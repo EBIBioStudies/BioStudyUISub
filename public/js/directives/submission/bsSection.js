@@ -69,15 +69,15 @@ module.exports = function(moduleDirective) {
                 var templateUrl=element.attr('template-url');
                 var id=element.attr('id');
                 var model = '', elTmp = '';
-                console.log('Scope data',$scope);
+                console.log('Scope data',$scope.labels);
                 if ($scope.data) {
                     model='ng-model="data"';
                 }
                 if ($scope.field) {
                     model= model + ' data-field="field"';
                 }
-                if ($scope.label) {
-                    model= model + ' data-labels="field"';
+                if ($scope.labels) {
+                    model= model + ' data-labels="labels"';
                 }
 
                 if (ctrl[id]) {

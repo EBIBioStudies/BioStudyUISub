@@ -36,11 +36,12 @@
 
                         <td class="">
                             {{$index+1}}
-                            {{data.colSize}}
                         </td>
                         <td class="">
-                            <button class="btn btn-primary btn-sm" type="button" ng-click="data.ui.activeTabs[$index]=true"><i class="fa fa-edit"></i></button>
-                            <button class="btn btn-warning btn-sm" type="button" ng-click="data.remove($index)"><i class="fa fa-trash"></i> </button>
+                            <button  uib-tooltip={{labels.actions.edit.popup}}
+                                    class="btn btn-primary btn-sm" type="button" ng-click="data.ui.activeTabs[$index]=true"><i class="fa fa-edit"></i></button>
+                            <button  uib-tooltip={{labels.actions.delete.popup}}
+                                    class="btn btn-warning btn-sm" type="button" ng-click="data.remove($index)"><i class="fa fa-trash"></i> </button>
                         </td>
                         <td ng-repeat="field in labels.fields" class="form-group-sm row ng-class:data.colSizeCss">
                             <bs-replace-el id="previewHeader" ng-model="author" data-field="field" data-labels="labels"
@@ -70,7 +71,7 @@
             </uib-tab-heading>
             <p class="pull-right padding-right-small">
                 <button class="pull-right btn btn-danger btn-xs" ng-click="data.remove($index)"
-                        uib-tooltip="Delete this author"
+                        uib-tooltip={{labels.actions.delete.popup}}
                         tooltip-append-to-body="true"
                         tooltip-placement="bottom"><i class="fa fa-trash"></i>
                 </button>
@@ -89,7 +90,7 @@
                     </td>
                     <td class="nopadding border-none form-group-sm">
                         <bs-replace-el id="detailHeader" ng-model="author" data-field="field"
-                               data-labels="labels" template-url="templates/bsng/section_part/detailHeader.html">
+                               data-labels="labels" data-field="field" template-url="templates/bsng/section_part/detailHeader.html">
                         </bs-replace-el>
                     </td>
                 </tr>
@@ -120,8 +121,9 @@
                                    ng-required="true" uib-tooltip="This field is required" tooltip-class="customClass" tooltip-placement="top-left"
                                    tooltip-trigger="mouseenter" tooltip-enable="!attribute.value">
                                 <span class="input-group-btn" ng-if="!data.requiredAttributes[attribute.name].required">
-                                    <button type="button" class="btn btn-sm btn-danger btn-flat"
+                                    <button uib-tooltip={{labels.actions.deleteAttr.popup}} type="button" class="btn btn-sm btn-danger btn-flat"
                                             ng-click="author.removeAttribute($index, attribute)">
+
                                         <i class="fa fa-trash-o"></i>
                                     </button>
                                 </span>
@@ -133,9 +135,9 @@
                     <td colspan="2" class="">
                         <p class="pull-right">
                             <button class="btn btn-primary btn-xs" ng-click="author.createAttribute();"
-                                    uib-tooltip="Add a new description"
+                                    uib-tooltip={{labels.actions.addAttr.popup}}
                                     tooltip-append-to-body="true"
-                                    tooltip-placement="bottom">Add a description
+                                    tooltip-placement="bottom">{{labels.actions.addAttr.title}}
                             </button>
 
                         </p>
