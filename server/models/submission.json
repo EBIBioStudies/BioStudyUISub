@@ -1,0 +1,85 @@
+{
+    "type": "submission",
+    "accno": "",
+    "id": "",
+    "attributes": [
+    {
+        "name": "Title",
+        "value": "Title default"
+    },
+    {
+        "name": "ReleaseDate",
+        "value": "2015-09-23"
+    }
+],
+    "section": {
+        "attributes": [
+          {
+            "name": "Description",
+            "value": "alamakota"
+          }
+        ],
+        "accno": "ACCNO-STUD",
+        "type": "Study",
+        "links" : [
+          {"url": "url1", "attributes": [
+            {"name": "Description", "value":"value1"},
+            {"name": "key2", "value":"value2"},
+            {"name": "key3", "value":"value3"}
+          ]},
+          {"url": "url2", "attributes": [
+            {"name": "Description", "value":"value1"},
+            {"name": "key2", "value":"value2"},
+            {"name": "key3", "value":"value3"}
+          ]},
+          {"url": "url3", "attributes": [
+            {"name": "Description", "value":"value1"},
+            {"name": "key2", "value":"value2"},
+            {"name": "key3", "value":"value3"}
+          ]},
+          {"url": "url4", "attributes": [
+            {"name": "Description", "value":"value1"},
+            {"name": "key2", "value":"value2"},
+            {"name": "key3", "value":"value3"}
+          ]},
+          {"url": "url10", "attributes": [
+            {"name": "Description", "value":"value10_1"},
+            {"name": "key10_2", "value":"value10_2"},
+            {"name": "key10_3", "value":"value10_3"}
+          ]}
+
+        ],
+        "files": [
+          {"path": "/User/data.txt", "attributes": [
+            {"name": "Description", "value":"value1"},
+            {"name": "Type", "value":"value2"}
+          ]}
+        ],
+        "subsections": [
+          {
+            "type": "Publication",
+            "attributes" : [{
+                "name" : "DOI", "value": "Alama"
+            }]
+          },
+          {
+            "type": "Author",
+            "attributes" : [{
+              "name" : "E-mail", "value": "miroslaw.dylag@mentorsoftware.pl"
+            },
+              {
+                "name" : "Name", "value": "Name"
+              },{
+                "name" : "Organization", "value": "Name"
+              }]
+          },
+          {
+            "type": "Contact"
+          },
+          {
+            "type": "Contact"
+          }
+
+        ]
+}
+}

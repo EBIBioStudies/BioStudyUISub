@@ -1,0 +1,144 @@
+{
+  "name": "dev",
+  "description": "Development - localhost",
+  "routing": {
+    "proxy": {
+      "auth": {
+        "signup": {
+          "url": "/proxy/api/auth/signup",
+          "method": "POST"
+        },
+        "register" : {
+          "url": "/proxy/api/auth/register",
+          "method": "POST"
+        },
+        "signout" : {
+          "url": "/proxy/api/auth/signout",
+          "method": "POST"
+        }
+      },
+      "files": {
+        "dir": {
+          "url": "/proxy/api/files/dir",
+          "method": "GET"
+        },
+        "upload": {
+          "url": "//proxy/api/files/fileUpload",
+          "method": "POST"
+        },
+        "delete": {
+          "url": "/proxy/api/files/delete",
+          "method": "DELETE"
+        }
+      },
+      "submission": {
+        "get": {
+          "url": "/proxy/api/submission",
+          "method": "GET"
+        },
+        "list": {
+          "url": "/proxy/api/submissions",
+          "method": "GET"
+        },
+        "create": {
+          "url": "/proxy/api/submission/create",
+          "method": "POST"
+        },
+        "update": {
+          "url": "/proxy/api/submission/update",
+          "method": "PUT"
+        },
+        "delete": {
+          "url": "/proxy/api/submission/delete",
+          "method": "DELETE"
+        },
+        "deleteSubmited": {
+          "url": "/proxy/api/submission/submited/delete",
+          "method": "DELETE"
+        },
+        "save": {
+          "url": "/proxy/api/submission/save",
+          "method": "PUT"
+        }
+      }
+    },
+
+    "signup": {
+      "url": "/auth/signup",
+      "method": "POST"
+    },
+    "signin": {
+      "url": "/auth/signin",
+      "method": "POST"
+    },
+    "signout": {
+      "url": "/auth/signout",
+      "method": "POST"
+    },
+    "files": {
+      "dir": {
+        "url": "/files/dir",
+        "method": "GET"
+      },
+      "upload": {
+        "url": "/files/fileUpload",
+        "method": "POST"
+      },
+      "delete": {
+        "url": "/files/delete",
+        "method": "DELETE"
+      }
+    },
+    "userdata" :{
+      "delete": {
+        "url": "/userdata/submission",
+        "method": "DELETE"
+      },
+      "submitted": {
+        "delete": {
+          "url": "/userdata/submission/submitted",
+          "method": "DELETE"
+        }
+      },
+      "list": {
+        "url": "/userdata/list",
+        "method": "GET"
+      },
+      "get": {
+        "url": "/userdata/get",
+        "method": "GET"
+      },
+      "set" : {
+        "url": "/userdata/set",
+        "method": "POST"
+      },
+      "register" : {
+        "url": "/userdata/register",
+        "method": "POST"
+      }
+    },
+    "submission": {
+      "get": {
+        "url": "/data/submission",
+        "method": "GET"
+      },
+      "list": {
+        "url": "/data/sbmlist",
+        "method": "GET"
+      },
+      "create": {
+        "url": "/data/create",
+        "method": "POST"
+      },
+      "update": {
+        "url": "/data/update",
+        "method": "POST"
+      },
+      "delete": {
+        "url": "/data/delete",
+        "method": "GET"
+      }
+
+    }
+  }
+}

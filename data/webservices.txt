@@ -1,0 +1,24 @@
+http://localhost:3229/biostd-dev/auth/signin
+{ login: "", password: "" }
+200:
+{
+"status": "OK",
+"sessid": "K0347d66381eef88ba2647ec8ccab9e5efbea649b",
+"username": "demo"
+}
+
+403:
+{
+"status": "FAIL login failed"
+}
+
+http://localhost:3229/biostd-dev/auth/signup
+{'login':'demo1', 'password':'demo1', email: "ala@ala",
+recaptcha_challenge: "sfsds",   recaptcha_response: "sfd"}
+200:
+{}
+403:
+{
+"status": "FAIL",
+"message": "error message"
+}

@@ -1,0 +1,306 @@
+{
+"@ReleaseDate": "2015-05-05T00:00:00.000",
+"submissions" : [
+{
+ "accessTags": [
+  "Pub",
+  "EBI"
+ ],
+ "attributes": [
+  {
+   "name": "Date",
+   "value": "1.1.1"
+  },
+  {
+   "name": "Type",
+   "value": "good"
+  }
+ ],
+ "classTags": [
+  {
+   "classifier": "Source",
+   "tag": "EBI"
+  },
+  {
+   "classifier": "Auth",
+   "tag": "FG"
+  }
+ ],
+ "section": {
+  "subsections": [
+   {
+    "subsections": [[
+     {
+      "attributes": [{
+       "name": "Amount",
+       "valqual": [{
+        "name": "Unit",
+        "value": "ml"
+       }],
+       "value": "0.1"
+      }],
+      "accession": "Al1",
+      "type": "Aliquotes"
+     },
+     {
+      "attributes": [{
+       "name": "Amount",
+       "valqual": [{
+        "name": "Unit",
+        "value": "ml"
+       }],
+       "value": "0.2"
+      }],
+      "accession": "Al2",
+      "type": "Aliquotes"
+     }
+    ]],
+    "files": [{
+     "accessTags": ["Owner"],
+     "name": "data.zip",
+     "attributes": [{
+      "name": "Type",
+      "value": "zip"
+     }],
+     "classTags": [{
+      "classifier": "Visual",
+      "tag": "popup"
+     }]
+    }],
+    "attributes": [{
+     "nmqual": [
+      {
+       "name": "OntoRef",
+       "value": "OBO:S000001"
+      },
+      {
+       "name": "VocRef",
+       "value": "Sp0128"
+      }
+     ],
+     "name": "Species",
+     "classTags": [
+      {
+       "classifier": "Visual",
+       "tag": "Bold"
+      },
+      {
+       "classifier": "Visual",
+       "tag": "Color",
+       "value": "Red"
+      }
+     ],
+     "valqual": [
+      {
+       "name": "Onto Ref",
+       "value": "OBO:S000001"
+      },
+      {
+       "name": "Alias",
+       "value": "Man"
+      }
+     ],
+     "value": "Human"
+    }],
+    "links": [{
+     "attributes": [{
+      "name": "Type",
+      "value": "Home page"
+     }],
+     "url": "http://aaa.com"
+    }],
+    "accession": "E1",
+    "type": "Experiment"
+   },
+   {
+    "attributes": [
+     {
+      "name": "Name",
+      "value": "MG"
+     },
+     {
+      "name": "works at",
+      "isReference": true,
+      "value": "AF3"
+     }
+    ],
+    "accession": "A1",
+    "type": "Author"
+   },
+   {
+    "attributes": [
+     {
+      "name": "Name",
+      "value": "Mike"
+     },
+     {
+      "name": "Affiliation",
+      "isReference": true,
+      "value": "AF3"
+     }
+    ],
+    "accession": "A2",
+    "type": "Author"
+   },
+   {
+    "attributes": [{
+     "name": "Name",
+     "value": "EBI"
+    }],
+    "accession": "AF3",
+    "type": "Institution"
+   },
+   {
+    "subsections": [[
+     {
+      "attributes": [
+       {
+        "name": "No",
+        "value": "1"
+       },
+       {
+        "name": "Owner",
+        "isReference": true,
+        "value": "AF3"
+       },
+       {
+        "name": "Concentration",
+        "valqual": [{
+         "name": "Unit",
+         "value": "mmol"
+        }],
+        "value": "0.01"
+       }
+      ],
+      "accession": "R4",
+      "type": "Runs"
+     },
+     {
+      "attributes": [
+       {
+        "name": "No",
+        "value": "2"
+       },
+       {
+        "name": "Owner",
+        "isReference": true,
+        "value": "AF3"
+       },
+       {
+        "name": "Concentration",
+        "valqual": [{
+         "name": "Unit",
+         "value": "mmol"
+        }],
+        "value": "0.02"
+       }
+      ],
+      "accession": "R5",
+      "type": "Runs"
+     }
+    ]],
+    "files": [[
+     {
+      "name": "r1.zip",
+      "attributes": [
+       {
+        "name": "Comment",
+        "value": "Run 1 data"
+       },
+       {
+        "name": "Run",
+        "isReference": true,
+        "value": "R4"
+       }
+      ]
+     },
+     {
+      "name": "r2.zip",
+      "attributes": [
+       {
+        "name": "Comment",
+        "value": "Run 2 data"
+       },
+       {
+        "name": "Run",
+        "isReference": true,
+        "value": "R5"
+       }
+      ]
+     }
+    ]],
+    "links": [[
+     {
+      "attributes": [
+       {
+        "name": "Comment",
+        "value": "Link to sile 1"
+       },
+       {
+        "name": "Run",
+        "isReference": true,
+        "value": "R4"
+       }
+      ],
+      "url": "http://s1.com"
+     },
+     {
+      "attributes": [
+       {
+        "name": "Comment",
+        "value": "Link to site 2"
+       },
+       {
+        "name": "Run",
+        "isReference": true,
+        "value": "R5"
+       }
+      ],
+      "url": "http://s2.com"
+     }
+    ]],
+    "accession": "E2",
+    "type": "Experiment"
+   }
+  ],
+  "attributes": [{
+   "name": "Name",
+   "value": "Super study"
+  }],
+  "links": [{
+
+  }],
+  "files": [{
+
+  }],
+  "subsections" :[{
+    "attributes":[
+     {
+
+     }
+    ],
+    "type": "Authors",
+    "links": [],
+    "files": [],
+    "subsections": []
+   }, {
+
+  }],
+  "classTags": [
+   {
+    "classifier": "Source",
+    "tag": "EBI"
+   },
+   {
+    "classifier": "Auth",
+    "tag": "FG"
+   }
+  ],
+  "accession": "STD2EBI",
+  "type": "Study"
+ },
+ "accession": "!{SBM}",
+ "type": "submission"
+}
+]
+}

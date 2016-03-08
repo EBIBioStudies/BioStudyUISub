@@ -1,0 +1,11 @@
+{
+    "login": "",
+    "password": "",
+    "username": "",
+    "email": "" ,
+    "recaptcha_challenge": "",
+    "recaptcha_response": ""
+}
+
+  //Recaptcha.get_challenge()
+  //Recaptcha.get_response()

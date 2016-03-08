@@ -1,0 +1,38 @@
+{
+  "type": "submission",
+  "accno": "!{S-BSST}",
+  "accessTags": [
+    "Public"
+  ],
+  "attributes": [
+    {
+      "name": "Title",
+      "value": ""
+    },
+    {
+      "name": "ReleaseDate",
+      "value": null
+    }
+  ],
+  "section": {
+    "accno": "!{STUDY-}",
+    "type": "Study",
+    "subsection": {
+      "unknwon": {
+        "type": "unknwon"
+      },
+      "publication": {
+        "type": "Publication",
+        "attributes" : {
+          "doi" : "DOI"
+        }
+      },
+      "contact": {
+        "type": "Contact"
+      },
+      "organization": {
+        "type": "Organization"
+      }
+    }
+  }
+}

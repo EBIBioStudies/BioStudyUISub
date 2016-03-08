@@ -1,0 +1,193 @@
+<ng-include src="'templates/partials/header.html'"></ng-include>
+
+
+
+<div class="wrapper row-offcanvas row-offcanvas-left">
+
+  <!--  <aside class="left-side sidebar-offcanvas" ng-class="{'collapse-left' : collapseLeftSide}" style="position: fixed;">
+        <section class="sidebar">
+            <ul class="sidebar-menu">
+                <bs-ng-toggle></bs-ng-toggle>
+                <li class="warning">
+                    <a href="">
+                        <i class="fa fa-file-o fa-fw"></i> <span ng-hide="collapseLeftSide">Add a file</span>
+                    </a>
+                </li>
+                <li class="success">
+                    <a href="">
+                        <i class="fa fa-comment-o fa-fw"></i> <span ng-hide="collapseLeftSide">Add an annotation</span>
+                    </a>
+                </li>
+                <li class="danger">
+                    <a href="">
+                        <i class="fa fa-th fa-fw"></i> <span ng-hide="collapseLeftSide">Add a section</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <i class="fa fa-save fa-fw"></i> <span ng-hide="collapseLeftSide">Submit submission</span>
+                    </a>
+                </li>
+
+            </ul>
+
+        </section>
+
+            <a class="toggle-btn padding" data-toggle="modal"
+                data-target="#fileModal" ng-click="clickToggle()"
+                tooltip-append-to-body="true"
+                tooltip=""
+                tooltip-placement="right">
+            <i class="fa fa-bars fa-lg"></i>
+            </a>
+
+        <div class="btn-group-vertical margin-small" role="group">
+
+            <button class="btn btn-sm btn-success btn-flat" data-toggle="modal"
+                    data-target="#fileModal" ng-click="showFiles()"
+                    tooltip-append-to-body="true"
+                    tooltip="{{tooltipAddFile}}"
+                    tooltip-placement="right">
+                <i class="fa fa-file-o fa-fw"></i>
+            </button>
+            <button class="btn btn-sm btn-success btn-flat"
+                    tooltip-append-to-body="true"
+                    tooltip="{{tooltipAddAnnotation}}"
+                    tooltip-placement="right" ng-click="addAnnotation()">
+                <i class="fa fa-comment-o fa-fw"></i>
+            </button>
+            <button  class="btn btn-sm btn-success btn-flat"
+                     tooltip="{{tooltipAddSection}}"
+                     tooltip-append-to-body="true"
+                     tooltip-placement="right" ng-click="addSection()">
+                <i class="fa fa-th fa-fw"></i> <span></span>
+            </button>
+        </div>
+        <div class="btn-group-vertical margin-small" role="group">
+
+            <button class="btn btn-sm bg-orange" ng-click="save();"
+                    ng-disabled="submissionForm.$invalid"
+                    tooltip="Save the submission"
+                    tooltip-placement="right"
+                    tooltip-append-to-body="true">
+                <i class="fa fa-save fa-fw"></i>
+            </button>
+
+
+        </div>
+    </aside>
+    -->
+    <!-- Right side column. Contains the navbar and content of the page -->
+    <!--<aside class="right-side" ng-class="{strech: toggleSidebar}">-->
+    <aside class="right-side strech">
+
+        <!-- Content Header (Page header) -->
+
+        <!-- Main content -->
+        <section class="content">
+
+           <!-- <form novalidate name="formUser" role="form" method="post">
+
+                    <div class="has-error" ng-show="showError();">
+                        <span class="help-block">Wrong username/password</span>
+                    </div>
+                    <div ng-show="!showError();">
+                        <span class="help-block-empty"></span>
+                    </div>
+
+                    <div class="form-group" bs-show-errors>
+
+                        <input type="text" ng-model="userForm.username" id="username" name="username" class="form-control" placeholder="User name"
+                               ng-required="true"/>
+                    </div>
+
+                    <div class="form-group" bs-show-errors>
+                        <label class="col-sm-2 control-label" for="title">Title</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="title" name="title" placeholder="Enter a title" required
+                               ng-model="submission.title" required>
+                        </div>
+                    </div>
+            </form>
+-->
+
+            <div class="row">
+                <!-- ./col -->
+                <div class="col-md-offset-1 col-md-3">
+                    <!-- small box -->
+                    <div class="small-box bg-green">
+                        <div class="inner">
+                            <h3>
+                                <i class="fa fa-book fa-fw"></i> <sup style="font-size: 20px"></sup>
+                            </h3>
+
+                            <p>
+                                Help
+                            </p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-stats-bars"></i>
+                        </div>
+                        <a href="#/help" class="small-box-footer">
+                            More info <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-md-3">
+                    <!-- small box -->
+                    <div class="small-box bg-yellow">
+                        <div class="inner">
+                            <h3>
+                                <i class="fa fa-user"></i>
+                            </h3>
+
+                            <p>
+                                Create a new account.
+                            </p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-person-add"></i>
+                        </div>
+                        <a href="" ng-click="signUp()" class="small-box-footer">
+                            Sign up <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-md-3">
+                    <!-- small box -->
+                    <div class="small-box bg-red">
+                        <div class="inner">
+                            <h3>
+                                <i class="fa fa-fw fa-sign-in"></i>
+                            </h3>
+
+                            <p>
+                                Login and start submitting data.
+                            </p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-pie-graph"></i>
+                        </div>
+                        <a href="" ng-click="signIn()" class="small-box-footer">
+                            Sign in<i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- ./col -->
+            </div>
+            <!-- /.row -->
+            <!--<p ng-bing="submission.name"></p>
+            <tabset ng-if="submission.sections">
+                <tab ng-repeat="section in submission.sections" heading="{{section.name}}">
+                    <ng-include src="'templates/bsng/section.html'">ś</ng-include>
+                </tab>
+            </tabset>-->
+
+        </section>
+        <!-- /.content -->
+    </aside>
+    <!-- /.right-side -->
+</div><!-- ./wrapper -->
+

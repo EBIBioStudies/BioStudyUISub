@@ -1,0 +1,39 @@
+{
+  "submissions" : [
+    {
+      "attributes": [
+        {
+          "name": "Title",
+          "value": "Sample submission"
+        },
+        {
+          "name": "ReleaseDate",
+          "value": "2015-06-01T00:00:00.000"
+        }
+      ],
+      "section": {
+        "files": [{
+          "path": "aaa.txt",
+          "attributes": [{
+            "name": "Type",
+            "value": "txt"
+          }]
+        }],
+        "attributes": [
+          {
+            "name": "Title",
+            "value": "Sample study"
+          },
+          {
+            "name": "Attr",
+            "value": "Some attribute"
+          }
+        ],
+        "accession": "{STD-}",
+        "type": "Study"
+      },
+      "accession": "!{SBM-}",
+      "type": "submission"
+    }
+  ]
+}

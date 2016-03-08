@@ -1,0 +1,11 @@
+<div ng-controller="FileCtrl">
+    {{files}}
+<input type="text" name="attrValuePreview" ng-model="author.ref[field.name]"
+       class="form-control input-sm" placeholder="Enter a value" ng-required="true" ng-if="field.type=='text'">
+<select class="form-control" ng-model="author.ref[field.name]" ng-if="field.type=='select'">
+    <option ng-repeat="item in files" value="{{item}}">
+        {{item}}
+    </option>
+</select>
+</div>
+

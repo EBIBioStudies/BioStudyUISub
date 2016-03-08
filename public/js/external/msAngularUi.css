@@ -1,0 +1,53 @@
+ms-ng-tree[data-angular-treeview] {
+  /* prevent user selection */
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  /* default */
+  font-family: Tahoma;
+  font-size: 13px;
+  color: #555;
+  text-decoration: node;
+}
+ms-ng-tree[data-tree-model] ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: none;
+  overflow: hidden;
+}
+ms-ng-tree[data-tree-model] li {
+  position: relative;
+  padding: 0 0 0 20px;
+  line-height: 20px;
+}
+ms-ng-tree[data-tree-model] li .expanded {
+  /*padding: 1px 10px;
+  background-image: url("../img/folder.png");
+  background-repeat: no-repeat;*/
+}
+ms-ng-tree[data-tree-model] li .collapsed {
+  /*padding: 1px 10px;
+  background-image: url("../img/folder-closed.png");
+  background-repeat: no-repeat;*/
+}
+ms-ng-tree[data-tree-model] li .normal {
+  /*padding: 1px 10px;
+  background-image: url("../img/file.png");
+  background-repeat: no-repeat;*/
+}
+ms-ng-tree[data-tree-model] li i,
+ms-ng-tree[data-tree-model] li span {
+  cursor: pointer;
+}
+ms-ng-tree[data-tree-model] span:hover i {
+  color: #428bca;
+  font-weight: bold;
+  font-size: 16px;
+}
+ms-ng-tree[data-tree-model] .selected {
+  color: #5cb85c;
+  font-weight: bold;
+}

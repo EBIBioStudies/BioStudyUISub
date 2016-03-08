@@ -1,0 +1,60 @@
+{ "submissions":[
+  {
+    "accno": "!{SBM-}",
+    "type": "submission",
+    "attributes": [
+      {
+        "name": "Title",
+        "value": "adasd"
+      },
+      {
+        "name": "ReleaseDate",
+        "value": "2015-09-02T23:00:00.000Z"
+      }
+    ],
+    "section": {
+      "type": "Study",
+      "accno": "!{STUDY-}",
+      "files": [],
+      "attributes": [],
+      "links": [ {
+        "url": "url1",
+        "attributes": [
+          {
+            "name": "LinkAttr",
+            "value": "Simple Link Attr"
+          }
+        ]
+      },
+        {
+          "url": "url2"
+        }],
+      "subsections": [
+        {
+          "attributes": [
+            {
+              "name": "Name",
+              "value": "Fouts DE"
+            },
+            {
+              "name": "affiliation",
+              "value": "o1"
+            }
+          ],
+          "type": "Author"
+        },
+        {
+          "attributes": [
+            {
+              "name": "Name",
+              "value": "Fouts DE"
+            }
+          ],
+          "type": "Publication"
+
+        }
+
+
+      ]
+    }
+  }]}

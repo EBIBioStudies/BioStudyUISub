@@ -1,0 +1,66 @@
+<ng-include src="'templates/partials/header.html'"></ng-include>
+
+<div class="wrapper row-offcanvas row-offcanvas-left">
+    <!-- <aside class="left-side sidebar-offcanvas"
+            ng-class="{'collapse-left' : uisettings.collapseLeftSide}"
+            style="position: fixed;">
+
+         <section class="sidebar">
+             <ul class="sidebar-menu">
+                 <bs-ng-toggle></bs-ng-toggle>
+                 <li class="success">
+                     <a href="" ngf-select="addFiles($files)" ngf-keep="true" multiple="multiple" >
+                         <i class="fa fa-files-o fa-fw"></i>
+                         <span ng-hide="uisettings.collapseLeftSide">Select the files</span>
+                     </a>
+                 </li>
+
+                 <li class="success" ng-disabled="true">
+                     <a href="" ng-click="uploadAll()" >
+                         <i class="fa fa-cloud-upload fa-fw"></i>
+                         <span ng-hide="uisettings.collapseLeftSide">Upload all files</span>
+                     </a>
+                 </li>
+
+             </ul>
+
+         </section>
+
+     </aside>-->
+
+
+    <!-- Right side column. Contains the navbar and content of the page -->
+    <aside class="right-side strech">
+
+        <!-- Main content -->
+        <section class="content">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                Uploaded files
+                <p class="pull-right">
+                    <button class="btn btn-default btn-xs" ngf-select="addFiles($files)" ngf-keep="true" multiple="multiple"
+                            multiple>Upload files</button>
+                </p>
+
+            </div>
+            <div class="row">
+                <div class="col-xs-12 article-tree">
+                    <tree-grid tree-data="filesTree"
+                               tree-control="uploadedTree"
+                               col-defs="col_defs"
+                               expand-on="expanding_property"
+                               on-select="selectFile(branch)"
+                               expand-level="2"
+                               icon-leaf="{{'fa fa-file'}}">
+                    </tree-grid>
+                </div>
+            </div>
+
+        </div>
+
+        </section>
+        <!-- /.content -->
+    </aside>
+    <!-- /.right-side -->
+</div><!-- ./wrapper -->
+

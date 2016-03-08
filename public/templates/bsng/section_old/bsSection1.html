@@ -1,0 +1,7 @@
+<div ng-repeat="section in data.sections">
+    <div>
+        Section {{$index}}
+        <input type="text" name="sub" ng-model="section.name">
+        <button ng-click="deleteItem($index, data)">Delete</button>
+    </div>
+</div>

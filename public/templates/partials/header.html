@@ -1,0 +1,89 @@
+<header class="header">
+
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-fixed-top" role="navigation" >
+        <!-- Sidebar toggle button-->
+        <div class="container-fluid">
+
+        <a href="/#" class="logo"
+           tooltip-append-to-body="true"
+           uib-tooltip="BioStudies submission tool Version: {{AppInfo.version}}"
+           tooltip-placement="bottom">
+            <span class="second">BioStudies</span>
+            <!--<img src="images/biostudy.png"
+                 alt="BioStudy Logo">-->
+            <span class="badge badge-logo">v:{{AppInfo.version}}</span>
+        </a>
+
+        <!-- User Account: style can be found in dropdown.less -->
+        <div class="navbar-right">
+            <ul class="nav navbar-nav">
+
+                <li  data-access-level="public" bs-active-nav >
+                    <a id="helpMenuItem" href="#/help"
+                       tooltip-append-to-body="true"
+                       uib-tooltip="Go to the help page"
+                       tooltip-placement="bottom">
+                        <i class="fa fa-fw fa-question"></i>
+                        <span>Help</span>
+                    </a>
+                </li>
+
+                <!-- Notifications: style can be found in dropdown.less -->
+                <li data-access-level="anon" bs-active-nav ng-hide="user.username">
+                    <a id="signUpMenuItem" href="#/signup"
+                       tooltip-append-to-body="true"
+                       uib-tooltip="Register a new user"
+                       tooltip-placement="bottom">
+                        <i class="fa fa-user fa-fw"></i>
+                        <span>Sign up</span>
+                    </a>
+
+                </li>
+                <li data-access-level="anon" bs-active-nav ng-hide="user.username">
+                    <a id="signInMenuItem" href="#/signin"
+                       tooltip-append-to-body="true"
+                       uib-tooltip="Sign in"
+                       tooltip-placement="bottom">
+                        <i class="fa fa-sign-in"></i>
+                        <span>Sign in</span>
+                    </a>
+                </li>
+
+
+                <li access-level="user" bs-active-nav>
+                    <a id="submissionMenuItem" href="#/submissions"
+                       tooltip-append-to-body="true"
+                       uib-tooltip="List of submissions"
+                       tooltip-placement="bottom">
+
+                    <i class="fa fa-fw fa-table"></i>
+                        <span>Submissions</span>
+                    </a>
+                </li>
+
+                <li access-level="user" bs-active-nav>
+                    <a href="#/files">
+                        <i class="fa fa fa-fw fa-upload"></i>
+                        <span>Files</span>
+                    </a>
+                </li>
+
+                <!-- User Account: style can be found in dropdown.less -->
+                <li class="dropdown" data-access-level="user" uib-dropdown>
+                    <a href="" class="dropdown-toggle" data-toggle="dropdown" uib-dropdown-toggle>
+                        <i class="fa fa-fw fa-user"></i>
+                        <span>{{user.lastName}}<i class="caret"></i></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a ng-click="signOut();">Sign out</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+        </div>
+        </div>
+
+    </nav>
+
+</header>

@@ -1,0 +1,81 @@
+{
+
+  "accno":"!{S-STA}",
+  "type":"submission",
+  "accessTags":["Public"],
+  "attributes":[
+    {"name":"Title",
+      "value": "dsadssad"},
+    {  "name": "ReleaseDate",
+      "value": "YYYY-MM-DD"
+    }
+  ],
+  "section": {
+    "accno": "{}",
+    "type":"Study",
+    "files":[{
+      "path":"",
+      "attributes":[]
+
+    }],
+    "attributes":[],
+    "links":[{"url":"url1"}],
+    "subsections":[
+      {
+        "attributes": [
+        {
+          "name": "Journal",
+          "value": "PLoS biology"
+        },
+        {
+          "name": "Volume",
+          "value": "3(1)"
+        },
+        {
+          "name": "Pages",
+          "value": "e15"
+        },
+        {
+          "name": "Publication date",
+          "value": "2005 Jan"
+        }
+      ],
+        "accession": "PMC539331",
+        "type": "Publication"
+      },
+      {
+        "attributes": [
+          {
+            "name": "Name",
+            "value": "Fouts DE"
+          },
+          {
+            "name": "affiliation",
+            "isReference": true,
+            "value": "o1"
+          }
+        ],
+        "accession": "a1",
+        "type": "Author"
+      },
+      {
+        "attributes": [{
+          "name": "Name",
+          "value": "The Institute for Genomic Research, Rockville Maryland"
+        }],
+        "accession": "o1",
+        "type": "Organization"
+      },
+      {
+        "accession": "anyvVlue",
+        "type": "AnyName",
+        "attributes": [{
+          "name": "Name",
+          "value": "The Institute for Genomic Research, Rockville Maryland"
+        }],
+        "subsections" : []
+      }
+
+
+    ]}
+}

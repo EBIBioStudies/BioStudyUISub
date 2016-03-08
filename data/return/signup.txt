@@ -1,0 +1,20 @@
+//{'login':'demo', 'password':'demo', email: "ala@ala",   recaptcha_challenge: "sfsds",   recaptcha_response: "sfd"}
+403
+{
+"status": "FAIL",
+"message": "User exists"
+}
+
+400
+{
+"status": "FAIL",
+"message": "'password' parameter is not defined"
+}
+
+403
+{
+"status": "FAIL CAPTCHA",
+"message": "Captcha response is not valid"
+}
+
+

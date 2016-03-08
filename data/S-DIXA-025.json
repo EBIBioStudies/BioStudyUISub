@@ -1,0 +1,532 @@
+{
+ "submissions" : [
+  {
+   "RootPath": "SBM-EPMC539331",
+   "ReleasDate":"2016-01-01",
+   "accessTags": ["Public"],
+   "Title": "Major structural differences and novel potential virulence mechanisms from the genomes of multiple campylobacter species.",
+   "attributes": [{
+    "name": "DataSource",
+    "value": "Europe PMC"
+   }],
+   "section": {
+    "subsections": [
+     {
+      "attributes": [
+       {
+        "name": "Journal",
+        "value": "PLoS biology"
+       },
+       {
+        "name": "Volume",
+        "value": "3(1)"
+       },
+       {
+        "name": "Pages",
+        "value": "e15"
+       },
+       {
+        "name": "Publication date",
+        "value": "2005 Jan"
+       }
+      ],
+      "accession": "PMC539331",
+      "type": "Publication"
+     },
+     {
+      "attributes": [
+       {
+        "name": "Name",
+        "value": "Fouts DE"
+       },
+       {
+        "name": "affiliation",
+        "isReference": true,
+        "value": "o1"
+       }
+      ],
+      "accession": "a1",
+      "type": "Author"
+     },
+     {
+      "attributes": [
+       {
+        "name": "Name",
+        "value": "Mongodin EF"
+       },
+       {
+        "name": "affiliation",
+        "isReference": true,
+        "value": "o1"
+       }
+      ],
+      "accession": "a2",
+      "type": "Author"
+     },
+     {
+      "attributes": [
+       {
+        "name": "Name",
+        "value": "Mandrell RE"
+       },
+       {
+        "name": "affiliation",
+        "isReference": true,
+        "value": "o2"
+       }
+      ],
+      "accession": "a3",
+      "type": "Author"
+     },
+     {
+      "attributes": [
+       {
+        "name": "Name",
+        "value": "Miller WG"
+       },
+       {
+        "name": "affiliation",
+        "isReference": true,
+        "value": "o2"
+       }
+      ],
+      "accession": "a4",
+      "type": "Author"
+     },
+     {
+      "attributes": [
+       {
+        "name": "Name",
+        "value": "Rasko DA"
+       },
+       {
+        "name": "affiliation",
+        "isReference": true,
+        "value": "o1"
+       }
+      ],
+      "accession": "a5",
+      "type": "Author"
+     },
+     {
+      "attributes": [
+       {
+        "name": "Name",
+        "value": "Ravel J"
+       },
+       {
+        "name": "affiliation",
+        "isReference": true,
+        "value": "o1"
+       }
+      ],
+      "accession": "a6",
+      "type": "Author"
+     },
+     {
+      "attributes": [
+       {
+        "name": "Name",
+        "value": "Brinkac LM"
+       },
+       {
+        "name": "affiliation",
+        "isReference": true,
+        "value": "o1"
+       }
+      ],
+      "accession": "a7",
+      "type": "Author"
+     },
+     {
+      "attributes": [
+       {
+        "name": "Name",
+        "value": "DeBoy RT"
+       },
+       {
+        "name": "affiliation",
+        "isReference": true,
+        "value": "o1"
+       }
+      ],
+      "accession": "a8",
+      "type": "Author"
+     },
+     {
+      "attributes": [
+       {
+        "name": "Name",
+        "value": "Parker CT"
+       },
+       {
+        "name": "affiliation",
+        "isReference": true,
+        "value": "o2"
+       }
+      ],
+      "accession": "a9",
+      "type": "Author"
+     },
+     {
+      "attributes": [
+       {
+        "name": "Name",
+        "value": "Daugherty SC"
+       },
+       {
+        "name": "affiliation",
+        "isReference": true,
+        "value": "o1"
+       }
+      ],
+      "accession": "a10",
+      "type": "Author"
+     },
+     {
+      "attributes": [
+       {
+        "name": "Name",
+        "value": "Dodson RJ"
+       },
+       {
+        "name": "affiliation",
+        "isReference": true,
+        "value": "o1"
+       }
+      ],
+      "accession": "a11",
+      "type": "Author"
+     },
+     {
+      "attributes": [
+       {
+        "name": "Name",
+        "value": "Durkin AS"
+       },
+       {
+        "name": "affiliation",
+        "isReference": true,
+        "value": "o1"
+       }
+      ],
+      "accession": "a12",
+      "type": "Author"
+     },
+     {
+      "attributes": [
+       {
+        "name": "Name",
+        "value": "Madupu R"
+       },
+       {
+        "name": "affiliation",
+        "isReference": true,
+        "value": "o1"
+       }
+      ],
+      "accession": "a13",
+      "type": "Author"
+     },
+     {
+      "attributes": [
+       {
+        "name": "Name",
+        "value": "Sullivan SA"
+       },
+       {
+        "name": "affiliation",
+        "isReference": true,
+        "value": "o1"
+       }
+      ],
+      "accession": "a14",
+      "type": "Author"
+     },
+     {
+      "attributes": [
+       {
+        "name": "Name",
+        "value": "Shetty JU"
+       },
+       {
+        "name": "affiliation",
+        "isReference": true,
+        "value": "o1"
+       }
+      ],
+      "accession": "a15",
+      "type": "Author"
+     },
+     {
+      "attributes": [
+       {
+        "name": "Name",
+        "value": "Ayodeji MA"
+       },
+       {
+        "name": "affiliation",
+        "isReference": true,
+        "value": "o1"
+       }
+      ],
+      "accession": "a16",
+      "type": "Author"
+     },
+     {
+      "attributes": [
+       {
+        "name": "Name",
+        "value": "Shvartsbeyn A"
+       },
+       {
+        "name": "affiliation",
+        "isReference": true,
+        "value": "o1"
+       }
+      ],
+      "accession": "a17",
+      "type": "Author"
+     },
+     {
+      "attributes": [
+       {
+        "name": "Name",
+        "value": "Schatz MC"
+       },
+       {
+        "name": "ORCID",
+        "value": "0000-0002-4118-4446"
+       },
+       {
+        "name": "affiliation",
+        "isReference": true,
+        "value": "o1"
+       }
+      ],
+      "accession": "a18",
+      "type": "Author"
+     },
+     {
+      "attributes": [
+       {
+        "name": "Name",
+        "value": "Badger JH"
+       },
+       {
+        "name": "affiliation",
+        "isReference": true,
+        "value": "o1"
+       }
+      ],
+      "accession": "a19",
+      "type": "Author"
+     },
+     {
+      "attributes": [
+       {
+        "name": "Name",
+        "value": "Fraser CM"
+       },
+       {
+        "name": "affiliation",
+        "isReference": true,
+        "value": "o1"
+       }
+      ],
+      "accession": "a20",
+      "type": "Author"
+     },
+     {
+      "attributes": [
+       {
+        "name": "Name",
+        "value": "Nelson KE"
+       },
+       {
+        "name": "affiliation",
+        "isReference": true,
+        "value": "o1"
+       }
+      ],
+      "accession": "a21",
+      "type": "Author"
+     },
+     {
+      "attributes": [{
+       "name": "Name",
+       "value": "Produce Safety and Microbiology Research Unit, Agricultural Research Service United States Department of Agriculture, Albany, California"
+      }],
+      "accession": "o2",
+      "type": "Organization"
+     },
+     {
+      "attributes": [{
+       "name": "Name",
+       "value": "The Institute for Genomic Research, Rockville Maryland"
+      }],
+      "accession": "o1",
+      "type": "Organization"
+     }
+    ],
+    "files": [
+     {
+      "path": "pbio.0030015.sg001.eps",
+      "attributes": [{
+       "name": "Type",
+       "value": "application(ps)"
+      }]
+     },
+     {
+      "path": "pbio.0030015.sg002.pdf",
+      "attributes": [{
+       "name": "Type",
+       "value": "application(pdf)"
+      }]
+     },
+     {
+      "path": "pbio.0030015.sg003.pdf",
+      "attributes": [{
+       "name": "Type",
+       "value": "application(pdf)"
+      }]
+     },
+     {
+      "path": "pbio.0030015.sg004.eps",
+      "attributes": [{
+       "name": "Type",
+       "value": "application(ps)"
+      }]
+     },
+     {
+      "path": "pbio.0030015.sg005.doc",
+      "attributes": [{
+       "name": "Type",
+       "value": "application(msword)"
+      }]
+     },
+     {
+      "path": "pbio.0030015.sg006.ppt",
+      "attributes": [{
+       "name": "Type",
+       "value": "application(vnd.ms-powerpoint)"
+      }]
+     },
+     {
+      "path": "pbio.0030015.sg007.eps",
+      "attributes": [{
+       "name": "Type",
+       "value": "application(ps)"
+      }]
+     },
+     {
+      "path": "pbio.0030015.st001.xls",
+      "attributes": [{
+       "name": "Type",
+       "value": "application(vnd.ms-excel)"
+      }]
+     },
+     {
+      "path": "pbio.0030015.st002.xls",
+      "attributes": [{
+       "name": "Type",
+       "value": "application(vnd.ms-excel)"
+      }]
+     },
+     {
+      "path": "pbio.0030015.st003.xls",
+      "attributes": [{
+       "name": "Type",
+       "value": "application(vnd.ms-excel)"
+      }]
+     },
+     {
+      "path": "pbio.0030015.st004.xls",
+      "attributes": [{
+       "name": "Type",
+       "value": "application(vnd.ms-excel)"
+      }]
+     },
+     {
+      "path": "pbio.0030015.st005.xls",
+      "attributes": [{
+       "name": "Type",
+       "value": "application(vnd.ms-excel)"
+      }]
+     },
+     {
+      "path": "pbio.0030015.st006.xls",
+      "attributes": [{
+       "name": "Type",
+       "value": "application(vnd.ms-excel)"
+      }]
+     },
+     {
+      "path": "pbio.0030015.st007.xls",
+      "attributes": [{
+       "name": "Type",
+       "value": "application(vnd.ms-excel)"
+      }]
+     },
+     {
+      "path": "pbio.0030015.st008.xls",
+      "attributes": [{
+       "name": "Type",
+       "value": "application(vnd.ms-excel)"
+      }]
+     },
+     {
+      "path": "pbio.0030015.st009.xls",
+      "attributes": [{
+       "name": "Type",
+       "value": "application(vnd.ms-excel)"
+      }]
+     },
+     {
+      "path": "pbio.0030015.st010.xls",
+      "attributes": [{
+       "name": "Type",
+       "value": "application(vnd.ms-excel)"
+      }]
+     }
+    ],
+    "attributes": [
+     {
+      "name": "Title",
+      "value": "Major structural differences and novel potential virulence mechanisms from the genomes of multiple campylobacter species."
+     },
+     {
+      "name": "Abstract",
+      "value": "Sequencing and comparative genome analysis of four strains of Campylobacter including C. lari RM2100, C. upsaliensis RM3195, and C. coli RM2228 has revealed major structural differences that are associated with the insertion of phage- and plasmid-like genomic islands, as well as major variations in the lipooligosaccharide complex. Poly G tracts are longer, are greater in number, and show greater variability in C. upsaliensis than in the other species. Many genes involved in host colonization, including racR/S, cadF, cdt, ciaB, and flagellin genes, are conserved across the species, but variations that appear to be species specific are evident for a lipooligosaccharide locus, a capsular (extracellular) polysaccharide locus, and a novel Campylobacter putative licABCD virulence locus. The strains also vary in their metabolic profiles, as well as their resistance profiles to a range of antibiotics. It is evident that the newly identified hypothetical and conserved hypothetical proteins, as well as uncharacterized two-component regulatory systems and membrane proteins, may hold additional significant information on the major differences in virulence among the species, as well as the specificity of the strains for particular hosts."
+     }
+    ],
+    "links": [[
+     {
+      "attributes": [{
+       "name": "Type",
+       "value": "gen"
+      }],
+      "url": "AAFJ00000000"
+     },
+     {
+      "attributes": [{
+       "name": "Type",
+       "value": "gen"
+      }],
+      "url": "AAFL00000000"
+     },
+     {
+      "attributes": [{
+       "name": "Type",
+       "value": "gen"
+      }],
+      "url": "CP000025"
+     }
+    ]],
+    "type": "Study"
+   },
+   "accession": "S-EPMC539331",
+   "type": "submission"
+  }
+ ]
+}

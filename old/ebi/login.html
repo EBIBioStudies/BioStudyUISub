@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)http://localhost:3229/biostd-dev/test/testLogin.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<script type="text/javascript">
+
+String.prototype.escapeSpecialChars = function() {
+    return this.replace(/\\n/g, "\\n")
+               .replace(/\\'/g, "\\'")
+               .replace(/\\"/g, '\\"')
+               .replace(/\\&/g, "\\&")
+               .replace(/\\r/g, "\\r")
+               .replace(/\\t/g, "\\t")
+               .replace(/\\b/g, "\\b")
+               .replace(/\\f/g, "\\f");
+};
+
+ function doLogin()
+ {
+  var uname = document.getElementById("login").value;
+  var pass = document.getElementById("password").value;
+
+  var xmlhttp = new XMLHttpRequest();
+
+  xmlhttp.onreadystatechange = function()
+  {
+   if (xmlhttp.readyState == 4)
+   {
+    var ctype = xmlhttp.getResponseHeader("Content-type");
+    
+    if( ctype != null )
+    {
+     var pos = ctype.indexOf(';');
+     
+     if( pos != -1 )
+      ctype = ctype.substring(0,pos);
+     
+     ctype = ctype.trim();
+    }
+    
+    var jsonObj;
+    
+    if( ctype == "application/json")
+     jsonObj = JSON.parse(xmlhttp.responseText);
+    
+    var msg="";
+    
+    if( xmlhttp.status == 200 )
+    {
+     msg +="Request succeeded Status: 200";
+     
+     if( jsonObj != null )
+      msg+="\nHello "+jsonObj.username+"\nSession key: "+jsonObj.sessid;
+     
+    }
+    else
+    {
+     msg +="Request failed. Status: "+xmlhttp.status;
+     
+     if( jsonObj != null )
+      msg+="\nError message: "+jsonObj.message;
+    }
+    
+    
+    
+    document.getElementById("report").innerHTML = msg;
+   }
+
+  };
+
+  xmlhttp.open("POST", "../auth/signin", true);
+  xmlhttp.setRequestHeader("Content-type", "application/json");
+
+  xmlhttp.send("{ login: \"" + uname.escapeSpecialChars() + "\", password: \""
+    + pass.escapeSpecialChars() + "\"}");
+ }
+ 
+ function doCheck()
+ {
+  var xmlhttp = new XMLHttpRequest();
+
+  xmlhttp.onreadystatechange = function()
+  {
+   if (xmlhttp.readyState == 4)
+   {
+    if( xmlhttp.status == 200 )
+     document.getElementById("report").innerHTML = "User logged in";
+    else
+     document.getElementById("report").innerHTML = "User NOT logged in";
+
+   }
+  }
+  
+  xmlhttp.open("GET", "../auth/check?format=json", true);
+  xmlhttp.send();
+ }
+</script>
+
+</head>
+<body>
+
+<form>
+Username : <input type="text" id="login"><br>
+Password : <input type="password" id="password"><br>
+
+</form>
+
+<button onclick="doLogin()">Login</button><br>
+<button onclick="doCheck()">Check</button>
+
+
+<pre id="report"></pre>
+
+
+</body></html>

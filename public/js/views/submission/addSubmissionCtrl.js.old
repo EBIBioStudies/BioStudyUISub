@@ -1,0 +1,201 @@
+/**
+ * Created by mdylag on 04/09/2014.
+ */
+'use strict';
+
+function createSection(parent) {
+
+    var section = {};
+    section.parent=parent;
+    section.name = 'Section ' + parent.sections.length;
+    section.annotations=[];
+    section.files=[];
+    section.sections=[];
+
+    section.annotations.open=true;
+    section.files.open=true;
+    section.sections.open=true;
+    parent.sections.push(section);
+
+}
+
+
+function saveSubmission() {
+
+}
+
+module.exports =
+    function($rootScope, $scope, $http, $timeout, $location,
+             $modal, $injector, $routeParams) {
+
+        var DataService =$injector.get('DataService'),
+            MessageService =$injector.get('MessageService'),
+            SubmissionModel = $injector.get('SubmissionModel');
+        $scope.SubmissionService = $injector.get('SubmissionService'),
+        $scope.mode=$rootScope.Constants.FormMode.ADD;
+        $scope.title='Add a new submission';
+
+
+        if ($routeParams.submissionId) {
+            $scope.mode=$rootScope.Constants.FormMode.EDIT;
+            $scope.title='Edit the submission';
+            DataService.getSubmissions({_id : $routeParams.submissionId}, function(data) {
+                if (data && data.length===1) {
+                    $scope.submission=data[0];
+                    console.log('Data',$scope.submission);
+
+                }
+            });
+
+        } else {
+            $scope.submission=SubmissionModel.createSubmission();
+        }
+
+
+        $scope.format = 'dd/MM/yyyy';
+        $scope.dateOptions= {
+            formatYear: 'yyyy',
+            startingDay: 1
+        };
+
+        $scope.curentSectionForFiles=$scope.submission;
+        $scope.hasError=false;
+
+        function saveUpdates() {
+            console.log('Save updates', $scope.submissionForm);
+            DataService.save($scope.submission, function () {
+
+            });
+        }
+        var timeout;
+        var saveInProgress=false;
+        function watchSubmission(newValue, oldValue) {
+            console.log('watch changes 1',$scope.submissionForm);
+
+            if (newValue !== oldValue && $scope.submissionForm.$valid) {
+
+                if (timeout) {
+                    $timeout.cancel(timeout);
+                }
+                timeout = $timeout(saveUpdates, 10000);  // 1000 = 1 second
+            }
+
+        }
+
+        $scope.$watch('submission', watchSubmission, true);
+
+        $scope.submit = function(submissionForm) {
+
+            $scope.$broadcast('show-errors-check-validity');
+            if ($scope.submissionForm.$invalid) {
+                return;
+            }
+
+            DataService.submit($scope.submission).then(function(data) {
+                MessageService.addMessage('Submission created');
+                var modalInstance = $modal.open({
+                    controller : 'MessagesCtrl',
+                    templateUrl: 'myModalContentSuccess.html',
+                    windowTemplateUrl: 'myModalWindow.html',
+                    backdrop:true,
+                    size: 'lg'
+                });
+                $timeout(function() {
+                    modalInstance.close();
+                },6000);
+                modalInstance.result.then(function() {
+                    $location.url('/submissions');
+                },function() {
+                    $location.url('/submissions');
+                });
+
+            }).catch(function(err, status) {
+              console.log('error', err, status);
+
+              MessageService.setErrorType();
+              MessageService.addMessage('Server error '+ status + ' ' + err);
+              var modalInstance = $modal.open({
+                controller : 'MessagesCtrl',
+                templateUrl: 'myModalContentError.html',
+                windowTemplateUrl: 'myModalWindow.html',
+                backdrop:true,
+                size: 'lg'
+              });
+              $timeout(function() {
+                modalInstance.close();
+                MessageService.clearMessages();
+              },6000);
+              modalInstance.result.then(function() {
+                MessageService.clearMessages();
+              });
+            });
+
+        };
+
+        $scope.open = function($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            $scope.opened = true;
+        };
+
+
+        $scope.getParentSection = function(parent) {
+            return parent || $scope.submission;
+        };
+
+        $scope.addAnnotation = function(parent) {
+            console.log('Add an annotation from controller');
+            //var parentSection=$scope.getParentSection(parent);
+            var annotation=SubmissionModel.createAttribute();
+            //parentSection.addAnnotation(annotation);
+        };
+
+
+
+        $scope.showFileDlg = function(parent) {
+            console.log('Show file dialog',parent);
+            $scope.curentSectionForFiles=$scope.getParentSection(parent);
+
+            var modalInstance = $modal.open({
+                templateUrl: 'templates/partials/filesTree.html',
+                controller: 'FilesTreeCtrl',
+                backdrop: true,
+                keyboard: true
+            });
+
+            modalInstance.result.then(function(fileParam) {
+                if (fileParam && fileParam.name) {
+                    var file = SubmissionModel.createFile({path: fileParam.name});
+                    //$scope.curentSectionForFiles.addFile(file);
+                }
+            });
+        };
+
+        $scope.deleteFile = function(index, parent) {
+            var parentSection=$scope.getParentSection(parent);
+            parentSection.files.splice(index, 1);
+        };
+
+
+
+        $scope.sourcesKeys=DataService.getSources();
+
+        $scope.annotationKeys = DataService.getAnnotationKeys();
+        var addEdit=false;
+        var editAnnotation='';
+        $scope.refreshKeys = function(search) {
+            if (search!=='' ) {
+                editAnnotation.name=search;
+                if ( !addEdit) {
+                    $scope.annotationKeys.push(editAnnotation);
+                    addEdit = true;
+                }
+            }
+            angular.forEach($scope.annotationKeys, function(value,key) {
+                /*if (key==='key') {
+
+                }*/
+            });
+        };
+
+    };

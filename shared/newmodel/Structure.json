@@ -1,0 +1,148 @@
+{
+  "submission": {
+    "attributes": []
+
+  },
+  "annotations" : {
+  "type": "Describe your study",
+  "attributes": [
+    {
+      "name": "Name", "required": true
+    }
+  ,
+    {"name": "Description", "required": true
+    }
+  ,
+    {"name": "Title", "required": false
+    }
+
+  ]
+  },
+  "publication": {
+    "type": "Contact",
+    "title": "Publications",
+    "tabHeading":"Publication",
+    "actions": {
+      "add": {
+        "title": "Add",
+        "popup": "Add a mew publication"
+      },
+      "delete": {
+        "popup" : "Delete the publication"
+      },
+      "edit": {
+        "popup" : "Edit the publication"
+      }
+    },
+    "attributes": [
+      { "name" : "DOI" ,"required" : false},
+      { "name" : "Title" , "required" : true},
+      { "name" : "Authors" ,"required" : false},
+      { "name" : "Type" ,"required" : false},
+      { "name" : "Issue" ,"required" : false},
+      { "name" : "Issn" ,"required" : false},
+      { "name" : "Year" ,"required" : false},
+      { "name" : "Volume" ,"required" : false}
+    ]
+  },
+  "link" :{
+    "title": "Links",
+    "tabHeading":"Link",
+    "actions": {
+      "add": {
+        "title": "Add",
+        "popup": "Add a mew link"
+      },
+      "delete": {
+        "popup" : "Delete the link"
+      },
+      "edit": {
+        "popup" : "Edit the linkt"
+      }
+    },
+    "fields" : [
+      {
+        "name": "url",
+        "label": "URL",
+        "type": "text"
+      }
+    ],
+    "attributes": [
+      { "name" : "Description" , "required" : true},
+      { "name" : "Type" , "required" : false}
+    ]
+  },
+  "contact" : {
+    "type": "Contact",
+    "title": "Contacts",
+    "tabHeading":"Contact",
+    "actions": {
+      "add": {
+        "title": "Add",
+        "popup": "Add a mew contact"
+      },
+      "delete": {
+        "popup" : "Delete the contact"
+      },
+      "edit": {
+        "popup" : "Edit the contact"
+      }
+    },
+    "attributes": [
+      {
+        "name": "Title",
+        "required": false
+      },
+      {
+        "name": "Name",
+        "required": true
+      },
+      {
+        "name": "Affiliation",
+        "required": false
+      },
+      {
+        "name": "Organization",
+        "required": true,
+        "values": ["EBI", "GEOD"]
+      },
+      {
+        "name": "Departament",
+        "required": false
+      },
+      {
+        "name": "E-mail",
+        "required": true
+      }
+    ]
+  },
+
+  "file" : {
+    "title": "Files",
+    "tabHeading":"File",
+    "actions": {
+      "add": {
+        "title": "Add",
+        "popup": "Add a mew file"
+      },
+      "delete": {
+        "popup" : "Delete the file"
+      },
+      "edit": {
+        "popup" : "Edit the file"
+      }
+    },
+    "fields" : [
+      {
+        "name": "path",
+        "label": "Paths",
+        "type": "select"
+      }
+    ],
+
+    "attributes":[
+      { "name" : "Description","required" : true },
+      { "name" : "Type","required" : false }
+    ]
+  }
+}

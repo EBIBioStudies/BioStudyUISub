@@ -1,0 +1,43 @@
+{
+  "submissions" : [
+    {
+      "attributes": [
+        {
+          "name": "Title",
+          "value": "Sample submission"
+        },
+        {
+          "name": "ReleaseDate",
+          "value": "2015-06-01T00:00:00.000"
+        },
+        {
+          "name": "Description",
+          "value": "Description of the submission"
+        }
+      ],
+      "section": {
+        "attributes": [
+          {
+            "name": "Title",
+            "value": "Sample study"
+          },
+          {
+            "name": "Attr",
+            "value": "Some attribute"
+          }
+        ],
+        "links": [[
+          {
+            "attributes": [{
+              "name": "Description",
+              "value": "Link to Sample Information"
+            }],
+            "url": "ftp://ftp.ebi.ac.uk/pub/databases/microarray/data/dixa/PredTox/archive/BII-S-22/s_FP015NN-all-samples.txt"
+          }]],
+        "type": "Study"
+      },
+      "accession": "!{S-ST}",
+      "type": "submission"
+    }
+  ]
+}

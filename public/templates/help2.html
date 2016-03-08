@@ -1,0 +1,63 @@
+<div class="panel panel-default">
+    <!-- Default panel contents -->
+    <div class="panel-heading">Describe your study
+        <!--<h4 tabindex="0" class="panel-title accordion-toggle">Panel heading
+        </h4>-->
+        <div class="btn-group pull-right">
+            <button class="btn btn-xs btn-danger">New</button>
+        </div>
+
+    </div>
+    <div class="panel-body">
+    </div>
+
+    <!-- Table -->
+    <table class="table table-borderless">
+        <tbody>
+        <tr ng-repeat="attribute in data.attributes" ng-form name="atrForm">
+            <td class="border-none">
+                <div class="form-group">
+                    <label>Key<span ng-show="atrForm.attrKey.$error.required">: cannot be blank</span></label>
+                    <input autocomplete="off" type="text" name="attrKey" ng-model="attribute.name"
+                           uib-typeahead="item as item.name for item in typeHead | filter:$viewValue:$emptyOrMatch | limitTo:30"
+                           typeahead-append-to-body="true"
+                           typeahead-show-hint="true"
+                           typeahead-min-length="0"
+                           class="form-control control-label"
+                           placeholder="Type a key" ng-required="true">
+                </div>
+            </td>
+            <td class="border-none">
+                <div class="form-group">
+                    <label>Value</label>
+                    <p class="input-group">
+                        <input type="text" name="attrValue" ng-model="attribute.value" class="form-control"
+                               placeholder="Enter a value" name="annotationValue{{$index}}" ng-required="true">
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-danger  btn-flat"
+                            ng-click="deleteItem($index, data.attributes)">
+                        <i class="fa fa-trash-o fa-fw"></i>
+                    </button>
+                </span>
+                    </p>
+                </div>
+            </td>
+        </tr>
+
+        </tbody>
+
+    </table>
+    <div class="panel-footer"> &nbsp;
+        <div class="btn-group pull-right">
+            <button class="btn btn-success btn-xs btn-circle2" ng-click="onAdd(data)"
+                    uib-tooltip="Add a new description"
+                    tooltip-append-to-body="true"
+                    tooltip-placement="bottom">
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+
+    </div>
+
+
+</div>

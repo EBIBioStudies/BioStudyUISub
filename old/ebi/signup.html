@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<!-- saved from url=(0053)http://localhost:3229/biostd-dev/test/testSignup.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<script type="text/javascript" src="./signup_files/recaptcha_ajax.js"></script>
+
+<script type="text/javascript">
+
+	String.prototype.escapeSpecialChars = function() {
+	 return this.replace(/\\n/g, "\\n")
+	            .replace(/\\'/g, "\\'")
+	            .replace(/\\"/g, '\\"')
+	            .replace(/\\&/g, "\\&")
+	            .replace(/\\r/g, "\\r")
+	            .replace(/\\t/g, "\\t")
+	            .replace(/\\b/g, "\\b")
+	            .replace(/\\f/g, "\\f");
+	};
+
+ function showRecaptcha(element)
+ {
+  Recaptcha.create("6Lcmlv0SAAAAAHofnIcb29l1LMZsnGFcSlH8Reve", element,
+  {
+   theme : "red",
+   callback : Recaptcha.focus_response_field
+  });
+ }
+
+ function signup()
+ {
+  var login = document.getElementById("login").value;
+  var pass1 = document.getElementById("pass1").value;
+  var pass2 = document.getElementById("pass2").value;
+  var email = document.getElementById("email").value.trim();
+  var uname = document.getElementById("username").value.trim();
+  
+  if( email.length == 0 )
+  {
+   msg("Email can't be empty");
+   return;
+  }
+  
+  if( pass1 != pass2 )
+  {
+   msg("Password doesn't match");
+   return;
+  }   
+  
+  var xmlhttp = new XMLHttpRequest();
+  
+  xmlhttp.onreadystatechange = function()
+  {
+   if (xmlhttp.readyState != 4)
+    return;
+   
+   Recaptcha.reload();
+   
+   var ctype = xmlhttp.getResponseHeader("Content-type");
+   
+   if( ctype != null )
+   {
+    var pos = ctype.indexOf(';');
+    
+    if( pos != -1 )
+     ctype = ctype.substring(0,pos);
+    
+    ctype = ctype.trim();
+   }
+   
+   var jsonObj;
+   
+   if( ctype == "application/json")
+    jsonObj = JSON.parse(xmlhttp.responseText);
+   
+   var msg="";
+   
+   if( xmlhttp.status == 200 )
+   {
+    msg +="Request succeeded Status: 200";
+    
+    if( jsonObj != null )
+     msg+="\nHello "+jsonObj.username+"\nSession key: "+jsonObj.sessid;
+    
+   }
+   else
+   {
+    msg +="Request failed. Status: "+xmlhttp.status;
+    
+    if( jsonObj != null )
+     msg+="\nError message: "+jsonObj.message;
+   }
+   
+   
+   
+   document.getElementById("response").innerHTML = msg;
+  }
+  
+  
+  xmlhttp.open("POST", "../auth/signup", true);
+  xmlhttp.setRequestHeader("Content-type", "application/json");
+
+  xmlhttp.send("{ login: \"" + login.escapeSpecialChars() + "\","
+   +"password: \"" + pass1.escapeSpecialChars()  +  "\","
+   +"username: \"" + uname.escapeSpecialChars()  +  "\","
+   +"email: \"" + email.escapeSpecialChars()  +  "\","
+   +"recaptcha_challenge: \"" + Recaptcha.get_challenge().escapeSpecialChars()  +  "\","
+   +"recaptcha_response: \"" + Recaptcha.get_response().escapeSpecialChars()  +  "\","
+   + "}");
+
+  
+  
+ }
+ 
+ function msg( txt )
+ {
+  document.getElementById("response").innerHTML=txt;
+ }
+ 
+ </script>
+
+
+<script type="text/javascript" src="./signup_files/challenge"></script><script type="text/javascript" charset="UTF-8" src="./signup_files/iKM5hnol86AhxGhl_-r9SzGa9C1frceqyiL-OY2J4uI.js"></script><style type="text/css">.recaptchatable td img{display:block}.recaptchatable .recaptcha_r1_c1{background:url('http://www.google.com/recaptcha/api/img/red/sprite.png') 0 -63px no-repeat;width:318px;height:9px}.recaptchatable .recaptcha_r2_c1{background:url('http://www.google.com/recaptcha/api/img/red/sprite.png') -18px 0 no-repeat;width:9px;height:57px}.recaptchatable .recaptcha_r2_c2{background:url('http://www.google.com/recaptcha/api/img/red/sprite.png') -27px 0 no-repeat;width:9px;height:57px}.recaptchatable .recaptcha_r3_c1{background:url('http://www.google.com/recaptcha/api/img/red/sprite.png') 0 0 no-repeat;width:9px;height:63px}.recaptchatable .recaptcha_r3_c2{background:url('http://www.google.com/recaptcha/api/img/red/sprite.png') -18px -57px no-repeat;width:300px;height:6px}.recaptchatable .recaptcha_r3_c3{background:url('http://www.google.com/recaptcha/api/img/red/sprite.png') -9px 0 no-repeat;width:9px;height:63px}.recaptchatable .recaptcha_r4_c1{background:url('http://www.google.com/recaptcha/api/img/red/sprite.png') -43px 0 no-repeat;width:171px;height:49px}.recaptchatable .recaptcha_r4_c2{background:url('http://www.google.com/recaptcha/api/img/red/sprite.png') -36px 0 no-repeat;width:7px;height:57px}.recaptchatable .recaptcha_r4_c4{background:url('http://www.google.com/recaptcha/api/img/red/sprite.png') -214px 0 no-repeat;width:97px;height:57px}.recaptchatable .recaptcha_r7_c1{background:url('http://www.google.com/recaptcha/api/img/red/sprite.png') -43px -49px no-repeat;width:171px;height:8px}.recaptchatable .recaptcha_r8_c1{background:url('http://www.google.com/recaptcha/api/img/red/sprite.png') -43px -49px no-repeat;width:25px;height:8px}.recaptchatable .recaptcha_image_cell center img{height:57px}.recaptchatable .recaptcha_image_cell center{height:57px}.recaptchatable .recaptcha_image_cell{background-color:white;height:57px}#recaptcha_area,#recaptcha_table{width:318px!important}.recaptchatable,#recaptcha_area tr,#recaptcha_area td,#recaptcha_area th{margin:0!important;border:0!important;padding:0!important;border-collapse:collapse!important;vertical-align:middle!important}.recaptchatable *{margin:0;padding:0;border:0;font-family:helvetica,sans-serif;font-size:8pt;color:black;position:static;top:auto;left:auto;right:auto;bottom:auto}.recaptchatable #recaptcha_image{position:relative;margin:auto}.recaptchatable #recaptcha_image #recaptcha_challenge_image{display:block}.recaptchatable #recaptcha_image #recaptcha_ad_image{display:block;position:absolute;top:0}.recaptchatable img{border:0!important;margin:0!important;padding:0!important}.recaptchatable a,.recaptchatable a:hover{cursor:pointer;outline:none;border:0!important;padding:0!important;text-decoration:none;color:blue;background:none!important;font-weight:normal}.recaptcha_input_area{position:relative!important;width:153px!important;height:45px!important;margin-left:7px!important;margin-right:7px!important;background:none!important}.recaptchatable label.recaptcha_input_area_text{margin:0!important;padding:0!important;position:static!important;top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;background:none!important;height:auto!important;width:auto!important}.recaptcha_theme_red label.recaptcha_input_area_text,.recaptcha_theme_white label.recaptcha_input_area_text{color:black!important}.recaptcha_theme_blackglass label.recaptcha_input_area_text{color:white!important}.recaptchatable #recaptcha_response_field{width:153px!important;position:relative!important;bottom:7px!important;padding:0!important;margin:15px 0 0 0!important;font-size:10pt}.recaptcha_theme_blackglass #recaptcha_response_field,.recaptcha_theme_white #recaptcha_response_field{border:1px solid gray}.recaptcha_theme_red #recaptcha_response_field{border:1px solid #cca940}.recaptcha_audio_cant_hear_link{font-size:7pt;color:black}.recaptchatable{line-height:1!important}#recaptcha_instructions_error{color:red!important}.recaptcha_only_if_privacy{float:right;text-align:right}#recaptcha-ad-choices{position:absolute;height:15px;top:0;right:0}#recaptcha-ad-choices img{height:15px}.recaptcha-ad-choices-collapsed{width:30px;height:15px;display:block}.recaptcha-ad-choices-expanded{width:75px;height:15px;display:none}#recaptcha-ad-choices:hover .recaptcha-ad-choices-collapsed{display:none}#recaptcha-ad-choices:hover .recaptcha-ad-choices-expanded{display:block}
+
+.recaptcha_is_showing_audio .recaptcha_only_if_image,.recaptcha_isnot_showing_audio .recaptcha_only_if_audio,.recaptcha_had_incorrect_sol .recaptcha_only_if_no_incorrect_sol,.recaptcha_nothad_incorrect_sol .recaptcha_only_if_incorrect_sol{display:none !important}</style><script type="text/javascript" src="./signup_files/reload"></script></head>
+<body onload="showRecaptcha(&#39;captcha&#39;)">
+
+<div style="margin: 50px">
+
+<table>
+
+<tbody><tr><td>Login:</td><td><input type="text" id="login" style="width: 200px"></td></tr>
+<tr><td>User name:</td><td><input type="text" id="username" style="width: 200px"></td></tr>
+<tr><td>Password:</td><td><input type="password" id="pass1" style="width: 200px"></td></tr>
+<tr><td>Password confirm:</td><td><input type="password" id="pass2" style="width: 200px"></td></tr>
+<tr><td>Email:</td><td><input type="text" id="email" style="width: 200px"></td></tr>
+
+</tbody></table>
+<br>
+<form>
+<div id="captcha" class=" recaptcha_nothad_incorrect_sol recaptcha_isnot_showing_audio"><div id="recaptcha_area"><table id="recaptcha_table" class="recaptchatable recaptcha_theme_red"> <tbody><tr> <td colspan="6" class="recaptcha_r1_c1"></td> </tr> <tr> <td class="recaptcha_r2_c1"></td> <td colspan="4" class="recaptcha_image_cell"><center><div id="recaptcha_image" style="width: 300px; height: 57px;"><img id="recaptcha_challenge_image" alt="Zadanie obrazkowe reCAPTCHA" height="57" width="300" src="./signup_files/image"></div></center></td> <td class="recaptcha_r2_c2"></td> </tr> <tr> <td rowspan="6" class="recaptcha_r3_c1"></td> <td colspan="4" class="recaptcha_r3_c2"></td> <td rowspan="6" class="recaptcha_r3_c3"></td> </tr> <tr> <td rowspan="3" class="recaptcha_r4_c1" height="49"> <div class="recaptcha_input_area"> <span id="recaptcha_challenge_field_holder" style="display: none;"><input type="hidden" name="recaptcha_challenge_field" id="recaptcha_challenge_field" value="03AHJ_Vuv82apUl2desiCyiH-qDydv3dko66l_GfqG6HDDyBgfhHcnKuG1zuULvnKWsv1nZk7sBKtWhBc5uCPmHS6RSaPHSLmxaSN8_4-LYSo2eWlDgOaelqF5D1dxIJZ6bbIyoua2Fa0ueO2_mks-_tST60wR3qg3TyP-9J7D5VTi7gokGSu4QRJVm5waNpaA0rOCT6JV_GS1uv_iTQYSCCQIacheIAVyYjqhau5d6mdKgbd60cZvnPiVqlB0ENkNW2mSkG2JuiXX"></span><input name="recaptcha_response_field" id="recaptcha_response_field" type="text" autocorrect="off" autocapitalize="off" placeholder="Przepisz tekst" autocomplete="off"> <span id="recaptcha_privacy" class="recaptcha_only_if_privacy"></span> </div> </td> <td rowspan="4" class="recaptcha_r4_c2"></td> <td><a id="recaptcha_reload_btn" title="Nowa podpowiedź"><img id="recaptcha_reload" width="25" height="17" src="./signup_files/refresh.gif" alt="Nowa podpowiedź"></a></td> <td rowspan="4" class="recaptcha_r4_c4"></td> </tr> <tr> <td><a id="recaptcha_switch_audio_btn" class="recaptcha_only_if_image" title="Odtwórz podpowiedź dźwiękową"><img id="recaptcha_switch_audio" width="25" height="16" alt="Odtwórz podpowiedź dźwiękową" src="./signup_files/audio.gif"></a><a id="recaptcha_switch_img_btn" class="recaptcha_only_if_audio" title="Pokaż podpowiedź wizualną"><img id="recaptcha_switch_img" width="25" height="16" alt="Pokaż podpowiedź wizualną" src="./signup_files/text.gif"></a></td> </tr> <tr> <td><a id="recaptcha_whatsthis_btn" title="Pomoc"><img id="recaptcha_whatsthis" width="25" height="16" src="./signup_files/help.gif" alt="Pomoc"></a></td> </tr> <tr> <td class="recaptcha_r7_c1"></td> <td class="recaptcha_r8_c1"></td> </tr> </tbody></table> </div></div>
+</form>
+<br>
+<button onclick="signup()"> Signup </button>
+<br>
+<pre id="response"></pre>
+</div>
+
+
+
+<!-- 
+
+Public Key: 	6Lcmlv0SAAAAAHofnIcb29l1LMZsnGFcSlH8Reve
+
+Use this in the JavaScript code that is served to your users
+Private Key: 	6Lcmlv0SAAAAANysy6M8YdozfJnOQxc2JB9WaOS1 
+ -->
+
+<iframe src="about:blank" style="height: 0px; width: 0px; visibility: hidden; border: none; display: none;">This frame prevents back/forward cache problems in Safari.</iframe></body></html>

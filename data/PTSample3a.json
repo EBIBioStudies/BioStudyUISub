@@ -1,0 +1,40 @@
+{
+  "submissions": [
+    {
+      "accno": "!{S-STA}",
+      "type": "submission",
+      "attributes": [
+        {
+          "name": "Title",
+          "value": ""
+        },
+        {
+          "name": "ReleaseDate",
+          "value": "2016-01-01"
+        }
+      ],
+      "section": {
+        "type": "Study",
+        "accno": "{STUDY-}",
+        "files": [],
+        "links": [
+          {
+            "url": "url1",
+            "attributes": [
+              {
+                "name": "LinkAttr",
+                "value": "Simple Link Attr"
+              }
+            ]
+          }
+        ],
+        "attributes": [
+          {
+            "name": "Title",
+            "value": "Sample study"
+          }
+        ]
+      }
+    }
+  ]
+}
