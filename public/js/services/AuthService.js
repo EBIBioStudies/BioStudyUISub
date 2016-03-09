@@ -52,7 +52,7 @@ module.exports = function ($http, $window, $q,$location, $rootScope, $cookieStor
             user = currentUser;
         }
         return user.role.title === userRoles.user.title || user.role.title === userRoles.admin.title;
-    },
+    };
 
 
     authService.signUp = function(user) {
