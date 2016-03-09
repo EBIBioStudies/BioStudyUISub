@@ -4,10 +4,12 @@ module.exports = function() {
     _showSuccess = false;
     _trigger = 'blur';
     this.showSuccess = function(showSuccess) {
-        return _showSuccess = showSuccess;
+        _showSuccess = showSuccess;
+        return _showSuccess;
     };
     this.trigger = function(trigger) {
-        return _trigger = trigger;
+        _trigger = trigger;
+        return _trigger;
     };
     this.$get = function() {
         return {
