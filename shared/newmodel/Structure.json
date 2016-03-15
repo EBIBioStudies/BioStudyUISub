@@ -24,14 +24,22 @@
     "tabHeading":"Publication",
     "actions": {
       "add": {
-        "title": "Add",
-        "popup": "Add a mew publication"
+        "title": "Create",
+        "popup": "Add publication"
       },
       "delete": {
-        "popup" : "Delete the publication"
+        "popup" : "Delete publication"
       },
       "edit": {
-        "popup" : "Edit the publication"
+        "popup" : "Edit publication"
+      },
+      "addAttr": {
+        "title": "Create description",
+        "popup": "Describe contact"
+      },
+      "deleteAttr": {
+        "title": "Delete description",
+        "popup": "Delete description"
       }
     },
     "attributes": [
@@ -50,20 +58,29 @@
     "tabHeading":"Link",
     "actions": {
       "add": {
-        "title": "Add",
-        "popup": "Add a mew link"
+        "title": "Create",
+        "popup": "Add link"
       },
       "delete": {
         "popup" : "Delete the link"
       },
       "edit": {
-        "popup" : "Edit the linkt"
+        "popup" : "Edit the link"
+      },
+      "addAttr": {
+        "title": "Create description",
+        "popup": "Describe the link"
+      },
+      "deleteAttr": {
+        "title": "Delete description",
+        "popup": "Delete description"
       }
     },
     "fields" : [
       {
         "name": "url",
         "label": "URL",
+        "placeholder":"Type a valid URL, e.g., http://www.ebi.ac.uk",
         "type": "text"
       }
     ],
@@ -78,14 +95,22 @@
     "tabHeading":"Contact",
     "actions": {
       "add": {
-        "title": "Add",
-        "popup": "Add a mew contact"
+        "title": "Create",
+        "popup": "Add contact"
       },
       "delete": {
-        "popup" : "Delete the contact"
+        "popup" : "Delete contact"
       },
       "edit": {
-        "popup" : "Edit the contact"
+        "popup" : "Edit contact"
+      },
+      "addAttr": {
+        "title": "Create description",
+        "popup": "Describe contact"
+      },
+      "deleteAttr": {
+        "title": "Delete description",
+        "popup": "Delete description"
       }
     },
     "attributes": [
@@ -122,14 +147,22 @@
     "tabHeading":"File",
     "actions": {
       "add": {
-        "title": "Add",
-        "popup": "Add a mew file"
+        "title": "Create",
+        "popup": "Add file"
       },
       "delete": {
-        "popup" : "Delete the file"
+        "popup" : "Delete file"
       },
       "edit": {
-        "popup" : "Edit the file"
+        "popup" : "Edit file"
+      },
+      "addAttr": {
+        "title": "Create description",
+        "popup": "Describe contact"
+      },
+      "deleteAttr": {
+        "title": "Delete description",
+        "popup": "Delete description"
       }
     },
     "fields" : [

@@ -37,7 +37,7 @@
             <td class="col-md-3 nopadding border-none form-group form-group-sm" ms-form-group-validator>
 
                 <input autocomplete="off" type="text" name="attrKey" ng-model="attribute.name"
-                       uib-typeahead="item.name as item.name for item in typeHead.attributes | filter:$viewValue:$emptyOrMatch | limitTo:30"
+                       uib-typeahead="item.name as item.name for item in typeHead.attributes | filter:filterAttrKeys | filter:$viewValue:$emptyOrMatch | limitTo:30"
                        typeahead-append-to-body="true"
                        typeahead-show-hint="true"
                        typeahead-min-length="0"

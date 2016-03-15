@@ -18,10 +18,12 @@ module.exports = function ($http, $window, $location,
 
     }
 
-    function addItem(parent, addMethodName, constructorFunc) {
-        if (parent && addMethodName && constructorFunc) {
-            var item = new constructorFunc();
-            addMethodName(parent, item);
+    function addItem(parent, addMethodName, ConstructorFunc) {
+        if (parent && addMethodName) {
+            if (ConstructorFunc) {
+                var item = new ConstructorFunc();
+                addMethodName(parent, item);
+            }
         }
 
     }

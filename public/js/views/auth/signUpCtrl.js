@@ -15,8 +15,6 @@ module.exports = function ($scope, $location, AuthService ) {
 
     $scope.signUp = function(user) {
         $scope.$broadcast('show-errors-check-validity');
-
-        console.log("Signup", $scope.signUpForm, $scope.user);
       if (grecaptcha.getResponse()==='' || $scope.signUpForm.$invalid) {
         $scope.hasError=true;
         $scope.error.message='Empty or invalid field!';

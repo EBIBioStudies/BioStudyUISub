@@ -25,9 +25,7 @@ module.exports = function ($compile, $log, SubmissionService, TypeHeadService) {
 
 
             scope.typeHeadObj = TypeHeadService[scope.submissionView];
-            console.log('Typehead', scope.data);
             scope.deleteItem = function(index, array) {
-                console.log('Delete item ', index, array);
                 if (array) {
                     SubmissionService.deleteElement(index, array);
                 }
@@ -35,7 +33,6 @@ module.exports = function ($compile, $log, SubmissionService, TypeHeadService) {
             };
 
             scope.addAttribute = function(parent) {
-                console.log('Annotation', parent);
                 if (parent) {
                     SubmissionService.addAttribute.call(parent);
 

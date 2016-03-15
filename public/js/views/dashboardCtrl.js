@@ -4,7 +4,6 @@
 'use strict';
 
 module.exports = function ($scope, AuthService) {
-    console.log('Dashboard');
 
     $scope.toggle=true;
     $scope.strech='strech';

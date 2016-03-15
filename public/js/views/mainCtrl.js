@@ -12,14 +12,12 @@ module.exports = function ($scope, $rootScope,$location,$log, AuthService, AppIn
     };
     $scope.toggleSidebar=false;
     $cookies.put('noSession', new Date(), {expires: new Date(2016,1,30)});
-    console.log('Main ctrl');
     //read it from cookie
     $scope.clickToggle=function() {
         $scope.toggleSidebar=!$scope.toggleSidebar;
     };
 
     $scope.$watch('collapseLeftSide', function() {
-        console.log('Collapse change');
     });
 
     $scope.AppInfo=AppInfo;
@@ -33,12 +31,9 @@ module.exports = function ($scope, $rootScope,$location,$log, AuthService, AppIn
     };
 
     $scope.signOut = function() {
-        console.log('Sign out fun');
         AuthService.signOut().then(function() {
-            console.log('Success signout');
             $location.path('/signin');
         }, function(err) {
-            console.log('Sign out error ', err);
             $location.path('/signin');
         });
     };

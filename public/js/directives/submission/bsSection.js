@@ -39,7 +39,6 @@ module.exports = function(moduleDirective) {
                 if (!$scope.labels) {
                     throw new Error('Attribute labels is required');
                 }
-                console.log('bSection--------------',$scope.data);
                 /*var keysCount = $scope.data ? Object.keys($scope.data.attributesKey).length : 2;
                 $scope.computeColumnSize = function () {
                     if (keysCount > 6) {
@@ -69,7 +68,6 @@ module.exports = function(moduleDirective) {
                 var templateUrl=element.attr('template-url');
                 var id=element.attr('id');
                 var model = '', elTmp = '';
-                console.log('Scope data',$scope.labels);
                 if ($scope.data) {
                     model='ng-model="data"';
                 }

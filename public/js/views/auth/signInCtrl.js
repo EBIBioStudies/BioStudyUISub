@@ -35,7 +35,6 @@ module.exports = function ($scope, $rootScope, $location, $q, AuthService, Messa
             $scope.error = {};
 
         }).catch(function(error){
-            console.log('error', error);
             $scope.hasError=true;
             if (error) {
                 $scope.error.message=error.message;
