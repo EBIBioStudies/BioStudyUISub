@@ -39,7 +39,7 @@ gulp.task('copy', ['clean'], function(cb) {
   gulp.src(envHelper.configDir + '/' + envHelper.configFile)
       .pipe(rename('config.json'))
       .pipe(gulp.dest('.gen'));
-  gulp.src(['public/images/*.png','public/images/*.ico'])
+  gulp.src(['public/images/**/*.png','public/images/*.ico'])
       .pipe(gulp.dest(envHelper.copyToPath + '/images'));
   gulp.src(['public/partials/**/*'])
       .pipe(gulp.dest(envHelper.copyToPath + '/partials') );
