@@ -1,4 +1,4 @@
-var moduleHelper = new (require('./modelHelper'))(require('../../../shared/newmodel/SubmissionModel'));
+var moduleHelper = new (require('./modelHelper'))(require('../.././SubmissionModel'));
 var submission = require('../../../server/models/submission.json');
 
 describe('Test module helper model', function() {

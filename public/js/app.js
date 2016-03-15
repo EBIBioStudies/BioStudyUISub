@@ -84,6 +84,10 @@ app.config(function($routeProvider, $locationProvider, $logProvider, $httpProvid
             templateUrl: 'templates/views/help.html',
             controller: 'HelpCtrl'
         }).
+        when('/activate/:key', {
+            templateUrl: 'templates/views/auth/activate.html',
+            controller: 'ActivateCtrl'
+        }).
         when('/signin', {
             templateUrl: 'templates/views/auth/signin.html',
             controller: 'SignInCtrl'

@@ -3,7 +3,7 @@
  */
 'use strict';
 
-var _keys = require('./../../../../shared/newmodel/Structure.json');
+var _keys = require('./../../../../shared/model/Structure.json');
 
 module.exports =
     function($rootScope, $scope, $http, $timeout, $interval, $location,

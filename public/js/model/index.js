@@ -4,7 +4,7 @@
 
 'use strict';
 var app = angular.module('BioStudyApp');
-var SubmissionModel = require('../../../shared/newmodel/SubmissionModel');
+var SubmissionModel = require('../../../shared/model/SubmissionModel');
 var ModuleHelper = require('./modelHelper');
 app.factory('SubmissionModel', function() {
   return SubmissionModel;

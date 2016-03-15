@@ -14,6 +14,7 @@ app.controller('MessagesCtrl', require('./messagesCtrl'));
 
 app.controller('SignInCtrl', require('./auth/signInCtrl'));
 app.controller('SignUpCtrl', require('./auth/signUpCtrl'));
+app.controller('ActivateCtrl',require('./auth/activateCtrl'));
 
 app.controller('DashboardCtrl', require('./dashboardCtrl'));
 app.controller('SubmissionListCtrl', require('./submission/submissionListCtrl'));

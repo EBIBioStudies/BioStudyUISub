@@ -1,4 +1,4 @@
-var structure=require('../../../shared/newmodel/Structure.json');
+var structure=require('../../../shared/model/Structure.json');
 var constants = {
     COL_CSS: 'col-lg-'
 }
