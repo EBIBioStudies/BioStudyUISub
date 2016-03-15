@@ -64,78 +64,78 @@
     },
 
     "signup": {
-      "url": "/auth/signup",
+      "url": "/proxy/api/auth/signup",
       "method": "POST"
     },
     "signin": {
-      "url": "/auth/signin",
+      "url": "/proxy/api/auth/signin",
       "method": "POST"
     },
     "signout": {
-      "url": "/auth/signout",
+      "url": "/proxy/api/auth/signout",
       "method": "POST"
     },
     "files": {
       "dir": {
-        "url": "/files/dir",
+        "url": "/proxy/api/files/dir",
         "method": "GET"
       },
       "upload": {
-        "url": "/files/fileUpload",
+        "url": "/proxy/api/files/fileUpload",
         "method": "POST"
       },
       "delete": {
-        "url": "/files/delete",
+        "url": "/proxy/api/files/delete",
         "method": "DELETE"
       }
     },
     "userdata" :{
       "delete": {
-        "url": "/userdata/submission",
+        "url": "/proxy/api/userdata/submission",
         "method": "DELETE"
       },
       "submitted": {
         "delete": {
-          "url": "/userdata/submission/submitted",
+          "url": "/proxy/api/userdata/submission/submitted",
           "method": "DELETE"
         }
       },
       "list": {
-        "url": "/userdata/list",
+        "url": "/proxy/api/userdata/list",
         "method": "GET"
       },
       "get": {
-        "url": "/userdata/get",
+        "url": "/proxy/api/userdata/get",
         "method": "GET"
       },
       "set" : {
-        "url": "/userdata/set",
+        "url": "/proxy/api/userdata/set",
         "method": "POST"
       },
       "register" : {
-        "url": "/userdata/register",
+        "url": "/proxy/api/userdata/register",
         "method": "POST"
       }
     },
     "submission": {
       "get": {
-        "url": "/data/submission",
+        "url": "/proxy/api/data/submission",
         "method": "GET"
       },
       "list": {
-        "url": "/data/sbmlist",
+        "url": "/proxy/api/data/sbmlist",
         "method": "GET"
       },
       "create": {
-        "url": "/data/create",
+        "url": "/proxy/api/data/create",
         "method": "POST"
       },
       "update": {
-        "url": "/data/update",
+        "url": "/proxy/api/data/update",
         "method": "POST"
       },
       "delete": {
-        "url": "/data/delete",
+        "url": "/proxy/api/data/delete",
         "method": "GET"
       }
 
