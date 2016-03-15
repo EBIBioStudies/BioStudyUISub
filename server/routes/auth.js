@@ -4,8 +4,8 @@ var express = require('express'),
   router = express.Router(),
   config = require('config');
 
-var biosd=config.get('biostd');
-var serverType = config.get('server');
+//var biosd=config.get('biostd');
+//var serverType = config.get('server');
 console.log("node dev");
 
 function signup(req, res) {

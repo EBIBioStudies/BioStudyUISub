@@ -4,8 +4,8 @@ var express = require('express'),
     router = express.Router(),
     config = require('config');
 
-var biosd=config.get('biostd');
-var serverType = config.get('server');
+//var biosd=config.get('biostd');
+//var serverType = config.get('server');
 var list = require('../models/tempsubmissions.json');
 
 router.get('/list',function(req, res, next) {

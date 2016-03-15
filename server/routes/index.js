@@ -9,7 +9,7 @@ var submission = require('./submission');
 var files = require('./files');
 var config = require('config');
 var userdata = require('./userdata');
-var biosd=config.get('biostd');
+//var biosd=config.get('biostd');
 var proxy= require('./proxy');
 module.exports = function (app) {
         app.use('/', home);

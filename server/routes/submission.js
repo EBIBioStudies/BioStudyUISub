@@ -5,7 +5,7 @@ var _ =           require('underscore'),
   router = express.Router(),
   config = require('config');
 var list = require('../models/submissions.json');
-var biosd=config.get('biostd');
+//var biosd=config.get('biostd');
 var submission = require('../models/submission.json');
 
 router.get('/submission/*',function(req, res) {
@@ -46,7 +46,7 @@ router.post('/update',function(req, res) {
 });
 
 router.post('/delete',function(req, res) {
-  console.log('data', req.query.id);
+  /*console.log('data', req.query.id);
   var _url = biosd.url + biosd.routes.submission.delete.path + '?id=' + req.query.id;
   utils.requestQ({method: 'GET',url: _url}).then(function(response) {
     res.status(response.statusCode).json(response.body);
@@ -54,7 +54,7 @@ router.post('/delete',function(req, res) {
   }).catch(function(err, response) {
     console.log('error 2', err);
     res.status(403).json({staus:'ERROR',message:'Connection error to BIOSD server'});
-  });
+  }); */
 
 });
 

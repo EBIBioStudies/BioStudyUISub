@@ -5,7 +5,7 @@ var _ =           require('underscore'),
   router = express.Router(),
   config = require('config');
 var list = require('../models/submissions.json');
-var biosd=config.get('biostd');
+//var biosd=config.get('biostd');
 var submission = require('../models/submission.json');
 
 var files=require('../models/files');
@@ -57,7 +57,7 @@ router.put('/submission/save/*',function(req, res) {
 
 
 router.put('/submission/update',function(req, res) {
-  var _url = biosd.url + biosd.routes.submission.update.path;
+  //var _url = biosd.url + biosd.routes.submission.update.path;
   console.log('Update data', req.body);
   res.status(200).json({});
 
