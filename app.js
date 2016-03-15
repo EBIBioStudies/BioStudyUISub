@@ -19,7 +19,7 @@ console.log("Node environment ", process.env.NODE_ENV);
 var app = express();
 function cors(req, res, next) {
     console.log('Allow',req,res);
-};
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
