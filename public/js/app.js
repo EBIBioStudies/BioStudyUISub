@@ -45,9 +45,7 @@ app.constant('AppInfo', appInfo);
 
 require('./model');
 require('./services');
-require('./controllers');
-require('./views/auth');
-require('./controllers/dashboard');
+require('./views/index');
 require('./directives');
 
 
