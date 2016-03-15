@@ -1,2 +1,0 @@
-//http://localhost:3229/biostd-dev/submit/create
-//
