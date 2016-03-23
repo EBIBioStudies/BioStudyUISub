@@ -116,10 +116,10 @@ module.exports = function ($http, $window, $location,
         var deffer = $q.defer();
         function success(response) {
             if (response.status===200) {
-                console.log('Data saved', response.data, submission);
+                //console.log('Data saved', response.data, submission);
                 deffer.resolve(response.data);
             } else {
-                console.log('Error get user data');
+                //console.log('Error get user data');
                 deffer.reject(response);
             }
 

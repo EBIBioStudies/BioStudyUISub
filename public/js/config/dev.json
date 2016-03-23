@@ -15,6 +15,10 @@
         "signout" : {
           "url": "/proxy/api/auth/signout",
           "method": "POST"
+        },
+        "activate" : {
+          "url": "/proxy/api/auth/activate",
+          "method": "POST"
         }
       },
       "files": {

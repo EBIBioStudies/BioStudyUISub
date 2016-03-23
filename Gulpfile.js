@@ -114,7 +114,7 @@ var jasmine = require('gulp-jasmine');
 var reporters = require('jasmine-reporters');
 
 gulp.task('unit:js', function() {
-  gulp.src(["shared/newmodel/*.Spec.js","public/js/model/*.Spec.js"])
+  gulp.src(["shared/model/*.Spec.js","public/js/model/*.Spec.js"])
     .pipe(jasmine({verbose: true,includeStackTrace: true
 
     }));

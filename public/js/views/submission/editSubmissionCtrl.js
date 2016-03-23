@@ -134,11 +134,7 @@ module.exports =
             return parent || $scope.submission;
         };
 
-        $scope.addAnnotation = function(parent) {
-            $log.debug('Add an annotation from controller', parent);
-            SubmissionModel.addItemToArray(parent.attributes, SubmissionModel.createAttribute);
-            scrollTo('annotations');
-        };
+
 
         $scope.addAttributeTo = function(parent) {
             var attr= SubmissionModel.createAttribute();

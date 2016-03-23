@@ -36,11 +36,6 @@ module.exports =
 
         });
 
-        $scope.addAnnotation = function(parent) {
-            SubmissionModel.addItemToArray(parent.attributes, SubmissionModel.createAttribute);
-            $log.debug('Add an annotation from controller', parent.attributes.writable);
-
-        };
         var container = angular.element(document.getElementById('container'));
 
 
@@ -62,7 +57,6 @@ module.exports =
                 //remove autosave
             } else {
                 DataService.saveUserData($scope.submission).then(function success(data) {
-                    console.log('data saved',data);
                     $scope.submission.accno = data.accno;
                 });
             }

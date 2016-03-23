@@ -19,7 +19,8 @@ module.exports = function ($compile, $log, SubmissionService, TypeHeadService) {
             onAdd: '&',
             onAddAttr: '&',
             templateName: '@',
-            typeHead: '='
+            typeHead: '=',
+            labels: '='
         },
         link: function (scope, element, attrs, ctrl) {
 

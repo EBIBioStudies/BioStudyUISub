@@ -8,14 +8,13 @@
   "attributes": [
     {
       "name": "Name", "required": true
+    },
+    {
+      "name": "Description", "required": true
+    },
+    {
+      "name": "Annotation", "required": false
     }
-  ,
-    {"name": "Description", "required": true
-    }
-  ,
-    {"name": "Title", "required": false
-    }
-
   ]
   },
   "publication": {

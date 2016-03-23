@@ -15,7 +15,12 @@
         "signout" : {
           "url": "/biostudies/submissions/proxy/api/auth/signout",
           "method": "POST"
+        },
+        "activate" : {
+          "url": "/biostudies/submissions/activate",
+          "method": "POST"
         }
+
       },
       "files": {
         "dir": {

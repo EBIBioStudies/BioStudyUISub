@@ -3,10 +3,11 @@ var _keys = require('./../../../../shared/model/Structure.json');
 module.exports = function($anchorScroll) {
     this.create = function($scope) {
         $scope.add= function(context, hash) {
-            context.add().then(function() {
+            context.add();
+                //.then(function() {
                 //$location.hash(hash);
-                $anchorScroll(hash);
-            });
+                //$anchorScroll(hash);
+            //});
         }
 
         $scope.format = 'dd/MM/yyyy';
@@ -20,6 +21,11 @@ module.exports = function($anchorScroll) {
         };
 
         $scope.keys = _keys;
+
+
+        $scope.addAnnotation = function(context) {
+            context.add({});
+        };
 
 
 

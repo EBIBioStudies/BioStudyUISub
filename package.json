@@ -1,6 +1,6 @@
 {
   "name": "BioSampleUi",
-  "version": "0.0.4-r21",
+  "version": "0.0.4-24",
   "description": "Frontend for BioStuties project",
   "private": true,
   "scripts": {

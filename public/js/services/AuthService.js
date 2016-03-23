@@ -6,8 +6,6 @@
 var routingConfig = require('../routeConfig');
 //var routing = require('../config/development.json').routing;
 var routing = require('../../../.gen/config.json').routing;
-var userdata = routing.userdata;
-var subroute = routing.submission;
 var proxyRoute = routing.proxy;
 
 

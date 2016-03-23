@@ -1,6 +1,39 @@
+<ng-include src="'templates/partials/header.html'"></ng-include>
+
+
 <div class="wrapper row-offcanvas row-offcanvas-left">
-    <section class="content padding-top">
 
-    </section>
+    <!--<aside class="right-side" ng-class="{strech: toggleSidebar}">-->
+    <aside class="right-side strech">
 
-</div>
+        <!-- Content Header (Page header) -->
+
+        <!-- Main content -->
+        <section class="content-header">
+            <h1>
+                Activation Page
+            </h1>
+        </section>
+        <!-- Main content -->
+        <section class="content">
+
+            <div class="error-page">
+                <h2 class="headline text-red">{{error.status}}</h2>
+                <div class="error-content">
+                    <h3 ng-if="hasError" class="text-muted text-red"><i class="fa fa-warning text-red"></i> {{message}}</h3>
+                    <h3 ng-if="!hasError" class="text-muted text-success"><i class="fa fa-check text-success"></i> {{message}}
+                    <p>
+                        You can now <a href="#/signin">sign in.</a>
+                    </p>
+                    </h3>
+
+                </div>
+            </div><!-- /.error-page -->
+
+        </section><!-- /.content -->
+
+        <!-- /.content -->
+    </aside>
+    <!-- /.right-side -->
+</div><!-- ./wrapper -->
+

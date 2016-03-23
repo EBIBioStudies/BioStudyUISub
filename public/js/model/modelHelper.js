@@ -27,6 +27,7 @@ module.exports = function (SubmissionModel, $q) {
      * @constructor
      */
 
+
     function Section(options) {
         this.submission_ref = options.submission;
         this.attributesKey ={};
@@ -133,7 +134,7 @@ module.exports = function (SubmissionModel, $q) {
         }
 
         this.add = function() {
-            var defer = $q.defer();
+            //var defer = $q.defer();
 
             console.log('Add new section');
             var attributes =  [];
@@ -147,8 +148,8 @@ module.exports = function (SubmissionModel, $q) {
             options.addToModel.call(this,modelElement);
             var sectionElement = this.createSectionItem(modelElement);
             this.ui.activeTabs[this.ui.activeTabs.length-1]=true;
-            defer.resolve();
-            return defer.promise;
+            //defer.resolve();
+            //return defer.promise;
         };
 
     }
@@ -182,8 +183,11 @@ module.exports = function (SubmissionModel, $q) {
                 }
             },
             section: {
-                attributes: new Section({createModelItem: SubmissionModel.createAttribute,addToModel: SubmissionModel.addAttribute
-                    ,submission: this.submission}),
+               // attributes: {};
+
+                attributes: {
+
+                },
                 links: new Section({createModelItem: SubmissionModel.createLink, addToModel: SubmissionModel.addLink
                     ,submission: this.submission, fields: structure.link.fields}),
                 files: new Section({createModelItem: SubmissionModel.createFile,  addToModel: SubmissionModel.addFile
@@ -204,7 +208,7 @@ module.exports = function (SubmissionModel, $q) {
     this.model = new Model();
 
 
-    this.mapSubmissionAttributes = function(array) {
+    this.mapAttributes = function(array) {
         var obj = {};
         for (var i in array) {
             obj[array[i].name] = array[i];
@@ -217,7 +221,7 @@ module.exports = function (SubmissionModel, $q) {
 
         this.model.submission = SubmissionModel.createSubmission(data);
 
-        this.model.viewSubmission.attributes=this.mapSubmissionAttributes(this.model.submission.attributes);
+        this.model.viewSubmission.attributes=this.mapAttributes(this.model.submission.attributes);
         if (this.model.viewSubmission.attributes.ReleaseDate) {
             this.model.viewSubmission.attributes.ReleaseDate.value = new Date(this.model.viewSubmission.attributes.ReleaseDate.value || Date.now);
         } else {
@@ -225,8 +229,31 @@ module.exports = function (SubmissionModel, $q) {
         }
 
         //map study attr
-        //this.model.viewSubmission.section.attributes.ref = this.model.submission.section.attributes;
-        //this.model.viewSubmission.section.attributes.requiredAttributes = fillRequiredAttributes(structure.attributes.attributes);
+        this.model.viewSubmission.section.attributes.model=this.mapAttributes(this.model.submission.section.attributes);
+        this.model.viewSubmission.section.attributes.ref = this.model.submission.section.attributes;
+        this.model.viewSubmission.section.attributes.requiredAttributes = fillRequiredAttributes(structure.annotations.attributes);
+        this.model.viewSubmission.section.attributes.add = function(attr) {
+            var _attr=SubmissionModel.createAttribute(attr);
+            this.model[_attr.name] = _attr;
+            this.ref.push(_attr);
+        };
+        this.model.viewSubmission.section.attributes.remove = function(attr) {
+            if (attr) {
+                delete this.model[attr.name];
+                var index = this.ref.indexOf(attr);
+                this.ref.splice(index,1);
+            }
+        };
+
+        for (var i in this.model.viewSubmission.section.attributes.requiredAttributes) {
+            if (this.model.viewSubmission.section.attributes.requiredAttributes[i].required
+                && !this.model.viewSubmission.section.attributes[this.model.viewSubmission.section.attributes.requiredAttributes[i].name]) {
+                var attr = SubmissionModel.createAttribute({name: this.model.viewSubmission.section.attributes.requiredAttributes[i].name});
+                this.model.viewSubmission.section.attributes.add(attr);
+            }
+        }
+
+
         //this.processModel({element: this.model.submission.section.attributes, data: this.model.viewSubmission.section.attributes});
 
         //map links

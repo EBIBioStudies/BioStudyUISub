@@ -24,6 +24,8 @@ app.directive('msTree',require('./msTree'));
 app.directive('treeNodeElement',require('./treeNodeElement'));
 
 require('./form/msFormValidator')(app);
+require('./form/msDuplicate')(app);
+
 require('./submission/bsSection')(app);
 
 

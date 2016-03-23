@@ -13,6 +13,12 @@ module.exports = function ($scope, $http, $timeout, DataService, Upload, $log) {
     $scope.uploadedTree = tree = {};
     $scope.selectedFiles = [];
     $scope.uploadUrl=routing.files.upload.url;
+    $scope.fileTypes = {
+        dir: 'DIR',
+        file : 'FILE',
+        archive : 'ARCHIVE',
+        fileInArchive : 'FILE_IN_ARCHIVE'
+    };
 
     $scope.expanding_property = {field: 'name', displayName: 'Name'};
 
@@ -22,7 +28,8 @@ module.exports = function ($scope, $http, $timeout, DataService, Upload, $log) {
         },*/
         {
             field: 'type', displayName: 'Type', sortable : false, filterable: true,
-            cellTemplate: '<i class="fa" ng-class="{\'fa-file\' : row.branch[col.field]===\'FILE\', \'fa-folder\' : row.branch[col.field]!==\'FILE\'}"/> '
+            cellTemplate: '<i class="fa" ng-class="{\'fa-file\' : row.branch[col.field]===\'FILE\', \'fa-folder\' : row.branch[col.field]===\'DIR\',' +
+            '\'fa-archive\' : row.branch[col.field]===\'ARCHIVE\', \'fa-file-archive-o\' : row.branch[col.field]===\'FILE_IN_ARCHIVE\'}"/>'
         },
         /*{
             field: 'status', displayName: 'Status',
@@ -34,7 +41,7 @@ module.exports = function ($scope, $http, $timeout, DataService, Upload, $log) {
             cellTemplate: '<div ng-show="row.branch[\'type\']===\'FILE\' && row.branch[\'status\']!=3" class="progress"  ' +
                     'style="margin-bottom: 0;"> <div class="progress-bar" ng-class="{\'progress-bar-success\' : (row.branch.status==3)}" role="progressbar" ' +
                     'ng-style="{ \'width\': row.branch.progress + \'%\' }"> {{row.branch.progress+ "%"}}</div> </div>' +
-                    '<div ng-show="row.branch[\'type\']===\'FILE\' && row.branch[\'status\']==3"><i class="fa fa-check"></i></div>'
+                    '<div ng-show="row.branch[\'status\']==3"><i class="fa fa-check"></i></div>'
         },
         {
             displayName: 'Actions',
@@ -42,7 +49,7 @@ module.exports = function ($scope, $http, $timeout, DataService, Upload, $log) {
             '<button ng-show="row.branch[\'type\']===\'FILE\' && row.branch[\'status\']!=3" type="button" class="btn btn-warning btn-xs"' +
             'ng-click="row.branch.deleteFile(row.branch);">' +
             'Delete </button>' +
-            '<button ng-show="row.branch[\'status\']==3" type="button" class="btn btn-danger btn-xs"' +
+            '<button ng-show="row.branch[\'status\']==3 && ( row.branch[\'type\']===\'FILE\' || row.branch[\'type\']===\'ARCHIVE\')" type="button" class="btn btn-danger btn-xs"' +
             'ng-click="cellTemplateScope.deleteUploaded(row.branch)">' +
             'Delete </button>',
             cellTemplateScope: {
@@ -58,17 +65,21 @@ module.exports = function ($scope, $http, $timeout, DataService, Upload, $log) {
 
     ];
 
-    function decorateFiles(array) {
+    function decorateFiles(array, archive) {
+
         for (var i in array) {
-            if (!array[i].status && array[i].type === 'FILE') {
+            if (!array[i].status && array[i].type !== $scope.fileTypes.dir) {
                 array[i].status = 3;
                 array[i].progress = 100;
+                if (archive) {
+                    array[i].type = $scope.fileTypes.fileInArchive;
+                }
             }
             if (array[i].files) {
+
                 array[i].children = array[i].files;
-                decorateFiles(array[i].files);
+                decorateFiles(array[i].files, array[i].type==='ARCHIVE');
             }
-            console.log(array[i]);
         }
     }
 
@@ -130,7 +141,7 @@ module.exports = function ($scope, $http, $timeout, DataService, Upload, $log) {
             decorateFiles($scope.filesTree);
             $scope.rootFileInTree = $scope.filesTree[0];
             addSelectedFileToTree();
-            $log.debug('Root',$scope.rootFileInTree);
+            $log.debug('Root',$scope.filesTree);
             //replace User:
             //add selected files
         });

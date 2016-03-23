@@ -74,7 +74,7 @@ app.config(function($routeProvider, $locationProvider, $logProvider, $httpProvid
         //User service to register accesslevels for paths.
         console.log(appInfo.configName);
         //TEST IT for TEST and PROD
-        if (appInfo.configName!='dev') {
+        if (appInfo.configName!=='dev') {
             angular.extend(route.resolve, {isSignedIn: ['$q', '$log', 'AuthService', checkSignedIn]});
         }
         return $routeProvider.when(path, route);
@@ -141,6 +141,7 @@ app.config(function($routeProvider, $locationProvider, $logProvider, $httpProvid
     //$anchorScroll.yOffset = 300;
     $rootScope.$on('$routeChangeError', function (ev, current, previous, rejection) {
         if (rejection && rejection.needsAuthentication === true) {
+            console.log('needs auth change error');
             var returnUrl = $location.url();
             $location.path('/home');
             $rootScope.$broadcast('needsAuthentication', returnUrl);
@@ -149,6 +150,8 @@ app.config(function($routeProvider, $locationProvider, $logProvider, $httpProvid
     $rootScope.Constants=require('./Const');
 
     $rootScope.$on('needsAuthentication', function (ev, current, previous, rejection) {
+        console.log('needs auth');
+
         var options = {currentUrl : current};
         $location.path('/signin');
     });
@@ -169,8 +172,8 @@ app.config(function($routeProvider, $locationProvider, $logProvider, $httpProvid
 
         responseError: function (response) {
             ErrorService.addError({status: response.status, message: response.statusText, url: response.config.url, path:$location.path() });
-            if ($location.path() !== "/signup" && $location.path() !== "/signin") {
-                $log.debug('auth interceptor error', response, ErrorService.errors);
+            if ($location.path() !== "/signup" && $location.path() !== "/signin" && $location.path().indexOf("/activate")===-1) {
+                //$log.debug('auth interceptor error', $location.path().indexOf("/activate");
                     //show sign in page
                 $location.path('/error');
                 $cookieStore.remove('token');
@@ -195,8 +198,15 @@ app.config(function($routeProvider, $locationProvider, $logProvider, $httpProvid
         }
     };
 }).filter("filterAttrKeys", function ($filter) {
-        return function (fieldValueUnused, value, attributes) {
-            console.log('Attributes filter', value, attributes);
+        return function (fieldValueUnused, array, existedKeys) {
+            //console.log('Attributes filter', value, attributes);
+            var typeHead = [];
+            for (var i in array) {
+                if (!existedKeys[array[i].name]) {
+                    typeHead.push(array[i]);
+                }
+            }
+            return typeHead;
         };
     });
 ;

@@ -7,7 +7,24 @@ var tree ={
         'files': [{
             'name': 'data.txt',
             'type': 'FILE',
-            'path': '/User/data.txt'}
+            'path': '/User/data.txt'},
+            {
+                'name': 'Eclipse.zip',
+                'type': 'ARCHIVE',
+                'path': '/User/Eclipse.zip', files:[
+                {
+                    'name': 'inside2.txt',
+                    'type': 'FILE',
+                    'path': '/User/Eclipse.zip/inside2.txt'
+                },
+                {
+                    'name': 'inside1.txt',
+                    'type': 'FILE',
+                    'path': '/User/Eclipse.zip/inside1.txt'
+                }
+
+        ]}
+
         ]
     }]};
 
