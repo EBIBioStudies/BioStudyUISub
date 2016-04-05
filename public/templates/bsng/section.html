@@ -95,8 +95,6 @@
                         </bs-replace-el>
                     </td>
                 </tr>
-
-
                 <tr ng-repeat="attribute in author.attributes" ng-form name="atrAuthorForm1">
                     <td class="col-md-3 nopadding border-none form-group-sm " ms-form-group-validator
                         ng-class="{'has-error' : atrAuthorForm1.attrKey.$invalid}">
@@ -106,6 +104,7 @@
                                typeahead-show-hint="true"
                                typeahead-min-length="0"
                                ng-blur="author.changeAttr(attribute);"
+                               ms-duplicate="data.model"
                                class="form-control control-label input-sm"
                                placeholder="Type a key" ng-required="true"
                                uib-tooltip="Emty or duplicate value" tooltip-class="customClass" tooltip-placement="top-left"

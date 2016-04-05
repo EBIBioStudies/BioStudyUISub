@@ -68,6 +68,7 @@
                               tooltip-append-to-body="true"
                               tooltip-placement="bottom"
                               tooltip-class="customClass"
+                              tooltip-enable="atrForm.attrValue.$invalid"
                               ng-if="attribute.name ==='Description'"></textarea>
                 <span class="input-group-btn" ng-if="!data.requiredAttributes[attribute.name].required">
                     <button type="button" class="btn btn-sm btn-danger btn-flat"

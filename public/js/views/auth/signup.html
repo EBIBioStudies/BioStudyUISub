@@ -40,7 +40,7 @@
                                           && signInForm.password.$error.required">: cannot be blank</span></label>
 
                                 <input type="password" ng-required="true" name="password"
-                                       id="password" ng-model="user.password" class="form-control"
+                                       id="password" ng-model="user.password" class="form-control input-sm"
                                        placeholder="Password"/>
 
                             </div>
@@ -49,7 +49,8 @@
                             </div>
                             <!--<div class="form-group" id='captcha'>
                             </div>-->
-                            <div class="form-group pull-right">
+
+                            <div class="form-group margin-top-large">
                                 <!--<i ng-show="sending" class="fa fa-spinner fa-pulse fa-3x"></i>-->
                                 <button class="btn btn-success" ng-click="signUp(user, signUpForm);">Sign up</button>
                             </div>

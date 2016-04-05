@@ -99,15 +99,18 @@ module.exports = function (SubmissionModel, $q) {
                 addAttribute: addAttribute,
                 removeAttribute: removeAttribute,
                 changeAttr:   function changeAttr(attr) {
-
+                    if (this.attributes[attr.name]) {
+                        return;
+                    }
                     if (attr.name) {
+                        if (_self.attributesKey[attr.name])
                         //find old reference in item.attributes
                         for (var i in this.attributes) {
                             if (this.attributes[i]==attr) {
                                 delete this.attributes[i];
                             }
                         }
-                        this.attributes[attr.name]=attr;
+                        //this.attributes[attr.name]=attr;
                         _self.attributesKey[attr.name]=attr.name;
                     }
                 }
@@ -211,6 +214,7 @@ module.exports = function (SubmissionModel, $q) {
     this.mapAttributes = function(array) {
         var obj = {};
         for (var i in array) {
+
             obj[array[i].name] = array[i];
         }
         return obj;
@@ -247,7 +251,7 @@ module.exports = function (SubmissionModel, $q) {
 
         for (var i in this.model.viewSubmission.section.attributes.requiredAttributes) {
             if (this.model.viewSubmission.section.attributes.requiredAttributes[i].required
-                && !this.model.viewSubmission.section.attributes[this.model.viewSubmission.section.attributes.requiredAttributes[i].name]) {
+                && !this.model.viewSubmission.section.attributes.model[this.model.viewSubmission.section.attributes.requiredAttributes[i].name]) {
                 var attr = SubmissionModel.createAttribute({name: this.model.viewSubmission.section.attributes.requiredAttributes[i].name});
                 this.model.viewSubmission.section.attributes.add(attr);
             }

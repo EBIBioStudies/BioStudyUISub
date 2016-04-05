@@ -61,8 +61,8 @@ describe('Test module helper model', function () {
             it('should create model', function () {
 
                 moduleHelper.setData(data);
-                expect(moduleHelper.model.viewSubmission.section.attributes.Description).toEqual(data.section.attributes[0]);
-
+                expect(moduleHelper.model.viewSubmission.section.attributes.model.Description).toEqual(data.section.attributes[0]);
+                //console.log(moduleHelper.model.viewSubmission);
                 //moduleHelper.model.viewSubmission.section.attributes.addAttribute({name:'a1'});
                 //console.log(moduleHelper.model.viewSubmission.section.attributes);
             })
@@ -70,8 +70,7 @@ describe('Test module helper model', function () {
 
                 moduleHelper.setData(data);
                 moduleHelper.model.viewSubmission.section.attributes.add({name:'a1'});
-                console.log(data.section);
-                expect(moduleHelper.model.viewSubmission.section.attributes.a1).toEqual(data.section.attributes[3]);
+                expect(moduleHelper.model.viewSubmission.section.attributes.model.a1).toEqual(data.section.attributes[3]);
 
                 //console.log(moduleHelper.model.viewSubmission.section.attributes);
             }),
@@ -80,7 +79,6 @@ describe('Test module helper model', function () {
                     moduleHelper.setData(data);
                     moduleHelper.model.viewSubmission.section.attributes.remove(data.section.attributes[1]);
                     //expect(moduleHelper.model.viewSubmission.section.attributes.length).toEqual(1);
-                    console.log('del',data.section, moduleHelper.model.viewSubmission.section.attributes);
                 })
 
         })
@@ -93,7 +91,25 @@ describe('Test module helper model', function () {
 
             moduleHelper.setData(data);
             moduleHelper.model.viewSubmission.section.links.add();
-            console.log(moduleHelper.model);
+            //expect(moduleHelper.model.viewSubmission.section.attributes.a1).toEqual(data.section.attributes[2]);
+
+            //console.log(moduleHelper.model.viewSubmission.section.attributes);
+        })
+        it('should add a new attributes', function () {
+
+            moduleHelper.setData(data);
+            moduleHelper.model.viewSubmission.section.links.add();
+            moduleHelper.model.viewSubmission.section.links.model[0].createAttribute();
+            moduleHelper.model.viewSubmission.section.links.model[0].createAttribute();
+            moduleHelper.model.viewSubmission.section.links.model[0].createAttribute();
+
+            //moduleHelper.model.viewSubmission.section.links.model[0].attributes[0];
+
+            moduleHelper.model.viewSubmission.section.links.model[0].attributes.Key_2.name="Key_1";
+            moduleHelper.model.viewSubmission.section.links.model[0].changeAttr(moduleHelper.model.viewSubmission.section.links.model[0].attributes.Key_2);
+            console.log(moduleHelper.model.viewSubmission.section.links.model[0].attributes);
+            console.log(moduleHelper.model.viewSubmission.section.links.attributesKey);
+
             //expect(moduleHelper.model.viewSubmission.section.attributes.a1).toEqual(data.section.attributes[2]);
 
             //console.log(moduleHelper.model.viewSubmission.section.attributes);
