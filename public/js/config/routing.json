@@ -1,0 +1,70 @@
+{
+  "context": "/proxy",
+
+  "routing": {
+    "signin": {
+      "url": "/cooked/auth/signin",
+      "method": "POST"
+    },
+    "signup": {
+      "url": "/cooked/auth/signup",
+      "method": "POST"
+    },
+    "register": {
+      "url": "/cooked/auth/register",
+      "method": "POST"
+    },
+    "signout": {
+      "url": "/cooked/auth/signout",
+      "method": "POST"
+    },
+    "activate": {
+      "url": "/cooked/auth/activate",
+      "method": "POST"
+    },
+    "files_dir": {
+      "url": "/cooked/files/dir",
+      "method": "GET"
+    },
+    "files_upload": {
+      "url": "/cooked/files/fileUpload",
+      "method": "POST"
+    },
+    "files_delete": {
+      "url": "/cooked/files/delete",
+      "method": "DELETE"
+    },
+    "files_upload": {
+      "url": "/raw/fileUpload",
+      "method": "POST"
+    },
+    "submission_get": {
+      "url": "/cooked/submission",
+      "method": "GET"
+    },
+    "submission_list": {
+      "url": "/cooked/submissions",
+      "method": "GET"
+    },
+    "submission_create": {
+      "url": "/cooked/submission/create",
+      "method": "POST"
+    },
+    "submission_update": {
+      "url": "/cooked/submission/update",
+      "method": "PUT"
+    },
+    "tmp_submission_delete": {
+      "url": "/cooked/submission/delete",
+      "method": "DELETE"
+    },
+    "submission_delete": {
+      "url": "/cooked/submission/submitted/delete",
+      "method": "DELETE"
+    },
+    "submission_save": {
+      "url": "/cooked/submission/save",
+      "method": "PUT"
+    }
+  }
+}

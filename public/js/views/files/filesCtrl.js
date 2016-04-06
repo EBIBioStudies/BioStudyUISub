@@ -2,7 +2,14 @@
  * Created by mdylag on 04/09/2014.
  */
 'use strict';
-var routing = require('../../../../.gen/config.json').routing;
+var routing =
+    (function (routs) {
+        return {
+            urlFor: function (p) {
+                return routs.context + routs.routing[p].url;
+            }
+        }
+    }(require('../../../../.gen/routing.json')));
 
 
 module.exports = function ($scope, $http, $timeout, DataService, Upload, $log) {
@@ -12,7 +19,7 @@ module.exports = function ($scope, $http, $timeout, DataService, Upload, $log) {
     var tree;
     $scope.uploadedTree = tree = {};
     $scope.selectedFiles = [];
-    $scope.uploadUrl=routing.files.upload.url;
+    $scope.uploadUrl=routing.urlFor("files_upload");
     $scope.fileTypes = {
         dir: 'DIR',
         file : 'FILE',
@@ -160,7 +167,7 @@ module.exports = function ($scope, $http, $timeout, DataService, Upload, $log) {
     $scope.uploadFile = function (file, _fileInTree, refreshTree) {
         $log.debug('Uploading file');
         var u=Upload.upload({
-            url:routing.files.upload.url,
+            url:routing.urlFor("files_upload"),
             data: {file: file}
             }).then(function(resp) {
             // file is uploaded successfully
