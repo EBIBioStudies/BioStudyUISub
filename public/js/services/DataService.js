@@ -4,13 +4,14 @@
 'use strict';
 
 var routingConfig = require('../routeConfig');
-var routing = require('../../../.gen/config.json').routing;
-
-var subroute = routing.submission;
-var userdata = routing.userdata;
-
-var filesroute = routing.files;
-var proxyRoute = routing.proxy;
+var routing =
+    (function (routs) {
+        return {
+            urlFor: function (p) {
+                return routs.context + routs.routing[p].url;
+            }
+        }
+    }(require('../../../.gen/routing.json')));
 
 /**
  * Function wrap submission by
@@ -25,14 +26,12 @@ function wrapSubmission(submission) {
 
 module.exports = function ($http, $window, $location,
                            $rootScope, $log, $q, SubmissionModel, SharedData) {
-    $log.debug('Data service created', proxyRoute);
     var annotationKeys = [{
         name : 'Name'},
         {name : 'Description'},
         {name : 'Title'},
         {name : 'Another key'}
     ];
-    console.log('data1', proxyRoute.submission);
 
     var sources=[{name: 'ArrayExpress'},{name: 'GEOD'}];
     var submissions = [];
@@ -68,7 +67,7 @@ module.exports = function ($http, $window, $location,
         var deffer = $q.defer();
 
         if (SharedData.submission.id) {
-            $http.get(proxyRoute.submission.get.url + '/' + accno).then(function (response) {
+            $http.get(routing.urlFor("submission_get") + '/' + accno).then(function (response) {
                 if (response.status === 200) {
                     console.log('Data',response.data);
                     deffer.resolve(response.data);
@@ -87,8 +86,9 @@ module.exports = function ($http, $window, $location,
     dataService.getSubmissions = function(options) {
         var deffer = $q.defer();
 
-        $http.get(proxyRoute.submission.list.url, options).then(function(response){
-            $log.debug('data2', proxyRoute.submission.list.url, response.data);
+        var getSubmissionUrl = routing.urlFor("submission_list");
+        $http.get(getSubmissionUrl, options).then(function(response){
+            $log.debug('data2', getSubmissionUrl, response.data);
 
             if (response.status===200) {
                 var submissions=[];
@@ -130,7 +130,7 @@ module.exports = function ($http, $window, $location,
             deffer.reject(err);
         }
 
-        var url=proxyRoute.submission.save.url;
+        var url=routing.urlFor("submission_save");
         $http.post(url, submission).then(success, error);
 
 
@@ -140,7 +140,7 @@ module.exports = function ($http, $window, $location,
 
     dataService.submit = function(submission) {
         var defer = $q.defer();
-        $http.post(proxyRoute.submission.create.url, wrapSubmission(submission))
+        $http.post(routing.urlFor("submission_create"), wrapSubmission(submission))
             .success(function(data) {
                 console.log('submission created service', typeof data);
                 //submissions.push(submission);
@@ -159,7 +159,7 @@ module.exports = function ($http, $window, $location,
         //if exists update()
         //else create
         //removeParent(submission);
-        $http.put(proxyRoute.submission.update.url, wrapSubmission(submission))
+        $http.put(routing.urlFor("submission_update"), wrapSubmission(submission))
             .success(function(data) {
                 console.log('submission updated', data);
                 defer.resolve(data);
@@ -174,9 +174,9 @@ module.exports = function ($http, $window, $location,
         var defer = $q.defer();
         var url = '';
         if (submission.id) {
-            url = proxyRoute.submission.deleteSubmited.url + '/' + submission.accno;
+            url = routing.urlFor("submission_delete") + '/' + submission.accno;
         } else {
-            url = proxyRoute.submission.delete.url + '/' + submission.accno;
+            url = routing.urlFor("tmp_submission_delete") + '/' + submission.accno;
         }
             console.log('Delete submitted submission', url);
             $http.delete(url)
@@ -194,7 +194,7 @@ module.exports = function ($http, $window, $location,
     dataService.getFiles = function() {
         var defer = $q.defer();
 
-        $http.get(proxyRoute.files.dir.url).success(function(data) {
+        $http.get(routing.urlFor("files_dir")).success(function(data) {
             defer.resolve(data);
         }).error(function(err, status){
             console.log('Error get files', err);
@@ -207,9 +207,9 @@ module.exports = function ($http, $window, $location,
     dataService.deleteFile = function(file) {
         var defer = $q.defer();
 
-        $http.delete(proxyRoute.files.delete.url+ '?file='+file.name).success(function(data) {
+        $http.delete(routing.urlFor("files_delete") + '?file=' + file.name).success(function (data) {
             defer.resolve(data);
-        }).error(function(err, status){
+        }).error(function (err, status) {
             defer.reject(err, status);
         });
 
