@@ -19,6 +19,8 @@ var gutil = require('gulp-util');
 var gulp = require('gulp');
 
 var envHelper=require('./tasks/helpers/envHelper');
+var webserver = require('gulp-webserver');
+
 
 
 gulp.task('clean', function () {
@@ -47,6 +49,8 @@ gulp.task('copy', ['clean'], function(cb) {
       .pipe(gulp.dest(envHelper.copyToPath + '/js/'));
   gulp.src('views/*.html')
       .pipe(gulp.dest(envHelper.copyToPath ));
+  gulp.src(envHelper.configDir + '/routing.json')
+      .pipe(gulp.dest('.gen'));
 
   cb();
 
@@ -136,6 +140,18 @@ gulp.task('unit:public', function() {
 
   gutil.log('Running unit tests on unminified source.');
   karma.start(karmaConfig, captureError());
+});
+
+gulp.task('webserver', ['clean', 'js', 'styles'], function() {
+  gulp.src('.build')
+      .pipe(webserver({
+        port: 7000,
+        proxies   : [
+          {
+            source: '/proxy', target: 'http://localhost:9180/proxy'
+          }
+        ]
+      }));
 });
 
 
