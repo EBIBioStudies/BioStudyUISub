@@ -3,35 +3,35 @@
 
   "routing": {
     "signin": {
-      "url": "/cooked/auth/signin",
+      "url": "/api/auth/signin",
       "method": "POST"
     },
     "signup": {
-      "url": "/cooked/auth/signup",
+      "url": "/api/auth/signup",
       "method": "POST"
     },
     "register": {
-      "url": "/cooked/auth/register",
+      "url": "/api/auth/register",
       "method": "POST"
     },
     "signout": {
-      "url": "/cooked/auth/signout",
+      "url": "/api/auth/signout",
       "method": "POST"
     },
     "activate": {
-      "url": "/cooked/auth/activate",
+      "url": "/api/auth/activate",
       "method": "POST"
     },
     "files_dir": {
-      "url": "/cooked/files/dir",
+      "url": "/api/files/dir",
       "method": "GET"
     },
     "files_upload": {
-      "url": "/cooked/files/fileUpload",
+      "url": "/api/files/fileUpload",
       "method": "POST"
     },
     "files_delete": {
-      "url": "/cooked/files/delete",
+      "url": "/api/files/delete",
       "method": "DELETE"
     },
     "files_upload": {
@@ -39,31 +39,31 @@
       "method": "POST"
     },
     "submission_get": {
-      "url": "/cooked/submission",
+      "url": "/api/submission",
       "method": "GET"
     },
     "submission_list": {
-      "url": "/cooked/submissions",
+      "url": "/api/submissions",
       "method": "GET"
     },
     "submission_create": {
-      "url": "/cooked/submission/create",
+      "url": "/api/submission/create",
       "method": "POST"
     },
     "submission_update": {
-      "url": "/cooked/submission/update",
+      "url": "/api/submission/update",
       "method": "PUT"
     },
     "tmp_submission_delete": {
-      "url": "/cooked/submission/delete",
+      "url": "/api/submission/delete",
       "method": "DELETE"
     },
     "submission_delete": {
-      "url": "/cooked/submission/submitted/delete",
+      "url": "/api/submission/submitted/delete",
       "method": "DELETE"
     },
     "submission_save": {
-      "url": "/cooked/submission/save",
+      "url": "/api/submission/save",
       "method": "PUT"
     }
   }
