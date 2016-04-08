@@ -5,12 +5,11 @@
 
 var app = angular.module('BioStudyApp');
 
-app.service('AuthService', require('./AuthService'));
 app.service('DataService', require('./DataService'));
 app.service('MessageService', require('./MessageService'));
 app.factory('ErrorService', require('./ErrorService'));
 
-app.service('SubmissionService', require('./SubmissionService'));
+app.service('EditSubmissionService', require('./SubmissionService'));
 
 app.service('EuropePmc', require('./EuropePmc'));
 
