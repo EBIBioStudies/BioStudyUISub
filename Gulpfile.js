@@ -41,14 +41,14 @@ gulp.task('copy', ['clean'], function(cb) {
   gulp.src(envHelper.configDir + '/' + envHelper.configFile)
       .pipe(rename('config.json'))
       .pipe(gulp.dest('.gen'));
-  gulp.src(['public/images/**/*.png','public/images/*.ico'])
+  gulp.src(['public/images/**/*.png', 'public/images/*.ico'])
       .pipe(gulp.dest(envHelper.copyToPath + '/images'));
   gulp.src(['public/partials/**/*'])
-      .pipe(gulp.dest(envHelper.copyToPath + '/partials') );
+      .pipe(gulp.dest(envHelper.copyToPath + '/partials'));
   gulp.src('public/js/polyfill.js')
       .pipe(gulp.dest(envHelper.copyToPath + '/js/'));
   gulp.src('views/*.html')
-      .pipe(gulp.dest(envHelper.copyToPath ));
+      .pipe(gulp.dest(envHelper.copyToPath));
   gulp.src(envHelper.configDir + '/routing.json')
       .pipe(gulp.dest('.gen'));
 
@@ -148,7 +148,10 @@ gulp.task('webserver', ['clean', 'js', 'styles'], function() {
         port: 7000,
         proxies   : [
           {
-            source: '/proxy', target: 'http://localhost:9180/proxy'
+            source: '/api', target: 'http://localhost:10280/proxy/api'
+          },
+          {
+            source: '/raw', target: 'http://localhost:10280/proxy/raw'
           }
         ]
       }));

@@ -19,7 +19,7 @@
         <div class="navbar-right">
             <ul class="nav navbar-nav">
 
-                <li  data-access-level="public" bs-active-nav >
+                <li bs-active-nav >
                     <a id="helpMenuItem" href="#/help"
                        tooltip-append-to-body="true"
                        uib-tooltip="Go to the help page"
@@ -30,7 +30,7 @@
                 </li>
 
                 <!-- Notifications: style can be found in dropdown.less -->
-                <li data-access-level="anon" bs-active-nav ng-hide="user.username">
+                <li data-access-level="anon" bs-active-nav ng-hide="currentUser">
                     <a id="signUpMenuItem" href="#/signup"
                        tooltip-append-to-body="true"
                        uib-tooltip="Register a new user"
@@ -40,7 +40,7 @@
                     </a>
 
                 </li>
-                <li data-access-level="anon" bs-active-nav ng-hide="user.username">
+                <li data-access-level="anon" bs-active-nav ng-hide="currentUser">
                     <a id="signInMenuItem" href="#/signin"
                        tooltip-append-to-body="true"
                        uib-tooltip="Sign in"
