@@ -30,7 +30,7 @@
                 </li>
 
                 <!-- Notifications: style can be found in dropdown.less -->
-                <li data-access-level="anon" bs-active-nav ng-hide="currentUser">
+                <li bs-active-nav ng-hide="currentUser">
                     <a id="signUpMenuItem" href="#/signup"
                        tooltip-append-to-body="true"
                        uib-tooltip="Register a new user"
@@ -40,7 +40,7 @@
                     </a>
 
                 </li>
-                <li data-access-level="anon" bs-active-nav ng-hide="currentUser">
+                <li bs-active-nav ng-hide="currentUser">
                     <a id="signInMenuItem" href="#/signin"
                        tooltip-append-to-body="true"
                        uib-tooltip="Sign in"
@@ -51,7 +51,7 @@
                 </li>
 
 
-                <li access-level="user" bs-active-nav>
+                <li bs-active-nav ng-show="currentUser">
                     <a id="submissionMenuItem" href="#/submissions"
                        tooltip-append-to-body="true"
                        uib-tooltip="List of submissions"
@@ -62,15 +62,15 @@
                     </a>
                 </li>
 
-                <li access-level="user" bs-active-nav>
+                <li bs-active-nav ng-show="currentUser">
                     <a href="#/files">
-                        <i class="fa fa fa-fw fa-upload"></i>
+                        <i class="fa fa-fw fa-upload"></i>
                         <span>Files</span>
                     </a>
                 </li>
 
                 <!-- User Account: style can be found in dropdown.less -->
-                <li class="dropdown" data-access-level="user" uib-dropdown>
+                <li class="dropdown" uib-dropdown ng-show="currentUser">
                     <a href="" class="dropdown-toggle" data-toggle="dropdown" uib-dropdown-toggle>
                         <i class="fa fa-fw fa-user"></i>
                         <span>{{user.lastName}}<i class="caret"></i></span>
