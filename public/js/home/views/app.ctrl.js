@@ -42,13 +42,13 @@ module.exports = (function(){
 
         $scope.signOut = function () {
             AuthService.signOut().then(function () {
+                $scope.setCurrentUser(null);
                 $location.path('/signin');
             }, function (err) {
+                $scope.setCurrentUser(null);
                 $location.path('/signin');
             });
         };
-
-
     }];
 
 })();

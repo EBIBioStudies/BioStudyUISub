@@ -2,7 +2,7 @@
 
 module.exports =
     (function () {
-        return ['$scope', '$rootScope', '$location', '$q', 'AuthService', function ($scope, $rootScope, $location, $q, AuthService) {
+        return ['$scope', '$rootScope', '$location', '$q', 'AuthService', 'AUTH_EVENTS', function ($scope, $rootScope, $location, $q, AuthService, AUTH_EVENTS) {
             $scope.hasError = false;
             $scope.error = {};
             $scope.credentials = {
@@ -29,12 +29,16 @@ module.exports =
 
                 AuthService
                     .signIn($scope.credentials)
-                    .then(function (res) {
+                    .then(function (user) {
+                        $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
+                        $scope.setCurrentUser(user);
+
                         $location.path('/submissions');
                         $scope.hasError = false;
                         $scope.error = {};
-
-                    }).catch(function (error) {
+                    })
+                    .catch(function (error) {
+                        $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
                         $scope.hasError = true;
                         if (error) {
                             $scope.error.message = error.message;

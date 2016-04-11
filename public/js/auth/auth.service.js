@@ -34,7 +34,7 @@ module.exports =
                     }
 
                     var defer = $q.defer();
-                    $http.post("/api/auth/signout", $rootScope.globals.currentUser.username)
+                    $http.post("/api/auth/signout", Session.userName)
                         .success(function (result) {
                             Session.destroy();
                             defer.resolve({});
@@ -74,7 +74,7 @@ module.exports =
                     if (!angular.isArray(roles)) {
                         roles = [roles];
                     }
-                    return (this.isAuthenticated() && roles.indexOf(Session.userRole) !== -1);
+                    return roles.indexOf(Session.userRole) !== -1;
                 }
 
                 return {
