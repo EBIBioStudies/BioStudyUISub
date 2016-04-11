@@ -63,46 +63,9 @@ module.exports = function ($http, $window, $location,
         return deffer.promise;
 
     }*/
-    dataService.getSubmission = function(accno) {
-        var deffer = $q.defer();
 
-        if (SharedData.submission.id) {
-            $http.get(routing.urlFor("submission_get") + '/' + accno).then(function (response) {
-                if (response.status === 200) {
-                    console.log('Data',response.data);
-                    deffer.resolve(response.data);
-                } else {
-                    deffer.reject(response);
-                }
-            }, function (err) {
-                deffer.reject(err);
-            });
-        } else {
-            deffer.resolve(SharedData.submission);
-        }
-        return deffer.promise;
-    };
 
-    dataService.getSubmissions = function(options) {
-        var deffer = $q.defer();
 
-        var getSubmissionUrl = routing.urlFor("submission_list");
-        $http.get(getSubmissionUrl, options).then(function(response){
-            $log.debug('data2', getSubmissionUrl, response.data);
-
-            if (response.status===200) {
-                var submissions=[];
-                submissions=submissions.concat(response.data.submissions);
-                deffer.resolve(submissions);
-                $log.debug('data1', submissions, submissions);
-            } else {
-                deffer.reject(response);
-            }
-        }, function(err) {
-            deffer.reject(err);
-        });
-        return deffer.promise;
-    };
 
 
     function removeParent(submission) {
@@ -112,31 +75,7 @@ module.exports = function ($http, $window, $location,
         });
     }
 
-    dataService.saveUserData = function(submission) {
-        var deffer = $q.defer();
-        function success(response) {
-            if (response.status===200) {
-                //console.log('Data saved', response.data, submission);
-                deffer.resolve(response.data);
-            } else {
-                //console.log('Error get user data');
-                deffer.reject(response);
-            }
 
-        }
-
-        function error(err) {
-            console.log('Error to save data', err);
-            deffer.reject(err);
-        }
-
-        var url=routing.urlFor("submission_save");
-        $http.post(url, submission).then(success, error);
-
-
-        return deffer.promise;
-
-    };
 
     dataService.submit = function(submission) {
         var defer = $q.defer();
@@ -187,31 +126,6 @@ module.exports = function ($http, $window, $location,
                     console.log('delete err',err);
                     defer.reject(err, status);
                 });
-
-        return defer.promise;
-    };
-
-    dataService.getFiles = function() {
-        var defer = $q.defer();
-
-        $http.get(routing.urlFor("files_dir")).success(function(data) {
-            defer.resolve(data);
-        }).error(function(err, status){
-            console.log('Error get files', err);
-            defer.reject(err, status);
-        });
-
-        return defer.promise;
-    };
-
-    dataService.deleteFile = function(file) {
-        var defer = $q.defer();
-
-        $http.delete(routing.urlFor("files_delete") + '?file=' + file.name).success(function (data) {
-            defer.resolve(data);
-        }).error(function (err, status) {
-            defer.reject(err, status);
-        });
 
         return defer.promise;
     };
