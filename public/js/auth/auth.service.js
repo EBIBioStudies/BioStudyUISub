@@ -3,19 +3,41 @@
 module.exports =
     (function () {
 
-        return ['$http', '$q', '$rootScope', 'USER_ROLES', 'Session', '$log',
-            function ($http, $q, $rootScope, USER_ROLES, Session,$log) {
+        return ['$http', '$q', '$rootScope', 'USER_ROLES', 'Session', 'AccessLevel', '$cookies', '$log',
+            function ($http, $q, $rootScope, USER_ROLES, Session, AccessLevel, $cookies, $log) {
 
                 function signIn(credentials) {
                     var defer = $q.defer();
                     $http.post("/api/auth/signin", credentials)
                         .success(function (result) {
                             if (result.status === $rootScope.Constants.Status.OK) {
+                                $cookies.put('BIOSTDSESS', result.sessid);
                                 Session.create(result.sessid, result.username, USER_ROLES.user);
                                 defer.resolve(result);
                             }
                             else {
                                 defer.reject({status: result.status, message: 'Wrong credentials'});
+                            }
+                        })
+                        .error(function (err, status, headers) {
+                            $log.error(status + ":" + err);
+                            defer.reject({
+                                status: status || 500,
+                                message: 'Problem with connection to biostudy server'
+                            });
+                        });
+                    return defer.promise;
+                }
+
+                function checkSession() {
+                    var defer = $q.defer();
+                    $http.get("/raw/auth/check?format=json")
+                        .success(function (result) {
+                            if (result.status === $rootScope.Constants.Status.OK) {
+                                Session.create(result.sessid, result.username, USER_ROLES.user);
+                                defer.resolve(result);
+                            } else {
+                                defer.reject({status: result.status, message: result.message});
                             }
                         })
                         .error(function (err, status, headers) {
@@ -37,6 +59,7 @@ module.exports =
                     $http.post("/api/auth/signout", Session.userName)
                         .success(function (result) {
                             Session.destroy();
+                            $cookies.remove(result.sessid);
                             defer.resolve({});
                         })
                         .error(function (err, status, headers) {
@@ -77,13 +100,18 @@ module.exports =
                     return roles.indexOf(Session.userRole) !== -1;
                 }
 
+                function isAuthorizedWith(accessLevel) {
+                    return isAuthorized(AccessLevel.roles(accessLevel));
+                }
+
                 return {
                     signIn: signIn,
                     signOut: signOut,
                     signUp: signUp,
-                    isSignedIn: isAuthenticated,
+                    checkSession: checkSession,
                     isAuthenticated: isAuthenticated,
-                    isAuthorized: isAuthorized
+                    isAuthorized: isAuthorized,
+                    isAuthorizedWith: isAuthorizedWith
                 };
             }];
 

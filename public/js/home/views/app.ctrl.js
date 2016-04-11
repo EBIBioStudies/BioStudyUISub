@@ -5,16 +5,8 @@
 
 module.exports = (function(){
 
-    return ['$scope', '$rootScope', '$location', '$log', 'AuthService', 'AppInfo', 'USER_ROLES',
-        function ($scope, $rootScope, $location, $log, AuthService, AppInfo, USER_ROLES) {
-
-        $scope.currentUser = null;
-        $scope.userRoles = USER_ROLES;
-        $scope.isAuthorized = AuthService.isAuthorized;
-
-        $scope.setCurrentUser = function (user) {
-            $scope.currentUser = user;
-        };
+    return ['$scope', '$rootScope', '$location', '$log', 'AuthService', 'AppInfo', 'AUTH_EVENTS',
+        function ($scope, $rootScope, $location, $log, AuthService, AppInfo, AUTH_EVENTS) {
 
         $scope.toggleMenuBtn = false;
         $scope.uisettings = {
@@ -42,11 +34,7 @@ module.exports = (function(){
 
         $scope.signOut = function () {
             AuthService.signOut().then(function () {
-                $scope.setCurrentUser(null);
-                $location.path('/signin');
-            }, function (err) {
-                $scope.setCurrentUser(null);
-                $location.path('/signin');
+                $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess);
             });
         };
     }];

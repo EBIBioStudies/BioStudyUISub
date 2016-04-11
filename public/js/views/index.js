@@ -13,8 +13,6 @@ app.controller('MessagesCtrl', require('./messagesCtrl'));
 
 
 app.controller('DashboardCtrl', require('./dashboardCtrl'));
-app.controller('AddSubmissionCtrl', require('./submission/addSubmissionCtrl'));
-app.controller('EditSubmissionCtrl', require('./submission/editSubmissionCtrl'));
 app.controller('PublicationCtrl', require('./submission/PublicationCtrl'));
 
 //app.controller('ImportCtrl', require('./importCtrl'));

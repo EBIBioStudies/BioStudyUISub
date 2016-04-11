@@ -51,95 +51,97 @@ require('./auth');
 require('./home');
 require('./submission');
 
-app.config(function ($routeProvider, $locationProvider, $logProvider, $httpProvider, $anchorScrollProvider) {
+app
+    .config(function ($routeProvider, $locationProvider, $logProvider, $httpProvider, $anchorScrollProvider) {
 
-    //for tests only
-    //delete $httpProvider.defaults.headers.common['X-Requested-With'];
-    $anchorScrollProvider.disableAutoScrolling();
-    $logProvider.debugEnabled(true);
+        //for tests only
+        //delete $httpProvider.defaults.headers.common['X-Requested-With'];
+        $anchorScrollProvider.disableAutoScrolling();
+        $logProvider.debugEnabled(true);
 
-    var access = require('./routeConfig').accessLevels;
+        // var access = require('./routeConfig').accessLevels;
 
-    function checkSignedIn($q, $log, AuthService) {
-        var deferred = $q.defer();
-        if (!AuthService.isSignedIn()) {
-            deferred.reject({needsAuthentication: true});
-        } else {
-            deferred.resolve();
+        function isAuthorized(accessLevel, $q, AuthService) {
+            var deferred = $q.defer();
+            if (AuthService.isAuthorizedWith(accessLevel)) {
+                deferred.reject({needsAuthentication: true});
+            } else {
+                deferred.resolve();
+            }
+            return deferred.promise;
         }
 
-        return deferred.promise;
-    }
+        $routeProvider.whenAuthenticated = function (path, route, accessLevel) {
+            route.resolve = route.resolve || {};
+            if (appInfo.configName !== 'dev') {
+                angular.extend(route.resolve, {
+                    isAuthorized: ['$q', 'AuthService',
+                        function ($q, AuthService) {
+                            return isAuthorized(accessLevel, $q, AuthService);
+                        }]
+                });
+            }
+            return $routeProvider.when(path, route);
+        };
+        $routeProvider.
+            when('/help', {
+                templateUrl: 'templates/views/help.html',
+                controller: 'HelpCtrl'
+            }).
+            when('/activate/:key', {
+                templateUrl: 'templates/auth/views/activate.html',
+                controller: 'ActivateCtrl'
+            }).
+            when('/signin', {
+                templateUrl: 'templates/auth/views/signin.html',
+                controller: 'SignInCtrl'
+            }).
+            when('/signup', {
+                templateUrl: 'templates/auth/views/signup.html',
+                controller: 'SignUpCtrl'
+            }).
+            when('/error', {
+                templateUrl: 'templates/views/error/error.html',
+                controller: 'ErrorCtrl'
+            }).
+            whenAuthenticated('/submissions', {
+                templateUrl: 'templates/submission/views/submissions.html',
+                controller: 'SubmissionListCtrl'
+            }, 'user').
+            whenAuthenticated('/addsubmission', {
+                templateUrl: 'templates/submission/views/submission.html',
+                controller: 'AddSubmissionCtrl'
+            }, 'user').
+            whenAuthenticated('/edit/:accno', {
+                templateUrl: 'templates/submission/views/submission.html',
+                controller: 'EditSubmissionCtrl'
+            }, 'user').
+            whenAuthenticated('/edittemp/:accnotemp', {
+                templateUrl: 'templates/submission/view/submission.html',
+                controller: 'EditSubmissionCtrl'
+            }, 'user').
+            whenAuthenticated('/files', {
+                templateUrl: 'templates/views/files/files.html',
+                controller: 'FilesCtrl'
+            }, 'user').
+            whenAuthenticated('/export', {
+                templateUrl: 'partials/export.html',
+                controller: 'ExportCtrl'
+            }, 'user').
+            whenAuthenticated('/profile', {
+                templateUrl: 'partials/profile.html',
+                controller: 'ProfileCtrl'
+            }, 'user').
+            otherwise({
+                redirectTo: '/submissions'
+            });
 
-    $routeProvider.whenAuthenticated = function (path, route, accessLevel) {
-        route.resolve = route.resolve || {};
-        //app.constant(path,accessLevel);
-        //User service to register accesslevels for paths.
-        console.log(appInfo.configName);
-        //TEST IT for TEST and PROD
-        if (appInfo.configName !== 'dev') {
-            angular.extend(route.resolve, {isSignedIn: ['$q', '$log', 'AuthService', checkSignedIn]});
-        }
-        return $routeProvider.when(path, route);
-    };
-    $routeProvider.
-        when('/help', {
-            templateUrl: 'templates/views/help.html',
-            controller: 'HelpCtrl'
-        }).
-        when('/activate/:key', {
-            templateUrl: 'templates/auth/views/activate.html',
-            controller: 'ActivateCtrl'
-        }).
-        when('/signin', {
-            templateUrl: 'templates/auth/views/signin.html',
-            controller: 'SignInCtrl'
-        }).
-        when('/signup', {
-            templateUrl: 'templates/auth/views/signup.html',
-            controller: 'SignUpCtrl'
-        }).
-        when('/error', {
-            templateUrl: 'templates/views/error/error.html',
-            controller: 'ErrorCtrl'
-        }).
-        whenAuthenticated('/submissions', {
-            templateUrl: 'templates/submission/views/submissions.html',
-            controller: 'SubmissionListCtrl'
-        }, access.user).
-        whenAuthenticated('/addsubmission', {
-            templateUrl: 'templates/views/submission/submission.html',
-            controller: 'AddSubmissionCtrl'
-        }, access.user).
-        whenAuthenticated('/edit/:accno', {
-            templateUrl: 'templates/views/submission/submission.html',
-            controller: 'EditSubmissionCtrl'
-        }, access.user).
-        whenAuthenticated('/edittemp/:accnotemp', {
-            templateUrl: 'templates/views/submission/submission.html',
-            controller: 'EditSubmissionCtrl'
-        }, access.user).
-        whenAuthenticated('/files', {
-            templateUrl: 'templates/views/files/files.html',
-            controller: 'FilesCtrl'
-        }, access.user).
-        whenAuthenticated('/export', {
-            templateUrl: 'partials/export.html',
-            controller: 'ExportCtrl'
-        }, access.user).
-        whenAuthenticated('/profile', {
-            templateUrl: 'partials/profile.html',
-            controller: 'ProfileCtrl'
-        }, access.user).
-        otherwise({
-            redirectTo: '/signin'
-        });
-    $locationProvider
-        .html5Mode(false);
-    $httpProvider.interceptors.push('authInterceptor');
+        $locationProvider.html5Mode(false);
 
-})
-    .run(function ($location, $log, $rootScope, $q, $locale, $anchorScroll, AuthService) {
+        $httpProvider.interceptors.push('authInterceptor');
+    })
+
+    .run(function ($location, $log, $rootScope, AuthService, AUTH_EVENTS, USER_ROLES) {
 
         //TODO: it does not work ???
         //$anchorScroll.yOffset = 300;
@@ -153,57 +155,50 @@ app.config(function ($routeProvider, $locationProvider, $logProvider, $httpProvi
         });
         $rootScope.Constants = require('./Const');
 
-        $rootScope.$on('needsAuthentication', function (ev, current, previous, rejection) {
-            console.log('needs auth');
-
-            var options = {currentUrl: current};
+        function logout() {
+            $rootScope.setCurrentUser(null);
             $location.path('/signin');
-        });
+        }
 
-        $rootScope.$watch('user', function (newValue, oldValue) {
-        });
+        $rootScope.$on(AUTH_EVENTS.notAuthenticated, logout);
+        $rootScope.$on(AUTH_EVENTS.logoutSuccess, logout);
+        $rootScope.$on(AUTH_EVENTS.sessionTimeout, logout);
 
+        $rootScope.currentUser = null;
+        $rootScope.userRoles = USER_ROLES;
+        $rootScope.isAuthorized = AuthService.isAuthorized;
 
+        $rootScope.setCurrentUser = function (user) {
+            $rootScope.currentUser = user;
+        };
+
+        AuthService.checkSession().then(
+            function (user) {
+                console.log('user set: ' + user);
+                $rootScope.setCurrentUser(user);
+            });
     })
-    .factory('authInterceptor', function ($rootScope, $q, $log, $cookieStore, $location, ErrorService) {
+    .factory('authInterceptor', ['$rootScope', '$q', 'AUTH_EVENTS', function ($rootScope, $q, AUTH_EVENTS) {
         return {
-            request: function (config) {
-                config.headers = config.headers || {};
-                if ($cookieStore.get('token')) {
-                    config.headers.Authorization = 'Bearer ' + $cookieStore.get('token');
-                }
-                return config;
-            },
-
             responseError: function (response) {
-                ErrorService.addError({
-                    status: response.status,
-                    message: response.statusText,
-                    url: response.config.url,
-                    path: $location.path()
-                });
-                if ($location.path() !== "/signup" && $location.path() !== "/signin" && $location.path().indexOf("/activate") === -1) {
-                    //$log.debug('auth interceptor error', $location.path().indexOf("/activate");
-                    //show sign in page
-                    $location.path('/error');
-                    $cookieStore.remove('token');
-
-                    return $q.reject(response);
-                }
-                else {
-                    return $q.reject(response);
-                }
+                $rootScope.$broadcast({
+                    401: AUTH_EVENTS.notAuthenticated,
+                    403: AUTH_EVENTS.notAuthorized,
+                    419: AUTH_EVENTS.sessionTimeout,
+                    440: AUTH_EVENTS.sessionTimeout
+                }[response.status], response);
+                return $q.reject(response);
             }
         };
-    })
+    }])
     .value('Xml2Json', XML2JSON)
-    .factory('SharedData', function() {
+    .factory('SharedData', function () {
         var submission = {};
         return {
-            setSubmission: function(sbm) {
+            setSubmission: function (sbm) {
                 submission = sbm;
             },
-            getSubmission: function() {
+            getSubmission: function () {
                 return submission;
             }
         }
