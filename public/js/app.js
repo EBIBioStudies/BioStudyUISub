@@ -50,6 +50,7 @@ require('./directives');
 require('./auth');
 require('./home');
 require('./submission');
+require('./files');
 
 app
     .config(function ($routeProvider, $locationProvider, $logProvider, $httpProvider, $anchorScrollProvider) {
@@ -121,7 +122,7 @@ app
                 controller: 'EditSubmissionCtrl'
             }, 'user').
             whenAuthenticated('/files', {
-                templateUrl: 'templates/views/files/files.html',
+                templateUrl: 'templates/files/views/files.html',
                 controller: 'FilesCtrl'
             }, 'user').
             whenAuthenticated('/export', {
