@@ -148,10 +148,10 @@ gulp.task('webserver', ['clean', 'js', 'styles'], function() {
         port: 7000,
         proxies   : [
           {
-            source: '/api', target: 'http://localhost:10280/proxy/api'
+            source: '/proxy/api', target: 'http://localhost:10280/proxy/api'
           },
           {
-            source: '/raw', target: 'http://localhost:10280/proxy/raw'
+            source: '/proxy/raw', target: 'http://localhost:10280/proxy/raw'
           }
         ]
       }));

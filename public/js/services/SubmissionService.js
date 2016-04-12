@@ -5,6 +5,15 @@ module.exports =
 
         return ['$http', '$q', function ($http, $q) {
 
+/*
+            function removeParent(submission) {
+                angular.forEach(submission.sections, function(section, index) {
+                    delete section.parent;
+                    removeParent(section);
+                });
+            }
+*/
+
             function getSubmissionList(options) {
                 var deffer = $q.defer();
 
@@ -55,10 +64,53 @@ module.exports =
                 return deffer.promise;
             }
 
+            function updateSubmission(submission) {
+                var defer = $q.defer();
+
+                $http.put("/api/submission/update", {submissions: [submission]})
+                    .success(function(data) {
+                        defer.resolve(data);
+                    }).error(function(err, status){
+                        defer.reject(err, status);
+                    });
+                return defer.promise;
+            }
+
+            function submitSubmission(submission) {
+                var defer = $q.defer();
+                $http.post("/api/submission/create", {submissions: [submission]})
+                    .success(function (data) {
+                        defer.resolve(data);
+                    }).error(function (err, status) {
+                        defer.reject(err, status);
+                    });
+                return defer.promise;
+            }
+
+            function deleteSubmission(submission) {
+                var defer = $q.defer();
+                var url = '';
+                if (submission.id) {
+                    url = '/api/submission/submitted/delete/' + submission.accno;
+                } else {
+                    url = '/api/submission/delete/' + submission.accno;
+                }
+                $http.delete(url)
+                    .success(function (data) {
+                        defer.resolve(data);
+                    }).error(function (err, status) {
+                        defer.reject(err, status);
+                    });
+                return defer.promise;
+            }
+
             return {
                 getSubmissionList: getSubmissionList,
                 getSubmission: getSubmission,
-                saveSubmission: saveSubmission
+                saveSubmission: saveSubmission,
+                submit: submitSubmission,
+                delete: deleteSubmission,
+                update: updateSubmission
             }
         }];
 

@@ -48,9 +48,6 @@ require('./services');
 require('./views/index');
 require('./directives');
 require('./auth');
-require('./home');
-require('./submission');
-require('./files');
 
 app
     .config(function ($routeProvider, $locationProvider, $logProvider, $httpProvider, $anchorScrollProvider) {
@@ -106,23 +103,23 @@ app
                 controller: 'ErrorCtrl'
             }).
             whenAuthenticated('/submissions', {
-                templateUrl: 'templates/submission/views/submissions.html',
+                templateUrl: 'templates/views/submission/submissions.html',
                 controller: 'SubmissionListCtrl'
             }, 'user').
             whenAuthenticated('/addsubmission', {
-                templateUrl: 'templates/submission/views/submission.html',
+                templateUrl: 'templates/views/submission/submission.html',
                 controller: 'AddSubmissionCtrl'
             }, 'user').
             whenAuthenticated('/edit/:accno', {
-                templateUrl: 'templates/submission/views/submission.html',
+                templateUrl: 'templates/views/submission/submission.html',
                 controller: 'EditSubmissionCtrl'
             }, 'user').
             whenAuthenticated('/edittemp/:accnotemp', {
-                templateUrl: 'templates/submission/view/submission.html',
+                templateUrl: 'templates/views/submission/submission.html',
                 controller: 'EditSubmissionCtrl'
             }, 'user').
             whenAuthenticated('/files', {
-                templateUrl: 'templates/files/views/files.html',
+                templateUrl: 'templates/views/files/files.html',
                 controller: 'FilesCtrl'
             }, 'user').
             whenAuthenticated('/export', {
@@ -140,6 +137,7 @@ app
         $locationProvider.html5Mode(false);
 
         $httpProvider.interceptors.push('authInterceptor');
+        $httpProvider.interceptors.push('httpInterceptor');
     })
 
     .run(function ($location, $log, $rootScope, AuthService, AUTH_EVENTS, USER_ROLES) {
@@ -192,6 +190,21 @@ app
             }
         };
     }])
+    .factory('httpInterceptor', function () {
+        return {
+            'request': function (config) {
+                var url = config.url;
+                if (url.startsWith('/api/') || url.startsWith('/raw/')) {
+                    config.url = "/proxy" + url;
+                }
+                return config;
+            },
+
+            'response': function (response) {
+                return response;
+            }
+        };
+    })
     .value('Xml2Json', XML2JSON)
     .factory('SharedData', function () {
         var submission = {};

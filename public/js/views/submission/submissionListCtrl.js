@@ -3,18 +3,18 @@
  */
 'use strict';
 
-module.exports = function ($scope, $location, $log, DataService, SharedData, $uibModal) {
-    $scope.submissions=[];
-    $scope.selectedSubmission=[];
+module.exports = function ($scope, $location, $log, SubmissionService, SharedData, $uibModal) {
+    $scope.submissions = [];
+    $scope.selectedSubmission = [];
 
 
-    DataService.getSubmissions({}).then(function(data) {
+    SubmissionService.getSubmissionList({}).then(function (data) {
         $scope.submissions = data;
 
         //angular.forEach($scope.submissions, function(value, key) {
         //$scope.submissions[key].rtime *= 1000;
         //});
-    }, function(err) {
+    }, function (err) {
         //should return the message page
     });
 
@@ -22,21 +22,21 @@ module.exports = function ($scope, $location, $log, DataService, SharedData, $ui
         return submission || $scope.selectedSubmission[0];
     }
 
-    $scope.editSubmission = function(submission) {
+    $scope.editSubmission = function (submission) {
         var sub = getCurrentSubmission(submission);
         $log.debug('Click edit submission', submission, sub);
 
         if (sub) {
-            SharedData.submission=sub;
+            SharedData.submission = sub;
             $location.url('/edit/' + sub.accno);
         }
     };
 
-    $scope.deleteSubmission = function(submission) {
+    $scope.deleteSubmission = function (submission) {
         var modalInstance = $uibModal.open({
-            controller : 'MessagesCtrl',
+            controller: 'MessagesCtrl',
             templateUrl: 'templates/partials/confirmDialog.html',
-            backdrop:true,
+            backdrop: true,
             size: 'lg'
         });
 
@@ -45,15 +45,15 @@ module.exports = function ($scope, $location, $log, DataService, SharedData, $ui
             $log.debug('Deleting the submission', submission);
 
             if (submission) {
-                DataService.delete(submission).then(function() {
-                    angular.forEach($scope.submissions, function(value, index) {
-                        if (value.id===submission.id) {
+                SubmissionService.delete(submission).then(function () {
+                    angular.forEach($scope.submissions, function (value, index) {
+                        if (value.id === submission.id) {
                             $log.debug('Deleting the submission', value);
                             $scope.submissions.splice(index, 1);
 
                         }
                     });
-                }).catch(function() {
+                }).catch(function () {
                     //show error
                 });
             }
@@ -61,8 +61,6 @@ module.exports = function ($scope, $location, $log, DataService, SharedData, $ui
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-
-
     };
 
 };

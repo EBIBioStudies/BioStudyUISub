@@ -4,7 +4,7 @@
 'use strict';
 module.exports =
     function($rootScope, $scope, $http, $timeout, $location,
-             $injector, $routeParams, $log, SubmissionModel, DataService) {
+             $injector, $routeParams, $log) {
         $log.debug('SubmissionCtrl');
 
 
