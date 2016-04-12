@@ -59,7 +59,7 @@ module.exports =
                     $http.post("/api/auth/signout", Session.userName)
                         .success(function (result) {
                             Session.destroy();
-                            $cookies.remove(result.sessid);
+                            $cookies.remove('BIOSTDSESS');
                             defer.resolve({});
                         })
                         .error(function (err, status, headers) {
