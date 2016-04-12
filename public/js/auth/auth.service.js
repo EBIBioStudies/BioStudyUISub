@@ -8,10 +8,10 @@ module.exports =
 
                 function signIn(credentials) {
                     var defer = $q.defer();
-                    $http.post("/api/auth/signin", credentials)
+                    $http.post("/raw/auth/signin", credentials)
                         .success(function (result) {
                             if (result.status === $rootScope.Constants.Status.OK) {
-                                $cookies.put('BIOSTDSESS', result.sessid);
+                                console.log(result.sessid);
                                 Session.create(result.sessid, result.username, USER_ROLES.user);
                                 defer.resolve(result);
                             }
@@ -59,7 +59,6 @@ module.exports =
                     $http.post("/api/auth/signout", Session.userName)
                         .success(function (result) {
                             Session.destroy();
-                            $cookies.remove('BIOSTDSESS');
                             defer.resolve({});
                         })
                         .error(function (err, status, headers) {
