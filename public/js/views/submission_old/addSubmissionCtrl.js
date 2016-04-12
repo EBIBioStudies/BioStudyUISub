@@ -2,7 +2,7 @@
  * Created by mdylag on 04/09/2014.
  */
 'use strict';
-var moduleHelper2 = require('../../model/moduleHelper2');
+
 module.exports =
     function($rootScope, $scope, $http, $timeout, $interval, $location,
              $uibModal, $injector, $routeParams, $log, SubmissionModel, DataService, ModuleHelper,
@@ -22,12 +22,6 @@ module.exports =
         $scope.viewSubmission=ModuleHelper.model.viewSubmission;
         $scope.submModel=ModuleHelper.model;
 
-        $scope.submHelper = moduleHelper2.createSubmModel($scope.submission);
-
-        /*$scope.viewModel;
-        $scope.$watchCollection('submission.section.links', function(newV, oldV) {
-            console.log('change',newV, oldV);
-        });*/
 
 
         var saveInterv=$interval(function() {

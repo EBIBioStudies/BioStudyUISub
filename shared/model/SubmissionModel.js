@@ -1,6 +1,7 @@
 'use strict';
 var ModelRes = require('./ModelRes.json');
 var modelStructure = require('./Structure.json');
+var _ = require('../../.build/components/lodash/lodash');
 
 /**
  * Created by mdylag on 12/08/15.
@@ -20,16 +21,19 @@ function addAttribute(attr) {
     if (!this.attributes) {
         this.attributes = [];
     }
-    this.attributes.push(attr || SubmissionFactory.prototype.createAttribute());
+    var _attr = attr || SubmissionFactory.prototype.createAttribute();
+    this.attributes.push(_attr);
+    return _attr;
 }
 
 
 var uidAttribute  = 0;
 SubmissionFactory.prototype.createAttribute = function (options) {
-    options = options || {writable : true};
+    options = options || {};
     var attribute = Object.create({}, {
         uid: {writable: false, configurable: false, value: ++uidAttribute },
-        writable: { writable: false, configurable: false, value: options.writable}
+        writable: { writable: false, configurable: false, value: options.writable},
+        required: {writable: false, configurable: false, value: options.required || false}
 });
 
     attribute.name = options.name || '';
@@ -69,15 +73,27 @@ SubmissionFactory.prototype.addAttributeTo = function(array, attr, type) {
 
 SubmissionFactory.prototype.addAttribute = addAttribute;
 
+function createReqAttrs(reqAttrs , obj) {
+    for (var i in reqAttrs) {
+        var index=_.findIndex(obj.attributes, {name: reqAttrs[i].name});
+        if (reqAttrs[i].required && index===-1) {
+            //console.log(add)
+            var attr = SubmissionFactory.prototype.createAttribute({name: reqAttrs[i].name, required:true});
+            obj.attributes.push(attr);
+            //console.log('llll',attr,obj.attributes, reqAttrs.name);
+
+        }
+    }
+}
 
 SubmissionFactory.prototype.createLink = function (options) {
     options = options || {};
     var link = Object.create({
         addAttribute: addAttribute
     });
-
     link.url = options.url || '';
     link.attributes = options.attributes || [];
+    createReqAttrs(modelStructure.link.attributes, link);
     return link;
 }
 
@@ -85,7 +101,9 @@ SubmissionFactory.prototype.addLink = function(link) {
     if (!this.links) {
         this.links = [];
     }
-    this.links.push(SubmissionFactory.prototype.createLink(link));
+    var link = SubmissionFactory.prototype.createLink(link);
+    this.links.push(link);
+    return link;
 
 }
 
@@ -96,6 +114,7 @@ SubmissionFactory.prototype.createFile = function (options) {
     });
     file.path = options.path || '';
     file.attributes = options.attributes || [];
+    createReqAttrs(modelStructure.file.attributes, file);
     return file;
 }
 
@@ -117,7 +136,6 @@ SubmissionFactory.prototype.createSubmission = function (options) {
         id: {writable: false, configurable: false, value: options.id || ''},
         idSave: {writable: false, configurable: false, value: options.idSave || ''},
     });
-    submission.addContact = SubmissionFactory.prototype.addContact;
 
     submission.accno =  options.accno || options.accession || ModelRes.accno;
     submission.type =  options.type || ModelRes.type;
@@ -157,6 +175,11 @@ SubmissionFactory.prototype.createSection = function (options) {
     section.attributes = options.attributes || [];
     section.links = options.links || [];
     section.subsections = options.subsections || [];
+    section.addLink = SubmissionFactory.prototype.addContact;
+    section.addFile = SubmissionFactory.prototype.addFile;
+    section.addPublication = SubmissionFactory.prototype.addPublication;
+    section.addContact = SubmissionFactory.prototype.addContact;
+
     //make a reference from subsection contact to
     return section;
 }

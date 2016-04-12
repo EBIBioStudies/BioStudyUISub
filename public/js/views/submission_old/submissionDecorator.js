@@ -10,11 +10,6 @@ module.exports = function($anchorScroll) {
             //});
         }
 
-        $scope.addNew= function(context, hash) {
-            console.log('add', context);
-            context.add();
-        }
-
         $scope.format = 'dd/MM/yyyy';
         $scope.dateOptions= {
             formatYear: 'yyyy',
@@ -32,11 +27,7 @@ module.exports = function($anchorScroll) {
             context.add({});
         };
 
-        $scope.viewModel = {
-            links : {
-                attributes: [],
-            }
-        }
+
 
     }
 

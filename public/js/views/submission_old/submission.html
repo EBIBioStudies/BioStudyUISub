@@ -19,7 +19,7 @@
                     data-toggle="uisettings.collapseLeftSide" data-item-text="Add a contact"
                     data-item-class="fa-user">
                 </li>
-                <li class="success" bs-ng-item data-bs-click="addNew(submHelper.section.links,'links');"
+                <li class="success" bs-ng-item data-bs-click="add(submModel.viewSubmission.section.links,'links');"
                     data-toggle="uisettings.collapseLeftSide" data-item-text="Add a link" data-item-class="fa-link">
                 </li>
                 <li class="success" bs-ng-item data-bs-click="add(submModel.viewSubmission.section.subsections.publications,'publications');"
@@ -123,9 +123,9 @@
                                     data-detail-header="templates/bsng/section_part/contact/detailHeader.html">
                     </bs-section>
 
-                    <bs-section-new id="links" ng-model="submHelper.section.links"
+                    <bs-section id="links" ng-model="submModel.viewSubmission.section.links"
                                 data-labels="keys.link">
-                    </bs-section-new>
+                    </bs-section>
 
                     <section id="files">
                         <bs-section  ng-model="submModel.viewSubmission.section.files"

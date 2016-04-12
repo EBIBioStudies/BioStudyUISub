@@ -1,4 +1,5 @@
 <!--"-->
+
 <div class="panel" ng-class="{'panel-danger': formContacts.$invalid, 'panel-info':formContacts.$valid}"
      default-class="panel-info" ng-show="data.model.length > 0" ng-form name="formContacts">
     <div class="panel-heading">{{labels.title}} <span class="badge">{{data.model.length}}</span>
@@ -26,7 +27,7 @@
                     <th ng-repeat="field in labels.fields" class="">
                         <span class="text-muted has-error error">{{field.label}}</span>
                     </th>
-                    <th ng-repeat="(key, val) in data.attributeKeys.keys" class="">
+                    <th ng-repeat="(key, val) in data.attributesKey" class="">
                         <span class="text-muted has-error error">{{key}}</span>
                     </th>
                     </thead>

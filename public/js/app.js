@@ -199,7 +199,7 @@ app.config(function($routeProvider, $locationProvider, $logProvider, $httpProvid
     };
 }).filter("filterAttrKeys", function ($filter) {
         return function (fieldValueUnused, array, existedKeys) {
-            //console.log('Attributes filter', value, attributes);
+            //console.log('Attributes filter', array, existedKeys);
             var typeHead = [];
             for (var i in array) {
                 if (!existedKeys[array[i].name]) {

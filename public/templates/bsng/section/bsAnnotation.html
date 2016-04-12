@@ -27,6 +27,7 @@
     </div>
 
     <!-- Table -->
+
     <table class="table table-condensed">
         <thead>
             <th><label class="control-label">Key<span ng-show="atrForm.attrKey.$error.required">: cannot be blank</span></label></th>
@@ -43,7 +44,7 @@
                        typeahead-min-length="0"
                        class="form-control control-label input-sm"
                        placeholder="Type a key" ng-required="true" ms-duplicate="data.model" required
-                       uib-tooltip="Emty or duplicate value" tooltip-class="customClass" tooltip-placement="top-left"
+                       uib-tooltip="Empty or duplicate value" tooltip-class="customClass" tooltip-placement="top-left"
                        tooltip-enable="atrForm.attrKey.$invalid"
                        ng-if="!data.requiredAttributes[attribute.name].required || data.model[attribute.name] != attribute">
                 <p class="form-control-static pull-right" name="attrKey" ng-if="data.requiredAttributes[attribute.name].required && data.model[attribute.name] == attribute">{{attribute.name}}</p>
