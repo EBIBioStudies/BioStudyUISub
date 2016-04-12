@@ -49,8 +49,6 @@ gulp.task('copy', ['clean'], function(cb) {
       .pipe(gulp.dest(envHelper.copyToPath + '/js/'));
   gulp.src('views/*.html')
       .pipe(gulp.dest(envHelper.copyToPath));
-  gulp.src(envHelper.configDir + '/routing.json')
-      .pipe(gulp.dest('.gen'));
 
   cb();
 
