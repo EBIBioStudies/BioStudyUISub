@@ -3,64 +3,62 @@
  */
 'use strict';
 
-module.exports = function ($scope, $location, $log, SubmissionService, SharedData, $uibModal) {
-    $scope.submissions = [];
-    $scope.selectedSubmission = [];
+module.exports =
+    (function () {
 
+        return ['$scope', '$location', 'SubmissionService', 'SharedData', '$uibModal', '$log',
+            function ($scope, $location, SubmissionService, SharedData, $uibModal, $log) {
 
-    SubmissionService.getSubmissionList({}).then(function (data) {
-        $scope.submissions = data;
+                $scope.submissions = [];
+                $scope.selectedSubmission = [];
 
-        //angular.forEach($scope.submissions, function(value, key) {
-        //$scope.submissions[key].rtime *= 1000;
-        //});
-    }, function (err) {
-        //should return the message page
-    });
-
-    function getCurrentSubmission(submission) {
-        return submission || $scope.selectedSubmission[0];
-    }
-
-    $scope.editSubmission = function (submission) {
-        var sub = getCurrentSubmission(submission);
-        $log.debug('Click edit submission', submission, sub);
-
-        if (sub) {
-            SharedData.submission = sub;
-            $location.url('/edit/' + sub.accno);
-        }
-    };
-
-    $scope.deleteSubmission = function (submission) {
-        var modalInstance = $uibModal.open({
-            controller: 'MessagesCtrl',
-            templateUrl: 'templates/partials/confirmDialog.html',
-            backdrop: true,
-            size: 'lg'
-        });
-
-        modalInstance.result.then(function (selectedItem) {
-            submission = submission || $scope.selectedSubmission;
-            $log.debug('Deleting the submission', submission);
-
-            if (submission) {
-                SubmissionService.delete(submission).then(function () {
-                    angular.forEach($scope.submissions, function (value, index) {
-                        if (value.id === submission.id) {
-                            $log.debug('Deleting the submission', value);
-                            $scope.submissions.splice(index, 1);
-
-                        }
+                SubmissionService
+                    .getSubmissionList()
+                    .then(function (result) {
+                        $scope.submissions = result;
                     });
-                }).catch(function () {
-                    //show error
-                });
-            }
 
-        }, function () {
-            $log.info('Modal dismissed at: ' + new Date());
-        });
-    };
+                function getFirstSelected() {
+                    return $scope.selectedSubmission[0];
+                }
 
-};
+                $scope.editSubmission = function (submission) {
+                    var sub = submission || getFirstSelected();
+                    if (sub) {
+                        SharedData.setSubmission(sub);
+                        $location.url('/edit/' + sub.accno);
+                    }
+                };
+
+                $scope.deleteSubmission = function (submission) {
+                    var modalInstance = $uibModal.open({
+                        controller: 'MessagesCtrl',
+                        templateUrl: 'templates/partials/confirmDialog.html',
+                        backdrop: true,
+                        size: 'lg'
+                    });
+
+                    modalInstance.result
+                        .then(function () {
+                            submission = submission || $scope.selectedSubmission;
+
+                            if (submission) {
+                                SubmissionService
+                                    .delete(submission)
+                                    .then(function () {
+                                        angular.forEach($scope.submissions,
+                                            function (value, index) {
+                                                if (value.id === submission.id) {
+                                                    $scope.submissions.splice(index, 1);
+                                                }
+                                            });
+                                    })
+                                    .catch(function () {
+                                        //show error
+                                    });
+                            }
+                        });
+                };
+
+            }];
+    })();
