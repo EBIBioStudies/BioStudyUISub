@@ -60,7 +60,7 @@ module.exports = function ($http, $window, $q,$location, $rootScope, $cookieStor
             .success(function(data, status) {
                 $log.debug('Success signup', data, status);
 
-                if (status===200 && data.status===$rootScope.Constants.Status.OK) {
+                if (status===200) {
                     defer.resolve(data);
                 } else {
                     console.log('Error', data, status);
