@@ -3,14 +3,15 @@
 module.exports =
     (function () {
 
-        return ['$http', '$q', '$rootScope', 'USER_ROLES', 'Session', 'AccessLevel', '$log',
-            function ($http, $q, $rootScope, USER_ROLES, Session, AccessLevel, $log) {
+        return ['$http', '$q', '$rootScope', 'USER_ROLES', 'Session', 'AccessLevel', '$log', 'SessionCookie',
+            function ($http, $q, $rootScope, USER_ROLES, Session, AccessLevel, $log, SessionCookie) {
 
                 function signIn(credentials) {
                     var defer = $q.defer();
                     $http.post("/raw/auth/signin", credentials)
                         .success(function (result) {
                             if (result.status === $rootScope.Constants.Status.OK) {
+                                SessionCookie.set(result.sessid);
                                 Session.create(result.sessid, result.username, USER_ROLES.user);
                                 defer.resolve(result);
                             }
@@ -30,7 +31,7 @@ module.exports =
 
                 function checkSession() {
                     var defer = $q.defer();
-                    $http.get("/raw/auth/check?format=json")
+                    $http.get("/raw/auth/check?format=json&BIOSTDSESS=" + SessionCookie.get())
                         .success(function (result) {
                             if (result.status === $rootScope.Constants.Status.OK) {
                                 Session.create(result.sessid, result.username, USER_ROLES.user);

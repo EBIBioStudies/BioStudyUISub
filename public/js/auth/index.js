@@ -7,6 +7,17 @@ angular.module('BioStudyApp')
     .controller('SignInCtrl', require('./views/signin.ctrl'))
     .controller('SignUpCtrl', require('./views/signup.ctrl'))
     .controller('ActivateCtrl', require('./views/activate.ctrl'))
+    .service('SessionCookie', ['$cookies', '$location', function ($cookies, $location) {
+        var COOKIE_NAME = "BST_SESSION";
+
+        this.set = function (id) {
+            $cookies.put(COOKIE_NAME, id, {domain: $location.host()});
+        };
+
+        this.get = function () {
+            return $cookies.get(COOKIE_NAME);
+        };
+    }])
     .service('Session', ['USER_ROLES', function (USER_ROLES) {
         this.id = null;
         this.userName = null;
@@ -30,7 +41,7 @@ angular.module('BioStudyApp')
             init(this);
         };
 
-        this.isAnonymous = function() {
+        this.isAnonymous = function () {
             return this.userName === null;
         };
 
