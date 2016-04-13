@@ -3,8 +3,8 @@
 module.exports =
     (function () {
 
-        return ['$http', '$q', '$rootScope', 'USER_ROLES', 'Session', 'AccessLevel', '$cookies', '$log',
-            function ($http, $q, $rootScope, USER_ROLES, Session, AccessLevel, $cookies, $log) {
+        return ['$http', '$q', '$rootScope', 'USER_ROLES', 'Session', 'AccessLevel', '$log',
+            function ($http, $q, $rootScope, USER_ROLES, Session, AccessLevel, $log) {
 
                 function signIn(credentials) {
                     var defer = $q.defer();

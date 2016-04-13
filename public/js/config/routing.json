@@ -1,0 +1,70 @@
+{
+  "context": "/proxy",
+
+  "routing": {
+    "signin": {
+      "url": "/api/auth/signin",
+      "method": "POST"
+    },
+    "signup": {
+      "url": "/api/auth/signup",
+      "method": "POST"
+    },
+    "register": {
+      "url": "/api/auth/register",
+      "method": "POST"
+    },
+    "signout": {
+      "url": "/api/auth/signout",
+      "method": "POST"
+    },
+    "activate": {
+      "url": "/api/auth/activate",
+      "method": "POST"
+    },
+    "files_dir": {
+      "url": "/api/files/dir",
+      "method": "GET"
+    },
+    "files_upload": {
+      "url": "/api/files/fileUpload",
+      "method": "POST"
+    },
+    "files_delete": {
+      "url": "/api/files/delete",
+      "method": "DELETE"
+    },
+    "files_upload": {
+      "url": "/raw/fileUpload",
+      "method": "POST"
+    },
+    "submission_get": {
+      "url": "/api/submission",
+      "method": "GET"
+    },
+    "submission_list": {
+      "url": "/api/submissions",
+      "method": "GET"
+    },
+    "submission_create": {
+      "url": "/api/submission/create",
+      "method": "POST"
+    },
+    "submission_update": {
+      "url": "/api/submission/update",
+      "method": "PUT"
+    },
+    "tmp_submission_delete": {
+      "url": "/api/submission/delete",
+      "method": "DELETE"
+    },
+    "submission_delete": {
+      "url": "/api/submission/submitted/delete",
+      "method": "DELETE"
+    },
+    "submission_save": {
+      "url": "/api/submission/save",
+      "method": "PUT"
+    }
+  }
+}
