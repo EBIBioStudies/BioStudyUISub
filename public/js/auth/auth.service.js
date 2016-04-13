@@ -99,7 +99,7 @@ module.exports =
                     return roles.indexOf(Session.userRole) !== -1;
                 }
 
-                function isAuthorizedWith(accessLevel) {
+                function isAuthorizedAs(accessLevel) {
                     return isAuthorized(AccessLevel.roles(accessLevel));
                 }
 
@@ -110,7 +110,7 @@ module.exports =
                     checkSession: checkSession,
                     isAuthenticated: isAuthenticated,
                     isAuthorized: isAuthorized,
-                    isAuthorizedWith: isAuthorizedWith
+                    isAuthorizedAs: isAuthorizedAs
                 };
             }];
 

@@ -61,7 +61,7 @@ app
 
         function isAuthorized(accessLevel, $q, AuthService) {
             var deferred = $q.defer();
-            if (AuthService.isAuthorizedWith(accessLevel)) {
+            if (AuthService.isAuthorizedAs(accessLevel)) {
                 deferred.reject({needsAuthentication: true});
             } else {
                 deferred.resolve();
