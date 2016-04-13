@@ -30,6 +30,10 @@ angular.module('BioStudyApp')
             init(this);
         };
 
+        this.isAnonymous = function() {
+            return this.userName === null;
+        };
+
         init(this);
     }])
     .constant('AUTH_EVENTS', {

@@ -137,7 +137,8 @@ app
         $locationProvider.html5Mode(false);
 
         $httpProvider.interceptors.push('authInterceptor');
-        $httpProvider.interceptors.push('httpInterceptor');
+        $httpProvider.interceptors.push('proxyInterceptor');
+        $httpProvider.interceptors.push('sessionInterceptor');
     })
 
     .run(function ($location, $log, $rootScope, AuthService, AUTH_EVENTS, USER_ROLES) {
@@ -190,7 +191,7 @@ app
             }
         };
     }])
-    .factory('httpInterceptor', function () {
+    .factory('proxyInterceptor', function () {
         return {
             'request': function (config) {
                 var url = config.url;
@@ -198,13 +199,19 @@ app
                     config.url = "/proxy" + url;
                 }
                 return config;
-            },
-
-            'response': function (response) {
-                return response;
             }
         };
     })
+    .factory('sessionInterceptor', ['Session', function (Session) {
+        return {
+            'request': function (config) {
+                if (!Session.isAnonymous()) {
+                    config.headers['X-Session-Token'] = Session.id;
+                }
+                return config;
+            }
+        };
+    }])
     .value('Xml2Json', XML2JSON)
     .factory('SharedData', function () {
         var submission = {};

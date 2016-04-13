@@ -11,7 +11,6 @@ module.exports =
                     $http.post("/raw/auth/signin", credentials)
                         .success(function (result) {
                             if (result.status === $rootScope.Constants.Status.OK) {
-                                console.log(result.sessid);
                                 Session.create(result.sessid, result.username, USER_ROLES.user);
                                 defer.resolve(result);
                             }
@@ -89,7 +88,7 @@ module.exports =
                 }
 
                 function isAuthenticated() {
-                    return !!Session.userName;
+                    return !Session.isAnonymous();
                 }
 
                 function isAuthorized(roles) {
