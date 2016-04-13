@@ -43,8 +43,8 @@
                                     class="btn btn-warning btn-sm" type="button" ng-click="data.remove($index, author)"><i class="fa fa-trash"></i> </button>
                         </td>
                         <td ng-repeat="field in labels.fields" class="form-group-sm row ng-class:data.colSizeCss">
-                            <input type="text" name="attrValuePreview" ng-model="author[field.name]"
-                                   class="form-control input-sm" placeholder="Enter a value" ng-required="true">
+                            <bs-replace-el id="previewHeader" ng-model="author" data-field="field" data-labels="labels"
+                                           template-url="templates/bsng/section_part/previewHeader.html"></bs-replace-el>
                         </td>
                         {{data.attributeKeys}}
                         <td class="form-group-sm row" ng-class="data.colSizeCss" ng-repeat="key in data.attributeKeys.keys">
@@ -90,14 +90,9 @@
                         <p class="form-control-static pull-right">{{field.label}}</p>
                     </td>
                     <td class="nopadding border-none form-group-sm">
-                        <p>
-                            <input type="text" name="url" ng-model="author[field.name]"
-                                   class="form-control input-sm"
-                                   placeholder="{{field.placeholder || 'Enter a value'}}" ng-required="true"
-                                   uib-tooltip="This field is required" tooltip-class="customClass" tooltip-placement="top-left"
-                                   tooltip-trigger="mouseenter focus"  tooltip-is-open="atrLinkForm1.attrValue.$error.required"
-                                   tooltip-enable="!attribute.value">
-                        </p>
+                        <bs-replace-el id="detailHeader" ng-model="author" data-field="field"
+                                       data-labels="labels" data-field="field" template-url="templates/bsng/section_part/detailHeader.html">
+                        </bs-replace-el>
 
                     </td>
                 </tr>

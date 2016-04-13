@@ -17,11 +17,12 @@ module.exports =
         $scope.hasError=false;
         $scope.title='Add a new submission';
 
-        ModuleHelper.setData(SubmissionModel.createSubmission());
+       /* ModuleHelper.setData(SubmissionModel.createSubmission());
         $scope.submission=ModuleHelper.model.submission;
         $scope.viewSubmission=ModuleHelper.model.viewSubmission;
         $scope.submModel=ModuleHelper.model;
-
+*/
+        $scope.submission = SubmissionModel.createSubmission();
         $scope.submHelper = moduleHelper2.createSubmModel($scope.submission);
 
         /*$scope.viewModel;

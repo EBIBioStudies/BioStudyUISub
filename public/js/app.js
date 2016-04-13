@@ -209,6 +209,5 @@ app.config(function($routeProvider, $locationProvider, $logProvider, $httpProvid
             return typeHead;
         };
     });
-;
 
 

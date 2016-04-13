@@ -103,7 +103,6 @@ describe('Test module helper2', function () {
             SubmissionModel.addAttribute.call(submModel, SubmissionModel.createAttribute({"name":"name1"}))
 
         });
-
         it('should create a new item from modelk', function () {
             var link1=SubmissionModel.createLink();
             SubmissionModel.addLink.call(submModel.section, link1);
@@ -143,12 +142,62 @@ describe('Test module helper2', function () {
 
         });
 
-        xit('should create a subm', function () {
+        it('should create a subm', function () {
             var model = moduleHelper2.createSubmModel(submModel);
             expect(model.section.links).toBeDefined();
             expect(model.section.files).toBeDefined();
 
+        });
+
+        it('should map attributes from model attributes', function () {
+            var model = moduleHelper2.createSubmModel(submModel);
+            expect(model.attributes.ReleaseDate).toBeDefined();
+            expect(model.attributes.Title).toBeDefined();
+
         })
+
+        it('should map attributes from section attributes', function () {
+            var model = moduleHelper2.createSubmModel(submModel);
+            expect(model.section.annotations.attributes).toBeDefined();
+            expect(model.section.annotations.attributes).toBeDefined();
+            expect(model.section.annotations.attributeKeys).toBeDefined();
+            for (var i in model.section.annotations.attributes) {
+                expect(model.section.annotations.attributes[i].require).toBeDefined();
+                expect(model.section.annotations.attributes[i].value).toBeDefined();
+                expect(model.section.annotations.attributes[i].value.name).toBeDefined();
+                expect(model.section.annotations.attributes[i].value.value).toBeDefined();
+
+            }
+            //expect(model.section.annotations.attributes[0].require).toBe(true);
+
+        })
+
+        it('should add a new attribute section', function () {
+            var model = moduleHelper2.createSubmModel(submModel);
+            expect(model.section.annotations.attributes[2]).not.toBeDefined();
+            model.section.annotations.add();
+            expect(model.section.annotations.attributes[2]).toBeDefined();
+            expect(model.section.annotations.attributes[2].require).toBe(false);
+            expect(model.section.annotations.attributes[2].value).toEqual(model.section.annotations.model[2]);
+            //console.log('eee', model.section.annotations.attributes[2].value, model.section.annotations.model);
+
+        });
+
+        it('should change the attribute', function () {
+            var model = moduleHelper2.createSubmModel(submModel);
+            model.section.annotations.add();
+            model.section.annotations.attributes[2].value.name = "A";
+            model.section.annotations.add();
+        });
+
+        it('should add a new contact', function () {
+            var model = moduleHelper2.createSubmModel(submModel);
+            model.section.subsection.contacts.add();
+            console.log('eee', model.section.subsection.contacts);
+
+        });
+
+
 
         xit('add a new link', function () {
             var model = moduleHelper2.createSubmModel(submModel);

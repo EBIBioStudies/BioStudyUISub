@@ -1,5 +1,6 @@
 var SubmissionModel = require('../../../shared/model/SubmissionModel');
 var _ = require('lodash');
+var Structure = require('../../../shared/model/Structure.json');
 
 
 function AttributeKeys() {
@@ -84,8 +85,10 @@ function ModuleItem(options) {
     }
 
     this.addAttrKeys= function(item) {
-        for (var j = 0; j < item.attributes.length; j++) {
-            this.attributeKeys.add(item.attributes[j].name);
+        if (item.attributes) {
+            for (var j = 0; j < item.attributes.length; j++) {
+                this.attributeKeys.add(item.attributes[j].name);
+            }
         }
     }
 
@@ -93,7 +96,6 @@ function ModuleItem(options) {
         //SubmissionModel.addLink
         var item=options.addItem();
         this.addAttrKeys(item);
-        computeColSize();
         this.ui.activeTabs.push(true);
         computeColSize();
     }
@@ -127,8 +129,13 @@ function ModuleItem(options) {
         //this.ui.activeTabs.splice(index,1);
         //this.ref.splice(index,1);
     }
-    this.deleteAttr = function (name) {
-        this.attributeKeys.remove(name);
+    this.deleteAttr = function (index, attribute, item) {
+        console.log('Delete attribute', attribute, item);
+        var index = _.findIndex(item.attributes, attribute);
+        if (index > -1) {
+            item.attributes.splice(index,1);
+        }
+        this.attributeKeys.remove(attribute.name);
         computeColSize();
 
     };
@@ -145,48 +152,129 @@ function ModuleItem(options) {
 
 }
 
+function Attributes(model) {
+    this.model=model;
+    this.attributeKeys= new AttributeKeys();
+    this.attributes= [];
+    function createAttr(require, attr) {
+        return {
+            require: require,
+            value:attr
+        }
+    }
+    for (var j = 0; j < model.length; j++) {
+        this.attributeKeys.add(model[j].name);
+        var modelAttr = _.find(Structure.annotations.attributes,{name: model[j].name});
+        this.attributes.push(createAttr(modelAttr.required, model[j]));
+    }
+    this.add = function(attr) {
+        var _attr=SubmissionModel.createAttribute(attr);
+        this.attributes.push(createAttr(false, _attr));
+        this.model.push(_attr);
+    }
+      this.remove = function(attr) {
+        if (attr) {
+            var index = _.findIndex(this.attributes, attr);
+            if (index > -1) {
+                this.model.splice(index,1);
+                this.attributes.splice(index,1);
+            }
+        }
+    };
 
+
+}
 function ModuleHelper(model, fieldsCount) {
     this.model = model;
     this.section = {};
-    if (this.model.section.links) {
-        this.section.links = new ModuleItem({
-            model: this.model.section.links,
-            fieldsCount: 1,
-            addItem: _.bind(SubmissionModel.addLink, this.model.section)
-        });
-        this.section.links.create();
-    }
-    if (this.model.section.files) {
-        this.section.files = new ModuleItem({
-            model: this.model.section.files,
-            fieldsCount: 1,
-            addItem: _.bind(SubmissionModel.addFile, this.model.section)
-        });
-        this.section.files.create();
-    }
     this.section.subsection = {};
-    var contacts=_.filter(model.section.subsections, {type: 'Contact'});
-    var publications=_.filter(model.section.subsections, {type: 'Publication'});
+    this.attributes = {};
+    //create attrs
+    //create attributes
 
-    if (contacts) {
-        this.section.subsection.contacts = new ModuleItem({
-            model: contacts,
-            fieldsCount: 0,
-            addItem: _.bind(SubmissionModel.addContact, this.model.section)
-        });
-        this.section.subsection.contacts.create();
+    if (this.model) {
+        if (this.model.attributes) {
+            var releaseDate = _.find(this.model.attributes, {name: 'ReleaseDate'});
+            this.attributes.ReleaseDate = {name: 'ReleaseDate', value: releaseDate}
+            var title = _.find(this.model.attributes, {name: 'Title'});
+            this.attributes.Title = {name: 'Title', value: title || ''}
+        }
+
+
+        if (this.model.section.attributes) {
+            this.section.annotations = new Attributes(this.model.section.attributes);
+            /*{attributeKeys: new AttributeKeys(),
+            attributes: []};
+            for (var j = 0; j < this.model.section.attributes.length; j++) {
+                this.section.annotations.attributeKeys.add(this.model.section.attributes[j].name);
+                var modelAttr = _.find(Structure.annotations.attributes,{name: this.model.section.attributes[j].name});
+                var attr = {require: modelAttr.required, value:this.model.section.attributes[j] };
+                this.section.annotations.attributes.push(attr);
+
+            }*/
+
+        }
+
+        if (this.model.section.links) {
+            this.section.links = new ModuleItem({
+                model: this.model.section.links,
+                fieldsCount: 1,
+                addItem: _.bind(SubmissionModel.addLink, this.model.section)
+            });
+            this.section.links.create();
+        }
+
+        if (this.model.section.files) {
+            this.section.files = new ModuleItem({
+                model: this.model.section.files,
+                fieldsCount: 1,
+                addItem: _.bind(SubmissionModel.addFile, this.model.section)
+            });
+            this.section.files.create();
+        }
+
+        var contacts=_.filter(model.section.subsections, {type: 'Contact'});
+        var publications=_.filter(model.section.subsections, {type: 'Publication'});
+        var _self = this;
+        if (contacts) {
+            this.section.subsection.contacts = new ModuleItem({
+                model: contacts,
+                fieldsCount: 0,
+                addItem: (function() {
+                    var addToModel = _.bind(SubmissionModel.addContact, _self.model.section);
+                    return function() {
+                        var item=addToModel();
+                        contacts.push(item);
+                        return item;
+                    }
+
+                })()
+            });
+            console.log('contacts.create',this.section.subsection.contacts);
+            this.section.subsection.contacts.create();
+
+        }
+        if (publications) {
+            this.section.subsection.publications = new ModuleItem({
+                model: publications,
+                fieldsCount: 0,
+                addItem: (function() {
+                    var addToModel = _.bind(SubmissionModel.addContact, _self.model.section);
+                    return function() {
+                        var item=addToModel();
+                        publications.push(item);
+                        return item;
+                    }
+
+                })()
+
+            });
+            this.section.subsection.publications.create();
+
+        }
 
     }
-    if (publications) {
-        this.section.subsection.publications = new ModuleItem({
-            model: publications,
-            fieldsCount: 0,
-            addItem: _.bind(SubmissionModel.addPublication, this.model.section)
-        });
-        this.section.subsection.publications.create();
 
-    }
 
 }
 

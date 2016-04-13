@@ -173,6 +173,8 @@ SubmissionFactory.prototype.createSection = function (options) {
     section.type = options.type || ModelRes.section.type;
     section.files =  options.files || [];
     section.attributes = options.attributes || [];
+    //create required attributes
+    createReqAttrs(modelStructure.annotations.attributes, section);
     section.links = options.links || [];
     section.subsections = options.subsections || [];
     section.addLink = SubmissionFactory.prototype.addContact;

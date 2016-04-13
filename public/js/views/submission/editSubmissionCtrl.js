@@ -3,6 +3,7 @@
  */
 'use strict';
 
+var moduleHelper2 = require('../../model/moduleHelper2');
 
 module.exports =
     function($rootScope, $scope, $timeout, $interval, $location,
@@ -26,10 +27,15 @@ module.exports =
         if ($routeParams.accno) {
             $log.debug('Edit the submission ', $routeParams);
             DataService.getSubmission($routeParams.accno).then(function(data) {
-                ModuleHelper.setData(data);
+                /*ModuleHelper.setData(data);
                 $scope.submission=ModuleHelper.model.submission;
                 $scope.viewSubmission=ModuleHelper.model.viewSubmission;
                 $scope.submModel=ModuleHelper.model;
+                */
+                $scope.submission = SubmissionModel.createSubmission(data);
+
+                $scope.submHelper = moduleHelper2.createSubmModel($scope.submission);
+
                 //$scope.viewSubmission.contacts=ModuleHelper.unionKeys($scope.submission.section.subsections, _keys.contact.type);
                 $log.debug('Date recevied', data);
 
@@ -79,9 +85,9 @@ module.exports =
                 $log.debug('Validation error', $scope.submissionForm);
                 return;
             }
-            $log.debug('Submit data', $scope.submModel.submission);
-            DataService.update($scope.submModel.submission).then(function(data) {
-                var acc = $scope.submModel.submission.accno;
+            $log.debug('Submit data', $scope.submission);
+            DataService.update($scope.submission).then(function(data) {
+                var acc = $scope.submission.accno;
                 MessageService.addMessage('Submission ' + acc + ' updated.');
                 $interval.cancel(saveInterv);
                 var modalInstance = $uibModal.open({
