@@ -21,9 +21,8 @@ module.exports =
                         return;
                     }
 
-
                     AuthService
-                        .signUp(user.username, user.email, user.password)
+                        .signUp(user)
                         .then(function (res) {
                             //$location.path('/subm');
                             $scope.hasError = false;

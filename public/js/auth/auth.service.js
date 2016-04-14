@@ -68,9 +68,9 @@ module.exports =
 
                 }
 
-                function signUp(username, email, password) {
+                function signUp(user) {
                     var defer = $q.defer();
-                    $http.post("/api/auth/signup", {username: username, email: email, password: password})
+                    $http.post("/api/auth/signup", user)
                         .success(function (result, status) {
                             if (result.status === $rootScope.Constants.Status.OK) {
                                 defer.resolve(result);
@@ -80,9 +80,19 @@ module.exports =
                             }
                         })
                         .error(function (err, status) {
-
                             defer.reject(err, status);
+                        });
+                    return defer.promise;
+                }
 
+                function activate(key) {
+                    var defer = $q.defer();
+                    $http.post("/raw/auth/activate/" + key)
+                        .success(function (result) {
+                            defer.resolve(result);
+                        })
+                        .error(function (err, status) {
+                            defer.reject(err, status);
                         });
                     return defer.promise;
                 }
@@ -107,6 +117,7 @@ module.exports =
                     signOut: signOut,
                     signUp: signUp,
                     checkSession: checkSession,
+                    activate: activate,
                     isAuthenticated: isAuthenticated,
                     isAuthorized: isAuthorized,
                     isAuthorizedAs: isAuthorizedAs
