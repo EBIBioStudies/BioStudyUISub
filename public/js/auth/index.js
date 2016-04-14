@@ -7,21 +7,12 @@ angular.module('BioStudyApp')
     .controller('SignInCtrl', require('./views/signin.ctrl'))
     .controller('SignUpCtrl', require('./views/signup.ctrl'))
     .controller('ActivateCtrl', require('./views/activate.ctrl'))
-    .service('SessionCookie', ['$cookies', '$location', function ($cookies, $location) {
-        var COOKIE_NAME = "BST_SESSION";
-
-        this.set = function (id) {
-            $cookies.put(COOKIE_NAME, id, {domain: $location.host()});
-        };
-
-        this.get = function () {
-            return $cookies.get(COOKIE_NAME);
-        };
-    }])
-    .service('Session', ['USER_ROLES', function (USER_ROLES) {
+    .service('Session', ['USER_ROLES', 'LocalStorage', function (USER_ROLES, LocalStorage) {
         this.id = null;
         this.userName = null;
         this.userRole = null;
+
+        var SESSION_KEY = "SESSION_DATA";
 
         function setValues(obj, id, userName, userRole) {
             obj.id = id;
@@ -29,23 +20,34 @@ angular.module('BioStudyApp')
             obj.userRole = userRole;
         }
 
-        function init(obj) {
-            setValues(obj, null, null, USER_ROLES.public)
+        function setInitValues(obj) {
+           setValues(obj, null, null, USER_ROLES.public);
         }
+
+        this.init = function() {
+            var data = LocalStorage.retrieve(SESSION_KEY);
+            if (data != null) {
+                setValues(this, data[0], data[1], data[2]);
+                return;
+            }
+            setInitValues(this);
+        };
 
         this.create = function (sessionId, userName, userRole) {
             setValues(this, sessionId, userName, userRole);
+            LocalStorage.store(SESSION_KEY, [sessionId, userName, userRole]);
         };
 
         this.destroy = function () {
-            init(this);
+            setInitValues(this);
+            LocalStorage.remove(SESSION_KEY);
         };
 
         this.isAnonymous = function () {
-            return this.userName === null;
+            return this.id === null;
         };
 
-        init(this);
+        this.init();
     }])
     .constant('AUTH_EVENTS', {
         loginSuccess: 'auth-login-success',

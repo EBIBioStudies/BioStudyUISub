@@ -48,6 +48,7 @@ require('./services');
 require('./views/index');
 require('./directives');
 require('./auth');
+require('./utils');
 
 app
     .config(function ($routeProvider, $locationProvider, $logProvider, $httpProvider, $anchorScrollProvider) {
@@ -136,12 +137,12 @@ app
 
         $locationProvider.html5Mode(false);
 
-        $httpProvider.interceptors.push('authInterceptor');
-        $httpProvider.interceptors.push('proxyInterceptor');
         $httpProvider.interceptors.push('sessionInterceptor');
+        $httpProvider.interceptors.push('proxyInterceptor');
+        $httpProvider.interceptors.push('authInterceptor');
     })
 
-    .run(function ($location, $log, $rootScope, AuthService, AUTH_EVENTS, USER_ROLES) {
+    .run(function ($location, $log, $rootScope, AuthService, AUTH_EVENTS, USER_ROLES, Session) {
 
         //TODO: it does not work ???
         //$anchorScroll.yOffset = 300;
@@ -172,11 +173,9 @@ app
             $rootScope.currentUser = user;
         };
 
-        AuthService.checkSession().then(
-            function (user) {
-                console.log('user set: ' + user);
-                $rootScope.setCurrentUser(user);
-            });
+        if (!Session.isAnonymous()) {
+            $rootScope.setCurrentUser(Session.userName);
+        }
     })
     .factory('authInterceptor', ['$rootScope', '$q', 'AUTH_EVENTS', function ($rootScope, $q, AUTH_EVENTS) {
         return {
@@ -206,7 +205,7 @@ app
         return {
             'request': function (config) {
                 if (!Session.isAnonymous()) {
-                    config.headers['X-Session-Token'] = Session.id;
+                    config.headers['x-session-token'] = Session.id;
                 }
                 return config;
             }

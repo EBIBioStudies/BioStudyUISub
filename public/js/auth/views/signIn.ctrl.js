@@ -32,7 +32,7 @@ module.exports =
                         .signIn($scope.credentials)
                         .then(function (user) {
                             $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
-                            $scope.setCurrentUser(user);
+                            $scope.setCurrentUser(user.username);
 
                             $location.path('/submissions');
                             $scope.hasError = false;

@@ -3,15 +3,14 @@
 module.exports =
     (function () {
 
-        return ['$http', '$q', '$rootScope', 'USER_ROLES', 'Session', 'AccessLevel', '$log', 'SessionCookie',
-            function ($http, $q, $rootScope, USER_ROLES, Session, AccessLevel, $log, SessionCookie) {
+        return ['$http', '$q', '$rootScope', 'USER_ROLES', 'Session', 'AccessLevel', '$log',
+            function ($http, $q, $rootScope, USER_ROLES, Session, AccessLevel, $log) {
 
                 function signIn(credentials) {
                     var defer = $q.defer();
                     $http.post("/raw/auth/signin", credentials)
                         .success(function (result) {
                             if (result.status === $rootScope.Constants.Status.OK) {
-                                SessionCookie.set(result.sessid);
                                 Session.create(result.sessid, result.username, USER_ROLES.user);
                                 defer.resolve(result);
                             }
@@ -29,12 +28,12 @@ module.exports =
                     return defer.promise;
                 }
 
-                function checkSession() {
+                function checkSession(sessionId) {
                     var defer = $q.defer();
-                    $http.get("/raw/auth/check?format=json&BIOSTDSESS=" + SessionCookie.get())
+                    $http.get("/raw/auth/check?format=json&BIOSTDSESS=" + sessionId)
                         .success(function (result) {
                             if (result.status === $rootScope.Constants.Status.OK) {
-                                Session.create(result.sessid, result.username, USER_ROLES.user);
+                                Session.create(sessionId, result.username, USER_ROLES.user);
                                 defer.resolve(result);
                             } else {
                                 defer.reject({status: result.status, message: result.message});
