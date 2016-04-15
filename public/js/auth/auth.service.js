@@ -3,8 +3,14 @@
 module.exports =
     (function () {
 
-        return ['$http', '$q', '$rootScope', 'USER_ROLES', 'Session', 'AccessLevel', '$log',
-            function ($http, $q, $rootScope, USER_ROLES, Session, AccessLevel, $log) {
+        return ['$http', '$q', '$rootScope', 'USER_ROLES', 'Session', 'AccessLevel', '$log', '$location',
+            function ($http, $q, $rootScope, USER_ROLES, Session, AccessLevel, $log, $location) {
+
+                function getAppPath() {
+                    var re = new RegExp("https?:\/\/[^\/]+([^\\?#]*).*");
+                    var m = re.exec($location.absUrl());
+                    return m[1];
+                }
 
                 function signIn(credentials) {
                     var defer = $q.defer();
@@ -70,6 +76,8 @@ module.exports =
 
                 function signUp(user) {
                     var defer = $q.defer();
+                    user.path = getAppPath() + "#/activate";
+                    $log.debug("application path: " + user.path);
                     $http.post("/api/auth/signup", user)
                         .success(function (result, status) {
                             if (result.status === $rootScope.Constants.Status.OK) {
