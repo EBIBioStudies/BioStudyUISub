@@ -205,7 +205,7 @@ app
         return {
             'request': function (config) {
                 if (!Session.isAnonymous()) {
-                    config.headers['x-session-token'] = Session.id;
+                    config.headers['X-Session-Token'] = Session.id;
                 }
                 return config;
             }
