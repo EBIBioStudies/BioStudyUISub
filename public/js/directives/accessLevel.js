@@ -1,44 +1,23 @@
 'use strict';
-module.exports=function($rootScope, AuthService) {
+module.exports = ['AccessLevel', function (AccessLevel) {
     return {
         restrict: 'A',
-        link: function($scope, element, attrs) {
-            var prevDisp = element.css('display'),
-                userRole,
-                accessLevel;
+        link: function ($scope, element, attrs) {
+            var display = element.css('display');
 
-            $scope.currentUser = AuthService.currentUser;
-            $scope.$watch('currentUser', function(user) {
-                if(user.role) {
-                    userRole = user.role;
+            $scope.$watch($scope.currentUser,
+                function () {
+                    updateCSS();
+                }, true);
+
+            function updateCSS() {
+                if (!$scope.isAuthorized(AccessLevel.roles(attrs.accessLevel))) {
+                    element.css('display', 'none');
                 }
-                updateCSS('watch user');
-            }, true);
-
-            attrs.$observe('accessLevel', function(al) {
-                if(al) {
-
-                    //accessLevel = $scope.$eval(al);
-                    accessLevel = AuthService.accessLevels[al] || AuthService.accessLevels.annon;
-
-                }
-                updateCSS('observer');
-            });
-
-            function updateCSS(wh) {
-
-                if(userRole && accessLevel) {
-
-                    if(!AuthService.authorize(accessLevel, userRole)) {
-                        element.css('display', 'none');
-                    }
-                    else {
-
-                        element.css('display', prevDisp);
-                    }
+                else {
+                    element.css('display', display);
                 }
             }
-
         }
     };
-};
+}];

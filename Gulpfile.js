@@ -19,6 +19,8 @@ var gutil = require('gulp-util');
 var gulp = require('gulp');
 
 var envHelper=require('./tasks/helpers/envHelper');
+var webserver = require('gulp-webserver');
+
 
 
 gulp.task('clean', function () {
@@ -39,14 +41,14 @@ gulp.task('copy', ['clean'], function(cb) {
   gulp.src(envHelper.configDir + '/' + envHelper.configFile)
       .pipe(rename('config.json'))
       .pipe(gulp.dest('.gen'));
-  gulp.src(['public/images/**/*.png','public/images/*.ico'])
+  gulp.src(['public/images/**/*.png', 'public/images/*.ico'])
       .pipe(gulp.dest(envHelper.copyToPath + '/images'));
   gulp.src(['public/partials/**/*'])
-      .pipe(gulp.dest(envHelper.copyToPath + '/partials') );
+      .pipe(gulp.dest(envHelper.copyToPath + '/partials'));
   gulp.src('public/js/polyfill.js')
       .pipe(gulp.dest(envHelper.copyToPath + '/js/'));
   gulp.src('views/*.html')
-      .pipe(gulp.dest(envHelper.copyToPath ));
+      .pipe(gulp.dest(envHelper.copyToPath));
 
   cb();
 
@@ -136,6 +138,21 @@ gulp.task('unit:public', function() {
 
   gutil.log('Running unit tests on unminified source.');
   karma.start(karmaConfig, captureError());
+});
+
+gulp.task('webserver', ['clean', 'js', 'styles'], function() {
+  gulp.src('.build')
+      .pipe(webserver({
+        port: 7000,
+        proxies   : [
+          {
+            source: '/proxy/api', target: 'http://localhost:10280/proxy/api'
+          },
+          {
+            source: '/proxy/raw', target: 'http://localhost:10280/proxy/raw'
+          }
+        ]
+      }));
 });
 
 

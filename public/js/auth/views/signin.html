@@ -21,7 +21,7 @@
 
                                 <input type="text" id="username" name="username" tabindex="1"
                                        class="form-control"
-                                       placeholder="Username" ng-model="user.login" ng-required="true">
+                                       placeholder="Username" ng-model="credentials.login" ng-required="true">
                             </div>
                             <div class="form-group" ms-form-group-validator>
                                 <label class="control-label" for="password">Password<span ng-show="signInForm.password.$dirty && signInForm.password.$invalid
@@ -29,7 +29,7 @@
 
                                 <input type="password" name="password" id="password" tabindex="2"
                                        class="form-control"
-                                       placeholder="Password" ng-model="user.password" ng-required="true">
+                                       placeholder="Password" ng-model="credentials.password" ng-required="true">
 
                             </div>
 

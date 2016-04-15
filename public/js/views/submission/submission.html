@@ -57,24 +57,23 @@
 
             </div>
 
-        <!-- Main content -->
-        <section id="scrollArea" class="content padding-left-large">
-            <form class="form-horizontal" autocomplete="off" novalidate role="form"
-                  method="post" name="submissionForm">
-                <div class="form-group row margin-bottom-small padding-right-15" ms-form-group-validator>
+            <!-- Main content -->
+            <section id="scrollArea" class="content padding-left-large">
+                <form class="form-horizontal" autocomplete="off" novalidate role="form"
+                      method="post" name="submissionForm">
+                    <div class="form-group row margin-bottom-small padding-right-15" ms-form-group-validator>
 
-                    <div class="col-sm-12 ">
-                        <label class="control-label" for="title">Title<span ng-show="submissionForm.title.$dirty && submissionForm.title.$invalid
+                        <div class="col-sm-12 ">
+                            <label class="control-label" for="title">Title<span ng-show="submissionForm.title.$dirty && submissionForm.title.$invalid
                                           && submissionForm.title.$error.required">: cannot be blank</span></label>
                         <input type="text" class="form-control" id="title" name="title" placeholder="Enter a title" required
                                ng-model="submHelper.attributes.Title.value.value" required>
                     </div>
-                </div>
 
                 <div class="form-group row margin-bottom-small padding-right-15" bs-show-errors id="submReleaseDate">
 
-                    <div class="col-sm-12">
-                        <label class="control-label">Release date<span ng-show="submissionForm.releaseDate.$dirty && submissionForm.releaseDate.$invalid
+                        <div class="col-sm-12">
+                            <label class="control-label">Release date<span ng-show="submissionForm.releaseDate.$dirty && submissionForm.releaseDate.$invalid
                                           && submissionForm.releaseDate.$error.required">: cannot be blank</span></label>
 
                         <p class="input-group margin-bottom-none">
@@ -89,7 +88,8 @@
                         <button type="button" class="btn btn-default" ng-click="open($event)">
                             <i class="fa fa-fw fa-calendar"></i></button>
                         </span>
-                        </p>
+                            </p>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group row margin-bottom-small padding-right-15" ng-class="{'has-error':sectionAttrForm.title1.$invalid }" ng-form name="sectionAttrForm"
@@ -141,21 +141,34 @@
                                 data-preview-header="templates/bsng/section_part/file/previewHeader.html"
                                 data-detail-header="templates/bsng/section_part/file/detailHeader.html">
                         </bs-section>
-                    </section>
 
                     <section id="publications">
                         <bs-section ng-model="submHelper.section.subsection.publications"
                                     data-labels="keys.publication">
                         </bs-section>
-                    </section>
+
+                        <section id="files">
+                            <bs-section  ng-model="submModel.viewSubmission.section.files"
+                                         data-labels="keys.file"
+                                         data-dynamic="true"
+                                         data-preview-header="templates/bsng/section_part/file/previewHeader.html"
+                                         data-detail-header="templates/bsng/section_part/file/detailHeader.html">
+                            </bs-section>
+                        </section>
+
+                        <section id="publications">
+                            <bs-section ng-model="submModel.viewSubmission.section.subsections.publications"
+                                        data-labels="keys.publication">
+                            </bs-section>
+                        </section>
 
 
-                </div>
+                    </div>
 
-            </form>
+                </form>
 
-        </section>
-        <!-- /.content -->
+            </section>
+            <!-- /.content -->
             <div class="panel-footer navbar-fixed-bottom">
             </div>
         </div>

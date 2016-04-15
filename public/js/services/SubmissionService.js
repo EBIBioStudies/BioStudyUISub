@@ -1,111 +1,117 @@
-/**
- * Created by mdylag on 04/09/2014.
- */
 'use strict';
 
-var routingConfig = require('../routeConfig');
+module.exports =
+    (function () {
 
+        return ['$http', '$q', function ($http, $q) {
 
-module.exports = function ($http, $window, $location,
-                           $rootScope, $log, $injector, SubmissionModel) {
-
-    function deleteItem(parent, arrayName, index) {
-        console.log('Delete from service',parent, index);
-        if (parent && arrayName  && parent[arrayName]) {
-            parent[arrayName].splice(index, 1);
-            console.log('Delete from service 2');
-        }
-
-    }
-
-    function addItem(parent, addMethodName, ConstructorFunc) {
-        if (parent && addMethodName) {
-            if (ConstructorFunc) {
-                var item = new ConstructorFunc();
-                addMethodName(parent, item);
+/*
+            function removeParent(submission) {
+                angular.forEach(submission.sections, function(section, index) {
+                    delete section.parent;
+                    removeParent(section);
+                });
             }
-        }
+*/
 
-    }
+            function getSubmissionList(options) {
+                var deffer = $q.defer();
 
+                $http.get("/api/submissions", options)
+                    .then(function (response) {
+                        if (response.status === 200) {
+                            var submissions = [];
+                            submissions = submissions.concat(response.data.submissions);
+                            deffer.resolve(submissions);
+                        } else {
+                            deffer.reject(response);
+                        }
+                    }, function (err) {
+                        deffer.reject(err);
+                    });
+                return deffer.promise;
+            }
 
+            function getSubmission(accno) {
+                var deffer = $q.defer();
 
+                $http.get("/api/submission/" + accno)
+                    .then(function (response) {
+                        if (response.status === 200) {
+                            deffer.resolve(response.data);
+                        } else {
+                            deffer.reject(response);
+                        }
+                    }, function (err) {
+                        deffer.reject(err);
+                    });
+                return deffer.promise;
+            }
 
-    var submissions = [];
-    var submissionService = {};
-    submissionService.submission=undefined;
+            function saveSubmission(submission) {
+                var deffer = $q.defer();
+                $http.post("/api/submission/save", submission)
+                    .then(function (response) {
+                        if (response.status === 200) {
+                            deffer.resolve(response.data);
+                        } else {
+                            deffer.reject(response);
+                        }
+                    }, function (err) {
+                        console.log('Error to save data', err);
+                        deffer.reject(err);
+                    });
+                return deffer.promise;
+            }
 
-    submissionService.deleteElement = function(index, array) {
-        array.splice(index,1);
-    };
+            function updateSubmission(submission) {
+                var defer = $q.defer();
 
-    submissionService.showEditSubmission = function(sub) {
-        submissionService.submission=sub;
-    };
+                $http.put("/api/submission/update", {submissions: [submission]})
+                    .success(function(data) {
+                        defer.resolve(data);
+                    }).error(function(err, status){
+                        defer.reject(err, status);
+                    });
+                return defer.promise;
+            }
 
-    submissionService.showAddSubmission = function() {
-        submissionService.submission = undefined;
-    };
+            function submitSubmission(submission) {
+                var defer = $q.defer();
+                $http.post("/api/submission/create", {submissions: [submission]})
+                    .success(function (data) {
+                        defer.resolve(data);
+                    }).error(function (err, status) {
+                        defer.reject(err, status);
+                    });
+                return defer.promise;
+            }
 
+            function deleteSubmission(submission) {
+                var defer = $q.defer();
+                var url = '';
+                if (submission.id) {
+                    url = '/api/submission/submitted/delete/' + submission.accno;
+                } else {
+                    url = '/api/submission/delete/' + submission.accno;
+                }
+                $http.delete(url)
+                    .success(function (data) {
+                        defer.resolve(data);
+                    }).error(function (err, status) {
+                        defer.reject(err, status);
+                    });
+                return defer.promise;
+            }
 
-    submissionService.addAnnotation = function(parent) {
-        addItem(parent, SubmissionModel.addAttribute, SubmissionModel.createAttribute);
-    };
+            return {
+                getSubmissionList: getSubmissionList,
+                getSubmission: getSubmission,
+                saveSubmission: saveSubmission,
+                submit: submitSubmission,
+                delete: deleteSubmission,
+                update: updateSubmission
+            }
+        }];
 
-    submissionService.deleteAnnotation = function(index, parent) {
-        deleteItem(parent, 'annotations', index);
-    };
-
-    submissionService.addLink = function(parent, link) {
-        addItem(parent,'addLink',link);
-    };
-
-    submissionService.deleteLink = function(index,parent) {
-        deleteItem(parent, 'links', index);
-    };
-
-    submissionService.addSource = function(parent, source) {
-        addItem(parent,'addSource',source);
-    };
-
-    submissionService.deleteSource = function(index, parent) {
-        deleteItem(parent, 'sources', index);
-
-    };
-
-    submissionService.addAuthor = function(parent, author) {
-        addItem(parent,'addAuthor',author);
-    };
-
-    submissionService.deleteAuthor = function(index,parent) {
-        deleteItem(parent, 'authors', index);
-    };
-
-    submissionService.addSection = function(parent) {
-        /*if (parent) {
-            var section = new Section();
-            section.name = 'Undefined';
-            parent.addSection(section);
-        }*/
-    };
-
-    submissionService.deleteSection = function(index, array) {
-        console.log('delete section', index, array);
-        array.splice(index, 1);
-    };
-
-    submissionService.deleteSubmission = function() {
-        console.log('Delete data');
-    };
-
-
-    submissionService.addAttribute = function() {
-        if (!this.attributes) {
-            this.attributes = [];
-        }
-        this.attributes.push(SubmissionModel.createAttribute());
-        console.log('Add attribute', this);
-    };
-
-    return submissionService;
-};
+    })();
