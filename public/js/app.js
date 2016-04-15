@@ -246,6 +246,5 @@ app
             return typeHead;
         };
     });
-;
 
 

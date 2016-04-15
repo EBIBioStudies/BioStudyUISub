@@ -3,11 +3,8 @@ var _keys = require('./../../../../shared/model/Structure.json');
 module.exports = function($anchorScroll) {
     this.create = function($scope) {
         $scope.add= function(context, hash) {
+            console.log('add', context);
             context.add();
-                //.then(function() {
-                //$location.hash(hash);
-                //$anchorScroll(hash);
-            //});
         }
 
         $scope.addNew= function(context, hash) {

@@ -3,6 +3,8 @@
  */
 
 'use strict';
+var _ = require('../../../../.build/components/lodash');
+
 module.exports = function(moduleDirective) {
 
     moduleDirective.directive('bsSection', function ($compile, $log, SubmissionService, TypeHeadService) {
@@ -40,13 +42,13 @@ module.exports = function(moduleDirective) {
                     throw new Error('Attribute labels is required');
                 }
                 /*var keysCount = $scope.data ? Object.keys($scope.data.attributesKey).length : 2;
-                $scope.computeColumnSize = function () {
-                    if (keysCount > 6) {
-                        return 2;
-                    } else {
-                        return (12 / keysCount);
-                    }
-                }*/
+                 $scope.computeColumnSize = function () {
+                 if (keysCount > 6) {
+                 return 2;
+                 } else {
+                 return (12 / keysCount);
+                 }
+                 }*/
                 $scope.typeHead = $scope.labels.attributes;
                 //TODO: Find a better way to scale fields in the preview
                 //$scope.previewColSize = $scope.computeColumnSize();
@@ -125,6 +127,58 @@ module.exports = function(moduleDirective) {
             }
         }
     });
+
+    moduleDirective.filter('filterAttrs', function() {
+        return function (fieldValueUnused, array, key) {
+            var ret = [];
+            for (var i in array) {
+                if (array[i].name===key) {
+                    ret.push(array[i]);
+                    return ret;
+                }
+            }
+            return ret;
+        };
+
+    })
+
+    moduleDirective.filter("filterAttrsTypeHead", function ($filter) {
+        return function (fieldValueUnused, array, existedKeys) {
+            var typeHead = [];
+            for (var i in array) {
+                var index=_.findIndex(existedKeys,{name:array[i].name})
+                if (index===-1) {
+                    typeHead.push(array[i]);
+                }
+            }
+            return typeHead;
+        };
+    });
+
+
+    moduleDirective.directive('bsWatch',function() {
+        return {
+            restrict: 'A',
+            require: '^ngModel',
+            scope: {
+                bsWatch:'='
+            },
+            link: function ($scope, element, attrs, ctrl) {
+                console.log('bs',$scope,attrs, ctrl);
+                /*$scope.$watch('bsWatch', function(oldVal, newVal) {
+                 console.log('bsWatch',ctrl, oldVal, newVal);
+                 });*/
+            }
+        }
+    });
+
+
+    moduleDirective.filter("filterDifference", function ($filter) {
+        return function (fieldValueUnused, array, existedKeys) {
+            return _.differenceBy(array, existedKeys,'name');
+        };
+    });
+
 
 
 };

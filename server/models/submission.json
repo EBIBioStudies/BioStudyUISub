@@ -63,21 +63,10 @@
             }]
           },
           {
-            "type": "Author",
+            "type": "Contact",
             "attributes" : [{
-              "name" : "E-mail", "value": "miroslaw.dylag@mentorsoftware.pl"
-            },
-              {
-                "name" : "Name", "value": "Name"
-              },{
-                "name" : "Organization", "value": "Name"
-              }]
-          },
-          {
-            "type": "Contact"
-          },
-          {
-            "type": "Contact"
+              "name" : "DOI", "value": "Alama"
+            }]
           }
 
         ]

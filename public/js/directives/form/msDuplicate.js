@@ -14,10 +14,8 @@ module.exports = function(moduleDirective) {
                 msViewModel: '='
             },
             link: function (scope, tElement, tAttrs, ctrl) {
-                console.log('msDuplicate', scope);
                 scope.$watch('msAttr.name', function(newVal, oldVal) {
                     if (oldVal!==newVal) {
-                        console.log('change attr dir',newVal, oldVal);
                         scope.msViewModel.changeAttr(newVal, oldVal);
                     }
                 });
@@ -28,7 +26,6 @@ module.exports = function(moduleDirective) {
                     }
 
                     var index=_.findIndex(scope.msDuplicate,{name:viewValue})
-                    console.log("Validate x",viewValue, modelValue, index, scope.msDuplicate);
 
                     if (index>-1 && scope.msAttr !==scope.msDuplicate[index] ) {
                         return false;

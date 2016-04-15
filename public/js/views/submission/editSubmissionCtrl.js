@@ -3,12 +3,15 @@
  */
 'use strict';
 
+var moduleHelper2 = require('../../model/moduleHelper2');
+
 module.exports =
     (function () {
 
         return ['$rootScope', '$scope', '$timeout', '$interval', '$location', '$uibModal', '$routeParams', '$log',
             '$anchorScroll', 'SharedData', 'ModuleHelper', 'submissionDecorator', 'SubmissionService', 'MessageService',
             'SubmissionModel',
+            
             function ($rootScope, $scope, $timeout, $interval, $location,
                       $uibModal, $routeParams, $log, $anchorScroll, SharedData, ModuleHelper, submissionDecorator,
                       SubmissionService, MessageService, SubmissionModel) {
@@ -23,34 +26,50 @@ module.exports =
                     console.log('destroy');
                     $interval.cancel(saveInterv);
                 });
+                
+                
+               if ($routeParams.accno) {
+                  $log.debug('Edit the submission ', $routeParams);
+            SubmissionService.getSubmission($routeParams.accno).then(function(data) {
+                /*ModuleHelper.setData(data);
+                $scope.submission=ModuleHelper.model.submission;
+                $scope.viewSubmission=ModuleHelper.model.viewSubmission;
+                $scope.submModel=ModuleHelper.model;
+                */
+                $scope.submission = SubmissionModel.createSubmission(data);
 
-                if ($routeParams.accno) {
-                    $log.debug('Edit the submission ', $routeParams);
-                    SubmissionService.getSubmission($routeParams.accno)
-                        .then(function (data) {
-                            ModuleHelper.setData(data);
-                            $scope.submission = ModuleHelper.model.submission;
-                            $scope.viewSubmission = ModuleHelper.model.viewSubmission;
-                            $scope.submModel = ModuleHelper.model;
-                            //$scope.viewSubmission.contacts=ModuleHelper.unionKeys($scope.submission.section.subsections, _keys.contact.type);
+                $scope.submHelper = moduleHelper2.createSubmModel($scope.submission);
 
-                            $scope.curentSectionForFiles = $scope.submission.section;
-                            if (!$scope.submission.id) {
-                                saveInterv = $interval(function () {
-                                    $scope.save();
-                                }, 10000);
-                            }
-                        }).catch(function (err) {
-                            $log.debug('Error data', err);
-                            $location.url('/error');
-                        });
-                } else {
-                    $location.url('/error');
+                //$scope.viewSubmission.contacts=ModuleHelper.unionKeys($scope.submission.section.subsections, _keys.contact.type);
+                $log.debug('Date recevied', data);
+
+                $scope.curentSectionForFiles=$scope.submission.section;
+                if (!$scope.submission.id) {
+                    saveInterv = $interval(function () {
+                        //console.log('Save');
+                        $scope.save();
+                    }, 10000);
                 }
+            }).catch(function(err) {
+                $log.debug('Error data',err);
+                $location.url('/error');
+            });
 
+               } else {
+                   $location.url('/error');
+               }
+
+                $scope.hasError=false;
+
+                var timeout;
+                var saveInProgress=false;
+
+                //$scope.$watch('submission', watchSubmission, true);
+                
                 $scope.save = function () {
                     if ($scope.submission.id) {
                         $interval.cancel(saveInterv);
+                        //remove autosave
                     } else {
                         SubmissionService.saveSubmission($scope.submModel.submission)
                             .then(function success(data) {
@@ -66,67 +85,68 @@ module.exports =
                         $log.debug('Validation error', $scope.submissionForm);
                         return;
                     }
-                    $log.debug('Submit data', $scope.submModel.submission);
-                    SubmissionService.update($scope.submModel.submission).then(function (data) {
-                        var acc = $scope.submModel.submission.accno;
+                    $log.debug('Submit data', $scope.submission);
+                    SubmissionService.update($scope.submission).then(function(data) {
+                        var acc = $scope.submission.accno;
                         MessageService.addMessage('Submission ' + acc + ' updated.');
                         $interval.cancel(saveInterv);
                         var modalInstance = $uibModal.open({
-                            controller: 'MessagesCtrl',
+                            controller : 'MessagesCtrl',
                             templateUrl: 'templates/partials/successDialog.html',
-                            backdrop: true,
+                            backdrop:true,
                             size: 'lg'
                         });
                         /*$timeout(function() {
                          modalInstance.close();
                          },6000);*/
-                        modalInstance.result.then(function () {
+                        modalInstance.result.then(function() {
                             $log.debug('Created ' + acc);
-                        }, function () {
+                        },function() {
                             $log.debug('Created');
                         });
 
 
-                    }).catch(function (err, status) {
+                    }).catch(function(err, status) {
                         $log.debug('Created error', err, status);
 
                         MessageService.setErrorType();
-                        MessageService.addMessage('Server error ' + status + ' ' + err);
+                        MessageService.addMessage('Server error '+ status + ' ' + err);
                         var modalInstance = $uibModal.open({
-                            controller: 'MessagesCtrl',
+                            controller : 'MessagesCtrl',
                             templateUrl: 'myModalContentError.html',
                             windowTemplateUrl: 'myModalWindow.html',
-                            backdrop: true,
+                            backdrop:true,
                             size: 'lg'
                         });
-                        $timeout(function () {
+                        $timeout(function() {
                             modalInstance.close();
                             MessageService.clearMessages();
-                        }, 6000);
-                        modalInstance.result.then(function () {
+                        },6000);
+                        modalInstance.result.then(function() {
                             MessageService.clearMessages();
                         });
                     });
 
+
                 };
 
-                $scope.open = function ($event) {
+                $scope.open = function($event) {
                     $event.preventDefault();
                     $event.stopPropagation();
                     $scope.opened = true;
                 };
 
-                $scope.getParentSection = function (parent) {
+
+                $scope.getParentSection = function(parent) {
                     return parent || $scope.submission;
                 };
 
-                $scope.addAttributeTo = function (parent) {
-                    var attr = SubmissionModel.createAttribute();
+                $scope.addAttributeTo = function(parent) {
+                    var attr= SubmissionModel.createAttribute();
                     $scope.viewSubmission.contacts.attributesKey(attr);
-                    SubmissionModel.addAttributeTo(parent, SubmissionModel.createAttribute(), 'contact');
+                    SubmissionModel.addAttributeTo(parent, SubmissionModel.createAttribute(), 'conract');
 
                 };
-
 
             }];
 
