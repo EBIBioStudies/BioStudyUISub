@@ -52,7 +52,7 @@
                 <div class="panel-heading">
                     List of submissions
                     <p class="pull-right">
-                        <a class="pull-right btn btn-success btn-xs" href="#/addsubmission"
+                        <a class="pull-right btn btn-success btn-xs" ng-click="createSubmission()"
                            uib-tooltip="Create a new submission"
                            tooltip-append-to-body="true"
                            tooltip-placement="bottom">Create a new submission
@@ -91,10 +91,10 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-class="{warning: !gridItem.id}">
+                    <tr ng-class="{warning: !gridItem.submitted}">
                         <td>
-                            <i ng-show="gridItem.id" class="fa fa-fw fa-check"></i>
-                            <i ng-show="!gridItem.id" class="fa fa-fw fa-times"></i>
+                            <i ng-show="gridItem.submitted" class="fa fa-fw fa-check"></i>
+                            <i ng-show="!gridItem.submitted" class="fa fa-fw fa-times"></i>
                         </td>
                         <td>
                             <button type="button" class="btn btn-danger btn-xs btn-flat"

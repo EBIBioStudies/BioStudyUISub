@@ -6,14 +6,14 @@
 module.exports =
     (function () {
 
-        return ['$scope', '$location', 'SubmissionService', 'SharedData', '$uibModal', '$log',
-            function ($scope, $location, SubmissionService, SharedData, $uibModal, $log) {
+        return ['$scope', '$location', 'SubmissionService', '$uibModal', '$log', 'SubmissionModel',
+            function ($scope, $location, SubmissionService, $uibModal, $log, SubmissionModel) {
 
                 $scope.submissions = [];
                 $scope.selectedSubmission = [];
 
                 SubmissionService
-                    .getSubmissionList()
+                    .getAllSubmissions()
                     .then(function (result) {
                         $scope.submissions = result;
                     });
@@ -22,12 +22,19 @@ module.exports =
                     return $scope.selectedSubmission[0];
                 }
 
+                function startEditing(sub){
+                    $location.url('/edit/' + sub.accno);
+                }
+
+                $scope.createSubmission = function () {
+                    SubmissionService.createSubmission(SubmissionModel.createSubmission())
+                        .then(function(sbm) {
+                            startEditing(sbm);
+                        });
+                };
+
                 $scope.editSubmission = function (submission) {
-                    var sub = submission || getFirstSelected();
-                    if (sub) {
-                        SharedData.setSubmission(sub);
-                        $location.url('/edit/' + sub.accno);
-                    }
+                    startEditing(submission || getFirstSelected());
                 };
 
                 $scope.deleteSubmission = function (submission) {
@@ -44,7 +51,7 @@ module.exports =
 
                             if (submission) {
                                 SubmissionService
-                                    .delete(submission)
+                                    .deleteSubmission(submission)
                                     .then(function () {
                                         angular.forEach($scope.submissions,
                                             function (value, index) {

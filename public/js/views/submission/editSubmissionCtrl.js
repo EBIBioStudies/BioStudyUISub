@@ -7,7 +7,7 @@ var moduleHelper2 = require('../../model/moduleHelper2');
 
 module.exports =
     function ($rootScope, $scope, $timeout, $interval, $location,
-              $uibModal, $routeParams, $log, $anchorScroll, SharedData, ModuleHelper, submissionDecorator,
+              $uibModal, $routeParams, $log, $anchorScroll, ModuleHelper, submissionDecorator,
               SubmissionService, MessageService, SubmissionModel) {
 
         submissionDecorator.create($scope);
@@ -15,63 +15,62 @@ module.exports =
         $scope.title = 'Edit the submission ' + $routeParams.accno;
         $scope.hasError = false;
 
-        var saveInterv;
+        var saveInterv = null;
+        var savedSubmission;
+
+        function startSaving(str) {
+            savedSubmission = str;
+            saveInterv = $interval(function () {
+                $scope.save();
+            }, 5000);
+        }
+
+        function stopSaving() {
+            if (saveInterv) {
+                $interval.cancel(saveInterv);
+                saveInterv = null;
+            }
+        }
+
         $scope.$on("$destroy", function () {
             console.log('destroy');
-            $interval.cancel(saveInterv);
+            stopSaving();
         });
-
 
         if ($routeParams.accno) {
             $log.debug('Edit the submission ', $routeParams);
-            SubmissionService.getSubmission($routeParams.accno).then(function (data) {
-                /*ModuleHelper.setData(data);
-                 $scope.submission=ModuleHelper.model.submission;
-                 $scope.viewSubmission=ModuleHelper.model.viewSubmission;
-                 $scope.submModel=ModuleHelper.model;
-                 */
-                $scope.submission = SubmissionModel.createSubmission(data);
+            SubmissionService.getSubmission($routeParams.accno)
+                .then(function (sbm) {
 
-                $scope.submHelper = moduleHelper2.createSubmModel($scope.submission);
+                    $scope.sbm = sbm;
+                    $scope.submission = SubmissionModel.createSubmission(sbm.data);
+                    $scope.submHelper = moduleHelper2.createSubmModel($scope.submission);
+                    $scope.curentSectionForFiles = $scope.submission.section;
 
-                //$scope.viewSubmission.contacts=ModuleHelper.unionKeys($scope.submission.section.subsections, _keys.contact.type);
-                $log.debug('Date recevied', data);
+                    startSaving(angular.fromJson($scope.submission));
 
-                $scope.curentSectionForFiles = $scope.submission.section;
-                if (!$scope.submission.id) {
-                    saveInterv = $interval(function () {
-                        //console.log('Save');
-                        $scope.save();
-                    }, 10000);
-                }
-            }).catch(function (err) {
-                $log.debug('Error data', err);
-                $location.url('/error');
-            });
-
+                }).catch(function (err) {
+                    $log.debug('Error data', err);
+                    $location.url('/error');
+                });
         } else {
             $location.url('/error');
         }
 
-        $scope.hasError = false;
-
-        var timeout;
-        var saveInProgress = false;
-
-        //$scope.$watch('submission', watchSubmission, true);
-
         $scope.save = function () {
-            if ($scope.submission.id) {
-                $interval.cancel(saveInterv);
-                //remove autosave
-            } else {
-                SubmissionService.saveSubmission($scope.submModel.submission)
-                    .then(function success(data) {
-                        $scope.submission.accno = data.accno;
+            var currentSubmission = angular.fromJson($scope.submission);
+            if (currentSubmission != savedSubmission) {
+                stopSaving();
+                var sbm = $scope.sbm;
+                sbm.data = currentSubmission;
+                SubmissionService.saveSubmission(sbm)
+                    .then(function () {
+                        $log.debug("edit_submission: changes saved");
+                        startSaving(currentSubmission);
                     });
             }
         };
-        //Update data
+
         $scope.submit = function (submissionForm) {
             //
             $scope.$broadcast('show-errors-check-validity');
@@ -80,7 +79,7 @@ module.exports =
                 return;
             }
             $log.debug('Submit data', $scope.submission);
-            SubmissionService.update($scope.submission).then(function (data) {
+            SubmissionService.submitSubmission($scope.submission).then(function (data) {
                 var acc = $scope.submission.accno;
                 MessageService.addMessage('Submission ' + acc + ' updated.');
                 $interval.cancel(saveInterv);
