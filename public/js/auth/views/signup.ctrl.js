@@ -23,20 +23,10 @@ module.exports =
 
                     AuthService
                         .signUp(user)
-                        .then(function (res) {
-                            //$location.path('/subm');
+                        .then(function () {
                             $scope.hasError = false;
                             $scope.error = {};
-                            console.log("Success sign up", res);
-                            if (res.serverStatus !== 200) {
-                                $scope.hasError = false;
-                                $scope.error.message = res.message;
-                                $scope.error.status = res.status;
-
-                            } else {
-                                $scope.success = true;
-                            }
-                            //grecaptcha.reset();
+                            $scope.success = true;
                         })
                         .catch(function (error, status) {
                             //grecaptcha.reset();
