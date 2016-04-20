@@ -47,7 +47,7 @@ module.exports =
                     $scope.submHelper = moduleHelper2.createSubmModel($scope.submission);
                     $scope.curentSectionForFiles = $scope.submission.section;
 
-                    startSaving(angular.fromJson($scope.submission));
+                    startSaving(angular.toJson($scope.submission));
 
                 }).catch(function (err) {
                     $log.debug('Error data', err);
@@ -58,7 +58,7 @@ module.exports =
         }
 
         $scope.save = function () {
-            var currentSubmission = angular.fromJson($scope.submission);
+            var currentSubmission = angular.toJson($scope.submission);
             if (currentSubmission != savedSubmission) {
                 stopSaving();
                 var sbm = $scope.sbm;
