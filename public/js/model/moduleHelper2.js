@@ -116,7 +116,9 @@ function ModuleItem(options) {
 
     this.remove = function (index, item) {
         //remove attribute from attributes
+        var _self = this;
         _(item.attributes).forEach(function (el) {
+            _self.attributeKeys.remove(el.name);
             var _index = _.findIndex(this.attributes, {name: el.name, value: el.value});
             if (_index > -1) {
                 this.attributes.splice(_index, 1)
@@ -194,10 +196,18 @@ function ModuleHelper(model, fieldsCount) {
 
     if (this.model) {
         if (this.model.attributes) {
-            var releaseDate = _.find(this.model.attributes, {name: 'ReleaseDate'});
-            this.attributes.ReleaseDate = {name: 'ReleaseDate', value: releaseDate}
-            var title = _.find(this.model.attributes, {name: 'Title'});
-            this.attributes.Title = {name: 'Title', value: title || ''}
+            var releaseDateIndex = _.findIndex(this.model.attributes, {name: 'ReleaseDate'});
+            if (releaseDateIndex > -1) {
+                this.attributes.ReleaseDate = {name: 'ReleaseDate', value: this.model.attributes[releaseDateIndex]}
+                if (!_.isDate(this.attributes.ReleaseDate.value.value )) {
+                    this.attributes.ReleaseDate.value.value = new Date(this.attributes.ReleaseDate.value.value);
+                }
+
+            }
+            var titleIndex = _.findIndex(this.model.attributes, {name: 'Title'});
+            if (titleIndex > -1) {
+                this.attributes.Title = {name: 'Title', value: this.model.attributes[titleIndex]}
+            }
         }
 
 
@@ -250,7 +260,6 @@ function ModuleHelper(model, fieldsCount) {
 
                 })()
             });
-            console.log('contacts.create',this.section.subsection.contacts);
             this.section.subsection.contacts.create();
 
         }

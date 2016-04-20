@@ -45,7 +45,7 @@ router.post('/submission/submit',function(req, res) {
 });
 
 router.post('/submission/create',function(req, res) {
-  console.log('create', JSON.stringify(req.body));
+  console.log('create subm ', JSON.stringify(req.body));
   res.status(200).json({mapping:[{assigned: 'T-SUB-1'}]});
 });
 
@@ -62,7 +62,7 @@ router.put('/submission/save/*',function(req, res) {
 
 router.put('/submission/update',function(req, res) {
   //var _url = biosd.url + biosd.routes.submission.update.path;
-  console.log('Update data', req.body);
+  console.log('Update data', JSON.stringify(req.body));
   res.status(200).json({});
 
 });
@@ -97,8 +97,8 @@ router.post('/auth/signin',function(req, res, next) {
 
 
 router.post('/auth/signup',function(req, res, next) {
-  console.log('signout');
-  res.status(200).json({});
+  console.log('signup');
+  res.status(200).json({status: 'OK',serverStatus:200});
 });
 
 router.post('/auth/activate',function(req, res, next) {
