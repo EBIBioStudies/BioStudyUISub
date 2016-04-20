@@ -3,10 +3,12 @@
  */
 'use strict';
 
+var moduleHelper2 = require('../../model/moduleHelper2');
+
 module.exports =
     function ($rootScope, $scope, $http, $timeout, $interval, $location,
-              $uibModal, $routeParams, $log, SubmissionModel, DataService, EditSubmissionService, MessageService, ModuleHelper,
-              $anchorScroll, submissionDecorator) {
+              $uibModal, $routeParams, $log, SubmissionModel, DataService, SubmissionService,
+              EditSubmissionService, MessageService, ModuleHelper, $anchorScroll, submissionDecorator) {
 
         //Copy data from model move to utility module
         submissionDecorator.create($scope);
@@ -16,11 +18,11 @@ module.exports =
         $scope.hasError = false;
         $scope.title = 'Add a new submission';
 
-       /* ModuleHelper.setData(SubmissionModel.createSubmission());
-        $scope.submission=ModuleHelper.model.submission;
-        $scope.viewSubmission=ModuleHelper.model.viewSubmission;
-        $scope.submModel=ModuleHelper.model;
-*/
+        /* ModuleHelper.setData(SubmissionModel.createSubmission());
+         $scope.submission=ModuleHelper.model.submission;
+         $scope.viewSubmission=ModuleHelper.model.viewSubmission;
+         $scope.submModel=ModuleHelper.model;
+         */
         $scope.submission = SubmissionModel.createSubmission();
         $scope.submHelper = moduleHelper2.createSubmModel($scope.submission);
 
@@ -41,11 +43,7 @@ module.exports =
         $scope.showError = function () {
             console.log('Error show or not');
             return true;
-        }
-
-        var timeout;
-        var saveInProgress = false;
-
+        };
 
         $scope.save = function () {
             //generate id

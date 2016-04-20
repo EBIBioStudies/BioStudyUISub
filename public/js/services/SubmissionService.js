@@ -64,10 +64,10 @@ module.exports =
                 return deffer.promise;
             }
 
-            function updateSubmission(submission) {
+            function submitSubmission(submission) {
                 var defer = $q.defer();
 
-                $http.put("/api/submission/update", {submissions: [submission]})
+                $http.put("/api/submission/submit", submission)
                     .success(function(data) {
                         defer.resolve(data);
                     }).error(function(err, status){
@@ -76,9 +76,9 @@ module.exports =
                 return defer.promise;
             }
 
-            function submitSubmission(submission) {
+            function createSubmission(submission) {
                 var defer = $q.defer();
-                $http.post("/api/submission/create", {submissions: [submission]})
+                $http.post("/api/submission/create", submission)
                     .success(function (data) {
                         defer.resolve(data);
                     }).error(function (err, status) {
@@ -105,12 +105,12 @@ module.exports =
             }
 
             return {
-                getSubmissionList: getSubmissionList,
+                getAllSubmissions: getSubmissionList,
                 getSubmission: getSubmission,
                 saveSubmission: saveSubmission,
-                submit: submitSubmission,
-                delete: deleteSubmission,
-                update: updateSubmission
+                submitSubmission: submitSubmission,
+                deleteSubmission: deleteSubmission,
+                createSubmission: createSubmission
             }
         }];
 
