@@ -7,13 +7,13 @@
   "type": "Describe your study",
   "attributes": [
     {
-      "name": "Name", "required": true
-    },
-    {
       "name": "Description", "required": true
     },
     {
-      "name": "Annotation", "required": false
+      "name": "Experiment type", "required": false
+    },
+    {
+      "name": "Keywords", "required": false
     }
   ]
   },
@@ -113,10 +113,6 @@
       }
     },
     "attributes": [
-      {
-        "name": "Title",
-        "required": false
-      },
       {
         "name": "Name",
         "required": true

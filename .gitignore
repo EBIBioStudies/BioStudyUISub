@@ -4,3 +4,6 @@ node_modules/
 .gen/
 .build/
 .DS_Store
+tmp/
+temp/
+public_old/

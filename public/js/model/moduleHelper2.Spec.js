@@ -87,7 +87,6 @@ describe('Test module helper2', function () {
             model.remove('');
             model.remove('');
             expect(model.keys['']).not.toBeDefined();
-            console.log(model.keys);
 
             //expect(model.keys.name2).toEqual({count: 1, value: 'name2'});
             //expect(model.keys.name3).toEqual({count: 2, value: 'name3'});
@@ -155,6 +154,17 @@ describe('Test module helper2', function () {
             expect(model.attributes.Title).toBeDefined();
 
         })
+        it('should add attribute to model attributes', function () {
+            var model = moduleHelper2.createSubmModel(submModel);
+            model.attributes.Title.value.value = "new";
+            var index=_.findIndex(submModel.attributes, {name: 'Title'});
+            console.log(model.attributes, submModel.attributes);
+
+            //console.log("Modif",submModel.attributes, index);
+            //expect(model.attributes.Title.value.value).toEqual();;
+
+        })
+
 
         it('should map attributes from section attributes', function () {
             var model = moduleHelper2.createSubmModel(submModel);
@@ -174,26 +184,19 @@ describe('Test module helper2', function () {
 
         it('should add a new attribute section', function () {
             var model = moduleHelper2.createSubmModel(submModel);
-            expect(model.section.annotations.attributes[2]).not.toBeDefined();
+            expect(model.section.annotations.attributes[1]).not.toBeDefined();
             model.section.annotations.add();
-            expect(model.section.annotations.attributes[2]).toBeDefined();
-            expect(model.section.annotations.attributes[2].require).toBe(false);
-            expect(model.section.annotations.attributes[2].value).toEqual(model.section.annotations.model[2]);
+            expect(model.section.annotations.attributes[1]).toBeDefined();
+            expect(model.section.annotations.attributes[1].require).toBe(false);
+            expect(model.section.annotations.attributes[1].value).toEqual(model.section.annotations.model[1]);
             //console.log('eee', model.section.annotations.attributes[2].value, model.section.annotations.model);
 
         });
 
-        it('should change the attribute', function () {
-            var model = moduleHelper2.createSubmModel(submModel);
-            model.section.annotations.add();
-            model.section.annotations.attributes[2].value.name = "A";
-            model.section.annotations.add();
-        });
 
         it('should add a new contact', function () {
             var model = moduleHelper2.createSubmModel(submModel);
             model.section.subsection.contacts.add();
-            console.log('eee', model.section.subsection.contacts);
 
         });
 
