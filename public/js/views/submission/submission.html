@@ -119,15 +119,15 @@
                                      data-on-add="addAnnotation(submission.section)">
                     </bs-section-item>
 
-<!--                    <bs-section id="annotations" ng-model="submModel.viewSubmission.section"
-                                data-template-name="templates/bsng/section/bsAnnotation.html"
-                                data-labels="keys.attributes">
-                    </bs-section>-->
-                    <bs-section id="contacts" ng-model="submHelper.section.subsection.contacts",
-                                    data-labels="keys.contact"
-                                    data-filter-type="Contact"
-                                    data-preview-header="templates/bsng/section_part/contact/previewHeader.html"
-                                    data-detail-header="templates/bsng/section_part/contact/detailHeader.html">
+                    <!--                    <bs-section id="annotations" ng-model="submModel.viewSubmission.section"
+                                                    data-template-name="templates/bsng/section/bsAnnotation.html"
+                                                    data-labels="keys.attributes">
+                                        </bs-section>-->
+                    <bs-section id="contacts" ng-model="submHelper.section.subsection.contacts"
+                                data-labels="keys.contact"
+                                data-filter-type="Contact"
+                                data-preview-header="templates/bsng/section_part/contact/previewHeader.html"
+                                data-detail-header="templates/bsng/section_part/contact/detailHeader.html">
                     </bs-section>
 
                     <bs-section id="links" ng-model="submHelper.section.links"
@@ -135,32 +135,19 @@
                     </bs-section>
 
                     <section id="files">
-                        <bs-section  ng-model="submHelper.section.files"
-                                data-labels="keys.file"
-                                data-dynamic="true"
-                                data-preview-header="templates/bsng/section_part/file/previewHeader.html"
-                                data-detail-header="templates/bsng/section_part/file/detailHeader.html">
+                        <bs-section ng-model="submModel.viewSubmission.section.files"
+                                    data-labels="keys.file"
+                                    data-dynamic="true"
+                                    data-preview-header="templates/bsng/section_part/file/previewHeader.html"
+                                    data-detail-header="templates/bsng/section_part/file/detailHeader.html">
                         </bs-section>
+                    </section>
 
                     <section id="publications">
-                        <bs-section ng-model="submHelper.section.subsection.publications"
+                        <bs-section ng-model="submModel.viewSubmission.section.subsections.publications"
                                     data-labels="keys.publication">
                         </bs-section>
-
-                        <section id="files">
-                            <bs-section  ng-model="submModel.viewSubmission.section.files"
-                                         data-labels="keys.file"
-                                         data-dynamic="true"
-                                         data-preview-header="templates/bsng/section_part/file/previewHeader.html"
-                                         data-detail-header="templates/bsng/section_part/file/detailHeader.html">
-                            </bs-section>
-                        </section>
-
-                        <section id="publications">
-                            <bs-section ng-model="submModel.viewSubmission.section.subsections.publications"
-                                        data-labels="keys.publication">
-                            </bs-section>
-                        </section>
+                    </section>
 
 
                     </div>
