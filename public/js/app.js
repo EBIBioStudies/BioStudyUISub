@@ -107,18 +107,10 @@ app
                 templateUrl: 'templates/views/submission/submissions.html',
                 controller: 'SubmissionListCtrl'
             }, 'user').
-           /* whenAuthenticated('/addsubmission', {
-                templateUrl: 'templates/views/submission/submission.html',
-                controller: 'AddSubmissionCtrl'
-            }, 'user'). */
             whenAuthenticated('/edit/:accno', {
                 templateUrl: 'templates/views/submission/submission.html',
                 controller: 'EditSubmissionCtrl'
             }, 'user').
-           /* whenAuthenticated('/edittemp/:accnotemp', {
-                templateUrl: 'templates/views/submission/submission.html',
-                controller: 'EditSubmissionCtrl'
-            }, 'user'). */
             whenAuthenticated('/files', {
                 templateUrl: 'templates/views/files/files.html',
                 controller: 'FilesCtrl'
