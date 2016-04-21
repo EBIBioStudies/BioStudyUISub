@@ -5,15 +5,6 @@ module.exports =
 
         return ['$http', '$q', function ($http, $q) {
 
-/*
-            function removeParent(submission) {
-                angular.forEach(submission.sections, function(section, index) {
-                    delete section.parent;
-                    removeParent(section);
-                });
-            }
-*/
-
             function getSubmissionList(options) {
                 var deffer = $q.defer();
 
@@ -88,15 +79,9 @@ module.exports =
                 return defer.promise;
             }
 
-            function deleteSubmission(submission) {
+            function deleteSubmission(accno) {
                 var defer = $q.defer();
-                var url = '';
-                if (submission.id) {
-                    url = '/api/submission/submitted/delete/' + submission.accno;
-                } else {
-                    url = '/api/submission/delete/' + submission.accno;
-                }
-                $http.delete(url)
+                $http.delete("/api/submission/" + accno)
                     .success(function (data) {
                         defer.resolve(data);
                     }).error(function (err, status) {
