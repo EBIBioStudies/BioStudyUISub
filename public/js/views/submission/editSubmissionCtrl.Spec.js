@@ -2,7 +2,7 @@
 
 
 
-describe('Controller addSubmissionCtrl',function() {
+describe('Controller editSubmissionCtrl',function() {
 
     beforeEach(angular.mock.module('BioStudyApp'));
     describe('',function() {
@@ -32,7 +32,7 @@ describe('Controller addSubmissionCtrl',function() {
 
         it('Should create controller', function(done) {
 
-            var controller = $controller('AddSubmissionCtrl', _mock);
+            var controller = $controller('EditSubmissionCtrl', _mock);
             console.log(_mock.$scope.submission);
 
             expect(controller).toBeDefined();
@@ -47,7 +47,7 @@ describe('Controller addSubmissionCtrl',function() {
             spyOn(_mock.SubmissionModel, 'addItemToArray');
             //spyOn(mockA.SubmissionModel, "createAttribute").and.returnValue({name:'a'});
 
-            var controller = $controller('AddSubmissionCtrl', _mock);
+            var controller = $controller('EditSubmissionCtrl', _mock);
             _mock.$scope.addAnnotation(sub);
 
             expect(_mock.SubmissionModel.addItemToArray).toHaveBeenCalled();
