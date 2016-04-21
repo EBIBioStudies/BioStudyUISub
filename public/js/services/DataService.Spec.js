@@ -1,5 +1,5 @@
+/*
 'use strict';
-var subroute = require('../../../.gen/config.json').routing.submission;
 var testData = {
     submission: {
         list: require('../../../tests/data/submission.list.json')
@@ -42,4 +42,4 @@ describe('BioStudyApp test DataService',function() {
 
     });
 
-});
+});*/

@@ -3,9 +3,6 @@
  */
 'use strict';
 
-var routingConfig = require('../routeConfig');
-
-
 module.exports = function ($http, $window, $location,
                            $rootScope, $log, $injector, SubmissionModel) {
 
