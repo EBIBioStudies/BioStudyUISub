@@ -62,7 +62,7 @@ module.exports =
             if (currentSubmission != savedSubmission) {
                 stopSaving();
                 var sbm = $scope.sbm;
-                sbm.data = currentSubmission;
+                sbm.data = $scope.submission;
                 SubmissionService.saveSubmission(sbm)
                     .then(function () {
                         $log.debug("edit_submission: changes saved");
