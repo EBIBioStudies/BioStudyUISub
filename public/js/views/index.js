@@ -14,7 +14,6 @@ app.controller('MessagesCtrl', require('./messagesCtrl'));
 
 app.controller('DashboardCtrl', require('./dashboardCtrl'));
 app.controller('SubmissionListCtrl', require('./submission/submissionListCtrl'));
-app.controller('AddSubmissionCtrl', require('./submission/addSubmissionCtrl'));
 app.controller('EditSubmissionCtrl', require('./submission/editSubmissionCtrl'));
 app.controller('PublicationCtrl', require('./submission/PublicationCtrl'));
 

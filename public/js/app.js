@@ -1,18 +1,5 @@
-/*var jQuery=require('jquery');
- window.jQuery=jQuery;
- window.$=jQuery;
-
- var bootstrap=require('bootstrap/dist/js/bootstrap');
- */
 'use strict';
-//require('../../.build/components/ng-file-upload/angular-file-upload-shim');
 
-//require('angular-animate/angular-animate');
-//require('angular-sanitize/angular-sanitize');
-
-//var msUi=require('../../.build/components/MentorSoftwareLtd/msNgUi/dist/index');
-
-//require('../../.build/components/angular-file-upload/dist/angular-file-upload.min');
 require('../../.build/components/ng-file-upload/ng-file-upload');
 require('../../.build/components/angular-bootstrap/ui-bootstrap');
 require('../../.build/components/angular-bootstrap/ui-bootstrap-tpls');
@@ -23,7 +10,6 @@ require('../../.build/components/angular-bootstrap-show-errors');
 require('../../.build/components/angular-recaptcha/release/angular-recaptcha');
 
 var XML2JSON = require('../../shared/lib/xml2json');
-//require('../../.build/components/angular-tree-dnd/dist/ng-tree-dnd');
 require('./directives/tree-grid-directive');
 
 var TrNgGrid = require('../../.build/components/trNgGrid/trNgGrid');
@@ -36,10 +22,9 @@ var app = angular.module('BioStudyApp',
         'ui.bootstrap', 'ui.bootstrap.showErrors',
         'ui.select', 'typeahead-focus', 'bs-templates', 'treeGrid', 'vcRecaptcha'
     ]);
-//'msAngularUi',
+
 var appInfo = {
-    version: require('../../package.json').version,
-    configName: require('../../.gen/config.json').name
+    version: require('../../package.json').version
 };
 app.constant('AppInfo', appInfo);
 
@@ -72,14 +57,12 @@ app
 
         $routeProvider.whenAuthenticated = function (path, route, accessLevel) {
             route.resolve = route.resolve || {};
-            if (appInfo.configName !== 'dev') {
-                angular.extend(route.resolve, {
-                    isAuthorized: ['$q', 'AuthService',
-                        function ($q, AuthService) {
-                            return isAuthorized(accessLevel, $q, AuthService);
-                        }]
-                });
-            }
+            angular.extend(route.resolve, {
+                isAuthorized: ['$q', 'AuthService',
+                    function ($q, AuthService) {
+                        return isAuthorized(accessLevel, $q, AuthService);
+                    }]
+            });
             return $routeProvider.when(path, route);
         };
         $routeProvider.
