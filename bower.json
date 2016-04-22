@@ -25,7 +25,8 @@
     "flow.js": "~2.10.1",
     "ng-flow": "~2",
     "ng-file-upload": "~12.0.1",
-    "lodash": "^4.8.2"
+    "lodash": "^4.8.2",
+    "angular-ui-router": "^0.2.18"
   },
   "devDependencies": {
     "angular-file-upload": "~2.1.4",

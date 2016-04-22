@@ -137,7 +137,7 @@ gulp.task('unit:public', function() {
   karma.start(karmaConfig, captureError());
 });
 
-gulp.task('webserver', ['clean', 'js', 'styles'], function() {
+gulp.task('webserver', ['clean', 'js', 'ejs', 'styles'], function() {
   gulp.src('.build')
       .pipe(webserver({
         port: 7000,

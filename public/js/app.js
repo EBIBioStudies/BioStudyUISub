@@ -8,6 +8,7 @@ require('../../.build/components/typeahead-focus/typeahead-focus');
 require('../../.build/components/angular-ui-select/dist/select');
 require('../../.build/components/angular-bootstrap-show-errors');
 require('../../.build/components/angular-recaptcha/release/angular-recaptcha');
+require('../../.build/components/angular-ui-router/release/angular-ui-router');
 
 var XML2JSON = require('../../shared/lib/xml2json');
 require('./directives/tree-grid-directive');
@@ -18,9 +19,10 @@ require('../../.gen/templates');
 
 
 var app = angular.module('BioStudyApp',
-    ['ngRoute', 'ngCookies', 'ngMessages', 'trNgGrid', 'ngFileUpload',
+    [
+        'ngCookies', 'ngMessages', 'trNgGrid', 'ngFileUpload',
         'ui.bootstrap', 'ui.bootstrap.showErrors',
-        'ui.select', 'typeahead-focus', 'bs-templates', 'treeGrid', 'vcRecaptcha'
+        'ui.select', 'typeahead-focus', 'bs-templates', 'treeGrid', 'vcRecaptcha', 'ui.router'
     ]);
 
 var appInfo = {
@@ -33,82 +35,75 @@ require('./services');
 require('./views/index');
 require('./directives');
 require('./auth');
+require('./submission');
 require('./utils');
 
 app
-    .config(function ($routeProvider, $locationProvider, $logProvider, $httpProvider, $anchorScrollProvider) {
+    .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $logProvider, $httpProvider, $anchorScrollProvider) {
 
         //for tests only
         //delete $httpProvider.defaults.headers.common['X-Requested-With'];
         $anchorScrollProvider.disableAutoScrolling();
         $logProvider.debugEnabled(true);
 
-        // var access = require('./routeConfig').accessLevels;
-
-        function isAuthorized(accessLevel, $q, AuthService) {
-            var deferred = $q.defer();
-            if (AuthService.isAuthorizedAs(accessLevel)) {
-                deferred.reject({needsAuthentication: true});
-            } else {
-                deferred.resolve();
-            }
-            return deferred.promise;
-        }
-
-        $routeProvider.whenAuthenticated = function (path, route, accessLevel) {
-            route.resolve = route.resolve || {};
-            angular.extend(route.resolve, {
-                isAuthorized: ['$q', 'AuthService',
-                    function ($q, AuthService) {
-                        return isAuthorized(accessLevel, $q, AuthService);
-                    }]
-            });
-            return $routeProvider.when(path, route);
-        };
-        $routeProvider.
-            when('/help', {
-                templateUrl: 'templates/views/help.html',
+        $stateProvider
+            .state('help', {
+                url: '/help',
+                templateProvider: 'templates/views/help.html',
                 controller: 'HelpCtrl'
-            }).
-            when('/activate/:key', {
+            })
+            .state('key_activation', {
+                url: '/activate/:key',
                 templateUrl: 'templates/auth/views/activate.html',
                 controller: 'ActivateCtrl'
-            }).
-            when('/signin', {
+            })
+            .state('signin', {
+                url: '/signin',
                 templateUrl: 'templates/auth/views/signin.html',
                 controller: 'SignInCtrl'
-            }).
-            when('/signup', {
+            })
+            .state('signup', {
+                url: '/signup',
                 templateUrl: 'templates/auth/views/signup.html',
                 controller: 'SignUpCtrl'
-            }).
-            when('/error', {
+            })
+            .state('error', {
+                url: '/error',
                 templateUrl: 'templates/views/error/error.html',
                 controller: 'ErrorCtrl'
-            }).
-            whenAuthenticated('/submissions', {
-                templateUrl: 'templates/views/submission/submissions.html',
-                controller: 'SubmissionListCtrl'
-            }, 'user').
-            whenAuthenticated('/edit/:accno', {
-                templateUrl: 'templates/views/submission/submission.html',
-                controller: 'EditSubmissionCtrl'
-            }, 'user').
-            whenAuthenticated('/files', {
+            })
+            .state('submissions', {
+                url: '/submissions',
+                templateUrl: 'templates/submission/views/submissions.html',
+                controller: 'SubmissionListCtrl',
+                authenticated: true
+            })
+            .state('submission_edit', {
+                url: '/edit/:accno',
+                templateUrl: 'templates/submission/views/submission.html',
+                controller: 'EditSubmissionCtrl',
+                authenticated: true
+            })
+            .state('files', {
+                url: '/files',
                 templateUrl: 'templates/views/files/files.html',
-                controller: 'FilesCtrl'
-            }, 'user').
-            whenAuthenticated('/export', {
+                controller: 'FilesCtrl',
+                authenticated: true
+            })
+            .state('export', {
+                url: '/export',
                 templateUrl: 'partials/export.html',
-                controller: 'ExportCtrl'
-            }, 'user').
-            whenAuthenticated('/profile', {
+                controller: 'ExportCtrl',
+                authenticated: true
+            })
+            .state('profile', {
+                url: '/profile',
                 templateUrl: 'partials/profile.html',
                 controller: 'ProfileCtrl'
-            }, 'user').
-            otherwise({
-                redirectTo: '/submissions'
             });
+
+        // default url
+        $urlRouterProvider.otherwise('/submissions');
 
         $locationProvider.html5Mode(false);
 
@@ -117,23 +112,23 @@ app
         $httpProvider.interceptors.push('authInterceptor');
     })
 
-    .run(function ($location, $log, $rootScope, AuthService, AUTH_EVENTS, USER_ROLES, Session) {
+    .run(function ($state, $log, $rootScope, AuthService, AUTH_EVENTS, USER_ROLES, Session) {
 
-        //TODO: it does not work ???
-        //$anchorScroll.yOffset = 300;
-        $rootScope.$on('$routeChangeError', function (ev, current, previous, rejection) {
-            if (rejection && rejection.needsAuthentication === true) {
-                console.log('needs auth change error');
-                var returnUrl = $location.url();
-                $location.path('/home');
-                $rootScope.$broadcast('needsAuthentication', returnUrl);
+        // Redirect to login if route requires auth and you're not logged in
+        $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
+            if (toState.authenticated && !AuthService.isAuthenticated()) {
+                event.preventDefault();
+                $rootScope.returnToState = toState.url;
+                $rootScope.returnToStateParams = toParams;
+                $state.transitionTo('signin');
             }
         });
+
         $rootScope.Constants = require('./Const');
 
         function logout() {
             $rootScope.setCurrentUser(null);
-            $location.path('/signin');
+            $state.go('signin');
         }
 
         $rootScope.$on(AUTH_EVENTS.notAuthenticated, logout);
