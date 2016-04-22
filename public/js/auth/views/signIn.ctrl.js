@@ -31,8 +31,7 @@ module.exports =
                     AuthService
                         .signIn($scope.credentials)
                         .then(function (user) {
-                            $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
-                            $scope.setCurrentUser(user.username);
+                            $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, user);
 
                             $location.path('/submissions');
                             $scope.hasError = false;

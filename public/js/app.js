@@ -126,25 +126,30 @@ app
 
         $rootScope.Constants = require('./Const');
 
+        function setCurrentUser(user) {
+            $rootScope.currentUser = user;
+        }
+
         function logout() {
-            $rootScope.setCurrentUser(null);
+            setCurrentUser(null);
             $state.go('signin');
         }
 
+        function login(event, data) {
+            setCurrentUser(data.username);
+        }
+
         $rootScope.$on(AUTH_EVENTS.notAuthenticated, logout);
-        $rootScope.$on(AUTH_EVENTS.logoutSuccess, logout);
         $rootScope.$on(AUTH_EVENTS.sessionTimeout, logout);
+        $rootScope.$on(AUTH_EVENTS.logoutSuccess, logout);
+        $rootScope.$on(AUTH_EVENTS.loginSuccess, login);
 
         $rootScope.currentUser = null;
         $rootScope.userRoles = USER_ROLES;
         $rootScope.isAuthorized = AuthService.isAuthorized;
 
-        $rootScope.setCurrentUser = function (user) {
-            $rootScope.currentUser = user;
-        };
-
         if (!Session.isAnonymous()) {
-            $rootScope.setCurrentUser(Session.userName);
+            setCurrentUser(Session.userName);
         }
     })
     .factory('authInterceptor', ['$rootScope', '$q', 'AUTH_EVENTS', function ($rootScope, $q, AUTH_EVENTS) {
