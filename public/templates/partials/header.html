@@ -20,7 +20,7 @@
             <ul class="nav navbar-nav">
 
                 <li bs-active-nav >
-                    <a id="helpMenuItem" href="#/help"
+                    <a id="helpMenuItem" ui-sref="help"
                        tooltip-append-to-body="true"
                        uib-tooltip="Go to the help page"
                        tooltip-placement="bottom">
@@ -31,7 +31,7 @@
 
                 <!-- Notifications: style can be found in dropdown.less -->
                 <li bs-active-nav ng-hide="currentUser">
-                    <a id="signUpMenuItem" href="#/signup"
+                    <a id="signUpMenuItem" ui-sref="signup"
                        tooltip-append-to-body="true"
                        uib-tooltip="Register a new user"
                        tooltip-placement="bottom">
@@ -41,7 +41,7 @@
 
                 </li>
                 <li bs-active-nav ng-hide="currentUser">
-                    <a id="signInMenuItem" href="#/signin"
+                    <a id="signInMenuItem" ui-sref="signin"
                        tooltip-append-to-body="true"
                        uib-tooltip="Sign in"
                        tooltip-placement="bottom">
@@ -52,7 +52,7 @@
 
 
                 <li bs-active-nav ng-show="currentUser">
-                    <a id="submissionMenuItem" href="#/submissions"
+                    <a id="submissionMenuItem" ui-sref="submissions"
                        tooltip-append-to-body="true"
                        uib-tooltip="List of submissions"
                        tooltip-placement="bottom">
@@ -63,7 +63,7 @@
                 </li>
 
                 <li bs-active-nav ng-show="currentUser">
-                    <a href="#/files">
+                    <a ui-sref="files">
                         <i class="fa fa-fw fa-upload"></i>
                         <span>Files</span>
                     </a>
