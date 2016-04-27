@@ -17,11 +17,15 @@ var rimraf = require('gulp-rimraf');
 var gutil = require('gulp-util');
 
 var gulp = require('gulp');
+var bower = require('gulp-bower');
 
 var envHelper=require('./tasks/helpers/envHelper');
 var webserver = require('gulp-webserver');
 
 
+gulp.task('bower', function() {
+  return bower();
+});
 
 gulp.task('clean', function () {
   return gulp.src([envHelper.copyToPath + '/css/**/*', envHelper.copyToPath + '/images/**/*',
@@ -159,7 +163,7 @@ gulp.task('webserver', ['clean', 'js', 'styles'], function() {
 gutil.log('Build client for environment ',process.env.NODE_ENV);
 gutil.log('Deploy client to ',envHelper.copyToPath);
 
-gulp.task('default', ['clean', 'copy','html2js','jshint','styles','js','ejs']);
+gulp.task('default', ['clean', 'bower', 'copy', 'html2js', 'jshint', 'styles', 'js', 'ejs']);
 
 
 
