@@ -78,7 +78,7 @@ gulp.task('html2js',['clean','copy','jshint'],function () {
     .pipe(gulp.dest(".gen"));
 });
 
-gulp.task('js', ['clean','copy','jshint','html2js'], function () {
+gulp.task('js', ['clean','copy', 'bower', 'jshint','html2js'], function () {
   var b = browserify({
     entries: 'public/js/app.js',
     debug: true
