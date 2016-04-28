@@ -82,7 +82,7 @@
     "ng-html2js": "^1.2.0",
     "passport": "^0.2.1",
     "passport-local": "^1.0.0",
-    "protractor": "^2.0.0",
+    "protractor": "^3.3.0",
     "q": "^1.4.1",
     "should": "^4.4.1",
     "streamqueue": "^1.1.0",
