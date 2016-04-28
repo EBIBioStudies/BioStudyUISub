@@ -4,7 +4,7 @@ angular.module('BioStudyApp')
 
     .factory('AuthService', require('./auth.service'))
     .factory('AccessLevel', require('./accessLevel.service'))
-    .controller('SignInCtrl', require('./views/signinn.ctrl.js'))
+    .controller('SignInCtrl', require('./views/signin.ctrl.js'))
     .controller('SignUpCtrl', require('./views/signup.ctrl'))
     .controller('ActivateCtrl', require('./views/activate.ctrl'))
     .service('Session', ['USER_ROLES', 'LocalStorage', function (USER_ROLES, LocalStorage) {
