@@ -61,7 +61,7 @@
             <section id="scrollArea" class="content padding-left-large">
                 <form class="form-horizontal" autocomplete="off" novalidate role="form"
                       method="post" name="submissionForm">
-                    <diFixv class="form-group row margin-bottom-small padding-right-15" ms-form-group-validator>
+                    <div class="form-group row margin-bottom-small padding-right-15" ms-form-group-validator>
 
                         <div class="col-sm-12 ">
                             <label class="control-label" for="title">Title<span ng-show="submissionForm.title.$dirty && submissionForm.title.$invalid
@@ -69,7 +69,7 @@
                         <input type="text" class="form-control" id="title" name="title" placeholder="Enter a title" required
                                ng-model="submHelper.attributes.Title.value.value" required>
                         </div>
-                    </diFix thev>
+                    </div>
 
                 <div class="form-group row margin-bottom-small padding-right-15" bs-show-errors id="submReleaseDate">
 
@@ -91,7 +91,6 @@
                         </span>
                             </p>
                         </div>
-                    </div>
                 </div>
                 <div class="form-group row margin-bottom-small padding-right-15" ng-class="{'has-error':sectionAttrForm.title1.$invalid }" ng-form name="sectionAttrForm"
                      ng-repeat="attr in submHelper.section.annotations.attributes | filter:{require: true}">

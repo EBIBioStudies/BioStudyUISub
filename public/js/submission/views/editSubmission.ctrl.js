@@ -3,7 +3,7 @@
  */
 'use strict';
 
-var moduleHelper2 = require('../../model/moduleHelper2');
+var moduleHelper2 = require('../../model/modelHelper2');
 
 module.exports =
     function ($rootScope, $scope, $timeout, $interval, $location,
@@ -62,7 +62,7 @@ module.exports =
             if (currentSubmission != savedSubmission) {
                 stopSaving();
                 var sbm = $scope.sbm;
-                sbm.data = currentSubmission;
+                sbm.data = $scope.submission;
                 SubmissionService.saveSubmission(sbm)
                     .then(function () {
                         $log.debug("edit_submission: changes saved");

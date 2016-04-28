@@ -2,9 +2,6 @@
  * Created by mdylag on 04/09/2014.
  */
 'use strict';
-var routing = require('../../../.gen/config.json').routing;
-
-
 
 module.exports = function ($http, $window, $q,$location, $rootScope, $cookieStore, $log, Xml2Json) {
 

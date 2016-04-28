@@ -51,11 +51,11 @@ module.exports =
 
                             if (submission) {
                                 SubmissionService
-                                    .deleteSubmission(submission)
+                                    .deleteSubmission(submission.accno)
                                     .then(function () {
                                         angular.forEach($scope.submissions,
                                             function (value, index) {
-                                                if (value.id === submission.id) {
+                                                if (value.accno === submission.accno) {
                                                     $scope.submissions.splice(index, 1);
                                                 }
                                             });
