@@ -5,8 +5,8 @@
 
 module.exports = (function(){
 
-    return ['$scope', '$rootScope', '$location', '$log', 'AuthService', 'AppInfo', 'AUTH_EVENTS',
-        function ($scope, $rootScope, $location, $log, AuthService, AppInfo, AUTH_EVENTS) {
+    return ['$scope', '$rootScope', '$location', '$log', 'AuthService', 'APP_VERSION', 'AUTH_EVENTS',
+        function ($scope, $rootScope, $location, $log, AuthService, APP_VERSION, AUTH_EVENTS) {
 
             $scope.toggleMenuBtn = false;
             $scope.uisettings = {
@@ -22,7 +22,7 @@ module.exports = (function(){
             $scope.$watch('collapseLeftSide', function () {
             });
 
-            $scope.AppInfo = AppInfo;
+            $scope.appVersion = APP_VERSION;
 
             $scope.signIn = function (options) {
                 AuthService.showSignInDialog(options || {});

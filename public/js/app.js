@@ -16,19 +16,15 @@ require('./directives/tree-grid-directive');
 var TrNgGrid = require('../../.build/components/trNgGrid/trNgGrid');
 
 require('../../.gen/templates');
-
+require('./config');
 
 var app = angular.module('BioStudyApp',
     [
+        'BioStudyApp.config',
         'ngCookies', 'ngMessages', 'trNgGrid', 'ngFileUpload',
         'ui.bootstrap', 'ui.bootstrap.showErrors',
         'ui.select', 'typeahead-focus', 'bs-templates', 'treeGrid', 'vcRecaptcha', 'ui.router'
     ]);
-
-var appInfo = {
-    version: require('../../package.json').version
-};
-app.constant('AppInfo', appInfo);
 
 require('./model');
 require('./services');
@@ -165,17 +161,17 @@ app
             }
         };
     }])
-    .factory('proxyInterceptor', function () {
+    .factory('proxyInterceptor', ['APP_PROXY_BASE', function (APP_PROXY_BASE) {
         return {
             'request': function (config) {
                 var url = config.url;
                 if (url.startsWith('/api/') || url.startsWith('/raw/')) {
-                    config.url = "/proxy" + url;
+                    config.url = APP_PROXY_BASE + url;
                 }
                 return config;
             }
         };
-    })
+    }])
     .factory('sessionInterceptor', ['Session', function (Session) {
         return {
             'request': function (config) {
