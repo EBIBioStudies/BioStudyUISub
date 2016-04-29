@@ -13,7 +13,7 @@ var concat = require('gulp-concat');
 var ngHtml2Js = require("gulp-ng-html2js");
 var rename = require('gulp-rename');
 var ejs = require("gulp-ejs");
-var rimraf = require('gulp-rimraf');
+
 var gutil = require('gulp-util');
 
 var gulp = require('gulp');
@@ -24,6 +24,7 @@ var webserver = require('gulp-webserver');
 var war = require('gulp-war');
 var bump = require('gulp-bump');
 var ngConstant = require('gulp-ng-constant');
+var clean = require('gulp-clean');
 
 
 gulp.task('bump', function () {
@@ -51,9 +52,14 @@ gulp.task('bower', function () {
 });
 
 gulp.task('clean', function () {
-  return gulp.src([envHelper.copyToPath + '/css/**/*', envHelper.copyToPath + '/images/**/*',
-    envHelper.copyToPath + '/js',envHelper.copyToPath + '/partials/**/*', '.gen/**/*', '.war/**/*'], {read: false})
-      .pipe(rimraf({ force: true }));
+    return gulp.src([
+            envHelper.copyToPath + '/css',
+            envHelper.copyToPath + '/images',
+            envHelper.copyToPath + '/js',
+            envHelper.copyToPath + '/partials',
+            '.gen',
+            '.war'], {read: false})
+        .pipe(clean({force: true}));
 });
 
 gulp.task('copy', ['clean'], function(cb) {
