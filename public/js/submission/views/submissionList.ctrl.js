@@ -29,7 +29,7 @@ module.exports =
                 $scope.createSubmission = function () {
                     SubmissionService.createSubmission(SubmissionModel.createSubmission())
                         .then(function(sbm) {
-                            startEditing(sbm);
+                            startEditing(sbm.accno);
                         });
                 };
 
