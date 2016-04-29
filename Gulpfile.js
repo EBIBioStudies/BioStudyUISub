@@ -52,7 +52,7 @@ gulp.task('bower', function () {
 
 gulp.task('clean', function () {
   return gulp.src([envHelper.copyToPath + '/css/**/*', envHelper.copyToPath + '/images/**/*',
-    envHelper.copyToPath + '/js',envHelper.copyToPath + '/partials/**/*', '.gen/**/*'], {read: false})
+    envHelper.copyToPath + '/js',envHelper.copyToPath + '/partials/**/*', '.gen/**/*', '.war/**/*'], {read: false})
       .pipe(rimraf({ force: true }));
 });
 
