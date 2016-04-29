@@ -3,11 +3,11 @@
  */
 'use strict';
 
-var moduleHelper2 = require('../../model/modelHelper2');
+var modelHelper = require('../../model/modelHelper2');
 
 module.exports =
     function ($rootScope, $scope, $timeout, $interval, $location,
-              $uibModal, $stateParams, $log, $anchorScroll, ModuleHelper, submissionDecorator,
+              $uibModal, $stateParams, $log, $anchorScroll, submissionDecorator,
               SubmissionService, MessageService, SubmissionModel) {
 
         submissionDecorator.create($scope);
@@ -42,7 +42,7 @@ module.exports =
 
                 $scope.sbm = sbm;
                 $scope.submission = SubmissionModel.createSubmission(sbm.data);
-                $scope.submHelper = moduleHelper2.createSubmModel($scope.submission);
+                $scope.submHelper = modelHelper.createSubmModel($scope.submission);
                 $scope.curentSectionForFiles = $scope.submission.section;
 
                 startSaving(angular.toJson($scope.submission));
