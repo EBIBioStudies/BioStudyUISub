@@ -78,6 +78,17 @@ module.exports =
                 return defer.promise;
             }
 
+            function editSubmission(accno) {
+                var defer = $q.defer();
+                $http.post("/api/submission/edit/" + accno)
+                    .success(function (data) {
+                        defer.resolve(data);
+                    }).error(function (err, status) {
+                    defer.reject(err, status);
+                });
+                return defer.promise;
+            }
+
             function deleteSubmission(accno) {
                 var defer = $q.defer();
                 $http.delete("/api/submission/" + accno)
@@ -95,7 +106,8 @@ module.exports =
                 saveSubmission: saveSubmission,
                 submitSubmission: submitSubmission,
                 deleteSubmission: deleteSubmission,
-                createSubmission: createSubmission
+                createSubmission: createSubmission,
+                editSubmission: editSubmission
             }
         }];
 
