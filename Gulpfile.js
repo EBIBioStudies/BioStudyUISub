@@ -13,7 +13,7 @@ var concat = require('gulp-concat');
 var ngHtml2Js = require("gulp-ng-html2js");
 var rename = require('gulp-rename');
 var ejs = require("gulp-ejs");
-var rimraf = require('gulp-rimraf');
+
 var gutil = require('gulp-util');
 
 var gulp = require('gulp');
@@ -21,16 +21,45 @@ var bower = require('gulp-bower');
 
 var envHelper=require('./tasks/helpers/envHelper');
 var webserver = require('gulp-webserver');
+var war = require('gulp-war');
+var bump = require('gulp-bump');
+var ngConstant = require('gulp-ng-constant');
+var clean = require('gulp-clean');
 
 
-gulp.task('bower', function() {
-  return bower();
+gulp.task('bump', function () {
+    return gulp
+        .src('./config.json')
+        .pipe(bump({
+            //type: 'minor',
+            //type: 'major',
+            key: 'APP_VERSION'
+        }))
+        .pipe(gulp.dest('./'));
+});
+
+gulp.task('config', function () {
+    return gulp.src('./config.json')
+        .pipe(ngConstant({
+            wrap: 'commonjs',
+            name: 'BioStudyApp.config'
+        }))
+        .pipe(gulp.dest('./public/js'));
+});
+
+gulp.task('bower', function () {
+    return bower();
 });
 
 gulp.task('clean', function () {
-  return gulp.src([envHelper.copyToPath + '/css/**/*', envHelper.copyToPath + '/images/**/*',
-    envHelper.copyToPath + '/js',envHelper.copyToPath + '/partials/**/*', '.gen/**/*'], {read: false})
-      .pipe(rimraf({ force: true }));
+    return gulp.src([
+            envHelper.copyToPath + '/css',
+            envHelper.copyToPath + '/images',
+            envHelper.copyToPath + '/js',
+            envHelper.copyToPath + '/partials',
+            '.gen',
+            '.war'], {read: false})
+        .pipe(clean({force: true}));
 });
 
 gulp.task('copy', ['clean'], function(cb) {
@@ -54,7 +83,6 @@ gulp.task('copy', ['clean'], function(cb) {
   cb();
 
 });
-
 
 
 gulp.task('jshint', function () {
@@ -139,6 +167,14 @@ gulp.task('unit:public', function() {
 
   gutil.log('Running unit tests on unminified source.');
   karma.start(karmaConfig, captureError());
+});
+
+gulp.task('war', function () {
+  gulp.src([".build/**/*.*"])
+      .pipe(war({
+        welcome: 'index.html'
+      }))
+      .pipe(gulp.dest(".war"));
 });
 
 gulp.task('webserver', ['clean', 'js', 'ejs', 'styles'], function() {
