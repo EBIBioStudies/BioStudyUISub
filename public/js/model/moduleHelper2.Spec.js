@@ -158,7 +158,6 @@ describe('Test module helper2', function () {
             var model = moduleHelper2.createSubmModel(submModel);
             model.attributes.Title.value.value = "new";
             var index=_.findIndex(submModel.attributes, {name: 'Title'});
-            console.log(model.attributes, submModel.attributes);
 
             //console.log("Modif",submModel.attributes, index);
             //expect(model.attributes.Title.value.value).toEqual();;
@@ -200,6 +199,13 @@ describe('Test module helper2', function () {
 
         });
 
+        it('should add a new file', function () {
+            var model = moduleHelper2.createSubmModel(submModel);
+            model.section.files.add();
+
+        });
+
+
 
 
         xit('add a new link', function () {
@@ -224,6 +230,7 @@ describe('Test module helper2', function () {
 
             attr.name = 'AA';
             model.section.links.changeAttr(attr.name, 'A');
+            console.log(model.section);
 
 
         })

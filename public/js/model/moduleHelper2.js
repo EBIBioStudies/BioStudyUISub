@@ -27,31 +27,31 @@ function AttributeKeys() {
 
 }
 /**
-Constructor for create a singlr element in item
+ Constructor for create a singlr element in item
  */
 function Element(options) {
     this.model = options.model || {};
     this.attributes = {};
-    this.create = function(model) {
+    this.create = function (model) {
         this.model = model;
         this.createAttributes();
     }
-    this.createAttributes = function() {
+    this.createAttributes = function () {
         _self = this;
-        _(this.model.attributes).forEach(function(obj, key) {
-            console.log('create attrs', obj, obj.name);
-            _self.attributes[obj.name]=obj;
+        _(this.model.attributes).forEach(function (obj, key) {
+            //console.log('create attrs', obj, obj.name);
+            _self.attributes[obj.name] = obj;
         });
     };
 
-    this.addAttribute = function(attr) {
+    this.addAttribute = function (attr) {
         this.attributes[attr.name] = attr;
     }
-    this.removeAttribute = function(name) {
+    this.removeAttribute = function (name) {
         delete this.attributes[name];
 
     }
-    this.changeAttribute= function(newVal, oldVal) {
+    this.changeAttribute = function (newVal, oldVal) {
         if (this.attributes[oldVal]) {
             if (!this.attributes[newVal]) {
                 this.attributes[newVal] = this.attributes[oldVal];
@@ -59,8 +59,6 @@ function Element(options) {
             }
         }
     }
-
-
 
 
 }
@@ -72,9 +70,10 @@ function ModuleItem(options) {
     this.colSizeCss = 'col-lg-6';
     this.attributeKeys = new AttributeKeys();
     this.ui = {
-        activeTabs:[]
+        activeTabs: []
     }
     var _self = this;
+
     function computeColSize() {
         var length = _self.fields + _self.attributeKeys.length;
         if (length > 6) {
@@ -84,7 +83,8 @@ function ModuleItem(options) {
         _self.colSizeCss = 'col-lg-' + colSize.toString();
     }
 
-    this.addAttrKeys= function(item) {
+    this.addAttrKeys = function (item) {
+        console.log('item.attrs', item);
         if (item.attributes) {
             for (var j = 0; j < item.attributes.length; j++) {
                 this.attributeKeys.add(item.attributes[j].name);
@@ -94,7 +94,8 @@ function ModuleItem(options) {
 
     this.add = function () {
         //SubmissionModel.addLink
-        var item=options.addItem();
+        var item = options.addItem();
+        console.log('Add item', options, this, item);
         this.addAttrKeys(item);
         this.ui.activeTabs.push(true);
         computeColSize();
@@ -108,7 +109,7 @@ function ModuleItem(options) {
 
     }
     this.changeAttr = function (newVal, oldVal) {
-        console.log('Remove old',oldVal, 'Add ',newVal);
+        //console.log('Remove old',oldVal, 'Add ',newVal);
         this.attributeKeys.remove(oldVal);
         this.attributeKeys.add(newVal);
     };
@@ -132,10 +133,10 @@ function ModuleItem(options) {
         //this.ref.splice(index,1);
     }
     this.deleteAttr = function (index, attribute, item) {
-        console.log('Delete attribute', attribute, item);
+        //console.log('Delete attribute', attribute, item);
         var index = _.findIndex(item.attributes, attribute);
         if (index > -1) {
-            item.attributes.splice(index,1);
+            item.attributes.splice(index, 1);
         }
         this.attributeKeys.remove(attribute.name);
         computeColSize();
@@ -155,31 +156,32 @@ function ModuleItem(options) {
 }
 
 function Attributes(model) {
-    this.model=model;
-    this.attributeKeys= new AttributeKeys();
-    this.attributes= [];
+    this.model = model;
+    this.attributeKeys = new AttributeKeys();
+    this.attributes = [];
     function createAttr(require, attr) {
         return {
             require: require,
-            value:attr
+            value: attr
         }
     }
+
     for (var j = 0; j < model.length; j++) {
         this.attributeKeys.add(model[j].name);
-        var modelAttr = _.find(Structure.annotations.attributes,{name: model[j].name});
+        var modelAttr = _.find(Structure.annotations.attributes, {name: model[j].name});
         this.attributes.push(createAttr(modelAttr.required, model[j]));
     }
-    this.add = function(attr) {
-        var _attr=SubmissionModel.createAttribute(attr);
+    this.add = function (attr) {
+        var _attr = SubmissionModel.createAttribute(attr);
         this.attributes.push(createAttr(false, _attr));
         this.model.push(_attr);
     }
-      this.remove = function(attr) {
+    this.remove = function (attr) {
         if (attr) {
             var index = _.findIndex(this.attributes, attr);
             if (index > -1) {
-                this.model.splice(index,1);
-                this.attributes.splice(index,1);
+                this.model.splice(index, 1);
+                this.attributes.splice(index, 1);
             }
         }
     };
@@ -199,7 +201,7 @@ function ModuleHelper(model, fieldsCount) {
             var releaseDateIndex = _.findIndex(this.model.attributes, {name: 'ReleaseDate'});
             if (releaseDateIndex > -1) {
                 this.attributes.ReleaseDate = {name: 'ReleaseDate', value: this.model.attributes[releaseDateIndex]}
-                if (!_.isDate(this.attributes.ReleaseDate.value.value )) {
+                if (!_.isDate(this.attributes.ReleaseDate.value.value)) {
                     this.attributes.ReleaseDate.value.value = new Date(this.attributes.ReleaseDate.value.value);
                 }
 
@@ -214,14 +216,14 @@ function ModuleHelper(model, fieldsCount) {
         if (this.model.section.attributes) {
             this.section.annotations = new Attributes(this.model.section.attributes);
             /*{attributeKeys: new AttributeKeys(),
-            attributes: []};
-            for (var j = 0; j < this.model.section.attributes.length; j++) {
-                this.section.annotations.attributeKeys.add(this.model.section.attributes[j].name);
-                var modelAttr = _.find(Structure.annotations.attributes,{name: this.model.section.attributes[j].name});
-                var attr = {require: modelAttr.required, value:this.model.section.attributes[j] };
-                this.section.annotations.attributes.push(attr);
+             attributes: []};
+             for (var j = 0; j < this.model.section.attributes.length; j++) {
+             this.section.annotations.attributeKeys.add(this.model.section.attributes[j].name);
+             var modelAttr = _.find(Structure.annotations.attributes,{name: this.model.section.attributes[j].name});
+             var attr = {require: modelAttr.required, value:this.model.section.attributes[j] };
+             this.section.annotations.attributes.push(attr);
 
-            }*/
+             }*/
 
         }
 
@@ -243,17 +245,17 @@ function ModuleHelper(model, fieldsCount) {
             this.section.files.create();
         }
 
-        var contacts=_.filter(model.section.subsections, {type: 'Contact'});
-        var publications=_.filter(model.section.subsections, {type: 'Publication'});
+        var contacts = _.filter(model.section.subsections, {type: 'Contact'});
+        var publications = _.filter(model.section.subsections, {type: 'Publication'});
         var _self = this;
         if (contacts) {
             this.section.subsection.contacts = new ModuleItem({
                 model: contacts,
                 fieldsCount: 0,
-                addItem: (function() {
+                addItem: (function () {
                     var addToModel = _.bind(SubmissionModel.addContact, _self.model.section);
-                    return function() {
-                        var item=addToModel();
+                    return function () {
+                        var item = addToModel();
                         contacts.push(item);
                         return item;
                     }
@@ -267,10 +269,10 @@ function ModuleHelper(model, fieldsCount) {
             this.section.subsection.publications = new ModuleItem({
                 model: publications,
                 fieldsCount: 0,
-                addItem: (function() {
-                    var addToModel = _.bind(SubmissionModel.addContact, _self.model.section);
-                    return function() {
-                        var item=addToModel();
+                addItem: (function () {
+                    var addToModel = _.bind(SubmissionModel.addPublication, _self.model.section);
+                    return function () {
+                        var item = addToModel();
                         publications.push(item);
                         return item;
                     }
@@ -311,11 +313,10 @@ function createModuleItem(options) {
 }
 
 function createElement(options) {
-    var el= new Element(options);
+    var el = new Element(options);
     el.createAttributes();
     return el;
 }
-
 
 
 module.exports = {

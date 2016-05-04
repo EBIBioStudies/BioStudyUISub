@@ -55,7 +55,8 @@
             </ol>
         </section>-->
         <div class="panel" ng-class="{'panel-danger': submissionForm.$invalid, 'panel-info':submissionForm.$valid}">
-            <div class="panel-heading">{{title}}</span>
+            <div class="panel-heading"><span>{{title}}</span>
+                <p>Data</p>{{submHelper.section.subsection}}
 
             </div>
 
@@ -96,15 +97,14 @@
                             </p>
                         </div>
                     </div>
-        </div>
-        <div class="form-group row margin-bottom-small padding-right-15"
-             ng-class="{'has-error':sectionAttrForm.title1.$invalid }" ng-form name="sectionAttrForm"
-             ng-repeat="attr in submHelper.section.annotations.attributes | filter:{require: true}">
-            <div class="col-sm-12 ">
-                <label class="control-label">{{attr.value.name}}<span ng-show="sectionAttrForm.title1.$dirty && sectionAttrForm.title1.$invalid
+                    <div class="form-group row margin-bottom-small padding-right-15"
+                         ng-class="{'has-error':sectionAttrForm.title1.$invalid }" ng-form name="sectionAttrForm"
+                         ng-repeat="attr in submHelper.section.annotations.attributes | filter:{require: true}">
+                        <div class="col-sm-12 ">
+                            <label class="control-label">{{attr.value.name}}<span ng-show="sectionAttrForm.title1.$dirty && sectionAttrForm.title1.$invalid
                                           && sectionAttrForm.title1.$error.required">: cannot be blank</span></label>
-                <input type="text" class="form-control" name="title1" placeholder="Enter a {{attr.value.name}}" required
-                       ng-model="attr.value.value" required ng-if="attr.value.name !=='Description'">
+                            <input type="text" class="form-control" name="title1" placeholder="Enter a {{attr.value.name}}" required
+                                   ng-model="attr.value.value" required ng-if="attr.value.name !=='Description'">
                            <textarea name="title1" ng-model="attribute.value" class="form-control input-sm"
                                      required
                                      uib-tooltip="Empty value"
@@ -113,8 +113,9 @@
                                      tooltip-class="customClass"
                                      tooltip-enable="atrForm.attrValue.$invalid"
                                      ng-if="attr.value.name ==='Description'"></textarea>
-            </div>
-        </div>
+                        </div>
+                    </div>
+
 
         <div class="col-lg-12 padding-left-none">
             <bs-section-item id="annotations" ng-model="submHelper.section.annotations"
@@ -146,12 +147,11 @@
                         data-preview-header="templates/bsng/section_part/file/previewHeader.html"
                         data-detail-header="templates/bsng/section_part/file/detailHeader.html">
             </bs-section>
+            <bs-section id="publications" ng-model="submHelper.section.subsection.publications"
+                            data-labels="keys.publication"
+                        data-filter-type="Publication">
 
-            <section id="publications">
-                <bs-section ng-model="submHelper.section.subsections.publications"
-                            data-labels="keys.publication">
-                </bs-section>
-            </section>
+            </bs-section>
 
 
         </div>
@@ -162,7 +162,9 @@
         <!-- /.content -->
         <div class="panel-footer navbar-fixed-bottom">
         </div>
-</aside>
+        </div>
+
+    </aside>
 <!-- /.right-side -->
 </div>
 
