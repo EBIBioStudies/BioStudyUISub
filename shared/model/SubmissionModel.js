@@ -124,7 +124,9 @@ SubmissionFactory.prototype.addFile = function(file) {
     if (!this.files) {
         this.files = [];
     }
-    this.files.push(SubmissionFactory.prototype.createFile(file));
+    var file=SubmissionFactory.prototype.createFile(file);
+    this.files.push(file);
+    return file;
 }
 
 
@@ -226,6 +228,7 @@ SubmissionFactory.prototype.addPublication = function(publication) {
     }
     publication = publication || SubmissionFactory.prototype.createPublication();
     this.subsections.push(publication);
+    return publication;
 }
 
 
