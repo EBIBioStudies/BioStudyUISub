@@ -50,6 +50,7 @@ module.exports =
 
             function saveSubmission(submission) {
                 var deffer = $q.defer();
+                console.log('saveSubmission', submission);
                 $http.post("/api/submission/save", submission)
                     .then(function (response) {
                         if (response.status === 200) {

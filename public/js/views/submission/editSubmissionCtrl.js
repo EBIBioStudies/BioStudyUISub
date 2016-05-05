@@ -65,7 +65,7 @@ module.exports =
                 sbm.data = currentSubmission;
                 SubmissionService.saveSubmission(sbm)
                     .then(function () {
-                        $log.debug("edit_submission: changes saved");
+                        $log.debug("edit_submission: changes saved", $scope.submission);
                         startSaving(currentSubmission);
                     });
             }
