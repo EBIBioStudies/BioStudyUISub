@@ -3,16 +3,16 @@
  */
 'use strict';
 
-var moduleHelper2 = require('../../model/moduleHelper2');
+var modelHelper = require('../../model/modelHelper2');
 
 module.exports =
     function ($rootScope, $scope, $timeout, $interval, $location,
-              $uibModal, $routeParams, $log, $anchorScroll, ModuleHelper, submissionDecorator,
+              $uibModal, $stateParams, $log, $anchorScroll, submissionDecorator,
               SubmissionService, MessageService, SubmissionModel) {
 
         submissionDecorator.create($scope);
         $scope.mode = $rootScope.Constants.FormMode.EDIT;
-        $scope.title = 'Edit the submission ' + $routeParams.accno;
+        $scope.title = 'Edit the submission ' + $stateParams.accno;
         $scope.hasError = false;
 
         var saveInterv = null;
@@ -37,35 +37,29 @@ module.exports =
             stopSaving();
         });
 
-        if ($routeParams.accno) {
-            $log.debug('Edit the submission ', $routeParams);
-            SubmissionService.getSubmission($routeParams.accno)
-                .then(function (sbm) {
+        SubmissionService.getSubmission($stateParams.accno)
+            .then(function (sbm) {
 
-                    $scope.sbm = sbm;
-                    $scope.submission = SubmissionModel.createSubmission(sbm.data);
-                    $scope.submHelper = moduleHelper2.createSubmModel($scope.submission);
-                    $scope.curentSectionForFiles = $scope.submission.section;
+                $scope.sbm = sbm;
+                $scope.submission = SubmissionModel.createSubmission(sbm.data);
+                $scope.submHelper = modelHelper.createSubmModel($scope.submission);
+                $scope.curentSectionForFiles = $scope.submission.section;
 
-                    startSaving(angular.toJson($scope.submission));
+                startSaving(angular.toJson($scope.submission));
 
-                }).catch(function (err) {
-                    $log.debug('Error data', err);
-                    $location.url('/error');
-                });
-        } else {
+            }).catch(function (err) {
+            $log.debug('Error data', err);
             $location.url('/error');
-        }
+        });
 
         $scope.save = function () {
             var currentSubmission = angular.toJson($scope.submission);
             if (currentSubmission != savedSubmission) {
                 stopSaving();
                 var sbm = $scope.sbm;
-                sbm.data = currentSubmission;
+                sbm.data = $scope.submission;
                 SubmissionService.saveSubmission(sbm)
                     .then(function () {
-                        $log.debug("edit_submission: changes saved", $scope.submission);
                         startSaving(currentSubmission);
                     });
             }

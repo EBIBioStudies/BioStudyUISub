@@ -13,20 +13,53 @@ var concat = require('gulp-concat');
 var ngHtml2Js = require("gulp-ng-html2js");
 var rename = require('gulp-rename');
 var ejs = require("gulp-ejs");
-var rimraf = require('gulp-rimraf');
+
 var gutil = require('gulp-util');
 
 var gulp = require('gulp');
+var bower = require('gulp-bower');
 
 var envHelper=require('./tasks/helpers/envHelper');
 var webserver = require('gulp-webserver');
+var war = require('gulp-war');
+var bump = require('gulp-bump');
+var ngConstant = require('gulp-ng-constant');
+var clean = require('gulp-clean');
 
 
+gulp.task('bump', function () {
+    return gulp
+        .src('./config.json')
+        .pipe(bump({
+            //type: 'minor',
+            //type: 'major',
+            key: 'APP_VERSION'
+        }))
+        .pipe(gulp.dest('./'));
+});
+
+gulp.task('config', function () {
+    return gulp.src('./config.json')
+        .pipe(ngConstant({
+            wrap: 'commonjs',
+            name: 'BioStudyApp.config'
+        }))
+        .pipe(gulp.dest('./public/js'));
+});
+
+gulp.task('bower', function () {
+    return bower();
+});
 
 gulp.task('clean', function () {
-  return gulp.src([envHelper.copyToPath + '/css/**/*', envHelper.copyToPath + '/images/**/*',
-    envHelper.copyToPath + '/js',envHelper.copyToPath + '/partials/**/*', '.gen/**/*'], {read: false})
-      .pipe(rimraf({ force: true }));
+    return gulp.src([
+            envHelper.copyToPath + '/css',
+            envHelper.copyToPath + '/images',
+            envHelper.copyToPath + '/js',
+            envHelper.copyToPath + '/partials',
+            '.gen',
+            '.war'], {read: false})
+        .pipe(clean({force: true}));
 });
 
 gulp.task('copy', ['clean'], function(cb) {
@@ -38,9 +71,6 @@ gulp.task('copy', ['clean'], function(cb) {
 
   gulp.src('public/js/external/msAngularUi.css')
       .pipe(gulp.dest(envHelper.copyToPath + '/css/'));
-  gulp.src(envHelper.configDir + '/' + envHelper.configFile)
-      .pipe(rename('config.json'))
-      .pipe(gulp.dest('.gen'));
   gulp.src(['public/images/**/*.png', 'public/images/*.ico'])
       .pipe(gulp.dest(envHelper.copyToPath + '/images'));
   gulp.src(['public/partials/**/*'])
@@ -53,7 +83,6 @@ gulp.task('copy', ['clean'], function(cb) {
   cb();
 
 });
-
 
 
 gulp.task('jshint', function () {
@@ -74,7 +103,7 @@ gulp.task('html2js',['clean','copy','jshint'],function () {
     .pipe(gulp.dest(".gen"));
 });
 
-gulp.task('js', ['clean','copy','jshint','html2js'], function () {
+gulp.task('js', ['clean','copy', 'bower', 'jshint','html2js'], function () {
   var b = browserify({
     entries: 'public/js/app.js',
     debug: true
@@ -140,7 +169,15 @@ gulp.task('unit:public', function() {
   karma.start(karmaConfig, captureError());
 });
 
-gulp.task('webserver', ['clean', 'js', 'styles'], function() {
+gulp.task('war', function () {
+  gulp.src([".build/**/*.*"])
+      .pipe(war({
+        welcome: 'index.html'
+      }))
+      .pipe(gulp.dest(".war"));
+});
+
+gulp.task('webserver', ['clean', 'js', 'ejs', 'styles'], function() {
   gulp.src('.build')
       .pipe(webserver({
         port: 7000,
@@ -159,7 +196,7 @@ gulp.task('webserver', ['clean', 'js', 'styles'], function() {
 gutil.log('Build client for environment ',process.env.NODE_ENV);
 gutil.log('Deploy client to ',envHelper.copyToPath);
 
-gulp.task('default', ['clean', 'copy','html2js','jshint','styles','js','ejs']);
+gulp.task('default', ['clean', 'bower', 'copy', 'html2js', 'jshint', 'styles', 'js', 'ejs']);
 
 
 

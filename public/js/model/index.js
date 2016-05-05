@@ -5,10 +5,10 @@
 'use strict';
 var app = angular.module('BioStudyApp');
 var SubmissionModel = require('../../../shared/model/SubmissionModel');
-var ModuleHelper = require('./modelHelper');
+var ModuleHelper = require('./modelHelper2');
 app.factory('SubmissionModel', function() {
   return SubmissionModel;
 });
-app.service('ModuleHelper', ModuleHelper);
+app.service('ModelHelper', ModuleHelper);
 
 module.exports=app;

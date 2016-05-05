@@ -22,19 +22,23 @@ module.exports =
                     return $scope.selectedSubmission[0];
                 }
 
-                function startEditing(sub){
-                    $location.url('/edit/' + sub.accno);
+                function startEditing(accno){
+                    $location.url('/edit/' + accno);
                 }
 
                 $scope.createSubmission = function () {
                     SubmissionService.createSubmission(SubmissionModel.createSubmission())
                         .then(function(sbm) {
-                            startEditing(sbm);
+                            startEditing(sbm.accno);
                         });
                 };
 
                 $scope.editSubmission = function (submission) {
-                    startEditing(submission || getFirstSelected());
+                    submission = submission || getFirstSelected();
+                    SubmissionService.editSubmission(submission.accno)
+                        .then(function(sbm) {
+                            startEditing(sbm.accno);
+                        });
                 };
 
                 $scope.deleteSubmission = function (submission) {
@@ -51,11 +55,11 @@ module.exports =
 
                             if (submission) {
                                 SubmissionService
-                                    .deleteSubmission(submission)
+                                    .deleteSubmission(submission.accno)
                                     .then(function () {
                                         angular.forEach($scope.submissions,
                                             function (value, index) {
-                                                if (value.id === submission.id) {
+                                                if (value.accno === submission.accno) {
                                                     $scope.submissions.splice(index, 1);
                                                 }
                                             });

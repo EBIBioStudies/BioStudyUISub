@@ -1,13 +1,12 @@
 {
-  "name": "bowerForBioSampleUi",
-  "version": "0.0.1",
+  "name": "BioStudiesUI",
+  "description": "BioStudies UI",
   "dependencies": {
-    "angular": "~1.5.0",
+    "angular": "~1.5.x",
     "angular-bootstrap-show-errors": "~2.3.0",
-    "angular-cookies": "~1.5.0",
-    "angular-file-upload": "2.1.4",
-    "angular-messages": "~1.5.0",
-    "angular-route": "~1.5.0",
+    "angular-cookies": "~1.5.x",
+    "angular-messages": "~1.5.x",
+    "angular-route": "~1.5.x",
     "angular-tree-dnd": "~3.0.4",
     "angular-ui-select": "~0.12.1",
     "bootstrap": "~3.3.5",
@@ -25,14 +24,12 @@
     "flow.js": "~2.10.1",
     "ng-flow": "~2",
     "ng-file-upload": "~12.0.1",
-    "lodash": "^4.8.2"
+    "lodash": "^4.8.2",
+    "angular-ui-router": "^0.2.18"
   },
   "devDependencies": {
     "angular-file-upload": "~2.1.4",
-    "angular-mocks": "~1.4.5",
+    "angular-mocks": "~1.5.x",
     "ng-file-upload": "~8.0.1"
-  },
-  "resolutions": {
-    "angular": "1.5.0"
   }
 }
