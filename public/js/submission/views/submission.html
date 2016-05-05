@@ -97,12 +97,11 @@
                         </span>
                             </p>
                         </div>
-                    </div>
-                    <div class="form-group row margin-bottom-small padding-right-15"
-                         ng-class="{'has-error':sectionAttrForm.title1.$invalid }" ng-form name="sectionAttrForm"
-                         ng-repeat="attr in submHelper.section.annotations.attributes | filter:{require: true}">
-                        <div class="col-sm-12 ">
-                            <label class="control-label">{{attr.value.name}}<span ng-show="sectionAttrForm.title1.$dirty && sectionAttrForm.title1.$invalid
+                </div>
+                <div class="form-group row margin-bottom-small padding-right-15" ng-class="{'has-error':sectionAttrForm.title1.$invalid }" ng-form name="sectionAttrForm"
+                     ng-repeat="attr in submHelper.section.annotations.attributes | filter:{require: true}">
+                    <div class="col-sm-12 ">
+                        <label class="control-label">{{attr.value.name}}<span ng-show="sectionAttrForm.title1.$dirty && sectionAttrForm.title1.$invalid
                                           && sectionAttrForm.title1.$error.required">: cannot be blank</span></label>
                             <input type="text" class="form-control" name="title1" placeholder="Enter a {{attr.value.name}}" required
                                    ng-model="attr.value.value" required ng-if="attr.value.name !=='Description'">

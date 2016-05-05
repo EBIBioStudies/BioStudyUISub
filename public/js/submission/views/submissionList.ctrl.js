@@ -22,8 +22,8 @@ module.exports =
                     return $scope.selectedSubmission[0];
                 }
 
-                function startEditing(sub){
-                    $location.url('/edit/' + sub.accno);
+                function startEditing(accno){
+                    $location.url('/edit/' + accno);
                 }
 
                 $scope.createSubmission = function () {
@@ -34,7 +34,11 @@ module.exports =
                 };
 
                 $scope.editSubmission = function (submission) {
-                    startEditing(submission || getFirstSelected());
+                    submission = submission || getFirstSelected();
+                    SubmissionService.editSubmission(submission.accno)
+                        .then(function(sbm) {
+                            startEditing(sbm.accno);
+                        });
                 };
 
                 $scope.deleteSubmission = function (submission) {
