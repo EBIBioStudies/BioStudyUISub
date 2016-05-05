@@ -2,16 +2,15 @@
 
 module.exports =
     (function () {
-        return ['$scope', '$routeParams', 'AuthService',
-            function ($scope, $routeParams, AuthService) {
-                console.log('Route params defined:', $routeParams.key);
+        return ['$scope', '$stateParams', 'AuthService',
+            function ($scope, $stateParams, AuthService) {
                 $scope.hasError = false;
                 $scope.message = '';
-                if (!$routeParams.key) {
+                if (!$stateParams.key) {
                     $scope.hasError = true;
                     $scope.message = 'Wrong url for registration';
                 } else {
-                    AuthService.activate($routeParams.key)
+                    AuthService.activate($stateParams.key)
                         .then(function () {
                             $scope.hasError = false;
                             $scope.message = "Activation was successful";
