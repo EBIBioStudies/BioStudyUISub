@@ -25,11 +25,12 @@ var war = require('gulp-war');
 var bump = require('gulp-bump');
 var ngConstant = require('gulp-ng-constant');
 var clean = require('gulp-clean');
+var extend = require('gulp-extend');
 
 
 gulp.task('bump', function () {
     return gulp
-        .src('./config.json')
+        .src('./version.json')
         .pipe(bump({
             //type: 'minor',
             //type: 'major',
@@ -39,7 +40,8 @@ gulp.task('bump', function () {
 });
 
 gulp.task('config', function () {
-    return gulp.src('./config.json')
+    return gulp.src(['./config.json', './version.json'])
+        .pipe(extend('config.json'))
         .pipe(ngConstant({
             wrap: 'commonjs',
             name: 'BioStudyApp.config'
