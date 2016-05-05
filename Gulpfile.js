@@ -21,15 +21,16 @@ var bower = require('gulp-bower');
 
 var envHelper=require('./tasks/helpers/envHelper');
 var webserver = require('gulp-webserver');
-var war = require('gulp-war');
+var zip = require('gulp-zip');
 var bump = require('gulp-bump');
 var ngConstant = require('gulp-ng-constant');
 var clean = require('gulp-clean');
+var extend = require('gulp-extend');
 
 
 gulp.task('bump', function () {
     return gulp
-        .src('./config.json')
+        .src('./version.json')
         .pipe(bump({
             //type: 'minor',
             //type: 'major',
@@ -39,7 +40,8 @@ gulp.task('bump', function () {
 });
 
 gulp.task('config', function () {
-    return gulp.src('./config.json')
+    return gulp.src(['./config.json', './version.json'])
+        .pipe(extend('config.json'))
         .pipe(ngConstant({
             wrap: 'commonjs',
             name: 'BioStudyApp.config'
@@ -169,12 +171,10 @@ gulp.task('unit:public', function() {
   karma.start(karmaConfig, captureError());
 });
 
-gulp.task('war', function () {
-  gulp.src([".build/**/*.*"])
-      .pipe(war({
-        welcome: 'index.html'
-      }))
-      .pipe(gulp.dest(".war"));
+gulp.task('zip', function () {
+    gulp.src([".build/**/*.*"])
+        .pipe(zip('ui.zip'))
+        .pipe(gulp.dest('./.dist'));
 });
 
 gulp.task('webserver', ['clean', 'js', 'ejs', 'styles'], function() {
