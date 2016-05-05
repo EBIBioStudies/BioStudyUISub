@@ -1,6 +1,6 @@
 {
-  "name": "BioStudiesUI",
-  "description": "BioStudies UI",
+  "name": "biostudies-sbm-ui",
+  "description": "BioStudies Submissions UI",
   "dependencies": {
     "angular": "~1.5.x",
     "angular-bootstrap-show-errors": "~2.3.0",
