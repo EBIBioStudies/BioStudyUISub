@@ -84,7 +84,6 @@ function ModuleItem(options) {
     }
 
     this.addAttrKeys = function (item) {
-        console.log('item.attrs', item);
         if (item.attributes) {
             for (var j = 0; j < item.attributes.length; j++) {
                 this.attributeKeys.add(item.attributes[j].name);
@@ -95,7 +94,6 @@ function ModuleItem(options) {
     this.add = function () {
         //SubmissionModel.addLink
         var item = options.addItem();
-        console.log('Add item', options, this, item);
         this.addAttrKeys(item);
         this.ui.activeTabs.push(true);
         computeColSize();

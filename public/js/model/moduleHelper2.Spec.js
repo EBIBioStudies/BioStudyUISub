@@ -1,4 +1,4 @@
-var _ =require('lodash');
+var _ = require('lodash');
 var SubmissionModel = require('../../../shared/model/SubmissionModel');
 var moduleHelper2 = require('./moduleHelper2');
 
@@ -15,8 +15,8 @@ describe('Test module helper2', function () {
 
     describe('Test Element', function () {
         var link1;
-        beforeEach(function() {
-            link1=SubmissionModel.createLink();
+        beforeEach(function () {
+            link1 = SubmissionModel.createLink();
             SubmissionModel.addAttribute.call(link1, {name: 'a'});
             SubmissionModel.addAttribute.call(link1);
             SubmissionModel.addAttribute.call(link1, {name: 'b'});
@@ -37,7 +37,7 @@ describe('Test module helper2', function () {
         });
         it('should add attr to the element', function () {
             var element = moduleHelper2.createElement({model: link1});
-            var attr=SubmissionModel.createAttribute({name: 'c'});
+            var attr = SubmissionModel.createAttribute({name: 'c'});
             element.addAttribute(attr);
             expect(element.attributes.c).toBeDefined();
             expect(element.attributes.c).toEqual(attr);
@@ -45,12 +45,11 @@ describe('Test module helper2', function () {
         });
 
 
-
     });
 
     describe('Test attributeKeys', function () {
         var model;
-        beforeEach(function() {
+        beforeEach(function () {
             model = moduleHelper2.createAttributeKeys();
             model.add('name1');
             model.add('name2');
@@ -94,23 +93,38 @@ describe('Test module helper2', function () {
         });
     });
 
-    describe('Test module item', function () {
-        var options = {fieldsCount:1, addItem: SubmissionModel.addLink};
-
-        beforeEach(function() {
+    describe('Test module attributes', function () {
+        beforeEach(function () {
             submModel = SubmissionModel.createSubmission();
-            SubmissionModel.addAttribute.call(submModel, SubmissionModel.createAttribute({"name":"name1"}))
+            SubmissionModel.addAttribute.call(submModel, SubmissionModel.createAttribute({"name": "name1"}))
+
+        });
+        it('should modify a description', function () {
+            var model = moduleHelper2.createSubmModel(submModel);
+            expect(model.section.annotations).toBeDefined();
+            model.section.annotations.model[0].value=10;
+            console.log(model.section.annotations, submModel.section.attributes);
+
+        });
+
+    });
+
+    describe('Test module item', function () {
+        var options = {fieldsCount: 1, addItem: SubmissionModel.addLink};
+
+        beforeEach(function () {
+            submModel = SubmissionModel.createSubmission();
+            SubmissionModel.addAttribute.call(submModel, SubmissionModel.createAttribute({"name": "name1"}))
 
         });
         it('should create a new item from modelk', function () {
-            var link1=SubmissionModel.createLink();
+            var link1 = SubmissionModel.createLink();
             SubmissionModel.addLink.call(submModel.section, link1);
             options.model = submModel.section.links;
-            var modelItem=moduleHelper2.createModuleItem(options);
+            var modelItem = moduleHelper2.createModuleItem(options);
             modelItem.create();
             expect(modelItem.attributeKeys.length).toEqual(1);
             expect(modelItem.model.length).toEqual(1);
-            //console.log('eee', modelItem.attributeKeys);
             //expect(modelItem.attributeKeys.keys.Description).toBeDefined();
 
         })
@@ -119,23 +133,23 @@ describe('Test module helper2', function () {
 
     describe('Test submModel ', function () {
         var link1, link2, submModel, file1, file2, contact1, publ1;
-        beforeEach(function() {
+        beforeEach(function () {
             submModel = SubmissionModel.createSubmission();
-            SubmissionModel.addAttribute.call(submModel, SubmissionModel.createAttribute({"name":"name1"}))
-            link1=SubmissionModel.createLink();
-            link2=SubmissionModel.createLink();
+            SubmissionModel.addAttribute.call(submModel, SubmissionModel.createAttribute({"name": "name1"}))
+            link1 = SubmissionModel.createLink();
+            link2 = SubmissionModel.createLink();
             SubmissionModel.addLink.call(submModel.section, link1);
             SubmissionModel.addLink.call(submModel.section, link2);
             SubmissionModel.addAttribute.call(link1);
             SubmissionModel.addAttribute.call(link2);
             SubmissionModel.addAttribute.call(link2, {name: 'LinkA1'});
-            file1=SubmissionModel.createFile();
-            file2=SubmissionModel.createFile();
+            file1 = SubmissionModel.createFile();
+            file2 = SubmissionModel.createFile();
             SubmissionModel.addFile.call(submModel.section, file1);
             SubmissionModel.addFile.call(submModel.section, file2);
-            contact1=SubmissionModel.createContact();
+            contact1 = SubmissionModel.createContact();
             SubmissionModel.addContact.call(submModel.section, contact1);
-            publ1=SubmissionModel.createPublication();
+            publ1 = SubmissionModel.createPublication();
             SubmissionModel.addPublication.call(submModel.section, publ1);
 
 
@@ -157,7 +171,7 @@ describe('Test module helper2', function () {
         it('should add attribute to model attributes', function () {
             var model = moduleHelper2.createSubmModel(submModel);
             model.attributes.Title.value.value = "new";
-            var index=_.findIndex(submModel.attributes, {name: 'Title'});
+            var index = _.findIndex(submModel.attributes, {name: 'Title'});
 
             //console.log("Modif",submModel.attributes, index);
             //expect(model.attributes.Title.value.value).toEqual();;
@@ -206,8 +220,6 @@ describe('Test module helper2', function () {
         });
 
 
-
-
         xit('add a new link', function () {
             var model = moduleHelper2.createSubmModel(submModel);
             model.section.links.add();
@@ -219,8 +231,8 @@ describe('Test module helper2', function () {
 
         it('modify attributes in link ', function () {
             var model = moduleHelper2.createSubmModel(submModel);
-            var attr=model.section.links.createAttr(link1);
-            var n='';
+            var attr = model.section.links.createAttr(link1);
+            var n = '';
             expect(model.section.links.attributeKeys.keys[n].count).toEqual(3);
 
             attr.name = 'A';
@@ -230,11 +242,9 @@ describe('Test module helper2', function () {
 
             attr.name = 'AA';
             model.section.links.changeAttr(attr.name, 'A');
-            console.log(model.section);
 
 
         })
-
 
 
     });

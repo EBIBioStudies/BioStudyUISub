@@ -56,8 +56,9 @@
         </section>-->
         <div class="panel" ng-class="{'panel-danger': submissionForm.$invalid, 'panel-info':submissionForm.$valid}">
             <div class="panel-heading"><span>{{title}}</span>
-                <p>Data</p>{{submHelper.section.subsection}}
-
+                <!--<p>Data</p>{{submHelper.section.annotations.model[0]}}
+                <p>Data</p>{{submHelper.section.annotations.attributes[0]}}
+                -->
             </div>
 
             <!-- Main content -->
@@ -105,7 +106,7 @@
                                           && sectionAttrForm.title1.$error.required">: cannot be blank</span></label>
                             <input type="text" class="form-control" name="title1" placeholder="Enter a {{attr.value.name}}" required
                                    ng-model="attr.value.value" required ng-if="attr.value.name !=='Description'">
-                           <textarea name="title1" ng-model="attribute.value" class="form-control input-sm"
+                           <textarea name="title1" ng-model="attr.value.value" class="form-control input-sm"
                                      required
                                      uib-tooltip="Empty value"
                                      tooltip-append-to-body="true"
