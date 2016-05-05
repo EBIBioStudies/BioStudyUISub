@@ -21,7 +21,7 @@ var bower = require('gulp-bower');
 
 var envHelper=require('./tasks/helpers/envHelper');
 var webserver = require('gulp-webserver');
-var war = require('gulp-war');
+var zip = require('gulp-zip');
 var bump = require('gulp-bump');
 var ngConstant = require('gulp-ng-constant');
 var clean = require('gulp-clean');
@@ -171,12 +171,10 @@ gulp.task('unit:public', function() {
   karma.start(karmaConfig, captureError());
 });
 
-gulp.task('war', function () {
-  gulp.src([".build/**/*.*"])
-      .pipe(war({
-        welcome: 'index.html'
-      }))
-      .pipe(gulp.dest(".war"));
+gulp.task('zip', function () {
+    gulp.src([".build/**/*.*"])
+        .pipe(zip('ui.zip'))
+        .pipe(gulp.dest('./.dist'));
 });
 
 gulp.task('webserver', ['clean', 'js', 'ejs', 'styles'], function() {
