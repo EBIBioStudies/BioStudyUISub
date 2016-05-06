@@ -14,7 +14,7 @@ module.exports =
 
                 function signIn(credentials) {
                     var defer = $q.defer();
-                    $http.post("/api/auth/signin", credentials)
+                    $http.post("/raw/auth/signin", credentials)
                         .success(function (result) {
                             if (result.status === $rootScope.Constants.Status.OK) {
                                 Session.create(result.sessid, result.username, USER_ROLES.user);
