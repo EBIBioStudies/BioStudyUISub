@@ -43,7 +43,6 @@ module.exports =
                 $scope.sbm = sbm;
                 $scope.submission = SubmissionModel.createSubmission(sbm.data);
                 $scope.submHelper = modelHelper.createSubmModel($scope.submission);
-                $scope.curentSectionForFiles = $scope.submission.section;
 
                 startSaving(angular.toJson($scope.submission));
 
