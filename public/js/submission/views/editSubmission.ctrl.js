@@ -3,7 +3,7 @@
  */
 'use strict';
 
-var modelHelper = require('../../model/modelHelper2');
+var modelHelper = require('../model/modelHelper2');
 
 module.exports =
     function ($rootScope, $scope, $timeout, $interval, $location,

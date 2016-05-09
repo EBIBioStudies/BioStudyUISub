@@ -1,7 +1,7 @@
 'use strict';
 var ModelRes = require('./ModelRes.json');
 var modelStructure = require('./Structure.json');
-var _ = require('../../.build/components/lodash/lodash');
+var _ = require('../../../../.build/components/lodash/lodash');
 
 /**
  * Created by mdylag on 12/08/15.

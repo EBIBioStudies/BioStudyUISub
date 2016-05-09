@@ -1,5 +1,5 @@
 var _ = require('lodash');
-var SubmissionModel = require('../../../shared/model/SubmissionModel');
+var SubmissionModel = require('./SubmissionModel');
 var moduleHelper2 = require('./modelHelper2');
 
 

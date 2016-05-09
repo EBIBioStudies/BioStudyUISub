@@ -26,7 +26,6 @@ var app = angular.module('BioStudyApp',
         'ui.select', 'typeahead-focus', 'bs-templates', 'treeGrid', 'vcRecaptcha', 'ui.router'
     ]);
 
-require('./model');
 require('./services');
 require('./views/index');
 require('./directives');
