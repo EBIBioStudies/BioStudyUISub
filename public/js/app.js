@@ -45,7 +45,7 @@ app
         $stateProvider
             .state('help', {
                 url: '/help',
-                templateProvider: 'templates/views/help.html',
+                templateUrl: 'templates/views/help.html',
                 controller: 'HelpCtrl'
             })
             .state('key_activation', {
