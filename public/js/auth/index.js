@@ -4,6 +4,7 @@ angular.module('BioStudyApp')
 
     .factory('AuthService', require('./auth.service'))
     .factory('AccessLevel', require('./accessLevel.service'))
+    .directive('accessLevel', require('./directives/accessLevel'))
     .controller('SignInCtrl', require('./views/signin.ctrl.js'))
     .controller('SignUpCtrl', require('./views/signup.ctrl'))
     .controller('ActivateCtrl', require('./views/activate.ctrl'))
