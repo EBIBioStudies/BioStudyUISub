@@ -30,9 +30,12 @@ require('./model');
 require('./services');
 require('./views/index');
 require('./directives');
+require('./home');
 require('./auth');
 require('./submission');
+require('./file');
 require('./utils');
+
 
 app
     .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $logProvider, $httpProvider, $anchorScrollProvider) {
@@ -45,7 +48,7 @@ app
         $stateProvider
             .state('help', {
                 url: '/help',
-                templateUrl: 'templates/views/help.html',
+                templateUrl: 'templates/home/views/help.html',
                 controller: 'HelpCtrl'
             })
             .state('key_activation', {
