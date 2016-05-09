@@ -120,10 +120,10 @@
         <div class="col-lg-12 padding-left-none">
             <bs-section-item id="annotations" ng-model="submHelper.section.annotations"
                              data-template-name="templates/bsng/section/bsAnnotation.html"
-                             type-head="keys.annotations"
-                             data-labels="keys.annotations"
+                             type-head="keys.annotation"
+                             data-labels="keys.annotation"
                              data-on-delete="deleteAnnotation"
-                             data-on-add="addAnnotation(submission.section)">
+                             data-on-add="addAnnotation(submHelper.section.annotations)">
             </bs-section-item>
 
             <!--                    <bs-section id="annotations" ng-model="submModel.viewSubmission.section"

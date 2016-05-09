@@ -26,13 +26,16 @@ var app = angular.module('BioStudyApp',
         'ui.select', 'typeahead-focus', 'bs-templates', 'treeGrid', 'vcRecaptcha', 'ui.router'
     ]);
 
-require('./model');
 require('./services');
 require('./views/index');
 require('./directives');
+require('./home');
+require('./error');
 require('./auth');
 require('./submission');
+require('./file');
 require('./utils');
+
 
 app
     .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $logProvider, $httpProvider, $anchorScrollProvider) {
@@ -45,7 +48,7 @@ app
         $stateProvider
             .state('help', {
                 url: '/help',
-                templateUrl: 'templates/views/help.html',
+                templateUrl: 'templates/home/views/help.html',
                 controller: 'HelpCtrl'
             })
             .state('key_activation', {
@@ -65,7 +68,7 @@ app
             })
             .state('error', {
                 url: '/error',
-                templateUrl: 'templates/views/error/error.html',
+                templateUrl: 'templates/error/views/error.html',
                 controller: 'ErrorCtrl'
             })
             .state('submissions', {

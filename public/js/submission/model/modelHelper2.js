@@ -1,6 +1,6 @@
-var SubmissionModel = require('../../../shared/model/SubmissionModel');
+var SubmissionModel = require('./SubmissionModel');
 var _ = require('lodash');
-var Structure = require('../../../shared/model/Structure.json');
+var Structure = require('./Structure.json');
 
 
 function AttributeKeys() {
@@ -165,15 +165,19 @@ function Attributes(model) {
     }
 
     for (var j = 0; j < model.length; j++) {
-        this.attributeKeys.add(model[j].name);
-        var modelAttr = _.find(Structure.annotations.attributes, {name: model[j].name});
-        this.attributes.push(createAttr(modelAttr.required, model[j]));
+        var attrName = model[j].name;
+        this.attributeKeys.add(attrName);
+        var modelAttr = _.find(Structure.annotations.attributes, {name: attrName});
+        var required = modelAttr && modelAttr.required ? true : false;
+        this.attributes.push(createAttr(required, model[j]));
     }
+
     this.add = function (attr) {
         var _attr = SubmissionModel.createAttribute(attr);
         this.attributes.push(createAttr(false, _attr));
         this.model.push(_attr);
-    }
+    };
+
     this.remove = function (attr) {
         if (attr) {
             var index = _.findIndex(this.attributes, attr);
@@ -183,9 +187,8 @@ function Attributes(model) {
             }
         }
     };
-
-
 }
+
 function ModuleHelper(model, fieldsCount) {
     this.model = model;
     this.section = {};
