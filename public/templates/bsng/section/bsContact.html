@@ -97,7 +97,7 @@
                                    tooltip-trigger="mouseenter" tooltip-enable="!attribute.value">
                                 <span class="input-group-btn" ng-if="!data.requiredAttributes[attribute.name]">
                                     <button type="button" class="btn btn-sm btn-danger btn-flat"
-                                            ng-click="author.removeAttribute($index, attribute)">
+                                            ng-click="deleteItem($index, data.attributes)">
                                         <i class="fa fa-trash-o"></i>
                                     </button>
                                 </span>

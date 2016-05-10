@@ -21,8 +21,8 @@ module.exports =
         function startSaving(str) {
             savedSubmission = str;
             saveInterv = $interval(function () {
-                $scope.save();
-            }, 5000);
+                saveUpdates();
+            }, 3000);
         }
 
         function stopSaving() {
@@ -32,8 +32,22 @@ module.exports =
             }
         }
 
+        function saveUpdates() {
+            var currentSubmission = angular.toJson($scope.submission);
+            if (currentSubmission != savedSubmission) {
+                stopSaving();
+                var sbm = $scope.sbm;
+                sbm.data = $scope.submission;
+                SubmissionService.saveSubmission(sbm)
+                    .then(function () {
+                        $log.debug("submission saved");
+                        startSaving(currentSubmission);
+                    });
+            }
+        }
+
         $scope.$on("$destroy", function () {
-            console.log('destroy');
+            saveUpdates();
             stopSaving();
         });
 
@@ -51,70 +65,64 @@ module.exports =
             $location.url('/error');
         });
 
-        $scope.save = function () {
-            var currentSubmission = angular.toJson($scope.submission);
-            if (currentSubmission != savedSubmission) {
-                stopSaving();
-                var sbm = $scope.sbm;
-                sbm.data = $scope.submission;
-                SubmissionService.saveSubmission(sbm)
-                    .then(function () {
-                        startSaving(currentSubmission);
-                    });
-            }
-        };
-
-        $scope.submit = function (submissionForm) {
-            //
+        $scope.submit = function () {
             $scope.$broadcast('show-errors-check-validity');
             if ($scope.submissionForm.$invalid) {
                 $log.debug('Validation error', $scope.submissionForm);
                 return;
             }
             $log.debug('Submit data', $scope.submission);
-            SubmissionService.submitSubmission($scope.submission).then(function (data) {
-                var acc = $scope.submission.accno;
-                MessageService.addMessage('Submission ' + acc + ' updated.');
-                $interval.cancel(saveInterv);
-                var modalInstance = $uibModal.open({
-                    controller: 'MessagesCtrl',
-                    templateUrl: 'templates/partials/successDialog.html',
-                    backdrop: true,
-                    size: 'lg'
-                });
-                /*$timeout(function() {
-                 modalInstance.close();
-                 },6000);*/
-                modalInstance.result.then(function () {
-                    $log.debug('Created ' + acc);
-                }, function () {
-                    $log.debug('Created');
-                });
+            var sbm = $scope.sbm;
+            sbm.data = $scope.submission;
+            SubmissionService.submitSubmission(sbm)
+                .then(function (data) {
+                    if (data.status === "OK") {
+                        showSubmitSuccess(data);
+                    } else {
+                        var log = angular.toJson(data, true);
+                        showSubmitError(log);
+                    }
+                }).catch(function (err, status) {
+                showSubmitError('Server error ' + status + ' ' + err);
+            });
+        };
 
+        function showSubmitSuccess(data) {
+            var acc = $scope.submission.accno;
+            MessageService.addMessage('Submission ' + acc + ' updated.');
 
-            }).catch(function (err, status) {
-                $log.debug('Created error', err, status);
-
-                MessageService.setErrorType();
-                MessageService.addMessage('Server error ' + status + ' ' + err);
-                var modalInstance = $uibModal.open({
-                    controller: 'MessagesCtrl',
-                    templateUrl: 'myModalContentError.html',
-                    windowTemplateUrl: 'myModalWindow.html',
-                    backdrop: true,
-                    size: 'lg'
-                });
-                $timeout(function () {
-                    modalInstance.close();
-                    MessageService.clearMessages();
-                }, 6000);
-                modalInstance.result.then(function () {
-                    MessageService.clearMessages();
-                });
+            var modalInstance = $uibModal.open({
+                controller: 'MessagesCtrl',
+                templateUrl: 'templates/partials/successDialog.html',
+                backdrop: true,
+                size: 'lg'
             });
 
+            $timeout(function () {
+                modalInstance.close();
+                MessageService.clearMessages();
+            }, 6000);
+            modalInstance.result.then(function () {
+                MessageService.clearMessages();
+            });
+        }
 
-        };
+        function showSubmitError(data) {
+            MessageService.addMessage(data);
+            var modalInstance = $uibModal.open({
+                controller: 'MessagesCtrl',
+                templateUrl: 'templates/partials/successDialog.html',
+                backdrop: true,
+                size: 'lg'
+            });
+            $timeout(function () {
+                modalInstance.close();
+                MessageService.clearMessages();
+            }, 6000);
+            modalInstance.result.then(function () {
+                MessageService.clearMessages();
+            });
+        }
 
         $scope.open = function ($event) {
             $event.preventDefault();
