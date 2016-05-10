@@ -38,12 +38,12 @@ require('./utils');
 
 
 app
-    .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $logProvider, $httpProvider, $anchorScrollProvider) {
+    .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $logProvider, $httpProvider, $anchorScrollProvider, APP_DEBUG_ENABLED) {
 
         //for tests only
         //delete $httpProvider.defaults.headers.common['X-Requested-With'];
         $anchorScrollProvider.disableAutoScrolling();
-        $logProvider.debugEnabled(true);
+        $logProvider.debugEnabled(APP_DEBUG_ENABLED === true);
 
         $stateProvider
             .state('help', {
@@ -85,7 +85,7 @@ app
             })
             .state('files', {
                 url: '/files',
-                templateUrl: 'templates/views/files/files.html',
+                templateUrl: 'templates/file/views/files.html',
                 controller: 'FilesCtrl',
                 authenticated: true
             })
