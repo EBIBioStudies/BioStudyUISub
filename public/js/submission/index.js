@@ -2,9 +2,6 @@
 
 (function () {
 
-    var SubmissionModel = require('./model/SubmissionModel');
-    var ModuleHelper = require('./model/modelHelper2');
-
     var app = angular.module('BioStudyApp');
 
     app
@@ -15,10 +12,7 @@
         .controller('PublicationCtrl', require('./views/publication.ctrl'))
         .controller('FileCtrl', require('./views/file.ctrl'))
         .directive('bsSectionItem', require('./directives/bsSectionItem'))
-        .factory('SubmissionModel', function () {
-            return SubmissionModel;
-        })
-        .service('ModelHelper', ModuleHelper);
+        .factory('SubmissionModel', require('./model/submission.model'));
 
 
     require('./directives/bsSection')(app);

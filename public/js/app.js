@@ -9,11 +9,12 @@ require('../../.build/components/angular-ui-select/dist/select');
 require('../../.build/components/angular-bootstrap-show-errors');
 require('../../.build/components/angular-recaptcha/release/angular-recaptcha');
 require('../../.build/components/angular-ui-router/release/angular-ui-router');
+require('../../.build/components/lodash/lodash');
 
 var XML2JSON = require('../../shared/lib/xml2json');
 require('./directives/tree-grid-directive');
 
-var TrNgGrid = require('../../.build/components/trNgGrid/trNgGrid');
+require('../../.build/components/trNgGrid/trNgGrid');
 
 require('../../.gen/templates');
 require('./config');
@@ -38,6 +39,7 @@ require('./utils');
 
 
 app
+    .constant('_', window._)
     .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $logProvider, $httpProvider, $anchorScrollProvider, APP_DEBUG_ENABLED) {
 
         //for tests only

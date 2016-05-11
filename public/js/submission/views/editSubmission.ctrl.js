@@ -3,15 +3,10 @@
  */
 'use strict';
 
-var modelHelper = require('../model/modelHelper2');
-
 module.exports =
     function ($rootScope, $scope, $timeout, $interval, $location,
-              $uibModal, $stateParams, $log, $anchorScroll, submissionDecorator,
-              SubmissionService, MessageService, SubmissionModel) {
+              $uibModal, $stateParams, $log, SubmissionModel, SubmissionService, MessageService) {
 
-        submissionDecorator.create($scope);
-        $scope.mode = $rootScope.Constants.FormMode.EDIT;
         $scope.title = 'Edit the submission ' + $stateParams.accno;
         $scope.hasError = false;
 
@@ -55,9 +50,8 @@ module.exports =
             .then(function (sbm) {
 
                 $scope.sbm = sbm;
-                $scope.submission = SubmissionModel.createSubmission(sbm.data);
-                $scope.submHelper = modelHelper.createSubmModel($scope.submission);
-
+                $scope.submission = SubmissionModel.import(sbm.data); // todo SubmissionData.create()
+                
                 startSaving(angular.toJson($scope.submission));
 
             }).catch(function (err) {
