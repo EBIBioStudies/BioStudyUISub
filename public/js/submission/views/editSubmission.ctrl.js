@@ -50,9 +50,9 @@ module.exports =
             .then(function (sbm) {
 
                 $scope.sbm = sbm;
-                $scope.submission = SubmissionModel.import(sbm.data); // todo SubmissionData.create()
-                
-                startSaving(angular.toJson($scope.submission));
+                $scope.submission = SubmissionModel.import(sbm.data); // todo SubmissionModel.create()
+
+                //startSaving(angular.toJson($scope.submission));
 
             }).catch(function (err) {
             $log.debug('Error data', err);
@@ -118,22 +118,42 @@ module.exports =
             });
         }
 
-        $scope.open = function ($event) {
-            $event.preventDefault();
-            $event.stopPropagation();
-            $scope.opened = true;
+        $scope.addAnnotation = function () {
+            this.submission.annotations.addNew();
         };
 
-
-        $scope.getParentSection = function (parent) {
-            return parent || $scope.submission;
+        $scope.addFile = function () {
+            this.submission.files.addNew();
         };
 
-        $scope.addAttributeTo = function (parent) {
-            var attr = SubmissionModel.createAttribute();
-            $scope.viewSubmission.contacts.attributesKey(attr);
-            SubmissionModel.addAttributeTo(parent, SubmissionModel.createAttribute(), 'conract');
-
+        $scope.addLink = function () {
+            //todo
         };
+
+        $scope.addContact = function () {
+            //todo
+        };
+
+        $scope.addPublication = function () {
+            //todo
+        };
+
+        /* $scope.open = function ($event) {
+         $event.preventDefault();
+         $event.stopPropagation();
+         $scope.opened = true;
+         };
+
+
+         $scope.getParentSection = function (parent) {
+         return parent || $scope.submission;
+         };
+
+         $scope.addAttributeTo = function (parent) {
+         var attr = SubmissionModel.createAttribute();
+         $scope.viewSubmission.contacts.attributesKey(attr);
+         SubmissionModel.addAttributeTo(parent, SubmissionModel.createAttribute(), 'conract');
+
+         };*/
 
     };

@@ -3,44 +3,33 @@
  */
 
 'use strict';
-var _ = require('../../../../.build/components/lodash/lodash');
 
 module.exports = function (moduleDirective) {
 
-    moduleDirective.directive('bsSection', function ($compile, $log, SubmissionService, TypeHeadService) {
+    moduleDirective.directive('bsSection', function (DictionaryService) {
         return {
             restrict: 'E',
-            templateUrl: function (ell, attr) {
+            templateUrl: function (elem, attr) {
                 if (attr.templateUrl) {
                     return templateUrl;
                 } else {
                     return 'templates/bsng/section.html'
-
                 }
             },
             scope: {
-                labels: '=',
                 sectionModel: '=',
                 data: '=ngModel'
             },
             bindToController: {
                 previewHeader: '@',
-                previewBody: '@',//not used
-                previewFooter: '@',//not used
-                detailHeader: '@',
-                detailBody: '@',  //not used
-                detailFooter: '@' //not used
-
+                detailHeader: '@'
             },
             controllerAs: 'ctrl',
             controller: function ($scope) {
 
             },
-            link: function ($scope, element, attrs, ctrl) {
+            link: function ($scope, elem, attr, ctrl) {
 
-                if (!$scope.labels) {
-                    throw new Error('Attribute labels is required');
-                }
                 /*var keysCount = $scope.data ? Object.keys($scope.data.attributesKey).length : 2;
                  $scope.computeColumnSize = function () {
                  if (keysCount > 6) {
@@ -49,7 +38,8 @@ module.exports = function (moduleDirective) {
                  return (12 / keysCount);
                  }
                  }*/
-                $scope.typeHead = $scope.labels.attributes;
+                $scope.dict = DictionaryService.byKey(attr.type);
+                $scope.typeahead = $scope.dict.attributes;
                 //TODO: Find a better way to scale fields in the preview
                 //$scope.previewColSize = $scope.computeColumnSize();
 
@@ -57,14 +47,14 @@ module.exports = function (moduleDirective) {
         };
     });
 
-    moduleDirective.directive('bsReplaceEl', function ($compile, $log) {
+    moduleDirective.directive('bsReplaceEl', function ($compile) {
         return {
             restrict: 'EA',
             require: '^bsSection',
             scope: {
                 data: '=ngModel',
                 field: '=',
-                labels: '='
+                dict: '='
             },
             link: function ($scope, element, attrs, ctrl) {
                 var templateUrl = element.attr('template-url');
@@ -77,7 +67,7 @@ module.exports = function (moduleDirective) {
                     model = model + ' data-field="field"';
                 }
                 if ($scope.labels) {
-                    model = model + ' data-labels="labels"';
+                    model = model + ' data-dict="dict"';
                 }
 
                 if (ctrl[id]) {
@@ -92,24 +82,17 @@ module.exports = function (moduleDirective) {
         }
     });
 
-    moduleDirective.directive('bsPreview', function ($compile, $log) {
+    moduleDirective.directive('bsPreview', function () {
         return {
             restrict: 'EA',
             require: '^bsSection',
             priority: 100,
-            //transclude: true,
             scope: {
                 data: '=ngModel',
                 field: '=',
-                labels: '=',
+                dict: '=',
                 sectionModel: '=',
-                templateUrl: '@',
-
-            },
-            templateUrl: function (elem, attr) {
-                if (!attr.templateUrl)
-                    return "templates/bssection/bsPreview.html";
-                return attr.templateUrl;
+                templateUrl: '@'
             }
         };
 

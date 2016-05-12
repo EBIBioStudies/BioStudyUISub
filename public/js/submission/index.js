@@ -6,7 +6,7 @@
 
     app
         .factory('SubmissionService', require('./submission.service'))
-        .service('submissionDecorator', require('./views/submissionDecorator'))
+        .service('DictionaryService', require('./dictionary.service'))
         .controller('SubmissionListCtrl', require('./views/submissionList.ctrl'))
         .controller('EditSubmissionCtrl', require('./views/editSubmission.ctrl'))
         .controller('PublicationCtrl', require('./views/publication.ctrl'))

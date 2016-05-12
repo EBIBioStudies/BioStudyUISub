@@ -4,24 +4,111 @@ module.exports =
     (function () {
         return ['_', function (_) {
 
+            function createAttributes(attrArray) {
+                var attributes = {
+                    attributes: [],
+                    add: function (attr) {
+                        this.attributes.push({name: attr.name, value: attr.value});
+                    },
+                    addNew: function () {
+                        this.add({name: "", value: ""});
+                    },
+                    remove: function (attr) {
+                        var index = _.findIndex(this.attributes, {name: attr.name});
+                        if (index >= 0) {
+                            this.attributes.splice(index, 1);
+                        }
+                    }
+                };
+
+                if (attrArray) {
+                    angular.forEach(attrArray, function(attr) {
+                       attributes.add(attr);
+                    });
+                }
+                return attributes;
+            }
+
+            function objProperties(obj) {
+                var keys = [];
+                for(var key in obj) {
+                    if (obj.hasOwnProperty(key)) {
+                        keys.push(key);
+                    }
+                }
+                return keys;
+            }
+
+            function createFileItem(path, attrArray) {
+                return {
+                    path: path,
+                    attributes: createAttributes(attrArray)
+                }
+            }
+
+            function createItems() {
+                function update(obj) {
+                    var keys = {};
+                    angular.forEach(obj.items, function(item) {
+                        angular.forEach(item.attributes.attributes, function(attr) {
+                            keys[attr.name] = 1;
+                        });
+                    });
+                    obj.attributeKeys = objProperties(keys);
+                }
+                return {
+                    attributeKeys: [],
+                    items: [],
+                    addNew: function() {
+                        this.add({});
+                    },
+                    add: function(item) {
+                        this.items.push(item);
+                        update(this);
+                    },
+                    remove: function(index, item) {
+                        if (index >= 0) {
+                            this.items.splice(index, 1);
+                            update(this);
+                        }
+                    }
+                }
+            }
+
             function createSubmission() {
                 return {
                     accno: "",
                     title: "",
+                    description: "",
                     releaseDate: null,
-                    annotations: attributes(),
-                    files: [],
+                    annotations: createAttributes(),
+                    files: createItems(),
                     links: [],
                     contacts: [],
-                    publications: []
+                    publications: [],
+                    addAnnotation: function (attr) {
+                        this.annotations.add(attr);
+                    },
+                    addLink: function (url, attributes) {
+                        //todo 
+                    },
+                    addFile: function (path, attributes) {
+                        this.files.add(createFileItem(path, attributes)); 
+                    },
+                    addContact: function (attributes) {
+                        //todo
+                    },
+                    addPublication: function (attributes) {
+                        //todo
+                    }
                 }
             }
 
             function importSubmission(obj) {
 
                 function getAttrValue(attrName, attributes) {
-                    var index = _.findIndex(obj.attributes, {name: attrName});
-                    return index >= 0 ? attributes[index] : null;
+                    var index = _.findIndex(attributes, {name: attrName});
+                    return index >= 0 ? attributes[index].value : null;
                 }
 
                 var subm = createSubmission();
@@ -36,10 +123,17 @@ module.exports =
                 }
 
                 if (obj.section.attributes) {
-                    angular.forEach(obj.section.attributes,
+                    subm.description = getAttrValue('Description', obj.section.attributes) || "";
+                    var filtered = _.filter(obj.section.attributes,
+                        function (attr) {
+                            return attr.name !== 'Description';
+                        }
+                    );
+                    angular.forEach(filtered,
                         function (attr) {
                             subm.addAnnotation(attr);
-                        });
+                        }
+                    );
                 }
 
                 if (obj.section.links) {
@@ -49,7 +143,7 @@ module.exports =
                 }
 
                 if (obj.section.files) {
-                    angular.forEach(obj.section.links, function (file) {
+                    angular.forEach(obj.section.files, function (file) {
                         subm.addFile(file.path, file.attributes);
                     });
                 }
