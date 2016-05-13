@@ -42,7 +42,7 @@ module.exports =
         }
 
         $scope.$on("$destroy", function () {
-            saveUpdates();
+            //saveUpdates();
             stopSaving();
         });
 

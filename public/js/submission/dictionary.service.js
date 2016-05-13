@@ -113,7 +113,7 @@ module.exports =
                         {"name": "Name", "required": true},
                         {"name": "Affiliation", "required": false},
                         {"name": "Organization", "required": true, "values": ["EBI", "GEOD"]},
-                        {"name": "Departament", "required": false},
+                        {"name": "Department", "required": false},
                         {"name": "E-mail", "required": true}
                     ]
                 },
@@ -156,12 +156,15 @@ module.exports =
             };
             return {
                 byKey: function (key) {
-                    if (dict.hasOwnProperty(key)){
-                        return dict[key];
+                    if (dict.hasOwnProperty(key)) {
+                        return angular.copy(dict[key]);
                     }
                     $log.error("dictionary key '" + key + "' doesn't exist");
                     return {};
-                } 
+                },
+                dict: function() {
+                    return angular.copy(dict);
+                }
             }
         }];
     })();

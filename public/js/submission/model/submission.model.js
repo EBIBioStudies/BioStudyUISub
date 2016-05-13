@@ -2,16 +2,16 @@
 
 module.exports =
     (function () {
-        return ['_', function (_) {
-
-            function createAttributes(attrArray) {
+        return ['_', 'DictionaryService', function (_, DictionaryService) {
+            
+            function createAttributes(attrArray, requiredAttrNames) {
                 var attributes = {
                     attributes: [],
                     add: function (attr) {
-                        this.attributes.push({name: attr.name, value: attr.value});
+                        this.attributes.push({name: attr.name, value: attr.value, required: attr.required === true});
                     },
                     addNew: function () {
-                        this.add({name: "", value: ""});
+                        this.add({name: "", value: "", required: false});
                     },
                     remove: function (attr) {
                         var index = _.findIndex(this.attributes, {name: attr.name});
@@ -21,79 +21,146 @@ module.exports =
                     }
                 };
 
+                var toAdd = {};
                 if (attrArray) {
-                    angular.forEach(attrArray, function(attr) {
-                       attributes.add(attr);
+                    angular.forEach(attrArray, function (attr) {
+                        toAdd[attr.name] = attr.value;
                     });
                 }
+
+                if (requiredAttrNames) {
+                    angular.forEach(requiredAttrNames, function (attrName) {
+                        var val = toAdd[attrName] || "";
+                        attributes.add({name: attrName, value: val, required: true});
+                        delete toAdd[attrName];
+                    });
+                }
+
+                angular.forEach(toAdd, function(value, key) {
+                    attributes.add({name: key, value: value});
+                });
+
                 return attributes;
             }
 
-            function objProperties(obj) {
-                var keys = [];
-                for(var key in obj) {
-                    if (obj.hasOwnProperty(key)) {
-                        keys.push(key);
-                    }
-                }
-                return keys;
-            }
-
-            function createFileItem(path, attrArray) {
+            function createFileItem(path, attrArray, requiredAttrNames) {
                 return {
                     path: path,
-                    attributes: createAttributes(attrArray)
+                    attributes: createAttributes(attrArray, requiredAttrNames)
                 }
             }
 
-            function createItems() {
+            function createLinkItem(url, attrArray, requiredAttrNames) {
+                return {
+                    url: url,
+                    attributes: createAttributes(attrArray, requiredAttrNames)
+                }
+            }
+
+            function createItems(fields, constructor) {
                 function update(obj) {
+                    var attributeKeys = getAttributeKeys(obj);
+                    var colSizeCss = getColSizeCss(obj.fields, attributeKeys);
+
+                    obj.attributeKeys = attributeKeys;
+                    obj.colSizeCss = colSizeCss;
+                }
+
+                function getAttributeKeys(obj) {
                     var keys = {};
-                    angular.forEach(obj.items, function(item) {
-                        angular.forEach(item.attributes.attributes, function(attr) {
+                    angular.forEach(obj.items, function (item) {
+                        angular.forEach(item.attributes.attributes, function (attr) {
                             keys[attr.name] = 1;
                         });
                     });
-                    obj.attributeKeys = objProperties(keys);
+                    return objProperties(keys);
                 }
+
+                function getColSizeCss(fields, attributeKeys) {
+                    var length = fields.length + attributeKeys.length;
+                    if (length > 6) {
+                        length = 6;
+                    }
+                    return 'col-lg-' + Math.ceil(12 / length);
+                }
+
+                function objProperties(obj) {
+                    var keys = [];
+                    for (var key in obj) {
+                        if (obj.hasOwnProperty(key)) {
+                            keys.push(key);
+                        }
+                    }
+                    return keys;
+                }
+
                 return {
-                    attributeKeys: [],
                     items: [],
-                    addNew: function() {
-                        this.add({});
+                    fields: fields,
+                    attributeKeys: [],
+                    colSizeCss: 'col-lg-6',
+                    addNew: function () {
+                        this.add(constructor.apply(this));
                     },
-                    add: function(item) {
-                        this.items.push(item);
+                    add: function () {
+                        this.items.push(constructor.apply(this, arguments));
                         update(this);
                     },
-                    remove: function(index, item) {
+                    remove: function (index, item) {
                         if (index >= 0) {
                             this.items.splice(index, 1);
                             update(this);
                         }
+                    },
+                    onAttrNameChanged: function() {
+                        update(this);
+                    },
+                    removeAttr: function(item, attr) {
+                        item.attributes.remove(attr);
+                        update(this);
+                    },
+                    addNewAttr: function(item) {
+                        item.attributes.addNew();
                     }
                 }
             }
 
-            function createSubmission() {
+            function createSubmission(dict) {
+                function requiredAttrNames(type) {
+                    var names = [];
+                    angular.forEach(dict[type].attributes, function(attr) {
+                       if (attr.required) {
+                           names.push(attr.name);
+                       }
+                    });
+                    return names;
+                }
                 return {
                     accno: "",
                     title: "",
                     description: "",
                     releaseDate: null,
-                    annotations: createAttributes(),
-                    files: createItems(),
-                    links: [],
+                    annotations: createAttributes([], requiredAttrNames("annotation")),
+                    files: createItems(["path"], function (path, attributes) {
+                        path = path || "";
+                        attributes = attributes || [];
+                        return createFileItem(path, attributes, requiredAttrNames("file"));
+                    }),
+                    links: createItems(["url"], function (url, attributes) {
+                        url = url || "";
+                        attributes = attributes || [];
+                        return createLinkItem(url, attributes, requiredAttrNames("link"));
+                    }),
                     contacts: [],
                     publications: [],
                     addAnnotation: function (attr) {
                         this.annotations.add(attr);
                     },
                     addLink: function (url, attributes) {
-                        //todo 
+                        this.links.add(url, attributes);
                     },
                     addFile: function (path, attributes) {
-                        this.files.add(createFileItem(path, attributes)); 
+                        this.files.add(path, attributes);
                     },
                     addContact: function (attributes) {
                         //todo
@@ -111,7 +178,7 @@ module.exports =
                     return index >= 0 ? attributes[index].value : null;
                 }
 
-                var subm = createSubmission();
+                var subm = createSubmission(DictionaryService.dict());
 
                 subm.accno = obj.accno;
                 if (obj.attributes) {
@@ -163,6 +230,7 @@ module.exports =
 
             return {
                 import: importSubmission
+                //export: exportSubmission
             }
         }]
     })();

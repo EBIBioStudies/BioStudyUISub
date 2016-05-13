@@ -80,19 +80,21 @@
                         <div class="col-sm-12 ">
                             <label class="control-label">Description<span ng-show="submissionForm.description.$dirty && submissionForm.description.$invalid
                                           && submissionForm.description.$error.required">: cannot be blank</span></label>
-                            <textarea id="description" name="description" ng-model="submission.description" class="form-control input-sm"
-                                     required
-                                     uib-tooltip="Empty value"
-                                     tooltip-append-to-body="true"
-                                     tooltip-placement="bottom"
-                                     tooltip-class="customClass"
-                                     tooltip-enable="submissionForm.description.$invalid"></textarea>
+                            <textarea id="description" name="description" class="form-control input-sm"
+                                      ng-model="submission.description"
+                                      required
+                                      uib-tooltip="Empty value"
+                                      tooltip-append-to-body="true"
+                                      tooltip-placement="bottom"
+                                      tooltip-class="customClass"
+                                      tooltip-enable="submissionForm.description.$invalid"></textarea>
                         </div>
                     </div>
 
 
                     <div class="col-lg-12 padding-left-none">
-                        <bs-section-item id="annotations" ng-model="submission.annotations"
+                        <bs-section-item id="annotations"
+                                         data-ng-model="submission.annotations"
                                          data-template-name="templates/bsng/section/bsAnnotation.html"
                                          data-type="annotation"
                         >
@@ -109,11 +111,12 @@
                         data-labels="keys.link">
             </bs-section> -->
 
-                        <bs-section id="files" ng-model="submission.files"
+                        <bs-section id="files"
+                                    data-ng-model="submission.files"
                                     data-type="file"
                                     data-dynamic="true"
                                     data-preview-header="templates/bsng/section_part/file/previewHeader.html"
-                                    data-detail-header="templates/bsng/section_part/file/detailHeader.html">
+                                    data-details-header="templates/bsng/section_part/file/detailsHeader.html">
                         </bs-section>
                         <!--
                                     <bs-section id="publications" ng-model="submission.publications"

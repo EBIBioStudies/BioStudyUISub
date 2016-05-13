@@ -51,7 +51,7 @@
                            uib-tooltip="Empty value" tooltip-class="customClass" tooltip-placement="top-left"
                            tooltip-enable="attrForm.attrValue.$invalid">
 
-                <span class="input-group-btn"> <!--ng-if="!dataModel.requiredAttributes[attr.name].required"-->
+                <span class="input-group-btn" ng-if="!attr.required">
                     <button type="button" class="btn btn-sm btn-danger btn-flat"
                             uib-tooltip="Delete this description"
                             tooltip-append-to-body="true"
