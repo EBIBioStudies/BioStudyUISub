@@ -131,29 +131,10 @@ module.exports =
         };
 
         $scope.addContact = function () {
-            //todo
+            this.submission.contacts.addNew();
         };
 
         $scope.addPublication = function () {
-            //todo
+            this.submission.publications.addNew();
         };
-
-        /* $scope.open = function ($event) {
-         $event.preventDefault();
-         $event.stopPropagation();
-         $scope.opened = true;
-         };
-
-
-         $scope.getParentSection = function (parent) {
-         return parent || $scope.submission;
-         };
-
-         $scope.addAttributeTo = function (parent) {
-         var attr = SubmissionModel.createAttribute();
-         $scope.viewSubmission.contacts.attributesKey(attr);
-         SubmissionModel.addAttributeTo(parent, SubmissionModel.createAttribute(), 'conract');
-
-         };*/
-
     };

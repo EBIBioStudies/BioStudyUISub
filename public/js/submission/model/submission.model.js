@@ -44,15 +44,19 @@ module.exports =
             }
 
             function createFileItem(path, attrArray, requiredAttrNames) {
-                return {
-                    path: path,
-                    attributes: createAttributes(attrArray, requiredAttrNames)
-                }
+                var item = createItem(attrArray, requiredAttrNames);
+                item.path = path;
+                return item;
             }
 
             function createLinkItem(url, attrArray, requiredAttrNames) {
+                var item = createItem(attrArray, requiredAttrNames);
+                item.url = url;
+                return item;
+            }
+
+            function createItem(attrArray, requiredAttrNames) {
                 return {
-                    url: url,
                     attributes: createAttributes(attrArray, requiredAttrNames)
                 }
             }
@@ -96,7 +100,7 @@ module.exports =
 
                 return {
                     items: [],
-                    fields: fields,
+                    fields: fields || [],
                     attributeKeys: [],
                     colSizeCss: 'col-lg-6',
                     addNew: function () {
@@ -151,8 +155,14 @@ module.exports =
                         attributes = attributes || [];
                         return createLinkItem(url, attributes, requiredAttrNames("link"));
                     }),
-                    contacts: [],
-                    publications: [],
+                    contacts: createItems([], function(attributes) {
+                        attributes = attributes || [];
+                        return createItem(attributes, requiredAttrNames("contact"));
+                    }),
+                    publications: createItems([], function(attributes) {
+                        attributes = attributes || [];
+                        return createItem(attributes, requiredAttrNames("publication"));
+                    }),
                     addAnnotation: function (attr) {
                         this.annotations.add(attr);
                     },
@@ -163,10 +173,10 @@ module.exports =
                         this.files.add(path, attributes);
                     },
                     addContact: function (attributes) {
-                        //todo
+                        this.contacts.add(attributes);
                     },
                     addPublication: function (attributes) {
-                        //todo
+                        this.publications.add(attributes);
                     }
                 }
             }

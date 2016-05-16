@@ -112,7 +112,7 @@ module.exports =
                     "attributes": [
                         {"name": "Name", "required": true},
                         {"name": "Affiliation", "required": false},
-                        {"name": "Organization", "required": true, "values": ["EBI", "GEOD"]},
+                        {"name": "Organisation", "required": true, "values": ["EBI", "GEOD"]},
                         {"name": "Department", "required": false},
                         {"name": "E-mail", "required": true}
                     ]
