@@ -189,9 +189,11 @@ module.exports =
                     subm.title = getAttrValue('Title', obj.attributes) || "";
                 }
 
-                if (obj.section.attributes) {
-                    subm.description = getAttrValue('Description', obj.section.attributes) || "";
-                    var filtered = _.filter(obj.section.attributes,
+                var section =  obj.section || {subsections:[]};
+
+                if (section.attributes) {
+                    subm.description = getAttrValue('Description', section.attributes) || "";
+                    var filtered = _.filter(section.attributes,
                         function (attr) {
                             return attr.name !== 'Description';
                         }
@@ -203,20 +205,20 @@ module.exports =
                     );
                 }
 
-                if (obj.section.links) {
-                    angular.forEach(obj.section.links, function (link) {
+                if (section.links) {
+                    angular.forEach(section.links, function (link) {
                         subm.addLink(link.url, link.attributes);
                     });
                 }
 
-                if (obj.section.files) {
-                    angular.forEach(obj.section.files, function (file) {
+                if (section.files) {
+                    angular.forEach(section.files, function (file) {
                         subm.addFile(file.path, file.attributes);
                     });
                 }
 
-                var contacts = _.filter(obj.section.subsections, {type: 'Author'});
-                var publications = _.filter(obj.section.subsections, {type: 'Publication'});
+                var contacts = _.filter(section.subsections, {type: 'Author'});
+                var publications = _.filter(section.subsections, {type: 'Publication'});
 
                 angular.forEach(contacts, function (contact) {
                     subm.addContact(contact.attributes);

@@ -1,5 +1,8 @@
 'use strict';
 
+require('../../.build/components/angular/angular');
+require('../../.build/components/angular-cookies/angular-cookies');
+require('../../.build/components/angular-messages/angular-messages');
 require('../../.build/components/ng-file-upload/ng-file-upload');
 require('../../.build/components/angular-bootstrap/ui-bootstrap');
 require('../../.build/components/angular-bootstrap/ui-bootstrap-tpls');
