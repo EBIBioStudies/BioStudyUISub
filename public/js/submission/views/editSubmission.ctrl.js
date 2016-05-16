@@ -127,7 +127,7 @@ module.exports =
         };
 
         $scope.addLink = function () {
-            //todo
+            this.submission.links.addNew();
         };
 
         $scope.addContact = function () {

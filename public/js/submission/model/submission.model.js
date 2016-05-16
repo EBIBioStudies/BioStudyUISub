@@ -3,7 +3,7 @@
 module.exports =
     (function () {
         return ['_', 'DictionaryService', function (_, DictionaryService) {
-            
+
             function createAttributes(attrArray, requiredAttrNames) {
                 var attributes = {
                     attributes: [],
@@ -100,7 +100,7 @@ module.exports =
                     attributeKeys: [],
                     colSizeCss: 'col-lg-6',
                     addNew: function () {
-                        this.add(constructor.apply(this));
+                        this.add();
                     },
                     add: function () {
                         this.items.push(constructor.apply(this, arguments));

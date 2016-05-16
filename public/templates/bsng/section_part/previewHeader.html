@@ -1,2 +1,4 @@
-<input type="text" name="attrValuePreview" ng-model="data[field.name]"
-       class="form-control input-sm" placeholder="Enter a value" ng-required="true">
+<input type="text" name="{{field.name}}" class="form-control input-sm"
+       placeholder="Enter a value"
+       data-ng-model="data[field.name]"
+       data-ng-required="true">

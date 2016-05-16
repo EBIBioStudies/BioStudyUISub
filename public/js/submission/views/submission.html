@@ -96,8 +96,7 @@
                         <bs-section-item id="annotations"
                                          data-ng-model="submission.annotations"
                                          data-template-name="templates/bsng/section/bsAnnotation.html"
-                                         data-type="annotation"
-                        >
+                                         data-type="annotation">
                         </bs-section-item>
 
            <!-- <bs-section id="contacts" ng-model="submission.contacts"
@@ -105,16 +104,16 @@
                         data-filter-type="Contact"
                         data-preview-header="templates/bsng/section_part/contact/previewHeader.html"
                         data-detail-header="templates/bsng/section_part/contact/detailHeader.html">
-            </bs-section>
+            </bs-section-->
 
-            <bs-section id="links" ng-model="submission.links"
-                        data-labels="keys.link">
-            </bs-section> -->
+                        <bs-section id="links"
+                                    data-ng-model="submission.links"
+                                    data-type="link">
+                        </bs-section>
 
                         <bs-section id="files"
                                     data-ng-model="submission.files"
                                     data-type="file"
-                                    data-dynamic="true"
                                     data-preview-header="templates/bsng/section_part/file/previewHeader.html"
                                     data-details-header="templates/bsng/section_part/file/detailsHeader.html">
                         </bs-section>
