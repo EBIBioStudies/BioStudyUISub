@@ -188,14 +188,21 @@ module.exports =
                     return index >= 0 ? attributes[index].value : null;
                 }
 
+                function parseDate(str) { // yyyy-mm-dd
+                    if (!str) {
+                        return null;
+                    }
+                    if (_.isDate(str)) {
+                        return str;
+                    }
+                    return new Date(str);
+                }
+
                 var subm = createSubmission(DictionaryService.dict());
 
-                subm.accno = obj.accno;
+                subm.accno = obj.accno || "";
                 if (obj.attributes) {
-                    var rdate = getAttrValue('ReleaseDate', obj.attributes);
-                    if (rdate != null) {
-                        subm.releaseDate = _.isDate(rdate) ? rdate : new Date(rdate);
-                    }
+                    subm.releaseDate = parseDate(getAttrValue('ReleaseDate', obj.attributes));
                     subm.title = getAttrValue('Title', obj.attributes) || "";
                 }
 
