@@ -1,4 +1,7 @@
-<div class="panel panel-info" ng-if="data.attributes.length > 0">
+<div class="panel panel-info"
+     ng-show="data.attributes.length > 0"
+     ng-class="{'panel-danger': sectionItemForm.$invalid, 'panel-info': sectionItemForm.$valid}"
+     ng-form name="sectionItemForm">
     <!-- Default panel contents -->
     <div class="panel-heading">Describe your study <span class="badge">{{data.attributes.length}}</span>
         <div class="btn-toolbar pull-right" role="toolbar">

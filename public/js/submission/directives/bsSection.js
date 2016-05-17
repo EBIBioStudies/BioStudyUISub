@@ -6,63 +6,27 @@
 
 module.exports = function (moduleDirective) {
 
-    moduleDirective.directive('bsSection', function (DictionaryService) {
+    moduleDirective.directive('bsSection', function () {
         return {
             restrict: 'E',
             templateUrl: function (elem, attrs) {
                 return attrs.templateUrl || 'templates/bsng/section.html';
             },
             scope: {
-                data: '=ngModel'
+                data: '=ngModel',
+                dataType: '@type'
             },
             bindToController: {
                 previewHeader: '@',
                 detailsHeader: '@'
             },
             controllerAs: 'ctrl',
-            controller: function () {
-            },
-            link: function (scope, elem, attr) {
-                scope.dict = DictionaryService.byKey(attr.type);
-                scope.typeahead = scope.dict.attributes;
-            }
+            controller: ['$scope', 'DictionaryService', function ($scope, DictionaryService) {
+                $scope.dict = DictionaryService.byKey($scope.dataType);
+                $scope.typeahead = $scope.dict.attributes;
+            }]
         };
     });
-
-    /*    moduleDirective.directive('bsReplaceEl', function ($compile) {
-     return {
-     restrict: 'EA',
-     require: '^bsSection',
-     scope: {
-     data: '=ngModel',
-     field: '=',
-     dict: '='
-     },
-     link: function (scope, element, attrs, ctrl) {
-     var templateUrl = element.attr('template-url');
-     var id = element.attr('id');
-     var model = '', elTmp = '';
-     if (scope.data) {
-     model = 'ng-model="data"';
-     }
-     if (scope.field) {
-     model = model + ' data-field="field"';
-     }
-     if (scope.labels) {
-     model = model + ' data-dict="dict"';
-     }
-
-     if (ctrl[id]) {
-     elTmp = '<bs-preview ' + model + ' template-url=' + ctrl[id] + '></bs-preview>'
-
-     } else {
-     elTmp = '<bs-preview ' + model + ' template-url=' + templateUrl + '></bs-preview>'
-     }
-     var node = $compile(elTmp)(scope);
-     element.replaceWith(node);
-     }
-     }
-     });*/
 
     moduleDirective.directive('bsPreviewHeader', function () {
         return {

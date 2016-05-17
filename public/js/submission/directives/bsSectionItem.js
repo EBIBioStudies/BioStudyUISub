@@ -8,7 +8,7 @@ module.exports = function (DictionaryService) {
     return {
         restrict: 'E',
         templateUrl: function (elem, attrs) {
-            return attrs.templateName;
+            return attrs.templateUrl;
         },
         scope: {
             data: '=ngModel'

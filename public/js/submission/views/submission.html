@@ -55,7 +55,8 @@
                         </div>
                     </div>
 
-                    <div class="form-group row margin-bottom-small padding-right-15" bs-show-errors id="submReleaseDate">
+                    <div class="form-group row margin-bottom-small padding-right-15" bs-show-errors
+                         id="submReleaseDate">
 
                         <div class="col-sm-12">
                             <label class="control-label">Release date<span ng-show="submissionForm.releaseDate.$dirty && submissionForm.releaseDate.$invalid
@@ -76,7 +77,8 @@
                             </p>
                         </div>
                     </div>
-                    <div class="form-group row margin-bottom-small padding-right-15" ng-class="{'has-error':submissionForm.description.$invalid }">
+                    <div class="form-group row margin-bottom-small padding-right-15"
+                         ng-class="{'has-error':submissionForm.description.$invalid }">
                         <div class="col-sm-12 ">
                             <label class="control-label">Description<span ng-show="submissionForm.description.$dirty && submissionForm.description.$invalid
                                           && submissionForm.description.$error.required">: cannot be blank</span></label>
@@ -93,50 +95,41 @@
 
 
                     <div class="col-lg-12 padding-left-none">
-                        <bs-section-item id="annotations"
-                                         data-ng-model="submission.annotations"
-                                         data-template-name="templates/bsng/section/bsAnnotation.html"
+                        <bs-section-item data-ng-model="submission.annotations"
+                                         data-template-url="templates/bsng/sectionItem/bsAnnotation.html"
                                          data-type="annotation">
                         </bs-section-item>
 
-           <!-- <bs-section id="contacts" ng-model="submission.contacts"
-                        data-labels="keys.contact"
-                        data-filter-type="Contact"
-                        data-preview-header="templates/bsng/section_part/contact/previewHeader.html"
-                        data-detail-header="templates/bsng/section_part/contact/detailHeader.html">
-            </bs-section-->
+                        <bs-section data-ng-model="submission.contacts"
+                                    data-type="contact">
+                        </bs-section>
 
-                        <bs-section id="links"
-                                    data-ng-model="submission.links"
+                        <bs-section data-ng-model="submission.links"
                                     data-type="link">
                         </bs-section>
 
-                        <bs-section id="files"
-                                    data-ng-model="submission.files"
+                        <bs-section data-ng-model="submission.files"
                                     data-type="file"
                                     data-preview-header="templates/bsng/section_part/file/previewHeader.html"
                                     data-details-header="templates/bsng/section_part/file/detailsHeader.html">
                         </bs-section>
-                        <!--
-                                    <bs-section id="publications" ng-model="submission.publications"
-                                                    data-labels="keys.publication"
-                                                data-filter-type="Publication">
 
-                                    </bs-section>
-                        -->
+                        <bs-section data-ng-model="submission.publications"
+                                    data-type="publication">
+                        </bs-section>
 
-        </div>
+                    </div>
 
-        </form>
+                </form>
 
-        </section>
-        <!-- /.content -->
-        <div class="panel-footer navbar-fixed-bottom">
-        </div>
+            </section>
+            <!-- /.content -->
+            <div class="panel-footer navbar-fixed-bottom">
+            </div>
         </div>
 
     </aside>
-<!-- /.right-side -->
+    <!-- /.right-side -->
 </div>
 
 
