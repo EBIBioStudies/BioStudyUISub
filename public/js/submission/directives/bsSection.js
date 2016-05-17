@@ -10,7 +10,7 @@ module.exports = function (moduleDirective) {
         return {
             restrict: 'E',
             templateUrl: function (elem, attrs) {
-                return attrs.templateUrl || 'templates/bsng/section.html';
+                return attrs.templateUrl || 'templates/bsng/section/section.html';
             },
             scope: {
                 data: '=ngModel',
@@ -39,7 +39,7 @@ module.exports = function (moduleDirective) {
             },
             template: "<ng-include src='template'></ng-include>",
             link: function (scope, element, attrs, ctrl) {
-                scope.template = ctrl.previewHeader || 'templates/bsng/section_part/previewHeader.html';
+                scope.template = ctrl.previewHeader || 'templates/bsng/section/previewHeader.html';
             }
         };
 
@@ -56,7 +56,7 @@ module.exports = function (moduleDirective) {
             },
             template: "<ng-include src='template'></ng-include>",
             link: function (scope, element, attrs, ctrl) {
-                scope.template = ctrl.detailsHeader || 'templates/bsng/section_part/detailsHeader.html';
+                scope.template = ctrl.detailsHeader || 'templates/bsng/section/detailsHeader.html';
             }
         };
     });
