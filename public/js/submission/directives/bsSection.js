@@ -21,9 +21,36 @@ module.exports = function (moduleDirective) {
                 detailsHeader: '@'
             },
             controllerAs: 'ctrl',
-            controller: ['$scope', 'DictionaryService', function ($scope, DictionaryService) {
+            controller: ['$scope', 'DictionaryService', '_', function ($scope, DictionaryService, _) {
                 $scope.dict = DictionaryService.byKey($scope.dataType);
-                $scope.typeahead = $scope.dict.attributes;
+                $scope.typeaheadKeys = _.map($scope.dict.attributes, function(attr) {return attr.name});
+                $scope.typeaheadValues = function (attrName, itemIndex) {
+                    var attr = _.find($scope.dict.attributes, { name: attrName, typeahead: true});
+                    if (!attr) {
+                        return [];
+                    }
+                    var set = {};
+                    var res = [];
+                    var items = $scope.data.items;
+                    for (var j = 0; j < items.length; j++) {
+                        if (j === itemIndex) {
+                            continue;
+                        }
+                        var item = items[j];
+                        var attrs = item.attributes.attributes;
+                        for (var i = 0; i < attrs.length; i++) {
+                            var attr = attrs[i];
+                            if (attr.name === attrName && attr.value) {
+                                if (set[attr.value] != 1) {
+                                    res.push(attr.value);
+                                    set[attr.value] = 1;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    return res;
+                }
             }]
         };
     });

@@ -111,8 +111,7 @@ module.exports =
                     },
                     "attributes": [
                         {"name": "Name", "required": true},
-                        {"name": "Affiliation", "required": false},
-                        {"name": "Organisation", "required": true, "values": ["EBI", "GEOD"]},
+                        {"name": "Organisation", "required": true, "typeahead": true},
                         {"name": "Department", "required": false},
                         {"name": "E-mail", "required": true}
                     ]

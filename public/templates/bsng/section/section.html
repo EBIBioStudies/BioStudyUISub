@@ -56,7 +56,11 @@
                                 <input type="text" name="attrValuePreview" ng-model="attr.value"
                                        class="form-control input-sm form-control-auto" placeholder="Enter a value"
                                        ng-required="true"
-                                       ng-if="attr.name==key" ms-input-val data-check-pristine="true">
+                                       ng-if="attr.name==key" ms-input-val data-check-pristine="true"
+                                       uib-typeahead="value for value in typeaheadValues(attr.name, item.$index) | filter:$viewValue:$emptyOrMatch | limitTo:10"
+                                       typeahead-append-to-body="true"
+                                       typeahead-show-hint="true"
+                                       typeahead-min-length="0">
                             </div>
                         </td>
                     </tr>
@@ -95,7 +99,7 @@
                     <td class="col-md-3 nopadding border-none form-group-sm " ms-form-group-validator
                         ng-class="{'has-error' : attrItemForm.attrKey.$invalid}">
                         <input autocomplete="off" type="text" name="attrKey" ng-model="attr.name"
-                               uib-typeahead="item.name as item.name for item in typeahead | filterDifference:typeahead:item.attributes.attributes | filter:$viewValue:$emptyOrMatch | limitTo:30"
+                               uib-typeahead="key for key in typeaheadKeys | filterDifference:typeahead_keys:item.attributes.attributes | filter:$viewValue:$emptyOrMatch | limitTo:30"
                                typeahead-append-to-body="true"
                                typeahead-show-hint="true"
                                typeahead-min-length="0"
@@ -115,7 +119,7 @@
                             <input type="text" name="attrValue" ng-model="attr.value"
                                    class="form-control input-sm"
                                    placeholder="Enter a value"
-                                   uib-typeahead="name for name in data.requiredAttributes[attr.name].values | filter:$viewValue | limitTo:8"
+                                   uib-typeahead="value for value in typeaheadValues(attr.name, item.$index) | filter:$viewValue:$emptyOrMatch | limitTo:10"
                                    typeahead-append-to-body="true"
                                    typeahead-show-hint="true"
                                    typeahead-min-length="0"
