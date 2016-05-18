@@ -36,7 +36,7 @@ module.exports =
                     });
                 }
 
-                angular.forEach(toAdd, function(value, key) {
+                angular.forEach(toAdd, function (value, key) {
                     attributes.add({name: key, value: value});
                 });
 
@@ -116,14 +116,14 @@ module.exports =
                             update(this);
                         }
                     },
-                    onAttrNameChanged: function() {
+                    onAttrNameChanged: function () {
                         update(this);
                     },
-                    removeAttr: function(item, attr) {
+                    removeAttr: function (item, attr) {
                         item.attributes.remove(attr);
                         update(this);
                     },
-                    addNewAttr: function(item) {
+                    addNewAttr: function (item) {
                         item.attributes.addNew();
                     }
                 }
@@ -132,13 +132,14 @@ module.exports =
             function createSubmission(dict) {
                 function requiredAttrNames(type) {
                     var names = [];
-                    angular.forEach(dict[type].attributes, function(attr) {
-                       if (attr.required) {
-                           names.push(attr.name);
-                       }
+                    angular.forEach(dict[type].attributes, function (attr) {
+                        if (attr.required) {
+                            names.push(attr.name);
+                        }
                     });
                     return names;
                 }
+
                 return {
                     accno: "",
                     title: "",
@@ -155,11 +156,11 @@ module.exports =
                         attributes = attributes || [];
                         return createLinkItem(url, attributes, requiredAttrNames("link"));
                     }),
-                    contacts: createItems([], function(attributes) {
+                    contacts: createItems([], function (attributes) {
                         attributes = attributes || [];
                         return createItem(attributes, requiredAttrNames("contact"));
                     }),
-                    publications: createItems([], function(attributes) {
+                    publications: createItems([], function (attributes) {
                         attributes = attributes || [];
                         return createItem(attributes, requiredAttrNames("publication"));
                     }),
@@ -198,17 +199,32 @@ module.exports =
                     return new Date(str);
                 }
 
+                function resolveReferences(attrs, refs) {
+                    if (!attrs) {
+                        return attrs;
+                    }
+                    var processed = [];
+                    _.forEach(attrs, function (attr) {
+                        var copy = _.assign({}, attr);
+                        if (copy.isReference) {
+                            copy.value =  refs[attr.value];
+                        }
+                        processed.push(copy);
+                    });
+                    return processed;
+                }
+
                 function renameAttributes(attrs) {
                     if (!attrs) {
                         return attrs;
                     }
                     var processed = [];
                     _.forEach(attrs, function (attr) {
-                        var attrName = attr.name;
-                        if (attr.name === 'Affiliation') { // Affiliation -> Organisation
-                            attrName = 'Organisation';
+                        var copy = _.assign({}, attr);
+                        if (copy.name === 'Affiliation') { // Affiliation -> Organisation
+                            copy.name = 'Organisation';
                         }
-                        processed.push({name: attrName, value: attr.value});
+                        processed.push(copy);
                     });
                     return processed;
                 }
@@ -221,7 +237,7 @@ module.exports =
                     subm.title = getAttrValue('Title', obj.attributes) || "";
                 }
 
-                var section =  obj.section || {subsections:[]};
+                var section = obj.section || {subsections: []};
 
                 if (section.attributes) {
                     subm.description = getAttrValue('Description', section.attributes) || "";
@@ -251,9 +267,18 @@ module.exports =
 
                 var contacts = _.filter(section.subsections, {type: 'Author'});
                 var publications = _.filter(section.subsections, {type: 'Publication'});
+                var references = {};
+                _.forEach(_.filter(section.subsections,
+                    function (s) {
+                        return _.isString(s.accno) && s.accno;
+                    }),
+                    function (s) {
+                        var attrs = s.attributes;
+                        references[s.accno] = attrs.length > 0 ? (attrs[0].value  || "") : "";
+                    });
 
                 angular.forEach(contacts, function (contact) {
-                    subm.addContact(renameAttributes(contact.attributes));
+                    subm.addContact(renameAttributes(resolveReferences(contact.attributes, references)));
                 });
 
                 angular.forEach(publications, function (pub) {

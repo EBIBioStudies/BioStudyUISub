@@ -75,7 +75,7 @@ describe("SubmissionModel", function () {
         expect(contactAttrs[0].name).toEqual("Name");
         expect(contactAttrs[0].value).toEqual("John Doe");
         expect(contactAttrs[1].name).toEqual("Organisation");
-        expect(contactAttrs[1].value).toEqual("affilRef1");
+        expect(contactAttrs[1].value).toEqual("The Institute for Genomic Research, Rockville Maryland");
         expect(contactAttrs[2].name).toEqual("E-mail");
         expect(contactAttrs[2].value).toEqual("");
     });
