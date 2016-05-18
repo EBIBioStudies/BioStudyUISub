@@ -198,6 +198,21 @@ module.exports =
                     return new Date(str);
                 }
 
+                function renameAttributes(attrs) {
+                    if (!attrs) {
+                        return attrs;
+                    }
+                    var processed = [];
+                    _.forEach(attrs, function (attr) {
+                        var attrName = attr.name;
+                        if (attr.name === 'Affiliation') { // Affiliation -> Organisation
+                            attrName = 'Organisation';
+                        }
+                        processed.push({name: attrName, value: attr.value});
+                    });
+                    return processed;
+                }
+
                 var subm = createSubmission(DictionaryService.dict());
 
                 subm.accno = obj.accno || "";
@@ -238,7 +253,7 @@ module.exports =
                 var publications = _.filter(section.subsections, {type: 'Publication'});
 
                 angular.forEach(contacts, function (contact) {
-                    subm.addContact(contact.attributes);
+                    subm.addContact(renameAttributes(contact.attributes));
                 });
 
                 angular.forEach(publications, function (pub) {

@@ -81,7 +81,7 @@
       },
       {
         "accno": "affilRef1",
-        "type": "Organisation",
+        "type": "Affiliation",
         "attributes": [
           {
             "name": "Name",

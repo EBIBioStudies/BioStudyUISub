@@ -71,14 +71,12 @@ describe("SubmissionModel", function () {
         var contacts = subm.contacts.items;
         expect(contacts.length).toEqual(1);
         var contactAttrs = contacts[0].attributes.attributes;
-        expect(contactAttrs.length).toEqual(4); // 'Name', 'Organisation', 'E-mqil' added automatically as they're required
+        expect(contactAttrs.length).toEqual(3); // 'Name', 'Organisation', 'E-mqil' added automatically as they're required
         expect(contactAttrs[0].name).toEqual("Name");
         expect(contactAttrs[0].value).toEqual("John Doe");
         expect(contactAttrs[1].name).toEqual("Organisation");
-        expect(contactAttrs[1].value).toEqual("");
+        expect(contactAttrs[1].value).toEqual("affilRef1");
         expect(contactAttrs[2].name).toEqual("E-mail");
         expect(contactAttrs[2].value).toEqual("");
-        expect(contactAttrs[3].name).toEqual("Affiliation");
-        expect(contactAttrs[3].value).toEqual("affilRef1");
     });
 });
