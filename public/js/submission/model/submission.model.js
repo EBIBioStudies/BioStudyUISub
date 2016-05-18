@@ -286,10 +286,98 @@ module.exports =
                 });
                 return subm;
             }
+            
+            function exportSubmission(subm) {
+                subm = _.assign({}, subm); // a copy
+
+                function copyAttributes(attrs) {
+                    return _.map(attrs, function(attr) {
+                        return {name: attr.name, value:attr.value};
+                    });
+                }
+
+                function renameAttributes(attrs) {
+                    _.forEach(attrs, function(attr) {
+                        if (attr.name === 'Organisation') { // Organisation --> Affiliation
+                            attr.name = 'Affiliation';
+                        }
+                    });
+                    return attrs;
+                }
+                
+                var out = {
+                    accno: subm.accno || "",
+                    type: "Submission",
+                    attributes: [
+                        {
+                            name: "Title",
+                            value: subm.title
+                        },
+                        {
+                            name: "ReleaseDate",
+                            value: _.isDate(subm.releaseDate) ? subm.releaseDate.toISOString().substring(0, 10) : ""
+                        }
+                    ],
+                    section: {
+                        type: "Study",
+                        attributes: [],
+                        links: [],
+                        files:[],
+                        subsections: []
+                    }
+                };
+
+                out.section.attributes.push({name: "Description", value: subm.description});
+                _.forEach(subm.annotations.attributes, function (attr) {
+                    out.section.attributes.push({name: attr.name, value: attr.value});
+                });
+
+                _.forEach(subm.files.items, function(item) {
+                    var file = {path: item.path, attributes: copyAttributes(item.attributes.attributes)};
+                    out.section.files.push(file);
+                });
+
+                _.forEach(subm.links.items, function(item) {
+                    var link = {url: item.url, attributes: copyAttributes(item.attributes.attributes)};
+                    out.section.links.push(link);
+                });
+
+                _.forEach(subm.publications.items, function(item) {
+                    var subsection = {type: "Publication", attributes: copyAttributes(item.attributes.attributes)};
+                    out.section.subsections.push(subsection);
+                });
+
+                var mem = {};
+                var organisations = [];
+                var refIndex = 0;
+                _.forEach(subm.contacts.items, function(item) {
+                    var attributes = copyAttributes(item.attributes.attributes);
+                    _.forEach(attributes, function(attr) {
+                        if (attr.name === "Organisation") {
+                            var org = attr.value;
+                            if (!mem[org]) {
+                                mem[org] = "ref" + (++refIndex);
+                                organisations.push(org);
+                            }
+                            attr.value = mem[org];
+                            attr.isReference = true;
+                        }
+                    });
+                    var subsection = {type: "Author", attributes: renameAttributes(attributes)};
+                    out.section.subsections.push(subsection);
+                });
+
+                _.forEach(organisations, function(org) {
+                    var subsection = {type: "Affiliation", accno: mem[org], attributes: [{name: "Name", value: org}]};
+                    out.section.subsections.push(subsection);
+                });
+
+                return out;
+            }
 
             return {
-                import: importSubmission
-                //export: exportSubmission
+                import: importSubmission,
+                export: exportSubmission
             }
         }]
     })();
