@@ -23,20 +23,20 @@ module.exports =
 
                 var toAdd = {};
                 if (attrArray) {
-                    angular.forEach(attrArray, function (attr) {
+                    _.forEach(attrArray, function (attr) {
                         toAdd[attr.name] = attr.value;
                     });
                 }
 
                 if (requiredAttrNames) {
-                    angular.forEach(requiredAttrNames, function (attrName) {
+                    _.forEach(requiredAttrNames, function (attrName) {
                         var val = toAdd[attrName] || "";
                         attributes.add({name: attrName, value: val, required: true});
                         delete toAdd[attrName];
                     });
                 }
 
-                angular.forEach(toAdd, function (value, key) {
+                _.forEach(toAdd, function (value, key) {
                     attributes.add({name: key, value: value});
                 });
 
@@ -62,69 +62,19 @@ module.exports =
             }
 
             function createItems(fields, constructor) {
-                function update(obj) {
-                    var attributeKeys = getAttributeKeys(obj);
-                    var colSizeCss = getColSizeCss(obj.fields, attributeKeys);
-
-                    obj.attributeKeys = attributeKeys;
-                    obj.colSizeCss = colSizeCss;
-                }
-
-                function getAttributeKeys(obj) {
-                    var keys = {};
-                    angular.forEach(obj.items, function (item) {
-                        angular.forEach(item.attributes.attributes, function (attr) {
-                            keys[attr.name] = 1;
-                        });
-                    });
-                    return objProperties(keys);
-                }
-
-                function getColSizeCss(fields, attributeKeys) {
-                    var length = fields.length + attributeKeys.length;
-                    if (length > 6) {
-                        length = 6;
-                    }
-                    return 'col-lg-' + Math.ceil(12 / length);
-                }
-
-                function objProperties(obj) {
-                    var keys = [];
-                    for (var key in obj) {
-                        if (obj.hasOwnProperty(key)) {
-                            keys.push(key);
-                        }
-                    }
-                    return keys;
-                }
-
                 return {
                     items: [],
                     fields: fields || [],
-                    attributeKeys: [],
-                    colSizeCss: 'col-lg-6',
                     addNew: function () {
                         this.add();
                     },
                     add: function () {
                         this.items.push(constructor.apply(this, arguments));
-                        update(this);
                     },
                     remove: function (index, item) {
                         if (index >= 0) {
                             this.items.splice(index, 1);
-                            update(this);
                         }
-                    },
-                    onAttrNameChanged: function () {
-                        update(this);
-                    },
-                    removeAttr: function (item, attr) {
-                        item.attributes.remove(attr);
-                        update(this);
-                    },
-                    addNewAttr: function (item) {
-                        item.attributes.addNew();
                     }
                 }
             }
@@ -132,7 +82,7 @@ module.exports =
             function createSubmission(dict) {
                 function requiredAttrNames(type) {
                     var names = [];
-                    angular.forEach(dict[type].attributes, function (attr) {
+                    _.forEach(dict[type].attributes, function (attr) {
                         if (attr.required) {
                             names.push(attr.name);
                         }
@@ -145,7 +95,14 @@ module.exports =
                     title: "",
                     description: "",
                     releaseDate: null,
-                    annotations: createAttributes([], requiredAttrNames("annotation")),
+                    annotations: (function() {
+                        var items = createItems([], function (attributes) {
+                            attributes = attributes || [];
+                            return createItem(attributes, requiredAttrNames("annotation"));
+                        });
+                        items.addNew();
+                        return items;
+                    })(),
                     files: createItems(["path"], function (path, attributes) {
                         path = path || "";
                         attributes = attributes || [];
@@ -165,7 +122,7 @@ module.exports =
                         return createItem(attributes, requiredAttrNames("publication"));
                     }),
                     addAnnotation: function (attr) {
-                        this.annotations.add(attr);
+                        this.annotations.items[0].attributes.add(attr);
                     },
                     addLink: function (url, attributes) {
                         this.links.add(url, attributes);
@@ -246,7 +203,7 @@ module.exports =
                             return attr.name !== 'Description';
                         }
                     );
-                    angular.forEach(filtered,
+                    _.forEach(filtered,
                         function (attr) {
                             subm.addAnnotation(attr);
                         }
@@ -328,22 +285,22 @@ module.exports =
                 };
 
                 out.section.attributes.push({name: "Description", value: subm.description});
-                _.forEach(subm.annotations.attributes, function (attr) {
+                _.forEach(subm.annotations.items[0].attributes.attributes, function (attr) {
                     out.section.attributes.push({name: attr.name, value: attr.value});
                 });
 
                 _.forEach(subm.files.items, function(item) {
-                    var file = {path: item.path, attributes: copyAttributes(item.attributes.attributes)};
+                    var file = {path: item.path, attributes: copyAttributes(item.attributes.items)};
                     out.section.files.push(file);
                 });
 
                 _.forEach(subm.links.items, function(item) {
-                    var link = {url: item.url, attributes: copyAttributes(item.attributes.attributes)};
+                    var link = {url: item.url, attributes: copyAttributes(item.attributes.items)};
                     out.section.links.push(link);
                 });
 
                 _.forEach(subm.publications.items, function(item) {
-                    var subsection = {type: "Publication", attributes: copyAttributes(item.attributes.attributes)};
+                    var subsection = {type: "Publication", attributes: copyAttributes(item.attributes.items)};
                     out.section.subsections.push(subsection);
                 });
 
@@ -351,7 +308,7 @@ module.exports =
                 var organisations = [];
                 var refIndex = 0;
                 _.forEach(subm.contacts.items, function(item) {
-                    var attributes = copyAttributes(item.attributes.attributes);
+                    var attributes = copyAttributes(item.attributes.items);
                     _.forEach(attributes, function(attr) {
                         if (attr.name === "Organisation") {
                             var org = attr.value;

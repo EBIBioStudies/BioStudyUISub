@@ -12,45 +12,93 @@ module.exports = function (moduleDirective) {
             templateUrl: function (elem, attrs) {
                 return attrs.templateUrl || 'templates/bsng/section/section.html';
             },
+            require: "^^bsPanel",
             scope: {
                 data: '=ngModel',
-                dataType: '@type'
+                dataType: '@type',
+                changeHandler: '@change'
             },
             bindToController: {
                 previewHeader: '@',
                 detailsHeader: '@'
             },
-            controllerAs: 'ctrl',
-            controller: ['$scope', 'DictionaryService', '_', function ($scope, DictionaryService, _) {
-                $scope.dict = DictionaryService.byKey($scope.dataType);
-                $scope.typeaheadKeys = _.map($scope.dict.attributes, function(attr) {return attr.name});
-                $scope.typeaheadValues = function (attrName, itemIndex) {
-                    var attr = _.find($scope.dict.attributes, { name: attrName, typeahead: true});
-                    if (!attr) {
-                        return [];
+            controllerAs: 'sectionCtrl',
+            controller: ['$scope', '_', '$log', function ($scope, _, $log) {
+                $scope.dict = $scope.$parent.dict;
+                $scope.typeaheadKeys = $scope.$parent.typeaheadKeys;
+                $scope.typeaheadValues = $scope.$parent.typeaheadValues;
+
+                var notifyChanges = function () {
+                    $log.debug("bsSection notifyChanges");
+                    if ($scope.changeHandler) {
+                        $scope.$parent.$eval($scope.changeHandler);
                     }
-                    var set = {};
-                    var res = [];
-                    var items = $scope.data.items;
-                    for (var j = 0; j < items.length; j++) {
-                        if (j === itemIndex) {
-                            continue;
-                        }
-                        var item = items[j];
-                        var attrs = item.attributes.attributes;
-                        for (var i = 0; i < attrs.length; i++) {
-                            var attr = attrs[i];
-                            if (attr.name === attrName && attr.value) {
-                                if (set[attr.value] != 1) {
-                                    res.push(attr.value);
-                                    set[attr.value] = 1;
-                                }
-                                break;
-                            }
-                        }
-                    }
-                    return res;
+                };
+
+                $scope.attributeKeys = [];
+                $scope.colSizeCss= 'col-lg-6';
+
+                function update(obj) {
+                    var attributeKeys = getAttributeKeys(obj);
+                    var colSizeCss = getColSizeCss(obj.fields, attributeKeys);
+
+                    $scope.attributeKeys = attributeKeys;
+                    $scope.colSizeCss = colSizeCss;
                 }
+
+                function getAttributeKeys(obj) {
+                    var keys = {};
+                    _.forEach(obj.items, function (item) {
+                        _.forEach(item.attributes.attributes, function (attr) {
+                            keys[attr.name] = 1;
+                        });
+                    });
+                    return objProperties(keys);
+                }
+
+                function getColSizeCss(fields, attributeKeys) {
+                    var length = fields.length + attributeKeys.length;
+                    if (length > 6) {
+                        length = 6;
+                    }
+                    return 'col-lg-' + Math.ceil(12 / length);
+                }
+
+                function objProperties(obj) {
+                    var keys = [];
+                    _.forOwn(obj, function(value, key) {
+                        keys.push(key);
+                    });
+                    return keys;
+                }
+
+                $scope.onAttributeChange = function() {
+                    $log.debug("bsSection onAttributeChange");
+                    update($scope.data);
+                    notifyChanges();
+                };
+
+                var unwatch = $scope.$watch('data', function(newValue, oldValue) {
+                    if (newValue === undefined) {
+                        return;
+                    }
+                    update(newValue);
+                    unwatch();
+                });
+
+                var unwatchItems = $scope.$watchCollection('data.items', function(newValue, oldValue) {
+                    if (newValue === undefined) {
+                        return;
+                    }
+                    $log.debug("bsSection collection changed");
+                    update($scope.data);
+                    notifyChanges();
+                });
+
+                $scope.$on('$destroy', function () {
+                    $log.debug("bsSection on-destroy");
+                    unwatchItems();
+                });
             }]
         };
     });
@@ -67,6 +115,7 @@ module.exports = function (moduleDirective) {
             template: "<ng-include src='template'></ng-include>",
             link: function (scope, element, attrs, ctrl) {
                 scope.template = ctrl.previewHeader || 'templates/bsng/section/previewHeader.html';
+                scope.onAttributeChange = scope.$parent.onAttributeChange;
             }
         };
 
@@ -84,6 +133,7 @@ module.exports = function (moduleDirective) {
             template: "<ng-include src='template'></ng-include>",
             link: function (scope, element, attrs, ctrl) {
                 scope.template = ctrl.detailsHeader || 'templates/bsng/section/detailsHeader.html';
+                scope.onAttributeChange = scope.$parent.onAttributeChange;
             }
         };
     });

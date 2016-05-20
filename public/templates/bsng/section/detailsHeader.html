@@ -1,13 +1,14 @@
 <p>
     <input type="text" name="{{field.name}}" class="form-control input-sm"
            placeholder="{{field.placeholder || 'Enter a value'}}"
-           data-ng-model="data[field.name]"
-           data-ng-required="true"
+           ng-model="data[field.name]"
+           ng-required="true"
            uib-tooltip="This field is required"
            tooltip-class="customClass"
            tooltip-placement="top-left"
            tooltip-trigger="mouseenter focus"
            tooltip-is-open="attrItemForm.field.$error.required"
-           tooltip-enable="!data[field.name]">
+           tooltip-enable="!data[field.name]"
+           ng-change="onAttributeChange()">
 </p>
 

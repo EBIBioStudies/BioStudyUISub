@@ -4,15 +4,32 @@ module.exports =
     (function () {
         return ['$log', function ($log) {
             var dict = {
-                "submission": {
-                    "attributes": []
-                },
                 "annotation": {
-                    "type": "Describe your study",
+                    "title": "Describe your study",
                     "attributes": [
                         {"name": "Experiment type", "required": false},
                         {"name": "Keywords", "required": false}
-                    ]
+                    ],
+                    "actions": {
+                        "add": {
+                            "title": "Create",
+                            "popup": "Add publication"
+                        },
+                        "delete": {
+                            "popup": "Delete publication"
+                        },
+                        "edit": {
+                            "popup": "Edit publication"
+                        },
+                        "addAttr": {
+                            "title": "Create description",
+                            "popup": "Describe contact"
+                        },
+                        "deleteAttr": {
+                            "title": "Delete description",
+                            "popup": "Delete description"
+                        }
+                    }
                 },
                 "publication": {
                     "type": "Publication",

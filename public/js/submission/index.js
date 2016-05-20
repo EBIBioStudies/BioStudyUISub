@@ -11,6 +11,7 @@
         .controller('EditSubmissionCtrl', require('./views/editSubmission.ctrl'))
         .controller('PublicationCtrl', require('./views/publication.ctrl'))
         .controller('FileCtrl', require('./views/file.ctrl'))
+        .directive('bsPanel', require('./directives/bsPanel'))
         .directive('bsSectionItem', require('./directives/bsSectionItem'))
         .factory('SubmissionModel', require('./model/submission.model'));
 

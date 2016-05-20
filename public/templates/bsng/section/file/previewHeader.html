@@ -1,5 +1,9 @@
 <div ng-controller="FileCtrl">
-    <select class="form-control" data-ng-model="data[field.name]" name="{{field.name}}" required>
+    <select class="form-control"
+            ng-model="data[field.name]"
+            ng-change="onAttributeChange()"
+            name="{{field.name}}"
+            required>
         <option ng-repeat="item in files" value="{{item}}">
             {{item}}
         </option>

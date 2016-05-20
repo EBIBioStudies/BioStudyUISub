@@ -9,50 +9,52 @@ module.exports =
 
         $scope.title = 'Edit the submission ' + $stateParams.accno;
         $scope.hasError = false;
-
-        var saveInterv = null;
-        var savedSubmission;
-
-        function startSaving(str) {
-            savedSubmission = str;
-            saveInterv = $interval(function () {
-                saveUpdates();
-            }, 3000);
+        $scope.onSubmissionChange = function() {
+            $log.debug("onSubmissionChange()");
         }
 
-        function stopSaving() {
-            if (saveInterv) {
-                $interval.cancel(saveInterv);
-                saveInterv = null;
-            }
+        var timeout = null;
+        var submissionUnwatch = null;
+
+        function watchSubmission(listener) {
+            return $scope.$watchGroup([
+                    'submission.title',
+                    'submission.releaseDate',
+                    'submission.description'], listener);
         }
 
         function saveUpdates() {
-            var currentSubmission = angular.toJson($scope.submission);
-            if (currentSubmission != savedSubmission) {
-                stopSaving();
-                var sbm = $scope.sbm;
-                sbm.data = $scope.submission;
-                SubmissionService.saveSubmission(sbm)
-                    .then(function () {
-                        $log.debug("submission saved");
-                        startSaving(currentSubmission);
-                    });
+            var sbm = $scope.sbm;
+            sbm.data = $scope.submission;
+            console.log("save updates");
+            //SubmissionService.saveSubmission(sbm)
+             //   .then(function () {
+            //        $log.debug("submission saved");
+            //      });
+        }
+
+        function debounceSaveUpdates(newVal, oldVal) {
+            if (newVal != oldVal) {
+                if (timeout) {
+                    $timeout.cancel(timeout)
+                }
+                timeout = $timeout(saveUpdates, 1000);
             }
         }
 
         $scope.$on("$destroy", function () {
-            //saveUpdates();
-            stopSaving();
+            if (submissionUnwatch) {
+                submissionUnwatch();
+                submissionUnwatch = null;
+            }
         });
 
         SubmissionService.getSubmission($stateParams.accno)
             .then(function (sbm) {
 
                 $scope.sbm = sbm;
-                $scope.submission = SubmissionModel.import(sbm.data); // todo SubmissionModel.create()
-
-                //startSaving(angular.toJson($scope.submission));
+                $scope.submission = SubmissionModel.import(sbm.data);
+                submissionUnwatch = watchSubmission(debounceSaveUpdates);
 
             }).catch(function (err) {
             $log.debug('Error data', err);
@@ -119,7 +121,7 @@ module.exports =
         }
 
         $scope.addAnnotation = function () {
-            this.submission.annotations.addNew();
+            this.submission.annotations.items[0].attributes.addNew();
         };
 
         $scope.addFile = function () {

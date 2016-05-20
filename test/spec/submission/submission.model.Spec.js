@@ -18,7 +18,7 @@ describe("SubmissionModel", function () {
         expect(subm.title).toEqual("");
         expect(subm.description).toEqual("");
         expect(subm.releaseDate).toBeNull();
-        expect(subm.annotations.attributes).toEqual([]);
+        expect(subm.annotations.items[0].attributes.attributes).toEqual([]);
         expect(subm.files.items).toEqual([]);
         expect(subm.links.items).toEqual([]);
         expect(subm.contacts.items).toEqual([]);
@@ -32,7 +32,7 @@ describe("SubmissionModel", function () {
         expect(subm.description).toEqual("Study Description");
         expect(subm.releaseDate).toEqual(new Date(2016, 11, 31));
 
-        var anns = subm.annotations.attributes;
+        var anns = subm.annotations.items[0].attributes.attributes;
         expect(anns.length).toEqual(1);
         expect(anns[0].name).toEqual("Ref");
         expect(anns[0].value).toEqual("123456");
@@ -103,7 +103,7 @@ describe("SubmissionModel", function () {
     it('exports description and annotations', function () {
         var subm = SubmissionModel.import({});
         subm.description = "Description";
-        subm.annotations.add(
+        subm.addAnnotation(
             {
                 name: "Annot",
                 value: "Value"
@@ -122,13 +122,14 @@ describe("SubmissionModel", function () {
 
         var imported = SubmissionModel.import(exported);
         expect(imported.description).toEqual(subm.description);
-        expect(imported.annotations.attributes.length).toEqual(subm.annotations.attributes.length);
+        expect(imported.annotations.items[0].attributes.attributes.length)
+            .toEqual(subm.annotations.items[0].attributes.attributes.length);
     });
 
     it('exports files and links', function () {
         var subm = SubmissionModel.import({});
-        subm.files.add("/file", [{name: "Description", value: "File description"}]);
-        subm.links.add("http://example.com", [{name: "Description", value: "Url description"}]);
+        subm.addFile("/file", [{name: "Description", value: "File description"}]);
+        subm.addLink("http://example.com", [{name: "Description", value: "Url description"}]);
 
         var exported = SubmissionModel.export(subm);
         expect(exported.section.files).toBeDefined();
@@ -158,7 +159,7 @@ describe("SubmissionModel", function () {
 
     it('exports contacts', function () {
         var subm = SubmissionModel.import({});
-        subm.contacts.add([
+        subm.addContact([
             {
                 name: "Name",
                 value: "Contact 1"
@@ -192,7 +193,7 @@ describe("SubmissionModel", function () {
 
     it('exports publications', function () {
         var subm = SubmissionModel.import({});
-        subm.publications.add([
+        subm.addPublication([
             {
                 name: "Title",
                 value: "A publication"

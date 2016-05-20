@@ -93,31 +93,38 @@
                         </div>
                     </div>
 
+                    <p></p>
 
                     <div class="col-lg-12 padding-left-none">
-                        <bs-section-item data-ng-model="submission.annotations"
-                                         data-template-url="templates/bsng/sectionItem/bsAnnotation.html"
-                                         data-type="annotation">
-                        </bs-section-item>
+                        <bs-panel
+                                data-ng-model="submission.annotations.items[0]"
+                                data-type="annotation"
+                                data-content-url="templates/bsng/panel/sectionItem_content.html"
+                                data-change="onSubmissionChange()"></bs-panel>
 
-                        <bs-section data-ng-model="submission.contacts"
-                                    data-type="contact">
-                        </bs-section>
+                        <bs-panel
+                                data-ng-model="submission.contacts"
+                                data-type="contact"
+                                data-content-url="templates/bsng/panel/section_content.html"
+                                data-change="onSubmissionChange()"></bs-panel>
 
-                        <bs-section data-ng-model="submission.links"
-                                    data-type="link">
-                        </bs-section>
+                        <bs-panel
+                                data-ng-model="submission.links"
+                                data-type="link"
+                                data-content-url="templates/bsng/panel/section_content.html"
+                                data-change="onSubmissionChange()"></bs-panel>
 
-                        <bs-section data-ng-model="submission.files"
-                                    data-type="file"
-                                    data-preview-header="templates/bsng/section/file/previewHeader.html"
-                                    data-details-header="templates/bsng/section/file/detailsHeader.html">
-                        </bs-section>
+                        <bs-panel
+                                data-ng-model="submission.files"
+                                data-type="file"
+                                data-content-url="templates/bsng/panel/file/section_content.html"
+                                data-change="onSubmissionChange()"></bs-panel>
 
-                        <bs-section data-ng-model="submission.publications"
-                                    data-type="publication">
-                        </bs-section>
-
+                        <bs-panel
+                                data-ng-model="submission.publications"
+                                data-type="publication"
+                                data-content-url="templates/bsng/panel/section_content.html"
+                                data-change="onSubmissionChange()"></bs-panel>
                     </div>
 
                 </form>
