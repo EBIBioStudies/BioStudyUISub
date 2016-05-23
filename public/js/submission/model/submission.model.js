@@ -248,8 +248,8 @@ module.exports =
                 subm = _.assign({}, subm); // a copy
 
                 function copyAttributes(attrs) {
-                    return _.map(attrs, function(attr) {
-                        return {name: attr.name, value:attr.value};
+                    return _.map(attrs, function (attr) {
+                        return {name: attr.name, value: attr.value};
                     });
                 }
 
@@ -290,17 +290,17 @@ module.exports =
                 });
 
                 _.forEach(subm.files.items, function(item) {
-                    var file = {path: item.path, attributes: copyAttributes(item.attributes.items)};
+                    var file = {path: item.path, attributes: copyAttributes(item.attributes.attributes)};
                     out.section.files.push(file);
                 });
 
                 _.forEach(subm.links.items, function(item) {
-                    var link = {url: item.url, attributes: copyAttributes(item.attributes.items)};
+                    var link = {url: item.url, attributes: copyAttributes(item.attributes.attributes)};
                     out.section.links.push(link);
                 });
 
                 _.forEach(subm.publications.items, function(item) {
-                    var subsection = {type: "Publication", attributes: copyAttributes(item.attributes.items)};
+                    var subsection = {type: "Publication", attributes: copyAttributes(item.attributes.attributes)};
                     out.section.subsections.push(subsection);
                 });
 
@@ -308,7 +308,7 @@ module.exports =
                 var organisations = [];
                 var refIndex = 0;
                 _.forEach(subm.contacts.items, function(item) {
-                    var attributes = copyAttributes(item.attributes.items);
+                    var attributes = copyAttributes(item.attributes.attributes);
                     _.forEach(attributes, function(attr) {
                         if (attr.name === "Organisation") {
                             var org = attr.value;
