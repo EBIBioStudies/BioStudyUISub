@@ -12,6 +12,7 @@ module.exports = function () {
         templateUrl: "templates/bsng/panel/panel.html",
         controllerAs: "panelCtrl",
         controller: ['$scope', 'DictionaryService', '_', '$log', function ($scope, DictionaryService, _, $log) {
+            $scope.readOnly = $scope.$parent.$eval('readOnly') || false;
 
             $scope.onDataChange = function () {
                 $log.debug("bsPanel notifyChanges");

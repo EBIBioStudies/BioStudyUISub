@@ -4,7 +4,8 @@
 
     <aside class="left-side sidebar-offcanvas"
            ng-class="{'collapse-left' : uisettings.collapseLeftSide}"
-           style="position: fixed;">
+           style="position: fixed;"
+           ng-if="!readOnly">
 
         <section class="sidebar">
             <ul class="sidebar-menu">
@@ -40,7 +41,7 @@
     <!-- Right side column. Contains the navbar and content of the page -->
     <aside class="right-side" ng-class="{'collapse-left' : uisettings.collapseLeftSide}">
         <div class="panel" ng-class="{'panel-danger': submissionForm.$invalid, 'panel-info':submissionForm.$valid}">
-            <div class="panel-heading"><span>{{title}}</span></div>
+            <div class="panel-heading"><span>{{title}}&nbsp;{{accno}}</span></div>
 
             <!-- Main content -->
             <section id="scrollArea" class="content padding-left-large">
@@ -51,7 +52,8 @@
                             <label class="control-label">Title<span ng-show="submissionForm.title.$dirty && submissionForm.title.$invalid
                                           && submissionForm.title.$error.required">: cannot be blank</span></label>
                             <input type="text" class="form-control" id="title" name="title" placeholder="Enter a title"
-                                   ng-model="submission.title" required>
+                                   ng-model="submission.title" required
+                                   ng-readonly="readOnly">
                         </div>
                     </div>
 
@@ -69,7 +71,8 @@
                                        datepicker-options="dateOptions"
                                        ng-required="true" close-text="Close"
                                        datepicker-append-to-body="true"
-                                       ng-click="open($event)"/>
+                                       ng-click="open($event)"
+                                       ng-readonly="readOnly"/>
                                 <span class="input-group-btn">
                                      <button type="button" class="btn btn-default" ng-click="open($event)">
                                      <i class="fa fa-fw fa-calendar"></i></button>
@@ -89,7 +92,8 @@
                                       tooltip-append-to-body="true"
                                       tooltip-placement="bottom"
                                       tooltip-class="customClass"
-                                      tooltip-enable="submissionForm.description.$invalid"></textarea>
+                                      tooltip-enable="submissionForm.description.$invalid"
+                                      ng-readonly="readOnly"></textarea>
                         </div>
                     </div>
 

@@ -24,6 +24,7 @@ module.exports = function (moduleDirective) {
             },
             controllerAs: 'sectionCtrl',
             controller: ['$scope', '_', '$log', function ($scope, _, $log) {
+                $scope.readOnly = $scope.$parent.$eval('readOnly') || false;
                 $scope.dict = $scope.$parent.dict;
                 $scope.typeaheadKeys = $scope.$parent.typeaheadKeys;
                 $scope.typeaheadValues = $scope.$parent.typeaheadValues;

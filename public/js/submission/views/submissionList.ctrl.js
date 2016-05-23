@@ -6,8 +6,8 @@
 module.exports =
     (function () {
 
-        return ['$scope', '$location', 'SubmissionService', '$uibModal', '$log', 'SubmissionModel',
-            function ($scope, $location, SubmissionService, $uibModal, $log, SubmissionModel) {
+        return ['$scope', '$state', 'SubmissionService', '$uibModal', '$log', 'SubmissionModel',
+            function ($scope, $state, SubmissionService, $uibModal, $log, SubmissionModel) {
 
                 $scope.submissions = [];
                 $scope.selectedSubmission = [];
@@ -22,23 +22,20 @@ module.exports =
                     return $scope.selectedSubmission[0];
                 }
 
-                function startEditing(accno){
-                    $location.url('/edit/' + accno);
+                function startEditing(accno) {
+                    $state.go('submission_edit', {accno: accno});
                 }
 
                 $scope.createSubmission = function () {
                     SubmissionService.createSubmission(SubmissionModel.createSubmission())
-                        .then(function(sbm) {
+                        .then(function (sbm) {
                             startEditing(sbm.accno);
                         });
                 };
 
                 $scope.editSubmission = function (submission) {
                     submission = submission || getFirstSelected();
-                    SubmissionService.editSubmission(submission.accno)
-                        .then(function(sbm) {
-                            startEditing(sbm.accno);
-                        });
+                    startEditing(submission.accno);
                 };
 
                 $scope.deleteSubmission = function (submission) {

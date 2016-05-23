@@ -88,6 +88,12 @@ app
                 controller: 'EditSubmissionCtrl',
                 authenticated: true
             })
+            .state('submission_view', {
+                url: '/view/:accno',
+                templateUrl: 'templates/submission/views/submission.html',
+                controller: 'ViewSubmissionCtrl',
+                authenticated: true
+            })
             .state('files', {
                 url: '/files',
                 templateUrl: 'templates/file/views/files.html',

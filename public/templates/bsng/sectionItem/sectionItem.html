@@ -29,11 +29,12 @@
                    uib-tooltip="Empty or duplicate value" tooltip-class="customClass" tooltip-placement="top-left"
                    tooltip-enable="attrItemForm.attrKey.$invalid"
                    ng-change="onAttributeChange()"
-                   ng-if="!attr.required" autofocus>
+                   ng-if="!attr.required" autofocus
+                   ng-readonly="readOnly">
             <p class="form-control-static pull-right" name="attrKey" ng-if="attr.required">{{attr.name}}</p>
         </td>
         <td class="col-md-9 nopadding border-none form-group-sm" ms-form-group-validator>
-            <p ng-class="{'input-group' : !attr.required}">
+            <p ng-class="{'input-group' : !readOnly && !attr.required}">
                 <input type="text" name="attrValue" ng-model="attr.value"
                        class="form-control input-sm"
                        placeholder="Enter a value"
@@ -44,8 +45,9 @@
                        ng-required="true" uib-tooltip="This field is required" tooltip-class="customClass"
                        tooltip-placement="top-left"
                        tooltip-enable="!attr.value"
-                       ng-change="onAttributeChange()">
-                                <span class="input-group-btn" ng-if="!attr.required">
+                       ng-change="onAttributeChange()"
+                       ng-readonly="readOnly">
+                                <span class="input-group-btn" ng-if="!readOnly && !attr.required">
                                     <button uib-tooltip={{dict.actions.deleteAttr.popup}} type="button"
                                             class="btn btn-sm btn-danger btn-flat"
                                             ng-click="item.attributes.remove(attr)">
@@ -56,15 +58,14 @@
         </td>
     </tr>
 
-    <tr>
-        <td colspan="2" class="">
+    <tr ng-if="!readOnly">
+        <td colspan="2">
             <p class="pull-right">
                 <button class="btn btn-primary btn-xs" ng-click="item.attributes.addNew()"
                         uib-tooltip={{dict.actions.addAttr.popup}}
                         tooltip-append-to-body="true"
                         tooltip-placement="bottom">{{dict.actions.addAttr.title}}
                 </button>
-
             </p>
         </td>
     </tr>

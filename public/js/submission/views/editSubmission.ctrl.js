@@ -4,11 +4,14 @@
 'use strict';
 
 module.exports =
-    function ($rootScope, $scope, $timeout, $interval, $location,
+    function ($rootScope, $scope, $timeout, $location,
               $uibModal, $stateParams, $log, SubmissionModel, SubmissionService, MessageService) {
 
-        $scope.title = 'Edit the submission ' + $stateParams.accno;
+        $scope.title = 'Edit the submission';
+        $scope.accno = ''; 
         $scope.hasError = false;
+        $scope.readOnly = false;
+
         $scope.onSubmissionChange = function() {
             $log.debug("onSubmissionChange()");
             debounceSaveUpdates();
@@ -58,11 +61,12 @@ module.exports =
             }
         });
 
-        SubmissionService.getSubmission($stateParams.accno)
+        SubmissionService.editSubmission($stateParams.accno)
             .then(function (sbm) {
 
                 $scope.sbm = sbm;
                 $scope.submission = SubmissionModel.import(sbm.data);
+                $scope.accno = $scope.sbm.accno;
                 saved = angular.toJson(SubmissionModel.export($scope.submission));
                 submissionUnwatch = watchSubmission(debounceSaveUpdates);
 

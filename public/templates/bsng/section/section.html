@@ -23,7 +23,7 @@
                                 class="btn btn-primary btn-sm" type="button"
                                 ng-click="data.ui.activeTabs[$index]=true"><i class="fa fa-edit"></i></button>
                         <button uib-tooltip={{dict.actions.delete.popup}}
-                                class="btn btn-warning btn-sm" type="button" ng-click="data.remove($index, item)">
+                                class="btn btn-warning btn-sm" type="button" ng-click="data.remove($index, item)" ng-if="!readOnly">
                             <i class="fa fa-trash"></i></button>
                     </td>
                     <td ng-repeat="field in dict.fields" class="form-group-sm row ng-class:data.colSizeCss">
@@ -43,7 +43,8 @@
                                    typeahead-append-to-body="true"
                                    typeahead-show-hint="true"
                                    typeahead-min-length="0"
-                                   ng-change="onAttributeChange()">
+                                   ng-change="onAttributeChange()"
+                                   ng-readonly="readOnly">
                         </div>
                     </td>
                 </tr>
@@ -60,7 +61,8 @@
             <button class="pull-right btn btn-danger btn-xs" ng-click="data.remove($index, item);"
                     uib-tooltip={{dict.actions.delete.popup}}
                     tooltip-append-to-body="true"
-                    tooltip-placement="bottom"><i class="fa fa-lg fa-trash"></i>
+                    tooltip-placement="bottom"
+                    ng-if="!readOnly"><i class="fa fa-lg fa-trash"></i>
             </button>
         </p>
 
