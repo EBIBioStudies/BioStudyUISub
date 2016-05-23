@@ -4,46 +4,37 @@
 
 'use strict';
 
-
-module.exports = function ($compile, $log, SubmissionService, TypeHeadService) {
+module.exports = function ($log) {
     return {
         restrict: 'E',
-        templateUrl: function(elem, attrs) {
-            return attrs.templateName;
-        },
-        transclude: true,
         scope: {
-            submissionView:'=',
-            data:'=ngModel',
-            onDelete: '@',
-            onAdd: '&',
-            onAddAttr: '&',
-            templateName: '@',
-            typeHead: '=',
-            labels: '='
+            item: '=ngModel',
+            changeHandler: '@change'
         },
-        link: function (scope, element, attrs, ctrl) {
+        requires: ['?^^bsSection', '^^bsPanel'],
+        templateUrl: function (elem, attrs) {
+            return attrs.templateUrl;
+        },
+        controllerAs: 'sectionItemCtrl',
+        controller: ['$scope', '$log', function ($scope, $log) {
+            $scope.dict = $scope.$parent.dict;
+            $scope.typeaheadKeys = $scope.$parent.typeaheadKeys;
+            $scope.typeaheadValues = $scope.$parent.typeaheadValues;
 
-
-            scope.typeHeadObj = TypeHeadService[scope.submissionView];
-            scope.deleteItem = function(index, array) {
-                if (array) {
-                    SubmissionService.deleteElement(index, array);
+            var notifyChanges = function () {
+                $log.debug("bsSectionItem notifyChanges");
+                if ($scope.changeHandler) {
+                    $scope.$parent.$eval($scope.changeHandler);
                 }
-
             };
 
-            scope.addAttribute = function(parent) {
-                if (parent) {
-                    SubmissionService.addAttribute.call(parent);
+            $scope.onAttributeChange = notifyChanges;
 
-                }
-
-
-            };
-
-
-        }
+            var unwatch = $scope.$watchCollection('item.attributes.attributes', notifyChanges);
+            $scope.$on('$destroy', function () {
+                $log.debug("bsSectionItem on-destroy");
+                unwatch();
+            });
+        }]
     };
-
 };

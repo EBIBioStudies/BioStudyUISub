@@ -11,7 +11,6 @@ app.factory('ErrorService', require('./ErrorService'));
 
 app.service('EuropePmc', require('./EuropePmc'));
 
-app.service('TypeHeadService', require('./TypeHeadService'));
 app.service('msTreeService', require('./msTreeService'));
 
 app.provider('bsShowErrorsConfig',require('./bsShowErrorsConfig'));

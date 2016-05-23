@@ -3,129 +3,139 @@
  */
 
 'use strict';
-var _ = require('../../../../.build/components/lodash/lodash');
 
 module.exports = function (moduleDirective) {
 
-    moduleDirective.directive('bsSection', function ($compile, $log, SubmissionService, TypeHeadService) {
+    moduleDirective.directive('bsSection', function () {
         return {
             restrict: 'E',
-            templateUrl: function (ell, attr) {
-                if (attr.templateUrl) {
-                    return templateUrl;
-                } else {
-                    return 'templates/bsng/section.html'
-
-                }
+            templateUrl: function (elem, attrs) {
+                return attrs.templateUrl || 'templates/bsng/section/section.html';
             },
+            require: "^^bsPanel",
             scope: {
-                labels: '=',
-                sectionModel: '=',
-                data: '=ngModel'
+                data: '=ngModel',
+                dataType: '@type',
+                changeHandler: '@change'
             },
             bindToController: {
                 previewHeader: '@',
-                previewBody: '@',//not used
-                previewFooter: '@',//not used
-                detailHeader: '@',
-                detailBody: '@',  //not used
-                detailFooter: '@' //not used
-
+                detailsHeader: '@'
             },
-            controllerAs: 'ctrl',
-            controller: function ($scope) {
+            controllerAs: 'sectionCtrl',
+            controller: ['$scope', '_', '$log', function ($scope, _, $log) {
+                $scope.dict = $scope.$parent.dict;
+                $scope.typeaheadKeys = $scope.$parent.typeaheadKeys;
+                $scope.typeaheadValues = $scope.$parent.typeaheadValues;
 
-            },
-            link: function ($scope, element, attrs, ctrl) {
+                var notifyChanges = function () {
+                    $log.debug("bsSection notifyChanges");
+                    if ($scope.changeHandler) {
+                        $scope.$parent.$eval($scope.changeHandler);
+                    }
+                };
 
-                if (!$scope.labels) {
-                    throw new Error('Attribute labels is required');
+                $scope.attributeKeys = [];
+                $scope.colSizeCss= 'col-lg-6';
+
+                function update(obj) {
+                    var attributeKeys = getAttributeKeys(obj);
+                    var colSizeCss = getColSizeCss(obj.fields, attributeKeys);
+
+                    $scope.attributeKeys = attributeKeys;
+                    $scope.colSizeCss = colSizeCss;
                 }
-                /*var keysCount = $scope.data ? Object.keys($scope.data.attributesKey).length : 2;
-                 $scope.computeColumnSize = function () {
-                 if (keysCount > 6) {
-                 return 2;
-                 } else {
-                 return (12 / keysCount);
-                 }
-                 }*/
-                $scope.typeHead = $scope.labels.attributes;
-                //TODO: Find a better way to scale fields in the preview
-                //$scope.previewColSize = $scope.computeColumnSize();
 
-            }
+                function getAttributeKeys(obj) {
+                    var keys = {};
+                    _.forEach(obj.items, function (item) {
+                        _.forEach(item.attributes.attributes, function (attr) {
+                            keys[attr.name] = 1;
+                        });
+                    });
+                    return objProperties(keys);
+                }
+
+                function getColSizeCss(fields, attributeKeys) {
+                    var length = fields.length + attributeKeys.length;
+                    if (length > 6) {
+                        length = 6;
+                    }
+                    return 'col-lg-' + Math.ceil(12 / length);
+                }
+
+                function objProperties(obj) {
+                    var keys = [];
+                    _.forOwn(obj, function(value, key) {
+                        keys.push(key);
+                    });
+                    return keys;
+                }
+
+                $scope.onAttributeChange = function() {
+                    $log.debug("bsSection onAttributeChange");
+                    update($scope.data);
+                    notifyChanges();
+                };
+
+                var unwatch = $scope.$watch('data', function(newValue, oldValue) {
+                    if (newValue === undefined) {
+                        return;
+                    }
+                    update(newValue);
+                    unwatch();
+                });
+
+                var unwatchItems = $scope.$watchCollection('data.items', function(newValue, oldValue) {
+                    if (newValue === undefined) {
+                        return;
+                    }
+                    $log.debug("bsSection collection changed");
+                    update($scope.data);
+                    notifyChanges();
+                });
+
+                $scope.$on('$destroy', function () {
+                    $log.debug("bsSection on-destroy");
+                    unwatchItems();
+                });
+            }]
         };
     });
 
-    moduleDirective.directive('bsReplaceEl', function ($compile, $log) {
+    moduleDirective.directive('bsPreviewHeader', function () {
         return {
-            restrict: 'EA',
+            restrict: 'E',
             require: '^bsSection',
             scope: {
                 data: '=ngModel',
                 field: '=',
-                labels: '='
+                dict: '='
             },
-            link: function ($scope, element, attrs, ctrl) {
-                var templateUrl = element.attr('template-url');
-                var id = element.attr('id');
-                var model = '', elTmp = '';
-                if ($scope.data) {
-                    model = 'ng-model="data"';
-                }
-                if ($scope.field) {
-                    model = model + ' data-field="field"';
-                }
-                if ($scope.labels) {
-                    model = model + ' data-labels="labels"';
-                }
-
-                if (ctrl[id]) {
-                    elTmp = '<bs-preview ' + model + ' template-url=' + ctrl[id] + '></bs-preview>'
-
-                } else {
-                    elTmp = '<bs-preview ' + model + ' template-url=' + templateUrl + '></bs-preview>'
-                }
-                var node = $compile(elTmp)($scope);
-                element.replaceWith(node);
-            }
-        }
-    });
-
-    moduleDirective.directive('bsPreview', function ($compile, $log) {
-        return {
-            restrict: 'EA',
-            require: '^bsSection',
-            priority: 100,
-            //transclude: true,
-            scope: {
-                data: '=ngModel',
-                field: '=',
-                labels: '=',
-                sectionModel: '=',
-                templateUrl: '@',
-
-            },
-            templateUrl: function (elem, attr) {
-                if (!attr.templateUrl)
-                    return "templates/bssection/bsPreview.html";
-                return attr.templateUrl;
+            template: "<ng-include src='template'></ng-include>",
+            link: function (scope, element, attrs, ctrl) {
+                scope.template = ctrl.previewHeader || 'templates/bsng/section/previewHeader.html';
+                scope.onAttributeChange = scope.$parent.onAttributeChange;
             }
         };
 
     });
 
-
-    moduleDirective.directive('bsColSize', function ($compile, $log) {
+    moduleDirective.directive('bsDetailsHeader', function () {
         return {
-            restrict: 'AC',
+            restrict: 'E',
             require: '^bsSection',
-            scoep: {
-                data: '=ngModel'
+            scope: {
+                data: '=ngModel',
+                field: '=',
+                dict: '='
             },
-            link: function ($scope, element, attrs, ctrl) {
+            template: "<ng-include src='template'></ng-include>",
+            link: function (scope, element, attrs, ctrl) {
+                scope.template = ctrl.detailsHeader || 'templates/bsng/section/detailsHeader.html';
+                scope.onAttributeChange = scope.$parent.onAttributeChange;
             }
-        }
+        };
     });
 
     moduleDirective.filter('filterAttrs', function () {
@@ -139,22 +149,21 @@ module.exports = function (moduleDirective) {
             }
             return ret;
         };
-
     });
 
-    moduleDirective.filter("filterAttrsTypeHead", function ($filter) {
+    moduleDirective.filter("filterAttrsTypeahead", function () {
         return function (fieldValueUnused, array, existedKeys) {
-            var typeHead = [];
+            var typeahead = [];
             for (var i in array) {
                 var index = _.findIndex(existedKeys, {name: array[i].name})
                 if (index === -1) {
-                    typeHead.push(array[i]);
+                    typeahead.push(array[i]);
                 }
             }
-            return typeHead;
+            return typeahead;
         };
     });
-    
+
     moduleDirective.directive('bsWatch', function () {
         return {
             restrict: 'A',
@@ -162,21 +171,18 @@ module.exports = function (moduleDirective) {
             scope: {
                 bsWatch: '='
             },
-            link: function ($scope, element, attrs, ctrl) {
-                console.log('bs', $scope, attrs, ctrl);
-                /*$scope.$watch('bsWatch', function(oldVal, newVal) {
-                 console.log('bsWatch',ctrl, oldVal, newVal);
-                 });*/
+            link: function (scope, element, attrs, ctrl) {
+                console.log('bs', scope, attrs, ctrl);
             }
         }
     });
-    
-    moduleDirective.filter("filterDifference", function ($filter) {
+
+    moduleDirective.filter("filterDifference", function () {
         return function (fieldValueUnused, array, existedKeys) {
             return _.differenceBy(array, existedKeys, 'name');
         };
     });
-    
+
 };
 
 

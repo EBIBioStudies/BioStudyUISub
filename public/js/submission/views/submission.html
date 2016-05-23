@@ -9,28 +9,23 @@
         <section class="sidebar">
             <ul class="sidebar-menu">
                 <bs-ng-toggle></bs-ng-toggle>
-                <li class="success" bs-ng-item data-bs-click="addAnnotation(submHelper.section.annotations)"
+                <li class="success" bs-ng-item data-bs-click="addAnnotation();"
                     data-toggle="uisettings.collapseLeftSide" data-item-text="Describe your study"
                     data-item-class="fa-comment-o">
                 </li>
-                <li class="success" bs-ng-item data-bs-click="add(submHelper.section.files, 'files');"
+                <li class="success" bs-ng-item data-bs-click="addFile();"
                     data-toggle="uisettings.collapseLeftSide" data-item-text="Add a file" data-item-class="fa-file-o">
                 </li>
-                <li class="success" bs-ng-item data-bs-click="add(submHelper.section.subsection.contacts,'contacts');"
+                <li class="success" bs-ng-item data-bs-click="addContact();"
                     data-toggle="uisettings.collapseLeftSide" data-item-text="Add a contact"
                     data-item-class="fa-user">
                 </li>
-                <li class="success" bs-ng-item data-bs-click="add(submHelper.section.links,'links');"
+                <li class="success" bs-ng-item data-bs-click="addLink();"
                     data-toggle="uisettings.collapseLeftSide" data-item-text="Add a link" data-item-class="fa-link">
                 </li>
-                <li class="success" bs-ng-item
-                    data-bs-click="add(submHelper.section.subsection.publications,'publications');"
+                <li class="success" bs-ng-item data-bs-click="addPublication();"
                     data-toggle="uisettings.collapseLeftSide" data-item-text="Add a publication"
                     data-item-class="fa-book">
-                </li>
-                <li class="info" bs-ng-item data-bs-click="save(submissionForm)" ng-if="mode=='ADD'"
-                    data-toggle="uisettings.collapseLeftSide" data-item-text="Save the submission"
-                    data-item-class="fa-save">
                 </li>
                 <li class="warning" bs-ng-item data-bs-click="submit(submissionForm)"
                     data-toggle="uisettings.collapseLeftSide" data-item-text="Submit the submission"
@@ -44,35 +39,19 @@
     </aside>
     <!-- Right side column. Contains the navbar and content of the page -->
     <aside class="right-side" ng-class="{'collapse-left' : uisettings.collapseLeftSide}">
-        <!-- Content Header (Page header)
-        <section class="content-header">
-            <h1 class="small" ng-bind="title">
-
-            </h1>
-            <ol class="breadcrumb">
-                <li><a href="#/submissions"><i class="fa fa-dashboard"></i> Submissions</a></li>
-                <li class="active">{{title}}</li>
-            </ol>
-        </section>-->
         <div class="panel" ng-class="{'panel-danger': submissionForm.$invalid, 'panel-info':submissionForm.$valid}">
-            <div class="panel-heading"><span>{{title}}</span>
-                <!--<p>Data</p>{{submHelper.section.annotations.model[0]}}
-                <p>Data</p>{{submHelper.section.annotations.attributes[0]}}
-                -->
-            </div>
+            <div class="panel-heading"><span>{{title}}</span></div>
 
             <!-- Main content -->
             <section id="scrollArea" class="content padding-left-large">
                 <form class="form-horizontal" autocomplete="off" novalidate role="form"
                       method="post" name="submissionForm">
                     <div class="form-group row margin-bottom-small padding-right-15" ms-form-group-validator>
-
                         <div class="col-sm-12 ">
-                            <label class="control-label" for="title">Title<span ng-show="submissionForm.title.$dirty && submissionForm.title.$invalid
+                            <label class="control-label">Title<span ng-show="submissionForm.title.$dirty && submissionForm.title.$invalid
                                           && submissionForm.title.$error.required">: cannot be blank</span></label>
                             <input type="text" class="form-control" id="title" name="title" placeholder="Enter a title"
-                                   required
-                                   ng-model="submHelper.attributes.Title.value.value" required>
+                                   ng-model="submission.title" required>
                         </div>
                     </div>
 
@@ -86,82 +65,78 @@
                             <p class="input-group margin-bottom-none">
                                 <input type="text" name="releaseDate" class="form-control"
                                        uib-datepicker-popup="dd.MM.yyyy"
-                                       ng-model="submHelper.attributes.ReleaseDate.value.value" is-open="opened"
+                                       ng-model="submission.releaseDate" is-open="opened"
                                        datepicker-options="dateOptions"
                                        ng-required="true" close-text="Close"
                                        datepicker-append-to-body="true"
                                        ng-click="open($event)"/>
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="open($event)">
-                            <i class="fa fa-fw fa-calendar"></i></button>
-                        </span>
+                                <span class="input-group-btn">
+                                     <button type="button" class="btn btn-default" ng-click="open($event)">
+                                     <i class="fa fa-fw fa-calendar"></i></button>
+                                </span>
                             </p>
                         </div>
-                </div>
-                <div class="form-group row margin-bottom-small padding-right-15" ng-class="{'has-error':sectionAttrForm.title1.$invalid }" ng-form name="sectionAttrForm"
-                     ng-repeat="attr in submHelper.section.annotations.attributes | filter:{require: true}">
-                    <div class="col-sm-12 ">
-                        <label class="control-label">{{attr.value.name}}<span ng-show="sectionAttrForm.title1.$dirty && sectionAttrForm.title1.$invalid
-                                          && sectionAttrForm.title1.$error.required">: cannot be blank</span></label>
-                            <input type="text" class="form-control" name="title1" placeholder="Enter a {{attr.value.name}}" required
-                                   ng-model="attr.value.value" required ng-if="attr.value.name !=='Description'">
-                           <textarea name="title1" ng-model="attr.value.value" class="form-control input-sm"
-                                     required
-                                     uib-tooltip="Empty value"
-                                     tooltip-append-to-body="true"
-                                     tooltip-placement="bottom"
-                                     tooltip-class="customClass"
-                                     tooltip-enable="atrForm.attrValue.$invalid"
-                                     ng-if="attr.value.name ==='Description'"></textarea>
+                    </div>
+                    <div class="form-group row margin-bottom-small padding-right-15"
+                         ng-class="{'has-error':submissionForm.description.$invalid }">
+                        <div class="col-sm-12 ">
+                            <label class="control-label">Description<span ng-show="submissionForm.description.$dirty && submissionForm.description.$invalid
+                                          && submissionForm.description.$error.required">: cannot be blank</span></label>
+                            <textarea id="description" name="description" class="form-control input-sm"
+                                      ng-model="submission.description"
+                                      required
+                                      uib-tooltip="Empty value"
+                                      tooltip-append-to-body="true"
+                                      tooltip-placement="bottom"
+                                      tooltip-class="customClass"
+                                      tooltip-enable="submissionForm.description.$invalid"></textarea>
                         </div>
                     </div>
 
+                    <p></p>
 
-        <div class="col-lg-12 padding-left-none">
-            <bs-section-item id="annotations" ng-model="submHelper.section.annotations"
-                             data-template-name="templates/bsng/section/bsAnnotation.html"
-                             type-head="keys.annotation"
-                             data-labels="keys.annotation"
-                             data-on-delete="deleteAnnotation"
-                             data-on-add="addAnnotation(submHelper.section.annotations)">
-            </bs-section-item>
+                    <div class="col-lg-12 padding-left-none">
+                        <bs-panel
+                                data-ng-model="submission.annotations.items[0]"
+                                data-type="annotation"
+                                data-content-url="templates/bsng/panel/sectionItem_content.html"
+                                data-change="onSubmissionChange()"></bs-panel>
 
-            <bs-section id="contacts" ng-model="submHelper.section.subsection.contacts"
-                        data-labels="keys.contact"
-                        data-filter-type="Contact"
-                        data-preview-header="templates/bsng/section_part/contact/previewHeader.html"
-                        data-detail-header="templates/bsng/section_part/contact/detailHeader.html">
-            </bs-section>
+                        <bs-panel
+                                data-ng-model="submission.contacts"
+                                data-type="contact"
+                                data-content-url="templates/bsng/panel/section_content.html"
+                                data-change="onSubmissionChange()"></bs-panel>
 
-            <bs-section id="links" ng-model="submHelper.section.links"
-                        data-labels="keys.link">
-            </bs-section>
+                        <bs-panel
+                                data-ng-model="submission.links"
+                                data-type="link"
+                                data-content-url="templates/bsng/panel/section_content.html"
+                                data-change="onSubmissionChange()"></bs-panel>
 
-            <bs-section id="files" ng-model="submHelper.section.files"
-                        data-labels="keys.file"
-                        data-dynamic="true"
-                        data-preview-header="templates/bsng/section_part/file/previewHeader.html"
-                        data-detail-header="templates/bsng/section_part/file/detailHeader.html">
-            </bs-section>
-            <bs-section id="publications" ng-model="submHelper.section.subsection.publications"
-                            data-labels="keys.publication"
-                        data-filter-type="Publication">
+                        <bs-panel
+                                data-ng-model="submission.files"
+                                data-type="file"
+                                data-content-url="templates/bsng/panel/file/section_content.html"
+                                data-change="onSubmissionChange()"></bs-panel>
 
-            </bs-section>
+                        <bs-panel
+                                data-ng-model="submission.publications"
+                                data-type="publication"
+                                data-content-url="templates/bsng/panel/section_content.html"
+                                data-change="onSubmissionChange()"></bs-panel>
+                    </div>
 
+                </form>
 
-        </div>
-
-        </form>
-
-        </section>
-        <!-- /.content -->
-        <div class="panel-footer navbar-fixed-bottom">
-        </div>
+            </section>
+            <!-- /.content -->
+            <div class="panel-footer navbar-fixed-bottom">
+            </div>
         </div>
 
     </aside>
-<!-- /.right-side -->
+    <!-- /.right-side -->
 </div>
 
 

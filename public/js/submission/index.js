@@ -2,23 +2,18 @@
 
 (function () {
 
-    var SubmissionModel = require('./model/SubmissionModel');
-    var ModuleHelper = require('./model/modelHelper2');
-
     var app = angular.module('BioStudyApp');
 
     app
         .factory('SubmissionService', require('./submission.service'))
-        .service('submissionDecorator', require('./views/submissionDecorator'))
+        .service('DictionaryService', require('./dictionary.service'))
         .controller('SubmissionListCtrl', require('./views/submissionList.ctrl'))
         .controller('EditSubmissionCtrl', require('./views/editSubmission.ctrl'))
         .controller('PublicationCtrl', require('./views/publication.ctrl'))
         .controller('FileCtrl', require('./views/file.ctrl'))
+        .directive('bsPanel', require('./directives/bsPanel'))
         .directive('bsSectionItem', require('./directives/bsSectionItem'))
-        .factory('SubmissionModel', function () {
-            return SubmissionModel;
-        })
-        .service('ModelHelper', ModuleHelper);
+        .factory('SubmissionModel', require('./model/submission.model'));
 
 
     require('./directives/bsSection')(app);

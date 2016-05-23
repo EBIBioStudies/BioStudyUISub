@@ -86,7 +86,6 @@ gulp.task('copy', ['clean'], function(cb) {
 
 });
 
-
 gulp.task('jshint', function () {
   return gulp.src('public/js/services/*.js')
     .pipe(jshint('.jshintrc'))
@@ -143,34 +142,6 @@ gulp.task('ejs', ['clean'], function() {
     .pipe(gulp.dest(envHelper.copyToPath ));
 });
 
-var jasmine = require('gulp-jasmine');
-var reporters = require('jasmine-reporters');
-
-gulp.task('unit:js', function() {
-  gulp.src(["shared/model/*.Spec.js","public/js/model/*.Spec.js"])
-    .pipe(jasmine({verbose: true,includeStackTrace: true
-
-    }));
-});
-
-var karma = require('karma').server;
-var ROOT = require('./tasks/gulp/const').ROOT;
-gulp.task('unit:public', function() {
-  var karmaConfig = {
-    logLevel: 'warn',
-    singleRun: true,
-    autoWatch: false,
-    configFile: ROOT + '/tests/karma.conf.js'
-  };
-
-  function captureError(next,done) {
-    gutil.log('Running unit tests on unminified source.');
-  }
-
-  gutil.log('Running unit tests on unminified source.');
-  karma.start(karmaConfig, captureError());
-});
-
 gulp.task('zip', function () {
     gulp.src([".build/**/*.*"])
         .pipe(zip('ui.zip'))
@@ -198,5 +169,28 @@ gutil.log('Deploy client to ',envHelper.copyToPath);
 
 gulp.task('default', ['clean', 'bower', 'copy', 'html2js', 'jshint', 'styles', 'js', 'ejs']);
 
+
+var karma = require('gulp-karma');
+
+gulp.task('test', function() {
+    // Be sure to return the stream
+    // NOTE: Using the fake './foobar' so as to run the files
+    // listed in karma.conf.js INSTEAD of what was passed to
+    // gulp.src !
+    return gulp.src('./foobar')
+        .pipe(karma({
+            configFile: 'karma.conf.js',
+            action: 'run'
+        }))
+        .on('error', function(err) {
+            // Make sure failed tests cause gulp to exit non-zero
+            console.log(err);
+            this.emit('end'); //instead of erroring the stream, end it
+        });
+});
+
+gulp.task('autotest', function() {
+    return gulp.watch(['public/js/**/*.js', 'test/spec/*.js'], ['test']);
+});
 
 
