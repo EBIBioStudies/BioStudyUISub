@@ -1,38 +1,6 @@
 <ng-include src="'templates/partials/header.html'"></ng-include>
 
 <div class="wrapper row-offcanvas row-offcanvas-left">
-    <!--<aside class="left-side sidebar-offcanvas"
-           ng-class="{'collapse-left' : uisettings.collapseLeftSide}"
-           style="position: fixed;">
-
-        <section class="sidebar">
-            <ul class="sidebar-menu">
-                <bs-ng-toggle></bs-ng-toggle>
-                <li class="success" bs-ng-item
-                    data-item-href="#/addsubmission"
-                    data-toggle="uisettings.collapseLeftSide" data-item-text="Add a new submission"
-                    data-item-class="fa-plus">
-                </li>
-                <li class="success" bs-ng-item
-                    ng-show="selectedSubmission.length>0"
-                    data-bs-click="editSubmission()"
-                    data-toggle="uisettings.collapseLeftSide"
-                    data-item-text="Edit the submission"
-                    data-item-class="fa-pencil">
-                </li>
-
-                <li class="danger" bs-ng-item
-                    data-bs-click="deleteSubmission(selectedSubmission)"
-                    data-toggle="uisettings.collapseLeftSide" data-item-text="Delete the submission"
-                    data-item-class="fa-trash-o">
-                </li>
-
-
-            </ul>
-
-        </section>
-
-    </aside>-->
 
     <!-- Right side column. Contains the navbar and content of the page -->
     <aside class="right-side strech">
@@ -57,7 +25,6 @@
                            tooltip-append-to-body="true"
                            tooltip-placement="bottom">Create a new submission
                         </a>
-
                     </p>
 
                 </div>
@@ -100,6 +67,11 @@
                             <button type="button" class="btn btn-danger btn-xs btn-flat"
                                     ng-click="deleteSubmission(gridItem)">
                                 <i class="fa fa-trash-o fa-fw"></i>
+                            </button>
+                            <button type="button" class="btn btn-info btn-xs btn-flat"
+                                    ng-click="viewSubmission(gridItem)"
+                                    ng-if="gridItem.submitted">
+                                <i class="fa fa-eye fa-fw"></i>
                             </button>
                             <button type="button" class="btn btn-primary btn-xs btn-flat"
                                     ng-click="editSubmission(gridItem)">

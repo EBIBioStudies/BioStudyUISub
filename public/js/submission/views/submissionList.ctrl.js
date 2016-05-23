@@ -38,6 +38,11 @@ module.exports =
                     startEditing(submission.accno);
                 };
 
+                $scope.viewSubmission = function (submission) {
+                    submission = submission || getFirstSelected();
+                    $state.go('submission_view', {accno: submission.accno});
+                };
+
                 $scope.deleteSubmission = function (submission) {
                     var modalInstance = $uibModal.open({
                         controller: 'MessagesCtrl',
