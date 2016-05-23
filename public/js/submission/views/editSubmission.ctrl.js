@@ -83,19 +83,19 @@ module.exports =
             SubmissionService.submitSubmission(sbm)
                 .then(function (data) {
                     if (data.status === "OK") {
-                        showSubmitSuccess(data);
+                        showSubmitSuccess();
                     } else {
-                        var log = angular.toJson(data, true);
-                        showSubmitError(log);
+                        $log.debug("failed to submit", data);
+                        showSubmitError(data);
                     }
                 }).catch(function (err, status) {
                 showSubmitError('Server error ' + status + ' ' + err);
             });
         };
 
-        function showSubmitSuccess(data) {
+        function showSubmitSuccess() {
             var acc = $scope.submission.accno;
-            MessageService.addMessage('Submission ' + acc + ' updated.');
+            MessageService.addMessage('Submission ' + acc + ' submitted.');
 
             var modalInstance = $uibModal.open({
                 controller: 'MessagesCtrl',
@@ -114,10 +114,10 @@ module.exports =
         }
 
         function showSubmitError(data) {
-            MessageService.addMessage(data);
+            MessageService.addMessage('Failed to submit.');
             var modalInstance = $uibModal.open({
                 controller: 'MessagesCtrl',
-                templateUrl: 'templates/partials/successDialog.html',
+                templateUrl: 'templates/partials/errorDialog.html',
                 backdrop: true,
                 size: 'lg'
             });
