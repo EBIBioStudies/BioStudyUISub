@@ -17,4 +17,8 @@ module.exports =
             $log.debug('Error data', err);
             $state.go('error');
         });
+
+        $scope.editSubmission = function() {
+           $state.go('submission_edit', {accno: $scope.accno});
+        };
     };

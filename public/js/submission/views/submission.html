@@ -41,7 +41,16 @@
     <!-- Right side column. Contains the navbar and content of the page -->
     <aside class="right-side" ng-class="{'collapse-left' : uisettings.collapseLeftSide}">
         <div class="panel" ng-class="{'panel-danger': submissionForm.$invalid, 'panel-info':submissionForm.$valid}">
-            <div class="panel-heading"><span>{{title}}&nbsp;{{accno}}</span></div>
+            <div class="panel-heading">
+                <span>{{title}}&nbsp;{{accno}}</span>
+                <p class="pull-right" ng-if="readOnly">
+                    <a class="pull-right btn btn-success btn-xs" ng-click="editSubmission()"
+                       uib-tooltip="Create a new submission"
+                       tooltip-append-to-body="true"
+                       tooltip-placement="bottom">Edit a copy
+                    </a>
+                </p>
+            </div>
 
             <!-- Main content -->
             <section id="scrollArea" class="content padding-left-large">
