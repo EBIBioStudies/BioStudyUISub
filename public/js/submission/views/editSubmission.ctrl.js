@@ -77,9 +77,11 @@ module.exports =
                 $log.debug('Validation error', $scope.submissionForm);
                 return;
             }
-            $log.debug('Submit data', $scope.submission);
+
             var sbm = $scope.sbm;
-            sbm.data = $scope.submission;
+            sbm.data = SubmissionModel.export($scope.submission);
+            $log.debug('Submit data', sbm);
+
             SubmissionService.submitSubmission(sbm)
                 .then(function (data) {
                     if (data.status === "OK") {
