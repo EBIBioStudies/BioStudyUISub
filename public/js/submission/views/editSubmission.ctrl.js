@@ -11,9 +11,11 @@ module.exports =
         $scope.hasError = false;
         $scope.onSubmissionChange = function() {
             $log.debug("onSubmissionChange()");
+            debounceSaveUpdates();
         }
 
         var timeout = null;
+        var saved = null;
         var submissionUnwatch = null;
 
         function watchSubmission(listener) {
@@ -24,22 +26,29 @@ module.exports =
         }
 
         function saveUpdates() {
-            var sbm = $scope.sbm;
-            sbm.data = $scope.submission;
-            console.log("save updates");
-            //SubmissionService.saveSubmission(sbm)
-             //   .then(function () {
-            //        $log.debug("submission saved");
-            //      });
+            $log.debug("saveUpdatess()");
+            var exported = SubmissionModel.export($scope.submission);
+            var exportedJson = angular.toJson(exported);
+            if (saved !== exportedJson) {
+                $log.debug("saved: " + saved);
+                $log.debug("exported: " + exportedJson);
+                var sbm = $scope.sbm;
+                sbm.data = exported;
+                SubmissionService.saveSubmission(sbm)
+                    .then(function () {
+                        $log.debug("submission saved");
+                        saved = exportedJson;
+                    });
+            } else {
+                $log.debug("all saved already");
+            }
         }
 
         function debounceSaveUpdates(newVal, oldVal) {
-            if (newVal != oldVal) {
-                if (timeout) {
-                    $timeout.cancel(timeout)
-                }
-                timeout = $timeout(saveUpdates, 1000);
+            if (timeout) {
+                $timeout.cancel(timeout)
             }
+            timeout = $timeout(saveUpdates, 1000);
         }
 
         $scope.$on("$destroy", function () {
@@ -54,6 +63,7 @@ module.exports =
 
                 $scope.sbm = sbm;
                 $scope.submission = SubmissionModel.import(sbm.data);
+                saved = angular.toJson(SubmissionModel.export($scope.submission));
                 submissionUnwatch = watchSubmission(debounceSaveUpdates);
 
             }).catch(function (err) {
