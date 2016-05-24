@@ -79,11 +79,17 @@ module.exports =
                 return defer.promise;
             }
 
-            function deleteSubmission(accno) {
+            function deleteSubmission(accno, copyOnly) {
+                var url = copyOnly === true ? "/api/submission/tmp/" : "/api/submission/";
+
                 var defer = $q.defer();
-                $http.delete("/api/submission/" + accno)
+                $http.delete(url + accno)
                     .success(function (data) {
-                        defer.resolve(data);
+                        if (data.status === "OK") {
+                            defer.resolve(data);
+                        } else {
+                            defer.reject("delete error", data.status);
+                        }
                     })
                     .error(function (err, status) {
                         defer.reject(err, status);

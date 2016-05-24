@@ -4,11 +4,14 @@
 'use strict';
 
 module.exports =
-    function ($rootScope, $scope, $timeout, $interval, $location,
+    function ($rootScope, $scope, $timeout, $state,
               $uibModal, $stateParams, $log, SubmissionModel, SubmissionService, MessageService) {
 
-        $scope.title = 'Edit the submission ' + $stateParams.accno;
+        $scope.title = 'Edit the submission';
+        $scope.accno = ''; 
         $scope.hasError = false;
+        $scope.readOnly = false;
+
         $scope.onSubmissionChange = function() {
             $log.debug("onSubmissionChange()");
             debounceSaveUpdates();
@@ -58,17 +61,18 @@ module.exports =
             }
         });
 
-        SubmissionService.getSubmission($stateParams.accno)
+        SubmissionService.editSubmission($stateParams.accno)
             .then(function (sbm) {
 
                 $scope.sbm = sbm;
                 $scope.submission = SubmissionModel.import(sbm.data);
+                $scope.accno = $scope.sbm.accno;
                 saved = angular.toJson(SubmissionModel.export($scope.submission));
                 submissionUnwatch = watchSubmission(debounceSaveUpdates);
 
             }).catch(function (err) {
             $log.debug('Error data', err);
-            $location.url('/error');
+            $state.go('error');
         });
 
         $scope.submit = function () {
@@ -112,6 +116,7 @@ module.exports =
             }, 6000);
             modalInstance.result.then(function () {
                 MessageService.clearMessages();
+                $state.go('submissions');
             });
         }
 
@@ -150,5 +155,11 @@ module.exports =
 
         $scope.addPublication = function () {
             this.submission.publications.addNew();
+        };
+
+        $scope.openDatePicker = function ($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            $scope.opened = true;
         };
     };

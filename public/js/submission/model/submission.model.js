@@ -265,6 +265,7 @@ module.exports =
                 var out = {
                     accno: subm.accno || "",
                     type: "Submission",
+                    //accessTags:["Public"], // public submission??
                     attributes: [
                         {
                             name: "Title",
@@ -332,7 +333,12 @@ module.exports =
                 return out;
             }
 
+            function createNew() {
+                return exportSubmission(importSubmission({}));
+            }
+
             return {
+                create: createNew,
                 import: importSubmission,
                 export: exportSubmission
             }
