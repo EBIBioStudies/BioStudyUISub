@@ -333,7 +333,12 @@ module.exports =
                 return out;
             }
 
+            function createNew() {
+                return exportSubmission(importSubmission({}));
+            }
+
             return {
+                create: createNew,
                 import: importSubmission,
                 export: exportSubmission
             }

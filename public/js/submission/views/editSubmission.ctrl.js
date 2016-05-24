@@ -4,7 +4,7 @@
 'use strict';
 
 module.exports =
-    function ($rootScope, $scope, $timeout, $location,
+    function ($rootScope, $scope, $timeout, $state,
               $uibModal, $stateParams, $log, SubmissionModel, SubmissionService, MessageService) {
 
         $scope.title = 'Edit the submission';
@@ -72,7 +72,7 @@ module.exports =
 
             }).catch(function (err) {
             $log.debug('Error data', err);
-            $location.url('/error');
+            $state.go('error');
         });
 
         $scope.submit = function () {
@@ -116,6 +116,7 @@ module.exports =
             }, 6000);
             modalInstance.result.then(function () {
                 MessageService.clearMessages();
+                $state.go('submissions');
             });
         }
 
@@ -154,5 +155,11 @@ module.exports =
 
         $scope.addPublication = function () {
             this.submission.publications.addNew();
+        };
+
+        $scope.openDatePicker = function ($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            $scope.opened = true;
         };
     };
