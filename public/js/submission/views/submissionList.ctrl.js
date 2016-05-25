@@ -39,12 +39,17 @@ module.exports =
                     $state.go('submission_view', {accno: submission.accno});
                 };
 
-                $scope.deleteSubmission = function (submission, copyOnly) {
+                $scope.revertSubmission = function(submission) {
+                    $scope.deleteSubmission(submission, 'Discard all changes for the submission ' + submission.accno + '?');
+                };
+
+                $scope.deleteSubmission = function (submission, message) {
+                    message = message || 'Delete submission ' + submission.accno + '?';
                     ModalDialogs
-                        .confirm(['You are going to delete the submission. Are you sure ?'])
+                        .confirm([message])
                         .then(function () {
                             SubmissionService
-                                .deleteSubmission(submission.accno, copyOnly)
+                                .deleteSubmission(submission.accno)
                                 .then(function (data) {
                                     loadSubmissions();
                                 })

@@ -79,11 +79,9 @@ module.exports =
                 return defer.promise;
             }
 
-            function deleteSubmission(accno, copyOnly) {
-                var url = copyOnly === true ? "/api/submission/tmp/" : "/api/submission/";
-
+            function deleteSubmission(accno) {
                 var defer = $q.defer();
-                $http.delete(url + accno)
+                $http.delete( "/api/submission/" + accno)
                     .success(function (data) {
                         if (data.status === "OK") {
                             defer.resolve(data);

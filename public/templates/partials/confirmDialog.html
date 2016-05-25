@@ -1,6 +1,8 @@
 <div class="modal-body padding-none">
-    <div class="alert alert-danger margin-none">
-        <p>You are going to delete the submission. Are you sure ?</p>
+    <div ng-repeat="message in messages">
+        <div class="alert alert-danger margin-none">
+            <p>{{message}}</p>
+        </div>
     </div>
 </div>
 <div class="modal-footer">
