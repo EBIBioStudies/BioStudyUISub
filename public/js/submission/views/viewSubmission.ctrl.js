@@ -7,9 +7,8 @@ module.exports =
         $scope.accno = '';
         $scope.readOnly = true;
 
-        SubmissionService.getSubmission($stateParams.accno)
+        SubmissionService.getSubmittedSubmission($stateParams.accno)
             .then(function (sbm) {
-
                 $scope.submission = SubmissionModel.import(sbm.data);
                 $scope.accno = sbm.accno;
 

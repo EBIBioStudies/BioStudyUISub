@@ -19,9 +19,9 @@ module.exports =
                 return defer.promise;
             }
 
-            function getSubmission(accno) {
+            function getSubmission(accno, origin) {
                 var defer = $q.defer();
-                $http.get("/api/submission/" + accno)
+                $http.get("/api/submission/" + accno, {params: {origin: origin === true}})
                     .success(function (data) {
                         defer.resolve(data);
                     })
@@ -98,6 +98,9 @@ module.exports =
             return {
                 getAllSubmissions: getSubmissionList,
                 getSubmission: getSubmission,
+                getSubmittedSubmission: function(submission) {
+                    return getSubmission(submission, true);
+                },
                 saveSubmission: saveSubmission,
                 submitSubmission: submitSubmission,
                 deleteSubmission: deleteSubmission,
