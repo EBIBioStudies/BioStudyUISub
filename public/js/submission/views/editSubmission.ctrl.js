@@ -101,7 +101,7 @@ module.exports =
 
         function showSubmitSuccess() {
             var acc = $scope.submission.accno;
-            MessageService.addMessage('Submission ' + acc + ' submitted.');
+            MessageService.addMessage('Submission ' + acc + ' has been submitted successfully.');
 
             var modalInstance = $uibModal.open({
                 controller: 'MessagesCtrl',
