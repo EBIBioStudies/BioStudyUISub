@@ -6,8 +6,8 @@
 module.exports =
     (function () {
 
-        return ['$scope', '$state', 'SubmissionService', '$uibModal', '$log', 'SubmissionModel',
-            function ($scope, $state, SubmissionService, $uibModal, $log, SubmissionModel) {
+        return ['$scope', '$state', 'SubmissionService', '$log', 'SubmissionModel', 'ModalDialogs',
+            function ($scope, $state, SubmissionService, $log, SubmissionModel, ModalDialogs) {
 
                 $scope.submissions = [];
                 $scope.selectedSubmission = [];
@@ -39,18 +39,17 @@ module.exports =
                     $state.go('submission_view', {accno: submission.accno});
                 };
 
-                $scope.deleteSubmission = function (submission, copyOnly) {
-                    var modalInstance = $uibModal.open({
-                        controller: 'MessagesCtrl',
-                        templateUrl: 'templates/partials/confirmDialog.html',
-                        backdrop: true,
-                        size: 'lg'
-                    });
+                $scope.revertSubmission = function(submission) {
+                    $scope.deleteSubmission(submission, 'Discard all changes for the submission ' + submission.accno + '?');
+                };
 
-                    modalInstance.result
+                $scope.deleteSubmission = function (submission, message) {
+                    message = message || 'Delete submission ' + submission.accno + '?';
+                    ModalDialogs
+                        .confirm([message])
                         .then(function () {
                             SubmissionService
-                                .deleteSubmission(submission.accno, copyOnly)
+                                .deleteSubmission(submission.accno)
                                 .then(function (data) {
                                     loadSubmissions();
                                 })

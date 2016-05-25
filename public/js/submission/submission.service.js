@@ -19,9 +19,9 @@ module.exports =
                 return defer.promise;
             }
 
-            function getSubmission(accno) {
+            function getSubmission(accno, origin) {
                 var defer = $q.defer();
-                $http.get("/api/submission/" + accno)
+                $http.get("/api/submission/" + accno, {params: {origin: origin === true}})
                     .success(function (data) {
                         defer.resolve(data);
                     })
@@ -79,11 +79,9 @@ module.exports =
                 return defer.promise;
             }
 
-            function deleteSubmission(accno, copyOnly) {
-                var url = copyOnly === true ? "/api/submission/tmp/" : "/api/submission/";
-
+            function deleteSubmission(accno) {
                 var defer = $q.defer();
-                $http.delete(url + accno)
+                $http.delete( "/api/submission/" + accno)
                     .success(function (data) {
                         if (data.status === "OK") {
                             defer.resolve(data);
@@ -100,6 +98,9 @@ module.exports =
             return {
                 getAllSubmissions: getSubmissionList,
                 getSubmission: getSubmission,
+                getSubmittedSubmission: function(submission) {
+                    return getSubmission(submission, true);
+                },
                 saveSubmission: saveSubmission,
                 submitSubmission: submitSubmission,
                 deleteSubmission: deleteSubmission,

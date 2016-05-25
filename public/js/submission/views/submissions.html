@@ -59,8 +59,14 @@
                     <tr ng-class="{warning: gridItem.status !== 'SUBMITTED'}">
                         <td>
                             <button type="button" class="btn btn-danger btn-xs btn-flat"
-                                    ng-click="deleteSubmission(gridItem, gridItem.status === 'NEW')">
+                                    ng-click="deleteSubmission(gridItem)"
+                                    ng-if="gridItem.status !== 'MODIFIED'">
                                 <i class="fa fa-trash-o fa-fw"></i>
+                            </button>
+                            <button type="button" class="btn btn-warning btn-xs btn-flat"
+                                    ng-click="revertSubmission(gridItem)"
+                                    ng-if="gridItem.status === 'MODIFIED'">
+                                <i class="fa fa-undo fa-fw"></i>
                             </button>
                             <button type="button" class="btn btn-primary btn-xs btn-flat"
                                     ng-click="editSubmission(gridItem)">
@@ -70,11 +76,6 @@
                                     ng-click="viewSubmission(gridItem)"
                                     ng-if="gridItem.status === 'MODIFIED'">
                                 <i class="fa fa-eye fa-fw"></i>
-                            </button>
-                            <button type="button" class="btn btn-warning btn-xs btn-flat"
-                                    ng-click="deleteSubmission(gridItem, true)"
-                                    ng-if="gridItem.status === 'MODIFIED'">
-                                <i class="fa fa-undo fa-fw"></i>
                             </button>
                         </td>
                     </tr>

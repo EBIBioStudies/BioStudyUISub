@@ -1,8 +1,11 @@
 <div class="modal-body padding-none">
     <div ng-repeat="message in messages">
         <div class="alert alert-danger margin-none">
-            <p>{{message.msg}}</p>
+            <p>{{message}}</p>
         </div>
     </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="$close()">OK</button>
 </div>
 
