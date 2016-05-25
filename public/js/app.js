@@ -31,7 +31,6 @@ var app = angular.module('BioStudyApp',
     ]);
 
 require('./services');
-require('./views/index');
 require('./directives');
 require('./home');
 require('./error');

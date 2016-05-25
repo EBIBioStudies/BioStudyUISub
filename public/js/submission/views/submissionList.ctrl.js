@@ -6,8 +6,8 @@
 module.exports =
     (function () {
 
-        return ['$scope', '$state', 'SubmissionService', '$uibModal', '$log', 'SubmissionModel',
-            function ($scope, $state, SubmissionService, $uibModal, $log, SubmissionModel) {
+        return ['$scope', '$state', 'SubmissionService', '$log', 'SubmissionModel', 'ModalDialogs',
+            function ($scope, $state, SubmissionService, $log, SubmissionModel, ModalDialogs) {
 
                 $scope.submissions = [];
                 $scope.selectedSubmission = [];
@@ -40,14 +40,8 @@ module.exports =
                 };
 
                 $scope.deleteSubmission = function (submission, copyOnly) {
-                    var modalInstance = $uibModal.open({
-                        controller: 'MessagesCtrl',
-                        templateUrl: 'templates/partials/confirmDialog.html',
-                        backdrop: true,
-                        size: 'lg'
-                    });
-
-                    modalInstance.result
+                    ModalDialogs
+                        .confirm(['You are going to delete the submission. Are you sure ?'])
                         .then(function () {
                             SubmissionService
                                 .deleteSubmission(submission.accno, copyOnly)

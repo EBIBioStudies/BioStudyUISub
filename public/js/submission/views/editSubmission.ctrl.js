@@ -5,14 +5,14 @@
 
 module.exports =
     function ($rootScope, $scope, $timeout, $state,
-              $uibModal, $stateParams, $log, SubmissionModel, SubmissionService, MessageService) {
+              $stateParams, $log, SubmissionModel, SubmissionService, MessageService, ModalDialogs) {
 
         $scope.title = 'Edit the submission';
-        $scope.accno = ''; 
+        $scope.accno = '';
         $scope.hasError = false;
         $scope.readOnly = false;
 
-        $scope.onSubmissionChange = function() {
+        $scope.onSubmissionChange = function () {
             $log.debug("onSubmissionChange()");
             debounceSaveUpdates();
         }
@@ -23,9 +23,9 @@ module.exports =
 
         function watchSubmission(listener) {
             return $scope.$watchGroup([
-                    'submission.title',
-                    'submission.releaseDate',
-                    'submission.description'], listener);
+                'submission.title',
+                'submission.releaseDate',
+                'submission.description'], listener);
         }
 
         function saveUpdates() {
@@ -94,47 +94,22 @@ module.exports =
                         $log.debug("failed to submit", data);
                         showSubmitError(data);
                     }
-                }).catch(function (err, status) {
-                showSubmitError('Server error ' + status + ' ' + err);
-            });
+                });
         };
 
         function showSubmitSuccess() {
             var acc = $scope.submission.accno;
-            MessageService.addMessage('Submission ' + acc + ' has been submitted successfully.');
-
-            var modalInstance = $uibModal.open({
-                controller: 'MessagesCtrl',
-                templateUrl: 'templates/partials/successDialog.html',
-                backdrop: true,
-                size: 'lg'
-            });
-
-            $timeout(function () {
-                modalInstance.close();
-                MessageService.clearMessages();
-            }, 6000);
-            modalInstance.result.then(function () {
-                MessageService.clearMessages();
-                $state.go('submissions');
-            });
+            ModalDialogs.successMessages(['Submission ' + acc + ' has been submitted successfully.'])
+                .then(function () {
+                    $state.go('submissions');
+                });
         }
 
         function showSubmitError(data) {
-            MessageService.addMessage('Failed to submit.');
-            var modalInstance = $uibModal.open({
-                controller: 'MessagesCtrl',
-                templateUrl: 'templates/partials/errorDialog.html',
-                backdrop: true,
-                size: 'lg'
-            });
-            $timeout(function () {
-                modalInstance.close();
-                MessageService.clearMessages();
-            }, 6000);
-            modalInstance.result.then(function () {
-                MessageService.clearMessages();
-            });
+            ModalDialogs.errorMessages(['Failed to submit.'])
+                .then(function () {
+                    // do nohtig;
+                });
         }
 
         $scope.addAnnotation = function () {
