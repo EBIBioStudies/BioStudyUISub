@@ -3,8 +3,8 @@
 module.exports =
     (function () {
 
-        return ['$http', '$q', '$rootScope', 'USER_ROLES', 'Session', 'AccessLevel', '$log', '$location',
-            function ($http, $q, $rootScope, USER_ROLES, Session, AccessLevel, $log, $location) {
+        return ['$http', '$q', 'USER_ROLES', 'Session', 'AccessLevel', '$log', '$location',
+            function ($http, $q, USER_ROLES, Session, AccessLevel, $log, $location) {
 
                 function getAppPath() {
                     var re = new RegExp("https?:\/\/[^\/]+([^\\?#]*).*");
@@ -15,22 +15,25 @@ module.exports =
                 function signIn(credentials) {
                     var defer = $q.defer();
                     $http.post("/raw/auth/signin", credentials)
-                        .success(function (result) {
-                            if (result.status === $rootScope.Constants.Status.OK) {
-                                Session.create(result.sessid, result.username, USER_ROLES.user);
-                                defer.resolve(result);
-                            }
-                            else {
-                                defer.reject({status: result.status, message: 'Wrong credentials'});
-                            }
-                        })
-                        .error(function (err, status, headers) {
-                            $log.error(status + ":" + err);
-                            defer.reject({
-                                status: status || 500,
-                                message: 'Problem with connection to biostudy server'
+                        .then(
+                            function (response) {
+                                var data = response.data;
+                                if (data.status === "OK") {
+                                    Session.create(data.sessid, data.username, USER_ROLES.user);
+                                    defer.resolve(data);
+                                }
+                                else {
+                                    defer.reject({status: data.status, message: data.message});
+                                }
+                            },
+                            function (response) {
+                                var statusCode = response.status;
+                                $log.error("login failure", response);
+                                defer.reject({
+                                    status: "*",
+                                    message: statusCode === 403 ? 'Invalid credentials' : 'Server error. Please try later..'
+                                });
                             });
-                        });
                     return defer.promise;
                 }
 
@@ -38,49 +41,49 @@ module.exports =
                     if (!isAuthenticated()) {
                         return $q.when({});
                     }
-
                     var defer = $q.defer();
                     $http.post("/api/auth/signout", Session.userName)
-                        .success(function (result) {
-                            Session.destroy();
-                            defer.resolve({});
-                        })
-                        .error(function (err, status, headers) {
-                            $log.error(status + ":" + err);
-                            defer.reject(err);
-                        });
+                        .then(
+                            function () {
+                                Session.destroy();
+                                defer.resolve({});
+                            },
+                            function (response) {
+                                $log.error("logout failure", response);
+                                defer.reject(err);
+                            });
                     return defer.promise;
-
                 }
 
                 function signUp(user) {
                     var defer = $q.defer();
                     user.path = getAppPath() + "#/activate";
-                    $log.debug("application path: " + user.path);
                     $http.post("/api/auth/signup", user)
-                        .success(function (result, status) {
-                            if (result.status === $rootScope.Constants.Status.OK) {
-                                defer.resolve(result);
-                            } else {
-                                $log.error("Error" + ":" + status + ":" + result);
-                                defer.reject({status: result.status, message: result.status});
-                            }
-                        })
-                        .error(function (err, status) {
-                            defer.reject(err, status);
-                        });
+                        .then(
+                            function (response) {
+                                var data = response.data;
+                                if (data.status === "OK") {
+                                    defer.resolve(data);
+                                } else {
+                                    defer.reject({status: data.status, message: data.message});
+                                }
+                            },
+                            function (response) {
+                                defer.reject(response);
+                            });
                     return defer.promise;
                 }
 
                 function activate(key) {
                     var defer = $q.defer();
                     $http.post("/raw/auth/activate/" + key)
-                        .success(function (result) {
-                            defer.resolve(result);
-                        })
-                        .error(function (err, status) {
-                            defer.reject(err, status);
-                        });
+                        .then(
+                            function (response) {
+                                defer.resolve(response.data);
+                            },
+                            function (response) {
+                                defer.reject(response);
+                            });
                     return defer.promise;
                 }
 
