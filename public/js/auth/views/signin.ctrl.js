@@ -20,7 +20,7 @@ module.exports =
                     $scope.hasError = false;
                 };
 
-                $scope.signIn = function (signInForm) {
+                $scope.signIn = function () {
                     $scope.$broadcast('show-errors-check-validity');
                     if ($scope.signInForm.$invalid) {
                         $scope.hasError = true;
