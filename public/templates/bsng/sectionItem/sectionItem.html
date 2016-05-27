@@ -58,7 +58,7 @@
         </td>
     </tr>
 
-    <tr ng-if="!readOnly">
+    <tr ng-if="sectionBinding && !readOnly">
         <td colspan="2">
             <p class="pull-right">
                 <button class="btn btn-primary btn-xs" ng-click="item.attributes.addNew()"

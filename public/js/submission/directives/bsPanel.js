@@ -7,66 +7,75 @@ module.exports = function () {
             data: "=ngModel",
             dataType: "@type",
             contentUrl: "@contentUrl",
-            changeHandler: "@change"
+            changeCallback: "@change"
         },
         templateUrl: "templates/bsng/panel/panel.html",
         controllerAs: "panelCtrl",
         controller: ['$scope', 'DictionaryService', '_', '$log', function ($scope, DictionaryService, _, $log) {
-            $scope.readOnly = $scope.$parent.$eval('readOnly') || false;
-
-            $scope.onDataChange = function () {
-                $log.debug("bsPanel notifyChanges");
-                if ($scope.changeHandler) {
-                    $scope.$parent.$eval($scope.changeHandler);
-                }
+            this.readOnly = $scope.$parent.$eval('readOnly') || false;
+            this.dict = function(dataType) {
+                return DictionaryService.byKey(dataType);
             };
-
-            $scope.dict = DictionaryService.byKey($scope.dataType);
-            $scope.typeaheadKeys = _.map($scope.dict.attributes, function (attr) {
-                return attr.name
-            });
-            $scope.typeaheadValues = function (attrName, itemIndex) {
-                var attr = _.find($scope.dict.attributes, {name: attrName, typeahead: true});
-                if (!attr) {
-                    return [];
-                }
-                var set = {};
-                var res = [];
-                var items = $scope.data.items;
-                for (var j = 0; j < items.length; j++) {
-                    if (j === itemIndex) {
-                        continue;
+            this.typeaheadKeys = function(dataType) {
+                return _.map(this.dict(dataType).attributes, function (attr) {
+                    return attr.name
+                });
+            };
+            this.typeaheadValues = function(dataType) {
+                var attributes = this.dict(dataType).attributes;
+                return function (attrName, itemIndex) {
+                    var attr = _.find(attributes, {name: attrName, typeahead: true});
+                    if (!attr) {
+                        return [];
                     }
-                    var item = items[j];
-                    if (item.attributes) {
-                        var attrs = item.attributes.attributes;
-                        for (var i = 0; i < attrs.length; i++) {
-                            var attr = attrs[i];
-                            if (attr.name === attrName && attr.value) {
-                                if (set[attr.value] != 1) {
-                                    res.push(attr.value);
-                                    set[attr.value] = 1;
+                    var set = {};
+                    var res = [];
+                    var items = $scope.data.items;
+                    for (var j = 0; j < items.length; j++) {
+                        if (j === itemIndex) {
+                            continue;
+                        }
+                        var item = items[j];
+                        if (item.attributes) {
+                            var attrs = item.attributes.attributes;
+                            for (var i = 0; i < attrs.length; i++) {
+                                var attr = attrs[i];
+                                if (attr.name === attrName && attr.value) {
+                                    if (set[attr.value] != 1) {
+                                        res.push(attr.value);
+                                        set[attr.value] = 1;
+                                    }
+                                    break;
                                 }
-                                break;
                             }
                         }
                     }
-                }
-                return res;
+                    return res;
+                };
             };
 
-            var unwatch = $scope.$watch('data', function(newValue, oldValue) {
-                if (newValue === undefined) {
+            $scope.onDataChange = function () {
+                $log.debug("bsPanel notifyChanges");
+                if ($scope.changeCallback) {
+                    $scope.$parent.$eval($scope.changeCallback);
+                }
+            };
+
+            $scope.dict = this.dict($scope.dataType);
+            $scope.readOnly = this.readOnly;
+
+            var unwatch = $scope.$watch('data', function(data) {
+                if (data === undefined) {
                     return;
                 }
-                if (newValue.attributes) {
-                    $scope.coll = newValue.attributes.attributes;
-                    $scope.collWrapper = newValue.attributes;
+                if (data.attributes) {
+                    $scope.coll = data.attributes.attributes;
+                    $scope.collWrapper = data.attributes;
                 }
 
-                if (newValue.items) {
-                    $scope.coll = newValue.items;
-                    $scope.collWrapper = newValue;
+                if (data.items) {
+                    $scope.coll = data.items;
+                    $scope.collWrapper = data;
                 }
                 unwatch();
             });

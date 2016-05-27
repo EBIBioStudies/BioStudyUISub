@@ -16,23 +16,25 @@ module.exports = function (moduleDirective) {
             scope: {
                 data: '=ngModel',
                 dataType: '@type',
-                changeHandler: '@change'
+                changeCallback: '@change'
             },
             bindToController: {
                 previewHeader: '@',
                 detailsHeader: '@'
             },
+            link: function(scope, elem, attrs, panelCtrl) {
+                scope.readOnly = panelCtrl.readOnly;
+                scope.dict = panelCtrl.dict(attrs.type);
+                scope.typeaheadKeys = panelCtrl.typeaheadKeys(attrs.type);
+                scope.typeaheadValues =  panelCtrl.typeaheadValues(attrs.type);
+            },
             controllerAs: 'sectionCtrl',
             controller: ['$scope', '_', '$log', function ($scope, _, $log) {
-                $scope.readOnly = $scope.$parent.$eval('readOnly') || false;
-                $scope.dict = $scope.$parent.dict;
-                $scope.typeaheadKeys = $scope.$parent.typeaheadKeys;
-                $scope.typeaheadValues = $scope.$parent.typeaheadValues;
-
+                
                 var notifyChanges = function () {
                     $log.debug("bsSection notifyChanges");
-                    if ($scope.changeHandler) {
-                        $scope.$parent.$eval($scope.changeHandler);
+                    if ($scope.changeCallback) {
+                        $scope.$parent.$eval($scope.changeCallback);
                     }
                 };
 

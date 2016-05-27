@@ -14,19 +14,9 @@ module.exports =
                         "add": {
                             "title": "Add annotation"
                         },
-                        "delete": {
-                            "popup": "Delete annotation"
-                        },
-                        "edit": {
-                            "popup": "Edit annotation"
-                        },
-                        "addAttr": {
-                            "title": "Create description",
-                            "popup": "Describe annotation"
-                        },
                         "deleteAttr": {
-                            "title": "Delete description",
-                            "popup": "Delete description"
+                            "title": "Delete annotation",
+                            "popup": "Delete annotation"
                         }
                     }
                 },

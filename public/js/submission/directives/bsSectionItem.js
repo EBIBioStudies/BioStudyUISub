@@ -9,33 +9,37 @@ module.exports = function ($log) {
         restrict: 'E',
         scope: {
             item: '=ngModel',
-            changeHandler: '@change'
+            dataType: '@type',
+            changeCallback: '@change'
         },
-        requires: ['?^^bsSection', '^^bsPanel'],
+        require: ['?^^bsSection', '^^bsPanel'],
         templateUrl: function (elem, attrs) {
             return attrs.templateUrl;
         },
-        controllerAs: 'sectionItemCtrl',
-        controller: ['$scope', '$log', function ($scope, $log) {
-            $scope.readOnly = $scope.$parent.$eval('readOnly') || false;
-            $scope.dict = $scope.$parent.dict;
-            $scope.typeaheadKeys = $scope.$parent.typeaheadKeys;
-            $scope.typeaheadValues = $scope.$parent.typeaheadValues;
+        link: function (scope, element, attrs, ctrls) {
+            var secCtrl = ctrls[0];
+            var panelCtrl = ctrls[1];
+            scope.sectionBinding = secCtrl != null;
+
+            scope.readOnly = panelCtrl.readOnly;
+            scope.dict = panelCtrl.dict(attrs.type);
+            scope.typeaheadKeys = panelCtrl.typeaheadKeys(attrs.type);
+            scope.typeaheadValues =  panelCtrl.typeaheadValues(attrs.type);
 
             var notifyChanges = function () {
                 $log.debug("bsSectionItem notifyChanges");
-                if ($scope.changeHandler) {
-                    $scope.$parent.$eval($scope.changeHandler);
+                if (scope.changeCallback) {
+                    scope.$parent.$eval(scope.changeCallback);
                 }
             };
 
-            $scope.onAttributeChange = notifyChanges;
+            scope.onAttributeChange = notifyChanges;
 
-            var unwatch = $scope.$watchCollection('item.attributes.attributes', notifyChanges);
-            $scope.$on('$destroy', function () {
+            var unwatch = scope.$watchCollection('item.attributes.attributes', notifyChanges);
+            scope.$on('$destroy', function () {
                 $log.debug("bsSectionItem on-destroy");
                 unwatch();
             });
-        }]
+        }
     };
 };
