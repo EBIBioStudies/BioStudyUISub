@@ -24,6 +24,7 @@ module.exports =
                     "type": "Publication",
                     "title": "Publications",
                     "tabHeading": "Publication",
+                    "previewTabHeading": "All publications",
                     "actions": {
                         "add": {
                             "title": "Add publication"
@@ -57,6 +58,7 @@ module.exports =
                 "link": {
                     "title": "Links",
                     "tabHeading": "Link",
+                    "previewTabHeading": "All links",
                     "actions": {
                         "add": {
                             "title": "Add link"
@@ -93,6 +95,7 @@ module.exports =
                     "type": "Contact",
                     "title": "Contacts",
                     "tabHeading": "Contact",
+                    "previewTabHeading": "All contacts",
                     "actions": {
                         "add": {
                             "title": "Add contact"
@@ -123,6 +126,7 @@ module.exports =
                 "file": {
                     "title": "Files",
                     "tabHeading": "File",
+                    "previewTabHeading": "All files",
                     "actions": {
                         "add": {
                             "title": "Add file"
