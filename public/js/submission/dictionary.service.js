@@ -7,8 +7,11 @@ module.exports =
                 "annotation": {
                     "title": "Describe your study",
                     "attributes": [
-                        {"name": "Experiment type", "required": false},
-                        {"name": "Keywords", "required": false}
+                        {"name": "Organism", "required": false},
+                        {"name": "Experimental design", "required": false},
+                        {"name": "Experimental factor", "required": false},
+                        {"name": "Organ", "required": false},
+                        {"name": "Cell type", "required": false}
                     ],
                     "actions": {
                         "add": {
