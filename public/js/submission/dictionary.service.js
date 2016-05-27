@@ -36,12 +36,12 @@ module.exports =
                             "popup": "Edit publication"
                         },
                         "addAttr": {
-                            "title": "Create description",
-                            "popup": "Describe contact"
+                            "title": "Add publication annotation",
+                            "popup": "Describe Publication"
                         },
                         "deleteAttr": {
-                            "title": "Delete description",
-                            "popup": "Delete description"
+                            "title": "Delete publication annotation",
+                            "popup": "Delete publication annotation"
                         }
                     },
                     "attributes": [
@@ -64,18 +64,18 @@ module.exports =
                             "title": "Add link"
                         },
                         "delete": {
-                            "popup": "Delete the link"
+                            "popup": "Delete link"
                         },
                         "edit": {
-                            "popup": "Edit the link"
+                            "popup": "Edit link"
                         },
                         "addAttr": {
-                            "title": "Create description",
-                            "popup": "Describe the link"
+                            "title": "Add link annotation",
+                            "popup": "Describe Link"
                         },
                         "deleteAttr": {
-                            "title": "Delete description",
-                            "popup": "Delete description"
+                            "title": "Delete link annotation",
+                            "popup": "Delete link annotation"
                         }
                     },
                     "fields": [
@@ -107,12 +107,12 @@ module.exports =
                             "popup": "Edit contact"
                         },
                         "addAttr": {
-                            "title": "Create description",
-                            "popup": "Describe contact"
+                            "title": "Add contact annotation",
+                            "popup": "Describe Contact"
                         },
                         "deleteAttr": {
-                            "title": "Delete description",
-                            "popup": "Delete description"
+                            "title": "Delete contact annotation",
+                            "popup": "Delete contact annotation"
                         }
                     },
                     "attributes": [
@@ -138,12 +138,12 @@ module.exports =
                             "popup": "Edit file"
                         },
                         "addAttr": {
-                            "title": "Create description",
-                            "popup": "Describe contact"
+                            "title": "Add file annotation",
+                            "popup": "Describe File"
                         },
                         "deleteAttr": {
-                            "title": "Delete description",
-                            "popup": "Delete description"
+                            "title": "Delete file annotation",
+                            "popup": "Delete file annotation"
                         }
                     },
                     "fields": [
