@@ -118,8 +118,12 @@ module.exports =
                     "attributes": [
                         {"name": "Name", "required": true},
                         {"name": "Organisation", "required": true, "typeahead": true},
-                        {"name": "Department", "required": false},
-                        {"name": "E-mail", "required": true}
+                        {"name": "E-mail", "required": true},
+                        {"name": "Role", "required": false},
+                        {"name": "ORCID", "required": false},
+                        {"name": "Address", "required": false},
+                        {"name": "Departement", "required": false},
+                        {"name": "Funding", "required": false}
                     ]
                 },
 
