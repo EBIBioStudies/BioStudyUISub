@@ -7,27 +7,19 @@ module.exports =
                 "annotation": {
                     "title": "Describe your study",
                     "attributes": [
-                        {"name": "Experiment type", "required": false},
-                        {"name": "Keywords", "required": false}
+                        {"name": "Organism", "required": false},
+                        {"name": "Experimental design", "required": false},
+                        {"name": "Experimental factor", "required": false},
+                        {"name": "Organ", "required": false},
+                        {"name": "Cell type", "required": false}
                     ],
                     "actions": {
                         "add": {
-                            "title": "Create",
-                            "popup": "Add publication"
-                        },
-                        "delete": {
-                            "popup": "Delete publication"
-                        },
-                        "edit": {
-                            "popup": "Edit publication"
-                        },
-                        "addAttr": {
-                            "title": "Create description",
-                            "popup": "Describe contact"
+                            "title": "Add annotation"
                         },
                         "deleteAttr": {
-                            "title": "Delete description",
-                            "popup": "Delete description"
+                            "title": "Delete annotation",
+                            "popup": "Delete annotation"
                         }
                     }
                 },
@@ -35,10 +27,10 @@ module.exports =
                     "type": "Publication",
                     "title": "Publications",
                     "tabHeading": "Publication",
+                    "previewTabHeading": "All publications",
                     "actions": {
                         "add": {
-                            "title": "Create",
-                            "popup": "Add publication"
+                            "title": "Add publication"
                         },
                         "delete": {
                             "popup": "Delete publication"
@@ -47,12 +39,12 @@ module.exports =
                             "popup": "Edit publication"
                         },
                         "addAttr": {
-                            "title": "Create description",
-                            "popup": "Describe contact"
+                            "title": "Add publication annotation",
+                            "popup": "Describe Publication"
                         },
                         "deleteAttr": {
-                            "title": "Delete description",
-                            "popup": "Delete description"
+                            "title": "Delete publication annotation",
+                            "popup": "Delete publication annotation"
                         }
                     },
                     "attributes": [
@@ -69,24 +61,24 @@ module.exports =
                 "link": {
                     "title": "Links",
                     "tabHeading": "Link",
+                    "previewTabHeading": "All links",
                     "actions": {
                         "add": {
-                            "title": "Create",
-                            "popup": "Add link"
+                            "title": "Add link"
                         },
                         "delete": {
-                            "popup": "Delete the link"
+                            "popup": "Delete link"
                         },
                         "edit": {
-                            "popup": "Edit the link"
+                            "popup": "Edit link"
                         },
                         "addAttr": {
-                            "title": "Create description",
-                            "popup": "Describe the link"
+                            "title": "Add link annotation",
+                            "popup": "Describe Link"
                         },
                         "deleteAttr": {
-                            "title": "Delete description",
-                            "popup": "Delete description"
+                            "title": "Delete link annotation",
+                            "popup": "Delete link annotation"
                         }
                     },
                     "fields": [
@@ -106,10 +98,10 @@ module.exports =
                     "type": "Contact",
                     "title": "Contacts",
                     "tabHeading": "Contact",
+                    "previewTabHeading": "All contacts",
                     "actions": {
                         "add": {
-                            "title": "Create",
-                            "popup": "Add contact"
+                            "title": "Add contact"
                         },
                         "delete": {
                             "popup": "Delete contact"
@@ -118,29 +110,33 @@ module.exports =
                             "popup": "Edit contact"
                         },
                         "addAttr": {
-                            "title": "Create description",
-                            "popup": "Describe contact"
+                            "title": "Add contact annotation",
+                            "popup": "Describe Contact"
                         },
                         "deleteAttr": {
-                            "title": "Delete description",
-                            "popup": "Delete description"
+                            "title": "Delete contact annotation",
+                            "popup": "Delete contact annotation"
                         }
                     },
                     "attributes": [
                         {"name": "Name", "required": true},
                         {"name": "Organisation", "required": true, "typeahead": true},
-                        {"name": "Department", "required": false},
-                        {"name": "E-mail", "required": true}
+                        {"name": "E-mail", "required": true},
+                        {"name": "Role", "required": false},
+                        {"name": "ORCID", "required": false},
+                        {"name": "Address", "required": false},
+                        {"name": "Departement", "required": false},
+                        {"name": "Funding", "required": false}
                     ]
                 },
 
                 "file": {
                     "title": "Files",
                     "tabHeading": "File",
+                    "previewTabHeading": "All files",
                     "actions": {
                         "add": {
-                            "title": "Create",
-                            "popup": "Add file"
+                            "title": "Add file"
                         },
                         "delete": {
                             "popup": "Delete file"
@@ -149,12 +145,12 @@ module.exports =
                             "popup": "Edit file"
                         },
                         "addAttr": {
-                            "title": "Create description",
-                            "popup": "Describe contact"
+                            "title": "Add file annotation",
+                            "popup": "Describe File"
                         },
                         "deleteAttr": {
-                            "title": "Delete description",
-                            "popup": "Delete description"
+                            "title": "Delete file annotation",
+                            "popup": "Delete file annotation"
                         }
                     },
                     "fields": [
