@@ -12,18 +12,17 @@ module.exports =
                     ],
                     "actions": {
                         "add": {
-                            "title": "Create",
-                            "popup": "Add publication"
+                            "title": "Add annotation"
                         },
                         "delete": {
-                            "popup": "Delete publication"
+                            "popup": "Delete annotation"
                         },
                         "edit": {
-                            "popup": "Edit publication"
+                            "popup": "Edit annotation"
                         },
                         "addAttr": {
                             "title": "Create description",
-                            "popup": "Describe contact"
+                            "popup": "Describe annotation"
                         },
                         "deleteAttr": {
                             "title": "Delete description",
@@ -37,8 +36,7 @@ module.exports =
                     "tabHeading": "Publication",
                     "actions": {
                         "add": {
-                            "title": "Create",
-                            "popup": "Add publication"
+                            "title": "Add publication"
                         },
                         "delete": {
                             "popup": "Delete publication"
@@ -71,8 +69,7 @@ module.exports =
                     "tabHeading": "Link",
                     "actions": {
                         "add": {
-                            "title": "Create",
-                            "popup": "Add link"
+                            "title": "Add link"
                         },
                         "delete": {
                             "popup": "Delete the link"
@@ -108,8 +105,7 @@ module.exports =
                     "tabHeading": "Contact",
                     "actions": {
                         "add": {
-                            "title": "Create",
-                            "popup": "Add contact"
+                            "title": "Add contact"
                         },
                         "delete": {
                             "popup": "Delete contact"
@@ -139,8 +135,7 @@ module.exports =
                     "tabHeading": "File",
                     "actions": {
                         "add": {
-                            "title": "Create",
-                            "popup": "Add file"
+                            "title": "Add file"
                         },
                         "delete": {
                             "popup": "Delete file"
