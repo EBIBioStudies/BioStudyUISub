@@ -11,8 +11,8 @@ ng-include > .header,
   max-height: 100px;
   z-index: 1030;
   .navbar {
-    height: 50px;
-    min-height: 50px;
+    height: 100px;
+    min-height: 100px;
     margin-bottom: 22px;
     margin-bottom: 0;
     /*margin-left: @left-side-width;*/
@@ -99,8 +99,7 @@ ng-include > .header,
     float: left;
     height: 50px;
     font-size: 20px;
-    line-height: 50px;
-    text-align: center;
+    text-align: left;
     padding: 0 10px;
     //width: @left-side-width;
     //width: @left-side-logo-width;
@@ -109,7 +108,7 @@ ng-include > .header,
     font-weight: 800;
 
     //font-weight: 500;
-    height: 50px;
+    height: 100px;
     display: block;
     //For logo imgs or icons
     .icon {
@@ -126,9 +125,32 @@ ng-include > .header,
     }
     .small {
       font-weight: normal;
-
     }
+  }
 
+  .logo .text-box {
+    margin: 0;
+    padding: 0;
+  }
+
+  .logo .logo-text {
+    margin: 0;
+    padding: 0;
+    font-family: Arial;
+    font-style: normal;
+    font-weight: 100;
+    color: #D1EBEC;
+  }
+
+  .logo .version {
+    margin: 0 5px;
+    padding: 0 3px;
+    font-family: Arial;
+    font-style: normal;
+    font-weight: 100;
+    font-size: 15px;
+    color: black;
+    background-color: white;
   }
 
   .badge-logo {
