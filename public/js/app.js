@@ -62,8 +62,8 @@ app
             })
             .state('password_change_request', {
                 url: '/forgot_password',
-                templateUrl: 'templates/auth/views/passwordChangeRequest.html',
-                controller: 'PasswordChangeRequestCtrl'
+                templateUrl: 'templates/auth/views/passwordResetRequest.html',
+                controller: 'PasswordResetRequestCtrl'
             })
             .state('signin', {
                 url: '/signin',

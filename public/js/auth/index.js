@@ -8,7 +8,7 @@ angular.module('BioStudyApp')
     .controller('SignInCtrl', require('./views/signin.ctrl.js'))
     .controller('SignUpCtrl', require('./views/signup.ctrl'))
     .controller('ActivateCtrl', require('./views/activate.ctrl'))
-    .controller('PasswordChangeRequestCtrl', require('./views/passwordChangeRequest.ctrl'))
+    .controller('PasswordResetRequestCtrl', require('./views/passwordResetRequest.ctrl'))
     .service('Session', ['USER_ROLES', 'LocalStorage', function (USER_ROLES, LocalStorage) {
         this.id = null;
         this.userName = null;

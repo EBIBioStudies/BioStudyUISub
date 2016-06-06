@@ -42,7 +42,7 @@ module.exports =
                         return $q.when({});
                     }
                     var defer = $q.defer();
-                    $http.post("/api/auth/signout", Session.userName)
+                    $http.post("/api/auth/signout", {username: Session.userName})
                         .then(
                             function () {
                                 Session.destroy();
@@ -61,14 +61,12 @@ module.exports =
                     $http.post("/api/auth/signup", user)
                         .then(
                             function (response) {
-                                var data = response.data;
-                                if (data.status === "OK") {
-                                    defer.resolve(data);
-                                } else {
-                                    defer.reject({status: data.status, message: data.message});
-                                }
+                                defer.resolve(response.data);
                             },
                             function (response) {
+                                if (response.status === 403) {
+                                    defer.resolve(response.data);
+                                }
                                 defer.reject(response);
                             });
                     return defer.promise;
@@ -82,6 +80,23 @@ module.exports =
                                 defer.resolve(response.data);
                             },
                             function (response) {
+                                defer.reject(response);
+                            });
+                    return defer.promise;
+                }
+
+                function passwordResetRequest(email, recaptcha) {
+                    var defer = $q.defer();
+                    var path = getAppPath() + "#/change_password";
+                    $http.post("/api/auth/passrstreq/", {email: email, 'recaptcha2-response': recaptcha, path: path})
+                        .then(
+                            function (response) {
+                                defer.resolve(response.data);
+                            },
+                            function (response) {
+                                if (response.status === 403) {
+                                    defer.resolve(response.data);
+                                }
                                 defer.reject(response);
                             });
                     return defer.promise;
@@ -107,6 +122,7 @@ module.exports =
                     signOut: signOut,
                     signUp: signUp,
                     activate: activate,
+                    passwordResetRequest: passwordResetRequest,
                     isAuthenticated: isAuthenticated,
                     isAuthorized: isAuthorized,
                     isAuthorizedAs: isAuthorizedAs
