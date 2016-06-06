@@ -60,10 +60,15 @@ app
                 templateUrl: 'templates/auth/views/activate.html',
                 controller: 'ActivateCtrl'
             })
-            .state('password_change_request', {
+            .state('password_reset_request', {
                 url: '/forgot_password',
                 templateUrl: 'templates/auth/views/passwordResetRequest.html',
                 controller: 'PasswordResetRequestCtrl'
+            })
+            .state('password_change', {
+                url: '/password_change/:key',
+                templateUrl: 'templates/auth/views/passwordChange.html',
+                controller: 'PasswordChangeCtrl'
             })
             .state('signin', {
                 url: '/signin',

@@ -87,7 +87,7 @@ module.exports =
 
                 function passwordResetRequest(email, recaptcha) {
                     var defer = $q.defer();
-                    var path = getAppPath() + "#/change_password";
+                    var path = getAppPath() + "#/password_change";
                     $http.post("/api/auth/passrstreq/", {email: email, 'recaptcha2-response': recaptcha, path: path})
                         .then(
                             function (response) {
