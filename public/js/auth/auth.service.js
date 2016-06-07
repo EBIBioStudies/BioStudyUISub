@@ -87,8 +87,8 @@ module.exports =
 
                 function passwordResetRequest(email, recaptcha) {
                     var defer = $q.defer();
-                    var path = getAppPath() + "#/password_change";
-                    $http.post("/api/auth/passrstreq/", {email: email, 'recaptcha2-response': recaptcha, path: path})
+                    var path = getAppPath() + "#/password_reset";
+                    $http.post("/api/auth/passrstreq/", {email: email, path: path, 'recaptcha2-response': recaptcha})
                         .then(
                             function (response) {
                                 defer.resolve(response.data);
@@ -97,6 +97,19 @@ module.exports =
                                 if (response.status === 403) {
                                     defer.resolve(response.data);
                                 }
+                                defer.reject(response);
+                            });
+                    return defer.promise;
+                }
+
+                function passwordReset(key, password, recaptcha) {
+                    var defer = $q.defer();
+                    $http.post("/raw/auth/passreset/", {key: key, password: password, 'recaptcha2-response': recaptcha})
+                        .then(
+                            function (response) {
+                                defer.resolve(response.data);
+                            },
+                            function (response) {
                                 defer.reject(response);
                             });
                     return defer.promise;
@@ -123,6 +136,7 @@ module.exports =
                     signUp: signUp,
                     activate: activate,
                     passwordResetRequest: passwordResetRequest,
+                    passwordReset: passwordReset,
                     isAuthenticated: isAuthenticated,
                     isAuthorized: isAuthorized,
                     isAuthorizedAs: isAuthorizedAs

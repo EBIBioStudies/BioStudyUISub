@@ -5,7 +5,6 @@ module.exports =
         return ['$scope', '$log', 'AuthService', 'vcRecaptchaService',
             function ($scope, $log, AuthService, vcRecaptchaService) {
                 $scope.req = {email: "", recaptcha: ""};
-                $scope.message = "";
 
                 $scope.passwordResetRequest = function () {
                     $scope.message = "";
@@ -18,7 +17,7 @@ module.exports =
                                  $scope.message = data.message;
                                  vcRecaptchaService.reload();
                              } else {
-                                 $scope.submitSuccess = true;
+                                 $scope.showSuccess = true;
                              }
                         });
                 }
