@@ -60,6 +60,16 @@ app
                 templateUrl: 'templates/auth/views/activate.html',
                 controller: 'ActivateCtrl'
             })
+            .state('password_reset_request', {
+                url: '/forgot_password',
+                templateUrl: 'templates/auth/views/passwordResetRequest.html',
+                controller: 'PasswordResetRequestCtrl'
+            })
+            .state('password_reset', {
+                url: '/password_reset/:key',
+                templateUrl: 'templates/auth/views/passwordReset.html',
+                controller: 'PasswordResetCtrl'
+            })
             .state('signin', {
                 url: '/signin',
                 templateUrl: 'templates/auth/views/signin.html',
@@ -140,11 +150,14 @@ app
         }
 
         function logout() {
+            $log.debug("logout() called");
             setCurrentUser(null);
+            Session.destroy();
             $state.go('signin');
         }
 
         function login(event, data) {
+            $log.debug("login() called");
             setCurrentUser(data.username);
         }
 

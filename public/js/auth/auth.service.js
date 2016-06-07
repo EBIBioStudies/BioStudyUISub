@@ -20,19 +20,17 @@ module.exports =
                                 var data = response.data;
                                 if (data.status === "OK") {
                                     Session.create(data.sessid, data.username, USER_ROLES.user);
-                                    defer.resolve(data);
                                 }
-                                else {
-                                    defer.reject({status: data.status, message: data.message});
-                                }
+                                defer.resolve(data);
                             },
                             function (response) {
-                                var statusCode = response.status;
-                                $log.error("login failure", response);
-                                defer.reject({
-                                    status: "*",
-                                    message: statusCode === 403 ? 'Invalid credentials' : 'Server error. Please try later..'
-                                });
+                                if (response.status === 403) {
+                                    response.data.message = "Invalid credentials";
+                                    defer.resolve(response.data);
+                                    return;
+                                }
+                                $log.error("login error", response);
+                                defer.reject(response);
                             });
                     return defer.promise;
                 }
@@ -42,15 +40,15 @@ module.exports =
                         return $q.when({});
                     }
                     var defer = $q.defer();
-                    $http.post("/api/auth/signout", Session.userName)
+                    $http.post("/api/auth/signout", {username: Session.userName})
                         .then(
                             function () {
                                 Session.destroy();
                                 defer.resolve({});
                             },
                             function (response) {
-                                $log.error("logout failure", response);
-                                defer.reject(err);
+                                $log.error("logout error", response);
+                                defer.reject(response);
                             });
                     return defer.promise;
                 }
@@ -61,14 +59,14 @@ module.exports =
                     $http.post("/api/auth/signup", user)
                         .then(
                             function (response) {
-                                var data = response.data;
-                                if (data.status === "OK") {
-                                    defer.resolve(data);
-                                } else {
-                                    defer.reject({status: data.status, message: data.message});
-                                }
+                                defer.resolve(response.data);
                             },
                             function (response) {
+                                if (response.status === 403) {
+                                    defer.resolve(response.data);
+                                    return;
+                                }
+                                $log.error("signup error", response);
                                 defer.reject(response);
                             });
                     return defer.promise;
@@ -82,6 +80,44 @@ module.exports =
                                 defer.resolve(response.data);
                             },
                             function (response) {
+                                $log.error("activate error", response);
+                                defer.reject(response);
+                            });
+                    return defer.promise;
+                }
+
+                function passwordResetRequest(email, recaptcha) {
+                    var defer = $q.defer();
+                    var path = getAppPath() + "#/password_reset";
+                    $http.post("/api/auth/passrstreq/", {email: email, path: path, 'recaptcha2-response': recaptcha})
+                        .then(
+                            function (response) {
+                                defer.resolve(response.data);
+                            },
+                            function (response) {
+                                if (response.status === 403) {
+                                    defer.resolve(response.data);
+                                    return;
+                                }
+                                $log.error("password reset request error", response);
+                                defer.reject(response);
+                            });
+                    return defer.promise;
+                }
+
+                function passwordReset(key, password, recaptcha) {
+                    var defer = $q.defer();
+                    $http.post("/raw/auth/passreset/", {key: key, password: password, 'recaptcha2-response': recaptcha})
+                        .then(
+                            function (response) {
+                                defer.resolve(response.data);
+                            },
+                            function (response) {
+                                if (response.status === 400) { //invalid request
+                                    defer.resolve(response.data);
+                                    return;
+                                }
+                                $log.error("password reset error", response);
                                 defer.reject(response);
                             });
                     return defer.promise;
@@ -107,6 +143,8 @@ module.exports =
                     signOut: signOut,
                     signUp: signUp,
                     activate: activate,
+                    passwordResetRequest: passwordResetRequest,
+                    passwordReset: passwordReset,
                     isAuthenticated: isAuthenticated,
                     isAuthorized: isAuthorized,
                     isAuthorizedAs: isAuthorizedAs

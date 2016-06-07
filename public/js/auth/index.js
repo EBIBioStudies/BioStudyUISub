@@ -5,9 +5,12 @@ angular.module('BioStudyApp')
     .factory('AuthService', require('./auth.service'))
     .factory('AccessLevel', require('./accessLevel.service'))
     .directive('accessLevel', require('./directives/accessLevel'))
+    .directive('equalsTo', require('./directives/equalsTo'))
     .controller('SignInCtrl', require('./views/signin.ctrl.js'))
     .controller('SignUpCtrl', require('./views/signup.ctrl'))
     .controller('ActivateCtrl', require('./views/activate.ctrl'))
+    .controller('PasswordResetRequestCtrl', require('./views/passwordResetRequest.ctrl'))
+    .controller('PasswordResetCtrl', require('./views/passwordReset.ctrl'))
     .service('Session', ['USER_ROLES', 'LocalStorage', function (USER_ROLES, LocalStorage) {
         this.id = null;
         this.userName = null;

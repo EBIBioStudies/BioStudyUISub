@@ -7,8 +7,7 @@ module.exports =
             function ($scope, $location, $log, AuthService, vcRecaptchaService) {
                 $scope.user = {};
                 $scope.error = {};
-                $scope.hasError = false;
-                $scope.success = false;
+
                 $scope.showError = function () {
                     return $scope.hasError;
                 };
@@ -21,20 +20,20 @@ module.exports =
                         return;
                     }
 
+                    $scope.hasError = false;
+                    $scope.success = false;
+                    $scope.error = {};
                     AuthService
                         .signUp(user)
-                        .then(function () {
-                            $scope.hasError = false;
-                            $scope.error = {};
-                            $scope.success = true;
-                        })
-                        .catch(function (error, status) {
-                            $scope.hasError = true;
-                            vcRecaptchaService.reload();
-                            $log.error('error sign up', error);
-                            if (error) {
-                                $scope.error.message = error.message;
-                                $scope.error.status = error.status;
+                        .then(function (data) {
+                            if (data.status === "FAIL") {
+                                $log.error('error sign up', data);
+                                $scope.hasError = true;
+                                vcRecaptchaService.reload();
+                                $scope.error.message = data.message;
+                                $scope.error.status = data.status;
+                            } else {
+                                $scope.success = true;
                             }
                         });
                 };

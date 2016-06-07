@@ -28,21 +28,20 @@ module.exports =
                         return;
                     }
 
+                    $scope.hasError = false;
+                    $scope.error = {};
+
                     AuthService
                         .signIn($scope.credentials)
-                        .then(function (user) {
-                            $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, user);
-
-                            $location.path('/submissions');
-                            $scope.hasError = false;
-                            $scope.error = {};
-                        })
-                        .catch(function (error) {
-                            $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
-                            $scope.hasError = true;
-                            if (error) {
-                                $scope.error.message = error.message;
-                                $scope.error.status = error.status;
+                        .then(function (data) {
+                            if (data.status === "OK") {
+                                $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, data);
+                                $location.path('/submissions');
+                            } else {
+                                $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
+                                $scope.hasError = true;
+                                $scope.error.message = data.message;
+                                $scope.error.status = "FAIL";
                             }
                         });
                 };
