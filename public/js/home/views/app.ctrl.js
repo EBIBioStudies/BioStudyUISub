@@ -24,14 +24,6 @@ module.exports = (function(){
 
             $scope.appVersion = APP_VERSION;
 
-            $scope.signIn = function (options) {
-                AuthService.showSignInDialog(options || {});
-            };
-
-            $scope.signUp = function (options) {
-                AuthService.showSignUpDialog(options || {});
-            };
-
             $scope.signOut = function () {
                 AuthService.signOut().then(function () {
                     $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess);

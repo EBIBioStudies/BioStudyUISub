@@ -110,6 +110,9 @@ module.exports =
                                 defer.resolve(response.data);
                             },
                             function (response) {
+                                if (response.status === 400) { //invalid request
+                                    defer.resolve(response.data);
+                                }
                                 defer.reject(response);
                             });
                     return defer.promise;

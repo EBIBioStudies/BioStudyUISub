@@ -150,11 +150,14 @@ app
         }
 
         function logout() {
+            $log.debug("logout() called");
             setCurrentUser(null);
+            Session.destroy();
             $state.go('signin');
         }
 
         function login(event, data) {
+            $log.debug("login() called");
             setCurrentUser(data.username);
         }
 
