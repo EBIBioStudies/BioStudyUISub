@@ -35,7 +35,7 @@
                     <td class="form-group-sm row" ng-class="colSizeCss"
                         ng-repeat="key in attributeKeys">
                         <div ng-repeat="attr in item.attributes.attributes">
-                            <input type="text" name="attrValuePreview" ng-model="attr.value"
+                            <input type="text" name="attrValuePreview_{{key}}" ng-model="attr.value"
                                    class="form-control input-sm form-control-auto" placeholder="Enter a value"
                                    ng-required="true"
                                    ng-if="attr.name==key" ms-input-val data-check-pristine="true"
@@ -43,6 +43,10 @@
                                    typeahead-append-to-body="true"
                                    typeahead-show-hint="true"
                                    typeahead-min-length="0"
+                                   uib-tooltip="This field is required"
+                                   tooltip-class="customClass"
+                                   tooltip-placement="top-left"
+                                   tooltip-enable="previewItemForm['attrValuePreview_' + key].$invalid"
                                    ng-change="onAttributeChange()"
                                    ng-readonly="readOnly">
                         </div>
