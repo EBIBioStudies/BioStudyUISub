@@ -30,7 +30,7 @@ Open terminal/command line window and run following commands
 
 ```
 
-To start a local webserver you will a proxy server (BioStudySubmProxy) real or fake runing locally or remotely. By default
+To start a local webserver you will need a proxy server (BioStudySubmProxy) real or fake one running locally or remotely. By default
 proxy expected to be on localhost:10280. You can customize this in the 'webserver' task in Gulpfile.js if needed. As soon
 as proxy is running you can use the following command to start the UI on a localhost:7000.
 ```
