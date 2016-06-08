@@ -142,7 +142,7 @@ module.exports =
                             "popup": "Delete file"
                         },
                         "edit": {
-                            "popup": "Edit file"
+                            "popup": "Edit file annotations"
                         },
                         "addAttr": {
                             "title": "Add file annotation",

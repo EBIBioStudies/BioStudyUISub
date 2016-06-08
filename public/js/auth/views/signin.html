@@ -16,12 +16,12 @@
                     <div class="panel-body">
                         <form id="login-form" novalidate name="signInForm" role="form">
                             <div class="form-group" ms-form-group-validator>
-                                <label class="control-label" for="username">Email/login name<span ng-show="signInForm.username.$dirty && signInForm.username.$invalid
-                                          && signInForm.username.$error.required">: cannot be blank</span></label>
+                                <label class="control-label" for="login">Email/login name<span ng-show="signInForm.login.$dirty && signInForm.login.$invalid
+                                          && signInForm.login.$error.required">: cannot be blank</span></label>
 
-                                <input type="text" id="username" name="username" tabindex="1"
+                                <input type="text" id="login" name="login" tabindex="1"
                                        class="form-control"
-                                       placeholder="Username" ng-model="credentials.login" ng-required="true">
+                                       placeholder="Email or login name" ng-model="credentials.login" ng-required="true">
                             </div>
                             <div class="form-group" ms-form-group-validator>
                                 <label class="control-label" for="password">Password<span ng-show="signInForm.password.$dirty && signInForm.password.$invalid
