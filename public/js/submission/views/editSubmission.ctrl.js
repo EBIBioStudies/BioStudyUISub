@@ -11,10 +11,13 @@ module.exports =
         $scope.accno = '';
         $scope.hasError = false;
         $scope.readOnly = false;
+        $scope.submission = null;
 
         $scope.onSubmissionChange = function () {
-            $log.debug("onSubmissionChange()");
-            debounceSaveUpdates();
+            if ($scope.submission !== null) {
+                $log.debug("onSubmissionChange()");
+                debounceSaveUpdates();
+            }
         }
 
         var timeout = null;
