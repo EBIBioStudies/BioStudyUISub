@@ -72,11 +72,7 @@ module.exports =
                 $scope.accno = $scope.sbm.accno;
                 saved = angular.toJson(SubmissionModel.export($scope.submission));
                 submissionUnwatch = watchSubmission(debounceSaveUpdates);
-
-            }).catch(function (err) {
-            $log.debug('Error data', err);
-            $state.go('error');
-        });
+            });
 
         $scope.submit = function () {
             $scope.$broadcast('show-errors-check-validity');
