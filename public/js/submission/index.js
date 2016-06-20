@@ -13,6 +13,8 @@
         .controller('FileCtrl', require('./views/file.ctrl'))
         .directive('bsPanel', require('./directives/bsPanel'))
         .directive('bsSectionItem', require('./directives/bsSectionItem'))
+        .directive('bsReplace', require('./directives/bsReplace'))
+        .directive('bsPubMedIdSearch', require('./directives/bsPubMedIdSearch'))
         .factory('SubmissionModel', require('./model/submission.model'));
 
 

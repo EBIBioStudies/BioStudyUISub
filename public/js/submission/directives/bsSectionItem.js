@@ -28,7 +28,7 @@ module.exports = function ($log) {
             scope.getTemplateUrl = function () {
                 return attrs.templateUrl;
             };
-
+            
             var notifyChanges = function () {
                 $log.debug("bsSectionItem notifyChanges");
                 if (scope.changeCallback) {
