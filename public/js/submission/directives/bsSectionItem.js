@@ -10,12 +10,11 @@ module.exports = function ($log) {
         scope: {
             item: '=ngModel',
             dataType: '@type',
-            changeCallback: '@change'
+            changeCallback: '@change',
+            templateUrl: '@templateUrl'
         },
         require: ['?^^bsSection', '^^bsPanel'],
-        templateUrl: function (elem, attrs) {
-            return attrs.templateUrl;
-        },
+        template: '<ng-include src="getTemplateUrl()"/>',
         link: function (scope, element, attrs, ctrls) {
             var secCtrl = ctrls[0];
             var panelCtrl = ctrls[1];
@@ -24,7 +23,11 @@ module.exports = function ($log) {
             scope.readOnly = panelCtrl.readOnly;
             scope.dict = panelCtrl.dict(attrs.type);
             scope.typeaheadKeys = panelCtrl.typeaheadKeys(attrs.type);
-            scope.typeaheadValues =  panelCtrl.typeaheadValues(attrs.type);
+            scope.typeaheadValues = panelCtrl.typeaheadValues(attrs.type);
+
+            scope.getTemplateUrl = function () {
+                return attrs.templateUrl;
+            };
 
             var notifyChanges = function () {
                 $log.debug("bsSectionItem notifyChanges");
