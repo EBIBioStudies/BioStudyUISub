@@ -48,9 +48,10 @@
                        ng-change="onAttributeChange()"
                        ng-readonly="readOnly">
                                 <span class="input-group-btn" ng-if="!readOnly && !attr.required">
-                                    <button uib-tooltip={{dict.actions.deleteAttr.popup}} type="button"
+                                    <button type="button"
                                             class="btn btn-sm btn-danger btn-flat"
-                                            ng-click="item.attributes.remove(attr)">
+                                            ng-click="item.attributes.remove(attr)"
+                                            uib-tooltip={{dict.actions.deleteAttr.popup}}>
                                         <i class="fa fa-trash-o"></i>
                                     </button>
                                 </span>
@@ -61,7 +62,8 @@
     <tr ng-if="sectionBinding && !readOnly">
         <td colspan="2">
             <p class="pull-right">
-                <button class="btn btn-primary btn-xs" ng-click="item.attributes.addNew()"
+                <button type="button" class="btn btn-primary btn-xs"
+                        ng-click="item.attributes.addNew()"
                         uib-tooltip={{dict.actions.addAttr.popup}}
                         tooltip-append-to-body="true"
                         tooltip-placement="bottom">{{dict.actions.addAttr.title}}

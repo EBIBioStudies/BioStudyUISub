@@ -19,11 +19,14 @@
                         {{$index+1}}
                     </td>
                     <td>
-                        <button uib-tooltip={{dict.actions.edit.popup}}
-                                class="btn btn-primary btn-sm" type="button"
-                                ng-click="data.ui.activeTabs[$index]=true"><i class="fa fa-edit"></i></button>
-                        <button uib-tooltip={{dict.actions.delete.popup}}
-                                class="btn btn-warning btn-sm" type="button" ng-click="data.remove($index, item)" ng-if="!readOnly">
+                        <button type="button"
+                                class="btn btn-primary btn-sm"
+                                ng-click="data.ui.activeTabs[$index]=true"
+                                uib-tooltip={{dict.actions.edit.popup}}><i class="fa fa-edit"></i></button>
+                        <button type="button"  ng-if="!readOnly"
+                                class="btn btn-warning btn-sm"
+                                ng-click="data.remove($index, item)"
+                                uib-tooltip={{dict.actions.delete.popup}}>
                             <i class="fa fa-trash"></i></button>
                     </td>
                     <td ng-repeat="field in dict.fields" class="form-group-sm row ng-class:data.colSizeCss">
@@ -62,7 +65,9 @@
             {{dict.tabHeading + ($index+1)}}
         </uib-tab-heading>
         <p class="pull-right padding-right-small padding-top-small">
-            <button class="pull-right btn btn-danger btn-xs" ng-click="data.remove($index, item);"
+            <button type="button"
+                    class="pull-right btn btn-danger btn-xs"
+                    ng-click="data.remove($index, item);"
                     uib-tooltip={{dict.actions.delete.popup}}
                     tooltip-append-to-body="true"
                     tooltip-placement="bottom"
