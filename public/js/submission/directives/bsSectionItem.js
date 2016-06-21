@@ -28,7 +28,7 @@ module.exports = function ($log) {
             scope.getTemplateUrl = function () {
                 return attrs.templateUrl;
             };
-            
+
             var notifyChanges = function () {
                 $log.debug("bsSectionItem notifyChanges");
                 if (scope.changeCallback) {
@@ -37,6 +37,10 @@ module.exports = function ($log) {
             };
 
             scope.onAttributeChange = notifyChanges;
+            
+            scope.onPubMedIdChange = function(data) {
+                $log.debug("onPubMedIdChange", data);
+            };
 
             var unwatch = scope.$watchCollection('item.attributes.attributes', notifyChanges);
             scope.$on('$destroy', function () {
