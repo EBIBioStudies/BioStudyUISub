@@ -13,15 +13,20 @@ module.exports = function () {
         controllerAs: "panelCtrl",
         controller: ['$scope', 'DictionaryService', '_', '$log', function ($scope, DictionaryService, _, $log) {
             this.readOnly = $scope.$parent.$eval('readOnly') || false;
-            this.dict = function(dataType) {
+            this.dict = function (dataType) {
                 return DictionaryService.byKey(dataType);
             };
-            this.typeaheadKeys = function(dataType) {
-                return _.map(this.dict(dataType).attributes, function (attr) {
-                    return attr.name
-                });
+            this.typeaheadKeys = function (dataType) {
+                return _.map(
+                    _.filter(this.dict(dataType).attributes,
+                        function (attr) {
+                            return attr.required !== true
+                        }),
+                    function (attr) {
+                        return attr.name
+                    });
             };
-            this.typeaheadValues = function(dataType) {
+            this.typeaheadValues = function (dataType) {
                 var attributes = this.dict(dataType).attributes;
                 return function (attrName, itemIndex) {
                     var attr = _.find(attributes, {name: attrName, typeahead: true});
@@ -64,7 +69,7 @@ module.exports = function () {
             $scope.dict = this.dict($scope.dataType);
             $scope.readOnly = this.readOnly;
 
-            var unwatch = $scope.$watch('data', function(data) {
+            var unwatch = $scope.$watch('data', function (data) {
                 if (data === undefined) {
                     return;
                 }

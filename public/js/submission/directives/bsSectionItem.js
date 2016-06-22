@@ -4,7 +4,7 @@
 
 'use strict';
 
-module.exports = function ($log) {
+module.exports = function ($log, PUBMEDID_SEARCH_EVENTS) {
     return {
         restrict: 'E',
         scope: {
@@ -12,10 +12,10 @@ module.exports = function ($log) {
             dataType: '@type',
             changeCallback: '@change'
         },
-        require: ['?^^bsSection', '^^bsPanel'],
         templateUrl: function (elem, attrs) {
-            return attrs.templateUrl;
+            return attrs.templateUrl || 'templates/bsng/sectionItem/sectionItem.html';
         },
+        require: ['?^^bsSection', '^^bsPanel'],
         link: function (scope, element, attrs, ctrls) {
             var secCtrl = ctrls[0];
             var panelCtrl = ctrls[1];
@@ -24,7 +24,7 @@ module.exports = function ($log) {
             scope.readOnly = panelCtrl.readOnly;
             scope.dict = panelCtrl.dict(attrs.type);
             scope.typeaheadKeys = panelCtrl.typeaheadKeys(attrs.type);
-            scope.typeaheadValues =  panelCtrl.typeaheadValues(attrs.type);
+            scope.typeaheadValues = panelCtrl.typeaheadValues(attrs.type);
 
             var notifyChanges = function () {
                 $log.debug("bsSectionItem notifyChanges");
@@ -34,6 +34,12 @@ module.exports = function ($log) {
             };
 
             scope.onAttributeChange = notifyChanges;
+
+            scope.$on(PUBMEDID_SEARCH_EVENTS.pubMedIdFound, function (event, data) {
+                event.stopPropagation();
+                $log.debug("onPubMedIdChange()", data);
+                scope.item.attributes.update(data);
+            });
 
             var unwatch = scope.$watchCollection('item.attributes.attributes', notifyChanges);
             scope.$on('$destroy', function () {

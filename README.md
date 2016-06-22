@@ -30,27 +30,17 @@ Open terminal/command line window and run following commands
 
 ```
 
-Start express server so you can test it locally. The client will call endpoints defined in server/routes/proxy.js
+To start a local webserver you will need a proxy server (BioStudySubmProxy) real or fake one running locally or remotely. By default
+proxy expected to be on localhost:10280. You can customize this in the 'webserver' task in Gulpfile.js if needed. As soon
+as proxy is running you can use the following command to start the UI on a localhost:7000.
 ```
- node bin/www
-
-```
-
-
-### Test environment ###
-Integrate with BioStudySubmProxy. The client code is build and copied to BioStudySubmProxy/WebContent
-
-Open terminal/command line window and run following commands
-```
- export NODE_ENV=test
- export BIOSD_DIR=../BioStudySubmProxy/WebContent
- gulp
- 
+ gulp webserver
 
 ```
 
-Start express server so you can test it locally. The client will call endpoints defined in server/routes/proxy.js
-```
- node bin/www
+### Tests ###
 
+Everything that in ./test/spec folder will be run by gulp task 'test':
+```
+gulp test
 ```

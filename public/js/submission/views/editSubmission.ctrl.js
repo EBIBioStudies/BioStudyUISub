@@ -11,10 +11,13 @@ module.exports =
         $scope.accno = '';
         $scope.hasError = false;
         $scope.readOnly = false;
+        $scope.submission = null;
 
         $scope.onSubmissionChange = function () {
-            $log.debug("onSubmissionChange()");
-            debounceSaveUpdates();
+            if ($scope.submission !== null) {
+                $log.debug("onSubmissionChange()");
+                debounceSaveUpdates();
+            }
         }
 
         var timeout = null;
@@ -69,11 +72,7 @@ module.exports =
                 $scope.accno = $scope.sbm.accno;
                 saved = angular.toJson(SubmissionModel.export($scope.submission));
                 submissionUnwatch = watchSubmission(debounceSaveUpdates);
-
-            }).catch(function (err) {
-            $log.debug('Error data', err);
-            $state.go('error');
-        });
+            });
 
         $scope.submit = function () {
             $scope.$broadcast('show-errors-check-validity');
