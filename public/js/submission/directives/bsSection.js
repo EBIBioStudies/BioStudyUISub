@@ -154,11 +154,11 @@ module.exports = function (moduleDirective) {
         };
     });
 
-    moduleDirective.filter("filterAttrsTypeahead", function () {
+    moduleDirective.filter("filterAttrsTypeahead", function (_) {
         return function (fieldValueUnused, array, existedKeys) {
             var typeahead = [];
             for (var i in array) {
-                var index = _.findIndex(existedKeys, {name: array[i].name})
+                var index = _.findIndex(existedKeys, {name: array[i].name});
                 if (index === -1) {
                     typeahead.push(array[i]);
                 }
@@ -167,22 +167,9 @@ module.exports = function (moduleDirective) {
         };
     });
 
-    moduleDirective.directive('bsWatch', function () {
-        return {
-            restrict: 'A',
-            require: '^ngModel',
-            scope: {
-                bsWatch: '='
-            },
-            link: function (scope, element, attrs, ctrl) {
-                console.log('bs', scope, attrs, ctrl);
-            }
-        }
-    });
-
-    moduleDirective.filter("filterDifference", function () {
-        return function (fieldValueUnused, array, existedKeys) {
-            return _.differenceBy(array, existedKeys, 'name');
+    moduleDirective.filter("filterDifference", function (_) {
+        return function (fieldValueUnused, array, existedAttrs) {
+            return _.differenceBy(array, _.map(existedAttrs, 'name'));
         };
     });
 
