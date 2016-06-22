@@ -10,14 +10,28 @@ module.exports =
                     add: function (attr) {
                         this.attributes.push({name: attr.name, value: attr.value, required: attr.required === true});
                     },
-                    addNew: function () {
-                        this.add({name: "", value: "", required: false});
+                    addNew: function (name, value) {
+                        this.add({name: name || "", value: value || "", required: false});
                     },
                     remove: function (attr) {
-                        var index = _.findIndex(this.attributes, {name: attr.name});
+                        var index = this.indexOf(attr.name);
                         if (index >= 0) {
                             this.attributes.splice(index, 1);
                         }
+                    },
+                    indexOf: function(name) {
+                        return _.findIndex(this.attributes, {name: name});
+                    },
+                    update: function (obj) {
+                        var self = this;
+                        _.forOwn(obj, function(value, key) {
+                            var index = self.indexOf(key);
+                            if (index >= 0) {
+                                self.attributes[index].value = value;
+                            } else {
+                                self.addNew(key, value);
+                            }
+                        });
                     }
                 };
 

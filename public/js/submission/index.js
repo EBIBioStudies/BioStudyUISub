@@ -8,6 +8,9 @@
         .factory('SubmissionService', require('./submission.service'))
         .factory('DictionaryService', require('./dictionary.service'))
         .factory('PubMedSearch', require('./pubMedSearch.service'))
+        .constant('PUBMEDID_SEARCH_EVENTS', {
+            pubMedIdFound: 'pub-med-id-found'
+        })
         .controller('SubmissionListCtrl', require('./views/submissionList.ctrl'))
         .controller('EditSubmissionCtrl', require('./views/editSubmission.ctrl'))
         .controller('ViewSubmissionCtrl', require('./views/viewSubmission.ctrl'))

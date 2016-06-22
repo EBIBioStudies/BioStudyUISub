@@ -1,11 +1,10 @@
 'use strict';
 
-module.exports = [function () {
+module.exports = ['PUBMEDID_SEARCH_EVENTS', function (PUBMEDID_SEARCH_EVENTS) {
     return {
         restrict: 'E',
         scope: {
-            pmid: "=ngModel",
-            callback: "&callback"
+            pmid: "=ngModel"
         },
         template: function (elem, attrs) {
             return '<input type="text" name="_pmid_search_" placeholder="Enter Pub Med Id" ng-model="pmid" class="' + attrs.childClass + '">';
@@ -18,12 +17,22 @@ module.exports = [function () {
                     function(resp) {
                         $log.debug(resp);
                         if (resp.status === "OK" && resp.data.hasOwnProperty('title')) {
-                            $scope.callback(resp.data);
+                            $scope.$emit(PUBMEDID_SEARCH_EVENTS.pubMedIdFound, uppercaseProperties(resp.data));
                         }
                     }
                 )
             }
-            
+
+            function uppercaseProperties(obj) {
+                var res = {};
+                for (var key in obj) {
+                    if (obj.hasOwnProperty(key)) {
+                        res[key.charAt(0).toUpperCase() + key.substring(1)] = obj[key];
+                    }
+                }
+                return res;
+            }
+
             function debounceSearch() {
                 if (timeout) {
                     $timeout.cancel(timeout)

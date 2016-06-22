@@ -16,8 +16,7 @@ module.exports = function (moduleDirective) {
             scope: {
                 data: '=ngModel',
                 dataType: '@type',
-                changeCallback: '@change',
-                sectionItemTemplateUrl: '@sectionItemTemplateUrl'
+                changeCallback: '@change'
             },
             bindToController: {
                 previewHeader: '@',
