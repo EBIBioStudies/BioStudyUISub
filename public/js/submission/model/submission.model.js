@@ -69,6 +69,12 @@ module.exports =
                 return item;
             }
 
+            function createPublicationItem(pubMedId, attrArray, requiredAttrNames) {
+                var item = createItem(attrArray, requiredAttrNames);
+                item.pubMedId = pubMedId; // can't make it an attribute as it's rendered differently
+                return item;
+            }
+
             function createItem(attrArray, requiredAttrNames) {
                 return {
                     attributes: createAttributes(attrArray, requiredAttrNames)
@@ -131,9 +137,10 @@ module.exports =
                         attributes = attributes || [];
                         return createItem(attributes, requiredAttrNames("contact"));
                     }),
-                    publications: createItems([], function (attributes) {
+                    publications: createItems([], function (pubMedId, attributes) {
+                        pubMedId = pubMedId || "";
                         attributes = attributes || [];
-                        return createItem(attributes, requiredAttrNames("publication"));
+                        return createPublicationItem(pubMedId, attributes, requiredAttrNames("publication"));
                     }),
                     addAnnotation: function (attr) {
                         this.annotations.items[0].attributes.add(attr);
@@ -253,7 +260,9 @@ module.exports =
                 });
 
                 angular.forEach(publications, function (pub) {
-                    subm.addPublication(pub.attributes);
+                    var pubMedId = getAttrValue('PubMedId', pub.attributes) || "";
+                    var attrs =  _.reject(pub.attributes, {name: "PubMedId"});
+                    subm.addPublication(pubMedId, attrs);
                 });
                 return subm;
             }
@@ -315,7 +324,9 @@ module.exports =
                 });
 
                 _.forEach(subm.publications.items, function(item) {
-                    var subsection = {type: "Publication", attributes: copyAttributes(item.attributes.attributes)};
+                    var attrs = copyAttributes(item.attributes.attributes);
+                    attrs.push({name: "PubMedId", value: item.pubMedId});
+                    var subsection = {type: "Publication", attributes: attrs};
                     out.section.subsections.push(subsection);
                 });
 
