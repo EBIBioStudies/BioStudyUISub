@@ -18,8 +18,9 @@ module.exports = function (moduleDirective) {
                     }
                     var len = _.filter(scope.attributes, {name: val}).length;
                     var edited = scope.savedValue != val;
-                    return edited ? len === 0 : len === 1;
-                }
+                    ctrl.$setValidity('duplicate', (edited ? len === 0 : len === 1));
+                    return val;
+                };
             }
         };
     });
