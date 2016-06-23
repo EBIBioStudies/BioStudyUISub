@@ -7,32 +7,20 @@ module.exports = function (moduleDirective) {
             restrict: 'A',
             require: '^ngModel',
             scope: {
-                msDuplicate: '=',
-                msAttr: '=',
-                msViewModel: '='
+                attributes: '=msDuplicate',
+                savedValue: '=ngModel'
             },
             link: function (scope, element, attrs, ctrl) {
-/*
-                scope.$watch('msAttr.name', function (newVal, oldVal) {
-                    if (oldVal !== newVal) {
-                        scope.msViewModel.changeAttr(newVal, oldVal);
-                    }
-                });
-*/
-                ctrl.$validators.msDuplicate = function (modelValue, viewValue) {
-                    if (ctrl.$isEmpty(modelValue)) {
+                ctrl.$validators.msDuplicate = function (val) {
+                    if (ctrl.$isEmpty(val)) {
                         // consider empty models to be valid
                         return true;
                     }
-
-                    var index = _.findIndex(scope.msDuplicate, {name: viewValue});
-
-                    if (index >= 0 && scope.msAttr !== scope.msDuplicate[index]) {
-                        return false;
-                    }
-                    return true;
-                }
-
+                    var len = _.filter(scope.attributes, {name: val}).length;
+                    var edited = scope.savedValue != val;
+                    ctrl.$setValidity('duplicate', (edited ? len === 0 : len === 1));
+                    return val;
+                };
             }
         };
     });
