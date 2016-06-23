@@ -7,7 +7,8 @@ module.exports = function (moduleDirective) {
             restrict: 'A',
             require: '^ngModel',
             scope: {
-                attributes: '=msDuplicate'
+                attributes: '=msDuplicate',
+                savedValue: '=ngModel'
             },
             link: function (scope, element, attrs, ctrl) {
                 ctrl.$validators.msDuplicate = function (val) {
@@ -15,8 +16,9 @@ module.exports = function (moduleDirective) {
                         // consider empty models to be valid
                         return true;
                     }
-                    var index = _.findIndex(scope.attributes, {name: val});
-                    return index < 0;
+                    var len = _.filter(scope.attributes, {name: val}).length;
+                    var edited = scope.savedValue != val;
+                    return edited ? len === 0 : len === 1;
                 }
             }
         };
