@@ -13,8 +13,7 @@ module.exports =
                     addNew: function (name, value) {
                         this.add({name: name || "", value: value || "", required: false});
                     },
-                    remove: function (attr) {
-                        var index = this.indexOf(attr.name);
+                    remove: function (index) {
                         if (index >= 0) {
                             this.attributes.splice(index, 1);
                         }
@@ -35,24 +34,24 @@ module.exports =
                     }
                 };
 
-                var toAdd = {};
-                if (attrArray) {
-                    _.forEach(attrArray, function (attr) {
-                        toAdd[attr.name] = attr.value;
-                    });
-                }
-
                 if (requiredAttrNames) {
                     _.forEach(requiredAttrNames, function (attrName) {
-                        var val = toAdd[attrName] || "";
-                        attributes.add({name: attrName, value: val, required: true});
-                        delete toAdd[attrName];
+                        attributes.add({name: attrName, value: "", required: true});
                     });
                 }
 
-                _.forEach(toAdd, function (value, key) {
-                    attributes.add({name: key, value: value});
+                var  claimed = {};
+                var leftover = _.filter(attrArray, function (attr) {
+                    var index = attributes.indexOf(attr.name);
+                    if (index >= 0 && !claimed[attr.name]) {
+                        attributes.attributes[index][attr.name] = attr.value;
+                        claimed[attr.name] = true; //only first value is used
+                        return false;
+                    }
+                    return true;
                 });
+
+                _.forEach(leftover, function(attr) {attributes.add(attr)});
 
                 return attributes;
             }
@@ -181,30 +180,26 @@ module.exports =
                     if (!attrs) {
                         return attrs;
                     }
-                    var processed = [];
-                    _.forEach(attrs, function (attr) {
+                    return _.map(attrs, function (attr) {
                         var copy = _.assign({}, attr);
                         if (copy.isReference) {
                             copy.value =  refs[attr.value];
                         }
-                        processed.push(copy);
+                        return copy;
                     });
-                    return processed;
                 }
 
                 function renameAttributes(attrs) {
                     if (!attrs) {
                         return attrs;
                     }
-                    var processed = [];
-                    _.forEach(attrs, function (attr) {
+                    return _.map(attrs, function (attr) {
                         var copy = _.assign({}, attr);
                         if (copy.name === 'Affiliation') { // Affiliation -> Organisation
                             copy.name = 'Organisation';
                         }
-                        processed.push(copy);
+                        return copy;
                     });
-                    return processed;
                 }
 
                 var subm = createSubmission(DictionaryService.dict());

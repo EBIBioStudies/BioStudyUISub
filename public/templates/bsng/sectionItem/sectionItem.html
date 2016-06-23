@@ -58,7 +58,7 @@
                                 <span class="input-group-btn" ng-if="!readOnly && !attr.required">
                                     <button type="button"
                                             class="btn btn-sm btn-danger btn-flat"
-                                            ng-click="item.attributes.remove(attr)"
+                                            ng-click="item.attributes.remove($index)"
                                             uib-tooltip={{dict.actions.deleteAttr.popup}}>
                                         <i class="fa fa-trash-o"></i>
                                     </button>
