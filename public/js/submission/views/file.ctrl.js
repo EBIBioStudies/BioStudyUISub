@@ -1,8 +1,6 @@
 'use strict';
 
-
 module.exports = function ($scope, $log, FileService) {
-    console.log('File Ctrl');
     $scope.files = [];
     function processFiles(data, array) {
         for (var i in data) {

@@ -1,0 +1,18 @@
+<div class="panel panel-info"
+     ng-class="{'panel-danger': sectionForm.$invalid, 'panel-info': sectionForm.$valid}"
+     ng-show="coll.length > 0"
+     ng-form name="sectionForm">
+
+    <div class="panel-heading">{{dict.title}}&nbsp;<span class="badge">{{coll.length}}</span>
+        <div class="btn-toolbar pull-right" role="toolbar" ng-if="!readOnly">
+            <div class="btn-group ">
+                <button type="button"
+                        class="btn btn-xs btn-success"
+                        ng-click="collWrapper.addNew()">{{dict.actions.add.title}}</i></button>
+            </div>
+        </div>
+    </div>
+
+    <ng-include src="contentUrl"></ng-include>
+
+</div>

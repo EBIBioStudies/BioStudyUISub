@@ -3,136 +3,137 @@
  */
 'use strict';
 
-var modelHelper = require('../../model/modelHelper2');
-
 module.exports =
-    function ($rootScope, $scope, $timeout, $interval, $location,
-              $uibModal, $stateParams, $log, $anchorScroll, submissionDecorator,
-              SubmissionService, MessageService, SubmissionModel) {
+    function ($rootScope, $scope, $timeout, $state,
+              $stateParams, $log, SubmissionModel, SubmissionService, MessageService, ModalDialogs) {
 
-        submissionDecorator.create($scope);
-        $scope.mode = $rootScope.Constants.FormMode.EDIT;
-        $scope.title = 'Edit the submission ' + $stateParams.accno;
+        $scope.title = 'Edit the submission';
+        $scope.accno = '';
         $scope.hasError = false;
+        $scope.readOnly = false;
+        $scope.submission = null;
 
-        var saveInterv = null;
-        var savedSubmission;
-
-        function startSaving(str) {
-            savedSubmission = str;
-            saveInterv = $interval(function () {
-                $scope.save();
-            }, 5000);
+        $scope.onSubmissionChange = function () {
+            if ($scope.submission !== null) {
+                $log.debug("onSubmissionChange()");
+                debounceSaveUpdates();
+            }
         }
 
-        function stopSaving() {
-            if (saveInterv) {
-                $interval.cancel(saveInterv);
-                saveInterv = null;
+        var timeout = null;
+        var saved = null;
+        var submissionUnwatch = null;
+
+        function watchSubmission(listener) {
+            return $scope.$watchGroup([
+                'submission.title',
+                'submission.releaseDate',
+                'submission.description'], listener);
+        }
+
+        function saveUpdates() {
+            $log.debug("saveUpdatess()");
+            var exported = SubmissionModel.export($scope.submission);
+            var exportedJson = angular.toJson(exported);
+            if (saved !== exportedJson) {
+                $log.debug("saved: " + saved);
+                $log.debug("exported: " + exportedJson);
+                var sbm = $scope.sbm;
+                sbm.data = exported;
+                SubmissionService.saveSubmission(sbm)
+                    .then(function () {
+                        $log.debug("submission saved");
+                        saved = exportedJson;
+                    });
+            } else {
+                $log.debug("all saved already");
             }
+        }
+
+        function debounceSaveUpdates(newVal, oldVal) {
+            if (timeout) {
+                $timeout.cancel(timeout)
+            }
+            timeout = $timeout(saveUpdates, 1000);
         }
 
         $scope.$on("$destroy", function () {
-            console.log('destroy');
-            stopSaving();
+            if (submissionUnwatch) {
+                submissionUnwatch();
+                submissionUnwatch = null;
+            }
         });
 
-        SubmissionService.getSubmission($stateParams.accno)
+        SubmissionService.editSubmission($stateParams.accno)
             .then(function (sbm) {
 
                 $scope.sbm = sbm;
-                $scope.submission = SubmissionModel.createSubmission(sbm.data);
-                $scope.submHelper = modelHelper.createSubmModel($scope.submission);
-                $scope.curentSectionForFiles = $scope.submission.section;
+                $scope.submission = SubmissionModel.import(sbm.data);
+                $scope.accno = $scope.sbm.accno;
+                saved = angular.toJson(SubmissionModel.export($scope.submission));
+                submissionUnwatch = watchSubmission(debounceSaveUpdates);
+            });
 
-                startSaving(angular.toJson($scope.submission));
-
-            }).catch(function (err) {
-            $log.debug('Error data', err);
-            $location.url('/error');
-        });
-
-        $scope.save = function () {
-            var currentSubmission = angular.toJson($scope.submission);
-            if (currentSubmission != savedSubmission) {
-                stopSaving();
-                var sbm = $scope.sbm;
-                sbm.data = $scope.submission;
-                SubmissionService.saveSubmission(sbm)
-                    .then(function () {
-                        startSaving(currentSubmission);
-                    });
-            }
-        };
-
-        $scope.submit = function (submissionForm) {
-            //
+        $scope.submit = function () {
             $scope.$broadcast('show-errors-check-validity');
             if ($scope.submissionForm.$invalid) {
                 $log.debug('Validation error', $scope.submissionForm);
                 return;
             }
-            $log.debug('Submit data', $scope.submission);
-            SubmissionService.submitSubmission($scope.submission).then(function (data) {
-                var acc = $scope.submission.accno;
-                MessageService.addMessage('Submission ' + acc + ' updated.');
-                $interval.cancel(saveInterv);
-                var modalInstance = $uibModal.open({
-                    controller: 'MessagesCtrl',
-                    templateUrl: 'templates/partials/successDialog.html',
-                    backdrop: true,
-                    size: 'lg'
+
+            var sbm = $scope.sbm;
+            sbm.data = SubmissionModel.export($scope.submission);
+            $log.debug('Submit data', sbm);
+
+            SubmissionService.submitSubmission(sbm)
+                .then(function (data) {
+                    if (data.status === "OK") {
+                        showSubmitSuccess();
+                    } else {
+                        $log.debug("failed to submit", data);
+                        showSubmitError(data);
+                    }
                 });
-                /*$timeout(function() {
-                 modalInstance.close();
-                 },6000);*/
-                modalInstance.result.then(function () {
-                    $log.debug('Created ' + acc);
-                }, function () {
-                    $log.debug('Created');
-                });
-
-
-            }).catch(function (err, status) {
-                $log.debug('Created error', err, status);
-
-                MessageService.setErrorType();
-                MessageService.addMessage('Server error ' + status + ' ' + err);
-                var modalInstance = $uibModal.open({
-                    controller: 'MessagesCtrl',
-                    templateUrl: 'myModalContentError.html',
-                    windowTemplateUrl: 'myModalWindow.html',
-                    backdrop: true,
-                    size: 'lg'
-                });
-                $timeout(function () {
-                    modalInstance.close();
-                    MessageService.clearMessages();
-                }, 6000);
-                modalInstance.result.then(function () {
-                    MessageService.clearMessages();
-                });
-            });
-
-
         };
 
-        $scope.open = function ($event) {
+        function showSubmitSuccess() {
+            var acc = $scope.submission.accno;
+            ModalDialogs.successMessages(['Submission ' + acc + ' has been submitted successfully.'])
+                .then(function () {
+                    $state.go('submissions');
+                });
+        }
+
+        function showSubmitError(data) {
+            ModalDialogs.errorMessages(['Failed to submit.'])
+                .then(function () {
+                    // do nohtig;
+                });
+        }
+
+        $scope.addAnnotation = function () {
+            this.submission.annotations.items[0].attributes.addNew();
+        };
+
+        $scope.addFile = function () {
+            this.submission.files.addNew();
+        };
+
+        $scope.addLink = function () {
+            this.submission.links.addNew();
+        };
+
+        $scope.addContact = function () {
+            this.submission.contacts.addNew();
+        };
+
+        $scope.addPublication = function () {
+            this.submission.publications.addNew();
+        };
+
+        $scope.openDatePicker = function ($event) {
             $event.preventDefault();
             $event.stopPropagation();
             $scope.opened = true;
         };
-
-
-        $scope.getParentSection = function (parent) {
-            return parent || $scope.submission;
-        };
-
-        $scope.addAttributeTo = function (parent) {
-            var attr = SubmissionModel.createAttribute();
-            $scope.viewSubmission.contacts.attributesKey(attr);
-            SubmissionModel.addAttributeTo(parent, SubmissionModel.createAttribute(), 'conract');
-
-        };
-
     };

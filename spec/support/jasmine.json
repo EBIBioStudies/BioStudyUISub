@@ -1,8 +1,0 @@
-{
-  "spec_dir": "public/js/model",
-  "spec_files": [
-    "**/*.[sS]pec.js"
-  ],
-  "stopSpecOnExpectationFailure": false,
-  "random": false
-}

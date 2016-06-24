@@ -1,0 +1,94 @@
+{
+  "accno": "S-STA01",
+  "type": "Submission",
+  "attributes": [
+    {
+      "name": "Title",
+      "value": "Example Submission"
+    },
+    {
+      "name": "ReleaseDate",
+      "value": "2016-12-31"
+    }
+  ],
+  "section": {
+    "type": "Study",
+    "attributes": [
+      {
+        "name": "Description",
+        "value": "Study Description"
+      },
+      {
+        "name": "Ref",
+        "value": "123456"
+      }
+    ],
+    "files": [
+      {
+        "path": "/file",
+        "attributes": [
+          {
+            "name": "Description",
+            "value": "File Description"
+          }
+        ]
+      }
+    ],
+    "links": [
+      {
+        "url": "http://example.com"
+      }
+    ],
+    "subsections": [
+      {
+        "type": "Publication",
+        "attributes": [
+          {
+            "name": "Title",
+            "value": "Publication Title"
+          },
+          {
+            "name": "Journal",
+            "value": "PLoS biology"
+          },
+          {
+            "name": "Volume",
+            "value": "3(1)"
+          },
+          {
+            "name": "Pages",
+            "value": "e15"
+          },
+          {
+            "name": "Publication date",
+            "value": "2005 Jan"
+          }
+        ],
+      },
+      {
+        "type": "Author",
+        "attributes": [
+          {
+            "name": "Name",
+            "value": "John Doe"
+          },
+          {
+            "name": "Affiliation",
+            "isReference": true,
+            "value": "affilRef1"
+          }
+        ],
+      },
+      {
+        "accno": "affilRef1",
+        "type": "Affiliation",
+        "attributes": [
+          {
+            "name": "Name",
+            "value": "The Institute for Genomic Research, Rockville Maryland"
+          }
+        ]
+      }
+    ]
+  }
+}
