@@ -15,18 +15,22 @@
                     </div>
                     <div class="panel-body">
                         <form id="login-form" novalidate name="signInForm" role="form">
-                            <div class="form-group" ms-form-group-validator>
-                                <label class="control-label" for="login">Email/login name<span ng-show="signInForm.login.$dirty && signInForm.login.$invalid
-                                          && signInForm.login.$error.required">: cannot be blank</span></label>
-
+                            <div class="form-group" ng-class="{'has-error': signInForm.login.$invalid}">
+                                <label class="control-label" for="login">Email/login name
+                                    <ng-messages for="signInForm.login.$error" ng-if="signInForm.login.$dirty">
+                                        <ng-message when="required"><span>: cannot be blank</span></ng-message>
+                                    </ng-messages>
+                                </label>
                                 <input type="text" id="login" name="login" tabindex="1"
                                        class="form-control"
                                        placeholder="Email or login name" ng-model="credentials.login" ng-required="true">
                             </div>
-                            <div class="form-group" ms-form-group-validator>
-                                <label class="control-label" for="password">Password<span ng-show="signInForm.password.$dirty && signInForm.password.$invalid
-                                          && signInForm.password.$error.required">: cannot be blank</span></label>
-
+                            <div class="form-group" ng-class="{'has-error': signInForm.password.$invalid}">
+                                <label class="control-label" for="password">Password
+                                    <ng-messages for="signInForm.password.$error" ng-if="signInForm.password.$dirty">
+                                        <ng-message when="required"><span>: cannot be blank</span></ng-message>
+                                    </ng-messages>
+                                </label>
                                 <input type="password" name="password" id="password" tabindex="2"
                                        class="form-control"
                                        placeholder="Password" ng-model="credentials.password" ng-required="true">
