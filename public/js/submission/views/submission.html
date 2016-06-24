@@ -28,8 +28,8 @@
                     data-toggle="uisettings.collapseLeftSide" data-item-text="Add a publication"
                     data-item-class="fa-book">
                 </li>
-                <li class="warning" bs-ng-item data-bs-click="submit(submissionForm)"
-                    data-toggle="uisettings.collapseLeftSide" data-item-text="Submit the submission"
+                <li class="warning" ng-disabled="submissionForm.$invalid" bs-ng-item data-bs-click="submit(submissionForm)"
+                    data-toggle="uisettings.collapseLeftSide" data-item-text="Submit"
                     data-item-class="fa-database">
                 </li>
 
