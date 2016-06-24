@@ -139,7 +139,9 @@
                                 data-content-url="templates/bsng/panel/section_content.html"
                                 data-change="onSubmissionChange()"></bs-panel>
                     </div>
-
+                    <div>
+                        <button class="btn btn-primary btn-lg" ng-show="!submissionForm.$invalid">Submit</button>
+                    </div>
                 </form>
 
             </section>
