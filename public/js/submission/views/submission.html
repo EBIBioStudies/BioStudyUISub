@@ -58,11 +58,15 @@
                       method="post" name="submissionForm">
                     <div class="form-group row margin-bottom-small padding-right-15" ms-form-group-validator>
                         <div class="col-sm-12 ">
-                            <label class="control-label">Title<span ng-show="submissionForm.title.$dirty && submissionForm.title.$invalid
-                                          && submissionForm.title.$error.required">: cannot be blank</span></label>
+                            <label class="control-label">Title
+                                <ng-messages for="submissionForm.title.$error" ng-if="submissionForm.title.$dirty">
+                                    <ng-message when="required"><span>: cannot be blank</span></ng-message>
+                                    <ng-message when="minlength"><span>: must be at least 50 characters</span></ng-message>
+                                </ng-messages>
+                            </label>
                             <input type="text" class="form-control" id="title" name="title" placeholder="Enter a title"
                                    ng-model="submission.title" required
-                                   ng-readonly="readOnly">
+                                   ng-readonly="readOnly" ng-minlength="50">
                         </div>
                     </div>
 
@@ -70,9 +74,11 @@
                          id="submReleaseDate">
 
                         <div class="col-sm-12">
-                            <label class="control-label">Release date<span ng-show="submissionForm.releaseDate.$dirty && submissionForm.releaseDate.$invalid
-                                          && submissionForm.releaseDate.$error.required">: cannot be blank</span></label>
-
+                            <label class="control-label">Release date
+                                <ng-messages for="submissionForm.releaseDate.$error" ng-if="submissionForm.releaseDate.$dirty">
+                                    <ng-message when="required"><span>: cannot be blank</span></ng-message>
+                                </ng-messages>
+                            </label>
                             <p class="input-group margin-bottom-none">
                                 <input type="text" name="releaseDate" class="form-control"
                                        uib-datepicker-popup="dd.MM.yyyy"
@@ -92,8 +98,12 @@
                     <div class="form-group row margin-bottom-small padding-right-15"
                          ng-class="{'has-error':submissionForm.description.$invalid }">
                         <div class="col-sm-12 ">
-                            <label class="control-label">Description<span ng-show="submissionForm.description.$dirty && submissionForm.description.$invalid
-                                          && submissionForm.description.$error.required">: cannot be blank</span></label>
+                            <label class="control-label">Description
+                                <ng-messages for="submissionForm.description.$error" ng-if="submissionForm.description.$dirty">
+                                    <ng-message when="required"><span>: cannot be blank</span></ng-message>
+                                    <ng-message when="minlength"><span>: must be at least 50 characters</span></ng-message>
+                                </ng-messages>
+                            </label>
                             <textarea id="description" name="description" class="form-control input-sm"
                                       ng-model="submission.description"
                                       required
@@ -102,7 +112,7 @@
                                       tooltip-placement="bottom"
                                       tooltip-class="customClass"
                                       tooltip-enable="submissionForm.description.$invalid"
-                                      ng-readonly="readOnly"></textarea>
+                                      ng-readonly="readOnly" ng-minlength="50"></textarea>
                         </div>
                     </div>
 
