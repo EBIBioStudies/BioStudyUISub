@@ -150,7 +150,7 @@
                                 data-change="onSubmissionChange()"></bs-panel>
                     </div>
                     <div>
-                        <button class="btn btn-primary btn-lg" ng-show="!submissionForm.$invalid">Submit</button>
+                        <button type="button" class="btn btn-primary btn-lg" ng-show="!submissionForm.$invalid" ng-click="submit(submissionForm)">Submit</button>
                     </div>
                 </form>
 
