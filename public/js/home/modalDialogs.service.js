@@ -8,13 +8,13 @@ module.exports =
                 templateUrl: params.template,
                 backdrop: 'static',
                 resolve: {
-                    messages: function () {
-                        return params.messages;
+                    params: function () {
+                        return params;
                     }
                 },
                 size: 'lg',
-                controller: function ($scope, messages) {
-                    $scope.messages = messages;
+                controller: function ($scope, params) {
+                    $scope.params = params;
                 }
             });
             return modalInstance.result;
@@ -27,10 +27,11 @@ module.exports =
             });
         }
 
-        function errorMessagesDialog(messages) {
+        function errorMessagesDialog(messages, title) {
             return showMessagesDialog({
                 template: 'templates/partials/errorDialog.html',
-                messages: messages
+                messages: messages,
+                title: title || 'Errors'
             });
         }
         
