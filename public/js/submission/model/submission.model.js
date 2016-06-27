@@ -50,7 +50,7 @@ module.exports =
                 var leftover = _.filter(attrArray, function (attr) {
                     var index = attributes.indexOf(attr.name);
                     if (index >= 0 && !claimed[attr.name]) {
-                        attributes.attributes[index][attr.name] = attr.value;
+                        attributes.attributes[index].value = attr.value;
                         claimed[attr.name] = true; //only first value is used
                         return false;
                     }

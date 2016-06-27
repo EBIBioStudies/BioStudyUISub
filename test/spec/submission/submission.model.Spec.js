@@ -39,19 +39,21 @@ describe("SubmissionModel", function () {
 
         var files = subm.files.items;
         expect(files.length).toEqual(1);
-        expect(files[0].path).toEqual("/file");
         var fileAttrs = files[0].attributes.attributes;
-        expect(fileAttrs.length).toEqual(1);
-        expect(fileAttrs[0].name).toEqual("Description");
-        expect(fileAttrs[0].value).toEqual("File Description");
+        expect(fileAttrs.length).toEqual(2);
+        expect(fileAttrs[0].name).toEqual("Path");
+        expect(fileAttrs[0].value).toEqual("/file");
+        expect(fileAttrs[1].name).toEqual("Description");
+        expect(fileAttrs[1].value).toEqual("File Description");
 
         var links = subm.links.items;
         expect(links.length).toEqual(1);
-        expect(links[0].url).toEqual("http://example.com");
         var linkAttrs = links[0].attributes.attributes;
-        expect(linkAttrs.length).toEqual(1); // 'Description' added automatically as it's required
-        expect(linkAttrs[0].name).toEqual("Description");
-        expect(linkAttrs[0].value).toEqual("");
+        expect(linkAttrs.length).toEqual(2); // 'Description' added automatically as it's required
+        expect(linkAttrs[0].name).toEqual("URL");
+        expect(linkAttrs[0].value).toEqual("http://example.com");
+        expect(linkAttrs[1].name).toEqual("Description");
+        expect(linkAttrs[1].value).toEqual("");
 
         var publications = subm.publications.items;
         expect(publications.length).toEqual(1);
@@ -128,8 +130,8 @@ describe("SubmissionModel", function () {
 
     it('exports files and links', function () {
         var subm = SubmissionModel.import({});
-        subm.addFile("/file", [{name: "Description", value: "File description"}]);
-        subm.addLink("http://example.com", [{name: "Description", value: "Url description"}]);
+        subm.addFile([{name: "Path", value: "/file"}, {name: "Description", value: "File description"}]);
+        subm.addLink([{name: "URL", value: "http://example.com"}, {name: "Description", value: "Url description"}]);
 
         var exported = SubmissionModel.export(subm);
         expect(exported.section.files).toBeDefined();
@@ -193,7 +195,7 @@ describe("SubmissionModel", function () {
 
     it('exports publications', function () {
         var subm = SubmissionModel.import({});
-        subm.addPublication([
+        subm.addPublication("123", [
             {
                 name: "Title",
                 value: "A publication"
@@ -205,8 +207,9 @@ describe("SubmissionModel", function () {
         var subsections = exported.section.subsections;
         expect(subsections.length).toEqual(1);
         expect(subsections[0].type).toEqual("Publication")
-        expect(subsections[0].attributes.length).toEqual(1);
+        expect(subsections[0].attributes.length).toEqual(2);
         expect(subsections[0].attributes[0]).toEqual({name: "Title", value: "A publication"});
+        expect(subsections[0].attributes[1]).toEqual({name: "PubMedId", value: "123"});
     });
 
     it('exports empty submission', function () {
