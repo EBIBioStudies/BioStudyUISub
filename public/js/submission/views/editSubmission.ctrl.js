@@ -75,12 +75,16 @@ module.exports =
             });
 
         $scope.submit = function () {
-            $scope.$broadcast('show-errors-check-validity');
             if ($scope.submissionForm.$invalid) {
-                $log.debug('Validation error', $scope.submissionForm);
+                $log.error('SubmissionForm is invalid');
                 return;
             }
 
+            var errors = SubmissionModel.validate($scope.submission);
+            if (errors.length > 0) {
+                showSubmitFailed(errors);
+                return;
+            }
             var sbm = $scope.sbm;
             sbm.data = SubmissionModel.export($scope.submission);
             $log.debug('Submit data', sbm);
@@ -91,11 +95,11 @@ module.exports =
                         showSubmitSuccess();
                     } else {
                         $log.debug("failed to submit", data);
-                        showSubmitError(data);
+                        showSubmitFailed(['Failed to submit.']);
                     }
                 });
         };
-
+        
         function showSubmitSuccess() {
             var acc = $scope.submission.accno;
             ModalDialogs.successMessages(['Submission ' + acc + ' has been submitted successfully.'])
@@ -104,8 +108,8 @@ module.exports =
                 });
         }
 
-        function showSubmitError(data) {
-            ModalDialogs.errorMessages(['Failed to submit.'])
+        function showSubmitFailed(errors) {
+            ModalDialogs.errorMessages(errors, "Submission validation failed")
                 .then(function () {
                     // do nohtig;
                 });

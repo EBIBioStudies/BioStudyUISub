@@ -6,15 +6,6 @@
     <tbody>
     <tr bs-replace src="templates/bsng/sectionItem/publication/sectionItem.html"
         ng-if="dataType === 'publication'"></tr>
-    <tr ng-repeat="field in dict.fields">
-        <td class="nopadding border-none form-group-sm">
-            <p class="form-control-static pull-right">{{field.label}}</p>
-        </td>
-        <td class="nopadding border-none form-group-sm"
-            ng-class="{'has-error' : attrItemForm[field.name].$invalid}">
-            <bs-details-header data-ng-model="item" data-field="field" data-dict="dict"></bs-details-header>
-        </td>
-    </tr>
     <tr ng-repeat="attr in item.attributes.attributes">
         <td class="col-md-3 nopadding border-none form-group-sm"
             ng-class="{'has-error' : attrItemForm['attrKey_' + $index].$invalid}">
@@ -47,14 +38,27 @@
                        typeahead-append-to-body="true"
                        typeahead-show-hint="true"
                        typeahead-min-length="0"
-                       ng-required="true"
+                       ng-required="attr.required"
                        uib-tooltip="This field is required"
                        tooltip-class="customClass"
                        tooltip-placement="top-left"
                        tooltip-enable="attrItemForm['attrValue_' + $index].$invalid"
                        ng-required="attr.required"
                        ng-change="onAttributeChange()"
-                       ng-readonly="readOnly">
+                       ng-readonly="readOnly"
+                       ng-if="attr.type === 'text'">
+
+            <div ng-controller="FileCtrl" ng-if="attr.type === 'file'">
+                <select class="form-control input-sm"
+                        ng-model="attr.value"
+                        ng-change="onAttributeChange()"
+                        name="attrValue_{{$index}}"
+                        ng-required="attr.required">
+                    <option ng-repeat="file in files" value="{{file}}">
+                        {{file}}
+                    </option>
+                </select>
+            </div>
                                 <span class="input-group-btn" ng-if="!readOnly && !attr.required">
                                     <button type="button"
                                             class="btn btn-sm btn-danger btn-flat"
