@@ -357,10 +357,67 @@ module.exports =
                 return exportSubmission(importSubmission({}));
             }
 
+            function validateSubmission(sbm) {
+
+                function requiredAttribute(itemKey, attrKey) {
+                    return function(sbm) {
+                        for(var item in sbm[itemKey].items) {
+                            var attrIndex = _.findIndex(item.attributes, {name: attrKey});
+                            if (attrIndex < 0) {
+                                return false;
+                            }
+                            var attr = item.attributes[attrIndex].value;
+                            return attr ? true : false;
+                        }
+                    }
+                }
+
+                var rules = {
+                    "Title must be at least 50 characters": function (sbm) {
+                        return sbm.title && sbm.title.length >= 50;
+                    },
+                    "Description must be at least 50 characters": function (sbm) {
+                        return sbm.description && sbm.description.length >= 50;
+                    },
+                    "Release date is required": function (sbm) {
+                        return sbm.releaseDate ? true : false;
+                    },
+                    "At least one contact is required": function (sbm) {
+                        return sbm.contacts.items.length > 0;
+                    }
+                };
+
+                _.forEach(_.filter(DictionaryService.byKey('contact').attributes, {required: 'true'}), function(attr){
+                    rules["Contact '" + attr.name + "' is required"] = requiredAttribute('contacts', attr.name);
+                });
+
+                _.forEach(_.filter(DictionaryService.byKey('link').attributes, {required: 'true'}), function(attr){
+                    rules["Link '" + attr.name + "' is required"] = requiredAttribute('links', attr.name);
+                });
+
+                _.forEach(_.filter(DictionaryService.byKey('file').attributes, {required: 'true'}), function(attr){
+                    rules["File '" + attr.name + "' is required"] = requiredAttribute('links', attr.name);
+                });
+
+                _.forEach(_.filter(DictionaryService.byKey('publication').attributes, {required: 'true'}), function(attr){
+                    rules["File '" + attr.name + "' is required"] = requiredAttribute('publications', attr.name);
+                });
+
+                var errors = [];
+                _.forOwn(rules, function(rule, name) {
+                    var ok =  rule(sbm);
+                    if (!ok) {
+                        errors.push(name);
+                    }
+                });
+                return errors;
+            }
+
             return {
                 create: createNew,
                 import: importSubmission,
-                export: exportSubmission
+                export: exportSubmission,
+                validate: validateSubmission
             }
         }]
     })();
