@@ -43,7 +43,7 @@ module.exports = function (moduleDirective) {
 
                 function update(obj) {
                     var attributeKeys = getAttributeKeys(obj);
-                    var colSizeCss = getColSizeCss(obj.fields, attributeKeys);
+                    var colSizeCss = getColSizeCss(attributeKeys);
 
                     $scope.attributeKeys = attributeKeys;
                     $scope.colSizeCss = colSizeCss;
@@ -59,8 +59,8 @@ module.exports = function (moduleDirective) {
                     return objProperties(keys);
                 }
 
-                function getColSizeCss(fields, attributeKeys) {
-                    var length = fields.length + attributeKeys.length;
+                function getColSizeCss(attributeKeys) {
+                    var length = attributeKeys.length;
                     if (length > 6) {
                         length = 6;
                     }
@@ -105,42 +105,7 @@ module.exports = function (moduleDirective) {
             }]
         };
     });
-
-    moduleDirective.directive('bsPreviewHeader', function () {
-        return {
-            restrict: 'E',
-            require: '^bsSection',
-            scope: {
-                data: '=ngModel',
-                field: '=',
-                dict: '='
-            },
-            template: "<ng-include src='template'></ng-include>",
-            link: function (scope, element, attrs, ctrl) {
-                scope.template = ctrl.previewHeader || 'templates/bsng/section/previewHeader.html';
-                scope.onAttributeChange = scope.$parent.onAttributeChange;
-            }
-        };
-
-    });
-
-    moduleDirective.directive('bsDetailsHeader', function () {
-        return {
-            restrict: 'E',
-            require: '^bsSection',
-            scope: {
-                data: '=ngModel',
-                field: '=',
-                dict: '='
-            },
-            template: "<ng-include src='template'></ng-include>",
-            link: function (scope, element, attrs, ctrl) {
-                scope.template = ctrl.detailsHeader || 'templates/bsng/section/detailsHeader.html';
-                scope.onAttributeChange = scope.$parent.onAttributeChange;
-            }
-        };
-    });
-
+    
     moduleDirective.filter('filterAttrs', function () {
         return function (fieldValueUnused, array, key) {
             var ret = [];

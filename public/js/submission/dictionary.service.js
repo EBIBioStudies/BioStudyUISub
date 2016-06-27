@@ -2,16 +2,16 @@
 
 module.exports =
     (function () {
-        return ['$log', function ($log) {
+        return ['$log', '_', function ($log, _) {
             var dict = {
                 "annotation": {
                     "title": "Describe your study",
                     "attributes": [
-                        {"name": "Organism", "required": false},
-                        {"name": "Experimental design", "required": false},
-                        {"name": "Experimental factor", "required": false},
-                        {"name": "Organ", "required": false},
-                        {"name": "Cell type", "required": false}
+                        {"name": "Organism", type: "text", "required": false},
+                        {"name": "Experimental design", type: "text", "required": false},
+                        {"name": "Experimental factor", type: "text", "required": false},
+                        {"name": "Organ", type: "text", "required": false},
+                        {"name": "Cell type", type: "text", "required": false}
                     ],
                     "actions": {
                         "add": {
@@ -48,14 +48,14 @@ module.exports =
                         }
                     },
                     "attributes": [
-                        {"name": "DOI", "required": false},
-                        {"name": "Title", "required": true},
-                        {"name": "Authors", "required": false},
-                        {"name": "Type", "required": false},
-                        {"name": "Issue", "required": false},
-                        {"name": "Issn", "required": false},
-                        {"name": "Year", "required": false},
-                        {"name": "Volume", "required": false}
+                        {"name": "DOI", type: "text", "required": false},
+                        {"name": "Title", type: "text", "required": true},
+                        {"name": "Authors", type: "text", "required": false},
+                        {"name": "Type", type: "text", "required": false},
+                        {"name": "Issue", type: "text", "required": false},
+                        {"name": "Issn", type: "text", "required": false},
+                        {"name": "Year", type: "text", "required": false},
+                        {"name": "Volume", type: "text", "required": false}
                     ]
                 },
                 "link": {
@@ -81,17 +81,10 @@ module.exports =
                             "popup": "Delete link annotation"
                         }
                     },
-                    "fields": [
-                        {
-                            "name": "url",
-                            "label": "URL",
-                            "placeholder": "Type a valid URL, e.g., http://www.ebi.ac.uk",
-                            "type": "text"
-                        }
-                    ],
                     "attributes": [
-                        {"name": "Description", "required": true},
-                        {"name": "Type", "required": false}
+                        {"name": "URL", type: "text", "required": true},
+                        {"name": "Description", type: "text", "required": true},
+                        {"name": "Type", type: "text", "required": false}
                     ]
                 },
                 "contact": {
@@ -119,14 +112,14 @@ module.exports =
                         }
                     },
                     "attributes": [
-                        {"name": "Name", "required": true},
-                        {"name": "Organisation", "required": true, "typeahead": true},
-                        {"name": "E-mail", "required": true},
-                        {"name": "Role", "required": false},
-                        {"name": "ORCID", "required": false},
-                        {"name": "Address", "required": false},
-                        {"name": "Departement", "required": false},
-                        {"name": "Funding", "required": false}
+                        {"name": "Name", type: "text", "required": true},
+                        {"name": "Organisation", type: "text", "required": true, "typeahead": true},
+                        {"name": "E-mail", type: "text", "required": true},
+                        {"name": "Role", type: "text", "required": false},
+                        {"name": "ORCID", type: "text", "required": false},
+                        {"name": "Address", type: "text", "required": false},
+                        {"name": "Departement", type: "text", "required": false},
+                        {"name": "Funding", type: "text", "required": false}
                     ]
                 },
 
@@ -153,29 +146,23 @@ module.exports =
                             "popup": "Delete file annotation"
                         }
                     },
-                    "fields": [
-                        {
-                            "name": "path",
-                            "label": "Path",
-                            "type": "select"
-                        }
-                    ],
                     "attributes": [
-                        {"name": "Description", "required": true},
-                        {"name": "Type", "required": false}
+                        {"name": "Path", type: "file", "required": true},
+                        {"name": "Description", type: "text", "required": true},
+                        {"name": "Type", type: "text", "required": false}
                     ]
                 }
             };
             return {
                 byKey: function (key) {
                     if (dict.hasOwnProperty(key)) {
-                        return angular.copy(dict[key]);
+                        return _.cloneDeep(dict[key]);
                     }
                     $log.error("dictionary key '" + key + "' doesn't exist");
                     return {};
                 },
-                dict: function() {
-                    return angular.copy(dict);
+                dict: function () {
+                    return _.cloneDeep(dict);
                 }
             }
         }];
