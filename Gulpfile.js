@@ -148,19 +148,23 @@ gulp.task('zip', function () {
         .pipe(gulp.dest('./.dist'));
 });
 
-gulp.task('webserver', ['clean', 'js', 'ejs', 'styles'], function() {
-  gulp.src('.build')
-      .pipe(webserver({
-        port: 7000,
-        proxies   : [
-          {
-            source: '/proxy/api', target: 'http://localhost:10280/proxy/api'
-          },
-          {
-            source: '/proxy/raw', target: 'http://localhost:10280/proxy/raw'
-          }
-        ]
-      }));
+gulp.task('webserver', ['clean', 'js', 'ejs', 'styles'], function () {
+
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+    
+    gulp.src('.build')
+        .pipe(webserver({
+            port: 7000,
+            https: true,
+            proxies: [
+                {
+                    source: '/proxy/api', target: 'https://localhost:10281/proxy/api'
+                },
+                {
+                    source: '/proxy/raw', target: 'https://localhost:10281/proxy/raw'
+                }
+            ]
+        }));
 });
 
 
