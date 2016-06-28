@@ -6,8 +6,7 @@
 module.exports =
     function ($rootScope, $scope, $timeout, $state,
               $stateParams, $log, SubmissionModel, SubmissionService, MessageService, ModalDialogs) {
-
-        $scope.title = 'Edit the submission';
+        
         $scope.accno = '';
         $scope.hasError = false;
         $scope.readOnly = false;
