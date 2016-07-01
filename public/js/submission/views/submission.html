@@ -42,7 +42,7 @@
     <aside class="right-side" ng-class="{'collapse-left' : uisettings.collapseLeftSide}">
         <div class="panel" ng-class="{'panel-danger': submissionForm.$invalid, 'panel-info':submissionForm.$valid}">
             <div class="panel-heading">
-                <span>Submission {{accno}}</span><span ng-if="submissionForm.$invalid"> << There are some validation errors. Please correct them before to proceed to submit >> </span>
+                <span>Submission {{accno}}</span><span ng-if="!readOnly && submissionForm.$invalid"> << There are some validation errors. Please correct them before to proceed to submit >> </span>
                 <p class="pull-right" ng-if="readOnly">
                     <a class="pull-right btn btn-success btn-xs" ng-click="editSubmission()"
                        uib-tooltip="Create a new submission"
