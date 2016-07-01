@@ -56,7 +56,8 @@
             <section id="scrollArea" class="content padding-left-large">
                 <form class="form-horizontal" autocomplete="off" novalidate role="form"
                       method="post" name="submissionForm">
-                    <div class="form-group row margin-bottom-small padding-right-15" ms-form-group-validator>
+                    <div class="form-group row margin-bottom-small padding-right-15"
+                         ng-class="{'has-error':submissionForm.title.$invalid }">
                         <div class="col-sm-12 ">
                             <label class="control-label">Title
                                 <ng-messages for="submissionForm.title.$error" ng-if="submissionForm.title.$dirty">
@@ -70,8 +71,8 @@
                         </div>
                     </div>
 
-                    <div class="form-group row margin-bottom-small padding-right-15" bs-show-errors
-                         id="submReleaseDate">
+                    <div class="form-group row margin-bottom-small padding-right-15"
+                         ng-class="{'has-error':submissionForm.releaseDate.$invalid }">
 
                         <div class="col-sm-12">
                             <label class="control-label">Release date
