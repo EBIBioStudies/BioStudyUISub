@@ -19,7 +19,7 @@ module.exports =
                             function (response) {
                                 var data = response.data;
                                 if (data.status === "OK") {
-                                    Session.create(data.sessid, data.username, USER_ROLES.user);
+                                    Session.create(data.sessid, data.username, "", USER_ROLES.user);
                                 }
                                 defer.resolve(data);
                             },

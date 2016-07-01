@@ -355,8 +355,13 @@ module.exports =
                 return out;
             }
 
-            function createNew() {
-                return exportSubmission(importSubmission({}));
+            function createNew(userName, userEmail) {
+                var sbm = importSubmission({});
+                sbm.addContact([
+                    {name: "Name", value: userName || ""},
+                    {name: "E-mail", value: userEmail || ""}
+                ]);
+                return exportSubmission(sbm);
             }
 
             function validateSubmission(sbm) {
