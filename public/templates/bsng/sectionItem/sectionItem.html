@@ -30,7 +30,7 @@
         </td>
         <td class="col-md-9 nopadding border-none form-group-sm"
             ng-class="{'has-error' : attr.required && attrItemForm['attrValue_' + $index].$invalid}">
-            <p ng-class="{'input-group' : !readOnly && !attr.required}">
+            <div ng-class="{'input-group' : !readOnly && !attr.required}">
                 <input type="text" name="attrValue_{{$index}}" ng-model="attr.value"
                        class="form-control input-sm"
                        placeholder="Enter a value"
@@ -67,7 +67,7 @@
                                         <i class="fa fa-trash-o"></i>
                                     </button>
                                 </span>
-            </p>
+            </div>
         </td>
     </tr>
 
