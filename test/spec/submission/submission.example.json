@@ -63,7 +63,7 @@
             "name": "Publication date",
             "value": "2005 Jan"
           }
-        ],
+        ]
       },
       {
         "type": "Author",
@@ -77,7 +77,7 @@
             "isReference": true,
             "value": "affilRef1"
           }
-        ],
+        ]
       },
       {
         "accno": "affilRef1",

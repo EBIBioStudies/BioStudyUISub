@@ -6,8 +6,8 @@
 module.exports =
     (function () {
 
-        return ['$scope', '$state', 'SubmissionService', '$log', 'SubmissionModel', 'ModalDialogs',
-            function ($scope, $state, SubmissionService, $log, SubmissionModel, ModalDialogs) {
+        return ['$scope', '$state', 'SubmissionService', '$log', 'SubmissionModel', 'ModalDialogs', 'Session',
+            function ($scope, $state, SubmissionService, $log, SubmissionModel, ModalDialogs, Session) {
 
                 $scope.submissions = [];
                 $scope.selectedSubmission = [];
@@ -25,7 +25,8 @@ module.exports =
                 }
 
                 $scope.createSubmission = function () {
-                    SubmissionService.createSubmission(SubmissionModel.create())
+                    var sbm = SubmissionModel.create(Session.userName, Session.userEmail);
+                    SubmissionService.createSubmission(sbm)
                         .then(function (sbm) {
                             startEditing(sbm.accno);
                         });

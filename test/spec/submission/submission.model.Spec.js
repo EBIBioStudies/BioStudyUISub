@@ -5,12 +5,36 @@ var submExample = require("./submission.example.json");
 describe("SubmissionModel", function () {
 
     var SubmissionModel;
+    var _;
 
     beforeEach(angular.mock.module('BioStudyApp'));
 
     beforeEach(inject(function ($injector) {
         SubmissionModel = $injector.get('SubmissionModel');
+        _ = $injector.get('_');
     }));
+
+    it('creates an empty submission', function () {
+        var subm = SubmissionModel.import(SubmissionModel.create());
+        expect(subm.accno).toEqual("");
+        expect(subm.title).toEqual("");
+        expect(subm.description).toEqual("");
+        expect(subm.contacts.items.length).toEqual(1);
+        expect(subm.publications.items.length).toEqual(0);
+        expect(subm.files.items.length).toEqual(0);
+        expect(subm.links.items.length).toEqual(0);
+
+        subm = SubmissionModel.import(SubmissionModel.create("contact name", "contact email"));
+        expect(subm.contacts.items.length).toEqual(1);
+        var attrs = subm.contacts.items[0].attributes.attributes;
+        var index = _.findIndex(attrs, {name: "Name"});
+        expect(index).toBeGreaterThan(-1);
+        expect(attrs[index].value).toEqual("contact name");
+
+        index = _.findIndex(attrs, {name: "E-mail"});
+        expect(index).toBeGreaterThan(-1);
+        expect(attrs[index].value).toEqual("contact email");
+    });
 
     it('imports an empty object', function () {
         var subm = SubmissionModel.import({});
