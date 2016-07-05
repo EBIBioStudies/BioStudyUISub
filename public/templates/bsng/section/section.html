@@ -46,7 +46,8 @@
                                    tooltip-enable="previewItemForm['attrValuePreview_' + key].$invalid"
                                    ng-required="attr.required"
                                    ng-change="onAttributeChange()"
-                                   ng-readonly="readOnly">
+                                   ng-readonly="readOnly"
+                                   ng-model-options="{ allowInvalid: true }">
 
                             <div ng-controller="FileCtrl" ng-if="attr.name==key && attr.type === 'file'">
                                 <select class="form-control"

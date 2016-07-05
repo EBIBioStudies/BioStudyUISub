@@ -46,7 +46,8 @@
                        ng-required="attr.required"
                        ng-change="onAttributeChange()"
                        ng-readonly="readOnly"
-                       ng-if="attr.type === 'text'">
+                       ng-if="attr.type === 'text'"
+                       ng-model-options="{ allowInvalid: true }">
 
             <div ng-controller="FileCtrl" ng-if="attr.type === 'file'">
                 <select class="form-control input-sm"

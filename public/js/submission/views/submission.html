@@ -66,8 +66,11 @@
                                 </ng-messages>
                             </label>
                             <input type="text" class="form-control" id="title" name="title" placeholder="Enter a title"
-                                   ng-model="submission.title" required
-                                   ng-readonly="readOnly" ng-minlength="50">
+                                   ng-model="submission.title"
+                                   ng-required="true"
+                                   ng-readonly="readOnly"
+                                   ng-minlength="50"
+                                   ng-model-options="{ allowInvalid: true }">
                         </div>
                     </div>
 
@@ -88,7 +91,8 @@
                                        ng-required="true" close-text="Close"
                                        datepicker-append-to-body="true"
                                        ng-click="openDatePicker($event)"
-                                       ng-readonly="readOnly"/>
+                                       ng-readonly="readOnly"
+                                       ng-model-options="{ allowInvalid: true }"/>
                                 <span class="input-group-btn">
                                      <button type="button" class="btn btn-default" ng-click="openDatePicker($event)">
                                      <i class="fa fa-fw fa-calendar"></i></button>
@@ -107,13 +111,14 @@
                             </label>
                             <textarea id="description" name="description" class="form-control input-sm"
                                       ng-model="submission.description"
-                                      required
+                                      ng-required="true"
                                       uib-tooltip="Empty value"
                                       tooltip-append-to-body="true"
                                       tooltip-placement="bottom"
                                       tooltip-class="customClass"
                                       tooltip-enable="submissionForm.description.$invalid"
-                                      ng-readonly="readOnly" ng-minlength="50"></textarea>
+                                      ng-readonly="readOnly" ng-minlength="50"
+                                      ng-model-options="{ allowInvalid: true }"></textarea>
                         </div>
                     </div>
 
