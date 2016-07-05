@@ -1,8 +1,17 @@
-<div class="modal-body padding-none">
-    <div ng-repeat="message in messages">
-        <div class="alert alert-danger margin-none">
-            <p>{{message.msg}}</p>
-        </div>
+<div class="modal-content panel-danger">
+
+    <div class="modal-header panel-heading">
+        <button type="button" class="close" ng-click="$close()">
+            <span class="glyphicon glyphicon-remove-circle"></span>
+        </button>
+        <h4 class="modal-title">{{params.title}}</h4>
     </div>
+    <div class="modal-body">
+        <ul class="list-group">
+            <li ng-repeat="message in params.messages" class="list-group-item text-danger">
+                <span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;{{message}}</li>
+        </ul>
+    </div>
+
 </div>
 

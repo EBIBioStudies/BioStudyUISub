@@ -1,5 +1,8 @@
 'use strict';
 
+require('../../.build/components/angular/angular');
+require('../../.build/components/angular-cookies/angular-cookies');
+require('../../.build/components/angular-messages/angular-messages');
 require('../../.build/components/ng-file-upload/ng-file-upload');
 require('../../.build/components/angular-bootstrap/ui-bootstrap');
 require('../../.build/components/angular-bootstrap/ui-bootstrap-tpls');
@@ -9,11 +12,12 @@ require('../../.build/components/angular-ui-select/dist/select');
 require('../../.build/components/angular-bootstrap-show-errors');
 require('../../.build/components/angular-recaptcha/release/angular-recaptcha');
 require('../../.build/components/angular-ui-router/release/angular-ui-router');
+require('../../.build/components/lodash/lodash');
 
 var XML2JSON = require('../../shared/lib/xml2json');
 require('./directives/tree-grid-directive');
 
-var TrNgGrid = require('../../.build/components/trNgGrid/trNgGrid');
+require('../../.build/components/trNgGrid/trNgGrid');
 
 require('../../.gen/templates');
 require('./config');
@@ -26,32 +30,45 @@ var app = angular.module('BioStudyApp',
         'ui.select', 'typeahead-focus', 'bs-templates', 'treeGrid', 'vcRecaptcha', 'ui.router'
     ]);
 
-require('./model');
 require('./services');
-require('./views/index');
 require('./directives');
+require('./home');
+require('./error');
 require('./auth');
 require('./submission');
+require('./file');
 require('./utils');
 
+
 app
-    .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $logProvider, $httpProvider, $anchorScrollProvider) {
+    .constant('_', window._)
+    .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $logProvider, $httpProvider, $anchorScrollProvider, APP_DEBUG_ENABLED) {
 
         //for tests only
         //delete $httpProvider.defaults.headers.common['X-Requested-With'];
         $anchorScrollProvider.disableAutoScrolling();
-        $logProvider.debugEnabled(true);
+        $logProvider.debugEnabled(APP_DEBUG_ENABLED === true);
 
         $stateProvider
             .state('help', {
                 url: '/help',
-                templateProvider: 'templates/views/help.html',
+                templateUrl: 'templates/home/views/help.html',
                 controller: 'HelpCtrl'
             })
             .state('key_activation', {
                 url: '/activate/:key',
                 templateUrl: 'templates/auth/views/activate.html',
                 controller: 'ActivateCtrl'
+            })
+            .state('password_reset_request', {
+                url: '/forgot_password',
+                templateUrl: 'templates/auth/views/passwordResetRequest.html',
+                controller: 'PasswordResetRequestCtrl'
+            })
+            .state('password_reset', {
+                url: '/password_reset/:key',
+                templateUrl: 'templates/auth/views/passwordReset.html',
+                controller: 'PasswordResetCtrl'
             })
             .state('signin', {
                 url: '/signin',
@@ -65,7 +82,7 @@ app
             })
             .state('error', {
                 url: '/error',
-                templateUrl: 'templates/views/error/error.html',
+                templateUrl: 'templates/error/views/error.html',
                 controller: 'ErrorCtrl'
             })
             .state('submissions', {
@@ -80,9 +97,15 @@ app
                 controller: 'EditSubmissionCtrl',
                 authenticated: true
             })
+            .state('submission_view', {
+                url: '/view/:accno',
+                templateUrl: 'templates/submission/views/submission.html',
+                controller: 'ViewSubmissionCtrl',
+                authenticated: true
+            })
             .state('files', {
                 url: '/files',
-                templateUrl: 'templates/views/files/files.html',
+                templateUrl: 'templates/file/views/files.html',
                 controller: 'FilesCtrl',
                 authenticated: true
             })
@@ -127,11 +150,14 @@ app
         }
 
         function logout() {
+            $log.debug("logout() called");
             setCurrentUser(null);
+            Session.destroy();
             $state.go('signin');
         }
 
         function login(event, data) {
+            $log.debug("login() called");
             setCurrentUser(data.username);
         }
 

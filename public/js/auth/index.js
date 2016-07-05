@@ -4,38 +4,44 @@ angular.module('BioStudyApp')
 
     .factory('AuthService', require('./auth.service'))
     .factory('AccessLevel', require('./accessLevel.service'))
+    .directive('accessLevel', require('./directives/accessLevel'))
+    .directive('equalsTo', require('./directives/equalsTo'))
     .controller('SignInCtrl', require('./views/signin.ctrl.js'))
     .controller('SignUpCtrl', require('./views/signup.ctrl'))
     .controller('ActivateCtrl', require('./views/activate.ctrl'))
+    .controller('PasswordResetRequestCtrl', require('./views/passwordResetRequest.ctrl'))
+    .controller('PasswordResetCtrl', require('./views/passwordReset.ctrl'))
     .service('Session', ['USER_ROLES', 'LocalStorage', function (USER_ROLES, LocalStorage) {
         this.id = null;
         this.userName = null;
+        this.userEmail = null;
         this.userRole = null;
 
         var SESSION_KEY = "SESSION_DATA";
 
-        function setValues(obj, id, userName, userRole) {
+        function setValues(obj, id, userName, userEmail, userRole) {
             obj.id = id;
             obj.userName = userName;
+            obj.userEmail = userEmail;
             obj.userRole = userRole;
         }
 
         function setInitValues(obj) {
-           setValues(obj, null, null, USER_ROLES.public);
+           setValues(obj, null, null, null, USER_ROLES.public);
         }
 
         this.init = function() {
             var data = LocalStorage.retrieve(SESSION_KEY);
             if (data != null) {
-                setValues(this, data[0], data[1], data[2]);
+                setValues(this, data[0], data[1], data[2], data[3]);
                 return;
             }
             setInitValues(this);
         };
 
-        this.create = function (sessionId, userName, userRole) {
-            setValues(this, sessionId, userName, userRole);
-            LocalStorage.store(SESSION_KEY, [sessionId, userName, userRole]);
+        this.create = function (sessionId, userName, userEmail, userRole) {
+            setValues(this, sessionId, userName, userEmail, userRole);
+            LocalStorage.store(SESSION_KEY, [sessionId, userName, userEmail, userRole]);
         };
 
         this.destroy = function () {

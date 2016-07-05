@@ -3,42 +3,42 @@
 
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
-                <h1 ng-if="success">Thank You for Registering! Please check your email for your link to </h1>
+                <h1 ng-if="success">Thank You for Registering! Please check your email for the account activation link.</h1>
 
                 <div ng-if="!success" class="panel" ng-class="{'panel-info' : !hasError, 'panel-danger': hasError}">
                     <div class="panel-heading">
-
-                                <span class="help-block span-error-large margin-bottom-none"
-                                      ng-show="hasError">
-                                    {{error.status}} : {{error.message}}
-                                </span>
-                            <span class="help-block-empty-large margin-bottom-none"
-                                  ng-show="!hasError">
-                                &nbsp;
-                            </span>
+                        <span class="help-block span-error-large margin-bottom-none" ng-show="hasError">
+                            {{error.status}} : {{error.message}}
+                        </span>
+                        <span class="help-block-empty-large margin-bottom-none" ng-show="!hasError">
+                            &nbsp;
+                        </span>
                     </div>
                     <div class="panel-body">
                         <form id="login-form" novalidate name="signUpForm" role="form">
-                            <div class="form-group form-group-sm" ms-form-group-validator>
-                                <label class="control-label" for="username">User name<span ng-show="signUpForm.username.$dirty && signUpForm.username.$invalid
-                                          && signUpForm.username.$error.required">: cannot be blank</span></label>
-                                <input type="text" id="username" name="username" tabindex="1" class="form-control input-sm"
-                                       placeholder="Username" value="" ng-model="user.username" ng-required="true">
+                            <div class="form-group form-group-sm">
+                                <label class="control-label" for="username">Full name</label>
+                                <input type="text" id="username" name="username" tabindex="1"
+                                       class="form-control input-sm"
+                                       placeholder="Full name" value="" ng-model="user.username">
                             </div>
-                            <div class="form-group form-group-sm" ms-form-group-validator>
-                                <label for="email">Email<span ng-show="signUpForm.email.$dirty && signUpForm.email.$invalid
-                                          && signUpForm.email.$error.required">: cannot be blank</span>
-                                        <span ng-show="signUpForm.email.$dirty && signUpForm.email.$invalid
-                                          && signUpForm.email.$error.email">: not a valid email</span></label>
-
+                            <div class="form-group form-group-sm" ng-class="{'has-error': signUpForm.email.$invalid}">
+                                <label for="email">Email
+                                    <ng-messages for="signUpForm.email.$error" ng-if="signUpForm.email.$dirty">
+                                        <ng-message when="required"><span>: cannot be blank</span></ng-message>
+                                        <ng-message when="email"><span>: not a valid email</span></ng-message>
+                                    </ng-messages>
+                                </label>
                                 <input type="email" id="email" ng-required="true" name="email"
                                        ng-model="user.email" class="form-control" placeholder="Email"/>
 
                             </div>
-                            <div class="form-group form-group-sm" ms-form-group-validator>
-                                <label for="password">Password<span ng-show="signUpForm.password.$dirty && signUpForm.password.$invalid
-                                          && signInForm.password.$error.required">: cannot be blank</span></label>
-
+                            <div class="form-group form-group-sm" ng-class="{'has-error': signUpForm.password.$invalid}">
+                                <label for="password">Password
+                                    <ng-messages for="signUpForm.password.$error" ng-if="signUpForm.password.$dirty">
+                                        <ng-message when="required"><span>: cannot be blank</span></ng-message>
+                                    </ng-messages>
+                                </label>
                                 <input type="password" ng-required="true" name="password"
                                        id="password" ng-model="user.password" class="form-control input-sm"
                                        placeholder="Password"/>
@@ -47,12 +47,9 @@
                             <div vc-recaptcha key="'6Lcmlv0SAAAAAHofnIcb29l1LMZsnGFcSlH8Reve'"
                                  theme="light" ng-model="user['recaptcha2-response']">
                             </div>
-                            <!--<div class="form-group" id='captcha'>
-                            </div>-->
 
                             <div class="form-group margin-top-large">
-                                <!--<i ng-show="sending" class="fa fa-spinner fa-pulse fa-3x"></i>-->
-                                <button class="btn btn-success" ng-click="signUp(user, signUpForm);">Sign up</button>
+                                <button type="submit" class="btn btn-success" ng-click="signUp(user, signUpForm);">Sign up</button>
                             </div>
 
                         </form>

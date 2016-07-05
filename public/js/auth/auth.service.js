@@ -3,8 +3,8 @@
 module.exports =
     (function () {
 
-        return ['$http', '$q', '$rootScope', 'USER_ROLES', 'Session', 'AccessLevel', '$log', '$location',
-            function ($http, $q, $rootScope, USER_ROLES, Session, AccessLevel, $log, $location) {
+        return ['$http', '$q', 'USER_ROLES', 'Session', 'AccessLevel', '$log', '$location',
+            function ($http, $q, USER_ROLES, Session, AccessLevel, $log, $location) {
 
                 function getAppPath() {
                     var re = new RegExp("https?:\/\/[^\/]+([^\\?#]*).*");
@@ -14,23 +14,24 @@ module.exports =
 
                 function signIn(credentials) {
                     var defer = $q.defer();
-                    $http.post("/api/auth/signin", credentials)
-                        .success(function (result) {
-                            if (result.status === $rootScope.Constants.Status.OK) {
-                                Session.create(result.sessid, result.username, USER_ROLES.user);
-                                defer.resolve(result);
-                            }
-                            else {
-                                defer.reject({status: result.status, message: 'Wrong credentials'});
-                            }
-                        })
-                        .error(function (err, status, headers) {
-                            $log.error(status + ":" + err);
-                            defer.reject({
-                                status: status || 500,
-                                message: 'Problem with connection to biostudy server'
+                    $http.post("/raw/auth/signin", credentials)
+                        .then(
+                            function (response) {
+                                var data = response.data;
+                                if (data.status === "OK") {
+                                    Session.create(data.sessid, data.username, data.email || "", USER_ROLES.user);
+                                }
+                                defer.resolve(data);
+                            },
+                            function (response) {
+                                if (response.status === 403) {
+                                    response.data.message = "Invalid credentials";
+                                    defer.resolve(response.data);
+                                    return;
+                                }
+                                $log.error("login error", response);
+                                defer.reject(response);
                             });
-                        });
                     return defer.promise;
                 }
 
@@ -38,49 +39,87 @@ module.exports =
                     if (!isAuthenticated()) {
                         return $q.when({});
                     }
-
                     var defer = $q.defer();
-                    $http.post("/api/auth/signout", Session.userName)
-                        .success(function (result) {
-                            Session.destroy();
-                            defer.resolve({});
-                        })
-                        .error(function (err, status, headers) {
-                            $log.error(status + ":" + err);
-                            defer.reject(err);
-                        });
+                    $http.post("/api/auth/signout", {username: Session.userName})
+                        .then(
+                            function () {
+                                Session.destroy();
+                                defer.resolve({});
+                            },
+                            function (response) {
+                                $log.error("logout error", response);
+                                defer.reject(response);
+                            });
                     return defer.promise;
-
                 }
 
                 function signUp(user) {
                     var defer = $q.defer();
                     user.path = getAppPath() + "#/activate";
-                    $log.debug("application path: " + user.path);
                     $http.post("/api/auth/signup", user)
-                        .success(function (result, status) {
-                            if (result.status === $rootScope.Constants.Status.OK) {
-                                defer.resolve(result);
-                            } else {
-                                $log.error("Error" + ":" + status + ":" + result);
-                                defer.reject({status: result.status, message: result.status});
-                            }
-                        })
-                        .error(function (err, status) {
-                            defer.reject(err, status);
-                        });
+                        .then(
+                            function (response) {
+                                defer.resolve(response.data);
+                            },
+                            function (response) {
+                                if (response.status === 403) {
+                                    defer.resolve(response.data);
+                                    return;
+                                }
+                                $log.error("signup error", response);
+                                defer.reject(response);
+                            });
                     return defer.promise;
                 }
 
                 function activate(key) {
                     var defer = $q.defer();
                     $http.post("/raw/auth/activate/" + key)
-                        .success(function (result) {
-                            defer.resolve(result);
-                        })
-                        .error(function (err, status) {
-                            defer.reject(err, status);
-                        });
+                        .then(
+                            function (response) {
+                                defer.resolve(response.data);
+                            },
+                            function (response) {
+                                $log.error("activate error", response);
+                                defer.reject(response);
+                            });
+                    return defer.promise;
+                }
+
+                function passwordResetRequest(email, recaptcha) {
+                    var defer = $q.defer();
+                    var path = getAppPath() + "#/password_reset";
+                    $http.post("/api/auth/passrstreq/", {email: email, path: path, 'recaptcha2-response': recaptcha})
+                        .then(
+                            function (response) {
+                                defer.resolve(response.data);
+                            },
+                            function (response) {
+                                if (response.status === 403) {
+                                    defer.resolve(response.data);
+                                    return;
+                                }
+                                $log.error("password reset request error", response);
+                                defer.reject(response);
+                            });
+                    return defer.promise;
+                }
+
+                function passwordReset(key, password, recaptcha) {
+                    var defer = $q.defer();
+                    $http.post("/raw/auth/passreset/", {key: key, password: password, 'recaptcha2-response': recaptcha})
+                        .then(
+                            function (response) {
+                                defer.resolve(response.data);
+                            },
+                            function (response) {
+                                if (response.status === 400) { //invalid request
+                                    defer.resolve(response.data);
+                                    return;
+                                }
+                                $log.error("password reset error", response);
+                                defer.reject(response);
+                            });
                     return defer.promise;
                 }
 
@@ -104,6 +143,8 @@ module.exports =
                     signOut: signOut,
                     signUp: signUp,
                     activate: activate,
+                    passwordResetRequest: passwordResetRequest,
+                    passwordReset: passwordReset,
                     isAuthenticated: isAuthenticated,
                     isAuthorized: isAuthorized,
                     isAuthorizedAs: isAuthorizedAs
