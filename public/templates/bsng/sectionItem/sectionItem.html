@@ -54,7 +54,8 @@
                         ng-model="attr.value"
                         ng-change="onAttributeChange()"
                         name="attrValue_{{$index}}"
-                        ng-required="attr.required">
+                        ng-required="attr.required"
+                        ng-readonly="readOnly">
                     <option ng-repeat="file in files" value="{{file}}">
                         {{file}}
                     </option>

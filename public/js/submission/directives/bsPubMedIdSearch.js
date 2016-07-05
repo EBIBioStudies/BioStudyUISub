@@ -4,10 +4,11 @@ module.exports = ['PUBMEDID_SEARCH_EVENTS', function (PUBMEDID_SEARCH_EVENTS) {
     return {
         restrict: 'E',
         scope: {
-            pmid: "=ngModel"
+            pmid: "=ngModel",
+            readOnly: "=ngReadonly"
         },
         template: function (elem, attrs) {
-            return '<input type="text" name="_pmid_search_" placeholder="Enter Pub Med Id" ng-model="pmid" class="' + attrs.childClass + '">';
+            return '<input type="text" name="_pmid_search_" placeholder="Enter Pub Med Id" ng-model="pmid" ng-readonly="readOnly" class="' + attrs.childClass + '">';
         },
         controller: function($scope, $log, $timeout, PubMedSearch) {
             var timeout = null;
