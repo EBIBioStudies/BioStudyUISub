@@ -21,15 +21,16 @@ var bower = require('gulp-bower');
 
 var envHelper=require('./tasks/helpers/envHelper');
 var webserver = require('gulp-webserver');
-var war = require('gulp-war');
+var zip = require('gulp-zip');
 var bump = require('gulp-bump');
 var ngConstant = require('gulp-ng-constant');
 var clean = require('gulp-clean');
+var extend = require('gulp-extend');
 
 
 gulp.task('bump', function () {
     return gulp
-        .src('./config.json')
+        .src('./version.json')
         .pipe(bump({
             //type: 'minor',
             //type: 'major',
@@ -39,7 +40,8 @@ gulp.task('bump', function () {
 });
 
 gulp.task('config', function () {
-    return gulp.src('./config.json')
+    return gulp.src(['./config.json', './version.json'])
+        .pipe(extend('config.json'))
         .pipe(ngConstant({
             wrap: 'commonjs',
             name: 'BioStudyApp.config'
@@ -83,7 +85,6 @@ gulp.task('copy', ['clean'], function(cb) {
   cb();
 
 });
-
 
 gulp.task('jshint', function () {
   return gulp.src('public/js/services/*.js')
@@ -141,55 +142,29 @@ gulp.task('ejs', ['clean'], function() {
     .pipe(gulp.dest(envHelper.copyToPath ));
 });
 
-var jasmine = require('gulp-jasmine');
-var reporters = require('jasmine-reporters');
-
-gulp.task('unit:js', function() {
-  gulp.src(["shared/model/*.Spec.js","public/js/model/*.Spec.js"])
-    .pipe(jasmine({verbose: true,includeStackTrace: true
-
-    }));
+gulp.task('zip', function () {
+    gulp.src([".build/**/*.*"])
+        .pipe(zip('ui.zip'))
+        .pipe(gulp.dest('./.dist'));
 });
 
-var karma = require('karma').server;
-var ROOT = require('./tasks/gulp/const').ROOT;
-gulp.task('unit:public', function() {
-  var karmaConfig = {
-    logLevel: 'warn',
-    singleRun: true,
-    autoWatch: false,
-    configFile: ROOT + '/tests/karma.conf.js'
-  };
+gulp.task('webserver', ['clean', 'js', 'ejs', 'styles'], function () {
 
-  function captureError(next,done) {
-    gutil.log('Running unit tests on unminified source.');
-  }
-
-  gutil.log('Running unit tests on unminified source.');
-  karma.start(karmaConfig, captureError());
-});
-
-gulp.task('war', function () {
-  gulp.src([".build/**/*.*"])
-      .pipe(war({
-        welcome: 'index.html'
-      }))
-      .pipe(gulp.dest(".war"));
-});
-
-gulp.task('webserver', ['clean', 'js', 'ejs', 'styles'], function() {
-  gulp.src('.build')
-      .pipe(webserver({
-        port: 7000,
-        proxies   : [
-          {
-            source: '/proxy/api', target: 'http://localhost:10280/proxy/api'
-          },
-          {
-            source: '/proxy/raw', target: 'http://localhost:10280/proxy/raw'
-          }
-        ]
-      }));
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+    
+    gulp.src('.build')
+        .pipe(webserver({
+            port: 7000,
+            https: true,
+            proxies: [
+                {
+                    source: '/proxy/api', target: 'https://localhost:10281/proxy/api'
+                },
+                {
+                    source: '/proxy/raw', target: 'https://localhost:10281/proxy/raw'
+                }
+            ]
+        }));
 });
 
 
@@ -198,5 +173,28 @@ gutil.log('Deploy client to ',envHelper.copyToPath);
 
 gulp.task('default', ['clean', 'bower', 'copy', 'html2js', 'jshint', 'styles', 'js', 'ejs']);
 
+
+var karma = require('gulp-karma');
+
+gulp.task('test', function() {
+    // Be sure to return the stream
+    // NOTE: Using the fake './foobar' so as to run the files
+    // listed in karma.conf.js INSTEAD of what was passed to
+    // gulp.src !
+    return gulp.src('./foobar')
+        .pipe(karma({
+            configFile: 'karma.conf.js',
+            action: 'run'
+        }))
+        .on('error', function(err) {
+            // Make sure failed tests cause gulp to exit non-zero
+            console.log(err);
+            this.emit('end'); //instead of erroring the stream, end it
+        });
+});
+
+gulp.task('autotest', function() {
+    return gulp.watch(['public/js/**/*.js', 'test/spec/*.js'], ['test']);
+});
 
 

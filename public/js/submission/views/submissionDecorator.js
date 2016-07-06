@@ -1,4 +1,4 @@
-var _keys = require('./../../../../shared/model/Structure.json');
+var _keys = require('./../model/Structure.json');
 
 module.exports = function ($anchorScroll) {
     this.create = function ($scope) {

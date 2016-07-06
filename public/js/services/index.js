@@ -6,13 +6,11 @@
 var app = angular.module('BioStudyApp');
 
 app.service('DataService', require('./DataService'));
-app.service('FileService', require('./FileService'));
 app.service('MessageService', require('./MessageService'));
 app.factory('ErrorService', require('./ErrorService'));
 
 app.service('EuropePmc', require('./EuropePmc'));
 
-app.service('TypeHeadService', require('./TypeHeadService'));
 app.service('msTreeService', require('./msTreeService'));
 
 app.provider('bsShowErrorsConfig',require('./bsShowErrorsConfig'));

@@ -1,18 +1,18 @@
 'use strict';
 
-module.exports = function ($compile, $templateCache) {
+module.exports = function () {
     return {
         restrict: 'EA',
-        //transclude: true,
         templateUrl: 'templates/bsng/bsNgItem.html',
         scope: {
             bsClick : '&',
             toggle : '=',
             itemText: '@',
             itemClass: '@',
-            itemHref: '@'
+            itemHref: '@',
+            disabled: '=ngDisabled'
         },
-        link: function(scope, iElement, iAttrs) {
+        link: function(scope, element, attrs) {
             //console.log(scope, iAttrs);
         }
     };
