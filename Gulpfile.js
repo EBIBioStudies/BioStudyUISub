@@ -23,7 +23,7 @@ var envHelper=require('./tasks/helpers/envHelper');
 var webserver = require('gulp-webserver');
 var zip = require('gulp-zip');
 var bump = require('gulp-bump');
-var ngConstant = require('gulp-ng-constant');
+var ngConfig = require('gulp-ng-config');
 var clean = require('gulp-clean');
 var extend = require('gulp-extend');
 
@@ -42,11 +42,12 @@ gulp.task('bump', function () {
 gulp.task('config', function () {
     return gulp.src(['./config.json', './version.json'])
         .pipe(extend('config.json'))
-        .pipe(ngConstant({
-            wrap: 'commonjs',
-            name: 'BioStudyApp.config'
-        }))
-        .pipe(gulp.dest('./public/js'));
+        .pipe(ngConfig( 'BioStudyApp.config',
+            {
+            wrap: 'ES6'
+            }
+        ))
+        .pipe(gulp.dest('./app/lib'));
 });
 
 gulp.task('bower', function () {
@@ -148,11 +149,12 @@ gulp.task('zip', function () {
         .pipe(gulp.dest('./.dist'));
 });
 
-gulp.task('webserver', ['clean', 'js', 'ejs', 'styles'], function () {
+//gulp.task('webserver', ['clean', 'js', 'ejs', 'styles'], function () {
+gulp.task('webserver', [], function () {
 
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
     
-    gulp.src('.build')
+    gulp.src('./app')
         .pipe(webserver({
             port: 7000,
             https: true,

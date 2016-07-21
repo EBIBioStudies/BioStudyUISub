@@ -4,10 +4,8 @@
  */
 
 import angular from 'angular'
-import ngCookies from 'angular-cookies'
 import ngMessages from 'angular-messages'
 import ngFileUpload from 'ng-file-upload'
-import vcRecaptcha from 'angular-recaptcha'
 
 
 import uiBootstrap from 'angular-bootstrap'
@@ -22,14 +20,218 @@ import lodash from 'lodash'
 
 //import appTemplates from './templates'
 import appConfig from './config'
+//import appRoutes from './routes'
+import appAuth from './auth/index'
 
 
 const appName = 'BioStudyApp';
 
 angular.module(appName,
     [
-        ngCookies, ngMessages, ngFileUpload, vcRecaptcha, uiBootstrap, uiBootstrapShowErrors, uiSelect, uiRouter,
-        typeaheadFocus, trNgGrid, lodash,
+        uiRouter,
+        /*ngMessages, ngFileUpload, uiBootstrap, uiBootstrapShowErrors, uiSelect, uiRouter,
+        typeaheadFocus, trNgGrid, lodash,*/
 
-        appConfig, appTemplates
-    ]);
+        appConfig.name,
+        //appRoutes.name,
+        appAuth.name
+    ])
+    .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $logProvider, $httpProvider, $anchorScrollProvider, APP_DEBUG_ENABLED) {
+
+
+        $anchorScrollProvider.disableAutoScrolling();
+        $logProvider.debugEnabled(APP_DEBUG_ENABLED === true);
+
+        $stateProvider
+            .state('help', {
+                url: '/help',
+                templateUrl: 'templates/home/views/help.html',
+                controller: 'HelpCtrl'
+            })
+            .state('key_activation', {
+                url: '/activate/:key',
+                templateUrl: 'templates/auth/views/activate.html',
+                controller: 'ActivateCtrl'
+            })
+            .state('password_reset_request', {
+                url: '/forgot_password',
+                templateUrl: 'templates/auth/views/passwordResetRequest.html',
+                controller: 'PasswordResetRequestCtrl'
+            })
+            .state('password_reset', {
+                url: '/password_reset/:key',
+                templateUrl: 'templates/auth/views/passwordReset.html',
+                controller: 'PasswordResetCtrl'
+            })
+            .state('signin', {
+                url: '/signin',
+                templateUrl: 'templates/auth/views/signin.html',
+                controller: 'SignInCtrl'
+            })
+            .state('signup', {
+                url: '/signup',
+                templateUrl: 'templates/auth/views/signup.html',
+                controller: 'SignUpCtrl'
+            })
+            .state('error', {
+                url: '/error',
+                templateUrl: 'templates/error/views/error.html',
+                controller: 'ErrorCtrl'
+            })
+            .state('submissions', {
+                url: '/submissions',
+                templateUrl: 'templates/submission/views/submissions.html',
+                controller: 'SubmissionListCtrl',
+                authenticated: true
+            })
+            .state('submission_edit', {
+                url: '/edit/:accno',
+                templateUrl: 'templates/submission/views/submission.html',
+                controller: 'EditSubmissionCtrl',
+                authenticated: true
+            })
+            .state('submission_view', {
+                url: '/view/:accno',
+                templateUrl: 'templates/submission/views/submission.html',
+                controller: 'ViewSubmissionCtrl',
+                authenticated: true
+            })
+            .state('files', {
+                url: '/files',
+                templateUrl: 'templates/file/views/files.html',
+                controller: 'FilesCtrl',
+                authenticated: true
+            })
+            .state('export', {
+                url: '/export',
+                templateUrl: 'partials/export.html',
+                controller: 'ExportCtrl',
+                authenticated: true
+            })
+            .state('profile', {
+                url: '/profile',
+                templateUrl: 'partials/profile.html',
+                controller: 'ProfileCtrl'
+            });
+
+        // default url
+        $urlRouterProvider.otherwise('/submissions');
+
+        $locationProvider.html5Mode(false);
+
+        $httpProvider.interceptors.push('sessionInterceptor');
+        $httpProvider.interceptors.push('proxyInterceptor');
+        $httpProvider.interceptors.push('authInterceptor');
+    })
+
+    .run(function ($state, $log, $rootScope, AuthService, AUTH_EVENTS, USER_ROLES, Session) {
+
+        // Redirect to login if route requires auth and you're not logged in
+        $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
+            if (toState.authenticated && !AuthService.isAuthenticated()) {
+                event.preventDefault();
+                $rootScope.returnToState = toState.url;
+                $rootScope.returnToStateParams = toParams;
+                $state.transitionTo('signin');
+            }
+        });
+
+        $rootScope.Constants = require('./Const');
+
+        function setCurrentUser(user) {
+            $rootScope.currentUser = user;
+        }
+
+        function logout() {
+            $log.debug("logout() called");
+            setCurrentUser(null);
+            Session.destroy();
+            $state.go('signin');
+        }
+
+        function login(event, data) {
+            $log.debug("login() called");
+            setCurrentUser(data.username);
+        }
+
+        $rootScope.$on(AUTH_EVENTS.notAuthenticated, logout);
+        $rootScope.$on(AUTH_EVENTS.sessionTimeout, logout);
+        $rootScope.$on(AUTH_EVENTS.logoutSuccess, logout);
+        $rootScope.$on(AUTH_EVENTS.loginSuccess, login);
+
+        $rootScope.currentUser = null;
+        $rootScope.userRoles = USER_ROLES;
+        $rootScope.isAuthorized = AuthService.isAuthorized;
+
+        if (!Session.isAnonymous()) {
+            setCurrentUser(Session.userName);
+        }
+    })
+    .factory('authInterceptor', ['$rootScope', '$q', 'AUTH_EVENTS', function ($rootScope, $q, AUTH_EVENTS) {
+        return {
+            responseError: function (response) {
+                $rootScope.$broadcast({
+                    401: AUTH_EVENTS.notAuthenticated,
+                    403: AUTH_EVENTS.notAuthorized,
+                    419: AUTH_EVENTS.sessionTimeout,
+                    440: AUTH_EVENTS.sessionTimeout
+                }[response.status], response);
+                return $q.reject(response);
+            }
+        };
+    }])
+    .factory('proxyInterceptor', ['APP_PROXY_BASE', function (APP_PROXY_BASE) {
+        return {
+            'request': function (config) {
+                var url = config.url;
+                if (url.startsWith('/api/') || url.startsWith('/raw/')) {
+                    config.url = APP_PROXY_BASE + url;
+                }
+                return config;
+            }
+        };
+    }])
+    .factory('sessionInterceptor', ['Session', function (Session) {
+        return {
+            'request': function (config) {
+                if (!Session.isAnonymous()) {
+                    config.headers['X-Session-Token'] = Session.id;
+                }
+                return config;
+            }
+        };
+    }])
+    .factory('SharedData', function () {
+        var submission = {};
+        return {
+            setSubmission: function (sbm) {
+                submission = sbm;
+            },
+            getSubmission: function () {
+                return submission;
+            }
+        }
+    })
+    .filter("releaseDateFormat", function ($filter) {
+        return function (fieldValueUnused, item) {
+            console.log(Number.isInteger(parseInt(item.rtime)));
+            var rtime = parseInt(item.rtime);
+            if (Number.isInteger(rtime)) {
+                return $filter('date')(new Date(rtime * 1000), 'dd-MMM-yyyy')
+            } else if (item.rtime) {
+                return new Date(item.rtime);
+            }
+        };
+    })
+    .filter("filterAttrKeys", function ($filter) {
+        return function (fieldValueUnused, array, existedKeys) {
+            //console.log('Attributes filter', array, existedKeys);
+            var typeHead = [];
+            for (var i in array) {
+                if (!existedKeys[array[i].name]) {
+                    typeHead.push(array[i]);
+                }
+            }
+            return typeHead;
+        };
+    });

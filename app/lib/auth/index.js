@@ -1,0 +1,48 @@
+import angular from 'angular'
+import uiRouter from 'angular-ui-router'
+import vcRecaptcha from 'angular-recaptcha'
+
+import appStorage from '../localstorage/index'
+
+import AuthService from './services/auth.service'
+import AccessLevelService from './services/accessLevel.service'
+import SessionService from './services/session.service'
+
+import ActivateCtrl from './pages/activate/activate.ctrl'
+import SignUpCtrl from './pages/signup/signup.ctrl'
+import SignInCtrl from './pages/signin/signin.ctrl'
+import PasswordResetRequestCtrl from './pages/passwordReset/passwordResetRequest.ctrl'
+import PasswordResetCtrl from './pages/passwordReset/passwordReset.ctrl'
+
+import EqualsToDirective from './directives/equalsTo'
+import AccessLevelDirective from './directives/accessLevel'
+
+
+export default angular.module('BioStudyApp.Auth', [/*uiRouter, vcRecaptcha,*/ appStorage.name])
+    .service('Session', SessionService)
+    .constant('USER_ROLES', {
+        public: 'role-public',
+        user: 'role-user',
+        admin: 'role-admin'
+    });
+
+/*
+    .service('AuthService', AuthService)
+    .service('AccessLevel', AccessLevelService)
+    .controller('SignInCtrl', SignInCtrl)
+    .controller('SignUpCtrl', SignUpCtrl)
+    .controller('ActivateCtrl', ActivateCtrl)
+    .controller('PasswordResetRequestCtrl', PasswordResetRequestCtrl)
+    .controller('PasswordResetCtrl', PasswordResetCtrl)
+    .directive('accessLevel', AccessLevelDirective)
+    .directive('equalsTo', EqualsToDirective)
+
+    .constant('AUTH_EVENTS', {
+        loginSuccess: 'auth-login-success',
+        loginFailed: 'auth-login-failed',
+        logoutSuccess: 'auth-logout-success',
+        sessionTimeout: 'auth-session-timeout',
+        notAuthenticated: 'auth-not-authenticated',
+        notAuthorized: 'auth-not-authorized'
+    })
+    */
