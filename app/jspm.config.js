@@ -4,7 +4,8 @@ System.config({
   babelOptions: {
     "optional": [
       "runtime",
-      "optimisation.modules.system"
+      "optimisation.modules.system",
+      "es7.classProperties"
     ]
   },
   paths: {
@@ -13,12 +14,12 @@ System.config({
   },
 
   map: {
-    "angular": "npm:angular@1.5.5",
-    "angular-bootstrap": "github:angular-ui/bootstrap-bower@1.2.5",
+    "angular": "github:angular/bower-angular@1.5.7",
+    "angular-bootstrap": "github:angular-ui/bootstrap-bower@2.0.0",
     "angular-bootstrap-show-errors": "github:paulyoder/angular-bootstrap-show-errors@2.3.0",
     "angular-bootstrap-tree-grid": "github:khan4019/tree-grid-directive@0.3.0",
-    "angular-cookies": "github:angular/bower-angular-cookies@1.5.5",
-    "angular-messages": "github:angular/bower-angular-messages@1.5.5",
+    "angular-cookies": "github:angular/bower-angular-cookies@1.5.7",
+    "angular-messages": "github:angular/bower-angular-messages@1.5.7",
     "angular-recaptcha": "npm:angular-recaptcha@2.5.0",
     "angular-ui-router": "github:angular-ui/angular-ui-router-bower@0.2.18",
     "angular-ui-select": "github:angular-ui/ui-select@0.12.1",
@@ -27,13 +28,13 @@ System.config({
     "core-js": "npm:core-js@1.2.6",
     "khan4019/angular-bootstrap-grid-tree": "github:khan4019/tree-grid-directive@0.3.0",
     "lodash": "npm:lodash@4.13.1",
-    "trNgGrid": "github:moonstorm/trNgGrid@3.1.7",
     "ng-file-upload": "github:danialfarid/ng-file-upload-bower@12.0.4",
+    "trNgGrid": "github:moonstorm/trNgGrid@3.1.7",
     "typeahead-focus": "github:yohairosen/typeaheadFocus@master",
-    "github:angular/bower-angular-cookies@1.5.5": {
+    "github:angular/bower-angular-cookies@1.5.7": {
       "angular": "github:angular/bower-angular@1.5.7"
     },
-    "github:angular/bower-angular-messages@1.5.5": {
+    "github:angular/bower-angular-messages@1.5.7": {
       "angular": "github:angular/bower-angular@1.5.7"
     },
     "github:jspm/nodelibs-assert@0.1.0": {

@@ -1,7 +1,7 @@
 import angular from 'angular'
-import ngCookies from 'angular-cookies'
+import 'angular-cookies'
 
 import LocalStorage from './localStorage.service'
 
-export default angular.module('BioStudyApp.LocalStorage', [ngCookies])
+export default angular.module('BioStudyApp.LocalStorage', ['ngCookies'])
     .service('LocalStorage', LocalStorage);

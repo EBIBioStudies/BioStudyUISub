@@ -3,6 +3,8 @@
  * @module main
  */
 
+import 'angular-bootstrap/css/bootstrap.css!';
+
 import angular from 'angular'
 import ngMessages from 'angular-messages'
 import ngFileUpload from 'ng-file-upload'
@@ -23,6 +25,7 @@ import appConfig from './config'
 //import appRoutes from './routes'
 import appAuth from './auth/index'
 
+import MainCtrl from './main.ctrl'
 
 const appName = 'BioStudyApp';
 
@@ -123,20 +126,18 @@ angular.module(appName,
         $httpProvider.interceptors.push('proxyInterceptor');
         $httpProvider.interceptors.push('authInterceptor');
     })
-
+    .controller('MainCtrl', MainCtrl)
     .run(function ($state, $log, $rootScope, AuthService, AUTH_EVENTS, USER_ROLES, Session) {
 
         // Redirect to login if route requires auth and you're not logged in
-        $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
+       /* $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
             if (toState.authenticated && !AuthService.isAuthenticated()) {
                 event.preventDefault();
                 $rootScope.returnToState = toState.url;
                 $rootScope.returnToStateParams = toParams;
                 $state.transitionTo('signin');
             }
-        });
-
-        $rootScope.Constants = require('./Const');
+        });*/
 
         function setCurrentUser(user) {
             $rootScope.currentUser = user;

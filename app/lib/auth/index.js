@@ -19,16 +19,25 @@ import AccessLevelDirective from './directives/accessLevel'
 
 
 export default angular.module('BioStudyApp.Auth', [/*uiRouter, vcRecaptcha,*/ appStorage.name])
+    .service('AuthService', AuthService)
+    .service('AccessLevel', AccessLevelService)
     .service('Session', SessionService)
     .constant('USER_ROLES', {
         public: 'role-public',
         user: 'role-user',
         admin: 'role-admin'
+    })
+    .constant('AUTH_EVENTS', {
+        loginSuccess: 'auth-login-success',
+        loginFailed: 'auth-login-failed',
+        logoutSuccess: 'auth-logout-success',
+        sessionTimeout: 'auth-session-timeout',
+        notAuthenticated: 'auth-not-authenticated',
+        notAuthorized: 'auth-not-authorized'
     });
 
 /*
-    .service('AuthService', AuthService)
-    .service('AccessLevel', AccessLevelService)
+
     .controller('SignInCtrl', SignInCtrl)
     .controller('SignUpCtrl', SignUpCtrl)
     .controller('ActivateCtrl', ActivateCtrl)
@@ -37,12 +46,5 @@ export default angular.module('BioStudyApp.Auth', [/*uiRouter, vcRecaptcha,*/ ap
     .directive('accessLevel', AccessLevelDirective)
     .directive('equalsTo', EqualsToDirective)
 
-    .constant('AUTH_EVENTS', {
-        loginSuccess: 'auth-login-success',
-        loginFailed: 'auth-login-failed',
-        logoutSuccess: 'auth-logout-success',
-        sessionTimeout: 'auth-session-timeout',
-        notAuthenticated: 'auth-not-authenticated',
-        notAuthorized: 'auth-not-authorized'
-    })
+
     */
