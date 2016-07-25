@@ -3,14 +3,15 @@
  * @module main
  */
 
-import 'angular-bootstrap/css/bootstrap.css!';
+import 'bootstrap/css/bootstrap.css!'
+import '../styles/app.less!'
 
 import angular from 'angular'
 import ngMessages from 'angular-messages'
 import ngFileUpload from 'ng-file-upload'
 
 
-import uiBootstrap from 'angular-bootstrap'
+//import uiBootstrap from 'angular-bootstrap'
 import uiBootstrapShowErrors from 'angular-bootstrap-show-errors'
 import uiSelect from 'angular-ui-select'
 import uiRouter from 'angular-ui-router'

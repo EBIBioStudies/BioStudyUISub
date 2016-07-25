@@ -15,22 +15,28 @@ System.config({
 
   map: {
     "angular": "github:angular/bower-angular@1.5.7",
-    "angular-bootstrap": "github:angular-ui/bootstrap-bower@2.0.0",
     "angular-bootstrap-show-errors": "github:paulyoder/angular-bootstrap-show-errors@2.3.0",
     "angular-bootstrap-tree-grid": "github:khan4019/tree-grid-directive@0.3.0",
     "angular-cookies": "github:angular/bower-angular-cookies@1.5.7",
     "angular-messages": "github:angular/bower-angular-messages@1.5.7",
     "angular-recaptcha": "npm:angular-recaptcha@2.5.0",
+    "angular-ui-bootstrap": "npm:angular-ui-bootstrap@2.0.0",
     "angular-ui-router": "github:angular-ui/angular-ui-router-bower@0.2.18",
     "angular-ui-select": "github:angular-ui/ui-select@0.12.1",
     "babel": "npm:babel-core@5.8.38",
     "babel-runtime": "npm:babel-runtime@5.8.38",
+    "bootstrap": "github:twbs/bootstrap@3.3.6",
     "core-js": "npm:core-js@1.2.6",
+    "css": "github:systemjs/plugin-css@0.1.23",
     "khan4019/angular-bootstrap-grid-tree": "github:khan4019/tree-grid-directive@0.3.0",
+    "less": "github:aaike/jspm-less-plugin@0.0.5",
     "lodash": "npm:lodash@4.13.1",
     "ng-file-upload": "github:danialfarid/ng-file-upload-bower@12.0.4",
     "trNgGrid": "github:moonstorm/trNgGrid@3.1.7",
     "typeahead-focus": "github:yohairosen/typeaheadFocus@master",
+    "github:aaike/jspm-less-plugin@0.0.5": {
+      "less.js": "github:distros/less@2.4.0"
+    },
     "github:angular/bower-angular-cookies@1.5.7": {
       "angular": "github:angular/bower-angular@1.5.7"
     },
@@ -54,6 +60,9 @@ System.config({
     },
     "github:jspm/nodelibs-vm@0.1.0": {
       "vm-browserify": "npm:vm-browserify@0.0.4"
+    },
+    "github:twbs/bootstrap@3.3.6": {
+      "jquery": "npm:jquery@2.2.4"
     },
     "npm:assert@1.4.1": {
       "assert": "github:jspm/nodelibs-assert@0.1.0",
