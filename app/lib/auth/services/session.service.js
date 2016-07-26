@@ -42,5 +42,7 @@ export default class Session {
                 return this.id === null;
             }
         });
+
+        this.init();
     }
 }

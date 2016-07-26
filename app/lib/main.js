@@ -4,6 +4,7 @@
  */
 
 import 'bootstrap/css/bootstrap.css!'
+import 'font-awesome/css/font-awesome.css!';
 import '../styles/app.less!'
 
 import angular from 'angular'
@@ -17,7 +18,6 @@ import uiSelect from 'angular-ui-select'
 import uiRouter from 'angular-ui-router'
 import typeaheadFocus from 'typeahead-focus'
 
-import trNgGrid from 'trNgGrid'
 
 import lodash from 'lodash'
 
@@ -25,6 +25,11 @@ import lodash from 'lodash'
 import appConfig from './config'
 //import appRoutes from './routes'
 import appAuth from './auth/index'
+import appSubmission from './submission/index'
+
+import submListTmpl from './submission/pages/list/submissionList.html!ng-template';
+import signInTmpl from './auth/pages/signin/signin.html!ng-template';
+import signUpTmpl from './auth/pages/signup/signup.html!ng-template';
 
 import MainCtrl from './main.ctrl'
 
@@ -38,7 +43,8 @@ angular.module(appName,
 
         appConfig.name,
         //appRoutes.name,
-        appAuth.name
+        appAuth.name,
+        appSubmission.name
     ])
     .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $logProvider, $httpProvider, $anchorScrollProvider, APP_DEBUG_ENABLED) {
 
@@ -69,12 +75,12 @@ angular.module(appName,
             })
             .state('signin', {
                 url: '/signin',
-                templateUrl: 'templates/auth/views/signin.html',
+                templateUrl: signInTmpl.templateUrl,
                 controller: 'SignInCtrl'
             })
             .state('signup', {
                 url: '/signup',
-                templateUrl: 'templates/auth/views/signup.html',
+                templateUrl: signUpTmpl.templateUrl,
                 controller: 'SignUpCtrl'
             })
             .state('error', {
@@ -84,7 +90,7 @@ angular.module(appName,
             })
             .state('submissions', {
                 url: '/submissions',
-                templateUrl: 'templates/submission/views/submissions.html',
+                templateUrl: submListTmpl.templateUrl,
                 controller: 'SubmissionListCtrl',
                 authenticated: true
             })
@@ -131,14 +137,14 @@ angular.module(appName,
     .run(function ($state, $log, $rootScope, AuthService, AUTH_EVENTS, USER_ROLES, Session) {
 
         // Redirect to login if route requires auth and you're not logged in
-       /* $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
+        $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
             if (toState.authenticated && !AuthService.isAuthenticated()) {
                 event.preventDefault();
                 $rootScope.returnToState = toState.url;
                 $rootScope.returnToStateParams = toParams;
                 $state.transitionTo('signin');
             }
-        });*/
+        });
 
         function setCurrentUser(user) {
             $rootScope.currentUser = user;

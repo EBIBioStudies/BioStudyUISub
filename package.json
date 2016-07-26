@@ -68,10 +68,12 @@
       "bootstrap": "github:twbs/bootstrap@^3.3.6",
       "css": "github:systemjs/plugin-css@^0.1.23",
       "danialfarid/ng-file-upload-bower": "github:danialfarid/ng-file-upload-bower@^12.0.4",
+      "font-awesome": "npm:font-awesome@^4.6.3",
       "khan4019/angular-bootstrap-grid-tree": "github:khan4019/tree-grid-directive@0.3.0",
-      "less": "github:aaike/jspm-less-plugin@^0.0.5",
+      "less": "npm:systemjs-less-plugin@^1.8.3",
       "lodash": "npm:lodash@^4.8.2",
       "moonstorm/trNgGrid": "github:moonstorm/trNgGrid@~3.1.6",
+      "ng-template": "github:jamespamplin/plugin-ng-template@^0.1.1",
       "paulyoder/angular-bootstrap-show-errors": "github:paulyoder/angular-bootstrap-show-errors@~2.3.0",
       "yohairosen/typeaheadFocus": "github:yohairosen/typeaheadFocus@master"
     },

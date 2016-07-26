@@ -27,16 +27,15 @@ System.config({
     "babel-runtime": "npm:babel-runtime@5.8.38",
     "bootstrap": "github:twbs/bootstrap@3.3.6",
     "core-js": "npm:core-js@1.2.6",
-    "css": "github:systemjs/plugin-css@0.1.23",
+    "css": "github:systemjs/plugin-css@0.1.24",
+    "font-awesome": "npm:font-awesome@4.6.3",
     "khan4019/angular-bootstrap-grid-tree": "github:khan4019/tree-grid-directive@0.3.0",
-    "less": "github:aaike/jspm-less-plugin@0.0.5",
+    "less": "npm:systemjs-less-plugin@1.8.3",
     "lodash": "npm:lodash@4.13.1",
     "ng-file-upload": "github:danialfarid/ng-file-upload-bower@12.0.4",
+    "ng-template": "github:jamespamplin/plugin-ng-template@0.1.1",
     "trNgGrid": "github:moonstorm/trNgGrid@3.1.7",
     "typeahead-focus": "github:yohairosen/typeaheadFocus@master",
-    "github:aaike/jspm-less-plugin@0.0.5": {
-      "less.js": "github:distros/less@2.4.0"
-    },
     "github:angular/bower-angular-cookies@1.5.7": {
       "angular": "github:angular/bower-angular@1.5.7"
     },
@@ -86,6 +85,9 @@ System.config({
       "path": "github:jspm/nodelibs-path@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2",
       "systemjs-json": "github:systemjs/plugin-json@0.1.2"
+    },
+    "npm:font-awesome@4.6.3": {
+      "css": "github:systemjs/plugin-css@0.1.24"
     },
     "npm:inherits@2.0.1": {
       "util": "github:jspm/nodelibs-util@0.1.0"

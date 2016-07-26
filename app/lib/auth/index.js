@@ -1,6 +1,6 @@
 import angular from 'angular'
-import uiRouter from 'angular-ui-router'
-import vcRecaptcha from 'angular-recaptcha'
+//import uiRouter from 'angular-ui-router'
+import 'angular-recaptcha'
 
 import appStorage from '../localstorage/index'
 
@@ -18,7 +18,7 @@ import EqualsToDirective from './directives/equalsTo'
 import AccessLevelDirective from './directives/accessLevel'
 
 
-export default angular.module('BioStudyApp.Auth', [/*uiRouter, vcRecaptcha,*/ appStorage.name])
+export default angular.module('BioStudyApp.Auth', [/*uiRouter,*/ 'vcRecaptcha', appStorage.name])
     .service('AuthService', AuthService)
     .service('AccessLevel', AccessLevelService)
     .service('Session', SessionService)
@@ -34,17 +34,11 @@ export default angular.module('BioStudyApp.Auth', [/*uiRouter, vcRecaptcha,*/ ap
         sessionTimeout: 'auth-session-timeout',
         notAuthenticated: 'auth-not-authenticated',
         notAuthorized: 'auth-not-authorized'
-    });
-
-/*
-
+    })
     .controller('SignInCtrl', SignInCtrl)
     .controller('SignUpCtrl', SignUpCtrl)
     .controller('ActivateCtrl', ActivateCtrl)
     .controller('PasswordResetRequestCtrl', PasswordResetRequestCtrl)
     .controller('PasswordResetCtrl', PasswordResetCtrl)
     .directive('accessLevel', AccessLevelDirective)
-    .directive('equalsTo', EqualsToDirective)
-
-
-    */
+    .directive('equalsTo', EqualsToDirective);
