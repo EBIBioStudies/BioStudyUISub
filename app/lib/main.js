@@ -30,6 +30,7 @@ import appSubmission from './submission/index'
 import submListTmpl from './submission/pages/list/submissionList.html!ng-template';
 import signInTmpl from './auth/pages/signin/signin.html!ng-template';
 import signUpTmpl from './auth/pages/signup/signup.html!ng-template';
+import helpTmpl from './help/help.html!ng-template';
 
 import MainCtrl from './main.ctrl'
 
@@ -55,7 +56,7 @@ angular.module(appName,
         $stateProvider
             .state('help', {
                 url: '/help',
-                templateUrl: 'templates/home/views/help.html',
+                templateUrl: helpTmpl.templateUrl,
                 controller: 'HelpCtrl'
             })
             .state('key_activation', {
