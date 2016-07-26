@@ -1,0 +1,12 @@
+
+<a ng-href="{{itemHref}}" ng-click="bsClick()" uib-tooltip="{{itemText}}" tooltip-placement="right"
+   tooltip-append-to-body="true" ng-show="toggle" ng-class="{ 'disabled-link': disabled}">
+    <i class="fa fa-fw" ng-class="itemClass">
+    </i>
+</a>
+
+<a ng-href="{{itemHref}}" ng-click="bsClick()" ng-show="!toggle" ng-class="{ 'disabled-link': disabled}">
+    <i class="fa fa-fw" ng-class="itemClass"></i>
+    <span ng-bind="itemText"></span>
+</a>
+

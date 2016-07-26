@@ -40,5 +40,5 @@ export default angular.module('BioStudyApp.Auth', [/*uiRouter,*/ 'vcRecaptcha', 
     .controller('ActivateCtrl', ActivateCtrl)
     .controller('PasswordResetRequestCtrl', PasswordResetRequestCtrl)
     .controller('PasswordResetCtrl', PasswordResetCtrl)
-    .directive('accessLevel', AccessLevelDirective)
-    .directive('equalsTo', EqualsToDirective);
+    .directive('accessLevel', () => new AccessLevelDirective())
+    .directive('equalsTo', () => new EqualsToDirective());

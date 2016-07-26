@@ -1,8 +1,5 @@
-'use strict';
-
-module.exports =
-    function ($scope, $state, $stateParams, $log, SubmissionModel, SubmissionService) {
-
+export default class SubmissionViewController {
+    constructor($scope, $state, $stateParams, $log, SubmissionModel, SubmissionService) {
         $scope.title = 'View the submission';
         $scope.accno = '';
         $scope.readOnly = true;
@@ -17,7 +14,8 @@ module.exports =
             $state.go('error');
         });
 
-        $scope.editSubmission = function() {
-           $state.go('submission_edit', {accno: $scope.accno});
+        $scope.editSubmission = function () {
+            $state.go('submission_edit', {accno: $scope.accno});
         };
-    };
+    }
+}

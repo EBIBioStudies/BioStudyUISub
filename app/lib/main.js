@@ -8,18 +8,18 @@ import 'font-awesome/css/font-awesome.css!';
 import '../styles/app.less!'
 
 import angular from 'angular'
-import ngMessages from 'angular-messages'
-import ngFileUpload from 'ng-file-upload'
+//import ngMessages from 'angular-messages'
+//import ngFileUpload from 'ng-file-upload'
 
 
 //import uiBootstrap from 'angular-bootstrap'
-import uiBootstrapShowErrors from 'angular-bootstrap-show-errors'
-import uiSelect from 'angular-ui-select'
+//import uiBootstrapShowErrors from 'angular-bootstrap-show-errors'
+//import uiSelect from 'angular-ui-select'
 import uiRouter from 'angular-ui-router'
-import typeaheadFocus from 'typeahead-focus'
+//import typeaheadFocus from 'typeahead-focus'
 
 
-import lodash from 'lodash'
+//import lodash from 'lodash'
 
 //import appTemplates from './templates'
 import appConfig from './config'
@@ -28,6 +28,7 @@ import appAuth from './auth/index'
 import appSubmission from './submission/index'
 
 import submListTmpl from './submission/pages/list/submissionList.html!ng-template';
+import submTmpl from './submission/pages/edit/submission.html!ng-template';
 import signInTmpl from './auth/pages/signin/signin.html!ng-template';
 import signUpTmpl from './auth/pages/signup/signup.html!ng-template';
 import helpTmpl from './help/help.html!ng-template';
@@ -97,8 +98,8 @@ angular.module(appName,
             })
             .state('submission_edit', {
                 url: '/edit/:accno',
-                templateUrl: 'templates/submission/views/submission.html',
-                controller: 'EditSubmissionCtrl',
+                templateUrl: submTmpl.templateUrl,
+                controller: 'SubmissionEditCtrl',
                 authenticated: true
             })
             .state('submission_view', {

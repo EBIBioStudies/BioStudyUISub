@@ -1,12 +1,8 @@
-/**
- * Created by mdylag on 04/09/2014.
- */
-'use strict';
+export default class SubmissionEditController {
+    constructor($scope, $timeout, $state,
+                $stateParams, $log, SubmissionModel, SubmissionService, ModalDialogs) {
+        "ngInject";
 
-module.exports =
-    function ($rootScope, $scope, $timeout, $state,
-              $stateParams, $log, SubmissionModel, SubmissionService, MessageService, ModalDialogs) {
-        
         $scope.accno = '';
         $scope.hasError = false;
         $scope.readOnly = false;
@@ -17,7 +13,7 @@ module.exports =
                 $log.debug("onSubmissionChange()");
                 debounceSaveUpdates();
             }
-        }
+        };
 
         var timeout = null;
         var saved = null;
@@ -98,7 +94,7 @@ module.exports =
                     }
                 });
         };
-        
+
         function showSubmitSuccess() {
             var acc = $scope.submission.accno;
             ModalDialogs.successMessages(['Submission ' + acc + ' has been submitted successfully.'])
@@ -139,4 +135,6 @@ module.exports =
             $event.stopPropagation();
             $scope.opened = true;
         };
-    };
+
+    }
+}
