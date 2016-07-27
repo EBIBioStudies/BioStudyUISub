@@ -1,8 +1,8 @@
-'use strict';
+class BsReplaceDirective {
+    constructor($compile, $templateRequest) {
+        "ngInject";
 
-module.exports = ['$compile', '$templateRequest',
-    function ($compile, $templateRequest) {
-        return {
+        Object.assign(this, {
             restrict: 'EA',
             scope: false,
             link: function (scope, elem, attrs) {
@@ -12,6 +12,12 @@ module.exports = ['$compile', '$templateRequest',
                     $compile(elem.contents())(scope);
                 });
             }
-        };
+        });
     }
-];
+    static create($compile, $templateRequest) {
+        "ngInject";
+        return new BsReplaceDirective($compile, $templateRequest);
+    }
+}
+
+export default BsReplaceDirective.create;

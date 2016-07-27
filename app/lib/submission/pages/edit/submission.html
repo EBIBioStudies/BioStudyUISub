@@ -5,7 +5,7 @@
            style="position: fixed;"
            ng-if="!readOnly">
 
-        <section class="bsst-submission sidebar">
+        <section class="sidebar">
             <ul class="sidebar-menu">
                 <bs-ng-toggle></bs-ng-toggle>
                 <li class="success" bs-ng-item data-bs-click="addAnnotation();"
@@ -111,7 +111,6 @@
                                       ng-model="submission.description"
                                       ng-required="true"
                                       uib-tooltip="Empty value"
-                                      tooltip-append-to-body="true"
                                       tooltip-placement="bottom"
                                       tooltip-class="customClass"
                                       tooltip-enable="submissionForm.description.$invalid"
@@ -126,31 +125,31 @@
                         <bs-panel
                                 data-ng-model="submission.annotations.items[0]"
                                 data-type="annotation"
-                                data-content-url="templates/bsng/panel/sectionItem_content.html"
+                                data-content-type="sectionItem"
                                 data-change="onSubmissionChange()"></bs-panel>
 
                         <bs-panel
                                 data-ng-model="submission.contacts"
                                 data-type="contact"
-                                data-content-url="templates/bsng/panel/section_content.html"
+                                data-content-type="section"
                                 data-change="onSubmissionChange()"></bs-panel>
 
                         <bs-panel
                                 data-ng-model="submission.links"
                                 data-type="link"
-                                data-content-url="templates/bsng/panel/section_content.html"
+                                data-content-type="section"
                                 data-change="onSubmissionChange()"></bs-panel>
 
                         <bs-panel
                                 data-ng-model="submission.files"
                                 data-type="file"
-                                data-content-url="templates/bsng/panel/file/section_content.html"
+                                data-content-type="fileSection"
                                 data-change="onSubmissionChange()"></bs-panel>
 
                         <bs-panel
                                 data-ng-model="submission.publications"
                                 data-type="publication"
-                                data-content-url="templates/bsng/panel/section_content.html"
+                                data-content-type="section"
                                 data-change="onSubmissionChange()"></bs-panel>
                     </div>
                     <div>

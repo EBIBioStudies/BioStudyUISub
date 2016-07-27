@@ -1,16 +1,88 @@
-/**
- * Created by mdylag on 04/09/2014.
- */
+import tmpl from './tmpl/bsSection/section.html!ng-template'
 
-'use strict';
+class BsSectionController {
+    constructor($scope, $log, _) {
+        "ngInject";
+        var notifyChanges = function () {
+            $log.debug("bsSection notifyChanges");
+            if ($scope.changeCallback) {
+                $scope.$parent.$eval($scope.changeCallback);
+            }
+        };
 
-module.exports = function (moduleDirective) {
+        $scope.attributeKeys = [];
+        $scope.colSizeCss= 'col-lg-6';
 
-    moduleDirective.directive('bsSection', function () {
-        return {
+        function update(obj) {
+            var attributeKeys = getAttributeKeys(obj);
+            var colSizeCss = getColSizeCss(attributeKeys);
+
+            $scope.attributeKeys = attributeKeys;
+            $scope.colSizeCss = colSizeCss;
+        }
+
+        function getAttributeKeys(obj) {
+            var keys = {};
+            _.forEach(obj.items, function (item) {
+                _.forEach(item.attributes.attributes, function (attr) {
+                    keys[attr.name] = 1;
+                });
+            });
+            return objProperties(keys);
+        }
+
+        function getColSizeCss(attributeKeys) {
+            var length = attributeKeys.length;
+            if (length > 6) {
+                length = 6;
+            }
+            return 'col-lg-' + Math.ceil(12 / length);
+        }
+
+        function objProperties(obj) {
+            var keys = [];
+            _.forOwn(obj, function(value, key) {
+                keys.push(key);
+            });
+            return keys;
+        }
+
+        $scope.onAttributeChange = function() {
+            $log.debug("bsSection onAttributeChange");
+            update($scope.data);
+            notifyChanges();
+        };
+
+        var unwatch = $scope.$watch('data', function(newValue, oldValue) {
+            if (newValue === undefined) {
+                return;
+            }
+            update(newValue);
+            unwatch();
+        });
+
+        var unwatchItems = $scope.$watchCollection('data.items', function(newValue, oldValue) {
+            if (newValue === undefined) {
+                return;
+            }
+            $log.debug("bsSection collection changed");
+            update($scope.data);
+            notifyChanges();
+        });
+
+        $scope.$on('$destroy', function () {
+            $log.debug("bsSection on-destroy");
+            unwatchItems();
+        });
+    }
+}
+
+class BsSectionDirective {
+    constructor() {
+        Object.assign(this, {
             restrict: 'E',
             templateUrl: function (elem, attrs) {
-                return attrs.templateUrl || 'templates/bsng/section/section.html';
+                return attrs.templateUrl || tmpl.templateUrl;
             },
             require: "^^bsPanel",
             scope: {
@@ -29,115 +101,14 @@ module.exports = function (moduleDirective) {
                 scope.typeaheadValues =  panelCtrl.typeaheadValues(attrs.type);
             },
             controllerAs: 'sectionCtrl',
-            controller: ['$scope', '_', '$log', function ($scope, _, $log) {
-                
-                var notifyChanges = function () {
-                    $log.debug("bsSection notifyChanges");
-                    if ($scope.changeCallback) {
-                        $scope.$parent.$eval($scope.changeCallback);
-                    }
-                };
+            controller: BsSectionController
+        });
+    }
 
-                $scope.attributeKeys = [];
-                $scope.colSizeCss= 'col-lg-6';
+    static create() {
+        return new BsSectionDirective();
+    }
+}
 
-                function update(obj) {
-                    var attributeKeys = getAttributeKeys(obj);
-                    var colSizeCss = getColSizeCss(attributeKeys);
-
-                    $scope.attributeKeys = attributeKeys;
-                    $scope.colSizeCss = colSizeCss;
-                }
-
-                function getAttributeKeys(obj) {
-                    var keys = {};
-                    _.forEach(obj.items, function (item) {
-                        _.forEach(item.attributes.attributes, function (attr) {
-                            keys[attr.name] = 1;
-                        });
-                    });
-                    return objProperties(keys);
-                }
-
-                function getColSizeCss(attributeKeys) {
-                    var length = attributeKeys.length;
-                    if (length > 6) {
-                        length = 6;
-                    }
-                    return 'col-lg-' + Math.ceil(12 / length);
-                }
-
-                function objProperties(obj) {
-                    var keys = [];
-                    _.forOwn(obj, function(value, key) {
-                        keys.push(key);
-                    });
-                    return keys;
-                }
-
-                $scope.onAttributeChange = function() {
-                    $log.debug("bsSection onAttributeChange");
-                    update($scope.data);
-                    notifyChanges();
-                };
-
-                var unwatch = $scope.$watch('data', function(newValue, oldValue) {
-                    if (newValue === undefined) {
-                        return;
-                    }
-                    update(newValue);
-                    unwatch();
-                });
-
-                var unwatchItems = $scope.$watchCollection('data.items', function(newValue, oldValue) {
-                    if (newValue === undefined) {
-                        return;
-                    }
-                    $log.debug("bsSection collection changed");
-                    update($scope.data);
-                    notifyChanges();
-                });
-
-                $scope.$on('$destroy', function () {
-                    $log.debug("bsSection on-destroy");
-                    unwatchItems();
-                });
-            }]
-        };
-    });
-    
-    moduleDirective.filter('filterAttrs', function () {
-        return function (fieldValueUnused, array, key) {
-            var ret = [];
-            for (var i in array) {
-                if (array[i].name === key) {
-                    ret.push(array[i]);
-                    return ret;
-                }
-            }
-            return ret;
-        };
-    });
-
-    moduleDirective.filter("filterAttrsTypeahead", function (_) {
-        return function (fieldValueUnused, array, existedKeys) {
-            var typeahead = [];
-            for (var i in array) {
-                var index = _.findIndex(existedKeys, {name: array[i].name});
-                if (index === -1) {
-                    typeahead.push(array[i]);
-                }
-            }
-            return typeahead;
-        };
-    });
-
-    moduleDirective.filter("filterDifference", function (_) {
-        return function (fieldValueUnused, array, existedAttrs) {
-            return _.differenceBy(array, _.map(existedAttrs, 'name'));
-        };
-    });
-
-};
-
+export default BsSectionDirective.create;
 

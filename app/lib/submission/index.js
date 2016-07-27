@@ -2,6 +2,10 @@ import angular from 'angular'
 import 'lodash'
 //import uiRouter from 'angular-ui-router'
 import 'trNgGrid'
+import uibTabs from 'angular-ui-bootstrap/src/tabs'
+import uibTypeahead from 'angular-ui-bootstrap/src/typeahead/index-nocss'
+import uibTooltip from 'angular-ui-bootstrap/src/tooltip/index-nocss'
+import 'typeahead-focus'
 
 import 'trNgGrid/trNgGrid.css!'
 
@@ -20,8 +24,14 @@ import SubmViewCtrl from './pages/edit/submissionView.ctrl'
 
 import BsNgItemDirective from './directives/bsNgItem'
 import BsNgToggleDirective from './directives/bsNgToggle'
+import BsPanelDirective from './directives/bsPanel'
+import BsSectionDirective from './directives/bsSection'
+import BsSectionItemDirective from './directives/bsSectionItem'
+import BsReplaceDirective from './directives/bsReplace'
+import BsPubMedIdSearchDirective from './directives/bsPubMedIdSearch'
 
-export default angular.module('BioStudyApp.Submission', ['trNgGrid', appAuth.name, appMisc.name])
+export default angular.module('BioStudyApp.Submission',
+    ['trNgGrid', 'typeahead-focus', uibTabs, uibTooltip, uibTypeahead, appAuth.name, appMisc.name])
     .constant('_', window._)
     .service('SubmissionService', SubmService)
     .service('DictionaryService', DictService)
@@ -33,14 +43,43 @@ export default angular.module('BioStudyApp.Submission', ['trNgGrid', appAuth.nam
     .controller('SubmissionListCtrl', SubmListCtrl)
     .controller('SubmissionEditCtrl', SubmEditCtrl)
     .controller('SubmissionViewCtrl', SubmViewCtrl)
-    .directive('bsNgItem',() => new BsNgItemDirective())
-    .directive('bsNgToggle', () => new BsNgToggleDirective());
-   // .controller('FileCtrl', FileCtrl);
-    /*.directive('bsPanel', require('./directives/bsPanel'))
-    .directive('bsSectionItem', require('./directives/bsSectionItem'))
-    .directive('bsReplace', require('./directives/bsReplace'))
-    .directive('bsPubMedIdSearch', require('./directives/bsPubMedIdSearch'));*/
-
-
-//require('./directives/bsSection')(app);
+    // .controller('FileCtrl', FileCtrl)
+    .directive('bsNgItem', () => new BsNgItemDirective())
+    .directive('bsNgToggle', () => new BsNgToggleDirective())
+    .directive('bsPanel', BsPanelDirective)
+    .directive('bsSection', BsSectionDirective)
+    .directive('bsSectionItem', BsSectionItemDirective)
+    .directive('bsReplace', BsReplaceDirective)
+    .directive('bsPubMedIdSearch', BsPubMedIdSearchDirective)
+    .filter('filterAttrs', function () {
+        return function (fieldValueUnused, array, key) {
+            var ret = [];
+            for (var i in array) {
+                if (array[i].name === key) {
+                    ret.push(array[i]);
+                    return ret;
+                }
+            }
+            return ret;
+        };
+    })
+    .filter("filterAttrsTypeahead", function (_) {
+        "ngInject";
+        return function (fieldValueUnused, array, existedKeys) {
+            var typeahead = [];
+            for (var i in array) {
+                var index = _.findIndex(existedKeys, {name: array[i].name});
+                if (index === -1) {
+                    typeahead.push(array[i]);
+                }
+            }
+            return typeahead;
+        };
+    })
+    .filter("filterDifference", function (_) {
+        "ngInject";
+        return function (fieldValueUnused, array, existedAttrs) {
+            return _.differenceBy(array, _.map(existedAttrs, 'name'));
+        };
+    });
 
