@@ -1,4 +1,6 @@
 import angular from 'angular'
+import 'angular-messages'
+
 import 'lodash'
 //import uiRouter from 'angular-ui-router'
 import uibTabs from 'angular-ui-bootstrap/src/tabs'
@@ -6,6 +8,10 @@ import uibTooltip from 'angular-ui-bootstrap/src/tooltip/index-nocss'
 
 import uibTypeahead from 'angular-ui-bootstrap/src/typeahead/index-nocss'
 import 'angular-ui-bootstrap/src/typeahead/typeahead.css!'
+
+//import uibDatepicker from 'angular-ui-bootstrap/src/datepicker/index-nocss'
+import uibDatepickerPopup from 'angular-ui-bootstrap/src/datepickerPopup/index-nocss'
+import 'angular-ui-bootstrap/src/datepickerPopup/popup.css!'
 
 import 'trNgGrid'
 import 'trNgGrid/trNgGrid.css!'
@@ -32,7 +38,7 @@ import BsReplaceDirective from './directives/bsReplace'
 import BsPubMedIdSearchDirective from './directives/bsPubMedIdSearch'
 
 export default angular.module('BioStudyApp.Submission',
-    ['trNgGrid', uibTabs, uibTooltip, uibTypeahead, appAuth.name, appMisc.name])
+    ['ngMessages', 'trNgGrid', uibTabs, uibTooltip, uibTypeahead, uibDatepickerPopup, appAuth.name, appMisc.name])
     .constant('_', window._)
     .service('SubmissionService', SubmService)
     .service('DictionaryService', DictService)

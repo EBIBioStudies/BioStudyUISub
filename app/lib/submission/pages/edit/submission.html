@@ -84,12 +84,14 @@
                             <p class="input-group margin-bottom-none">
                                 <input type="text" name="releaseDate" class="form-control"
                                        uib-datepicker-popup="dd.MM.yyyy"
-                                       ng-model="submission.releaseDate" is-open="opened"
-                                       datepicker-options="dateOptions"
-                                       ng-required="true" close-text="Close"
                                        datepicker-append-to-body="true"
+                                       datepicker-options="dateOptions"
+                                       is-open="opened"
+                                       close-text="Close"
+                                       ng-required="true"
                                        ng-click="openDatePicker($event)"
                                        ng-readonly="readOnly"
+                                       ng-model="submission.releaseDate"
                                        ng-model-options="{ allowInvalid: true }"/>
                                 <span class="input-group-btn">
                                      <button type="button" class="btn btn-default" ng-click="openDatePicker($event)">
