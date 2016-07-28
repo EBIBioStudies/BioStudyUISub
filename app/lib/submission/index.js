@@ -9,7 +9,6 @@ import uibTooltip from 'angular-ui-bootstrap/src/tooltip/index-nocss'
 import uibTypeahead from 'angular-ui-bootstrap/src/typeahead/index-nocss'
 import 'angular-ui-bootstrap/src/typeahead/typeahead.css!'
 
-//import uibDatepicker from 'angular-ui-bootstrap/src/datepicker/index-nocss'
 import uibDatepickerPopup from 'angular-ui-bootstrap/src/datepickerPopup/index-nocss'
 import 'angular-ui-bootstrap/src/datepickerPopup/popup.css!'
 
@@ -18,6 +17,7 @@ import 'trNgGrid/trNgGrid.css!'
 
 import appAuth from '../auth/index'
 import appModals from '../modals/index'
+import appFile from '../file/index'
 
 import SubmService from './services/submission.service'
 import DictService from './services/dictionary.service'
@@ -27,7 +27,7 @@ import SubmModel from './model/submission.model'
 import SubmListCtrl from './pages/list/submissionList.ctrl'
 import SubmEditCtrl from './pages/edit/submissionEdit.ctrl'
 import SubmViewCtrl from './pages/edit/submissionView.ctrl'
-//import FileCtrl from './pages/edit/file.ctrl'
+import FileCtrl from './pages/edit/file.ctrl'
 
 import BsNgItemDirective from './directives/bsNgItem'
 import BsNgToggleDirective from './directives/bsNgToggle'
@@ -38,7 +38,8 @@ import BsReplaceDirective from './directives/bsReplace'
 import BsPubMedIdSearchDirective from './directives/bsPubMedIdSearch'
 
 export default angular.module('BioStudyApp.Submission',
-    ['ngMessages', 'trNgGrid', uibTabs, uibTooltip, uibTypeahead, uibDatepickerPopup, appAuth.name, appModals.name])
+    ['ngMessages', 'trNgGrid', uibTabs, uibTooltip, uibTypeahead, uibDatepickerPopup,
+        appAuth.name, appModals.name, appFile.name])
     .constant('_', window._)
     .service('SubmissionService', SubmService)
     .service('DictionaryService', DictService)
@@ -50,7 +51,7 @@ export default angular.module('BioStudyApp.Submission',
     .controller('SubmissionListCtrl', SubmListCtrl)
     .controller('SubmissionEditCtrl', SubmEditCtrl)
     .controller('SubmissionViewCtrl', SubmViewCtrl)
-    // .controller('FileCtrl', FileCtrl)
+    .controller('FileCtrl', FileCtrl)
     .directive('bsNgItem', () => new BsNgItemDirective())
     .directive('bsNgToggle', () => new BsNgToggleDirective())
     .directive('bsPanel', BsPanelDirective)
