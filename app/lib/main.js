@@ -4,8 +4,6 @@ import '../styles/app.less!'
 
 import angular from 'angular'
 
-//import ngFileUpload from 'ng-file-upload'
-
 
 
 
@@ -17,6 +15,7 @@ import appConfig from './config'
 //import appRoutes from './routes'
 import appAuth from './auth/index'
 import appSubmission from './submission/index'
+import appFile from './file/index'
 import appMain from './main/index'
 import appHelp from './help/index'
 
@@ -24,8 +23,12 @@ import submListTmpl from './submission/pages/list/submissionList.html!ng-templat
 import submTmpl from './submission/pages/edit/submission.html!ng-template';
 import signInTmpl from './auth/pages/signin/signin.html!ng-template';
 import signUpTmpl from './auth/pages/signup/signup.html!ng-template';
-import helpTmpl from './help/help.html!ng-template';
+import accActivateTmpl from './auth/pages/activate/activate.html!ng-template';
+import accPasswordResetReqTmpl from './auth/pages/passwordReset/passwordResetRequest.html!ng-template';
+import accPasswordResetTmpl from './auth/pages/passwordReset/passwordReset.html!ng-template'
+import fileListTmpl from './file/pages/list/fileList.html!ng-template'
 
+import helpTmpl from './help/help.html!ng-template';
 
 const appName = 'BioStudyApp';
 
@@ -40,6 +43,7 @@ angular.module(appName,
         //appRoutes.name,
         appAuth.name,
         appSubmission.name,
+        appFile.name,
         appHelp.name
     ])
     .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $logProvider, $httpProvider, $anchorScrollProvider, APP_DEBUG_ENABLED) {
@@ -55,17 +59,17 @@ angular.module(appName,
             })
             .state('key_activation', {
                 url: '/activate/:key',
-                templateUrl: 'templates/auth/views/activate.html',
+                templateUrl: accActivateTmpl.templateUrl,
                 controller: 'ActivateCtrl'
             })
             .state('password_reset_request', {
                 url: '/forgot_password',
-                templateUrl: 'templates/auth/views/passwordResetRequest.html',
+                templateUrl: accPasswordResetReqTmpl.templateUrl,
                 controller: 'PasswordResetRequestCtrl'
             })
             .state('password_reset', {
                 url: '/password_reset/:key',
-                templateUrl: 'templates/auth/views/passwordReset.html',
+                templateUrl: accPasswordResetTmpl.templateUrl,
                 controller: 'PasswordResetCtrl'
             })
             .state('signin', {
@@ -97,17 +101,17 @@ angular.module(appName,
             })
             .state('submission_view', {
                 url: '/view/:accno',
-                templateUrl: 'templates/submission/views/submission.html',
+                templateUrl: submTmpl.templateUrl,
                 controller: 'ViewSubmissionCtrl',
                 authenticated: true
             })
             .state('files', {
                 url: '/files',
-                templateUrl: 'templates/file/views/files.html',
+                templateUrl: fileListTmpl.templateUrl,
                 controller: 'FilesCtrl',
                 authenticated: true
-            })
-            .state('export', {
+            });
+            /*.state('export', {
                 url: '/export',
                 templateUrl: 'partials/export.html',
                 controller: 'ExportCtrl',
@@ -117,7 +121,7 @@ angular.module(appName,
                 url: '/profile',
                 templateUrl: 'partials/profile.html',
                 controller: 'ProfileCtrl'
-            });
+            });*/
 
         // default url
         $urlRouterProvider.otherwise('/submissions');
