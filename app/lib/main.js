@@ -1,31 +1,24 @@
-/**
- * Main module
- * @module main
- */
-
 import 'bootstrap/css/bootstrap.css!'
 import 'font-awesome/css/font-awesome.css!';
 import '../styles/app.less!'
 
 import angular from 'angular'
-//import ngMessages from 'angular-messages'
+
 //import ngFileUpload from 'ng-file-upload'
 
 
-//import uiBootstrap from 'angular-bootstrap'
-//import uiBootstrapShowErrors from 'angular-bootstrap-show-errors'
+
+
 //import uiSelect from 'angular-ui-select'
 import uiRouter from 'angular-ui-router'
-//import typeaheadFocus from 'typeahead-focus'
 
 
-//import lodash from 'lodash'
-
-//import appTemplates from './templates'
 import appConfig from './config'
 //import appRoutes from './routes'
 import appAuth from './auth/index'
 import appSubmission from './submission/index'
+import appMain from './main/index'
+import appHelp from './help/index'
 
 import submListTmpl from './submission/pages/list/submissionList.html!ng-template';
 import submTmpl from './submission/pages/edit/submission.html!ng-template';
@@ -33,7 +26,6 @@ import signInTmpl from './auth/pages/signin/signin.html!ng-template';
 import signUpTmpl from './auth/pages/signup/signup.html!ng-template';
 import helpTmpl from './help/help.html!ng-template';
 
-import MainCtrl from './main.ctrl'
 
 const appName = 'BioStudyApp';
 
@@ -43,13 +35,14 @@ angular.module(appName,
         /*ngMessages, ngFileUpload, uiBootstrap, uiBootstrapShowErrors, uiSelect, uiRouter,
         typeaheadFocus, trNgGrid, lodash,*/
 
+        appMain.name,
         appConfig.name,
         //appRoutes.name,
         appAuth.name,
-        appSubmission.name
+        appSubmission.name,
+        appHelp.name
     ])
     .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $logProvider, $httpProvider, $anchorScrollProvider, APP_DEBUG_ENABLED) {
-
 
         $anchorScrollProvider.disableAutoScrolling();
         $logProvider.debugEnabled(APP_DEBUG_ENABLED === true);
@@ -135,7 +128,6 @@ angular.module(appName,
         $httpProvider.interceptors.push('proxyInterceptor');
         $httpProvider.interceptors.push('authInterceptor');
     })
-    .controller('MainCtrl', MainCtrl)
     .run(function ($state, $log, $rootScope, AuthService, AUTH_EVENTS, USER_ROLES, Session) {
 
         // Redirect to login if route requires auth and you're not logged in

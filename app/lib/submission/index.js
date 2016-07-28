@@ -17,7 +17,7 @@ import 'trNgGrid'
 import 'trNgGrid/trNgGrid.css!'
 
 import appAuth from '../auth/index'
-import appMisc from '../misc/index'
+import appModals from '../modals/index'
 
 import SubmService from './services/submission.service'
 import DictService from './services/dictionary.service'
@@ -38,7 +38,7 @@ import BsReplaceDirective from './directives/bsReplace'
 import BsPubMedIdSearchDirective from './directives/bsPubMedIdSearch'
 
 export default angular.module('BioStudyApp.Submission',
-    ['ngMessages', 'trNgGrid', uibTabs, uibTooltip, uibTypeahead, uibDatepickerPopup, appAuth.name, appMisc.name])
+    ['ngMessages', 'trNgGrid', uibTabs, uibTooltip, uibTypeahead, uibDatepickerPopup, appAuth.name, appModals.name])
     .constant('_', window._)
     .service('SubmissionService', SubmService)
     .service('DictionaryService', DictService)

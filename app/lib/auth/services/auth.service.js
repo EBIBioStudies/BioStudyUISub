@@ -33,7 +33,7 @@ export default class AuthService {
             },
 
             signOut() {
-                if (!isAuthenticated()) {
+                if (!this.isAuthenticated()) {
                     return $q.when({});
                 }
                 var defer = $q.defer();
