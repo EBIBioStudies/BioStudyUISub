@@ -10,11 +10,11 @@ class BsSectionItemDirective {
                 dataType: '@type',
                 changeCallback: '@change'
             },
-            templateUrl: function (elem, attrs) {
+            templateUrl(elem, attrs) {
                 return attrs.templateUrl || tmpl.templateUrl;
             },
             require: ['?^^bsSection', '^^bsPanel'],
-            link: function (scope, element, attrs, ctrls) {
+            link(scope, element, attrs, ctrls) {
                 var secCtrl = ctrls[0];
                 var panelCtrl = ctrls[1];
                 scope.sectionBinding = secCtrl != null;

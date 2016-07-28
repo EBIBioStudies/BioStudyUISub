@@ -75,7 +75,6 @@
       "moonstorm/trNgGrid": "github:moonstorm/trNgGrid@~3.1.6",
       "ng-template": "github:jamespamplin/plugin-ng-template@^0.1.1",
       "paulyoder/angular-bootstrap-show-errors": "github:paulyoder/angular-bootstrap-show-errors@~2.3.0",
-      "typeahead-focus": "github:yohairosen/typeaheadFocus@master",
       "yohairosen/typeaheadFocus": "github:yohairosen/typeaheadFocus@master"
     },
     "devDependencies": {

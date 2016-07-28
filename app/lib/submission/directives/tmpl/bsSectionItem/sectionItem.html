@@ -23,6 +23,7 @@
                    tooltip-enable="attrItemForm['attrKey_' + $index].$invalid"
                    ng-required="true"
                    ng-model="attr.name"
+                   ng-model-options="{ allowInvalid: true }"
                    ng-change="onAttributeChange()"
                    ng-if="!attr.required" autofocus
                    ng-readonly="readOnly">
@@ -31,7 +32,7 @@
         <td class="col-md-9 nopadding border-none form-group-sm"
             ng-class="{'has-error' : attr.required && attrItemForm['attrValue_' + $index].$invalid}">
             <div ng-class="{'input-group' : !readOnly && !attr.required}">
-                <input type="text" name="attrValue_{{$index}}" ng-model="attr.value"
+                <input type="text" name="attrValue_{{$index}}"
                        class="form-control input-sm"
                        placeholder="Enter a value"
                        uib-typeahead="value for value in typeaheadValues(attr.name, item.$index) | filter:$viewValue:$emptyOrMatch | limitTo:10"
@@ -47,6 +48,7 @@
                        ng-change="onAttributeChange()"
                        ng-readonly="readOnly"
                        ng-if="attr.type === 'text'"
+                       ng-model="attr.value"
                        ng-model-options="{ allowInvalid: true }">
 
             <div ng-controller="FileCtrl" ng-if="attr.type === 'file'">

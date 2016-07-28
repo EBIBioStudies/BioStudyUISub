@@ -1,12 +1,13 @@
 import angular from 'angular'
 import 'lodash'
 //import uiRouter from 'angular-ui-router'
-import 'trNgGrid'
 import uibTabs from 'angular-ui-bootstrap/src/tabs'
-import uibTypeahead from 'angular-ui-bootstrap/src/typeahead/index-nocss'
 import uibTooltip from 'angular-ui-bootstrap/src/tooltip/index-nocss'
-import 'typeahead-focus'
 
+import uibTypeahead from 'angular-ui-bootstrap/src/typeahead/index-nocss'
+import 'angular-ui-bootstrap/src/typeahead/typeahead.css!'
+
+import 'trNgGrid'
 import 'trNgGrid/trNgGrid.css!'
 
 import appAuth from '../auth/index'
@@ -31,7 +32,7 @@ import BsReplaceDirective from './directives/bsReplace'
 import BsPubMedIdSearchDirective from './directives/bsPubMedIdSearch'
 
 export default angular.module('BioStudyApp.Submission',
-    ['trNgGrid', 'typeahead-focus', uibTabs, uibTooltip, uibTypeahead, appAuth.name, appMisc.name])
+    ['trNgGrid', uibTabs, uibTooltip, uibTypeahead, appAuth.name, appMisc.name])
     .constant('_', window._)
     .service('SubmissionService', SubmService)
     .service('DictionaryService', DictService)

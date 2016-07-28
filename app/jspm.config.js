@@ -35,7 +35,6 @@ System.config({
     "ng-file-upload": "github:danialfarid/ng-file-upload-bower@12.0.4",
     "ng-template": "github:jamespamplin/plugin-ng-template@0.1.1",
     "trNgGrid": "github:moonstorm/trNgGrid@3.1.7",
-    "typeahead-focus": "github:yohairosen/typeaheadFocus@master",
     "github:angular/bower-angular-cookies@1.5.7": {
       "angular": "github:angular/bower-angular@1.5.7"
     },
