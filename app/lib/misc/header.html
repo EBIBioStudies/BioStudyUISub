@@ -21,7 +21,6 @@
 
                 <li bs-active-nav >
                     <a id="helpMenuItem" ui-sref="help"
-                       tooltip-append-to-body="true"
                        uib-tooltip="Go to the help page"
                        tooltip-placement="bottom">
                         <i class="fa fa-fw fa-question"></i>
@@ -32,7 +31,6 @@
                 <!-- Notifications: style can be found in dropdown.less -->
                 <li bs-active-nav ng-hide="currentUser">
                     <a id="signUpMenuItem" ui-sref="signup"
-                       tooltip-append-to-body="true"
                        uib-tooltip="Register a new user"
                        tooltip-placement="bottom">
                         <i class="fa fa-user fa-fw"></i>
@@ -42,7 +40,6 @@
                 </li>
                 <li bs-active-nav ng-hide="currentUser">
                     <a id="signInMenuItem" ui-sref="signin"
-                       tooltip-append-to-body="true"
                        uib-tooltip="Sign in"
                        tooltip-placement="bottom">
                         <i class="fa fa-sign-in"></i>
@@ -53,7 +50,6 @@
 
                 <li bs-active-nav ng-show="currentUser">
                     <a id="submissionMenuItem" ui-sref="submissions"
-                       tooltip-append-to-body="true"
                        uib-tooltip="List of submissions"
                        tooltip-placement="bottom">
 
