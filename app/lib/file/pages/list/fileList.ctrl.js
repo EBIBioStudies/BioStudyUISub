@@ -8,7 +8,7 @@ export default class SubmissionListController {
         var tree;
         $scope.uploadedTree = tree = {};
         $scope.selectedFiles = [];
-        $scope.uploadUrl = "/raw/fileUpload"
+        $scope.uploadUrl = "/raw/fileUpload";
         $scope.fileTypes = {
             dir: 'DIR',
             file: 'FILE',
