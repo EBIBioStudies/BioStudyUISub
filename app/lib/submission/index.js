@@ -36,6 +36,7 @@ import BsSectionDirective from './directives/bsSection'
 import BsSectionItemDirective from './directives/bsSectionItem'
 import BsReplaceDirective from './directives/bsReplace'
 import BsPubMedIdSearchDirective from './directives/bsPubMedIdSearch'
+import MsDuplicateDirective from './directives/msDuplicate'
 
 export default angular.module('BioStudyApp.Submission',
     ['ngMessages', 'trNgGrid', uibTabs, uibTooltip, uibTypeahead, uibDatepickerPopup,
@@ -59,6 +60,7 @@ export default angular.module('BioStudyApp.Submission',
     .directive('bsSectionItem', BsSectionItemDirective)
     .directive('bsReplace', BsReplaceDirective)
     .directive('bsPubMedIdSearch', BsPubMedIdSearchDirective)
+    .directive('msDuplicate', MsDuplicateDirective)
     .filter('filterAttrs', function () {
         return function (fieldValueUnused, array, key) {
             var ret = [];
