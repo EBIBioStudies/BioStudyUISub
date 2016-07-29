@@ -1,5 +1,5 @@
 class BsPubMedIdSearchController {
-    constructor($scope, $log, $timeout, PubMedSearch) {
+    constructor($scope, $log, $timeout, PubMedSearch, PUBMEDID_SEARCH_EVENTS) {
         "ngInject";
 
         var timeout = null;
@@ -7,7 +7,6 @@ class BsPubMedIdSearchController {
         function pubMedSearch() {
             PubMedSearch.search($scope.pmid).then(
                 function(resp) {
-                    $log.debug(resp);
                     if (resp.status === "OK" && resp.data.hasOwnProperty('title')) {
                         $scope.$emit(PUBMEDID_SEARCH_EVENTS.pubMedIdFound, uppercaseProperties(resp.data));
                     }

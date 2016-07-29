@@ -1,4 +1,5 @@
 import tmpl from './tmpl/bsSectionItem/sectionItem.html!ng-template'
+import publTmpl from './tmpl/bsSectionItem/publication/sectionItem.html!ng-template'
 
 class BsSectionItemDirective {
     constructor($log, PUBMEDID_SEARCH_EVENTS) {
@@ -17,6 +18,7 @@ class BsSectionItemDirective {
             link(scope, element, attrs, ctrls) {
                 var secCtrl = ctrls[0];
                 var panelCtrl = ctrls[1];
+                scope.pubMedSearchTmplUrl = publTmpl.templateUrl;
                 scope.sectionBinding = secCtrl != null;
 
                 scope.readOnly = panelCtrl.readOnly;

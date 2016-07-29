@@ -4,7 +4,7 @@
     <th>Value</th>
     </thead>
     <tbody>
-    <tr bs-replace src="templates/bsng/sectionItem/publication/sectionItem.html"
+    <tr bs-replace src="{{pubMedSearchTmplUrl}}"
         ng-if="dataType === 'publication'"></tr>
     <tr ng-repeat="attr in item.attributes.attributes">
         <td class="col-md-3 nopadding border-none form-group-sm"
