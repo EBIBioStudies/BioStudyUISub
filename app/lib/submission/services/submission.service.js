@@ -4,97 +4,92 @@ export default class SubmissionService {
 
         Object.assign(this, {
             getAllSubmissions(options) {
-                var defer = $q.defer();
-                $http.get("/api/submissions", options)
-                    .success(function (data) {
-                        var submissions = [];
-                        submissions = submissions.concat(data.submissions);
-                        defer.resolve(submissions);
-                    })
-                    .error(function (err, status) {
-                        defer.reject(err, status);
-                    });
-                return defer.promise;
+                return $http.get("/api/submissions", options)
+                    .then(function (response) {
+                            return response.data.submissions;
+                        },
+                        function (response) {
+                            $log.error("getAllSubmissions() error: ", response);
+                            return response;
+                        })
             },
 
             getSubmission(accno, origin) {
-                var defer = $q.defer();
-                $http.get("/api/submission/" + accno, {params: {origin: origin === true}})
-                    .success(function (data) {
-                        defer.resolve(data);
-                    })
-                    .error(function (err, status) {
-                        defer.reject(err, status);
-                    });
-                return defer.promise;
+                return $http.get("/api/submission/" + accno, {params: {origin: origin === true}})
+                    .then(function (response) {
+                            return response.data;
+                        },
+                        function (response) {
+                            $log.error("getSubmission() error: ", response);
+                            return response;
+                        });
             },
+
             getSubmittedSubmission(submission) {
                 return this.getSubmission(submission, true);
             },
+
             saveSubmission(submission) {
-                var defer = $q.defer();
-                $http.post("/api/submission/save", submission)
-                    .success(function (data) {
-                        defer.resolve(data);
-                    })
-                    .error(function (err, status) {
-                        defer.reject(err, status);
-                    });
-                return defer.promise;
+                return $http.post("/api/submission/save", submission)
+                    .then(function (response) {
+                            return response.data;
+                        },
+                        function (response) {
+                            $log.error("saveSubmission() error: ", response);
+                            return response;
+                        });
             },
 
             submitSubmission(submission) {
-                var defer = $q.defer();
-                $http.put("/api/submission/submit", submission)
-                    .success(function (data) {
-                        defer.resolve(data);
-                    })
-                    .error(function (err, status) {
-                        defer.reject(err, status);
-                    });
-                return defer.promise;
+                return $http.put("/api/submission/submit", submission)
+                    .then(function (response) {
+                            return response.data;
+                        },
+                        function (response) {
+                            $log.error("submitSubmission() error: ", response);
+                            return response;
+                        });
             },
 
             createSubmission(submission) {
-                var defer = $q.defer();
-                $http.post("/api/submission/create", submission)
-                    .success(function (data) {
-                        defer.resolve(data);
-                    })
-                    .error(function (err, status) {
-                        defer.reject(err, status);
-                    });
-                return defer.promise;
+                return $http.post("/api/submission/create", submission)
+                    .then(function (response) {
+                            return response.data;
+                        },
+                        function (response) {
+                            $log.error("createSubmission() error: ", response);
+                            return response;
+                        });
             },
 
             editSubmission(accno) {
-                var defer = $q.defer();
-                $http.post("/api/submission/edit/" + accno)
-                    .success(function (data) {
-                        defer.resolve(data);
-                    })
-                    .error(function (err, status) {
-                        defer.reject(err, status);
-                    });
-                return defer.promise;
+                return $http.post("/api/submission/edit/" + accno)
+                    .then(function (response) {
+                            return response.data;
+                        },
+                        function (response) {
+                            $log.error("editSubmission(accno=" + accno + ") error:", response);
+                            return response;
+                        });
             },
 
             deleteSubmission(accno) {
                 var defer = $q.defer();
                 $http.delete("/api/submission/" + accno)
-                    .success(function (data) {
+                    .then(function (response) {
+                        var data = response.data;
                         if (data.status === "OK") {
                             defer.resolve(data);
                         } else {
-                            defer.reject("delete error", data.status);
+                            $log.error("deleteSubmission(accno=" + accno + ") error:", data);
+                            defer.reject("delete error", data);
                         }
-                    })
-                    .error(function (err, status) {
-                        defer.reject(err, status);
+                    }, function (response) {
+                        $log.error("deleteSubmission() error: ", response);
+                        defer.reject("delete error", {status: "FAILED", message: "Server error"});
                     });
                 return defer.promise;
             }
-
         });
     }
 }
