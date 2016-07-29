@@ -39,6 +39,7 @@ class BsSectionItemDirective {
                     event.stopPropagation();
                     $log.debug("onPubMedIdChange()", data);
                     scope.item.attributes.update(data);
+                    notifyChanges();
                 });
 
                 var unwatch = scope.$watchCollection('item.attributes.attributes', notifyChanges);
