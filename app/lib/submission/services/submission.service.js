@@ -1,5 +1,5 @@
 export default class SubmissionService {
-    constructor($http, $q) {
+    constructor($http, $q, $log) {
         "ngInject";
 
         Object.assign(this, {
@@ -10,7 +10,7 @@ export default class SubmissionService {
                         },
                         function (response) {
                             $log.error("getAllSubmissions() error: ", response);
-                            return response;
+                            return $q.reject(response);
                         })
             },
 
@@ -21,7 +21,7 @@ export default class SubmissionService {
                         },
                         function (response) {
                             $log.error("getSubmission() error: ", response);
-                            return response;
+                            return $q.reject(response);
                         });
             },
 
@@ -36,7 +36,7 @@ export default class SubmissionService {
                         },
                         function (response) {
                             $log.error("saveSubmission() error: ", response);
-                            return response;
+                            return $q.reject(response);
                         });
             },
 
@@ -47,7 +47,7 @@ export default class SubmissionService {
                         },
                         function (response) {
                             $log.error("submitSubmission() error: ", response);
-                            return response;
+                            return $q.reject(response);
                         });
             },
 
@@ -58,7 +58,7 @@ export default class SubmissionService {
                         },
                         function (response) {
                             $log.error("createSubmission() error: ", response);
-                            return response;
+                            return $q.reject(response);
                         });
             },
 
@@ -69,7 +69,7 @@ export default class SubmissionService {
                         },
                         function (response) {
                             $log.error("editSubmission(accno=" + accno + ") error:", response);
-                            return response;
+                            return $q.reject(response);
                         });
             },
 

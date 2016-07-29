@@ -6,16 +6,17 @@ export default class PubMedSearchService {
             search(pmid) {
                 if (!pmid) {
                     $log.warn("PubMedSearchService: Empty pubMedId");
-                    return $q.reject({ status: "FAILED" });
+                    return $q.reject({status: "FAILED"});
                 }
                 return $http.get("/api/pubMedSearch/" + pmid).then(
-                        function (response) {
-                            $log.debug("PubMedSearchService response:", response);
-                            return response.data;
-                        }, function (error) {
-                            $log.error("pubMed search request error", error);
-                            return error;
-                        });
+                    function (response) {
+                        $log.debug("PubMedSearchService() response", response);
+                        return response.data;
+                    },
+                    function (response) {
+                        $log.error("PubMedSearchService() error", response);
+                        return $q.reject(response);
+                    });
             }
         });
     }
