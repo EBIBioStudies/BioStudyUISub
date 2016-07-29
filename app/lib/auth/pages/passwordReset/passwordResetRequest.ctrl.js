@@ -1,5 +1,5 @@
 export default class PasswordResetRequestController {
-    constructor($scope, $log, AuthService, vcRecaptchaService) {
+    constructor($scope, AuthService, vcRecaptchaService) {
         'ngInject';
 
         $scope.req = {email: "", recaptcha: ""};
