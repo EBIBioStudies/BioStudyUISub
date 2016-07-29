@@ -26,8 +26,11 @@ var bump = require('gulp-bump');
 var ngConfig = require('gulp-ng-config');
 var clean = require('gulp-clean');
 var extend = require('gulp-extend');
+var Builder = require('systemjs-builder');
 
+var distDir = ".dist";
 
+/* increment the version */
 gulp.task('bump', function () {
     return gulp
         .src('./version.json')
@@ -39,6 +42,7 @@ gulp.task('bump', function () {
         .pipe(gulp.dest('./'));
 });
 
+/* sync app config with changes in config.json and version.json */
 gulp.task('config', function () {
     return gulp.src(['./config.json', './version.json'])
         .pipe(extend('config.json'))
@@ -50,81 +54,24 @@ gulp.task('config', function () {
         .pipe(gulp.dest('./app/lib'));
 });
 
-gulp.task('bower', function () {
-    return bower();
-});
-
 gulp.task('clean', function () {
-    return gulp.src([
-            envHelper.copyToPath + '/css',
-            envHelper.copyToPath + '/images',
-            envHelper.copyToPath + '/js',
-            envHelper.copyToPath + '/partials',
-            '.gen',
-            '.war'], {read: false})
+    return gulp.src(['./dist'])
         .pipe(clean({force: true}));
 });
 
 gulp.task('copy', ['clean'], function(cb) {
-  //copy components if dir different
-  if (envHelper.copyToPath!='.build') {
-    gulp.src('.build/components/**/*')
-        .pipe(gulp.dest(envHelper.copyToPath + '/components'))
-  }
-
-  gulp.src('public/js/external/msAngularUi.css')
-      .pipe(gulp.dest(envHelper.copyToPath + '/css/'));
-  gulp.src(['public/images/**/*.png', 'public/images/*.ico'])
-      .pipe(gulp.dest(envHelper.copyToPath + '/images'));
-  gulp.src(['public/partials/**/*'])
-      .pipe(gulp.dest(envHelper.copyToPath + '/partials'));
-  gulp.src('public/js/polyfill.js')
-      .pipe(gulp.dest(envHelper.copyToPath + '/js/'));
-  gulp.src('views/*.html')
-      .pipe(gulp.dest(envHelper.copyToPath));
-
+  gulp.src(['./app/images/**/*'])
+      .pipe(gulp.dest('./dist/images'));
   cb();
-
 });
 
-gulp.task('jshint', function () {
-  return gulp.src('public/js/services/*.js')
-    .pipe(jshint('.jshintrc'))
-    .pipe(jshint.reporter('default'))
-    .pipe(jshint.reporter('fail'));
-});
-
-gulp.task('html2js',['clean','copy','jshint'],function () {
-
-  return gulp.src(["public/templates/**/*.html","public/js/**/*html"])
-    .pipe(templateCache({
-      standalone: true,
-      module: 'bs-templates',
-      root: 'templates'
-    }))
-    .pipe(gulp.dest(".gen"));
-});
-
-gulp.task('js', ['clean','copy', 'bower', 'jshint','html2js'], function () {
-  var b = browserify({
-    entries: 'public/js/app.js',
-    debug: true
-  });
-  var app = b.bundle()
-    .pipe(source('app.js'))
-    .pipe(buffer());
-  /*var views = gulp.src('public/templates/.html')
-    .pipe(templateCache({
-      standalone: true,
-      module: 'bs-templates',
-      root: 'templates'
-    }));*/
-  return sq({ objectMode: true }, app)
-    .pipe(concat('main.js'))
-    .pipe(ngAnnotate())
-    //.pipe(uglify()) TODO: Fix the problem with uglify
-    .pipe(gulp.dest(envHelper.copyToPath + '/js'));
-
+gulp.task('js', ['clean'], function () {
+    var builder = new Builder('./app', './app/jspm.config.js');
+    builder.buildStatic('lib/main.js', '.dist/main.min.js', {
+        separateCSS: true,
+        minify: true,
+        sourceMaps: false
+    });
 });
 
 
@@ -170,8 +117,6 @@ gulp.task('webserver', [], function () {
 });
 
 
-gutil.log('Build client for environment ',process.env.NODE_ENV);
-gutil.log('Deploy client to ',envHelper.copyToPath);
 
 gulp.task('default', ['clean', 'bower', 'copy', 'html2js', 'jshint', 'styles', 'js', 'ejs']);
 
