@@ -4,12 +4,7 @@ import '../styles/app.less!'
 
 import angular from 'angular'
 
-
-
-
-//import uiSelect from 'angular-ui-select'
 import uiRouter from 'angular-ui-router'
-
 
 import appConfig from './config'
 //import appRoutes from './routes'
@@ -19,25 +14,22 @@ import appFile from './file/index'
 import appMain from './main/index'
 import appHelp from './help/index'
 
-import submListTmpl from './submission/pages/list/submissionList.html!ng-template';
-import submTmpl from './submission/pages/edit/submission.html!ng-template';
-import signInTmpl from './auth/pages/signin/signin.html!ng-template';
-import signUpTmpl from './auth/pages/signup/signup.html!ng-template';
-import accActivateTmpl from './auth/pages/activate/activate.html!ng-template';
-import accPasswordResetReqTmpl from './auth/pages/passwordReset/passwordResetRequest.html!ng-template';
+import submListTmpl from './submission/pages/list/submissionList.html!ng-template'
+import submTmpl from './submission/pages/edit/submission.html!ng-template'
+import signInTmpl from './auth/pages/signin/signin.html!ng-template'
+import signUpTmpl from './auth/pages/signup/signup.html!ng-template'
+import accActivateTmpl from './auth/pages/activate/activate.html!ng-template'
+import accPasswordResetReqTmpl from './auth/pages/passwordReset/passwordResetRequest.html!ng-template'
 import accPasswordResetTmpl from './auth/pages/passwordReset/passwordReset.html!ng-template'
 import fileListTmpl from './file/pages/list/fileList.html!ng-template'
-
-import helpTmpl from './help/help.html!ng-template';
+import helpTmpl from './help/help.html!ng-template'
+import errorTmpl from './main/error.html!ng-template'
 
 const appName = 'BioStudyApp';
 
 angular.module(appName,
     [
         uiRouter,
-        /*ngMessages, ngFileUpload, uiBootstrap, uiBootstrapShowErrors, uiSelect, uiRouter,
-        typeaheadFocus, trNgGrid, lodash,*/
-
         appMain.name,
         appConfig.name,
         //appRoutes.name,
@@ -84,7 +76,7 @@ angular.module(appName,
             })
             .state('error', {
                 url: '/error',
-                templateUrl: 'templates/error/views/error.html',
+                templateUrl: errorTmpl.templateUrl,
                 controller: 'ErrorCtrl'
             })
             .state('submissions', {
