@@ -2,38 +2,35 @@ var jshint = require('gulp-jshint');
 var browserify = require('browserify');
 var uglify = require('gulp-uglify');
 var source = require('vinyl-source-stream');
-var ngAnnotate = require('gulp-ng-annotate');
+
 var buffer = require('vinyl-buffer');
 var sq = require('streamqueue');
-var less=require('gulp-less');
+var less = require('gulp-less');
 //var sourcemaps = require('gulp-sourcemaps');
 var minifyCSS = require('gulp-cssnano');
 var templateCache = require('gulp-angular-templatecache');
 var concat = require('gulp-concat');
 var ngHtml2Js = require("gulp-ng-html2js");
 var rename = require('gulp-rename');
-var ejs = require("gulp-ejs");
 
 var gutil = require('gulp-util');
 
 var gulp = require('gulp');
-var bower = require('gulp-bower');
 
-var envHelper=require('./tasks/helpers/envHelper');
+var envHelper = require('./tasks/helpers/envHelper');
 var webserver = require('gulp-webserver');
 var zip = require('gulp-zip');
 var bump = require('gulp-bump');
 var ngConfig = require('gulp-ng-config');
-var clean = require('gulp-clean');
+var del = require('del');
 var extend = require('gulp-extend');
 var Builder = require('systemjs-builder');
-
-var distDir = ".dist";
+var ngAnnotate = require('gulp-ng-annotate');
 
 /* increment the version */
 gulp.task('bump', function () {
     return gulp
-        .src('./version.json')
+        .src('version.json')
         .pipe(bump({
             //type: 'minor',
             //type: 'major',
@@ -44,63 +41,88 @@ gulp.task('bump', function () {
 
 /* sync app config with changes in config.json and version.json */
 gulp.task('config', function () {
-    return gulp.src(['./config.json', './version.json'])
+    return gulp.src(['config.json', 'version.json'])
         .pipe(extend('config.json'))
-        .pipe(ngConfig( 'BioStudyApp.config',
+        .pipe(ngConfig('BioStudyApp.config',
             {
-            wrap: 'ES6'
+                wrap: 'ES6'
             }
         ))
-        .pipe(gulp.dest('./app/lib'));
+        .pipe(gulp.dest('app/lib'));
 });
 
-gulp.task('clean', function () {
-    return gulp.src(['./dist'])
-        .pipe(clean({force: true}));
+gulp.task('clean:js', function () {
+    return del([
+        '.dist/lib/*'
+    ]);
 });
 
-gulp.task('copy', ['clean'], function(cb) {
-  gulp.src(['./app/images/**/*'])
-      .pipe(gulp.dest('./dist/images'));
-  cb();
+gulp.task('clean:images', function () {
+    return del([
+        '.dist/images/**/*'
+    ]);
 });
 
-gulp.task('js', ['clean'], function () {
-    var builder = new Builder('./app', './app/jspm.config.js');
-    builder.buildStatic('lib/main.js', '.dist/main.min.js', {
-        separateCSS: true,
-        minify: true,
-        sourceMaps: false
+gulp.task('clean:jspm_packages', function () {
+    return del([
+        '.dist/jspm_packages/**/*'
+    ]);
+});
+
+gulp.task('clean', ['clean:js', 'clean:images']);
+
+
+gulp.task('copy:images', ['clean:images'], function () {
+    gulp.src(['app/images/**/*'])
+        .pipe(gulp.dest('.dist/images'));
+});
+
+gulp.task('copy:jspm_packages', ['clean:jspm_packages'], function () {
+    gulp.src(['jspm_packages/**/*'])
+        .pipe(gulp.dest('.dist/jspm_packages'));
+});
+
+gulp.task('css', ['clean:css'], function () {
+    return gulp.src('public/less/app.less')
+        .pipe(less())
+        .pipe(minifyCSS({keepBreaks: true}))
+        .pipe(gulp.dest('.dist/css/app.min.css'));
+});
+
+gulp.task('js', ['clean:js'], function () {
+    var builder = new Builder('app', 'app/jspm.config.js');
+    builder.config({
+        separateCSS: true
     });
-});
-
-
-gulp.task('styles', ['clean'],function() {
-  return gulp.src('public/less/app.less')
-    .pipe(less())
-    .pipe(minifyCSS({keepBreaks:true}))
-    .pipe(gulp.dest(envHelper.copyToPath + '/css'));
-});
-
-
-gulp.task('ejs', ['clean'], function() {
-  return gulp.src("views/index.ejs")
-    .pipe(ejs({
-    }))
-    .pipe(gulp.dest(envHelper.copyToPath ));
+    builder.bundle('lib/main.js', '.dist/lib/main.js', {
+        minify: false,
+        mangle: false
+    })
+        .then(function () {
+            gulp.src('.dist/lib/main.js')
+                .pipe(ngAnnotate())
+                .pipe(uglify({sourceMaps: true}))
+                .pipe(gulp.dest('.dist/lib'));
+            console.log('JS Build complete');
+        })
+        .catch(function (err) {
+            console.log('Build error');
+            console.log(err);
+        });
 });
 
 gulp.task('zip', function () {
-    gulp.src([".build/**/*.*"])
+    gulp.src([".dist/**/*.*"])
         .pipe(zip('ui.zip'))
-        .pipe(gulp.dest('./.dist'));
+        .pipe(gulp.dest('.dist'));
 });
 
-//gulp.task('webserver', ['clean', 'js', 'ejs', 'styles'], function () {
+gulp.task('default', ['js', 'css', 'images']);
+
 gulp.task('webserver', [], function () {
 
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-    
+
     gulp.src('./app')
         .pipe(webserver({
             port: 7000,
@@ -117,13 +139,9 @@ gulp.task('webserver', [], function () {
 });
 
 
-
-gulp.task('default', ['clean', 'bower', 'copy', 'html2js', 'jshint', 'styles', 'js', 'ejs']);
-
-
 var karma = require('gulp-karma');
 
-gulp.task('test', function() {
+gulp.task('test', function () {
     // Be sure to return the stream
     // NOTE: Using the fake './foobar' so as to run the files
     // listed in karma.conf.js INSTEAD of what was passed to
@@ -133,14 +151,14 @@ gulp.task('test', function() {
             configFile: 'karma.conf.js',
             action: 'run'
         }))
-        .on('error', function(err) {
+        .on('error', function (err) {
             // Make sure failed tests cause gulp to exit non-zero
             console.log(err);
             this.emit('end'); //instead of erroring the stream, end it
         });
 });
 
-gulp.task('autotest', function() {
+gulp.task('autotest', function () {
     return gulp.watch(['public/js/**/*.js', 'test/spec/*.js'], ['test']);
 });
 

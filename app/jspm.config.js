@@ -13,6 +13,12 @@ System.config({
     "npm:*": "jspm_packages/npm/*"
   },
 
+  meta: {
+    "*.css": {
+      "loader": "css"
+    }
+  },
+
   map: {
     "angular": "github:angular/bower-angular@1.5.7",
     "angular-bootstrap-show-errors": "github:paulyoder/angular-bootstrap-show-errors@2.3.0",
@@ -27,7 +33,7 @@ System.config({
     "babel-runtime": "npm:babel-runtime@5.8.38",
     "bootstrap": "github:twbs/bootstrap@3.3.7",
     "core-js": "npm:core-js@1.2.6",
-    "css": "github:systemjs/plugin-css@0.1.25",
+    "css": "github:systemjs/plugin-css@0.1.26",
     "font-awesome": "npm:font-awesome@4.6.3",
     "khan4019/angular-bootstrap-grid-tree": "github:khan4019/tree-grid-directive@0.3.0",
     "less": "npm:systemjs-less-plugin@1.8.3",

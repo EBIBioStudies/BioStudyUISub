@@ -4,6 +4,8 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BioStudies Submission Tool</title>
+    <!-- build:css -->
+    <!-- endbuild -->
     <script src="https://www.google.com/recaptcha/api.js?onload=vcRecaptchaApiLoaded&render=explicit" async
             defer></script>
 
@@ -19,9 +21,12 @@
 
     <div ui-view></div>
 </body>
+<!-- build:js-app -->
+<!-- for production, this is all replaced by a minified bundle -->
 <script src="jspm_packages/system.js"></script>
 <script src="jspm.config.js"></script>
 <script>
     System.import('lib/main');
 </script>
+<!-- endbuild -->
 </html>
