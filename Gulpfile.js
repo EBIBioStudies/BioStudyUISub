@@ -53,43 +53,41 @@ gulp.task('config', function () {
 
 gulp.task('clean:js', function () {
     return del([
-        '.dist/lib/*'
+        '.dist/lib'
     ]);
 });
 
 gulp.task('clean:images', function () {
     return del([
-        '.dist/images/**/*'
+        '.dist/images'
     ]);
 });
 
 gulp.task('clean:jspm_packages', function () {
     return del([
-        '.dist/jspm_packages/**/*'
+        '.dist/jspm_packages'
     ]);
 });
 
-gulp.task('clean', ['clean:js', 'clean:images']);
-
+gulp.task('clean', ['clean:js', 'clean:images', 'clean:jspm_packages']);
 
 gulp.task('copy:images', ['clean:images'], function () {
-    gulp.src(['app/images/**/*'])
+    return gulp.src(['app/images/**/*'])
         .pipe(gulp.dest('.dist/images'));
 });
 
 gulp.task('copy:jspm_packages', ['clean:jspm_packages'], function () {
-    gulp.src(['jspm_packages/**/*'])
+    return gulp.src(['jspm_packages/**/*'])
         .pipe(gulp.dest('.dist/jspm_packages'));
 });
 
-gulp.task('css', ['clean:css'], function () {
-    return gulp.src('public/less/app.less')
-        .pipe(less())
-        .pipe(minifyCSS({keepBreaks: true}))
-        .pipe(gulp.dest('.dist/css/app.min.css'));
+/* a workaround for: SystemJS builder doesn't create sub-folders automatically for css files */
+gulp.task('mkdir', ['clean:js'], function() {
+    return gulp.src(['app/lib', '!app/lib/**/*'], {base: 'app'})
+        .pipe(gulp.dest('.dist'));
 });
 
-gulp.task('js', ['clean:js'], function () {
+gulp.task('js', ['mkdir'], function (cb) {
     var builder = new Builder('app', 'app/jspm.config.js');
     builder.config({
         separateCSS: true
@@ -103,11 +101,12 @@ gulp.task('js', ['clean:js'], function () {
                 .pipe(ngAnnotate())
                 .pipe(uglify({sourceMaps: true}))
                 .pipe(gulp.dest('.dist/lib'));
-            console.log('JS Build complete');
+            cb();
         })
         .catch(function (err) {
             console.log('Build error');
             console.log(err);
+            cb(err);
         });
 });
 
