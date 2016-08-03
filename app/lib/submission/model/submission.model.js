@@ -1,5 +1,6 @@
 export default class SubmissionModel {
     constructor(_, DictionaryService) {
+        "ngInject";
 
         function createAttributes(attrArray, requiredAttributes) {
             var attributes = {

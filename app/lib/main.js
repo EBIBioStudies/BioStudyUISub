@@ -1,5 +1,3 @@
-import 'bootstrap/css/bootstrap.css!'
-import 'font-awesome/css/font-awesome.css!';
 import '../styles/app.less!'
 
 import angular from 'angular'
@@ -24,6 +22,8 @@ import accPasswordResetTmpl from './auth/pages/passwordReset/passwordReset.html!
 import fileListTmpl from './file/pages/list/fileList.html!ng-template'
 import helpTmpl from './help/help.html!ng-template'
 import errorTmpl from './main/error.html!ng-template'
+
+import './main/header.html!ng-template'
 
 const appName = 'BioStudyApp';
 
@@ -100,7 +100,7 @@ angular.module(appName,
             .state('files', {
                 url: '/files',
                 templateUrl: fileListTmpl.templateUrl,
-                controller: 'FilesCtrl',
+                controller: 'FileListCtrl',
                 authenticated: true
             });
             /*.state('export', {

@@ -1,4 +1,4 @@
-export default class SubmissionService {
+export default class FileService {
     constructor($http, $q) {
         "ngIngect";
 

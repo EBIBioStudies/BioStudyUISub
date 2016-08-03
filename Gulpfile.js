@@ -109,23 +109,11 @@ gulp.task('js', ['mkdir'], function (cb) {
         separateCSS: true
     });
     builder.bundle('lib/main.js', '.dist/lib/main.js', {
-        minify: false,
-        mangle: false
-    })
-        .then(function () {
-            gulp.src('.dist/lib/main.js')
-                .pipe(ngAnnotate())
-                .pipe(uglify({sourceMaps: true}))
-                .pipe(gulp.dest('.dist/lib'));
-            cb();
-        })
-        .catch(function (err) {
-            console.log('Build error');
-            console.log(err);
-            cb(err);
-        });
+        minify: true,
+        mangle: false,
+        sourceMaps: true
+    });
 });
-
 
 gulp.task('zip', function () {
     gulp.src([".dist/**/*"])

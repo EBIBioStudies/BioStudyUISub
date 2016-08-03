@@ -46,7 +46,7 @@
     "q": "^1.4.1",
     "should": "^4.4.1",
     "streamqueue": "^1.1.0",
-    "systemjs-builder": "^0.15.25",
+    "systemjs-builder": "^0.15.26",
     "uglify-js": "^2.6.2",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"

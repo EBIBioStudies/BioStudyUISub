@@ -9,4 +9,4 @@ import FileListCtrl from './pages/list/fileList.ctrl'
 
 export default angular.module('BioStudyApp.File', ['ngFileUpload', treeGrid.name])
     .service('FileService', FileService)
-    .controller('FilesCtrl', FileListCtrl);
+    .controller('FileListCtrl', FileListCtrl);
