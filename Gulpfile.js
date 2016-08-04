@@ -37,19 +37,19 @@ gulp.task('config', function () {
 
 gulp.task('clean:js', function () {
     return del([
-        '.dist/lib'
+        '.build/lib'
     ]);
 });
 
 gulp.task('clean:images', function () {
     return del([
-        '.dist/images'
+        '.build/images'
     ]);
 });
 
 gulp.task('clean:jspm_packages', function () {
     return del([
-        '.dist/jspm_packages'
+        '.build/jspm_packages'
     ]);
 });
 
@@ -57,17 +57,17 @@ gulp.task('clean', ['clean:js', 'clean:images', 'clean:jspm_packages']);
 
 gulp.task('copy:images', ['clean:images'], function () {
     return gulp.src(['app/images/**/*'], {base: 'app'})
-        .pipe(gulp.dest('.dist/'));
+        .pipe(gulp.dest('.build/'));
 });
 
 gulp.task('copy:jspm_packages', ['clean:jspm_packages'], function () {
     return gulp.src(['app/jspm_packages/**/*'], {base: 'app'})
-        .pipe(gulp.dest('.dist/'));
+        .pipe(gulp.dest('.build/'));
 });
 
 gulp.task('copy:jspm_config', function () {
     return gulp.src(['app/jspm.config.js'])
-        .pipe(gulp.dest('.dist/'));
+        .pipe(gulp.dest('.build/'));
 });
 
 gulp.task('copy', ['copy:images', 'copy:index', 'copy:jspm_packages', 'copy:jspm_config']);
@@ -77,13 +77,13 @@ gulp.task('copy:index', function() {
         .pipe(htmlreplace({
             'css': ['lib/main.css', 'lib/main-from-less.css'],
         }))
-        .pipe(gulp.dest('.dist/'));
+        .pipe(gulp.dest('.build/'));
 });
 
 /* a workaround for: SystemJS builder doesn't create sub-folders automatically for css files */
 gulp.task('mkdir', ['clean:js'], function() {
     return gulp.src(['app/lib', '!app/lib/**/*'], {base: 'app'})
-        .pipe(gulp.dest('.dist/'));
+        .pipe(gulp.dest('.build/'));
 });
 
 gulp.task('js', ['mkdir'], function (cb) {
@@ -91,7 +91,7 @@ gulp.task('js', ['mkdir'], function (cb) {
     builder.config({
         separateCSS: true
     });
-    builder.bundle('lib/main.js', '.dist/lib/main.js', {
+    builder.bundle('lib/main.js', '.build/lib/main.js', {
         minify: true,
         mangle: false,
         sourceMaps: true
@@ -102,7 +102,7 @@ gulp.task('js', ['mkdir'], function (cb) {
 });
 
 gulp.task('zip', function () {
-    gulp.src([".dist/**/*"])
+    gulp.src([".build/**/*"])
         .pipe(zip('ui.zip'))
         .pipe(gulp.dest('.dist'));
 });
@@ -113,7 +113,7 @@ gulp.task('webserver', [], function () {
 
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-    gulp.src('.dist')
+    gulp.src('app' /*'.build'*/)
         .pipe(webserver({
             port: 7000,
             https: true,
