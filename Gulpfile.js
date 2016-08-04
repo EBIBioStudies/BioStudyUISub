@@ -1,23 +1,6 @@
-var jshint = require('gulp-jshint');
-var browserify = require('browserify');
-var uglify = require('gulp-uglify');
-var source = require('vinyl-source-stream');
-
-var buffer = require('vinyl-buffer');
-var sq = require('streamqueue');
-var less = require('gulp-less');
-//var sourcemaps = require('gulp-sourcemaps');
-var minifyCSS = require('gulp-cssnano');
-var templateCache = require('gulp-angular-templatecache');
-var concat = require('gulp-concat');
-var ngHtml2Js = require("gulp-ng-html2js");
-var rename = require('gulp-rename');
-
-var gutil = require('gulp-util');
-
 var gulp = require('gulp');
 
-var envHelper = require('./tasks/helpers/envHelper');
+
 var webserver = require('gulp-webserver');
 var zip = require('gulp-zip');
 var bump = require('gulp-bump');
@@ -25,7 +8,7 @@ var ngConfig = require('gulp-ng-config');
 var del = require('del');
 var extend = require('gulp-extend');
 var Builder = require('systemjs-builder');
-var ngAnnotate = require('gulp-ng-annotate');
+//var ngAnnotate = require('gulp-ng-annotate');
 var htmlreplace = require('gulp-html-replace');
 
 /* increment the version */
@@ -112,7 +95,10 @@ gulp.task('js', ['mkdir'], function (cb) {
         minify: true,
         mangle: false,
         sourceMaps: true
+    }).then(function() {
+        cb();
     });
+    // TODO: minify with ngAnnotate
 });
 
 gulp.task('zip', function () {
@@ -142,28 +128,17 @@ gulp.task('webserver', [], function () {
         }));
 });
 
+var Server = require('karma').Server;
 
-var karma = require('gulp-karma');
-
-gulp.task('test', function () {
-    // Be sure to return the stream
-    // NOTE: Using the fake './foobar' so as to run the files
-    // listed in karma.conf.js INSTEAD of what was passed to
-    // gulp.src !
-    return gulp.src('./foobar')
-        .pipe(karma({
-            configFile: 'karma.conf.js',
-            action: 'run'
-        }))
-        .on('error', function (err) {
-            // Make sure failed tests cause gulp to exit non-zero
-            console.log(err);
-            this.emit('end'); //instead of erroring the stream, end it
-        });
+gulp.task('test', function (done) {
+    new Server({
+        configFile: __dirname + '/karma.conf.js',
+        singleRun: true
+    }, done).start();
 });
 
 gulp.task('autotest', function () {
-    return gulp.watch(['public/js/**/*.js', 'test/spec/*.js'], ['test']);
+    return gulp.watch(['/app/lib/**/*.js'], ['test']);
 });
 
 

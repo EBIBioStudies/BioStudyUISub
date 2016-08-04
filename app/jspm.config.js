@@ -16,15 +16,19 @@ System.config({
   meta: {
     "*.css": {
       "loader": "css"
+    },
+    "*.html": {
+      "loader": "ng-template"
     }
   },
 
   map: {
-    "angular": "github:angular/bower-angular@1.5.7",
+    "angular": "github:angular/bower-angular@1.5.8",
     "angular-bootstrap-show-errors": "github:paulyoder/angular-bootstrap-show-errors@2.3.0",
     "angular-bootstrap-tree-grid": "github:khan4019/tree-grid-directive@0.3.0",
     "angular-cookies": "github:angular/bower-angular-cookies@1.5.7",
     "angular-messages": "github:angular/bower-angular-messages@1.5.7",
+    "angular-mocks": "github:angular/bower-angular-mocks@1.5.8",
     "angular-recaptcha": "npm:angular-recaptcha@2.5.0",
     "angular-ui-bootstrap": "npm:angular-ui-bootstrap@2.0.0",
     "angular-ui-router": "github:angular-ui/angular-ui-router-bower@0.2.18",
@@ -35,6 +39,7 @@ System.config({
     "core-js": "npm:core-js@1.2.6",
     "css": "github:systemjs/plugin-css@0.1.26",
     "font-awesome": "npm:font-awesome@4.6.3",
+    "json": "github:systemjs/plugin-json@0.1.2",
     "khan4019/angular-bootstrap-grid-tree": "github:khan4019/tree-grid-directive@0.3.0",
     "less": "npm:systemjs-less-plugin@1.8.3",
     "lodash": "npm:lodash@4.13.1",
@@ -42,10 +47,13 @@ System.config({
     "ng-template": "github:jamespamplin/plugin-ng-template@0.1.1",
     "trNgGrid": "github:moonstorm/trNgGrid@3.1.7",
     "github:angular/bower-angular-cookies@1.5.7": {
-      "angular": "github:angular/bower-angular@1.5.7"
+      "angular": "github:angular/bower-angular@1.5.8"
     },
     "github:angular/bower-angular-messages@1.5.7": {
-      "angular": "github:angular/bower-angular@1.5.7"
+      "angular": "github:angular/bower-angular@1.5.8"
+    },
+    "github:angular/bower-angular-mocks@1.5.8": {
+      "angular": "github:angular/bower-angular@1.5.8"
     },
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.4.1"
