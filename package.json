@@ -41,6 +41,7 @@
       "angular": "github:angular/bower-angular@^1.5.7",
       "angular-bootstrap-tree-grid": "github:khan4019/tree-grid-directive@0.3.0",
       "angular-cookies": "github:angular/bower-angular-cookies@^1.5.7",
+      "angular-elastic": "github:monospaced/angular-elastic@^2.5.1",
       "angular-messages": "github:angular/bower-angular-messages@^1.5.7",
       "angular-mocks": "github:angular/bower-angular-mocks@^1.5.8",
       "angular-recaptcha": "npm:angular-recaptcha@~2.5.0",

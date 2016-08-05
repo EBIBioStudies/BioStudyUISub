@@ -1,5 +1,6 @@
 import angular from 'angular'
 import 'angular-messages'
+import 'angular-elastic'
 
 import 'lodash'
 //import uiRouter from 'angular-ui-router'
@@ -39,7 +40,7 @@ import BsPubMedIdSearchDirective from './directives/bsPubMedIdSearch'
 import MsDuplicateDirective from './directives/msDuplicate'
 
 export default angular.module('BioStudyApp.Submission',
-    ['ngMessages', 'trNgGrid', uibTabs, uibTooltip, uibTypeahead, uibDatepickerPopup,
+    ['ngMessages', 'trNgGrid', 'monospaced.elastic', uibTabs, uibTooltip, uibTypeahead, uibDatepickerPopup,
         appAuth.name, appModals.name, appFile.name])
     .constant('_', window._)
     .service('SubmissionService', SubmService)
