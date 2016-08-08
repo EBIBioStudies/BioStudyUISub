@@ -137,7 +137,7 @@ angular.module(appName,
         });
 
         function setCurrentUser(user) {
-            $rootScope.currentUser = user;
+            $rootScope.currentUser = user || "NO_NAME";
         }
 
         function logout() {
