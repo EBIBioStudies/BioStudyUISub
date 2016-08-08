@@ -3,7 +3,11 @@
      ng-show="coll.length > 0"
      ng-form name="sectionForm">
 
-    <div class="panel-heading">{{dict.title}}&nbsp;<span class="badge">{{coll.length}}</span>
+    <div class="panel-heading clearfix">
+        <h4 class="panel-title pull-left">
+            {{dict.title}}&nbsp;<span class="badge">{{coll.length}}</span>
+            <span class="bs-slide-out-tip"><i class="fa fa-angle-right tip-icon" aria-hidden="true"></i><i class="tip-text">{{dict.description}}</i></span>
+        </h4>
         <div class="btn-toolbar pull-right" role="toolbar" ng-if="!readOnly">
             <div class="btn-group ">
                 <button type="button"
