@@ -5,6 +5,7 @@ export default class DictionaryService {
         var dict = {
             "annotation": {
                 "title": "Describe your study",
+                "description": "Provide an adequate overview of the Study, make it easier to find and interpret",
                 "attributes": [
                     {"name": "Organism", type: "text", "required": false},
                     {"name": "Experimental design", type: "text", "required": false},
@@ -25,6 +26,7 @@ export default class DictionaryService {
             "publication": {
                 "type": "Publication",
                 "title": "Publications",
+                "description": "Search by PubMed identifier, or add information manually if not in PubMed",
                 "tabHeading": "Publication",
                 "previewTabHeading": "All publications",
                 "actions": {
@@ -59,6 +61,7 @@ export default class DictionaryService {
             },
             "link": {
                 "title": "Links",
+                "description": "Provide additional relevant information on the web",
                 "tabHeading": "Link",
                 "previewTabHeading": "All links",
                 "actions": {
@@ -89,6 +92,7 @@ export default class DictionaryService {
             "contact": {
                 "type": "Contact",
                 "title": "Contacts",
+                "description": "Include contact information for one or more authors of the Study",
                 "tabHeading": "Contact",
                 "previewTabHeading": "All contacts",
                 "actions": {
@@ -124,6 +128,7 @@ export default class DictionaryService {
 
             "file": {
                 "title": "Files",
+                "description": "Include Study data, describe the purpose of each file",
                 "tabHeading": "File",
                 "previewTabHeading": "All files",
                 "actions": {
