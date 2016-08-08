@@ -57,11 +57,15 @@
                         ng-change="onAttributeChange()"
                         name="attrValue_{{$index}}"
                         ng-required="attr.required"
-                        ng-readonly="readOnly">
+                        ng-readonly="readOnly"
+                        ng-if="files.length">
                     <option ng-repeat="file in files" value="{{file}}">
                         {{file}}
                     </option>
                 </select>
+                <a ui-sref="files"
+                   class="btn btn-link"
+                   ng-if="!files.length">Go to File Upload</a>
             </div>
                                 <span class="input-group-btn" ng-if="!readOnly && !attr.required">
                                     <button type="button"
