@@ -1,9 +1,9 @@
+/* elastic description box */
 .msd-elastic {
   max-height: 500px;
 }
 
-@slide-out-tip-width: 580px;
-
+/* panel (submission section) heading */
 .panel-heading h4 {
   white-space: nowrap;
   overflow: hidden;
@@ -12,28 +12,31 @@
   padding-top: 8px;
 }
 
-.slide-out-tip {
+/* sliding out tooltips in the panel headers */
+@bs-slide-out-tip-width: 580px;
+
+.bs-slide-out-tip {
   margin-left: 10px;
   position: relative;
   overflow: hidden;
   display: inline-block;
-  width: @slide-out-tip-width;
+  width: @bs-slide-out-tip-width;
   height: 22px;
   vertical-align: middle;
 }
 
-.slide-out-tip .tip-icon {
+.bs-slide-out-tip .tip-icon {
   cursor: pointer;
 }
 
-.slide-out-tip .tip-text {
+.bs-slide-out-tip .tip-text {
   margin: 0 0 0 10px;
   position: absolute;
   padding: 0;
   vertical-align: middle;
   top: 0;
-  left: -@slide-out-tip-width;
-  width: @slide-out-tip-width;
+  left: -@bs-slide-out-tip-width;
+  width: @bs-slide-out-tip-width;
   height: 22px;
   -webkit-transition: left 0.5s ease-in-out;
   -moz-transition: left 0.5s ease-in-out;
@@ -42,7 +45,7 @@
   transition: left 0.5s ease-in-out;
 }
 
-.slide-out-tip:hover .tip-text {
+.bs-slide-out-tip:hover .tip-text {
   left: 0;
 }
 
