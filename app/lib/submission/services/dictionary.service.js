@@ -24,7 +24,6 @@ export default class DictionaryService {
                 }
             },
             "publication": {
-                "type": "Publication",
                 "title": "Publications",
                 "description": "Search by PubMed identifier, or add information manually if not in PubMed",
                 "tabHeading": "Publication",
@@ -90,7 +89,6 @@ export default class DictionaryService {
                 ]
             },
             "contact": {
-                "type": "Contact",
                 "title": "Contacts",
                 "description": "Include contact information for one or more authors of the Study",
                 "tabHeading": "Contact",
