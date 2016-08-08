@@ -1,5 +1,15 @@
 .msd-elastic {
-  max-height: 400px;
+  max-height: 500px;
+}
+
+@slide-out-tip-width: 580px;
+
+.panel-heading h4 {
+  white-space: nowrap;
+  overflow: hidden;
+  line-height: normal;
+  width: 70%;
+  padding-top: 8px;
 }
 
 .slide-out-tip {
@@ -7,7 +17,7 @@
   position: relative;
   overflow: hidden;
   display: inline-block;
-  width: 250px;
+  width: @slide-out-tip-width;
   height: 22px;
   vertical-align: middle;
 }
@@ -22,8 +32,8 @@
   padding: 0;
   vertical-align: middle;
   top: 0;
-  left: -250px;
-  width: 250px;
+  left: -@slide-out-tip-width;
+  width: @slide-out-tip-width;
   height: 22px;
   -webkit-transition: left 0.5s ease-in-out;
   -moz-transition: left 0.5s ease-in-out;
