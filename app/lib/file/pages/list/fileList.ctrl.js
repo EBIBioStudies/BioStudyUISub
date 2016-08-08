@@ -1,7 +1,8 @@
 export default class SubmissionListController {
-    constructor($scope, $log, FileService, Upload) {
+    constructor($scope, $log, $stateParams, FileService, Upload) {
         "ngInject";
 
+        $scope.backButton = $stateParams.bb;
         $scope.importMenu = true;
         $scope.title = 'Import';
         $scope.filesTree = [];

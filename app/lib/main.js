@@ -98,7 +98,7 @@ angular.module(appName,
                 authenticated: true
             })
             .state('files', {
-                url: '/files',
+                url: '/files?bb=true',
                 templateUrl: fileListTmpl.templateUrl,
                 controller: 'FileListCtrl',
                 authenticated: true
