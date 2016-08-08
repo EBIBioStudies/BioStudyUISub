@@ -137,12 +137,12 @@ angular.module(appName,
         });
 
         function setCurrentUser(user) {
-            $rootScope.currentUser = user || "NO_NAME";
+            $rootScope.currentUser = angular.isString(user) ? (user || "NO_NAME") : user;
         }
 
         function logout() {
             $log.debug("logout() called");
-            setCurrentUser(null);
+            setCurrentUser();
             Session.destroy();
             $state.go('signin');
         }
