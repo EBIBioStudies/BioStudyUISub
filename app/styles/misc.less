@@ -7,37 +7,41 @@
 .panel-heading h4 {
   white-space: nowrap;
   overflow: hidden;
-  line-height: normal;
+  line-height: inherit;
+  font-size: inherit; //14px
   width: 70%;
-  padding-top: 8px;
 }
 
 /* sliding out tooltips in the panel headers */
 @bs-slide-out-tip-width: 580px;
 
 .bs-slide-out-tip {
-  margin-left: 10px;
-  position: relative;
-  overflow: hidden;
   display: inline-block;
-  width: @bs-slide-out-tip-width;
-  height: 22px;
-  vertical-align: middle;
+  margin: 0 0 0 5px;
+  padding: 0;
 }
 
 .bs-slide-out-tip .tip-icon {
+  display: inline-block;
   cursor: pointer;
+  width: 15px;
+}
+
+.bs-slide-out-tip .tip-text-wrap {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  width: @bs-slide-out-tip-width;
+  height: 18px;
+  float: right;
 }
 
 .bs-slide-out-tip .tip-text {
-  margin: 0 0 0 10px;
   position: absolute;
-  padding: 0;
-  vertical-align: middle;
   top: 0;
   left: -@bs-slide-out-tip-width;
   width: @bs-slide-out-tip-width;
-  height: 22px;
+  display: inline-block;
   -webkit-transition: left 0.5s ease-in-out;
   -moz-transition: left 0.5s ease-in-out;
   -o-transition: left 0.5s ease-in-out;
@@ -45,7 +49,6 @@
   transition: left 0.5s ease-in-out;
 }
 
-.bs-slide-out-tip:hover .tip-text {
-  left: 0;
+.bs-slide-out-tip .tip-text.show {
+    left: 0;
 }
-
