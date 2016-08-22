@@ -4,11 +4,11 @@ export default class SignUpController {
 
         $scope.user = {};
 
-        $scope.signUp = function (user) {
+        $scope.signUp = function () {
             $scope.success = false;
             $scope.error = null;
             AuthService
-                .signUp(user)
+                .signUp($scope.user)
                 .then(function (data) {
                     if (data.status === "FAIL") {
                         $log.error('error sign up', data);
