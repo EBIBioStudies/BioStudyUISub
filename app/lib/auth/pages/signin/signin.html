@@ -4,17 +4,17 @@
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
 
-                <div class="panel" ng-class="{'panel-info' : !hasError, 'panel-danger': hasError}">
+                <div class="panel" ng-class="{'panel-info' : !error, 'panel-danger': error}">
                     <div class="panel-heading">
-                            <span class="help-block span-error-large" ng-show="hasError">
+                            <span class="help-block span-error-large" ng-show="error">
                                     {{error.status}} : {{error.message}}
                             </span>
-                           <span class="help-block span-error-large" ng-show="!hasError">
+                           <span class="help-block span-error-large" ng-show="!error">
                                 &nbsp;
                             </span>
                     </div>
                     <div class="panel-body">
-                        <form id="login-form" novalidate name="signInForm" role="form">
+                        <form id="login-form" novalidate name="signInForm" role="form" ng-submit="signInForm.$valid && signIn()">
                             <div class="form-group" ng-class="{'has-error': signInForm.login.$invalid}">
                                 <label class="control-label" for="login">Email/login name
                                     <ng-messages for="signInForm.login.$error" ng-if="signInForm.login.$dirty">
@@ -23,7 +23,10 @@
                                 </label>
                                 <input type="text" id="login" name="login" tabindex="1"
                                        class="form-control"
-                                       placeholder="Email or login name" ng-model="credentials.login" ng-required="true">
+                                       placeholder="Email or login name"
+                                       ng-model="credentials.login"
+                                       ng-required="true"
+                                       ng-change="resetError()"/>
                             </div>
                             <div class="form-group" ng-class="{'has-error': signInForm.password.$invalid}">
                                 <label class="control-label" for="password">Password
@@ -33,7 +36,11 @@
                                 </label>
                                 <input type="password" name="password" id="password" tabindex="2"
                                        class="form-control"
-                                       placeholder="Password" ng-model="credentials.password" ng-required="true">
+                                       placeholder="Password"
+                                       ng-model="credentials.password"
+                                       ng-required="true"
+                                       ng-change="resetError()"/>
+
                                 <div class="form-group">
                                     <span><a  ui-sref="password_reset_request">Forgot password?</a></span>
                                 </div>
@@ -41,7 +48,7 @@
 
                             <div class="form-group">
                                 <i ng-show="sending" class="fa fa-spinner fa-pulse fa-3x"></i>
-                                <button class="btn btn-success" ng-click="signIn(signInForm);">Sign in</button>
+                                <button type="submit" class="btn btn-success">Sign in</button>
 
                             </div>
                             <div class="form-group">

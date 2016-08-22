@@ -20,7 +20,7 @@ export default class SignUpController {
                 });
         };
 
-        $scope.userInputChanged = function () {
+        $scope.resetError = function () {
             $scope.error = null;
         };
     }

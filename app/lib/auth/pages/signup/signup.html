@@ -29,7 +29,7 @@
                                        class="form-control"
                                        placeholder="Full name"
                                        ng-model="user.username"
-                                       ng-change="userInputChanged()"/>
+                                       ng-change="resetError()"/>
                             </div>
                             <div class="form-group form-group-sm" ng-class="{'has-error': signUpForm.email.$invalid}">
                                 <label for="email">Email
@@ -45,7 +45,7 @@
                                        placeholder="Email"
                                        ng-model="user.email"
                                        ng-required="true"
-                                       ng-change="userInputChanged()"/>
+                                       ng-change="resetError()"/>
                             </div>
                             <div class="form-group form-group-sm" ng-class="{'has-error': signUpForm.password.$invalid}">
                                 <label for="password">Password
@@ -60,7 +60,7 @@
                                        placeholder="Password"
                                        ng-model="user.password"
                                        ng-required="true"
-                                       ng-change="userInputChanged()"/>
+                                       ng-change="resetError()"/>
                             </div>
                             <div vc-recaptcha key="'6Lcmlv0SAAAAAHofnIcb29l1LMZsnGFcSlH8Reve'"
                                  theme="light" ng-model="user['recaptcha2-response']">
