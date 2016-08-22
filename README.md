@@ -1,22 +1,21 @@
 # BioStudyUISub #
 
-User interface module for BioStudySubmProxy web application. To compile it you will need nodejs
-because we use tools like less, gulp, browserify etc.
+User interface module for BioStudySubm web application. 
 
 ### Install tools ###
 Open terminal/command line window and run following commands
 ```
+ npm install jspm -g
  npm install gulp -g
- npm install bower -g
-
+ 
 ```
 
 ### Configuration after pulling the repository ###
 Open terminal/command line window and run following commands
 ```
  cd BioStudyUISub
- bower install
  npm install
+ jspm install
 
 ```
 
@@ -24,7 +23,7 @@ Open terminal/command line window and run following commands
 
 ### Dev environment ###
 
-Open terminal/command line window and run following commands
+To create .war file just run: 
 ```
  gulp
 
