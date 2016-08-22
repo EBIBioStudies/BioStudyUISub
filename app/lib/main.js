@@ -212,7 +212,6 @@ angular.module(appName,
     })
     .filter("releaseDateFormat", function ($filter) {
         return function (fieldValueUnused, item) {
-            console.log(Number.isInteger(parseInt(item.rtime)));
             var rtime = parseInt(item.rtime);
             if (Number.isInteger(rtime)) {
                 return $filter('date')(new Date(rtime * 1000), 'dd-MMM-yyyy')
