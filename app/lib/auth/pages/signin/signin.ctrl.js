@@ -1,5 +1,5 @@
 export default class SignUpController {
-    constructor($scope, $rootScope, $state, AuthService, AUTH_EVENTS) {
+    constructor($scope, $rootScope, AuthService, AUTH_EVENTS) {
         'ngInject';
 
         $scope.credentials = {};
@@ -12,7 +12,6 @@ export default class SignUpController {
                 .then(function (data) {
                     if (data.status === "OK") {
                         $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, data);
-                        $state.go('submissions');
                     } else {
                         $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
                         $scope.error = {status: "FAIL", message: data.message};

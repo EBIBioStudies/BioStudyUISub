@@ -130,7 +130,7 @@ angular.module(appName,
         $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
             if (toState.authenticated && !AuthService.isAuthenticated()) {
                 event.preventDefault();
-                $rootScope.returnToState = toState.url;
+                $rootScope.returnToState = toState;
                 $rootScope.returnToStateParams = toParams;
                 $state.transitionTo('signin');
             }
@@ -141,15 +141,20 @@ angular.module(appName,
         }
 
         function logout() {
-            $log.debug("logout() called");
+            $log.debug('logout() called');
             setCurrentUser();
             Session.destroy();
             $state.go('signin');
         }
 
         function login(event, data) {
-            $log.debug("login() called");
+            $log.debug('login() called');
             setCurrentUser(data.username);
+            if ($rootScope.returnToState) {
+                $state.go($rootScope.returnToState, $rootScope.returnToStateParams);
+            } else {
+                $state.go('submissions');
+            }
         }
 
         $rootScope.$on(AUTH_EVENTS.notAuthenticated, logout);
