@@ -9,12 +9,12 @@
                     </div>
                 </div>
 
-                <div ng-if="!success" class="panel" ng-class="{'panel-info' : !hasError, 'panel-danger': hasError}">
+                <div ng-if="!success" class="panel" ng-class="{'panel-info' : !error, 'panel-danger': error}">
                     <div class="panel-heading">
-                        <span class="help-block span-error-large margin-bottom-none" ng-show="hasError">
+                        <span class="help-block span-error-large margin-bottom-none" ng-show="error">
                             {{error.status}} : {{error.message}}
                         </span>
-                        <span class="help-block-empty-large margin-bottom-none" ng-show="!hasError">
+                        <span class="help-block-empty-large margin-bottom-none" ng-show="!error">
                             &nbsp;
                         </span>
                     </div>
@@ -22,9 +22,15 @@
                         <form id="login-form" novalidate name="signUpForm" role="form">
                             <div class="form-group form-group-sm">
                                 <label class="control-label" for="username">Full name</label>
-                                <input type="text" id="username" name="username" tabindex="1"
-                                       class="form-control input-sm"
-                                       placeholder="Full name" value="" ng-model="user.username">
+                                <input type="text"
+                                       id="username"
+                                       name="username"
+                                       tabindex="1"
+                                       class="form-control"
+                                       value=""
+                                       placeholder="Full name"
+                                       ng-model="user.username"
+                                       ng-change="userInputChanged()"/>
                             </div>
                             <div class="form-group form-group-sm" ng-class="{'has-error': signUpForm.email.$invalid}">
                                 <label for="email">Email
@@ -33,9 +39,14 @@
                                         <ng-message when="email"><span>: not a valid email</span></ng-message>
                                     </ng-messages>
                                 </label>
-                                <input type="email" id="email" ng-required="true" name="email"
-                                       ng-model="user.email" class="form-control" placeholder="Email"/>
-
+                                <input type="email"
+                                       id="email"
+                                       name="email"
+                                       class="form-control"
+                                       placeholder="Email"
+                                       ng-model="user.email"
+                                       ng-required="true"
+                                       ng-change="userInputChanged()"/>
                             </div>
                             <div class="form-group form-group-sm" ng-class="{'has-error': signUpForm.password.$invalid}">
                                 <label for="password">Password
@@ -43,19 +54,21 @@
                                         <ng-message when="required"><span>: cannot be blank</span></ng-message>
                                     </ng-messages>
                                 </label>
-                                <input type="password" ng-required="true" name="password"
-                                       id="password" ng-model="user.password" class="form-control input-sm"
-                                       placeholder="Password"/>
-
+                                <input type="password"
+                                       name="password"
+                                       id="password"
+                                       class="form-control"
+                                       placeholder="Password"
+                                       ng-model="user.password"
+                                       ng-required="true"
+                                       ng-change="userInputChanged()"/>
                             </div>
                             <div vc-recaptcha key="'6Lcmlv0SAAAAAHofnIcb29l1LMZsnGFcSlH8Reve'"
                                  theme="light" ng-model="user['recaptcha2-response']">
                             </div>
-
                             <div class="form-group margin-top-large">
-                                <button type="submit" class="btn btn-success" ng-click="signUp(user, signUpForm);">Sign up</button>
+                                <button type="submit" class="btn btn-success" ng-click="signUp(user);">Sign up</button>
                             </div>
-
                         </form>
                     </div>
                 </div>

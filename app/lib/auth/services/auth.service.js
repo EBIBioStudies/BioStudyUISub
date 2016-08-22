@@ -59,7 +59,7 @@ export default class AuthService {
                             defer.resolve(response.data);
                         },
                         function (response) {
-                            if (response.status === 403) {
+                            if (response.status === 403 || response.status === 400) {
                                 defer.resolve(response.data);
                                 return;
                             }
