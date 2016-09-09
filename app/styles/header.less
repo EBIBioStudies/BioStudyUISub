@@ -10,11 +10,17 @@ ng-include > .header
   position: relative;
   max-height: 100px;
   z-index: 1030;
+
   .navbar {
-    height: 100px;
-    min-height: 100px;
+    height: 80px;
+    min-height: 80px;
     margin-bottom: 22px;
     margin-bottom: 0;
+    background: #b5d7ec;
+    background: -webkit-linear-gradient(left top, #b5d7ec, #d7eaca); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(bottom right, #b5d7ec, #d7eaca); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(bottom right, #b5d7ec, #d7eaca); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(to bottom right, #b5d7ec, #d7eaca); /* Standard syntax */
     /*margin-left: @left-side-width;*/
   }
 
@@ -96,11 +102,14 @@ ng-include > .header
 
   //Logo bar - leftside
   .logo {
+    background-image:  url("../images/biostudies-logo2.png");
+    background-size: 300px auto;
+    background-repeat: no-repeat;
     float: left;
-    height: 50px;
     font-size: 20px;
     text-align: left;
-    padding: 0 10px;
+    padding-top: 40px;
+    margin-top: 10px;
     //width: @left-side-width;
     //width: @left-side-logo-width;
     font-family: 'Roboto';
@@ -108,7 +117,8 @@ ng-include > .header
     font-weight: 800;
 
     //font-weight: 500;
-    height: 100px;
+    width: 300px;
+    height: 80px;
     display: block;
     //For logo imgs or icons
     .icon {
@@ -129,27 +139,26 @@ ng-include > .header
   }
 
   .logo .text-box {
-    margin: 0;
-    padding: 0;
+    display: inline-block;
   }
 
   .logo .logo-text {
     margin: 0;
     padding: 0;
-    font-family: Arial;
-    font-style: normal;
-    font-weight: 100;
-    color: #D1EBEC;
+    font-family: 'Times New Roman', Times, serif;
+    font-style:  normal;
+    font-weight: bold;
+    color:  #58595B;//#6BA8C5;//#D1EBEC;
   }
 
   .logo .version {
     margin: 0 5px;
     padding: 0 3px;
-    font-family: Arial;
+    font-family: 'Times New Roman', Times, serif;
     font-style: normal;
-    font-weight: 100;
+    font-weight: 500;
     font-size: 15px;
-    color: black;
+    color: #58595B;
     background-color: white;
   }
 
