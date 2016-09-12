@@ -6,6 +6,9 @@ import appAuth from '../auth/index'
 import MainCtrl from './main.ctrl'
 import ErrorCtrl from './error.ctrl'
 
+import BsActiveNavDirective from './directives/bsActiveNav'
+
 export default angular.module('BioStudyApp.Main', [uibDropdown, appAuth.name])
     .controller('MainCtrl', MainCtrl)
-    .controller('ErrorCtrl', ErrorCtrl);
+    .controller('ErrorCtrl', ErrorCtrl)
+    .directive('bsActiveNav', BsActiveNavDirective);
