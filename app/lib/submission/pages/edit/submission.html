@@ -38,7 +38,7 @@
     </aside>
     <!-- Right side column. Contains the navbar and content of the page -->
     <aside class="right-side" ng-class="{'collapse-left' : uisettings.collapseLeftSide}">
-        <!--<div class="panel" ng-class="{'panel-danger': submissionForm.$invalid, 'panel-info':submissionForm.$valid}">
+        <div class="panel" ng-class="{'panel-danger': submissionForm.$invalid, 'panel-info':submissionForm.$valid}">
             <div class="panel-heading">
                 <span>Submission {{accno}}</span><span ng-if="!readOnly && submissionForm.$invalid"> << There are some validation errors. Please correct them before to proceed to submit >> </span>
                 <p class="pull-right" ng-if="readOnly">
@@ -49,14 +49,14 @@
                     </a>
                 </p>
             </div>
--->
+
             <!-- Main content -->
             <section id="scrollArea" class="content padding-left-large">
-                <div class="page-header">
+                <!--<div class="page-header">
                     <h4>Submission {{accno}}
                         <span ng-if="!readOnly && submissionForm.$invalid"> << There are some validation errors. Please correct them before to proceed to submit >> </span>
                     </h4>
-                </div>
+                </div>-->
 
                 <form class="form-horizontal" autocomplete="off" novalidate role="form"
                       method="post" name="submissionForm">
@@ -171,7 +171,7 @@
             <!-- /.content -->
             <div class="panel-footer navbar-fixed-bottom">
             </div>
-       <!-- </div>-->
+       </div>
 
     </aside>
     <!-- /.right-side -->
