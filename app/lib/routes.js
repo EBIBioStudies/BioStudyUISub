@@ -64,7 +64,7 @@ function routes($stateProvider, $urlRouterProvider) {
         .state('submission_view', {
             url: '/view/:accno',
             templateUrl: submTmpl.templateUrl,
-            controller: 'ViewSubmissionCtrl',
+            controller: 'SubmissionViewCtrl',
             authenticated: true
         })
         .state('files', {
