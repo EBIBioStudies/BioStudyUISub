@@ -22,7 +22,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="https://www.ebi.ac.uk/europepmc/thor/resources/js/datasubmission/ebithor-submission.1.0.0.js"></script>
 <script>
-    var thorCallback = null;
+    var message = null;
 
     if (window.addEventListener) {
         addEventListener("message", thorEventListener, false)
@@ -31,22 +31,15 @@
     }
 
     function thorEventListener() {
-        if (thorCallback == null) {
-            return;
-        }
-        thorApplicationNamespace.searchOrcIdBio(thorCallback);
-    }
-
-    /* used from outside iFrame */
-    function addCallback(callback) {
-        thorCallback = callback;
-        return  function() {
-            thorCallback == null;
-        }
+        thorApplicationNamespace.searchOrcIdBio(function(msg){
+            message = msg;
+        });
     }
 
     /* used from outside iFrame */
     function openPopup() {
+        message = null;
+
         if (thorApplicationNamespace) {
             console.log("opening ORCID popup...");
             thorApplicationNamespace.openOrcidPopup(0);

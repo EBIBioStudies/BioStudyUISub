@@ -1,5 +1,5 @@
 export default class SignUpController {
-    constructor($scope, $timeout, $document, $log, AuthService, vcRecaptchaService) {
+    constructor($scope, $interval, $document, $log, AuthService, vcRecaptchaService) {
         'ngInject';
 
         $scope.user = {};
@@ -32,20 +32,23 @@ export default class SignUpController {
             var w = thorIFrame.contentWindow;
             $log.debug(w);
 
-            var unbind = w.addCallback(function(msg) {
+            w.openPopup();
+
+            var promise = $interval(function() {
+                $log.debug("(thor) message check...");
+
+                var msg = w.message;
+                if (msg === null) {
+                    return;
+                }
                 var data = angular.fromJson(msg);
                 var orcid = data['orcid-profile']['orcid-identifier']['path'];
                 $log.debug(orcid);
 
-                /* workaround to update model and form values ASAP */
-                var promise = $timeout(function() {
-                    $log.debug("on timeout: user.orcid=" + orcid);
-                    $scope.user.orcid = orcid;
-                    $timeout.cancel(promise);
-                }, 1);
-                unbind();
-            });
-            w.openPopup();
+                $scope.user.orcid = orcid;
+                $interval.cancel(promise);
+            }, 1000); //1 sec
+
         }
     }
 }
