@@ -22,8 +22,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="https://www.ebi.ac.uk/europepmc/thor/resources/js/datasubmission/ebithor-submission.1.0.0.js"></script>
 <script>
-    var message = null;
-
     if (window.addEventListener) {
         addEventListener("message", thorEventListener, false)
     } else {
@@ -31,8 +29,8 @@
     }
 
     function thorEventListener() {
-        thorApplicationNamespace.searchOrcIdBio(function(msg){
-            message = msg;
+        thorApplicationNamespace.searchOrcIdBio(function(msg) {
+            window.top.postMessage(msg, '*');
         });
     }
 

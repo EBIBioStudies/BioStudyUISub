@@ -1,5 +1,5 @@
 export default class SignUpController {
-    constructor($scope, $interval, $document, $log, AuthService, vcRecaptchaService) {
+    constructor($scope, $window, $timeout, $document, $log, AuthService, vcRecaptchaService) {
         'ngInject';
 
         $scope.user = {};
@@ -24,31 +24,32 @@ export default class SignUpController {
             $scope.error = null;
         };
 
+        var messageListener = function(e) {
+            $log.debug('in message listener..');
+            var data = angular.fromJson(e.data);
+            var orcid = data['orcid-profile']['orcid-identifier']['path'];
+            $log.debug('orcid: ' + orcid);
+
+            $timeout(function() {
+                $log.debug("in timeout func...");
+                $scope.user.orcid = orcid;
+            }, 1);
+        };
+
         $scope.findOrcid = function () {
-            $log.debug("findOrcid");
+            $log.debug('findOrcid(...)');
             var thorIFrame = $document[0].getElementById("thor");
             $log.debug(thorIFrame);
 
             var w = thorIFrame.contentWindow;
             $log.debug(w);
 
+            $window.addEventListener('message', messageListener);
             w.openPopup();
+        };
 
-            var promise = $interval(function() {
-                $log.debug("(thor) message check...");
-
-                var msg = w.message;
-                if (msg === null) {
-                    return;
-                }
-                var data = angular.fromJson(msg);
-                var orcid = data['orcid-profile']['orcid-identifier']['path'];
-                $log.debug(orcid);
-
-                $scope.user.orcid = orcid;
-                $interval.cancel(promise);
-            }, 1000); //1 sec
-
-        }
+        $scope.$on('destroy', function() {
+            $window.removeEventListener(messageListener);
+        })
     }
 }
