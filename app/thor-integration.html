@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Thor Integration</title>
+</head>
+<body>
+<form id="thorForm" name="thorForm">
+    <input type="text"
+           id="username"
+           name="username"
+           tabindex="1"
+           class="thorCompleteNameTx"/>
+    <input type="email"
+           id="email"
+           name="email"
+           class="thorEmailTxt"/>
+    <input type="text" id="orcId" name="orcId" class="thorOrcIdIdentifier"/>
+    <span class="thorOrcIdSpan"></span>
+</form>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://www.ebi.ac.uk/europepmc/thor/resources/js/datasubmission/ebithor-submission.1.0.0.js"></script>
+<script>
+    var thorCallback = null;
+
+    if (window.addEventListener) {
+        addEventListener("message", thorEventListener, false)
+    } else {
+        attachEvent("onmessage", thorEventListener)
+    }
+
+    function thorEventListener() {
+        if (thorCallback == null) {
+            return;
+        }
+        thorApplicationNamespace.searchOrcIdBio(thorCallback);
+    }
+
+    /* used from outside iFrame */
+    function addCallback(callback) {
+        thorCallback = callback;
+        return  function() {
+            thorCallback == null;
+        }
+    }
+
+    /* used from outside iFrame */
+    function openPopup() {
+        if (thorApplicationNamespace) {
+            console.log("opening ORCID popup...");
+            thorApplicationNamespace.openOrcidPopup(0);
+        }
+    }
+</script>

@@ -47,6 +47,19 @@
                                        ng-required="true"
                                        ng-change="resetError()"/>
                             </div>
+                            <!-- THOR INTEGRATION BEGIN -->
+                            <div class="form-group form-group-sm">
+                                <label for="orcId">ORCID</label>
+                                <input type="text"
+                                       id="orcId"
+                                       name="orcId"
+                                       class="form-control"
+                                       placeholder="Click to find your ORCID"
+                                       ng-model="user.orcid"
+                                       ng-change="resetError()"
+                                       ng-click="findOrcid()"/>
+                            </div>
+                            <!-- THOR INTEGRATION END -->
                             <div class="form-group form-group-sm" ng-class="{'has-error': signUpForm.password.$invalid}">
                                 <label for="password">Password
                                     <ng-messages for="signUpForm.password.$error" ng-if="signUpForm.password.$dirty">
