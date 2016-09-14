@@ -23,13 +23,13 @@
 <script src="https://www.ebi.ac.uk/europepmc/thor/resources/js/datasubmission/ebithor-submission.1.0.0.js"></script>
 <script>
     if (window.addEventListener) {
-        addEventListener("message", thorEventListener, false)
+        addEventListener("message", thorEventListener, false);
     } else {
-        attachEvent("onmessage", thorEventListener)
+        attachEvent("onmessage", thorEventListener);
     }
 
     function thorEventListener() {
-        thorApplicationNamespace.searchOrcIdBio(function(msg) {
+        thorApplicationNamespace.searchOrcIdBio(function (msg) {
             window.top.postMessage(msg, '*');
         });
     }

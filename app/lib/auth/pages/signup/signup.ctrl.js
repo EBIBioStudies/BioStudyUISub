@@ -24,17 +24,24 @@ export default class SignUpController {
             $scope.error = null;
         };
 
-        var messageListener = function(e) {
+        var messageListener = function (e) {
             $log.debug('in message listener..');
             var data = angular.fromJson(e.data);
             var orcid = data['orcid-profile']['orcid-identifier']['path'];
             $log.debug('orcid: ' + orcid);
 
-            $timeout(function() {
+            $timeout(function () {
                 $log.debug("in timeout func...");
                 $scope.user.orcid = orcid;
             }, 1);
         };
+
+        if ($window.addEventListener) {
+            $log.debug('addEventListener(message)');
+            $window.addEventListener('message', messageListener, false);
+        } else {
+            $window.attachEvent('onmessage', messageListener);
+        }
 
         $scope.findOrcid = function () {
             $log.debug('findOrcid(...)');
@@ -43,13 +50,17 @@ export default class SignUpController {
 
             var w = thorIFrame.contentWindow;
             $log.debug(w);
-
-            $window.addEventListener('message', messageListener);
             w.openPopup();
         };
 
-        $scope.$on('destroy', function() {
-            $window.removeEventListener(messageListener);
+        $scope.$on('destroy', function () {
+            $log.debug('singUpCtrl: destroy()');
+            if ($window.removeEventListener) {
+                $log.debug('removeEventListener(message)');
+                $window.removeEventListener('message', messageListener, false);
+            } else {
+                $window.detachEvent('onmessage', messageListener);
+            }
         })
     }
 }
