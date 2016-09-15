@@ -1,5 +1,5 @@
 export default class SignUpController {
-    constructor($scope, $window, $timeout, $document, $log, AuthService, vcRecaptchaService) {
+    constructor($scope, $window, $timeout, $document, $location, $log, AuthService, vcRecaptchaService) {
         'ngInject';
 
         $scope.user = {};
@@ -24,7 +24,24 @@ export default class SignUpController {
             $scope.error = null;
         };
 
+        $scope.findOrcid = function () {
+            $log.debug('findOrcid(...)');
+            var thorIFrame = $document[0].getElementById("thor");
+            $log.debug(thorIFrame);
+
+            var w = thorIFrame.contentWindow;
+            $log.debug(w);
+            w.bsst_initThor();
+            w.bsst_openOrcidPopup();
+        };
+
+        var origin = $location.protocol() + '://' + $location.host() + ':' + $location.port();
+
+        /* getting messages back fro iframe */
         var messageListener = function (e) {
+            if (e.origin != origin) {
+                return;
+            }
             $log.debug('in message listener..');
             var data = angular.fromJson(e.data);
             var orcid = data['orcid-profile']['orcid-identifier']['path'];
@@ -42,16 +59,6 @@ export default class SignUpController {
         } else {
             $window.attachEvent('onmessage', messageListener);
         }
-
-        $scope.findOrcid = function () {
-            $log.debug('findOrcid(...)');
-            var thorIFrame = $document[0].getElementById("thor");
-            $log.debug(thorIFrame);
-
-            var w = thorIFrame.contentWindow;
-            $log.debug(w);
-            w.openPopup();
-        };
 
         $scope.$on('destroy', function () {
             $log.debug('singUpCtrl: destroy()');

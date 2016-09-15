@@ -3,6 +3,8 @@
 <head>
     <meta charset="utf-8"/>
     <title>Thor Integration</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://www.ebi.ac.uk/europepmc/thor/resources/js/datasubmission/ebithor-submission.1.0.0.js"></script>
 </head>
 <body>
 <form id="thorForm" name="thorForm">
@@ -19,28 +21,72 @@
     <span class="thorOrcIdSpan"></span>
 </form>
 </body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="https://www.ebi.ac.uk/europepmc/thor/resources/js/datasubmission/ebithor-submission.1.0.0.js"></script>
 <script>
-    if (window.addEventListener) {
-        addEventListener("message", thorEventListener, false);
-    } else {
-        attachEvent("onmessage", thorEventListener);
-    }
+    var __bsstThor__ = null;
 
-    function thorEventListener() {
-        thorApplicationNamespace.searchOrcIdBio(function (msg) {
-            window.top.postMessage(msg, '*');
-        });
-    }
-
-    /* used from outside iFrame */
-    function openPopup() {
-        message = null;
-
-        if (thorApplicationNamespace) {
-            console.log("opening ORCID popup...");
-            thorApplicationNamespace.openOrcidPopup(0);
+    function bsst_thorListener() {
+        console.log("bsst_thorListener(...)");
+        if (__bsstThor__) {
+            __bsstThor__.searchOrcIdBio(function (msg) {
+                console.log("top.postMessage(...)");
+                window.top.postMessage(msg, '*');
+            });
+        } else {
+            console.log("bsst_thorListener() error: not initialized")
         }
     }
+
+    /* called from outside iFrame */
+    function bsst_openOrcidPopup() {
+        if (__bsstThor__) {
+            console.log("opening ORCID popup...");
+            __bsstThor__.openOrcidPopup(0);
+        } else {
+            console.log("bsst_openOrcidPopup() error: not initialised");
+        }
+    }
+
+    /* called from outside iFrame */
+    function bsst_initThor() {
+        if (__bsstThor__ != null) {
+            console.log("bsst_initThor(): already initialized");
+            return;
+        }
+
+        function removeMessageListener(listener, capture) {
+            if (window.removeEventListener) {
+                console.log("removeEventListener(...)");
+                window.removeEventListener("message", listener, capture);
+            }
+            if (window.detachEvent) {
+                console.log("detachEvent(...)");
+                window.detachEvent("onmessage", listener);
+            }
+        }
+
+        function addMessageListener(listener, capture) {
+            if (window.addEventListener) {
+                console.log("addEventListener(...)");
+                addEventListener("message", listener, capture);
+            }
+            if (window.attachEvent) {
+                console.log("attachEvent(...)");
+                attachEvent("onmessage", listener);
+            }
+        }
+
+        if (thorListener) {
+            removeMessageListener(thorListener, false);
+        } else {
+            console.log("warning: no thorListener found");
+        }
+
+        if (thorApplicationNamespace) {
+            addMessageListener(bsst_thorListener, false);
+            __bsstThor__ = thorApplicationNamespace;
+        } else {
+            console.log("warning: no thorApplicationNamespace found");
+        }
+    }
+
 </script>
