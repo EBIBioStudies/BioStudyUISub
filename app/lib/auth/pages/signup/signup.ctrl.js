@@ -31,43 +31,17 @@ export default class SignUpController {
 
             var w = thorIFrame.contentWindow;
             $log.debug(w);
-            w.bsst_initThor();
-            w.bsst_openOrcidPopup();
+            w.bsst_openOrcidPopup(function (msg) {
+                $log.debug('in message callback..');
+                var data = angular.fromJson(msg);
+                var orcid = data['orcid-profile']['orcid-identifier']['path'];
+                $log.debug('orcid: ' + orcid);
+
+                $timeout(function () {
+                    $log.debug("in timeout func...");
+                    $scope.user.orcid = orcid;
+                }, 1);
+            });
         };
-
-        var origin = $location.protocol() + '://' + $location.host() + ':' + $location.port();
-
-        /* getting messages back fro iframe */
-        var messageListener = function (e) {
-            if (e.origin != origin) {
-                return;
-            }
-            $log.debug('in message listener..');
-            var data = angular.fromJson(e.data);
-            var orcid = data['orcid-profile']['orcid-identifier']['path'];
-            $log.debug('orcid: ' + orcid);
-
-            $timeout(function () {
-                $log.debug("in timeout func...");
-                $scope.user.orcid = orcid;
-            }, 1);
-        };
-
-        if ($window.addEventListener) {
-            $log.debug('addEventListener(message)');
-            $window.addEventListener('message', messageListener, false);
-        } else {
-            $window.attachEvent('onmessage', messageListener);
-        }
-
-        $scope.$on('destroy', function () {
-            $log.debug('singUpCtrl: destroy()');
-            if ($window.removeEventListener) {
-                $log.debug('removeEventListener(message)');
-                $window.removeEventListener('message', messageListener, false);
-            } else {
-                $window.detachEvent('onmessage', messageListener);
-            }
-        })
     }
 }

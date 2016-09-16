@@ -23,30 +23,32 @@
 </body>
 <script>
     var __bsstThor__ = null;
+    var __bsstCallback__ = null;
 
     function bsst_thorListener() {
         console.log("bsst_thorListener(...)");
-        if (__bsstThor__) {
-            __bsstThor__.searchOrcIdBio(function (msg) {
-                console.log("top.postMessage(...)");
-                window.top.postMessage(msg, '*');
-            });
-        } else {
-            console.log("bsst_thorListener() error: not initialized")
+        if (!__bsstThor__) {
+            console.log("bsst_thorListener() error: not initialized");
+            return;
         }
+
+        __bsstThor__.searchOrcIdBio(function (msg) {
+            if (__bsstCallback__) {
+                __bsstCallback__(msg);
+                __bsstCallback__ = null;
+            }
+        });
     }
 
     /* called from outside iFrame */
-    function bsst_openOrcidPopup() {
-        if (__bsstThor__) {
-            console.log("opening ORCID popup...");
-            __bsstThor__.openOrcidPopup(0);
-        } else {
-            console.log("bsst_openOrcidPopup() error: not initialised");
+    function bsst_openOrcidPopup(callback) {
+        if (!__bsstThor__) {
+            bsst_initThor();
         }
+        __bsstCallback__ = callback;
+        __bsstThor__.openOrcidPopup(0);
     }
 
-    /* called from outside iFrame */
     function bsst_initThor() {
         if (__bsstThor__ != null) {
             console.log("bsst_initThor(): already initialized");
