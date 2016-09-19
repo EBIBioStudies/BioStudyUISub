@@ -40,9 +40,9 @@ class ORCIDInputBoxDirective {
         };
     }
 
-    static create(ORCIDService, $log, $document, $timeout, $parse) {
+    static create($log, $document, $timeout, $parse) {
         'ngInject';
-        return new ORCIDInputBoxDirective(ORCIDService, $log, $document, $timeout, $parse);
+        return new ORCIDInputBoxDirective($log, $document, $timeout, $parse);
     }
 }
 
