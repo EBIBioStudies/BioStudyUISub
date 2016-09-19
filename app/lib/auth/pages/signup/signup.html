@@ -47,19 +47,25 @@
                                        ng-required="true"
                                        ng-change="resetError()"/>
                             </div>
-                            <!-- THOR INTEGRATION BEGIN -->
-                            <div class="form-group form-group-sm">
-                                <label for="orcId">ORCID</label>
-                                <input type="text"
-                                       id="orcId"
-                                       name="orcId"
-                                       class="form-control"
-                                       placeholder="Click to find your ORCID"
-                                       ng-model="user.orcid"
-                                       ng-change="resetError()"
-                                       ng-click="findOrcid()"/>
+                            <div class="form-group form-group-sm" ng-class="{'has-error': signUpForm.orcId.$invalid}">
+                                <label for="orcId">ORCID
+                                    <ng-messages for="signUpForm.orcId.$error" ng-if="signUpForm.orcId.$dirty">
+                                        <ng-message when="pattern"><span>: wrong format; the value should be in 0000-0000-0000-0000 format.</span></ng-message>
+                                    </ng-messages>
+                                </label>
+                                <div class="input-group">
+                                    <input type="text"
+                                           id="orcId"
+                                           name="orcId"
+                                           class="form-control"
+                                           placeholder="ORCID"
+                                           ng-model="user.orcid"
+                                           ng-change="resetError()"
+                                           ng-pattern='/^\d{4}-\d{4}-\d{4}-\d{4}$/'
+                                           orcid-input-box/>
+                                    <div class="input-group-addon"><i class="fa fa-external-link" aria-hidden="true"></i></div>
+                                </div>
                             </div>
-                            <!-- THOR INTEGRATION END -->
                             <div class="form-group form-group-sm" ng-class="{'has-error': signUpForm.password.$invalid}">
                                 <label for="password">Password
                                     <ng-messages for="signUpForm.password.$error" ng-if="signUpForm.password.$dirty">

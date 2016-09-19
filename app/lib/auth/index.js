@@ -4,6 +4,7 @@ import 'angular-messages'
 import 'angular-recaptcha'
 
 import appStorage from '../localstorage/index'
+import appORCID from '../orcid/index'
 
 import AuthService from './services/auth.service'
 import AccessLevelService from './services/accessLevel.service'
@@ -19,7 +20,7 @@ import EqualsToDirective from './directives/equalsTo'
 import AccessLevelDirective from './directives/accessLevel'
 
 
-export default angular.module('BioStudyApp.Auth', [/*uiRouter,*/ 'ngMessages', 'vcRecaptcha', appStorage.name])
+export default angular.module('BioStudyApp.Auth', [/*uiRouter,*/ 'ngMessages', 'vcRecaptcha', appStorage.name, appORCID.name])
     .service('AuthService', AuthService)
     .service('AccessLevel', AccessLevelService)
     .service('Session', SessionService)
