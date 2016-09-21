@@ -10,12 +10,12 @@ export default class SignUpController {
             AuthService
                 .signUp($scope.user)
                 .then(function (data) {
-                    if (data.status === "FAIL") {
-                        $log.error('error sign up', data);
-                        $scope.error = {status: data.status, message: data.message};
-                        vcRecaptchaService.reload();
-                    } else {
+                    if (data.status === "OK") {
                         $scope.success = true;
+                    } else {
+                        $log.error('error sign up', data);
+                        $scope.error = {status: 'Error', message: data.message};
+                        vcRecaptchaService.reload();
                     }
                 });
         };
