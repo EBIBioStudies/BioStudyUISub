@@ -12,10 +12,11 @@ ng-include > .header
   z-index: 1030;
 
   .navbar {
-    height: 80px;
-    min-height: 80px;
+    height: 60px;
+    min-height: 60px;
     margin-bottom: 22px;
     margin-bottom: 0;
+   // background: #eee;
     background: #b5d7ec;
     background: -webkit-linear-gradient(right top, #d7eaca, #98C7D7); //#b5d7ec); /* For Safari 5.1 to 6.0 */
     background: -o-linear-gradient(top right, #d7eaca, #98C7D7);//#b5d7ec); /* For Opera 11.1 to 12.0 */
@@ -77,6 +78,11 @@ ng-include > .header
     margin-right: 5px;
   }
 
+  .navbar .nav > li > a {
+    //color: #3F89A2;
+    line-height: 30px;
+  }
+
   //Labels in navbar
   .navbar .nav > li > a > .label {
     .border-radius(50%);
@@ -97,28 +103,28 @@ ng-include > .header
 
   .navbar .nav > .active > a {
     //color: #444444;
+    color: white;
     background-color: #3F89A2;//#569F9D; //#367fa9;
   }
 
   //Logo bar - leftside
   .logo {
     background-image:  url("../images/biostudies-logo2.png");
-    background-size: 300px auto;
+    background-size: 200px auto;
     background-repeat: no-repeat;
     float: left;
     font-size: 20px;
     text-align: left;
-    padding-top: 40px;
+    padding-top: 20px;
     margin-top: 10px;
     //width: @left-side-width;
     //width: @left-side-logo-width;
-    font-family: 'Roboto';
     font-style: normal;
     font-weight: 800;
 
     //font-weight: 500;
-    width: 300px;
-    height: 80px;
+    width: 200px;
+    height: 50px;
     display: block;
     //For logo imgs or icons
     .icon {
@@ -147,8 +153,9 @@ ng-include > .header
     padding: 0;
     font-family: 'Times New Roman', Times, serif;
     font-style:  normal;
-    font-weight: bold;
+    font-weight: 500;
     color:  #58595B;//#6BA8C5;//#D1EBEC;
+    font-size: 14px;
   }
 
   .logo .version {
@@ -156,8 +163,8 @@ ng-include > .header
     padding: 0 3px;
     font-family: 'Times New Roman', Times, serif;
     font-style: normal;
-    font-weight: 500;
-    font-size: 15px;
+    font-weight: 100;
+    font-size: 14px;
     color: #58595B;
     background-color: white;
   }
