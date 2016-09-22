@@ -169,39 +169,96 @@ class Submission {
     }
 }
 
+class SubmissionSource {
+    constructor(obj) {
+        this.obj = _.cloneDeep(obj);
+
+        if (!this.obj.attributes) {
+            this.obj.attributes = [];
+        }
+
+        if (!this.obj.section) {
+            this.obj.section = {subsections: []};
+        }
+
+        if (!this.obj.section.attributes) {
+            this.obj.section.attributes = [];
+        }
+    }
+
+    get accno() {
+        return this.obj.accno || '';
+    }
+
+    get title() {
+        return this.__attrValue__('Title', this.obj.attributes) || '';
+    }
+
+    get releaseDate() {
+        return this.__parseDate__(this.__attrValue__('ReleaseDate', this.obj.attributes));
+    }
+
+    get description() {
+        return this.__attrValue__('Description', this.obj.section.attributes) || '';
+    }
+
+    get annotations() {
+        return _.reject(this.obj.section.attributes, {name: 'Description'});
+    }
+
+    get links() {
+        return this.obj.section.links || [];
+    }
+
+    get files() {
+        return this.obj.section.files || [];
+    }
+
+    get publications() {
+        return _.filter(this.obj.section.subsections, {type: 'Publication'});
+    }
+
+    get contacts() {
+        return _.map(_.filter(this.obj.section.subsections, {type: 'Author'}), (c) => {
+            c.attributes = this.__resolveReferences__(c.attributes);
+            return c;
+        });
+    }
+
+    __resolveReferences__(attributes) {
+        return _.map(attributes, (a) => {
+            return (a.isReference) ? this.__findRef__(a) : a;
+        });
+    }
+
+    __findRef__(attr) {
+        var ref = attr.value;
+        var found = _.find(this.obj.section.subsections, {accno: ref});
+        return {name: attr.name, value: found ? found.attributes[0].value : ''};
+    }
+
+    __parseDate__(str) { // yyyy-mm-dd
+        if (!str) {
+            return null;
+        }
+        return (_.isDate(str)) ? str : new Date(str);
+    }
+
+    __attrValue__(attrName, attributes) {
+        var index = _.findIndex(attributes, {name: attrName});
+        return index >= 0 ? attributes[index].value : null;
+    }
+
+    static from(obj) {
+        return new SubmissionSource(obj);
+    }
+}
+
 export default class SubmissionModel {
     constructor(_, DictionaryService) {
         "ngInject";
 
         function importSubmission(obj) {
-
-            function getAttrValue(attrName, attributes) {
-                var index = _.findIndex(attributes, {name: attrName});
-                return index >= 0 ? attributes[index].value : null;
-            }
-
-            function parseDate(str) { // yyyy-mm-dd
-                if (!str) {
-                    return null;
-                }
-                if (_.isDate(str)) {
-                    return str;
-                }
-                return new Date(str);
-            }
-
-            function resolveReferences(attrs, refs) {
-                if (!attrs) {
-                    return attrs;
-                }
-                return _.map(attrs, function (attr) {
-                    var copy = _.assign({}, attr);
-                    if (copy.isReference) {
-                        copy.value = refs[attr.value];
-                    }
-                    return copy;
-                });
-            }
 
             function renameAttributes(attrs) {
                 if (!attrs) {
@@ -228,55 +285,32 @@ export default class SubmissionModel {
             }
 
             var subm = Submission.create(DictionaryService.dict());
+            var source = SubmissionSource.from(obj);
 
-            subm.accno = obj.accno || '';
-            if (obj.attributes) {
-                subm.releaseDate = parseDate(getAttrValue('ReleaseDate', obj.attributes));
-                subm.title = getAttrValue('Title', obj.attributes) || "";
-            }
+            subm.accno = source.accno;
+            subm.releaseDate = source.releaseDate;
+            subm.title = source.title;
+            subm.description = source.description;
 
-            var section = obj.section || {subsections: []};
-
-            if (section.attributes) {
-                subm.description = getAttrValue('Description', section.attributes) || "";
-                _.forEach(_.reject(section.attributes, {name: 'Description'}),
-                    function (attr) {
-                        subm.addAnnotation(attr);
-                    }
-                );
-            }
-
-            if (section.links) {
-                _.forEach(section.links, function (link) {
-                    subm.addLink(joinAttributes(link.attributes, [{name: 'URL', value: link.url}]));
-                });
-            }
-
-            if (section.files) {
-                _.forEach(section.files, function (file) {
-                    subm.addFile(joinAttributes(file.attributes, [{name: 'Path', value: file.path}]));
-                });
-            }
-
-            var contacts = _.filter(section.subsections, {type: 'Author'});
-            var publications = _.filter(section.subsections, {type: 'Publication'});
-            var references = {};
-            _.forEach(_.filter(section.subsections,
-                function (s) {
-                    return _.isString(s.accno) && s.accno;
-                }),
-                function (s) {
-                    var attrs = s.attributes;
-                    references[s.accno] = attrs.length > 0 ? (attrs[0].value || "") : "";
-                });
-
-            _.forEach(contacts, function (contact) {
-                subm.addContact(renameAttributes(resolveReferences(contact.attributes, references)));
+            _.forEach(source.annotations, (attr) => {
+                subm.addAnnotation(attr);
             });
 
-            _.forEach(publications, function (pub) {
-                var pubMedId = getAttrValue('PubMedId', pub.attributes) || "";
-                var attrs = _.reject(pub.attributes, {name: "PubMedId"});
+            _.forEach(source.links, (link) => {
+                subm.addLink(joinAttributes(link.attributes, [{name: 'URL', value: link.url}]));
+            });
+
+            _.forEach(source.files, function (file) {
+                subm.addFile(joinAttributes(file.attributes, [{name: 'Path', value: file.path}]));
+            });
+
+            _.forEach(source.contacts, function (contact) {
+                subm.addContact(renameAttributes(contact.attributes));
+            });
+
+            _.forEach(source.publications, function (pub) {
+                var pubMedId = (_.find(pub.attributes, {name: 'PubMedId'}) || { value: ''}).value;
+                var attrs = _.reject(pub.attributes, {name: 'PubMedId'});
                 subm.addPublication(pubMedId, attrs);
             });
             return subm;
