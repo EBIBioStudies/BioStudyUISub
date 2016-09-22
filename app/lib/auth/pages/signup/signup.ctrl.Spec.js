@@ -16,8 +16,8 @@ describe('BioStudyApp.Auth module', () => {
         beforeEach(inject((_$controller_, _$q_, _$rootScope_) => {
             $controller = _$controller_;
             fakeAuth = {
-                signUp: (user) => {
-                    return _$q_.when(user ? {status: 'OK'} : {status: 'FAIL', message: 'an error'});
+                signUp: () => {
+                    return _$q_.when({status: 'FAIL', message: 'an error'});
                 }
             };
             fakeReCaptcha = {
@@ -41,7 +41,7 @@ describe('BioStudyApp.Auth module', () => {
                 $scope.signUp();
                 $rootScope.$apply();
 
-                expect($scope.error).toEqual({status: 'FAIL', message: 'an error'});
+                expect($scope.error).toEqual({status: 'Error', message: 'an error'});
                 expect(fakeAuth.signUp).toHaveBeenCalled();
                 expect(fakeReCaptcha.reload).toHaveBeenCalled();
             });
