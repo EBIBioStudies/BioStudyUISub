@@ -1,148 +1,177 @@
+import 'lodash'
+
+var _ = window._;
+
+class Attributes {
+    constructor() {
+        this.attributes = [];
+    }
+
+    add(attr) {
+        this.attributes.push(
+            {
+                name: attr.name,
+                value: attr.value,
+                type: attr.type || "text",
+                required: attr.required === true
+            });
+    }
+
+    addNew(name, value) {
+        this.add({name: name || '', value: value || '', required: false});
+    }
+
+    remove(index) {
+        if (index >= 0) {
+            this.attributes.splice(index, 1);
+        }
+    }
+
+    indexOf(name) {
+        return _.findIndex(this.attributes, {name: name});
+    }
+
+    update(obj) {
+        _.forOwn(obj, (value, key) => {
+            var index = this.indexOf(key);
+            if (index >= 0) {
+                this.attributes[index].value = value;
+            } else {
+                this.addNew(key, value);
+            }
+        });
+    }
+
+    /**
+     * @param attributes = [{name: "...", value: "..."}, {...}]
+     * @param required = [ {name: "...", type: "file" or "text"}, {...}]
+     * @returns {Attributes}
+     */
+    static create(attributes, required) {
+        var attrs = new Attributes();
+
+        if (required) {
+            _.forEach(required, function (attr) {
+                attrs.add({name: attr.name, type: attr.type, value: '', required: true});
+            });
+        }
+
+        var claimed = {};
+        var leftover = _.filter(attributes, (attr) => {
+            var index = attrs.indexOf(attr.name);
+            if (index >= 0 && !claimed[attr.name]) {
+                attrs.attributes[index].value = attr.value;
+                claimed[attr.name] = true; //only first value is used
+                return false;
+            }
+            return true;
+        });
+
+        _.forEach(leftover, function (attr) {
+            attrs.add(attr)
+        });
+
+        return attrs;
+    }
+}
+
+class Items {
+    constructor(itemConstructor) {
+        this.items = [];
+        this.__itemConstructor__ = itemConstructor;
+    }
+
+    addNew() {
+        this.add();
+    }
+
+    add() {
+        this.items.push(this.__itemConstructor__.apply(this, arguments));
+    }
+
+    remove(index) {
+        if (index >= 0) {
+            this.items.splice(index, 1);
+        }
+    }
+
+    static create(itemConstructor) {
+        return new Items(itemConstructor);
+    }
+}
+
+class Item {
+    constructor(attributes, required) {
+        attributes = attributes || [];
+        required = required || [];
+        this.attributes = Attributes.create(attributes, required);
+    }
+
+    static factory(required) {
+        return function (attributes) {
+            return new Item(attributes, required);
+        };
+    }
+
+    static publicationFactory(required) {
+        return function (pubMedId, attributes) {
+            var item = new Item(attributes, required);
+            item.pubMedId = pubMedId; // can't make it an attribute as it's rendered differently
+            return item;
+        };
+    }
+}
+
+class Submission {
+    constructor(dict) {
+        function requiredAttributes(itemType) {
+            return _.filter(dict[itemType].attributes, {required: true});
+        }
+
+        this.accno = '';
+        this.title = '';
+        this.description = '';
+        this.releaseDate = null;
+        this.annotations = (function () {
+            var items = Items.create(Item.factory(requiredAttributes('annotation')));
+            items.addNew();
+            return items;
+        })();
+
+        this.files = Items.create(Item.factory(requiredAttributes('file')));
+        this.links = Items.create(Item.factory(requiredAttributes('link')));
+        this.contacts = Items.create(Item.factory(requiredAttributes('contact')));
+        this.publications = Items.create(Item.publicationFactory(requiredAttributes('publication')));
+    }
+
+    addAnnotation(attr) {
+        this.annotations.items[0].attributes.add(attr);
+    }
+
+    addLink(attributes) {
+        this.links.add(attributes);
+    }
+
+    addFile(attributes) {
+        this.files.add(attributes);
+    }
+
+    addContact(attributes) {
+        this.contacts.add(attributes);
+    }
+
+    addPublication(pubMedId, attributes) {
+        this.publications.add(pubMedId, attributes);
+    }
+
+    static create(dict) {
+        return new Submission(dict);
+    }
+}
+
 export default class SubmissionModel {
     constructor(_, DictionaryService) {
         "ngInject";
-
-        function createAttributes(attrArray, requiredAttributes) {
-            var attributes = {
-                attributes: [],
-                add: function (attr) {
-                    this.attributes.push(
-                        {
-                            name: attr.name,
-                            value: attr.value,
-                            type: attr.type || "text",
-                            required: attr.required === true
-                        });
-                },
-                addNew: function (name, value) {
-                    this.add({name: name || '', value: value || '', required: false});
-                },
-                remove: function (index) {
-                    if (index >= 0) {
-                        this.attributes.splice(index, 1);
-                    }
-                },
-                indexOf: function (name) {
-                    return _.findIndex(this.attributes, {name: name});
-                },
-                update: function (obj) {
-                    var self = this;
-                    _.forOwn(obj, function (value, key) {
-                        var index = self.indexOf(key);
-                        if (index >= 0) {
-                            self.attributes[index].value = value;
-                        } else {
-                            self.addNew(key, value);
-                        }
-                    });
-                }
-            };
-
-            if (requiredAttributes) {
-                _.forEach(requiredAttributes, function (attr) {
-                    attributes.add({name: attr.name, type: attr.type, value: '', required: true});
-                });
-            }
-
-            var claimed = {};
-            var leftover = _.filter(attrArray, function (attr) {
-                var index = attributes.indexOf(attr.name);
-                if (index >= 0 && !claimed[attr.name]) {
-                    attributes.attributes[index].value = attr.value;
-                    claimed[attr.name] = true; //only first value is used
-                    return false;
-                }
-                return true;
-            });
-
-            _.forEach(leftover, function (attr) {
-                attributes.add(attr)
-            });
-
-            return attributes;
-        }
-
-        function createPublicationItem(pubMedId, attrArray, requiredAttributes) {
-            var item = createItem(attrArray, requiredAttributes);
-            item.pubMedId = pubMedId; // can't make it an attribute as it's rendered differently
-            return item;
-        }
-
-        function createItem(attrArray, requiredAttributes) {
-            return {
-                attributes: createAttributes(attrArray, requiredAttributes)
-            }
-        }
-
-        function createItems(constructor) {
-            return {
-                items: [],
-                addNew: function () {
-                    this.add();
-                },
-                add: function () {
-                    this.items.push(constructor.apply(this, arguments));
-                },
-                remove: function (index, item) {
-                    if (index >= 0) {
-                        this.items.splice(index, 1);
-                    }
-                }
-            }
-        }
-
-        function createSubmission(dict) {
-            function requiredAttributes(itemType) {
-                return _.filter(dict[itemType].attributes, {required: true});
-            }
-
-            return {
-                accno: '',
-                title: '',
-                description: '',
-                releaseDate: null,
-                annotations: (function () {
-                    var items = createItems(function (attributes) {
-                        attributes = attributes || [];
-                        return createItem(attributes, requiredAttributes('annotation'));
-                    });
-                    items.addNew();
-                    return items;
-                })(),
-                files: createItems(function (attributes) {
-                    attributes = attributes || [];
-                    return createItem(attributes, requiredAttributes('file'));
-                }),
-                links: createItems(function (attributes) {
-                    attributes = attributes || [];
-                    return createItem(attributes, requiredAttributes('link'));
-                }),
-                contacts: createItems(function (attributes) {
-                    attributes = attributes || [];
-                    return createItem(attributes, requiredAttributes('contact'));
-                }),
-                publications: createItems(function (pubMedId, attributes) {
-                    pubMedId = pubMedId || '';
-                    attributes = attributes || [];
-                    return createPublicationItem(pubMedId, attributes, requiredAttributes('publication'));
-                }),
-                addAnnotation: function (attr) {
-                    this.annotations.items[0].attributes.add(attr);
-                },
-                addLink: function (attributes) {
-                    this.links.add(attributes);
-                },
-                addFile: function (attributes) {
-                    this.files.add(attributes);
-                },
-                addContact: function (attributes) {
-                    this.contacts.add(attributes);
-                },
-                addPublication: function (pubMedId, attributes) {
-                    this.publications.add(pubMedId, attributes);
-                }
-            }
-        }
 
         function importSubmission(obj) {
 
@@ -198,7 +227,7 @@ export default class SubmissionModel {
                 return joined;
             }
 
-            var subm = createSubmission(DictionaryService.dict());
+            var subm = Submission.create(DictionaryService.dict());
 
             subm.accno = obj.accno || '';
             if (obj.attributes) {
