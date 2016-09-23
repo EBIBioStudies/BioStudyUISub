@@ -3,21 +3,20 @@
 
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
+                <div>
+                    <div class="alert alert-danger" style="margin-left:0" ng-show="error">
+                        {{error.status}} : {{error.message}}
+                    </div>
+                    <div class="alert" ng-show="!error">
+                        &nbsp;
+                    </div>
+                </div>
                 <div class="panel panel-info" ng-if="success">
                     <div class="panel-body">
                         <h3>Thank you for registering. Please check your email for the account activation link.</h3>
                     </div>
                 </div>
-
-                <div ng-if="!success" class="panel" ng-class="{'panel-info' : !error, 'panel-danger': error}">
-                    <div class="panel-heading">
-                        <span class="help-block span-error-large margin-bottom-none" ng-show="error">
-                            {{error.status}} : {{error.message}}
-                        </span>
-                        <span class="help-block-empty-large margin-bottom-none" ng-show="!error">
-                            &nbsp;
-                        </span>
-                    </div>
+                <div ng-if="!success" class="panel panel-info">
                     <div class="panel-body">
                         <form id="login-form" novalidate name="signUpForm" role="form" ng-submit="signUpForm.$valid && signUp()">
                             <div class="form-group form-group-sm">

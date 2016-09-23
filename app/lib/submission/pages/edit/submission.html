@@ -2,7 +2,6 @@
 
     <aside class="left-side sidebar-offcanvas"
            ng-class="{'collapse-left' : uisettings.collapseLeftSide}"
-           style="position: fixed;"
            ng-if="!readOnly">
 
         <section class="sidebar">
@@ -37,7 +36,8 @@
 
     </aside>
     <!-- Right side column. Contains the navbar and content of the page -->
-    <aside class="right-side" ng-class="{'collapse-left' : uisettings.collapseLeftSide}">
+    <aside class="right-side" ng-class="{'collapse-left' : uisettings.collapseLeftSide}" >
+        <section class="content">
         <div class="panel" ng-class="{'panel-danger': submissionForm.$invalid, 'panel-info':submissionForm.$valid}">
             <div class="panel-heading">
                 <span>Submission {{accno}}</span><span ng-if="!readOnly && submissionForm.$invalid"> << There are some validation errors. Please correct them before to proceed to submit >> </span>
@@ -52,6 +52,12 @@
 
             <!-- Main content -->
             <section id="scrollArea" class="content padding-left-large">
+                <!--<div class="page-header">
+                    <h4>Submission {{accno}}
+                        <span ng-if="!readOnly && submissionForm.$invalid"> << There are some validation errors. Please correct them before to proceed to submit >> </span>
+                    </h4>
+                </div>-->
+
                 <form class="form-horizontal" autocomplete="off" novalidate role="form"
                       method="post" name="submissionForm">
                     <div class="form-group row margin-bottom-small padding-right-15"
@@ -165,8 +171,8 @@
             <!-- /.content -->
             <div class="panel-footer navbar-fixed-bottom">
             </div>
-        </div>
-
+       </div>
+        </section>
     </aside>
     <!-- /.right-side -->
 </div>
