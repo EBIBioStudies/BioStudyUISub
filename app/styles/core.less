@@ -23,7 +23,7 @@ a:hover, a:active, a:focus {
 /* Layouts */
 .wrapper {
     min-height: 100%;
-    padding-top: 100px;
+    padding-top: 60px;
     .clearfix();    
 }
 
@@ -60,8 +60,10 @@ body > .header {
 
 @media screen and (min-width: @screen-md) {
     .left-side {
-        top: 50px;
+        position: fixed;
+        top: 60px;
     }
+
     /*Right side strech mode*/
     .right-side.strech {
         margin-left: 0 !important;
