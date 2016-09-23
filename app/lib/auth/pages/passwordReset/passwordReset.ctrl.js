@@ -21,12 +21,12 @@ export default class PasswordResetController {
                 .passwordReset($stateParams.key, $scope.password1, $scope.recaptcha)
                 .then(function (data) {
                     $log.debug(data);
-                    if (data.status === "FAIL") {
+                    if (data.status === "OK") {
+                        $scope.showSuccess = true;
+                    } else {
                         $scope.hasError = true;
                         $scope.message = data.message;
                         vcRecaptchaService.reload();
-                    } else {
-                        $scope.showSuccess = true;
                     }
                 });
         }
