@@ -10,16 +10,16 @@ export default class AuthService {
 
         Object.assign(this, {
             signIn(credentials) {
-                $http.post("/raw/auth/signin", credentials)
+                return $http.post("/raw/auth/signin", credentials)
                     .then(
-                        function (response) {
+                        (response) => {
                             var data = response.data;
                             if (data.status === "OK") {
                                 Session.create(data.sessid, data.username, data.email || "", USER_ROLES.user);
                             }
                             return data;
                         },
-                        function (response) {
+                        (response) => {
                             if (response.status === 403) {
                                 response.data.message = "Invalid credentials";
                                 return response.data;
@@ -35,11 +35,11 @@ export default class AuthService {
                 }
                 return $http.post("/api/auth/signout", {username: Session.userName})
                     .then(
-                        function () {
+                        () => {
                             Session.destroy();
                             return {};
                         },
-                        function (response) {
+                        (response) => {
                             $log.error("logout error", response);
                             return $q.reject(response);
                         });
@@ -49,10 +49,10 @@ export default class AuthService {
                 user.path = getAppPath() + "#/activate";
                 return $http.post("/api/auth/signup", user)
                     .then(
-                        function (response) {
+                        (response) => {
                             return response.data;
                         },
-                        function (response) {
+                        (response) => {
                             if (response.status === 403 || response.status === 400) {
                                 return response.data;
                             }
@@ -64,10 +64,10 @@ export default class AuthService {
             activate(key) {
                 return $http.post("/raw/auth/activate/" + key)
                     .then(
-                        function (response) {
+                        (response) => {
                             return response.data;
                         },
-                        function (response) {
+                        (response) => {
                             $log.error("activate error", response);
                             return $q.reject(response);
                         });
@@ -77,10 +77,10 @@ export default class AuthService {
                 var path = getAppPath() + "#/password_reset";
                 return $http.post("/api/auth/passrstreq/", {email: email, path: path, 'recaptcha2-response': recaptcha})
                     .then(
-                        function (response) {
-                            defer.resolve(response.data);
+                        (response) => {
+                            return response.data;
                         },
-                        function (response) {
+                        (response) => {
                             if (response.status === 403) {
                                 return response.data;
                             }
@@ -96,10 +96,10 @@ export default class AuthService {
                     'recaptcha2-response': recaptcha
                 })
                     .then(
-                        function (response) {
+                        (response) => {
                             return response.data;
                         },
-                        function (response) {
+                        (response) => {
                             if (response.status === 400) { //invalid request
                                 return response.data;
                             }
