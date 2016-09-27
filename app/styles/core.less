@@ -9,7 +9,7 @@ html, body {
   -webkit-font-smoothing: antialiased;
   height: 100%;
   background: @body-bg-white;
-  padding-top: 60px; // fixed top navbar
+  padding-top: @navbar-height; // fixed top navbar
 }
 
 a {
@@ -30,7 +30,7 @@ a:hover, a:active, a:focus {
   background-color: @body-bg;
   margin-left: @left-side-width;
   position: relative;
-  top: -60px;
+  top: -@navbar-height;
 }
 
 .right-side.strech {
@@ -40,7 +40,7 @@ a:hover, a:active, a:focus {
 /*left side - contains sidebar*/
 .left-side {
   position: fixed;
-  top: 60px;
+  top: @navbar-height;
   width: @left-side-width;
 }
 
@@ -76,7 +76,7 @@ a:hover, a:active, a:focus {
 /* Content */
 .content {
   background-color: transparent;
-  padding: 10px 10px;
+  padding-top: 10px;
 }
 
 .fill {

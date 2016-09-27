@@ -2,12 +2,13 @@
     Components: navbar, logo and content header
 -------------------------------------------------
 */
+@navbar-height: 60px;
 
 ng-include
 {
   .navbar {
-    height: 60px;
-    min-height: 60px;
+    height: @navbar-height;
+    min-height: @navbar-height;
     margin-bottom: 0;
     background: #b5d7ec;
     background: -webkit-linear-gradient(right top, #d7eaca, #98C7D7);
