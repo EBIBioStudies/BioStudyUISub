@@ -31,7 +31,7 @@ System.config({
     "angular-messages": "github:angular/bower-angular-messages@1.5.7",
     "angular-mocks": "github:angular/bower-angular-mocks@1.5.8",
     "angular-recaptcha": "npm:angular-recaptcha@2.5.0",
-    "angular-ui-bootstrap": "npm:angular-ui-bootstrap@2.0.0",
+    "angular-ui-bootstrap": "npm:angular-ui-bootstrap@2.1.4",
     "angular-ui-router": "github:angular-ui/angular-ui-router-bower@0.2.18",
     "angular-ui-select": "github:angular-ui/ui-select@0.12.1",
     "babel": "npm:babel-core@5.8.38",

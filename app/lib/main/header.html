@@ -1,80 +1,72 @@
-<header class="header">
+<!-- Header Navbar: style can be found in header.less -->
+<nav class="navbar navbar-fixed-top" role="navigation">
 
-    <!-- Header Navbar: style can be found in header.less -->
-    <nav class="navbar navbar-fixed-top" role="navigation">
-        <!-- Sidebar toggle button-->
-        <div class="container-fluid">
-
-        <a ui-sref="submissions" class="logo"
+    <div class="navbar-header">
+        <a ui-sref="submissions" class="navbar-brand"
            uib-tooltip="BioStudies submission tool Version: {{appVersion}}"
            tooltip-placement="bottom">
-            <!--span class="second">BioStudies</span-->
-            <div class="text-box pull-right">
+            <div class="logo">
                 <span class="logo-text">submission tool</span><span class="version">v:{{appVersion}}</span>
             </div>
         </a>
+    </div>
 
-        <!-- User Account: style can be found in dropdown.less -->
-            <ul class="nav navbar-nav navbar-right" >
-                <li>
-                    <a id="helpMenuItem" ui-sref="help"
-                       uib-tooltip="Go to the help page"
-                       tooltip-placement="bottom">
-                        <i class="fa fa-fw fa-question"></i>
-                        <span>Help</span>
-                    </a>
-                </li>
+    <div class="navbar-collapse collapse navbar-right">
 
-                <!-- Notifications: style can be found in dropdown.less -->
-                <li ng-hide="currentUser">
-                    <a id="signUpMenuItem" ui-sref="signup"
-                       uib-tooltip="Register a new user"
-                       tooltip-placement="bottom">
-                        <i class="fa fa-user fa-fw"></i>
-                        <span>Sign up</span>
-                    </a>
+        <ul class="nav navbar-nav">
+            <li>
+                <a id="helpMenuItem" ui-sref="help"
+                   uib-tooltip="Go to the help page"
+                   tooltip-placement="bottom">
+                    <i class="fa fa-fw fa-question"></i>
+                    <span>Help</span>
+                </a>
+            </li>
 
-                </li>
-                <li ng-hide="currentUser">
-                    <a id="signInMenuItem" ui-sref="signin"
-                       uib-tooltip="Sign in"
-                       tooltip-placement="bottom">
-                        <i class="fa fa-sign-in"></i>
-                        <span>Sign in</span>
-                    </a>
-                </li>
+            <li ng-hide="currentUser">
+                <a id="signUpMenuItem" ui-sref="signup"
+                   uib-tooltip="Register a new user"
+                   tooltip-placement="bottom">
+                    <i class="fa fa-user fa-fw"></i>
+                    <span>Sign up</span>
+                </a>
+            </li>
 
+            <li ng-hide="currentUser">
+                <a id="signInMenuItem" ui-sref="signin"
+                   uib-tooltip="Sign in"
+                   tooltip-placement="bottom">
+                    <i class="fa fa-sign-in"></i>
+                    <span>Sign in</span>
+                </a>
+            </li>
 
-                <li ng-show="currentUser">
-                    <a id="submissionMenuItem" ui-sref="submissions"
-                       uib-tooltip="List of submissions"
-                       tooltip-placement="bottom">
-
+            <li ng-show="currentUser">
+                <a id="submissionMenuItem" ui-sref="submissions"
+                   uib-tooltip="List of submissions"
+                   tooltip-placement="bottom">
                     <i class="fa fa-fw fa-table"></i>
-                        <span>Submissions</span>
-                    </a>
-                </li>
+                    <span>Submissions</span>
+                </a>
+            </li>
 
-                <li ng-show="currentUser">
-                    <a ui-sref="files">
-                        <i class="fa fa-fw fa-upload"></i>
-                        <span>Files</span>
-                    </a>
-                </li>
+            <li ng-show="currentUser">
+                <a ui-sref="files">
+                    <i class="fa fa-fw fa-upload"></i>
+                    <span>Files</span>
+                </a>
+            </li>
 
-                <!-- User Account: style can be found in dropdown.less -->
-                <li class="dropdown" uib-dropdown ng-show="currentUser">
-                    <a href="" class="dropdown-toggle" data-toggle="dropdown" uib-dropdown-toggle>
-                        <i class="fa fa-fw fa-user"></i>
-                        <span>{{user.lastName}}<i class="caret"></i></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a ng-click="signOut();">Sign out</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-
-    </nav>
-
-</header>
+            <!-- User Account: style can be found in dropdown.less -->
+            <li class="dropdown" uib-dropdown ng-show="currentUser">
+                <a href="" class="dropdown-toggle" data-toggle="dropdown" uib-dropdown-toggle>
+                    <i class="fa fa-fw fa-user"></i>
+                    <span>{{user.lastName}}<i class="caret"></i></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a ng-click="signOut();">Sign out</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>

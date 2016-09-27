@@ -1,11 +1,9 @@
-<div class="wrapper row-offcanvas row-offcanvas-left">
+<div class="row-offcanvas row-offcanvas-left">
 
-    <aside class="left-side sidebar-offcanvas"
+    <aside class="left-side sidebar sidebar-offcanvas"
            ng-class="{'collapse-left' : uisettings.collapseLeftSide}"
            ng-if="!readOnly">
-
-        <section class="sidebar">
-            <ul class="sidebar-menu">
+           <ul class="sidebar-menu">
                 <bs-ng-toggle></bs-ng-toggle>
                 <li class="success" bs-ng-item data-bs-click="addAnnotation();"
                     data-toggle="uisettings.collapseLeftSide" data-item-text="Describe your study"
@@ -29,34 +27,38 @@
                     data-toggle="uisettings.collapseLeftSide" data-item-text="Submit"
                     data-item-class="fa-database">
                 </li>
+                <li><hr/></li>
+                <li class="success" ng-disabled="true">
+                    <a class="disabled-link" ng-show="uisettings.collapseLeftSide">
+                        <i class="fa fa-check" ng-hide="saving"></i>
+                        <i class="fa fa-spinner fa-spin-2x" ng-show="saving"></i>
+                    </a>
 
+                    <a class="disabled-link" ng-show="!uisettings.collapseLeftSide">
+                        <i class="fa fa-check" ng-hide="saving"></i>
+                        <i class="fa fa-spinner fa-spin-2x" ng-show="saving"></i>
+                        <span ng-hide="saving">Saved</span>
+                        <span ng-show="saving">Saving...</span>
+                    </a>
+                </li>
             </ul>
-
-        </section>
-
     </aside>
+
     <!-- Right side column. Contains the navbar and content of the page -->
-    <aside class="right-side" ng-class="{'collapse-left' : uisettings.collapseLeftSide}" >
-        <section class="content">
+    <aside class="right-side content" ng-class="{'collapse-left' : uisettings.collapseLeftSide}">
+
         <div class="panel" ng-class="{'panel-danger': submissionForm.$invalid, 'panel-info':submissionForm.$valid}">
             <div class="panel-heading">
                 <span>Submission {{accno}}</span><span ng-if="!readOnly && submissionForm.$invalid"> << There are some validation errors. Please correct them before to proceed to submit >> </span>
-                <p class="pull-right" ng-if="readOnly">
+                <div class="pull-right" ng-if="readOnly">
                     <a class="pull-right btn btn-success btn-xs" ng-click="editSubmission()"
                        uib-tooltip="Create a new submission"
                        tooltip-append-to-body="true"
                        tooltip-placement="bottom">Edit
                     </a>
-                </p>
+                </div>
             </div>
-
-            <!-- Main content -->
-            <section id="scrollArea" class="content padding-left-large">
-                <!--<div class="page-header">
-                    <h4>Submission {{accno}}
-                        <span ng-if="!readOnly && submissionForm.$invalid"> << There are some validation errors. Please correct them before to proceed to submit >> </span>
-                    </h4>
-                </div>-->
+            <div class="panel-body">
 
                 <form class="form-horizontal" autocomplete="off" novalidate role="form"
                       method="post" name="submissionForm">
@@ -162,13 +164,8 @@
                                 ng-click="submit(submissionForm)">Submit</button>
                     </div>
                 </form>
-
-            </section>
-            <!-- /.content -->
-            <div class="panel-footer navbar-fixed-bottom">
             </div>
        </div>
-        </section>
     </aside>
     <!-- /.right-side -->
 </div>
