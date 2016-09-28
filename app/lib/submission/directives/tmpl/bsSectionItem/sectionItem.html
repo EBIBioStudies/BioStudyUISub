@@ -1,0 +1,94 @@
+<table class="table table-condensed" ng-form="attrItemForm">
+    <thead>
+    <th>Key</th>
+    <th>Value</th>
+    </thead>
+    <tbody>
+    <tr bs-replace src="{{pubMedSearchTmplUrl}}"
+        ng-if="dataType === 'publication'"></tr>
+    <tr ng-repeat="attr in item.attributes.attributes">
+        <td class="col-md-3 nopadding border-none form-group-sm"
+            ng-class="{'has-error' : attrItemForm['attrKey_' + $index].$invalid}">
+            <input autocomplete="off" type="text" name="attrKey_{{$index}}"
+                   class="form-control control-label input-sm"
+                   placeholder="Type a key"
+                   uib-typeahead="key for key in typeaheadKeys | filterDifference:typeaheadKeys:item.attributes.attributes | filter:$viewValue:$emptyOrMatch | limitTo:30"
+                   typeahead-append-to-body="true"
+                   typeahead-show-hint="true"
+                   typeahead-min-length="0"
+                   ms-duplicate="item.attributes.attributes"
+                   uib-tooltip="Empty or duplicate value"
+                   tooltip-class="customClass"
+                   tooltip-placement="top-left"
+                   tooltip-enable="attrItemForm['attrKey_' + $index].$invalid"
+                   ng-required="true"
+                   ng-model="attr.name"
+                   ng-model-options="{ allowInvalid: true }"
+                   ng-change="onAttributeChange()"
+                   ng-if="!attr.required" autofocus
+                   ng-readonly="readOnly">
+            <p class="form-control-static pull-right" ng-if="attr.required">{{attr.name}}</p>
+        </td>
+        <td class="col-md-9 nopadding border-none form-group-sm"
+            ng-class="{'has-error' : attr.required && attrItemForm['attrValue_' + $index].$invalid}">
+            <div ng-class="{'input-group' : !readOnly && !attr.required}">
+                <input type="text" name="attrValue_{{$index}}"
+                       class="form-control input-sm"
+                       placeholder="Enter a value"
+                       uib-typeahead="value for value in typeaheadValues(attr.name, item.$index) | filter:$viewValue:$emptyOrMatch | limitTo:10"
+                       typeahead-append-to-body="true"
+                       typeahead-show-hint="true"
+                       typeahead-min-length="0"
+                       ng-required="attr.required"
+                       uib-tooltip="This field is required"
+                       tooltip-class="customClass"
+                       tooltip-placement="top-left"
+                       tooltip-enable="attrItemForm['attrValue_' + $index].$invalid"
+                       ng-required="attr.required"
+                       ng-change="onAttributeChange()"
+                       ng-readonly="readOnly"
+                       ng-if="attr.type === 'text'"
+                       ng-model="attr.value"
+                       ng-model-options="{ allowInvalid: true }">
+
+            <div ng-controller="FileCtrl" ng-if="attr.type === 'file'">
+                <select class="form-control input-sm"
+                        ng-model="attr.value"
+                        ng-change="onAttributeChange()"
+                        name="attrValue_{{$index}}"
+                        ng-required="attr.required"
+                        ng-readonly="readOnly"
+                        ng-if="files.length">
+                    <option ng-repeat="file in files" value="{{file}}">
+                        {{file}}
+                    </option>
+                </select>
+                <a ui-sref="files({ bb:1 })"
+                   class="btn btn-link"
+                   ng-if="!files.length">Go to File Upload</a>
+            </div>
+                                <span class="input-group-btn" ng-if="!readOnly && !attr.required">
+                                    <button type="button"
+                                            class="btn btn-sm btn-danger btn-flat"
+                                            ng-click="item.attributes.remove($index)"
+                                            uib-tooltip={{dict.actions.deleteAttr.popup}}>
+                                        <i class="fa fa-trash-o"></i>
+                                    </button>
+                                </span>
+            </div>
+        </td>
+    </tr>
+
+    <tr ng-if="sectionBinding && !readOnly">
+        <td colspan="2">
+            <p class="pull-right">
+                <button type="button" class="btn btn-default btn-xs"
+                        ng-click="item.attributes.addNew()"
+                        uib-tooltip={{dict.actions.addAttr.popup}}
+                        tooltip-placement="bottom">{{dict.actions.addAttr.title}}
+                </button>
+            </p>
+        </td>
+    </tr>
+    </tbody>
+</table>

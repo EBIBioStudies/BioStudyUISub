@@ -1,36 +1,20 @@
-var jshint = require('gulp-jshint');
-var browserify = require('browserify');
-var uglify = require('gulp-uglify');
-var source = require('vinyl-source-stream');
-var ngAnnotate = require('gulp-ng-annotate');
-var buffer = require('vinyl-buffer');
-var sq = require('streamqueue');
-var less=require('gulp-less');
-//var sourcemaps = require('gulp-sourcemaps');
-var minifyCSS = require('gulp-cssnano');
-var templateCache = require('gulp-angular-templatecache');
-var concat = require('gulp-concat');
-var ngHtml2Js = require("gulp-ng-html2js");
-var rename = require('gulp-rename');
-var ejs = require("gulp-ejs");
-
-var gutil = require('gulp-util');
-
 var gulp = require('gulp');
-var bower = require('gulp-bower');
 
-var envHelper=require('./tasks/helpers/envHelper');
+
 var webserver = require('gulp-webserver');
 var zip = require('gulp-zip');
 var bump = require('gulp-bump');
-var ngConstant = require('gulp-ng-constant');
-var clean = require('gulp-clean');
+var ngConfig = require('gulp-ng-config');
+var del = require('del');
 var extend = require('gulp-extend');
+var Builder = require('systemjs-builder');
+//var ngAnnotate = require('gulp-ng-annotate');
+var htmlreplace = require('gulp-html-replace');
 
-
+/* increment the version */
 gulp.task('bump', function () {
     return gulp
-        .src('./version.json')
+        .src('version.json')
         .pipe(bump({
             //type: 'minor',
             //type: 'major',
@@ -39,120 +23,97 @@ gulp.task('bump', function () {
         .pipe(gulp.dest('./'));
 });
 
+/* sync app config with changes in config.json and version.json */
 gulp.task('config', function () {
-    return gulp.src(['./config.json', './version.json'])
+    return gulp.src(['config.json', 'version.json'])
         .pipe(extend('config.json'))
-        .pipe(ngConstant({
-            wrap: 'commonjs',
-            name: 'BioStudyApp.config'
+        .pipe(ngConfig('BioStudyApp.config',
+            {
+                wrap: 'ES6'
+            }
+        ))
+        .pipe(gulp.dest('app/lib'));
+});
+
+gulp.task('clean:js', function () {
+    return del([
+        '.build/lib'
+    ]);
+});
+
+gulp.task('clean:images', function () {
+    return del([
+        '.build/images'
+    ]);
+});
+
+gulp.task('clean:jspm_packages', function () {
+    return del([
+        '.build/jspm_packages'
+    ]);
+});
+
+gulp.task('clean', ['clean:js', 'clean:images', 'clean:jspm_packages']);
+
+gulp.task('copy:images', ['clean:images'], function () {
+    return gulp.src(['app/images/**/*'], {base: 'app'})
+        .pipe(gulp.dest('.build/'));
+});
+
+gulp.task('copy:jspm_packages', ['clean:jspm_packages'], function () {
+    return gulp.src(['app/jspm_packages/**/*'], {base: 'app'})
+        .pipe(gulp.dest('.build/'));
+});
+
+gulp.task('copy:jspm_config', function () {
+    return gulp.src(['app/jspm.config.js'])
+        .pipe(gulp.dest('.build/'));
+});
+
+gulp.task('copy', ['copy:images', 'copy:index', 'copy:jspm_packages', 'copy:jspm_config']);
+
+gulp.task('copy:index', function() {
+    return gulp.src('app/index.html')
+        .pipe(htmlreplace({
+            'css': ['lib/main.css', 'lib/main-from-less.css'],
         }))
-        .pipe(gulp.dest('./public/js'));
+        .pipe(gulp.dest('.build/'));
 });
 
-gulp.task('bower', function () {
-    return bower();
+/* a workaround for: SystemJS builder doesn't create sub-folders automatically for css files */
+gulp.task('mkdir', ['clean:js'], function() {
+    return gulp.src(['app/lib', '!app/lib/**/*'], {base: 'app'})
+        .pipe(gulp.dest('.build/'));
 });
 
-gulp.task('clean', function () {
-    return gulp.src([
-            envHelper.copyToPath + '/css',
-            envHelper.copyToPath + '/images',
-            envHelper.copyToPath + '/js',
-            envHelper.copyToPath + '/partials',
-            '.gen',
-            '.war'], {read: false})
-        .pipe(clean({force: true}));
-});
-
-gulp.task('copy', ['clean'], function(cb) {
-  //copy components if dir different
-  if (envHelper.copyToPath!='.build') {
-    gulp.src('.build/components/**/*')
-        .pipe(gulp.dest(envHelper.copyToPath + '/components'))
-  }
-
-  gulp.src('public/js/external/msAngularUi.css')
-      .pipe(gulp.dest(envHelper.copyToPath + '/css/'));
-  gulp.src(['public/images/**/*.png', 'public/images/*.ico'])
-      .pipe(gulp.dest(envHelper.copyToPath + '/images'));
-  gulp.src(['public/partials/**/*'])
-      .pipe(gulp.dest(envHelper.copyToPath + '/partials'));
-  gulp.src('public/js/polyfill.js')
-      .pipe(gulp.dest(envHelper.copyToPath + '/js/'));
-  gulp.src('views/*.html')
-      .pipe(gulp.dest(envHelper.copyToPath));
-
-  cb();
-
-});
-
-gulp.task('jshint', function () {
-  return gulp.src('public/js/services/*.js')
-    .pipe(jshint('.jshintrc'))
-    .pipe(jshint.reporter('default'))
-    .pipe(jshint.reporter('fail'));
-});
-
-gulp.task('html2js',['clean','copy','jshint'],function () {
-
-  return gulp.src(["public/templates/**/*.html","public/js/**/*html"])
-    .pipe(templateCache({
-      standalone: true,
-      module: 'bs-templates',
-      root: 'templates'
-    }))
-    .pipe(gulp.dest(".gen"));
-});
-
-gulp.task('js', ['clean','copy', 'bower', 'jshint','html2js'], function () {
-  var b = browserify({
-    entries: 'public/js/app.js',
-    debug: true
-  });
-  var app = b.bundle()
-    .pipe(source('app.js'))
-    .pipe(buffer());
-  /*var views = gulp.src('public/templates/.html')
-    .pipe(templateCache({
-      standalone: true,
-      module: 'bs-templates',
-      root: 'templates'
-    }));*/
-  return sq({ objectMode: true }, app)
-    .pipe(concat('main.js'))
-    .pipe(ngAnnotate())
-    //.pipe(uglify()) TODO: Fix the problem with uglify
-    .pipe(gulp.dest(envHelper.copyToPath + '/js'));
-
-});
-
-
-gulp.task('styles', ['clean'],function() {
-  return gulp.src('public/less/app.less')
-    .pipe(less())
-    .pipe(minifyCSS({keepBreaks:true}))
-    .pipe(gulp.dest(envHelper.copyToPath + '/css'));
-});
-
-
-gulp.task('ejs', ['clean'], function() {
-  return gulp.src("views/index.ejs")
-    .pipe(ejs({
-    }))
-    .pipe(gulp.dest(envHelper.copyToPath ));
+gulp.task('js', ['mkdir'], function (cb) {
+    var builder = new Builder('app', 'app/jspm.config.js');
+    builder.config({
+        separateCSS: true
+    });
+    builder.bundle('lib/main.js', '.build/lib/main.js', {
+        minify: true,
+        mangle: false,
+        sourceMaps: true
+    }).then(function() {
+        cb();
+    });
+    // TODO: minify with ngAnnotate
 });
 
 gulp.task('zip', function () {
-    gulp.src([".build/**/*.*"])
+    gulp.src([".build/**/*"])
         .pipe(zip('ui.zip'))
-        .pipe(gulp.dest('./.dist'));
+        .pipe(gulp.dest('.dist'));
 });
 
-gulp.task('webserver', ['clean', 'js', 'ejs', 'styles'], function () {
+gulp.task('default', ['js', 'copy']);
+
+gulp.task('webserver', [], function () {
 
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-    
-    gulp.src('.build')
+
+    gulp.src('app' /*'.build'*/)
         .pipe(webserver({
             port: 7000,
             https: true,
@@ -167,34 +128,17 @@ gulp.task('webserver', ['clean', 'js', 'ejs', 'styles'], function () {
         }));
 });
 
+var Server = require('karma').Server;
 
-gutil.log('Build client for environment ',process.env.NODE_ENV);
-gutil.log('Deploy client to ',envHelper.copyToPath);
-
-gulp.task('default', ['clean', 'bower', 'copy', 'html2js', 'jshint', 'styles', 'js', 'ejs']);
-
-
-var karma = require('gulp-karma');
-
-gulp.task('test', function() {
-    // Be sure to return the stream
-    // NOTE: Using the fake './foobar' so as to run the files
-    // listed in karma.conf.js INSTEAD of what was passed to
-    // gulp.src !
-    return gulp.src('./foobar')
-        .pipe(karma({
-            configFile: 'karma.conf.js',
-            action: 'run'
-        }))
-        .on('error', function(err) {
-            // Make sure failed tests cause gulp to exit non-zero
-            console.log(err);
-            this.emit('end'); //instead of erroring the stream, end it
-        });
+gulp.task('test', function (done) {
+    new Server({
+        configFile: __dirname + '/karma.conf.js',
+        singleRun: true
+    }, done).start();
 });
 
-gulp.task('autotest', function() {
-    return gulp.watch(['public/js/**/*.js', 'test/spec/*.js'], ['test']);
+gulp.task('autotest', function () {
+    return gulp.watch(['/app/lib/**/*.js'], ['test']);
 });
 
 

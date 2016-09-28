@@ -3,7 +3,9 @@
 node_modules/
 .gen/
 .build/
+.dist/
 .DS_Store
 tmp/
 temp/
 public_old/
+jspm_packages/

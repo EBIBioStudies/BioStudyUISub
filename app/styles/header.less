@@ -1,0 +1,82 @@
+/*
+    Components: navbar, logo and content header
+-------------------------------------------------
+*/
+@navbar-height: 60px;
+
+ng-include
+{
+  .navbar {
+    height: @navbar-height;
+    min-height: @navbar-height;
+    margin-bottom: 0;
+    background: #b5d7ec;
+    background: -webkit-linear-gradient(right top, #d7eaca, #98C7D7);
+    background: -o-linear-gradient(top right, #d7eaca, #98C7D7);
+    background: -moz-linear-gradient(top right, #d7eaca, #98C7D7);
+    background: linear-gradient(to top right, #d7eaca, #98C7D7);
+  }
+
+  .navbar .nav > li.user > a > .fa,
+  .navbar .nav > li.user > a > .glyphicon,
+  .navbar .nav > li.user > a > .ion {
+    margin-right: 5px;
+  }
+
+  .navbar .nav > li > a {
+    line-height: 30px;
+  }
+
+  .navbar .nav > .active > a {
+    color: white;
+    background-color: @navbar-active;
+  }
+
+  .navbar-brand {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .logo {
+    background-image:  url("../images/biostudies-logo2.png");
+    background-size: 200px auto;
+    background-repeat: no-repeat;
+
+    font-style: normal;
+    font-weight: 800;
+
+    width: 200px;
+    height: 50px;
+    display: block;
+    padding-top: 25px;
+    text-align: right;
+  }
+
+  .logo .logo-text {
+    margin: 0;
+    padding: 0;
+    font-family:  Georgia, Baskerville, "Times New Roman", Times, serif;
+    font-style:  normal;
+    font-weight: 500;
+    color:  #58595B;
+    font-size: 14px;
+  }
+
+  .logo .version {
+    margin: 0 5px;
+    padding: 0 3px;
+    font-family:  Georgia, Baskerville, "Times New Roman", Times, serif;
+    font-style: normal;
+    font-weight: 100;
+    font-size: 14px;
+    color: #58595B;
+    background-color: white;
+  }
+
+  .navbar-toggle {
+     border-color: @blue;
+    >span {
+      background-color: @green;
+    }
+  }
+}

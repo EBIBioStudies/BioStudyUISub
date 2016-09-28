@@ -1,0 +1,81 @@
+/**
+*  Main less file.
+*/
+/*@import url(http://fonts.googleapis.com/css?family=Roboto:400,400italic,500,300italic,300,100italic,100,500italic,700,700italic,900,900italic);
+@import url(http://fonts.googleapis.com/css?family=Ubuntu:400,500,700,300&subset=latin,latin-ext);
+*/
+
+@import "core.less";
+@import "variables.less";
+@import "mixins.less";
+
+//COMPONENTS
+//-----------
+@import "header.less";
+@import "sidebar.less";
+@import "dropdown.less";
+@import "forms.less";
+@import "progress-bars.less";
+@import "small-box.less";
+@import "boxes.less";
+@import "timeline.less";
+@import "buttons.less";
+@import "callout.less";
+@import "alerts.less";
+@import "navs.less";
+@import "tree.less";
+@import "table.less";
+@import "tooltip.less";
+@import "help.less";
+@import "misc.less";
+@import "panels.less";
+@import "pagination.less";
+
+//PAGES
+//------
+@import "login_and_register.less";
+@import "login";
+@import "404_500_errors.less";
+
+//Skins
+//-------
+@import "skins.less";
+
+//bootstrap-ui
+@import "accordion.less";
+@import "bootstrap.less";
+@import "modal.less";
+
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+.center-block {
+  float: none !important
+}
+//upload
+//
+.fileUpload {
+  position: relative;
+  overflow: hidden;
+  margin: 10px;
+}
+.fileUpload input.upload {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  padding: 0;
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 0;
+  filter: alpha(opacity=0);
+}
+
+.test {
+  border-color: @green !important;
+
+}
+
+#scrollArea {
+  height: 100%;
+  overflow: auto;
+}
