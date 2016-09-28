@@ -1,22 +1,24 @@
 <div class="container-fluid">
     <div class="row-offcanvas row-offcanvas-left">
-            <div class="row">
-                <div class="col-md-6 col-md-offset-3">
-                    <div>
-                        <div class="alert alert-danger" style="margin-left:0" ng-show="error">
-                            {{error.status}} : {{error.message}}
-                        </div>
-                        <div class="alert" ng-show="!error">
-                            &nbsp;
-                        </div>
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div>
+                    <div class="alert alert-danger" style="margin-left:0" ng-show="error">
+                        {{error.status}} : {{error.message}}
                     </div>
-                    <div class="panel panel-info" ng-if="success">
-                        <div class="panel-body">
-                            <h3>Thank you for registering. Please check your email for the account activation link.</h3>
-                        </div>
+                    <div class="alert" ng-show="!error">
+                        &nbsp;
                     </div>
-                    <div ng-if="!success" class="panel-body">
-                        <form id="login-form" novalidate name="signUpForm" role="form" ng-submit="signUpForm.$valid && signUp()">
+                </div>
+                <div class="panel panel-info" ng-if="success">
+                    <div class="panel-body">
+                        <h3>Thank you for registering. Please check your email for the account activation link.</h3>
+                    </div>
+                </div>
+                <div ng-if="!success" class="panel panel-info">
+                    <div class="panel-body">
+                        <form id="login-form" novalidate name="signUpForm" role="form"
+                              ng-submit="signUpForm.$valid && signUp()">
                             <div class="form-group form-group-sm">
                                 <label class="control-label" for="username">Full name</label>
                                 <input type="text"
@@ -47,7 +49,8 @@
                             <div class="form-group form-group-sm" ng-class="{'has-error': signUpForm.orcId.$invalid}">
                                 <label for="orcId">ORCID
                                     <ng-messages for="signUpForm.orcId.$error" ng-if="signUpForm.orcId.$dirty">
-                                        <ng-message when="pattern"><span>: wrong format; the value should be in 0000-0000-0000-0000 format.</span></ng-message>
+                                        <ng-message when="pattern"><span>: wrong format; the value should be in 0000-0000-0000-0000 format.</span>
+                                        </ng-message>
                                     </ng-messages>
                                 </label>
                                 <div class="input-group">
@@ -60,10 +63,12 @@
                                            ng-change="resetError()"
                                            ng-pattern='/^\d{4}-\d{4}-\d{4}-\d{4}$/'
                                            orcid-input-box/>
-                                    <div class="input-group-addon"><i class="fa fa-external-link" aria-hidden="true"></i></div>
+                                    <div class="input-group-addon"><i class="fa fa-external-link"
+                                                                      aria-hidden="true"></i></div>
                                 </div>
                             </div>
-                            <div class="form-group form-group-sm" ng-class="{'has-error': signUpForm.password.$invalid}">
+                            <div class="form-group form-group-sm"
+                                 ng-class="{'has-error': signUpForm.password.$invalid}">
                                 <label for="password">Password
                                     <ng-messages for="signUpForm.password.$error" ng-if="signUpForm.password.$dirty">
                                         <ng-message when="required"><span>: cannot be blank</span></ng-message>
@@ -88,6 +93,7 @@
                     </div>
                 </div>
             </div>
+        </div>
     </div>
 </div>
 
