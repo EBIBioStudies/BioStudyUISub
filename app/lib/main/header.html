@@ -1,8 +1,8 @@
 <!-- Header Navbar: style can be found in header.less -->
-<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation" ng-controller="NavCtrl">
     <div class="container-fluid">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" ng-init="isNavCollapsed=true" ng-click="isNavCollapsed = !isNavCollapsed">
+            <button type="button" class="navbar-toggle" ng-click="toggleCollapsed()">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -21,7 +21,8 @@
                 <li>
                     <a id="helpMenuItem" ui-sref="help"
                        uib-tooltip="Go to the help page"
-                       tooltip-placement="bottom">
+                       tooltip-placement="bottom"
+                       ng-click="toggleCollapsed()">
                         <i class="fa fa-fw fa-question"></i>
                         <span>Help</span>
                     </a>
@@ -30,7 +31,8 @@
                 <li ng-hide="currentUser">
                     <a id="signUpMenuItem" ui-sref="signup"
                        uib-tooltip="Register a new user"
-                       tooltip-placement="bottom">
+                       tooltip-placement="bottom"
+                       ng-click="toggleCollapsed()">
                         <i class="fa fa-user fa-fw"></i>
                         <span>Sign up</span>
                     </a>
@@ -39,7 +41,8 @@
                 <li ng-hide="currentUser">
                     <a id="signInMenuItem" ui-sref="signin"
                        uib-tooltip="Sign in"
-                       tooltip-placement="bottom">
+                       tooltip-placement="bottom"
+                       ng-click="toggleCollapsed()">
                         <i class="fa fa-sign-in"></i>
                         <span>Sign in</span>
                     </a>
@@ -48,14 +51,16 @@
                 <li ng-show="currentUser">
                     <a id="submissionMenuItem" ui-sref="submissions"
                        uib-tooltip="List of submissions"
-                       tooltip-placement="bottom">
+                       tooltip-placement="bottom"
+                       ng-click="toggleCollapsed()">
                         <i class="fa fa-fw fa-table"></i>
                         <span>Submissions</span>
                     </a>
                 </li>
 
                 <li ng-show="currentUser">
-                    <a ui-sref="files">
+                    <a ui-sref="files"
+                       ng-click="toggleCollapsed()">
                         <i class="fa fa-fw fa-upload"></i>
                         <span>Files</span>
                     </a>
@@ -68,7 +73,7 @@
                         <span>{{user.lastName}}<i class="caret"></i></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a ng-click="signOut();">Sign out</a></li>
+                        <li><a ng-click="signOut(); toggleCollapsed();">Sign out</a></li>
                     </ul>
                 </li>
             </ul>
