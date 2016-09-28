@@ -9,12 +9,13 @@
 
 //Colors
 //@light-blue: #3c8dbc; //Primary
-@light-blue:#6BA8C5;
-@red: #f56954;        //Danger
-@green: #00a65a;      //Success
-@aqua: #00c0ef;       //Info
-@yellow: #f39c12;     //Warning
-@blue: #0073b7;
+@light-blue: #b5d7ec;
+@light-red: #E0B8B9;
+@red: #DF7C86;//Danger
+@green: #C8E2B6;//Success
+@aqua: #7ad8d9; //Info
+@yellow: #f39c12; //Warning
+@blue: #82b0bc;
 @navy:  #001F3F;
 @teal:  #39CCCC;
 @olive: #3D9970;
@@ -28,14 +29,14 @@
 @white: #fff;
 @black-light: #737373;
 
-@color-primary: @light-blue;
+@color-primary: @blue;
 @color-danger: @red;
 @color-success: @green;
 @color-info: @aqua;
 @color-warning: @yellow;
 
 //Link colors (Aka: <a> tags)
-@link-color: @light-blue;
+@link-color: @blue;
 //@link-hover-color: lighten(@link-color, 15%);
 @link-hover-color: lighten(@black, 15%);
 
@@ -49,10 +50,12 @@
 
 //Sidebar skins
 //skin blue (light) sidebar vars
-@sidebar-light-bg: #f4f4f4;
-@sidebar-light-hover-bg: #f9f9f9;
-@sidebar-light-font: #555;
-@sidebar-light-border: #dbdbdb;
+@sidebar-light-bg: white;
+@sidebar-light-hover-bg: @blue;
+@sidebar-light-font: white;
+@sidebar-light-border: none;
+
+@navbar-active: @blue;
 
 //Screen widths - Same as bootstrap default settings
 @screen-xs: 480px;

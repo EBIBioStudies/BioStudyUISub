@@ -7,6 +7,7 @@ export default class SubmissionEditController {
         $scope.hasError = false;
         $scope.readOnly = false;
         $scope.submission = null;
+        $scope.saving = false;
 
         $scope.onSubmissionChange = function () {
             if ($scope.submission !== null) {
@@ -27,10 +28,11 @@ export default class SubmissionEditController {
         }
 
         function saveUpdates() {
-            $log.debug("saveUpdatess()");
+            $log.debug("saveUpdates()");
             var exported = SubmissionModel.export($scope.submission);
             var exportedJson = angular.toJson(exported);
             if (saved !== exportedJson) {
+                $scope.saving = true;
                 $log.debug("saved: " + saved);
                 $log.debug("exported: " + exportedJson);
                 var sbm = $scope.sbm;
@@ -38,6 +40,7 @@ export default class SubmissionEditController {
                 SubmissionService.saveSubmission(sbm)
                     .then(function () {
                         $log.debug("submission saved");
+                        $scope.saving = false;
                         saved = exportedJson;
                     });
             } else {

@@ -9,13 +9,14 @@ export default class PasswordResetRequestController {
             $scope.hasError = false;
             AuthService
                 .passwordResetRequest($scope.req.email, $scope.req.recaptcha)
-                .then(function(data) {
-                    if (data.status === "FAIL") {
+                .then(function (data) {
+                    if (data.status === "OK") {
+                        $scope.showSuccess = true;
+                    }
+                    else {
                         $scope.hasError = true;
                         $scope.message = data.message;
                         vcRecaptchaService.reload();
-                    } else {
-                        $scope.showSuccess = true;
                     }
                 });
         }

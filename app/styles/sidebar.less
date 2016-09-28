@@ -4,10 +4,15 @@
 */
 
 .sidebar {
+  height:100%;
+  overflow-y:auto;
+  overflow-x:hidden;
+}
 
+.sidebar-offcanvas {
 
-  
   margin-bottom: 5px;
+
   // remove shadow from form
   .sidebar-form {
     input:focus {
@@ -29,6 +34,7 @@
         color: #737373;
       }
       &.menu-toggle >a{
+        background-color: #e3fdec;
         color: @link-color;
       }
       &.warning > a {
@@ -48,7 +54,7 @@
 
       >a:hover {
         > .fa, > .glyphicon, > .ion, span {
-          color: @link-hover-color;
+          color: white;//  @link-hover-color;
         }
 
       }
@@ -155,7 +161,6 @@
 
   body.fixed {
     .sidebar-offcanvas {
-      margin-top: 50px;
       left: -@left-side-width;
     }
     .row-offcanvas-left.active {

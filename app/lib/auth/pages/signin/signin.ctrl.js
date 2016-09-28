@@ -14,7 +14,7 @@ export default class SignUpController {
                         $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, data);
                     } else {
                         $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
-                        $scope.error = {status: "FAIL", message: data.message};
+                        $scope.error = {status: "Error", message: data.message};
                     }
                 });
         };
