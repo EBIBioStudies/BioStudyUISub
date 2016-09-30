@@ -16,7 +16,7 @@ import './main/header.html!ng-template'
 
 const appName = 'BioStudyApp';
 
-angular.module(appName,
+export default angular.module(appName,
     [
         uiRouter,
         appMain.name,

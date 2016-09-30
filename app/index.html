@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="BioStudyApp">
+<html lang="en">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,6 +26,7 @@
 <script src="jspm_packages/system.js"></script>
 <script src="jspm.config.js"></script>
 <script>
-    System.import('lib/main');
+    System.import('lib/app')
+            .catch(console.error.bind(console));
 </script>
 </html>
