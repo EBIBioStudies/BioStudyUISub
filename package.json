@@ -3,7 +3,9 @@
   "version": "0.0.4-24",
   "description": "BioStuties Submssion Tool Frontend",
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "typescript": "^2.0.3"
+  },
   "devDependencies": {
     "del": "^2.2.1",
     "gulp": "^3.8.11",
@@ -48,6 +50,7 @@
       "angular-ui-bootstrap": "npm:angular-ui-bootstrap@^2.0.0",
       "angular-ui-router": "github:angular-ui/angular-ui-router-bower@^0.2.18",
       "angular-ui-select": "github:angular-ui/ui-select@~0.12.1",
+      "angular2": "npm:angular2@^2.0.0-beta.17",
       "bootstrap": "github:twbs/bootstrap@^3.3.7",
       "css": "github:systemjs/plugin-css@^0.1.26",
       "danialfarid/ng-file-upload-bower": "github:danialfarid/ng-file-upload-bower@^12.0.4",
@@ -59,7 +62,10 @@
       "moonstorm/trNgGrid": "github:moonstorm/trNgGrid@~3.1.6",
       "ng-template": "github:jamespamplin/plugin-ng-template@^0.1.1",
       "paulyoder/angular-bootstrap-show-errors": "github:paulyoder/angular-bootstrap-show-errors@~2.3.0",
-      "yohairosen/typeaheadFocus": "github:yohairosen/typeaheadFocus@master"
+      "rxjs": "npm:rxjs@^5.0.0-beta.12",
+      "ts": "github:frankwallis/plugin-typescript@^5.1.2",
+      "yohairosen/typeaheadFocus": "github:yohairosen/typeaheadFocus@master",
+      "zone.js": "npm:zone.js@^0.6.25"
     },
     "devDependencies": {
       "babel": "npm:babel-core@^5.8.24",

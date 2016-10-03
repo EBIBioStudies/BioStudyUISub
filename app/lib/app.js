@@ -1,6 +1,6 @@
 import angular from 'angular';
-import mainModule from './main';
+import { upgradeAdapter } from './upgrade_adapter.ts';
 
 angular.element(document).ready(function() {
-    angular.bootstrap(document, [mainModule.name]);
+    upgradeAdapter.bootstrap(document.body, ['BioStudyApp']);
 });
