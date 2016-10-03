@@ -7,6 +7,7 @@ import signUpTmpl from './auth/pages/signup/signup.html!ng-template'
 import accActivateTmpl from './auth/pages/activate/activate.html!ng-template'
 import accPasswordResetReqTmpl from './auth/pages/passwordReset/passwordResetRequest.html!ng-template'
 import accPasswordResetTmpl from './auth/pages/passwordReset/passwordReset.html!ng-template'
+import accResendActivationLinkTmpl from './auth/pages/activationLink/resendActivationLink.html!ng-template'
 import fileListTmpl from './file/pages/list/fileList.html!ng-template'
 import helpTmpl from './help/help.html!ng-template'
 import errorTmpl from './main/error.html!ng-template'
@@ -33,6 +34,11 @@ function routes($stateProvider, $urlRouterProvider) {
             url: '/password_reset/:key',
             templateUrl: accPasswordResetTmpl.templateUrl,
             controller: 'PasswordResetCtrl'
+        })
+        .state('resend_activation_link', {
+            url: '/resend_activation_link',
+            templateUrl: accResendActivationLinkTmpl.templateUrl,
+            controller: 'ResendActivationLinkCtrl'
         })
         .state('signin', {
             url: '/signin',

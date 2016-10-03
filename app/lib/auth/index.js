@@ -14,6 +14,7 @@ import SignUpCtrl from './pages/signup/signup.ctrl'
 import SignInCtrl from './pages/signin/signin.ctrl'
 import PasswordResetRequestCtrl from './pages/passwordReset/passwordResetRequest.ctrl'
 import PasswordResetCtrl from './pages/passwordReset/passwordReset.ctrl'
+import ResendActivationLinkCtrl from './pages/activationLink/resendActivationLink.ctrl'
 
 import EqualsToDirective from './directives/equalsTo'
 import AccessLevelDirective from './directives/accessLevel'
@@ -41,5 +42,6 @@ export default angular.module('BioStudyApp.Auth', [/*uiRouter,*/ 'ngMessages', '
     .controller('ActivateCtrl', ActivateCtrl)
     .controller('PasswordResetRequestCtrl', PasswordResetRequestCtrl)
     .controller('PasswordResetCtrl', PasswordResetCtrl)
+    .controller('ResendActivationLinkCtrl', ResendActivationLinkCtrl)
     .directive('accessLevel', () => new AccessLevelDirective())
     .directive('equalsTo', () => new EqualsToDirective());
