@@ -1,20 +1,16 @@
 System.config({
   defaultJSExtensions: true,
-  transpiler: "ts",
-
-  /*babelOptions: {
+  transpiler: "plugin-babel",
+  babelOptions: {
     "optional": [
       "runtime",
-      "optimisation.modules.system",
-      "es7.classProperties"
+      "optimisation.modules.system"
     ]
-  },*/
-
+  },
   typescriptOptions: {
     "tsconfig": "tsconfig.json",
     "typeCheck": true
   },
-
   paths: {
     "github:*": "jspm_packages/github/*",
     "npm:*": "jspm_packages/npm/*"
@@ -22,7 +18,6 @@ System.config({
 
   packages: {
     "lib": {
-      "main": "index",
       "format": "es6",
       "defaultExtension": "js"
     }
@@ -66,6 +61,8 @@ System.config({
     "lodash": "npm:lodash@4.13.1",
     "ng-file-upload": "github:danialfarid/ng-file-upload-bower@12.0.4",
     "ng-template": "github:jamespamplin/plugin-ng-template@0.1.1",
+    "plugin-babel": "npm:systemjs-plugin-babel@0.0.16",
+    'systemjs-babel-build': 'npm:systemjs-plugin-babel@0.0.16/systemjs-babel-browser.js',
     "rxjs": "npm:rxjs@5.0.0-beta.12",
     "trNgGrid": "github:moonstorm/trNgGrid@3.1.7",
     "ts": "github:frankwallis/plugin-typescript@5.1.2",

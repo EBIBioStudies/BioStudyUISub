@@ -1,10 +1,17 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "module": "system",
+    "module": "es6",
+    "moduleResolution": "classic",
     "sourceMap": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "experimentalDecorators": false,
+    "emitDecoratorMetadata": false,
+    "baseUrl": ".",
+    "paths": {
+      "angular2/*": [
+        "jspm_packages/npm/angular2@2.0.0-beta.17/*"
+      ]
+    }
   },
   "include": [
     "lib/**/*.ts"
