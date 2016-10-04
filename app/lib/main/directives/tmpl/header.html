@@ -1,17 +1,17 @@
 <!-- Header Navbar: style can be found in header.less -->
-<nav class="navbar navbar-default navbar-fixed-top" role="navigation" ng-controller="NavCtrl">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container-fluid">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" ng-click="toggleCollapsed()">
+            <button type="button" class="navbar-toggle" ng-click="ctrl.toggleCollapsed()">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
             <a ui-sref="submissions" class="navbar-brand"
-               uib-tooltip="BioStudies submission tool Version: {{appVersion}}"
+               uib-tooltip="BioStudies submission tool Version: {{ctrl.appVersion}}"
                tooltip-placement="bottom">
                 <div class="logo">
-                    <span class="logo-text">submission tool</span><span class="version">v:{{appVersion}}</span>
+                    <span class="logo-text">submission tool</span><span class="version">v:{{ctrl.appVersion}}</span>
                 </div>
             </a>
         </div>
@@ -28,52 +28,52 @@
                     </a>
                 </li>
 
-                <li ng-hide="currentUser">
+                <li ng-hide="ctrl.currentUser">
                     <a id="signUpMenuItem" ui-sref="signup"
                        uib-tooltip="Register a new user"
                        tooltip-placement="bottom"
-                       ng-click="toggleCollapsed()">
+                       ng-click="ctrl.toggleCollapsed()">
                         <i class="fa fa-user fa-fw"></i>
                         <span>Sign up</span>
                     </a>
                 </li>
 
-                <li ng-hide="currentUser">
+                <li ng-hide="ctrl.currentUser">
                     <a id="signInMenuItem" ui-sref="signin"
                        uib-tooltip="Sign in"
                        tooltip-placement="bottom"
-                       ng-click="toggleCollapsed()">
+                       ng-click="ctrl.toggleCollapsed()">
                         <i class="fa fa-sign-in"></i>
                         <span>Sign in</span>
                     </a>
                 </li>
 
-                <li ng-show="currentUser">
+                <li ng-show="ctrl.currentUser">
                     <a id="submissionMenuItem" ui-sref="submissions"
                        uib-tooltip="List of submissions"
                        tooltip-placement="bottom"
-                       ng-click="toggleCollapsed()">
+                       ng-click="ctrl.toggleCollapsed()">
                         <i class="fa fa-fw fa-table"></i>
                         <span>Submissions</span>
                     </a>
                 </li>
 
-                <li ng-show="currentUser">
+                <li ng-show="ctrl.currentUser">
                     <a ui-sref="files"
-                       ng-click="toggleCollapsed()">
+                       ng-click="ctrl.toggleCollapsed()">
                         <i class="fa fa-fw fa-upload"></i>
                         <span>Files</span>
                     </a>
                 </li>
 
                 <!-- User Account: style can be found in dropdown.less -->
-                <li class="dropdown" uib-dropdown ng-show="currentUser">
+                <li class="dropdown" uib-dropdown ng-show="ctrl.currentUser">
                     <a href="" class="dropdown-toggle" data-toggle="dropdown" uib-dropdown-toggle>
                         <i class="fa fa-fw fa-user"></i>
                         <span>{{user.lastName}}<i class="caret"></i></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a ng-click="signOut(); toggleCollapsed();">Sign out</a></li>
+                        <li><a ng-click="ctrl.signOut(); ctrl.toggleCollapsed();">Sign out</a></li>
                     </ul>
                 </li>
             </ul>

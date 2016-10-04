@@ -4,14 +4,13 @@ import uibCollapse from 'angular-ui-bootstrap/src/collapse/index'
 
 import appAuth from '../auth/index'
 
-import MainCtrl from './main.ctrl'
 import ErrorCtrl from './error.ctrl'
-import NavCtrl from './nav.ctrl'
+
 
 import BsActiveNavDirective from './directives/bsActiveNav'
+import appHeaderDirective from './directives/appHeader'
 
 export default angular.module('BioStudyApp.Main', [uibDropdown, uibCollapse, appAuth.name])
-    .controller('MainCtrl', MainCtrl)
     .controller('ErrorCtrl', ErrorCtrl)
-    .controller('NavCtrl', NavCtrl)
-    .directive('bsActiveNav', BsActiveNavDirective);
+    .directive('bsActiveNav', BsActiveNavDirective)
+    .directive('appHeader', appHeaderDirective);

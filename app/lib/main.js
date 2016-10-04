@@ -16,7 +16,6 @@ import appFile from './file/index'
 import appMain from './main/index'
 import appHelp from './help/index'
 
-import './main/header.html!ng-template'
 
 const appName = 'BioStudyApp';
 
@@ -156,5 +155,7 @@ angular.module(appName,
         };
     });
 
-angular.bootstrap(document.body, [appName]);
-upgradeAdapter.bootstrap(document.body, [appName]);
+
+angular.element(document).ready(() => {
+    upgradeAdapter.bootstrap(document.body, [appName]);
+});
