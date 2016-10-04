@@ -17,9 +17,11 @@ System.config({
   },
 
   packages: {
-    "lib": {
-      "format": "es6",
-      "defaultExtension": "js"
+    "ts": {
+      "main": "plugin.js"
+    },
+    "typescript": {
+      "main": "lib/typescript"
     }
   },
 
@@ -54,6 +56,7 @@ System.config({
     "bootstrap": "github:twbs/bootstrap@3.3.7",
     "core-js": "npm:core-js@1.2.6",
     "css": "github:systemjs/plugin-css@0.1.26",
+    "es6-shim": "github:es-shims/es6-shim@0.35.1",
     "font-awesome": "npm:font-awesome@4.6.3",
     "json": "github:systemjs/plugin-json@0.1.2",
     "khan4019/angular-bootstrap-grid-tree": "github:khan4019/tree-grid-directive@0.3.0",
@@ -62,10 +65,13 @@ System.config({
     "ng-file-upload": "github:danialfarid/ng-file-upload-bower@12.0.4",
     "ng-template": "github:jamespamplin/plugin-ng-template@0.1.1",
     "plugin-babel": "npm:systemjs-plugin-babel@0.0.16",
-    'systemjs-babel-build': 'npm:systemjs-plugin-babel@0.0.16/systemjs-babel-browser.js',
+    "plugin-babel-runtime": "npm:babel-runtime@5.8.38",
     "rxjs": "npm:rxjs@5.0.0-beta.12",
+    "reflect-metadata": "npm:reflect-metadata@0.1.2",
+    "systemjs-babel-build": "npm:systemjs-plugin-babel@0.0.16/systemjs-babel-browser.js",
     "trNgGrid": "github:moonstorm/trNgGrid@3.1.7",
     "ts": "github:frankwallis/plugin-typescript@5.1.2",
+    "typescript": "npm:typescript@2.0.3",
     "zone.js": "npm:zone.js@0.6.25",
     "github:angular/bower-angular-cookies@1.5.7": {
       "angular": "github:angular/bower-angular@1.5.8"
@@ -197,7 +203,7 @@ System.config({
       "base64-js": "npm:base64-js@0.0.8",
       "child_process": "github:jspm/nodelibs-child_process@0.1.0",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
-      "ieee754": "npm:ieee754@1.1.6",
+      "ieee754": "npm:ieee754@1.1.8",
       "isarray": "npm:isarray@1.0.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
     },

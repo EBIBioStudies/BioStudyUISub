@@ -89,7 +89,10 @@ gulp.task('mkdir', ['clean:js'], function() {
 gulp.task('js', ['mkdir'], function (cb) {
     var builder = new Builder('app', 'app/jspm.config.js');
     builder.config({
-        separateCSS: true
+        separateCSS: true,
+        map: {
+            'systemjs-babel-build': './app/jspm_packages/systemjs-plugin-babel@0.0.16/systemjs-babel-node.js'
+        }
     });
     builder.bundle('lib/main.js', '.build/lib/main.js', {
         minify: true,

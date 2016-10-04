@@ -4,8 +4,9 @@
     "module": "es6",
     "moduleResolution": "classic",
     "sourceMap": true,
-    "experimentalDecorators": false,
-    "emitDecoratorMetadata": false,
+    /*"experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "experimentalAsyncFunctions": true,*/
     "baseUrl": ".",
     "paths": {
       "angular2/*": [
@@ -13,7 +14,7 @@
       ]
     }
   },
-  "include": [
+  "files": [
     "lib/**/*.ts"
   ],
   "compileOnSave": false

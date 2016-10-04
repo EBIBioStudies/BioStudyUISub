@@ -1,6 +1,10 @@
 import '../styles/app.less!'
 
+import 'zone.js';
+import 'reflect-metadata';
+
 import angular from 'angular'
+import { upgradeAdapter } from './upgrade_adapter';
 
 import uiRouter from 'angular-ui-router'
 
@@ -16,7 +20,7 @@ import './main/header.html!ng-template'
 
 const appName = 'BioStudyApp';
 
-export default angular.module(appName,
+angular.module(appName,
     [
         uiRouter,
         appMain.name,
@@ -151,3 +155,6 @@ export default angular.module(appName,
             return typeHead;
         };
     });
+
+angular.bootstrap(document.body, [appName]);
+upgradeAdapter.bootstrap(document.body, [appName]);

@@ -3,9 +3,6 @@
   "version": "0.0.4-24",
   "description": "BioStuties Submssion Tool Frontend",
   "private": true,
-  "dependencies": {
-    "typescript": "^2.0.3"
-  },
   "devDependencies": {
     "del": "^2.2.1",
     "gulp": "^3.8.11",
@@ -54,6 +51,7 @@
       "bootstrap": "github:twbs/bootstrap@^3.3.7",
       "css": "github:systemjs/plugin-css@^0.1.26",
       "danialfarid/ng-file-upload-bower": "github:danialfarid/ng-file-upload-bower@^12.0.4",
+      "es6-shim": "github:es-shims/es6-shim@^0.35.1",
       "font-awesome": "npm:font-awesome@^4.6.3",
       "json": "github:systemjs/plugin-json@^0.1.2",
       "khan4019/angular-bootstrap-grid-tree": "github:khan4019/tree-grid-directive@0.3.0",
@@ -65,13 +63,15 @@
       "plugin-babel": "npm:systemjs-plugin-babel@^0.0.16",
       "rxjs": "npm:rxjs@^5.0.0-beta.12",
       "ts": "github:frankwallis/plugin-typescript@^5.1.2",
+      "typescript": "npm:typescript@^2.0.3",
       "yohairosen/typeaheadFocus": "github:yohairosen/typeaheadFocus@master",
       "zone.js": "npm:zone.js@^0.6.25"
     },
     "devDependencies": {
       "babel": "npm:babel-core@^5.8.24",
       "babel-runtime": "npm:babel-runtime@^5.8.24",
-      "core-js": "npm:core-js@^1.1.4"
+      "core-js": "npm:core-js@^1.1.4",
+      "plugin-babel-runtime": "npm:babel-runtime@^5.8.24"
     }
   }
 }
