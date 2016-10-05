@@ -17,11 +17,16 @@ System.config({
   },
 
   packages: {
+    "lib": {
+      "*.ts": {
+        "loader": "ts"
+      }
+    },
     "ts": {
       "main": "plugin.js"
     },
     "typescript": {
-      "main": "lib/typescript"
+      "main": "lib/typescript.js"
     }
   },
 
@@ -29,12 +34,11 @@ System.config({
     "*.css": {
       "loader": "css"
     },
+    "*.less": {
+      "loader": "less"
+    },
     "*.html": {
       "loader": "ng-template"
-    },
-    "*.ts": {
-      "loader": "ts",
-      "format": "es6"
     }
   },
 
@@ -66,9 +70,10 @@ System.config({
     "ng-template": "github:jamespamplin/plugin-ng-template@0.1.1",
     "plugin-babel": "npm:systemjs-plugin-babel@0.0.16",
     "plugin-babel-runtime": "npm:babel-runtime@5.8.38",
-    "rxjs": "npm:rxjs@5.0.0-beta.12",
     "reflect-metadata": "npm:reflect-metadata@0.1.2",
+    "rxjs": "npm:rxjs@5.0.0-beta.12",
     "systemjs-babel-build": "npm:systemjs-plugin-babel@0.0.16/systemjs-babel-browser.js",
+    "text": "github:systemjs/plugin-text@0.0.9",
     "trNgGrid": "github:moonstorm/trNgGrid@3.1.7",
     "ts": "github:frankwallis/plugin-typescript@5.1.2",
     "typescript": "npm:typescript@2.0.3",

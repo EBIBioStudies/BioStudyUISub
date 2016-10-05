@@ -8,9 +8,7 @@ import ErrorCtrl from './error.ctrl'
 
 
 import BsActiveNavDirective from './directives/bsActiveNav'
-import appHeaderDirective from './directives/appHeader'
 
 export default angular.module('BioStudyApp.Main', [uibDropdown, uibCollapse, appAuth.name])
     .controller('ErrorCtrl', ErrorCtrl)
-    .directive('bsActiveNav', BsActiveNavDirective)
-    .directive('appHeader', appHeaderDirective);
+    .directive('bsActiveNav', BsActiveNavDirective);

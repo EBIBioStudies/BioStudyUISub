@@ -1,12 +1,14 @@
-import '../styles/app.less!'
-
 import 'zone.js';
 import 'reflect-metadata';
 
 import angular from 'angular'
 import { upgradeAdapter } from './upgrade_adapter';
 
+///import '../styles/app.less!less'
+
 import uiRouter from 'angular-ui-router'
+
+import appComponents from './components/index'
 
 import appConfig from './config'
 import appRoutes from './routes'
@@ -22,6 +24,7 @@ const appName = 'BioStudyApp';
 angular.module(appName,
     [
         uiRouter,
+        appComponents.name,
         appMain.name,
         appConfig.name,
         appRoutes.name,

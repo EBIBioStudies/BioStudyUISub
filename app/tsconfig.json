@@ -2,11 +2,13 @@
   "compilerOptions": {
     "target": "es6",
     "module": "es6",
-    "moduleResolution": "classic",
-    "sourceMap": true,
-    /*"experimentalDecorators": true,
+/*
+    "moduleResolution": "node",
+*/
+    "sourceMap": false,
+    "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "experimentalAsyncFunctions": true,*/
+    /*"experimentalAsyncFunctions": true,*/
     "baseUrl": ".",
     "paths": {
       "angular2/*": [
@@ -14,8 +16,5 @@
       ]
     }
   },
-  "files": [
-    "lib/**/*.ts"
-  ],
   "compileOnSave": false
 }
