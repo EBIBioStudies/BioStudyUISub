@@ -89,6 +89,22 @@ export default class AuthService {
                         });
             },
 
+            resendActivationLink(email, recaptcha) {
+                var path = getAppPath() + "#/activate";
+                return $http.post("/api/auth/resendActLink/", {email: email, path: path, 'recaptcha2-response': recaptcha})
+                    .then(
+                        (response) => {
+                            return response.data;
+                        },
+                        (response) => {
+                            if (response.status === 403) {
+                                return response.data;
+                            }
+                            $log.error("resend activation link error", response);
+                            return $q.reject(response);
+                        });
+            },
+
             passwordReset(key, password, recaptcha) {
                 return $http.post("/raw/auth/passreset/", {
                     key: key,
