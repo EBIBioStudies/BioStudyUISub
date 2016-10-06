@@ -8,10 +8,10 @@ import { upgradeAdapter } from './upgrade_adapter';
 
 import uiRouter from 'angular-ui-router'
 
-import appComponents from './components/index'
+import appNav from './nav/index'
 
 import appConfig from './config'
-import appRoutes from './routes'
+//import appRoutes from './routes'
 import appAuth from './auth/index'
 import appSubmission from './submission/index'
 import appFile from './file/index'
@@ -24,10 +24,10 @@ const appName = 'BioStudyApp';
 angular.module(appName,
     [
         uiRouter,
-        appComponents.name,
+        appNav.name,
         appMain.name,
         appConfig.name,
-        appRoutes.name,
+       // appRoutes.name,
         appAuth.name,
         appSubmission.name,
         appFile.name,
@@ -38,7 +38,7 @@ angular.module(appName,
         $anchorScrollProvider.disableAutoScrolling();
         $logProvider.debugEnabled(APP_DEBUG_ENABLED === true);
 
-        $locationProvider.html5Mode(false);
+        //$locationProvider.html5Mode(false);
 
         $httpProvider.interceptors.push('sessionInterceptor');
         $httpProvider.interceptors.push('proxyInterceptor');

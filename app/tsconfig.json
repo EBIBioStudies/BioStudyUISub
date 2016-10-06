@@ -2,19 +2,17 @@
   "compilerOptions": {
     "target": "es6",
     "module": "es6",
-/*
     "moduleResolution": "node",
-*/
     "sourceMap": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     /*"experimentalAsyncFunctions": true,*/
-    "baseUrl": ".",
+    /*"baseUrl": ".",
     "paths": {
-      "angular2/*": [
-        "jspm_packages/npm/angular2@2.0.0-beta.17/*"
+      "angular2/core": [
+        "jspm_packages/npm/angular2@2.0.0-beta.17/core.d.ts"
       ]
-    }
+    }*/
   },
   "compileOnSave": false
 }

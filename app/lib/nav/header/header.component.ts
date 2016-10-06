@@ -1,15 +1,17 @@
-import {Component} from 'angular2/core';
+import {Component} from '@angular/core';
 
 @Component({
     selector: 'app-header',
-    templateUrl: 'appHeader.component.html'
+    templateUrl: 'lib/nav/header/header.component.html'
 })
 
 export class AppHeaderComponent {
     isNavCollapsed: boolean;
+    appVersion: string;
 
     constructor() {
         this.isNavCollapsed = true;
+        this.appVersion = "0.0.0";
 
         /*this.appVersion = APP_VERSION;
 
