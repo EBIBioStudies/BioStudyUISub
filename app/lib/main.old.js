@@ -8,8 +8,6 @@ import { upgradeAdapter } from './upgrade_adapter';
 
 import uiRouter from 'angular-ui-router'
 
-import appNav from './nav/index'
-
 import appConfig from './config'
 //import appRoutes from './routes'
 import appAuth from './auth/index'
@@ -24,7 +22,6 @@ const appName = 'BioStudyApp';
 angular.module(appName,
     [
         uiRouter,
-        appNav.name,
         appMain.name,
         appConfig.name,
        // appRoutes.name,

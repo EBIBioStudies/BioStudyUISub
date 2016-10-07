@@ -9,7 +9,7 @@
             </button>
             <a  class="navbar-brand"
                 uiSref="submissions"
-               ngbTooltip="BioStudies submission tool Version: {appVersion}"
+               ngbTooltip="BioStudies submission tool Version: {{ appVersion }}"
                placement="bottom">
                 <div class="logo">
                     <span class="logo-text">submission tool</span><span class="version">v:{{appVersion}}</span>
@@ -20,7 +20,7 @@
         <div class="collapse navbar-collapse navbar-right" uib-collapse="isNavCollapsed">
             <ul class="nav navbar-nav">
                 <li>
-                    <a uiSref="help"
+                    <a routerLink="/help"
                        ngbTooltip="Go to the help page"
                        placement="bottom"
                        (click)="toggleCollapsed()">
@@ -30,7 +30,7 @@
                 </li>
 
                 <li [hidden]="currentUser">
-                    <a uiSref="signup"
+                    <a routerLink="/signup"
                        ngbTooltip="Register a new user"
                        placement="bottom"
                        (click)="toggleCollapsed()">
@@ -40,7 +40,7 @@
                 </li>
 
                 <li [hidden]="currentUser">
-                    <a uiSref="signin"
+                    <a routerLink="/signin"
                        ngbTooltip="Sign in"
                        placement="bottom"
                        (click)="toggleCollapsed()">
@@ -50,7 +50,7 @@
                 </li>
 
                 <li [hidden]="!currentUser">
-                    <a uiSref="submissions"
+                    <a routerLink="submissions"
                        ngbTooltip="List of submissions"
                        placement="bottom"
                        (click)="toggleCollapsed()">
@@ -60,7 +60,7 @@
                 </li>
 
                 <li [hidden]="!currentUser">
-                    <a uiSref="files"
+                    <a routerLink="files"
                        (click)="toggleCollapsed()">
                         <i class="fa fa-fw fa-upload"></i>
                         <span>Files</span>

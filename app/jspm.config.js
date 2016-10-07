@@ -12,7 +12,8 @@ SystemJS.config({
       "plugin-babel": "npm:systemjs-plugin-babel@0.0.16",
       "css": "github:systemjs/plugin-css@0.1.30",
       "less": "github:systemjs/plugin-less@0.1.2",
-      "ts": "github:frankwallis/plugin-typescript@5.2.6"
+      "ts": "github:frankwallis/plugin-typescript@5.2.6",
+      "text": "github:systemjs/plugin-text@0.0.9"
     },
     "packages": {
       "github:frankwallis/plugin-typescript@5.2.6": {
@@ -30,7 +31,8 @@ SystemJS.config({
   transpiler: "plugin-babel",
   packages: {
     "lib": {
-      "main": "main.js",
+      "defaultExtension": "ts",
+      "main": "main.ts",
       "meta": {
         "*.js": {
           "loader": "plugin-babel"
@@ -43,6 +45,9 @@ SystemJS.config({
         },
         "*.less": {
           "loader": "less"
+        },
+        "*.html": {
+          "loader": "text"
         }
       }
     }
@@ -62,13 +67,15 @@ SystemJS.config({
     "github:*/*.json"
   ],
   map: {
+    "@angular/router": "npm:@angular/router@3.0.2",
+    "core-js": "npm:core-js@2.4.1",
     "@angular/forms": "npm:@angular/forms@2.0.2",
     "@ng-bootstrap/ng-bootstrap": "npm:@ng-bootstrap/ng-bootstrap@1.0.0-alpha.6",
     "@angular/common": "npm:@angular/common@2.0.2",
-    "@angular/compiler": "npm:@angular/compiler@2.0.1",
-    "@angular/core": "npm:@angular/core@2.0.1",
-    "@angular/platform-browser": "npm:@angular/platform-browser@2.0.1",
-    "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.0.1",
+    "@angular/compiler": "npm:@angular/compiler@2.0.2",
+    "@angular/core": "npm:@angular/core@2.0.2",
+    "@angular/platform-browser": "npm:@angular/platform-browser@2.0.2",
+    "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.0.2",
     "@angular/upgrade": "npm:@angular/upgrade@2.0.1",
     "angular": "github:angular/bower-angular@1.5.8",
     "angular-cookies": "github:angular/bower-angular-cookies@1.5.8",
@@ -93,7 +100,6 @@ SystemJS.config({
     "stream": "github:jspm/nodelibs-stream@0.2.0-alpha",
     "string_decoder": "github:jspm/nodelibs-string_decoder@0.2.0-alpha",
     "timers": "github:jspm/nodelibs-timers@0.2.0-alpha",
-    "ui-router-ng2": "npm:ui-router-ng2@1.0.0-beta.3",
     "util": "github:jspm/nodelibs-util@0.2.0-alpha",
     "vm": "github:jspm/nodelibs-vm@0.2.0-alpha",
     "zone.js": "npm:zone.js@0.6.25"

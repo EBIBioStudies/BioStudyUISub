@@ -1,30 +1,22 @@
-import {NgModule} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
-import {UIRouterModule} from "ui-router-ng2";
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import '../styles/app.less!';
 
-
-import {APP_STATES} from './app.states.ts!ts'
-import {AppHeaderComponent} from './nav/header/header.component.ts!ts'
-import {DummyComponent} from './nav/dummy.component.ts!ts';
-import {AppComponent} from './app.component.ts!ts';
+import {NgModule}       from '@angular/core';
+import {BrowserModule}  from '@angular/platform-browser';
 import {HashLocationStrategy, LocationStrategy} from '@angular/common';
 
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
-//TODO HashLocationStrategy
+import {AppRoutingModule} from './app-routing.module';
+import {AppHeaderComponent} from './main/header/header.component';
+import {DummyComponent} from './main/dummy.component';
+
+import {AppComponent}     from './app.component';
 
 @NgModule({
     imports: [
         BrowserModule,
         NgbModule,
-        UIRouterModule.forRoot({
-            states: APP_STATES,
-            otherwise: { state: 'help', params: {} },
-            useHash: true
-            /*
-             configClass: MyRootUIRouterConfig
-             */
-        })
+        AppRoutingModule
     ],
     declarations: [
         AppComponent,
@@ -34,6 +26,7 @@ import {HashLocationStrategy, LocationStrategy} from '@angular/common';
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}
     ],
+    bootstrap: [AppComponent]
 })
 export class AppModule {
 }

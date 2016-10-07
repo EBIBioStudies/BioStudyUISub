@@ -17,14 +17,18 @@
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
+
+    <script src="jspm_packages/npm/core-js@2.4.1/client/shim.min.js"></script>
+    <script src="jspm_packages/npm/zone.js@0.6.25/dist/zone.js"></script>
+    <script src="jspm_packages/npm/reflect-metadata@0.1.8/Reflect.js"></script>
+    <script src="jspm_packages/system.js"></script>
+    <script src="jspm.config.js"></script>
+    <script>
+        System.import('lib/')
+                .catch(console.error.bind(console));
+    </script>
 </head>
 <body>
-    <the-app>Loading...</the-app>
+    <my-app>loading...</my-app>
 </body>
-<script src="jspm_packages/system.js"></script>
-<script src="jspm.config.js"></script>
-<script>
-    System.import('lib/main')
-            .catch(console.error.bind(console));
-</script>
 </html>

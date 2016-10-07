@@ -1,10 +1,12 @@
 import {Component} from '@angular/core';
 
 @Component({
-    selector: 'the-app',
+    selector: 'my-app',
     template: `
     <app-header></app-header>
-    <ui-view></ui-view>
+    <div class="outlet">
+        <router-outlet></router-outlet>
+    </div>    
     `
 })
 

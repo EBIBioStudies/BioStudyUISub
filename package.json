@@ -37,6 +37,7 @@
     },
     "configFile": "app/jspm.config.js",
     "dependencies": {
+      "@angular/router": "npm:@angular/router@^3.0.2",
       "@angular/upgrade": "npm:@angular/upgrade@^2.0.1",
       "@ng-bootstrap/ng-bootstrap": "npm:@ng-bootstrap/ng-bootstrap@^1.0.0-alpha.6",
       "angular": "github:angular/bower-angular@^1.5.8",
@@ -46,28 +47,29 @@
       "angular-ui-bootstrap": "npm:angular-ui-bootstrap@2.1.4",
       "angular-ui-router": "github:angular-ui/angular-ui-router-bower@^0.3.1",
       "bootstrap": "github:twbs/bootstrap@^3.3.7",
+      "core-js": "npm:core-js@^2.4.1",
       "danialfarid/ng-file-upload-bower": "github:danialfarid/ng-file-upload-bower@^12.2.12",
       "font-awesome": "npm:font-awesome@^4.6.3",
       "lodash": "npm:lodash@^4.16.3",
       "monospaced/angular-elastic": "github:monospaced/angular-elastic@^2.5.1",
       "moonstorm/trNgGrid": "github:moonstorm/trNgGrid@^3.1.7",
-      "reflect-metadata": "npm:reflect-metadata@^0.1.8",
-      "ui-router-ng2": "npm:ui-router-ng2@^1.0.0-beta.3"
+      "reflect-metadata": "npm:reflect-metadata@^0.1.8"
     },
     "devDependencies": {
       "css": "github:systemjs/plugin-css@^0.1.30",
       "jamespamplin/plugin-ng-template": "github:jamespamplin/plugin-ng-template@^0.1.1",
       "less": "github:systemjs/plugin-less@^0.1.2",
       "plugin-babel": "npm:systemjs-plugin-babel@^0.0.16",
+      "text": "github:systemjs/plugin-text@^0.0.9",
       "ts": "github:frankwallis/plugin-typescript@^5.2.6"
     },
     "peerDependencies": {
       "@angular/common": "npm:@angular/common@2.0.2",
-      "@angular/compiler": "npm:@angular/compiler@2.0.1",
-      "@angular/core": "npm:@angular/core@2.0.1",
+      "@angular/compiler": "npm:@angular/compiler@2.0.2",
+      "@angular/core": "npm:@angular/core@2.0.2",
       "@angular/forms": "npm:@angular/forms@^2.0.0",
-      "@angular/platform-browser": "npm:@angular/platform-browser@^2.0.1",
-      "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.0.1",
+      "@angular/platform-browser": "npm:@angular/platform-browser@2.0.2",
+      "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@^2.0.2",
       "assert": "github:jspm/nodelibs-assert@^0.2.0-alpha",
       "buffer": "github:jspm/nodelibs-buffer@^0.2.0-alpha",
       "constants": "github:jspm/nodelibs-constants@^0.2.0-alpha",
@@ -173,7 +175,7 @@
           "./testing": "./bundles/common-testing.umd.js"
         }
       },
-      "npm:@angular/compiler@2.0.1": {
+      "npm:@angular/compiler@2.0.2": {
         "meta": {
           "src/*.js": {
             "deps": [
@@ -187,7 +189,7 @@
           "./testing": "./bundles/compiler-testing.umd.js"
         }
       },
-      "npm:@angular/core@2.0.1": {
+      "npm:@angular/core@2.0.2": {
         "meta": {
           "src/*.js": {
             "deps": [
@@ -201,7 +203,7 @@
           "./testing": "./bundles/core-testing.umd.js"
         }
       },
-      "npm:@angular/platform-browser-dynamic@2.0.1": {
+      "npm:@angular/platform-browser-dynamic@2.0.2": {
         "meta": {
           "src/*.js": {
             "deps": [
@@ -215,7 +217,7 @@
           "./testing": "./bundles/platform-browser-dynamic-testing.umd.js"
         }
       },
-      "npm:@angular/platform-browser@2.0.1": {
+      "npm:@angular/platform-browser@2.0.2": {
         "meta": {
           "src/*.js": {
             "deps": [
@@ -227,6 +229,20 @@
         "map": {
           "@angular/platform-browser": ".",
           "./testing": "./bundles/platform-browser-testing.umd.js"
+        }
+      },
+      "npm:@angular/router@3.0.2": {
+        "meta": {
+          "src/*.js": {
+            "deps": [
+              "reflect-metadata",
+              "zone.js"
+            ]
+          }
+        },
+        "map": {
+          "@angular/router": ".",
+          "./testing": "./bundles/router-testing.umd.js"
         }
       },
       "npm:font-awesome@4.6.3": {
