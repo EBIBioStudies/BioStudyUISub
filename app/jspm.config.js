@@ -67,6 +67,7 @@ SystemJS.config({
     "github:*/*.json"
   ],
   map: {
+    "@angular/http": "npm:@angular/http@2.0.2",
     "@angular/router": "npm:@angular/router@3.0.2",
     "core-js": "npm:core-js@2.4.1",
     "@angular/forms": "npm:@angular/forms@2.0.2",

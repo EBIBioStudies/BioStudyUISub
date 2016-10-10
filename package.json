@@ -37,6 +37,7 @@
     },
     "configFile": "app/jspm.config.js",
     "dependencies": {
+      "@angular/http": "npm:@angular/http@^2.0.2",
       "@angular/router": "npm:@angular/router@^3.0.2",
       "@angular/upgrade": "npm:@angular/upgrade@^2.0.1",
       "@ng-bootstrap/ng-bootstrap": "npm:@ng-bootstrap/ng-bootstrap@^1.0.0-alpha.6",
@@ -201,6 +202,20 @@
         "map": {
           "@angular/core": ".",
           "./testing": "./bundles/core-testing.umd.js"
+        }
+      },
+      "npm:@angular/http@2.0.2": {
+        "meta": {
+          "src/*.js": {
+            "deps": [
+              "reflect-metadata",
+              "zone.js"
+            ]
+          }
+        },
+        "map": {
+          "@angular/http": ".",
+          "./testing": "./bundles/http-testing.umd.js"
         }
       },
       "npm:@angular/platform-browser-dynamic@2.0.2": {

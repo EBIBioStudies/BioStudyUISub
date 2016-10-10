@@ -1,6 +1,37 @@
-export default class AuthService {
-    constructor($http, $q, USER_ROLES, Session, AccessLevel, $log, $location) {
-        "ngInject";
+import { Injectable } from '@angular/core';
+import { Http, Response } from '@angular/http';
+import { Observable }     from 'rxjs/Observable';
+
+import {Credentials} from './signin/credentials';
+
+@Injectable()
+export class AuthService {
+    constructor(private http: Http) {}
+
+    signIn(credentials: Credentials): Observable<any> {
+        return this.http.post('/raw/auth/signin', credentials.stringify())
+            .map((res: Response) => {
+                let body = res.json();
+                let data = body.data || {};
+                if (data.status === "OK") {
+                   // Session.create(data.sessid, data.username, data.email || "", USER_ROLES.user);
+                }
+                return data;
+
+        })
+            .catch((error: any) => {
+            if (error.status === 403) {
+                return {status: 'Error', message: 'Invalid credentials'};
+            }
+            let errMsg = (error.message) ? error.message :
+                error.status ? `${error.status} - ${error.statusText}` : 'Server error';
+            console.error(errMsg);
+            return Observable.throw(errMsg);
+        });
+    }
+
+    /*constructor(private http: $http, $q, USER_ROLES, Session, AccessLevel, $log, $location) {
+
 
         function getAppPath() {
             var re = new RegExp("https?:\/\/[^\/]+([^\\?#]*).*");
@@ -140,5 +171,5 @@ export default class AuthService {
             }
         });
 
-    }
+    }*/
 }

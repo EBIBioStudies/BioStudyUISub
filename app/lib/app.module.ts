@@ -11,17 +11,20 @@ import {AppHeaderComponent} from './main/header/header.component';
 import {DummyComponent} from './main/dummy.component';
 
 import {AppComponent}     from './app.component';
-
+import {AuthModule} from './auth/auth.mdule';
+import {SignInPageComponent} from "./main/signInPage.component";
 @NgModule({
     imports: [
         BrowserModule,
         NgbModule,
-        AppRoutingModule
+        AppRoutingModule,
+        AuthModule
     ],
     declarations: [
         AppComponent,
         AppHeaderComponent,
-        DummyComponent
+        DummyComponent,
+        SignInPageComponent
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}

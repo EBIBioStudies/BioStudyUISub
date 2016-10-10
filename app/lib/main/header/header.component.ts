@@ -1,8 +1,10 @@
 import {Component} from '@angular/core';
 
+import tmpl from './header.component.html'
+
 @Component({
     selector: 'app-header',
-    templateUrl: '/lib/main/header/header.component.html'
+    template: tmpl
 })
 
 export class AppHeaderComponent {
