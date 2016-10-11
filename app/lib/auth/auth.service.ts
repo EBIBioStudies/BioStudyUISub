@@ -46,7 +46,8 @@ export class AuthService {
                         (response) => {
                             var data = response.data;
                             if (data.status === "OK") {
-                                Session.create(data.sessid, data.username, data.email || "", USER_ROLES.user);
+                                var orcid = data.aux ? data.aux.orcid : "";
+                                Session.create(data.sessid, data.username, data.email || "", USER_ROLES.user, orcid);
                             }
                             return data;
                         },
