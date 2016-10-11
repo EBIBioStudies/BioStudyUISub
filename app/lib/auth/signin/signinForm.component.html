@@ -1,8 +1,8 @@
 <div>
-    <div class="alert alert-danger" style="margin-left:0" [hidden]="!error">
+    <div class="alert alert-danger" style="margin-left:0" *ngIf="error !== null">
         {{error.status}} : {{error.message}}
     </div>
-    <div class="alert" [hidden]="error">
+    <div class="alert" *ngIf="error === null">
         &nbsp;
     </div>
 </div>
@@ -11,10 +11,10 @@
 
 
         <form id="login-form" novalidate name="signInForm" role="form"
-              (submit)="signInForm.form.valid && signIn()" #signInForm="ngForm">
-            <div class="form-group" [ngClass]="{'has-error': login.invalid}">
+              (submit)="signInForm.form.valid && onSubmit()" #signInForm="ngForm">
+            <div class="form-group" [ngClass]="{'has-error': login.invalid && login.dirty}">
                 <label class="control-label" for="login">Email/login name
-                    <span [hidden]="login.valid || password.prestine">: cannot be blank</span>
+                    <span [hidden]="login.valid || password.pristine">: cannot be blank</span>
                 </label>
                 <input type="text" id="login" name="login" tabindex="1"
                        class="form-control"
@@ -24,9 +24,9 @@
                        (change)="resetError()"
                        #login="ngModel"/>
             </div>
-            <div class="form-group" [ngClass]="{'has-error': password.invalid}">
+            <div class="form-group" [ngClass]="{'has-error': password.invalid && password.dirty}">
                 <label class="control-label" for="password">Password
-                    <span [hidden]="password.valid || password.prestine">: cannot be blank</span>
+                    <span [hidden]="password.valid || password.pristine">: cannot be blank</span>
                 </label>
                 <input type="password" name="password" id="password" tabindex="2"
                        class="form-control"
@@ -42,9 +42,7 @@
             </div>
 
             <div class="form-group">
-                <i ng-show="sending" class="fa fa-spinner fa-pulse fa-3x"></i>
                 <button type="submit" class="btn btn-primary">Sign in</button>
-
             </div>
             <div class="form-group">
                 <span>Don't have an account? <a ui-sref="signup">Sign Up</a></span>

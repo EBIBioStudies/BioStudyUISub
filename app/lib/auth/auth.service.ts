@@ -1,23 +1,23 @@
-import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable }     from 'rxjs/Observable';
+import { Injectable, Inject } from '@angular/core';
+import { Response } from '@angular/http';
 
-import {Credentials} from './signin/credentials';
+import { HttpClient } from '../http/http-client'
+import { Observable } from 'rxjs/Observable';
+
+import {Credentials} from './credentials';
 
 @Injectable()
 export class AuthService {
-    constructor(private http: Http) {}
+    constructor(@Inject(HttpClient)private http: HttpClient) {}
 
     signIn(credentials: Credentials): Observable<any> {
         return this.http.post('/raw/auth/signin', credentials.stringify())
             .map((res: Response) => {
-                let body = res.json();
-                let data = body.data || {};
-                if (data.status === "OK") {
+                let data = res.json();
+                if (data.status === 'OK') {
                    // Session.create(data.sessid, data.username, data.email || "", USER_ROLES.user);
                 }
                 return data;
-
         })
             .catch((error: any) => {
             if (error.status === 403) {

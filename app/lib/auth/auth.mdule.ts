@@ -1,16 +1,21 @@
 import {NgModule}  from '@angular/core';
+import {SharedModule} from '../shared/shared.module.ts';
+import {HttpClientModule} from '../http/http-client.module';
 
-import { HttpModule, JsonpModule } from '@angular/http';
-import { FormsModule }   from '@angular/forms';
-
-import {SignInFormComponent} from './signin/signinForm.component'
+import {SignInFormComponent} from './signin/signinForm.component';
+import {AuthService} from './auth.service';
 
 
 @NgModule({
     imports: [
-        HttpModule,
-        JsonpModule,
-        FormsModule
+        SharedModule,
+        HttpClientModule
+    ],
+    exports: [
+        SignInFormComponent
+    ],
+    providers: [
+        AuthService
     ],
     declarations: [
         SignInFormComponent
