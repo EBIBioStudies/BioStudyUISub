@@ -16,8 +16,9 @@ export class AuthService {
                 let data = res.json();
                 if (data.status === 'OK') {
                    // Session.create(data.sessid, data.username, data.email || "", USER_ROLES.user);
+                    return data;
                 }
-                return data;
+                return {status: 'Error', message: data.message || 'Server error'};
         })
             .catch((error: any) => {
             if (error.status === 403) {
