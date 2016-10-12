@@ -346,7 +346,7 @@ export default class SubmissionModel {
             });
 
             _.forEach(organisations, function (org) {
-                var subsection = {type: 'Affiliation', accno: mem[org], attributes: [{name: 'Name', value: org}]};
+                var subsection = {type: 'Organization', accno: mem[org], attributes: [{name: 'Name', value: org}]};
                 out.section.subsections.push(subsection);
             });
 

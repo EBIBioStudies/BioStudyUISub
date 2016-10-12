@@ -73,7 +73,7 @@ gulp.task('copy:jspm_config', function () {
 gulp.task('copy', ['copy:images', 'copy:index', 'copy:jspm_packages', 'copy:jspm_config']);
 
 gulp.task('copy:index', function() {
-    return gulp.src('app/index.html')
+    return gulp.src(['app/index.html', 'app/thor-integration.html'])
         .pipe(htmlreplace({
             'css': ['lib/main.css', 'lib/main-from-less.css'],
         }))
