@@ -40,7 +40,6 @@
       "@angular/http": "npm:@angular/http@^2.0.2",
       "@angular/router": "npm:@angular/router@^3.0.2",
       "@angular/upgrade": "npm:@angular/upgrade@^2.0.1",
-      "@ng-bootstrap/ng-bootstrap": "npm:@ng-bootstrap/ng-bootstrap@^1.0.0-alpha.6",
       "angular": "github:angular/bower-angular@^1.5.8",
       "angular-cookies": "github:angular/bower-angular-cookies@^1.5.8",
       "angular-messages": "github:angular/bower-angular-messages@^1.5.8",
@@ -54,6 +53,7 @@
       "lodash": "npm:lodash@^4.16.3",
       "monospaced/angular-elastic": "github:monospaced/angular-elastic@^2.5.1",
       "moonstorm/trNgGrid": "github:moonstorm/trNgGrid@^3.1.7",
+      "ng2-bootstrap": "npm:ng2-bootstrap@^1.1.13",
       "reflect-metadata": "npm:reflect-metadata@^0.1.8"
     },
     "devDependencies": {
@@ -281,6 +281,9 @@
           "buffer": "@empty",
           "process": "@empty"
         }
+      },
+      "npm:moment@2.15.1": {
+        "jspmNodeConversion": false
       },
       "npm:reflect-metadata@0.1.8": {
         "jspmNodeConversion": false,

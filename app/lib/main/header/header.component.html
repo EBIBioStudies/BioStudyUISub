@@ -9,7 +9,7 @@
             </button>
             <a  class="navbar-brand"
                 uiSref="submissions"
-               ngbTooltip="BioStudies submission tool Version: {{ appVersion }}"
+               tooltip="BioStudies submission tool Version: {{ appVersion }}"
                placement="bottom">
                 <div class="logo">
                     <span class="logo-text">submission tool</span><span class="version">v:{{appVersion}}</span>
@@ -21,45 +21,45 @@
             <ul class="nav navbar-nav">
                 <li>
                     <a routerLink="/help"
-                       ngbTooltip="Go to the help page"
-                       placement="bottom"
+                       tooltip="Go to the help page"
+                       tooltipPlacement="bottom"
                        (click)="toggleCollapsed()">
                         <i class="fa fa-fw fa-question"></i>
                         <span>Help</span>
                     </a>
                 </li>
 
-                <li [hidden]="currentUser">
+                <li *ngIf="!currentUser">
                     <a routerLink="/signup"
-                       ngbTooltip="Register a new user"
-                       placement="bottom"
+                       tooltip="Register a new user"
+                       tooltipPlacement="bottom"
                        (click)="toggleCollapsed()">
                         <i class="fa fa-user fa-fw"></i>
                         <span>Sign up</span>
                     </a>
                 </li>
 
-                <li [hidden]="currentUser">
+                <li *ngIf="!currentUser">
                     <a routerLink="/signin"
-                       ngbTooltip="Sign in"
-                       placement="bottom"
+                       tooltip="Sign in"
+                       tooltipPlacement="bottom"
                        (click)="toggleCollapsed()">
                         <i class="fa fa-sign-in"></i>
                         <span>Sign in</span>
                     </a>
                 </li>
 
-                <li [hidden]="!currentUser">
+                <li *ngIf="currentUser">
                     <a routerLink="submissions"
-                       ngbTooltip="List of submissions"
-                       placement="bottom"
+                       tooltip="List of submissions"
+                       tooltipPlacement="bottom"
                        (click)="toggleCollapsed()">
                         <i class="fa fa-fw fa-table"></i>
                         <span>Submissions</span>
                     </a>
                 </li>
 
-                <li [hidden]="!currentUser">
+                <li *ngIf="currentUser">
                     <a routerLink="files"
                        (click)="toggleCollapsed()">
                         <i class="fa fa-fw fa-upload"></i>
@@ -67,14 +67,13 @@
                     </a>
                 </li>
 
-                <!-- User Account: style can be found in dropdown.less -->
-                <li class="dropdown" ngbDropdown [hidden]="!currentUser">
-                    <a href="" class="dropdown-toggle" data-toggle="dropdown" ngbDropdownToggle>
+                <li class="d-inline-block" *ngIf="currentUser" dropdown>
+                    <a id="dropdownMenu1" dropdownToggle>
                         <i class="fa fa-fw fa-user"></i>
-                        <span>Vasya Pupkin<i class="caret"></i></span>
+                        <span>{{userName}}<i class="caret"></i></span>
                     </a>
-                    <ul class="dropdown-menu">
-                        <li><a (click)="signOut(); toggleCollapsed();">Sign out</a></li>
+                    <ul class="dropdown-menu" dropdownMenu>
+                        <li class="dropdown-item"><a (click)="signOut(); toggleCollapsed();">Sign out</a></li>
                     </ul>
                 </li>
             </ul>

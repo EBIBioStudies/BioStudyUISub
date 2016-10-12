@@ -67,11 +67,11 @@ SystemJS.config({
     "github:*/*.json"
   ],
   map: {
+    "ng2-bootstrap": "npm:ng2-bootstrap@1.1.13",
     "@angular/http": "npm:@angular/http@2.0.2",
     "@angular/router": "npm:@angular/router@3.0.2",
     "core-js": "npm:core-js@2.4.1",
     "@angular/forms": "npm:@angular/forms@2.0.2",
-    "@ng-bootstrap/ng-bootstrap": "npm:@ng-bootstrap/ng-bootstrap@1.0.0-alpha.6",
     "@angular/common": "npm:@angular/common@2.0.2",
     "@angular/compiler": "npm:@angular/compiler@2.0.2",
     "@angular/core": "npm:@angular/core@2.0.2",
@@ -308,7 +308,7 @@ SystemJS.config({
     },
     "npm:rxjs@5.0.0-beta.12": {
       "map": {
-        "symbol-observable": "npm:symbol-observable@1.0.2"
+        "symbol-observable": "npm:symbol-observable@1.0.3"
       }
     },
     "github:jspm/nodelibs-timers@0.2.0-alpha": {
@@ -319,11 +319,6 @@ SystemJS.config({
     "npm:timers-browserify@1.4.2": {
       "map": {
         "process": "npm:process@0.11.9"
-      }
-    },
-    "github:twbs/bootstrap@3.3.7": {
-      "map": {
-        "jquery": "npm:jquery@3.1.1"
       }
     },
     "npm:font-awesome@4.6.3": {
@@ -344,6 +339,16 @@ SystemJS.config({
     "github:angular/bower-angular-cookies@1.5.8": {
       "map": {
         "angular": "github:angular/bower-angular@1.5.8"
+      }
+    },
+    "github:twbs/bootstrap@3.3.7": {
+      "map": {
+        "jquery": "npm:jquery@3.1.1"
+      }
+    },
+    "npm:ng2-bootstrap@1.1.13": {
+      "map": {
+        "moment": "npm:moment@2.15.1"
       }
     }
   }

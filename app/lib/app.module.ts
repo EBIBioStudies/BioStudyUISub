@@ -4,7 +4,7 @@ import {NgModule}       from '@angular/core';
 import {BrowserModule}  from '@angular/platform-browser';
 import {HashLocationStrategy, LocationStrategy} from '@angular/common';
 
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {Ng2BootstrapModule} from 'ng2-bootstrap/ng2-bootstrap';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppHeaderComponent} from './main/header/header.component';
@@ -16,7 +16,7 @@ import {SignInPageComponent} from "./main/signInPage.component";
 @NgModule({
     imports: [
         BrowserModule,
-        NgbModule,
+        Ng2BootstrapModule,
         AppRoutingModule,
         AuthModule
     ],
