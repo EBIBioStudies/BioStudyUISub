@@ -1,6 +1,7 @@
 import {Inject, Component} from '@angular/core';
 
 import {AuthEvents} from '../../auth/auth-events';
+import {AuthService} from "../../auth/auth.service";
 
 import tmpl from './header.component.html';
 
@@ -15,7 +16,10 @@ export class AppHeaderComponent {
     currentUser: boolean = false;
     userName: string = "";
 
-    constructor(@Inject(AuthEvents) private authEvents: AuthEvents) {
+    constructor(@Inject(AuthEvents) private authEvents: AuthEvents,
+                @Inject(AuthService) private authService: AuthService) {
+        this.currentUser = !authService.currentUser().isAnonymous();
+        this.userName = authService.currentUser().name;
 
         authEvents.userSignedIn$.subscribe(name => {
             this.currentUser = true;
@@ -27,13 +31,14 @@ export class AppHeaderComponent {
             this.userName = "";
         });
 
-        /*this.appVersion = APP_VERSION;
+        /*this.appVersion = APP_VERSION;*/
 
-        this.signOut = function () {
-            AuthService.signOut().then(function () {
-                $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess);
-            });
-        };*/
+    }
+
+    signOut() {
+        this.authService.signOut().subscribe(data => {
+            //goto signin page
+        });
     }
 
     toggleCollapsed() {

@@ -54,6 +54,7 @@
       "monospaced/angular-elastic": "github:monospaced/angular-elastic@^2.5.1",
       "moonstorm/trNgGrid": "github:moonstorm/trNgGrid@^3.1.7",
       "ng2-bootstrap": "npm:ng2-bootstrap@^1.1.13",
+      "ng2-cookies": "npm:ng2-cookies@^1.0.2",
       "reflect-metadata": "npm:reflect-metadata@^0.1.8"
     },
     "devDependencies": {
@@ -80,7 +81,7 @@
       "os": "github:jspm/nodelibs-os@^0.2.0-alpha",
       "path": "github:jspm/nodelibs-path@^0.2.0-alpha",
       "process": "github:jspm/nodelibs-process@^0.2.0-alpha",
-      "rxjs": "npm:rxjs@5.0.0-beta.12",
+      "rxjs": "npm:rxjs@^5.0.0-rc.1",
       "stream": "github:jspm/nodelibs-stream@^0.2.0-alpha",
       "string_decoder": "github:jspm/nodelibs-string_decoder@^0.2.0-alpha",
       "timers": "github:jspm/nodelibs-timers@^0.2.0-alpha",

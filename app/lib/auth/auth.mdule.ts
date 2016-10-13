@@ -5,7 +5,7 @@ import {HttpClientModule} from '../http/http-client.module';
 import {SignInFormComponent} from './signin/signinForm.component';
 import {AuthService} from './auth.service';
 import {AuthEvents} from './auth-events';
-
+import {UserSession} from './user-session';
 
 @NgModule({
     imports: [
@@ -17,7 +17,8 @@ import {AuthEvents} from './auth-events';
     ],
     providers: [
         AuthService,
-        AuthEvents
+        AuthEvents,
+        UserSession
     ],
     declarations: [
         SignInFormComponent

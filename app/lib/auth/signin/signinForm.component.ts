@@ -26,12 +26,7 @@ export class SignInFormComponent {
             .signIn(this.model)
             .subscribe(
                 data => {
-                    if (data.status === 'OK') {
-                        // $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, data);
-                    } else {
-                        // $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
-                        this.error = {status: 'Error', message: data.message};
-                    }
+                        // $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, data)
                 },
                 error => this.error = <any>error
             );

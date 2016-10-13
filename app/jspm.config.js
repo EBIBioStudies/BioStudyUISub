@@ -67,6 +67,7 @@ SystemJS.config({
     "github:*/*.json"
   ],
   map: {
+    "ng2-cookies": "npm:ng2-cookies@1.0.2",
     "ng2-bootstrap": "npm:ng2-bootstrap@1.1.13",
     "@angular/http": "npm:@angular/http@2.0.2",
     "@angular/router": "npm:@angular/router@3.0.2",
@@ -97,7 +98,7 @@ SystemJS.config({
     "path": "github:jspm/nodelibs-path@0.2.0-alpha",
     "process": "github:jspm/nodelibs-process@0.2.0-alpha",
     "reflect-metadata": "npm:reflect-metadata@0.1.8",
-    "rxjs": "npm:rxjs@5.0.0-beta.12",
+    "rxjs": "npm:rxjs@5.0.0-rc.1",
     "stream": "github:jspm/nodelibs-stream@0.2.0-alpha",
     "string_decoder": "github:jspm/nodelibs-string_decoder@0.2.0-alpha",
     "timers": "github:jspm/nodelibs-timers@0.2.0-alpha",
@@ -306,11 +307,6 @@ SystemJS.config({
         "string_decoder-browserify": "npm:string_decoder@0.10.31"
       }
     },
-    "npm:rxjs@5.0.0-beta.12": {
-      "map": {
-        "symbol-observable": "npm:symbol-observable@1.0.3"
-      }
-    },
     "github:jspm/nodelibs-timers@0.2.0-alpha": {
       "map": {
         "timers-browserify": "npm:timers-browserify@1.4.2"
@@ -349,6 +345,11 @@ SystemJS.config({
     "npm:ng2-bootstrap@1.1.13": {
       "map": {
         "moment": "npm:moment@2.15.1"
+      }
+    },
+    "npm:rxjs@5.0.0-rc.1": {
+      "map": {
+        "symbol-observable": "npm:symbol-observable@1.0.3"
       }
     }
   }

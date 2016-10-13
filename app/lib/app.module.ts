@@ -12,7 +12,9 @@ import {DummyComponent} from './main/dummy.component';
 
 import {AppComponent}     from './app.component';
 import {AuthModule} from './auth/auth.mdule';
-import {SignInPageComponent} from "./main/signInPage.component";
+import {SignInPageComponent} from './main/signInPage.component';
+import {AuthGuard} from './auth.guard';
+
 @NgModule({
     imports: [
         BrowserModule,
@@ -27,7 +29,8 @@ import {SignInPageComponent} from "./main/signInPage.component";
         SignInPageComponent
     ],
     providers: [
-        {provide: LocationStrategy, useClass: HashLocationStrategy}
+        {provide: LocationStrategy, useClass: HashLocationStrategy},
+        AuthGuard
     ],
     bootstrap: [AppComponent]
 })

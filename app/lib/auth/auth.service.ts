@@ -4,35 +4,81 @@ import {Response} from '@angular/http';
 import {HttpClient} from '../http/http-client'
 import {Observable} from 'rxjs/Observable';
 
+import 'rxjs/add/observable/throw';
+import 'rxjs/add/operator/catch';
+
 import {Credentials} from './credentials';
 import {AuthEvents} from './auth-events';
+import {UserSession} from './user-session';
+import {UserRole} from './user-role';
 
 @Injectable()
 export class AuthService {
-    constructor(@Inject(HttpClient) private http: HttpClient, @Inject(AuthEvents) private  authEvents: AuthEvents) {
+
+    constructor(@Inject(HttpClient) private http: HttpClient,
+                @Inject(AuthEvents) private  authEvents: AuthEvents,
+                @Inject(UserSession) private userSession: UserSession) {
+    }
+
+    isAuthenticated() {
+        return !this.userSession.isAnonymous();
+    }
+
+    currentUser() {
+        return this.userSession.user;
     }
 
     signIn(credentials: Credentials): Observable<any> {
         return this.http.post('/raw/auth/signin', credentials.stringify())
             .map((res: Response) => {
                 let data = res.json();
+                Observable.throw({status: 'Error', message: data.message || 'Server error'});
                 if (data.status === 'OK') {
-                    // Session.create(data.sessid, data.username, data.email || "", USER_ROLES.user);
+                    var orcid = data.aux ? data.aux.orcid : '';
+                    this.userSession.create(data.sessid, data.username, data.email, orcid, UserRole.User);
                     this.authEvents.userSignedIn(data.username);
                     return data;
                 }
-                return {status: 'Error', message: data.message || 'Server error'};
+                return Observable.throw({status: 'Error', message: data.message || 'Server error'});
             })
-            .catch((error: any) => {
-                if (error.status === 403) {
-                    return {status: 'Error', message: 'Invalid credentials'};
-                }
-                let errMsg = (error.message) ? error.message :
-                    error.status ? `${error.status} - ${error.statusText}` : 'Server error';
-                console.error(errMsg);
-                return Observable.throw(errMsg);
-            });
+            .catch(AuthService.errorHandler);
     }
+
+    signOut(): Observable<any> {
+        if (!this.isAuthenticated()) {
+            return Observable.just({});
+        }
+
+        let userName = this.userSession.user.name;
+        let userKey = this.userSession.user.key;
+        this.userSession.destroy();
+        this.authEvents.userSignedOut(userName);
+
+        return this.http.post("/api/auth/signout", {username: userName}, userKey)
+            .map(
+                () => {
+                    // if user alreade logged out we got 403 error (!!!) and not getting here
+                    // thus not putting session.destroy() here
+                    return {};
+                })
+            .catch(AuthService.errorHandler);
+    }
+
+    static errorHandler(error: any) {
+        let err = { status: '', message : ''};
+        try {
+            var jsonError = error.json ? error.json() : error;
+            err.status =  (jsonError.status) ? jsonError.status : 'Error';
+            err.message = (jsonError.message) ? jsonError.message : 'Server error';
+        } catch(e) {
+            // probably not a json
+            err.status = error.status || 'Error';
+            err.message = error.statusText || 'Server error';
+        }
+        console.error(err);
+        return Observable.throw(err);
+    }
+
 
     /*constructor(private http: $http, $q, USER_ROLES, Session, AccessLevel, $log, $location) {
 

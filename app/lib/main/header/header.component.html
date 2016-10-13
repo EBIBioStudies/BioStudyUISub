@@ -21,6 +21,7 @@
             <ul class="nav navbar-nav">
                 <li>
                     <a routerLink="/help"
+                       routerLinkActive="active"
                        tooltip="Go to the help page"
                        tooltipPlacement="bottom"
                        (click)="toggleCollapsed()">
@@ -31,6 +32,7 @@
 
                 <li *ngIf="!currentUser">
                     <a routerLink="/signup"
+                       routerLinkActive="active"
                        tooltip="Register a new user"
                        tooltipPlacement="bottom"
                        (click)="toggleCollapsed()">
@@ -41,6 +43,7 @@
 
                 <li *ngIf="!currentUser">
                     <a routerLink="/signin"
+                       routerLinkActive="active"
                        tooltip="Sign in"
                        tooltipPlacement="bottom"
                        (click)="toggleCollapsed()">
@@ -51,6 +54,7 @@
 
                 <li *ngIf="currentUser">
                     <a routerLink="submissions"
+                       routerLinkActive="active"
                        tooltip="List of submissions"
                        tooltipPlacement="bottom"
                        (click)="toggleCollapsed()">
@@ -61,6 +65,7 @@
 
                 <li *ngIf="currentUser">
                     <a routerLink="files"
+                       routerLinkActive="active"
                        (click)="toggleCollapsed()">
                         <i class="fa fa-fw fa-upload"></i>
                         <span>Files</span>

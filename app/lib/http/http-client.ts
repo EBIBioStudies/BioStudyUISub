@@ -1,6 +1,6 @@
 import {Injectable, Inject} from '@angular/core';
 import {Http, Response, RequestOptions, Headers} from '@angular/http';
-import {Observable}     from 'rxjs/Observable';
+import {Observable} from 'rxjs/Observable';
 
 @Injectable()
 export class HttpClient {
@@ -15,8 +15,11 @@ export class HttpClient {
         return this.http.get(this.transform(url));
     }
 
-    post(url, data) {
+    post(url, data, sessionId = undefined) {
         let headers = new Headers({'Content-Type': 'application/json'});
+        if (sessionId) {
+            headers.append('X-Session-Token', sessionId);
+        }
         let options = new RequestOptions({headers: headers});
         return this.http.post(this.transform(url), data, options);
     }
