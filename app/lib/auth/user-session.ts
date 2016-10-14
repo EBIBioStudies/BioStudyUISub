@@ -1,6 +1,6 @@
 import {Injectable, Inject} from '@angular/core';
 
-import {lsStore, lsRemove, lsRetrieve} from '../shared/local-storage';
+import {lsStore, lsRemove, lsRetrieve} from './local-storage';
 import {User} from './user';
 
 const SESSION_KEY = "SESSION_DATA";

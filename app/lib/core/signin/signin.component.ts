@@ -1,20 +1,22 @@
 import {Component, Inject} from '@angular/core';
+import {Router} from '@angular/router';
 
-import {Credentials} from '../credentials'
-import {AuthService} from '../auth.service';
+import {Credentials} from '../../auth/credentials'
+import {AuthService} from '../../auth/auth.service';
 
-import tmpl from './signinForm.component.html'
+import tmpl from './signin.component.html'
 
 @Component({
-    selector: 'signin-form',
+    selector: 'app-signin',
     template: tmpl
 })
 
-export class SignInFormComponent {
+export class SignInComponent {
     model = new Credentials('', '');
     error: any = null;
 
-    constructor(@Inject(AuthService) private authService: AuthService) {
+    constructor(@Inject(AuthService) private authService: AuthService,
+                @Inject(Router) private router: Router) {
     }
 
     onSubmit(event) {
@@ -26,7 +28,7 @@ export class SignInFormComponent {
             .signIn(this.model)
             .subscribe(
                 data => {
-                        // $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, data)
+                    this.router.navigate(['/submissions']);
                 },
                 error => this.error = <any>error
             );
