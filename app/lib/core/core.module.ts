@@ -3,6 +3,8 @@ import {NgModule}     from '@angular/core';
 import {Ng2BootstrapModule} from 'ng2-bootstrap/ng2-bootstrap';
 import {RouterModule} from '@angular/router';
 
+import {RecaptchaModule} from 'ng2-recaptcha';
+
 import {SharedModule} from '../shared/shared.module.ts';
 
 import {AuthModule} from '../auth/auth.mdule';
@@ -16,14 +18,16 @@ import {SignInComponent} from './signin/signin.component';
 import {DummyComponent} from './dummy.component';
 import {TopContainerComponent} from './top-container.component';
 import {CenteredContainerComponent} from './centered-container.component';
+import {ORCIDInputBoxComponent} from './orcid-input-box.component';
 
 import {APP_ROUTES} from './app-routes';
-
+import {SignUpComponent} from "./signup/signup.component";
 
 @NgModule({
     imports: [
         Ng2BootstrapModule,
         RouterModule.forRoot(APP_ROUTES),
+        RecaptchaModule.forRoot(),
         SharedModule,
         AuthModule
     ],
@@ -35,9 +39,11 @@ import {APP_ROUTES} from './app-routes';
         AppComponent,
         HeaderComponent,
         SignInComponent,
+        SignUpComponent,
         DummyComponent,
         TopContainerComponent,
-        CenteredContainerComponent
+        CenteredContainerComponent,
+        ORCIDInputBoxComponent
     ],
     providers: [
         AuthGuard

@@ -67,17 +67,18 @@ SystemJS.config({
     "github:*/*.json"
   ],
   map: {
+    "ng2-recaptcha": "npm:ng2-recaptcha@1.3.2",
     "ng2-cookies": "npm:ng2-cookies@1.0.2",
     "ng2-bootstrap": "npm:ng2-bootstrap@1.1.13",
-    "@angular/http": "npm:@angular/http@2.0.2",
+    "@angular/http": "npm:@angular/http@2.1.0",
     "@angular/router": "npm:@angular/router@3.0.2",
     "core-js": "npm:core-js@2.4.1",
-    "@angular/forms": "npm:@angular/forms@2.0.2",
-    "@angular/common": "npm:@angular/common@2.0.2",
-    "@angular/compiler": "npm:@angular/compiler@2.0.2",
-    "@angular/core": "npm:@angular/core@2.0.2",
-    "@angular/platform-browser": "npm:@angular/platform-browser@2.0.2",
-    "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.0.2",
+    "@angular/forms": "npm:@angular/forms@2.1.0",
+    "@angular/common": "npm:@angular/common@2.1.0",
+    "@angular/compiler": "npm:@angular/compiler@2.1.0",
+    "@angular/core": "npm:@angular/core@2.1.0",
+    "@angular/platform-browser": "npm:@angular/platform-browser@2.1.0",
+    "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.1.0",
     "@angular/upgrade": "npm:@angular/upgrade@2.0.1",
     "angular": "github:angular/bower-angular@1.5.8",
     "angular-cookies": "github:angular/bower-angular-cookies@1.5.8",
@@ -98,7 +99,7 @@ SystemJS.config({
     "path": "github:jspm/nodelibs-path@0.2.0-alpha",
     "process": "github:jspm/nodelibs-process@0.2.0-alpha",
     "reflect-metadata": "npm:reflect-metadata@0.1.8",
-    "rxjs": "npm:rxjs@5.0.0-rc.1",
+    "rxjs": "npm:rxjs@5.0.0-beta.12",
     "stream": "github:jspm/nodelibs-stream@0.2.0-alpha",
     "string_decoder": "github:jspm/nodelibs-string_decoder@0.2.0-alpha",
     "timers": "github:jspm/nodelibs-timers@0.2.0-alpha",
@@ -347,9 +348,9 @@ SystemJS.config({
         "moment": "npm:moment@2.15.1"
       }
     },
-    "npm:rxjs@5.0.0-rc.1": {
+    "npm:rxjs@5.0.0-beta.12": {
       "map": {
-        "symbol-observable": "npm:symbol-observable@1.0.3"
+        "symbol-observable": "npm:symbol-observable@1.0.4"
       }
     }
   }

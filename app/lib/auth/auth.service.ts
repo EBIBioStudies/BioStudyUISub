@@ -8,6 +8,8 @@ import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
 
 import {Credentials} from './credentials';
+import {RegistrationData} from './registration-data';
+
 import {AuthEvents} from './auth-events';
 import {UserSession} from './user-session';
 import {UserRole} from './user-role';
@@ -42,6 +44,11 @@ export class AuthService {
                 return Observable.throw({status: 'Error', message: data.message || 'Server error'});
             })
             .catch(AuthService.errorHandler);
+    }
+
+    signUp(regData: RegistratioData):Observable<any> {
+        //TOD
+        return Observable.just({});
     }
 
     signOut(): Observable<any> {
