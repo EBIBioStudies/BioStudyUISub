@@ -54,11 +54,11 @@ export class AuthService {
         this.userSession.destroy();
         this.authEvents.userSignedOut(userName);
 
-        return this.http.post("/api/auth/signout", {username: userName}, userKey)
+        return this.http.post("/api/auth/signout", {}, userKey)
             .map(
                 () => {
-                    // if user alreade logged out we got 403 error (!!!) and not getting here
-                    // thus not putting session.destroy() here
+                    // if users session expired on server we got 403 error (why?!) and not getting here
+                    // thus not writing session.destroy() here
                     return {};
                 })
             .catch(AuthService.errorHandler);
