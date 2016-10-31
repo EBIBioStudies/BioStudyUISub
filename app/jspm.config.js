@@ -13,7 +13,8 @@ SystemJS.config({
       "css": "github:systemjs/plugin-css@0.1.30",
       "less": "github:systemjs/plugin-less@0.1.2",
       "ts": "github:frankwallis/plugin-typescript@5.2.6",
-      "text": "github:systemjs/plugin-text@0.0.9"
+      "text": "github:systemjs/plugin-text@0.0.9",
+      "jamespamplin/plugin-ng-template": "github:jamespamplin/plugin-ng-template@0.1.1"
     },
     "packages": {
       "github:frankwallis/plugin-typescript@5.2.6": {
@@ -67,16 +68,21 @@ SystemJS.config({
     "github:*/*.json"
   ],
   map: {
+    "ng2-table": "npm:ng2-table@1.3.2",
+    "ng2-smart-table": "npm:ng2-smart-table@0.4.0-3",
+    "danialfarid/ng-file-upload-bower": "github:danialfarid/ng-file-upload-bower@12.2.12",
+    "monospaced/angular-elastic": "github:monospaced/angular-elastic@2.5.1",
+    "moonstorm/trNgGrid": "github:moonstorm/trNgGrid@3.1.7",
     "ng2-recaptcha": "npm:ng2-recaptcha@1.3.2",
     "ng2-cookies": "npm:ng2-cookies@1.0.2",
     "ng2-bootstrap": "npm:ng2-bootstrap@1.1.13",
     "@angular/http": "npm:@angular/http@2.1.0",
     "@angular/router": "npm:@angular/router@3.0.2",
     "core-js": "npm:core-js@2.4.1",
-    "@angular/forms": "npm:@angular/forms@2.1.0",
-    "@angular/common": "npm:@angular/common@2.1.0",
-    "@angular/compiler": "npm:@angular/compiler@2.1.0",
-    "@angular/core": "npm:@angular/core@2.1.0",
+    "@angular/forms": "npm:@angular/forms@2.1.1",
+    "@angular/common": "npm:@angular/common@2.1.1",
+    "@angular/compiler": "npm:@angular/compiler@2.1.1",
+    "@angular/core": "npm:@angular/core@2.1.1",
     "@angular/platform-browser": "npm:@angular/platform-browser@2.1.0",
     "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.1.0",
     "@angular/upgrade": "npm:@angular/upgrade@2.0.1",
@@ -86,38 +92,28 @@ SystemJS.config({
     "angular-recaptcha": "npm:angular-recaptcha@3.0.4",
     "angular-ui-bootstrap": "npm:angular-ui-bootstrap@2.1.4",
     "angular-ui-router": "github:angular-ui/angular-ui-router-bower@0.3.1",
-    "assert": "github:jspm/nodelibs-assert@0.2.0-alpha",
+    "assert": "npm:jspm-nodelibs-assert@0.2.0",
     "bootstrap": "github:twbs/bootstrap@3.3.7",
-    "buffer": "github:jspm/nodelibs-buffer@0.2.0-alpha",
-    "constants": "github:jspm/nodelibs-constants@0.2.0-alpha",
-    "crypto": "github:jspm/nodelibs-crypto@0.2.0-alpha",
-    "events": "github:jspm/nodelibs-events@0.2.0-alpha",
+    "buffer": "npm:jspm-nodelibs-buffer@0.2.0",
+    "constants": "npm:jspm-nodelibs-constants@0.2.0",
+    "crypto": "npm:jspm-nodelibs-crypto@0.2.0",
+    "events": "npm:jspm-nodelibs-events@0.2.0",
     "font-awesome": "npm:font-awesome@4.6.3",
-    "fs": "github:jspm/nodelibs-fs@0.2.0-alpha",
+    "fs": "npm:jspm-nodelibs-fs@0.2.0",
     "lodash": "npm:lodash@4.16.3",
-    "os": "github:jspm/nodelibs-os@0.2.0-alpha",
-    "path": "github:jspm/nodelibs-path@0.2.0-alpha",
-    "process": "github:jspm/nodelibs-process@0.2.0-alpha",
+    "os": "npm:jspm-nodelibs-os@0.2.0",
+    "path": "npm:jspm-nodelibs-path@0.2.0",
+    "process": "npm:jspm-nodelibs-process@0.2.0",
     "reflect-metadata": "npm:reflect-metadata@0.1.8",
     "rxjs": "npm:rxjs@5.0.0-beta.12",
-    "stream": "github:jspm/nodelibs-stream@0.2.0-alpha",
-    "string_decoder": "github:jspm/nodelibs-string_decoder@0.2.0-alpha",
-    "timers": "github:jspm/nodelibs-timers@0.2.0-alpha",
-    "util": "github:jspm/nodelibs-util@0.2.0-alpha",
-    "vm": "github:jspm/nodelibs-vm@0.2.0-alpha",
-    "zone.js": "npm:zone.js@0.6.25"
+    "stream": "npm:jspm-nodelibs-stream@0.2.0",
+    "string_decoder": "npm:jspm-nodelibs-string_decoder@0.2.0",
+    "timers": "npm:jspm-nodelibs-timers@0.2.0",
+    "util": "npm:jspm-nodelibs-util@0.2.0",
+    "vm": "npm:jspm-nodelibs-vm@0.2.0",
+    "zone.js": "npm:zone.js@0.6.26"
   },
   packages: {
-    "github:jspm/nodelibs-os@0.2.0-alpha": {
-      "map": {
-        "os-browserify": "npm:os-browserify@0.2.1"
-      }
-    },
-    "github:jspm/nodelibs-crypto@0.2.0-alpha": {
-      "map": {
-        "crypto-browserify": "npm:crypto-browserify@3.11.0"
-      }
-    },
     "npm:crypto-browserify@3.11.0": {
       "map": {
         "browserify-cipher": "npm:browserify-cipher@1.0.0",
@@ -269,21 +265,11 @@ SystemJS.config({
         "minimalistic-assert": "npm:minimalistic-assert@1.0.0"
       }
     },
-    "github:jspm/nodelibs-buffer@0.2.0-alpha": {
-      "map": {
-        "buffer-browserify": "npm:buffer@4.9.1"
-      }
-    },
     "npm:buffer@4.9.1": {
       "map": {
         "base64-js": "npm:base64-js@1.2.0",
         "isarray": "npm:isarray@1.0.0",
         "ieee754": "npm:ieee754@1.1.8"
-      }
-    },
-    "github:jspm/nodelibs-stream@0.2.0-alpha": {
-      "map": {
-        "stream-browserify": "npm:stream-browserify@2.0.1"
       }
     },
     "npm:stream-browserify@2.0.1": {
@@ -301,16 +287,6 @@ SystemJS.config({
         "buffer-shims": "npm:buffer-shims@1.0.0",
         "util-deprecate": "npm:util-deprecate@1.0.2",
         "process-nextick-args": "npm:process-nextick-args@1.0.7"
-      }
-    },
-    "github:jspm/nodelibs-string_decoder@0.2.0-alpha": {
-      "map": {
-        "string_decoder-browserify": "npm:string_decoder@0.10.31"
-      }
-    },
-    "github:jspm/nodelibs-timers@0.2.0-alpha": {
-      "map": {
-        "timers-browserify": "npm:timers-browserify@1.4.2"
       }
     },
     "npm:timers-browserify@1.4.2": {
@@ -351,6 +327,41 @@ SystemJS.config({
     "npm:rxjs@5.0.0-beta.12": {
       "map": {
         "symbol-observable": "npm:symbol-observable@1.0.4"
+      }
+    },
+    "npm:jspm-nodelibs-buffer@0.2.0": {
+      "map": {
+        "buffer-browserify": "npm:buffer@4.9.1"
+      }
+    },
+    "npm:jspm-nodelibs-os@0.2.0": {
+      "map": {
+        "os-browserify": "npm:os-browserify@0.2.1"
+      }
+    },
+    "npm:jspm-nodelibs-string_decoder@0.2.0": {
+      "map": {
+        "string_decoder-browserify": "npm:string_decoder@0.10.31"
+      }
+    },
+    "npm:jspm-nodelibs-stream@0.2.0": {
+      "map": {
+        "stream-browserify": "npm:stream-browserify@2.0.1"
+      }
+    },
+    "npm:jspm-nodelibs-crypto@0.2.0": {
+      "map": {
+        "crypto-browserify": "npm:crypto-browserify@3.11.0"
+      }
+    },
+    "npm:jspm-nodelibs-timers@0.2.0": {
+      "map": {
+        "timers-browserify": "npm:timers-browserify@1.4.2"
+      }
+    },
+    "npm:ng2-smart-table@0.4.0-3": {
+      "map": {
+        "rxjs": "npm:rxjs@5.0.0-beta.12"
       }
     }
   }

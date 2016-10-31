@@ -1,0 +1,85 @@
+<container-root>
+
+    <aside class="right-side strech">
+
+        <section class="content">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    List of submissions
+                    <p class="pull-right">
+                        <a class="pull-right btn btn-default btn-xs" (click)="createSubmission()"
+                           tooltipPlacement="bottom">Create a new submission
+                        </a>
+                    </p>
+
+                </div>
+
+                <ng-table [config]="config"
+                          (tableChanged)="onChangeTable(config)"
+                          (cellClicked)="onCellClick($event)"
+                          [rows]="rows" [columns]="columns">
+                </ng-table>
+
+                <table class="table table-condensed table-bordered" tr-ng-grid
+                       items="submissions" page-items="10"
+                       selected-items="selectedSubmission"
+                       selection-mode="SingleRow">
+                    <thead>
+                    <tr>
+                        <th cell-width="20%" field-name="accno" display-name="Accession" enable-filtering="false"
+                            cell-width="10em" display-align="right">
+                        </th>
+                        <th field-name="title" display-name="Title"
+                            enable-filtering="false">
+                        </th>
+                        <th field-name="rtime" cell-width="10%" display-name="Release date"
+                            display-format="releaseDateFormat:gridItem" enable-filtering="false">
+                        </th>
+                        <th field-name="status" cell-width="10%" display-name="Status"
+                            display-format="lowercase:gridItem" enable-filtering="false">
+                        </th>
+                        <th cell-width="10%">
+                            <div class="tr-ng-title">
+                                Actions
+                            </div>
+                        </th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-class="{warning: gridItem.status !== 'SUBMITTED'}">
+                        <td>
+                            <button type="button" class="btn btn-danger btn-xs btn-flat"
+                                    ng-click="deleteSubmission(gridItem)"
+                                    ng-if="gridItem.status !== 'MODIFIED'"
+                                    uib-tooltip="delete">
+                                <i class="fa fa-trash-o fa-fw"></i>
+                            </button>
+                            <button type="button" class="btn btn-warning btn-xs btn-flat"
+                                    ng-click="revertSubmission(gridItem)"
+                                    ng-if="gridItem.status === 'MODIFIED'"
+                                    uib-tooltip="undo changes">
+                                <i class="fa fa-undo fa-fw"></i>
+                            </button>
+                            <button type="button" class="btn btn-primary btn-xs btn-flat"
+                                    ng-click="editSubmission(gridItem)"
+                                    uib-tooltip="edit">
+                                <i class="fa fa-pencil fa-fw"></i>
+                            </button>
+                            <button type="button" class="btn btn-info btn-xs btn-flat"
+                                    ng-click="viewSubmission(gridItem)"
+                                    ng-if="gridItem.status === 'MODIFIED'"
+                                    uib-tooltip="view">
+                                <i class="fa fa-eye fa-fw"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </aside>
+</container-root>
+
+

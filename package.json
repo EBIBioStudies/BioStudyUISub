@@ -56,6 +56,8 @@
       "ng2-bootstrap": "npm:ng2-bootstrap@^1.1.13",
       "ng2-cookies": "npm:ng2-cookies@^1.0.2",
       "ng2-recaptcha": "npm:ng2-recaptcha@^1.3.2",
+      "ng2-smart-table": "npm:ng2-smart-table@^0.4.0-3",
+      "ng2-table": "npm:ng2-table@^1.3.2",
       "reflect-metadata": "npm:reflect-metadata@^0.1.8"
     },
     "devDependencies": {
@@ -67,27 +69,27 @@
       "ts": "github:frankwallis/plugin-typescript@^5.2.6"
     },
     "peerDependencies": {
-      "@angular/common": "npm:@angular/common@2.1.0",
-      "@angular/compiler": "npm:@angular/compiler@^2.1.0",
-      "@angular/core": "npm:@angular/core@2.1.0",
-      "@angular/forms": "npm:@angular/forms@^2.0.0",
+      "@angular/common": "npm:@angular/common@2.1.1",
+      "@angular/compiler": "npm:@angular/compiler@2.1.1",
+      "@angular/core": "npm:@angular/core@2.1.1",
+      "@angular/forms": "npm:@angular/forms@2.1.1",
       "@angular/platform-browser": "npm:@angular/platform-browser@2.1.0",
       "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@^2.1.0",
-      "assert": "github:jspm/nodelibs-assert@^0.2.0-alpha",
-      "buffer": "github:jspm/nodelibs-buffer@^0.2.0-alpha",
-      "constants": "github:jspm/nodelibs-constants@^0.2.0-alpha",
-      "crypto": "github:jspm/nodelibs-crypto@^0.2.0-alpha",
-      "events": "github:jspm/nodelibs-events@^0.2.0-alpha",
-      "fs": "github:jspm/nodelibs-fs@^0.2.0-alpha",
-      "os": "github:jspm/nodelibs-os@^0.2.0-alpha",
-      "path": "github:jspm/nodelibs-path@^0.2.0-alpha",
-      "process": "github:jspm/nodelibs-process@^0.2.0-alpha",
+      "assert": "npm:jspm-nodelibs-assert@^0.2.0",
+      "buffer": "npm:jspm-nodelibs-buffer@^0.2.0",
+      "constants": "npm:jspm-nodelibs-constants@^0.2.0",
+      "crypto": "npm:jspm-nodelibs-crypto@^0.2.0",
+      "events": "npm:jspm-nodelibs-events@^0.2.0",
+      "fs": "npm:jspm-nodelibs-fs@^0.2.0",
+      "os": "npm:jspm-nodelibs-os@^0.2.0",
+      "path": "npm:jspm-nodelibs-path@^0.2.0",
+      "process": "npm:jspm-nodelibs-process@^0.2.0",
       "rxjs": "npm:rxjs@5.0.0-beta.12",
-      "stream": "github:jspm/nodelibs-stream@^0.2.0-alpha",
-      "string_decoder": "github:jspm/nodelibs-string_decoder@^0.2.0-alpha",
-      "timers": "github:jspm/nodelibs-timers@^0.2.0-alpha",
-      "util": "github:jspm/nodelibs-util@^0.2.0-alpha",
-      "vm": "github:jspm/nodelibs-vm@^0.2.0-alpha",
+      "stream": "npm:jspm-nodelibs-stream@^0.2.0",
+      "string_decoder": "npm:jspm-nodelibs-string_decoder@^0.2.0",
+      "timers": "npm:jspm-nodelibs-timers@^0.2.0",
+      "util": "npm:jspm-nodelibs-util@^0.2.0",
+      "vm": "npm:jspm-nodelibs-vm@^0.2.0",
       "zone.js": "npm:zone.js@^0.6.21"
     },
     "overrides": {
@@ -164,7 +166,7 @@
           }
         }
       },
-      "npm:@angular/common@2.1.0": {
+      "npm:@angular/common@2.1.1": {
         "meta": {
           "src/*.js": {
             "deps": [
@@ -178,7 +180,7 @@
           "./testing": "./bundles/common-testing.umd.js"
         }
       },
-      "npm:@angular/compiler@2.1.0": {
+      "npm:@angular/compiler@2.1.1": {
         "meta": {
           "src/*.js": {
             "deps": [
@@ -192,7 +194,7 @@
           "./testing": "./bundles/compiler-testing.umd.js"
         }
       },
-      "npm:@angular/core@2.1.0": {
+      "npm:@angular/core@2.1.1": {
         "meta": {
           "src/*.js": {
             "deps": [

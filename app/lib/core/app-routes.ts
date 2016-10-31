@@ -4,6 +4,7 @@ import {DummyComponent} from './dummy.component';
 import {SignInComponent} from './signin/signin.component';
 import {SignUpComponent} from './signup/signup.component';
 import {HelpComponent} from './help/help.component';
+import {SubmissionListComponent} from './submission/submissionList.component';
 
 import {AuthGuard} from "./auth.guard";
 
@@ -17,7 +18,7 @@ export const APP_ROUTES: Routes = [
     {path: 'password_reset', component: DummyComponent},
     {path: 'resend_activation_link', component: DummyComponent},
     {path: 'help', loadChildren: HelpComponent},
-    {path: 'submissions', component: DummyComponent, canActivate: [AuthGuard]},
+    {path: 'submissions', component: SubmissionListComponent, canActivate: [AuthGuard]},
     {path: 'edit/:accno', component: DummyComponent, canActivate: [AuthGuard]},
     {path: 'view/:accno', component: DummyComponent, canActivate: [AuthGuard]},
     {path: 'files', component: DummyComponent, canActivate: [AuthGuard]}
