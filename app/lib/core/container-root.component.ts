@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 
 @Component({
-    selector: 'top-container',
+    selector: 'container-root',
     template: `
     <div class="container-fluid">
     <div class="row-offcanvas row-offcanvas-left">
@@ -11,5 +11,5 @@ import {Component} from '@angular/core';
     `
 })
 
-export class TopContainerComponent {
+export class ContainerRootComponent {
 }

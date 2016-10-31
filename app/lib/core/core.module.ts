@@ -16,8 +16,8 @@ import {HelpComponent} from './help/help.component';
 import {HeaderComponent} from './header/header.component';
 import {SignInComponent} from './signin/signin.component';
 import {DummyComponent} from './dummy.component';
-import {TopContainerComponent} from './top-container.component';
-import {CenteredContainerComponent} from './centered-container.component';
+import {ContainerRootComponent} from './container-root.component';
+import {ContainerMdComponent} from './container-md.component';
 import {ORCIDInputBoxComponent} from './orcid-input-box.component';
 
 import {APP_ROUTES} from './app-routes';
@@ -41,8 +41,8 @@ import {SignUpComponent} from "./signup/signup.component";
         SignInComponent,
         SignUpComponent,
         DummyComponent,
-        TopContainerComponent,
-        CenteredContainerComponent,
+        ContainerRootComponent,
+        ContainerMdComponent,
         ORCIDInputBoxComponent
     ],
     providers: [
