@@ -2,26 +2,38 @@ import {Injectable, Inject} from '@angular/core';
 import {Http, Response, RequestOptions, Headers} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 
+import {UserSession} from '../session/user-session';
+
 @Injectable()
 export class HttpClient {
+    //TODO: use config
+    private prefix:string = '/proxy';
 
-    constructor(@Inject(Http) http: Http) {
-        //TODO: use config
-        this.prefix = '/proxy';
-        this.http = http;
-    }
+    constructor(@Inject(Http) private http: Http,
+                @Inject(UserSession) private userSession: UserSession
+    ) {}
 
     get(url) {
-        return this.http.get(this.transform(url));
+        let headers = this.headers();
+        let options =  new RequestOptions({headers: headers});
+        return this.http.get(this.transform(url), options);
     }
 
-    post(url, data, sessionId = undefined) {
-        let headers = new Headers({'Content-Type': 'application/json'});
+    post(url, data) {
+        let headers = this.headers();
+        headers.append('Content-Type', 'application/json');
+
+        let options =  new RequestOptions({headers: headers});
+        return this.http.post(this.transform(url), data, options);
+    }
+
+    private headers() {
+        let headers = new Headers();
+        let sessionId = this.userSession.user.key;
         if (sessionId) {
             headers.append('X-Session-Token', sessionId);
         }
-        let options = new RequestOptions({headers: headers});
-        return this.http.post(this.transform(url), data, options);
+        return headers;
     }
 
     private transform(url: string) {

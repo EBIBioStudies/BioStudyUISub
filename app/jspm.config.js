@@ -51,6 +51,12 @@ SystemJS.config({
           "loader": "text"
         }
       }
+    },
+    "ag-grid-ng2": {
+      "defaultExtension": "js"
+    },
+    "ag-grid": {
+      "defaultExtension": "js"
     }
   },
   map: {
@@ -68,7 +74,8 @@ SystemJS.config({
     "github:*/*.json"
   ],
   map: {
-    "ng2-table": "npm:ng2-table@1.3.2",
+    "ag-grid-ng2": "github:ceolter/ag-grid-ng2@6.2.0",
+    "ag-grid": "github:ceolter/ag-grid@6.2.1",
     "ng2-smart-table": "npm:ng2-smart-table@0.4.0-3",
     "danialfarid/ng-file-upload-bower": "github:danialfarid/ng-file-upload-bower@12.2.12",
     "monospaced/angular-elastic": "github:monospaced/angular-elastic@2.5.1",

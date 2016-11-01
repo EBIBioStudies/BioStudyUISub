@@ -1,8 +1,14 @@
-export default class DictionaryService {
-    constructor($log, _) {
-        "ngInject";
+import {Injectable, Inject} from '@angular/core';
 
-        var dict = {
+import * as _ from 'lodash';
+
+@Injectable()
+export class DictionaryService {
+    private dict;
+
+    constructor() {
+
+        this.dict = {
             "annotation": {
                 "title": "Describe your study",
                 "description": "Provide an adequate overview of the Study, make it easier to find and interpret",
@@ -155,18 +161,18 @@ export default class DictionaryService {
                 ]
             }
         };
+    }
 
-        Object.assign(this, {
-            byKey (key) {
-                if (dict.hasOwnProperty(key)) {
-                    return _.cloneDeep(dict[key]);
-                }
-                $log.error("dictionary key '" + key + "' doesn't exist");
-                return {};
-            },
-            dict() {
-                return _.cloneDeep(dict);
-            }
-        });
+    byKey(key: string) {
+        if (this.dict.hasOwnProperty(key)) {
+            return _.cloneDeep(this.dict[key]);
+        }
+
+        console.error("dictionary key '" + key + "' doesn't exist");
+        return {};
+    }
+
+    dict() {
+        return _.cloneDeep(this.dict);
     }
 }

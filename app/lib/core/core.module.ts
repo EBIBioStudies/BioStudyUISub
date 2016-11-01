@@ -5,11 +5,12 @@ import {RouterModule} from '@angular/router';
 
 import {RecaptchaModule} from 'ng2-recaptcha';
 
-import { Ng2TableModule } from 'ng2-table/ng2-table';
+import {AgGridModule} from 'ag-grid-ng2/main';
 
 import {SharedModule} from '../shared/shared.module.ts';
 
-import {AuthModule} from '../auth/auth.mdule';
+import {AuthModule} from '../auth/auth.module';
+import {SubmissionModule} from '../submission/submission.module';
 
 import {AuthGuard} from './auth.guard';
 
@@ -24,16 +25,18 @@ import {ContainerMdComponent} from './container-md.component';
 import {ORCIDInputBoxComponent} from './orcid-input-box.component';
 
 import {APP_ROUTES} from './app-routes';
-import {SignUpComponent} from "./signup/signup.component";
+import {SignUpComponent} from './signup/signup.component';
+import {ActionButtonsComponent} from './submission/actionButtons.component';
 
 @NgModule({
     imports: [
         Ng2BootstrapModule,
         RouterModule.forRoot(APP_ROUTES),
         RecaptchaModule.forRoot(),
-        Ng2TableModule,
+        AgGridModule.withNg2ComponentSupport(),
         SharedModule,
-        AuthModule
+        AuthModule,
+        SubmissionModule
     ],
     exports: [
         AppComponent
@@ -48,7 +51,8 @@ import {SignUpComponent} from "./signup/signup.component";
         DummyComponent,
         ContainerRootComponent,
         ContainerMdComponent,
-        ORCIDInputBoxComponent
+        ORCIDInputBoxComponent,
+        ActionButtonsComponent
     ],
     providers: [
         AuthGuard

@@ -11,8 +11,8 @@ import {Credentials} from './credentials';
 import {RegistrationData} from './registration-data';
 
 import {AuthEvents} from './auth-events';
-import {UserSession} from './user-session';
-import {UserRole} from './user-role';
+import {UserSession} from '../session/user-session';
+import {UserRole} from '../session/user-role';
 
 @Injectable()
 export class AuthService {
@@ -46,7 +46,7 @@ export class AuthService {
             .catch(AuthService.errorHandler);
     }
 
-    signUp(regData: RegistratioData):Observable<any> {
+    signUp(regData: RegistrationData):Observable<any> {
         //TOD
         return Observable.just({});
     }
@@ -57,11 +57,10 @@ export class AuthService {
         }
 
         let userName = this.userSession.user.name;
-        let userKey = this.userSession.user.key;
         this.userSession.destroy();
         this.authEvents.userSignedOut(userName);
 
-        return this.http.post("/api/auth/signout", {}, userKey)
+        return this.http.post("/api/auth/signout", {})
             .map(
                 () => {
                     // if users session expired on server we got 403 error (why?!) and not getting here

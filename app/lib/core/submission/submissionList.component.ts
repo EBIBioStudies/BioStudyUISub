@@ -1,6 +1,26 @@
 import {Component, Inject} from '@angular/core';
 
 import tmpl from './submissionList.component.html'
+import {SubmissionService} from '../../submission/submission.service';
+import {SubmissionModel} from '../../submission/submission.model';
+
+import {GridOptions, AgRendererComponent} from 'ag-grid/main';
+
+import 'ag-grid/dist/styles/ag-grid.css!css';
+import 'ag-grid/dist/styles/theme-fresh.css!css';
+
+@Component({
+    selector: 'actions-cell',
+    template: `<action-buttons [status]="params.value"></action-buttons>`
+})
+class ActionsCellComponent implements AgRendererComponent {
+    private params:any;
+
+    agInit(params:any):void {
+        this.params = params;
+    }
+}
+
 
 @Component({
     selector: 'submission-list',
@@ -8,34 +28,70 @@ import tmpl from './submissionList.component.html'
 })
 
 export class SubmissionListComponent {
-    public rows: Array<any> = [];
-    public columns: Array<any> = [
-        {title: 'Accession', name: 'accno', filtering: {filterString: '', placeholder: 'Filter by accession'}},
-        {title: 'Title', name: 'position', sort: false, filtering: {filterString: '', placeholder: 'Filter by position'}},
-        {title: 'Release Date', name: 'releaseDate', sort: 'asc'},
-        {title: 'Status', name: 'ext', sort: '', filtering: {filterString: '', placeholder: 'Filter by extn.'}},
-        {title: '', className: 'text-warning', name: 'startDate'},
-    ];
-    public page: number = 1;
-    public itemsPerPage: number = 10;
-    public maxSize: number = 5;
-    public numPages: number = 1;
-    public length: number = 0;
+    private gridOptions:GridOptions;
+    private rowData: any[];
+    private columnDefs: any[];
 
-    public config: any = {
-        paging: true,
-        sorting: {columns: this.columns},
-        filtering: {filterString: ''},
-        className: ['table-striped', 'table-bordered']
-    };
+    error: any = null;
 
-    constructor() {
+    constructor(@Inject(SubmissionService) private submService: SubmissionService,
+                @Inject(SubmissionModel) private submModel: SubmissionModel) {
+
+        this.gridOptions = <GridOptions>{
+            onGridReady: () => {
+                this.gridOptions.api.sizeColumnsToFit();
+            }
+        };
+
+        this.createColumnDefs();
+
+        submService
+            .getAllSubmissions()
+            .subscribe(
+                data => {
+                    this.createRowData(data);
+                },
+                error => this.error = <any>error
+            );
+    }
+
+    createRowData(data) {
+        this.rowData = data;
+    }
+
+    createColumnDefs() {
+        this.columnDefs = [
+            {
+                headerName: 'Accession',
+                field: 'accno',
+            },
+            {
+                headerName: 'Title',
+                field: 'title'
+            },
+            {
+                headerName: 'Release Date',
+                field: 'rtime'
+            },
+            {
+                headerName: 'Status',
+                field: 'status'
+            },
+            {
+                headerName: 'Actions',
+                field: 'status',
+                suppressMenu: true,
+                suppressSorting: true,
+                cellRendererFramework: {
+                    component: ActionsCellComponent
+                }
+            }
+        ];
+
     }
 
     createSubmission = function () {
-        /*
-         //TODO
-         var sbm = SubmissionModel.create(Session.userName, Session.userEmail);
+        /* //TODO var sbm = SubmissionModel.create(Session.userName, Session.userEmail);
          SubmissionService.createSubmission(sbm)
          .then(function (sbm) {
          startEditing(sbm.accno);

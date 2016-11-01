@@ -3,10 +3,12 @@ import {HttpModule} from '@angular/http';
 
 import {HttpClient} from './http-client';
 
+import {SessionModule} from '../session/session.module';
 
 @NgModule({
     imports: [
-        HttpModule
+        HttpModule,
+        SessionModule
     ],
     exports: [
         HttpModule

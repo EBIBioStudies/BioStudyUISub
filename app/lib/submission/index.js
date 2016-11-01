@@ -20,10 +20,10 @@ import appAuth from '../auth/index'
 import appModals from '../modals/index'
 import appFile from '../file/index'
 
-import SubmService from './services/submission.service'
-import DictService from './services/dictionary.service'
+import SubmService from './submission.service'
+import DictService from './dictionary.service'
 import PubMedSearchService from './services/pubMedSearch.service'
-import SubmModel from './model/submission.model'
+import SubmModel from './submission.model'
 
 import SubmListCtrl from './pages/list/submissionList.ctrl'
 import SubmEditCtrl from './pages/edit/submissionEdit.ctrl'
