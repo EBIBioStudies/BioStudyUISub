@@ -1,4 +1,4 @@
-import {Component, Input, Inject} from '@angular/core';
+import {Component, EventEmitter, Input, Output, Inject} from '@angular/core';
 
 import {CommonModule}        from '@angular/common';
 
@@ -12,18 +12,6 @@ import 'ag-grid/dist/styles/ag-grid.css!css';
 import 'ag-grid/dist/styles/theme-fresh.css!css';
 
 import {AgRendererComponent} from 'ag-grid-ng2/main';
-
-@Component({
-    selector: 'action-buttons-cell',
-    template: '<action-buttons [status]="params.value"></action-buttons>'
-})
-export class ActionButtonsCellComponent implements AgRendererComponent {
-    private params:any;
-
-    agInit(params:any):void {
-        this.params = params;
-    }
-}
 
 @Component({
     selector: 'action-buttons',
@@ -55,11 +43,58 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
 })
 export class ActionButtonsComponent {
     @Input() status:string;
+    @Input() accno:string;
+    @Output() onDelete = new EventEmitter<boolean>();
+    @Output() onRevert = new EventEmitter<boolean>();
+    @Output() onEdit = new EventEmitter<boolean>();
+    @Output() onView = new EventEmitter<boolean>();
 
-    deleteSubmission() {}
-    revertSubmission() {}
-    editSubmission() {}
-    viewSubmission() {}
+    deleteSubmission() {
+        this.onDelete.emit(this.accno);
+    }
+    revertSubmission() {
+        this.onRevert.emit(this.accno);
+    }
+    editSubmission() {
+        this.onEdit.emit(this.accno);
+    }
+    viewSubmission() {
+        this.onView.emit(this.accno);
+    }
+}
+
+@Component({
+    selector: 'action-buttons-cell',
+    template: `<action-buttons [status]="status"
+                               [accno]="accno" 
+                               (onDelete)="doDelete($event)"
+                               (onRevert)="doRevert($event)"
+                               (onEdit)="doEdit($event)"
+                               (onView)="doView($event)">
+                               </action-buttons>`
+})
+export class ActionButtonsCellComponent implements AgRendererComponent {
+    status:string;
+    accno:string;
+
+    agInit(params:any):void {
+        console.debug("params:", params);
+        this.status = params.data.status;
+        this.accno = params.data.accno;
+    }
+
+    doDelete(e) {
+        console.log(e);
+    }
+    doRevert(e) {
+        console.log(e);
+    }
+    doEdit(e) {
+        console.log(e);
+    }
+    doView(e){
+        console.log(e);
+    }
 }
 
 @Component({
@@ -119,7 +154,6 @@ export class SubmissionListComponent {
             },
             {
                 headerName: 'Actions',
-                field: 'status',
                 suppressMenu: true,
                 suppressSorting: true,
                 cellRendererFramework: {
