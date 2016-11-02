@@ -2,6 +2,8 @@ import {Component, EventEmitter, Input, Output, Inject} from '@angular/core';
 
 import {CommonModule}        from '@angular/common';
 
+import {Router} from '@angular/router';
+
 import tmpl from './submissionList.component.html'
 import {SubmissionService} from '../../submission/submission.service';
 import {SubmissionModel} from '../../submission/submission.model';
@@ -77,23 +79,30 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
     status:string;
     accno:string;
 
+    constructor(@Inject(Router) private router: Router) {
+    }
+
     agInit(params:any):void {
-        console.debug("params:", params);
+        console.debug("params: ", params);
         this.status = params.data.status;
         this.accno = params.data.accno;
     }
 
-    doDelete(e) {
-        console.log(e);
+    doDelete(accno) {
+        console.debug("doDelete: ", accno);
+        //TODO
     }
-    doRevert(e) {
-        console.log(e);
+    doRevert(accno) {
+        console.debug("doRevert: ", accno);
+        //TODO
     }
-    doEdit(e) {
-        console.log(e);
+    doEdit(accno) {
+        console.debug("doEdit: ", accno);
+        this.router.navigate(['/edit', accno]);
     }
-    doView(e){
-        console.log(e);
+    doView(accno){
+        console.debug("doView: ", accno);
+        this.router.navigate(['/view', accno]);
     }
 }
 
