@@ -1,19 +1,23 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Input, Inject} from '@angular/core';
+
+import {CommonModule}        from '@angular/common';
 
 import tmpl from './submissionList.component.html'
 import {SubmissionService} from '../../submission/submission.service';
 import {SubmissionModel} from '../../submission/submission.model';
 
-import {GridOptions, AgRendererComponent} from 'ag-grid/main';
+import {GridOptions} from 'ag-grid/main';
 
 import 'ag-grid/dist/styles/ag-grid.css!css';
 import 'ag-grid/dist/styles/theme-fresh.css!css';
 
+import {AgRendererComponent} from 'ag-grid-ng2/main';
+
 @Component({
-    selector: 'actions-cell',
-    template: `<action-buttons [status]="params.value"></action-buttons>`
+    selector: 'action-buttons-cell',
+    template: '<action-buttons [status]="params.value"></action-buttons>'
 })
-class ActionsCellComponent implements AgRendererComponent {
+export class ActionButtonsCellComponent implements AgRendererComponent {
     private params:any;
 
     agInit(params:any):void {
@@ -21,6 +25,42 @@ class ActionsCellComponent implements AgRendererComponent {
     }
 }
 
+@Component({
+    selector: 'action-buttons',
+    template: `
+                           <button *ngIf="status !== 'MODIFIED'"
+                                    type="button" class="btn btn-danger btn-xs btn-flat"
+                                    (click)="deleteSubmission()"
+                                    tooltip="delete">
+                                <i class="fa fa-trash-o fa-fw"></i>
+                           </button>
+                           <button *ngIf="status === 'MODIFIED'" 
+                                    type="button" class="btn btn-warning btn-xs btn-flat"
+                                    (click)="revertSubmission()"
+                                    tooltip="undo changes">
+                                <i class="fa fa-undo fa-fw"></i>
+                           </button>
+                           <button type="button" class="btn btn-primary btn-xs btn-flat"
+                                    (click)="editSubmission()"
+                                    tooltip="edit">
+                                <i class="fa fa-pencil fa-fw"></i>
+                           </button>
+                           <button *ngIf="status === 'MODIFIED'" 
+                                    type="button" class="btn btn-info btn-xs btn-flat"
+                                    (click)="viewSubmission()"
+                                    tooltip="view">
+                                <i class="fa fa-eye fa-fw"></i>
+                           </button>
+`
+})
+export class ActionButtonsComponent {
+    @Input() status:string;
+
+    deleteSubmission() {}
+    revertSubmission() {}
+    editSubmission() {}
+    viewSubmission() {}
+}
 
 @Component({
     selector: 'submission-list',
@@ -83,7 +123,9 @@ export class SubmissionListComponent {
                 suppressMenu: true,
                 suppressSorting: true,
                 cellRendererFramework: {
-                    component: ActionsCellComponent
+                    component: ActionButtonsCellComponent,
+                    dependencies: [ActionButtonsComponent],
+                    moduleImports: [CommonModule]
                 }
             }
         ];

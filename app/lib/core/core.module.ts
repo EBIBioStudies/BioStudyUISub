@@ -26,7 +26,6 @@ import {ORCIDInputBoxComponent} from './orcid-input-box.component';
 
 import {APP_ROUTES} from './app-routes';
 import {SignUpComponent} from './signup/signup.component';
-import {ActionButtonsComponent} from './submission/actionButtons.component';
 
 @NgModule({
     imports: [
@@ -51,8 +50,7 @@ import {ActionButtonsComponent} from './submission/actionButtons.component';
         DummyComponent,
         ContainerRootComponent,
         ContainerMdComponent,
-        ORCIDInputBoxComponent,
-        ActionButtonsComponent
+        ORCIDInputBoxComponent
     ],
     providers: [
         AuthGuard
