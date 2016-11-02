@@ -16,7 +16,7 @@
                       (submit)="signInForm.form.valid && onSubmit($event)" #signInForm="ngForm">
                     <div class="form-group" [ngClass]="{'has-error': login.invalid && login.dirty}">
                         <label class="control-label" for="login">Email/login name
-                            <span [hidden]="login.valid || password.pristine">: cannot be blank</span>
+                            <span [hidden]="login.valid || login.pristine">: cannot be blank</span>
                         </label>
                         <input type="text" id="login" name="login" tabindex="1"
                                class="form-control"
