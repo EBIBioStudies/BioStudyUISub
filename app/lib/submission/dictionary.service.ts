@@ -4,11 +4,11 @@ import * as _ from 'lodash';
 
 @Injectable()
 export class DictionaryService {
-    private dict;
+    private data;
 
     constructor() {
 
-        this.dict = {
+        this.data = {
             "annotation": {
                 "title": "Describe your study",
                 "description": "Provide an adequate overview of the Study, make it easier to find and interpret",
@@ -164,8 +164,8 @@ export class DictionaryService {
     }
 
     byKey(key: string) {
-        if (this.dict.hasOwnProperty(key)) {
-            return _.cloneDeep(this.dict[key]);
+        if (this.data.hasOwnProperty(key)) {
+            return _.cloneDeep(this.data[key]);
         }
 
         console.error("dictionary key '" + key + "' doesn't exist");
@@ -173,6 +173,6 @@ export class DictionaryService {
     }
 
     dict() {
-        return _.cloneDeep(this.dict);
+        return _.cloneDeep(this.data);
     }
 }

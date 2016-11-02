@@ -19,6 +19,9 @@ import {HelpComponent} from './help/help.component';
 import {HeaderComponent} from './header/header.component';
 import {SignInComponent} from './signin/signin.component';
 import {SubmissionListComponent} from './submission/submissionList.component';
+import {SubmissionEditComponent} from './submission/submissionEdit.component';
+import {SubmissionSideBarComponent} from './submission/submissionSideBar.component';
+
 import {DummyComponent} from './dummy.component';
 import {ContainerRootComponent} from './container-root.component';
 import {ContainerMdComponent} from './container-md.component';
@@ -47,6 +50,8 @@ import {SignUpComponent} from './signup/signup.component';
         SignInComponent,
         SignUpComponent,
         SubmissionListComponent,
+        SubmissionEditComponent,
+        SubmissionSideBarComponent,
         DummyComponent,
         ContainerRootComponent,
         ContainerMdComponent,

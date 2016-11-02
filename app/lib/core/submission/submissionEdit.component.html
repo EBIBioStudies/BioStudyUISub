@@ -1,0 +1,125 @@
+<div class="row-offcanvas row-offcanvas-left">
+
+   <subm-sidebar></subm-sidebar>
+
+    <div class="container-fluid">
+
+        <aside class="right-side content" [ngClass]="{'collapse-left' : uisettings.collapseLeftSide}">
+
+            <form class="form-horizontal" id="subm-form" novalidate name="submForm" role="form" method="post"
+                  (submit)="submForm.form.valid && onSubmit($event)" #submForm="ngForm">
+
+            <div class="panel" [ngClass]="{'panel-danger': submForm.form.invalid, 'panel-info':submForm.form.valid}">
+                <div class="panel-heading">
+                    <span>Submission {{accno}}</span><span *ngIf="!readOnly && submForm.form.invalid"> << There are some validation errors. Please correct them before to proceed to submit >> </span>
+                    <div class="pull-right" *ngIf="readOnly">
+                        <a class="pull-right btn btn-success btn-xs" (click)="editSubmission()">Edit</a>
+                    </div>
+                </div>
+                <div class="panel-body">
+
+                        <div class="form-group row margin-bottom-small padding-right-15"
+                             [ngClass]="{'has-error':title.invalid}">
+                            <div class="col-sm-12 ">
+                                <label class="control-label">Title
+                                    <span *ngIf="title.errors">
+                                        <span *ngIf="!title.pristine && title.errors.required">: cannot be blank</span>
+                                        <span *ngIf="title.errors.minlength">: must be at least 50 characters</span>
+                                    </span>
+                                </label>
+                                <input type="text" class="form-control" id="title" name="title"
+                                       placeholder="Enter a title"
+                                       [(ngModel)]="submission.title"
+                                       [readonly]="readOnly"
+                                       minlength="50"
+                                       required
+                                       #title="ngModel">
+                                <!--ng-model-options="{ allowInvalid: true }"-->
+                            </div>
+                        </div>
+
+                        <div class="form-group row margin-bottom-small padding-right-15"
+                             [ngClass]="{'has-error':releaseDate.invalid}">
+                            <div class="col-sm-12">
+                                <label class="control-label">Release date
+                                    <span *ngIf="releaseDate.errors">
+                                        <span *ngIf="!releaseDate.pristine && releaseDate.errors.required">: cannot be blank</span>
+                                    </span>
+                                </label>
+                                <input type="date" class="form-control" id="releaseDate" name="releaseDate"
+                                       [readonly]="readOnly"
+                                       [(ngModel)]="submission.releaseDate"
+                                       required
+                                       #releaseDate="ngModel">
+                                           <!--ng-model-options="{ allowInvalid: true }"/-->
+                            </div>
+                        </div>
+
+                        <div class="form-group row margin-bottom-small padding-right-15"
+                             [ngClass]="{'has-error':description.invalid}">
+                            <div class="col-sm-12">
+                                <label class="control-label">Description
+                                    <span *ngIf="description.errors">
+                                        <span *ngIf="!description.pristine && description.errors.required">: cannot be blank</span>
+                                        <span *ngIf="description.errors.minlength">: must be at least 50 characters</span>
+                                    </span>
+                                </label>
+                                <textarea id="description" name="description" class="msd-elastic form-control input-sm"
+                                          [(ngModel)]="submission.description"
+                                          [readonly]="readOnly"
+                                          minlength="50"
+                                          required
+                                          #description="ngModel"></textarea>
+
+<!--                                          ng-model-options="{ allowInvalid: true }"-->
+                            </div>
+                        </div>
+
+                        <p></p>
+
+                        <div class="col-lg-12 padding-left-none">
+                            <!--bs-panel
+                                    data-ng-model="submission.annotations.items[0]"
+                                    data-type="annotation"
+                                    data-content-type="sectionItem"
+                                    data-change="onSubmissionChange()"></bs-panel>
+
+                            <bs-panel
+                                    data-ng-model="submission.contacts"
+                                    data-type="contact"
+                                    data-content-type="section"
+                                    data-change="onSubmissionChange()"></bs-panel>
+
+                            <bs-panel
+                                    data-ng-model="submission.links"
+                                    data-type="link"
+                                    data-content-type="section"
+                                    data-change="onSubmissionChange()"></bs-panel>
+
+                            <bs-panel
+                                    data-ng-model="submission.files"
+                                    data-type="file"
+                                    data-content-type="fileSection"
+                                    data-change="onSubmissionChange()"></bs-panel>
+
+                            <bs-panel
+                                    data-ng-model="submission.publications"
+                                    data-type="publication"
+                                    data-content-type="section"
+                                    data-change="onSubmissionChange()"></bs-panel-->
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-primary btn-lg"
+                                    ng-show="!readOnly && !submissionForm.$invalid"
+                                    ng-click="submit(submissionForm)">Submit
+                            </button>
+                        </div>
+                    <!-- /form-->
+                </div>
+            </div>
+
+            </form>
+        </aside>
+    </div>
+    <!-- /.right-side -->
+</div>

@@ -288,7 +288,7 @@ export class SubmissionModel {
     constructor(@Inject(DictionaryService) private dictService: DictionaryService) {
     }
 
-    importSubmission(obj) {
+    importSubmission(obj):Submission {
 
         function renameAttributes(attrs) {
             if (!attrs) {
@@ -346,7 +346,7 @@ export class SubmissionModel {
         return subm;
     }
 
-    exportSubmission(subm: Submission) {
+    exportSubmission(subm: Submission):any {
         subm = _.cloneDeep(subm); // a copy
 
         function copyAttributes(attrs) {
@@ -446,7 +446,7 @@ export class SubmissionModel {
         return out;
     }
 
-    createNew(userName: string, userEmail: string) {
+    createNew(userName: string, userEmail: string):any {
         var sbm = this.importSubmission({});
         sbm.addContact([
             {name: "Name", value: userName || ""},
@@ -455,7 +455,7 @@ export class SubmissionModel {
         return this.exportSubmission(sbm);
     }
 
-    validateSubmission(sbm: Submission) {
+    validateSubmission(sbm: Submission):Array {
 
         function requiredAttribute(itemKey, attrKey) {
             return function (sbm) {

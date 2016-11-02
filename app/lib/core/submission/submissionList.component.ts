@@ -107,7 +107,7 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
 }
 
 @Component({
-    selector: 'submission-list',
+    selector: 'subm-list',
     template: tmpl
 })
 

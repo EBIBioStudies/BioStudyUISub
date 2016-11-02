@@ -13,6 +13,13 @@ export class SubmissionService {
     constructor(@Inject(HttpClient) private http: HttpClient) {
     }
 
+    getSubmission(accno, origin:boolean = false) {
+        return this.http.get('/api/submission/' + accno /*{params: {origin: origin === true}}*/)
+            .map((res: Response) => {
+                    return res.json();
+            }).catch(SubmissionService.errorHandler);
+    }
+
     getAllSubmissions() {
         return this.http.get('/api/submissions')
             .map((res: Response) => {
