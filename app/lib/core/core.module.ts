@@ -18,9 +18,14 @@ import {AppComponent}     from './app.component';
 import {HelpComponent} from './help/help.component';
 import {HeaderComponent} from './header/header.component';
 import {SignInComponent} from './signin/signin.component';
-import {SubmissionListComponent} from './submission/submissionList.component';
-import {SubmissionEditComponent} from './submission/submissionEdit.component';
-import {SubmissionSideBarComponent} from './submission/submissionSideBar.component';
+import {SubmissionListComponent} from './submission/subm-list.component';
+import {SubmissionEditComponent} from './submission/subm-edit.component';
+import {SideBarComponent} from './submission/sidebar/subm-sidebar.component';
+import {SideBarItemComponent} from './submission/sidebar/subm-sidebar.component';
+import {SubmissionPanelComponent} from './submission/subm-panel.component';
+import {SubmissionAttributesPanelComponent} from './submission/subm-attributes-panel.component';
+import {SubmissionAttributesComponent} from './submission/subm-attributes.component';
+import {InputFileComponent} from './submission/input-file.component';
 
 import {DummyComponent} from './dummy.component';
 import {ContainerRootComponent} from './container-root.component';
@@ -51,7 +56,12 @@ import {SignUpComponent} from './signup/signup.component';
         SignUpComponent,
         SubmissionListComponent,
         SubmissionEditComponent,
-        SubmissionSideBarComponent,
+        SubmissionPanelComponent,
+        SubmissionAttributesPanelComponent,
+        SubmissionAttributesComponent,
+        SideBarComponent,
+        SideBarItemComponent,
+        InputFileComponent,
         DummyComponent,
         ContainerRootComponent,
         ContainerMdComponent,

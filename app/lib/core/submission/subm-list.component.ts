@@ -4,7 +4,7 @@ import {CommonModule}        from '@angular/common';
 
 import {Router} from '@angular/router';
 
-import tmpl from './submissionList.component.html'
+import tmpl from './subm-list.component.html'
 import {SubmissionService} from '../../submission/submission.service';
 import {SubmissionModel} from '../../submission/submission.model';
 

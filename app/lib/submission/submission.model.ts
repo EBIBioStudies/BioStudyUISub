@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 
 import {DictionaryService} from './dictionary.service';
 
-class Attr {
+export class Attr {
     private constructor(public name: string = '',
                         public value: string = '',
                         public type: string = 'text',
@@ -20,14 +20,14 @@ class Attr {
     }
 }
 
-class Attributes {
+export class Attributes {
     attributes: Array<Attr> = [];
 
     add(attr: Attr) {
         this.attributes.push(attr);
     }
 
-    addNew(name: string, value: string) {
+    addNew(name: string = '', value: string = '') {
         this.add(new Attr(name, value));
     }
 
@@ -86,7 +86,7 @@ class Attributes {
     }
 }
 
-class Items {
+export class Items {
     items: Array<Item> = [];
 
     constructor(private itemConstructor) {

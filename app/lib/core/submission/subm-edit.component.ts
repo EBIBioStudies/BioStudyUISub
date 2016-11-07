@@ -2,11 +2,11 @@ import {Component, Inject} from '@angular/core';
 
 import {ActivatedRoute, Params} from '@angular/router';
 
-import {Submission} from '../../submission/submission.model';
+import {Submission, Attributes} from '../../submission/submission.model';
 import {SubmissionService} from '../../submission/submission.service';
-import {SubmissionModel} from '../../submission/submission.model';
+import {SubmissionModel, Attr} from '../../submission/submission.model';
 
-import tmpl from './submissionEdit.component.html'
+import tmpl from './subm-edit.component.html'
 
 @Component({
     selector: 'subm-edit',
@@ -26,7 +26,7 @@ export class SubmissionEditComponent {
     uisettings = {
         collapseLeftSide: false
     };
-    readOnly: boolean = false;
+    readonly: boolean = false;
     submission: Submission;
 
 
@@ -34,7 +34,7 @@ export class SubmissionEditComponent {
                 @Inject(SubmissionService) private submService: SubmissionService,
                 @Inject(SubmissionModel) private submModel: SubmissionModel) {
 
-        this.submission = submModel.importSubmission({});
+        this.submission = submModel.importSubmission({}); // should be null
     }
 
     ngOnInit() {
@@ -45,8 +45,17 @@ export class SubmissionEditComponent {
                 .getSubmission(accno)
                 .subscribe(subm => {
                     this.submission = this.submModel.importSubmission(subm.data);
+                    //TODO
+                    this.submission.releaseDate = "2016-01-01";
+                    this.submission.addAnnotation(new Attr('name', 'value'));
                     console.debug("submission:", this.submission);
                 });
         });
+    }
+
+    addAnnotation() {
+        if (this.submission) {
+            this.submission.addAnnotation(new Attr('', ''));
+        }
     }
 }

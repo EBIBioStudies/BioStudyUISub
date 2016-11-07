@@ -1,18 +1,48 @@
 <div class="row-offcanvas row-offcanvas-left">
 
-   <subm-sidebar></subm-sidebar>
+   <subm-sidebar>
+       <sidebar-item
+               (click)="addAnnotation();"
+               label="Describe your study"
+               icon="fa-comment-o"></sidebar-item>
+       <sidebar-item
+               (click)="addFile();"
+               label="Add a file"
+               icon="fa-file-o"></sidebar-item>
+
+       <sidebar-item
+               (click)="addContact();"
+               label="Add a contact"
+               icon="fa-user"></sidebar-item>
+
+       <sidebar-item
+               (click)="addLink();"
+               label="Add a link"
+               icon="fa-link"></sidebar-item>
+
+       <sidebar-item
+               (click)="addPublication();"
+               label="Add a publication"
+               icon="fa-book"></sidebar-item>
+
+       <sidebar-item
+               (click)="onSubmit()"
+               label="Submit"
+               icon="fa-database"
+               [disabled]="submForm.invalid"></sidebar-item>
+   </subm-sidebar>
 
     <div class="container-fluid">
 
         <aside class="right-side content" [ngClass]="{'collapse-left' : uisettings.collapseLeftSide}">
 
             <form class="form-horizontal" id="subm-form" novalidate name="submForm" role="form" method="post"
-                  (submit)="submForm.form.valid && onSubmit($event)" #submForm="ngForm">
+                  (ngSubmit)="submForm.form.valid && onSubmit()" #submForm="ngForm">
 
             <div class="panel" [ngClass]="{'panel-danger': submForm.form.invalid, 'panel-info':submForm.form.valid}">
                 <div class="panel-heading">
-                    <span>Submission {{accno}}</span><span *ngIf="!readOnly && submForm.form.invalid"> << There are some validation errors. Please correct them before to proceed to submit >> </span>
-                    <div class="pull-right" *ngIf="readOnly">
+                    <span>Submission {{accno}}</span><span *ngIf="!readonly && submForm.form.invalid"> << There are some validation errors. Please correct them before to proceed to submit >> </span>
+                    <div class="pull-right" *ngIf="readonly">
                         <a class="pull-right btn btn-success btn-xs" (click)="editSubmission()">Edit</a>
                     </div>
                 </div>
@@ -30,7 +60,7 @@
                                 <input type="text" class="form-control" id="title" name="title"
                                        placeholder="Enter a title"
                                        [(ngModel)]="submission.title"
-                                       [readonly]="readOnly"
+                                       [readonly]="readonly"
                                        minlength="50"
                                        required
                                        #title="ngModel">
@@ -47,7 +77,7 @@
                                     </span>
                                 </label>
                                 <input type="date" class="form-control" id="releaseDate" name="releaseDate"
-                                       [readonly]="readOnly"
+                                       [readonly]="readonly"
                                        [(ngModel)]="submission.releaseDate"
                                        required
                                        #releaseDate="ngModel">
@@ -66,7 +96,7 @@
                                 </label>
                                 <textarea id="description" name="description" class="msd-elastic form-control input-sm"
                                           [(ngModel)]="submission.description"
-                                          [readonly]="readOnly"
+                                          [readonly]="readonly"
                                           minlength="50"
                                           required
                                           #description="ngModel"></textarea>
@@ -78,43 +108,38 @@
                         <p></p>
 
                         <div class="col-lg-12 padding-left-none">
-                            <!--bs-panel
-                                    data-ng-model="submission.annotations.items[0]"
-                                    data-type="annotation"
-                                    data-content-type="sectionItem"
-                                    data-change="onSubmissionChange()"></bs-panel>
+                            <subm-attributes-panel
+                                    [attributes]="submission.annotations.items[0].attributes"
+                                    [form]="submForm.form"
+                                    [readonly]="readonly"
+                                    type="annotation">
+                            </subm-attributes-panel>
 
-                            <bs-panel
-                                    data-ng-model="submission.contacts"
-                                    data-type="contact"
-                                    data-content-type="section"
-                                    data-change="onSubmissionChange()"></bs-panel>
+                            <!--subm-items-panel
+                                    [items]="submission.contacts"
+                                    [form]="submForm.form"
+                                    type="contact"></subm-items-panel>
 
-                            <bs-panel
-                                    data-ng-model="submission.links"
-                                    data-type="link"
-                                    data-content-type="section"
-                                    data-change="onSubmissionChange()"></bs-panel>
+                            <subm-panel-items
+                                    [(ngModel)]="submission.links"
+                                    [form]="submForm.form"
+                                    type="link"></subm-panel-items>
 
-                            <bs-panel
-                                    data-ng-model="submission.files"
-                                    data-type="file"
-                                    data-content-type="fileSection"
-                                    data-change="onSubmissionChange()"></bs-panel>
+                            <subm-panel-items
+                                    [(ngModel)]="submission.files"
+                                    [form]="submForm.form"
+                                    type="file"></subm-panel-items>
 
-                            <bs-panel
-                                    data-ng-model="submission.publications"
-                                    data-type="publication"
-                                    data-content-type="section"
-                                    data-change="onSubmissionChange()"></bs-panel-->
+                            <subm-panel-items
+                                    [(ngModel)]="submission.publications"
+                                    [form]="submForm.form"
+                                    type="publication"></subm-panel-items-->
                         </div>
                         <div>
-                            <button type="button" class="btn btn-primary btn-lg"
-                                    ng-show="!readOnly && !submissionForm.$invalid"
-                                    ng-click="submit(submissionForm)">Submit
+                            <button type="submit" class="btn btn-primary btn-lg"
+                                    *ngIf="!readonly && !submForm.invalid">Submit
                             </button>
                         </div>
-                    <!-- /form-->
                 </div>
             </div>
 

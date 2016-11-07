@@ -4,8 +4,8 @@ import {DummyComponent} from './dummy.component';
 import {SignInComponent} from './signin/signin.component';
 import {SignUpComponent} from './signup/signup.component';
 import {HelpComponent} from './help/help.component';
-import {SubmissionListComponent} from './submission/submissionList.component';
-import {SubmissionEditComponent} from './submission/submissionEdit.component';
+import {SubmissionListComponent} from './submission/subm-list.component';
+import {SubmissionEditComponent} from './submission/subm-edit.component';
 
 import {AuthGuard} from "./auth.guard";
 
