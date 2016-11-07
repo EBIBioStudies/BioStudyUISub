@@ -1,7 +1,10 @@
 import {Component, Inject, Input, OnInit, ViewChild} from '@angular/core';
+import {NgForm} from '@angular/forms';
+
+import * as _ from 'lodash';
 
 import {Attributes, Attr} from '../../submission/submission.model';
-import {NgForm} from '@angular/forms';
+import {DictionaryService} from '../../submission/dictionary.service';
 
 //import {FormGroup, FormControl, Validators} from '@angular/forms';
 
@@ -32,18 +35,20 @@ import {NgForm} from '@angular/forms';
                    tooltip="Empty or duplicate value"
                    [tooltipEnable]="attrForm.form.controls['name_' + idx] && attrForm.form.controls['name_' + idx].invalid"
                    placement="top-left"
+                   [typeahead]="typeaheadAttrNames"
+                   typeaheadAppendToBody="true"
+                   typeaheadMinLength="0"
+                   typeaheadOptionsLimit="30"                
                    [readonly]="readonly"
                    [(ngModel)]="attr.name"
                    (onModelChange)="onAttributeChange()" 
                    required>
 <!--
-                   uib-typeahead="key for key in typeaheadKeys | filterDifference:typeaheadKeys:item.attributes.attributes | filter:$viewValue:$emptyOrMatch | limitTo:30"
-                   typeahead-append-to-body="true"
-                   typeahead-show-hint="true"
-                   typeahead-min-length="0"
+                   
                    ms-duplicate="item.attributes.attributes"
                    
-                   
+                                 typeahead="key for key in typeaheadKeys | filterDifference:typeaheadKeys:item.attributes.attributes | filter:$viewValue:$emptyOrMatch"
+     
                    [ngModelOptions]="{allowInvalid: true}"
 
 -->
@@ -89,12 +94,11 @@ import {NgForm} from '@angular/forms';
         </td>
     </tr>
 
-    <tr *ngIf="!readonly">
+    <tr *ngIf="!readonly && addNewLabel">
         <td colspan="2">
             <p class="pull-right">
                 <button type="button" class="btn btn-default btn-xs"
                         (click)="addNew()"
-                        [tooltip]="addNewTooltip"
                         placement="bottom">{{addNewLabel}}
                 </button>
             </p>
@@ -114,18 +118,33 @@ export class SubmissionAttributesComponent implements OnInit {
     //@Input() form: FormGroup;
 
     addNewLabel: string; // dict.actions.addAttr.title
-    addNewTooltip: string; //{{dict.actions.addAttr.popup}}
 
     deleteTooltip: string; //{{dict.actions.deleteAttr.popup}}
+
+    attrNames: Array;
+
+
+
+    constructor(@Inject(DictionaryService) private dictService:DictionaryService) {
+    }
+
 
     addNew() {
         this.attributes.addNew();
     }
 
     ngOnInit() {
-       console.log("attrForm:", this.attrForm);
+        console.log("attrForm:", this.attrForm);
+        let dict = this.dictService.byKey(this.type);
+        console.log(dict);
+        this.addNewLabel = dict.actions.addAttr ? dict.actions.addAttr.title : undefined;
+        this.deleteTooltip = dict.actions.deleteAttr.popup;
+        this.attrNames = _.map(_.filter(dict.attributes, {required:false}), 'name');
     }
 
+    get typeaheadAttrNames() {
+        return this.attrNames;
+    }
     onAttributeChange(){}
 
 

@@ -1,6 +1,7 @@
 import {NgModule}     from '@angular/core';
 
-import {Ng2BootstrapModule} from 'ng2-bootstrap/ng2-bootstrap';
+//import {Ng2BootstrapModule} from 'ng2-bootstrap/ng2-bootstrap';
+import {TypeaheadModule, TooltipModule} from 'ng2-bootstrap/ng2-bootstrap';
 import {RouterModule} from '@angular/router';
 
 import {RecaptchaModule} from 'ng2-recaptcha';
@@ -37,9 +38,10 @@ import {SignUpComponent} from './signup/signup.component';
 
 @NgModule({
     imports: [
-        Ng2BootstrapModule,
         RouterModule.forRoot(APP_ROUTES),
         RecaptchaModule.forRoot(),
+        TypeaheadModule,
+        TooltipModule,
         AgGridModule.withNg2ComponentSupport(),
         SharedModule,
         AuthModule,
