@@ -9,7 +9,7 @@ import {NgForm} from '@angular/forms';
     selector: 'subm-attributes',
     template: `
 <form id="attributes-form" novalidate name="attrForm" role="form"
-                      (submit)="$event.preventDefault();" #attrForm="ngForm">
+       (ngSubmit)="$event.preventDefault();" #attrForm="ngForm">
 <table class="table table-condensed">
     <thead>
     <th>Key</th>
@@ -19,31 +19,30 @@ import {NgForm} from '@angular/forms';
     <!--pubmedid-search *ngIf="type === 'publication'"></pubmedid-search-->
     <!-- {{pubMedSearchTmplUrl}} -->
     
-    <tr *ngFor="let attr of attributes.attributes; let idx=index"><!-- [formGroup]="form" -->
-        <td class="col-md-3 nopadding border-none form-group-sm">
-<!--
-            [ngClass]="{'has-error' : form.controls['name_' + idx].invalid}">
--->
+    <tr *ngFor="let attr of attributes.attributes; let idx=index">
+        <td class="col-md-3 nopadding border-none form-group-sm"
+            [ngClass]="{'has-error' : !attr.required 
+                                       && attrForm.form.controls['name_' + idx] 
+                                       && attrForm.form.controls['name_' + idx].invalid}">
+
             <input *ngIf="!attr.required"
                    type="text" class="form-control control-label input-sm"
+                   name="{{'name_' + idx}}"
                    placeholder="Type a key"
                    tooltip="Empty or duplicate value"
+                   [tooltipEnable]="attrForm.form.controls['name_' + idx] && attrForm.form.controls['name_' + idx].invalid"
                    placement="top-left"
                    [readonly]="readonly"
                    [(ngModel)]="attr.name"
                    (onModelChange)="onAttributeChange()" 
-                   name="{{'name_' + idx}}"
-
-                   >
-                   
-                   <!--[formControlName]="'name_' + idx" -->
+                   required>
 <!--
                    uib-typeahead="key for key in typeaheadKeys | filterDifference:typeaheadKeys:item.attributes.attributes | filter:$viewValue:$emptyOrMatch | limitTo:30"
                    typeahead-append-to-body="true"
                    typeahead-show-hint="true"
                    typeahead-min-length="0"
                    ms-duplicate="item.attributes.attributes"
-                   tooltipEnable="attrItemForm['attrKey_' + $index].$invalid"
+                   
                    
                    [ngModelOptions]="{allowInvalid: true}"
 
@@ -51,35 +50,37 @@ import {NgForm} from '@angular/forms';
             <p *ngIf="attr.required" class="form-control-static pull-right">{{attr.name}}</p>
         </td>
         <td class="col-md-9 nopadding border-none form-group-sm"
-            [ngClass]="{'has-error' : attr.required }"> <!-- && form.controls['value_' + idx].invalid -->
+            [ngClass]="{'has-error' : attr.required 
+                                      && attrForm.form.controls['value_' + idx] 
+                                      && attrForm.form.controls['value_' + idx].invalid}">
             <div [ngClass]="{'input-group' : !readonly && !attr.required}">
             
-                 <input type="text" class="form-control input-sm"
-                       *ngIf="attr.type === 'text'"
+                 <input *ngIf="attr.type === 'text'"
+                       type="text" class="form-control input-sm"
+                       name="{{'value_' + idx}}"
                        placeholder="Enter a value"
                        tooltip="This field is required"
+                       [tooltipEnable]="attrForm.form.controls['value_' + idx] && attrForm.form.controls['value_' + idx].invalid"
                        placement="top-left"
                        [readonly]="readonly"
                        [(ngModel)]="attr.value"
                        (ngModelChange)="onAttributeChange()"
-                       name="{{'value_' + idx}}">
+                       [required]="attr.required">
 <!--
                        uib-typeahead="value for value in typeaheadValues(attr.name, item.$index) | filter:$viewValue:$emptyOrMatch | limitTo:10"
                        typeahead-append-to-body="true"
                        typeahead-show-hint="true"
                        typeahead-min-length="0"
-                       tooltipEnable="attrItemForm['attrValue_' + $index].$invalid"
                        [ngModelOtions]="{allowInvalid: true}"
 -->
-                 <input-file 
-                      *ngIf="attr.type === 'file'" 
+                 <input-file *ngIf="attr.type === 'file'" 
                       [(ngModel)]="attr.value"
-                      #attrValue="ngModel"></input-file>
+                      #attrValue></input-file>
             
                  <span class="input-group-btn" *ngIf="!readonly && !attr.required">
                       <button type="button"
                            class="btn btn-sm btn-danger btn-flat"
-                           (click)="item.attributes.remove($index)"
+                           (click)="attributes.remove(idx)"
                            [tooltip]="deleteTooltip">
                            <i class="fa fa-trash-o"></i>
                       </button>
@@ -122,7 +123,7 @@ export class SubmissionAttributesComponent implements OnInit {
     }
 
     ngOnInit() {
-       console.log(this.attrForm);
+       console.log("attrForm:", this.attrForm);
     }
 
     onAttributeChange(){}
