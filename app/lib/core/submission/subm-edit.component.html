@@ -117,15 +117,16 @@
                                     type="annotation">
                             </subm-attributes-panel>
 
-                            <!--subm-items-panel
+                            <subm-items-panel
                                     [items]="submission.contacts"
                                     [form]="submForm.form"
+                                    [readonly]="readonly"
                                     type="contact"></subm-items-panel>
 
-                            <subm-panel-items
+                            <!--subm-panel-items
                                     [(ngModel)]="submission.links"
                                     [form]="submForm.form"
-                                    type="link"></subm-panel-items>
+                                    type="link"></--subm-panel-items>
 
                             <subm-panel-items
                                     [(ngModel)]="submission.files"

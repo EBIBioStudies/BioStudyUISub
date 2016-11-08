@@ -115,7 +115,7 @@ export class Items {
     }
 }
 
-class Item {
+export class Item {
     constructor(public attributes: Attributes) {
     }
 
@@ -126,7 +126,7 @@ class Item {
     }
 }
 
-class Publication extends Item {
+export class Publication extends Item {
     pubMedId: string;
 
     constructor(attributes: Attributes, pubMedId: string) {

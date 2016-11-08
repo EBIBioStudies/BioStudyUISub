@@ -78,8 +78,7 @@ import {DictionaryService} from '../../../submission/dictionary.service';
                        [ngModelOtions]="{allowInvalid: true}"
 -->
                  <input-file *ngIf="attr.type === 'file'" 
-                      [(ngModel)]="attr.value"
-                      #attrValue></input-file>
+                      [(ngModel)]="attr.value"></input-file>
             
                  <span class="input-group-btn" *ngIf="!readonly && !attr.required">
                       <button type="button"
@@ -121,7 +120,7 @@ export class SubmissionAttributesComponent implements OnInit {
 
     suggestedAttrNames: Array<string>;
 
-    constructor(@Inject(DictionaryService) private dictService:DictionaryService) {
+    constructor(@Inject(DictionaryService) private dictService: DictionaryService) {
     }
 
     addNew() {
@@ -134,13 +133,14 @@ export class SubmissionAttributesComponent implements OnInit {
         console.log(dict);
         this.addNewAttrLabel = dict.actions.addAttr ? dict.actions.addAttr.title : undefined;
         this.deleteAttrTooltip = dict.actions.deleteAttr.popup;
-        this.suggestedAttrNames = _.map(_.filter(dict.attributes, {required:false}), 'name');
+        this.suggestedAttrNames = _.map(_.filter(dict.attributes, {required: false}), 'name');
     }
 
     typeaheadAttrNames() {
         return _.filter(this.suggestedAttrNames, (name) => !this.attributes.contains(name));
     }
 
-    onAttributeChange(){}
+    onAttributeChange() {
+    }
 
 }

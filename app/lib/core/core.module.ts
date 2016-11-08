@@ -1,7 +1,7 @@
 import {NgModule}     from '@angular/core';
 
 //import {Ng2BootstrapModule} from 'ng2-bootstrap/ng2-bootstrap';
-import {TypeaheadModule, TooltipModule} from 'ng2-bootstrap/ng2-bootstrap';
+import {TypeaheadModule, TooltipModule, TabsModule} from 'ng2-bootstrap/ng2-bootstrap';
 import {RouterModule} from '@angular/router';
 
 import {RecaptchaModule} from 'ng2-recaptcha';
@@ -26,7 +26,11 @@ import {SideBarItemComponent} from './submission/sidebar/subm-sidebar.component'
 import {SubmissionPanelComponent} from './submission/panel/subm-panel.component';
 import {SubmissionAttributesPanelComponent} from './submission/panel/subm-attributes-panel.component';
 import {SubmissionAttributesComponent} from './submission/panel/subm-attributes.component';
+import {SubmissionItemsComponent} from "./submission/panel/subm-items.component";
+import {SubmissionItemsPanelComponent} from "./submission/panel/subm-items-panel.component";
+
 import {InputFileComponent} from './submission/panel/input-file.component';
+import {PropertyFilterPipe} from './submission/panel/prop-filter.pipe';
 
 import {DummyComponent} from './dummy.component';
 import {ContainerRootComponent} from './container-root.component';
@@ -42,6 +46,7 @@ import {SignUpComponent} from './signup/signup.component';
         RecaptchaModule.forRoot(),
         TypeaheadModule,
         TooltipModule,
+        TabsModule,
         AgGridModule.withNg2ComponentSupport(),
         SharedModule,
         AuthModule,
@@ -61,13 +66,16 @@ import {SignUpComponent} from './signup/signup.component';
         SubmissionPanelComponent,
         SubmissionAttributesPanelComponent,
         SubmissionAttributesComponent,
+        SubmissionItemsPanelComponent,
+        SubmissionItemsComponent,
         SideBarComponent,
         SideBarItemComponent,
         InputFileComponent,
         DummyComponent,
         ContainerRootComponent,
         ContainerMdComponent,
-        ORCIDInputBoxComponent
+        ORCIDInputBoxComponent,
+        PropertyFilterPipe
     ],
     providers: [
         AuthGuard
