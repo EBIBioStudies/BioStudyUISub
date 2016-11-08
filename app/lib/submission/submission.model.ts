@@ -53,6 +53,10 @@ export class Attributes {
         });
     }
 
+    contains(name: string):boolean {
+        return this.find(name) && true;
+    }
+
     /**
      * @param attributes = [{name: "...", value: "..."}, {...}]
      * @param required = [ {name: "...", type: "file" or "text"}, {...}]

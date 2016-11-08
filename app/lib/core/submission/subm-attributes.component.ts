@@ -35,7 +35,7 @@ import {DictionaryService} from '../../submission/dictionary.service';
                    tooltip="Empty or duplicate value"
                    [tooltipEnable]="attrForm.form.controls['name_' + idx] && attrForm.form.controls['name_' + idx].invalid"
                    placement="top-left"
-                   [typeahead]="typeaheadAttrNames"
+                   [typeahead]="typeaheadAttrNames()"
                    typeaheadAppendToBody="true"
                    typeaheadMinLength="0"
                    typeaheadOptionsLimit="30"                
@@ -86,7 +86,7 @@ import {DictionaryService} from '../../submission/dictionary.service';
                       <button type="button"
                            class="btn btn-sm btn-danger btn-flat"
                            (click)="attributes.remove(idx)"
-                           [tooltip]="deleteTooltip">
+                           [tooltip]="deleteAttrTooltip">
                            <i class="fa fa-trash-o"></i>
                       </button>
                  </span>
@@ -99,7 +99,7 @@ import {DictionaryService} from '../../submission/dictionary.service';
             <p class="pull-right">
                 <button type="button" class="btn btn-default btn-xs"
                         (click)="addNew()"
-                        placement="bottom">{{addNewLabel}}
+                        placement="bottom">{{addNewAttrLabel}}
                 </button>
             </p>
         </td>
@@ -115,19 +115,15 @@ export class SubmissionAttributesComponent implements OnInit {
     @Input() readonly: boolean;
 
     @ViewChild('attrForm') public attrForm: NgForm;
-    //@Input() form: FormGroup;
 
-    addNewLabel: string; // dict.actions.addAttr.title
+    addNewAttrLabel: string;
 
-    deleteTooltip: string; //{{dict.actions.deleteAttr.popup}}
+    deleteAttrTooltip: string;
 
-    attrNames: Array;
-
-
+    suggestedAttrNames: Array<string>;
 
     constructor(@Inject(DictionaryService) private dictService:DictionaryService) {
     }
-
 
     addNew() {
         this.attributes.addNew();
@@ -137,14 +133,15 @@ export class SubmissionAttributesComponent implements OnInit {
         console.log("attrForm:", this.attrForm);
         let dict = this.dictService.byKey(this.type);
         console.log(dict);
-        this.addNewLabel = dict.actions.addAttr ? dict.actions.addAttr.title : undefined;
-        this.deleteTooltip = dict.actions.deleteAttr.popup;
-        this.attrNames = _.map(_.filter(dict.attributes, {required:false}), 'name');
+        this.addNewAttrLabel = dict.actions.addAttr ? dict.actions.addAttr.title : undefined;
+        this.deleteAttrTooltip = dict.actions.deleteAttr.popup;
+        this.suggestedAttrNames = _.map(_.filter(dict.attributes, {required:false}), 'name');
     }
 
-    get typeaheadAttrNames() {
-        return this.attrNames;
+    typeaheadAttrNames() {
+        return _.filter(this.suggestedAttrNames, (name) => !this.attributes.contains(name));
     }
+
     onAttributeChange(){}
 
 
