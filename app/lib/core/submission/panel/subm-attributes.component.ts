@@ -92,7 +92,7 @@ import {DictionaryService} from '../../../submission/dictionary.service';
         </td>
     </tr>
 
-    <tr *ngIf="!readonly && addNewLabel">
+    <tr *ngIf="!readonly && addNewAttrLabel">
         <td colspan="2">
             <p class="pull-right">
                 <button type="button" class="btn btn-default btn-xs"

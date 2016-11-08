@@ -11,19 +11,13 @@ import * as _ from 'lodash';
     template: `
 <tabset>
     <tab [heading]="previewTabHeading">
-        <div class="table-responsive">
-
-       <form id="items-preview-form" novalidate name="itemsPreviewForm" role="form"
+        <form id="items-preview-form" novalidate name="itemsPreviewForm" role="form"
              (ngSubmit)="$event.preventDefault();" #itemsPreviewForm="ngForm">
+        <div class="table-responsive">
             <table class="table table-condensed" style="width:100%">
                 <thead>
                 <th></th>
                 <th></th>
-<!--
-                <th ng-repeat="field in dict.fields">
-                    <span class="text-muted has-error error">{{field.label}}</span>
-                </th>
--->
                 <th *ngFor="let attrName of attrNames">
                     <span class="text-muted has-error error">{{attrName}}</span>
                 </th>
@@ -38,7 +32,7 @@ import * as _ from 'lodash';
                                 class="btn btn-primary btn-sm"
                                 (click)="activeTab = idx"
                                 [tooltip]="editTooltip"><i class="fa fa-edit"></i>
-                        </button>
+                        </button>   
                         <button *ngIf="!readonly" type="button" 
                                 class="btn btn-danger btn-sm"
                                 (click)="items.remove(idx)"
@@ -47,7 +41,8 @@ import * as _ from 'lodash';
                     </td>
                     <td *ngFor="let attrName of attrNames" class="form-group-sm row" [ngClass]="colSizeCss">
                         <div *ngFor="let attr of (item.attributes.attributes | propFilter:{name: attrName})"
-                             [ngClass]="{'has-error' : true}">
+                             [ngClass]="{'has-error' : itemsPreviewForm.form.controls[attr.name + '_' + idx] &&
+                                                       itemsPreviewForm.form.controls[attr.name + '_' + idx].invalid}">
 <!--
                              previewItemForm['attrValuePreview_' + key].$invalid
 -->
@@ -61,14 +56,12 @@ import * as _ from 'lodash';
                                    typeaheadOptionsLimit="10"   
                                    tooltip="This field is required"
                                    placement="top-left"
-                                   tooltipEnable="true"
+                                   [tooltipEnable]="itemsPreviewForm.form.controls[attr.name + '_' + idx] && itemsPreviewForm.form.controls[attr.name + '_' + idx].invalid"
                                    [required]="attr.required"
                                    [(ngModel)]="attr.value"
                                    (ngModelChange)="onAttributeChange()"
                                    [readonly]="readonly">
 <!--
-                                   [typeahead]="value for value in typeaheadValues(attr.name, item.$index) | filter:$viewValue:$emptyOrMatch | limitTo:10"
-
                                    ng-model-options="{ allowInvalid: true }">
 -->
                             <input-file *ngIf="attr.type === 'file'"
@@ -100,8 +93,8 @@ import * as _ from 'lodash';
                 </tr>
                 </tbody>
             </table>
-        </form>    
         </div>
+        </form>    
     </tab>
 
     <tab *ngFor="let item of items.items; let idx=index" [active]="activeTab === idx">
@@ -119,12 +112,11 @@ import * as _ from 'lodash';
             </button>
         </p>
 
-<!--
-        <bs-section-item data-ng-model="item"
-                         data-type="{{dataType}}"
-                         data-change="onAttributeChange()">
-        </bs-section-item>
--->
+        <subm-attributes
+             [attributes]="item.attributes"
+             [type]="type"
+             [readonly]="readonly">
+        </subm-attributes>
     </tab>
 
 </tabset>
