@@ -1,6 +1,8 @@
 <div class="row-offcanvas row-offcanvas-left">
 
-   <subm-sidebar>
+   <subm-sidebar
+           (toggle)="uisettings.collapseLeftSide=!uisettings.collapseLeftSide"
+           [collapsed]="uisettings.collapseLeftSide">
        <sidebar-item
                (click)="addAnnotation();"
                label="Describe your study"

@@ -1,4 +1,13 @@
-import {Component, Inject, Input, Output, EventEmitter, AfterContentInit, ContentChildren, QueryList} from '@angular/core';
+import {
+    Component,
+    Inject,
+    Input,
+    Output,
+    EventEmitter,
+    AfterContentInit,
+    ContentChildren,
+    QueryList
+} from '@angular/core';
 
 @Component({
     selector: 'sidebar-item',
@@ -8,7 +17,7 @@ import {Component, Inject, Input, Output, EventEmitter, AfterContentInit, Conten
 export class SideBarItemComponent {
     @Input() label: string;
     @Input() icon: string;
-    @Input() disabled?:boolean = false;
+    @Input() disabled?: boolean = false;
     @Output() click = new EventEmitter();
 
     clicked(e) {
@@ -24,7 +33,12 @@ export class SideBarItemComponent {
        [ngClass]="{'collapse-left' : collapsed}"
        *ngIf="!readonly">
     <ul class="sidebar-menu">
-        <!--bs-ng-toggle></bs-ng-toggle-->
+        <li class="menu-toggle">
+            <a (click)="onToggle($event)">
+                 <i class="fa fa-bars fa-fw"></i> 
+                 <span *ngIf="!collapsed">Minimise</span>
+            </a>
+        </li>
         <li class="success" *ngFor="let child of childs">
             <a *ngIf="collapsed" 
                 (click)="child.clicked($event)" 
@@ -63,11 +77,19 @@ export class SideBarItemComponent {
 export class SideBarComponent implements AfterContentInit {
     @Input() collapsed?: boolean = false;
     @Input() readonly?: boolean = false;
+    @Output() toggle? = new EventEmitter();
 
     @ContentChildren(SideBarItemComponent)
     childs: QueryList<SideBarItemComponent>;
 
     ngAfterContentInit() {
         console.log("children:", this.childs)
+    }
+
+    onToggle(e) {
+        e.preventDefault();
+        if (this.toggle) {
+            this.toggle.emit();
+        }
     }
 }
