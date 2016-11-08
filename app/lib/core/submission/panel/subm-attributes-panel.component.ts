@@ -1,8 +1,8 @@
 import {Component, Inject, Input, OnChanges, SimpleChange, ContentChild, ViewChild } from '@angular/core';
-
-import {Attributes} from '../../submission/submission.model';
-import {AttributesInfo} from './panel-info';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
+
+import {Attributes} from '../../../submission/submission.model';
+import {AttributesInfo} from './panel-info';
 
 import {SubmissionAttributesComponent} from './subm-attributes.component';
 
@@ -28,7 +28,6 @@ export class SubmissionAttributesPanelComponent implements OnChanges  {
 
     @ViewChild(SubmissionAttributesComponent) private submAttrCmp: SubmissionAttributesComponent;
 
-    //childForm: FormGroup;
     attributesInfo:AttributesInfo;
 
     constructor() {
@@ -39,9 +38,9 @@ export class SubmissionAttributesPanelComponent implements OnChanges  {
     }
 
     ngAfterContentInit() {
+        //TODO
         this.form.controls["test"]= this.submAttrCmp.attrForm;
     }
-
 
     ngOnChanges(changes: {[ propName: string]: SimpleChange}) {
         console.log(changes);
@@ -51,23 +50,6 @@ export class SubmissionAttributesPanelComponent implements OnChanges  {
         this.attributesInfo = new AttributesInfo(this.attributes, title, addNewLabel);
 
         console.log("Attributes", this.attributes);
-
-/*
-        let group: any = {};
-        let index = 0;
-        for (let attr of this.attributes.attributes) {
-            if (!attr.required) {
-                group["name_" + index] = new FormControl(attr.name, Validators.required);
-            }
-            group["value_" + index] = new FormControl(attr.value,
-                (attr.required ? Validators.required : undefined));
-            index++;
-        }
-
-        this.childForm = new FormGroup(group);
-        console.log("childForm: ", this.childForm);
-        this.form.controls["test"] = this.childForm
-*/
     }
 
     get valid() {

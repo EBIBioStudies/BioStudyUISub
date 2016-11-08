@@ -3,8 +3,8 @@ import {NgForm} from '@angular/forms';
 
 import * as _ from 'lodash';
 
-import {Attributes, Attr} from '../../submission/submission.model';
-import {DictionaryService} from '../../submission/dictionary.service';
+import {Attributes, Attr} from '../../../submission/submission.model';
+import {DictionaryService} from '../../../submission/dictionary.service';
 
 //import {FormGroup, FormControl, Validators} from '@angular/forms';
 
@@ -47,7 +47,6 @@ import {DictionaryService} from '../../submission/dictionary.service';
                    
                    ms-duplicate="item.attributes.attributes"
                    
-                                 typeahead="key for key in typeaheadKeys | filterDifference:typeaheadKeys:item.attributes.attributes | filter:$viewValue:$emptyOrMatch"
      
                    [ngModelOptions]="{allowInvalid: true}"
 
@@ -143,7 +142,5 @@ export class SubmissionAttributesComponent implements OnInit {
     }
 
     onAttributeChange(){}
-
-
 
 }

@@ -23,10 +23,10 @@ import {SubmissionListComponent} from './submission/subm-list.component';
 import {SubmissionEditComponent} from './submission/subm-edit.component';
 import {SideBarComponent} from './submission/sidebar/subm-sidebar.component';
 import {SideBarItemComponent} from './submission/sidebar/subm-sidebar.component';
-import {SubmissionPanelComponent} from './submission/subm-panel.component';
-import {SubmissionAttributesPanelComponent} from './submission/subm-attributes-panel.component';
-import {SubmissionAttributesComponent} from './submission/subm-attributes.component';
-import {InputFileComponent} from './submission/input-file.component';
+import {SubmissionPanelComponent} from './submission/panel/subm-panel.component';
+import {SubmissionAttributesPanelComponent} from './submission/panel/subm-attributes-panel.component';
+import {SubmissionAttributesComponent} from './submission/panel/subm-attributes.component';
+import {InputFileComponent} from './submission/panel/input-file.component';
 
 import {DummyComponent} from './dummy.component';
 import {ContainerRootComponent} from './container-root.component';
