@@ -15,8 +15,10 @@ import {DictionaryService} from '../../../submission/dictionary.service';
        (ngSubmit)="$event.preventDefault();" #attrForm="ngForm">
 <table class="table table-condensed">
     <thead>
-    <th>Key</th>
-    <th>Value</th>
+    <tr>
+        <th>Key</th>
+        <th>Value</th>    
+    </tr>
     </thead>
     <tbody>
     <!--pubmedid-search *ngIf="type === 'publication'"></pubmedid-search-->

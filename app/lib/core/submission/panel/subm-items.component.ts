@@ -16,11 +16,13 @@ import * as _ from 'lodash';
         <div class="table-responsive">
             <table class="table table-condensed" style="width:100%">
                 <thead>
-                <th></th>
-                <th></th>
-                <th *ngFor="let attrName of attrNames">
-                    <span class="text-muted has-error error">{{attrName}}</span>
-                </th>
+                <tr>
+                   <th></th>
+                   <th></th>
+                   <th *ngFor="let attrName of attrNames">
+                      <span class="text-muted has-error error">{{attrName}}</span>
+                   </th>
+                </tr>   
                 </thead>
                 <tbody>
                 <tr *ngFor="let item of items.items; let idx=index">
