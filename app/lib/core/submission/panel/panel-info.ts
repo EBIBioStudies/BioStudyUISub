@@ -1,16 +1,12 @@
 import {Attributes, Items} from '../../../submission/submission.model';
 
 export interface PanelInfo {
-    title: string;
-    addNewLabel: string;
     size: number;
     addNew(): void;
 }
 
 export class AttributesInfo implements PanelInfo {
-    constructor(private data: Attributes,
-                public title: string,
-                public addNewLabel: string) {
+    constructor(private data: Attributes) {
     }
 
     addNew(): void {
@@ -23,9 +19,7 @@ export class AttributesInfo implements PanelInfo {
 }
 
 export class ItemsInfo implements PanelInfo {
-    constructor(private data: Items,
-                public title: string,
-                public addNewLabel: string) {
+    constructor(private data: Items) {
     }
 
     addNew(): void {

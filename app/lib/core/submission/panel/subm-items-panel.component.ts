@@ -11,7 +11,9 @@ import {SubmissionItemsComponent} from './subm-items.component';
     template: `
 <subm-panel
     [info]="itemsInfo"
-    [valid]="valid">
+    [valid]="valid"
+    [readonly]="readonly"
+    [type]="type">
     <subm-items
        [items]="items"
        [type]="type"

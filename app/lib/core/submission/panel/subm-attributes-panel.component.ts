@@ -11,7 +11,9 @@ import {SubmissionAttributesComponent} from './subm-attributes.component';
     template: `
 <subm-panel
     [info]="attributesInfo"
-    [valid]="valid">
+    [valid]="valid"
+    [readonly]="readonly"
+    [type]="type">
     <subm-attributes
        [attributes]="attributes"
        [type]="type"

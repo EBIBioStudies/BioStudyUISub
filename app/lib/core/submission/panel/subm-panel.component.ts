@@ -1,5 +1,7 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit, Inject} from '@angular/core';
 import {PanelInfo} from "./panel-info";
+
+import {DictionaryService} from '../../../submission/dictionary.service';
 
 @Component({
     selector: 'subm-panel',
@@ -9,7 +11,7 @@ import {PanelInfo} from "./panel-info";
      *ngIf="info.size > 0">
 
     <div class="panel-heading clearfix">
-        <h4 class="panel-title pull-left">{{info.title}}&nbsp;<span class="badge">{{info.size}}</span>
+        <h4 class="panel-title pull-left">{{title}}&nbsp;<span class="badge">{{info.size}}</span>
             <!--span class="bs-slide-out-tip"
                   icon-class="fa fa-angle-right"
                   tip="{{dict.description}}"></span-->
@@ -18,15 +20,28 @@ import {PanelInfo} from "./panel-info";
             <div class="btn-group ">
                 <button type="button"
                         class="btn btn-xs btn-default"
-                        (click)="info.addNew()">{{info.addNewLabel}}</button>
+                        (click)="info.addNew()">{{addNewLabel}}</button>
             </div>
         </div>
     </div>
     <ng-content></ng-content>
 </div>`
 })
-export class SubmissionPanelComponent {
+export class SubmissionPanelComponent implements OnInit{
     @Input() info: PanelInfo;
     @Input() readonly: boolean;
     @Input() valid: boolean;
+    @Input() type: string;
+
+    title: string;
+    addNewLabel: string;
+
+    constructor(@Inject(DictionaryService) private dictService: DictionaryService){
+    }
+
+    ngOnInit() {
+        let dict = this.dictService.byKey(this.type);
+        this.title = dict.title;
+        this.addNewLabel = dict.actions.add.title;
+    }
 }
