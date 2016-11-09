@@ -123,20 +123,23 @@
                                     [readonly]="readonly"
                                     type="contact"></subm-items-panel>
 
-                            <!--subm-panel-items
-                                    [(ngModel)]="submission.links"
+                            <subm-items-panel
+                                    [items]="submission.links"
                                     [form]="submForm.form"
-                                    type="link"></--subm-panel-items>
+                                    [readonly]="readonly"
+                                    type="link"></subm-items-panel>
 
-                            <subm-panel-items
-                                    [(ngModel)]="submission.files"
+                            <subm-items-panel
+                                    [items]="submission.files"
                                     [form]="submForm.form"
-                                    type="file"></subm-panel-items>
+                                    [readonly]="readonly"
+                                    type="file"></subm-items-panel>
 
-                            <subm-panel-items
-                                    [(ngModel)]="submission.publications"
+                            <subm-items-panel
+                                    [items]="submission.publications"
                                     [form]="submForm.form"
-                                    type="publication"></subm-panel-items-->
+                                    [readonly]="readonly"
+                                    type="publication"></subm-items-panel>
                         </div>
                         <div>
                             <button type="submit" class="btn btn-primary btn-lg"

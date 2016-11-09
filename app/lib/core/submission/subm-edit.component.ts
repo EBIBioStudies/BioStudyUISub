@@ -58,4 +58,22 @@ export class SubmissionEditComponent {
             this.submission.addAnnotation(new Attr('', ''));
         }
     }
+
+    addLink() {
+        if (this.submission) {
+            this.submission.addLink();
+        }
+    }
+
+    addFile() {
+        if (this.submission) {
+            this.submission.addFile();
+        }
+    }
+
+    addPublication() {
+        if (this.submission) {
+            this.submission.addPublication();
+        }
+    }
 }
