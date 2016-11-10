@@ -96,14 +96,14 @@
                                         <span *ngIf="description.errors.minlength">: must be at least 50 characters</span>
                                     </span>
                                 </label>
-                                <textarea id="description" name="description" class="msd-elastic form-control input-sm"
+                                <textarea id="description" name="description" class="form-control input-sm" style="max-height:400px;"
                                           [(ngModel)]="submission.description"
                                           [readonly]="readonly"
                                           minlength="50"
                                           required
                                           #description="ngModel"></textarea>
-
 <!--                                          ng-model-options="{ allowInvalid: true }"-->
+                                            <!-- autosize -->
                             </div>
                         </div>
 

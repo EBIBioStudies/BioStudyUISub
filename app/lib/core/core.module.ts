@@ -3,15 +3,15 @@ import {NgModule}     from '@angular/core';
 //import {Ng2BootstrapModule} from 'ng2-bootstrap/ng2-bootstrap';
 import {TypeaheadModule, TooltipModule, TabsModule} from 'ng2-bootstrap/ng2-bootstrap';
 import {RouterModule} from '@angular/router';
-
 import {RecaptchaModule} from 'ng2-recaptcha';
-
 import {AgGridModule} from 'ag-grid-ng2/main';
+import {HttpClientModule} from '../http/http-client.module';
 
 import {SharedModule} from '../shared/shared.module.ts';
 
 import {AuthModule} from '../auth/auth.module';
 import {SubmissionModule} from '../submission/submission.module';
+import {FileModule} from '../file/file.module';
 
 import {AuthGuard} from './auth.guard';
 
@@ -27,7 +27,8 @@ import {SubmissionPanelComponent} from './submission/panel/subm-panel.component'
 import {SubmissionAttributesPanelComponent} from './submission/panel/subm-attributes-panel.component';
 import {SubmissionAttributesComponent} from './submission/panel/subm-attributes.component';
 import {SubmissionItemsComponent} from "./submission/panel/subm-items.component";
-import {SubmissionItemsPanelComponent} from "./submission/panel/subm-items-panel.component";
+import {SubmissionItemsPanelComponent} from './submission/panel/subm-items-panel.component';
+import {FileListComponent} from './file/file-list.component';
 
 import {InputFileComponent} from './submission/panel/input-file.component';
 import {PropertyFilterPipe} from './submission/panel/prop-filter.pipe';
@@ -47,10 +48,12 @@ import {SignUpComponent} from './signup/signup.component';
         TypeaheadModule,
         TooltipModule,
         TabsModule,
+        HttpClientModule,
         AgGridModule.withNg2ComponentSupport(),
         SharedModule,
         AuthModule,
-        SubmissionModule
+        SubmissionModule,
+        FileModule
     ],
     exports: [
         AppComponent
@@ -68,6 +71,7 @@ import {SignUpComponent} from './signup/signup.component';
         SubmissionAttributesComponent,
         SubmissionItemsPanelComponent,
         SubmissionItemsComponent,
+        FileListComponent,
         SideBarComponent,
         SideBarItemComponent,
         InputFileComponent,

@@ -6,6 +6,7 @@ import {SignUpComponent} from './signup/signup.component';
 import {HelpComponent} from './help/help.component';
 import {SubmissionListComponent} from './submission/subm-list.component';
 import {SubmissionEditComponent} from './submission/subm-edit.component';
+import {FileListComponent} from './file/file-list.component';
 
 import {AuthGuard} from "./auth.guard";
 
@@ -22,5 +23,5 @@ export const APP_ROUTES: Routes = [
     {path: 'submissions', component: SubmissionListComponent, canActivate: [AuthGuard]},
     {path: 'edit/:accno', component: SubmissionEditComponent, canActivate: [AuthGuard]},
     {path: 'view/:accno', component: DummyComponent, canActivate: [AuthGuard]},
-    {path: 'files', component: DummyComponent, canActivate: [AuthGuard]}
+    {path: 'files', component: FileListComponent, canActivate: [AuthGuard]}
 ];

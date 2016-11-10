@@ -21,7 +21,7 @@ export class HttpClient {
 
     post(url, data) {
         let headers = this.headers();
-        headers.append('Content-Type', 'application/json');
+        //headers.append('Content-Type', 'application/json');
 
         let options =  new RequestOptions({headers: headers});
         return this.http.post(this.transform(url), data, options);
