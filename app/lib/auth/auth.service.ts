@@ -30,6 +30,18 @@ export class AuthService {
         return this.userSession.user;
     }
 
+    activate(key:string) {
+        return this.http.post('/raw/auth/activate/' + key, {})
+            .map((res:Response) => {
+                let data = res.json();
+                if (data.status === 'OK') {
+                    return data;
+                }
+                return Observable.throw({status: 'Error', message: data.message || 'Server error'});
+            })
+            .catch(AuthService.errorHandler);
+    }
+
     signIn(credentials: Credentials): Observable<any> {
         return this.http.post('/raw/auth/signin', credentials.stringify())
             .map((res: Response) => {
@@ -46,7 +58,7 @@ export class AuthService {
     }
 
     signUp(regData: RegistrationData):Observable<any> {
-        //TOD
+        //TODO
         return Observable.just({});
     }
 

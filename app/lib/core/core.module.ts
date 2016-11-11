@@ -19,6 +19,7 @@ import {AppComponent}     from './app.component';
 import {HelpComponent} from './help/help.component';
 import {HeaderComponent} from './header/header.component';
 import {SignInComponent} from './signin/signin.component';
+import {ActivateComponent} from './activate/activate.component';
 import {SubmissionListComponent} from './submission/subm-list.component';
 import {SubmissionEditComponent} from './submission/subm-edit.component';
 import {SideBarComponent} from './submission/sidebar/subm-sidebar.component';
@@ -64,6 +65,7 @@ import {SignUpComponent} from './signup/signup.component';
         HeaderComponent,
         SignInComponent,
         SignUpComponent,
+        ActivateComponent,
         SubmissionListComponent,
         SubmissionEditComponent,
         SubmissionPanelComponent,
