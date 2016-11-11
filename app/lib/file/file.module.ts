@@ -2,6 +2,7 @@ import {NgModule} from '@angular/core';
 
 import {HttpClientModule} from '../http/http-client.module';
 import {SharedModule} from '../shared/shared.module';
+import {FileService} from "./file.service";
 import {FileUploadService} from "./file-upload.service";
 import {FileUploadButtonComponent} from "./file-upload-button.component";
 
@@ -17,6 +18,7 @@ import {FileUploadButtonComponent} from "./file-upload-button.component";
         FileUploadButtonComponent
     ],
     providers: [
+        FileService,
         FileUploadService
     ]
 })
