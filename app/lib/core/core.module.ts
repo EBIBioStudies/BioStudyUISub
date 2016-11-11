@@ -1,7 +1,7 @@
 import {NgModule}     from '@angular/core';
 
 //import {Ng2BootstrapModule} from 'ng2-bootstrap/ng2-bootstrap';
-import {TypeaheadModule, TooltipModule, TabsModule} from 'ng2-bootstrap/ng2-bootstrap';
+import {TypeaheadModule, TooltipModule, TabsModule, DropdownModule} from 'ng2-bootstrap/ng2-bootstrap';
 import {RouterModule} from '@angular/router';
 import {RecaptchaModule} from 'ng2-recaptcha';
 import {AgGridModule} from 'ag-grid-ng2/main';
@@ -49,6 +49,7 @@ import {SignUpComponent} from './signup/signup.component';
         TypeaheadModule,
         TooltipModule,
         TabsModule,
+        DropdownModule,
         HttpClientModule,
         AgGridModule.withNg2ComponentSupport(),
         SharedModule,

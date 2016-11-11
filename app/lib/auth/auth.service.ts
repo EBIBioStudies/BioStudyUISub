@@ -67,18 +67,25 @@ export class AuthService {
             return Observable.just({});
         }
 
-        let userName = this.userSession.user.name;
-        this.userSession.destroy();
-        this.authEvents.userSignedOut(userName);
-
         return this.http.post("/api/auth/signout", {})
             .map(
                 () => {
-                    // if users session expired on server we got 403 error (why?!) and not getting here
-                    // thus not writing session.destroy() here
+                    this.sessionDestroy();
                     return {};
                 })
-            .catch(AuthService.errorHandler);
+            .catch((error) => {
+                if (error.status === 403) { //session expired
+                    this.sessionDestroy();
+                } else {
+                    AuthService.errorHandler(error);
+                }
+            });
+    }
+
+    sessionDestroy() {
+        let userName = this.userSession.user.name;
+        this.userSession.destroy();
+        this.authEvents.userSignedOut(userName);
     }
 
     static errorHandler(error: any) {
