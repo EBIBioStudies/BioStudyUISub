@@ -34,7 +34,6 @@ export class AuthService {
         return this.http.post('/raw/auth/signin', credentials.stringify())
             .map((res: Response) => {
                 let data = res.json();
-                Observable.throw({status: 'Error', message: data.message || 'Server error'});
                 if (data.status === 'OK') {
                     var orcid = data.aux ? data.aux.orcid : '';
                     this.userSession.create(data.sessid, data.username, data.email, orcid, UserRole.User);
