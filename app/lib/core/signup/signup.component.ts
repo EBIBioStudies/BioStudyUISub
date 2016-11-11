@@ -6,7 +6,7 @@ import {RegistrationData} from '../../auth/registration-data';
 import tmpl from './signup.component.html'
 
 @Component({
-    selector: 'app-signup',
+    selector: 'user-signup',
     template: tmpl
 })
 
