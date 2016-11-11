@@ -1,4 +1,12 @@
 import {Component, EventEmitter, Input, Output, Inject} from '@angular/core';
+
+import {GridOptions} from 'ag-grid/main';
+
+import 'ag-grid/dist/styles/ag-grid.css!css';
+import 'ag-grid/dist/styles/theme-fresh.css!css';
+
+import {AgRendererComponent} from 'ag-grid-ng2/main';
+
 @Component({
     selector: 'file-list',
     template: `
@@ -21,7 +29,15 @@ import {Component, EventEmitter, Input, Output, Inject} from '@angular/core';
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-12 article-tree">
+                        <div class="col-xs-12">
+                             <ag-grid-ng2 #agGrid style="width: 100%; height: 350px;" class="ag-fresh"
+                                  [gridOptions]="gridOptions"
+                                  [columnDefs]="columnDefs"
+                                  [rowData]="rowData"
+                                  enableSorting
+                                  enableColResize
+                                  rowHeight="30">
+                             </ag-grid-ng2>
                             <!--tree-grid tree-data="filesTree"
                                        tree-control="uploadedTree"
                                        col-defs="col_defs"
@@ -42,4 +58,48 @@ import {Component, EventEmitter, Input, Output, Inject} from '@angular/core';
 
 export class FileListComponent {
     backButton:boolean = false;
+
+    private gridOptions:GridOptions;
+    private rowData: any[];
+    private columnDefs: any[];
+
+    constructor() {
+        this.gridOptions = <GridOptions>{
+            onGridReady: () => {
+                this.gridOptions.api.sizeColumnsToFit();
+            }
+        };
+
+        this.createColumnDefs();
+        this.rowData = [];
+    }
+
+    createColumnDefs() {
+        this.columnDefs = [
+            {
+                headerName: 'Name',
+                field: 'name',
+            },
+            {
+                headerName: 'Type',
+                field: 'type',
+                width: 50
+            },
+            {
+                headerName: 'Progress',
+                field: 'progress'
+            },
+            {
+                headerName: 'Actions'
+                /*suppressMenu: true,
+                suppressSorting: true,
+                cellRendererFramework: {
+                    component: ActionButtonsCellComponent,
+                    dependencies: [ActionButtonsComponent],
+                    moduleImports: [CommonModule]
+                }*/
+            }
+        ];
+
+    }
 }
