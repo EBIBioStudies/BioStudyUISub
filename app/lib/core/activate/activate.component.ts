@@ -6,7 +6,7 @@ import {ActivatedRoute, Params} from '@angular/router';
 import tmpl from './activate.component.html'
 
 @Component({
-    selector: 'app-signin',
+    selector: 'user-activate',
     template: tmpl
 })
 export class ActivateComponent implements OnInit {
