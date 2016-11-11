@@ -7,7 +7,7 @@ import {AuthService} from '../../auth/auth.service';
 import tmpl from './signin.component.html'
 
 @Component({
-    selector: 'app-signin',
+    selector: 'user-signin',
     template: tmpl
 })
 
