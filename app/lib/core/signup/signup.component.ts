@@ -25,7 +25,7 @@ export class SignUpComponent {
 
         this.authService
             .signUp(this.model)
-            .then(function (data) {
+            .subscribe((data) => {
                 if (data.status === 'OK') {
                     this.success = true;
                 } else {
@@ -39,5 +39,4 @@ export class SignUpComponent {
     resetError() {
         this.error = null;
     }
-
 }

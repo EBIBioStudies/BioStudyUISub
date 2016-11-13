@@ -63,7 +63,9 @@ SystemJS.config({
     "ng-file-upload": "github:danialfarid/ng-file-upload-bower@12.2.12",
     "angular-elastic": "github:monospaced/angular-elastic@2.5.1",
     "ng-template": "github:jamespamplin/plugin-ng-template@0.1.1",
-    "trNgGrid": "github:moonstorm/trNgGrid@3.1.7"
+    "trNgGrid": "github:moonstorm/trNgGrid@3.1.7",
+    "ag-grid-ng2": "github:ceolter/ag-grid-ng2@6.2.0",
+    "ag-grid": "github:ceolter/ag-grid@6.2.1"
   }
 });
 
@@ -74,13 +76,12 @@ SystemJS.config({
     "github:*/*.json"
   ],
   map: {
-    "ag-grid-ng2": "github:ceolter/ag-grid-ng2@6.2.0",
-    "ag-grid": "github:ceolter/ag-grid@6.2.1",
+    "ng2-recaptcha": "npm:ng2-recaptcha@1.4.0",
+    "angular2-recaptcha": "npm:angular2-recaptcha@0.3.3",
     "ng2-smart-table": "npm:ng2-smart-table@0.4.0-3",
     "danialfarid/ng-file-upload-bower": "github:danialfarid/ng-file-upload-bower@12.2.12",
     "monospaced/angular-elastic": "github:monospaced/angular-elastic@2.5.1",
     "moonstorm/trNgGrid": "github:moonstorm/trNgGrid@3.1.7",
-    "ng2-recaptcha": "npm:ng2-recaptcha@1.3.2",
     "ng2-cookies": "npm:ng2-cookies@1.0.2",
     "ng2-bootstrap": "npm:ng2-bootstrap@1.1.13",
     "@angular/http": "npm:@angular/http@2.1.0",
@@ -146,7 +147,7 @@ SystemJS.config({
         "inherits": "npm:inherits@2.0.3",
         "cipher-base": "npm:cipher-base@1.0.3",
         "ripemd160": "npm:ripemd160@1.0.1",
-        "sha.js": "npm:sha.js@2.4.5"
+        "sha.js": "npm:sha.js@2.4.8"
       }
     },
     "npm:public-encrypt@4.0.0": {
@@ -220,11 +221,6 @@ SystemJS.config({
         "inherits": "npm:inherits@2.0.3"
       }
     },
-    "npm:sha.js@2.4.5": {
-      "map": {
-        "inherits": "npm:inherits@2.0.3"
-      }
-    },
     "npm:elliptic@6.3.2": {
       "map": {
         "bn.js": "npm:bn.js@4.11.6",
@@ -251,7 +247,7 @@ SystemJS.config({
         "create-hash": "npm:create-hash@1.1.2",
         "evp_bytestokey": "npm:evp_bytestokey@1.0.0",
         "pbkdf2": "npm:pbkdf2@3.0.9",
-        "asn1.js": "npm:asn1.js@4.8.1"
+        "asn1.js": "npm:asn1.js@4.9.0"
       }
     },
     "npm:des.js@1.0.0": {
@@ -265,13 +261,6 @@ SystemJS.config({
         "inherits": "npm:inherits@2.0.3"
       }
     },
-    "npm:asn1.js@4.8.1": {
-      "map": {
-        "bn.js": "npm:bn.js@4.11.6",
-        "inherits": "npm:inherits@2.0.3",
-        "minimalistic-assert": "npm:minimalistic-assert@1.0.0"
-      }
-    },
     "npm:buffer@4.9.1": {
       "map": {
         "base64-js": "npm:base64-js@1.2.0",
@@ -282,18 +271,7 @@ SystemJS.config({
     "npm:stream-browserify@2.0.1": {
       "map": {
         "inherits": "npm:inherits@2.0.3",
-        "readable-stream": "npm:readable-stream@2.1.5"
-      }
-    },
-    "npm:readable-stream@2.1.5": {
-      "map": {
-        "inherits": "npm:inherits@2.0.3",
-        "isarray": "npm:isarray@1.0.0",
-        "core-util-is": "npm:core-util-is@1.0.2",
-        "string_decoder": "npm:string_decoder@0.10.31",
-        "buffer-shims": "npm:buffer-shims@1.0.0",
-        "util-deprecate": "npm:util-deprecate@1.0.2",
-        "process-nextick-args": "npm:process-nextick-args@1.0.7"
+        "readable-stream": "npm:readable-stream@2.2.1"
       }
     },
     "npm:timers-browserify@1.4.2": {
@@ -369,6 +347,29 @@ SystemJS.config({
     "npm:ng2-smart-table@0.4.0-3": {
       "map": {
         "rxjs": "npm:rxjs@5.0.0-beta.12"
+      }
+    },
+    "npm:sha.js@2.4.8": {
+      "map": {
+        "inherits": "npm:inherits@2.0.3"
+      }
+    },
+    "npm:asn1.js@4.9.0": {
+      "map": {
+        "bn.js": "npm:bn.js@4.11.6",
+        "inherits": "npm:inherits@2.0.3",
+        "minimalistic-assert": "npm:minimalistic-assert@1.0.0"
+      }
+    },
+    "npm:readable-stream@2.2.1": {
+      "map": {
+        "isarray": "npm:isarray@1.0.0",
+        "inherits": "npm:inherits@2.0.3",
+        "string_decoder": "npm:string_decoder@0.10.31",
+        "buffer-shims": "npm:buffer-shims@1.0.0",
+        "core-util-is": "npm:core-util-is@1.0.2",
+        "process-nextick-args": "npm:process-nextick-args@1.0.7",
+        "util-deprecate": "npm:util-deprecate@1.0.2"
       }
     }
   }

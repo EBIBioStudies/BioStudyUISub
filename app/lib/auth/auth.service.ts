@@ -7,6 +7,8 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
 
+import {Location} from '@angular/common';
+
 import {Credentials} from './credentials';
 import {RegistrationData} from './registration-data';
 
@@ -19,7 +21,8 @@ export class AuthService {
 
     constructor(@Inject(HttpClient) private http: HttpClient,
                 @Inject(AuthEvents) private  authEvents: AuthEvents,
-                @Inject(UserSession) private userSession: UserSession) {
+                @Inject(UserSession) private userSession: UserSession,
+                @Inject(Location) private location: Location) {
     }
 
     isAuthenticated() {
@@ -30,9 +33,9 @@ export class AuthService {
         return this.userSession.user;
     }
 
-    activate(key:string) {
+    activate(key: string): Observable<any> {
         return this.http.post('/raw/auth/activate/' + key, {})
-            .map((res:Response) => {
+            .map((res: Response) => {
                 let data = res.json();
                 if (data.status === 'OK') {
                     return data;
@@ -40,6 +43,42 @@ export class AuthService {
                 return Observable.throw({status: 'Error', message: data.message || 'Server error'});
             })
             .catch(AuthService.errorHandler);
+    }
+
+    passwordResetRequest(email: string, recaptcha: string): Observable<any> {
+        let loc = window.location;
+        let path = loc.origin + loc.pathname + "#/password_reset";
+        return this.http.post("/api/auth/passrstreq/", {email: email, path: path, 'recaptcha2-response': recaptcha})
+            .map((res: Response) => {
+                let data = res.json();
+                if (data.status === 'OK') {
+                    return data;
+                }
+                return Observable.throw({status: 'Error', message: data.message || 'Server error'});
+            })
+            .catch(AuthService.errorHandler);
+    }
+
+    passwordReset(key, password, recaptcha) {
+        return this.http.post("/raw/auth/passreset/", {
+            key: key,
+            password: password,
+            'recaptcha2-response': recaptcha
+        })
+            .map(
+                (res: Response) => {
+                    let data = res.json();
+                    if (data.status === 'OK') {
+                        return data;
+                    }
+                    return Observable.throw({status: 'Error', message: data.message || 'Server error'});
+                })
+            .catch((error)=> {
+                if (error.status === 400) { //invalid request
+                    return error.json();
+                }
+                return AuthService.errorHandler(error);
+            });
     }
 
     signIn(credentials: Credentials): Observable<any> {
@@ -57,7 +96,7 @@ export class AuthService {
             .catch(AuthService.errorHandler);
     }
 
-    signUp(regData: RegistrationData):Observable<any> {
+    signUp(regData: RegistrationData): Observable<any> {
         //TODO
         return Observable.just({});
     }
@@ -82,19 +121,19 @@ export class AuthService {
             });
     }
 
-    sessionDestroy() {
+    private sessionDestroy() {
         let userName = this.userSession.user.name;
         this.userSession.destroy();
         this.authEvents.userSignedOut(userName);
     }
 
     static errorHandler(error: any) {
-        let err = { status: '', message : ''};
+        let err = {status: '', message: ''};
         try {
             var jsonError = error.json ? error.json() : error;
-            err.status =  (jsonError.status) ? jsonError.status : 'Error';
+            err.status = (jsonError.status) ? jsonError.status : 'Error';
             err.message = (jsonError.message) ? jsonError.message : 'Server error';
-        } catch(e) {
+        } catch (e) {
             // probably not a json
             err.status = error.status || 'Error';
             err.message = error.statusText || 'Server error';
@@ -107,11 +146,6 @@ export class AuthService {
     /*constructor(private http: $http, $q, USER_ROLES, Session, AccessLevel, $log, $location) {
 
 
-     function getAppPath() {
-     var re = new RegExp("https?:\/\/[^\/]+([^\\?#]*).*");
-     var m = re.exec($location.absUrl());
-     return m[1];
-     }
 
      Object.assign(this, {
      signIn(credentials) {
@@ -135,22 +169,6 @@ export class AuthService {
      });
      },
 
-     signOut() {
-     if (!this.isAuthenticated()) {
-     return $q.when({});
-     }
-     return $http.post("/api/auth/signout", {username: Session.userName})
-     .then(
-     () => {
-     Session.destroy();
-     return {};
-     },
-     (response) => {
-     $log.error("logout error", response);
-     return $q.reject(response);
-     });
-     },
-
      signUp(user) {
      user.path = getAppPath() + "#/activate";
      return $http.post("/api/auth/signup", user)
@@ -163,34 +181,6 @@ export class AuthService {
      return response.data;
      }
      $log.error("signup error", response);
-     return $q.reject(response);
-     });
-     },
-
-     activate(key) {
-     return $http.post("/raw/auth/activate/" + key)
-     .then(
-     (response) => {
-     return response.data;
-     },
-     (response) => {
-     $log.error("activate error", response);
-     return $q.reject(response);
-     });
-     },
-
-     passwordResetRequest(email, recaptcha) {
-     var path = getAppPath() + "#/password_reset";
-     return $http.post("/api/auth/passrstreq/", {email: email, path: path, 'recaptcha2-response': recaptcha})
-     .then(
-     (response) => {
-     return response.data;
-     },
-     (response) => {
-     if (response.status === 403) {
-     return response.data;
-     }
-     $log.error("password reset request error", response);
      return $q.reject(response);
      });
      },
@@ -211,24 +201,6 @@ export class AuthService {
      });
      },
 
-     passwordReset(key, password, recaptcha) {
-     return $http.post("/raw/auth/passreset/", {
-     key: key,
-     password: password,
-     'recaptcha2-response': recaptcha
-     })
-     .then(
-     (response) => {
-     return response.data;
-     },
-     (response) => {
-     if (response.status === 400) { //invalid request
-     return response.data;
-     }
-     $log.error("password reset error", response);
-     return q$.reject(response);
-     });
-     },
 
      isAuthenticated() {
      return !Session.isAnonymous();

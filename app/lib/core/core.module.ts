@@ -1,6 +1,5 @@
 import {NgModule}     from '@angular/core';
 
-//import {Ng2BootstrapModule} from 'ng2-bootstrap/ng2-bootstrap';
 import {TypeaheadModule, TooltipModule, TabsModule, DropdownModule} from 'ng2-bootstrap/ng2-bootstrap';
 import {RouterModule} from '@angular/router';
 import {RecaptchaModule} from 'ng2-recaptcha';
@@ -20,6 +19,8 @@ import {HelpComponent} from './help/help.component';
 import {HeaderComponent} from './header/header.component';
 import {SignInComponent} from './signin/signin.component';
 import {ActivateComponent} from './activate/activate.component';
+import {PasswordResetReqComponent} from './password-reset/password-reset-req.component';
+import {PasswordResetComponent} from './password-reset/password-reset.component';
 import {SubmissionListComponent} from './submission/subm-list.component';
 import {SubmissionEditComponent} from './submission/subm-edit.component';
 import {SideBarComponent} from './submission/sidebar/subm-sidebar.component';
@@ -41,6 +42,7 @@ import {ORCIDInputBoxComponent} from './orcid-input-box.component';
 
 import {APP_ROUTES} from './app-routes';
 import {SignUpComponent} from './signup/signup.component';
+import {Equals2} from './password-reset/equals2.directive';
 
 @NgModule({
     imports: [
@@ -67,6 +69,8 @@ import {SignUpComponent} from './signup/signup.component';
         SignInComponent,
         SignUpComponent,
         ActivateComponent,
+        PasswordResetReqComponent,
+        PasswordResetComponent,
         SubmissionListComponent,
         SubmissionEditComponent,
         SubmissionPanelComponent,
@@ -82,7 +86,8 @@ import {SignUpComponent} from './signup/signup.component';
         ContainerRootComponent,
         ContainerMdComponent,
         ORCIDInputBoxComponent,
-        PropertyFilterPipe
+        PropertyFilterPipe,
+        Equals2
     ],
     providers: [
         AuthGuard

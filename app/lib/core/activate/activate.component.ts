@@ -22,7 +22,7 @@ export class ActivateComponent implements OnInit {
             let key = params['key'];
             if (!key) {
                 this.hasError = true;
-                this.message = 'Wrong url for registration';
+                this.message = 'Invalid path';
             }
 
             this.authService.activate(key)
