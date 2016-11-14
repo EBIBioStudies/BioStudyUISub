@@ -120,7 +120,7 @@ export class Item {
     }
 
     static factory(required) {
-        return function (attributes: Array) {
+        return function (attributes: any[]) {
             return new Item(Attributes.create(attributes, required));
         };
     }
@@ -135,10 +135,8 @@ export class Publication extends Item {
     }
 
     static publicationFactory(required) {
-        return function (pubMedId, attributes) {
-            var item = new Publication(attributes, required);
-            item.pubMedId = pubMedId; // can't make it an attribute as it's rendered differently
-            return item;
+        return function (pubMedId:string, attributes: any[]) {
+            return new Publication(Attributes.create(attributes, required), pubMedId);
         };
     }
 }
