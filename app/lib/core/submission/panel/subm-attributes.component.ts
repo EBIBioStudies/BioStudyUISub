@@ -32,7 +32,7 @@ import {DictionaryService} from '../../../submission/dictionary.service';
 
             <input *ngIf="!attr.required"
                    type="text" class="form-control control-label input-sm"
-                   name="{{'name_' + idx}}"
+                   [name]="'name_' + idx"
                    placeholder="Type a key"
                    tooltip="Empty or duplicate value"
                    [tooltipEnable]="attrForm.form.controls['name_' + idx] && attrForm.form.controls['name_' + idx].invalid"
@@ -63,7 +63,7 @@ import {DictionaryService} from '../../../submission/dictionary.service';
             
                  <input *ngIf="attr.type === 'text'"
                        type="text" class="form-control input-sm"
-                       name="{{'value_' + idx}}"
+                       [name]="'value_' + idx"
                        placeholder="Enter a value"
                        tooltip="This field is required"
                        [tooltipEnable]="attrForm.form.controls['value_' + idx] && attrForm.form.controls['value_' + idx].invalid"
@@ -80,9 +80,13 @@ import {DictionaryService} from '../../../submission/dictionary.service';
                        [ngModelOtions]="{allowInvalid: true}"
 -->
                  <input-file *ngIf="attr.type === 'file'" 
-                      [(ngModel)]="attr.value"></input-file>
+                             [(ngModel)]="attr.value"
+                             [name]="'value_' + idx"
+                             [required]="attr.required"
+                             [readonly]="readonly">                             
+                 </input-file>
             
-                 <span class="input-group-btn" *ngIf="!readonly && !attr.required">
+                 <span *ngIf="!readonly && !attr.required" class="input-group-btn">
                       <button type="button"
                            class="btn btn-sm btn-danger btn-flat"
                            (click)="attributes.remove(idx)"

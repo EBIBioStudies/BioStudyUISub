@@ -46,8 +46,7 @@ export class SubmissionEditComponent {
                 .subscribe(subm => {
                     this.submission = this.submModel.importSubmission(subm.data);
                     //TODO
-                    this.submission.releaseDate = "2016-01-01";
-                    this.submission.addAnnotation(new Attr('name', 'value', 'text', true));
+                    //this.submission.releaseDate = "2016-01-01";
                     console.debug("submission:", this.submission);
                 });
         });

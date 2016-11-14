@@ -61,7 +61,6 @@ import * as _ from 'lodash';
                                    [tooltipEnable]="itemsPreviewForm.form.controls[attr.name + '_' + idx] && itemsPreviewForm.form.controls[attr.name + '_' + idx].invalid"
                                    [required]="attr.required"
                                    [(ngModel)]="attr.value"
-                                   (ngModelChange)="onAttributeChange()"
                                    [readonly]="readonly">
 <!--
                                    ng-model-options="{ allowInvalid: true }">
@@ -69,27 +68,9 @@ import * as _ from 'lodash';
                             <input-file *ngIf="attr.type === 'file'"
                                         [name]="attr.name + '_' + idx" 
                                         [(ngModel)]="attr.value"
-                                        (ngModelChange)="onAttributeChange()"
                                         [readonly]="readonly"
                                         [required]="attr.required">
                             </input-file>
-<!--
-                            <div ng-controller="FileCtrl" ng-if="attr.type === 'file'">
-                                <select class="form-control"
-                                        ng-model="attr.value"
-                                        ng-change="onAttributeChange()"
-                                        name="attrValuePreview_{{key}}"
-                                        ng-required="attr.required"
-                                        ng-if="files.length">
-                                    <option ng-repeat="file in files" value="{{file}}">
-                                        {{file}}
-                                    </option>
-                                </select>
-                                <a ui-sref="files({ bb:1 })"
-                                   class="btn btn-link"
-                                   ng-if="!files.length">Go to File Upload</a>
-                            </div>
--->
                         </div>
                     </td>
                 </tr>
@@ -105,12 +86,12 @@ import * as _ from 'lodash';
         </template>
         
         <p class="pull-right padding-right-small padding-top-small">
-            <button type="button"
+            <button *ngIf="!readonly"
+                    type="button"
                     class="pull-right btn btn-danger btn-xs"
                     (click)="items.remove(idx);"
                     [tooltip]="deleteTooltip"
-                    placement="bottom"
-                    *ngIf="!readonly"><i class="fa fa-lg fa-trash"></i>
+                    placement="bottom"><i class="fa fa-lg fa-trash"></i>
             </button>
         </p>
 
