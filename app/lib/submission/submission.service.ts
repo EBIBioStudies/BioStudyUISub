@@ -32,10 +32,7 @@ export class SubmissionService {
         return this.http.post('/api/submission/create', submission)
             .map((res: Response) => {
                 let data = res.json();
-                if (data.status === 'OK') {
-                    return data.submission;
-                }
-                return Observable.throw({status: 'Error', message: data.message || 'Server error'});
+                return data;
             }).catch(SubmissionService.errorHandler);
     }
 

@@ -14,6 +14,7 @@ import 'ag-grid/dist/styles/ag-grid.css!css';
 import 'ag-grid/dist/styles/theme-fresh.css!css';
 
 import {AgRendererComponent} from 'ag-grid-ng2/main';
+import {UserSession} from '../../session/user-session';
 
 @Component({
     selector: 'action-buttons',
@@ -44,8 +45,8 @@ import {AgRendererComponent} from 'ag-grid-ng2/main';
 `
 })
 export class ActionButtonsComponent {
-    @Input() status:string;
-    @Input() accno:string;
+    @Input() status: string;
+    @Input() accno: string;
     @Output() onDelete = new EventEmitter<boolean>();
     @Output() onRevert = new EventEmitter<boolean>();
     @Output() onEdit = new EventEmitter<boolean>();
@@ -54,12 +55,15 @@ export class ActionButtonsComponent {
     deleteSubmission() {
         this.onDelete.emit(this.accno);
     }
+
     revertSubmission() {
         this.onRevert.emit(this.accno);
     }
+
     editSubmission() {
         this.onEdit.emit(this.accno);
     }
+
     viewSubmission() {
         this.onView.emit(this.accno);
     }
@@ -76,13 +80,13 @@ export class ActionButtonsComponent {
                                </action-buttons>`
 })
 export class ActionButtonsCellComponent implements AgRendererComponent {
-    status:string;
-    accno:string;
+    status: string;
+    accno: string;
 
     constructor(@Inject(Router) private router: Router) {
     }
 
-    agInit(params:any):void {
+    agInit(params: any): void {
         console.debug("params: ", params);
         this.status = params.data.status;
         this.accno = params.data.accno;
@@ -92,15 +96,18 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
         console.debug("doDelete: ", accno);
         //TODO
     }
+
     doRevert(accno) {
         console.debug("doRevert: ", accno);
         //TODO
     }
+
     doEdit(accno) {
         console.debug("doEdit: ", accno);
         this.router.navigate(['/edit', accno]);
     }
-    doView(accno){
+
+    doView(accno) {
         console.debug("doView: ", accno);
         this.router.navigate(['/view', accno]);
     }
@@ -112,14 +119,22 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
 })
 
 export class SubmissionListComponent {
-    private gridOptions:GridOptions;
+    private gridOptions: GridOptions;
     private rowData: any[];
     private columnDefs: any[];
+
+    private userName: string;
+    private userEmail: string;
 
     error: any = null;
 
     constructor(@Inject(SubmissionService) private submService: SubmissionService,
-                @Inject(SubmissionModel) private submModel: SubmissionModel) {
+                @Inject(SubmissionModel) private submModel: SubmissionModel,
+                @Inject(Router) private router: Router,
+                @Inject(UserSession) sess: UserSession) {
+
+        this.userName = sess.user.name;
+        this.userEmail = sess.user.email;
 
         this.gridOptions = <GridOptions>{
             onGridReady: () => {
@@ -176,11 +191,15 @@ export class SubmissionListComponent {
     }
 
     createSubmission = function () {
-        /* //TODO var sbm = SubmissionModel.create(Session.userName, Session.userEmail);
-         SubmissionService.createSubmission(sbm)
-         .then(function (sbm) {
-         startEditing(sbm.accno);
-         });
-         */
+        let sbm = this.submModel.createNew(this.userName, this.userEmail);
+        this.submService.createSubmission(sbm)
+            .subscribe((sbm) => {
+                console.log("created submission:", sbm);
+                this.startEditing(sbm.accno);
+            });
     };
+
+    startEditing(accno) {
+        this.router.navigate(['/edit', accno]);
+    }
 }
