@@ -30,7 +30,7 @@ export class SubmissionAttributesPanelComponent implements OnChanges  {
 
     @ViewChild(SubmissionAttributesComponent) private submAttrCmp: SubmissionAttributesComponent;
 
-    attributesInfo:AttributesInfo;
+    private attributesInfo:AttributesInfo;
 
     constructor() {
     }
@@ -45,13 +45,7 @@ export class SubmissionAttributesPanelComponent implements OnChanges  {
     }
 
     ngOnChanges(changes: {[ propName: string]: SimpleChange}) {
-        console.log(changes);
-        console.log(this.attributes);
-        let title = this.type;
-        let addNewLabel = 'Add ' + this.type;
         this.attributesInfo = new AttributesInfo(this.attributes);
-
-        console.log("Attributes", this.attributes);
     }
 
     get valid() {

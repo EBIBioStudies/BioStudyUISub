@@ -82,7 +82,7 @@ import * as _ from 'lodash';
 
     <tab *ngFor="let item of items.items; let idx=index" [active]="activeTab === idx">
         <template tabHeading>
-          <span [ngClass]="{'text-danger': true}">{{tabHeading + (idx + 1)}}</span>
+          <span [ngClass]="{'text-danger': submAttr.attrForm.invalid}">{{tabHeading + (idx + 1)}}</span>
         </template>
         
         <p class="pull-right padding-right-small padding-top-small">
@@ -109,7 +109,8 @@ import * as _ from 'lodash';
         <subm-attributes
              [attributes]="item.attributes"
              [type]="type"
-             [readonly]="readonly">
+             [readonly]="readonly"
+             #submAttr>
         </subm-attributes>
     </tab>
 
