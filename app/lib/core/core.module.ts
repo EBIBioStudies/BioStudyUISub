@@ -33,6 +33,7 @@ import {SubmissionItemsPanelComponent} from './submission/panel/subm-items-panel
 import {FileListComponent} from './file/file-list.component';
 
 import {InputFileComponent} from './submission/panel/input-file.component';
+import {PubMedIdSearchComponent} from './submission/panel/pubmedid-search.component';
 import {PropertyFilterPipe} from './submission/panel/prop-filter.pipe';
 
 import {DummyComponent} from './dummy.component';
@@ -82,6 +83,7 @@ import {Equals2} from './password-reset/equals2.directive';
         SideBarComponent,
         SideBarItemComponent,
         InputFileComponent,
+        PubMedIdSearchComponent,
         DummyComponent,
         ContainerRootComponent,
         ContainerMdComponent,

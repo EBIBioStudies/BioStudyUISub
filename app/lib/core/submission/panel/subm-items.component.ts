@@ -94,6 +94,17 @@ import * as _ from 'lodash';
                     placement="bottom"><i class="fa fa-lg fa-trash"></i>
             </button>
         </p>
+        <table *ngIf="type === 'publication'" class="table table-condensed" style="width:100%">
+        <tr>
+            <td><p class="form-control-static pull-right">Pub Med Id</p></td>
+            <td>
+               <pubmedid-search 
+                   [name]="'pubMedId_' + idx" 
+                   [(ngModel)]="item.pubMedId"
+                   (found)="pubMedIdFound($event, item)"></pubmedid-search>    
+            </td>    
+        </tr>
+        </table>
 
         <subm-attributes
              [attributes]="item.attributes"
@@ -148,6 +159,11 @@ export class SubmissionItemsComponent implements OnInit {
             length = 6;
         }
         return 'col-lg-' + Math.ceil(12 / length);
+    }
+
+    pubMedIdFound(data, item:Item) {
+        console.log("pubMedIdFound", data);
+        item.attributes.update(data);
     }
 
     typeaheadValues(attrName: string, itemIdx:number):Array<string> {

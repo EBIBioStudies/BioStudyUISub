@@ -6,8 +6,6 @@ import * as _ from 'lodash';
 import {Attributes, Attr} from '../../../submission/submission.model';
 import {DictionaryService} from '../../../submission/dictionary.service';
 
-//import {FormGroup, FormControl, Validators} from '@angular/forms';
-
 @Component({
     selector: 'subm-attributes',
     template: `
@@ -21,9 +19,6 @@ import {DictionaryService} from '../../../submission/dictionary.service';
     </tr>
     </thead>
     <tbody>
-    <!--pubmedid-search *ngIf="type === 'publication'"></pubmedid-search-->
-    <!-- {{pubMedSearchTmplUrl}} -->
-    
     <tr *ngFor="let attr of attributes.attributes; let idx=index">
         <td class="col-md-3 nopadding border-none form-group-sm"
             [ngClass]="{'has-error' : !attr.required 
@@ -43,7 +38,6 @@ import {DictionaryService} from '../../../submission/dictionary.service';
                    typeaheadOptionsLimit="30"                
                    [readonly]="readonly"
                    [(ngModel)]="attr.name"
-                   (onModelChange)="onAttributeChange()" 
                    required>
 <!--
                    
