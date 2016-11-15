@@ -49,7 +49,7 @@ export class SubmissionAttributesPanelComponent implements OnChanges  {
         console.log(this.attributes);
         let title = this.type;
         let addNewLabel = 'Add ' + this.type;
-        this.attributesInfo = new AttributesInfo(this.attributes, title, addNewLabel);
+        this.attributesInfo = new AttributesInfo(this.attributes);
 
         console.log("Attributes", this.attributes);
     }
