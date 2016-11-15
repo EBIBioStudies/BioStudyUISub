@@ -9,7 +9,6 @@ import {PubMedSearchService} from '../../../submission/pubMedSearch.service';
     template: `
     <input type="text" class="form-control input-sm"
            placeholder="Enter Pub Med Id" 
-           [name]="name"
            [(ngModel)]="pubMedId"
            (ngModelChange)="ngOnChanges()"
            [readonly]="readonly">
@@ -20,7 +19,6 @@ import {PubMedSearchService} from '../../../submission/pubMedSearch.service';
 })
 export class PubMedIdSearchComponent implements ControlValueAccessor, OnChanges {
     @Input() readonly?: boolean = false;
-    @Input() name: string;
     @Input('value') private pubMedId: string;
 
     @Output() found: EventEmitter = new EventEmitter<any>();

@@ -99,7 +99,6 @@ import * as _ from 'lodash';
             <td><p class="form-control-static pull-right">Pub Med Id</p></td>
             <td>
                <pubmedid-search 
-                   [name]="'pubMedId_' + idx" 
                    [(ngModel)]="item.pubMedId"
                    (found)="pubMedIdFound($event, item)"></pubmedid-search>    
             </td>    
