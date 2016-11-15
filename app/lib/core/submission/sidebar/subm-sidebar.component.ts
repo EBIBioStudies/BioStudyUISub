@@ -42,8 +42,9 @@ export class SideBarItemComponent {
         <li class="success" *ngFor="let child of childs">
             <a *ngIf="collapsed" 
                 (click)="child.clicked($event)" 
-                tooltip="{{child.label}}" 
-                placement="right"
+                [tooltip]="child.label" 
+                tooltipPlacement="right"
+                tooltipAppendToBody="true"
                 [ngClass]="{'disabled-link': child.disabled}">
                 <i class="fa fa-fw" [ngClass]="child.icon"></i>
             </a>
@@ -57,7 +58,7 @@ export class SideBarItemComponent {
         <li>
             <hr/>
         </li>
-        <li class="success" disabled="true">
+        <li class="success" disabled>
             <a class="disabled-link" *ngIf="collapsed">
                 <i class="fa fa-check" *ngIf="!saving"></i>
                 <i class="fa fa-spinner fa-spin-2x" *ngIf="saving"></i>
