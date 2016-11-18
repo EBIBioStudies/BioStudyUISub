@@ -5,7 +5,7 @@ module.exports = function (config) {
     config.set({
 
         // base path that will be used to resolve all patterns (eg. files, exclude)
-        basePath: 'app',
+        basePath: './app',
 
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
@@ -14,16 +14,41 @@ module.exports = function (config) {
             'jasmine'
         ],
 
-        plugins: ['karma-jspm', 'karma-jasmine', 'karma-chrome-launcher'],
+        plugins: ['karma-uiuxengineering-jspm', 'karma-jasmine', 'karma-chrome-launcher'],
 
         jspm: {
-            config: "jspm.config.js",
-            packages: "jspm_packages",
-            loadFiles: ['lib/**/*.Spec.js'],
-            serveFiles: ['lib/**/*.js', 'lib/**/*.html', 'lib/**/*.json']
+            jspmConfig: 'jspm.config.js',
+            packages: 'jspm_packages',
+            adapter: 'angular2',
+            files: [
+                'lib/**/*.ts',
+                'lib/**/*.html',
+                'lib/**/*.json'
+            ]
         },
 
-        urlRoot: "/",
+        // must have path roots of serveFiles and loadFiles, suppress annoying 404 warnings.
+        proxies: {
+            '/lib/': '/base/lib/',
+            '/jspm_packages/': '/base/jspm_packages/'
+        },
+
+        // list of files to exclude
+        exclude: [],
+
+
+        // preprocess matching files before serving them to the browser
+        // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
+        preprocessors: {
+            'app/**/!(*.spec).ts': ['jspm']
+        },
+/*
+        proxies: {
+            '/': '/app'
+        },
+*/
+
+        //urlRoot: "/",
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
@@ -40,7 +65,7 @@ module.exports = function (config) {
 
         // level of logging
         // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-        logLevel: config.LOG_ERROR,
+        logLevel: config.LOG_WARN,
 
 
         // enable / disable watching file and executing tests whenever any file changes
@@ -59,6 +84,8 @@ module.exports = function (config) {
 
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
-        singleRun: false
+        singleRun: false,
+
+        browserNoActivityTimeout: 3000000
     })
 };

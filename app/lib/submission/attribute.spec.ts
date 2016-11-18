@@ -1,10 +1,52 @@
-import 'angular';
-import 'angular-mocks';
-import '../index';
+import {Attr} from './submission.model';
 
-import submExample from './submission.example.json!json';
+describe('Attr class', () => {
+    it('has default values', () => {
+        let attr = Attr.from({});
+        expect(attr.name).toBe('');
+        expect(attr.value).toBe('');
+        expect(attr.type).toBe('text');
+        expect(attr.required).toBe(false);
+    });
 
-describe('BioStudyApp.Submission module', function() {
+    it('sets predefined values', () => {
+        let attr = Attr.requiredFrom({name:'Name', value:'Value', type: 'file'});
+        expect(attr.name).toBe('Name');
+        expect(attr.value).toBe('Value');
+        expect(attr.type).toBe('file');
+        expect(attr.required).toBe(true);
+    });
+
+    it('notifies about changes', () => {
+        let attr = Attr.from({});
+        expect(attr.changes()).toBeDefined();
+
+        let res = [];
+        let sub = attr.changes().subscribe(m => {
+            res.push(m);
+        });
+
+        attr.name = 'new name';
+        attr.value = 'new value';
+
+        sub.unsubscribe();
+        attr.name = 'a name';
+        attr.value = 'a value';
+
+        expect(res.length).toEqual(2);
+    });
+});
+
+/*
+
+ //import 'angular';
+ //import 'angular-mocks';
+ //import '../index';
+
+ //import submExample from './submission.example.json!json';
+
+
+ describe('BioStudyApp.Submission module', function() {
 
     beforeEach(angular.mock.module('BioStudyApp.Submission'));
 
@@ -250,4 +292,4 @@ describe('BioStudyApp.Submission module', function() {
         });
     });
 
-});
+});*/

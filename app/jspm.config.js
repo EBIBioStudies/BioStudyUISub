@@ -76,6 +76,7 @@ SystemJS.config({
     "github:*/*.json"
   ],
   map: {
+    "es6-shim": "github:es-shims/es6-shim@0.35.1",
     "ng2-recaptcha": "npm:ng2-recaptcha@1.4.0",
     "angular2-recaptcha": "npm:angular2-recaptcha@0.3.3",
     "ng2-smart-table": "npm:ng2-smart-table@0.4.0-3",
