@@ -1,6 +1,6 @@
-import {Item, Items} from './submission.model';
+import {Item, Items} from './submission';
 
-describe('Items class', () => {
+describe('Items', () => {
     it('can be empty', () => {
         let items = new Items(Item.factory([]));
         expect(items.items.length).toEqual(0);

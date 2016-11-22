@@ -1,6 +1,6 @@
-import {Attributes} from './submission.model';
+import {Attributes} from './submission';
 
-describe('Attributes class', () => {
+describe('Attributes', () => {
     it('can be empty', () => {
         let attrs = Attributes.create();
         expect(attrs.attributes.length).toEqual(0);

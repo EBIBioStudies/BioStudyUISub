@@ -1,131 +1,172 @@
+import {Subscription} from 'rxjs/Subscription';
+
+import {Item, Publication, Submission} from './submission';
+import {PageTabProxy} from './pagetabproxy';
+
 import * as _ from 'lodash';
 
+class ItemAdapter {
+    static fromFile(it: Item): any {
+        return {
+            path: it.attributes.find('Path') || {value: ''},
+            attributes: _.map(_.reject(it.attributes.attributes, {name: 'Path'}),
+                attr => ({name: attr.name, value: attr.value}))
+        };
+    }
+
+    static toFile(file: any): any {
+        return {
+            attributes: [].concat(
+                _.map(file.attributes, a => a),
+                [{name: 'Path', value: file.path}]
+            )
+        };
+    }
+
+    static fromLink(it: Item): any {
+        return {
+            url: it.attributes.find('URL') || {value: ''},
+            attributes: _.map(_.reject(it.attributes.attributes, {name: 'URL'}),
+                attr => ({name: attr.name, value: attr.value}))
+        };
+    }
+
+    static toLink(link: any): any {
+        return {
+            attributes: [].concat(
+                _.map(link.attributes, a => a),
+                [{name: 'URL', value: link.url}]
+            )
+        };
+    }
+
+    static fromPublication(it: Publication): any {
+        return {
+            attributes: [].concat(
+                [{name: 'PubMedId', value: it.pubMedId}],
+                _.map(it.attributes.attributes,
+                    attr => ({name: attr.name, value: attr.value}))
+            )
+        };
+    }
+
+    static  toPublication(publ: any): any {
+        return {
+            pubMedId: (_.find(publ.attributes, {name: 'PubMedId'}) || {value: ''}).value,
+            attributes: _.reject(publ.attributes, a => (a.name.toLowerCase() === 'pubmedid'))
+        };
+    }
+
+    static fromContact(it:Item): any {
+        return {
+            attributes: _.map(it.attributes.attributes, attr => {
+                let name = (attr.name === 'Organisation') ? 'affiliation' : attr.name;
+                return {name: name, value: attr.value};
+            })
+        }
+    }
+
+    static toContact(contact: any): any {
+        return {
+            attributes: _.map(contact.attributes, attr => {
+                let name = (attr.name.toLowerCase() === 'affiliation') ? 'Organisation' : attr.name;
+                return {name: name, value: attr.value};
+            })
+        };
+    }
+}
+
 export class PageTab {
-    private __origin: any;
 
-    constructor(origin?: any = {type: 'Submission'}) {
-        this.__origin = _.cloneDeep(origin);
+    private __pt: PageTabProxy;
+    private __subscr: Subscription;
+    private __subm: Submission;
+
+    private __updates = {
+        title(pt, subm): void {
+            pt.title = subm.title;
+        },
+        description(pt, subm): void{
+            pt.description = subm.description;
+        },
+        releaseDate(pt, subm): void {
+            pt.releaseDate = subm.releaseDate;
+        },
+        annotations(pt, subm): void {
+            pt.annotations = _.map(subm.annotations.items[0].attributes.attributes,
+                attr => {
+                    return {name: attr.name, value: attr.value}
+                });
+        },
+        files(pt, subm): void {
+            pt.files = _.map(subm.files.items, ItemAdapter.fromFile);
+        },
+        links(pt, subm): void {
+            pt.links = _.map(subm.links.items, ItemAdapter.fromLink);
+        },
+        publications(pt, subm): void {
+            pt.publications = _.map(subm.publications.items, ItemAdapter.fromPublication);
+        },
+        contacts(pt, subm): void {
+            pt.links = _.map(subm.contacts.items, ItemAdapter.fromContact);
+        }
+    };
+
+    constructor(obj?: any) {
+        this.__pt = PageTabProxy.create(obj);
     }
 
-    get accno(): string {
-        return this.__origin.accno || '';
-    }
+    asSubmission(dict: any): Submission {
+        if (this.__subm) {
+            return this.__subm;
+        }
 
-    set accno(accno: string) {
-        this.__origin.accno = accno;
-    }
+        let subm = Submission.create(dict);
+        let source = this.__pt;
 
-    get title(): string {
-        return this.findAttrValue(this.path('attributes', []), 'Title');
-    }
+        subm.accno = source.accno;
+        subm.releaseDate = source.releaseDate;
+        subm.title = source.title;
+        subm.description = source.description;
 
-    set title(title: string) {
-        this.require('attributes', []);
-        this.requireAttr(this.path('attributes'), {name: 'Title', value: title});
-    }
-
-    get description(): string {
-        return this.findAttrValue(this.path('section.attributes', []), 'Description');
-    }
-
-    set description(descr: string) {
-        this.require('section', {});
-        this.require('section.attributes', []);
-        this.requireAttr(this.path('section.attributes'), {name: 'Description', value: descr});
-    }
-
-    get releaseDate(): string { // yyyy-mm-dd
-        return this.findAttrValue(this.path('attributes', []), 'ReleaseDate');
-    }
-
-    set releaseDate(date: string) {
-        this.require('attributes', []);
-        this.requireAttr(this.path('attributes'), {name: 'ReleaseDate', value: date});
-    }
-
-    get annotations() {
-        return _.reject(this.path('section.attributes', []), {name: 'Description'});
-    }
-
-    get links() {
-        return this.path('section.links') || [];
-    }
-
-    get files() {
-        return this.path('section.files') || [];
-    }
-
-    get publications() {
-        return _.filter(this.path('section.subsections', []), {type: 'Publication'});
-    }
-
-    get contacts() {
-        return _.map(_.filter(this.path('section.subsections', []), {type: 'Author'}),
-            (c) => {
-                c.attributes = this.resolveReferences(c.attributes);
-                return c;
-            });
-    }
-
-    private resolveReferences(attributes) {
-        return _.map(attributes, (a) => {
-            return (a.isReference) ? this.findRef(a) : a;
+        _.forEach(source.annotations, (attr) => {
+            subm.addAnnotation(attr);
         });
+
+        _.forEach(source.links, (link) => {
+            subm.addLink(ItemAdapter.toLink(link).attributes);
+        });
+
+        _.forEach(source.files, (file) => {
+            subm.addFile(ItemAdapter.toFile(file).attributes);
+        });
+
+        _.forEach(source.contacts, (contact) => {
+            subm.addContact(ItemAdapter.toContact(contact).attributes);
+        });
+
+        _.forEach(source.publications, (pub) => {
+            let obj = ItemAdapter.toPublication(pub);
+            subm.addPublication(pub.pubMedId, pub.attributes);
+        });
+
+        this.__subm = subm;
+        // todo: unsubscribe
+        this.__subscr = subm.changes().subscribe(ch => {
+            this.update(ch);
+        });
+        return subm;
     }
 
-    private findRef(attr) {
-        let ref = attr.value;
-        let found = _.find(this.path('section.subsections', []), {accno: ref});
-        return {name: attr.name, value: found ? found.attributes[0].value : ''};
+    get data(): any {
+        return this.__pt.data();
     }
 
-    private require(path: string, deflt: any): any {
-        let obj = this.__origin;
-        let parts = path.split('.');
-        for (let i = 0; i < parts.length - 1; i++) {
-            obj = obj[parts[i]];
+    private update(ch: string): void {
+        if (this.__updates.hasOwnProperty(ch)) {
+            this.__updates[ch](this.__pt, this.__subm);
+        } else {
+            console.error(`unsupported update type: ${ch}`);
         }
-        let lastPart = parts[parts.length - 1];
-        if (!obj.hasOwnProperty(lastPart)) {
-            obj[lastPart] = deflt;
-        }
-    }
-
-    private requireAttr(obj, attr) {
-        if (!_.isArray(obj)) {
-            console.error('Can not set attribute to none array');
-            return;
-        }
-
-        let found = _.find(obj, {name: attr.name});
-        if (!found) {
-            found = {name: attr.name, value: ''};
-            obj.push(found);
-        }
-        found.value = attr.value;
-    }
-
-    private path(path: string, deflt?: any): any {
-        return this.__path(this.__origin, path, deflt);
-    }
-
-    private __path(obj: any, path: string, deflt?: any) {
-        if (!obj) {
-            return deflt;
-        }
-        if (!path) {
-            return obj;
-        }
-        let parts = path.split('.', 1);
-        return this.__path(obj[parts[0]], parts[1], deflt);
-    }
-
-    private findAttrValue(attributes: any[], attrName: string): string {
-        let attr = _.find(attributes, {name: attrName}) || {};
-        return attr.value || '';
-    }
-
-    static create(obj?:any): PageTab {
-        return new PageTab(obj);
     }
 }

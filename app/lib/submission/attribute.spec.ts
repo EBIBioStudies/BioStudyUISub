@@ -1,6 +1,6 @@
-import {Attr} from './submission.model';
+import {Attr} from './submission';
 
-describe('Attr class', () => {
+describe('Attr', () => {
     it('has default values', () => {
         let attr = Attr.from({});
         expect(attr.name).toBe('');
