@@ -44,13 +44,19 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
             let accno = params['accno'];
             this.submService
                 .getSubmission(accno)
-                .subscribe(subm => {
-                    let pt = new PageTab(subm.data);
+                .subscribe(resp => {
+                    let wrap = resp;
+                    let pt = new PageTab(wrap.data);
                     this.submission = pt.asSubmission(this.dictService.dict());
                     console.debug("submission:", this.submission);
 
                     this.subscr = pt.changes().subscribe((changes) => {
                         console.debug("save changes");
+                        wrap.data = pt.data;
+                        this.submService.saveSubmission(wrap)
+                            .subscribe(resp => {
+                               console.debug("saved");
+                            });
                     });
                 });
         });

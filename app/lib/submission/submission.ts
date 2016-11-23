@@ -325,7 +325,7 @@ export class Submission extends WithChanges {
 
     set releaseDate(date: string) {
         this.__releaseDate = date;
-        this.notify(new Change('releaseDate: ', date));
+        this.notify(new Change('releaseDate', date));
     }
 
     addAnnotation(attr?: any) {

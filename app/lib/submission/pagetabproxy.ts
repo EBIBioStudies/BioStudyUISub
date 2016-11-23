@@ -8,6 +8,7 @@ export class PageTabProxy {
 
     constructor(origin?: any = SUBMISSION) {
         this.__origin = _.cloneDeep(origin);
+        console.log("origin", origin);
     }
 
     get data():any {

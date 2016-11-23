@@ -107,7 +107,7 @@ export class PageTab extends WithChanges<string> {
             pt.publications = _.map(subm.publications.items, ItemAdapter.fromPublication);
         },
         contacts(pt, subm): void {
-            pt.links = _.map(subm.contacts.items, ItemAdapter.fromContact);
+            pt.contacts = _.map(subm.contacts.items, ItemAdapter.fromContact);
         }
     };
 
@@ -152,7 +152,7 @@ export class PageTab extends WithChanges<string> {
 
         this.__subm = subm;
         subm.changes().subscribe((ch:Change) => {
-            console.debug("catched:", ch);
+            console.debug("got:", ch);
             this.__changes[ch.name] = 1;
             this.debouncedUpdate();
         });
@@ -180,6 +180,6 @@ export class PageTab extends WithChanges<string> {
     }
 
     get data(): any {
-        return this.__pt.data();
+        return this.__pt.data;
     }
 }
