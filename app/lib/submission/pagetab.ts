@@ -1,6 +1,6 @@
-import {Subscription} from 'rxjs/Subscription';
+//import {Subscription} from 'rxjs/Subscription';
 
-import {Item, Publication, Submission} from './submission';
+import {Item, Publication, Submission, WithChanges, Change} from './submission';
 import {PageTabProxy} from './pagetabproxy';
 
 import * as _ from 'lodash';
@@ -57,7 +57,7 @@ class ItemAdapter {
         };
     }
 
-    static fromContact(it:Item): any {
+    static fromContact(it: Item): any {
         return {
             attributes: _.map(it.attributes.attributes, attr => {
                 let name = (attr.name === 'Organisation') ? 'affiliation' : attr.name;
@@ -76,17 +76,16 @@ class ItemAdapter {
     }
 }
 
-export class PageTab {
+export class PageTab extends WithChanges<string> {
 
     private __pt: PageTabProxy;
-    private __subscr: Subscription;
     private __subm: Submission;
 
     private __updates = {
         title(pt, subm): void {
             pt.title = subm.title;
         },
-        description(pt, subm): void{
+        description(pt, subm): void {
             pt.description = subm.description;
         },
         releaseDate(pt, subm): void {
@@ -113,6 +112,7 @@ export class PageTab {
     };
 
     constructor(obj?: any) {
+        super();
         this.__pt = PageTabProxy.create(obj);
     }
 
@@ -151,22 +151,35 @@ export class PageTab {
         });
 
         this.__subm = subm;
-        // todo: unsubscribe
-        this.__subscr = subm.changes().subscribe(ch => {
-            this.update(ch);
+        subm.changes().subscribe((ch:Change) => {
+            console.debug("catched:", ch);
+            this.__changes[ch.name] = 1;
+            this.debouncedUpdate();
         });
         return subm;
     }
 
-    get data(): any {
-        return this.__pt.data();
+    private __changes = {};
+
+    private debouncedUpdate = _.debounce(this.update, 400);
+
+    private update(): void {
+        let changes = this.__changes;
+        this.__changes = {};
+
+        console.debug("PageTab::update", changes);
+
+        _.forOwn(changes, (v, k)=> {
+            if (this.__updates.hasOwnProperty(k)) {
+                this.__updates[k](this.__pt, this.__subm);
+            } else {
+                console.error(`unsupported update type: ${k}`);
+            }
+        });
+        this.notify("changed");
     }
 
-    private update(ch: string): void {
-        if (this.__updates.hasOwnProperty(ch)) {
-            this.__updates[ch](this.__pt, this.__subm);
-        } else {
-            console.error(`unsupported update type: ${ch}`);
-        }
+    get data(): any {
+        return this.__pt.data();
     }
 }

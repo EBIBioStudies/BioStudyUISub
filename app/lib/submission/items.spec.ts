@@ -1,12 +1,12 @@
 import {Item, Items} from './submission';
 
 describe('Items', () => {
-    it('can be empty', () => {
+    it('should be empty when created with no arguments', () => {
         let items = new Items(Item.factory([]));
         expect(items.items.length).toEqual(0);
     });
 
-    it('notifies about changes', () => {
+    it('should notify about changes', () => {
         let items = new Items(Item.factory([]));
         expect(items.changes()).toBeDefined();
         let res = [];

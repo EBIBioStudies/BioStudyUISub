@@ -14,4 +14,8 @@ describe('Submission', () => {
         expect(subm.contacts.items.length).toBe(0);
         expect(subm.publications.items.length).toBe(0);
     });
+
+    it('', () => {
+
+    });
 });

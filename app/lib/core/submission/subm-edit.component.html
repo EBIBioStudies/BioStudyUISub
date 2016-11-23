@@ -1,54 +1,54 @@
 <div class="row-offcanvas row-offcanvas-left">
 
-   <subm-sidebar
-           (toggle)="uisettings.collapseLeftSide=!uisettings.collapseLeftSide"
-           [collapsed]="uisettings.collapseLeftSide">
-       <sidebar-item
-               (click)="addAnnotation();"
-               label="Describe your study"
-               icon="fa-comment-o"></sidebar-item>
-       <sidebar-item
-               (click)="addFile();"
-               label="Add a file"
-               icon="fa-file-o"></sidebar-item>
+    <form *ngIf="submission" class="form-horizontal" id="subm-form" novalidate name="submForm" role="form" method="post"
+          (ngSubmit)="submForm.valid && onSubmit()" #submForm="ngForm">
 
-       <sidebar-item
-               (click)="addContact();"
-               label="Add a contact"
-               icon="fa-user"></sidebar-item>
+        <subm-sidebar
+                (toggle)="uisettings.collapseLeftSide=!uisettings.collapseLeftSide"
+                [collapsed]="uisettings.collapseLeftSide">
+            <sidebar-item
+                    (click)="addAnnotation();"
+                    label="Describe your study"
+                    icon="fa-comment-o"></sidebar-item>
+            <sidebar-item
+                    (click)="addFile();"
+                    label="Add a file"
+                    icon="fa-file-o"></sidebar-item>
 
-       <sidebar-item
-               (click)="addLink();"
-               label="Add a link"
-               icon="fa-link"></sidebar-item>
+            <sidebar-item
+                    (click)="addContact();"
+                    label="Add a contact"
+                    icon="fa-user"></sidebar-item>
 
-       <sidebar-item
-               (click)="addPublication();"
-               label="Add a publication"
-               icon="fa-book"></sidebar-item>
+            <sidebar-item
+                    (click)="addLink();"
+                    label="Add a link"
+                    icon="fa-link"></sidebar-item>
 
-       <sidebar-item
-               (click)="onSubmit()"
-               label="Submit"
-               icon="fa-database"
-               [disabled]="submForm.invalid"></sidebar-item>
-   </subm-sidebar>
+            <sidebar-item
+                    (click)="addPublication();"
+                    label="Add a publication"
+                    icon="fa-book"></sidebar-item>
 
-    <div class="container-fluid">
+            <sidebar-item
+                    (click)="onSubmit()"
+                    label="Submit"
+                    icon="fa-database"
+                    [disabled]="submForm.invalid"></sidebar-item>
+        </subm-sidebar>
 
-        <aside class="right-side content" [ngClass]="{'collapse-left' : uisettings.collapseLeftSide}">
+        <div class="container-fluid">
 
-            <form class="form-horizontal" id="subm-form" novalidate name="submForm" role="form" method="post"
-                  (ngSubmit)="submForm.form.valid && onSubmit()" #submForm="ngForm">
+            <aside class="right-side content" [ngClass]="{'collapse-left' : uisettings.collapseLeftSide}">
 
-            <div class="panel" [ngClass]="{'panel-danger': submForm.form.invalid, 'panel-info':submForm.form.valid}">
-                <div class="panel-heading">
-                    <span>Submission {{accno}}</span><span *ngIf="!readonly && submForm.form.invalid"> << There are some validation errors. Please correct them before to proceed to submit >> </span>
-                    <div class="pull-right" *ngIf="readonly">
-                        <a class="pull-right btn btn-success btn-xs" (click)="editSubmission()">Edit</a>
+                <div class="panel" [ngClass]="{'panel-danger': submForm.invalid, 'panel-info':submForm.valid}">
+                    <div class="panel-heading">
+                        <span>Submission {{accno}}</span><span *ngIf="!readonly && submForm.invalid"> << There are some validation errors. Please correct them before to proceed to submit >> </span>
+                        <div class="pull-right" *ngIf="readonly">
+                            <a class="pull-right btn btn-success btn-xs" (click)="editSubmission()">Edit</a>
+                        </div>
                     </div>
-                </div>
-                <div class="panel-body">
+                    <div class="panel-body">
 
                         <div class="form-group row margin-bottom-small padding-right-15"
                              [ngClass]="{'has-error':title.invalid}">
@@ -83,7 +83,7 @@
                                        [(ngModel)]="submission.releaseDate"
                                        required
                                        #releaseDate="ngModel">
-                                           <!--ng-model-options="{ allowInvalid: true }"/-->
+                                <!--ng-model-options="{ allowInvalid: true }"/-->
                             </div>
                         </div>
 
@@ -96,14 +96,15 @@
                                         <span *ngIf="description.errors.minlength">: must be at least 50 characters</span>
                                     </span>
                                 </label>
-                                <textarea id="description" name="description" class="form-control input-sm" style="max-height:400px;"
+                                <textarea id="description" name="description" class="form-control input-sm"
+                                          style="max-height:400px;"
                                           [(ngModel)]="submission.description"
                                           [readonly]="readonly"
                                           minlength="50"
                                           required
                                           #description="ngModel"></textarea>
-<!--                                          ng-model-options="{ allowInvalid: true }"-->
-                                            <!-- autosize -->
+                                <!--                                          ng-model-options="{ allowInvalid: true }"-->
+                                <!-- autosize -->
                             </div>
                         </div>
 
@@ -146,11 +147,11 @@
                                     *ngIf="!readonly && !submForm.invalid">Submit
                             </button>
                         </div>
+                    </div>
                 </div>
-            </div>
 
-            </form>
-        </aside>
-    </div>
+            </aside>
+        </div>
+    </form>
     <!-- /.right-side -->
 </div>

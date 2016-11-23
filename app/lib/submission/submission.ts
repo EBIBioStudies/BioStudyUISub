@@ -7,23 +7,28 @@ import 'rxjs/add/observable/from';
 
 import * as _ from 'lodash';
 
-class WithChanges {
-    private __subj: Subject<string>;
+export class WithChanges<T> {
+    private __subj: Subject<T>;
 
     constructor() {
-        this.__subj = new Subject<string>();
+        this.__subj = new Subject<T>();
     }
 
-    protected notify(v: string) {
+    protected notify(v: T) {
         this.__subj.next(v);
     }
 
-    changes(): Observable<string> {
+    changes(): Observable<T> {
         return this.__subj.asObservable();
     }
 }
 
-export class Attr extends WithChanges {
+export class Change {
+    constructor(public name: string, public value?: any = null, public source?: Change = null) {
+    }
+}
+
+export class Attr extends WithChanges<Change> {
     private __name: string;
     private __value: string;
     private __type: string;
@@ -42,12 +47,12 @@ export class Attr extends WithChanges {
 
     set name(name: string) {
         this.__name = name;
-        this.notify(name);
+        this.notify(new Change('name', name));
     }
 
     set value(value: string) {
         this.__value = value;
-        this.notify(value);
+        this.notify(new Change('value', value));
     }
 
     get name(): string {
@@ -70,12 +75,12 @@ export class Attr extends WithChanges {
         return Attr.from(obj, true);
     }
 
-    static from(obj, required: boolean = false): Attr {
+    static from(obj?: any = {}, required: boolean = false): Attr {
         return new Attr(obj.name, obj.value, obj.type, required);
     }
 }
 
-export class Attributes extends WithChanges {
+export class Attributes extends WithChanges<Change> {
     attributes: Attr[] = [];
     private __subscriptions: Subscription[] = [];
 
@@ -84,13 +89,14 @@ export class Attributes extends WithChanges {
     }
 
     add(attr: Attr): void {
+        let index = this.attributes.length;
         this.attributes.push(attr);
         this.__subscriptions.push(
             attr.changes().subscribe(m => {
-                this.notify(m);
+                this.notify(new Change('attr_change', index, m));
             })
         );
-        this.notify('new attribute added');
+        this.notify(new Change('attr_add', index));
     }
 
     addNew(name?: string, value?: string) {
@@ -107,7 +113,7 @@ export class Attributes extends WithChanges {
             this.attributes.splice(index, 1);
             this.__subscriptions[index].unsubscribe();
             this.__subscriptions.splice(index, 1);
-            this.notify('attribute removed: ' + index);
+            this.notify(new Change('attr_remove', index));
         }
     }
 
@@ -136,7 +142,7 @@ export class Attributes extends WithChanges {
      * @param required = [{name: "...", type: "file"|"text"}, {...}]
      * @returns {Attributes}
      */
-    static create(attributes?:any[] = [], required?:any[] = []) {
+    static create(attributes?: any[] = [], required?: any[] = []) {
         let attrs = new Attributes();
 
         if (required) {
@@ -164,7 +170,7 @@ export class Attributes extends WithChanges {
     }
 }
 
-export class Item extends WithChanges {
+export class Item extends WithChanges<Change> {
     constructor(public attributes: Attributes) {
         super();
         attributes.changes().subscribe(m => {
@@ -189,7 +195,7 @@ export class Publication extends Item {
 
     set pubMedId(pubMedId: string) {
         this.__pubMedId = pubMedId;
-        this.notify("pubMedId: " + this.__pubMedId);
+        this.notify(new Change('pubMedId', this.__pubMedId));
     }
 
     get pubMedId(): string {
@@ -205,7 +211,7 @@ export class Publication extends Item {
 
 type ItemConstructorType = (...a: any[]) => Item;
 
-export class Items extends WithChanges {
+export class Items extends WithChanges<Change> {
     items: Item[] = [];
     private __subscriptions: Subscription[] = [];
     private __itemConstructor: ItemConstructorType;
@@ -221,14 +227,15 @@ export class Items extends WithChanges {
 
     add() {
         let item = this.__itemConstructor.apply(this, arguments);
+        let index = this.items.length;
         this.items.push(item);
         this.__subscriptions.push(
             item.changes().subscribe(
                 m => {
-                    this.notify(m);
+                    this.notify(new Change('item_change', index, m));
                 })
         );
-        this.notify('new item added');
+        this.notify(new Change('item_add', index));
     }
 
     remove(index) {
@@ -236,7 +243,7 @@ export class Items extends WithChanges {
             this.items.splice(index, 1);
             this.__subscriptions[index].unsubscribe();
             this.__subscriptions.splice(index, 1);
-            this.notify('item removed: ' + index);
+            this.notify(new Change('item_remove', index));
         }
     }
 
@@ -278,11 +285,11 @@ export class Submission extends WithChanges {
         this.contacts = Items.create(Item.factory(requiredAttributes('contact')));
         this.publications = Items.create(Publication.publicationFactory(requiredAttributes('publication')));
 
-        this.subscribe2(this.annotations, 'annotation');
-        this.subscribe2(this.files, 'file');
-        this.subscribe2(this.links, 'link');
-        this.subscribe2(this.contacts, 'contact');
-        this.subscribe2(this.publications, 'publication');
+        this.subscribeTo(this.annotations, 'annotations');
+        this.subscribeTo(this.files, 'files');
+        this.subscribeTo(this.links, 'links');
+        this.subscribeTo(this.contacts, 'contacts');
+        this.subscribeTo(this.publications, 'publications');
     }
 
     get accno(): string {
@@ -303,25 +310,25 @@ export class Submission extends WithChanges {
 
     set accno(accno: string) {
         this.__accno = accno;
-        this.notify('accno: ' + accno);
+        this.notify(new Change('accno', accno));
     }
 
     set title(title: string) {
         this.__title = title;
-        this.notify('title: ' + title);
+        this.notify(new Change('title', title));
     }
 
     set description(descr: string) {
         this.__description = descr;
-        this.notify('description:' + descr);
+        this.notify(new Change('description', descr));
     }
 
     set releaseDate(date: string) {
         this.__releaseDate = date;
-        this.notify('releaseDate: ' + date);
+        this.notify(new Change('releaseDate: ', date));
     }
 
-    addAnnotation(attr: any) {
+    addAnnotation(attr?: any) {
         this.annotations.items[0].attributes.add(Attr.from(attr));
     }
 
@@ -341,9 +348,9 @@ export class Submission extends WithChanges {
         this.publications.add(pubMedId, attributes);
     }
 
-    subscribe2(items:Items, type:string) {
+    subscribeTo(items: Items, type: string) {
         items.changes().subscribe(
-            m => this.notify(type + ':' + m)
+            m => this.notify(new Change(type, null, m))
         );
     }
 

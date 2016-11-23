@@ -1,12 +1,12 @@
 import {Item, Attributes} from './submission';
 
 describe('Item', () => {
-    it('can be empty', () => {
+    it('should be empty when created with no arguments', () => {
         let item = new Item(Attributes.create());
         expect(item.attributes.attributes.length).toBe(0);
     });
 
-    it('notifies about changes',() => {
+    it('should notify about changes',() => {
         let item = new Item(Attributes.create());
         expect(item.changes()).toBeDefined();
 
