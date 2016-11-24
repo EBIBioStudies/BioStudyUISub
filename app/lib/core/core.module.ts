@@ -40,6 +40,7 @@ import {DummyComponent} from './dummy.component';
 import {ContainerRootComponent} from './container-root.component';
 import {ContainerMdComponent} from './container-md.component';
 import {ORCIDInputBoxComponent} from './orcid-input-box.component';
+import {SlideOutTipComponent} from './submission/panel/slide-out-tip.component';
 
 import {APP_ROUTES} from './app-routes';
 import {SignUpComponent} from './signup/signup.component';
@@ -88,6 +89,7 @@ import {Equals2} from './password-reset/equals2.directive';
         ContainerRootComponent,
         ContainerMdComponent,
         ORCIDInputBoxComponent,
+        SlideOutTipComponent,
         PropertyFilterPipe,
         Equals2
     ],

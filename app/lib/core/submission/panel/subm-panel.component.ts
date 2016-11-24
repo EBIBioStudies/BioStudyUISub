@@ -12,9 +12,7 @@ import {DictionaryService} from '../../../submission/dictionary.service';
 
     <div class="panel-heading clearfix">
         <h4 class="panel-title pull-left">{{title}}&nbsp;<span class="badge">{{info.size}}</span>
-            <!--span class="bs-slide-out-tip"
-                  icon-class="fa fa-angle-right"
-                  tip="{{dict.description}}"></span-->
+            <slide-out-tip tip="{{slideOutTip}}"></slide-out-tip>
         </h4>
         <div class="btn-toolbar pull-right" role="toolbar" *ngIf="!readonly">
             <div class="btn-group ">
@@ -35,6 +33,7 @@ export class SubmissionPanelComponent implements OnInit{
 
     title: string;
     addNewLabel: string;
+    slideOutTip: string;
 
     constructor(@Inject(DictionaryService) private dictService: DictionaryService){
     }
@@ -43,5 +42,6 @@ export class SubmissionPanelComponent implements OnInit{
         let dict = this.dictService.byKey(this.type);
         this.title = dict.title;
         this.addNewLabel = dict.actions.add.title;
+        this.slideOutTip = dict.description;
     }
 }
