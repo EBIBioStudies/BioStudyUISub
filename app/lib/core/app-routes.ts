@@ -21,7 +21,7 @@ export const APP_ROUTES: Routes = [
     {path: 'password_reset_request', component: PasswordResetReqComponent},
     {path: 'password_reset', component: PasswordResetComponent},
     {path: 'resend_activation_link', component: DummyComponent},
-    {path: 'help', loadChildren: HelpComponent},
+    {path: 'help', component: HelpComponent},
     {path: 'submissions', component: SubmissionListComponent, canActivate: [AuthGuard]},
     {path: 'edit/:accno', component: SubmissionEditComponent, canActivate: [AuthGuard]},
     {path: 'view/:accno', component: DummyComponent, canActivate: [AuthGuard]},
