@@ -134,7 +134,7 @@ export class SubmissionAttributesComponent implements OnInit {
     }
 
     onAttrNameChange() {
-        // trigger form revalidation
+        // trigger form validation
         _.forOwn(this.attrForm.form.controls, (v:FormControl, k:string)=> {
             v.updateValueAndValidity();
         });
