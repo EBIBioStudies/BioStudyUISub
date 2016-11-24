@@ -1,9 +1,9 @@
 import {Component, Inject, Input, OnInit, ViewChild} from '@angular/core';
-import {NgForm} from '@angular/forms';
+import {NgForm, FormControl} from '@angular/forms';
 
 import * as _ from 'lodash';
 
-import {Attributes, Attr} from '../../../submission/submission.model';
+import {Attributes, Attr} from '../../../submission/submission';
 import {DictionaryService} from '../../../submission/dictionary.service';
 
 @Component({
@@ -29,15 +29,17 @@ import {DictionaryService} from '../../../submission/dictionary.service';
                    type="text" class="form-control control-label input-sm"
                    [name]="'name_' + idx"
                    placeholder="Type a key"
-                   tooltip="Empty or duplicate value"
+                   tooltip="Empty or duplicated value"
                    [tooltipEnable]="attrForm.form.controls['name_' + idx] && attrForm.form.controls['name_' + idx].invalid"
-                   placement="top-left"
+                   tooltipPlacement="top-left"
                    [typeahead]="typeaheadAttrNames()"
                    typeaheadAppendToBody="true"
                    typeaheadMinLength="0"
                    typeaheadOptionsLimit="30"                
                    [readonly]="readonly"
                    [(ngModel)]="attr.name"
+                   (ngModelChange)="onAttrNameChange()"
+                   [uniqueAttrName]="attributes.attributes"
                    required>
 <!--
                    
@@ -61,10 +63,9 @@ import {DictionaryService} from '../../../submission/dictionary.service';
                        placeholder="Enter a value"
                        tooltip="This field is required"
                        [tooltipEnable]="attrForm.form.controls['value_' + idx] && attrForm.form.controls['value_' + idx].invalid"
-                       placement="top-left"
+                       tooltipPlacement="top-left"
                        [readonly]="readonly"
                        [(ngModel)]="attr.value"
-                       (ngModelChange)="onAttributeChange()"
                        [required]="attr.required">
 <!--
                        uib-typeahead="value for value in typeaheadValues(attr.name, item.$index) | filter:$viewValue:$emptyOrMatch | limitTo:10"
@@ -83,8 +84,9 @@ import {DictionaryService} from '../../../submission/dictionary.service';
                  <span *ngIf="!readonly && !attr.required" class="input-group-btn">
                       <button type="button"
                            class="btn btn-sm btn-danger btn-flat"
-                           (click)="attributes.remove(idx)"
-                           [tooltip]="deleteAttrTooltip">
+                           (click)="onRemoveAttrClick(idx);"
+                           [tooltip]="removeAttrTooltip"
+                           tooltipPlacement="top">
                            <i class="fa fa-trash-o"></i>
                       </button>
                  </span>
@@ -95,9 +97,9 @@ import {DictionaryService} from '../../../submission/dictionary.service';
     <tr *ngIf="!readonly && addNewAttrLabel">
         <td colspan="2">
             <p class="pull-right">
-                <button type="button" class="btn btn-default btn-xs"
-                        (click)="addNew()"
-                        placement="bottom">{{addNewAttrLabel}}
+                <button type="button" 
+                        class="btn btn-default btn-xs"
+                        (click)="onAddNewAttrClick()">{{addNewAttrLabel}}
                 </button>
             </p>
         </td>
@@ -116,15 +118,26 @@ export class SubmissionAttributesComponent implements OnInit {
 
     addNewAttrLabel: string;
 
-    deleteAttrTooltip: string;
+    removeAttrTooltip: string;
 
-    suggestedAttrNames: Array<string>;
+    suggestedAttrNames: string[];
 
     constructor(@Inject(DictionaryService) private dictService: DictionaryService) {
     }
 
-    addNew() {
+    onAddNewAttrClick(): void {
         this.attributes.addNew();
+    }
+
+    onRemoveAttrClick(idx: number): void {
+        this.attributes.remove(idx);
+    }
+
+    onAttrNameChange() {
+        // trigger form revalidation
+        _.forOwn(this.attrForm.form.controls, (v:FormControl, k:string)=> {
+            v.updateValueAndValidity();
+        });
     }
 
     ngOnInit() {
@@ -132,15 +145,12 @@ export class SubmissionAttributesComponent implements OnInit {
         let dict = this.dictService.byKey(this.type);
         console.log(dict);
         this.addNewAttrLabel = dict.actions.addAttr ? dict.actions.addAttr.title : undefined;
-        this.deleteAttrTooltip = dict.actions.deleteAttr.popup;
+        this.removeAttrTooltip = dict.actions.deleteAttr.popup;
         this.suggestedAttrNames = _.map(_.filter(dict.attributes, {required: false}), 'name');
     }
 
     typeaheadAttrNames() {
         return _.filter(this.suggestedAttrNames, (name) => !this.attributes.contains(name));
-    }
-
-    onAttributeChange() {
     }
 
 }

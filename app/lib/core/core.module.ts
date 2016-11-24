@@ -45,6 +45,7 @@ import {SlideOutTipComponent} from './submission/panel/slide-out-tip.component';
 import {APP_ROUTES} from './app-routes';
 import {SignUpComponent} from './signup/signup.component';
 import {Equals2} from './password-reset/equals2.directive';
+import {UniqueAttrName} from './submission/panel/unique-attr-name.directive';
 
 @NgModule({
     imports: [
@@ -91,7 +92,8 @@ import {Equals2} from './password-reset/equals2.directive';
         ORCIDInputBoxComponent,
         SlideOutTipComponent,
         PropertyFilterPipe,
-        Equals2
+        Equals2,
+        UniqueAttrName
     ],
     providers: [
         AuthGuard

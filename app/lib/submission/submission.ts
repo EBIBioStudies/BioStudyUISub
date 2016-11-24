@@ -106,7 +106,7 @@ export class Attributes extends WithChanges<Change> {
     remove(index: number) {
         if (index >= 0) {
             let attr = this.attributes[index];
-            if (attr.required) {
+            if (attr.required === true) {
                 console.error(`Can't remove required attribute: ${attr.name}`);
                 return;
             }
