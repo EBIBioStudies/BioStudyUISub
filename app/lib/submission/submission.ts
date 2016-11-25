@@ -7,6 +7,13 @@ import 'rxjs/add/observable/from';
 
 import * as _ from 'lodash';
 
+const nextId = (function () {
+    let count = 0;
+    return function () {
+        return `id${count++}`;
+    }
+})();
+
 export class WithChanges<T> {
     private __subj: Subject<T>;
 
@@ -29,6 +36,7 @@ export class Change {
 }
 
 export class Attr extends WithChanges<Change> {
+    private __id: string;
     private __name: string;
     private __value: string;
     private __type: string;
@@ -39,6 +47,7 @@ export class Attr extends WithChanges<Change> {
                         type: string = 'text',
                         required: boolean = false) {
         super();
+        this.__id = nextId();
         this.__name = name;
         this.__value = value;
         this.__type = type;
@@ -53,6 +62,10 @@ export class Attr extends WithChanges<Change> {
     set value(value: string) {
         this.__value = value;
         this.notify(new Change('value', value));
+    }
+
+    get id(): string {
+        return this.__id;
     }
 
     get name(): string {

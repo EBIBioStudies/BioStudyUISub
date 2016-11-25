@@ -22,15 +22,15 @@ import {DictionaryService} from '../../../submission/dictionary.service';
     <tr *ngFor="let attr of attributes.attributes; let idx=index">
         <td class="col-md-3 nopadding border-none form-group-sm"
             [ngClass]="{'has-error' : !attr.required 
-                                       && attrForm.form.controls['name_' + idx] 
-                                       && attrForm.form.controls['name_' + idx].invalid}">
+                                       && attrForm.controls['name_' + attr.id] 
+                                       && attrForm.controls['name_' + attr.id].invalid}">
 
             <input *ngIf="!attr.required"
                    type="text" class="form-control control-label input-sm"
-                   [name]="'name_' + idx"
+                   [name]="'name_' + attr.id"
                    placeholder="Type a key"
                    tooltip="Empty or duplicated value"
-                   [tooltipEnable]="attrForm.form.controls['name_' + idx] && attrForm.form.controls['name_' + idx].invalid"
+                   [tooltipEnable]="attrForm.controls['name_' + attr.id] && attrForm.controls['name_' + attr.id].invalid"
                    tooltipPlacement="top-left"
                    [typeahead]="typeaheadAttrNames()"
                    typeaheadAppendToBody="true"
@@ -41,28 +41,21 @@ import {DictionaryService} from '../../../submission/dictionary.service';
                    (ngModelChange)="onAttrNameChange()"
                    [uniqueAttrName]="attributes.attributes"
                    required>
-<!--
-                   
-                   ms-duplicate="item.attributes.attributes"
-                   
-     
-                   [ngModelOptions]="{allowInvalid: true}"
 
--->
             <p *ngIf="attr.required" class="form-control-static pull-right">{{attr.name}}</p>
         </td>
         <td class="col-md-9 nopadding border-none form-group-sm"
             [ngClass]="{'has-error' : attr.required 
-                                      && attrForm.form.controls['value_' + idx] 
-                                      && attrForm.form.controls['value_' + idx].invalid}">
+                                      && attrForm.controls['value_' + attr.id] 
+                                      && attrForm.controls['value_' + attr.id].invalid}">
             <div [ngClass]="{'input-group' : !readonly && !attr.required}">
             
                  <input *ngIf="attr.type === 'text'"
                        type="text" class="form-control input-sm"
-                       [name]="'value_' + idx"
+                       [name]="'value_' + attr.id"
                        placeholder="Enter a value"
                        tooltip="This field is required"
-                       [tooltipEnable]="attrForm.form.controls['value_' + idx] && attrForm.form.controls['value_' + idx].invalid"
+                       [tooltipEnable]="attrForm.controls['value_' + attr.id] && attrForm.controls['value_' + attr.id].invalid"
                        tooltipPlacement="top-left"
                        [readonly]="readonly"
                        [(ngModel)]="attr.value"
@@ -76,7 +69,7 @@ import {DictionaryService} from '../../../submission/dictionary.service';
 -->
                  <input-file *ngIf="attr.type === 'file'" 
                              [(ngModel)]="attr.value"
-                             [name]="'value_' + idx"
+                             [name]="'value_' + attr.id"
                              [required]="attr.required"
                              [readonly]="readonly">                             
                  </input-file>
@@ -117,9 +110,7 @@ export class SubmissionAttributesComponent implements OnInit {
     @ViewChild('attrForm') public attrForm: NgForm;
 
     addNewAttrLabel: string;
-
     removeAttrTooltip: string;
-
     suggestedAttrNames: string[];
 
     constructor(@Inject(DictionaryService) private dictService: DictionaryService) {
@@ -134,8 +125,11 @@ export class SubmissionAttributesComponent implements OnInit {
     }
 
     onAttrNameChange() {
-        // trigger form validation
-        _.forOwn(this.attrForm.form.controls, (v:FormControl, k:string)=> {
+        this.triggerFormValidation();
+    }
+
+    triggerFormValidation() {
+        _.forOwn(this.attrForm.form.controls, (v: FormControl, k: string)=> {
             v.updateValueAndValidity();
         });
     }
