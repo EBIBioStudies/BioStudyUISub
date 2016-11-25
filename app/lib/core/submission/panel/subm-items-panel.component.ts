@@ -1,7 +1,7 @@
 import {Component, Inject, Input, OnChanges, SimpleChange, ContentChild, ViewChild} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 
-import {Items} from '../../../submission/submission.model';
+import {Items} from '../../../submission/submission';
 import {ItemsInfo} from './panel-info';
 
 import {SubmissionItemsComponent} from './subm-items.component';
@@ -17,14 +17,14 @@ import {SubmissionItemsComponent} from './subm-items.component';
     <subm-items
        [items]="items"
        [type]="type"
-       [readonly]="readonly"></subm-items>   
+       [readonly]="readonly"
+       [parentForm]="parentForm"></subm-items>   
 </subm-panel>
 `
 })
 export class SubmissionItemsPanelComponent implements OnChanges {
-
     @Input() items: Items;
-    @Input() form: FormGroup;
+    @Input() parentForm: FormGroup;
     @Input() type: string;
     @Input() readonly: boolean;
 
@@ -32,28 +32,11 @@ export class SubmissionItemsPanelComponent implements OnChanges {
 
     itemsInfo: ItemsInfo;
 
-    constructor() {
-    }
-
-    ngOnInit() {
-        //
-    }
-
-    ngAfterContentInit() {
-        //TODO
-        this.form.controls["test1"] = this.submItemsCmp.itemsForm;
-    }
-
     ngOnChanges(changes: {[ propName: string]: SimpleChange}) {
-        console.log(changes);
-        console.log(this.items);
-        let title = this.type;
-        //TODO from dict
-        let addNewLabel = 'Add ' + this.type;
-        this.itemsInfo = new ItemsInfo(this.items, title, addNewLabel);
+        this.itemsInfo = new ItemsInfo(this.items);
     }
 
-    get valid() {
-        return this.submItemsCmp.itemsForm.valid;
+    get valid(): boolean {
+        return this.submItemsCmp.valid;
     }
 }

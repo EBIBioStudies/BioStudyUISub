@@ -113,32 +113,32 @@
                         <div class="col-lg-12 padding-left-none">
                             <subm-attributes-panel
                                     [attributes]="submission.annotations.items[0].attributes"
-                                    [form]="submForm.form"
+                                    [parentForm]="submForm.form"
                                     [readonly]="readonly"
                                     type="annotation">
                             </subm-attributes-panel>
 
                             <subm-items-panel
                                     [items]="submission.contacts"
-                                    [form]="submForm.form"
+                                    [parentForm]="submForm.form"
                                     [readonly]="readonly"
                                     type="contact"></subm-items-panel>
 
                             <subm-items-panel
                                     [items]="submission.links"
-                                    [form]="submForm.form"
+                                    [parentForm]="submForm.form"
                                     [readonly]="readonly"
                                     type="link"></subm-items-panel>
 
                             <subm-items-panel
                                     [items]="submission.files"
-                                    [form]="submForm.form"
+                                    [parentForm]="submForm.form"
                                     [readonly]="readonly"
                                     type="file"></subm-items-panel>
 
                             <subm-items-panel
                                     [items]="submission.publications"
-                                    [form]="submForm.form"
+                                    [parentForm]="submForm.form"
                                     [readonly]="readonly"
                                     type="publication"></subm-items-panel>
                         </div>

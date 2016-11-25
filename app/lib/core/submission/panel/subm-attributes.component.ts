@@ -1,5 +1,5 @@
-import {Component, Inject, Input, OnInit, ViewChild} from '@angular/core';
-import {NgForm, FormControl} from '@angular/forms';
+import {Component, Inject, Input, OnInit, OnDestroy, ViewChild} from '@angular/core';
+import {NgForm, FormGroup, FormControl} from '@angular/forms';
 
 import * as _ from 'lodash';
 
@@ -79,7 +79,7 @@ import {DictionaryService} from '../../../submission/dictionary.service';
                            class="btn btn-sm btn-danger btn-flat"
                            (click)="onRemoveAttrClick(idx);"
                            [tooltip]="removeAttrTooltip"
-                           tooltipPlacement="top">
+                           tooltipPlacement="bottom">
                            <i class="fa fa-trash-o"></i>
                       </button>
                  </span>
@@ -102,18 +102,38 @@ import {DictionaryService} from '../../../submission/dictionary.service';
 </form>
 `
 })
-export class SubmissionAttributesComponent implements OnInit {
+export class SubmissionAttributesComponent implements OnInit, OnDestroy {
     @Input() attributes: Attributes;
     @Input() type: string; // should be a enum??
     @Input() readonly: boolean;
+    @Input() parentForm: FormGroup;
 
-    @ViewChild('attrForm') public attrForm: NgForm;
+    @ViewChild('attrForm') private attrForm: NgForm;
 
     addNewAttrLabel: string;
     removeAttrTooltip: string;
     suggestedAttrNames: string[];
 
+    private cName: string;
+
     constructor(@Inject(DictionaryService) private dictService: DictionaryService) {
+    }
+
+    ngAfterContentInit() {
+        let cName = `attrsForm_${this.type}`;
+        while(this.parentForm.controls.hasOwnProperty(cName)) {
+            cName += '0';
+        }
+        this.parentForm.addControl(cName, this.attrForm.form);
+        this.cName = cName;
+    }
+
+    ngOnDestroy() {
+        this.parentForm.removeControl(this.cName);
+    }
+
+    get valid() {
+        return !this.attrForm || this.attrForm.valid;
     }
 
     onAddNewAttrClick(): void {

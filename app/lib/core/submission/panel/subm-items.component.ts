@@ -1,7 +1,7 @@
-import {Component, Inject, Input, OnInit, ViewChild} from '@angular/core';
-import {NgForm} from '@angular/forms';
+import {Component, Inject, Input, OnInit, OnDestroy, ViewChild} from '@angular/core';
+import {NgForm, FormGroup} from '@angular/forms';
 
-import {Items, Item} from '../../../submission/submission.model';
+import {Items, Item} from '../../../submission/submission';
 import {DictionaryService} from '../../../submission/dictionary.service';
 
 import * as _ from 'lodash';
@@ -9,10 +9,15 @@ import * as _ from 'lodash';
 @Component({
     selector: 'subm-items',
     template: `
+
 <tabset>
     <tab [heading]="previewTabHeading">
-        <form id="items-preview-form" novalidate name="itemsPreviewForm" role="form"
-             (ngSubmit)="$event.preventDefault();" #itemsPreviewForm="ngForm">
+        <form novalidate 
+              id="items-preview-form" 
+              name="items-preview-form" 
+              role="form"
+             (ngSubmit)="$event.preventDefault();"
+             #itemsPreviewForm="ngForm">
         <div class="table-responsive">
             <table class="table table-condensed" style="width:100%">
                 <thead>
@@ -91,7 +96,7 @@ import * as _ from 'lodash';
                     class="pull-right btn btn-danger btn-xs"
                     (click)="items.remove(idx);"
                     [tooltip]="deleteTooltip"
-                    placement="bottom"><i class="fa fa-lg fa-trash"></i>
+                    tooltipPlacement="bottom"><i class="fa fa-lg fa-trash"></i>
             </button>
         </p>
         <table *ngIf="type === 'publication'" class="table table-condensed" style="width:100%">
@@ -109,6 +114,7 @@ import * as _ from 'lodash';
              [attributes]="item.attributes"
              [type]="type"
              [readonly]="readonly"
+             [parentForm]="itemsForm"
              #submAttr>
         </subm-attributes>
     </tab>
@@ -116,25 +122,29 @@ import * as _ from 'lodash';
 </tabset>
 `
 })
-export class SubmissionItemsComponent implements OnInit {
+export class SubmissionItemsComponent implements OnInit, OnDestroy {
     @Input() items: Items;
     @Input() type: string; // should be a enum??
     @Input() readonly: boolean;
+    @Input() parentForm: FormGroup;
 
     editTooltip: string;
     deleteTooltip: string;
     tabHeading: string;
     previewTabHeading: string;
-    attributes:Array<any>;
+    attributes: any[];
 
     activeTab: number = -1;
 
-    @ViewChild('itemsPreviewForm') public itemsForm: NgForm;
+    @ViewChild('itemsPreviewForm') private itemsPreviewForm: NgForm;
+    private itemsForm: FormGroup;
 
     constructor(@Inject(DictionaryService) private dictService: DictionaryService) {
     }
 
     ngOnInit() {
+        this.itemsForm = new FormGroup({});
+
         let dict = this.dictService.byKey(this.type);
         this.editTooltip = dict.actions.edit.popup;
         this.deleteTooltip = dict.actions.delete.popup;
@@ -143,7 +153,20 @@ export class SubmissionItemsComponent implements OnInit {
         this.attributes = dict.attributes;
     }
 
-    get attrNames() {
+    ngAfterContentInit() {
+        this.itemsForm.addControl('itemsPreviewForm', this.itemsPreviewForm.form);
+        this.parentForm.addControl(`itemsForm_${this.type}`, this.itemsForm);
+    }
+
+    ngOnDestroy() {
+        this.parentForm.removeComponent(`itemsForm_${this.type}`);
+    }
+
+    get valid(): boolean {
+        return !this.itemsForm || this.itemsForm.valid;
+    }
+
+    get attrNames(): string[] {
         let hash = {};
         _.forEach(this.items.items, function (item) {
             _.forEach(item.attributes.attributes, function (attr) {
@@ -161,12 +184,12 @@ export class SubmissionItemsComponent implements OnInit {
         return 'col-lg-' + Math.ceil(12 / length);
     }
 
-    pubMedIdFound(data, item:Item) {
+    pubMedIdFound(data, item: Item) {
         console.log("pubMedIdFound", data);
         item.attributes.update(data);
     }
 
-    typeaheadValues(attrName: string, itemIdx:number):Array<string> {
+    typeaheadValues(attrName: string, itemIdx: number): string[] {
         let attr = _.find(this.attributes, {name: attrName, typeahead: true});
         if (!attr) {
             return [];

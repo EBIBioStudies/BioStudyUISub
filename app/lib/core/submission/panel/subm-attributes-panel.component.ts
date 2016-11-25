@@ -1,7 +1,7 @@
-import {Component, Inject, Input, OnChanges, SimpleChange, ContentChild, ViewChild } from '@angular/core';
+import {Component, Inject, Input, OnChanges, SimpleChange, ContentChild, ViewChild} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 
-import {Attributes} from '../../../submission/submission.model';
+import {Attributes} from '../../../submission/submission';
 import {AttributesInfo} from './panel-info';
 
 import {SubmissionAttributesComponent} from './subm-attributes.component';
@@ -17,38 +17,27 @@ import {SubmissionAttributesComponent} from './subm-attributes.component';
     <subm-attributes
        [attributes]="attributes"
        [type]="type"
-       [readonly]="readonly"></subm-attributes>   
+       [readonly]="readonly"
+       [parentForm]="parentForm"></subm-attributes>   
 </subm-panel>
 `
 })
-export class SubmissionAttributesPanelComponent implements OnChanges  {
+export class SubmissionAttributesPanelComponent implements OnChanges {
 
-    @Input() attributes:Attributes;
-    @Input() form:FormGroup;
-    @Input() type:string;
-    @Input() readonly:boolean;
+    @Input() attributes: Attributes;
+    @Input() parentForm: FormGroup;
+    @Input() type: string;
+    @Input() readonly: boolean;
 
     @ViewChild(SubmissionAttributesComponent) private submAttrCmp: SubmissionAttributesComponent;
 
-    private attributesInfo:AttributesInfo;
-
-    constructor() {
-    }
-
-    ngOnInit() {
-        //
-    }
-
-    ngAfterContentInit() {
-        //TODO
-        this.form.controls["test"]= this.submAttrCmp.attrForm;
-    }
+    private attributesInfo: AttributesInfo;
 
     ngOnChanges(changes: {[ propName: string]: SimpleChange}) {
         this.attributesInfo = new AttributesInfo(this.attributes);
     }
 
-    get valid() {
-        return this.submAttrCmp.attrForm.valid;
+    get valid(): boolean {
+        return this.submAttrCmp.valid;
     }
 }
