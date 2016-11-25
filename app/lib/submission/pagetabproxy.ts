@@ -92,7 +92,8 @@ export class PageTabProxy {
         this.requirePath('section', SECTION);
         this.requirePath('section.subsections', []);
         let other = _.reject(this.path('section.subsections'), {type: 'Publication'});
-        this.updatePath('section.subsections', [].concat(other, publications));
+        this.updatePath('section.subsections',
+            [].concat(other, _.map(publications, p => ({type: 'Publication', attributes: p.attributes}))));
     }
 
     get contacts(): any[] {

@@ -53,6 +53,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
                     this.subscr = pt.changes().subscribe((changes) => {
                         console.debug("save changes");
                         wrap.data = pt.data;
+                        console.debug(wrap.data);
                         this.submService.saveSubmission(wrap)
                             .subscribe(resp => {
                                console.debug("saved");
