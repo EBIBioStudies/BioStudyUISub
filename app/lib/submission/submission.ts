@@ -345,19 +345,19 @@ export class Submission extends WithChanges {
         this.annotations.items[0].attributes.add(Attr.from(attr));
     }
 
-    addLink(attributes: any[] = []) {
+    addLink(attributes?: any[] = []) {
         this.links.add(attributes);
     }
 
-    addFile(attributes: any[] = []) {
+    addFile(attributes?: any[] = []) {
         this.files.add(attributes);
     }
 
-    addContact(attributes: any[] = []) {
+    addContact(attributes?: any[] = []) {
         this.contacts.add(attributes);
     }
 
-    addPublication(pubMedId = '', attributes: any[] = []) {
+    addPublication(pubMedId?:string = '', attributes?: any[] = []) {
         this.publications.add(pubMedId, attributes);
     }
 

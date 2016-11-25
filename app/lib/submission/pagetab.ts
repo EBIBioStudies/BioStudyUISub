@@ -8,7 +8,7 @@ import * as _ from 'lodash';
 class ItemAdapter {
     static fromFile(it: Item): any {
         return {
-            path: it.attributes.find('Path') || {value: ''},
+            path: (it.attributes.find('Path') || {value: ''}).value,
             attributes: _.map(_.reject(it.attributes.attributes, {name: 'Path'}),
                 attr => ({name: attr.name, value: attr.value}))
         };
@@ -25,7 +25,7 @@ class ItemAdapter {
 
     static fromLink(it: Item): any {
         return {
-            url: it.attributes.find('URL') || {value: ''},
+            url: (it.attributes.find('URL') || {value: ''}).value,
             attributes: _.map(_.reject(it.attributes.attributes, {name: 'URL'}),
                 attr => ({name: attr.name, value: attr.value}))
         };
