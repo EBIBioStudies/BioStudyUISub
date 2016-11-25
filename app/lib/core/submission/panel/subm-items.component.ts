@@ -159,7 +159,7 @@ export class SubmissionItemsComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.parentForm.removeComponent(`itemsForm_${this.type}`);
+        this.parentForm.removeControl(`itemsForm_${this.type}`);
     }
 
     get valid(): boolean {
