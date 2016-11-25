@@ -92,4 +92,11 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
             this.submission.addPublication();
         }
     }
+
+    addContact() {
+        if (this.submission) {
+            this.submission.addContact();
+        }
+    }
+
 }

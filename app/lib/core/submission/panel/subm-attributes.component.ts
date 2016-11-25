@@ -122,6 +122,7 @@ export class SubmissionAttributesComponent implements OnInit {
 
     onRemoveAttrClick(idx: number): void {
         this.attributes.remove(idx);
+        this.triggerFormValidation();
     }
 
     onAttrNameChange() {

@@ -43,8 +43,8 @@ import * as _ from 'lodash';
                     </td>
                     <td *ngFor="let attrName of attrNames" class="form-group-sm row" [ngClass]="colSizeCss">
                         <div *ngFor="let attr of (item.attributes.attributes | propFilter:{name: attrName})"
-                             [ngClass]="{'has-error' : itemsPreviewForm.form.controls[attr.name + '_' + idx] &&
-                                                       itemsPreviewForm.form.controls[attr.name + '_' + idx].invalid}">
+                             [ngClass]="{'has-error' : itemsPreviewForm.controls[attr.name + '_' + idx] &&
+                                                       itemsPreviewForm.controls[attr.name + '_' + idx].invalid}">
 <!--
                              previewItemForm['attrValuePreview_' + key].$invalid
 -->
@@ -57,8 +57,8 @@ import * as _ from 'lodash';
                                    typeaheadMinlength="0"
                                    typeaheadOptionsLimit="10"   
                                    tooltip="This field is required"
-                                   placement="top-left"
-                                   [tooltipEnable]="itemsPreviewForm.form.controls[attr.name + '_' + idx] && itemsPreviewForm.form.controls[attr.name + '_' + idx].invalid"
+                                   tooltipPlacement="top-left"
+                                   [tooltipEnable]="itemsPreviewForm.controls[attr.name + '_' + idx] && itemsPreviewForm.controls[attr.name + '_' + idx].invalid"
                                    [required]="attr.required"
                                    [(ngModel)]="attr.value"
                                    [readonly]="readonly">
