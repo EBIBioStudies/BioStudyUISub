@@ -1,17 +1,142 @@
 import * as _ from 'lodash';
 
-const SECTION = {type: "Study"};
-const SUBMISSION = {type: 'Submission'};
+const SECTION = {type: 'Study'};
+const SUBMISSION = {type: 'Submission', accno: ''};
+
+export interface PTEntity {
+    jsObj();
+}
+
+export class PTAttributes implements PTEntity {
+    private attrs: any[];
+
+    constructor(array?: any[]) {
+        this.attrs = _.map(array || [], a => ({name: a.name || '', value: a.value || ''}));
+    }
+
+    jsObj(): any[] {
+        return _.map(this.attrs, a => ({name: a.name, value: a.value}));
+    }
+
+    get length(): number {
+        return this.attrs.length;
+    }
+}
+
+export class PTLink implements PTEntity {
+    url: string;
+    attrs: PTAttributes;
+
+    constructor(obj: any = {}) {
+        this.url = obj.url || '';
+        this.attrs = new PTAttributes(obj.attributes);
+    }
+
+    jsObj(): any {
+        return {
+            url: this.url,
+            attributes: this.attrs.jsObj()
+        }
+    }
+
+    static from(url: string, attributes: any[]): PTLink {
+        let ln = new PTLink();
+        ln.url = url;
+        ln.attrs = new PTAttributes(attributes);
+        return ln;
+    }
+}
+
+export class PTFile implements PTEntity {
+    path: string;
+    attrs: PTAttributes;
+
+    constructor(obj: any = {}) {
+        this.path = obj.path || '';
+        this.attrs = new PTAttributes(obj.attributes);
+    }
+
+    jsObj(): any {
+        return {
+            path: this.path,
+            attributes: this.attrs.jsObj()
+        }
+    }
+
+    static from(path: string, attributes: any[]): PTFile {
+        let f = new PTFile();
+        f.path = path;
+        f.attrs = new PTAttributes(attributes);
+        return f;
+    }
+}
+
+export class PTPubl implements PTEntity {
+    pubMedId: string;
+    attrs: PTAttributes;
+
+    constructor(obj: any = {}) {
+        let attrs = obj.attributes || [];
+        let isPubMedAttr = a => (a.name.toLowerCase() === 'pubmedid');
+        this.pubMedId = (_.find(attrs, isPubMedAttr) || {value: ''}).value;
+        this.attrs = new PTAttributes(_.reject(attrs, isPubMedAttr));
+    }
+
+    jsObj(): any {
+        return {
+            type: 'Publication',
+            attributes: [].concat(
+                [{name: 'PubMedId', value: this.pubMedId}],
+                this.attrs.jsObj()
+            )
+        }
+    }
+
+    static from(pubMedId: string, attributes: any[]): PTPubl {
+        let f = new PTPubl();
+        f.pubMedId = pubMedId;
+        f.attrs = new PTAttributes(attributes);
+        return f;
+    }
+}
+
+export class PTContact implements PTEntity {
+    org: string;
+    attrs: PTAttributes;
+
+    constructor(obj: any = {}) {
+        let attrs = obj.attributes || [];
+        let isOrgAttr = a => (a.name.toLowerCase() === 'affiliation');
+        this.org = (_.find(attrs, isOrgAttr) || {value: ''}).value;
+        this.attrs = new PTAttributes(_.reject(attrs, isOrgAttr));
+    }
+
+    jsObj(): any {
+        return {
+            type: 'Author',
+            attributes: [].concat(
+                [{name: 'affiliation', value: this.org}],
+                this.attrs.jsObj()
+            )
+        }
+    }
+
+    static from(org: string, attributes: any[]): PTContact {
+        let c = new PTContact();
+        c.org = org;
+        c.attrs = new PTAttributes(attributes);
+        return c;
+    }
+}
 
 export class PageTabProxy {
     private __origin: any;
 
-    constructor(origin?: any = SUBMISSION) {
+    constructor(origin: any = SUBMISSION) {
         this.__origin = _.cloneDeep(origin);
-        console.log("origin", origin);
     }
 
-    get data():any {
+    get data(): any {
         return _.cloneDeep(this.__origin);
     }
 
@@ -55,78 +180,78 @@ export class PageTabProxy {
         this.requireAttr('attributes', {name: 'ReleaseDate', value: date});
     }
 
-    get annotations(): any[] { // filter out description attribute
-        return _.reject(this.path('section.attributes', []), {name: 'Description'});
+    get annotations(): PTAttributes { // filter out description attribute
+        return new PTAttributes(_.reject(this.path('section.attributes', []), {name: 'Description'}));
     }
 
-    set annotations(annotations:any[]) {
+    set annotations(annotations: PTAttributes) {
         this.requirePath('section', SECTION);
         this.requirePath('section.attributes', []);
         let descr = _.filter(this.path('section.attributes'), {name: 'Description'});
-        this.updatePath('section.attributes', [].concat(descr, annotations));
+        this.updatePath('section.attributes', [].concat(descr, annotations.jsObj()));
     }
 
-    get links(): any[] {
-        return this.path('section.links', []);
+    get links(): PTLink[] {
+        return _.map(this.path('section.links', []), (ln: any) => new PTLink(ln));
     }
 
-    set links(links:any[]) {
+    set links(links: PTLink[]) {
         this.requirePath('section', SECTION);
-        this.updatePath('section.links', links);
+        this.updatePath('section.links', _.map(links, (ln: PTLink) => ln.jsObj()));
     }
 
-    get files(): any[] {
-        return this.path('section.files', []);
+    get files(): PTFile[] {
+        return _.map(this.path('section.files', []), (f: any) => new PTFile(f));
     }
 
-    set files(files:any[]) {
+    set files(files: PTFile[]) {
         this.requirePath('section', SECTION);
-        this.updatePath('section.files', files);
+        this.updatePath('section.files', _.map(files, (f: PTFile) => f.jsObj()));
     }
 
-    get publications(): any[] {
-        return _.filter(this.path('section.subsections', []), {type: 'Publication'});
+    get publications(): PTPubl[] {
+        let pubs = _.filter(this.path('section.subsections', []), {type: 'Publication'});
+        return _.map(pubs, (p: any) => new PTPubl(p));
     }
 
-    set publications(publications:any[]) {
+    set publications(publications: PTPubl[]) {
         this.requirePath('section', SECTION);
         this.requirePath('section.subsections', []);
         let other = _.reject(this.path('section.subsections'), {type: 'Publication'});
         this.updatePath('section.subsections',
-            [].concat(other, _.map(publications, p => ({type: 'Publication', attributes: p.attributes}))));
+            [].concat(other, _.map(publications, p => p.jsObj())));
     }
 
-    get contacts(): any[] {
+    get contacts(): PTContact[] {
         return _.map(_.filter(this.path('section.subsections', []), {type: 'Author'}),
             (c) => {
-                c.attributes = this.resolveReferences(c.attributes);
-                return c;
+                return new PTContact({
+                    attributes: this.resolveReferences(c.attributes)
+                });
             });
     }
 
-    set contacts(contacts:any[]) {
+    set contacts(contacts: PTContact[]) {
         this.requirePath('section', SECTION);
         this.requirePath('section.subsections', []);
-        let other = _.reject(this.path('section.subsections'), (a) => (a.type === 'Author' || a.type === 'Organization'));
+        let other = _.reject(this.path('section.subsections'), (s) => (s.type === 'Author' || s.type === 'Organization'));
 
         let cs = [], refs = [], tmp = {}, idx = 0;
-        _.forEach(contacts, (contact) => {
-            let attributes = [];
-            _.forEach(contact.attributes, (attr) => {
-                let copy = _.assign({}, attr);
-                if (copy.name === 'Organisation') {
-                    copy.name = 'affiliation';
-                    let org = copy.value;
-                    if (!tmp[org]) {
-                        tmp[org] = 'ref' + (++idx);
-                        refs.push({type: 'Organization', accno: tmp[org], attributes: [{name: 'Name', value: org}]});
-                    }
-                    copy.value = tmp[org];
-                    copy.isReference = true;
+        _.forEach(contacts, (contact: PTContact) => {
+            let org = contact.org;
+            if (!tmp[org]) {
+                tmp[org] = 'ref' + (++idx);
+                refs.push({type: 'Organization', accno: tmp[org], attributes: [{name: 'Name', value: org}]});
+            }
+
+            let c = contact.jsObj();
+            _.forEach(c.attributes, (attr) => {
+                if (attr.name === 'affiliation') {
+                    attr.value = tmp[attr.value];
+                    attr.isReference = true;
                 }
-                attributes.push(copy);
             });
-            cs.push({type: 'Author', attributes: attributes});
+            cs.push(c);
         });
         this.updatePath('section.subsections', [].concat(other, cs, refs));
     }
@@ -137,21 +262,21 @@ export class PageTabProxy {
         });
     }
 
-    private findRef(attr):any {
+    private findRef(attr): any {
         let ref = attr.value;
         let found = _.find(this.path('section.subsections', []), {accno: ref});
         return {name: attr.name, value: found ? found.attributes[0].value : ''};
     }
 
-    private requirePath(path: string, value: any, forceUpdate?:boolean=false): any {
+    private requirePath(path: string, value: any, forceUpdate?: boolean = false): any {
         let parts = path.split('.');
         let lastPart = parts.pop();
         let obj = this.path(parts.join('.'), null);
         if (!obj) {
             throw Error(`path ${path} doesn't exist`);
         }
-        if (!obj.hasOwnProperty(lastPart) || forceUpdate){
-            obj[lastPart]= value;
+        if (!obj.hasOwnProperty(lastPart) || forceUpdate) {
+            obj[lastPart] = value;
         }
     }
 

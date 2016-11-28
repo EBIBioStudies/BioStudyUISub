@@ -1,4 +1,4 @@
-import {PageTabProxy} from './pagetabproxy';
+import {PageTabProxy, PTLink, PTFile, PTContact, PTPubl, PTAttributes} from './pagetabproxy';
 
 const SAMPLE = {
     type: 'Submission',
@@ -113,43 +113,62 @@ describe('PageTabProxy', () => {
 
     it('ensure annotations are updated', () => {
         let pt = PageTabProxy.create();
-        pt.annotations = [
+        pt.annotations = new PTAttributes([
             {name: 'annot', value: 'annot'}
-        ];
+        ]);
         expect(pt.annotations.length).toEqual(1);
     });
 
     it('ensure links are updated', () => {
         let pt = PageTabProxy.create();
         pt.links = [
-            {url: "url", attributes: []}
+            new PTLink({url: "url", attributes: [{name: 'test', value: 'test'}]})
         ];
-        expect(pt.links.length).toEqual(1);
+        let links = pt.links;
+        expect(links.length).toEqual(1);
+        expect(links[0].attrs.length).toEqual(1);
     });
 
     it('ensure files are updated', () => {
         let pt = PageTabProxy.create();
         pt.files = [
-            {path: "/file", attributes: []}
+            new PTFile({path: "/file", attributes: [{name: 'test', value: 'test'}]})
         ];
-        expect(pt.files.length).toEqual(1);
+        let files = pt.files;
+        expect(files.length).toEqual(1);
+        expect(files[0].attrs.length).toEqual(1);
     });
 
     it('ensure contacts are updated', () => {
         let pt = PageTabProxy.create();
         pt.contacts = [
-            {
+            new PTContact({
                 attributes: [
                     {name: 'name', value: 'John Doe'},
                     {name: 'affiliation', value: 'EBI'}]
-            }
+            })
         ];
         let cs = pt.contacts;
         expect(cs.length).toEqual(1);
-        expect(cs[0].attributes.length).toEqual(2);
-        let attr = cs[0].attributes.find(a => a.name === 'affiliation');
-        expect(attr).toBeDefined();
-        expect(attr.value).toBe('EBI');
+        expect(cs[0].attrs.length).toEqual(1);
+        expect(cs[0].org).toBe('EBI');
     });
 
+    it('ensure publications are updated', () => {
+        let pt = PageTabProxy.create();
+        pt.publications = [
+            new PTPubl({
+                attributes: [
+                    {name: "Title", value: "Publication Title"},
+                    {name: "Journal", value: "PLoS biology"},
+                    {name: "Volume", value: "3(1)"},
+                    {name: "Pages", value: "e15"},
+                    {name: "Publication date", value: "2005 Jan"}
+                ]
+            })
+        ];
+        let publs = pt.publications;
+        expect(publs.length).toEqual(1);
+        expect(publs[0].attrs.length).toEqual(5);
+    });
 });

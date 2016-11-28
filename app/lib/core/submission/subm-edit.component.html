@@ -1,7 +1,7 @@
 <div class="row-offcanvas row-offcanvas-left">
 
     <form *ngIf="submission" class="form-horizontal" id="subm-form" novalidate name="submForm" role="form" method="post"
-          (ngSubmit)="submForm.valid && onSubmit()" #submForm="ngForm">
+          (ngSubmit)="submForm.valid && onSubmit($event)" #submForm="ngForm">
 
         <subm-sidebar
                 (toggle)="uisettings.collapseLeftSide=!uisettings.collapseLeftSide"

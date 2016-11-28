@@ -8,6 +8,7 @@ import {Submission} from '../../submission/submission';
 import {PageTab} from '../../submission/pagetab';
 import {SubmissionService} from '../../submission/submission.service';
 import {DictionaryService} from '../../submission/dictionary.service';
+import {SubmissionModel} from '../../submission/submission.model';
 
 import tmpl from './subm-edit.component.html'
 
@@ -31,32 +32,40 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     };
     readonly: boolean = false;
     submission: Submission;
-    private subscr: Subscription;
+
+    private __subscr: Subscription;
+    private __wrap;
 
     constructor(@Inject(ActivatedRoute) private route: ActivatedRoute,
                 @Inject(SubmissionService) private submService: SubmissionService,
-                @Inject(DictionaryService) private dictService: DictionaryService) {
+                @Inject(DictionaryService) private dictService: DictionaryService,
+                @Inject(SubmissionModel) private submModel: SubmissionModel,) {
     }
 
     ngOnInit() {
         console.debug("SubmissionEditComponent::OnInit");
-        let params = this.route.params.forEach((params:Params) => {
+        let params = this.route.params.forEach((params: Params) => {
             let accno = params['accno'];
             this.submService
                 .getSubmission(accno)
                 .subscribe(resp => {
                     let wrap = resp;
                     let pt = new PageTab(wrap.data);
+                    this.__wrap = ((w, p) => {
+                        return function () {
+                            w.data = p.data;
+                            return wrap;
+                        }
+                    })(wrap, pt);
+
                     this.submission = pt.asSubmission(this.dictService.dict());
                     console.debug("submission:", this.submission);
 
-                    this.subscr = pt.changes().subscribe((changes) => {
+                    this.__subscr = pt.changes().subscribe((changes) => {
                         console.debug("save changes");
-                        wrap.data = pt.data;
-                        console.debug(wrap.data);
-                        this.submService.saveSubmission(wrap)
+                        this.submService.saveSubmission(this.__wrap())
                             .subscribe(resp => {
-                               console.debug("saved");
+                                console.debug("saved");
                             });
                     });
                 });
@@ -65,9 +74,28 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         console.debug("SubmissionEditComponent::OnDestroy");
-        if (this.subscr) {
-            this.subscr.unsubscribe();
+        if (this.__subscr) {
+            this.__subscr.unsubscribe();
         }
+    }
+
+    onSubmit(event) {
+        event.preventDefault();
+
+        let errors = this.submModel.validate(this.submission);
+        if (errors.length > 0) {
+            //TODO show validation errors in modal dialog
+            return;
+        }
+        this.submService.submitSubmission(this.__wrap)
+            .subscribe(resp => {
+                console.debug("submitted", resp);
+                if (resp.status === "OK") {
+                    //TODO: show success
+                } else {
+                    //TODO: showSubmitFailed(['Failed to submit.']);
+                }
+            });
     }
 
     addAnnotation() {

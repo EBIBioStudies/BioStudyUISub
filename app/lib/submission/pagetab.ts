@@ -1,77 +1,69 @@
 //import {Subscription} from 'rxjs/Subscription';
 
-import {Item, Publication, Submission, WithChanges, Change} from './submission';
-import {PageTabProxy} from './pagetabproxy';
+import {Item, Attributes, Publication, Submission, WithChanges, Change} from './submission';
+import {PageTabProxy, PTFile, PTLink, PTPubl, PTContact, PTAttributes} from './pagetabproxy';
 
 import * as _ from 'lodash';
 
 class ItemAdapter {
-    static fromFile(it: Item): any {
-        return {
-            path: (it.attributes.find('Path') || {value: ''}).value,
-            attributes: _.map(_.reject(it.attributes.attributes, {name: 'Path'}),
-                attr => ({name: attr.name, value: attr.value}))
-        };
+    static fromFile(it: Item): PTFile {
+        let attrs: Attributes = it.attributes;
+        let path = (attrs.find('Path') || {value: ''}).value;
+        let attributes = _.reject(attrs.attributes, {name: 'Path'});
+        return PTFile.from(path, attributes);
     }
 
-    static toFile(file: any): any {
+    static toFile(file: PTFile): any {
         return {
             attributes: [].concat(
-                _.map(file.attributes, a => a),
+                file.attrs.jsObj(),
                 [{name: 'Path', value: file.path}]
             )
         };
     }
 
-    static fromLink(it: Item): any {
-        return {
-            url: (it.attributes.find('URL') || {value: ''}).value,
-            attributes: _.map(_.reject(it.attributes.attributes, {name: 'URL'}),
-                attr => ({name: attr.name, value: attr.value}))
-        };
+    static fromLink(it: Item): PTLink {
+        let attrs: Attributes = it.attributes;
+        let url = (attrs.find('URL') || {value: ''}).value;
+        let attributes = _.reject(attrs.attributes, {name: 'URL'});
+        return PTLink.from(url, attributes);
     }
 
-    static toLink(link: any): any {
+    static toLink(link: PTLink): any {
         return {
             attributes: [].concat(
-                _.map(link.attributes, a => a),
+                link.attrs.jsObj(),
                 [{name: 'URL', value: link.url}]
             )
         };
     }
 
-    static fromPublication(it: Publication): any {
+    static fromPublication(it: Publication): PTPubl {
+        let pubMedId = it.pubMedId;
+        let attributes = it.attributes.attributes;
+        return PTPubl.from(pubMedId, attributes);
+    }
+
+    static  toPublication(publ: PTPubl): any {
+        return {
+            pubMedId: publ.pubMedId,
+            attributes: publ.attrs.jsObj()
+        };
+    }
+
+    static fromContact(it: Item): PTContact {
+        let attrs: Attributes = it.attributes;
+        let org = (attrs.find('Organisation') || {value: ''}).value;
+        let attributes = _.reject(attrs.attributes, {name: 'Organisation'});
+        return PTContact.from(org, attributes);
+    }
+
+    static toContact(contact: PTContact): any {
         return {
             attributes: [].concat(
-                [{name: 'PubMedId', value: it.pubMedId}],
-                _.map(it.attributes.attributes,
-                    attr => ({name: attr.name, value: attr.value}))
+                contact.attrs.jsObj(),
+                [{name: 'Organisation', value: contact.org}]
             )
-        };
-    }
-
-    static  toPublication(publ: any): any {
-        return {
-            pubMedId: (_.find(publ.attributes, {name: 'PubMedId'}) || {value: ''}).value,
-            attributes: _.reject(publ.attributes, a => (a.name.toLowerCase() === 'pubmedid'))
-        };
-    }
-
-    static fromContact(it: Item): any {
-        return {
-            attributes: _.map(it.attributes.attributes, attr => {
-                let name = (attr.name === 'Organisation') ? 'affiliation' : attr.name;
-                return {name: name, value: attr.value};
-            })
-        }
-    }
-
-    static toContact(contact: any): any {
-        return {
-            attributes: _.map(contact.attributes, attr => {
-                let name = (attr.name.toLowerCase() === 'affiliation') ? 'Organisation' : attr.name;
-                return {name: name, value: attr.value};
-            })
         };
     }
 }
@@ -92,10 +84,7 @@ export class PageTab extends WithChanges<string> {
             pt.releaseDate = subm.releaseDate;
         },
         annotations(pt, subm): void {
-            pt.annotations = _.map(subm.annotations.items[0].attributes.attributes,
-                attr => {
-                    return {name: attr.name, value: attr.value}
-                });
+            pt.annotations = new PTAttributes(subm.annotations.items[0].attributes.attributes);
         },
         files(pt, subm): void {
             pt.files = _.map(subm.files.items, ItemAdapter.fromFile);
@@ -111,9 +100,14 @@ export class PageTab extends WithChanges<string> {
         }
     };
 
-    constructor(obj?: any) {
+    private __debouncedUpdate;
+
+    constructor(obj?: any, debounceInterval: number = 400) {
         super();
         this.__pt = PageTabProxy.create(obj);
+        this.__debouncedUpdate = debounceInterval === 0 ?
+            this.update :
+            _.debounce(this.update, debounceInterval);
     }
 
     asSubmission(dict: any): Submission {
@@ -129,7 +123,7 @@ export class PageTab extends WithChanges<string> {
         subm.title = source.title;
         subm.description = source.description;
 
-        _.forEach(source.annotations, (attr) => {
+        _.forEach(source.annotations.jsObj(), (attr) => {
             subm.addAnnotation(attr);
         });
 
@@ -151,17 +145,16 @@ export class PageTab extends WithChanges<string> {
         });
 
         this.__subm = subm;
-        subm.changes().subscribe((ch:Change) => {
+        subm.changes().subscribe((ch: Change) => {
             console.debug("got:", ch);
             this.__changes[ch.name] = 1;
-            this.debouncedUpdate();
+            this.__debouncedUpdate();
         });
         return subm;
     }
 
     private __changes = {};
 
-    private debouncedUpdate = _.debounce(this.update, 400);
 
     private update(): void {
         let changes = this.__changes;
@@ -169,7 +162,7 @@ export class PageTab extends WithChanges<string> {
 
         console.debug("PageTab::update", changes);
 
-        _.forOwn(changes, (v, k)=> {
+        _.forOwn(changes, (v, k) => {
             if (this.__updates.hasOwnProperty(k)) {
                 this.__updates[k](this.__pt, this.__subm);
             } else {
@@ -181,5 +174,9 @@ export class PageTab extends WithChanges<string> {
 
     get data(): any {
         return this.__pt.data;
+    }
+
+    static noWait(obj?:any) {
+        return new PageTab(obj, 0);
     }
 }

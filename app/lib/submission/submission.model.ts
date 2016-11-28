@@ -1,6 +1,6 @@
 import {Injectable, Inject} from '@angular/core';
 
-import {Submission} from './submission'
+import {Submission, Item} from './submission'
 import * as _ from 'lodash';
 
 import {DictionaryService} from './dictionary.service';
@@ -17,30 +17,33 @@ export class SubmissionModel {
     //}
 
     createNew(userName: string, userEmail: string): any {
-        let pt = new PageTab();
+        let pt = PageTab.noWait();
         pt.asSubmission(this.dictService.dict())
         .addContact([
             {name: "Name", value: userName || ""},
             {name: "E-mail", value: userEmail || ""}
         ]);
-        return pt.data();
+        return pt.data;
     }
 
-    validateSubmission(sbm: Submission): any[] {
+    validate(sbm: Submission): any[] {
         function requiredAttribute(itemKey, attrKey) {
             return function (sbm) {
-                for (let item in sbm[itemKey].items) {
+                for (let item of sbm[itemKey].items) {
                     let attrIndex = _.findIndex(item.attributes, {name: attrKey});
                     if (attrIndex < 0) {
                         return false;
                     }
-                    let attr = item.attributes[attrIndex].value;
-                    return attr ? true : false;
+                    let val = item.attributes[attrIndex].value;
+                    if (!val) {
+                        return false;
+                    }
                 }
+                return true;
             }
         }
 
-        var rules = {
+        let rules = {
             "Title must be at least 50 characters": function (sbm) {
                 return sbm.title && sbm.title.length >= 50;
             },
@@ -48,7 +51,7 @@ export class SubmissionModel {
                 return sbm.description && sbm.description.length >= 50;
             },
             "Release date is required": function (sbm) {
-                return sbm.releaseDate ? true : false;
+                return !!sbm.releaseDate;
             },
             "At least one contact is required": function (sbm) {
                 return sbm.contacts.items.length > 0;
@@ -71,9 +74,9 @@ export class SubmissionModel {
             rules["File '" + attr.name + "' is required"] = requiredAttribute('publications', attr.name);
         });
 
-        var errors = [];
+        let errors = [];
         _.forOwn(rules, function (rule, name) {
-            var ok = rule(sbm);
+            let ok = rule(sbm);
             if (!ok) {
                 errors.push(name);
             }

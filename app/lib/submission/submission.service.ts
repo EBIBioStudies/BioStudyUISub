@@ -43,10 +43,17 @@ export class SubmissionService {
             }).catch(SubmissionService.errorHandler);
     }
 
+    submitSubmission(pt) {
+        return this.http.post("/api/submission/submit", pt)
+            .map((response) => {
+                return response.data;
+            }).catch(SubmissionService.errorHandler);
+    }
+
     static errorHandler(error: any) {
         let err = {status: '', message: ''};
         try {
-            var jsonError = error.json ? error.json() : error;
+            let jsonError = error.json ? error.json() : error;
             err.status = (jsonError.status) ? jsonError.status : 'Error';
             err.message = (jsonError.message) ? jsonError.message : 'Server error';
         } catch (e) {
@@ -102,16 +109,7 @@ export class SubmissionService {
  });
  },
 
- submitSubmission(submission) {
- return $http.put("/api/submission/submit", submission)
- .then((response) => {
- return response.data;
- },
- (response) => {
- $log.error("submitSubmission() error: ", response);
- return $q.reject(response);
- });
- },
+
 
  createSubmission(submission) {
  return $http.post("/api/submission/create", submission)
