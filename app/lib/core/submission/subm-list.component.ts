@@ -114,13 +114,32 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
 }
 
 @Component({
+    selector: 'date-cell',
+    template: `<span>{{value | date: 'dd/MM/yyyy'}}</span>`
+})
+export class DateCellComponent implements AgRendererComponent {
+    value: Date;
+
+    agInit(params: any): void {
+        console.log("date:", params.value);
+        this.value = this.asDate(params.value);
+    }
+
+    private asDate(seconds: number): Date {
+        if (seconds && seconds > 0) {
+            return new Date(seconds * 1000);
+        }
+        return null;
+    }
+}
+
+@Component({
     selector: 'subm-list',
     template: tmpl
 })
 
 export class SubmissionListComponent {
     private gridOptions: GridOptions;
-    private rowData: any[];
     private columnDefs: any[];
 
     private userName: string;
@@ -137,25 +156,53 @@ export class SubmissionListComponent {
         this.userEmail = sess.user.email;
 
         this.gridOptions = <GridOptions>{
+            //enableServerSideSorting: true,
+            //enableServerSideFilter: true,
+            //enableSorting: true,
+            //enableFilter: true,
+            debug: true,
+            rowSelection: 'single',
+            enableColResize: true,
+            paginationPageSize: 200,
+            rowModelType: 'pagination',
+            rowHeight: 30,
+            getRowNodeId: (item) => {
+                return item.accno;
+            },
             onGridReady: () => {
                 this.gridOptions.api.sizeColumnsToFit();
+                this.createDatasource();
             }
         };
 
         this.createColumnDefs();
-
-        submService
-            .getAllSubmissions()
-            .subscribe(
-                data => {
-                    this.createRowData(data);
-                },
-                error => this.error = <any>error
-            );
     }
 
-    createRowData(data) {
-        this.rowData = data;
+    createDatasource() {
+        let dataSource = {
+            //rowCount: ???, - not setting the row count, infinite paging will be used
+            getRows: (params) => {
+                console.log("grid params:", params);
+                // params.sortModel
+                // params.filterModel
+                // params.startRow
+                // params.endRow
+
+                let offset = params.startRow;
+                let limit = params.endRow - params.startRow;
+                this.submService.getAllSubmissions(offset, limit)
+                    .subscribe((data) => {
+                        let rowsThisPage = data;
+                        let lastRow = -1;
+                        if (data.length < limit) {
+                            lastRow = params.startRow + data.length;
+                        }
+                        params.successCallback(rowsThisPage, lastRow);
+                    });
+            }
+        };
+
+        this.gridOptions.api.setDatasource(dataSource);
     }
 
     createColumnDefs() {
@@ -163,18 +210,30 @@ export class SubmissionListComponent {
             {
                 headerName: 'Accession',
                 field: 'accno',
+                suppressFilter: true
+                //filter: 'text',
+                //filterParams: {apply: true, newRowsAction: 'keep'}
             },
             {
                 headerName: 'Title',
-                field: 'title'
+                field: 'title',
+                suppressFilter: true
+                //filter: 'text',
+                //filterParams: {apply: true, newRowsAction: 'keep'}
             },
             {
                 headerName: 'Release Date',
-                field: 'rtime'
+                field: 'rtime',
+                suppressFilter: true,
+                cellRendererFramework: {
+                    component: DateCellComponent,
+                    moduleImports: [CommonModule]
+                }
             },
             {
                 headerName: 'Status',
-                field: 'status'
+                field: 'status',
+                suppressFilter: true
             },
             {
                 headerName: 'Actions',

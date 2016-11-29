@@ -20,8 +20,8 @@ export class SubmissionService {
             }).catch(SubmissionService.errorHandler);
     }
 
-    getAllSubmissions() {
-        return this.http.get('/api/submissions')
+    getAllSubmissions(offset = -1, limit = -1, filter = '') {
+        return this.http.get(`/api/submissions?offset=${offset}&limit=${limit}&filter=${filter}`)
             .map((res: Response) => {
                 let data = res.json();
                 return data.submissions;
