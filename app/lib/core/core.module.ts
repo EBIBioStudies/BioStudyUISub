@@ -1,6 +1,13 @@
 import {NgModule}     from '@angular/core';
 
-import {TypeaheadModule, TooltipModule, TabsModule, DropdownModule} from 'ng2-bootstrap/ng2-bootstrap';
+import {
+    TypeaheadModule,
+    TooltipModule,
+    TabsModule,
+    DropdownModule,
+    ModalModule
+} from 'ng2-bootstrap/ng2-bootstrap';
+
 import {RouterModule} from '@angular/router';
 import {RecaptchaModule} from 'ng2-recaptcha';
 import {AgGridModule} from 'ag-grid-ng2/main';
@@ -55,6 +62,7 @@ import {UniqueAttrName} from './submission/panel/unique-attr-name.directive';
         TooltipModule,
         TabsModule,
         DropdownModule,
+        ModalModule,
         HttpClientModule,
         AgGridModule.withNg2ComponentSupport(),
         SharedModule,

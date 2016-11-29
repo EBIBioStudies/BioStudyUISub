@@ -31,22 +31,21 @@ export class SubmissionService {
     createSubmission(pt) {
         return this.http.post('/api/submission/create', pt)
             .map((res: Response) => {
-                let data = res.json();
-                return data;
+                return res.json();
             }).catch(SubmissionService.errorHandler);
     }
 
     saveSubmission(pt) {
         return this.http.post("/api/submission/save", pt)
-            .map((response) => {
-                return response.data;
+            .map((res: Response) => {
+                return {}; //empty response if OK
             }).catch(SubmissionService.errorHandler);
     }
 
     submitSubmission(pt) {
         return this.http.post("/api/submission/submit", pt)
-            .map((response) => {
-                return response.data;
+            .map((res: Response) => {
+                return res.json();
             }).catch(SubmissionService.errorHandler);
     }
 

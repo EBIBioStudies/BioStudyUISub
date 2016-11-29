@@ -1,8 +1,10 @@
-import {Component, Inject, OnInit, OnDestroy} from '@angular/core';
+import {Component, Inject, OnInit, OnDestroy, ViewChild} from '@angular/core';
 
-import {ActivatedRoute, Params} from '@angular/router';
+import {ActivatedRoute, Router, Params} from '@angular/router';
 
 import {Subscription} from 'rxjs/Subscription';
+
+import {ModalDirective} from 'ng2-bootstrap/components/modal/modal.component';
 
 import {Submission} from '../../submission/submission';
 import {PageTab} from '../../submission/pagetab';
@@ -32,14 +34,18 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     };
     readonly: boolean = false;
     submission: Submission;
+    errors: string[] = [];
 
     private __subscr: Subscription;
     private __wrap;
 
+    @ViewChild('submitResults') public submitResults: ModalDirective;
+
     constructor(@Inject(ActivatedRoute) private route: ActivatedRoute,
                 @Inject(SubmissionService) private submService: SubmissionService,
                 @Inject(DictionaryService) private dictService: DictionaryService,
-                @Inject(SubmissionModel) private submModel: SubmissionModel,) {
+                @Inject(SubmissionModel) private submModel: SubmissionModel,
+                @Inject(Router) private router: Router) {
     }
 
     ngOnInit() {
@@ -81,23 +87,27 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
 
     onSubmit(event) {
         event.preventDefault();
-
-        let errors = this.submModel.validate(this.submission);
-        if (errors.length > 0) {
-            //TODO show validation errors in modal dialog
+        this.errors = this.submModel.validate(this.submission);
+        if (this.errors.length > 0) {
+            this.submitResults.show();
             return;
         }
-        this.submService.submitSubmission(this.__wrap)
+        this.submService.submitSubmission(this.__wrap())
             .subscribe(resp => {
                 console.debug("submitted", resp);
-                if (resp.status === "OK") {
-                    //TODO: show success
-                } else {
-                    //TODO: showSubmitFailed(['Failed to submit.']);
+                if (resp.status !== "OK") {
+                    //TODO get real messages from response
+                    this.errors = ['Failed to submit'];
                 }
+                this.submitResults.show();
             });
     }
 
+    onSubmitResultsHide() {
+        if (this.errors.length === 0) {
+            this.router.navigate(['/submissions']);
+        }
+    }
     addAnnotation() {
         if (this.submission) {
             this.submission.addAnnotation();
