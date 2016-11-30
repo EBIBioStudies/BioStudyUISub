@@ -1,5 +1,6 @@
 import {Component, Inject, EventEmitter, Input, Output, OnInit} from '@angular/core';
 import {FileUploadService} from './file-upload.service';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'file-upload-button',
@@ -20,17 +21,19 @@ import {FileUploadService} from './file-upload.service';
 `
 })
 export class FileUploadButtonComponent implements OnInit {
-    //@Output() change = new EventEmitter<any>();
+    @Output() onUpload: EventEmitter = new EventEmitter();
 
     constructor(@Inject(FileUploadService) private uploader: FileUploadService) {
     }
 
     onFileChange(event) {
-
         let files = event.target.files;
-        console.log("Files to upload:", files);
-        this.uploader.uploadFiles(files);
-        // this.change.emit(files);
+        console.debug("Files to upload:", files);
+        let subscr = this.uploader.uploadFiles(files).subscribe(ev => {
+            this.onUpload.emit(ev);
+            if (ev.done()) {
+                subscr.unsubscribe();
+            }
+        });
     }
-
 }

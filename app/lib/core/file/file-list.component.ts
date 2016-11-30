@@ -24,7 +24,8 @@ import {FileService} from '../../file/file.service';
 })
 class FileActionsCellComponent implements AgRendererComponent {
     ftype: string;
-    loading:boolean = false;
+    loading: boolean = false;
+
     agInit(params: any): void {
         console.debug("params: ", params);
         this.ftype = params.value;
@@ -36,17 +37,17 @@ class FileActionsCellComponent implements AgRendererComponent {
     template: `
     <div style="text-align:center">
     <i class="fa" [ngClass]="{
-                                         'fa-file' : ftype === 'FILE', 
-                                         'fa-folder' : ftype === 'DIR', 
-                                         'fa-archive' : ftype === 'ARCHIVE', 
-                                         'fa-file-archive-o' : ftype === 'FILE_IN_ARCHIVE'}"></i>
+                               'fa-file' : ftype === 'FILE', 
+                               'fa-folder' : ftype === 'DIR', 
+                               'fa-archive' : ftype === 'ARCHIVE', 
+                               'fa-file-archive-o' : ftype === 'FILE_IN_ARCHIVE'}"></i>
     </div>                                     
 `
 })
 class FileTypeCellComponent implements AgRendererComponent {
-    ftype:string;
-    agInit(params:any):void {
-        console.debug("params: ", params);
+    private ftype: string;
+
+    agInit(params: any): void {
         this.ftype = params.value;
     }
 }
@@ -69,7 +70,7 @@ class FileTypeCellComponent implements AgRendererComponent {
                             &nbsp;Uploaded files
                         </div>
                         <div class="pull-right">
-                            <file-upload-button></file-upload-button>       
+                            <file-upload-button (onUpload)="onUpload($event)"></file-upload-button>       
                         </div>
                     </div>
                     <div class="row">
@@ -101,13 +102,13 @@ class FileTypeCellComponent implements AgRendererComponent {
 })
 
 export class FileListComponent {
-    backButton:boolean = false;
+    backButton: boolean = false;
 
-    private gridOptions:GridOptions;
+    private gridOptions: GridOptions;
     private rowData: any[];
     private columnDefs: any[];
 
-    constructor(@Inject(FileService) private fileService:FileService) {
+    constructor(@Inject(FileService) private fileService: FileService) {
         this.gridOptions = <GridOptions>{
             onGridReady: () => {
                 this.gridOptions.api.sizeColumnsToFit();
@@ -157,26 +158,36 @@ export class FileListComponent {
     }
 
     loadData() {
-        var d = this.fileService.getFiles()
+        let d = this.fileService.getFiles()
             .subscribe((data) => {
                 console.log(data);
                 this.rowData = data;
             });
-/*
-            d.then(function (data) {
-                $scope.filesTree = data.files;
-                if ($scope.filesTree[0]) {
-                    $scope.filesTree[0].name = "Your uploaded files";
-                }
-                decorateFiles($scope.filesTree);
-                $scope.rootFileInTree = $scope.filesTree[0];
-                addSelectedFileToTree();
-            });
-*/
+        /*
+         d.then(function (data) {
+         $scope.filesTree = data.files;
+         if ($scope.filesTree[0]) {
+         $scope.filesTree[0].name = "Your uploaded files";
+         }
+         decorateFiles($scope.filesTree);
+         $scope.rootFileInTree = $scope.filesTree[0];
+         addSelectedFileToTree();
+         });
+         */
+    }
+
+    onUpload(event) {
+        console.log("progress event", event);
     }
 
     static getNodeChildDetails(rowItem) {
-        if (rowItem.type === 'DIR') {
+        /*$scope.fileTypes = {
+         dir: 'DIR',
+         file: 'FILE',
+         archive: 'ARCHIVE',
+         fileInArchive: 'FILE_IN_ARCHIVE'
+         };*/
+        if (rowItem.type === 'DIR' || rowItem.type === 'ARCHIVE') {
             return {
                 group: true,
                 expanded: true, //todo
@@ -188,4 +199,5 @@ export class FileListComponent {
             return null;
         }
     }
+
 }
