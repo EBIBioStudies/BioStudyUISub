@@ -1,10 +1,11 @@
-import {Component, Inject, Input, OnInit, OnDestroy, ViewChild} from '@angular/core';
+import {Component, Inject, Input, OnInit, OnDestroy, ViewChild, forwardRef} from '@angular/core';
 import {NgForm, FormGroup, FormControl} from '@angular/forms';
 
 import * as _ from 'lodash';
 
 import {Attributes, Attr} from '../../../submission/submission';
 import {DictionaryService} from '../../../submission/dictionary.service';
+import {TypeaheadValuesForItem} from "./typeahead-values";
 
 @Component({
     selector: 'subm-attributes',
@@ -57,6 +58,10 @@ import {DictionaryService} from '../../../submission/dictionary.service';
                        tooltip="This field is required"
                        [tooltipEnable]="attrForm.controls['value_' + attr.id] && attrForm.controls['value_' + attr.id].invalid"
                        tooltipPlacement="top-left"
+                       [typeahead]="typeaheadAttrValues(attr.name)"
+                       typeaheadAppendToBody="true"
+                       typeaheadMinLength="0"
+                       typeaheadOptionsLimit="30"  
                        [readonly]="readonly"
                        [(ngModel)]="attr.value"
                        [required]="attr.required">
@@ -65,7 +70,6 @@ import {DictionaryService} from '../../../submission/dictionary.service';
                        typeahead-append-to-body="true"
                        typeahead-show-hint="true"
                        typeahead-min-length="0"
-                       [ngModelOtions]="{allowInvalid: true}"
 -->
                  <input-file *ngIf="attr.type === 'file'" 
                              [(ngModel)]="attr.value"
@@ -107,13 +111,14 @@ export class SubmissionAttributesComponent implements OnInit, OnDestroy {
     @Input() type: string; // should be a enum??
     @Input() readonly: boolean;
     @Input() parentForm: FormGroup;
+    @Input() typeaheadValues?: TypeaheadValuesForItem;
 
     @ViewChild('attrForm') private attrForm: NgForm;
 
-    addNewAttrLabel: string;
-    removeAttrTooltip: string;
-    suggestedAttrNames: string[];
+    private addNewAttrLabel: string;
+    private removeAttrTooltip: string;
 
+    private __typeaheadNames: string[];
     private cName: string;
 
     constructor(@Inject(DictionaryService) private dictService: DictionaryService) {
@@ -121,7 +126,7 @@ export class SubmissionAttributesComponent implements OnInit, OnDestroy {
 
     ngAfterContentInit() {
         let cName = `attrsForm_${this.type}`;
-        while(this.parentForm.controls.hasOwnProperty(cName)) {
+        while (this.parentForm.controls.hasOwnProperty(cName)) {
             cName += '0';
         }
         this.parentForm.addControl(cName, this.attrForm.form);
@@ -150,7 +155,7 @@ export class SubmissionAttributesComponent implements OnInit, OnDestroy {
     }
 
     triggerFormValidation() {
-        _.forOwn(this.attrForm.form.controls, (v: FormControl, k: string)=> {
+        _.forOwn(this.attrForm.form.controls, (v: FormControl, k: string) => {
             v.updateValueAndValidity();
         });
     }
@@ -161,11 +166,18 @@ export class SubmissionAttributesComponent implements OnInit, OnDestroy {
         console.log(dict);
         this.addNewAttrLabel = dict.actions.addAttr ? dict.actions.addAttr.title : undefined;
         this.removeAttrTooltip = dict.actions.deleteAttr.popup;
-        this.suggestedAttrNames = _.map(_.filter(dict.attributes, {required: false}), 'name');
+        this.__typeaheadNames = _.map(_.filter(dict.attributes, {required: false}), 'name');
     }
 
-    typeaheadAttrNames() {
-        return _.filter(this.suggestedAttrNames, (name) => !this.attributes.contains(name));
+    typeaheadAttrNames():string[] {
+        return _.filter(this.__typeaheadNames, (name) => !this.attributes.contains(name));
+    }
+
+    typeaheadAttrValues(attrName: string): string[] {
+        if (this.typeaheadValues) {
+            return this.typeaheadValues.typeaheadValues(attrName);
+        }
+        return [];
     }
 
 }

@@ -1,6 +1,7 @@
 import {Component, Inject, Input, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {NgForm, FormGroup} from '@angular/forms';
 
+import {TypeaheadValues} from './typeahead-values';
 import {Items, Item} from '../../../submission/submission';
 import {DictionaryService} from '../../../submission/dictionary.service';
 
@@ -115,6 +116,7 @@ import * as _ from 'lodash';
              [type]="type"
              [readonly]="readonly"
              [parentForm]="itemsForm"
+             [typeaheadValues]="typeaheadValuesFor(idx)"
              #submAttr>
         </subm-attributes>
     </tab>
@@ -132,12 +134,12 @@ export class SubmissionItemsComponent implements OnInit, OnDestroy {
     deleteTooltip: string;
     tabHeading: string;
     previewTabHeading: string;
-    attributes: any[];
-
     activeTab: number = -1;
 
-    @ViewChild('itemsPreviewForm') private itemsPreviewForm: NgForm;
+    private  __typeaheadValues: TypeaheadValues;
     private itemsForm: FormGroup;
+
+    @ViewChild('itemsPreviewForm') private itemsPreviewForm: NgForm;
 
     constructor(@Inject(DictionaryService) private dictService: DictionaryService) {
     }
@@ -150,7 +152,9 @@ export class SubmissionItemsComponent implements OnInit, OnDestroy {
         this.deleteTooltip = dict.actions.delete.popup;
         this.tabHeading = dict.tabHeading;
         this.previewTabHeading = dict.previewTabHeading;
-        this.attributes = dict.attributes;
+        this.__typeaheadValues = new TypeaheadValues(
+            _.map(_.filter(dict.attributes, {typeahead: true}), 'name'),
+            this.items);
     }
 
     ngAfterContentInit() {
@@ -176,7 +180,7 @@ export class SubmissionItemsComponent implements OnInit, OnDestroy {
         return _.keysIn(hash);
     }
 
-    get colSizeCss() {
+    get colSizeCss(): string {
         let length = this.attrNames.length;
         if (length > 6) {
             length = 6;
@@ -190,32 +194,10 @@ export class SubmissionItemsComponent implements OnInit, OnDestroy {
     }
 
     typeaheadValues(attrName: string, itemIdx: number): string[] {
-        let attr = _.find(this.attributes, {name: attrName, typeahead: true});
-        if (!attr) {
-            return [];
-        }
-        let set = {};
-        let res = [];
-        let items = this.items.items;
-        for (let j = 0; j < items.length; j++) {
-            if (j === itemIdx) {
-                continue;
-            }
-            let item = items[j];
-            if (item.attributes) {
-                let attrs = item.attributes.attributes;
-                for (let i = 0; i < attrs.length; i++) {
-                    let attr = attrs[i];
-                    if (attr.name === attrName && attr.value) {
-                        if (set[attr.value] != 1) {
-                            res.push(attr.value);
-                            set[attr.value] = 1;
-                        }
-                        break;
-                    }
-                }
-            }
-        }
-        return res;
+        return this.__typeaheadValues.typeaheadValues(attrName, itemIdx);
+    }
+
+    typeaheadValuesFor(itemIdx) {
+        return this.__typeaheadValues.forItem(itemIdx);
     }
 }
