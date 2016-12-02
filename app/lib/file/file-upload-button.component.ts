@@ -29,11 +29,7 @@ export class FileUploadButtonComponent implements OnInit {
     onFileChange(event) {
         let files = event.target.files;
         console.debug("Files to upload:", files);
-        let subscr = this.uploader.uploadFiles(files).subscribe(ev => {
-            this.onUpload.emit(ev);
-            if (ev.done()) {
-                subscr.unsubscribe();
-            }
-        });
+        let upload = this.uploader.upload(files);
+        this.onUpload.emit(upload);
     }
 }

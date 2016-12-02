@@ -27,6 +27,14 @@ export class HttpClient {
         return this.http.post(this.transform(url), data, options);
     }
 
+    upload(url, files: File[]): Observable<any> {
+        let input = new FormData();
+        for (let fi of files) {
+            input.append('file', fi);
+        }
+        return this.post(url, input);
+    }
+
     private headers() {
         let headers = new Headers();
         let sessionId = this.userSession.user.key;

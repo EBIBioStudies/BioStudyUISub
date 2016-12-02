@@ -10,6 +10,9 @@ import 'ag-grid/dist/styles/theme-fresh.css!css';
 import {AgRendererComponent} from 'ag-grid-ng2/main';
 
 import {FileService} from '../../file/file.service';
+import {FileUploadService} from '../../file/file-upload.service';
+
+import * as _ from 'lodash';
 
 @Component({
     selector: 'file-actions-cell',
@@ -53,6 +56,40 @@ class FileTypeCellComponent implements AgRendererComponent {
 }
 
 @Component({
+    selector: 'progress-cell',
+    template: `
+    <div *ngIf="value < 100" class="progress" 
+         style="margin-bottom: 0;">
+         <div class="progress-bar" [ngClass]="{'progress-bar-success' : !error }" role="progressbar"
+                [ngStyle]="{ 'width': value + '%'}">{{value}}%</div>
+    </div>
+    <div *ngIf="value === 100"><i class="fa fa-check"></i></div>
+`
+})
+class ProgressCellComponent implements AgRendererComponent {
+    private value: number;
+    private error: string;
+
+    agInit(params: any): void {
+        if (params.value && params.value.subscribe) {
+            let sb = params.value.subscribe((e) => {
+                if (e.progress) {
+                    this.value = e.progress;
+                }
+                if (e.error) {
+                    this.error = e.error;
+                }
+                if (e.progress === 100 || e.error) {
+                    sb.unsubscribe();
+                }
+            })
+        } else {
+            this.value = 100;
+        }
+    }
+}
+
+@Component({
     selector: 'file-list',
     template: `
 <container-root>
@@ -70,7 +107,7 @@ class FileTypeCellComponent implements AgRendererComponent {
                             &nbsp;Uploaded files
                         </div>
                         <div class="pull-right">
-                            <file-upload-button (onUpload)="onUpload($event)"></file-upload-button>       
+                            <file-upload-button (onUpload)="onNewUpload($event)"></file-upload-button>       
                         </div>
                     </div>
                     <div class="row">
@@ -78,19 +115,10 @@ class FileTypeCellComponent implements AgRendererComponent {
                              <ag-grid-ng2 #agGrid style="width: 100%; height: 350px;" class="ag-fresh"
                                   [gridOptions]="gridOptions"
                                   [columnDefs]="columnDefs"
-                                  [rowData]="rowData"
                                   enableSorting
                                   enableColResize
                                   rowHeight="30">
                              </ag-grid-ng2>
-                            <!--tree-grid tree-data="filesTree"
-                                       tree-control="uploadedTree"
-                                       col-defs="col_defs"
-                                       expand-on="expanding_property"
-                                       on-select="selectFile(branch)"
-                                       expand-level="2"
-                                       icon-leaf="{{'fa fa-file'}}">
-                            </tree-grid-->
                         </div>
                     </div>
                 </div>
@@ -108,15 +136,16 @@ export class FileListComponent {
     private rowData: any[];
     private columnDefs: any[];
 
-    constructor(@Inject(FileService) private fileService: FileService) {
+    constructor(@Inject(FileService) private fileService: FileService,
+                @Inject(FileUploadService) private fileUploadService: FileUploadService) {
         this.gridOptions = <GridOptions>{
             onGridReady: () => {
                 this.gridOptions.api.sizeColumnsToFit();
             },
             getNodeChildDetails: FileListComponent.getNodeChildDetails,
         };
-        this.rowData = [];
 
+        this.rowData = [];
         this.createColumnDefs();
         this.loadData();
     }
@@ -141,7 +170,11 @@ export class FileListComponent {
             {
                 headerName: 'Progress',
                 field: 'progress',
-                width: 200
+                width: 200,
+                cellRendererFramework: {
+                    component: ProgressCellComponent,
+                    moduleImports: [CommonModule]
+                }
             },
             {
                 headerName: 'Actions',
@@ -158,11 +191,14 @@ export class FileListComponent {
     }
 
     loadData() {
-        let d = this.fileService.getFiles()
+        this.fileService.getFiles()
             .subscribe((data) => {
                 console.log(data);
-                this.rowData = data;
+                this.updateDataRows([].concat(
+                    this.decorateUploads(this.fileUploadService.currentUploads()),
+                    data));
             });
+
         /*
          d.then(function (data) {
          $scope.filesTree = data.files;
@@ -176,8 +212,30 @@ export class FileListComponent {
          */
     }
 
-    onUpload(event) {
-        console.log("progress event", event);
+    updateDataRows(rows) {
+        this.rowData = rows;
+        this.gridOptions.api.setRowData(rows);
+    }
+
+    onNewUpload(upload) {
+        this.updateDataRows([].concat(this.decorateUploads([upload]), this.rowData));
+    }
+
+    decorateUploads(uploads): any[] {
+        return _.flatMap(uploads, (u) => {
+            if (u.done()) {
+                return [];
+            }
+            return _.map(u.files, (f) => ({
+                name: f,
+                progress: u.progress,
+                type: 'FILE',
+                status: u.status,
+                cancel() {
+                    u.cancel()
+                }
+            }));
+        });
     }
 
     static getNodeChildDetails(rowItem) {
