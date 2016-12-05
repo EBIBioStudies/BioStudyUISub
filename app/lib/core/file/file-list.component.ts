@@ -10,7 +10,7 @@ import 'ag-grid/dist/styles/theme-fresh.css!css';
 import {AgRendererComponent} from 'ag-grid-ng2/main';
 
 import {FileService} from '../../file/file.service';
-import {FileUploadService} from '../../file/file-upload.service';
+import {FileUploadService, FileUpload} from '../../file/file-upload.service';
 
 import * as _ from 'lodash';
 
@@ -18,20 +18,45 @@ import * as _ from 'lodash';
     selector: 'file-actions-cell',
     template: `
 <div style="text-align:center">
-    <span *ngIf="loading"><i class="fa fa-cog fa-spin"></i></span>
-    <button *ngIf="(ftype === 'FILE' || ftype === 'ARCHIVE')" 
+    <button *ngIf="canRemove" 
             type="button" class="btn btn-danger btn-xs"
-            (click)="deleteFile($event)">Delete</button>
+            (click)="onFileRemove($event)">Delete</button>
+    <button *ngIf="canCancel" 
+            type="button" class="btn btn-warning btn-xs"
+            (click)="onCancelUpload($event)">Cancel</button>        
 </div>
 `
 })
 class FileActionsCellComponent implements AgRendererComponent {
-    ftype: string;
-    loading: boolean = false;
+    private type: string;
+    private upload: FileUpload;
+    private onRemove;
 
     agInit(params: any): void {
-        console.debug("params: ", params);
-        this.ftype = params.value;
+        this.type = params.data.type;
+        this.upload = params.data.upload;
+        this.onRemove = params.data.onRemove || (() => {
+            });
+    }
+
+    get canRemove(): boolean {
+        return !this.canCancel && (this.type === 'FILE' || this.type === 'ARCHIVE')
+    }
+
+    get canCancel(): boolean {
+        return this.upload && !this.upload.finished();
+    }
+
+    onFileRemove(ev) {
+        ev.preventDefault();
+        this.onRemove();
+    }
+
+    onCancelUpload(ev) {
+        ev.preventDefault();
+        if (this.upload) {
+            this.upload.cancel();
+        }
     }
 }
 
@@ -69,23 +94,38 @@ class FileTypeCellComponent implements AgRendererComponent {
 class ProgressCellComponent implements AgRendererComponent {
     private value: number;
     private error: string;
+    private type: string;
+
+    private __sb;
 
     agInit(params: any): void {
-        if (params.value && params.value.subscribe) {
-            let sb = params.value.subscribe((e) => {
-                if (e.progress) {
-                    this.value = e.progress;
+        let type = params.data.type;
+        let upload = params.data.upload;
+        if (upload) {
+            let onUploadFinished = params.data.onUploadFinished || (() => {
+                });
+            this.__sb = upload.progress.subscribe((e) => {
+                if (e >= 0) {
+                    this.value = e;
                 }
-                if (e.error) {
-                    this.error = e.error;
+                if (e === -1) {
+                    this.error = upload.errorMessage;
                 }
-                if (e.progress === 100 || e.error) {
-                    sb.unsubscribe();
+                if (e < 0 || e === 100) {
+                    _.delay(() => {
+                        // it's delayed because event comes earlier than __sb is created
+                        this.unsubscribe();
+                    }, 50);
+                    onUploadFinished();
                 }
             })
-        } else {
+        } else if (type === 'FILE' || type === 'ARCHIVE') {
             this.value = 100;
         }
+    }
+
+    unsubscribe() {
+        this.__sb.unsubscribe();
     }
 }
 
@@ -169,7 +209,6 @@ export class FileListComponent {
             },
             {
                 headerName: 'Progress',
-                field: 'progress',
                 width: 200,
                 cellRendererFramework: {
                     component: ProgressCellComponent,
@@ -178,7 +217,6 @@ export class FileListComponent {
             },
             {
                 headerName: 'Actions',
-                field: 'type',
                 width: 100,
                 suppressMenu: true,
                 suppressSorting: true,
@@ -196,7 +234,7 @@ export class FileListComponent {
                 console.log(data);
                 this.updateDataRows([].concat(
                     this.decorateUploads(this.fileUploadService.currentUploads()),
-                    data));
+                    this.decorateFiles(data)));
             });
 
         /*
@@ -221,21 +259,47 @@ export class FileListComponent {
         this.updateDataRows([].concat(this.decorateUploads([upload]), this.rowData));
     }
 
-    decorateUploads(uploads): any[] {
+    decorateUploads(uploads: FileUpload[]): any[] {
         return _.flatMap(uploads, (u) => {
             if (u.done()) {
                 return [];
             }
             return _.map(u.files, (f) => ({
                 name: f,
-                progress: u.progress,
+                upload: u,
                 type: 'FILE',
-                status: u.status,
-                cancel() {
-                    u.cancel()
+                onRemove: () => {
+                    this.removeUpload(u);
+                },
+                onUploadFinished: () => {
+                    this.loadData();
                 }
             }));
         });
+    }
+
+    decorateFiles(files): any[] {
+        return _.map(files, (f) => ({
+            name: f.name,
+            type: f.type,
+            files: this.decorateFiles(f.files),
+            onRemove: () => {
+                this.removeFile(f.name);
+            }
+        }));
+    }
+
+    private removeFile(fileName: string): void {
+        this.fileService
+            .removeFile(fileName)
+            .subscribe((resp) => {
+                this.loadData();
+            });
+    }
+
+    private removeUpload(u: FileUpload) {
+        this.fileUploadService.remove(u);
+        this.loadData();
     }
 
     static getNodeChildDetails(rowItem) {
@@ -249,7 +313,7 @@ export class FileListComponent {
             return {
                 group: true,
                 expanded: true, //todo
-                children: rowItem.files,
+                children: rowItem.files || [],
                 field: 'name',
                 key: rowItem.name
             };

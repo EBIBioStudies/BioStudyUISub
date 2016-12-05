@@ -14,19 +14,19 @@ export class HttpClient {
     ) {}
 
     get(url) {
-        let headers = this.headers();
-        let options =  new RequestOptions({headers: headers});
+        let options =  new RequestOptions({headers: this.headers()});
         return this.http.get(this.transform(url), options);
     }
 
     post(url, data) {
-        let headers = this.headers();
-        //headers.append('Content-Type', 'application/json');
-
-        let options =  new RequestOptions({headers: headers});
+        let options =  new RequestOptions({headers: this.headers()});
         return this.http.post(this.transform(url), data, options);
     }
 
+    del(url) {
+        let options =  new RequestOptions({headers: this.headers()});
+        return this.http.delete(this.transform(url), options);
+    }
     upload(url, files: File[]): Observable<any> {
         let input = new FormData();
         for (let fi of files) {

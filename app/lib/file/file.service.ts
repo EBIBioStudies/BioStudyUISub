@@ -41,20 +41,12 @@ export class FileService {
             .catch(FileService.errorHandler);
     }
 
-    deleteFile(file) {
-        /*this.http.delete("/api/files/delete?file=" + file.name)
-         .success(function (data) {
-         defer.resolve(data);
-         }).error(function (err, status) {
-         defer.reject(err, status);
-         });
-         return defer.promise;
-         }
-
-         Object.assign(this, {
-         getFiles: getFiles,
-         deleteFile: deleteFile
-         });*/
+    removeFile(file): Observable<any> {
+        return this.http.del("/api/files/delete?file=" + file.name)
+            .map((res: Response) => {
+                return res.json();
+            })
+            .catch(FileService.errorHandler);
     }
 
     static errorHandler(error: any) {
