@@ -1,6 +1,8 @@
-import {Component, EventEmitter, Input, Output, Inject} from '@angular/core';
+import {Component, EventEmitter, Input, Output, Inject, OnInit} from '@angular/core';
 
-import {CommonModule}        from '@angular/common';
+import {CommonModule} from '@angular/common';
+import {ActivatedRoute, Params} from '@angular/router';
+
 
 import {GridOptions} from 'ag-grid/main';
 
@@ -140,7 +142,7 @@ class ProgressCellComponent implements AgRendererComponent {
                     <div class="panel-heading clearfix">
                         <div class="panel-title pull-left">
                             <button class="btn btn-default btn-xs"
-                                    (click)="history.back()"
+                                    (click)="onBackButtonClick()"
                                     *ngIf="backButton"><i class="fa fa-long-arrow-left" aria-hidden="true"></i>&nbsp;Back
                                 to submission
                             </button>
@@ -169,7 +171,7 @@ class ProgressCellComponent implements AgRendererComponent {
 `
 })
 
-export class FileListComponent {
+export class FileListComponent implements OnInit {
     backButton: boolean = false;
 
     private gridOptions: GridOptions;
@@ -177,7 +179,8 @@ export class FileListComponent {
     private columnDefs: any[];
 
     constructor(@Inject(FileService) private fileService: FileService,
-                @Inject(FileUploadService) private fileUploadService: FileUploadService) {
+                @Inject(FileUploadService) private fileUploadService: FileUploadService,
+                @Inject(ActivatedRoute) private route: ActivatedRoute) {
         this.gridOptions = <GridOptions>{
             onGridReady: () => {
                 this.gridOptions.api.sizeColumnsToFit();
@@ -188,6 +191,16 @@ export class FileListComponent {
         this.rowData = [];
         this.createColumnDefs();
         this.loadData();
+    }
+
+    ngOnInit() {
+        this.route.params.forEach((params: Params) => {
+            this.backButton = params['bb'];
+        });
+    }
+
+    onBackButtonClick() {
+        window.history.back();
     }
 
     createColumnDefs() {

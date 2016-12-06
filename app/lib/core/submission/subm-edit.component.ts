@@ -49,8 +49,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        console.debug("SubmissionEditComponent::OnInit");
-        let params = this.route.params.forEach((params: Params) => {
+        this.route.params.forEach((params: Params) => {
             let accno = params['accno'];
             this.submService
                 .getSubmission(accno)
