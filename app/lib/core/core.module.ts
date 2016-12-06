@@ -26,6 +26,7 @@ import {HelpComponent} from './help/help.component';
 import {HeaderComponent} from './header/header.component';
 import {SignInComponent} from './signin/signin.component';
 import {ActivateComponent} from './activate/activate.component';
+import {ResendActivationLinkComponent} from './activate/resend-activation-link.component';
 import {PasswordResetReqComponent} from './password-reset/password-reset-req.component';
 import {PasswordResetComponent} from './password-reset/password-reset.component';
 import {SubmissionListComponent} from './submission/subm-list.component';
@@ -80,6 +81,7 @@ import {UniqueAttrName} from './submission/panel/unique-attr-name.directive';
         SignInComponent,
         SignUpComponent,
         ActivateComponent,
+        ResendActivationLinkComponent,
         PasswordResetReqComponent,
         PasswordResetComponent,
         SubmissionListComponent,

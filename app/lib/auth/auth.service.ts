@@ -15,21 +15,21 @@ import {RegistrationData} from './registration-data';
 import {AuthEvents} from './auth-events';
 import {UserSession} from '../session/user-session';
 import {UserRole} from '../session/user-role';
+import {User} from '../session/user';
 
 @Injectable()
 export class AuthService {
 
     constructor(@Inject(HttpClient) private http: HttpClient,
                 @Inject(AuthEvents) private  authEvents: AuthEvents,
-                @Inject(UserSession) private userSession: UserSession,
-                @Inject(Location) private location: Location) {
+                @Inject(UserSession) private userSession: UserSession) {
     }
 
-    isAuthenticated() {
+    isAuthenticated(): boolean {
         return !this.userSession.isAnonymous();
     }
 
-    currentUser() {
+    currentUser(): User {
         return this.userSession.user;
     }
 
@@ -46,9 +46,8 @@ export class AuthService {
     }
 
     passwordResetRequest(email: string, recaptcha: string): Observable<any> {
-        let loc = window.location;
-        let path = loc.origin + loc.pathname + "#/password_reset";
-        return this.http.post("/api/auth/passrstreq/", {email: email, path: path, 'recaptcha2-response': recaptcha})
+        let path = this.getFullPath('#/password_reset');
+        return this.http.post('/api/auth/passrstreq/', {email: email, path: path, 'recaptcha2-response': recaptcha})
             .map((res: Response) => {
                 let data = res.json();
                 if (data.status === 'OK') {
@@ -59,8 +58,8 @@ export class AuthService {
             .catch(AuthService.errorHandler);
     }
 
-    passwordReset(key, password, recaptcha) {
-        return this.http.post("/raw/auth/passreset/", {
+    passwordReset(key, password, recaptcha): Observable<any> {
+        return this.http.post('/raw/auth/passreset/', {
             key: key,
             password: password,
             'recaptcha2-response': recaptcha
@@ -73,8 +72,26 @@ export class AuthService {
                     }
                     return Observable.throw({status: 'Error', message: data.message || 'Server error'});
                 })
-            .catch((error)=> {
+            .catch((error) => {
                 if (error.status === 400) { //invalid request
+                    return error.json();
+                }
+                return AuthService.errorHandler(error);
+            });
+    }
+
+    resendActivationLink(email, recaptcha): Observable<any> {
+        let path = this.getFullPath('#/activate');
+        return this.http.post('/api/auth/resendActLink/', {
+            email: email,
+            path: path,
+            'recaptcha2-response': recaptcha
+        })
+            .map((resp: Response) => {
+                return resp.json();
+            })
+            .catch((error) => {
+                if (error.status === 403) {
                     return error.json();
                 }
                 return AuthService.errorHandler(error);
@@ -86,7 +103,7 @@ export class AuthService {
             .map((res: Response) => {
                 let data = res.json();
                 if (data.status === 'OK') {
-                    var orcid = data.aux ? data.aux.orcid : '';
+                    let orcid = data.aux ? data.aux.orcid : '';
                     this.userSession.create(data.sessid, data.username, data.email, orcid, UserRole.User);
                     this.authEvents.userSignedIn(data.username);
                     return data;
@@ -97,28 +114,41 @@ export class AuthService {
     }
 
     signUp(regData: RegistrationData): Observable<any> {
-        //TODO
-        return Observable.just({});
+        let user = RegistrationData.transform(regData);
+        user.path = this.getFullPath('#/activate');
+        return this.http.post('/api/auth/signup', user)
+            .map((resp: Response) => {
+                return resp.json();
+            })
+            .catch((error) => {
+                if (error.status === 403 || error.status === 400) {
+                    return error.json();
+                }
+                return AuthService.errorHandler(error);
+            });
     }
 
     signOut(): Observable<any> {
         if (!this.isAuthenticated()) {
             return Observable.just({});
         }
-
         return this.http.post("/api/auth/signout", {})
-            .map(
-                () => {
+            .map(() => {
                     this.sessionDestroy();
                     return {};
                 })
             .catch((error) => {
                 if (error.status === 403) { //session expired
                     this.sessionDestroy();
-                } else {
-                    AuthService.errorHandler(error);
+                    return {};
                 }
+                return AuthService.errorHandler(error);
             });
+    }
+
+    private getFullPath(ancor: string = '') {
+        let loc = window.location;
+        return loc.origin + loc.pathname + ancor;
     }
 
     private sessionDestroy() {
@@ -130,7 +160,7 @@ export class AuthService {
     static errorHandler(error: any) {
         let err = {status: '', message: ''};
         try {
-            var jsonError = error.json ? error.json() : error;
+            let jsonError = error.json ? error.json() : error;
             err.status = (jsonError.status) ? jsonError.status : 'Error';
             err.message = (jsonError.message) ? jsonError.message : 'Server error';
         } catch (e) {
@@ -143,11 +173,9 @@ export class AuthService {
     }
 
 
-    /*constructor(private http: $http, $q, USER_ROLES, Session, AccessLevel, $log, $location) {
+    /*
 
 
-
-     Object.assign(this, {
      signIn(credentials) {
      return $http.post("/raw/auth/signin", credentials)
      .then(
@@ -185,21 +213,6 @@ export class AuthService {
      });
      },
 
-     resendActivationLink(email, recaptcha) {
-     var path = getAppPath() + "#/activate";
-     return $http.post("/api/auth/resendActLink/", {email: email, path: path, 'recaptcha2-response': recaptcha})
-     .then(
-     (response) => {
-     return response.data;
-     },
-     (response) => {
-     if (response.status === 403) {
-     return response.data;
-     }
-     $log.error("resend activation link error", response);
-     return $q.reject(response);
-     });
-     },
 
 
      isAuthenticated() {

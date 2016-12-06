@@ -7,9 +7,9 @@ export class RegistrationData {
         public captcha: string = ''
     ) {}
 
-    private static transform(obj) {
-        var res = {};
-        for (var n of ['username', 'email', 'password']) {
+    public static transform(obj: RegistrationData): any {
+        let res = {};
+        for (let n of ['username', 'email', 'password']) {
             res[n] = obj[n] || '';
         }
         res['aux'] = ['orcid:' + (obj.orcid || '')];
