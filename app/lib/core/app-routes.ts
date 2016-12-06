@@ -1,6 +1,5 @@
 import {Routes} from '@angular/router';
 
-import {DummyComponent} from './dummy.component';
 import {SignInComponent} from './signin/signin.component';
 import {SignUpComponent} from './signup/signup.component';
 import {ActivateComponent} from './activate/activate.component';
@@ -10,6 +9,7 @@ import {PasswordResetComponent} from './password-reset/password-reset.component'
 import {HelpComponent} from './help/help.component';
 import {SubmissionListComponent} from './submission/subm-list.component';
 import {SubmissionEditComponent} from './submission/subm-edit.component';
+import {SubmissionViewComponent} from './submission/subm-view.component';
 import {FileListComponent} from './file/file-list.component';
 
 import {AuthGuard} from "./auth.guard";
@@ -25,6 +25,6 @@ export const APP_ROUTES: Routes = [
     {path: 'help', component: HelpComponent},
     {path: 'submissions', component: SubmissionListComponent, canActivate: [AuthGuard]},
     {path: 'edit/:accno', component: SubmissionEditComponent, canActivate: [AuthGuard]},
-    {path: 'view/:accno', component: DummyComponent, canActivate: [AuthGuard]},
+    {path: 'view/:accno', component: SubmissionViewComponent, canActivate: [AuthGuard]},
     {path: 'files', component: FileListComponent, canActivate: [AuthGuard]}
 ];

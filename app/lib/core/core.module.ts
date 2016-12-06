@@ -13,7 +13,7 @@ import {RecaptchaModule} from 'ng2-recaptcha';
 import {AgGridModule} from 'ag-grid-ng2/main';
 import {HttpClientModule} from '../http/http-client.module';
 
-import {SharedModule} from '../shared/shared.module.ts';
+import {SharedModule} from '../shared/shared.module';
 
 import {AuthModule} from '../auth/auth.module';
 import {SubmissionModule} from '../submission/submission.module';
@@ -31,6 +31,7 @@ import {PasswordResetReqComponent} from './password-reset/password-reset-req.com
 import {PasswordResetComponent} from './password-reset/password-reset.component';
 import {SubmissionListComponent} from './submission/subm-list.component';
 import {SubmissionEditComponent} from './submission/subm-edit.component';
+import {SubmissionViewComponent} from './submission/subm-view.component';
 import {SideBarComponent} from './submission/sidebar/subm-sidebar.component';
 import {SideBarItemComponent} from './submission/sidebar/subm-sidebar.component';
 import {SubmissionPanelComponent} from './submission/panel/subm-panel.component';
@@ -86,6 +87,7 @@ import {UniqueAttrName} from './submission/panel/unique-attr-name.directive';
         PasswordResetComponent,
         SubmissionListComponent,
         SubmissionEditComponent,
+        SubmissionViewComponent,
         SubmissionPanelComponent,
         SubmissionAttributesPanelComponent,
         SubmissionAttributesComponent,

@@ -1,4 +1,4 @@
-<div bsModal #submitResults="bs-modal"
+<div *ngIf="!readonly" bsModal #submitResults="bs-modal"
      class="modal fade"
      tabindex="-1"
      role="dialog"
@@ -29,7 +29,7 @@
     <form *ngIf="submission" class="form-horizontal" id="subm-form" novalidate name="submForm" role="form" method="post"
           (ngSubmit)="submForm.valid && onSubmit($event)" #submForm="ngForm">
 
-        <subm-sidebar
+        <subm-sidebar *ngIf="!readonly"
                 (toggle)="uisettings.collapseLeftSide=!uisettings.collapseLeftSide"
                 [collapsed]="uisettings.collapseLeftSide">
             <sidebar-item
@@ -65,13 +65,13 @@
 
         <div class="container-fluid">
 
-            <aside class="right-side content" [ngClass]="{'collapse-left' : uisettings.collapseLeftSide}">
+            <aside class="right-side content" [ngClass]="{'collapse-left' : !readonly && uisettings.collapseLeftSide}">
 
                 <div class="panel" [ngClass]="{'panel-danger': submForm.invalid, 'panel-info':submForm.valid}">
                     <div class="panel-heading">
                         <span>Submission {{accno}}</span><span *ngIf="!readonly && submForm.invalid"> << There are some validation errors. Please correct them before to proceed to submit >> </span>
                         <div class="pull-right" *ngIf="readonly">
-                            <a class="pull-right btn btn-success btn-xs" (click)="editSubmission()">Edit</a>
+                            <a class="pull-right btn btn-success btn-xs" (click)="onEditSubmission()">Edit</a>
                         </div>
                     </div>
                     <div class="panel-body">

@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, Output, Inject} from '@angular/core';
 
-import {CommonModule}        from '@angular/common';
+import {CommonModule} from '@angular/common';
+import {TooltipModule} from 'ng2-bootstrap/ng2-bootstrap';
 
 import {Router} from '@angular/router';
 
@@ -17,71 +18,39 @@ import {AgRendererComponent} from 'ag-grid-ng2/main';
 import {UserSession} from '../../session/user-session';
 
 @Component({
-    selector: 'action-buttons',
+    selector: 'action-buttons-cell',
     template: `
                            <button *ngIf="status !== 'MODIFIED'"
                                     type="button" class="btn btn-danger btn-xs btn-flat"
-                                    (click)="deleteSubmission()"
-                                    tooltip="delete">
+                                    (click)="onDeleteSubmission()"
+                                    tooltip="delete"
+                                    tooltipAppendToBody="true">
                                 <i class="fa fa-trash-o fa-fw"></i>
                            </button>
                            <button *ngIf="status === 'MODIFIED'" 
                                     type="button" class="btn btn-warning btn-xs btn-flat"
-                                    (click)="revertSubmission()"
-                                    tooltip="undo changes">
+                                    (click)="onRevertSubmission()"
+                                    tooltip="undo all changes"
+                                    tooltipAppendToBody="true">
                                 <i class="fa fa-undo fa-fw"></i>
                            </button>
                            <button type="button" class="btn btn-primary btn-xs btn-flat"
-                                    (click)="editSubmission()"
-                                    tooltip="edit">
+                                    (click)="onEditSubmission()"
+                                    tooltip="edit"
+                                    tooltipAppendToBody="true">
                                 <i class="fa fa-pencil fa-fw"></i>
                            </button>
                            <button *ngIf="status === 'MODIFIED'" 
                                     type="button" class="btn btn-info btn-xs btn-flat"
-                                    (click)="viewSubmission()"
-                                    tooltip="view">
+                                    (click)="onViewSubmission()"
+                                    tooltip="view original"
+                                    tooltipAppendToBody="true">
                                 <i class="fa fa-eye fa-fw"></i>
-                           </button>
-`
-})
-export class ActionButtonsComponent {
-    @Input() status: string;
-    @Input() accno: string;
-    @Output() onDelete = new EventEmitter<boolean>();
-    @Output() onRevert = new EventEmitter<boolean>();
-    @Output() onEdit = new EventEmitter<boolean>();
-    @Output() onView = new EventEmitter<boolean>();
-
-    deleteSubmission() {
-        this.onDelete.emit(this.accno);
-    }
-
-    revertSubmission() {
-        this.onRevert.emit(this.accno);
-    }
-
-    editSubmission() {
-        this.onEdit.emit(this.accno);
-    }
-
-    viewSubmission() {
-        this.onView.emit(this.accno);
-    }
-}
-
-@Component({
-    selector: 'action-buttons-cell',
-    template: `<action-buttons [status]="status"
-                               [accno]="accno" 
-                               (onDelete)="doDelete($event)"
-                               (onRevert)="doRevert($event)"
-                               (onEdit)="doEdit($event)"
-                               (onView)="doView($event)">
-                               </action-buttons>`
+                           </button>`
 })
 export class ActionButtonsCellComponent implements AgRendererComponent {
-    status: string;
-    accno: string;
+    private status: string;
+    private accno: string;
 
     constructor(@Inject(Router) private router: Router) {
     }
@@ -92,24 +61,24 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
         this.accno = params.data.accno;
     }
 
-    doDelete(accno) {
-        console.debug("doDelete: ", accno);
+    onDeleteSubmission() {
+        console.debug("onDelete:", this.accno);
         //TODO
     }
 
-    doRevert(accno) {
-        console.debug("doRevert: ", accno);
+    onRevertSubmission() {
+        console.debug("onRevert:", this.accno);
         //TODO
     }
 
-    doEdit(accno) {
-        console.debug("doEdit: ", accno);
-        this.router.navigate(['/edit', accno]);
+    onEditSubmission() {
+        console.debug("onEdit:", this.accno);
+        this.router.navigate(['/edit', this.accno]);
     }
 
-    doView(accno) {
-        console.debug("doView: ", accno);
-        this.router.navigate(['/view', accno]);
+    onViewSubmission(accno) {
+        console.debug("onView:", this.accno);
+        this.router.navigate(['/view', this.accno]);
     }
 }
 
@@ -241,8 +210,7 @@ export class SubmissionListComponent {
                 suppressSorting: true,
                 cellRendererFramework: {
                     component: ActionButtonsCellComponent,
-                    dependencies: [ActionButtonsComponent],
-                    moduleImports: [CommonModule]
+                    moduleImports: [TooltipModule, CommonModule]
                 }
             }
         ];

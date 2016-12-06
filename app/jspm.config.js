@@ -84,7 +84,7 @@ SystemJS.config({
     "monospaced/angular-elastic": "github:monospaced/angular-elastic@2.5.1",
     "moonstorm/trNgGrid": "github:moonstorm/trNgGrid@3.1.7",
     "ng2-cookies": "npm:ng2-cookies@1.0.2",
-    "ng2-bootstrap": "npm:ng2-bootstrap@1.1.13",
+    "ng2-bootstrap": "npm:ng2-bootstrap@1.1.16",
     "@angular/http": "npm:@angular/http@2.1.0",
     "@angular/router": "npm:@angular/router@3.0.2",
     "core-js": "npm:core-js@2.4.1",
@@ -272,7 +272,7 @@ SystemJS.config({
     "npm:stream-browserify@2.0.1": {
       "map": {
         "inherits": "npm:inherits@2.0.3",
-        "readable-stream": "npm:readable-stream@2.2.1"
+        "readable-stream": "npm:readable-stream@2.2.2"
       }
     },
     "npm:timers-browserify@1.4.2": {
@@ -303,11 +303,6 @@ SystemJS.config({
     "github:twbs/bootstrap@3.3.7": {
       "map": {
         "jquery": "npm:jquery@3.1.1"
-      }
-    },
-    "npm:ng2-bootstrap@1.1.13": {
-      "map": {
-        "moment": "npm:moment@2.15.1"
       }
     },
     "npm:rxjs@5.0.0-beta.12": {
@@ -362,15 +357,20 @@ SystemJS.config({
         "minimalistic-assert": "npm:minimalistic-assert@1.0.0"
       }
     },
-    "npm:readable-stream@2.2.1": {
+    "npm:ng2-bootstrap@1.1.16": {
       "map": {
-        "isarray": "npm:isarray@1.0.0",
+        "moment": "npm:moment@2.15.1"
+      }
+    },
+    "npm:readable-stream@2.2.2": {
+      "map": {
         "inherits": "npm:inherits@2.0.3",
         "string_decoder": "npm:string_decoder@0.10.31",
-        "buffer-shims": "npm:buffer-shims@1.0.0",
-        "core-util-is": "npm:core-util-is@1.0.2",
+        "isarray": "npm:isarray@1.0.0",
+        "util-deprecate": "npm:util-deprecate@1.0.2",
         "process-nextick-args": "npm:process-nextick-args@1.0.7",
-        "util-deprecate": "npm:util-deprecate@1.0.2"
+        "buffer-shims": "npm:buffer-shims@1.0.0",
+        "core-util-is": "npm:core-util-is@1.0.2"
       }
     }
   }

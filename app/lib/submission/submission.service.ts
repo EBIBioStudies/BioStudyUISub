@@ -14,10 +14,14 @@ export class SubmissionService {
     }
 
     getSubmission(accno, origin: boolean = false) {
-        return this.http.get('/api/submission/' + accno /*{params: {origin: origin === true}}*/)
+        return this.http.get(`/api/submission/${accno}?origin=${origin}`)
             .map((res: Response) => {
                 return res.json();
             }).catch(SubmissionService.errorHandler);
+    }
+
+    getSubmittedSubmission(submission) {
+        return this.getSubmission(submission, true);
     }
 
     getAllSubmissions(offset = -1, limit = -1, filter = '') {
@@ -36,14 +40,14 @@ export class SubmissionService {
     }
 
     saveSubmission(pt) {
-        return this.http.post("/api/submission/save", pt)
+        return this.http.post('/api/submission/save', pt)
             .map((res: Response) => {
                 return {}; //empty response if OK
             }).catch(SubmissionService.errorHandler);
     }
 
     submitSubmission(pt) {
-        return this.http.post("/api/submission/submit", pt)
+        return this.http.post('/api/submission/submit', pt)
             .map((res: Response) => {
                 return res.json();
             }).catch(SubmissionService.errorHandler);
