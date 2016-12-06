@@ -290,6 +290,7 @@ export class FileListComponent {
     }
 
     private removeFile(fileName: string): void {
+        console.log('removeFile', fileName);
         this.fileService
             .removeFile(fileName)
             .subscribe((resp) => {

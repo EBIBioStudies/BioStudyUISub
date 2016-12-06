@@ -41,8 +41,8 @@ export class FileService {
             .catch(FileService.errorHandler);
     }
 
-    removeFile(file): Observable<any> {
-        return this.http.del("/api/files/delete?file=" + file.name)
+    removeFile(fileName): Observable<any> {
+        return this.http.del("/api/files/delete?file=" + fileName)
             .map((res: Response) => {
                 return res.json();
             })
