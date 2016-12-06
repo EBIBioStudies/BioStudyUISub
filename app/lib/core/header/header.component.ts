@@ -13,7 +13,7 @@ import tmpl from './header.component.html';
 
 export class HeaderComponent {
     isNavCollapsed: boolean = true;
-    appVersion: string = "0.0.0";
+    appVersion: string = "2.0.0";//TODO: get it from config
     currentUser: boolean = false;
     userName: string = "";
 
