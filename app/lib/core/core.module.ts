@@ -5,7 +5,8 @@ import {
     TooltipModule,
     TabsModule,
     DropdownModule,
-    ModalModule
+    ModalModule,
+    PaginationModule
 } from 'ng2-bootstrap/ng2-bootstrap';
 
 import {RouterModule} from '@angular/router';
@@ -65,6 +66,7 @@ import {UniqueAttrName} from './submission/panel/unique-attr-name.directive';
         TabsModule,
         DropdownModule,
         ModalModule,
+        PaginationModule,
         HttpClientModule,
         AgGridModule.withNg2ComponentSupport(),
         SharedModule,

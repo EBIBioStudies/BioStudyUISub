@@ -13,18 +13,18 @@ export class SubmissionService {
     constructor(@Inject(HttpClient) private http: HttpClient) {
     }
 
-    getSubmission(accno, origin: boolean = false) {
+    getSubmission(accno, origin: boolean = false): Observable<any> {
         return this.http.get(`/api/submission/${accno}?origin=${origin}`)
             .map((res: Response) => {
                 return res.json();
             }).catch(SubmissionService.errorHandler);
     }
 
-    getSubmittedSubmission(submission) {
+    getSubmittedSubmission(submission): Observable<any> {
         return this.getSubmission(submission, true);
     }
 
-    getAllSubmissions(offset = -1, limit = -1, filter = '') {
+    getAllSubmissions(offset = -1, limit = -1, filter = ''): Observable<any> {
         return this.http.get(`/api/submissions?offset=${offset}&limit=${limit}&filter=${filter}`)
             .map((res: Response) => {
                 let data = res.json();
@@ -32,24 +32,36 @@ export class SubmissionService {
             }).catch(SubmissionService.errorHandler);
     }
 
-    createSubmission(pt) {
+    createSubmission(pt): Observable<any> {
         return this.http.post('/api/submission/create', pt)
             .map((res: Response) => {
                 return res.json();
             }).catch(SubmissionService.errorHandler);
     }
 
-    saveSubmission(pt) {
+    saveSubmission(pt): Observable<any> {
         return this.http.post('/api/submission/save', pt)
             .map((res: Response) => {
                 return {}; //empty response if OK
             }).catch(SubmissionService.errorHandler);
     }
 
-    submitSubmission(pt) {
+    submitSubmission(pt): Observable<any> {
         return this.http.post('/api/submission/submit', pt)
             .map((res: Response) => {
                 return res.json();
+            }).catch(SubmissionService.errorHandler);
+    }
+
+    deleteSubmission(accno) {
+        return this.http.del('/api/submission/' + accno)
+            .map((resp: Response) => {
+                let data = resp.json();
+                if (data.status === "OK") {
+                    return data;
+                } else {
+                    return Observable.throw({status: 'Error', message: data.message || 'Server error'});
+                }
             }).catch(SubmissionService.errorHandler);
     }
 

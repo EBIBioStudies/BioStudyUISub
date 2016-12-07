@@ -17,6 +17,8 @@ import 'ag-grid/dist/styles/theme-fresh.css!css';
 import {AgRendererComponent} from 'ag-grid-ng2/main';
 import {UserSession} from '../../session/user-session';
 
+import * as _ from 'lodash';
+
 @Component({
     selector: 'action-buttons-cell',
     template: `
@@ -29,7 +31,7 @@ import {UserSession} from '../../session/user-session';
                            </button>
                            <button *ngIf="status === 'MODIFIED'" 
                                     type="button" class="btn btn-warning btn-xs btn-flat"
-                                    (click)="onRevertSubmission()"
+                                    (click)="onDeleteSubmission()"
                                     tooltip="undo all changes"
                                     tooltipAppendToBody="true">
                                 <i class="fa fa-undo fa-fw"></i>
@@ -51,34 +53,31 @@ import {UserSession} from '../../session/user-session';
 export class ActionButtonsCellComponent implements AgRendererComponent {
     private status: string;
     private accno: string;
-
-    constructor(@Inject(Router) private router: Router) {
-    }
+    private onDelete: (string)=>{};
+    private onEdit: (string)=>{};
+    private onView: (string)=>{};
 
     agInit(params: any): void {
-        console.debug("params: ", params);
-        this.status = params.data.status;
-        this.accno = params.data.accno;
+        let data = params.data;
+        this.status = data.status;
+        this.accno = data.accno;
+
+        let noop = (accno:string) => {};
+        this.onDelete = data.onDelete || noop;
+        this.onEdit = data.onEdit || noop;
+        this.onView = data.onView || noop;
     }
 
     onDeleteSubmission() {
-        console.debug("onDelete:", this.accno);
-        //TODO
-    }
-
-    onRevertSubmission() {
-        console.debug("onRevert:", this.accno);
-        //TODO
+        this.onDelete(this.accno);
     }
 
     onEditSubmission() {
-        console.debug("onEdit:", this.accno);
-        this.router.navigate(['/edit', this.accno]);
+        this.onEdit(this.accno);
     }
 
-    onViewSubmission(accno) {
-        console.debug("onView:", this.accno);
-        this.router.navigate(['/view', this.accno]);
+    onViewSubmission() {
+        this.onView(this.accno);
     }
 }
 
@@ -110,6 +109,10 @@ export class DateCellComponent implements AgRendererComponent {
 export class SubmissionListComponent {
     private gridOptions: GridOptions;
     private columnDefs: any[];
+    private rows: any[];
+    private currentPage: number = 1;
+    private totalItems: number = 0;
+    private itemsPerPage: number = 2;
 
     private userName: string;
     private userEmail: string;
@@ -125,53 +128,20 @@ export class SubmissionListComponent {
         this.userEmail = sess.user.email;
 
         this.gridOptions = <GridOptions>{
-            //enableServerSideSorting: true,
-            //enableServerSideFilter: true,
-            //enableSorting: true,
-            //enableFilter: true,
             debug: true,
             rowSelection: 'single',
             enableColResize: true,
-            paginationPageSize: 200,
-            rowModelType: 'pagination',
             rowHeight: 30,
             getRowNodeId: (item) => {
                 return item.accno;
             },
             onGridReady: () => {
                 this.gridOptions.api.sizeColumnsToFit();
-                this.createDatasource();
+                this.loadDataRows();
             }
         };
 
         this.createColumnDefs();
-    }
-
-    createDatasource() {
-        let dataSource = {
-            //rowCount: ???, - not setting the row count, infinite paging will be used
-            getRows: (params) => {
-                console.log("grid params:", params);
-                // params.sortModel
-                // params.filterModel
-                // params.startRow
-                // params.endRow
-
-                let offset = params.startRow;
-                let limit = params.endRow - params.startRow;
-                this.submService.getAllSubmissions(offset, limit)
-                    .subscribe((data) => {
-                        let rowsThisPage = data;
-                        let lastRow = -1;
-                        if (data.length < limit) {
-                            lastRow = params.startRow + data.length;
-                        }
-                        params.successCallback(rowsThisPage, lastRow);
-                    });
-            }
-        };
-
-        this.gridOptions.api.setDatasource(dataSource);
     }
 
     createColumnDefs() {
@@ -179,21 +149,15 @@ export class SubmissionListComponent {
             {
                 headerName: 'Accession',
                 field: 'accno',
-                suppressFilter: true
-                //filter: 'text',
-                //filterParams: {apply: true, newRowsAction: 'keep'}
+                suppressSorting: true
             },
             {
                 headerName: 'Title',
-                field: 'title',
-                suppressFilter: true
-                //filter: 'text',
-                //filterParams: {apply: true, newRowsAction: 'keep'}
+                field: 'title'
             },
             {
                 headerName: 'Release Date',
                 field: 'rtime',
-                suppressFilter: true,
                 cellRendererFramework: {
                     component: DateCellComponent,
                     moduleImports: [CommonModule]
@@ -202,20 +166,66 @@ export class SubmissionListComponent {
             {
                 headerName: 'Status',
                 field: 'status',
-                suppressFilter: true
             },
             {
                 headerName: 'Actions',
                 suppressMenu: true,
-                suppressSorting: true,
                 cellRendererFramework: {
                     component: ActionButtonsCellComponent,
                     moduleImports: [TooltipModule, CommonModule]
                 }
             }
         ];
-
     }
+
+    loadDataRows() {
+        let offset = (this.currentPage - 1) * this.itemsPerPage;
+        let limit = this.itemsPerPage;
+        this.submService.getAllSubmissions(offset, limit)
+            .subscribe((data) => {
+                console.debug("all data", data);
+                this.setDataRows(data);
+            });
+    }
+
+    onPageChanged(ev) {
+        console.debug("onPageChanged", ev);
+        this.currentPage = ev.page;
+        this.loadDataRows();
+    }
+
+    setDataRows(rows) {
+        this.rows = rows;
+        this.totalItems = (this.currentPage - 1)*this.itemsPerPage + this.rows.length + 1;
+        this.gridOptions.api.setRowData(this.decorateDataRows(this.rows));
+    }
+
+    decorateDataRows(rows: any[]) {
+        return _.map(rows, (row:any) => ({
+            accno: row.accno,
+            title: row.title,
+            rtime: row.rtime,
+            status: row.status,
+            onDelete: (accno:string) => {
+                console.debug("onDelete:", accno);
+                this.submService
+                    .deleteSubmission(accno)
+                    .subscribe(() => {
+                        this.loadDataRows();
+                    });
+            },
+
+            onEdit: (accno:string) => {
+                console.debug("onEdit:", accno);
+                this.router.navigate(['/edit', accno]);
+            },
+
+            onView: (accno:string) => {
+                console.debug("onView:", accno);
+                this.router.navigate(['/view', accno]);
+            }
+        }));
+    };
 
     createSubmission = function () {
         let sbm = this.submModel.createNew(this.userName, this.userEmail);
