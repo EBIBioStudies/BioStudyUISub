@@ -112,7 +112,7 @@ export class SubmissionListComponent {
     private rows: any[];
     private currentPage: number = 1;
     private totalItems: number = 0;
-    private itemsPerPage: number = 2;
+    private itemsPerPage: number = 50;
 
     private userName: string;
     private userEmail: string;
