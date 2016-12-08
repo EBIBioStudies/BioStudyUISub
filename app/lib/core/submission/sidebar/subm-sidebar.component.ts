@@ -58,7 +58,7 @@ export class SideBarItemComponent {
         <li>
             <hr/>
         </li>
-        <li class="success" disabled>
+        <!--li class="success" disabled>
             <a class="disabled-link" *ngIf="collapsed">
                 <i class="fa fa-check" *ngIf="!saving"></i>
                 <i class="fa fa-spinner fa-spin-2x" *ngIf="saving"></i>
@@ -69,7 +69,7 @@ export class SideBarItemComponent {
                 <span *ngIf="!saving">Saved</span>
                 <span *ngIf="saving">Saving...</span>
             </a>
-        </li>
+        </li-->
     </ul>
 </aside>
 `
