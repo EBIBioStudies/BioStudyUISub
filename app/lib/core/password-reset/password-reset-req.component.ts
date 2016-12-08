@@ -1,4 +1,5 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {RecaptchaComponent} from 'ng2-recaptcha';
 
 import {AuthService} from '../../auth/auth.service';
 
@@ -9,11 +10,12 @@ import tmpl from './password-reset-req.component.html'
     template: tmpl
 })
 export class PasswordResetReqComponent implements OnInit {
-    email: string = '';
-    recaptcha: string = '';
-    message: string = '';
-    hasError: boolean = false;
-    showSuccess: boolean = false;
+    private model:any = {email: '', recaptcha: ''};
+    private message: string = '';
+    private hasError: boolean = false;
+    private showSuccess: boolean = false;
+
+    @ViewChild('recaptcha') private recaptcha: RecaptchaComponent;
 
     constructor(@Inject(AuthService) private authService: AuthService) {
     }
@@ -24,13 +26,15 @@ export class PasswordResetReqComponent implements OnInit {
         this.message = '';
         this.hasError = false;
 
-        this.authService.passwordResetRequest(this.email, this.recaptcha)
-            .subscribe((data) => {
+        this.authService.passwordResetRequest(this.model.email, this.model.recaptcha)
+            .subscribe(
+                (data) => {
                     this.showSuccess = true;
                 },
                 (error) => {
                     this.hasError = true;
                     this.message = error.message;
+                    this.recaptcha.reset();
                 }
             );
     }

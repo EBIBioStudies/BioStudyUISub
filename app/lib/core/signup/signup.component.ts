@@ -1,4 +1,5 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, ViewChild} from '@angular/core';
+import {RecaptchaComponent} from 'ng2-recaptcha';
 
 import {AuthService} from '../../auth/auth.service'
 import {RegistrationData} from '../../auth/registration-data';
@@ -11,32 +12,35 @@ import tmpl from './signup.component.html'
 })
 
 export class SignUpComponent {
-    model = new RegistrationData();
-    error: any = null;
-    success: boolean = false;
+    private model = new RegistrationData();
+    private error: any = null;
+    private success: boolean = false;
+
+    @ViewChild('recaptcha') private recaptcha: RecaptchaComponent;
 
     constructor(@Inject(AuthService) private authService: AuthService) {
     }
 
     onSubmit(event) {
         event.preventDefault();
+
         this.success = false;
         this.error = null;
 
         this.authService
             .signUp(this.model)
-            .subscribe((data) => {
-                if (data.status === 'OK') {
+            .subscribe(
+                (data) => {
                     this.success = true;
-                } else {
-                    console.error('error sign up', data);
-                    this.error = {status: 'Error', message: data.message};
-                    //todo: vcRecaptchaService.reload();
+                },
+                (error) => {
+                    this.error = {status: 'Error', message: error.message};
+                    this.recaptcha.reset();
                 }
-            });
+            );
     }
 
-    resetError() {
+    onChange() {
         this.error = null;
     }
 }

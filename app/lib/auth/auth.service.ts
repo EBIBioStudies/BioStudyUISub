@@ -9,7 +9,6 @@ import 'rxjs/add/operator/catch';
 
 import {Location} from '@angular/common';
 
-import {Credentials} from './credentials';
 import {RegistrationData} from './registration-data';
 
 import {AuthEvents} from './auth-events';
@@ -74,7 +73,7 @@ export class AuthService {
                 })
             .catch((error) => {
                 if (error.status === 400) { //invalid request
-                    return error.json();
+                    return Observable.throw(error.json());
                 }
                 return AuthService.errorHandler(error);
             });
@@ -88,18 +87,22 @@ export class AuthService {
             'recaptcha2-response': recaptcha
         })
             .map((resp: Response) => {
-                return resp.json();
+                let data = resp.json();
+                if (data.status === 'OK') {
+                    return resp.json();
+                }
+                return Observable.throw({status: 'Error', message: data.message || 'Server error'});
             })
             .catch((error) => {
                 if (error.status === 403) {
-                    return error.json();
+                    return Observable.throw(error.json());
                 }
                 return AuthService.errorHandler(error);
             });
     }
 
-    signIn(credentials: Credentials): Observable<any> {
-        return this.http.post('/raw/auth/signin', credentials.stringify())
+    signIn(login, password): Observable<any> {
+        return this.http.post('/raw/auth/signin', {login: login, password: password})
             .map((res: Response) => {
                 let data = res.json();
                 if (data.status === 'OK') {
@@ -118,11 +121,15 @@ export class AuthService {
         user.path = this.getFullPath('#/activate');
         return this.http.post('/api/auth/signup', user)
             .map((resp: Response) => {
-                return resp.json();
+                let data = resp.json();
+                if (data.status === 'OK') {
+                    return data;
+                }
+                return Observable.throw({status: 'Error', message: data.message || 'Server error'});
             })
             .catch((error) => {
                 if (error.status === 403 || error.status === 400) {
-                    return error.json();
+                    return Observable.throw(error.json());
                 }
                 return AuthService.errorHandler(error);
             });
@@ -140,7 +147,7 @@ export class AuthService {
             .catch((error) => {
                 if (error.status === 403) { //session expired
                     this.sessionDestroy();
-                    return {};
+                    return Observable.throw({});
                 }
                 return AuthService.errorHandler(error);
             });
@@ -148,6 +155,7 @@ export class AuthService {
 
     private getFullPath(ancor: string = '') {
         let loc = window.location;
+        console.log(loc, loc.pathname);
         return loc.origin + loc.pathname + ancor;
     }
 

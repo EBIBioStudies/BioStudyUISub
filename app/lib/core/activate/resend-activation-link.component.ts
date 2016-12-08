@@ -1,11 +1,10 @@
-import {Component, Inject, OnInit} from '@angular/core';
-
-import {Response} from '@angular/http';
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {RecaptchaComponent} from 'ng2-recaptcha';
 
 import {AuthService} from '../../auth/auth.service';
-import {ActivatedRoute, Params} from '@angular/router';
 
 import tmpl from './resend-activation-link.component.html'
+
 @Component({
     selector: 'user-activation-resend',
     template: tmpl
@@ -16,22 +15,27 @@ export class ResendActivationLinkComponent implements OnInit {
     private hasError: boolean;
     private showSuccess: boolean;
 
-    constructor(@Inject(AuthService) private authService: AuthService,
-                @Inject(ActivatedRoute) private route: ActivatedRoute) {
+    @ViewChild('recaptcha') private recaptcha: RecaptchaComponent;
+
+    constructor(@Inject(AuthService) private authService: AuthService) {
     }
 
-    onSubmit() {
+    onSubmit(event) {
+        event.preventDefault();
+
         this.message = "";
         this.hasError = false;
         this.authService
             .resendActivationLink(this.req.email, this.req.recaptcha)
-            .subscribe((data) => {
-                if (data.status === 'OK') {
+            .subscribe(
+                (data) => {
                     this.showSuccess = true;
-                } else {
+                },
+                (error) => {
                     this.hasError = true;
-                    this.message = data.message;
+                    this.message = error.message;
+                    this.recaptcha.reset();
                 }
-            })
+            )
     }
 }

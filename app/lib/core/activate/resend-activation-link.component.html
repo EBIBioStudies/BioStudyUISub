@@ -24,7 +24,7 @@
                         <input type="text" id="email" name="email" tabindex="1"
                                class="form-control"
                                placeholder="Email address"
-                               [ngModel]="req.email"
+                               [(ngModel)]="req.email"
                                (change)="message=''"
                                required
                                #email>
@@ -32,7 +32,7 @@
                     <recaptcha name="recaptcha"
                                [(ngModel)]="req.recaptcha"
                                required
-                               siteKey="6Lcmlv0SAAAAAHofnIcb29l1LMZsnGFcSlH8Reve"></recaptcha>
+                               siteKey="6Lcmlv0SAAAAAHofnIcb29l1LMZsnGFcSlH8Reve" #recaptcha></recaptcha>
                     <div class="form-group margin-top-large">
                         <i *ngIf="sending" class="fa fa-spinner fa-pulse fa-3x"></i>
                         <button type="submit" class="btn btn-primary">Submit</button>

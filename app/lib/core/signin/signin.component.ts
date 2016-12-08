@@ -1,7 +1,6 @@
 import {Component, Inject} from '@angular/core';
 import {Router} from '@angular/router';
 
-import {Credentials} from '../../auth/credentials'
 import {AuthService} from '../../auth/auth.service';
 
 import tmpl from './signin.component.html'
@@ -12,8 +11,8 @@ import tmpl from './signin.component.html'
 })
 
 export class SignInComponent {
-    model = new Credentials('', '');
-    error: any = null;
+    private model = {login: "", password: ""};
+    private error: any = null;
 
     constructor(@Inject(AuthService) private authService: AuthService,
                 @Inject(Router) private router: Router) {
@@ -25,12 +24,12 @@ export class SignInComponent {
         this.error = null;
 
         this.authService
-            .signIn(this.model)
+            .signIn(this.model.login, this.model.password)
             .subscribe(
-                data => {
+                (data) => {
                     this.router.navigate(['/submissions']);
                 },
-                error => this.error = <any>error
+                (error) => this.error = <any>error
             );
     }
 

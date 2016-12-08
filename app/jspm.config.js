@@ -76,6 +76,8 @@ SystemJS.config({
     "github:*/*.json"
   ],
   map: {
+    "ceolter/ag-grid": "github:ceolter/ag-grid@6.2.1",
+    "ceolter/ag-grid-ng2": "github:ceolter/ag-grid-ng2@6.2.0",
     "es6-shim": "github:es-shims/es6-shim@0.35.1",
     "ng2-recaptcha": "npm:ng2-recaptcha@1.4.0",
     "angular2-recaptcha": "npm:angular2-recaptcha@0.3.3",

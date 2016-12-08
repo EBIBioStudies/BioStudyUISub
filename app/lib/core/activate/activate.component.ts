@@ -10,30 +10,36 @@ import tmpl from './activate.component.html'
     template: tmpl
 })
 export class ActivateComponent implements OnInit {
-    hasError:boolean = false;
-    message:string = '';
+    private hasError:boolean = false;
+    private message:string = '';
+
 
     constructor(@Inject(AuthService) private authService: AuthService,
                 @Inject(ActivatedRoute) private route: ActivatedRoute) {
     }
 
     ngOnInit() {
-        let params = this.route.params.forEach((params:Params) => {
+         this.route.params.forEach((params:Params) => {
             let key = params['key'];
             if (!key) {
                 this.hasError = true;
                 this.message = 'Invalid path';
+            } else {
+                this.checkKey(key);
             }
-
-            this.authService.activate(key)
-                .subscribe((data) => {
-                    this.hasError = false;
-                    this.message = 'Activation was successful';
-                })
-                .catch(function () {
-                    this.hasError = true;
-                    this.message = 'Activation link is not correct';
-                });
         });
+    }
+
+    checkKey(key:string) {
+        this.authService
+            .activate(key)
+            .subscribe(
+                (data) => {
+                    this.message = 'Activation was successful';
+                },
+                (error) => {
+                    this.hasError = true;
+                    this.message = error.message;
+                });
     }
 }

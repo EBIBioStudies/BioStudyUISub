@@ -1,4 +1,5 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {RecaptchaComponent} from 'ng2-recaptcha';
 
 import {AuthService} from '../../auth/auth.service';
 import {ActivatedRoute, Params} from '@angular/router';
@@ -10,21 +11,25 @@ import tmpl from './password-reset.component.html'
     template: tmpl
 })
 export class PasswordResetComponent implements OnInit {
-    password1: string = '';
-    password2: string = '';
-    recaptcha: string = '';
-    hasError: boolean = false;
-    message: string = '';
-    showSuccess: boolean = false;
+    private model = {
+        password1: '',
+        password2: '',
+        recaptcha: ''
+    };
+    private hasError: boolean = false;
+    private message: string = '';
+    private showSuccess: boolean = false;
 
-    private key:string;
+    private key: string;
+
+    @ViewChild('recaptcha') private recaptcha: RecaptchaComponent;
 
     constructor(@Inject(AuthService) private authService: AuthService,
                 @Inject(ActivatedRoute) private route: ActivatedRoute) {
     }
 
     ngOnInit() {
-        let params = this.route.params.forEach((params: Params) => {
+        this.route.params.forEach((params: Params) => {
             let key = params['key'];
             if (!key) {
                 this.hasError = true;
@@ -37,26 +42,26 @@ export class PasswordResetComponent implements OnInit {
     onSubmit(event) {
         event.preventDefault();
 
-        if (this.password1 !== this.password2) {
+        if (this.model.password1 !== this.model.password2) {
             console.error("password validation broken. Passwords do not match.");
             return;
         }
-        if (this.password1.length < 6) {
+        if (this.model.password1.length < 6) {
             console.error("password length validation broken. 6 chars is a minimum");
             return;
         }
         this.hasError = false;
         this.message = "";
         this.authService
-            .passwordReset(this.key, this.password1, this.recaptcha)
-            .then(function (data) {
-                console.debug(data);
-                if (data.status === "OK") {
+            .passwordReset(this.key, this.model.password1, this.model.recaptcha)
+            .subscribe(
+                (data) => {
                     this.showSuccess = true;
-                } else {
+                },
+                (error) => {
                     this.hasError = true;
-                    this.message = data.message;
-                }
-            });
+                    this.message = error.message;
+                    this.recaptcha.reset();
+                });
     }
 }

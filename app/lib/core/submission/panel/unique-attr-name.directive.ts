@@ -18,7 +18,7 @@ export class UniqueAttrName implements Validator {
             let valid = (_.filter(this.attributes, {name: v}).length) === 1;
             if (!valid) {
                 return {
-                    uniqueAttrName: false
+                    uniqueAttrName: true
                 }
             }
         }
