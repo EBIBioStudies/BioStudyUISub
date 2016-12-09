@@ -11,8 +11,8 @@ import {SubmissionModel} from '../../submission/submission.model';
 
 import {GridOptions} from 'ag-grid/main';
 
-import 'ag-grid/dist/styles/ag-grid.css!css';
-import 'ag-grid/dist/styles/theme-fresh.css!css';
+import 'ag-grid/dist/styles/ag-grid.css!';
+import 'ag-grid/dist/styles/theme-fresh.css!';
 
 import {AgRendererComponent} from 'ag-grid-ng2/main';
 import {UserSession} from '../../session/user-session';

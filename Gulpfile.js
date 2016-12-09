@@ -1,14 +1,12 @@
 var gulp = require('gulp');
 
-
 var webserver = require('gulp-webserver');
 var zip = require('gulp-zip');
 var bump = require('gulp-bump');
 var ngConfig = require('gulp-ng-config');
 var del = require('del');
 var extend = require('gulp-extend');
-var Builder = require('systemjs-builder');
-//var ngAnnotate = require('gulp-ng-annotate');
+var Builder = require('jspm').Builder; //require('systemjs-builder');
 var htmlreplace = require('gulp-html-replace');
 
 /* increment the version */
@@ -76,6 +74,10 @@ gulp.task('copy:index', function() {
     return gulp.src(['app/index.html', 'app/thor-integration.html'])
         .pipe(htmlreplace({
             'css': ['lib/main.css', 'lib/main-from-less.css'],
+            'js': {
+                src: ['jspm.prod.js'],
+                tpl: '<script src="%s"></script>'
+            }
         }))
         .pipe(gulp.dest('.build/'));
 });
@@ -87,21 +89,17 @@ gulp.task('mkdir', ['clean:js'], function() {
 });
 
 gulp.task('js', ['mkdir'], function (cb) {
-    var builder = new Builder('app', 'app/jspm.config.js');
+    var builder = new Builder('app', './app/jspm.config.js');
     builder.config({
-        separateCSS: true,
-        map: {
-            'systemjs-babel-build': './app/jspm_packages/systemjs-plugin-babel@0.0.16/systemjs-babel-node.js'
-        }
+        separateCSS: true
     });
-    builder.bundle('lib/main.js', '.build/lib/main.js', {
+    builder.bundle('lib/main.ts', '.build/lib/main.js', {
         minify: true,
         mangle: false,
         sourceMaps: true
     }).then(function() {
         cb();
     });
-    // TODO: minify with ngAnnotate
 });
 
 gulp.task('zip', function () {
@@ -116,7 +114,7 @@ gulp.task('webserver', [], function () {
 
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-    gulp.src('app' /*'.build'*/)
+    gulp.src('app')
         .pipe(webserver({
             port: 7000,
             https: true,
@@ -135,13 +133,8 @@ var Server = require('karma').Server;
 
 gulp.task('test', function (done) {
     new Server({
-        configFile: __dirname + '/karma.conf.js',
+        configFile: './karma.conf.js',
         singleRun: true
     }, done).start();
 });
-
-gulp.task('autotest', function () {
-    return gulp.watch(['/app/lib/**/*.js'], ['test']);
-});
-
 

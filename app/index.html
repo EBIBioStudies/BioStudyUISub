@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BioStudies Submission Tool</title>
     <link rel="stylesheet" href="jspm_packages/github/twbs/bootstrap@3.3.7/dist/css/bootstrap.css">
-    <link rel="stylesheet" href="jspm_packages/npm/font-awesome@4.6.3/css/font-awesome.css">
+    <link rel="stylesheet" href="jspm_packages/npm/font-awesome@4.7.0/css/font-awesome.css">
     <!-- build:css -->
     <!-- endbuild -->
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -19,10 +19,12 @@
     <script src="jspm_packages/npm/zone.js@0.6.26/dist/zone.js"></script>
     <script src="jspm_packages/npm/reflect-metadata@0.1.8/Reflect.js"></script>
     <script src="jspm_packages/system.js"></script>
+    <!-- build:js -->
+    <!-- endbuild -->
     <script src="jspm.config.js"></script>
     <script>
-        System.import('lib/')
-                .catch(console.error.bind(console));
+        System.import('lib/main')
+            .catch(console.error.bind(console));
     </script>
 </head>
 <body class="skin-blue">
