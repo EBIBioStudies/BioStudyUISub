@@ -113,7 +113,7 @@ gulp.task('webserver', function () {
 
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-    gulp.src(/*'app'*/ '.build')
+    gulp.src('app'/* '.build'*/)
         .pipe(webserver({
             port: 7000,
             https: true,

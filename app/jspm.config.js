@@ -1,15 +1,12 @@
 SystemJS.config({
-    nodeConfig: {
-        "paths": {
-            "lib/": "lib/"
-        }
+    paths: {
+        "lib/": "lib/"
     },
     browserConfig: {
-        baseURL: "/",
-        paths: {
+        "baseURL": "/",
+        "paths": {
             "github:": "jspm_packages/github/",
             "npm:": "jspm_packages/npm/",
-            "lib/": "lib/",
             "dist/": "dist/"
         }
     },
@@ -53,6 +50,10 @@ SystemJS.config({
                 }
             }
         }
+    },
+    map: {
+        "ag-grid": "github:ceolter/ag-grid@6.2.1",
+        "ag-grid-ng2": "github:ceolter/ag-grid-ng2@6.2.0"
     }
 });
 
@@ -64,10 +65,14 @@ SystemJS.config({
     ],
     map: {
         "css": "github:systemjs/plugin-css@0.1.32",
-        "less": "npm:systemjs-less-plugin@1.9.1",
-        "ag-grid": "github:ceolter/ag-grid@6.2.1",
-        "ag-grid-ng2": "github:ceolter/ag-grid-ng2@6.2.0",
+        "domain": "npm:jspm-nodelibs-domain@0.2.0",
+        "errno": "npm:errno@0.1.4",
+        "graceful-fs": "npm:graceful-fs@4.1.11",
+        "image-size": "npm:image-size@0.5.0",
+        "less": "npm:less@2.7.1",
         "es6-shim": "github:es-shims/es6-shim@0.35.1",
+        "mime": "npm:mime@1.3.4",
+        "mkdirp": "npm:mkdirp@0.5.1",
         "ng2-recaptcha": "npm:ng2-recaptcha@1.4.0",
         "angular2-recaptcha": "npm:angular2-recaptcha@0.3.3",
         "ng2-smart-table": "npm:ng2-smart-table@0.4.0-3",
@@ -96,11 +101,14 @@ SystemJS.config({
         "os": "npm:jspm-nodelibs-os@0.2.0",
         "path": "npm:jspm-nodelibs-path@0.2.0",
         "process": "npm:jspm-nodelibs-process@0.2.0",
+        "promise": "npm:promise@7.1.1",
         "reflect-metadata": "npm:reflect-metadata@0.1.8",
         "rxjs": "npm:rxjs@5.0.0-beta.12",
+        "source-map": "npm:source-map@0.5.6",
         "stream": "npm:jspm-nodelibs-stream@0.2.0",
         "string_decoder": "npm:jspm-nodelibs-string_decoder@0.2.0",
         "timers": "npm:jspm-nodelibs-timers@0.2.0",
+        "url": "npm:jspm-nodelibs-url@0.2.0",
         "util": "npm:jspm-nodelibs-util@0.2.0",
         "vm": "npm:jspm-nodelibs-vm@0.2.0",
         "zone.js": "npm:zone.js@0.6.26"
@@ -339,6 +347,37 @@ SystemJS.config({
         "npm:font-awesome@4.7.0": {
             "map": {
                 "css": "github:systemjs/plugin-css@0.1.32"
+            }
+        },
+        "npm:errno@0.1.4": {
+            "map": {
+                "prr": "npm:prr@0.0.0"
+            }
+        },
+        "npm:mkdirp@0.5.1": {
+            "map": {
+                "minimist": "npm:minimist@0.0.8"
+            }
+        },
+        "npm:promise@7.1.1": {
+            "map": {
+                "asap": "npm:asap@2.0.5"
+            }
+        },
+        "npm:jspm-nodelibs-domain@0.2.0": {
+            "map": {
+                "domain-browserify": "npm:domain-browser@1.1.7"
+            }
+        },
+        "npm:jspm-nodelibs-url@0.2.0": {
+            "map": {
+                "url-browserify": "npm:url@0.11.0"
+            }
+        },
+        "npm:url@0.11.0": {
+            "map": {
+                "punycode": "npm:punycode@1.3.2",
+                "querystring": "npm:querystring@0.2.0"
             }
         }
     }
