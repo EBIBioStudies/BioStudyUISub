@@ -26,7 +26,7 @@ export class FileUpload {
             }
         );
 
-        this.__sb = httpClient.upload('/raw/fileUpload', files)
+        this.__sb = httpClient.upload('/raw/fileUpload', files) // use '/api/fileUpload' in offline mode
             .subscribe(res => {
                     p.unsubscribe();
                     this.__progress.next(-2);
