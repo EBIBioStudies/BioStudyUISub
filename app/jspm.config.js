@@ -9,19 +9,11 @@ SystemJS.config({
         paths: {
             "github:": "jspm_packages/github/",
             "npm:": "jspm_packages/npm/",
-            "lib/": "lib/"
-        }
-    },
-    productionConfig: {
-        "packages": {
-            "lib": {
-                "defaultExtension": "js"
-            }
+            "lib/": "lib/",
+            "dist/": "dist/"
         }
     },
     devConfig: {
-        "transpiler": "plugin-babel",
-
         "map": {
             "plugin-babel": "npm:systemjs-plugin-babel@0.0.16",
             "ts": "github:frankwallis/plugin-typescript@5.2.6",
@@ -32,25 +24,32 @@ SystemJS.config({
                 "map": {
                     "typescript": "npm:typescript@2.0.3"
                 }
-            },
-            "lib": {
-                "defaultExtension": "ts",
-                "meta": {
-                    "*.js": {
-                        "loader": "plugin-babel"
-                    },
-                    "*.ts": {
-                        "loader": "ts"
-                    },
-                    "*.css": {
-                        "loader": "css"
-                    },
-                    "*.less": {
-                        "loader": "less"
-                    },
-                    "*.html": {
-                        "loader": "text"
-                    }
+            }
+        }
+    },
+    transpiler: "plugin-babel",
+    babelOptions: {
+        "compact": true
+    },
+    packages: {
+        "lib": {
+            "defaultExtension": "ts",
+            "main": "main",
+            "meta": {
+                "*.js": {
+                    "loader": "plugin-babel"
+                },
+                "*.ts": {
+                    "loader": "ts"
+                },
+                "*.css": {
+                    "loader": "css"
+                },
+                "*.less": {
+                    "loader": "less"
+                },
+                "*.html": {
+                    "loader": "text"
                 }
             }
         }
