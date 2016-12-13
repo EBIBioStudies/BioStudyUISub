@@ -113,12 +113,12 @@ class ProgressCellComponent implements AgRendererComponent {
                 if (e === -1) {
                     this.error = upload.errorMessage;
                 }
-                if (e < 0 || e === 100) {
+                if (e < 0) {
+                    onUploadFinished();
                     _.delay(() => {
                         // it's delayed because event comes earlier than __sb is created
                         this.unsubscribe();
                     }, 50);
-                    onUploadFinished();
                 }
             })
         } else if (type === 'FILE' || type === 'ARCHIVE') {
@@ -285,6 +285,7 @@ export class FileListComponent implements OnInit {
                     this.removeUpload(u);
                 },
                 onUploadFinished: () => {
+                    console.log('on upload finished');
                     this.loadData();
                 }
             }));

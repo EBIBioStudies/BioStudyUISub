@@ -26,9 +26,10 @@ export class FileUpload {
             }
         );
 
-        this.__sb = httpClient.upload('/api/fileUpload', files)
+        this.__sb = httpClient.upload('/raw/fileUpload', files)
             .subscribe(res => {
                     p.unsubscribe();
+                    this.__progress.next(-2);
                     this.__status = 'success';
                 },
                 err => {

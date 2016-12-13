@@ -56,6 +56,7 @@
       "css": "github:systemjs/plugin-css@^0.1.32",
       "es6-shim": "github:es-shims/es6-shim@^0.35.1",
       "font-awesome": "npm:font-awesome@^4.7.0",
+      "less": "npm:less@^2.7.1",
       "lodash": "npm:lodash@^4.16.3",
       "monospaced/angular-elastic": "github:monospaced/angular-elastic@^2.5.1",
       "ng2-bootstrap": "npm:ng2-bootstrap@^1.1.16",
