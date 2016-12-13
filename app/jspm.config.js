@@ -42,9 +42,6 @@ SystemJS.config({
                 "*.css": {
                     "loader": "css"
                 },
-                "*.less": {
-                    "loader": "less"
-                },
                 "*.html": {
                     "loader": "text"
                 }
@@ -69,7 +66,6 @@ SystemJS.config({
         "errno": "npm:errno@0.1.4",
         "graceful-fs": "npm:graceful-fs@4.1.11",
         "image-size": "npm:image-size@0.5.0",
-        "less": "npm:less@2.7.1",
         "es6-shim": "github:es-shims/es6-shim@0.35.1",
         "mime": "npm:mime@1.3.4",
         "mkdirp": "npm:mkdirp@0.5.1",
