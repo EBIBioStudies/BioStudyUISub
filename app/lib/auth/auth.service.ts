@@ -11,7 +11,6 @@ import {Location} from '@angular/common';
 
 import {RegistrationData} from './registration-data';
 
-import {AuthEvents} from './auth-events';
 import {UserSession} from '../session/user-session';
 import {UserRole} from '../session/user-role';
 import {User} from '../session/user';
@@ -20,7 +19,6 @@ import {User} from '../session/user';
 export class AuthService {
 
     constructor(@Inject(HttpClient) private http: HttpClient,
-                @Inject(AuthEvents) private  authEvents: AuthEvents,
                 @Inject(UserSession) private userSession: UserSession) {
     }
 
@@ -108,7 +106,6 @@ export class AuthService {
                 if (data.status === 'OK') {
                     let orcid = data.aux ? data.aux.orcid : '';
                     this.userSession.create(data.sessid, data.username, data.email, orcid, UserRole.User);
-                    this.authEvents.userSignedIn(data.username);
                     return data;
                 }
                 return Observable.throw({status: 'Error', message: data.message || 'Server error'});
@@ -160,9 +157,7 @@ export class AuthService {
     }
 
     private sessionDestroy() {
-        let userName = this.userSession.user.name;
         this.userSession.destroy();
-        this.authEvents.userSignedOut(userName);
     }
 
     static errorHandler(error: any) {

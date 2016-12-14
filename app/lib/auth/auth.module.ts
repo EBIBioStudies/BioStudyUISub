@@ -3,7 +3,6 @@ import {HttpClientModule} from '../http/http-client.module';
 import {SessionModule} from '../session/session.module';
 
 import {AuthService} from './auth.service';
-import {AuthEvents} from './auth-events';
 
 @NgModule({
     imports: [
@@ -11,8 +10,7 @@ import {AuthEvents} from './auth-events';
         SessionModule
     ],
     providers: [
-        AuthService,
-        AuthEvents
+        AuthService
     ],
     declarations: [
     ],

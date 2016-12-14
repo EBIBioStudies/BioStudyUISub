@@ -1,8 +1,9 @@
 import {Inject, Component} from '@angular/core';
 import {Router} from '@angular/router';
 
-import {AuthEvents} from '../../auth/auth-events';
-import {AuthService} from "../../auth/auth.service";
+import {SessionEvents, UserSessionEvents} from '../../session/session.events';
+import {UserSession} from '../../session/user-session';
+import {AuthService} from '../../auth/auth.service';
 
 import tmpl from './header.component.html';
 
@@ -17,20 +18,22 @@ export class HeaderComponent {
     currentUser: boolean = false;
     userName: string = "";
 
-    constructor(@Inject(AuthEvents) private authEvents: AuthEvents,
-                @Inject(AuthService) private authService: AuthService,
-                @Inject(Router) private router: Router) {
-        this.currentUser = !authService.currentUser().isAnonymous();
-        this.userName = authService.currentUser().name;
+    constructor(@Inject(UserSessionEvents) sessionEvents: UserSessionEvents,
+                @Inject(UserSession) private session: UserSession,
+                @Inject(Router) private router: Router,
+                @Inject(AuthService) private authService: AuthService) {
+        this.currentUser = !session.isAnonymous();
+        this.userName = session.user.name;
 
-        authEvents.userSignedIn$.subscribe(name => {
+        sessionEvents.userSessionCreated$.subscribe(name => {
             this.currentUser = true;
             this.userName = name; // can be empty
         });
 
-        authEvents.userSignedOut$.subscribe(name => {
+        sessionEvents.userSessionDestroyed$.subscribe(name => {
             this.currentUser = false;
             this.userName = "";
+            this.router.navigate(['/signin']);
         });
 
         /*this.appVersion = APP_VERSION;*/

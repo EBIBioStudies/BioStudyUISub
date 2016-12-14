@@ -1,4 +1,4 @@
-import {NgModule}     from '@angular/core';
+import {NgModule, ErrorHandler}     from '@angular/core';
 
 import {
     TypeaheadModule,
@@ -21,6 +21,7 @@ import {SubmissionModule} from '../submission/submission.module';
 import {FileModule} from '../file/file.module';
 
 import {AuthGuard} from './auth.guard';
+import {GlobalErrorHandler} from './global.error.handler';
 
 import {AppComponent}     from './app.component';
 import {HelpComponent} from './help/help.component';
@@ -56,6 +57,7 @@ import {APP_ROUTES} from './app-routes';
 import {SignUpComponent} from './signup/signup.component';
 import {Equals2} from './password-reset/equals2.directive';
 import {UniqueAttrName} from './submission/panel/unique-attr-name.directive';
+
 
 @NgModule({
     imports: [
@@ -110,7 +112,8 @@ import {UniqueAttrName} from './submission/panel/unique-attr-name.directive';
         UniqueAttrName
     ],
     providers: [
-        AuthGuard
+        AuthGuard,
+        {provide: ErrorHandler, useClass: GlobalErrorHandler}
     ]
 })
 export class CoreModule {
