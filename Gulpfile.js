@@ -4,7 +4,6 @@ var debug = require('gulp-debug');
 var webserver = require('gulp-webserver');
 var zip = require('gulp-zip');
 var bump = require('gulp-bump');
-var ngConfig = require('gulp-ng-config');
 var del = require('del');
 var extend = require('gulp-extend');
 var Builder = require('jspm').Builder; //require('systemjs-builder');
