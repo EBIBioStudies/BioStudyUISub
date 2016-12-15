@@ -2,14 +2,6 @@ SystemJS.config({
     paths: {
         "lib/": "lib/"
     },
-    browserConfig: {
-        "baseURL": "/",
-        "paths": {
-            "github:": "jspm_packages/github/",
-            "npm:": "jspm_packages/npm/",
-            "other:": "jspm_packages/other/"
-        }
-    },
     devConfig: {
         "map": {
             "plugin-babel": "npm:systemjs-plugin-babel@0.0.16",

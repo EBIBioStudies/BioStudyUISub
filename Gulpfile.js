@@ -10,6 +10,9 @@ var Builder = require('jspm').Builder; //require('systemjs-builder');
 var htmlreplace = require('gulp-html-replace');
 var sourcemaps = require('gulp-sourcemaps');
 var less = require('gulp-less');
+var replace = require('gulp-replace');
+
+var appConfig = require('./config.json');
 
 gulp.task('ag-grid:copy', function() {
     return gulp.src(['node_modules/ag-grid/**/*'])
@@ -69,6 +72,13 @@ gulp.task('copy:jspm_config', function () {
         .pipe(gulp.dest('.build/'));
 });
 
+gulp.task('copy:jspm_browser_config', function () {
+    return gulp.src(['app/jspm.browser.js'])
+        .pipe(replace(/"baseURL"\:\s+".*"/, `"baseURL": "${appConfig.APP_CONTEXT}"`))
+        .pipe(gulp.dest('.build/'));
+});
+
+
 gulp.task('copy:index', function () {
     return gulp.src(['app/index.html', 'app/thor-integration.html'])
         .pipe(htmlreplace({
@@ -83,7 +93,7 @@ gulp.task('copy:templates', function () {
         .pipe(gulp.dest('.build/lib/'));
 });
 
-gulp.task('copy', gulp.parallel('copy:images', 'copy:index', 'copy:jspm_packages', 'copy:jspm_config'));
+gulp.task('copy', gulp.parallel('copy:images', 'copy:index', 'copy:jspm_packages', 'copy:jspm_config', 'copy:jspm_browser_config'));
 
 /* a workaround for: SystemJS builder doesn't create sub-folders automatically for css files */
 gulp.task('mkdir', function() {
