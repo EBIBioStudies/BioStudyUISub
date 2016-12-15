@@ -3,11 +3,11 @@ import {Http, Response, RequestOptions, Headers} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 
 import {UserSession} from '../session/user-session';
+import {AppConfig} from "../config/app.config";
 
 @Injectable()
 export class HttpClient {
-    //TODO: use config
-    private prefix:string = '/proxy';
+    private prefix:string = AppConfig.PROXY_BASE;
 
     constructor(@Inject(Http) private http: Http,
                 @Inject(UserSession) private userSession: UserSession

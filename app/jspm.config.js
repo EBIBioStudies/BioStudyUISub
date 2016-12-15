@@ -7,7 +7,7 @@ SystemJS.config({
         "paths": {
             "github:": "jspm_packages/github/",
             "npm:": "jspm_packages/npm/",
-            "dist/": "dist/"
+            "other:": "jspm_packages/other/"
         }
     },
     devConfig: {
@@ -44,13 +44,12 @@ SystemJS.config({
                 },
                 "*.html": {
                     "loader": "text"
+                },
+                "*.json": {
+                    "loader": "text"
                 }
             }
         }
-    },
-    map: {
-        "ag-grid": "github:ceolter/ag-grid@6.2.1",
-        "ag-grid-ng2": "github:ceolter/ag-grid-ng2@6.2.0"
     }
 });
 
@@ -58,9 +57,13 @@ SystemJS.config({
     packageConfigPaths: [
         "npm:@*/*.json",
         "npm:*.json",
-        "github:*/*.json"
+        "github:*/*.json",
+        "other:*.json",
+        "other:@*/*.json"
     ],
     map: {
+        "ag-grid-ng2": "other:ag-grid-ng2",
+        "ag-grid": "other:ag-grid",
         "css": "github:systemjs/plugin-css@0.1.32",
         "domain": "npm:jspm-nodelibs-domain@0.2.0",
         "errno": "npm:errno@0.1.4",
@@ -76,15 +79,15 @@ SystemJS.config({
         "monospaced/angular-elastic": "github:monospaced/angular-elastic@2.5.1",
         "ng2-cookies": "npm:ng2-cookies@1.0.2",
         "ng2-bootstrap": "npm:ng2-bootstrap@1.1.16",
-        "@angular/http": "npm:@angular/http@2.1.0",
+        "@angular/http": "npm:@angular/http@2.3.1",
         "@angular/router": "npm:@angular/router@3.0.2",
         "core-js": "npm:core-js@2.4.1",
-        "@angular/forms": "npm:@angular/forms@2.1.1",
-        "@angular/common": "npm:@angular/common@2.1.1",
-        "@angular/compiler": "npm:@angular/compiler@2.1.1",
-        "@angular/core": "npm:@angular/core@2.1.1",
-        "@angular/platform-browser": "npm:@angular/platform-browser@2.1.0",
-        "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.1.0",
+        "@angular/forms": "npm:@angular/forms@2.3.1",
+        "@angular/common": "npm:@angular/common@2.3.1",
+        "@angular/compiler": "npm:@angular/compiler@2.3.1",
+        "@angular/core": "npm:@angular/core@2.3.1",
+        "@angular/platform-browser": "npm:@angular/platform-browser@2.3.1",
+        "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.3.1",
         "@angular/upgrade": "npm:@angular/upgrade@2.0.1",
         "assert": "npm:jspm-nodelibs-assert@0.2.0",
         "bootstrap": "github:twbs/bootstrap@3.3.7",
@@ -100,7 +103,7 @@ SystemJS.config({
         "process": "npm:jspm-nodelibs-process@0.2.0",
         "promise": "npm:promise@7.1.1",
         "reflect-metadata": "npm:reflect-metadata@0.1.8",
-        "rxjs": "npm:rxjs@5.0.0-beta.12",
+        "rxjs": "npm:rxjs@5.0.0-rc.4",
         "source-map": "npm:source-map@0.5.6",
         "stream": "npm:jspm-nodelibs-stream@0.2.0",
         "string_decoder": "npm:jspm-nodelibs-string_decoder@0.2.0",
@@ -108,7 +111,7 @@ SystemJS.config({
         "url": "npm:jspm-nodelibs-url@0.2.0",
         "util": "npm:jspm-nodelibs-util@0.2.0",
         "vm": "npm:jspm-nodelibs-vm@0.2.0",
-        "zone.js": "npm:zone.js@0.6.26"
+        "zone.js": "npm:zone.js@0.7.2"
     },
     packages: {
         "npm:crypto-browserify@3.11.0": {
@@ -375,6 +378,11 @@ SystemJS.config({
             "map": {
                 "punycode": "npm:punycode@1.3.2",
                 "querystring": "npm:querystring@0.2.0"
+            }
+        },
+        "npm:rxjs@5.0.0-rc.4": {
+            "map": {
+                "symbol-observable": "npm:symbol-observable@1.0.4"
             }
         }
     }

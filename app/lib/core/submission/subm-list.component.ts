@@ -158,10 +158,7 @@ export class SubmissionListComponent {
             {
                 headerName: 'Release Date',
                 field: 'rtime',
-                cellRendererFramework: {
-                    component: DateCellComponent,
-                    moduleImports: [CommonModule]
-                }
+                cellRendererFramework: DateCellComponent
             },
             {
                 headerName: 'Status',
@@ -170,10 +167,7 @@ export class SubmissionListComponent {
             {
                 headerName: 'Actions',
                 suppressMenu: true,
-                cellRendererFramework: {
-                    component: ActionButtonsCellComponent,
-                    moduleImports: [TooltipModule, CommonModule]
-                }
+                cellRendererFramework: ActionButtonsCellComponent
             }
         ];
     }

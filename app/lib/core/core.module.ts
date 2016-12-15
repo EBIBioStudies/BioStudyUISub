@@ -19,6 +19,7 @@ import {SharedModule} from '../shared/shared.module';
 import {AuthModule} from '../auth/auth.module';
 import {SubmissionModule} from '../submission/submission.module';
 import {FileModule} from '../file/file.module';
+import {ConfigModule} from '../config/config.module';
 
 import {AuthGuard} from './auth.guard';
 import {GlobalErrorHandler} from './global.error.handler';
@@ -31,7 +32,7 @@ import {ActivateComponent} from './activate/activate.component';
 import {ResendActivationLinkComponent} from './activate/resend-activation-link.component';
 import {PasswordResetReqComponent} from './password-reset/password-reset-req.component';
 import {PasswordResetComponent} from './password-reset/password-reset.component';
-import {SubmissionListComponent} from './submission/subm-list.component';
+import {SubmissionListComponent, ActionButtonsCellComponent, DateCellComponent} from './submission/subm-list.component';
 import {SubmissionEditComponent} from './submission/subm-edit.component';
 import {SubmissionViewComponent} from './submission/subm-view.component';
 import {SideBarComponent} from './submission/sidebar/subm-sidebar.component';
@@ -41,7 +42,10 @@ import {SubmissionAttributesPanelComponent} from './submission/panel/subm-attrib
 import {SubmissionAttributesComponent} from './submission/panel/subm-attributes.component';
 import {SubmissionItemsComponent} from "./submission/panel/subm-items.component";
 import {SubmissionItemsPanelComponent} from './submission/panel/subm-items-panel.component';
-import {FileListComponent} from './file/file-list.component';
+import {
+    FileListComponent, ProgressCellComponent, FileActionsCellComponent,
+    FileTypeCellComponent
+} from './file/file-list.component';
 
 import {InputFileComponent} from './submission/panel/input-file.component';
 import {PubMedIdSearchComponent} from './submission/panel/pubmedid-search.component';
@@ -70,11 +74,18 @@ import {UniqueAttrName} from './submission/panel/unique-attr-name.directive';
         ModalModule,
         PaginationModule,
         HttpClientModule,
-        AgGridModule.withNg2ComponentSupport(),
+        AgGridModule.withComponents([
+            ActionButtonsCellComponent,
+            DateCellComponent,
+            FileActionsCellComponent,
+            FileTypeCellComponent,
+            ProgressCellComponent
+        ]),
         SharedModule,
         AuthModule,
         SubmissionModule,
-        FileModule
+        FileModule,
+        ConfigModule
     ],
     exports: [
         AppComponent
@@ -109,7 +120,12 @@ import {UniqueAttrName} from './submission/panel/unique-attr-name.directive';
         SlideOutTipComponent,
         PropertyFilterPipe,
         Equals2,
-        UniqueAttrName
+        UniqueAttrName,
+        ActionButtonsCellComponent,
+        DateCellComponent,
+        FileActionsCellComponent,
+        FileTypeCellComponent,
+        ProgressCellComponent
     ],
     providers: [
         AuthGuard,

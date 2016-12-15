@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {SessionEvents, UserSessionEvents} from '../../session/session.events';
 import {UserSession} from '../../session/user-session';
 import {AuthService} from '../../auth/auth.service';
+import {AppConfig} from '../../config/app.config';
 
 import tmpl from './header.component.html';
 
@@ -14,7 +15,7 @@ import tmpl from './header.component.html';
 
 export class HeaderComponent {
     isNavCollapsed: boolean = true;
-    appVersion: string = "2.0.0";//TODO: get it from config
+    appVersion: string = '0.0.0';
     currentUser: boolean = false;
     userName: string = "";
 
@@ -36,8 +37,7 @@ export class HeaderComponent {
             this.router.navigate(['/signin']);
         });
 
-        /*this.appVersion = APP_VERSION;*/
-
+        this.appVersion = AppConfig.VERSION;
     }
 
     signOut() {

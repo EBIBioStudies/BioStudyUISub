@@ -29,7 +29,7 @@ import * as _ from 'lodash';
 </div>
 `
 })
-class FileActionsCellComponent implements AgRendererComponent {
+export class FileActionsCellComponent implements AgRendererComponent {
     private type: string;
     private upload: FileUpload;
     private onRemove;
@@ -74,7 +74,7 @@ class FileActionsCellComponent implements AgRendererComponent {
     </div>                                     
 `
 })
-class FileTypeCellComponent implements AgRendererComponent {
+export class FileTypeCellComponent implements AgRendererComponent {
     private ftype: string;
 
     agInit(params: any): void {
@@ -93,7 +93,7 @@ class FileTypeCellComponent implements AgRendererComponent {
     <div *ngIf="value === 100"><i class="fa fa-check"></i></div>
 `
 })
-class ProgressCellComponent implements AgRendererComponent {
+export class ProgressCellComponent implements AgRendererComponent {
     private value: number;
     private error: string;
     private type: string;
@@ -215,28 +215,19 @@ export class FileListComponent implements OnInit {
                 field: 'type',
                 width: 50,
                 suppressSorting: true,
-                cellRendererFramework: {
-                    component: FileTypeCellComponent,
-                    moduleImports: [CommonModule]
-                }
+                cellRendererFramework: FileTypeCellComponent
             },
             {
                 headerName: 'Progress',
                 width: 200,
-                cellRendererFramework: {
-                    component: ProgressCellComponent,
-                    moduleImports: [CommonModule]
-                }
+                cellRendererFramework: ProgressCellComponent
             },
             {
                 headerName: 'Actions',
                 width: 100,
                 suppressMenu: true,
                 suppressSorting: true,
-                cellRendererFramework: {
-                    component: FileActionsCellComponent,
-                    moduleImports: [CommonModule]
-                }
+                cellRendererFramework:  FileActionsCellComponent
             }
         ];
     }

@@ -12,6 +12,24 @@ var htmlreplace = require('gulp-html-replace');
 var sourcemaps = require('gulp-sourcemaps');
 var less = require('gulp-less');
 
+gulp.task('ag-grid:copy', function() {
+    return gulp.src(['node_modules/ag-grid/**/*'])
+        .pipe(gulp.dest('app/jspm_packages/other/ag-grid/'));
+});
+
+gulp.task('ag-grid-ng2:copy', function() {
+    return gulp.src(['node_modules/ag-grid-ng2/**/*'])
+        .pipe(gulp.dest('app/jspm_packages/other/ag-grid-ng2/'));
+});
+
+gulp.task('ag-grid:json', function() {
+    return gulp.src(['ag-grid/*.json'])
+        .pipe(gulp.dest('app/jspm_packages/other/'));
+});
+
+/* workaround for jspm not been able to install ag-grid from npm */
+gulp.task('init', gulp.series('ag-grid:copy', 'ag-grid-ng2:copy', 'ag-grid:json'));
+
 /* increment the version */
 gulp.task('bump', function () {
     return gulp
@@ -28,12 +46,7 @@ gulp.task('bump', function () {
 gulp.task('config', function () {
     return gulp.src(['config.json', 'version.json'])
         .pipe(extend('config.json'))
-        .pipe(ngConfig('BioStudyApp.config',
-            {
-                wrap: 'ES6'
-            }
-        ))
-        .pipe(gulp.dest('app/lib'));
+        .pipe(gulp.dest('app/lib/config'));
 });
 
 gulp.task('clean', function () {
@@ -107,13 +120,13 @@ gulp.task('zip', function () {
         .pipe(gulp.dest('.dist'));
 });
 
-gulp.task('default', gulp.series('clean', 'copy', 'js', 'css'));
+gulp.task('default', gulp.series('clean', 'init', 'copy', 'js', 'css'));
 
 gulp.task('webserver', function () {
 
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-    gulp.src('app'/* '.build'*/)
+    gulp.src(/* 'app'*/ '.build')
         .pipe(webserver({
             port: 7000,
             https: true,
