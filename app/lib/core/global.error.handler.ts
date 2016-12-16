@@ -12,7 +12,7 @@ export class GlobalErrorHandler implements ErrorHandler {
         if (error.status === 401) {//Unauthorized
             this.userSession.destroy();
         } else {
-            super.handleError(error);
+            console.error(error);
         }
     }
 }
