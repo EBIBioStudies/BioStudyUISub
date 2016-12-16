@@ -108,9 +108,12 @@ export class ProgressCellComponent implements AgRendererComponent {
                 });
             this.__sb = upload.progress.subscribe((e) => {
                 if (e >= 0) {
-                    this.value = e;
+                    this.value = e > 0 ? e - 1 : e; //make it 99 not 100
                 }
-                if (e === -1) {
+                if (e === -2) { // upload finished successfully
+                    this.value = 100;
+                }
+                if (e === -1) { // upload failed
                     this.error = upload.errorMessage;
                 }
                 if (e < 0) {
