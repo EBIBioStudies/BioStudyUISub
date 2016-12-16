@@ -110,13 +110,17 @@ export class ProgressCellComponent implements AgRendererComponent {
                 if (e >= 0) {
                     this.value = e > 0 ? e - 1 : e; //make it 99 not 100
                 }
-                if (e === -2) { // upload finished successfully
+                let isError = e === -1;
+                let isFinished = e === -2;
+                let isDone = isError || isFinished;
+
+                if (isFinished) {
                     this.value = 100;
                 }
-                if (e === -1) { // upload failed
+                if (isError) {
                     this.error = upload.errorMessage;
                 }
-                if (e < 0) {
+                if (isDone) {
                     onUploadFinished();
                     _.delay(() => {
                         // it's delayed because event comes earlier than __sb is created
