@@ -30,13 +30,13 @@ export class FileService {
         return this.http.get("/api/files/dir")
             .map((res: Response) => {
                 let data = res.json();
-                if (data.status !== 'OK') {
-                    return Observable.throw({status: 'Error', message: data.message || 'Server error'});
+                if (data.status === 'OK') {
+                    if (data.files.length > 0) {
+                        this.cutOffUserRoot(data.files[0].files);
+                    }
+                    return data.files;
                 }
-                if (data.files) {
-                    this.cutOffUserRoot(data.files[0].files);
-                }
-                return data.files;
+                return Observable.throw({status: 'Error', message: data.message || 'Server error'});
             })
             .catch(FileService.errorHandler);
     }

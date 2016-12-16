@@ -65,7 +65,7 @@ export class FileActionsCellComponent implements AgRendererComponent {
 @Component({
     selector: 'file-type-cell',
     template: `
-    <div style="text-align:center">
+    <div style="text-align:center;color:#82b0bc">
     <i class="fa" [ngClass]="{
                                'fa-file' : ftype === 'FILE', 
                                'fa-folder' : ftype === 'DIR', 
@@ -90,7 +90,7 @@ export class FileTypeCellComponent implements AgRendererComponent {
          <div class="progress-bar" [ngClass]="{'progress-bar-success' : !error }" role="progressbar"
                 [ngStyle]="{ 'width': value + '%'}">{{value}}%</div>
     </div>
-    <div *ngIf="value === 100"><i class="fa fa-check"></i></div>
+    <div *ngIf="value === 100" style="text-align:center;color:green"><i class="fa fa-check"></i></div>
 `
 })
 export class ProgressCellComponent implements AgRendererComponent {
@@ -161,7 +161,7 @@ export class ProgressCellComponent implements AgRendererComponent {
                     </div>
                     <div class="row">
                         <div class="col-xs-12">
-                             <ag-grid-ng2 #agGrid style="width: 100%; height: 350px;" class="ag-fresh"
+                             <ag-grid-ng2 #agGrid style="width: 100%; height: 450px;" class="ag-fresh"
                                   [gridOptions]="gridOptions"
                                   [columnDefs]="columnDefs"
                                   enableSorting
