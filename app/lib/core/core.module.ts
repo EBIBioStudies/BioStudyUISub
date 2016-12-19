@@ -60,6 +60,7 @@ import {SlideOutTipComponent} from './submission/panel/slide-out-tip.component';
 import {APP_ROUTES} from './app-routes';
 import {SignUpComponent} from './signup/signup.component';
 import {Equals2} from './password-reset/equals2.directive';
+import {TextareaAutosize} from './submission/textarea-autosize.directive';
 import {UniqueAttrName} from './submission/panel/unique-attr-name.directive';
 
 
@@ -120,6 +121,7 @@ import {UniqueAttrName} from './submission/panel/unique-attr-name.directive';
         SlideOutTipComponent,
         PropertyFilterPipe,
         Equals2,
+        TextareaAutosize,
         UniqueAttrName,
         ActionButtonsCellComponent,
         DateCellComponent,

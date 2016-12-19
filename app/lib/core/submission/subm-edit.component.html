@@ -123,14 +123,13 @@
                                     </span>
                                 </label>
                                 <textarea id="description" name="description" class="form-control input-sm"
-                                          style="max-height:400px;"
                                           [(ngModel)]="submission.description"
                                           [readonly]="readonly"
                                           minlength="50"
                                           required
+                                          autosize="200"
                                           #description="ngModel"></textarea>
                                 <!--                                          ng-model-options="{ allowInvalid: true }"-->
-                                <!-- autosize -->
                             </div>
                         </div>
 
