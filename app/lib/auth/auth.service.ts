@@ -166,8 +166,12 @@ export class AuthService {
             message: error.statusText || 'Server error'
         };
         if (error.json) {
-            let jsonError = error.json();
-            err.message = jsonError.message || err.message;
+            try {
+                let jsonError = error.json();
+                err.message = jsonError.message || err.message;
+            } catch(e) {// ignore ?
+                console.log(error);
+            }
         }
         console.error(err);
         return Observable.throw(err);
