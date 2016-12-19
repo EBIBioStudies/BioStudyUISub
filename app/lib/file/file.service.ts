@@ -50,15 +50,13 @@ export class FileService {
     }
 
     static errorHandler(error: any) {
-        let err = {status: '', message: ''};
-        try {
-            var jsonError = error.json ? error.json() : error;
-            err.status = (jsonError.status) ? jsonError.status : 'Error';
-            err.message = (jsonError.message) ? jsonError.message : 'Server error';
-        } catch (e) {
-            // probably not a json
-            err.status = error.status || 'Error';
-            err.message = error.statusText || 'Server error';
+        let err = {
+            status: error.status || 'Error',
+            message: error.statusText || 'Server error'
+        };
+        if (error.json) {
+            let jsonError = error.json();
+            err.message = jsonError.message || err.message;
         }
         console.error(err);
         return Observable.throw(err);
