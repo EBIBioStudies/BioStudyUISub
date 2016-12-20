@@ -74,7 +74,7 @@ gulp.task('copy:jspm_config', function () {
 
 gulp.task('copy:jspm_browser_config', function () {
     return gulp.src(['app/jspm.browser.js'])
-        .pipe(replace(/"baseURL"\:\s+".*"/, `"baseURL": "${appConfig.APP_CONTEXT}"`))
+        .pipe(replace(/"?baseURL"?\s*:\s*".*"/, `"baseURL": "${appConfig.APP_CONTEXT}"`))
         .pipe(gulp.dest('.build/'));
 });
 
