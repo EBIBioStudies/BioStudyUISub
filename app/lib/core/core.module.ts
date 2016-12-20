@@ -68,12 +68,12 @@ import {UniqueAttrName} from './submission/panel/unique-attr-name.directive';
     imports: [
         RouterModule.forRoot(APP_ROUTES),
         RecaptchaModule.forRoot(),
-        TypeaheadModule,
-        TooltipModule,
-        TabsModule,
-        DropdownModule,
-        ModalModule,
-        PaginationModule,
+        TypeaheadModule.forRoot(),
+        TooltipModule.forRoot(),
+        TabsModule.forRoot(),
+        DropdownModule.forRoot(),
+        ModalModule.forRoot(),
+        PaginationModule.forRoot(),
         HttpClientModule,
         AgGridModule.withComponents([
             ActionButtonsCellComponent,

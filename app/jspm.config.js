@@ -1,6 +1,8 @@
 SystemJS.config({
-    paths: {
-        "lib/": "lib/"
+    nodeConfig: {
+        "paths": {
+            "lib/": "lib/"
+        }
     },
     devConfig: {
         "map": {
@@ -42,6 +44,10 @@ SystemJS.config({
                 }
             }
         }
+    },
+    map: {
+        "ag-grid-ng2": "other:ag-grid-ng2",
+        "ag-grid": "other:ag-grid"
     }
 });
 
@@ -54,8 +60,6 @@ SystemJS.config({
         "other:@*/*.json"
     ],
     map: {
-        "ag-grid-ng2": "other:ag-grid-ng2",
-        "ag-grid": "other:ag-grid",
         "css": "github:systemjs/plugin-css@0.1.32",
         "domain": "npm:jspm-nodelibs-domain@0.2.0",
         "errno": "npm:errno@0.1.4",
@@ -70,7 +74,7 @@ SystemJS.config({
         "ng2-smart-table": "npm:ng2-smart-table@0.4.0-3",
         "monospaced/angular-elastic": "github:monospaced/angular-elastic@2.5.1",
         "ng2-cookies": "npm:ng2-cookies@1.0.2",
-        "ng2-bootstrap": "npm:ng2-bootstrap@1.1.16",
+        "ng2-bootstrap": "npm:ng2-bootstrap@1.1.16-7",
         "@angular/http": "npm:@angular/http@2.3.1",
         "@angular/router": "npm:@angular/router@3.0.2",
         "core-js": "npm:core-js@2.4.1",
@@ -320,11 +324,6 @@ SystemJS.config({
                 "minimalistic-assert": "npm:minimalistic-assert@1.0.0"
             }
         },
-        "npm:ng2-bootstrap@1.1.16": {
-            "map": {
-                "moment": "npm:moment@2.15.1"
-            }
-        },
         "npm:readable-stream@2.2.2": {
             "map": {
                 "inherits": "npm:inherits@2.0.3",
@@ -375,6 +374,11 @@ SystemJS.config({
         "npm:rxjs@5.0.0-rc.4": {
             "map": {
                 "symbol-observable": "npm:symbol-observable@1.0.4"
+            }
+        },
+        "npm:ng2-bootstrap@1.1.16-7": {
+            "map": {
+                "moment": "npm:moment@2.17.1"
             }
         }
     }
