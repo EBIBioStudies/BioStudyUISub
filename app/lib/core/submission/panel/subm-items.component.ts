@@ -64,7 +64,7 @@ import * as _ from 'lodash';
                                    typeaheadOptionsLimit="10"   
                                    tooltip="This field is required"
                                    placement="top-left"
-                                   [tooltipEnable]="itemsPreviewForm.controls[attr.name + '_' + idx] && itemsPreviewForm.controls[attr.name + '_' + idx].invalid"
+                                   [isDisabled]="itemsPreviewForm.controls[attr.name + '_' + idx] && itemsPreviewForm.controls[attr.name + '_' + idx].valid"
                                    [required]="attr.required"
                                    [(ngModel)]="attr.value"
                                    [readonly]="readonly">
