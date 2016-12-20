@@ -63,7 +63,7 @@ import * as _ from 'lodash';
                                    typeaheadMinlength="0"
                                    typeaheadOptionsLimit="10"   
                                    tooltip="This field is required"
-                                   tooltipPlacement="top-left"
+                                   placement="top-left"
                                    [tooltipEnable]="itemsPreviewForm.controls[attr.name + '_' + idx] && itemsPreviewForm.controls[attr.name + '_' + idx].invalid"
                                    [required]="attr.required"
                                    [(ngModel)]="attr.value"
@@ -97,7 +97,7 @@ import * as _ from 'lodash';
                     class="pull-right btn btn-danger btn-xs"
                     (click)="items.remove(idx);"
                     [tooltip]="deleteTooltip"
-                    tooltipPlacement="bottom"><i class="fa fa-lg fa-trash"></i>
+                    placement="bottom"><i class="fa fa-lg fa-trash"></i>
             </button>
         </p>
         <table *ngIf="type === 'publication'" class="table table-condensed" style="width:100%">
