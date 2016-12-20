@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output, Inject} from '@angular/core';
 
 import {CommonModule} from '@angular/common';
-import {TooltipModule} from 'ng2-bootstrap/ng2-bootstrap';
+import {TooltipModule} from 'ng2-bootstrap';
 
 import {Router} from '@angular/router';
 
