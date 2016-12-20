@@ -3,6 +3,7 @@ SystemJS.config({
     "paths": {
         "github:": "jspm_packages/github/",
         "npm:": "jspm_packages/npm/",
-        "other:": "jspm_packages/other/"
+        "other:": "jspm_packages/other/",
+        "/lib": "/lib"
     }
 });
