@@ -44,7 +44,7 @@ export class SideBarItemComponent {
                 (click)="child.clicked($event)" 
                 [tooltip]="child.label" 
                 pacement="right"
-                tooltipAppendToBody="true"
+                container="body"
                 [ngClass]="{'disabled-link': child.disabled}">
                 <i class="fa fa-fw" [ngClass]="child.icon"></i>
             </a>

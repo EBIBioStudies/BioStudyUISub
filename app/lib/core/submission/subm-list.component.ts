@@ -26,27 +26,27 @@ import * as _ from 'lodash';
                                     type="button" class="btn btn-danger btn-xs btn-flat"
                                     (click)="onDeleteSubmission()"
                                     tooltip="delete"
-                                    tooltipAppendToBody="true">
+                                    container="body">
                                 <i class="fa fa-trash-o fa-fw"></i>
                            </button>
                            <button *ngIf="status === 'MODIFIED'" 
                                     type="button" class="btn btn-warning btn-xs btn-flat"
                                     (click)="onDeleteSubmission()"
                                     tooltip="undo all changes"
-                                    tooltipAppendToBody="true">
+                                    container="body">
                                 <i class="fa fa-undo fa-fw"></i>
                            </button>
                            <button type="button" class="btn btn-primary btn-xs btn-flat"
                                     (click)="onEditSubmission()"
                                     tooltip="edit"
-                                    tooltipAppendToBody="true">
+                                    container="body">
                                 <i class="fa fa-pencil fa-fw"></i>
                            </button>
                            <button *ngIf="status === 'MODIFIED'" 
                                     type="button" class="btn btn-info btn-xs btn-flat"
                                     (click)="onViewSubmission()"
                                     tooltip="view original"
-                                    tooltipAppendToBody="true">
+                                    container="body">
                                 <i class="fa fa-eye fa-fw"></i>
                            </button>`
 })
