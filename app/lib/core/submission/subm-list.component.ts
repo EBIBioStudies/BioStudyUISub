@@ -89,7 +89,6 @@ export class DateCellComponent implements AgRendererComponent {
     value: Date;
 
     agInit(params: any): void {
-        console.log("date:", params.value);
         this.value = this.asDate(params.value);
     }
 
