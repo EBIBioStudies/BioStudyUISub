@@ -1,4 +1,4 @@
-import {Items} from '../../../submission/submission';
+import {Items} from '../../../submission/index';
 
 import * as _ from 'lodash';
 

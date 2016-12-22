@@ -1,7 +1,7 @@
 import {Component, Inject, Input, OnChanges, SimpleChange, ContentChild, ViewChild} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 
-import {Items} from '../../../submission/submission';
+import {Items} from '../../../submission/index';
 import {ItemsInfo} from './panel-info';
 
 import {SubmissionItemsComponent} from './subm-items.component';

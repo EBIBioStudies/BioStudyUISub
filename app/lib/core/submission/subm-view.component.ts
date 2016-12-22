@@ -6,11 +6,7 @@ import {Subscription} from 'rxjs/Subscription';
 
 import {ModalDirective} from 'ng2-bootstrap/components/modal/modal.component';
 
-import {Submission} from '../../submission/submission';
-import {PageTab} from '../../submission/pagetab';
-import {SubmissionService} from '../../submission/submission.service';
-import {DictionaryService} from '../../submission/dictionary.service';
-import {SubmissionModel} from '../../submission/submission.model';
+import {Submission, PageTab, SubmissionService, DictionaryService} from '../../submission/index';
 
 import tmpl from './subm-edit.component.html'
 

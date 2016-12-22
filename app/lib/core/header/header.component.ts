@@ -1,10 +1,9 @@
 import {Inject, Component} from '@angular/core';
 import {Router} from '@angular/router';
 
-import {SessionEvents, UserSessionEvents} from '../../session/session.events';
-import {UserSession} from '../../session/user-session';
-import {AuthService} from '../../auth/auth.service';
-import {AppConfig} from '../../config/app.config';
+import {UserSession, UserSessionEvents} from '../../session/index';
+import {AuthService} from '../../auth/index';
+import {AppConfig} from '../../config/index';
 
 import tmpl from './header.component.html';
 

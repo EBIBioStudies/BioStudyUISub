@@ -1,8 +1,7 @@
 import {Component, Inject, ViewChild} from '@angular/core';
 import {RecaptchaComponent} from 'ng2-recaptcha';
 
-import {AuthService} from '../../auth/auth.service'
-import {RegistrationData} from '../../auth/registration-data';
+import {AuthService, RegistrationData} from '../../auth/index'
 
 import tmpl from './signup.component.html'
 

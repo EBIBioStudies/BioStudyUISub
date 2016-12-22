@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {RecaptchaComponent} from 'ng2-recaptcha';
 
-import {AuthService} from '../../auth/auth.service';
+import {AuthService} from '../../auth/index';
 
 import tmpl from './resend-activation-link.component.html'
 

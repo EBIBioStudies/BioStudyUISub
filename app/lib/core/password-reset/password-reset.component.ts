@@ -1,8 +1,9 @@
 import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {RecaptchaComponent} from 'ng2-recaptcha';
 
-import {AuthService} from '../../auth/auth.service';
 import {ActivatedRoute, Params} from '@angular/router';
+
+import {AuthService} from '../../auth/index';
 
 import tmpl from './password-reset.component.html'
 

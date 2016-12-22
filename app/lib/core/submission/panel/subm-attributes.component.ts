@@ -3,9 +3,8 @@ import {NgForm, FormGroup, FormControl} from '@angular/forms';
 
 import * as _ from 'lodash';
 
-import {Attributes, Attr} from '../../../submission/submission';
-import {DictionaryService} from '../../../submission/dictionary.service';
-import {TypeaheadValuesForItem} from "./typeahead-values";
+import {Attributes, DictionaryService} from '../../../submission/index';
+import {TypeaheadValuesForItem} from './typeahead-values';
 
 @Component({
     selector: 'subm-attributes',
