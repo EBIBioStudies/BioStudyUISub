@@ -16,12 +16,13 @@ export class SubmissionModel {
     //    return ptAdapter.fromPageTab(pt);
     //}
 
-    createNew(userName: string, userEmail: string): any {
+    createNew(userName?: string, userEmail?: string, orcid?: string): any {
         let pt = PageTab.noWait();
         pt.asSubmission(this.dictService.dict())
         .addContact([
             {name: "Name", value: userName || ""},
-            {name: "E-mail", value: userEmail || ""}
+            {name: "E-mail", value: userEmail || ""},
+            {name: "ORCID", value: orcid || ""}
         ]);
         return pt.data;
     }

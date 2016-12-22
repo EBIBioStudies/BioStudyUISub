@@ -115,6 +115,7 @@ export class SubmissionListComponent {
 
     private userName: string;
     private userEmail: string;
+    private userOrcid: string;
 
     error: any = null;
 
@@ -125,6 +126,8 @@ export class SubmissionListComponent {
 
         this.userName = sess.user.name;
         this.userEmail = sess.user.email;
+        this.userOrcid = sess.user.orcid;
+
 
         this.gridOptions = <GridOptions>{
             debug: true,
@@ -221,7 +224,7 @@ export class SubmissionListComponent {
     };
 
     createSubmission = function () {
-        let sbm = this.submModel.createNew(this.userName, this.userEmail);
+        let sbm = this.submModel.createNew(this.userName, this.userEmail, this.userOrcid);
         this.submService.createSubmission(sbm)
             .subscribe((sbm) => {
                 console.log("created submission:", sbm);
