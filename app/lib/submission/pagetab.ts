@@ -141,7 +141,7 @@ export class PageTab extends WithChanges<string> {
 
         _.forEach(source.publications, (pub) => {
             let obj = ItemAdapter.toPublication(pub);
-            subm.addPublication(pub.pubMedId, pub.attributes);
+            subm.addPublication(obj.pubMedId, obj.attributes);
         });
 
         this.__subm = subm;
