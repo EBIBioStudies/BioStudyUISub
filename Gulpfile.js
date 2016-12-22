@@ -135,7 +135,7 @@ gulp.task('webserver', function () {
 
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-    gulp.src(/* 'app'*/ '.build')
+    gulp.src('app')
         .pipe(webserver({
             port: 7000,
             https: true,
@@ -154,7 +154,7 @@ var Server = require('karma').Server;
 
 gulp.task('test', function (done) {
     new Server({
-        configFile: './karma.conf.js',
+        configFile: require('path').resolve('karma.conf.js'),
         singleRun: true
     }, done).start();
 });

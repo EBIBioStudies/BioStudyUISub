@@ -18,6 +18,7 @@ module.exports = function (config) {
 
         jspm: {
             jspmConfig: 'jspm.config.js',
+            browserConfig: 'jspm.browser.js',
             packages: 'jspm_packages',
             adapter: 'angular2',
             files: [
