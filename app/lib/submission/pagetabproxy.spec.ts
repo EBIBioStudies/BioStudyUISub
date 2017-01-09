@@ -96,6 +96,7 @@ describe('PageTabProxy', () => {
         let pt = PageTabProxy.create();
         pt.publications = [
             new PTPubl({
+                acc: '12345',
                 attributes: [
                     {name: "Title", value: "Publication Title"},
                     {name: "Journal", value: "PLoS biology"},
@@ -108,5 +109,6 @@ describe('PageTabProxy', () => {
         let publs = pt.publications;
         expect(publs.length).toEqual(1);
         expect(publs[0].attrs.length).toEqual(5);
+        expect(publs[0].pubMedId).toBe('12345');
     });
 });
