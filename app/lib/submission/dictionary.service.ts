@@ -125,7 +125,7 @@ export class DictionaryService {
                     {"name": "Role", type: "text", "required": false},
                     {"name": "ORCID", type: "text", "required": false},
                     {"name": "Address", type: "text", "required": false},
-                    {"name": "Departement", type: "text", "required": false},
+                    {"name": "Department", type: "text", "required": false},
                     {"name": "Funding", type: "text", "required": false}
                 ]
             },
