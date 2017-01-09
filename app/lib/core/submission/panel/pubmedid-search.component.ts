@@ -9,7 +9,7 @@ import {PubMedSearchService} from '../../../submission/index';
     template: `
     <input type="text" class="form-control input-sm"
            placeholder="Enter Pub Med Id" 
-           [(ngModel)]="pubMedId"
+           [(ngModel)]="value"
            (ngModelChange)="ngOnChanges()"
            [readonly]="readonly">
 `, providers: [
@@ -19,9 +19,10 @@ import {PubMedSearchService} from '../../../submission/index';
 })
 export class PubMedIdSearchComponent implements ControlValueAccessor, OnChanges {
     @Input() readonly?: boolean = false;
-    @Input('value') private pubMedId: string;
 
     @Output() found: EventEmitter = new EventEmitter<any>();
+
+    private pubMedId: string;
 
     private debouncedSearch = _.debounce(this.pubMedSearch, 1000);
 
@@ -56,20 +57,21 @@ export class PubMedIdSearchComponent implements ControlValueAccessor, OnChanges 
         return res;
     }
 
-    private onChange: any = () => {
-    };
-    private onTouched: any = () => {
-    };
+    private changed = new Array<(value: string) => void>();
+    private touched = new Array<() => void>();
     private validateFn: any = () => {
     };
+
 
     get value() {
         return this.pubMedId;
     }
 
     set value(val) {
-        this.pubMedId = val;
-        this.onChange(val);
+        if (this.pubMedId !== val) {
+            this.pubMedId = val;
+            this.changed.forEach(f => f(val));
+        }
     }
 
     //From ControlValueAccessor interface
@@ -80,13 +82,13 @@ export class PubMedIdSearchComponent implements ControlValueAccessor, OnChanges 
     }
 
     //From ControlValueAccessor interface
-    registerOnChange(fn) {
-        this.onChange = fn;
+    registerOnChange(fn: (value: string) => void) {
+        this.changed.push(fn);
     }
 
     //From ControlValueAccessor interface
-    registerOnTouched(fn: any) {
-        this.onTouched = fn;
+    registerOnTouched(fn: () => void) {
+        this.touched.push(fn);
     }
 
     validate(c: FormControl) {
