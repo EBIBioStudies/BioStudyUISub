@@ -36,8 +36,7 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor, OnChanges {
     private validateFn: any = () => {
     };
 
-
-    @Input('value') orcidValue = '';
+    orcidValue = '';
 
     get value() {
         return this.orcidValue;
@@ -84,7 +83,7 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor, OnChanges {
 
             Observable.timer(1).subscribe(() => {
                 console.debug("in timeout func...");
-                this.orcidValue = orcid;
+                this.value = orcid;
             });
         });
     }
