@@ -2,6 +2,7 @@ import {Component, Inject} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {AuthService} from '../../auth/index';
+import {UserSession} from '../../session/index';
 
 import tmpl from './signin.component.html'
 
@@ -16,7 +17,14 @@ export class SignInComponent {
     private waiting: boolean = false;
 
     constructor(@Inject(AuthService) private authService: AuthService,
+                @Inject(UserSession) private session: UserSession,
                 @Inject(Router) private router: Router) {
+    }
+
+    ngOnInit() {
+       if (!this.session.isAnonymous()) {
+           this.router.navigate(['']);
+       }
     }
 
     onSubmit(event) {

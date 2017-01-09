@@ -1,7 +1,9 @@
 import {Component, Inject, ViewChild} from '@angular/core';
 import {RecaptchaComponent} from 'ng2-recaptcha';
+import {Router} from '@angular/router';
 
-import {AuthService, RegistrationData} from '../../auth/index'
+import {AuthService, RegistrationData} from '../../auth/index';
+import {UserSession} from '../../session/index';
 
 import tmpl from './signup.component.html'
 
@@ -17,7 +19,15 @@ export class SignUpComponent {
 
     @ViewChild('recaptcha') private recaptcha: RecaptchaComponent;
 
-    constructor(@Inject(AuthService) private authService: AuthService) {
+    constructor(@Inject(AuthService) private authService: AuthService,
+                @Inject(UserSession) private session: UserSession,
+                @Inject(Router) private router: Router) {
+    }
+
+    ngOnInit() {
+        if (!this.session.isAnonymous()) {
+            this.router.navigate(['']);
+        }
     }
 
     onSubmit(event) {
