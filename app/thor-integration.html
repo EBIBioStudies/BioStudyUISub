@@ -25,8 +25,19 @@
     var __bsstThor__ = null;
     var __bsstCallback__ = null;
 
-    function bsst_thorListener() {
+    function bsst_thorListener(msg) {
         console.log("bsst_thorListener(...)");
+
+        if (msg === 'openPopup') {
+            bsst_openOrcidPopup(function (msg) {
+                if (parent) {
+                    console.log("sending message to parent");
+                    parent.sendMessage({thor:msg}, '*');
+                }
+            });
+            return;
+        }
+
         if (!__bsstThor__) {
             console.log("bsst_thorListener() error: not initialized");
             return;
@@ -40,7 +51,6 @@
         });
     }
 
-    /* called from outside iFrame */
     function bsst_openOrcidPopup(callback) {
         if (!__bsstThor__) {
             bsst_initThor();

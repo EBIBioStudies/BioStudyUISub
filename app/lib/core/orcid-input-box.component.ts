@@ -36,7 +36,7 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor, OnChanges {
     private validateFn: any = () => {
     };
 
-    orcidValue = '';
+    private orcidValue = '';
 
     get value() {
         return this.orcidValue;
@@ -68,6 +68,31 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor, OnChanges {
         return this.validateFn(c);
     }
 
+    messageListener(msg) {
+        if (!msg.thor) {
+            return;
+        }
+
+        console.debug('in message callback..');
+        var data = JSON.parse(msg.thor);
+        var orcid = data['orcid-profile']['orcid-identifier']['path'];
+        console.debug('orcid: ' + orcid);
+
+        Observable.timer(1).subscribe(() => {
+            console.debug("in timeout func...");
+            this.value = orcid;
+        });
+    }
+
+    ngOnInit() {
+        window.addEventListener('message', this.messageListener);
+    }
+
+    ngOnDestroy() {
+       window.removeEventListener('message', this.messageListener);
+
+    }
+
     openPopup() {
         var thorIFrame = document.getElementById("thor");
         console.debug("thor iframe", thorIFrame);
@@ -75,17 +100,7 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor, OnChanges {
         var w = thorIFrame.contentWindow;
         console.debug("thor iframe.wondow", w);
 
-        w.bsst_openOrcidPopup((msg) => {
-            console.debug('in message callback..');
-            var data = JSON.parse(msg);
-            var orcid = data['orcid-profile']['orcid-identifier']['path'];
-            console.debug('orcid: ' + orcid);
-
-            Observable.timer(1).subscribe(() => {
-                console.debug("in timeout func...");
-                this.value = orcid;
-            });
-        });
+        w.postMessage('openPopup', '*');
     }
 }
 
