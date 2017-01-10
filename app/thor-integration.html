@@ -34,8 +34,8 @@
             if (event.data === 'openPopup') {
                 myCallback = function (msg) {
                     if (parent) {
-                        console.log("parent window found; sending message to it", msg);
-                        parent.sendMessage({thor: msg}, '*');
+                        console.log("sending message to parent", msg);
+                        parent.postMessage({thor: msg}, '*');
                     }
                 };
                 thor.openOrcidPopup(0);
