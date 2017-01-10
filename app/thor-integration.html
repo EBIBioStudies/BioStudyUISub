@@ -22,48 +22,33 @@
 </form>
 </body>
 <script>
-    var __bsstThor__ = null;
-    var __bsstCallback__ = null;
 
-    function bsst_thorListener(msg) {
-        console.log("bsst_thorListener(...)");
+    var myThor = (function(){
 
-        if (msg === 'openPopup') {
-            bsst_openOrcidPopup(function (msg) {
-                if (parent) {
-                    console.log("sending message to parent");
-                    parent.sendMessage({thor:msg}, '*');
+        var thor = null;
+        var myCallback = null;
+
+        var myListener = function (event) {
+            console.log("myListener(...)", event);
+
+            if (event.data === 'openPopup') {
+                myCallback = function (msg) {
+                    if (parent) {
+                        console.log("parent window found; sending message to it", msg);
+                        parent.sendMessage({thor: msg}, '*');
+                    }
+                };
+                thor.openOrcidPopup(0);
+                return;
+            }
+
+            thor.searchOrcIdBio(function (msg) {
+                if (myCallback) {
+                    myCallback(msg);
+                    myCallback = null;
                 }
             });
-            return;
-        }
-
-        if (!__bsstThor__) {
-            console.log("bsst_thorListener() error: not initialized");
-            return;
-        }
-
-        __bsstThor__.searchOrcIdBio(function (msg) {
-            if (__bsstCallback__) {
-                __bsstCallback__(msg);
-                __bsstCallback__ = null;
-            }
-        });
-    }
-
-    function bsst_openOrcidPopup(callback) {
-        if (!__bsstThor__) {
-            bsst_initThor();
-        }
-        __bsstCallback__ = callback;
-        __bsstThor__.openOrcidPopup(0);
-    }
-
-    function bsst_initThor() {
-        if (__bsstThor__ != null) {
-            console.log("bsst_initThor(): already initialized");
-            return;
-        }
+        };
 
         function removeMessageListener(listener, capture) {
             if (window.removeEventListener) {
@@ -87,18 +72,25 @@
             }
         }
 
-        if (thorListener) {
-            removeMessageListener(thorListener, false);
-        } else {
-            console.log("warning: no thorListener found");
+        return {
+            init: function(listener, thorNamespace) {
+                if (listener) {
+                    removeMessageListener(listener, false);
+                } else {
+                    console.log("warning: no thorListener found");
+                }
+
+                if (thorNamespace) {
+                    addMessageListener(myListener, false);
+                    thor = thorNamespace;
+                } else {
+                    console.log("warning: no thorApplicationNamespace found");
+                }
+            }
         }
 
-        if (thorApplicationNamespace) {
-            addMessageListener(bsst_thorListener, false);
-            __bsstThor__ = thorApplicationNamespace;
-        } else {
-            console.log("warning: no thorApplicationNamespace found");
-        }
-    }
+    })();
+
+    myThor.init(thorListener, thorApplicationNamespace);
 
 </script>
