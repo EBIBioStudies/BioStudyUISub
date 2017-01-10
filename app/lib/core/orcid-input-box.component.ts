@@ -68,12 +68,13 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor, OnChanges {
         return this.validateFn(c);
     }
 
-    messageListener(msg) {
+    messageListener(event) {
+        console.debug('in message callback..', event);
+        let msg = event.data;
         if (!msg.thor) {
             return;
         }
 
-        console.debug('in message callback..');
         var data = JSON.parse(msg.thor);
         var orcid = data['orcid-profile']['orcid-identifier']['path'];
         console.debug('orcid: ' + orcid);
@@ -85,12 +86,13 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor, OnChanges {
     }
 
     ngOnInit() {
+        console.log('added message listener');
         window.addEventListener('message', this.messageListener);
     }
 
     ngOnDestroy() {
-       window.removeEventListener('message', this.messageListener);
-
+        console.log('removed message listener');
+        window.removeEventListener('message', this.messageListener);
     }
 
     openPopup() {
