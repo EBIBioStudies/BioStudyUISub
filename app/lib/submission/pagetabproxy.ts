@@ -81,15 +81,15 @@ export class PTPubl implements PTEntity {
         this.pubMedId = (_.find(attrs, isPubMedAttr) || {value: ''}).value;
         this.attrs = new PTAttributes(_.reject(attrs, isPubMedAttr));
 
-        if (obj.acc) {
-            this.pubMedId = obj.acc;
+        if (obj.accno) {
+            this.pubMedId = obj.accno;
         }
     }
 
     jsObj(): any {
         return {
             type: 'Publication',
-            acc: this.pubMedId,
+            accno: this.pubMedId,
             attributes: [].concat(
                 [{name: 'PubMedId', value: this.pubMedId}],
                 this.attrs.jsObj()
