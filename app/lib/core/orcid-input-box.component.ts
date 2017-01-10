@@ -68,31 +68,37 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor, OnChanges {
         return this.validateFn(c);
     }
 
-    messageListener(event) {
-        console.debug('in message callback..', event);
-        let msg = event.data;
-        if (!msg.thor) {
-            return;
+    private mlistener = null;
+
+    messageListener() {
+        if (!this.mlistener) {
+            let obj = this;
+
+            this.mlistener = function (event) {
+                console.debug('in message callback..', event);
+                let msg = event.data;
+                if (!msg.thor) {
+                    return;
+                }
+
+                let data = JSON.parse(msg.thor);
+                let orcid = data['orcid-profile']['orcid-identifier']['path'];
+                console.debug('orcid: ' + orcid);
+
+                obj.value = orcid;
+            }
         }
-
-        var data = JSON.parse(msg.thor);
-        var orcid = data['orcid-profile']['orcid-identifier']['path'];
-        console.debug('orcid: ' + orcid);
-
-        Observable.timer(1).subscribe(() => {
-            console.debug("in timeout func...");
-            this.value = orcid;
-        });
+        return this.mlistener;
     }
 
     ngOnInit() {
         console.log('added message listener');
-        window.addEventListener('message', this.messageListener);
+        window.addEventListener('message', this.messageListener());
     }
 
     ngOnDestroy() {
         console.log('removed message listener');
-        window.removeEventListener('message', this.messageListener);
+        window.removeEventListener('message', this.messageListener());
     }
 
     openPopup() {
