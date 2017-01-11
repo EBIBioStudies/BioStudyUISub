@@ -1,4 +1,6 @@
-import {Component} from '@angular/core';
+import {Component, Inject} from '@angular/core';
+
+import {UserSession} from "../auth/index";
 
 @Component({
     selector: 'app-root',
@@ -9,4 +11,11 @@ import {Component} from '@angular/core';
 })
 
 export class AppComponent {
+
+    constructor(@Inject(UserSession) private userSession: UserSession) {
+    }
+
+    ngOnInit() {
+        this.userSession.init();
+    }
 }

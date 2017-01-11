@@ -1,10 +1,11 @@
 import {Injectable, Inject} from '@angular/core';
 import {Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
-import {AuthService} from '../auth/auth.service';
+
+import {UserSession} from '../auth/user-session';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-    constructor(@Inject(AuthService) private auth: AuthService,
+    constructor(@Inject(UserSession) private userSession: UserSession,
                 @Inject(Router) private router: Router) {
     }
 
@@ -15,7 +16,7 @@ export class AuthGuard implements CanActivate {
     }
 
     checkLogin(url: string): boolean {
-        if (this.auth.isAuthenticated()) {
+        if (!this.userSession.isAnonymous()) {
             return true;
         }
         //TODO this.authService.redirectUrl = url;

@@ -14,7 +14,7 @@ import 'ag-grid/dist/styles/ag-grid.css!';
 import 'ag-grid/dist/styles/theme-fresh.css!';
 
 import {AgRendererComponent} from 'ag-grid-ng2/main';
-import {UserSession} from '../../session/index';
+import {UserData} from '../../auth/index';
 
 import * as _ from 'lodash';
 
@@ -112,21 +112,12 @@ export class SubmissionListComponent {
     private totalItems: number = 0;
     private itemsPerPage: number = 50;
 
-    private userName: string;
-    private userEmail: string;
-    private userOrcid: string;
-
     error: any = null;
 
     constructor(@Inject(SubmissionService) private submService: SubmissionService,
                 @Inject(SubmissionModel) private submModel: SubmissionModel,
                 @Inject(Router) private router: Router,
-                @Inject(UserSession) sess: UserSession) {
-
-        this.userName = sess.user.name;
-        this.userEmail = sess.user.email;
-        this.userOrcid = sess.user.orcid;
-
+                @Inject(UserData) private userData: UserData) {
 
         this.gridOptions = <GridOptions>{
             debug: true,
@@ -223,7 +214,11 @@ export class SubmissionListComponent {
     };
 
     createSubmission = function () {
-        let sbm = this.submModel.createNew(this.userName, this.userEmail, this.userOrcid);
+        let userName = this.userData.name;
+        let userEmail = this.userData.email;
+        let userOrcid = this.userData.orcid;
+
+        let sbm = this.submModel.createNew(userName, userEmail, userOrcid);
         this.submService.createSubmission(sbm)
             .subscribe((sbm) => {
                 console.log("created submission:", sbm);

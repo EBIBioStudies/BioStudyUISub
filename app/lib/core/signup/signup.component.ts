@@ -2,8 +2,7 @@ import {Component, Inject, ViewChild} from '@angular/core';
 import {RecaptchaComponent} from 'ng2-recaptcha';
 import {Router} from '@angular/router';
 
-import {AuthService, RegistrationData} from '../../auth/index';
-import {UserSession} from '../../session/index';
+import {AuthService, RegistrationData, UserSession} from '../../auth/index';
 
 import tmpl from './signup.component.html'
 

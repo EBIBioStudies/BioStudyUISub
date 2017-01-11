@@ -1,33 +1,24 @@
 import {Injectable, Inject} from '@angular/core';
-import {Response} from '@angular/http';
-
-import {HttpClient} from '../http/http-client'
+import {Location} from '@angular/common';
+import {Http, Response} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
 
-import {Location} from '@angular/common';
 
 import {RegistrationData} from './registration-data';
 
-import {UserSession} from '../session/user-session';
-import {UserRole} from '../session/user-role';
-import {User} from '../session/user';
+import {UserSession} from './user-session';
+import {UserRole} from './user-role';
+
+import {HttpClient} from '../http/index'
 
 @Injectable()
 export class AuthService {
 
     constructor(@Inject(HttpClient) private http: HttpClient,
                 @Inject(UserSession) private userSession: UserSession) {
-    }
-
-    isAuthenticated(): boolean {
-        return !this.userSession.isAnonymous();
-    }
-
-    currentUser(): User {
-        return this.userSession.user;
     }
 
     activate(key: string): Observable<any> {
@@ -99,13 +90,24 @@ export class AuthService {
             });
     }
 
+    checkUser(): Observable<any> {
+        return this.http.get('/raw/auth/check?format=json')
+            .map((res: Response) => {
+                let data = res.json();
+                if (data.status === 'OK') {
+                    return data;
+                }
+                return Observable.throw({status: 'Error', message: data.message || 'Server error'});
+            })
+            .catch(AuthService.errorHandler);
+    }
+
     signIn(login, password): Observable<any> {
         return this.http.post('/raw/auth/signin', {login: login, password: password})
             .map((res: Response) => {
                 let data = res.json();
                 if (data.status === 'OK') {
-                    let orcid = data.aux ? data.aux.orcid : '';
-                    this.userSession.create(data.sessid, data.username, data.email, orcid, UserRole.User);
+                    this.userSession.create(login, data.sessid);
                     return data;
                 }
                 return Observable.throw({status: 'Error', message: data.message || 'Server error'});
@@ -133,7 +135,7 @@ export class AuthService {
     }
 
     signOut(): Observable<any> {
-        if (!this.isAuthenticated()) {
+        if (this.userSession.isAnonymous()) {
             return Observable.just({});
         }
         return this.http.post("/api/auth/signout", {})
@@ -177,64 +179,4 @@ export class AuthService {
         return Observable.throw(err);
     }
 
-
-    /*
-
-
-     signIn(credentials) {
-     return $http.post("/raw/auth/signin", credentials)
-     .then(
-     (response) => {
-     var data = response.data;
-     if (data.status === "OK") {
-     var orcid = data.aux ? data.aux.orcid : "";
-     Session.create(data.sessid, data.username, data.email || "", USER_ROLES.user, orcid);
-     }
-     return data;
-     },
-     (response) => {
-     if (response.status === 403) {
-     response.data.message = "Invalid credentials";
-     return response.data;
-     }
-     $log.error("login error", response);
-     return $q.reject(response);
-     });
-     },
-
-     signUp(user) {
-     user.path = getAppPath() + "#/activate";
-     return $http.post("/api/auth/signup", user)
-     .then(
-     (response) => {
-     return response.data;
-     },
-     (response) => {
-     if (response.status === 403 || response.status === 400) {
-     return response.data;
-     }
-     $log.error("signup error", response);
-     return $q.reject(response);
-     });
-     },
-
-
-
-     isAuthenticated() {
-     return !Session.isAnonymous();
-     },
-
-     isAuthorized(roles) {
-     if (!angular.isArray(roles)) {
-     roles = [roles];
-     }
-     return roles.indexOf(Session.userRole) !== -1;
-     },
-
-     isAuthorizedAs(accessLevel) {
-     return isAuthorized(AccessLevel.roles(accessLevel));
-     }
-     });
-
-     }*/
 }

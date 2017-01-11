@@ -1,8 +1,7 @@
 import {Inject, Component} from '@angular/core';
 import {Router} from '@angular/router';
 
-import {UserSession, UserSessionEvents} from '../../session/index';
-import {AuthService} from '../../auth/index';
+import {AuthService, UserSession, UserSessionEvents} from '../../auth/index';
 import {AppConfig} from '../../config/index';
 
 import tmpl from './header.component.html';
@@ -23,7 +22,7 @@ export class HeaderComponent {
                 @Inject(Router) private router: Router,
                 @Inject(AuthService) private authService: AuthService) {
         this.currentUser = !session.isAnonymous();
-        this.userName = session.user.name;
+        this.userName = session.login();
 
         sessionEvents.userSessionCreated$.subscribe(name => {
             this.currentUser = true;

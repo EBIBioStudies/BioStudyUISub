@@ -1,8 +1,7 @@
 import {Component, Inject} from '@angular/core';
 import {Router} from '@angular/router';
 
-import {AuthService} from '../../auth/index';
-import {UserSession} from '../../session/index';
+import {AuthService, UserSession} from '../../auth/index';
 
 import tmpl from './signin.component.html'
 
