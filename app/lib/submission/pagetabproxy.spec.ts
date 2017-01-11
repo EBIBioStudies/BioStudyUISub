@@ -96,7 +96,7 @@ describe('PageTabProxy', () => {
         let pt = PageTabProxy.create();
         pt.publications = [
             new PTPubl({
-                acc: '12345',
+                accno: '12345',
                 attributes: [
                     {name: "Title", value: "Publication Title"},
                     {name: "Journal", value: "PLoS biology"},
