@@ -32,6 +32,8 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     submission: Submission;
     errors: string[] = [];
 
+    private submitting: boolean = false;
+
     private __subscr: Subscription;
     private __wrap;
 
@@ -48,7 +50,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
         this.route.params.forEach((params: Params) => {
             let accno = params['accno'];
             this.submService
-                .getSubmission(accno)
+                .editSubmission(accno)
                 .subscribe(resp => {
                     let wrap = resp;
                     let pt = new PageTab(wrap.data);
@@ -82,9 +84,14 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
 
     onSubmit(event) {
         event.preventDefault();
+
+        if (!this.canSubmit()) {
+            return;
+        }
+
         this.errors = this.submModel.validate(this.submission);
         if (this.errors.length > 0) {
-            this.submitResults.show();
+            this.showSubmitResults();
             return;
         }
         this.submService.submitSubmission(this.__wrap())
@@ -94,8 +101,17 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
                     //TODO get real messages from response
                     this.errors = ['Failed to submit'];
                 }
-                this.submitResults.show();
+                this.showSubmitResults()
             });
+    }
+
+    canSubmit() {
+        return this.submitting ? false : (this.submitting = true);
+    }
+
+    showSubmitResults() {
+        this.submitting = false;
+        this.submitResults.show();
     }
 
     onSubmitResultsHide() {
@@ -103,6 +119,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
             this.router.navigate(['/submissions']);
         }
     }
+
     addAnnotation() {
         if (this.submission) {
             this.submission.addAnnotation();

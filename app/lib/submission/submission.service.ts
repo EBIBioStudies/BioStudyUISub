@@ -46,6 +46,13 @@ export class SubmissionService {
             }).catch(SubmissionService.errorHandler);
     }
 
+    editSubmission(accno): Observable<any> {
+        return this.http.get(`/api/submission/edit/${accno}`)
+            .map((res: Response) => {
+                return res.json();
+            }).catch(SubmissionService.errorHandler);
+    }
+
     submitSubmission(pt): Observable<any> {
         return this.http.post('/api/submission/submit', pt)
             .map((res: Response) => {
