@@ -15,6 +15,7 @@ export class UserData {
             this._data = null;
             authService.checkUser().subscribe(data => {
                 console.log('data', data);
+                this._data = data;
             });
         });
 
@@ -24,11 +25,11 @@ export class UserData {
     }
 
     get key(): string {
-        return this.data().key || '';
+        return this.data().sessid || '';
     }
 
     get name(): string {
-        return this.data().name || '';
+        return this.data().username || '';
     }
 
     get email(): string {
@@ -36,7 +37,7 @@ export class UserData {
     }
 
     get orcid(): string {
-        return this.data().orcid || '';
+        return this.data().aux.orcid || '';
     }
 
     get role(): UserRole {
@@ -44,6 +45,6 @@ export class UserData {
     }
 
     private data(): any {
-        return this._data || {};
+        return this._data || {aux:{}};
     }
 }
