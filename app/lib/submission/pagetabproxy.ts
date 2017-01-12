@@ -90,10 +90,7 @@ export class PTPubl implements PTEntity {
         return {
             type: 'Publication',
             accno: this.pubMedId,
-            attributes: [].concat(
-                [{name: 'PubMedId', value: this.pubMedId}],
-                this.attrs.jsObj()
-            )
+            attributes: this.attrs.jsObj()
         }
     }
 
