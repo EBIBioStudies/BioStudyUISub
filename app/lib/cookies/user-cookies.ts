@@ -4,8 +4,8 @@ const AE_LOGGED_USER = "AeLoggedUser";
 const AE_LOGIN_TOKEN = "AeLoginToken";
 
 export function setUserCookies(login, token): void {
-    Cookie.set(AE_LOGGED_USER, login);
-    Cookie.set(AE_LOGIN_TOKEN, token);
+    Cookie.set(AE_LOGGED_USER, login, 30, '/');
+    Cookie.set(AE_LOGIN_TOKEN, token, 30, '/');
 }
 
 export function getUserCookies(): any {
