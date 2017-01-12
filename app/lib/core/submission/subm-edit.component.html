@@ -69,7 +69,7 @@
 
                 <div class="panel" [ngClass]="{'panel-danger': submForm.invalid, 'panel-info':submForm.valid}">
                     <div class="panel-heading">
-                        <span>Submission {{submission.accno}}</span><span *ngIf="!readonly && submForm.invalid"> << There are some validation errors. Please correct them before to proceed to submit >> </span>
+                        <span>Submission {{accno}}</span><span *ngIf="!readonly && submForm.invalid"> << There are some validation errors. Please correct them before to proceed to submit >> </span>
                         <div class="pull-right" *ngIf="readonly">
                             <a class="pull-right btn btn-success btn-xs" (click)="onEditSubmission()">Edit</a>
                         </div>

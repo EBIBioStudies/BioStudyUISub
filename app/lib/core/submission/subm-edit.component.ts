@@ -33,6 +33,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     errors: string[] = [];
 
     private submitting: boolean = false;
+    private accno: string = '';
 
     private __subscr: Subscription;
     private __wrap;
@@ -48,9 +49,10 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.route.params.forEach((params: Params) => {
-            let accno = params['accno'];
+            this.accno = params['accno'];
+
             this.submService
-                .editSubmission(accno)
+                .editSubmission(this.accno)
                 .subscribe(resp => {
                     let wrap = resp;
                     let pt = new PageTab(wrap.data);
@@ -62,7 +64,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
                     })(wrap, pt);
 
                     this.submission = pt.asSubmission(this.dictService.dict());
-                    console.debug("submission:", this.submission);
+                    console.log("submission:", this.submission);
 
                     this.__subscr = pt.changes().subscribe((changes) => {
                         console.debug("save changes");
