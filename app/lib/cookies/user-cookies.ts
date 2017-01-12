@@ -1,7 +1,7 @@
 import {Cookie} from 'ng2-cookies/ng2-cookies';
 
-const AE_LOGGED_USER = "AeLoggedUser";
-const AE_LOGIN_TOKEN = "AeLoginToken";
+const AE_LOGGED_USER = "AeLoggedUser_";
+const AE_LOGIN_TOKEN = "AeLoginToken_";
 
 export function setUserCookies(login, token): void {
     Cookie.set(AE_LOGGED_USER, login, 30, '/');
