@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
-import {Subject}    from 'rxjs/Subject';
+import {BehaviorSubject}    from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class UserSessionEvents {
 
-    private sessionCreated = new Subject<string>();
+    private sessionCreated = new BehaviorSubject<string>();
 
-    private sessionDestroyed = new Subject<string>();
+    private sessionDestroyed = new BehaviorSubject<string>();
 
     userSessionCreated$ = this.sessionCreated.asObservable();
     userSessionDestroyed$ = this.sessionDestroyed.asObservable();
