@@ -169,13 +169,13 @@ export class SubmissionListComponent {
         let limit = this.itemsPerPage;
         this.submService.getAllSubmissions(offset, limit)
             .subscribe((data) => {
-                console.debug("all data", data);
+                console.debug('SubmList: data loaded');
                 this.setDataRows(data);
             });
     }
 
     onPageChanged(ev) {
-        console.debug("onPageChanged", ev);
+        console.debug('SubmList: current page number changed: ' + ev.page);
         this.currentPage = ev.page;
         this.loadDataRows();
     }
@@ -193,7 +193,7 @@ export class SubmissionListComponent {
             rtime: row.rtime,
             status: row.status,
             onDelete: (accno:string) => {
-                console.debug("onDelete:", accno);
+                console.debug('SubmList: (onDelete): accno=' + accno);
                 this.submService
                     .deleteSubmission(accno)
                     .subscribe(() => {
@@ -202,12 +202,12 @@ export class SubmissionListComponent {
             },
 
             onEdit: (accno:string) => {
-                console.debug("onEdit:", accno);
+                console.debug('SubmList: (onEdit): accno=' + accno);
                 this.router.navigate(['/edit', accno]);
             },
 
             onView: (accno:string) => {
-                console.debug("onView:", accno);
+                console.debug('SubmList: (onView): accno=' + accno);
                 this.router.navigate(['/view', accno]);
             }
         }));

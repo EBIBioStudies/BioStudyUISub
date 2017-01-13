@@ -8,6 +8,6 @@ export class ProgressService {
 
 
     constructor() {
-        console.log("ProgressService: new instance");
+        console.debug('ProgressService: new instance');
     }
 }

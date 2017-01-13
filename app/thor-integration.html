@@ -29,12 +29,12 @@
         var myCallback = null;
 
         var myListener = function (event) {
-            console.log("myListener(...)", event);
+            console.debug('thor: myListener(...)', event);
 
             if (event.data === 'openPopup') {
                 myCallback = function (msg) {
                     if (parent) {
-                        console.log("sending message to parent", msg);
+                        console.debug('thor: sending message to parent', msg);
                         parent.postMessage({thor: msg}, '*');
                     }
                 };
@@ -52,23 +52,23 @@
 
         function removeMessageListener(listener, capture) {
             if (window.removeEventListener) {
-                console.log("removeEventListener(...)");
-                window.removeEventListener("message", listener, capture);
+                console.debug('thor: removeEventListener(...)');
+                window.removeEventListener('message', listener, capture);
             }
             if (window.detachEvent) {
-                console.log("detachEvent(...)");
-                window.detachEvent("onmessage", listener);
+                console.debug('thor: detachEvent(...)');
+                window.detachEvent('onmessage', listener);
             }
         }
 
         function addMessageListener(listener, capture) {
             if (window.addEventListener) {
-                console.log("addEventListener(...)");
-                addEventListener("message", listener, capture);
+                console.debug('thor: addEventListener(...)');
+                addEventListener('message', listener, capture);
             }
             if (window.attachEvent) {
-                console.log("attachEvent(...)");
-                attachEvent("onmessage", listener);
+                console.debug('thor: attachEvent(...)');
+                attachEvent('onmessage', listener);
             }
         }
 
@@ -77,14 +77,14 @@
                 if (listener) {
                     removeMessageListener(listener, false);
                 } else {
-                    console.log("warning: no thorListener found");
+                    console.log('warning: no thorListener found');
                 }
 
                 if (thorNamespace) {
                     addMessageListener(myListener, false);
                     thor = thorNamespace;
                 } else {
-                    console.log("warning: no thorApplicationNamespace found");
+                    console.log('warning: no thorApplicationNamespace found');
                 }
             }
         }

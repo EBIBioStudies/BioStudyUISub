@@ -160,9 +160,7 @@ export class SubmissionAttributesComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        console.log("attrForm:", this.attrForm);
         let dict = this.dictService.byKey(this.type);
-        console.log(dict);
         this.addNewAttrLabel = dict.actions.addAttr ? dict.actions.addAttr.title : undefined;
         this.removeAttrTooltip = dict.actions.deleteAttr.popup;
         this.__typeaheadNames = _.map(_.filter(dict.attributes, {required: false}), 'name');

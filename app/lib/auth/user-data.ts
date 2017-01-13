@@ -14,7 +14,7 @@ export class UserData {
         userSessionEvents.userSessionCreated$.subscribe((ev) => {
             this._data = null;
             authService.checkUser().subscribe(data => {
-                console.log('data', data);
+                console.debug('UserData: loaded');
                 this._data = data;
             });
         });

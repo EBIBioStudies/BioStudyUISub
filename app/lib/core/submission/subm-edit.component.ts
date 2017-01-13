@@ -64,13 +64,13 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
                     })(wrap, pt);
 
                     this.submission = pt.asSubmission(this.dictService.dict());
-                    console.log("submission:", this.submission);
+                    console.debug('SubmEdit: submission loaded ', this.submission);
 
                     this.__subscr = pt.changes().subscribe((changes) => {
-                        console.debug("save changes");
+                        console.debug('SubmEdit: sending changes to the server...');
                         this.submService.saveSubmission(this.__wrap())
                             .subscribe(resp => {
-                                console.debug("saved");
+                                console.debug('SubmEdit: all sent');
                             });
                     });
                 });
@@ -78,7 +78,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        console.debug("SubmissionEditComponent::OnDestroy");
+        console.debug("SubmEdit: (OnDestroy)");
         if (this.__subscr) {
             this.__subscr.unsubscribe();
         }

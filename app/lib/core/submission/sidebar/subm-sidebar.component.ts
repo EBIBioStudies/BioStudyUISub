@@ -21,7 +21,7 @@ export class SideBarItemComponent {
     @Output() click = new EventEmitter();
 
     clicked(e) {
-        console.debug("clicked: " + this.label);
+        console.debug('clicked: ' + this.label);
         this.click.emit(e);
     }
 }
@@ -81,10 +81,9 @@ export class SideBarComponent implements AfterContentInit {
     @Output() toggle? = new EventEmitter();
 
     @ContentChildren(SideBarItemComponent)
-    childs: QueryList<SideBarItemComponent>;
+    private childs: QueryList<SideBarItemComponent>;
 
     ngAfterContentInit() {
-        console.log("children:", this.childs)
     }
 
     onToggle(e) {
