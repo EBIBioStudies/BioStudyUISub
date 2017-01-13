@@ -10,4 +10,5 @@ export class AppConfig {
     public static VERSION: string = CONFIG.APP_VERSION;
     public static PROXY_BASE: string = CONFIG.APP_PROXY_BASE;
     public static DEBUG: boolean = CONFIG.APP_DEBUG_ENABLED;
+    public static PROD: boolean = CONFIG.APP_PROD;
 }
