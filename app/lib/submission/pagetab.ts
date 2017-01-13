@@ -146,7 +146,7 @@ export class PageTab extends WithChanges<string> {
 
         this.__subm = subm;
         subm.changes().subscribe((ch: Change) => {
-            console.debug("got:", ch);
+            console.debug('changed: ' + ch.name);
             this.__changes[ch.name] = 1;
             this.__debouncedUpdate();
         });
@@ -160,7 +160,7 @@ export class PageTab extends WithChanges<string> {
         let changes = this.__changes;
         this.__changes = {};
 
-        console.debug("PageTab::update", changes);
+        console.debug('updating PageTab', changes);
 
         _.forOwn(changes, (v, k) => {
             if (this.__updates.hasOwnProperty(k)) {
@@ -169,7 +169,7 @@ export class PageTab extends WithChanges<string> {
                 console.error(`unsupported update type: ${k}`);
             }
         });
-        this.notify("changed");
+        this.notify('changed');
     }
 
     get data(): any {
