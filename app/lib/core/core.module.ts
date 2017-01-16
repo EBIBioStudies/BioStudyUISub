@@ -52,8 +52,6 @@ import {PubMedIdSearchComponent} from './submission/panel/pubmedid-search.compon
 import {PropertyFilterPipe} from './submission/panel/prop-filter.pipe';
 
 import {DummyComponent} from './dummy.component';
-import {ContainerRootComponent} from './container-root.component';
-import {ContainerMdComponent} from './container-md.component';
 import {ORCIDInputBoxComponent} from './orcid-input-box.component';
 import {SlideOutTipComponent} from './submission/panel/slide-out-tip.component';
 
@@ -115,8 +113,6 @@ import {UniqueAttrName} from './submission/panel/unique-attr-name.directive';
         InputFileComponent,
         PubMedIdSearchComponent,
         DummyComponent,
-        ContainerRootComponent,
-        ContainerMdComponent,
         ORCIDInputBoxComponent,
         SlideOutTipComponent,
         PropertyFilterPipe,
