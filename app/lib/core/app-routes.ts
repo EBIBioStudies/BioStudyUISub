@@ -6,7 +6,6 @@ import {ActivateComponent} from './activate/activate.component';
 import {ResendActivationLinkComponent} from './activate/resend-activation-link.component';
 import {PasswordResetReqComponent} from './password-reset/password-reset-req.component';
 import {PasswordResetComponent} from './password-reset/password-reset.component';
-import {HelpComponent} from './help/help.component';
 import {SubmissionListComponent} from './submission/subm-list.component';
 import {SubmissionEditComponent} from './submission/subm-edit.component';
 import {SubmissionViewComponent} from './submission/subm-view.component';
@@ -22,7 +21,7 @@ export const APP_ROUTES: Routes = [
     {path: 'password_reset_request', component: PasswordResetReqComponent},
     {path: 'password_reset/:key', component: PasswordResetComponent},
     {path: 'resend_activation_link', component: ResendActivationLinkComponent},
-    {path: 'help', component: HelpComponent},
+    {path: 'help',  loadChildren: '../help/help.module#HelpModule'},
     {path: 'submissions', component: SubmissionListComponent, canActivate: [AuthGuard]},
     {path: 'edit/:accno', component: SubmissionEditComponent, canActivate: [AuthGuard]},
     {path: 'view/:accno', component: SubmissionViewComponent, canActivate: [AuthGuard]},

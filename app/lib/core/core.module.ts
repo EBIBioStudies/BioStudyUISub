@@ -16,6 +16,7 @@ import {HttpClientModule} from '../http/http-client.module';
 
 import {SharedModule} from '../shared/shared.module';
 
+import {HelpModule} from '../help/help.module';
 import {AuthModule} from '../auth/auth.module';
 import {SubmissionModule} from '../submission/submission.module';
 import {FileModule} from '../file/file.module';
@@ -25,7 +26,6 @@ import {AuthGuard} from './auth.guard';
 import {GlobalErrorHandler} from './global.error.handler';
 
 import {AppComponent}     from './app.component';
-import {HelpComponent} from './help/help.component';
 import {HeaderComponent} from './header/header.component';
 import {SignInComponent} from './signin/signin.component';
 import {ActivateComponent} from './activate/activate.component';
@@ -81,6 +81,7 @@ import {UniqueAttrName} from './submission/panel/unique-attr-name.directive';
             ProgressCellComponent
         ]),
         SharedModule,
+        HelpModule,
         AuthModule,
         SubmissionModule,
         FileModule,
@@ -90,7 +91,6 @@ import {UniqueAttrName} from './submission/panel/unique-attr-name.directive';
         AppComponent
     ],
     declarations: [
-        HelpComponent,
         AppComponent,
         HeaderComponent,
         SignInComponent,
