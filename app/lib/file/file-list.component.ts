@@ -11,7 +11,7 @@ import 'ag-grid/dist/styles/theme-fresh.css!';
 
 import {AgRendererComponent} from 'ag-grid-ng2/main';
 
-import {FileService, FileUploadService, FileUpload} from '../../file/index';
+import {FileService, FileUploadService, FileUpload} from './index';
 
 import * as _ from 'lodash';
 

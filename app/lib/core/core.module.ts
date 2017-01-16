@@ -42,10 +42,7 @@ import {SubmissionAttributesPanelComponent} from './submission/panel/subm-attrib
 import {SubmissionAttributesComponent} from './submission/panel/subm-attributes.component';
 import {SubmissionItemsComponent} from "./submission/panel/subm-items.component";
 import {SubmissionItemsPanelComponent} from './submission/panel/subm-items-panel.component';
-import {
-    FileListComponent, ProgressCellComponent, FileActionsCellComponent,
-    FileTypeCellComponent
-} from './file/file-list.component';
+
 
 import {InputFileComponent} from './submission/panel/input-file.component';
 import {PubMedIdSearchComponent} from './submission/panel/pubmedid-search.component';
@@ -75,10 +72,7 @@ import {UniqueAttrName} from './submission/panel/unique-attr-name.directive';
         HttpClientModule,
         AgGridModule.withComponents([
             ActionButtonsCellComponent,
-            DateCellComponent,
-            FileActionsCellComponent,
-            FileTypeCellComponent,
-            ProgressCellComponent
+            DateCellComponent
         ]),
         SharedModule,
         HelpModule,
@@ -107,7 +101,6 @@ import {UniqueAttrName} from './submission/panel/unique-attr-name.directive';
         SubmissionAttributesComponent,
         SubmissionItemsPanelComponent,
         SubmissionItemsComponent,
-        FileListComponent,
         SideBarComponent,
         SideBarItemComponent,
         InputFileComponent,
@@ -120,10 +113,7 @@ import {UniqueAttrName} from './submission/panel/unique-attr-name.directive';
         TextareaAutosize,
         UniqueAttrName,
         ActionButtonsCellComponent,
-        DateCellComponent,
-        FileActionsCellComponent,
-        FileTypeCellComponent,
-        ProgressCellComponent
+        DateCellComponent
     ],
     providers: [
         AuthGuard,

@@ -9,7 +9,6 @@ import {PasswordResetComponent} from './password-reset/password-reset.component'
 import {SubmissionListComponent} from './submission/subm-list.component';
 import {SubmissionEditComponent} from './submission/subm-edit.component';
 import {SubmissionViewComponent} from './submission/subm-view.component';
-import {FileListComponent} from './file/file-list.component';
 
 import {AuthGuard} from "./auth.guard";
 
@@ -25,5 +24,5 @@ export const APP_ROUTES: Routes = [
     {path: 'submissions', component: SubmissionListComponent, canActivate: [AuthGuard]},
     {path: 'edit/:accno', component: SubmissionEditComponent, canActivate: [AuthGuard]},
     {path: 'view/:accno', component: SubmissionViewComponent, canActivate: [AuthGuard]},
-    {path: 'files', component: FileListComponent, canActivate: [AuthGuard]}
+    {path: 'files', loadChildren: '../file/file.module#FileModule', canActivate: [AuthGuard]}
 ];
