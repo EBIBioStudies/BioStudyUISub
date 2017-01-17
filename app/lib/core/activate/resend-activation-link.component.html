@@ -1,0 +1,53 @@
+<container-root>
+    <container-md>
+
+        <div class="panel panel-info">
+            <div class="panel-body" *ngIf="!showSuccess">
+                <h4>
+                    Resend Activation Link
+                </h4>
+                <p>Please enter your registered e-mail address here so that we can resend you the activation link.</p>
+                <p>
+                    <span *ngIf="hasError" class="help-block span-error-large margin-bottom-none">
+                        {{message}}
+                    </span>
+                </p>
+
+                <form novalidate name="raForm" role="form"
+                      (ngSubmit)="raForm.valid && onSubmit($event)" #raForm="ngForm">
+                    <div class="form-group" [ngClass]="{'has-error': email.invalid}">
+                        <label class="control-label" for="email">Email
+                            <span *ngIf="email.errors">
+                                <span *ngIf="email.errors.required">: cannot be blank</span>
+                            </span>
+                        </label>
+                        <input type="text" id="email" name="email" tabindex="1"
+                               class="form-control"
+                               placeholder="Email address"
+                               [(ngModel)]="req.email"
+                               (change)="message=''"
+                               required
+                               #email>
+                    </div>
+                    <recaptcha name="recaptcha"
+                               [(ngModel)]="req.recaptcha"
+                               required
+                               siteKey="6Lcmlv0SAAAAAHofnIcb29l1LMZsnGFcSlH8Reve" #recaptcha></recaptcha>
+                    <div class="form-group margin-top-large">
+                        <i *ngIf="sending" class="fa fa-spinner fa-pulse fa-3x"></i>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+
+            </div>
+            <div class="panel-body" *ngIf="showSuccess">
+                <p>
+                    <span class="help-block span-success-large margin-bottom-none">
+                        The activation link has been sent to the address you've entered. Please check your mailbox and follow the instructions in the email.
+                    </span>
+                </p>
+            </div>
+        </div>
+
+    </container-md>
+</container-root>

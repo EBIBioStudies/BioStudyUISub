@@ -1,15 +1,36 @@
 var gulp = require('gulp');
-
+var debug = require('gulp-debug');
 
 var webserver = require('gulp-webserver');
 var zip = require('gulp-zip');
 var bump = require('gulp-bump');
-var ngConfig = require('gulp-ng-config');
 var del = require('del');
 var extend = require('gulp-extend');
-var Builder = require('systemjs-builder');
-//var ngAnnotate = require('gulp-ng-annotate');
+var Builder = require('jspm').Builder; //require('systemjs-builder');
 var htmlreplace = require('gulp-html-replace');
+var sourcemaps = require('gulp-sourcemaps');
+var less = require('gulp-less');
+var replace = require('gulp-replace');
+
+var appConfig = require('./config.json');
+
+gulp.task('ag-grid:copy', function() {
+    return gulp.src(['node_modules/ag-grid/**/*'])
+        .pipe(gulp.dest('app/jspm_packages/other/ag-grid/'));
+});
+
+gulp.task('ag-grid-ng2:copy', function() {
+    return gulp.src(['node_modules/ag-grid-ng2/**/*'])
+        .pipe(gulp.dest('app/jspm_packages/other/ag-grid-ng2/'));
+});
+
+gulp.task('ag-grid:json', function() {
+    return gulp.src(['ag-grid/*.json'])
+        .pipe(gulp.dest('app/jspm_packages/other/'));
+});
+
+/* workaround for jspm not been able to install ag-grid from npm */
+gulp.task('init', gulp.series('ag-grid:copy', 'ag-grid-ng2:copy', 'ag-grid:json'));
 
 /* increment the version */
 gulp.task('bump', function () {
@@ -27,40 +48,21 @@ gulp.task('bump', function () {
 gulp.task('config', function () {
     return gulp.src(['config.json', 'version.json'])
         .pipe(extend('config.json'))
-        .pipe(ngConfig('BioStudyApp.config',
-            {
-                wrap: 'ES6'
-            }
-        ))
-        .pipe(gulp.dest('app/lib'));
+        .pipe(gulp.dest('app/lib/config'));
 });
 
-gulp.task('clean:js', function () {
+gulp.task('clean', function () {
     return del([
-        '.build/lib'
+        '.build'
     ]);
 });
 
-gulp.task('clean:images', function () {
-    return del([
-        '.build/images'
-    ]);
-});
-
-gulp.task('clean:jspm_packages', function () {
-    return del([
-        '.build/jspm_packages'
-    ]);
-});
-
-gulp.task('clean', ['clean:js', 'clean:images', 'clean:jspm_packages']);
-
-gulp.task('copy:images', ['clean:images'], function () {
+gulp.task('copy:images', function () {
     return gulp.src(['app/images/**/*'], {base: 'app'})
         .pipe(gulp.dest('.build/'));
 });
 
-gulp.task('copy:jspm_packages', ['clean:jspm_packages'], function () {
+gulp.task('copy:jspm_packages', function () {
     return gulp.src(['app/jspm_packages/**/*'], {base: 'app'})
         .pipe(gulp.dest('.build/'));
 });
@@ -70,35 +72,55 @@ gulp.task('copy:jspm_config', function () {
         .pipe(gulp.dest('.build/'));
 });
 
-gulp.task('copy', ['copy:images', 'copy:index', 'copy:jspm_packages', 'copy:jspm_config']);
+gulp.task('copy:jspm_browser_config', function () {
+    return gulp.src(['app/jspm.browser.js'])
+        .pipe(replace(/"?baseURL"?\s*:\s*".*"/, `"baseURL": "${appConfig.APP_CONTEXT}"`))
+        .pipe(gulp.dest('.build/'));
+});
 
-gulp.task('copy:index', function() {
+
+gulp.task('copy:index', function () {
     return gulp.src(['app/index.html', 'app/thor-integration.html'])
         .pipe(htmlreplace({
-            'css': ['lib/main.css', 'lib/main-from-less.css'],
+            'css': ['lib/main.css', 'lib/app.css'],
+            'js': 'lib/main.js'
         }))
         .pipe(gulp.dest('.build/'));
 });
 
+gulp.task('copy:templates', function () {
+    return gulp.src(['app/lib/**/*.html'])
+        .pipe(gulp.dest('.build/lib/'));
+});
+
+gulp.task('copy', gulp.parallel('copy:images', 'copy:index', 'copy:jspm_packages', 'copy:jspm_config', 'copy:jspm_browser_config'));
+
 /* a workaround for: SystemJS builder doesn't create sub-folders automatically for css files */
-gulp.task('mkdir', ['clean:js'], function() {
+gulp.task('mkdir', function() {
     return gulp.src(['app/lib', '!app/lib/**/*'], {base: 'app'})
         .pipe(gulp.dest('.build/'));
 });
 
-gulp.task('js', ['mkdir'], function (cb) {
-    var builder = new Builder('app', 'app/jspm.config.js');
+gulp.task('js', gulp.series('mkdir', function (cb) {
+    var builder = new Builder();
     builder.config({
         separateCSS: true
     });
-    builder.bundle('lib/main.js', '.build/lib/main.js', {
+    builder.bundle('lib/main.ts', '.build/lib/main.js', {
         minify: true,
         mangle: false,
         sourceMaps: true
-    }).then(function() {
+    }).then(function () {
         cb();
     });
-    // TODO: minify with ngAnnotate
+}));
+
+gulp.task('css', function() {
+    return gulp.src('app/styles/app.less')
+        .pipe(sourcemaps.init())
+        .pipe(less())
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest('.build/lib'));
 });
 
 gulp.task('zip', function () {
@@ -107,13 +129,13 @@ gulp.task('zip', function () {
         .pipe(gulp.dest('.dist'));
 });
 
-gulp.task('default', ['js', 'copy']);
+gulp.task('default', gulp.series('clean', 'init', 'copy', 'js', 'css'));
 
-gulp.task('webserver', [], function () {
+gulp.task('webserver', function () {
 
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-    gulp.src('app' /*'.build'*/)
+    gulp.src('app')
         .pipe(webserver({
             port: 7000,
             https: true,
@@ -132,13 +154,8 @@ var Server = require('karma').Server;
 
 gulp.task('test', function (done) {
     new Server({
-        configFile: __dirname + '/karma.conf.js',
+        configFile: require('path').resolve('karma.conf.js'),
         singleRun: true
     }, done).start();
 });
-
-gulp.task('autotest', function () {
-    return gulp.watch(['/app/lib/**/*.js'], ['test']);
-});
-
 
