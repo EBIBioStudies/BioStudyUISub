@@ -33,8 +33,6 @@ import {ResendActivationLinkComponent} from './activate/resend-activation-link.c
 import {PasswordResetReqComponent} from './password-reset/password-reset-req.component';
 import {PasswordResetComponent} from './password-reset/password-reset.component';
 
-import {DummyComponent} from './dummy.component';
-
 
 import {APP_ROUTES} from './app-routes';
 import {SignUpComponent} from './signup/signup.component';
@@ -71,7 +69,6 @@ import {Equals2} from './password-reset/equals2.directive';
         ResendActivationLinkComponent,
         PasswordResetReqComponent,
         PasswordResetComponent,
-        DummyComponent,
         Equals2
     ],
     providers: [
