@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {ActivatedRoute, Params} from '@angular/router';
 
-import {AuthService} from '../../auth/index';
+import {AuthService} from '../auth.service';
 
 import tmpl from './activate.component.html'
 

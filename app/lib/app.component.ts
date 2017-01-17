@@ -1,9 +1,9 @@
 import {Component, Inject} from '@angular/core';
 
-import {UserSession} from "../auth/index";
+import {UserSession} from './auth/index';
 
 @Component({
-    selector: 'app-root',
+    selector: 'bsst-app',
     template: `
     <app-header></app-header>
     <router-outlet></router-outlet>

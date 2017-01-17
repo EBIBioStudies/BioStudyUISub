@@ -1,19 +1,19 @@
 import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {RecaptchaComponent} from 'ng2-recaptcha';
 
-import {AuthService} from '../../auth/index';
+import {AuthService} from '../auth.service';
 
-import tmpl from './resend-activation-link.component.html'
+import tmpl from './password-reset-req.component.html'
 
 @Component({
-    selector: 'user-activation-resend',
+    selector: 'passwd-reset-req',
     template: tmpl
 })
-export class ResendActivationLinkComponent implements OnInit {
-    private req = {email: "", recaptcha: ""};
-    private message: string;
-    private hasError: boolean;
-    private showSuccess: boolean;
+export class PasswordResetReqComponent implements OnInit {
+    private model:any = {email: '', recaptcha: ''};
+    private message: string = '';
+    private hasError: boolean = false;
+    private showSuccess: boolean = false;
 
     @ViewChild('recaptcha') private recaptcha: RecaptchaComponent;
 
@@ -23,10 +23,10 @@ export class ResendActivationLinkComponent implements OnInit {
     onSubmit(event) {
         event.preventDefault();
 
-        this.message = "";
+        this.message = '';
         this.hasError = false;
-        this.authService
-            .resendActivationLink(this.req.email, this.req.recaptcha)
+
+        this.authService.passwordResetRequest(this.model.email, this.model.recaptcha)
             .subscribe(
                 (data) => {
                     this.showSuccess = true;
@@ -36,6 +36,6 @@ export class ResendActivationLinkComponent implements OnInit {
                     this.message = error.message;
                     this.recaptcha.reset();
                 }
-            )
+            );
     }
 }

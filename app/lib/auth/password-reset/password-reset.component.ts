@@ -3,7 +3,7 @@ import {RecaptchaComponent} from 'ng2-recaptcha';
 
 import {ActivatedRoute, Params} from '@angular/router';
 
-import {AuthService} from '../../auth/index';
+import {AuthService} from '../auth.service';
 
 import tmpl from './password-reset.component.html'
 

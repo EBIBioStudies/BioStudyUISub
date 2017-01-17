@@ -1,6 +1,6 @@
 import {Inject, ErrorHandler}  from '@angular/core';
 
-import {UserSession} from '../auth/user-session';
+import {UserSession} from './auth/user-session';
 
 
 export class GlobalErrorHandler implements ErrorHandler {

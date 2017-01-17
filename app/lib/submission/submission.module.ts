@@ -1,8 +1,9 @@
 import {NgModule}  from '@angular/core';
+import {RouterModule} from '@angular/router';
+
 import {AgGridModule} from 'ag-grid-ng2/main';
 
 import {HttpClientModule} from '../http/http-client.module';
-import {SubmissionRoutingModule} from './submission-routing.module';
 import {FileModule} from '../file/file.module';
 import {SharedModule} from '../shared/shared.module';
 
@@ -31,12 +32,12 @@ import {UniqueAttrName} from './panel/unique-attr-name.directive';
 @NgModule({
     imports: [
         HttpClientModule,
-        SubmissionRoutingModule,
         AgGridModule.withComponents([
             ActionButtonsCellComponent,
             DateCellComponent
         ]),
         SharedModule,
+        RouterModule,
         FileModule
     ],
     providers: [
@@ -65,6 +66,11 @@ import {UniqueAttrName} from './panel/unique-attr-name.directive';
         ActionButtonsCellComponent,
         DateCellComponent
     ],
+    exports: [
+        SubmissionListComponent,
+        SubmissionEditComponent,
+        SubmissionViewComponent
+    ]
 })
 export class SubmissionModule {
 }

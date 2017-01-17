@@ -10,7 +10,6 @@ import 'rxjs/add/operator/catch';
 import {RegistrationData} from './registration-data';
 
 import {UserSession} from './user-session';
-import {UserRole} from './user-role';
 
 import {HttpClient} from '../http/index'
 

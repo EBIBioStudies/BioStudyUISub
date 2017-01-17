@@ -1,20 +1,56 @@
-import {NgModule}       from '@angular/core';
+import {NgModule, ErrorHandler} from '@angular/core';
 import {BrowserModule}  from '@angular/platform-browser';
 import {HashLocationStrategy, LocationStrategy} from '@angular/common';
 
-import {CoreModule} from './core/core.module';
+import {RecaptchaModule} from 'ng2-recaptcha';
 
-import {AppComponent} from './core/app.component';
+import {
+    TypeaheadModule,
+    TooltipModule,
+    TabsModule,
+    DropdownModule,
+    ModalModule,
+    PaginationModule
+} from 'ng2-bootstrap';
+
+import {AppRoutingModule} from './app-routing.module';
+import {CoreModule} from './core/core.module';
+import {HelpModule} from './help/help.module';
+import {AuthModule} from './auth/auth.module';
+import {SubmissionModule} from './submission/submission.module';
+import {FileModule} from './file/file.module';
+import {ConfigModule} from './config/config.module';
+
+import {AppComponent} from './app.component';
+import {AuthGuard} from './auth.guard';
+import {GlobalErrorHandler} from './global-error.handler';
+
 
 @NgModule({
     imports: [
         BrowserModule,
-        CoreModule
+        RecaptchaModule.forRoot(),
+        TypeaheadModule.forRoot(),
+        TooltipModule.forRoot(),
+        TabsModule.forRoot(),
+        DropdownModule.forRoot(),
+        ModalModule.forRoot(),
+        PaginationModule.forRoot(),
+        AppRoutingModule,
+        CoreModule,
+        HelpModule,
+        AuthModule,
+        SubmissionModule,
+        FileModule,
+        ConfigModule
     ],
     declarations: [
+        AppComponent
     ],
     providers: [
-        {provide: LocationStrategy, useClass: HashLocationStrategy}
+        AuthGuard,
+        {provide: LocationStrategy, useClass: HashLocationStrategy},
+        {provide: ErrorHandler, useClass: GlobalErrorHandler}
     ],
     bootstrap: [AppComponent]
 })

@@ -1,4 +1,5 @@
 import {NgModule} from '@angular/core';
+import {RouterModule} from '@angular/router';
 import {AgGridModule} from 'ag-grid-ng2/main';
 
 import {HttpClientModule} from '../http/http-client.module';
@@ -6,7 +7,6 @@ import {SharedModule} from '../shared/shared.module';
 import {FileService} from './file.service';
 import {FileUploadService} from './file-upload.service';
 import {FileUploadButtonComponent} from './file-upload-button.component';
-import {FileRoutingModule} from './file-routing.module';
 import {
     FileListComponent, ProgressCellComponent, FileActionsCellComponent,
     FileTypeCellComponent
@@ -15,8 +15,8 @@ import {
 @NgModule({
     imports: [
         HttpClientModule,
+        RouterModule,
         SharedModule,
-        FileRoutingModule,
         AgGridModule.withComponents([
             FileActionsCellComponent,
             FileTypeCellComponent,
@@ -35,6 +35,9 @@ import {
     providers: [
         FileService,
         FileUploadService
+    ],
+    exports: [
+        FileListComponent
     ]
 })
 export class FileModule {
