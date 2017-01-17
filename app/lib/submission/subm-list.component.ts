@@ -6,7 +6,7 @@ import {TooltipModule} from 'ng2-bootstrap';
 import {Router} from '@angular/router';
 
 import tmpl from './subm-list.component.html'
-import {SubmissionService, SubmissionModel} from '../../submission/index';
+import {SubmissionService, SubmissionModel} from './index';
 
 import {GridOptions} from 'ag-grid/main';
 
@@ -14,7 +14,7 @@ import 'ag-grid/dist/styles/ag-grid.css!';
 import 'ag-grid/dist/styles/theme-fresh.css!';
 
 import {AgRendererComponent} from 'ag-grid-ng2/main';
-import {UserData} from '../../auth/index';
+import {UserData} from '../auth/index';
 
 import * as _ from 'lodash';
 

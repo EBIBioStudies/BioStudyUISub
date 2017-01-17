@@ -3,7 +3,7 @@ import {NgForm, FormGroup, FormControl} from '@angular/forms';
 
 import * as _ from 'lodash';
 
-import {Attributes, DictionaryService} from '../../../submission/index';
+import {Attributes, DictionaryService} from '../index';
 import {TypeaheadValuesForItem} from './typeahead-values';
 
 @Component({

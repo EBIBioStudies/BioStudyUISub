@@ -2,7 +2,7 @@ import {Component, Inject, Input, Output, OnChanges, forwardRef, EventEmitter} f
 import {FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor} from '@angular/forms';
 
 import * as _ from 'lodash';
-import {PubMedSearchService} from '../../../submission/index';
+import {PubMedSearchService} from '../index';
 
 @Component({
     selector: 'pubmedid-search',

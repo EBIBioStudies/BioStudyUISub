@@ -1,7 +1,7 @@
 import {Component, Inject, Input, OnChanges, forwardRef} from '@angular/core';
 import {FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor} from '@angular/forms';
 
-import {FileService} from '../../../file/index';
+import {FileService} from '../../file/index';
 
 
 @Component({
