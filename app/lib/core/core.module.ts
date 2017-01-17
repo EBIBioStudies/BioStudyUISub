@@ -34,7 +34,6 @@ import {PasswordResetReqComponent} from './password-reset/password-reset-req.com
 import {PasswordResetComponent} from './password-reset/password-reset.component';
 
 import {DummyComponent} from './dummy.component';
-import {ORCIDInputBoxComponent} from './orcid-input-box.component';
 
 
 import {APP_ROUTES} from './app-routes';
@@ -73,7 +72,6 @@ import {Equals2} from './password-reset/equals2.directive';
         PasswordResetReqComponent,
         PasswordResetComponent,
         DummyComponent,
-        ORCIDInputBoxComponent,
         Equals2
     ],
     providers: [

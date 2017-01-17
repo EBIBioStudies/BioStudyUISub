@@ -13,10 +13,12 @@ import {
 
 import {ContainerRootComponent} from './container-root.component';
 import {ContainerMdComponent} from './container-md.component';
+import {ORCIDInputBoxComponent} from './orcid-input-box.component';
 
 @NgModule({
     imports: [
         CommonModule,
+        FormsModule,
         TypeaheadModule,
         TooltipModule,
         TabsModule,
@@ -26,7 +28,8 @@ import {ContainerMdComponent} from './container-md.component';
     ],
     declarations: [
         ContainerRootComponent,
-        ContainerMdComponent
+        ContainerMdComponent,
+        ORCIDInputBoxComponent
     ],
     exports: [
         CommonModule,
@@ -40,7 +43,8 @@ import {ContainerMdComponent} from './container-md.component';
         ModalModule,
         PaginationModule,
         ContainerRootComponent,
-        ContainerMdComponent
+        ContainerMdComponent,
+        ORCIDInputBoxComponent
     ]
 })
 export class SharedModule {
