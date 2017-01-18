@@ -8,22 +8,28 @@ import {AuthService} from './auth.service';
 
 @Injectable()
 export class UserData {
-    private d: any = null;
+    private d: any;
 
     constructor(@Inject(UserSessionEvents) userSessionEvents: UserSessionEvents,
                 @Inject(AuthService) authService: AuthService) {
 
-        userSessionEvents.userSessionCreated$.subscribe((ev) => {
-            this.data = null;
-            authService.checkUser().subscribe(data => {
-                console.debug('UserData: loaded', data);
-                this.data = data;
-            });
+        userSessionEvents.userSessionCreated$.subscribe((name) => {
+            if (name) {
+                this.data = null;
+                authService.checkUser().subscribe(data => {
+                    console.debug('UserData: loaded', data);
+                    this.data = data;
+                });
+            }
         });
 
-        userSessionEvents.userSessionDestroyed$.subscribe((ev) => {
-            this.data = null;
+        userSessionEvents.userSessionDestroyed$.subscribe((name) => {
+            if (name) {
+                this.data = null;
+            }
         });
+
+        this.data = null;
     }
 
     get key(): string {
