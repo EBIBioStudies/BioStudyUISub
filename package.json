@@ -269,8 +269,8 @@
     }
   },
   "dependencies": {
-    "ag-grid": "^7.0.2",
-    "ag-grid-ng2": "^7.0.1",
+    "ag-grid": "^7.2.2",
+    "ag-grid-ng2": "^7.2.2",
     "jspm": "^0.17.0-beta.32"
   }
 }
