@@ -135,7 +135,7 @@ export class AuthService {
 
     signOut(): Observable<any> {
         if (this.userSession.isAnonymous()) {
-            return Observable.just({});
+            return Observable.of({});
         }
         return this.http.post("/api/auth/signout", {})
             .map(() => {
