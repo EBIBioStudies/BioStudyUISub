@@ -31,7 +31,6 @@ import {TypeaheadValuesForItem} from './typeahead-values';
                    placeholder="Type a key"
                    tooltip="Empty or duplicated value"
                    [isDisabled]="attrForm.controls['name_' + attr.id] && attrForm.controls['name_' + attr.id].valid"
-                   placement="top-left"
                    [typeahead]="typeaheadAttrNames()"
                    typeaheadAppendToBody="true"
                    typeaheadMinLength="0"
@@ -56,7 +55,6 @@ import {TypeaheadValuesForItem} from './typeahead-values';
                        placeholder="Enter a value"
                        tooltip="This field is required"
                        [isDisabled]="attrForm.controls['value_' + attr.id] && attrForm.controls['value_' + attr.id].valid"
-                       placement="top-left"
                        [typeahead]="typeaheadAttrValues(attr.name)"
                        typeaheadAppendToBody="true"
                        typeaheadMinLength="0"
@@ -81,8 +79,7 @@ import {TypeaheadValuesForItem} from './typeahead-values';
                       <button type="button"
                            class="btn btn-sm btn-danger btn-flat"
                            (click)="onRemoveAttrClick(idx);"
-                           [tooltip]="removeAttrTooltip"
-                           placement="bottom">
+                           [tooltip]="removeAttrTooltip">
                            <i class="fa fa-trash-o"></i>
                       </button>
                  </span>
