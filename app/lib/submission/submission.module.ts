@@ -28,6 +28,8 @@ import {PropertyFilterPipe} from './panel/prop-filter.pipe';
 import {SlideOutTipComponent} from './panel/slide-out-tip.component';
 import {TextareaAutosize} from './textarea-autosize.directive';
 import {UniqueAttrName} from './panel/unique-attr-name.directive';
+import {DateFormatDirective} from './date-format.directive';
+import {DateInputBoxComponent} from './date-input-box';
 
 @NgModule({
     imports: [
@@ -64,7 +66,9 @@ import {UniqueAttrName} from './panel/unique-attr-name.directive';
         TextareaAutosize,
         UniqueAttrName,
         ActionButtonsCellComponent,
-        DateCellComponent
+        DateCellComponent,
+        DateFormatDirective,
+        DateInputBoxComponent
     ],
     exports: [
         SubmissionListComponent,

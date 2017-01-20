@@ -74,7 +74,7 @@ SystemJS.config({
         "ng2-smart-table": "npm:ng2-smart-table@0.4.0-3",
         "monospaced/angular-elastic": "github:monospaced/angular-elastic@2.5.1",
         "ng2-cookies": "npm:ng2-cookies@1.0.2",
-        "ng2-bootstrap": "npm:ng2-bootstrap@1.1.16-7",
+        "ng2-bootstrap": "npm:ng2-bootstrap@1.2.6",
         "@angular/http": "npm:@angular/http@2.3.1",
         "@angular/router": "npm:@angular/router@3.0.2",
         "core-js": "npm:core-js@2.4.1",
@@ -235,7 +235,7 @@ SystemJS.config({
                 "create-hash": "npm:create-hash@1.1.2",
                 "evp_bytestokey": "npm:evp_bytestokey@1.0.0",
                 "pbkdf2": "npm:pbkdf2@3.0.9",
-                "asn1.js": "npm:asn1.js@4.9.0"
+                "asn1.js": "npm:asn1.js@4.9.1"
             }
         },
         "npm:des.js@1.0.0": {
@@ -317,13 +317,6 @@ SystemJS.config({
                 "inherits": "npm:inherits@2.0.3"
             }
         },
-        "npm:asn1.js@4.9.0": {
-            "map": {
-                "bn.js": "npm:bn.js@4.11.6",
-                "inherits": "npm:inherits@2.0.3",
-                "minimalistic-assert": "npm:minimalistic-assert@1.0.0"
-            }
-        },
         "npm:readable-stream@2.2.2": {
             "map": {
                 "inherits": "npm:inherits@2.0.3",
@@ -376,9 +369,16 @@ SystemJS.config({
                 "symbol-observable": "npm:symbol-observable@1.0.4"
             }
         },
-        "npm:ng2-bootstrap@1.1.16-7": {
+        "npm:ng2-bootstrap@1.2.6": {
             "map": {
                 "moment": "npm:moment@2.17.1"
+            }
+        },
+        "npm:asn1.js@4.9.1": {
+            "map": {
+                "bn.js": "npm:bn.js@4.11.6",
+                "minimalistic-assert": "npm:minimalistic-assert@1.0.0",
+                "inherits": "npm:inherits@2.0.3"
             }
         }
     }

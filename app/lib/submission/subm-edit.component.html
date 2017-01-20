@@ -81,7 +81,7 @@
                             <div class="col-sm-12 ">
                                 <label class="control-label">Title
                                     <span *ngIf="title.errors">
-                                        <span *ngIf="!title.pristine && title.errors.required">: cannot be blank</span>
+                                        <span *ngIf="title.errors.required">: cannot be blank</span>
                                         <span *ngIf="title.errors.minlength">: must be at least 50 characters</span>
                                     </span>
                                 </label>
@@ -101,15 +101,16 @@
                             <div class="col-sm-12">
                                 <label class="control-label">Release date
                                     <span *ngIf="releaseDate.errors">
-                                        <span *ngIf="!releaseDate.pristine && releaseDate.errors.required">: cannot be blank</span>
+                                        <span *ngIf="releaseDate.errors.required">: cannot be blank</span>
+                                        <span *ngIf="releaseDate.errors.bsstDateFormat">: should be in YYYY-MM-DD format</span>
                                     </span>
                                 </label>
-                                <input type="date" class="form-control" id="releaseDate" name="releaseDate"
-                                       [readonly]="readonly"
-                                       [(ngModel)]="submission.releaseDate"
-                                       required
-                                       #releaseDate="ngModel">
-                                <!--ng-model-options="{ allowInvalid: true }"/-->
+                                <date-input-box
+                                        name="releaseDate"
+                                        [(ngModel)]="submission.releaseDate"
+                                        #releaseDate="ngModel"
+                                        required
+                                        bsstDateFormat></date-input-box>
                             </div>
                         </div>
 
@@ -118,7 +119,7 @@
                             <div class="col-sm-12">
                                 <label class="control-label">Description
                                     <span *ngIf="description.errors">
-                                        <span *ngIf="!description.pristine && description.errors.required">: cannot be blank</span>
+                                        <span *ngIf="description.errors.required">: cannot be blank</span>
                                         <span *ngIf="description.errors.minlength">: must be at least 50 characters</span>
                                     </span>
                                 </label>
@@ -129,7 +130,6 @@
                                           required
                                           autosize="200"
                                           #description="ngModel"></textarea>
-                                <!--                                          ng-model-options="{ allowInvalid: true }"-->
                             </div>
                         </div>
 

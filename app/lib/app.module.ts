@@ -10,7 +10,8 @@ import {
     TabsModule,
     DropdownModule,
     ModalModule,
-    PaginationModule
+    PaginationModule,
+    DatepickerModule
 } from 'ng2-bootstrap';
 
 import {AppRoutingModule} from './app-routing.module';
@@ -36,6 +37,7 @@ import {GlobalErrorHandler} from './global-error.handler';
         DropdownModule.forRoot(),
         ModalModule.forRoot(),
         PaginationModule.forRoot(),
+        DatepickerModule.forRoot(),
         AppRoutingModule,
         CoreModule,
         HelpModule,

@@ -12,16 +12,7 @@ import tmpl from './subm-edit.component.html'
 
 @Component({
     selector: 'subm-edit',
-    template: tmpl,
-    styles: [`
-    .popup {
-      position: absolute;
-      background-color: #fff;
-      border-radius: 3px;
-      border: 1px solid #ddd;
-      height: 251px;
-    }
-`]
+    template: tmpl
 })
 
 export class SubmissionEditComponent implements OnInit, OnDestroy {
@@ -151,5 +142,4 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
             this.submission.addContact();
         }
     }
-
 }
