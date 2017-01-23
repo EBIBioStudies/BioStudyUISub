@@ -1,0 +1,183 @@
+<div *ngIf="!readonly" bsModal #submitResults="bs-modal"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="myLargeModalLabel"
+     aria-hidden="true"
+     (onHide)="onSubmitResultsHide()">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" (click)="submitResults.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 *ngIf="errors.length > 0" class="modal-title">Submit failed</h4>
+                <h4 *ngIf="errors.length == 0" class="modal-title">Submit succeeded</h4>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group">
+                    <li *ngFor="let error of errors" class="list-group-item text-danger">
+                        <span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;{{error}}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row-offcanvas row-offcanvas-left">
+
+    <form *ngIf="submission" class="form-horizontal" id="subm-form" novalidate name="submForm" role="form" method="post"
+          (ngSubmit)="submForm.valid && onSubmit($event)" #submForm="ngForm">
+
+        <subm-sidebar *ngIf="!readonly"
+                (toggle)="uisettings.collapseLeftSide=!uisettings.collapseLeftSide"
+                [collapsed]="uisettings.collapseLeftSide">
+            <sidebar-item
+                    (click)="addAnnotation();"
+                    label="Describe your study"
+                    icon="fa-comment-o"></sidebar-item>
+            <sidebar-item
+                    (click)="addFile();"
+                    label="Add a file"
+                    icon="fa-file-o"></sidebar-item>
+
+            <sidebar-item
+                    (click)="addContact();"
+                    label="Add a contact"
+                    icon="fa-user"></sidebar-item>
+
+            <sidebar-item
+                    (click)="addLink();"
+                    label="Add a link"
+                    icon="fa-link"></sidebar-item>
+
+            <sidebar-item
+                    (click)="addPublication();"
+                    label="Add a publication"
+                    icon="fa-book"></sidebar-item>
+
+            <sidebar-item
+                    (click)="onSubmit()"
+                    label="Submit"
+                    icon="fa-database"
+                    [disabled]="submForm.invalid"></sidebar-item>
+        </subm-sidebar>
+
+        <div class="container-fluid">
+
+            <aside class="right-side content" [ngClass]="{'collapse-left' : !readonly && uisettings.collapseLeftSide}">
+
+                <div class="panel" [ngClass]="{'panel-danger': submForm.invalid, 'panel-info':submForm.valid}">
+                    <div class="panel-heading">
+                        <span>Submission {{accno}}</span><span *ngIf="!readonly && submForm.invalid"> << There are some validation errors. Please correct them before to proceed to submit >> </span>
+                        <div class="pull-right" *ngIf="readonly">
+                            <a class="pull-right btn btn-success btn-xs" (click)="onEditSubmission()">Edit</a>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+
+                        <div class="form-group row margin-bottom-small padding-right-15"
+                             [ngClass]="{'has-error':title.invalid}">
+                            <div class="col-sm-12 ">
+                                <label class="control-label">Title
+                                    <span *ngIf="title.errors">
+                                        <span *ngIf="title.errors.required">: cannot be blank</span>
+                                        <span *ngIf="title.errors.minlength">: must be at least 50 characters</span>
+                                    </span>
+                                </label>
+                                <input type="text" class="form-control" id="title" name="title"
+                                       placeholder="Enter a title"
+                                       [(ngModel)]="submission.title"
+                                       [readonly]="readonly"
+                                       minlength="50"
+                                       required
+                                       #title="ngModel">
+                                <!--ng-model-options="{ allowInvalid: true }"-->
+                            </div>
+                        </div>
+
+                        <div class="form-group row margin-bottom-small padding-right-15"
+                             [ngClass]="{'has-error':releaseDate.invalid}">
+                            <div class="col-sm-12">
+                                <label class="control-label">Release date
+                                    <span *ngIf="releaseDate.errors">
+                                        <span *ngIf="releaseDate.errors.required">: cannot be blank</span>
+                                        <span *ngIf="releaseDate.errors.bsstDateFormat">: should be in YYYY-MM-DD format</span>
+                                    </span>
+                                </label>
+                                <date-input-box
+                                        name="releaseDate"
+                                        [(ngModel)]="submission.releaseDate"
+                                        #releaseDate="ngModel"
+                                        required
+                                        bsstDateFormat></date-input-box>
+                            </div>
+                        </div>
+
+                        <div class="form-group row margin-bottom-small padding-right-15"
+                             [ngClass]="{'has-error':description.invalid}">
+                            <div class="col-sm-12">
+                                <label class="control-label">Description
+                                    <span *ngIf="description.errors">
+                                        <span *ngIf="description.errors.required">: cannot be blank</span>
+                                        <span *ngIf="description.errors.minlength">: must be at least 50 characters</span>
+                                    </span>
+                                </label>
+                                <textarea id="description" name="description" class="form-control input-sm"
+                                          [(ngModel)]="submission.description"
+                                          [readonly]="readonly"
+                                          minlength="50"
+                                          required
+                                          autosize="200"
+                                          #description="ngModel"></textarea>
+                            </div>
+                        </div>
+
+                        <p></p>
+
+                        <div class="col-lg-12 padding-left-none">
+                            <subm-attributes-panel
+                                    [attributes]="submission.annotations.items[0].attributes"
+                                    [parentForm]="submForm.form"
+                                    [readonly]="readonly"
+                                    type="annotation">
+                            </subm-attributes-panel>
+
+                            <subm-items-panel
+                                    [items]="submission.contacts"
+                                    [parentForm]="submForm.form"
+                                    [readonly]="readonly"
+                                    type="contact"></subm-items-panel>
+
+                            <subm-items-panel
+                                    [items]="submission.links"
+                                    [parentForm]="submForm.form"
+                                    [readonly]="readonly"
+                                    type="link"></subm-items-panel>
+
+                            <subm-items-panel
+                                    [items]="submission.files"
+                                    [parentForm]="submForm.form"
+                                    [readonly]="readonly"
+                                    type="file"></subm-items-panel>
+
+                            <subm-items-panel
+                                    [items]="submission.publications"
+                                    [parentForm]="submForm.form"
+                                    [readonly]="readonly"
+                                    type="publication"></subm-items-panel>
+                        </div>
+                        <div>
+                            <button type="submit" class="btn btn-primary btn-lg"
+                                    *ngIf="!readonly && !submForm.invalid">Submit
+                            </button>
+                            <span *ngIf="submitting"><i class="fa fa-spinner fa-spin"></i></span>
+                        </div>
+                    </div>
+                </div>
+
+            </aside>
+        </div>
+    </form>
+    <!-- /.right-side -->
+</div>

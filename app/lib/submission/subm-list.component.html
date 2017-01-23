@@ -1,0 +1,44 @@
+<container-root>
+
+    <aside class="right-side strech">
+
+        <section class="content">
+            <div class="panel panel-info">
+                <div class="panel-heading clearfix">
+                    List of submissions
+                    <p class="pull-right">
+                        <a class="pull-right btn btn-default btn-xs"
+                           (click)="createSubmission()">Create a new submission
+                        </a>
+                    </p>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <ag-grid-ng2 #agGrid style="width: 100%; height: 450px;" class="ag-fresh"
+                                     [gridOptions]="gridOptions"
+                                     [columnDefs]="columnDefs"
+                                     [rowData]="rowData">
+                        </ag-grid-ng2>
+                    </div>
+                    <div>
+                        <pager [totalItems]="totalItems"
+                               [itemsPerPage]="itemsPerPage"
+                               [(ngModel)]="currentPage"
+                               (pageChanged)="onPageChanged($event)"
+                               pageBtnClass="btn"></pager>
+                        <!--pagination [totalItems]="totalItems"
+                                    [(ngModel)]="currentPage"
+                                    [maxSize]="5"
+                                    class="pagination-sm"
+                                    [boundaryLinks]="true"
+                                    [rotate]="false"
+                                    (pageChanged)="onPageChanged($event)"></pagination-->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </aside>
+</container-root>
+
+

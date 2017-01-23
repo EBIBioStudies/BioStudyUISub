@@ -1,4 +1,6 @@
 {
   "APP_PROXY_BASE": "/proxy",
-  "APP_DEBUG_ENABLED": true
+  "APP_CONTEXT": "/",
+  "APP_DEBUG_ENABLED": true,
+  "APP_PROD": true
 }

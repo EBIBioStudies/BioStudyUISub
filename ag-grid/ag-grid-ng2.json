@@ -1,0 +1,12 @@
+{
+  "main": "main.js",
+  "format": "cjs",
+  "meta": {
+    "*.json": {
+      "format": "json"
+    },
+    "main.d.ts": {
+      "format": "esm"
+    }
+  }
+}
