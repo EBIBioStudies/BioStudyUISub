@@ -70,23 +70,14 @@ export class PubMedIdSearchComponent implements ControlValueAccessor, OnChanges 
     set value(val) {
         if (this.pubMedId !== val) {
             this.pubMedId = val;
-            this.changed.forEach(f => f(PubMedIdSearchComponent.addPMCPrefix(val)));
+            this.changed.forEach(f => f(val));
         }
-    }
-
-    static addPMCPrefix(val) {
-        return val ? 'PMC' + val : val;
-    }
-
-    static removePMCPrefix(val) {
-        console.log('removePMCPrefix');
-        return val ? val.replace(/[PMC]+/, ''): val;
     }
 
     //From ControlValueAccessor interface
     writeValue(value: any) {
         if (value) {
-            this.pubMedId = PubMedIdSearchComponent.removePMCPrefix(value);
+            this.pubMedId = value;
         }
     }
 
