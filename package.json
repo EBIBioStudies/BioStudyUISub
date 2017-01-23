@@ -57,7 +57,7 @@
       "less": "npm:less@^2.7.1",
       "lodash": "npm:lodash@^4.16.3",
       "monospaced/angular-elastic": "github:monospaced/angular-elastic@^2.5.1",
-      "ng2-bootstrap": "npm:ng2-bootstrap@^1.1.16-7",
+      "ng2-bootstrap": "npm:ng2-bootstrap@^1.2.6",
       "ng2-cookies": "npm:ng2-cookies@^1.0.2",
       "ng2-recaptcha": "npm:ng2-recaptcha@^1.4.0",
       "ng2-smart-table": "npm:ng2-smart-table@^0.4.0-3",
@@ -269,8 +269,8 @@
     }
   },
   "dependencies": {
-    "ag-grid": "^7.0.2",
-    "ag-grid-ng2": "^7.0.1",
+    "ag-grid": "^7.2.2",
+    "ag-grid-ng2": "^7.2.2",
     "jspm": "^0.17.0-beta.32"
   }
 }

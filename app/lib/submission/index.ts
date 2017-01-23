@@ -6,3 +6,6 @@ export * from './dictionary.service';
 export * from './pagetab';
 export * from './pagetabproxy';
 export * from './submission';
+export * from './subm-list.component';
+export * from './subm-edit.component';
+export * from './subm-view.component';

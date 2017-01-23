@@ -10,7 +10,6 @@ import 'rxjs/add/operator/catch';
 import {RegistrationData} from './registration-data';
 
 import {UserSession} from './user-session';
-import {UserRole} from './user-role';
 
 import {HttpClient} from '../http/index'
 
@@ -136,7 +135,7 @@ export class AuthService {
 
     signOut(): Observable<any> {
         if (this.userSession.isAnonymous()) {
-            return Observable.just({});
+            return Observable.of({});
         }
         return this.http.post("/api/auth/signout", {})
             .map(() => {
