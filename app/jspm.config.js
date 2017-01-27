@@ -96,7 +96,7 @@ SystemJS.config({
         "lodash": "npm:lodash@4.16.3",
         "os": "npm:jspm-nodelibs-os@0.2.0",
         "path": "npm:jspm-nodelibs-path@0.2.0",
-        "process": "npm:jspm-nodelibs-process@0.2.0",
+        "process": "github:jspm/nodelibs-process@0.2.0-alpha",
         "promise": "npm:promise@7.1.1",
         "reflect-metadata": "npm:reflect-metadata@0.1.8",
         "rxjs": "npm:rxjs@5.0.0-rc.4",
