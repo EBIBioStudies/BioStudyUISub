@@ -152,7 +152,7 @@ export class ProgressCellComponent implements AgRendererComponent {
                                     *ngIf="backButton"><i class="fa fa-long-arrow-left" aria-hidden="true"></i>&nbsp;Back
                                 to submission
                             </button>
-                            &nbsp;Uploaded files
+                            &nbsp;{{currentPath}}
                         </div>
                         <div class="pull-right">
                             <file-upload-button (onUpload)="onNewUpload($event)"></file-upload-button>       
@@ -165,7 +165,8 @@ export class ProgressCellComponent implements AgRendererComponent {
                                   [columnDefs]="columnDefs"
                                   enableSorting
                                   enableColResize
-                                  rowHeight="30">
+                                  rowHeight="30"
+                                  (rowDoubleClicked)="onRowDoubleClicked($event)">
                              </ag-grid-ng2>
                         </div>
                     </div>
@@ -184,6 +185,8 @@ export class FileListComponent implements OnInit {
     private rowData: any[];
     private columnDefs: any[];
 
+    private currentPath: string = '/';
+
     constructor(@Inject(FileService) private fileService: FileService,
                 @Inject(FileUploadService) private fileUploadService: FileUploadService,
                 @Inject(ActivatedRoute) private route: ActivatedRoute) {
@@ -191,7 +194,7 @@ export class FileListComponent implements OnInit {
             onGridReady: () => {
                 this.gridOptions.api.sizeColumnsToFit();
             },
-            getNodeChildDetails: FileListComponent.getNodeChildDetails,
+            rowSelection: 'single'
         };
 
         this.rowData = [];
@@ -212,16 +215,16 @@ export class FileListComponent implements OnInit {
     createColumnDefs() {
         this.columnDefs = [
             {
-                headerName: 'Name',
-                field: 'name',
-                cellRenderer: 'group'
-            },
-            {
                 headerName: 'Type',
                 field: 'type',
                 width: 50,
                 suppressSorting: true,
                 cellRendererFramework: FileTypeCellComponent
+            },
+            {
+                headerName: 'Name',
+                field: 'name',
+                cellRenderer: 'group'
             },
             {
                 headerName: 'Progress',
@@ -239,7 +242,7 @@ export class FileListComponent implements OnInit {
     }
 
     loadData() {
-        this.fileService.getFiles()
+        this.fileService.getFiles(this.currentPath)
             .subscribe((data) => {
                 console.log(data);
                 this.updateDataRows([].concat(
@@ -258,6 +261,11 @@ export class FileListComponent implements OnInit {
          addSelectedFileToTree();
          });
          */
+    }
+
+    onRowDoubleClicked(ev) {
+        this.currentPath += ev.data.name + '/';
+        this.loadData();
     }
 
     updateDataRows(rows) {

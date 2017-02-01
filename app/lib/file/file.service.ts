@@ -26,8 +26,8 @@ export class FileService {
         });
     }
 
-    getFiles(): Observable<any> {
-        return this.http.get("/api/files/dir")
+    getFiles(path:string='/', depth:number=1, showArchive:boolean=false):Observable<any>  {
+        return this.http.get(`/api/files/dir?showArchive=${showArchive}&depth=${depth}&path=${path}`)
             .map((res: Response) => {
                 let data = res.json();
                 if (data.status === 'OK') {

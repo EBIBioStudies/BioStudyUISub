@@ -54,7 +54,7 @@
       "es6-shim": "github:es-shims/es6-shim@^0.35.1",
       "font-awesome": "npm:font-awesome@^4.7.0",
       "less": "npm:less@^2.7.1",
-      "lodash": "npm:lodash@^4.16.3",
+      "lodash": "npm:lodash@^4.17.4",
       "monospaced/angular-elastic": "github:monospaced/angular-elastic@^2.5.1",
       "ng2-bootstrap": "npm:ng2-bootstrap@^1.2.6",
       "ng2-cookies": "npm:ng2-cookies@^1.0.2",
@@ -88,7 +88,7 @@
       "mkdirp": "npm:mkdirp@^0.5.0",
       "os": "npm:jspm-nodelibs-os@^0.2.0",
       "path": "npm:jspm-nodelibs-path@^0.2.0",
-      "process": "github:jspm/nodelibs-process@^0.2.0-alpha",
+      "process": "npm:jspm-nodelibs-process@^0.2.0",
       "promise": "npm:promise@^7.1.1",
       "rxjs": "npm:rxjs@5.0.0-rc.4",
       "source-map": "npm:source-map@^0.5.3",
@@ -236,7 +236,7 @@
       "npm:jquery@3.1.1": {
         "format": "amd"
       },
-      "npm:lodash@4.16.3": {
+      "npm:lodash@4.17.4": {
         "map": {
           "buffer": "@empty",
           "process": "@empty"
