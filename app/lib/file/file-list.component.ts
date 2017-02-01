@@ -152,7 +152,7 @@ export class ProgressCellComponent implements AgRendererComponent {
                                     *ngIf="backButton"><i class="fa fa-long-arrow-left" aria-hidden="true"></i>&nbsp;Back
                                 to submission
                             </button>
-                            &nbsp;{{currentPath}}
+                            &nbsp;<directory-path [path]="currentPath" (change)="onDirectoryPathChange($event)"></directory-path>
                         </div>
                         <div class="pull-right">
                             <file-upload-button (onUpload)="onNewUpload($event)"></file-upload-button>       
@@ -166,7 +166,7 @@ export class ProgressCellComponent implements AgRendererComponent {
                                   enableSorting
                                   enableColResize
                                   rowHeight="30"
-                                  (rowDoubleClicked)="onRowDoubleClicked($event)">
+                                  (rowDoubleClicked)="onRowDoubleClick($event)">
                              </ag-grid-ng2>
                         </div>
                     </div>
@@ -263,8 +263,16 @@ export class FileListComponent implements OnInit {
          */
     }
 
-    onRowDoubleClicked(ev) {
-        this.currentPath += ev.data.name + '/';
+    onRowDoubleClick(ev) {
+        if (ev.data.type != 'FILE') {
+            this.currentPath += ev.data.name + '/';
+            this.loadData();
+        }
+    }
+
+    onDirectoryPathChange(dir) {
+        console.log(dir);
+        this.currentPath = dir;
         this.loadData();
     }
 

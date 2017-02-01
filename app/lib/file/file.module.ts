@@ -7,6 +7,7 @@ import {SharedModule} from '../shared/shared.module';
 import {FileService} from './file.service';
 import {FileUploadService} from './file-upload.service';
 import {FileUploadButtonComponent} from './file-upload-button.component';
+import {DirectoryPathComponent} from './directory-path.component';
 import {
     FileListComponent, ProgressCellComponent, FileActionsCellComponent,
     FileTypeCellComponent
@@ -30,7 +31,8 @@ import {
         FileActionsCellComponent,
         FileTypeCellComponent,
         ProgressCellComponent,
-        FileUploadButtonComponent
+        FileUploadButtonComponent,
+        DirectoryPathComponent
     ],
     providers: [
         FileService,
