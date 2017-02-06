@@ -185,7 +185,7 @@ export class FileListComponent implements OnInit {
     private rowData: any[];
     private columnDefs: any[];
 
-    private currentPath: string = '/';
+    private currentPath: string = '/User';
 
     constructor(@Inject(FileService) private fileService: FileService,
                 @Inject(FileUploadService) private fileUploadService: FileUploadService,
@@ -217,14 +217,13 @@ export class FileListComponent implements OnInit {
             {
                 headerName: 'Type',
                 field: 'type',
-                width: 50,
+                width: 30,
                 suppressSorting: true,
                 cellRendererFramework: FileTypeCellComponent
             },
             {
                 headerName: 'Name',
-                field: 'name',
-                cellRenderer: 'group'
+                field: 'name'
             },
             {
                 headerName: 'Progress',
