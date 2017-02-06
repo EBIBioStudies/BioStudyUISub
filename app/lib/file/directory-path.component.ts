@@ -9,7 +9,7 @@ import {Component, Inject, EventEmitter, Input, Output, OnInit} from '@angular/c
            {{dir}}
         </a>
         <span *ngIf="last">{{dir}}</span>
-        <span>/</span>
+        <span><i class="fa fa-angle-right" aria-hidden="true"></i></span>
 </span>
 `
 })
