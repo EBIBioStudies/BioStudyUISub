@@ -24,8 +24,9 @@ export class SubmissionService {
         return this.getSubmission(submission, true);
     }
 
-    getAllSubmissions(offset = -1, limit = -1, filter = ''): Observable<any> {
-        return this.http.get(`/api/submissions?offset=${offset}&limit=${limit}&filter=${filter}`)
+    getSubmissions(submitted=false, offset = -1, limit = -1, filter = ''): Observable<any> {
+        let submissions = submitted ? 'submittedSubmissions' : 'modifiedSubmissions';
+        return this.http.get(`/api/${submissions}?offset=${offset}&limit=${limit}&filter=${filter}`)
             .map((res: Response) => {
                 let data = res.json();
                 return data.submissions;
