@@ -30,6 +30,7 @@ import {TextareaAutosize} from './textarea-autosize.directive';
 import {UniqueAttrName} from './panel/unique-attr-name.directive';
 import {DateFormatDirective} from './date-format.directive';
 import {DateInputBoxComponent} from './date-input-box';
+import {SubmTypeComponent} from './subm-type.component';
 
 @NgModule({
     imports: [
@@ -68,7 +69,8 @@ import {DateInputBoxComponent} from './date-input-box';
         ActionButtonsCellComponent,
         DateCellComponent,
         DateFormatDirective,
-        DateInputBoxComponent
+        DateInputBoxComponent,
+        SubmTypeComponent
     ],
     exports: [
         SubmissionListComponent,

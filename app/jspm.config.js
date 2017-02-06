@@ -66,6 +66,7 @@ SystemJS.config({
         "graceful-fs": "npm:graceful-fs@4.1.11",
         "image-size": "npm:image-size@0.5.0",
         "es6-shim": "github:es-shims/es6-shim@0.35.1",
+        "jspm-nodelibs-process": "npm:jspm-nodelibs-process@0.2.0",
         "less": "npm:less@2.7.1",
         "mime": "npm:mime@1.3.4",
         "mkdirp": "npm:mkdirp@0.5.1",

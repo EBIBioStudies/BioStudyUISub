@@ -101,16 +101,65 @@ export class DateCellComponent implements AgRendererComponent {
 
 @Component({
     selector: 'subm-list',
-    template: tmpl
+    template: `
+<container-root>
+
+    <aside class="right-side strech">
+
+        <section class="content">
+            <div class="panel panel-info">
+                <div class="panel-heading clearfix">
+                    <span>Submissions</span>
+                    <subm-type [submitted]="false" (select)="onSubmTypeSelect($event)"></subm-type>
+                    <span>(current page: {{currentPage}})</span>
+                    <span>(page size: {{itemsPerPage}})</span>
+                    <p class="pull-right">
+                        <a class="pull-right btn btn-default btn-xs"
+                           (click)="createSubmission()">Create a new submission
+                        </a>
+                    </p>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <ag-grid-ng2 #agGrid style="width: 100%; height: 500px;" class="ag-fresh"
+                                     [gridOptions]="gridOptions"
+                                     [columnDefs]="columnDefs"
+                                     [rowData]="rowData">
+                        </ag-grid-ng2>
+                    </div>
+                    <div>
+                        <pager [totalItems]="totalItems"
+                               [itemsPerPage]="itemsPerPage"
+                               [(ngModel)]="currentPage"
+                               (pageChanged)="onPageChanged($event)"
+                               pageBtnClass="btn"></pager>
+                        <!--pagination [totalItems]="totalItems"
+                                    [(ngModel)]="currentPage"
+                                    [maxSize]="5"
+                                    class="pagination-sm"
+                                    [boundaryLinks]="true"
+                                    [rotate]="false"
+                                    (pageChanged)="onPageChanged($event)"></pagination-->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </aside>
+</container-root>
+`
 })
 
 export class SubmissionListComponent {
+
     private gridOptions: GridOptions;
     private columnDefs: any[];
     private rows: any[];
     private currentPage: number = 1;
     private totalItems: number = 0;
-    private itemsPerPage: number = 50;
+    private itemsPerPage: number = 15;
+
+    private showSubmitted: boolean = false;
 
     error: any = null;
 
@@ -167,7 +216,7 @@ export class SubmissionListComponent {
     loadDataRows() {
         let offset = (this.currentPage - 1) * this.itemsPerPage;
         let limit = this.itemsPerPage;
-        this.submService.getAllSubmissions(offset, limit)
+        this.submService.getSubmissions(this.showSubmitted, offset, limit)
             .subscribe((data) => {
                 console.debug('SubmList: data loaded');
                 this.setDataRows(data);
@@ -180,7 +229,14 @@ export class SubmissionListComponent {
         this.loadDataRows();
     }
 
+    onSubmTypeSelect(ev) {
+        this.showSubmitted = ev.submitted;
+        this.currentPage = 1;
+        this.loadDataRows();
+    }
+
     setDataRows(rows) {
+        console.log("rows=", rows.length);
         this.rows = rows;
         this.totalItems = (this.currentPage - 1)*this.itemsPerPage + this.rows.length + 1;
         this.gridOptions.api.setRowData(this.decorateDataRows(this.rows));
