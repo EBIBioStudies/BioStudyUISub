@@ -32,15 +32,15 @@ export class FileUpload {
             .subscribe(
                 res => {
                     p.unsubscribe();
-                    this.__progress.next(-2);
                     this.__status = 'success';
+                    this.__progress.complete();
                 },
                 err => {
                     p.unsubscribe();
-                    this.__status = 'error';
                     //TODO error message
-                    this.__error = 'an error';
-                    this.__progress.next(-1);
+                    this.__status = 'error';
+                    this.__error = 'file upload failed';
+                    this.__progress.error('file upload failed');
                 });
     }
 

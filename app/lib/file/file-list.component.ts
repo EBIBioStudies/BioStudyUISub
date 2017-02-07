@@ -84,16 +84,17 @@ export class FileTypeCellComponent implements AgRendererComponent {
 @Component({
     selector: 'progress-cell',
     template: `
-    <div *ngIf="value < 100" class="progress" 
+    <div *ngIf="value >= 0 && value < 100" class="progress" 
          style="margin-bottom: 0;">
          <div class="progress-bar" [ngClass]="{'progress-bar-success' : !error }" role="progressbar"
                 [ngStyle]="{ 'width': value + '%'}">{{value}}%</div>
     </div>
     <div *ngIf="value === 100" style="text-align:center;color:green"><i class="fa fa-check"></i></div>
+    <div *ngIf="value < 0" class="text-danger">{{error}}</div>
 `
 })
 export class ProgressCellComponent implements AgRendererComponent {
-    private value: number;
+    private value: number = 0;
     private error: string;
     private type: string;
 
@@ -103,36 +104,36 @@ export class ProgressCellComponent implements AgRendererComponent {
         let type = params.data.type;
         let upload = params.data.upload;
         if (upload) {
-            let onUploadFinished = params.data.onUploadFinished || (() => {
-                });
-            this.__sb = upload.progress.subscribe((e) => {
-                if (e >= 0) {
-                    this.value = e > 0 ? e - 1 : e; //make it 99 not 100
-                }
-                let isError = e === -1;
-                let isFinished = e === -2;
-                let isDone = isError || isFinished;
-
-                if (isFinished) {
-                    this.value = 100;
-                }
-                if (isError) {
-                    this.error = upload.errorMessage;
-                }
-                if (isDone) {
-                    onUploadFinished();
-                    _.delay(() => {
-                        // it's delayed because event comes earlier than __sb is created
+            if (upload.failed()) {
+                this.error = upload.error;
+                this.value = -1;
+            } else {
+                let onUploadFinished = params.data.onUploadFinished || (() => {
+                    });
+                this.__sb = upload.progress.subscribe(
+                    (p) => {
+                        console.log('progress value:', p);
+                        this.value = p > 0 ? p - 1 : p; //make it 99 not 100
+                    },
+                    (error) => {
+                        this.error = error;
+                        this.value = -1;
                         this.unsubscribe();
-                    }, 50);
-                }
-            })
+                        onUploadFinished();
+                    },
+                    () => {
+                        this.value = 100;
+                        this.unsubscribe();
+                        onUploadFinished();
+                    });
+            }
         } else if (type === 'FILE' || type === 'ARCHIVE') {
             this.value = 100;
         }
     }
 
     unsubscribe() {
+        console.log('progress unsubscribe', this.__sb);
         this.__sb.unsubscribe();
     }
 }
@@ -240,7 +241,8 @@ export class FileListComponent implements OnInit {
         ];
     }
 
-    loadData(path) {
+    loadData(path?:string) {
+        path = path ? path : this.currentPath;
         this.fileService.getFiles(path)
             .subscribe(
                 data => {
@@ -327,7 +329,7 @@ export class FileListComponent implements OnInit {
         this.fileService
             .removeFile(fileName)
             .subscribe((resp) => {
-                this.loadData(this.currentPath);
+                this.loadData();
             });
     }
 

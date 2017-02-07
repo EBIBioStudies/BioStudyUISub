@@ -21,7 +21,7 @@ export class FileService {
     }
 
     removeFile(fullPath): Observable<any> {
-        return this.http.del("/api/files/delete?file=" + fullPath)
+        return this.http.del("/api/files/delete?path=" + fullPath)
             .map((res: Response) => res.json())
             .catch(FileService.errorHandler);
     }
