@@ -185,7 +185,7 @@ export class FileListComponent implements OnInit {
     private rowData: any[];
     private columnDefs: any[];
 
-    private currentPath: string = '/User';
+    private currentPath: string;
 
     constructor(@Inject(FileService) private fileService: FileService,
                 @Inject(FileUploadService) private fileUploadService: FileUploadService,
@@ -199,7 +199,7 @@ export class FileListComponent implements OnInit {
 
         this.rowData = [];
         this.createColumnDefs();
-        this.loadData();
+        this.loadData('/User');
     }
 
     ngOnInit() {
@@ -235,19 +235,28 @@ export class FileListComponent implements OnInit {
                 width: 100,
                 suppressMenu: true,
                 suppressSorting: true,
-                cellRendererFramework:  FileActionsCellComponent
+                cellRendererFramework: FileActionsCellComponent
             }
         ];
     }
 
-    loadData() {
-        this.fileService.getFiles(this.currentPath)
-            .subscribe((data) => {
-                console.log(data);
-                this.updateDataRows([].concat(
-                    this.decorateUploads(this.fileUploadService.currentUploads()),
-                    this.decorateFiles(data)));
-            });
+    loadData(path) {
+        this.fileService.getFiles(path)
+            .subscribe(
+                data => {
+                    if (data.status === 'OK') { //use proper http codes for this!!!!!!
+                        this.currentPath = path;
+                        this.updateDataRows([].concat(
+                            this.decorateUploads(this.fileUploadService.currentUploads()),
+                            this.decorateFiles(data.files)));
+                    } else {
+                        console.error("Error", data);
+                    }
+                },
+                err => {
+                    //TODO
+                }
+            );
 
         /*
          d.then(function (data) {
@@ -264,15 +273,13 @@ export class FileListComponent implements OnInit {
 
     onRowDoubleClick(ev) {
         if (ev.data.type != 'FILE') {
-            this.currentPath += ev.data.name + '/';
-            this.loadData();
+            this.loadData((this.currentPath + '/' + ev.data.name).replace('//', '/'));
         }
     }
 
     onDirectoryPathChange(dir) {
         console.log(dir);
-        this.currentPath = dir;
-        this.loadData();
+        this.loadData(dir);
     }
 
     updateDataRows(rows) {
@@ -320,7 +327,7 @@ export class FileListComponent implements OnInit {
         this.fileService
             .removeFile(fileName)
             .subscribe((resp) => {
-                this.loadData();
+                this.loadData(this.currentPath);
             });
     }
 

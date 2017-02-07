@@ -8,14 +8,16 @@ import {Subscription} from 'rxj/Subscription';
 
 import * as _ from 'lodash';
 
+const FILE_UPLOAD_URL = '/raw/fileUpload'; // use '/api/fileUpload' in offline mode
+
 export class FileUpload {
     private __status: string = 'uploading';
-    private __sb: Subscription;
     private __error: string;
+    private __sb: Subscription;
     private __progress: BehaviorSubject;
     private __files: string[];
 
-    constructor(files: File[], httpClient: HttpClient, progress: ProgressService): FileUpload {
+    constructor(path:string, files: File[], httpClient: HttpClient, progress: ProgressService): FileUpload {
         this.__files = _.map(files, 'name');
         this.__progress = new BehaviorSubject(0);
 
@@ -26,8 +28,9 @@ export class FileUpload {
             }
         );
 
-        this.__sb = httpClient.upload('/raw/fileUpload', files) // use '/api/fileUpload' in offline mode
-            .subscribe(res => {
+        this.__sb = httpClient.upload(FILE_UPLOAD_URL, files, path)
+            .subscribe(
+                res => {
                     p.unsubscribe();
                     this.__progress.next(-2);
                     this.__status = 'success';
@@ -96,8 +99,8 @@ export class FileUploadService {
         return _.map(this.__uploads, _.identity);
     }
 
-    upload(files: File[]): FileUpload {
-        let u = new FileUpload(files, this.http, this.progress);
+    upload(path:string, files: File[]): FileUpload {
+        let u = new FileUpload(path, files, this.http, this.progress);
         this.__uploads.push(u);
         return u;
     }

@@ -9,7 +9,8 @@ import {getUserCookies} from '../cookies/user-cookies';
 export class HttpClient {
     private prefix: string = AppConfig.PROXY_BASE;
 
-    constructor(@Inject(Http) private http: Http) {}
+    constructor(@Inject(Http) private http: Http) {
+    }
 
     get(url) {
         let options = new RequestOptions({headers: this.headers()});
@@ -26,8 +27,9 @@ export class HttpClient {
         return this.http.delete(this.transform(url), options);
     }
 
-    upload(url, files: File[]): Observable<any> {
+    upload(url, files: File[], path: string): Observable<any> {
         let input = new FormData();
+        input.append('path', path);
         for (let fi of files) {
             input.append('file', fi);
         }

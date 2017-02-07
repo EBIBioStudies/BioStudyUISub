@@ -1,4 +1,4 @@
-import {Component, Inject, EventEmitter, Input, Output, OnInit} from '@angular/core';
+import {Component, Inject, EventEmitter, Input, Output, Input, OnInit} from '@angular/core';
 import {FileUploadService} from './file-upload.service';
 import {Subscription} from 'rxjs/Subscription';
 
@@ -22,6 +22,7 @@ import {Subscription} from 'rxjs/Subscription';
 })
 export class FileUploadButtonComponent implements OnInit {
     @Output() onUpload: EventEmitter = new EventEmitter();
+    @Input() path?: string = '/User';
 
     constructor(@Inject(FileUploadService) private uploader: FileUploadService) {
     }
@@ -29,7 +30,7 @@ export class FileUploadButtonComponent implements OnInit {
     onFileChange(event) {
         let files = event.target.files;
         console.debug("Files to upload:", files);
-        let upload = this.uploader.upload(files);
+        let upload = this.uploader.upload(this.path, files);
         this.onUpload.emit(upload);
     }
 }

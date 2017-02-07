@@ -20,11 +20,13 @@ export class DirectoryPathComponent implements OnInit {
 
     @Input()
     set path(path: string) {
-        let p = path.replace(/\/\s*$/, '');
-        this.dirs = (('Home' + p).split('/'));
+        if (path) {
+            let p = path.replace(/\/\s*$/, '');
+            this.dirs = (('Home' + p).split('/'));
+        }
     }
 
     onDirectoryClick(idx) {
-       this.change.emit('/' + (this.dirs.slice(1, idx + 1)).join('/'));
+        this.change.emit('/' + (this.dirs.slice(1, idx + 1)).join('/'));
     }
 }
