@@ -254,9 +254,6 @@ export class FileListComponent implements OnInit {
                     } else {
                         console.error("Error", data);
                     }
-                },
-                err => {
-                    //TODO
                 }
             );
 
