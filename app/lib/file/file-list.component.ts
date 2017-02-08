@@ -84,7 +84,7 @@ export class FileTypeCellComponent implements AgRendererComponent {
 @Component({
     selector: 'progress-cell',
     template: `
-    <div *ngIf="value >= 0 && value < 100" class="progress" 
+    <div *ngIf="value >= 1 && value < 100" class="progress" 
          style="margin-bottom: 0;">
          <div class="progress-bar" [ngClass]="{'progress-bar-success' : !error }" role="progressbar"
                 [ngStyle]="{ 'width': value + '%'}">{{value}}%</div>
@@ -141,10 +141,18 @@ export class ProgressCellComponent implements AgRendererComponent {
 @Component({
     selector: 'file-list',
     template: `
-<container-root>
-    <aside class="right-side strech">
-    
-         <section class="content">
+<div class="row-offcanvas row-offcanvas-left">
+
+   <user-dirs-sidebar 
+       [initPath]="currentPath"
+       (select)="onUserDirSelect($event)"
+       (toggle)="sideBarCollapsed=!sideBarCollapsed"
+       [collapsed]="sideBarCollapsed">
+   </user-dirs-sidebar>
+          
+   <div class="container-fluid">
+        <aside class="right-side" [ngClass]="{'collapse-left' : sideBarCollapsed}">    
+            <section class="content">
                 <div class="panel panel-info">
                     <div class="panel-heading clearfix">
                         <div class="panel-title pull-left">
@@ -172,21 +180,22 @@ export class ProgressCellComponent implements AgRendererComponent {
                         </div>
                     </div>
                 </div>
-          </section>
-            
-    </aside>
-</container-root>
+              </section>
+          </aside>
+    </div>
+</div>
 `
 })
 
 export class FileListComponent implements OnInit {
-    backButton: boolean = false;
+    private backButton: boolean = false;
+    private sideBarCollapsed: boolean = false;
 
     private gridOptions: GridOptions;
     private rowData: any[];
     private columnDefs: any[];
 
-    private currentPath: string;
+    private currentPath: string = '/User';
 
     constructor(@Inject(FileService) private fileService: FileService,
                 @Inject(FileUploadService) private fileUploadService: FileUploadService,
@@ -200,7 +209,7 @@ export class FileListComponent implements OnInit {
 
         this.rowData = [];
         this.createColumnDefs();
-        this.loadData('/User');
+        this.loadData();
     }
 
     ngOnInit() {
@@ -276,9 +285,14 @@ export class FileListComponent implements OnInit {
         }
     }
 
-    onDirectoryPathChange(dir) {
+    onDirectoryPathChange(newPath) {
+        console.log(newPath);
+        this.loadData(newPath);
+    }
+
+    onUserDirSelect(dir) {
         console.log(dir);
-        this.loadData(dir);
+        this.loadData(dir.path);
     }
 
     updateDataRows(rows) {

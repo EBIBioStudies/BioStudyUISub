@@ -14,6 +14,18 @@ export class FileService {
     constructor(@Inject(HttpClient) private http: HttpClient,) {
     }
 
+    getUserDirs(): Observable<any> {
+        return this.getFiles('/Groups', 1, false)
+            .map(
+                (data) => {
+                    return [].concat(
+                        [{name:'Home', path: '/User'}],
+                        _.map(data.files, (f) => ({name:f.name, path: '/Groups/' + f.name}))
+                    );
+                }
+            )
+    }
+
     getFiles(path: string = '/', depth: number = 1, showArchive: boolean = true): Observable<any> {
         return this.http.get(`/api/files/dir?showArchive=${showArchive}&depth=${depth}&path=${path}`)
             .map((res: Response) => res.json())

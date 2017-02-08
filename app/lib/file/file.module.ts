@@ -8,6 +8,7 @@ import {FileService} from './file.service';
 import {FileUploadService} from './file-upload.service';
 import {FileUploadButtonComponent} from './file-upload-button.component';
 import {DirectoryPathComponent} from './directory-path.component';
+import {UserDirsSideBarComponent} from './user-dirs-sidebar.component';
 import {
     FileListComponent, ProgressCellComponent, FileActionsCellComponent,
     FileTypeCellComponent
@@ -32,7 +33,8 @@ import {
         FileTypeCellComponent,
         ProgressCellComponent,
         FileUploadButtonComponent,
-        DirectoryPathComponent
+        DirectoryPathComponent,
+        UserDirsSideBarComponent
     ],
     providers: [
         FileService,
