@@ -22,7 +22,7 @@ import {Subscription} from 'rxjs/Subscription';
 })
 export class FileUploadButtonComponent implements OnInit {
     @Output() onUpload: EventEmitter = new EventEmitter();
-    @Input() path?: string = '/User';
+    @Input() path: string;
 
     constructor(@Inject(FileUploadService) private uploader: FileUploadService) {
     }

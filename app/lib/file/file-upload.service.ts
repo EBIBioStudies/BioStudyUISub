@@ -106,6 +106,7 @@ export class FileUploadService {
     }
 
     remove(u: FileUpload) {
+        console.log(this.__uploads, u);
         _.pull(this.__uploads, [u]);
     }
 }
