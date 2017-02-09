@@ -220,8 +220,8 @@ export class FileListComponent implements OnInit {
         });
     }
 
-    asPath(p1: string, p2: string) {
-        return (p1 + '/' + p2).replace('//', '/');
+    asPath(...parts: string[]) {
+        return parts.join('/').replace(/\/[\/]+/, '/');
     }
 
     get currentPath() {
@@ -348,7 +348,7 @@ export class FileListComponent implements OnInit {
     private removeFile(fileName: string): void {
         console.log('removeFile', fileName);
         this.fileService
-            .removeFile(this.currentPath + "/" + fileName)
+            .removeFile(this.asPath(this.rootPath, this.relPath, fileName))
             .subscribe((resp) => {
                 this.loadData();
             });
