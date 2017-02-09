@@ -144,8 +144,8 @@ export class ProgressCellComponent implements AgRendererComponent {
 <div class="row-offcanvas row-offcanvas-left">
 
    <user-dirs-sidebar 
-       [initPath]="currentPath"
-       (select)="onUserDirSelect($event)"
+       [initPath]="rootPath"
+       (select)="onRootPathSelect($event)"
        (toggle)="sideBarCollapsed=!sideBarCollapsed"
        [collapsed]="sideBarCollapsed">
    </user-dirs-sidebar>
@@ -161,7 +161,7 @@ export class ProgressCellComponent implements AgRendererComponent {
                                     *ngIf="backButton"><i class="fa fa-long-arrow-left" aria-hidden="true"></i>&nbsp;Back
                                 to submission
                             </button>
-                            &nbsp;<directory-path [path]="currentPath" (change)="onDirectoryPathChange($event)"></directory-path>
+                            &nbsp;<directory-path [path]="relPath" (change)="onRelativePathChange($event)"></directory-path>
                         </div>
                         <div class="pull-right">
                             <file-upload-button [path]="currentPath" (onUpload)="onNewUpload($event)"></file-upload-button>       
@@ -191,11 +191,13 @@ export class FileListComponent implements OnInit {
     private backButton: boolean = false;
     private sideBarCollapsed: boolean = false;
 
+
     private gridOptions: GridOptions;
     private rowData: any[];
     private columnDefs: any[];
 
-    private currentPath: string = '/User';
+    private rootPath: string = '/User';
+    private relPath: string = '/';
 
     constructor(@Inject(FileService) private fileService: FileService,
                 @Inject(FileUploadService) private fileUploadService: FileUploadService,
@@ -216,6 +218,14 @@ export class FileListComponent implements OnInit {
         this.route.params.forEach((params: Params) => {
             this.backButton = params['bb'];
         });
+    }
+
+    asPath(p1: string, p2: string) {
+        return (p1 + '/' + p2).replace('//', '/');
+    }
+
+    get currentPath() {
+        return this.asPath(this.rootPath, this.relPath);
     }
 
     onBackButtonClick() {
@@ -250,13 +260,13 @@ export class FileListComponent implements OnInit {
         ];
     }
 
-    loadData(path?:string) {
-        path = path ? path : this.currentPath;
-        this.fileService.getFiles(path)
+    loadData(relPath?:string) {
+        relPath = relPath ? relPath : this.relPath;
+        this.fileService.getFiles(this.asPath(this.rootPath, relPath))
             .subscribe(
                 data => {
                     if (data.status === 'OK') { //use proper http codes for this!!!!!!
-                        this.currentPath = path;
+                        this.relPath = relPath;
                         this.updateDataRows([].concat(
                             this.decorateUploads(this.fileUploadService.currentUploads()),
                             this.decorateFiles(data.files)));
@@ -281,18 +291,18 @@ export class FileListComponent implements OnInit {
 
     onRowDoubleClick(ev) {
         if (ev.data.type != 'FILE') {
-            this.loadData((this.currentPath + '/' + ev.data.name).replace('//', '/'));
+            this.loadData(this.asPath(this.relPath, ev.data.name));
         }
     }
 
-    onDirectoryPathChange(newPath) {
-        console.log(newPath);
-        this.loadData(newPath);
+    onRelativePathChange(relPath) {
+        this.loadData(relPath);
     }
 
-    onUserDirSelect(dir) {
-        console.log(dir);
-        this.loadData(dir.path);
+    onRootPathSelect(rootPath) {
+        this.rootPath = rootPath;
+        this.relPath = '/';
+        this.loadData();
     }
 
     updateDataRows(rows) {

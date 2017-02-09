@@ -9,7 +9,7 @@ import {Component, Inject, EventEmitter, Input, Output, OnInit} from '@angular/c
            {{dir}}
         </a>
         <span *ngIf="last">{{dir}}</span>
-        <span><i class="fa fa-angle-right" aria-hidden="true"></i></span>
+        <span>/</span>
 </span>
 `
 })
@@ -22,7 +22,7 @@ export class DirectoryPathComponent implements OnInit {
     set path(path: string) {
         if (path) {
             let p = path.replace(/\/\s*$/, '');
-            this.dirs = (('Home' + p).split('/'));
+            this.dirs = (('\u2022' + p).split('/'));
         }
     }
 

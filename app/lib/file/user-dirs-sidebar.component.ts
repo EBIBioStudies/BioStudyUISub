@@ -71,7 +71,7 @@ export class UserDirsSideBarComponent implements OnInit {
         console.log(d);
         this.selectedPath = d.path;
         if (this.select) {
-            this.select.emit(d);
+            this.select.emit(d.path);
         }
     }
 }
