@@ -1,6 +1,5 @@
-import {Component, Inject, EventEmitter, Input, Output, Input, OnInit} from '@angular/core';
+import {Component, Inject, EventEmitter, Output, Input, OnInit} from '@angular/core';
 import {FileUploadService} from './file-upload.service';
-import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'file-upload-button',

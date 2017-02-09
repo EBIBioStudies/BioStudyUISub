@@ -28,8 +28,7 @@ import {FileService} from './file.service';
             </a>
             <a *ngIf="!collapsed"    
                 (click)="onDirSelect(dir)">
-                <i class="fa fa-fw fa-folder"></i>
-                <span>{{dir.name}}</span>
+                <i class="fa fa-fw fa-folder"></i>{{dir.name}}
             </a>
         </li>
     </ul>

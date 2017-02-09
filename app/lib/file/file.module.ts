@@ -7,6 +7,7 @@ import {SharedModule} from '../shared/shared.module';
 import {FileService} from './file.service';
 import {FileUploadService} from './file-upload.service';
 import {FileUploadButtonComponent} from './file-upload-button.component';
+import {FileUploadBadgeComponent} from './file-upload-badge.component';
 import {DirectoryPathComponent} from './directory-path.component';
 import {UserDirsSideBarComponent} from './user-dirs-sidebar.component';
 import {
@@ -33,6 +34,7 @@ import {
         FileTypeCellComponent,
         ProgressCellComponent,
         FileUploadButtonComponent,
+        FileUploadBadgeComponent,
         DirectoryPathComponent,
         UserDirsSideBarComponent
     ],
