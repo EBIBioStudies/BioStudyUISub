@@ -19,5 +19,8 @@ export class FileUploadBadgeComponent implements OnInit {
     constructor(@Inject(FileUploadService) private uploader: FileUploadService) {
     }
 
+    ngOnInit() {
+
+    }
 
 }

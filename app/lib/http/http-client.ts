@@ -4,12 +4,14 @@ import {Observable} from 'rxjs/Observable';
 
 import {AppConfig} from '../config/app.config';
 import {getUserCookies} from '../cookies/user-cookies';
+import {UploadService} from './upload.service';
 
 @Injectable()
 export class HttpClient {
     private prefix: string = AppConfig.PROXY_BASE;
 
-    constructor(@Inject(Http) private http: Http) {
+    constructor(@Inject(Http) private http: Http,
+                @Inject(UploadService) private uploadService: UploadService) {
     }
 
     get(url) {
@@ -33,7 +35,7 @@ export class HttpClient {
         for (let fi of files) {
             input.append('file', fi);
         }
-        return this.post(url, input);
+        return this.uploadService.post(this.transform(url), input, this.headers());
     }
 
     private headers(): Headers {

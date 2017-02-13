@@ -1,42 +1,36 @@
 import {Injectable, Inject} from '@angular/core';
 import {HttpClient} from '../http/http-client'
 import {Observable} from 'rxjs/Observable';
-import {ProgressService} from '../http/progress.service';
-import {Subject} from 'rxjs/Subject';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Subscription} from 'rxj/Subscription';
 
 import * as _ from 'lodash';
 
-const FILE_UPLOAD_URL = '/raw/fileUpload'; // use '/api/fileUpload' in offline mode
+const FILE_UPLOAD_URL = '/api/fileUpload';//'/raw/fileUpload'; // use '/api/fileUpload' in offline mode
 
 export class FileUpload {
     private __status: string = 'uploading';
     private __error: string;
     private __sb: Subscription;
-    private __progress: BehaviorSubject;
+    private __progress: BehaviorSubject<number>;
     private __files: string[];
 
-    constructor(path:string, files: File[], httpClient: HttpClient, progress: ProgressService): FileUpload {
+    constructor(path:string, files: File[], httpClient: HttpClient) {
         this.__files = _.map(files, 'name');
         this.__progress = new BehaviorSubject(0);
 
-        let p = progress.uploadProgress.subscribe(
-            e => {
-                let p = Math.ceil(100 * (e.loaded / e.total));
-                this.__progress.next(p);
-            }
-        );
-
         this.__sb = httpClient.upload(FILE_UPLOAD_URL, files, path)
             .subscribe(
-                res => {
-                    p.unsubscribe();
-                    this.__status = 'success';
-                    this.__progress.complete();
+                (res) => {
+                    if (res.kind === 'progress') {
+                        this.__progress.next(res.progress);
+                    }
+                    if (res.kind === 'response') {
+                        this.__status = 'success';
+                        this.__progress.complete();
+                    }
                 },
                 err => {
-                    p.unsubscribe();
                     //TODO error message
                     this.__status = 'error';
                     this.__error = 'file upload failed';
@@ -44,7 +38,7 @@ export class FileUpload {
                 });
     }
 
-    get progress(): Observable {
+    get progress(): Observable<number> {
         return this.__progress;
     }
 
@@ -65,7 +59,7 @@ export class FileUpload {
             this.__sb.unsubscribe();
             this.__sb = null;
             this.__status = 'cancelled';
-            this.__progress.next(-2);
+            this.__progress.complete();
         }
     }
 
@@ -90,8 +84,7 @@ export class FileUpload {
 export class FileUploadService {
     private __uploads: FileUpload[] = [];
 
-    constructor(@Inject(HttpClient) private http: HttpClient,
-                @Inject(ProgressService) private progress: ProgressService) {
+    constructor(@Inject(HttpClient) private http: HttpClient) {
         console.debug("FileUploadService created");
     }
 
@@ -100,7 +93,7 @@ export class FileUploadService {
     }
 
     upload(path:string, files: File[]): FileUpload {
-        let u = new FileUpload(path, files, this.http, this.progress);
+        let u = new FileUpload(path, files, this.http);
         this.__uploads.push(u);
         return u;
     }

@@ -2,12 +2,7 @@ import {NgModule}  from '@angular/core';
 import {HttpModule, BrowserXhr} from '@angular/http';
 
 import {HttpClient} from './http-client';
-import {ProgressService} from './progress.service';
-
-import {CustomBrowserXhr} from './custom-browser-xhr';
-
-const progress:ProgressService = new ProgressService();
-const browserXhr:BrowserXhr = new CustomBrowserXhr(progress);
+import {UploadService} from './upload.service';
 
 @NgModule({
     imports: [
@@ -18,8 +13,7 @@ const browserXhr:BrowserXhr = new CustomBrowserXhr(progress);
     ],
     providers: [
         HttpClient,
-        {provide: ProgressService, useValue: progress},
-        {provide: BrowserXhr, useValue: browserXhr}
+        UploadService
     ]
 })
 export class HttpClientModule {
