@@ -8,13 +8,13 @@ import {FileUploadService} from './file-upload.service';
            id="fileInput" 
            name="fileInput" 
            title="Upload Files" 
-           (change)="onFileChange($event)"
+           (change)="onInputChange($event)"
            style="display:none"
            multiple
            #inputFile/>
     <button type="button"
             class="btn btn-default btn-xs"
-            (click)="inputFile.click()">
+            (click)="inputFile.value = '';inputFile.click()">
             Upload Files
     </button>
 `
@@ -26,7 +26,7 @@ export class FileUploadButtonComponent implements OnInit {
     constructor(@Inject(FileUploadService) private uploader: FileUploadService) {
     }
 
-    onFileChange(event) {
+    onInputChange(event) {
         let files = event.target.files;
         console.debug("Files to upload:", files);
         let upload = this.uploader.upload(this.path, files);
