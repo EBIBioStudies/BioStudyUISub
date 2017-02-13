@@ -14,8 +14,10 @@ export class FileUpload {
     private __sb: Subscription;
     private __progress: BehaviorSubject<number>;
     private __files: string[];
+    private __path: string;
 
     constructor(path:string, files: File[], httpClient: HttpClient) {
+        this.__path = path;
         this.__files = _.map(files, 'name');
         this.__progress = new BehaviorSubject(0);
 
@@ -36,6 +38,10 @@ export class FileUpload {
                     this.__error = 'file upload failed';
                     this.__progress.error('file upload failed');
                 });
+    }
+
+    get path() : string {
+        return this.__path;
     }
 
     get progress(): Observable<number> {
@@ -88,8 +94,8 @@ export class FileUploadService {
         console.debug("FileUploadService created");
     }
 
-    currentUploads(): FileUpload[] {
-        return _.map(this.__uploads, _.identity);
+    activeUploads(): FileUpload[] {
+        return _.filter(_.map(this.__uploads, _.identity), (u) => !u.done());
     }
 
     upload(path:string, files: File[]): FileUpload {

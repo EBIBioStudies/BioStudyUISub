@@ -268,7 +268,7 @@ export class FileListComponent implements OnInit {
                     if (data.status === 'OK') { //use proper http codes for this!!!!!!
                         this.relPath = relPath;
                         this.updateDataRows([].concat(
-                            this.decorateUploads(this.fileUploadService.currentUploads()),
+                            this.decorateUploads(this.fileUploadService.activeUploads()),
                             this.decorateFiles(data.files)));
                     } else {
                         console.error("Error", data);
@@ -316,9 +316,6 @@ export class FileListComponent implements OnInit {
 
     decorateUploads(uploads: FileUpload[]): any[] {
         return _.flatMap(uploads, (u) => {
-            if (u.done()) {
-                return [];
-            }
             return _.map(u.files, (f) => ({
                 name: f,
                 upload: u,
