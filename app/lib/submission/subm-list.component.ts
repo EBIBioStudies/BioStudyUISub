@@ -108,10 +108,10 @@ export class DateCellComponent implements AgRendererComponent {
         <tabset>
            <tab heading="New / Modified Submissions"
                 [active]="!showSubmitted"
-                (select)="onSubmTypeSelect(false)"></tab>
+                (select)="onSubmTabSelect(false)"></tab>
            <tab heading="Submitted Submissions"
                 [active]="showSubmitted" 
-                (select)="onSubmTypeSelect(true)"></tab>
+                (select)="onSubmTabSelect(true)"></tab>
         </tabset>
         
         <section class="content">
@@ -222,9 +222,12 @@ export class SubmissionListComponent {
     loadDataRows() {
         let offset = (this.currentPage - 1) * this.itemsPerPage;
         let limit = this.itemsPerPage;
+
+        this.gridOptions.api.showLoadingOverlay();
+
         this.submService.getSubmissions(this.showSubmitted, offset, limit)
             .subscribe((data) => {
-                console.debug('SubmList: data loaded');
+                this.gridOptions.api.hideOverlay();
                 this.setDataRows(data);
             });
     }
@@ -235,10 +238,13 @@ export class SubmissionListComponent {
         this.loadDataRows();
     }
 
-    onSubmTypeSelect(submitted) {
-        this.showSubmitted = submitted;
-        this.currentPage = 1;
-        this.loadDataRows();
+    onSubmTabSelect(submitted) {
+        console.log('on submission tab select');
+        if (this.showSubmitted != submitted) {
+            this.showSubmitted = submitted;
+            this.currentPage = 1;
+            this.loadDataRows();
+        }
     }
 
     setDataRows(rows) {
