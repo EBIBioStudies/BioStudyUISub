@@ -104,13 +104,19 @@ export class DateCellComponent implements AgRendererComponent {
     template: `
 <container-root>
 
-    <aside class="right-side strech">
-
+    <aside class="right-side strech" style="padding-top: 5px">
+        <tabset>
+           <tab heading="New / Modified Submissions"
+                [active]="!showSubmitted"
+                (select)="onSubmTypeSelect(false)"></tab>
+           <tab heading="Submitted Submissions"
+                [active]="showSubmitted" 
+                (select)="onSubmTypeSelect(true)"></tab>
+        </tabset>
+        
         <section class="content">
             <div class="panel panel-info">
                 <div class="panel-heading clearfix">
-                    <span>Submissions</span>
-                    <subm-type [submitted]="false" (select)="onSubmTypeSelect($event)"></subm-type>
                     <span>(current page: {{currentPage}})</span>
                     <span>(page size: {{itemsPerPage}})</span>
                     <p class="pull-right">
@@ -229,14 +235,13 @@ export class SubmissionListComponent {
         this.loadDataRows();
     }
 
-    onSubmTypeSelect(ev) {
-        this.showSubmitted = ev.submitted;
+    onSubmTypeSelect(submitted) {
+        this.showSubmitted = submitted;
         this.currentPage = 1;
         this.loadDataRows();
     }
 
     setDataRows(rows) {
-        console.log("rows=", rows.length);
         this.rows = rows;
         this.totalItems = (this.currentPage - 1)*this.itemsPerPage + this.rows.length + 1;
         this.gridOptions.api.setRowData(this.decorateDataRows(this.rows));
