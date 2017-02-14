@@ -12,6 +12,7 @@ import 'ag-grid/dist/styles/theme-fresh.css!';
 import {AgRendererComponent} from 'ag-grid-ng2/main';
 
 import {FileService, FileUploadService, FileUpload} from './index';
+import {Path} from './path';
 
 import * as _ from 'lodash';
 
@@ -94,46 +95,29 @@ export class FileTypeCellComponent implements AgRendererComponent {
 `
 })
 export class ProgressCellComponent implements AgRendererComponent {
-    private value: number = 0;
-    private error: string;
+    private upload: FileUpload;
     private type: string;
 
-    private __sb;
-
     agInit(params: any): void {
-        let type = params.data.type;
-        let upload = params.data.upload;
-        if (upload) {
-            if (upload.failed()) {
-                this.error = upload.error;
-                this.value = -1;
-            } else {
-                let onUploadFinished = params.data.onUploadFinished || (() => {
-                    });
-                this.__sb = upload.progress.subscribe(
-                    (p) => {
-                        this.value = p > 0 ? p - 1 : p; //make it 99 not 100
-                    },
-                    (error) => {
-                        this.error = error;
-                        this.value = -1;
-                        this.unsubscribe();
-                        onUploadFinished();
-                    },
-                    () => {
-                        this.value = 100;
-                        this.unsubscribe();
-                        onUploadFinished();
-                    });
-            }
-        } else if (type === 'FILE' || type === 'ARCHIVE') {
-            this.value = 100;
-        }
+        this.type = params.data.type;
+        this.upload = params.data.upload;
     }
 
-    unsubscribe() {
-        console.log('progress unsubscribe', this.__sb);
-        this.__sb.unsubscribe();
+    get value(): number {
+        if (this.upload) {
+            if (this.upload.failed()) {
+                return -1;
+            }
+            return this.upload.progress;
+        }
+        if (this.type === 'FILE' || this.type === 'ARCHIVE') {
+            return 100;
+        }
+        return 0;
+    }
+
+    get error(): string {
+        return this.upload.error;
     }
 }
 
@@ -143,7 +127,8 @@ export class ProgressCellComponent implements AgRendererComponent {
 <div class="row-offcanvas row-offcanvas-left">
 
    <user-dirs-sidebar 
-       [initPath]="rootPath"
+       name="userDirsSidebar"
+       [(ngModel)]="rootPath"
        (select)="onRootPathSelect($event)"
        (toggle)="sideBarCollapsed=!sideBarCollapsed"
        [collapsed]="sideBarCollapsed">
@@ -160,11 +145,11 @@ export class ProgressCellComponent implements AgRendererComponent {
                                     *ngIf="backButton"><i class="fa fa-long-arrow-left" aria-hidden="true"></i>&nbsp;Back
                                 to submission
                             </button>
-                            &nbsp;<directory-path [path]="relPath" (change)="onRelativePathChange($event)"></directory-path>
+                            &nbsp;<directory-path [path]="path.rel" (change)="onRelativePathChange($event)"></directory-path>
                         </div>
                         <div class="pull-right">
-                            <file-upload-badge [path]="rootPath"></file-upload-badge>
-                            <file-upload-button [path]="currentPath" (onUpload)="onNewUpload($event)"></file-upload-button>       
+                            <file-upload-badge (select)="onUploadSelect($event)"></file-upload-badge>
+                            <file-upload-button [path]="path" (onUpload)="onNewUpload($event)"></file-upload-button>       
                         </div>
                     </div>
                     <div class="row">
@@ -191,13 +176,11 @@ export class FileListComponent implements OnInit {
     private backButton: boolean = false;
     private sideBarCollapsed: boolean = false;
 
-
     private gridOptions: GridOptions;
     private rowData: any[];
     private columnDefs: any[];
 
-    private rootPath: string = '/User';
-    private relPath: string = '/';
+    private path: Path = new Path('/User', '/');
 
     constructor(@Inject(FileService) private fileService: FileService,
                 @Inject(FileUploadService) private fileUploadService: FileUploadService,
@@ -209,6 +192,12 @@ export class FileListComponent implements OnInit {
             rowSelection: 'single'
         };
 
+        this.fileUploadService.uploadFinish$.subscribe((u: FileUpload) => {
+            if (u.path.fullPath().startsWith(this.currentPath)) {
+                console.log('on upload finished');
+                this.loadData();
+            }
+        });
         this.rowData = [];
         this.createColumnDefs();
         this.loadData();
@@ -220,19 +209,19 @@ export class FileListComponent implements OnInit {
         });
     }
 
-    asPath(...parts: string[]) {
-        return parts.join('/').replace(/\/[\/]+/, '/');
+    private get currentPath() {
+        return this.path.fullPath();
     }
 
-    get currentPath() {
-        return this.asPath(this.rootPath, this.relPath);
+    private get rootPath() {
+        return this.path.root;
     }
 
-    onBackButtonClick() {
-        window.history.back();
+    private set rootPath(rp: string) {
+        this.path = this.path.setRoot(rp);
     }
 
-    createColumnDefs() {
+    private createColumnDefs() {
         this.columnDefs = [
             {
                 headerName: 'Type',
@@ -260,13 +249,13 @@ export class FileListComponent implements OnInit {
         ];
     }
 
-    loadData(relPath?:string) {
-        relPath = relPath ? relPath : this.relPath;
-        this.fileService.getFiles(this.asPath(this.rootPath, relPath))
+    private loadData(path?: Path) {
+        let p:Path = path ? path : this.path;
+        this.fileService.getFiles(p.fullPath())
             .subscribe(
                 data => {
                     if (data.status === 'OK') { //use proper http codes for this!!!!!!
-                        this.relPath = relPath;
+                        this.path = p;
                         this.updateDataRows([].concat(
                             this.decorateUploads(this.fileUploadService.activeUploads()),
                             this.decorateFiles(data.files)));
@@ -275,39 +264,35 @@ export class FileListComponent implements OnInit {
                     }
                 }
             );
-
-        /*
-         d.then(function (data) {
-         $scope.filesTree = data.files;
-         if ($scope.filesTree[0]) {
-         $scope.filesTree[0].name = "Your uploaded files";
-         }
-         decorateFiles($scope.filesTree);
-         $scope.rootFileInTree = $scope.filesTree[0];
-         addSelectedFileToTree();
-         });
-         */
-    }
-
-    onRowDoubleClick(ev) {
-        if (ev.data.type != 'FILE') {
-            this.loadData(this.asPath(this.relPath, ev.data.name));
-        }
-    }
-
-    onRelativePathChange(relPath) {
-        this.loadData(relPath);
-    }
-
-    onRootPathSelect(rootPath) {
-        this.rootPath = rootPath;
-        this.relPath = '/';
-        this.loadData();
     }
 
     updateDataRows(rows) {
         this.rowData = rows;
         this.gridOptions.api.setRowData(rows);
+    }
+
+    private onBackButtonClick() {
+        window.history.back();
+    }
+
+    onRowDoubleClick(ev) {
+        if (ev.data.type != 'FILE') {
+            this.loadData(this.path.addRel(ev.data.name));
+        }
+    }
+
+    onRelativePathChange(relPath) {
+        this.loadData(this.path.setRel(relPath));
+    }
+
+    onRootPathSelect(rootPath) {
+        this.path = new Path(rootPath, '/');
+        this.loadData();
+    }
+
+    onUploadSelect(upload) {
+        this.path = upload.path;
+        this.loadData();
     }
 
     onNewUpload(upload) {
@@ -316,16 +301,15 @@ export class FileListComponent implements OnInit {
 
     decorateUploads(uploads: FileUpload[]): any[] {
         return _.flatMap(uploads, (u) => {
+            if (!u.path.fullPath().startsWith(this.currentPath)) {
+                return [];
+            }
             return _.map(u.files, (f) => ({
                 name: f,
                 upload: u,
                 type: 'FILE',
                 onRemove: () => {
                     this.removeUpload(u);
-                },
-                onUploadFinished: () => {
-                    console.log('on upload finished');
-                    this.loadData();
                 }
             }));
         });
@@ -345,7 +329,7 @@ export class FileListComponent implements OnInit {
     private removeFile(fileName: string): void {
         console.log('removeFile', fileName);
         this.fileService
-            .removeFile(this.asPath(this.rootPath, this.relPath, fileName))
+            .removeFile(this.path.fullPath(fileName))
             .subscribe((resp) => {
                 this.loadData();
             });
@@ -355,25 +339,4 @@ export class FileListComponent implements OnInit {
         this.fileUploadService.remove(u);
         this.loadData();
     }
-
-    static getNodeChildDetails(rowItem) {
-        /*$scope.fileTypes = {
-         dir: 'DIR',
-         file: 'FILE',
-         archive: 'ARCHIVE',
-         fileInArchive: 'FILE_IN_ARCHIVE'
-         };*/
-        if (rowItem.type === 'DIR' || rowItem.type === 'ARCHIVE') {
-            return {
-                group: true,
-                expanded: true, //todo
-                children: rowItem.files || [],
-                field: 'name',
-                key: rowItem.name
-            };
-        } else {
-            return null;
-        }
-    }
-
 }

@@ -1,5 +1,6 @@
 import {Component, Inject, EventEmitter, Output, Input, OnInit} from '@angular/core';
-import {FileUploadService} from './file-upload.service';
+import {FileUploadService, FileUpload} from './file-upload.service';
+import {Path} from './path';
 
 @Component({
     selector: 'file-upload-button',
@@ -20,8 +21,8 @@ import {FileUploadService} from './file-upload.service';
 `
 })
 export class FileUploadButtonComponent implements OnInit {
-    @Output() onUpload: EventEmitter = new EventEmitter();
-    @Input() path: string;
+    @Output() onUpload: EventEmitter<FileUpload> = new EventEmitter<FileUpload>();
+    @Input() path: Path;
 
     constructor(@Inject(FileUploadService) private uploader: FileUploadService) {
     }

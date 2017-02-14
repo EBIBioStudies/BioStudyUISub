@@ -4,9 +4,12 @@ import {
     Input,
     Output,
     EventEmitter,
-    OnInit
+    OnInit,
+    OnChanges,
+    forwardRef
 } from '@angular/core';
 
+import {FormControl, ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {FileService} from './file.service';
 
 @Component({
@@ -33,10 +36,11 @@ import {FileService} from './file.service';
         </li>
     </ul>
 </aside>
-`
+`, providers: [
+        {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => UserDirsSideBarComponent), multi: true}
+    ]
 })
-export class UserDirsSideBarComponent implements OnInit {
-    @Input() initPath?: string;
+export class UserDirsSideBarComponent implements OnInit, ControlValueAccessor, OnChanges {
     @Input() collapsed?: boolean = false;
     @Output() toggle? = new EventEmitter();
     @Output() select = new EventEmitter();
@@ -47,10 +51,44 @@ export class UserDirsSideBarComponent implements OnInit {
     constructor(@Inject(FileService) private fileService: FileService) {
     }
 
-    ngOnInit() {
-        if (this.initPath) {
-            this.selectedPath = this.initPath;
+    private onChange: any = () => {
+    };
+    private onTouched: any = () => {
+    };
+    private validateFn: any = () => {
+    };
+
+    get value() {
+        return this.selectedPath;
+    }
+
+    set value(val) {
+        this.selectedPath = val;
+        this.onChange(val);
+    }
+
+    //From ControlValueAccessor interface
+    writeValue(value: any) {
+        if (value) {
+            this.selectedPath = value;
         }
+    }
+
+    //From ControlValueAccessor interface
+    registerOnChange(fn) {
+        this.onChange = fn;
+    }
+
+    //From ControlValueAccessor interface
+    registerOnTouched(fn: any) {
+        this.onTouched = fn;
+    }
+
+    validate(c: FormControl) {
+        return this.validateFn(c);
+    }
+
+    ngOnInit() {
         this.fileService.getUserDirs()
             .subscribe(
                 (data) => {
@@ -68,7 +106,7 @@ export class UserDirsSideBarComponent implements OnInit {
 
     onDirSelect(d) {
         console.log(d);
-        this.selectedPath = d.path;
+        this.value = d.path;
         if (this.select) {
             this.select.emit(d.path);
         }

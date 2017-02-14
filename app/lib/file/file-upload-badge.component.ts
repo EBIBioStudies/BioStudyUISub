@@ -6,18 +6,6 @@ import * as _ from 'lodash';
 @Component({
     selector: 'file-upload-badge',
     template: `
-    <!--template #popTemplate>
-       <span *ngIf="uploads.length === 0">No uploads</span>
-       <ul class="sidebar-menu">
-          <li *ngFor="let u of uploads"><a>{{u.name}}, {{u.status}}</a></li>
-       </ul>
-    </template>
-    <span class="badge"
-          [popover]="popTemplate" 
-          container="body"
-          placement="bottom">{{count}}</span-->
-    
-
    <div class="btn-group" dropdown>
       <span class="badge" dropdownToggle>{{count}}</span>
       <ul *ngIf="uploads.length === 0" class="dropdown-menu" style="left:-160px" dropdownMenu  role="menu">
@@ -25,15 +13,14 @@ import * as _ from 'lodash';
       </ul>
       <ul *ngIf="uploads.length > 0" class="dropdown-menu" style="left:-160px" dropdownMenu role="menu">
          <li role="menuitem" *ngFor="let u of uploads">
-            <a class="dropdown-item" (click)="onMenuItemClick(u)">{{u.name}}, {{u.status}}</a>
+            <a class="dropdown-item" (click)="onMenuItemClick(u)">{{u.name}}, {{u.progress}}</a>
          </li>
       </ul>
    </div>      
 `
 })
 export class FileUploadBadgeComponent implements OnInit {
-    @Input() path: string;
-    @Output() select: EventEmitter<string> = new EventEmitter<string>();
+    @Output() select: EventEmitter<any> = new EventEmitter<any>();
 
     private __uploads = [];
 
@@ -49,8 +36,7 @@ export class FileUploadBadgeComponent implements OnInit {
             return _.map(u.files, (f) => ({
                 name: f,
                 path: u.path,
-                status: u.status,
-                progress: 0
+                progress: u.failed() ? 'error' : u.progress + "%"
             }))
         }));
     }
@@ -86,8 +72,7 @@ export class FileUploadBadgeComponent implements OnInit {
     }
 
     onMenuItemClick(u) {
-        console.log(u.path + '/' + u.name);
-        this.select.emit(u.path + '/' + u.name);
+        this.select.emit({path: u.path, name: u.name});
     }
 
 }

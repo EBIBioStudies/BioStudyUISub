@@ -1,6 +1,5 @@
-import {Component, forwardRef, Input, OnChanges} from '@angular/core';
+import {Component, forwardRef, OnChanges} from '@angular/core';
 import {FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor} from '@angular/forms';
-import {Observable} from 'rxjs/Observable';
 
 import 'rxjs/add/observable/timer';
 

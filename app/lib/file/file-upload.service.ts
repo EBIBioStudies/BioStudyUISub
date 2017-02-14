@@ -1,8 +1,9 @@
 import {Injectable, Inject} from '@angular/core';
 import {HttpClient} from '../http/http-client'
-import {Observable} from 'rxjs/Observable';
+import {Subject} from 'rxjs/Subject';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Subscription} from 'rxj/Subscription';
+import {Path} from './path';
 
 import * as _ from 'lodash';
 
@@ -12,39 +13,47 @@ export class FileUpload {
     private __status: string = 'uploading';
     private __error: string;
     private __sb: Subscription;
-    private __progress: BehaviorSubject<number>;
+    private __progress: number;
     private __files: string[];
-    private __path: string;
+    private __path: Path;
 
-    constructor(path:string, files: File[], httpClient: HttpClient) {
+    finish$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+    constructor(path: Path, files: File[], httpClient: HttpClient) {
         this.__path = path;
         this.__files = _.map(files, 'name');
-        this.__progress = new BehaviorSubject(0);
+        this.__progress = 0;
 
-        this.__sb = httpClient.upload(FILE_UPLOAD_URL, files, path)
+        this.__sb = httpClient.upload(FILE_UPLOAD_URL, files, path.fullPath())
             .subscribe(
                 (res) => {
                     if (res.kind === 'progress') {
-                        this.__progress.next(res.progress);
+                        this.__progress = res.progress;
                     }
                     if (res.kind === 'response') {
                         this.__status = 'success';
-                        this.__progress.complete();
+                        this.__progress = 100;
+                        this.complete();
                     }
                 },
-                err => {
+                (err) => {
                     //TODO error message
                     this.__status = 'error';
                     this.__error = 'file upload failed';
-                    this.__progress.error('file upload failed');
+                    this.complete();
                 });
     }
 
-    get path() : string {
+    private complete() {
+        this.finish$.next(true);
+        this.finish$.complete();
+    }
+
+    get path(): Path {
         return this.__path;
     }
 
-    get progress(): Observable<number> {
+    get progress(): number {
         return this.__progress;
     }
 
@@ -65,7 +74,7 @@ export class FileUpload {
             this.__sb.unsubscribe();
             this.__sb = null;
             this.__status = 'cancelled';
-            this.__progress.complete();
+            this.complete();
         }
     }
 
@@ -89,23 +98,27 @@ export class FileUpload {
 @Injectable()
 export class FileUploadService {
     private __uploads: FileUpload[] = [];
+    uploadFinish$: Subject<FileUpload> = new Subject<FileUpload>();
 
     constructor(@Inject(HttpClient) private http: HttpClient) {
-        console.debug("FileUploadService created");
     }
 
     activeUploads(): FileUpload[] {
         return _.filter(_.map(this.__uploads, _.identity), (u) => !u.done());
     }
 
-    upload(path:string, files: File[]): FileUpload {
+    upload(path: Path, files: File[]): FileUpload {
         let u = new FileUpload(path, files, this.http);
         this.__uploads.push(u);
+        u.finish$.subscribe((m) => {
+            if (m) {
+                this.uploadFinish$.next(u);
+            }
+        });
         return u;
     }
 
     remove(u: FileUpload) {
-        console.log(this.__uploads, u);
         _.pull(this.__uploads, [u]);
     }
 }
