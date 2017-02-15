@@ -1,8 +1,9 @@
-import {Component, Inject, Input, OnChanges, forwardRef} from '@angular/core';
+import {Component, Inject, Input, forwardRef} from '@angular/core';
 import {FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor} from '@angular/forms';
 
 import {FileService} from '../../file/index';
 
+import * as _ from 'lodash';
 
 @Component({
     selector: 'input-file',
@@ -24,7 +25,7 @@ import {FileService} from '../../file/index';
         {provide: NG_VALIDATORS, useExisting: forwardRef(() => InputFileComponent), multi: true}
     ]
 })
-export class InputFileComponent implements ControlValueAccessor, OnChanges {
+export class InputFileComponent implements ControlValueAccessor {
     @Input() required?: boolean = false;
     @Input() readonly?: boolean = false;
     @Input() name: string;
@@ -34,19 +35,12 @@ export class InputFileComponent implements ControlValueAccessor, OnChanges {
 
     constructor(@Inject(FileService) fileService: FileService) {
         fileService
-            .getFiles()
-            .subscribe((files) => this.processFiles(files, this.files));
-    }
-
-    processFiles(data, array) {
-        for (let d of data) {
-            if (d.type == 'FILE') {
-                array.push(d.path);
-            } else if (d.type == 'DIR') {
-                this.processFiles(d.files, array);
-            }
-        }
-        return array;
+            .getFiles('/User')
+            .map(data => data.files)
+            .map(files => _.map(files, f => f.path.replace(/^\/User\//,'')))
+            .subscribe((files) => {
+                this.files = files;
+            });
     }
 
     private onChange: any = () => {
