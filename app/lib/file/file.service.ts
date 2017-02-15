@@ -16,14 +16,9 @@ export class FileService {
 
     getUserDirs(): Observable<any> {
         return this.getFiles('/Groups', 1, false)
-            .map(
-                (data) => {
-                    return [].concat(
-                        [{name:'Home', path: '/User'}],
-                        _.map(data.files, (f) => ({name:f.name, path: '/Groups/' + f.name}))
-                    );
-                }
-            )
+            .map(data => data.files)
+            .map(files => _.map(files, (f) => ({name: f.name, path: '/Groups/' + f.name})))
+            .map(files => [].concat([{name: 'Home', path: '/User'}], files))
     }
 
     getFiles(path: string = '/', depth: number = 1, showArchive: boolean = true): Observable<any> {
