@@ -7,15 +7,18 @@ const isSuccess = (status: number): boolean => (status >= 200 && status < 300);
 
 export class UploadProgress {
     public kind = "progress";
+
     constructor(public progress: number) {
     }
 }
 export class UploadResponse {
     public kind = "response";
+
     constructor(public status: number,
                 public statusText: string,
                 public type,
-                public body: string) {}
+                public body: string) {
+    }
 }
 
 type UploadResponseType = UploadProgress | UploadResponse;
@@ -23,7 +26,7 @@ type UploadResponseType = UploadProgress | UploadResponse;
 @Injectable()
 export class UploadService {
     post(url: string, formData: FormData, headers: Headers): Observable<UploadResponseType> {
-        return Observable.create((observer:Observer<UploadResponseType>) => {
+        return Observable.create((observer: Observer<UploadResponseType>) => {
             let xhr: XMLHttpRequest = new XMLHttpRequest();
 
             const onProgress = (event) => {
@@ -55,7 +58,7 @@ export class UploadService {
 
                 const statusText: string = xhr.statusText || 'OK';
 
-                if (isSuccess(status))  {
+                if (isSuccess(status)) {
                     observer.next(new UploadResponse({
                         body: body,
                         type: 'Success',
@@ -84,14 +87,14 @@ export class UploadService {
             headers.forEach((values, name) => xhr.setRequestHeader(name, values.join(',')));
 
             xhr.upload.addEventListener('progress', onProgress);
-            xhr.upload.addEventListener('load', onLoad);
-            xhr.upload.addEventListener('error', onError);
+            xhr.addEventListener('load', onLoad);
+            xhr.addEventListener('error', onError);
 
             xhr.send(formData);
 
             return () => {
-                xhr.upload.removeEventListener('load', onLoad);
-                xhr.upload.removeEventListener('error', onError);
+                xhr.removeEventListener('load', onLoad);
+                xhr.removeEventListener('error', onError);
                 xhr.upload.removeEventListener('progress', onProgress);
                 xhr.abort();
             };

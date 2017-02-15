@@ -16,6 +16,8 @@ import {Path} from './path';
 
 import * as _ from 'lodash';
 
+import 'rxjs/add/operator/filter';
+
 @Component({
     selector: 'file-actions-cell',
     template: `
@@ -192,12 +194,12 @@ export class FileListComponent implements OnInit {
             rowSelection: 'single'
         };
 
-        this.fileUploadService.uploadFinish$.subscribe((u: FileUpload) => {
-            if (u.path.fullPath().startsWith(this.currentPath)) {
+        this.fileUploadService.uploadFinish$
+            .filter((path) => path.startsWith(this.currentPath))
+            .subscribe(() => {
                 console.log('on upload finished');
                 this.loadData();
-            }
-        });
+            });
         this.rowData = [];
         this.createColumnDefs();
         this.loadData();
