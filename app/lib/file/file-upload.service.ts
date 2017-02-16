@@ -138,7 +138,8 @@ export class FileUploadService {
         this.__uploads.push(u);
         u.finish$.filter(_.identity)
             .map(() => u.path.fullPath())
-            .subscribe(this.uploadFinish$);
+            .subscribe((path) => this.uploadFinish$.next(path)); // do not subscribe uploadFinish$ directly here.
+        // as cancellation of finish$ will cancel uploadFinish$ as well
         return u;
     }
 
