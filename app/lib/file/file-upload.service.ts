@@ -14,7 +14,7 @@ import {Path} from './path';
 
 import * as _ from 'lodash';
 
-const FILE_UPLOAD_URL = '/raw/fileUpload'; // use '/api/fileUpload' in offline mode
+const FILE_UPLOAD_URL = '/api/fileUpload'; //'/raw/fileUpload'; // use '/api/fileUpload' in offline mode
 
 class FileUploadStatus {
     constructor(public status,
@@ -69,6 +69,7 @@ export class FileUpload {
                 if (this.done()) {
                     this.finish$.next(true);
                     this.finish$.complete();
+                    this.__statusSubject.complete();
                 }
             },
             console.log);

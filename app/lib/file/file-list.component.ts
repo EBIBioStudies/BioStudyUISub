@@ -1,8 +1,9 @@
-import {Component, EventEmitter, Input, Output, Inject, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, Output, Inject, OnInit, OnDestroy} from '@angular/core';
 
 import {CommonModule} from '@angular/common';
 import {ActivatedRoute, Params} from '@angular/router';
 
+import {Subscription} from 'rxjs/Subscription';
 
 import {GridOptions} from 'ag-grid/main';
 
@@ -174,7 +175,7 @@ export class ProgressCellComponent implements AgRendererComponent {
 `
 })
 
-export class FileListComponent implements OnInit {
+export class FileListComponent implements OnInit, OnDestroy {
     private backButton: boolean = false;
     private sideBarCollapsed: boolean = false;
 
@@ -183,6 +184,7 @@ export class FileListComponent implements OnInit {
     private columnDefs: any[];
 
     private path: Path = new Path('/User', '/');
+    private uploadSubscription: Subscription;
 
     constructor(@Inject(FileService) private fileService: FileService,
                 @Inject(FileUploadService) private fileUploadService: FileUploadService,
@@ -194,7 +196,7 @@ export class FileListComponent implements OnInit {
             rowSelection: 'single'
         };
 
-        this.fileUploadService.uploadFinish$
+        this.uploadSubscription = this.fileUploadService.uploadFinish$
             .filter((path) => path.startsWith(this.currentPath))
             .subscribe(() => {
                 console.log('on upload finished');
@@ -209,6 +211,11 @@ export class FileListComponent implements OnInit {
         this.route.params.forEach((params: Params) => {
             this.backButton = params['bb'];
         });
+    }
+
+    ngOnDestroy() {
+        console.log('onDestroy()');
+        this.uploadSubscription.unsubscribe();
     }
 
     private get currentPath() {
@@ -252,7 +259,7 @@ export class FileListComponent implements OnInit {
     }
 
     private loadData(path?: Path) {
-        let p:Path = path ? path : this.path;
+        let p: Path = path ? path : this.path;
         this.fileService.getFiles(p.fullPath())
             .subscribe(
                 data => {
