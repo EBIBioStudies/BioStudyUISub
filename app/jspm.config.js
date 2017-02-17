@@ -94,7 +94,7 @@ SystemJS.config({
         "events": "npm:jspm-nodelibs-events@0.2.0",
         "font-awesome": "npm:font-awesome@4.7.0",
         "fs": "npm:jspm-nodelibs-fs@0.2.0",
-        "lodash": "npm:lodash@4.16.3",
+        "lodash": "npm:lodash@4.17.4",
         "os": "npm:jspm-nodelibs-os@0.2.0",
         "path": "npm:jspm-nodelibs-path@0.2.0",
         "process": "npm:jspm-nodelibs-process@0.2.0",

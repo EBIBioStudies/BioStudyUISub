@@ -11,7 +11,8 @@ import {
     DropdownModule,
     ModalModule,
     PaginationModule,
-    DatepickerModule
+    DatepickerModule,
+    PopoverModule
 } from 'ng2-bootstrap';
 
 import {AppRoutingModule} from './app-routing.module';
@@ -38,6 +39,7 @@ import {GlobalErrorHandler} from './global-error.handler';
         ModalModule.forRoot(),
         PaginationModule.forRoot(),
         DatepickerModule.forRoot(),
+        PopoverModule.forRoot(),
         AppRoutingModule,
         CoreModule,
         HelpModule,

@@ -1,8 +1,9 @@
-import {Component, EventEmitter, Input, Output, Inject, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, Output, Inject, OnInit, OnDestroy} from '@angular/core';
 
 import {CommonModule} from '@angular/common';
 import {ActivatedRoute, Params} from '@angular/router';
 
+import {Subscription} from 'rxjs/Subscription';
 
 import {GridOptions} from 'ag-grid/main';
 
@@ -12,8 +13,11 @@ import 'ag-grid/dist/styles/theme-fresh.css!';
 import {AgRendererComponent} from 'ag-grid-ng2/main';
 
 import {FileService, FileUploadService, FileUpload} from './index';
+import {Path} from './path';
 
 import * as _ from 'lodash';
+
+import 'rxjs/add/operator/filter';
 
 @Component({
     selector: 'file-actions-cell',
@@ -84,66 +88,58 @@ export class FileTypeCellComponent implements AgRendererComponent {
 @Component({
     selector: 'progress-cell',
     template: `
-    <div *ngIf="value < 100" class="progress" 
+    <div *ngIf="value >= 1 && value < 100" class="progress" 
          style="margin-bottom: 0;">
          <div class="progress-bar" [ngClass]="{'progress-bar-success' : !error }" role="progressbar"
                 [ngStyle]="{ 'width': value + '%'}">{{value}}%</div>
     </div>
     <div *ngIf="value === 100" style="text-align:center;color:green"><i class="fa fa-check"></i></div>
+    <div *ngIf="value < 0" class="text-danger">{{error}}</div>
 `
 })
 export class ProgressCellComponent implements AgRendererComponent {
-    private value: number;
-    private error: string;
+    private upload: FileUpload;
     private type: string;
 
-    private __sb;
-
     agInit(params: any): void {
-        let type = params.data.type;
-        let upload = params.data.upload;
-        if (upload) {
-            let onUploadFinished = params.data.onUploadFinished || (() => {
-                });
-            this.__sb = upload.progress.subscribe((e) => {
-                if (e >= 0) {
-                    this.value = e > 0 ? e - 1 : e; //make it 99 not 100
-                }
-                let isError = e === -1;
-                let isFinished = e === -2;
-                let isDone = isError || isFinished;
-
-                if (isFinished) {
-                    this.value = 100;
-                }
-                if (isError) {
-                    this.error = upload.errorMessage;
-                }
-                if (isDone) {
-                    onUploadFinished();
-                    _.delay(() => {
-                        // it's delayed because event comes earlier than __sb is created
-                        this.unsubscribe();
-                    }, 50);
-                }
-            })
-        } else if (type === 'FILE' || type === 'ARCHIVE') {
-            this.value = 100;
-        }
+        this.type = params.data.type;
+        this.upload = params.data.upload;
     }
 
-    unsubscribe() {
-        this.__sb.unsubscribe();
+    get value(): number {
+        if (this.upload) {
+            if (this.upload.failed()) {
+                return -1;
+            }
+            return this.upload.progress;
+        }
+        if (this.type === 'FILE' || this.type === 'ARCHIVE') {
+            return 100;
+        }
+        return 0;
+    }
+
+    get error(): string {
+        return this.upload.error;
     }
 }
 
 @Component({
     selector: 'file-list',
     template: `
-<container-root>
-    <aside class="right-side strech">
-    
-         <section class="content">
+<div class="row-offcanvas row-offcanvas-left">
+
+   <user-dirs-sidebar 
+       name="userDirsSidebar"
+       [(ngModel)]="rootPath"
+       (select)="onRootPathSelect($event)"
+       (toggle)="sideBarCollapsed=!sideBarCollapsed"
+       [collapsed]="sideBarCollapsed">
+   </user-dirs-sidebar>
+          
+   <div class="container-fluid">
+        <aside class="right-side" [ngClass]="{'collapse-left' : sideBarCollapsed}">    
+            <section class="content">
                 <div class="panel panel-info">
                     <div class="panel-heading clearfix">
                         <div class="panel-title pull-left">
@@ -152,10 +148,11 @@ export class ProgressCellComponent implements AgRendererComponent {
                                     *ngIf="backButton"><i class="fa fa-long-arrow-left" aria-hidden="true"></i>&nbsp;Back
                                 to submission
                             </button>
-                            &nbsp;Uploaded files
+                            &nbsp;<directory-path [path]="path.rel" (change)="onRelativePathChange($event)"></directory-path>
                         </div>
                         <div class="pull-right">
-                            <file-upload-button (onUpload)="onNewUpload($event)"></file-upload-button>       
+                            <file-upload-badge (select)="onUploadSelect($event)"></file-upload-badge>
+                            <file-upload-button [path]="path" (onUpload)="onNewUpload($event)"></file-upload-button>       
                         </div>
                     </div>
                     <div class="row">
@@ -165,24 +162,29 @@ export class ProgressCellComponent implements AgRendererComponent {
                                   [columnDefs]="columnDefs"
                                   enableSorting
                                   enableColResize
-                                  rowHeight="30">
+                                  rowHeight="30"
+                                  (rowDoubleClicked)="onRowDoubleClick($event)">
                              </ag-grid-ng2>
                         </div>
                     </div>
                 </div>
-          </section>
-            
-    </aside>
-</container-root>
+              </section>
+          </aside>
+    </div>
+</div>
 `
 })
 
-export class FileListComponent implements OnInit {
-    backButton: boolean = false;
+export class FileListComponent implements OnInit, OnDestroy {
+    private backButton: boolean = false;
+    private sideBarCollapsed: boolean = false;
 
     private gridOptions: GridOptions;
     private rowData: any[];
     private columnDefs: any[];
+
+    private path: Path = new Path('/User', '/');
+    private uploadSubscription: Subscription;
 
     constructor(@Inject(FileService) private fileService: FileService,
                 @Inject(FileUploadService) private fileUploadService: FileUploadService,
@@ -191,9 +193,15 @@ export class FileListComponent implements OnInit {
             onGridReady: () => {
                 this.gridOptions.api.sizeColumnsToFit();
             },
-            getNodeChildDetails: FileListComponent.getNodeChildDetails,
+            rowSelection: 'single'
         };
 
+        this.uploadSubscription = this.fileUploadService.uploadFinish$
+            .filter((path) => path.startsWith(this.currentPath))
+            .subscribe(() => {
+                console.log('on upload finished');
+                this.loadData();
+            });
         this.rowData = [];
         this.createColumnDefs();
         this.loadData();
@@ -205,23 +213,35 @@ export class FileListComponent implements OnInit {
         });
     }
 
-    onBackButtonClick() {
-        window.history.back();
+    ngOnDestroy() {
+        console.log('onDestroy()');
+        this.uploadSubscription.unsubscribe();
     }
 
-    createColumnDefs() {
+    private get currentPath() {
+        return this.path.fullPath();
+    }
+
+    private get rootPath() {
+        return this.path.root;
+    }
+
+    private set rootPath(rp: string) {
+        this.path = this.path.setRoot(rp);
+    }
+
+    private createColumnDefs() {
         this.columnDefs = [
-            {
-                headerName: 'Name',
-                field: 'name',
-                cellRenderer: 'group'
-            },
             {
                 headerName: 'Type',
                 field: 'type',
-                width: 50,
+                width: 30,
                 suppressSorting: true,
                 cellRendererFramework: FileTypeCellComponent
+            },
+            {
+                headerName: 'Name',
+                field: 'name'
             },
             {
                 headerName: 'Progress',
@@ -233,36 +253,55 @@ export class FileListComponent implements OnInit {
                 width: 100,
                 suppressMenu: true,
                 suppressSorting: true,
-                cellRendererFramework:  FileActionsCellComponent
+                cellRendererFramework: FileActionsCellComponent
             }
         ];
     }
 
-    loadData() {
-        this.fileService.getFiles()
-            .subscribe((data) => {
-                console.log(data);
-                this.updateDataRows([].concat(
-                    this.decorateUploads(this.fileUploadService.currentUploads()),
-                    this.decorateFiles(data)));
-            });
-
-        /*
-         d.then(function (data) {
-         $scope.filesTree = data.files;
-         if ($scope.filesTree[0]) {
-         $scope.filesTree[0].name = "Your uploaded files";
-         }
-         decorateFiles($scope.filesTree);
-         $scope.rootFileInTree = $scope.filesTree[0];
-         addSelectedFileToTree();
-         });
-         */
+    private loadData(path?: Path) {
+        let p: Path = path ? path : this.path;
+        this.fileService.getFiles(p.fullPath())
+            .subscribe(
+                data => {
+                    if (data.status === 'OK') { //use proper http codes for this!!!!!!
+                        this.path = p;
+                        this.updateDataRows([].concat(
+                            this.decorateUploads(this.fileUploadService.activeUploads()),
+                            this.decorateFiles(data.files)));
+                    } else {
+                        console.error("Error", data);
+                    }
+                }
+            );
     }
 
     updateDataRows(rows) {
         this.rowData = rows;
         this.gridOptions.api.setRowData(rows);
+    }
+
+    private onBackButtonClick() {
+        window.history.back();
+    }
+
+    onRowDoubleClick(ev) {
+        if (ev.data.type != 'FILE') {
+            this.loadData(this.path.addRel(ev.data.name));
+        }
+    }
+
+    onRelativePathChange(relPath) {
+        this.loadData(this.path.setRel(relPath));
+    }
+
+    onRootPathSelect(rootPath) {
+        this.path = new Path(rootPath, '/');
+        this.loadData();
+    }
+
+    onUploadSelect(upload) {
+        this.path = upload.path;
+        this.loadData();
     }
 
     onNewUpload(upload) {
@@ -271,7 +310,7 @@ export class FileListComponent implements OnInit {
 
     decorateUploads(uploads: FileUpload[]): any[] {
         return _.flatMap(uploads, (u) => {
-            if (u.done()) {
+            if (!u.path.fullPath().startsWith(this.currentPath)) {
                 return [];
             }
             return _.map(u.files, (f) => ({
@@ -280,10 +319,6 @@ export class FileListComponent implements OnInit {
                 type: 'FILE',
                 onRemove: () => {
                     this.removeUpload(u);
-                },
-                onUploadFinished: () => {
-                    console.log('on upload finished');
-                    this.loadData();
                 }
             }));
         });
@@ -303,7 +338,7 @@ export class FileListComponent implements OnInit {
     private removeFile(fileName: string): void {
         console.log('removeFile', fileName);
         this.fileService
-            .removeFile(fileName)
+            .removeFile(this.path.fullPath(fileName))
             .subscribe((resp) => {
                 this.loadData();
             });
@@ -313,25 +348,4 @@ export class FileListComponent implements OnInit {
         this.fileUploadService.remove(u);
         this.loadData();
     }
-
-    static getNodeChildDetails(rowItem) {
-        /*$scope.fileTypes = {
-         dir: 'DIR',
-         file: 'FILE',
-         archive: 'ARCHIVE',
-         fileInArchive: 'FILE_IN_ARCHIVE'
-         };*/
-        if (rowItem.type === 'DIR' || rowItem.type === 'ARCHIVE') {
-            return {
-                group: true,
-                expanded: true, //todo
-                children: rowItem.files || [],
-                field: 'name',
-                key: rowItem.name
-            };
-        } else {
-            return null;
-        }
-    }
-
 }

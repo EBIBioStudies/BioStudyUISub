@@ -14,38 +14,22 @@ export class FileService {
     constructor(@Inject(HttpClient) private http: HttpClient,) {
     }
 
-    cutOffUserRoot(obj): void {
-        if (!_.isObject(obj)) {
-            return;
-        }
-        if (obj.path) {
-            obj.path = obj.path.replace(/^(\/User\/)/, "");
-        }
-        _.forEach(obj, (item) => {
-            this.cutOffUserRoot(item);
-        });
+    getUserDirs(): Observable<any> {
+        return this.getFiles('/Groups', 1, false)
+            .map(data => data.files)
+            .map(files => _.map(files, (f) => ({name: f.name, path: '/Groups/' + f.name})))
+            .map(files => [].concat([{name: 'Home', path: '/User'}], files))
     }
 
-    getFiles(): Observable<any> {
-        return this.http.get("/api/files/dir")
-            .map((res: Response) => {
-                let data = res.json();
-                if (data.status === 'OK') {
-                    if (data.files.length > 0) {
-                        this.cutOffUserRoot(data.files[0].files);
-                    }
-                    return data.files;
-                }
-                return Observable.throw({status: 'Error', message: data.message || 'Server error'});
-            })
+    getFiles(path: string = '/', depth: number = 1, showArchive: boolean = true): Observable<any> {
+        return this.http.get(`/api/files/dir?showArchive=${showArchive}&depth=${depth}&path=${path}`)
+            .map((res: Response) => res.json())
             .catch(FileService.errorHandler);
     }
 
-    removeFile(fileName): Observable<any> {
-        return this.http.del("/api/files/delete?file=" + fileName)
-            .map((res: Response) => {
-                return res.json();
-            })
+    removeFile(fullPath): Observable<any> {
+        return this.http.del("/api/files/delete?path=" + fullPath)
+            .map((res: Response) => res.json())
             .catch(FileService.errorHandler);
     }
 
@@ -58,7 +42,7 @@ export class FileService {
             try {
                 let jsonError = error.json();
                 err.message = jsonError.message || err.message;
-            } catch(e) {// ignore ?
+            } catch (e) {// ignore ?
                 console.log(error);
             }
         }
