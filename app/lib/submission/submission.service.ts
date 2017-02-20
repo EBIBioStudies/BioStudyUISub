@@ -7,6 +7,24 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
 
+class UrlParams {
+    private params: any[] = [];
+
+    constructor(obj: any) {
+        for (let p in obj) {
+            this.addParam(p, obj[p]);
+        }
+    }
+
+    addParam(name, value) {
+        this.params.push({name: name, value: value});
+    }
+
+    get list() {
+        return this.params;
+    }
+}
+
 @Injectable()
 export class SubmissionService {
 
@@ -24,9 +42,11 @@ export class SubmissionService {
         return this.getSubmission(submission, true);
     }
 
-    getSubmissions(submitted=false, offset = -1, limit = -1, filter = ''): Observable<any> {
-        let submissions = submitted ? 'submittedSubmissions' : 'modifiedSubmissions';
-        return this.http.get(`/api/${submissions}?offset=${offset}&limit=${limit}&filter=${filter}`)
+    getSubmissions(submitted, args: any = {}): Observable<any> {
+        let submissionType = submitted === true ? 'submittedSubmissions' : 'modifiedSubmissions';
+        let urlParams = new UrlParams(args);
+
+        return this.http.get(`/api/${submissionType}`, urlParams.list)
             .map((res: Response) => {
                 let data = res.json();
                 return data.submissions;
@@ -82,7 +102,7 @@ export class SubmissionService {
             try {
                 let jsonError = error.json();
                 err.message = jsonError.message || err.message;
-            } catch(e) {// ignore ?
+            } catch (e) {// ignore ?
                 console.log(error);
             }
         }

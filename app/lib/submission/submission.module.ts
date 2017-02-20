@@ -31,13 +31,15 @@ import {UniqueAttrName} from './panel/unique-attr-name.directive';
 import {DateFormatDirective} from './date-format.directive';
 import {DateInputBoxComponent} from './date-input-box';
 import {SubmTypeComponent} from './subm-type.component';
+import {AccessionFilterComponent} from './ag-grid/acc-filter.component';
 
 @NgModule({
     imports: [
         HttpClientModule,
         AgGridModule.withComponents([
             ActionButtonsCellComponent,
-            DateCellComponent
+            DateCellComponent,
+            AccessionFilterComponent
         ]),
         SharedModule,
         RouterModule,
@@ -70,7 +72,8 @@ import {SubmTypeComponent} from './subm-type.component';
         DateCellComponent,
         DateFormatDirective,
         DateInputBoxComponent,
-        SubmTypeComponent
+        SubmTypeComponent,
+        AccessionFilterComponent
     ],
     exports: [
         SubmissionListComponent,

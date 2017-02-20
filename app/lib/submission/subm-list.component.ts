@@ -1,6 +1,8 @@
 import {Component, EventEmitter, Input, Output, Inject} from '@angular/core';
 
 import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+
 import {TooltipModule} from 'ng2-bootstrap';
 
 import {Router} from '@angular/router';
@@ -13,6 +15,7 @@ import 'ag-grid/dist/styles/ag-grid.css!';
 import 'ag-grid/dist/styles/theme-fresh.css!';
 
 import {AgRendererComponent} from 'ag-grid-ng2/main';
+import {AccessionFilterComponent} from './ag-grid/acc-filter.component';
 import {UserData} from '../auth/index';
 
 import * as _ from 'lodash';
@@ -126,8 +129,7 @@ export class DateCellComponent implements AgRendererComponent {
                     <div class="col-xs-12">
                         <ag-grid-ng2 #agGrid style="width: 100%; height: 500px;" class="ag-fresh"
                                      [gridOptions]="gridOptions"
-                                     [columnDefs]="columnDefs"
-                                     [rowData]="rowData">
+                                     [columnDefs]="columnDefs">
                         </ag-grid-ng2>
                     </div>
                 </div>
@@ -179,7 +181,7 @@ export class SubmissionListComponent {
             {
                 headerName: 'Accession',
                 field: 'accno',
-                suppressMenu: true
+                filterFramework: AccessionFilterComponent
             },
             {
                 headerName: 'Title',
@@ -210,12 +212,20 @@ export class SubmissionListComponent {
             this.datasource = {
                 //rowCount: ???, - not setting the row count, infinite paging will be used
                 getRows: (params) => {
-                    console.log('asking for ' + params.startRow + ' to ' + params.endRow);
+                    console.log('ag-grid params', params);
                     let pageSize = params.endRow - params.startRow;
+                    let filterModel = params.filterModel;
 
                     this.gridOptions.api.showLoadingOverlay();
 
-                    this.submService.getSubmissions(this.showSubmitted, params.startRow, pageSize)
+                    this.submService.getSubmissions(this.showSubmitted, {
+                         offset: params.startRow,
+                         limit: pageSize,
+                         accNo: filterModel.accno ? filterModel.accno.value : undefined
+                         //keywords:
+                         //rTimeFrom:
+                         //rTimeTo:
+                    })
                         .subscribe((data) => {
                             this.gridOptions.api.hideOverlay();
                             let lastRow = -1;
