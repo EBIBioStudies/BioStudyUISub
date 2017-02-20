@@ -5,7 +5,6 @@ import {TooltipModule} from 'ng2-bootstrap';
 
 import {Router} from '@angular/router';
 
-import tmpl from './subm-list.component.html'
 import {SubmissionService, SubmissionModel} from './index';
 
 import {GridOptions} from 'ag-grid/main';
@@ -117,8 +116,6 @@ export class DateCellComponent implements AgRendererComponent {
         <section class="content">
             <div class="panel panel-info">
                 <div class="panel-heading clearfix">
-                    <span>(current page: {{currentPage}})</span>
-                    <span>(page size: {{itemsPerPage}})</span>
                     <p class="pull-right">
                         <a class="pull-right btn btn-default btn-xs"
                            (click)="createSubmission()">Create a new submission
@@ -133,20 +130,6 @@ export class DateCellComponent implements AgRendererComponent {
                                      [rowData]="rowData">
                         </ag-grid-ng2>
                     </div>
-                    <div>
-                        <pager [totalItems]="totalItems"
-                               [itemsPerPage]="itemsPerPage"
-                               [(ngModel)]="currentPage"
-                               (pageChanged)="onPageChanged($event)"
-                               pageBtnClass="btn"></pager>
-                        <!--pagination [totalItems]="totalItems"
-                                    [(ngModel)]="currentPage"
-                                    [maxSize]="5"
-                                    class="pagination-sm"
-                                    [boundaryLinks]="true"
-                                    [rotate]="false"
-                                    (pageChanged)="onPageChanged($event)"></pagination-->
-                    </div>
                 </div>
             </div>
         </section>
@@ -160,10 +143,7 @@ export class SubmissionListComponent {
 
     private gridOptions: GridOptions;
     private columnDefs: any[];
-    private rows: any[];
-    private currentPage: number = 1;
-    private totalItems: number = 0;
-    private itemsPerPage: number = 15;
+    private datasource: any;
 
     private showSubmitted: boolean = false;
 
@@ -175,16 +155,19 @@ export class SubmissionListComponent {
                 @Inject(UserData) private userData: UserData) {
 
         this.gridOptions = <GridOptions>{
-            debug: true,
+            debug: false,
             rowSelection: 'single',
             enableColResize: true,
+            enableServerSideFilter: true,
+            rowModelType: 'pagination',
+            paginationPageSize: 2,
             rowHeight: 30,
             getRowNodeId: (item) => {
                 return item.accno;
             },
             onGridReady: () => {
                 this.gridOptions.api.sizeColumnsToFit();
-                this.loadDataRows();
+                this.setDatasource();
             }
         };
 
@@ -196,20 +179,23 @@ export class SubmissionListComponent {
             {
                 headerName: 'Accession',
                 field: 'accno',
-                suppressSorting: true
+                suppressMenu: true
             },
             {
                 headerName: 'Title',
-                field: 'title'
+                field: 'title',
+                suppressMenu: true
             },
             {
                 headerName: 'Release Date',
                 field: 'rtime',
+                suppressMenu: true,
                 cellRendererFramework: DateCellComponent
             },
             {
                 headerName: 'Status',
                 field: 'status',
+                suppressMenu: true
             },
             {
                 headerName: 'Actions',
@@ -219,38 +205,37 @@ export class SubmissionListComponent {
         ];
     }
 
-    loadDataRows() {
-        let offset = (this.currentPage - 1) * this.itemsPerPage;
-        let limit = this.itemsPerPage;
+    setDatasource() {
+        if (!this.datasource) {
+            this.datasource = {
+                //rowCount: ???, - not setting the row count, infinite paging will be used
+                getRows: (params) => {
+                    console.log('asking for ' + params.startRow + ' to ' + params.endRow);
+                    let pageSize = params.endRow - params.startRow;
 
-        this.gridOptions.api.showLoadingOverlay();
+                    this.gridOptions.api.showLoadingOverlay();
 
-        this.submService.getSubmissions(this.showSubmitted, offset, limit)
-            .subscribe((data) => {
-                this.gridOptions.api.hideOverlay();
-                this.setDataRows(data);
-            });
-    }
-
-    onPageChanged(ev) {
-        console.debug('SubmList: current page number changed: ' + ev.page);
-        this.currentPage = ev.page;
-        this.loadDataRows();
+                    this.submService.getSubmissions(this.showSubmitted, params.startRow, pageSize)
+                        .subscribe((data) => {
+                            this.gridOptions.api.hideOverlay();
+                            let lastRow = -1;
+                            if (data.length < pageSize) {
+                                lastRow = params.startRow + data.length;
+                            }
+                            params.successCallback(this.decorateDataRows(data), lastRow);
+                        });
+                }
+            }
+        }
+        this.gridOptions.api.setDatasource(this.datasource);
     }
 
     onSubmTabSelect(submitted) {
         console.log('on submission tab select');
         if (this.showSubmitted != submitted) {
             this.showSubmitted = submitted;
-            this.currentPage = 1;
-            this.loadDataRows();
+            this.gridOptions.api.onFilterChanged();
         }
-    }
-
-    setDataRows(rows) {
-        this.rows = rows;
-        this.totalItems = (this.currentPage - 1)*this.itemsPerPage + this.rows.length + 1;
-        this.gridOptions.api.setRowData(this.decorateDataRows(this.rows));
     }
 
     decorateDataRows(rows: any[]) {
@@ -264,7 +249,7 @@ export class SubmissionListComponent {
                 this.submService
                     .deleteSubmission(accno)
                     .subscribe(() => {
-                        this.loadDataRows();
+                        this.setDatasource();
                     });
             },
 
