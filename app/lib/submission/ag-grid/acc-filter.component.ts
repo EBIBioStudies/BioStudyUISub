@@ -9,9 +9,10 @@ import {AgFilterComponent} from 'ag-grid-ng2/main';
     <div style="padding:5px">
         <span>Filter:&nbsp;</span>
         <input #input 
-         (keyup)="onKeyUp($event)"
-         (blur)="onBlur($event)"
-         [(ngModel)]="text">
+              [(ngModel)]="text">
+    </div>
+    <div style="padding:0 5px 5px 5px;text-align:right">
+        <button (click)="onRefreshClick($event)">apply</button>
     </div>
     `
 })
@@ -53,13 +54,7 @@ export class AccessionFilterComponent implements AgFilterComponent {
         this.input.element.nativeElement.focus();
     }
 
-    onKeyUp(ev): void {
-        if (ev.keyCode === 13) {
-            this.notifyAboutChanges();
-        }
-    }
-
-    onBlur(ev): void {
+    onRefreshClick(ev):void {
         this.notifyAboutChanges();
     }
 

@@ -42,11 +42,9 @@ export class SubmissionService {
         return this.getSubmission(submission, true);
     }
 
-    getSubmissions(submitted, args: any = {}): Observable<any> {
-        let submissionType = submitted === true ? 'submittedSubmissions' : 'modifiedSubmissions';
+    getSubmissions(args: any = {}): Observable<any> {
         let urlParams = new UrlParams(args);
-
-        return this.http.get(`/api/${submissionType}`, urlParams.list)
+        return this.http.get('/api/submissions', urlParams.list)
             .map((res: Response) => {
                 let data = res.json();
                 return data.submissions;

@@ -32,6 +32,7 @@ import {DateFormatDirective} from './date-format.directive';
 import {DateInputBoxComponent} from './date-input-box';
 import {SubmTypeComponent} from './subm-type.component';
 import {AccessionFilterComponent} from './ag-grid/acc-filter.component';
+import {DateFilterComponent} from './ag-grid/date-filter.component';
 
 @NgModule({
     imports: [
@@ -39,7 +40,8 @@ import {AccessionFilterComponent} from './ag-grid/acc-filter.component';
         AgGridModule.withComponents([
             ActionButtonsCellComponent,
             DateCellComponent,
-            AccessionFilterComponent
+            AccessionFilterComponent,
+            DateFilterComponent
         ]),
         SharedModule,
         RouterModule,
@@ -73,7 +75,8 @@ import {AccessionFilterComponent} from './ag-grid/acc-filter.component';
         DateFormatDirective,
         DateInputBoxComponent,
         SubmTypeComponent,
-        AccessionFilterComponent
+        AccessionFilterComponent,
+        DateFilterComponent
     ],
     exports: [
         SubmissionListComponent,

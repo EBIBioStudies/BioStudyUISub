@@ -16,6 +16,7 @@ import 'ag-grid/dist/styles/theme-fresh.css!';
 
 import {AgRendererComponent} from 'ag-grid-ng2/main';
 import {AccessionFilterComponent} from './ag-grid/acc-filter.component';
+import {DateFilterComponent} from './ag-grid/date-filter.component';
 import {UserData} from '../auth/index';
 
 import * as _ from 'lodash';
@@ -162,7 +163,7 @@ export class SubmissionListComponent {
             enableColResize: true,
             enableServerSideFilter: true,
             rowModelType: 'pagination',
-            paginationPageSize: 2,
+            paginationPageSize: 15,
             rowHeight: 30,
             getRowNodeId: (item) => {
                 return item.accno;
@@ -191,8 +192,8 @@ export class SubmissionListComponent {
             {
                 headerName: 'Release Date',
                 field: 'rtime',
-                suppressMenu: true,
-                cellRendererFramework: DateCellComponent
+                cellRendererFramework: DateCellComponent,
+                filterFramework: DateFilterComponent
             },
             {
                 headerName: 'Status',
@@ -218,13 +219,14 @@ export class SubmissionListComponent {
 
                     this.gridOptions.api.showLoadingOverlay();
 
-                    this.submService.getSubmissions(this.showSubmitted, {
-                         offset: params.startRow,
-                         limit: pageSize,
-                         accNo: filterModel.accno ? filterModel.accno.value : undefined
-                         //keywords:
-                         //rTimeFrom:
-                         //rTimeTo:
+                    this.submService.getSubmissions({
+                        submitted: this.showSubmitted,
+                        offset: params.startRow,
+                        limit: pageSize,
+                        accNo: filterModel.accno && filterModel.accno.value ? filterModel.accno.value : undefined
+                        //keywords:
+                        //rTimeFrom:
+                        //rTimeTo:
                     })
                         .subscribe((data) => {
                             this.gridOptions.api.hideOverlay();
