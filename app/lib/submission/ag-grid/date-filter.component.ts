@@ -1,7 +1,59 @@
-import {Component, ViewChild, ViewContainerRef} from '@angular/core';
+import {Component} from '@angular/core';
 
 import {IFilterParams, IDoesFilterPassParams, RowNode, IAfterGuiAttachedParams} from 'ag-grid/main';
 import {AgFilterComponent} from 'ag-grid-ng2/main';
+
+import {parseDate, formatDate} from '../date.utils';
+
+class DateRange {
+    constructor(public from: string = '',
+                public to: string = '') {
+    }
+
+    isEmpty(): boolean {
+        return DateRange.hasValue(this.from) || DateRange.hasValue(this.to);
+    }
+
+    equalsTo(obj: DateRange): boolean {
+        return obj && this.from === obj.from && this.to === obj.to;
+    }
+
+    copy(): DateRange {
+        return new DateRange(this.from, this.to);
+    }
+
+    toSeconds(): any {
+        return {
+            from: DateRange.asSeconds(this.from),
+            to: DateRange.asSeconds(this.to)
+        }
+    }
+
+    public static fromSeconds(from: number, to: number): DateRange {
+        return new DateRange(
+            DateRange.asDateString(from), DateRange.asDateString(to));
+    }
+
+    private static asSeconds(dateString: string): number {
+        if (!DateRange.hasValue(dateString)) {
+            return undefined;
+        }
+        return parseDate(dateString).getTime() / 1000;
+    }
+
+    private static asDateString(seconds: number): string {
+        if (!DateRange.hasValue(seconds)) {
+            return '';
+        }
+        let date = new Date();
+        date.setTime(seconds * 1000);
+        return formatDate(date);
+    }
+
+    private static hasValue(v: any): boolean {
+        return v !== null && v !== undefined && v !== '';
+    }
+}
 
 @Component({
     selector: 'ag-date-filter',
@@ -15,16 +67,12 @@ import {AgFilterComponent} from 'ag-grid-ng2/main';
         </select>
         <date-input-box
             *ngIf="after || between"
-            name="date1"
-            (ngModelChange)="onDate1Change($event)"
-            [(ngModel)]="date1"
+            [(ngModel)]="date.from"
             bsstDateFormat>
         </date-input-box>
         <date-input-box
             *ngIf="before || between"
-            name="date2"
-            (ngModelChange)="onDate2Change($event)"
-            [(ngModel)]="date2"
+            [(ngModel)]="date.to"
             bsstDateFormat>
         </date-input-box>
     </div>
@@ -38,14 +86,10 @@ export class DateFilterComponent implements AgFilterComponent {
     private params: IFilterParams;
     private valueGetter: (rowNode: RowNode) => any;
 
-    private date1: string = '';
-    private date2: string = '';
-    private seconds1: number;
-    private seconds2: number;
+    private date: DateRange = new DateRange();
     private selection: string = 'after';
 
-    private prev1: string = '';
-    private prev2: string = '';
+    private prev: DateRange;
 
     agInit(params: IFilterParams): void {
         this.params = params;
@@ -53,74 +97,65 @@ export class DateFilterComponent implements AgFilterComponent {
     }
 
     isFilterActive(): boolean {
-        return this.notEmpty(this.date1) || this.notEmpty(this.date2);
-    }
-
-    notEmpty(v): boolean {
-        return v !== null && v !== undefined && v !== '';
+        return !this.date.isEmpty();
     }
 
     doesFilterPass(params: IDoesFilterPassParams): boolean {
-        return true;
-        /* todo this.text.toLowerCase()
-         .split(" ")
-         .every((filterWord) => {
-         return this.valueGetter(params.node).toString().toLowerCase().indexOf(filterWord) >= 0;
-         });*/
+        let seconds = this.valueGetter(params.node);
+        if (seconds == undefined || seconds == null || seconds < 0) {
+            return false;
+        }
+        const s = this.date.toSeconds();
+        if (this.after) {
+            return seconds >= s.from;
+        } else if (this.before) {
+            return seconds < s.to;
+        } else if (this.between) {
+            return seconds >= s.from && seconds < s.to;
+        }
     }
 
     getModel(): any {
-        return {value: {from: this.date1, to: this.date2}};
+        return {value: this.date.toSeconds()};
     }
 
     setModel(model: any): void {
-        this.date1 = model.value.from;
-        this.date2 = model.value.to;
+        this.date = DateRange.fromSeconds(model.value.from, model.value.to);
     }
 
     afterGuiAttached(params: IAfterGuiAttachedParams): void {
     }
 
-    notifyAboutChanges() {
-        if (this.date1 !== this.prev1 ||
-            this.date2 !== this.prev2) {
-            this.prev1 = this.date1;
-            this.prev2 = this.date2;
+    private notifyAboutChanges() {
+        if (!this.date.equalsTo(this.prev)) {
+            this.prev = this.date.copy();
             this.params.filterChangedCallback();
         }
     }
 
-    get after(): boolean {
+    private get after(): boolean {
         return this.selection === "after";
     }
 
-    get before(): boolean {
+    private get before(): boolean {
         return this.selection === "before";
     }
 
-    get between(): boolean {
+    private get between(): boolean {
         return this.selection === "between";
     }
 
-    onSelectionChange(ev): void {
+    private onSelectionChange(ev): void {
         this.selection = ev.target.value;
         if (this.after) {
-            this.date2 = '';
+            this.date.to = '';
         }
         if (this.before) {
-            this.date1 = '';
+            this.date.from = '';
         }
     }
 
-    onRefreshClick(ev): void {
+    private onRefreshClick(ev): void {
         this.notifyAboutChanges();
-    }
-
-    onDate1Change(ev):void {
-        //todo
-    }
-
-    onDate2Change(ev):void {
-        //todo
     }
 }

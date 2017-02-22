@@ -215,7 +215,7 @@ export class SubmissionListComponent {
                 getRows: (params) => {
                     console.log('ag-grid params', params);
                     let pageSize = params.endRow - params.startRow;
-                    let filterModel = params.filterModel;
+                    let fm = params.filterModel || {};
 
                     this.gridOptions.api.showLoadingOverlay();
 
@@ -223,10 +223,10 @@ export class SubmissionListComponent {
                         submitted: this.showSubmitted,
                         offset: params.startRow,
                         limit: pageSize,
-                        accNo: filterModel.accno && filterModel.accno.value ? filterModel.accno.value : undefined
+                        accNo: fm.accno && fm.accno.value ? fm.accno.value : undefined,
+                        rTimeFrom: fm.rtime && fm.rtime.value && fm.rtime.value.from ? fm.rtime.value.from : undefined,
+                        rTimeTo: fm.rtime && fm.rtime.value && fm.rtime.value.to ? fm.rtime.value.to : undefined
                         //keywords:
-                        //rTimeFrom:
-                        //rTimeTo:
                     })
                         .subscribe((data) => {
                             this.gridOptions.api.hideOverlay();
