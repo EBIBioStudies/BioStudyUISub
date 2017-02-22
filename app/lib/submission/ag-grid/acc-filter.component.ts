@@ -12,7 +12,7 @@ import {AgFilterComponent} from 'ag-grid-ng2/main';
               [(ngModel)]="text">
     </div>
     <div style="padding:0 5px 5px 5px;text-align:right">
-        <button (click)="onRefreshClick($event)">apply</button>
+        <button (click)="onApplyClick($event)">apply</button>
     </div>
     `
 })
@@ -54,7 +54,7 @@ export class AccessionFilterComponent implements AgFilterComponent {
         this.input.element.nativeElement.focus();
     }
 
-    onRefreshClick(ev):void {
+    onApplyClick(ev):void {
         this.notifyAboutChanges();
     }
 

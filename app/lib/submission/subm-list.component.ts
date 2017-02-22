@@ -128,10 +128,10 @@ export class DateCellComponent implements AgRendererComponent {
                 </div>
                 <div class="row">
                     <div class="col-xs-12">
-                        <ag-grid-ng2 #agGrid style="width: 100%; height: 500px;" class="ag-fresh"
+                        <ag-grid-angular #agGrid style="width: 100%; height: 500px;" class="ag-fresh"
                                      [gridOptions]="gridOptions"
                                      [columnDefs]="columnDefs">
-                        </ag-grid-ng2>
+                        </ag-grid-angular>
                     </div>
                 </div>
             </div>
@@ -246,7 +246,7 @@ export class SubmissionListComponent {
         console.log('on submission tab select');
         if (this.showSubmitted != submitted) {
             this.showSubmitted = submitted;
-            this.gridOptions.api.onFilterChanged();
+            this.setDatasource();
         }
     }
 

@@ -11,7 +11,7 @@ class DateRange {
     }
 
     isEmpty(): boolean {
-        return DateRange.hasValue(this.from) && DateRange.hasValue(this.to);
+        return !DateRange.hasValue(this.from) && !DateRange.hasValue(this.to);
     }
 
     equalsTo(obj: DateRange): boolean {
@@ -77,7 +77,7 @@ class DateRange {
         </date-input-box>
     </div>
     <div style="padding:0 5px 5px 5px;text-align:right">
-        <button (click)="onRefreshClick($event)">apply</button>
+        <button (click)="onApplyClick($event)">apply</button>
     </div>
 </div>
     `
@@ -155,7 +155,7 @@ export class DateFilterComponent implements AgFilterComponent {
         }
     }
 
-    private onRefreshClick(ev): void {
+    private onApplyClick(ev): void {
         this.notifyAboutChanges();
     }
 }

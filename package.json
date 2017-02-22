@@ -269,8 +269,8 @@
     }
   },
   "dependencies": {
-    "ag-grid": "=8.0.0",
-    "ag-grid-ng2": "=8.0.0",
+    "ag-grid": "=8.1.0",
+    "ag-grid-angular": "=8.1.0",
     "jspm": "=0.17.0-beta.32"
   }
 }

@@ -56,6 +56,7 @@ export class DateInputBoxComponent implements ControlValueAccessor {
 
     //From ControlValueAccessor interface
     writeValue(value: any) {
+        console.log('write value', value);
         if (value) {
             this.dateValue = value;
             this.activeDate = parseDate(value);

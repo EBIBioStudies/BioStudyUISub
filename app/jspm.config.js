@@ -46,7 +46,7 @@ SystemJS.config({
         }
     },
     map: {
-        "ag-grid-ng2": "other:ag-grid-ng2",
+        "ag-grid-ng2": "other:ag-grid-angular",
         "ag-grid": "other:ag-grid"
     }
 });
