@@ -11,7 +11,7 @@ class DateRange {
     }
 
     isEmpty(): boolean {
-        return DateRange.hasValue(this.from) || DateRange.hasValue(this.to);
+        return DateRange.hasValue(this.from) && DateRange.hasValue(this.to);
     }
 
     equalsTo(obj: DateRange): boolean {
