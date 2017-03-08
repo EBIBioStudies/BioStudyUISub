@@ -16,7 +16,7 @@ import {AgFilterComponent} from 'ag-grid-ng2/main';
     </div>
     `
 })
-export class AccessionFilterComponent implements AgFilterComponent {
+export class TextFilterComponent implements AgFilterComponent {
     private params: IFilterParams;
     private valueGetter: (rowNode: RowNode) => any;
 

@@ -15,7 +15,7 @@ import 'ag-grid/dist/styles/ag-grid.css!';
 import 'ag-grid/dist/styles/theme-fresh.css!';
 
 import {AgRendererComponent} from 'ag-grid-ng2/main';
-import {AccessionFilterComponent} from './ag-grid/acc-filter.component';
+import {TextFilterComponent} from './ag-grid/text-filter.component';
 import {DateFilterComponent} from './ag-grid/date-filter.component';
 import {UserData} from '../auth/index';
 
@@ -182,12 +182,12 @@ export class SubmissionListComponent {
             {
                 headerName: 'Accession',
                 field: 'accno',
-                filterFramework: AccessionFilterComponent
+                filterFramework: TextFilterComponent
             },
             {
                 headerName: 'Title',
                 field: 'title',
-                suppressMenu: true
+                filterFramework: TextFilterComponent
             },
             {
                 headerName: 'Release Date',
@@ -225,8 +225,8 @@ export class SubmissionListComponent {
                         limit: pageSize,
                         accNo: fm.accno && fm.accno.value ? fm.accno.value : undefined,
                         rTimeFrom: fm.rtime && fm.rtime.value && fm.rtime.value.from ? fm.rtime.value.from : undefined,
-                        rTimeTo: fm.rtime && fm.rtime.value && fm.rtime.value.to ? fm.rtime.value.to : undefined
-                        //keywords:
+                        rTimeTo: fm.rtime && fm.rtime.value && fm.rtime.value.to ? fm.rtime.value.to : undefined,
+                        keywords: fm.title && fm.title.value ? fm.title.value : undefined
                     })
                         .subscribe((data) => {
                             this.gridOptions.api.hideOverlay();
