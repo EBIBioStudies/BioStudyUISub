@@ -1,9 +1,9 @@
-import {Component, ElementRef, ViewChild, forwardRef, Input, OnChanges} from '@angular/core';
+import {Component, ElementRef, ViewChild, forwardRef} from '@angular/core';
 import {FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor} from '@angular/forms';
-import {Observable} from 'rxjs/Observable';
 
 import 'rxjs/add/observable/timer';
 import {formatDate, parseDate} from './date.utils';
+import {DatePickerComponent} from 'ng2-bootstrap/datepicker';
 
 @Component({
     selector: 'date-input-box',
@@ -20,7 +20,7 @@ import {formatDate, parseDate} from './date.utils';
                       (click)="toggleDatePicker()"><i class="fa fa-calendar"></i></span>       
     </div>
     <datepicker style="position: absolute; z-index:10; min-height:290px;"
-                [initDate]="initDate()" 
+                [activeDate]="activeDate" 
                 [hidden]="!showDatePicker"
                 (selectionDone)="onSelectionDone($event)"></datepicker>
 `,
@@ -30,7 +30,7 @@ import {formatDate, parseDate} from './date.utils';
     ]
 })
 
-export class DateInputBoxComponent implements ControlValueAccessor, OnChanges {
+export class DateInputBoxComponent implements ControlValueAccessor {
 
     @ViewChild('inputbox') private inpEl: ElementRef;
 
@@ -42,6 +42,7 @@ export class DateInputBoxComponent implements ControlValueAccessor, OnChanges {
     };
 
     private dateValue = '';
+    private activeDate: Date = new Date();
     private showDatePicker = false;
 
     get value() {
@@ -55,8 +56,10 @@ export class DateInputBoxComponent implements ControlValueAccessor, OnChanges {
 
     //From ControlValueAccessor interface
     writeValue(value: any) {
+        console.log('write value', value);
         if (value) {
             this.dateValue = value;
+            this.activeDate = parseDate(value);
         }
     }
 
@@ -87,13 +90,10 @@ export class DateInputBoxComponent implements ControlValueAccessor, OnChanges {
         this.inpEl.nativeElement.blur();
     }
 
-    onSelectionDone(date:Date): void {
+    onSelectionDone(date: Date): void {
         this.value = formatDate(date);
+        this.activeDate = date;
         this.closeDatePicker();
-    }
-
-    initDate():Date {
-        return parseDate(this.value);
     }
 }
 

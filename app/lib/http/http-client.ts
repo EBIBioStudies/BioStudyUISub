@@ -1,5 +1,5 @@
 import {Injectable, Inject} from '@angular/core';
-import {Http, Response, RequestOptions, Headers} from '@angular/http';
+import {Http, Response, RequestOptions, Headers, URLSearchParams} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 
 import {AppConfig} from '../config/app.config';
@@ -14,8 +14,15 @@ export class HttpClient {
                 @Inject(UploadService) private uploadService: UploadService) {
     }
 
-    get(url) {
+    get(url, urlParams?: any[]) {
         let options = new RequestOptions({headers: this.headers()});
+        if (urlParams) {
+            let params: URLSearchParams = new URLSearchParams();
+            urlParams.forEach(p => {
+                params.set(p.name, p.value);
+            });
+            options.search = params;
+        }
         return this.http.get(this.transform(url), options);
     }
 
