@@ -152,7 +152,9 @@ export class ProgressCellComponent implements AgRendererComponent {
                         </div>
                         <div class="pull-right">
                             <file-upload-badge (select)="onUploadSelect($event)"></file-upload-badge>
-                            <file-upload-button title="Upload Files" (select)="onUploadFilesSelect($event)"></file-upload-button>
+                            <file-upload-button title="Upload Files" 
+                                                [multiple]="true"
+                                                (select)="onUploadFilesSelect($event)"></file-upload-button>
                         </div>
                     </div>
                     <div class="row">

@@ -5,11 +5,10 @@ import {Component, EventEmitter, Output, Input} from '@angular/core';
     template: `
     <input type="file" 
            id="fileInput" 
-           name="fileInput" 
-           title="Upload Files" 
+           name="fileInput"  
            (change)="onInputChange($event)"
            style="display:none"
-           multiple
+           [multiple]="multiple"
            #inputFile/>
     <button type="button"
             class="btn btn-default btn-xs"
@@ -21,6 +20,7 @@ import {Component, EventEmitter, Output, Input} from '@angular/core';
 export class FileUploadButtonComponent {
     @Output() select: EventEmitter<File[]> = new EventEmitter<File[]>();
     @Input() title: string = 'Upload';
+    @Input() multiple: boolean = false;
 
     onInputChange(event) {
         let files = event.target.files;
