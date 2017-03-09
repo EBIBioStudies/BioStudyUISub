@@ -101,7 +101,7 @@ gulp.task('mkdir', function() {
         .pipe(gulp.dest('.build/'));
 });
 
-gulp.task('js', gulp.series('mkdir', function (cb) {
+gulp.task('js', gulp.series('mkdir', function (done) {
     var builder = new Builder();
     builder.config({
         separateCSS: true
@@ -111,7 +111,7 @@ gulp.task('js', gulp.series('mkdir', function (cb) {
         mangle: false,
         sourceMaps: true
     }).then(function () {
-        cb();
+        done();
     });
 }));
 
@@ -124,7 +124,7 @@ gulp.task('css', function() {
 });
 
 gulp.task('zip', function () {
-    gulp.src([".build/**/*"])
+    return gulp.src([".build/**/*"])
         .pipe(zip('ui.zip'))
         .pipe(gulp.dest('.dist'));
 });
