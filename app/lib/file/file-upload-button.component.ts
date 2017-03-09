@@ -1,4 +1,4 @@
-import {Component, Inject, EventEmitter, Output, Input, OnInit} from '@angular/core';
+import {Component, Inject, EventEmitter, Output, Input} from '@angular/core';
 import {FileUploadService, FileUpload} from './file-upload.service';
 import {Path} from './path';
 
@@ -20,7 +20,7 @@ import {Path} from './path';
     </button>
 `
 })
-export class FileUploadButtonComponent implements OnInit {
+export class FileUploadButtonComponent {
     @Output() onUpload: EventEmitter<FileUpload> = new EventEmitter<FileUpload>();
     @Input() path: Path;
 
