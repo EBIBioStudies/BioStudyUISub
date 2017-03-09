@@ -46,7 +46,7 @@ SystemJS.config({
         }
     },
     map: {
-        "ag-grid-ng2": "other:ag-grid-ng2",
+        "ag-grid-ng2": "other:ag-grid-angular",
         "ag-grid": "other:ag-grid"
     }
 });
@@ -75,7 +75,7 @@ SystemJS.config({
         "ng2-smart-table": "npm:ng2-smart-table@0.4.0-3",
         "monospaced/angular-elastic": "github:monospaced/angular-elastic@2.5.1",
         "ng2-cookies": "npm:ng2-cookies@1.0.2",
-        "ng2-bootstrap": "npm:ng2-bootstrap@1.2.6",
+        "ng2-bootstrap": "npm:ng2-bootstrap@1.3.3",
         "@angular/http": "npm:@angular/http@2.3.1",
         "@angular/router": "npm:@angular/router@3.0.2",
         "core-js": "npm:core-js@2.4.1",
@@ -172,7 +172,7 @@ SystemJS.config({
                 "create-hash": "npm:create-hash@1.1.2",
                 "create-hmac": "npm:create-hmac@1.1.4",
                 "inherits": "npm:inherits@2.0.3",
-                "elliptic": "npm:elliptic@6.3.2",
+                "elliptic": "npm:elliptic@6.3.3",
                 "bn.js": "npm:bn.js@4.11.6",
                 "browserify-rsa": "npm:browserify-rsa@4.0.1",
                 "parse-asn1": "npm:parse-asn1@5.0.0"
@@ -180,7 +180,7 @@ SystemJS.config({
         },
         "npm:create-ecdh@4.0.0": {
             "map": {
-                "elliptic": "npm:elliptic@6.3.2",
+                "elliptic": "npm:elliptic@6.3.3",
                 "bn.js": "npm:bn.js@4.11.6"
             }
         },
@@ -210,14 +210,6 @@ SystemJS.config({
                 "inherits": "npm:inherits@2.0.3"
             }
         },
-        "npm:elliptic@6.3.2": {
-            "map": {
-                "bn.js": "npm:bn.js@4.11.6",
-                "inherits": "npm:inherits@2.0.3",
-                "brorand": "npm:brorand@1.0.6",
-                "hash.js": "npm:hash.js@1.0.3"
-            }
-        },
         "npm:browserify-rsa@4.0.1": {
             "map": {
                 "randombytes": "npm:randombytes@2.0.3",
@@ -227,7 +219,7 @@ SystemJS.config({
         "npm:miller-rabin@4.0.0": {
             "map": {
                 "bn.js": "npm:bn.js@4.11.6",
-                "brorand": "npm:brorand@1.0.6"
+                "brorand": "npm:brorand@1.0.7"
             }
         },
         "npm:parse-asn1@5.0.0": {
@@ -260,7 +252,7 @@ SystemJS.config({
         "npm:stream-browserify@2.0.1": {
             "map": {
                 "inherits": "npm:inherits@2.0.3",
-                "readable-stream": "npm:readable-stream@2.2.2"
+                "readable-stream": "npm:readable-stream@2.2.3"
             }
         },
         "npm:timers-browserify@1.4.2": {
@@ -318,17 +310,6 @@ SystemJS.config({
                 "inherits": "npm:inherits@2.0.3"
             }
         },
-        "npm:readable-stream@2.2.2": {
-            "map": {
-                "inherits": "npm:inherits@2.0.3",
-                "string_decoder": "npm:string_decoder@0.10.31",
-                "isarray": "npm:isarray@1.0.0",
-                "util-deprecate": "npm:util-deprecate@1.0.2",
-                "process-nextick-args": "npm:process-nextick-args@1.0.7",
-                "buffer-shims": "npm:buffer-shims@1.0.0",
-                "core-util-is": "npm:core-util-is@1.0.2"
-            }
-        },
         "npm:font-awesome@4.7.0": {
             "map": {
                 "css": "github:systemjs/plugin-css@0.1.32"
@@ -370,16 +351,35 @@ SystemJS.config({
                 "symbol-observable": "npm:symbol-observable@1.0.4"
             }
         },
-        "npm:ng2-bootstrap@1.2.6": {
-            "map": {
-                "moment": "npm:moment@2.17.1"
-            }
-        },
         "npm:asn1.js@4.9.1": {
             "map": {
                 "bn.js": "npm:bn.js@4.11.6",
                 "minimalistic-assert": "npm:minimalistic-assert@1.0.0",
                 "inherits": "npm:inherits@2.0.3"
+            }
+        },
+        "npm:ng2-bootstrap@1.3.3": {
+            "map": {
+                "moment": "npm:moment@2.17.1"
+            }
+        },
+        "npm:elliptic@6.3.3": {
+            "map": {
+                "bn.js": "npm:bn.js@4.11.6",
+                "inherits": "npm:inherits@2.0.3",
+                "hash.js": "npm:hash.js@1.0.3",
+                "brorand": "npm:brorand@1.0.7"
+            }
+        },
+        "npm:readable-stream@2.2.3": {
+            "map": {
+                "isarray": "npm:isarray@1.0.0",
+                "inherits": "npm:inherits@2.0.3",
+                "string_decoder": "npm:string_decoder@0.10.31",
+                "process-nextick-args": "npm:process-nextick-args@1.0.7",
+                "core-util-is": "npm:core-util-is@1.0.2",
+                "util-deprecate": "npm:util-deprecate@1.0.2",
+                "buffer-shims": "npm:buffer-shims@1.0.0"
             }
         }
     }

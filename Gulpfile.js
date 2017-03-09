@@ -20,8 +20,8 @@ gulp.task('ag-grid:copy', function() {
 });
 
 gulp.task('ag-grid-ng2:copy', function() {
-    return gulp.src(['node_modules/ag-grid-ng2/**/*'])
-        .pipe(gulp.dest('app/jspm_packages/other/ag-grid-ng2/'));
+    return gulp.src(['node_modules/ag-grid-angular/**/*'])
+        .pipe(gulp.dest('app/jspm_packages/other/ag-grid-angular/'));
 });
 
 gulp.task('ag-grid:json', function() {
@@ -101,7 +101,7 @@ gulp.task('mkdir', function() {
         .pipe(gulp.dest('.build/'));
 });
 
-gulp.task('js', gulp.series('mkdir', function (cb) {
+gulp.task('js', gulp.series('mkdir', function (done) {
     var builder = new Builder();
     builder.config({
         separateCSS: true
@@ -111,7 +111,7 @@ gulp.task('js', gulp.series('mkdir', function (cb) {
         mangle: false,
         sourceMaps: true
     }).then(function () {
-        cb();
+        done();
     });
 }));
 
@@ -124,7 +124,7 @@ gulp.task('css', function() {
 });
 
 gulp.task('zip', function () {
-    gulp.src([".build/**/*"])
+    return gulp.src([".build/**/*"])
         .pipe(zip('ui.zip'))
         .pipe(gulp.dest('.dist'));
 });

@@ -157,14 +157,14 @@ export class ProgressCellComponent implements AgRendererComponent {
                     </div>
                     <div class="row">
                         <div class="col-xs-12">
-                             <ag-grid-ng2 #agGrid style="width: 100%; height: 450px;" class="ag-fresh"
+                             <ag-grid-angular #agGrid style="width: 100%; height: 450px;" class="ag-fresh"
                                   [gridOptions]="gridOptions"
                                   [columnDefs]="columnDefs"
                                   enableSorting
                                   enableColResize
                                   rowHeight="30"
                                   (rowDoubleClicked)="onRowDoubleClick($event)">
-                             </ag-grid-ng2>
+                             </ag-grid-angular>
                         </div>
                     </div>
                 </div>
