@@ -152,7 +152,7 @@ export class ProgressCellComponent implements AgRendererComponent {
                         </div>
                         <div class="pull-right">
                             <file-upload-badge (select)="onUploadSelect($event)"></file-upload-badge>
-                            <file-upload-button [path]="path" (onUpload)="onNewUpload($event)"></file-upload-button>       
+                            <file-upload-button title="Upload Files" (select)="onUploadFilesSelect($event)"></file-upload-button>
                         </div>
                     </div>
                     <div class="row">
@@ -304,7 +304,9 @@ export class FileListComponent implements OnInit, OnDestroy {
         this.loadData();
     }
 
-    onNewUpload(upload) {
+    onUploadFilesSelect(files) {
+        console.debug("Files to upload:", files);
+        let upload = this.fileUploadService.upload(this.path, files);
         this.updateDataRows([].concat(this.decorateUploads([upload]), this.rowData));
     }
 
