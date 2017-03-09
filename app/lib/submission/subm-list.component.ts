@@ -122,7 +122,15 @@ export class DateCellComponent implements AgRendererComponent {
                 <div class="panel-heading clearfix">
                     <p class="pull-right">
                         <a class="pull-right btn btn-default btn-xs"
-                           (click)="createSubmission()">Create a new submission
+                           (click)="createSubmission()">
+                           <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                           <span>Create new submission</span>
+                        </a>
+                        <a style="margin-right:3px"
+                           class="pull-right btn btn-default btn-xs"
+                           (click)="uploadSubmission()">
+                           <i class="fa fa-upload" aria-hidden="true"></i>
+                           <span>Direct upload</span>
                         </a>
                     </p>
                 </div>
@@ -277,7 +285,7 @@ export class SubmissionListComponent {
         }));
     };
 
-    createSubmission = function () {
+    createSubmission() {
         let userName = this.userData.name;
         let userEmail = this.userData.email;
         let userOrcid = this.userData.orcid;
@@ -289,6 +297,10 @@ export class SubmissionListComponent {
                 this.startEditing(sbm.accno);
             });
     };
+
+    uploadSubmission() {
+        this.router.navigate(['/direct_upload']);
+    }
 
     startEditing(accno) {
         this.router.navigate(['/edit', accno]);

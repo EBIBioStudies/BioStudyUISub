@@ -15,6 +15,7 @@ import {PubMedSearchService} from './pubMedSearch.service';
 import {SubmissionListComponent, ActionButtonsCellComponent, DateCellComponent} from './subm-list.component';
 import {SubmissionEditComponent} from './subm-edit.component';
 import {SubmissionViewComponent} from './subm-view.component';
+import {SubmissionUploadComponent} from './subm-upload.component';
 import {SideBarComponent} from './sidebar/subm-sidebar.component';
 import {SideBarItemComponent} from './sidebar/subm-sidebar.component';
 import {SubmissionPanelComponent} from './panel/subm-panel.component';
@@ -57,6 +58,7 @@ import {DateFilterComponent} from './ag-grid/date-filter.component';
         SubmissionListComponent,
         SubmissionEditComponent,
         SubmissionViewComponent,
+        SubmissionUploadComponent,
         SubmissionPanelComponent,
         SubmissionAttributesPanelComponent,
         SubmissionAttributesComponent,
@@ -81,7 +83,8 @@ import {DateFilterComponent} from './ag-grid/date-filter.component';
     exports: [
         SubmissionListComponent,
         SubmissionEditComponent,
-        SubmissionViewComponent
+        SubmissionViewComponent,
+        SubmissionUploadComponent
     ]
 })
 export class SubmissionModule {
