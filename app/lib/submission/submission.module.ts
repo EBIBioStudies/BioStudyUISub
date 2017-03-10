@@ -16,6 +16,7 @@ import {SubmissionListComponent, ActionButtonsCellComponent, DateCellComponent} 
 import {SubmissionEditComponent} from './subm-edit.component';
 import {SubmissionViewComponent} from './subm-view.component';
 import {SubmissionUploadComponent} from './subm-upload.component';
+import {SubmissionUploadSideBarComponent} from './sidebar/subm-upload-sidebar.component';
 import {SideBarComponent} from './sidebar/subm-sidebar.component';
 import {SideBarItemComponent} from './sidebar/subm-sidebar.component';
 import {SubmissionPanelComponent} from './panel/subm-panel.component';
@@ -59,6 +60,7 @@ import {DateFilterComponent} from './ag-grid/date-filter.component';
         SubmissionEditComponent,
         SubmissionViewComponent,
         SubmissionUploadComponent,
+        SubmissionUploadSideBarComponent,
         SubmissionPanelComponent,
         SubmissionAttributesPanelComponent,
         SubmissionAttributesComponent,
