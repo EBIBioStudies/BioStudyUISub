@@ -37,6 +37,8 @@ import {SubmTypeComponent} from './subm-type.component';
 import {TextFilterComponent} from './ag-grid/text-filter.component';
 import {DateFilterComponent} from './ag-grid/date-filter.component';
 
+import {TreeViewComponent, TreeViewNodeComponent} from './results/tree-view.component';
+
 @NgModule({
     imports: [
         HttpClientModule,
@@ -82,7 +84,9 @@ import {DateFilterComponent} from './ag-grid/date-filter.component';
         DateInputBoxComponent,
         SubmTypeComponent,
         TextFilterComponent,
-        DateFilterComponent
+        DateFilterComponent,
+        TreeViewComponent,
+        TreeViewNodeComponent
     ],
     exports: [
         SubmissionListComponent,

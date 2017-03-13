@@ -10,7 +10,8 @@ import {
     ModalModule,
     PaginationModule,
     DatepickerModule,
-    PopoverModule
+    PopoverModule,
+    CollapseModule
 } from 'ng2-bootstrap';
 
 import {ContainerRootComponent} from './container-root.component';
@@ -29,7 +30,8 @@ import {FileUploadButtonComponent} from './file-upload-button.component';
         ModalModule,
         PaginationModule,
         DatepickerModule,
-        PopoverModule
+        PopoverModule,
+        CollapseModule
     ],
     declarations: [
         ContainerRootComponent,
@@ -50,6 +52,7 @@ import {FileUploadButtonComponent} from './file-upload-button.component';
         PaginationModule,
         DatepickerModule,
         PopoverModule,
+        CollapseModule,
         ContainerRootComponent,
         ContainerMdComponent,
         ORCIDInputBoxComponent,

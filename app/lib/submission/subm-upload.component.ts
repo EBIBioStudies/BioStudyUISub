@@ -1,5 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {SubmissionUploadService, SubmUploadResults} from './submission-upload.service';
+import {TreeViewConfig} from './results/tree-view.component';
 
 @Component({
     selector: 'subm-upload',
@@ -28,7 +29,7 @@ import {SubmissionUploadService, SubmUploadResults} from './submission-upload.se
                      <div class="panel-heading">
                          <div class="row">
                              <div class="col-xs-1 text-center">
-                                 <i style="margin-top:25%" 
+                                 <i style="margin-top:15%" 
                                     class="fa fa-2x" aria-hidden="true"
                                     [ngClass]="{'fa-exclamation-triangle': results.failed,
                                     'fa-check': results.successful,
@@ -51,7 +52,8 @@ import {SubmissionUploadService, SubmUploadResults} from './submission-upload.se
                             Loading...                       
                          </div>
                          <div *ngIf="results.failed">
-                            Show results tree view here
+                            <tree-view [data]="results.log"
+                                       [config]="treeViewConfig"></tree-view>
                          </div> 
                      <!--div class="text-success">
                         <i class="fa fa-check fa-3x" aria-hidden="true"></i>
@@ -70,6 +72,15 @@ import {SubmissionUploadService, SubmUploadResults} from './submission-upload.se
 export class SubmissionUploadComponent implements OnInit {
     private collapseLeftSide: boolean = false;
     private results: SubmUploadResults = undefined;
+    private treeViewConfig: TreeViewConfig = {
+        children(data: any): any[] {
+            return data.subnodes ? data.subnodes : [];
+        },
+        title(data: any): string {
+            return data.message ? data.message: 'no message';
+        }
+    };
+
 
     constructor(@Inject(SubmissionUploadService) private submUploadService: SubmissionUploadService) {
     }

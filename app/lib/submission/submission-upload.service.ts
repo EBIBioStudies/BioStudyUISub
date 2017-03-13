@@ -7,6 +7,69 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
 
+
+const LOG = {
+    "mapping": [],
+    "log": {
+        "level": "ERROR",
+        "message": "CREATE submission(s) from json source",
+        "subnodes": [
+            {
+                "level": "INFO",
+                "message": "Processing 'json' data. Body size: 808"
+            },
+            {
+                "level": "WARN",
+                "message": "Charset isn't specified. Assuming default 'utf-8'"
+            },
+            {
+                "level": "SUCCESS",
+                "message": "Parsing JSON body",
+                "subnodes": [
+                    {
+                        "level": "SUCCESS",
+                        "message": "Procesing submission",
+                        "subnodes": [
+                            {
+                                "level": "INFO",
+                                "message": "Submission accession no: !{S-BSST}"
+                            },
+                            {
+                                "level": "SUCCESS",
+                                "message": "Processing section 'Study'",
+                                "subnodes": [
+                                    {
+                                        "level": "SUCCESS",
+                                        "message": "Processing section 'Author'"
+                                    },
+                                    {
+                                        "level": "SUCCESS",
+                                        "message": "Processing section 'Organization'"
+                                    },
+                                    {
+                                        "level": "SUCCESS",
+                                        "message": "Processing file reference"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "level": "ERROR",
+                "message": "Internal server error"
+            },
+            {
+                "level": "ERROR",
+                "message": "Submit/Update operation failed. Rolling transaction back"
+            }
+        ]
+    },
+    "status": "FAIL"
+};
+
+
 export class SubmUploadResults {
     private __created: Date;
     private __filename: string;
@@ -40,6 +103,10 @@ export class SubmUploadResults {
 
     get filename(): string {
         return this.__filename;
+    }
+
+    get log(): any {
+        return LOG ? LOG.log : {};
     }
 }
 
