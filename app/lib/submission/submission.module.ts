@@ -8,6 +8,7 @@ import {FileModule} from '../file/file.module';
 import {SharedModule} from '../shared/shared.module';
 
 import {SubmissionService} from './submission.service';
+import {SubmissionUploadService} from './submission-upload.service';
 import {DictionaryService} from './dictionary.service';
 import {SubmissionModel} from './submission.model';
 import {PubMedSearchService} from './pubMedSearch.service';
@@ -51,6 +52,7 @@ import {DateFilterComponent} from './ag-grid/date-filter.component';
     ],
     providers: [
         SubmissionService,
+        SubmissionUploadService,
         PubMedSearchService,
         DictionaryService,
         SubmissionModel
