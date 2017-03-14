@@ -2,8 +2,11 @@ import {
     Component,
     Input,
     Output,
-    EventEmitter
+    EventEmitter,
+    Inject
 } from '@angular/core';
+
+import {SubmissionUploadService} from '../submission-upload.service';
 
 @Component({
     selector: 'subm-upload-sidebar',
@@ -41,17 +44,20 @@ import {
                 <label for="">Format</label>
                 <select id="formatSelect" 
                         class="form-control">
+                   <option disabled selected value> -- autodetect -- </option>
+                   <option value="xlsx">xlsx</option>
+                   <option value="xls">xls</option>
                    <option value="json">json</option>
-                   <option value="exel">excel</option>
+                   <option value="csv">csv</option>
+                   <option value="tsv">tsv</option>
                 </select>
             </div>
             <hr/>
             <div>
+                <!--span *ngIf="submitting"><i class="fa fa-spinner fa-spin"></i></span-->
                 <button type="submit"
                         class="btn btn-primary btn-sm pull-right"
-                        tooltip="Validate & submit"
-                        [disabled]="!canSubmit">Upload</button>
-                <span *ngIf="submitting"><i class="fa fa-spinner fa-spin"></i></span>
+                        [disabled]="!canSubmit">Submit</button>
             </div>
         </form>
     </div>
@@ -65,9 +71,13 @@ export class SubmissionUploadSideBarComponent {
     @Output() toggle? = new EventEmitter();
 
     private model = {
-        submFile: undefined,
+        file: undefined,
         format: undefined
     };
+
+
+    constructor(@Inject(SubmissionUploadService) private submUploadService: SubmissionUploadService) {
+    }
 
     onToggle(e): void {
         e.preventDefault();
@@ -77,32 +87,24 @@ export class SubmissionUploadSideBarComponent {
     }
 
     private get fileName(): string {
-        return this.model.submFile ? this.model.submFile.name : 'No file selected';
+        return this.model.file ? this.model.file.name : 'No file selected';
     }
 
     private get canSubmit(): boolean {
-        return this.model.submFile && this.model.format;
+        return this.model.file !== undefined;
     }
 
     private onUploadFilesSelect(files: File[]): void {
         if (files.length > 0) {
-            this.model.submFile = files[0];
-            this.model.format = this.detectFileFormat(files[0].name);
+            this.model.file = files[0];
+            this.model.format = '';
         }
-    }
-
-    private detectFileFormat(fileName: string): string {
-        if (!fileName) {
-            return undefined;
-        }
-        //todo use
-        return undefined;
     }
 
     private onSubmit() {
         if (!this.canSubmit) {
             return;
         }
-
+        this.submUploadService.upload(this.model.file, this.model.format);
     }
 }

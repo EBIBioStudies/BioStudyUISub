@@ -1,6 +1,8 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {SubmissionUploadService, SubmUploadResults} from './submission-upload.service';
+import {Component, Inject, OnInit, OnDestroy} from '@angular/core';
+import {SubmissionUploadService, SubmUploadRequest} from './submission-upload.service';
 import {TreeViewConfig, TreeViewCustomNodeComponent} from './results/tree-view.component';
+
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'submit-log-node',
@@ -20,6 +22,7 @@ export class SubmitLogNodeComponent implements TreeViewCustomNodeComponent {
     private __logLevel: string = '';
 
     onNodeData(data: any): void {
+        console.log(data);
         this.__message = data.message || '';
         this.__logLevel = (data.level || 'info').toLowerCase();
     }
@@ -55,38 +58,37 @@ export class SubmitLogNodeComponent implements TreeViewCustomNodeComponent {
     template: `
 <div class="row-offcanvas row-offcanvas-left">
     <subm-upload-sidebar *ngIf="!readonly"
-                (upload)="onUpload($event)"
                 (toggle)="onToggle($event)"
                 [collapsed]="collapseLeftSide">
     </subm-upload-sidebar>
     
     <div class="container-fluid">
         <aside class="right-side content" [ngClass]="{'collapse-left' : collapseLeftSide}">
-            <div *ngIf="!results"
+            <div *ngIf="!request"
                  class="panel text-center" 
                  style="border-color:#bbb;color:#aaa;padding:20px; margin:20px">
                Please use the form on the left to upload submission file. 
                It will be validated and, if the validation is successful, automatically submitted to BioStudies. 
                The results appear here shortly after.
             </div>
-            <div *ngIf="results">
+            <div *ngIf="request">
                 <div class="panel"
-                     [ngClass]="{'panel-danger': results.failed, 
-                                 'panel-success': results.successful,
-                                 'panel-info': results.inprogress}">
+                     [ngClass]="{'panel-danger': request.failed, 
+                                 'panel-success': request.successful,
+                                 'panel-info': request.inprogress}">
                      <div class="panel-heading">
                          <div class="row">
                              <div class="col-xs-1 text-center">
                                  <i style="margin-top:10%" 
                                     class="fa fa-2x" aria-hidden="true"
-                                    [ngClass]="{'fa-exclamation-triangle': results.failed,
-                                    'fa-check': results.successful,
-                                    'fa-circle-o-notch fa-spin': results.inprogress                                    
+                                    [ngClass]="{'fa-exclamation-triangle': request.failed,
+                                    'fa-check': request.successful,
+                                    'fa-circle-o-notch fa-spin': request.inprogress                                    
                                     }"></i>
                              </div>
                              <div class="col-xs-10">
-                                 <h4 class="panel-title">{{results.filename}}</h4>
-                                 <h6><em>Content-Type: {{results.contentType}}, Created: {{results.created | date:'short'}}</em></h6>
+                                 <h4 class="panel-title">{{request.filename}}</h4>
+                                 <h6><em>Format: {{request.format}}, Created: {{request.created | date:'short'}}</em></h6>
                              </div>
                              <div class="col-xs-1">
                                  <button type="button" class="close">
@@ -96,11 +98,11 @@ export class SubmitLogNodeComponent implements TreeViewCustomNodeComponent {
                          </div>
                      </div>
                      <div class="panel-body container-fluid">
-                         <div *ngIf="results.inprogress">
+                         <div *ngIf="request.inprogress">
                             Loading...                       
                          </div>
-                         <div *ngIf="results.failed">
-                            <tree-view [data]="results.log"
+                         <div *ngIf="request.failed">
+                            <tree-view [data]="request.log"
                                        [config]="treeViewConfig"></tree-view>
                          </div> 
                      </div>                            
@@ -111,9 +113,10 @@ export class SubmitLogNodeComponent implements TreeViewCustomNodeComponent {
 </div>
 `
 })
-export class SubmissionUploadComponent implements OnInit {
+export class SubmissionUploadComponent implements OnInit, OnDestroy {
     private collapseLeftSide: boolean = false;
-    private results: SubmUploadResults = undefined;
+    private request: SubmUploadRequest;
+    private sb: Subscription;
     private treeViewConfig: TreeViewConfig = {
         children(data: any): any[] {
             return data.subnodes ? data.subnodes : [];
@@ -121,23 +124,22 @@ export class SubmissionUploadComponent implements OnInit {
         nodeComponentClass: SubmitLogNodeComponent
     };
 
-
     constructor(@Inject(SubmissionUploadService) private submUploadService: SubmissionUploadService) {
     }
 
     ngOnInit(): void {
-        this.submUploadService
-            .lastResults()
-            .subscribe(res => {
-                this.results = res
-            });
+        this.sb = this.submUploadService.newUploadRequest$.subscribe((req:SubmUploadRequest) => {
+            console.log(req);
+            this.request = req;
+        });
+    }
+
+    ngOnDestroy():void {
+        this.sb.unsubscribe();
     }
 
     onToggle(ev): void {
         this.collapseLeftSide = !this.collapseLeftSide;
     }
 
-    onUpload(ev): void {
-
-    }
 }

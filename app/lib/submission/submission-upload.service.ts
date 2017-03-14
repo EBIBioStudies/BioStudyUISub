@@ -3,98 +3,39 @@ import {Response} from '@angular/http';
 
 import {HttpClient} from '../http/http-client';
 import {Observable} from 'rxjs/Observable';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
 
 
-const LOG = {
-    "mapping": [],
-    "log": {
-        "level": "ERROR",
-        "message": "CREATE submission(s) from json source",
-        "subnodes": [
-            {
-                "level": "INFO",
-                "message": "Processing 'json' data. Body size: 808"
-            },
-            {
-                "level": "WARN",
-                "message": "Charset isn't specified. Assuming default 'utf-8'"
-            },
-            {
-                "level": "SUCCESS",
-                "message": "Parsing JSON body",
-                "subnodes": [
-                    {
-                        "level": "SUCCESS",
-                        "message": "Procesing submission",
-                        "subnodes": [
-                            {
-                                "level": "INFO",
-                                "message": "Submission accession no: !{S-BSST}"
-                            },
-                            {
-                                "level": "SUCCESS",
-                                "message": "Processing section 'Study'",
-                                "subnodes": [
-                                    {
-                                        "level": "SUCCESS",
-                                        "message": "Processing section 'Author'"
-                                    },
-                                    {
-                                        "level": "SUCCESS",
-                                        "message": "Processing section 'Organization'"
-                                    },
-                                    {
-                                        "level": "SUCCESS",
-                                        "message": "Processing file reference"
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "level": "ERROR",
-                "message": "Internal server error"
-            },
-            {
-                "level": "ERROR",
-                "message": "Submit/Update operation failed. Rolling transaction back"
-            }
-        ]
-    },
-    "status": "FAIL"
-};
-
-
-export class SubmUploadResults {
+export class SubmUploadRequest {
     private __created: Date;
     private __filename: string;
-    private __contentType: string;
+    private __format: string;
+    private __log: any;
+    private __status: string = 'in_progress';
 
-    constructor() {
+    constructor(filename: string, format: string) {
         this.__created = new Date();
-        this.__filename = "file_name.json";
-        this.__contentType = "text/json";
+        this.__filename = filename;
+        this.__format = format || 'unspecified';
     }
 
     get failed(): boolean {
-        return true;
+        return this.__status === 'error';
     }
 
     get successful(): boolean {
-        return false;
+        return this.__status === 'success';
     }
 
     get inprogress(): boolean {
-        return false;
+        return this.__status === 'in_progress';
     }
 
-    get contentType(): string {
-        return this.__contentType;
+    get format(): string {
+        return this.__format;
     }
 
     get created(): Date {
@@ -106,18 +47,43 @@ export class SubmUploadResults {
     }
 
     get log(): any {
-        return LOG ? LOG.log : {};
+        return this.__log || {};
+    }
+
+    onResults(res: any): void {
+        this.__log = res.log;
+        this.__status = (res.status === 'FAIL') ? 'error' : 'success';
     }
 }
 
-
 @Injectable()
 export class SubmissionUploadService {
+    newUploadRequest$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>();
 
     constructor(@Inject(HttpClient) private http: HttpClient) {
     }
 
-    lastResults(): Observable<SubmUploadResults> {
-        return Observable.of(new SubmUploadResults());
+    upload(file: File, format: string): void {
+        let formData = new FormData();
+        formData.append('format', format);
+        formData.append('file', file);
+
+        let req = new SubmUploadRequest(file.name, format);
+        this.http.post('/raw/formsubmit', formData)
+            .subscribe(
+                resp => {
+                    req.onResults(resp.json());
+                },
+                error => {
+                    req.onResults({
+                        status: "FAIL",
+                        log: {
+                            "level": "ERROR",
+                            "message": "request failed"
+                        }
+                    });
+                });
+
+        this.newUploadRequest$.next(req);
     }
 }
