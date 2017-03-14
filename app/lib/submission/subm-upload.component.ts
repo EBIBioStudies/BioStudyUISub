@@ -29,7 +29,7 @@ import {TreeViewConfig} from './results/tree-view.component';
                      <div class="panel-heading">
                          <div class="row">
                              <div class="col-xs-1 text-center">
-                                 <i style="margin-top:15%" 
+                                 <i style="margin-top:10%" 
                                     class="fa fa-2x" aria-hidden="true"
                                     [ngClass]="{'fa-exclamation-triangle': results.failed,
                                     'fa-check': results.successful,
@@ -55,12 +55,6 @@ import {TreeViewConfig} from './results/tree-view.component';
                             <tree-view [data]="results.log"
                                        [config]="treeViewConfig"></tree-view>
                          </div> 
-                     <!--div class="text-success">
-                        <i class="fa fa-check fa-3x" aria-hidden="true"></i>
-                     </div>
-                     <div class="text-danger">
-                        <i class="fa fa-exclamation-triangle fa-3x" aria-hidden="true"></i>
-                     </div-->
                      </div>                            
                 </div>
             </div>
@@ -77,7 +71,25 @@ export class SubmissionUploadComponent implements OnInit {
             return data.subnodes ? data.subnodes : [];
         },
         title(data: any): string {
-            return data.message ? data.message: 'no message';
+            return data.message ? this.icon(data.level) + data.message : 'no message';
+        },
+        cssClass(data: any): string {
+            return this.bgClass(data.level);
+        },
+        bgClass(logLevel: string) {
+            const level = logLevel || 'INFO';
+            return ({
+                'info': 'bg-info',
+                'error': 'bg-danger',
+                'warn': 'bg-warning',
+                'success': 'bg-success'
+            })[level.toLowerCase()];
+        },
+        icon(logLevel: string) {
+            if (logLevel && logLevel.toLowerCase() === 'error') {
+                return '<i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i>&nbsp;';
+            }
+            return "";
         }
     };
 

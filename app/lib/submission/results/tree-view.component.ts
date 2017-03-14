@@ -7,16 +7,17 @@ import {
 export interface TreeViewConfig {
     children(data:any):any[];
     title(data:any):string;
+    cssClass(data:any):string;
 }
 
 @Component({
     selector: 'tree-view-node',
     template: `
-    <span><i *ngIf="hasChildren" 
+    <span class="{{cssClass}}"><i *ngIf="hasChildren" 
              class="fa"
              [ngClass]="{'fa-minus-square-o': !isCollapsed, 'fa-plus-square-o': isCollapsed}"
              (click)="isCollapsed = !isCollapsed"
-             aria-hidden="true"></i>&nbsp;{{title}}</span>
+             aria-hidden="true"></i>&nbsp;<div style="display:inline-block" [innerHTML]="title"></div></span>
     <ul [collapse]="isCollapsed">
         <li  *ngFor="let child of children">
             <tree-view-node [data]="child"
@@ -77,6 +78,10 @@ export class TreeViewNodeComponent {
 
     get title(): string {
         return this.config.title(this.data);
+    }
+
+    get cssClass(): string {
+        return this.config.cssClass(this.data) || "";
     }
 
     get hasChildren():boolean {
