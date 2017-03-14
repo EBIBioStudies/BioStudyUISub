@@ -1,6 +1,54 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {SubmissionUploadService, SubmUploadResults} from './submission-upload.service';
-import {TreeViewConfig} from './results/tree-view.component';
+import {TreeViewConfig, TreeViewCustomNodeComponent} from './results/tree-view.component';
+
+@Component({
+    selector: 'submit-log-node',
+    template: `
+    <span [ngClass]="{
+             'text-info': info,          
+             'text-danger': error,
+             'text-warning': warn,     
+             'text-success': success}">
+        <i *ngIf="error" class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i>&nbsp;
+        {{message}}
+    </span>       
+`
+})
+export class SubmitLogNodeComponent implements TreeViewCustomNodeComponent {
+    private __message: string = '';
+    private __logLevel: string = '';
+
+    onNodeData(data: any): void {
+        this.__message = data.message || '';
+        this.__logLevel = (data.level || 'info').toLowerCase();
+    }
+
+    get message(): string {
+        return this.__message;
+    }
+
+    get error(): boolean {
+        return this.logLevelEquals('error');
+    }
+
+    get warn(): boolean {
+        return this.logLevelEquals('warn');
+    }
+
+    get success(): boolean {
+        return this.logLevelEquals('success');
+    }
+
+    get info(): boolean {
+        return this.logLevelEquals('info');
+    }
+
+    private logLevelEquals(level: string): boolean {
+        return this.__logLevel === level;
+    }
+}
+
 
 @Component({
     selector: 'subm-upload',
@@ -70,27 +118,7 @@ export class SubmissionUploadComponent implements OnInit {
         children(data: any): any[] {
             return data.subnodes ? data.subnodes : [];
         },
-        title(data: any): string {
-            return data.message ? this.icon(data.level) + data.message : 'no message';
-        },
-        cssClass(data: any): string {
-            return this.bgClass(data.level);
-        },
-        bgClass(logLevel: string) {
-            const level = logLevel || 'INFO';
-            return ({
-                'info': 'bg-info',
-                'error': 'bg-danger',
-                'warn': 'bg-warning',
-                'success': 'bg-success'
-            })[level.toLowerCase()];
-        },
-        icon(logLevel: string) {
-            if (logLevel && logLevel.toLowerCase() === 'error') {
-                return '<i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i>&nbsp;';
-            }
-            return "";
-        }
+        nodeComponentClass: SubmitLogNodeComponent
     };
 
 

@@ -1,23 +1,34 @@
 import {
     Component,
     Inject,
-    Input
+    Input,
+    Type,
+    ViewChild,
+    ViewContainerRef,
+    AfterViewInit,
+    ComponentFactoryResolver
 } from '@angular/core';
 
+export interface TreeViewCustomNodeComponent {
+    onNodeData(data: any): void;
+}
+
 export interface TreeViewConfig {
-    children(data:any):any[];
-    title(data:any):string;
-    cssClass(data:any):string;
+    nodeComponentClass: Type<TreeViewCustomNodeComponent>
+    children(data: any): any[];
 }
 
 @Component({
     selector: 'tree-view-node',
     template: `
-    <span class="{{cssClass}}"><i *ngIf="hasChildren" 
-             class="fa"
-             [ngClass]="{'fa-minus-square-o': !isCollapsed, 'fa-plus-square-o': isCollapsed}"
-             (click)="isCollapsed = !isCollapsed"
-             aria-hidden="true"></i>&nbsp;<div style="display:inline-block" [innerHTML]="title"></div></span>
+    <span class="node">
+        <i *ngIf="hasChildren" 
+           class="fa"
+           [ngClass]="{'fa-minus-square-o': !isCollapsed, 'fa-plus-square-o': isCollapsed}"
+           (click)="isCollapsed = !isCollapsed"
+           aria-hidden="true"></i>
+           <template #nodeTemplate></template>
+    </span>
     <ul [collapse]="isCollapsed">
         <li  *ngFor="let child of children">
             <tree-view-node [data]="child"
@@ -51,7 +62,7 @@ li::after {
     top:25px;
     width:25px
 }
-:host span {
+:host span.node {
     -moz-border-radius:5px;
     -webkit-border-radius:5px;
     border:1px solid #999;
@@ -66,26 +77,29 @@ li:last-child::before {
 }
 `]
 })
-export class TreeViewNodeComponent {
+export class TreeViewNodeComponent implements AfterViewInit {
     @Input() data: any;
     @Input() config: TreeViewConfig;
 
-    private isCollapsed:boolean = false;
+    @ViewChild('nodeTemplate', {read: ViewContainerRef}) vcr;
+
+    private isCollapsed: boolean = false;
+
+    constructor(@Inject(ComponentFactoryResolver) private componentFactoryResolver: ComponentFactoryResolver) {
+    }
 
     get children(): any [] {
         return this.config.children(this.data);
     }
 
-    get title(): string {
-        return this.config.title(this.data);
-    }
-
-    get cssClass(): string {
-        return this.config.cssClass(this.data) || "";
-    }
-
-    get hasChildren():boolean {
+    get hasChildren(): boolean {
         return this.children.length > 0;
+    }
+
+    ngAfterViewInit() {
+        let componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.config.nodeComponentClass);
+        let componentRef = this.vcr.createComponent(componentFactory);
+        (<TreeViewCustomNodeComponent>componentRef.instance).onNodeData(this.data);
     }
 }
 
@@ -99,13 +113,12 @@ export class TreeViewNodeComponent {
 </div>        
 
 `,
-    styles:[`
+    styles: [`
 .tree {
     min-height:20px;
     padding:19px;
     margin-bottom:20px;
     background-color:#fbfbfb;
-    border:1px solid #999;
     -webkit-border-radius:4px;
     -moz-border-radius:4px;
     border-radius:4px;

@@ -16,7 +16,7 @@ import {PubMedSearchService} from './pubMedSearch.service';
 import {SubmissionListComponent, ActionButtonsCellComponent, DateCellComponent} from './subm-list.component';
 import {SubmissionEditComponent} from './subm-edit.component';
 import {SubmissionViewComponent} from './subm-view.component';
-import {SubmissionUploadComponent} from './subm-upload.component';
+import {SubmissionUploadComponent, SubmitLogNodeComponent} from './subm-upload.component';
 import {SubmissionUploadSideBarComponent} from './sidebar/subm-upload-sidebar.component';
 import {SideBarComponent} from './sidebar/subm-sidebar.component';
 import {SideBarItemComponent} from './sidebar/subm-sidebar.component';
@@ -64,6 +64,7 @@ import {TreeViewComponent, TreeViewNodeComponent} from './results/tree-view.comp
         SubmissionEditComponent,
         SubmissionViewComponent,
         SubmissionUploadComponent,
+        SubmitLogNodeComponent,
         SubmissionUploadSideBarComponent,
         SubmissionPanelComponent,
         SubmissionAttributesPanelComponent,
@@ -93,7 +94,8 @@ import {TreeViewComponent, TreeViewNodeComponent} from './results/tree-view.comp
         SubmissionEditComponent,
         SubmissionViewComponent,
         SubmissionUploadComponent
-    ]
+    ],
+    entryComponents: [SubmitLogNodeComponent]
 })
 export class SubmissionModule {
 }
