@@ -109,6 +109,8 @@ export class SubmitLogNodeComponent implements TreeViewCustomNodeComponent {
                              <div class="alert alert-success">
                                  The study was submitted <strong>successful</strong>! It should appear in the list of 'Submitted' studies. Thanks! 
                              </div>
+                             <tree-view [data]="request.log"
+                                        [config]="treeViewConfig"></tree-view>
                          </div> 
                      </div>                            
                 </div>
