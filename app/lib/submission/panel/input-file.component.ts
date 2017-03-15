@@ -37,7 +37,7 @@ export class InputFileComponent implements ControlValueAccessor {
         fileService
             .getFiles('/User')
             .map(data => data.files)
-            .map(files => _.map(files, f => f.path.replace(/^\/User\//,'/tmp/')))
+            .map(files => _.map(files, f => f.path.replace(/^\/User\//, '')))
             .subscribe((files) => {
                 this.files = files;
             });
