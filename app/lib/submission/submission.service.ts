@@ -79,6 +79,18 @@ export class SubmissionService {
             }).catch(SubmissionService.errorHandler);
     }
 
+    formSubmit(file: File, format: string = ''): Observable<any> {
+        let formData = new FormData();
+        formData.append('op', 'CREATEUPDATE');
+        formData.append('type', format);
+        formData.append('file', file);
+
+        return this.http.post('/raw/formsubmit', formData)
+            .map((res: Response) => {
+                return res.json();
+            }).catch(SubmissionService.errorHandler);
+    }
+
     deleteSubmission(accno) {
         return this.http.del('/api/submission/' + accno)
             .map((resp: Response) => {

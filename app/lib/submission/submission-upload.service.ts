@@ -1,12 +1,8 @@
 import {Injectable, Inject} from '@angular/core';
 import {Response} from '@angular/http';
 
-import {HttpClient} from '../http/http-client';
-import {Observable} from 'rxjs/Observable';
+import {SubmissionService} from './submission.service';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-
-import 'rxjs/add/observable/throw';
-import 'rxjs/add/operator/catch';
 
 
 export class SubmUploadRequest {
@@ -60,34 +56,18 @@ export class SubmUploadRequest {
 export class SubmissionUploadService {
     newUploadRequest$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>();
 
-    constructor(@Inject(HttpClient) private http: HttpClient) {
+    constructor(@Inject(SubmissionService) private submService: SubmissionService) {
     }
 
     upload(file: File, format: string): void {
-        let formData = new FormData();
-        formData.append('op', 'CREATEUPDATE');
-        formData.append('type', format);
-        formData.append('file', file);
-
         let req = new SubmUploadRequest(file.name, format);
-        this.http.post('/raw/formsubmit', formData)
+        this.newUploadRequest$.next(req);
+
+        this.submService.formSubmit(file, format)
             .subscribe(
-                resp => {
-                    req.onResults(resp.json());
-                },
-                error => {
-                    const status = error.status || '';
-                    const statusText = error.statusText || '';
-                    const statusLine = (status ? status + ': ' : '') + (statusText ? statusText : '');
-                    req.onResults({
-                        status: "FAIL",
-                        log: {
-                            "level": "ERROR",
-                            "message": "Submit request failed. " + statusLine
-                        }
-                    });
+                data => {
+                    req.onResults(data);
                 });
 
-        this.newUploadRequest$.next(req);
     }
 }
