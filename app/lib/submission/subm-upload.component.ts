@@ -105,6 +105,11 @@ export class SubmitLogNodeComponent implements TreeViewCustomNodeComponent {
                             <tree-view [data]="request.log"
                                        [config]="treeViewConfig"></tree-view>
                          </div> 
+                         <div *ngIf="request.successful">
+                             <div class="alert alert-success">
+                                 The study was submitted <strong>successful</strong>! It should appear in the list of 'Submitted' studies. Thanks! 
+                             </div>
+                         </div> 
                      </div>                            
                 </div>
             </div>
@@ -129,7 +134,6 @@ export class SubmissionUploadComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.sb = this.submUploadService.newUploadRequest$.subscribe((req:SubmUploadRequest) => {
-            console.log(req);
             this.request = req;
         });
     }

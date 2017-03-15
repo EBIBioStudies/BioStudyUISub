@@ -19,7 +19,7 @@ export class SubmUploadRequest {
     constructor(filename: string, format: string) {
         this.__created = new Date();
         this.__filename = filename;
-        this.__format = format || 'unspecified';
+        this.__format = format || '<auto-detect>';
     }
 
     get failed(): boolean {
@@ -65,7 +65,8 @@ export class SubmissionUploadService {
 
     upload(file: File, format: string): void {
         let formData = new FormData();
-        formData.append('format', format);
+        formData.append('op', 'CREATEUPDATE');
+        formData.append('type', format);
         formData.append('file', file);
 
         let req = new SubmUploadRequest(file.name, format);
@@ -75,11 +76,14 @@ export class SubmissionUploadService {
                     req.onResults(resp.json());
                 },
                 error => {
+                    const status = error.status || '';
+                    const statusText = error.statusText || '';
+                    const statusLine = (status ? status + ': ' : '') + (statusText ? statusText : '');
                     req.onResults({
                         status: "FAIL",
                         log: {
                             "level": "ERROR",
-                            "message": "request failed"
+                            "message": "Submit request failed. " + statusLine
                         }
                     });
                 });

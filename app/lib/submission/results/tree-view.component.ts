@@ -6,6 +6,7 @@ import {
     ViewChild,
     ViewContainerRef,
     AfterViewInit,
+    OnChanges,
     ComponentFactoryResolver
 } from '@angular/core';
 
@@ -77,13 +78,14 @@ li:last-child::before {
 }
 `]
 })
-export class TreeViewNodeComponent implements AfterViewInit {
+export class TreeViewNodeComponent implements AfterViewInit, OnChanges  {
     @Input() data: any;
     @Input() config: TreeViewConfig;
 
     @ViewChild('nodeTemplate', {read: ViewContainerRef}) vcr;
 
     private isCollapsed: boolean = false;
+    private compRef;
 
     constructor(@Inject(ComponentFactoryResolver) private componentFactoryResolver: ComponentFactoryResolver) {
     }
@@ -97,9 +99,20 @@ export class TreeViewNodeComponent implements AfterViewInit {
     }
 
     ngAfterViewInit() {
-        let componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.config.nodeComponentClass);
-        let componentRef = this.vcr.createComponent(componentFactory);
-        (<TreeViewCustomNodeComponent>componentRef.instance).onNodeData(this.data);
+        let compFactory = this.componentFactoryResolver.resolveComponentFactory(this.config.nodeComponentClass);
+        this.compRef = this.vcr.createComponent(compFactory);
+        this.detectChanges();
+    }
+
+    ngOnChanges() {
+        this.detectChanges();
+    }
+
+    private detectChanges() {
+        if (this.compRef) {
+            (<TreeViewCustomNodeComponent>this.compRef.instance).onNodeData(this.data);
+            this.compRef.changeDetectorRef.detectChanges();
+        }
     }
 }
 

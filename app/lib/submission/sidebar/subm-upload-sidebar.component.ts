@@ -42,14 +42,12 @@ import {SubmissionUploadService} from '../submission-upload.service';
             </div>
             <div class="form-group">
                 <label for="">Format</label>
-                <select id="formatSelect" 
-                        class="form-control">
-                   <option disabled selected value> -- autodetect -- </option>
-                   <option value="xlsx">xlsx</option>
-                   <option value="xls">xls</option>
-                   <option value="json">json</option>
-                   <option value="csv">csv</option>
-                   <option value="tsv">tsv</option>
+                <select name="formatSelect" 
+                        class="form-control"
+                        [(ngModel)]="model.format">
+                    <option *ngFor="let format of formats" [value]="format.value" [selected]="model.format === format.value">
+                        {{format.name}}
+                    </option>     
                 </select>
             </div>
             <hr/>
@@ -70,11 +68,19 @@ export class SubmissionUploadSideBarComponent {
     @Input() readonly?: boolean = false;
     @Output() toggle? = new EventEmitter();
 
+    private formats = [
+        {name: '-- auto-detect --', value: ''},
+        {name: 'xlsx', value: 'xlsx'},
+        {name: 'xls', value: 'xls'},
+        {name: 'json', value: 'json'},
+        {name: 'csv', value: 'csv'},
+        {name: 'tsv', value: 'tsv'}
+    ];
+
     private model = {
         file: undefined,
-        format: undefined
+        format: ''
     };
-
 
     constructor(@Inject(SubmissionUploadService) private submUploadService: SubmissionUploadService) {
     }
