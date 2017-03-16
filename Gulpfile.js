@@ -116,7 +116,7 @@ gulp.task('js', gulp.series('mkdir', function (done) {
 }));
 
 gulp.task('css', function() {
-    return gulp.src('app/styles/app.less')
+    return gulp.src('app/styles/custom/custom-bootstrap.less')
         .pipe(sourcemaps.init())
         .pipe(less())
         .pipe(sourcemaps.write())
