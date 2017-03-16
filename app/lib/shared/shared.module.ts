@@ -10,7 +10,8 @@ import {
     ModalModule,
     PaginationModule,
     DatepickerModule,
-    PopoverModule
+    PopoverModule,
+    CollapseModule
 } from 'ng2-bootstrap';
 
 import {ContainerRootComponent} from './container-root.component';
@@ -28,7 +29,8 @@ import {ORCIDInputBoxComponent} from './orcid-input-box.component';
         ModalModule,
         PaginationModule,
         DatepickerModule,
-        PopoverModule
+        PopoverModule,
+        CollapseModule
     ],
     declarations: [
         ContainerRootComponent,
@@ -48,6 +50,7 @@ import {ORCIDInputBoxComponent} from './orcid-input-box.component';
         PaginationModule,
         DatepickerModule,
         PopoverModule,
+        CollapseModule,
         ContainerRootComponent,
         ContainerMdComponent,
         ORCIDInputBoxComponent

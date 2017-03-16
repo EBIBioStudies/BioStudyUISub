@@ -1,0 +1,193 @@
+@navbar-bsst-color:                     #fff;
+@navbar-bsst-bg:                        #b5d7ec;
+@navbar-bsst-border:                    darken(@navbar-bsst-bg, 6.5%);
+
+@navbar-bsst-link-color:                #f6f6f6;
+@navbar-bsst-link-hover-color:          #fff;
+@navbar-bsst-link-hover-bg:             #82b0bc;
+@navbar-bsst-link-active-color:         #fff;
+@navbar-bsst-link-active-bg:            #82b0bc;
+@navbar-bsst-link-disabled-color:       #ccc;
+@navbar-bsst-link-disabled-bg:          transparent;
+
+@navbar-bsst-brand-color:               @navbar-bsst-link-color;
+@navbar-bsst-brand-hover-color:         darken(@navbar-bsst-brand-color, 10%);
+@navbar-bsst-brand-hover-bg:            transparent;
+
+@navbar-bsst-toggle-hover-bg:           #ddd;
+@navbar-bsst-toggle-icon-bar-bg:        #888;
+@navbar-bsst-toggle-border-color:       #ddd;
+
+.navbar-bsst {
+  background: @navbar-bsst-bg;
+  background: -webkit-linear-gradient(right top, #d7eaca, #98C7D7);
+  background: -o-linear-gradient(top right, #d7eaca, #98C7D7);
+  background: -moz-linear-gradient(top right, #d7eaca, #98C7D7);
+  background: linear-gradient(to top right, #d7eaca, #98C7D7);
+
+  .navbar-brand {
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    color: @navbar-bsst-brand-color;
+    &:hover,
+    &:focus {
+      color: @navbar-bsst-brand-hover-color;
+      background-color: @navbar-bsst-brand-hover-bg;
+    }
+  }
+
+  .navbar-text {
+    color: @navbar-bsst-color;
+  }
+
+  .navbar-nav {
+    > li > a {
+      color: @navbar-bsst-link-color;
+
+      &:hover,
+      &:focus {
+        color: @navbar-bsst-link-hover-color;
+        background-color: @navbar-bsst-link-hover-bg;
+      }
+    }
+    > .active > a {
+      &,
+      &:hover,
+      &:focus {
+        color: @navbar-bsst-link-active-color;
+        background-color: @navbar-bsst-link-active-bg;
+      }
+    }
+    > .disabled > a {
+      &,
+      &:hover,
+      &:focus {
+        color: @navbar-bsst-link-disabled-color;
+        background-color: @navbar-bsst-link-disabled-bg;
+      }
+    }
+  }
+
+  .navbar-toggle {
+    border-color: @navbar-bsst-toggle-border-color;
+    &:hover,
+    &:focus {
+      background-color: @navbar-bsst-toggle-hover-bg;
+    }
+    .icon-bar {
+      background-color: @navbar-bsst-toggle-icon-bar-bg;
+    }
+  }
+
+  .navbar-collapse,
+  .navbar-form {
+    border-color: @navbar-bsst-border;
+  }
+
+  // Dropdown menu items
+  .navbar-nav {
+    // Remove background color from open dropdown
+    > .open > a {
+      &,
+      &:hover,
+      &:focus {
+        background-color: @navbar-bsst-link-active-bg;
+        color: @navbar-bsst-link-active-color;
+      }
+    }
+
+    @media (max-width: @grid-float-breakpoint-max) {
+      // Dropdowns get custom display when collapsed
+      .open .dropdown-menu {
+        > li > a {
+          color: @navbar-bsst-link-color;
+          &:hover,
+          &:focus {
+            color: @navbar-bsst-link-hover-color;
+            background-color: @navbar-bsst-link-hover-bg;
+          }
+        }
+        > .active > a {
+          &,
+          &:hover,
+          &:focus {
+            color: @navbar-bsst-link-active-color;
+            background-color: @navbar-bsst-link-active-bg;
+          }
+        }
+        > .disabled > a {
+          &,
+          &:hover,
+          &:focus {
+            color: @navbar-bsst-link-disabled-color;
+            background-color: @navbar-bsst-link-disabled-bg;
+          }
+        }
+      }
+    }
+  }
+
+
+  // Links in navbars
+  //
+  // Add a class to ensure links outside the navbar nav are colored correctly.
+
+  .navbar-link {
+    color: @navbar-bsst-link-color;
+    &:hover {
+      color: @navbar-bsst-link-hover-color;
+    }
+  }
+
+  .btn-link {
+    color: @navbar-bsst-link-color;
+    &:hover,
+    &:focus {
+      color: @navbar-bsst-link-hover-color;
+    }
+    &[disabled],
+    fieldset[disabled] & {
+      &:hover,
+      &:focus {
+        color: @navbar-bsst-link-disabled-color;
+      }
+    }
+  }
+}
+
+.logo-bsst {
+  background-image: url("../../images/biostudies-logo2.png");
+  background-size: 200px auto;
+  background-repeat: no-repeat;
+
+  font-style: normal;
+  font-weight: 800;
+
+  width: 200px;
+  height: 50px;
+  display: block;
+  padding-top: 25px;
+  text-align: right;
+
+  .name-bsst {
+    margin: 0;
+    padding: 0;
+    font-family: Georgia, Baskerville, "Times New Roman", Times, serif;
+    font-style: normal;
+    font-weight: 500;
+    color: #58595B;
+    font-size: 14px;
+  }
+
+  .version-bsst {
+    margin: 0 5px;
+    padding: 0 3px;
+    font-family: Georgia, Baskerville, "Times New Roman", Times, serif;
+    font-style: normal;
+    font-weight: 100;
+    font-size: 14px;
+    color: #58595B;
+    background-color: white;
+  }
+}
