@@ -46,8 +46,7 @@ export class SubmissionService {
         let urlParams = new UrlParams(args);
         return this.http.get('/api/submissions', urlParams.list)
             .map((res: Response) => {
-                let data = res.json();
-                return data.submissions;
+                return res.json().subissions;
             }).catch(SubmissionService.errorHandler);
     }
 
@@ -94,28 +93,11 @@ export class SubmissionService {
     deleteSubmission(accno) {
         return this.http.del('/api/submission/' + accno)
             .map((resp: Response) => {
-                let data = resp.json();
-                if (data.status === "OK") {
-                    return data;
-                } else {
-                    return Observable.throw({status: 'Error', message: data.message || 'Server error'});
-                }
+                return resp.json();
             }).catch(SubmissionService.errorHandler);
     }
 
     static errorHandler(error: any) {
-        let err = {
-            status: error.status || 'Error',
-            message: error.statusText || 'Server error'
-        };
-        if (error.json) {
-            try {
-                let jsonError = error.json();
-                err.message = jsonError.message || err.message;
-            } catch (e) {// ignore ?
-                console.log(error);
-            }
-        }
         console.error(err);
         return Observable.throw(err);
     }

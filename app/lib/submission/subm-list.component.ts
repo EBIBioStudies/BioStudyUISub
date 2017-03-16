@@ -268,8 +268,10 @@ export class SubmissionListComponent {
                 console.debug('SubmList: (onDelete): accno=' + accno);
                 this.submService
                     .deleteSubmission(accno)
-                    .subscribe(() => {
-                        this.setDatasource();
+                    .subscribe(data => {
+                        if (data.status === "OK") {
+                            this.setDatasource();
+                        }
                     });
             },
 
