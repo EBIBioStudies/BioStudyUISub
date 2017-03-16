@@ -67,6 +67,18 @@ export class SubmissionUploadService {
             .subscribe(
                 data => {
                     req.onResults(data);
+                },
+                error => {
+                    const status = error.status || '';
+                    const statusText = error.statusText || '';
+                    const statusLine = (status ? status + ': ' : '') + (statusText ? statusText : '');
+                    req.onResults({
+                        status: "FAIL",
+                        log: {
+                            "level": "ERROR",
+                            "message": "Submit request failed. " + statusLine
+                        }
+                    });
                 });
 
     }
