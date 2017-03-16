@@ -53,9 +53,23 @@ import {SubmissionUploadService} from '../submission-upload.service';
             <hr/>
             <div>
                 <!--span *ngIf="submitting"><i class="fa fa-spinner fa-spin"></i></span-->
-                <button type="submit"
+                <!--button type="submit"
                         class="btn btn-primary btn-sm pull-right"
-                        [disabled]="!canSubmit">Submit</button>
+                        [disabled]="!canSubmit">Submit</button-->
+                        
+                <div class="btn-group pull-right" dropdown>
+                    <button id="single-button" 
+                            type="button" 
+                            class="btn btn-primary btn-sm" 
+                            [disabled]="!canSubmit"
+                            dropdownToggle>
+                       Submit to... <span class="caret"></span>
+                    </button>
+                    <ul dropdownMenu role="menu" aria-labelledby="single-button">
+                        <li role="menuitem"><a class="dropdown-item" href="#">Create</a></li>
+                        <li role="menuitem"><a class="dropdown-item" href="#">Update</a></li>
+                    </ul>
+                </div>
             </div>
         </form>
     </div>
