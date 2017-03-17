@@ -1,0 +1,181 @@
+@left-side-width: 200px;
+@left-side-width-collapse: 40px;
+
+@sidebar-light-bg: white;
+@sidebar-light-hover-bg: @brand-primary;
+@sidebar-light-font: white;
+@sidebar-light-border: none;
+
+/* Layout */
+
+/*right side - contains main content*/
+.right-side {
+  background-color: @body-bg;
+  margin-left: @left-side-width;
+  position: relative;
+  top: -@navbar-height;
+}
+
+.right-side.stretch {
+  margin-left: 0 !important;
+}
+
+/*left side - contains sidebar*/
+.left-side {
+  position: fixed;
+  top: @navbar-height;
+  width: @left-side-width;
+  background: @sidebar-light-bg;
+  -webkit-box-shadow: 10px 10px 5px -9px rgba(0, 0, 0, 0.24);
+  -moz-box-shadow: 10px 10px 5px -9px rgba(0, 0, 0, 0.24);
+  box-shadow: 10px 10px 5px -9px rgba(0, 0, 0, 0.24);
+}
+
+@media screen and (min-width: @screen-md) {
+
+  .right-side.collapse-left {
+    margin-left: @left-side-width-collapse;
+    display: block !important;
+  }
+
+  .right-side.ng-hide {
+    display: block !important;
+    margin-left: 0;
+    > .content-header {
+      margin-top: 0;
+    }
+  }
+
+  .left-side.collapse-left {
+    width: @left-side-width-collapse;
+  }
+}
+
+@media screen and (max-width: @screen-md) {
+  .right-side {
+    margin-left: 0;
+  }
+}
+
+/* Content */
+.content {
+  background-color: transparent;
+  padding-top: 10px;
+}
+
+/* Sidebar */
+
+.sidebar {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.sidebar-offcanvas {
+  margin-bottom: 5px;
+  border-bottom: 1px solid #fff;
+
+  .sidebar-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    .sidebar-item {
+      margin: 0;
+      padding: 0;
+      border-top: 1px solid #fff;
+      border-bottom: 1px solid @sidebar-light-border;
+
+      &.menu-toggle > a {
+        background-color: #e3fdec;
+        color: @link-color;
+      }
+      &.warning > a {
+        color: @brand-warning;
+      }
+      &.success > a {
+        color: @brand-success;
+      }
+      &.danger > a {
+        color: @brand-danger;
+      }
+      &.info > a {
+        color: @brand-info;
+      }
+
+      > a > span {
+        color: #737373;
+      }
+
+      > a:hover, &.active > a {
+        text-decoration: none;
+        cursor: pointer;
+        color: #fff;
+        background: @sidebar-light-hover-bg;
+        > .fa, > .glyphicon, span {
+          color: #fff;
+        }
+      }
+
+      > a {
+        padding: 12px 10px 12px 10px;
+        display: block;
+        > .fa, > .glyphicon {
+          width: 20px;
+        }
+      }
+
+      > a.disabled-link {
+        cursor: not-allowed;
+        pointer-events: none;
+        > span {
+          color: lightgrey;
+        }
+      }
+    }
+  }
+}
+
+/*
+ * Off Canvas
+ * --------------------------------------------------
+ */
+@media screen and (max-width: @screen-md) {
+  .row-offcanvas {
+    position: relative;
+    -webkit-transition: all .25s ease-out;
+    -o-transition: all .25s ease-out;
+    transition: all .25s ease-out;
+  }
+
+  .row-offcanvas-right {
+    right: 0;
+  }
+
+  .row-offcanvas-left {
+    left: 0;
+  }
+
+  .row-offcanvas-right
+  .sidebar-offcanvas {
+    right: -@left-side-width;
+  }
+
+  .row-offcanvas-left
+  .sidebar-offcanvas {
+    left: -@left-side-width;
+  }
+
+  .row-offcanvas-right.active {
+    right: @left-side-width;
+  }
+
+  .row-offcanvas-left.active {
+    left: @left-side-width;
+  }
+
+  .sidebar-offcanvas {
+    position: absolute;
+    top: 0;
+    width: @left-side-width;
+  }
+}

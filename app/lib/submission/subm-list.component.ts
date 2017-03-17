@@ -107,7 +107,7 @@ export class DateCellComponent implements AgRendererComponent {
     template: `
 <container-root>
 
-    <aside class="right-side strech" style="padding-top: 5px">
+    <aside class="right-side stretch" style="padding-top: 5px">
         <tabset>
            <tab heading="New / Modified Submissions"
                 [active]="!showSubmitted"

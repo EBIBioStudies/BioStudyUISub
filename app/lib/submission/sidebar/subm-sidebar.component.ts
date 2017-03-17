@@ -33,13 +33,13 @@ export class SideBarItemComponent {
        [ngClass]="{'collapse-left' : collapsed}"
        *ngIf="!readonly">
     <ul class="sidebar-menu">
-        <li class="menu-toggle">
+        <li class="sidebar-item menu-toggle">
             <a (click)="onToggle($event)">
                  <i class="fa fa-bars fa-fw"></i> 
                  <span *ngIf="!collapsed">Minimise</span>
             </a>
         </li>
-        <li class="success" *ngFor="let child of childs">
+        <li class="sidebar-item success" *ngFor="let child of childs">
             <a *ngIf="collapsed" 
                 (click)="child.clicked($event)" 
                 [tooltip]="child.label" 

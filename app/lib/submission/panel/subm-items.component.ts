@@ -34,7 +34,7 @@ import * as _ from 'lodash';
                     <td>
                         {{idx+1}}
                     </td>
-                    <td>
+                    <td class="text-nowrap">
                         <button type="button"
                                 class="btn btn-primary btn-sm"
                                 (click)="activeTab = idx"
@@ -46,7 +46,7 @@ import * as _ from 'lodash';
                                 [tooltip]="deleteTooltip"><i class="fa fa-trash"></i>
                         </button>
                     </td>
-                    <td *ngFor="let attrName of attrNames" class="form-group-sm row" [ngClass]="colSizeCss">
+                    <td *ngFor="let attrName of attrNames" class="form-group row" [ngClass]="colSizeCss">
                         <div *ngFor="let attr of (item.attributes.attributes | propFilter:{name: attrName})"
                              [ngClass]="{'has-error' : itemsPreviewForm.controls[attr.name + '_' + idx] &&
                                                        itemsPreviewForm.controls[attr.name + '_' + idx].invalid}">
@@ -54,7 +54,8 @@ import * as _ from 'lodash';
                              previewItemForm['attrValuePreview_' + key].$invalid
 -->
                             <input *ngIf="attr.type === 'text'"
-                                   type="text" class="form-control input-sm form-control-auto" 
+                                   type="text" 
+                                   class="form-control input-sm" 
                                    [name]="attr.name + '_' + idx" 
                                    placeholder="Enter a value"
                                    [typeahead]="typeaheadValues(attr.name, idx)"

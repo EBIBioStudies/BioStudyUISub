@@ -18,20 +18,20 @@ import {FileService} from './file.service';
 <aside class="left-side sidebar sidebar-offcanvas"
        [ngClass]="{'collapse-left' : collapsed}">
     <ul class="sidebar-menu">
-        <li class="menu-toggle">
+        <li class="sidebar-item menu-toggle">
             <a (click)="onToggle($event)">
                  <i class="fa fa-bars fa-fw"></i> 
                  <span *ngIf="!collapsed">Minimise</span>
             </a>
         </li>
-        <li *ngFor="let dir of dirs" [ngClass]="{'active': dir.path === selectedPath}">
+        <li *ngFor="let dir of dirs" class="sidebar-item success" [ngClass]="{'active': dir.path === selectedPath}">
             <a *ngIf="collapsed" 
                 (click)="onDirSelect(dir)"> 
                 <i class="fa fa-fw fa-folder"></i>
             </a>
             <a *ngIf="!collapsed"    
                 (click)="onDirSelect(dir)">
-                <i class="fa fa-fw fa-folder"></i>{{dir.name}}
+                <i class="fa fa-fw fa-folder"></i><span>{{dir.name}}</span>
             </a>
         </li>
     </ul>
