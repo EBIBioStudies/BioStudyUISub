@@ -8,16 +8,16 @@ import {FileModule} from '../file/file.module';
 import {SharedModule} from '../shared/shared.module';
 
 import {SubmissionService} from './submission.service';
-import {SubmissionUploadService} from './submission-upload.service';
+import {DirectSubmitService} from './direct-submit.service';
 import {DictionaryService} from './dictionary.service';
 import {SubmissionModel} from './submission.model';
 import {PubMedSearchService} from './pubMedSearch.service';
 
+import {DirectSubmitComponent, ResultLogNodeComponent} from './direct-submit.component';
 import {SubmissionListComponent, ActionButtonsCellComponent, DateCellComponent} from './subm-list.component';
 import {SubmissionEditComponent} from './subm-edit.component';
 import {SubmissionViewComponent} from './subm-view.component';
-import {SubmissionUploadComponent, SubmitLogNodeComponent} from './subm-upload.component';
-import {SubmissionUploadSideBarComponent} from './sidebar/subm-upload-sidebar.component';
+import {DirectSubmitSideBarComponent} from './sidebar/direct-submit-sidebar.component';
 import {SideBarComponent} from './sidebar/subm-sidebar.component';
 import {SideBarItemComponent} from './sidebar/subm-sidebar.component';
 import {SubmissionPanelComponent} from './panel/subm-panel.component';
@@ -33,7 +33,6 @@ import {TextareaAutosize} from './textarea-autosize.directive';
 import {UniqueAttrName} from './panel/unique-attr-name.directive';
 import {DateFormatDirective} from './date-format.directive';
 import {DateInputBoxComponent} from './date-input-box';
-import {SubmTypeComponent} from './subm-type.component';
 import {TextFilterComponent} from './ag-grid/text-filter.component';
 import {DateFilterComponent} from './ag-grid/date-filter.component';
 
@@ -54,7 +53,7 @@ import {TreeViewComponent, TreeViewNodeComponent} from './results/tree-view.comp
     ],
     providers: [
         SubmissionService,
-        SubmissionUploadService,
+        DirectSubmitService,
         PubMedSearchService,
         DictionaryService,
         SubmissionModel
@@ -63,9 +62,9 @@ import {TreeViewComponent, TreeViewNodeComponent} from './results/tree-view.comp
         SubmissionListComponent,
         SubmissionEditComponent,
         SubmissionViewComponent,
-        SubmissionUploadComponent,
-        SubmitLogNodeComponent,
-        SubmissionUploadSideBarComponent,
+        DirectSubmitComponent,
+        ResultLogNodeComponent,
+        DirectSubmitSideBarComponent,
         SubmissionPanelComponent,
         SubmissionAttributesPanelComponent,
         SubmissionAttributesComponent,
@@ -83,7 +82,6 @@ import {TreeViewComponent, TreeViewNodeComponent} from './results/tree-view.comp
         DateCellComponent,
         DateFormatDirective,
         DateInputBoxComponent,
-        SubmTypeComponent,
         TextFilterComponent,
         DateFilterComponent,
         TreeViewComponent,
@@ -93,9 +91,9 @@ import {TreeViewComponent, TreeViewNodeComponent} from './results/tree-view.comp
         SubmissionListComponent,
         SubmissionEditComponent,
         SubmissionViewComponent,
-        SubmissionUploadComponent
+        DirectSubmitComponent
     ],
-    entryComponents: [SubmitLogNodeComponent]
+    entryComponents: [ResultLogNodeComponent]
 })
 export class SubmissionModule {
 }

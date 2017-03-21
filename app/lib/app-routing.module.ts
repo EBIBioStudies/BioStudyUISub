@@ -15,7 +15,7 @@ import {
     SubmissionListComponent,
     SubmissionEditComponent,
     SubmissionViewComponent,
-    SubmissionUploadComponent
+    DirectSubmitComponent
 } from './submission/index';
 
 import {FileListComponent} from './file/index';
@@ -29,7 +29,7 @@ const appRoutes: Routes = [
     {path: 'password_reset/:key', component: PasswordResetComponent},
     {path: 'resend_activation_link', component: ResendActivationLinkComponent},
     {path: 'submissions', component: SubmissionListComponent, canActivate: [AuthGuard]},
-    {path: 'direct_upload', component: SubmissionUploadComponent, canActivate: [AuthGuard]},
+    {path: 'direct_upload', component: DirectSubmitComponent, canActivate: [AuthGuard]},
     {path: 'edit/:accno', component: SubmissionEditComponent, canActivate: [AuthGuard]},
     {path: 'view/:accno', component: SubmissionViewComponent, canActivate: [AuthGuard]},
     {path: 'files', component: FileListComponent, canActivate: [AuthGuard]}

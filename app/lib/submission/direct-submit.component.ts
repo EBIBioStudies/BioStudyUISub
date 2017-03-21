@@ -1,11 +1,11 @@
 import {Component, Inject, OnInit, OnDestroy} from '@angular/core';
-import {SubmissionUploadService, SubmUploadRequest} from './submission-upload.service';
+import {DirectSubmitService, DirectSubmitRequest} from './direct-submit.service';
 import {TreeViewConfig, TreeViewCustomNodeComponent} from './results/tree-view.component';
 
 import {Subscription} from 'rxjs/Subscription';
 
 @Component({
-    selector: 'submit-log-node',
+    selector: 'result-log-node',
     template: `
     <span [ngClass]="{
              'text-info': info,          
@@ -17,7 +17,7 @@ import {Subscription} from 'rxjs/Subscription';
     </span>       
 `
 })
-export class SubmitLogNodeComponent implements TreeViewCustomNodeComponent {
+export class ResultLogNodeComponent implements TreeViewCustomNodeComponent {
     private __message: string = '';
     private __logLevel: string = '';
 
@@ -53,13 +53,13 @@ export class SubmitLogNodeComponent implements TreeViewCustomNodeComponent {
 
 
 @Component({
-    selector: 'subm-upload',
+    selector: 'direct-submit',
     template: `
 <div class="row-offcanvas row-offcanvas-left">
-    <subm-upload-sidebar *ngIf="!readonly"
+    <direct-submit-sidebar *ngIf="!readonly"
                 (toggle)="onToggle($event)"
-                [collapsed]="collapseLeftSide">
-    </subm-upload-sidebar>
+                [collapsed]="collapseSideBar">
+    </direct-submit-sidebar>
     
     <div class="container-fluid">
         <aside class="right-side content" [ngClass]="{'collapse-left' : collapseLeftSide}">
@@ -119,32 +119,32 @@ export class SubmitLogNodeComponent implements TreeViewCustomNodeComponent {
 </div>
 `
 })
-export class SubmissionUploadComponent implements OnInit, OnDestroy {
-    private collapseLeftSide: boolean = false;
-    private request: SubmUploadRequest;
+export class DirectSubmitComponent implements OnInit, OnDestroy {
+    private collapseSideBar: boolean = false;
+    private request: DirectSubmitRequest;
     private sb: Subscription;
     private treeViewConfig: TreeViewConfig = {
         children(data: any): any[] {
             return data.subnodes ? data.subnodes : [];
         },
-        nodeComponentClass: SubmitLogNodeComponent
+        nodeComponentClass: ResultLogNodeComponent
     };
 
-    constructor(@Inject(SubmissionUploadService) private submUploadService: SubmissionUploadService) {
+    constructor(@Inject(DirectSubmitService) private submitService: DirectSubmitService) {
     }
 
     ngOnInit(): void {
-        this.sb = this.submUploadService.newUploadRequest$.subscribe((req:SubmUploadRequest) => {
+        this.sb = this.submitService.newRequest$.subscribe((req: DirectSubmitRequest) => {
             this.request = req;
         });
     }
 
-    ngOnDestroy():void {
+    ngOnDestroy(): void {
         this.sb.unsubscribe();
     }
 
     onToggle(ev): void {
-        this.collapseLeftSide = !this.collapseLeftSide;
+        this.collapseSideBar = !this.collapseSideBar;
     }
 
 }

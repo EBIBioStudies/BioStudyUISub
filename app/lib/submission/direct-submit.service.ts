@@ -5,7 +5,7 @@ import {SubmissionService} from './submission.service';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 
-export class SubmUploadRequest {
+export class DirectSubmitRequest {
     private __created: Date;
     private __filename: string;
     private __format: string;
@@ -53,15 +53,15 @@ export class SubmUploadRequest {
 }
 
 @Injectable()
-export class SubmissionUploadService {
-    newUploadRequest$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>();
+export class DirectSubmitService {
+    newRequest$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>();
 
     constructor(@Inject(SubmissionService) private submService: SubmissionService) {
     }
 
-    upload(op: string, file: File, format: string): void {
-        let req = new SubmUploadRequest(file.name, format);
-        this.newUploadRequest$.next(req);
+    submit(op: string, file: File, format: string): void {
+        let req = new DirectSubmitRequest(file.name, format);
+        this.newRequest$.next(req);
 
         this.submService.formSubmit(op, file, format)
             .subscribe(

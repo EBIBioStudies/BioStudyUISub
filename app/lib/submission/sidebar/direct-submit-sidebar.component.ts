@@ -6,16 +6,16 @@ import {
     Inject
 } from '@angular/core';
 
-import {SubmissionUploadService} from '../submission-upload.service';
+import {DirectSubmitService} from '../direct-submit.service';
 
 @Component({
-    selector: 'subm-upload-sidebar',
+    selector: 'direct-submit-sidebar',
     template: `
 <aside class="left-side sidebar sidebar-offcanvas"
        [ngClass]="{'collapse-left' : collapsed}"
        *ngIf="!readonly">
     <ul class="sidebar-menu">
-        <li class="menu-toggle">
+        <li class="sidebar-item menu-toggle">
             <a (click)="onToggle($event)">
                  <i class="fa fa-bars fa-fw"></i> 
                  <span *ngIf="!collapsed">Minimise</span>
@@ -77,7 +77,7 @@ import {SubmissionUploadService} from '../submission-upload.service';
 `
 })
 
-export class SubmissionUploadSideBarComponent {
+export class DirectSubmitSideBarComponent {
     @Input() collapsed?: boolean = false;
     @Input() readonly?: boolean = false;
     @Output() toggle? = new EventEmitter();
@@ -96,7 +96,7 @@ export class SubmissionUploadSideBarComponent {
         format: ''
     };
 
-    constructor(@Inject(SubmissionUploadService) private submUploadService: SubmissionUploadService) {
+    constructor(@Inject(DirectSubmitService) private submUploadService: DirectSubmitService) {
     }
 
     onToggle(e): void {
@@ -125,6 +125,6 @@ export class SubmissionUploadSideBarComponent {
         if (!this.canSubmit) {
             return;
         }
-        this.submUploadService.upload(op, this.model.file, this.model.format);
+        this.submUploadService.submit(op, this.model.file, this.model.format);
     }
 }

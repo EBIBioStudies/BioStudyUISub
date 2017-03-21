@@ -9,4 +9,4 @@ export * from './submission';
 export * from './subm-list.component';
 export * from './subm-edit.component';
 export * from './subm-view.component';
-export * from './subm-upload.component';
+export * from './direct-submit.component';
