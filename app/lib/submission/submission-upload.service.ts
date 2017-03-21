@@ -59,11 +59,11 @@ export class SubmissionUploadService {
     constructor(@Inject(SubmissionService) private submService: SubmissionService) {
     }
 
-    upload(file: File, format: string): void {
+    upload(op: string, file: File, format: string): void {
         let req = new SubmUploadRequest(file.name, format);
         this.newUploadRequest$.next(req);
 
-        this.submService.formSubmit(file, format)
+        this.submService.formSubmit(op, file, format)
             .subscribe(
                 data => {
                     req.onResults(data);

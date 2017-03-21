@@ -63,11 +63,11 @@ import {SubmissionUploadService} from '../submission-upload.service';
                             class="btn btn-primary btn-sm" 
                             [disabled]="!canSubmit"
                             dropdownToggle>
-                       Submit to... <span class="caret"></span>
+                       Action <span class="caret"></span>
                     </button>
                     <ul dropdownMenu role="menu" aria-labelledby="single-button">
-                        <li role="menuitem"><a class="dropdown-item" href="#">Create</a></li>
-                        <li role="menuitem"><a class="dropdown-item" href="#">Update</a></li>
+                        <li role="menuitem"><a class="dropdown-item" (click)="onSubmit('CREATE')">Create</a></li>
+                        <li role="menuitem"><a class="dropdown-item" (click)="onSubmit('UPDATE')">Update</a></li>
                     </ul>
                 </div>
             </div>
@@ -121,10 +121,10 @@ export class SubmissionUploadSideBarComponent {
         }
     }
 
-    private onSubmit() {
+    private onSubmit(op: string): void {
         if (!this.canSubmit) {
             return;
         }
-        this.submUploadService.upload(this.model.file, this.model.format);
+        this.submUploadService.upload(op, this.model.file, this.model.format);
     }
 }

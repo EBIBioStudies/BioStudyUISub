@@ -78,9 +78,9 @@ export class SubmissionService {
             }).catch(SubmissionService.errorHandler);
     }
 
-    formSubmit(file: File, format: string = ''): Observable<any> {
+    formSubmit(op: string, file: File, format: string = ''): Observable<any> {
         let formData = new FormData();
-        formData.append('op', 'CREATEUPDATE');
+        formData.append('op', op);
         formData.append('type', format);
         formData.append('file', file);
 
