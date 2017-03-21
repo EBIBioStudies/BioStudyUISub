@@ -46,7 +46,7 @@ export class SubmissionService {
         let urlParams = new UrlParams(args);
         return this.http.get('/api/submissions', urlParams.list)
             .map((res: Response) => {
-                return res.json().subissions;
+                return res.json().submissions;
             }).catch(SubmissionService.errorHandler);
     }
 
