@@ -22,7 +22,6 @@ export class SubmitLogNodeComponent implements TreeViewCustomNodeComponent {
     private __logLevel: string = '';
 
     onNodeData(data: any): void {
-        console.log(data);
         this.__message = data.message || '';
         this.__logLevel = (data.level || 'info').toLowerCase();
     }
