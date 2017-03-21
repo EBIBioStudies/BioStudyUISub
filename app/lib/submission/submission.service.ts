@@ -98,7 +98,7 @@ export class SubmissionService {
     }
 
     static errorHandler(error: any) {
-        console.error(err);
-        return Observable.throw(err);
+        console.error(error);
+        return Observable.throw(error);
     }
 }
