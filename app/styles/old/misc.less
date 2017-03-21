@@ -1,0 +1,64 @@
+/* elastic description box */
+.msd-elastic {
+  max-height: 500px;
+}
+
+/* panel (submission section) heading */
+.panel-heading h4 {
+  white-space: nowrap;
+  overflow: hidden;
+  line-height: inherit;
+  font-size: inherit; //14px
+  width: 70%;
+}
+
+/* sliding out tooltips in the panel headers */
+@bs-slide-out-tip-width: 580px;
+
+.bs-slide-out-tip {
+  display: inline-block;
+  position: relative;
+  margin: 0 0 0 5px;
+  padding: 0;
+  width: 70%;
+  height: 18px;
+  overflow: hidden;
+}
+
+.bs-slide-out-tip .tip-icon {
+  display: inline-block;
+  cursor: pointer;
+  width: 15px;
+}
+
+.bs-slide-out-tip .tip-text-wrap {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  width: 600px;
+  height: 100%;
+}
+
+.bs-slide-out-tip .tip-text {
+  position: absolute;
+  top: 0;
+  left: -@bs-slide-out-tip-width;
+  width: @bs-slide-out-tip-width;
+  display: inline-block;
+  -webkit-transition: left 0.5s ease-in-out;
+  -moz-transition: left 0.5s ease-in-out;
+  -o-transition: left 0.5s ease-in-out;
+  -ms-transition: left 0.5s ease-in-out;
+  transition: left 0.5s ease-in-out;
+}
+
+.bs-slide-out-tip .tip-text.show {
+  left: 0;
+}
+
+/* saving spinner */
+
+.fa-spin-2x {
+  -webkit-animation: fa-spin 1s infinite linear;
+  animation: fa-spin 1s infinite linear;
+}
