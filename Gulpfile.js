@@ -16,6 +16,7 @@ var appConfig = require('./config.json');
 
 var LessAutoprefixPlugin = require('less-plugin-autoprefix');
 var autoprefix = new LessAutoprefixPlugin({browsers: ["last 2 versions"]});
+var rename = require('gulp-rename');
 
 gulp.task('ag-grid:copy', function() {
     return gulp.src(['node_modules/ag-grid/**/*'])
@@ -125,7 +126,8 @@ gulp.task('css', function() {
             plugins: [autoprefix]
          }))
         .pipe(sourcemaps.write())
-        .pipe(gulp.dest('.build/lib/app.css'));
+        .pipe(rename('app.css'))
+        .pipe(gulp.dest('.build/lib'));
 });
 
 gulp.task('zip', function () {
