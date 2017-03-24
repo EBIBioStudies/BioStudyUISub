@@ -87,7 +87,7 @@ export class ResultLogNodeComponent implements TreeViewCustomNodeComponent {
                              </div>
                              <div class="col-xs-10">
                                  <h4 class="panel-title">{{request.filename}}</h4>
-                                 <h6><em>Format: {{request.format}}, Created: {{request.created | date:'short'}}</em></h6>
+                                 <h6><em>Format: {{request.formatText}}, Created: {{request.created | date:'short'}}</em></h6>
                              </div>
                              <div class="col-xs-1">
                                  <button type="button" class="close">
@@ -134,8 +134,8 @@ export class DirectSubmitComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.sb = this.submitService.newRequest$.subscribe((req: DirectSubmitRequest) => {
-            this.request = req;
+        this.sb = this.submitService.newRequest$.subscribe((index: Number) => {
+            this.request = this.submitService.request(index);
         });
     }
 

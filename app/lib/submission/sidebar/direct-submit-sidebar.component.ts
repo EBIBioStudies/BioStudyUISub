@@ -63,11 +63,11 @@ import {DirectSubmitService} from '../direct-submit.service';
                             class="btn btn-primary btn-sm" 
                             [disabled]="!canSubmit"
                             dropdownToggle>
-                       Action <span class="caret"></span>
+                       Submit as... <span class="caret"></span>
                     </button>
                     <ul dropdownMenu role="menu" aria-labelledby="single-button">
-                        <li role="menuitem"><a class="dropdown-item" (click)="onSubmit('CREATE')">Create</a></li>
-                        <li role="menuitem"><a class="dropdown-item" (click)="onSubmit('UPDATE')">Update</a></li>
+                        <li role="menuitem"><a class="dropdown-item" (click)="onCreate()">New</a></li>
+                        <li role="menuitem"><a class="dropdown-item" (click)="onUpdate()">Existed</a></li>
                     </ul>
                 </div>
             </div>
@@ -96,7 +96,7 @@ export class DirectSubmitSideBarComponent {
         format: ''
     };
 
-    constructor(@Inject(DirectSubmitService) private submUploadService: DirectSubmitService) {
+    constructor(@Inject(DirectSubmitService) private directSubmitService: DirectSubmitService) {
     }
 
     onToggle(e): void {
@@ -121,10 +121,11 @@ export class DirectSubmitSideBarComponent {
         }
     }
 
-    private onSubmit(op: string): void {
-        if (!this.canSubmit) {
-            return;
-        }
-        this.submUploadService.submit(op, this.model.file, this.model.format);
+    private onCreate(): void {
+        this.directSubmitService.create(this.model.file, this.model.format);
+    }
+
+    private onUpdate(): void {
+        this.directSubmitService.update(this.model.file, this.model.format);
     }
 }
