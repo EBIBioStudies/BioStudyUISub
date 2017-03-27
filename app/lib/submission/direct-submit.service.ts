@@ -6,32 +6,26 @@ import {Subject} from 'rxjs/Subject';
 
 import {SubmissionService} from './submission.service';
 
-const enum ReqStatus {
-    CONVERT = 'convert',
-    SUBMIT = 'submit',
-    ERROR = 'error',
-    SUCCESS = 'success'
-}
+const enum ReqStatus {CONVERT, SUBMIT, ERROR, SUCCESS}
 
-const enum ReqType {
-    CREATE = 'create',
-    UPDATE = 'update'
-}
+const enum ReqType {CREATE, UPDATE}
 
 export class DirectSubmitRequest {
-    private __created: Date;
-    private __file: File;
+    private __filename: string;
     private __format: string;
-    private __log: any;
-    private __status: ReqStatus = ReqStatus.CONVERT;
     private __type: ReqType;
-    private __subm: any;
 
-    private constructor(file: File, format: string, type: ReqType) {
-        this.__created = new Date();
-        this.__file = file;
+    private __created: Date;
+    private __status: ReqStatus;
+    private __log: any;
+
+    constructor(filename: string, format: string, type: ReqType) {
+        this.__filename = filename;
         this.__format = format;
         this.__type = type;
+
+        this.__created = new Date();
+        this.__status = ReqStatus.CONVERT;
     }
 
     get failed(): boolean {
@@ -50,8 +44,8 @@ export class DirectSubmitRequest {
         return !this.done;
     }
 
-    get status(): ReqStatus {
-        return this.__status;
+    get statusText(): string {
+        return ReqStatus[this.__status];
     }
 
     get format(): string {
@@ -66,43 +60,34 @@ export class DirectSubmitRequest {
         return this.__created;
     }
 
-    get file(): File {
-        return this.__file;
+    get filename(): string {
+        return this.__filename;
     }
 
-    get filename(): string {
-        return this.__file.name;
+    get type(): ReqType {
+        return this.__type;
     }
 
     get log(): any {
         return this.__log || {};
     }
 
-    get subm(): any {
-        return this.__subm || {};
+    onConvertResponse(res: any): void {
+        this.onResponse(res, ReqStatus.SUBMIT);
     }
 
-    onConversionFinished(res: any): void {
+    onSubmitResponse(res: any): void {
+        this.onResponse(res, ReqStatus.SUCCESS);
+    }
+
+    private onResponse(res: any, successStatus: ReqStatus): void {
         if (res.status === 'FAIL') {
             this.__log = res.log;
             this.__status = ReqStatus.ERROR;
             return;
         }
-        this.__status = ReqStatus.SUBMIT;
-        this.__subm = res.document.submissions[0];
-    }
-
-    onSubmitFinished(res: any): void {
-        this.__log = res.log;
-        this.__status = res.status === 'FAIL' ? ReqStatus.ERROR : ReqStatus.SUCCESS;
-    }
-
-    static newCreateRequest(file: File, format: string) {
-        return new DirectSubmitRequest(file, format, ReqType.CREATE);
-    }
-
-    static newUpdateRequest(file: File, format: string) {
-        return new DirectSubmitRequest(file, format, ReqType.UPDATE);
+        this.__status = successStatus;
+        this.__log = res.log || undefined;
     }
 }
 
@@ -111,84 +96,61 @@ export class DirectSubmitService {
 
     newRequest$: Subject<Number> = new Subject<Number>();
 
-    private allRequests = [];
-    private newSubmitRequest$: Subject<Number> = new Subject<Number>();
+    private requests: DirectSubmitRequest[] = [];
 
     constructor(@Inject(SubmissionService) private submService: SubmissionService) {
-        this.newRequest$.subscribe(index => this.convert(index));
-        this.newSubmitRequest$.subscribe(index => this.submit(index));
     }
 
     create(file: File, format: string): void {
-        this.addRequest(DirectSubmitRequest.newCreateRequest(file, format));
+        this.addRequest(file, format, ReqType.CREATE);
     }
 
     update(file: File, format: string): void {
-        this.addRequest(DirectSubmitRequest.newUpdateRequest(file, format));
+        this.addRequest(file, format, ReqType.UPDATE);
     }
 
     request(index: Number) {
-        if (index >= 0 && index < this.allRequests.length) {
-            return this.allRequests[index];
+        if (index >= 0 && index < this.requests.length) {
+            return this.requests[index];
         }
         console.warn('DirectSubmitRequest index out of bounds: ' + index);
         return undefined;
     }
 
-    private addRequest(req: DirectSubmitRequest): void {
-        const index = this.allRequests.length;
-        this.allRequests.push(req);
+    private addRequest(file: File, format: string, type: ReqType): void {
+        const req = new DirectSubmitRequest(file.name, format, type);
+        const index = this.requests.length;
+        this.requests.push(req);
         this.newRequest$.next(index);
+
+        this.convert(req, file, format);
     }
 
-    private convert(index: number): void {
-        const req = this.request(index);
-        if (!req) {
-            return;
-        }
-        this.submService.formSubmit('CONVERT', req.file, req.format)
+    private convert(req: DirectSubmitRequest, file: File, format: string): void {
+        this.submService.convert(file, format)
             .subscribe(
                 data => {
-                    req.onConversionFinished(data);
-                    this.newSubmitRequest$.next(index);
-                },
-                error => {
-                    const status = error.status || '';
-                    const statusText = error.statusText || '';
-                    const statusLine = (status ? status + ': ' : '') + (statusText ? statusText : '');
-                    req.onConversionFinished({
-                        status: "FAIL",
-                        log: {
-                            "level": "ERROR",
-                            "message": "Submit request failed. " + statusLine
-                        }
-                    });
+                    this.onConvertRequestFinished(req, data);
+                }
+            );
+    }
+
+    private submit(req: DirectSubmitRequest, subm: any, type: ReqType): void {
+        this.submService.directCreateOrUpdate(subm, type === ReqType.CREATE)
+            .subscribe(
+                data => {
+                    this.onSubmitRequestFinished(req, data);
                 });
     }
 
-    private submit(index: number): void {
-        const req = this.request(index);
-        if (!req || req.failed) {
-            return;
+    private onConvertRequestFinished(req: DirectSubmitRequest, resp: any) {
+        req.onConvertResponse(resp);
+        if (!req.failed) {
+            this.submit(req, resp.document.submissions[0], req.type);
         }
-        /*this.submService,directSubmit(req.subm, req.type)
-            .subscribe(
-                data => {
-                    req.onSubmitFinished(data);
-                },
-                error => {
-                    const status = error.status || '';
-                    const statusText = error.statusText || '';
-                    const statusLine = (status ? status + ': ' : '') + (statusText ? statusText : '');
-                    req.onSubmitFinished({
-                        status: "FAIL",
-                        log: {
-                            "level": "ERROR",
-                            "message": "Submit request failed. " + statusLine
-                        }
-                    });
-                });
-                */
+    }
 
+    private onSubmitRequestFinished(req: DirectSubmitRequest, resp: any) {
+        req.onSubmitResponse(resp);
     }
 }

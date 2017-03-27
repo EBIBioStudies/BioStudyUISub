@@ -31,15 +31,14 @@ export class SubmissionService {
     constructor(@Inject(HttpClient) private http: HttpClient) {
     }
 
-    getSubmission(accno, origin: boolean = false): Observable<any> {
+    getSubmission(accno: string, origin: boolean = false): Observable<any> {
         return this.http.get(`/api/submission/${accno}?origin=${origin}`)
-            .map((res: Response) => {
-                return res.json();
-            }).catch(SubmissionService.errorHandler);
+            .map((res: Response) => res.json())
+            .catch(SubmissionService.errorHandler);
     }
 
-    getSubmittedSubmission(submission): Observable<any> {
-        return this.getSubmission(submission, true);
+    getSubmittedSubmission(accno: string): Observable<any> {
+        return this.getSubmission(accno, true);
     }
 
     getSubmissions(args: any = {}): Observable<any> {
@@ -50,51 +49,52 @@ export class SubmissionService {
             }).catch(SubmissionService.errorHandler);
     }
 
-    createSubmission(pt): Observable<any> {
+    createSubmission(pt: any): Observable<any> {
         return this.http.post('/api/submission/create', pt)
-            .map((res: Response) => {
-                return res.json();
-            }).catch(SubmissionService.errorHandler);
+            .map((res: Response) => res.json())
+            .catch(SubmissionService.errorHandler);
     }
 
-    saveSubmission(pt): Observable<any> {
+    saveSubmission(pt: any): Observable<any> {
         return this.http.post('/api/submission/save', pt)
             .map((res: Response) => {
-                return {}; //empty response if OK
-            }).catch(SubmissionService.errorHandler);
+            })
+            .catch(SubmissionService.errorHandler);
     }
 
-    editSubmission(accno): Observable<any> {
+    editSubmission(accno: string): Observable<any> {
         return this.http.get(`/api/submission/edit/${accno}`)
-            .map((res: Response) => {
-                return res.json();
-            }).catch(SubmissionService.errorHandler);
+            .map((res: Response) => res.json())
+            .catch(SubmissionService.errorHandler);
     }
 
-    submitSubmission(pt): Observable<any> {
+    submitSubmission(pt: any): Observable<any> {
         return this.http.post('/api/submission/submit', pt)
-            .map((res: Response) => {
-                return res.json();
-            }).catch(SubmissionService.errorHandler);
+            .map((res: Response) => res.json())
+            .catch(SubmissionService.errorHandler);
     }
 
-    formSubmit(op: string, file: File, format: string = ''): Observable<any> {
+    directCreateOrUpdate(pt: any, create: boolean): Observable<any> {
+        return this.http.post(`/api/submission/direct?create=${create}`, pt)
+            .map((res: Response) => res.json())
+            .catch(SubmissionService.errorHandler);
+    }
+
+    convert(file: File, format: string = ''): Observable<any> {
         let formData = new FormData();
-        formData.append('op', op);
+        formData.append('op', 'CONVERT');
         formData.append('type', format);
         formData.append('file', file);
 
         return this.http.post('/raw/formsubmit', formData)
-            .map((res: Response) => {
-                return res.json();
-            }).catch(SubmissionService.errorHandler);
+            .map((res: Response) => res.json())
+            .catch(SubmissionService.errorHandler);
     }
 
     deleteSubmission(accno) {
         return this.http.del('/api/submission/' + accno)
-            .map((resp: Response) => {
-                return resp.json();
-            }).catch(SubmissionService.errorHandler);
+            .map((resp: Response) => resp.json())
+            .catch(SubmissionService.errorHandler);
     }
 
     static errorHandler(error: any) {
