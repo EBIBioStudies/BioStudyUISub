@@ -12,27 +12,23 @@ import tmpl from './header.component.html';
 })
 
 export class HeaderComponent {
-    isNavCollapsed: boolean = true;
-    appVersion: string = '0.0.0';
-    currentUser: boolean = false;
-    userName: string = "";
+    private isNavCollapsed: boolean = true;
+    private appVersion: string = '0.0.0';
+
+    private userLoggedIn: boolean = false;
 
     constructor(@Inject(UserSessionEvents) sessionEvents: UserSessionEvents,
                 @Inject(UserSession) private session: UserSession,
                 @Inject(Router) private router: Router,
                 @Inject(AuthService) private authService: AuthService) {
-        this.currentUser = !session.isAnonymous();
-        this.userName = session.login();
 
-        sessionEvents.userSessionCreated$.subscribe(name => {
-            this.currentUser = true;
-            this.userName = name; // can be empty
-        });
+        this.userLoggedIn = !session.isAnonymous();
 
-        sessionEvents.userSessionDestroyed$.subscribe(name => {
-            this.currentUser = false;
-            this.userName = "";
-            this.router.navigate(['/signin']);
+        sessionEvents.userSessionCreated$.subscribe(created => {
+            this.userLoggedIn = created;
+            if (!created) {
+                this.router.navigate(['/signin']);
+            }
         });
 
         this.appVersion = AppConfig.VERSION;

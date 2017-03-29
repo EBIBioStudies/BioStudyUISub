@@ -2,7 +2,7 @@ import {Injectable, Inject} from '@angular/core';
 
 import {UserSessionEvents} from './user-session.events';
 
-import {setUserCookies, getUserCookies, destroyUserCookies} from '../cookies/user-cookies';
+import {setLoginToken, getLoginToken, destroyLoginToken, cleanUpOldCookies} from '../cookies/user-cookies';
 
 @Injectable()
 export class UserSession {
@@ -12,27 +12,24 @@ export class UserSession {
 
     // call it when the app is bootstrapped
     init() {
+        cleanUpOldCookies(); // keep it for a while
         if (!this.isAnonymous()) {
-            this.sessionEvents.userSessionCreated(this.login());
+            this.sessionEvents.userSessionCreated();
         }
     }
 
-    create(login, token) {
-        setUserCookies(login, token);
-        this.sessionEvents.userSessionCreated(login);
+    create(token) {
+        setLoginToken(token);
+        this.sessionEvents.userSessionCreated();
     }
 
     destroy() {
-        destroyUserCookies();
-        this.sessionEvents.userSessionDestroyed(this.login());
+        destroyLoginToken();
+        this.sessionEvents.userSessionDestroyed();
     }
 
     token(): string {
-        return getUserCookies().token;
-    }
-
-    login(): string {
-        return getUserCookies().login;
+        return getLoginToken();
     }
 
     isAnonymous() {
