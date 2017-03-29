@@ -12,7 +12,7 @@ export function getLoginToken(): string {
 }
 
 export function destroyLoginToken(): string {
-    return Cookie.delete(LOGIN_TOKEN) || ''
+    return Cookie.delete(LOGIN_TOKEN, PATH) || ''
 }
 
 export function cleanUpOldCookies() {
