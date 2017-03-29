@@ -28,7 +28,7 @@
                     </a>
                 </li>
 
-                <li *ngIf="!currentUser">
+                <li *ngIf="!userLoggedIn">
                     <a routerLink="/signup"
                        routerLinkActive="active"
                        tooltip="Register a new user"
@@ -39,7 +39,7 @@
                     </a>
                 </li>
 
-                <li *ngIf="!currentUser">
+                <li *ngIf="!userLoggedIn">
                     <a routerLink="/signin"
                        routerLinkActive="active"
                        tooltip="Sign in"
@@ -50,7 +50,7 @@
                     </a>
                 </li>
 
-                <li *ngIf="currentUser">
+                <li *ngIf="userLoggedIn">
                     <a routerLink="submissions"
                        routerLinkActive="active"
                        tooltip="List of submissions"
@@ -61,7 +61,7 @@
                     </a>
                 </li>
 
-                <li *ngIf="currentUser">
+                <li *ngIf="userLoggedIn">
                     <a routerLink="files"
                        routerLinkActive="active"
                        (click)="toggleCollapsed()">
@@ -70,10 +70,10 @@
                     </a>
                 </li>
 
-                <li class="d-inline-block" *ngIf="currentUser" dropdown>
+                <li class="d-inline-block" *ngIf="userLoggedIn" dropdown>
                     <a id="dropdownMenu1" dropdownToggle>
                         <i class="fa fa-fw fa-user"></i>
-                        <span>{{userName}}<i class="caret"></i></span>
+                        <span>My Account<i class="caret"></i></span>
                     </a>
                     <ul class="dropdown-menu" dropdownMenu>
                         <li class="dropdown-item"><a (click)="signOut(); toggleCollapsed();">Sign out</a></li>
