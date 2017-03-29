@@ -3,7 +3,7 @@ import {Http, Response, RequestOptions, Headers, URLSearchParams} from '@angular
 import {Observable} from 'rxjs/Observable';
 
 import {AppConfig} from '../config/app.config';
-import {getUserCookies} from '../cookies/user-cookies';
+import {getLoginToken} from '../cookies/user-cookies';
 import {UploadService} from './upload.service';
 
 @Injectable()
@@ -47,7 +47,7 @@ export class HttpClient {
 
     private headers(): Headers {
         let headers = new Headers();
-        let sessionId = getUserCookies().token;
+        let sessionId = getLoginToken();
         if (sessionId) {
             headers.append('X-Session-Token', sessionId);
         }
