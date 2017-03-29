@@ -13,18 +13,14 @@ export class UserData {
     constructor(@Inject(UserSessionEvents) userSessionEvents: UserSessionEvents,
                 @Inject(AuthService) authService: AuthService) {
 
-        userSessionEvents.userSessionCreated$.subscribe((name) => {
-            if (name) {
+        userSessionEvents.userSessionCreated$.subscribe(created => {
+            if (created) {
                 this.data = null;
                 authService.checkUser().subscribe(data => {
                     console.debug('UserData: loaded', data);
                     this.data = data;
                 });
-            }
-        });
-
-        userSessionEvents.userSessionDestroyed$.subscribe((name) => {
-            if (name) {
+            } else {
                 this.data = null;
             }
         });

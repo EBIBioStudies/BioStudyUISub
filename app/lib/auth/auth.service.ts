@@ -106,7 +106,7 @@ export class AuthService {
             .map((res: Response) => {
                 let data = res.json();
                 if (data.status === 'OK') {
-                    this.userSession.create(login, data.sessid);
+                    this.userSession.create(data.sessid);
                     return data;
                 }
                 return Observable.throw({status: 'Error', message: data.message || 'Server error'});
