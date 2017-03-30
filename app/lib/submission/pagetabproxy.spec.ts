@@ -111,4 +111,15 @@ describe('PageTabProxy', () => {
         expect(publs[0].attrs.length).toEqual(5);
         expect(publs[0].pubMedId).toBe('12345');
     });
+
+    it('ensure AttachTo attribute is updated', () => {
+        let pt = PageTabProxy.create(PAGETAB_SAMPLE);
+        expect(pt.attachTo.length).toEqual(0);
+        expect(pt.title).toBe('Subm Title');
+
+        pt.attachTo = ['123', '456', '789'];
+        expect(pt.attachTo.length).toEqual(3);
+        expect(pt.title).toBe('Subm Title');
+        expect(pt.attachTo).toEqual(['123', '456', '789']);
+    });
 });

@@ -154,6 +154,17 @@ export class PageTabProxy {
         this.requirePath('accno', accno);
     }
 
+    get attachTo(): string[] {
+        return this.attrValues('attributes', 'AttachTo');
+    }
+
+    set attachTo(accessions: string[]) {
+        this.requirePath('attributes', []);
+        let other = _.reject(this.path('attributes'), {name: 'AttachTo'});
+        this.updatePath('attributes',
+            [].concat(other, _.map(accessions, accno => ({name: 'AttachTo', value: accno}))));
+    }
+
     get title(): string {
         return this.attrValue('attributes', 'Title');
     }
@@ -320,6 +331,11 @@ export class PageTabProxy {
         let attributes = this.path(path, []);
         let attr = _.find(attributes, {name: attrName}) || {};
         return attr.value || '';
+    }
+
+    private attrValues(path: string, attrName: string): string[] {
+        let attributes = this.path(path, []);
+        return _.map(_.filter(attributes, {name: attrName}, (attr) => attr.value);
     }
 
     static create(obj?: any): PageTabProxy {
