@@ -28,33 +28,33 @@ import * as _ from 'lodash';
 @Component({
     selector: 'action-buttons-cell',
     template: `
-                           <button *ngIf="status !== 'MODIFIED'"
-                                    type="button" class="btn btn-danger btn-xs btn-flat"
-                                    (click)="onDeleteSubmission()"
-                                    tooltip="delete"
-                                    container="body">
-                                <i class="fa fa-trash-o fa-fw"></i>
-                           </button>
-                           <button *ngIf="status === 'MODIFIED'" 
-                                    type="button" class="btn btn-warning btn-xs btn-flat"
-                                    (click)="onRevertSubmission()"
-                                    tooltip="undo all changes"
-                                    container="body">
-                                <i class="fa fa-undo fa-fw"></i>
-                           </button>
-                           <button type="button" class="btn btn-primary btn-xs btn-flat"
-                                    (click)="onEditSubmission()"
-                                    tooltip="edit"
-                                    container="body">
-                                <i class="fa fa-pencil fa-fw"></i>
-                           </button>
-                           <button *ngIf="status === 'MODIFIED'" 
-                                    type="button" class="btn btn-info btn-xs btn-flat"
-                                    (click)="onViewSubmission()"
-                                    tooltip="view original"
-                                    container="body">
-                                <i class="fa fa-eye fa-fw"></i>
-                           </button>`
+<button *ngIf="status !== 'MODIFIED'"
+    type="button" class="btn btn-danger btn-xs btn-flat"
+    (click)="onDeleteSubmission()"
+    tooltip="delete"
+    container="body">
+    <i class="fa fa-trash-o fa-fw"></i>
+</button>
+<button *ngIf="status === 'MODIFIED'" 
+    type="button" class="btn btn-warning btn-xs btn-flat"
+    (click)="onRevertSubmission()"
+    tooltip="undo all changes"
+    container="body">
+    <i class="fa fa-undo fa-fw"></i>
+</button>
+<button type="button" class="btn btn-primary btn-xs btn-flat"
+    (click)="onEditSubmission()"
+    tooltip="edit"
+    container="body">
+    <i class="fa fa-pencil fa-fw"></i>
+</button>
+<button *ngIf="status === 'MODIFIED'" 
+    type="button" class="btn btn-info btn-xs btn-flat"
+    (click)="onViewSubmission()"
+    tooltip="view original"
+    container="body">
+    <i class="fa fa-eye fa-fw"></i>
+</button>`
 })
 export class ActionButtonsCellComponent implements AgRendererComponent {
     private status: string;
