@@ -4,6 +4,8 @@ import {ModalDirective} from 'ng2-bootstrap/modal';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 
+import 'rxjs/add/operator/take';
+
 @Component({
     selector: 'confirm-dialog',
     template: `
@@ -51,16 +53,11 @@ export class ConfirmDialogComponent {
     confirm(message: string): Observable<any> {
         this.message = message;
         this.modalDirective.show();
-        return Observable.create(observer => {
-            this.buttonClicks.asObservable().subscribe(value => {
-                if (value === true) {
-                    observer.next({});
-                }
-                observer.complete();
-            });
-            return () => {
-            };
-        });
+        return this.buttonClicks
+            .asObservable()
+            .take(1)
+            .filter(x => x)
+            .map(x => {});
     }
 
     private yes(): void {
