@@ -18,6 +18,7 @@ import {ContainerRootComponent} from './container-root.component';
 import {ContainerMdComponent} from './container-md.component';
 import {ORCIDInputBoxComponent} from './orcid-input-box.component';
 import {FileUploadButtonComponent} from './file-upload-button.component';
+import {ConfirmDialogComponent} from './confirm-dialog.component';
 
 @NgModule({
     imports: [
@@ -37,7 +38,8 @@ import {FileUploadButtonComponent} from './file-upload-button.component';
         ContainerRootComponent,
         ContainerMdComponent,
         ORCIDInputBoxComponent,
-        FileUploadButtonComponent
+        FileUploadButtonComponent,
+        ConfirmDialogComponent
     ],
     exports: [
         CommonModule,
@@ -56,7 +58,8 @@ import {FileUploadButtonComponent} from './file-upload-button.component';
         ContainerRootComponent,
         ContainerMdComponent,
         ORCIDInputBoxComponent,
-        FileUploadButtonComponent
+        FileUploadButtonComponent,
+        ConfirmDialogComponent
     ]
 })
 export class SharedModule {

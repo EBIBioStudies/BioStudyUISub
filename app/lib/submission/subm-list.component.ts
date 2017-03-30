@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output, Inject} from '@angular/core';
+import {Component, EventEmitter, Input, Output, Inject, ViewChild} from '@angular/core';
 
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
@@ -6,6 +6,8 @@ import {FormsModule} from '@angular/forms';
 import {TooltipModule} from 'ng2-bootstrap';
 
 import {Router} from '@angular/router';
+
+import {Observable} from 'rxjs/Observable';
 
 import {SubmissionService, SubmissionModel} from './index';
 
@@ -18,6 +20,8 @@ import {AgRendererComponent} from 'ag-grid-ng2/main';
 import {TextFilterComponent} from './ag-grid/text-filter.component';
 import {DateFilterComponent} from './ag-grid/date-filter.component';
 import {UserData} from '../auth/index';
+
+import {ConfirmDialogComponent} from '../shared/index';
 
 import * as _ from 'lodash';
 
@@ -33,7 +37,7 @@ import * as _ from 'lodash';
                            </button>
                            <button *ngIf="status === 'MODIFIED'" 
                                     type="button" class="btn btn-warning btn-xs btn-flat"
-                                    (click)="onDeleteSubmission()"
+                                    (click)="onRevertSubmission()"
                                     tooltip="undo all changes"
                                     container="body">
                                 <i class="fa fa-undo fa-fw"></i>
@@ -55,7 +59,7 @@ import * as _ from 'lodash';
 export class ActionButtonsCellComponent implements AgRendererComponent {
     private status: string;
     private accno: string;
-    private onDelete: (string)=>{};
+    private onDelete: (string, string)=>{};
     private onEdit: (string)=>{};
     private onView: (string)=>{};
 
@@ -64,14 +68,19 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
         this.status = data.status;
         this.accno = data.accno;
 
-        let noop = (accno:string) => {};
+        let noop = (accno: string) => {
+        };
         this.onDelete = data.onDelete || noop;
         this.onEdit = data.onEdit || noop;
         this.onView = data.onView || noop;
     }
 
     onDeleteSubmission() {
-        this.onDelete(this.accno);
+        this.onDelete(this.accno, 'delete');
+    }
+
+    onRevertSubmission() {
+        this.onDelete(this.accno, 'revert');
     }
 
     onEditSubmission() {
@@ -146,7 +155,9 @@ export class DateCellComponent implements AgRendererComponent {
         </section>
 
     </aside>
+    
 </container-root>
+<confirm-dialog #confirmDialog></confirm-dialog>
 `
 })
 
@@ -157,6 +168,8 @@ export class SubmissionListComponent {
     private datasource: any;
 
     private showSubmitted: boolean = false;
+
+    @ViewChild('confirmDialog') public confirmDialog: ConfirmDialogComponent;
 
     error: any = null;
 
@@ -259,29 +272,30 @@ export class SubmissionListComponent {
     }
 
     decorateDataRows(rows: any[]) {
-        return _.map(rows, (row:any) => ({
+        return _.map(rows, (row: any) => ({
             accno: row.accno,
             title: row.title,
             rtime: row.rtime,
             status: row.status,
-            onDelete: (accno:string) => {
-                console.debug('SubmList: (onDelete): accno=' + accno);
-                this.submService
-                    .deleteSubmission(accno)
-                    .subscribe(data => {
-                        if (data.status === "OK") {
-                            this.setDatasource();
-                        }
+            onDelete: (accno: string, deleteOrRevert: string = 'delete') => {
+                const action = deleteOrRevert === 'delete' ? 'delete' : 'undo all changes for';
+                this.confirm(`Do you want to ${action} submission with accession number ${accno}?`)
+                    .subscribe(()=> {
+                        this.submService
+                            .deleteSubmission(accno)
+                            .subscribe(data => {
+                                if (data.status === "OK") {
+                                    this.setDatasource();
+                                }
+                            });
                     });
             },
 
-            onEdit: (accno:string) => {
-                console.debug('SubmList: (onEdit): accno=' + accno);
+            onEdit: (accno: string) => {
                 this.router.navigate(['/edit', accno]);
             },
 
-            onView: (accno:string) => {
-                console.debug('SubmList: (onView): accno=' + accno);
+            onView: (accno: string) => {
                 this.router.navigate(['/view', accno]);
             }
         }));
@@ -306,5 +320,9 @@ export class SubmissionListComponent {
 
     startEditing(accno) {
         this.router.navigate(['/edit', accno]);
+    }
+
+    confirm(text: string): Observable<any> {
+        return this.confirmDialog.confirm(text);
     }
 }
