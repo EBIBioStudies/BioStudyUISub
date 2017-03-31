@@ -50,6 +50,10 @@ import {DirectSubmitService} from '../direct-submit.service';
                     </option>     
                 </select>
             </div>
+            <div class="form-group">
+                <label for="">Attach To</label>
+                <multi-select></multi-select>
+            </div>
             <hr/>
             <div>
                 <!--span *ngIf="submitting"><i class="fa fa-spinner fa-spin"></i></span-->
