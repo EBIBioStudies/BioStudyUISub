@@ -49,6 +49,13 @@ export class SubmissionService {
             }).catch(SubmissionService.errorHandler);
     }
 
+    getProjects(): Observable<any> {
+        return this.http.get('/api/projects')
+            .map((res: Response) => {
+                return res.json().submissions;
+            }).catch(SubmissionService.errorHandler);
+    }
+
     createSubmission(pt: any): Observable<any> {
         return this.http.post('/api/submission/create', pt)
             .map((res: Response) => res.json())

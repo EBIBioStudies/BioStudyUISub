@@ -3,10 +3,14 @@ import {
     Input,
     Output,
     EventEmitter,
-    Inject
+    Inject,
+    OnInit
 } from '@angular/core';
 
 import {DirectSubmitService} from '../direct-submit.service';
+import {SubmissionService} from '../submission.service';
+
+import * as _ from 'lodash';
 
 @Component({
     selector: 'direct-submit-sidebar',
@@ -87,7 +91,7 @@ import {DirectSubmitService} from '../direct-submit.service';
 `
 })
 
-export class DirectSubmitSideBarComponent {
+export class DirectSubmitSideBarComponent implements OnInit {
     @Input() collapsed?: boolean = false;
     @Input() readonly?: boolean = false;
     @Output() toggle? = new EventEmitter();
@@ -107,9 +111,17 @@ export class DirectSubmitSideBarComponent {
         projects: []
     };
 
-    private projectsToAttachTo: string[] = ['One', 'Two', 'Three', 'Four', 'Five'];
+    private projectsToAttachTo: string[] = [];
 
-    constructor(@Inject(DirectSubmitService) private directSubmitService: DirectSubmitService) {
+    constructor(@Inject(DirectSubmitService) private directSubmitService: DirectSubmitService,
+                @Inject(SubmissionService) private submService: SubmissionService) {
+    }
+
+    ngOnInit(): void {
+        this.submService.getProjects()
+            .subscribe(data => {
+                this.projectsToAttachTo = _.map(data, s => s.accno);
+            });
     }
 
     onToggle(e): void {

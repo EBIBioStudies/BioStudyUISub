@@ -6,7 +6,8 @@ import {
     Pipe,
     PipeTransform,
     ElementRef,
-    forwardRef
+    forwardRef,
+    OnChanges
 } from '@angular/core';
 
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
@@ -96,7 +97,7 @@ export class FilterPipe implements PipeTransform {
         {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => MultiSelectComponent), multi: true}
     ]
 })
-export class MultiSelectComponent implements ControlValueAccessor {
+export class MultiSelectComponent implements ControlValueAccessor, OnChanges{
     @Input() placeholder: string = 'Select...';
     @Input() filterPlaceholder: string = 'Filter...';
     @Input() filterEnabled: boolean = true;
@@ -111,9 +112,13 @@ export class MultiSelectComponent implements ControlValueAccessor {
 
     private selected: string[] = [];
 
-    ngAfterViewInit() {
+    ngOnChanges(): void {
         this.items  = _.map(this.options, opt => ({checked: false, label: opt}));
+        this.selected = [];
+        this.onChange(this.selected);
+    }
 
+    ngAfterViewInit() {
         Observable
             .fromEvent(this.filterInput.nativeElement, 'keyup')
             .map(ev => ev.target.value)
