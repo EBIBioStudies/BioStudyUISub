@@ -52,7 +52,13 @@ import {DirectSubmitService} from '../direct-submit.service';
             </div>
             <div class="form-group">
                 <label for="">Attach To</label>
-                <multi-select></multi-select>
+                <ul>
+                   <li *ngFor="let p of model.projects">{{p}}</li>
+                </ul>
+                <multi-select
+                     name="selectedProjects"
+                    [options]="projectsToAttachTo" 
+                    [(ngModel)]="model.projects"></multi-select>
             </div>
             <hr/>
             <div>
@@ -97,8 +103,11 @@ export class DirectSubmitSideBarComponent {
 
     private model = {
         file: undefined,
-        format: ''
+        format: '',
+        projects: []
     };
+
+    private projectsToAttachTo: string[] = ['One', 'Two', 'Three', 'Four', 'Five'];
 
     constructor(@Inject(DirectSubmitService) private directSubmitService: DirectSubmitService) {
     }

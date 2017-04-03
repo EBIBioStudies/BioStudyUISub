@@ -1,4 +1,15 @@
-import {Component, ViewChild, Input, OnInit, Pipe, PipeTransform, ElementRef} from '@angular/core';
+import {
+    Component,
+    ViewChild,
+    Input,
+    OnInit,
+    Pipe,
+    PipeTransform,
+    ElementRef,
+    forwardRef
+} from '@angular/core';
+
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/debounceTime';
@@ -80,32 +91,29 @@ export class FilterPipe implements PipeTransform {
   overflow-y: auto;
 }
 `
+    ],
+    providers: [
+        {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => MultiSelectComponent), multi: true}
     ]
 })
-export class MultiSelectComponent {
+export class MultiSelectComponent implements ControlValueAccessor {
     @Input() placeholder: string = 'Select...';
     @Input() filterPlaceholder: string = 'Filter...';
     @Input() filterEnabled: boolean = true;
+    @Input() options: string[];
 
     private filterText: string = '';
     private isOpen: boolean = false;
 
     @ViewChild('filterInput') private filterInput: ElementRef;
 
-    private items: any[] = [
-        {checked: false, label: 'One'},
-        {checked: false, label: 'Two'},
-        {checked: true, label: 'Three'},
-        {checked: false, label: 'Four'},
-        {checked: false, label: 'Five'},
-        {checked: true, label: 'Six'},
-        {checked: false, label: 'Seven'},
-        {checked: true, label: 'Eight'},
-        {checked: false, label: 'Nine'},
-        {checked: true, label: 'Ten'}
-    ];
+    private items: any[] = [];
+
+    private selected: string[] = [];
 
     ngAfterViewInit() {
+        this.items  = _.map(this.options, opt => ({checked: false, label: opt}));
+
         Observable
             .fromEvent(this.filterInput.nativeElement, 'keyup')
             .map(ev => ev.target.value)
@@ -113,18 +121,60 @@ export class MultiSelectComponent {
             .distinctUntilChanged()
             .subscribe(term => {
                 this.filterText = term;
-                //this.changeDetectorRef.markForCheck();
             });
     }
 
-
     private select(item: any) {
         item.checked = !item.checked;
+        if (item.checked) {
+            this.selected.push(item.label);
+        } else {
+            _.remove(this.selected, el => (el === item.label));
+        }
+        this.onChange(this.selected);
     }
 
     private onToggle(): void {
         this.isOpen = !this.isOpen;
     }
 
+    private setSelected(value: string[]): void {
+        this.selected = value;
+        const ht = _.zipObject(value, _.fill(Array(value.length), 1));
+        _.forEach(this.items, item => {
+           item.checked = (ht[item.label] == 1);
+        });
+    }
+
+    private onChange: any = () => {
+    };
+    private onTouched: any = () => {
+    };
+
+    get value(): any {
+        return this.selected;
+    }
+
+    // ControlValueAccessor interface
+    writeValue(obj: any) : void {
+        if (obj && _.isArray(obj)) {
+            this.setSelected(obj as string[]);
+        }
+    }
+
+    // ControlValueAccessor interface
+    registerOnChange(fn: any) : void {
+        this.onChange = fn;
+    }
+
+    // ControlValueAccessor interface
+    registerOnTouched(fn: any) : void {
+        this.onTouched = fn;
+    }
+
+    // ControlValueAccessor interface
+    setDisabledState(isDisabled: boolean) : void {
+       // not supported yet
+    }
 
 }
