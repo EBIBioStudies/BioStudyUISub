@@ -106,7 +106,7 @@ export class ResultLogNodeComponent implements TreeViewCustomNodeComponent {
                          </div> 
                          <div *ngIf="request.successful">
                              <div class="alert alert-success">
-                                 The study was submitted <strong>successful</strong>! It should appear in the list of 'Submitted' studies. Thanks! 
+                                 The study was submitted <strong>successfully</strong>! It should appear in the list of 'Submitted' studies. Thanks! 
                              </div>
                              <tree-view [data]="request.log"
                                         [config]="treeViewConfig"></tree-view>
