@@ -47,15 +47,18 @@ export class FilterPipe implements PipeTransform {
         <span class="caret"></span>
     </label>
     <ul dropdownMenu class="dropdown-menu" role="menu" [ngStyle]="{display:isOpen ? 'block' : 'none'}">
-        <li *ngIf="filterEnabled" role="menuitem">
+        <li [hidden]="empty || !filterEnabled" role="menuitem">
             <div class="form-group filter">
                 <input class="form-control" 
                        type="text" 
                        [value]="filterText" 
                        [placeholder]="filterPlaceholder" 
                        #filterInput/>
-                <span class="fa fa-times-circle-o clear-filter" (click)="clearFilter()"></span>
+                <span class="fa fa-times-circle-o clear-filter" (click)="onClearFilter()"></span>
             </div>
+        </li>
+        <li *ngIf="empty">
+            <a class="dropdown-item"><span>No options to select from</span></a>
         </li>
         <li *ngFor="let item of items | filter:{label: filterText}" role="menuitem">
             <a (click)="select(item)" class="dropdown-item">
@@ -97,7 +100,7 @@ export class FilterPipe implements PipeTransform {
         {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => MultiSelectComponent), multi: true}
     ]
 })
-export class MultiSelectComponent implements ControlValueAccessor, OnChanges{
+export class MultiSelectComponent implements ControlValueAccessor, OnChanges {
     @Input() placeholder: string = 'Select...';
     @Input() filterPlaceholder: string = 'Filter...';
     @Input() filterEnabled: boolean = true;
@@ -113,7 +116,7 @@ export class MultiSelectComponent implements ControlValueAccessor, OnChanges{
     private selected: string[] = [];
 
     ngOnChanges(): void {
-        this.items  = _.map(this.options, opt => ({checked: false, label: opt}));
+        this.items = _.map(this.options, opt => ({checked: false, label: opt}));
         this.selected = [];
         this.onChange(this.selected);
     }
@@ -129,6 +132,18 @@ export class MultiSelectComponent implements ControlValueAccessor, OnChanges{
             });
     }
 
+    private get empty(): boolean {
+        return this.options.length === 0;
+    }
+
+    private onClearFilter() {
+        this.filterText = '';
+    }
+
+    private onToggle(): void {
+        this.isOpen = !this.isOpen;
+    }
+
     private select(item: any) {
         item.checked = !item.checked;
         if (item.checked) {
@@ -139,15 +154,11 @@ export class MultiSelectComponent implements ControlValueAccessor, OnChanges{
         this.onChange(this.selected);
     }
 
-    private onToggle(): void {
-        this.isOpen = !this.isOpen;
-    }
-
     private setSelected(value: string[]): void {
         this.selected = value;
         const ht = _.zipObject(value, _.fill(Array(value.length), 1));
         _.forEach(this.items, item => {
-           item.checked = (ht[item.label] == 1);
+            item.checked = (ht[item.label] == 1);
         });
     }
 
@@ -161,25 +172,25 @@ export class MultiSelectComponent implements ControlValueAccessor, OnChanges{
     }
 
     // ControlValueAccessor interface
-    writeValue(obj: any) : void {
+    writeValue(obj: any): void {
         if (obj && _.isArray(obj)) {
             this.setSelected(obj as string[]);
         }
     }
 
     // ControlValueAccessor interface
-    registerOnChange(fn: any) : void {
+    registerOnChange(fn: any): void {
         this.onChange = fn;
     }
 
     // ControlValueAccessor interface
-    registerOnTouched(fn: any) : void {
+    registerOnTouched(fn: any): void {
         this.onTouched = fn;
     }
 
     // ControlValueAccessor interface
-    setDisabledState(isDisabled: boolean) : void {
-       // not supported yet
+    setDisabledState(isDisabled: boolean): void {
+        // not supported yet
     }
 
 }
