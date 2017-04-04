@@ -147,10 +147,10 @@ export class DirectSubmitSideBarComponent implements OnInit {
     }
 
     private onCreate(): void {
-        this.directSubmitService.create(this.model.file, this.model.format);
+        this.directSubmitService.create(this.model.file, this.model.format, this.model.projects);
     }
 
     private onUpdate(): void {
-        this.directSubmitService.update(this.model.file, this.model.format);
+        this.directSubmitService.update(this.model.file, this.model.format, this.model.projects);
     }
 }

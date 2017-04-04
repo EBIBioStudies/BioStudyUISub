@@ -9,7 +9,7 @@ export class GlobalErrorHandler implements ErrorHandler {
     }
 
     handleError(error) {
-        if (error.status === 401) {//Unauthorized
+        if (error.status === 401 || error.status === 403) {//Unauthorized or Forbidden
             this.userSession.destroy();
         } else {
             console.error(error);

@@ -5,6 +5,7 @@ import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 
 import {SubmissionService} from './submission.service';
+import {PageTabProxy} from './pagetabproxy';
 
 const enum ReqStatus {CONVERT, SUBMIT, ERROR, SUCCESS}
 
@@ -13,15 +14,17 @@ const enum ReqType {CREATE, UPDATE}
 export class DirectSubmitRequest {
     private __filename: string;
     private __format: string;
+    private __projects: string[];
     private __type: ReqType;
 
     private __created: Date;
     private __status: ReqStatus;
     private __log: any;
 
-    constructor(filename: string, format: string, type: ReqType) {
+    constructor(filename: string, format: string, projects: string[], type: ReqType) {
         this.__filename = filename;
         this.__format = format;
+        this.__projects = projects;
         this.__type = type;
 
         this.__created = new Date();
@@ -64,6 +67,10 @@ export class DirectSubmitRequest {
         return this.__filename;
     }
 
+    get projects(): string[] {
+        return this.__projects;
+    }
+
     get type(): ReqType {
         return this.__type;
     }
@@ -101,12 +108,12 @@ export class DirectSubmitService {
     constructor(@Inject(SubmissionService) private submService: SubmissionService) {
     }
 
-    create(file: File, format: string): void {
-        this.addRequest(file, format, ReqType.CREATE);
+    create(file: File, format: string, projects: string[]): void {
+        this.addRequest(file, format, projects, ReqType.CREATE);
     }
 
-    update(file: File, format: string): void {
-        this.addRequest(file, format, ReqType.UPDATE);
+    update(file: File, format: string, projects: string[]): void {
+        this.addRequest(file, format, projects, ReqType.UPDATE);
     }
 
     request(index: Number) {
@@ -117,8 +124,8 @@ export class DirectSubmitService {
         return undefined;
     }
 
-    private addRequest(file: File, format: string, type: ReqType): void {
-        const req = new DirectSubmitRequest(file.name, format, type);
+    private addRequest(file: File, format: string, projects: string[], type: ReqType): void {
+        const req = new DirectSubmitRequest(file.name, format, projects, type);
         const index = this.requests.length;
         this.requests.push(req);
         this.newRequest$.next(index);
@@ -135,8 +142,10 @@ export class DirectSubmitService {
             );
     }
 
-    private submit(req: DirectSubmitRequest, subm: any, type: ReqType): void {
-        this.submService.directCreateOrUpdate(subm, type === ReqType.CREATE)
+    private submit(req: DirectSubmitRequest, subm: any): void {
+        const pt:PageTabProxy = PageTabProxy.create(subm);
+        pt.attachTo = req.projects;
+        this.submService.directCreateOrUpdate(pt.data, req.type === ReqType.CREATE)
             .subscribe(
                 data => {
                     this.onSubmitRequestFinished(req, data);
@@ -146,7 +155,7 @@ export class DirectSubmitService {
     private onConvertRequestFinished(req: DirectSubmitRequest, resp: any) {
         req.onConvertResponse(resp);
         if (!req.failed) {
-            this.submit(req, resp.document.submissions[0], req.type);
+            this.submit(req, resp.document.submissions[0]);
         }
     }
 
