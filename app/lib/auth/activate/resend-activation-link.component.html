@@ -7,12 +7,9 @@
                     Resend Activation Link
                 </h4>
                 <p>Please enter your registered e-mail address here so that we can resend you the activation link.</p>
-                <p>
-                    <span *ngIf="hasError" class="help-block span-error-large margin-bottom-none">
-                        {{message}}
-                    </span>
-                </p>
-
+                <h5 *ngIf="hasError" class="text-danger">
+                    {{message}}
+                </h5>
                 <form novalidate name="raForm" role="form"
                       (ngSubmit)="raForm.valid && onSubmit($event)" #raForm="ngForm">
                     <div class="form-group" [ngClass]="{'has-error': email.invalid}">

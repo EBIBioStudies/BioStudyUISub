@@ -1,7 +1,7 @@
 <container-root>
     <container-md>
 
-        <div class="panel panel-info">
+        <div class="panel" [ngClass]="{'panel-info' : !hasError, 'panel-danger': hasError}">
             <div class="panel-body">
                 <div *ngIf="!message">
                     <h3 class="text-muted">
@@ -9,8 +9,8 @@
                     </h3>
                 </div>
                 <div *ngIf="message">
-                    <h3 *ngIf="hasError" class="text-muted text-red" style="text-align: center">
-                        <i class="fa fa-warning text-red"></i>&nbsp;{{message}}
+                    <h3 *ngIf="hasError" class="text-muted text-danger" style="text-align: center">
+                        <i class="fa fa-warning"></i>&nbsp;{{message}}
                     </h3>
                     <h3 *ngIf="!hasError" class="text-muted text-success">
                         <i class="fa fa-check text-success"></i>&nbsp;{{message}}

@@ -20,21 +20,9 @@ export class AuthService {
                 @Inject(UserSession) private userSession: UserSession) {
     }
 
-    activate(key: string): Observable<any> {
-        return this.http.post('/raw/auth/activate/' + key, {})
-            .map((res: Response) => {
-                let data = res.json();
-                if (data.status === 'OK') {
-                    return data;
-                }
-                return Observable.throw({status: 'Error', message: data.message || 'Server error'});
-            })
-            .catch(AuthService.errorHandler);
-    }
-
     passwordResetRequest(email: string, recaptcha: string): Observable<any> {
         let path = this.getFullPath('#/password_reset');
-        return this.http.post('/api/auth/passrstreq/', {email: email, path: path, 'recaptcha2-response': recaptcha})
+        return this.http.post('/api/auth/password/reset_request', {email: email, path: path, 'captcha': recaptcha})
             .map((res: Response) => {
                 let data = res.json();
                 if (data.status === 'OK') {
@@ -45,12 +33,8 @@ export class AuthService {
             .catch(AuthService.errorHandler);
     }
 
-    passwordReset(key, password, recaptcha): Observable<any> {
-        return this.http.post('/raw/auth/passreset/', {
-            key: key,
-            password: password,
-            'recaptcha2-response': recaptcha
-        })
+    passwordReset(key:string, password:string, recaptcha:string): Observable<any> {
+        return this.http.post('/api/auth/password/reset', {key: key, password: password, 'captcha': recaptcha})
             .map(
                 (res: Response) => {
                     let data = res.json();
@@ -67,13 +51,9 @@ export class AuthService {
             });
     }
 
-    resendActivationLink(email, recaptcha): Observable<any> {
+    resendActivationLink(email:string, recaptcha:string): Observable<any> {
         let path = this.getFullPath('#/activate');
-        return this.http.post('/api/auth/resendActLink/', {
-            email: email,
-            path: path,
-            'recaptcha2-response': recaptcha
-        })
+        return this.http.post('/api/auth/activation/link', {email: email, path: path, 'captcha': recaptcha})
             .map((resp: Response) => {
                 let data = resp.json();
                 if (data.status === 'OK') {
@@ -87,6 +67,18 @@ export class AuthService {
                 }
                 return AuthService.errorHandler(error);
             });
+    }
+
+    activate(key: string): Observable<any> {
+        return this.http.post('/api/auth/activation/check/' + key, {})
+            .map((res: Response) => {
+                let data = res.json();
+                if (data.status === 'OK') {
+                    return data;
+                }
+                return Observable.throw({status: 'Error', message: data.message || 'Server error'});
+            })
+            .catch(AuthService.errorHandler);
     }
 
     checkUser(): Observable<any> {
@@ -115,9 +107,8 @@ export class AuthService {
     }
 
     signUp(regData: RegistrationData): Observable<any> {
-        let user = RegistrationData.transform(regData);
-        user.path = this.getFullPath('#/activate');
-        return this.http.post('/api/auth/signup', user)
+        regData.path = this.getFullPath('#/activate');
+        return this.http.post('/api/auth/signup', regData)
             .map((resp: Response) => {
                 let data = resp.json();
                 if (data.status === 'OK') {

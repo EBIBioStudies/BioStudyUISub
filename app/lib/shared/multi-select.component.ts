@@ -52,7 +52,8 @@ export class FilterPipe implements PipeTransform {
                 <input class="form-control" 
                        type="text" 
                        [value]="filterText" 
-                       [placeholder]="filterPlaceholder" 
+                       [placeholder]="filterPlaceholder"
+                       (input)="console.log(filterInput.value)"
                        #filterInput/>
                 <span class="fa fa-times-circle-o clear-filter" (click)="onClearFilter()"></span>
             </div>
