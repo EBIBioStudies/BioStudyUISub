@@ -117,7 +117,6 @@ export class MultiSelectComponent implements ControlValueAccessor, OnChanges, On
 
     ngOnInit(): void {
         this.sb = this.filterInputValue$.subscribe(term => {
-            console.log(term);
             this.filterText = term;
         })
     }
