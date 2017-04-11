@@ -3,6 +3,7 @@ import {
     ViewChild,
     Input,
     OnInit,
+    OnDestroy,
     Pipe,
     PipeTransform,
     ElementRef,
@@ -12,11 +13,8 @@ import {
 
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/throttleTime';
-import 'rxjs/add/observable/fromEvent';
+import {Subject} from 'rxjs/Subject';
+import {Subscription} from 'rxjs/Subscription';
 
 import * as _ from 'lodash';
 
@@ -53,7 +51,7 @@ export class FilterPipe implements PipeTransform {
                        type="text" 
                        [value]="filterText" 
                        [placeholder]="filterPlaceholder"
-                       (input)="console.log(filterInput.value)"
+                       (input)="filterInputValue$.next(filterInput.value)"
                        #filterInput/>
                 <span class="fa fa-times-circle-o clear-filter" (click)="onClearFilter()"></span>
             </div>
@@ -101,7 +99,7 @@ export class FilterPipe implements PipeTransform {
         {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => MultiSelectComponent), multi: true}
     ]
 })
-export class MultiSelectComponent implements ControlValueAccessor, OnChanges {
+export class MultiSelectComponent implements ControlValueAccessor, OnChanges, OnInit, OnDestroy {
     @Input() placeholder: string = 'Select...';
     @Input() filterPlaceholder: string = 'Filter...';
     @Input() filterEnabled: boolean = true;
@@ -110,27 +108,28 @@ export class MultiSelectComponent implements ControlValueAccessor, OnChanges {
     private filterText: string = '';
     private isOpen: boolean = false;
 
-    @ViewChild('filterInput') private filterInput: ElementRef;
-
     private items: any[] = [];
 
     private selected: string[] = [];
+
+    private filterInputValue$: Subject<String> = new Subject<String>();
+    private sb: Subscription<String>;
+
+    ngOnInit(): void {
+        this.sb = this.filterInputValue$.subscribe(term => {
+            console.log(term);
+            this.filterText = term;
+        })
+    }
+
+    ngOnDestroy(): void {
+        this.sb.unsubscribe();
+    }
 
     ngOnChanges(): void {
         this.items = _.map(this.options, opt => ({checked: false, label: opt}));
         this.selected = [];
         this.onChange(this.selected);
-    }
-
-    ngAfterViewInit() {
-        Observable
-            .fromEvent(this.filterInput.nativeElement, 'keyup')
-            .map(ev => ev.target.value)
-            .debounceTime(200)
-            .distinctUntilChanged()
-            .subscribe(term => {
-                this.filterText = term;
-            });
     }
 
     private get empty(): boolean {
