@@ -20,63 +20,15 @@ export class AuthService {
                 @Inject(UserSession) private userSession: UserSession) {
     }
 
-    passwordResetRequest(email: string, recaptcha: string): Observable<any> {
-        let path = this.getFullPath('#/password_reset');
-        return this.http.post('/api/auth/password/reset_request', {email: email, path: path, 'captcha': recaptcha})
+    signIn(login, password): Observable<any> {
+        return this.http.post('/raw/auth/signin', {login: login, password: password})
             .map((res: Response) => {
                 let data = res.json();
                 if (data.status === 'OK') {
+                    this.userSession.create(data.sessid);
                     return data;
                 }
-                return Observable.throw({status: 'Error', message: data.message || 'Server error'});
-            })
-            .catch(AuthService.errorHandler);
-    }
-
-    passwordReset(key:string, password:string, recaptcha:string): Observable<any> {
-        return this.http.post('/api/auth/password/reset', {key: key, password: password, 'captcha': recaptcha})
-            .map(
-                (res: Response) => {
-                    let data = res.json();
-                    if (data.status === 'OK') {
-                        return data;
-                    }
-                    return Observable.throw({status: 'Error', message: data.message || 'Server error'});
-                })
-            .catch((error) => {
-                if (error.status === 400) { //invalid request
-                    return Observable.throw(error.json());
-                }
-                return AuthService.errorHandler(error);
-            });
-    }
-
-    resendActivationLink(email:string, recaptcha:string): Observable<any> {
-        let path = this.getFullPath('#/activate');
-        return this.http.post('/api/auth/activation/link', {email: email, path: path, 'captcha': recaptcha})
-            .map((resp: Response) => {
-                let data = resp.json();
-                if (data.status === 'OK') {
-                    return resp.json();
-                }
-                return Observable.throw({status: 'Error', message: data.message || 'Server error'});
-            })
-            .catch((error) => {
-                if (error.status === 403) {
-                    return Observable.throw(error.json());
-                }
-                return AuthService.errorHandler(error);
-            });
-    }
-
-    activate(key: string): Observable<any> {
-        return this.http.post('/api/auth/activation/check/' + key, {})
-            .map((res: Response) => {
-                let data = res.json();
-                if (data.status === 'OK') {
-                    return data;
-                }
-                return Observable.throw({status: 'Error', message: data.message || 'Server error'});
+                return Observable.throw({status: 422, statusText: data.message || 'Server error'});
             })
             .catch(AuthService.errorHandler);
     }
@@ -88,40 +40,43 @@ export class AuthService {
                 if (data.status === 'OK') {
                     return data;
                 }
-                return Observable.throw({status: 'Error', message: data.message || 'Server error'});
+                return Observable.throw({status: 422, statusText: data.message || 'Server error'});
             })
             .catch(AuthService.errorHandler);
     }
 
-    signIn(login, password): Observable<any> {
-        return this.http.post('/raw/auth/signin', {login: login, password: password})
-            .map((res: Response) => {
-                let data = res.json();
-                if (data.status === 'OK') {
-                    this.userSession.create(data.sessid);
-                    return data;
-                }
-                return Observable.throw({status: 'Error', message: data.message || 'Server error'});
-            })
+
+    passwordResetRequest(email: string, recaptcha: string): Observable<any> {
+        let path = this.getFullPath('#/password_reset');
+        return this.http.post('/api/auth/password/reset_request', {email: email, path: path, 'captcha': recaptcha})
+            .map((res: Response) => res.json())
+            .catch(AuthService.errorHandler);
+    }
+
+    passwordReset(key: string, password: string, recaptcha: string): Observable<any> {
+        return this.http.post('/api/auth/password/reset', {key: key, password: password, 'captcha': recaptcha})
+            .map((res: Response) => res.json())
+            .catch(AuthService.errorHandler);
+    }
+
+    resendActivationLink(email: string, recaptcha: string): Observable<any> {
+        let path = this.getFullPath('#/activate');
+        return this.http.post('/api/auth/activation/link', {email: email, path: path, 'captcha': recaptcha})
+            .map((resp: Response) => resp.json())
+            .catch(AuthService.errorHandler);
+    }
+
+    activate(key: string): Observable<any> {
+        return this.http.post('/api/auth/activation/check/' + key, {})
+            .map((res: Response) => res.json())
             .catch(AuthService.errorHandler);
     }
 
     signUp(regData: RegistrationData): Observable<any> {
         regData.path = this.getFullPath('#/activate');
         return this.http.post('/api/auth/signup', regData)
-            .map((resp: Response) => {
-                let data = resp.json();
-                if (data.status === 'OK') {
-                    return data;
-                }
-                return Observable.throw({status: 'Error', message: data.message || 'Server error'});
-            })
-            .catch((error) => {
-                if (error.status === 403 || error.status === 400) {
-                    return Observable.throw(error.json());
-                }
-                return AuthService.errorHandler(error);
-            });
+            .map((resp: Response) => resp.json())
+            .catch(AuthService.errorHandler);
     }
 
     signOut(): Observable<any> {
@@ -130,9 +85,9 @@ export class AuthService {
         }
         return this.http.post("/api/auth/signout", {})
             .map(() => {
-                    this.sessionDestroy();
-                    return {};
-                })
+                this.sessionDestroy();
+                return {};
+            })
             .catch((error) => {
                 if (error.status === 403) { //session expired
                     this.sessionDestroy();
@@ -161,7 +116,7 @@ export class AuthService {
             try {
                 let jsonError = error.json();
                 err.message = jsonError.message || err.message;
-            } catch(e) {// ignore ?
+            } catch (e) {// ignore ?
                 console.log(error);
             }
         }
