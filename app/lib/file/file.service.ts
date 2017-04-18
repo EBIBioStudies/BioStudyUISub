@@ -22,13 +22,13 @@ export class FileService {
     }
 
     getFiles(path: string = '/', depth: number = 1, showArchive: boolean = true): Observable<any> {
-        return this.http.get(`/api/files/dir?showArchive=${showArchive}&depth=${depth}&path=${path}`)
+        return this.http.get(`/api/files?showArchive=${showArchive}&depth=${depth}&path=${path}`)
             .map((res: Response) => res.json())
             .catch(FileService.errorHandler);
     }
 
     removeFile(fullPath): Observable<any> {
-        return this.http.del("/api/files/delete?path=" + fullPath)
+        return this.http.del("/api/files?path=" + fullPath)
             .map((res: Response) => res.json())
             .catch(FileService.errorHandler);
     }
