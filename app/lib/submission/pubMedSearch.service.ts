@@ -14,15 +14,11 @@ export class PubMedSearchService {
 
     search(pmid): Observable<any> {
         if (!pmid) {
-            console.log("PubMedSearchService: Empty pubMedId");
-            return Observable.throw({status: "Failed"});
+            console.warn("PubMedSearch: no pubMedId given");
+            return Observable.of({});
         }
         return this.http.get('/api/pubMedSearch/' + pmid)
-            .map((res: Response) => {
-                let data = res.json();
-                console.log("PubMedSearchService() response", data);
-                return data;
-            })
+            .map((resp: Response) => resp.json())
             .catch((error: any) => {
                 let err = {status: '', message: ''};
                 try {
