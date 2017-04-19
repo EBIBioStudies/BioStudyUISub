@@ -26,7 +26,7 @@ export class PubMedSearchService {
             .catch((error: any) => {
                 let err = {status: '', message: ''};
                 try {
-                    var jsonError = error.json ? error.json() : error;
+                    let jsonError = error.json ? error.json() : error;
                     err.status = (jsonError.status) ? jsonError.status : 'Error';
                     err.message = (jsonError.message) ? jsonError.message : 'Server error';
                 } catch (e) {

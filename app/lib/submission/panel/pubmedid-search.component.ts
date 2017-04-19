@@ -40,8 +40,8 @@ export class PubMedIdSearchComponent implements ControlValueAccessor, OnChanges 
             .search(this.pubMedId)
             .subscribe((resp) => {
                 console.log("pubMedId search:", resp);
-                if (resp.status === "OK" && resp.data.hasOwnProperty('title')) {
-                    this.found.emit(this.uppercaseProperties(resp.data));
+                if (resp.hasOwnProperty('title')) {
+                    this.found.emit(this.uppercaseProperties(resp));
                 }
             });
     }
