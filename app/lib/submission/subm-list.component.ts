@@ -284,9 +284,7 @@ export class SubmissionListComponent {
                         this.submService
                             .deleteSubmission(accno)
                             .subscribe(data => {
-                                if (data.status === "OK") {
-                                    this.setDatasource();
-                                }
+                                this.setDatasource();
                             });
                     });
             },
