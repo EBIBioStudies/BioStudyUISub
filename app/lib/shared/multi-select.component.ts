@@ -38,12 +38,12 @@ export class FilterPipe implements PipeTransform {
     selector: 'multi-select',
     template: `
 <div class="btn-group btn-block" dropdown>
-    <label class="btn btn-default col-sm-10 dropdown-toggle" style="text-align:left">
-        {{placeholder}}
-    </label>
-    <label class="btn btn-default col-sm-2 dropdown-toggle" (click)="onToggle()">
-        <span class="caret"></span>
-    </label>
+    <button type="button" class="btn btn-default col-sm-12 dropdown-toggle" (click)="onToggle()">
+        <span class="pull-left">{{placeholder}}</span>
+        <span class="pull-right">
+            <span class="caret"></span>
+        </span>
+    </button>
     <ul dropdownMenu class="dropdown-menu" role="menu" [ngStyle]="{display:isOpen ? 'block' : 'none'}">
         <li [hidden]="empty || !filterEnabled" role="menuitem">
             <div class="form-group filter">
