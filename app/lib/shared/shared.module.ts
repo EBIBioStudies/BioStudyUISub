@@ -11,7 +11,8 @@ import {
     PaginationModule,
     DatepickerModule,
     PopoverModule,
-    CollapseModule
+    CollapseModule,
+    AlertModule
 } from 'ng2-bootstrap';
 
 import {ContainerRootComponent} from './container-root.component';
@@ -20,6 +21,7 @@ import {ORCIDInputBoxComponent} from './orcid-input-box.component';
 import {FileUploadButtonComponent} from './file-upload-button.component';
 import {ConfirmDialogComponent} from './confirm-dialog.component';
 import {MultiSelectComponent, FilterPipe} from './multi-select.component';
+import {SharedService} from './shared-service';
 
 @NgModule({
     imports: [
@@ -33,7 +35,11 @@ import {MultiSelectComponent, FilterPipe} from './multi-select.component';
         PaginationModule,
         DatepickerModule,
         PopoverModule,
-        CollapseModule
+        CollapseModule,
+        AlertModule
+    ],
+    providers: [
+        SharedService
     ],
     declarations: [
         ContainerRootComponent,
@@ -58,6 +64,7 @@ import {MultiSelectComponent, FilterPipe} from './multi-select.component';
         DatepickerModule,
         PopoverModule,
         CollapseModule,
+        AlertModule,
         ContainerRootComponent,
         ContainerMdComponent,
         ORCIDInputBoxComponent,

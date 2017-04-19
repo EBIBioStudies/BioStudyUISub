@@ -13,7 +13,8 @@ import {
     PaginationModule,
     DatepickerModule,
     PopoverModule,
-    CollapseModule
+    CollapseModule,
+    AlertModule
 } from 'ng2-bootstrap';
 
 import {AppRoutingModule} from './app-routing.module';
@@ -42,6 +43,7 @@ import {GlobalErrorHandler} from './global-error.handler';
         DatepickerModule.forRoot(),
         PopoverModule.forRoot(),
         CollapseModule.forRoot(),
+        AlertModule.forRoot(),
         AppRoutingModule,
         CoreModule,
         HelpModule,

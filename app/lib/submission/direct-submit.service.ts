@@ -88,8 +88,8 @@ export class DirectSubmitRequest {
     }
 
     private onResponse(res: any, successStatus: ReqStatus): void {
-        if (res.status === 'FAIL') {
-            this.__log = res.log;
+        if (res.status !== 'OK') {
+            this.__log = res.log || {message: 'no results available', level: 'error'};
             this.__status = ReqStatus.ERROR;
             return;
         }
@@ -138,6 +138,12 @@ export class DirectSubmitService {
             .subscribe(
                 data => {
                     this.onConvertRequestFinished(req, data);
+                },
+                error => {
+                    this.onConvertRequestFinished(req, error.data || {});
+                    if (!error.isInputError()) {
+                        throw error;
+                    }
                 }
             );
     }
@@ -149,7 +155,14 @@ export class DirectSubmitService {
             .subscribe(
                 data => {
                     this.onSubmitRequestFinished(req, data);
-                });
+                },
+                error => {
+                    this.onSubmitRequestFinished(req, error.data || {});
+                    if (!error.isInputError()) {
+                        throw error;
+                    }
+                }
+            );
     }
 
     private onConvertRequestFinished(req: DirectSubmitRequest, resp: any) {

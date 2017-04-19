@@ -8,10 +8,11 @@ import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
 
 import * as _ from 'lodash';
+import {SharedService} from '../shared/index';
 
 @Injectable()
 export class FileService {
-    constructor(@Inject(HttpClient) private http: HttpClient,) {
+    constructor(@Inject(HttpClient) private http: HttpClient) {
     }
 
     getUserDirs(): Observable<any> {
@@ -24,29 +25,12 @@ export class FileService {
     getFiles(path: string = '/', depth: number = 1, showArchive: boolean = true): Observable<any> {
         return this.http.get(`/api/files?showArchive=${showArchive}&depth=${depth}&path=${path}`)
             .map((res: Response) => res.json())
-            .catch(FileService.errorHandler);
+            .catch(SharedService.errorHandler);
     }
 
     removeFile(fullPath): Observable<any> {
         return this.http.del("/api/files?path=" + fullPath)
             .map((res: Response) => res.json())
-            .catch(FileService.errorHandler);
-    }
-
-    static errorHandler(error: any) {
-        let err = {
-            status: error.status || 'Error',
-            message: error.statusText || 'Server error'
-        };
-        if (error.json) {
-            try {
-                let jsonError = error.json();
-                err.message = jsonError.message || err.message;
-            } catch (e) {// ignore ?
-                console.log(error);
-            }
-        }
-        console.error(err);
-        return Observable.throw(err);
+            .catch(SharedService.errorHandler);
     }
 }

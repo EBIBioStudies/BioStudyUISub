@@ -7,6 +7,8 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
 
+import {SharedService} from '../shared/index';
+
 class UrlParams {
     private params: any[] = [];
 
@@ -34,13 +36,13 @@ export class SubmissionService {
     getSubmission(accno: string): Observable<any> {
         return this.http.get(`/api/submissions/${accno}`)
             .map((res: Response) => res.json())
-            .catch(SubmissionService.errorHandler);
+            .catch(SharedService.errorHandler);
     }
 
     getSubmittedSubmission(accno: string): Observable<any> {
         return this.http.get(`/api/submissions/origin/${accno}`)
             .map((res: Response) => res.json())
-            .catch(SubmissionService.errorHandler);
+            .catch(SharedService.errorHandler);
     }
 
     getSubmissions(args: any = {}): Observable<any> {
@@ -48,39 +50,39 @@ export class SubmissionService {
         return this.http.get('/api/submissions', urlParams.list)
             .map((res: Response) => {
                 return res.json().submissions;
-            }).catch(SubmissionService.errorHandler);
+            }).catch(SharedService.errorHandler);
     }
 
     getProjects(): Observable<any> {
         return this.http.get('/api/projects')
             .map((res: Response) => {
                 return res.json().submissions;
-            }).catch(SubmissionService.errorHandler);
+            }).catch(SharedService.errorHandler);
     }
 
     createSubmission(pt: any): Observable<any> {
         return this.http.post('/api/submissions/tmp/create', pt)
             .map((res: Response) => res.json())
-            .catch(SubmissionService.errorHandler);
+            .catch(SharedService.errorHandler);
     }
 
     saveSubmission(pt: any): Observable<any> {
         return this.http.post('/api/submissions/tmp/save', pt)
             .map((res: Response) => {
             })
-            .catch(SubmissionService.errorHandler);
+            .catch(SharedService.errorHandler);
     }
 
     submitSubmission(pt: any): Observable<any> {
         return this.http.post('/api/submissions/tmp/submit', pt)
             .map((res: Response) => res.json())
-            .catch(SubmissionService.errorHandler);
+            .catch(SharedService.errorHandler);
     }
 
     directCreateOrUpdate(pt: any, create: boolean): Observable<any> {
         return this.http.post(`/api/submissions/origin/submit?create=${create}`, pt)
             .map((res: Response) => res.json())
-            .catch(SubmissionService.errorHandler);
+            .catch(SharedService.errorHandler);
     }
 
     convert(file: File, format: string = ''): Observable<any> {
@@ -91,17 +93,12 @@ export class SubmissionService {
 
         return this.http.post('/raw/formsubmit', formData)
             .map((res: Response) => res.json())
-            .catch(SubmissionService.errorHandler);
+            .catch(SharedService.errorHandler);
     }
 
     deleteSubmission(accno) {
         return this.http.del('/api/submissions/' + accno)
             .map((resp: Response) => resp.json())
-            .catch(SubmissionService.errorHandler);
-    }
-
-    static errorHandler(error: any) {
-        console.error(error);
-        return Observable.throw(error);
+            .catch(SharedService.errorHandler);
     }
 }

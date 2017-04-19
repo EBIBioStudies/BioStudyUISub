@@ -4,6 +4,7 @@ import {RouterModule} from '@angular/router';
 import {SharedModule} from '../shared/shared.module';
 
 import {HeaderComponent} from './header/header.component';
+import {GlobalErrorComponent} from './header/global-error.component';
 
 @NgModule({
     imports: [
@@ -14,7 +15,8 @@ import {HeaderComponent} from './header/header.component';
         HeaderComponent
     ],
     declarations: [
-        HeaderComponent
+        HeaderComponent,
+        GlobalErrorComponent
     ]
 })
 export class CoreModule {
