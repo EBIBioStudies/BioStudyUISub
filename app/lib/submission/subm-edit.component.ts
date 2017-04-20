@@ -88,14 +88,19 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
             return;
         }
         this.submService.submitSubmission(this.__wrap())
-            .subscribe(resp => {
-                console.debug("submitted", resp);
-                if (resp.status !== "OK") {
-                    //TODO get real messages from response
+            .subscribe(
+                resp => {
+                    console.debug("submitted", resp);
+                    this.showSubmitResults()
+                },
+                error => {
                     this.errors = ['Failed to submit'];
-                }
-                this.showSubmitResults()
-            });
+                    this.showSubmitResults();
+
+                    if (!error.isInputError()) {
+                        throw error;
+                    }
+                });
     }
 
     canSubmit() {
