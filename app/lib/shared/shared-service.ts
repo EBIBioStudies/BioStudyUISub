@@ -12,18 +12,22 @@ export class ServiceError {
     }
 
     get name(): string {
-        return "Error";
+        const st = this.__status ? '[' + this.__status + '] ' : '';
+        const stStr = this.__statusString ? '[' + this.__statusString + '] ' : '';
+        return "Error: " + st + stStr;
     }
 
     get message(): string {
-        const st = this.__status ? '[' + this.__status + ']' : '';
-        const stStr = this.__statusString ? '[' + this.__statusString + ']' : '';
         const b = this.__data ? (this.__data.message || '') : '';
-        return st + stStr + b;
+        return b;
     }
 
     get data(): any {
         return this.__data;
+    }
+
+    get status(): number {
+        return this.__status;
     }
 
     isInputError(): boolean {
