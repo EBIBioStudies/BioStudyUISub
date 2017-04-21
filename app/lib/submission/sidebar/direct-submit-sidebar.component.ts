@@ -81,7 +81,7 @@ import * as _ from 'lodash';
                     </button>
                     <ul dropdownMenu role="menu" aria-labelledby="single-button">
                         <li role="menuitem"><a class="dropdown-item" (click)="onCreate()">New</a></li>
-                        <li role="menuitem"><a class="dropdown-item" (click)="onUpdate()">Existed</a></li>
+                        <li role="menuitem"><a class="dropdown-item" (click)="onUpdate()">Existing</a></li>
                     </ul>
                 </div>
             </div>
