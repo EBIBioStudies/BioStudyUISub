@@ -76,7 +76,9 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     }
 
     onSubmit(event) {
-        event.preventDefault();
+        if (event) {
+            event.preventDefault();
+        }
 
         if (!this.canSubmit()) {
             return;
