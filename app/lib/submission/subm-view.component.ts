@@ -1,18 +1,12 @@
-import {Component, Inject, OnInit, OnDestroy, ViewChild} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 
 import {ActivatedRoute, Router, Params} from '@angular/router';
 
-import {Subscription} from 'rxjs/Subscription';
-
-import {ModalDirective} from 'ng2-bootstrap/components/modal/modal.component';
-
 import {Submission, PageTab, SubmissionService, DictionaryService} from './index';
-
-import tmpl from './subm-edit.component.html'
 
 @Component({
     selector: 'subm-view',
-    template: tmpl,
+    templateUrl:  './subm-edit.component.html',
     styles: [`
     .popup {
       position: absolute;
@@ -25,7 +19,6 @@ import tmpl from './subm-edit.component.html'
 })
 
 export class SubmissionViewComponent implements OnInit {
-    private readonly: boolean = true;
     private submission: Submission;
 
     constructor(@Inject(ActivatedRoute) private route: ActivatedRoute,

@@ -6,11 +6,9 @@ import {AuthService} from '../auth.service';
 import {UserSession} from '../user-session';
 import {RegistrationData} from '../registration-data';
 
-import tmpl from './signup.component.html'
-
 @Component({
     selector: 'user-signup',
-    template: tmpl
+    templateUrl: './signup.component.html'
 })
 
 export class SignUpComponent {

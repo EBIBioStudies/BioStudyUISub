@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 @Component({
     selector: 'slide-out-tip',
@@ -52,7 +52,7 @@ import {Component, Input, OnInit} from '@angular/core';
     ]
 
 })
-export class SlideOutTipComponent implements OnInit {
+export class SlideOutTipComponent {
     @Input() tip: string;
     private showTip: boolean = false;
 

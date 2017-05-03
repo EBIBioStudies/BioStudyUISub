@@ -1,14 +1,29 @@
 import {Injectable} from '@angular/core';
-import cfg from './config.json';
-
-
-const CONFIG = JSON.parse(cfg);
-console.debug("AppConfig:", CONFIG);
+import {Http} from '@angular/http';
 
 @Injectable()
 export class AppConfig {
-    public static VERSION: string = CONFIG.APP_VERSION;
-    public static PROXY_BASE: string = CONFIG.APP_PROXY_BASE;
-    public static DEBUG: boolean = CONFIG.APP_DEBUG_ENABLED;
-    public static PROD: boolean = CONFIG.APP_PROD;
+
+    private __config: any = {};
+
+    constructor(private http: Http) {
+        this.http.get('config.json')
+            .subscribe(res => this.__config = res.json());
+    }
+
+    get version(): string {
+        return this.__config.APP_VERSION;
+    }
+
+    get proxy_base(): string {
+        return this.__config.APP_PROXY_BASE;
+    }
+
+    get debug(): boolean {
+        return this.__config.APP_DEBUG_ENABLED;
+    }
+
+    get prod(): boolean {
+        return this.__config.APP_PROD;
+    }
 }

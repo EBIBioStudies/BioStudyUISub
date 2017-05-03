@@ -3,11 +3,9 @@ import {ActivatedRoute, Params} from '@angular/router';
 
 import {AuthService} from '../auth.service';
 
-import tmpl from './activate.component.html'
-
 @Component({
     selector: 'user-activate',
-    template: tmpl
+    templateUrl: './activate.component.html'
 })
 export class ActivateComponent implements OnInit {
     private hasError:boolean = false;

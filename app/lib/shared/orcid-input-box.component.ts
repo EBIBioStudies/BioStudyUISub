@@ -1,4 +1,4 @@
-import {Component, forwardRef, OnChanges} from '@angular/core';
+import {Component, forwardRef} from '@angular/core';
 import {FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor} from '@angular/forms';
 
 import 'rxjs/add/observable/timer';
@@ -26,7 +26,7 @@ import 'rxjs/add/observable/timer';
     ]
 })
 
-export class ORCIDInputBoxComponent implements ControlValueAccessor, OnChanges {
+export class ORCIDInputBoxComponent implements ControlValueAccessor {
 
     private onChange: any = () => {
     };
@@ -101,10 +101,10 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor, OnChanges {
     }
 
     openPopup() {
-        var thorIFrame = document.getElementById("thor");
+        let thorIFrame:any = document.getElementById("thor");
         console.debug("thor iframe", thorIFrame);
 
-        var w = thorIFrame.contentWindow;
+        let w = thorIFrame.contentWindow;
         console.debug("thor iframe.wondow", w);
 
         w.postMessage('openPopup', '*');

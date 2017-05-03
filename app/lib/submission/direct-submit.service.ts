@@ -1,15 +1,13 @@
 import {Injectable, Inject} from '@angular/core';
-import {Response} from '@angular/http';
 
-import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 
 import {SubmissionService} from './submission.service';
 import {PageTabProxy} from './pagetabproxy';
 
-const enum ReqStatus {CONVERT, SUBMIT, ERROR, SUCCESS}
+enum ReqStatus {CONVERT, SUBMIT, ERROR, SUCCESS}
 
-const enum ReqType {CREATE, UPDATE}
+enum ReqType {CREATE, UPDATE}
 
 export class DirectSubmitRequest {
     private __filename: string;
@@ -116,7 +114,7 @@ export class DirectSubmitService {
         this.addRequest(file, format, projects, ReqType.UPDATE);
     }
 
-    request(index: Number) {
+    request(index: number) {
         if (index >= 0 && index < this.requests.length) {
             return this.requests[index];
         }

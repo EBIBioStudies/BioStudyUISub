@@ -4,11 +4,9 @@ import {Router} from '@angular/router';
 import {AuthService} from '../auth.service';
 import {UserSession} from '../user-session';
 
-import tmpl from './signin.component.html'
-
 @Component({
     selector: 'user-signin',
-    template: tmpl
+    templateUrl: './signin.component.html'
 })
 
 export class SignInComponent {

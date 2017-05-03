@@ -1,12 +1,10 @@
 import {
     Component,
-    ViewChild,
     Input,
     OnInit,
     OnDestroy,
     Pipe,
     PipeTransform,
-    ElementRef,
     forwardRef,
     OnChanges
 } from '@angular/core';
@@ -112,8 +110,8 @@ export class MultiSelectComponent implements ControlValueAccessor, OnChanges, On
 
     private selected: string[] = [];
 
-    private filterInputValue$: Subject<String> = new Subject<String>();
-    private sb: Subscription<String>;
+    private filterInputValue$: Subject<string> = new Subject<string>();
+    private sb: Subscription;
 
     ngOnInit(): void {
         this.sb = this.filterInputValue$.subscribe(term => {

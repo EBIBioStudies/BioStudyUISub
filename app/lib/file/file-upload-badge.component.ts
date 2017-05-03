@@ -1,4 +1,4 @@
-import {Component, Inject, EventEmitter, Input, Output, OnInit} from '@angular/core';
+import {Component, Inject, EventEmitter, Output} from '@angular/core';
 import {FileUploadService} from './file-upload.service';
 
 import * as _ from 'lodash';
@@ -19,7 +19,7 @@ import * as _ from 'lodash';
    </div>      
 `
 })
-export class FileUploadBadgeComponent implements OnInit {
+export class FileUploadBadgeComponent {
     @Output() select: EventEmitter<any> = new EventEmitter<any>();
 
     private __uploads = [];

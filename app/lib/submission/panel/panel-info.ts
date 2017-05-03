@@ -1,4 +1,4 @@
-import {Attributes, Items} from '../../../submission/submission.model';
+import {Attributes, Items} from '../submission';
 
 export interface PanelInfo {
     size: number;

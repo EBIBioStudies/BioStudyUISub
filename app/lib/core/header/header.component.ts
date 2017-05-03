@@ -4,11 +4,9 @@ import {Router} from '@angular/router';
 import {AuthService, UserSession, UserSessionEvents} from '../../auth/index';
 import {AppConfig} from '../../config/index';
 
-import tmpl from './header.component.html';
-
 @Component({
     selector: 'app-header',
-    template: tmpl
+    templateUrl: './header.component.html'
 })
 
 export class HeaderComponent {
@@ -20,7 +18,8 @@ export class HeaderComponent {
     constructor(@Inject(UserSessionEvents) sessionEvents: UserSessionEvents,
                 @Inject(UserSession) private session: UserSession,
                 @Inject(Router) private router: Router,
-                @Inject(AuthService) private authService: AuthService) {
+                @Inject(AuthService) private authService: AuthService,
+                @Inject(AppConfig) private appConfig: AppConfig) {
 
         this.userLoggedIn = !session.isAnonymous();
 
@@ -31,7 +30,7 @@ export class HeaderComponent {
             }
         });
 
-        this.appVersion = AppConfig.VERSION;
+        this.appVersion = appConfig.version;
     }
 
     signOut() {

@@ -1,15 +1,13 @@
-import {Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {Component, Inject, ViewChild} from '@angular/core';
 import {RecaptchaComponent} from 'ng2-recaptcha';
 
 import {AuthService} from '../auth.service';
 
-import tmpl from './password-reset-req.component.html'
-
 @Component({
     selector: 'passwd-reset-req',
-    template: tmpl
+    templateUrl: './password-reset-req.component.html'
 })
-export class PasswordResetReqComponent implements OnInit {
+export class PasswordResetReqComponent {
     private model:any = {email: '', recaptcha: ''};
     private message: string = '';
     private hasError: boolean = false;

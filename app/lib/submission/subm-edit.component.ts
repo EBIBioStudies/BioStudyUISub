@@ -4,15 +4,13 @@ import {ActivatedRoute, Router, Params} from '@angular/router';
 
 import {Subscription} from 'rxjs/Subscription';
 
-import {ModalDirective} from 'ng2-bootstrap/components/modal/modal.component';
+import {ModalDirective} from 'ng2-bootstrap/modal/modal.component';
 
 import {Submission, PageTab, SubmissionService, SubmissionModel, DictionaryService} from './index';
 
-import tmpl from './subm-edit.component.html'
-
 @Component({
     selector: 'subm-edit',
-    template: tmpl
+    templateUrl: './subm-edit.component.html'
 })
 
 export class SubmissionEditComponent implements OnInit, OnDestroy {

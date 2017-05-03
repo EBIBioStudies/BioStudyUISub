@@ -1,4 +1,4 @@
-import {Component, Inject, EventEmitter, Input, Output, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
     selector: 'directory-path',
@@ -13,7 +13,7 @@ import {Component, Inject, EventEmitter, Input, Output, OnInit} from '@angular/c
 </span>
 `
 })
-export class DirectoryPathComponent implements OnInit {
+export class DirectoryPathComponent {
     @Output() change: EventEmitter<string> = new EventEmitter<string>();
 
     private dirs = [];

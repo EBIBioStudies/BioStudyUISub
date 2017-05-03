@@ -1,6 +1,4 @@
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Subject} from 'rxjs/Subject';
-import {Scheduler} from 'rxjs/Scheduler';
 import {Subscription} from 'rxjs/Subscription';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/from';
@@ -31,7 +29,7 @@ export class WithChanges<T> {
 }
 
 export class Change {
-    constructor(public name: string, public value?: any = null, public source?: Change = null) {
+    constructor(public name: string, public value: any = null, public source: Change = null) {
     }
 }
 
@@ -88,7 +86,7 @@ export class Attr extends WithChanges<Change> {
         return Attr.from(obj, true);
     }
 
-    static from(obj?: any = {}, required: boolean = false): Attr {
+    static from(obj: any = {}, required: boolean = false): Attr {
         return new Attr(obj.name, obj.value, obj.type, required);
     }
 }
@@ -155,7 +153,7 @@ export class Attributes extends WithChanges<Change> {
      * @param required = [{name: "...", type: "file"|"text"}, {...}]
      * @returns {Attributes}
      */
-    static create(attributes?: any[] = [], required?: any[] = []) {
+    static create(attributes: any[] = [], required: any[] = []) {
         let attrs = new Attributes();
 
         if (required) {
@@ -238,7 +236,7 @@ export class Items extends WithChanges<Change> {
         this.add();
     }
 
-    add() {
+    add(arg1?:any, arg2?:any) {
         let item = this.__itemConstructor.apply(this, arguments);
         let index = this.items.length;
         this.items.push(item);
@@ -265,7 +263,7 @@ export class Items extends WithChanges<Change> {
     }
 }
 
-export class Submission extends WithChanges {
+export class Submission extends WithChanges<Change> {
     private __accno: string;
     private __title: string;
     private __description: string;
@@ -288,7 +286,7 @@ export class Submission extends WithChanges {
         this.__description = '';
         this.__releaseDate = '';
         this.annotations = (function () {
-            var items = Items.create(Item.factory(requiredAttributes('annotation')));
+            let items = Items.create(Item.factory(requiredAttributes('annotation')));
             items.addNew();
             return items;
         })();
@@ -345,19 +343,19 @@ export class Submission extends WithChanges {
         this.annotations.items[0].attributes.add(Attr.from(attr));
     }
 
-    addLink(attributes?: any[] = []) {
+    addLink(attributes: any[] = []) {
         this.links.add(attributes);
     }
 
-    addFile(attributes?: any[] = []) {
+    addFile(attributes: any[] = []) {
         this.files.add(attributes);
     }
 
-    addContact(attributes?: any[] = []) {
+    addContact(attributes: any[] = []) {
         this.contacts.add(attributes);
     }
 
-    addPublication(pubMedId?:string = '', attributes?: any[] = []) {
+    addPublication(pubMedId:string = '', attributes: any[] = []) {
         this.publications.add(pubMedId, attributes);
     }
 

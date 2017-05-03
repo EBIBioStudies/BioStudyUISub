@@ -4,7 +4,7 @@ import {BehaviorSubject}    from 'rxjs/BehaviorSubject';
 @Injectable()
 export class UserSessionEvents {
 
-    private sessionCreated = new BehaviorSubject<boolean>();
+    private sessionCreated = new BehaviorSubject<boolean>(false);
 
     userSessionCreated$ = this.sessionCreated.asObservable();
 

@@ -1,16 +1,12 @@
-import {Component, EventEmitter, Input, Output, Inject, OnInit, OnDestroy} from '@angular/core';
+import {Component, Inject, OnInit, OnDestroy} from '@angular/core';
 
-import {CommonModule} from '@angular/common';
 import {ActivatedRoute, Params} from '@angular/router';
 
 import {Subscription} from 'rxjs/Subscription';
 
 import {GridOptions} from 'ag-grid/main';
 
-import 'ag-grid/dist/styles/ag-grid.css!';
-import 'ag-grid/dist/styles/theme-fresh.css!';
-
-import {AgRendererComponent} from 'ag-grid-ng2/main';
+import {AgRendererComponent} from 'ag-grid-angular/main';
 
 import {FileService, FileUploadService, FileUpload} from './index';
 import {Path} from './path';

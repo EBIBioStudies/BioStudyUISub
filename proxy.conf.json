@@ -1,0 +1,10 @@
+{
+  "/proxy/api": {
+    "target": "https://localhost:10281/proxy/api",
+    "secure": true
+  },
+  "/proxy/raw": {
+    "target": "https://localhost:10281/proxy/raw",
+    "secure": true
+  }
+}

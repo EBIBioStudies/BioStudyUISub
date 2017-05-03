@@ -5,11 +5,9 @@ import {ActivatedRoute, Params} from '@angular/router';
 
 import {AuthService} from '../auth.service';
 
-import tmpl from './password-reset.component.html'
-
 @Component({
     selector: 'passwd-reset',
-    template: tmpl
+    templateUrl: './password-reset.component.html'
 })
 export class PasswordResetComponent implements OnInit {
     private model = {
@@ -29,7 +27,7 @@ export class PasswordResetComponent implements OnInit {
                 @Inject(ActivatedRoute) private route: ActivatedRoute) {
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.route.params.forEach((params: Params) => {
             let key = params['key'];
             if (!key) {
@@ -40,7 +38,7 @@ export class PasswordResetComponent implements OnInit {
         });
     }
 
-    onSubmit(event) {
+    onSubmit(event): void {
         event.preventDefault();
 
         if (this.model.password1 !== this.model.password2) {

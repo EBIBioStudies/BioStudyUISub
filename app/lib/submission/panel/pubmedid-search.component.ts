@@ -20,7 +20,7 @@ import {PubMedSearchService} from '../index';
 export class PubMedIdSearchComponent implements ControlValueAccessor, OnChanges {
     @Input() readonly?: boolean = false;
 
-    @Output() found: EventEmitter = new EventEmitter<any>();
+    @Output() found: EventEmitter<any> = new EventEmitter<any>();
 
     private pubMedId: string;
 

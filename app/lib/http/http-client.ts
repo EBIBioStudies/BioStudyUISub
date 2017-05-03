@@ -1,5 +1,5 @@
 import {Injectable, Inject} from '@angular/core';
-import {Http, Response, RequestOptions, Headers, URLSearchParams} from '@angular/http';
+import {Http, RequestOptions, Headers, URLSearchParams} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 
 import {AppConfig} from '../config/app.config';
@@ -8,10 +8,13 @@ import {UploadService} from './upload.service';
 
 @Injectable()
 export class HttpClient {
-    private prefix: string = AppConfig.PROXY_BASE;
+    private prefix: string;
 
     constructor(@Inject(Http) private http: Http,
-                @Inject(UploadService) private uploadService: UploadService) {
+                @Inject(UploadService) private uploadService: UploadService,
+                @Inject(AppConfig) appConfig: AppConfig) {
+
+        this.prefix = appConfig.proxy_base;
     }
 
     get(url, urlParams?: any[]) {

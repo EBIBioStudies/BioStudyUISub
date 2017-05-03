@@ -16,8 +16,8 @@ export class UploadResponse {
 
     constructor(public status: number,
                 public statusText: string,
-                public type,
-                public body: string) {
+                public type: string,
+                public body: any) {
     }
 }
 
@@ -36,12 +36,10 @@ export class UploadService {
 
             const onError = (err: ErrorEvent) => {
                 observer.error(new UploadResponse(
-                    {
-                        body: err,
-                        type: 'Error',
-                        status: xhr.status,
-                        statusText: xhr.statusText
-                    }
+                    xhr.status,
+                    xhr.statusText,
+                    'Error',
+                    err
                 ));
             };
 
@@ -59,21 +57,21 @@ export class UploadService {
                 const statusText: string = xhr.statusText || 'OK';
 
                 if (isSuccess(status)) {
-                    observer.next(new UploadResponse({
-                        body: body,
-                        type: 'Success',
-                        status: status,
-                        statusText: statusText
-                    }));
+                    observer.next(new UploadResponse(
+                        status,
+                        statusText,
+                        'Success',
+                        body
+                    ));
                     observer.complete();
                     return;
                 }
-                observer.error(new UploadResponse({
-                    body: body,
-                    type: 'Error',
-                    status: status,
-                    statusText: statusText
-                }));
+                observer.error(new UploadResponse(
+                    status,
+                    statusText,
+                    'Error',
+                    body
+                ));
             };
 
             xhr.open('post', url);

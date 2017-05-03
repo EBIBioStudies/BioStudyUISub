@@ -3,6 +3,10 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/distinctUntilChanged';
 
+interface CSSStyleDeclarationWithResize extends CSSStyleDeclaration {
+    resize: string
+}
+
 @Directive({
     selector: 'textarea[autosize]'
 })

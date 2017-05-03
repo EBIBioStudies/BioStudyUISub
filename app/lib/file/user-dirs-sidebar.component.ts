@@ -5,7 +5,6 @@ import {
     Output,
     EventEmitter,
     OnInit,
-    OnChanges,
     forwardRef
 } from '@angular/core';
 
@@ -40,7 +39,7 @@ import {FileService} from './file.service';
         {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => UserDirsSideBarComponent), multi: true}
     ]
 })
-export class UserDirsSideBarComponent implements OnInit, ControlValueAccessor, OnChanges {
+export class UserDirsSideBarComponent implements OnInit, ControlValueAccessor {
     @Input() collapsed?: boolean = false;
     @Output() toggle? = new EventEmitter();
     @Output() select = new EventEmitter();

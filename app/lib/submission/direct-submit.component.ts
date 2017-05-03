@@ -134,7 +134,7 @@ export class DirectSubmitComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.sb = this.submitService.newRequest$.subscribe((index: Number) => {
+        this.sb = this.submitService.newRequest$.subscribe((index: number) => {
             this.request = this.submitService.request(index);
         });
     }

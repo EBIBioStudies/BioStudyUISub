@@ -281,7 +281,7 @@ export class PageTabProxy {
         return {name: attr.name, value: found ? found.attributes[0].value : ''};
     }
 
-    private requirePath(path: string, value: any, forceUpdate?: boolean = false): any {
+    private requirePath(path: string, value: any, forceUpdate: boolean = false): any {
         let parts = path.split('.');
         let lastPart = parts.pop();
         let obj = this.path(parts.join('.'), null);

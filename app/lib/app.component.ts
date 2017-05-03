@@ -3,10 +3,14 @@ import {Component, Inject} from '@angular/core';
 import {UserSession} from './auth/index';
 
 @Component({
-    selector: 'bsst-app',
+    selector: 'app-root',
     template: `
     <app-header></app-header>
     <router-outlet></router-outlet>
+    
+    <!-- THOR INTEGRATION BEGIN -->
+    <iframe id="thor" name="thor" src="thor-integration.html" style="display: none;"></iframe>
+    <!-- THOR INTEGRATION END -->
     `
 })
 

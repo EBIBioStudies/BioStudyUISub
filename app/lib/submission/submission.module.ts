@@ -1,7 +1,7 @@
 import {NgModule}  from '@angular/core';
 import {RouterModule} from '@angular/router';
 
-import {AgGridModule} from 'ag-grid-ng2/main';
+import {AgGridModule} from 'ag-grid-angular/main';
 
 import {HttpClientModule} from '../http/http-client.module';
 import {FileModule} from '../file/file.module';

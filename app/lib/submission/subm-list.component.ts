@@ -1,9 +1,4 @@
-import {Component, EventEmitter, Input, Output, Inject, ViewChild} from '@angular/core';
-
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
-
-import {TooltipModule} from 'ng2-bootstrap';
+import {Component, Inject, ViewChild} from '@angular/core';
 
 import {Router} from '@angular/router';
 
@@ -13,10 +8,7 @@ import {SubmissionService, SubmissionModel} from './index';
 
 import {GridOptions} from 'ag-grid/main';
 
-import 'ag-grid/dist/styles/ag-grid.css!';
-import 'ag-grid/dist/styles/theme-fresh.css!';
-
-import {AgRendererComponent} from 'ag-grid-ng2/main';
+import {AgRendererComponent} from 'ag-grid-angular/main';
 import {TextFilterComponent} from './ag-grid/text-filter.component';
 import {DateFilterComponent} from './ag-grid/date-filter.component';
 import {UserData} from '../auth/index';
@@ -28,40 +20,40 @@ import * as _ from 'lodash';
 @Component({
     selector: 'action-buttons-cell',
     template: `
-<button *ngIf="status !== 'MODIFIED'"
-    type="button" class="btn btn-danger btn-xs btn-flat"
-    (click)="onDeleteSubmission()"
-    tooltip="delete"
-    container="body">
-    <i class="fa fa-trash-o fa-fw"></i>
-</button>
-<button *ngIf="status === 'MODIFIED'" 
-    type="button" class="btn btn-warning btn-xs btn-flat"
-    (click)="onRevertSubmission()"
-    tooltip="undo all changes"
-    container="body">
-    <i class="fa fa-undo fa-fw"></i>
-</button>
-<button type="button" class="btn btn-primary btn-xs btn-flat"
-    (click)="onEditSubmission()"
-    tooltip="edit"
-    container="body">
-    <i class="fa fa-pencil fa-fw"></i>
-</button>
-<button *ngIf="status === 'MODIFIED'" 
-    type="button" class="btn btn-info btn-xs btn-flat"
-    (click)="onViewSubmission()"
-    tooltip="view original"
-    container="body">
-    <i class="fa fa-eye fa-fw"></i>
-</button>`
+        <button *ngIf="status !== 'MODIFIED'"
+                type="button" class="btn btn-danger btn-xs btn-flat"
+                (click)="onDeleteSubmission()"
+                tooltip="delete"
+                container="body">
+            <i class="fa fa-trash-o fa-fw"></i>
+        </button>
+        <button *ngIf="status === 'MODIFIED'"
+                type="button" class="btn btn-warning btn-xs btn-flat"
+                (click)="onRevertSubmission()"
+                tooltip="undo all changes"
+                container="body">
+            <i class="fa fa-undo fa-fw"></i>
+        </button>
+        <button type="button" class="btn btn-primary btn-xs btn-flat"
+                (click)="onEditSubmission()"
+                tooltip="edit"
+                container="body">
+            <i class="fa fa-pencil fa-fw"></i>
+        </button>
+        <button *ngIf="status === 'MODIFIED'"
+                type="button" class="btn btn-info btn-xs btn-flat"
+                (click)="onViewSubmission()"
+                tooltip="view original"
+                container="body">
+            <i class="fa fa-eye fa-fw"></i>
+        </button>`
 })
 export class ActionButtonsCellComponent implements AgRendererComponent {
     private status: string;
     private accno: string;
-    private onDelete: (string, string)=>{};
-    private onEdit: (string)=>{};
-    private onView: (string)=>{};
+    private onDelete: (accno: string, action: string) => {};
+    private onEdit: (string) => {};
+    private onView: (string) => {};
 
     agInit(params: any): void {
         let data = params.data;
@@ -114,51 +106,51 @@ export class DateCellComponent implements AgRendererComponent {
 @Component({
     selector: 'subm-list',
     template: `
-<container-root>
+        <container-root>
 
-    <aside class="right-side stretch" style="padding-top: 5px">
-        <tabset>
-           <tab heading="New / Modified Submissions"
-                [active]="!showSubmitted"
-                (select)="onSubmTabSelect(false)"></tab>
-           <tab heading="Submitted Submissions"
-                [active]="showSubmitted" 
-                (select)="onSubmTabSelect(true)"></tab>
-        </tabset>
-        
-        <section class="content">
-            <div class="panel panel-info">
-                <div class="panel-heading clearfix">
-                    <p class="pull-right">
-                        <a class="pull-right btn btn-default btn-xs"
-                           (click)="createSubmission()">
-                           <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                           <span>Create new submission</span>
-                        </a>
-                        <a style="margin-right:3px"
-                           class="pull-right btn btn-default btn-xs"
-                           (click)="uploadSubmission()">
-                           <i class="fa fa-upload" aria-hidden="true"></i>
-                           <span>Direct upload</span>
-                        </a>
-                    </p>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12">
-                        <ag-grid-angular #agGrid style="width: 100%; height: 500px;" class="ag-fresh"
-                                     [gridOptions]="gridOptions"
-                                     [columnDefs]="columnDefs">
-                        </ag-grid-angular>
+            <aside class="right-side stretch" style="padding-top: 5px">
+                <tabset>
+                    <tab heading="New / Modified Submissions"
+                         [active]="!showSubmitted"
+                         (select)="onSubmTabSelect(false)"></tab>
+                    <tab heading="Submitted Submissions"
+                         [active]="showSubmitted"
+                         (select)="onSubmTabSelect(true)"></tab>
+                </tabset>
+
+                <section class="content">
+                    <div class="panel panel-info">
+                        <div class="panel-heading clearfix">
+                            <p class="pull-right">
+                                <a class="pull-right btn btn-default btn-xs"
+                                   (click)="createSubmission()">
+                                    <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                                    <span>Create new submission</span>
+                                </a>
+                                <a style="margin-right:3px"
+                                   class="pull-right btn btn-default btn-xs"
+                                   (click)="uploadSubmission()">
+                                    <i class="fa fa-upload" aria-hidden="true"></i>
+                                    <span>Direct upload</span>
+                                </a>
+                            </p>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <ag-grid-angular #agGrid style="width: 100%; height: 500px;" class="ag-fresh"
+                                                 [gridOptions]="gridOptions"
+                                                 [columnDefs]="columnDefs">
+                                </ag-grid-angular>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </section>
+                </section>
 
-    </aside>
-    
-</container-root>
-<confirm-dialog #confirmDialog></confirm-dialog>
-`
+            </aside>
+
+        </container-root>
+        <confirm-dialog #confirmDialog></confirm-dialog>
+    `
 })
 
 export class SubmissionListComponent {
@@ -280,7 +272,7 @@ export class SubmissionListComponent {
             onDelete: (accno: string, deleteOrRevert: string = 'delete') => {
                 const action = deleteOrRevert === 'delete' ? 'delete' : 'undo all changes for';
                 this.confirm(`Do you want to ${action} submission with accession number ${accno}?`)
-                    .subscribe(()=> {
+                    .subscribe(() => {
                         this.submService
                             .deleteSubmission(accno)
                             .subscribe(data => {

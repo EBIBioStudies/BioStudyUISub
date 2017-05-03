@@ -1,15 +1,13 @@
-import {Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {Component, Inject, ViewChild} from '@angular/core';
 import {RecaptchaComponent} from 'ng2-recaptcha';
 
 import {AuthService} from '../auth.service';
 
-import tmpl from './resend-activation-link.component.html'
-
 @Component({
     selector: 'user-activation-resend',
-    template: tmpl
+    templateUrl: './resend-activation-link.component.html'
 })
-export class ResendActivationLinkComponent implements OnInit {
+export class ResendActivationLinkComponent {
     private req = {email: "", recaptcha: ""};
     private message: string;
     private hasError: boolean;
