@@ -1,4 +1,4 @@
-import {Injectable, Inject} from '@angular/core';
+import {Injectable} from '@angular/core';
 
 import {UserSessionEvents} from './user-session.events';
 
@@ -7,7 +7,7 @@ import {setLoginToken, getLoginToken, destroyLoginToken, cleanUpOldCookies} from
 @Injectable()
 export class UserSession {
 
-    constructor(@Inject(UserSessionEvents) private  sessionEvents: UserSessionEvents) {
+    constructor(private sessionEvents: UserSessionEvents) {
     }
 
     // call it when the app is bootstrapped

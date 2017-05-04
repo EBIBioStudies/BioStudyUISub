@@ -2,7 +2,7 @@ import {Injectable, Inject} from '@angular/core';
 import {Http, RequestOptions, Headers, URLSearchParams} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 
-import {AppConfig} from '../config/app.config';
+import {AppConfig} from '../app.config';
 import {getLoginToken} from '../cookies/user-cookies';
 import {UploadService} from './upload.service';
 
@@ -15,6 +15,7 @@ export class HttpClient {
                 @Inject(AppConfig) appConfig: AppConfig) {
 
         this.prefix = appConfig.proxy_base;
+        console.log('proxy_base', this.prefix);
     }
 
     get(url, urlParams?: any[]) {

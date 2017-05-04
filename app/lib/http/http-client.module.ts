@@ -1,5 +1,5 @@
 import {NgModule}  from '@angular/core';
-import {HttpModule, BrowserXhr} from '@angular/http';
+import {HttpModule} from '@angular/http';
 
 import {HttpClient} from './http-client';
 import {UploadService} from './upload.service';

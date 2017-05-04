@@ -1,19 +1,20 @@
 import {Inject, ErrorHandler}  from '@angular/core';
 import {Subject} from 'rxjs/Subject';
 
-import {UserSession} from './auth/user-session';
+import {UserSession} from './auth/index';
 
-
-export class GlobalErrorHandler implements ErrorHandler {
+export class GlobalErrorHandler extends ErrorHandler {
 
     private errors: Subject<any> = new Subject<any>();
 
     anErrorDetected$ = this.errors.asObservable();
 
     constructor(@Inject(UserSession) private userSession: UserSession) {
+        super(true);
     }
 
     handleError(error) {
+        console.log('global error', error);
         if (error.status === 401) {//Unauthorized
             this.userSession.destroy();
         } else {

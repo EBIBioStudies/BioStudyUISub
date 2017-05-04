@@ -2,7 +2,8 @@ import {Component, Inject, Input, OnInit, OnDestroy, ViewChild} from '@angular/c
 import {NgForm, FormGroup} from '@angular/forms';
 
 import {TypeaheadValues} from './typeahead-values';
-import {DictionaryService, Items, Item} from '../index';
+import {DictionaryService} from '../dictionary.service';
+import {Items, Item} from '../submission';
 
 import * as _ from 'lodash';
 

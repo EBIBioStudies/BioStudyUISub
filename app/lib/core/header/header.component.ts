@@ -2,7 +2,7 @@ import {Inject, Component} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {AuthService, UserSession, UserSessionEvents} from '../../auth/index';
-import {AppConfig} from '../../config/index';
+import {AppConfig} from '../../app.config';
 
 @Component({
     selector: 'app-header',
@@ -15,13 +15,15 @@ export class HeaderComponent {
 
     private userLoggedIn: boolean = false;
 
-    constructor(@Inject(UserSessionEvents) sessionEvents: UserSessionEvents,
-                @Inject(UserSession) private session: UserSession,
-                @Inject(Router) private router: Router,
-                @Inject(AuthService) private authService: AuthService,
-                @Inject(AppConfig) private appConfig: AppConfig) {
+    constructor(sessionEvents: UserSessionEvents,
+                private session: UserSession,
+                private router: Router,
+                private authService: AuthService,
+                appConfig: AppConfig) {
 
         this.userLoggedIn = !session.isAnonymous();
+
+        this.appVersion = appConfig.version;
 
         sessionEvents.userSessionCreated$.subscribe(created => {
             this.userLoggedIn = created;
@@ -30,7 +32,6 @@ export class HeaderComponent {
             }
         });
 
-        this.appVersion = appConfig.version;
     }
 
     signOut() {

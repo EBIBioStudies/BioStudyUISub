@@ -1,7 +1,7 @@
 import {Component, Input, OnInit, Inject} from '@angular/core';
 import {PanelInfo} from './panel-info';
 
-import {DictionaryService} from '../index';
+import {DictionaryService} from '../dictionary.service';
 
 @Component({
     selector: 'subm-panel',

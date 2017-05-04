@@ -4,7 +4,8 @@ import {Router} from '@angular/router';
 
 import {Observable} from 'rxjs/Observable';
 
-import {SubmissionService, SubmissionModel} from './index';
+import {SubmissionService} from './submission.service';
+import {SubmissionModel} from './submission.model';
 
 import {GridOptions} from 'ag-grid/main';
 
@@ -256,7 +257,6 @@ export class SubmissionListComponent {
     }
 
     onSubmTabSelect(submitted) {
-        console.log('on submission tab select');
         if (this.showSubmitted != submitted) {
             this.showSubmitted = submitted;
             this.setDatasource();

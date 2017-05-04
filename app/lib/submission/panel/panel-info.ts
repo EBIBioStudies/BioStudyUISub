@@ -1,8 +1,10 @@
 import {Attributes, Items} from '../submission';
 
-export interface PanelInfo {
-    size: number;
-    addNew(): void;
+// should be interface but compile doesn't like export interfaces:
+// https://github.com/angular/angular-cli/issues/2034
+export abstract class PanelInfo {
+    abstract size: number;
+    abstract addNew(): void;
 }
 
 export class AttributesInfo implements PanelInfo {

@@ -47,7 +47,7 @@ export class SharedService {
                 try {
                     data = error.json();
                 } catch (e) {
-                    console.error("Can't parse error message", e);
+                    //console.error("Can't parse error message", e);
                 }
             }
             return Observable.throw(new ServiceError(status, statusText, data));

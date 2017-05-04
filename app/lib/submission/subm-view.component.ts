@@ -2,7 +2,10 @@ import {Component, Inject, OnInit} from '@angular/core';
 
 import {ActivatedRoute, Router, Params} from '@angular/router';
 
-import {Submission, PageTab, SubmissionService, DictionaryService} from './index';
+import {Submission} from './submission';
+import {PageTab} from './pagetab';
+import {SubmissionService} from './submission.service';
+import {DictionaryService} from './dictionary.service';
 
 @Component({
     selector: 'subm-view',

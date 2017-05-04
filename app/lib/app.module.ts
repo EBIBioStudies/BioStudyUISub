@@ -1,4 +1,4 @@
-import {NgModule, ErrorHandler} from '@angular/core';
+import {NgModule, ErrorHandler, APP_INITIALIZER} from '@angular/core';
 import {BrowserModule}  from '@angular/platform-browser';
 import {HashLocationStrategy, LocationStrategy} from '@angular/common';
 
@@ -23,12 +23,15 @@ import {HelpModule} from './help/help.module';
 import {AuthModule} from './auth/auth.module';
 import {SubmissionModule} from './submission/submission.module';
 import {FileModule} from './file/file.module';
-import {ConfigModule} from './config/config.module';
 
 import {AppComponent} from './app.component';
 import {AuthGuard} from './auth.guard';
 import {GlobalErrorHandler} from './global-error.handler';
+import {AppConfig} from './app.config';
 
+export function initConfig(config: AppConfig) {
+    return () => config.load();
+}
 
 @NgModule({
     imports: [
@@ -49,16 +52,17 @@ import {GlobalErrorHandler} from './global-error.handler';
         HelpModule,
         AuthModule,
         SubmissionModule,
-        FileModule,
-        ConfigModule
+        FileModule
     ],
     declarations: [
         AppComponent
     ],
     providers: [
+        AppConfig,
         AuthGuard,
+        {provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true},
         {provide: LocationStrategy, useClass: HashLocationStrategy},
-        {provide: ErrorHandler, useClass: GlobalErrorHandler}
+        {provide: ErrorHandler, useClass: GlobalErrorHandler},
     ],
     bootstrap: [AppComponent]
 })
