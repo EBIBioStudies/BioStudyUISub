@@ -1,4 +1,4 @@
-import {NgModule}  from '@angular/core';
+import {NgModule, ModuleWithProviders}  from '@angular/core';
 import {RouterModule} from '@angular/router';
 
 import {RecaptchaModule} from 'ng2-recaptcha';
@@ -7,7 +7,6 @@ import {SharedModule} from '../shared/shared.module';
 
 import {AuthService} from './auth.service';
 import {UserSession} from './user-session';
-import {UserSessionEvents} from './user-session.events';
 import {UserData} from './user-data';
 
 import {SignInComponent} from './signin/signin.component';
@@ -17,7 +16,7 @@ import {PasswordResetReqComponent} from './password-reset/password-reset-req.com
 import {PasswordResetComponent} from './password-reset/password-reset.component';
 import {SignUpComponent} from './signup/signup.component';
 import {Equals2} from './password-reset/equals2.directive';
-
+import {AuthConfig} from './auth.config';
 
 @NgModule({
     imports: [
@@ -29,7 +28,6 @@ import {Equals2} from './password-reset/equals2.directive';
     providers: [
         AuthService,
         UserSession,
-        UserSessionEvents,
         UserData
     ],
     declarations: [
@@ -51,4 +49,12 @@ import {Equals2} from './password-reset/equals2.directive';
     ]
 })
 export class AuthModule {
+    static forRoot(config: AuthConfig): ModuleWithProviders {
+        return {
+            ngModule: AuthModule,
+            providers: [
+                {provide: AuthConfig, useValue: config }
+            ]
+        };
+    }
 }

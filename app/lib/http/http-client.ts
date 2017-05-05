@@ -3,7 +3,7 @@ import {Http, RequestOptions, Headers, URLSearchParams} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 
 import {AppConfig} from '../app.config';
-import {getLoginToken} from '../cookies/user-cookies';
+import {getLoginToken} from '../auth/user-cookies';
 import {UploadService} from './upload.service';
 
 @Injectable()

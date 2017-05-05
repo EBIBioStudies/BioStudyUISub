@@ -1,15 +1,16 @@
-import {Inject, ErrorHandler}  from '@angular/core';
+import {ErrorHandler, Injectable}  from '@angular/core';
 import {Subject} from 'rxjs/Subject';
 
 import {UserSession} from './auth/index';
 
+@Injectable()
 export class GlobalErrorHandler extends ErrorHandler {
 
     private errors: Subject<any> = new Subject<any>();
 
     anErrorDetected$ = this.errors.asObservable();
 
-    constructor(@Inject(UserSession) private userSession: UserSession) {
+    constructor(private userSession: UserSession) {
         super(true);
     }
 

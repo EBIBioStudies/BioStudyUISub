@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {RecaptchaComponent} from 'ng2-recaptcha';
 
 import {ActivatedRoute, Params} from '@angular/router';
@@ -23,8 +23,8 @@ export class PasswordResetComponent implements OnInit {
 
     @ViewChild('recaptcha') private recaptcha: RecaptchaComponent;
 
-    constructor(@Inject(AuthService) private authService: AuthService,
-                @Inject(ActivatedRoute) private route: ActivatedRoute) {
+    constructor(private authService: AuthService,
+                private route: ActivatedRoute) {
     }
 
     ngOnInit(): void {

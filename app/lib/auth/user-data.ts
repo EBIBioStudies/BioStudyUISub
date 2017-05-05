@@ -3,21 +3,21 @@ import {Injectable, Inject} from '@angular/core';
 import * as _ from 'lodash';
 
 import {UserRole} from './user-role';
-import {UserSessionEvents} from './user-session.events';
 import {AuthService} from './auth.service';
+import {UserSession} from './user-session';
 
 @Injectable()
 export class UserData {
     private d: any;
 
-    constructor(@Inject(UserSessionEvents) userSessionEvents: UserSessionEvents,
-                @Inject(AuthService) authService: AuthService) {
+    constructor(userSession: UserSession,
+                authService: AuthService) {
 
-        userSessionEvents.userSessionCreated$.subscribe(created => {
+        userSession.created$.subscribe(created => {
             if (created) {
                 this.data = null;
                 authService.checkUser().subscribe(data => {
-                    console.debug('UserData: loaded', data);
+                    console.debug('UserData:', data);
                     this.data = data;
                 });
             } else {

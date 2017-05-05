@@ -1,38 +1,47 @@
 import {Injectable} from '@angular/core';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {Observable} from 'rxjs/Observable';
 
-import {UserSessionEvents} from './user-session.events';
-
-import {setLoginToken, getLoginToken, destroyLoginToken, cleanUpOldCookies} from '../cookies/user-cookies';
+import {setLoginToken, getLoginToken, destroyLoginToken, cleanUpOldCookies} from './user-cookies';
 
 @Injectable()
 export class UserSession {
 
-    constructor(private sessionEvents: UserSessionEvents) {
-    }
+    private sessionCreated = new BehaviorSubject<boolean>(false);
+
+    created$: Observable<boolean> = this.sessionCreated.asObservable();
 
     // call it when the app is bootstrapped
-    init() {
+    init(): void {
         cleanUpOldCookies(); // keep it for a while
         if (!this.isAnonymous()) {
-            this.sessionEvents.userSessionCreated();
+            this.notifySessionCreated();
         }
     }
 
-    create(token) {
+    create(token: string): void {
         setLoginToken(token);
-        this.sessionEvents.userSessionCreated();
+        this.notifySessionCreated();
     }
 
-    destroy() {
+    destroy(): void {
         destroyLoginToken();
-        this.sessionEvents.userSessionDestroyed();
+        this.notifySessionDestroyed();
     }
 
     token(): string {
         return getLoginToken();
     }
 
-    isAnonymous() {
+    isAnonymous(): boolean {
         return this.token() === '';
+    }
+
+    private notifySessionCreated(): void {
+        this.sessionCreated.next(true);
+    }
+
+    private notifySessionDestroyed(): void {
+        this.sessionCreated.next(false);
     }
 }

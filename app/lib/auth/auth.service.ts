@@ -1,25 +1,30 @@
-import {Injectable, Inject} from '@angular/core';
-import {Location} from '@angular/common';
-import {Http, Response} from '@angular/http';
+import {Injectable, Optional} from '@angular/core';
+import {Response} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
 
-
 import {RegistrationData} from './registration-data';
-
 import {UserSession} from './user-session';
-
+import {AuthModuleConfig} from './auth.module.config';
 import {HttpClient} from '../http/index'
-
-import {SharedService} from '../shared/index';
 
 @Injectable()
 export class AuthService {
 
-    constructor(@Inject(HttpClient) private http: HttpClient,
-                @Inject(UserSession) private userSession: UserSession) {
+    private __errorHandler =
+        (error: any) => {
+           console.log(error);
+           return Observable.throw(error);
+        };
+
+    constructor(private http: HttpClient,
+                private userSession: UserSession,
+                @Optional() authConfig: AuthModuleConfig) {
+        if (authConfig) {
+            this.__errorHandler = authConfig.httpErrorHandler;
+        }
     }
 
     signIn(login, password): Observable<any> {
@@ -32,7 +37,7 @@ export class AuthService {
                 }
                 return Observable.throw({status: 422, statusText: 'ClientError', data: data});
             })
-            .catch(SharedService.errorHandler);
+            .catch(this.__errorHandler);
     }
 
     checkUser(): Observable<any> {
@@ -44,40 +49,40 @@ export class AuthService {
                 }
                 return Observable.throw({status: 422, statusText: 'ClientError', data: data});
             })
-            .catch(SharedService.errorHandler);
+            .catch(this.__errorHandler);
     }
 
     passwordResetRequest(email: string, recaptcha: string): Observable<any> {
         let path = this.getFullPath('#/password_reset');
         return this.http.post('/api/auth/password/reset_request', {email: email, path: path, 'captcha': recaptcha})
             .map((res: Response) => res.json())
-            .catch(SharedService.errorHandler);
+            .catch(this.__errorHandler);
     }
 
     passwordReset(key: string, password: string, recaptcha: string): Observable<any> {
         return this.http.post('/api/auth/password/reset', {key: key, password: password, 'captcha': recaptcha})
             .map((res: Response) => res.json())
-            .catch(SharedService.errorHandler);
+            .catch(this.__errorHandler);
     }
 
     resendActivationLink(email: string, recaptcha: string): Observable<any> {
         let path = this.getFullPath('#/activate');
         return this.http.post('/api/auth/activation/link', {email: email, path: path, 'captcha': recaptcha})
             .map((resp: Response) => resp.json())
-            .catch(SharedService.errorHandler);
+            .catch(this.__errorHandler);
     }
 
     activate(key: string): Observable<any> {
         return this.http.post('/api/auth/activation/check/' + key, {})
             .map((res: Response) => res.json())
-            .catch(SharedService.errorHandler);
+            .catch(this.__errorHandler);
     }
 
     signUp(regData: RegistrationData): Observable<any> {
         regData.path = this.getFullPath('#/activate');
         return this.http.post('/api/auth/signup', regData)
             .map((resp: Response) => resp.json())
-            .catch(SharedService.errorHandler);
+            .catch(this.__errorHandler);
     }
 
     signOut(): Observable<any> {
@@ -94,7 +99,7 @@ export class AuthService {
                     this.sessionDestroy();
                     return Observable.throw({});
                 }
-                return SharedService.errorHandler(error);
+                return this.__errorHandler(error);
             });
     }
 

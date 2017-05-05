@@ -3,11 +3,11 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 
 import {AuthService} from './auth.service';
-import {UserSessionEvents} from './user-session.events';
+import {UserSession} from './user-session';
 
 describe('UserData', () => {
     it('should be empty when the session is not set', () => {
-        const ud = new UserData(new UserSessionEvents(), {} as AuthService);
+        const ud = new UserData(new UserSession(), {} as AuthService);
         expect(ud.key).toBe('');
         expect(ud.email).toBe('');
         expect(ud.name).toBe('');
@@ -21,10 +21,10 @@ describe('UserData', () => {
              email: 'vasya@pupkin.com'
          })};
 
-        const sessionEvents = new UserSessionEvents();
-        const ud = new UserData(sessionEvents, checkUser as AuthService);
+        const session = new UserSession();
+        const ud = new UserData(session, checkUser as AuthService);
 
-        sessionEvents.userSessionCreated('blah blah blah');
+        session.create('12345');
 
         setTimeout(() => {
             expect(ud.key).toBe('123');
@@ -45,10 +45,10 @@ describe('UserData', () => {
             }
         })};
 
-        const sessionEvents = new UserSessionEvents();
-        const ud = new UserData(sessionEvents, checkUser as AuthService);
+        const session = new UserSession();
+        const ud = new UserData(session, checkUser as AuthService);
 
-        sessionEvents.userSessionCreated('blah blah blah');
+        session.create('123456');
 
         setTimeout(() => {
             expect(ud.key).toBe('123');

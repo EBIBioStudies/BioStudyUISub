@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Params} from '@angular/router';
 
 import {AuthService} from '../auth.service';
@@ -12,8 +12,8 @@ export class ActivateComponent implements OnInit {
     private message:string = '';
 
 
-    constructor(@Inject(AuthService) private authService: AuthService,
-                @Inject(ActivatedRoute) private route: ActivatedRoute) {
+    constructor(private authService: AuthService,
+                private route: ActivatedRoute) {
     }
 
     ngOnInit() {

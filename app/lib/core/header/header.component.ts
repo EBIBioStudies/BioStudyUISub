@@ -1,7 +1,7 @@
-import {Inject, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {Router} from '@angular/router';
 
-import {AuthService, UserSession, UserSessionEvents} from '../../auth/index';
+import {AuthService, UserSession} from '../../auth/index';
 import {AppConfig} from '../../app.config';
 
 @Component({
@@ -15,8 +15,7 @@ export class HeaderComponent {
 
     private userLoggedIn: boolean = false;
 
-    constructor(sessionEvents: UserSessionEvents,
-                private session: UserSession,
+    constructor(private session: UserSession,
                 private router: Router,
                 private authService: AuthService,
                 appConfig: AppConfig) {
@@ -25,7 +24,7 @@ export class HeaderComponent {
 
         this.appVersion = appConfig.version;
 
-        sessionEvents.userSessionCreated$.subscribe(created => {
+        this.session.created$.subscribe(created => {
             this.userLoggedIn = created;
             if (!created) {
                 this.router.navigate(['/signin']);

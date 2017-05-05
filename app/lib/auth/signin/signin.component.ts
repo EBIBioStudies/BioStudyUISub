@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {AuthService} from '../auth.service';
@@ -14,9 +14,9 @@ export class SignInComponent {
     private error: any = null;
     private waiting: boolean = false;
 
-    constructor(@Inject(AuthService) private authService: AuthService,
-                @Inject(UserSession) private session: UserSession,
-                @Inject(Router) private router: Router) {
+    constructor(private authService: AuthService,
+                private session: UserSession,
+                private router: Router) {
     }
 
     ngOnInit() {

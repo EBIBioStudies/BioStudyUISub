@@ -1,4 +1,4 @@
-import {Component, Inject, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {RecaptchaComponent} from 'ng2-recaptcha';
 
 import {AuthService} from '../auth.service';
@@ -15,7 +15,7 @@ export class ResendActivationLinkComponent {
 
     @ViewChild('recaptcha') private recaptcha: RecaptchaComponent;
 
-    constructor(@Inject(AuthService) private authService: AuthService) {
+    constructor(private authService: AuthService) {
     }
 
     onSubmit(event) {

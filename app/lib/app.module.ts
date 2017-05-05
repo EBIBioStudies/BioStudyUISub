@@ -18,15 +18,16 @@ import {
 } from 'ng2-bootstrap';
 
 import {AppRoutingModule} from './app-routing.module';
-import {CoreModule} from './core/core.module';
-import {HelpModule} from './help/help.module';
-import {AuthModule} from './auth/auth.module';
-import {SubmissionModule} from './submission/submission.module';
-import {FileModule} from './file/file.module';
+import {CoreModule} from './core';
+import {HelpModule} from './help';
+import {AuthModule} from './auth';
+import {SubmissionModule} from './submission';
+import {FileModule} from './file';
 
 import {AppComponent} from './app.component';
 import {AuthGuard} from './auth.guard';
 import {GlobalErrorHandler} from './global-error.handler';
+import {httpErrorHandler} from './http-error.handler';
 import {AppConfig} from './app.config';
 
 export function initConfig(config: AppConfig) {
@@ -50,8 +51,8 @@ export function initConfig(config: AppConfig) {
         AppRoutingModule,
         CoreModule,
         HelpModule,
-        AuthModule,
-        SubmissionModule,
+        AuthModule.forRoot({httpErrorHandler: httpErrorHandler}),
+        SubmissionModule.forRoot({httpErrorHandler: httpErrorHandler}),
         FileModule
     ],
     declarations: [

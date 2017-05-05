@@ -1,4 +1,4 @@
-import {Component, Inject, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {RecaptchaComponent} from 'ng2-recaptcha';
 import {Router} from '@angular/router';
 
@@ -18,9 +18,9 @@ export class SignUpComponent {
 
     @ViewChild('recaptcha') private recaptcha: RecaptchaComponent;
 
-    constructor(@Inject(AuthService) private authService: AuthService,
-                @Inject(UserSession) private session: UserSession,
-                @Inject(Router) private router: Router) {
+    constructor(private authService: AuthService,
+                private session: UserSession,
+                private router: Router) {
     }
 
     ngOnInit() {
