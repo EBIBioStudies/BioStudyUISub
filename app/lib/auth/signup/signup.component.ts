@@ -1,23 +1,26 @@
 import {Component, ViewChild} from '@angular/core';
+import {Response} from '@angular/http';
 import {RecaptchaComponent} from 'ng2-recaptcha';
 import {Router} from '@angular/router';
 
 import {AuthService} from '../auth.service';
 import {UserSession} from '../user-session';
 import {RegistrationData} from '../registration-data';
+import {ServerError} from '../../http/index';
 
 @Component({
-    selector: 'user-signup',
+    selector: 'auth-signup',
     templateUrl: './signup.component.html'
 })
 
 export class SignUpComponent {
     private model = new RegistrationData();
 
-    error: any = null;
+    error: ServerError = null;
     success: boolean = false;
 
-    @ViewChild('recaptcha') private recaptcha: RecaptchaComponent;
+    @ViewChild('recaptcha')
+    private recaptcha: RecaptchaComponent;
 
     constructor(private authService: AuthService,
                 private session: UserSession,
@@ -42,8 +45,8 @@ export class SignUpComponent {
                 (data) => {
                     this.success = true;
                 },
-                (error) => {
-                    this.error = {status: 'Error', message: error.message};
+                (error: Response) => {
+                    this.error = ServerError.fromResponse(error).data;
                     this.recaptcha.reset();
                 }
             );

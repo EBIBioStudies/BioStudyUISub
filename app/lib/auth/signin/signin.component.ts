@@ -1,16 +1,18 @@
 import {Component} from '@angular/core';
 import {Router} from '@angular/router';
+import {Response} from '@angular/http';
 
 import {AuthService} from '../auth.service';
 import {UserSession} from '../user-session';
+import {ServerError} from '../../http/index';
 
 @Component({
-    selector: 'user-signin',
+    selector: 'auth-signin',
     templateUrl: './signin.component.html'
 })
 export class SignInComponent {
     model = {login: "", password: ""};
-    error: any = null;
+    error: ServerError = null;
     waiting: boolean = false;
 
     constructor(private authService: AuthService,
@@ -39,9 +41,9 @@ export class SignInComponent {
                 (data) => {
                     this.router.navigate(['/submissions']);
                 },
-                (error) => {
+                (error: Response) => {
                     this.waiting = false;
-                    this.error = <any>error;
+                    this.error = ServerError.fromResponse(error);
                 }
             );
     }

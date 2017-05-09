@@ -1,7 +1,9 @@
 import {Component, OnInit} from '@angular/core';
+import {Response} from '@angular/http';
 import {ActivatedRoute, Params} from '@angular/router';
 
 import {AuthService} from '../auth.service';
+import {ServerError} from '../../http/index';
 
 @Component({
     selector: 'user-activate',
@@ -22,21 +24,21 @@ export class ActivateComponent implements OnInit {
                 this.hasError = true;
                 this.message = 'Invalid path';
             } else {
-                this.checkKey(key);
+                this.activate(key);
             }
         });
     }
 
-    checkKey(key: string) {
+    private activate(key: string) {
         this.authService
             .activate(key)
             .subscribe(
                 (data) => {
                     this.message = 'Activation was successful';
                 },
-                (error) => {
+                (error: Response) => {
                     this.hasError = true;
-                    this.message = error.message;
+                    this.message = ServerError.fromResponse(error).message;
                 });
     }
 }

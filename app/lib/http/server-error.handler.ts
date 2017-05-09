@@ -1,4 +1,5 @@
 import {Observable} from 'rxjs/Observable';
+import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import 'rxjs/add/observable/throw';
 
 import {Response} from '@angular/http';
@@ -39,7 +40,7 @@ export class ServerError {
         return this._status === 403;
     }
 
-    public static create(error: Response) {
+    public static fromResponse(error: Response): ServerError {
         let data = {};
         if (error.json) {
             try {
@@ -50,8 +51,12 @@ export class ServerError {
         }
         return new ServerError(error.status, error.statusText, data);
     }
+
+    public static inputError(data: any): ServerError {
+        return new ServerError(422, 'Unprocessable Entity', data);
+    }
 }
 
-export function serverErrorHandler(error: any) {
-    return Observable.throw(ServerError.create(error));
+export function serverErrorHandler(error: Response): ErrorObservable {
+    return Observable.throw(ServerError.fromResponse(error));
 }

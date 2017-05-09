@@ -1,4 +1,4 @@
-import {Injectable, Optional} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Response} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 
@@ -23,7 +23,7 @@ export class AuthService {
                     this.userSession.create(data.sessid);
                     return data;
                 }
-                return Observable.throw(new ServerError(422, 'ClientError', data));
+                return Observable.throw(ServerError.inputError(data));
             });
     }
 
@@ -34,25 +34,31 @@ export class AuthService {
                 if (data.status === 'OK') {
                     return data;
                 }
-                return Observable.throw(new ServerError(422, 'ClientError', data));
+                return Observable.throw(ServerError.inputError(data));
             });
     }
 
-    passwordResetRequest(email: string, recaptcha: string): Observable<any> {
+    passwordResetRequest(obj: {email: string, captcha: string}): Observable<any> {
         let path = this.getFullPath('#/password_reset');
-        return this.http.post('/api/auth/password/reset_request', {email: email, path: path, 'captcha': recaptcha})
+        return this.http.post('/api/auth/password/reset_request', {
+            email: obj.email,
+            captcha: obj.captcha,
+            path: path
+        }).map((res: Response) => res.json());
+    }
+
+    passwordReset(obj: {key: string, password: string, captcha: string}): Observable<any> {
+        return this.http.post('/api/auth/password/reset', obj)
             .map((res: Response) => res.json());
     }
 
-    passwordReset(key: string, password: string, recaptcha: string): Observable<any> {
-        return this.http.post('/api/auth/password/reset', {key: key, password: password, 'captcha': recaptcha})
-            .map((res: Response) => res.json());
-    }
-
-    resendActivationLink(email: string, recaptcha: string): Observable<any> {
+    resendActivationLink(obj: {email: string, captcha: string}): Observable<any> {
         let path = this.getFullPath('#/activate');
-        return this.http.post('/api/auth/activation/link', {email: email, path: path, 'captcha': recaptcha})
-            .map((resp: Response) => resp.json());
+        return this.http.post('/api/auth/activation/link', {
+            email: obj.email,
+            captcha: obj.captcha,
+            path: path
+        }).map((resp: Response) => resp.json());
     }
 
     activate(key: string): Observable<any> {

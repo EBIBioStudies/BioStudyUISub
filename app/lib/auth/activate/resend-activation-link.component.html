@@ -21,13 +21,13 @@
                         <input type="text" id="email" name="email" tabindex="1"
                                class="form-control"
                                placeholder="Email address"
-                               [(ngModel)]="req.email"
+                               [(ngModel)]="model.email"
                                (change)="message=''"
                                required
                                #email>
                     </div>
                     <recaptcha name="recaptcha"
-                               [(ngModel)]="req.recaptcha"
+                               [(ngModel)]="model.captcha"
                                required
                                siteKey="6Lcmlv0SAAAAAHofnIcb29l1LMZsnGFcSlH8Reve" #recaptcha></recaptcha>
                     <div class="form-group margin-top-large">

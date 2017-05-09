@@ -13,7 +13,7 @@ export class PasswordResetComponent implements OnInit {
     private model = {
         password1: '',
         password2: '',
-        recaptcha: ''
+        captcha: ''
     };
     private message: string = '';
     private key: string;
@@ -53,7 +53,7 @@ export class PasswordResetComponent implements OnInit {
         this.hasError = false;
         this.message = "";
         this.authService
-            .passwordReset(this.key, this.model.password1, this.model.recaptcha)
+            .passwordReset({key: this.key, password: this.model.password1, captcha: this.model.captcha})
             .subscribe(
                 (data) => {
                     this.showSuccess = true;

@@ -1,14 +1,16 @@
 import {Component, ViewChild} from '@angular/core';
+import {Response} from '@angular/http';
 import {RecaptchaComponent} from 'ng2-recaptcha';
 
 import {AuthService} from '../auth.service';
+import {ServerError} from '../../http/index';
 
 @Component({
     selector: 'user-activation-resend',
     templateUrl: './resend-activation-link.component.html'
 })
 export class ResendActivationLinkComponent {
-    private req = {email: "", recaptcha: ""};
+    private model = {email: "", captcha: ""};
     private message: string;
 
     hasError: boolean;
@@ -26,14 +28,14 @@ export class ResendActivationLinkComponent {
         this.message = "";
         this.hasError = false;
         this.authService
-            .resendActivationLink(this.req.email, this.req.recaptcha)
+            .resendActivationLink(this.model)
             .subscribe(
                 (data) => {
                     this.showSuccess = true;
                 },
-                (error) => {
+                (error: Response) => {
                     this.hasError = true;
-                    this.message = error.message;
+                    this.message = ServerError.fromResponse(error).message;
                     this.recaptcha.reset();
                 }
             )

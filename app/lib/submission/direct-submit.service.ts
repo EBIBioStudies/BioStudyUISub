@@ -140,7 +140,7 @@ export class DirectSubmitService {
                     this.onConvertRequestFinished(req, data);
                 },
                 (error: Response) => {
-                    const err = ServerError.create(error);
+                    const err = ServerError.fromResponse(error);
                     this.onConvertRequestFinished(req, err.data || {});
                     if (!err.isInputError()) {
                         setTimeout(function() {
@@ -160,7 +160,7 @@ export class DirectSubmitService {
                     this.onSubmitRequestFinished(req, data);
                 },
                 (error: Response) => {
-                    const err = ServerError.create(error);
+                    const err = ServerError.fromResponse(error);
                     this.onSubmitRequestFinished(req, err.data || {});
                     if (!err.isInputError()) {
                         setTimeout(function() {
