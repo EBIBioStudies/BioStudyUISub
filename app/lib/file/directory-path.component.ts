@@ -16,7 +16,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 export class DirectoryPathComponent {
     @Output() change: EventEmitter<string> = new EventEmitter<string>();
 
-    private dirs = [];
+    dirs = [];
 
     @Input()
     set path(path: string) {

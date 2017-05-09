@@ -74,7 +74,7 @@ export class FileActionsCellComponent implements AgRendererComponent {
 `
 })
 export class FileTypeCellComponent implements AgRendererComponent {
-    private ftype: string;
+    ftype: string;
 
     agInit(params: any): void {
         this.ftype = params.value;
@@ -174,15 +174,15 @@ export class ProgressCellComponent implements AgRendererComponent {
 })
 
 export class FileListComponent implements OnInit, OnDestroy {
-    private backButton: boolean = false;
-    private sideBarCollapsed: boolean = false;
-
-    private gridOptions: GridOptions;
     private rowData: any[];
-    private columnDefs: any[];
-
-    private path: Path = new Path('/User', '/');
     private uploadSubscription: Subscription;
+
+    path: Path = new Path('/User', '/');
+
+    sideBarCollapsed: boolean = false;
+    backButton: boolean = false;
+    gridOptions: GridOptions;
+    columnDefs: any[];
 
     constructor(@Inject(FileService) private fileService: FileService,
                 @Inject(FileUploadService) private fileUploadService: FileUploadService,
@@ -220,11 +220,11 @@ export class FileListComponent implements OnInit, OnDestroy {
         return this.path.fullPath();
     }
 
-    private get rootPath() {
+    get rootPath(): string {
         return this.path.root;
     }
 
-    private set rootPath(rp: string) {
+    set rootPath(rp: string) {
         this.path = this.path.setRoot(rp);
     }
 

@@ -50,11 +50,12 @@ import * as _ from 'lodash';
         </button>`
 })
 export class ActionButtonsCellComponent implements AgRendererComponent {
-    private status: string;
     private accno: string;
     private onDelete: (accno: string, action: string) => {};
     private onEdit: (string) => {};
     private onView: (string) => {};
+
+    status: string;
 
     agInit(params: any): void {
         let data = params.data;
@@ -155,16 +156,16 @@ export class DateCellComponent implements AgRendererComponent {
 })
 
 export class SubmissionListComponent {
-
-    private gridOptions: GridOptions;
-    private columnDefs: any[];
     private datasource: any;
 
-    private showSubmitted: boolean = false;
-
-    @ViewChild('confirmDialog') public confirmDialog: ConfirmDialogComponent;
+    @ViewChild('confirmDialog')
+    confirmDialog: ConfirmDialogComponent;
 
     error: any = null;
+    showSubmitted: boolean = false;
+
+    gridOptions: GridOptions;
+    columnDefs: any[];
 
     constructor(@Inject(SubmissionService) private submService: SubmissionService,
                 @Inject(SubmissionModel) private submModel: SubmissionModel,
@@ -242,14 +243,15 @@ export class SubmissionListComponent {
                         rTimeTo: fm.rtime && fm.rtime.value && fm.rtime.value.to ? fm.rtime.value.to : undefined,
                         keywords: fm.title && fm.title.value ? fm.title.value : undefined
                     })
-                        .subscribe((data) => {
-                            this.gridOptions.api.hideOverlay();
-                            let lastRow = -1;
-                            if (data.length < pageSize) {
-                                lastRow = params.startRow + data.length;
-                            }
-                            params.successCallback(this.decorateDataRows(data), lastRow);
-                        });
+                        .subscribe(
+                            (data) => {
+                                this.gridOptions.api.hideOverlay();
+                                let lastRow = -1;
+                                if (data.length < pageSize) {
+                                    lastRow = params.startRow + data.length;
+                                }
+                                params.successCallback(this.decorateDataRows(data), lastRow);
+                            });
                 }
             }
         }

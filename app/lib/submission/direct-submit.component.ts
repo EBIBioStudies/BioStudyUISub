@@ -56,13 +56,13 @@ export class ResultLogNodeComponent implements TreeViewCustomNodeComponent {
     selector: 'direct-submit',
     template: `
 <div class="row-offcanvas row-offcanvas-left">
-    <direct-submit-sidebar *ngIf="!readonly"
+    <direct-submit-sidebar
                 (toggle)="onToggle($event)"
                 [collapsed]="collapseSideBar">
     </direct-submit-sidebar>
     
     <div class="container-fluid">
-        <aside class="right-side content" [ngClass]="{'collapse-left' : collapseLeftSide}">
+        <aside class="right-side content" [ngClass]="{'collapse-left' : collapseSideBar}">
             <div *ngIf="!request"
                  class="panel text-center" 
                  style="border-color:#bbb;color:#aaa;padding:20px; margin:20px">
@@ -120,8 +120,6 @@ export class ResultLogNodeComponent implements TreeViewCustomNodeComponent {
 `
 })
 export class DirectSubmitComponent implements OnInit, OnDestroy {
-    private collapseSideBar: boolean = false;
-    private request: DirectSubmitRequest;
     private sb: Subscription;
     private treeViewConfig: TreeViewConfig = {
         children(data: any): any[] {
@@ -129,6 +127,9 @@ export class DirectSubmitComponent implements OnInit, OnDestroy {
         },
         nodeComponentClass: ResultLogNodeComponent
     };
+
+    request: DirectSubmitRequest;
+    collapseSideBar: boolean = false;
 
     constructor(@Inject(DirectSubmitService) private submitService: DirectSubmitService) {
     }

@@ -6,7 +6,6 @@ var zip = require('gulp-zip');
 var bump = require('gulp-bump');
 var del = require('del');
 var extend = require('gulp-extend');
-var Builder = require('jspm').Builder; //require('systemjs-builder');
 var htmlreplace = require('gulp-html-replace');
 var sourcemaps = require('gulp-sourcemaps');
 var less = require('gulp-less');
@@ -143,7 +142,7 @@ gulp.task('webserver', function () {
 
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-    gulp.src('app')
+    gulp.src('dist')
         .pipe(webserver({
             port: 7000,
             https: true,

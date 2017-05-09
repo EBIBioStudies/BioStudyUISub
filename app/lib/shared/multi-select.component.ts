@@ -103,14 +103,13 @@ export class MultiSelectComponent implements ControlValueAccessor, OnChanges, On
     @Input() filterEnabled: boolean = true;
     @Input() options: string[];
 
-    private filterText: string = '';
-    private isOpen: boolean = false;
+    filterText: string = '';
+    isOpen: boolean = false;
+    items: any[] = [];
 
-    private items: any[] = [];
+    filterInputValue$: Subject<string> = new Subject<string>();
 
     private selected: string[] = [];
-
-    private filterInputValue$: Subject<string> = new Subject<string>();
     private sb: Subscription;
 
     ngOnInit(): void {
@@ -129,15 +128,15 @@ export class MultiSelectComponent implements ControlValueAccessor, OnChanges, On
         this.onChange(this.selected);
     }
 
-    private get empty(): boolean {
+    get empty(): boolean {
         return this.options.length === 0;
     }
 
-    private onClearFilter() {
+    onClearFilter() {
         this.filterText = '';
     }
 
-    private onToggle(): void {
+    onToggle(): void {
         this.isOpen = !this.isOpen;
     }
 

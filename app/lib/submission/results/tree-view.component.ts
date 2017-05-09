@@ -84,8 +84,8 @@ export class TreeViewNodeComponent implements AfterViewInit, OnChanges  {
 
     @ViewChild('nodeTemplate', {read: ViewContainerRef}) vcr;
 
-    private isCollapsed: boolean = false;
     private compRef;
+    isCollapsed: boolean = false;
 
     constructor(@Inject(ComponentFactoryResolver) private componentFactoryResolver: ComponentFactoryResolver) {
     }

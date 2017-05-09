@@ -13,7 +13,7 @@ import {GlobalErrorHandler} from '../../global-error.handler';
 })
 
 export class GlobalErrorComponent {
-    private errors = [];
+    errors = [];
 
     constructor(@Inject(ErrorHandler) geh: ErrorHandler,
                 @Inject(NgZone) zone: NgZone) {

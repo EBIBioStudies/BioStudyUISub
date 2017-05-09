@@ -20,7 +20,7 @@ export class TextFilterComponent implements AgFilterComponent {
     private params: IFilterParams;
     private valueGetter: (rowNode: RowNode) => any;
 
-    private text: string = '';
+    text: string = '';
     private prev: string = '';
 
     @ViewChild('input', {read: ViewContainerRef}) public input;

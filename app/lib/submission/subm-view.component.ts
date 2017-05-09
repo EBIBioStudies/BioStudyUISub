@@ -9,7 +9,7 @@ import {DictionaryService} from './dictionary.service';
 
 @Component({
     selector: 'subm-view',
-    templateUrl:  './subm-edit.component.html',
+    templateUrl: './subm-edit.component.html',
     styles: [`
     .popup {
       position: absolute;
@@ -22,7 +22,8 @@ import {DictionaryService} from './dictionary.service';
 })
 
 export class SubmissionViewComponent implements OnInit {
-    private submission: Submission;
+    submission: Submission;
+    readonly: boolean = true;
 
     constructor(@Inject(ActivatedRoute) private route: ActivatedRoute,
                 @Inject(SubmissionService) private submService: SubmissionService,

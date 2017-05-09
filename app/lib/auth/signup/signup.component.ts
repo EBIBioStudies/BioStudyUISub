@@ -13,8 +13,9 @@ import {RegistrationData} from '../registration-data';
 
 export class SignUpComponent {
     private model = new RegistrationData();
-    private error: any = null;
-    private success: boolean = false;
+
+    error: any = null;
+    success: boolean = false;
 
     @ViewChild('recaptcha') private recaptcha: RecaptchaComponent;
 

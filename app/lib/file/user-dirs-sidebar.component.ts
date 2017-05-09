@@ -44,8 +44,9 @@ export class UserDirsSideBarComponent implements OnInit, ControlValueAccessor {
     @Output() toggle? = new EventEmitter();
     @Output() select = new EventEmitter();
 
-    private dirs = [];
     private selectedPath: string;
+
+    dirs = [];
 
     constructor(@Inject(FileService) private fileService: FileService) {
     }

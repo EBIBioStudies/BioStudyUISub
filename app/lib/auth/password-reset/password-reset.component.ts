@@ -15,13 +15,14 @@ export class PasswordResetComponent implements OnInit {
         password2: '',
         recaptcha: ''
     };
-    private hasError: boolean = false;
     private message: string = '';
-    private showSuccess: boolean = false;
-
     private key: string;
 
-    @ViewChild('recaptcha') private recaptcha: RecaptchaComponent;
+    @ViewChild('recaptcha')
+    private recaptcha: RecaptchaComponent;
+
+    hasError: boolean = false;
+    showSuccess: boolean = false;
 
     constructor(private authService: AuthService,
                 private route: ActivatedRoute) {

@@ -10,8 +10,9 @@ import {AuthService} from '../auth.service';
 export class PasswordResetReqComponent {
     private model:any = {email: '', recaptcha: ''};
     private message: string = '';
-    private hasError: boolean = false;
-    private showSuccess: boolean = false;
+
+    hasError: boolean = false;
+    showSuccess: boolean = false;
 
     @ViewChild('recaptcha') private recaptcha: RecaptchaComponent;
 

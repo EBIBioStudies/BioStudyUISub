@@ -10,10 +10,12 @@ import {AuthService} from '../auth.service';
 export class ResendActivationLinkComponent {
     private req = {email: "", recaptcha: ""};
     private message: string;
-    private hasError: boolean;
-    private showSuccess: boolean;
 
-    @ViewChild('recaptcha') private recaptcha: RecaptchaComponent;
+    hasError: boolean;
+    showSuccess: boolean;
+
+    @ViewChild('recaptcha')
+    private recaptcha: RecaptchaComponent;
 
     constructor(private authService: AuthService) {
     }

@@ -1,40 +1,42 @@
 import {Injectable, Inject} from '@angular/core';
+import {Response} from '@angular/http';
 
 import {Subject} from 'rxjs/Subject';
 
 import {SubmissionService} from './submission.service';
 import {PageTabProxy} from './pagetabproxy';
+import {ServerError} from '../http/index';
 
 enum ReqStatus {CONVERT, SUBMIT, ERROR, SUCCESS}
 
 enum ReqType {CREATE, UPDATE}
 
 export class DirectSubmitRequest {
-    private __filename: string;
-    private __format: string;
-    private __projects: string[];
-    private __type: ReqType;
+    private _filename: string;
+    private _format: string;
+    private _projects: string[];
+    private _type: ReqType;
 
-    private __created: Date;
-    private __status: ReqStatus;
-    private __log: any;
+    private _created: Date;
+    private _status: ReqStatus;
+    private _log: any;
 
     constructor(filename: string, format: string, projects: string[], type: ReqType) {
-        this.__filename = filename;
-        this.__format = format;
-        this.__projects = projects;
-        this.__type = type;
+        this._filename = filename;
+        this._format = format;
+        this._projects = projects;
+        this._type = type;
 
-        this.__created = new Date();
-        this.__status = ReqStatus.CONVERT;
+        this._created = new Date();
+        this._status = ReqStatus.CONVERT;
     }
 
     get failed(): boolean {
-        return this.__status === ReqStatus.ERROR;
+        return this._status === ReqStatus.ERROR;
     }
 
     get successful(): boolean {
-        return this.__status === ReqStatus.SUCCESS;
+        return this._status === ReqStatus.SUCCESS;
     }
 
     get done(): boolean {
@@ -46,11 +48,11 @@ export class DirectSubmitRequest {
     }
 
     get statusText(): string {
-        return ReqStatus[this.__status];
+        return ReqStatus[this._status];
     }
 
     get format(): string {
-        return this.__format;
+        return this._format;
     }
 
     get formatText(): string {
@@ -58,23 +60,23 @@ export class DirectSubmitRequest {
     }
 
     get created(): Date {
-        return this.__created;
+        return this._created;
     }
 
     get filename(): string {
-        return this.__filename;
+        return this._filename;
     }
 
     get projects(): string[] {
-        return this.__projects;
+        return this._projects;
     }
 
     get type(): ReqType {
-        return this.__type;
+        return this._type;
     }
 
     get log(): any {
-        return this.__log || {};
+        return this._log || {};
     }
 
     onConvertResponse(res: any): void {
@@ -87,12 +89,12 @@ export class DirectSubmitRequest {
 
     private onResponse(res: any, successStatus: ReqStatus): void {
         if (res.status !== 'OK') {
-            this.__log = res.log || {message: 'no results available', level: 'error'};
-            this.__status = ReqStatus.ERROR;
+            this._log = res.log || {message: 'no results available', level: 'error'};
+            this._status = ReqStatus.ERROR;
             return;
         }
-        this.__status = successStatus;
-        this.__log = res.log || undefined;
+        this._status = successStatus;
+        this._log = res.log || undefined;
     }
 }
 
@@ -137,27 +139,33 @@ export class DirectSubmitService {
                 data => {
                     this.onConvertRequestFinished(req, data);
                 },
-                error => {
-                    this.onConvertRequestFinished(req, error.data || {});
-                    if (!error.isInputError()) {
-                        throw error;
+                (error: Response) => {
+                    const err = ServerError.create(error);
+                    this.onConvertRequestFinished(req, err.data || {});
+                    if (!err.isInputError()) {
+                        setTimeout(function() {
+                            throw err;
+                        }, 10);
                     }
                 }
             );
     }
 
     private submit(req: DirectSubmitRequest, subm: any): void {
-        const pt:PageTabProxy = PageTabProxy.create(subm);
+        const pt: PageTabProxy = PageTabProxy.create(subm);
         pt.attachTo = req.projects;
         this.submService.directCreateOrUpdate(pt.data, req.type === ReqType.CREATE)
             .subscribe(
                 data => {
                     this.onSubmitRequestFinished(req, data);
                 },
-                error => {
-                    this.onSubmitRequestFinished(req, error.data || {});
-                    if (!error.isInputError()) {
-                        throw error;
+                (error: Response) => {
+                    const err = ServerError.create(error);
+                    this.onSubmitRequestFinished(req, err.data || {});
+                    if (!err.isInputError()) {
+                        setTimeout(function() {
+                            throw err;
+                        }, 10);
                     }
                 }
             );

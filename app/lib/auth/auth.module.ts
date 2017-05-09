@@ -16,7 +16,6 @@ import {PasswordResetReqComponent} from './password-reset/password-reset-req.com
 import {PasswordResetComponent} from './password-reset/password-reset.component';
 import {SignUpComponent} from './signup/signup.component';
 import {Equals2} from './password-reset/equals2.directive';
-import {AuthConfig} from './auth.config';
 
 @NgModule({
     imports: [
@@ -49,12 +48,4 @@ import {AuthConfig} from './auth.config';
     ]
 })
 export class AuthModule {
-    static forRoot(config: AuthConfig): ModuleWithProviders {
-        return {
-            ngModule: AuthModule,
-            providers: [
-                {provide: AuthConfig, useValue: config }
-            ]
-        };
-    }
 }

@@ -30,8 +30,8 @@ export class InputFileComponent implements ControlValueAccessor {
     @Input() readonly?: boolean = false;
     @Input() name: string;
 
-    private files: Array<string> = [];
     @Input('value') private selected: string = '';
+    files: Array<string> = [];
 
     constructor(@Inject(FileService) fileService: FileService) {
         fileService

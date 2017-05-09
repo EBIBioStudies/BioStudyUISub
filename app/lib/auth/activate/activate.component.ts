@@ -8,16 +8,15 @@ import {AuthService} from '../auth.service';
     templateUrl: './activate.component.html'
 })
 export class ActivateComponent implements OnInit {
-    private hasError:boolean = false;
-    private message:string = '';
-
+    hasError: boolean = false;
+    message: string = '';
 
     constructor(private authService: AuthService,
                 private route: ActivatedRoute) {
     }
 
     ngOnInit() {
-         this.route.params.forEach((params:Params) => {
+        this.route.params.forEach((params: Params) => {
             let key = params['key'];
             if (!key) {
                 this.hasError = true;
@@ -28,7 +27,7 @@ export class ActivateComponent implements OnInit {
         });
     }
 
-    checkKey(key:string) {
+    checkKey(key: string) {
         this.authService
             .activate(key)
             .subscribe(

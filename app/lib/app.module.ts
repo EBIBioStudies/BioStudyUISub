@@ -27,7 +27,6 @@ import {FileModule} from './file';
 import {AppComponent} from './app.component';
 import {AuthGuard} from './auth.guard';
 import {GlobalErrorHandler} from './global-error.handler';
-import {httpErrorHandler} from './http-error.handler';
 import {AppConfig} from './app.config';
 
 export function initConfig(config: AppConfig) {
@@ -51,8 +50,8 @@ export function initConfig(config: AppConfig) {
         AppRoutingModule,
         CoreModule,
         HelpModule,
-        AuthModule.forRoot({httpErrorHandler: httpErrorHandler}),
-        SubmissionModule.forRoot({httpErrorHandler: httpErrorHandler}),
+        AuthModule,
+        SubmissionModule,
         FileModule
     ],
     declarations: [
@@ -63,7 +62,7 @@ export function initConfig(config: AppConfig) {
         AuthGuard,
         {provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true},
         {provide: LocationStrategy, useClass: HashLocationStrategy},
-        {provide: ErrorHandler, useClass: GlobalErrorHandler},
+        {provide: ErrorHandler, useClass: GlobalErrorHandler}
     ],
     bootstrap: [AppComponent]
 })

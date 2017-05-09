@@ -54,7 +54,7 @@ import {Component, Input} from '@angular/core';
 })
 export class SlideOutTipComponent {
     @Input() tip: string;
-    private showTip: boolean = false;
+    showTip: boolean = false;
 
     show() {
         this.showTip = true;

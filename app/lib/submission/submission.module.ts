@@ -37,7 +37,6 @@ import {TextFilterComponent} from './ag-grid/text-filter.component';
 import {DateFilterComponent} from './ag-grid/date-filter.component';
 
 import {TreeViewComponent, TreeViewNodeComponent} from './results/tree-view.component';
-import {SubmissionModuleConfig} from './submission.module.config';
 
 @NgModule({
     imports: [
@@ -97,12 +96,4 @@ import {SubmissionModuleConfig} from './submission.module.config';
     entryComponents: [ResultLogNodeComponent]
 })
 export class SubmissionModule {
-    static forRoot(config: SubmissionModuleConfig): ModuleWithProviders {
-        return {
-            ngModule: SubmissionModule,
-            providers: [
-                {provide: SubmissionModuleConfig, useValue: config }
-            ]
-        };
-    }
 }

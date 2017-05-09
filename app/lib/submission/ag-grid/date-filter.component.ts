@@ -133,19 +133,19 @@ export class DateFilterComponent implements AgFilterComponent {
         }
     }
 
-    private get after(): boolean {
+    get after(): boolean {
         return this.selection === "after";
     }
 
-    private get before(): boolean {
+    get before(): boolean {
         return this.selection === "before";
     }
 
-    private get between(): boolean {
+    get between(): boolean {
         return this.selection === "between";
     }
 
-    private onSelectionChange(ev): void {
+    onSelectionChange(ev): void {
         this.selection = ev.target.value;
         if (this.after) {
             this.date.to = '';
@@ -155,7 +155,7 @@ export class DateFilterComponent implements AgFilterComponent {
         }
     }
 
-    private onApplyClick(ev): void {
+    onApplyClick(ev): void {
         this.notifyAboutChanges();
     }
 }

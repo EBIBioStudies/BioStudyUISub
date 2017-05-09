@@ -8,11 +8,10 @@ import {UserSession} from '../user-session';
     selector: 'user-signin',
     templateUrl: './signin.component.html'
 })
-
 export class SignInComponent {
-    private model = {login: "", password: ""};
-    private error: any = null;
-    private waiting: boolean = false;
+    model = {login: "", password: ""};
+    error: any = null;
+    waiting: boolean = false;
 
     constructor(private authService: AuthService,
                 private session: UserSession,
@@ -35,7 +34,7 @@ export class SignInComponent {
         this.waiting = true;
 
         this.authService
-            .signIn(this.model.login, this.model.password)
+            .signIn(this.model)
             .subscribe(
                 (data) => {
                     this.router.navigate(['/submissions']);

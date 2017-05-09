@@ -32,7 +32,8 @@ import {DatePickerComponent} from 'ng2-bootstrap/datepicker';
 
 export class DateInputBoxComponent implements ControlValueAccessor {
 
-    @ViewChild('inputbox') private inpEl: ElementRef;
+    @ViewChild('inputbox')
+    private inpEl: ElementRef;
 
     private onChange: any = () => {
     };
@@ -42,8 +43,9 @@ export class DateInputBoxComponent implements ControlValueAccessor {
     };
 
     private dateValue = '';
-    private activeDate: Date = new Date();
-    private showDatePicker = false;
+
+    activeDate: Date = new Date();
+    showDatePicker = false;
 
     get value() {
         return this.dateValue;

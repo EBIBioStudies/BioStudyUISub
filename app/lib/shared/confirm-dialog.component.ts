@@ -43,12 +43,12 @@ import 'rxjs/add/operator/take';
 })
 
 export class ConfirmDialogComponent {
-
-    @ViewChild('staticModal') private modalDirective: ModalDirective;
-
-    private message: string = '';
-
     private buttonClicks: Subject<boolean> = new Subject<boolean>();
+
+    @ViewChild('staticModal')
+    private modalDirective: ModalDirective;
+
+    message: string = '';
 
     confirm(message: string): Observable<any> {
         this.message = message;
@@ -60,12 +60,12 @@ export class ConfirmDialogComponent {
             .map(x => {});
     }
 
-    private yes(): void {
+    yes(): void {
         this.buttonClicks.next(true);
         this.modalDirective.hide();
     }
 
-    private no(): void {
+    no(): void {
         this.buttonClicks.next(false);
         this.modalDirective.hide();
     }

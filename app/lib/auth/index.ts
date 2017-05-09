@@ -1,5 +1,4 @@
 export * from './auth.module';
-export * from './auth.config';
 export * from './auth.service';
 export * from './registration-data';
 export * from './user-session';

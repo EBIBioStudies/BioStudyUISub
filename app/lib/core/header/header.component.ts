@@ -10,10 +10,9 @@ import {AppConfig} from '../../app.config';
 })
 
 export class HeaderComponent {
-    private isNavCollapsed: boolean = true;
-    private appVersion: string = '0.0.0';
-
-    private userLoggedIn: boolean = false;
+    isNavCollapsed: boolean = true;
+    appVersion: string = '0.0.0';
+    userLoggedIn: boolean = false;
 
     constructor(private session: UserSession,
                 private router: Router,
