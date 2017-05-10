@@ -66,13 +66,11 @@
                                required
                                #password="ngModel"/>
                     </div>
-                    <recaptcha
-                            [(ngModel)]="model.captcha"
-                            name="captcha"
-                            required
+                    <re-captcha
+                            (resolved)="onRecaptchaResolved($event)"
                             siteKey="6Lcmlv0SAAAAAHofnIcb29l1LMZsnGFcSlH8Reve"
-                            #recaptcha>
-                    </recaptcha>
+                             #recaptcha>
+                    </re-captcha>
                     <div class="form-group margin-top-large">
                         <button type="submit" class="btn btn-primary">Sign up</button>
                     </div>

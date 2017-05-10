@@ -8,10 +8,8 @@ import * as _ from 'lodash';
     template: `
    <div class="btn-group" dropdown>
       <span class="badge" dropdownToggle>{{count}}</span>
-      <ul *ngIf="uploads.length === 0" class="dropdown-menu" style="left:-160px" dropdownMenu  role="menu">
-         <li role="menuitem"><a class="dropdown-item">No uploads</a></li>
-      </ul>
-      <ul *ngIf="uploads.length > 0" class="dropdown-menu" style="left:-160px" dropdownMenu role="menu">
+      <ul class="dropdown-menu" style="left:-160px" *dropdownMenu role="menu">
+         <li *ngIf="uploads.length === 0" role="menuitem"><a class="dropdown-item">No uploads</a></li>
          <li role="menuitem" *ngFor="let u of uploads">
             <a class="dropdown-item" (click)="onMenuItemClick(u)">{{u.name}}, {{u.progress}}</a>
          </li>

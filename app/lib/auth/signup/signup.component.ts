@@ -1,6 +1,6 @@
 import {Component, ViewChild} from '@angular/core';
 import {Response} from '@angular/http';
-import {RecaptchaComponent} from 'ng2-recaptcha';
+import {RecaptchaComponent} from 'ng-recaptcha';
 import {Router} from '@angular/router';
 
 import {AuthService} from '../auth.service';
@@ -51,7 +51,11 @@ export class SignUpComponent {
             );
     }
 
-    onChange() {
+    onChange(): void {
         this.error = null;
+    }
+
+    onRecaptchaResolved(resp: string): void {
+        this.model.captcha = resp;
     }
 }

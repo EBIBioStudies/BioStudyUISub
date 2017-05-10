@@ -4,7 +4,7 @@ import {ActivatedRoute, Router, Params} from '@angular/router';
 
 import {Subscription} from 'rxjs/Subscription';
 
-import {ModalDirective} from 'ng2-bootstrap/modal/modal.component';
+import {ModalDirective} from 'ngx-bootstrap/modal/modal.component';
 
 import {Submission} from './submission';
 import {PageTab} from './pagetab';

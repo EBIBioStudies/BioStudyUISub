@@ -1,7 +1,7 @@
 import {NgModule, ModuleWithProviders}  from '@angular/core';
 import {RouterModule} from '@angular/router';
 
-import {RecaptchaModule} from 'ng2-recaptcha';
+import {RecaptchaModule} from 'ng-recaptcha';
 import {HttpClientModule} from '../http/http-client.module';
 import {SharedModule} from '../shared/shared.module';
 

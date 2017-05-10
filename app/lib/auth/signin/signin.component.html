@@ -1,16 +1,15 @@
 <container-root>
     <container-md>
         <div>
-            <div class="alert alert-danger" style="margin-left:0" *ngIf="error !== null">
-                Error: {{error.message}}
+            <div [hidden]="error == null" class="alert alert-danger" style="margin-left:0">
+                {{error?.message}}
             </div>
-            <div class="alert" *ngIf="error === null">
+            <div [hidden]="error !== null" class="alert">
                 &nbsp;
             </div>
         </div>
         <div class="panel panel-info">
             <div class="panel-body">
-
 
                 <form id="login-form" novalidate name="signInForm" role="form"
                       (submit)="signInForm.form.valid && onSubmit($event)" #signInForm="ngForm">

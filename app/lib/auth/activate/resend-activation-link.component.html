@@ -26,10 +26,9 @@
                                required
                                #email>
                     </div>
-                    <recaptcha name="recaptcha"
-                               [(ngModel)]="model.captcha"
-                               required
-                               siteKey="6Lcmlv0SAAAAAHofnIcb29l1LMZsnGFcSlH8Reve" #recaptcha></recaptcha>
+                    <re-captcha (resolved)="OnRecaptchaResolved($event)"
+                                siteKey="6Lcmlv0SAAAAAHofnIcb29l1LMZsnGFcSlH8Reve"
+                                #recaptcha></re-captcha>
                     <div class="form-group margin-top-large">
                         <i *ngIf="sending" class="fa fa-spinner fa-pulse fa-3x"></i>
                         <button type="submit" class="btn btn-primary">Submit</button>

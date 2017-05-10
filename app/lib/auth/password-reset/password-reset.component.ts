@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {RecaptchaComponent} from 'ng2-recaptcha';
+import {RecaptchaComponent} from 'ng-recaptcha';
 
 import {ActivatedRoute, Params} from '@angular/router';
 
@@ -63,5 +63,9 @@ export class PasswordResetComponent implements OnInit {
                     this.message = error.message;
                     this.recaptcha.reset();
                 });
+    }
+
+    onRecaptchaResolved(resp: string): void {
+        this.model.captcha = resp;
     }
 }

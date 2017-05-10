@@ -1,8 +1,13 @@
-import {NgModule, ErrorHandler, APP_INITIALIZER} from '@angular/core';
+import {
+    NgModule,
+    ErrorHandler,
+    APP_INITIALIZER
+} from '@angular/core';
+
 import {BrowserModule}  from '@angular/platform-browser';
 import {HashLocationStrategy, LocationStrategy} from '@angular/common';
 
-import {RecaptchaModule} from 'ng2-recaptcha';
+import {RecaptchaModule} from 'ng-recaptcha';
 
 import {
     TypeaheadModule,
@@ -10,12 +15,11 @@ import {
     TabsModule,
     BsDropdownModule,
     ModalModule,
-    PaginationModule,
     DatepickerModule,
     PopoverModule,
     CollapseModule,
     AlertModule
-} from 'ng2-bootstrap';
+} from 'ngx-bootstrap';
 
 import {AppRoutingModule} from './app-routing.module';
 import {CoreModule} from './core';
@@ -42,7 +46,6 @@ export function initConfig(config: AppConfig) {
         TabsModule.forRoot(),
         BsDropdownModule.forRoot(),
         ModalModule.forRoot(),
-        PaginationModule.forRoot(),
         DatepickerModule.forRoot(),
         PopoverModule.forRoot(),
         CollapseModule.forRoot(),

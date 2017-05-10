@@ -8,12 +8,11 @@ import {
     TabsModule,
     BsDropdownModule,
     ModalModule,
-    PaginationModule,
     DatepickerModule,
     PopoverModule,
     CollapseModule,
     AlertModule
-} from 'ng2-bootstrap';
+} from 'ngx-bootstrap';
 
 import {ContainerRootComponent} from './container-root.component';
 import {ContainerMdComponent} from './container-md.component';
@@ -31,7 +30,6 @@ import {MultiSelectComponent, FilterPipe} from './multi-select.component';
         TabsModule,
         BsDropdownModule,
         ModalModule,
-        PaginationModule,
         DatepickerModule,
         PopoverModule,
         CollapseModule,
@@ -58,7 +56,6 @@ import {MultiSelectComponent, FilterPipe} from './multi-select.component';
         TabsModule,
         BsDropdownModule,
         ModalModule,
-        PaginationModule,
         DatepickerModule,
         PopoverModule,
         CollapseModule,

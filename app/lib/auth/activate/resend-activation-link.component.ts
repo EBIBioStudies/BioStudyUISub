@@ -1,6 +1,6 @@
 import {Component, ViewChild} from '@angular/core';
 import {Response} from '@angular/http';
-import {RecaptchaComponent} from 'ng2-recaptcha';
+import {RecaptchaComponent} from 'ng-recaptcha';
 
 import {AuthService} from '../auth.service';
 import {ServerError} from '../../http/index';
@@ -39,5 +39,9 @@ export class ResendActivationLinkComponent {
                     this.recaptcha.reset();
                 }
             )
+    }
+
+    onRecaptchaResolved(resp: string): void {
+        this.model.captcha = resp;
     }
 }

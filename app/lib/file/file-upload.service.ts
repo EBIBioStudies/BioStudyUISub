@@ -14,7 +14,7 @@ import {Path} from './path';
 
 import * as _ from 'lodash';
 
-const FILE_UPLOAD_URL = '/raw/fileUpload'; // use '/api/fileUpload' in offline mode
+const FILE_UPLOAD_URL = '/raw/fileUpload'; 
 
 class FileUploadStatus {
     constructor(public status,
@@ -24,21 +24,21 @@ class FileUploadStatus {
 }
 
 export class FileUpload {
-    private __status: string = 'uploading';
-    private __error: string;
-    private __sb: Subscription;
-    private __progress: number;
-    private __files: string[];
-    private __path: Path;
+    private _status: string = 'uploading';
+    private _error: string;
+    private _sb: Subscription;
+    private _progress: number;
+    private _files: string[];
+    private _path: Path;
 
-    private __statusSubject: Subject<FileUploadStatus> = new Subject<FileUploadStatus>();
+    private _statusSubject: Subject<FileUploadStatus> = new Subject<FileUploadStatus>();
 
     finish$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
     constructor(path: Path, files: File[], httpClient: HttpClient) {
-        this.__path = path;
-        this.__files = _.map(files, 'name');
-        this.__progress = 0;
+        this._path = path;
+        this._files = _.map(files, 'name');
+        this._progress = 0;
 
         const failed = Observable.of(new FileUploadStatus('error', -1, 'file upload failed'));
 
@@ -59,54 +59,53 @@ export class FileUpload {
                 return failed;
             });
 
-
-        this.__statusSubject.subscribe(
+        this._statusSubject.subscribe(
             (fus) => {
                 console.log(fus);
-                this.__progress = fus.progress;
-                this.__status = fus.status;
-                this.__error = fus.error;
+                this._progress = fus.progress;
+                this._status = fus.status;
+                this._error = fus.error;
                 if (this.done()) {
                     this.finish$.next(true);
                     this.finish$.complete();
-                    this.__statusSubject.complete();
+                    this._statusSubject.complete();
                 }
             },
             console.log);
 
-        this.__sb = uploadStatus.subscribe(this.__statusSubject);
+        this._sb = uploadStatus.subscribe(this._statusSubject);
     }
 
     get path(): Path {
-        return this.__path;
+        return this._path;
     }
 
     get progress(): number {
-        return this.__progress;
+        return this._progress;
     }
 
     get status(): string {
-        return this.__status;
+        return this._status;
     }
 
     get files(): string[] {
-        return _.map(this.__files, _.identity);
+        return _.map(this._files, _.identity);
     }
 
     get error(): string {
-        return this.__error;
+        return this._error;
     }
 
     cancel(): void {
         if (!this.finished()) {
-            this.__sb.unsubscribe();
-            this.__sb = null;
-            this.__statusSubject.next(new FileUploadStatus('cancelled', this.__progress, undefined));
+            this._sb.unsubscribe();
+            this._sb = null;
+            this._statusSubject.next(new FileUploadStatus('cancelled', this._progress, undefined));
         }
     }
 
     cancelled(): boolean {
-        return this.__status === 'cancelled';
+        return this._status === 'cancelled';
     }
 
     finished(): boolean {
@@ -114,29 +113,29 @@ export class FileUpload {
     }
 
     done(): boolean {
-        return this.__status === 'success' || this.cancelled();
+        return this._status === 'success' || this.cancelled();
     }
 
     failed(): boolean {
-        return this.__status === 'error';
+        return this._status === 'error';
     }
 }
 
 @Injectable()
 export class FileUploadService {
-    private __uploads: FileUpload[] = [];
+    private _uploads: FileUpload[] = [];
     uploadFinish$: Subject<string> = new Subject<string>();
 
     constructor(private http: HttpClient) {
     }
 
     activeUploads(): FileUpload[] {
-        return _.filter(_.map(this.__uploads, _.identity), (u) => !u.done());
+        return _.filter(_.map(this._uploads, _.identity), (u) => !u.done());
     }
 
     upload(path: Path, files: File[]): FileUpload {
         let u = new FileUpload(path, files, this.http);
-        this.__uploads.push(u);
+        this._uploads.push(u);
         u.finish$.filter(_.identity)
             .map(() => u.path.fullPath())
             .subscribe((path) => this.uploadFinish$.next(path)); // do not subscribe uploadFinish$ directly here.
@@ -145,7 +144,7 @@ export class FileUploadService {
     }
 
     remove(u: FileUpload) {
-        console.log("remove upload", u, this.__uploads);
-        _.pull(this.__uploads, u);
+        console.log("remove upload", u, this._uploads);
+        _.pull(this._uploads, u);
     }
 }
