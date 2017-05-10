@@ -1,4 +1,4 @@
-import {Component, Inject, Input, OnInit, OnDestroy, ViewChild} from '@angular/core';
+import {Component, Input, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {NgForm, FormGroup} from '@angular/forms';
 
 import {TypeaheadValues} from './typeahead-values';
@@ -140,7 +140,7 @@ export class SubmissionItemsComponent implements OnInit, OnDestroy {
 
     @ViewChild('itemsPreviewForm') private itemsPreviewForm: NgForm;
 
-    constructor(@Inject(DictionaryService) private dictService: DictionaryService) {
+    constructor(private dictService: DictionaryService) {
     }
 
     ngOnInit() {

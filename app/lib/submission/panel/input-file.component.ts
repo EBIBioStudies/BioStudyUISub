@@ -1,4 +1,4 @@
-import {Component, Inject, Input, forwardRef} from '@angular/core';
+import {Component, Input, forwardRef} from '@angular/core';
 import {FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor} from '@angular/forms';
 
 import {FileService} from '../../file/index';
@@ -33,7 +33,7 @@ export class InputFileComponent implements ControlValueAccessor {
     @Input('value') private selected: string = '';
     files: Array<string> = [];
 
-    constructor(@Inject(FileService) fileService: FileService) {
+    constructor(fileService: FileService) {
         fileService
             .getFiles('/User')
             .map(data => data.files)

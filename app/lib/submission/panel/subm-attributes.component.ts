@@ -1,4 +1,4 @@
-import {Component, Inject, Input, OnInit, OnDestroy, ViewChild, forwardRef} from '@angular/core';
+import {Component, Input, OnInit, OnDestroy, ViewChild, forwardRef} from '@angular/core';
 import {NgForm, FormGroup, FormControl} from '@angular/forms';
 
 import * as _ from 'lodash';
@@ -26,7 +26,7 @@ export class SubmissionAttributesComponent implements OnInit, OnDestroy {
 
     addNewAttrLabel: string;
 
-    constructor(@Inject(DictionaryService) private dictService: DictionaryService) {
+    constructor(private dictService: DictionaryService) {
     }
 
     ngAfterContentInit() {
@@ -82,5 +82,4 @@ export class SubmissionAttributesComponent implements OnInit, OnDestroy {
         }
         return [];
     }
-
 }

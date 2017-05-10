@@ -1,4 +1,4 @@
-import {Injectable, Inject} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '../http/http-client'
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
@@ -127,7 +127,7 @@ export class FileUploadService {
     private __uploads: FileUpload[] = [];
     uploadFinish$: Subject<string> = new Subject<string>();
 
-    constructor(@Inject(HttpClient) private http: HttpClient) {
+    constructor(private http: HttpClient) {
     }
 
     activeUploads(): FileUpload[] {

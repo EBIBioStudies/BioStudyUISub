@@ -21,7 +21,6 @@ import {ORCIDInputBoxComponent} from './orcid-input-box.component';
 import {FileUploadButtonComponent} from './file-upload-button.component';
 import {ConfirmDialogComponent} from './confirm-dialog.component';
 import {MultiSelectComponent, FilterPipe} from './multi-select.component';
-import {SharedService} from './shared-service';
 
 @NgModule({
     imports: [
@@ -39,7 +38,6 @@ import {SharedService} from './shared-service';
         AlertModule
     ],
     providers: [
-        SharedService
     ],
     declarations: [
         ContainerRootComponent,

@@ -28,7 +28,8 @@ export class SubmissionItemsPanelComponent implements OnChanges {
     @Input() type: string;
     @Input() readonly: boolean;
 
-    @ViewChild(SubmissionItemsComponent) private submItemsCmp: SubmissionItemsComponent;
+    @ViewChild(SubmissionItemsComponent)
+    private submItemsCmp: SubmissionItemsComponent;
 
     itemsInfo: ItemsInfo;
 

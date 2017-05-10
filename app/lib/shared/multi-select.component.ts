@@ -188,5 +188,4 @@ export class MultiSelectComponent implements ControlValueAccessor, OnChanges, On
     setDisabledState(isDisabled: boolean): void {
         // not supported yet
     }
-
 }

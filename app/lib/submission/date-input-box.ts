@@ -3,7 +3,6 @@ import {FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor} fro
 
 import 'rxjs/add/observable/timer';
 import {formatDate, parseDate} from './date.utils';
-import {DatePickerComponent} from 'ng2-bootstrap/datepicker';
 
 @Component({
     selector: 'date-input-box',

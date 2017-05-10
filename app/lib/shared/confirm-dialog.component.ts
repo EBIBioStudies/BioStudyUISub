@@ -41,7 +41,6 @@ import 'rxjs/add/operator/take';
 </div>         
     `
 })
-
 export class ConfirmDialogComponent {
     private buttonClicks: Subject<boolean> = new Subject<boolean>();
 

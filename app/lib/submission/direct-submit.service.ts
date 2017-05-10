@@ -1,4 +1,4 @@
-import {Injectable, Inject} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Response} from '@angular/http';
 
 import {Subject} from 'rxjs/Subject';
@@ -105,7 +105,7 @@ export class DirectSubmitService {
 
     private requests: DirectSubmitRequest[] = [];
 
-    constructor(@Inject(SubmissionService) private submService: SubmissionService) {
+    constructor(private submService: SubmissionService) {
     }
 
     create(file: File, format: string, projects: string[]): void {

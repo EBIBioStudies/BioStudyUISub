@@ -1,4 +1,4 @@
-import {Component, Inject, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 
 import {Router} from '@angular/router';
 
@@ -167,10 +167,10 @@ export class SubmissionListComponent {
     gridOptions: GridOptions;
     columnDefs: any[];
 
-    constructor(@Inject(SubmissionService) private submService: SubmissionService,
-                @Inject(SubmissionModel) private submModel: SubmissionModel,
-                @Inject(Router) private router: Router,
-                @Inject(UserData) private userData: UserData) {
+    constructor(private submService: SubmissionService,
+                private submModel: SubmissionModel,
+                private router: Router,
+                private userData: UserData) {
 
         this.gridOptions = <GridOptions>{
             debug: false,

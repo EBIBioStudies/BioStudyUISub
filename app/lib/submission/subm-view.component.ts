@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 import {ActivatedRoute, Router, Params} from '@angular/router';
 
@@ -20,15 +20,14 @@ import {DictionaryService} from './dictionary.service';
     }
 `]
 })
-
 export class SubmissionViewComponent implements OnInit {
     submission: Submission;
     readonly: boolean = true;
 
-    constructor(@Inject(ActivatedRoute) private route: ActivatedRoute,
-                @Inject(SubmissionService) private submService: SubmissionService,
-                @Inject(DictionaryService) private dictService: DictionaryService,
-                @Inject(Router) private router: Router) {
+    constructor(private route: ActivatedRoute,
+                private submService: SubmissionService,
+                private dictService: DictionaryService,
+                private router: Router) {
     }
 
     ngOnInit() {

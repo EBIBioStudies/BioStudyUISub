@@ -12,7 +12,6 @@ import {ServerError} from '../../http/index';
     selector: 'auth-signup',
     templateUrl: './signup.component.html'
 })
-
 export class SignUpComponent {
     private model = new RegistrationData();
 

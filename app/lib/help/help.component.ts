@@ -4,6 +4,5 @@ import {Component} from '@angular/core';
     selector: 'help-page',
     templateUrl: './help.component.html'
 })
-
 export class HelpComponent {
 }

@@ -1,6 +1,5 @@
 import {
     Component,
-    Inject,
     Input,
     Output,
     EventEmitter,
@@ -48,7 +47,7 @@ export class UserDirsSideBarComponent implements OnInit, ControlValueAccessor {
 
     dirs = [];
 
-    constructor(@Inject(FileService) private fileService: FileService) {
+    constructor(private fileService: FileService) {
     }
 
     private onChange: any = () => {

@@ -6,7 +6,7 @@ import {AuthService} from '../auth.service';
 import {ServerError} from '../../http/index';
 
 @Component({
-    selector: 'user-activate',
+    selector: 'auth-activate',
     templateUrl: './activate.component.html'
 })
 export class ActivateComponent implements OnInit {

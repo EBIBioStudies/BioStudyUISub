@@ -1,4 +1,4 @@
-import {Injectable, Inject} from '@angular/core';
+import {Injectable} from '@angular/core';
 
 import {Submission, Item} from './submission'
 import * as _ from 'lodash';
@@ -8,7 +8,7 @@ import {PageTab} from './pagetab';
 
 @Injectable()
 export class SubmissionModel {
-    constructor(@Inject(DictionaryService) private dictService: DictionaryService) {
+    constructor(private dictService: DictionaryService) {
     }
 
     //wrap(obj:any): PageTabGuard {

@@ -6,7 +6,7 @@ import {AuthService} from '../auth.service';
 import {ServerError} from '../../http/index';
 
 @Component({
-    selector: 'user-activation-resend',
+    selector: 'auth-activation-resend',
     templateUrl: './resend-activation-link.component.html'
 })
 export class ResendActivationLinkComponent {

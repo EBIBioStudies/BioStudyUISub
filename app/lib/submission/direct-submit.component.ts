@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit, OnDestroy} from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import {DirectSubmitService, DirectSubmitRequest} from './direct-submit.service';
 import {TreeViewConfig, TreeViewCustomNodeComponent} from './results/tree-view.component';
 
@@ -18,16 +18,16 @@ import {Subscription} from 'rxjs/Subscription';
 `
 })
 export class ResultLogNodeComponent implements TreeViewCustomNodeComponent {
-    private __message: string = '';
-    private __logLevel: string = '';
+    private _message: string = '';
+    private _logLevel: string = '';
 
     onNodeData(data: any): void {
-        this.__message = data.message || '';
-        this.__logLevel = (data.level || 'info').toLowerCase();
+        this._message = data.message || '';
+        this._logLevel = (data.level || 'info').toLowerCase();
     }
 
     get message(): string {
-        return this.__message;
+        return this._message;
     }
 
     get error(): boolean {
@@ -47,10 +47,9 @@ export class ResultLogNodeComponent implements TreeViewCustomNodeComponent {
     }
 
     private logLevelEquals(level: string): boolean {
-        return this.__logLevel === level;
+        return this._logLevel === level;
     }
 }
-
 
 @Component({
     selector: 'direct-submit',
@@ -131,7 +130,7 @@ export class DirectSubmitComponent implements OnInit, OnDestroy {
     request: DirectSubmitRequest;
     collapseSideBar: boolean = false;
 
-    constructor(@Inject(DirectSubmitService) private submitService: DirectSubmitService) {
+    constructor(private submitService: DirectSubmitService) {
     }
 
     ngOnInit(): void {
@@ -147,5 +146,4 @@ export class DirectSubmitComponent implements OnInit, OnDestroy {
     onToggle(ev): void {
         this.collapseSideBar = !this.collapseSideBar;
     }
-
 }

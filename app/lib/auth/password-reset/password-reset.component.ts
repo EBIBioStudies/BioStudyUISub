@@ -6,7 +6,7 @@ import {ActivatedRoute, Params} from '@angular/router';
 import {AuthService} from '../auth.service';
 
 @Component({
-    selector: 'passwd-reset',
+    selector: 'auth-passwd-reset',
     templateUrl: './password-reset.component.html'
 })
 export class PasswordResetComponent implements OnInit {

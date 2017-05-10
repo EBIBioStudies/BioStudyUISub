@@ -6,15 +6,15 @@ import 'rxjs/add/operator/catch';
 import {AppConfig} from '../app.config';
 import {getLoginToken} from '../auth/user-cookies';
 import {UploadService} from './upload.service';
-import {serverErrorHandler} from './server-error.handler';
+//import {serverErrorHandler} from './server-error.handler';
 
 @Injectable()
 export class HttpClient {
     private prefix: string;
 
-    constructor(@Inject(Http) private http: Http,
-                @Inject(UploadService) private uploadService: UploadService,
-                @Inject(AppConfig) appConfig: AppConfig) {
+    constructor(private http: Http,
+                private uploadService: UploadService,
+                appConfig: AppConfig) {
 
         this.prefix = appConfig.proxy_base;
         console.log('proxy_base', this.prefix);

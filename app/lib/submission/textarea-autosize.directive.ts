@@ -1,4 +1,4 @@
-import {Inject, Input, ElementRef, HostListener, Directive} from '@angular/core';
+import {Input, ElementRef, HostListener, Directive} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/distinctUntilChanged';
@@ -14,7 +14,7 @@ export class TextareaAutosize {
     @Input('autosize') private maxHeight:number;
     private minHeight:number = 50;
 
-    constructor(@Inject(ElementRef) private element: ElementRef) {
+    constructor(private element: ElementRef) {
     }
 
     ngAfterContentInit(): void {

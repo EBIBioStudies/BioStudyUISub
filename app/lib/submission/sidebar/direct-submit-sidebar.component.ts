@@ -3,7 +3,6 @@ import {
     Input,
     Output,
     EventEmitter,
-    Inject,
     OnInit
 } from '@angular/core';
 
@@ -113,8 +112,8 @@ export class DirectSubmitSideBarComponent implements OnInit {
 
     private projectsToAttachTo: string[] = [];
 
-    constructor(@Inject(DirectSubmitService) private directSubmitService: DirectSubmitService,
-                @Inject(SubmissionService) private submService: SubmissionService) {
+    constructor(private directSubmitService: DirectSubmitService,
+                private submService: SubmissionService) {
     }
 
     ngOnInit(): void {

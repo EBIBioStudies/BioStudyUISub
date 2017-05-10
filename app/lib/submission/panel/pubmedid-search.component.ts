@@ -1,4 +1,4 @@
-import {Component, Inject, Input, Output, OnChanges, forwardRef, EventEmitter} from '@angular/core';
+import {Component, Input, Output, OnChanges, forwardRef, EventEmitter} from '@angular/core';
 import {FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor} from '@angular/forms';
 
 import * as _ from 'lodash';
@@ -26,7 +26,7 @@ export class PubMedIdSearchComponent implements ControlValueAccessor, OnChanges 
 
     private debouncedSearch = _.debounce(this.pubMedSearch, 1000);
 
-    constructor(@Inject(PubMedSearchService) private pubMedSearchService: PubMedSearchService) {
+    constructor(private pubMedSearchService: PubMedSearchService) {
     }
 
     ngOnChanges() {
@@ -48,7 +48,7 @@ export class PubMedIdSearchComponent implements ControlValueAccessor, OnChanges 
 
     uppercaseProperties(obj) {
         let res = {};
-        for (var key in obj) {
+        for (let key in obj) {
             if (obj.hasOwnProperty(key)) {
                 res[key.charAt(0).toUpperCase() + key.substring(1)] = obj[key];
             }
@@ -94,5 +94,4 @@ export class PubMedIdSearchComponent implements ControlValueAccessor, OnChanges 
     validate(c: FormControl) {
         return this.validateFn(c);
     }
-
 }

@@ -1,4 +1,4 @@
-import {Inject, ErrorHandler, NgZone, Component} from '@angular/core';
+import {ErrorHandler, NgZone, Component} from '@angular/core';
 import {GlobalErrorHandler} from '../../global-error.handler';
 
 @Component({
@@ -15,8 +15,8 @@ import {GlobalErrorHandler} from '../../global-error.handler';
 export class GlobalErrorComponent {
     errors = [];
 
-    constructor(@Inject(ErrorHandler) geh: ErrorHandler,
-                @Inject(NgZone) zone: NgZone) {
+    constructor(geh: ErrorHandler,
+                zone: NgZone) {
         if (geh instanceof GlobalErrorHandler) {
             geh.anErrorDetected$.subscribe(error => {
                 zone.run(() => {

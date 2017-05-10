@@ -6,7 +6,7 @@ import {AuthService} from '../auth.service';
 import {ServerError} from '../../http/index';
 
 @Component({
-    selector: 'passwd-reset-req',
+    selector: 'auth-passwd-reset-req',
     templateUrl: './password-reset-req.component.html'
 })
 export class PasswordResetReqComponent {

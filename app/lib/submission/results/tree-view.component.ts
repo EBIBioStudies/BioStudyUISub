@@ -1,6 +1,5 @@
 import {
     Component,
-    Inject,
     Input,
     Type,
     ViewChild,
@@ -87,7 +86,7 @@ export class TreeViewNodeComponent implements AfterViewInit, OnChanges  {
     private compRef;
     isCollapsed: boolean = false;
 
-    constructor(@Inject(ComponentFactoryResolver) private componentFactoryResolver: ComponentFactoryResolver) {
+    constructor(private componentFactoryResolver: ComponentFactoryResolver) {
     }
 
     get children(): any [] {

@@ -1,4 +1,4 @@
-import {Component, Inject, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {FileUploadService} from './file-upload.service';
 
 import * as _ from 'lodash';
@@ -22,9 +22,9 @@ import * as _ from 'lodash';
 export class FileUploadBadgeComponent {
     @Output() select: EventEmitter<any> = new EventEmitter<any>();
 
-    private __uploads = [];
+    private _uploads = [];
 
-    constructor(@Inject(FileUploadService) private uploader: FileUploadService) {
+    constructor(private uploader: FileUploadService) {
     }
 
     get count(): number {
@@ -42,11 +42,11 @@ export class FileUploadBadgeComponent {
     }
 
     merge(dest: any[]): any[] {
-        if (this.__uploads.length == 0) {
-           this.__uploads = dest;
+        if (this._uploads.length == 0) {
+           this._uploads = dest;
            return dest;
         }
-        let src = this.__uploads;
+        let src = this._uploads;
         let i = 0, j = 0;
         while (i < src.length || j < dest.length) {
             if (i >= src.length && j < dest.length) {
@@ -74,5 +74,4 @@ export class FileUploadBadgeComponent {
     onMenuItemClick(u) {
         this.select.emit({path: u.path, name: u.name});
     }
-
 }

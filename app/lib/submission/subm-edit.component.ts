@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit, OnDestroy, ViewChild} from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 
 import {ActivatedRoute, Router, Params} from '@angular/router';
 
@@ -33,11 +33,11 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
 
     @ViewChild('submitResults') public submitResults: ModalDirective;
 
-    constructor(@Inject(ActivatedRoute) private route: ActivatedRoute,
-                @Inject(SubmissionService) private submService: SubmissionService,
-                @Inject(DictionaryService) private dictService: DictionaryService,
-                @Inject(SubmissionModel) private submModel: SubmissionModel,
-                @Inject(Router) private router: Router) {
+    constructor(private route: ActivatedRoute,
+                private submService: SubmissionService,
+                private dictService: DictionaryService,
+                private submModel: SubmissionModel,
+                private router: Router) {
     }
 
     ngOnInit() {

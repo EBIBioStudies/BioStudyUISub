@@ -1,4 +1,4 @@
-import {Injectable, Inject} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Response} from '@angular/http';
 
 import {HttpClient} from '../http/http-client';
@@ -9,7 +9,7 @@ import 'rxjs/add/operator/catch';
 
 @Injectable()
 export class PubMedSearchService {
-    constructor(@Inject(HttpClient) private http: HttpClient) {
+    constructor(private http: HttpClient) {
     }
 
     search(pmid): Observable<any> {

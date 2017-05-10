@@ -1,4 +1,4 @@
-import {Injectable, Optional} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Response} from '@angular/http';
 
 import {HttpClient} from '../http/http-client';

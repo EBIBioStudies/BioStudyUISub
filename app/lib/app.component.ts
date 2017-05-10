@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 import {UserSession} from './auth/index';
 
@@ -11,7 +11,7 @@ import {UserSession} from './auth/index';
 })
 
 export class AppComponent implements OnInit {
-    constructor(@Inject(UserSession) private userSession: UserSession) {
+    constructor(private userSession: UserSession) {
     }
 
     ngOnInit() {

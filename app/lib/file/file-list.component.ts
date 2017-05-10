@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit, OnDestroy} from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 
 import {ActivatedRoute, Params} from '@angular/router';
 
@@ -184,9 +184,9 @@ export class FileListComponent implements OnInit, OnDestroy {
     gridOptions: GridOptions;
     columnDefs: any[];
 
-    constructor(@Inject(FileService) private fileService: FileService,
-                @Inject(FileUploadService) private fileUploadService: FileUploadService,
-                @Inject(ActivatedRoute) private route: ActivatedRoute) {
+    constructor(private fileService: FileService,
+                private fileUploadService: FileUploadService,
+                private route: ActivatedRoute) {
         this.gridOptions = <GridOptions>{
             onGridReady: () => {
                 this.gridOptions.api.sizeColumnsToFit();
