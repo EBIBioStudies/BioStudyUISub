@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 
 import {Attributes} from '../model/submission';
 import {DictionaryService} from '../dictionary.service';
-import {TypeaheadValuesForItem} from './typeahead-values';
+import {TypeaheadValuesForItem} from '../panel/typeahead-values';
 
 @Component({
     selector: 'subm-attributes',

@@ -6,11 +6,14 @@ import {Subscription} from 'rxjs/Subscription';
 
 import {ModalDirective} from 'ngx-bootstrap/modal/modal.component';
 
-import {Submission} from './model/submission';
-import {PageTab} from './model/pagetab';
-import {SubmissionService} from './submission.service';
-import {SubmissionModel} from './model/submission.model';
-import {DictionaryService} from './dictionary.service';
+import {
+    Submission,
+    PageTab,
+    DictionaryService,
+    SubmissionModel
+} from '../../submission-model/index';
+
+import {SubmissionService} from '../submission.service';
 
 @Component({
     selector: 'subm-edit',

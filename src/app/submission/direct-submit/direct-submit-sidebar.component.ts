@@ -6,7 +6,7 @@ import {
     OnInit
 } from '@angular/core';
 
-import {DirectSubmitService} from '../direct-submit.service';
+import {DirectSubmitService} from './direct-submit.service';
 import {SubmissionService} from '../submission.service';
 
 import * as _ from 'lodash';

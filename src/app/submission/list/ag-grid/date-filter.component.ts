@@ -3,7 +3,7 @@ import {Component} from '@angular/core';
 import {IFilterParams, IDoesFilterPassParams, RowNode, IAfterGuiAttachedParams} from 'ag-grid/main';
 import {AgFilterComponent} from 'ag-grid-angular/main';
 
-import {parseDate, formatDate} from '../date.utils';
+import {parseDate, formatDate} from '../../../submission-shared/date.utils';
 
 class DateRange {
     constructor(public from: string = '',

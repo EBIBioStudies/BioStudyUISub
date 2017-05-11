@@ -1,20 +1,18 @@
 import {Component, ViewChild} from '@angular/core';
-
 import {Router} from '@angular/router';
-
 import {Observable} from 'rxjs/Observable';
 
-import {SubmissionService} from './submission.service';
-import {SubmissionModel} from './model/submission.model';
-
 import {GridOptions} from 'ag-grid/main';
-
 import {AgRendererComponent} from 'ag-grid-angular/main';
+
+import {SubmissionService} from '../submission.service';
+import {SubmissionModel} from '../../submission-model/index';
+
 import {TextFilterComponent} from './ag-grid/text-filter.component';
 import {DateFilterComponent} from './ag-grid/date-filter.component';
-import {UserData} from '../auth/index';
+import {UserData} from '../../auth/index';
 
-import {ConfirmDialogComponent} from '../shared/index';
+import {ConfirmDialogComponent} from '../../shared/index';
 
 import * as _ from 'lodash';
 

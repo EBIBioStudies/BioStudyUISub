@@ -1,7 +1,7 @@
 import {Component, Input, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {NgForm, FormGroup} from '@angular/forms';
 
-import {TypeaheadValues} from './typeahead-values';
+import {TypeaheadValues} from '../panel/typeahead-values';
 import {DictionaryService} from '../dictionary.service';
 import {Items, Item} from '../model/submission';
 

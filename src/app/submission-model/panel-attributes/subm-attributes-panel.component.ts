@@ -2,7 +2,7 @@ import {Component, Input, OnChanges, SimpleChange, ViewChild} from '@angular/cor
 import {FormGroup} from '@angular/forms';
 
 import {Attributes} from '../model/submission';
-import {AttributesInfo} from './panel-info';
+import {AttributesInfo} from '../panel/panel-info';
 
 import {SubmissionAttributesComponent} from './subm-attributes.component';
 
