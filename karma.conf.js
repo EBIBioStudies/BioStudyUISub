@@ -22,9 +22,9 @@ module.exports = function (config) {
             packages: 'jspm_packages',
             adapter: 'angular2',
             files: [
-                'lib/**/*.ts',
-                'lib/**/*.html',
-                'lib/**/*.json'
+                'app/app/**/*.ts',
+                'app/app/**/*.html',
+                'app/app/**/*.json'
             ]
         },
 
