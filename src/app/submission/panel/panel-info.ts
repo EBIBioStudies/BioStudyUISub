@@ -1,4 +1,4 @@
-import {Attributes, Items} from '../submission';
+import {Attributes, Items} from '../model/submission';
 
 // should be interface but compile doesn't like export interfaces:
 // https://github.com/angular/angular-cli/issues/2034

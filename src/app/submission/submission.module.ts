@@ -10,7 +10,7 @@ import {SharedModule} from '../shared/shared.module';
 import {SubmissionService} from './submission.service';
 import {DirectSubmitService} from './direct-submit.service';
 import {DictionaryService} from './dictionary.service';
-import {SubmissionModel} from './submission.model';
+import {SubmissionModel} from './model/submission.model';
 import {PubMedSearchService} from './pubMedSearch.service';
 
 import {DirectSubmitComponent, ResultLogNodeComponent} from './direct-submit.component';

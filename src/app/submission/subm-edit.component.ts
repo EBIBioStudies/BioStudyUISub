@@ -6,10 +6,10 @@ import {Subscription} from 'rxjs/Subscription';
 
 import {ModalDirective} from 'ngx-bootstrap/modal/modal.component';
 
-import {Submission} from './submission';
-import {PageTab} from './pagetab';
+import {Submission} from './model/submission';
+import {PageTab} from './model/pagetab';
 import {SubmissionService} from './submission.service';
-import {SubmissionModel} from './submission.model';
+import {SubmissionModel} from './model/submission.model';
 import {DictionaryService} from './dictionary.service';
 
 @Component({

@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 
-import {Submission, Item} from './submission'
+import {Submission} from './submission'
 import * as _ from 'lodash';
 
-import {DictionaryService} from './dictionary.service';
+import {DictionaryService} from '../dictionary.service';
 import {PageTab} from './pagetab';
 
 @Injectable()
@@ -84,5 +84,4 @@ export class SubmissionModel {
         });
         return errors;
     }
-
 }

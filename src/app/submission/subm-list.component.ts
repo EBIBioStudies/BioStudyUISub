@@ -5,7 +5,7 @@ import {Router} from '@angular/router';
 import {Observable} from 'rxjs/Observable';
 
 import {SubmissionService} from './submission.service';
-import {SubmissionModel} from './submission.model';
+import {SubmissionModel} from './model/submission.model';
 
 import {GridOptions} from 'ag-grid/main';
 

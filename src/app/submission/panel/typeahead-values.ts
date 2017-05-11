@@ -1,4 +1,4 @@
-import {Items} from '../submission';
+import {Items} from '../model/submission';
 
 import * as _ from 'lodash';
 
