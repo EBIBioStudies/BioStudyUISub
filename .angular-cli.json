@@ -5,7 +5,7 @@
   },
   "apps": [
     {
-      "root": "app",
+      "root": "src",
       "outDir": ".build",
       "assets": [
         "images",
