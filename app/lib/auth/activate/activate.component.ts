@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Response} from '@angular/http';
-import {ActivatedRoute, Params} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 
 import {AuthService} from '../auth.service';
 import {ServerError} from '../../http/index';
@@ -14,22 +14,20 @@ export class ActivateComponent implements OnInit {
     message: string = '';
 
     constructor(private authService: AuthService,
-                private route: ActivatedRoute) {
+                private activatedRoute: ActivatedRoute) {
     }
 
-    ngOnInit() {
-        this.route.params.forEach((params: Params) => {
-            let key = params['key'];
-            if (!key) {
-                this.hasError = true;
-                this.message = 'Invalid path';
-            } else {
-                this.activate(key);
-            }
-        });
+    ngOnInit(): void {
+        const key = this.activatedRoute.snapshot.paramMap.get('key');
+        if (key === null) {
+            this.hasError = true;
+            this.message = 'Invalid path';
+        } else {
+            this.activate(key);
+        }
     }
 
-    private activate(key: string) {
+    private activate(key: string): void {
         this.authService
             .activate(key)
             .subscribe(

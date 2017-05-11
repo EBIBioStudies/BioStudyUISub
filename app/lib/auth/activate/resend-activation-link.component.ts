@@ -10,11 +10,11 @@ import {ServerError} from '../../http/index';
     templateUrl: './resend-activation-link.component.html'
 })
 export class ResendActivationLinkComponent {
-    private model = {email: "", captcha: ""};
-    private message: string;
-
     hasError: boolean;
     showSuccess: boolean;
+
+    model = {email: '', captcha: ''};
+    message: string;
 
     @ViewChild('recaptcha')
     private recaptcha: RecaptchaComponent;
@@ -25,7 +25,7 @@ export class ResendActivationLinkComponent {
     onSubmit(event) {
         event.preventDefault();
 
-        this.message = "";
+        this.message = '';
         this.hasError = false;
         this.authService
             .resendActivationLink(this.model)
