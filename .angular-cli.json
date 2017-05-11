@@ -6,7 +6,7 @@
   "apps": [
     {
       "root": "app",
-      "outDir": "dist",
+      "outDir": ".build",
       "assets": [
         "images",
         "thor-integration.html",
