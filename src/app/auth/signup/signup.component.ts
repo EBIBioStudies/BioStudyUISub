@@ -19,7 +19,7 @@ import {RegistrationData} from '../registration-data';
     templateUrl: './signup.component.html'
 })
 export class SignUpComponent {
-    private model = new RegistrationData();
+    model: RegistrationData = new RegistrationData();
 
     error: ServerError = null;
     success: boolean = false;
@@ -53,6 +53,7 @@ export class SignUpComponent {
                 (error: Response) => {
                     this.error = ServerError.fromResponse(error).data;
                     this.recaptcha.reset();
+                    this.model.resetCaptcha();
                 }
             );
     }

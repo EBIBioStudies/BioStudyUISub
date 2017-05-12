@@ -7,4 +7,12 @@ export class RegistrationData {
         public captcha: string = '',
         public path: string = ''
     ) {}
+
+    resetCaptcha(): void {
+        this.captcha = '';
+    }
+
+    hasCaptcha(): boolean {
+        return this.captcha != '';
+    }
 }
