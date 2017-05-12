@@ -1,4 +1,9 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Output
+} from '@angular/core';
+
 import {FileUploadService} from './file-upload.service';
 
 import * as _ from 'lodash';
@@ -41,8 +46,8 @@ export class FileUploadBadgeComponent {
 
     merge(dest: any[]): any[] {
         if (this._uploads.length == 0) {
-           this._uploads = dest;
-           return dest;
+            this._uploads = dest;
+            return dest;
         }
         let src = this._uploads;
         let i = 0, j = 0;
@@ -52,13 +57,13 @@ export class FileUploadBadgeComponent {
                 continue;
             }
             if (j >= dest.length && i < src.length) {
-                src.splice(i,1);
+                src.splice(i, 1);
                 continue;
             }
             let u1 = src[i];
             let u2 = dest[j];
             if (u1.name != u2.name) {
-                src.splice(i,1);
+                src.splice(i, 1);
                 i++;
                 continue;
             }

@@ -1,9 +1,9 @@
 import {NgModule}  from '@angular/core';
 import {RouterModule} from '@angular/router';
 
-import {SharedModule} from '../shared/shared.module';
-import {FileModule} from '../file/file.module';
-import {SubmissionSharedModule} from '../submission-shared/submission-shared.module';
+import {SharedModule} from 'app/shared/shared.module';
+import {FileModule} from 'app/file/file.module';
+import {SubmissionSharedModule} from 'app/submission-shared/submission-shared.module';
 
 import {SubmissionPanelComponent} from './panel/subm-panel.component';
 

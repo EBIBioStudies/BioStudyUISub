@@ -1,4 +1,11 @@
-import {Component, Input, OnChanges, SimpleChange, ViewChild} from '@angular/core';
+import {
+    Component,
+    Input,
+    OnChanges,
+    SimpleChange,
+    ViewChild
+} from '@angular/core';
+
 import {FormGroup} from '@angular/forms';
 
 import {Attributes} from '../model/submission';
@@ -23,15 +30,14 @@ import {SubmissionAttributesComponent} from './subm-attributes.component';
 `
 })
 export class SubmissionAttributesPanelComponent implements OnChanges {
-
     @Input() attributes: Attributes;
     @Input() parentForm: FormGroup;
     @Input() type: string;
     @Input() readonly: boolean;
 
-    @ViewChild(SubmissionAttributesComponent) private submAttrCmp: SubmissionAttributesComponent;
-
     attributesInfo: AttributesInfo;
+
+    @ViewChild(SubmissionAttributesComponent) private submAttrCmp: SubmissionAttributesComponent;
 
     ngOnChanges(changes: {[ propName: string]: SimpleChange}) {
         this.attributesInfo = new AttributesInfo(this.attributes);

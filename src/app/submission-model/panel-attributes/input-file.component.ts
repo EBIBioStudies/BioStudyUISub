@@ -1,7 +1,17 @@
-import {Component, Input, forwardRef} from '@angular/core';
-import {FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor} from '@angular/forms';
+import {
+    Component,
+    Input,
+    forwardRef
+} from '@angular/core';
 
-import {FileService} from '../../file/index';
+import {
+    FormControl,
+    ControlValueAccessor,
+    NG_VALUE_ACCESSOR,
+    NG_VALIDATORS
+} from '@angular/forms';
+
+import {FileService} from 'app/file/index';
 
 import * as _ from 'lodash';
 

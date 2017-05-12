@@ -1,5 +1,16 @@
-import {Component, Input, OnInit, OnDestroy, ViewChild, forwardRef} from '@angular/core';
-import {NgForm, FormGroup, FormControl} from '@angular/forms';
+import {
+    Component,
+    Input,
+    OnInit,
+    OnDestroy,
+    ViewChild
+} from '@angular/core';
+
+import {
+    NgForm,
+    FormGroup,
+    FormControl
+} from '@angular/forms';
 
 import * as _ from 'lodash';
 
@@ -72,7 +83,7 @@ export class SubmissionAttributesComponent implements OnInit, OnDestroy {
         this.__typeaheadNames = _.map(_.filter(dict.attributes, {required: false}), 'name');
     }
 
-    typeaheadAttrNames():string[] {
+    typeaheadAttrNames(): string[] {
         return _.filter(this.__typeaheadNames, (name) => !this.attributes.contains(name));
     }
 

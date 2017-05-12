@@ -1,5 +1,5 @@
 import {NgModule}  from '@angular/core';
-import {SharedModule} from '../shared/shared.module';
+import {SharedModule} from 'app/shared/shared.module';
 
 import {DateFormatDirective} from './date-format.directive';
 import {DateInputBoxComponent} from './date-input-box';

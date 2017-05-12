@@ -22,11 +22,11 @@ import {
 } from 'ngx-bootstrap';
 
 import {AppRoutingModule} from './app-routing.module';
-import {CoreModule} from './core';
-import {HelpModule} from './help';
-import {AuthModule} from './auth';
-import {SubmissionModule} from './submission';
-import {FileModule} from './file';
+import {CoreModule} from './core/core.module';
+import {HelpModule} from './help/help.module';
+import {AuthModule} from './auth/auth.module';
+import {FileModule} from './file/file.module';
+import {SubmissionModule} from './submission/submission.module';
 
 import {AppComponent} from './app.component';
 import {AuthGuard} from './auth.guard';

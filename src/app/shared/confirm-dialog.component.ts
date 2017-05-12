@@ -1,9 +1,12 @@
-import {Component, ViewChild} from '@angular/core';
+import {
+    Component,
+    ViewChild
+} from '@angular/core';
+
 import {ModalDirective} from 'ngx-bootstrap/modal';
 
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-
 import 'rxjs/add/operator/take';
 
 @Component({
@@ -56,7 +59,8 @@ export class ConfirmDialogComponent {
             .asObservable()
             .take(1)
             .filter(x => x)
-            .map(x => {});
+            .map(x => {
+            });
     }
 
     yes(): void {

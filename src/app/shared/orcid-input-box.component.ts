@@ -1,5 +1,14 @@
-import {Component, forwardRef} from '@angular/core';
-import {FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor} from '@angular/forms';
+import {
+    Component,
+    forwardRef
+} from '@angular/core';
+
+import {
+    FormControl,
+    ControlValueAccessor,
+    NG_VALUE_ACCESSOR,
+    NG_VALIDATORS
+} from '@angular/forms';
 
 import 'rxjs/add/observable/timer';
 
@@ -101,7 +110,7 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor {
     }
 
     openPopup() {
-        let thorIFrame:any = document.getElementById("thor");
+        let thorIFrame: any = document.getElementById("thor");
         console.debug("thor iframe", thorIFrame);
 
         let w = thorIFrame.contentWindow;

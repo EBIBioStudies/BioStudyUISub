@@ -1,8 +1,12 @@
 import {Component} from '@angular/core';
 import {Router} from '@angular/router';
 
-import {AuthService, UserSession} from '../../auth/index';
-import {AppConfig} from '../../app.config';
+import {
+    AuthService,
+    UserSession
+} from 'app/auth/index';
+
+import {AppConfig} from 'app/app.config';
 
 @Component({
     selector: 'app-header',
@@ -29,7 +33,6 @@ export class HeaderComponent {
                 this.router.navigate(['/signin']);
             }
         });
-
     }
 
     signOut() {

@@ -1,7 +1,15 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {
+    Component,
+    OnInit,
+    ViewChild
+} from '@angular/core';
+
 import {RecaptchaComponent} from 'ng-recaptcha';
 
-import {ActivatedRoute, Params} from '@angular/router';
+import {
+    ActivatedRoute,
+    Params
+} from '@angular/router';
 
 import {AuthService} from '../auth.service';
 

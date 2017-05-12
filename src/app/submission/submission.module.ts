@@ -3,10 +3,10 @@ import {RouterModule} from '@angular/router';
 
 import {AgGridModule} from 'ag-grid-angular/main';
 
-import {HttpClientModule} from '../http/http-client.module';
-import {SharedModule} from '../shared/shared.module';
-import {SubmissionModelModule} from '../submission-model/submission-model.module';
-import {SubmissionSharedModule} from '../submission-shared/submission-shared.module';
+import {HttpClientModule} from 'app/http/http-client.module';
+import {SharedModule} from 'app/shared/shared.module';
+import {SubmissionModelModule} from 'app/submission-model/submission-model.module';
+import {SubmissionSharedModule} from 'app/submission-shared/submission-shared.module';
 
 import {SubmissionService} from './submission.service';
 

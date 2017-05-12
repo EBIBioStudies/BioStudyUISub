@@ -7,7 +7,12 @@ import {
     forwardRef
 } from '@angular/core';
 
-import {FormControl, ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {
+    FormControl,
+    ControlValueAccessor,
+    NG_VALUE_ACCESSOR
+} from '@angular/forms';
+
 import {FileService} from './file.service';
 
 @Component({

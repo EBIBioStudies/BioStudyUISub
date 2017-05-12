@@ -1,9 +1,9 @@
-import {NgModule, ModuleWithProviders}  from '@angular/core';
+import {NgModule}  from '@angular/core';
 import {RouterModule} from '@angular/router';
 
 import {RecaptchaModule} from 'ng-recaptcha';
-import {HttpClientModule} from '../http/http-client.module';
-import {SharedModule} from '../shared/shared.module';
+import {HttpClientModule} from 'app/http/http-client.module';
+import {SharedModule} from 'app/shared/shared.module';
 
 import {AuthService} from './auth.service';
 import {UserSession} from './user-session';

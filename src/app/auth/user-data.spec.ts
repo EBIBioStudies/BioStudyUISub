@@ -1,7 +1,7 @@
-import {UserData} from './user-data';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 
+import {UserData} from './user-data';
 import {AuthService} from './auth.service';
 import {UserSession} from './user-session';
 

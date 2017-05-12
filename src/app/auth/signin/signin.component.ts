@@ -2,9 +2,10 @@ import {Component} from '@angular/core';
 import {Router} from '@angular/router';
 import {Response} from '@angular/http';
 
+import {ServerError} from 'app/http/index';
+
 import {AuthService} from '../auth.service';
 import {UserSession} from '../user-session';
-import {ServerError} from '../../http/index';
 
 @Component({
     selector: 'auth-signin',

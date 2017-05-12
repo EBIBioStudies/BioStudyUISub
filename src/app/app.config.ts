@@ -7,25 +7,25 @@ import 'rxjs/add/operator/toPromise';
 @Injectable()
 export class AppConfig {
 
-    private __config: any = {};
+    private config: any = {};
 
     constructor(private http: Http) {
     }
 
     get version(): string {
-        return this.__config.APP_VERSION;
+        return this.config.APP_VERSION;
     }
 
     get proxy_base(): string {
-        return this.__config.APP_PROXY_BASE;
+        return this.config.APP_PROXY_BASE;
     }
 
     get debug(): boolean {
-        return this.__config.APP_DEBUG_ENABLED;
+        return this.config.APP_DEBUG_ENABLED;
     }
 
     get prod(): boolean {
-        return this.__config.APP_PROD;
+        return this.config.APP_PROD;
     }
 
     // Promise is required here
@@ -34,8 +34,8 @@ export class AppConfig {
             .map(res => res.json());
 
         req.subscribe(res => {
-                this.__config = res;
-                console.log('config', this.__config);
+                this.config = res;
+                console.log('config', this.config);
             });
 
         return req.toPromise();

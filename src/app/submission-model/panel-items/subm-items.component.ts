@@ -1,5 +1,15 @@
-import {Component, Input, OnInit, OnDestroy, ViewChild} from '@angular/core';
-import {NgForm, FormGroup} from '@angular/forms';
+import {
+    Component,
+    Input,
+    OnInit,
+    OnDestroy,
+    ViewChild
+} from '@angular/core';
+
+import {
+    NgForm,
+    FormGroup
+} from '@angular/forms';
 
 import {TypeaheadValues} from '../panel/typeahead-values';
 import {DictionaryService} from '../dictionary.service';
@@ -135,7 +145,7 @@ export class SubmissionItemsComponent implements OnInit, OnDestroy {
     previewTabHeading: string;
     activeTab: number = -1;
 
-    private  __typeaheadValues: TypeaheadValues;
+    private __typeaheadValues: TypeaheadValues;
     private itemsForm: FormGroup;
 
     @ViewChild('itemsPreviewForm') private itemsPreviewForm: NgForm;

@@ -1,6 +1,16 @@
-import {Component, ViewChild, ViewContainerRef} from '@angular/core';
+import {
+    Component,
+    ViewChild,
+    ViewContainerRef
+} from '@angular/core';
 
-import {IFilterParams, IDoesFilterPassParams, RowNode, IAfterGuiAttachedParams} from 'ag-grid/main';
+import {
+    IFilterParams,
+    IDoesFilterPassParams,
+    RowNode,
+    IAfterGuiAttachedParams
+} from 'ag-grid/main';
+
 import {AgFilterComponent} from 'ag-grid-angular/main';
 
 @Component({
@@ -54,7 +64,7 @@ export class TextFilterComponent implements AgFilterComponent {
         this.input.element.nativeElement.focus();
     }
 
-    onApplyClick(ev):void {
+    onApplyClick(ev): void {
         this.notifyAboutChanges();
     }
 

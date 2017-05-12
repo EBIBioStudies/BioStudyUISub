@@ -1,8 +1,23 @@
-import {Component, ElementRef, ViewChild, forwardRef} from '@angular/core';
-import {FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor} from '@angular/forms';
+import {
+    Component,
+    ElementRef,
+    ViewChild,
+    forwardRef
+} from '@angular/core';
+
+import {
+    FormControl,
+    ControlValueAccessor,
+    NG_VALUE_ACCESSOR,
+    NG_VALIDATORS
+} from '@angular/forms';
 
 import 'rxjs/add/observable/timer';
-import {formatDate, parseDate} from './date.utils';
+
+import {
+    formatDate,
+    parseDate
+} from './date.utils';
 
 @Component({
     selector: 'date-input-box',

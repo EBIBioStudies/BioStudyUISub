@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Response} from '@angular/http';
 
-import {HttpClient} from '../../http/http-client';
 import {Observable} from 'rxjs/Observable';
-
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
+
+import {HttpClient} from 'app/http/http-client';
 
 @Injectable()
 export class PubMedSearchService {

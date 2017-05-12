@@ -1,12 +1,16 @@
 import {Injectable} from '@angular/core';
 import {Response} from '@angular/http';
-import {Observable} from 'rxjs/Observable';
 
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/throw';
+
+import {
+    HttpClient,
+    ServerError
+} from 'app/http/index'
 
 import {RegistrationData} from './registration-data';
 import {UserSession} from './user-session';
-import {HttpClient, ServerError} from '../http/index'
 
 @Injectable()
 export class AuthService {

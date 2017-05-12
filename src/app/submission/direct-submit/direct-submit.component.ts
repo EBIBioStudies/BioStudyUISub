@@ -1,8 +1,15 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
-import {DirectSubmitService, DirectSubmitRequest} from './direct-submit.service';
-import {TreeViewConfig, TreeViewCustomNodeComponent} from '../../submission-shared/index';
-
 import {Subscription} from 'rxjs/Subscription';
+
+import {
+    TreeViewConfig,
+    TreeViewCustomNodeComponent
+} from 'app/submission-shared/index';
+
+import {
+    DirectSubmitService,
+    DirectSubmitRequest
+} from './direct-submit.service';
 
 @Component({
     selector: 'result-log-node',

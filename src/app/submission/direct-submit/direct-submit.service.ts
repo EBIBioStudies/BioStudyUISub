@@ -4,8 +4,8 @@ import {Response} from '@angular/http';
 import {Subject} from 'rxjs/Subject';
 
 import {SubmissionService} from '../submission.service';
-import {PageTabProxy} from '../../submission-model/index';
-import {ServerError} from '../../http/index';
+import {PageTabProxy} from 'app/submission-model/index';
+import {ServerError} from 'app/http/index';
 
 enum ReqStatus {CONVERT, SUBMIT, ERROR, SUCCESS}
 

@@ -1,7 +1,21 @@
-import {Component, Input, Output, OnChanges, forwardRef, EventEmitter} from '@angular/core';
-import {FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor} from '@angular/forms';
+import {
+    Component,
+    Input,
+    Output,
+    OnChanges,
+    forwardRef,
+    EventEmitter
+} from '@angular/core';
+
+import {
+    FormControl,
+    ControlValueAccessor,
+    NG_VALUE_ACCESSOR,
+    NG_VALIDATORS
+} from '@angular/forms';
 
 import * as _ from 'lodash';
+
 import {PubMedSearchService} from './pubmedid-search.service';
 
 @Component({
@@ -64,7 +78,7 @@ export class PubMedIdSearchComponent implements ControlValueAccessor, OnChanges 
 
 
     get value() {
-        return  this.pubMedId;
+        return this.pubMedId;
     }
 
     set value(val) {

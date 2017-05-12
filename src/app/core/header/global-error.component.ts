@@ -1,5 +1,10 @@
-import {ErrorHandler, NgZone, Component} from '@angular/core';
-import {GlobalErrorHandler} from '../../global-error.handler';
+import {
+    ErrorHandler,
+    NgZone,
+    Component
+} from '@angular/core';
+
+import {GlobalErrorHandler} from 'app/global-error.handler';
 
 @Component({
     selector: 'global-error',

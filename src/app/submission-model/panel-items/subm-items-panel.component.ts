@@ -1,4 +1,11 @@
-import {Component, Input, OnChanges, SimpleChange, ViewChild} from '@angular/core';
+import {
+    Component,
+    Input,
+    OnChanges,
+    SimpleChange,
+    ViewChild
+} from '@angular/core';
+
 import {FormGroup} from '@angular/forms';
 
 import {Items} from '../model/submission';

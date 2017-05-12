@@ -1,7 +1,18 @@
-import {Inject, Directive, forwardRef, ElementRef, OnInit} from '@angular/core';
-import {Validator, AbstractControl, NG_VALIDATORS} from '@angular/forms';
+import {
+    Directive,
+    forwardRef
+} from '@angular/core';
 
-import {parseDate, formatDate} from './date.utils';
+import {
+    Validator,
+    AbstractControl,
+    NG_VALIDATORS
+} from '@angular/forms';
+
+import {
+    parseDate,
+    formatDate
+} from './date.utils';
 
 @Directive({
     selector: '[bsstDateFormat]',
@@ -13,7 +24,7 @@ export class DateFormatDirective implements Validator {
 
     private regexp = /(\d{4})\-(\d{2})\-(\d{2})/;
 
-    validate(c: AbstractControl): { [key: string]: any } {
+    validate(c: AbstractControl): {[key: string]: any} {
         let v = c.value || '';
         if (v !== '') {
             if (!this.valid(v)) {

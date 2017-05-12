@@ -1,14 +1,26 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
+import {
+    Component,
+    OnInit,
+    OnDestroy
+} from '@angular/core';
 
-import {ActivatedRoute, Params} from '@angular/router';
+import {
+    ActivatedRoute,
+    Params
+} from '@angular/router';
 
 import {Subscription} from 'rxjs/Subscription';
 
 import {GridOptions} from 'ag-grid/main';
-
 import {AgRendererComponent} from 'ag-grid-angular/main';
 
-import {FileService, FileUploadService, FileUpload} from './index';
+import {FileService} from './file.service';
+
+import {
+    FileUploadService,
+    FileUpload
+} from './file-upload.service';
+
 import {Path} from './path';
 
 import * as _ from 'lodash';

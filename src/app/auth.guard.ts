@@ -1,5 +1,11 @@
 import {Injectable} from '@angular/core';
-import {Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
+
+import {
+    Router,
+    CanActivate,
+    ActivatedRouteSnapshot,
+    RouterStateSnapshot
+} from '@angular/router';
 
 import {UserSession} from './auth/user-session';
 

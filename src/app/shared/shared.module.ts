@@ -1,6 +1,10 @@
-import {NgModule}            from '@angular/core';
-import {CommonModule}        from '@angular/common';
-import {FormsModule, ReactiveFormsModule}  from '@angular/forms';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+
+import {
+    FormsModule,
+    ReactiveFormsModule
+}  from '@angular/forms';
 
 import {
     TypeaheadModule,
@@ -35,8 +39,7 @@ import {MultiSelectComponent, FilterPipe} from './multi-select.component';
         CollapseModule,
         AlertModule
     ],
-    providers: [
-    ],
+    providers: [],
     declarations: [
         ContainerRootComponent,
         ContainerMdComponent,

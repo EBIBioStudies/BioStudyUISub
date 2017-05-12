@@ -1,9 +1,14 @@
-import {Component, ViewChild} from '@angular/core';
+import {
+    Component,
+    ViewChild
+} from '@angular/core';
+
 import {Response} from '@angular/http';
 import {RecaptchaComponent} from 'ng-recaptcha';
 
+import {ServerError} from 'app/http/index';
+
 import {AuthService} from '../auth.service';
-import {ServerError} from '../../http/index';
 
 @Component({
     selector: 'auth-activation-resend',

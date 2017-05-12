@@ -11,7 +11,7 @@ import {
     PageTab,
     DictionaryService,
     SubmissionModel
-} from '../../submission-model/index';
+} from 'app/submission-model/index';
 
 import {SubmissionService} from '../submission.service';
 

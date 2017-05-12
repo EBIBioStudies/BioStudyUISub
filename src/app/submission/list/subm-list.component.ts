@@ -5,14 +5,14 @@ import {Observable} from 'rxjs/Observable';
 import {GridOptions} from 'ag-grid/main';
 import {AgRendererComponent} from 'ag-grid-angular/main';
 
-import {SubmissionService} from '../submission.service';
-import {SubmissionModel} from '../../submission-model/index';
+import {SubmissionModel} from 'app/submission-model/index';
+import {UserData} from 'app/auth/index';
+import {ConfirmDialogComponent} from 'app/shared/index';
 
+import {SubmissionService} from '../submission.service';
 import {TextFilterComponent} from './ag-grid/text-filter.component';
 import {DateFilterComponent} from './ag-grid/date-filter.component';
-import {UserData} from '../../auth/index';
 
-import {ConfirmDialogComponent} from '../../shared/index';
 
 import * as _ from 'lodash';
 
@@ -230,7 +230,9 @@ export class SubmissionListComponent {
                     let pageSize = params.endRow - params.startRow;
                     let fm = params.filterModel || {};
 
-                    this.gridOptions.api.showLoadingOverlay();
+                    if (this.gridOptions.api != null) {
+                        this.gridOptions.api.showLoadingOverlay();
+                    }
 
                     this.submService.getSubmissions({
                         submitted: this.showSubmitted,

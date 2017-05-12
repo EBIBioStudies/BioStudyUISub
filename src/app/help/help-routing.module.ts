@@ -1,5 +1,10 @@
-import {NgModule}             from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
+import {NgModule} from '@angular/core';
+
+import {
+    RouterModule,
+    Routes
+} from '@angular/router';
+
 import {HelpComponent} from './help.component';
 
 const helpRoutes: Routes = [
@@ -13,8 +18,7 @@ const helpRoutes: Routes = [
     exports: [
         RouterModule
     ],
-    providers: [
-    ]
+    providers: []
 })
 export class HelpRoutingModule {
 }

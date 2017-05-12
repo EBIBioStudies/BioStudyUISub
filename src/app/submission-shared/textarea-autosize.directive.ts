@@ -1,4 +1,10 @@
-import {Input, ElementRef, HostListener, Directive} from '@angular/core';
+import {
+    Input,
+    ElementRef,
+    HostListener,
+    Directive
+} from '@angular/core';
+
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/distinctUntilChanged';
@@ -11,8 +17,8 @@ interface CSSStyleDeclarationWithResize extends CSSStyleDeclaration {
     selector: 'textarea[autosize]'
 })
 export class TextareaAutosize {
-    @Input('autosize') private maxHeight:number;
-    private minHeight:number = 50;
+    @Input('autosize') private maxHeight: number;
+    private minHeight: number = 50;
 
     constructor(private element: ElementRef) {
     }
@@ -26,7 +32,7 @@ export class TextareaAutosize {
 
         Observable.fromEvent(window, 'resize')
             .debounceTime(250)
-            .distinctUntilChanged((evt:any) => evt.timeStamp)
+            .distinctUntilChanged((evt: any) => evt.timeStamp)
             .subscribe(() => this.adjust());
     }
 

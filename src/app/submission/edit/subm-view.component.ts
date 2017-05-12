@@ -1,8 +1,20 @@
-import {Component, OnInit} from '@angular/core';
+import {
+    Component,
+    OnInit
+} from '@angular/core';
 
-import {ActivatedRoute, Router, Params} from '@angular/router';
+import {
+    ActivatedRoute,
+    Router,
+    Params
+} from '@angular/router';
 
-import {Submission, PageTab, DictionaryService} from '../../submission-model/index';
+import {
+    Submission,
+    PageTab,
+    DictionaryService
+} from 'app/submission-model/index';
+
 import {SubmissionService} from '../submission.service';
 
 @Component({
