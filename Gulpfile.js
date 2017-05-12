@@ -10,7 +10,7 @@ var extend = require('gulp-extend');
 gulp.task('config', function () {
     return gulp.src(['config.json', 'version.json'])
         .pipe(extend('config.json'))
-        .pipe(gulp.dest('app'));
+        .pipe(gulp.dest('src'));
 });
 
 gulp.task('clean', function () {
