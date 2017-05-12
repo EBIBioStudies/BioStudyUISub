@@ -18,14 +18,10 @@ import {UploadService} from './upload.service';
 
 @Injectable()
 export class HttpClient {
-    private prefix: string;
 
     constructor(private http: Http,
                 private uploadService: UploadService,
-                appConfig: AppConfig) {
-
-        this.prefix = appConfig.proxy_base;
-        console.log('proxy_base', this.prefix);
+                private appConfig: AppConfig) {
     }
 
     get(url, urlParams?: any[]) {
@@ -76,7 +72,7 @@ export class HttpClient {
 
     private transform(url: string) {
         if (url.startsWith('/api/') || url.startsWith('/raw/')) {
-            return this.prefix + url;
+            return this.appConfig.proxy_base + url;
         }
         return url;
     }
