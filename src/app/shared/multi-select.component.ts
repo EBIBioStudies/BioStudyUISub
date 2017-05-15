@@ -45,7 +45,7 @@ export class FilterPipe implements PipeTransform {
             <span class="caret"></span>
         </span>
     </button>
-    <ul dropdownMenu class="dropdown-menu" role="menu" [ngStyle]="{display:isOpen ? 'block' : 'none'}">
+    <ul *dropdownMenu class="dropdown-menu" role="menu" [ngStyle]="{display:isOpen ? 'block' : 'none'}">
         <li [hidden]="empty || !filterEnabled" role="menuitem">
             <div class="form-group filter">
                 <input class="form-control" 

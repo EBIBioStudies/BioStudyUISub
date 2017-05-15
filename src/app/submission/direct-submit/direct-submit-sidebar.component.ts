@@ -78,7 +78,7 @@ import * as _ from 'lodash';
                             dropdownToggle>
                        Submit as... <span class="caret"></span>
                     </button>
-                    <ul dropdownMenu role="menu" aria-labelledby="single-button">
+                    <ul *dropdownMenu role="menu" aria-labelledby="single-button" class="dropdown-menu">
                         <li role="menuitem"><a class="dropdown-item" (click)="onCreate()">New</a></li>
                         <li role="menuitem"><a class="dropdown-item" (click)="onUpdate()">Existing</a></li>
                     </ul>
