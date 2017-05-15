@@ -16,7 +16,7 @@
         <div *ngIf="!success" class="panel panel-info">
             <div class="panel-body">
                 <form id="signUpForm" novalidate name="signUpForm" role="form"
-                      (ngSubmit)="signUpForm.valid && model.hasCaptcha() && onSubmit($event)" #signUpForm="ngForm">
+                      (ngSubmit)="signUpForm.valid && model.valid() && onSubmit($event)" #signUpForm="ngForm">
                     <div class="form-group form-group-sm">
                         <label class="control-label" for="username">Full name</label>
                         <input type="text"
