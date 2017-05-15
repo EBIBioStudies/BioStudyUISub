@@ -33,8 +33,8 @@ import {AuthGuard} from './auth.guard';
 import {GlobalErrorHandler} from './global-error.handler';
 import {AppConfig} from './app.config';
 
-export function initConfig(config: AppConfig): Promise<any> {
-    return config.load();
+export function initConfig(config: AppConfig): () => Promise<any> {
+    return () => config.load();
 }
 
 @NgModule({
