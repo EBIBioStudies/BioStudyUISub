@@ -9,20 +9,21 @@ import {RecaptchaComponent} from 'ng-recaptcha';
 import {ServerError} from 'app/http/index';
 
 import {AuthService} from '../auth.service';
+import {PasswordResetRequestData} from '../model/email-req-data';
 
 @Component({
     selector: 'auth-passwd-reset-req',
     templateUrl: './password-reset-req.component.html'
 })
 export class PasswordResetReqComponent {
-    private model: any = {email: '', captcha: ''};
-    private message: string = '';
+    hasError: boolean = false;
+    showSuccess: boolean = false;
+
+    model: PasswordResetRequestData = new PasswordResetRequestData();
+    message: string = '';
 
     @ViewChild('recaptcha')
     private recaptcha: RecaptchaComponent;
-
-    hasError: boolean = false;
-    showSuccess: boolean = false;
 
     constructor(private authService: AuthService) {
     }
@@ -33,7 +34,7 @@ export class PasswordResetReqComponent {
         this.message = '';
         this.hasError = false;
 
-        this.authService.passwordResetRequest(this.model)
+        this.authService.passwordResetReq(this.model)
             .subscribe(
                 (data) => {
                     this.showSuccess = true;
@@ -41,6 +42,7 @@ export class PasswordResetReqComponent {
                 (error: Response) => {
                     this.hasError = true;
                     this.message = ServerError.fromResponse(error).message;
+                    this.model.resetCaptcha();
                     this.recaptcha.reset();
                 }
             );

@@ -11,7 +11,7 @@ import {UserData} from './user-data';
 
 import {SignInComponent} from './signin/signin.component';
 import {ActivateComponent} from './activate/activate.component';
-import {ResendActivationLinkComponent} from './activate/resend-activation-link.component';
+import {ActivationLinkReqComponent} from './activate/activation-link-req.component';
 import {PasswordResetReqComponent} from './password-reset/password-reset-req.component';
 import {PasswordResetComponent} from './password-reset/password-reset.component';
 import {SignUpComponent} from './signup/signup.component';
@@ -33,7 +33,7 @@ import {Equals2} from './password-reset/equals2.directive';
         SignInComponent,
         SignUpComponent,
         ActivateComponent,
-        ResendActivationLinkComponent,
+        ActivationLinkReqComponent,
         PasswordResetReqComponent,
         PasswordResetComponent,
         Equals2
@@ -42,7 +42,7 @@ import {Equals2} from './password-reset/equals2.directive';
         SignInComponent,
         SignUpComponent,
         ActivateComponent,
-        ResendActivationLinkComponent,
+        ActivationLinkReqComponent,
         PasswordResetReqComponent,
         PasswordResetComponent
     ]

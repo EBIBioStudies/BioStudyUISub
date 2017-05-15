@@ -9,16 +9,17 @@ import {RecaptchaComponent} from 'ng-recaptcha';
 import {ServerError} from 'app/http/index';
 
 import {AuthService} from '../auth.service';
+import {ActivationLinkRequestData} from '../model/email-req-data';
 
 @Component({
     selector: 'auth-activation-resend',
-    templateUrl: './resend-activation-link.component.html'
+    templateUrl: './activation-link-req.component.html'
 })
-export class ResendActivationLinkComponent {
+export class ActivationLinkReqComponent {
     hasError: boolean;
     showSuccess: boolean;
 
-    model = {email: '', captcha: ''};
+    model: ActivationLinkRequestData = new ActivationLinkRequestData();
     message: string;
 
     @ViewChild('recaptcha')
@@ -33,7 +34,7 @@ export class ResendActivationLinkComponent {
         this.message = '';
         this.hasError = false;
         this.authService
-            .resendActivationLink(this.model)
+            .activationLinkReq(this.model)
             .subscribe(
                 (data) => {
                     this.showSuccess = true;
@@ -41,6 +42,7 @@ export class ResendActivationLinkComponent {
                 (error: Response) => {
                     this.hasError = true;
                     this.message = ServerError.fromResponse(error).message;
+                    this.model.resetCaptcha();
                     this.recaptcha.reset();
                 }
             )

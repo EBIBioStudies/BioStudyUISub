@@ -11,8 +11,9 @@ import {
     SignInComponent,
     SignUpComponent,
     ActivateComponent,
-    ResendActivationLinkComponent,
-    PasswordResetReqComponent, PasswordResetComponent
+    ActivationLinkReqComponent,
+    PasswordResetReqComponent,
+    PasswordResetComponent
 } from './auth/index';
 
 import {
@@ -31,7 +32,7 @@ const appRoutes: Routes = [
     {path: 'activate/:key', component: ActivateComponent},
     {path: 'password_reset_request', component: PasswordResetReqComponent},
     {path: 'password_reset/:key', component: PasswordResetComponent},
-    {path: 'resend_activation_link', component: ResendActivationLinkComponent},
+    {path: 'resend_activation_link', component: ActivationLinkReqComponent},
     {path: 'submissions', component: SubmissionListComponent, canActivate: [AuthGuard]},
     {path: 'direct_upload', component: DirectSubmitComponent, canActivate: [AuthGuard]},
     {path: 'edit/:accno', component: SubmissionEditComponent, canActivate: [AuthGuard]},

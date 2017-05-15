@@ -6,62 +6,49 @@ import {
 
 import {RecaptchaComponent} from 'ng-recaptcha';
 
-import {
-    ActivatedRoute,
-    Params
-} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 
 import {AuthService} from '../auth.service';
+import {PasswordResetData} from '../model/password-reset-data';
 
 @Component({
     selector: 'auth-passwd-reset',
     templateUrl: './password-reset.component.html'
 })
 export class PasswordResetComponent implements OnInit {
-    private model = {
-        password1: '',
-        password2: '',
-        captcha: ''
-    };
-    private message: string = '';
-    private key: string;
+    hasError: boolean = false;
+    showSuccess: boolean = false;
+
+    model: PasswordResetData = new PasswordResetData();
+    message: string = '';
 
     @ViewChild('recaptcha')
     private recaptcha: RecaptchaComponent;
 
-    hasError: boolean = false;
-    showSuccess: boolean = false;
-
     constructor(private authService: AuthService,
-                private route: ActivatedRoute) {
+                private activatedRoute: ActivatedRoute) {
     }
 
     ngOnInit(): void {
-        this.route.params.forEach((params: Params) => {
-            let key = params['key'];
-            if (!key) {
-                this.hasError = true;
-                this.message = 'Invalid path';
-            }
-            this.key = key;
-        });
+        const key = this.activatedRoute.snapshot.paramMap.get('key');
+        if (key === null) {
+            this.hasError = true;
+            this.message = 'Invalid path';
+        }
+        this.model.key = key;
     }
 
     onSubmit(event): void {
         event.preventDefault();
 
-        if (this.model.password1 !== this.model.password2) {
-            console.error("password validation broken. Passwords do not match.");
+        if (!this.model.valid()) {
             return;
         }
-        if (this.model.password1.length < 6) {
-            console.error("password length validation broken. 6 chars is a minimum");
-            return;
-        }
+
         this.hasError = false;
         this.message = "";
         this.authService
-            .passwordReset({key: this.key, password: this.model.password1, captcha: this.model.captcha})
+            .passwordReset(this.model)
             .subscribe(
                 (data) => {
                     this.showSuccess = true;
@@ -69,6 +56,7 @@ export class PasswordResetComponent implements OnInit {
                 (error) => {
                     this.hasError = true;
                     this.message = error.message;
+                    this.model.resetCaptcha();
                     this.recaptcha.reset();
                 });
     }

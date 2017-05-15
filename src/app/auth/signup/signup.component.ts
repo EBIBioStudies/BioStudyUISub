@@ -12,7 +12,7 @@ import {ServerError} from 'app/http/index';
 
 import {AuthService} from '../auth.service';
 import {UserSession} from '../user-session';
-import {RegistrationData} from '../registration-data';
+import {RegistrationData} from '../model/registration-data';
 
 @Component({
     selector: 'auth-signup',

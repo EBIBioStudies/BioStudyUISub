@@ -9,7 +9,13 @@ import {
     ServerError
 } from 'app/http/index'
 
-import {RegistrationData} from './registration-data';
+import {RegistrationData} from './model/registration-data';
+import {PasswordResetData} from './model/password-reset-data';
+import {
+    ActivationLinkRequestData,
+    PasswordResetRequestData
+} from './model/email-req-data';
+
 import {UserSession} from './user-session';
 
 @Injectable()
@@ -19,7 +25,7 @@ export class AuthService {
                 private userSession: UserSession) {
     }
 
-    signIn(obj: {login: string, password: string}): Observable<any> {
+    signIn(obj: { login: string, password: string }): Observable<any> {
         return this.http.post('/raw/auth/signin', obj)
             .map((res: Response) => {
                 let data = res.json();
@@ -42,27 +48,19 @@ export class AuthService {
             });
     }
 
-    passwordResetRequest(obj: {email: string, captcha: string}): Observable<any> {
-        let path = this.getFullPath('#/password_reset');
-        return this.http.post('/api/auth/password/reset_request', {
-            email: obj.email,
-            captcha: obj.captcha,
-            path: path
-        }).map((res: Response) => res.json());
+    passwordResetReq(obj: PasswordResetRequestData): Observable<any> {
+        return this.http.post('/api/auth/password/reset_request', obj)
+            .map((res: Response) => res.json());
     }
 
-    passwordReset(obj: {key: string, password: string, captcha: string}): Observable<any> {
+    passwordReset(obj: PasswordResetData): Observable<any> {
         return this.http.post('/api/auth/password/reset', obj)
             .map((res: Response) => res.json());
     }
 
-    resendActivationLink(obj: {email: string, captcha: string}): Observable<any> {
-        let path = this.getFullPath('#/activate');
-        return this.http.post('/api/auth/activation/link', {
-            email: obj.email,
-            captcha: obj.captcha,
-            path: path
-        }).map((resp: Response) => resp.json());
+    activationLinkReq(obj: ActivationLinkRequestData): Observable<any> {
+        return this.http.post('/api/auth/activation/link', obj)
+            .map((resp: Response) => resp.json());
     }
 
     activate(key: string): Observable<any> {
@@ -71,7 +69,6 @@ export class AuthService {
     }
 
     signUp(regData: RegistrationData): Observable<any> {
-        regData.path = this.getFullPath('#/activate');
         return this.http.post('/api/auth/signup', regData)
             .map((resp: Response) => resp.json());
     }
@@ -85,12 +82,6 @@ export class AuthService {
                 this.sessionDestroy();
                 return {};
             });
-    }
-
-    private getFullPath(ancor: string = '') {
-        let loc = window.location;
-        console.log(loc, loc.pathname);
-        return loc.origin + loc.pathname + ancor;
     }
 
     private sessionDestroy() {
