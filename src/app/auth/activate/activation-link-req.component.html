@@ -1,7 +1,7 @@
 <container-root>
     <container-md>
 
-        <div class="panel panel-info">
+        <div class="panel" [ngClass]="{'panel-success' : !hasError, 'panel-danger': hasError}">
             <div class="panel-body" *ngIf="!showSuccess">
                 <h4>
                     Resend Activation Link
@@ -37,11 +37,10 @@
 
             </div>
             <div class="panel-body" *ngIf="showSuccess">
-                <p>
-                    <span class="help-block span-success-large margin-bottom-none">
-                        The activation link has been sent to the address you've entered. Please check your mailbox and follow the instructions in the email.
-                    </span>
-                </p>
+                <h4 class="text-success">
+                    The activation link has been sent to the address you've entered. Please check your mailbox and
+                    follow the instructions in the email.
+                </h4>
             </div>
         </div>
 
