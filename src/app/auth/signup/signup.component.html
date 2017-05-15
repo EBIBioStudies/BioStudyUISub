@@ -8,9 +8,9 @@
                 &nbsp;
             </div>
         </div>
-        <div class="panel panel-info" *ngIf="success">
+        <div *ngIf="success" class="panel panel-success">
             <div class="panel-body">
-                <h3>Thank you for registering. Please check your email for the account activation link.</h3>
+                <h4 class="text-success">Thank you for registering. Please check your email for the account activation link.</h4>
             </div>
         </div>
         <div *ngIf="!success" class="panel panel-info">
