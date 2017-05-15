@@ -1,6 +1,7 @@
 import {Captcha} from './captcha';
+import {WithSnapshot} from './with-snapshot';
 
-export class PasswordResetData {
+export class PasswordResetData extends WithSnapshot {
     key: string = '';
     password: string = '';
     passwordRepeat: string = '';
@@ -38,6 +39,6 @@ export class PasswordResetData {
     }
 
     snapshot(): any {
-        return this as {key: string, password: string, captcha: string};
+        return this.dataSnapshot(['key', 'password', 'captcha']);
     }
 }

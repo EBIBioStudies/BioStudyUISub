@@ -1,7 +1,8 @@
 import {Captcha} from './captcha';
 import {AppPath} from './app-path';
+import {WithSnapshot} from './with-snapshot';
 
-export class RegistrationData {
+export class RegistrationData extends WithSnapshot {
     username: string = '';
     password: string = '';
     email: string = '';
@@ -31,6 +32,6 @@ export class RegistrationData {
     }
 
     snapshot(): any {
-        return this as { username: string, password: string, email: string, orcid: string, captcha: string, path: string };
+        return this.dataSnapshot(['username', 'password', 'email', 'orcid', 'captcha', 'path']);
     }
 }

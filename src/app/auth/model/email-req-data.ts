@@ -1,13 +1,15 @@
 import {Captcha} from './captcha';
-import {AppPath} from "./app-path";
+import {AppPath} from './app-path';
+import {WithSnapshot} from './with-snapshot';
 
-class EmailRequestData {
+class EmailRequestData extends WithSnapshot {
     email: string;
 
     private _captcha: Captcha = new Captcha();
     private _path: AppPath;
 
     constructor(pathAncor: string) {
+        super();
         this._path = new AppPath(pathAncor);
     }
 
@@ -28,7 +30,7 @@ class EmailRequestData {
     }
 
     snapshot(): any {
-        return this as {email: string, captcha: string, path: string};
+        return this.dataSnapshot(['email', 'captcha', 'path']);
     }
 }
 
