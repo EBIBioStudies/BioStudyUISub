@@ -36,4 +36,8 @@ export class PasswordResetData {
         }
         return true;
     }
+
+    snapshot(): any {
+        return this as {key: string, password: string, captcha: string};
+    }
 }

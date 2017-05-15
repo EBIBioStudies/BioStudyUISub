@@ -49,17 +49,17 @@ export class AuthService {
     }
 
     passwordResetReq(obj: PasswordResetRequestData): Observable<any> {
-        return this.http.post('/api/auth/password/reset_request', obj)
+        return this.http.post('/api/auth/password/reset_request', obj.snapshot())
             .map((res: Response) => res.json());
     }
 
     passwordReset(obj: PasswordResetData): Observable<any> {
-        return this.http.post('/api/auth/password/reset', obj)
+        return this.http.post('/api/auth/password/reset', obj.snapshot())
             .map((res: Response) => res.json());
     }
 
     activationLinkReq(obj: ActivationLinkRequestData): Observable<any> {
-        return this.http.post('/api/auth/activation/link', obj)
+        return this.http.post('/api/auth/activation/link', obj.snapshot())
             .map((resp: Response) => resp.json());
     }
 
@@ -69,7 +69,7 @@ export class AuthService {
     }
 
     signUp(regData: RegistrationData): Observable<any> {
-        return this.http.post('/api/auth/signup', regData)
+        return this.http.post('/api/auth/signup', regData.snapshot())
             .map((resp: Response) => resp.json());
     }
 

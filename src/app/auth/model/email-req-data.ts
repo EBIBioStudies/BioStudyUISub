@@ -7,9 +7,12 @@ class EmailRequestData {
     private _captcha: Captcha = new Captcha();
     private _path: AppPath;
 
-
     constructor(pathAncor: string) {
         this._path = new AppPath(pathAncor);
+    }
+
+    get path(): string {
+        return this._path.value;
     }
 
     get captcha(): string {
@@ -22,6 +25,10 @@ class EmailRequestData {
 
     resetCaptcha(): void {
         this._captcha.reset();
+    }
+
+    snapshot(): any {
+        return this as {email: string, captcha: string, path: string};
     }
 }
 

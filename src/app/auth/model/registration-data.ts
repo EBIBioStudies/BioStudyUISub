@@ -29,4 +29,8 @@ export class RegistrationData {
     resetCaptcha(): void {
         this._captcha.reset();
     }
+
+    snapshot(): any {
+        return this as { username: string, password: string, email: string, orcid: string, captcha: string, path: string };
+    }
 }
