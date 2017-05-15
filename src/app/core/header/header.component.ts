@@ -14,34 +14,31 @@ import {AppConfig} from 'app/app.config';
 })
 
 export class HeaderComponent {
-    isNavCollapsed: boolean = true;
-    appVersion: string = '0.0.0';
-    userLoggedIn: boolean = false;
+    navCollapsed: boolean = true;
 
     constructor(private session: UserSession,
                 private router: Router,
                 private authService: AuthService,
-                appConfig: AppConfig) {
-
-        this.userLoggedIn = !session.isAnonymous();
-
-        this.appVersion = appConfig.version;
-
-        this.session.created$.subscribe(created => {
-            this.userLoggedIn = created;
-            if (!created) {
-                this.router.navigate(['/signin']);
-            }
-        });
+                private appConfig: AppConfig) {
     }
 
     signOut() {
-        this.authService.signOut().subscribe(data => {
-            this.router.navigate(['/signin']);
-        });
+        this.authService
+            .signOut()
+            .subscribe(data => {
+                this.router.navigate(['/signin']);
+            });
     }
 
     toggleCollapsed() {
-        this.isNavCollapsed = !this.isNavCollapsed;
+        this.navCollapsed = !this.navCollapsed;
+    }
+
+    get appVersion(): string {
+        return this.appConfig.version;
+    }
+
+    get userLoggedIn(): boolean {
+        return !this.session.isAnonymous();
     }
 }
