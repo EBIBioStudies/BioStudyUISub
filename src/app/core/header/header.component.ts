@@ -25,8 +25,7 @@ export class HeaderComponent {
         this.userLoggedIn = !this.session.isAnonymous();
 
         this.session.created$.subscribe(created => {
-            const sessionExpired = !created && this.userLoggedIn;
-            console.log('session expired');
+            const sessionExpired = this.userLoggedIn && !created;
             this.userLoggedIn = created;
             if (sessionExpired) {
                 this.router.navigate(['/signin']);
