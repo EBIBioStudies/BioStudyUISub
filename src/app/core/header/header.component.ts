@@ -15,19 +15,29 @@ import {AppConfig} from 'app/app.config';
 
 export class HeaderComponent {
     navCollapsed: boolean = true;
+    userLoggedIn: boolean = false;
 
     constructor(private session: UserSession,
                 private router: Router,
                 private authService: AuthService,
                 private appConfig: AppConfig) {
+
+        this.userLoggedIn = !this.session.isAnonymous();
+
+        this.session.created$.subscribe(created => {
+            const sessionExpired = !created && this.userLoggedIn;
+            console.log('session expired');
+            this.userLoggedIn = created;
+            if (sessionExpired) {
+                this.router.navigate(['/signin']);
+            }
+        });
     }
 
     signOut() {
         this.authService
             .signOut()
-            .subscribe(data => {
-                this.router.navigate(['/signin']);
-            });
+            .subscribe(()=>{});
     }
 
     toggleCollapsed() {
@@ -36,9 +46,5 @@ export class HeaderComponent {
 
     get appVersion(): string {
         return this.appConfig.version;
-    }
-
-    get userLoggedIn(): boolean {
-        return !this.session.isAnonymous();
     }
 }

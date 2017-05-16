@@ -5,7 +5,7 @@ import {
     Routes
 } from '@angular/router';
 
-import {AuthGuard} from './auth.guard';
+import {AuthGuard} from './auth-guard.service';
 
 import {
     SignInComponent,
@@ -47,7 +47,9 @@ const appRoutes: Routes = [
     exports: [
         RouterModule
     ],
-    providers: []
+    providers: [
+        AuthGuard
+    ]
 })
 export class AppRoutingModule {
 }

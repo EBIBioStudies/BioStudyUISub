@@ -16,18 +16,12 @@ export class AuthGuard implements CanActivate {
     }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-        let url: string = state.url;
-        return this.checkLogin(url);
-    }
-
-    checkLogin(url: string): boolean {
         if (!this.userSession.isAnonymous()) {
             return true;
         }
-        //TODO this.authService.redirectUrl = url;
+        //TODO this.authService.redirectUrl = state.url;
 
         this.router.navigate(['/signin']);
-
         return false;
     }
 }

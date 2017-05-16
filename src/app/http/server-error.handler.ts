@@ -28,7 +28,7 @@ export class ServerError {
         return this._status;
     }
 
-    isInputError(): boolean {
+    isDataError(): boolean {
         return this._status === 422 || this._status === 400;
     }
 
@@ -52,7 +52,7 @@ export class ServerError {
         return new ServerError(error.status, error.statusText, data);
     }
 
-    public static inputError(data: any): ServerError {
+    public static dataError(data: any): ServerError {
         return new ServerError(422, 'Unprocessable Entity', data);
     }
 }

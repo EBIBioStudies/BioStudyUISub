@@ -142,7 +142,7 @@ export class DirectSubmitService {
                 (error: Response) => {
                     const err = ServerError.fromResponse(error);
                     this.onConvertRequestFinished(req, err.data || {});
-                    if (!err.isInputError()) {
+                    if (!err.isDataError()) {
                         setTimeout(function() {
                             throw err;
                         }, 10);
@@ -162,7 +162,7 @@ export class DirectSubmitService {
                 (error: Response) => {
                     const err = ServerError.fromResponse(error);
                     this.onSubmitRequestFinished(req, err.data || {});
-                    if (!err.isInputError()) {
+                    if (!err.isDataError()) {
                         setTimeout(function() {
                             throw err;
                         }, 10);

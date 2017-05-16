@@ -104,7 +104,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
                     this.errors = ['Failed to submit'];
                     this.showSubmitResults();
 
-                    if (!error.isInputError()) {
+                    if (!error.isDataError()) {
                         throw error;
                     }
                 });

@@ -29,7 +29,6 @@ import {FileModule} from './file/file.module';
 import {SubmissionModule} from './submission/submission.module';
 
 import {AppComponent} from './app.component';
-import {AuthGuard} from './auth.guard';
 import {GlobalErrorHandler} from './global-error.handler';
 import {AppConfig} from './app.config';
 
@@ -62,7 +61,6 @@ export function initConfig(config: AppConfig): () => Promise<any> {
     ],
     providers: [
         AppConfig,
-        AuthGuard,
         {provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true},
         {provide: LocationStrategy, useClass: HashLocationStrategy},
         {provide: ErrorHandler, useClass: GlobalErrorHandler}

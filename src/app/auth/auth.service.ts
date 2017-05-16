@@ -33,7 +33,7 @@ export class AuthService {
                     this.userSession.create(data.sessid);
                     return data;
                 }
-                return Observable.throw(ServerError.inputError(data));
+                return Observable.throw(ServerError.dataError(data));
             });
     }
 
@@ -44,7 +44,7 @@ export class AuthService {
                 if (data.status === 'OK') {
                     return data;
                 }
-                return Observable.throw(ServerError.inputError(data));
+                return Observable.throw(ServerError.dataError(data));
             });
     }
 
@@ -79,12 +79,8 @@ export class AuthService {
         }
         return this.http.post("/api/auth/signout", {})
             .map(() => {
-                this.sessionDestroy();
+                this.userSession.destroy();
                 return {};
             });
-    }
-
-    private sessionDestroy() {
-        this.userSession.destroy();
     }
 }
