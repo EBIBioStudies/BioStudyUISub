@@ -335,7 +335,7 @@ export class PageTabProxy {
 
     private attrValues(path: string, attrName: string): string[] {
         let attributes = this.path(path, []);
-        return _.map(_.filter(attributes, {name: attrName}, (attr) => attr.value));
+        return _.map(_.filter(attributes, {name: attrName}), (attr) => attr.value);
     }
 
     static create(obj?: any): PageTabProxy {
