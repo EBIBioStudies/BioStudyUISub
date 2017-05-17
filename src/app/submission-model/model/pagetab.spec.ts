@@ -1,5 +1,6 @@
 import {PAGETAB_SAMPLE} from './pagetab.sample';
-import {PageTab, PageTabProxy} from './index';
+import {PageTab} from './pagetab';
+import {PageTabProxy} from './pagetabproxy';
 
 describe('PageTab', () => {
     it('ensure publications are parsed correctly', () => {
