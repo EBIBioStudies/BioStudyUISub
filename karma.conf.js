@@ -2,103 +2,52 @@
 // Generated on Mon May 16 2016 11:10:10 GMT+0100 (BST)
 
 module.exports = function (config) {
-    var configuration = {
-
-        // base path that will be used to resolve all patterns (eg. files, exclude)
-        basePath: './app',
-
-        // frameworks to use
-        // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
+    const conf = {
+        basePath: '',
         frameworks: [
-            'jspm',
-            'jasmine'
+            'jasmine',
+            '@angular/cli'
         ],
 
-        plugins: ['karma-uiuxengineering-jspm', 'karma-jasmine', 'karma-chrome-launcher'],
-
-        jspm: {
-            jspmConfig: 'jspm.config.js',
-            browserConfig: 'jspm.browser.js',
-            packages: 'jspm_packages',
-            adapter: 'angular2',
-            files: [
-                'lib/**/*.ts',
-                'lib/**/*.html',
-                'lib/**/*.json'
-            ]
+        plugins: [
+            require('karma-jasmine'),
+            require('karma-chrome-launcher'),
+            require('karma-jasmine-html-reporter'),
+            require('karma-coverage-istanbul-reporter'),
+            require('@angular/cli/plugins/karma')
+        ],
+        client: {
+            clearContext: false // leave Jasmine Spec Runner output visible in browser
         },
-
-        // must have path roots of serveFiles and loadFiles, suppress annoying 404 warnings.
-        proxies: {
-            '/lib/': '/base/lib/',
-            '/jspm_packages/': '/base/jspm_packages/'
-        },
-
-        // list of files to exclude
-        exclude: [],
-
-
-        // preprocess matching files before serving them to the browser
-        // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
+        files: [
+            {pattern: './src/test.ts', watched: false}
+        ],
         preprocessors: {
-            'app/**/!(*.spec).ts': ['jspm']
+            './src/test.ts': ['@angular/cli']
         },
-        /*
-         proxies: {
-         '/': '/app'
-         },
-         */
-
-        //urlRoot: "/",
-        // test results reporter to use
-        // possible values: 'dots', 'progress'
-        // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: ['progress'],
-
-
-        // web server port
+        mime: {
+            'text/x-typescript': ['ts','tsx']
+        },
+        coverageIstanbulReporter: {
+            reports: [ 'html', 'lcovonly' ],
+            fixWebpackSourcePaths: true
+        },
+        angularCli: {
+            environment: 'dev'
+        },
+        reporters: config.angularCli && config.angularCli.codeCoverage
+            ? ['progress', 'coverage-istanbul']
+            : ['progress', 'kjhtml'],
         port: 9876,
-
-
-        // enable / disable colors in the output (reporters and logs)
         colors: true,
-
-
-        // level of logging
-        // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-        logLevel: config.LOG_WARN,
-
-
-        // enable / disable watching file and executing tests whenever any file changes
-        autoWatch: false,
-
-
-        // start these browsers
-        // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: [
-            //'PhantomJS'
-            'Chrome',
-            // , 'Firefox'
-            // , 'Safari'
-        ],
-
-        customLaunchers: {
-            chrome_travis_ci: {
-                base: 'Chrome',
-                flags: ['--no-sandbox']
-            }
-        },
-
-        // Continuous Integration mode
-        // if true, Karma captures browsers, runs the tests and exits
-        singleRun: false,
-
-        browserNoActivityTimeout: 3000000
+        logLevel: config.LOG_INFO,
+        autoWatch: true,
+        browsers: ['Chrome'],
+        singleRun: false
     };
 
     if (process.env.TRAVIS) {
-        configuration.browsers = ['chrome_travis_ci'];
+        conf.browsers = ['chrome_travis_ci'];
     }
-
-    config.set(configuration);
+    config.set(conf);
 };

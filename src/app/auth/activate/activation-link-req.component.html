@@ -1,0 +1,48 @@
+<container-root>
+    <container-md>
+
+        <div class="panel" [ngClass]="{'panel-success' : !hasError, 'panel-danger': hasError}">
+            <div class="panel-body" *ngIf="!showSuccess">
+                <h4>
+                    Resend Activation Link
+                </h4>
+                <p>Please enter your registered e-mail address here so that we can resend you the activation link.</p>
+                <h5 *ngIf="hasError" class="text-danger">
+                    {{message}}
+                </h5>
+                <form novalidate name="raForm" role="form"
+                      (ngSubmit)="raForm.valid && onSubmit($event)" #raForm="ngForm">
+                    <div class="form-group" [ngClass]="{'has-error': email.invalid}">
+                        <label class="control-label" for="email">Email
+                            <span *ngIf="email.errors">
+                                <span *ngIf="email.errors.required">: cannot be blank</span>
+                            </span>
+                        </label>
+                        <input type="text" id="email" name="email" tabindex="1"
+                               class="form-control"
+                               placeholder="Email address"
+                               [(ngModel)]="model.email"
+                               (change)="message=''"
+                               required
+                               #email>
+                    </div>
+                    <re-captcha (resolved)="onRecaptchaResolved($event)"
+                                siteKey="6Lcmlv0SAAAAAHofnIcb29l1LMZsnGFcSlH8Reve"
+                                #recaptcha></re-captcha>
+                    <div class="form-group margin-top-large">
+                        <i *ngIf="sending" class="fa fa-spinner fa-pulse fa-3x"></i>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+
+            </div>
+            <div class="panel-body" *ngIf="showSuccess">
+                <h4 class="text-success">
+                    The activation link has been sent to the address you've entered. Please check your mailbox and
+                    follow the instructions in the email.
+                </h4>
+            </div>
+        </div>
+
+    </container-md>
+</container-root>

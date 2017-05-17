@@ -1,276 +1,65 @@
 {
   "name": "lib",
-  "description": "BioStuties Submssion Tool (UI)",
+  "description": "BioStudies Submission Tool (UI)",
+  "version": "0.0.0",
   "private": true,
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve --proxy-config proxy.conf.json --ssl true --ssl-key ssl/localhost.key --ssl-cert ssl/localhost.crt",
+    "build": "ng build",
+    "test": "ng test",
+    "lint": "ng lint",
+    "e2e": "ng e2e"
+  },
+  "dependencies": {
+    "@angular/common": "^4.1.1",
+    "@angular/compiler": "^4.1.1",
+    "@angular/compiler-cli": "^4.1.1",
+    "@angular/core": "^4.1.1",
+    "@angular/forms": "^4.1.1",
+    "@angular/http": "^4.1.1",
+    "@angular/platform-browser": "^4.1.1",
+    "@angular/platform-browser-dynamic": "^4.1.1",
+    "@angular/router": "^4.1.1",
+    "ag-grid": "=8.1.0",
+    "ag-grid-angular": "=8.1.0",
+    "core-js": "^2.4.1",
+    "font-awesome": "^4.7.0",
+    "lodash": "^4.17.4",
+    "ng-recaptcha": "^2.1.1",
+    "ng2-cookies": "^1.0.2",
+    "ngx-bootstrap": "^1.6.6",
+    "rxjs": "^5.3.1",
+    "zone.js": "^0.8.4"
+  },
   "devDependencies": {
+    "@angular/cli": "^1.0.2",
+    "@types/jasmine": "^2.5.47",
+    "@types/node": "^7.0.18",
     "amdefine": "^1.0.1",
+    "css-loader": "^0.28.1",
     "del": "^2.2.1",
+    "file-loader": "^0.11.1",
     "gulp": "gulpjs/gulp#4.0",
-    "gulp-bump": "^2.1.0",
     "gulp-debug": "^3.0.0",
     "gulp-extend": "^0.2.0",
-    "gulp-html-replace": "^1.6.1",
-    "gulp-less": "^3.3.0",
     "gulp-mocha": "^2.0.0",
-    "gulp-replace": "^0.5.4",
-    "gulp-sourcemaps": "^1.9.1",
     "gulp-util": "^3.0.7",
     "gulp-webserver": "^0.9.1",
     "gulp-zip": "^3.2.0",
-    "handlebars": "^4.0.6",
-    "jasmine-core": "^2.4.1",
-    "karma": "^1.3.0",
-    "karma-chrome-launcher": "^0.1.12",
-    "karma-firefox-launcher": "^0.1.3",
-    "karma-jasmine": "^1.0.2",
-    "karma-jspm": "^2.2.0",
+    "jasmine-core": "~2.6.1",
+    "jasmine-spec-reporter": "~4.1.0",
+    "karma": "~1.4.1",
+    "karma-chrome-launcher": "~2.0.0",
+    "karma-coverage-istanbul-reporter": "~1.2.1",
+    "karma-jasmine": "~1.1.0",
+    "karma-jasmine-html-reporter": "^0.2.2",
     "karma-junit-reporter": "^0.2.2",
-    "karma-mocha": "~0.1.9",
-    "karma-phantomjs-launcher": "~0.1.4",
-    "karma-spec-reporter": "0.0.26",
-    "karma-uiuxengineering-jspm": "^3.2.0",
-    "lodash": "^4.17.2",
+    "less": "^2.7.2",
+    "less-loader": "^4.0.3",
     "mocha": "^2.2.4",
-    "q": "^1.4.1",
-    "should": "^4.4.1",
-    "systemjs-builder": "^0.15.26",
-    "typescript": "^2.1.4",
-    "uglify-js": "^2.7.0"
-  },
-  "jspm": {
-    "main": "main.js",
-    "directories": {
-      "baseURL": "app"
-    },
-    "configFile": "app/jspm.config.js",
-    "dependencies": {
-      "@angular/http": "npm:@angular/http@^2.3.1",
-      "@angular/router": "npm:@angular/router@^3.0.2",
-      "@angular/upgrade": "npm:@angular/upgrade@^2.0.1",
-      "angular2-recaptcha": "npm:angular2-recaptcha@^0.3.3",
-      "bootstrap": "github:twbs/bootstrap@^3.3.7",
-      "core-js": "npm:core-js@^2.4.1",
-      "css": "github:systemjs/plugin-css@^0.1.32",
-      "es6-shim": "github:es-shims/es6-shim@^0.35.1",
-      "font-awesome": "npm:font-awesome@^4.7.0",
-      "jspm-nodelibs-process": "npm:jspm-nodelibs-process@0.2.0",
-      "less": "npm:less@^2.7.1",
-      "lodash": "npm:lodash@^4.17.4",
-      "monospaced/angular-elastic": "github:monospaced/angular-elastic@^2.5.1",
-      "ng2-bootstrap": "npm:ng2-bootstrap@^1.3.3",
-      "ng2-cookies": "npm:ng2-cookies@^1.0.2",
-      "ng2-recaptcha": "npm:ng2-recaptcha@^1.4.0",
-      "ng2-smart-table": "npm:ng2-smart-table@^0.4.0-3",
-      "reflect-metadata": "npm:reflect-metadata@^0.1.8"
-    },
-    "devDependencies": {
-      "plugin-babel": "npm:systemjs-plugin-babel@^0.0.16",
-      "text": "github:systemjs/plugin-text@^0.0.9",
-      "ts": "github:frankwallis/plugin-typescript@^5.2.6"
-    },
-    "peerDependencies": {
-      "@angular/common": "npm:@angular/common@2.3.1",
-      "@angular/compiler": "npm:@angular/compiler@^2.3.1",
-      "@angular/core": "npm:@angular/core@2.3.1",
-      "@angular/forms": "npm:@angular/forms@^2.3.1",
-      "@angular/platform-browser": "npm:@angular/platform-browser@2.3.1",
-      "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@^2.3.1",
-      "assert": "npm:jspm-nodelibs-assert@^0.2.0",
-      "buffer": "npm:jspm-nodelibs-buffer@^0.2.0",
-      "constants": "npm:jspm-nodelibs-constants@^0.2.0",
-      "crypto": "npm:jspm-nodelibs-crypto@^0.2.0",
-      "domain": "npm:jspm-nodelibs-domain@^0.2.0",
-      "errno": "npm:errno@^0.1.1",
-      "events": "npm:jspm-nodelibs-events@^0.2.0",
-      "fs": "npm:jspm-nodelibs-fs@^0.2.0",
-      "graceful-fs": "npm:graceful-fs@^4.1.2",
-      "image-size": "npm:image-size@0.5",
-      "mime": "npm:mime@^1.2.11",
-      "mkdirp": "npm:mkdirp@^0.5.0",
-      "os": "npm:jspm-nodelibs-os@^0.2.0",
-      "path": "npm:jspm-nodelibs-path@^0.2.0",
-      "process": "npm:jspm-nodelibs-process@^0.2.0",
-      "promise": "npm:promise@^7.1.1",
-      "rxjs": "npm:rxjs@5.0.0-rc.4",
-      "source-map": "npm:source-map@^0.5.3",
-      "stream": "npm:jspm-nodelibs-stream@^0.2.0",
-      "string_decoder": "npm:jspm-nodelibs-string_decoder@^0.2.0",
-      "timers": "npm:jspm-nodelibs-timers@^0.2.0",
-      "url": "npm:jspm-nodelibs-url@^0.2.0",
-      "util": "npm:jspm-nodelibs-util@^0.2.0",
-      "vm": "npm:jspm-nodelibs-vm@^0.2.0",
-      "zone.js": "npm:zone.js@^0.7.2"
-    },
-    "overrides": {
-      "github:twbs/bootstrap@3.3.7": {
-        "main": "js/bootstrap.js",
-        "dependencies": {
-          "jquery": "jspm:jquery@*"
-        },
-        "files": [
-          "dist",
-          "fonts",
-          "js",
-          "css"
-        ],
-        "meta": {
-          "js/bootstrap.js": {
-            "deps": [
-              "jquery"
-            ],
-            "exports": "$",
-            "format": "global"
-          }
-        }
-      },
-      "npm:@angular/common@2.3.1": {
-        "meta": {
-          "src/*.js": {
-            "deps": [
-              "reflect-metadata",
-              "zone.js"
-            ]
-          }
-        },
-        "map": {
-          "@angular/common": ".",
-          "./testing": "./bundles/common-testing.umd.js"
-        }
-      },
-      "npm:@angular/compiler@2.3.1": {
-        "meta": {
-          "src/*.js": {
-            "deps": [
-              "reflect-metadata",
-              "zone.js"
-            ]
-          }
-        },
-        "map": {
-          "@angular/compiler": ".",
-          "./testing": "./bundles/compiler-testing.umd.js"
-        }
-      },
-      "npm:@angular/core@2.3.1": {
-        "meta": {
-          "src/*.js": {
-            "deps": [
-              "reflect-metadata",
-              "zone.js"
-            ]
-          }
-        },
-        "map": {
-          "@angular/core": ".",
-          "./testing": "./bundles/core-testing.umd.js"
-        }
-      },
-      "npm:@angular/http@2.3.1": {
-        "meta": {
-          "src/*.js": {
-            "deps": [
-              "reflect-metadata",
-              "zone.js"
-            ]
-          }
-        },
-        "map": {
-          "@angular/http": ".",
-          "./testing": "./bundles/http-testing.umd.js"
-        }
-      },
-      "npm:@angular/platform-browser-dynamic@2.3.1": {
-        "meta": {
-          "src/*.js": {
-            "deps": [
-              "reflect-metadata",
-              "zone.js"
-            ]
-          }
-        },
-        "map": {
-          "@angular/platform-browser-dynamic": ".",
-          "./testing": "./bundles/platform-browser-dynamic-testing.umd.js"
-        }
-      },
-      "npm:@angular/platform-browser@2.3.1": {
-        "meta": {
-          "src/*.js": {
-            "deps": [
-              "reflect-metadata",
-              "zone.js"
-            ]
-          }
-        },
-        "map": {
-          "@angular/platform-browser": ".",
-          "./testing": "./bundles/platform-browser-testing.umd.js"
-        }
-      },
-      "npm:@angular/router@3.0.2": {
-        "meta": {
-          "src/*.js": {
-            "deps": [
-              "reflect-metadata",
-              "zone.js"
-            ]
-          }
-        },
-        "map": {
-          "@angular/router": ".",
-          "./testing": "./bundles/router-testing.umd.js"
-        }
-      },
-      "npm:font-awesome@4.7.0": {
-        "main": "css/font-awesome.css!",
-        "jspmNodeConversion": false,
-        "registry": "jspm",
-        "dependencies": {
-          "css": "0.1"
-        }
-      },
-      "npm:inherits@2.0.3": {
-        "ignore": [
-          "test.js"
-        ]
-      },
-      "npm:jquery@3.1.1": {
-        "format": "amd"
-      },
-      "npm:lodash@4.17.4": {
-        "map": {
-          "buffer": "@empty",
-          "process": "@empty"
-        }
-      },
-      "npm:moment@2.17.1": {
-        "jspmNodeConversion": false
-      },
-      "npm:reflect-metadata@0.1.8": {
-        "jspmNodeConversion": false,
-        "map": {
-          "crypto": {
-            "node": "@node/crypto",
-            "default": "@empty"
-          }
-        }
-      },
-      "npm:typescript@2.0.3": {
-        "browser": {},
-        "map": {
-          "buffer": "@empty",
-          "child_process": "@empty",
-          "fs": "@empty",
-          "path": "@empty",
-          "process": "@empty",
-          "readline": "@empty"
-        }
-      }
-    }
-  },
-  "dependencies": {
-    "ag-grid": "=8.1.0",
-    "ag-grid-angular": "=8.1.0",
-    "jspm": "=0.17.0-beta.32"
+    "style-loader": "^0.17.0",
+    "typescript": "^2.3.2",
+    "uglify-js": "^3.0.4"
   }
 }
