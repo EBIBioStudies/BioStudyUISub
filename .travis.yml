@@ -4,7 +4,6 @@ sudo: required
 branches:
   only:
     - dev
-    - master
 
 language: node_js
 
