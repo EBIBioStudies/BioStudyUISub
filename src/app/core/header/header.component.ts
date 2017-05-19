@@ -17,14 +17,14 @@ export class HeaderComponent {
     navCollapsed: boolean = true;
     userLoggedIn: boolean = false;
 
-    constructor(private session: UserSession,
+    constructor(private userSession: UserSession,
                 private router: Router,
                 private authService: AuthService,
                 private appConfig: AppConfig) {
 
-        this.userLoggedIn = !this.session.isAnonymous();
+        this.userLoggedIn = !this.userSession.isAnonymous();
 
-        this.session.created$.subscribe(created => {
+        this.userSession.created$.subscribe(created => {
             const sessionExpired = this.userLoggedIn && !created;
             this.userLoggedIn = created;
             if (sessionExpired) {
@@ -36,7 +36,14 @@ export class HeaderComponent {
     signOut() {
         this.authService
             .signOut()
-            .subscribe(()=>{});
+            .subscribe(
+                ()=>{},
+                (error)=> {
+                    // fix this: 403 response should not be returned here
+                    if (error.status === 403) {
+                        this.userSession.destroy();
+                    }
+                });
     }
 
     toggleCollapsed() {

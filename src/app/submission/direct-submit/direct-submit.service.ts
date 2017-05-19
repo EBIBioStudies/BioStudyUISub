@@ -139,13 +139,10 @@ export class DirectSubmitService {
                 data => {
                     this.onConvertRequestFinished(req, data);
                 },
-                (error: Response) => {
-                    const err = ServerError.fromResponse(error);
-                    this.onConvertRequestFinished(req, err.data || {});
-                    if (!err.isDataError()) {
-                        setTimeout(function() {
-                            throw err;
-                        }, 10);
+                (error: any) => {
+                    this.onConvertRequestFinished(req, error.data || {});
+                    if (!error.isDataError) {
+                        throw error;
                     }
                 }
             );
@@ -159,13 +156,10 @@ export class DirectSubmitService {
                 data => {
                     this.onSubmitRequestFinished(req, data);
                 },
-                (error: Response) => {
-                    const err = ServerError.fromResponse(error);
-                    this.onSubmitRequestFinished(req, err.data || {});
-                    if (!err.isDataError()) {
-                        setTimeout(function() {
-                            throw err;
-                        }, 10);
+                (error: ServerError) => {
+                    this.onSubmitRequestFinished(req, error.data || {});
+                    if (!error.isDataError) {
+                        throw error;
                     }
                 }
             );

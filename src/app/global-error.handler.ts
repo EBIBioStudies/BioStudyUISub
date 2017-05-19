@@ -19,7 +19,6 @@ export class GlobalErrorHandler extends ErrorHandler {
     }
 
     handleError(error) {
-        console.log('global error', error);
         if (error.status === 401) {//Unauthorized
             this.userSession.destroy();
         } else {

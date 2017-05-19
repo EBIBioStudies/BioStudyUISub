@@ -14,7 +14,7 @@ import {AppConfig} from 'app/app.config';
 import {getLoginToken} from 'app/auth/user-cookies';
 
 import {UploadService} from './upload.service';
-//import {serverErrorHandler} from './server-error.handler';
+import {serverErrorHandler} from './server-error.handler';
 
 @Injectable()
 export class HttpClient {
@@ -34,22 +34,22 @@ export class HttpClient {
             options.search = params;
         }
         return this.http
-            .get(this.transform(url), options);
-        //.catch(serverErrorHandler);
+            .get(this.transform(url), options)
+            .catch(serverErrorHandler);
     }
 
     post(url, data) {
         let options = new RequestOptions({headers: this.headers()});
         return this.http
-            .post(this.transform(url), data, options);
-        //.catch(serverErrorHandler);
+            .post(this.transform(url), data, options)
+            .catch(serverErrorHandler);
     }
 
     del(url) {
         let options = new RequestOptions({headers: this.headers()});
         return this.http
-            .delete(this.transform(url), options);
-        //.catch(serverErrorHandler);
+            .delete(this.transform(url), options)
+            .catch(serverErrorHandler);
     }
 
     upload(url, files: File[], path: string): Observable<any> {

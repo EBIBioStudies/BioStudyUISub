@@ -1,43 +1,25 @@
 import {Observable} from 'rxjs/Observable';
-import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
-import 'rxjs/add/observable/throw';
-
 import {Response} from '@angular/http';
 
 export class ServerError {
-    constructor(private _status: number,
-                private _statusString: string,
-                private _data: any) {
+
+    constructor(public status: number,
+                public statusString: string,
+                public data: any) {
     }
 
     get name(): string {
-        const st = this._status ? '[' + this._status + '] ' : '';
-        const stStr = this._statusString ? '[' + this._statusString + '] ' : '';
+        const st = this.status ? '[' + this.status + '] ' : '';
+        const stStr = this.statusString ? '[' + this.statusString + '] ' : '';
         return "ServerError: " + st + stStr;
     }
 
     get message(): string {
-        return this._data ? (this._data.message || '') : '';
+        return this.data ? (this.data.message || '') : '';
     }
 
-    get data(): any {
-        return this._data;
-    }
-
-    get status(): number {
-        return this._status;
-    }
-
-    isDataError(): boolean {
-        return this._status === 422 || this._status === 400;
-    }
-
-    isUnauthorized(): boolean {
-        return this._status === 401;
-    }
-
-    isForbidden(): boolean {
-        return this._status === 403;
+    get isDataError(): boolean {
+        return this.status === 422 || this.status === 400;
     }
 
     public static fromResponse(error: Response): ServerError {
@@ -57,6 +39,6 @@ export class ServerError {
     }
 }
 
-export function serverErrorHandler(error: Response): ErrorObservable {
-    return Observable.throw(ServerError.fromResponse(error));
+export function serverErrorHandler(error: Response): Observable<any> {
+    throw ServerError.fromResponse(error);
 }

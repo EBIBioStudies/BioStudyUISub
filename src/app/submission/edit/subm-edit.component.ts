@@ -14,6 +14,7 @@ import {
 } from 'app/submission-model/index';
 
 import {SubmissionService} from '../submission.service';
+import {ServerError} from "../../http/server-error.handler";
 
 @Component({
     selector: 'subm-edit',
@@ -104,7 +105,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
                     this.errors = ['Failed to submit'];
                     this.showSubmitResults();
 
-                    if (!error.isDataError()) {
+                    if (!error.isDataError) {
                         throw error;
                     }
                 });
