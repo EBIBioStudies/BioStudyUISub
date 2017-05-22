@@ -1,0 +1,83 @@
+<container-root>
+    <container-md>
+        <div>
+            <div class="alert alert-danger" style="margin-left:0" *ngIf="error">
+                {{error.status}} : {{error.message}}
+            </div>
+            <div class="alert" *ngIf="!error">
+                &nbsp;
+            </div>
+        </div>
+        <div *ngIf="success" class="panel panel-success">
+            <div class="panel-body">
+                <h4 class="text-success">Thank you for registering. Please check your email for the account activation link.</h4>
+            </div>
+        </div>
+        <div *ngIf="!success" class="panel panel-info">
+            <div class="panel-body">
+                <form id="signUpForm" novalidate name="signUpForm" role="form"
+                      (ngSubmit)="signUpForm.valid && model.valid() && onSubmit($event)" #signUpForm="ngForm">
+                    <div class="form-group form-group-sm">
+                        <label class="control-label" for="username">Full name</label>
+                        <input type="text"
+                               id="username"
+                               name="username"
+                               tabindex="1"
+                               class="form-control"
+                               placeholder="Full name"
+                               [(ngModel)]="model.username"
+                               (change)="onChange()"/>
+                    </div>
+                    <div class="form-group form-group-sm" [ngClass]="{'has-error': email.invalid && email.dirty}">
+                        <label for="email">Email
+                            <span [hidden]="email.valid || email.pristine">: cannot be blank</span>
+                        </label>
+                        <input type="email"
+                               id="email"
+                               name="email"
+                               class="form-control"
+                               placeholder="Email"
+                               [(ngModel)]="model.email"
+                               (change)="onChange()"
+                               required
+                               #email="ngModel"/>
+                    </div>
+                    <div class="form-group form-group-sm" [ngClass]="{'has-error': orcid.invalid}">
+                        <label>ORCID
+                            <span [hidden]="orcid.valid">: wrong format; the value should be in 0000-0000-0000-0000 format.</span>
+                        </label>
+                        <orcid-input-box
+                                [(ngModel)]="model.orcid"
+                                name="orcid"
+                                #orcid="ngModel">
+                        </orcid-input-box>
+                    </div>
+                    <div class="form-group form-group-sm" [ngClass]="{'has-error': password.invalid && password.dirty}">
+                        <label for="password">Password
+                            <span [hidden]="password.valid || password.pristine">: cannot be blank</span>
+                        </label>
+                        <input type="password"
+                               name="password"
+                               id="password"
+                               class="form-control"
+                               placeholder="Password"
+                               [(ngModel)]="model.password"
+                               (change)="onChange()"
+                               required
+                               #password="ngModel"/>
+                    </div>
+                    <re-captcha
+                            (resolved)="onRecaptchaResolved($event)"
+                            siteKey="6Lcmlv0SAAAAAHofnIcb29l1LMZsnGFcSlH8Reve"
+                            #recaptcha>
+                    </re-captcha>
+                    <div class="form-group margin-top-large">
+                        <button type="submit" class="btn btn-primary">Sign up</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </container-md>
+</container-root>
+
+

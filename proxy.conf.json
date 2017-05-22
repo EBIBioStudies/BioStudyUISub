@@ -1,0 +1,10 @@
+{
+  "/proxy/api": {
+    "target": "https://localhost:10281",
+    "secure": false
+  },
+  "/proxy/raw": {
+    "target": "https://localhost:10281",
+    "secure": false
+  }
+}
