@@ -8,7 +8,7 @@ import {SharedModule} from 'app/shared/shared.module';
 import {SubmissionModelModule} from 'app/submission-model/submission-model.module';
 import {SubmissionSharedModule} from 'app/submission-shared/submission-shared.module';
 
-import {SubmissionService} from './submission.service';
+import {SubmissionService} from './shared/submission.service';
 
 import {
     SubmissionListComponent,

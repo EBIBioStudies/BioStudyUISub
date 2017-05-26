@@ -13,7 +13,7 @@ import {
     SubmissionModel
 } from 'app/submission-model/index';
 
-import {SubmissionService} from '../submission.service';
+import {SubmissionService} from '../shared/submission.service';
 import {ServerError} from "../../http/server-error.handler";
 
 @Component({

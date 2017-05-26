@@ -9,7 +9,7 @@ import {SubmissionModel} from 'app/submission-model/index';
 import {UserData} from 'app/auth/index';
 import {ConfirmDialogComponent} from 'app/shared/index';
 
-import {SubmissionService} from '../submission.service';
+import {SubmissionService} from '../shared/submission.service';
 import {TextFilterComponent} from './ag-grid/text-filter.component';
 import {DateFilterComponent} from './ag-grid/date-filter.component';
 

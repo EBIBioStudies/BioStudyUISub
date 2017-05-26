@@ -15,7 +15,7 @@ import {
     DictionaryService
 } from 'app/submission-model/index';
 
-import {SubmissionService} from '../submission.service';
+import {SubmissionService} from '../shared/submission.service';
 
 @Component({
     selector: 'subm-view',
