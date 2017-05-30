@@ -3,7 +3,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/from';
 
-import * as _ from 'lodash';
+import {SubmissionTemplate} from "./submisison-template.model";
 
 const nextId = (function () {
     let count = 0;
@@ -195,259 +195,207 @@ export class Columns extends HasUpdates<UpdateEvent> {
 }
 
 export class Rows extends HasUpdates<UpdateEvent> {
-    private __rows: ValueMap[] = [];
-    private __rowSubscriptions: Subscription[] = [];
+    private rows: ValueMap[] = [];
+    private subscriptions: Subscription[] = [];
 
     constructor() {
         super();
     }
 
-    get list(): ValueMap[] {
-        return this.__rows;
+    list(): ValueMap[] {
+        return this.rows;
     }
 
     add(keys: string[]): ValueMap {
         let row = ValueMap.create(keys);
-        this.__rows.push(row);
-        this.__rowSubscriptions.push(row.updates().subscribe(m => {
-            this.notify(new UpdateEvent('row_change', m));
-        }));
+        this.rows.push(row);
+        this.subscriptions.push(
+            row.updates()
+                .subscribe(m => {
+                    this.notify(new UpdateEvent('row_change', m));
+                }));
         return row;
     }
 
     remove(index: number) {
-        if (!this.validIndex(index)) {
+        if ((index < 0) || (index > this.rows.length)) {
+            console.warn(`index is out of range: ${index}`);
             return;
         }
-        this.__rows.splice(index, 1);
-        this.__rowSubscriptions[index].unsubscribe();
-        this.__rowSubscriptions.splice(index, 1);
+        this.rows.splice(index, 1);
+        this.subscriptions[index].unsubscribe();
+        this.subscriptions.splice(index, 1);
     }
 
     addKey(key: string) {
-        _.forEach(this.__rows, r => {
+        this.rows.forEach(r => {
             r.add(key);
         });
     }
 
     removeKey(key: string) {
-        _.forEach(this.__rows, r => {
-            r.removeValue(key);
+        this.rows.forEach(r => {
+            r.remove(key);
         });
     }
 
     size(): number {
-        return this.__rows.length;
-    }
-
-    private validIndex(index: number): boolean {
-        let valid = (index >= 0) && (index < this.__rows.length);
-        if (!valid) {
-            console.warn('row index is out of bounds', index);
-        }
-        return valid;
+        return this.rows.length;
     }
 }
 
-export class Attributes {
-    private __attrs: any[] = [];
+/*
+ export class Attributes {
+ private __attrs: any[] = [];
 
-    addAll(attrs: any[]): void {
-        _.forEach(attrs, (a) => {
-            this.__attrs.push({name: a.name, value: a.value});
-        });
-    }
+ addAll(attrs: any[]): void {
+ _.forEach(attrs, (a) => {
+ this.__attrs.push({name: a.name, value: a.value});
+ });
+ }
 
-    find(name: string): Attr {
-        let index = _.findIndex(this.__attrs, {name: name});
-        return index >= 0 ? this.__attrs[index] : null;
-    }
+ find(name: string): Attr {
+ let index = _.findIndex(this.__attrs, {name: name});
+ return index >= 0 ? this.__attrs[index] : null;
+ }
 
-    get attributes(): any[] {
-        return _.map(this.__attrs, (a) => ({name: a.name, value: a.value}));
+ get attributes(): any[] {
+ return _.map(this.__attrs, (a) => ({name: a.name, value: a.value}));
+ }
+ }
+
+ export class Item {
+ attributes: Attributes = new Attributes();
+
+ constructor(attrs: any[]) {
+ this.attributes.addAll(attrs);
+ }
+ }
+ */
+
+export class NameValuePair {
+    constructor(public name: string,
+                public value: string) {
     }
 }
 
-export class Item {
-    attributes: Attributes = new Attributes();
+export class Attributes extends HasUpdates<UpdateEvent> {
+    private _columns: Columns = new Columns();
+    private _rows: Rows = new Rows();
 
-    constructor(attrs: any[]) {
-        this.attributes.addAll(attrs);
-    }
-}
-
-export class Section extends HasUpdates<UpdateEvent> {
-    private __columns: Columns = new Columns();
-    private __rows: Rows = new Rows();
-
-    private __subscr: Subscription[] = [];
+    private colSubscription: Subscription;
+    private rowSubscription: Subscription;
 
     constructor() {
         super();
-        this.__subscr[0] = this.__columns.updates()
+        this.colSubscription = this._columns.updates()
             .subscribe(m => {
                 this.notify(new UpdateEvent('columns_change', m));
             });
-        this.__subscr[1] = this.__rows.updates()
+        this.rowSubscription = this._rows.updates()
             .subscribe(m => {
                 this.notify(new UpdateEvent('rows_change', m));
             });
     }
 
     get rows(): ValueMap[] {
-        return this.__rows.list;
+        return this._rows.list();
     }
 
     get columns(): Attribute[] {
-        return this.__columns.list;
-    }
-
-    get items(): any[] {
-        return _.map(this.rows, (row: ValueMap) => {
-            const attrs = [];
-            _.forEach(this.columns, (col: Attribute) => {
-                attrs.push({name: col.name, value: row.valueFor(col.id).value});
-            });
-            return new Item(attrs);
-        });
+        return this._columns.list();
     }
 
     rowSize(): number {
-        return this.__rows.size();
+        return this._rows.size();
     }
 
     colSize(): number {
-        return this.__columns.size();
+        return this._columns.size();
     }
 
-    add(attributes: any[] = []): void {
-        const attrNames = _.reject(_.map(attributes, (a) => a.name), (a) => a === '');
-        const colNames = this.__columns.names();
+    /*
+     get items(): any[] {
+     return _.map(this.rows, (row: ValueMap) => {
+     const attrs = [];
+     _.forEach(this.columns, (col: Attribute) => {
+     attrs.push({name: col.name, value: row.valueFor(col.id).value});
+     });
+     return new Item(attrs);
+     });
+     }
+     */
 
-        _.forEach(_.difference(attrNames, colNames),
-            (name) => {
-                this.addColumn(Attribute.fromName(name));
-            });
+    add(attributes: NameValuePair[] = []): void {
+        const attrNames = attributes.filter(attr => attr.name !== '').map(attr => attr.name);
+        const colNames = this._columns.names();
 
-        const r: ValueMap = this.addRow();
-        _.forEach(attributes, (a) => {
-            const cols: Attribute[] = this.__columns.byName(a.name);
-            _.forEach(cols, (col) => {
-                r.valueFor(col.id).value = a.value;
+        attrNames
+            .filter(n => colNames.indexOf(n) < 0)
+            .forEach(
+                (name) => {
+                    this.addColumn(Attribute.fromName(name));
+                });
+
+        const row: ValueMap = this.addRow();
+
+        attributes.forEach(attr => {
+            const cols: Attribute[] = this._columns.byName(attr.name);
+            cols.forEach(col => {
+                row.valueFor(col.id).value = attr.value;
             });
         });
     }
 
     addColumn(obj: any = {}): void {
         const col = Attribute.from(obj);
-        this.__columns.add(col);
-        this.__rows.addKey(col.id);
+        this._columns.add(col);
+        this._rows.addKey(col.id);
         this.notify(new UpdateEvent('add_column', col.id));
     }
 
     removeColumnById(id: string): void {
-        this.__columns.removeById(id);
-        this.__rows.removeKey(id);
+        this._columns.removeById(id);
+        this._rows.removeKey(id);
         this.notify(new UpdateEvent('remove_column', id));
     }
 
     addRow(): ValueMap {
-        const vm = this.__rows.add(this.__columns.orderedKeys());
+        const vm = this._rows.add(this._columns.keys());
         this.notify(new UpdateEvent('add_row'));
         return vm;
     }
 
     removeRow(index: number): void {
-        this.__rows.remove(index);
+        this._rows.remove(index);
+        this.notify(new UpdateEvent('remove_row'));
     }
 
-    static create(attrs: any[]): Section {
-        const s = new Section();
-        _.forEach(attrs, (a) => {
-            s.addColumn(Attribute.from(a));
+    static create(attrs: any[]): Attributes {
+        const attributes = new Attributes();
+        attrs.forEach(attr => {
+            attributes.addColumn(Attribute.from(attr));
         });
-        return s;
+        return attributes;
     }
 }
 
-export class Submission extends HasUpdates<UpdateEvent> {
-    private __accno: string;
-    private __title: string;
-    private __description: string;
-    private __releaseDate: string;
-    annotations: Section;
-    files: Section;
-    links: Section;
-    contacts: Section;
-    publications: Section;
+export class Section extends HasUpdates<UpdateEvent> {
+    attributes: Attributes;
+    files: Attributes;
+    links: Attributes;
+    sections: Sections;
 
-    constructor(dict: any) {
+    constructor(template: SubmissionTemplate) {
         super();
-        function requiredColumns(itemType) {
-            let attrs = (dict[itemType] || {attributes: []}).attributes;
-            return _.filter(attrs, {required: true});
-        }
 
-        this.__accno = '';
-        this.__title = '';
-        this.__description = '';
-        this.__releaseDate = '';
-        this.annotations = (function () {
-            let s = Section.create(requiredColumns('annotation'));
-            s.addRow();
-            return s;
-        })();
+        this.files = Attributes.create(template.requiredColumns('file'));
+        this.links = Attributes.create(template.requiredColumns('link'));
+        this.sections = new Sections();
 
-        this.files = Section.create(requiredColumns('file'));
-        this.links = Section.create(requiredColumns('link'));
-        this.contacts = Section.create(requiredColumns('contact'));
-        this.publications = Section.create(requiredColumns('publication'));
-
-        this.subscribeTo(this.annotations, 'annotations');
         this.subscribeTo(this.files, 'files');
         this.subscribeTo(this.links, 'links');
-        this.subscribeTo(this.contacts, 'contacts');
-        this.subscribeTo(this.publications, 'publications');
-    }
-
-    get accno(): string {
-        return this.__accno;
-    }
-
-    get title(): string {
-        return this.__title;
-    }
-
-    get description(): string {
-        return this.__description;
-    }
-
-    get releaseDate(): string {
-        return this.__releaseDate;
-    }
-
-    set accno(accno: string) {
-        this.__accno = accno;
-        this.notify(new UpdateEvent('accno', accno));
-    }
-
-    set title(title: string) {
-        this.__title = title;
-        this.notify(new UpdateEvent('title', title));
-    }
-
-    set description(descr: string) {
-        this.__description = descr;
-        this.notify(new UpdateEvent('description', descr));
-    }
-
-    set releaseDate(date: string) {
-        this.__releaseDate = date;
-        this.notify(new UpdateEvent('releaseDate', date));
-    }
-
-    addAnnotation(attr?: any) {
-        this.annotations.addColumn(attr);
+        this.subscribeTo(this.sections, 'sections');
     }
 
     addLink(attributes: any[] = []) {
@@ -458,6 +406,104 @@ export class Submission extends HasUpdates<UpdateEvent> {
         this.files.add(attributes);
     }
 
+    subscribeTo(hasUpdates: HasUpdates<UpdateEvent>, type: string) {
+        hasUpdates.updates().subscribe(
+            m => this.notify(new UpdateEvent(type, null, m))
+        );
+    }
+}
+
+export class Sections extends HasUpdates<UpdateEvent> {
+    private sections: Section[];
+    private subscriptions: Subscription[];
+
+    list(): Section[] {
+        return this.sections;
+    }
+
+    add(): void {
+        //TODO
+    }
+
+    remove(): void {
+        //TODO
+    }
+}
+
+export class Submission extends HasUpdates<UpdateEvent> {
+    private _accno: string;
+    private _title: string;
+    private _description: string;
+    private _releaseDate: string;
+    annotations: Attributes;
+    contacts: Attributes;
+    publications: Attributes;
+
+    sections: Sections;
+
+    constructor(template: SubmissionTemplate) {
+        super();
+
+        this._accno = '';
+        this._title = '';
+        this._description = '';
+        this._releaseDate = '';
+        this.annotations = (function () {
+            let s = Attributes.create(template.requiredColumns('annotation'));
+            s.addRow();
+            return s;
+        })();
+        this.contacts = Attributes.create(template.requiredColumns('contact'));
+        this.publications = Attributes.create(template.requiredColumns('publication'));
+        this.sections = new Sections();
+
+        this.subscribeTo(this.annotations, 'annotations');
+        this.subscribeTo(this.contacts, 'contacts');
+        this.subscribeTo(this.publications, 'publications');
+        this.subscribeTo(this.publications, 'publications');
+        this.subscribeTo(this.sections, 'sections');
+    }
+
+    get accno(): string {
+        return this._accno;
+    }
+
+    get title(): string {
+        return this._title;
+    }
+
+    get description(): string {
+        return this._description;
+    }
+
+    get releaseDate(): string {
+        return this._releaseDate;
+    }
+
+    set accno(accno: string) {
+        this._accno = accno;
+        this.notify(new UpdateEvent('accno', accno));
+    }
+
+    set title(title: string) {
+        this._title = title;
+        this.notify(new UpdateEvent('title', title));
+    }
+
+    set description(descr: string) {
+        this._description = descr;
+        this.notify(new UpdateEvent('description', descr));
+    }
+
+    set releaseDate(date: string) {
+        this._releaseDate = date;
+        this.notify(new UpdateEvent('releaseDate', date));
+    }
+
+    addAnnotation(attr?: any) {
+        this.annotations.addColumn(attr);
+    }
+
     addContact(attributes: any[] = []) {
         this.contacts.add(attributes);
     }
@@ -466,8 +512,8 @@ export class Submission extends HasUpdates<UpdateEvent> {
         this.publications.add(attributes);
     }
 
-    subscribeTo(sec: Section, type: string) {
-        sec.updates().subscribe(
+    subscribeTo(hasUpdates: HasUpdates<UpdateEvent>, type: string) {
+        hasUpdates.updates().subscribe(
             m => this.notify(new UpdateEvent(type, null, m))
         );
     }
