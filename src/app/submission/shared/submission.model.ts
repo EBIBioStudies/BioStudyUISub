@@ -3,8 +3,6 @@ import {Subscription} from 'rxjs/Subscription';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/from';
 
-import {SubmissionTemplate} from "./submisison-template.model";
-
 const nextId = (function () {
     let count = 0;
     return function () {
@@ -97,8 +95,8 @@ export class AttributeValue extends HasUpdates<UpdateEvent> {
 }
 
 export class ValueMap extends HasUpdates<UpdateEvent> {
-    private valueMap: { [key: string]: AttributeValue } = {};
-    private subscriptionMap: { [key: string]: Subscription } = {};
+    private valueMap: {[key: string]: AttributeValue} = {};
+    private subscriptionMap: {[key: string]: Subscription} = {};
 
     private constructor() {
         super();
@@ -135,7 +133,7 @@ export class ValueMap extends HasUpdates<UpdateEvent> {
         return keys.map(key => this.valueMap[key]);
     }
 
-    static create(keys: string[]): ValueMap {
+    static create(keys: string[] = []): ValueMap {
         const vm = new ValueMap();
         keys.forEach(key => vm.add(key));
         return vm;
@@ -244,50 +242,24 @@ export class Rows extends HasUpdates<UpdateEvent> {
     }
 }
 
-/*
- export class Attributes {
- private __attrs: any[] = [];
-
- addAll(attrs: any[]): void {
- _.forEach(attrs, (a) => {
- this.__attrs.push({name: a.name, value: a.value});
- });
- }
-
- find(name: string): Attr {
- let index = _.findIndex(this.__attrs, {name: name});
- return index >= 0 ? this.__attrs[index] : null;
- }
-
- get attributes(): any[] {
- return _.map(this.__attrs, (a) => ({name: a.name, value: a.value}));
- }
- }
-
- export class Item {
- attributes: Attributes = new Attributes();
-
- constructor(attrs: any[]) {
- this.attributes.addAll(attrs);
- }
- }
- */
-
 export class NameValuePair {
     constructor(public name: string,
                 public value: string) {
     }
 }
 
-export class Attributes extends HasUpdates<UpdateEvent> {
+export class Feature extends HasUpdates<UpdateEvent> {
+    private _type: string;
     private _columns: Columns = new Columns();
     private _rows: Rows = new Rows();
 
     private colSubscription: Subscription;
     private rowSubscription: Subscription;
 
-    constructor() {
+    constructor(type: string) {
         super();
+
+        this._type = type;
         this.colSubscription = this._columns.updates()
             .subscribe(m => {
                 this.notify(new UpdateEvent('columns_change', m));
@@ -296,6 +268,10 @@ export class Attributes extends HasUpdates<UpdateEvent> {
             .subscribe(m => {
                 this.notify(new UpdateEvent('rows_change', m));
             });
+    }
+
+    get type(): string {
+        return this._type;
     }
 
     get rows(): ValueMap[] {
@@ -313,18 +289,6 @@ export class Attributes extends HasUpdates<UpdateEvent> {
     colSize(): number {
         return this._columns.size();
     }
-
-    /*
-     get items(): any[] {
-     return _.map(this.rows, (row: ValueMap) => {
-     const attrs = [];
-     _.forEach(this.columns, (col: Attribute) => {
-     attrs.push({name: col.name, value: row.valueFor(col.id).value});
-     });
-     return new Item(attrs);
-     });
-     }
-     */
 
     add(attributes: NameValuePair[] = []): void {
         const attrNames = attributes.filter(attr => attr.name !== '').map(attr => attr.name);
@@ -371,8 +335,8 @@ export class Attributes extends HasUpdates<UpdateEvent> {
         this.notify(new UpdateEvent('remove_row'));
     }
 
-    static create(attrs: any[]): Attributes {
-        const attributes = new Attributes();
+    static create(type: string, attrs: any[]): Feature {
+        const attributes = new Feature(type);
         attrs.forEach(attr => {
             attributes.addColumn(Attribute.from(attr));
         });
@@ -380,30 +344,131 @@ export class Attributes extends HasUpdates<UpdateEvent> {
     }
 }
 
-export class Section extends HasUpdates<UpdateEvent> {
-    attributes: Attributes;
-    files: Attributes;
-    links: Attributes;
-    sections: Sections;
+export class Features extends HasUpdates<UpdateEvent> {
+    private features: Feature[];
+    private subscriptions: Subscription[];
 
-    constructor(template: SubmissionTemplate) {
+    constructor() {
+        super();
+        this.features = [];
+        this.subscriptions = [];
+    }
+
+    list(): Feature[] {
+        return this.features;
+    }
+
+    add(type: string): void {
+        const f = new Feature(type);
+        this.features.push(f);
+        this.subscriptions.push(
+            f.updates().subscribe(
+                u => this.notify(new UpdateEvent('feature_update', undefined, u))
+            ));
+        this.notify(new UpdateEvent('feature_add', type));
+    }
+
+    remove(): void {
+        //todo
+    }
+}
+
+export class Field extends HasUpdates<UpdateEvent> {
+    private id: string;
+
+    constructor(private _name: string,
+                private _value: string = '',
+                private _type: string = 'text',
+                private _required: boolean = false) {
+        super();
+        this.id = nextId();
+    }
+
+    get name(): string {
+        return this._name;
+    }
+
+    set name(v: string) {
+        this._name = v;
+        this.notify(new UpdateEvent('name', v));
+    }
+
+    get value(): string {
+        return this._value;
+    }
+
+    set value(v: string) {
+        this._value = v;
+        this.notify(new UpdateEvent('value', v));
+    }
+
+    get type(): string {
+        return this._type;
+    }
+
+    get required(): boolean {
+        return this._required;
+    }
+}
+
+export class Fields extends HasUpdates<UpdateEvent> {
+    private fields: Field[];
+    private subscriptions: Subscription[];
+
+    constructor() {
+        super();
+        this.fields = [];
+        this.subscriptions = [];
+    }
+
+    list(): Field[] {
+        return this.fields;
+    }
+
+    add(name: string, value?: string, type?: string, required?: boolean): void {
+        const field = new Field(name, value, type, required);
+        this.fields.push(field);
+        this.subscriptions.push(
+            field.updates().subscribe(
+                u => this.notify(new UpdateEvent('field_change', null, u))
+            )
+        );
+        this.notify(new UpdateEvent('field_add', name));
+    }
+
+    remove(): void {
+        //TODO
+    }
+}
+
+export class Section extends HasUpdates<UpdateEvent> {
+    private _accno: string = '';
+    private _type: string;
+
+    readonly fields: Fields;
+    readonly features: Features;
+    readonly sections: Sections;
+
+    constructor(accno: string = '',
+                type: string) {
         super();
 
-        this.files = Attributes.create(template.requiredColumns('file'));
-        this.links = Attributes.create(template.requiredColumns('link'));
-        this.sections = new Sections();
+        this._accno = accno;
+        this._type = type;
 
-        this.subscribeTo(this.files, 'files');
-        this.subscribeTo(this.links, 'links');
+        this.fields = new Fields();
+        this.features = new Features();
+        this.sections = new Sections();
         this.subscribeTo(this.sections, 'sections');
     }
 
-    addLink(attributes: any[] = []) {
-        this.links.add(attributes);
+    get accno(): string {
+        return this._accno;
     }
 
-    addFile(attributes: any[] = []) {
-        this.files.add(attributes);
+    set accno(accno: string) {
+        this._accno = accno;
+        this.notify(new UpdateEvent('accno', accno));
     }
 
     subscribeTo(hasUpdates: HasUpdates<UpdateEvent>, type: string) {
@@ -411,11 +476,21 @@ export class Section extends HasUpdates<UpdateEvent> {
             m => this.notify(new UpdateEvent(type, null, m))
         );
     }
+
+    static ofType(type: string) {
+        return new Section(undefined, type);
+    }
 }
 
 export class Sections extends HasUpdates<UpdateEvent> {
     private sections: Section[];
     private subscriptions: Subscription[];
+
+    constructor() {
+        super();
+        this.sections = [];
+        this.subscriptions = [];
+    }
 
     list(): Section[] {
         return this.sections;
@@ -430,95 +505,123 @@ export class Sections extends HasUpdates<UpdateEvent> {
     }
 }
 
-export class Submission extends HasUpdates<UpdateEvent> {
-    private _accno: string;
-    private _title: string;
-    private _description: string;
-    private _releaseDate: string;
-    annotations: Attributes;
-    contacts: Attributes;
-    publications: Attributes;
+export class Submission {
+    readonly root: Section;
 
-    sections: Sections;
-
-    constructor(template: SubmissionTemplate) {
-        super();
-
-        this._accno = '';
-        this._title = '';
-        this._description = '';
-        this._releaseDate = '';
-        this.annotations = (function () {
-            let s = Attributes.create(template.requiredColumns('annotation'));
-            s.addRow();
-            return s;
-        })();
-        this.contacts = Attributes.create(template.requiredColumns('contact'));
-        this.publications = Attributes.create(template.requiredColumns('publication'));
-        this.sections = new Sections();
-
-        this.subscribeTo(this.annotations, 'annotations');
-        this.subscribeTo(this.contacts, 'contacts');
-        this.subscribeTo(this.publications, 'publications');
-        this.subscribeTo(this.publications, 'publications');
-        this.subscribeTo(this.sections, 'sections');
+    constructor() {
+        this.root = Section.ofType('Study');
     }
 
-    get accno(): string {
-        return this._accno;
-    }
-
-    get title(): string {
-        return this._title;
-    }
-
-    get description(): string {
-        return this._description;
-    }
-
-    get releaseDate(): string {
-        return this._releaseDate;
-    }
-
-    set accno(accno: string) {
-        this._accno = accno;
-        this.notify(new UpdateEvent('accno', accno));
-    }
-
-    set title(title: string) {
-        this._title = title;
-        this.notify(new UpdateEvent('title', title));
-    }
-
-    set description(descr: string) {
-        this._description = descr;
-        this.notify(new UpdateEvent('description', descr));
-    }
-
-    set releaseDate(date: string) {
-        this._releaseDate = date;
-        this.notify(new UpdateEvent('releaseDate', date));
-    }
-
-    addAnnotation(attr?: any) {
-        this.annotations.addColumn(attr);
-    }
-
-    addContact(attributes: any[] = []) {
-        this.contacts.add(attributes);
-    }
-
-    addPublication(attributes: any[] = []) {
-        this.publications.add(attributes);
-    }
-
-    subscribeTo(hasUpdates: HasUpdates<UpdateEvent>, type: string) {
-        hasUpdates.updates().subscribe(
-            m => this.notify(new UpdateEvent(type, null, m))
-        );
-    }
-
-    static create(dict: any): Submission {
-        return new Submission(dict);
+    section(path: string): Section {
+        //TODO
+        return this.root;
     }
 }
+
+/*
+ private _title: string;
+ private _description: string;
+ private _releaseDate: string;
+ annotations: Attributes;
+ contacts: Attributes;
+ publications: Attributes;
+ this._title = '';
+ this._description = '';
+ this._releaseDate = '';
+ this.annotations = (function () {
+ let s = Attributes.create(template.requiredAttributes('annotation'));
+ s.addRow();
+ return s;
+ })();
+ this.contacts = Attributes.create(template.requiredAttributes('contact'));
+ this.publications = Attributes.create(template.requiredAttributes('publication'));
+ this.files = Attributes.create(template.requiredAttributes('file'));
+ this.links = Attributes.create(template.requiredAttributes('link'));
+
+
+ */
+
+/*
+
+
+ set title(title: string) {
+ this._title = title;
+ this.notify(new UpdateEvent('title', title));
+ }
+
+ set description(descr: string) {
+ this._description = descr;
+ this.notify(new UpdateEvent('description', descr));
+ }
+
+ set releaseDate(date: string) {
+ this._releaseDate = date;
+ this.notify(new UpdateEvent('releaseDate', date));
+ }
+
+ addAnnotation(attr?: any) {
+ this.annotations.addColumn(attr);
+ }
+
+ addContact(attributes: any[] = []) {
+ this.contacts.add(attributes);
+ }
+
+ addPublication(attributes: any[] = []) {
+ this.publications.add(attributes);
+ }
+
+ subscribeTo(hasUpdates: HasUpdates<UpdateEvent>, type: string) {
+ hasUpdates.updates().subscribe(
+ m => this.notify(new UpdateEvent(type, null, m))
+ );
+ }
+
+ static create(dict: any): Submission {
+ return new Submission(dict);
+ }
+
+ */
+
+/*
+ get items(): any[] {
+ return _.map(this.rows, (row: ValueMap) => {
+ const attrs = [];
+ _.forEach(this.columns, (col: Attribute) => {
+ attrs.push({name: col.name, value: row.valueFor(col.id).value});
+ });
+ return new Item(attrs);
+ });
+ }
+ */
+
+/*
+ export class Attributes {
+ private __attrs: any[] = [];
+
+ addAll(attrs: any[]): void {
+ _.forEach(attrs, (a) => {
+ this.__attrs.push({name: a.name, value: a.value});
+ });
+ }
+
+ find(name: string): Attr {
+ let index = _.findIndex(this.__attrs, {name: name});
+ return index >= 0 ? this.__attrs[index] : null;
+ }
+
+ get attributes(): any[] {
+ return _.map(this.__attrs, (a) => ({name: a.name, value: a.value}));
+ }
+ }
+
+ export class Item {
+ attributes: Attributes = new Attributes();
+
+ constructor(attrs: any[]) {
+ this.attributes.addAll(attrs);
+ }
+ }
+ */
+
+

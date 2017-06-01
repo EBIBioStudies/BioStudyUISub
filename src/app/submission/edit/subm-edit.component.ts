@@ -7,14 +7,13 @@ import {Subscription} from 'rxjs/Subscription';
 import {ModalDirective} from 'ngx-bootstrap/modal/modal.component';
 
 import {
-    Submission,
     PageTab,
     DictionaryService,
     SubmissionModel
 } from 'app/submission-model/index';
 
+import {Submission} from '../shared/submission.model';
 import {SubmissionService} from '../shared/submission.service';
-import {ServerError} from "../../http/server-error.handler";
 
 @Component({
     selector: 'subm-edit',
@@ -22,9 +21,7 @@ import {ServerError} from "../../http/server-error.handler";
 })
 
 export class SubmissionEditComponent implements OnInit, OnDestroy {
-    uisettings = {
-        collapseLeftSide: false
-    };
+    sideBarCollapsed: false;
     readonly: boolean = false;
     submission: Submission;
     errors: string[] = [];
@@ -47,8 +44,12 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.route.params.forEach((params: Params) => {
             this.accno = params['accno'];
+            this.submission = new Submission();
+            this.submission.root.fields.add('title', '', 'text', true);
+            this.submission.root.features.add('Contact');
+            this.submission.root.features.add('Publication');
 
-            this.submService
+            /*this.submService
                 .getSubmission(this.accno)
                 .subscribe(resp => {
                     let wrap = resp;
@@ -71,6 +72,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
                             });
                     });
                 });
+                */
         });
     }
 
@@ -86,7 +88,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
             event.preventDefault();
         }
 
-        if (!this.canSubmit()) {
+       /* if (!this.canSubmit()) {
             return;
         }
 
@@ -109,6 +111,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
                         throw error;
                     }
                 });
+        */
     }
 
     canSubmit() {
@@ -126,7 +129,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
         }
     }
 
-    addAnnotation() {
+   /* addAnnotation() {
         if (this.submission) {
             this.submission.addAnnotation();
         }
@@ -154,5 +157,5 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
         if (this.submission) {
             this.submission.addContact();
         }
-    }
+    }*/
 }

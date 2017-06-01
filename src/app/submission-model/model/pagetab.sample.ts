@@ -6,6 +6,7 @@ export const PAGETAB_SAMPLE = {
         {name: 'ReleaseDate', value: '2016-01-01'}
     ],
     section: {
+        type: "Study",
         attributes: [
             {name: 'Description', value: 'Subm Description'},
             {name: 'Annot 1', value: 'Annot Value 1'},
@@ -19,12 +20,14 @@ export const PAGETAB_SAMPLE = {
                 ]
             }
         ],
-        files: [{
-            path: "/file",
-            attributes: [
-                {name: "Description", value: "file description"}
-            ]
-        }],
+        files: [
+            {
+                path: "/file",
+                attributes: [
+                    {name: "Description", value: "file description"}
+                ]
+            }
+        ],
         subsections: [
             {
                 type: "Publication",
@@ -52,7 +55,8 @@ export const PAGETAB_SAMPLE = {
                 accno: "__affilRef1__",
                 attributes: [
                     {
-                        "name": "Name", "value": "The Institute for Genomic Research, Rockville Maryland"
+                        "name": "Name",
+                        "value": "The Institute for Genomic Research, Rockville Maryland"
                     }
                 ]
             }

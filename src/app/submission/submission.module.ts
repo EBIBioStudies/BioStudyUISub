@@ -25,10 +25,8 @@ import {DirectSubmitSideBarComponent} from './direct-submit/direct-submit-sideba
 import {DirectSubmitComponent, ResultLogNodeComponent} from './direct-submit/direct-submit.component';
 import {DirectSubmitService} from './direct-submit/direct-submit.service';
 
-import {
-    SideBarComponent,
-    SideBarItemComponent
-} from './edit/subm-sidebar.component';
+import {SubmissionSideBarComponent} from './edit/subm-sidebar/subm-sidebar.component';
+import {SubmissionFormComponent} from './edit/subm-form/subm-form.component';
 
 
 @NgModule({
@@ -56,8 +54,8 @@ import {
         DirectSubmitComponent,
         ResultLogNodeComponent,
         DirectSubmitSideBarComponent,
-        SideBarComponent,
-        SideBarItemComponent,
+        SubmissionFormComponent,
+        SubmissionSideBarComponent,
         ActionButtonsCellComponent,
         DateCellComponent,
         TextFilterComponent,
