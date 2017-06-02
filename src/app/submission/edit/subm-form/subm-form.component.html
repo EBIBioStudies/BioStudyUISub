@@ -3,16 +3,17 @@
       (ngSubmit)="onSubmit($event)">
 
     <div *ngFor="let field of fields"
-         class="form-group row">
+         class="form-group row"
+         [ngClass]="{'has-error': formErrors[field.id].length > 0}">
         <div class="col-sm-12">
-            <label class="control-label">{{field.name}}</label>
-            <input type="text" class="form-control"
-                   [id]="field.name"
-                   placeholder="Enter a {{field.name}}"
-                   [(ngModel)]="field.value"
-                   [readonly]="readonly"
-                   [required]="field.required"
-                   [formControlName]="field.name">
+            <label class="control-label">{{field.label}}:</label>
+            <subm-field
+                    [type]="field.type"
+                    [label]="field.label"
+                    [required]="field.required"
+                    [readonly]="readonly"
+                    [formControlName]="field.id">
+            </subm-field>
         </div>
     </div>
     <!--div class="form-group row"

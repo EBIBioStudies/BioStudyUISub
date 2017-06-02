@@ -1,0 +1,18 @@
+<input *ngIf="type === 'text'"
+       type="text" class="form-control"
+       placeholder="Enter a {{label}}"
+       [(ngModel)]="value"
+       [readonly]="readonly"
+       [required]="required">
+
+<date-input-box *ngIf="type === 'date'"
+                [(ngModel)]="value"
+                [required]="required"
+                bsstDateFormat></date-input-box>
+
+<textarea *ngIf="type === 'textarea'"
+          class="form-control input-sm"
+          [(ngModel)]="value"
+          [readonly]="readonly"
+          [required]="required"
+          autosize="200"></textarea>

@@ -374,23 +374,27 @@ export class Features extends HasUpdates<UpdateEvent> {
 }
 
 export class Field extends HasUpdates<UpdateEvent> {
-    private id: string;
+    private _id: string;
 
-    constructor(private _name: string,
+    constructor(private _label: string,
                 private _value: string = '',
                 private _type: string = 'text',
                 private _required: boolean = false) {
         super();
-        this.id = nextId();
+        this._id = 'field_' + nextId();
     }
 
-    get name(): string {
-        return this._name;
+    get id(): string {
+        return this._id;
     }
 
-    set name(v: string) {
-        this._name = v;
-        this.notify(new UpdateEvent('name', v));
+    get label(): string {
+        return this._label;
+    }
+
+    set label(v: string) {
+        this._label = v;
+        this.notify(new UpdateEvent('label', v));
     }
 
     get value(): string {
@@ -425,8 +429,8 @@ export class Fields extends HasUpdates<UpdateEvent> {
         return this.fields;
     }
 
-    add(name: string, value?: string, type?: string, required?: boolean): void {
-        const field = new Field(name, value, type, required);
+    add(label: string, value?: string, type?: string, required?: boolean): void {
+        const field = new Field(label, value, type, required);
         this.fields.push(field);
         this.subscriptions.push(
             field.updates().subscribe(

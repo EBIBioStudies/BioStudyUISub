@@ -45,7 +45,9 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
         this.route.params.forEach((params: Params) => {
             this.accno = params['accno'];
             this.submission = new Submission();
-            this.submission.root.fields.add('title', '', 'text', true);
+            this.submission.root.fields.add('Title', '', 'text', true);
+            this.submission.root.fields.add('Release Date', '', 'date', true);
+            this.submission.root.fields.add('Description', '', 'textarea', true);
             this.submission.root.features.add('Contact');
             this.submission.root.features.add('Publication');
 

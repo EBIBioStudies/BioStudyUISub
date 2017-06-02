@@ -22,6 +22,8 @@ export class SubmissionFormComponent {
 
     submForm: FormGroup;
 
+    formErrors: {[key: string]: string} = {};
+
     constructor(private fb: FormBuilder) {
     }
 
@@ -33,14 +35,17 @@ export class SubmissionFormComponent {
         const config = {};
 
         this.fields.forEach(
-            field => config[field.name] = [
-                field.name,
-                [
-                    Validators.required,
-                    Validators.minLength(4),
-                    Validators.maxLength(24)
-                ]
-            ]
+            field => {
+                config[field.id] = [
+                    field.value,
+                    [
+                        Validators.required,
+                        Validators.minLength(4),
+                        Validators.maxLength(24)
+                    ]
+                ];
+                this.formErrors[field.id] = '';
+            }
         );
 
         this.submForm = this.fb.group(config);
@@ -48,7 +53,7 @@ export class SubmissionFormComponent {
             data =>
                 this.onValueChanged(data)
         );
-        this.onValueChanged(); // (re)set validation messages now
+        this.onValueChanged();
     }
 
     get fields(): Field[] {
@@ -56,8 +61,31 @@ export class SubmissionFormComponent {
     }
 
     onValueChanged(data ?: any): void {
-        console.log(data);
+        if (!this.submForm) {
+            return;
+        }
+        const form = this.submForm;
+
+        for (const field in this.formErrors) {
+            this.formErrors[field] = '';
+            const control = form.get(field);
+            if (control && control.dirty && !control.valid) {
+                for (const key in control.errors) {
+                    this.formErrors[field] += this.validationMessage(key);
+                }
+            }
+        }
     }
+
+    validationMessage(key: string): string {
+        const m = {
+            'required': 'the value is required',
+            'minlength': 'must be at least  characters long.',
+            'maxlength': 'cannot be more than 24 characters long.'
+        };
+        return m[key];
+    }
+
 
     onSubmit(ev: any): void {
         return;
