@@ -22,84 +22,106 @@
 
     <div class="panel-body">
         <div class="container-fluid container-scroll">
-            <div class="row">
-                <div class="col-md-2" *ngFor="let column of feature.columns">
+            <div class="row" [style.width]="rowWidth" style="border-bottom:1px solid #ccc">
+                <div class="col-xs-1 col-md-1">&nbsp;</div>
+                <div class="col-xs-3 col-md-2 col-md-offset-0" *ngFor="let column of feature.columns">
                     <feature-column
                             [column]="column"
                             [required]="false"
                             (remove)="onColumnRemove(column)"></feature-column>
                 </div>
             </div>
+            <div class="row" [style.width]="rowWidth" *ngFor="let row of feature.rows; let idx=index">
+                <div class="col-xs-1 col-md-1">
+                    <span style="width:20px;">{{idx+1}}</span>
+                    <button *ngIf="!readonly"
+                            type="button"
+                            class="btn btn-danger btn-sm"
+                            (click)="feature.removeRow(idx)"
+                            [tooltip]="'Delete ' + feature.name"><i class="fa fa-trash"></i>
+                    </button>
+                </div>
+                <div class="col-xs-3 col-md-2 col-md-offset-0" *ngFor="let column of feature.columns">
+                    <div [ngClass]="{'has-error' : false}">
+                        <input *ngIf="column.type === 'text'"
+                               type="text" class="form-control input-sm form-control-auto"
+                               [name]="'value_' + column.id"
+                               placeholder="Enter a value"
+                               tooltip="This field is required"
+                               [required]="true"
+                               [(ngModel)]="row.valueFor(column.id).value"
+                               [readonly]="readonly">
+                        <!--
+                                                       [typeahead]="typeaheadValues(column.id)"
+                               typeaheadAppendToBody="true"
+                               typeaheadMinlength="0"
+                               typeaheadOptionsLimit="10"
+-->
+
+                        <!--input-file *ngIf="column.type === 'file'"
+                                    [name]="column.id"
+                                    [(ngModel)]="row.getValue(column.id).value"
+                                    [required]="true">
+                        </input-file-->
+                    </div>
+                </div>
+            </div>
         </div>
-        <!--div style="overflow-x:auto; white-space:nowrap; width:100%;">
-            <table class="table">
-                <thead>
-                <tr>
-                    <th class="col-xs-1"></th>
-                    <th class="col-xs-1"></th>
-                    <th *ngFor="let column of feature.columns"
-                        class="col-md-1">
-                        <feature-column
-                                [column]="column"
-                                [required]="false"
-                                (remove)="onColumnRemove(column)"></feature-column>
-                    </th>
-                </tr>
-                </thead-->
-                <!--
-                                <tbody>
-                                <tr *ngFor="let row of rows; let idx=index">
-                                    <td>
-                                        {{idx+1}}
-                                    </td>
-                                    <td class="text-nowrap">
-                                        <button type="button"
-                                                class="btn btn-primary btn-sm"
-                                                (click)="activeTab = idx"
-                                                [tooltip]="editTooltip"><i class="fa fa-edit"></i>
-                                        </button>
-                                        <button *ngIf="!readonly" type="button"
-                                                class="btn btn-danger btn-sm"
-                                                (click)="items.remove(idx)"
-                                                [tooltip]="deleteTooltip"><i class="fa fa-trash"></i>
-                                        </button>
-                                    </td>
-                                    <td *ngFor="let attrName of attrNames" class="form-group row" [ngClass]="colSizeCss">
-                                        <div *ngFor="let attr of (item.attributes.attributes | propFilter:{name: attrName})"
-                                             [ngClass]="{'has-error' : itemsPreviewForm.controls[attr.name + '_' + idx] &&
-                                                                       itemsPreviewForm.controls[attr.name + '_' + idx].invalid}">
-                                            &lt;!&ndash;
-                                                                         previewItemForm['attrValuePreview_' + key].$invalid
-                                            &ndash;&gt;
-                                            <input *ngIf="attr.type === 'text'"
-                                                   type="text"
-                                                   class="form-control input-sm"
-                                                   [name]="attr.name + '_' + idx"
-                                                   placeholder="Enter a value"
-                                                   [typeahead]="typeaheadValues(attr.name, idx)"
-                                                   typeaheadAppendToBody="true"
-                                                   typeaheadMinlength="0"
-                                                   typeaheadOptionsLimit="10"
-                                                   tooltip="This field is required"
-                                                   [isDisabled]="itemsPreviewForm.controls[attr.name + '_' + idx] && itemsPreviewForm.controls[attr.name + '_' + idx].valid"
-                                                   [required]="attr.required"
-                                                   [(ngModel)]="attr.value"
-                                                   [readonly]="readonly">
-                                            &lt;!&ndash;
-                                                                               ng-model-options="{ allowInvalid: true }">
-                                            &ndash;&gt;
-                                            <input-file *ngIf="attr.type === 'file'"
-                                                        [name]="attr.name + '_' + idx"
-                                                        [(ngModel)]="attr.value"
-                                                        [readonly]="readonly"
-                                                        [required]="attr.required">
-                                            </input-file>
-                                        </div>
-                                    </td>
-                                </tr>
-                                </tbody>
-                -->
-            <!--/table>
-        </div-->
+
+        <!--
+                        <tbody>
+                        <tr *ngFor="let row of rows; let idx=index">
+                            <td>
+                                {{idx+1}}
+                            </td>
+                            <td class="text-nowrap">
+                                <button type="button"
+                                        class="btn btn-primary btn-sm"
+                                        (click)="activeTab = idx"
+                                        [tooltip]="editTooltip"><i class="fa fa-edit"></i>
+                                </button>
+                                <button *ngIf="!readonly" type="button"
+                                        class="btn btn-danger btn-sm"
+                                        (click)="items.remove(idx)"
+                                        [tooltip]="deleteTooltip"><i class="fa fa-trash"></i>
+                                </button>
+                            </td>
+                            <td *ngFor="let attrName of attrNames" class="form-group row" [ngClass]="colSizeCss">
+                                <div *ngFor="let attr of (item.attributes.attributes | propFilter:{name: attrName})"
+                                     [ngClass]="{'has-error' : itemsPreviewForm.controls[attr.name + '_' + idx] &&
+                                                               itemsPreviewForm.controls[attr.name + '_' + idx].invalid}">
+                                    &lt;!&ndash;
+                                                                 previewItemForm['attrValuePreview_' + key].$invalid
+                                    &ndash;&gt;
+                                    <input *ngIf="attr.type === 'text'"
+                                           type="text"
+                                           class="form-control input-sm"
+                                           [name]="attr.name + '_' + idx"
+                                           placeholder="Enter a value"
+                                           [typeahead]="typeaheadValues(attr.name, idx)"
+                                           typeaheadAppendToBody="true"
+                                           typeaheadMinlength="0"
+                                           typeaheadOptionsLimit="10"
+                                           tooltip="This field is required"
+                                           [isDisabled]="itemsPreviewForm.controls[attr.name + '_' + idx] && itemsPreviewForm.controls[attr.name + '_' + idx].valid"
+                                           [required]="attr.required"
+                                           [(ngModel)]="attr.value"
+                                           [readonly]="readonly">
+                                    &lt;!&ndash;
+                                                                       ng-model-options="{ allowInvalid: true }">
+                                    &ndash;&gt;
+                                    <input-file *ngIf="attr.type === 'file'"
+                                                [name]="attr.name + '_' + idx"
+                                                [(ngModel)]="attr.value"
+                                                [readonly]="readonly"
+                                                [required]="attr.required">
+                                    </input-file>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+        -->
+        <!--/table>
+    </div-->
     </div>
 </div>

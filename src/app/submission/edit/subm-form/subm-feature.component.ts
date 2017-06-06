@@ -37,8 +37,13 @@ export class SubmissionFeatureComponent {
         return true;
     }
 
-    get rowWidth(): number {
-        return 100.0*(this.feature.columns.length*3.0);
+    get rowWidth(): string {
+        //TODO move window to providers for easy testing
+        const w = window.innerWidth;
+        const k = (w >= 768 ? 2 : 3);
+        const rw = 100 * (k*this.feature.colSize()+1)/12 + 'vw';
+        console.log(w, k, rw);
+        return rw;
     }
 
 }
