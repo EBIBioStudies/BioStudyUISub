@@ -26,9 +26,10 @@ export class SubmissionSideBarComponent {
             const sec = this.subm.section(this.currSection);
             sec.features.list().forEach(
                 f => items.push({
-                    label: 'Add ' + f.type,
+                    label: 'Add ' + f.name,
                     icon: 'fa-file-o',
                     onClick: function (ev) {
+                        console.log('add row');
                         f.addRow();
                     }
                 })

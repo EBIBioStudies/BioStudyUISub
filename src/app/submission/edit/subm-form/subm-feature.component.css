@@ -1,0 +1,17 @@
+@media (min-width: 992px) {
+    .container-scroll > .row {
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    .container-scroll > .row > .col-md-2 {
+        display: inline-block;
+        float: none;
+    }
+}
+.container-scroll > .row {
+    margin-top: 24px;
+}
+.container-scroll > .row > .col-md-2 {
+    font-weight: bold;
+    text-align: center;
+}

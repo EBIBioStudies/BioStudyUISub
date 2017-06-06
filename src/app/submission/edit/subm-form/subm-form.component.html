@@ -6,11 +6,15 @@
          class="form-group row"
          [ngClass]="{'has-error': formErrors[field.id].length > 0}">
         <div class="col-sm-12">
-            <label class="control-label">{{field.label}}:</label>
+            <label class="control-label">{{field.label}}:
+                <span>
+                    <span>{{formErrors[field.id]}}</span>
+                </span>
+            </label>
             <subm-field
                     [type]="field.type"
                     [label]="field.label"
-                    [required]="field.required"
+                    [required]="true"
                     [readonly]="readonly"
                     [formControlName]="field.id">
             </subm-field>
@@ -75,6 +79,10 @@
     <p></p>
 
     <div class="col-lg-12" style="padding:0">
+        <subm-feature *ngFor="let feature of features"
+                      [feature]="feature"
+                      [readonly]="readonly">
+        </subm-feature>
         <!--subm-attributes-panel
                 [attributes]="submission.annotations.items[0].attributes"
                 [parentForm]="submForm.form"

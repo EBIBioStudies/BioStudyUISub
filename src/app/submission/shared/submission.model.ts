@@ -249,17 +249,19 @@ export class NameValuePair {
 }
 
 export class Feature extends HasUpdates<UpdateEvent> {
-    private _type: string;
+    private _name: string;
     private _columns: Columns = new Columns();
     private _rows: Rows = new Rows();
+    private _singleRow: boolean;
 
     private colSubscription: Subscription;
     private rowSubscription: Subscription;
 
-    constructor(type: string) {
+    constructor(name: string, singleRow: boolean = false) {
         super();
 
-        this._type = type;
+        this._name = name;
+        this._singleRow = singleRow;
         this.colSubscription = this._columns.updates()
             .subscribe(m => {
                 this.notify(new UpdateEvent('columns_change', m));
@@ -270,8 +272,12 @@ export class Feature extends HasUpdates<UpdateEvent> {
             });
     }
 
-    get type(): string {
-        return this._type;
+    get singleRow(): boolean {
+        return this._singleRow;
+    }
+
+    get name(): string {
+        return this._name;
     }
 
     get rows(): ValueMap[] {
@@ -288,6 +294,10 @@ export class Feature extends HasUpdates<UpdateEvent> {
 
     colSize(): number {
         return this._columns.size();
+    }
+
+    size(): number {
+        return this._singleRow ? this.colSize() : this.rowSize();
     }
 
     add(attributes: NameValuePair[] = []): void {
@@ -378,8 +388,7 @@ export class Field extends HasUpdates<UpdateEvent> {
 
     constructor(private _label: string,
                 private _value: string = '',
-                private _type: string = 'text',
-                private _required: boolean = false) {
+                private _type: string = 'text') {
         super();
         this._id = 'field_' + nextId();
     }
@@ -409,10 +418,6 @@ export class Field extends HasUpdates<UpdateEvent> {
     get type(): string {
         return this._type;
     }
-
-    get required(): boolean {
-        return this._required;
-    }
 }
 
 export class Fields extends HasUpdates<UpdateEvent> {
@@ -429,8 +434,8 @@ export class Fields extends HasUpdates<UpdateEvent> {
         return this.fields;
     }
 
-    add(label: string, value?: string, type?: string, required?: boolean): void {
-        const field = new Field(label, value, type, required);
+    add(label: string, value?: string, type?: string): void {
+        const field = new Field(label, value, type);
         this.fields.push(field);
         this.subscriptions.push(
             field.updates().subscribe(
@@ -463,6 +468,8 @@ export class Section extends HasUpdates<UpdateEvent> {
         this.fields = new Fields();
         this.features = new Features();
         this.sections = new Sections();
+        this.subscribeTo(this.fields, 'fields');
+        this.subscribeTo(this.features, 'features');
         this.subscribeTo(this.sections, 'sections');
     }
 

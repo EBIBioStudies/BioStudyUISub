@@ -5,10 +5,15 @@ import {
 
 import {
     FormGroup,
-    FormBuilder, Validators
+    FormBuilder,
+    Validators
 } from '@angular/forms';
 
-import {Submission, Field} from '../../shared/submission.model';
+import {
+    Submission,
+    Field,
+    Feature
+} from '../../shared/submission.model';
 import {SubmissionTemplate} from '../../shared/submission-template.model';
 
 @Component({
@@ -40,8 +45,7 @@ export class SubmissionFormComponent {
                     field.value,
                     [
                         Validators.required,
-                        Validators.minLength(4),
-                        Validators.maxLength(24)
+                        Validators.minLength(50)
                     ]
                 ];
                 this.formErrors[field.id] = '';
@@ -58,6 +62,10 @@ export class SubmissionFormComponent {
 
     get fields(): Field[] {
         return this.subm.section(this.currSection).fields.list();
+    }
+
+    get features(): Feature[] {
+        return this.subm.section(this.currSection).features.list();
     }
 
     onValueChanged(data ?: any): void {
@@ -80,12 +88,10 @@ export class SubmissionFormComponent {
     validationMessage(key: string): string {
         const m = {
             'required': 'the value is required',
-            'minlength': 'must be at least  characters long.',
-            'maxlength': 'cannot be more than 24 characters long.'
+            'minlength': 'must be at least 50 characters long'
         };
         return m[key];
     }
-
 
     onSubmit(ev: any): void {
         return;

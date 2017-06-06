@@ -28,6 +28,8 @@ import {DirectSubmitService} from './direct-submit/direct-submit.service';
 import {SubmissionSideBarComponent} from './edit/subm-sidebar/subm-sidebar.component';
 import {SubmissionFormComponent} from './edit/subm-form/subm-form.component';
 import {SubmissionFieldComponent} from './edit/subm-form/subm-field.component';
+import {SubmissionFeatureComponent} from './edit/subm-form/subm-feature.component';
+import {FeatureColumnComponent} from './edit/subm-form/feature-column.component';
 
 @NgModule({
     imports: [
@@ -56,7 +58,9 @@ import {SubmissionFieldComponent} from './edit/subm-form/subm-field.component';
         DirectSubmitSideBarComponent,
         SubmissionFormComponent,
         SubmissionFieldComponent,
+        SubmissionFeatureComponent,
         SubmissionSideBarComponent,
+        FeatureColumnComponent,
         ActionButtonsCellComponent,
         DateCellComponent,
         TextFilterComponent,
