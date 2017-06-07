@@ -29,7 +29,9 @@ export class SubmissionSideBarComponent {
                     label: 'Add ' + f.name,
                     icon: 'fa-file-o',
                     onClick: function (ev) {
-                        console.log('add row');
+                        if (f.colSize() === 0) {
+                            f.addColumn();
+                        }
                         f.addRow();
                     }
                 })

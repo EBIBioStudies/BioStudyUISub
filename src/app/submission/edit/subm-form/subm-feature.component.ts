@@ -16,7 +16,6 @@ export class SubmissionFeatureComponent {
     actions: any[];
 
     constructor() {
-
         this.actions = [
             {
                 label: 'Add Row',

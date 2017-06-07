@@ -23,7 +23,17 @@
     <div class="panel-body">
         <div class="container-fluid container-scroll">
             <div class="row" [style.width]="rowWidth" style="border-bottom:1px solid #ccc">
-                <div class="col-xs-1 col-md-1">&nbsp;</div>
+                <div class="col-xs-1 col-md-1">
+                    <button *ngIf="!readonly"
+                            type="button"
+                            class="btn btn-xs btn-primary btn-block"
+                            tooltip="Add Column"
+                            container="body"
+                            (click)="feature.addColumn()">
+                        <i class="fa fa-plus"></i>
+                        <span class="pull-right"><i class="fa fa-angle-double-right"></i></span>
+                    </button>
+                </div>
                 <div class="col-xs-3 col-md-2" *ngFor="let column of feature.columns">
                     <feature-column
                             [column]="column"
@@ -38,7 +48,9 @@
                             type="button"
                             class="btn btn-danger btn-sm"
                             (click)="feature.removeRow(idx)"
-                            [tooltip]="'Delete ' + feature.name"><i class="fa fa-trash"></i>
+                            [tooltip]="'Delete ' + feature.name"
+                            container="body">
+                        <i class="fa fa-trash"></i>
                     </button>
                 </div>
                 <div class="col-xs-3 col-md-2" *ngFor="let column of feature.columns">
@@ -64,6 +76,18 @@
                                     [required]="true">
                         </input-file-->
                     </div>
+                </div>
+            </div>
+            <div class="row" [style.width]="rowWidth">
+                <div class="col-xs-1 col-md-1">
+                    <button *ngIf="!readonly"
+                            type="button"
+                            class="btn btn-xs btn-primary btn-block"
+                            tooltip="Add Row"
+                            container="body"
+                            (click)="feature.addRow()">
+                        <i class="fa fa-plus"></i>
+                    </button>
                 </div>
             </div>
         </div>
