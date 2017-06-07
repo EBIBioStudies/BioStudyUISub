@@ -24,7 +24,7 @@
         <div class="container-fluid container-scroll">
             <div class="row" [style.width]="rowWidth" style="border-bottom:1px solid #ccc">
                 <div class="col-xs-1 col-md-1">&nbsp;</div>
-                <div class="col-xs-3 col-md-2 col-md-offset-0" *ngFor="let column of feature.columns">
+                <div class="col-xs-3 col-md-2" *ngFor="let column of feature.columns">
                     <feature-column
                             [column]="column"
                             [required]="false"
@@ -41,7 +41,7 @@
                             [tooltip]="'Delete ' + feature.name"><i class="fa fa-trash"></i>
                     </button>
                 </div>
-                <div class="col-xs-3 col-md-2 col-md-offset-0" *ngFor="let column of feature.columns">
+                <div class="col-xs-3 col-md-2" *ngFor="let column of feature.columns">
                     <div [ngClass]="{'has-error' : false}">
                         <input *ngIf="column.type === 'text'"
                                type="text" class="form-control input-sm form-control-auto"
