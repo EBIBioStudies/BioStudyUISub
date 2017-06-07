@@ -1,13 +1,13 @@
 import {
-    Component, Input
+    Component,
+    Input
 } from '@angular/core';
 
 import {Feature} from '../../shared/submission.model';
 
 @Component({
     selector: 'subm-feature',
-    templateUrl: './subm-feature.component.html',
-    styleUrls: ['./subm-feature.component.css']
+    templateUrl: './subm-feature.component.html'
 })
 export class SubmissionFeatureComponent {
     @Input() feature: Feature;
@@ -35,13 +35,5 @@ export class SubmissionFeatureComponent {
     get valid(): boolean {
         return true;
     }
-
-    get rowWidth(): string {
-        //TODO move window to provider for easy testing
-        const w = window.innerWidth;
-        const k = (w >= 768 ? 2 : 3);
-        return 100 * (k*this.feature.colSize()+1)/12 + 'vw';
-    }
-
 }
 

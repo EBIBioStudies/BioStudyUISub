@@ -1,0 +1,153 @@
+<div class="container-fluid">
+    <div class="row" style="margin-bottom:15px;border-bottom:1px solid #ccc">
+        <div class="col-md-3"><h5>key</h5></div>
+        <div class="col-md-9"><h5>value</h5></div>
+    </div>
+    <div class="row" *ngFor="let column of feature.columns">
+        <div class="col-md-3">
+            <div class="form-group" style="margin-right:15px">
+                <input type="text"
+                       class="form-control control-label input-sm"
+                       [readonly]="readonly"
+                       [(ngModel)]="column.name"
+                       required>
+                <!--
+                <input *ngIf="!attr.required"
+                   type="text" class="form-control control-label input-sm"
+                   [name]="'name_' + attr.id"
+                   placeholder="Type a key"
+                   tooltip="Empty or duplicated value"
+                   [isDisabled]="attrForm.controls['name_' + attr.id]?.valid"
+                   [typeahead]="typeaheadAttrNames()"
+                   typeaheadAppendToBody="true"
+                   typeaheadMinLength="0"
+                   typeaheadOptionsLimit="30"
+                   [readonly]="readonly"
+                   [(ngModel)]="attr.name"
+                   (ngModelChange)="onAttrNameChange()"
+                   [uniqueAttrName]="attributes.attributes"
+                   required>
+                -->
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="form-group">
+                <div class="input-group">
+                    <input type="text"
+                           class="form-control input-sm"
+                           [readonly]="readonly"
+                           [(ngModel)]="feature.rows[0].valueFor(column.id).value"
+                           [required]="false">
+                    <!--
+                                                   [typeahead]="typeaheadAttrValues(attr.name)"
+                               typeaheadAppendToBody="true"
+                               typeaheadMinLength="0"
+                               typeaheadOptionsLimit="30"
+
+                    -->
+                    <!--input-file *ngIf="attr.type === 'file'"
+                                [(ngModel)]="attr.value"
+                                [name]="'value_' + attr.id"
+                                [required]="attr.required"
+                                [readonly]="readonly">
+                    </input-file-->
+
+                    <span *ngIf="!readonly"
+                          class="input-group-btn">
+                              <button type="button"
+                                      class="btn btn-sm btn-danger btn-flat"
+                                      (click)="onRemoveAttrClick(column.id);">
+                                   <i class="fa fa-trash-o"></i>
+                              </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--table>
+<thead>
+    <tr>
+        <th>Key</th>
+        <th>Value</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let attr of attributes.attributes; let idx=index">
+        <td class="col-md-3 nopadding border-none form-group-sm"
+            [ngClass]="{'has-error' : !attr.required
+                                       && attrForm.controls['name_' + attr.id]?.invalid}">
+
+            <input *ngIf="!attr.required"
+                   type="text" class="form-control control-label input-sm"
+                   [name]="'name_' + attr.id"
+                   placeholder="Type a key"
+                   tooltip="Empty or duplicated value"
+                   [isDisabled]="attrForm.controls['name_' + attr.id]?.valid"
+                   [typeahead]="typeaheadAttrNames()"
+                   typeaheadAppendToBody="true"
+                   typeaheadMinLength="0"
+                   typeaheadOptionsLimit="30"
+                   [readonly]="readonly"
+                   [(ngModel)]="attr.name"
+                   (ngModelChange)="onAttrNameChange()"
+                   [uniqueAttrName]="attributes.attributes"
+                   required>
+
+            <p *ngIf="attr.required" class="form-control-static pull-right">{{attr.name}}</p>
+        </td>
+        <td class="col-md-9 nopadding border-none form-group-sm"
+            [ngClass]="{'has-error' : attr.required
+                                      && attrForm.controls['value_' + attr.id]?.invalid}">
+            <div [ngClass]="{'input-group' : !readonly && !attr.required}">
+
+                <input *ngIf="attr.type === 'text'"
+                       type="text" class="form-control input-sm"
+                       [name]="'value_' + attr.id"
+                       placeholder="Enter a value"
+                       tooltip="This field is required"
+                       [isDisabled]="attrForm.controls['value_' + attr.id]?.valid"
+                       [typeahead]="typeaheadAttrValues(attr.name)"
+                       typeaheadAppendToBody="true"
+                       typeaheadMinLength="0"
+                       typeaheadOptionsLimit="30"
+                       [readonly]="readonly"
+                       [(ngModel)]="attr.value"
+                       [required]="attr.required"-->
+<!--
+                       uib-typeahead="value for value in typeaheadValues(attr.name, item.$index) | filter:$viewValue:$emptyOrMatch | limitTo:10"
+                       typeahead-append-to-body="true"
+                       typeahead-show-hint="true"
+                       typeahead-min-length="0"
+-->
+<!--input-file *ngIf="attr.type === 'file'"
+            [(ngModel)]="attr.value"
+            [name]="'value_' + attr.id"
+            [required]="attr.required"
+            [readonly]="readonly">
+</input-file>
+
+<span *ngIf="!readonly && !attr.required" class="input-group-btn">
+      <button type="button"
+              class="btn btn-sm btn-danger btn-flat"
+              (click)="onRemoveAttrClick(idx);"
+              [tooltip]="removeAttrTooltip">
+           <i class="fa fa-trash-o"></i>
+      </button>
+ </span>
+</div>
+</td>
+</tr>
+
+<tr *ngIf="!readonly && (addNewAttrLabel !== undefined)">
+<td colspan="2">
+<p class="pull-right">
+<button type="button"
+        class="btn btn-default btn-xs"
+        (click)="onAddNewAttrClick()">{{addNewAttrLabel}}
+</button>
+</p>
+</td>
+</tr>
+</tbody>
+</table-->

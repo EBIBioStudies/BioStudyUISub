@@ -5,8 +5,8 @@ import {
     EventEmitter
 } from '@angular/core';
 
-import {SubmissionTemplate} from "../../shared/submission-template.model";
-import {Submission} from "../../shared/submission.model";
+import {SubmissionTemplate} from '../../shared/submission-template.model';
+import {Submission, Feature} from "../../shared/submission.model";
 
 @Component({
     selector: 'subm-sidebar',
@@ -25,10 +25,14 @@ export class SubmissionSideBarComponent {
         if (this.subm) { //TODO
             const sec = this.subm.section(this.currSection);
             sec.features.list().forEach(
-                f => items.push({
+                (f: Feature) => items.push({
                     label: 'Add ' + f.name,
                     icon: 'fa-file-o',
                     onClick: function (ev) {
+                        if (f.singleRow) {
+                            f.addColumn();
+                            return;
+                        }
                         if (f.colSize() === 0) {
                             f.addColumn();
                         }

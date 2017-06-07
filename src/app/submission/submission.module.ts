@@ -30,6 +30,9 @@ import {SubmissionFormComponent} from './edit/subm-form/subm-form.component';
 import {SubmissionFieldComponent} from './edit/subm-form/subm-field.component';
 import {SubmissionFeatureComponent} from './edit/subm-form/subm-feature.component';
 import {FeatureColumnComponent} from './edit/subm-form/feature-column.component';
+import {FeatureGridComponent} from './edit/subm-form/feature-grid.component';
+import {FeatureListComponent} from './edit/subm-form/feature-list.component';
+
 
 @NgModule({
     imports: [
@@ -61,6 +64,8 @@ import {FeatureColumnComponent} from './edit/subm-form/feature-column.component'
         SubmissionFeatureComponent,
         SubmissionSideBarComponent,
         FeatureColumnComponent,
+        FeatureGridComponent,
+        FeatureListComponent,
         ActionButtonsCellComponent,
         DateCellComponent,
         TextFilterComponent,

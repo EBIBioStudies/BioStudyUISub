@@ -48,6 +48,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
             this.submission.root.fields.add('Title', '', 'text');
             this.submission.root.fields.add('Release Date', '', 'date');
             this.submission.root.fields.add('Description', '', 'textarea');
+            this.submission.root.features.add('Annotation', true);
             this.submission.root.features.add('Contact');
             this.submission.root.features.add('Publication');
 

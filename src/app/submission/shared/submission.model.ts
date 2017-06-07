@@ -262,6 +262,9 @@ export class Feature extends HasUpdates<UpdateEvent> {
 
         this._name = name;
         this._singleRow = singleRow;
+        if (singleRow) {
+            this.addRow();
+        }
         this.colSubscription = this._columns.updates()
             .subscribe(m => {
                 this.notify(new UpdateEvent('columns_change', m));
@@ -335,12 +338,18 @@ export class Feature extends HasUpdates<UpdateEvent> {
     }
 
     addRow(): ValueMap {
+        if (this.singleRow && this._rows.size() > 0) {
+            return;
+        }
         const vm = this._rows.add(this._columns.keys());
         this.notify(new UpdateEvent('add_row'));
         return vm;
     }
 
     removeRow(index: number): void {
+        if (this.singleRow) {
+            return;
+        }
         this._rows.remove(index);
         this.notify(new UpdateEvent('remove_row'));
     }
@@ -368,8 +377,8 @@ export class Features extends HasUpdates<UpdateEvent> {
         return this.features;
     }
 
-    add(type: string): void {
-        const f = new Feature(type);
+    add(type: string, singleRow:boolean = false): void {
+        const f = new Feature(type, singleRow);
         this.features.push(f);
         this.subscriptions.push(
             f.updates().subscribe(
