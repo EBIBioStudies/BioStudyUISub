@@ -24,8 +24,17 @@
                 <span>{{item.label}}</span>
             </a>
         </li>
-        <li>
-            <hr/>
+        <li class="sidebar-item success">
+            <a *ngIf="collapsed"
+               tooltip="Add New Section"
+               placement="right"
+               container="body">
+                <i class="fa fa-fw fa-plus"></i>
+            </a>
+            <a *ngIf="!collapsed">
+                <i class="fa fa-fw fa-plus"></i>
+                <span>Add New Section</span>
+            </a>
         </li>
         <!--li class="success" disabled>
             <a class="disabled-link" *ngIf="collapsed">
