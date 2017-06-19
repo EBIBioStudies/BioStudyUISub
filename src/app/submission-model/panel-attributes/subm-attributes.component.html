@@ -59,12 +59,12 @@
                                            typeahead-show-hint="true"
                                            typeahead-min-length="0"
                     -->
-                    <input-file *ngIf="attr.type === 'file'"
+                    <!--input-file *ngIf="attr.type === 'file'"
                                 [(ngModel)]="attr.value"
                                 [name]="'value_' + attr.id"
                                 [required]="attr.required"
                                 [readonly]="readonly">
-                    </input-file>
+                    </input-file-->
 
                     <span *ngIf="!readonly && !attr.required" class="input-group-btn">
                       <button type="button"

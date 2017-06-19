@@ -5,10 +5,10 @@
        [readonly]="readonly"
        [required]="required">
 
-<date-input-box *ngIf="type === 'date'"
+<date-input *ngIf="type === 'date'"
                 [(ngModel)]="value"
                 [required]="required"
-                bsstDateFormat></date-input-box>
+                bsstDateFormat></date-input>
 
 <textarea *ngIf="type === 'textarea'"
           class="form-control input-sm"

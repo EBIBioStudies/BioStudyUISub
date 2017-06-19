@@ -33,25 +33,12 @@
         <div class="col-md-9">
             <div class="form-group">
                 <div class="input-group">
-                    <input type="text"
-                           class="form-control input-sm"
-                           [readonly]="readonly"
-                           [(ngModel)]="feature.rows[0].valueFor(column.id).value"
-                           [required]="false">
-                    <!--
-                                                   [typeahead]="typeaheadAttrValues(attr.name)"
-                               typeaheadAppendToBody="true"
-                               typeaheadMinLength="0"
-                               typeaheadOptionsLimit="30"
-
-                    -->
-                    <!--input-file *ngIf="attr.type === 'file'"
-                                [(ngModel)]="attr.value"
-                                [name]="'value_' + attr.id"
-                                [required]="attr.required"
-                                [readonly]="readonly">
-                    </input-file-->
-
+                    <feature-value
+                          [type]="column.type"
+                          [(ngModel)]="feature.rows[0].valueFor(column.id).value"
+                          [readonly]="readonly"
+                          [required]="false">
+                    </feature-value>
                     <span *ngIf="!readonly"
                           class="input-group-btn">
                               <button type="button"

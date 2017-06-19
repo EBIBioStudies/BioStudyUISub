@@ -1,15 +1,12 @@
 import {NgModule}  from '@angular/core';
-import {RouterModule} from '@angular/router';
 
 import {SharedModule} from 'app/shared/shared.module';
-import {FileModule} from 'app/file/file.module';
 import {SubmissionSharedModule} from 'app/submission-shared/submission-shared.module';
 
 import {SubmissionPanelComponent} from './panel/subm-panel.component';
 
 import {SubmissionAttributesPanelComponent} from './panel-attributes/subm-attributes-panel.component';
 import {SubmissionAttributesComponent} from './panel-attributes/subm-attributes.component';
-import {InputFileComponent} from './panel-attributes/input-file.component';
 import {UniqueAttrName} from './panel-attributes/unique-attr-name.directive';
 
 import {SubmissionItemsComponent} from './panel-items/subm-items.component';
@@ -22,10 +19,7 @@ import {SubmissionModel} from './model/submission.model';
 @NgModule({
     imports: [
         SharedModule,
-        FileModule,
-        SubmissionSharedModule,
-        RouterModule
-    ],
+        SubmissionSharedModule],
     providers: [
         DictionaryService,
         SubmissionModel
@@ -36,7 +30,6 @@ import {SubmissionModel} from './model/submission.model';
         SubmissionAttributesComponent,
         SubmissionItemsPanelComponent,
         SubmissionItemsComponent,
-        InputFileComponent,
         PropertyFilterPipe,
         UniqueAttrName
     ],

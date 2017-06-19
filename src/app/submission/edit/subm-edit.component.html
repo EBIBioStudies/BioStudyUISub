@@ -30,32 +30,38 @@
                   (toggle)="sideBarCollapsed=!sideBarCollapsed"
                   [collapsed]="sideBarCollapsed"
                   (select)="onSideBarSelect($event)"
-                  [subm]="submission"
                   [submTemplate]="submissionTemplate"
-                  [currSection]="currentSection">
+                  [submSection]="currSection">
     </subm-sidebar>
+
+    <subm-navbar
+            [class.collapse-left]="!readonly && sideBarCollapsed"
+            [accno]="accno">
+    </subm-navbar>
 
     <div class="container-fluid">
         <aside class="right-side content"
                [ngClass]="{'collapse-left' : !readonly && sideBarCollapsed}">
 
             <div *ngIf="submission"
-                 class="panel"
+                 class="panel navbar-subm-margin"
                  [ngClass]="{'panel-danger': !submValid, 'panel-info': submValid}">
 
-                <div class="panel-heading">
-                    <span>Submission {{accno}}</span><span *ngIf="!readonly && !submValid"> << There are some validation errors. Please correct them before to proceed to submit >> </span>
-                    <div *ngIf="readonly" class="pull-right">
-                        <a class="pull-right btn btn-success btn-xs"
-                           (click)="onEditSubmission()">Edit</a>
-                    </div>
-                </div>
                 <div class="panel-body">
                     <subm-form
-                            [subm]="submission"
                             [submTemplate]="submTemplate"
-                            [currSection]="currentSection">
+                            [submSection]="currSection">
                     </subm-form>
+
+                    <div class="list-group">
+                        <a *ngFor="let section of currSection.sections.list(); let idx = index"
+                           class="list-group-item"
+                           [ngClass]="{'list-group-item-danger': idx === 2}"
+                           (click)="onSectionClick(section)">
+                            {{section.type}} <i class="fa fa-angle-double-right"></i>
+                        </a>
+                    </div>
+
                     <div>
                         <button *ngIf="!readonly && submValid"
                                 type="button"
@@ -65,6 +71,7 @@
                         <span *ngIf="submitting"><i class="fa fa-spinner fa-spin"></i></span>
                     </div>
                 </div>
+
             </div>
 
         </aside>

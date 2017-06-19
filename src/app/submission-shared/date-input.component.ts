@@ -20,7 +20,7 @@ import {
 } from './date.utils';
 
 @Component({
-    selector: 'date-input-box',
+    selector: 'date-input',
     template: `
     <div class="input-group">
          <input type="text"
@@ -39,12 +39,12 @@ import {
                 (selectionDone)="onSelectionDone($event)"></datepicker>
 `,
     providers: [
-        {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DateInputBoxComponent), multi: true},
-        {provide: NG_VALIDATORS, useExisting: forwardRef(() => DateInputBoxComponent), multi: true}
+        {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DateInputComponent), multi: true},
+        {provide: NG_VALIDATORS, useExisting: forwardRef(() => DateInputComponent), multi: true}
     ]
 })
 
-export class DateInputBoxComponent implements ControlValueAccessor {
+export class DateInputComponent implements ControlValueAccessor {
 
     @ViewChild('inputbox')
     private inpEl: ElementRef;

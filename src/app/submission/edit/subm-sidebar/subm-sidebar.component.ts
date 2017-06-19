@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 
 import {SubmissionTemplate} from '../../shared/submission-template.model';
-import {Submission, Feature} from "../../shared/submission.model";
+import {Section, Feature} from "../../shared/submission.model";
 
 @Component({
     selector: 'subm-sidebar',
@@ -14,17 +14,15 @@ import {Submission, Feature} from "../../shared/submission.model";
 })
 export class SubmissionSideBarComponent {
     @Input() collapsed?: boolean = false;
-    @Input() subm: Submission;
     @Input() submTemplate: SubmissionTemplate;
-    @Input() currSection: string;
+    @Input() submSection: Section;
 
     @Output() toggle? = new EventEmitter();
 
     get items(): any[] {
         const items = [];
-        if (this.subm) { //TODO
-            const sec = this.subm.section(this.currSection);
-            sec.features.list().forEach(
+        if (this.submSection) { //TODO
+            this.submSection.features.list().forEach(
                 (f: Feature) => items.push({
                     label: 'Add ' + f.name,
                     icon: 'fa-file-o',

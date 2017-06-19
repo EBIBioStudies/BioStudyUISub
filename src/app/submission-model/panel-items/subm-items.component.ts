@@ -81,12 +81,12 @@ import * as _ from 'lodash';
 <!--
                                    ng-model-options="{ allowInvalid: true }">
 -->
-                            <input-file *ngIf="attr.type === 'file'"
+                            <!--input-file *ngIf="attr.type === 'file'"
                                         [name]="attr.name + '_' + idx" 
                                         [(ngModel)]="attr.value"
                                         [readonly]="readonly"
                                         [required]="attr.required">
-                            </input-file>
+                            </input-file-->
                         </div>
                     </td>
                 </tr>

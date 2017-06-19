@@ -10,7 +10,7 @@ import {
 } from '@angular/forms';
 
 import {
-    Submission,
+    Section,
     Field,
     Feature
 } from '../../shared/submission.model';
@@ -21,9 +21,8 @@ import {SubmissionTemplate} from '../../shared/submission-template.model';
     templateUrl: './subm-form.component.html'
 })
 export class SubmissionFormComponent {
-    @Input() subm: Submission;
     @Input() submTemplate: SubmissionTemplate;
-    @Input() currSection: string;
+    @Input() submSection: Section;
 
     submForm: FormGroup;
 
@@ -61,11 +60,11 @@ export class SubmissionFormComponent {
     }
 
     get fields(): Field[] {
-        return this.subm.section(this.currSection).fields.list();
+        return this.submSection.fields.list();
     }
 
     get features(): Feature[] {
-        return this.subm.section(this.currSection).features.list();
+        return this.submSection.features.list();
     }
 
     onValueChanged(data ?: any): void {

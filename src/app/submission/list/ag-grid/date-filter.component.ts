@@ -71,16 +71,16 @@ class DateRange {
             <option value="before" [selected]="before">before</option>
             <option value="between" [selected]="between">between</option>
         </select>
-        <date-input-box
+        <date-input
             *ngIf="after || between"
             [(ngModel)]="date.from"
             bsstDateFormat>
-        </date-input-box>
-        <date-input-box
+        </date-input>
+        <date-input
             *ngIf="before || between"
             [(ngModel)]="date.to"
             bsstDateFormat>
-        </date-input-box>
+        </date-input>
     </div>
     <div style="padding:0 5px 5px 5px;text-align:right">
         <button (click)="onApplyClick($event)">apply</button>

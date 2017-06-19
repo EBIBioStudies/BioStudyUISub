@@ -377,7 +377,7 @@ export class Features extends HasUpdates<UpdateEvent> {
         return this.features;
     }
 
-    add(type: string, singleRow:boolean = false): void {
+    add(type: string, singleRow: boolean = false): void {
         const f = new Feature(type, singleRow);
         this.features.push(f);
         this.subscriptions.push(
@@ -462,24 +462,29 @@ export class Fields extends HasUpdates<UpdateEvent> {
 export class Section extends HasUpdates<UpdateEvent> {
     private _accno: string = '';
     private _type: string;
+    private _id: string;
 
     readonly fields: Fields;
     readonly features: Features;
     readonly sections: Sections;
 
-    constructor(accno: string = '',
-                type: string) {
+    constructor(type: string, id: string, accno: string = '') {
         super();
 
         this._accno = accno;
         this._type = type;
+        this._id = id;
 
         this.fields = new Fields();
         this.features = new Features();
-        this.sections = new Sections();
+        this.sections = new Sections(id);
         this.subscribeTo(this.fields, 'fields');
         this.subscribeTo(this.features, 'features');
         this.subscribeTo(this.sections, 'sections');
+    }
+
+    get id(): string {
+        return this._id;
     }
 
     get accno(): string {
@@ -491,23 +496,33 @@ export class Section extends HasUpdates<UpdateEvent> {
         this.notify(new UpdateEvent('accno', accno));
     }
 
+    get type(): string {
+        return this._type;
+    }
+
+    sectionById(id: string): Section {
+        if (this._id === id) {
+            return this;
+        }
+        return this.sections.list()
+            .find(s => s.sectionById(id) !== undefined);
+    }
+
     subscribeTo(hasUpdates: HasUpdates<UpdateEvent>, type: string) {
         hasUpdates.updates().subscribe(
             m => this.notify(new UpdateEvent(type, null, m))
         );
-    }
-
-    static ofType(type: string) {
-        return new Section(undefined, type);
     }
 }
 
 export class Sections extends HasUpdates<UpdateEvent> {
     private sections: Section[];
     private subscriptions: Subscription[];
+    private secId: string;
 
-    constructor() {
+    constructor(secId: string) {
         super();
+        this.secId = secId;
         this.sections = [];
         this.subscriptions = [];
     }
@@ -516,8 +531,16 @@ export class Sections extends HasUpdates<UpdateEvent> {
         return this.sections;
     }
 
-    add(): void {
-        //TODO
+    add(type: string, accno?: string): void {
+        const id = `${this.secId}.${this.sections.length}`;
+        const s = new Section(type, id, accno);
+        this.sections.push(s);
+        this.subscriptions.push(
+            s.updates().subscribe(
+                u => this.notify(new UpdateEvent('section_change', null, u))
+            )
+        );
+        this.notify(new UpdateEvent('section_add', id));
     }
 
     remove(): void {
@@ -529,12 +552,11 @@ export class Submission {
     readonly root: Section;
 
     constructor() {
-        this.root = Section.ofType('Study');
+        this.root = new Section('Study', 'root');
     }
 
-    section(path: string): Section {
-        //TODO
-        return this.root;
+    sectionById(id: string): Section {
+        return this.root.sectionById(id);
     }
 }
 

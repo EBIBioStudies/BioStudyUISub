@@ -6,6 +6,23 @@
 @sidebar-light-font: white;
 @sidebar-light-border: none;
 
+@navbar-subm-height: 44px;
+
+/* Navbar submission */
+.navbar-subm-fixed {
+  height: @navbar-subm-height;
+  min-height: @navbar-subm-height !important;
+  position: fixed !important;
+  top: @navbar-height;
+  z-index: @zindex-navbar;
+  padding-left: @left-side-width;
+  width: 100%;
+}
+
+.navbar-subm-margin {
+  margin-top: @navbar-subm-height;
+}
+
 /* Layout */
 
 /*right side - contains main content*/
@@ -38,14 +55,18 @@
     display: block !important;
   }
 
-  .right-side.ng-hide {
+  .navbar-subm-fixed.collapse-left {
+    padding-left: @left-side-width-collapse;
+  }
+
+  /*.right-side.ng-hide {
     display: block !important;
     margin-left: 0;
     > .content-header {
       margin-top: 0;
     }
   }
-
+*/
   .left-side.collapse-left {
     width: @left-side-width-collapse;
   }
@@ -54,6 +75,10 @@
 @media screen and (max-width: @screen-md) {
   .right-side {
     margin-left: 0;
+  }
+
+  .navbar-subm-fixed {
+    padding-left: 0;
   }
 }
 
@@ -69,6 +94,7 @@
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
+  z-index: @zindex-navbar + 1;
 }
 
 .sidebar-offcanvas {

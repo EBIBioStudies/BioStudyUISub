@@ -13,10 +13,8 @@ import {
 
 import {FileService} from 'app/file/index';
 
-import * as _ from 'lodash';
-
 @Component({
-    selector: 'input-file',
+    selector: 'file-input',
     template: `
     <select  *ngIf="files.length > 0"
              class="form-control input-sm"
@@ -31,23 +29,23 @@ import * as _ from 'lodash';
         class="btn btn-link">Go to File Upload</a>
 `,
     providers: [
-        {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => InputFileComponent), multi: true},
-        {provide: NG_VALIDATORS, useExisting: forwardRef(() => InputFileComponent), multi: true}
+        {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => FileInputComponent), multi: true},
+        {provide: NG_VALIDATORS, useExisting: forwardRef(() => FileInputComponent), multi: true}
     ]
 })
-export class InputFileComponent implements ControlValueAccessor {
+export class FileInputComponent implements ControlValueAccessor {
     @Input() required?: boolean = false;
     @Input() readonly?: boolean = false;
     @Input() name: string;
 
     @Input('value') private selected: string = '';
-    files: Array<string> = [];
+    files: string[] = [];
 
     constructor(fileService: FileService) {
         fileService
             .getFiles('/User')
             .map(data => data.files)
-            .map(files => _.map(files, f => f.path.replace(/^\/User\//, '')))
+            .map(files => files.map(f => f.path.replace(/^\/User\//, '')))
             .subscribe((files) => {
                 this.files = files;
             });
@@ -69,19 +67,16 @@ export class InputFileComponent implements ControlValueAccessor {
         this.onChange(val);
     }
 
-    //From ControlValueAccessor interface
     writeValue(value: any) {
         if (value) {
             this.selected = value;
         }
     }
 
-    //From ControlValueAccessor interface
     registerOnChange(fn) {
         this.onChange = fn;
     }
 
-    //From ControlValueAccessor interface
     registerOnTouched(fn: any) {
         this.onTouched = fn;
     }
