@@ -29,7 +29,6 @@
     <subm-sidebar *ngIf="!readonly"
                   (toggle)="sideBarCollapsed=!sideBarCollapsed"
                   [collapsed]="sideBarCollapsed"
-                  (select)="onSideBarSelect($event)"
                   [submTemplate]="submissionTemplate"
                   [submSection]="currSection">
     </subm-sidebar>

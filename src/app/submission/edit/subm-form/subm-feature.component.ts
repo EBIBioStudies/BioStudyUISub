@@ -9,7 +9,7 @@ import {Feature} from '../../shared/submission.model';
     selector: 'subm-feature',
     templateUrl: './subm-feature.component.html'
 })
-export class SubmissionFeatureComponent {
+export class SubmFeatureComponent {
     @Input() feature: Feature;
     @Input() readonly?: boolean = false;
 

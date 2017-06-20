@@ -17,11 +17,11 @@ import {
     selector: 'subm-field',
     templateUrl: './subm-field.component.html',
     providers: [
-        {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => SubmissionFieldComponent), multi: true},
-        {provide: NG_VALIDATORS, useExisting: forwardRef(() => SubmissionFieldComponent), multi: true}
+        {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => SubmFieldComponent), multi: true},
+        {provide: NG_VALIDATORS, useExisting: forwardRef(() => SubmFieldComponent), multi: true}
     ]
 })
-export class SubmissionFieldComponent implements ControlValueAccessor, OnChanges {
+export class SubmFieldComponent implements ControlValueAccessor, OnChanges {
 
     propagateChange: any = () => {
     };

@@ -378,6 +378,7 @@ export class Features extends HasUpdates<UpdateEvent> {
     }
 
     add(type: string, singleRow: boolean = false): void {
+        console.log('addFeature', type, singleRow);
         const f = new Feature(type, singleRow);
         this.features.push(f);
         this.subscriptions.push(

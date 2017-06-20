@@ -30,7 +30,7 @@ import {SubmissionService} from '../shared/submission.service';
     }
 `]
 })
-export class SubmissionViewComponent implements OnInit {
+export class SubmViewComponent implements OnInit {
     submission: Submission;
     readonly: boolean = true;
 

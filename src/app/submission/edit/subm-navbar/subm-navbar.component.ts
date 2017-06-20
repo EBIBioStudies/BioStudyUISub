@@ -8,6 +8,6 @@ import {
     templateUrl: './subm-navbar.component.html',
     host: {'class': 'navbar-subm-fixed navbar-default'}
 })
-export class SubmissionNavBarComponent {
+export class SubmNavBarComponent {
     @Input() accno: string;
 }

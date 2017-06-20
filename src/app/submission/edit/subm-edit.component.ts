@@ -22,13 +22,13 @@ import {
 } from '../shared/submission.model';
 
 import {SubmissionService} from '../shared/submission.service';
-import {Observable} from "rxjs";
+
 
 @Component({
     selector: 'subm-edit',
     templateUrl: './subm-edit.component.html'
 })
-export class SubmissionEditComponent implements OnInit, OnDestroy {
+export class SubmEditComponent implements OnInit, OnDestroy {
     sideBarCollapsed: false;
     readonly: boolean = false;
     submission: Submission;

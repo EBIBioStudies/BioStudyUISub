@@ -11,29 +11,30 @@ import {SubmissionSharedModule} from 'app/submission-shared/submission-shared.mo
 import {SubmissionService} from './shared/submission.service';
 
 import {
-    SubmissionListComponent,
+    SubmListComponent,
     ActionButtonsCellComponent,
     DateCellComponent
 } from './list/subm-list.component';
 import {TextFilterComponent} from './list/ag-grid/text-filter.component';
 import {DateFilterComponent} from './list/ag-grid/date-filter.component';
 
-import {SubmissionEditComponent} from './edit/subm-edit.component';
-import {SubmissionViewComponent} from './edit/subm-view.component';
+import {SubmEditComponent} from './edit/subm-edit.component';
+import {SubmViewComponent} from './edit/subm-view.component';
 
 import {DirectSubmitSideBarComponent} from './direct-submit/direct-submit-sidebar.component';
 import {DirectSubmitComponent, ResultLogNodeComponent} from './direct-submit/direct-submit.component';
 import {DirectSubmitService} from './direct-submit/direct-submit.service';
 
-import {SubmissionSideBarComponent} from './edit/subm-sidebar/subm-sidebar.component';
-import {SubmissionFormComponent} from './edit/subm-form/subm-form.component';
-import {SubmissionFieldComponent} from './edit/subm-form/subm-field.component';
-import {SubmissionFeatureComponent} from './edit/subm-form/subm-feature.component';
+import {SubmSideBarComponent} from './edit/subm-sidebar/subm-sidebar.component';
+import {SubmFormComponent} from './edit/subm-form/subm-form.component';
+import {SubmFieldComponent} from './edit/subm-form/subm-field.component';
+import {SubmFeatureComponent} from './edit/subm-form/subm-feature.component';
 import {FeatureColumnComponent} from './edit/subm-form/feature-column.component';
 import {FeatureGridComponent} from './edit/subm-form/feature-grid.component';
 import {FeatureListComponent} from './edit/subm-form/feature-list.component';
 import {FeatureValueComponent} from './edit/subm-form/feature-value.component';
-import {SubmissionNavBarComponent} from './edit/subm-navbar/subm-navbar.component';
+import {SubmNavBarComponent} from './edit/subm-navbar/subm-navbar.component';
+import {SubmAddDialogComponent} from "./edit/subm-add/subm-add.component";
 
 
 @NgModule({
@@ -55,17 +56,18 @@ import {SubmissionNavBarComponent} from './edit/subm-navbar/subm-navbar.componen
         DirectSubmitService
     ],
     declarations: [
-        SubmissionListComponent,
-        SubmissionEditComponent,
-        SubmissionViewComponent,
+        SubmListComponent,
+        SubmEditComponent,
+        SubmViewComponent,
         DirectSubmitComponent,
         ResultLogNodeComponent,
         DirectSubmitSideBarComponent,
-        SubmissionFormComponent,
-        SubmissionFieldComponent,
-        SubmissionFeatureComponent,
-        SubmissionSideBarComponent,
-        SubmissionNavBarComponent,
+        SubmFormComponent,
+        SubmFieldComponent,
+        SubmFeatureComponent,
+        SubmSideBarComponent,
+        SubmNavBarComponent,
+        SubmAddDialogComponent,
         FeatureColumnComponent,
         FeatureValueComponent,
         FeatureGridComponent,
@@ -76,9 +78,9 @@ import {SubmissionNavBarComponent} from './edit/subm-navbar/subm-navbar.componen
         DateFilterComponent
     ],
     exports: [
-        SubmissionListComponent,
-        SubmissionEditComponent,
-        SubmissionViewComponent,
+        SubmListComponent,
+        SubmEditComponent,
+        SubmViewComponent,
         DirectSubmitComponent
     ],
     entryComponents: [ResultLogNodeComponent]

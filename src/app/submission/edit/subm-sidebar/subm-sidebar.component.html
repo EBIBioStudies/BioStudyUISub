@@ -26,12 +26,11 @@
         </li>
         <li class="sidebar-item success">
             <a *ngIf="collapsed"
-               tooltip="Add New Section"
-               placement="right"
-               container="body">
+               (click)="onAddClick($event)">
                 <i class="fa fa-fw fa-plus"></i>
             </a>
-            <a *ngIf="!collapsed">
+            <a *ngIf="!collapsed"
+               (click)="onAddClick($event)">
                 <i class="fa fa-fw fa-plus"></i>
                 <span>Add...</span>
             </a>
@@ -80,3 +79,7 @@
                [disabled]="submForm.invalid"></sidebar-item-->
     </ul>
 </aside>
+<subm-add-dialog
+        #addDialog
+        (okClick)="onAdd($event)">
+</subm-add-dialog>

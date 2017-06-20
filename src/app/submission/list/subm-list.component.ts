@@ -153,7 +153,7 @@ export class DateCellComponent implements AgRendererComponent {
     `
 })
 
-export class SubmissionListComponent {
+export class SubmListComponent {
     private datasource: any;
 
     @ViewChild('confirmDialog')

@@ -9,6 +9,8 @@ import {
     Validators
 } from '@angular/forms';
 
+import {Subscription} from "rxjs/Subscription";
+
 import {
     Section,
     Field,
@@ -20,31 +22,45 @@ import {SubmissionTemplate} from '../../shared/submission-template.model';
     selector: 'subm-form',
     templateUrl: './subm-form.component.html'
 })
-export class SubmissionFormComponent {
+export class SubmFormComponent {
     @Input() submTemplate: SubmissionTemplate;
     @Input() submSection: Section;
 
     submForm: FormGroup;
+    submFields: Field[] = [];
 
     formErrors: {[key: string]: string} = {};
+
+    private subscr: Subscription;
 
     constructor(private fb: FormBuilder) {
     }
 
-    ngOnInit(): void {
+    ngOnChanges(): void {
+        if (this.subscr != undefined) {
+            this.subscr.unsubscribe();
+            this.subscr = undefined;
+        }
+        this.subscr = this.submSection.fields
+            .updates()
+            .filter(ue => ue.name === 'field_add')
+            .subscribe(ue => {
+                this.buildForm();
+            });
         this.buildForm();
     }
 
     buildForm(): void {
         const config = {};
 
-        this.fields.forEach(
+        this.submFields = this.submSection.fields.list().slice(0);
+        this.submFields.forEach(
             field => {
                 config[field.id] = [
                     field.value,
                     [
-                        Validators.required,
-                        Validators.minLength(50)
+                        Validators.required
+                        //Validators.minLength(50)
                     ]
                 ];
                 this.formErrors[field.id] = '';
@@ -60,7 +76,7 @@ export class SubmissionFormComponent {
     }
 
     get fields(): Field[] {
-        return this.submSection.fields.list();
+        return this.submFields;
     }
 
     get features(): Feature[] {
