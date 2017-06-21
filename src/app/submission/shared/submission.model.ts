@@ -501,12 +501,19 @@ export class Section extends HasUpdates<UpdateEvent> {
         return this._type;
     }
 
-    sectionById(id: string): Section {
-        if (this._id === id) {
-            return this;
+    path(id: string): Section[] {
+        if (id === undefined || id.length === 0 || !id.startsWith(this.id)) {
+            return [];
         }
-        return this.sections.list()
-            .find(s => s.sectionById(id) !== undefined);
+        if (id !== this.id) {
+            const p: Section[] =
+                this.sections
+                    .list()
+                    .map(s => s.path(id))
+                    .find(p => p.length > 0);
+            return [].concat([this], p);
+        }
+        return [this];
     }
 
     subscribeTo(hasUpdates: HasUpdates<UpdateEvent>, type: string) {
@@ -557,7 +564,12 @@ export class Submission {
     }
 
     sectionById(id: string): Section {
-        return this.root.sectionById(id);
+        const p: Section[] = this.path(id);
+        return p.length > 0 ? p[p.length - 1] : undefined;
+    }
+
+    path(sectionId: string): Section[] {
+        return this.root.path(sectionId);
     }
 }
 

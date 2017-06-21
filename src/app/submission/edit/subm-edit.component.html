@@ -35,7 +35,10 @@
 
     <subm-navbar
             [class.collapse-left]="!readonly && sideBarCollapsed"
-            [accno]="accno">
+            [accno]="accno"
+            [submission]="submission"
+            [submSection]="currSection"
+            (sectionClick)="onSectionClick($event)">
     </subm-navbar>
 
     <div class="container-fluid">

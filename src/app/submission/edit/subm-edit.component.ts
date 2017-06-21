@@ -161,6 +161,7 @@ export class SubmEditComponent implements OnInit, OnDestroy {
     }
 
     onSectionClick(section: Section): void {
+        console.log('onSectionClick', section.id);
         this.changeSection(section.id);
     }
 }

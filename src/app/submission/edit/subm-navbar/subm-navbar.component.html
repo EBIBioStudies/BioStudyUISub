@@ -1,9 +1,12 @@
 <div style="display:flex;align-items:center;height:100%;width:100%;padding:0 10px">
     <div>
-        <h5>{{accno}}: {{collapseLeft}}</h5>
+        <h5>{{accno}}</h5>
     </div>
     <div style="margin-left:10px;">
-        Study <i class="fa fa-angle-double-right"></i> Section 1 <i class="fa fa-angle-double-right"></i> Section 2
+        <span *ngFor="let sec of sections">
+            <i *ngIf="!lst" class="fa fa-angle-double-right"></i>
+            &nbsp;<a (click)="onSectionClick(sec)">{{sec.type}}</a>
+        </span>
     </div>
     <div style="margin-left: auto;">
         <span class="label label-danger">7 Errors</span>
