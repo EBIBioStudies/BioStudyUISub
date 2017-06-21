@@ -27,12 +27,12 @@ import {DirectSubmitService} from './direct-submit/direct-submit.service';
 
 import {SubmSideBarComponent} from './edit/subm-sidebar/subm-sidebar.component';
 import {SubmFormComponent} from './edit/subm-form/subm-form.component';
-import {SubmFieldComponent} from './edit/subm-form/subm-field.component';
-import {SubmFeatureComponent} from './edit/subm-form/subm-feature.component';
-import {FeatureColumnComponent} from './edit/subm-form/feature-column.component';
-import {FeatureGridComponent} from './edit/subm-form/feature-grid.component';
-import {FeatureListComponent} from './edit/subm-form/feature-list.component';
-import {FeatureValueComponent} from './edit/subm-form/feature-value.component';
+import {SubmFieldComponent} from './edit/subm-form/field/subm-field.component';
+import {SubmFeatureComponent} from './edit/subm-form/feature/subm-feature.component';
+import {FeatureColumnComponent} from './edit/subm-form/feature/feature-column.component';
+import {FeatureGridComponent} from './edit/subm-form/feature/feature-grid.component';
+import {FeatureListComponent} from './edit/subm-form/feature/feature-list.component';
+import {FeatureValueComponent} from './edit/subm-form/feature/feature-value.component';
 import {SubmNavBarComponent} from './edit/subm-navbar/subm-navbar.component';
 import {SubmAddDialogComponent} from "./edit/subm-add/subm-add.component";
 

@@ -3,7 +3,7 @@ import {
     Input
 } from '@angular/core';
 
-import {Feature} from '../../shared/submission.model';
+import {Feature} from '../../../shared/submission.model';
 
 @Component({
     selector: 'subm-feature-grid',
