@@ -12,10 +12,11 @@
             </button>
         </div>
         <div class="col-xs-3 col-md-2" *ngFor="let column of feature.columns">
-            <feature-column
-                    [column]="column"
-                    [required]="false"
-                    (remove)="onColumnRemove(column)"></feature-column>
+            <inline-edit
+                    [(ngModel)]="column.name"
+                    emptyValue="New Column"
+                    [required]="false"x
+                    (remove)="onColumnRemove(column)"></inline-edit>
         </div>
     </div>
     <div class="row" [style.width]="rowWidth" *ngFor="let row of feature.rows; let idx=index">

@@ -24,6 +24,7 @@ import {ORCIDInputBoxComponent} from './orcid-input-box.component';
 import {FileUploadButtonComponent} from './file-upload-button.component';
 import {ConfirmDialogComponent} from './confirm-dialog.component';
 import {MultiSelectComponent, FilterPipe} from './multi-select.component';
+import {InlineEditComponent} from './inline-edit.component';
 
 @NgModule({
     imports: [
@@ -47,6 +48,7 @@ import {MultiSelectComponent, FilterPipe} from './multi-select.component';
         FileUploadButtonComponent,
         ConfirmDialogComponent,
         MultiSelectComponent,
+        InlineEditComponent,
         FilterPipe
     ],
     exports: [
@@ -69,6 +71,7 @@ import {MultiSelectComponent, FilterPipe} from './multi-select.component';
         FileUploadButtonComponent,
         ConfirmDialogComponent,
         MultiSelectComponent,
+        InlineEditComponent,
         FilterPipe
     ]
 })

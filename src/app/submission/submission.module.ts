@@ -29,7 +29,6 @@ import {SubmSideBarComponent} from './edit/subm-sidebar/subm-sidebar.component';
 import {SubmFormComponent} from './edit/subm-form/subm-form.component';
 import {SubmFieldComponent} from './edit/subm-form/field/subm-field.component';
 import {SubmFeatureComponent} from './edit/subm-form/feature/subm-feature.component';
-import {FeatureColumnComponent} from './edit/subm-form/feature/feature-column.component';
 import {FeatureGridComponent} from './edit/subm-form/feature/feature-grid.component';
 import {FeatureListComponent} from './edit/subm-form/feature/feature-list.component';
 import {FeatureValueComponent} from './edit/subm-form/feature/feature-value.component';
@@ -68,7 +67,6 @@ import {SubmAddDialogComponent} from "./edit/subm-add/subm-add.component";
         SubmSideBarComponent,
         SubmNavBarComponent,
         SubmAddDialogComponent,
-        FeatureColumnComponent,
         FeatureValueComponent,
         FeatureGridComponent,
         FeatureListComponent,
