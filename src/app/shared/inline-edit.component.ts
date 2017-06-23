@@ -130,9 +130,8 @@ export class InlineEditComponent implements AfterViewInit, ControlValueAccessor 
         this.stopEditing();
     }
 
-    private onEditBoxKeyUp(ev): void {
-        let code = ev.target.code;
-        if (code === 13) {
+    private onEditBoxKeyUp(ev: KeyboardEvent): void {
+        if (ev.key === 'Enter') {
             this.stopEditing();
         }
     }
