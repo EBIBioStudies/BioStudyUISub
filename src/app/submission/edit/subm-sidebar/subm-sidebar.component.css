@@ -1,0 +1,27 @@
+.sidebar-item-edit {
+    position: relative !important;
+}
+
+.sidebar-edit-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30px;
+    height: 100%;
+    z-index: 10000;
+}
+
+.sidebar-edit-btn > a {
+    width: 100%;
+    background: transparent;
+}
+
+.sidebar-edit-btn > a:hover > i {
+    color: black;
+    cursor: pointer;
+}
+
+.sidebar-edit-btn > a > i {
+    margin-top: 50%;
+    margin-left: 20%;
+}

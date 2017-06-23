@@ -12,7 +12,8 @@ import {SubmAddEvent} from "../subm-add/subm-add-event.model";
 
 @Component({
     selector: 'subm-sidebar',
-    templateUrl: './subm-sidebar.component.html'
+    templateUrl: './subm-sidebar.component.html',
+    styleUrls: ['./subm-sidebar.component.css']
 })
 export class SubmSideBarComponent implements OnChanges {
     @Input() collapsed?: boolean = false;
@@ -23,6 +24,7 @@ export class SubmSideBarComponent implements OnChanges {
 
     @ViewChild('addDialog')
     addDialog: SubmAddDialogComponent;
+    editing: boolean = false;
     items: any[] = [];
 
     ngOnChanges(): void {
@@ -31,6 +33,7 @@ export class SubmSideBarComponent implements OnChanges {
             this.submSection.features.list().forEach(
                 (f: Feature) => items.push({
                     label: 'Add ' + f.name,
+                    value: f.name,
                     icon: 'fa-file-o',
                     onClick: function (ev) {
                         if (f.singleRow) {
@@ -54,6 +57,11 @@ export class SubmSideBarComponent implements OnChanges {
         if (this.toggle) {
             this.toggle.emit();
         }
+    }
+
+    onEditModeToggle(ev): void {
+        ev.preventDefault();
+        this.editing = !this.editing;
     }
 
     onAddClick(ev): void {

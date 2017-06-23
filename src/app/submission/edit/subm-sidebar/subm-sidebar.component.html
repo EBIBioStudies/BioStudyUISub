@@ -2,26 +2,47 @@
        [ngClass]="{'collapse-left' : collapsed}">
 
     <ul class="sidebar-menu">
-        <li class="sidebar-item menu-toggle">
+        <li class="sidebar-item sidebar-item-edit menu-toggle">
             <a (click)="onToggle($event)">
                 <i class="fa fa-bars fa-fw"></i>
                 <span *ngIf="!collapsed">Minimise</span>
             </a>
+            <div *ngIf="!collapsed" class="sidebar-edit-btn">
+                <a (click)="onEditModeToggle($event)">
+                    <i class="fa fa-fw" [ngClass]="{'fa-edit': !editing, 'fa-check': editing}"></i>
+                </a>
+            </div>
         </li>
         <li class="sidebar-item success" *ngFor="let item of items">
-            <a (click)="item.onClick($event)"
+            <a *ngIf="!editing" (click)="item.onClick($event)"
                [tooltip]="item.label"
                placement="right"
-               container="body"
-               [ngClass]="{'disabled-link': item.disabled}">
+               container="body">
                 <i class="fa fa-fw" [ngClass]="item.icon"></i>
                 <span *ngIf="!collapsed">{{item.label}}</span>
             </a>
+            <a *ngIf="editing">
+                <div style="float:left;width:20px;">
+                    <i class="fa fa-fw" [ngClass]="item.icon"></i>
+                </div>
+                <div style="margin-left:20px;">
+                    <div style="float:right;width:20px;">
+                        <i class="fa fa-trash-o fa-fw"></i>
+                    </div>
+                    <div style="margin-right:20px;">
+                        <input type="text"
+                               class="form-control input-sm form-control-auto"
+                               [(ngModel)]="item.value"/>
+                    </div>
+                    <span class="clearfix"></span>
+                </div>
+                <span class="clearfix"></span>
+            </a>
         </li>
-        <li class="sidebar-item success">
+        <li *ngIf="!editing" class="sidebar-item success">
             <a (click)="onAddClick($event)">
                 <i class="fa fa-fw fa-plus"></i>
-                <span  *ngIf="!collapsed">Add...</span>
+                <span *ngIf="!collapsed">Add...</span>
             </a>
         </li>
     </ul>
