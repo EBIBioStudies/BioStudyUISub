@@ -9,74 +9,21 @@
             </a>
         </li>
         <li class="sidebar-item success" *ngFor="let item of items">
-            <a *ngIf="collapsed"
-               (click)="item.onClick($event)"
+            <a (click)="item.onClick($event)"
                [tooltip]="item.label"
                placement="right"
                container="body"
                [ngClass]="{'disabled-link': item.disabled}">
                 <i class="fa fa-fw" [ngClass]="item.icon"></i>
-            </a>
-            <a *ngIf="!collapsed"
-               (click)="item.onClick($event)"
-               [ngClass]="{'disabled-link': item.disabled}">
-                <i class="fa fa-fw" [ngClass]="item.icon"></i>
-                <span>{{item.label}}</span>
+                <span *ngIf="!collapsed">{{item.label}}</span>
             </a>
         </li>
         <li class="sidebar-item success">
-            <a *ngIf="collapsed"
-               (click)="onAddClick($event)">
+            <a (click)="onAddClick($event)">
                 <i class="fa fa-fw fa-plus"></i>
-            </a>
-            <a *ngIf="!collapsed"
-               (click)="onAddClick($event)">
-                <i class="fa fa-fw fa-plus"></i>
-                <span>Add...</span>
+                <span  *ngIf="!collapsed">Add...</span>
             </a>
         </li>
-        <!--li class="success" disabled>
-            <a class="disabled-link" *ngIf="collapsed">
-                <i class="fa fa-check" *ngIf="!saving"></i>
-                <i class="fa fa-spinner fa-spin-2x" *ngIf="saving"></i>
-            </a>
-            <a class="disabled-link" *ngIf="!collapsed">
-                <i class="fa fa-check" *ngIf="!saving"></i>
-                <i class="fa fa-spinner fa-spin-2x" *ngIf="saving"></i>
-                <span *ngIf="!saving">Saved</span>
-                <span *ngIf="saving">Saving...</span>
-            </a>
-        </li-->
-
-        <!--sidebar-item
-               (click)="addAnnotation();"
-               label="Describe your study"
-               icon="fa-comment-o"></sidebar-item>
-       <sidebar-item
-               (click)="addFile();"
-               label="Add a file"
-               icon="fa-file-o"></sidebar-item>
-
-       <sidebar-item
-               (click)="addContact();"
-               label="Add a contact"
-               icon="fa-user"></sidebar-item>
-
-       <sidebar-item
-               (click)="addLink();"
-               label="Add a link"
-               icon="fa-link"></sidebar-item>
-
-       <sidebar-item
-               (click)="addPublication();"
-               label="Add a publication"
-               icon="fa-book"></sidebar-item>
-
-       <sidebar-item
-               (click)="onSubmit()"
-               label="Submit"
-               icon="fa-database"
-               [disabled]="submForm.invalid"></sidebar-item-->
     </ul>
 </aside>
 <subm-add-dialog

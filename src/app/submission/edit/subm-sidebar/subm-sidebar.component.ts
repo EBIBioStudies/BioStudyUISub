@@ -2,7 +2,7 @@ import {
     Component,
     Input,
     Output,
-    EventEmitter, ViewChild
+    EventEmitter, ViewChild, OnChanges
 } from '@angular/core';
 
 import {SubmissionTemplate} from '../../shared/submission-template.model';
@@ -14,7 +14,7 @@ import {SubmAddEvent} from "../subm-add/subm-add-event.model";
     selector: 'subm-sidebar',
     templateUrl: './subm-sidebar.component.html'
 })
-export class SubmSideBarComponent {
+export class SubmSideBarComponent implements OnChanges {
     @Input() collapsed?: boolean = false;
     @Input() submTemplate: SubmissionTemplate;
     @Input() submSection: Section;
@@ -23,8 +23,9 @@ export class SubmSideBarComponent {
 
     @ViewChild('addDialog')
     addDialog: SubmAddDialogComponent;
+    items: any[] = [];
 
-    get items(): any[] {
+    ngOnChanges(): void {
         const items = [];
         if (this.submSection) { //TODO
             this.submSection.features.list().forEach(
@@ -44,7 +45,7 @@ export class SubmSideBarComponent {
                 })
             );
         }
-        return items;
+        this.items = items;
     }
 
     onToggle(ev): void {
