@@ -2,7 +2,7 @@
        [ngClass]="{'collapse-left' : collapsed}">
 
     <ul class="sidebar-menu">
-        <li class="sidebar-item sidebar-item-edit menu-toggle">
+        <li class="sidebar-item sidebar-edit-btn-item menu-toggle">
             <a (click)="onToggle($event)">
                 <i class="fa fa-bars fa-fw"></i>
                 <span *ngIf="!collapsed">Minimise</span>
@@ -21,22 +21,20 @@
                 <i class="fa fa-fw" [ngClass]="item.icon"></i>
                 <span *ngIf="!collapsed">{{item.label}}</span>
             </a>
-            <a *ngIf="editing">
-                <div style="float:left;width:20px;">
+            <a *ngIf="editing" class="sidebar-item-editor">
+                <div class="item-icon-left">
                     <i class="fa fa-fw" [ngClass]="item.icon"></i>
                 </div>
-                <div style="margin-left:20px;">
-                    <div style="float:right;width:20px;">
-                        <i class="fa fa-trash-o fa-fw"></i>
-                    </div>
-                    <div style="margin-right:20px;">
+                <div class="item-editbox-wrap">
+                    <div class="item-editbox">
                         <input type="text"
                                class="form-control input-sm form-control-auto"
                                [(ngModel)]="item.value"/>
                     </div>
-                    <span class="clearfix"></span>
+                    <div class="item-icon-right">
+                        <i class="fa fa-trash-o fa-fw"></i>
+                    </div>
                 </div>
-                <span class="clearfix"></span>
             </a>
         </li>
         <li *ngIf="!editing" class="sidebar-item success">

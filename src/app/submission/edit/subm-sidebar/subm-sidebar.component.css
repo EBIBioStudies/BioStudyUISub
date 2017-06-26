@@ -1,4 +1,6 @@
-.sidebar-item-edit {
+/*sidebar edit button */
+
+.sidebar-edit-btn-item {
     position: relative !important;
 }
 
@@ -24,4 +26,32 @@
 .sidebar-edit-btn > a > i {
     margin-top: 50%;
     margin-left: 20%;
+}
+
+/* item editor*/
+
+.sidebar-item-editor {
+    position: relative !important;
+}
+
+.sidebar-item-editor .item-icon-left {
+    position:absolute;
+    top:28%;
+    width:20px;
+}
+
+.sidebar-item-editor .item-editbox-wrap {
+    margin-left:20px;
+    position:relative;
+}
+
+.item-editbox-wrap .item-editbox {
+    margin-right:20px;
+}
+
+.item-editbox-wrap .item-icon-right {
+    position:absolute;
+    top:20%;
+    right:0;
+    width:20px;
 }
