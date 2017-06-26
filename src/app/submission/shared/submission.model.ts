@@ -283,6 +283,11 @@ export class Feature extends HasUpdates<UpdateEvent> {
         return this._name;
     }
 
+    set name(v: string) {
+        this._name = v;
+        this.notify(new UpdateEvent('name', v));
+    }
+
     get rows(): ValueMap[] {
         return this._rows.list();
     }
