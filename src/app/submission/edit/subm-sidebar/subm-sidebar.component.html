@@ -19,7 +19,7 @@
                placement="right"
                container="body">
                 <i class="fa fa-fw" [ngClass]="item.icon"></i>
-                <span *ngIf="!collapsed">{{item.label}}</span>
+                <span *ngIf="!collapsed">Add&nbsp;{{item.feature.name}}</span>
             </a>
             <a *ngIf="editing" class="sidebar-item-editor">
                 <div class="item-icon-left">
@@ -29,7 +29,7 @@
                     <div class="item-editbox">
                         <input type="text"
                                class="form-control input-sm form-control-auto"
-                               [(ngModel)]="item.value"/>
+                               [(ngModel)]="item.feature.name"/>
                     </div>
                     <div class="item-icon-right">
                         <i class="fa fa-trash-o fa-fw"></i>

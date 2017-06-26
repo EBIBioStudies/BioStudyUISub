@@ -2,13 +2,17 @@ import {
     Component,
     Input,
     Output,
-    EventEmitter, ViewChild, OnChanges
+    EventEmitter,
+    ViewChild,
+    OnChanges,
+    SimpleChange
 } from '@angular/core';
 
 import {SubmissionTemplate} from '../../shared/submission-template.model';
 import {Section, Feature} from '../../shared/submission.model';
 import {SubmAddDialogComponent} from '../subm-add/subm-add.component';
-import {SubmAddEvent} from "../subm-add/subm-add-event.model";
+import {SubmAddEvent} from '../subm-add/subm-add-event.model';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'subm-sidebar',
@@ -27,28 +31,26 @@ export class SubmSideBarComponent implements OnChanges {
     editing: boolean = false;
     items: any[] = [];
 
-    ngOnChanges(): void {
-        const items = [];
-        if (this.submSection) { //TODO
-            this.submSection.features.list().forEach(
-                (f: Feature) => items.push({
-                    label: 'Add ' + f.name,
-                    value: f.name,
-                    icon: 'fa-file-o',
-                    onClick: function (ev) {
-                        if (f.singleRow) {
-                            f.addColumn();
-                            return;
-                        }
-                        if (f.colSize() === 0) {
-                            f.addColumn();
-                        }
-                        f.addRow();
-                    }
-                })
-            );
+    private subscr: Subscription;
+
+    ngOnChanges(changes: any): void {
+        const secChange: SimpleChange = changes.submSection;
+        if (secChange) {
+            if (this.subscr) {
+                this.subscr.unsubscribe();
+            }
+            const sec: Section = secChange.currentValue;
+            if (sec) {
+                this.subscr = sec.features
+                    .updates()
+                    .subscribe(ev => {
+                        if (ev.name === 'feature_add' ||
+                            ev.name === 'feature_remove')
+                            this.onItemsChange();
+                    });
+                this.onItemsChange();
+            }
         }
-        this.items = items;
     }
 
     onToggle(ev): void {
@@ -71,7 +73,6 @@ export class SubmSideBarComponent implements OnChanges {
     }
 
     onAdd(ev: SubmAddEvent) {
-        console.log('onAdd', ev);
         if (ev.itemType === 'SingleAttribute') {
             this.submSection.fields.add(ev.name);
         }
@@ -85,4 +86,26 @@ export class SubmSideBarComponent implements OnChanges {
             this.submSection.sections.add(ev.name);
         }
     }
+
+    onItemsChange(): void {
+        const items = [];
+        this.submSection.features.list().forEach(
+            (f: Feature) => items.push({
+                feature: f,
+                icon: 'fa-file-o',
+                onClick: function (ev) {
+                    if (f.singleRow) {
+                        f.addColumn();
+                        return;
+                    }
+                    if (f.colSize() === 0) {
+                        f.addColumn();
+                    }
+                    f.addRow();
+                }
+            })
+        );
+        this.items = items;
+    }
+
 }
