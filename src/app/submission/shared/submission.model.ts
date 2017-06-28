@@ -249,6 +249,7 @@ export class NameValuePair {
 }
 
 export class Feature extends HasUpdates<UpdateEvent> {
+    private _id: string;
     private _name: string;
     private _columns: Columns = new Columns();
     private _rows: Rows = new Rows();
@@ -260,6 +261,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
     constructor(name: string, singleRow: boolean = false) {
         super();
 
+        this._id = `feature_${nextId()}`;
         this._name = name;
         this._singleRow = singleRow;
         if (singleRow) {
@@ -273,6 +275,10 @@ export class Feature extends HasUpdates<UpdateEvent> {
             .subscribe(m => {
                 this.notify(new UpdateEvent('rows_change', m));
             });
+    }
+
+    get id(): string {
+        return this._id;
     }
 
     get singleRow(): boolean {
