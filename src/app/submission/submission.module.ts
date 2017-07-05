@@ -33,7 +33,8 @@ import {FeatureGridComponent} from './edit/subm-form/feature/feature-grid.compon
 import {FeatureListComponent} from './edit/subm-form/feature/feature-list.component';
 import {FeatureValueComponent} from './edit/subm-form/feature/feature-value.component';
 import {SubmNavBarComponent} from './edit/subm-navbar/subm-navbar.component';
-import {SubmAddDialogComponent} from "./edit/subm-add/subm-add.component";
+import {SubmAddDialogComponent} from './edit/subm-add/subm-add.component';
+import {SubmFormService} from './edit/subm-form/subm-form.service';
 
 
 @NgModule({
@@ -51,6 +52,7 @@ import {SubmAddDialogComponent} from "./edit/subm-add/subm-add.component";
         SubmissionSharedModule
     ],
     providers: [
+        SubmFormService,
         SubmissionService,
         DirectSubmitService
     ],

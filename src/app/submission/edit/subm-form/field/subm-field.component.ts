@@ -28,7 +28,7 @@ export class SubmFieldComponent implements ControlValueAccessor, OnChanges {
     validateFn: any = () => {
     };
 
-    @Input() label: string;
+    @Input() name: string;
     @Input() type: string;
     @Input() readonly: boolean;
     @Input() required: boolean;

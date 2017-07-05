@@ -4,13 +4,14 @@ import {
 } from '@angular/core';
 
 import {Feature} from '../../../shared/submission.model';
+import {FeatureForm} from '../subm-form.service';
 
 @Component({
     selector: 'subm-feature',
     templateUrl: './subm-feature.component.html'
 })
 export class SubmFeatureComponent {
-    @Input() feature: Feature;
+    @Input() featureForm: FeatureForm;
     @Input() readonly?: boolean = false;
 
     actions: any[];
@@ -32,8 +33,12 @@ export class SubmFeatureComponent {
         ];
     }
 
+    get feature(): Feature {
+        return this.featureForm === undefined ? undefined : this.featureForm.feature;
+    }
+
     get valid(): boolean {
-        return true;
+        return this.featureForm.form.valid;
     }
 }
 

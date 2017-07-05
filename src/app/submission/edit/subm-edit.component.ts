@@ -22,7 +22,8 @@ import {
 } from '../shared/submission.model';
 
 import {SubmissionService} from '../shared/submission.service';
-
+import {SubmissionTemplate, SectionTemplate} from '../shared/submission-template.model';
+import * as stu from '../shared/submission-template.utils';
 
 @Component({
     selector: 'subm-edit',
@@ -31,22 +32,22 @@ import {SubmissionService} from '../shared/submission.service';
 export class SubmEditComponent implements OnInit, OnDestroy {
     sideBarCollapsed: false;
     readonly: boolean = false;
-    submission: Submission;
-    currSection: Section;
+
+    submAndTmpl: [Submission, SubmissionTemplate];
+
+    sectionAndTmpl: [Section, SectionTemplate];
+
     errors: string[] = [];
 
     private submitting: boolean = false;
     private accno: string = '';
 
     private __subscr: Subscription;
-    private __wrap;
 
     @ViewChild('submitResults') public submitResults: ModalDirective;
 
     constructor(private route: ActivatedRoute,
                 private submService: SubmissionService,
-                // private dictService: DictionaryService,
-                //private submModel: SubmissionModel,
                 private router: Router) {
     }
 
@@ -57,19 +58,11 @@ export class SubmEditComponent implements OnInit, OnDestroy {
             .subscribe(data => {
                 //TODO
                 this.accno = data.accno;
-                this.submission = new Submission();
-                const root = this.submission.root;
-                root.fields.add('Title', '', 'text');
-                root.fields.add('Release Date', '', 'date');
-                root.fields.add('Description', '', 'textarea');
-                root.features.add('Annotation', true);
-                root.features.add('Contact');
-                root.features.add('Publication');
-                root.sections.add('Section_1');
-                root.sections.add('Section_2');
-                root.sections.add('Section_3');
-                root.sections.add('Section_4');
-                this.currSection = root;
+                const tmpl = SubmissionTemplate.createDefault();
+                const subm = stu.createSubmission(tmpl);
+
+                this.submAndTmpl = [subm, tmpl];
+                this.changeSection(subm.root.id);
             });
     }
 
@@ -80,38 +73,61 @@ export class SubmEditComponent implements OnInit, OnDestroy {
         }
     }
 
+    get submission(): Submission {
+        return this.submAndTmpl ? this.submAndTmpl[0] : undefined;
+    }
+
+    get submissionTmpl(): SubmissionTemplate {
+        return this.submAndTmpl ? this.submAndTmpl[1] : undefined;
+    }
+
+    get section(): Section {
+        return this.sectionAndTmpl ? this.sectionAndTmpl[0] : undefined;
+    }
+
+    get sectionPath(): Section[] {
+        const subm = this.submission;
+        return subm === undefined ? [] : subm.sectionPath(this.section.id);
+    }
+
     loadSubmission(accno: string, section: string): void {
-    /*this.route.params.forEach((params: Params) => {
-     this.accno = params['accno'];
-     this.submService
-     .getSubmission(this.accno)
-     .subscribe(resp => {
-     let wrap = resp;
-     let pt = new PageTab(wrap.data);
-     this.__wrap = ((w, p) => {
-     return function () {
-     w.data = p.data;
-     return wrap;
-     }
-     })(wrap, pt);
+        /*this.route.params.forEach((params: Params) => {
+         this.accno = params['accno'];
+         this.submService
+         .getSubmission(this.accno)
+         .subscribe(resp => {
+         let wrap = resp;
+         let pt = new PageTab(wrap.data);
+         this.__wrap = ((w, p) => {
+         return function () {
+         w.data = p.data;
+         return wrap;
+         }
+         })(wrap, pt);
 
-     this.submission = pt.asSubmission(this.dictService.dict());
-     console.debug('SubmEdit: submission loaded ', this.submission);
+         this.submission = pt.asSubmission(this.dictService.dict());
+         console.debug('SubmEdit: submission loaded ', this.submission);
 
-     this.__subscr = pt.changes().subscribe((changes) => {
-     console.debug('SubmEdit: sending changes to the server...');
-     this.submService.saveSubmission(this.__wrap())
-     .subscribe(resp => {
-     console.debug('SubmEdit: all sent');
-     });
-     });
-     });
+         this.__subscr = pt.changes().subscribe((changes) => {
+         console.debug('SubmEdit: sending changes to the server...');
+         this.submService.saveSubmission(this.__wrap())
+         .subscribe(resp => {
+         console.debug('SubmEdit: all sent');
+         });
+         });
+         });
 
-     });*/
+         });*/
     }
 
     changeSection(sectionId: string) {
-        this.currSection = this.submission.sectionById(sectionId);
+        let sec = this.submission.sectionById(sectionId);
+        const types: string[] = this.submission
+            .sectionPath(sectionId)
+            .map(s => s.type);
+
+        let tmpl = this.submissionTmpl.getSectionTemplate(types.splice(1));
+        this.sectionAndTmpl = [sec, tmpl || SectionTemplate.createDefault(sec.type)];
     }
 
     onSubmit(event) {

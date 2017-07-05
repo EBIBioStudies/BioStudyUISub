@@ -22,11 +22,11 @@
 
     <div class="panel-body">
         <subm-feature-grid *ngIf="!feature.singleRow"
-                           [feature]="feature"
+                           [featureForm]="featureForm"
                            [readonly]="readonly">
         </subm-feature-grid>
         <subm-feature-list *ngIf="feature.singleRow"
-                           [feature]="feature"
+                           [featureForm]="featureForm"
                            [readonly]="readonly">
         </subm-feature-list>
     </div>

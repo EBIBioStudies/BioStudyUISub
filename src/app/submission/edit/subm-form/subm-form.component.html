@@ -1,117 +1,31 @@
-<form class="form-horizontal"
-      [formGroup]="submForm"
+<form *ngIf="sectionForm" class="form-horizontal"
+      [formGroup]="sectionForm.form"
       (ngSubmit)="onSubmit($event)">
 
-    <div *ngFor="let field of fields"
+    <div *ngFor="let field of sectionForm.fields"
          class="form-group row"
-         [ngClass]="{'has-error': formErrors[field.id].length > 0}">
+         [ngClass]="{'has-error': sectionForm.fieldControl(field.id).invalid}">
         <div class="col-sm-12">
-            <label class="control-label">{{field.label}}:
+            <label class="control-label">{{field.name}}:
                 <span>
-                    <span>{{formErrors[field.id]}}</span>
+                    <span>{{sectionForm.formErrors[field.id]}}</span>
                 </span>
             </label>
             <subm-field
                     [type]="field.type"
-                    [label]="field.label"
-                    [required]="true"
+                    [name]="field.name"
                     [readonly]="readonly"
-                    [formControlName]="field.id">
+                    [formControl]="sectionForm.fieldControl(field.id)">
             </subm-field>
         </div>
     </div>
-    <!--div class="form-group row"
-         [ngClass]="{'has-error':title.invalid}">
-        <div class="col-sm-12 ">
-            <label class="control-label">Title
-                <span *ngIf="title.errors">
-                    <span *ngIf="title.errors.required">: cannot be blank</span>
-                    <span *ngIf="title.errors.minlength">: must be at least 50 characters</span>
-                </span>
-            </label>
-            <input type="text" class="form-control" id="title" name="title"
-                   placeholder="Enter a title"
-                   [(ngModel)]="submission.title"
-                   [readonly]="readonly"
-                   minlength="50"
-                   required
-                   #title="ngModel">
-        </div>
-    </div-->
-
-    <!--div class="form-group row"
-         [ngClass]="{'has-error':releaseDate.invalid}">
-        <div class="col-sm-12">
-            <label class="control-label">Release date
-                <span *ngIf="releaseDate.errors">
-                    <span *ngIf="releaseDate.errors.required">: cannot be blank</span>
-                    <span *ngIf="releaseDate.errors.bsstDateFormat">: should be in YYYY-MM-DD format</span>
-                </span>
-            </label>
-            <date-input-box
-                    name="releaseDate"
-                    [(ngModel)]="submission.releaseDate"
-                    #releaseDate="ngModel"
-                    required
-                    bsstDateFormat></date-input-box>
-        </div>
-    </div-->
-
-    <!--div class="form-group row"
-         [ngClass]="{'has-error':description.invalid}">
-        <div class="col-sm-12">
-            <label class="control-label">Description
-                <span *ngIf="description.errors">
-                    <span *ngIf="description.errors.required">: cannot be blank</span>
-                    <span *ngIf="description.errors.minlength">: must be at least 50 characters</span>
-                </span>
-            </label>
-            <textarea id="description" name="description" class="form-control input-sm"
-                      [(ngModel)]="submission.description"
-                      [readonly]="readonly"
-                      minlength="50"
-                      required
-                      autosize="200"
-                      #description="ngModel"></textarea>
-        </div>
-    </div-->
 
     <p></p>
 
     <div style="padding:0">
-        <subm-feature *ngFor="let feature of features"
-                      [feature]="feature"
+        <subm-feature *ngFor="let feature of sectionForm.features"
+                      [featureForm]="sectionForm.featureForm(feature.id)"
                       [readonly]="readonly">
         </subm-feature>
-        <!--subm-attributes-panel
-                [attributes]="submission.annotations.items[0].attributes"
-                [parentForm]="submForm.form"
-                [readonly]="readonly"
-                type="annotation">
-        </subm-attributes-panel>
-
-        <subm-items-panel
-                [items]="submission.contacts"
-                [parentForm]="submForm.form"
-                [readonly]="readonly"
-                type="contact"></subm-items-panel>
-
-        <subm-items-panel
-                [items]="submission.links"
-                [parentForm]="submForm.form"
-                [readonly]="readonly"
-                type="link"></subm-items-panel>
-
-        <subm-items-panel
-                [items]="submission.files"
-                [parentForm]="submForm.form"
-                [readonly]="readonly"
-                type="file"></subm-items-panel>
-
-        <subm-items-panel
-                [items]="submission.publications"
-                [parentForm]="submForm.form"
-                [readonly]="readonly"
-                type="publication"></subm-items-panel-->
     </div>
 </form>

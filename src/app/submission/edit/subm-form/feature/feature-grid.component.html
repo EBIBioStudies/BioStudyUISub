@@ -1,4 +1,4 @@
-<div class="container-fluid container-scroll">
+<div class="container-fluid container-scroll" [formGroup]="featureForm.form">
     <div class="row" [style.width]="rowWidth" style="border-bottom:1px solid #ccc">
         <div class="col-xs-1 col-md-1">
             <button *ngIf="!readonly"
@@ -11,33 +11,34 @@
                 <span class="pull-right"><i class="fa fa-angle-double-right"></i></span>
             </button>
         </div>
-        <div class="col-xs-3 col-md-2" *ngFor="let column of feature.columns">
+        <div class="col-xs-3 col-md-2" *ngFor="let column of columns">
             <inline-edit
                     [(ngModel)]="column.name"
                     emptyValue="New Column"
-                    [required]="false"x
-                    (remove)="onColumnRemove(column)"></inline-edit>
+                    [required]="featureForm.columnTmpl(column.id).required"
+                    (remove)="onColumnRemove(column)"
+                    [formControl]="featureForm.columnControl(column.id)"></inline-edit>
         </div>
     </div>
-    <div class="row" [style.width]="rowWidth" *ngFor="let row of feature.rows; let idx=index">
+    <div class="row" [style.width]="rowWidth" *ngFor="let row of rows; let idx=index">
         <div class="col-xs-1 col-md-1">
             <span style="width:20px;">{{idx+1}}</span>
             <button *ngIf="!readonly"
                     type="button"
                     class="btn btn-danger btn-sm"
-                    (click)="feature.removeRow(idx)"
+                    (click)="feature.removeRowAt(idx)"
                     [tooltip]="'Delete ' + feature.name"
                     container="body">
                 <i class="fa fa-trash"></i>
             </button>
         </div>
-        <div class="col-xs-3 col-md-2" *ngFor="let column of feature.columns">
+        <div class="col-xs-3 col-md-2" *ngFor="let column of columns">
             <div [ngClass]="{'has-error' : false}">
                 <feature-value
                         [type]="column.type"
                         [(ngModel)]="row.valueFor(column.id).value"
-                        [required]="true"
-                        [readonly]="readonly">
+                        [readonly]="readonly"
+                        [formControl]="featureForm.rowValueControl(idx, column.id)">
                 </feature-value>
             </div>
         </div>

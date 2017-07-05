@@ -3,13 +3,22 @@ import {
     Input
 } from '@angular/core';
 
-import {Feature} from '../../../shared/submission.model';
+import {Attribute, Feature} from '../../../shared/submission.model';
+import {FeatureForm} from '../subm-form.service';
 
 @Component({
     selector: 'subm-feature-list',
     templateUrl: './feature-list.component.html'
 })
 export class FeatureListComponent {
-    @Input() feature: Feature;
+    @Input() featureForm: FeatureForm;
     @Input() readonly?: boolean = false;
+
+    get columns(): Attribute[] {
+        return this.featureForm.columns
+    }
+
+    get feature(): Feature {
+        return this.featureForm.feature;
+    }
 }

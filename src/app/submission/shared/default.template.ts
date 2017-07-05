@@ -1,82 +1,70 @@
-export default {
+export const DefaultTemplate = {
     "sections": [
         {
-            "key": "study",
-            "pageTabSection": "Study",
-            "mincount": 1,
-            "maxcount": 1,
+            "type": "Study",
+            "required": true,
             "fields": [
                 {
-                    "key": "title",
                     "name": "Title",
                     "type": "text",
                     "required": true,
                     "minlength": 50
                 },
                 {
-                    "key": "description",
+                    "name": "Release Date",
+                    "type": "date",
+                    "required": true
+                },
+                {
                     "name": "Description",
                     "type": "textarea",
                     "required": true,
                     "minlength": 50
-                },
-                {
-                    "key": "releaseDate",
-                    "name": "Release Date",
-                    "type": "date",
-                    "required": true
                 }
             ],
-
-            "annotations": {
-                "title": "Describe your study",
-                "description": "Provide an adequate overview of the Study, make it easier to find and interpret",
-                "attributes": [
-                    {
-                        "name": "Organism",
-                        "type": "text",
-                        "required": false
-                    },
-                    {
-                        "name": "Experimental design",
-                        "type": "text",
-                        "required": false
-                    },
-                    {
-                        "name": "Experimental factor",
-                        "type": "text",
-                        "required": false
-                    },
-                    {
-                        "name": "Organ",
-                        "type": "text",
-                        "required": false
-                    },
-                    {
-                        "name": "Cell type",
-                        "type": "text",
-                        "required": false
-                    }
-                ],
-                "actions": {
-                    "add": {
-                        "title": "Add annotation"
-                    },
-                    "deleteAttr": {
-                        "title": "Delete annotation",
-                        "popup": "Delete annotation"
-                    }
-                }
-            },
-
-            "subsections": [
+            "features": [
                 {
-                    "key": "contact",
-                    "pageTabSubsection": "Author",
-                    "mincount": 1,
+                    "type": "Annotation",
+                    "singleRow": true,
+                    "title": "Describe your study",
+                    "description": "Provide an adequate overview of the Study, make it easier to find and interpret",
+                    "required": true,
+                    "columns": [
+                        {
+                            "name": "Organism",
+                            "type": "text",
+                            "required": false
+                        },
+                        {
+                            "name": "Experimental design",
+                            "type": "text",
+                            "required": false
+                        },
+                        {
+                            "name": "Experimental factor",
+                            "type": "text",
+                            "required": false
+                        },
+                        {
+                            "name": "Organ",
+                            "type": "text",
+                            "required": false
+                        },
+                        {
+                            "name": "Cell type",
+                            "type": "text",
+                            "required": false
+                        }
+                    ]
+                },
+                {
+                    "type": "Contact",
+                    "singleRow": false,
                     "title": "Contacts",
                     "description": "Include contact information for one or more authors of the Study",
-                    "attributes": [
+                    "required": true,
+                    "minrows": 1,
+                    "columns": [
                         {
                             "name": "Name",
                             "type": "text",
@@ -86,7 +74,6 @@ export default {
                             "name": "Organisation",
                             "type": "text",
                             "required": true,
-                            "typeahead": true
                         },
                         {
                             "name": "E-mail",
@@ -117,33 +104,16 @@ export default {
                             "name": "Funding",
                             "type": "text",
                             "required": false
-                        }],
-                    "actions": {
-                        "add": {
-                            "title": "Add contact"
-                        },
-                        "delete": {
-                            "popup": "Delete contact"
-                        },
-                        "edit": {
-                            "popup": "Edit contact"
-                        },
-                        "addAttr": {
-                            "title": "Add contact annotation",
-                            "popup": "Describe Contact"
-                        },
-                        "deleteAttr": {
-                            "title": "Delete contact annotation",
-                            "popup": "Delete contact annotation"
                         }
-                    }
+                    ]
                 },
                 {
-                    "key": "publication",
-                    "pageTabSubsection": "Publication",
+                    "type": "Publication",
+                    "singleRow": false,
                     "title": "Publications",
                     "description": "Search by PubMed identifier, or add information manually if not in PubMed",
-                    "attributes": [
+                    "required": true,
+                    "columns": [
                         {
                             "name": "DOI",
                             "type": "text",
@@ -184,33 +154,15 @@ export default {
                             "type": "text",
                             "required": false
                         }
-                    ],
-                    "actions": {
-                        "add": {
-                            "title": "Add publication"
-                        },
-                        "delete": {
-                            "popup": "Delete publication"
-                        },
-                        "edit": {
-                            "popup": "Edit publication"
-                        },
-                        "addAttr": {
-                            "title": "Add publication annotation",
-                            "popup": "Describe Publication"
-                        },
-                        "deleteAttr": {
-                            "title": "Delete publication annotation",
-                            "popup": "Delete publication annotation"
-                        }
-                    }
+                    ]
                 },
                 {
-                    "key": "link",
-                    "pageTabProperty": "links",
+                    "type": "Link",
+                    "singleRow": false,
                     "title": "Links",
                     "description": "Provide additional relevant information on the web",
-                    "attributes": [
+                    "required": true,
+                    "columns": [
                         {
                             "name": "URL",
                             "type": "text",
@@ -226,33 +178,15 @@ export default {
                             "type": "text",
                             "required": false
                         }
-                    ],
-                    "actions": {
-                        "add": {
-                            "title": "Add link"
-                        },
-                        "delete": {
-                            "popup": "Delete link"
-                        },
-                        "edit": {
-                            "popup": "Edit link"
-                        },
-                        "addAttr": {
-                            "title": "Add link annotation",
-                            "popup": "Describe Link"
-                        },
-                        "deleteAttr": {
-                            "title": "Delete link annotation",
-                            "popup": "Delete link annotation"
-                        }
-                    }
+                    ]
                 },
                 {
-                    "key": "file",
-                    "pageTabProperty": "links",
+                    "type": "File",
+                    "singleRow": false,
                     "title": "Files",
                     "description": "Include Study data, describe the purpose of each file",
-                    "attributes": [
+                    "required": true,
+                    "columns": [
                         {
                             "name": "Path",
                             "type": "file",
@@ -268,26 +202,7 @@ export default {
                             "type": "text",
                             "required": false
                         }
-                    ],
-                    "actions": {
-                        "add": {
-                            "title": "Add file"
-                        },
-                        "delete": {
-                            "popup": "Delete file"
-                        },
-                        "edit": {
-                            "popup": "Edit file annotations"
-                        },
-                        "addAttr": {
-                            "title": "Add file annotation",
-                            "popup": "Describe File"
-                        },
-                        "deleteAttr": {
-                            "title": "Delete file annotation",
-                            "popup": "Delete file annotation"
-                        }
-                    }
+                    ]
                 }
             ]
         }

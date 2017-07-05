@@ -8,7 +8,7 @@ import {
     SimpleChange
 } from '@angular/core';
 
-import {SubmissionTemplate} from '../../shared/submission-template.model';
+import {SectionTemplate} from '../../shared/submission-template.model';
 import {Section, Feature} from '../../shared/submission.model';
 import {SubmAddDialogComponent} from '../subm-add/subm-add.component';
 import {SubmAddEvent} from '../subm-add/subm-add-event.model';
@@ -21,9 +21,7 @@ import {Subscription} from 'rxjs/Subscription';
 })
 export class SubmSideBarComponent implements OnChanges {
     @Input() collapsed?: boolean = false;
-    @Input() submTemplate: SubmissionTemplate;
-    @Input() submSection: Section;
-
+    @Input() sectionAndTmpl: [Section, SectionTemplate];
     @Output() toggle? = new EventEmitter();
 
     @ViewChild('addDialog')
@@ -34,12 +32,12 @@ export class SubmSideBarComponent implements OnChanges {
     private subscr: Subscription;
 
     ngOnChanges(changes: any): void {
-        const secChange: SimpleChange = changes.submSection;
+        const secChange: SimpleChange = changes.sectionAndTmpl;
         if (secChange) {
             if (this.subscr) {
                 this.subscr.unsubscribe();
             }
-            const sec: Section = secChange.currentValue;
+            const [sec, _] = secChange.currentValue || [undefined, undefined];
             if (sec) {
                 this.subscr = sec.features
                     .updates()
@@ -53,9 +51,12 @@ export class SubmSideBarComponent implements OnChanges {
         }
     }
 
+    get section(): Section {
+        return this.sectionAndTmpl ? this.sectionAndTmpl[0] : undefined;
+    }
+
     onToggle(ev): void {
         ev.preventDefault();
-
         if (this.toggle) {
             this.toggle.emit();
         }
@@ -68,28 +69,27 @@ export class SubmSideBarComponent implements OnChanges {
 
     onAddClick(ev): void {
         ev.preventDefault();
-
         this.addDialog.show();
     }
 
     onAdd(ev: SubmAddEvent) {
         if (ev.itemType === 'SingleAttribute') {
-            this.submSection.fields.add(ev.name);
+            this.section.fields.add(ev.name);
         }
         if (ev.itemType === 'AttributeList') {
-            this.submSection.features.add(ev.name, true);
+            this.section.features.add(ev.name, true);
         }
         if (ev.itemType === 'AttributeGrid') {
-            this.submSection.features.add(ev.name, false);
+            this.section.features.add(ev.name, false);
         }
         if (ev.itemType === 'Section') {
-            this.submSection.sections.add(ev.name);
+            this.section.sections.add(ev.name);
         }
     }
 
     onItemsChange(): void {
         const items = [];
-        this.submSection.features.list().forEach(
+        this.section.features.list().forEach(
             (f: Feature) => items.push({
                 feature: f,
                 icon: 'fa-file-o',

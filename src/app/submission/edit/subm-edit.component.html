@@ -29,15 +29,13 @@
     <subm-sidebar *ngIf="!readonly"
                   (toggle)="sideBarCollapsed=!sideBarCollapsed"
                   [collapsed]="sideBarCollapsed"
-                  [submTemplate]="submissionTemplate"
-                  [submSection]="currSection">
+                  [sectionAndTmpl]="sectionAndTmpl">
     </subm-sidebar>
 
     <subm-navbar
             [class.collapse-left]="!readonly && sideBarCollapsed"
             [accno]="accno"
-            [submission]="submission"
-            [submSection]="currSection"
+            [sectionPath]="sectionPath"
             (sectionClick)="onSectionClick($event)">
     </subm-navbar>
 
@@ -50,13 +48,11 @@
                  [ngClass]="{'panel-danger': !submValid, 'panel-info': submValid}">
 
                 <div class="panel-body">
-                    <subm-form
-                            [submTemplate]="submTemplate"
-                            [submSection]="currSection">
+                    <subm-form [sectionAndTmpl]="sectionAndTmpl">
                     </subm-form>
 
                     <div class="list-group">
-                        <a *ngFor="let section of currSection.sections.list(); let idx = index"
+                        <a *ngFor="let section of section.sections.list(); let idx = index"
                            class="list-group-item"
                            [ngClass]="{'list-group-item-danger': idx === 2}"
                            (click)="onSectionClick(section)">

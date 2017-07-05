@@ -15,20 +15,11 @@ import {
     templateUrl: './subm-navbar.component.html',
     host: {'class': 'navbar-subm-fixed navbar-default'}
 })
-export class SubmNavBarComponent implements OnChanges {
+export class SubmNavBarComponent {
     @Input() accno: string;
-    @Input() submission: Submission;
-    @Input() submSection: Section;
+    @Input() sectionPath: Section[];
 
     @Output() sectionClick: EventEmitter<Section> = new EventEmitter<Section>();
-
-    sections: Section[];
-
-    ngOnChanges(changes: SimpleChanges): void {
-        this.sections = (this.submission == undefined) ? [] :
-            this.submission
-                .path(this.submSection.id);
-    }
 
     onSectionClick(ev: Section): void {
         this.sectionClick.next(ev);

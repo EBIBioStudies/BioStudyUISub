@@ -3,7 +3,7 @@
         <h5>{{accno}}</h5>
     </div>
     <div style="margin-left:10px;">
-        <span *ngFor="let sec of sections">
+        <span *ngFor="let sec of sectionPath">
             <i *ngIf="!lst" class="fa fa-angle-double-right"></i>
             &nbsp;<a (click)="onSectionClick(sec)">{{sec.type}}</a>
         </span>
