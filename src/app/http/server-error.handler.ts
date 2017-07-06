@@ -15,7 +15,7 @@ export class ServerError {
     }
 
     get message(): string {
-        return this.data ? (this.data.message || '') : '';
+        return (this.data ? this.data.message : undefined) || this.name;
     }
 
     get isDataError(): boolean {
