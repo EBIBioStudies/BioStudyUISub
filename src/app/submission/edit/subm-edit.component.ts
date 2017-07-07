@@ -23,7 +23,7 @@ import {
 
 import {SubmissionService} from '../shared/submission.service';
 import {SubmissionTemplate, SectionTemplate} from '../shared/submission-template.model';
-import * as stu from '../shared/submission-template.utils';
+import {SubmissionWithTemplate, SectionWithTemplate} from "../shared/submission-with-template.model";
 
 @Component({
     selector: 'subm-edit',
@@ -33,9 +33,9 @@ export class SubmEditComponent implements OnInit, OnDestroy {
     sideBarCollapsed: false;
     readonly: boolean = false;
 
-    submAndTmpl: [Submission, SubmissionTemplate];
+    submAndTmpl: SubmissionWithTemplate;
 
-    sectionAndTmpl: [Section, SectionTemplate];
+    sectionAndTmpl: SectionWithTemplate;
 
     errors: string[] = [];
 
@@ -59,9 +59,9 @@ export class SubmEditComponent implements OnInit, OnDestroy {
                 //TODO
                 this.accno = data.accno;
                 const tmpl = SubmissionTemplate.createDefault();
-                const subm = stu.createSubmission(tmpl);
+                const subm = tmpl.createSubmission();
 
-                this.submAndTmpl = [subm, tmpl];
+                this.submAndTmpl = new SubmissionWithTemplate(subm, tmpl);
                 this.changeSection(subm.root.id);
             });
     }
@@ -74,15 +74,15 @@ export class SubmEditComponent implements OnInit, OnDestroy {
     }
 
     get submission(): Submission {
-        return this.submAndTmpl ? this.submAndTmpl[0] : undefined;
+        return this.submAndTmpl ? this.submAndTmpl.subm : undefined;
     }
 
     get submissionTmpl(): SubmissionTemplate {
-        return this.submAndTmpl ? this.submAndTmpl[1] : undefined;
+        return this.submAndTmpl ? this.submAndTmpl.tmpl : undefined;
     }
 
     get section(): Section {
-        return this.sectionAndTmpl ? this.sectionAndTmpl[0] : undefined;
+        return this.sectionAndTmpl ? this.sectionAndTmpl.section : undefined;
     }
 
     get sectionPath(): Section[] {
@@ -121,13 +121,11 @@ export class SubmEditComponent implements OnInit, OnDestroy {
     }
 
     changeSection(sectionId: string) {
-        let sec = this.submission.sectionById(sectionId);
-        const types: string[] = this.submission
-            .sectionPath(sectionId)
-            .map(s => s.type);
+        this.sectionAndTmpl = this.submAndTmpl.sectionWithTmplById(sectionId);
+    }
 
-        let tmpl = this.submissionTmpl.getSectionTemplate(types.splice(1));
-        this.sectionAndTmpl = [sec, tmpl || SectionTemplate.createDefault(sec.type)];
+    onSectionClick(section: Section): void {
+        this.changeSection(section.id);
     }
 
     onSubmit(event) {
@@ -174,10 +172,5 @@ export class SubmEditComponent implements OnInit, OnDestroy {
         if (this.errors.length === 0) {
             this.router.navigate(['/submissions']);
         }
-    }
-
-    onSectionClick(section: Section): void {
-        console.log('onSectionClick', section.id);
-        this.changeSection(section.id);
     }
 }

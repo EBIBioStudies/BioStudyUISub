@@ -1,210 +1,195 @@
 export const DefaultTemplate = {
-    "sections": [
+    "sectionTypes": [
         {
-            "type": "Study",
+            "name": "Submission",
             "required": true,
-            "fields": [
+            "maxcount": 1,
+            "sectionTypes": [
                 {
-                    "name": "Title",
-                    "type": "text",
+                    "name": "Study",
                     "required": true,
-                    "minlength": 50
-                },
-                {
-                    "name": "Release Date",
-                    "type": "date",
-                    "required": true
-                },
-                {
-                    "name": "Description",
-                    "type": "textarea",
-                    "required": true,
-                    "minlength": 50
-                }
-            ],
-            "features": [
-                {
-                    "type": "Annotation",
-                    "singleRow": true,
-                    "title": "Describe your study",
-                    "description": "Provide an adequate overview of the Study, make it easier to find and interpret",
-                    "required": true,
-                    "columns": [
-                        {
-                            "name": "Organism",
-                            "type": "text",
-                            "required": false
-                        },
-                        {
-                            "name": "Experimental design",
-                            "type": "text",
-                            "required": false
-                        },
-                        {
-                            "name": "Experimental factor",
-                            "type": "text",
-                            "required": false
-                        },
-                        {
-                            "name": "Organ",
-                            "type": "text",
-                            "required": false
-                        },
-                        {
-                            "name": "Cell type",
-                            "type": "text",
-                            "required": false
-                        }
-                    ]
-                },
-                {
-                    "type": "Contact",
-                    "singleRow": false,
-                    "title": "Contacts",
-                    "description": "Include contact information for one or more authors of the Study",
-                    "required": true,
-                    "minrows": 1,
-                    "columns": [
-                        {
-                            "name": "Name",
-                            "type": "text",
-                            "required": true
-                        },
-                        {
-                            "name": "Organisation",
-                            "type": "text",
-                            "required": true,
-                        },
-                        {
-                            "name": "E-mail",
-                            "type": "text",
-                            "required": true
-                        },
-                        {
-                            "name": "Role",
-                            "type": "text",
-                            "required": false
-                        },
-                        {
-                            "name": "ORCID",
-                            "type": "text",
-                            "required": false
-                        },
-                        {
-                            "name": "Address",
-                            "type": "text",
-                            "required": false
-                        },
-                        {
-                            "name": "Department",
-                            "type": "text",
-                            "required": false
-                        },
-                        {
-                            "name": "Funding",
-                            "type": "text",
-                            "required": false
-                        }
-                    ]
-                },
-                {
-                    "type": "Publication",
-                    "singleRow": false,
-                    "title": "Publications",
-                    "description": "Search by PubMed identifier, or add information manually if not in PubMed",
-                    "required": true,
-                    "columns": [
-                        {
-                            "name": "DOI",
-                            "type": "text",
-                            "required": false
-                        },
+                    "maxcount": 1,
+                    "fieldTypes": [
                         {
                             "name": "Title",
-                            "type": "text",
-                            "required": true
+                            "valueType": "textline",
+                            "required": true,
+                            "minlength": 50
                         },
                         {
-                            "name": "Authors",
-                            "type": "text",
-                            "required": false
-                        },
-                        {
-                            "name": "Type",
-                            "type": "text",
-                            "required": false
-                        },
-                        {
-                            "name": "Issue",
-                            "type": "text",
-                            "required": false
-                        },
-                        {
-                            "name": "Issn",
-                            "type": "text",
-                            "required": false
-                        },
-                        {
-                            "name": "Year",
-                            "type": "text",
-                            "required": false
-                        },
-                        {
-                            "name": "Volume",
-                            "type": "text",
-                            "required": false
-                        }
-                    ]
-                },
-                {
-                    "type": "Link",
-                    "singleRow": false,
-                    "title": "Links",
-                    "description": "Provide additional relevant information on the web",
-                    "required": true,
-                    "columns": [
-                        {
-                            "name": "URL",
-                            "type": "text",
+                            "name": "Release Date",
+                            "valueType": "date",
                             "required": true
                         },
                         {
                             "name": "Description",
-                            "type": "text",
-                            "required": true
-                        },
-                        {
-                            "name": "Type",
-                            "type": "text",
-                            "required": false
+                            "valueType": "text",
+                            "required": true,
+                            "minlength": 50
                         }
-                    ]
-                },
-                {
-                    "type": "File",
-                    "singleRow": false,
-                    "title": "Files",
-                    "description": "Include Study data, describe the purpose of each file",
-                    "required": true,
-                    "columns": [
+                    ],
+                    "featureTypes": [
                         {
-                            "name": "Path",
-                            "type": "file",
-                            "required": true
+                            "name": "Annotation",
+                            "singleRow": true,
+                            "title": "Describe your study",
+                            "description": "Provide an adequate overview of the Study, make it easier to find and interpret",
+                            "required": true,
+                            "columnTypes": [
+                                {
+                                    "name": "Organism",
+                                    "valueType": "textline"
+                                },
+                                {
+                                    "name": "Experimental design",
+                                    "valueType": "textline"
+                                },
+                                {
+                                    "name": "Experimental factor",
+                                    "valueType": "textline"
+                                },
+                                {
+                                    "name": "Organ",
+                                    "valueType": "textline"
+                                },
+                                {
+                                    "name": "Cell type",
+                                    "valueType": "textline"
+                                }
+                            ]
                         },
                         {
-                            "name": "Description",
-                            "type": "text",
-                            "required": true
+                            "name": "Contact",
+                            "title": "Add Contacts",
+                            "description": "Include contact information for one or more authors of the Study",
+                            "required": true,
+                            "minrows": 1,
+                            "columnTypes": [
+                                {
+                                    "name": "Name",
+                                    "valueType": "textline",
+                                    "required": true
+                                },
+                                {
+                                    "name": "Organisation",
+                                    "valueType": "textline",
+                                    "required": true
+                                },
+                                {
+                                    "name": "E-mail",
+                                    "valueType": "textline",
+                                    "required": true
+                                },
+                                {
+                                    "name": "Role",
+                                    "valueType": "textline"
+                                },
+                                {
+                                    "name": "ORCID",
+                                    "valueType": "textline"
+                                },
+                                {
+                                    "name": "Address",
+                                    "valueType": "textline"
+                                },
+                                {
+                                    "name": "Department",
+                                    "valueType": "textline"
+                                },
+                                {
+                                    "name": "Funding",
+                                    "valueType": "textline"
+                                }
+                            ]
                         },
                         {
-                            "name": "Type",
-                            "type": "text",
-                            "required": false
+                            "name": "Publication",
+                            "title": "Add Publications",
+                            "description": "Search by PubMed identifier, or add information manually if not in PubMed",
+                            "required": true,
+                            "columnTypes": [
+                                {
+                                    "name": "DOI",
+                                    "valueType": "textline"
+                                },
+                                {
+                                    "name": "Title",
+                                    "valueType": "textline",
+                                    "required": true
+                                },
+                                {
+                                    "name": "Authors",
+                                    "valueType": "textline"
+                                },
+                                {
+                                    "name": "Type",
+                                    "valueType": "textline"
+                                },
+                                {
+                                    "name": "Issue",
+                                    "valueType": "textline"
+                                },
+                                {
+                                    "name": "Issn",
+                                    "valueType": "textline"
+                                },
+                                {
+                                    "name": "Year",
+                                    "valueType": "textline"
+                                },
+                                {
+                                    "name": "Volume",
+                                    "valueType": "textline"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Link",
+                            "title": "Add Links",
+                            "description": "Provide additional relevant information on the web",
+                            "required": true,
+                            "columnTypes": [
+                                {
+                                    "name": "URL",
+                                    "valueType": "textline",
+                                    "required": true
+                                },
+                                {
+                                    "name": "Description",
+                                    "valueType": "textline",
+                                    "required": true
+                                },
+                                {
+                                    "name": "Type",
+                                    "valueType": "textline"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "File",
+                            "title": "Add Files",
+                            "description": "Include Study data, describe the purpose of each file",
+                            "required": true,
+                            "columnTypes": [
+                                {
+                                    "name": "Path",
+                                    "valueType": "file",
+                                    "required": true
+                                },
+                                {
+                                    "name": "Description",
+                                    "valueType": "textline",
+                                    "required": true
+                                },
+                                {
+                                    "name": "Type",
+                                    "valueType": "textline"
+                                }
+                            ]
                         }
                     ]
                 }
             ]
         }
     ]
-}
+};

@@ -1,29 +1,18 @@
 import {
     Component,
     Input,
-    OnChanges, SimpleChanges, SimpleChange
+    OnChanges
 } from '@angular/core';
 
-import {
-    FormGroup,
-    FormControl,
-    Validators
-} from '@angular/forms';
-
-import {Subscription} from 'rxjs/Subscription';
-
-import {
-    Section
-} from '../../shared/submission.model';
-import {SectionTemplate} from '../../shared/submission-template.model';
 import {SubmFormService, SectionForm} from './subm-form.service';
+import {SectionWithTemplate} from '../../shared/submission-with-template.model';
 
 @Component({
     selector: 'subm-form',
     templateUrl: './subm-form.component.html'
 })
 export class SubmFormComponent implements OnChanges {
-    @Input() sectionAndTmpl: [Section, SectionTemplate];
+    @Input() sectionAndTmpl: SectionWithTemplate;
 
     sectionForm: SectionForm;
 

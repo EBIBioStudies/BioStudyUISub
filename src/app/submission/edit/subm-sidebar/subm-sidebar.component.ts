@@ -8,11 +8,11 @@ import {
     SimpleChange
 } from '@angular/core';
 
-import {SectionTemplate} from '../../shared/submission-template.model';
 import {Section, Feature} from '../../shared/submission.model';
 import {SubmAddDialogComponent} from '../subm-add/subm-add.component';
 import {SubmAddEvent} from '../subm-add/subm-add-event.model';
 import {Subscription} from 'rxjs/Subscription';
+import {SectionWithTemplate, FeatureWithTemplate} from '../../shared/submission-with-template.model';
 
 @Component({
     selector: 'subm-sidebar',
@@ -21,7 +21,7 @@ import {Subscription} from 'rxjs/Subscription';
 })
 export class SubmSideBarComponent implements OnChanges {
     @Input() collapsed?: boolean = false;
-    @Input() sectionAndTmpl: [Section, SectionTemplate];
+    @Input() sectionAndTmpl: SectionWithTemplate;
     @Output() toggle? = new EventEmitter();
 
     @ViewChild('addDialog')
@@ -37,9 +37,9 @@ export class SubmSideBarComponent implements OnChanges {
             if (this.subscr) {
                 this.subscr.unsubscribe();
             }
-            const [sec, _] = secChange.currentValue || [undefined, undefined];
-            if (sec) {
-                this.subscr = sec.features
+            const sectionAndTmpl = secChange.currentValue;
+            if (sectionAndTmpl) {
+                this.subscr = sectionAndTmpl.section.features
                     .updates()
                     .subscribe(ev => {
                         if (ev.name === 'feature_add' ||
@@ -52,7 +52,7 @@ export class SubmSideBarComponent implements OnChanges {
     }
 
     get section(): Section {
-        return this.sectionAndTmpl ? this.sectionAndTmpl[0] : undefined;
+        return this.sectionAndTmpl ? this.sectionAndTmpl.section : undefined;
     }
 
     onToggle(ev): void {
@@ -74,34 +74,27 @@ export class SubmSideBarComponent implements OnChanges {
 
     onAdd(ev: SubmAddEvent) {
         if (ev.itemType === 'SingleAttribute') {
-            this.section.fields.add(ev.name);
+            this.sectionAndTmpl.addField(ev.name);
         }
         if (ev.itemType === 'AttributeList') {
-            this.section.features.add(ev.name, true);
+            this.sectionAndTmpl.addFeature(ev.name, true);
         }
         if (ev.itemType === 'AttributeGrid') {
-            this.section.features.add(ev.name, false);
+            this.sectionAndTmpl.addFeature(ev.name, false);
         }
         if (ev.itemType === 'Section') {
-            this.section.sections.add(ev.name);
+            this.sectionAndTmpl.addSection(ev.name);
         }
     }
 
     onItemsChange(): void {
         const items = [];
-        this.section.features.list().forEach(
-            (f: Feature) => items.push({
+        this.sectionAndTmpl.features.forEach(
+            (f: FeatureWithTemplate) => items.push({
                 feature: f,
                 icon: 'fa-file-o',
-                onClick: function (ev) {
-                    if (f.singleRow) {
-                        f.addColumn();
-                        return;
-                    }
-                    if (f.colSize() === 0) {
-                        f.addColumn();
-                    }
-                    f.addRow();
+                onClick: (ev) => {
+                    f.addItem();
                 }
             })
         );

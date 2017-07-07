@@ -4,7 +4,7 @@ import {
     Submission,
     Feature,
     Field,
-    Attribute
+    Attribute, Section
 } from './submission.model';
 
 export class FieldTemplate {
@@ -112,12 +112,12 @@ export class SectionTemplate {
             .map(s => SectionTemplate.create(s));
     }
 
-    getFieldTemplate(field: Field): FieldTemplate {
-        return  this.fields.find(f => f.name === field.name);
+    getFieldTemplate(fieldName: string): FieldTemplate {
+        return this.fields.find(f => f.name === fieldName);
     }
 
-    getFeatureTemplate(feature: Feature): FeatureTemplate {
-        return this.features.find(s => s.type === feature.name);
+    getFeatureTemplate(featureType: string): FeatureTemplate {
+        return this.features.find(s => s.type === featureType);
     }
 
     getSectionTemplate(types: string[]): SectionTemplate {
@@ -143,12 +143,12 @@ export class SectionTemplate {
     }
 }
 
-export class SubmissionTemplate {
-    readonly sections: SectionTemplate[];
+export class SubmissionType {
+    readonly sectionTypes: SectionType[];
 
     constructor(obj: any) {
-        this.sections =
-            (obj.sections || [])
+        this.sectionTypes =
+            (obj.sectionTypes || [])
                 .map(s => SectionTemplate.create(s));
     }
 
@@ -158,6 +158,53 @@ export class SubmissionTemplate {
             return sec.getSectionTemplate(types.slice(1));
         }
         return undefined;
+    }
+
+    createSubmission(): Submission {
+        const addField = (sec: Section, tmpl: FieldTemplate): void => {
+            sec.fields.add(tmpl.name, '', tmpl.type);
+        };
+
+        const addFeature = (sec: Section, tmpl: FeatureTemplate): void => {
+            sec.features.add(tmpl.type, tmpl.singleRow);
+            //todo add required columns
+        };
+
+        const addSection = (sec: Section, tmpl: SectionTemplate): void => {
+            const newSec = sec.sections.add(tmpl.type);
+
+            tmpl.fields.forEach(
+                (ft: FieldTemplate) => {
+                    if (ft.required) {
+                        addField(newSec, ft);
+                    }
+                }
+            );
+            tmpl.features.forEach(
+                (ft: FeatureTemplate) => {
+                    if (ft.required) {
+                        addFeature(newSec, ft);
+                    }
+                }
+            );
+            tmpl.sections.forEach(
+                (st: SectionTemplate) => {
+                    if (st.required) {
+                        addSection(newSec, st);
+                    }
+                }
+            );
+        };
+
+        const subm = new Submission();
+        this.sections.forEach(
+            (st: SectionTemplate) => {
+                if (st.required) {
+                    addSection(subm.root, st);
+                }
+            }
+        );
+        return subm;
     }
 
     static createDefault(): SubmissionTemplate {

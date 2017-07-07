@@ -1,12 +1,11 @@
 import {
     Component,
     Input,
-    OnChanges,
-    SimpleChanges, Output, EventEmitter
+    Output,
+    EventEmitter
 } from '@angular/core';
 
 import {
-    Submission,
     Section
 } from '../../shared/submission.model';
 

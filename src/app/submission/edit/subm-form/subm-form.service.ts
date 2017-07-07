@@ -4,13 +4,13 @@ import {Subscription} from 'rxjs/Subscription';
 
 import {SectionTemplate, FeatureTemplate, ColumnTemplate} from '../../shared/submission-template.model';
 import {Section, Field, Feature, UpdateEvent, Attribute, ValueMap} from '../../shared/submission.model';
+import {SectionWithTemplate} from "../../shared/submission-with-template.model";
 
 export class SectionForm {
     formErrors: {[key: string]: string} = {};
     readonly form: FormGroup;
 
-    private section: Section;
-    private tmpl: SectionTemplate;
+    private sectionAndTmpl: SectionWithTemplate;
 
     private _fields: Field[] = [];
     private _features: Feature[] = [];
@@ -18,8 +18,8 @@ export class SectionForm {
     private subscriptions: Subscription[] = [];
     private featureForms: {[key: string]: FeatureForm} = {};
 
-    constructor(sectionAndTemplate: [Section, SectionTemplate]) {
-        [this.section, this.tmpl] = sectionAndTemplate;
+    constructor(sectionAndTmpl: SectionWithTemplate) {
+        this.sectionAndTmpl = sectionAndTmpl;
 
         this.form = new FormGroup({
             fields: new FormGroup({}),
@@ -30,7 +30,7 @@ export class SectionForm {
         this.updateFeatureForms();
 
         this.subscriptions.push(
-            this.section.fields
+            this.sectionAndTmpl.section.fields
                 .updates()
                 .filter(ue => (['field_add', 'field_remove'].indexOf(ue.name) > -1))
                 .subscribe(ue => {
@@ -38,7 +38,7 @@ export class SectionForm {
                 }));
 
         this.subscriptions.push(
-            this.section.features
+            this.sectionAndTmpl.section.features
                 .updates()
                 .filter(ue => (['feature_add', 'feature_remove'].indexOf(ue.name) > -1))
                 .subscribe(ue => {
@@ -122,7 +122,7 @@ export class SectionForm {
 
     private addFieldControl(field: Field): void {
         const validators = [];
-        const tmpl = this.tmpl.getFieldTemplate(field);
+        const tmpl = this.sectionAndTmpl.tmpl.getFieldTemplate(field.name);
         if (tmpl.required) {
             validators.push(Validators.required);
         }
@@ -137,7 +137,7 @@ export class SectionForm {
     }
 
     private updateFieldControls(ue?: UpdateEvent): void {
-        this._fields = this.section.fields.list().slice(0);
+        this._fields = this.sectionAndTmpl.section.fields.list().slice(0);
         if (ue && ue.name === 'field_remove') {
             this.removeFieldControl(ue.value.id);
             return;
@@ -162,14 +162,14 @@ export class SectionForm {
     }
 
     private addFeatureForm(feature: Feature) {
-        const tmpl = this.tmpl.getFeatureTemplate(feature);
+        const tmpl = this.sectionAndTmpl.tmpl.getFeatureTemplate(feature.type);
         const featureForm = new FeatureForm([feature, tmpl]);
         this.featureForms[feature.id] = featureForm;
         this.featuresFormGroup.addControl(feature.id, featureForm.form);
     }
 
     private updateFeatureForms(ue?: UpdateEvent): void {
-        this._features = this.section.features.list().slice(0);
+        this._features = this.sectionAndTmpl.section.features.list().slice(0);
         if (ue && ue.name === 'feature_remove') {
             this.removeFeatureForm(ue.value.id);
             return;
@@ -342,10 +342,10 @@ export class FeatureForm {
 export class SubmFormService {
     private sectionForm: SectionForm;
 
-    createForm(sectionAndTemplate: [Section, SectionTemplate]): SectionForm {
+    createForm(sectionAndTmpl: SectionWithTemplate): SectionForm {
         if (this.sectionForm) {
             this.sectionForm.destroy();
         }
-        return new SectionForm(sectionAndTemplate);
+        return new SectionForm(sectionAndTmpl);
     }
 }
