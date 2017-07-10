@@ -2,15 +2,15 @@ import {Injectable} from '@angular/core';
 import {FormGroup, Validators, FormControl, FormArray} from '@angular/forms';
 import {Subscription} from 'rxjs/Subscription';
 
-import {SectionTemplate, FeatureTemplate, ColumnTemplate} from '../../shared/submission-template.model';
+import {SectionType, FeatureType, ColumnType} from '../../shared/submission-template.model';
 import {Section, Field, Feature, UpdateEvent, Attribute, ValueMap} from '../../shared/submission.model';
-import {SectionWithTemplate} from "../../shared/submission-with-template.model";
 
 export class SectionForm {
     formErrors: {[key: string]: string} = {};
     readonly form: FormGroup;
 
-    private sectionAndTmpl: SectionWithTemplate;
+    private section: Section;
+    private sectionType: SectionType;
 
     private _fields: Field[] = [];
     private _features: Feature[] = [];
@@ -18,8 +18,8 @@ export class SectionForm {
     private subscriptions: Subscription[] = [];
     private featureForms: {[key: string]: FeatureForm} = {};
 
-    constructor(sectionAndTmpl: SectionWithTemplate) {
-        this.sectionAndTmpl = sectionAndTmpl;
+    constructor(sectionWithType: [Section, SectionType]) {
+        [this.section, this.sectionType] = sectionWithType;
 
         this.form = new FormGroup({
             fields: new FormGroup({}),
@@ -30,7 +30,7 @@ export class SectionForm {
         this.updateFeatureForms();
 
         this.subscriptions.push(
-            this.sectionAndTmpl.section.fields
+            this.section.fields
                 .updates()
                 .filter(ue => (['field_add', 'field_remove'].indexOf(ue.name) > -1))
                 .subscribe(ue => {
@@ -38,7 +38,7 @@ export class SectionForm {
                 }));
 
         this.subscriptions.push(
-            this.sectionAndTmpl.section.features
+            this.section.features
                 .updates()
                 .filter(ue => (['feature_add', 'feature_remove'].indexOf(ue.name) > -1))
                 .subscribe(ue => {
@@ -122,7 +122,7 @@ export class SectionForm {
 
     private addFieldControl(field: Field): void {
         const validators = [];
-        const tmpl = this.sectionAndTmpl.tmpl.getFieldTemplate(field.name);
+        const tmpl = this.sectionType.getFieldType(field.name);
         if (tmpl.required) {
             validators.push(Validators.required);
         }
@@ -137,7 +137,7 @@ export class SectionForm {
     }
 
     private updateFieldControls(ue?: UpdateEvent): void {
-        this._fields = this.sectionAndTmpl.section.fields.list().slice(0);
+        this._fields = this.section.fields.list().slice(0);
         if (ue && ue.name === 'field_remove') {
             this.removeFieldControl(ue.value.id);
             return;
@@ -162,14 +162,14 @@ export class SectionForm {
     }
 
     private addFeatureForm(feature: Feature) {
-        const tmpl = this.sectionAndTmpl.tmpl.getFeatureTemplate(feature.type);
+        const tmpl = this.sectionType.getFeatureType(feature.type);
         const featureForm = new FeatureForm([feature, tmpl]);
         this.featureForms[feature.id] = featureForm;
         this.featuresFormGroup.addControl(feature.id, featureForm.form);
     }
 
     private updateFeatureForms(ue?: UpdateEvent): void {
-        this._features = this.sectionAndTmpl.section.features.list().slice(0);
+        this._features = this.section.features.list().slice(0);
         if (ue && ue.name === 'feature_remove') {
             this.removeFeatureForm(ue.value.id);
             return;
@@ -192,14 +192,14 @@ export class FeatureForm {
     readonly form: FormGroup;
 
     readonly feature: Feature;
-    readonly tmpl: FeatureTemplate;
+    readonly featureType: FeatureType;
 
     private subscriptions: Subscription[] = [];
     private _columns: Attribute[] = [];
     private _rows: ValueMap[] = [];
 
-    constructor(featureAndTemplate: [Feature, FeatureTemplate]) {
-        [this.feature, this.tmpl] = featureAndTemplate;
+    constructor(featureWithType: [Feature, FeatureType]) {
+        [this.feature, this.featureType] = featureWithType;
 
         this.form = new FormGroup({
             columns: new FormGroup({}),
@@ -240,9 +240,9 @@ export class FeatureForm {
         return <FormControl>fg.get(columnId);
     }
 
-    columnTmpl(columnId: string): ColumnTemplate {
+    columnTmpl(columnId: string): ColumnType {
         const column = this.columns.find(c => c.id === columnId);
-        return this.tmpl.getColumnTemplate(column);
+        return this.featureType.getColumnTemplate(column);
     }
 
     private removeColumnControl(columnId: string) {
@@ -254,7 +254,7 @@ export class FeatureForm {
     }
 
     private addColumnControl(column: Attribute) {
-        const t = this.tmpl.getColumnTemplate(column);
+        const t = this.featureType.getColumnTemplate(column);
         const colValidators = [Validators.required];
         this.columnsFormGroup.addControl(column.id, new FormControl(column.name, colValidators));
         this.rows.forEach(
@@ -271,12 +271,12 @@ export class FeatureForm {
 
         this.columns.forEach(
             column => {
-                const t = this.tmpl.getColumnTemplate(column);
+                const t = this.featureType.getColumnTemplate(column);
                 this.addRowValueControl(formGroup, column.id, row, t);
             });
     }
 
-    private addRowValueControl(fg: FormGroup, columnId: string, row: ValueMap, tmpl: ColumnTemplate): void {
+    private addRowValueControl(fg: FormGroup, columnId: string, row: ValueMap, tmpl: ColumnType): void {
         const valueValidators = [];
         if (tmpl.required) {
             valueValidators.push(Validators.required);
@@ -342,10 +342,10 @@ export class FeatureForm {
 export class SubmFormService {
     private sectionForm: SectionForm;
 
-    createForm(sectionAndTmpl: SectionWithTemplate): SectionForm {
+    createForm(sectionWithType: [Section, SectionType]): SectionForm {
         if (this.sectionForm) {
             this.sectionForm.destroy();
         }
-        return new SectionForm(sectionAndTmpl);
+        return new SectionForm(sectionWithType);
     }
 }

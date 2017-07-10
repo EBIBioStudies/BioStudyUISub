@@ -29,7 +29,7 @@
     <subm-sidebar *ngIf="!readonly"
                   (toggle)="sideBarCollapsed=!sideBarCollapsed"
                   [collapsed]="sideBarCollapsed"
-                  [sectionAndTmpl]="sectionAndTmpl">
+                  [sectionAndTmpl]="sectionWithType">
     </subm-sidebar>
 
     <subm-navbar
@@ -48,7 +48,7 @@
                  [ngClass]="{'panel-danger': !submValid, 'panel-info': submValid}">
 
                 <div class="panel-body">
-                    <subm-form [sectionAndTmpl]="sectionAndTmpl">
+                    <subm-form [sectionAndTmpl]="sectionWithType">
                     </subm-form>
 
                     <div class="list-group">

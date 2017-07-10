@@ -358,15 +358,16 @@ export class Features extends HasUpdates<UpdateEvent> {
         return this.features;
     }
 
-    add(type: string, singleRow: boolean = false): void {
-        const f = new Feature({type: type, singleRow: singleRow});
-        const featureId = {id: f.id, index: this.features.length};
-        this.features.push(f);
+    add(type: string, singleRow: boolean = false): Feature {
+        const feature = new Feature({type: type, singleRow: singleRow});
+        const featureId = {id: feature.id, index: this.features.length};
+        this.features.push(feature);
         this.subscriptions.push(
-            f.updates().subscribe(
+            feature.updates().subscribe(
                 u => this.notify(new UpdateEvent('feature_update', featureId, u))
             ));
         this.notify(new UpdateEvent('feature_add', featureId));
+        return feature;
     }
 
     remove(): void {
@@ -478,13 +479,15 @@ export class Section extends HasUpdates<UpdateEvent> {
     }
 
     sectionPath(id: string): Section[] {
-        if (id === undefined || id.length === 0 || !id.startsWith(this.id)) {
-            return [];
-        }
         if (id === this.id) {
             return [this];
         }
-        return [].concat([this], this.sections.sectionPath(id));
+        const p = this.sections
+            .list()
+            .map(s => s.sectionPath(id))
+            .filter(p => p.length > 0);
+
+        return (p.length > 0) ? [].concat([this], p[0]) : [];
     }
 
     subscribeTo(hasUpdates: HasUpdates<UpdateEvent>, type: string) {
@@ -524,12 +527,6 @@ export class Sections extends HasUpdates<UpdateEvent> {
     remove(): void {
         //TODO
     }
-
-    sectionPath(id: string): Section[] {
-        return this.sections
-            .map(s => s.sectionPath(id))
-            .find(p => p.length > 0);
-    }
 }
 
 export class Submission {
@@ -542,9 +539,9 @@ export class Submission {
    /* sectionById(id: string): Section {
         const p = this.sectionPath(id);
         return p.length > 0 ? p[p.length - 1] : undefined;
-    }
+    }*/
 
     sectionPath(id: string): Section[] {
         return this.root.sectionPath(id);
-    }*/
+    }
 }

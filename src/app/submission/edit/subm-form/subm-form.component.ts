@@ -5,14 +5,15 @@ import {
 } from '@angular/core';
 
 import {SubmFormService, SectionForm} from './subm-form.service';
-import {SectionWithTemplate} from '../../shared/submission-with-template.model';
+import {Section} from '../../shared/submission.model';
+import {SectionType} from '../../shared/submission-template.model';
 
 @Component({
     selector: 'subm-form',
     templateUrl: './subm-form.component.html'
 })
 export class SubmFormComponent implements OnChanges {
-    @Input() sectionAndTmpl: SectionWithTemplate;
+    @Input() sectionWithType: [Section, SectionType];
 
     sectionForm: SectionForm;
 

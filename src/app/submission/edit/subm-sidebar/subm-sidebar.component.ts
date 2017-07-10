@@ -32,7 +32,7 @@ export class SubmSideBarComponent implements OnChanges {
     private subscr: Subscription;
 
     ngOnChanges(changes: any): void {
-        const secChange: SimpleChange = changes.sectionAndTmpl;
+        const secChange: SimpleChange = changes.sectionWithType;
         if (secChange) {
             if (this.subscr) {
                 this.subscr.unsubscribe();

@@ -22,27 +22,28 @@ import {
 } from '../shared/submission.model';
 
 import {SubmissionService} from '../shared/submission.service';
-import {SubmissionTemplate, SectionTemplate} from '../shared/submission-template.model';
-import {SubmissionWithTemplate, SectionWithTemplate} from "../shared/submission-with-template.model";
+import {SubmissionType, SectionType} from '../shared/submission-template.model';
+import * as stu from '../shared/submission-template.utils';
 
 @Component({
     selector: 'subm-edit',
     templateUrl: './subm-edit.component.html'
 })
 export class SubmEditComponent implements OnInit, OnDestroy {
-    sideBarCollapsed: false;
+    sideBarCollapsed: boolean = false;
     readonly: boolean = false;
 
-    submAndTmpl: SubmissionWithTemplate;
+    subm: Submission;
+    submType: SubmissionType;
 
-    sectionAndTmpl: SectionWithTemplate;
+    section: Section;
+    sectionType: SectionType;
 
     errors: string[] = [];
+    accno: string = '';
 
+    private subscr: Subscription;
     private submitting: boolean = false;
-    private accno: string = '';
-
-    private __subscr: Subscription;
 
     @ViewChild('submitResults') public submitResults: ModalDirective;
 
@@ -56,38 +57,23 @@ export class SubmEditComponent implements OnInit, OnDestroy {
             .map((params: Params) => params['accno'])
             .switchMap(accno => this.submService.getSubmission(accno))
             .subscribe(data => {
-                //TODO
+                //TODO: convert PageTab into Submission
                 this.accno = data.accno;
-                const tmpl = SubmissionTemplate.createDefault();
-                const subm = tmpl.createSubmission();
+                this.submType = SubmissionType.createDefault();
+                this.subm = stu.createSubmission(this.submType);
 
-                this.submAndTmpl = new SubmissionWithTemplate(subm, tmpl);
-                this.changeSection(subm.root.id);
+                this.changeSection(this.subm.root.id);
             });
     }
 
     ngOnDestroy() {
-        console.debug("SubmEdit: (OnDestroy)");
-        if (this.__subscr) {
-            this.__subscr.unsubscribe();
+        if (this.subscr) {
+            this.subscr.unsubscribe();
         }
     }
 
-    get submission(): Submission {
-        return this.submAndTmpl ? this.submAndTmpl.subm : undefined;
-    }
-
-    get submissionTmpl(): SubmissionTemplate {
-        return this.submAndTmpl ? this.submAndTmpl.tmpl : undefined;
-    }
-
-    get section(): Section {
-        return this.sectionAndTmpl ? this.sectionAndTmpl.section : undefined;
-    }
-
     get sectionPath(): Section[] {
-        const subm = this.submission;
-        return subm === undefined ? [] : subm.sectionPath(this.section.id);
+        return this.subm === undefined ? [] : this.subm.sectionPath(this.section.id);
     }
 
     loadSubmission(accno: string, section: string): void {
@@ -120,9 +106,6 @@ export class SubmEditComponent implements OnInit, OnDestroy {
          });*/
     }
 
-    changeSection(sectionId: string) {
-        this.sectionAndTmpl = this.submAndTmpl.sectionWithTmplById(sectionId);
-    }
 
     onSectionClick(section: Section): void {
         this.changeSection(section.id);
@@ -172,5 +155,15 @@ export class SubmEditComponent implements OnInit, OnDestroy {
         if (this.errors.length === 0) {
             this.router.navigate(['/submissions']);
         }
+    }
+
+    private changeSection(sectionId: string) {
+        const path: Section[] = this.subm.sectionPath(sectionId);
+        if (path.length === 0) {
+            console.log(`Section with id ${sectionId} was not found`);
+        }
+        this.section = path[path.length - 1];
+        this.sectionType = this.submType.sectionType(path.map(s => s.type))
+            || SectionType.createDefault(this.section.type);
     }
 }
