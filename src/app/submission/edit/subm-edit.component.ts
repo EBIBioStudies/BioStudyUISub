@@ -36,8 +36,7 @@ export class SubmEditComponent implements OnInit, OnDestroy {
     subm: Submission;
     submType: SubmissionType;
 
-    section: Section;
-    sectionType: SectionType;
+    sectionWithType: [Section, SectionType];
 
     errors: string[] = [];
     accno: string = '';
@@ -72,8 +71,15 @@ export class SubmEditComponent implements OnInit, OnDestroy {
         }
     }
 
+    get section(): Section {
+        return this.sectionWithType === undefined ? undefined : this.sectionWithType[0];
+    }
+
     get sectionPath(): Section[] {
-        return this.subm === undefined ? [] : this.subm.sectionPath(this.section.id);
+        if (this.subm === undefined || this.section) {
+            return [];
+        }
+        return this.subm.sectionPath(this.section.id);
     }
 
     loadSubmission(accno: string, section: string): void {
@@ -162,8 +168,9 @@ export class SubmEditComponent implements OnInit, OnDestroy {
         if (path.length === 0) {
             console.log(`Section with id ${sectionId} was not found`);
         }
-        this.section = path[path.length - 1];
-        this.sectionType = this.submType.sectionType(path.map(s => s.type))
-            || SectionType.createDefault(this.section.type);
+        const section = path[path.length - 1];
+        this.sectionWithType = [section,
+            this.submType.sectionType(path.map(s => s.type))
+            || SectionType.createDefault(section.type)];
     }
 }

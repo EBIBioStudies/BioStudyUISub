@@ -1,7 +1,5 @@
 import {DefaultTemplate} from './default.template';
 
-import {Attribute} from './submission.model';
-
 export class FieldType {
     readonly name: string;
     readonly valueType: string;
@@ -40,8 +38,9 @@ export class FeatureType {
             .map(c => new ColumnType(c));
     }
 
-    getColumnTemplate(column: Attribute): ColumnType {
-        return this.columnTypes.find(c => c.name === column.name);
+    getColumnTemplate(name: string): ColumnType {
+        return this.columnTypes.find(c => c.name === name)
+            || ColumnType.createDefault(name);
     }
 
     static createDefault(name: string, singleRow: boolean): FeatureType {
@@ -76,30 +75,33 @@ export class SectionType {
         this.name = name;
         this.required = obj.required === true;
         this.fieldTypes = (obj.fieldTypes || [])
-            .map(f => new FieldType(f));
+            .map(f => new FieldType(f.name, f));
         this.featureTypes = (obj.featureTypes || [])
-            .map(f => new FeatureType(f));
+            .map(f => new FeatureType(f.name, f));
         this.sectionTypes = (obj.sectionTypes || [])
-            .map(s => new SectionType(s));
+            .map(s => new SectionType(s.name, s));
     }
 
     getFieldType(name: string): FieldType {
-        return this.fieldTypes.find(f => f.name === name);
+        return this.fieldTypes.find(f => f.name === name)
+            || FieldType.createDefault(name);
     }
 
-    getFeatureType(name: string): FeatureType {
-        return this.featureTypes.find(s => s.name === name);
+    getFeatureType(name: string, singleRow: boolean): FeatureType {
+        return this.featureTypes.find(s => s.name === name && s.singleRow === singleRow)
+            || FeatureType.createDefault(name, singleRow);
     }
 
     getSectionType(name: string): SectionType {
-        return this.sectionTypes.find(s => s.name === name);
+        return this.sectionTypes.find(s => s.name === name)
+            || SectionType.createDefault(name);
     }
 
     sectionType(names: string[]) {
         if (names.length > 1) {
             const types = this.sectionTypes
-                .map(s => s.sectionType(names.slice(1))
-                    .filter(t => t !== undefined));
+                .map(s => s.sectionType(names.slice(1)))
+                .filter(t => t !== undefined);
             if (types.length > 0) {
                 return types[0];
             }
@@ -120,14 +122,14 @@ export class SubmissionType {
     constructor(obj: any) {
         this.sectionTypes =
             (obj.sectionTypes || [])
-                .map(s => new SectionType(s));
+                .map(s => new SectionType(s.name, s));
     }
 
     sectionType(names: string[]): SectionType {
         if (names.length > 0) {
             const types = this.sectionTypes
-                .map(s => s.sectionType(names)
-                    .filter(t => t !== undefined));
+                .map(s => s.sectionType(names))
+                .filter(t => t !== undefined);
             if (types.length > 0) {
                 return types[0];
             }

@@ -1,4 +1,4 @@
-<input *ngIf="type === 'text'"
+<input *ngIf="type === 'textline'"
        type="text" class="form-control"
        placeholder="Enter a {{name}}"
        [(ngModel)]="value"
@@ -10,7 +10,7 @@
                 [required]="required"
                 bsstDateFormat></date-input>
 
-<textarea *ngIf="type === 'textarea'"
+<textarea *ngIf="type === 'text'"
           class="form-control input-sm"
           [(ngModel)]="value"
           [readonly]="readonly"

@@ -21,7 +21,8 @@ export class SubmFormComponent implements OnChanges {
     }
 
     ngOnChanges(): void {
-        this.sectionForm = this.submFormService.createForm(this.sectionAndTmpl);
+        this.sectionForm = this.sectionWithType === undefined ?
+            undefined : this.submFormService.createForm(this.sectionWithType);
     }
 
     onSubmit(ev: any): void {

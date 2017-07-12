@@ -8,11 +8,13 @@ import {
     SimpleChange
 } from '@angular/core';
 
+import {Subscription} from 'rxjs/Subscription';
+
 import {Section, Feature} from '../../shared/submission.model';
 import {SubmAddDialogComponent} from '../subm-add/subm-add.component';
 import {SubmAddEvent} from '../subm-add/subm-add-event.model';
-import {Subscription} from 'rxjs/Subscription';
-import {SectionWithTemplate, FeatureWithTemplate} from '../../shared/submission-with-template.model';
+import {SectionType, FieldType, FeatureType} from '../../shared/submission-template.model';
+import * as stu from '../../shared/submission-template.utils';
 
 @Component({
     selector: 'subm-sidebar',
@@ -21,7 +23,7 @@ import {SectionWithTemplate, FeatureWithTemplate} from '../../shared/submission-
 })
 export class SubmSideBarComponent implements OnChanges {
     @Input() collapsed?: boolean = false;
-    @Input() sectionAndTmpl: SectionWithTemplate;
+    @Input() sectionWithType: [Section, SectionType];
     @Output() toggle? = new EventEmitter();
 
     @ViewChild('addDialog')
@@ -37,9 +39,8 @@ export class SubmSideBarComponent implements OnChanges {
             if (this.subscr) {
                 this.subscr.unsubscribe();
             }
-            const sectionAndTmpl = secChange.currentValue;
-            if (sectionAndTmpl) {
-                this.subscr = sectionAndTmpl.section.features
+            if (this.sectionWithType !== undefined) {
+                this.subscr = this.sectionWithType[0].features
                     .updates()
                     .subscribe(ev => {
                         if (ev.name === 'feature_add' ||
@@ -52,7 +53,11 @@ export class SubmSideBarComponent implements OnChanges {
     }
 
     get section(): Section {
-        return this.sectionAndTmpl ? this.sectionAndTmpl.section : undefined;
+        return this.sectionWithType ? this.sectionWithType[0] : undefined;
+    }
+
+    get sectionType(): SectionType {
+        return this.sectionWithType ? this.sectionWithType[1] : undefined;
     }
 
     onToggle(ev): void {
@@ -74,27 +79,38 @@ export class SubmSideBarComponent implements OnChanges {
 
     onAdd(ev: SubmAddEvent) {
         if (ev.itemType === 'SingleAttribute') {
-            this.sectionAndTmpl.addField(ev.name);
-        }
-        if (ev.itemType === 'AttributeList') {
-            this.sectionAndTmpl.addFeature(ev.name, true);
-        }
-        if (ev.itemType === 'AttributeGrid') {
-            this.sectionAndTmpl.addFeature(ev.name, false);
+            const fieldType = this.sectionType.getFieldType(ev.name);
+            stu.addField(this.section, fieldType);
+            return;
         }
         if (ev.itemType === 'Section') {
-            this.sectionAndTmpl.addSection(ev.name);
+            const sectionType = this.sectionType.getSectionType(ev.name);
+            stu.addSection(this.section, sectionType);
+            return;
+        }
+        const idx = ['AttributeList', 'AttributeGrid'].indexOf(ev.itemType);
+        if (idx > -1) {
+            const singleRow = idx === 0;
+            const featureType = this.sectionType.getFeatureType(ev.name, singleRow);
+            stu.addFeature(this.section, featureType);
         }
     }
 
     onItemsChange(): void {
         const items = [];
-        this.sectionAndTmpl.features.forEach(
-            (f: FeatureWithTemplate) => items.push({
+        this.section.features.list().forEach(
+            (f: Feature) => items.push({
                 feature: f,
                 icon: 'fa-file-o',
                 onClick: (ev) => {
-                    f.addItem();
+                    if (f.singleRow) {
+                        f.addColumn();
+                        return;
+                    }
+                    if (f.colSize() === 0) {
+                        f.addColumn();
+                    }
+                    f.addRow();
                 }
             })
         );

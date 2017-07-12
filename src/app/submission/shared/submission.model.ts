@@ -532,14 +532,14 @@ export class Sections extends HasUpdates<UpdateEvent> {
 export class Submission {
     readonly root: Section;
 
-    constructor() {
-        this.root = new Section({type: 'Submission'});
+    constructor(name: string, accno?: string) {
+        this.root = new Section({type: name, accno: accno});
     }
 
-   /* sectionById(id: string): Section {
-        const p = this.sectionPath(id);
-        return p.length > 0 ? p[p.length - 1] : undefined;
-    }*/
+    /* sectionById(id: string): Section {
+     const p = this.sectionPath(id);
+     return p.length > 0 ? p[p.length - 1] : undefined;
+     }*/
 
     sectionPath(id: string): Section[] {
         return this.root.sectionPath(id);

@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {FormGroup, Validators, FormControl, FormArray} from '@angular/forms';
 import {Subscription} from 'rxjs/Subscription';
 
-import {SectionType, FeatureType, ColumnType} from '../../shared/submission-template.model';
+import {SectionType, FeatureType, ColumnType, FieldType} from '../../shared/submission-template.model';
 import {Section, Field, Feature, UpdateEvent, Attribute, ValueMap} from '../../shared/submission.model';
 
 export class SectionForm {
@@ -122,15 +122,15 @@ export class SectionForm {
 
     private addFieldControl(field: Field): void {
         const validators = [];
-        const tmpl = this.sectionType.getFieldType(field.name);
-        if (tmpl.required) {
+        const type = this.sectionType.getFieldType(field.name);
+        if (type.required) {
             validators.push(Validators.required);
         }
-        if (tmpl.minlength > 0) {
-            validators.push(Validators.minLength(tmpl.minlength));
+        if (type.minlength > 0) {
+            validators.push(Validators.minLength(type.minlength));
         }
-        if (tmpl.maxlength > 0) {
-            validators.push(Validators.maxLength(tmpl.maxlength));
+        if (type.maxlength > 0) {
+            validators.push(Validators.maxLength(type.maxlength));
         }
         this.fieldsFormGroup.addControl(field.id, new FormControl(field.value, validators));
         this.formErrors[field.id] = '';
@@ -143,13 +143,13 @@ export class SectionForm {
             return;
         }
 
-        let toAdd: Field[] = this.fields;
+        let toAdd = this.fields;
         if (ue && ue.name === 'field_add') {
             toAdd = [this.fields[ue.value.index]];
         }
 
         toAdd.forEach(
-            (field: Field) => {
+            field => {
                 this.addFieldControl(field);
             }
         );
@@ -162,8 +162,8 @@ export class SectionForm {
     }
 
     private addFeatureForm(feature: Feature) {
-        const tmpl = this.sectionType.getFeatureType(feature.type);
-        const featureForm = new FeatureForm([feature, tmpl]);
+        const type = this.sectionType.getFeatureType(feature.type, feature.singleRow);
+        const featureForm = new FeatureForm([feature, type]);
         this.featureForms[feature.id] = featureForm;
         this.featuresFormGroup.addControl(feature.id, featureForm.form);
     }
@@ -242,7 +242,7 @@ export class FeatureForm {
 
     columnTmpl(columnId: string): ColumnType {
         const column = this.columns.find(c => c.id === columnId);
-        return this.featureType.getColumnTemplate(column);
+        return this.featureType.getColumnTemplate(column.name);
     }
 
     private removeColumnControl(columnId: string) {
@@ -254,7 +254,7 @@ export class FeatureForm {
     }
 
     private addColumnControl(column: Attribute) {
-        const t = this.featureType.getColumnTemplate(column);
+        const t = this.featureType.getColumnTemplate(column.name);
         const colValidators = [Validators.required];
         this.columnsFormGroup.addControl(column.id, new FormControl(column.name, colValidators));
         this.rows.forEach(
@@ -271,7 +271,7 @@ export class FeatureForm {
 
         this.columns.forEach(
             column => {
-                const t = this.featureType.getColumnTemplate(column);
+                const t = this.featureType.getColumnTemplate(column.name);
                 this.addRowValueControl(formGroup, column.id, row, t);
             });
     }

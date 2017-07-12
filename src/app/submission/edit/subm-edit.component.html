@@ -29,7 +29,7 @@
     <subm-sidebar *ngIf="!readonly"
                   (toggle)="sideBarCollapsed=!sideBarCollapsed"
                   [collapsed]="sideBarCollapsed"
-                  [sectionAndTmpl]="sectionWithType">
+                  [sectionWithType]="sectionWithType">
     </subm-sidebar>
 
     <subm-navbar
@@ -43,19 +43,19 @@
         <aside class="right-side content"
                [ngClass]="{'collapse-left' : !readonly && sideBarCollapsed}">
 
-            <div *ngIf="submission"
+            <div *ngIf="subm"
                  class="panel navbar-subm-margin"
                  [ngClass]="{'panel-danger': !submValid, 'panel-info': submValid}">
 
                 <div class="panel-body">
-                    <subm-form [sectionAndTmpl]="sectionWithType">
+                    <subm-form [sectionWithType]="sectionWithType">
                     </subm-form>
 
                     <div class="list-group">
-                        <a *ngFor="let section of section.sections.list(); let idx = index"
+                        <a *ngFor="let section of section.sections.list()"
                            class="list-group-item"
-                           [ngClass]="{'list-group-item-danger': idx === 2}"
                            (click)="onSectionClick(section)">
+                            <!-- TODO: [ngClass]="{'list-group-item-danger': ...}" -->
                             {{section.type}} <i class="fa fa-angle-double-right"></i>
                         </a>
                     </div>
