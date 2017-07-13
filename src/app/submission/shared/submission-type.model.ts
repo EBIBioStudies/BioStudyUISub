@@ -1,16 +1,43 @@
 import {DefaultTemplate} from './default.template';
 
-export class FieldType {
-    readonly name: string;
+const defined = (val: string) => {
+    return val !== undefined && val.length > 0;
+};
+
+class BaseType {
+    constructor(private _name: string,
+                private _canModify: boolean) {
+        if (!defined(this._name)) {
+            throw Error("Type name is undefined");
+        }
+    }
+
+    get canModify() {
+        return this._canModify;
+    }
+
+    get name(): string {
+        return this._name;
+    }
+
+    set name(val: string) {
+        if (this._canModify && defined(val)) {
+            this._name = val;
+        }
+    }
+}
+
+/* Fields are always required. User can't add/change/delete fields. Only changing its value is allowed.
+ * In PageTab it's a selected by name attribute from an 'attributes' section.
+ */
+export class FieldType extends BaseType {
     readonly valueType: string;
-    readonly required: boolean;
     readonly minlength: number;
     readonly maxlength: number;
 
     constructor(name, obj: any = {}) {
-        this.name = name;
+        super(name, false);
         this.valueType = obj.valueType || 'textline';
-        this.required = obj.required === true;
         this.minlength = obj.minlength || -1;
         this.maxlength = obj.maxlength || -1;
     }
@@ -20,21 +47,23 @@ export class FieldType {
     }
 }
 
-export class FeatureType {
-    readonly name: string;
+/* Feature contains similar defined PageTab section(s) without subsections or a list of attributes*/
+export class FeatureType extends BaseType {
     readonly singleRow: boolean;
     readonly required: boolean;
     readonly title: string;
     readonly description: string;
     readonly columnTypes: ColumnType[];
 
-    constructor(name: string, obj: any = {}) {
-        this.name = name;
-        this.singleRow = obj.singleRow === true;
-        this.required = obj.required === true;
-        this.title = obj.title || 'Add a ' + this.name.toLowerCase();
-        this.description = obj.description || '';
-        this.columnTypes = (obj.columnTypes || [])
+    constructor(name: string, singleRow: boolean, other?: any) {
+        super(name, other === undefined);
+        this.singleRow  = singleRow;
+
+        other = other || {};
+        this.required = other.required === true;
+        this.title = other.title || 'Add ' + this.name;
+        this.description = other.description || '';
+        this.columnTypes = (other.columnTypes || [])
             .map(c => new ColumnType(c));
     }
 
@@ -44,19 +73,26 @@ export class FeatureType {
     }
 
     static createDefault(name: string, singleRow: boolean): FeatureType {
-        return new FeatureType(name, {singleRow: singleRow});
+        return new FeatureType(name, singleRow);
     }
 }
 
-export class ColumnType {
-    readonly name: string;
+export class AnnotationsType extends FeatureType {
+    constructor(name: string, other: any) {
+        super(name, true, other);
+    }
+}
+
+export class ColumnType extends BaseType {
     readonly required: boolean;
     readonly valueType: string;
 
-    constructor(name: string, obj: any = {}) {
-        this.name = name;
-        this.valueType = obj.valueType || 'textline';
-        this.required = obj.required === true;
+    constructor(name: string, other?: any) {
+        super(name, other === undefined);
+
+        other = other || {};
+        this.valueType = other.valueType || 'textline';
+        this.required = other.required === true;
     }
 
     static createDefault(name: string): ColumnType {
@@ -64,21 +100,22 @@ export class ColumnType {
     }
 }
 
-export class SectionType {
-    readonly name: string;
+export class SectionType extends BaseType {
     readonly required: boolean;
     readonly fieldTypes: FieldType[];
     readonly featureTypes: FeatureType[];
     readonly sectionTypes: SectionType[];
 
-    constructor(name: string, obj: any = {}) {
-        this.name = name;
-        this.required = obj.required === true;
-        this.fieldTypes = (obj.fieldTypes || [])
+    constructor(name: string, other?: any) {
+        super(name, other === undefined);
+
+        other = other || {};
+        this.required = other.required === true;
+        this.fieldTypes = (other.fieldTypes || [])
             .map(f => new FieldType(f.name, f));
-        this.featureTypes = (obj.featureTypes || [])
+        this.featureTypes = (other.featureTypes || [])
             .map(f => new FeatureType(f.name, f));
-        this.sectionTypes = (obj.sectionTypes || [])
+        this.sectionTypes = (other.sectionTypes || [])
             .map(s => new SectionType(s.name, s));
     }
 

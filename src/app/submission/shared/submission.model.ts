@@ -2,6 +2,7 @@ import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/from';
+import {SectionType, FeatureType, AnnotationsType} from './submission-type.model';
 
 const nextId = (function () {
     let count = 0;
@@ -38,7 +39,7 @@ export class Attribute extends HasUpdates<UpdateEvent> {
 
     constructor(private _name: string = '') {
         super();
-        this.id = nextId();
+        this.id = `attr_${nextId()}`;
     }
 
     get name(): string {
@@ -227,46 +228,44 @@ export class NameValuePair {
 }
 
 export class Feature extends HasUpdates<UpdateEvent> {
-    private _type: string;
+    readonly id: string;
+    readonly type: FeatureType;
+
     private _columns: Columns = new Columns();
     private _rows: Rows = new Rows();
 
-    readonly id: string;
-    readonly singleRow: boolean;
-
-    private subscriptions: Subscription[] = [];
-
-    constructor(obj: {
-        type: string,
-        singleRow?: boolean
-    }) {
+    constructor(type: FeatureType) {
         super();
 
         this.id = `feature_${nextId()}`;
-        this.singleRow = obj.singleRow === true;
-
-        this._type = obj.type;
+        this.type = type;
 
         if (this.singleRow) {
             this.addRow();
         }
-        this.subscriptions.push(this._columns.updates()
+        this._columns.updates()
             .subscribe(m => {
                 this.notify(new UpdateEvent('columns_update', {id: this.id}, m));
-            }));
-        this.subscriptions.push(this._rows.updates()
+            });
+        this._rows.updates()
             .subscribe(m => {
                 this.notify(new UpdateEvent('rows_update', {id: this.id}, m));
-            }));
+            });
     }
 
-    get type(): string {
-        return this._type;
+    get singleRow(): boolean {
+        return this.type.singleRow;
     }
 
-    set type(v: string) {
-        this._type = v;
-        this.notify(new UpdateEvent('type', v));
+    get typeName(): string {
+        return this.type.name;
+    }
+
+    set typeName(val: string) {
+        this.type.name = val;
+        if (this.type.name === val) {
+            this.notify(new UpdateEvent('type', val));
+        }
     }
 
     get rows(): ValueMap[] {
@@ -378,6 +377,7 @@ export class Features extends HasUpdates<UpdateEvent> {
 export class Field extends HasUpdates<UpdateEvent> {
     readonly id: string;
 
+
     constructor(private _name: string,
                 private _value: string = '') {
         super();
@@ -444,23 +444,21 @@ export class Section extends HasUpdates<UpdateEvent> {
     private _accno: string = '';
 
     readonly id: string;
-    readonly type: string;
-
+    readonly type: SectionType;
+    readonly annotations: Feature;
     readonly fields: Fields;
     readonly features: Features;
     readonly sections: Sections;
 
-    constructor(obj: {
-        type: string,
-        accno?: string
-    }) {
-
+    constructor(type: SectionType, annotType: AnnotationsType, accno: string = '') {
         super();
+
         this.id = `section_${nextId()}`;
-        this.type = obj.type;
+        this.type = type;
 
-        this._accno = obj.accno || '';
+        this._accno = accno;
 
+        this.annotations = new Feature(annotType);
         this.fields = new Fields();
         this.features = new Features();
         this.sections = new Sections();
@@ -476,6 +474,17 @@ export class Section extends HasUpdates<UpdateEvent> {
     set accno(accno: string) {
         this._accno = accno;
         this.notify(new UpdateEvent('accno', accno));
+    }
+
+    get typeName(): string {
+        return this.type.name;
+    }
+
+    set typeName(name: string) {
+        this.type.name = name;
+        if (this.type.name === name) {
+            this.notify(new UpdateEvent('type', name));
+        }
     }
 
     sectionPath(id: string): Section[] {
@@ -511,8 +520,8 @@ export class Sections extends HasUpdates<UpdateEvent> {
         return this.sections;
     }
 
-    add(type: string, accno?: string): Section {
-        const s = new Section({type: type, accno: accno});
+    add(type: SectionType, accno?: string): Section {
+        const s = new Section(type, accno);
         const sectionId = {id: s.id, index: this.sections.length};
         this.sections.push(s);
         this.subscriptions.push(
@@ -532,8 +541,8 @@ export class Sections extends HasUpdates<UpdateEvent> {
 export class Submission {
     readonly root: Section;
 
-    constructor(name: string, accno?: string) {
-        this.root = new Section({type: name, accno: accno});
+    constructor(type: SectionType, annotType: AnnotationsType, accno?: string) {
+        this.root = new Section(type, annotType, accno);
     }
 
     /* sectionById(id: string): Section {
