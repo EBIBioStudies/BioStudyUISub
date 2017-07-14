@@ -29,7 +29,7 @@
     <subm-sidebar *ngIf="!readonly"
                   (toggle)="sideBarCollapsed=!sideBarCollapsed"
                   [collapsed]="sideBarCollapsed"
-                  [sectionWithType]="sectionWithType">
+                  [section]="section">
     </subm-sidebar>
 
     <subm-navbar
@@ -48,7 +48,7 @@
                  [ngClass]="{'panel-danger': !submValid, 'panel-info': submValid}">
 
                 <div class="panel-body">
-                    <subm-form [sectionWithType]="sectionWithType">
+                    <subm-form [section]="section">
                     </subm-form>
 
                     <div class="list-group">
@@ -56,7 +56,7 @@
                            class="list-group-item"
                            (click)="onSectionClick(section)">
                             <!-- TODO: [ngClass]="{'list-group-item-danger': ...}" -->
-                            {{section.type}} <i class="fa fa-angle-double-right"></i>
+                            {{section.typeName}}: [accno={{section.accno || ''}}] <i class="fa fa-angle-double-right"></i>
                         </a>
                     </div>
 

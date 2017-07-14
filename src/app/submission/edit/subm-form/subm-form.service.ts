@@ -1,25 +1,38 @@
 import {Injectable} from '@angular/core';
-import {FormGroup, Validators, FormControl, FormArray} from '@angular/forms';
+import {
+    FormGroup,
+    Validators,
+    FormControl,
+    FormArray
+} from '@angular/forms';
 import {Subscription} from 'rxjs/Subscription';
 
-import {SectionType, FeatureType, ColumnType, FieldType} from '../../shared/submission-template.model';
-import {Section, Field, Feature, UpdateEvent, Attribute, ValueMap} from '../../shared/submission.model';
+import {
+    ColumnType
+} from '../../shared/submission-type.model';
+import {
+    Section,
+    Field,
+    Feature,
+    UpdateEvent,
+    Attribute,
+    ValueMap
+} from '../../shared/submission.model';
 
 export class SectionForm {
-    formErrors: {[key: string]: string} = {};
+    formErrors: { [key: string]: string } = {};
     readonly form: FormGroup;
 
     private section: Section;
-    private sectionType: SectionType;
 
     private _fields: Field[] = [];
     private _features: Feature[] = [];
 
     private subscriptions: Subscription[] = [];
-    private featureForms: {[key: string]: FeatureForm} = {};
+    private featureForms: { [key: string]: FeatureForm } = {};
 
-    constructor(sectionWithType: [Section, SectionType]) {
-        [this.section, this.sectionType] = sectionWithType;
+    constructor(section: Section) {
+        this.section = section;
 
         this.form = new FormGroup({
             fields: new FormGroup({}),
@@ -121,11 +134,9 @@ export class SectionForm {
     }
 
     private addFieldControl(field: Field): void {
-        const validators = [];
-        const type = this.sectionType.getFieldType(field.name);
-        if (type.required) {
-            validators.push(Validators.required);
-        }
+        const validators = [Validators.required];
+
+        const type = this.section.type.getFieldType(field.name);
         if (type.minlength > 0) {
             validators.push(Validators.minLength(type.minlength));
         }
@@ -162,8 +173,7 @@ export class SectionForm {
     }
 
     private addFeatureForm(feature: Feature) {
-        const type = this.sectionType.getFeatureType(feature.type, feature.singleRow);
-        const featureForm = new FeatureForm([feature, type]);
+        const featureForm = new FeatureForm(feature);
         this.featureForms[feature.id] = featureForm;
         this.featuresFormGroup.addControl(feature.id, featureForm.form);
     }
@@ -190,16 +200,14 @@ export class SectionForm {
 
 export class FeatureForm {
     readonly form: FormGroup;
-
     readonly feature: Feature;
-    readonly featureType: FeatureType;
 
     private subscriptions: Subscription[] = [];
     private _columns: Attribute[] = [];
     private _rows: ValueMap[] = [];
 
-    constructor(featureWithType: [Feature, FeatureType]) {
-        [this.feature, this.featureType] = featureWithType;
+    constructor(feature: Feature) {
+        this.feature = feature;
 
         this.form = new FormGroup({
             columns: new FormGroup({}),
@@ -242,7 +250,7 @@ export class FeatureForm {
 
     columnTmpl(columnId: string): ColumnType {
         const column = this.columns.find(c => c.id === columnId);
-        return this.featureType.getColumnTemplate(column.name);
+        return this.feature.type.getColumnTemplate(column.name);
     }
 
     private removeColumnControl(columnId: string) {
@@ -254,7 +262,7 @@ export class FeatureForm {
     }
 
     private addColumnControl(column: Attribute) {
-        const t = this.featureType.getColumnTemplate(column.name);
+        const t = this.feature.type.getColumnTemplate(column.name);
         const colValidators = [Validators.required];
         this.columnsFormGroup.addControl(column.id, new FormControl(column.name, colValidators));
         this.rows.forEach(
@@ -271,7 +279,7 @@ export class FeatureForm {
 
         this.columns.forEach(
             column => {
-                const t = this.featureType.getColumnTemplate(column.name);
+                const t = this.feature.type.getColumnTemplate(column.name);
                 this.addRowValueControl(formGroup, column.id, row, t);
             });
     }
@@ -342,10 +350,10 @@ export class FeatureForm {
 export class SubmFormService {
     private sectionForm: SectionForm;
 
-    createForm(sectionWithType: [Section, SectionType]): SectionForm {
+    createForm(section: Section): SectionForm {
         if (this.sectionForm) {
             this.sectionForm.destroy();
         }
-        return new SectionForm(sectionWithType);
+        return section === undefined ? undefined : new SectionForm(section);
     }
 }

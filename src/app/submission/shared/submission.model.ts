@@ -334,8 +334,8 @@ export class Feature extends HasUpdates<UpdateEvent> {
         this._rows.removeAt(index);
     }
 
-    static create(type: string, attrs: any[]): Feature {
-        const attributes = new Feature({type: type});
+    static create(type: FeatureType, attrs: any[]): Feature {
+        const attributes = new Feature(type);
         attrs.forEach(attr => {
             attributes.addColumn(new Attribute(attr));
         });
@@ -357,8 +357,8 @@ export class Features extends HasUpdates<UpdateEvent> {
         return this.features;
     }
 
-    add(type: string, singleRow: boolean = false): Feature {
-        const feature = new Feature({type: type, singleRow: singleRow});
+    add(type: FeatureType): Feature {
+        const feature = new Feature(type);
         const featureId = {id: feature.id, index: this.features.length};
         this.features.push(feature);
         this.subscriptions.push(
@@ -450,7 +450,7 @@ export class Section extends HasUpdates<UpdateEvent> {
     readonly features: Features;
     readonly sections: Sections;
 
-    constructor(type: SectionType, annotType: AnnotationsType, accno: string = '') {
+    constructor(type: SectionType, accno: string = '') {
         super();
 
         this.id = `section_${nextId()}`;
@@ -458,7 +458,7 @@ export class Section extends HasUpdates<UpdateEvent> {
 
         this._accno = accno;
 
-        this.annotations = new Feature(annotType);
+        this.annotations = new Feature(type.annotationsType);
         this.fields = new Fields();
         this.features = new Features();
         this.sections = new Sections();
@@ -541,8 +541,8 @@ export class Sections extends HasUpdates<UpdateEvent> {
 export class Submission {
     readonly root: Section;
 
-    constructor(type: SectionType, annotType: AnnotationsType, accno?: string) {
-        this.root = new Section(type, annotType, accno);
+    constructor(type: SectionType, accno?: string) {
+        this.root = new Section(type, accno);
     }
 
     /* sectionById(id: string): Section {

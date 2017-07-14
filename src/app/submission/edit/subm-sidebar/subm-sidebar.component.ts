@@ -10,11 +10,14 @@ import {
 
 import {Subscription} from 'rxjs/Subscription';
 
-import {Section, Feature} from '../../shared/submission.model';
+import {
+    Section,
+    Feature
+} from '../../shared/submission.model';
 import {SubmAddDialogComponent} from '../subm-add/subm-add.component';
 import {SubmAddEvent} from '../subm-add/subm-add-event.model';
-import {SectionType, FieldType, FeatureType} from '../../shared/submission-template.model';
-import * as stu from '../../shared/submission-template.utils';
+import {SectionType} from '../../shared/submission-type.model';
+import * as stu from '../../shared/submission-type.utils';
 
 @Component({
     selector: 'subm-sidebar',
@@ -23,7 +26,7 @@ import * as stu from '../../shared/submission-template.utils';
 })
 export class SubmSideBarComponent implements OnChanges {
     @Input() collapsed?: boolean = false;
-    @Input() sectionWithType: [Section, SectionType];
+    @Input() section: Section;
     @Output() toggle? = new EventEmitter();
 
     @ViewChild('addDialog')
@@ -34,13 +37,13 @@ export class SubmSideBarComponent implements OnChanges {
     private subscr: Subscription;
 
     ngOnChanges(changes: any): void {
-        const secChange: SimpleChange = changes.sectionWithType;
-        if (secChange) {
+        const change: SimpleChange = changes.section;
+        if (change) {
             if (this.subscr) {
                 this.subscr.unsubscribe();
             }
-            if (this.sectionWithType !== undefined) {
-                this.subscr = this.sectionWithType[0].features
+            if (this.section !== undefined) {
+                this.subscr = this.section.features
                     .updates()
                     .subscribe(ev => {
                         if (ev.name === 'feature_add' ||
@@ -52,12 +55,8 @@ export class SubmSideBarComponent implements OnChanges {
         }
     }
 
-    get section(): Section {
-        return this.sectionWithType ? this.sectionWithType[0] : undefined;
-    }
-
     get sectionType(): SectionType {
-        return this.sectionWithType ? this.sectionWithType[1] : undefined;
+        return this.section.type;
     }
 
     onToggle(ev): void {

@@ -22,8 +22,11 @@ import {
 } from '../shared/submission.model';
 
 import {SubmissionService} from '../shared/submission.service';
-import {SubmissionType, SectionType} from '../shared/submission-template.model';
-import * as stu from '../shared/submission-template.utils';
+import {
+    SubmissionType
+} from '../shared/submission-type.model';
+
+import {PageTab} from "../shared/pagetab.model";
 
 @Component({
     selector: 'subm-edit',
@@ -34,9 +37,7 @@ export class SubmEditComponent implements OnInit, OnDestroy {
     readonly: boolean = false;
 
     subm: Submission;
-    submType: SubmissionType;
-
-    sectionWithType: [Section, SectionType];
+    section: Section;
 
     errors: string[] = [];
     accno: string = '';
@@ -56,10 +57,8 @@ export class SubmEditComponent implements OnInit, OnDestroy {
             .map((params: Params) => params['accno'])
             .switchMap(accno => this.submService.getSubmission(accno))
             .subscribe(data => {
-                //TODO: convert PageTab into Submission
                 this.accno = data.accno;
-                this.submType = SubmissionType.createDefault();
-                this.subm = stu.createSubmission(this.submType);
+                this.subm = (new PageTab(data)).toSubmission(SubmissionType.createDefault());
 
                 this.changeSection(this.subm.root.id);
             });
@@ -71,12 +70,8 @@ export class SubmEditComponent implements OnInit, OnDestroy {
         }
     }
 
-    get section(): Section {
-        return this.sectionWithType === undefined ? undefined : this.sectionWithType[0];
-    }
-
     get sectionPath(): Section[] {
-        if (this.subm === undefined || this.section) {
+        if (this.subm === undefined || this.section === undefined) {
             return [];
         }
         return this.subm.sectionPath(this.section.id);
@@ -168,9 +163,6 @@ export class SubmEditComponent implements OnInit, OnDestroy {
         if (path.length === 0) {
             console.log(`Section with id ${sectionId} was not found`);
         }
-        const section = path[path.length - 1];
-        this.sectionWithType = [section,
-            this.submType.sectionType(path.map(s => s.type))
-            || SectionType.createDefault(section.type)];
+        this.section = path[path.length - 1];
     }
 }

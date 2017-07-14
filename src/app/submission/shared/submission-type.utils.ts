@@ -29,20 +29,17 @@ export function createSubmission(type: SubmissionType): Submission {
 }
 
 export function addSection(sec: Section, type: SectionType): void {
-    const newSec = sec.sections.add(type.name);
+    const newSec = sec.sections.add(type);
 
     type.fieldTypes.forEach(
         (fieldType: FieldType) => {
-            if (fieldType.required) {
-                addField(newSec, fieldType);
-            }
+            addField(newSec, fieldType);
         }
     );
     type.featureTypes.forEach(
         (featureType: FeatureType) => {
-            if (featureType.required) {
-                addFeature(newSec, featureType);
-            }
+            // adding all features (not just required only)
+            addFeature(newSec, featureType);
         }
     );
     type.sectionTypes.forEach(
@@ -59,7 +56,7 @@ export function addField(sec: Section, type: FieldType): void {
 }
 
 export function addFeature(sec: Section, type: FeatureType): void {
-    const feature: Feature = sec.features.add(type.name, type.singleRow);
+    const feature: Feature = sec.features.add(type);
     type.columnTypes.forEach(
         (columnType: ColumnType) => {
             if (columnType.required) {

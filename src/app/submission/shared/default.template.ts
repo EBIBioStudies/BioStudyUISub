@@ -9,10 +9,38 @@ export const DefaultTemplate = {
                     "name": "Study",
                     "required": true,
                     "maxcount": 1,
+                    "annotationsType": {
+                        "singleRow": true,
+                        "title": "Describe your study",
+                        "description": "Provide an adequate overview of the Study, make it easier to find and interpret",
+                        "required": true,
+                        "columnTypes": [
+                            {
+                                "name": "Organism",
+                                "valueType": "text"
+                            },
+                            {
+                                "name": "Experimental design",
+                                "valueType": "text"
+                            },
+                            {
+                                "name": "Experimental factor",
+                                "valueType": "text"
+                            },
+                            {
+                                "name": "Organ",
+                                "valueType": "text"
+                            },
+                            {
+                                "name": "Cell type",
+                                "valueType": "text"
+                            }
+                        ]
+                    },
                     "fieldTypes": [
                         {
                             "name": "Title",
-                            "valueType": "textline",
+                            "valueType": "text",
                             "required": true,
                             "minlength": 50
                         },
@@ -23,41 +51,12 @@ export const DefaultTemplate = {
                         },
                         {
                             "name": "Description",
-                            "valueType": "text",
+                            "valueType": "textblob",
                             "required": true,
                             "minlength": 50
                         }
                     ],
                     "featureTypes": [
-                        {
-                            "name": "Annotation",
-                            "singleRow": true,
-                            "title": "Describe your study",
-                            "description": "Provide an adequate overview of the Study, make it easier to find and interpret",
-                            "required": true,
-                            "columnTypes": [
-                                {
-                                    "name": "Organism",
-                                    "valueType": "textline"
-                                },
-                                {
-                                    "name": "Experimental design",
-                                    "valueType": "textline"
-                                },
-                                {
-                                    "name": "Experimental factor",
-                                    "valueType": "textline"
-                                },
-                                {
-                                    "name": "Organ",
-                                    "valueType": "textline"
-                                },
-                                {
-                                    "name": "Cell type",
-                                    "valueType": "textline"
-                                }
-                            ]
-                        },
                         {
                             "name": "Contact",
                             "title": "Add Contacts",
@@ -67,38 +66,38 @@ export const DefaultTemplate = {
                             "columnTypes": [
                                 {
                                     "name": "Name",
-                                    "valueType": "textline",
+                                    "valueType": "text",
                                     "required": true
                                 },
                                 {
                                     "name": "Organisation",
-                                    "valueType": "textline",
+                                    "valueType": "text",
                                     "required": true
                                 },
                                 {
                                     "name": "E-mail",
-                                    "valueType": "textline",
+                                    "valueType": "text",
                                     "required": true
                                 },
                                 {
                                     "name": "Role",
-                                    "valueType": "textline"
+                                    "valueType": "text"
                                 },
                                 {
                                     "name": "ORCID",
-                                    "valueType": "textline"
+                                    "valueType": "text"
                                 },
                                 {
                                     "name": "Address",
-                                    "valueType": "textline"
+                                    "valueType": "text"
                                 },
                                 {
                                     "name": "Department",
-                                    "valueType": "textline"
+                                    "valueType": "text"
                                 },
                                 {
                                     "name": "Funding",
-                                    "valueType": "textline"
+                                    "valueType": "text"
                                 }
                             ]
                         },
@@ -110,36 +109,36 @@ export const DefaultTemplate = {
                             "columnTypes": [
                                 {
                                     "name": "DOI",
-                                    "valueType": "textline"
+                                    "valueType": "text"
                                 },
                                 {
                                     "name": "Title",
-                                    "valueType": "textline",
+                                    "valueType": "text",
                                     "required": true
                                 },
                                 {
                                     "name": "Authors",
-                                    "valueType": "textline"
+                                    "valueType": "text"
                                 },
                                 {
                                     "name": "Type",
-                                    "valueType": "textline"
+                                    "valueType": "text"
                                 },
                                 {
                                     "name": "Issue",
-                                    "valueType": "textline"
+                                    "valueType": "text"
                                 },
                                 {
                                     "name": "Issn",
-                                    "valueType": "textline"
+                                    "valueType": "text"
                                 },
                                 {
                                     "name": "Year",
-                                    "valueType": "textline"
+                                    "valueType": "text"
                                 },
                                 {
                                     "name": "Volume",
-                                    "valueType": "textline"
+                                    "valueType": "text"
                                 }
                             ]
                         },
@@ -151,17 +150,17 @@ export const DefaultTemplate = {
                             "columnTypes": [
                                 {
                                     "name": "URL",
-                                    "valueType": "textline",
+                                    "valueType": "text",
                                     "required": true
                                 },
                                 {
                                     "name": "Description",
-                                    "valueType": "textline",
+                                    "valueType": "text",
                                     "required": true
                                 },
                                 {
                                     "name": "Type",
-                                    "valueType": "textline"
+                                    "valueType": "text"
                                 }
                             ]
                         },
@@ -178,12 +177,12 @@ export const DefaultTemplate = {
                                 },
                                 {
                                     "name": "Description",
-                                    "valueType": "textline",
+                                    "valueType": "text",
                                     "required": true
                                 },
                                 {
                                     "name": "Type",
-                                    "valueType": "textline"
+                                    "valueType": "text"
                                 }
                             ]
                         }

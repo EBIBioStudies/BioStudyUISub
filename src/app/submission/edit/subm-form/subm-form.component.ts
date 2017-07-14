@@ -4,16 +4,19 @@ import {
     OnChanges
 } from '@angular/core';
 
-import {SubmFormService, SectionForm} from './subm-form.service';
+import {
+    SubmFormService,
+    SectionForm
+} from './subm-form.service';
+
 import {Section} from '../../shared/submission.model';
-import {SectionType} from '../../shared/submission-template.model';
 
 @Component({
     selector: 'subm-form',
     templateUrl: './subm-form.component.html'
 })
 export class SubmFormComponent implements OnChanges {
-    @Input() sectionWithType: [Section, SectionType];
+    @Input() section: Section;
 
     sectionForm: SectionForm;
 
@@ -21,8 +24,7 @@ export class SubmFormComponent implements OnChanges {
     }
 
     ngOnChanges(): void {
-        this.sectionForm = this.sectionWithType === undefined ?
-            undefined : this.submFormService.createForm(this.sectionWithType);
+        this.sectionForm = this.submFormService.createForm(this.section);
     }
 
     onSubmit(ev: any): void {

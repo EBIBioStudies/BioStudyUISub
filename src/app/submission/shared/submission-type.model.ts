@@ -78,8 +78,8 @@ export class FeatureType extends BaseType {
 }
 
 export class AnnotationsType extends FeatureType {
-    constructor(name: string, other: any) {
-        super(name, true, other);
+    constructor(other?: any) {
+        super('Annotation', true, other);
     }
 }
 
@@ -102,6 +102,7 @@ export class ColumnType extends BaseType {
 
 export class SectionType extends BaseType {
     readonly required: boolean;
+    readonly annotationsType: AnnotationsType;
     readonly fieldTypes: FieldType[];
     readonly featureTypes: FeatureType[];
     readonly sectionTypes: SectionType[];
@@ -111,6 +112,7 @@ export class SectionType extends BaseType {
 
         other = other || {};
         this.required = other.required === true;
+        this.annotationsType = other.annotationsType || new AnnotationsType();
         this.fieldTypes = (other.fieldTypes || [])
             .map(f => new FieldType(f.name, f));
         this.featureTypes = (other.featureTypes || [])
