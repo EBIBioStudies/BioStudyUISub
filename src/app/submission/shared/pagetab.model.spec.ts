@@ -10,14 +10,16 @@ describe('PageTab', () => {
     it("sets undefined section type to 'Undefined' value", () => {
         const pt = new PageTab({});
         expect(pt.section).toBeDefined();
-        expect(pt.section.type).toEqual('Undefined');
+        expect(pt.section.type).toBe('Undefined');
     });
 
     it("doesn't change the original object", () => {
-       //TODO
+        const obj = pageTabSample1();
+        const pt = new PageTab(obj);
+        expect(obj).toEqual(pageTabSample1());
     });
 
-    it("extracts sections and features from the original PageTab", () => {
+    it("extracts features from the original PageTab", () => {
         const pt = new PageTab({
             type: "Study",
             subsections: [
@@ -30,11 +32,148 @@ describe('PageTab', () => {
             ]
         });
         expect(pt.section).toBeDefined();
-        expect(pt.section.type).toEqual('Study');
+        expect(pt.section.type).toBe('Study');
+        expect(pt.section.features.length).toBe(1);
+
+        const feature = pt.section.features[0];
+        expect(feature.type).toBe('Feature1');
+    });
+
+    it("extracts files as a feature from an original PageTab", () => {
+        const pt = new PageTab({
+            type: "Study",
+            files: [
+                {
+                    path: "path1",
+                    attributes: [
+                        {
+                            name: "attr1",
+                            value: "file1"
+                        }
+                    ]
+                },
+                {
+                    path: "path2",
+                    attributes: [
+                        {
+                            name: "attr1",
+                            value: "file2"
+                        }
+                    ]
+                }
+            ]
+        });
+        expect(pt.section).toBeDefined();
+        expect(pt.section.type).toBe('Study');
         expect(pt.section.features.length).toEqual(1);
 
         const feature = pt.section.features[0];
-        expect(feature.type).toEqual('Feature1');
+        expect(feature.type).toBe('File');
+        expect(feature.entries.length).toBe(2);
+
+        const entry = feature.entries[0];
+        expect(entry.attributes).toEqual([
+            {
+                name: "attr1",
+                value: "file1"
+            },
+            {
+                name: "Path",
+                value: "path1"
+            }
+        ]);
     });
 
+    it("extracts links as a feature from an original PageTab", () => {
+        const pt = new PageTab({
+            type: "Study",
+            links: [
+                {
+                    url: "url1",
+                    attributes: [
+                        {
+                            name: "attr1",
+                            value: "url1"
+                        }
+                    ]
+                },
+                {
+                    url: "url2",
+                    attributes: [
+                        {
+                            name: "attr1",
+                            value: "url2"
+                        }
+                    ]
+                }
+            ]
+        });
+        expect(pt.section).toBeDefined();
+        expect(pt.section.type).toBe('Study');
+        expect(pt.section.features.length).toEqual(1);
+
+        const feature = pt.section.features[0];
+        expect(feature.type).toBe('Link');
+        expect(feature.entries.length).toBe(2);
+
+        const entry = feature.entries[0];
+        expect(entry.attributes).toEqual([
+            {
+                name: "attr1",
+                value: "url1"
+            },
+            {
+                name: "URL",
+                value: "url1"
+            }
+        ]);
+    });
+
+    it("flattens double arrays", () => {
+        const pt = new PageTab({
+            type: "Study",
+            files: [[
+                {
+                    path: "file1"
+                },
+                {
+                    path: "file2"
+                }
+            ]],
+            links: [[
+                {
+                    url: "url1"
+                },
+                {
+                    url: "url2"
+                }
+            ]],
+            subsections: [[
+                {
+                    type: "Feature1"
+                },
+                {
+                    type: "Feature1"
+                }
+            ], [
+                {
+                    type: "Feature2"
+                },
+                {
+                    type: "Feature2"
+                }
+            ]]
+        });
+
+        expect(pt.section).toBeDefined();
+        expect(pt.section.type).toBe('Study');
+        expect(pt.section.features.length).toEqual(4);
+
+        const types = pt.section.features.map(f => f.type);
+        expect(types.sort()).toEqual(['Feature1', 'Feature2', 'Link', 'File'].sort());
+    });
+
+    it("resolves attribute references", () => {
+       //TODO
+    });
 });

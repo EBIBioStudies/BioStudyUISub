@@ -31,12 +31,12 @@ class PtEntry {
     readonly attributes: any[];
 
     constructor(obj: any = {}) {
-        let resolveRef = (accno: string) => {
+        const resolveRef = (accno: string) => {
             const section = (obj.subsections || []).find(s => s.accno === accno);
             if (section === undefined) {
                 console.error(`Can't resolve reference ${accno}`);
             }
-            const attributes = (section || {}).attributes || [];
+            const attributes = ((section || {}).attributes) || [];
             return attributes.length > 0 ? attributes[0].value : accno;
         };
         this.type = obj.type || 'Undefined';
@@ -69,8 +69,9 @@ class PtFeature {
         return new PtFeature('File',
             entries.map(e => {
                 const ee = Object.assign({}, e);
-                ee.attributes = (e.attributes || [])
-                    .slice().push({name: "Path", value: ee.path});
+                ee.attributes = (e.attributes || []).slice();
+                ee.attributes.push({name: "Path", value: ee.path});
+                return ee;
             }));
     }
 
@@ -78,8 +79,9 @@ class PtFeature {
         return new PtFeature('Link',
             entries.map(e => {
                 const ee = Object.assign({}, e);
-                ee.attributes = (e.attributes || [])
-                    .slice().push({name: "URL", value: ee.url});
+                ee.attributes = (e.attributes || []).slice();
+                ee.attributes.push({name: "URL", value: ee.url});
+                return ee;
             }));
     }
 }
@@ -90,14 +92,16 @@ class PtSection extends PtEntry {
     readonly sections: PtSection[];
 
     constructor(obj: any) {
-        super(flattenArrays(obj));
+        super((obj = flattenArrays(obj)));
         this.accno = obj.accno;
 
         let subsections = obj.subsections || [];
+
         let features = subsections
             .filter(s => s.subsections === undefined)
             .reduce((rv, x) => {
-                (rv[x.type] = rv[x.type] || []).push(x);
+                rv[x.type] = (rv[x.type] || []);
+                rv[x.type].push(x);
                 return rv;
             }, {});
 
@@ -122,7 +126,7 @@ export class PageTab {
         if (obj !== undefined) {
             const newObj = Object.assign({}, obj);
             newObj.subsections = (obj.subsections || []).slice();
-            newObj.subsections = obj.subsections.concat((obj.section ? [obj.section] : []));
+            newObj.subsections = newObj.subsections.concat((obj.section ? [obj.section] : []));
             this.section = new PtSection(newObj);
         }
     }
