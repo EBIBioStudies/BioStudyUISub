@@ -2,17 +2,44 @@ import {Submission} from './submission.model';
 import {SubmissionType} from './submission-type.model';
 //import * as stu from './submission-type.utils';
 
+const isDoubleArray = (array: any) => {
+    if (array === undefined || !(array instanceof Array) || array.length === 0) {
+        return false;
+    }
+    return array[0] instanceof Array;
+};
+
+const flattenArrays = (obj: any): any => {
+    const newObj = Object.assign({}, obj);
+    newObj.subsections = flatten(obj.subsections);
+    newObj.files = flatten(obj.files);
+    newObj.links = flatten(obj.links);
+    return newObj;
+};
+
+const flatten = (array: any): any => {
+    if (isDoubleArray(array)) {
+        return [].concat.apply([], array);
+    }
+    return array;
+};
+
 class PtEntry {
     readonly type: string;
     readonly tags: any[];
     readonly accessTags: any[];
     readonly attributes: any[];
 
-    constructor(obj:any) {
+    constructor(obj: any = {}) {
         let resolveRef = (accno: string) => {
-            //TODO
+            const section = (obj.subsections || []).find(s => s.accno === accno);
+            if (section === undefined) {
+                console.error(`Can't resolve reference ${accno}`);
+            }
+            const attributes = (section || {}).attributes || [];
+            return attributes.length > 0 ? attributes[0].value : accno;
         };
-        this.type = obj.type;
+        this.type = obj.type || 'Undefined';
         this.tags = (obj.tags || []).map(t => Object.assign({}, t));
         this.accessTags = (obj.accesTags || []).map(t => Object.assign({}, t));
         this.attributes = (obj.attributes || [])
@@ -34,8 +61,26 @@ class PtFeature {
     readonly entries: PtEntry[];
 
     constructor(type: string, entries: any[]) {
-        this.type = type;
+        this.type = type || 'Undefined';
         this.entries = (entries || []).map(i => new PtEntry(i));
+    }
+
+    static file(entries: any[]): PtFeature {
+        return new PtFeature('File',
+            entries.map(e => {
+                const ee = Object.assign({}, e);
+                ee.attributes = (e.attributes || [])
+                    .slice().push({name: "Path", value: ee.path});
+            }));
+    }
+
+    static link(entries: any[]): PtFeature {
+        return new PtFeature('Link',
+            entries.map(e => {
+                const ee = Object.assign({}, e);
+                ee.attributes = (e.attributes || [])
+                    .slice().push({name: "URL", value: ee.url});
+            }));
     }
 }
 
@@ -45,13 +90,10 @@ class PtSection extends PtEntry {
     readonly sections: PtSection[];
 
     constructor(obj: any) {
-        super(obj);
+        super(flattenArrays(obj));
         this.accno = obj.accno;
 
         let subsections = obj.subsections || [];
-        if (isDoubleArray(subsections)) {
-            subsections = [].concat.apply([], subsections);
-        }
         let features = subsections
             .filter(s => s.subsections === undefined)
             .reduce((rv, x) => {
@@ -60,6 +102,13 @@ class PtSection extends PtEntry {
             }, {});
 
         this.features = Object.keys(features).map(k => new PtFeature(k, features[k]));
+        if (obj.files !== undefined) {
+            this.features.push(PtFeature.file(obj.files));
+        }
+        if (obj.links !== undefined) {
+            this.features.push(PtFeature.link(obj.links));
+        }
+
         this.sections = subsections
             .filter(s => s.subsections !== undefined)
             .map(s => new PtSection(s));
@@ -67,11 +116,15 @@ class PtSection extends PtEntry {
 }
 
 export class PageTab {
-    private obj: PtSection;
+    readonly section: PtSection;
 
-    constructor(obj: any = {}) {
-        obj.subsections = obj.section ? [obj.section] : [];
-        this.obj = new PtSection(obj)
+    constructor(obj?: any) {
+        if (obj !== undefined) {
+            const newObj = Object.assign({}, obj);
+            newObj.subsections = (obj.subsections || []).slice();
+            newObj.subsections = obj.subsections.concat((obj.section ? [obj.section] : []));
+            this.section = new PtSection(newObj);
+        }
     }
 
     toSubmission(type: SubmissionType): Submission {
@@ -86,10 +139,4 @@ export class PageTab {
         return {};
     }
 
-    private update(subm: Submission): void {
-        subm.root.addTags(this.obj.tags);
-        subm.root.addAccessTags(this.obj.accessTags);
-        subm.root.accno = this.obj.accno;
-
-    }
 }
