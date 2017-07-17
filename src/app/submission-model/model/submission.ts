@@ -241,7 +241,7 @@ export class Items extends WithChanges<Change> {
         let index = this.items.length;
         this.items.push(item);
         this.__subscriptions.push(
-            item.updates().subscribe(
+            item.changes().subscribe(
                 m => {
                     this.notify(new Change('item_change', index, m));
                 })
