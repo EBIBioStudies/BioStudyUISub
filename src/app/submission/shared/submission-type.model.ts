@@ -156,24 +156,15 @@ export class SectionType extends BaseType {
 }
 
 export class SubmissionType {
-    readonly sectionTypes: SectionType[];
+    readonly submType: SectionType;
 
     constructor(obj: any) {
-        this.sectionTypes =
-            (obj.sectionTypes || [])
-                .map(s => new SectionType(s.name, s));
+        const st = obj.submissionType;
+        this.submType = st ? new SectionType(st.name, st) : undefined;
     }
 
     sectionType(names: string[]): SectionType {
-        if (names.length > 0) {
-            const types = this.sectionTypes
-                .map(s => s.sectionType(names))
-                .filter(t => t !== undefined);
-            if (types.length > 0) {
-                return types[0];
-            }
-        }
-        return undefined;
+        return this.submType ? this.submType.sectionType(names) : undefined;
     }
 
     static createDefault(): SubmissionType {

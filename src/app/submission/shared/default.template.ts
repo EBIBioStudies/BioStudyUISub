@@ -1,9 +1,7 @@
 export const DefaultTemplate = {
-    "sectionTypes": [
-        {
+    "sectionType": {
             "name": "Submission",
             "required": true,
-            "maxcount": 1,
             "sectionTypes": [
                 {
                     "name": "Study",
@@ -190,5 +188,4 @@ export const DefaultTemplate = {
                 }
             ]
         }
-    ]
 };
