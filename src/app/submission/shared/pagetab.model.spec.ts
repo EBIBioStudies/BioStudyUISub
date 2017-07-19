@@ -1,5 +1,6 @@
 import {pageTabSample1} from './pagetab.samples';
 import {PageTab} from './pagetab.model';
+import {SubmissionType} from './submission-type.model';
 
 describe('PageTab', () => {
     it("doesn't create the root section if the original object is undefined", () => {
@@ -175,5 +176,45 @@ describe('PageTab', () => {
 
     it("resolves attribute references", () => {
        //TODO
+    });
+
+    it("can be converted into submission object", () => {
+        const pt = new PageTab({
+            type: "Submission",
+            accno: "123",
+            section: {
+                type: "Study",
+                attributes: [
+                    {
+                        name: "Title",
+                        value: "Title value"
+                    },
+                    {
+                        name: "attr1",
+                        value: "attr1 value"
+                    }
+                ],
+                links: [{
+                    url: "url1"
+                }],
+                files: [{
+                    path: "file1"
+                }]
+            }
+        });
+
+        const subm = pt.toSubmission(SubmissionType.createDefault());
+        expect(subm.root).toBeDefined();
+        expect(subm.root.accno).toBe("123");
+        expect(subm.root.type).toBeDefined();
+        expect(subm.root.type.name).toBe('Submission');
+
+        expect(subm.root.sections.length).toBe(1);
+
+        const study = subm.root.sections.list()[0];
+        expect(study.type).toBeDefined();
+        expect(study.fields.length).toBe(1);
+        expect(study.annotations.size()).toBe(1);
+        expect(study.features.length).toBe(2);
     });
 });

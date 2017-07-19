@@ -1,4 +1,4 @@
-import {Submission} from './submission.model';
+import {Section, Submission} from './submission.model';
 import {SubmissionType} from './submission-type.model';
 //import * as stu from './submission-type.utils';
 
@@ -28,7 +28,7 @@ class PtEntry {
     readonly type: string;
     readonly tags: any[];
     readonly accessTags: any[];
-    readonly attributes: any[];
+    readonly attributes: { name: string, value: string }[];
 
     constructor(obj: any = {}) {
         const resolveRef = (accno: string) => {
@@ -47,8 +47,8 @@ class PtEntry {
             .map(a => {
                 if (a.isReference === true) {
                     return {
-                        "name": a.name,
-                        "value": resolveRef(a.value)
+                        name: a.name,
+                        value: resolveRef(a.value)
                     }
                 }
                 return a;
@@ -62,7 +62,7 @@ class PtFeature {
 
     constructor(type: string, entries: any[]) {
         this.type = type || 'Undefined';
-        this.entries = (entries || []).map(i => new PtEntry(i));
+        this.entries = (entries || []).map(e => new PtEntry(e));
     }
 
     static file(entries: any[]): PtFeature {
@@ -93,28 +93,36 @@ class PtSection extends PtEntry {
 
     constructor(obj: any) {
         super((obj = flattenArrays(obj)));
+
+        const isFeature = (obj: any) => {
+            return obj.subsections === undefined &&
+                obj.files === undefined &&
+                obj.links === undefined;
+        };
+
         this.accno = obj.accno;
 
         let subsections = obj.subsections || [];
 
-        let features = subsections
-            .filter(s => s.subsections === undefined)
+        let featureMap = subsections
+            .filter(s => isFeature(s))
             .reduce((rv, x) => {
                 rv[x.type] = (rv[x.type] || []);
                 rv[x.type].push(x);
                 return rv;
             }, {});
 
-        this.features = Object.keys(features).map(k => new PtFeature(k, features[k]));
+        let features = Object.keys(featureMap).map(k => new PtFeature(k, featureMap[k]));
         if (obj.files !== undefined) {
-            this.features.push(PtFeature.file(obj.files));
+            features.push(PtFeature.file(obj.files));
         }
         if (obj.links !== undefined) {
-            this.features.push(PtFeature.link(obj.links));
+            features.push(PtFeature.link(obj.links));
         }
 
+        this.features = features;
         this.sections = subsections
-            .filter(s => s.subsections !== undefined)
+            .filter(s => !isFeature(s))
             .map(s => new PtSection(s));
     }
 }
@@ -132,10 +140,10 @@ export class PageTab {
     }
 
     toSubmission(type: SubmissionType): Submission {
-        /*let subm = new Submission(type);
-         this.update(subm);
-         return subm;*/
-        return undefined;
+        let subm = new Submission(type.submType);
+        this.copySection(this.section, subm.root);
+        // TODO validate according the Type
+        return subm;
     }
 
     fromSubmission(subm: Submission): any {
@@ -143,4 +151,37 @@ export class PageTab {
         return {};
     }
 
+
+    private copySection(ptsec: PtSection, sec: Section): void {
+        //TODO copy tags and accessTags
+        sec.accno = ptsec.accno;
+
+        const annotations = ptsec.attributes.reduce((rv, a) => {
+            const t = sec.type.getFieldType(a.name);
+            const key = (t === undefined) ? 'other' : 'fields';
+            rv[key] = rv[key] || [];
+            rv[key].push(a);
+            return rv;
+        }, {});
+
+        sec.annotations.add(annotations['other']);
+        (annotations['fields'] || []).forEach(fld => {
+            sec.fields.add(fld);
+        });
+
+        ptsec.features.forEach(ptf => {
+            const type = sec.type.getFeatureType(ptf.type);
+            const f = sec.features.add(type);
+            ptf.entries.forEach(e => {
+                console.log(e.attributes);
+                f.add(e.attributes);
+            });
+        });
+
+        ptsec.sections.forEach(pts => {
+            const type = sec.type.getSectionType(pts.type);
+            const s = sec.sections.add(type, pts.accno);
+            this.copySection(pts, s);
+        });
+    }
 }

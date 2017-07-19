@@ -68,8 +68,8 @@ export class AttributeValue extends HasUpdates<UpdateEvent> {
 }
 
 export class ValueMap extends HasUpdates<UpdateEvent> {
-    private valueMap: {[key: string]: AttributeValue} = {};
-    private subscriptionMap: {[key: string]: Subscription} = {};
+    private valueMap: { [key: string]: AttributeValue } = {};
+    private subscriptionMap: { [key: string]: Subscription } = {};
 
     private constructor() {
         super();
@@ -221,12 +221,6 @@ export class Rows extends HasUpdates<UpdateEvent> {
     }
 }
 
-export class NameValuePair {
-    constructor(public name: string,
-                public value: string) {
-    }
-}
-
 export class Feature extends HasUpdates<UpdateEvent> {
     readonly id: string;
     readonly type: FeatureType;
@@ -288,7 +282,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
         return this.singleRow ? this.colSize() : this.rowSize();
     }
 
-    add(attributes: NameValuePair[] = []): void {
+    add(attributes: { name: string, value: string }[] = []): void {
         const attrNames = attributes.filter(attr => attr.name !== '').map(attr => attr.name);
         const colNames = this._columns.names();
 
@@ -299,7 +293,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
                     this.addColumn(new Attribute(name));
                 });
 
-        const row: ValueMap = this.addRow();
+        const row: ValueMap = this.singleRow ? this.rows[0] : this.addRow();
 
         attributes.forEach(attr => {
             const cols: Attribute[] = this._columns.allWithName(attr.name);
@@ -372,6 +366,10 @@ export class Features extends HasUpdates<UpdateEvent> {
     remove(): void {
         //todo
     }
+
+    get length(): number {
+        return this.features.length;
+    }
 }
 
 export class Field extends HasUpdates<UpdateEvent> {
@@ -437,6 +435,10 @@ export class Fields extends HasUpdates<UpdateEvent> {
         this.subscriptions.splice(index, 1);
 
         this.notify(new UpdateEvent('field_remove', fieldId));
+    }
+
+    get length(): number {
+        return this.fields.length;
     }
 }
 
@@ -535,6 +537,10 @@ export class Sections extends HasUpdates<UpdateEvent> {
 
     remove(): void {
         //TODO
+    }
+
+    get length(): number {
+        return this.sections.length;
     }
 }
 

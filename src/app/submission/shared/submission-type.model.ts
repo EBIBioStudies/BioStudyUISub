@@ -41,10 +41,6 @@ export class FieldType extends BaseType {
         this.minlength = obj.minlength || -1;
         this.maxlength = obj.maxlength || -1;
     }
-
-    static createDefault(name: string): FieldType {
-        return new FieldType(name);
-    }
 }
 
 /* Feature contains similar defined PageTab section(s) without subsections or a list of attributes*/
@@ -57,7 +53,7 @@ export class FeatureType extends BaseType {
 
     constructor(name: string, singleRow: boolean, other?: any) {
         super(name, other === undefined);
-        this.singleRow  = singleRow;
+        this.singleRow = singleRow;
 
         other = other || {};
         this.required = other.required === true;
@@ -122,12 +118,11 @@ export class SectionType extends BaseType {
     }
 
     getFieldType(name: string): FieldType {
-        return this.fieldTypes.find(f => f.name === name)
-            || FieldType.createDefault(name);
+        return this.fieldTypes.find(f => f.name === name);
     }
 
-    getFeatureType(name: string, singleRow: boolean): FeatureType {
-        return this.featureTypes.find(s => s.name === name && s.singleRow === singleRow)
+    getFeatureType(name: string, singleRow: boolean = false): FeatureType {
+        return this.featureTypes.find(s => s.name === name)
             || FeatureType.createDefault(name, singleRow);
     }
 
@@ -159,7 +154,10 @@ export class SubmissionType {
     readonly submType: SectionType;
 
     constructor(obj: any) {
-        const st = obj.submissionType;
+        if (obj.sectionType === undefined) {
+            console.error('the root sectionType is not defined in the template');
+        }
+        const st = obj.sectionType;
         this.submType = st ? new SectionType(st.name, st) : undefined;
     }
 
