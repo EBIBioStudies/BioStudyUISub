@@ -2,7 +2,10 @@ import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/from';
-import {SectionType, FeatureType, AnnotationsType} from './submission-type.model';
+import {
+    SectionType,
+    FeatureType
+} from './submission-type.model';
 
 const nextId = (function () {
     let count = 0;
@@ -36,9 +39,14 @@ export class UpdateEvent {
 
 export class Attribute extends HasUpdates<UpdateEvent> {
     readonly id: string;
+    readonly required: boolean;
 
-    constructor(private _name: string = '') {
+    private _name: string;
+
+    constructor(name: string = '', required: boolean = false) {
         super();
+        this.required = required;
+        this._name = name;
         this.id = `attr_${nextId()}`;
     }
 
@@ -47,6 +55,9 @@ export class Attribute extends HasUpdates<UpdateEvent> {
     }
 
     set name(name: string) {
+        if (this.required) {
+            return;
+        }
         this._name = name;
         this.notify(new UpdateEvent('name', name));
     }
@@ -136,10 +147,15 @@ export class Columns extends HasUpdates<UpdateEvent> {
         this.notify(new UpdateEvent('column_add', columnId));
     }
 
-    remove(id: string): void {
+    remove(id: string): boolean {
         const index = this.columns.findIndex(attr => attr.id === id);
         if (index < 0) {
-            return;
+            console.error(`Column index out of bounds: ${index}`);
+            return false;
+        }
+        if (this.columns[index].required) {
+            console.error(`Can't remove required column [index: ${index}`);
+            return false;
         }
         this.columns.splice(index, 1);
         this.subscriptions[index].unsubscribe();
@@ -228,15 +244,26 @@ export class Feature extends HasUpdates<UpdateEvent> {
     private _columns: Columns = new Columns();
     private _rows: Rows = new Rows();
 
-    constructor(type: FeatureType) {
+    constructor(type: FeatureType, data: FeatureData = {} as FeatureData) {
         super();
 
         this.id = `feature_${nextId()}`;
         this.type = type;
 
-        if (this.singleRow) {
+        if (type.singleRow) {
             this.addRow();
         }
+
+        type.columnTypes.forEach(ct => {
+            if (ct.required) {
+                this.addColumn(ct.name, ct.required);
+            }
+        });
+
+        (data.entries || []).forEach(entry => {
+            this.add(entry.attributes);
+        });
+
         this._columns.updates()
             .subscribe(m => {
                 this.notify(new UpdateEvent('columns_update', {id: this.id}, m));
@@ -290,7 +317,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
             .filter(n => colNames.indexOf(n) < 0)
             .forEach(
                 (name) => {
-                    this.addColumn(new Attribute(name));
+                    this.addColumn(name);
                 });
 
         const row: ValueMap = this.singleRow ? this.rows[0] : this.addRow();
@@ -303,19 +330,21 @@ export class Feature extends HasUpdates<UpdateEvent> {
         });
     }
 
-    addColumn(obj: any = {}): void {
-        const col = new Attribute(obj.name);
+    addColumn(name?: string, required?: boolean): void {
+        const col = new Attribute(name, required);
         this._rows.addKey(col.id);
         this._columns.add(col);
     }
 
     removeColumn(id: string): void {
-        this._columns.remove(id);
-        this._rows.removeKey(id);
+        if (this._columns.remove(id)) {
+            this._rows.removeKey(id);
+        }
     }
 
     addRow(): ValueMap {
         if (this.singleRow && this._rows.size() > 0) {
+            console.error(`addRow: The feature [type=${this.type.name}] can't have more than one row`);
             return;
         }
         return this._rows.add(this._columns.keys());
@@ -323,58 +352,80 @@ export class Feature extends HasUpdates<UpdateEvent> {
 
     removeRowAt(index: number): void {
         if (this.singleRow) {
+            console.error(`removeRowAt: The feature [type=${this.type.name}] can't have less than one row`);
             return;
         }
         this._rows.removeAt(index);
     }
 
-    static create(type: FeatureType, attrs: any[]): Feature {
-        const attributes = new Feature(type);
-        attrs.forEach(attr => {
-            attributes.addColumn(new Attribute(attr));
-        });
-        return attributes;
+    static create(type: FeatureType, attrs: { name: string, value: string }[]): Feature {
+        const feature = new Feature(type);
+        feature.add(attrs);
+        return feature;
     }
 }
 
 export class Features extends HasUpdates<UpdateEvent> {
-    private features: Feature[];
-    private subscriptions: Subscription[];
+    private features: { [key: string]: Feature };
+    private order: string[];
+    private subscriptions: { [key: string]: Subscription };
 
-    constructor() {
+    constructor(type: SectionType, data: SectionData) {
         super();
-        this.features = [];
-        this.subscriptions = [];
+        this.features = {};
+        this.subscriptions = {};
+        this.order = [];
+
+        const fd = (data.features || []).reduce((rv, d) => {
+            rv[d.type] = d;
+            return rv;
+        }, {});
+
+        type.featureTypes.forEach(ft => {
+            this.add(ft, fd[ft.name]);
+            fd[ft.name] = undefined;
+        });
+
+        Object.keys(fd).forEach(key => {
+            if (fd[key] !== undefined) {
+                const ft = type.getFeatureType(key);
+                this.add(ft, fd[ft.name])
+            }
+        });
     }
 
     list(): Feature[] {
-        return this.features;
+        return this.order.map(k => this.features[k]);
     }
 
-    add(type: FeatureType): Feature {
-        const feature = new Feature(type);
+    add(type: FeatureType, data: FeatureData): Feature {
+        if (this.features[type.name] !== undefined) {
+            console.error(`Feature with name ${type.name} already exists`);
+            return;
+        }
+        const feature = new Feature(type, data);
         const featureId = {id: feature.id, index: this.features.length};
-        this.features.push(feature);
-        this.subscriptions.push(
+        this.order.push(type.name);
+        this.features[type.name] = feature;
+        this.subscriptions[type.name] =
             feature.updates().subscribe(
                 u => this.notify(new UpdateEvent('feature_update', featureId, u))
-            ));
+            );
         this.notify(new UpdateEvent('feature_add', featureId));
         return feature;
     }
 
     remove(): void {
-        //todo
+        //todo: do not remove features which are required
     }
 
     get length(): number {
-        return this.features.length;
+        return this.order.length;
     }
 }
 
 export class Field extends HasUpdates<UpdateEvent> {
     readonly id: string;
-
 
     constructor(private _name: string,
                 private _value: string = '') {
@@ -403,47 +454,45 @@ export class Field extends HasUpdates<UpdateEvent> {
 
 export class Fields extends HasUpdates<UpdateEvent> {
     private fields: Field[];
-    private subscriptions: Subscription[];
 
-    constructor() {
+    constructor(type: SectionType, data: SectionData) {
         super();
         this.fields = [];
-        this.subscriptions = [];
+
+        const vals = (data.attributes || []).reduce((rv, a) => {
+            const t = type.getFieldType(a.name);
+            if (t !== undefined) {
+                rv[a.name] = a.value;
+            }
+            return rv;
+        }, {});
+
+        type.fieldTypes.forEach(ft => {
+            this.add(ft.name, vals[ft.name] || '');
+        });
     }
 
     list(): Field[] {
-        return this.fields;
-    }
-
-    add(name: string, value?: string): void {
-        const field = new Field(name, value);
-        const fieldId = {id: field.id, index: this.fields.length};
-        this.fields.push(field);
-        this.subscriptions.push(
-            field.updates().subscribe(
-                u => this.notify(new UpdateEvent('field_change', fieldId, u))
-            )
-        );
-        this.notify(new UpdateEvent('field_add', fieldId));
-    }
-
-    removeAt(index: number): void {
-        const id = this.fields[index].id;
-        const fieldId = {id: id, index: index};
-        this.fields.splice(index, 1);
-        this.subscriptions[index].unsubscribe();
-        this.subscriptions.splice(index, 1);
-
-        this.notify(new UpdateEvent('field_remove', fieldId));
+        return this.fields.slice();
     }
 
     get length(): number {
         return this.fields.length;
     }
+
+    private add(name: string, value?: string): void {
+        const field = new Field(name, value);
+        const fieldId = {id: field.id, index: this.fields.length};
+        this.fields.push(field);
+
+        field.updates().subscribe(
+            u => this.notify(new UpdateEvent('field_change', fieldId, u))
+        )
+    }
 }
 
 export class Section extends HasUpdates<UpdateEvent> {
-    private _accno: string = '';
+    private _accno: string;
 
     readonly id: string;
     readonly type: SectionType;
@@ -452,18 +501,21 @@ export class Section extends HasUpdates<UpdateEvent> {
     readonly features: Features;
     readonly sections: Sections;
 
-    constructor(type: SectionType, accno: string = '') {
+    constructor(type: SectionType, data: SectionData = {} as SectionData) {
         super();
 
         this.id = `section_${nextId()}`;
         this.type = type;
 
-        this._accno = accno;
+        this._accno = data.accno || '';
 
-        this.annotations = new Feature(type.annotationsType);
-        this.fields = new Fields();
-        this.features = new Features();
-        this.sections = new Sections();
+        this.fields = new Fields(type, data);
+        this.annotations = Feature.create(type.annotationsType,
+            (data.attributes || []).filter(a => type.getFieldType(a.name) === undefined)
+        );
+        this.features = new Features(type, data);
+        this.sections = new Sections(type, data);
+
         this.subscribeTo(this.fields, 'fields');
         this.subscribeTo(this.features, 'features');
         this.subscribeTo(this.sections, 'sections');
@@ -512,18 +564,38 @@ export class Sections extends HasUpdates<UpdateEvent> {
     private sections: Section[];
     private subscriptions: Subscription[];
 
-    constructor() {
+    constructor(type: SectionType, data: SectionData = {} as SectionData) {
         super();
         this.sections = [];
         this.subscriptions = [];
+
+        const sd: { [key: string]: SectionData } = (data.sections || []).reduce((rv, d) => {
+            rv[d.type] = d;
+            return rv;
+        }, {});
+
+        type.sectionTypes.forEach(st => {
+            if (st.required) {
+                this.add(st, sd[st.name]);
+                sd[st.name] = undefined;
+            }
+        });
+
+        Object.keys(sd).forEach(key => {
+            const d = sd[key];
+            if (d !== undefined) {
+                this.add(type.getSectionType(d.type), d);
+            }
+        });
     }
 
     list(): Section[] {
         return this.sections;
     }
 
-    add(type: SectionType, accno?: string): Section {
-        const s = new Section(type, accno);
+    add(type: SectionType, data?: SectionData): Section {
+        const s = new Section(type, data);
+
         const sectionId = {id: s.id, index: this.sections.length};
         this.sections.push(s);
         this.subscriptions.push(
@@ -547,8 +619,8 @@ export class Sections extends HasUpdates<UpdateEvent> {
 export class Submission {
     readonly root: Section;
 
-    constructor(type: SectionType, accno?: string) {
-        this.root = new Section(type, accno);
+    constructor(type: SectionType, data?: SectionData) {
+        this.root = new Section(type, data);
     }
 
     /* sectionById(id: string): Section {
@@ -559,4 +631,23 @@ export class Submission {
     sectionPath(id: string): Section[] {
         return this.root.sectionPath(id);
     }
+}
+
+export interface AttributesData {
+    attributes: { name: string, value: string }[];
+}
+
+export interface FeatureData {
+    type: string;
+    entries: AttributesData[];
+}
+
+export interface SectionData extends AttributesData {
+    tags: any[];
+    accessTags: any[];
+
+    type: string;
+    accno: string;
+    features: FeatureData[];
+    sections: SectionData[];
 }

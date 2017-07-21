@@ -1,6 +1,5 @@
-import {Section, Submission} from './submission.model';
+import {AttributesData, FeatureData, Section, SectionData, Submission} from './submission.model';
 import {SubmissionType} from './submission-type.model';
-//import * as stu from './submission-type.utils';
 
 const isDoubleArray = (array: any) => {
     if (array === undefined || !(array instanceof Array) || array.length === 0) {
@@ -24,10 +23,7 @@ const flatten = (array: any): any => {
     return array;
 };
 
-class PtEntry {
-    readonly type: string;
-    readonly tags: any[];
-    readonly accessTags: any[];
+class PtEntry implements AttributesData {
     readonly attributes: { name: string, value: string }[];
 
     constructor(obj: any = {}) {
@@ -39,9 +35,6 @@ class PtEntry {
             const attributes = ((section || {}).attributes) || [];
             return attributes.length > 0 ? attributes[0].value : accno;
         };
-        this.type = obj.type || 'Undefined';
-        this.tags = (obj.tags || []).map(t => Object.assign({}, t));
-        this.accessTags = (obj.accesTags || []).map(t => Object.assign({}, t));
         this.attributes = (obj.attributes || [])
             .map(a => Object.assign({}, a))
             .map(a => {
@@ -56,7 +49,7 @@ class PtEntry {
     }
 }
 
-class PtFeature {
+class PtFeature implements FeatureData {
     readonly type: string;
     readonly entries: PtEntry[];
 
@@ -86,8 +79,11 @@ class PtFeature {
     }
 }
 
-class PtSection extends PtEntry {
+class PtSection extends PtEntry implements SectionData {
+    readonly type: string;
     readonly accno: string;
+    readonly tags: any[];
+    readonly accessTags: any[];
     readonly features: PtFeature[];
     readonly sections: PtSection[];
 
@@ -100,7 +96,10 @@ class PtSection extends PtEntry {
                 obj.links === undefined;
         };
 
+        this.type = obj.type;
         this.accno = obj.accno;
+        this.tags = (obj.tags || []).map(t => Object.assign({}, t));
+        this.accessTags = (obj.accessTags || []).map(t => Object.assign({}, t));
 
         let subsections = obj.subsections || [];
 
@@ -140,48 +139,11 @@ export class PageTab {
     }
 
     toSubmission(type: SubmissionType): Submission {
-        let subm = new Submission(type.submType);
-        this.copySection(this.section, subm.root);
-        // TODO validate according the Type
-        return subm;
+        return new Submission(type.submType, this.section);
     }
 
     fromSubmission(subm: Submission): any {
         //TODO
         return {};
-    }
-
-
-    private copySection(ptsec: PtSection, sec: Section): void {
-        //TODO copy tags and accessTags
-        sec.accno = ptsec.accno;
-
-        const annotations = ptsec.attributes.reduce((rv, a) => {
-            const t = sec.type.getFieldType(a.name);
-            const key = (t === undefined) ? 'other' : 'fields';
-            rv[key] = rv[key] || [];
-            rv[key].push(a);
-            return rv;
-        }, {});
-
-        sec.annotations.add(annotations['other']);
-        (annotations['fields'] || []).forEach(fld => {
-            sec.fields.add(fld);
-        });
-
-        ptsec.features.forEach(ptf => {
-            const type = sec.type.getFeatureType(ptf.type);
-            const f = sec.features.add(type);
-            ptf.entries.forEach(e => {
-                console.log(e.attributes);
-                f.add(e.attributes);
-            });
-        });
-
-        ptsec.sections.forEach(pts => {
-            const type = sec.type.getSectionType(pts.type);
-            const s = sec.sections.add(type, pts.accno);
-            this.copySection(pts, s);
-        });
     }
 }

@@ -8,10 +8,10 @@ describe('PageTab', () => {
         expect(pt.section).not.toBeDefined();
     });
 
-    it("sets undefined section type to 'Undefined' value", () => {
+    it("allows undefined section type", () => {
         const pt = new PageTab({});
         expect(pt.section).toBeDefined();
-        expect(pt.section.type).toBe('Undefined');
+        expect(pt.section.type).toBeUndefined();
     });
 
     it("doesn't change the original object", () => {
@@ -203,7 +203,10 @@ describe('PageTab', () => {
             }
         });
 
-        const subm = pt.toSubmission(SubmissionType.createDefault());
+        const type = SubmissionType.createDefault();
+        const studyType = type.submType.sectionTypes[0];
+
+        const subm = pt.toSubmission(type);
         expect(subm.root).toBeDefined();
         expect(subm.root.accno).toBe("123");
         expect(subm.root.type).toBeDefined();
@@ -213,8 +216,8 @@ describe('PageTab', () => {
 
         const study = subm.root.sections.list()[0];
         expect(study.type).toBeDefined();
-        expect(study.fields.length).toBe(1);
+        expect(study.fields.length).toBe(studyType.fieldTypes.length);
         expect(study.annotations.size()).toBe(1);
-        expect(study.features.length).toBe(2);
+        expect(study.features.length).toBe(studyType.featureTypes.length);
     });
 });
