@@ -785,4 +785,4 @@ export function pageTabSample1() {
         },
         "type": "submission"
     }
-};
+}

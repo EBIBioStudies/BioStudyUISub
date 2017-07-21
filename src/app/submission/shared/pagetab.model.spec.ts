@@ -174,10 +174,6 @@ describe('PageTab', () => {
         expect(types.sort()).toEqual(['Feature1', 'Feature2', 'Link', 'File'].sort());
     });
 
-    it("resolves attribute references", () => {
-       //TODO
-    });
-
     it("can be converted into submission object", () => {
         const pt = new PageTab({
             type: "Submission",

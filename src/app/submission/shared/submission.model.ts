@@ -79,11 +79,12 @@ export class AttributeValue extends HasUpdates<UpdateEvent> {
 }
 
 export class ValueMap extends HasUpdates<UpdateEvent> {
-    private valueMap: { [key: string]: AttributeValue } = {};
-    private subscriptionMap: { [key: string]: Subscription } = {};
+    private valueMap: Map<string, AttributeValue> = new Map();
+    private subscriptionMap: Map<string, Subscription> = new Map();
 
-    private constructor() {
+    constructor(keys?: string[]) {
         super();
+        (keys || []).forEach(key => this.add(key));
     }
 
     valueFor(key: string): AttributeValue {
@@ -91,36 +92,33 @@ export class ValueMap extends HasUpdates<UpdateEvent> {
     }
 
     add(key: string, value?: string): void {
-        if (key in this.valueMap) {
+        if (this.valueMap.has(key)) {
             console.warn(`adding multiple values for a key:${key}`);
             return;
         }
         let v = new AttributeValue(value);
-        this.valueMap[key] = v;
-        this.subscriptionMap[key] = v.updates()
-            .subscribe(m => {
+        this.valueMap.set(key, v);
+        this.subscriptionMap.set(key,
+            v.updates().subscribe(m => {
                 this.notify(new UpdateEvent('value_update', {key: key}, m));
-            });
+            }));
     }
 
     remove(key: string): void {
-        if (key in this.valueMap) {
-            this.subscriptionMap[key].unsubscribe();
-            this.subscriptionMap[key] = undefined;
-            this.valueMap[key] = undefined;
+        if (this.valueMap.has(key)) {
+            this.subscriptionMap.get(key).unsubscribe();
+            this.subscriptionMap.delete(key);
+            this.valueMap.delete(key);
         }
         console.warn('removing non-existent value for a key', key);
     }
 
-    //TODO: should we filter undefined values in the results?
-    list(keys: string[]): AttributeValue[] {
-        return keys.map(key => this.valueMap[key]);
+    values(keys?: string[]): AttributeValue[] {
+        return (keys || this.keys()).map(key => this.valueMap.get(key));
     }
 
-    static create(keys: string[] = []): ValueMap {
-        const vm = new ValueMap();
-        keys.forEach(key => vm.add(key));
-        return vm;
+    keys(): string[] {
+        return Array.from(this.valueMap.keys());
     }
 }
 
@@ -197,7 +195,7 @@ export class Rows extends HasUpdates<UpdateEvent> {
     }
 
     add(keys: string[]): ValueMap {
-        let row = ValueMap.create(keys);
+        let row = new ValueMap(keys);
         let rowIndex = {index: this.rows.length};
         this.rows.push(row);
         this.subscriptions.push(

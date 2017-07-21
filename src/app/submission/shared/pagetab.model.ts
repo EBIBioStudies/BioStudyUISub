@@ -27,21 +27,13 @@ class PtEntry implements AttributesData {
     readonly attributes: { name: string, value: string }[];
 
     constructor(obj: any = {}) {
-        const resolveRef = (accno: string) => {
-            const section = (obj.subsections || []).find(s => s.accno === accno);
-            if (section === undefined) {
-                console.error(`Can't resolve reference ${accno}`);
-            }
-            const attributes = ((section || {}).attributes) || [];
-            return attributes.length > 0 ? attributes[0].value : accno;
-        };
         this.attributes = (obj.attributes || [])
             .map(a => Object.assign({}, a))
             .map(a => {
                 if (a.isReference === true) {
                     return {
                         name: a.name,
-                        value: resolveRef(a.value)
+                        value: `ref:${a.value}`
                     }
                 }
                 return a;
@@ -101,7 +93,7 @@ class PtSection extends PtEntry implements SectionData {
         this.tags = (obj.tags || []).map(t => Object.assign({}, t));
         this.accessTags = (obj.accessTags || []).map(t => Object.assign({}, t));
 
-        let subsections = obj.subsections || [];
+        const subsections = (obj.subsections || []).slice();
 
         let featureMap = subsections
             .filter(s => isFeature(s))
