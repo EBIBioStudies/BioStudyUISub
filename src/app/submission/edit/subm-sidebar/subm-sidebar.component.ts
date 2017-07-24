@@ -17,7 +17,6 @@ import {
 import {SubmAddDialogComponent} from '../subm-add/subm-add.component';
 import {SubmAddEvent} from '../subm-add/subm-add-event.model';
 import {SectionType} from '../../shared/submission-type.model';
-import * as stu from '../../shared/submission-type.utils';
 
 @Component({
     selector: 'subm-sidebar',
@@ -77,21 +76,16 @@ export class SubmSideBarComponent implements OnChanges {
     }
 
     onAdd(ev: SubmAddEvent) {
-        if (ev.itemType === 'SingleAttribute') {
-            const fieldType = this.sectionType.getFieldType(ev.name);
-            stu.addField(this.section, fieldType);
-            return;
-        }
         if (ev.itemType === 'Section') {
             const sectionType = this.sectionType.getSectionType(ev.name);
-            stu.addSection(this.section, sectionType);
+            this.section.sections.add(sectionType);
             return;
         }
         const idx = ['AttributeList', 'AttributeGrid'].indexOf(ev.itemType);
         if (idx > -1) {
             const singleRow = idx === 0;
-            const featureType = this.sectionType.getFeatureType(ev.name, singleRow);
-            stu.addFeature(this.section, featureType);
+            const featureType = this.sectionType.getFeatureType(ev.name);
+            this.section.features.add(featureType);
         }
     }
 

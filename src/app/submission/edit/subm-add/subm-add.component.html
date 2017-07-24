@@ -8,7 +8,6 @@
                         <div class="col-xs-8">
                             <select class="form-control"
                                     [(ngModel)]="itemType">
-                                <option value="SingleAttribute">Single Attribute</option>
                                 <option value="AttributeList">Attribute List</option>
                                 <option value="AttributeGrid">Attribute Grid</option>
                                 <option value="Section">Section</option>
@@ -22,25 +21,6 @@
                 </div>
             </div>
             <div class="modal-body">
-                <!--subm-add-form></subm-add-form-->
-                <div *ngIf="itemType === 'SingleAttribute'">
-                    <div class="form-group">
-                        <label class="control-label">Name:</label>
-                        <input type="text" class="form-control"
-                               placeholder="Enter a name"
-                               [(ngModel)]="name"
-                               [required]="true">
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Type:</label>
-                        <select class="form-control" id="sel1">
-                            <option>text</option>
-                            <option>textarea</option>
-                            <option>date</option>
-                            <option>file</option>
-                        </select>
-                    </div>
-                </div>
                 <div *ngIf="itemType === 'AttributeList' || itemType === 'AttributeGrid' || itemType == 'Section'">
                     <div class="form-group">
                         <label class="control-label">Name:</label>

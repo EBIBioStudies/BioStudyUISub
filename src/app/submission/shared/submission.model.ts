@@ -4,7 +4,7 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/from';
 import {
     SectionType,
-    FeatureType
+    FeatureType, FieldValueType, FieldType
 } from './submission-type.model';
 
 const nextId = (function () {
@@ -399,7 +399,7 @@ export class Features extends HasUpdates<UpdateEvent> {
         return this.order.map(k => this.features[k]);
     }
 
-    add(type: FeatureType, data: FeatureData): Feature {
+    add(type: FeatureType, data?: FeatureData): Feature {
         if (this.features[type.name] !== undefined) {
             console.warn(`Feature with name ${type.name} already exists`);
             return;
@@ -427,20 +427,18 @@ export class Features extends HasUpdates<UpdateEvent> {
 
 export class Field extends HasUpdates<UpdateEvent> {
     readonly id: string;
+    readonly name: string;
+    readonly valueType: FieldValueType;
 
-    constructor(private _name: string,
-                private _value: string = '') {
+    private _value: string;
+
+    constructor(type: FieldType,
+                value: string = '') {
         super();
         this.id = `field_${nextId()}`;
-    }
-
-    get name(): string {
-        return this._name;
-    }
-
-    set name(v: string) {
-        this._name = v;
-        this.notify(new UpdateEvent('name', v));
+        this.name = type.name;
+        this.valueType = type.valueType;
+        this._value = value;
     }
 
     get value(): string {
@@ -469,7 +467,7 @@ export class Fields extends HasUpdates<UpdateEvent> {
         }, {});
 
         type.fieldTypes.forEach(ft => {
-            this.add(ft.name, vals[ft.name] || '');
+            this.add(ft, vals[ft.name] || '');
         });
     }
 
@@ -481,8 +479,8 @@ export class Fields extends HasUpdates<UpdateEvent> {
         return this.fields.length;
     }
 
-    private add(name: string, value?: string): void {
-        const field = new Field(name, value);
+    private add(type: FieldType, value?: string): void {
+        const field = new Field(type, value);
         const fieldId = {id: field.id, index: this.fields.length};
         this.fields.push(field);
 

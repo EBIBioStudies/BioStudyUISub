@@ -56,7 +56,11 @@
                            class="list-group-item"
                            (click)="onSectionClick(section)">
                             <!-- TODO: [ngClass]="{'list-group-item-danger': ...}" -->
-                            {{section.typeName}}: [accno={{section.accno || ''}}] <i class="fa fa-angle-double-right"></i>
+                            {{section.typeName}}
+                            <div *ngIf="section.accno" style="display: inline-block;">
+                                : {{section.accno}}
+                            </div>
+                            <i class="fa fa-angle-double-right"></i>
                         </a>
                     </div>
 

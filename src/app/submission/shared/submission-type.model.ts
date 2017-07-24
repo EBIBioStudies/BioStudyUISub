@@ -30,14 +30,16 @@ class BaseType {
 /* Fields are always required. User can't add/change/delete fields. Only changing its value is allowed.
  * In PageTab it's a selected by name attribute from an 'attributes' section.
  */
+export type FieldValueType = 'text' | 'textblob' | 'date';
+
 export class FieldType extends BaseType {
-    readonly valueType: string;
+    readonly valueType: FieldValueType;
     readonly minlength: number;
     readonly maxlength: number;
 
     constructor(name, obj: any = {}) {
         super(name, false);
-        this.valueType = obj.valueType || 'textline';
+        this.valueType = obj.valueType || 'text';
         this.minlength = obj.minlength || -1;
         this.maxlength = obj.maxlength || -1;
     }
