@@ -149,17 +149,18 @@ export class Columns extends HasUpdates<UpdateEvent> {
     remove(id: string): boolean {
         const index = this.columns.findIndex(attr => attr.id === id);
         if (index < 0) {
-            console.error(`Column index out of bounds: ${index}`);
+            console.warn(`Column index out of bounds: ${index}`);
             return false;
         }
         if (this.columns[index].required) {
-            console.error(`Can't remove required column [index: ${index}`);
+            console.warn(`Can't remove required column [index: ${index}`);
             return false;
         }
         this.columns.splice(index, 1);
         this.subscriptions[index].unsubscribe();
         this.subscriptions.splice(index, 1);
         this.notify(new UpdateEvent('column_remove', {id: id, index: index}));
+        return true;
     }
 
     at(index: number): Attribute {
@@ -329,10 +330,11 @@ export class Feature extends HasUpdates<UpdateEvent> {
         });
     }
 
-    addColumn(name?: string, required?: boolean): void {
+    addColumn(name?: string, required?: boolean): Attribute {
         const col = new Attribute(name, required);
         this._rows.addKey(col.id);
         this._columns.add(col);
+        return col;
     }
 
     removeColumn(id: string): void {
@@ -343,7 +345,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
 
     addRow(): ValueMap {
         if (this.singleRow && this._rows.size() > 0) {
-            console.error(`addRow: The feature [type=${this.type.name}] can't have more than one row`);
+            console.warn(`addRow: The feature [type=${this.type.name}] can't have more than one row`);
             return;
         }
         return this._rows.add(this._columns.keys());
@@ -351,7 +353,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
 
     removeRowAt(index: number): void {
         if (this.singleRow) {
-            console.error(`removeRowAt: The feature [type=${this.type.name}] can't have less than one row`);
+            console.warn(`removeRowAt: The feature [type=${this.type.name}] can't have less than one row`);
             return;
         }
         this._rows.removeAt(index);
@@ -399,7 +401,7 @@ export class Features extends HasUpdates<UpdateEvent> {
 
     add(type: FeatureType, data: FeatureData): Feature {
         if (this.features[type.name] !== undefined) {
-            console.error(`Feature with name ${type.name} already exists`);
+            console.warn(`Feature with name ${type.name} already exists`);
             return;
         }
         const feature = new Feature(type, data);

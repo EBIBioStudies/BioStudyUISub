@@ -7,7 +7,7 @@ const defined = (val: string) => {
 class BaseType {
     constructor(private _name: string,
                 private _canModify: boolean) {
-        if (!defined(this._name)) {
+        if (!defined(_name)) {
             throw Error("Type name is undefined");
         }
     }
@@ -60,7 +60,7 @@ export class FeatureType extends BaseType {
         this.title = other.title || 'Add ' + this.name;
         this.description = other.description || '';
         this.columnTypes = (other.columnTypes || [])
-            .map(c => new ColumnType(c));
+            .map(c => new ColumnType(c.name, c));
     }
 
     getColumnTemplate(name: string): ColumnType {
@@ -68,8 +68,8 @@ export class FeatureType extends BaseType {
             || ColumnType.createDefault(name);
     }
 
-    static createDefault(name: string, singleRow: boolean): FeatureType {
-        return new FeatureType(name, singleRow);
+    static createDefault(name: string, singleRow?: boolean): FeatureType {
+        return new FeatureType(name, singleRow === true);
     }
 }
 
