@@ -88,7 +88,7 @@ export class ValueMap extends HasUpdates<UpdateEvent> {
     }
 
     valueFor(key: string): AttributeValue {
-        return this.valueMap[key];
+        return this.valueMap.get(key);
     }
 
     add(key: string, value?: string): void {
@@ -105,12 +105,13 @@ export class ValueMap extends HasUpdates<UpdateEvent> {
     }
 
     remove(key: string): void {
-        if (this.valueMap.has(key)) {
-            this.subscriptionMap.get(key).unsubscribe();
-            this.subscriptionMap.delete(key);
-            this.valueMap.delete(key);
+        if (!this.valueMap.has(key)) {
+            console.warn(`remove: the key '${key}' does not exist in the map`);
+            return;
         }
-        console.warn('removing non-existent value for a key', key);
+        this.subscriptionMap.get(key).unsubscribe();
+        this.subscriptionMap.delete(key);
+        this.valueMap.delete(key);
     }
 
     values(keys?: string[]): AttributeValue[] {
