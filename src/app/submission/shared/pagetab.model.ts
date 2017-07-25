@@ -30,13 +30,11 @@ class PtEntry implements AttributesData {
         this.attributes = (obj.attributes || [])
             .map(a => Object.assign({}, a))
             .map(a => {
-                if (a.isReference === true) {
-                    return {
-                        name: a.name,
-                        value: `ref:${a.value}`
-                    }
+                return {
+                    name: a.name,
+                    value: a.value,
+                    reference: a.isReference === true
                 }
-                return a;
             });
     }
 }
