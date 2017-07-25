@@ -3,8 +3,8 @@
      *ngIf="feature.size() > 0">
 
     <div class="panel-heading clearfix">
-        <h4 class="panel-title pull-left">{{feature.name}}&nbsp;<span class="badge">{{feature.size()}}</span>
-            <slide-out-tip tip="{{feature.name}}"></slide-out-tip>
+        <h4 class="panel-title pull-left">{{feature.type.name}}&nbsp;<span class="badge">{{feature.size()}}</span>
+            <slide-out-tip tip="{{feature.type.description}}"></slide-out-tip>
         </h4>
         <div class="btn-toolbar pull-right" role="toolbar" *ngIf="!readonly">
             <div class="btn-group" dropdown>

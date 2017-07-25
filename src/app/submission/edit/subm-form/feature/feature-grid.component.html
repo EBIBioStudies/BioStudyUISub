@@ -15,7 +15,7 @@
             <inline-edit
                     [(ngModel)]="column.name"
                     emptyValue="New Column"
-                    [required]="featureForm.columnTmpl(column.id).required"
+                    [required]="featureForm.columnType(column.id).required"
                     (remove)="onColumnRemove(column)"
                     [formControl]="featureForm.columnControl(column.id)"></inline-edit>
         </div>
@@ -35,7 +35,7 @@
         <div class="col-xs-3 col-md-2" *ngFor="let column of columns">
             <div [ngClass]="{'has-error' : false}">
                 <feature-value
-                        [type]="column.type"
+                        [type]="column.valueType"
                         [(ngModel)]="row.valueFor(column.id).value"
                         [readonly]="readonly"
                         [formControl]="featureForm.rowValueControl(idx, column.id)">

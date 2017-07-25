@@ -91,23 +91,28 @@ export class SubmSideBarComponent implements OnChanges {
 
     onItemsChange(): void {
         const items = [];
+        items.push(this.createItem(this.section.annotations));
         this.section.features.list().forEach(
-            (f: Feature) => items.push({
-                feature: f,
-                icon: 'fa-file-o',
-                onClick: (ev) => {
-                    if (f.singleRow) {
-                        f.addColumn();
-                        return;
-                    }
-                    if (f.colSize() === 0) {
-                        f.addColumn();
-                    }
-                    f.addRow();
-                }
-            })
+            (f: Feature) => items.push(this.createItem(f))
         );
         this.items = items;
+    }
+
+    private createItem(f: Feature): any {
+        return {
+            feature: f,
+            icon: 'fa-file-o',
+            onClick: (ev) => {
+                if (f.singleRow) {
+                    f.addColumn();
+                    return;
+                }
+                if (f.colSize() === 0) {
+                    f.addColumn();
+                }
+                f.addRow();
+            }
+        };
     }
 
 }

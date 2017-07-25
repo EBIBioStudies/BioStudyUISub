@@ -19,7 +19,7 @@
             <div class="form-group">
                 <div class="input-group">
                     <feature-value
-                            [type]="column.type"
+                            [type]="column.valueType"
                             [(ngModel)]="feature.rows[0].valueFor(column.id).value"
                             [readonly]="readonly"
                             [formControl]="featureForm.rowValueControl(0,column.id)">

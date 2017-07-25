@@ -29,7 +29,7 @@ export class SectionForm {
     private _features: Feature[] = [];
 
     private subscriptions: Subscription[] = [];
-    private featureForms: { [key: string]: FeatureForm } = {};
+    private featureForms: Map<string, FeatureForm> = new Map();
 
     constructor(section: Section) {
         this.section = section;
@@ -39,16 +39,8 @@ export class SectionForm {
             features: new FormGroup({})
         });
 
-        this.updateFieldControls();
+        this.createFieldControls();
         this.updateFeatureForms();
-
-        this.subscriptions.push(
-            this.section.fields
-                .updates()
-                .filter(ue => (['field_add', 'field_remove'].indexOf(ue.name) > -1))
-                .subscribe(ue => {
-                    this.updateFieldControls(ue);
-                }));
 
         this.subscriptions.push(
             this.section.features
@@ -58,11 +50,10 @@ export class SectionForm {
                     this.updateFeatureForms(ue);
                 }));
 
-        /* this.form.valueChanges.subscribe(
-         data =>
-         this.onValueChanged(data)
-         );
-         this.onValueChanged();*/
+        this.fieldsFormGroup.valueChanges.subscribe(
+            data => this.onFieldValueChanged(data)
+        );
+        this.onFieldValueChanged();
     }
 
     get fields(): Field[] {
@@ -78,47 +69,52 @@ export class SectionForm {
     }
 
     featureForm(featureId: string): FeatureForm {
-        return this.featureForms[featureId];
+        return this.featureForms.get(featureId);
     }
 
-    onValueChanged(data ?: any): void {
+    onFieldValueChanged(data ?: any): void {
         if (!this.form) {
             return;
         }
-        const form = this.form;
+        const form = this.fieldsFormGroup;
 
-        for (const field in this.formErrors) {
-            this.formErrors[field] = '';
-            const control = form.get(field);
+        this.fields.forEach(field => {
+            this.formErrors[field.id] = '';
+            const control = form.get(field.id);
             if (control && control.dirty && !control.valid) {
-                for (const key in control.errors) {
-                    this.formErrors[field] += this.validationMessage(key);
-                }
+                Object.keys(control.errors).forEach(key => {
+                    this.formErrors[field.id] += this.fieldErrorMessage(field, key);
+                });
             }
-        }
+        });
     }
 
-    validationMessage(key: string): string {
-        //todo make it dependable from a field id as well
-        const m = {
-            'required': 'the value is required',
-            'minlength': 'must be at least 50 characters long'
-        };
-        return m[key] || key;
+    fieldErrorMessage(field: Field, key: string): string {
+        if (key === 'required') {
+            return 'the value is required';
+        }
+        if (key === 'minlength') {
+            const type = this.section.type.getFieldType(field.name);
+            return `must be at least  ${type.minlength} characters long`;
+        }
+        if (key === 'maxlength') {
+            const type = this.section.type.getFieldType(field.name);
+            return `must be no more than ${type.maxlength} characters long`;
+        }
+        return key;
     }
 
     valid(): boolean {
-        //todo
-        return false;
+        return this.form.valid;
     }
 
     destroy() {
         this.subscriptions.forEach(s => s.unsubscribe());
         this.subscriptions = [];
 
-        for (let key in this.featureForms) {
-            this.featureForms[key].destroy();
-        }
+        Array.from(this.featureForms.values()).forEach(
+            form => form.destroy()
+        )
     }
 
     private get fieldsFormGroup(): FormGroup {
@@ -127,10 +123,6 @@ export class SectionForm {
 
     private get featuresFormGroup(): FormGroup {
         return <FormGroup>this.form.get('features');
-    }
-
-    private removeFieldControl(fieldId: string): void {
-        this.fieldsFormGroup.removeControl(fieldId);
     }
 
     private addFieldControl(field: Field): void {
@@ -144,22 +136,11 @@ export class SectionForm {
             validators.push(Validators.maxLength(type.maxlength));
         }
         this.fieldsFormGroup.addControl(field.id, new FormControl(field.value, validators));
-        this.formErrors[field.id] = '';
     }
 
-    private updateFieldControls(ue?: UpdateEvent): void {
+    private createFieldControls(): void {
         this._fields = this.section.fields.list().slice(0);
-        if (ue && ue.name === 'field_remove') {
-            this.removeFieldControl(ue.value.id);
-            return;
-        }
-
-        let toAdd = this.fields;
-        if (ue && ue.name === 'field_add') {
-            toAdd = [this.fields[ue.value.index]];
-        }
-
-        toAdd.forEach(
+        this._fields.forEach(
             field => {
                 this.addFieldControl(field);
             }
@@ -167,19 +148,20 @@ export class SectionForm {
     }
 
     private removeFeatureForm(featureId: string): void {
-        this.featureForms[featureId].destroy();
-        this.featureForms[featureId] = undefined;
+        this.featureForms.get(featureId).destroy();
+        this.featureForms.delete(featureId);
         this.featuresFormGroup.removeControl(featureId);
     }
 
     private addFeatureForm(feature: Feature) {
         const featureForm = new FeatureForm(feature);
-        this.featureForms[feature.id] = featureForm;
+        this.featureForms.set(feature.id, featureForm);
         this.featuresFormGroup.addControl(feature.id, featureForm.form);
     }
 
     private updateFeatureForms(ue?: UpdateEvent): void {
-        this._features = this.section.features.list().slice(0);
+        this._features = [this.section.annotations].concat(this.section.features.list().slice(0));
+
         if (ue && ue.name === 'feature_remove') {
             this.removeFeatureForm(ue.value.id);
             return;
@@ -187,7 +169,7 @@ export class SectionForm {
 
         let toAdd = this.features;
         if (ue && ue.name === 'feature_add') {
-            toAdd = [this.features[ue.value.index]];
+            toAdd = [this.features[ue.value.index + 1]];
         }
 
         toAdd.forEach(
@@ -239,30 +221,44 @@ export class FeatureForm {
         return this._rows;
     }
 
-    columnControl(columnId: string): FormControl {
-        return <FormControl>this.columnsFormGroup.get(columnId);
+    columnControl(colId: string): FormControl {
+        return <FormControl>this.columnsFormGroup.get(colId);
     }
 
-    rowValueControl(rowIndex: number, columnId: string): FormControl {
+    rowValueControl(rowIndex: number, colId: string): FormControl {
         const fg = this.rowsFormArray.at(rowIndex);
-        return <FormControl>fg.get(columnId);
+        return <FormControl>fg.get(colId);
     }
 
-    columnTmpl(columnId: string): ColumnType {
-        const column = this.columns.find(c => c.id === columnId);
-        return this.feature.type.getColumnTemplate(column.name);
+    columnType(colId: string): ColumnType {
+        const column = this.columns.find(c => c.id === colId);
+        return this.feature.type.getColumnType(column.name);
     }
 
-    private removeColumnControl(columnId: string) {
-        //todo
+    destroy() {
+        this.subscriptions.forEach(s => s.unsubscribe());
+        this.subscriptions = [];
     }
 
-    private removeRowArray(index: number) {
-        //todo
+    private get columnsFormGroup(): FormGroup {
+        return <FormGroup>this.form.get('columns');
+    }
+
+    private get rowsFormArray(): FormArray {
+        return <FormArray>this.form.get('rows');
+    }
+
+    private removeColumnControl(colId: string) {
+        this.columnsFormGroup.removeControl(colId);
+        this.rows.forEach(
+            (row, rowIndex) => {
+                (<FormGroup>this.rowsFormArray.at(rowIndex)).removeControl(colId);
+            }
+        );
     }
 
     private addColumnControl(column: Attribute) {
-        const t = this.feature.type.getColumnTemplate(column.name);
+        const t = this.feature.type.getColumnType(column.name);
         const colValidators = [Validators.required];
         this.columnsFormGroup.addControl(column.id, new FormControl(column.name, colValidators));
         this.rows.forEach(
@@ -273,13 +269,17 @@ export class FeatureForm {
         );
     }
 
+    private removeRowArray(index: number) {
+        this.rowsFormArray.removeAt(index);
+    }
+
     private addRowArray(row: ValueMap) {
         const formGroup = new FormGroup({});
         this.rowsFormArray.push(formGroup);
 
         this.columns.forEach(
             column => {
-                const t = this.feature.type.getColumnTemplate(column.name);
+                const t = this.feature.type.getColumnType(column.name);
                 this.addRowValueControl(formGroup, column.id, row, t);
             });
     }
@@ -330,19 +330,6 @@ export class FeatureForm {
                 this.addRowArray(row);
             }
         );
-    }
-
-    private get columnsFormGroup(): FormGroup {
-        return <FormGroup>this.form.get('columns');
-    }
-
-    private get rowsFormArray(): FormArray {
-        return <FormArray>this.form.get('rows');
-    }
-
-    destroy() {
-        this.subscriptions.forEach(s => s.unsubscribe());
-        this.subscriptions = [];
     }
 }
 

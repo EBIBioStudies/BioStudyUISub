@@ -60,7 +60,6 @@ export const DefaultTemplate = {
                             "title": "Add Contacts",
                             "description": "Include contact information for one or more authors of the Study",
                             "required": true,
-                            "minrows": 1,
                             "columnTypes": [
                                 {
                                     "name": "Name",
@@ -103,7 +102,6 @@ export const DefaultTemplate = {
                             "name": "Publication",
                             "title": "Add Publications",
                             "description": "Search by PubMed identifier, or add information manually if not in PubMed",
-                            "required": true,
                             "columnTypes": [
                                 {
                                     "name": "DOI",
@@ -144,7 +142,6 @@ export const DefaultTemplate = {
                             "name": "Link",
                             "title": "Add Links",
                             "description": "Provide additional relevant information on the web",
-                            "required": true,
                             "columnTypes": [
                                 {
                                     "name": "URL",
@@ -166,7 +163,6 @@ export const DefaultTemplate = {
                             "name": "File",
                             "title": "Add Files",
                             "description": "Include Study data, describe the purpose of each file",
-                            "required": true,
                             "columnTypes": [
                                 {
                                     "name": "Path",

@@ -4,7 +4,9 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/from';
 import {
     SectionType,
-    FeatureType, FieldValueType, FieldType
+    FeatureType,
+    ValueType,
+    FieldType
 } from './submission-type.model';
 
 const nextId = (function () {
@@ -40,12 +42,14 @@ export class UpdateEvent {
 export class Attribute extends HasUpdates<UpdateEvent> {
     readonly id: string;
     readonly required: boolean;
+    readonly valueType: ValueType;
 
     private _name: string;
 
-    constructor(name: string = '', required: boolean = false) {
+    constructor(name: string = '', required: boolean = false, valueType: ValueType = 'text') {
         super();
         this.required = required;
+        this.valueType = valueType;
         this._name = name;
         this.id = `attr_${nextId()}`;
     }
@@ -264,6 +268,10 @@ export class Feature extends HasUpdates<UpdateEvent> {
             this.add(entry.attributes);
         });
 
+        if (type.required && this.rowSize() === 0) {
+            this.addRow();
+        }
+
         this._columns.updates()
             .subscribe(m => {
                 this.notify(new UpdateEvent('columns_update', {id: this.id}, m));
@@ -428,7 +436,7 @@ export class Features extends HasUpdates<UpdateEvent> {
 export class Field extends HasUpdates<UpdateEvent> {
     readonly id: string;
     readonly name: string;
-    readonly valueType: FieldValueType;
+    readonly valueType: ValueType;
 
     private _value: string;
 

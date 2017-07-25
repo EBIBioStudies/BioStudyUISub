@@ -8,7 +8,7 @@ class BaseType {
     constructor(private _name: string,
                 private _canModify: boolean) {
         if (!defined(_name)) {
-            throw Error("Type name is undefined");
+            throw Error(`Type name is undefined ${_name}`);
         }
     }
 
@@ -30,10 +30,10 @@ class BaseType {
 /* Fields are always required. User can't add/change/delete fields. Only changing its value is allowed.
  * In PageTab it's a selected by name attribute from an 'attributes' section.
  */
-export type FieldValueType = 'text' | 'textblob' | 'date';
+export type ValueType = 'text' | 'textblob' | 'date';
 
 export class FieldType extends BaseType {
-    readonly valueType: FieldValueType;
+    readonly valueType: ValueType;
     readonly minlength: number;
     readonly maxlength: number;
 
@@ -55,7 +55,7 @@ export class FeatureType extends BaseType {
 
     constructor(name: string, singleRow: boolean, other?: any) {
         super(name, other === undefined);
-        this.singleRow = singleRow;
+        this.singleRow = singleRow === true;
 
         other = other || {};
         this.required = other.required === true;
@@ -65,13 +65,13 @@ export class FeatureType extends BaseType {
             .map(c => new ColumnType(c.name, c));
     }
 
-    getColumnTemplate(name: string): ColumnType {
+    getColumnType(name: string): ColumnType {
         return this.columnTypes.find(c => c.name === name)
             || ColumnType.createDefault(name);
     }
 
     static createDefault(name: string, singleRow?: boolean): FeatureType {
-        return new FeatureType(name, singleRow === true);
+        return new FeatureType(name || 'DefaultFeature', singleRow === true);
     }
 }
 
@@ -83,18 +83,18 @@ export class AnnotationsType extends FeatureType {
 
 export class ColumnType extends BaseType {
     readonly required: boolean;
-    readonly valueType: string;
+    readonly valueType: ValueType;
 
     constructor(name: string, other?: any) {
         super(name, other === undefined);
 
         other = other || {};
-        this.valueType = other.valueType || 'textline';
+        this.valueType = other.valueType || 'text';
         this.required = other.required === true;
     }
 
     static createDefault(name: string): ColumnType {
-        return new ColumnType(name);
+        return new ColumnType(name || 'DefaultColumn');
     }
 }
 
@@ -110,11 +110,11 @@ export class SectionType extends BaseType {
 
         other = other || {};
         this.required = other.required === true;
-        this.annotationsType = other.annotationsType || new AnnotationsType();
+        this.annotationsType = new AnnotationsType(other.annotationsType);
         this.fieldTypes = (other.fieldTypes || [])
             .map(f => new FieldType(f.name, f));
         this.featureTypes = (other.featureTypes || [])
-            .map(f => new FeatureType(f.name, f));
+            .map(f => new FeatureType(f.name, f.singleRow, f));
         this.sectionTypes = (other.sectionTypes || [])
             .map(s => new SectionType(s.name, s));
     }
@@ -148,7 +148,7 @@ export class SectionType extends BaseType {
     }
 
     static createDefault(name: string): SectionType {
-        return new SectionType(name);
+        return new SectionType(name || 'DefaultSection');
     }
 }
 
