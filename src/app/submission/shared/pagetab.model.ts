@@ -1,5 +1,6 @@
 import {AttributesData, FeatureData, Section, SectionData, Submission} from './submission.model';
 import {SubmissionType} from './submission-type.model';
+import {mergeIntoContacts} from './authors-affiliations.helper';
 
 const isDoubleArray = (array: any) => {
     if (array === undefined || !(array instanceof Array) || array.length === 0) {
@@ -28,13 +29,13 @@ class PtEntry implements AttributesData {
 
     constructor(obj: any = {}) {
         this.attributes = (obj.attributes || [])
-            .map(a => Object.assign({}, a))
             .map(a => {
-                return {
-                    name: a.name,
-                    value: a.value,
-                    reference: a.isReference === true
-                }
+                return a.isReference ?
+                    {
+                        name: a.name,
+                        value: a.value,
+                        isRef: a.isReference === true
+                    } : a;
             });
     }
 }
@@ -101,7 +102,9 @@ class PtSection extends PtEntry implements SectionData {
                 return rv;
             }, {});
 
-        let features = Object.keys(featureMap).map(k => new PtFeature(k, featureMap[k]));
+        let features = Object
+            .keys(featureMap)
+            .map(k => new PtFeature(k, featureMap[k]));
         if (obj.files !== undefined) {
             features.push(PtFeature.file(obj.files));
         }
@@ -124,16 +127,28 @@ export class PageTab {
             const newObj = Object.assign({}, obj);
             newObj.subsections = (obj.subsections || []).slice();
             newObj.subsections = newObj.subsections.concat((obj.section ? [obj.section] : []));
-            this.section = new PtSection(newObj);
+            this.section = new PtSection(mergeIntoContacts(newObj));
         }
     }
 
     toSubmission(type: SubmissionType): Submission {
+        console.log(this.section);
         return new Submission(type.submType, this.section);
     }
 
-    fromSubmission(subm: Submission): any {
-        //TODO
+    static fromSubmission(subm: Submission): any {
+        const root = subm.root;
+        const pt: any = {
+            type: root.typeName,
+            accno: root.accno
+        };
+        if (root.sections.length > 0) {
+            pt.section = PageTab.fromSection(root.sections.list()[0]);
+        }
+        return pt;
+    }
+
+    private static fromSection(sec: Section): any {
         return {};
     }
 }
