@@ -1,28 +1,7 @@
 import {AttributesData, FeatureData, Section, SectionData, Submission} from './submission.model';
 import {SubmissionType} from './submission-type.model';
 import {mergeIntoContacts} from './authors-affiliations.helper';
-
-const isDoubleArray = (array: any) => {
-    if (array === undefined || !(array instanceof Array) || array.length === 0) {
-        return false;
-    }
-    return array[0] instanceof Array;
-};
-
-const flattenArrays = (obj: any): any => {
-    const newObj = Object.assign({}, obj);
-    newObj.subsections = flatten(obj.subsections);
-    newObj.files = flatten(obj.files);
-    newObj.links = flatten(obj.links);
-    return newObj;
-};
-
-const flatten = (array: any): any => {
-    if (isDoubleArray(array)) {
-        return [].concat.apply([], array);
-    }
-    return array;
-};
+import {flattenDoubleArrays} from './pagetab-doublearrays.helper';
 
 class PtEntry implements AttributesData {
     readonly attributes: { name: string, value: string }[];
@@ -79,7 +58,7 @@ class PtSection extends PtEntry implements SectionData {
     readonly sections: PtSection[];
 
     constructor(obj: any) {
-        super((obj = flattenArrays(obj)));
+        super(obj);
 
         const isFeature = (obj: any) => {
             return obj.subsections === undefined &&
@@ -124,10 +103,11 @@ export class PageTab {
 
     constructor(obj?: any) {
         if (obj !== undefined) {
-            const newObj = Object.assign({}, obj);
+            let newObj = Object.assign({}, obj);
             newObj.subsections = (obj.subsections || []).slice();
             newObj.subsections = newObj.subsections.concat((obj.section ? [obj.section] : []));
-            this.section = new PtSection(mergeIntoContacts(newObj));
+            newObj = mergeIntoContacts(flattenDoubleArrays(newObj));
+            this.section = new PtSection(newObj);
         }
     }
 

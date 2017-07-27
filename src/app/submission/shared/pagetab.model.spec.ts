@@ -130,50 +130,6 @@ describe('PageTab', () => {
         ]);
     });
 
-    it("flattens double arrays", () => {
-        const pt = new PageTab({
-            type: "Study",
-            files: [[
-                {
-                    path: "file1"
-                },
-                {
-                    path: "file2"
-                }
-            ]],
-            links: [[
-                {
-                    url: "url1"
-                },
-                {
-                    url: "url2"
-                }
-            ]],
-            subsections: [[
-                {
-                    type: "Feature1"
-                },
-                {
-                    type: "Feature1"
-                }
-            ], [
-                {
-                    type: "Feature2"
-                },
-                {
-                    type: "Feature2"
-                }
-            ]]
-        });
-
-        expect(pt.section).toBeDefined();
-        expect(pt.section.type).toBe('Study');
-        expect(pt.section.features.length).toEqual(4);
-
-        const types = pt.section.features.map(f => f.type);
-        expect(types.sort()).toEqual(['Feature1', 'Feature2', 'Link', 'File'].sort());
-    });
-
     it("can be converted into submission object", () => {
         const pt = new PageTab({
             type: "Submission",
