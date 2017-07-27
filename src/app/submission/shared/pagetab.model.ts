@@ -1,6 +1,6 @@
-import {AttributesData, FeatureData, Section, SectionData, Submission} from './submission.model';
+import {AttributesData, FeatureData, Section, SectionData, Submission, SubmissionData} from './submission.model';
 import {SubmissionType} from './submission-type.model';
-import {mergeIntoContacts} from './authors-affiliations.helper';
+import {convertAuthorsToContacts} from './authors-affiliations.helper';
 import {flattenDoubleArrays} from './pagetab-doublearrays.helper';
 
 class PtEntry implements AttributesData {
@@ -98,22 +98,23 @@ class PtSection extends PtEntry implements SectionData {
     }
 }
 
-export class PageTab {
+export class PageTab implements SubmissionData {
+    readonly accno: string;
     readonly section: PtSection;
 
-    constructor(obj?: any) {
-        if (obj !== undefined) {
-            let newObj = Object.assign({}, obj);
-            newObj.subsections = (obj.subsections || []).slice();
-            newObj.subsections = newObj.subsections.concat((obj.section ? [obj.section] : []));
-            newObj = mergeIntoContacts(flattenDoubleArrays(newObj));
-            this.section = new PtSection(newObj);
+    constructor(obj: any = {}) {
+        //todo: move all attributes (if any) to a child section
+        let newObj = convertAuthorsToContacts(flattenDoubleArrays(obj));
+
+        this.accno = newObj.accno;
+
+        if (newObj.section !== undefined) {
+            this.section = new PtSection(newObj.section);
         }
     }
 
     toSubmission(type: SubmissionType): Submission {
-        console.log(this.section);
-        return new Submission(type.submType, this.section);
+        return new Submission(type, this);
     }
 
     static fromSubmission(subm: Submission): any {

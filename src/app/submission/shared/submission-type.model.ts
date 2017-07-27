@@ -153,19 +153,19 @@ export class SectionType extends BaseType {
 }
 
 export class SubmissionType {
-    readonly submType: SectionType;
+    readonly sectionType: SectionType;
 
     constructor(obj: any) {
         if (obj.sectionType === undefined) {
             console.error('the root sectionType is not defined in the template');
         }
         const st = obj.sectionType;
-        this.submType = st ? new SectionType(st.name, st) : undefined;
+        this.sectionType = st ? new SectionType(st.name, st) : undefined;
     }
 
-    sectionType(names: string[]): SectionType {
-        return this.submType ? this.submType.sectionType(names) : undefined;
-    }
+    /*sectionType(names: string[]): SectionType {
+        return this.sectionType ? this.sectionType.sectionType(names) : undefined;
+    }*/
 
     static createDefault(): SubmissionType {
         return new SubmissionType(DefaultTemplate);

@@ -39,18 +39,18 @@ function mergeSubsIntoContacts(subsections: any[]): any[] {
         });
     return sections
         .filter(s => !isAuthor(s.type) && !isAffiliation(s.type))
-        .map(s => mergeIntoContacts(s))
+        .map(s => convertAuthorsToContacts(s))
         .concat(contacts);
 }
 
-export function mergeIntoContacts(obj: any): any {
+export function convertAuthorsToContacts(obj: any): any {
     if (obj === undefined) {
         return obj;
     }
 
     if (obj.section !== undefined) {
         const newObj = Object.assign({}, obj);
-        newObj.section = mergeIntoContacts(obj.section);
+        newObj.section = convertAuthorsToContacts(obj.section);
         return newObj;
     }
 
@@ -62,6 +62,6 @@ export function mergeIntoContacts(obj: any): any {
     return obj;
 }
 
-export function splitContacts(obj: any): any {
+export function convertContactsToAuthors(obj: any): any {
     //todo
 }

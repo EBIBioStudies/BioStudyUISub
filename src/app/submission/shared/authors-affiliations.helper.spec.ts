@@ -1,8 +1,8 @@
-import {mergeIntoContacts} from './authors-affiliations.helper';
+import {convertAuthorsToContacts} from './authors-affiliations.helper';
 
 describe('AuthorsAndAffiliations:', () => {
     it("merge: returns undefined if the object is undefined", () => {
-        expect(mergeIntoContacts(undefined)).toBeUndefined();
+        expect(convertAuthorsToContacts(undefined)).toBeUndefined();
     });
 
     it("merge: sections that are not of type 'author' or 'affiliation' are stayed untouched", () => {
@@ -16,11 +16,11 @@ describe('AuthorsAndAffiliations:', () => {
                 }
             ]
         };
-        expect(mergeIntoContacts(obj)).toEqual(obj);
+        expect(convertAuthorsToContacts(obj)).toEqual(obj);
     });
 
     it("merge: authors and affiliations are merged into contacts", () => {
-       expect(mergeIntoContacts({
+       expect(convertAuthorsToContacts({
            subsections: [
                {
                    type: 'Author',

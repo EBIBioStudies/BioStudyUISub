@@ -3,15 +3,9 @@ import {PageTab} from './pagetab.model';
 import {SubmissionType} from './submission-type.model';
 
 describe('PageTab', () => {
-    it("doesn't create the root section if the original object is undefined", () => {
+    it("can have undefined root section", () => {
         const pt = new PageTab();
-        expect(pt.section).not.toBeDefined();
-    });
-
-    it("allows undefined section type", () => {
-        const pt = new PageTab({});
-        expect(pt.section).toBeDefined();
-        expect(pt.section.type).toBeUndefined();
+        expect(pt.section).toBeUndefined();
     });
 
     it("doesn't change the original object", () => {
@@ -22,15 +16,18 @@ describe('PageTab', () => {
 
     it("extracts features from the original PageTab", () => {
         const pt = new PageTab({
-            type: "Study",
-            subsections: [
-                {
-                    type: "Feature1"
-                },
-                {
-                    type: "Feature1"
-                }
-            ]
+            type: "Submission",
+            section: {
+                type: "Study",
+                subsections: [
+                    {
+                        type: "Feature1"
+                    },
+                    {
+                        type: "Feature1"
+                    }
+                ]
+            }
         });
         expect(pt.section).toBeDefined();
         expect(pt.section.type).toBe('Study');
@@ -42,27 +39,30 @@ describe('PageTab', () => {
 
     it("extracts files as a feature from an original PageTab", () => {
         const pt = new PageTab({
-            type: "Study",
-            files: [
-                {
-                    path: "path1",
-                    attributes: [
-                        {
-                            name: "attr1",
-                            value: "file1"
-                        }
-                    ]
-                },
-                {
-                    path: "path2",
-                    attributes: [
-                        {
-                            name: "attr1",
-                            value: "file2"
-                        }
-                    ]
-                }
-            ]
+            type: "Submission",
+            section: {
+                type: "Study",
+                files: [
+                    {
+                        path: "path1",
+                        attributes: [
+                            {
+                                name: "attr1",
+                                value: "file1"
+                            }
+                        ]
+                    },
+                    {
+                        path: "path2",
+                        attributes: [
+                            {
+                                name: "attr1",
+                                value: "file2"
+                            }
+                        ]
+                    }
+                ]
+            }
         });
         expect(pt.section).toBeDefined();
         expect(pt.section.type).toBe('Study');
@@ -87,27 +87,30 @@ describe('PageTab', () => {
 
     it("extracts links as a feature from an original PageTab", () => {
         const pt = new PageTab({
-            type: "Study",
-            links: [
-                {
-                    url: "url1",
-                    attributes: [
-                        {
-                            name: "attr1",
-                            value: "url1"
-                        }
-                    ]
-                },
-                {
-                    url: "url2",
-                    attributes: [
-                        {
-                            name: "attr1",
-                            value: "url2"
-                        }
-                    ]
-                }
-            ]
+            type: "Submission",
+            section: {
+                type: "Study",
+                links: [
+                    {
+                        url: "url1",
+                        attributes: [
+                            {
+                                name: "attr1",
+                                value: "url1"
+                            }
+                        ]
+                    },
+                    {
+                        url: "url2",
+                        attributes: [
+                            {
+                                name: "attr1",
+                                value: "url2"
+                            }
+                        ]
+                    }
+                ]
+            }
         });
         expect(pt.section).toBeDefined();
         expect(pt.section.type).toBe('Study');
@@ -156,18 +159,16 @@ describe('PageTab', () => {
         });
 
         const type = SubmissionType.createDefault();
-        const studyType = type.submType.sectionTypes[0];
+        const studyType = type.sectionType;
 
         const subm = pt.toSubmission(type);
+        expect(subm.accno).toBe("123");
         expect(subm.root).toBeDefined();
-        expect(subm.root.accno).toBe("123");
         expect(subm.root.type).toBeDefined();
-        expect(subm.root.type.name).toBe('Submission');
+        expect(subm.root.type.name).toBe('Study');
 
-        expect(subm.root.sections.length).toBe(1);
-
-        const study = subm.root.sections.list()[0];
-        expect(study.type).toBeDefined();
+        const study = subm.root;
+        expect(study.sections.length).toBe(0);
         expect(study.fields.length).toBe(studyType.fieldTypes.length);
         expect(study.annotations.size()).toBe(1);
         expect(study.features.length).toBe(studyType.featureTypes.length);

@@ -27,5 +27,9 @@ export function flattenDoubleArrays(obj: any): any {
         newObj.subsections = flatten(obj.subsections)
             .map(s => flattenDoubleArrays(s));
     }
+
+    if (obj.hasOwnProperty('section')) {
+        newObj.section = flatten(obj.section);
+    }
     return newObj;
 }

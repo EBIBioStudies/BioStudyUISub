@@ -6,7 +6,7 @@ import {
     SectionType,
     FeatureType,
     ValueType,
-    FieldType
+    FieldType, SubmissionType
 } from './submission-type.model';
 
 const nextId = (function () {
@@ -624,16 +624,13 @@ export class Sections extends HasUpdates<UpdateEvent> {
 }
 
 export class Submission {
+    readonly accno;
     readonly root: Section;
 
-    constructor(type: SectionType, data?: SectionData) {
-        this.root = new Section(type, data);
+    constructor(type: SubmissionType, data: SubmissionData = {} as SubmissionData) {
+        this.accno = data.accno || '';
+        this.root = new Section(type.sectionType, data.section);
     }
-
-    /* sectionById(id: string): Section {
-     const p = this.sectionPath(id);
-     return p.length > 0 ? p[p.length - 1] : undefined;
-     }*/
 
     sectionPath(id: string): Section[] {
         return this.root.sectionPath(id);
@@ -657,4 +654,9 @@ export interface SectionData extends AttributesData {
     accno: string;
     features: FeatureData[];
     sections: SectionData[];
+}
+
+export interface SubmissionData {
+    accno: string;
+    section: SectionData;
 }
