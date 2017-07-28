@@ -42,9 +42,9 @@ export class SignInComponent {
                 (data) => {
                     this.router.navigate(['/submissions']);
                 },
-                (error: Response) => {
+                (error: ServerError) => {
                     this.waiting = false;
-                    this.error = ServerError.fromResponse(error);
+                    this.error = error;
                 }
             );
     }
