@@ -626,8 +626,10 @@ export class Sections extends HasUpdates<UpdateEvent> {
 export class Submission {
     readonly accno;
     readonly root: Section;
+    readonly type;
 
     constructor(type: SubmissionType, data: SubmissionData = {} as SubmissionData) {
+        this.type = type;
         this.accno = data.accno || '';
         this.root = new Section(type.sectionType, data.section);
     }

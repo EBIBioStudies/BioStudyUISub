@@ -153,6 +153,7 @@ export class SectionType extends BaseType {
 }
 
 export class SubmissionType {
+    readonly name: string = "Submission";
     readonly sectionType: SectionType;
 
     constructor(obj: any) {

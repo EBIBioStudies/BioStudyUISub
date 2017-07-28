@@ -1,6 +1,9 @@
-import {AttributesData, FeatureData, Section, SectionData, Submission, SubmissionData} from './submission.model';
+import {
+    AttributesData, Feature, FeatureData, Section, SectionData, Submission,
+    SubmissionData, ValueMap
+} from './submission.model';
 import {SubmissionType} from './submission-type.model';
-import {convertAuthorsToContacts} from './authors-affiliations.helper';
+import {convertAuthorsToContacts, convertContactsToAuthors} from './authors-affiliations.helper';
 import {flattenDoubleArrays} from './pagetab-doublearrays.helper';
 
 class PtEntry implements AttributesData {
@@ -118,18 +121,75 @@ export class PageTab implements SubmissionData {
     }
 
     static fromSubmission(subm: Submission): any {
-        const root = subm.root;
         const pt: any = {
-            type: root.typeName,
-            accno: root.accno
+            type: subm.type.name,
+            accno: subm.accno
         };
-        if (root.sections.length > 0) {
-            pt.section = PageTab.fromSection(root.sections.list()[0]);
-        }
-        return pt;
+        pt.section = PageTab.fromSection(subm.root);
+        return convertContactsToAuthors(pt);
     }
 
     private static fromSection(sec: Section): any {
-        return {};
+        const pts: any = {
+            type: sec.type.name
+        };
+
+        if (sec.accno) {
+            pts.accno = sec.accno;
+        }
+
+        if (sec.annotations.size() > 0) {
+            pts.attributes = PageTab.fromAnnotations(sec.annotations);
+        }
+
+        const subsections = [];
+
+        sec.features.list().forEach(f => {
+            if (f.type.name === 'File') {
+                pts.files = PageTab.fromFileOrLinkFeature(f, 'file');
+            } else if (f.type.name === 'Link') {
+                pts.links = PageTab.fromFileOrLinkFeature(f, 'url');
+            } else {
+                subsections.concat(PageTab.fromFeature(f));
+            }
+        });
+
+        subsections.concat(
+            sec.sections.list().map(s => PageTab.fromSection(s))
+        );
+
+        if (subsections.length > 0) {
+            pts.subsections = subsections;
+        }
     }
+
+    private static fromAnnotations(f: Feature): any[] {
+        return PageTab.fromFeature(f)[0].attributes;
+    }
+
+    private static fromFeature(f: Feature): any[] {
+        return f.rows.map(row => (
+            {
+                type: f.type.name,
+                attributes: row.keys().map(k => ({
+                    name: k,
+                    value: row.valueFor(k).value
+                }))
+            }));
+    }
+
+    private static fromFileOrLinkFeature(f: Feature, name: string): any[] {
+        const isNamedAttr = (a) => (a.name.toLowerCase() === name);
+
+        return PageTab.fromFeature(f).map(f => {
+            const other = f.attributes.filter(!isNamedAttr);
+            const ff: any = {type: f.type};
+            ff[name] = (f.attributes.find(isNamedAttr) || {value: ''}).value || '';
+            if (other.length > 0) {
+                ff.attributes = other;
+            }
+            return ff;
+        });
+    }
+
 }
