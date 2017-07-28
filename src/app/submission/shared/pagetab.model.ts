@@ -1,6 +1,11 @@
 import {
-    AttributesData, Feature, FeatureData, Section, SectionData, Submission,
-    SubmissionData, ValueMap
+    AttributesData,
+    Feature,
+    FeatureData,
+    Section,
+    SectionData,
+    Submission,
+    SubmissionData
 } from './submission.model';
 import {SubmissionType} from './submission-type.model';
 import {convertAuthorsToContacts, convertContactsToAuthors} from './authors-affiliations.helper';
@@ -138,29 +143,42 @@ export class PageTab implements SubmissionData {
             pts.accno = sec.accno;
         }
 
-        if (sec.annotations.size() > 0) {
-            pts.attributes = PageTab.fromAnnotations(sec.annotations);
+        let attributes = [];
+        if (sec.fields.length > 0) {
+            attributes = attributes.concat(sec.fields.list().map(fld => ({
+                name: fld.name,
+                value: fld.value
+            })));
         }
 
-        const subsections = [];
+        if (sec.annotations.size() > 0) {
+            attributes.concat(PageTab.fromAnnotations(sec.annotations));
+        }
 
-        sec.features.list().forEach(f => {
+        if (attributes.length > 0) {
+            pts.attributes = attributes;
+        }
+
+        let subsections = [];
+
+        sec.features.list().filter(f => f.size() > 0).forEach(f => {
             if (f.type.name === 'File') {
                 pts.files = PageTab.fromFileOrLinkFeature(f, 'file');
             } else if (f.type.name === 'Link') {
                 pts.links = PageTab.fromFileOrLinkFeature(f, 'url');
             } else {
-                subsections.concat(PageTab.fromFeature(f));
+                subsections = subsections.concat(PageTab.fromFeature(f));
             }
         });
 
-        subsections.concat(
+        subsections = subsections.concat(
             sec.sections.list().map(s => PageTab.fromSection(s))
         );
 
         if (subsections.length > 0) {
             pts.subsections = subsections;
         }
+        return pts;
     }
 
     private static fromAnnotations(f: Feature): any[] {

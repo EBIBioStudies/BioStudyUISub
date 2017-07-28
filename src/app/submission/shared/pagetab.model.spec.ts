@@ -173,4 +173,28 @@ describe('PageTab', () => {
         expect(study.annotations.size()).toBe(1);
         expect(study.features.length).toBe(studyType.featureTypes.length);
     });
+
+    it("can be created from a submission object", () => {
+        const type = SubmissionType.createDefault();
+        const secType = type.sectionType;
+        const subm = (new PageTab({})).toSubmission(type);
+        const pt = PageTab.fromSubmission(subm);
+
+        expect(pt.type).toBe('Submission');
+        expect(pt.accno).toBeUndefined();
+        expect(pt.section).toBeDefined();
+        expect(pt.section.type).toBe('Study');
+        expect(pt.section.accno).toBeUndefined();
+        expect(pt.section.attributes).toBeDefined();
+        expect(pt.section.attributes.length).toBe(secType.fieldTypes.length);
+
+        expect(pt.section.links).toBeUndefined(); // no links defined
+        expect(pt.section.files).toBeUndefined(); // no files defined
+        expect(pt.section.subsections).toBeDefined();
+        expect(pt.section.subsections.length).toBe(1); // at least one contact is required
+
+        const s = pt.section.subsections[0];
+        expect(s.type).toBe('Author');
+        expect(s.attributes).toBeUndefined(); // all values are empty
+    });
 });

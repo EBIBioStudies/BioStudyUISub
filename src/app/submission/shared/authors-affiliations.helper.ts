@@ -53,9 +53,9 @@ function contactsToAuthors(subsections: any[] = []): any[] {
 
     const authors = sections
         .filter(s => isContact(s.type))
-        .map(c => ({
-            type: 'Author',
-            attributes: c.attributes
+        .map(c => {
+            const author: any = {type: 'Author'};
+            const attributes = c.attributes
                 .filter(a => a.value.trim().length > 0)
                 .map(a => {
                     if (a.name.toLowerCase() === 'organisation') {
@@ -70,8 +70,13 @@ function contactsToAuthors(subsections: any[] = []): any[] {
                         }
                     }
                     return a;
-                })
-        }));
+                });
+
+            if (attributes.length > 0) {
+                author.attributes = attributes;
+            }
+            return author;
+        });
 
     const affiliations = Object.keys(orgRefs).map(k => (
         {

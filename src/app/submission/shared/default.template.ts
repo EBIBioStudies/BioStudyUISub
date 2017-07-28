@@ -2,7 +2,6 @@ export const DefaultTemplate = {
     "sectionType": {
         "name": "Study",
         "required": true,
-        "maxcount": 1,
         "annotationsType": {
             "singleRow": true,
             "title": "Describe your study",

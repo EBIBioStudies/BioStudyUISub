@@ -630,7 +630,7 @@ export class Submission {
 
     constructor(type: SubmissionType, data: SubmissionData = {} as SubmissionData) {
         this.type = type;
-        this.accno = data.accno || '';
+        this.accno = data.accno;
         this.root = new Section(type.sectionType, data.section);
     }
 
