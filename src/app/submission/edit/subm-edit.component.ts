@@ -56,10 +56,9 @@ export class SubmEditComponent implements OnInit, OnDestroy {
         this.route.params
             .map((params: Params) => params['accno'])
             .switchMap(accno => this.submService.getSubmission(accno))
-            .subscribe(data => {
-                this.accno = data.accno;
-                this.subm = (new PageTab(data)).toSubmission(SubmissionType.createDefault());
-
+            .subscribe(wrap => {
+                this.accno = wrap.accno;
+                this.subm = (new PageTab(wrap.data)).toSubmission(SubmissionType.createDefault());
                 this.changeSection(this.subm.root.id);
             });
     }
