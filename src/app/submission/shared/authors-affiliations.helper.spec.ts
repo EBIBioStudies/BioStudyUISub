@@ -1,68 +1,202 @@
-import {convertAuthorsToContacts} from './authors-affiliations.helper';
+import {convertAuthorsToContacts, convertContactsToAuthors} from './authors-affiliations.helper';
 
 describe('AuthorsAndAffiliations:', () => {
-    it("merge: returns undefined if the object is undefined", () => {
-        expect(convertAuthorsToContacts(undefined)).toBeUndefined();
-    });
-
-    it("merge: sections that are not of type 'author' or 'affiliation' are stayed untouched", () => {
-        const obj = {
+    it("authorsToContacts: authors and affiliations are merged into contacts", () => {
+        expect(convertAuthorsToContacts({
             subsections: [
                 {
-                    type: 'Section1'
+                    type: 'Author',
+                    attributes: [
+                        {
+                            name: 'Name',
+                            value: 'John D'
+                        },
+                        {
+                            name: 'Affiliation',
+                            isReference: true,
+                            value: 'o1'
+                        }
+                    ]
                 },
                 {
-                    type: 'Section2'
+                    type: 'Author',
+                    attributes: [
+                        {
+                            name: 'Name',
+                            value: 'Guy R'
+                        },
+                        {
+                            name: 'Affiliation',
+                            value: 'Some organisation'
+                        }
+                    ]
+                },
+                {
+                    type: 'Author',
+                    attributes: [
+                        {
+                            name: 'Name',
+                            value: 'Bob D'
+                        }
+                    ]
+                },
+                {
+                    type: 'Organization',
+                    accno: 'o1',
+                    attributes: [
+                        {
+                            name: 'Name',
+                            value: 'EMBL-EBI'
+                        }
+                    ]
+                },
+                {
+                     type: 'Other'
                 }
             ]
-        };
-        expect(convertAuthorsToContacts(obj)).toEqual(obj);
+        })).toEqual({
+            subsections: [
+                {
+                    type: 'Other'
+                },
+                {
+                    type: 'Contact',
+                    attributes: [
+                        {
+                            name: 'Name',
+                            value: 'John D'
+                        },
+                        {
+                            name: 'Organisation',
+                            value: 'EMBL-EBI'
+                        }
+                    ]
+                },
+                {
+                    type: 'Contact',
+                    attributes: [
+                        {
+                            name: 'Name',
+                            value: 'Guy R'
+                        },
+                        {
+                            name: 'Organisation',
+                            value: 'Some organisation'
+                        }
+                    ]
+                },
+                {
+                    type: 'Contact',
+                    attributes: [
+                        {
+                            name: 'Name',
+                            value: 'Bob D'
+                        }
+                    ]
+                }
+            ]
+        });
     });
 
-    it("merge: authors and affiliations are merged into contacts", () => {
-       expect(convertAuthorsToContacts({
-           subsections: [
-               {
-                   type: 'Author',
-                   attributes: [
-                       {
-                           name: 'Name',
-                           value: 'John D'
-                       },
-                       {
-                           name: 'Affiliation',
-                           isReference: true,
-                           value: 'o1'
-                       }
-                   ]
-               },
-               {
-                   type: 'Organization',
-                   accno: 'o1',
-                   attributes: [
-                       {
-                           name: 'Name',
-                           value: 'EMBL-EBI'
-                       }
-                   ]
-               }
-           ]
-       })).toEqual({
-           subsections: [
-               {
-                   type: 'Contact',
-                   attributes: [
-                       {
-                           name: 'Name',
-                           value: 'John D'
-                       },
-                       {
-                           name: 'Organisation',
-                           value: 'EMBL-EBI'
-                       }
-                   ]
-               }
-           ]
-       });
+    it("contactsToAuthors: 'contact' sections are split into authors and affiliations", () => {
+        expect(convertContactsToAuthors({
+            subsections: [
+                {
+                    type: 'Contact',
+                    attributes: [
+                        {
+                            name: 'Name',
+                            value: 'John D'
+                        },
+                        {
+                            name: 'Organisation',
+                            value: 'Org1'
+                        }]
+                },
+                {
+                    type: 'Contact',
+                    attributes: [
+                        {
+                            name: 'Name',
+                            value: 'Bob D'
+                        },
+                        {
+                            name: 'Organisation',
+                            value: 'ORG1'
+                        }
+                    ]
+                },
+                {
+                    type: 'Contact',
+                    attributes: [
+                        {
+                            name: 'Name',
+                            value: 'Guy R'
+                        },
+                        {
+                            name: 'Organisation',
+                            value: ''
+                        }
+                    ]
+                },
+                {
+                    type: 'Other'
+                }]
+        })).toEqual({
+            subsections: [
+                {
+                    type: 'Other'
+                },
+                {
+                    type: 'Author',
+                    attributes: [
+                        {
+                            name: 'Name',
+                            value: 'John D'
+                        },
+                        {
+                            name: 'Affiliation',
+                            isReference: true,
+                            value: 'o1'
+                        }
+                    ]
+                },
+                {
+                    type: 'Author',
+                    attributes: [
+                        {
+                            name: 'Name',
+                            value: 'Bob D'
+                        },
+                        {
+                            name: 'Affiliation',
+                            isReference: true,
+                            value: 'o1'
+                        }
+                    ]
+                },
+                {
+                    type: 'Author',
+                    attributes: [
+                        {
+                            name: 'Name',
+                            value: 'Guy R'
+                        }
+                    ]
+                },
+                {
+                    type: 'Organization',
+                    accno: 'o1',
+                    attributes: [
+                        {
+                            name: 'Name',
+                            value: 'Org1'
+                        }
+                    ]
+                }
+            ]
+        });
+
     });
 });
+
