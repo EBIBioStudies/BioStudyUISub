@@ -50,8 +50,8 @@ export class SignUpComponent {
                 (data) => {
                     this.success = true;
                 },
-                (error: Response) => {
-                    this.error = ServerError.fromResponse(error).data;
+                (error: ServerError) => {
+                    this.error = error;
                     this.recaptcha.reset();
                     this.model.resetCaptcha();
                 }
