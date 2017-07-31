@@ -1,4 +1,5 @@
-import {flattenDoubleArrays} from "./pagetab-doublearrays.helper";
+import {flattenDoubleArrays} from './pagetab-doublearrays.utils';
+
 describe('PageTab flattenDoubleArrays:', () => {
 
     it("flattens double arrays", () => {

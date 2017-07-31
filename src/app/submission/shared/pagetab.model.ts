@@ -8,8 +8,9 @@ import {
     SubmissionData
 } from './submission.model';
 import {SubmissionType} from './submission-type.model';
-import {convertAuthorsToContacts, convertContactsToAuthors} from './authors-affiliations.helper';
-import {flattenDoubleArrays} from './pagetab-doublearrays.helper';
+import {convertAuthorsToContacts, convertContactsToAuthors} from './pagetab-authors.utils';
+import {flattenDoubleArrays} from './pagetab-doublearrays.utils';
+import {shiftAttributes} from './pagetab-attributes.utils';
 
 class PtEntry implements AttributesData {
     readonly attributes: { name: string, value: string }[];
@@ -111,8 +112,9 @@ export class PageTab implements SubmissionData {
     readonly section: PtSection;
 
     constructor(obj: any = {}) {
-        //todo: move all attributes (if any) to a child section
-        let newObj = convertAuthorsToContacts(flattenDoubleArrays(obj));
+        let newObj = convertAuthorsToContacts(
+            flattenDoubleArrays(
+                shiftAttributes(obj)));
 
         this.accno = newObj.accno;
 

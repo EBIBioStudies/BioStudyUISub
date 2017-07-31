@@ -1,4 +1,4 @@
-import {convertAuthorsToContacts, convertContactsToAuthors} from './authors-affiliations.helper';
+import {convertAuthorsToContacts, convertContactsToAuthors} from './pagetab-authors.utils';
 
 describe('AuthorsAndAffiliations:', () => {
     it("authorsToContacts: authors and affiliations are merged into contacts", () => {
