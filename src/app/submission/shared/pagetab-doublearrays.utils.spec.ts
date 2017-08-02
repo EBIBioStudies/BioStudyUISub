@@ -2,46 +2,46 @@ import {flattenDoubleArrays} from './pagetab-doublearrays.utils';
 
 describe('PageTab flattenDoubleArrays:', () => {
 
-    it("flattens double arrays", () => {
+    it('flattens double arrays', () => {
         const pt = {
-            type: "Study",
+            type: 'Study',
             files: [[
                 {
-                    path: "file1"
+                    path: 'file1'
                 },
                 {
-                    path: "file2"
+                    path: 'file2'
                 }
             ]],
             links: [[
                 {
-                    url: "url1"
+                    url: 'url1'
                 },
                 {
-                    url: "url2"
+                    url: 'url2'
                 }
             ]],
             subsections: [[
                 {
-                    type: "Feature1",
+                    type: 'Feature1',
                     subsections: [[
                         {
-                            type: "Feature5"
+                            type: 'Feature5'
                         },
                         {
-                            type: "Feature6"
+                            type: 'Feature6'
                         }
                     ]]
                 },
                 {
-                    type: "Feature1"
+                    type: 'Feature1'
                 }
             ], [
                 {
-                    type: "Feature2"
+                    type: 'Feature2'
                 },
                 {
-                    type: "Feature2"
+                    type: 'Feature2'
                 }
             ]]
         };

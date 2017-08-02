@@ -32,7 +32,7 @@ import {SubmissionService} from '../shared/submission.service';
 })
 export class SubmViewComponent implements OnInit {
     submission: Submission;
-    readonly: boolean = true;
+    readonly = true;
 
     constructor(private route: ActivatedRoute,
                 private submService: SubmissionService,
@@ -42,11 +42,11 @@ export class SubmViewComponent implements OnInit {
 
     ngOnInit() {
         this.route.params.forEach((params: Params) => {
-            let accno = params['accno'];
+            const accno = params['accno'];
             this.submService
                 .getSubmittedSubmission(accno)
                 .subscribe(resp => {
-                    let pt = new PageTab(resp.data);
+                    const pt = new PageTab(resp.data);
                     this.submission = pt.asSubmission(this.dictService.dict());
                 });
         });

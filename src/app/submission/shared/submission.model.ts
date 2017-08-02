@@ -100,7 +100,7 @@ export class ValueMap extends HasUpdates<UpdateEvent> {
             console.warn(`adding multiple values for a key:${key}`);
             return;
         }
-        let v = new AttributeValue(value);
+        const v = new AttributeValue(value);
         this.valueMap.set(key, v);
         this.subscriptionMap.set(key,
             v.updates().subscribe(m => {
@@ -201,8 +201,8 @@ export class Rows extends HasUpdates<UpdateEvent> {
     }
 
     add(keys: string[]): ValueMap {
-        let row = new ValueMap(keys);
-        let rowIndex = {index: this.rows.length};
+        const row = new ValueMap(keys);
+        const rowIndex = {index: this.rows.length};
         this.rows.push(row);
         this.subscriptions.push(
             row.updates()
@@ -247,6 +247,12 @@ export class Feature extends HasUpdates<UpdateEvent> {
 
     private _columns: Columns = new Columns();
     private _rows: Rows = new Rows();
+
+    static create(type: FeatureType, attrs: { name: string, value: string }[]): Feature {
+        const feature = new Feature(type);
+        feature.add(attrs);
+        return feature;
+    }
 
     constructor(type: FeatureType, data: FeatureData = {} as FeatureData) {
         super();
@@ -366,12 +372,6 @@ export class Feature extends HasUpdates<UpdateEvent> {
         }
         this._rows.removeAt(index);
     }
-
-    static create(type: FeatureType, attrs: { name: string, value: string }[]): Feature {
-        const feature = new Feature(type);
-        feature.add(attrs);
-        return feature;
-    }
 }
 
 export class Features extends HasUpdates<UpdateEvent> {
@@ -425,7 +425,7 @@ export class Features extends HasUpdates<UpdateEvent> {
     }
 
     remove(): void {
-        //todo: do not remove features which are required
+        // todo: do not remove features which are required
     }
 
     get length(): number {
@@ -552,12 +552,12 @@ export class Section extends HasUpdates<UpdateEvent> {
         if (id === this.id) {
             return [this];
         }
-        const p = this.sections
+        const path = this.sections
             .list()
             .map(s => s.sectionPath(id))
             .filter(p => p.length > 0);
 
-        return (p.length > 0) ? [].concat([this], p[0]) : [];
+        return (path.length > 0) ? [].concat([this], path[0]) : [];
     }
 
     subscribeTo(hasUpdates: HasUpdates<UpdateEvent>, type: string) {
@@ -615,7 +615,7 @@ export class Sections extends HasUpdates<UpdateEvent> {
     }
 
     remove(): void {
-        //TODO
+        // TODO
     }
 
     get length(): number {

@@ -201,7 +201,7 @@ export class FeatureForm {
 
         this.subscriptions.push(
             this.feature.updates()
-                .filter(ue => ue.source != undefined)
+                .filter(ue => ue.source !== undefined)
                 .subscribe(ue => {
                     if (['column_add', 'column_remove'].indexOf(ue.source.name) > -1) {
                         this.updateColumnControls(ue);

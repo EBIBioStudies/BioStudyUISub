@@ -53,6 +53,10 @@ export class FeatureType extends BaseType {
     readonly description: string;
     readonly columnTypes: ColumnType[];
 
+    static createDefault(name: string, singleRow?: boolean): FeatureType {
+        return new FeatureType(name || 'DefaultFeature', singleRow === true);
+    }
+
     constructor(name: string, singleRow: boolean, other?: any) {
         super(name, other === undefined);
         this.singleRow = singleRow === true;
@@ -69,10 +73,6 @@ export class FeatureType extends BaseType {
         return this.columnTypes.find(c => c.name === name)
             || ColumnType.createDefault(name);
     }
-
-    static createDefault(name: string, singleRow?: boolean): FeatureType {
-        return new FeatureType(name || 'DefaultFeature', singleRow === true);
-    }
 }
 
 export class AnnotationsType extends FeatureType {
@@ -85,16 +85,16 @@ export class ColumnType extends BaseType {
     readonly required: boolean;
     readonly valueType: ValueType;
 
+    static createDefault(name: string): ColumnType {
+        return new ColumnType(name || 'DefaultColumn');
+    }
+
     constructor(name: string, other?: any) {
         super(name, other === undefined);
 
         other = other || {};
         this.valueType = other.valueType || 'text';
         this.required = other.required === true;
-    }
-
-    static createDefault(name: string): ColumnType {
-        return new ColumnType(name || 'DefaultColumn');
     }
 }
 
@@ -104,6 +104,10 @@ export class SectionType extends BaseType {
     readonly fieldTypes: FieldType[];
     readonly featureTypes: FeatureType[];
     readonly sectionTypes: SectionType[];
+
+    static createDefault(name: string): SectionType {
+        return new SectionType(name || 'DefaultSection');
+    }
 
     constructor(name: string, other?: any) {
         super(name, other === undefined);
@@ -146,15 +150,15 @@ export class SectionType extends BaseType {
         }
         return undefined;
     }
-
-    static createDefault(name: string): SectionType {
-        return new SectionType(name || 'DefaultSection');
-    }
 }
 
 export class SubmissionType {
-    readonly name: string = "Submission";
+    readonly name: string = 'Submission';
     readonly sectionType: SectionType;
+
+    static createDefault(): SubmissionType {
+        return new SubmissionType(DefaultTemplate);
+    }
 
     constructor(obj: any) {
         if (obj.sectionType === undefined) {
@@ -165,10 +169,6 @@ export class SubmissionType {
     }
 
     /*sectionType(names: string[]): SectionType {
-        return this.sectionType ? this.sectionType.sectionType(names) : undefined;
-    }*/
-
-    static createDefault(): SubmissionType {
-        return new SubmissionType(DefaultTemplate);
-    }
+     return this.sectionType ? this.sectionType.sectionType(names) : undefined;
+     }*/
 }

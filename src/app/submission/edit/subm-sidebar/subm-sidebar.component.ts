@@ -24,13 +24,13 @@ import {SectionType} from '../../shared/submission-type.model';
     styleUrls: ['./subm-sidebar.component.css']
 })
 export class SubmSideBarComponent implements OnChanges {
-    @Input() collapsed?: boolean = false;
+    @Input() collapsed? = false;
     @Input() section: Section;
     @Output() toggle? = new EventEmitter();
 
     @ViewChild('addDialog')
     addDialog: SubmAddDialogComponent;
-    editing: boolean = false;
+    editing = false;
     items: any[] = [];
 
     private subscr: Subscription;
@@ -46,8 +46,9 @@ export class SubmSideBarComponent implements OnChanges {
                     .updates()
                     .subscribe(ev => {
                         if (ev.name === 'feature_add' ||
-                            ev.name === 'feature_remove')
+                            ev.name === 'feature_remove') {
                             this.onItemsChange();
+                        }
                     });
                 this.onItemsChange();
             }
@@ -114,5 +115,4 @@ export class SubmSideBarComponent implements OnChanges {
             }
         };
     }
-
 }

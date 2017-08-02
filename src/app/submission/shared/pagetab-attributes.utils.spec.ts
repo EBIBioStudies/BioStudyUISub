@@ -1,7 +1,7 @@
 import {copyAttributes} from './pagetab-attributes.utils';
 
 describe('Submission Attributes:', () => {
-    it("joins attributes from submission root and submission.section.attributes", () => {
+    it('joins attributes from submission root and submission.section.attributes', () => {
         const result = copyAttributes({
             type: 'Submission',
             attributes: [
@@ -33,7 +33,7 @@ describe('Submission Attributes:', () => {
         expect(result.section.attributes.map(a => a.value).sort()).toEqual(['value1', 'value2', 'value3']);
     });
 
-    it("does nothing if there are no submission attributes (1)", () => {
+    it('does nothing if there are no submission attributes (1)', () => {
         const result = copyAttributes({
             type: 'Submission',
             section: {
@@ -54,7 +54,7 @@ describe('Submission Attributes:', () => {
         expect(result.section.attributes.map(a => a.value)).toEqual(['value3']);
     });
 
-    it("does nothing if there are no submission attributes (2)", () => {
+    it('does nothing if there are no submission attributes (2)', () => {
         const result = copyAttributes({
             type: 'Submission',
             section: {
@@ -68,7 +68,7 @@ describe('Submission Attributes:', () => {
     });
 
 
-    it("copies submission attributes to study if there are no any", () => {
+    it('copies submission attributes to study if there are no any', () => {
         const result = copyAttributes({
             type: 'Submission',
             attributes: [

@@ -32,29 +32,27 @@ class PtFeature implements FeatureData {
     readonly type: string;
     readonly entries: PtEntry[];
 
-    constructor(type: string, entries: any[]) {
-        this.type = type || 'Undefined';
-        this.entries = (entries || []).map(e => new PtEntry(e));
-    }
-
     static file(entries: any[]): PtFeature {
         return new PtFeature('File',
             entries.map(e => {
                 const ee = Object.assign({}, e);
                 ee.attributes = (e.attributes || []).slice();
-                ee.attributes.push({name: "Path", value: ee.path});
+                ee.attributes.push({name: 'Path', value: ee.path});
                 return ee;
             }));
     }
-
     static link(entries: any[]): PtFeature {
         return new PtFeature('Link',
             entries.map(e => {
                 const ee = Object.assign({}, e);
                 ee.attributes = (e.attributes || []).slice();
-                ee.attributes.push({name: "URL", value: ee.url});
+                ee.attributes.push({name: 'URL', value: ee.url});
                 return ee;
             }));
+    }
+    constructor(type: string, entries: any[]) {
+        this.type = type || 'Undefined';
+        this.entries = (entries || []).map(e => new PtEntry(e));
     }
 }
 
@@ -69,10 +67,10 @@ class PtSection extends PtEntry implements SectionData {
     constructor(obj: any) {
         super(obj);
 
-        const isFeature = (obj: any) => {
-            return obj.subsections === undefined &&
-                obj.files === undefined &&
-                obj.links === undefined;
+        const isFeature = (s: any) => {
+            return s.subsections === undefined &&
+                s.files === undefined &&
+                s.links === undefined;
         };
 
         this.type = obj.type;
@@ -82,7 +80,7 @@ class PtSection extends PtEntry implements SectionData {
 
         const subsections = (obj.subsections || []).slice();
 
-        let featureMap = subsections
+        const featureMap = subsections
             .filter(s => isFeature(s))
             .reduce((rv, x) => {
                 rv[x.type] = (rv[x.type] || []);
@@ -90,7 +88,7 @@ class PtSection extends PtEntry implements SectionData {
                 return rv;
             }, {});
 
-        let features = Object
+        const features = Object
             .keys(featureMap)
             .map(k => new PtFeature(k, featureMap[k]));
         if (obj.files !== undefined) {
@@ -110,22 +108,6 @@ class PtSection extends PtEntry implements SectionData {
 export class PageTab implements SubmissionData {
     readonly accno: string;
     readonly section: PtSection;
-
-    constructor(obj: any = {}) {
-        let newObj = convertAuthorsToContacts(
-            flattenDoubleArrays(
-                copyAttributes(obj)));
-
-        this.accno = newObj.accno;
-
-        if (newObj.section !== undefined) {
-            this.section = new PtSection(newObj.section);
-        }
-    }
-
-    toSubmission(type: SubmissionType): Submission {
-        return new Submission(type, this);
-    }
 
     static fromSubmission(subm: Submission): any {
         const pt: any = {
@@ -198,10 +180,10 @@ export class PageTab implements SubmissionData {
             }));
     }
 
-    private static fromFileOrLinkFeature(f: Feature, name: string): any[] {
+    private static fromFileOrLinkFeature(feature: Feature, name: string): any[] {
         const isNamedAttr = (a) => (a.name.toLowerCase() === name);
 
-        return PageTab.fromFeature(f).map(f => {
+        return PageTab.fromFeature(feature).map(f => {
             const other = f.attributes.filter(!isNamedAttr);
             const ff: any = {type: f.type};
             ff[name] = (f.attributes.find(isNamedAttr) || {value: ''}).value || '';
@@ -212,4 +194,19 @@ export class PageTab implements SubmissionData {
         });
     }
 
+    constructor(obj: any = {}) {
+        const newObj = convertAuthorsToContacts(
+            flattenDoubleArrays(
+                copyAttributes(obj)));
+
+        this.accno = newObj.accno;
+
+        if (newObj.section !== undefined) {
+            this.section = new PtSection(newObj.section);
+        }
+    }
+
+    toSubmission(type: SubmissionType): Submission {
+        return new Submission(type, this);
+    }
 }

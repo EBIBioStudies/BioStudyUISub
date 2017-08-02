@@ -10,9 +10,9 @@ class UrlParams {
     private params: any[] = [];
 
     constructor(obj: any) {
-        for (let p in obj) {
-            this.addParam(p, obj[p]);
-        }
+        Object.keys(obj).forEach(k => {
+            this.addParam(k, obj[k]);
+        });
     }
 
     addParam(name, value) {
@@ -41,7 +41,7 @@ export class SubmissionService {
     }
 
     getSubmissions(args: any = {}): Observable<any> {
-        let urlParams = new UrlParams(args);
+        const urlParams = new UrlParams(args);
         return this.http.get('/api/submissions', urlParams.list)
             .map((res: Response) => {
                 return res.json().submissions;
@@ -77,7 +77,7 @@ export class SubmissionService {
     }
 
     convert(file: File, format: string = ''): Observable<any> {
-        let formData = new FormData();
+        const formData = new FormData();
         formData.append('op', 'CONVERT');
         formData.append('type', format);
         formData.append('file', file);

@@ -1,7 +1,7 @@
 import {convertAuthorsToContacts, convertContactsToAuthors} from './pagetab-authors.utils';
 
 describe('AuthorsAndAffiliations:', () => {
-    it("authorsToContacts: authors and affiliations are merged into contacts", () => {
+    it('authorsToContacts: authors and affiliations are merged into contacts', () => {
         expect(convertAuthorsToContacts({
             subsections: [
                 {
@@ -98,7 +98,7 @@ describe('AuthorsAndAffiliations:', () => {
         });
     });
 
-    it("contactsToAuthors: 'contact' sections are split into authors and affiliations", () => {
+    it('contactsToAuthors: [contact] sections are split into authors and affiliations', () => {
         expect(convertContactsToAuthors({
             subsections: [
                 {

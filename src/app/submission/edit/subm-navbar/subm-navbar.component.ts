@@ -2,7 +2,8 @@ import {
     Component,
     Input,
     Output,
-    EventEmitter
+    EventEmitter,
+    HostBinding
 } from '@angular/core';
 
 import {

@@ -6,14 +6,14 @@ import {
 } from '@angular/core';
 
 import {ModalDirective} from 'ngx-bootstrap';
-import {SubmAddEvent} from "./subm-add-event.model";
+import {SubmAddEvent} from './subm-add-event.model';
 
 @Component({
     selector: 'subm-add-dialog',
     templateUrl: './subm-add.component.html'
 })
 export class SubmAddDialogComponent {
-    itemType: string = 'AttributeGrid';
+    itemType = 'AttributeGrid';
     name: string;
 
     @Output() okClick: EventEmitter<SubmAddEvent> = new EventEmitter();

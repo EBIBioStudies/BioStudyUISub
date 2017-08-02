@@ -24,6 +24,6 @@ export function copyAttributes(obj: any) {
                 }));
             }
         )
-        .reduce((rv,x) => rv.concat(x, []));
+        .reduce((rv, x) => rv.concat(x, []));
     return newObj;
 }

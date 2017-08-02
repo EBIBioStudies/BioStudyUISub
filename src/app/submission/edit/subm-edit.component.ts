@@ -26,24 +26,24 @@ import {
     SubmissionType
 } from '../shared/submission-type.model';
 
-import {PageTab} from "../shared/pagetab.model";
+import {PageTab} from '../shared/pagetab.model';
 
 @Component({
     selector: 'subm-edit',
     templateUrl: './subm-edit.component.html'
 })
 export class SubmEditComponent implements OnInit, OnDestroy {
-    sideBarCollapsed: boolean = false;
-    readonly: boolean = false;
+    sideBarCollapsed = false;
+    readonly = false;
 
     subm: Submission;
     section: Section;
 
     errors: string[] = [];
-    accno: string = '';
+    accno = '';
 
     private subscr: Subscription;
-    private submitting: boolean = false;
+    private submitting = false;
 
     @ViewChild('submitResults') public submitResults: ModalDirective;
 
