@@ -34,9 +34,9 @@ import {
                       (click)="toggleDatePicker()"><i class="fa fa-calendar"></i></span>       
     </div>
     <datepicker style="position: absolute; z-index:10; min-height:290px;"
-                [activeDate]="activeDate" 
                 [hidden]="!showDatePicker"
-                (selectionDone)="onSelectionDone($event)"></datepicker>
+                [ngModel]="activeDate" 
+                (ngModelChange)="onActiveDateChange($event)"></datepicker>
 `,
     providers: [
         {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DateInputComponent), multi: true},
@@ -72,7 +72,6 @@ export class DateInputComponent implements ControlValueAccessor {
 
     //From ControlValueAccessor interface
     writeValue(value: any) {
-        console.log('write value', value);
         if (value) {
             this.dateValue = value;
             this.activeDate = parseDate(value);
@@ -106,7 +105,7 @@ export class DateInputComponent implements ControlValueAccessor {
         this.inpEl.nativeElement.blur();
     }
 
-    onSelectionDone(date: Date): void {
+    onActiveDateChange(date: Date): void {
         this.value = formatDate(date);
         this.activeDate = date;
         this.closeDatePicker();
