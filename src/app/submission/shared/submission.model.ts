@@ -637,6 +637,10 @@ export class Submission {
     sectionPath(id: string): Section[] {
         return this.root.sectionPath(id);
     }
+
+    updates(): Observable<UpdateEvent> {
+        return this.root.updates();
+    }
 }
 
 export interface AttributesData {

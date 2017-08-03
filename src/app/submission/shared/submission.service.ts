@@ -62,8 +62,7 @@ export class SubmissionService {
 
     saveSubmission(pt: any): Observable<any> {
         return this.http.post('/api/submissions/tmp/save', pt)
-            .map((res: Response) => {
-            });
+            .map((res: Response) => 'done');
     }
 
     submitSubmission(pt: any): Observable<any> {

@@ -27,6 +27,7 @@ import {
 } from '../shared/submission-type.model';
 
 import {PageTab} from '../shared/pagetab.model';
+import {SubmissionValidator} from '../shared/submission.validator';
 
 @Component({
     selector: 'subm-edit',
@@ -59,6 +60,20 @@ export class SubmEditComponent implements OnInit, OnDestroy {
             .subscribe(wrap => {
                 this.accno = wrap.accno;
                 this.subm = (new PageTab(wrap.data)).toSubmission(SubmissionType.createDefault());
+                this.subm
+                    .updates()
+                    .switchMap(ue => new SubmissionValidator(this.subm).asObservable())
+                    .subscribe(errors => {
+                        this.errors = errors;
+                    });
+                this.subm
+                    .updates()
+                    .switchMap(ue => {
+                        wrap.data = PageTab.fromSubmission(this.subm);
+                        return this.submService.saveSubmission(wrap);
+                    })
+                    .subscribe(result => console.log('saved: ' + result));
+
                 this.changeSection(this.subm.root.id);
             });
     }
