@@ -59,7 +59,7 @@ export class Attribute extends HasUpdates<UpdateEvent> {
     }
 
     set name(name: string) {
-        if (this.required) {
+        if (this.required || this._name === name) {
             return;
         }
         this._name = name;
@@ -73,8 +73,10 @@ export class AttributeValue extends HasUpdates<UpdateEvent> {
     }
 
     set value(value: string) {
-        this._value = value;
-        this.notify(new UpdateEvent('value', value));
+        if (this.value !== value) {
+            this._value = value;
+            this.notify(new UpdateEvent('value', value));
+        }
     }
 
     get value(): string {
@@ -249,9 +251,13 @@ export class Feature extends HasUpdates<UpdateEvent> {
     private _rows: Rows = new Rows();
 
     static create(type: FeatureType, attrs: { name: string, value: string }[]): Feature {
-        const feature = new Feature(type);
-        feature.add(attrs);
-        return feature;
+        return new Feature(type,
+            {
+                type: type.name,
+                entries: [{
+                    attributes: attrs
+                }]
+            });
     }
 
     constructor(type: FeatureType, data: FeatureData = {} as FeatureData) {
@@ -375,15 +381,12 @@ export class Feature extends HasUpdates<UpdateEvent> {
 }
 
 export class Features extends HasUpdates<UpdateEvent> {
-    private features: { [key: string]: Feature };
-    private order: string[];
-    private subscriptions: { [key: string]: Subscription };
+    private featuresMap: Map<string, Feature> = new Map();
+    private order: string[] = [];
+    private subscriptionsMap: Map<string, Subscription> = new Map();
 
     constructor(type: SectionType, data: SectionData) {
         super();
-        this.features = {};
-        this.subscriptions = {};
-        this.order = [];
 
         const fd = (data.features || []).reduce((rv, d) => {
             rv[d.type] = d;
@@ -398,28 +401,28 @@ export class Features extends HasUpdates<UpdateEvent> {
         Object.keys(fd).forEach(key => {
             if (fd[key] !== undefined) {
                 const ft = type.getFeatureType(key);
-                this.add(ft, fd[ft.name])
+                this.add(ft, fd[ft.name]);
             }
         });
     }
 
     list(): Feature[] {
-        return this.order.map(k => this.features[k]);
+        return this.order.map(k => this.featuresMap.get(k));
     }
 
     add(type: FeatureType, data?: FeatureData): Feature {
-        if (this.features[type.name] !== undefined) {
-            console.warn(`Feature with name ${type.name} already exists`);
+        if (this.featuresMap.has(type.name)) {
+            console.warn(`Feature with type ${type.name} already exists`);
             return;
         }
         const feature = new Feature(type, data);
-        const featureId = {id: feature.id, index: this.features.length};
+        const featureId = {id: feature.id, key: type.name};
         this.order.push(type.name);
-        this.features[type.name] = feature;
-        this.subscriptions[type.name] =
+        this.featuresMap.set(type.name, feature);
+        this.subscriptionsMap.set(type.name,
             feature.updates().subscribe(
                 u => this.notify(new UpdateEvent('feature_update', featureId, u))
-            );
+            ));
         this.notify(new UpdateEvent('feature_add', featureId));
         return feature;
     }
@@ -454,8 +457,10 @@ export class Field extends HasUpdates<UpdateEvent> {
     }
 
     set value(v: string) {
-        this._value = v;
-        this.notify(new UpdateEvent('value', v));
+        if (this._value !== v) {
+            this._value = v;
+            this.notify(new UpdateEvent('value', v));
+        }
     }
 }
 
@@ -562,7 +567,7 @@ export class Section extends HasUpdates<UpdateEvent> {
 
     subscribeTo(hasUpdates: HasUpdates<UpdateEvent>, type: string) {
         hasUpdates.updates().subscribe(
-            m => this.notify(new UpdateEvent(type, null, m))
+            m => this.notify(new UpdateEvent(type, undefined, m))
         );
     }
 }
@@ -630,7 +635,7 @@ export class Submission {
 
     constructor(type: SubmissionType, data: SubmissionData = {} as SubmissionData) {
         this.type = type;
-        this.accno = data.accno;
+        this.accno = data.accno || '';
         this.root = new Section(type.sectionType, data.section);
     }
 
