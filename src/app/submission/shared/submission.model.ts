@@ -438,8 +438,7 @@ export class Features extends HasUpdates<UpdateEvent> {
 
 export class Field extends HasUpdates<UpdateEvent> {
     readonly id: string;
-    readonly name: string;
-    readonly valueType: ValueType;
+    readonly type;
 
     private _value: string;
 
@@ -447,9 +446,16 @@ export class Field extends HasUpdates<UpdateEvent> {
                 value: string = '') {
         super();
         this.id = `field_${nextId()}`;
-        this.name = type.name;
-        this.valueType = type.valueType;
+        this.type = type;
         this._value = value;
+    }
+
+    get name(): string {
+        return this.type.name;
+    }
+
+    get valueType(): string {
+        return this.type.valueType;
     }
 
     get value(): string {
