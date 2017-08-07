@@ -118,6 +118,11 @@ export class PageTab implements SubmissionData {
         return convertContactsToAuthors(pt);
     }
 
+    static createNew(): any {
+        const pt = new PageTab();
+        return PageTab.fromSubmission(pt.toSubmission(SubmissionType.createDefault()));
+    }
+
     private static fromSection(sec: Section): any {
         const pts: any = {
             type: sec.type.name
