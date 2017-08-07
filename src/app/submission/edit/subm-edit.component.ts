@@ -60,19 +60,27 @@ export class SubmEditComponent implements OnInit, OnDestroy {
             .subscribe(wrap => {
                 this.accno = wrap.accno;
                 this.subm = (new PageTab(wrap.data)).toSubmission(SubmissionType.createDefault());
+
+                const validator = new SubmissionValidator(this.subm);
+                this.errors = validator.validate();
+
                 this.subm
                     .updates()
-                    .switchMap(ue => new SubmissionValidator(this.subm).asObservable())
+                    .switchMap(ue => validator.createObservable())
                     .subscribe(errors => {
                         this.errors = errors;
+                        console.log(errors);
                     });
+
                 this.subm
                     .updates()
-                    .switchMap(ue => {
+                    .subscribe(ue =>  console.log(ue));
+                    /*.switchMap(ue => {
+                        console.log(ue);
                         wrap.data = PageTab.fromSubmission(this.subm);
                         return this.submService.saveSubmission(wrap);
                     })
-                    .subscribe(result => console.log('saved: ' + result));
+                    .subscribe(result => console.log('saved: ' + result));*/
 
                 this.changeSection(this.subm.root.id);
             });

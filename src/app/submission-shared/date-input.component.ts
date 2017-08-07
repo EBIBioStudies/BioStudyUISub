@@ -45,6 +45,10 @@ import {
 })
 
 export class DateInputComponent implements ControlValueAccessor {
+    showDatePicker = false;
+    activeDate: Date;
+
+    private dateValue = '';
 
     @ViewChild('inputbox')
     private inpEl: ElementRef;
@@ -56,11 +60,6 @@ export class DateInputComponent implements ControlValueAccessor {
     private validateFn: any = () => {
     };
 
-    private dateValue = '';
-
-    activeDate: Date = new Date();
-    showDatePicker = false;
-
     get value() {
         return this.dateValue;
     }
@@ -70,7 +69,6 @@ export class DateInputComponent implements ControlValueAccessor {
         this.onChange(val);
     }
 
-    //From ControlValueAccessor interface
     writeValue(value: any) {
         if (value) {
             this.dateValue = value;
@@ -78,12 +76,10 @@ export class DateInputComponent implements ControlValueAccessor {
         }
     }
 
-    //From ControlValueAccessor interface
     registerOnChange(fn) {
         this.onChange = fn;
     }
 
-    //From ControlValueAccessor interface
     registerOnTouched(fn: any) {
         this.onTouched = fn;
     }

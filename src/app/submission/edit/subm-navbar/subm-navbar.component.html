@@ -9,11 +9,8 @@
         </span>
     </div>
     <div style="margin-left: auto;">
-        <span class="label label-danger">7 Errors</span>
+        <span class="label"
+              [ngClass]="{'label-danger': errors.length > 0, 'label-info': errors.length === 0}">
+            {{errors.length}} Error(s)</span>
     </div>
 </div>
-<!--span calss="danger" *ngIf="!readonly && !submValid"> << There are some validation errors. Please correct them before to proceed to submit >> </span-->
-<!--div *ngIf="readonly" class="pull-right">
-    <a class="pull-right btn btn-success btn-xs"
-       (click)="onEditSubmission()">Edit</a>
-</div-->

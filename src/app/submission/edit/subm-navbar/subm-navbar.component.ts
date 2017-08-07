@@ -2,8 +2,7 @@ import {
     Component,
     Input,
     Output,
-    EventEmitter,
-    HostBinding
+    EventEmitter
 } from '@angular/core';
 
 import {
@@ -17,6 +16,7 @@ import {
 })
 export class SubmNavBarComponent {
     @Input() accno: string;
+    @Input() errors: string[];
     @Input() sectionPath: Section[];
 
     @Output() sectionClick: EventEmitter<Section> = new EventEmitter<Section>();

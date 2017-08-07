@@ -35,6 +35,7 @@
     <subm-navbar
             [class.collapse-left]="!readonly && sideBarCollapsed"
             [accno]="accno"
+            [errors]="errors"
             [sectionPath]="sectionPath"
             (sectionClick)="onSectionClick($event)">
     </subm-navbar>
