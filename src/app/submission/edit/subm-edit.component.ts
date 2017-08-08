@@ -111,6 +111,10 @@ export class SubmEditComponent implements OnInit, OnDestroy {
         this.changeSection(section.id);
     }
 
+    onSectionDelete(section: Section): void {
+        this.section.sections.remove(section);
+    }
+
     onSubmit(event) {
         if (event) {
             event.preventDefault();

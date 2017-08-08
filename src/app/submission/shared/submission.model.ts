@@ -614,8 +614,12 @@ export class Sections extends HasUpdates<UpdateEvent> {
         return s;
     }
 
-    remove(): void {
-        // TODO
+    remove(section: Section): void {
+        const sections = this.sections;
+        const index = sections.indexOf(section);
+
+        sections.splice(index, 1);
+        console.log(`remove section with id: ${section.id}`);
     }
 
     get length(): number {
