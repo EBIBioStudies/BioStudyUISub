@@ -33,6 +33,7 @@ import {FeatureGridComponent} from './edit/subm-form/feature/feature-grid.compon
 import {FeatureListComponent} from './edit/subm-form/feature/feature-list.component';
 import {FeatureValueComponent} from './edit/subm-form/feature/feature-value.component';
 import {SubmNavBarComponent} from './edit/subm-navbar/subm-navbar.component';
+import {SubmValidationErrorsComponent} from './edit/subm-navbar/subm-validation-errors.component';
 import {SubmAddDialogComponent} from './edit/subm-add/subm-add.component';
 import {SubmFormService} from './edit/subm-form/subm-form.service';
 
@@ -68,6 +69,7 @@ import {SubmFormService} from './edit/subm-form/subm-form.service';
         SubmFeatureComponent,
         SubmSideBarComponent,
         SubmNavBarComponent,
+        SubmValidationErrorsComponent,
         SubmAddDialogComponent,
         FeatureValueComponent,
         FeatureGridComponent,
@@ -83,7 +85,10 @@ import {SubmFormService} from './edit/subm-form/subm-form.service';
         SubmViewComponent,
         DirectSubmitComponent
     ],
-    entryComponents: [ResultLogNodeComponent]
+    entryComponents: [
+        ResultLogNodeComponent,
+        SubmValidationErrorsComponent
+    ]
 })
 export class SubmissionModule {
 }

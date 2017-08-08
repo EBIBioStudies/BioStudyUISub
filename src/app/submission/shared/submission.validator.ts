@@ -20,17 +20,20 @@ class ValidationRules {
             ValidationRules.forFeature(section.annotations)
         );
 
-        rules.concat(
+        rules = rules.concat(
             section.features.list()
                 .map(feature => ValidationRules.forFeature(feature))
                 .reduce((rv, v) => rv.concat(v), [])
         );
 
-        rules.concat(
+        rules = rules.concat(
             section.sections.list()
                 .map(sec => ValidationRules.forSection(sec))
                 .reduce((rv, v) => rv.concat(v), [])
         );
+
+        // todo check section.type.featureTypes for required
+        // todo check section.type.sectionTypes for required
         return rules;
     }
 
@@ -45,7 +48,25 @@ class ValidationRules {
     }
 
     static forFeature(feature: Feature): ValidationRule[] {
-        return [];
+        const rules: ValidationRule[] = [];
+        if (feature.type.required) {
+            // rules.push(ValidationRules.atLeastOneRowFeature(feature))
+        }
+
+        const valueRules = [];
+        feature.columns.forEach((col, colIndex) => {
+            rules.push(ValidationRules.requiredValue(col.name, `${feature.type.name}: column ${colIndex}:`));
+            feature.rows.forEach((row, rowIndex) => {
+                const rowValue = row.valueFor(col.id).value;
+                const rowName = `${feature.type.name}: column ${colIndex}: row ${rowIndex}:`;
+                if (col.required) {
+                    valueRules.push(ValidationRules.requiredValue(rowValue, rowName));
+                }
+                valueRules.push(ValidationRules.formattedValue(rowValue, col.valueType, rowName));
+            });
+        });
+
+        return rules.concat(valueRules);
     }
 
     static requiredValue(value: string, name: string): ValidationRule {

@@ -10,7 +10,8 @@
     </div>
     <div style="margin-left: auto;">
         <span class="label"
-              [ngClass]="{'label-danger': errors.length > 0, 'label-info': errors.length === 0}">
+              [ngClass]="{'label-danger': errors.length > 0, 'label-info': errors.length === 0}"
+              (click)="onErrorsLabelClick($event)">
             {{errors.length}} Error(s)</span>
     </div>
 </div>

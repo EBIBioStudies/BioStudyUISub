@@ -1,0 +1,16 @@
+<div class="modal-header">
+    <button type="button"
+            class="close"
+            (click)="bsModalRef.hide()"
+            aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title">{{errors.length}} Error(s)</h4>
+</div>
+<div class="modal-body">
+    <ul class="list-group">
+        <li *ngFor="let error of errors" class="list-group-item text-danger">
+            <span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;{{error}}
+        </li>
+    </ul>
+</div>

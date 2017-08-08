@@ -74,13 +74,13 @@ export class SubmEditComponent implements OnInit, OnDestroy {
 
                 this.subm
                     .updates()
-                    .subscribe(ue =>  console.log(ue));
-                    /*.switchMap(ue => {
-                        console.log(ue);
-                        wrap.data = PageTab.fromSubmission(this.subm);
-                        return this.submService.saveSubmission(wrap);
-                    })
-                    .subscribe(result => console.log('saved: ' + result));*/
+                    .subscribe(ue => console.log(ue));
+                /*.switchMap(ue => {
+                    console.log(ue);
+                    wrap.data = PageTab.fromSubmission(this.subm);
+                    return this.submService.saveSubmission(wrap);
+                })
+                .subscribe(result => console.log('saved: ' + result));*/
 
                 this.changeSection(this.subm.root.id);
             });
@@ -97,6 +97,10 @@ export class SubmEditComponent implements OnInit, OnDestroy {
             return [];
         }
         return this.subm.sectionPath(this.section.id);
+    }
+
+    get submValid(): boolean {
+        return this.errors.length === 0;
     }
 
     loadSubmission(accno: string, section: string): void {
@@ -139,30 +143,24 @@ export class SubmEditComponent implements OnInit, OnDestroy {
             event.preventDefault();
         }
 
-        /* if (!this.canSubmit()) {
-         return;
-         }
+        if (!this.canSubmit() || !this.submValid) {
+            return;
+        }
 
-         this.errors = this.submModel.validate(this.submission);
-         if (this.errors.length > 0) {
-         this.showSubmitResults();
-         return;
-         }
-         this.submService.submitSubmission(this.__wrap())
-         .subscribe(
-         resp => {
-         console.debug("submitted", resp);
-         this.showSubmitResults()
-         },
-         error => {
-         this.errors = ['Failed to submit'];
-         this.showSubmitResults();
+       /* this.submService.submitSubmission(this.__wrap())
+            .subscribe(
+                resp => {
+                    console.debug('submitted', resp);
+                    this.showSubmitResults()
+                },
+                error => {
+                    this.errors = ['Failed to submit'];
+                    this.showSubmitResults();
 
-         if (!error.isDataError) {
-         throw error;
-         }
-         });
-         */
+                    if (!error.isDataError) {
+                        throw error;
+                    }
+                });*/
     }
 
     canSubmit() {
