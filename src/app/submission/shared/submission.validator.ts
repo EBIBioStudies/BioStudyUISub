@@ -26,12 +26,6 @@ class ValidationRules {
                 .reduce((rv, v) => rv.concat(v), [])
         );
 
-        rules = rules.concat(
-            section.sections.list()
-                .map(sec => ValidationRules.forSection(sec))
-                .reduce((rv, v) => rv.concat(v), [])
-        );
-
         // todo check section.type.featureTypes for required
         // todo check section.type.sectionTypes for required
         return rules;
@@ -55,10 +49,10 @@ class ValidationRules {
 
         const valueRules = [];
         feature.columns.forEach((col, colIndex) => {
-            rules.push(ValidationRules.requiredValue(col.name, `${feature.type.name}: column ${colIndex}:`));
+            rules.push(ValidationRules.requiredValue(col.name, `${feature.type.name}: (col ${colIndex}):`));
             feature.rows.forEach((row, rowIndex) => {
                 const rowValue = row.valueFor(col.id).value;
-                const rowName = `${feature.type.name}: column ${colIndex}: row ${rowIndex}:`;
+                const rowName = `${feature.type.name}: (col: ${colIndex}, row: ${rowIndex}):`;
                 if (col.required) {
                     valueRules.push(ValidationRules.requiredValue(rowValue, rowName));
                 }
@@ -127,28 +121,45 @@ class ValidationRules {
     }
 }
 
+export class SubmValidationErrors {
+    static EMPTY = new SubmValidationErrors('');
+
+    constructor(readonly secId: string,
+                readonly errors: string [] = [],
+                readonly sections: SubmValidationErrors[] = []) {
+    }
+
+    empty(): boolean {
+        return this.errors.length === 0 && this.sections.length === 0;
+    }
+
+    total(): number {
+       return this.errors.length + this.sections.reduce((rv, ve) => (rv + ve.total()), 0);
+    }
+}
+
 export class SubmissionValidator {
 
-    constructor(private subm: Submission) {
+    static validate(subm: Submission): SubmValidationErrors {
+        return this.validateSection(subm.root);
     }
 
-    validate(): string[] {
-        return ValidationRules.forSection(this.subm.root)
+    static validateSection(section: Section): SubmValidationErrors {
+        const errors = ValidationRules.forSection(section)
             .map(vr => vr.validate())
-            .filter(err => err !== undefined);
+            .filter(m => m !== undefined);
+        const sections = section.sections.list()
+            .map(s => SubmissionValidator.validateSection(s))
+            .filter(ve => !ve.empty());
+        return new SubmValidationErrors(section.id, errors, sections);
     }
 
-    cancel(): void {
-        // do we need this at all?
-    }
-
-    createObservable(): Observable<string[]> {
+    static createObservable(subm: Submission): Observable<SubmValidationErrors> {
         return Observable.create((observer) => {
-            observer.next(this.validate());
+            observer.next(SubmissionValidator.validate(subm));
             observer.complete();
 
             return () => {
-                this.cancel();
             };
         });
     }

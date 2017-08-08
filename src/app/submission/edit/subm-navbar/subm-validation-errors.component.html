@@ -5,12 +5,17 @@
             aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
-    <h4 class="modal-title">{{errors.length}} Error(s)</h4>
+    <h4 class="modal-title">{{errors.total()}} Error(s)</h4>
 </div>
 <div class="modal-body">
     <ul class="list-group">
-        <li *ngFor="let error of errors" class="list-group-item text-danger">
-            <span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;{{error}}
+        <li *ngFor="let error of errorList"
+            class="list-group-item text-danger">
+            <i *ngFor="let i of error.level"
+               style="width:20px"
+               class="fa fa-long-arrow-right"
+               aria-hidden="true"></i>
+            <span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;{{error.message}}
         </li>
     </ul>
 </div>

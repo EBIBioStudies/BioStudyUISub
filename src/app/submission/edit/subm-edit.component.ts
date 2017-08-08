@@ -27,7 +27,12 @@ import {
 } from '../shared/submission-type.model';
 
 import {PageTab} from '../shared/pagetab.model';
-import {SubmissionValidator} from '../shared/submission.validator';
+import {
+    SubmissionValidator,
+    SubmValidationErrors
+} from '../shared/submission.validator';
+import {isNullOrUndefined} from "util";
+
 
 @Component({
     selector: 'subm-edit',
@@ -40,7 +45,7 @@ export class SubmEditComponent implements OnInit, OnDestroy {
     subm: Submission;
     section: Section;
 
-    errors: string[] = [];
+    errors: SubmValidationErrors = SubmValidationErrors.EMPTY;
     accno = '';
 
     private subscr: Subscription;
@@ -61,15 +66,13 @@ export class SubmEditComponent implements OnInit, OnDestroy {
                 this.accno = wrap.accno;
                 this.subm = (new PageTab(wrap.data)).toSubmission(SubmissionType.createDefault());
 
-                const validator = new SubmissionValidator(this.subm);
-                this.errors = validator.validate();
+                this.errors = SubmissionValidator.validate(this.subm);
 
                 this.subm
                     .updates()
-                    .switchMap(ue => validator.createObservable())
+                    .switchMap(ue => SubmissionValidator.createObservable(this.subm))
                     .subscribe(errors => {
                         this.errors = errors;
-                        console.log(errors);
                     });
 
                 this.subm
@@ -100,7 +103,7 @@ export class SubmEditComponent implements OnInit, OnDestroy {
     }
 
     get submValid(): boolean {
-        return this.errors.length === 0;
+        return this.errors.empty();
     }
 
     loadSubmission(accno: string, section: string): void {
@@ -147,27 +150,27 @@ export class SubmEditComponent implements OnInit, OnDestroy {
             return;
         }
 
-       /* this.submService.submitSubmission(this.__wrap())
-            .subscribe(
-                resp => {
-                    console.debug('submitted', resp);
-                    this.showSubmitResults()
-                },
-                error => {
-                    this.errors = ['Failed to submit'];
-                    this.showSubmitResults();
+        /* this.submService.submitSubmission(this.__wrap())
+             .subscribe(
+                 resp => {
+                     console.debug('submitted', resp);
+                     this.showSubmitResults()
+                 },
+                 error => {
+                     this.errors = ['Failed to submit'];
+                     this.showSubmitResults();
 
-                    if (!error.isDataError) {
-                        throw error;
-                    }
-                });*/
+                     if (!error.isDataError) {
+                         throw error;
+                     }
+                 });*/
     }
 
     canSubmit() {
         return this.submitting ? false : (this.submitting = true);
     }
 
-    showSubmitResults() {
+    /*showSubmitResults() {
         this.submitting = false;
         this.submitResults.show();
     }
@@ -176,7 +179,7 @@ export class SubmEditComponent implements OnInit, OnDestroy {
         if (this.errors.length === 0) {
             this.router.navigate(['/submissions']);
         }
-    }
+    }*/
 
     private changeSection(sectionId: string) {
         const path: Section[] = this.subm.sectionPath(sectionId);

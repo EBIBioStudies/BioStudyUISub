@@ -4,14 +4,14 @@
     </div>
     <div style="margin-left:10px;">
         <span *ngFor="let sec of sectionPath">
-            <i *ngIf="!lst" class="fa fa-angle-double-right"></i>
+            <i class="fa fa-angle-double-right"></i>
             &nbsp;<a (click)="onSectionClick(sec)">{{sec.typeName}}</a>
         </span>
     </div>
     <div style="margin-left: auto;">
         <span class="label"
-              [ngClass]="{'label-danger': errors.length > 0, 'label-info': errors.length === 0}"
+              [ngClass]="{'label-danger': !errors.empty(), 'label-info': errors.empty()}"
               (click)="onErrorsLabelClick($event)">
-            {{errors.length}} Error(s)</span>
+            {{errors.total()}} Error(s)</span>
     </div>
 </div>

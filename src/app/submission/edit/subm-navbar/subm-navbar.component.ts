@@ -11,6 +11,7 @@ import {
     Section
 } from '../../shared/submission.model';
 import {SubmValidationErrorsComponent} from './subm-validation-errors.component';
+import {SubmValidationErrors} from '../../shared/submission.validator';
 
 @Component({
     selector: 'subm-navbar',
@@ -19,7 +20,7 @@ import {SubmValidationErrorsComponent} from './subm-validation-errors.component'
 })
 export class SubmNavBarComponent {
     @Input() accno: string;
-    @Input() errors: string[];
+    @Input() errors: SubmValidationErrors;
     @Input() sectionPath: Section[];
 
     @Output() sectionClick: EventEmitter<Section> = new EventEmitter<Section>();
