@@ -1,6 +1,15 @@
-import {Feature, Field, Section, Submission} from './submission.model';
+import {
+    Feature,
+    Field,
+    Section,
+    Submission
+} from './submission.model';
 import {Observable} from 'rxjs/Observable';
 import {parseDate} from '../../submission-shared/date.utils';
+import {
+    FeatureType,
+    SectionType
+} from './submission-type.model';
 
 interface ValidationRule {
     validate(): string | undefined;
@@ -26,8 +35,17 @@ class ValidationRules {
                 .reduce((rv, v) => rv.concat(v), [])
         );
 
-        // todo check section.type.featureTypes for required
-        // todo check section.type.sectionTypes for required
+        rules = rules.concat(
+            section.type.featureTypes
+                .filter(ft => ft.required)
+                .map(ft => ValidationRules.requiredFeature(ft, section))
+        );
+
+        rules = rules.concat(
+            section.type.sectionTypes
+                .filter(st => st.required)
+                .map(st => ValidationRules.requiredSection(st, section))
+        );
         return rules;
     }
 
@@ -44,7 +62,7 @@ class ValidationRules {
     static forFeature(feature: Feature): ValidationRule[] {
         const rules: ValidationRule[] = [];
         if (feature.type.required) {
-            // rules.push(ValidationRules.atLeastOneRowFeature(feature))
+            rules.push(ValidationRules.atLeastOneRowFeature(feature))
         }
 
         const valueRules = [];
@@ -61,6 +79,41 @@ class ValidationRules {
         });
 
         return rules.concat(valueRules);
+    }
+
+    static atLeastOneRowFeature(feature: Feature): ValidationRule {
+        return {
+            validate() {
+                if (feature.rowSize() === 0) {
+                    return `At least one of ${feature.type.name} is required`;
+                }
+                return undefined;
+            }
+        }
+    }
+
+    static requiredFeature(ft: FeatureType, section: Section): ValidationRule {
+        return {
+            validate() {
+                const features = section.features.list().filter(f => f.type.name === ft.name);
+                if (features.length === 0) {
+                    return `At least one of ${ft.name} is required in the section`;
+                }
+                return undefined;
+            }
+        }
+    }
+
+    static requiredSection(st: SectionType, section: Section): ValidationRule {
+        return {
+            validate() {
+                const sections = section.sections.list().filter(f => f.type.name === st.name);
+                if (sections.length === 0) {
+                    return `At least one subsection of ${st.name} is required`;
+                }
+                return undefined;
+            }
+        }
     }
 
     static requiredValue(value: string, name: string): ValidationRule {
@@ -134,17 +187,13 @@ export class SubmValidationErrors {
     }
 
     total(): number {
-       return this.errors.length + this.sections.reduce((rv, ve) => (rv + ve.total()), 0);
+        return this.errors.length + this.sections.reduce((rv, ve) => (rv + ve.total()), 0);
     }
 }
 
 export class SubmissionValidator {
 
-    static validate(subm: Submission): SubmValidationErrors {
-        return this.validateSection(subm.root);
-    }
-
-    static validateSection(section: Section): SubmValidationErrors {
+    private static validateSection(section: Section): SubmValidationErrors {
         const errors = ValidationRules.forSection(section)
             .map(vr => vr.validate())
             .filter(m => m !== undefined);
@@ -152,6 +201,10 @@ export class SubmissionValidator {
             .map(s => SubmissionValidator.validateSection(s))
             .filter(ve => !ve.empty());
         return new SubmValidationErrors(section.id, errors, sections);
+    }
+
+    static validate(subm: Submission): SubmValidationErrors {
+        return this.validateSection(subm.root);
     }
 
     static createObservable(subm: Submission): Observable<SubmValidationErrors> {
