@@ -103,16 +103,25 @@
   margin: 0 auto;
   padding: @modal-inner-padding;
   max-width: 400px;
+  font-size: 1.6rem;
+
+  .media-left {
+    font-size: 4rem;
+    padding-right: 2rem;
+    color: #82b0bc;
+    opacity: .7;
+  }
 }
 
 // Footer (for actions)
 .modal-footer {
   padding: @modal-inner-padding;
   text-align: right; // right align buttons
-  border-top: 1px solid @modal-footer-border-color;
+  border-top: none;
   &:extend(.clearfix all); // clear it in case folks use .pull-* classes on buttons
 
   .btn {
+    padding: .6rem 1rem;
     font-size: 1.35rem;
     text-transform: uppercase;
   }

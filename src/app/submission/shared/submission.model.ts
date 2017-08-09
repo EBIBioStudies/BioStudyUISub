@@ -618,6 +618,10 @@ export class Sections extends HasUpdates<UpdateEvent> {
         const sections = this.sections;
         const index = sections.indexOf(section);
 
+        this.subscriptions[index].unsubscribe();
+        this.subscriptions.splice(index, 1);
+        this.notify(new UpdateEvent('section_remove', {index: index}));
+
         sections.splice(index, 1);
     }
 

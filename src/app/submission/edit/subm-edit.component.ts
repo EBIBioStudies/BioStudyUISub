@@ -116,13 +116,14 @@ export class SubmEditComponent implements OnInit, OnDestroy {
     }
 
     onSectionDelete(section: Section): void {
-        let confirmMsg = 'Are you sure you want to delete the section';
+        let confirmMsg = 'You are about to permanently delete the section';
 
         if (section.accno) {
             confirmMsg += ` with accession number ${section.accno}`;
         }
+        confirmMsg += '. This operation cannot be undone.'
 
-        this.confirm(`${confirmMsg}?`)
+        this.confirm(`${confirmMsg}`)
             .subscribe(() => {
                 this.section.sections.remove(section);
             });
