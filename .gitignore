@@ -9,3 +9,4 @@ temp/
 public_old/
 jspm_packages/
 */jspm_packages/
+npm-debug.log
