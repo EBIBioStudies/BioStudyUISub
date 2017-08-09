@@ -79,6 +79,10 @@
 .modal-header {
   padding: @modal-title-padding;
   border-bottom: 1px solid @modal-header-border-color;
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #fafafa;
+  background: #82b0bc;
   &:extend(.clearfix all);
 }
 // Close icon
@@ -96,7 +100,9 @@
 // Where all modal content resides (sibling of .modal-header and .modal-footer)
 .modal-body {
   position: relative;
+  margin: 0 auto;
   padding: @modal-inner-padding;
+  max-width: 400px;
 }
 
 // Footer (for actions)
@@ -105,6 +111,11 @@
   text-align: right; // right align buttons
   border-top: 1px solid @modal-footer-border-color;
   &:extend(.clearfix all); // clear it in case folks use .pull-* classes on buttons
+
+  .btn {
+    font-size: 1.35rem;
+    text-transform: uppercase;
+  }
 
   // Properly space out buttons
   .btn + .btn {

@@ -59,7 +59,7 @@
                                 : {{section.accno}}
                             </div>
                             <span class="btn-toolbar pull-right">
-                                <button type="button" class="section-delete btn btn-danger btn-xs btn-flat"
+                                <button type="button" *ngIf="!section.required" class="section-delete btn btn-danger btn-xs btn-flat"
                                         tooltip="delete"
                                         container="body"
                                         (click)="onSectionDelete(section)">

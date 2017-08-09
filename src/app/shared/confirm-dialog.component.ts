@@ -19,23 +19,21 @@ import 'rxjs/add/operator/take';
 
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header alert-warning">
-                <!--button type="button" class="close pull-right" aria-label="Close" (click)="no()">
-                    <span aria-hidden="true">&times;</span>
-                </button-->
+            <div class="modal-header">{{title}}</div>
+            <div class="modal-body">
                 <div class="media">
                     <span class="media-left">
-                        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                        <i aria-hidden="true" class="fa fa-exclamation-triangle"></i>
                     </span>
                     <div class="media-body">
-                        <p class="media-heading">{{message}}</p>
+                        <p class="media-heading">{{body}}</p>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <div class="pull-right">
-                    <button type="button" class="btn btn-primary btn-xs" (click)="yes()">Yes</button>
-                    <button type="button" class="btn btn-default btn-xs" (click)="no()">No</button>                
+                    <button type="button" class="btn btn-primary btn-xs" (click)="ok()">{{confirmLabel}}</button>
+                    <button type="button" class="btn btn-default btn-xs" (click)="cancel()">{{abortLabel}}</button>                
                 </div>
             </div>  
         </div>
@@ -50,10 +48,13 @@ export class ConfirmDialogComponent {
     @ViewChild('staticModal')
     private modalDirective: ModalDirective;
 
-    message: string = '';
+    title: string = 'Confirm';          //Summary text for the modal's title
+    body: string = 'Are you sure?';     //Descriptive message for the modal's body
+    confirmLabel: string = 'Ok';        //Default name for positive action
+    abortLabel: string = 'Cancel';      //Default name for negative action
 
     confirm(message: string): Observable<any> {
-        this.message = message;
+        this.body = message;
         this.modalDirective.show();
         return this.buttonClicks
             .asObservable()
@@ -63,12 +64,12 @@ export class ConfirmDialogComponent {
             });
     }
 
-    yes(): void {
+    ok(): void {
         this.buttonClicks.next(true);
         this.modalDirective.hide();
     }
 
-    no(): void {
+    cancel(): void {
         this.buttonClicks.next(false);
         this.modalDirective.hide();
     }

@@ -619,7 +619,6 @@ export class Sections extends HasUpdates<UpdateEvent> {
         const index = sections.indexOf(section);
 
         sections.splice(index, 1);
-        console.log(`remove section with id: ${section.id}`);
     }
 
     get length(): number {

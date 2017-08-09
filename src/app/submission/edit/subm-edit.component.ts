@@ -12,6 +12,7 @@ import {
 } from '@angular/router';
 
 import {Subscription} from 'rxjs/Subscription';
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
 import {ModalDirective} from 'ngx-bootstrap/modal/modal.component';
@@ -27,6 +28,8 @@ import {
 } from '../shared/submission-type.model';
 
 import {PageTab} from '../shared/pagetab.model';
+
+import {ConfirmDialogComponent} from 'app/shared/index';
 
 @Component({
     selector: 'subm-edit',
@@ -46,6 +49,7 @@ export class SubmEditComponent implements OnInit, OnDestroy {
     private submitting = false;
 
     @ViewChild('submitResults') public submitResults: ModalDirective;
+    @ViewChild('confirmDialog') confirmDialog: ConfirmDialogComponent;
 
     constructor(private route: ActivatedRoute,
                 private submService: SubmissionService,
@@ -112,7 +116,16 @@ export class SubmEditComponent implements OnInit, OnDestroy {
     }
 
     onSectionDelete(section: Section): void {
-        this.section.sections.remove(section);
+        let confirmMsg = 'Are you sure you want to delete the section';
+
+        if (section.accno) {
+            confirmMsg += ` with accession number ${section.accno}`;
+        }
+
+        this.confirm(`${confirmMsg}?`)
+            .subscribe(() => {
+                this.section.sections.remove(section);
+            });
     }
 
     onSubmit(event) {
@@ -159,6 +172,10 @@ export class SubmEditComponent implements OnInit, OnDestroy {
         if (this.errors.length === 0) {
             this.router.navigate(['/submissions']);
         }
+    }
+
+    private confirm(text: string): Observable<any> {
+        return this.confirmDialog.confirm(text);
     }
 
     private changeSection(sectionId: string) {
