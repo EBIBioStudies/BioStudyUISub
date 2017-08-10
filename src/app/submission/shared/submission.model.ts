@@ -548,6 +548,10 @@ export class Section extends HasUpdates<UpdateEvent> {
         }
     }
 
+    isRequired(): boolean {
+        return this.type.required;
+    }
+
     sectionPath(id: string): Section[] {
         if (id === this.id) {
             return [this];
@@ -623,6 +627,13 @@ export class Sections extends HasUpdates<UpdateEvent> {
         this.notify(new UpdateEvent('section_remove', {index: index}));
 
         sections.splice(index, 1);
+    }
+
+    isLastOfType(typeName: string): boolean { console.log('lastif')
+        const sectionsFiltered = this.sections.filter(section => {
+            return section.type.name === typeName;
+        });
+        return sectionsFiltered.length === 1;
     }
 
     get length(): number {

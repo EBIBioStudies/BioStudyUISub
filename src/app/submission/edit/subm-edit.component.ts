@@ -110,20 +110,23 @@ export class SubmEditComponent implements OnInit, OnDestroy {
          });*/
     }
 
+    isRemovable(section: Section): boolean {
+        return !section.isRequired() && this.section.sections.isLastOfType(section.typeName);
+    }
 
     onSectionClick(section: Section): void {
         this.changeSection(section.id);
     }
 
     onSectionDelete(section: Section): void {
-        let confirmMsg = 'You are about to permanently delete the section';
+        let confirmMsg: string = 'You are about to permanently delete the section';
 
         if (section.accno) {
             confirmMsg += ` with accession number ${section.accno}`;
         }
         confirmMsg += '. This operation cannot be undone.'
 
-        this.confirm(`${confirmMsg}`)
+        this.confirm(confirmMsg)
             .subscribe(() => {
                 this.section.sections.remove(section);
             });

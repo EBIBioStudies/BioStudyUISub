@@ -59,7 +59,7 @@
                                 : {{section.accno}}
                             </div>
                             <span class="btn-toolbar pull-right">
-                                <button type="button" *ngIf="!section.required" class="section-delete btn btn-danger btn-xs btn-flat"
+                                <button type="button" *ngIf="isRemovable(section)" class="section-delete btn btn-danger btn-xs btn-flat"
                                         tooltip="delete"
                                         container="body"
                                         (click)="onSectionDelete(section)">
@@ -91,6 +91,7 @@
         </aside>
         <confirm-dialog #confirmDialog
                         title="Delete section"
+                        body="You are about to permanently delete the section"
                         confirmLabel="Delete">
         </confirm-dialog>
     </div>

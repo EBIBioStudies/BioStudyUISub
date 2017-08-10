@@ -23,8 +23,7 @@ export class ConfirmDialogComponent {
     @Input() title: string = 'Confirm';          //Summary text for the modal's title
     @Input() confirmLabel: string = 'Ok';        //Default name for positive action
     @Input() abortLabel: string = 'Cancel';      //Default name for negative action
-
-    body: string = 'Are you sure?';              //Descriptive message for the modal's body
+    @Input() body: string = 'Are you sure?';     //Descriptive message for the modal's body
 
     confirm(message: string): Observable<any> {
         this.body = message;
