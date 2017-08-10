@@ -371,8 +371,12 @@ export class Feature extends HasUpdates<UpdateEvent> {
         return this._rows.add(this._columns.keys());
     }
 
+    canRemoveRowAt(index: number): boolean {
+        return !this.singleRow && !(this.type.required && this.rowSize() === 1);
+    }
+
     removeRowAt(index: number): void {
-        if (this.singleRow) {
+        if (this.canRemoveRowAt(index)) {
             console.warn(`removeRowAt: The feature [type=${this.type.name}] can't have less than one row`);
             return;
         }
