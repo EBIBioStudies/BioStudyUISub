@@ -629,7 +629,7 @@ export class Sections extends HasUpdates<UpdateEvent> {
         sections.splice(index, 1);
     }
 
-    isLastOfType(typeName: string): boolean { console.log('lastif')
+    isLastOfType(typeName: string): boolean {
         const sectionsFiltered = this.sections.filter(section => {
             return section.type.name === typeName;
         });
