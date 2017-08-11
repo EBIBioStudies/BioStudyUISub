@@ -77,13 +77,11 @@ export class SubmEditComponent implements OnInit, OnDestroy {
 
                 this.subm
                     .updates()
-                    .subscribe(ue => console.log(ue));
-                /*.switchMap(ue => {
-                    console.log(ue);
-                    wrap.data = PageTab.fromSubmission(this.subm);
-                    return this.submService.saveSubmission(wrap);
-                })
-                .subscribe(result => console.log('saved: ' + result));*/
+                    .switchMap(ue => {
+                        wrap.data = PageTab.fromSubmission(this.subm);
+                        return this.submService.saveSubmission(wrap);
+                    })
+                    .subscribe(result => console.log('saved: ' + result));
 
                 this.changeSection(this.subm.root.id);
             });
