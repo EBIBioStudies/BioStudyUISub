@@ -178,9 +178,9 @@ export class PageTab implements SubmissionData {
         return f.rows.map(row => (
             {
                 type: f.type.name,
-                attributes: row.keys().map(k => ({
-                    name: k,
-                    value: row.valueFor(k).value
+                attributes: f.columns.map(c => ({
+                    name: c.name,
+                    value: row.valueFor(c.id).value
                 }))
             }));
     }
