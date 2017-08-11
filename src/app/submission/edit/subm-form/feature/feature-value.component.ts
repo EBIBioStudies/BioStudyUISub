@@ -11,7 +11,7 @@ import {
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
     FormControl
-} from "@angular/forms";
+} from '@angular/forms';
 
 @Component({
     selector: 'feature-value',
@@ -22,17 +22,17 @@ import {
     ]
 })
 export class FeatureValueComponent implements ControlValueAccessor, OnChanges {
-
-    propagateChange: any = () => {
-    };
-    validateFn: any = () => {
-    };
-
     @Input() type: string;
     @Input() readonly: boolean;
     @Input() required: boolean;
 
-    private _value: string = '';
+    private _value = '';
+
+    propagateChange: any = () => {
+    };
+
+    validateFn: any = () => {
+    };
 
     get value() {
         return this._value;

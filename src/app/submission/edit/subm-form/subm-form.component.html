@@ -15,6 +15,7 @@
                     [type]="field.valueType"
                     [name]="field.name"
                     [readonly]="readonly"
+                    [(ngModel)]="field.value"
                     [formControl]="sectionForm.fieldControl(field.id)">
             </subm-field>
         </div>

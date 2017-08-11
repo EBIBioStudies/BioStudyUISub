@@ -1,0 +1,13 @@
+<div class="modal-header">
+    <button type="button"
+            class="close"
+            (click)="bsModalRef.hide()"
+            aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title">Submission {{status}}</h4>
+</div>
+<div class="modal-body">
+    <subm-results-tree
+            [log]="log"></subm-results-tree>
+</div>

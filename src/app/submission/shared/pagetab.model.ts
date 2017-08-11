@@ -118,6 +118,11 @@ export class PageTab implements SubmissionData {
         return convertContactsToAuthors(pt);
     }
 
+    static createNew(): any {
+        const pt = new PageTab();
+        return PageTab.fromSubmission(pt.toSubmission(SubmissionType.createDefault()));
+    }
+
     private static fromSection(sec: Section): any {
         const pts: any = {
             type: sec.type.name
@@ -173,9 +178,9 @@ export class PageTab implements SubmissionData {
         return f.rows.map(row => (
             {
                 type: f.type.name,
-                attributes: row.keys().map(k => ({
-                    name: k,
-                    value: row.valueFor(k).value
+                attributes: f.columns.map(c => ({
+                    name: c.name,
+                    value: row.valueFor(c.id).value
                 }))
             }));
     }

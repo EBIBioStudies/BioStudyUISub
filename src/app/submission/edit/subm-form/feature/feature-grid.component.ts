@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 
 import {Feature, Attribute, ValueMap} from '../../../shared/submission.model';
-import {FeatureForm} from "../subm-form.service";
+import {FeatureForm} from '../subm-form.service';
 
 @Component({
     selector: 'subm-feature-grid',
@@ -13,10 +13,10 @@ import {FeatureForm} from "../subm-form.service";
 })
 export class FeatureGridComponent {
     @Input() featureForm: FeatureForm;
-    @Input() readonly?: boolean = false;
+    @Input() readonly? = false;
 
     get rowWidth(): string {
-        //TODO move window to provider for easy testing
+        // TODO move window to provider for easy testing
         const w = window.innerWidth;
         const k = (w >= 768 ? 2 : 3);
         return 100 * (k * this.feature.colSize() + 1) / 12 + 'vw';

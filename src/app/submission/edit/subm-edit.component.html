@@ -1,30 +1,3 @@
-<div *ngIf="!readonly" bsModal #submitResults="bs-modal"
-     class="modal fade"
-     tabindex="-1"
-     role="dialog"
-     aria-labelledby="myLargeModalLabel"
-     aria-hidden="true"
-     (onHide)="onSubmitResultsHide()">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" (click)="submitResults.hide()" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 *ngIf="errors.length > 0" class="modal-title">Submit failed</h4>
-                <h4 *ngIf="errors.length == 0" class="modal-title">Submit succeeded</h4>
-            </div>
-            <div class="modal-body">
-                <ul class="list-group">
-                    <li *ngFor="let error of errors" class="list-group-item text-danger">
-                        <span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;{{error}}
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="row-offcanvas row-offcanvas-left">
     <subm-sidebar *ngIf="!readonly"
                   (toggle)="sideBarCollapsed=!sideBarCollapsed"
@@ -35,6 +8,7 @@
     <subm-navbar
             [class.collapse-left]="!readonly && sideBarCollapsed"
             [accno]="accno"
+            [errors]="errors"
             [sectionPath]="sectionPath"
             (sectionClick)="onSectionClick($event)">
     </subm-navbar>

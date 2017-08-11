@@ -181,7 +181,7 @@ describe('PageTab', () => {
         const pt = PageTab.fromSubmission(subm);
 
         expect(pt.type).toBe('Submission');
-        expect(pt.accno).toBeUndefined();
+        expect(pt.accno).toEqual('');
         expect(pt.section).toBeDefined();
         expect(pt.section.type).toBe('Study');
         expect(pt.section.accno).toBeUndefined();

@@ -4,16 +4,14 @@
     </div>
     <div style="margin-left:10px;">
         <span *ngFor="let sec of sectionPath">
-            <i *ngIf="!lst" class="fa fa-angle-double-right"></i>
+            <i class="fa fa-angle-double-right"></i>
             &nbsp;<a (click)="onSectionClick(sec)">{{sec.typeName}}</a>
         </span>
     </div>
     <div style="margin-left: auto;">
-        <span class="label label-danger">7 Errors</span>
+        <span class="label"
+              [ngClass]="{'label-danger': !errors.empty(), 'label-info': errors.empty()}"
+              (click)="onErrorsLabelClick($event)">
+            {{errors.total()}} Error(s)</span>
     </div>
 </div>
-<!--span calss="danger" *ngIf="!readonly && !submValid"> << There are some validation errors. Please correct them before to proceed to submit >> </span-->
-<!--div *ngIf="readonly" class="pull-right">
-    <a class="pull-right btn btn-success btn-xs"
-       (click)="onEditSubmission()">Edit</a>
-</div-->

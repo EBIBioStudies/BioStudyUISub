@@ -5,16 +5,13 @@ import {Observable} from 'rxjs/Observable';
 import {GridOptions} from 'ag-grid/main';
 import {AgRendererComponent} from 'ag-grid-angular/main';
 
-import {SubmissionModel} from 'app/submission-model/index';
 import {UserData} from 'app/auth/index';
 import {ConfirmDialogComponent} from 'app/shared/index';
 
 import {SubmissionService} from '../shared/submission.service';
 import {TextFilterComponent} from './ag-grid/text-filter.component';
 import {DateFilterComponent} from './ag-grid/date-filter.component';
-
-
-import * as _ from 'lodash';
+import {PageTab} from '../shared/pagetab.model';
 
 @Component({
     selector: 'action-buttons-cell',
@@ -56,11 +53,11 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
     status: string;
 
     agInit(params: any): void {
-        let data = params.data;
+        const data = params.data;
         this.status = data.status;
         this.accno = data.accno;
 
-        let noop = (accno: string) => {
+        const noop = (accno: string) => {
         };
         this.onDelete = data.onDelete || noop;
         this.onEdit = data.onEdit || noop;
@@ -121,7 +118,6 @@ export class SubmListComponent {
     columnDefs: any[];
 
     constructor(private submService: SubmissionService,
-                private submModel: SubmissionModel,
                 private router: Router,
                 private userData: UserData) {
 
@@ -179,11 +175,11 @@ export class SubmListComponent {
     setDatasource() {
         if (!this.datasource) {
             this.datasource = {
-                //rowCount: ???, - not setting the row count, infinite paging will be used
+                // rowCount: ???, - not setting the row count, infinite paging will be used
                 getRows: (params) => {
                     console.log('ag-grid params', params);
-                    let pageSize = params.endRow - params.startRow;
-                    let fm = params.filterModel || {};
+                    const pageSize = params.endRow - params.startRow;
+                    const fm = params.filterModel || {};
 
                     if (this.gridOptions.api != null) {
                         this.gridOptions.api.showLoadingOverlay();
@@ -214,14 +210,14 @@ export class SubmListComponent {
     }
 
     onSubmTabSelect(submitted) {
-        if (this.showSubmitted != submitted) {
+        if (this.showSubmitted !== submitted) {
             this.showSubmitted = submitted;
             this.setDatasource();
         }
     }
 
-    decorateDataRows(rows: any[]) {
-        return _.map(rows, (row: any) => ({
+    decorateDataRows(rows: any[]): any {
+        return rows.map(row => ({
             accno: row.accno,
             title: row.title,
             rtime: row.rtime,
@@ -249,15 +245,14 @@ export class SubmListComponent {
     };
 
     createSubmission() {
-        let userName = this.userData.name;
-        let userEmail = this.userData.email;
-        let userOrcid = this.userData.orcid;
+        // const userName = this.userData.name;
+        // const userEmail = this.userData.email;
+        // const userOrcid = this.userData.orcid;
 
-        let sbm = this.submModel.createNew(userName, userEmail, userOrcid);
-        this.submService.createSubmission(sbm)
-            .subscribe((sbm) => {
-                console.log("created submission:", sbm);
-                this.startEditing(sbm.accno);
+        this.submService.createSubmission(PageTab.createNew())
+            .subscribe((s) => {
+                console.log('created submission:', s);
+                this.startEditing(s.accno);
             });
     };
 
