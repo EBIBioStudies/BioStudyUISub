@@ -9,7 +9,7 @@ import {SubmValidationErrors} from '../../shared/submission.validator';
     selector: 'subm-validation-errors',
     templateUrl: './subm-validation-errors.component.html'
 })
-export class SubmValidationErrorsComponent {
+export class SubmValidationErrorsModalComponent {
     errors: SubmValidationErrors = SubmValidationErrors.EMPTY;
 
     constructor(public bsModalRef: BsModalRef) {

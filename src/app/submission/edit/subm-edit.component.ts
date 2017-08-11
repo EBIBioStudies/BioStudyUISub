@@ -14,7 +14,7 @@ import {
 import {Subscription} from 'rxjs/Subscription';
 import 'rxjs/add/operator/switchMap';
 
-import {ModalDirective} from 'ngx-bootstrap/modal/modal.component';
+import {BsModalService} from 'ngx-bootstrap/modal';
 
 import {
     Submission,
@@ -31,8 +31,8 @@ import {
     SubmissionValidator,
     SubmValidationErrors
 } from '../shared/submission.validator';
-import {isNullOrUndefined} from "util";
-
+import {ServerError} from '../../http/server-error.handler';
+import {SubmResultsModalComponent} from '../results/subm-results-modal.component';
 
 @Component({
     selector: 'subm-edit',
@@ -50,21 +50,22 @@ export class SubmEditComponent implements OnInit, OnDestroy {
 
     private subscr: Subscription;
     private submitting = false;
-
-    @ViewChild('submitResults') public submitResults: ModalDirective;
+    private wrappedSubm: any;
 
     constructor(private route: ActivatedRoute,
                 private submService: SubmissionService,
-                private router: Router) {
+                private router: Router,
+                private modalService: BsModalService) {
     }
 
     ngOnInit() {
         this.route.params
             .map((params: Params) => params['accno'])
             .switchMap(accno => this.submService.getSubmission(accno))
-            .subscribe(wrap => {
-                this.accno = wrap.accno;
-                this.subm = (new PageTab(wrap.data)).toSubmission(SubmissionType.createDefault());
+            .subscribe(wrappedSubm => {
+                this.wrappedSubm = wrappedSubm;
+                this.accno = wrappedSubm.accno;
+                this.subm = (new PageTab(wrappedSubm.data)).toSubmission(SubmissionType.createDefault());
 
                 this.errors = SubmissionValidator.validate(this.subm);
 
@@ -78,8 +79,7 @@ export class SubmEditComponent implements OnInit, OnDestroy {
                 this.subm
                     .updates()
                     .switchMap(ue => {
-                        wrap.data = PageTab.fromSubmission(this.subm);
-                        return this.submService.saveSubmission(wrap);
+                        return this.submService.saveSubmission(this.wrap());
                     })
                     .subscribe(result => console.log('saved: ' + result));
 
@@ -104,37 +104,6 @@ export class SubmEditComponent implements OnInit, OnDestroy {
         return this.errors.empty();
     }
 
-    loadSubmission(accno: string, section: string): void {
-        /*this.route.params.forEach((params: Params) => {
-         this.accno = params['accno'];
-         this.submService
-         .getSubmission(this.accno)
-         .subscribe(resp => {
-         let wrap = resp;
-         let pt = new PageTab(wrap.data);
-         this.__wrap = ((w, p) => {
-         return function () {
-         w.data = p.data;
-         return wrap;
-         }
-         })(wrap, pt);
-
-         this.submission = pt.asSubmission(this.dictService.dict());
-         console.debug('SubmEdit: submission loaded ', this.submission);
-
-         this.__subscr = pt.changes().subscribe((changes) => {
-         console.debug('SubmEdit: sending changes to the server...');
-         this.submService.saveSubmission(this.__wrap())
-         .subscribe(resp => {
-         console.debug('SubmEdit: all sent');
-         });
-         });
-         });
-
-         });*/
-    }
-
-
     onSectionClick(section: Section): void {
         this.changeSection(section.id);
     }
@@ -148,36 +117,66 @@ export class SubmEditComponent implements OnInit, OnDestroy {
             return;
         }
 
-        /* this.submService.submitSubmission(this.__wrap())
-             .subscribe(
-                 resp => {
-                     console.debug('submitted', resp);
-                     this.showSubmitResults()
-                 },
-                 error => {
-                     this.errors = ['Failed to submit'];
-                     this.showSubmitResults();
+        this.submService.submitSubmission(this.wrap())
+            .subscribe(
+                resp => {
+                    console.log('submitted', resp);
+                    this.showSubmitResults(resp);
+                },
+                (error: ServerError) => {
+                    this.showSubmitResults({
+                        status: 'FAIL',
+                        log: {
+                            level: 'ERROR',
+                            message: error.message
+                        }
+                    });
 
-                     if (!error.isDataError) {
-                         throw error;
-                     }
-                 });*/
+                    if (!error.isDataError) {
+                        throw error;
+                    }
+                });
     }
 
     canSubmit() {
         return this.submitting ? false : (this.submitting = true);
     }
 
-    /*showSubmitResults() {
+    showSubmitResults(resp: any) {
         this.submitting = false;
-        this.submitResults.show();
+
+        const subscriptions = (function () {
+            let list = [];
+            return {
+                push: function (i) {
+                    list.push(i);
+                },
+                unsubscribe: function () {
+                    list.forEach(i => i.unsubscribe());
+                    list = [];
+                }
+            }
+        })();
+
+        subscriptions.push(this.modalService.onHide.subscribe((reason: string) => {
+            if (resp.status === 'OK') {
+                this.router.navigate(['/submissions']);
+            }
+        }));
+        subscriptions.push(this.modalService.onHidden.subscribe((reason: string) => {
+            subscriptions.unsubscribe();
+        }));
+
+        const bsModalRef = this.modalService.show(SubmResultsModalComponent);
+        bsModalRef.content.log = resp.log || {};
+        bsModalRef.content.status = resp.status;
     }
 
-    onSubmitResultsHide() {
-        if (this.errors.length === 0) {
-            this.router.navigate(['/submissions']);
-        }
-    }*/
+    private wrap(): any {
+        const w = Object.assign({}, this.wrappedSubm);
+        w.data = PageTab.fromSubmission(this.subm);
+        return w;
+    }
 
     private changeSection(sectionId: string) {
         const path: Section[] = this.subm.sectionPath(sectionId);
