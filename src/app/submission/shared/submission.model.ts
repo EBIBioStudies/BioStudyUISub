@@ -600,6 +600,10 @@ export class Sections extends HasUpdates<UpdateEvent> {
         });
     }
 
+    get length(): number {
+        return this.sections.length;
+    }
+
     list(): Section[] {
         return this.sections;
     }
@@ -622,11 +626,18 @@ export class Sections extends HasUpdates<UpdateEvent> {
         const sections = this.sections;
         const index = sections.indexOf(section);
 
-        this.subscriptions[index].unsubscribe();
-        this.subscriptions.splice(index, 1);
-        this.notify(new UpdateEvent('section_remove', {index: index}));
+        if (this.isRemovable(section)) {
+            this.subscriptions[index].unsubscribe();
+            this.subscriptions.splice(index, 1);
+            this.notify(new UpdateEvent('section_remove', {index: index}));
 
-        sections.splice(index, 1);
+            sections.splice(index, 1);
+        }
+    }
+
+    //It is assumed that removable sections
+    isRemovable(section: Section): boolean {
+        return !section.isRequired() || !this.isLastOfType(section.typeName);
     }
 
     isLastOfType(typeName: string): boolean {
@@ -634,10 +645,6 @@ export class Sections extends HasUpdates<UpdateEvent> {
             return section.type.name === typeName;
         });
         return sectionsFiltered.length === 1;
-    }
-
-    get length(): number {
-        return this.sections.length;
     }
 }
 

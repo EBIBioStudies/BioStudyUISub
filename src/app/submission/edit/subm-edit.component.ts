@@ -110,10 +110,6 @@ export class SubmEditComponent implements OnInit, OnDestroy {
          });*/
     }
 
-    isRemovable(section: Section): boolean {
-        return !section.isRequired() || !this.section.sections.isLastOfType(section.typeName);
-    }
-
     onSectionClick(section: Section): void {
         this.changeSection(section.id);
     }
