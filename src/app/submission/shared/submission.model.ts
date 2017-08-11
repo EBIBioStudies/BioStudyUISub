@@ -563,6 +563,10 @@ export class Section extends HasUpdates<UpdateEvent> {
         }
     }
 
+    isRequired(): boolean {
+        return this.type.required;
+    }
+
     sectionPath(id: string): Section[] {
         if (id === this.id) {
             return [this];
@@ -611,6 +615,10 @@ export class Sections extends HasUpdates<UpdateEvent> {
         });
     }
 
+    get length(): number {
+        return this.sections.length;
+    }
+
     list(): Section[] {
         return this.sections;
     }
@@ -629,12 +637,29 @@ export class Sections extends HasUpdates<UpdateEvent> {
         return s;
     }
 
-    remove(): void {
-        // TODO
+    remove(section: Section): void {
+        const sections = this.sections;
+        const index = sections.indexOf(section);
+
+        if (this.isRemovable(section)) {
+            this.subscriptions[index].unsubscribe();
+            this.subscriptions.splice(index, 1);
+            this.notify(new UpdateEvent('section_remove', {index: index}));
+
+            sections.splice(index, 1);
+        }
     }
 
-    get length(): number {
-        return this.sections.length;
+    //It is assumed that removable sections
+    isRemovable(section: Section): boolean {
+        return !section.isRequired() || !this.isLastOfType(section.typeName);
+    }
+
+    isLastOfType(typeName: string): boolean {
+        const sectionsFiltered = this.sections.filter(section => {
+            return section.type.name === typeName;
+        });
+        return sectionsFiltered.length === 1;
     }
 }
 

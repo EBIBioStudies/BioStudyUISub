@@ -1,0 +1,27 @@
+<div class="modal fade" bsModal #staticModal="bs-modal"
+     [config]="{backdrop: 'static'}"
+     tabindex="-1"
+     role="dialog">
+
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">{{title}}</div>
+            <div class="modal-body">
+                <div class="media">
+                    <span class="media-left media-middle">
+                        <i aria-hidden="true" class="fa fa-exclamation-triangle"></i>
+                    </span>
+                    <div class="media-body media-middle">
+                        <p class="media-heading">{{body}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-right">
+                    <button type="button" class="btn btn-primary btn-xs" (click)="ok()">{{confirmLabel}}</button>
+                    <button type="button" class="btn btn-default btn-xs" (click)="cancel()">{{abortLabel}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

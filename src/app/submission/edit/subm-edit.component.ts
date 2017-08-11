@@ -12,8 +12,10 @@ import {
 } from '@angular/router';
 
 import {Subscription} from 'rxjs/Subscription';
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
+import {ModalDirective} from 'ngx-bootstrap/modal/modal.component';
 import {BsModalService} from 'ngx-bootstrap/modal';
 
 import {
@@ -34,6 +36,8 @@ import {
 import {ServerError} from '../../http/server-error.handler';
 import {SubmResultsModalComponent} from '../results/subm-results-modal.component';
 
+import {ConfirmDialogComponent} from 'app/shared/index';
+
 @Component({
     selector: 'subm-edit',
     templateUrl: './subm-edit.component.html'
@@ -51,6 +55,7 @@ export class SubmEditComponent implements OnInit, OnDestroy {
     private subscr: Subscription;
     private submitting = false;
     private wrappedSubm: any;
+    @ViewChild('confirmDialog') confirmDialog: ConfirmDialogComponent;
 
     constructor(private route: ActivatedRoute,
                 private submService: SubmissionService,
@@ -106,6 +111,20 @@ export class SubmEditComponent implements OnInit, OnDestroy {
 
     onSectionClick(section: Section): void {
         this.changeSection(section.id);
+    }
+
+    onSectionDelete(section: Section): void {
+        let confirmMsg: string = 'You are about to permanently delete the section';
+
+        if (section.accno) {
+            confirmMsg += ` with accession number ${section.accno}`;
+        }
+        confirmMsg += '. This operation cannot be undone.'
+
+        this.confirm(confirmMsg)
+            .subscribe(() => {
+                this.section.sections.remove(section);
+            });
     }
 
     onSubmit(event) {
@@ -176,6 +195,10 @@ export class SubmEditComponent implements OnInit, OnDestroy {
         const w = Object.assign({}, this.wrappedSubm);
         w.data = PageTab.fromSubmission(this.subm);
         return w;
+    }
+
+    private confirm(text: string): Observable<any> {
+        return this.confirmDialog.confirm(text);
     }
 
     private changeSection(sectionId: string) {
