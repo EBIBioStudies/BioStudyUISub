@@ -105,52 +105,7 @@ export class DateCellComponent implements AgRendererComponent {
 
 @Component({
     selector: 'subm-list',
-    template: `
-        <container-root>
-
-            <aside class="right-side stretch" style="padding-top: 5px">
-                <tabset>
-                    <tab heading="New / Modified Submissions"
-                         [active]="!showSubmitted"
-                         (select)="onSubmTabSelect(false)"></tab>
-                    <tab heading="Submitted Submissions"
-                         [active]="showSubmitted"
-                         (select)="onSubmTabSelect(true)"></tab>
-                </tabset>
-
-                <section class="content">
-                    <div class="panel panel-info">
-                        <div class="panel-heading clearfix">
-                            <p class="pull-right">
-                                <a class="pull-right btn btn-default btn-xs"
-                                   (click)="createSubmission()">
-                                    <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                                    <span>Create new submission</span>
-                                </a>
-                                <a style="margin-right:3px"
-                                   class="pull-right btn btn-default btn-xs"
-                                   (click)="uploadSubmission()">
-                                    <i class="fa fa-upload" aria-hidden="true"></i>
-                                    <span>Direct upload</span>
-                                </a>
-                            </p>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <ag-grid-angular #agGrid style="width: 100%; height: 500px;" class="ag-fresh"
-                                                 [gridOptions]="gridOptions"
-                                                 [columnDefs]="columnDefs">
-                                </ag-grid-angular>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-            </aside>
-
-        </container-root>
-        <confirm-dialog #confirmDialog></confirm-dialog>
-    `
+    templateUrl: './subm-list.component.html'
 })
 
 export class SubmListComponent {
