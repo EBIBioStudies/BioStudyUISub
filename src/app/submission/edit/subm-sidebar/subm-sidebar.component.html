@@ -29,7 +29,7 @@
                     <div class="item-editbox">
                         <input type="text"
                                class="form-control input-sm form-control-auto"
-                               [disabled]="item.feature.type.canModify"
+                               [disabled]="!item.feature.type.canModify"
                                [(ngModel)]="item.feature.typeName"/>
                     </div>
                     <div class="item-icon-right">
