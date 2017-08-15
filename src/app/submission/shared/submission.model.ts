@@ -138,7 +138,7 @@ export class Columns extends HasUpdates<UpdateEvent> {
     }
 
     list(): Attribute[] {
-        return this.columns;
+        return this.columns.slice();
     }
 
     add(column: Attribute): void {
@@ -199,7 +199,7 @@ export class Rows extends HasUpdates<UpdateEvent> {
     }
 
     list(): ValueMap[] {
-        return this.rows;
+        return this.rows.slice();
     }
 
     add(keys: string[]): ValueMap {
@@ -302,19 +302,24 @@ export class Feature extends HasUpdates<UpdateEvent> {
         return this.type.name;
     }
 
-    set typeName(val: string) {
-        this.type.name = val;
-        if (this.type.name === val) {
-            this.notify(new UpdateEvent('type', val));
-        }
-    }
-
     get rows(): ValueMap[] {
         return this._rows.list();
     }
 
     get columns(): Attribute[] {
         return this._columns.list();
+    }
+
+    get data(): FeatureData {
+        const entries = this.rows.map(r => {
+            return {
+                attributes: this.columns.map(c => ({name: c.name, value: r.valueFor(c.id).value}))
+            }
+        });
+        return {
+            type: this.type.name,
+            entries: entries
+        }
     }
 
     rowSize(): number {
@@ -382,6 +387,13 @@ export class Feature extends HasUpdates<UpdateEvent> {
         }
         this._rows.removeAt(index);
     }
+
+    modifyType(type: FeatureType): Feature {
+        // todo: check if type is user defined
+        const newFeature = new Feature(type);
+        newFeature.copyDataFrom(this);
+        return newFeature;
+    }
 }
 
 export class Features extends HasUpdates<UpdateEvent> {
@@ -414,35 +426,69 @@ export class Features extends HasUpdates<UpdateEvent> {
     }
 
     add(type: FeatureType, data?: FeatureData): Feature {
+        if (this.hasFeatureType(type)) {
+            console.log(`feature_add: feature with the type '${type.name}' already exists`);
+            return;
+        }
         const feature = new Feature(type, data);
-        const featureId = {id: feature.id, key: type.name};
-        this.features.push(feature);
-        this.subscriptions.push(
-            feature.updates().subscribe(
-                u => this.notify(new UpdateEvent('feature_update', featureId, u))
-            ));
-        this.notify(new UpdateEvent('feature_add', featureId));
+        this.addAt(feature);
         return feature;
     }
 
     remove(feature: Feature): void {
-        if (!feature.type.canModify) {
+        if (!feature.type.userDefined) {
             return;
         }
-        const index = this.features.findIndex(f => f.id === feature.id);
+        this.removeAt(this.indexOf(feature));
+    }
+
+    replace(feature: Feature, newFeature: Feature): void {
+        const index = this.indexOf(feature);
         if (index < 0) {
             return;
         }
-        this.subscriptions[index].unsubscribe();
-        this.subscriptions.splice(index, 1);
-        this.notify(new UpdateEvent('feature_remove', {index: index, id: feature.id}));
-        this.features.splice(index, 1);
+        if (feature.type.name !== newFeature.type.name && this.hasFeatureType(newFeature.type)) {
+            console.log(`feature_replace: feature with the type '${newFeature.type.name}' already exists`);
+            return;
+        }
+        this.removeAt(index);
+        this.addAt(newFeature, index);
     }
 
     get length(): number {
         return this.features.length;
     }
 
+    private addAt(feature: Feature, index?: number): void {
+        index = index === undefined ? this.features.length : index;
+        const featureId = {id: feature.id, index: index};
+
+        this.features.splice(index, 0, feature);
+        this.subscriptions.splice(index, 0,
+            feature.updates().subscribe(
+                u => this.notify(new UpdateEvent('feature_update', featureId, u))
+            ));
+        this.notify(new UpdateEvent('feature_add', featureId));
+    }
+
+    private removeAt(index: number): void {
+        if (index < 0) {
+            return;
+        }
+        const feature = this.features[index];
+        this.subscriptions[index].unsubscribe();
+        this.subscriptions.splice(index, 1);
+        this.features.splice(index, 1);
+        this.notify(new UpdateEvent('feature_remove', {index: index, id: feature.id}));
+    }
+
+    private hasFeatureType(type: FeatureType): boolean {
+        return this.features.filter(f => f.type.name === type.name).length > 0;
+    }
+
+    private indexOf(feature: Feature): number {
+        return this.features.findIndex(f => f.id === feature.id);
+    }
 }
 
 export class Field extends HasUpdates<UpdateEvent> {
@@ -559,13 +605,6 @@ export class Section extends HasUpdates<UpdateEvent> {
 
     get typeName(): string {
         return this.type.name;
-    }
-
-    set typeName(name: string) {
-        this.type.name = name;
-        if (this.type.name === name) {
-            this.notify(new UpdateEvent('type', name));
-        }
     }
 
     isRequired(): boolean {

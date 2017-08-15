@@ -6,24 +6,18 @@ const defined = (val: string) => {
 
 class BaseType {
     constructor(private _name: string,
-                private _canModify: boolean) {
+                private _userDefined: boolean) {
         if (!defined(_name)) {
             throw Error(`Type name is undefined ${_name}`);
         }
     }
 
-    get canModify() {
-        return this._canModify;
+    get userDefined(): boolean {
+        return this._userDefined;
     }
 
     get name(): string {
         return this._name;
-    }
-
-    set name(val: string) {
-        if (this._canModify && defined(val)) {
-            this._name = val;
-        }
     }
 }
 
