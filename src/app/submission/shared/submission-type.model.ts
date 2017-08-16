@@ -5,19 +5,11 @@ const defined = (val: string) => {
 };
 
 class BaseType {
-    constructor(private _name: string,
-                private _userDefined: boolean) {
-        if (!defined(_name)) {
-            throw Error(`Type name is undefined ${_name}`);
+    constructor(readonly name: string,
+                readonly isDefault: boolean) {
+        if (!defined(name)) {
+            throw Error(`Type name is undefined ${name}`);
         }
-    }
-
-    get userDefined(): boolean {
-        return this._userDefined;
-    }
-
-    get name(): string {
-        return this._name;
     }
 }
 

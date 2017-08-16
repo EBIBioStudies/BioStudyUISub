@@ -388,11 +388,8 @@ export class Feature extends HasUpdates<UpdateEvent> {
         this._rows.removeAt(index);
     }
 
-    modifyType(type: FeatureType): Feature {
-        // todo: check if type is user defined
-        const newFeature = new Feature(type);
-        newFeature.copyDataFrom(this);
-        return newFeature;
+    changeType(type: FeatureType): Feature {
+        return new Feature(type, this.data);
     }
 }
 
@@ -436,7 +433,7 @@ export class Features extends HasUpdates<UpdateEvent> {
     }
 
     remove(feature: Feature): void {
-        if (!feature.type.userDefined) {
+        if (!feature.type.isDefault) {
             return;
         }
         this.removeAt(this.indexOf(feature));
@@ -487,7 +484,7 @@ export class Features extends HasUpdates<UpdateEvent> {
     }
 
     private indexOf(feature: Feature): number {
-        return this.features.findIndex(f => f.id === feature.id);
+        return this.features.indexOf(feature);
     }
 }
 
@@ -607,6 +604,24 @@ export class Section extends HasUpdates<UpdateEvent> {
         return this.type.name;
     }
 
+    get data(): SectionData {
+        let attrs = [];
+        const annotations = this.annotations.data.entries;
+        if (annotations.length > 0) {
+            attrs = attrs.concat(annotations[0].attributes);
+        }
+        attrs = attrs.concat(this.fields.list().map(f => ({name: f.name, value: f.value})));
+        return {
+            tags: [],
+            accessTags: [],
+            type: this.type.name,
+            accno: this.accno,
+            attributes: attrs,
+            features: this.features.list().map(f => f.data),
+            sections: this.sections.list().map(s => s.data)
+        }
+    }
+
     isRequired(): boolean {
         return this.type.required;
     }
@@ -627,6 +642,10 @@ export class Section extends HasUpdates<UpdateEvent> {
         hasUpdates.updates().subscribe(
             m => this.notify(new UpdateEvent(type, undefined, m))
         );
+    }
+
+    changeType(type: SectionType): Section {
+        return new Section(type, this.data);
     }
 }
 
@@ -664,21 +683,13 @@ export class Sections extends HasUpdates<UpdateEvent> {
     }
 
     list(): Section[] {
-        return this.sections;
+        return this.sections.slice();
     }
 
     add(type: SectionType, data?: SectionData): Section {
-        const s = new Section(type, data);
-
-        const sectionId = {id: s.id, index: this.sections.length};
-        this.sections.push(s);
-        this.subscriptions.push(
-            s.updates().subscribe(
-                u => this.notify(new UpdateEvent('section_change', sectionId, u))
-            )
-        );
-        this.notify(new UpdateEvent('section_add', sectionId));
-        return s;
+        const section = new Section(type, data);
+        this.addAt(section);
+        return section;
     }
 
     remove(section: Section): void {
@@ -686,12 +697,17 @@ export class Sections extends HasUpdates<UpdateEvent> {
         const index = sections.indexOf(section);
 
         if (this.isRemovable(section)) {
-            this.subscriptions[index].unsubscribe();
-            this.subscriptions.splice(index, 1);
-            this.notify(new UpdateEvent('section_remove', {index: index}));
-
-            sections.splice(index, 1);
+            this.removeAt(index);
         }
+    }
+
+    replace(section: Section, newSection: Section): void {
+        const index = this.sections.indexOf(section);
+        if (index < 0) {
+            return;
+        }
+        this.removeAt(index);
+        this.addAt(newSection, index);
     }
 
     //It is assumed that removable sections
@@ -704,6 +720,29 @@ export class Sections extends HasUpdates<UpdateEvent> {
             return section.type.name === typeName;
         });
         return sectionsFiltered.length === 1;
+    }
+
+    private removeAt(index: number): void {
+        if (index < 0) {
+            return;
+        }
+        this.subscriptions[index].unsubscribe();
+        this.subscriptions.splice(index, 1);
+        this.sections.splice(index, 1);
+        this.notify(new UpdateEvent('section_remove', {index: index}));
+    }
+
+    private addAt(section: Section, index?: number): void {
+        index = index === undefined ? this.sections.length : index;
+        const sectionId = {id: section.id, index: index};
+
+        this.sections.splice(index, 0, section);
+        this.subscriptions.splice(index, 0,
+            section.updates().subscribe(
+                u => this.notify(new UpdateEvent('section_change', sectionId, u))
+            )
+        );
+        this.notify(new UpdateEvent('section_add', sectionId));
     }
 }
 
