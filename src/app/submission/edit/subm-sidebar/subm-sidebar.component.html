@@ -1,50 +1,65 @@
 <aside class="left-side sidebar sidebar-offcanvas"
        [ngClass]="{'collapse-left' : collapsed}">
 
-    <ul class="sidebar-menu">
-        <li class="sidebar-item sidebar-edit-btn-item menu-toggle">
-            <a (click)="onToggle($event)">
-                <i class="fa fa-bars fa-fw"></i>
-                <span *ngIf="!collapsed">Minimise</span>
-            </a>
-            <div *ngIf="!collapsed" class="sidebar-edit-btn">
-                <a (click)="onEditModeToggle($event)">
-                    <i class="fa fa-fw" [ngClass]="{'fa-edit': !editing, 'fa-check': editing}"></i>
+    <form novalidate #form="ngForm">
+        <ul class="sidebar-menu">
+            <li class="sidebar-item sidebar-edit-btn-item menu-toggle">
+                <a (click)="onToggle($event)">
+                    <i class="fa fa-bars fa-fw"></i>
+                    <span *ngIf="!collapsed">Minimise</span>
                 </a>
-            </div>
-        </li>
-        <li class="sidebar-item success" *ngFor="let item of items">
-            <a *ngIf="!editing" (click)="item.onClick($event)"
-               [tooltip]="item.label"
-               placement="right"
-               container="body">
-                <i class="fa fa-fw" [ngClass]="item.icon"></i>
-                <span *ngIf="!collapsed">Add&nbsp;{{item.feature.typeName}}</span>
-            </a>
-            <a *ngIf="editing" class="sidebar-item-editor">
-                <div class="item-icon-left">
-                    <i class="fa fa-fw" [ngClass]="item.icon"></i>
+                <button class="sidebar-edit-btn btn btn-primary btn-xs btn-flat"
+                        *ngIf="!collapsed"
+                        (click)="onEditModeToggle($event)"
+                        [disabled]="form.invalid || !valid">
+                    <i class="fa fa-fw" [ngClass]="{'fa-pencil': !editing, 'fa-check': editing}"></i>
+                </button>
+            </li>
+            <li>
+                <div class="sidebar-item success" *ngFor="let item of items; let i = index">
+                    <a *ngIf="!editing" (click)="item.onClick($event)"
+                       [tooltip]="item.label"
+                       placement="right"
+                       container="body">
+                        <i class="fa fa-fw" [ngClass]="item.icon"></i>
+                        <span *ngIf="!collapsed">Add&nbsp;{{item.feature.typeName}}</span>
+                    </a>
+                    <a *ngIf="editing" [ngClass]="{'has-error': !isUnique(itemType) || itemType.invalid}">
+                        <label [hidden]="isUnique(itemType)"
+                               class="control-label small">
+                            Type name must be unique
+                        </label>
+                        <label [hidden]="!itemType.errors?.required || !itemType.touched"
+                               class="control-label small">
+                            Type name cannot be blank
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="fa fa-fw" [ngClass]="item.icon"></i>
+                            </span>
+                            <input type="text"
+                                   (change)="isValidItems(itemType)"
+                                   class="form-control input-sm form-control-auto"
+                                   [disabled]="!item.feature.type.canModify"
+                                   [(ngModel)]="item.feature.typeName"
+                                   name="itemType{{i}}"
+                                   #itemType="ngModel"
+                                   required />
+                            <span class="input-group-addon">
+                                <i class="fa fa-trash-o fa-fw"></i>
+                            </span>
+                        </div>
+                    </a>
                 </div>
-                <div class="item-editbox-wrap">
-                    <div class="item-editbox">
-                        <input type="text"
-                               class="form-control input-sm form-control-auto"
-                               [disabled]="!item.feature.type.canModify"
-                               [(ngModel)]="item.feature.typeName"/>
-                    </div>
-                    <div class="item-icon-right">
-                        <i class="fa fa-trash-o fa-fw"></i>
-                    </div>
-                </div>
-            </a>
-        </li>
-        <li *ngIf="!editing" class="sidebar-item success">
-            <a (click)="onAddClick($event)">
-                <i class="fa fa-fw fa-plus"></i>
-                <span *ngIf="!collapsed">Add...</span>
-            </a>
-        </li>
-    </ul>
+            </li>
+            <li *ngIf="!editing" class="sidebar-item success">
+                <a (click)="onAddClick($event)">
+                    <i class="fa fa-fw fa-plus"></i>
+                    <span *ngIf="!collapsed">Add...</span>
+                </a>
+            </li>
+        </ul>
+    </form>
 </aside>
 <subm-add-dialog
         #addDialog

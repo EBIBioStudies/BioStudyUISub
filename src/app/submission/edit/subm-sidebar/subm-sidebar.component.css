@@ -1,16 +1,13 @@
-/*sidebar edit button */
-
+/* topbar */
 .sidebar-edit-btn-item {
     position: relative !important;
 }
 
 .sidebar-edit-btn {
     position: absolute;
-    top: 0;
-    right: 0;
-    width: 30px;
-    height: 100%;
-    z-index: 10000;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
 }
 
 .sidebar-edit-btn > a {
@@ -28,30 +25,23 @@
     margin-left: 20%;
 }
 
-/* item editor*/
 
-.sidebar-item-editor {
-    position: relative !important;
+/* edit mode */
+.sidebar-item {
+    line-height: 30px;
 }
 
-.sidebar-item-editor .item-icon-left {
-    position:absolute;
-    top:28%;
-    width:20px;
+.control-label {
+    margin-bottom: 0;
 }
 
-.sidebar-item-editor .item-editbox-wrap {
-    margin-left:20px;
-    position:relative;
+.input-group {
+    margin-left: -5px;
 }
 
-.item-editbox-wrap .item-editbox {
-    margin-right:20px;
-}
-
-.item-editbox-wrap .item-icon-right {
-    position:absolute;
-    top:20%;
-    right:0;
-    width:20px;
+.input-group-addon {
+    padding: 6px;
+    background: none;
+    border: none;
+    color: #A6D08A;
 }
