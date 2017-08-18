@@ -25,14 +25,6 @@
                         <span *ngIf="!collapsed">Add&nbsp;{{item.feature.typeName}}</span>
                     </a>
                     <a *ngIf="editing" [ngClass]="{'has-error': !isUnique(itemType) || itemType.invalid}">
-                        <label [hidden]="isUnique(itemType)"
-                               class="control-label small">
-                            Type name must be unique
-                        </label>
-                        <label [hidden]="!itemType.errors?.required || !itemType.touched"
-                               class="control-label small">
-                            Type name cannot be blank
-                        </label>
                         <div class="input-group">
                             <span class="input-group-addon">
                                 <i class="fa fa-fw" [ngClass]="item.icon"></i>
@@ -49,6 +41,14 @@
                                 <i class="fa fa-trash-o fa-fw"></i>
                             </span>
                         </div>
+                        <label [hidden]="isUnique(itemType)"
+                               class="control-label small">
+                            Type name must be unique
+                        </label>
+                        <label [hidden]="!itemType.errors?.required || !itemType.touched"
+                               class="control-label small">
+                            Type name cannot be blank
+                        </label>
                     </a>
                 </div>
             </li>
