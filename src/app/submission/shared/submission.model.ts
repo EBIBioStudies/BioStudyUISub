@@ -423,7 +423,7 @@ export class Features extends HasUpdates<UpdateEvent> {
             return;
         }
         const feature = new Feature(type, data);
-        const featureId = {id: feature.id, key: type.name};
+        const featureId = {id: feature.id, index: (this.features.length), key: type.name};
         this.features.push(feature);
         this.subscriptions.push(
             feature.updates().subscribe(
