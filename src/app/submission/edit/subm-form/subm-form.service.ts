@@ -160,16 +160,16 @@ export class SectionForm {
     }
 
     private updateFeatureForms(ue?: UpdateEvent): void {
-        this._features = [this.section.annotations].concat(this.section.features.list().slice(0));
+        this._features = [this.section.annotations].concat(this.section.features.list());
 
         if (ue && ue.name === 'feature_remove') {
             this.removeFeatureForm(ue.value.id);
             return;
         }
 
-        let toAdd = this.features;
+        let toAdd = this._features;
         if (ue && ue.name === 'feature_add') {
-            toAdd = [this.features[ue.value.index + 1]];
+            toAdd = [this._features[ue.value.index + 1]];
         }
 
         toAdd.forEach(
@@ -293,7 +293,7 @@ export class FeatureForm {
     }
 
     private updateColumnControls(ue?: UpdateEvent): void {
-        this._columns = this.feature.columns.slice(0);
+        this._columns = this.feature.columns;
 
         if (ue && ue.name === 'column_remove') {
             this.removeColumnControl(ue.value.id);
@@ -313,7 +313,7 @@ export class FeatureForm {
     }
 
     private updateRowControls(ue?: UpdateEvent): void {
-        this._rows = this.feature.rows.slice(0);
+        this._rows = this.feature.rows;
 
         if (ue && ue.name === 'row_remove') {
             this.removeRowArray(ue.value.index);

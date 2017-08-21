@@ -144,7 +144,7 @@ export class SectionType extends BaseType {
 
         other = other || {};
         this.required = other.required === true;
-        this.annotationsType = new AnnotationsType(other.annotationsType, this.featureScope);
+        this.annotationsType = new AnnotationsType(other.annotationsType, new Map());
         (other.fieldTypes || [])
             .forEach(f => new FieldType(f.name, f, this.fieldScope));
         (other.featureTypes || [])

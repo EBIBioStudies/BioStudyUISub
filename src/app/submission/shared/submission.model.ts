@@ -351,7 +351,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
     }
 
     addColumn(name?: string, required?: boolean): Attribute {
-        const col = new Attribute(name, required);
+        const col = new Attribute(name || 'New Column', required);
         this._rows.addKey(col.id);
         this._columns.add(col);
         return col;
@@ -419,11 +419,11 @@ export class Features extends HasUpdates<UpdateEvent> {
 
     add(type: FeatureType, data?: FeatureData): Feature {
         if (this.features.filter(f => f.type === type).length > 0) {
-            console.log(`Fature of type ${type} already exists in the section`);
+            console.error(`Feature of type ${type} already exists in the section`);
             return;
         }
         const feature = new Feature(type, data);
-        const featureId = {id: feature.id, key: type.name};
+        const featureId = {id: feature.id, index: (this.features.length), key: type.name};
         this.features.push(feature);
         this.subscriptions.push(
             feature.updates().subscribe(

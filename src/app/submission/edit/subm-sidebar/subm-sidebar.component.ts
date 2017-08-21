@@ -86,8 +86,8 @@ export class SubmSideBarComponent implements OnChanges {
         const idx = ['AttributeList', 'AttributeGrid'].indexOf(ev.itemType);
         if (idx > -1) {
             const singleRow = idx === 0;
-            const featureType = this.sectionType.getFeatureType(ev.name);
-            this.section.features.add(featureType);
+            const featureType = this.sectionType.getFeatureType(ev.name, singleRow);
+            const f = this.section.features.add(featureType);
         }
     }
 
@@ -98,6 +98,7 @@ export class SubmSideBarComponent implements OnChanges {
             (f: Feature) => items.push(this.createItem(f))
         );
         this.items = items;
+        console.log(this.section);
     }
 
     private createItem(f: Feature): any {
