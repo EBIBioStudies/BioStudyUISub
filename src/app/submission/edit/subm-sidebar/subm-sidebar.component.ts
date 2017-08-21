@@ -31,14 +31,13 @@ export class SubmSideBarComponent implements OnChanges {
     @ViewChild('addDialog')
     addDialog: SubmAddDialogComponent;
     editing: boolean = false;   //component's mode: display or editing, with different renderings
-    valid: boolean = true;      //global flag for validity of items collection
-                                //TODO: Refactor html to make form encompass menu-toggle
     items: any[] = [];          //items collection
 
     private subscr: Subscription;
 
     ngOnChanges(changes: any): void {
         const change: SimpleChange = changes.section;
+
         if (change) {
             if (this.subscr) {
                 this.subscr.unsubscribe();
@@ -99,44 +98,6 @@ export class SubmSideBarComponent implements OnChanges {
             (f: Feature) => items.push(this.createItem(f))
         );
         this.items = items;
-    }
-
-    /**
-     * Checks that the collection of items contains no duplicate type names.
-     * @private
-     * @param {Object} itemTypeControl - Form control for item's type name
-     * @returns {boolean} True if there are no duplicate names in the collection
-     */
-    private isValidItems(itemTypeControl: any): boolean {
-        const names = this.items.map(item => item.feature.typeName);
-        const nameSet = new Set(names);
-
-        //NOTE: The conversion to a set drops any duplicated entries
-        //TODO: Stop using two-way data binding and use form controls as temporary model, instead of blocking toggling
-        this.valid = nameSet.size === names.length;
-
-        //"Unique" is a custom field to indicate validity at the input level.
-        //TODO: Use custom validator and native form flags instead
-        itemTypeControl.unique = this.valid;
-
-        return this.valid;
-    }
-
-    /**
-     * Template helper that normalises the uniqueness flag to true in case the control
-     * object does not exist yet. Initially, when no control is present, the type names
-     * are guaranteed to be unique since no submission would have been allowed in the
-     * first place.
-     * @private
-     * @param {Object} itemTypeControl - Form control for item's type name
-     * @returns {boolean}
-     */
-    private isUnique(itemTypeControl: any): boolean {
-        if (itemTypeControl && itemTypeControl.hasOwnProperty('unique')) {
-            return itemTypeControl.unique;
-        } else {
-            return true;
-        }
     }
 
     private createItem(f: Feature): any {
