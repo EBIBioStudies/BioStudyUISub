@@ -419,7 +419,7 @@ export class Features extends HasUpdates<UpdateEvent> {
 
     add(type: FeatureType, data?: FeatureData): Feature {
         if (this.features.filter(f => f.type === type).length > 0) {
-            console.log(`Fature of type ${type} already exists in the section`);
+            console.error(`Feature of type ${type} already exists in the section`);
             return;
         }
         const feature = new Feature(type, data);
