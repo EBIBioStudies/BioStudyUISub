@@ -40,6 +40,7 @@ import {SubmResultsModalComponent} from './results/subm-results-modal.component'
 import {ResultsLogNodeComponent} from './results/results-log-node.component';
 import {SubmResultsTreeComponent} from './results/subm-results-tree.component';
 
+import {UniqueValidator} from './shared/unique.directive';
 
 @NgModule({
     imports: [
@@ -82,7 +83,8 @@ import {SubmResultsTreeComponent} from './results/subm-results-tree.component';
         ActionButtonsCellComponent,
         DateCellComponent,
         TextFilterComponent,
-        DateFilterComponent
+        DateFilterComponent,
+        UniqueValidator
     ],
     exports: [
         SubmListComponent,
