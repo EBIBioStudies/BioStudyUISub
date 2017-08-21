@@ -351,7 +351,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
     }
 
     addColumn(name?: string, required?: boolean): Attribute {
-        const col = new Attribute(name, required);
+        const col = new Attribute(name || 'New Column', required);
         this._rows.addKey(col.id);
         this._columns.add(col);
         return col;
