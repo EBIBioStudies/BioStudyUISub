@@ -73,7 +73,7 @@ export class FeatureType extends BaseType {
     readonly description: string;
 
     static createDefault(name: string, singleRow?: boolean, scope?: Map<string, any>): FeatureType {
-        return new FeatureType(name, singleRow === true, scope);
+        return new FeatureType(name, singleRow === true, undefined, scope);
     }
 
     constructor(name: string, singleRow: boolean, other?: any, scope?: Map<string, any>) {
