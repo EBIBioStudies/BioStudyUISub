@@ -1,7 +1,12 @@
-import {FeatureType} from './submission-type.model';
+import {FeatureType, invalidateGlobalScope} from './submission-type.model';
 import {Feature, FeatureData} from './submission.model';
 
 describe('Submission Model: Feature', () => {
+
+    beforeEach(() => {
+        invalidateGlobalScope();
+    });
+
     it('can be multi row', () => {
         const f = new Feature(FeatureType.createDefault('MultiRowFeature'));
         expect(f.colSize()).toBe(0);

@@ -1,4 +1,5 @@
 export const DefaultTemplate = {
+    'name': 'DeafultTemplate',
     'sectionType': {
         'name': 'Study',
         'required': true,

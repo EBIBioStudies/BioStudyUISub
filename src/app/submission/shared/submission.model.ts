@@ -138,7 +138,7 @@ export class Columns extends HasUpdates<UpdateEvent> {
     }
 
     list(): Attribute[] {
-        return this.columns;
+        return this.columns.slice();
     }
 
     add(column: Attribute): void {
@@ -199,7 +199,7 @@ export class Rows extends HasUpdates<UpdateEvent> {
     }
 
     list(): ValueMap[] {
-        return this.rows;
+        return this.rows.slice();
     }
 
     add(keys: string[]): ValueMap {
@@ -385,9 +385,8 @@ export class Feature extends HasUpdates<UpdateEvent> {
 }
 
 export class Features extends HasUpdates<UpdateEvent> {
-    private featuresMap: Map<string, Feature> = new Map();
-    private order: string[] = [];
-    private subscriptionsMap: Map<string, Subscription> = new Map();
+    private features: Feature[] = [];
+    private subscriptions: Subscription[] = [];
 
     constructor(type: SectionType, data: SectionData) {
         super();
@@ -410,20 +409,23 @@ export class Features extends HasUpdates<UpdateEvent> {
         });
     }
 
+    get length(): number {
+        return this.features.length;
+    }
+
     list(): Feature[] {
-        return this.order.map(k => this.featuresMap.get(k));
+        return this.features.slice();
     }
 
     add(type: FeatureType, data?: FeatureData): Feature {
-        if (this.featuresMap.has(type.name)) {
-            console.warn(`Feature with type ${type.name} already exists`);
+        if (this.features.filter(f => f.type === type).length > 0) {
+            console.log(`Fature of type ${type} already exists in the section`);
             return;
         }
         const feature = new Feature(type, data);
         const featureId = {id: feature.id, key: type.name};
-        this.order.push(type.name);
-        this.featuresMap.set(type.name, feature);
-        this.subscriptionsMap.set(type.name,
+        this.features.push(feature);
+        this.subscriptions.push(
             feature.updates().subscribe(
                 u => this.notify(new UpdateEvent('feature_update', featureId, u))
             ));
@@ -431,12 +433,18 @@ export class Features extends HasUpdates<UpdateEvent> {
         return feature;
     }
 
-    remove(): void {
-        // todo: do not remove features which are required
-    }
-
-    get length(): number {
-        return this.order.length;
+    remove(feature: Feature): void {
+        if (feature.type.tmplBased) {
+            return;
+        }
+        const index = this.features.indexOf(feature);
+        if (index < 0) {
+            return;
+        }
+        this.subscriptions[index].unsubscribe();
+        this.subscriptions.splice(index, 1);
+        this.features.splice(index, 1);
+        this.notify(new UpdateEvent('feature_remove', {index: index, id: feature.id}));
     }
 }
 
@@ -620,7 +628,7 @@ export class Sections extends HasUpdates<UpdateEvent> {
     }
 
     list(): Section[] {
-        return this.sections;
+        return this.sections.slice();
     }
 
     add(type: SectionType, data?: SectionData): Section {

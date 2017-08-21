@@ -1,11 +1,16 @@
 import {SubmissionValidator} from './submission.validator';
-import {SubmissionType} from './submission-type.model';
+import {SubmissionType, invalidateGlobalScope} from './submission-type.model';
 import {Submission} from './submission.model';
 
 describe('Submission Validator', () => {
 
+    beforeEach(() => {
+        invalidateGlobalScope();
+    });
+
     it('validates field values', () => {
-        const submType = new SubmissionType({
+        const submType = SubmissionType.fromTemplate({
+            name: 'Tmpl1',
             sectionType: {
                 name: 'SectionType',
                 fieldTypes: [
@@ -29,7 +34,8 @@ describe('Submission Validator', () => {
     });
 
     it('validates feature values', () => {
-        const submType = new SubmissionType({
+        const submType = SubmissionType.fromTemplate({
+            name: 'Tmpl1',
             sectionType: {
                 name: 'SectionType',
                 featureTypes: [
@@ -64,7 +70,8 @@ describe('Submission Validator', () => {
     });
 
     it('validates value format', () => {
-        const submType = new SubmissionType({
+        const submType = SubmissionType.fromTemplate({
+            name: 'Tmpl1',
             sectionType: {
                 name: 'SectionType',
                 fieldTypes: [

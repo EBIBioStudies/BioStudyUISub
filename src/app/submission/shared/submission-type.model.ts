@@ -4,26 +4,43 @@ const defined = (val: string) => {
     return val !== undefined && val.length > 0;
 };
 
-class BaseType {
-    constructor(private _name: string,
-                private _canModify: boolean) {
-        if (!defined(_name)) {
-            throw Error(`Type name is undefined ${_name}`);
-        }
-    }
+const GlobalScope: Map<string, any> = new Map();
 
-    get canModify() {
-        return this._canModify;
+class BaseType {
+    private scope: Map<string, any>;
+    private typeName: string;
+
+    readonly tmplBased: boolean;
+
+    constructor(name: string,
+                tmplBased: boolean,
+                scope: Map<string, any> = GlobalScope) {
+        if (!defined(name)) {
+            throw Error(`Type name is undefined ${name}`);
+        }
+        if (scope.has(name)) {
+            throw Error(`Type with name ${name} already exists in the scope`);
+        }
+        scope.set(name, this);
+        this.typeName = name;
+        this.tmplBased = tmplBased;
+        this.scope = scope;
     }
 
     get name(): string {
-        return this._name;
+        return this.typeName;
     }
 
-    set name(val: string) {
-        if (this._canModify && defined(val)) {
-            this._name = val;
+    set name(name: string) {
+        if (!this.tmplBased && !this.scope.has(name)) {
+            this.scope.delete(this.typeName);
+            this.typeName = name;
+            this.scope.set(name, this);
         }
+    }
+
+    get canModify(): boolean {
+        return !this.tmplBased;
     }
 }
 
@@ -37,8 +54,9 @@ export class FieldType extends BaseType {
     readonly minlength: number;
     readonly maxlength: number;
 
-    constructor(name, obj: any = {}) {
-        super(name, false);
+    constructor(name, obj?: any, scope?: Map<string, any>) {
+        super(name, true, scope);
+        obj = obj || {};
         this.valueType = obj.valueType || 'text';
         this.minlength = obj.minlength || -1;
         this.maxlength = obj.maxlength || -1;
@@ -47,37 +65,48 @@ export class FieldType extends BaseType {
 
 /* Feature contains similar defined PageTab section(s) without subsections or a list of attributes*/
 export class FeatureType extends BaseType {
+    private columnScope: Map<string, any> = new Map();
+
     readonly singleRow: boolean;
     readonly required: boolean;
     readonly title: string;
     readonly description: string;
-    readonly columnTypes: ColumnType[];
 
-    static createDefault(name: string, singleRow?: boolean): FeatureType {
-        return new FeatureType(name || 'DefaultFeature', singleRow === true);
+    static createDefault(name: string, singleRow?: boolean, scope?: Map<string, any>): FeatureType {
+        return new FeatureType(name, singleRow === true, undefined, scope);
     }
 
-    constructor(name: string, singleRow: boolean, other?: any) {
-        super(name, other === undefined);
+    constructor(name: string, singleRow: boolean, other?: any, scope?: Map<string, any>) {
+        super(name, other !== undefined, scope);
         this.singleRow = singleRow === true;
 
         other = other || {};
         this.required = other.required === true;
         this.title = other.title || 'Add ' + this.name;
         this.description = other.description || '';
-        this.columnTypes = (other.columnTypes || [])
-            .map(c => new ColumnType(c.name, c));
+
+        (other.columnTypes || [])
+            .forEach(ct => {
+                const colType = new ColumnType(ct.name, ct, this.columnScope);
+            });
+    }
+
+    get columnTypes(): ColumnType[] {
+        return Array.from(this.columnScope.values()).filter(ct => ct.tmplBased);
+
     }
 
     getColumnType(name: string): ColumnType {
-        return this.columnTypes.find(c => c.name === name)
-            || ColumnType.createDefault(name);
+        if (this.columnScope.has(name)) {
+            return this.columnScope.get(name);
+        }
+        return ColumnType.createDefault(name, this.columnScope);
     }
 }
 
 export class AnnotationsType extends FeatureType {
-    constructor(other?: any) {
-        super('Annotation', true, other);
+    constructor(other?: any, scope?: Map<string, any>) {
+        super('Annotation', true, other, scope);
     }
 }
 
@@ -85,12 +114,12 @@ export class ColumnType extends BaseType {
     readonly required: boolean;
     readonly valueType: ValueType;
 
-    static createDefault(name: string): ColumnType {
-        return new ColumnType(name || 'DefaultColumn');
+    static createDefault(name: string, scope?: Map<string, any>): ColumnType {
+        return new ColumnType(name, undefined, scope);
     }
 
-    constructor(name: string, other?: any) {
-        super(name, other === undefined);
+    constructor(name: string, other?: any, scope?: Map<string, any>) {
+        super(name, other !== undefined, scope);
 
         other = other || {};
         this.valueType = other.valueType || 'text';
@@ -101,40 +130,57 @@ export class ColumnType extends BaseType {
 export class SectionType extends BaseType {
     readonly required: boolean;
     readonly annotationsType: AnnotationsType;
-    readonly fieldTypes: FieldType[];
-    readonly featureTypes: FeatureType[];
-    readonly sectionTypes: SectionType[];
 
-    static createDefault(name: string): SectionType {
-        return new SectionType(name || 'DefaultSection');
+    private fieldScope: Map<string, any> = new Map();
+    private featureScope: Map<string, any> = new Map();
+    private sectionScope: Map<string, any> = new Map();
+
+    static createDefault(name: string, scope?: Map<string, any>): SectionType {
+        return new SectionType(name, undefined, scope);
     }
 
-    constructor(name: string, other?: any) {
-        super(name, other === undefined);
+    constructor(name: string, other?: any, scope?: Map<string, any>) {
+        super(name, other !== undefined, scope);
 
         other = other || {};
         this.required = other.required === true;
-        this.annotationsType = new AnnotationsType(other.annotationsType);
-        this.fieldTypes = (other.fieldTypes || [])
-            .map(f => new FieldType(f.name, f));
-        this.featureTypes = (other.featureTypes || [])
-            .map(f => new FeatureType(f.name, f.singleRow, f));
-        this.sectionTypes = (other.sectionTypes || [])
-            .map(s => new SectionType(s.name, s));
+        this.annotationsType = new AnnotationsType(other.annotationsType, this.featureScope);
+        (other.fieldTypes || [])
+            .forEach(f => new FieldType(f.name, f, this.fieldScope));
+        (other.featureTypes || [])
+            .forEach(f => new FeatureType(f.name, f.singleRow, f, this.featureScope));
+        (other.sectionTypes || [])
+            .forEach(s => new SectionType(s.name, s, this.sectionScope));
+    }
+
+    get fieldTypes(): FieldType[] {
+        return Array.from(this.fieldScope.values()).filter(ft => ft.tmplBased);
+    }
+
+    get featureTypes(): FeatureType[] {
+        return Array.from(this.featureScope.values()).filter(ft => ft.tmplBased);
+    }
+
+    get sectionTypes(): SectionType[] {
+        return Array.from(this.sectionScope.values()).filter(st => st.tmplBased);
     }
 
     getFieldType(name: string): FieldType {
-        return this.fieldTypes.find(f => f.name === name);
+        return this.fieldScope.get(name);
     }
 
     getFeatureType(name: string, singleRow: boolean = false): FeatureType {
-        return this.featureTypes.find(s => s.name === name)
-            || FeatureType.createDefault(name, singleRow);
+        if (this.featureScope.has(name)) {
+            return this.featureScope.get(name);
+        }
+        return FeatureType.createDefault(name, singleRow, this.featureScope);
     }
 
     getSectionType(name: string): SectionType {
-        return this.sectionTypes.find(s => s.name === name)
-            || SectionType.createDefault(name);
+        if (this.sectionScope.has(name)) {
+            return this.sectionScope.get(name);
+        }
+        return SectionType.createDefault(name, this.sectionScope);
     }
 
     sectionType(names: string[]) {
@@ -152,23 +198,46 @@ export class SectionType extends BaseType {
     }
 }
 
-export class SubmissionType {
-    readonly name: string = 'Submission';
+export class SubmissionType extends BaseType {
     readonly sectionType: SectionType;
 
     static createDefault(): SubmissionType {
-        return new SubmissionType(DefaultTemplate);
+        return SubmissionType.fromTemplate(DefaultTemplate);
     }
 
-    constructor(obj: any) {
+    static fromTemplate(tmpl: any): SubmissionType {
+        return TemplateType.create(tmpl).submissionType;
+    }
+
+    constructor(name: string, obj: any, scope?: Map<string, any>) {
+        super('Submission', obj !== undefined, scope);
         if (obj.sectionType === undefined) {
-            console.error('the root sectionType is not defined in the template');
+            throw Error('sectionType is not defined in the template');
         }
-        const st = obj.sectionType;
-        this.sectionType = st ? new SectionType(st.name, st) : undefined;
+        this.sectionType = new SectionType(obj.sectionType.name, obj.sectionType, new Map());
+    }
+}
+
+export class TemplateType extends BaseType {
+    readonly submissionType: SubmissionType;
+
+    static create(tmpl: any): TemplateType {
+        const tmplName = tmpl.name;
+        if (tmplName === undefined) {
+            throw Error('name is not defined for the template');
+        }
+        if (GlobalScope.has(tmplName)) {
+            return GlobalScope.get(tmplName);
+        }
+        return new TemplateType(tmplName, tmpl, GlobalScope);
     }
 
-    /*sectionType(names: string[]): SectionType {
-     return this.sectionType ? this.sectionType.sectionType(names) : undefined;
-     }*/
+    constructor(name: string, obj?: any, scope?: Map<string, any>) {
+        super(name, obj !== undefined, scope);
+        this.submissionType = new SubmissionType('Submission', obj, new Map());
+    }
+}
+
+export function invalidateGlobalScope() {
+    GlobalScope.clear();
 }

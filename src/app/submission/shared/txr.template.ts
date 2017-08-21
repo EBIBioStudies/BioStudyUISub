@@ -1,4 +1,5 @@
 export const TxRTemplate = {
+    'name': 'TxRTemplate',
     'sectionType': {
         'name': 'Study',
         'required': true,
