@@ -38,14 +38,14 @@ export class FilterPipe implements PipeTransform {
 @Component({
     selector: 'multi-select',
     template: `
-<div class="btn-group btn-block" dropdown>
+<div class="btn-group btn-block" dropdown [isOpen]="isOpen">
     <button type="button" class="btn btn-default col-sm-12 dropdown-toggle" (click)="onToggle()">
         <span class="pull-left">{{placeholder}}</span>
         <span class="pull-right">
             <span class="caret"></span>
         </span>
     </button>
-    <ul *dropdownMenu class="dropdown-menu" role="menu" [ngStyle]="{display:isOpen ? 'block' : 'none'}">
+    <ul *dropdownMenu class="dropdown-menu" role="menu">
         <li [hidden]="empty || !filterEnabled" role="menuitem">
             <div class="form-group filter">
                 <input class="form-control" 
@@ -101,13 +101,13 @@ export class FilterPipe implements PipeTransform {
     ]
 })
 export class MultiSelectComponent implements ControlValueAccessor, OnChanges, OnInit, OnDestroy {
-    @Input() placeholder: string = 'Select...';
-    @Input() filterPlaceholder: string = 'Filter...';
-    @Input() filterEnabled: boolean = true;
-    @Input() options: string[];
+    @Input() placeholder = 'Select...';
+    @Input() filterPlaceholder = 'Filter...';
+    @Input() filterEnabled = true;
+    @Input() options: string[] = [];
 
-    filterText: string = '';
-    isOpen: boolean = false;
+    filterText = '';
+    isOpen = false;
     items: any[] = [];
 
     filterInputValue$: Subject<string> = new Subject<string>();
@@ -126,7 +126,8 @@ export class MultiSelectComponent implements ControlValueAccessor, OnChanges, On
     }
 
     ngOnChanges(): void {
-        this.items = _.map(this.options, opt => ({checked: false, label: opt}));
+        this.items = this.options.map(opt => ({checked: false, label: opt}));
+        console.log(this.items);
         this.selected = [];
         this.onChange(this.selected);
     }

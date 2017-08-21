@@ -9,8 +9,6 @@ import {
 import {DirectSubmitService} from './direct-submit.service';
 import {SubmissionService} from '../shared/submission.service';
 
-import * as _ from 'lodash';
-
 @Component({
     selector: 'direct-submit-sidebar',
     template: `
@@ -91,8 +89,8 @@ import * as _ from 'lodash';
 })
 
 export class DirectSubmitSideBarComponent implements OnInit {
-    @Input() collapsed?: boolean = false;
-    @Input() readonly?: boolean = false;
+    @Input() collapsed? = false;
+    @Input() readonly? = false;
     @Output() toggle? = new EventEmitter();
 
     private formats = [
@@ -119,7 +117,7 @@ export class DirectSubmitSideBarComponent implements OnInit {
     ngOnInit(): void {
         this.submService.getProjects()
             .subscribe(data => {
-                this.projectsToAttachTo = _.map(data, s => s.accno);
+                this.projectsToAttachTo = data.map(s => s.accno);
             });
     }
 

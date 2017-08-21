@@ -30,13 +30,14 @@ export class SubmSideBarComponent implements OnChanges {
 
     @ViewChild('addDialog')
     addDialog: SubmAddDialogComponent;
-    editing = false;
-    items: any[] = [];
+    editing: boolean = false;   //component's mode: display or editing, with different renderings
+    items: any[] = [];          //items collection
 
     private subscr: Subscription;
 
     ngOnChanges(changes: any): void {
         const change: SimpleChange = changes.section;
+
         if (change) {
             if (this.subscr) {
                 this.subscr.unsubscribe();
