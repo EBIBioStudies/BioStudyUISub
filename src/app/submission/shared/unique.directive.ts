@@ -29,8 +29,8 @@ export class UniqueValidator implements Validator {
 
 /**
  * Uniqueness validator factory. It checks the value of the control passed in is different from that of any other
- * control in the form. Effectively, the set of controls must contain no duplicate type names.
- * @returns {ValidatorFn}
+ * control in the form. Effectively, the set of controls must contain no duplicate values.
+ * @returns {ValidatorFn} Object describing if the uniqueness requirement is met or valid.
  */
 function uniqueValidatorFactory(): ValidatorFn {
     return (control: FormControl) => {

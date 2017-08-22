@@ -7,14 +7,17 @@ import {
     OnChanges,
     SimpleChange
 } from '@angular/core';
+import { NgForm } from '@angular/forms';
 
 import {Subscription} from 'rxjs/Subscription';
+import {Observable} from 'rxjs/Observable';
 
 import {
     Section,
     Feature
 } from '../../shared/submission.model';
 import {SubmAddDialogComponent} from '../subm-add/subm-add.component';
+import {ConfirmDialogComponent} from 'app/shared/index';
 import {SubmAddEvent} from '../subm-add/subm-add-event.model';
 import {SectionType} from '../../shared/submission-type.model';
 
@@ -30,6 +33,9 @@ export class SubmSideBarComponent implements OnChanges {
 
     @ViewChild('addDialog')
     addDialog: SubmAddDialogComponent;
+    @ViewChild('confirmDialog')
+    confirmDialog: ConfirmDialogComponent;
+
     editing: boolean = false;   //component's mode: display or editing, with different renderings
     items: any[] = [];          //items collection
 
@@ -67,8 +73,31 @@ export class SubmSideBarComponent implements OnChanges {
         }
     }
 
-    onEditModeToggle(ev): void {
-        ev.preventDefault();
+    /**
+     * Provided is valid, it saves the form data onto the model's respective properties on submission.
+     * @param {NgForm} form Object generated from type name fields.
+     */
+    onSubmit(form: NgForm): void {
+        const items = this.items;
+
+        if (form.valid) {
+
+            //Field names suffixed with the corresponding items array index
+            Object.keys(form.value).forEach(key => {
+                const itemsIdx = key.split('_')[1];
+
+                items[itemsIdx].feature.typeName = form.value[key];
+            });
+        }
+        this.onEditModeToggle();
+    }
+
+    /**
+     * Transitions between the display/edit mode by changing a flag.
+     * @param {Event} [event] Optional click event object. If passed, the default action is prevented.
+     */
+    onEditModeToggle(event?:Event): void {
+        event && event.preventDefault();
         this.editing = !this.editing;
     }
 
@@ -91,6 +120,12 @@ export class SubmSideBarComponent implements OnChanges {
         }
     }
 
+    onItemDelete(itemIdx: number): void {
+        this.confirm().subscribe(() => {
+            this.removeItemAt(itemIdx);
+        });
+    }
+
     onItemsChange(): void {
         const items = [];
         items.push(this.createItem(this.section.annotations));
@@ -98,7 +133,10 @@ export class SubmSideBarComponent implements OnChanges {
             (f: Feature) => items.push(this.createItem(f))
         );
         this.items = items;
-        console.log(this.section);
+    }
+
+    private confirm(): Observable<any> {
+        return this.confirmDialog.confirm();
     }
 
     private createItem(f: Feature): any {
@@ -116,5 +154,9 @@ export class SubmSideBarComponent implements OnChanges {
                 f.addRow();
             }
         };
+    }
+
+    private removeItemAt(index: number): void {
+        this.items.splice(index, 1);
     }
 }

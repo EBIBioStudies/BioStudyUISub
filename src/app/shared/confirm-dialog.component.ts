@@ -25,8 +25,16 @@ export class ConfirmDialogComponent {
     @Input() abortLabel: string = 'Cancel';      //Default name for negative action
     @Input() body: string = 'Are you sure?';     //Descriptive message for the modal's body
 
-    confirm(message: string): Observable<any> {
-        this.body = message;
+    /**
+     * Renders the confirmation modal, allowing subscription to button events.
+     * @param {string} [message] Optional body replacement
+     * @returns {Observable<any>} Stream of button events.
+     */
+    confirm(message?: string): Observable<any> {
+        if (message) {
+            this.body = message;
+        }
+
         this.modalDirective.show();
         return this.buttonClicks
             .asObservable()
