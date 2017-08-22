@@ -41,6 +41,7 @@ class PtFeature implements FeatureData {
                 return ee;
             }));
     }
+
     static link(entries: any[]): PtFeature {
         return new PtFeature('Link',
             entries.map(e => {
@@ -50,6 +51,7 @@ class PtFeature implements FeatureData {
                 return ee;
             }));
     }
+
     constructor(type: string, entries: any[]) {
         this.type = type || 'Undefined';
         this.entries = (entries || []).map(e => new PtEntry(e));
@@ -60,7 +62,7 @@ class PtSection extends PtEntry implements SectionData {
     readonly type: string;
     readonly accno: string;
     readonly tags: any[];
-    readonly accessTags: any[];
+    readonly accessTags: string[];
     readonly features: PtFeature[];
     readonly sections: PtSection[];
 
@@ -75,8 +77,8 @@ class PtSection extends PtEntry implements SectionData {
 
         this.type = obj.type;
         this.accno = obj.accno;
-        this.tags = (obj.tags || []).map(t => Object.assign({}, t));
-        this.accessTags = (obj.accessTags || []).map(t => Object.assign({}, t));
+        this.tags = (obj.tags || []);
+        this.accessTags = (obj.accessTags || []);
 
         const subsections = (obj.subsections || []).slice();
 
@@ -108,11 +110,15 @@ class PtSection extends PtEntry implements SectionData {
 export class PageTab implements SubmissionData {
     readonly accno: string;
     readonly section: PtSection;
+    readonly tags: any[];
+    readonly accessTags: string[];
 
     static fromSubmission(subm: Submission): any {
         const pt: any = {
             type: subm.type.name,
-            accno: subm.accno
+            accno: subm.accno,
+            tags: subm.tags.tags,
+            accessTags: subm.tags.accessTags
         };
         pt.section = PageTab.fromSection(subm.root);
         return convertContactsToAuthors(pt);
@@ -125,7 +131,9 @@ export class PageTab implements SubmissionData {
 
     private static fromSection(sec: Section): any {
         const pts: any = {
-            type: sec.type.name
+            type: sec.type.name,
+            tags: sec.tags.tags,
+            accessTags: sec.tags.accessTags
         };
 
         if (sec.accno) {
@@ -205,6 +213,8 @@ export class PageTab implements SubmissionData {
                 copyAttributes(obj)));
 
         this.accno = newObj.accno;
+        this.tags = (newObj.tags || []);
+        this.accessTags = (newObj.accessTags || []);
 
         if (newObj.section !== undefined) {
             this.section = new PtSection(newObj.section);
