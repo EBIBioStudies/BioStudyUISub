@@ -106,6 +106,7 @@ class PtSection extends PtEntry implements SectionData {
             .keys(featureMap)
             .filter(k => k !== HiddenFeature.type)
             .map(k => new PtFeature(k, featureMap[k]));
+
         if (obj.files !== undefined) {
             features.push(PtFeature.file(obj.files));
         }
@@ -177,7 +178,7 @@ export class PageTab implements SubmissionData {
         }
 
         if (links.length === 0 && files.length === 0 && subsections.length === 0) {
-            subsections.push(PageTab.fromFeature(HiddenFeature));
+            subsections = subsections.concat(PageTab.fromFeature(HiddenFeature));
         }
 
         const pts: any = {
