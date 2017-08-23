@@ -376,7 +376,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
     }
 
     removeRowAt(index: number): void {
-        if (this.canRemoveRowAt(index)) {
+        if (!this.canRemoveRowAt(index)) {
             console.warn(`removeRowAt: The feature [type=${this.type.name}] can't have less than one row`);
             return;
         }
@@ -531,8 +531,12 @@ export class Section extends HasUpdates<UpdateEvent> {
     readonly features: Features;
     readonly sections: Sections;
 
+    readonly tags: Tags;
+
     constructor(type: SectionType, data: SectionData = {} as SectionData) {
         super();
+
+        this.tags = Tags.create(data);
 
         this.id = `section_${nextId()}`;
         this.type = type;
@@ -676,7 +680,11 @@ export class Submission {
     readonly root: Section;
     readonly type;
 
+    readonly tags: Tags;
+
     constructor(type: SubmissionType, data: SubmissionData = {} as SubmissionData) {
+        this.tags = Tags.create(data);
+
         this.type = type;
         this.accno = data.accno || '';
         this.root = new Section(type.sectionType, data.section);
@@ -688,6 +696,33 @@ export class Submission {
 
     updates(): Observable<UpdateEvent> {
         return this.root.updates();
+    }
+}
+
+export class Tags {
+    private _tags: { classifier: string, tag: string }[];
+    private _accessTags: string[];
+
+    static create(data: any): Tags {
+        return new Tags(data.tags, data.accessTags);
+    }
+
+    constructor(tags: any[] = [], accessTags: any[] = []) {
+        const defined = function (v: string) {
+            return v !== undefined && v.trim().length > 0;
+        };
+        this._tags = (tags || [])
+            .filter(t => defined(t.classifier) && defined(t.tag))
+            .map(t => ({classifier: t.classifier, tag: t.tag}));
+        this._accessTags = (accessTags || []).slice();
+    }
+
+    get tags(): any[] {
+        return this._tags.map(t => Object.assign({}, t));
+    }
+
+    get accessTags(): string[] {
+        return this._accessTags.slice();
     }
 }
 
@@ -711,6 +746,9 @@ export interface SectionData extends AttributesData {
 }
 
 export interface SubmissionData {
+    tags: any[];
+    accessTags: any[];
+
     accno: string;
     section: SectionData;
 }

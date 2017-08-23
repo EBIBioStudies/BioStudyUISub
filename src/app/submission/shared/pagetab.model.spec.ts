@@ -174,6 +174,36 @@ describe('PageTab', () => {
         expect(study.features.length).toBe(studyType.featureTypes.length);
     });
 
+    it('keeps values of tags and accessTags when transforming to Submission model and back', () => {
+        const accessTags = ['Public'];
+        const tags = [
+            {classifier: 'Priority', tag: 'High'}
+        ];
+        const pt = new PageTab({
+            type: 'Submission',
+            accno: '123',
+            accessTags: accessTags,
+            tags: tags,
+            section: {
+                type: 'Study',
+                accessTags: accessTags,
+                tags: tags
+            }
+        });
+
+        const subm = pt.toSubmission(SubmissionType.createDefault());
+        expect(subm.tags.accessTags).toEqual(accessTags);
+        expect(subm.tags.tags).toEqual(tags);
+        expect(subm.root.tags.accessTags).toEqual(accessTags);
+        expect(subm.root.tags.tags).toEqual(tags);
+
+        const pt2 = PageTab.fromSubmission(subm);
+        expect(pt2.accessTags).toEqual(accessTags);
+        expect(pt2.tags).toEqual(tags);
+        expect(pt2.section.accessTags).toEqual(accessTags);
+        expect(pt2.section.tags).toEqual(tags);
+    });
+
     it('can be created from a submission object', () => {
         const type = SubmissionType.createDefault();
         const secType = type.sectionType;
