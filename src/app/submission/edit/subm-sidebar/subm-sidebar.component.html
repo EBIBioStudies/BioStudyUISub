@@ -23,13 +23,13 @@
                         <i class="fa fa-fw fa-check"></i>
                     </button>
                     <button class="btn btn-default btn-xs btn-flat"
-                            (click)="onEditModeToggle($event)">
+                            (click)="onCancel($event)">
                         <i class="fa fa-fw fa-times"></i>
                     </button>
                 </span>
             </li>
             <li>
-                <div class="sidebar-item success" *ngFor="let item of items; let i = index">
+                <div class="sidebar-item success" *ngFor="let item of items?.list(); let i = index">
                     <a *ngIf="!editing" (click)="item.onClick($event)"
                        [tooltip]="item.label"
                        placement="right"
@@ -38,14 +38,14 @@
                         <span *ngIf="!collapsed">Add&nbsp;{{item.feature.typeName}}</span>
                     </a>
                     <a [ngClass]="{'has-error': itemType.invalid}"
-                       *ngIf="editing">
+                       *ngIf="editing && !item.isDeleted">
                         <span class="input-group">
                             <span class="input-group-addon">
                                 <i class="fa fa-fw" [ngClass]="item.icon"></i>
                             </span>
                             <input type="text"
                                    class="form-control input-sm form-control-auto"
-                                   [disabled]="!item.feature.type.canModify"
+                                   [disabled]="item.isReadOnly()"
                                    [ngModel]="item.feature.typeName"
                                    name="itemType_{{i}}"
                                    #itemType="ngModel"
@@ -53,9 +53,9 @@
                                    required />
                             <span class="input-group-btn">
                                 <button class="item-delete btn btn-danger btn-sm btn-flat"
-                                        [disabled]="!item.feature.type.canModify"
+                                        [disabled]="item.isReadOnly()"
                                         tooltip="delete"
-                                        (click)="$event.preventDefault(); onItemDelete(i)">
+                                        (click)="onItemDelete($event, i)">
                                     <i class="fa fa-trash-o fa-fw"></i>
                                 </button>
                             </span>
@@ -85,7 +85,7 @@
         (okClick)="onAdd($event)">
 </subm-add-dialog>
 <confirm-dialog #confirmDialog
-                title="Delete item"
-                body="You are about to permanently delete the item. This operation cannot be undone."
+                title="Delete items"
+                body="Some of the items have been deleted. If you proceed, your changes cannot be undone."
                 confirmLabel="Delete">
 </confirm-dialog>
