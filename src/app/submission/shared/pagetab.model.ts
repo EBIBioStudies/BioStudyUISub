@@ -197,7 +197,7 @@ export class PageTab implements SubmissionData {
         const isNamedAttr = (a) => (a.name.toLowerCase() === name);
 
         return PageTab.fromFeature(feature).map(f => {
-            const other = f.attributes.filter(!isNamedAttr);
+            const other = f.attributes.filter((a) => !isNamedAttr(a));
             const ff: any = {type: f.type};
             ff[name] = (f.attributes.find(isNamedAttr) || {value: ''}).value || '';
             if (other.length > 0) {
