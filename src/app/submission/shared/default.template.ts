@@ -1,5 +1,5 @@
 export const DefaultTemplate = {
-    'name': 'DeafultTemplate',
+    'name': 'DefaultTemplate',
     'sectionType': {
         'name': 'Study',
         'required': true,
