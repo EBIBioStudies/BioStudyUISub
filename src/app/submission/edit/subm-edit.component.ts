@@ -136,7 +136,7 @@ export class SubmEditComponent implements OnInit, OnDestroy {
             return;
         }
 
-        this.submService.submitSubmission(this.wrap())
+        this.submService.submitSubmission(this.wrap({ignoreEmptySections: true}))
             .subscribe(
                 resp => {
                     console.log('submitted', resp);
@@ -191,9 +191,10 @@ export class SubmEditComponent implements OnInit, OnDestroy {
         bsModalRef.content.status = resp.status;
     }
 
-    private wrap(): any {
+    private wrap(opts?: { ignoreEmptySections: boolean }): any {
         const w = Object.assign({}, this.wrappedSubm);
-        w.data = PageTab.fromSubmission(this.subm);
+        const ignoreEmptySections = opts !== undefined ? opts.ignoreEmptySections === true : undefined;
+        w.data = PageTab.fromSubmission(this.subm, ignoreEmptySections);
         return w;
     }
 
