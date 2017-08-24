@@ -172,12 +172,10 @@ export class PageTab implements SubmissionData {
                 || !isEmptyArray(sub.links)
                 || !isEmptyArray(sub.subsections)
             );
-            if (subsections.length === 0) {
+            if (subsections.length === 0 && isEmptyArray(sd.attributes)) {
                 return;
             }
-        }
-
-        if (links.length === 0 && files.length === 0 && subsections.length === 0) {
+        } else if (links.length === 0 && files.length === 0 && subsections.length === 0) {
             subsections = subsections.concat(PageTab.fromFeature(HiddenFeature));
         }
 
@@ -192,15 +190,15 @@ export class PageTab implements SubmissionData {
             pts.attributes = sd.attributes;
         }
 
-        if (files.length > 0) {
+        if (!isEmptyArray(files)) {
             pts.files = files;
         }
 
-        if (links.length > 0) {
+        if (!isEmptyArray(links)) {
             pts.links = links;
         }
 
-        if (subsections.length > 0) {
+        if (!isEmptyArray(subsections)) {
             pts.subsections = subsections;
         }
 
