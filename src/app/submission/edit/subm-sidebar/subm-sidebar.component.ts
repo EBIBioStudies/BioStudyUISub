@@ -66,21 +66,29 @@ class SubmItem {
     }
 }
 
-//TODO: Comments
 /**
- * Array extension for submission items allowing temporary deletion. Class pattern based on
- * convention created by SimonTest: {@link https://blog.simontest.net/extend-array-with-typescript-965cc1134b3}
+ * Array extension for submission items with a global flag for pending deletions.
+ * Class pattern loosely based on convention for global prototypes created by SimonTest:
+ * {@link https://blog.simontest.net/extend-array-with-typescript-965cc1134b3}
  *
  * @author Hector Casanova <hector@ebi.ac.uk>
   */
 class SubmItems extends Array<SubmItem> {
     private _isDeletion: boolean;    //has any of the items been deleted?
 
+    /**
+     * Creates a collection of submission items. Private to prevent erroneous extension.
+     * @param {Array<SubmItem>} [items] - Optional literal of initial items
+     */
     private constructor(items?: Array<SubmItem>) {
         super(...items);
         this._isDeletion = false;
     }
 
+    /**
+     * Factory to ensure prototypal inheritance.
+     * @returns {SubmItems} Collection of submission items.
+     */
     static create(): SubmItems {
         return Object.create(SubmItems.prototype);
     }
@@ -89,17 +97,29 @@ class SubmItems extends Array<SubmItem> {
         return this._isDeletion;
     }
 
+    /**
+     * Removes a given item from the collection, flagging it globally for the collection.
+     * @param {number} itemIdx - Array index of the item to be removed.
+     */
     delete(itemIdx: number): void {
         this[itemIdx].delete();
         this._isDeletion = true;
     }
 
+    /**
+     * Gets items within the collection that are pending deletion.
+     * @returns {SubmItem[]} Collection of items flagged for deletion.
+     */
     getDeleted(): SubmItem[] {
         return this.filter((item) => {
             return item.isDeleted
         });
     }
 
+    /**
+     * Resets both the item and collection-level flags, effectively cancelling all
+     * pending deletions.
+     */
     reset(): void {
         this.forEach((item) => item.reset());
         this._isDeletion = false;
@@ -119,7 +139,7 @@ export class SubmSideBarComponent implements OnChanges {
     @ViewChild('addDialog') addDialog: SubmAddDialogComponent;
     @ViewChild('confirmDialog') confirmDialog: ConfirmDialogComponent;
 
-    idxPrefix: string = '_';     //default character prefixing array indexes
+    idxPrefix: string = '_';     //default character prefixing array indexes. Component-wide constant used in template too.
     editing: boolean = false;    //component's mode: display or editing, with different renderings
     items: SubmItems;            //current collection of feature/subsection items
 
@@ -156,30 +176,33 @@ export class SubmSideBarComponent implements OnChanges {
     /**
      * Provided is valid, it saves the form data onto the model's respective properties on submission.
      * @param {NgForm} form Object generated from type name fields.
-     * @param {string} [separator] Optional separator between field name and array index.
+     * @param {string} [separator] Optional separator between field name and array index. Takes default if left out.
      */
     onSubmit(form: NgForm, separator: string = this.idxPrefix): void {
 
-        //Updates items collection if there has been scalar changes
-        if (form.dirty && form.valid) {
-            Object.keys(form.value).forEach((key) => {
-                const itemsIdx = key.split(separator)[1];
-
-                //TODO: for some reason the assignment is ignored sometimes when the new value is the same as a previous one
-                this.items[itemsIdx].feature.typeName = form.value[key];
-            }, this);
-        }
-
-        //Removes features marked as deleted. Check that onItemsChange is called reactively.
+        //Removes features marked as deleted
         if (this.items.isDeletion) {
             this.items.getDeleted().forEach(({feature}) => {
                 this.section.features.remove(feature);
             });
         }
 
+        //Updates items collection if there has been scalar changes
+        if (form.dirty && form.valid) {
+            Object.keys(form.value).forEach((key) => {
+                const itemsIdx = key.split(separator)[1];
+
+                this.items[itemsIdx].feature.typeName = form.value[key];
+            }, this);
+        }
+
         this.onEditModeToggle();
     }
 
+    /**
+     *
+     * @param {Event} event - click event object.
+     */
     onCancel(event: Event): void {
         if (this.items.isDeletion) {
             this.items.reset();
@@ -189,7 +212,7 @@ export class SubmSideBarComponent implements OnChanges {
 
     /**
      * Transitions between the display/edit mode by changing a flag.
-     * @param {Event} [event] Optional click event object. If passed, the default action is prevented.
+     * @param {Event} [event] - Optional click event object. If passed, the default action is prevented.
      */
     onEditModeToggle(event?:Event): void {
         event && event.preventDefault();
@@ -217,17 +240,27 @@ export class SubmSideBarComponent implements OnChanges {
         }
     }
 
+    /**
+     *
+     * @param {Event} event
+     * @param {FormControl[]} controls
+     * @param {string} nameInput
+     * @param {number} itemIdx
+     */
     onItemDelete(event: Event, controls: FormControl[], nameInput: string, itemIdx: number): void {
         event.preventDefault();
         this.items.delete(itemIdx);
 
-        //Edge case: the last input containing a duplicate value is removed
+        //Updates validity after deletion to avoid inconsistencies, especially regarding the uniqueness test.
         delete controls[nameInput];
         Object.keys(controls).forEach((key) => {
             controls[key].updateValueAndValidity();
         });
     }
 
+    /**
+     *
+     */
     onItemsChange(): void {
         this.items = SubmItems.create();
 
@@ -237,6 +270,10 @@ export class SubmSideBarComponent implements OnChanges {
         });
     }
 
+    /**
+     *
+     * @returns {Observable<any>}
+     */
     private confirm(): Observable<any> {
         return this.confirmDialog.confirm();
     }
