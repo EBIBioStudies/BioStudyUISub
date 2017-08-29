@@ -29,7 +29,7 @@
                 </span>
             </li>
             <li>
-                <div class="sidebar-item success" *ngFor="let item of items?.list(); let i = index">
+                <div class="sidebar-item success" *ngFor="let item of items; let i = index">
                     <a *ngIf="!editing" (click)="item.onClick($event)"
                        [tooltip]="item.label"
                        placement="right"
@@ -47,7 +47,7 @@
                                    class="form-control input-sm form-control-auto"
                                    [disabled]="item.isReadOnly()"
                                    [ngModel]="item.feature.typeName"
-                                   name="itemType_{{i}}"
+                                   name="itemType{{idxPrefix + i}}"
                                    #itemType="ngModel"
                                    unique
                                    required />
@@ -55,7 +55,7 @@
                                 <button class="item-delete btn btn-danger btn-sm btn-flat"
                                         [disabled]="item.isReadOnly()"
                                         tooltip="delete"
-                                        (click)="onItemDelete($event, i)">
+                                        (click)="onItemDelete($event, form.controls, 'itemType' + idxPrefix + i, i)">
                                     <i class="fa fa-trash-o fa-fw"></i>
                                 </button>
                             </span>

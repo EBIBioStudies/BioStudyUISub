@@ -7,20 +7,24 @@ import {
     OnChanges,
     SimpleChange
 } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import {
+    NgForm,
+    FormControl,
+} from '@angular/forms';
 
-import {Subscription} from 'rxjs/Subscription';
-import {Observable} from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
 
 import {
     Section,
     Feature
 } from '../../shared/submission.model';
-import {SubmAddDialogComponent} from '../subm-add/subm-add.component';
-import {ConfirmDialogComponent} from 'app/shared/index';
-import {SubmAddEvent} from '../subm-add/subm-add-event.model';
-import {SectionType} from '../../shared/submission-type.model';
+import { SubmAddDialogComponent } from '../subm-add/subm-add.component';
+import { ConfirmDialogComponent } from 'app/shared/index';
+import { SubmAddEvent } from '../subm-add/subm-add-event.model';
+import { SectionType } from '../../shared/submission-type.model';
 
+//TODO: comments
 class SubmItem {
     feature: Feature;
     icon: string;
@@ -62,35 +66,42 @@ class SubmItem {
     }
 }
 
-class SubmItems {
+//TODO: Comments
+/**
+ * Array extension for submission items allowing temporary deletion. Class pattern based on
+ * convention created by SimonTest: {@link https://blog.simontest.net/extend-array-with-typescript-965cc1134b3}
+ *
+ * @author Hector Casanova <hector@ebi.ac.uk>
+  */
+class SubmItems extends Array<SubmItem> {
     private _isDeletion: boolean;    //has any of the items been deleted?
-    private _items: SubmItem[];
 
-    constructor(section: Section) {
-        this._items = [];
+    private constructor(items?: Array<SubmItem>) {
+        super(...items);
         this._isDeletion = false;
+    }
 
-        this._items.push(new SubmItem(section.annotations));
-        section.features.list().forEach(
-            feature => this._items.push(new SubmItem(feature))
-        );
+    static create(): SubmItems {
+        return Object.create(SubmItems.prototype);
     }
 
     get isDeletion(): boolean {
         return this._isDeletion;
     }
 
-    list(): SubmItem[] {
-        return this._items;
-    }
-
     delete(itemIdx: number): void {
-        this._items[itemIdx].delete();
+        this[itemIdx].delete();
         this._isDeletion = true;
     }
 
+    getDeleted(): SubmItem[] {
+        return this.filter((item) => {
+            return item.isDeleted
+        });
+    }
+
     reset(): void {
-        this._items.forEach(item => item.reset());
+        this.forEach((item) => item.reset());
         this._isDeletion = false;
     }
 }
@@ -105,14 +116,12 @@ export class SubmSideBarComponent implements OnChanges {
     @Input() collapsed? = false;
     @Input() section: Section;
     @Output() toggle? = new EventEmitter();
+    @ViewChild('addDialog') addDialog: SubmAddDialogComponent;
+    @ViewChild('confirmDialog') confirmDialog: ConfirmDialogComponent;
 
-    @ViewChild('addDialog')
-    addDialog: SubmAddDialogComponent;
-    @ViewChild('confirmDialog')
-    confirmDialog: ConfirmDialogComponent;
-
-    editing: boolean = false;           //component's mode: display or editing, with different renderings
-    items: SubmItems;                   //current collection of feature/subsection items
+    idxPrefix: string = '_';     //default character prefixing array indexes
+    editing: boolean = false;    //component's mode: display or editing, with different renderings
+    items: SubmItems;            //current collection of feature/subsection items
 
     private subscr: Subscription;
 
@@ -147,21 +156,27 @@ export class SubmSideBarComponent implements OnChanges {
     /**
      * Provided is valid, it saves the form data onto the model's respective properties on submission.
      * @param {NgForm} form Object generated from type name fields.
+     * @param {string} [separator] Optional separator between field name and array index.
      */
-    onSubmit(form: NgForm): void {
-        const items = this.items;
+    onSubmit(form: NgForm, separator: string = this.idxPrefix): void {
 
-        if (form.valid) {
+        //Updates items collection if there has been scalar changes
+        if (form.dirty && form.valid) {
+            Object.keys(form.value).forEach((key) => {
+                const itemsIdx = key.split(separator)[1];
 
-            //Updates items collection if there has been scalar changes
-            if (form.dirty) {
-                Object.keys(form.value).forEach(key => {
-                    const itemsIdx = key.split('_')[1];     //Field names suffixed with items array index
-
-                    items[itemsIdx].feature.typeName = form.value[key];
-                });
-            }
+                //TODO: for some reason the assignment is ignored sometimes when the new value is the same as a previous one
+                this.items[itemsIdx].feature.typeName = form.value[key];
+            }, this);
         }
+
+        //Removes features marked as deleted. Check that onItemsChange is called reactively.
+        if (this.items.isDeletion) {
+            this.items.getDeleted().forEach(({feature}) => {
+                this.section.features.remove(feature);
+            });
+        }
+
         this.onEditModeToggle();
     }
 
@@ -202,13 +217,24 @@ export class SubmSideBarComponent implements OnChanges {
         }
     }
 
-    onItemDelete(event: Event, itemIdx: number): void {
+    onItemDelete(event: Event, controls: FormControl[], nameInput: string, itemIdx: number): void {
         event.preventDefault();
         this.items.delete(itemIdx);
+
+        //Edge case: the last input containing a duplicate value is removed
+        delete controls[nameInput];
+        Object.keys(controls).forEach((key) => {
+            controls[key].updateValueAndValidity();
+        });
     }
 
     onItemsChange(): void {
-        this.items = new SubmItems(this.section);
+        this.items = SubmItems.create();
+
+        this.items.push(new SubmItem(this.section.annotations));
+        this.section.features.list().forEach((feature) => {
+            this.items.push(new SubmItem(feature))
+        });
     }
 
     private confirm(): Observable<any> {
