@@ -27,21 +27,23 @@ export class ConfirmDialogComponent {
 
     /**
      * Renders the confirmation modal, allowing subscription to button events.
-     * @param {string} [message] Optional body replacement
+     * @param {string} [message] - Optional text for the modal's body section.
+     * @param {boolean} [isDiscardCancel] - Optional RxJS stream behaviour. By default,
+     * events are assumed to come from the confirmation button exclusively.
      * @returns {Observable<any>} Stream of button events.
      */
-    confirm(message?: string): Observable<any> {
-        if (message) {
-            this.body = message;
-        }
+    confirm(message: string = this.body, isDiscardCancel: boolean = true): Observable<any> {
+        const observable = this.buttonClicks.asObservable();
 
+        this.body = message;
         this.modalDirective.show();
-        return this.buttonClicks
-            .asObservable()
-            .take(1)
-            .filter(x => x)
-            .map(x => {
-            });
+
+        //Discards anything that returns false
+        if (isDiscardCancel) {
+            return observable.take(1).filter(x => x).map(x => {});
+        } else {
+            return observable;
+        }
     }
 
     ok(): void {

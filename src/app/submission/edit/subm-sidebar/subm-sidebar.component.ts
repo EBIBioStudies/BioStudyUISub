@@ -24,12 +24,22 @@ import { ConfirmDialogComponent } from 'app/shared/index';
 import { SubmAddEvent } from '../subm-add/subm-add-event.model';
 import { SectionType } from '../../shared/submission-type.model';
 
-//TODO: comments
+/**
+ * Submission item class aggregating its corresponding feature with UI-relevant metadata. It enables
+ * items to be in an intermediate deletion state. It also abstracts the action logic on click.
+ *
+ * @author Hector Casanova <hector@ebi.ac.uk>
+ */
 class SubmItem {
-    feature: Feature;
-    icon: string;
-    private _deleted: boolean;
+    feature: Feature;           //submission item
+    icon: string;               //class for fontawesome's icon representing the item
+    private _deleted: boolean;  //is item marked for deletion?
 
+    /**
+     * Instantiates a submission item for a given feature with a certain icon.
+     * @param {Feature} feature - Feature object for this item.
+     * @param {string} [icon] - Optional icon class. Defaults to file icon.
+     */
     constructor(feature: Feature, icon: string = 'fa-file-o') {
         this.feature = feature;
         this.icon = icon;
@@ -40,19 +50,33 @@ class SubmItem {
         return this._deleted;
     }
 
+    /**
+     * Marks the item as permanently deleted.
+     */
     delete(): void {
         this._deleted = true;
     }
 
+    /**
+     * Cancels deletion if applicable.
+     */
     reset(): void {
         this._deleted = false;
     }
 
+    /**
+     * Tests if the feature type can be changed
+     * @returns {boolean} If true, the feature type can be changed.
+     */
     isReadOnly(): boolean {
         return !this.feature.type.canModify;
     }
 
-    onClick(event: Event): void {
+    /**
+     * Automatically determines the appropriate action on click, adding a column and/or row according
+     * to the type of table and/or number of existing columns.
+     */
+    onClick(): void {
         if (this.feature.singleRow) {
             this.feature.addColumn();
             return;
@@ -67,7 +91,8 @@ class SubmItem {
 }
 
 /**
- * Array extension for submission items with a global flag for pending deletions.
+ * Collection class for submission items with a global flag for pending deletions. Items are only
+ * permanently deleted when removed from the collection.
  * Class pattern loosely based on convention for global prototypes created by SimonTest:
  * {@link https://blog.simontest.net/extend-array-with-typescript-965cc1134b3}
  *
@@ -77,8 +102,8 @@ class SubmItems extends Array<SubmItem> {
     private _isDeletion: boolean;    //has any of the items been deleted?
 
     /**
-     * Creates a collection of submission items. Private to prevent erroneous extension.
-     * @param {Array<SubmItem>} [items] - Optional literal of initial items
+     * Instantiates a collection of submission items. Private to prevent erroneous extension.
+     * @param {Array<SubmItem>} [items] - Optional literal of initial items.
      */
     private constructor(items?: Array<SubmItem>) {
         super(...items);
@@ -180,10 +205,16 @@ export class SubmSideBarComponent implements OnChanges {
      */
     onSubmit(form: NgForm, separator: string = this.idxPrefix): void {
 
-        //Removes features marked as deleted
+        //Removes features marked as deleted, showing a confirmation dialogue if applicable.
         if (this.items.isDeletion) {
-            this.items.getDeleted().forEach(({feature}) => {
-                this.section.features.remove(feature);
+            this.confirm().subscribe((isConfirmed: boolean) => {
+                if (isConfirmed) {
+                    this.items.getDeleted().forEach(({feature}) => {
+                        this.section.features.remove(feature);
+                    });
+                } else {
+                    this.items.reset();
+                }
             });
         }
 
@@ -200,10 +231,18 @@ export class SubmSideBarComponent implements OnChanges {
     }
 
     /**
-     *
-     * @param {Event} event - click event object.
+     * Renders the confirmation dialogue, internally creating a new reactive stream.
+     * @returns {Observable<any>} Reactive stream for listening to confirmation event.
      */
-    onCancel(event: Event): void {
+    private confirm(): Observable<any> {
+        return this.confirmDialog.confirm(undefined, false);
+    }
+
+    /**
+     * Cancels any pending deletion and goes back to display mode.
+     * @param {Event} [event] - Optional click event object.
+     */
+    onCancel(event?: Event): void {
         if (this.items.isDeletion) {
             this.items.reset();
         }
@@ -268,13 +307,5 @@ export class SubmSideBarComponent implements OnChanges {
         this.section.features.list().forEach((feature) => {
             this.items.push(new SubmItem(feature))
         });
-    }
-
-    /**
-     *
-     * @returns {Observable<any>}
-     */
-    private confirm(): Observable<any> {
-        return this.confirmDialog.confirm();
     }
 }
