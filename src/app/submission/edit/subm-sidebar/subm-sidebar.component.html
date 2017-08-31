@@ -7,8 +7,10 @@
         <ul class="sidebar-menu">
             <li class="sidebar-item sidebar-edit-btn-item menu-toggle">
                 <a (click)="onToggle($event)">
-                    <i class="fa fa-bars fa-fw"></i>
-                    <span *ngIf="!collapsed">Minimise</span>
+                    <button class="minimise-btn btn btn-primary btn-xs"
+                            [ngClass]="{'inactive': !collapsed}">
+                        <i class="fa fa-bars fa-fw"></i>
+                    </button>
                 </a>
                 <button class="sidebar-edit-btn btn btn-primary btn-xs btn-flat"
                         *ngIf="!editing && !collapsed"
@@ -20,11 +22,11 @@
                     <button class="btn btn-primary btn-xs btn-flat"
                             type="submit"
                             [disabled]="form.invalid">
-                        <i class="fa fa-fw fa-check"></i>
+                        Save
                     </button>
                     <button class="btn btn-default btn-xs btn-flat"
                             (click)="onCancel($event)">
-                        <i class="fa fa-fw fa-times"></i>
+                        Cancel
                     </button>
                 </span>
             </li>

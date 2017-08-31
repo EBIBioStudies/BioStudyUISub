@@ -283,11 +283,12 @@ export class SubmSideBarComponent implements OnChanges {
     }
 
     /**
-     *
-     * @param {Event} event
-     * @param {FormControl[]} controls
-     * @param {string} nameInput
-     * @param {number} itemIdx
+     * Removes the submission item from the list of controls and marks it for deletion.
+     * It also makes sure that validation is consistent with current input values.
+     * @param {Event} event - Click event object.
+     * @param {FormControl[]} controls - Array of controls making up the component's form.
+     * @param {string} nameInput - Name of the input control corresponding to the item being removed.
+     * @param {number} itemIdx - Index of control for the item being removed.
      */
     onItemDelete(event: Event, nameInput: string, controls: FormControl[], itemIdx: number): void {
         event.preventDefault();
@@ -301,7 +302,8 @@ export class SubmSideBarComponent implements OnChanges {
     }
 
     /**
-     *
+     * Resets the submission item collection to the current section's
+     * annotations and features.
      */
     onItemsChange(): void {
         this.items = SubmItems.create();
