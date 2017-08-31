@@ -164,7 +164,6 @@ export class SubmSideBarComponent implements OnChanges {
     @ViewChild('addDialog') addDialog: SubmAddDialogComponent;
     @ViewChild('confirmDialog') confirmDialog: ConfirmDialogComponent;
 
-    idxPrefix: string = '_';     //default character prefixing array indexes. Component-wide constant used in template too.
     editing: boolean = false;    //component's mode: display or editing, with different renderings
     items: SubmItems;            //current collection of feature/subsection items
 
@@ -200,16 +199,16 @@ export class SubmSideBarComponent implements OnChanges {
 
     /**
      * Provided it is valid, it saves the form data onto the model's respective properties on submission.
+     * The operation requires the user's confirmation if items have been deleted.
      * @param {NgForm} form Object generated from type name fields.
-     * @param {string} [separator] Optional separator between field name and array index. Takes default if left out.
      */
-    onSubmit(form: NgForm, separator: string = this.idxPrefix): void {
-        let confirmed = Observable.of(true);    //dummy observable in case modal not shown
+    onSubmit(form: NgForm): void {
+        let confirmShown = Observable.of(true);   //dummy observable in case modal not shown
 
         //Removes features marked as deleted, showing a confirmation dialogue if applicable.
         if (this.items.isDeletion) {
-            confirmed = this.confirm();
-            confirmed.subscribe((isConfirmed: boolean) => {
+            confirmShown = this.confirm();
+            confirmShown.subscribe((isConfirmed: boolean) => {
                 if (isConfirmed) {
                     this.items.getDeleted().forEach(({feature}) => {
                         this.section.features.remove(feature);
@@ -220,18 +219,17 @@ export class SubmSideBarComponent implements OnChanges {
             });
         }
 
-        //Only proceeds after the confirmation dialogue has been dismissed. Then, it updates
-        //items if scalar changes made.
-        confirmed.subscribe(() => {
-            if (form.dirty && form.valid) {
+        //Scalar changes are only applied if deletion confirmed in the first place.
+        //Otherwise, it doesn't apply any changes.
+        confirmShown.subscribe((isConfirmed: boolean) => {
+            if (form.dirty && form.valid && isConfirmed) {
                 Object.keys(form.value).forEach((key) => {
-                    const itemsIdx = key.split(separator)[1];
-
-                    this.items[itemsIdx].feature.typeName = form.value[key];
+                    this.section.features.find(key).typeName = form.value[key];
                 }, this);
             }
 
-            this.onEditModeToggle();
+            //If items deleted but not confirmed, it stays on edit mode
+            isConfirmed && this.onEditModeToggle();
         });
     }
 
@@ -291,7 +289,7 @@ export class SubmSideBarComponent implements OnChanges {
      * @param {string} nameInput
      * @param {number} itemIdx
      */
-    onItemDelete(event: Event, controls: FormControl[], nameInput: string, itemIdx: number): void {
+    onItemDelete(event: Event, nameInput: string, controls: FormControl[], itemIdx: number): void {
         event.preventDefault();
         this.items.delete(itemIdx);
 

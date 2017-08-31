@@ -47,7 +47,7 @@
                                    class="form-control input-sm form-control-auto"
                                    [disabled]="item.isReadOnly()"
                                    [ngModel]="item.feature.typeName"
-                                   name="itemType{{idxPrefix + i}}"
+                                   name="{{item.feature.id}}"
                                    #itemType="ngModel"
                                    unique
                                    required />
@@ -55,7 +55,7 @@
                                 <button class="item-delete btn btn-danger btn-sm btn-flat"
                                         [disabled]="item.isReadOnly()"
                                         tooltip="delete"
-                                        (click)="onItemDelete($event, form.controls, 'itemType' + idxPrefix + i, i)">
+                                        (click)="onItemDelete($event, item.feature.id, form.controls, i)">
                                     <i class="fa fa-trash-o fa-fw"></i>
                                 </button>
                             </span>
