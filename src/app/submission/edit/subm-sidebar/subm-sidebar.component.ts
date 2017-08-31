@@ -14,6 +14,7 @@ import {
 
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
 
 import {
     Section,
@@ -151,7 +152,6 @@ class SubmItems extends Array<SubmItem> {
     }
 }
 
-//TODO: Use model-driven approach to make dynamic manipulation of form more syntactic
 @Component({
     selector: 'subm-sidebar',
     templateUrl: './subm-sidebar.component.html',
@@ -199,15 +199,17 @@ export class SubmSideBarComponent implements OnChanges {
     }
 
     /**
-     * Provided is valid, it saves the form data onto the model's respective properties on submission.
+     * Provided it is valid, it saves the form data onto the model's respective properties on submission.
      * @param {NgForm} form Object generated from type name fields.
      * @param {string} [separator] Optional separator between field name and array index. Takes default if left out.
      */
     onSubmit(form: NgForm, separator: string = this.idxPrefix): void {
+        let confirmed = Observable.of(true);    //dummy observable in case modal not shown
 
         //Removes features marked as deleted, showing a confirmation dialogue if applicable.
         if (this.items.isDeletion) {
-            this.confirm().subscribe((isConfirmed: boolean) => {
+            confirmed = this.confirm();
+            confirmed.subscribe((isConfirmed: boolean) => {
                 if (isConfirmed) {
                     this.items.getDeleted().forEach(({feature}) => {
                         this.section.features.remove(feature);
@@ -218,16 +220,19 @@ export class SubmSideBarComponent implements OnChanges {
             });
         }
 
-        //Updates items collection if there has been scalar changes
-        if (form.dirty && form.valid) {
-            Object.keys(form.value).forEach((key) => {
-                const itemsIdx = key.split(separator)[1];
+        //Only proceeds after the confirmation dialogue has been dismissed. Then, it updates
+        //items if scalar changes made.
+        confirmed.subscribe(() => {
+            if (form.dirty && form.valid) {
+                Object.keys(form.value).forEach((key) => {
+                    const itemsIdx = key.split(separator)[1];
 
-                this.items[itemsIdx].feature.typeName = form.value[key];
-            }, this);
-        }
+                    this.items[itemsIdx].feature.typeName = form.value[key];
+                }, this);
+            }
 
-        this.onEditModeToggle();
+            this.onEditModeToggle();
+        });
     }
 
     /**
