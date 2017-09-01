@@ -203,14 +203,25 @@ export class SubmSideBarComponent implements OnChanges {
      * @param {NgForm} form Object generated from type name fields.
      */
     onSubmit(form: NgForm): void {
-        let confirmShown = Observable.of(true);   //dummy observable in case modal not shown
+        let confirmShown = Observable.of(true);     //dummy observable in case modal not shown
+        let deleted;                                //collection of items marked for deletion
+        let isPlural;                               //more than one item is being deleted?
 
         //Removes features marked as deleted, showing a confirmation dialogue if applicable.
         if (this.items.isDeletion) {
-            confirmShown = this.confirm();
+            deleted = this.items.getDeleted();
+            isPlural = deleted.length > 1;
+
+            confirmShown = this.confirm(`The submission 
+                ${isPlural ? `items` : `item`} with type
+                ${deleted.map(({feature}) => `"${feature.typeName}"`).join(', ')} 
+                ${isPlural ? `have` : `has`} been deleted. If you proceed, 
+                ${isPlural ? `they` : `it`} will be removed from the
+                list of items and any related features or sections will be permanently deleted.`);
+
             confirmShown.subscribe((isConfirmed: boolean) => {
                 if (isConfirmed) {
-                    this.items.getDeleted().forEach(({feature}) => {
+                    deleted.forEach(({feature}) => {
                         this.section.features.remove(feature);
                     });
                 } else {
@@ -235,10 +246,11 @@ export class SubmSideBarComponent implements OnChanges {
 
     /**
      * Renders the confirmation dialogue, internally creating a new reactive stream.
+     * @param {string} message - Text to be shown within the dialogue's body section.
      * @returns {Observable<any>} Reactive stream for listening to confirmation event.
      */
-    private confirm(): Observable<any> {
-        return this.confirmDialog.confirm(undefined, false);
+    private confirm(message: string): Observable<any> {
+        return this.confirmDialog.confirm(message, false);
     }
 
     /**
