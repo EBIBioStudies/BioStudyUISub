@@ -47,7 +47,7 @@ class BaseType {
 /* Fields are always required. User can't add/change/delete fields. Only changing its value is allowed.
  * In PageTab it's a selected by name attribute from an 'attributes' section.
  */
-export type ValueType = 'text' | 'textblob' | 'date';
+export type ValueType = 'text' | 'textblob' | 'date' | 'file';
 
 export class FieldType extends BaseType {
     readonly valueType: ValueType;

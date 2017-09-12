@@ -98,7 +98,6 @@ export class SubmSideBarComponent implements OnChanges {
             (f: Feature) => items.push(this.createItem(f))
         );
         this.items = items;
-        console.log(this.section);
     }
 
     private createItem(f: Feature): any {
