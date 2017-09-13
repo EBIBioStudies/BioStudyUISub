@@ -1,15 +1,31 @@
-<!-- TODO: This is almost equivalent to feature-value.component.html. Merge the two? -->
 <input *ngIf="type === 'text'"
        type="text" class="form-control"
        placeholder="Enter a {{name}}"
+       [ngClass]="{'input-sm': isSmall}"
        [(ngModel)]="value"
        [readonly]="readonly"
        [required]="required">
 
-<date-input *ngIf="type === 'date'"
-                [(ngModel)]="value"
-                [required]="required"
-                bsstDateFormat></date-input>
+<!--
+           [typeahead]="typeaheadAttrValues(attr.name)"
+           typeaheadAppendToBody="true"
+           typeaheadMinLength="0"
+           typeaheadOptionsLimit="30"
+-->
+
+<date-input
+        *ngIf="type === 'date'"
+        [(ngModel)]="value"
+        [required]="required"
+        [readonly]="readonly"
+        bsstDateFormat>
+</date-input>
+
+<file-input *ngIf="type === 'file'"
+            [(ngModel)]="value"
+            [required]="required"
+            [readonly]="readonly">
+</file-input>
 
 <textarea *ngIf="type === 'textblob'"
           class="form-control input-sm"

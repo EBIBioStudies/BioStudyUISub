@@ -24,6 +24,7 @@ import {
 export class SubmFieldComponent implements ControlValueAccessor, OnChanges {
     @Input() name: string;
     @Input() type: string;
+    @Input() isSmall: boolean;
     @Input() readonly: boolean;
     @Input() required: boolean;
 
