@@ -445,6 +445,18 @@ export class Features extends HasUpdates<UpdateEvent> {
         this.subscriptions.splice(index, 1);
         this.features.splice(index, 1);
         this.notify(new UpdateEvent('feature_remove', {index: index, id: feature.id}));
+
+        //NOTE: Existing type names in the scope are guaranteed to be unique at setting time
+        feature.type.destroy();
+    }
+
+    /**
+     * Retrieves the feature object with a given ID.
+     * @param {string} id - ID of the required feature.
+     * @returns {Feature} Feature with given ID.
+     */
+    find(id: string): Feature {
+        return this.features.filter(feature => feature.id === id)[0];
     }
 }
 

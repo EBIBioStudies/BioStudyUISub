@@ -1,4 +1,15 @@
 /* topbar */
+.minimise-btn {
+    outline: none;
+}
+.minimise-btn.inactive {
+    background: none;
+    color: #71a6b3;
+}
+.minimise-btn:not(.inactive) {
+    margin-left: -4px;
+}
+
 .sidebar-edit-btn-item {
     position: relative !important;
 }
@@ -25,9 +36,8 @@
     margin-left: 20%;
 }
 
-
 /* edit mode */
-.sidebar-item {
+.sidebar-item:not(.menu-toggle) {
     line-height: 30px;
 }
 
@@ -40,7 +50,7 @@
 }
 
 .input-group-addon {
-    padding: 6px;
+    padding-left: 6px;
     background: none;
     border: none;
     color: #A6D08A;

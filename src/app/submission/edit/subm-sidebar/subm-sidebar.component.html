@@ -1,19 +1,34 @@
 <aside class="left-side sidebar sidebar-offcanvas"
        [ngClass]="{'collapse-left' : collapsed}">
 
-    <form novalidate #form="ngForm">
+    <form novalidate
+          #form="ngForm"
+          (ngSubmit)="onSubmit(form)">
         <ul class="sidebar-menu">
             <li class="sidebar-item sidebar-edit-btn-item menu-toggle">
                 <a (click)="onToggle($event)">
-                    <i class="fa fa-bars fa-fw"></i>
-                    <span *ngIf="!collapsed">Minimise</span>
+                    <button class="minimise-btn btn btn-primary btn-xs"
+                            [ngClass]="{'inactive': !collapsed}">
+                        <i class="fa fa-bars fa-fw"></i>
+                    </button>
                 </a>
                 <button class="sidebar-edit-btn btn btn-primary btn-xs btn-flat"
-                        *ngIf="!collapsed"
-                        (click)="onEditModeToggle($event)"
-                        [disabled]="form.invalid">
-                    <i class="fa fa-fw" [ngClass]="{'fa-pencil': !editing, 'fa-check': editing}"></i>
+                        *ngIf="!editing && !collapsed"
+                        (click)="onEditModeToggle($event)">
+                    <i class="fa fa-fw fa-pencil"></i>
                 </button>
+                <span class="sidebar-edit-btn"
+                     *ngIf="editing && !collapsed">
+                    <button class="btn btn-primary btn-xs btn-flat"
+                            type="submit"
+                            [disabled]="form.invalid">
+                        Save
+                    </button>
+                    <button class="btn btn-default btn-xs btn-flat"
+                            (click)="onCancel($event)">
+                        Cancel
+                    </button>
+                </span>
             </li>
             <li>
                 <div class="sidebar-item success" *ngFor="let item of items; let i = index">
@@ -24,23 +39,29 @@
                         <i class="fa fa-fw" [ngClass]="item.icon"></i>
                         <span *ngIf="!collapsed">Add&nbsp;{{item.feature.typeName}}</span>
                     </a>
-                    <a *ngIf="editing" [ngClass]="{'has-error': itemType.invalid}">
-                        <div class="input-group">
+                    <a [ngClass]="{'has-error': itemType.invalid}"
+                       *ngIf="editing && !item.isDeleted">
+                        <span class="input-group">
                             <span class="input-group-addon">
                                 <i class="fa fa-fw" [ngClass]="item.icon"></i>
                             </span>
                             <input type="text"
                                    class="form-control input-sm form-control-auto"
-                                   [disabled]="!item.feature.type.canModify"
-                                   [(ngModel)]="item.feature.typeName"
-                                   name="itemType{{i}}"
+                                   [disabled]="item.isReadOnly()"
+                                   [ngModel]="item.feature.typeName"
+                                   name="{{item.feature.id}}"
                                    #itemType="ngModel"
                                    unique
                                    required />
-                            <span class="input-group-addon">
-                                <i class="fa fa-trash-o fa-fw"></i>
+                            <span class="input-group-btn">
+                                <button class="item-delete btn btn-danger btn-sm btn-flat"
+                                        [disabled]="item.isReadOnly()"
+                                        tooltip="delete"
+                                        (click)="onItemDelete($event, item.feature.id, form.controls, i)">
+                                    <i class="fa fa-trash-o fa-fw"></i>
+                                </button>
                             </span>
-                        </div>
+                        </span>
                         <label [hidden]="!itemType.errors?.unique || !itemType.touched"
                                class="control-label small">
                             Type name must be unique
@@ -65,3 +86,7 @@
         #addDialog
         (okClick)="onAdd($event)">
 </subm-add-dialog>
+<confirm-dialog #confirmDialog
+                title="Delete items"
+                confirmLabel="Delete">
+</confirm-dialog>
