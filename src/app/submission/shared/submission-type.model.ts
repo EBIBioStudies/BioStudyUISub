@@ -39,6 +39,14 @@ class BaseType {
         }
     }
 
+    /**
+     * Removes the type name from the scope. Allows type names that were previously assigned to
+     * submission items already deleted.
+     */
+    destroy(): void {
+        this.scope.delete(this.typeName);
+    }
+
     get canModify(): boolean {
         return !this.tmplBased;
     }
