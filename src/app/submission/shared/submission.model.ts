@@ -318,6 +318,18 @@ export class Feature extends HasUpdates<UpdateEvent> {
         return this._columns.list();
     }
 
+    get data(): FeatureData {
+        const entries = this.rows.map(r => {
+            return {
+                attributes: this.columns.map(c => ({name: c.name, value: r.valueFor(c.id).value}))
+            }
+        });
+        return {
+            type: this.type.name,
+            entries: entries
+        }
+    }
+
     rowSize(): number {
         return this._rows.size();
     }
@@ -585,6 +597,24 @@ export class Section extends HasUpdates<UpdateEvent> {
         this.type.name = name;
         if (this.type.name === name) {
             this.notify(new UpdateEvent('type', name));
+        }
+    }
+
+    get data(): SectionData {
+        let attrs = [];
+        const annotations = this.annotations.data.entries;
+        if (annotations.length > 0) {
+            attrs = attrs.concat(annotations[0].attributes);
+        }
+        attrs = attrs.concat(this.fields.list().map(f => ({name: f.name, value: f.value})));
+        return {
+            tags: this.tags.tags,
+            accessTags: this.tags.accessTags,
+            type: this.type.name,
+            accno: this.accno,
+            attributes: attrs,
+            features: this.features.list().map(f => f.data),
+            sections: this.sections.list().map(s => s.data)
         }
     }
 

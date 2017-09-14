@@ -1,8 +1,6 @@
 import {
     AttributesData,
-    Feature,
     FeatureData,
-    Section,
     SectionData,
     Submission,
     SubmissionData
@@ -11,6 +9,20 @@ import {SubmissionType} from './submission-type.model';
 import {convertAuthorsToContacts, convertContactsToAuthors} from './pagetab-authors.utils';
 import {flattenDoubleArrays} from './pagetab-doublearrays.utils';
 import {copyAttributes} from './pagetab-attributes.utils';
+
+const HiddenFeature = {
+    type: '__HIDDEN__',
+    entries: [{
+        attributes: [{
+            name: '__NAME__',
+            value: '__VALUE__'
+        }]
+    }]
+} as FeatureData;
+
+const isEmptyArray = function (v) {
+    return v === undefined || v.length === 0
+};
 
 class PtEntry implements AttributesData {
     readonly attributes: { name: string, value: string }[];
@@ -69,10 +81,10 @@ class PtSection extends PtEntry implements SectionData {
     constructor(obj: any) {
         super(obj);
 
-        const isFeature = (s: any) => {
-            return s.subsections === undefined &&
-                s.files === undefined &&
-                s.links === undefined;
+        const isFeature = function (s: any) {
+            return isEmptyArray(s.subsections) &&
+                isEmptyArray(s.files) &&
+                isEmptyArray(s.links);
         };
 
         this.type = obj.type;
@@ -92,7 +104,9 @@ class PtSection extends PtEntry implements SectionData {
 
         const features = Object
             .keys(featureMap)
+            .filter(k => k !== HiddenFeature.type)
             .map(k => new PtFeature(k, featureMap[k]));
+
         if (obj.files !== undefined) {
             features.push(PtFeature.file(obj.files));
         }
@@ -113,14 +127,15 @@ export class PageTab implements SubmissionData {
     readonly tags: any[];
     readonly accessTags: string[];
 
-    static fromSubmission(subm: Submission): any {
+    // ignoreEmptySections means that empty sections (and features) will not be included into PageTab
+    static fromSubmission(subm: Submission, ignoreEmptySections = false): any {
         const pt: any = {
             type: subm.type.name,
             accno: subm.accno,
             tags: subm.tags.tags,
             accessTags: subm.tags.accessTags
         };
-        pt.section = PageTab.fromSection(subm.root);
+        pt.section = PageTab.fromSection(subm.root.data, ignoreEmptySections);
         return convertContactsToAuthors(pt);
     }
 
@@ -129,74 +144,79 @@ export class PageTab implements SubmissionData {
         return PageTab.fromSubmission(pt.toSubmission(SubmissionType.createDefault()));
     }
 
-    private static fromSection(sec: Section): any {
-        const pts: any = {
-            type: sec.type.name,
-            tags: sec.tags.tags,
-            accessTags: sec.tags.accessTags
-        };
-
-        if (sec.accno) {
-            pts.accno = sec.accno;
-        }
-
-        let attributes = [];
-        if (sec.fields.length > 0) {
-            attributes = attributes.concat(sec.fields.list().map(fld => ({
-                name: fld.name,
-                value: fld.value
-            })));
-        }
-
-        if (sec.annotations.size() > 0) {
-            attributes.concat(PageTab.fromAnnotations(sec.annotations));
-        }
-
-        if (attributes.length > 0) {
-            pts.attributes = attributes;
-        }
-
+    private static fromSection(sd: SectionData, ignoreEmptySections: boolean): any {
         let subsections = [];
+        let files = [];
+        let links = [];
 
-        sec.features.list().filter(f => f.size() > 0).forEach(f => {
-            if (f.type.name === 'File') {
-                pts.files = PageTab.fromFileOrLinkFeature(f, 'file');
-            } else if (f.type.name === 'Link') {
-                pts.links = PageTab.fromFileOrLinkFeature(f, 'url');
-            } else {
-                subsections = subsections.concat(PageTab.fromFeature(f));
-            }
-        });
+        sd.features
+            .forEach(fd => {
+                if (fd.type === 'File') {
+                    files = PageTab.fromFileOrLinkFeature(fd, 'file');
+                } else if (fd.type === 'Link') {
+                    links = PageTab.fromFileOrLinkFeature(fd, 'url');
+                } else {
+                    subsections = subsections.concat(PageTab.fromFeature(fd));
+                }
+            });
 
         subsections = subsections.concat(
-            sec.sections.list().map(s => PageTab.fromSection(s))
-        );
+            sd.sections
+                .map(s => PageTab.fromSection(s, ignoreEmptySections))
+                .filter(s => s !== undefined));
 
-        if (subsections.length > 0) {
+        if (ignoreEmptySections) {
+            subsections = subsections.filter(sub =>
+                !isEmptyArray(sub.attributes)
+                || !isEmptyArray(sub.files)
+                || !isEmptyArray(sub.links)
+                || !isEmptyArray(sub.subsections)
+            );
+            if (subsections.length === 0 && isEmptyArray(sd.attributes)) {
+                return;
+            }
+        } else if (links.length === 0 && files.length === 0 && subsections.length === 0) {
+            subsections = subsections.concat(PageTab.fromFeature(HiddenFeature));
+        }
+
+        const pts: any = {
+            type: sd.type,
+            accno: sd.accno,
+            tags: sd.tags,
+            accessTags: sd.accessTags
+        };
+
+        if (!isEmptyArray(sd.attributes)) {
+            pts.attributes = sd.attributes;
+        }
+
+        if (!isEmptyArray(files)) {
+            pts.files = files;
+        }
+
+        if (!isEmptyArray(links)) {
+            pts.links = links;
+        }
+
+        if (!isEmptyArray(subsections)) {
             pts.subsections = subsections;
         }
+
         return pts;
     }
 
-    private static fromAnnotations(f: Feature): any[] {
-        return PageTab.fromFeature(f)[0].attributes;
-    }
-
-    private static fromFeature(f: Feature): any[] {
-        return f.rows.map(row => (
+    private static fromFeature(fd: FeatureData): any[] {
+        return fd.entries.map(entry => (
             {
-                type: f.type.name,
-                attributes: f.columns.map(c => ({
-                    name: c.name,
-                    value: row.valueFor(c.id).value
-                }))
+                type: fd.type,
+                attributes: entry.attributes
             }));
     }
 
-    private static fromFileOrLinkFeature(feature: Feature, name: string): any[] {
+    private static fromFileOrLinkFeature(fd: FeatureData, name: string): any[] {
         const isNamedAttr = (a) => (a.name.toLowerCase() === name);
 
-        return PageTab.fromFeature(feature).map(f => {
+        return PageTab.fromFeature(fd).map(f => {
             const other = f.attributes.filter((a) => !isNamedAttr(a));
             const ff: any = {type: f.type};
             ff[name] = (f.attributes.find(isNamedAttr) || {value: ''}).value || '';

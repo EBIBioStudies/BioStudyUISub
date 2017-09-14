@@ -1,6 +1,7 @@
 import {pageTabSample1} from './pagetab.samples';
 import {PageTab} from './pagetab.model';
 import {SubmissionType} from './submission-type.model';
+import {Submission} from "./submission.model";
 
 describe('PageTab', () => {
     it('can have undefined root section', () => {
@@ -211,10 +212,10 @@ describe('PageTab', () => {
         const pt = PageTab.fromSubmission(subm);
 
         expect(pt.type).toBe('Submission');
-        expect(pt.accno).toEqual('');
+        expect(pt.accno).toBe('');
         expect(pt.section).toBeDefined();
         expect(pt.section.type).toBe('Study');
-        expect(pt.section.accno).toBeUndefined();
+        expect(pt.section.accno).toBe('');
         expect(pt.section.attributes).toBeDefined();
         expect(pt.section.attributes.length).toBe(secType.fieldTypes.length);
 
@@ -226,5 +227,102 @@ describe('PageTab', () => {
         const s = pt.section.subsections[0];
         expect(s.type).toBe('Author');
         expect(s.attributes).toBeUndefined(); // all values are empty
+    });
+
+    it('does not ignore empty sections by default', () => {
+        const submType = SubmissionType.fromTemplate(
+            {
+                name: 'Test',
+                sectionType: {
+                    name: 'Study'
+                }
+            });
+        const subm = new Submission(submType,
+            {
+                accno: '123',
+                tags: [],
+                accessTags: [],
+                section: {
+                    type: 'Study',
+                    accno: '321',
+                    tags: [],
+                    accessTags: [],
+                    attributes: [],
+                    features: [{
+                        type: 'EmptyFeature',
+                        entries: []
+                    }],
+                    sections: [{
+                        type: 'EmptySection',
+                        accno: '1',
+                        tags: [],
+                        accessTags: [],
+                        attributes: [],
+                        features: [],
+                        sections: []
+                    }]
+                }
+            });
+
+        expect(subm.root.features.length).toEqual(1);
+        expect(subm.root.sections.length).toEqual(1);
+
+        const pt = PageTab.fromSubmission(subm);
+        expect(pt.section.subsections.length).toEqual(1); // empty features are not saved for now
+
+        const subm2 = new PageTab(pt).toSubmission(submType);
+
+        expect(subm2.root.features.length).toEqual(0);
+        expect(subm2.root.sections.length).toEqual(1);
+    });
+
+    it('does ignore empty sections if specified', () => {
+        const submType = SubmissionType.fromTemplate(
+            {
+                name: 'Test',
+                sectionType: {
+                    name: 'Study'
+                }
+            });
+        const subm = new Submission(submType,
+            {
+                accno: '123',
+                tags: [],
+                accessTags: [],
+                section: {
+                    type: 'Study',
+                    accno: '321',
+                    tags: [],
+                    accessTags: [],
+                    attributes: [{
+                        name: 'Attr',
+                        value: 'Value'
+                    }],
+                    features: [{
+                        type: 'EmptyFeature',
+                        entries: []
+                    }],
+                    sections: [{
+                        type: 'EmptySection',
+                        accno: '1',
+                        tags: [],
+                        accessTags: [],
+                        attributes: [],
+                        features: [],
+                        sections: []
+                    }]
+                }
+            });
+
+        expect(subm.root.features.length).toEqual(1);
+        expect(subm.root.sections.length).toEqual(1);
+
+        const pt = PageTab.fromSubmission(subm, true);
+        expect(pt.section.subsections).toBeUndefined();
+
+        const subm2 = new PageTab(pt).toSubmission(submType);
+
+        expect(subm2.root.features.length).toEqual(0);
+        expect(subm2.root.sections.length).toEqual(0);
     });
 });
