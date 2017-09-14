@@ -18,12 +18,13 @@
         <div class="col-md-9">
             <div class="form-group">
                 <div class="input-group">
-                    <feature-value
+                    <subm-field
                             [type]="column.valueType"
                             [(ngModel)]="feature.rows[0].valueFor(column.id).value"
                             [readonly]="readonly"
+                            isSmall="true"
                             [formControl]="featureForm.rowValueControl(0,column.id)">
-                    </feature-value>
+                    </subm-field>
                     <span *ngIf="!readonly"
                           class="input-group-btn">
                               <button type="button"

@@ -6,7 +6,8 @@ import {
     SectionType,
     FeatureType,
     ValueType,
-    FieldType, SubmissionType
+    FieldType,
+    SubmissionType
 } from './submission-type.model';
 
 const nextId = (function () {
@@ -272,7 +273,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
 
         type.columnTypes.forEach(ct => {
             if (ct.required) {
-                this.addColumn(ct.name, ct.required);
+                this.addColumn(ct.name, ct.required, ct.valueType);
             }
         });
 
@@ -350,8 +351,8 @@ export class Feature extends HasUpdates<UpdateEvent> {
         });
     }
 
-    addColumn(name?: string, required?: boolean): Attribute {
-        const col = new Attribute(name || 'New Column', required);
+    addColumn(name?: string, required?: boolean, valueType?: ValueType): Attribute {
+        const col = new Attribute(name || 'New Column', required, valueType);
         this._rows.addKey(col.id);
         this._columns.add(col);
         return col;

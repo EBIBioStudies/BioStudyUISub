@@ -2,6 +2,7 @@ import {
     Component,
     ElementRef,
     ViewChild,
+    Input,
     forwardRef
 } from '@angular/core';
 
@@ -29,6 +30,8 @@ import {
                 [(ngModel)]="value"
                 pattern="^\d{4}-\d{2}-\d{2}$"
                 (click)="openDatePicker()"
+                [required]="required"
+                [disabled]="readonly"
                  #inputbox>
                 <span class="btn input-group-addon" 
                       (click)="toggleDatePicker()"><i class="fa fa-calendar"></i></span>       
@@ -36,7 +39,8 @@ import {
     <datepicker style="position: absolute; z-index:10; min-height:290px;"
                 [hidden]="!showDatePicker"
                 [ngModel]="activeDate" 
-                (ngModelChange)="onActiveDateChange($event)"></datepicker>
+                (ngModelChange)="onActiveDateChange($event)"
+                [disabled]="readonly"></datepicker>
 `,
     providers: [
         {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DateInputComponent), multi: true},
@@ -45,6 +49,9 @@ import {
 })
 
 export class DateInputComponent implements ControlValueAccessor {
+    @Input() required?: boolean = false;
+    @Input() readonly?: boolean = false;
+
     showDatePicker = false;
     activeDate: Date;
 

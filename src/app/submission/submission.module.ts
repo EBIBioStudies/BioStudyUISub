@@ -31,7 +31,6 @@ import {SubmFieldComponent} from './edit/subm-form/field/subm-field.component';
 import {SubmFeatureComponent} from './edit/subm-form/feature/subm-feature.component';
 import {FeatureGridComponent} from './edit/subm-form/feature/feature-grid.component';
 import {FeatureListComponent} from './edit/subm-form/feature/feature-list.component';
-import {FeatureValueComponent} from './edit/subm-form/feature/feature-value.component';
 import {SubmNavBarComponent} from './edit/subm-navbar/subm-navbar.component';
 import {SubmValidationErrorsModalComponent} from './edit/subm-navbar/subm-validation-errors.component';
 import {SubmAddDialogComponent} from './edit/subm-add/subm-add.component';
@@ -77,7 +76,6 @@ import {UniqueValidator} from './shared/unique.directive';
         SubmResultsModalComponent,
         SubmResultsTreeComponent,
         SubmAddDialogComponent,
-        FeatureValueComponent,
         FeatureGridComponent,
         FeatureListComponent,
         ActionButtonsCellComponent,

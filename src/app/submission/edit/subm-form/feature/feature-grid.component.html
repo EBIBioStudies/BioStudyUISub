@@ -34,12 +34,13 @@
         </div>
         <div class="col-xs-3 col-md-2" *ngFor="let column of columns">
             <div [ngClass]="{'has-error' : false}">
-                <feature-value
+                <subm-field
                         [type]="column.valueType"
                         [(ngModel)]="row.valueFor(column.id).value"
                         [readonly]="readonly"
+                        isSmall="true"
                         [formControl]="featureForm.rowValueControl(idx, column.id)">
-                </feature-value>
+                </subm-field>
             </div>
         </div>
     </div>
