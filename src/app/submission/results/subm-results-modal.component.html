@@ -5,9 +5,14 @@
             aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
-    <h4 class="modal-title">Submission {{status}}</h4>
+    <h4 class="modal-title">Submission {{status == 'OK' ? 'successful' : 'failed'}}</h4>
 </div>
 <div class="modal-body">
     <subm-results-tree
             [log]="log"></subm-results-tree>
+</div>
+<div class="modal-footer">
+    <div class="pull-right">
+        <button type="button" class="btn btn-primary btn-xs" (click)="bsModalRef.hide()">Go to submissions</button>
+    </div>
 </div>
