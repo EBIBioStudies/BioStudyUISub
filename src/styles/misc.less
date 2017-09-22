@@ -57,8 +57,22 @@
 }
 
 /* saving spinner */
-
 .fa-spin-2x {
   -webkit-animation: fa-spin 1s infinite linear;
   animation: fa-spin 1s infinite linear;
+}
+
+/* Gets rid of default styling for ag-grid's buttons */
+.ag-paging-button {
+  padding: .5rem 1rem;
+  color: #fafafa;
+  background: #82b0bc;
+  border: #71a6b3;
+  border-radius: .3rem;
+  outline: none;
+
+  /* Makes disabled state for ag-grid's buttons more apparent */
+  &[disabled] {
+    opacity: .4;
+  }
 }

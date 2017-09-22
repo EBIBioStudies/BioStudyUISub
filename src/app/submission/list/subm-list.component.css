@@ -1,0 +1,7 @@
+.panel-info {
+    border: none;
+    box-shadow: none;
+}
+.panel-heading {
+    border-top-left-radius: 0;
+}
