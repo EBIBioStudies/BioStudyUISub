@@ -8,7 +8,8 @@ import {
 
 @Component({
     selector: 'direct-submit',
-    templateUrl: './direct-submit.component.html'
+    templateUrl: './direct-submit.component.html',
+    styleUrls: ['./direct-submit.component.css']
 })
 export class DirectSubmitComponent implements OnInit, OnDestroy {
     private sb: Subscription;

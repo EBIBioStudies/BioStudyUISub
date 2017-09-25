@@ -11,81 +11,7 @@ import {SubmissionService} from '../shared/submission.service';
 
 @Component({
     selector: 'direct-submit-sidebar',
-    template: `
-<aside class="left-side sidebar sidebar-offcanvas"
-       [ngClass]="{'collapse-left' : collapsed}"
-       *ngIf="!readonly">
-    <ul class="sidebar-menu">
-        <li class="sidebar-item menu-toggle">
-            <a (click)="onToggle($event)">
-                 <i class="fa fa-bars fa-fw"></i> 
-                 <span *ngIf="!collapsed">Minimise</span>
-            </a>
-        </li>
-    </ul>    
-    <div *ngIf="!collapsed" style="margin: 5px;">
-        <form id="subm-upload-form" 
-              name="submUploadForm"
-              novalidate 
-              role="form" 
-              method="post"
-              (ngSubmit)="onSubmit($event)" 
-              #uploadForm="ngForm">
-            
-              
-            <div class="form-group">
-                <label>File</label>
-                <div>
-                    <small class="form-text text-muted">{{fileName}}</small>               
-                </div>
-                <file-upload-button title="Browse file..." 
-                                    (select)="onUploadFilesSelect($event)"></file-upload-button>
-            </div>
-            <div class="form-group">
-                <label for="">Format</label>
-                <select name="formatSelect" 
-                        class="form-control"
-                        [(ngModel)]="model.format">
-                    <option *ngFor="let format of formats" [value]="format.value" [selected]="model.format === format.value">
-                        {{format.name}}
-                    </option>     
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="">Attach To</label>
-                <ul>
-                   <li *ngFor="let p of model.projects">{{p}}</li>
-                </ul>
-                <multi-select
-                     name="selectedProjects"
-                    [options]="projectsToAttachTo" 
-                    [(ngModel)]="model.projects"></multi-select>
-            </div>
-            <hr/>
-            <div>
-                <!--span *ngIf="submitting"><i class="fa fa-spinner fa-spin"></i></span-->
-                <!--button type="submit"
-                        class="btn btn-primary btn-sm pull-right"
-                        [disabled]="!canSubmit">Submit</button-->
-                        
-                <div class="btn-group pull-right" dropdown>
-                    <button id="single-button" 
-                            type="button" 
-                            class="btn btn-primary btn-sm" 
-                            [disabled]="!canSubmit"
-                            dropdownToggle>
-                       Submit as... <span class="caret"></span>
-                    </button>
-                    <ul *dropdownMenu role="menu" aria-labelledby="single-button" class="dropdown-menu">
-                        <li role="menuitem"><a class="dropdown-item" (click)="onCreate()">New</a></li>
-                        <li role="menuitem"><a class="dropdown-item" (click)="onUpdate()">Existing</a></li>
-                    </ul>
-                </div>
-            </div>
-        </form>
-    </div>
-</aside>
-`
+    templateUrl: './direct-submit-sidebar.component.html'
 })
 
 export class DirectSubmitSideBarComponent implements OnInit {
@@ -108,6 +34,7 @@ export class DirectSubmitSideBarComponent implements OnInit {
         projects: []
     };
 
+    private isLoading: boolean;         //flags request in progress
     private projectsToAttachTo: string[] = [];
 
     constructor(private directSubmitService: DirectSubmitService,
@@ -115,9 +42,13 @@ export class DirectSubmitSideBarComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.isLoading = true;
         this.submService.getProjects()
             .subscribe(data => {
                 this.projectsToAttachTo = data.map(s => s.accno);
+                this.isLoading = false;
+            }, () => {
+                this.isLoading = false;
             });
     }
 
