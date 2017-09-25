@@ -102,7 +102,8 @@ export class DateCellComponent implements AgRendererComponent {
 
 @Component({
     selector: 'subm-list',
-    templateUrl: './subm-list.component.html'
+    templateUrl: './subm-list.component.html',
+    styleUrls: ['./subm-list.component.css']
 })
 
 export class SubmListComponent {

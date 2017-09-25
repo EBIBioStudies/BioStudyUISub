@@ -149,7 +149,7 @@ export class PageTab implements SubmissionData {
         }
 
         if (sec.annotations.size() > 0) {
-            attributes.concat(PageTab.fromAnnotations(sec.annotations));
+            attributes = attributes.concat(PageTab.fromAnnotations(sec.annotations));
         }
 
         if (attributes.length > 0) {

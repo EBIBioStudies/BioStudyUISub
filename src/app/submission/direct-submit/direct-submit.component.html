@@ -6,12 +6,10 @@
 
     <div class="container-fluid">
         <aside class="right-side content" [ngClass]="{'collapse-left' : collapseSideBar}">
+            <h3>Direct submission</h3>
             <div *ngIf="!request"
-                 class="panel text-center"
-                 style="border-color:#bbb;color:#aaa;padding:20px; margin:20px">
-                Please use the form on the left to upload submission file.
-                It will be validated and, if the validation is successful, automatically submitted to BioStudies.
-                The results appear here shortly after.
+                 class="help-msg panel text-center">
+                Please, provide the details of your data file using the form on the left. Upon submission, the file will be validated and any errors shown.
             </div>
             <div *ngIf="request">
                 <div class="panel"
