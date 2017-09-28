@@ -129,7 +129,6 @@ export class TreeViewNodeComponent implements AfterViewInit, OnChanges  {
 .tree {
     min-height:20px;
     padding:19px;
-    margin-bottom:20px;
     background-color:#fbfbfb;
     -webkit-border-radius:4px;
     -moz-border-radius:4px;

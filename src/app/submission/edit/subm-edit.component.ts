@@ -4,10 +4,8 @@ import {
     OnDestroy,
     ViewChild
 } from '@angular/core';
-
 import {
     ActivatedRoute,
-    Router,
     Params
 } from '@angular/router';
 
@@ -15,14 +13,12 @@ import {Subscription} from 'rxjs/Subscription';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
-import {ModalDirective} from 'ngx-bootstrap/modal/modal.component';
 import {BsModalService} from 'ngx-bootstrap/modal';
 
 import {
     Submission,
     Section
 } from '../shared/submission.model';
-
 import {SubmissionService} from '../shared/submission.service';
 import {
     SubmissionType
@@ -35,12 +31,12 @@ import {
 } from '../shared/submission.validator';
 import {ServerError} from '../../http/server-error.handler';
 import {SubmResultsModalComponent} from '../results/subm-results-modal.component';
-
 import {ConfirmDialogComponent} from 'app/shared/index';
 
 @Component({
     selector: 'subm-edit',
-    templateUrl: './subm-edit.component.html'
+    templateUrl: './subm-edit.component.html',
+    styleUrls: ['./subm-edit.component.css']
 })
 export class SubmEditComponent implements OnInit, OnDestroy {
     sideBarCollapsed = false;
@@ -59,7 +55,6 @@ export class SubmEditComponent implements OnInit, OnDestroy {
 
     constructor(private route: ActivatedRoute,
                 private submService: SubmissionService,
-                private router: Router,
                 private modalService: BsModalService) {
     }
 
@@ -177,17 +172,9 @@ export class SubmEditComponent implements OnInit, OnDestroy {
             }
         })();
 
-        subscriptions.push(this.modalService.onHide.subscribe((reason: string) => {
-            if (resp.status === 'OK') {
-                this.router.navigate(['/submissions']);
-            }
-        }));
-        subscriptions.push(this.modalService.onHidden.subscribe((reason: string) => {
-            subscriptions.unsubscribe();
-        }));
-
         const bsModalRef = this.modalService.show(SubmResultsModalComponent);
         bsModalRef.content.log = resp.log || {};
+        bsModalRef.content.mapping = resp.mapping || [];
         bsModalRef.content.status = resp.status;
     }
 

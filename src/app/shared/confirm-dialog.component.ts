@@ -1,7 +1,7 @@
 import {
     Component,
     ViewChild,
-    Input
+    Input, ElementRef
 } from '@angular/core';
 
 import {ModalDirective} from 'ngx-bootstrap/modal';
@@ -10,6 +10,9 @@ import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import 'rxjs/add/operator/take';
 
+/**
+ * UI component for confirmation modals with all its text parts parameterised.
+ */
 @Component({
     selector: 'confirm-dialog',
     templateUrl: './confirm-dialog.component.html'
@@ -19,11 +22,13 @@ export class ConfirmDialogComponent {
 
     @ViewChild('staticModal')
     private modalDirective: ModalDirective;
+    @ViewChild('abortBtn')
+    private abortEl: ElementRef;
 
-    @Input() title: string = 'Confirm';          //Summary text for the modal's title
-    @Input() confirmLabel: string = 'Ok';        //Default name for positive action
-    @Input() abortLabel: string = 'Cancel';      //Default name for negative action
-    @Input() body: string = 'Are you sure?';     //Descriptive message for the modal's body
+    @Input('headerTitle') title: string = 'Confirm';    //Summary text for the modal's title
+    @Input() confirmLabel: string = 'Ok';               //Default name for positive action
+    @Input() abortLabel: string = 'Cancel';             //Default name for negative action
+    @Input() body: string = 'Are you sure?';            //Descriptive message for the modal's body
 
     /**
      * Renders the confirmation modal, allowing subscription to button events.
@@ -53,11 +58,24 @@ export class ConfirmDialogComponent {
         }
     }
 
+    /**
+     * Handler for "onShown" event, triggered exactly after the modal has been fully revealed.
+     */
+    onShown(): void {
+        this.abortEl.nativeElement.focus();
+    }
+
+    /**
+     * Handler for confirmation event. Notifies such confirmation with a "true" in the event stream.
+     */
     ok(): void {
         this.buttonClicks.next(true);
         this.modalDirective.hide();
     }
 
+    /**
+     * Handler for abort event. Notifies such confirmation with a "false" in the event stream.
+     */
     cancel(): void {
         this.buttonClicks.next(false);
         this.modalDirective.hide();

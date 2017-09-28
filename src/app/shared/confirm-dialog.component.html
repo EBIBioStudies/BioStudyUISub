@@ -1,11 +1,19 @@
 <div class="modal fade" bsModal #staticModal="bs-modal"
-     [config]="{backdrop: 'static'}"
+     (onShown)="onShown()"
      tabindex="-1"
      role="dialog">
 
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">{{title}}</div>
+            <div class="modal-header bg-primary">
+                {{title}}
+                <button type="button"
+                        class="close"
+                        (click)="cancel()"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
             <div class="modal-body">
                 <div class="media">
                     <span class="media-left media-middle">
@@ -17,10 +25,10 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <div class="pull-right">
+                <form class="pull-right">
                     <button type="button" class="btn btn-primary btn-xs" (click)="ok()">{{confirmLabel}}</button>
-                    <button type="button" class="btn btn-default btn-xs" (click)="cancel()">{{abortLabel}}</button>
-                </div>
+                    <button type="button" class="btn btn-default btn-xs" (click)="cancel()" autofocus #abortBtn>{{abortLabel}}</button>
+                </form>
             </div>
         </div>
     </div>

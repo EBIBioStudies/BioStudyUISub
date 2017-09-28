@@ -29,7 +29,8 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-12">
-                        <ag-grid-angular #agGrid style="width: 100%; height: 500px;" class="ag-fresh"
+                        <!-- Grid options set to have 15 30-pixel rows per page + 40px headings + 40px footer => height = 450px + 80px  -->
+                        <ag-grid-angular #agGrid style="width: 100%; height: 530px;" class="ag-fresh"
                                          [gridOptions]="gridOptions"
                                          [columnDefs]="columnDefs">
                         </ag-grid-angular>
@@ -41,6 +42,6 @@
 </container-root>
 
 <confirm-dialog #confirmDialog
-                title="Delete submission"
+                headerTitle="Delete submission"
                 confirmLabel="Delete">
 </confirm-dialog>

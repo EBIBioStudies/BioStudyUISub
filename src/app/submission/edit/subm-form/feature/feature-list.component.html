@@ -3,7 +3,7 @@
         <div class="col-md-3"><h5>key</h5></div>
         <div class="col-md-9"><h5>value</h5></div>
     </div>
-    <div class="row" *ngFor="let column of columns">
+    <div class="row" *ngFor="let column of columns; let idx = index">
         <div class="col-md-3">
             <div class="form-group"
                  [ngClass]="{'has-error': featureForm.columnControl(column.id).invalid}"
@@ -29,7 +29,7 @@
                           class="input-group-btn">
                               <button type="button"
                                       class="btn btn-sm btn-danger btn-flat"
-                                      (click)="onRemoveAttrClick(column.id);">
+                                      (click)="featureForm.feature.removeRowAt(idx)">
                                    <i class="fa fa-trash-o"></i>
                               </button>
                     </span>
