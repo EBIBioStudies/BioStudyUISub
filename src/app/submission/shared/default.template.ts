@@ -4,10 +4,8 @@ export const DefaultTemplate = {
         'name': 'Study',
         'required': true,
         'annotationsType': {
-            'singleRow': true,
             'title': 'Describe your study',
             'description': 'Provide an adequate overview of the Study, make it easier to find and interpret',
-            'required': true,
             'columnTypes': [
                 {
                     'name': 'Organism',

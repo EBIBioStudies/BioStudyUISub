@@ -385,6 +385,67 @@ export class Feature extends HasUpdates<UpdateEvent> {
     }
 }
 
+/**
+ * Annotation groups are implemented as grid features whose columns act as different annotations or rows.
+ *
+ * @author Hector Casanova <hector@ebi.ac.uk>
+ */
+export class AnnotationFeature extends Feature {
+
+    /**
+     * Instantiates an annotation group based on its type and data.
+     * @param {FeatureType} type - Normally of type "annotationsType"
+     * @param {FeatureData} data - Key-value pairs wrapped with type.
+     */
+    constructor(type: FeatureType, data: FeatureData = {} as FeatureData) {
+        super(type, data);
+    }
+
+    /**
+     * Convenience method for instantiating this annotation from attributes
+     * @param {FeatureType} type - Normally of type "annotationsType"
+     * @param {{name: string; value: string}[]} attrs - Key-value pairs
+     */
+    static create(type: FeatureType, attrs: { name: string, value: string }[]): Feature {
+        return new AnnotationFeature(type,
+            {
+                type: type.name,
+                entries: [{
+                    attributes: attrs
+                }]
+            });
+    }
+
+    /**
+     * Uses columns when counting the name of annotation "rows"
+     * @returns {number} Number of columns.
+     */
+    rowSize(): number {
+        return this.colSize();
+    }
+
+    /**
+     * Bypasses the check for the singleRow flag as this is always true for annotations. See {@link AnnotationsType}
+     * @param {number} index - Index in the list of columns
+     * @returns {boolean} True if removable.
+     */
+    canRemoveRowAt(index: number): boolean {
+        return this.rowSize() > 1 || !this.type.required;
+    }
+
+    /**
+     * Checks that a column-like row can be removed.
+     * @param {number} index - Index in the list of columns
+     */
+    removeRowAt(index: number): void {
+        if (!this.canRemoveRowAt(index)) {
+            console.warn(`removeRowAt: This annotation group is required. It cannot have less than one row`);
+            return;
+        }
+        this.removeColumn(this.columns[index].id);
+    }
+}
+
 export class Features extends HasUpdates<UpdateEvent> {
     private features: Feature[] = [];
     private subscriptions: Subscription[] = [];
@@ -557,7 +618,7 @@ export class Section extends HasUpdates<UpdateEvent> {
         this._accno = data.accno || '';
 
         this.fields = new Fields(type, data);
-        this.annotations = Feature.create(type.annotationsType,
+        this.annotations = AnnotationFeature.create(type.annotationsType,
             (data.attributes || []).filter(a => type.getFieldType(a.name) === undefined)
         );
         this.features = new Features(type, data);

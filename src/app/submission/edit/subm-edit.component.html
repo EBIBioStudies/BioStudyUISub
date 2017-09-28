@@ -29,9 +29,9 @@
                         <div *ngFor="let subsection of section.sections.list()"
                               class="list-group-item">
                             {{subsection.typeName}}
-                            <div *ngIf="subsection.accno" style="display: inline-block;">
+                            <span *ngIf="subsection.accno">
                                 : {{subsection.accno}}
-                            </div>
+                            </span>
                             <span class="btn-toolbar pull-right">
                                 <button type="button" *ngIf="section.sections.isRemovable(subsection)" class="section-delete btn btn-danger btn-xs btn-flat"
                                         tooltip="delete"
@@ -53,10 +53,12 @@
                     <div>
                         <button *ngIf="!readonly && submValid"
                                 type="button"
-                                class="btn btn-primary btn-lg"
-                                (click)="onSubmit($event)">Submit
+                                class="submit-btn btn btn-primary btn-md"
+                                [disabled]="submitting"
+                                (click)="onSubmit($event)">
+                                <span *ngIf="!submitting">Submit</span>
+                                <span *ngIf="submitting"><i class="fa fa-spinner fa-spin"></i></span>
                         </button>
-                        <span *ngIf="submitting"><i class="fa fa-spinner fa-spin"></i></span>
                     </div>
                 </div>
 
@@ -64,7 +66,7 @@
 
         </aside>
         <confirm-dialog #confirmDialog
-                        title="Delete section"
+                        headerTitle="Delete section"
                         body="You are about to permanently delete the section"
                         confirmLabel="Delete">
         </confirm-dialog>

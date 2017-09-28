@@ -112,6 +112,10 @@ export class FeatureType extends BaseType {
     }
 }
 
+/**
+ * All annotations are features with the singleRow flag set to true so that the controls
+ * for adding rows/columns are not shown.
+ */
 export class AnnotationsType extends FeatureType {
     constructor(other?: any, scope?: Map<string, any>) {
         super('Annotation', true, other, scope);

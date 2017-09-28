@@ -11,7 +11,8 @@ import {SubmissionService} from '../shared/submission.service';
 
 @Component({
     selector: 'direct-submit-sidebar',
-    templateUrl: './direct-submit-sidebar.component.html'
+    templateUrl: './direct-submit-sidebar.component.html',
+    styleUrls: ['./direct-submit-sidebar.component.css']
 })
 
 export class DirectSubmitSideBarComponent implements OnInit {
