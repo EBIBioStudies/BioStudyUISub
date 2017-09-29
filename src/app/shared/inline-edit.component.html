@@ -1,27 +1,28 @@
-<div style="width:100%;height:30px">
-    <div *ngIf="editing">
-        <input type="text"
-               class="form-control input-sm form-control-auto"
-               name="inline-edit-box"
-               [required]="required"
-               [(ngModel)]="value"
-               [placeholder]="placeholder"
-               (blur)="onEditBoxBlur($event)"
-               (keyup)="onEditBoxKeyUp($event)"
-               #inlineEditBox/>
-    </div>
-    <div *ngIf="!editing"
-         class="inline-edit-wrapper">
-        <span class="text-muted">{{value || emptyValue}}</span>
-        <div class="icons">
-            <i *ngIf="canEdit"
-               class="fa fa-pencil-square-o"
-               aria-hidden="true"
-               (click)="onEditClick()"></i>
-            <i *ngIf="canEdit"
-               class="fa fa-times"
-               aria-hidden="true"
-               (click)="onRemoveClick($event)"></i>
-        </div>
+<div *ngIf="editing">
+    <input type="text"
+           class="form-control input-sm form-control-auto"
+           name="inline-edit-box"
+           [required]="required"
+           [(ngModel)]="value"
+           [placeholder]="placeholder"
+           (blur)="onEditBoxBlur($event)"
+           (keyup)="onEditBoxKeyUp($event)"
+           #inlineEditBox/>
+</div>
+<div class="inline-edit-wrapper"
+     [ngClass]="{'editable': canEdit}"
+     *ngIf="!editing">
+    <span class="editable-value text-muted">{{value || emptyValue}}</span>
+    <div class="icons">
+        <button class="btn btn-xs btn-link"
+                *ngIf="canEdit"
+                (click)="onEditClick()">
+            <i class="fa fa-pencil"></i>
+        </button>
+        <button class="btn btn-xs btn-link"
+                *ngIf="canEdit"
+                (click)="onRemoveClick($event)">
+            <i class="text-danger fa fa-trash-o"></i>
+        </button>
     </div>
 </div>

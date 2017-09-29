@@ -8,7 +8,8 @@ import {FeatureForm} from '../subm-form.service';
 
 @Component({
     selector: 'subm-feature-list',
-    templateUrl: './feature-list.component.html'
+    templateUrl: './feature-list.component.html',
+    styleUrls: ['./feature-list.component.css']
 })
 export class FeatureListComponent {
     @Input() featureForm: FeatureForm;

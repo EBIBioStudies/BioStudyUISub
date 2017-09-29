@@ -3,21 +3,20 @@
      *ngIf="feature.size() > 0">
 
     <div class="panel-heading clearfix">
-        <h4 class="panel-title pull-left">{{feature.type.name}}&nbsp;<span class="badge">{{feature.size()}}</span>
-            <slide-out-tip tip="{{feature.type.description}}"></slide-out-tip>
-        </h4>
-        <div class="btn-toolbar pull-right" role="toolbar" *ngIf="!readonly">
+        <div class="btn-toolbar pull-left" role="toolbar" *ngIf="!readonly">
             <div class="btn-group" dropdown>
                 <button type="button" class="btn btn-xs btn-default" dropdownToggle>
                     <i class="fa fa-bars" aria-hidden="true"></i>
                 </button>
-                <ul *dropdownMenu class="dropdown-menu" style="left:-160px" role="menu" aria-labelledby="single-button">
+                <ul *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="single-button">
                     <li *ngFor="let act of actions" role="menuitem">
                         <a class="dropdown-item" (click)="act.invoke()">{{act.label}}</a>
                     </li>
                 </ul>
             </div>
         </div>
+        <span class="panel-description col-md-11">{{feature.type.description}}</span>
+        <span class="badge pull-right">{{feature.size()}}</span>
     </div>
 
     <div class="panel-body">

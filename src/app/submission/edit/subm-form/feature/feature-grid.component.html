@@ -1,14 +1,12 @@
 <div class="container-fluid container-scroll" [formGroup]="featureForm.form">
-    <div class="row" [style.width]="rowWidth" style="border-bottom:1px solid #ccc">
-        <div class="col-xs-1 col-md-1">
-            <button *ngIf="!readonly"
-                    type="button"
-                    class="btn btn-xs btn-primary btn-block"
-                    tooltip="Add Column"
-                    container="body"
-                    (click)="feature.addColumn()">
-                <i class="fa fa-plus"></i>
-                <span class="pull-right"><i class="fa fa-angle-double-right"></i></span>
+    <div class="row headings" [style.width]="rowWidth">
+        <div class="col-xs-1 col-md-1 text-center">
+            <button class="add-column-btn btn btn-link btn-md"
+               *ngIf="!readonly"
+               [tooltip]="'Add a new ' + feature.typeName.toLowerCase() + ' attribute'"
+               container="body"
+               (click)="feature.addColumn()">
+                <i class="fa fa-plus" aria-hidden="true"></i> Column
             </button>
         </div>
         <div class="col-xs-3 col-md-2" *ngFor="let column of columns">
@@ -21,13 +19,13 @@
         </div>
     </div>
     <div class="row" [style.width]="rowWidth" *ngFor="let row of rows; let idx=index">
-        <div class="col-xs-1 col-md-1">
-            <span style="width:20px;">{{idx+1}}</span>
+        <div class="col-xs-1 col-md-1 text-center">
+            <span class="row-number">{{idx+1}}</span>
             <button *ngIf="!readonly"
                     type="button"
                     class="btn btn-danger btn-sm"
                     (click)="feature.removeRowAt(idx)"
-                    [tooltip]="'Delete ' + feature.name"
+                    [tooltip]="'Delete ' + feature.typeName.toLowerCase() + ' ' + (idx + 1)"
                     container="body">
                 <i class="fa fa-trash"></i>
             </button>
@@ -44,16 +42,16 @@
             </div>
         </div>
     </div>
-    <div class="row" [style.width]="rowWidth">
-        <div class="col-xs-1 col-md-1">
-            <button *ngIf="!readonly"
-                    type="button"
-                    class="btn btn-xs btn-primary btn-block"
-                    tooltip="Add Row"
-                    container="body"
-                    (click)="feature.addRow()">
-                <i class="fa fa-plus"></i>
-            </button>
-        </div>
+</div>
+<div class="row" [style.width]="rowWidth">
+    <div class="col-xs-1 col-md-1">
+        <button *ngIf="!readonly"
+                type="button"
+                class="btn btn-sm btn-primary"
+                [tooltip]="'Add a new ' + feature.typeName.toLowerCase()"
+                container="body"
+                (click)="feature.addRow()">
+            <i class="fa fa-plus" aria-hidden="true"></i> Row
+        </button>
     </div>
 </div>

@@ -1,7 +1,7 @@
 <div class="container-fluid" [formGroup]="featureForm.form">
-    <div class="row" style="margin-bottom:15px;border-bottom:1px solid #ccc">
-        <div class="col-md-3"><h5>key</h5></div>
-        <div class="col-md-9"><h5>value</h5></div>
+    <div class="headings row text-muted">
+        <div class="heading col-md-3">Key</div>
+        <div class="heading col-md-9">Value</div>
     </div>
     <div class="row" *ngFor="let column of columns; let idx = index">
         <div class="col-md-3">

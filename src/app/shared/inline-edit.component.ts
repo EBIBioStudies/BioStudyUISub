@@ -14,42 +14,7 @@ import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
 @Component({
     selector: 'inline-edit',
     templateUrl: './inline-edit.component.html',
-    styles: [
-        ` 
- .inline-edit-wrapper {
-    width:100%;
-    height:100%;
-    position:relative;
-    border-bottom: 1px solid white;
- }
- 
- .inline-edit-wrapper span {
-     position:absolute;
-     top:25%;
-     left:0;
- }
- 
- .inline-edit-wrapper .icons {
-    position:absolute;
-    display: none;
-    right:5px;
-    top:5px;
-    color:#cccccc
- }
- 
- .inline-edit-wrapper:hover {
-    border-color: #cccccc;
- }
- 
- .inline-edit-wrapper:hover .icons {
-    display: block;
- }
- 
- .pointer {
-    cursor:pointer;
- }
-`
-    ],
+    styleUrls: ['./inline-edit.component.css'],
     providers: [
         {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => InlineEditComponent), multi: true}
     ]
