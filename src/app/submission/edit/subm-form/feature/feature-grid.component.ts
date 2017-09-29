@@ -33,8 +33,4 @@ export class FeatureGridComponent {
     get feature(): Feature {
        return this.featureForm.feature;
     }
-
-    onColumnRemove(column: Attribute) {
-        //this.featureForm.removeColumnControl(column.id); //Use add action to find out how it manages to call private methods within featureForm
-    }
 }

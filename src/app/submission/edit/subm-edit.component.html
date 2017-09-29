@@ -16,11 +16,9 @@
     <div class="container-fluid">
         <aside class="right-side content"
                [ngClass]="{'collapse-left' : !readonly && sideBarCollapsed}">
-
             <div *ngIf="subm"
                  class="panel navbar-subm-margin"
                  [ngClass]="{'panel-danger': !submValid, 'panel-info': submValid}">
-
                 <div class="panel-body">
                     <subm-form [section]="section">
                     </subm-form>

@@ -14,7 +14,7 @@
                     [(ngModel)]="column.name"
                     emptyValue="New Column"
                     [required]="featureForm.columnType(column.id).required"
-                    (remove)="onColumnRemove(column)"
+                    (remove)="feature.removeColumn(column.id)"
                     [formControl]="featureForm.columnControl(column.id)"></inline-edit>
         </div>
     </div>
