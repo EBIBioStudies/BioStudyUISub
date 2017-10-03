@@ -21,8 +21,6 @@
         </div>
     </div>
 
-    <p></p>
-
     <div *ngFor="let feature of sectionForm.features">
         <label class="control-label" *ngIf="feature.size() > 0">{{feature.type.name}}:</label>
         <subm-feature [featureForm]="sectionForm.featureForm(feature.id)"

@@ -19,27 +19,27 @@ import {PageTab} from '../shared/pagetab.model';
         <button *ngIf="status !== 'MODIFIED'"
                 type="button" class="btn btn-danger btn-xs btn-flat"
                 (click)="onDeleteSubmission()"
-                tooltip="delete"
+                tooltip="Delete"
                 container="body">
             <i class="fa fa-trash-o fa-fw"></i>
         </button>
         <button *ngIf="status === 'MODIFIED'"
                 type="button" class="btn btn-warning btn-xs btn-flat"
                 (click)="onRevertSubmission()"
-                tooltip="undo all changes"
+                tooltip="Undo all changes"
                 container="body">
             <i class="fa fa-undo fa-fw"></i>
         </button>
         <button type="button" class="btn btn-primary btn-xs btn-flat"
                 (click)="onEditSubmission()"
-                tooltip="edit"
+                tooltip="Edit"
                 container="body">
             <i class="fa fa-pencil fa-fw"></i>
         </button>
         <button *ngIf="status === 'MODIFIED'"
                 type="button" class="btn btn-info btn-xs btn-flat"
                 (click)="onViewSubmission()"
-                tooltip="view original"
+                tooltip="View original"
                 container="body">
             <i class="fa fa-eye fa-fw"></i>
         </button>`
@@ -223,16 +223,31 @@ export class SubmListComponent {
             title: row.title,
             rtime: row.rtime,
             status: row.status,
-            onDelete: (accno: string, deleteOrRevert: string = 'delete') => {
-                const action = deleteOrRevert === 'delete' ? 'delete' : 'undo all changes for';
-                this.confirm(`Do you want to ${action} submission with accession number ${accno}?`)
-                    .subscribe(() => {
-                        this.submService
-                            .deleteSubmission(accno)
-                            .subscribe(data => {
-                                this.setDatasource();
-                            });
-                    });
+            onDelete: (accno: string, action: string = 'delete') => {
+                const onNext = () => {
+                    this.submService
+                        .deleteSubmission(accno)
+                        .subscribe(data => {
+                            this.setDatasource();
+                        });
+                };
+
+                switch (action) {
+                    case 'delete':
+                        this.confirm(
+                            `If you proceed, the submission with accession number ${accno} will be permanently deleted.`,
+                            `Delete submission`,
+                            'Delete'
+                        ).subscribe(onNext);
+                        break;
+                    case 'revert':
+                        this.confirm(
+                            `If you proceed, all recent changes made to the submission with accession number ${accno} will be rolled back.`,
+                            `Undo changes in submission`,
+                            'Undo'
+                        ).subscribe(onNext);
+                        break;
+                }
             },
 
             onEdit: (accno: string) => {
@@ -265,7 +280,9 @@ export class SubmListComponent {
         this.router.navigate(['/edit', accno]);
     }
 
-    confirm(text: string): Observable<any> {
+    confirm(text: string, title: string, confirmLabel: string): Observable<any> {
+        this.confirmDialog.title = title;
+        this.confirmDialog.confirmLabel = confirmLabel;
         return this.confirmDialog.confirm(text);
     }
 }

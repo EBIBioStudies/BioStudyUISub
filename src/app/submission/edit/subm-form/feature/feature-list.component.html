@@ -5,36 +5,47 @@
     </div>
     <div class="row" *ngFor="let column of columns; let idx = index">
         <div class="col-md-3">
-            <div class="form-group"
-                 [ngClass]="{'has-error': featureForm.columnControl(column.id).invalid}"
-                 style="margin-right:15px">
-                <input type="text"
-                       class="form-control control-label input-sm"
-                       [readonly]="readonly"
-                       [(ngModel)]="column.name"
-                       [formControl]="featureForm.columnControl(column.id)">
+            <div class="form-group key-field"
+                 [ngClass]="{'has-error': featureForm.columnControl(column.id).invalid}">
+                <div class="input-group">
+                    <span *ngIf="!readonly"
+                          class="input-group-btn">
+                          <button type="button"
+                                  class="btn btn-sm btn-danger btn-flat"
+                                  (click)="featureForm.feature.removeRowAt(idx)"
+                                  [tooltip]="'Delete ' + feature.typeName.toLowerCase() + ' entry'">
+                               <i class="fa fa-trash-o"></i>
+                          </button>
+                    </span>
+                    <input type="text"
+                           class="form-control control-label input-sm"
+                           [readonly]="readonly"
+                           [(ngModel)]="column.name"
+                           [formControl]="featureForm.columnControl(column.id)">
+                </div>
             </div>
         </div>
         <div class="col-md-9">
             <div class="form-group">
-                <div class="input-group">
-                    <subm-field
-                            [type]="column.valueType"
-                            [(ngModel)]="feature.rows[0].valueFor(column.id).value"
-                            [readonly]="readonly"
-                            isSmall="true"
-                            [formControl]="featureForm.rowValueControl(0,column.id)">
-                    </subm-field>
-                    <span *ngIf="!readonly"
-                          class="input-group-btn">
-                              <button type="button"
-                                      class="btn btn-sm btn-danger btn-flat"
-                                      (click)="featureForm.feature.removeRowAt(idx)">
-                                   <i class="fa fa-trash-o"></i>
-                              </button>
-                    </span>
-                </div>
+                <subm-field
+                    [type]="column.valueType"
+                    [(ngModel)]="feature.rows[0].valueFor(column.id).value"
+                    [readonly]="readonly"
+                    isSmall="true"
+                    [formControl]="featureForm.rowValueControl(0,column.id)">
+                </subm-field>
             </div>
         </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-1 col-md-1">
+        <button *ngIf="!readonly"
+                type="button"
+                class="btn btn-sm btn-primary"
+                [tooltip]="'Add a new ' + feature.typeName.toLowerCase()"
+                (click)="feature.addColumn()">
+            <i class="fa fa-plus" aria-hidden="true"></i> Entry
+        </button>
     </div>
 </div>

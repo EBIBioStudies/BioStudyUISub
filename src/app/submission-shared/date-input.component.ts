@@ -24,7 +24,10 @@ import {
     selector: 'date-input',
     template: `
     <div class="input-group">
-         <input type="text"
+        <span class="btn input-group-addon" (click)="toggleDatePicker()">
+            <i class="fa fa-calendar"></i>
+        </span>
+        <input type="text"
                 class="form-control"
                 placeholder="YYYY-MM-DD"
                 [(ngModel)]="value"
@@ -33,8 +36,6 @@ import {
                 [required]="required"
                 [disabled]="readonly"
                  #inputbox>
-                <span class="btn input-group-addon" 
-                      (click)="toggleDatePicker()"><i class="fa fa-calendar"></i></span>       
     </div>
     <datepicker style="position: absolute; z-index:10; min-height:290px;"
                 [hidden]="!showDatePicker"

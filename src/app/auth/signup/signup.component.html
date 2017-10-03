@@ -13,7 +13,7 @@
                 <h4 class="text-success">Thank you for registering. Please check your email for the account activation link.</h4>
             </div>
         </div>
-        <div *ngIf="!success" class="panel panel-info">
+        <div *ngIf="!success" class="panel panel-default">
             <div class="panel-body">
                 <form id="signUpForm" novalidate name="signUpForm" role="form"
                       (ngSubmit)="signUpForm.valid && model.valid() && onSubmit($event)" #signUpForm="ngForm">
@@ -72,7 +72,7 @@
                             #recaptcha>
                     </re-captcha>
                     <div class="form-group margin-top-large">
-                        <button type="submit" class="btn btn-primary">Sign up</button>
+                        <button type="submit" class="btn btn-primary">Register</button>
                     </div>
                 </form>
             </div>

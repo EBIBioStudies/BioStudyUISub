@@ -22,14 +22,14 @@
                         </a>
                         <a class="btn btn-default btn-sm"
                            (click)="createSubmission()">
-                            <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                            <i class="fa fa-plus" aria-hidden="true"></i>
                             <span>New submission</span>
                         </a>
                    </span>
                 </div>
                 <div class="row">
                     <div class="col-xs-12">
-                        <!-- Grid options set to have 15 30-pixel rows per page + 40px headings + 40px footer => height = 450px + 80px  -->
+                        <!-- Grid options set to 15 30-pixel rows per page + 40px-height heading + 40px-height footer => height = 450px + 80px  -->
                         <ag-grid-angular #agGrid style="width: 100%; height: 530px;" class="ag-fresh"
                                          [gridOptions]="gridOptions"
                                          [columnDefs]="columnDefs">
@@ -41,7 +41,4 @@
     </aside>
 </container-root>
 
-<confirm-dialog #confirmDialog
-                headerTitle="Delete submission"
-                confirmLabel="Delete">
-</confirm-dialog>
+<confirm-dialog #confirmDialog></confirm-dialog>

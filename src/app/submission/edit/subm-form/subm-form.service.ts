@@ -319,14 +319,14 @@ export class FeatureForm {
     private updateRowControls(ue?: UpdateEvent): void {
         this._rows = this.feature.rows;
 
-        if (ue && ue.name === 'row_remove') {
-            this.removeRowArray(ue.value.index);
+        if (ue && ue.source && ue.source.name === 'row_remove') {
+            this.removeRowArray(ue.source.value.index);
             return;
         }
 
         let toAdd: ValueMap[] = this.rows;
-        if (ue && ue.name === 'row_add') {
-            toAdd = [this.rows[ue.value.index]];
+        if (ue && ue.source && ue.source.name === 'row_add') {
+            toAdd = [this.rows[ue.source.value.index]];
         }
 
         toAdd.forEach(

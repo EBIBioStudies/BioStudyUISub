@@ -6,16 +6,14 @@
 @sidebar-light-font: white;
 @sidebar-light-border: none;
 
-@navbar-subm-height: 44px;
+@navbar-subm-height: 50px;
 
 /* Navbar submission */
 .navbar-subm-fixed {
-  height: @navbar-subm-height;
-  min-height: @navbar-subm-height !important;
   position: fixed !important;
   top: @navbar-height;
   z-index: @zindex-navbar;
-  padding-left: @left-side-width;
+  padding: 13px 0 13px @left-side-width;
   width: 100%;
 }
 
@@ -43,9 +41,9 @@
   top: @navbar-height;
   width: @left-side-width;
   background: @sidebar-light-bg;
-  -webkit-box-shadow: 10px 10px 5px -9px rgba(0, 0, 0, 0.24);
-  -moz-box-shadow: 10px 10px 5px -9px rgba(0, 0, 0, 0.24);
-  box-shadow: 10px 10px 5px -9px rgba(0, 0, 0, 0.24);
+  -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.24);
+  -moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.24);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.24);
 }
 
 @media screen and (min-width: @screen-md) {

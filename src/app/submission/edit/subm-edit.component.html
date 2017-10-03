@@ -17,8 +17,7 @@
         <aside class="right-side content"
                [ngClass]="{'collapse-left' : !readonly && sideBarCollapsed}">
             <div *ngIf="subm"
-                 class="panel navbar-subm-margin"
-                 [ngClass]="{'panel-danger': !submValid, 'panel-info': submValid}">
+                 class="panel navbar-subm-margin panel-default">
                 <div class="panel-body">
                     <subm-form [section]="section">
                     </subm-form>
