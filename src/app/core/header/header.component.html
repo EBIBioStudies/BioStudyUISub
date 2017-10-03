@@ -23,29 +23,28 @@
                        placement="bottom"
                        (click)="toggleCollapsed()">
                         <i class="fa fa-fw fa-question"></i>
-                        <span>Help</span>
+                        Help
                     </a>
                 </li>
 
                 <li *ngIf="!userLoggedIn">
                     <a routerLink="/signup"
                        routerLinkActive="active"
-                       tooltip="Register a new user"
+                       tooltip="Register as new user"
                        placement="bottom"
                        (click)="toggleCollapsed()">
-                        <i class="fa fa-user fa-fw"></i>
-                        <span>Sign up</span>
+                        <i class="fa fa-user-plus fa-fw"></i>
+                        Register
                     </a>
                 </li>
 
                 <li *ngIf="!userLoggedIn">
                     <a routerLink="/signin"
-                       routerLinkActive="active"
-                       tooltip="Sign in"
+                       tooltip="Start submitting studies"
                        placement="bottom"
                        (click)="toggleCollapsed()">
                         <i class="fa fa-sign-in"></i>
-                        <span>Sign in</span>
+                        Log in
                     </a>
                 </li>
 
@@ -56,27 +55,27 @@
                        placement="bottom"
                        (click)="toggleCollapsed()">
                         <i class="fa fa-fw fa-table"></i>
-                        <span>Submissions</span>
+                        Submissions
                     </a>
                 </li>
 
                 <li *ngIf="userLoggedIn">
                     <a routerLink="files"
                        routerLinkActive="active"
+                       tooltip="Upload or list your files"
+                       placement="bottom"
                        (click)="toggleCollapsed()">
                         <i class="fa fa-fw fa-upload"></i>
-                        <span>Files</span>
+                        Files
                     </a>
                 </li>
 
-                <li class="d-inline-block" *ngIf="userLoggedIn" dropdown>
-                    <a id="dropdownMenu1" dropdownToggle>
-                        <i class="fa fa-fw fa-user"></i>
-                        <span>My Account<i class="caret"></i></span>
+                <li *ngIf="userLoggedIn">
+                    <a href="javascript:void(0)"
+                       (click)="signOut()">
+                        <i class="fa fa-fw fa-sign-out"></i>
+                        Log out
                     </a>
-                    <ul class="dropdown-menu" *dropdownMenu>
-                        <li class="dropdown-item"><a (click)="signOut(); toggleCollapsed();">Sign out</a></li>
-                    </ul>
                 </li>
             </ul>
         </div>

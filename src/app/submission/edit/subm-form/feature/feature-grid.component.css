@@ -1,8 +1,43 @@
+.container-scroll {
+    margin-bottom: 10px;
+}
+
+.headings {
+    border-bottom: 1px solid #ccc;
+}
+
+.add-column-btn {
+    padding: 0;
+    border: none;
+}
+.add-column-btn:hover {
+    text-decoration: none;
+}
+
+.container-scroll > .row {
+    margin-top: 15px;
+}
+.container-scroll > .row:first-of-type {
+    margin-top: 0;
+}
+.container-scroll > .row:last-of-type {
+    margin-bottom: 10px;
+}
+
+.row-number {
+    position: absolute;
+    left: 0;
+    top: 5px;
+}
+/*.container-scroll > .row > .col-md-2 {
+    font-weight: bold;
+    text-align: center;
+}*/
+
 @media (min-width: 768px) {
     .container-scroll {
         overflow-x: auto;
         white-space: nowrap;
-        padding-bottom: 20px;
     }
     .container-scroll .col-md-2 {
         width: 16.66666667vw;
@@ -18,7 +53,6 @@
     .container-scroll {
         overflow-x: auto;
         white-space: nowrap;
-        padding-bottom: 20px;
     }
     .container-scroll .col-xs-3 {
         width: 25vw;
@@ -33,15 +67,3 @@
         float: none;
     }
 }
-
-.container-scroll {
-    margin-bottom: 10px;
-}
-
-.container-scroll > .row {
-    margin-top: 15px;
-}
-/*.container-scroll > .row > .col-md-2 {
-    font-weight: bold;
-    text-align: center;
-}*/

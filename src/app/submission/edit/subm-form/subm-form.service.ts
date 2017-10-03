@@ -286,10 +286,14 @@ export class FeatureForm {
 
     private addRowValueControl(fg: FormGroup, columnId: string, row: ValueMap, tmpl: ColumnType): void {
         const valueValidators = [];
+
+        //TODO: it seems the inclusion of the required validator forces new rows (some are empty for some reason) to be invalid
+        //TODO: this is being called a number of times equal to the number of existing rows x 3, no matter the state of the widget (initialisation –on render– or new row addition)
         if (tmpl.required) {
             valueValidators.push(Validators.required);
         }
         fg.addControl(columnId, new FormControl(row.valueFor(columnId).value, valueValidators));
+        console.log(row.valueFor(columnId).value);
     }
 
     private updateColumnControls(ue?: UpdateEvent): void {
@@ -315,14 +319,14 @@ export class FeatureForm {
     private updateRowControls(ue?: UpdateEvent): void {
         this._rows = this.feature.rows;
 
-        if (ue && ue.name === 'row_remove') {
-            this.removeRowArray(ue.value.index);
+        if (ue && ue.source && ue.source.name === 'row_remove') {
+            this.removeRowArray(ue.source.value.index);
             return;
         }
 
         let toAdd: ValueMap[] = this.rows;
-        if (ue && ue.name === 'row_add') {
-            toAdd = [this.rows[ue.value.index]];
+        if (ue && ue.source && ue.source.name === 'row_add') {
+            toAdd = [this.rows[ue.source.value.index]];
         }
 
         toAdd.forEach(

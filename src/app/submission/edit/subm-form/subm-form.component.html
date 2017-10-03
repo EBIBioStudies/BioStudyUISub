@@ -21,11 +21,9 @@
         </div>
     </div>
 
-    <p></p>
-
-    <div style="padding:0">
-        <subm-feature *ngFor="let feature of sectionForm.features"
-                      [featureForm]="sectionForm.featureForm(feature.id)"
+    <div *ngFor="let feature of sectionForm.features">
+        <label class="control-label" *ngIf="feature.size() > 0">{{feature.type.name}}:</label>
+        <subm-feature [featureForm]="sectionForm.featureForm(feature.id)"
                       [readonly]="readonly">
         </subm-feature>
     </div>

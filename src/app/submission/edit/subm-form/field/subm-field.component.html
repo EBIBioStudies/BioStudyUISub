@@ -1,6 +1,5 @@
 <input *ngIf="type === 'text'"
        type="text" class="form-control"
-       placeholder="Enter a {{name}}"
        [ngClass]="{'input-sm': isSmall}"
        [(ngModel)]="value"
        [readonly]="readonly"

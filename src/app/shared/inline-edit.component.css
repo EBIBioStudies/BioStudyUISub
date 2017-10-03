@@ -1,0 +1,28 @@
+.inline-edit-wrapper .icons {
+    opacity: .3;
+}
+
+.editable-value {
+    overflow: hidden;
+    display: inline-block;
+    width: 60%;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+}
+
+.editable:hover .editable-value {
+    color: #000;
+}
+
+.icons {
+    float: right;
+    height: 20px;
+}
+
+.editable:hover .icons {
+    opacity: 1;
+}
+
+.pointer {
+    cursor: pointer;
+}

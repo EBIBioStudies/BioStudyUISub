@@ -5,7 +5,7 @@ export const DefaultTemplate = {
         'required': true,
         'annotationsType': {
             'title': 'Describe your study',
-            'description': 'Provide an adequate overview of the Study, make it easier to find and interpret',
+            'description': 'Provide enough details of the study to make it easier to find and interpret',
             'columnTypes': [
                 {
                     'name': 'Organism',
@@ -52,7 +52,7 @@ export const DefaultTemplate = {
             {
                 'name': 'Contact',
                 'title': 'Add Contacts',
-                'description': 'Include contact information for one or more authors of the Study',
+                'description': 'Include contact information for one or more authors of the study',
                 'required': true,
                 'columnTypes': [
                     {
@@ -156,7 +156,7 @@ export const DefaultTemplate = {
             {
                 'name': 'File',
                 'title': 'Add Files',
-                'description': 'Include Study data, describe the purpose of each file',
+                'description': 'Include study data, describing the purpose of each file',
                 'columnTypes': [
                     {
                         'name': 'Path',

@@ -1,6 +1,6 @@
 import {
     Component,
-    Input
+    Input, OnInit
 } from '@angular/core';
 
 import {Feature} from '../../../shared/submission.model';
@@ -10,27 +10,24 @@ import {FeatureForm} from '../subm-form.service';
     selector: 'subm-feature',
     templateUrl: './subm-feature.component.html'
 })
-export class SubmFeatureComponent {
+export class SubmFeatureComponent implements OnInit {
     @Input() featureForm: FeatureForm;
     @Input() readonly?: boolean = false;
 
-    actions: any[];
+    actions: any[] = [];
 
-    constructor() {
-        this.actions = [
-            {
-                label: 'Add Row',
-                invoke: () => {
-                    this.feature.addRow();
-                }
-            },
-            {
-                label: 'Add Column',
-                invoke: () => {
-                    this.feature.addColumn();
-                }
-            }
-        ];
+    ngOnInit() {
+        this.actions.push({
+            label: 'Add column',
+            invoke: () => this.feature.addColumn()
+        });
+
+        if (!this.feature.singleRow) {
+            this.actions.push({
+                label: 'Add row',
+                invoke: () => this.feature.addRow()
+            });
+        }
     }
 
     get feature(): Feature {

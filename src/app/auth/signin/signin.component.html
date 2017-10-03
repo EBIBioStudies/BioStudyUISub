@@ -8,7 +8,7 @@
                 &nbsp;
             </div>
         </div>
-        <div class="panel panel-info">
+        <div class="panel panel-default">
             <div class="panel-body">
 
                 <form id="login-form" novalidate name="signInForm" role="form"
@@ -37,19 +37,19 @@
                                (change)="resetError()"
                                #password="ngModel"/>
 
-                        <div class="form-group" style="text-align: right">
-                            <span><a routerLink="/password_reset_request">Forgot password?</a></span>
+                        <div class="form-group pull-right">
+                            <a routerLink="/password_reset_request">Forgot your password?</a>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Sign in</button>
+                        <button type="submit" class="btn btn-primary">Log in</button>
                         <span *ngIf="waiting"><i class="fa fa-spinner fa-spin"></i></span>
                     </div>
-                    <div class="form-group">
-                        <span>Don't have an account? <a routerLink="/signup">Sign Up</a></span>
+                    <div class="pull-left">
+                        <span>Don't have an account? <a routerLink="/signup">Register</a></span>
                     </div>
-                    <div>
+                    <div class="pull-right">
                         <span><a routerLink="/resend_activation_link">Resend activation link</a></span>
                     </div>
                 </form>
