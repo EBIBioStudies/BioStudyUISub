@@ -159,10 +159,10 @@ export class PageTab implements SubmissionData {
         let subsections = [];
 
         sec.features.list().filter(f => f.size() > 0).forEach(f => {
-            if (f.type.name === 'File') {
-                pts.files = PageTab.fromFileOrLinkFeature(f, 'file');
-            } else if (f.type.name === 'Link') {
-                pts.links = PageTab.fromFileOrLinkFeature(f, 'url');
+            const locType = f.type.name.toLowerCase();
+
+            if (locType === 'file' || locType === 'link') {
+                pts[`${locType}s`] = PageTab.fromLocationFeature(f);
             } else {
                 subsections = subsections.concat(PageTab.fromFeature(f));
             }
@@ -190,20 +190,42 @@ export class PageTab implements SubmissionData {
                     name: c.name,
                     value: row.valueFor(c.id).value
                 }))
-            }));
+            })
+        );
     }
 
-    private static fromFileOrLinkFeature(feature: Feature, name: string): any[] {
-        const isNamedAttr = (a) => (a.name.toLowerCase() === name);
+    /**
+     * Converts features of file or link type into the corresponding PageTab's section sets.
+     * @param {Feature} feature - Feature to be converted
+     * @param {string} [locRegex = /^(path|url)$/] - Regular expresion used to extract the location attribute.
+     * @returns {any[]} Array of converted features
+     */
+    private static fromLocationFeature(feature: Feature, locRegex: RegExp = /^(path|url)$/): any[] {
 
-        return PageTab.fromFeature(feature).map(f => {
-            const other = f.attributes.filter((a) => !isNamedAttr(a));
-            const ff: any = {type: f.type};
-            ff[name] = (f.attributes.find(isNamedAttr) || {value: ''}).value || '';
-            if (other.length > 0) {
-                ff.attributes = other;
+        //Flattens each of the feature's row objects, adding other properties if necessary.
+        return PageTab.fromFeature(feature).map(pagedRow => {
+            const pagedLoc: any = {};
+            const attrs: any = pagedRow.attributes.slice(0);
+            const locationAttr: any = attrs.find((attr) => attr.name.toLowerCase().match(locRegex));
+
+            //Extracts the location as a root-level property
+            //NOTE: the proxy appears to consider the path as a non-attribute.
+            if (locationAttr) {
+                pagedLoc[locationAttr.name.toLowerCase()] = locationAttr.value;
+                attrs.splice(attrs.indexOf(locationAttr), 1);
             }
-            return ff;
+
+            //If there are attributes, nests them inside the resulting object.
+            if (attrs.length > 0) {
+                pagedLoc.attributes = attrs;
+            }
+
+            //Only adds the type attribute if it's a file feature. Otherwise, submissions with links fail.
+            if (pagedRow.type == 'File') {
+                pagedLoc.type = pagedRow.type;
+            }
+
+            return pagedLoc;
         });
     }
 
