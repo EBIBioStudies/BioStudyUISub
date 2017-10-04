@@ -163,10 +163,12 @@ export class SubmListComponent {
             {
                 headerName: 'Status',
                 field: 'status',
+                cellClass: 'ag-cell-centered',
                 suppressMenu: true
             },
             {
                 headerName: 'Actions',
+                cellClass: 'ag-cell-centered',
                 suppressMenu: true,
                 cellRendererFramework: ActionButtonsCellComponent
             }

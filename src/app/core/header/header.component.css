@@ -1,7 +1,4 @@
-a[routerlink].active {
+.navbar-btn.active {
     color: #fff;
     background-color: #82b0bc;
-}
-li[dropdown] a {
-    cursor: pointer;
 }

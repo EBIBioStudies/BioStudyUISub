@@ -14,8 +14,8 @@
                 <form id="login-form" novalidate name="signInForm" role="form"
                       (submit)="signInForm.form.valid && onSubmit($event)" #signInForm="ngForm">
                     <div class="form-group" [ngClass]="{'has-error': login.invalid && login.dirty}">
-                        <label class="control-label" for="login">Email/login name
-                            <span [hidden]="login.valid || login.pristine">: cannot be blank</span>
+                        <label class="control-label" for="login">
+                            Email<span [hidden]="login.valid || login.pristine">: cannot be blank</span>
                         </label>
                         <input type="text" id="login" name="login" tabindex="1"
                                class="form-control"
@@ -26,8 +26,8 @@
                                #login="ngModel"/>
                     </div>
                     <div class="form-group" [ngClass]="{'has-error': password.invalid && password.dirty}">
-                        <label class="control-label" for="password">Password
-                            <span [hidden]="password.valid || password.pristine">: cannot be blank</span>
+                        <label class="control-label" for="password">
+                            Password<span [hidden]="password.valid || password.pristine">: cannot be blank</span>
                         </label>
                         <input type="password" name="password" id="password" tabindex="2"
                                class="form-control"

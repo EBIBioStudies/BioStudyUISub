@@ -1,5 +1,8 @@
 import {Component} from '@angular/core';
-import {Router} from '@angular/router';
+import {
+    Router,
+    NavigationEnd,
+    Event} from '@angular/router';
 
 import {
     AuthService,
@@ -13,10 +16,11 @@ import {AppConfig} from 'app/app.config';
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.css']
 })
-
 export class HeaderComponent {
     navCollapsed: boolean = true;
     userLoggedIn: boolean = false;
+    userLoggingIn: boolean = false;
+    userRegistering: boolean = false;
 
     constructor(private userSession: UserSession,
                 private router: Router,
@@ -30,6 +34,14 @@ export class HeaderComponent {
             this.userLoggedIn = created;
             if (sessionExpired) {
                 this.router.navigate(['/signin']);
+            }
+        });
+
+        this.router.events.subscribe((event: Event) => {
+           if (event instanceof NavigationEnd) {
+               this.userRegistering = this.router.url === '/signup'
+               this.userLoggingIn = this.router.url === '/signin';
+               console.log(this.userLoggingIn);
             }
         });
     }
