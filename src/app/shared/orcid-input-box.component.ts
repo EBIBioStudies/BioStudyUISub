@@ -18,7 +18,6 @@ import 'rxjs/add/observable/timer';
     <div class="input-group">
          <input type="text"
                 class="form-control"
-                placeholder="ORCID"
                 [(ngModel)]="value"
                 pattern="/^\d{4}-\d{4}-\d{4}-\d{4}$/">
                 <div class="input-group-addon orcid-popup" (click)="openPopup()">

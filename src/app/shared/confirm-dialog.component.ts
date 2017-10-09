@@ -22,8 +22,8 @@ export class ConfirmDialogComponent {
 
     @ViewChild('staticModal')
     private modalDirective: ModalDirective;
-    @ViewChild('abortBtn')
-    private abortEl: ElementRef;
+    @ViewChild('focusBtn')
+    private focusEl: ElementRef;
 
     @Input('headerTitle') title: string = 'Confirm';    //Summary text for the modal's title
     @Input() confirmLabel: string = 'Ok';               //Default name for positive action
@@ -62,7 +62,7 @@ export class ConfirmDialogComponent {
      * Handler for "onShown" event, triggered exactly after the modal has been fully revealed.
      */
     onShown(): void {
-        this.abortEl.nativeElement.focus();
+        this.focusEl.nativeElement.focus();
     }
 
     /**

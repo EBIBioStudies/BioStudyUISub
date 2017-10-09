@@ -41,7 +41,6 @@ export class HeaderComponent {
            if (event instanceof NavigationEnd) {
                this.userRegistering = this.router.url === '/signup'
                this.userLoggingIn = this.router.url === '/signin';
-               console.log(this.userLoggingIn);
             }
         });
     }

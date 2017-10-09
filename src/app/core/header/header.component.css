@@ -1,4 +1,7 @@
-.navbar-btn.active {
+.navbar-btn.active, .btn-link:hover {
     color: #fff;
     background-color: #82b0bc;
+}
+.nav li {
+    margin: 0 5px;
 }

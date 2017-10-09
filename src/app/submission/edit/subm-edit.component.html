@@ -14,7 +14,7 @@
     </subm-navbar>
 
     <div class="container-fluid">
-        <aside class="right-side content"
+        <aside class="right-side"
                [ngClass]="{'collapse-left' : !readonly && sideBarCollapsed}">
             <div *ngIf="subm"
                  class="panel navbar-subm-margin panel-default">
@@ -23,9 +23,10 @@
                     </subm-form>
 
                     <div class="list-group">
+                        <label class="control-label" *ngIf="section.sections.list() > 0">Subsections:</label>
                         <div *ngFor="let subsection of section.sections.list()"
                               class="list-group-item">
-                            {{subsection.typeName}}
+                            {{subsection.typeName}} subsection
                             <span *ngIf="subsection.accno">
                                 : {{subsection.accno}}
                             </span>
@@ -54,7 +55,7 @@
                                 [disabled]="submitting"
                                 (click)="onSubmit($event)">
                                 <span *ngIf="!submitting">Submit</span>
-                                <span *ngIf="submitting"><i class="fa fa-spinner fa-spin"></i></span>
+                                <span *ngIf="submitting"><i class="fa fa-cog fa-spin"></i></span>
                         </button>
                     </div>
                 </div>

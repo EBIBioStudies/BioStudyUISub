@@ -34,8 +34,8 @@ const appRoutes: Routes = [
     {path: 'password_reset/:key', component: PasswordResetComponent},
     {path: 'resend_activation_link', component: ActivationLinkReqComponent},
     {path: 'submissions', component: SubmListComponent, canActivate: [AuthGuard]},
-    {path: 'direct_upload', component: DirectSubmitComponent, canActivate: [AuthGuard]},
-    {path: 'edit/:accno', component: SubmEditComponent, canActivate: [AuthGuard]},
+    {path: 'submissions/direct_upload', component: DirectSubmitComponent, canActivate: [AuthGuard]},
+    {path: 'submissions/:accno', component: SubmEditComponent, canActivate: [AuthGuard]},
     {path: 'view/:accno', component: SubmViewComponent, canActivate: [AuthGuard]},
     {path: 'files', component: FileListComponent, canActivate: [AuthGuard]}
 ];

@@ -1,7 +1,7 @@
 <container-root>
     <container-md>
 
-        <div class="panel" [ngClass]="{'panel-success' : !hasError, 'panel-danger': hasError}">
+        <div class="panel auth-content" [ngClass]="{'panel-success' : !hasError, 'panel-danger': hasError}">
             <div class="panel-body" *ngIf="!showSuccess">
                 <h4>
                     Resend Activation Link
@@ -13,24 +13,25 @@
                 <form novalidate name="raForm" role="form"
                       (ngSubmit)="raForm.valid && onSubmit($event)" #raForm="ngForm">
                     <div class="form-group" [ngClass]="{'has-error': email.invalid}">
-                        <label class="control-label" for="email">Email
+                        <label class="control-label" for="email">Email address
                             <span *ngIf="email.errors">
                                 <span *ngIf="email.errors.required">: cannot be blank</span>
                             </span>
                         </label>
                         <input type="text" id="email" name="email" tabindex="1"
                                class="form-control"
-                               placeholder="Email address"
                                [(ngModel)]="model.email"
                                (change)="message=''"
                                required
                                #email>
                     </div>
-                    <re-captcha (resolved)="onRecaptchaResolved($event)"
-                                siteKey="6Lcmlv0SAAAAAHofnIcb29l1LMZsnGFcSlH8Reve"
-                                #recaptcha></re-captcha>
+                    <div class="form-group">
+                        <re-captcha (resolved)="onRecaptchaResolved($event)"
+                                    siteKey="6Lcmlv0SAAAAAHofnIcb29l1LMZsnGFcSlH8Reve"
+                                    #recaptcha></re-captcha>
+                    </div>
                     <div class="form-group margin-top-large">
-                        <i *ngIf="sending" class="fa fa-spinner fa-pulse fa-3x"></i>
+                        <i *ngIf="sending" class="fa fa-cog fa-pulse fa-3x"></i>
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
                 </form>

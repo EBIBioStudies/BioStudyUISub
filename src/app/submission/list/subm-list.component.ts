@@ -253,7 +253,7 @@ export class SubmListComponent {
             },
 
             onEdit: (accno: string) => {
-                this.router.navigate(['/edit', accno]);
+                this.router.navigate(['/submissions', accno]);
             },
 
             onView: (accno: string) => {
@@ -275,11 +275,11 @@ export class SubmListComponent {
     };
 
     uploadSubmission() {
-        this.router.navigate(['/direct_upload']);
+        this.router.navigate(['/submissions/direct_upload']);
     }
 
     startEditing(accno) {
-        this.router.navigate(['/edit', accno]);
+        this.router.navigate(['/submissions', accno]);
     }
 
     confirm(text: string, title: string, confirmLabel: string): Observable<any> {

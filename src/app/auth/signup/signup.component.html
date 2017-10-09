@@ -24,19 +24,17 @@
                                name="username"
                                tabindex="1"
                                class="form-control"
-                               placeholder="Full name"
                                [(ngModel)]="model.username"
                                (change)="onChange()"/>
                     </div>
                     <div class="form-group form-group-sm" [ngClass]="{'has-error': email.invalid && email.dirty}">
-                        <label for="email">Email
+                        <label for="email">Email address
                             <span [hidden]="email.valid || email.pristine">: cannot be blank</span>
                         </label>
                         <input type="email"
                                id="email"
                                name="email"
                                class="form-control"
-                               placeholder="Email"
                                [(ngModel)]="model.email"
                                (change)="onChange()"
                                required
@@ -60,17 +58,18 @@
                                name="password"
                                id="password"
                                class="form-control"
-                               placeholder="Password"
                                [(ngModel)]="model.password"
                                (change)="onChange()"
                                required
                                #password="ngModel"/>
                     </div>
-                    <re-captcha
-                            (resolved)="onRecaptchaResolved($event)"
-                            siteKey="6Lcmlv0SAAAAAHofnIcb29l1LMZsnGFcSlH8Reve"
-                            #recaptcha>
-                    </re-captcha>
+                    <div class="form-group">
+                        <re-captcha
+                                (resolved)="onRecaptchaResolved($event)"
+                                siteKey="6Lcmlv0SAAAAAHofnIcb29l1LMZsnGFcSlH8Reve"
+                                #recaptcha>
+                        </re-captcha>
+                    </div>
                     <div class="form-group margin-top-large">
                         <button type="submit" class="btn btn-primary">Register</button>
                     </div>
