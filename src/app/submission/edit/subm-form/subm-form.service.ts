@@ -287,13 +287,10 @@ export class FeatureForm {
     private addRowValueControl(fg: FormGroup, columnId: string, row: ValueMap, tmpl: ColumnType): void {
         const valueValidators = [];
 
-        //TODO: it seems the inclusion of the required validator forces new rows (some are empty for some reason) to be invalid
-        //TODO: this is being called a number of times equal to the number of existing rows x 3, no matter the state of the widget (initialisation –on render– or new row addition)
         if (tmpl.required) {
             valueValidators.push(Validators.required);
         }
         fg.addControl(columnId, new FormControl(row.valueFor(columnId).value, valueValidators));
-        console.log(row.valueFor(columnId).value);
     }
 
     private updateColumnControls(ue?: UpdateEvent): void {

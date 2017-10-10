@@ -23,10 +23,10 @@
                     </subm-form>
 
                     <div class="list-group">
-                        <label class="control-label" *ngIf="section.sections.list() > 0">Subsections:</label>
+                        <label class="control-label" *ngIf="section.sections.list().length > 0">Subsections:</label>
                         <div *ngFor="let subsection of section.sections.list()"
                               class="list-group-item">
-                            {{subsection.typeName}} subsection
+                            {{subsection.typeName}}
                             <span *ngIf="subsection.accno">
                                 : {{subsection.accno}}
                             </span>

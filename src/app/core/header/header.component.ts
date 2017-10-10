@@ -21,6 +21,7 @@ export class HeaderComponent {
     userLoggedIn: boolean = false;
     userLoggingIn: boolean = false;
     userRegistering: boolean = false;
+    isLoaderVisible: boolean = false;
 
     constructor(private userSession: UserSession,
                 private router: Router,

@@ -22,14 +22,16 @@
 }
 
 /* Layout */
-aside {
-  padding-top: @navbar-height;
+
+//Top spacing to make room for top bar on login-related screens */
+//TODO: Untangle the styling used for the authentication screens, which is spread over "container-md" and the auth component in question
+.auth-content {
+  margin-top: calc(@navbar-height + 20px);
 }
 
-.auth-content {
-  position: absolute;
-  min-width: 80%;
-  top: 50%;
+//Top spacing for screens past the login-related ones */
+aside {
+  padding-top: @navbar-height;
 }
 
 /*right side - contains main content*/
