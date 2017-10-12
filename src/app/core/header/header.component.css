@@ -13,7 +13,7 @@
 }
 .loading-bar {
     position: absolute;
-    background: #5fafd0;
+    background: #25a9e0 /*#5fafd0*/;
     height: 2px;
     width: 0%;
 }

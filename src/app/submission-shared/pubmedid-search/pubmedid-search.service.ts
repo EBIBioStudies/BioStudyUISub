@@ -5,11 +5,11 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
 
-import {HttpClient} from 'app/http/http-client';
+import {HttpCustomClient} from 'app/http/http-custom-client.service';
 
 @Injectable()
 export class PubMedSearchService {
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpCustomClient) {
     }
 
     search(pmid): Observable<any> {
@@ -18,7 +18,6 @@ export class PubMedSearchService {
             return Observable.of({});
         }
         return this.http.get('/api/pubMedSearch/' + pmid)
-            .map((resp: Response) => resp.json())
             .catch((error: any) => {
                 let err = {status: '', message: ''};
                 try {

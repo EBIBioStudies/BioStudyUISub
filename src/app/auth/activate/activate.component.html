@@ -1,6 +1,13 @@
 <container-root>
     <container-md>
-
+        <div class="auth-content">
+            <div class="alert alert-danger" *ngIf="hasError">
+                {{message}}
+            </div>
+            <div class="alert" *ngIf="!hasError">
+                &nbsp;
+            </div>
+        </div>
         <div class="panel auth-content panel-default">
             <div class="panel-body">
                 <div *ngIf="!message">

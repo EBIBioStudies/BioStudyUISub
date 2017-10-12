@@ -1,15 +1,19 @@
 <container-root>
     <container-md>
-
-        <div class="panel auth-content panel-default">
+        <div class="auth-content">
+            <div class="alert alert-danger" *ngIf="hasError">
+                {{message}}
+            </div>
+            <div class="alert" *ngIf="!hasError">
+                &nbsp;
+            </div>
+        </div>
+        <div class="panel panel-default">
             <div class="panel-body" *ngIf="!showSuccess">
                 <h4>
                     Resend Activation Link
                 </h4>
                 <p>Please enter your registered e-mail address here so that we can resend you the activation link.</p>
-                <h5 *ngIf="hasError" class="text-danger">
-                    {{message}}
-                </h5>
                 <form novalidate name="raForm" role="form"
                       (ngSubmit)="raForm.valid && onSubmit($event)" #raForm="ngForm">
                     <div class="form-group" [ngClass]="{'has-error': email.invalid}">

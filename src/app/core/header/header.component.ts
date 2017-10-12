@@ -1,8 +1,12 @@
-import {Component} from '@angular/core';
+import {
+    Component,
+    OnDestroy
+} from '@angular/core';
 import {
     Router,
     NavigationEnd,
-    Event} from '@angular/router';
+    Event
+} from '@angular/router';
 
 import {
     AuthService,
@@ -10,13 +14,17 @@ import {
 } from 'app/auth/index';
 
 import {AppConfig} from 'app/app.config';
+import {RequestStatusService} from "../../http/request-status.service";
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
     selector: 'app-header',
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.css']
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnDestroy {
+    reqStatusSubs: Subscription;
+
     navCollapsed: boolean = true;
     userLoggedIn: boolean = false;
     userLoggingIn: boolean = false;
@@ -26,8 +34,8 @@ export class HeaderComponent {
     constructor(private userSession: UserSession,
                 private router: Router,
                 private authService: AuthService,
-                private appConfig: AppConfig) {
-
+                private appConfig: AppConfig,
+                private requestStatus: RequestStatusService) {
         this.userLoggedIn = !this.userSession.isAnonymous();
 
         this.userSession.created$.subscribe(created => {
@@ -40,10 +48,19 @@ export class HeaderComponent {
 
         this.router.events.subscribe((event: Event) => {
            if (event instanceof NavigationEnd) {
-               this.userRegistering = this.router.url === '/signup'
+               this.userRegistering = this.router.url === '/signup';
                this.userLoggingIn = this.router.url === '/signin';
             }
         });
+
+        this.reqStatusSubs = this.requestStatus
+        .whenStatusChanged.subscribe(hasPendingRequests => {
+            this.isLoaderVisible = hasPendingRequests;
+        });
+    }
+
+    get appVersion(): string {
+        return this.appConfig.version;
     }
 
     signOut() {
@@ -63,7 +80,7 @@ export class HeaderComponent {
         this.navCollapsed = !this.navCollapsed;
     }
 
-    get appVersion(): string {
-        return this.appConfig.version;
+    ngOnDestroy(): void {
+        this.reqStatusSubs.unsubscribe();
     }
 }

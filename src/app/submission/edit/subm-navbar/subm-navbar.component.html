@@ -8,7 +8,7 @@
         </a>
     </span>
     <span class="label label-danger pull-right"
-          *ngIf="!errors.empty()"
+          *ngIf="errors && !errors.empty()"
           (click)="onErrorsLabelClick($event)">
         {{errors.total()}} error{{errors.total() > 1 ? 's' : ''}}
     </span>

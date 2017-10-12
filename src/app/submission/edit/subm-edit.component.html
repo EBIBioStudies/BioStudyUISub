@@ -23,7 +23,7 @@
                     </subm-form>
 
                     <div class="list-group">
-                        <label class="control-label" *ngIf="section.sections.list().length > 0">Subsections:</label>
+                        <label class="control-label" *ngIf="section.sections.list().length > 0">Subsections</label>
                         <div *ngFor="let subsection of section.sections.list()"
                               class="list-group-item">
                             {{subsection.typeName}}
@@ -48,15 +48,21 @@
                         </div>
                     </div>
 
-                    <div>
-                        <button *ngIf="!readonly && submValid"
-                                type="button"
-                                class="submit-btn btn btn-primary btn-md"
-                                [disabled]="submitting"
-                                (click)="onSubmit($event)">
-                                <span *ngIf="!submitting">Submit</span>
-                                <span *ngIf="submitting"><i class="fa fa-cog fa-spin"></i></span>
-                        </button>
+                    <div class="row submit-row">
+                        <p class="col-md-2">
+                            <button type="button" class="submit-btn btn btn-md col-md-12"
+                                    [ngClass]="{'btn-primary': submValid, 'btn-danger': !submValid}"
+                                    [disabled]="isSubmitting || isSaving || readonly || !submValid"
+                                    (click)="onSubmit($event)">
+                                Submit
+                            </button>
+                        </p>
+                        <p class="text-muted col-md-10">
+                            <span *ngIf="!submValid && !isSaving">Your submission has errors. Please, correct them before submitting.</span>
+                            <i class="fa fa-cog fa-spin" *ngIf="isSubmitting || isSaving"></i>
+                            <span *ngIf="isSubmitting">Submitting study...</span>
+                            <span *ngIf="isSaving">Backing up study data...</span>
+                        </p>
                     </div>
                 </div>
 

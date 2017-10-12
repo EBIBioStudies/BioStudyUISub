@@ -1,3 +1,3 @@
-export * from './http-client.module';
-export * from './http-client';
+export * from './http-custom-client.module';
+export * from './http-custom-client.service';
 export * from './server-error.handler';

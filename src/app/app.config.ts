@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Http} from '@angular/http';
+import {HttpClient} from "@angular/common/http";
 
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/toPromise';
@@ -9,7 +9,7 @@ export class AppConfig {
 
     private config: any = {};
 
-    constructor(private http: Http) {
+    constructor(private http: HttpClient) {
     }
 
     get version(): string {
@@ -30,8 +30,7 @@ export class AppConfig {
 
     // Promise is required here
     load(): Promise<any> {
-        let req:Observable<any> = this.http.get('./config.json')
-            .map(res => res.json());
+        let req: Observable<any> = this.http.get('./config.json');
 
         req.subscribe(res => {
                 this.config = res;

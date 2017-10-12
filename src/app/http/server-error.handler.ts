@@ -1,5 +1,6 @@
 import {Observable} from 'rxjs/Observable';
-import {Response} from '@angular/http';
+import {HttpErrorResponse} from "@angular/common/http";
+
 
 export class ServerError {
 
@@ -22,13 +23,13 @@ export class ServerError {
         return this.status === 422 || this.status === 400;
     }
 
-    public static fromResponse(error: Response): ServerError {
+    public static fromResponse(error: HttpErrorResponse): ServerError {
         let data = {};
-        if (error.json) {
+        if (error.error.message) {
             try {
-                data = error.json();
+                data['message'] = error.error.message;
             } catch (e) {
-                //console.error("Can't parse error message", e);
+                console.error("Unknown error type", e);
             }
         }
         return new ServerError(error.status, error.statusText, data);
@@ -39,6 +40,6 @@ export class ServerError {
     }
 }
 
-export function serverErrorHandler(error: Response): Observable<any> {
+export function serverErrorHandler(error: HttpErrorResponse): Observable<any> {
     throw ServerError.fromResponse(error);
 }

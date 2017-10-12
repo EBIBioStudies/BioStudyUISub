@@ -3,7 +3,7 @@ import {RouterModule} from '@angular/router';
 
 import {AgGridModule} from 'ag-grid-angular/main';
 
-import {HttpClientModule} from 'app/http/http-client.module';
+import {HttpCustomClientModule} from 'app/http/http-custom-client.module';
 import {SharedModule} from 'app/shared/shared.module';
 import {SubmissionModelModule} from 'app/submission-model/submission-model.module';
 import {SubmissionSharedModule} from 'app/submission-shared/submission-shared.module';
@@ -43,7 +43,7 @@ import {UniqueValidator} from './shared/unique.directive';
 
 @NgModule({
     imports: [
-        HttpClientModule,
+        HttpCustomClientModule,
         AgGridModule.withComponents([
             ActionButtonsCellComponent,
             DateCellComponent,

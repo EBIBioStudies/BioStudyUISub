@@ -20,7 +20,7 @@ import {SubmValidationErrors} from '../../shared/submission.validator';
 })
 export class SubmNavBarComponent {
     @Input() accno: string;
-    @Input() errors: SubmValidationErrors;
+    @Input() errors: SubmValidationErrors = SubmValidationErrors.EMPTY;
     @Input() sectionPath: Section[];
 
     @Output() sectionClick: EventEmitter<Section> = new EventEmitter<Section>();

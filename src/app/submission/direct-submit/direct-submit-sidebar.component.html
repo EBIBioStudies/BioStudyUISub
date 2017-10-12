@@ -11,7 +11,7 @@
               #uploadForm="ngForm">
 
             <div class="form-group">
-                <label>File</label>
+                <label>Data file</label>
                 <file-upload-button class="show"
                                     title="Select file"
                                     (select)="onUploadFilesSelect($event)"></file-upload-button>
@@ -19,7 +19,7 @@
             </div>
 
             <div class="form-group">
-                <label for="">Format</label>
+                <label for="">File format</label>
                 <select name="formatSelect"
                         class="form-control"
                         [(ngModel)]="model.format">
@@ -29,7 +29,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="">Attach To</label>
+                <label for="">Attach to project</label>
                 <ul *ngIf="model.projects.length > 0">
                     <li *ngFor="let p of model.projects">{{p}}</li>
                 </ul>
