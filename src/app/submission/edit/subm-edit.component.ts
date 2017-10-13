@@ -35,8 +35,7 @@ import {ConfirmDialogComponent} from 'app/shared/index';
 
 @Component({
     selector: 'subm-edit',
-    templateUrl: './subm-edit.component.html',
-    styleUrls: ['./subm-edit.component.css']
+    templateUrl: './subm-edit.component.html'
 })
 export class SubmEditComponent implements OnInit, OnDestroy {
     sideBarCollapsed = false;

@@ -48,9 +48,9 @@
                         </div>
                     </div>
 
-                    <div class="row submit-row">
+                    <div class="row row-submit">
                         <p class="col-md-2">
-                            <button type="button" class="submit-btn btn btn-md col-md-12"
+                            <button type="button" class="btn-submit btn btn-md col-md-12"
                                     [ngClass]="{'btn-primary': submValid, 'btn-danger': !submValid}"
                                     [disabled]="isSubmitting || isSaving || readonly || !submValid"
                                     (click)="onSubmit($event)">

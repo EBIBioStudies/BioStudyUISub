@@ -24,13 +24,10 @@ export class ServerError {
     }
 
     public static fromResponse(error: HttpErrorResponse): ServerError {
-        let data = {};
+        const data = {message: 'Unknown error type'};
+
         if (error.error.message) {
-            try {
-                data['message'] = error.error.message;
-            } catch (e) {
-                console.error("Unknown error type", e);
-            }
+            data.message = error.error.message;
         }
         return new ServerError(error.status, error.statusText, data);
     }

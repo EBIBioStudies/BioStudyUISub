@@ -3,7 +3,6 @@ import {
     ViewChild
 } from '@angular/core';
 
-import {Response} from '@angular/http';
 import {RecaptchaComponent} from 'ng-recaptcha';
 
 import {ServerError} from 'app/http/index';
@@ -18,6 +17,7 @@ import {ActivationLinkRequestData} from '../model/email-req-data';
 export class ActivationLinkReqComponent {
     hasError: boolean;
     showSuccess: boolean;
+    isSubmitting: boolean = false;
 
     model: ActivationLinkRequestData = new ActivationLinkRequestData();
     message: string;
@@ -25,11 +25,20 @@ export class ActivationLinkReqComponent {
     @ViewChild('recaptcha')
     private recaptcha: RecaptchaComponent;
 
-    constructor(private authService: AuthService) {
+    constructor(private authService: AuthService) {}
+
+    /**
+     * Handler for change event for form fields
+     */
+    onFieldChange(): void {
+        this.hasError = false;
     }
 
     onSubmit(event) {
+        const component = this;     //SelfSubscriber object overwrites context for "subscribe" method
+
         event.preventDefault();
+        this.isSubmitting = true;
 
         this.message = '';
         this.hasError = false;
@@ -37,13 +46,15 @@ export class ActivationLinkReqComponent {
             .activationLinkReq(this.model)
             .subscribe(
                 (data) => {
-                    this.showSuccess = true;
+                    this.isSubmitting = false;
+                    component.showSuccess = true;
                 },
-                (error: Response) => {
-                    this.hasError = true;
-                    this.message = ServerError.fromResponse(error).message;
-                    this.model.resetCaptcha();
-                    this.recaptcha.reset();
+                (error: ServerError) => {
+                    this.isSubmitting = false;
+                    component.hasError = true;
+                    component.message = error.data.message;
+                    component.model.resetCaptcha();
+                    component.recaptcha.reset();
                 }
             )
     }

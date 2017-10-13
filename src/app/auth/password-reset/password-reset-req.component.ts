@@ -1,9 +1,9 @@
 import {
-    Component,
+    AfterViewInit,
+    Component, ElementRef,
     ViewChild
 } from '@angular/core';
 
-import {Response} from '@angular/http';
 import {RecaptchaComponent} from 'ng-recaptcha';
 
 import {ServerError} from 'app/http/index';
@@ -15,7 +15,7 @@ import {PasswordResetRequestData} from '../model/email-req-data';
     selector: 'auth-passwd-reset-req',
     templateUrl: './password-reset-req.component.html'
 })
-export class PasswordResetReqComponent {
+export class PasswordResetReqComponent implements AfterViewInit {
     hasError: boolean = false;
     showSuccess: boolean = false;
 
@@ -25,10 +25,25 @@ export class PasswordResetReqComponent {
     @ViewChild('recaptcha')
     private recaptcha: RecaptchaComponent;
 
-    constructor(private authService: AuthService) {
+    @ViewChild('emailInput')
+    private focusEl: ElementRef;
+
+    constructor(private authService: AuthService) {}
+
+    ngAfterViewInit(): void {
+        this.focusEl.nativeElement.focus();
+    }
+
+    /**
+     * Handler for change event for form fields
+     */
+    onFieldChange(): void {
+        this.hasError = false;
     }
 
     onSubmit(event): void {
+        const component = this;     //SelfSubscriber object overwrites context for "subscribe" method
+
         event.preventDefault();
 
         this.message = '';
@@ -37,13 +52,13 @@ export class PasswordResetReqComponent {
         this.authService.passwordResetReq(this.model)
             .subscribe(
                 (data) => {
-                    this.showSuccess = true;
+                    component.showSuccess = true;
                 },
-                (error: Response) => {
-                    this.hasError = true;
-                    this.message = ServerError.fromResponse(error).message;
-                    this.model.resetCaptcha();
-                    this.recaptcha.reset();
+                (error: ServerError) => {
+                    component.hasError = true;
+                    component.message = error.data.message;
+                    component.model.resetCaptcha();
+                    component.recaptcha.reset();
                 }
             );
     }

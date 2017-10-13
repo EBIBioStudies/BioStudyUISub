@@ -20,8 +20,8 @@ import 'rxjs/add/observable/throw';
 @Injectable()
 export class RequestStatusService implements HttpInterceptor {
     private _whenStatusChanged: Subject<boolean> = new Subject<boolean>();
-    private _filteredUrlPatterns: RegExp[] = [];
-    private _pendingRequests = 0;
+    private _filteredUrlPatterns: RegExp[] = [];        //URLs to exclude from request status tracking
+    private _pendingRequests = 0;                       //counter for pending requests
 
     get filteredUrlPatterns(): RegExp[] {
         return this._filteredUrlPatterns;
@@ -35,6 +35,11 @@ export class RequestStatusService implements HttpInterceptor {
         return this._whenStatusChanged.asObservable();
     }
 
+    /**
+     * Flags those URLs to which requests should not be counted as pending
+     * @param {string} url - URL for the request in question
+     * @returns {boolean} True if the request is to be ignored.
+     */
     private shouldBypass(url: string): boolean {
         return this._filteredUrlPatterns.some(e => {
             return e.test(url);
@@ -42,10 +47,10 @@ export class RequestStatusService implements HttpInterceptor {
     }
 
     /**
-     *
-     * @param {HttpRequest<any>} req
-     * @param {HttpHandler} next
-     * @returns {Observable<HttpEvent<any>>}
+     * Keeps track of pending requests and emits a true when the request counter is 0.
+     * @param {HttpRequest<any>} req - Object representing the request
+     * @param {HttpHandler} next - Next interceptor in the chain, if applicable.
+     * @returns {Observable<HttpEvent<any>>} Observable the request has been turned into
      */
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const shouldBypass = this.shouldBypass(req.url);
@@ -77,8 +82,3 @@ export class RequestStatusService implements HttpInterceptor {
 export function RequestStatusServiceFactory() {
     return new RequestStatusService();
 }
-
-export let RequestStatusServiceFactoryProvider = {
-    provide: RequestStatusService,
-    useFactory: RequestStatusServiceFactory
-};
