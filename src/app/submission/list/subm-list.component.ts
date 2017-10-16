@@ -54,11 +54,10 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
 
     agInit(params: any): void {
         const data = params.data;
+        const noop = (accno: string) => {};
+
         this.status = data.status;
         this.accno = data.accno;
-
-        const noop = (accno: string) => {
-        };
         this.onDelete = data.onDelete || noop;
         this.onEdit = data.onEdit || noop;
         this.onView = data.onView || noop;

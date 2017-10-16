@@ -76,14 +76,6 @@ export class SubmEditComponent implements OnInit, OnDestroy {
                         this.errors = errors;
                     });
 
-                this.subm
-                    .updates()
-                    .switchMap(ue => {
-                        this.isSaving = true;
-                        return this.submService.saveSubmission(this.wrap());
-                    })
-                    .subscribe(result => this.isSaving = false);
-
                 this.changeSection(this.subm.root.id);
             });
     }
@@ -121,6 +113,14 @@ export class SubmEditComponent implements OnInit, OnDestroy {
             .subscribe(() => {
                 this.section.sections.remove(section);
             });
+    }
+
+    /**
+     * Handler for field change events. Saves the current data to the server, flagging the request's progress.
+     */
+    onChange() {
+        this.isSaving = true;
+        this.submService.saveSubmission(this.wrap()).subscribe(result => this.isSaving = false);
     }
 
     onSubmit(event) {

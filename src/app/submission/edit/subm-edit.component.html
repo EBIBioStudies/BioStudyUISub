@@ -16,7 +16,7 @@
     <div class="container-fluid">
         <aside class="right-side"
                [ngClass]="{'collapse-left' : !readonly && sideBarCollapsed}">
-            <div *ngIf="subm"
+            <div *ngIf="subm" (change)="onChange($event)"
                  class="panel navbar-subm-margin panel-default">
                 <div class="panel-body">
                     <subm-form [section]="section">
