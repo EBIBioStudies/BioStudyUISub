@@ -31,12 +31,18 @@ import 'rxjs/add/operator/filter';
     selector: 'file-actions-cell',
     template: `
 <div style="text-align:center">
-    <button *ngIf="canRemove" 
-            type="button" class="btn btn-danger btn-xs"
-            (click)="onFileRemove($event)">Delete</button>
+    <button *ngIf="canRemove"
+            type="button" class="btn btn-danger btn-xs btn-flat"
+            tooltip="Delete"
+            (click)="onFileRemove($event)">
+        <i class="fa fa-trash-o fa-fw"></i>
+    </button>
     <button *ngIf="canCancel" 
             type="button" class="btn btn-warning btn-xs"
-            (click)="onCancelUpload($event)">Cancel</button>        
+            tooltip="Cancel"
+            (click)="onCancelUpload($event)">
+        Cancel
+    </button>        
 </div>
 `
 })
@@ -159,10 +165,10 @@ export class ProgressCellComponent implements AgRendererComponent {
                             &nbsp;<directory-path [path]="path.rel" (change)="onRelativePathChange($event)"></directory-path>
                         </div>
                         <div class="pull-right">
-                            <file-upload-badge (select)="onUploadSelect($event)"></file-upload-badge>
-                            <file-upload-button title="Upload Files" 
+                            <file-upload-button title="Upload files" 
                                                 [multiple]="true"
                                                 (select)="onUploadFilesSelect($event)"></file-upload-button>
+                            <file-upload-badge (select)="onUploadSelect($event)"></file-upload-badge>
                         </div>
                     </div>
                     <div class="row">

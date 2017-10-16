@@ -14,7 +14,7 @@
     </subm-navbar>
 
     <div class="container-fluid">
-        <aside class="right-side content"
+        <aside class="right-side"
                [ngClass]="{'collapse-left' : !readonly && sideBarCollapsed}">
             <div *ngIf="subm"
                  class="panel navbar-subm-margin panel-default">
@@ -23,6 +23,7 @@
                     </subm-form>
 
                     <div class="list-group">
+                        <label class="control-label" *ngIf="section.sections.list().length > 0">Subsections</label>
                         <div *ngFor="let subsection of section.sections.list()"
                               class="list-group-item">
                             {{subsection.typeName}}
@@ -47,15 +48,21 @@
                         </div>
                     </div>
 
-                    <div>
-                        <button *ngIf="!readonly && submValid"
-                                type="button"
-                                class="submit-btn btn btn-primary btn-md"
-                                [disabled]="submitting"
-                                (click)="onSubmit($event)">
-                                <span *ngIf="!submitting">Submit</span>
-                                <span *ngIf="submitting"><i class="fa fa-spinner fa-spin"></i></span>
-                        </button>
+                    <div class="row row-submit">
+                        <p class="col-md-2">
+                            <button type="button" class="btn-submit btn btn-md col-md-12"
+                                    [ngClass]="{'btn-primary': submValid, 'btn-danger': !submValid}"
+                                    [disabled]="isSubmitting || isSaving || readonly || !submValid"
+                                    (click)="onSubmit($event)">
+                                Submit
+                            </button>
+                        </p>
+                        <p class="text-muted col-md-10">
+                            <span *ngIf="!submValid && !isSaving">Your submission has errors. Please, correct them before submitting.</span>
+                            <i class="fa fa-cog fa-spin" *ngIf="isSubmitting || isSaving"></i>
+                            <span *ngIf="isSubmitting">Submitting study...</span>
+                            <span *ngIf="isSaving">Backing up study data...</span>
+                        </p>
                     </div>
                 </div>
 

@@ -21,7 +21,7 @@ export class DirectSubmitSideBarComponent implements OnInit {
     @Output() toggle? = new EventEmitter();
 
     private formats = [
-        {name: '-- auto-detect --', value: ''},
+        {name: 'Detect automatically', value: ''},
         {name: 'xlsx', value: 'xlsx'},
         {name: 'xls', value: 'xls'},
         {name: 'json', value: 'json'},

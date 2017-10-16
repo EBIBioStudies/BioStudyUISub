@@ -35,8 +35,7 @@ import {ConfirmDialogComponent} from 'app/shared/index';
 
 @Component({
     selector: 'subm-edit',
-    templateUrl: './subm-edit.component.html',
-    styleUrls: ['./subm-edit.component.css']
+    templateUrl: './subm-edit.component.html'
 })
 export class SubmEditComponent implements OnInit, OnDestroy {
     sideBarCollapsed = false;
@@ -49,7 +48,8 @@ export class SubmEditComponent implements OnInit, OnDestroy {
     accno = '';
 
     private subscr: Subscription;
-    private submitting = false;
+    private isSubmitting = false;
+    private isSaving = false;
     private wrappedSubm: any;
     @ViewChild('confirmDialog') confirmDialog: ConfirmDialogComponent;
 
@@ -79,9 +79,10 @@ export class SubmEditComponent implements OnInit, OnDestroy {
                 this.subm
                     .updates()
                     .switchMap(ue => {
+                        this.isSaving = true;
                         return this.submService.saveSubmission(this.wrap());
                     })
-                    .subscribe(result => console.log('saved: ' + result));
+                    .subscribe(result => this.isSaving = false);
 
                 this.changeSection(this.subm.root.id);
             });
@@ -138,13 +139,9 @@ export class SubmEditComponent implements OnInit, OnDestroy {
                     this.showSubmitResults(resp);
                 },
                 (error: ServerError) => {
-                    this.showSubmitResults({
-                        status: 'FAIL',
-                        log: {
-                            level: 'ERROR',
-                            message: error.message
-                        }
-                    });
+
+                    //Uses the original error object given by the server
+                    this.showSubmitResults(error.data.error);
 
                     if (!error.isDataError) {
                         throw error;
@@ -153,11 +150,11 @@ export class SubmEditComponent implements OnInit, OnDestroy {
     }
 
     canSubmit() {
-        return this.submitting ? false : (this.submitting = true);
+        return this.isSubmitting ? false : (this.isSubmitting = true);
     }
 
     showSubmitResults(resp: any) {
-        this.submitting = false;
+        this.isSubmitting = false;
 
         const subscriptions = (function () {
             let list = [];

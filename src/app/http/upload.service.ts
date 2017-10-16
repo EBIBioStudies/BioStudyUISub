@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import {Headers} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import {Observer} from 'rxjs/Observer';
+import {HttpHeaders} from "@angular/common/http";
 
 const isSuccess = (status: number): boolean => (status >= 200 && status < 300);
 
@@ -25,7 +25,7 @@ type UploadResponseType = UploadProgress | UploadResponse;
 
 @Injectable()
 export class UploadService {
-    post(url: string, formData: FormData, headers: Headers): Observable<UploadResponseType> {
+    post(url: string, formData: FormData, headers: HttpHeaders): Observable<UploadResponseType> {
         return Observable.create((observer: Observer<UploadResponseType>) => {
             let xhr: XMLHttpRequest = new XMLHttpRequest();
 
@@ -77,12 +77,14 @@ export class UploadService {
             xhr.open('post', url);
 
             if (headers == null) {
-                headers = new Headers();
+                headers = new HttpHeaders();
             }
             if (!headers.has('Accept')) {
-                headers.append('Accept', 'application/json, text/plain, */*');
+                headers = headers.append('Accept', 'application/json, text/plain, */*');
             }
-            headers.forEach((values, name) => xhr.setRequestHeader(name, values.join(',')));
+            headers.keys().forEach((key) => {
+                xhr.setRequestHeader(key, headers.getAll(key).join(','));
+            });
 
             xhr.upload.addEventListener('progress', onProgress);
             xhr.addEventListener('load', onLoad);
@@ -98,5 +100,4 @@ export class UploadService {
             };
         });
     }
-
 }

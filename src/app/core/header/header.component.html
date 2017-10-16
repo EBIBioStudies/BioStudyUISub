@@ -14,70 +14,76 @@
             </a>
         </div>
 
-        <div class="collapse navbar-collapse navbar-right" [collapse]="navCollapsed">
-            <ul class="nav navbar-nav">
-                <li>
-                    <a routerLink="/help"
-                       routerLinkActive="active"
-                       tooltip="Go to the help page"
-                       placement="bottom"
-                       (click)="toggleCollapsed()">
-                        <i class="fa fa-fw fa-question"></i>
-                        Help
-                    </a>
-                </li>
-
-                <li *ngIf="!userLoggedIn">
-                    <a routerLink="/signup"
-                       routerLinkActive="active"
-                       tooltip="Register as new user"
-                       placement="bottom"
-                       (click)="toggleCollapsed()">
+        <div class="collapse navbar-collapse" [collapse]="navCollapsed">
+            <ul class="nav navbar-nav navbar-right">
+                <li *ngIf="!userLoggedIn && !userRegistering">
+                    <button class="btn btn-link navbar-btn"
+                            routerLink="/signup"
+                            routerLinkActive="active"
+                            tooltip="Register as new user"
+                            placement="bottom"
+                            (click)="toggleCollapsed()">
                         <i class="fa fa-user-plus fa-fw"></i>
                         Register
-                    </a>
+                    </button>
                 </li>
 
-                <li *ngIf="!userLoggedIn">
-                    <a routerLink="/signin"
-                       tooltip="Start submitting studies"
-                       placement="bottom"
-                       (click)="toggleCollapsed()">
+                <li *ngIf="!userLoggedIn && !userLoggingIn">
+                    <button class="btn btn-link navbar-btn"
+                            routerLink="/signin"
+                            tooltip="Start submitting studies"
+                            placement="bottom"
+                            (click)="toggleCollapsed()">
                         <i class="fa fa-sign-in"></i>
                         Log in
-                    </a>
+                    </button>
                 </li>
 
                 <li *ngIf="userLoggedIn">
-                    <a routerLink="submissions"
-                       routerLinkActive="active"
-                       tooltip="List of submissions"
-                       placement="bottom"
-                       (click)="toggleCollapsed()">
+                    <button class="btn btn-link navbar-btn"
+                            routerLink="submissions"
+                            routerLinkActive="active"
+                            tooltip="List of submissions"
+                            placement="bottom"
+                            (click)="toggleCollapsed()">
                         <i class="fa fa-fw fa-table"></i>
                         Submissions
-                    </a>
+                    </button>
                 </li>
 
                 <li *ngIf="userLoggedIn">
-                    <a routerLink="files"
-                       routerLinkActive="active"
-                       tooltip="Upload or list your files"
-                       placement="bottom"
-                       (click)="toggleCollapsed()">
+                    <button class="btn btn-link navbar-btn"
+                            routerLink="files"
+                            routerLinkActive="active"
+                            tooltip="Upload or list your files"
+                            placement="bottom"
+                            (click)="toggleCollapsed()">
                         <i class="fa fa-fw fa-upload"></i>
                         Files
-                    </a>
+                    </button>
                 </li>
 
                 <li *ngIf="userLoggedIn">
-                    <a href="javascript:void(0)"
-                       (click)="signOut()">
+                    <button class="btn btn-link navbar-btn"
+                            routerLink="/help"
+                            routerLinkActive="active"
+                            tooltip="How to use this tool"
+                            placement="bottom"
+                            (click)="toggleCollapsed()">
+                        <i class="fa fa-fw fa-question"></i>
+                        Help
+                    </button>
+                </li>
+
+                <li *ngIf="userLoggedIn">
+                    <button class="btn btn-link navbar-btn"
+                            (click)="signOut()">
                         <i class="fa fa-fw fa-sign-out"></i>
                         Log out
-                    </a>
+                    </button>
                 </li>
             </ul>
         </div>
     </div>
+    <div class="loading-bar" [ngClass]="{'animate': isLoaderVisible}"></div>
 </nav>

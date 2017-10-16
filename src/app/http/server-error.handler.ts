@@ -1,5 +1,6 @@
 import {Observable} from 'rxjs/Observable';
-import {Response} from '@angular/http';
+import {HttpErrorResponse} from "@angular/common/http";
+
 
 export class ServerError {
 
@@ -18,18 +19,27 @@ export class ServerError {
         return (this.data ? this.data.message : undefined) || this.name;
     }
 
+    /**
+     * Checks if the error returned by the server based on the status code.
+     * @returns {boolean} True if the source of the error is the client.
+     */
     get isDataError(): boolean {
         return this.status === 422 || this.status === 400;
     }
 
-    public static fromResponse(error: Response): ServerError {
-        let data = {};
-        if (error.json) {
-            try {
-                data = error.json();
-            } catch (e) {
-                //console.error("Can't parse error message", e);
-            }
+    /**
+     * Factory-like method to turn the standard error object from the HTTP client to the custom
+     * @param {HttpErrorResponse} error Error object as it comes from the HTTP client
+     * @returns {ServerError} Converted error object
+     */
+    public static fromResponse(error: HttpErrorResponse): ServerError {
+        const data = {
+            message: 'Unknown error type',      //Default error message
+            error: error.error                  //Original error object coming from the server
+        };
+
+        if (error.error.message) {
+            data.message = error.error.message;
         }
         return new ServerError(error.status, error.statusText, data);
     }
@@ -39,6 +49,6 @@ export class ServerError {
     }
 }
 
-export function serverErrorHandler(error: Response): Observable<any> {
+export function serverErrorHandler(error: HttpErrorResponse): Observable<any> {
     throw ServerError.fromResponse(error);
 }

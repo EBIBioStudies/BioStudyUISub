@@ -6,10 +6,8 @@
          class="form-group row"
          [ngClass]="{'has-error': sectionForm.fieldControl(field.id).invalid}">
         <div class="col-sm-12">
-            <label class="control-label">{{field.name}}:
-                <span>
-                    <span>{{sectionForm.formErrors[field.id]}}</span>
-                </span>
+            <label class="control-label">
+                {{field.name}}{{sectionForm.formErrors[field.id] ? ': ' + sectionForm.formErrors[field.id] : ''}}
             </label>
             <subm-field
                     [type]="field.valueType"
@@ -22,7 +20,7 @@
     </div>
 
     <div *ngFor="let feature of sectionForm.features">
-        <label class="control-label" *ngIf="feature.size() > 0">{{feature.type.name}}:</label>
+        <label class="control-label" *ngIf="feature.size() > 0">{{feature.type.name}}</label>
         <subm-feature [featureForm]="sectionForm.featureForm(feature.id)"
                       [readonly]="readonly">
         </subm-feature>

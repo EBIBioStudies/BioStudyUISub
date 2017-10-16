@@ -3,13 +3,21 @@
             (toggle)="onToggle($event)"
             [collapsed]="collapseSideBar">
     </direct-submit-sidebar>
-
+    <div class="navbar-default navbar-subm-fixed">
+        <div class="col-md-12">
+            <a routerLink="/submissions">Submission list</a>
+            &nbsp;<i class="fa fa-angle-double-right"></i>&nbsp;
+            <strong>Direct upload</strong>
+        </div>
+    </div>
     <div class="container-fluid">
-        <aside class="right-side content" [ngClass]="{'collapse-left' : collapseSideBar}">
-            <h3>Direct submission</h3>
-            <div *ngIf="!request"
-                 class="help-msg panel text-center">
-                Please, provide the details of your data file using the form on the left. Upon submission, the file will be validated and any errors shown.
+        <aside class="right-side">
+            <div class="help-msg panel panel-default navbar-subm-margin"
+                 *ngIf="!request">
+                <div class="panel-body">
+                    Please, provide the details of your data file using the form on the left. Upon
+                    submission, the file will be validated and any errors shown.
+                </div>
             </div>
             <div *ngIf="request">
                 <div class="panel"

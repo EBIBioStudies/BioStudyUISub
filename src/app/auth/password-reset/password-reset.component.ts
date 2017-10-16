@@ -1,5 +1,6 @@
 import {
-    Component,
+    AfterViewInit,
+    Component, ElementRef,
     OnInit,
     ViewChild
 } from '@angular/core';
@@ -15,7 +16,7 @@ import {PasswordResetData} from '../model/password-reset-data';
     selector: 'auth-passwd-reset',
     templateUrl: './password-reset.component.html'
 })
-export class PasswordResetComponent implements OnInit {
+export class PasswordResetComponent implements OnInit, AfterViewInit {
     hasError: boolean = false;
     showSuccess: boolean = false;
 
@@ -24,6 +25,9 @@ export class PasswordResetComponent implements OnInit {
 
     @ViewChild('recaptcha')
     private recaptcha: RecaptchaComponent;
+
+    @ViewChild('focusEl')
+    private focusEl: ElementRef;
 
     constructor(private authService: AuthService,
                 private activatedRoute: ActivatedRoute) {
@@ -36,6 +40,11 @@ export class PasswordResetComponent implements OnInit {
             this.message = 'Invalid path';
         }
         this.model.key = key;
+    }
+
+    //TODO: Turn autofocus on render into a directive
+    ngAfterViewInit(): void {
+        this.focusEl.nativeElement.focus();
     }
 
     onSubmit(event): void {

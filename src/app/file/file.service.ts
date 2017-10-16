@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
-import {Response} from '@angular/http';
 
-import {HttpClient} from '../http/http-client'
+import {HttpCustomClient} from '../http/http-custom-client.service'
 import {Observable} from 'rxjs/Observable';
 
 import 'rxjs/add/observable/throw';
@@ -11,7 +10,7 @@ import * as _ from 'lodash';
 
 @Injectable()
 export class FileService {
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpCustomClient) {
     }
 
     getUserDirs(): Observable<any> {
@@ -22,12 +21,10 @@ export class FileService {
     }
 
     getFiles(path: string = '/', depth: number = 1, showArchive: boolean = true): Observable<any> {
-        return this.http.get(`/api/files?showArchive=${showArchive}&depth=${depth}&path=${path}`)
-            .map((res: Response) => res.json());
+        return this.http.get(`/api/files?showArchive=${showArchive}&depth=${depth}&path=${path}`);
     }
 
     removeFile(fullPath): Observable<any> {
-        return this.http.del(`/api/files?path=${fullPath}`)
-            .map((res: Response) => res.json());
+        return this.http.del(`/api/files?path=${fullPath}`);
     }
 }

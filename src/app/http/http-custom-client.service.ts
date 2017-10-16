@@ -1,11 +1,9 @@
 import {Injectable} from '@angular/core';
-
 import {
-    Http,
-    RequestOptions,
-    Headers,
-    URLSearchParams
-} from '@angular/http';
+    HttpClient,
+    HttpHeaders,
+    HttpParams
+} from "@angular/common/http";
 
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
@@ -17,36 +15,44 @@ import {UploadService} from './upload.service';
 import {serverErrorHandler} from './server-error.handler';
 
 @Injectable()
-export class HttpClient {
+export class HttpCustomClient {
 
-    constructor(private http: Http,
+    constructor(private http: HttpClient,
                 private uploadService: UploadService,
                 private appConfig: AppConfig) {
     }
 
     get(url, urlParams?: any[]) {
-        let options = new RequestOptions({headers: this.headers()});
+        let options = {
+            headers: this.headers(),
+            params: new HttpParams()
+        };
+
+        //For non-empty parameters, filters out any undefined values and set the client's HTTP parameters to the remainder
         if (urlParams) {
-            let params: URLSearchParams = new URLSearchParams();
-            urlParams.forEach(p => {
-                params.set(p.name, p.value);
+            urlParams.filter(p => {
+                return p.value !== undefined;
+            }).forEach(p => {
+                options.params = options.params.set(p.name, p.value);
             });
-            options.search = params;
         }
+
         return this.http
             .get(this.transform(url), options)
             .catch(serverErrorHandler);
     }
 
     post(url, data) {
-        let options = new RequestOptions({headers: this.headers()});
+        let options = {headers: this.headers()};
+
         return this.http
             .post(this.transform(url), data, options)
             .catch(serverErrorHandler);
     }
 
     del(url) {
-        let options = new RequestOptions({headers: this.headers()});
+        let options = {headers: this.headers()};
+
         return this.http
             .delete(this.transform(url), options)
             .catch(serverErrorHandler);
@@ -61,13 +67,14 @@ export class HttpClient {
         return this.uploadService.post(this.transform(url), input, this.headers());
     }
 
-    private headers(): Headers {
-        let headers = new Headers();
+    private headers(): HttpHeaders {
+        let headers = new HttpHeaders();
         let sessionId = getLoginToken();
         if (sessionId) {
-            headers.append('X-Session-Token', sessionId);
+            return headers.append('X-Session-Token', sessionId);
+        } else {
+            return headers;
         }
-        return headers;
     }
 
     private transform(url: string) {

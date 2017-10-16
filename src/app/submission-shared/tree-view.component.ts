@@ -73,7 +73,7 @@ li::after {
 }
 
 li:last-child::before {
-    height:30px
+    height:25px
 }
 `]
 })

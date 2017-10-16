@@ -53,6 +53,6 @@ export class SubmViewComponent implements OnInit {
     }
 
     onEditSubmission() {
-        this.router.navigate(['/edit', this.submission.accno])
+        this.router.navigate(['/submissions', this.submission.accno])
     }
 }

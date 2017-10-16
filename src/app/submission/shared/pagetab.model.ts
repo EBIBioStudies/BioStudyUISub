@@ -199,6 +199,8 @@ export class PageTab implements SubmissionData {
      * @param {Feature} feature - Feature to be converted
      * @param {string} [locRegex = /^(path|url)$/] - Regular expresion used to extract the location attribute.
      * @returns {any[]} Array of converted features
+     *
+     * @author Hector Casanova <hector@ebi.ac.uk>
      */
     private static fromLocationFeature(feature: Feature, locRegex: RegExp = /^(path|url)$/): any[] {
 

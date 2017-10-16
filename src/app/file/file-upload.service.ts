@@ -9,7 +9,7 @@ import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
-import {HttpClient} from 'app/http/http-client'
+import {HttpCustomClient} from 'app/http/http-custom-client.service'
 import {Path} from './path';
 
 import * as _ from 'lodash';
@@ -35,7 +35,7 @@ export class FileUpload {
 
     finish$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-    constructor(path: Path, files: File[], httpClient: HttpClient) {
+    constructor(path: Path, files: File[], httpClient: HttpCustomClient) {
         this._path = path;
         this._files = _.map(files, 'name');
         this._progress = 0;
@@ -126,7 +126,7 @@ export class FileUploadService {
     private _uploads: FileUpload[] = [];
     uploadFinish$: Subject<string> = new Subject<string>();
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpCustomClient) {
     }
 
     activeUploads(): FileUpload[] {

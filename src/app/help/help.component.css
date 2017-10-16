@@ -1,0 +1,9 @@
+p .scale {
+    height: 2.3rem;
+}
+p img {
+    max-width: 100%;
+}
+.col-md-12 {
+    margin-bottom: 35px;
+}

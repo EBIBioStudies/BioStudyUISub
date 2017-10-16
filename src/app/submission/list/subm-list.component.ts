@@ -163,10 +163,12 @@ export class SubmListComponent {
             {
                 headerName: 'Status',
                 field: 'status',
+                cellClass: 'ag-cell-centered',
                 suppressMenu: true
             },
             {
                 headerName: 'Actions',
+                cellClass: 'ag-cell-centered',
                 suppressMenu: true,
                 cellRendererFramework: ActionButtonsCellComponent
             }
@@ -251,7 +253,7 @@ export class SubmListComponent {
             },
 
             onEdit: (accno: string) => {
-                this.router.navigate(['/edit', accno]);
+                this.router.navigate(['/submissions', accno]);
             },
 
             onView: (accno: string) => {
@@ -273,11 +275,11 @@ export class SubmListComponent {
     };
 
     uploadSubmission() {
-        this.router.navigate(['/direct_upload']);
+        this.router.navigate(['/submissions/direct_upload']);
     }
 
     startEditing(accno) {
-        this.router.navigate(['/edit', accno]);
+        this.router.navigate(['/submissions', accno]);
     }
 
     confirm(text: string, title: string, confirmLabel: string): Observable<any> {

@@ -1,59 +1,60 @@
 <container-root>
     <container-md>
-        <div>
-            <div [hidden]="error == null" class="alert alert-danger" style="margin-left:0">
-                {{error?.message}}
+        <div class="auth-content">
+            <div class="auth-content">
+                <div class="alert alert-danger" [ngClass]="{'invisible': !error}">
+                    {{error ? error.message : '&nbsp;'}}
+                </div>
             </div>
-            <div [hidden]="error !== null" class="alert">
-                &nbsp;
-            </div>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-body">
+            <div class="panel panel-default">
+                <div class="panel-body">
 
-                <form id="login-form" novalidate name="signInForm" role="form"
-                      (submit)="signInForm.form.valid && onSubmit($event)" #signInForm="ngForm">
-                    <div class="form-group" [ngClass]="{'has-error': login.invalid && login.dirty}">
-                        <label class="control-label" for="login">Email/login name
-                            <span [hidden]="login.valid || login.pristine">: cannot be blank</span>
-                        </label>
-                        <input type="text" id="login" name="login" tabindex="1"
-                               class="form-control"
-                               placeholder="Email or login name"
-                               [(ngModel)]="model.login"
-                               required
-                               (change)="resetError()"
-                               #login="ngModel"/>
-                    </div>
-                    <div class="form-group" [ngClass]="{'has-error': password.invalid && password.dirty}">
-                        <label class="control-label" for="password">Password
-                            <span [hidden]="password.valid || password.pristine">: cannot be blank</span>
-                        </label>
-                        <input type="password" name="password" id="password" tabindex="2"
-                               class="form-control"
-                               placeholder="Password"
-                               [(ngModel)]="model.password"
-                               required
-                               (change)="resetError()"
-                               #password="ngModel"/>
-
-                        <div class="form-group pull-right">
-                            <a routerLink="/password_reset_request">Forgot your password?</a>
+                    <form id="login-form" novalidate name="signInForm" role="form"
+                          (submit)="signInForm.form.valid && onSubmit($event)" #signInForm="ngForm">
+                        <div class="form-group" [ngClass]="{'has-error': login.invalid && login.dirty}">
+                            <label class="control-label" for="login">
+                                Email address<span [hidden]="login.valid || login.pristine">: cannot be blank</span>
+                            </label>
+                            <input type="text" id="login" name="login" autofocus
+                                   class="form-control"
+                                   [(ngModel)]="model.login"
+                                   required
+                                   (change)="resetError()"
+                                   #login="ngModel"
+                                   #focusEl />
                         </div>
-                    </div>
+                        <div class="form-group" [ngClass]="{'has-error': password.invalid && password.dirty}">
+                            <label class="control-label" for="password">
+                                Password<span [hidden]="password.valid || password.pristine">: cannot be blank</span>
+                            </label>
+                            <input type="password" name="password" id="password"
+                                   class="form-control"
+                                   [(ngModel)]="model.password"
+                                   required
+                                   (change)="resetError()"
+                                   #password="ngModel"/>
 
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Log in</button>
-                        <span *ngIf="waiting"><i class="fa fa-spinner fa-spin"></i></span>
-                    </div>
-                    <div class="pull-left">
-                        <span>Don't have an account? <a routerLink="/signup">Register</a></span>
-                    </div>
-                    <div class="pull-right">
-                        <span><a routerLink="/resend_activation_link">Resend activation link</a></span>
-                    </div>
-                </form>
+                            <div class="form-group pull-right">
+                                <a routerLink="/password_reset_request">Forgot your password?</a>
+                            </div>
+                        </div>
 
+                        <div class="form-group row-submit">
+                            <button type="submit" class="btn btn-primary btn-submit"
+                                    [disabled]="waiting">Log in</button>
+                            <div class="text-muted col-md-10">
+                                <span *ngIf="waiting"><i class="fa fa-cog fa-spin"></i> Logging in...</span>
+                            </div>
+                        </div>
+                        <div class="pull-left">
+                            <span>Don't have an account? <a routerLink="/signup">Register</a></span>
+                        </div>
+                        <div class="pull-right">
+                            <span><a routerLink="/resend_activation_link">Resend activation email</a></span>
+                        </div>
+                    </form>
+
+                </div>
             </div>
         </div>
     </container-md>

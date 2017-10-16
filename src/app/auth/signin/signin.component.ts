@@ -1,9 +1,7 @@
-import {Component} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
-import {Response} from '@angular/http';
 
 import {ServerError} from 'app/http/index';
-
 import {AuthService} from '../auth.service';
 import {UserSession} from '../user-session';
 
@@ -11,10 +9,13 @@ import {UserSession} from '../user-session';
     selector: 'auth-signin',
     templateUrl: './signin.component.html'
 })
-export class SignInComponent {
+export class SignInComponent implements OnInit, AfterViewInit {
     model = {login: "", password: ""};
     error: ServerError = null;
     waiting: boolean = false;
+
+    @ViewChild('focusEl')
+    private focusEl: ElementRef;
 
     constructor(private authService: AuthService,
                 private session: UserSession,
@@ -25,6 +26,11 @@ export class SignInComponent {
        if (!this.session.isAnonymous()) {
            this.router.navigate(['']);
        }
+    }
+
+    //TODO: Turn autofocus on render into a directive
+    ngAfterViewInit(): void {
+        this.focusEl.nativeElement.focus();
     }
 
     onSubmit(event) {
