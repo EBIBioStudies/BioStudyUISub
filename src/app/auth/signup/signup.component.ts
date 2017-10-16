@@ -1,5 +1,6 @@
 import {
-    Component,
+    AfterViewInit,
+    Component, ElementRef,
     ViewChild
 } from '@angular/core';
 
@@ -17,7 +18,7 @@ import {RegistrationData} from '../model/registration-data';
     selector: 'auth-signup',
     templateUrl: './signup.component.html'
 })
-export class SignUpComponent {
+export class SignUpComponent implements AfterViewInit {
     model: RegistrationData = new RegistrationData();
 
     error: ServerError = null;
@@ -26,9 +27,17 @@ export class SignUpComponent {
     @ViewChild('recaptcha')
     private recaptcha: RecaptchaComponent;
 
+    @ViewChild('focusEl')
+    private focusEl: ElementRef;
+
     constructor(private authService: AuthService,
                 private session: UserSession,
                 private router: Router) {
+    }
+
+    //TODO: Turn autofocus on render into a directive
+    ngAfterViewInit(): void {
+        this.focusEl.nativeElement.focus();
     }
 
     ngOnInit() {

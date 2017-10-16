@@ -28,6 +28,7 @@ export class SignInComponent implements OnInit, AfterViewInit {
        }
     }
 
+    //TODO: Turn autofocus on render into a directive
     ngAfterViewInit(): void {
         this.focusEl.nativeElement.focus();
     }

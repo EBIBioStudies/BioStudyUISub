@@ -30,6 +30,7 @@ export class PasswordResetReqComponent implements AfterViewInit {
 
     constructor(private authService: AuthService) {}
 
+    //TODO: Turn autofocus on render into a directive
     ngAfterViewInit(): void {
         this.focusEl.nativeElement.focus();
     }

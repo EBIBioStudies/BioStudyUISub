@@ -1,5 +1,6 @@
 import {
-    Component,
+    AfterViewInit,
+    Component, ElementRef,
     ViewChild
 } from '@angular/core';
 
@@ -14,7 +15,7 @@ import {ActivationLinkRequestData} from '../model/email-req-data';
     selector: 'auth-activation-resend',
     templateUrl: './activation-link-req.component.html'
 })
-export class ActivationLinkReqComponent {
+export class ActivationLinkReqComponent implements AfterViewInit {
     hasError: boolean;
     showSuccess: boolean;
     isSubmitting: boolean = false;
@@ -25,7 +26,15 @@ export class ActivationLinkReqComponent {
     @ViewChild('recaptcha')
     private recaptcha: RecaptchaComponent;
 
+    @ViewChild('email')
+    private focusEl: ElementRef;
+
     constructor(private authService: AuthService) {}
+
+    //TODO: Turn autofocus on render into a directive
+    ngAfterViewInit(): void {
+        this.focusEl.nativeElement.focus();
+    }
 
     /**
      * Handler for change event for form fields

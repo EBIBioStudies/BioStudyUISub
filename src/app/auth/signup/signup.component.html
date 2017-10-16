@@ -28,7 +28,8 @@
                                name="username"
                                class="form-control"
                                [(ngModel)]="model.username"
-                               (change)="onChange()"/>
+                               (change)="onChange()"
+                               #focusEl />
                     </div>
                     <div class="form-group form-group-sm" [ngClass]="{'has-error': email.invalid && email.dirty}">
                         <label for="email">Email address

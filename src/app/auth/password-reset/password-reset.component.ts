@@ -42,6 +42,7 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
         this.model.key = key;
     }
 
+    //TODO: Turn autofocus on render into a directive
     ngAfterViewInit(): void {
         this.focusEl.nativeElement.focus();
     }

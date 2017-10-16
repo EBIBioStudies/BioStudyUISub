@@ -139,13 +139,9 @@ export class SubmEditComponent implements OnInit, OnDestroy {
                     this.showSubmitResults(resp);
                 },
                 (error: ServerError) => {
-                    this.showSubmitResults({
-                        status: 'FAIL',
-                        log: {
-                            level: 'ERROR',
-                            message: error.message
-                        }
-                    });
+
+                    //Uses the original error object given by the server
+                    this.showSubmitResults(error.data.error);
 
                     if (!error.isDataError) {
                         throw error;
