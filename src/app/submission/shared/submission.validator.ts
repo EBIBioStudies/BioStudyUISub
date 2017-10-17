@@ -52,7 +52,7 @@ class ValidationRules {
     static forField(field: Field): ValidationRule[] {
         const value = field.value;
         return [
-            ValidationRules.requiredValue(value, field.name),
+            ValidationRules.requiredValue(value, field.name, field.type.required),
             ValidationRules.formattedValue(value, field.valueType, field.name),
             ValidationRules.maxlengthValue(value, field.type.maxlength, field.name),
             ValidationRules.minlengthValue(value, field.type.minlength, field.name)
@@ -116,10 +116,10 @@ class ValidationRules {
         }
     }
 
-    static requiredValue(value: string, name: string): ValidationRule {
+    static requiredValue(value: string, name: string, isRequired: boolean = true): ValidationRule {
         return {
             validate() {
-                if (ValidationRules.isEmpty(value)) {
+                if (isRequired && ValidationRules.isEmpty(value)) {
                     return `'${name}' value is required`;
                 }
                 return undefined;

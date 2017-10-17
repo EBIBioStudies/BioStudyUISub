@@ -16,7 +16,7 @@
     <div class="container-fluid">
         <aside class="right-side"
                [ngClass]="{'collapse-left' : !readonly && sideBarCollapsed}">
-            <div *ngIf="subm"
+            <div *ngIf="subm" (change)="onChange($event)"
                  class="panel navbar-subm-margin panel-default">
                 <div class="panel-body">
                     <subm-form [section]="section">
@@ -58,7 +58,7 @@
                             </button>
                         </p>
                         <p class="text-muted col-md-10">
-                            <span *ngIf="!submValid && !isSaving">Your submission has errors. Please, correct them before submitting.</span>
+                            <span *ngIf="!submValid && !isSaving">Some information is missing or incorrect. Please, review the data before submitting.</span>
                             <i class="fa fa-cog fa-spin" *ngIf="isSubmitting || isSaving"></i>
                             <span *ngIf="isSubmitting">Submitting study...</span>
                             <span *ngIf="isSaving">Backing up study data...</span>
