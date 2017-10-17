@@ -10,11 +10,12 @@
                 {{field.name}}{{sectionForm.formErrors[field.id] ? ': ' + sectionForm.formErrors[field.id] : ''}}
             </label>
             <subm-field
-                    [type]="field.valueType"
-                    [name]="field.name"
-                    [readonly]="readonly"
-                    [(ngModel)]="field.value"
-                    [formControl]="sectionForm.fieldControl(field.id)">
+                [type]="field.valueType"
+                [name]="field.name"
+                [readonly]="readonly"
+                [required]="field.type.required"
+                [(ngModel)]="field.value"
+                [formControl]="sectionForm.fieldControl(field.id)">
             </subm-field>
         </div>
     </div>

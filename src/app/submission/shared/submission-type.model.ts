@@ -52,12 +52,13 @@ class BaseType {
     }
 }
 
-/* Fields are always required. User can't add/change/delete fields. Only changing its value is allowed.
- * In PageTab it's a selected by name attribute from an 'attributes' section.
+/* Fields are always required by default. User can't add/change/delete fields. Only changing its value is allowed.
+ * In PageTab it's selected by name attribute from an 'attributes' section.
  */
 export type ValueType = 'text' | 'textblob' | 'date' | 'file';
 
 export class FieldType extends BaseType {
+    readonly required: boolean;
     readonly valueType: ValueType;
     readonly minlength: number;
     readonly maxlength: number;
@@ -68,6 +69,15 @@ export class FieldType extends BaseType {
         this.valueType = obj.valueType || 'text';
         this.minlength = obj.minlength || -1;
         this.maxlength = obj.maxlength || -1;
+
+        //Sets required to false if not present. If the field has a mininum legth, it must be required
+        if (obj.hasOwnProperty('required')) {
+            this.required = obj.required;
+        } else if (this.minlength > 0) {
+            this.required = true;
+        } else {
+            this.required = false;
+        }
     }
 }
 

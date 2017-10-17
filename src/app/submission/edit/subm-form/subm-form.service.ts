@@ -126,9 +126,12 @@ export class SectionForm {
     }
 
     private addFieldControl(field: Field): void {
-        const validators = [Validators.required];
-
         const type = this.section.type.getFieldType(field.name);
+        const validators = [];
+
+        if (type.required) {
+            validators.push(Validators.required);
+        }
         if (type.minlength > 0) {
             validators.push(Validators.minLength(type.minlength));
         }
