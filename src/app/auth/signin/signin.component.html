@@ -1,10 +1,8 @@
 <container-root>
     <container-md>
         <div class="auth-content">
-            <div class="auth-content">
-                <div class="alert alert-danger" [ngClass]="{'invisible': !error}">
-                    {{error ? error.message : '&nbsp;'}}
-                </div>
+            <div class="alert" [ngClass]="{'alert-danger': error, 'invisible': !error}">
+                {{error ? error.message : '&nbsp;'}}
             </div>
             <div class="panel panel-default">
                 <div class="panel-body">
@@ -41,9 +39,9 @@
 
                         <div class="form-group row-submit">
                             <button type="submit" class="btn btn-primary btn-submit"
-                                    [disabled]="waiting">Log in</button>
+                                    [disabled]="isLoading || signInForm.form.invalid">Log in</button>
                             <div class="text-muted col-md-10">
-                                <span *ngIf="waiting"><i class="fa fa-cog fa-spin"></i> Logging in...</span>
+                                <span *ngIf="isLoading"><i class="fa fa-cog fa-spin"></i> Logging in...</span>
                             </div>
                         </div>
                         <div class="pull-left">

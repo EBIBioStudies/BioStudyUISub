@@ -89,21 +89,23 @@ export class FeatureType extends BaseType {
     readonly required: boolean;
     readonly title: string;
     readonly description: string;
+    readonly icon: string;
 
     static createDefault(name: string, singleRow?: boolean, scope?: Map<string, any>): FeatureType {
         return new FeatureType(name, singleRow === true, undefined, scope);
     }
 
-    constructor(name: string, singleRow: boolean, other?: any, scope?: Map<string, any>) {
-        super(name, other !== undefined, scope);
+    constructor(name: string, singleRow: boolean, typeObj?: any, scope?: Map<string, any>) {
+        super(name, typeObj !== undefined, scope);
         this.singleRow = singleRow === true;
 
-        other = other || {};
-        this.required = other.required === true;
-        this.title = other.title || 'Add ' + this.name;
-        this.description = other.description || '';
+        typeObj = typeObj || {};
+        this.required = typeObj.required === true;
+        this.title = typeObj.title || 'Add ' + this.name;
+        this.description = typeObj.description || '';
+        this.icon = typeObj.icon || 'fa-arrow-circle-right';
 
-        (other.columnTypes || [])
+        (typeObj.columnTypes || [])
             .forEach(ct => {
                 const colType = new ColumnType(ct.name, ct, this.columnScope);
             });
@@ -123,7 +125,7 @@ export class FeatureType extends BaseType {
 }
 
 /**
- * All annotations are features with the singleRow flag set to true so that the controls
+ * All annotations are features with the "singleRow" flag set to true so that the controls
  * for adding rows/columns are not shown.
  */
 export class AnnotationsType extends FeatureType {

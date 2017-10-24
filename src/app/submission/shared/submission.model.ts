@@ -10,6 +10,8 @@ import {
     SubmissionType
 } from './submission-type.model';
 
+import * as pluralize from "pluralize";
+
 const nextId = (function () {
     let count = 0;
     return function () {
@@ -329,6 +331,19 @@ export class Feature extends HasUpdates<UpdateEvent> {
     size(): number {
         return this.singleRow ? this.colSize() : this.rowSize();
     }
+
+    /**
+     * Converts the feature's name to plural if it has more than one row (or column if only one row allowed).
+     * It employs the Pluralize global JS plugin: {@link https://github.com/blakeembrey/pluralize}
+     * @returns {string} Pluralized or unmodified feature name.
+     *
+     * @author Hector Casanova <hector@ebi.ac.uk>
+     */
+    pluralName(): string {
+        return pluralize(this.type.name, this.size());
+    }
+
+
 
     add(attributes: { name: string, value: string }[] = []): void {
         const attrNames = attributes.filter(attr => attr.name !== '').map(attr => attr.name);

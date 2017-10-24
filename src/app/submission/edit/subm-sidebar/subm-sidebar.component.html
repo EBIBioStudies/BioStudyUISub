@@ -31,19 +31,19 @@
                 </span>
             </li>
             <li>
-                <div class="sidebar-item success" *ngFor="let item of items; let i = index">
+                <div class="sidebar-item" *ngFor="let item of items; let i = index">
                     <a *ngIf="!editing" (click)="item.onClick($event)"
                        [tooltip]="item.label"
                        placement="right"
                        container="body">
-                        <i class="fa fa-fw" [ngClass]="item.icon"></i>
-                        <span *ngIf="!collapsed">Add&nbsp;{{item.feature.typeName}}</span>
+                        <i class="fa fa-lg text-center {{item.feature.type.icon}}"></i>
+                        <span *ngIf="!collapsed">&nbsp;Add {{item.feature.typeName}}</span>
                     </a>
                     <a [ngClass]="{'has-error': itemType.invalid}"
                        *ngIf="editing && !item.isDeleted">
                         <span class="input-group">
                             <span class="input-group-addon">
-                                <i class="fa fa-fw" [ngClass]="item.icon"></i>
+                                <i class="fa fa-lg text-center {{item.feature.type.icon}}"></i>
                             </span>
                             <input type="text"
                                    class="form-control input-sm form-control-auto"
@@ -73,10 +73,10 @@
                     </a>
                 </div>
             </li>
-            <li *ngIf="!editing" class="sidebar-item success">
+            <li *ngIf="!editing" class="sidebar-item">
                 <a (click)="onAddClick($event)">
-                    <i class="fa fa-fw fa-plus"></i>
-                    <span *ngIf="!collapsed">New type item</span>
+                    <i class="fa fa-fw fa-plus-square fa-lg"></i>
+                    <span *ngIf="!collapsed">New type</span>
                 </a>
             </li>
         </ul>

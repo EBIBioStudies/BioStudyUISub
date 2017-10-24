@@ -2,7 +2,11 @@
     margin-bottom: 10px;
 }
 
-.headings {
+.headings > div, .column {
+    float: none;
+    display: inline-block;
+}
+.headings > div {
     border-bottom: 1px solid #ccc;
 }
 
@@ -10,8 +14,9 @@
     padding: 0;
     border: none;
 }
-.add-column-btn:hover {
+.add-btn:hover, .add-btn:active, .add-btn:focus {
     text-decoration: none;
+    outline: 0;
 }
 
 .container-scroll > .row {

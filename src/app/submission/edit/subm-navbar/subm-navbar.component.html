@@ -2,7 +2,7 @@
     <a routerLink="/submissions">Submission list</a>
     <span *ngFor="let sec of sectionPath; let idx = index">
         &nbsp;<i class="fa fa-angle-double-right"></i>&nbsp;
-        <a href="jvascript:void(0)" (click)="onSectionClick(sec)">
+        <a href="javascript:void(0)" (click)="onSectionClick(sec)">
             <strong *ngIf="idx === 0">{{accno}}</strong>
             <span *ngIf="idx > 0">{{sec.typeName + ' subsection'}}</span>
         </a>

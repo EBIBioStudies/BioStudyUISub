@@ -42,10 +42,11 @@
     <div class="col-xs-1 col-md-1">
         <button *ngIf="!readonly"
                 type="button"
-                class="btn btn-sm btn-default"
+                class="add-btn btn btn-link"
                 [tooltip]="'Add a new ' + feature.typeName.toLowerCase()"
                 (click)="feature.addColumn()">
-            <i class="fa fa-plus" aria-hidden="true"></i> Entry
+            <i class="fa fa-lg {{feature.type.icon}}"></i>
+            &nbsp;Add {{feature.typeName}}
         </button>
     </div>
 </div>

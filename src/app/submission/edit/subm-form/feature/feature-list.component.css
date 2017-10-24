@@ -8,3 +8,7 @@
 .key-field {
     margin-right:15px;
 }
+.add-btn:hover, .add-btn:active, .add-btn:focus {
+    text-decoration: none;
+    outline: 0;
+}

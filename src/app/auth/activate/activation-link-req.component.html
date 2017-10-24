@@ -1,7 +1,7 @@
 <container-root>
     <container-md>
         <div class="auth-content">
-            <div class="alert alert-danger" [ngClass]="{'invisible': !hasError}">
+            <div class="alert" [ngClass]="{'alert-danger': hasError, 'invisible': !hasError}">
                 {{hasError ? message : '&nbsp;'}}
             </div>
         </div>
@@ -37,11 +37,11 @@
                     </div>
                     <div class="form-group margin-top-large row-submit">
                         <button type="submit" class="btn btn-primary btn-submit col-md-6"
-                                [disabled]="isSubmitting">
+                                [disabled]="isLoading || raForm.invalid">
                             Resend activation email
                         </button>
                         <div class="text-muted col-md-6">
-                            <span *ngIf="isSubmitting"><i class="fa fa-cog fa-spin"></i> Sending...</span>
+                            <span *ngIf="isLoading"><i class="fa fa-cog fa-spin"></i> Sending...</span>
                         </div>
                     </div>
                 </form>

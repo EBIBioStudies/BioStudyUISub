@@ -21,7 +21,7 @@
     </div>
 
     <div *ngFor="let feature of sectionForm.features">
-        <label class="control-label" *ngIf="feature.size() > 0">{{feature.type.name}}</label>
+        <label class="control-label" [ngClass]="{'text-danger': !sectionForm.featureForm(feature.id).form.valid}" *ngIf="feature.size() > 0">{{feature.pluralName()}}</label>
         <subm-feature [featureForm]="sectionForm.featureForm(feature.id)"
                       [readonly]="readonly">
         </subm-feature>

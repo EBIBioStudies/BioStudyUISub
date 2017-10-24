@@ -39,11 +39,9 @@ class SubmItem {
     /**
      * Instantiates a submission item for a given feature with a certain icon.
      * @param {Feature} feature - Feature object for this item.
-     * @param {string} [icon] - Optional icon class. Defaults to file icon.
      */
-    constructor(feature: Feature, icon: string = 'fa-file-o') {
+    constructor(feature: Feature) {
         this.feature = feature;
-        this.icon = icon;
         this._deleted = false;
     }
 
