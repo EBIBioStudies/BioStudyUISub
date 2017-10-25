@@ -1,6 +1,7 @@
 import {
     Component,
-    Input, OnInit
+    Input,
+    OnInit
 } from '@angular/core';
 
 import {Feature} from '../../../shared/submission.model';

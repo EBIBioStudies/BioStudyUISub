@@ -37,7 +37,7 @@
                        placement="right"
                        container="body">
                         <i class="fa fa-lg text-center {{item.feature.type.icon}}"></i>
-                        <span *ngIf="!collapsed">&nbsp;Add {{item.feature.typeName}}</span>
+                        {{!collapsed ? '&nbsp;&nbsp;Add ' + item.feature.typeName : ''}}
                     </a>
                     <a [ngClass]="{'has-error': itemType.invalid}"
                        *ngIf="editing && !item.isDeleted">
@@ -75,8 +75,8 @@
             </li>
             <li *ngIf="!editing" class="sidebar-item">
                 <a (click)="onAddClick($event)">
-                    <i class="fa fa-fw fa-plus-square fa-lg"></i>
-                    <span *ngIf="!collapsed">New type</span>
+                    <i class="fa fa-fw fa-plus-circle fa-lg"></i>
+                    {{!collapsed ? '&nbsp;&nbsp;New type' : ''}}
                 </a>
             </li>
         </ul>
