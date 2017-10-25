@@ -77,9 +77,14 @@
   }
 }
 
-/* Prevents cell menu buttons from being hidden. By default, only shown on hover */
+/* Prevents cell menu buttons from being hidden. By default, only shown on hover.
+   Also, brings it in line with app's styles. */
 .ag-header-cell-menu-button {
+  float: left;
   opacity: 1 !important;
+}
+.ag-header-cell-menu-button, .ag-header-cell-label {
+  cursor: pointer;
 }
 
 /* Center-aligns ag-grid cells marked accordingly */
@@ -90,6 +95,15 @@
 /* Makes all main submit buttons stand out clearly */
 .btn-submit {
   text-transform: uppercase;
+}
+
+/* Highlights row being hovered on */
+/* NOTE: The rows' zebra colour pattern has to be overriden */
+.ag-row-hover {
+  background-color: #b0e0e6 !important;
+}
+.ag-row {
+  cursor: pointer;
 }
 
 /* Vertically aligns any indicators beside a submit button */

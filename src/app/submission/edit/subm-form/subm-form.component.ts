@@ -23,6 +23,8 @@ export class SubmFormComponent implements OnChanges {
     constructor(private submFormService: SubmFormService) {
     }
 
+    //TODO: ExpressionChangedAfterItHasBeenCheckedError thrown when checking for dirty status of top-level field. Why?
+
     ngOnChanges(): void {
         this.sectionForm = this.submFormService.createForm(this.section);
         console.log(this.sectionForm);

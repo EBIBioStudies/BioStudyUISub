@@ -81,7 +81,12 @@ export class FieldType extends BaseType {
     }
 }
 
-/* Feature contains similar defined PageTab section(s) without subsections or a list of attributes*/
+/**
+ * Provides information likely to be processed, or at least considered, separately. Thus, it corresponds to a section
+ * in PageTab's model but without any subsections or list of attributes. It is rendered as a widget
+ * consisting of either a list –actually, this is used internally for the – or a grid, both with add buttons allowing
+ * the addition of new columns or rows.
+ */
 export class FeatureType extends BaseType {
     private columnScope: Map<string, any> = new Map();
 
@@ -89,24 +94,47 @@ export class FeatureType extends BaseType {
     readonly required: boolean;
     readonly title: string;
     readonly description: string;
+    readonly icon: string;
 
-    static createDefault(name: string, singleRow?: boolean, scope?: Map<string, any>): FeatureType {
-        return new FeatureType(name, singleRow === true, undefined, scope);
-    }
-
-    constructor(name: string, singleRow: boolean, other?: any, scope?: Map<string, any>) {
-        super(name, other !== undefined, scope);
+    /**
+     * Instantiates a feature widget with a given set of parameters.
+     * @param {string} name - Effectively, the widget's name to be displayed in the app.
+     * @param {boolean} singleRow - If true, the feature will be rendered as a list where each column is actually a row.
+     * @param {Object} typeObj - Contains all the parameters defining this feature widget.
+     * @param {Map<string, any>} scope - Set of already existing featureType instances.
+     */
+    constructor(name: string, singleRow: boolean, typeObj?: any, scope?: Map<string, any>) {
+        super(name, typeObj !== undefined, scope);
         this.singleRow = singleRow === true;
 
-        other = other || {};
-        this.required = other.required === true;
-        this.title = other.title || 'Add ' + this.name;
-        this.description = other.description || '';
+        typeObj = typeObj || {};
+        this.required = typeObj.required === true;
+        this.title = typeObj.title || 'Add ' + this.name;
+        this.description = typeObj.description || '';
 
-        (other.columnTypes || [])
+        if (typeObj.icon) {
+            this.icon = typeObj.icon;
+        } else if (this.singleRow) {
+            this.icon = 'fa-list';
+        } else {
+            this.icon = 'fa-th';
+        }
+
+        (typeObj.columnTypes || [])
             .forEach(ct => {
                 const colType = new ColumnType(ct.name, ct, this.columnScope);
             });
+    }
+
+    /**
+     * Convenience static factory method for features without pre-defined parameters.
+     * @param {string} name - Name to be displayed as the feature's.
+     * @param {boolean} [singleRow] - Optional list mode.
+     * @param {Map<string, any>} [scope] - Optional set of already existing featureType instances.
+     * @returns {FeatureType} Newly instantiated feature widget.
+     */
+    static createDefault(name: string, singleRow?: boolean, scope?: Map<string, any>): FeatureType {
+        return new FeatureType(name, singleRow === true, undefined, scope);
     }
 
     get columnTypes(): ColumnType[] {
@@ -123,7 +151,7 @@ export class FeatureType extends BaseType {
 }
 
 /**
- * All annotations are features with the singleRow flag set to true so that the controls
+ * All annotations are features with the "singleRow" flag set to true so that the controls
  * for adding rows/columns are not shown.
  */
 export class AnnotationsType extends FeatureType {

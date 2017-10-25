@@ -1,15 +1,15 @@
 <div class="container-fluid container-scroll" [formGroup]="featureForm.form">
-    <div class="row headings" [style.width]="rowWidth">
+    <div class="row headings">
         <div class="col-xs-1 col-md-1 text-center">
-            <button class="add-column-btn btn btn-link btn-md"
+            <button class="add-column-btn add-btn btn btn-link btn-md"
                *ngIf="!readonly"
                [tooltip]="'Add a new ' + feature.typeName.toLowerCase() + ' attribute'"
                container="body"
                (click)="feature.addColumn()">
-                <i class="fa fa-plus" aria-hidden="true"></i> Column
+                <i class="fa fa-plus-circle" aria-hidden="true"></i> Column
             </button>
-        </div>
-        <div class="col-xs-3 col-md-2" *ngFor="let column of columns">
+        </div><!--
+        --><div class="col-xs-3 col-md-2" *ngFor="let column of columns">
             <inline-edit
                     [(ngModel)]="column.name"
                     emptyValue="New Column"
@@ -18,7 +18,8 @@
                     [formControl]="featureForm.columnControl(column.id)"></inline-edit>
         </div>
     </div>
-    <div class="row" [style.width]="rowWidth" *ngFor="let row of rows; let idx=index">
+    <div class="row" #rowEl
+         *ngFor="let row of rows; let idx=index">
         <div class="col-xs-1 col-md-1 text-center">
             <span class="row-number">{{idx+1}}</span>
             <button *ngIf="!readonly"
@@ -30,7 +31,7 @@
                 <i class="fa fa-trash"></i>
             </button>
         </div>
-        <div class="col-xs-3 col-md-2" *ngFor="let column of columns">
+        <div class="column col-xs-3 col-md-2" #colEl *ngFor="let column of columns">
             <div [ngClass]="{'has-error' : false}">
                 <subm-field
                         [type]="column.valueType"
@@ -43,15 +44,16 @@
         </div>
     </div>
 </div>
-<div class="row" [style.width]="rowWidth">
+<div class="row">
     <div class="col-xs-1 col-md-1">
         <button *ngIf="!readonly"
                 type="button"
-                class="btn btn-sm btn-default"
+                class="add-btn btn btn-link"
                 [tooltip]="'Add a new ' + feature.typeName.toLowerCase()"
                 container="body"
                 (click)="feature.addRow()">
-            <i class="fa fa-plus" aria-hidden="true"></i> Row
+            <i class="fa fa-lg {{feature.type.icon}}"></i>
+            &nbsp;Add {{feature.typeName}}
         </button>
     </div>
 </div>

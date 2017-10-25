@@ -5,7 +5,8 @@ export const DefaultTemplate = {
         'required': true,
         'annotationsType': {
             'title': 'Describe your study',
-            'description': 'Provide enough details of the study to make it easier to find and interpret',
+            'description': 'Provide any supplementary details of the study that may improve its discoverability or interpretation',
+            'icon': 'fa-tag',
             'columnTypes': [
                 {
                     'name': 'Organism',
@@ -53,6 +54,7 @@ export const DefaultTemplate = {
                 'name': 'Contact',
                 'title': 'Add Contacts',
                 'description': 'Include contact information for one or more authors of the study',
+                'icon': 'fa-vcard',
                 'required': true,
                 'columnTypes': [
                     {
@@ -96,6 +98,7 @@ export const DefaultTemplate = {
                 'name': 'Publication',
                 'title': 'Add Publications',
                 'description': 'Search by PubMed identifier, or add information manually if not in PubMed',
+                'icon': 'fa-book',
                 'columnTypes': [
                     {
                         'name': 'DOI',
@@ -135,7 +138,8 @@ export const DefaultTemplate = {
             {
                 'name': 'Link',
                 'title': 'Add Links',
-                'description': 'Provide additional relevant information on the web',
+                'description': 'Provide links to any additional documentation that may be of relevance',
+                'icon': 'fa-link',
                 'columnTypes': [
                     {
                         'name': 'URL',
@@ -156,7 +160,8 @@ export const DefaultTemplate = {
             {
                 'name': 'File',
                 'title': 'Add Files',
-                'description': 'Include study data, describing the purpose of each file',
+                'description': 'List the data files for the study and describe their respective scopes',
+                'icon': 'fa-file',
                 'columnTypes': [
                     {
                         'name': 'Path',

@@ -1,11 +1,8 @@
 <container-root>
     <container-md>
         <div class="auth-content">
-            <div class="alert alert-danger" style="margin-left:0" *ngIf="error">
-                {{error.status}} : {{error.message}}
-            </div>
-            <div class="alert" *ngIf="!error">
-                &nbsp;
+            <div class="alert" [ngClass]="{'alert-danger': error, 'invisible': !error}">
+                {{error ? error.message : '&nbsp;'}}
             </div>
         </div>
         <p>
@@ -55,8 +52,11 @@
                         </orcid-input-box>
                     </div>
                     <div class="form-group form-group-sm" [ngClass]="{'has-error': password.invalid && password.dirty}">
-                        <label for="password">Password
-                            <span [hidden]="password.valid || password.pristine">: cannot be blank</span>
+                        <label for="password" [ngClass]="{'text-danger': password.invalid && password.dirty}">Password
+                            <span *ngIf="password.invalid && (password.dirty || password.touched)">
+                                <span *ngIf="password.errors.required">: cannot be blank</span>
+                                <span *ngIf="password.errors.minlength">: must be at least 6 characters long</span>
+                            </span>
                         </label>
                         <input type="password"
                                name="password"
@@ -65,6 +65,7 @@
                                [(ngModel)]="model.password"
                                (change)="onChange()"
                                required
+                               minlength="6"
                                #password="ngModel"/>
                     </div>
                     <div class="form-group">
@@ -75,7 +76,8 @@
                         </re-captcha>
                     </div>
                     <div class="form-group margin-top-large">
-                        <button type="submit" class="btn btn-primary btn-submit">Register</button>
+                        <button type="submit" class="btn btn-primary btn-submit"
+                                [disabled]="signUpForm.invalid || !model.valid()">Register</button>
                     </div>
                 </form>
             </div>

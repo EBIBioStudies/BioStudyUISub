@@ -28,7 +28,8 @@ export class ServerError {
     }
 
     /**
-     * Factory-like method to turn the standard error object from the HTTP client to the custom
+     * Factory-like method to turn the standard error object coming from the HTTP client to
+     * the app's custom error object.
      * @param {HttpErrorResponse} error Error object as it comes from the HTTP client
      * @returns {ServerError} Converted error object
      */
@@ -38,9 +39,12 @@ export class ServerError {
             error: error.error                  //Original error object coming from the server
         };
 
-        if (error.error.message) {
+        if (error.error && error.error.message) {
             data.message = error.error.message;
+        } else if (error.message) {
+            data.message = error.message;
         }
+
         return new ServerError(error.status, error.statusText, data);
     }
 

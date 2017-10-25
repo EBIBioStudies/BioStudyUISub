@@ -1,4 +1,10 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    OnInit,
+    ViewChild
+} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {ServerError} from 'app/http/index';
@@ -12,7 +18,7 @@ import {UserSession} from '../user-session';
 export class SignInComponent implements OnInit, AfterViewInit {
     model = {login: "", password: ""};
     error: ServerError = null;
-    waiting: boolean = false;
+    isLoading: boolean = false;
 
     @ViewChild('focusEl')
     private focusEl: ElementRef;
@@ -36,11 +42,8 @@ export class SignInComponent implements OnInit, AfterViewInit {
     onSubmit(event) {
         event.preventDefault();
 
-        if (this.waiting) {
-            return;
-        }
         this.error = null;
-        this.waiting = true;
+        this.isLoading = true;
 
         this.authService
             .signIn(this.model)
@@ -49,7 +52,7 @@ export class SignInComponent implements OnInit, AfterViewInit {
                     this.router.navigate(['/submissions']);
                 },
                 (error: ServerError) => {
-                    this.waiting = false;
+                    this.isLoading = false;
                     this.error = error;
                 }
             );

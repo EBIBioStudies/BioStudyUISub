@@ -125,6 +125,8 @@ export class SubmListComponent {
             debug: false,
             rowSelection: 'single',
             enableColResize: true,
+            unSortIcon: true,
+            enableSorting: true,
             enableServerSideFilter: true,
             rowModelType: 'pagination',
             paginationPageSize: 15,
@@ -169,6 +171,7 @@ export class SubmListComponent {
                 headerName: 'Actions',
                 cellClass: 'ag-cell-centered',
                 suppressMenu: true,
+                suppressSorting: true,
                 cellRendererFramework: ActionButtonsCellComponent
             }
         ];
@@ -279,6 +282,14 @@ export class SubmListComponent {
 
     startEditing(accno) {
         this.router.navigate(['/submissions', accno]);
+    }
+
+    /**
+     * Handler for click events on a row. It redirects the user to the study's edit mode.
+     * @param event - ag-Grid's custom event object that includes data represented by the clicked row.
+     */
+    onRowClicked(event): void {
+        this.startEditing(event.data.accno);
     }
 
     confirm(text: string, title: string, confirmLabel: string): Observable<any> {

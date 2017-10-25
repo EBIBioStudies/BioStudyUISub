@@ -18,7 +18,7 @@ import {ActivationLinkRequestData} from '../model/email-req-data';
 export class ActivationLinkReqComponent implements AfterViewInit {
     hasError: boolean;
     showSuccess: boolean;
-    isSubmitting: boolean = false;
+    isLoading: boolean = false;
 
     model: ActivationLinkRequestData = new ActivationLinkRequestData();
     message: string;
@@ -47,7 +47,7 @@ export class ActivationLinkReqComponent implements AfterViewInit {
         const component = this;     //SelfSubscriber object overwrites context for "subscribe" method
 
         event.preventDefault();
-        this.isSubmitting = true;
+        this.isLoading = true;
 
         this.message = '';
         this.hasError = false;
@@ -55,11 +55,11 @@ export class ActivationLinkReqComponent implements AfterViewInit {
             .activationLinkReq(this.model)
             .subscribe(
                 (data) => {
-                    this.isSubmitting = false;
+                    this.isLoading = false;
                     component.showSuccess = true;
                 },
                 (error: ServerError) => {
-                    this.isSubmitting = false;
+                    this.isLoading = false;
                     component.hasError = true;
                     component.message = error.data.message;
                     component.model.resetCaptcha();
