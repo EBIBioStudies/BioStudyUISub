@@ -56,10 +56,44 @@
   left: 0;
 }
 
+/* Prevents flicker when hovering over tabs */
+.nav-tabs .nav-link:hover {
+  border-color: transparent;
+}
+
 /* saving spinner */
 .fa-spin-2x {
   -webkit-animation: fa-spin 1s infinite linear;
   animation: fa-spin 1s infinite linear;
+}
+
+/* Convenience class to force black typography */
+.text-black {
+  color: #000;
+}
+
+/* Adds a red border a la Bootstrap to the recaptcha's iframe if invalid */
+.has-error iframe[title="recaptcha widget"] {
+  border: 1px solid #C05F5D;
+  border-radius: 4px;
+}
+
+
+/* Vertically aligns any indicators beside a submit button */
+.row-submit {
+  display: flex;
+  align-items: center;
+}
+
+/* Makes all main submit buttons stand out clearly */
+.btn-submit {
+  text-transform: uppercase;
+}
+
+/* Prevents highlighting for add links */
+.btn-add.btn-link:hover, .btn-add.button-link:active, .btn-add.button-link:focus {
+  text-decoration: none;
+  outline: 0;
 }
 
 /* Gets rid of default styling for ag-grid's buttons */
@@ -92,22 +126,16 @@
   text-align: center;
 }
 
-/* Makes all main submit buttons stand out clearly */
-.btn-submit {
-  text-transform: uppercase;
-}
-
-/* Highlights row being hovered on */
+/* Highlights row being hovered on, except when over the "actions" cell if applicable */
 /* NOTE: The rows' zebra colour pattern has to be overriden */
-.ag-row-hover {
+/* NOTE: The shadow-piercing descendant combinator is being deprecated. Hence why this is not within the subm-list
+component */
+.subm-list .ag-row-hover {
   background-color: #b0e0e6 !important;
 }
-.ag-row {
-  cursor: pointer;
+.subm-list .ag-cell[colid="0"] {
+  cursor: default;
 }
-
-/* Vertically aligns any indicators beside a submit button */
-.row-submit {
-  display: flex;
-  align-items: center;
+.subm-list .ag-cell {
+  cursor: pointer;
 }

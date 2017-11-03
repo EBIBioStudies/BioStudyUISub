@@ -14,10 +14,6 @@
     padding: 0;
     border: none;
 }
-.add-btn:hover, .add-btn:active, .add-btn:focus {
-    text-decoration: none;
-    outline: 0;
-}
 
 .container-scroll > .row {
     margin-top: 15px;

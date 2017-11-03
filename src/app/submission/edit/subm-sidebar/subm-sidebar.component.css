@@ -14,13 +14,6 @@
     position: relative !important;
 }
 
-.sidebar-edit-btn {
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-}
-
 .sidebar-edit-btn > a {
     width: 100%;
     background: transparent;
@@ -36,6 +29,26 @@
     margin-left: 20%;
 }
 
+.sidebar-item.type-control {
+    border-bottom: 1px solid rgba(107, 145, 155, .3);
+}
+
+.row-input, .row-submit {
+    padding: 12px 10px 12px 10px;
+}
+
+/* stacked icons for type controls */
+.fa-lg {
+    vertical-align: middle;
+}
+.fa-stack {
+    margin-left: -2.5px;
+    font-size: 12px;
+}
+.sidebar-item a:hover .fa-inverse {
+    color: #6b919b;
+}
+
 /* edit mode */
 .sidebar-item:not(.menu-toggle) {
     line-height: 30px;
@@ -45,13 +58,23 @@
     margin-bottom: 0;
 }
 
+.type-input {
+    cursor: default;
+    background: none;
+}
+
 .input-group {
     margin-left: -5px;
 }
 
 .input-group-addon {
-    padding-left: 7.25px;
+    min-width: 41px;
+    padding-left: 3px;
     background: none;
     border: none;
     color: #6b919b;
+}
+
+.btn-link {
+
 }

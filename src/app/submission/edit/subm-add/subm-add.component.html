@@ -1,40 +1,61 @@
-<div bsModal #bsModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+<div bsModal class="modal fade" role="dialog" aria-hidden="true"
+     #bsModal="bs-modal"
+     (onShown)="onShown()">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
-            <div class="modal-header bg-primary">
-                New Type Item
-                <button type="button" class="close pull-right" aria-label="Close" (click)="bsModal.hide()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="control-label">Type:</label>
-                    <select class="form-control"
-                            [(ngModel)]="itemType">
-                        <option value="AttributeList">Attribute List</option>
-                        <option value="AttributeGrid">Attribute Grid</option>
-                        <option value="Section">Section</option>
-                    </select>
-                </div>
-                <div *ngIf="itemType === 'AttributeList' || itemType === 'AttributeGrid' || itemType == 'Section'">
-                    <div class="form-group">
-                        <label class="control-label">Name:</label>
-                        <input type="text" class="form-control"
-                               placeholder="Default is &quot;Test&quot;"
-                               [(ngModel)]="name"
-                               [required]="true">
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <div class="pull-right">
-                    <button type="button"
-                            class="btn btn-primary btn-sm"
-                            (click)="ok();bsModal.hide()">Add
+            <form novalidate autocomplete="off"
+                  #form="ngForm"
+                  (ngSubmit)="onSubmit(form)">
+                <div class="modal-header bg-primary">
+                    New type item
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="bsModal.hide()">
+                        <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-            </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label">Type</label>
+                        <select class="form-control"
+                                [(ngModel)]="type"
+                                name="type">
+                            <option value="List">List</option>
+                            <option value="Grid">Grid</option>
+                            <option value="Section">Section</option>
+                        </select>
+                    </div>
+                    <div class="form-group"[ngClass]="{'has-error': (typeName.invalid || !isUnique) && typeName.touched}">
+                        <label class="control-label" for="typeName">
+                            <span class="text-black">Name</span>
+                            <span *ngIf="(typeName.invalid || !isUnique) && typeName.touched">
+                                <span *ngIf="typeName.errors?.required">Please enter a name</span>
+                                <span *ngIf="!isUnique">Please use a unique name</span>
+                            </span>
+                            <span [hidden]="(typeName.invalid || !isUnique) && typeName.touched" class="text-muted">
+                                (must be unique)
+                            </span>
+                        </label>
+                        <input type="text" class="form-control"
+                               [(ngModel)]="name"
+                               name="name"
+                               id="typeName"
+                               #typeName="ngModel"
+                               validate-onblur
+                               required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-right">
+                        <button type="submit"
+                                class="btn btn-primary btn-sm"
+                                autofocus #focusBtn>Add
+                        </button>
+                        <button type="button"
+                                class="btn btn-default btn-sm"
+                                (click)="bsModal.hide()">Cancel
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>

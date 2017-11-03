@@ -1,6 +1,9 @@
+/* Truncates if it overflows */
+.form-text {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
 .sidebar-contents {
     margin: 15px 5px;
-}
-.submit-btn {
-    text-transform: uppercase;
 }

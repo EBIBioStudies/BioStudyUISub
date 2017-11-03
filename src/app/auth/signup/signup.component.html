@@ -6,78 +6,101 @@
             </div>
         </div>
         <p>
-            <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
-            <a routerLink="/signin">Back to Log in</a>
+            <a routerLink="/signin"><i class="fa fa-chevron-circle-left" aria-hidden="true"></i> Back to Log in</a>
         </p>
-        <div *ngIf="success" class="panel panel-success">
-            <div class="panel-body">
-                <h4 class="text-success">Thank you for registering. Please check your email for the account activation link.</h4>
-            </div>
+        <div *ngIf="success">
+            <h4 class="text-success">Thank you for registering</h4>
+            <p>An email has been sent with a link to activate your new account.</p>
+        </div>
+        <div *ngIf="!success">
+            <h4>Registration</h4>
+            <p>Please provide the information below to create a new account. Note that both the <i>Full name</i> and
+                <i>ORCID</i> fields are optional.</p>
         </div>
         <div *ngIf="!success" class="panel panel-default">
             <div class="panel-body">
                 <form id="signUpForm" novalidate name="signUpForm" role="form"
-                      (ngSubmit)="signUpForm.valid && model.valid() && onSubmit($event)" #signUpForm="ngForm">
+                      (ngSubmit)="onSubmit(signUpForm)" #signUpForm="ngForm">
                     <div class="form-group form-group-sm">
                         <label class="control-label" for="username">Full name</label>
+                        <small class="text-muted pull-right">Optional</small>
                         <input type="text" autofocus
                                id="username"
                                name="username"
                                class="form-control"
                                [(ngModel)]="model.username"
-                               (change)="onChange()"
+                               (change)="resetGlobalError()"
                                #focusEl />
                     </div>
-                    <div class="form-group form-group-sm" [ngClass]="{'has-error': email.invalid && email.dirty}">
-                        <label for="email">Email address
-                            <span [hidden]="email.valid || email.pristine">: cannot be blank</span>
+                    <div class="form-group" [ngClass]="{'has-error': email.invalid && email.touched}">
+                        <label class="control-label" for="email">
+                            <span class="text-black">Email address</span>
+                            <span *ngIf="email.invalid && email.touched">Please enter an email address</span>
                         </label>
-                        <input type="email"
-                               id="email"
-                               name="email"
+                        <input type="email" id="email" name="email" autofocus
                                class="form-control"
                                [(ngModel)]="model.email"
-                               (change)="onChange()"
+                               (change)="resetGlobalError()"
+                               #email="ngModel"
+                               #emailEl
                                required
-                               #email="ngModel"/>
+                               validate-onblur>
                     </div>
-                    <div class="form-group form-group-sm" [ngClass]="{'has-error': orcid.invalid}">
-                        <label>ORCID
-                            <span [hidden]="orcid.valid">: wrong format; the value should be in 0000-0000-0000-0000 format.</span>
-                        </label>
-                        <orcid-input-box
-                                [(ngModel)]="model.orcid"
-                                name="orcid"
-                                #orcid="ngModel">
-                        </orcid-input-box>
-                    </div>
-                    <div class="form-group form-group-sm" [ngClass]="{'has-error': password.invalid && password.dirty}">
-                        <label for="password" [ngClass]="{'text-danger': password.invalid && password.dirty}">Password
-                            <span *ngIf="password.invalid && (password.dirty || password.touched)">
-                                <span *ngIf="password.errors.required">: cannot be blank</span>
-                                <span *ngIf="password.errors.minlength">: must be at least 6 characters long</span>
+                    <div class="form-group form-group-sm" [ngClass]="{'has-error': password.invalid && password.touched}">
+                        <label class="control-label" for="password">
+                            <span class="text-black">Password</span>
+                            <span *ngIf="password.invalid && password.touched">
+                                <span *ngIf="password.errors?.required">Please enter your new password</span>
+                                <span *ngIf="password.errors?.minlength">Please use at least 6 characters</span>
                             </span>
+                            <span [hidden]="password.invalid && password.touched" class="text-muted">(at least 6 characters long)</span>
                         </label>
                         <input type="password"
                                name="password"
                                id="password"
                                class="form-control"
                                [(ngModel)]="model.password"
-                               (change)="onChange()"
+                               (change)="resetGlobalError()"
+                               validate-onblur
                                required
                                minlength="6"
                                #password="ngModel"/>
                     </div>
-                    <div class="form-group">
-                        <re-captcha
-                                (resolved)="onRecaptchaResolved($event)"
-                                siteKey="6Lcmlv0SAAAAAHofnIcb29l1LMZsnGFcSlH8Reve"
-                                #recaptcha>
-                        </re-captcha>
+                    <div class="form-group form-group-sm" [ngClass]="{'has-error': orcid.invalid && orcid.touched}">
+                        <label class="control-label">
+                            <span class="text-black">ORCID</span>
+                            <span *ngIf="orcid.invalid && orcid.touched">
+                                <span *ngIf="orcid.errors?.pattern">Please match the dddd-dddd-dddd-dddd format</span>
+                            </span>
+                            <span [hidden]="orcid.invalid && orcid.touched" class="text-muted">(should follow dddd-dddd-dddd-dddd format)</span>
+                        </label>
+                        <small class="text-muted pull-right">Optional</small>
+                        <orcid-input-box
+                                [(ngModel)]="model.orcid"
+                                name="orcid"
+                                #orcid="ngModel"
+                                validate-onblur>
+                        </orcid-input-box>
                     </div>
-                    <div class="form-group margin-top-large">
+                    <div class="form-group" [ngClass]="{'has-error': captcha.invalid && (captcha.dirty || captcha.touched)}">
+                        <label class="control-label">
+                            <span class="text-black">Verify you are a human</span>
+                            <span [hidden]="captcha.valid || (captcha.pristine && captcha.untouched)">Please confirm you are not a robot</span>
+                        </label>
+                        <re-captcha (resolved)="onRecaptchaResolved($event)"
+                                    [(ngModel)]="model.captcha"
+                                    name="captcha"
+                                    #captcha="ngModel"
+                                    required
+                                    siteKey="6Lcmlv0SAAAAAHofnIcb29l1LMZsnGFcSlH8Reve"
+                                    #recaptchaEl></re-captcha>
+                    </div>
+                    <div class="row-submit">
                         <button type="submit" class="btn btn-primary btn-submit"
-                                [disabled]="signUpForm.invalid || !model.valid()">Register</button>
+                                [disabled]="isLoading">Register</button>
+                        <div class="text-muted col-md-10">
+                            <span *ngIf="isLoading"><i class="fa fa-cog fa-spin"></i> Registering...</span>
+                        </div>
                     </div>
                 </form>
             </div>

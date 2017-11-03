@@ -5,7 +5,7 @@ export const DefaultTemplate = {
         'required': true,
         'annotationsType': {
             'title': 'Describe your study',
-            'description': 'Provide any supplementary details of the study that may improve its discoverability or interpretation',
+            'description': 'Provide any supplementary details of the study that may help discover and/or interpret it',
             'icon': 'fa-tag',
             'columnTypes': [
                 {

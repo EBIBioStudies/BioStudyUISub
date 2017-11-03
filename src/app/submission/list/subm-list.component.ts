@@ -272,7 +272,7 @@ export class SubmListComponent {
         this.submService.createSubmission(PageTab.createNew())
             .subscribe((s) => {
                 console.log('created submission:', s);
-                this.startEditing(s.accno);
+                this.startEditing(s.accno, true);
             });
     };
 
@@ -280,16 +280,28 @@ export class SubmListComponent {
         this.router.navigate(['/submissions/direct_upload']);
     }
 
-    startEditing(accno) {
-        this.router.navigate(['/submissions', accno]);
+    /**
+     * Brings the submission form up to allow editing, passing an optional URL parameter to flag new submissions.
+     * @param {string} accno Accession number of the submission to be edited.
+     * @param {boolean} isRecent True if starting off from a blank submission.
+     */
+    startEditing(accno: string, isRecent:boolean = false) {
+        const extras = {};
+
+        if (isRecent) {
+            extras['queryParams'] = {isRecent: true};
+        }
+        this.router.navigate(['/submissions', accno], extras);
     }
 
     /**
-     * Handler for click events on a row. It redirects the user to the study's edit mode.
+     * Handler for click events on a row. It redirects the user to the study's edit mode, unless over the actions cell
      * @param event - ag-Grid's custom event object that includes data represented by the clicked row.
      */
     onRowClicked(event): void {
-        this.startEditing(event.data.accno);
+        if (event.colDef.headerName !== "Actions") {
+            this.startEditing(event.data.accno);
+        }
     }
 
     confirm(text: string, title: string, confirmLabel: string): Observable<any> {

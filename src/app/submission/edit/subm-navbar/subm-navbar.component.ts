@@ -24,6 +24,7 @@ export class SubmNavBarComponent {
     @Input() sectionPath: Section[];
 
     @Output() sectionClick: EventEmitter<Section> = new EventEmitter<Section>();
+    @Output() submitClick: EventEmitter<Section> = new EventEmitter<Section>();
 
     constructor(private modalService: BsModalService) {
     }
@@ -35,5 +36,9 @@ export class SubmNavBarComponent {
     onErrorsLabelClick(ev): void {
         const bsModalRef = this.modalService.show(SubmValidationErrorsModalComponent);
         bsModalRef.content.errors = this.errors;
+    }
+
+    onSubmit(event): void {
+        this.submitClick.next(event);
     }
 }

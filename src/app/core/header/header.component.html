@@ -17,7 +17,7 @@
         <div class="collapse navbar-collapse" [collapse]="navCollapsed">
             <ul class="nav navbar-nav navbar-right">
                 <li *ngIf="!userLoggedIn && !userRegistering">
-                    <button class="btn btn-link navbar-btn"
+                    <button class="btn navbar-btn"
                             routerLink="/signup"
                             routerLinkActive="active"
                             tooltip="Register as new user"
@@ -29,7 +29,7 @@
                 </li>
 
                 <li *ngIf="!userLoggedIn && !userLoggingIn">
-                    <button class="btn btn-link navbar-btn"
+                    <button class="btn navbar-btn"
                             routerLink="/signin"
                             tooltip="Start submitting studies"
                             placement="bottom"
@@ -40,7 +40,7 @@
                 </li>
 
                 <li *ngIf="userLoggedIn">
-                    <button class="btn btn-link navbar-btn"
+                    <button class="btn navbar-btn"
                             routerLink="submissions"
                             routerLinkActive="active"
                             tooltip="List of submissions"
@@ -52,7 +52,7 @@
                 </li>
 
                 <li *ngIf="userLoggedIn">
-                    <button class="btn btn-link navbar-btn"
+                    <button class="btn navbar-btn"
                             routerLink="files"
                             routerLinkActive="active"
                             tooltip="Upload or list your files"
@@ -64,7 +64,7 @@
                 </li>
 
                 <li *ngIf="userLoggedIn">
-                    <button class="btn btn-link navbar-btn"
+                    <button class="btn navbar-btn"
                             routerLink="/help"
                             routerLinkActive="active"
                             tooltip="How to use this tool"
@@ -76,7 +76,7 @@
                 </li>
 
                 <li *ngIf="userLoggedIn">
-                    <button class="btn btn-link navbar-btn"
+                    <button class="btn navbar-btn"
                             (click)="signOut()">
                         <i class="fa fa-fw fa-sign-out"></i>
                         Log out

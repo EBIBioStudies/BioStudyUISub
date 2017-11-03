@@ -81,7 +81,7 @@ export class SectionForm {
         this.fields.forEach(field => {
             this.formErrors[field.id] = '';
             const control = form.get(field.id);
-            if (control && control.dirty && !control.valid) {
+            if (control && !control.valid) {
                 Object.keys(control.errors).forEach(key => {
                     this.formErrors[field.id] += this.fieldErrorMessage(field, key);
                 });
@@ -91,15 +91,15 @@ export class SectionForm {
 
     fieldErrorMessage(field: Field, key: string): string {
         if (key === 'required') {
-            return 'the value is required';
+            return `Please enter the study's ${field.name.toLowerCase()}`;
         }
         if (key === 'minlength') {
             const type = this.section.type.getFieldType(field.name);
-            return `must be at least  ${type.minlength} characters long`;
+            return `Please use at least ${type.minlength} characters`;
         }
         if (key === 'maxlength') {
             const type = this.section.type.getFieldType(field.name);
-            return `must be no more than ${type.maxlength} characters long`;
+            return `Please use up to ${type.maxlength} characters`;
         }
         return key;
     }

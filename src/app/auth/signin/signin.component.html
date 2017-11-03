@@ -2,53 +2,62 @@
     <container-md>
         <div class="auth-content">
             <div class="alert" [ngClass]="{'alert-danger': error, 'invisible': !error}">
-                {{error ? error.message : '&nbsp;'}}
+                {{error ? error.message.replace('FAIL', '') + '. Please check your email and password and try again.' : '&nbsp;'}}
             </div>
+            <h3>Welcome</h3>
+            <p>
+                Please log in to submit studies. Don't have an account?
+                <a routerLink="/signup">
+                    Register
+                    <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+                </a>
+            </p>
             <div class="panel panel-default">
                 <div class="panel-body">
 
                     <form id="login-form" novalidate name="signInForm" role="form"
-                          (submit)="signInForm.form.valid && onSubmit($event)" #signInForm="ngForm">
-                        <div class="form-group" [ngClass]="{'has-error': login.invalid && login.dirty}">
+                          (ngSubmit)="onSubmit(signInForm)"
+                          #signInForm="ngForm">
+                        <div class="form-group" [ngClass]="{'has-error': login.invalid && login.touched}">
                             <label class="control-label" for="login">
-                                Email address<span [hidden]="login.valid || login.pristine">: cannot be blank</span>
+                                <span class="text-black">Email address</span>
+                                <span *ngIf="login.invalid && login.touched">Please enter an email address</span>
                             </label>
                             <input type="text" id="login" name="login" autofocus
                                    class="form-control"
                                    [(ngModel)]="model.login"
                                    required
-                                   (change)="resetError()"
+                                   validate-onblur
+                                   (change)="resetGlobalError()"
                                    #login="ngModel"
                                    #focusEl />
+                            <div class="text-right">
+                                <a routerLink="/resend_activation_link">Resend activation email</a>
+                            </div>
                         </div>
-                        <div class="form-group" [ngClass]="{'has-error': password.invalid && password.dirty}">
+                        <div class="form-group" [ngClass]="{'has-error': password.invalid && password.touched}">
                             <label class="control-label" for="password">
-                                Password<span [hidden]="password.valid || password.pristine">: cannot be blank</span>
+                                <span class="text-black">Password</span>
+                                <span *ngIf="password.invalid && password.touched">Please enter a password</span>
                             </label>
                             <input type="password" name="password" id="password"
                                    class="form-control"
                                    [(ngModel)]="model.password"
                                    required
-                                   (change)="resetError()"
+                                   validate-onblur
+                                   (change)="resetGlobalError()"
                                    #password="ngModel"/>
-
-                            <div class="form-group pull-right">
+                            <div class="text-right">
                                 <a routerLink="/password_reset_request">Forgot your password?</a>
                             </div>
                         </div>
 
-                        <div class="form-group row-submit">
+                        <div class="row-submit">
                             <button type="submit" class="btn btn-primary btn-submit"
-                                    [disabled]="isLoading || signInForm.form.invalid">Log in</button>
+                                    [disabled]="isLoading">Log in</button>
                             <div class="text-muted col-md-10">
                                 <span *ngIf="isLoading"><i class="fa fa-cog fa-spin"></i> Logging in...</span>
                             </div>
-                        </div>
-                        <div class="pull-left">
-                            <span>Don't have an account? <a routerLink="/signup">Register</a></span>
-                        </div>
-                        <div class="pull-right">
-                            <span><a routerLink="/resend_activation_link">Resend activation email</a></span>
                         </div>
                     </form>
 

@@ -205,41 +205,53 @@ export class SubmSideBarComponent implements OnChanges {
         let deleted;                                //collection of items marked for deletion
         let isPlural;                               //more than one item is being deleted?
 
-        //Removes features marked as deleted, showing a confirmation dialogue if applicable.
-        if (this.items.isDeletion) {
-            deleted = this.items.getDeleted();
-            isPlural = deleted.length > 1;
+        //Only submits if no field has errors.
+        //NOTE: disabled fields are not validated as per Angular's default behaviour. Therefore, the VALID/INVALID
+        //fields cannot be relied on in this case.
+        if (!form.errors) {
 
-            confirmShown = this.confirm(`The submission 
-                ${isPlural ? `items` : `item`} with type
-                ${deleted.map(({feature}) => `"${feature.typeName}"`).join(', ')} 
-                ${isPlural ? `have` : `has`} been deleted. If you proceed, 
-                ${isPlural ? `they` : `it`} will be removed from the
-                list of items and any related features or sections will be permanently deleted.`);
+            //Removes features marked as deleted, showing a confirmation dialogue if applicable.
+            if (this.items.isDeletion) {
+                deleted = this.items.getDeleted();
+                isPlural = deleted.length > 1;
 
-            confirmShown.subscribe((isConfirmed: boolean) => {
-                if (isConfirmed) {
-                    deleted.forEach(({feature}) => {
-                        this.section.features.remove(feature);
-                    });
-                } else {
-                    this.items.reset();
-                }
-            });
-        }
+                confirmShown = this.confirm(`The submission 
+                    ${isPlural ? `items` : `item`} with type
+                    ${deleted.map(({feature}) => `"${feature.typeName}"`).join(', ')} 
+                    ${isPlural ? `have` : `has`} been deleted. If you proceed, 
+                    ${isPlural ? `they` : `it`} will be removed from the
+                    list of items and any related features or sections will be permanently deleted.`);
 
-        //Scalar changes are only applied if deletion confirmed in the first place.
-        //Otherwise, it doesn't apply any changes.
-        confirmShown.subscribe((isConfirmed: boolean) => {
-            if (form.dirty && form.valid && isConfirmed) {
-                Object.keys(form.value).forEach((key) => {
-                    this.section.features.find(key).typeName = form.value[key];
-                }, this);
+                confirmShown.subscribe((isConfirmed: boolean) => {
+                    if (isConfirmed) {
+                        deleted.forEach(({feature}) => {
+                            this.section.features.remove(feature);
+                        });
+                    } else {
+                        this.items.reset();
+                    }
+                });
             }
 
-            //If items deleted but not confirmed, it stays on edit mode
-            isConfirmed && this.onEditModeToggle();
-        });
+            //Scalar changes are only applied if deletion confirmed in the first place.
+            //Otherwise, it doesn't apply any changes.
+            confirmShown.subscribe((isConfirmed: boolean) => {
+                if (form.dirty && form.valid && isConfirmed) {
+                    Object.keys(form.value).forEach((key) => {
+                        this.section.features.find(key).typeName = form.value[key];
+                    }, this);
+                }
+
+                //If items deleted but not confirmed, it stays on edit mode
+                isConfirmed && this.onEditModeToggle();
+            });
+
+        //Triggers validation of all fields at once.
+        } else {
+            Object.keys(form.controls).forEach((key) => {
+                form.controls[key].markAsTouched({ onlySelf: true });
+            });
+        }
     }
 
     /**
@@ -276,20 +288,20 @@ export class SubmSideBarComponent implements OnChanges {
         this.addDialog.show();
     }
 
-    onAdd(ev: SubmAddEvent) {
+    onAdd(name: string, isSection: boolean, isSingleRow: boolean = false): any {
         const rootType: SectionType = this.section.type;
+        let addedType: any;
 
-        if (ev.itemType === 'Section') {
-            const sectionType = rootType.getSectionType(ev.name);
-            this.section.sections.add(sectionType);
-            return;
+        if (isSection) {
+            const sectionType = rootType.getSectionType(name);
+            addedType = this.section.sections.add(sectionType);
+
+        } else {
+            const featureType = rootType.getFeatureType(name, isSingleRow);
+            addedType = this.section.features.add(featureType);
         }
-        const idx = ['AttributeList', 'AttributeGrid'].indexOf(ev.itemType);
-        if (idx > -1) {
-            const singleRow = idx === 0;
-            const featureType = rootType.getFeatureType(ev.name, singleRow);
-            const f = this.section.features.add(featureType);
-        }
+
+        return addedType;
     }
 
     /**
