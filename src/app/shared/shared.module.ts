@@ -25,6 +25,7 @@ import {FileUploadButtonComponent} from './file-upload-button.component';
 import {ConfirmDialogComponent} from './confirm-dialog.component';
 import {MultiSelectComponent, FilterPipe} from './multi-select.component';
 import {InlineEditComponent} from './inline-edit.component';
+import {ValidateOnBlurDirective} from "./validate-onblur.directive";
 
 @NgModule({
     imports: [
@@ -49,7 +50,8 @@ import {InlineEditComponent} from './inline-edit.component';
         ConfirmDialogComponent,
         MultiSelectComponent,
         InlineEditComponent,
-        FilterPipe
+        FilterPipe,
+        ValidateOnBlurDirective
     ],
     exports: [
         CommonModule,
@@ -72,7 +74,8 @@ import {InlineEditComponent} from './inline-edit.component';
         ConfirmDialogComponent,
         MultiSelectComponent,
         InlineEditComponent,
-        FilterPipe
+        FilterPipe,
+        ValidateOnBlurDirective
     ]
 })
 export class SharedModule {

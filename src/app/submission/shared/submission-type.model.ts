@@ -97,10 +97,10 @@ export class FeatureType extends BaseType {
     readonly icon: string;
 
     /**
-     * Instantiates a feature widget with a given set of parameters.
+     * Instantiates a feature widget type with a pre-defined set of sub-type elements.
      * @param {string} name - Effectively, the widget's name to be displayed in the app.
      * @param {boolean} singleRow - If true, the feature will be rendered as a list where each column is actually a row.
-     * @param {Object} typeObj - Contains all the parameters defining this feature widget.
+     * @param {Object} typeObj - Contains all the sub-type parameters defining this feature widget.
      * @param {Map<string, any>} scope - Set of already existing featureType instances.
      */
     constructor(name: string, singleRow: boolean, typeObj?: any, scope?: Map<string, any>) {
@@ -259,12 +259,19 @@ export class SubmissionType extends BaseType {
         return TemplateType.create(tmpl).submissionType;
     }
 
-    constructor(name: string, obj: any, scope?: Map<string, any>) {
-        super('Submission', obj !== undefined, scope);
-        if (obj.sectionType === undefined) {
+    /**
+     * Instantiates a submission type with a pre-defined set of sub-type definitions. Note that a single sectionType
+     * is assumed at root level. However, that section may in turn consist of multiple sections (so-called "subsections).
+     * @param {string} name - Name of the submission's only section. Not in use at present.
+     * @param {Object} typeObj - Contains all the sub-type parameters defining this submission.
+     * @param {Map<string, any>} [scope] - Optional set of already existing SubmissionType instances.
+     */
+    constructor(name: string, typeObj: any, scope?: Map<string, any>) {
+        super('Submission', typeObj !== undefined, scope);
+        if (typeObj.sectionType === undefined) {
             throw Error('sectionType is not defined in the template');
         }
-        this.sectionType = new SectionType(obj.sectionType.name, obj.sectionType, new Map());
+        this.sectionType = new SectionType(typeObj.sectionType.name, typeObj.sectionType, new Map());
     }
 }
 

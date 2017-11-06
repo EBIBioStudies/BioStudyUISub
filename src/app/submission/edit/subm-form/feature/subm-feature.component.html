@@ -15,11 +15,13 @@
                 </ul>
             </div>
         </div>
-        <span class="panel-description col-xs-10 col-sm-11">{{feature.type.description}}</span>
-        <span class="badge pull-right">{{feature.size()}}</span>
+        <span class="panel-description col-xs-10">{{feature.type.description}}</span>
+        <span class="label label-default pull-right" *ngIf="!valid && errorNum">{{errorNum}} error{{errorNum > 1 ? 's' : ''}}</span>
     </div>
 
-    <div class="panel-body">
+    <div class="panel-body"
+         #featureEl
+         (change)="onChange($event)">
         <subm-feature-grid *ngIf="!feature.singleRow"
                            [featureForm]="featureForm"
                            [readonly]="readonly">

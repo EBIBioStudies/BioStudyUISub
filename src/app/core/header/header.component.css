@@ -1,4 +1,10 @@
 /* Turns global navigation links into buttons when active/hovered over */
+.navbar-btn {
+    background-color: transparent;
+}
+.navbar-btn:focus {
+    outline: none;
+}
 .navbar-btn.active, .btn-link:hover {
     color: #fff;
     background-color: #82b0bc;

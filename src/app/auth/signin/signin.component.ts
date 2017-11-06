@@ -10,15 +10,17 @@ import {Router} from '@angular/router';
 import {ServerError} from 'app/http/index';
 import {AuthService} from '../auth.service';
 import {UserSession} from '../user-session';
+import {AbstractControl, NgControl, NgForm} from "@angular/forms";
 
 @Component({
     selector: 'auth-signin',
-    templateUrl: './signin.component.html'
+    templateUrl: './signin.component.html',
+    styleUrls: ['./signin.component.css']
 })
 export class SignInComponent implements OnInit, AfterViewInit {
-    model = {login: "", password: ""};
-    error: ServerError = null;
-    isLoading: boolean = false;
+    model = {login: "", password: ""};      //Data model for the component's form
+    error: ServerError = null;              //Server response object in case of error
+    isLoading: boolean = false;             //Flag indicating if login request in progress
 
     @ViewChild('focusEl')
     private focusEl: ElementRef;
@@ -39,26 +41,33 @@ export class SignInComponent implements OnInit, AfterViewInit {
         this.focusEl.nativeElement.focus();
     }
 
-    onSubmit(event) {
-        event.preventDefault();
+    onSubmit(form: NgForm) {
+        this.resetGlobalError();
 
-        this.error = null;
-        this.isLoading = true;
+        //Makes request for login if all form fields completed satisfactorily
+        if (form.valid) {
+            this.isLoading = true;
+            this.authService
+                .signIn(this.model)
+                .subscribe(
+                    (data) => {
+                        this.router.navigate(['/submissions']);
+                    },
+                    (error: ServerError) => {
+                        this.isLoading = false;
+                        this.error = error;
+                    }
+                );
 
-        this.authService
-            .signIn(this.model)
-            .subscribe(
-                (data) => {
-                    this.router.navigate(['/submissions']);
-                },
-                (error: ServerError) => {
-                    this.isLoading = false;
-                    this.error = error;
-                }
-            );
+        //Validates in bulk if form incomplete
+        } else {
+            Object.keys(form.controls).forEach((key) => {
+                form.controls[key].markAsTouched({ onlySelf: true });
+            });
+        }
     }
 
-    resetError() {
+    resetGlobalError() {
         this.error = null;
-    };
+    }
 }

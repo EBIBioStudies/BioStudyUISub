@@ -10,6 +10,11 @@
     <button class="button-link btn btn-danger btn-xs pull-right"
           *ngIf="errors && !errors.empty()"
           (click)="onErrorsLabelClick($event)">
-        {{errors.total()}} error{{errors.total() > 1 ? 's' : ''}}
+        <strong>{{errors.total()}} error{{errors.total() > 1 ? 's' : ''}}</strong>
+    </button>
+    <button class="button-link btn-submit btn btn-primary btn-xs pull-right"
+            *ngIf="!errors || errors.empty()"
+            (click)="onSubmit($event)">
+        Submit
     </button>
 </div>

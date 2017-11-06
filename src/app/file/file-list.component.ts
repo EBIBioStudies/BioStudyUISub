@@ -154,22 +154,25 @@ export class ProgressCellComponent implements AgRendererComponent {
    <div class="container-fluid">
         <aside class="right-side" [ngClass]="{'collapse-left' : sideBarCollapsed}">    
             <section class="content">
+                <button class="btn btn-default btn-link"
+                        (click)="onBackButtonClick()"
+                        *ngIf="backButton">
+                    <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
+                    Back to submission
+                </button>
                 <div class="panel panel-info">
                     <div class="panel-heading clearfix">
-                        <div class="panel-title pull-left">
-                            <button class="btn btn-default btn-xs"
-                                    (click)="onBackButtonClick()"
-                                    *ngIf="backButton"><i class="fa fa-long-arrow-left" aria-hidden="true"></i>&nbsp;Back
-                                to submission
-                            </button>
-                            &nbsp;<directory-path [path]="path.rel" (change)="onRelativePathChange($event)"></directory-path>
-                        </div>
-                        <div class="pull-right">
-                            <file-upload-button title="Upload files" 
-                                                [multiple]="true"
-                                                (select)="onUploadFilesSelect($event)"></file-upload-button>
-                            <file-upload-badge (select)="onUploadSelect($event)"></file-upload-badge>
-                        </div>
+                        <span>
+                            Path: <directory-path [path]="path.rel" (change)="onRelativePathChange($event)"></directory-path>
+                        </span>
+                        <file-upload-button class="pull-right"
+                                            title="Add files"
+                                            [multiple]="true"
+                                            (select)="onUploadFilesSelect($event)"></file-upload-button>
+                        <!--file-upload-badge (select)="onUploadSelect($event)"></file-upload-badge-->
+                        <!-- The badge is redundant since upload progress is already shown within the ag-grid list. 
+                             It can also be confusing since it only counts files being uploaded, yet its position in the UI
+                             implies total number of files -->
                     </div>
                     <div class="row">
                         <div class="col-xs-12">

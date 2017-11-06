@@ -12,65 +12,63 @@
                         <i class="fa fa-bars fa-fw"></i>
                     </button>
                 </a>
-                <button class="sidebar-edit-btn btn btn-primary btn-xs btn-flat"
-                        *ngIf="!editing && !collapsed"
-                        (click)="onEditModeToggle($event)">
-                    <i class="fa fa-fw fa-pencil"></i>
-                </button>
-                <span class="sidebar-edit-btn"
-                     *ngIf="editing && !collapsed">
-                    <button class="btn btn-primary btn-xs btn-flat"
-                            type="submit"
-                            [disabled]="form.invalid">
-                        Save
-                    </button>
-                    <button class="btn btn-default btn-xs btn-flat"
-                            (click)="onCancel($event)">
-                        Cancel
-                    </button>
-                </span>
             </li>
-            <li>
-                <div class="sidebar-item" *ngFor="let item of items; let i = index">
-                    <a *ngIf="!editing" (click)="item.onClick($event)"
-                       [tooltip]="item.label"
-                       placement="right"
-                       container="body">
-                        <i class="fa fa-lg text-center {{item.feature.type.icon}}"></i>
-                        {{!collapsed ? '&nbsp;&nbsp;Add ' + item.feature.typeName : ''}}
-                    </a>
-                    <a [ngClass]="{'has-error': itemType.invalid}"
-                       *ngIf="editing && !item.isDeleted">
-                        <span class="input-group">
-                            <span class="input-group-addon">
-                                <i class="fa fa-lg text-center {{item.feature.type.icon}}"></i>
-                            </span>
-                            <input type="text"
-                                   class="form-control input-sm form-control-auto"
-                                   [disabled]="item.isReadOnly()"
-                                   [ngModel]="item.feature.typeName"
-                                   name="{{item.feature.id}}"
-                                   #itemType="ngModel"
-                                   unique
-                                   required />
-                            <span class="input-group-btn">
-                                <button class="item-delete btn btn-danger btn-sm btn-flat"
-                                        [disabled]="item.isReadOnly()"
-                                        tooltip="delete"
-                                        (click)="onItemDelete($event, item.feature.id, form.controls, i)">
-                                    <i class="fa fa-trash-o fa-fw"></i>
-                                </button>
-                            </span>
+            <li class="sidebar-item type-control" *ngIf="!editing">
+                <a (click)="onEditModeToggle($event)">
+                    <strong class="fa-stack">
+                        <i class="fa fa-circle fa-stack-2x"></i>
+                        <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+                    </strong>
+                    {{!collapsed ? '&nbsp;Edit types' : ''}}
+                </a>
+            </li>
+            <li class="sidebar-item type-control" *ngIf="editing">
+                <a (click)="onCancel($event)">
+                    <i class="fa fa-fw fa fa-chevron-circle-left fa-lg"></i>
+                    {{!collapsed ? '&nbsp;Cancel type edit' : ''}}
+                </a>
+            </li>
+            <li class="sidebar-item" *ngFor="let item of items; let i = index">
+                <a *ngIf="!editing" (click)="item.onClick($event)"
+                   [tooltip]="item.label"
+                   placement="right"
+                   container="body">
+                    <i class="fa fa-lg text-center {{item.feature.type.icon}}"></i>
+                    {{!collapsed ? '&nbsp;&nbsp;Add ' + item.feature.typeName : ''}}
+                </a>
+                <div class="row-input"
+                   [ngClass]="{'has-error': itemType.invalid && itemType.touched}"
+                   *ngIf="editing && !item.isDeleted">
+                    <label [hidden]="!itemType.errors?.unique || !itemType.touched"
+                           class="control-label small">
+                        Please use a unique type name
+                    </label>
+                    <label [hidden]="!itemType.errors?.required || !itemType.touched"
+                           class="control-label small">
+                        Please enter a type name
+                    </label>
+                    <span class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-lg text-center {{item.feature.type.icon}}"></i>
                         </span>
-                        <label [hidden]="!itemType.errors?.unique || !itemType.touched"
-                               class="control-label small">
-                            Type name must be unique
-                        </label>
-                        <label [hidden]="!itemType.errors?.required || !itemType.touched"
-                               class="control-label small">
-                            Type name cannot be blank
-                        </label>
-                    </a>
+                        <input type="text"
+                               class="form-control input-sm form-control-auto"
+                               [disabled]="item.isReadOnly()"
+                               [ngModel]="item.feature.typeName"
+                               name="{{item.feature.id}}"
+                               #itemType="ngModel"
+                               unique
+                               validate-onblur
+                               required />
+                        <span class="input-group-btn">
+                            <button class="item-delete btn btn-danger btn-sm btn-flat"
+                                    [disabled]="item.isReadOnly()"
+                                    tooltip="delete"
+                                    (click)="onItemDelete($event, item.feature.id, form.controls, i)">
+                                <i class="fa fa-trash-o fa-fw"></i>
+                            </button>
+                        </span>
+                    </span>
                 </div>
             </li>
             <li *ngIf="!editing" class="sidebar-item">
@@ -79,12 +77,18 @@
                     {{!collapsed ? '&nbsp;&nbsp;New type' : ''}}
                 </a>
             </li>
+            <li *ngIf="editing && !collapsed" class="row-submit">
+                <button class="btn btn-primary btn-submit"
+                        type="submit">
+                    Save
+                </button>
+            </li>
         </ul>
     </form>
 </aside>
 <subm-add-dialog
         #addDialog
-        (okClick)="onAdd($event)">
+        [onAddType]="onAdd.bind(this)">
 </subm-add-dialog>
 <confirm-dialog #confirmDialog
                 headerTitle="Delete items"
