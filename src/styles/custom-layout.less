@@ -1,7 +1,7 @@
 @left-side-width: 200px;
 @left-side-width-collapse: 40px;
 
-@sidebar-light-bg: white;
+@sidebar-light-bg: #6db1c1;
 @sidebar-light-hover-bg: @brand-primary;
 @sidebar-light-font: white;
 @sidebar-light-border: none;
@@ -15,10 +15,16 @@
   z-index: @zindex-navbar;
   padding: 13px 0 12px @left-side-width;
   width: 100%;
+
+  & > div {
+    float: none;
+    display: inline-block;
+    vertical-align: middle;
+  }
 }
 
 .navbar-subm-margin {
-  margin-top: calc(@navbar-subm-height + 16px);
+  padding-top: calc(@navbar-subm-height + 16px);
 }
 
 /* Layout */
@@ -31,10 +37,10 @@
 
 //Top spacing for screens past the login-related ones */
 aside {
-  padding-top: @navbar-height;
+  margin-top: @navbar-height;
 }
 
-/*right side - contains main content*/
+/*right side - main content*/
 .right-side {
   margin-left: @left-side-width;
 }
@@ -42,11 +48,16 @@ aside {
 /*left side - contains sidebar*/
 .left-side {
   position: fixed;
+  top: 0;
+  bottom: 0;
   width: @left-side-width;
   background: @sidebar-light-bg;
   -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.24);
   -moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.24);
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.24);
+  -webkit-transition: width .3s ease;
+  -moz-transition: width .3s ease;
+  transition: width .3s ease;
 }
 
 @media screen and (min-width: @screen-md) {
@@ -89,27 +100,44 @@ aside {
   padding-top: 10px;
 }
 
-/* Sidebar */
-
+/* Off-canvas side menu */
 .sidebar {
-  height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
   z-index: @zindex-navbar + 1;
 }
 
 .sidebar-offcanvas {
-  margin-bottom: 5px;
-  border-bottom: 1px solid #fff;
+  .menu-toggle {
+    overflow: hidden;
+    padding-top: 12px;
+    background: #fafafa;
+
+    .minimise-btn {
+      padding: 6px 7px;
+      color: #5792a0;
+      outline: none;
+      background: none;
+    }
+
+    .nav-tabs > li > a {
+      padding: 10px 12px;
+    }
+  }
+
+  &.collapse-left .menu-toggle {
+    height: 54px;
+  }
 
   .sidebar-menu {
     list-style: none;
     margin: 0;
     padding: 0;
+    border-top: 3px solid #6db1c1;
+
     .sidebar-item {
       margin: 0;
       padding: 0;
-      border-top: 1px solid #fff;
       border-bottom: 1px solid @sidebar-light-border;
 
       &.menu-toggle > a {
@@ -146,6 +174,7 @@ aside {
       > a {
         padding: 12px 10px 12px 10px;
         display: block;
+        color: #fff;
         > .fa, > .glyphicon {
           width: 20px;
         }
@@ -205,4 +234,20 @@ aside {
     top: 0;
     width: @left-side-width;
   }
+}
+
+/* Makes unselected tabs be on a plane behind selected ones with a permanent shaded appearance */
+.nav-tabs > .nav-item > .nav-link:not(.active) {
+  background: @gray-lighter;
+}
+.nav-tabs > .nav-item > .nav-link.active {
+  z-index: 100;
+}
+
+/* Gives readonly inputs the appearance of standard text */
+input[readonly] {
+  font-size: @font-size-base;
+  background: #fff !important;
+  box-shadow: none;
+  border: none;
 }

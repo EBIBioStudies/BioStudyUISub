@@ -85,8 +85,8 @@
   align-items: center;
 }
 
-/* Makes all main submit buttons stand out clearly */
-.btn-submit {
+/* Makes all main submit/cancel buttons stand out clearly */
+.btn-submit, .btn-cancel {
   text-transform: uppercase;
 }
 
@@ -100,8 +100,8 @@
 .ag-paging-button {
   padding: .5rem 1rem;
   color: #fafafa;
-  background: #82b0bc;
-  border: #71a6b3;
+  background: #3c8b9f;
+  border: #6db1c1;
   border-radius: .3rem;
   outline: none;
 
@@ -120,9 +120,49 @@
 .ag-header-cell-menu-button, .ag-header-cell-label {
   cursor: pointer;
 }
+.ag-fresh .ag-header-cell-menu-button:hover  {
+  border-color: #fafafa;
+}
 
 /* Center-aligns ag-grid cells marked accordingly */
 .ag-cell-centered {
+  text-align: center;
+}
+
+/* Brings ag-grid table's styles for cells in line with app's colour scheme */
+.ag-fresh .ag-root {
+  border: none;
+  border-top: 3px solid #6db1c1;
+}
+.ag-fresh .ag-header {
+  background: #6db1c1;
+  border: none;
+  color: #fff;
+}
+.ag-fresh .ag-header-icon {
+  fill: #fff;
+}
+.ag-fresh .ag-ltr .ag-header-cell {
+  border-right-color: #c8c8c8;
+}
+.ag-fresh .ag-ltr .ag-cell-no-focus {
+  border-right: 1px solid #c8c8c8;
+}
+.ag-fresh .ag-ltr .ag-cell-no-focus:last-of-type, .ag-fresh .ag-ltr .ag-header-cell:last-of-type {
+  border-right: none;
+}
+
+//Prevents highlighting of single cells
+.ag-cell {
+  outline: none !important;
+}
+
+//Prevents page controls from wrapping onto the next line when on pad-sized screens
+.ag-fresh .ag-paging-row-summary-panel {
+  width: auto;
+  float: left
+}
+.ag-fresh .ag-paging-panel {
   text-align: center;
 }
 
@@ -138,4 +178,23 @@ component */
 }
 .subm-list .ag-cell {
   cursor: pointer;
+}
+
+.validation-pop {
+  visibility: hidden;
+  min-width: 300px;
+  text-align: center;
+}
+.has-error .validation-pop {
+  visibility: visible;
+}
+
+/* Utility classes for top-right-corner badge indicators */
+.badge-parent {
+  position: relative;
+}
+.badge-corner {
+  position: absolute;
+  top: -7px;
+  right: -7px;
 }

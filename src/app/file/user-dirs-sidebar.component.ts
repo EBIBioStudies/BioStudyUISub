@@ -20,13 +20,19 @@ import {FileService} from './file.service';
     template: `
 <aside class="left-side sidebar sidebar-offcanvas"
        [ngClass]="{'collapse-left' : collapsed}">
+    <div class="menu-toggle">
+        <button class="minimise-btn btn pull-right"
+                [ngClass]="{'inactive': !collapsed}"
+                [disabled]="editing"
+                (click)="onToggle($event)">
+            <i class="fa fa-fw fa-lg"
+               [ngClass]="{'fa-toggle-left': !collapsed, 'fa-toggle-right': collapsed}"></i>
+        </button>
+        <tabset [ngClass]="{'invisible': collapsed}">
+            <tab heading="Explorer" active="true"></tab>
+        </tabset>
+    </div>
     <ul class="sidebar-menu">
-        <li class="sidebar-item menu-toggle">
-            <a (click)="onToggle($event)">
-                 <i class="fa fa-bars fa-fw"></i> 
-                 <span *ngIf="!collapsed">Minimise</span>
-            </a>
-        </li>
         <li *ngFor="let dir of dirs" class="sidebar-item success" [ngClass]="{'active': dir.path === selectedPath}">
             <a *ngIf="collapsed" 
                 (click)="onDirSelect(dir)"> 

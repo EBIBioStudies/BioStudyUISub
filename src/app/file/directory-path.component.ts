@@ -7,8 +7,7 @@ import {
 
 @Component({
     selector: 'directory-path',
-    templateUrl:'./directory-path.component.html',
-    styleUrls: ['./directory-path.component.css']
+    templateUrl:'./directory-path.component.html'
 })
 export class DirectoryPathComponent {
     @Output() change: EventEmitter<string> = new EventEmitter<string>();

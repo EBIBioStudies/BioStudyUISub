@@ -5,10 +5,13 @@
     <div *ngFor="let field of sectionForm.fields"
          class="form-group row">
         <div class="col-sm-12"
-             [ngClass]="{'has-error': sectionForm.fieldControl(field.id).invalid}">
+             [ngClass]="{'has-error': sectionForm.fieldControl(field.id).invalid && sectionForm.fieldControl(field.id).touched}">
             <label class="control-label">
                 <span class="text-black">{{field.name}}</span>
-                {{sectionForm.formErrors[field.id] ? sectionForm.formErrors[field.id] : ''}}
+                <span *ngIf="sectionForm.fieldControl(field.id).invalid && sectionForm.fieldControl(field.id).touched">
+                    {{sectionForm.formErrors[field.id] ? sectionForm.formErrors[field.id] : ''}}
+                </span>
+                <small *ngIf="!field.type.required" class="text-muted pull-right"><i>Optional</i></small>
             </label>
             <subm-field
                 [type]="field.valueType"
@@ -16,13 +19,17 @@
                 [readonly]="readonly"
                 [required]="field.type.required"
                 [(ngModel)]="field.value"
-                [formControl]="sectionForm.fieldControl(field.id)">
+                [formControl]="sectionForm.fieldControl(field.id)"
+                validate-onblur>
             </subm-field>
         </div>
     </div>
 
     <div *ngFor="let feature of sectionForm.features">
-        <label class="control-label" *ngIf="feature.size() > 0">{{feature.pluralName()}}</label>
+        <span *ngIf="feature.size() > 0">
+            <label class="control-label">{{feature.pluralName()}}</label>
+            <small *ngIf="!feature.type.required" class="text-muted pull-right"><i>Optional</i></small>
+        </span>
         <subm-feature [featureForm]="sectionForm.featureForm(feature.id)"
                       [readonly]="readonly">
         </subm-feature>

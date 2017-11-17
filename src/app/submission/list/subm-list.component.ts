@@ -16,12 +16,18 @@ import {PageTab} from '../shared/pagetab.model';
 @Component({
     selector: 'action-buttons-cell',
     template: `
-        <button *ngIf="status !== 'MODIFIED'"
-                type="button" class="btn btn-danger btn-xs btn-flat"
-                (click)="onDeleteSubmission()"
-                tooltip="Delete"
+        <button type="button" class="btn btn-link btn-xs btn-flat"
+                (click)="onEditSubmission()"
+                tooltip="Edit"
                 container="body">
-            <i class="fa fa-trash-o fa-fw"></i>
+            <i class="fa fa-pencil fa-fw fa-lg"></i>
+        </button>
+        <button *ngIf="status === 'MODIFIED'"
+                type="button" class="btn btn-info btn-xs btn-flat"
+                (click)="onViewSubmission()"
+                tooltip="View original"
+                container="body">
+            <i class="fa fa-eye fa-fw fa-lg"></i>
         </button>
         <button *ngIf="status === 'MODIFIED'"
                 type="button" class="btn btn-warning btn-xs btn-flat"
@@ -30,18 +36,12 @@ import {PageTab} from '../shared/pagetab.model';
                 container="body">
             <i class="fa fa-undo fa-fw"></i>
         </button>
-        <button type="button" class="btn btn-primary btn-xs btn-flat"
-                (click)="onEditSubmission()"
-                tooltip="Edit"
+        <button *ngIf="status !== 'MODIFIED'"
+                type="button" class="btn btn-danger btn-xs btn-flat"
+                (click)="onDeleteSubmission()"
+                tooltip="Delete"
                 container="body">
-            <i class="fa fa-pencil fa-fw"></i>
-        </button>
-        <button *ngIf="status === 'MODIFIED'"
-                type="button" class="btn btn-info btn-xs btn-flat"
-                (click)="onViewSubmission()"
-                tooltip="View original"
-                container="body">
-            <i class="fa fa-eye fa-fw"></i>
+            <i class="fa fa-trash-o fa-fw"></i>
         </button>`
 })
 export class ActionButtonsCellComponent implements AgRendererComponent {

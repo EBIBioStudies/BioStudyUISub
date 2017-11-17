@@ -92,6 +92,9 @@ export class InlineEditComponent implements AfterViewInit, ControlValueAccessor 
     }
 
     private onEditBoxBlur(ev): void {
+        if (!this.value.length) {
+            this.value = this.emptyValue;
+        }
         this.stopEditing();
     }
 

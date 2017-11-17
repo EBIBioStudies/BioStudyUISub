@@ -367,9 +367,21 @@ export class Feature extends HasUpdates<UpdateEvent> {
     }
 
     addColumn(name?: string, required?: boolean, valueType?: ValueType): Attribute {
-        const col = new Attribute(name || 'New Column', required, valueType);
+        let defColName = ' ' + (this.colSize() + 1);
+        let col;
+
+        //Creates the new column with the appropriate name (it could be a single-row grid column)
+        if (this.singleRow) {
+            defColName = this.typeName + defColName;
+        } else {
+            defColName = 'Column' + defColName;
+        }
+        col = new Attribute(name || defColName, required, valueType);
+
+        //Updates row and column maps
         this._rows.addKey(col.id);
         this._columns.add(col);
+
         return col;
     }
 

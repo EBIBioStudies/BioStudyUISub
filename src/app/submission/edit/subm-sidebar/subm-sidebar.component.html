@@ -1,44 +1,44 @@
 <aside class="left-side sidebar sidebar-offcanvas"
        [ngClass]="{'collapse-left' : collapsed}">
+    <div class="menu-toggle">
+        <button class="minimise-btn btn pull-right"
+                [ngClass]="{'inactive': !collapsed}"
+                [disabled]="editing"
+                (click)="onToggle($event)">
+            <i class="fa fa-fw fa-lg"
+               [ngClass]="{'fa-toggle-left': !collapsed, 'fa-toggle-right': collapsed}"></i>
+        </button>
+        <tabset [ngClass]="{'invisible': collapsed}">
+            <tab [active]="isStatus"
+                 customClass="badge-parent"
+                 (select)="onTabClick(true)">
+                <template tabHeading>
+                    Review
+                    <span *ngIf="!errors.empty()" class="badge badge-corner">{{errors.total()}}</span>
+                </template>
+            </tab>
+            <tab heading="Types"
+                 [active]="!isStatus"
+                 (select)="onTabClick(false)"></tab>
+        </tabset>
+    </div>
+    <ul class="sidebar-menu">
 
-    <form novalidate
-          #form="ngForm"
-          (ngSubmit)="onSubmit(form)">
-        <ul class="sidebar-menu">
-            <li class="sidebar-item sidebar-edit-btn-item menu-toggle">
-                <a (click)="onToggle($event)">
-                    <button class="minimise-btn btn btn-primary btn-xs"
-                            [ngClass]="{'inactive': !collapsed}">
-                        <i class="fa fa-bars fa-fw"></i>
-                    </button>
-                </a>
-            </li>
-            <li class="sidebar-item type-control" *ngIf="!editing">
-                <a (click)="onEditModeToggle($event)">
-                    <strong class="fa-stack">
-                        <i class="fa fa-circle fa-stack-2x"></i>
-                        <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
-                    </strong>
-                    {{!collapsed ? '&nbsp;Edit types' : ''}}
-                </a>
-            </li>
-            <li class="sidebar-item type-control" *ngIf="editing">
-                <a (click)="onCancel($event)">
-                    <i class="fa fa-fw fa fa-chevron-circle-left fa-lg"></i>
-                    {{!collapsed ? '&nbsp;Cancel type edit' : ''}}
-                </a>
-            </li>
+        <!-- Types tab -->
+        <form novalidate
+              [ngClass]="{'edit-type-form': editing}"
+              #form="ngForm"
+              (ngSubmit)="onSubmit(form)">
             <li class="sidebar-item" *ngFor="let item of items; let i = index">
-                <a *ngIf="!editing" (click)="item.onClick($event)"
+                <a *ngIf="!isStatus && !editing" (click)="item.onClick($event)"
                    [tooltip]="item.label"
-                   placement="right"
                    container="body">
                     <i class="fa fa-lg text-center {{item.feature.type.icon}}"></i>
                     {{!collapsed ? '&nbsp;&nbsp;Add ' + item.feature.typeName : ''}}
                 </a>
                 <div class="row-input"
                    [ngClass]="{'has-error': itemType.invalid && itemType.touched}"
-                   *ngIf="editing && !item.isDeleted">
+                   *ngIf="!isStatus && editing && !item.isDeleted">
                     <label [hidden]="!itemType.errors?.unique || !itemType.touched"
                            class="control-label small">
                         Please use a unique type name
@@ -71,24 +71,61 @@
                     </span>
                 </div>
             </li>
-            <li *ngIf="!editing" class="sidebar-item">
-                <a (click)="onAddClick($event)">
-                    <i class="fa fa-fw fa-plus-circle fa-lg"></i>
-                    {{!collapsed ? '&nbsp;&nbsp;New type' : ''}}
-                </a>
-            </li>
-            <li *ngIf="editing && !collapsed" class="row-submit">
-                <button class="btn btn-primary btn-submit"
-                        type="submit">
+            <li *ngIf="!isStatus && editing && !collapsed" class="row-submit btn-toolbar">
+                <button class="btn btn-primary btn-submit" type="submit">
                     Save
                 </button>
+                <button class="btn btn-default btn-cancel"(click)="onCancel($event)">
+                    Cancel
+                </button>
             </li>
-        </ul>
-    </form>
+        </form>
+        <li  *ngIf="!isStatus && !editing" class="sidebar-item type-control">
+            <a (click)="onEditModeToggle($event)">
+                <strong class="fa-stack">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+                </strong>
+                {{!collapsed ? '&nbsp;Edit types' : ''}}
+            </a>
+        </li>
+        <li *ngIf="!isStatus && !editing" class="sidebar-item type-control">
+            <a (click)="onAddClick($event)">
+                <i class="fa fa-fw fa-plus-circle fa-lg"></i>
+                {{!collapsed ? '&nbsp;&nbsp;New type' : ''}}
+            </a>
+        </li>
+
+        <!-- Review tab -->
+        <div *ngIf="isStatus">
+            <li *ngIf="errors.empty()" class="no-error-msg text-center"
+                [ngClass]="{'col-md-12': !collapsed}">
+                <i class="fa fa-check-circle" aria-hidden="true"
+                    [ngClass]="{'fa-2x': collapsed, 'fa-4x': !collapsed}"></i>
+                <h4>No field is pending review</h4>
+                <h4>You may submit the study now</h4>
+            </li>
+            <li class="sidebar-item" *ngFor="let control of formControls; let i = index">
+                <a *ngIf="control.invalid"
+                   tooltip="{{collapsed ? tipText(control.errors) : ''}}"
+                   container="body"
+                   placement="right"
+                   (click)="onReviewClick(control)">
+                    <i class="fa fa-lg text-center {{control.parentType.icon}}"></i>
+                    {{!collapsed ? '&nbsp;' + control.template.name + '&nbsp;' : ''}}
+                    <strong class="label label-default"
+                            [ngClass]="{'label-danger': control.invalid && control.touched}">
+                        {{!collapsed ? tipText(control.errors) : ''}}
+                        <i *ngIf="collapsed && control.errors.required" class="fa fa-lg fa-asterisk"></i>
+                        <i *ngIf="collapsed && (control.errors.maxlength || control.errors.minlength)" class="fa fa-lg fa-arrows-h"></i>
+                    </strong>
+                </a>
+            </li>
+        </div>
+    </ul>
 </aside>
-<subm-add-dialog
-        #addDialog
-        [onAddType]="onAdd.bind(this)">
+<subm-add-dialog #addDialog
+                [onAddType]="onAdd.bind(this)">
 </subm-add-dialog>
 <confirm-dialog #confirmDialog
                 headerTitle="Delete items"

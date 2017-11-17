@@ -36,25 +36,16 @@ export class SubmFeatureComponent implements OnInit {
         }
     }
 
-    //Counts the number of errors if the feature is not empty.
-    ngAfterViewInit(): void {
-        if (this.featureEl) {
-            this.errorNum = this.featureEl.nativeElement.getElementsByClassName('has-error').length;
-            this.changeRef.detectChanges();
-        }
-    }
-
-    //Updates the number of errors only after a field within the feature has changed.
-    onChange(): void {
-        this.errorNum = this.featureEl.nativeElement.getElementsByClassName('has-error').length;
-    }
-
     get feature(): Feature {
         return this.featureForm === undefined ? undefined : this.featureForm.feature;
     }
 
-    get valid(): boolean {
-        return this.featureForm.form.valid;
+    //Counts the number of errors if the feature is not empty.
+    ngDoCheck(): void {
+        if (this.featureEl) {
+            this.errorNum = this.featureEl.nativeElement.getElementsByClassName('has-error').length;
+            this.changeRef.detectChanges();
+        }
     }
 }
 

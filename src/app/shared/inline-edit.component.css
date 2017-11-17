@@ -1,5 +1,16 @@
-.inline-edit-wrapper .icons {
-    opacity: .3;
+/* Makes sure container is not outgrown by input when displayed */
+.inline-edit-wrapper {
+    height: 32px;
+}
+
+.simple-box {
+    height: 32px;
+    padding-left: 0;
+    outline: none;
+    border: none !important;
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
 }
 
 .editable-value {
@@ -14,8 +25,13 @@
     color: #000;
 }
 
+.inline-edit-wrapper .icons {
+    opacity: .3;
+}
 .icons {
-    float: right;
+    position: absolute;
+    top: 0;
+    right: 2.5px;
     height: 20px;
 }
 

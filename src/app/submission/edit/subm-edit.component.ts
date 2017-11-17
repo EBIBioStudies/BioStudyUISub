@@ -8,6 +8,7 @@ import {
     ActivatedRoute,
     Params
 } from '@angular/router';
+import {FormControl, ValidationErrors} from "@angular/forms";
 
 import {Subscription} from 'rxjs/Subscription';
 import {Observable} from 'rxjs/Observable';
@@ -32,26 +33,28 @@ import {
 import {ServerError} from '../../http/server-error.handler';
 import {SubmResultsModalComponent} from '../results/subm-results-modal.component';
 import {ConfirmDialogComponent} from 'app/shared/index';
+import {SubmFormComponent} from "./subm-form/subm-form.component";
 
 @Component({
     selector: 'subm-edit',
     templateUrl: './subm-edit.component.html'
 })
 export class SubmEditComponent implements OnInit, OnDestroy {
-    sideBarCollapsed = false;
-    readonly = false;
-
     subm: Submission;
     section: Section;
-
     errors: SubmValidationErrors = SubmValidationErrors.EMPTY;
-    accno = '';
+    formControls: FormControl[] = [];
+    sideBarCollapsed: boolean = false;
+    readonly: boolean = false;
+    accno: string = '';
 
     private subscr: Subscription;
     private isSubmitting = false;
     private isSaving = false;
     private wrappedSubm: any;
+
     @ViewChild('confirmDialog') confirmDialog: ConfirmDialogComponent;
+    @ViewChild('submForm') submForm: SubmFormComponent;
 
     constructor(private route: ActivatedRoute,
                 private submService: SubmissionService,
@@ -80,6 +83,10 @@ export class SubmEditComponent implements OnInit, OnDestroy {
             });
     }
 
+    ngAfterViewChecked() {
+        this.submForm && this.submForm.sectionForm.controls(this.formControls);
+    }
+
     ngOnDestroy() {
         if (this.subscr) {
             this.subscr.unsubscribe();
@@ -93,8 +100,20 @@ export class SubmEditComponent implements OnInit, OnDestroy {
         return this.subm.sectionPath(this.section.id);
     }
 
-    get submValid(): boolean {
+    get formValid(): boolean {
         return this.errors.empty();
+    }
+
+    /**
+     * Probes the "touched" property of the child form component to figure out if any of the fields has been blurred.
+     * @returns {boolean} Normalised equivalent of the "touched" flag in the form.
+     */
+    get formTouched(): boolean {
+        if (this.submForm && typeof this.submForm.sectionForm.form.touched !== 'undefined') {
+            return this.submForm.sectionForm.form.touched;
+        } else {
+            return false;
+        }
     }
 
     onSectionClick(section: Section): void {
@@ -128,7 +147,9 @@ export class SubmEditComponent implements OnInit, OnDestroy {
             event.preventDefault();
         }
 
-        if (!this.canSubmit() || !this.submValid) {
+        if (!this.canSubmit() || !this.formValid) {
+            this.submForm.sectionForm.markAsTouched();
+            this.isSubmitting = false;
             return;
         }
 

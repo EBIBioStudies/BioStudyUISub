@@ -1,5 +1,5 @@
-<div class="panel"
-     [ngClass]="{'panel-danger': !valid, 'panel-default': valid}"
+<strong class="text-danger" *ngIf="errorNum && feature.size() > 0">Please review the fields below</strong>
+<div class="panel panel-default"
      *ngIf="feature.size() > 0">
 
     <div class="panel-heading clearfix">
@@ -16,12 +16,10 @@
             </div>
         </div>
         <span class="panel-description col-xs-10">{{feature.type.description}}</span>
-        <span class="label label-default pull-right" *ngIf="!valid && errorNum">{{errorNum}} error{{errorNum > 1 ? 's' : ''}}</span>
+        <span class="label label-danger pull-right" *ngIf="errorNum">{{errorNum}} error{{errorNum > 1 ? 's' : ''}}</span>
     </div>
 
-    <div class="panel-body"
-         #featureEl
-         (change)="onChange($event)">
+    <div class="panel-body" #featureEl>
         <subm-feature-grid *ngIf="!feature.singleRow"
                            [featureForm]="featureForm"
                            [readonly]="readonly">

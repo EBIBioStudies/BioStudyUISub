@@ -8,7 +8,7 @@
                   (ngSubmit)="onSubmit(form)">
                 <div class="modal-header bg-primary">
                     New type item
-                    <button type="button" class="close pull-right" aria-label="Close" (click)="bsModal.hide()">
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="hide()">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -40,14 +40,14 @@
                                id="typeName"
                                #typeName="ngModel"
                                validate-onblur
-                               required>
+                               required
+                               autofocus #focusBtn>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <div class="pull-right">
-                        <button type="submit"
-                                class="btn btn-primary btn-sm"
-                                autofocus #focusBtn>Add
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            Add
                         </button>
                         <button type="button"
                                 class="btn btn-default btn-sm"

@@ -1,6 +1,6 @@
 <aside class="left-side sidebar sidebar-offcanvas"
        *ngIf="!readonly">
-    <div class="sidebar-contents" *ngIf="!collapsed">
+    <div class="sidebar-contents clearfix" *ngIf="!collapsed">
         <form id="subm-upload-form"
               class="col-sm-12"
               name="submUploadForm"
@@ -33,7 +33,10 @@
                 <ul *ngIf="model.projects.length > 0">
                     <li *ngFor="let p of model.projects">{{p}}</li>
                 </ul>
-                <p *ngIf="isLoading"><i class="fa fa-cog fa-spin"></i> Loading projects...</p>
+                <p *ngIf="isLoading" class="text-muted">
+                    <i class="fa fa-cog fa-spin"></i>
+                    Loading projects...
+                </p>
                 <multi-select
                         name="selectedProjects"
                         *ngIf="!isLoading"

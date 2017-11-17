@@ -23,7 +23,7 @@
                       (ngSubmit)="onSubmit(signUpForm)" #signUpForm="ngForm">
                     <div class="form-group form-group-sm">
                         <label class="control-label" for="username">Full name</label>
-                        <small class="text-muted pull-right">Optional</small>
+                        <small class="text-muted pull-right"><i>Optional</i></small>
                         <input type="text" autofocus
                                id="username"
                                name="username"
@@ -74,7 +74,7 @@
                             </span>
                             <span [hidden]="orcid.invalid && orcid.touched" class="text-muted">(should follow dddd-dddd-dddd-dddd format)</span>
                         </label>
-                        <small class="text-muted pull-right">Optional</small>
+                        <small class="text-muted pull-right"><i>Optional</i></small>
                         <orcid-input-box
                                 [(ngModel)]="model.orcid"
                                 name="orcid"
