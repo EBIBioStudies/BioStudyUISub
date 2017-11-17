@@ -10,7 +10,10 @@ export const DefaultTemplate = {
             'columnTypes': [
                 {
                     'name': 'Organism',
-                    'valueType': 'text'
+                    'valueType': 'text',
+                    'required': true,
+                    'minlength': 50
+
                 },
                 {
                     'name': 'Experimental design',
@@ -33,17 +36,20 @@ export const DefaultTemplate = {
         'fieldTypes': [
             {
                 'name': 'Title',
+                'icon': 'fa-font',
                 'valueType': 'text',
                 'required': true,
                 'minlength': 50
             },
             {
                 'name': 'Release Date',
+                'icon': 'fa-calendar',
                 'valueType': 'date',
                 'required': true
             },
             {
                 'name': 'Description',
+                'icon': 'fa-comment',
                 'valueType': 'textblob',
                 'required': true,
                 'minlength': 50
@@ -65,7 +71,8 @@ export const DefaultTemplate = {
                     {
                         'name': 'Organisation',
                         'valueType': 'text',
-                        'required': true
+                        'required': true,
+                        'minlength': 50
                     },
                     {
                         'name': 'E-mail',

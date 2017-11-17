@@ -16,7 +16,7 @@ import {
            [multiple]="multiple"
            #inputFile/>
     <button type="button"
-            class="btn btn-default btn-sm"
+            class="btn btn-primary btn-sm"
             (click)="inputFile.value = '';inputFile.click()">
             {{title}}
     </button>

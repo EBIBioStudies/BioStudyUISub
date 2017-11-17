@@ -4,18 +4,18 @@
             [collapsed]="collapseSideBar">
     </direct-submit-sidebar>
     <div class="navbar-default navbar-subm-fixed">
-        <div class="col-md-12">
+        <div class="col-xs-12">
             <a routerLink="/submissions">Submission list</a>
             &nbsp;<i class="fa fa-angle-double-right"></i>&nbsp;
             <strong>Direct upload</strong>
         </div>
     </div>
     <div class="container-fluid">
-        <aside class="right-side">
-            <div *ngIf="!request" class="help-msg panel panel-default navbar-subm-margin">
+        <aside class="right-side navbar-subm-margin">
+            <div *ngIf="!request" class="help-msg panel">
                 <div class="panel-body">
-                    Please, provide the details of your data file using the form on the left. Upon
-                    submission, the file will be validated and any errors shown.
+                    <h4>Please fill in the form on the left</h4>
+                    <p>All fields are required. Upon submission, the data file will be validated and any errors shown below.</p>
                 </div>
             </div>
             <div *ngIf="request" class="navbar-subm-margin">

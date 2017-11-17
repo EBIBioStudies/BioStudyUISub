@@ -3,13 +3,11 @@
         <div class="heading col-xs-3">Key</div>
         <div class="heading col-xs-9">Value</div>
     </div>
-    <div class="row" #rowEl *ngFor="let column of columns; let idx = index">
+    <div class="row" #rowEl *ngFor="let column of columns; let idx = index; let first = first; let last = last">
         <div class="col-xs-3">
-            <div class="form-group key-field"
-                 [ngClass]="{'has-error': featureForm.columnControl(column.id).invalid}">
+            <div class="form-group key-field">
                 <div class="input-group">
-                    <span *ngIf="!readonly"
-                          class="input-group-btn">
+                    <span *ngIf="!readonly && !column.required" class="input-group-btn">
                           <button type="button"
                                   class="btn btn-sm btn-danger btn-flat"
                                   (click)="featureForm.feature.removeRowAt(idx)"
@@ -21,18 +19,27 @@
                            class="form-control input-sm"
                            [readonly]="readonly"
                            [(ngModel)]="column.name"
-                           [formControl]="featureForm.columnControl(column.id)">
+                           [formControl]="featureForm.columnControl(column.id)"
+                           [readonly]="column.required || readonly"
+                           (blur)="featureForm.columnControl(column.id).value ||
+                                   featureForm.columnControl(column.id).setValue(feature.typeName + ' ' + (idx + 1))">
                 </div>
             </div>
         </div>
         <div class="col-xs-9">
-            <div class="form-group">
-                <subm-field
-                    [type]="column.valueType"
-                    [(ngModel)]="feature.rows[0].valueFor(column.id).value"
-                    [readonly]="readonly"
-                    isSmall="true"
-                    [formControl]="featureForm.rowValueControl(0,column.id)">
+            <div class="form-group"
+                 [ngClass]="{'has-error': featureForm.rowValueControl(0,column.id).invalid &&
+                                          featureForm.rowValueControl(0,column.id).touched}">
+                <subm-field placement="{{first && !last ? 'bottom' : 'top'}}"
+                            triggers="focus"
+                            containerClass="validation-pop text-danger"
+                            popover="{{featureForm.rowErrors[0][column.id]}}"
+                            [type]="column.valueType"
+                            [(ngModel)]="feature.rows[0].valueFor(column.id).value"
+                            [readonly]="readonly"
+                            isSmall="true"
+                            [formControl]="featureForm.rowValueControl(0,column.id)"
+                            validate-onblur>
                 </subm-field>
             </div>
         </div>
@@ -46,7 +53,7 @@
                 [tooltip]="'Add a new ' + feature.typeName.toLowerCase()"
                 (click)="feature.addColumn()">
             <i class="fa fa-lg {{feature.type.icon}}"></i>
-            &nbsp;Add {{feature.typeName}}
+            &nbsp;Add row
         </button>
     </div>
 </div>

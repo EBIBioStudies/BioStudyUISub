@@ -62,6 +62,7 @@ export class FieldType extends BaseType {
     readonly valueType: ValueType;
     readonly minlength: number;
     readonly maxlength: number;
+    readonly icon: string;
 
     constructor(name, obj?: any, scope?: Map<string, any>) {
         super(name, true, scope);
@@ -70,13 +71,20 @@ export class FieldType extends BaseType {
         this.minlength = obj.minlength || -1;
         this.maxlength = obj.maxlength || -1;
 
-        //Sets required to false if not present. If the field has a mininum legth, it must be required
+        //Sets required to false if not present. If the field has a mininum length, it must be required.
         if (obj.hasOwnProperty('required')) {
             this.required = obj.required;
         } else if (this.minlength > 0) {
             this.required = true;
         } else {
             this.required = false;
+        }
+
+        //Normalises the icon for the present type.
+        if (obj.hasOwnProperty('icon')) {
+            this.icon = obj.icon;
+        } else {
+            this.icon = 'fa-pencil-square-o';
         }
     }
 }
@@ -112,7 +120,8 @@ export class FeatureType extends BaseType {
         this.title = typeObj.title || 'Add ' + this.name;
         this.description = typeObj.description || '';
 
-        if (typeObj.icon) {
+        //Normalises the icon for the present type
+        if (typeObj.hasOwnProperty('icon')) {
             this.icon = typeObj.icon;
         } else if (this.singleRow) {
             this.icon = 'fa-list';

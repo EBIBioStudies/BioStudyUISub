@@ -57,9 +57,11 @@ export class SubmAddDialogComponent implements AfterViewInit {
     }
 
     /**
-     * Closes the modal.
+     * Closes the modal, making sure the last typeName typed in is not lost while
+     * clearing any validation messages.
      */
     hide(): void {
+        this.typeName.control.markAsUntouched({onlySelf: true});
         this.modalDirective.hide();
     }
 
@@ -82,7 +84,7 @@ export class SubmAddDialogComponent implements AfterViewInit {
     }
 
     /**
-     * Handler for click events on "Cancel" button. Resets the form's state and hides modal.
+     * Handler for click events on "Cancel" button.
      */
     onCancel(): void {
         this.type = 'Grid';

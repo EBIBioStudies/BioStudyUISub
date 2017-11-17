@@ -1,6 +1,6 @@
 <div *ngIf="editing">
     <input type="text"
-           class="form-control input-sm form-control-auto"
+           class="form-control form-control-auto simple-box"
            name="inline-edit-box"
            [required]="required"
            [(ngModel)]="value"
@@ -12,7 +12,10 @@
 <div class="inline-edit-wrapper"
      [ngClass]="{'editable': canEdit}"
      *ngIf="!editing">
-    <span class="editable-value text-muted">{{value || emptyValue}}</span>
+    <span class="editable-value text-muted"
+          (click)="canEdit && onEditClick()">
+        {{value}}
+    </span>
     <div class="icons">
         <button class="btn btn-xs btn-link"
                 *ngIf="canEdit"

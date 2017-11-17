@@ -35,7 +35,9 @@ import {
                 (click)="openDatePicker()"
                 [required]="required"
                 [disabled]="readonly"
-                 #inputbox>
+                readonly
+                style="width: auto"
+                #inputbox>
     </div>
     <datepicker style="position: absolute; z-index:10; min-height:290px;"
                 [hidden]="!showDatePicker"
@@ -49,6 +51,8 @@ import {
     ]
 })
 
+//TODO: It seems that the pattern specified in the template is being purposefully overwritten to make up for the lack of blubbling up of validation just like it was done with the ORCID input.
+//NOTE: For the time being, the input is set to readonly since the user is negated the ability to type the date in instead of using the picker.
 export class DateInputComponent implements ControlValueAccessor {
     @Input() required?: boolean = false;
     @Input() readonly?: boolean = false;
@@ -106,7 +110,6 @@ export class DateInputComponent implements ControlValueAccessor {
 
     openDatePicker() {
         this.showDatePicker = true;
-        this.inpEl.nativeElement.blur();
     }
 
     onActiveDateChange(date: Date): void {

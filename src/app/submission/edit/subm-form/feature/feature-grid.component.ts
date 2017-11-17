@@ -9,6 +9,7 @@ import {
 
 import {Feature, Attribute, ValueMap} from '../../../shared/submission.model';
 import {FeatureForm} from '../subm-form.service';
+import {AbstractControl} from "@angular/forms";
 
 @Component({
     selector: 'subm-feature-grid',
@@ -50,11 +51,11 @@ export class FeatureGridComponent implements AfterViewInit {
 
             //Row added => sets focus to the first field of the row
             if (oldNumRows < this.featureForm.rows.length) {
-                rowEls.last.nativeElement.querySelector('select, input').focus();
+                rowEls.last.nativeElement.querySelector('.form-control').focus();
 
             //Column added => sets focus to last field of the first row (first field of the added column)
             } else if (oldNumCols < this.featureForm.columns.length) {
-                rowEls.first.nativeElement.querySelectorAll('select, input')[oldNumCols].focus();
+                rowEls.first.nativeElement.querySelectorAll('.form-control')[oldNumCols].focus();
             }
 
             oldNumRows = this.featureForm.rows.length;

@@ -1,7 +1,7 @@
 <div class="container-fluid container-scroll" [formGroup]="featureForm.form">
-    <div class="row headings">
-        <div class="col-xs-1 col-md-1 text-center">
-            <button class="add-column-btn btn-add btn btn-link btn-md"
+    <div class="row">
+        <div class="cell canton col-xs-1 col-md-1 text-center">
+            <button class="btn-add btn btn-link btn-md"
                *ngIf="!readonly"
                [tooltip]="'Add a new ' + feature.typeName.toLowerCase() + ' attribute'"
                container="body"
@@ -9,51 +9,54 @@
                 <i class="fa fa-plus-circle" aria-hidden="true"></i> Column
             </button>
         </div><!--
-        --><div class="col-xs-3 col-md-2" *ngFor="let column of columns">
+        --><div class="cell heading-cell column-heading col-xs-3 col-md-2" *ngFor="let column of columns; let idx = index">
             <inline-edit
                     [(ngModel)]="column.name"
-                    emptyValue="New Column"
-                    [required]="featureForm.columnType(column.id).required"
+                    emptyValue="{{'Column ' + (idx + 1)}}"
                     (remove)="feature.removeColumn(column.id)"
-                    [formControl]="featureForm.columnControl(column.id)"></inline-edit>
+                    [formControl]="featureForm.columnControl(column.id)"
+                    [required]="column.required">
+            </inline-edit>
         </div>
     </div>
     <div class="row" #rowEl
-         *ngFor="let row of rows; let idx=index">
-        <div class="col-xs-1 col-md-1 text-center">
-            <span class="row-number">{{idx+1}}</span>
+         *ngFor="let row of rows; let rowIdx = index; let first = first; let last = last">
+        <div class="cell heading-cell row-heading col-xs-1 col-md-1 text-center">
+            {{rowIdx+1}}
             <button *ngIf="!readonly"
                     type="button"
                     class="btn btn-danger btn-sm"
-                    (click)="feature.removeRowAt(idx)"
-                    [tooltip]="'Delete ' + feature.typeName.toLowerCase() + ' ' + (idx + 1)"
+                    (click)="feature.removeRowAt(rowIdx)"
+                    [tooltip]="'Delete ' + feature.typeName.toLowerCase() + ' ' + (rowIdx + 1)"
                     container="body">
                 <i class="fa fa-trash"></i>
             </button>
         </div>
-        <div class="column col-xs-3 col-md-2" #colEl *ngFor="let column of columns">
-            <div [ngClass]="{'has-error': featureForm.rowValueControl(idx, column.id).invalid}">
-                <subm-field
-                        [type]="column.valueType"
-                        [(ngModel)]="row.valueFor(column.id).value"
-                        [readonly]="readonly"
-                        isSmall="true"
-                        [formControl]="featureForm.rowValueControl(idx, column.id)">
+        <div class="cell body-cell column-entry col-xs-3 col-md-2" #colEl *ngFor="let column of columns">
+            <div [ngClass]="{'has-error': featureForm.rowValueControl(rowIdx, column.id).invalid &&
+                                          featureForm.rowValueControl(rowIdx, column.id).touched}">
+                <subm-field placement="{{first && !last ? 'bottom' : 'top'}}"
+                            triggers="focus"
+                            containerClass="validation-pop text-danger"
+                            popover="{{featureForm.rowErrors[rowIdx][column.id]}}"
+                            [name]="column.name"
+                            [type]="column.valueType"
+                            [(ngModel)]="row.valueFor(column.id).value"
+                            [readonly]="readonly"
+                            [formControl]="featureForm.rowValueControl(rowIdx, column.id)"
+                            isSmall="true"
+                            validate-onblur>
                 </subm-field>
             </div>
         </div>
     </div>
 </div>
-<div class="row">
-    <div class="col-xs-1 col-md-1">
-        <button *ngIf="!readonly"
-                type="button"
-                class="btn-add btn btn-link"
-                [tooltip]="'Add a new ' + feature.typeName.toLowerCase()"
-                container="body"
-                (click)="feature.addRow()">
-            <i class="fa fa-lg {{feature.type.icon}}"></i>
-            &nbsp;Add {{feature.typeName}}
-        </button>
-    </div>
-</div>
+<button *ngIf="!readonly"
+        type="button"
+        class="btn-add btn btn-link"
+        [tooltip]="'Add a new ' + feature.typeName.toLowerCase()"
+        container="body"
+        (click)="feature.addRow()">
+    <i class="fa fa-lg {{feature.type.icon}}"></i>
+    &nbsp;Add row
+</button>

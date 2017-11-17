@@ -8,7 +8,8 @@ import {
 import {
     ControlValueAccessor,
     NG_VALUE_ACCESSOR,
-    NgControl
+    NgControl,
+    NgModel,
 } from '@angular/forms';
 
 import 'rxjs/add/observable/timer';
@@ -30,12 +31,12 @@ import 'rxjs/add/observable/timer';
  */
 export class ORCIDInputBoxComponent implements ControlValueAccessor {
     private onChange: any = (_:any) => {};      //placeholder for handler propagating changes outside the custom control
-    private onTouched: any = () => {};          //placeholder for handler
+    private onTouched: any = () => {};          //placeholder for handler after the control has been "touched"
     private orcidValue = '';                    //internal data model
     private mlistener = null;
 
     @ViewChild('inputModel')
-    private inputModel:any;
+    private inputModel:NgModel;
 
     /**
      * Instantiates a new custom component.
@@ -112,7 +113,6 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor {
     }
 
     ngOnInit() {
-        console.log('added message listener');
         window.addEventListener('message', this.messageListener());
     }
 
@@ -125,11 +125,9 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor {
 
         control.setValidators(this.inputModel.control.validator);
         control.setAsyncValidators(this.inputModel.control.asyncValidator);
-        /*control.markAsTouched = this.inputModel.control.markAsTouched;*/
     }
 
     ngOnDestroy() {
-        console.log('removed message listener');
         window.removeEventListener('message', this.messageListener());
     }
 

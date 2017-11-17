@@ -1,0 +1,13 @@
+<select  *ngIf="files.length > 0"
+         class="form-control input-sm"
+         [name]="name"
+         [(ngModel)]="value"
+         [required]="required"
+         [disabled]="readonly">
+    <option *ngFor="let file of files" [value]="file">{{file}}</option>
+</select>
+<a *ngIf="files.length == 0" class="form-control input-sm"
+   [routerLink]="['/files',{bb:'1'}]">
+    Upload a file
+    <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+</a>

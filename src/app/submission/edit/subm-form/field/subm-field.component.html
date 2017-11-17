@@ -3,7 +3,8 @@
        [ngClass]="{'input-sm': isSmall}"
        [(ngModel)]="value"
        [readonly]="readonly"
-       [required]="required">
+       [required]="required"
+       (blur)="onBlur()">
 
 <!--
            [typeahead]="typeaheadAttrValues(attr.name)"
@@ -17,13 +18,15 @@
         [(ngModel)]="value"
         [required]="required"
         [readonly]="readonly"
-        bsstDateFormat>
+        bsstDateFormat
+        (focusout)="onBlur()">
 </date-input>
 
 <file-input *ngIf="type === 'file'"
             [(ngModel)]="value"
             [required]="required"
-            [readonly]="readonly">
+            [readonly]="readonly"
+            (focusout)="onBlur()">
 </file-input>
 
 <textarea *ngIf="type === 'textblob'"
@@ -31,4 +34,6 @@
           [(ngModel)]="value"
           [readonly]="readonly"
           [required]="required"
-          autosize="200"></textarea>
+          autosize="200"
+          (blur)="onBlur()">
+</textarea>

@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import {
     NgForm,
-    FormControl,
+    FormControl, ValidationErrors,
 } from '@angular/forms';
 
 import { Subscription } from 'rxjs/Subscription';
@@ -24,6 +24,8 @@ import { SubmAddDialogComponent } from '../subm-add/subm-add.component';
 import { ConfirmDialogComponent } from 'app/shared/index';
 import { SubmAddEvent } from '../subm-add/subm-add-event.model';
 import { SectionType } from '../../shared/submission-type.model';
+import {SubmValidationErrors} from "../../shared/submission.validator";
+import {SectionForm} from "../subm-form/subm-form.service";
 
 /**
  * Submission item class aggregating its corresponding feature with UI-relevant metadata. It enables
@@ -158,12 +160,17 @@ class SubmItems extends Array<SubmItem> {
 export class SubmSideBarComponent implements OnChanges {
     @Input() collapsed? = false;
     @Input() section: Section;
+    @Input() formControls: FormControl[] = [];
+    @Input() errors: SubmValidationErrors = SubmValidationErrors.EMPTY;
     @Output() toggle? = new EventEmitter();
+
     @ViewChild('addDialog') addDialog: SubmAddDialogComponent;
     @ViewChild('confirmDialog') confirmDialog: ConfirmDialogComponent;
 
-    editing: boolean = false;    //component's mode: display or editing, with different renderings
-    items: SubmItems;            //current collection of feature/subsection items
+    isStatus: boolean = true;               //flag indicating if form status on display
+    editing: boolean = false;               //flag indicating component's mode: display or editing, with different renderings
+    items: SubmItems;                       //current collection of feature/subsection items
+    iconMap: any = {};                      //lookup table for icons
 
     private subscr: Subscription;
 
@@ -188,11 +195,17 @@ export class SubmSideBarComponent implements OnChanges {
         }
     }
 
-    onToggle(ev): void {
-        ev.preventDefault();
-        if (this.toggle) {
-            this.toggle.emit();
-        }
+    onTabClick(isStatus: boolean): void {
+        this.isStatus = isStatus;
+    }
+
+    /**
+     * Handler for the toggling button, bubbling the menu's state up.
+     * @param {Event} [event] - Optional click event object.
+     */
+    onToggle(event?:Event): void {
+        event.preventDefault();
+        this.toggle && this.toggle.emit();
     }
 
     /**
@@ -324,15 +337,46 @@ export class SubmSideBarComponent implements OnChanges {
     }
 
     /**
-     * Resets the submission item collection to the current section's
-     * annotations and features.
+     * Resets the submission item collection to the current section's annotations and features.
      */
     onItemsChange(): void {
         this.items = SubmItems.create();
 
+        //Builds the item collection
         this.items.push(new SubmItem(this.section.annotations));
         this.section.features.list().forEach((feature) => {
             this.items.push(new SubmItem(feature))
         });
+
+        //Indexes icons by type name
+        this.iconMap = {};
+        this.items.forEach((item) => {
+            this.iconMap[item.feature.typeName] = item.feature.type.icon;
+        });
+    }
+
+    /**
+     * Sets focus on the field represented by the form control clicked on within the review tab.
+     * @param {FormControl} control - Form control augmented with the DOM element for the field.
+     */
+    onReviewClick(control: FormControl) {
+        control['nativeElement'].focus();
+    }
+
+    /**
+     * Determines the abbreviated text matching a certain error key.
+     * @param {ValidationErrors} errors Set of error keys.
+     * @returns {string} Abbreviated text
+     */
+    tipText(errors: ValidationErrors): string {
+        if (errors.required) {
+            return 'Blank';
+        } else if (errors.maxlength) {
+            return 'Too long';
+        } else if (errors.minlength) {
+            return 'Too short';
+        } else if (errors.pattern) {
+            return 'Wrong format';
+        }
     }
 }

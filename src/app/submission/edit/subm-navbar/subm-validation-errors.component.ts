@@ -1,16 +1,18 @@
 import {
-    Component
+    Component,
+    Input
 } from '@angular/core';
 
-import {BsModalRef} from 'ngx-bootstrap/modal/modal-options.class';
 import {SubmValidationErrors} from '../../shared/submission.validator';
+import {BsModalRef} from 'ngx-bootstrap/modal/modal-options.class';
 
 @Component({
     selector: 'subm-validation-errors',
-    templateUrl: './subm-validation-errors.component.html'
+    templateUrl: './subm-validation-errors.component.html',
+    styleUrls:['./subm-validation-errors.component.css']
 })
-export class SubmValidationErrorsModalComponent {
-    errors: SubmValidationErrors = SubmValidationErrors.EMPTY;
+export class SubmValidationErrorsComponent {
+    @Input() errors: SubmValidationErrors = SubmValidationErrors.EMPTY;
 
     constructor(public bsModalRef: BsModalRef) {
     }
@@ -29,5 +31,13 @@ export class SubmValidationErrorsModalComponent {
             );
         };
         return collect(0, this.errors);
+    }
+
+    /**
+     * Formats the error log as a URI string.
+     * @returns {string} Serialised contents of the log.
+     */
+    toLogURI(): string {
+        return encodeURIComponent(JSON.stringify(this.errors));
     }
 }

@@ -4,18 +4,18 @@ import {
     Output,
     EventEmitter
 } from '@angular/core';
-
-import {BsModalService} from 'ngx-bootstrap/modal';
+import {BsModalService} from "ngx-bootstrap/modal";
 
 import {
     Section
 } from '../../shared/submission.model';
-import {SubmValidationErrorsModalComponent} from './subm-validation-errors.component';
+import {SubmValidationErrorsComponent} from './subm-validation-errors.component';
 import {SubmValidationErrors} from '../../shared/submission.validator';
 
 @Component({
     selector: 'subm-navbar',
     templateUrl: './subm-navbar.component.html',
+    styleUrls: ['./subm-navbar.component.css'],
     host: {'class': 'navbar-subm-fixed navbar-default'}
 })
 export class SubmNavBarComponent {
@@ -26,15 +26,14 @@ export class SubmNavBarComponent {
     @Output() sectionClick: EventEmitter<Section> = new EventEmitter<Section>();
     @Output() submitClick: EventEmitter<Section> = new EventEmitter<Section>();
 
-    constructor(private modalService: BsModalService) {
-    }
+    constructor(private modalService: BsModalService) {}
 
     onSectionClick(ev: Section): void {
         this.sectionClick.next(ev);
     }
 
     onErrorsLabelClick(ev): void {
-        const bsModalRef = this.modalService.show(SubmValidationErrorsModalComponent);
+        const bsModalRef = this.modalService.show(SubmValidationErrorsComponent);
         bsModalRef.content.errors = this.errors;
     }
 

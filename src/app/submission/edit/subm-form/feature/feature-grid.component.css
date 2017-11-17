@@ -1,70 +1,57 @@
 .container-scroll {
+    overflow-x: auto;
     margin-bottom: 10px;
+    white-space: nowrap;
 }
-
-.headings > div, .column {
+.cell {
     float: none;
     display: inline-block;
-}
-.headings > div {
-    border-bottom: 1px solid #ccc;
+    padding: 0 0.5vw;
 }
 
-.add-column-btn {
+/* Heading row */
+.cell.row-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    float: left;
+}
+.canton, .column-heading {
+    border-bottom: 1px solid #ccc;
+}
+.canton .btn-add {
+    overflow: hidden;
+    width: 100%;
     padding: 0;
+    text-overflow: ellipsis;
     border: none;
 }
 
-.container-scroll > .row {
+/* Other rows */
+.row {
     margin-top: 15px;
 }
-.container-scroll > .row:first-of-type {
+.row:first-of-type {
     margin-top: 0;
+    line-height: 32px;
 }
-.container-scroll > .row:last-of-type {
+.row:last-of-type {
     margin-bottom: 10px;
 }
 
-.row-number {
-    position: absolute;
-    left: 0;
-    top: 5px;
-}
-/*.container-scroll > .row > .col-md-2 {
-    font-weight: bold;
-    text-align: center;
-}*/
-
 @media (min-width: 768px) {
-    .container-scroll {
-        overflow-x: auto;
-        white-space: nowrap;
-    }
     .container-scroll .col-md-2 {
         width: 16.66666667vw;
-        padding: 0 0.5vw;
     }
     .container-scroll .col-md-1 {
         width: 8.33333334vw;
-        padding: 0 0.5vw;
     }
 }
-
 @media (max-width: 768px) {
-    .container-scroll {
-        overflow-x: auto;
-        white-space: nowrap;
-    }
     .container-scroll .col-xs-3 {
         width: 25vw;
-        padding: 0 0.5vw;
-        display: inline-block;
-        float: none;
     }
     .container-scroll .col-xs-1 {
         width: 8.33333334vw;
-        padding: 0 0.5vw;
-        display: inline-block;
-        float: none;
     }
 }

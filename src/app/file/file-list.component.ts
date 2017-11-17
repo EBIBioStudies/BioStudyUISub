@@ -82,7 +82,7 @@ export class FileActionsCellComponent implements AgRendererComponent {
 @Component({
     selector: 'file-type-cell',
     template: `
-    <div style="text-align:center;color:#82b0bc">
+    <div style="text-align:center;color:#3c8b9f">
     <i class="fa" [ngClass]="{
                                'fa-file' : ftype === 'FILE', 
                                'fa-folder' : ftype === 'DIR', 
@@ -140,58 +140,8 @@ export class ProgressCellComponent implements AgRendererComponent {
 
 @Component({
     selector: 'file-list',
-    template: `
-<div class="row-offcanvas row-offcanvas-left">
-
-   <user-dirs-sidebar 
-       name="userDirsSidebar"
-       [(ngModel)]="rootPath"
-       (select)="onRootPathSelect($event)"
-       (toggle)="sideBarCollapsed=!sideBarCollapsed"
-       [collapsed]="sideBarCollapsed">
-   </user-dirs-sidebar>
-          
-   <div class="container-fluid">
-        <aside class="right-side" [ngClass]="{'collapse-left' : sideBarCollapsed}">    
-            <section class="content">
-                <button class="btn btn-default btn-link"
-                        (click)="onBackButtonClick()"
-                        *ngIf="backButton">
-                    <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
-                    Back to submission
-                </button>
-                <div class="panel panel-info">
-                    <div class="panel-heading clearfix">
-                        <span>
-                            Path: <directory-path [path]="path.rel" (change)="onRelativePathChange($event)"></directory-path>
-                        </span>
-                        <file-upload-button class="pull-right"
-                                            title="Add files"
-                                            [multiple]="true"
-                                            (select)="onUploadFilesSelect($event)"></file-upload-button>
-                        <!--file-upload-badge (select)="onUploadSelect($event)"></file-upload-badge-->
-                        <!-- The badge is redundant since upload progress is already shown within the ag-grid list. 
-                             It can also be confusing since it only counts files being uploaded, yet its position in the UI
-                             implies total number of files -->
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                             <ag-grid-angular #agGrid style="width: 100%; height: 450px;" class="ag-fresh"
-                                  [gridOptions]="gridOptions"
-                                  [columnDefs]="columnDefs"
-                                  enableSorting
-                                  enableColResize
-                                  rowHeight="30"
-                                  (rowDoubleClicked)="onRowDoubleClick($event)">
-                             </ag-grid-angular>
-                        </div>
-                    </div>
-                </div>
-              </section>
-          </aside>
-    </div>
-</div>
-`
+    templateUrl: './file-list.component.html',
+    styleUrls: ['./file-list.component.css']
 })
 
 export class FileListComponent implements OnInit, OnDestroy {

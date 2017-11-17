@@ -8,7 +8,9 @@ import {
 import {Subscription} from 'rxjs/Subscription';
 
 import {
-    ColumnType
+    ColumnType,
+    FeatureType,
+    FieldType
 } from '../../shared/submission-type.model';
 import {
     Section,
@@ -18,6 +20,118 @@ import {
     Attribute,
     ValueMap
 } from '../../shared/submission.model';
+
+/**
+ * Augments the FormControl class with various pointers to structures related to the control for ease of access during
+ * rendering. Hence, the term "field" here refers to the rendered state of the control.
+ *
+ * @author Hector Casanova <hector@ebi.ac.uk>
+ */
+export class FieldControl extends FormControl {
+    template: Field | Attribute;            //the control's model containing reference properties such as its name
+    parentType: FieldType | FeatureType;    //the type descriptor the control refers to for things such as validation
+    nativeElement: Element;                 //DOM element the control is rendered into
+
+    /**
+     * Instantiates a simple form control with validators, keeping a reference to related model or type structures.
+     * @param value - Initial value of the new control.
+     * @param validators - Validation routines for the control.
+     * @param {Field | Attribute} template - The reference model for the control.
+     * @param {FieldType | FeatureType} parentType - The reference type descriptor for the control.
+     * @param {Element} nativeEl - DOM element which the control render into.
+     */
+    constructor(value: any, validators: any, template: Field | Attribute, parentType: FieldType | FeatureType, nativeEl?: Element | null) {
+        super(value, validators);
+        this.template = template;
+        this.parentType = parentType;
+        this.nativeElement = nativeEl;
+    }
+
+    /**
+     * Recursively traverses a given form grouping to mark all its controls as touched.
+     * @param {FormGroup | FormArray} formGroup - Group containing all controls, regardless of any nested groups or arrays.
+     * {@link https://stackoverflow.com/a/44150793}
+     */
+    static groupTouched(formGroup: FormGroup | FormArray) {
+
+        //Alternative to ES7's Object.values() method to get all controls within the grouping
+        (<any>Object).keys(formGroup.controls).map(key => formGroup.controls[key]).forEach(control => {
+            control.markAsTouched();
+
+            //Branches will always have a further "controls" property
+            control.controls && this.groupTouched(control);
+        });
+    }
+
+    /**
+     * Recursively traverses a given form grouping to get all controls as a flattened array.
+     * @param {FormGroup | FormArray} formGroup - Group containing all controls, regardless of any nested groups or arrays.
+     * @param {FormControl[]} controls - Flattened array of form controls.
+     */
+    static toArray(formGroup: FormGroup | FormArray, controls: FormControl[]) {
+
+        //Alternative to ES7's Object.values() method to get all controls within the grouping
+        (<any>Object).keys(formGroup.controls).map(key => formGroup.controls[key]).forEach(control => {
+            if (control.controls) {
+                this.toArray(control, controls);
+
+            //Leaf objects characterised by a "template" property (the name of the control)
+            } else if (control.template) {
+                controls.push(control);
+            }
+        });
+    }
+
+    /**
+     * Determines all the error messages for each of the members of a given control group.
+     * @param parent The structure encompassing this control group.
+     * @param {FormGroup} fieldsGroup - The group of fields for which errors are to be determined
+     * @returns {{[key: string]: string}} to error message map.
+     */
+    static getErrors(parent: any, fieldsGroup: FormGroup): { [key: string]: string } {
+        const formErrors: { [key: string]: string } = {};
+        let control;
+
+        fieldsGroup.controls && Object.keys(fieldsGroup.controls).forEach(fieldId => {
+            formErrors[fieldId] = '';
+            control = fieldsGroup.get(fieldId);
+            if (control && !control.valid) {
+                Object.keys(control.errors).forEach(key => {
+                    formErrors[fieldId] += this.errorMessage(parent, control.template.name, key, control.errors[key]);
+                });
+            }
+        });
+
+        return formErrors;
+    }
+
+    /**
+     * Builds the string to be used as a validation error message.
+     * @param parent - Structure that encompasses the control, eg: feature.
+     * @param {string} fieldName - Name with which the control will be identified to the user.
+     * @param {string} errorKey - Property in error object pointing to the type of issue.
+     * @param errorString - Value of the property in error object.
+     * @returns {string} The error message.
+     */
+    static errorMessage(parent: any, fieldName: string, errorKey: string, errorString?: any | null): string {
+        if (errorKey === 'required') {
+            return `Please enter the ${parent.typeName.toLowerCase()}'s ${fieldName.toLowerCase()}`;
+        }
+        if (errorKey === 'minlength') {
+            const type = parent.type.getFieldType(fieldName);
+            return `Please use at least ${type.minlength} characters`;
+        }
+        if (errorKey === 'maxlength') {
+            const type = parent.type.getFieldType(fieldName);
+            return `Please use up to ${type.maxlength} characters`;
+        }
+        if (errorKey === 'pattern') {
+            const type = parent.type.getFieldType(fieldName);
+            return `Please match the ${errorString} format`;
+        }
+        return errorKey;
+    }
+}
 
 export class SectionForm {
     formErrors: { [key: string]: string } = {};
@@ -51,9 +165,9 @@ export class SectionForm {
                 }));
 
         this.fieldsFormGroup.valueChanges.subscribe(
-            data => this.onFieldValueChanged(data)
+            data => this.formErrors = FieldControl.getErrors(this.section, this.fieldsFormGroup)
         );
-        this.onFieldValueChanged();
+        this.formErrors = FieldControl.getErrors(this.section, this.fieldsFormGroup);
     }
 
     get fields(): Field[] {
@@ -64,44 +178,22 @@ export class SectionForm {
         return this._features;
     }
 
+    /**
+     * Traverses the form in its entirety in order to get all its controls, both of the section and its member features.
+     * @param {FormControl[]} controls - Final array with all the form's controls.
+     */
+    controls(controls: FormControl[]) {
+        controls.length = 0;
+        FieldControl.toArray(this.fieldsFormGroup, controls);
+        FieldControl.toArray(this.featuresFormGroup, controls);
+    }
+
     fieldControl(fieldId: string): FormControl {
         return <FormControl>this.fieldsFormGroup.get(fieldId);
     }
 
     featureForm(featureId: string): FeatureForm {
         return this.featureForms.get(featureId);
-    }
-
-    onFieldValueChanged(data ?: any): void {
-        if (!this.form) {
-            return;
-        }
-        const form = this.fieldsFormGroup;
-
-        this.fields.forEach(field => {
-            this.formErrors[field.id] = '';
-            const control = form.get(field.id);
-            if (control && !control.valid) {
-                Object.keys(control.errors).forEach(key => {
-                    this.formErrors[field.id] += this.fieldErrorMessage(field, key);
-                });
-            }
-        });
-    }
-
-    fieldErrorMessage(field: Field, key: string): string {
-        if (key === 'required') {
-            return `Please enter the study's ${field.name.toLowerCase()}`;
-        }
-        if (key === 'minlength') {
-            const type = this.section.type.getFieldType(field.name);
-            return `Please use at least ${type.minlength} characters`;
-        }
-        if (key === 'maxlength') {
-            const type = this.section.type.getFieldType(field.name);
-            return `Please use up to ${type.maxlength} characters`;
-        }
-        return key;
     }
 
     valid(): boolean {
@@ -128,6 +220,7 @@ export class SectionForm {
     private addFieldControl(field: Field): void {
         const type = this.section.type.getFieldType(field.name);
         const validators = [];
+        let control;
 
         if (type.required) {
             validators.push(Validators.required);
@@ -138,7 +231,9 @@ export class SectionForm {
         if (type.maxlength > 0) {
             validators.push(Validators.maxLength(type.maxlength));
         }
-        this.fieldsFormGroup.addControl(field.id, new FormControl(field.value, validators));
+
+        control = new FieldControl(field.value, validators, field, field.type);
+        this.fieldsFormGroup.addControl(field.id, control);
     }
 
     private createFieldControls(): void {
@@ -181,6 +276,14 @@ export class SectionForm {
             }
         );
     }
+
+    /**
+     * Marks all the controls of the section and its features as touched.
+     */
+    markAsTouched(): void {
+        FieldControl.groupTouched(this.fieldsFormGroup);
+        FieldControl.groupTouched(this.featuresFormGroup);
+    }
 }
 
 export class FeatureForm {
@@ -190,6 +293,8 @@ export class FeatureForm {
     private subscriptions: Subscription[] = [];
     private _columns: Attribute[] = [];
     private _rows: ValueMap[] = [];
+
+    rowErrors: { [key: string]: string }[] = [];
 
     constructor(feature: Feature) {
         this.feature = feature;
@@ -256,6 +361,9 @@ export class FeatureForm {
         this.rows.forEach(
             (row, rowIndex) => {
                 (<FormGroup>this.rowsFormArray.at(rowIndex)).removeControl(colId);
+
+                //Removes the error entry in the current row for the deleted column
+                delete this.rowErrors[rowIndex][colId];
             }
         );
     }
@@ -268,6 +376,9 @@ export class FeatureForm {
             (row, rowIndex) => {
                 const fg = (<FormGroup>this.rowsFormArray.at(rowIndex));
                 this.addRowValueControl(fg, column.id, row, t);
+
+                //Regenerates the field errors for the whole current row
+                this.addRowErrors(fg);
             }
         );
     }
@@ -276,7 +387,12 @@ export class FeatureForm {
         this.rowsFormArray.removeAt(index);
     }
 
-    private addRowArray(row: ValueMap) {
+    /**
+     * Adds a new row to the array of form groups representing the feature's rows.
+     * @param {ValueMap} row Set of values for each of the row's controls.
+     * @returns {FormGroup} The form group corresponding to the row just added.
+     */
+    private addRowArray(row: ValueMap): FormGroup {
         const formGroup = new FormGroup({});
         this.rowsFormArray.push(formGroup);
 
@@ -285,15 +401,22 @@ export class FeatureForm {
                 const t = this.feature.type.getColumnType(column.name);
                 this.addRowValueControl(formGroup, column.id, row, t);
             });
+
+        return formGroup;
     }
 
     private addRowValueControl(fg: FormGroup, columnId: string, row: ValueMap, tmpl: ColumnType): void {
-        const valueValidators = [];
+        const valueValidators = [];     //validators for the control
+        let colAttr;                    //attribute corresponding to the column under which this control will lie
+        let control;
 
         if (tmpl.required) {
             valueValidators.push(Validators.required);
         }
-        fg.addControl(columnId, new FormControl(row.valueFor(columnId).value, valueValidators));
+
+        colAttr = this.columns.find(column => column.id === columnId);
+        control = new FieldControl(row.valueFor(columnId).value, valueValidators, colAttr, this.feature.type);
+        fg.addControl(columnId, control);
     }
 
     private updateColumnControls(ue?: UpdateEvent): void {
@@ -321,6 +444,7 @@ export class FeatureForm {
 
         if (ue && ue.source && ue.source.name === 'row_remove') {
             this.removeRowArray(ue.source.value.index);
+            this.rowErrors.splice(ue.source.value.index, 1);
             return;
         }
 
@@ -331,9 +455,25 @@ export class FeatureForm {
 
         toAdd.forEach(
             (row: ValueMap) => {
-                this.addRowArray(row);
+                this.addRowErrors(this.addRowArray(row));
             }
         );
+    }
+
+    private addRowErrors(rowGroup: FormGroup) {
+        const newIdx = this.rowsFormArray.controls.indexOf(rowGroup);
+
+        rowGroup.valueChanges.subscribe((data) => {
+            this.rowErrors[newIdx] = FieldControl.getErrors(this.feature, rowGroup);
+        });
+        this.rowErrors[newIdx] = FieldControl.getErrors(this.feature, rowGroup);
+    }
+
+    /**
+     * Marks the controls of every row of the feature as touched
+     */
+    private markAsTouched(): void {
+        FieldControl.groupTouched(this.rowsFormArray);
     }
 }
 
