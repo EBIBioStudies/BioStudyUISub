@@ -22,13 +22,6 @@ export class FeatureGridComponent implements AfterViewInit {
     @ViewChildren('rowEl') rowEls: QueryList<ElementRef>;
     @ViewChildren('colEl') colEls: QueryList<ElementRef>;
 
-    get rowWidth(): string {
-        // TODO move window to provider for easy testing
-        const w = window.innerWidth;
-        const k = (w >= 768 ? 2 : 3);
-        return 100 * (k * this.feature.colSize() + 1) / 12 + 'vw';
-    }
-
     get rows(): ValueMap[] {
         return this.featureForm.rows;
     }

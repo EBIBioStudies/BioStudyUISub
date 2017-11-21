@@ -44,7 +44,7 @@ export class SubmEditComponent implements OnInit, OnDestroy {
     section: Section;
     errors: SubmValidationErrors = SubmValidationErrors.EMPTY;
     formControls: FormControl[] = [];
-    sideBarCollapsed: boolean = false;
+    sideBarCollapsed: boolean = window.innerWidth < 993;
     readonly: boolean = false;
     accno: string = '';
 
@@ -76,10 +76,12 @@ export class SubmEditComponent implements OnInit, OnDestroy {
                     .updates()
                     .switchMap(ue => SubmissionValidator.createObservable(this.subm))
                     .subscribe(errors => {
-                        this.errors = errors;
+                        this.errors = errors; console.log('validated');
                     });
 
                 this.changeSection(this.subm.root.id);
+
+                this.subm.updates().subscribe((value) => {console.log(value)});
             });
     }
 

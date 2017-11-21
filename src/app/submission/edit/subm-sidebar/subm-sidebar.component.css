@@ -64,7 +64,6 @@
     color: #fff;
 }
 .no-error-msg h4 {
-    font-size: 16px;
     font-weight: 400;
 }
 .collapse-left .no-error-msg {
@@ -73,6 +72,9 @@
 .collapse-left .no-error-msg h4 {
     display: none;
 }
+.label {
+    font-size: 80%;
+}
 .collapse-left .label {
-    padding: .2em .29em .3em;
+    padding: .2em .17em .5em;
 }

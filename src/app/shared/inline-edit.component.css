@@ -1,10 +1,10 @@
 /* Makes sure container is not outgrown by input when displayed */
 .inline-edit-wrapper {
-    height: 32px;
+    height: 2.284em
 }
 
 .simple-box {
-    height: 32px;
+    height: 2.284em;
     padding-left: 0;
     outline: none;
     border: none !important;

@@ -6,11 +6,11 @@ import {
     ViewChild
 } from '@angular/core';
 import {Router} from '@angular/router';
+import {NgForm} from "@angular/forms";
 
 import {ServerError} from 'app/http/index';
 import {AuthService} from '../auth.service';
 import {UserSession} from '../user-session';
-import {AbstractControl, NgControl, NgForm} from "@angular/forms";
 
 @Component({
     selector: 'auth-signin',

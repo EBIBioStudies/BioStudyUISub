@@ -1,0 +1,8 @@
+<div class="dropdown" (click)="onClick($event)">
+    <input type="text" class="form-control" readonly
+           bsDatepicker
+           (bsValueChange)="onPickerSet($event)"
+           [ngModel]="dateValue"
+           [required]="required"
+           #dp="bsDatepicker">
+</div>

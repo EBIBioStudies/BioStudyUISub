@@ -28,12 +28,12 @@
                         <h4>Please fill in the form below</h4>
                         <p>
                             All fields are required unless marked as <i>Optional</i>. The <i>Review</i> tab on the
-                            left-hand side lists any missing or incorrect information.
+                            left-hand side lists any missing or invalid information.
                         </p>
                     </div>
                 </div>
 
-                <subm-form #submForm [section]="section">
+                <subm-form #submForm [section]="section" (keyup.enter)="onSubmit($event)">
                 </subm-form>
 
                 <div class="list-group">

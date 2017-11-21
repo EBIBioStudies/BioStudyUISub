@@ -12,12 +12,14 @@ import {PubMedIdSearchComponent} from './pubmedid-search/pubmedid-search.compone
 import {SlideOutTipComponent} from './slide-out-tip.component';
 import {TextareaAutosize} from './textarea-autosize.directive';
 import {TreeViewComponent, TreeViewNodeComponent} from './tree-view.component';
+import {BsDatepickerModule} from "ngx-bootstrap";
 
 @NgModule({
     imports: [
         SharedModule,
         FileModule,
-        RouterModule
+        RouterModule,
+        BsDatepickerModule.forRoot(),
     ],
     providers: [
         PubMedSearchService,
