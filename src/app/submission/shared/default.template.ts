@@ -11,9 +11,7 @@ export const DefaultTemplate = {
                 {
                     'name': 'Organism',
                     'valueType': 'text',
-                    'required': true,
-                    'minlength': 50
-
+                    'required': true
                 },
                 {
                     'name': 'Experimental design',
@@ -71,8 +69,7 @@ export const DefaultTemplate = {
                     {
                         'name': 'Organisation',
                         'valueType': 'text',
-                        'required': true,
-                        'minlength': 50
+                        'required': true
                     },
                     {
                         'name': 'E-mail',

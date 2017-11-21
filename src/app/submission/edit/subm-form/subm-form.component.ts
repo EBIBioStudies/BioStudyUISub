@@ -25,11 +25,4 @@ export class SubmFormComponent implements OnChanges {
     ngOnChanges(): void {
         this.sectionForm = this.submFormService.createForm(this.section);
     }
-
-    onSubmit(ev: any): void {
-        if (this.sectionForm.valid()) {
-            //todo
-        }
-        return;
-    }
 }

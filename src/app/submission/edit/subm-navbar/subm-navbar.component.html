@@ -1,7 +1,7 @@
 <div class="col-xs-9">
     <a routerLink="/submissions">Submission list</a>
     <span *ngFor="let sec of sectionPath; let idx = index; let last = last;">
-        &nbsp;<i class="fa fa-angle-double-right"></i>&nbsp;
+        &nbsp;<i class="fa fa-angle-right font-bold"></i>&nbsp;
         <a href="javascript:void(0)" (click)="onSectionClick(sec)">
             <span [ngClass]="{'current-section': last}">
                 <span *ngIf="idx == 0">{{accno}}</span>

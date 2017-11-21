@@ -1,0 +1,22 @@
+.dropdown {
+    position: relative;
+    width: 15rem;
+    cursor: pointer;
+}
+
+.dropdown:after {
+    position: absolute;
+    content: "\25BC";
+    top: 50%;
+    right: 8px;
+    height: 20px;
+    width: 20px;
+    transform: translateY(-50%);
+    text-align: center;
+}
+
+.form-control[readonly] {
+    cursor: pointer;
+    border: 1px solid #ccc;
+    background: #fff;
+}

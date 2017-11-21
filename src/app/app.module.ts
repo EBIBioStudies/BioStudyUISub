@@ -15,7 +15,6 @@ import {
     TabsModule,
     BsDropdownModule,
     ModalModule,
-    DatepickerModule,
     PopoverModule,
     CollapseModule,
     AlertModule
@@ -45,7 +44,6 @@ export function initConfig(config: AppConfig): () => Promise<any> {
         TabsModule.forRoot(),
         BsDropdownModule.forRoot(),
         ModalModule.forRoot(),
-        DatepickerModule.forRoot(),
         PopoverModule.forRoot(),
         CollapseModule.forRoot(),
         AlertModule.forRoot(),

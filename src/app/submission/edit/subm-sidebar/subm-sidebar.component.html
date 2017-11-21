@@ -14,7 +14,7 @@
                  (select)="onTabClick(true)">
                 <template tabHeading>
                     Review
-                    <span *ngIf="!errors.empty()" class="badge badge-corner">{{errors.total()}}</span>
+                    <span *ngIf="numInvalid" class="badge badge-corner badge-danger">{{numInvalid}}</span>
                 </template>
             </tab>
             <tab heading="Types"
@@ -102,8 +102,7 @@
                 [ngClass]="{'col-md-12': !collapsed}">
                 <i class="fa fa-check-circle" aria-hidden="true"
                     [ngClass]="{'fa-2x': collapsed, 'fa-4x': !collapsed}"></i>
-                <h4>No field is pending review</h4>
-                <h4>You may submit the study now</h4>
+                <h4>All fields are valid</h4>
             </li>
             <li class="sidebar-item" *ngFor="let control of formControls; let i = index">
                 <a *ngIf="control.invalid"
@@ -114,7 +113,8 @@
                     <i class="fa fa-lg text-center {{control.parentType.icon}}"></i>
                     {{!collapsed ? '&nbsp;' + control.template.name + '&nbsp;' : ''}}
                     <strong class="label label-default"
-                            [ngClass]="{'label-danger': control.invalid && control.touched}">
+                            [ngClass]="{'label-danger': control.invalid && control.touched}"
+                            #labelEl>
                         {{!collapsed ? tipText(control.errors) : ''}}
                         <i *ngIf="collapsed && control.errors.required" class="fa fa-lg fa-asterisk"></i>
                         <i *ngIf="collapsed && (control.errors.maxlength || control.errors.minlength)" class="fa fa-lg fa-arrows-h"></i>

@@ -9,7 +9,7 @@ import {
     ControlValueAccessor,
     NG_VALUE_ACCESSOR,
     NgControl,
-    NgModel,
+    NgModel, Validators,
 } from '@angular/forms';
 
 import 'rxjs/add/observable/timer';
@@ -25,8 +25,8 @@ import 'rxjs/add/observable/timer';
 })
 
 /**
- * Custom ORCID component including messaging for Thor. It adds all required validation directives. Therefore, the
- * wrapping element will NOT have any such directives.
+ * Custom ORCID component including messaging for Thor. It supports validation directives both on the
+ * inside of the custom control and the outside, i.e. on the wrapping component itself.
  * @see {@link ControlValueAccessor}
  */
 export class ORCIDInputBoxComponent implements ControlValueAccessor {
@@ -117,14 +117,14 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor {
     }
 
     /**
-     * Lifecycle hook for operations after all child views have been initialised. It copies all validators over from
-     * the actual input to the wrapping element.
+     * Lifecycle hook for operations after all child views have been initialised. It merges all validators of
+     * the actual input and the wrapping component.
      */
     ngAfterViewInit() {
         const control = this.injector.get(NgControl).control;
 
-        control.setValidators(this.inputModel.control.validator);
-        control.setAsyncValidators(this.inputModel.control.asyncValidator);
+        control.setValidators(Validators.compose([control.validator, this.inputModel.control.validator]));
+        control.setAsyncValidators(Validators.compose([control.asyncValidator, this.inputModel.control.asyncValidator]));
     }
 
     ngOnDestroy() {

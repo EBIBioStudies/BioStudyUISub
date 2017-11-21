@@ -189,12 +189,17 @@ component */
   visibility: visible;
 }
 
-/* Utility classes for top-right-corner badge indicators */
-.badge-parent {
-  position: relative;
+//Brings date picker's styles in line with the app.
+.bs-datepicker {
+  z-index: 2000;
+  border-radius: 4px;
 }
-.badge-corner {
-  position: absolute;
-  top: -7px;
-  right: -7px;
+.bs-datepicker .bs-datepicker-head {
+  background: #3c8b9f;
+}
+.bs-datepicker .selected {
+  background: #3c8b9f !important;
+}
+.theme-green .bs-datepicker-container {
+  padding: 0;
 }

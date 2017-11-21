@@ -60,7 +60,7 @@ aside {
   transition: width .3s ease;
 }
 
-@media screen and (min-width: @screen-md) {
+/*@media screen and (min-width: @screen-md) { */
 
   .right-side.collapse-left {
     margin-left: @left-side-width-collapse;
@@ -82,7 +82,7 @@ aside {
   .left-side.collapse-left {
     width: @left-side-width-collapse;
   }
-}
+/*}*/
 
 @media screen and (max-width: @screen-md) {
   .right-side {
@@ -195,7 +195,7 @@ aside {
  * Off Canvas
  * --------------------------------------------------
  */
-@media screen and (max-width: @screen-md) {
+/*@media screen and (max-width: @screen-md) {
   .row-offcanvas {
     position: relative;
     -webkit-transition: all .25s ease-out;
@@ -234,7 +234,7 @@ aside {
     top: 0;
     width: @left-side-width;
   }
-}
+}*/
 
 /* Makes unselected tabs be on a plane behind selected ones with a permanent shaded appearance */
 .nav-tabs > .nav-item > .nav-link:not(.active) {
@@ -250,4 +250,22 @@ input[readonly] {
   background: #fff !important;
   box-shadow: none;
   border: none;
+}
+
+/* Utility classes for top-right-corner badge indicators */
+.badge-parent {
+  position: relative;
+}
+.badge-corner {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+}
+.badge-danger {
+  background: @brand-danger !important;
+}
+
+//Utility class for bold typography
+.font-bold {
+  font-weight: bold;
 }

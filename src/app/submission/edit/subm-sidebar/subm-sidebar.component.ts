@@ -5,7 +5,7 @@ import {
     EventEmitter,
     ViewChild,
     OnChanges,
-    SimpleChange
+    SimpleChange, ViewChildren, QueryList, ElementRef
 } from '@angular/core';
 import {
     NgForm,
@@ -167,12 +167,15 @@ export class SubmSideBarComponent implements OnChanges {
     @ViewChild('addDialog') addDialog: SubmAddDialogComponent;
     @ViewChild('confirmDialog') confirmDialog: ConfirmDialogComponent;
 
-    isStatus: boolean = true;               //flag indicating if form status on display
-    editing: boolean = false;               //flag indicating component's mode: display or editing, with different renderings
-    items: SubmItems;                       //current collection of feature/subsection items
-    iconMap: any = {};                      //lookup table for icons
+    isStatus: boolean = true;       //flag indicating if form status on display
+    editing: boolean = false;       //flag indicating component's mode: display or editing, with different renderings
+    items: SubmItems;               //current collection of feature/subsection items
+    numInvalid: number = 0;         //number of invalid labels (those corresponding to invalid and touched fields)
+    iconMap: any = {};              //lookup table for icons
 
     private subscr: Subscription;
+
+    constructor(private rootEl:ElementRef) {}
 
     ngOnChanges(changes: any): void {
         const change: SimpleChange = changes.section;
@@ -193,6 +196,11 @@ export class SubmSideBarComponent implements OnChanges {
                 this.onItemsChange();
             }
         }
+    }
+
+    ngDoCheck() {
+        this.numInvalid = this.rootEl.nativeElement.getElementsByClassName('label-danger').length;
+        console.log(this.numInvalid);
     }
 
     onTabClick(isStatus: boolean): void {
