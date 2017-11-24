@@ -5,6 +5,7 @@ import {
     DirectSubmitService,
     DirectSubmitRequest
 } from './direct-submit.service';
+import {AppConfig} from "../../app.config";
 
 @Component({
     selector: 'direct-submit',
@@ -14,9 +15,12 @@ export class DirectSubmitComponent implements OnInit, OnDestroy {
     private sb: Subscription;
 
     request: DirectSubmitRequest;
-    collapseSideBar = false;
+    collapseSideBar: Boolean = false;
 
-    constructor(private submitService: DirectSubmitService) {
+    constructor(private submitService: DirectSubmitService, private appConfig: AppConfig) {
+
+        //Initally collapses the sidebar for tablet-sized screens
+        this.collapseSideBar = window.innerWidth < this.appConfig.tabletBreak;
     }
 
     ngOnInit(): void {

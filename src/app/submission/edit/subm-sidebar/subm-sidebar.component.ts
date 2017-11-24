@@ -22,10 +22,8 @@ import {
 } from '../../shared/submission.model';
 import { SubmAddDialogComponent } from '../subm-add/subm-add.component';
 import { ConfirmDialogComponent } from 'app/shared/index';
-import { SubmAddEvent } from '../subm-add/subm-add-event.model';
 import { SectionType } from '../../shared/submission-type.model';
 import {SubmValidationErrors} from "../../shared/submission.validator";
-import {SectionForm} from "../subm-form/subm-form.service";
 
 /**
  * Submission item class aggregating its corresponding feature with UI-relevant metadata. It enables
@@ -200,7 +198,6 @@ export class SubmSideBarComponent implements OnChanges {
 
     ngDoCheck() {
         this.numInvalid = this.rootEl.nativeElement.getElementsByClassName('label-danger').length;
-        console.log(this.numInvalid);
     }
 
     onTabClick(isStatus: boolean): void {
@@ -378,13 +375,13 @@ export class SubmSideBarComponent implements OnChanges {
      */
     tipText(errors: ValidationErrors): string {
         if (errors.required) {
-            return 'Blank';
+            return 'blank';
         } else if (errors.maxlength) {
-            return 'Too long';
+            return 'too long';
         } else if (errors.minlength) {
-            return 'Too short';
+            return 'too short';
         } else if (errors.pattern) {
-            return 'Wrong format';
+            return 'wrong format';
         }
     }
 }

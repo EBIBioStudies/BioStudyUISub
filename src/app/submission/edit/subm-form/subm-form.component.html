@@ -11,7 +11,7 @@
                 <span *ngIf="sectionForm.fieldControl(field.id).invalid && sectionForm.fieldControl(field.id).touched">
                     {{sectionForm.formErrors[field.id] ? sectionForm.formErrors[field.id] : ''}}
                 </span>
-                <small *ngIf="!field.type.required" class="text-muted pull-right"><i>Optional</i></small>
+                <small *ngIf="!readonly && !field.type.required" class="text-muted pull-right"><i>Optional</i></small>
             </label>
             <subm-field
                 [type]="field.valueType"
@@ -28,7 +28,7 @@
     <div *ngFor="let feature of sectionForm.features">
         <span *ngIf="feature.size() > 0">
             <label class="control-label">{{feature.pluralName()}}</label>
-            <small *ngIf="!feature.type.required" class="text-muted pull-right"><i>Optional</i></small>
+            <small *ngIf="!readonly && !feature.type.required" class="text-muted pull-right"><i>Optional</i></small>
         </span>
         <subm-feature [featureForm]="sectionForm.featureForm(feature.id)"
                       [readonly]="readonly">

@@ -1,10 +1,10 @@
 <div class="container-fluid" [formGroup]="featureForm.form">
     <div class="headings row text-muted">
-        <div class="heading col-xs-3">Key</div>
-        <div class="heading col-xs-9">Value</div>
+        <div class="cell heading col-xs-3">Key</div>
+        <div class="cell heading col-xs-9">Value</div>
     </div>
     <div class="row" #rowEl *ngFor="let column of columns; let idx = index; let first = first; let last = last">
-        <div class="col-xs-3">
+        <div class="cell col-xs-3">
             <div class="form-group key-field">
                 <div class="input-group">
                     <span *ngIf="!readonly && !column.required" class="input-group-btn">
@@ -26,7 +26,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xs-9">
+        <div class="cell col-xs-9">
             <div class="form-group"
                  [ngClass]="{'has-error': featureForm.rowValueControl(0,column.id).invalid &&
                                           featureForm.rowValueControl(0,column.id).touched}">

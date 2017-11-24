@@ -35,9 +35,10 @@
 <div class="modal-footer">
     <div class="pull-right">
         <button type="button" class="btn btn-xs"
+                tooltip="{{isSuccess() ? 'List all submissions sent' : 'Go back to the current submission'}}"
                 [ngClass]="{'btn-primary': isSuccess(), 'btn-default': !isSuccess()}"
                 (click)="onConfirm()">
-            {{isSuccess() ? 'Go to submissions' : 'Review submission'}}
+            {{isSuccess() ? 'Show all sent' : 'Review submission'}}
         </button>
     </div>
 </div>

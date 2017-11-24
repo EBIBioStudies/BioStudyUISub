@@ -1,6 +1,19 @@
-<aside class="left-side sidebar sidebar-offcanvas"
-       *ngIf="!readonly">
-    <div class="sidebar-contents clearfix" *ngIf="!collapsed">
+<aside *ngIf="!readonly" class="left-side sidebar sidebar-offcanvas"
+       [ngClass]="{'collapse-left' : collapsed}">
+    <div class="menu-toggle">
+        <button class="minimise-btn btn pull-right"
+                [ngClass]="{'inactive': !collapsed}"
+                [disabled]="editing"
+                (click)="onToggle($event)">
+            <i class="fa fa-fw fa-lg"
+               [ngClass]="{'fa-toggle-left': !collapsed, 'fa-toggle-right': collapsed}"></i>
+        </button>
+        <tabset [ngClass]="{'invisible': collapsed}">
+            <tab heading="Upload form" active="true"></tab>
+        </tabset>
+    </div>
+    <div *ngIf="collapsed" class="vertical-text">Upload form</div>
+    <div class="sidebar-menu sidebar-contents clearfix" *ngIf="!collapsed">
         <form id="subm-upload-form"
               class="col-sm-12"
               name="submUploadForm"

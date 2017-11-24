@@ -3,7 +3,8 @@
             (toggle)="onToggle($event)"
             [collapsed]="collapseSideBar">
     </direct-submit-sidebar>
-    <div class="navbar-default navbar-subm-fixed">
+    <div class="navbar-default navbar-subm-fixed"
+         [ngClass]="{'collapse-left': collapseSideBar}">
         <div class="col-xs-12">
             <a routerLink="/submissions">Submission list</a>
             &nbsp;<i class="fa fa-angle-right font-bold"></i>&nbsp;
@@ -11,10 +12,11 @@
         </div>
     </div>
     <div class="container-fluid">
-        <aside class="right-side navbar-subm-margin">
+        <aside class="right-side navbar-subm-margin"
+               [ngClass]="{'collapse-left': collapseSideBar}">
             <div *ngIf="!request" class="help-msg panel">
                 <div class="panel-body">
-                    <h4>Please fill in the form on the left</h4>
+                    <h4>Please fill out the form on the left</h4>
                     <p>All fields are required. Upon submission, the data file will be validated and any errors shown below.</p>
                 </div>
             </div>

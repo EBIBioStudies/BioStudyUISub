@@ -10,8 +10,7 @@ export const DefaultTemplate = {
             'columnTypes': [
                 {
                     'name': 'Organism',
-                    'valueType': 'text',
-                    'required': true
+                    'valueType': 'text'
                 },
                 {
                     'name': 'Experimental design',

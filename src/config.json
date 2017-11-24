@@ -1,1 +1,8 @@
-{"APP_PROXY_BASE":"/proxy","APP_CONTEXT":"/","APP_DEBUG_ENABLED":true,"APP_PROD":true,"APP_VERSION":"2.3.4"}
+{
+  "APP_PROXY_BASE":"/proxy",
+  "APP_CONTEXT":"/",
+  "APP_DEBUG_ENABLED":true,
+  "APP_PROD":true,
+  "APP_VERSION":"2.5",
+  "APP_TABLET_BREAKPOINT": 993
+}
