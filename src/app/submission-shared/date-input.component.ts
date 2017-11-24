@@ -45,12 +45,14 @@ export class DateInputComponent implements ControlValueAccessor {
     private onTouched: any = () => {};
 
     /**
-     * Instantiates a new custom component, setting its default format and hiding the weeks column on the calendar.
+     * Instantiates a new custom component, hiding the weeks column on the calendar disabling past dates and setting
+     * its default format.
      * @param {BsDatepickerConfig} config - Configuration object for the datepicker directive
      * @param {ElementRef} rootEl - Reference to the root element of the component's template.
      */
     constructor(config: BsDatepickerConfig, private rootEl: ElementRef) {
         config.showWeekNumbers = false;
+        config.minDate = new Date(Date.now());
         config.dateInputFormat = 'YYYY-MM-DD';
     }
 

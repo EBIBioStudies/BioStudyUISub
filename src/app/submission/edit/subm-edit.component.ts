@@ -34,6 +34,7 @@ import {ServerError} from '../../http/server-error.handler';
 import {SubmResultsModalComponent} from '../results/subm-results-modal.component';
 import {ConfirmDialogComponent} from 'app/shared/index';
 import {SubmFormComponent} from "./subm-form/subm-form.component";
+import {AppConfig} from "../../app.config";
 
 @Component({
     selector: 'subm-edit',
@@ -43,28 +44,40 @@ export class SubmEditComponent implements OnInit, OnDestroy {
     subm: Submission;
     section: Section;
     errors: SubmValidationErrors = SubmValidationErrors.EMPTY;
-    formControls: FormControl[] = [];
-    sideBarCollapsed: boolean = window.innerWidth < 993;
+    formControls: FormControl[] = [];       //immutable list of controls making up the form's section (fields, features...)
+    sideBarCollapsed: boolean = false;
     readonly: boolean = false;
     accno: string = '';
+    wrappedSubm: any;
 
     private subscr: Subscription;
     private isSubmitting = false;
     private isSaving = false;
-    private wrappedSubm: any;
+    private isNew = false;
 
     @ViewChild('confirmDialog') confirmDialog: ConfirmDialogComponent;
     @ViewChild('submForm') submForm: SubmFormComponent;
 
-    constructor(private route: ActivatedRoute,
-                private submService: SubmissionService,
-                private modalService: BsModalService) {
+    constructor(public route: ActivatedRoute,
+                public submService: SubmissionService,
+                public modalService: BsModalService,
+                private appConfig: AppConfig) {
+
+        //Initally collapses the sidebar for tablet-sized screens if applicable
+        if (this.appConfig) {
+            this.sideBarCollapsed = window.innerWidth < this.appConfig.tabletBreak;
+        }
     }
 
     ngOnInit() {
+
+        //Determines if the current submission has just been created
+        this.route.data.subscribe((data) => {
+            this.isNew = data.isNew || false;
+        });
+
         this.route.params
-            .map((params: Params) => params['accno'])
-            .switchMap(accno => this.submService.getSubmission(accno))
+            .switchMap((params: Params) => this.submService.getSubmission(params.accno))
             .subscribe(wrappedSubm => {
                 this.wrappedSubm = wrappedSubm;
                 this.accno = wrappedSubm.accno;
@@ -76,15 +89,18 @@ export class SubmEditComponent implements OnInit, OnDestroy {
                     .updates()
                     .switchMap(ue => SubmissionValidator.createObservable(this.subm))
                     .subscribe(errors => {
-                        this.errors = errors; console.log('validated');
+                        this.errors = errors;
                     });
 
                 this.changeSection(this.subm.root.id);
-
-                this.subm.updates().subscribe((value) => {console.log(value)});
             });
     }
 
+    /**
+     * As soon as there is a new form section created, traverse it and get all its controls.
+     * Note that the section –and effectively the whole form– is rebuilt every time there is a change in the form.
+     * @see {@link SubmFormComponent}
+     */
     ngAfterViewChecked() {
         this.submForm && this.submForm.sectionForm.controls(this.formControls);
     }
@@ -198,6 +214,14 @@ export class SubmEditComponent implements OnInit, OnDestroy {
         bsModalRef.content.status = resp.status;
     }
 
+    changeSection(sectionId: string) {
+        const path: Section[] = this.subm.sectionPath(sectionId);
+        if (path.length === 0) {
+            console.log(`Section with id ${sectionId} was not found`);
+        }
+        this.section = path[path.length - 1];
+    }
+
     private wrap(): any {
         const w = Object.assign({}, this.wrappedSubm);
         w.data = PageTab.fromSubmission(this.subm);
@@ -206,13 +230,5 @@ export class SubmEditComponent implements OnInit, OnDestroy {
 
     private confirm(text: string): Observable<any> {
         return this.confirmDialog.confirm(text);
-    }
-
-    private changeSection(sectionId: string) {
-        const path: Section[] = this.subm.sectionPath(sectionId);
-        if (path.length === 0) {
-            console.log(`Section with id ${sectionId} was not found`);
-        }
-        this.section = path[path.length - 1];
     }
 }

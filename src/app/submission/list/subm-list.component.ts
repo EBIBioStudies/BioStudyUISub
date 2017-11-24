@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Observable} from 'rxjs/Observable';
 
 import {GridOptions} from 'ag-grid/main';
@@ -12,20 +12,22 @@ import {SubmissionService} from '../shared/submission.service';
 import {TextFilterComponent} from './ag-grid/text-filter.component';
 import {DateFilterComponent} from './ag-grid/date-filter.component';
 import {PageTab} from '../shared/pagetab.model';
+import {RequestStatusService} from "../../http/request-status.service";
 
 @Component({
     selector: 'action-buttons-cell',
     template: `
-        <button type="button" class="btn btn-link btn-xs btn-flat"
+        <button *ngIf="isTemp"
+                type="button" class="btn btn-link btn-xs btn-flat"
                 (click)="onEditSubmission()"
-                tooltip="Edit"
+                tooltip="Edit this submission"
                 container="body">
             <i class="fa fa-pencil fa-fw fa-lg"></i>
         </button>
-        <button *ngIf="status === 'MODIFIED'"
-                type="button" class="btn btn-info btn-xs btn-flat"
+        <button *ngIf="!isTemp || status === 'MODIFIED'"
+                type="button" class="btn btn-link btn-xs btn-flat"
                 (click)="onViewSubmission()"
-                tooltip="View original"
+                tooltip="Show this submission"
                 container="body">
             <i class="fa fa-eye fa-fw fa-lg"></i>
         </button>
@@ -39,13 +41,14 @@ import {PageTab} from '../shared/pagetab.model';
         <button *ngIf="status !== 'MODIFIED'"
                 type="button" class="btn btn-danger btn-xs btn-flat"
                 (click)="onDeleteSubmission()"
-                tooltip="Delete"
+                tooltip="Delete this submission"
                 container="body">
             <i class="fa fa-trash-o fa-fw"></i>
         </button>`
 })
 export class ActionButtonsCellComponent implements AgRendererComponent {
     private accno: string;
+    private isTemp: boolean;
     private onDelete: (accno: string, action: string) => {};
     private onEdit: (string) => {};
     private onView: (string) => {};
@@ -58,6 +61,7 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
 
         this.status = data.status;
         this.accno = data.accno;
+        this.isTemp = data.isTemp;
         this.onDelete = data.onDelete || noop;
         this.onEdit = data.onEdit || noop;
         this.onView = data.onView || noop;
@@ -106,20 +110,27 @@ export class DateCellComponent implements AgRendererComponent {
 })
 
 export class SubmListComponent {
+    showSubmitted: boolean = false;     //flag indicating if the list of sent submissions is to be displayed
+
+    //AgGrid-related properties
+    gridOptions: GridOptions;
+    columnDefs: any[];
     private datasource: any;
 
     @ViewChild('confirmDialog')
     confirmDialog: ConfirmDialogComponent;
 
-    error: any = null;
-    showSubmitted: boolean = false;
-
-    gridOptions: GridOptions;
-    columnDefs: any[];
-
     constructor(private submService: SubmissionService,
                 private router: Router,
+                private route: ActivatedRoute,
                 private userData: UserData) {
+
+        //Microstate - Allows going back to the sent submissions list directly
+        this.route.data.subscribe((data) => {
+            if (data.hasOwnProperty('isSent')) {
+                this.showSubmitted = data.isSent;
+            }
+        });
 
         this.gridOptions = <GridOptions>{
             debug: false,
@@ -178,18 +189,20 @@ export class SubmListComponent {
     }
 
     setDatasource() {
+        const agApi = this.gridOptions.api;     //AgGrid's API
+
         if (!this.datasource) {
             this.datasource = {
                 // rowCount: ???, - not setting the row count, infinite paging will be used
                 getRows: (params) => {
-                    console.log('ag-grid params', params);
                     const pageSize = params.endRow - params.startRow;
                     const fm = params.filterModel || {};
 
-                    if (this.gridOptions.api != null) {
-                        this.gridOptions.api.showLoadingOverlay();
+                    if (agApi != null) {
+                        agApi.showLoadingOverlay();
                     }
 
+                    //Makes the request taking into account any filtering arguments supplied through the UI.
                     this.submService.getSubmissions({
                         submitted: this.showSubmitted,
                         offset: params.startRow,
@@ -198,31 +211,41 @@ export class SubmListComponent {
                         rTimeFrom: fm.rtime && fm.rtime.value && fm.rtime.value.from ? fm.rtime.value.from : undefined,
                         rTimeTo: fm.rtime && fm.rtime.value && fm.rtime.value.to ? fm.rtime.value.to : undefined,
                         keywords: fm.title && fm.title.value ? fm.title.value : undefined
-                    })
-                        .subscribe(
-                            (data) => {
-                                this.gridOptions.api.hideOverlay();
-                                let lastRow = -1;
-                                if (data.length < pageSize) {
-                                    lastRow = params.startRow + data.length;
-                                }
-                                params.successCallback(this.decorateDataRows(data), lastRow);
-                            });
+
+                    //Once all submissions fetched, determines last row for display purposes.
+                    }).subscribe((data) => {
+                        agApi.hideOverlay();
+                        let lastRow = -1;
+                        if (data.length < pageSize) {
+                            lastRow = params.startRow + data.length;
+                        }
+                        params.successCallback(this.decorateDataRows(data), lastRow);
+                    });
                 }
             }
         }
-        this.gridOptions.api.setDatasource(this.datasource);
+        agApi.setDatasource(this.datasource);
     }
 
-    onSubmTabSelect(submitted) {
-        if (this.showSubmitted !== submitted) {
-            this.showSubmitted = submitted;
+    onSubmTabSelect(isSubmitted: boolean) {
+        let fragment = '';
+
+        //Ignores actions that don't carry with them a change in state.
+        if (this.showSubmitted !== isSubmitted) {
+
+            //Submitted list's route has 'sent' as a fragment while temp list has no fragment.
+            if (isSubmitted) {
+                fragment = 'sent';
+            }
+
+            this.router.navigate([fragment], {relativeTo: this.route});
             this.setDatasource();
         }
     }
 
     decorateDataRows(rows: any[]): any {
         return rows.map(row => ({
+            isTemp: !this.showSubmitted,
             accno: row.accno,
             title: row.title,
             rtime: row.rtime,
@@ -255,15 +278,18 @@ export class SubmListComponent {
             },
 
             onEdit: (accno: string) => {
-                this.router.navigate(['/submissions', accno]);
+                this.router.navigate(['/submissions/edit', accno]);
             },
 
             onView: (accno: string) => {
-                this.router.navigate(['/view', accno]);
+                this.router.navigate(['/submissions', accno]);
             }
         }));
     };
 
+    /**
+     * Creates a blank submission using PageTab's data structure and brings up a form to edit it.
+     */
     createSubmission() {
         // const userName = this.userData.name;
         // const userEmail = this.userData.email;
@@ -272,7 +298,7 @@ export class SubmListComponent {
         this.submService.createSubmission(PageTab.createNew())
             .subscribe((s) => {
                 console.log('created submission:', s);
-                this.startEditing(s.accno, true);
+                this.router.navigate(['/submissions/new', s.accno]);
             });
     };
 
@@ -281,17 +307,16 @@ export class SubmListComponent {
     }
 
     /**
-     * Brings the submission form up to allow editing, passing an optional URL parameter to flag new submissions.
+     * Brings the submission form up to allow editing only if the submission is a temporary one.
      * @param {string} accno Accession number of the submission to be edited.
-     * @param {boolean} isRecent True if starting off from a blank submission.
+     * @param {boolean} isReadonly True if submission edition is to be disallowed.
      */
-    startEditing(accno: string, isRecent:boolean = false) {
-        const extras = {};
-
-        if (isRecent) {
-            extras['queryParams'] = {isRecent: true};
+    startEditing(accno: string, isReadonly: boolean) {
+        if (isReadonly) {
+            this.router.navigate(['/submissions', accno]);
+        } else {
+            this.router.navigate(['/submissions/edit', accno]);
         }
-        this.router.navigate(['/submissions', accno], extras);
     }
 
     /**
@@ -300,7 +325,7 @@ export class SubmListComponent {
      */
     onRowClicked(event): void {
         if (event.colDef.headerName !== "Actions") {
-            this.startEditing(event.data.accno);
+            this.startEditing(event.data.accno, !event.data.isTemp);
         }
     }
 

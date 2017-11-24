@@ -1,4 +1,5 @@
-<div class="row-offcanvas row-offcanvas-left">
+<div class="row-offcanvas row-offcanvas-left"
+     [ngClass]="{'readonly': readonly}">
     <subm-sidebar *ngIf="!readonly"
                   (toggle)="sideBarCollapsed=!sideBarCollapsed"
                   [collapsed]="sideBarCollapsed"
@@ -7,8 +8,9 @@
                   [errors]="errors">
     </subm-sidebar>
 
-    <subm-navbar
-            [class.collapse-left]="!readonly && sideBarCollapsed"
+    <subm-navbar class="navbar-subm-fixed navbar-default"
+            [ngClass]="{'collapse-left': !readonly && sideBarCollapsed}"
+            [readonly]="readonly"
             [accno]="accno"
             [errors]="errors"
             [sectionPath]="sectionPath"
@@ -17,23 +19,28 @@
     </subm-navbar>
 
     <div class="container-fluid">
-        <aside class="right-side"
-               [ngClass]="{'collapse-left' : !readonly && sideBarCollapsed}">
+        <aside [ngClass]="{'collapse-left' : !readonly && sideBarCollapsed, 'right-side': !readonly}">
             <div *ngIf="subm"
                  (change)="onChange($event)"
                  class="navbar-subm-margin">
 
-                <div class = "panel">
-                    <div class = "panel-body">
-                        <h4>Please fill in the form below</h4>
+                <div *ngIf="isNew" class="panel">
+                    <div class="panel-body">
+                        <h4>Please fill out the form below</h4>
                         <p>
-                            All fields are required unless marked as <i>Optional</i>. The <i>Review</i> tab on the
-                            left-hand side lists any missing or invalid information.
+                            All fields are required unless marked as <i>Optional</i>. The
+                            <span class="font-bold">Review</span> tab on the
+                            left-hand side lists any missing or invalid information, while the
+                            <span class="font-bold">Types</span> tab contains
+                            optional field types that may be added to this submission.
                         </p>
                     </div>
                 </div>
 
-                <subm-form #submForm [section]="section" (keyup.enter)="onSubmit($event)">
+                <subm-form #submForm
+                           [section]="section"
+                           (keyup.enter)="onSubmit($event)"
+                           [readonly]="readonly">
                 </subm-form>
 
                 <div class="list-group">
@@ -61,10 +68,10 @@
                     </div>
                 </div>
 
-                <div class="row row-submit">
+                <div *ngIf="!readonly" class="row row-submit">
                     <p class="col-md-2">
                         <button type="button" class="btn-submit btn btn-primary col-md-12"
-                                [disabled]="isSubmitting || isSaving || readonly"
+                                [disabled]="isSubmitting || isSaving"
                                 (click)="onSubmit($event)">
                             Submit
                         </button>

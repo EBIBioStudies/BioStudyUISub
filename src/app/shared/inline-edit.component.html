@@ -1,22 +1,16 @@
-<div *ngIf="editing">
-    <input type="text"
-           class="form-control form-control-auto simple-box"
-           name="inline-edit-box"
+<div class="inline-edit-wrapper"
+     [ngClass]="{'editable': canEdit, 'text-muted': !editing}">
+    <input class="form-control form-control-auto" type="text"
            [required]="required"
            [(ngModel)]="value"
            [placeholder]="placeholder"
            (blur)="onEditBoxBlur($event)"
            (keyup)="onEditBoxKeyUp($event)"
+           (click)="canEdit && onEditClick()"
+           [readonly]="!editing"
+           name="inline-edit-box"
            #inlineEditBox/>
-</div>
-<div class="inline-edit-wrapper"
-     [ngClass]="{'editable': canEdit}"
-     *ngIf="!editing">
-    <span class="editable-value text-muted"
-          (click)="canEdit && onEditClick()">
-        {{value}}
-    </span>
-    <div class="icons">
+    <div *ngIf="!editing" class="icons">
         <button class="btn btn-xs btn-link"
                 *ngIf="canEdit"
                 (click)="onEditClick()">

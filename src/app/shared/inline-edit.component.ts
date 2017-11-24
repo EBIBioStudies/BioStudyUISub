@@ -19,31 +19,18 @@ import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
         {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => InlineEditComponent), multi: true}
     ]
 })
-export class InlineEditComponent implements AfterViewInit, ControlValueAccessor {
+export class InlineEditComponent implements ControlValueAccessor {
     @Input() required?: boolean = false;
     @Input() disabled?: boolean = false;
     @Input() emptyValue?: string = '';
     @Input() placeholder?: string = '';
     @Output() remove: EventEmitter<any> = new EventEmitter<any>();
 
-    @ViewChildren('inlineEditBox') private inlineEditBoxQuery: QueryList<ElementRef>;
-
     editing: boolean = false;
-    onChange: any = () => {
-    };
-    onTouched: any = () => {
-    };
+    onChange: any = () => {};
+    onTouched: any = () => {};
 
     private _value: string = '';
-
-    ngAfterViewInit(): void {
-        this.inlineEditBoxQuery.changes.subscribe((list: QueryList <ElementRef>) => {
-            if (list.length > 0) {
-                let inpBox = list.first;
-                inpBox.nativeElement.focus();
-            }
-        });
-    }
 
     get value(): any {
         return this._value;

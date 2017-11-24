@@ -26,6 +26,7 @@ import {Path} from './path';
 import * as _ from 'lodash';
 
 import 'rxjs/add/operator/filter';
+import {AppConfig} from "../app.config";
 
 @Component({
     selector: 'file-actions-cell',
@@ -157,7 +158,12 @@ export class FileListComponent implements OnInit, OnDestroy {
 
     constructor(private fileService: FileService,
                 private fileUploadService: FileUploadService,
-                private route: ActivatedRoute) {
+                private route: ActivatedRoute,
+                private appConfig: AppConfig) {
+
+        //Initally collapses the sidebar for tablet-sized screens
+        this.sideBarCollapsed = window.innerWidth < this.appConfig.tabletBreak;
+
         this.gridOptions = <GridOptions>{
             onGridReady: () => {
                 this.gridOptions.api.sizeColumnsToFit();

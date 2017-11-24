@@ -156,6 +156,11 @@
 .ag-cell {
   outline: none !important;
 }
+.ag-fresh .ag-cell-focus {
+  border-left: none;
+  border-top: none;
+  border-bottom: none;
+}
 
 //Prevents page controls from wrapping onto the next line when on pad-sized screens
 .ag-fresh .ag-paging-row-summary-panel {
@@ -180,6 +185,7 @@ component */
   cursor: pointer;
 }
 
+//Makes validation popovers show up only when there is indeed an error.
 .validation-pop {
   visibility: hidden;
   min-width: 300px;
@@ -187,19 +193,4 @@ component */
 }
 .has-error .validation-pop {
   visibility: visible;
-}
-
-//Brings date picker's styles in line with the app.
-.bs-datepicker {
-  z-index: 2000;
-  border-radius: 4px;
-}
-.bs-datepicker .bs-datepicker-head {
-  background: #3c8b9f;
-}
-.bs-datepicker .selected {
-  background: #3c8b9f !important;
-}
-.theme-green .bs-datepicker-container {
-  padding: 0;
 }

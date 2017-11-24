@@ -1,44 +1,33 @@
-/* Makes sure container is not outgrown by input when displayed */
-.inline-edit-wrapper {
-    height: 2.284em
+/* Makes the control appear as standard text, even when not on read-only mode */
+.form-control {
+    padding: 0;
+    height: auto;
+    color: inherit;
+    border: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
 }
 
-.simple-box {
-    height: 2.284em;
-    padding-left: 0;
-    outline: none;
-    border: none !important;
-    -webkit-box-shadow: none !important;
-    -moz-box-shadow: none !important;
-    box-shadow: none !important;
+/* Truncates text when not editing */
+.editable .form-control[readonly] {
+    width: 70%;
+    cursor: pointer;
 }
 
-.editable-value {
-    overflow: hidden;
-    display: inline-block;
-    width: 60%;
-    text-overflow: ellipsis;
-    vertical-align: middle;
-}
-
-.editable:hover .editable-value {
-    color: #000;
-}
-
-.inline-edit-wrapper .icons {
-    opacity: .3;
-}
+/* Positions toolbar on the far right and highlights it on hover */
 .icons {
     position: absolute;
     top: 0;
-    right: 2.5px;
-    height: 20px;
+    right: 0;
+    opacity: .3;
 }
-
 .editable:hover .icons {
     opacity: 1;
 }
 
-.pointer {
-    cursor: pointer;
+/* Prevents outline on focus */
+.btn-link {
+    outline: none !important;
 }
+

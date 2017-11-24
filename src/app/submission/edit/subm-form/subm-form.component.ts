@@ -17,6 +17,7 @@ import {Section} from '../../shared/submission.model';
 })
 export class SubmFormComponent implements OnChanges {
     @Input() section: Section;
+    @Input() readonly: boolean;
 
     sectionForm: SectionForm;
 

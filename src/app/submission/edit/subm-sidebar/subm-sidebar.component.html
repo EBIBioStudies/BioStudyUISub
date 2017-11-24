@@ -3,7 +3,6 @@
     <div class="menu-toggle">
         <button class="minimise-btn btn pull-right"
                 [ngClass]="{'inactive': !collapsed}"
-                [disabled]="editing"
                 (click)="onToggle($event)">
             <i class="fa fa-fw fa-lg"
                [ngClass]="{'fa-toggle-left': !collapsed, 'fa-toggle-right': collapsed}"></i>
@@ -106,7 +105,7 @@
             </li>
             <li class="sidebar-item" *ngFor="let control of formControls; let i = index">
                 <a *ngIf="control.invalid"
-                   tooltip="{{collapsed ? tipText(control.errors) : ''}}"
+                   tooltip="{{collapsed ? '&quot;' + control.template.name + '&quot; field is ' + tipText(control.errors) : ''}}"
                    container="body"
                    placement="right"
                    (click)="onReviewClick(control)">

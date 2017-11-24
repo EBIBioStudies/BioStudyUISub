@@ -23,17 +23,14 @@
     overflow: hidden;
     width: 100%;
     padding: 0;
+    vertical-align: baseline;
     text-overflow: ellipsis;
     border: none;
 }
 
 /* Other rows */
 .row {
-    margin-top: 15px;
-}
-.row:first-of-type {
-    margin-top: 3px;
-    line-height: 32px;
+    margin-top: 16px;
 }
 .row:last-of-type {
     margin-bottom: 10px;

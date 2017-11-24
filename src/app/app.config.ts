@@ -28,6 +28,10 @@ export class AppConfig {
         return this.config.APP_PROD;
     }
 
+    get tabletBreak(): number {
+        return this.config.APP_TABLET_BREAKPOINT;
+    }
+
     // Promise is required here
     load(): Promise<any> {
         let req: Observable<any> = this.http.get('./config.json');

@@ -1,8 +1,7 @@
 <strong class="text-danger" *ngIf="errorNum && feature.size() > 0">Please review the fields below</strong>
-<div class="panel panel-default"
-     *ngIf="feature.size() > 0">
+<div *ngIf="feature.size() > 0" class="panel panel-default feature">
 
-    <div class="panel-heading clearfix">
+    <div *ngIf="!readonly" class="panel-heading clearfix">
         <div class="btn-toolbar pull-left" role="toolbar" *ngIf="!readonly">
             <div class="btn-group" dropdown>
                 <button type="button" class="btn btn-xs btn-default" dropdownToggle>

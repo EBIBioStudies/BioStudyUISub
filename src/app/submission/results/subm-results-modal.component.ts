@@ -55,10 +55,10 @@ export class SubmResultsModalComponent {
     }
 
     /**
-     * Handler for confirmation event. Hides the modal, possibly redirecting to list of submissions.
+     * Handler for confirmation event. Hides the modal, possibly redirecting to list of sent submissions.
      */
     onConfirm(): void {
         this.bsModalRef.hide();
-        this.isSuccess() && this.router.navigate(['/submissions']);
+        this.isSuccess() && this.router.navigate(['/submissions/sent']);
     }
 }

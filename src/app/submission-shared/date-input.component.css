@@ -17,6 +17,4 @@
 
 .form-control[readonly] {
     cursor: pointer;
-    border: 1px solid #ccc;
-    background: #fff;
 }
