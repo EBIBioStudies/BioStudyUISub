@@ -17,6 +17,7 @@
         *ngIf="type === 'date'"
         [(ngModel)]="value"
         [required]="required"
+        [readonly]="readonly"
         (focusout)="onBlur()">
 </date-input>
 

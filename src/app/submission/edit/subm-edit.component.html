@@ -24,15 +24,36 @@
                  (change)="onChange($event)"
                  class="navbar-subm-margin">
 
-                <div *ngIf="isNew" class="panel">
+                <div *ngIf="isNew && errors.total()" class="panel">
                     <div class="panel-body">
-                        <h4>Please fill out the form below</h4>
+                        <h4>New submission</h4>
                         <p>
-                            All fields are required unless marked as <i>Optional</i>. The
+                            Please fill out the form below. All fields are required unless marked as <i>Optional</i>. The
                             <span class="font-bold">Review</span> tab on the
                             left-hand side lists any missing or invalid information, while the
                             <span class="font-bold">Types</span> tab contains
                             optional field types that may be added to this submission.
+                        </p>
+                    </div>
+                </div>
+
+                <div *ngIf="!isNew && errors.total()" class="panel">
+                    <div class="panel-body">
+                        <h4>Incomplete submission</h4>
+                        <p>
+                            Some information in this submission is still missing or incorrect. Please
+                            note that all fields are required unless marked as <i>Optional</i>. Check the
+                            <span class="font-bold">Review</span> tab on the left-hand side for more help.
+                        </p>
+                    </div>
+                </div>
+
+                <div *ngIf="!errors.total() && !readonly" class="panel">
+                    <div class="panel-body">
+                        <h4>Study ready for submission</h4>
+                        <p>
+                            You may submit the data on this form now. After submission, your study will be allocated
+                            a permanent accession number under which it will be published.
                         </p>
                     </div>
                 </div>

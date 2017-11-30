@@ -645,8 +645,14 @@ export class Section extends HasUpdates<UpdateEvent> {
         this._accno = data.accno || '';
 
         this.fields = new Fields(type, data);
+
+        //Any attribute names that do not match field names are added as annotations.
+        //NOTE: Attribute names are camel-cased whereas field names are in human-readable form with spaces.
         this.annotations = AnnotationFeature.create(type.annotationsType,
-            (data.attributes || []).filter(a => type.getFieldType(a.name) === undefined)
+            (data.attributes || []).filter((attribute) => {
+                const humanName = attribute.name.replace(/([a-z])([A-Z])/g, '$1 $2');  //uncamelcased version
+                return (type.getFieldType(humanName) === undefined);
+            })
         );
         this.features = new Features(type, data);
         this.sections = new Sections(type, data);

@@ -11,6 +11,7 @@ import {SubmissionType} from './submission-type.model';
 import {convertAuthorsToContacts, convertContactsToAuthors} from './pagetab-authors.utils';
 import {flattenDoubleArrays} from './pagetab-doublearrays.utils';
 import {copyAttributes} from './pagetab-attributes.utils';
+import * as _ from 'lodash';
 
 class PtEntry implements AttributesData {
     readonly attributes: { name: string, value: string }[];
@@ -108,19 +109,41 @@ class PtSection extends PtEntry implements SectionData {
 }
 
 export class PageTab implements SubmissionData {
+    static externalAttrs: string[] = ['Title', 'ReleaseDate'];
     readonly accno: string;
     readonly section: PtSection;
     readonly tags: any[];
     readonly accessTags: string[];
 
     static fromSubmission(subm: Submission): any {
+
+        //Properties outside the "section" property
         const pt: any = {
             type: subm.type.name,
             accno: subm.accno,
             tags: subm.tags.tags,
             accessTags: subm.tags.accessTags
         };
+
+        //Properties under the "section" property
         pt.section = PageTab.fromSection(subm.root);
+
+        //As per requirements of pagetab's current implementation, some attributes must not be within the section.
+        pt['attributes'] = [];
+        pt.section.attributes = _.filter(pt.section.attributes, (attribute) => {
+
+            //Moves attributes labelled as "external" outside the section
+            if (_.includes(this.externalAttrs, attribute.name)) {
+                pt.attributes.push(attribute);
+                return false;
+
+            //For the rest, leave them inside.
+            } else {
+                return true;
+            }
+        });
+
+
         return convertContactsToAuthors(pt);
     }
 
@@ -143,7 +166,7 @@ export class PageTab implements SubmissionData {
         let attributes = [];
         if (sec.fields.length > 0) {
             attributes = attributes.concat(sec.fields.list().map(fld => ({
-                name: fld.name,
+                name: fld.name.split(' ').join(''),     //PageTab's property names are whitespace-free
                 value: fld.value
             })));
         }

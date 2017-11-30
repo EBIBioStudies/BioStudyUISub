@@ -46,12 +46,12 @@ export class SubmNavBarComponent {
 
     /**
      * Creates a blank submission using PageTab's data structure and brings up a form to edit it.
+     * //TODO: at present, the app relies on the backend to generate a ready instance of a submission. This leads to two requests for every new submission, one to create it and another to retrieve it for the edit view.
      */
     createSubmission() {
         this.submService.createSubmission(PageTab.createNew())
             .subscribe((s) => {
-                console.log('created submission:', s); console.log(PageTab.createNew());
-                this.router.navigate(['/submissions/new', s.accno]);
+                this.router.navigate(['/submissions/new/', s.accno]);
             });
     };
 }

@@ -222,9 +222,6 @@ input[readonly], textarea[readonly] {
 .readonly .feature .form-control {
   padding-left: 0;
 }
-.readonly .dropdown:after {
-  display: none;
-}
 
 /* Convenience classes for top-right-corner badge indicators */
 .badge-parent {
@@ -271,4 +268,10 @@ input[readonly], textarea[readonly] {
 }
 .bs-datepicker-body table td span.disabled, .bs-datepicker-body table td.disabled span {
   cursor: default;
+}
+
+//Restores the border radius applied to right corners on fields inside input-groups
+.input-group .subm-field .form-control {
+  border-top-right-radius: @border-radius-base !important;
+  border-bottom-right-radius: @border-radius-base !important;
 }

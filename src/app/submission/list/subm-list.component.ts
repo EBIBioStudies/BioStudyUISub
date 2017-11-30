@@ -13,6 +13,7 @@ import {TextFilterComponent} from './ag-grid/text-filter.component';
 import {DateFilterComponent} from './ag-grid/date-filter.component';
 import {PageTab} from '../shared/pagetab.model';
 import {RequestStatusService} from "../../http/request-status.service";
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
     selector: 'action-buttons-cell',
@@ -31,15 +32,15 @@ import {RequestStatusService} from "../../http/request-status.service";
                 container="body">
             <i class="fa fa-eye fa-fw fa-lg"></i>
         </button>
-        <button *ngIf="status === 'MODIFIED'"
-                type="button" class="btn btn-warning btn-xs btn-flat"
+        <button *ngIf="status === 'MODIFIED'" type="button" class="btn btn-warning btn-xs btn-flat"
+                [disabled]="isBusy"
                 (click)="onRevertSubmission()"
                 tooltip="Undo all changes"
                 container="body">
             <i class="fa fa-undo fa-fw"></i>
         </button>
-        <button *ngIf="status !== 'MODIFIED'"
-                type="button" class="btn btn-danger btn-xs btn-flat"
+        <button *ngIf="status !== 'MODIFIED'" type="button" class="btn btn-danger btn-xs btn-flat"
+                [disabled]="isBusy"
                 (click)="onDeleteSubmission()"
                 tooltip="Delete this submission"
                 container="body">
@@ -48,8 +49,9 @@ import {RequestStatusService} from "../../http/request-status.service";
 })
 export class ActionButtonsCellComponent implements AgRendererComponent {
     private accno: string;
-    private isTemp: boolean;
-    private onDelete: (accno: string, action: string) => {};
+    private isBusy: boolean;        //flags if a previous button action is in progress
+    private isTemp: boolean;        //flags if the corresponding submission is a temporary one
+    private onDelete: (accno: string, onCancel: Function, action: string) => {};
     private onEdit: (string) => {};
     private onView: (string) => {};
 
@@ -65,14 +67,23 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
         this.onDelete = data.onDelete || noop;
         this.onEdit = data.onEdit || noop;
         this.onView = data.onView || noop;
+
+        this.reset();
+    }
+
+    //Reverts the button to its original state
+    reset() {
+        this.isBusy = false;
     }
 
     onDeleteSubmission() {
-        this.onDelete(this.accno, 'delete');
+        this.isBusy = true;
+        this.onDelete(this.accno, this.reset.bind(this), 'delete');
     }
 
     onRevertSubmission() {
-        this.onDelete(this.accno, 'revert');
+        this.isBusy = true;
+        this.onDelete(this.accno, this.reset.bind(this), 'revert');
     }
 
     onEditSubmission() {
@@ -142,10 +153,11 @@ export class SubmListComponent {
             rowModelType: 'pagination',
             paginationPageSize: 15,
             rowHeight: 30,
+            localeText: {noRowsToShow: 'No submissions found'},
             getRowNodeId: (item) => {
                 return item.accno;
             },
-            onGridReady: () => {
+            onGridReady: (params) => {
                 this.gridOptions.api.sizeColumnsToFit();
                 this.setDatasource();
             }
@@ -158,6 +170,8 @@ export class SubmListComponent {
         this.columnDefs = [
             {
                 headerName: 'Accession',
+                cellClass: 'ag-cell-centered',
+                maxWidth: 175,
                 field: 'accno',
                 filterFramework: TextFilterComponent
             },
@@ -168,19 +182,16 @@ export class SubmListComponent {
             },
             {
                 headerName: 'Release Date',
+                cellClass: 'ag-cell-centered',
+                maxWidth: 150,
                 field: 'rtime',
                 cellRendererFramework: DateCellComponent,
                 filterFramework: DateFilterComponent
             },
             {
-                headerName: 'Status',
-                field: 'status',
-                cellClass: 'ag-cell-centered',
-                suppressMenu: true
-            },
-            {
                 headerName: 'Actions',
                 cellClass: 'ag-cell-centered',
+                maxWidth: 100,
                 suppressMenu: true,
                 suppressSorting: true,
                 cellRendererFramework: ActionButtonsCellComponent
@@ -238,8 +249,7 @@ export class SubmListComponent {
                 fragment = 'sent';
             }
 
-            this.router.navigate([fragment], {relativeTo: this.route});
-            this.setDatasource();
+            this.router.navigate([fragment], {relativeTo: this.route, replaceUrl:true});
         }
     }
 
@@ -250,30 +260,37 @@ export class SubmListComponent {
             title: row.title,
             rtime: row.rtime,
             status: row.status,
-            onDelete: (accno: string, action: string = 'delete') => {
-                const onNext = () => {
-                    this.submService
-                        .deleteSubmission(accno)
-                        .subscribe(data => {
-                            this.setDatasource();
-                        });
+            onDelete: (accno: string, onCancel: Function, action: string = 'delete'): Subscription => {
+                const onNext = (isOk: boolean) => {
+
+                    //Deletion confirmed => makes a request to removes the submission from the server and refreshes
+                    //the grid by performing an additional request to retrieve the updated list.
+                    if (isOk) {
+                        this.submService
+                            .deleteSubmission(accno)
+                            .subscribe(data => {
+                                this.setDatasource();
+                            });
+
+                    //Deletion canceled: reflects it on the button
+                    } else {
+                        onCancel();
+                    }
                 };
 
                 switch (action) {
                     case 'delete':
-                        this.confirm(
+                        return this.confirm(
                             `If you proceed, the submission with accession number ${accno} will be permanently deleted.`,
                             `Delete submission`,
                             'Delete'
                         ).subscribe(onNext);
-                        break;
                     case 'revert':
-                        this.confirm(
+                        return this.confirm(
                             `If you proceed, all recent changes made to the submission with accession number ${accno} will be rolled back.`,
                             `Undo changes in submission`,
                             'Undo'
                         ).subscribe(onNext);
-                        break;
                 }
             },
 
@@ -297,8 +314,7 @@ export class SubmListComponent {
 
         this.submService.createSubmission(PageTab.createNew())
             .subscribe((s) => {
-                console.log('created submission:', s);
-                this.router.navigate(['/submissions/new', s.accno]);
+                this.router.navigate(['/submissions/new/', s.accno]);
             });
     };
 
@@ -332,6 +348,6 @@ export class SubmListComponent {
     confirm(text: string, title: string, confirmLabel: string): Observable<any> {
         this.confirmDialog.title = title;
         this.confirmDialog.confirmLabel = confirmLabel;
-        return this.confirmDialog.confirm(text);
+        return this.confirmDialog.confirm(text, false);
     }
 }

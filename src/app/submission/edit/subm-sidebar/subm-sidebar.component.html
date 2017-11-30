@@ -3,7 +3,10 @@
     <div class="menu-toggle">
         <button class="minimise-btn btn pull-right"
                 [ngClass]="{'inactive': !collapsed}"
-                (click)="onToggle($event)">
+                (click)="onToggle($event)"
+                tooltip="{{collapsed ? 'Maximize sidebar' : 'Minimize sidebar'}}"
+                container="body"
+                placement="right">
             <i class="fa fa-fw fa-lg"
                [ngClass]="{'fa-toggle-left': !collapsed, 'fa-toggle-right': collapsed}"></i>
         </button>
@@ -13,7 +16,8 @@
                  (select)="onTabClick(true)">
                 <template tabHeading>
                     Review
-                    <span *ngIf="numInvalid" class="badge badge-corner badge-danger">{{numInvalid}}</span>
+                    <span *ngIf="errors.total()" class="badge badge-corner"
+                          [ngClass]="{'badge-danger': numPending}">{{errors.total()}}</span>
                 </template>
             </tab>
             <tab heading="Types"
@@ -102,13 +106,14 @@
                 <i class="fa fa-check-circle" aria-hidden="true"
                     [ngClass]="{'fa-2x': collapsed, 'fa-4x': !collapsed}"></i>
                 <h4>All fields are valid</h4>
+                <h4>You may submit your study now</h4>
             </li>
             <li class="sidebar-item" *ngFor="let control of formControls; let i = index">
                 <a *ngIf="control.invalid"
                    tooltip="{{collapsed ? '&quot;' + control.template.name + '&quot; field is ' + tipText(control.errors) : ''}}"
                    container="body"
                    placement="right"
-                   (click)="onReviewClick(control)">
+                   (click)="onReviewClick($event, control)">
                     <i class="fa fa-lg text-center {{control.parentType.icon}}"></i>
                     {{!collapsed ? '&nbsp;' + control.template.name + '&nbsp;' : ''}}
                     <strong class="label label-default"

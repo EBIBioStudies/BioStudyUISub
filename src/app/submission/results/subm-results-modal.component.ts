@@ -25,12 +25,16 @@ export class SubmResultsModalComponent {
                 public bsModalRef: BsModalRef) {
     }
 
+    get location() {
+        return window.location;
+    }
+
     /**
      * Extracts the accession number from the server's response, taking into account whether the
      * study is new or not. The former will have its accession number added under the mapping section.
      * @returns {string} Accession number assigned to the submitted study
      */
-    getAccno(): string {
+    get accno(): string {
         if (this.mapping.length && this.mapping[0].hasOwnProperty('assigned') && this.mapping[0].assigned) {
             return this.mapping[0].assigned;
         } else {

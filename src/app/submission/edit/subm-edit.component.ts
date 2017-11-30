@@ -4,11 +4,11 @@ import {
     OnDestroy,
     ViewChild
 } from '@angular/core';
+import { Location } from '@angular/common';
 import {
     ActivatedRoute,
     Params
 } from '@angular/router';
-import {FormControl, ValidationErrors} from "@angular/forms";
 
 import {Subscription} from 'rxjs/Subscription';
 import {Observable} from 'rxjs/Observable';
@@ -35,6 +35,7 @@ import {SubmResultsModalComponent} from '../results/subm-results-modal.component
 import {ConfirmDialogComponent} from 'app/shared/index';
 import {SubmFormComponent} from "./subm-form/subm-form.component";
 import {AppConfig} from "../../app.config";
+import {FieldControl} from "./subm-form/subm-form.service";
 
 @Component({
     selector: 'subm-edit',
@@ -44,7 +45,7 @@ export class SubmEditComponent implements OnInit, OnDestroy {
     subm: Submission;
     section: Section;
     errors: SubmValidationErrors = SubmValidationErrors.EMPTY;
-    formControls: FormControl[] = [];       //immutable list of controls making up the form's section (fields, features...)
+    formControls: FieldControl[] = [];       //immutable list of controls making up the form's section (fields, features...)
     sideBarCollapsed: boolean = false;
     readonly: boolean = false;
     accno: string = '';
@@ -55,12 +56,14 @@ export class SubmEditComponent implements OnInit, OnDestroy {
     private isSaving = false;
     private isNew = false;
 
+
     @ViewChild('confirmDialog') confirmDialog: ConfirmDialogComponent;
     @ViewChild('submForm') submForm: SubmFormComponent;
 
     constructor(public route: ActivatedRoute,
                 public submService: SubmissionService,
-                public modalService: BsModalService,
+                private location: Location,
+                private modalService: BsModalService,
                 private appConfig: AppConfig) {
 
         //Initally collapses the sidebar for tablet-sized screens if applicable
@@ -79,9 +82,12 @@ export class SubmEditComponent implements OnInit, OnDestroy {
         this.route.params
             .switchMap((params: Params) => this.submService.getSubmission(params.accno))
             .subscribe(wrappedSubm => {
+                let page;
+
                 this.wrappedSubm = wrappedSubm;
                 this.accno = wrappedSubm.accno;
-                this.subm = (new PageTab(wrappedSubm.data)).toSubmission(SubmissionType.createDefault());
+                page = new PageTab(wrappedSubm.data);
+                this.subm = page.toSubmission(SubmissionType.createDefault());
 
                 this.errors = SubmissionValidator.validate(this.subm);
 
@@ -98,11 +104,14 @@ export class SubmEditComponent implements OnInit, OnDestroy {
 
     /**
      * As soon as there is a new form section created, traverse it and get all its controls.
-     * Note that the section –and effectively the whole form– is rebuilt every time there is a change in the form.
+     * Note that, by design, the section –and effectively the whole form– is rebuilt every time there
+     * is a change in the form.
      * @see {@link SubmFormComponent}
      */
     ngAfterViewChecked() {
-        this.submForm && this.submForm.sectionForm.controls(this.formControls);
+        if (this.submForm) {
+            this.submForm.sectionForm.controls(this.formControls);
+        }
     }
 
     ngOnDestroy() {
@@ -120,18 +129,6 @@ export class SubmEditComponent implements OnInit, OnDestroy {
 
     get formValid(): boolean {
         return this.errors.empty();
-    }
-
-    /**
-     * Probes the "touched" property of the child form component to figure out if any of the fields has been blurred.
-     * @returns {boolean} Normalised equivalent of the "touched" flag in the form.
-     */
-    get formTouched(): boolean {
-        if (this.submForm && typeof this.submForm.sectionForm.form.touched !== 'undefined') {
-            return this.submForm.sectionForm.form.touched;
-        } else {
-            return false;
-        }
     }
 
     onSectionClick(section: Section): void {
@@ -153,11 +150,15 @@ export class SubmEditComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Handler for field change events. Saves the current data to the server, flagging the request's progress.
+     * Handler for field change events. Saves the current data to the server, flagging the request's progress,
+     * and updates the state of the view if the submission was new (replacing whatever route already exists).
      */
     onChange() {
         this.isSaving = true;
-        this.submService.saveSubmission(this.wrap()).subscribe(result => this.isSaving = false);
+        this.submService.saveSubmission(this.wrap()).subscribe((result) => {
+            this.isSaving = false;
+            this.isNew && this.location.replaceState('/submissions/edit/' + this.accno);
+        });
     }
 
     onSubmit(event) {
@@ -174,8 +175,12 @@ export class SubmEditComponent implements OnInit, OnDestroy {
         this.submService.submitSubmission(this.wrap())
             .subscribe(
                 resp => {
-                    console.log('submitted', resp);
                     this.showSubmitResults(resp);
+
+                    //Updates the view to reflect the "sent" state of the submission without knock-on effects on history
+                    this.location.replaceState('/submissions/' + resp.mapping[0].assigned);
+                    this.accno = resp.mapping[0].assigned;
+                    this.readonly = true;
                 },
                 (error: ServerError) => {
 

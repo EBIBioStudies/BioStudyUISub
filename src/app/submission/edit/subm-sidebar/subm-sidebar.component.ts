@@ -24,6 +24,7 @@ import { SubmAddDialogComponent } from '../subm-add/subm-add.component';
 import { ConfirmDialogComponent } from 'app/shared/index';
 import { SectionType } from '../../shared/submission-type.model';
 import {SubmValidationErrors} from "../../shared/submission.validator";
+import {FieldControl} from "../subm-form/subm-form.service";
 
 /**
  * Submission item class aggregating its corresponding feature with UI-relevant metadata. It enables
@@ -158,8 +159,8 @@ class SubmItems extends Array<SubmItem> {
 export class SubmSideBarComponent implements OnChanges {
     @Input() collapsed? = false;
     @Input() section: Section;
-    @Input() formControls: FormControl[] = [];
-    @Input() errors: SubmValidationErrors = SubmValidationErrors.EMPTY;
+    @Input() formControls: FieldControl[] = [];                              //refreshed array of form controls
+    @Input() errors: SubmValidationErrors = SubmValidationErrors.EMPTY;     //errors from validator service
     @Output() toggle? = new EventEmitter();
 
     @ViewChild('addDialog') addDialog: SubmAddDialogComponent;
@@ -168,12 +169,10 @@ export class SubmSideBarComponent implements OnChanges {
     isStatus: boolean = true;       //flag indicating if form status on display
     editing: boolean = false;       //flag indicating component's mode: display or editing, with different renderings
     items: SubmItems;               //current collection of feature/subsection items
-    numInvalid: number = 0;         //number of invalid labels (those corresponding to invalid and touched fields)
     iconMap: any = {};              //lookup table for icons
+    numPending: number = 0;         //number of modified fields still pending review (still invalid)
 
     private subscr: Subscription;
-
-    constructor(private rootEl:ElementRef) {}
 
     ngOnChanges(changes: any): void {
         const change: SimpleChange = changes.section;
@@ -196,8 +195,10 @@ export class SubmSideBarComponent implements OnChanges {
         }
     }
 
+    //Updates the pending fields counter only after the digest cycle. Otherwise Angular complains the change happened
+    //too early.
     ngDoCheck() {
-        this.numInvalid = this.rootEl.nativeElement.getElementsByClassName('label-danger').length;
+        this.numPending = FieldControl.numPending;
     }
 
     onTabClick(isStatus: boolean): void {
@@ -361,11 +362,23 @@ export class SubmSideBarComponent implements OnChanges {
     }
 
     /**
-     * Sets focus on the field represented by the form control clicked on within the review tab.
-     * @param {FormControl} control - Form control augmented with the DOM element for the field.
+     * Scrolls to and sets focus on the field represented by the form control clicked on within the review tab.
+     * @param {Event} event - Click event object
+     * @param {FieldControl} control - Form control augmented with the DOM element for the field.
      */
-    onReviewClick(control: FormControl) {
-        control['nativeElement'].focus();
+    onReviewClick(event: Event, control: FieldControl) {
+        const buttonEl = <HTMLElement>event.target;
+
+        //Determines the scrolling offset needed to get the control alongside the review button just clicked.
+        let scrollTop = control.nativeElement.getBoundingClientRect().top - buttonEl.getBoundingClientRect().top;
+
+        //Prevents the submission topbar from overlapping the control's label area if it's at the top.
+        if (this.formControls.indexOf(control) == 0) {
+            scrollTop -= 25;
+        }
+
+        window.scrollBy(0, scrollTop);
+        control.nativeElement.focus();
     }
 
     /**

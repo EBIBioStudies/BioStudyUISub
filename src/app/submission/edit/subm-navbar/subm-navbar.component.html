@@ -10,7 +10,7 @@
         <a href="javascript:void(0)" (click)="onSectionClick(sec)">
             <span [ngClass]="{'current-section': last}">
                 <span *ngIf="idx == 0">{{accno}}</span>
-                <span *ngIf="idx > 0">{{sec.typeName + ' subsection'}}</span>
+                <span *ngIf="idx > 0">{{sec.typeName}}</span>
             </span>
         </a>
     </span>

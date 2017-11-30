@@ -127,7 +127,6 @@ export class MultiSelectComponent implements ControlValueAccessor, OnChanges, On
 
     ngOnChanges(): void {
         this.items = this.options.map(opt => ({checked: false, label: opt}));
-        console.log(this.items);
         this.selected = [];
         this.onChange(this.selected);
     }

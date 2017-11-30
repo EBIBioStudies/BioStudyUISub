@@ -162,10 +162,15 @@
   border-bottom: none;
 }
 
-//Prevents page controls from wrapping onto the next line when on pad-sized screens
+//Prevents page controls from wrapping onto the next line when on smaller screens
 .ag-fresh .ag-paging-row-summary-panel {
   width: auto;
   float: left
+}
+@media screen and (max-width: 650px) {
+  .ag-fresh .ag-paging-row-summary-panel {
+    display: none;
+  }
 }
 .ag-fresh .ag-paging-panel {
   text-align: center;

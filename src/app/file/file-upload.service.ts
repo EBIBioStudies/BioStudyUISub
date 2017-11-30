@@ -46,7 +46,6 @@ export class FileUpload {
 
         let uploadStatus = upload
             .map((res) => {
-                console.log(res);
                 if (res.kind === 'progress') {
                     return new FileUploadStatus('uploading', res.progress, undefined);
                 }
@@ -59,9 +58,7 @@ export class FileUpload {
                 return failed;
             });
 
-        this._statusSubject.subscribe(
-            (fus) => {
-                console.log(fus);
+        this._statusSubject.subscribe((fus) => {
                 this._progress = fus.progress;
                 this._status = fus.status;
                 this._error = fus.error;
@@ -70,8 +67,7 @@ export class FileUpload {
                     this.finish$.complete();
                     this._statusSubject.complete();
                 }
-            },
-            console.log);
+            }, console.log);
 
         this._sb = uploadStatus.subscribe(this._statusSubject);
     }
@@ -144,7 +140,6 @@ export class FileUploadService {
     }
 
     remove(u: FileUpload) {
-        console.log("remove upload", u, this._uploads);
         _.pull(this._uploads, u);
     }
 }
