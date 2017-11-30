@@ -1,7 +1,7 @@
 <div class="container-fluid container-scroll" [formGroup]="featureForm.form">
     <div class="row">
         <div class="cell canton col-xs-1 col-md-1 text-center">
-            <button class="btn-add btn btn-link btn-md" type="button"
+            <button class="btn-add btn btn-link btn-md" type="button" tabindex="-1"
                     [ngClass]="{'invisible': readonly}"
                     [tooltip]="'Add a new ' + feature.typeName.toLowerCase() + ' attribute'"
                     container="body"
@@ -51,9 +51,7 @@
         </div>
     </div>
 </div>
-<button *ngIf="!readonly"
-        type="button"
-        class="btn-add btn btn-link"
+<button *ngIf="!readonly" type="button" class="btn-add btn btn-link" tabindex="-1"
         [tooltip]="'Add a new ' + feature.typeName.toLowerCase()"
         container="body"
         (click)="feature.addRow()">
