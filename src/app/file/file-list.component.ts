@@ -168,13 +168,14 @@ export class FileListComponent implements OnInit, OnDestroy {
             onGridReady: () => {
                 this.gridOptions.api.sizeColumnsToFit();
             },
-            rowSelection: 'single'
+            rowSelection: 'single',
+            unSortIcon: true,
+            localeText: {noRowsToShow: 'No files found'}
         };
 
         this.uploadSubscription = this.fileUploadService.uploadFinish$
             .filter((path) => path.startsWith(this.currentPath))
             .subscribe(() => {
-                console.log('on upload finished');
                 this.loadData();
             });
         this.rowData = [];
@@ -183,13 +184,12 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.route.params.forEach((params: Params) => {
-            this.backButton = params['bb'];
+        this.route.queryParams.forEach((params: Params) => {
+            this.backButton = params.bb;
         });
     }
 
     ngOnDestroy() {
-        console.log('onDestroy()');
         this.uploadSubscription.unsubscribe();
     }
 
@@ -210,7 +210,8 @@ export class FileListComponent implements OnInit, OnDestroy {
             {
                 headerName: 'Type',
                 field: 'type',
-                width: 30,
+                minWidth: 45,
+                maxWidth: 45,
                 suppressSorting: true,
                 cellRendererFramework: FileTypeCellComponent
             },
@@ -220,12 +221,12 @@ export class FileListComponent implements OnInit, OnDestroy {
             },
             {
                 headerName: 'Progress',
-                width: 200,
+                maxWidth: 200,
                 cellRendererFramework: ProgressCellComponent
             },
             {
                 headerName: 'Actions',
-                width: 100,
+                maxWidth: 100,
                 suppressMenu: true,
                 suppressSorting: true,
                 cellRendererFramework: FileActionsCellComponent
@@ -313,7 +314,6 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     private removeFile(fileName: string): void {
-        console.log('removeFile', fileName);
         this.fileService
             .removeFile(this.path.fullPath(fileName))
             .subscribe((resp) => {

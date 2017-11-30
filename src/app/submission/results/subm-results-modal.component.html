@@ -16,9 +16,9 @@
         <div class="media-body media-middle">
             <p class="media-heading">
                 <span *ngIf="isSuccess()">
-                    Your submission has been added successfully to BioStudies with accession number <strong>{{getAccno()}}</strong>. It
-                    will be available in the next 24 hours at <a target="_blank" href="http://www.ebi.ac.uk/biostudies/studies/{{getAccno()}}">
-                    www.ebi.ac.uk/biostudies/studies/{{getAccno()}}</a>.
+                    Your submission has been successfully added to the BioStudies database with accession number <strong>{{accno}}</strong>. It
+                    will be available in the next 24 hours at <a target="_blank" href="{{location.origin}}/biostudies/studies/{{accno}}">
+                    {{location.hostname}}/biostudies/studies/{{accno}}</a>.
                 </span>
                 <span *ngIf="!isSuccess()">
                     An error has occurred while submitting the data to BioStudies. You may review your submission and try again. If the error

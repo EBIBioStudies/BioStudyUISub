@@ -63,6 +63,7 @@ const appRoutes: Routes = [
     {
         path: 'submissions/:accno',
         component: SubmViewComponent,
+        data: {reuse: true},
         canActivate: [AuthGuard]
     },
     {
@@ -70,6 +71,9 @@ const appRoutes: Routes = [
         component: FileListComponent,
         canActivate: [AuthGuard]
     }
+
+    //NOTE: some components should be reused instead of re-instantiated when navigating to certain routes (the ones with a "reuse" data property).
+    //TODO: As of now, angular does not support this feature but is soon to be added (https://github.com/angular/angular/issues/12446). We should take advantage of this to save requests.
 ];
 
 @NgModule({

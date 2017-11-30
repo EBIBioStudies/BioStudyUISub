@@ -10,11 +10,13 @@ import {FeatureForm} from '../subm-form.service';
 
 @Component({
     selector: 'subm-feature',
-    templateUrl: './subm-feature.component.html'
+    templateUrl: './subm-feature.component.html',
+    styleUrls: ['./subm-feature.component.css']
 })
 export class SubmFeatureComponent implements OnInit {
     @Input() featureForm: FeatureForm;
     @Input() readonly?: boolean = false;
+    @Input() isMenu?: boolean = true;
     @ViewChild('featureEl') featureEl: ElementRef;
 
     actions: any[] = [];

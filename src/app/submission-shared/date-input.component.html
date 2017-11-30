@@ -1,4 +1,6 @@
-<div class="dropdown" (click)="onClick($event)">
+<div class="dropdown"
+     [ngClass]="{'readonly': readonly}"
+     (click)="onClick($event)">
     <input type="text" class="form-control" readonly
            bsDatepicker
            (bsValueChange)="onPickerSet($event)"

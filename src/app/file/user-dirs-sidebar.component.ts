@@ -24,7 +24,10 @@ import {FileService} from './file.service';
         <button class="minimise-btn btn pull-right"
                 [ngClass]="{'inactive': !collapsed}"
                 [disabled]="editing"
-                (click)="onToggle($event)">
+                (click)="onToggle($event)"
+                tooltip="{{collapsed ? 'Maximize sidebar' : 'Minimize sidebar'}}"
+                container="body"
+                placement="right">
             <i class="fa fa-fw fa-lg"
                [ngClass]="{'fa-toggle-left': !collapsed, 'fa-toggle-right': collapsed}"></i>
         </button>
@@ -115,7 +118,6 @@ export class UserDirsSideBarComponent implements OnInit, ControlValueAccessor {
     }
 
     onDirSelect(d) {
-        console.log(d);
         this.value = d.path;
         if (this.select) {
             this.select.emit(d.path);

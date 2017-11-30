@@ -24,9 +24,11 @@ export class SubmViewComponent extends SubmEditComponent {
             this.submService
                 .getSubmittedSubmission(this.accno)
                 .subscribe(wrappedSubm => {
+                    const page = new PageTab(wrappedSubm.data);
+
                     this.wrappedSubm = wrappedSubm;
                     this.accno = wrappedSubm.accno;
-                    this.subm = (new PageTab(wrappedSubm.data)).toSubmission(SubmissionType.createDefault());
+                    this.subm = page.toSubmission(SubmissionType.createDefault());
                     this.changeSection(this.subm.root.id);
                 });
         });

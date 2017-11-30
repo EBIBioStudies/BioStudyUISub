@@ -13,15 +13,20 @@
                 </span>
                 <small *ngIf="!readonly && !field.type.required" class="text-muted pull-right"><i>Optional</i></small>
             </label>
-            <subm-field
-                [type]="field.valueType"
-                [name]="field.name"
-                [readonly]="readonly"
-                [required]="field.type.required"
-                [(ngModel)]="field.value"
-                [formControl]="sectionForm.fieldControl(field.id)"
-                validate-onblur>
-            </subm-field>
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <i class="fa {{sectionForm.fieldControl(field.id).parentType.icon}}"></i>
+                </span>
+                <subm-field class="subm-field"
+                    [type]="field.valueType"
+                    [name]="field.name"
+                    [readonly]="readonly"
+                    [required]="field.type.required"
+                    [(ngModel)]="field.value"
+                    [formControl]="sectionForm.fieldControl(field.id)"
+                    validate-onblur>
+                </subm-field>
+            </div>
         </div>
     </div>
 
@@ -30,7 +35,8 @@
             <label class="control-label">{{feature.pluralName()}}</label>
             <small *ngIf="!readonly && !feature.type.required" class="text-muted pull-right"><i>Optional</i></small>
         </span>
-        <subm-feature [featureForm]="sectionForm.featureForm(feature.id)"
+        <subm-feature [isMenu]="false"
+                      [featureForm]="sectionForm.featureForm(feature.id)"
                       [readonly]="readonly">
         </subm-feature>
     </div>

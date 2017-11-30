@@ -28,9 +28,10 @@ import {
  * @author Hector Casanova <hector@ebi.ac.uk>
  */
 export class FieldControl extends FormControl {
+    static numPending: number = 0;          //total number of touched controls still invalid
     template: Field | Attribute;            //the control's model containing reference properties such as its name
     parentType: FieldType | FeatureType;    //the type descriptor the control refers to for things such as validation
-    nativeElement: Element;                 //DOM element the control is rendered into
+    nativeElement: HTMLElement;             //DOM element the control is rendered into
 
     /**
      * Instantiates a simple form control with validators, keeping a reference to related model or type structures.
@@ -38,9 +39,9 @@ export class FieldControl extends FormControl {
      * @param validators - Validation routines for the control.
      * @param {Field | Attribute} template - The reference model for the control.
      * @param {FieldType | FeatureType} parentType - The reference type descriptor for the control.
-     * @param {Element} nativeEl - DOM element which the control render into.
+     * @param {HTMLElement} nativeEl - DOM element which the control render into.
      */
-    constructor(value: any, validators: any, template: Field | Attribute, parentType: FieldType | FeatureType, nativeEl?: Element | null) {
+    constructor(value: any, validators: any, template: Field | Attribute, parentType: FieldType | FeatureType, nativeEl?: HTMLElement | null) {
         super(value, validators);
         this.template = template;
         this.parentType = parentType;
@@ -66,18 +67,23 @@ export class FieldControl extends FormControl {
     /**
      * Recursively traverses a given form grouping to get all controls as a flattened array.
      * @param {FormGroup | FormArray} formGroup - Group containing all controls, regardless of any nested groups or arrays.
-     * @param {FormControl[]} controls - Flattened array of form controls.
+     * @param {FormControl[]} controlList - Flattened array of form controls.
      */
-    static toArray(formGroup: FormGroup | FormArray, controls: FormControl[]) {
+    static toArray(formGroup: FormGroup | FormArray, controlList: FormControl[]) {
 
         //Alternative to ES7's Object.values() method to get all controls within the grouping
         (<any>Object).keys(formGroup.controls).map(key => formGroup.controls[key]).forEach(control => {
             if (control.controls) {
-                this.toArray(control, controls);
+                this.toArray(control, controlList);
 
             //Leaf objects characterised by a "template" property (the name of the control)
             } else if (control.template) {
-                controls.push(control);
+                controlList.push(control);
+
+                //Keeps track of controls that have been modified but still invalid
+                if (control.touched && control.invalid) {
+                    this.numPending++;
+                }
             }
         });
     }
@@ -179,10 +185,13 @@ export class SectionForm {
     }
 
     /**
-     * Traverses the form in its entirety in order to get all its controls, both of the section and its member features.
+     * Traverses the form in its entirety in order to get all its controls, both the section's and features' controls.
+     * While at it, it initialises the current number of pending fields.
      * @param {FormControl[]} controls - Final array with all the form's controls.
      */
     controls(controls: FormControl[]) {
+        FieldControl.numPending = 0;
+
         controls.length = 0;
         FieldControl.toArray(this.fieldsFormGroup, controls);
         FieldControl.toArray(this.featuresFormGroup, controls);

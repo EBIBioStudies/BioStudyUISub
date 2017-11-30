@@ -1,0 +1,8 @@
+.panel-heading .fa {
+    color: #777777;
+}
+.panel-description {
+    display: inline-block;
+    margin: 0 .5rem;
+    width: 83%;
+}

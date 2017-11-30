@@ -11,6 +11,7 @@
                           <button type="button"
                                   class="btn btn-sm btn-danger btn-flat"
                                   (click)="featureForm.feature.removeRowAt(idx)"
+                                  [disabled]="!feature.canRemoveRowAt(idx)"
                                   [tooltip]="'Delete ' + feature.typeName.toLowerCase() + ' entry'">
                                <i class="fa fa-trash-o"></i>
                           </button>
@@ -53,7 +54,7 @@
                 [tooltip]="'Add a new ' + feature.typeName.toLowerCase()"
                 (click)="feature.addColumn()">
             <i class="fa fa-lg {{feature.type.icon}}"></i>
-            &nbsp;Add row
+            &nbsp;Add {{feature.typeName.toLowerCase()}} row
         </button>
     </div>
 </div>

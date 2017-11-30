@@ -39,6 +39,7 @@ export class DateInputComponent implements ControlValueAccessor {
     private dateValue: Date;
 
     @Input() required?: boolean = false;
+    @Input() readonly?: boolean = false;
     @ViewChild('dp') private datepicker: BsDatepickerComponent;
 
     private onChange: any = () => {};
@@ -92,11 +93,17 @@ export class DateInputComponent implements ControlValueAccessor {
 
     /**
      * Normalises clicking behaviour across all of the input. Otherwise, clicking around the area of the arrow would
-     * not bring up the calenda, the expected behaviour.
+     * not bring up the calendar, the expected behaviour.
      * @param {Event} event - DOM event for the click action.
      */
     onClick(event: Event) {
-        if ((<Element>event.target).classList.contains('dropdown')) {  //checks click happened on the wrapping element
+
+        //Cancels the datepicker dialogue by closing it as soon as it's opened.
+        if (this.readonly) {
+            this.datepicker.toggle();
+
+        //Checks click happened on the wrapping element
+        } else if ((<Element>event.target).classList.contains('dropdown')) {
             this.datepicker.show();
         }
     }
