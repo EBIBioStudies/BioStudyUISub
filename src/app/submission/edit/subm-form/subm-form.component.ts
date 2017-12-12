@@ -6,7 +6,7 @@ import {
 
 import {
     SubmFormService,
-    SectionForm
+    SectionForm, FieldControl
 } from './subm-form.service';
 
 import {Section} from '../../shared/submission.model';
@@ -26,5 +26,22 @@ export class SubmFormComponent implements OnChanges {
 
     ngOnChanges(): void {
         this.sectionForm = this.submFormService.createForm(this.section);
+    }
+
+    /**
+     * Convenience method to retrieve the control corresponding to a certain top-level field.
+     * Optionally, it can also fetch the value of a certain attribute within the type assigned to that field.
+     * @param {string} fieldId - ID for the field to be retrieved.
+     * @param {string} [typeAttr = ''] - Name of the type attribute to be retrieved.
+     * @returns {FieldControl} - Extended form control for the field.
+     */
+    get(fieldId: string, typeAttr?: string | ''): FieldControl | any {
+        const fieldControl = this.sectionForm.fieldControl(fieldId);
+
+        if (typeAttr) {
+            return fieldControl.parentType[typeAttr];
+        } else {
+            return fieldControl;
+        }
     }
 }

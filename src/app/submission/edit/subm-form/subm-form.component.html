@@ -4,18 +4,32 @@
 
     <div *ngFor="let field of sectionForm.fields"
          class="form-group row">
-        <div class="col-sm-12"
-             [ngClass]="{'has-error': sectionForm.fieldControl(field.id).invalid && sectionForm.fieldControl(field.id).touched}">
+        <div class="col-xs-12"
+             [ngClass]="{'has-error': get(field.id).invalid && get(field.id).touched}">
             <label class="control-label">
                 <span class="text-black">{{field.name}}</span>
-                <span *ngIf="sectionForm.fieldControl(field.id).invalid && sectionForm.fieldControl(field.id).touched">
+                <span *ngIf="get(field.id).invalid && get(field.id).touched">
                     {{sectionForm.formErrors[field.id] ? sectionForm.formErrors[field.id] : ''}}
                 </span>
-                <small *ngIf="!readonly && !field.type.required" class="text-muted pull-right"><i>Optional</i></small>
+                <span [hidden]="readonly || get(field.id).invalid && get(field.id).touched" class="text-muted">
+                     <span *ngIf="(get(field.id, 'minlength') > 0) && (get(field.id, 'maxlength') < 0)">
+                         (at least {{get(field.id, 'minlength')}}
+                     </span>
+                     <span *ngIf="(get(field.id, 'minlength') < 0) && (get(field.id, 'maxlength') > 0)">
+                         (at most {{get(field.id, 'maxlength')}}
+                     </span>
+                     <span *ngIf="(get(field.id, 'minlength') > 0) && (get(field.id, 'maxlength') > 0)">
+                         (between {{get(field.id, 'minlength')}} and {{get(field.id, 'maxlength')}}
+                     </span>
+                     <span *ngIf="(get(field.id, 'minlength') > 0) || (get(field.id, 'maxlength') > 0)">
+                         characters long)
+                     </span>
+                </span>
             </label>
-            <div class="input-group">
-                <span class="input-group-addon">
-                    <i class="fa {{sectionForm.fieldControl(field.id).parentType.icon}}"></i>
+            <span *ngIf="!readonly && !field.type.required" class="text-muted pull-right"><i>Optional</i></span>
+            <div [ngClass]="{'input-group': !readonly}">
+                <span *ngIf="!readonly" class="input-group-addon">
+                    <i class="fa {{get(field.id, 'icon')}}"></i>
                 </span>
                 <subm-field class="subm-field"
                     [type]="field.valueType"
@@ -23,21 +37,22 @@
                     [readonly]="readonly"
                     [required]="field.type.required"
                     [(ngModel)]="field.value"
-                    [formControl]="sectionForm.fieldControl(field.id)"
+                    [formControl]="get(field.id)"
                     validate-onblur>
                 </subm-field>
             </div>
         </div>
     </div>
 
-    <div *ngFor="let feature of sectionForm.features">
-        <span *ngIf="feature.size() > 0">
+    <div *ngFor="let feature of sectionForm.features"
+        [ngClass]="{'form-group row': feature.size() > 0}">
+        <div *ngIf="feature.size() > 0" class="col-xs-12">
             <label class="control-label">{{feature.pluralName()}}</label>
-            <small *ngIf="!readonly && !feature.type.required" class="text-muted pull-right"><i>Optional</i></small>
-        </span>
-        <subm-feature [isMenu]="false"
-                      [featureForm]="sectionForm.featureForm(feature.id)"
-                      [readonly]="readonly">
-        </subm-feature>
+            <span *ngIf="!readonly && !feature.type.required" class="text-muted pull-right"><i>Optional</i></span>
+            <subm-feature [isMenu]="false"
+                          [featureForm]="sectionForm.featureForm(feature.id)"
+                          [readonly]="readonly">
+            </subm-feature>
+        </div>
     </div>
 </form>

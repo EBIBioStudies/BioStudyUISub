@@ -73,13 +73,12 @@ class DateRange {
         </select>
         <date-input
             *ngIf="after || between"
-            [(ngModel)]="date.from"
-            bsstDateFormat>
+            [canUsePastDates]="true"
+            [(ngModel)]="date.from">
         </date-input>
         <date-input
             *ngIf="before || between"
-            [(ngModel)]="date.to"
-            bsstDateFormat>
+            [(ngModel)]="date.to">
         </date-input>
     </div>
     <div style="padding:0 5px 5px 5px;text-align:right">

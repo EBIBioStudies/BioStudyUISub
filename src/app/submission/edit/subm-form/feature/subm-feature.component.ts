@@ -22,14 +22,16 @@ export class SubmFeatureComponent implements OnInit {
     actions: any[] = [];
     errorNum: number = 0;
 
+
     constructor(private changeRef: ChangeDetectorRef) {}
 
     ngOnInit() {
+
+        //Defines the actions of the feature's menu according to its type (list or not).
         this.actions.push({
             label: 'Add column',
             invoke: () => this.feature.addColumn()
         });
-
         if (!this.feature.singleRow) {
             this.actions.push({
                 label: 'Add row',

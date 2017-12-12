@@ -1,7 +1,7 @@
 import {
     Component,
     forwardRef,
-    Injector,
+    Injector, Input,
     ViewChild
 } from '@angular/core';
 
@@ -35,6 +35,9 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor {
     private orcidValue = '';                    //internal data model
     private mlistener = null;
 
+    @Input() isPopupButton: boolean = true;     //flag for showing/hiding popup button
+    @Input() isSmall: boolean = true;           //flag for making the input area the same size as grid fields
+
     @ViewChild('inputModel')
     private inputModel:NgModel;
 
@@ -49,19 +52,19 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor {
         return this.orcidValue;
     }
 
-    set value(value) {
-        this.orcidValue = value;
-        this.onChange(value);
+    set value(newValue) {
+        this.orcidValue = newValue;
+        this.onChange(newValue);
     }
 
     /**
      * Writes a new value from the form model into the view or (if needed) DOM property.
      * @see {@link ControlValueAccessor}
-     * @param value - Value to be stored
+     * @param newValue - Value to be stored
      */
-    writeValue(value: any) {
-        if (value) {
-            this.orcidValue = value;
+    writeValue(newValue: any) {
+        if (newValue) {
+            this.orcidValue = newValue;
         }
     }
 

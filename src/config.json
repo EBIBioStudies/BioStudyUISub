@@ -1,8 +1,11 @@
 {
-  "APP_PROXY_BASE":"/proxy",
-  "APP_CONTEXT":"/",
-  "APP_DEBUG_ENABLED":true,
-  "APP_PROD":true,
-  "APP_VERSION":"2.5",
-  "APP_TABLET_BREAKPOINT": 993
+  "APP_PROXY_BASE": "/proxy",
+  "APP_CONTEXT": "/",
+  "APP_DEBUG_ENABLED": true,
+  "APP_PROD": true,
+  "APP_VERSION": "2.5",
+  "APP_TABLET_BREAKPOINT": 993,
+  "APP_CAN_PAST_DATES": false,
+  "APP_DATE_LIST_FORMAT": "dd MMM yyyy",
+  "APP_DATE_INPUT_FORMAT": "DD MMM YYYY"
 }

@@ -15,7 +15,8 @@
                     emptyValue="{{'Column ' + (idx + 1)}}"
                     (remove)="feature.removeColumn(column.id)"
                     [formControl]="featureForm.columnControl(column.id)"
-                    [required]="column.required">
+                    [required]="column.required"
+                    [disableEdit]="featureForm.columnType(column.id).displayed || readonly">
             </inline-edit>
         </div>
     </div>
@@ -43,6 +44,7 @@
                             [type]="column.valueType"
                             [(ngModel)]="row.valueFor(column.id).value"
                             [readonly]="readonly"
+                            [required]="column.required"
                             [formControl]="featureForm.rowValueControl(rowIdx, column.id)"
                             isSmall="true"
                             validate-onblur>

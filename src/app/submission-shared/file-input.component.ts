@@ -18,8 +18,7 @@ import {FileService} from 'app/file/index';
     templateUrl: './file-input.component.html',
     styleUrls:['./file-input.component.css'],
     providers: [
-        {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => FileInputComponent), multi: true},
-        {provide: NG_VALIDATORS, useExisting: forwardRef(() => FileInputComponent), multi: true}
+        {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => FileInputComponent), multi: true}
     ]
 })
 export class FileInputComponent implements ControlValueAccessor {
@@ -29,56 +28,77 @@ export class FileInputComponent implements ControlValueAccessor {
     @Input('value') private selected: string = '';
 
     files: string[] = [];
+    isFound: boolean = false;        //flags a selected file name that is indeed among the existing
+
     private onChange: any = () => {};
     private onTouched: any = () => {};
-    private validateFn: any = () => {};
 
-    constructor(fileService: FileService) {
-        fileService
-            .getFiles('/User')
-            .map(data => data.files)
-            .map(files => files.map(f => f.path.replace(/^\/User\//, '')))
-            .subscribe((files) => {
-                this.files = files;
-            });
-    }
+    constructor(private fileService: FileService) {}
 
     get value() {
         return this.selected;
     }
 
-    set value(val) {
-        this.selected = val;
-        this.onChange(val);
+    /**
+     * Updates the selected value together with the found status. The latter is done to make sure it is changed
+     * even if the field was initially set to a non-existent file.
+     * @param {string} newValue - New selected file's path.
+     */
+    set value(newValue: any) {
+        this.selected = newValue;
+        this.isFound = this.files.indexOf(this.selected) != -1;
+        this.onChange(newValue);
     }
 
-    writeValue(value: any) {
-        if (value) {
-            this.selected = value;
-        }
+    /**
+     * Grabs the list of files in the user folder and checks whether the pre-selected file exists, if applicable.
+     */
+    ngOnInit() {
+        this.fileService
+            .getFiles('/User')
+            .map(data => data.files)
+            .map(files => files.map(f => f.path.replace(/^\/User\//, '')))
+            .subscribe((files) => {
+                this.files = files;
+
+                //A file has already been selected => must be among the user files
+                if (this.selected) {
+                    this.isFound = this.files.indexOf(this.selected) != -1;
+                }
+
+                //When the selected file no longer exists, the selection should be reset.
+                if (!this.isFound) {
+                    this.value = '';
+                }
+            });
     }
 
-    registerOnChange(fn) {
-        this.onChange = fn;
-    }
-
-    registerOnTouched(fn: any) {
-        this.onTouched = fn;
-    }
-
-    //TODO: this tries to cater for an edge case when the selected file no longer exists. The control should then be invalid but is not behaving like so.
-    validate(control: FormControl) {
-        if (this.selected && this.files.length == 0) {
-            control.setErrors({'required': true});
-        } else {
-            return this.validateFn(control);
+    /**
+     * Writes a new value from the form model into the view or (if needed) DOM property.
+     * @see {@link ControlValueAccessor}
+     * @param {string} newValue - Value to be set as selected file's path.
+     */
+    writeValue(newValue: string) {
+        if (newValue) {
+            this.selected = newValue;
         }
     }
 
     /**
-     * Handler for blur events. Normalises the behaviour of the "touched" flag.
+     * Registers a handler that should be called when something in the view has changed.
+     * @see {@link ControlValueAccessor}
+     * @param fn - Handler telling other form directives and form controls to update their values.
      */
-    onBlur() {
-        this.onTouched();
+    registerOnChange(fn) {
+        this.onChange = fn;
+    }
+
+    /**
+     * Registers a handler specifically for when a control receives a touch event.
+     * @see {@link ControlValueAccessor}
+     * @param fn - Handler for touch events.
+     */
+    registerOnTouched(fn: any) {
+        this.onTouched = fn;
     }
 }

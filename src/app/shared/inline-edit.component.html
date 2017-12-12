@@ -6,14 +6,14 @@
            [placeholder]="placeholder"
            (blur)="onEditBoxBlur($event)"
            (keyup)="onEditBoxKeyUp($event)"
-           (click)="canEdit && onEditClick()"
+           (click)="canEdit && startEditing()"
            [readonly]="!editing"
            name="inline-edit-box"
            #inlineEditBox/>
     <div *ngIf="!editing" class="icons">
         <button class="btn btn-xs btn-link"
                 *ngIf="canEdit"
-                (click)="onEditClick()">
+                (click)="startEditing()">
             <i class="fa fa-pencil"></i>
         </button>
         <button class="btn btn-xs btn-link"

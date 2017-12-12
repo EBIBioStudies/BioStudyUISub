@@ -21,9 +21,9 @@
             <div class="panel-body">
                 <form id="signUpForm" novalidate name="signUpForm" role="form"
                       (ngSubmit)="onSubmit(signUpForm)" #signUpForm="ngForm">
-                    <div class="form-group form-group-sm">
+                    <div class="form-group">
                         <label class="control-label" for="username">Full name</label>
-                        <small class="text-muted pull-right"><i>Optional</i></small>
+                        <span class="text-muted pull-right"><i>Optional</i></span>
                         <input type="text" autofocus
                                id="username"
                                name="username"
@@ -46,7 +46,7 @@
                                required
                                validate-onblur>
                     </div>
-                    <div class="form-group form-group-sm" [ngClass]="{'has-error': password.invalid && password.touched}">
+                    <div class="form-group" [ngClass]="{'has-error': password.invalid && password.touched}">
                         <label class="control-label" for="password">
                             <span class="text-black">Password</span>
                             <span *ngIf="password.invalid && password.touched">
@@ -66,7 +66,7 @@
                                minlength="6"
                                #password="ngModel" bsDatepicker/>
                     </div>
-                    <div class="form-group form-group-sm" [ngClass]="{'has-error': orcid.invalid && orcid.touched}">
+                    <div class="form-group" [ngClass]="{'has-error': orcid.invalid && orcid.touched}">
                         <label class="control-label">
                             <span class="text-black">ORCID</span>
                             <span *ngIf="orcid.invalid && orcid.touched">
@@ -74,9 +74,10 @@
                             </span>
                             <span [hidden]="orcid.invalid && orcid.touched" class="text-muted">(should follow dddd-dddd-dddd-dddd format)</span>
                         </label>
-                        <small class="text-muted pull-right"><i>Optional</i></small>
+                        <span class="text-muted pull-right"><i>Optional</i></span>
                         <orcid-input-box
                                 [(ngModel)]="model.orcid"
+                                [isSmall]="false"
                                 name="orcid"
                                 #orcid="ngModel"
                                 validate-onblur>

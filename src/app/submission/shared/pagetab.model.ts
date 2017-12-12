@@ -12,6 +12,7 @@ import {convertAuthorsToContacts, convertContactsToAuthors} from './pagetab-auth
 import {flattenDoubleArrays} from './pagetab-doublearrays.utils';
 import {copyAttributes} from './pagetab-attributes.utils';
 import * as _ from 'lodash';
+import {formatDate} from "../../submission-shared/date.utils";
 
 class PtEntry implements AttributesData {
     readonly attributes: { name: string, value: string }[];
@@ -111,6 +112,7 @@ class PtSection extends PtEntry implements SectionData {
 export class PageTab implements SubmissionData {
     static externalAttrs: string[] = ['Title', 'ReleaseDate'];
     readonly accno: string;
+    readonly isRevised: boolean;
     readonly section: PtSection;
     readonly tags: any[];
     readonly accessTags: string[];
@@ -132,6 +134,11 @@ export class PageTab implements SubmissionData {
         pt['attributes'] = [];
         pt.section.attributes = _.filter(pt.section.attributes, (attribute) => {
 
+            //While at it, sets the release date to today by default
+            if (attribute.name === 'ReleaseDate' && !attribute.value) {
+                attribute.value = formatDate(new Date(Date.now()));
+            }
+
             //Moves attributes labelled as "external" outside the section
             if (_.includes(this.externalAttrs, attribute.name)) {
                 pt.attributes.push(attribute);
@@ -143,12 +150,11 @@ export class PageTab implements SubmissionData {
             }
         });
 
-
         return convertContactsToAuthors(pt);
     }
 
     static createNew(): any {
-        const pt = new PageTab();
+        const pt = new PageTab({});
         return PageTab.fromSubmission(pt.toSubmission(SubmissionType.createDefault()));
     }
 
@@ -254,12 +260,17 @@ export class PageTab implements SubmissionData {
         });
     }
 
-    constructor(obj: any = {}) {
-        const newObj = convertAuthorsToContacts(
-            flattenDoubleArrays(
-                copyAttributes(obj)));
+    constructor(obj?: any | {}) {
+        let newObj = flattenDoubleArrays(copyAttributes(obj));
+        newObj = convertAuthorsToContacts(newObj);
 
         this.accno = newObj.accno;
+
+        //Submission data with a "tags" property at the root level implies that the submission has been revised
+        //NOTE: the API does not mark revised submissions in any way at the point of list retrieval. Hence why that
+        //state is determined here.
+        this.isRevised = newObj.hasOwnProperty('tags');
+
         this.tags = (newObj.tags || []);
         this.accessTags = (newObj.accessTags || []);
 

@@ -1,15 +1,15 @@
 <div class="col-xs-8 col-md-9">
-    <a *ngIf="!readonly" routerLink="/submissions">
-        <i class="fa fa-clock-o" aria-hidden="true"></i> Temporary
+    <a *ngIf="isTemp" routerLink="/submissions">
+        <i class="fa fa-clock-o" aria-hidden="true"></i> Pending
     </a>
-    <a *ngIf="readonly" routerLink="/submissions/sent">
+    <a *ngIf="!isTemp" routerLink="/submissions/sent">
         <i class="fa fa-database" aria-hidden="true"></i> Sent
     </a>
     <span *ngFor="let sec of sectionPath; let idx = index; let last = last;">
         &nbsp;<i class="fa fa-angle-right font-bold"></i>&nbsp;
         <a href="javascript:void(0)" (click)="onSectionClick(sec)">
             <span [ngClass]="{'current-section': last}">
-                <span *ngIf="idx == 0">{{accno}}</span>
+                <span *ngIf="idx == 0">{{accno}}{{isDiscardable? ' (revised)' : ''}}</span>
                 <span *ngIf="idx > 0">{{sec.typeName}}</span>
             </span>
         </a>
@@ -18,11 +18,12 @@
 --><div class="col-xs-4 col-md-3 btn-toolbar">
     <button *ngIf="!readonly" class="button-link btn btn-primary btn-sm btn-submit pull-right"
             (click)="onSubmit($event)">
-        Submit
+        {{isTemp ? 'S' : 'Re-s'}}ubmit
     </button>
-    <button *ngIf="!readonly && errors && !errors.empty()" class="button-link btn btn-default btn-sm pull-right"
-            (click)="onErrorsLabelClick($event)">
-        View log
+    <button  *ngIf="!readonly && !isTemp && isRevised" class="button-link btn btn-primary btn-sm btn-danger pull-right"
+            (click)="onRevert($event)">
+        <i class="fa fa-undo" aria-hidden="true"></i>
+        Revert
     </button>
     <button *ngIf="readonly" class="button-link btn btn-primary btn-sm pull-right"
             (click)="createSubmission()">

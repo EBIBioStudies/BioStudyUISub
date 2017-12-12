@@ -3,7 +3,7 @@
     <div class="menu-toggle">
         <button class="minimise-btn btn pull-right"
                 [ngClass]="{'inactive': !collapsed}"
-                (click)="onToggle($event)"
+                (click)="onToggleCollapse($event)"
                 tooltip="{{collapsed ? 'Maximize sidebar' : 'Minimize sidebar'}}"
                 container="body"
                 placement="right">
@@ -15,12 +15,12 @@
                  customClass="badge-parent"
                  (select)="onTabClick(true)">
                 <template tabHeading>
-                    Review
+                    Check
                     <span *ngIf="errors.total()" class="badge badge-corner"
                           [ngClass]="{'badge-danger': numPending}">{{errors.total()}}</span>
                 </template>
             </tab>
-            <tab heading="Types"
+            <tab heading="Add"
                  [active]="!isStatus"
                  (select)="onTabClick(false)"></tab>
         </tabset>
@@ -37,7 +37,7 @@
                    [tooltip]="item.label"
                    container="body">
                     <i class="fa fa-lg text-center {{item.feature.type.icon}}"></i>
-                    {{!collapsed ? '&nbsp;&nbsp;Add ' + item.feature.typeName : ''}}
+                    {{!collapsed ? '&nbsp;&nbsp;' + item.feature.typeName + ' ' + addUnit(item.feature.size()) : ''}}
                 </a>
                 <div class="row-input"
                    [ngClass]="{'has-error': itemType.invalid && itemType.touched}"
@@ -83,20 +83,31 @@
                 </button>
             </li>
         </form>
-        <li  *ngIf="!isStatus && !editing" class="sidebar-item type-control">
-            <a (click)="onEditModeToggle($event)">
-                <strong class="fa-stack">
-                    <i class="fa fa-circle fa-stack-2x"></i>
-                    <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
-                </strong>
-                {{!collapsed ? '&nbsp;Edit types' : ''}}
-            </a>
-        </li>
-        <li *ngIf="!isStatus && !editing" class="sidebar-item type-control">
-            <a (click)="onAddClick($event)">
-                <i class="fa fa-fw fa-plus-circle fa-lg"></i>
-                {{!collapsed ? '&nbsp;&nbsp;New type' : ''}}
-            </a>
+        <li *ngIf="!isStatus && !editing" class="text-right">
+            <button *ngIf="!collapsed" class="advanced-btn btn btn-link btn-sm"
+                    (click)="toggleAdvanced()">
+                <i class="fa fa-chevron-circle-right" aria-hidden="true"
+                   [ngClass]="{'fa-rotate-90': isAdvancedOpen}"></i>
+                Advanced
+            </button>
+            <ul class="sidebar-menu advanced-menu text-left"
+                [ngClass]="{'collapsed-box': !isAdvancedOpen}">
+                <li class="sidebar-item type-control">
+                    <a (click)="onEditModeToggle($event)">
+                        <strong class="fa-stack">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+                        </strong>
+                        {{!collapsed ? '&nbsp;Edit types' : ''}}
+                    </a>
+                </li>
+                <li *ngIf="!isStatus && !editing" class="sidebar-item type-control">
+                    <a (click)="onNewTypeClick($event)">
+                        <i class="fa fa-fw fa-plus-circle fa-lg"></i>
+                        {{!collapsed ? '&nbsp;&nbsp;New type' : ''}}
+                    </a>
+                </li>
+            </ul>
         </li>
 
         <!-- Review tab -->
@@ -105,8 +116,8 @@
                 [ngClass]="{'col-md-12': !collapsed}">
                 <i class="fa fa-check-circle" aria-hidden="true"
                     [ngClass]="{'fa-2x': collapsed, 'fa-4x': !collapsed}"></i>
-                <h4>All fields are valid</h4>
-                <h4>You may submit your study now</h4>
+                <h4 [ngClass]="{'vertical-text': collapsed}">All fields are valid</h4>
+                <h4 class="action-title">You may submit your study now</h4>
             </li>
             <li class="sidebar-item" *ngFor="let control of formControls; let i = index">
                 <a *ngIf="control.invalid"
@@ -129,7 +140,7 @@
     </ul>
 </aside>
 <subm-add-dialog #addDialog
-                [onAddType]="onAdd.bind(this)">
+                [onAddType]="onAddType.bind(this)">
 </subm-add-dialog>
 <confirm-dialog #confirmDialog
                 headerTitle="Delete items"

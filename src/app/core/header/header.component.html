@@ -76,13 +76,15 @@
 
                 <li *ngIf="userLoggedIn">
                     <button class="btn navbar-btn"
-                            (click)="signOut()">
-                        <i class="fa fa-fw fa-sign-out"></i>
+                            (click)="signOut()"
+                            [disabled]="isBusy">
+                        <i *ngIf="!isBusy" class="fa fa-fw fa-sign-out"></i>
+                        <i *ngIf="isBusy" class="fa fa-fw fa-cog fa-spin"></i>
                         Log out
                     </button>
                 </li>
             </ul>
         </div>
     </div>
-    <div class="loading-bar" [ngClass]="{'animate': isLoaderVisible}"></div>
+    <div class="loading-bar" [ngClass]="{'animate': isPendingReq}"></div>
 </nav>
