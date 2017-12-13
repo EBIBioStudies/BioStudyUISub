@@ -27,15 +27,16 @@
     </div>
     <ul class="sidebar-menu">
 
-        <!-- Types tab -->
+        <!-- Add tab -->
         <form novalidate
               [ngClass]="{'edit-type-form': editing}"
               #form="ngForm"
               (ngSubmit)="onSubmit(form)">
             <li class="sidebar-item" *ngFor="let item of items; let i = index">
-                <a *ngIf="!isStatus && !editing" (click)="item.onClick($event)"
-                   [tooltip]="item.label"
-                   container="body">
+                <a *ngIf="!isStatus && !editing"
+                   tooltip="Add to the form"
+                   container="body"
+                   (click)="item.onClick($event)">
                     <i class="fa fa-lg text-center {{item.feature.type.icon}}"></i>
                     {{!collapsed ? '&nbsp;&nbsp;' + item.feature.typeName + ' ' + addUnit(item.feature.size()) : ''}}
                 </a>
@@ -110,7 +111,7 @@
             </ul>
         </li>
 
-        <!-- Review tab -->
+        <!-- Check tab -->
         <div *ngIf="isStatus">
             <li *ngIf="errors.empty()" class="no-error-msg text-center"
                 [ngClass]="{'col-md-12': !collapsed}">
@@ -121,9 +122,9 @@
             </li>
             <li class="sidebar-item" *ngFor="let control of formControls; let i = index">
                 <a *ngIf="control.invalid"
-                   tooltip="{{collapsed ? '&quot;' + control.template.name + '&quot; field is ' + tipText(control.errors) : ''}}"
+                   tooltip="{{collapsed ? '&quot;' + control.template.name + '&quot; field is ' + tipText(control.errors) : 'Scroll field into view'}}"
                    container="body"
-                   placement="right"
+                   placement="{{collapsed ? 'right' : 'top'}}"
                    (click)="onReviewClick($event, control)">
                     <i class="fa fa-lg text-center {{control.parentType.icon}}"></i>
                     {{!collapsed ? '&nbsp;' + control.template.name + '&nbsp;' : ''}}

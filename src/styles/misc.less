@@ -211,9 +211,9 @@ component */
 
 //Shades an entire area, preventing any interaction as well.
 //TODO: Optimistic approach (IE11+). Depending on user response, this could need replacing with the traditional method.
-.disabled {
+.grayout {
   -webkit-filter: grayscale(100%);
-  -ms-filter: grayscale(100%);
+  ms-filter: gray;
   filter: grayscale(100%);
   pointer-events: none;
 }

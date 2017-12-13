@@ -1,5 +1,5 @@
 <div class="row-offcanvas row-offcanvas-left"
-     [ngClass]="{'readonly': readonly, 'disabled': isReverting}">
+     [ngClass]="{'readonly': readonly, 'grayout': isReverting}">
     <subm-sidebar *ngIf="!readonly"
                   (toggle)="sideBarCollapsed=!sideBarCollapsed"
                   [collapsed]="sideBarCollapsed"
@@ -114,6 +114,9 @@
                     <p class="col-xs-2">
                         <button type="button" class="btn-submit btn btn-primary"
                                 [disabled]="isSubmitting || isSaving"
+                                tooltip="Send to the BioStudies database"
+                                placement="top"
+                                container="body"
                                 (click)="onSubmit($event)">
                             {{subm.isTemp ? 'S' : 'Re-s'}}ubmit
                         </button>
@@ -125,6 +128,9 @@
                     </p>
                     <p class="col-xs-2 text-right">
                         <button *ngIf="!readonly && errors && !errors.empty()" class="btn btn-default btn-sm btn-log"
+                                tooltip="Show validation log"
+                                placement="left"
+                                container="body"
                                 (click)="onViewLog($event)">
                             View log
                         </button>

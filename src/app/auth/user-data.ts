@@ -52,13 +52,14 @@ export class UserData {
      * @returns {Object} Object containing contact data.
      */
     get contact(): object {
-        const contact = {};
+        const userData = this;      //gives context to eval op later on
+        const contactObj = {};
 
         Object.keys(UserData.contactMap).forEach((keyToChange) => {
-            contact[UserData.contactMap[keyToChange]] = eval('userData.' + keyToChange);
+            contactObj[UserData.contactMap[keyToChange]] = eval('userData.' + keyToChange);
         });
 
-        return contact;
+        return contactObj;
     }
 
     /**

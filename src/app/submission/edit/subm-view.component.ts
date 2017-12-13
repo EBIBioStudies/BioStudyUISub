@@ -11,13 +11,14 @@ import {
 import {SubmEditComponent} from "./subm-edit.component";
 import {PageTab} from "../shared/pagetab.model";
 import {SubmissionType} from "../shared/submission-type.model";
+import {Observable} from "rxjs/Observable";
 
 @Component({
     selector: 'subm-view',
     templateUrl: './subm-edit.component.html',
 })
 export class SubmViewComponent extends SubmEditComponent {
-    ngOnInit() {
+    ngOnInit(): Observable<any> {
         this.readonly = true;
         this.route.params.forEach((params: Params) => {
             this.accno = params['accno'];
@@ -32,5 +33,7 @@ export class SubmViewComponent extends SubmEditComponent {
                     this.changeSection(this.subm.root.id);
                 });
         });
+
+        return Observable.of(true);
     }
 }
