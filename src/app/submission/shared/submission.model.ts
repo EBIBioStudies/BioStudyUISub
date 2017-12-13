@@ -11,6 +11,7 @@ import {
 } from './submission-type.model';
 
 import * as pluralize from "pluralize";
+import * as _ from "lodash";
 
 const nextId = (function () {
     let count = 0;
@@ -36,9 +37,19 @@ export class HasUpdates<T> {
 }
 
 export class UpdateEvent {
+    leafEvent: UpdateEvent = null;      //pointer to original first event if a cascade is triggered
+
     constructor(public name: string,
                 public value: any,
                 public source: UpdateEvent = undefined) {
+
+        //Keeps track of the source event.
+        //NOTE: In certain instances, the chain of events is recorded as a nested object.
+        if (this.source && !this.source.leafEvent.source) {
+            this.leafEvent = this.source.leafEvent;
+        } else {
+            this.leafEvent = this;
+        }
     }
 }
 
@@ -177,7 +188,7 @@ export class Columns extends HasUpdates<UpdateEvent> {
     }
 
     allWithName(name: string): Attribute[] {
-        return this.columns.filter(attr => attr.name === name);
+        return this.columns.filter(attr => attr.name.toLowerCase() === name.toLowerCase());
     }
 
     keys(): string[] {
@@ -274,7 +285,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
         }
 
         type.columnTypes.forEach(ct => {
-            if (ct.required) {
+            if (ct.required || ct.displayed) {
                 this.addColumn(ct.name, ct.required, ct.valueType);
             }
         });
@@ -344,24 +355,36 @@ export class Feature extends HasUpdates<UpdateEvent> {
     }
 
 
-
-    add(attributes: { name: string, value: string }[] = []): void {
+    /**
+     * Sets the values of a given row.
+     * @param {{name: string; value: string}[]} attributes - Data the row will be set to.
+     * @param {number} [rowIdx = null] - Index of row to be set to the provided attributes. By default, the row will be
+     * added if the feature is not limited to a single row, in which case the first row is changed.
+     */
+    add(attributes: { name: string, value: string }[] = [], rowIdx: number = null): void {
         const attrNames = attributes.filter(attr => attr.name !== '').map(attr => attr.name);
-        const colNames = this._columns.names();
+        const colNames = this._columns.names().map(name => name.toLowerCase());
+        let rowMap;
 
+        //Adds a column if any of the passed-in attribute names doesn't exist.
         attrNames
-            .filter(n => colNames.indexOf(n) < 0)
-            .forEach(
-                (name) => {
+            .filter(attrName => colNames.indexOf(attrName.toLowerCase()) < 0)
+            .forEach((name) => {
                     this.addColumn(name);
-                });
+            });
 
-        const row: ValueMap = this.singleRow ? this.rows[0] : this.addRow();
+        //If row not provided, add it if applicable.
+        if (rowIdx === null) {
+            rowMap = this.singleRow ? this.rows[0] : this.addRow();
+        } else {
+            rowMap = this.rows[rowIdx];
+        }
 
+        //Finds out the column corresponding to each of the attributes and sets its value
         attributes.forEach(attr => {
             const cols: Attribute[] = this._columns.allWithName(attr.name);
             cols.forEach(col => {
-                row.valueFor(col.id).value = attr.value;
+                rowMap.valueFor(col.id).value = attr.value;
             });
         });
     }
@@ -540,12 +563,16 @@ export class Features extends HasUpdates<UpdateEvent> {
     }
 
     /**
-     * Retrieves the feature object with a given ID.
-     * @param {string} id - ID of the required feature.
-     * @returns {Feature} Feature with given ID.
+     * Retrieves the feature object that fulfills a scalar comparison with one of its property values.
+     * By default, it will look for a given ID.
+     * @param {string} value - Value of the required feature's property.
+     * @param {string} [property = 'id'] - Property name by which features are looked up.
+     * @returns {Feature} Feature fulfilling the predicated comparison.
      */
-    find(id: string): Feature {
-        return this.features.filter(feature => feature.id === id)[0];
+    find(value: string, property: string = 'id'): Feature {
+        return this.features.find((feature) => {
+            return feature[property] === value
+        });
     }
 }
 
@@ -590,16 +617,21 @@ export class Fields extends HasUpdates<UpdateEvent> {
         super();
         this.fields = [];
 
-        const vals = (data.attributes || []).reduce((rv, a) => {
-            const t = type.getFieldType(a.name);
-            if (t !== undefined) {
-                rv[a.name] = a.value;
+        //Converts the array of attribute objects from the server to an object of type {attrName: attrValue}
+        //NOTE: Attribute names from the server are camel-cased whereas field names are in human-readable form with spaces.
+        const attrObj = (data.attributes || []).reduce((obj, attr) => {
+            const attrName = attr.name.replace(/([a-z])([A-Z])/g, '$1 $2');  //uncamelcased version
+            const fieldType = type.getFieldType(attrName);
+
+            if (fieldType !== undefined) {
+                obj[attrName] = attr.value;
             }
-            return rv;
+
+            return obj;
         }, {});
 
-        type.fieldTypes.forEach(ft => {
-            this.add(ft, vals[ft.name] || '');
+        type.fieldTypes.forEach(fieldType => {
+            this.add(fieldType, attrObj[fieldType.name] || '');
         });
     }
 
@@ -631,7 +663,6 @@ export class Section extends HasUpdates<UpdateEvent> {
     readonly fields: Fields;
     readonly features: Features;
     readonly sections: Sections;
-
     readonly tags: Tags;
 
     constructor(type: SectionType, data: SectionData = {} as SectionData) {
@@ -647,7 +678,7 @@ export class Section extends HasUpdates<UpdateEvent> {
         this.fields = new Fields(type, data);
 
         //Any attribute names that do not match field names are added as annotations.
-        //NOTE: Attribute names are camel-cased whereas field names are in human-readable form with spaces.
+        //NOTE: Attribute names from the server are camel-cased whereas field names are in human-readable form with spaces.
         this.annotations = AnnotationFeature.create(type.annotationsType,
             (data.attributes || []).filter((attribute) => {
                 const humanName = attribute.name.replace(/([a-z])([A-Z])/g, '$1 $2');  //uncamelcased version
@@ -658,6 +689,7 @@ export class Section extends HasUpdates<UpdateEvent> {
         this.sections = new Sections(type, data);
 
         this.subscribeTo(this.fields, 'fields');
+        this.subscribeTo(this.annotations, 'annotations');
         this.subscribeTo(this.features, 'features');
         this.subscribeTo(this.sections, 'sections');
     }
@@ -783,7 +815,8 @@ export class Sections extends HasUpdates<UpdateEvent> {
 }
 
 export class Submission {
-    readonly accno;
+    accno: string;
+    isRevised: boolean;        //true if submission has been sent and is marked as revised by PageTab class.
     readonly root: Section;
     readonly type;
 
@@ -791,10 +824,18 @@ export class Submission {
 
     constructor(type: SubmissionType, data: SubmissionData = {} as SubmissionData) {
         this.tags = Tags.create(data);
-
         this.type = type;
         this.accno = data.accno || '';
+        this.isRevised = !this.isTemp && data.isRevised;
         this.root = new Section(type.sectionType, data.section);
+    }
+
+    /**
+     * Determines if the current submission is a temporary one by probing its accession number's format
+     * @returns {boolean} True if the submission is temporary.
+     */
+    get isTemp(): boolean {
+        return this.accno.length == 0 || this.accno.indexOf('TMP') == 0;
     }
 
     sectionPath(id: string): Section[] {
@@ -855,7 +896,7 @@ export interface SectionData extends AttributesData {
 export interface SubmissionData {
     tags: any[];
     accessTags: any[];
-
+    isRevised: boolean;
     accno: string;
     section: SectionData;
 }

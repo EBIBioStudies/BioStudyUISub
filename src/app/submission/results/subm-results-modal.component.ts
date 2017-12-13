@@ -17,9 +17,9 @@ import {BsModalRef} from 'ngx-bootstrap/modal/modal-options.class';
     templateUrl: './subm-results-modal.component.html'
 })
 export class SubmResultsModalComponent {
-    @Input() log: any;          //Log part of the server's response
-    @Input() mapping: any[];    //Mapping part of the server's response
-    @Input() status: string;    //Status the server comes back with
+    @Input() status: string;        //Status the server comes back with
+    @Input() accno: string;         //Submission's accession number
+    @Input() log: any;              //Log part of the server's response
 
     constructor(private router: Router,
                 public bsModalRef: BsModalRef) {
@@ -27,19 +27,6 @@ export class SubmResultsModalComponent {
 
     get location() {
         return window.location;
-    }
-
-    /**
-     * Extracts the accession number from the server's response, taking into account whether the
-     * study is new or not. The former will have its accession number added under the mapping section.
-     * @returns {string} Accession number assigned to the submitted study
-     */
-    get accno(): string {
-        if (this.mapping.length && this.mapping[0].hasOwnProperty('assigned') && this.mapping[0].assigned) {
-            return this.mapping[0].assigned;
-        } else {
-            return this.log.subnodes[2].subnodes[0].subnodes[0].message.split(':')[1].trim();
-        }
     }
 
     /**

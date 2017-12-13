@@ -17,6 +17,7 @@ import {
 import {AppConfig} from 'app/app.config';
 import {RequestStatusService} from "../../http/request-status.service";
 import {Subscription} from "rxjs/Subscription";
+import {UserData} from "../../auth/user-data";
 
 @Component({
     selector: 'app-header',
@@ -30,9 +31,11 @@ export class HeaderComponent implements OnDestroy {
     userLoggedIn: boolean = false;
     userLoggingIn: boolean = false;
     userRegistering: boolean = false;
-    isLoaderVisible: boolean = false;
+    isPendingReq: boolean = false;       //flags whether there is a transaction in progress (from anywhere in the app)
+    isBusy: boolean = false;             //flags whether there is a transaction triggered by this component
 
     constructor(private userSession: UserSession,
+                private userData: UserData,
                 private router: Router,
                 private authService: AuthService,
                 private appConfig: AppConfig,
@@ -70,7 +73,7 @@ export class HeaderComponent implements OnDestroy {
 
         //Shows visual feedback while the apps awaits request resolution.
         this.reqStatusSubs = this.requestStatus.whenStatusChanged.subscribe(hasPendingRequests => {
-            header.isLoaderVisible = hasPendingRequests;
+            header.isPendingReq = hasPendingRequests;
         });
     }
 
@@ -79,15 +82,17 @@ export class HeaderComponent implements OnDestroy {
     }
 
     signOut() {
+        this.isBusy = true;
         this.authService
             .signOut()
             .subscribe(
-                ()=>{},
-                (error)=> {
+                () => {this.isBusy = false},
+                (error) => {
                     // fix this: 403 response should not be returned here
                     if (error.status === 403) {
                         this.userSession.destroy();
                     }
+                    this.isBusy = false;
                 });
     }
 

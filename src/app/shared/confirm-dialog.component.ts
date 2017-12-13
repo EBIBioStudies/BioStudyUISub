@@ -33,7 +33,7 @@ export class ConfirmDialogComponent {
     /**
      * Renders the confirmation modal, allowing subscription to button events.
      * @param {string} [message] - Optional text for the modal's body section.
-     * @param {boolean} [isDiscardCancel] - Optional RxJS stream behaviour. By default,
+     * @param {boolean} [isDiscardCancel = true] - Optional RxJS stream behaviour. By default,
      * events are assumed to come from the confirmation button exclusively.
      * @returns {Observable<any>} Stream of button events.
      */

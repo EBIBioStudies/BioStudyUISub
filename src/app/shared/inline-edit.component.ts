@@ -3,10 +3,7 @@ import {
     Input,
     Output,
     forwardRef,
-    EventEmitter,
-    ViewChildren,
-    QueryList,
-    ElementRef, AfterViewInit
+    EventEmitter
 } from '@angular/core';
 
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
@@ -21,7 +18,7 @@ import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
 })
 export class InlineEditComponent implements ControlValueAccessor {
     @Input() required?: boolean = false;
-    @Input() disabled?: boolean = false;
+    @Input() disableEdit?: boolean = false;
     @Input() emptyValue?: string = '';
     @Input() placeholder?: string = '';
     @Output() remove: EventEmitter<any> = new EventEmitter<any>();
@@ -56,7 +53,7 @@ export class InlineEditComponent implements ControlValueAccessor {
     }
 
     private get canEdit(): boolean {
-        return !this.required;
+        return !this.required && !this.disableEdit;
     }
 
     private startEditing(): void {
@@ -65,13 +62,6 @@ export class InlineEditComponent implements ControlValueAccessor {
 
     private stopEditing(): void {
         this.editing = false;
-    }
-
-    private onEditClick(ev): void {
-        if (this.disabled) {
-            return;
-        }
-        this.startEditing();
     }
 
     private onRemoveClick(ev): void {

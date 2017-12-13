@@ -1,5 +1,5 @@
 <div class="row-offcanvas row-offcanvas-left"
-     [ngClass]="{'readonly': readonly}">
+     [ngClass]="{'readonly': readonly, 'grayout': isReverting}">
     <subm-sidebar *ngIf="!readonly"
                   (toggle)="sideBarCollapsed=!sideBarCollapsed"
                   [collapsed]="sideBarCollapsed"
@@ -12,9 +12,11 @@
             [ngClass]="{'collapse-left': !readonly && sideBarCollapsed}"
             [readonly]="readonly"
             [accno]="accno"
-            [errors]="errors"
+            [isTemp]="subm?.isTemp"
+            [isRevised]="subm?.isRevised"
             [sectionPath]="sectionPath"
             (sectionClick)="onSectionClick($event)"
+            (revertClick)="onRevert($event)"
             (submitClick)="onSubmit($event)">
     </subm-navbar>
 
@@ -28,11 +30,10 @@
                     <div class="panel-body">
                         <h4>New submission</h4>
                         <p>
-                            Please fill out the form below. All fields are required unless marked as <i>Optional</i>. The
-                            <span class="font-bold">Review</span> tab on the
-                            left-hand side lists any missing or invalid information, while the
-                            <span class="font-bold">Types</span> tab contains
-                            optional field types that may be added to this submission.
+                            Please fill in the form below. All fields are required unless marked as <i>Optional</i>.<br>
+                            The <span class="font-bold">Check</span> tab on the
+                            left-hand side lists those form fields still incomplete or incorrect. Use the
+                            <span class="font-bold">Add</span> tab to quickly add new rows or tables.
                         </p>
                     </div>
                 </div>
@@ -42,19 +43,39 @@
                         <h4>Incomplete submission</h4>
                         <p>
                             Some information in this submission is still missing or incorrect. Please
-                            note that all fields are required unless marked as <i>Optional</i>. Check the
-                            <span class="font-bold">Review</span> tab on the left-hand side for more help.
+                            note that all fields are required unless marked as <i>Optional</i>. You can find the list
+                            of fields that need updating under the <span class="font-bold">Check</span> tab on the
+                            left-hand side.
                         </p>
                     </div>
                 </div>
 
-                <div *ngIf="!errors.total() && !readonly" class="panel">
+                <div *ngIf="!errors.total() && !readonly">
+                    <div *ngIf="subm.isTemp" class="panel">
+                        <div class="panel-body">
+                            <h4>Study ready for submission</h4>
+                            <p>
+                                You may submit the data on this form now. After submission, your study will be allocated
+                                a permanent accession number under which it will be published.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div *ngIf="!subm.isTemp" class="panel">
+                        <div class="panel-body">
+                            <h4>Study ready for re-submission</h4>
+                            <p>
+                                You may re-submit the data on this form now. Your study will retain
+                                the same accession number under which it was published.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="!subm.isTemp && readonly" class="panel">
                     <div class="panel-body">
-                        <h4>Study ready for submission</h4>
-                        <p>
-                            You may submit the data on this form now. After submission, your study will be allocated
-                            a permanent accession number under which it will be published.
-                        </p>
+                        <h4>Submitted study</h4>
+                        <p>The study has been added to the BioStudies database with accession number <strong>{{accno}}</strong>.</p>
                     </div>
                 </div>
 
@@ -64,8 +85,8 @@
                            [readonly]="readonly">
                 </subm-form>
 
-                <div class="list-group">
-                    <label class="control-label" *ngIf="section.sections.list().length > 0">Subsections</label>
+                <div *ngIf="section.sections.list().length > 0" class="list-group form-group">
+                    <label class="control-label">Sections</label>
                     <div *ngFor="let subsection of section.sections.list()"
                           class="list-group-item">
                         {{subsection.typeName}}
@@ -90,25 +111,42 @@
                 </div>
 
                 <div *ngIf="!readonly" class="row row-submit">
-                    <p class="col-md-2">
-                        <button type="button" class="btn-submit btn btn-primary col-md-12"
+                    <p class="col-xs-2">
+                        <button type="button" class="btn-submit btn btn-primary"
                                 [disabled]="isSubmitting || isSaving"
+                                tooltip="Send to the BioStudies database"
+                                placement="top"
+                                container="body"
                                 (click)="onSubmit($event)">
-                            Submit
+                            {{subm.isTemp ? 'S' : 'Re-s'}}ubmit
                         </button>
                     </p>
-                    <p class="text-muted col-md-10">
+                    <p class="text-muted col-xs-9">
                         <i class="fa fa-cog fa-spin" *ngIf="isSubmitting || isSaving"></i>
                         <span *ngIf="isSubmitting">Submitting study...</span>
                         <span *ngIf="isSaving">Backing up study data...</span>
                     </p>
+                    <p class="col-xs-2 text-right">
+                        <button *ngIf="!readonly && errors && !errors.empty()" class="btn btn-default btn-sm btn-log"
+                                tooltip="Show validation log"
+                                placement="left"
+                                container="body"
+                                (click)="onViewLog($event)">
+                            View log
+                        </button>
+                    </p>
                 </div>
             </div>
         </aside>
-        <confirm-dialog #confirmDialog
+        <confirm-dialog #confirmSectionDel
                         headerTitle="Delete section"
                         body="You are about to permanently delete the section"
                         confirmLabel="Delete">
+        </confirm-dialog>
+        <confirm-dialog #confirmRevert
+                        headerTitle="Revert to released version"
+                        confirmLabel="Revert"
+                        body="You are about to discard all changes made to this submission since it was last released. This operation cannot be undone.">
         </confirm-dialog>
     </div>
 </div>

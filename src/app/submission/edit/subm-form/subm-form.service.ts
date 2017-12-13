@@ -197,8 +197,8 @@ export class SectionForm {
         FieldControl.toArray(this.featuresFormGroup, controls);
     }
 
-    fieldControl(fieldId: string): FormControl {
-        return <FormControl>this.fieldsFormGroup.get(fieldId);
+    fieldControl(fieldId: string): FieldControl {
+        return <FieldControl>this.fieldsFormGroup.get(fieldId);
     }
 
     featureForm(featureId: string): FeatureForm {

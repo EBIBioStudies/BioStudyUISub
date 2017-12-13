@@ -15,7 +15,8 @@
                     emptyValue="{{'Column ' + (idx + 1)}}"
                     (remove)="feature.removeColumn(column.id)"
                     [formControl]="featureForm.columnControl(column.id)"
-                    [required]="column.required">
+                    [required]="column.required"
+                    [disableEdit]="featureForm.columnType(column.id).displayed || readonly">
             </inline-edit>
         </div>
     </div>
@@ -28,6 +29,7 @@
                     [disabled]="!feature.canRemoveRowAt(index)"
                     (click)="feature.removeRowAt(rowIdx)"
                     [tooltip]="'Delete ' + feature.typeName.toLowerCase() + ' ' + (rowIdx + 1)"
+                    placement="bottom"
                     container="body">
                 <i class="fa fa-trash"></i>
             </button>
@@ -43,6 +45,7 @@
                             [type]="column.valueType"
                             [(ngModel)]="row.valueFor(column.id).value"
                             [readonly]="readonly"
+                            [required]="column.required"
                             [formControl]="featureForm.rowValueControl(rowIdx, column.id)"
                             isSmall="true"
                             validate-onblur>

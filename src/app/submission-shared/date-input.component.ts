@@ -15,6 +15,7 @@ import {
 } from "ngx-bootstrap/datepicker";
 
 import {formatDate, isEqualDate} from './date.utils';
+import {AppConfig} from "../app.config";
 
 @Component({
     selector: 'date-input',
@@ -29,7 +30,7 @@ import {formatDate, isEqualDate} from './date.utils';
 
 /**
  * Custom component for the Bootstrap's datepicker. It allows for a default value and makes sure the resulting
- * component behaves exactly like a normal input field.
+ * component behaves exactly like a read-only input field (so that input is only allowed through the date picker).
  * NOTE: Contrary to what its name suggests, DatePicker's "bsValueChange" output event is triggered every time
  * a date is set, NOT on change exclusively.
  * @see {@link https://valor-software.com/ngx-bootstrap/old/1.9.3/#/datepicker}
@@ -38,6 +39,7 @@ import {formatDate, isEqualDate} from './date.utils';
 export class DateInputComponent implements ControlValueAccessor {
     private dateValue: Date;
 
+    @Input() canUsePastDates?: boolean = undefined;
     @Input() required?: boolean = false;
     @Input() readonly?: boolean = false;
     @ViewChild('dp') private datepicker: BsDatepickerComponent;
@@ -46,15 +48,19 @@ export class DateInputComponent implements ControlValueAccessor {
     private onTouched: any = () => {};
 
     /**
-     * Instantiates a new custom component, hiding the weeks column on the calendar disabling past dates and setting
-     * its default format.
-     * @param {BsDatepickerConfig} config - Configuration object for the datepicker directive
+     * Instantiates a new custom component, hiding the weeks column on the calendar and setting
+     * its default formats.
+     * @param {BsDatepickerConfig} config - Configuration object for the datepicker directive.
+     * @param {AppConfig} appConfig - Global configuration object with app-wide settings.
      * @param {ElementRef} rootEl - Reference to the root element of the component's template.
      */
-    constructor(config: BsDatepickerConfig, private rootEl: ElementRef) {
+    constructor(config: BsDatepickerConfig, private appConfig: AppConfig, private rootEl: ElementRef) {
         config.showWeekNumbers = false;
-        config.minDate = new Date(Date.now());
-        config.dateInputFormat = 'YYYY-MM-DD';
+        config.dateInputFormat = appConfig.dateInputFormat;
+
+        /*if (!appConfig.canUsePastDates) {
+            config.minDate = new Date(Date.now());
+        }*/
     }
 
     /**
@@ -99,6 +105,7 @@ export class DateInputComponent implements ControlValueAccessor {
     onClick(event: Event) {
 
         //Cancels the datepicker dialogue by closing it as soon as it's opened.
+        //NOTE: As of ngx-bootstrap's current version, a disabled state is still WIP.
         if (this.readonly) {
             this.datepicker.toggle();
 
@@ -120,6 +127,14 @@ export class DateInputComponent implements ControlValueAccessor {
             this.dateValue = dateObj;
             this.onChange(formatDate(this.dateValue));
             isChange && this.rootEl.nativeElement.dispatchEvent(new Event('change', {bubbles: true}));
+        }
+    }
+
+    //and disabling past dates if applicable.
+    ngOnInit(): void {
+        if ((typeof this.canUsePastDates === 'undefined' && !this.appConfig.canUsePastDates) ||
+            (this.canUsePastDates === false)) {
+            this.datepicker.minDate = new Date(Date.now());
         }
     }
 }

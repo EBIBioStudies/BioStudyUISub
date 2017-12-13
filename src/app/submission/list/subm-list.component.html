@@ -4,12 +4,14 @@
 
         <span class="pull-right">
             <button class="btn btn-primary"
-               (click)="uploadSubmission()">
+                    (click)="uploadSubmission()"
+                    [disabled]="isBusy">
                 <i class="fa fa-upload" aria-hidden="true"></i>
                 <span>Direct upload</span>
             </button>
             <button class="btn btn-primary"
-               (click)="createSubmission()">
+                    (click)="createSubmission()"
+                    [disabled]="isBusy">
                 <i class="fa fa-plus-circle" aria-hidden="true"></i>
                 <span>Add new</span>
             </button>
@@ -19,7 +21,7 @@
                  (select)="onSubmTabSelect(false)">
                 <template tabHeading>
                     <i class="fa fa-clock-o" aria-hidden="true"></i>
-                    Temporary
+                    Pending
                 </template>
             </tab>
             <tab [active]="showSubmitted"

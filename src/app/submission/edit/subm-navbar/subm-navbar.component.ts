@@ -2,16 +2,15 @@ import {
     Component,
     Input,
     Output,
-    EventEmitter
+    EventEmitter, ViewChild
 } from '@angular/core';
 import {Router} from "@angular/router";
-import {BsModalService} from "ngx-bootstrap/modal";
 
 import {Section} from '../../shared/submission.model';
-import {SubmValidationErrorsComponent} from './subm-validation-errors.component';
-import {SubmValidationErrors} from '../../shared/submission.validator';
 import {SubmissionService} from "../../shared/submission.service";
 import {PageTab} from "app/submission/shared/pagetab.model";
+import {ConfirmDialogComponent} from "../../../shared/confirm-dialog.component";
+import {Observable} from "rxjs/Observable";
 
 @Component({
     selector: 'subm-navbar',
@@ -21,26 +20,25 @@ import {PageTab} from "app/submission/shared/pagetab.model";
 export class SubmNavBarComponent {
     @Input() accno: string;
     @Input() readonly: boolean;
-    @Input() errors: SubmValidationErrors = SubmValidationErrors.EMPTY;
+    @Input() isTemp: boolean;
     @Input() sectionPath: Section[];
-
+    @Input() isRevised: boolean;
     @Output() sectionClick: EventEmitter<Section> = new EventEmitter<Section>();
-    @Output() submitClick: EventEmitter<Section> = new EventEmitter<Section>();
+    @Output() revertClick: EventEmitter<Event> = new EventEmitter<Event>();
+    @Output() submitClick: EventEmitter<Event> = new EventEmitter<Event>();
 
-    constructor(private modalService: BsModalService,
-                private submService: SubmissionService,
+    constructor(private submService: SubmissionService,
                 private router: Router) {}
 
-    onSectionClick(ev: Section): void {
-        this.sectionClick.next(ev);
+    onSectionClick(section: Section): void {
+        this.sectionClick.next(section);
     }
 
-    onErrorsLabelClick(ev): void {
-        const bsModalRef = this.modalService.show(SubmValidationErrorsComponent);
-        bsModalRef.content.errors = this.errors;
+    onRevert(event: Event): void {
+        this.revertClick.next(event);
     }
 
-    onSubmit(event): void {
+    onSubmit(event: Event): void {
         this.submitClick.next(event);
     }
 

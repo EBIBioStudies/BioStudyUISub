@@ -1,14 +1,18 @@
-<select  *ngIf="files.length > 0"
+<select  *ngIf="files.length > 0 && !readonly"
          class="form-control input-sm"
          [name]="name"
          [(ngModel)]="value"
-         [required]="required"
-         [disabled]="readonly">
+         [required]="required">
     <option *ngFor="let file of files" [value]="file">{{file}}</option>
 </select>
-<a *ngIf="files.length == 0" class="form-control input-sm no-files"
+<a *ngIf="files.length == 0 && !readonly" class="form-control input-sm no-files"
    routerLink="/files"
    [queryParams]="{bb: true}">
     Upload a file
     <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
 </a>
+<input *ngIf="readonly"
+       class="form-control input-sm"
+       [name]="name"
+       [ngModel]="(files.length > 0 && isFound) ? value : 'File not found'"
+       readonly>

@@ -170,8 +170,9 @@ export class AnnotationsType extends FeatureType {
 }
 
 export class ColumnType extends BaseType {
-    readonly required: boolean;
-    readonly valueType: ValueType;
+    readonly required: boolean;     //required data-wise: its fields should have data associated with it to be valid
+    readonly displayed: boolean;    //required render-wise: should be visually available regardless of its fields being required or not
+    readonly valueType: ValueType;  //type of data for the fields under this column
 
     static createDefault(name: string, scope?: Map<string, any>): ColumnType {
         return new ColumnType(name, undefined, scope);
@@ -183,6 +184,7 @@ export class ColumnType extends BaseType {
         other = other || {};
         this.valueType = other.valueType || 'text';
         this.required = other.required === true;
+        this.displayed = other.displayed || false;
     }
 }
 
@@ -287,6 +289,11 @@ export class SubmissionType extends BaseType {
 export class TemplateType extends BaseType {
     readonly submissionType: SubmissionType;
 
+    constructor(name: string, obj?: any, scope?: Map<string, any>) {
+        super(name, obj !== undefined, scope);
+        this.submissionType = new SubmissionType('Submission', obj, new Map());
+    }
+
     static create(tmpl: any): TemplateType {
         const tmplName = tmpl.name;
         if (tmplName === undefined) {
@@ -296,11 +303,6 @@ export class TemplateType extends BaseType {
             return GlobalScope.get(tmplName);
         }
         return new TemplateType(tmplName, tmpl, GlobalScope);
-    }
-
-    constructor(name: string, obj?: any, scope?: Map<string, any>) {
-        super(name, obj !== undefined, scope);
-        this.submissionType = new SubmissionType('Submission', obj, new Map());
     }
 }
 

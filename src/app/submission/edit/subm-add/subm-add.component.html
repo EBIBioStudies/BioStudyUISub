@@ -13,16 +13,6 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label class="control-label">Type</label>
-                        <select class="form-control"
-                                [(ngModel)]="type"
-                                name="type">
-                            <option value="List">List</option>
-                            <option value="Grid">Grid</option>
-                            <option value="Section">Section</option>
-                        </select>
-                    </div>
                     <div class="form-group"[ngClass]="{'has-error': (typeName.invalid || !isUnique) && typeName.touched}">
                         <label class="control-label" for="typeName">
                             <span class="text-black">Name</span>
@@ -42,6 +32,16 @@
                                validate-onblur
                                required
                                autofocus #focusBtn>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Type</label>
+                        <select class="form-control"
+                                [(ngModel)]="type"
+                                name="type">
+                            <option value="List">List</option>
+                            <option value="Grid">Grid</option>
+                            <option value="Section">Section</option>
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">

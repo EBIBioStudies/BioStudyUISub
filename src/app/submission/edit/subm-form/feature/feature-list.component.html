@@ -7,21 +7,23 @@
         <div class="cell col-xs-3">
             <div class="form-group key-field">
                 <div class="input-group">
-                    <span *ngIf="!readonly && !column.required" class="input-group-btn">
+                    <span *ngIf="!readonly && !column.required && !featureForm.columnType(column.id).displayed"
+                          class="input-group-btn">
                           <button type="button" tabindex="-1"
                                   class="btn btn-sm btn-danger btn-flat"
                                   (click)="featureForm.feature.removeRowAt(idx)"
                                   [disabled]="!feature.canRemoveRowAt(idx)"
-                                  [tooltip]="'Delete ' + feature.typeName.toLowerCase() + ' entry'">
+                                  [tooltip]="'Delete &quot;' + column.name + '&quot; entry'"
+                                  placement="bottom"
+                                  container="body">
                                <i class="fa fa-trash-o"></i>
                           </button>
                     </span>
                     <input type="text"
                            class="form-control input-sm"
-                           [readonly]="readonly"
                            [(ngModel)]="column.name"
                            [formControl]="featureForm.columnControl(column.id)"
-                           [readonly]="column.required || readonly"
+                           [readonly]="readonly || column.required || featureForm.columnType(column.id).displayed"
                            (blur)="featureForm.columnControl(column.id).value ||
                                    featureForm.columnControl(column.id).setValue(feature.typeName + ' ' + (idx + 1))">
                 </div>
@@ -38,6 +40,7 @@
                             [type]="column.valueType"
                             [(ngModel)]="feature.rows[0].valueFor(column.id).value"
                             [readonly]="readonly"
+                            [required]="column.required"
                             isSmall="true"
                             [formControl]="featureForm.rowValueControl(0,column.id)"
                             validate-onblur>
@@ -52,6 +55,7 @@
                 type="button"
                 class="btn-add btn btn-link"
                 [tooltip]="'Add a new ' + feature.typeName.toLowerCase()"
+                container="body"
                 (click)="feature.addColumn()">
             <i class="fa fa-lg {{feature.type.icon}}"></i>
             &nbsp;Add {{feature.typeName.toLowerCase()}} row

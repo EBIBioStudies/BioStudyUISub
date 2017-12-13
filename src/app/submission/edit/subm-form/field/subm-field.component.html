@@ -12,7 +12,6 @@
            typeaheadMinLength="0"
            typeaheadOptionsLimit="30"
 -->
-
 <date-input
         *ngIf="type === 'date'"
         [(ngModel)]="value"
@@ -20,6 +19,15 @@
         [readonly]="readonly"
         (focusout)="onBlur()">
 </date-input>
+
+<!-- TODO: Template-driven validation for ORCID is not bubbling up to the reactive form control wrapping it -->
+<orcid-input-box
+        *ngIf="type === 'orcid'"
+        [isSmall]="isSmall"
+        [required]="required"
+        [isPopupButton]="false"
+        [(ngModel)]="value">
+</orcid-input-box>
 
 <file-input *ngIf="type === 'file'"
             [(ngModel)]="value"

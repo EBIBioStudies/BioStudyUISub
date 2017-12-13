@@ -34,7 +34,7 @@ export const DefaultTemplate = {
             {
                 'name': 'Title',
                 'icon': 'fa-font',
-                'valueType': 'text',
+                'valueType': 'textblob',
                 'required': true,
                 'minlength': 50
             },
@@ -81,7 +81,8 @@ export const DefaultTemplate = {
                     },
                     {
                         'name': 'ORCID',
-                        'valueType': 'text'
+                        'valueType': 'orcid',
+                        'displayed': true
                     },
                     {
                         'name': 'Address',

@@ -5,54 +5,68 @@ import * as _ from 'lodash';
 import {UserRole} from './user-role';
 import {AuthService} from './auth.service';
 import {UserSession} from './user-session';
+import {Subject} from "rxjs/Subject";
+import {Observable} from "rxjs/Observable";
 
 @Injectable()
 export class UserData {
-    private d: any;
+    static contactMap = {       //maps response property to submission attribute name for contact data
+        'email': 'e-mail',
+        'username': 'name',
+        'aux.orcid': 'orcid'    //allows flattening of nesting levels
+    }
+    private _whenFetched: Subject<any> = new Subject<any>();
+    private isFetched: boolean = false;                         //flags when data has been fetched already
 
-    constructor(userSession: UserSession,
-                authService: AuthService) {
-
+    /**
+     * Waits until the session for the current user has been created to fetch the latter's data.
+     * @param {UserSession} userSession - Async session manager.
+     * @param {AuthService} authService - API interface for athentication-related server transactions
+     */
+    constructor(userSession: UserSession, authService: AuthService) {
         userSession.created$.subscribe(created => {
-            if (created) {
-                this.data = null;
-                authService.checkUser().subscribe(data => {
-                    console.debug('UserData:', data);
-                    this.data = data;
-                });
-            } else {
-                this.data = null;
-            }
+            created && authService.checkUser().subscribe(data => {
+                _.merge(this, data);
+                this._whenFetched.next(data);
+                this.isFetched = true;
+                this._whenFetched.complete();
+            });
+        });
+    }
+
+    /**
+     * Creates an observable normalised to resolve instantly if the user data has already been retrieved.
+     * @returns {Observable<any>} Observable from subject
+     */
+    get whenFetched(): Observable<any> {
+        if (this.isFetched) {
+            return Observable.of(true);     //dummy observable in case user data has already been fetched
+        } else {
+            return this._whenFetched.asObservable();
+        }
+    }
+
+    /**
+     * Creates a new object from the one fetched from the server, changing the names of the properties if so
+     * required.
+     * @returns {Object} Object containing contact data.
+     */
+    get contact(): object {
+        const userData = this;      //gives context to eval op later on
+        const contactObj = {};
+
+        Object.keys(UserData.contactMap).forEach((keyToChange) => {
+            contactObj[UserData.contactMap[keyToChange]] = eval('userData.' + keyToChange);
         });
 
-        this.data = null;
+        return contactObj;
     }
 
-    get key(): string {
-        return this.data.sessid || '';
-    }
-
-    get name(): string {
-        return this.data.username || '';
-    }
-
-    get email(): string {
-        return this.data.email || '';
-    }
-
-    get orcid(): string {
-        return this.data.aux.orcid || '';
-    }
-
+    /**
+     * Convenience method to determine the user's role (hard-coded for the moment).
+     * @returns {UserRole} - Public.
+     */
     get role(): UserRole {
         return UserRole.Public;
-    }
-
-    private get data(): any {
-        return this.d;
-    }
-
-    private set data(data: any) {
-        this.d = _.assign({aux: {}}, data);
     }
 }

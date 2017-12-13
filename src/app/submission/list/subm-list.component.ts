@@ -5,53 +5,37 @@ import {Observable} from 'rxjs/Observable';
 import {GridOptions} from 'ag-grid/main';
 import {AgRendererComponent} from 'ag-grid-angular/main';
 
-import {UserData} from 'app/auth/index';
 import {ConfirmDialogComponent} from 'app/shared/index';
-
 import {SubmissionService} from '../shared/submission.service';
 import {TextFilterComponent} from './ag-grid/text-filter.component';
 import {DateFilterComponent} from './ag-grid/date-filter.component';
 import {PageTab} from '../shared/pagetab.model';
-import {RequestStatusService} from "../../http/request-status.service";
 import {Subscription} from "rxjs/Subscription";
+import {AppConfig} from "../../app.config";
 
 @Component({
     selector: 'action-buttons-cell',
     template: `
-        <button *ngIf="isTemp"
-                type="button" class="btn btn-link btn-xs btn-flat"
+        <button type="button" class="btn btn-link btn-xs btn-flat"
                 (click)="onEditSubmission()"
                 tooltip="Edit this submission"
                 container="body">
             <i class="fa fa-pencil fa-fw fa-lg"></i>
         </button>
-        <button *ngIf="!isTemp || status === 'MODIFIED'"
-                type="button" class="btn btn-link btn-xs btn-flat"
-                (click)="onViewSubmission()"
-                tooltip="Show this submission"
-                container="body">
-            <i class="fa fa-eye fa-fw fa-lg"></i>
-        </button>
-        <button *ngIf="status === 'MODIFIED'" type="button" class="btn btn-warning btn-xs btn-flat"
-                [disabled]="isBusy"
-                (click)="onRevertSubmission()"
-                tooltip="Undo all changes"
-                container="body">
-            <i class="fa fa-undo fa-fw"></i>
-        </button>
-        <button *ngIf="status !== 'MODIFIED'" type="button" class="btn btn-danger btn-xs btn-flat"
+        <button type="button" class="btn btn-danger btn-xs btn-flat"
                 [disabled]="isBusy"
                 (click)="onDeleteSubmission()"
                 tooltip="Delete this submission"
                 container="body">
-            <i class="fa fa-trash-o fa-fw"></i>
+            <i *ngIf="!isBusy" class="fa fa-trash-o fa-fw"></i>
+            <i *ngIf="isBusy" class="fa fa-cog fa-spin fa-fw"></i>
         </button>`
 })
 export class ActionButtonsCellComponent implements AgRendererComponent {
     private accno: string;
     private isBusy: boolean;        //flags if a previous button action is in progress
     private isTemp: boolean;        //flags if the corresponding submission is a temporary one
-    private onDelete: (accno: string, onCancel: Function, action: string) => {};
+    private onDelete: (accno: string, onCancel: Function) => {};
     private onEdit: (string) => {};
     private onView: (string) => {};
 
@@ -71,41 +55,46 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
         this.reset();
     }
 
-    //Reverts the button to its original state
+    /**
+     * Reverts the button to its original state
+     */
     reset() {
         this.isBusy = false;
     }
 
     onDeleteSubmission() {
         this.isBusy = true;
-        this.onDelete(this.accno, this.reset.bind(this), 'delete');
-    }
-
-    onRevertSubmission() {
-        this.isBusy = true;
-        this.onDelete(this.accno, this.reset.bind(this), 'revert');
+        this.onDelete(this.accno, this.reset.bind(this));
     }
 
     onEditSubmission() {
         this.onEdit(this.accno);
     }
-
-    onViewSubmission() {
-        this.onView(this.accno);
-    }
 }
 
 @Component({
     selector: 'date-cell',
-    template: `<span>{{value | date: 'dd/MM/yyyy'}}</span>`
+    template: `{{value | date: appConfig.dateListFormat}}`
 })
 export class DateCellComponent implements AgRendererComponent {
     value: Date;
+
+    /**
+     * Exposes app's configuration to the template.
+     * @param {AppConfig} appConfig - Global configuration object with app-wide settings.
+     */
+    constructor(private appConfig: AppConfig) {}
 
     agInit(params: any): void {
         this.value = this.asDate(params.value);
     }
 
+    /**
+     * Converts the date to a JavaScript standard Date object. Note that dates are stored on the server in
+     * seconds, not in milliseconds as the Date object requires.
+     * @param {number} seconds - Seconds since 1 January 1970 UTC
+     * @returns {Date} Equivalent JavaScript Date object.
+     */
     private asDate(seconds: number): Date {
         if (seconds && seconds > 0) {
             return new Date(seconds * 1000);
@@ -122,6 +111,7 @@ export class DateCellComponent implements AgRendererComponent {
 
 export class SubmListComponent {
     showSubmitted: boolean = false;     //flag indicating if the list of sent submissions is to be displayed
+    isBusy: boolean = false;            //flag indicating if a request is in progress
 
     //AgGrid-related properties
     gridOptions: GridOptions;
@@ -133,8 +123,7 @@ export class SubmListComponent {
 
     constructor(private submService: SubmissionService,
                 private router: Router,
-                private route: ActivatedRoute,
-                private userData: UserData) {
+                private route: ActivatedRoute) {
 
         //Microstate - Allows going back to the sent submissions list directly
         this.route.data.subscribe((data) => {
@@ -176,12 +165,20 @@ export class SubmListComponent {
                 filterFramework: TextFilterComponent
             },
             {
-                headerName: 'Title',
+                headerName: 'Version',
+                field: 'version',
+                maxWidth: 100,
+                cellClass: 'ag-cell-centered',
+                hide: !this.showSubmitted,
+                filterFramework: TextFilterComponent
+            },
+            {
+                headerName: this.showSubmitted ? 'Latest title' : 'Title',
                 field: 'title',
                 filterFramework: TextFilterComponent
             },
             {
-                headerName: 'Release Date',
+                headerName: this.showSubmitted ? 'First Released' : 'Release Date',
                 cellClass: 'ag-cell-centered',
                 maxWidth: 150,
                 field: 'rtime',
@@ -208,6 +205,7 @@ export class SubmListComponent {
                 getRows: (params) => {
                     const pageSize = params.endRow - params.startRow;
                     const fm = params.filterModel || {};
+                    this.isBusy = true;
 
                     if (agApi != null) {
                         agApi.showLoadingOverlay();
@@ -224,13 +222,24 @@ export class SubmListComponent {
                         keywords: fm.title && fm.title.value ? fm.title.value : undefined
 
                     //Once all submissions fetched, determines last row for display purposes.
-                    }).subscribe((data) => {
-                        agApi.hideOverlay();
+                    }).subscribe((rows) => {
                         let lastRow = -1;
-                        if (data.length < pageSize) {
-                            lastRow = params.startRow + data.length;
+
+                        agApi.hideOverlay();
+
+                        //Removes any entries that are really revisions of sent submissions if showing temporary ones
+                        if (!this.showSubmitted) {
+                            rows = rows.filter((subm) => {
+                                return subm.accno.indexOf('TMP') == 0;
+                            });
                         }
-                        params.successCallback(this.decorateDataRows(data), lastRow);
+
+                        if (rows.length < pageSize) {
+                            lastRow = params.startRow + rows.length;
+                        }
+
+                        params.successCallback(this.decorateDataRows(rows), lastRow);
+                        this.isBusy = false;
                     });
                 }
             }
@@ -260,16 +269,28 @@ export class SubmListComponent {
             title: row.title,
             rtime: row.rtime,
             status: row.status,
-            onDelete: (accno: string, onCancel: Function, action: string = 'delete'): Subscription => {
+            version: row.version,
+            onDelete: (accno: string, onCancel: Function): Subscription => {
                 const onNext = (isOk: boolean) => {
+                    this.isBusy = true;
 
-                    //Deletion confirmed => makes a request to removes the submission from the server and refreshes
-                    //the grid by performing an additional request to retrieve the updated list.
+                    //Deletion confirmed => makes a request to removes the submission from the server
                     if (isOk) {
                         this.submService
                             .deleteSubmission(accno)
-                            .subscribe(data => {
-                                this.setDatasource();
+                            .subscribe(() => {
+
+                                //Issues an additional delete request for modified submissions
+                                //TODO: This is a crude approach to the problem of no response data coming from the API (whether there are revisions or not is unknown).
+                                if (this.showSubmitted) {
+                                    this.submService.deleteSubmission(accno).subscribe(() => {
+                                        this.setDatasource();               //TODO: refreshes grid by re-fetching data. Better approach is to use a singleton.
+                                        this.isBusy = false;
+                                    });
+                                } else {
+                                    this.setDatasource();
+                                    this.isBusy = false;
+                                }
                             });
 
                     //Deletion canceled: reflects it on the button
@@ -278,19 +299,23 @@ export class SubmListComponent {
                     }
                 };
 
-                switch (action) {
-                    case 'delete':
-                        return this.confirm(
-                            `If you proceed, the submission with accession number ${accno} will be permanently deleted.`,
-                            `Delete submission`,
-                            'Delete'
-                        ).subscribe(onNext);
-                    case 'revert':
-                        return this.confirm(
-                            `If you proceed, all recent changes made to the submission with accession number ${accno} will be rolled back.`,
-                            `Undo changes in submission`,
-                            'Undo'
-                        ).subscribe(onNext);
+                //Shows the confim dialogue for an already sent submission (including its revisions).
+                if (this.showSubmitted) {
+                    return this.confirm(
+                        `The submission with accession number ${accno} may have un-submitted changes. If you proceed, both the submission and any changes will be permanently lost.`,
+                        `Delete submission and its revisions`,
+                        'Delete'
+                    ).subscribe(onNext);
+
+                //Shows the confirm dialogue for a temporary submission
+                } else {
+                    return this.confirm(
+                        `The submission with accession number ${accno} has not been sent yet. If you proceed, it will be permanently deleted.`,
+                        `Delete pending submission`,
+                        'Delete'
+                    ).subscribe(onNext);
+
+
                 }
             },
 
@@ -308,12 +333,10 @@ export class SubmListComponent {
      * Creates a blank submission using PageTab's data structure and brings up a form to edit it.
      */
     createSubmission() {
-        // const userName = this.userData.name;
-        // const userEmail = this.userData.email;
-        // const userOrcid = this.userData.orcid;
-
+        this.isBusy = true;
         this.submService.createSubmission(PageTab.createNew())
             .subscribe((s) => {
+                this.isBusy = false;
                 this.router.navigate(['/submissions/new/', s.accno]);
             });
     };
@@ -323,25 +346,12 @@ export class SubmListComponent {
     }
 
     /**
-     * Brings the submission form up to allow editing only if the submission is a temporary one.
-     * @param {string} accno Accession number of the submission to be edited.
-     * @param {boolean} isReadonly True if submission edition is to be disallowed.
-     */
-    startEditing(accno: string, isReadonly: boolean) {
-        if (isReadonly) {
-            this.router.navigate(['/submissions', accno]);
-        } else {
-            this.router.navigate(['/submissions/edit', accno]);
-        }
-    }
-
-    /**
      * Handler for click events on a row. It redirects the user to the study's edit mode, unless over the actions cell
      * @param event - ag-Grid's custom event object that includes data represented by the clicked row.
      */
     onRowClicked(event): void {
         if (event.colDef.headerName !== "Actions") {
-            this.startEditing(event.data.accno, !event.data.isTemp);
+            this.router.navigate(['/submissions/edit', event.data.accno]);
         }
     }
 

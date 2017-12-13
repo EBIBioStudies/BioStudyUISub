@@ -157,23 +157,28 @@ class SubmItems extends Array<SubmItem> {
     styleUrls: ['./subm-sidebar.component.css']
 })
 export class SubmSideBarComponent implements OnChanges {
-    @Input() collapsed? = false;
-    @Input() section: Section;
+    @Input() collapsed? = false;                                             //flag indicating if menu is minimized/collapsed
+    @Input() section: Section;                                               //section of the form being displayed
     @Input() formControls: FieldControl[] = [];                              //refreshed array of form controls
-    @Input() errors: SubmValidationErrors = SubmValidationErrors.EMPTY;     //errors from validator service
-    @Output() toggle? = new EventEmitter();
+    @Input() errors: SubmValidationErrors = SubmValidationErrors.EMPTY;      //errors from validator service
+    @Output() toggle? = new EventEmitter();                                  //event triggered when collapsed state changes
 
     @ViewChild('addDialog') addDialog: SubmAddDialogComponent;
     @ViewChild('confirmDialog') confirmDialog: ConfirmDialogComponent;
 
-    isStatus: boolean = true;       //flag indicating if form status on display
-    editing: boolean = false;       //flag indicating component's mode: display or editing, with different renderings
-    items: SubmItems;               //current collection of feature/subsection items
-    iconMap: any = {};              //lookup table for icons
-    numPending: number = 0;         //number of modified fields still pending review (still invalid)
+    isAdvancedOpen: boolean = false; //flag indicating if advanced options for types are being displayed
+    isStatus: boolean = true;        //flag indicating if form status or "check" tab is being displayed
+    editing: boolean = false;        //flag indicating component's mode: display or editing, with different renderings
+    items: SubmItems;                //current collection of feature/subsection items
+    iconMap: any = {};               //lookup table for icons
+    numPending: number = 0;          //number of modified fields still pending review (still invalid)
 
     private subscr: Subscription;
 
+    /**
+     * Updates the list of type items whenever a feature is added or removed.
+     * @param changes -  Object of current and previous property values.
+     */
     ngOnChanges(changes: any): void {
         const change: SimpleChange = changes.section;
 
@@ -195,21 +200,28 @@ export class SubmSideBarComponent implements OnChanges {
         }
     }
 
-    //Updates the pending fields counter only after the digest cycle. Otherwise Angular complains the change happened
-    //too early.
+    /**
+     * Updates the pending fields counter only after the digest cycle. Otherwise Angular predictably complains
+     * the change happened too early.
+     */
     ngDoCheck() {
         this.numPending = FieldControl.numPending;
     }
 
+    /**
+     * Handler for clicks on the sidebar's tabs.
+     * @param {boolean} isStatus - Is the status tab to be displayed after click?
+     */
     onTabClick(isStatus: boolean): void {
         this.isStatus = isStatus;
     }
 
     /**
-     * Handler for the toggling button, bubbling the menu's state up.
+     * Handler for the button toggling the collapsed state of the whole sidebar menu,
+     * bubbling the menu's state up.
      * @param {Event} [event] - Optional click event object.
      */
-    onToggle(event?:Event): void {
+    onToggleCollapse(event?:Event): void {
         event.preventDefault();
         this.toggle && this.toggle.emit();
     }
@@ -295,19 +307,30 @@ export class SubmSideBarComponent implements OnChanges {
 
     /**
      * Transitions between the display/edit mode by changing a flag.
-     * @param {Event} [event] - Optional click event object. If passed, the default action is prevented.
+     * @param {Event} [event] - Optional click event object. If passed in, bubbling is prevented.
      */
-    onEditModeToggle(event?:Event): void {
+    onEditModeToggle(event?: Event): void {
         event && event.preventDefault();
         this.editing = !this.editing;
     }
 
-    onAddClick(ev): void {
-        ev.preventDefault();
+    /**
+     * Renders the new type dialogue that allows the user to choose what type is to be added.
+     * @param {Event} event - Click event object, the bubbling of which will be prevented
+     */
+    onNewTypeClick(event: Event): void {
+        event.preventDefault();
         this.addDialog.show();
     }
 
-    onAdd(name: string, isSection: boolean, isSingleRow: boolean = false): any {
+    /**
+     * Handler for adding the new type to the existing set of type items.
+     * @param {string} name - Name of the new type.
+     * @param {boolean} isSection - Indicates a section will be added.
+     * @param {boolean} isSingleRow - Indicates a list will be added.
+     * @returns {any} Result of the addition operation, which could be empty if the new type is not valid.
+     */
+    onAddType(name: string, isSection: boolean, isSingleRow: boolean = false): any {
         const rootType: SectionType = this.section.type;
         let addedType: any;
 
@@ -362,7 +385,14 @@ export class SubmSideBarComponent implements OnChanges {
     }
 
     /**
-     * Scrolls to and sets focus on the field represented by the form control clicked on within the review tab.
+     * Opens/closes the collapsible box for advanced type options.
+     */
+    toggleAdvanced() {
+        this.isAdvancedOpen = !this.isAdvancedOpen;
+    }
+
+    /**
+     * Scrolls to and sets focus on the field represented by the form control clicked on within the check tab.
      * @param {Event} event - Click event object
      * @param {FieldControl} control - Form control augmented with the DOM element for the field.
      */
@@ -379,6 +409,19 @@ export class SubmSideBarComponent implements OnChanges {
 
         window.scrollBy(0, scrollTop);
         control.nativeElement.focus();
+    }
+
+    /**
+     * Determines the unit of addition when clicking a type add button.
+     * @param {number} featureSize - Feature's number of rows.
+     * @returns {string} Name of the smallest element to be added.
+     */
+    addUnit(featureSize: number): string {
+        if (featureSize > 0) {
+            return 'row';
+        } else {
+            return 'table';
+        }
     }
 
     /**

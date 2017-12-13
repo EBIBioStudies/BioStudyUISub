@@ -18,7 +18,7 @@ import {
 })
 export class SubmAddDialogComponent implements AfterViewInit {
     private _type: string;       //form model member for the type property
-    name: string;                //form model member for the name property
+    name: string;                //form model member for the new type's name property
     isUnique: boolean;           //uniqueness flag of the chosen type name
 
     @Input() onAddType: Function = () => {}; //callback for add action (acts as an ad-hoc, async validator)
@@ -95,8 +95,7 @@ export class SubmAddDialogComponent implements AfterViewInit {
     /**
      * Shows validation errors globally on submission according to the nature of the type, using the addition operation
      * as a validator post-submission. Only after that op is the form data confirmed as valid.
-     * modal is simply
-     * @param {NgForm} form
+     * @param {NgForm} form New type submit form.
      */
     onSubmit(form: NgForm): void {
         let isSingleRow: boolean = false;

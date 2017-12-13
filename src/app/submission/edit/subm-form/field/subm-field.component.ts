@@ -2,12 +2,13 @@ import {
     Component,
     Input,
     forwardRef,
-    ElementRef
+    ElementRef, ViewChild
 } from '@angular/core';
 
 import {
+    AsyncValidator,
     ControlValueAccessor,
-    NG_VALUE_ACCESSOR,
+    NG_VALUE_ACCESSOR, NgModel, Validators,
 } from '@angular/forms';
 import {FieldControl} from "../subm-form.service";
 
@@ -25,14 +26,14 @@ export class SubmFieldComponent implements ControlValueAccessor {
     private onChange: any = (_:any) => {};      //placeholder for handler propagating changes outside the custom control
     private onTouched: any = () => {};          //placeholder for handler after the control has been "touched"
 
+    private _value = '';
+
     @Input() name: string;
     @Input() type: string;
-    @Input() isSmall: boolean;
     @Input() readonly: boolean;
     @Input() required: boolean;
     @Input() formControl: FieldControl;
-
-    private _value = '';
+    @Input() isSmall: boolean = true;           //flag for making the input area the same size as grid fields
 
     constructor(private elementRef: ElementRef) { }
 
@@ -43,10 +44,6 @@ export class SubmFieldComponent implements ControlValueAccessor {
     set value(value) {
         this._value = value;
         this.onChange(value);
-    }
-
-    ngAfterViewInit(): void {
-        this.formControl.nativeElement = this.elementRef.nativeElement.querySelector('.form-control');
     }
 
     /**
@@ -83,5 +80,13 @@ export class SubmFieldComponent implements ControlValueAccessor {
      */
     onBlur() {
         this.onTouched();
+    }
+
+    /**
+     * Lifecycle hook for operations after all child views have been initialised.
+     * Updates the pointer to the DOM element too.
+     */
+    ngAfterViewInit(): void {
+        this.formControl.nativeElement = this.elementRef.nativeElement.querySelector('.form-control');
     }
 }

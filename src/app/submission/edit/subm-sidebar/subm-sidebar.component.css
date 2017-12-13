@@ -2,7 +2,7 @@
     padding: 12px 10px 12px 10px;
 }
 
-/* Types tab - list mode */
+/* Add tab - list mode */
 .sidebar-item {
     line-height: 30px;
 }
@@ -16,11 +16,15 @@
 .sidebar-item.type-control a {
     color: #317181;
 }
-.sidebar-item.type-control a:hover {
+.sidebar-item.type-control a:hover, .advanced-btn {
     color: #fff;
 }
 .sidebar-item.type-control a:hover .fa-inverse {
     color: #3c8b9f;
+}
+.advanced-btn {
+    outline: none !important;
+    text-decoration: none;
 }
 .fa-lg {
     vertical-align: middle;
@@ -30,7 +34,19 @@
     font-size: 12px;
 }
 
-/* Types tab - edit mode */
+/* Advanced submenu */
+.advanced-menu {
+    max-height: 200px;
+    overflow: hidden;
+    -webkit-transition: max-height .3s ease-in;
+    -moz-transition: max-height .3s ease-in;
+    transition: max-height .3s ease-in;
+}
+.collapsed-box {
+    max-height: 0;
+}
+
+/* Add tab - edit mode */
 .edit-type-form {
     background: #fff;
 }
@@ -56,7 +72,7 @@
     color: #3c8b9f;
 }
 
-/* Review tab */
+/* Check tab */
 .no-error-msg {
     position: absolute;
     top: 50%;
@@ -69,7 +85,7 @@
 .collapse-left .no-error-msg {
     width: 100%;
 }
-.collapse-left .no-error-msg h4 {
+.collapse-left .no-error-msg .action-title {
     display: none;
 }
 .label {
