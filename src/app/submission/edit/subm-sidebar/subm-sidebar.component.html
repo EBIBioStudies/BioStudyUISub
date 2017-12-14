@@ -122,7 +122,7 @@
             </li>
             <li class="sidebar-item" *ngFor="let control of formControls; let i = index">
                 <a *ngIf="control.invalid"
-                   tooltip="{{collapsed ? '&quot;' + control.template.name + '&quot; field is ' + tipText(control.errors) : 'Scroll field into view'}}"
+                   tooltip="{{collapsed ? '&quot;' + control.template.name + '&quot; field is ' + tipText(control.errors) : 'Highlight field on the form'}}"
                    container="body"
                    placement="{{collapsed ? 'right' : 'top'}}"
                    (click)="onReviewClick($event, control)">

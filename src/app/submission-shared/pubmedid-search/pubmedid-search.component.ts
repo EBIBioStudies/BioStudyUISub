@@ -22,7 +22,7 @@ import {PubMedSearchService} from './pubmedid-search.service';
     selector: 'pubmedid-search',
     template: `
     <input type="text" class="form-control input-sm"
-           placeholder="Enter Pub Med Id" 
+           placeholder="e.g. 24265224" 
            [(ngModel)]="value"
            (ngModelChange)="ngOnChanges()"
            [readonly]="readonly">
@@ -55,27 +55,15 @@ export class PubMedIdSearchComponent implements ControlValueAccessor, OnChanges 
             .subscribe((resp) => {
                 console.log("pubMedId search:", resp);
                 if (resp.hasOwnProperty('title')) {
-                    this.found.emit(this.uppercaseProperties(resp));
+                    this.found.emit(resp);
                 }
             });
     }
 
-    uppercaseProperties(obj) {
-        let res = {};
-        for (let key in obj) {
-            if (obj.hasOwnProperty(key)) {
-                res[key.charAt(0).toUpperCase() + key.substring(1)] = obj[key];
-            }
-        }
-        console.log("upperCaseProperties:", res);
-        return res;
-    }
-
     private changed = new Array<(value: string) => void>();
     private touched = new Array<() => void>();
-    private validateFn: any = () => {
-    };
 
+    private validateFn: any = () => {};
 
     get value() {
         return this.pubMedId;

@@ -1,5 +1,8 @@
 <input *ngIf="type === 'text'"
        type="text" class="form-control"
+       tooltip="{{isOverflow ? value : ''}}"
+       container="body"
+       placement="bottom"
        [ngClass]="{'input-sm': isSmall}"
        [(ngModel)]="value"
        [readonly]="readonly"
@@ -35,6 +38,12 @@
             [readonly]="readonly"
             (focusout)="onBlur()">
 </file-input>
+
+<pubmedid-search
+        *ngIf="type === 'pubmedid'"
+        [(ngModel)]="value"
+        (found)="asyncData($event)">
+</pubmedid-search>
 
 <textarea *ngIf="type === 'textblob'"
           class="form-control"

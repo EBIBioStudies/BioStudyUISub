@@ -101,9 +101,14 @@ export const DefaultTemplate = {
             {
                 'name': 'Publication',
                 'title': 'Add Publications',
-                'description': 'Search by PubMed identifier, or add information manually if not in PubMed',
+                'description': 'Add relevant publications by PubMed ID number or manually',
                 'icon': 'fa-book',
                 'columnTypes': [
+                    {
+                        'name': 'PubMedID',
+                        'valueType': 'pubmedid',
+                        'displayed': true
+                    },
                     {
                         'name': 'DOI',
                         'valueType': 'text'
@@ -115,27 +120,33 @@ export const DefaultTemplate = {
                     },
                     {
                         'name': 'Authors',
-                        'valueType': 'text'
-                    },
-                    {
-                        'name': 'Type',
-                        'valueType': 'text'
-                    },
-                    {
-                        'name': 'Issue',
-                        'valueType': 'text'
-                    },
-                    {
-                        'name': 'Issn',
-                        'valueType': 'text'
+                        'valueType': 'text',
+                        'displayed': true
                     },
                     {
                         'name': 'Year',
-                        'valueType': 'text'
+                        'valueType': 'text',
+                        'displayed': true
+                    },
+                    {
+                        'name': 'Type',
+                        'valueType': 'text',
+                        'displayed': true
+                    },
+                    {
+                        'name': 'Issue',
+                        'valueType': 'text',
+                        'displayed': true
+                    },
+                    {
+                        'name': 'Issn',
+                        'valueType': 'text',
+                        'displayed': true
                     },
                     {
                         'name': 'Volume',
-                        'valueType': 'text'
+                        'valueType': 'text',
+                        'displayed': true
                     }
                 ]
             },

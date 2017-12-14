@@ -47,6 +47,7 @@
                             [readonly]="readonly"
                             [required]="column.required"
                             [formControl]="featureForm.rowValueControl(rowIdx, column.id)"
+                            (async)="addOnAsync($event, rowIdx)"
                             isSmall="true"
                             validate-onblur>
                 </subm-field>

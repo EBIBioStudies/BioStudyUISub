@@ -2,7 +2,7 @@ import {
     Component,
     Input,
     forwardRef,
-    ElementRef, ViewChild
+    ElementRef, ViewChild, Output, EventEmitter
 } from '@angular/core';
 
 import {
@@ -27,6 +27,7 @@ export class SubmFieldComponent implements ControlValueAccessor {
     private onTouched: any = () => {};          //placeholder for handler after the control has been "touched"
 
     private _value = '';
+    private isOverflow: boolean = false;        //indicates if the text content is longer than the field itself.
 
     @Input() name: string;
     @Input() type: string;
@@ -34,6 +35,8 @@ export class SubmFieldComponent implements ControlValueAccessor {
     @Input() required: boolean;
     @Input() formControl: FieldControl;
     @Input() isSmall: boolean = true;           //flag for making the input area the same size as grid fields
+
+    @Output() async: EventEmitter<any> = new EventEmitter<any>();  //signals availability of asynchronous attributes
 
     constructor(private elementRef: ElementRef) { }
 
@@ -52,7 +55,7 @@ export class SubmFieldComponent implements ControlValueAccessor {
      * @param value - Value to be stored
      */
     writeValue(value: any): void {
-        if (value) {
+        if (typeof value !== 'undefined') {
             this.value = value;
         }
     }
@@ -88,5 +91,26 @@ export class SubmFieldComponent implements ControlValueAccessor {
      */
     ngAfterViewInit(): void {
         this.formControl.nativeElement = this.elementRef.nativeElement.querySelector('.form-control');
+    }
+
+    /**
+     * Determines if the field's contents are longer than the actual field's dimensions by probing the DOM directly.
+     */
+    ngAfterViewChecked(): void {
+        const controlEl = this.formControl.nativeElement;
+
+        if (controlEl) {
+            this.isOverflow = controlEl.scrollWidth > controlEl.clientWidth;
+        } else {
+            this.isOverflow = false;
+        }
+    }
+
+    /**
+     * Bubbles up an event for any inbound event in turn triggered by data fetched asynchronously.
+     * @param data - Data retrieved asynchronously.
+     */
+    asyncData(data: any): void {
+        this.async.emit(data);
     }
 }

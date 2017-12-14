@@ -25,9 +25,10 @@ export class SubmFeatureComponent implements OnInit {
 
     constructor(private changeRef: ChangeDetectorRef) {}
 
+    /**
+     * Defines the actions of the feature's menu according to its type (list or not).
+     */
     ngOnInit() {
-
-        //Defines the actions of the feature's menu according to its type (list or not).
         this.actions.push({
             label: 'Add column',
             invoke: () => this.feature.addColumn()
@@ -44,7 +45,9 @@ export class SubmFeatureComponent implements OnInit {
         return this.featureForm === undefined ? undefined : this.featureForm.feature;
     }
 
-    //Counts the number of errors if the feature is not empty.
+    /**
+     * Counts the number of errors if the feature is not empty.
+     */
     ngDoCheck(): void {
         if (this.featureEl) {
             this.errorNum = this.featureEl.nativeElement.getElementsByClassName('has-error').length;
