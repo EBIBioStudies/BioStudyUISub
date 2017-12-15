@@ -32,9 +32,11 @@ import 'rxjs/add/observable/timer';
 export class ORCIDInputBoxComponent implements ControlValueAccessor {
     private onChange: any = (_:any) => {};      //placeholder for handler propagating changes outside the custom control
     private onTouched: any = () => {};          //placeholder for handler after the control has been "touched"
+
     private orcidValue = '';                    //internal data model
     private mlistener = null;
 
+    @Input() readonly?: boolean = false;
     @Input() isPopupButton: boolean = true;     //flag for showing/hiding popup button
     @Input() isSmall: boolean = true;           //flag for making the input area the same size as grid fields
 

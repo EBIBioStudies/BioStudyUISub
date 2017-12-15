@@ -16,13 +16,13 @@ class BaseType {
                 tmplBased: boolean,
                 scope: Map<string, any> = GlobalScope) {
         if (!defined(name)) {
-            console.log(`Error: Type name is undefined ${name}`);
+            console.warn(`Error: Type name is undefined ${name}`);
             return;
         }
 
         //TODO: scope check is not working. Why?
         if (scope.has(name)) {
-            console.log(`Error: Type with name ${name} already exists in the scope`);
+            console.warn(`Error: Type with name ${name} already exists in the scope`);
             return;
         }
         scope.set(name, this);

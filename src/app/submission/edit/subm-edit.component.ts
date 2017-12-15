@@ -266,6 +266,7 @@ export class SubmEditComponent implements OnInit, OnDestroy {
             return;
         }
 
+        //TODO: this could probably do with its own method
         this.submService.submitSubmission(this.wrap())
             .subscribe(
                 resp => {

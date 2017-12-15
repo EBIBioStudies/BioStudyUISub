@@ -28,6 +28,7 @@
         *ngIf="type === 'orcid'"
         [isSmall]="isSmall"
         [required]="required"
+        [readonly]="readonly"
         [isPopupButton]="false"
         [(ngModel)]="value">
 </orcid-input-box>
@@ -42,6 +43,8 @@
 <pubmedid-search
         *ngIf="type === 'pubmedid'"
         [(ngModel)]="value"
+        [readonly]="readonly"
+        [required]="required"
         (found)="asyncData($event)">
 </pubmedid-search>
 
