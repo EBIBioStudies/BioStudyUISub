@@ -38,8 +38,8 @@ import {SubmFormComponent} from "./subm-form/subm-form.component";
 import {AppConfig} from "../../app.config";
 import {FieldControl} from "./subm-form/subm-form.service";
 import {UserData} from "../../auth/user-data";
-import {SubmSideBarComponent} from "./subm-sidebar/subm-sidebar.component";
 import {SubmValidationErrorsComponent} from "./subm-navbar/subm-validation-errors.component";
+import * as _ from "lodash";
 
 @Component({
     selector: 'subm-edit',
@@ -81,6 +81,11 @@ export class SubmEditComponent implements OnInit, OnDestroy {
 
         //Initally collapses the sidebar for tablet-sized screens if applicable
         this.sideBarCollapsed = window.innerWidth < this.appConfig.tabletBreak;
+
+        //Avoids unnecessary post requests in case there's a cascade of updates from programmatic changes
+        //NOTE: All calls are coalesced into the last one since it's that one that will lead to the most
+        //up-to-date copy of the submission.
+        this.onChange = _.throttle(this.onChange, 500, {'leading': false});
     }
 
     //TODO: this need splitting up. Especially the part dealing with server transactions and transformation of data.
@@ -164,6 +169,7 @@ export class SubmEditComponent implements OnInit, OnDestroy {
     ngAfterViewChecked() {
         if (this.submForm) {
             this.submForm.sectionForm.controls(this.formControls);
+            this.changeRef.detectChanges();
         }
     }
 
@@ -260,6 +266,7 @@ export class SubmEditComponent implements OnInit, OnDestroy {
             return;
         }
 
+        //TODO: this could probably do with its own method
         this.submService.submitSubmission(this.wrap())
             .subscribe(
                 resp => {

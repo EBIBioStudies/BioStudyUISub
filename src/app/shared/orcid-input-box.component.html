@@ -1,4 +1,13 @@
 <div [ngClass]="{'input-group': isPopupButton}">
+    <input type="text"
+           class="form-control"
+           [ngClass]="{'input-sm': isSmall}"
+           [(ngModel)]="value"
+           (blur)="onBlur()"
+           pattern="\d{4}-\d{4}-\d{4}-\d{4}"
+           placeholder="{{!readonly ? 'e.g. 1892-5647-2571-9436' : ''}}"
+           [readonly]="readonly"
+           #inputModel="ngModel">
     <span *ngIf="isPopupButton" class="input-group-btn">
         <button class="btn btn-sm btn-primary" type="button"
                 [ngClass]="{'btn-sm': isSmall}"
@@ -6,12 +15,4 @@
             <i class="fa fa-external-link" aria-hidden="true"></i>
         </button>
     </span>
-    <input type="text"
-           class="form-control"
-           [ngClass]="{'input-sm': isSmall}"
-           [(ngModel)]="value"
-           (blur)="onBlur()"
-           pattern="\d{4}-\d{4}-\d{4}-\d{4}"
-           placeholder="e.g. 1892-5647-2571-9436"
-           #inputModel="ngModel">
 </div>

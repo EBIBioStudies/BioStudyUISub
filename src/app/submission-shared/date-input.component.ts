@@ -31,6 +31,8 @@ import {AppConfig} from "../app.config";
 /**
  * Custom component for the Bootstrap's datepicker. It allows for a default value and makes sure the resulting
  * component behaves exactly like a read-only input field (so that input is only allowed through the date picker).
+ * It allows the display format for the date to be different to the transactional one if needed (the latter is
+ * hard-coded to ISO 8601 YYYY-MM-DD).
  * NOTE: Contrary to what its name suggests, DatePicker's "bsValueChange" output event is triggered every time
  * a date is set, NOT on change exclusively.
  * @see {@link https://valor-software.com/ngx-bootstrap/old/1.9.3/#/datepicker}
@@ -57,10 +59,6 @@ export class DateInputComponent implements ControlValueAccessor {
     constructor(config: BsDatepickerConfig, private appConfig: AppConfig, private rootEl: ElementRef) {
         config.showWeekNumbers = false;
         config.dateInputFormat = appConfig.dateInputFormat;
-
-        /*if (!appConfig.canUsePastDates) {
-            config.minDate = new Date(Date.now());
-        }*/
     }
 
     /**
@@ -130,7 +128,10 @@ export class DateInputComponent implements ControlValueAccessor {
         }
     }
 
-    //and disabling past dates if applicable.
+    /**
+     * Disables past dates if so defined in the corresponding input binding. If there is none, it falls back
+     * on the app-wide config's relevant entry.
+     */
     ngOnInit(): void {
         if ((typeof this.canUsePastDates === 'undefined' && !this.appConfig.canUsePastDates) ||
             (this.canUsePastDates === false)) {

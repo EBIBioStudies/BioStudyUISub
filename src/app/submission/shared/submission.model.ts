@@ -366,11 +366,11 @@ export class Feature extends HasUpdates<UpdateEvent> {
         const colNames = this._columns.names().map(name => name.toLowerCase());
         let rowMap;
 
-        //Adds a column if any of the passed-in attribute names doesn't exist.
+        //Adds a column if any of the passed-in attribute names doesn't exist, capitalizing it just for display purposes.
         attrNames
             .filter(attrName => colNames.indexOf(attrName.toLowerCase()) < 0)
             .forEach((name) => {
-                    this.addColumn(name);
+                    this.addColumn(_.capitalize(name));
             });
 
         //If row not provided, add it if applicable.

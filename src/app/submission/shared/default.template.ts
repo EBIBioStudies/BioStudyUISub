@@ -101,12 +101,18 @@ export const DefaultTemplate = {
             {
                 'name': 'Publication',
                 'title': 'Add Publications',
-                'description': 'Search by PubMed identifier, or add information manually if not in PubMed',
+                'description': 'Add the details of publications that are relevant or complementary to the study',
                 'icon': 'fa-book',
                 'columnTypes': [
                     {
-                        'name': 'DOI',
-                        'valueType': 'text'
+                        'name': 'PMID',
+                        'valueType': 'pubmedid',
+                        'displayed': true
+                    },
+                    {
+                        'name': 'Authors',
+                        'valueType': 'text',
+                        'displayed': true
                     },
                     {
                         'name': 'Title',
@@ -114,15 +120,22 @@ export const DefaultTemplate = {
                         'required': true
                     },
                     {
-                        'name': 'Authors',
-                        'valueType': 'text'
+                        'name': 'Year',
+                        'valueType': 'text',
+                        'displayed': true
                     },
                     {
-                        'name': 'Type',
-                        'valueType': 'text'
+                        'name': 'Volume',
+                        'valueType': 'text',
+                        'displayed': true
                     },
                     {
                         'name': 'Issue',
+                        'valueType': 'text',
+                        'displayed': true
+                    },
+                    {
+                        'name': 'Type',
                         'valueType': 'text'
                     },
                     {
@@ -130,13 +143,9 @@ export const DefaultTemplate = {
                         'valueType': 'text'
                     },
                     {
-                        'name': 'Year',
+                        'name': 'DOI',
                         'valueType': 'text'
                     },
-                    {
-                        'name': 'Volume',
-                        'valueType': 'text'
-                    }
                 ]
             },
             {
