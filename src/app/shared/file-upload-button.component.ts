@@ -24,7 +24,7 @@ import {
 })
 export class FileUploadButtonComponent {
     @Output() select: EventEmitter<File[]> = new EventEmitter<File[]>();
-    @Input() title: string = 'Upload';
+    @Input() title: string = 'Browse...';
     @Input() multiple: boolean = false;
 
     onInputChange(event) {
