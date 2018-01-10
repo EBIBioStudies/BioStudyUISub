@@ -20,45 +20,33 @@
                     <p>All fields are required. Upon submission, the data file will be validated and any errors shown below.</p>
                 </div>
             </div>
-            <div *ngIf="request" class="navbar-subm-margin">
-                <div class="panel"
-                     [ngClass]="{'panel-danger': request.failed,
-                                 'panel-success': request.successful,
-                                 'panel-info': request.inprogress}">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-xs-1 text-center">
-                                <i style="margin-top:10%"
-                                   class="fa fa-2x" aria-hidden="true"
-                                   [ngClass]="{'fa-exclamation-triangle': request.failed,
-                                    'fa-check': request.successful,
+            <div *ngIf="request" class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <i class="fa fa-2x" aria-hidden="true"
+                       [ngClass]="{ 'fa-times-circle text-danger': request.failed,
+                                    'fa-check text-success': request.successful,
                                     'fa-circle-o-notch fa-spin': request.inprogress
-                                    }"></i>
-                            </div>
-                            <div class="col-xs-10">
-                                <h4 class="panel-title">{{request.filename}}</h4>
-                                <h6><em>Format: {{request.formatText}}, Created: {{request.created | date:'short'}}</em>
-                                </h6>
-                            </div>
-                            <div class="col-xs-1">
-                                <button type="button" class="close">
-                                    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-                                </button>
-                            </div>
-                        </div>
+                       }"></i>
+                    <div class="panel-description">
+                        <p class="panel-title">
+                            {{request.failed ? 'Please review at least the issues marked in red below for ' : ''}}
+                            <strong>{{request.filename}}</strong>
+                            {{request.failed ? ' and submit again.' : ''}}
+                        </p>
+                        {{request.created | date: 'd MMM y, h:mm a'}}
                     </div>
-                    <div class="panel-body container-fluid">
-                        <div *ngIf="request.inprogress">
-                            Loading...
+                </div>
+                <div class="panel-body container-fluid">
+                    <div *ngIf="request.inprogress">
+                        Loading...
+                    </div>
+                    <div>
+                        <div *ngIf="request.successful"
+                             class="alert alert-success">
+                            The study was submitted <strong>successfully</strong>! It should appear in the list of
+                            'Submitted' studies. Thanks!
                         </div>
-                        <div>
-                            <div *ngIf="request.successful"
-                                 class="alert alert-success">
-                                The study was submitted <strong>successfully</strong>! It should appear in the list of
-                                'Submitted' studies. Thanks!
-                            </div>
-                            <subm-results-tree [log]="request.log"></subm-results-tree>
-                        </div>
+                        <subm-results-tree [log]="request.log"></subm-results-tree>
                     </div>
                 </div>
             </div>

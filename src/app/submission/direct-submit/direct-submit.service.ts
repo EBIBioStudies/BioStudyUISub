@@ -55,7 +55,7 @@ export class DirectSubmitRequest {
     }
 
     get formatText(): string {
-        return this.format || '<auto-detect>';
+        return this.format || 'auto-detect';
     }
 
     get created(): Date {
