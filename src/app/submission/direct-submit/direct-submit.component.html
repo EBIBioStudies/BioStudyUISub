@@ -14,10 +14,25 @@
     <div class="container-fluid">
         <aside class="right-side navbar-subm-margin"
                [ngClass]="{'collapse-left': collapseSideBar}">
-            <div *ngIf="!request" class="help-msg panel">
-                <div class="panel-body">
-                    <h4>Please fill out the form on the left</h4>
-                    <p>All fields are required. Upon submission, the data file will be validated and any errors shown below.</p>
+            <div class="help-msg panel">
+                <div *ngIf="!request" class="panel-body">
+                    <h4>New direct submission</h4>
+                    <p>Please fill in the form on the left. All fields are required. Upon submission, the data file will
+                        be validated.</p>
+                </div>
+                <div *ngIf="request && request.inprogress" class="panel-body">
+                    <h4>Submitting study...</h4>
+                    <p>Please wait while the data file is being submitted and validated. Any invalid sections in the file
+                        will be listed below.</p>
+                </div>
+                <div *ngIf="request && request.failed" class="panel-body">
+                    <h4>Error while submitting study</h4>
+                    <p>The submitted data file is invalid or an unexpected error was encountered. Try to correct at least the
+                    issues highlighted in red and submit again.</p>
+                </div>
+                <div *ngIf="request && request.successful" class="panel-body">
+                    <h4>Submitted study</h4>
+                    <p>The study has been added to the BioStudies database with accession number <strong>{{'hello'}}</strong>.</p>
                 </div>
             </div>
             <div *ngIf="request" class="panel panel-default">
@@ -25,29 +40,17 @@
                     <i class="fa fa-2x" aria-hidden="true"
                        [ngClass]="{ 'fa-times-circle text-danger': request.failed,
                                     'fa-check text-success': request.successful,
-                                    'fa-circle-o-notch fa-spin': request.inprogress
+                                    'fa-cog fa-spin': request.inprogress
                        }"></i>
                     <div class="panel-description">
                         <p class="panel-title">
-                            {{request.failed ? 'Please review at least the issues marked in red below for ' : ''}}
                             <strong>{{request.filename}}</strong>
-                            {{request.failed ? ' and submit again.' : ''}}
                         </p>
                         {{request.created | date: 'd MMM y, h:mm a'}}
                     </div>
                 </div>
-                <div class="panel-body container-fluid">
-                    <div *ngIf="request.inprogress">
-                        Loading...
-                    </div>
-                    <div>
-                        <div *ngIf="request.successful"
-                             class="alert alert-success">
-                            The study was submitted <strong>successfully</strong>! It should appear in the list of
-                            'Submitted' studies. Thanks!
-                        </div>
-                        <subm-results-tree [log]="request.log"></subm-results-tree>
-                    </div>
+                <div *ngIf="!request.inprogress" class="panel-body container-fluid">
+                    <subm-results-tree [log]="request.log"></subm-results-tree>
                 </div>
             </div>
         </aside>
