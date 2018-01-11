@@ -54,6 +54,8 @@
                 </p>
                 <multi-select
                         name="selectedProjects"
+                        placeholder="Select one or more"
+                        filterPlaceholder="Filter by name"
                         *ngIf="!isLoading"
                         [options]="projectsToAttachTo"
                         [(ngModel)]="model.projects"></multi-select>
