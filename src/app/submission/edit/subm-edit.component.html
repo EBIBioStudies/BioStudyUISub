@@ -51,7 +51,7 @@
                 </div>
 
                 <div *ngIf="!errors.total() && !readonly">
-                    <div *ngIf="subm.isTemp" class="panel">
+                    <div *ngIf="subm.isTemp && !isSubmitting" class="panel">
                         <div class="panel-body">
                             <h4>Study ready for submission</h4>
                             <p>
@@ -61,13 +61,20 @@
                         </div>
                     </div>
 
-                    <div *ngIf="!subm.isTemp" class="panel">
+                    <div *ngIf="!subm.isTemp && !isSubmitting" class="panel">
                         <div class="panel-body">
                             <h4>Study ready for re-submission</h4>
                             <p>
                                 You may re-submit the data on this form now. Your study will retain
                                 the same accession number under which it was published.
                             </p>
+                        </div>
+                    </div>
+
+                    <div *ngIf="isSubmitting" class="panel">
+                        <div class="panel-body">
+                            <h4>Submitting study...</h4>
+                            <p>Please wait while the data in the form is being submitted and validated.</p>
                         </div>
                     </div>
                 </div>
