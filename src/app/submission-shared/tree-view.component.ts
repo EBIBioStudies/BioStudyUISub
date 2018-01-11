@@ -4,9 +4,8 @@ import {
     Type,
     ViewChild,
     ViewContainerRef,
-    AfterViewInit,
-    OnChanges,
-    ComponentFactoryResolver
+    ComponentFactoryResolver,
+    OnInit
 } from '@angular/core';
 
 export interface TreeViewCustomNodeComponent {
@@ -77,14 +76,14 @@ li:last-child::before {
 }
 `]
 })
-export class TreeViewNodeComponent implements AfterViewInit, OnChanges  {
+export class TreeViewNodeComponent implements OnInit {
     @Input() data: any;
     @Input() config: TreeViewConfig;
 
     @ViewChild('nodeTemplate', {read: ViewContainerRef}) vcr;
 
     private compRef;
-    isCollapsed: boolean = false;
+    isCollapsed: boolean = true;        //All branches will be collapsed by default.
 
     constructor(private componentFactoryResolver: ComponentFactoryResolver) {
     }
@@ -95,6 +94,13 @@ export class TreeViewNodeComponent implements AfterViewInit, OnChanges  {
 
     get hasChildren(): boolean {
         return this.children.length > 0;
+    }
+
+    //Reveals only branches of the tree that indicate error.
+    ngOnInit() {
+        if (this.hasChildren && this.data.level == "ERROR") {
+            this.isCollapsed = false;
+        }
     }
 
     ngAfterViewInit() {
@@ -128,14 +134,7 @@ export class TreeViewNodeComponent implements AfterViewInit, OnChanges  {
     styles: [`
 .tree {
     min-height:20px;
-    padding:19px;
-    background-color:#fbfbfb;
-    -webkit-border-radius:4px;
-    -moz-border-radius:4px;
-    border-radius:4px;
-    -webkit-box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.05);
-    -moz-box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.05);
-    box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.05)
+    padding:10px;
 }
 `]
 })
