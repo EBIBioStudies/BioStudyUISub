@@ -2,7 +2,7 @@ import {NgControl} from "@angular/forms";
 import {Directive} from "@angular/core";
 
 /**
- * Directive that Replicates "touched" flag behaviour beyond the first blur event. By default, once the latter happens,
+ * Directive that replicates "touched" flag behaviour beyond the first blur event. Otherwise, once the latter happens,
  * "touched" is permanently set to true. Thus, it allows the flag to be used as a proxy indicator for blur and, by
  * extension, for resetting error feedback. The flag is only reset on key down, to avoid a situation where the
  * user loses track of what the error was in the first place.

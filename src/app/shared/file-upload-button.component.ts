@@ -2,7 +2,7 @@ import {
     Component,
     EventEmitter,
     Output,
-    Input
+    Input, ViewChild, ElementRef
 } from '@angular/core';
 
 @Component({
@@ -12,12 +12,12 @@ import {
            id="fileInput" 
            name="fileInput"  
            (change)="onInputChange($event)"
-           style="display:none"
+           style="display: none"
            [multiple]="multiple"
            #inputFile/>
     <button type="button"
             class="btn btn-primary btn-sm"
-            (click)="inputFile.value = '';inputFile.click()">
+            (click)="onButtonClick($event)">
             {{title}}
     </button>
 `
@@ -27,8 +27,16 @@ export class FileUploadButtonComponent {
     @Input() title: string = 'Browse...';
     @Input() multiple: boolean = false;
 
+    @ViewChild('inputFile')
+    private inputEl: ElementRef;
+
     onInputChange(event) {
-        let files = event.target.files;
-        this.select.emit(files);
+        this.select.emit(event.target.files);
+    }
+
+    //Makes sure every subsequent selection triggers a "select" event even if the file selected is the same.
+    onButtonClick(event) {
+        this.inputEl.nativeElement.value = '';
+        this.inputEl.nativeElement.click();
     }
 }

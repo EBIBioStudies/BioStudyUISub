@@ -25,7 +25,7 @@ import {FileService} from './file.service';
                 [ngClass]="{'inactive': !collapsed}"
                 [disabled]="editing"
                 (click)="onToggle($event)"
-                tooltip="{{collapsed ? 'Maximize sidebar' : 'Minimize sidebar'}}"
+                tooltip="{{collapsed ? 'Expand sidebar' : 'Collapse sidebar'}}"
                 container="body"
                 placement="right">
             <i class="fa fa-fw fa-lg"

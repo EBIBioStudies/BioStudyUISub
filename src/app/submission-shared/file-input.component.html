@@ -3,6 +3,7 @@
          [name]="name"
          [(ngModel)]="value"
          [required]="required">
+    <option value="">Select a file</option>
     <option *ngFor="let file of files" [value]="file">{{file}}</option>
 </select>
 <a *ngIf="files.length == 0 && !readonly" class="form-control input-sm no-files"

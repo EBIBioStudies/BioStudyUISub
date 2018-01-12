@@ -101,7 +101,7 @@ export const DefaultTemplate = {
             {
                 'name': 'Publication',
                 'title': 'Add Publications',
-                'description': 'Add the details of publications that are relevant or complementary to the study',
+                'description': 'Add the details of publications relevant or complementary to the study',
                 'icon': 'fa-book',
                 'columnTypes': [
                     {
