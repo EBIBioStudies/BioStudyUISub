@@ -2,12 +2,5 @@
     margin-bottom: 0;
 }
 .panel-heading .fa {
-    color: #777777;
-    vertical-align: middle;
-}
-.panel-description {
-    display: inline-block;
-    margin: 0 .5rem;
-    width: 83%;
-    vertical-align: middle;
-}
+     color: #777777;
+ }

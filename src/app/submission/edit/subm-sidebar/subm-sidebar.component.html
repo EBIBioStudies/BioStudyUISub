@@ -4,7 +4,7 @@
         <button class="minimise-btn btn pull-right"
                 [ngClass]="{'inactive': !collapsed}"
                 (click)="onToggleCollapse($event)"
-                tooltip="{{collapsed ? 'Maximize sidebar' : 'Minimize sidebar'}}"
+                tooltip="{{collapsed ? 'Expand sidebar' : 'Collapse sidebar'}}"
                 container="body"
                 placement="right">
             <i class="fa fa-fw fa-lg"
@@ -105,7 +105,7 @@
                 <li *ngIf="!isStatus && !editing" class="sidebar-item type-control">
                     <a (click)="onNewTypeClick($event)">
                         <i class="fa fa-fw fa-plus-circle fa-lg"></i>
-                        {{!collapsed ? '&nbsp;&nbsp;New type' : ''}}
+                        {{!collapsed ? '&nbsp;&nbsp;New type...' : ''}}
                     </a>
                 </li>
             </ul>

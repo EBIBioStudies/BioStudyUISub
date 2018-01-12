@@ -101,8 +101,8 @@ export class FilterPipe implements PipeTransform {
     ]
 })
 export class MultiSelectComponent implements ControlValueAccessor, OnChanges, OnInit, OnDestroy {
-    @Input() placeholder = 'Select...';
-    @Input() filterPlaceholder = 'Filter...';
+    @Input() placeholder = 'Select an option';
+    @Input() filterPlaceholder = 'Filter list';
     @Input() filterEnabled = true;
     @Input() options: string[] = [];
 

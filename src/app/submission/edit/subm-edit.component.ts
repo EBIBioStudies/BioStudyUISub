@@ -48,7 +48,7 @@ import * as _ from "lodash";
 export class SubmEditComponent implements OnInit, OnDestroy {
 
     //List of non-bubbling events to trigger auto-save
-    //NOTE: 'section_add' has been omitted since adding sections is at present buggy
+    //NOTE: 'section_add' has been omitted since adding sections is buggy at present
     static watchedUpdates = ['column_add', 'column_remove', 'row_add', 'row_remove', 'section_remove'];
 
     subm: Submission;
