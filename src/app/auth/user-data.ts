@@ -63,10 +63,18 @@ export class UserData {
     }
 
     /**
-     * Convenience method to determine the user's role (hard-coded for the moment).
-     * @returns {UserRole} - Public.
+     * Convenience method to determine if the user's role.
+     * @returns {UserRole} Public (hard-coded for the moment).
      */
     get role(): UserRole {
         return UserRole.Public;
+    }
+
+    /**
+     * Convenience method to determine if the user has any priviledges.
+     * @returns {boolean} True if the user enjoys any privileges.
+     */
+    get isPrivileged() : boolean {
+        return this.role != UserRole.Public;
     }
 }
