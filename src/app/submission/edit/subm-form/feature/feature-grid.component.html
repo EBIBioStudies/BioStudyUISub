@@ -1,13 +1,15 @@
 <div class="container-fluid container-scroll" [formGroup]="featureForm.form">
     <div class="row">
         <div class="cell canton col-xs-1 col-md-1 text-center">
-            <button class="btn-add btn btn-link btn-md" type="button" tabindex="-1"
+            <button *ngIf="userData.isPrivileged" class="btn-add btn btn-link btn-md" type="button" tabindex="-1"
                     [ngClass]="{'invisible': readonly}"
                     [tooltip]="'Add a new ' + feature.typeName.toLowerCase() + ' attribute'"
                     container="body"
                     (click)="feature.addColumn()">
                 <i class="fa fa-plus-circle" aria-hidden="true"></i> Column
             </button>
+            {{userData.isPrivileged ? '' : '&nbsp;'}}
+
         </div><!--
         --><div class="cell heading-cell column-heading col-xs-3 col-md-2" *ngFor="let column of columns; let idx = index">
             <inline-edit
@@ -16,7 +18,7 @@
                     (remove)="feature.removeColumn(column.id)"
                     [formControl]="featureForm.columnControl(column.id)"
                     [required]="column.required"
-                    [disableEdit]="featureForm.columnType(column.id).displayed || readonly">
+                    [disableEdit]="featureForm.columnType(column.id).displayed || readonly || !userData.isPrivileged">
             </inline-edit>
         </div>
     </div>

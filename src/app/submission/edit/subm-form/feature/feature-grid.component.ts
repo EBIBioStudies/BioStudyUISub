@@ -9,6 +9,7 @@ import {
 
 import {Feature, Attribute, ValueMap} from '../../../shared/submission.model';
 import {FeatureForm} from '../subm-form.service';
+import {UserData} from "../../../../auth/user-data";
 
 @Component({
     selector: 'subm-feature-grid',
@@ -21,7 +22,7 @@ export class FeatureGridComponent implements AfterViewInit {
     @ViewChildren('rowEl') rowEls: QueryList<ElementRef>;
     @ViewChildren('colEl') colEls: QueryList<ElementRef>;
 
-    constructor(private rootEl: ElementRef) {}
+    constructor(private rootEl: ElementRef, private userData: UserData) {}
 
     get rows(): ValueMap[] {
         return this.featureForm.rows;

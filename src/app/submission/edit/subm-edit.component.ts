@@ -97,7 +97,7 @@ export class SubmEditComponent implements OnInit, OnDestroy {
             //Determines if the current submission has just been created
             this.isNew = this.route.snapshot.data.isNew || false;
 
-            //Waits for the fetching of both the user data and the submission data to proceed
+            //Waits for the parallel fetching of both the user data and the submission data to proceed
             eventStream = forkJoin([
                 this.submService.getSubmission(params.accno),
                 this.userData.whenFetched
