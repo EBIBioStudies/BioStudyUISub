@@ -59,13 +59,6 @@ export class ConfirmDialogComponent {
     }
 
     /**
-     * Handler for "onShown" event, triggered exactly after the modal has been fully revealed.
-     */
-    onShown(): void {
-        this.focusEl.nativeElement.focus();
-    }
-
-    /**
      * Handler for confirmation event. Notifies such confirmation with a "true" in the event stream.
      */
     ok(): void {
@@ -79,5 +72,23 @@ export class ConfirmDialogComponent {
     cancel(): void {
         this.buttonClicks.next(false);
         this.modalDirective.hide();
+    }
+
+    /**
+     * Handler for "onShown" event, triggered exactly after the modal has been fully revealed.
+     */
+    onShown(): void {
+        this.focusEl.nativeElement.focus();
+    }
+
+    /**
+     * Monitors modal dismissals and, if any of them are due to clicks on the backdrop area,
+     * it is interpreted as a cancel action.
+     * @param event - Custom modal event indicating the reason for the modal's dismissal
+     */
+    onHidden(event: ModalDirective): void {
+        if (event.dismissReason == 'backdrop-click') {
+            this.cancel();
+        }
     }
 }
