@@ -197,7 +197,7 @@ export class SubmEditComponent implements OnInit, OnDestroy {
     /**
      * Handler for revert action. It deletes the current revision and loads the latest released version by
      * fetching the same submission again (after deletion).
-     * @param {Event} event DOM event for the click action.
+     * @param {Event} event - DOM event for the click action.
      * TODO: This produces an spurious GET request. ngOnInit needs to be split up.
      */
     onRevert(event: Event) {
