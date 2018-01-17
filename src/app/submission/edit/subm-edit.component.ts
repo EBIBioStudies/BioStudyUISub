@@ -116,20 +116,20 @@ export class SubmEditComponent implements OnInit, OnDestroy {
                 this.errors = SubmissionValidator.validate(this.subm);
 
                 //Re-validates the submission on change (including non-text updates).
-                this.subm.updates().switchMap((ue) => {
+                this.subm.updates().switchMap((event) => {
 
-                        //Inspects the original event producing the cascade of subsequent ones and saves the submission if it was triggered by a non-text update.
-                        //NOTE: Leaf nodes in the update event tree have no source.
-                        if (SubmEditComponent.watchedUpdates.indexOf(ue.leafEvent.name) > -1) {
-                            this.onChange();
-                        }
+                    //Inspects the original event producing the cascade of subsequent ones and saves the submission if it was triggered by a non-text update.
+                    //NOTE: Leaf nodes in the update event tree have no source.
+                    if (SubmEditComponent.watchedUpdates.indexOf(event.leafEvent.name) > -1) {
+                        this.onChange();
+                    }
 
-                        //Performs programmatic validation, its results being aggregated in a modal log.
-                        return SubmissionValidator.createObservable(this.subm);
+                    //Performs programmatic validation, its results being aggregated in a modal log.
+                    return SubmissionValidator.createObservable(this.subm);
 
-                    }).subscribe(errors => {
-                        this.errors = errors;
-                    });
+                }).subscribe(errors => {
+                    this.errors = errors;
+                });
 
                 //Determines the current section (in case the user navigates down to a subsection)
                 this.changeSection(this.subm.root.id);

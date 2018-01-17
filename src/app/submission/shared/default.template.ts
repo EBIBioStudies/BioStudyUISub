@@ -2,15 +2,16 @@ export const DefaultTemplate = {
     'name': 'DeafultTemplate',
     'sectionType': {
         'name': 'Study',
-        'required': true,
         'annotationsType': {
             'title': 'Describe your study',
             'description': 'Provide any supplementary details of the study that may help discover and/or interpret it',
             'icon': 'fa-tag',
+            'required': true,
             'columnTypes': [
                 {
                     'name': 'Organism',
-                    'valueType': 'text'
+                    'valueType': 'text',
+                    'required': true
                 },
                 {
                     'name': 'Experimental design',

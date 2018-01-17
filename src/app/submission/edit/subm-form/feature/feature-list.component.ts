@@ -15,6 +15,7 @@ import {FeatureForm} from '../subm-form.service';
 export class FeatureListComponent implements AfterViewInit {
     @Input() featureForm: FeatureForm;
     @Input() readonly?: boolean = false;
+    @Input() colNames: string[] = [];
     @ViewChildren('rowEl') rowEls: QueryList<ElementRef>;
 
     get columns(): Attribute[] {

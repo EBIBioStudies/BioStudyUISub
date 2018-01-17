@@ -56,13 +56,15 @@ export class UpdateEvent {
 export class Attribute extends HasUpdates<UpdateEvent> {
     readonly id: string;
     readonly required: boolean;
+    readonly displayed: boolean;
     readonly valueType: ValueType;
 
     private _name: string;
 
-    constructor(name: string = '', required: boolean = false, valueType: ValueType = 'text') {
+    constructor(name: string = '', required: boolean = false, displayed: boolean = false, valueType: ValueType = 'text') {
         super();
         this.required = required;
+        this.displayed = displayed;
         this.valueType = valueType;
         this._name = name;
         this.id = `attr_${nextId()}`;
@@ -286,7 +288,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
 
         type.columnTypes.forEach(ct => {
             if (ct.required || ct.displayed) {
-                this.addColumn(ct.name, ct.required, ct.valueType);
+                this.addColumn(ct.name, ct.required, ct.displayed, ct.valueType);
             }
         });
 
@@ -389,7 +391,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
         });
     }
 
-    addColumn(name?: string, required?: boolean, valueType?: ValueType): Attribute {
+    addColumn(name?: string, required?: boolean, displayed?: boolean, valueType?: ValueType): Attribute {
         let defColName = ' ' + (this.colSize() + 1);
         let col;
 
@@ -399,7 +401,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
         } else {
             defColName = 'Column' + defColName;
         }
-        col = new Attribute(name || defColName, required, valueType);
+        col = new Attribute(name || defColName, required, displayed, valueType);
 
         //Updates row and column maps
         this._rows.addKey(col.id);

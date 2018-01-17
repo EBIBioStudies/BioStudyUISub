@@ -5,9 +5,11 @@
     </div>
     <div class="row" #rowEl *ngFor="let column of columns; let idx = index; let first = first; let last = last">
         <div class="cell col-xs-3">
-            <div class="form-group key-field">
+            <div class="form-group key-field"
+                 [ngClass]="{'has-error': !column.required && featureForm.columnControl(column.id).invalid &&
+                                          featureForm.columnControl(column.id).touched}">
                 <div class="input-group">
-                    <span *ngIf="!readonly && !column.required && !featureForm.columnType(column.id).displayed"
+                    <span *ngIf="!readonly && !column.required && !column.displayed"
                           class="input-group-btn">
                           <button type="button" tabindex="-1"
                                   class="btn btn-sm btn-danger btn-flat"
@@ -19,11 +21,17 @@
                                <i class="fa fa-trash-o"></i>
                           </button>
                     </span>
-                    <input type="text"
-                           class="form-control input-sm"
+                    <input type="text" class="form-control input-sm"
+                           placement="{{first && !last ? 'bottom' : 'top'}}"
+                           triggers="focus"
+                           containerClass="validation-pop text-danger"
+                           popover="Please use a unique key name"
                            [(ngModel)]="column.name"
                            [formControl]="featureForm.columnControl(column.id)"
-                           [readonly]="readonly || column.required || featureForm.columnType(column.id).displayed"
+                           [readonly]="readonly || column.required || column.displayed"
+                           [typeahead]="colNames"
+                           unique
+                           validate-onblur
                            (blur)="featureForm.columnControl(column.id).value ||
                                    featureForm.columnControl(column.id).setValue(feature.typeName + ' ' + (idx + 1))">
                 </div>

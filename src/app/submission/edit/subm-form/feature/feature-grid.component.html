@@ -18,7 +18,7 @@
                     (remove)="feature.removeColumn(column.id)"
                     [formControl]="featureForm.columnControl(column.id)"
                     [required]="column.required"
-                    [disableEdit]="featureForm.columnType(column.id).displayed || readonly || !userData.isPrivileged">
+                    [disableEdit]="column.displayed || readonly || !userData.isPrivileged">
             </inline-edit>
         </div>
     </div>

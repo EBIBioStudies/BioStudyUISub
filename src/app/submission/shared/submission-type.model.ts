@@ -20,7 +20,6 @@ class BaseType {
             return;
         }
 
-        //TODO: scope check is not working. Why?
         if (scope.has(name)) {
             console.warn(`Error: Type with name ${name} already exists in the scope`);
             return;
