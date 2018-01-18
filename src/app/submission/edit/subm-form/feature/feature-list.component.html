@@ -13,7 +13,7 @@
                           class="input-group-btn">
                           <button type="button" tabindex="-1"
                                   class="btn btn-sm btn-danger btn-flat"
-                                  (click)="featureForm.feature.removeRowAt(idx)"
+                                  (click)="feature.removeRowAt(idx)"
                                   [disabled]="!feature.canRemoveRowAt(idx)"
                                   [tooltip]="'Delete &quot;' + column.name + '&quot; entry'"
                                   placement="bottom"
@@ -32,6 +32,7 @@
                            [typeahead]="colNames"
                            unique
                            validate-onblur
+                           (keyup.enter)="$event.stopPropagation()"
                            (blur)="featureForm.columnControl(column.id).value ||
                                    featureForm.columnControl(column.id).setValue(feature.typeName + ' ' + (idx + 1))">
                 </div>

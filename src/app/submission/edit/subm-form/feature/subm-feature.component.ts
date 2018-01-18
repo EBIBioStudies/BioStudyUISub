@@ -47,14 +47,20 @@ export class SubmFeatureComponent implements OnInit {
         return this.featureForm === undefined ? undefined : this.featureForm.feature;
     }
 
-    //Gets the names of all columns from the list of column types.
+    /**
+     * Gets the names of allowed new column names. Since they have to be unique, it takes all columns from
+     * the list of column types and removes the names for the current columns.
+     */
     get colNames(): string[] {
+        const currColNames = this.featureForm.columns.map(column => column.name);
 
+        //Feature not loaded yet => returns no column names.
         if (this.feature === undefined) {
             return [];
 
+        //Feature loaded => gets only uniques column names.
         } else {
-            return this.colTypeNames;
+            return this.colTypeNames.filter(name => currColNames.indexOf(name) == -1);
         }
     }
 

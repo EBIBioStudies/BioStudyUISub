@@ -431,14 +431,14 @@ export class FeatureForm {
     private updateColumnControls(ue?: UpdateEvent): void {
         this._columns = this.feature.columns;
 
-        if (ue && ue.name === 'column_remove') {
-            this.removeColumnControl(ue.value.id);
+        if (ue && ue.source.name === 'column_remove') {
+            this.removeColumnControl(ue.source.value.id);
             return;
         }
 
         let toAdd: Attribute[] = this.columns;
-        if (ue && ue.name === 'column_add') {
-            toAdd = [this.columns[ue.value.index]];
+        if (ue && ue.source.name === 'column_add') {
+            toAdd = [this.columns[ue.source.value.index]];
         }
 
         toAdd.forEach(

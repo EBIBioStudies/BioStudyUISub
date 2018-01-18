@@ -6,12 +6,10 @@ export const DefaultTemplate = {
             'title': 'Describe your study',
             'description': 'Provide any supplementary details of the study that may help discover and/or interpret it',
             'icon': 'fa-tag',
-            'required': true,
             'columnTypes': [
                 {
                     'name': 'Organism',
-                    'valueType': 'text',
-                    'required': true
+                    'valueType': 'text'
                 },
                 {
                     'name': 'Experimental design',
@@ -100,6 +98,50 @@ export const DefaultTemplate = {
                 ]
             },
             {
+                'name': 'File',
+                'title': 'Add Files',
+                'description': 'List the data files for the study and describe their respective scopes',
+                'icon': 'fa-file',
+                'columnTypes': [
+                    {
+                        'name': 'Path',
+                        'valueType': 'file',
+                        'required': true
+                    },
+                    {
+                        'name': 'Description',
+                        'valueType': 'text',
+                        'required': true
+                    },
+                    {
+                        'name': 'Type',
+                        'valueType': 'text'
+                    }
+                ]
+            },
+            {
+                'name': 'Link',
+                'title': 'Add Links',
+                'description': 'Provide links to any additional documentation that may be of relevance',
+                'icon': 'fa-link',
+                'columnTypes': [
+                    {
+                        'name': 'URL',
+                        'valueType': 'text',
+                        'required': true
+                    },
+                    {
+                        'name': 'Description',
+                        'valueType': 'text',
+                        'required': true
+                    },
+                    {
+                        'name': 'Type',
+                        'valueType': 'text'
+                    }
+                ]
+            },
+            {
                 'name': 'Publication',
                 'title': 'Add Publications',
                 'description': 'Add the details of publications relevant or complementary to the study',
@@ -147,50 +189,6 @@ export const DefaultTemplate = {
                         'name': 'DOI',
                         'valueType': 'text'
                     },
-                ]
-            },
-            {
-                'name': 'Link',
-                'title': 'Add Links',
-                'description': 'Provide links to any additional documentation that may be of relevance',
-                'icon': 'fa-link',
-                'columnTypes': [
-                    {
-                        'name': 'URL',
-                        'valueType': 'text',
-                        'required': true
-                    },
-                    {
-                        'name': 'Description',
-                        'valueType': 'text',
-                        'required': true
-                    },
-                    {
-                        'name': 'Type',
-                        'valueType': 'text'
-                    }
-                ]
-            },
-            {
-                'name': 'File',
-                'title': 'Add Files',
-                'description': 'List the data files for the study and describe their respective scopes',
-                'icon': 'fa-file',
-                'columnTypes': [
-                    {
-                        'name': 'Path',
-                        'valueType': 'file',
-                        'required': true
-                    },
-                    {
-                        'name': 'Description',
-                        'valueType': 'text',
-                        'required': true
-                    },
-                    {
-                        'name': 'Type',
-                        'valueType': 'text'
-                    }
                 ]
             }
         ]

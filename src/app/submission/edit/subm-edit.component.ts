@@ -186,8 +186,17 @@ export class SubmEditComponent implements OnInit, OnDestroy {
         return this.subm.sectionPath(this.section.id);
     }
 
+    /**
+     * Checks that the form contains no errors. It does so with a double test to guarantee resilience:
+     * batch validator's count and a DOM-based count. The latter for errors that don't concern the form itself
+     * and therefore and not likely to be caught by the batch validator, such as repeated columns.
+     * TODO: There is already an array for row errors. Columns should have a similar one.
+     * @see {@link SubmFormComponent}
+     * @see {@link SubmissionValidator}
+     * @returns {boolean} True is there are no errors.
+     */
     get formValid(): boolean {
-        return this.errors.empty();
+        return this.errors.empty() && !this.submForm.hasError;
     }
 
     onSectionClick(section: Section): void {

@@ -55,10 +55,10 @@ export class UniqueValidator implements Validator {
  */
 function uniqueValidatorFactory(): ValidatorFn {
     return (control: FormControl) => {
-        const controls = control.parent.controls; console.log(control); console.log(controls);
+        const controls = control.parent.controls;
         const values = Object.keys(controls).map(controlKey => controls[controlKey].value);
         const valueSet = new Set(values);
-        let isValid = false; console.log(control.value + " " + values);
+        let isValid = false;
 
         //If all values of all form controls are unique, the present control must be valid
         //NOTE: Set conversion drops any duplicated entries
