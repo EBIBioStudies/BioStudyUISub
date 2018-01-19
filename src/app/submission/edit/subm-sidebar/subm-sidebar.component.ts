@@ -25,6 +25,7 @@ import { ConfirmDialogComponent } from 'app/shared/index';
 import { SectionType } from '../../shared/submission-type.model';
 import {SubmValidationErrors} from "../../shared/submission.validator";
 import {FieldControl} from "../subm-form/subm-form.service";
+import {UserData} from "../../../auth/user-data";
 
 /**
  * Submission item class aggregating its corresponding feature with UI-relevant metadata. It enables
@@ -174,6 +175,8 @@ export class SubmSideBarComponent implements OnChanges {
     numPending: number = 0;          //number of modified fields still pending review (still invalid)
 
     private subscr: Subscription;
+
+    constructor(private userData: UserData) {}
 
     /**
      * Updates the list of type items whenever a feature is added or removed.

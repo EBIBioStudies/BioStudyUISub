@@ -84,7 +84,7 @@
                 </button>
             </li>
         </form>
-        <li *ngIf="!isStatus && !editing" class="text-right">
+        <li *ngIf="!isStatus && !editing && userData.isPrivileged" class="text-right">
             <button *ngIf="!collapsed" class="advanced-btn btn btn-link btn-sm"
                     (click)="toggleAdvanced()">
                 <i class="fa fa-chevron-circle-right" aria-hidden="true"
