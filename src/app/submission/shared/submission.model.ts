@@ -84,11 +84,15 @@ export class Attribute extends HasUpdates<UpdateEvent> {
         this.notify(new UpdateEvent('name', name));
     }
 
-    updateType(type: ColumnType) {
-        this.required = type.required;
-        this.displayed = type.displayed;
-        this.valueType = type.valueType;
-        this.values = type.values;
+    /**
+     * Changes the type properties of the column to a given set.
+     * @param {ColumnType} colType - New type values for the column.
+     */
+    updateType(colType: ColumnType) {
+        this.required = colType.required;
+        this.displayed = colType.displayed;
+        this.valueType = colType.valueType;
+        this.values = colType.values;
     }
 }
 
@@ -439,6 +443,11 @@ export class Feature extends HasUpdates<UpdateEvent> {
         }
     }
 
+    /**
+     * Handler for column name updates. It refreshes the type properties of a given column according to name.
+     * @param {string} newName - Updated column name.
+     * @param {number} colIndex - Index of the updated column.
+     */
     onColumnRename(newName: string, colIndex: number) {
         this._columns.at(colIndex).updateType(this.type.getColumnType(newName));
     }

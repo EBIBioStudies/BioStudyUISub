@@ -49,6 +49,9 @@
                             [readonly]="readonly"
                             [required]="column.required"
                             [formControl]="featureForm.rowValueControl(rowIdx, column.id)"
+                            [typeahead]="column.values"
+                            #ahead="bs-typeahead"
+                            (keyup.enter)="ahead._container ? $event.stopPropagation() : return"
                             (async)="addOnAsync($event, rowIdx)"
                             isSmall="true"
                             validate-onblur>
@@ -61,6 +64,6 @@
         [tooltip]="'Add a new ' + feature.typeName.toLowerCase()"
         container="body"
         (click)="feature.addRow()">
-    <i class="fa fa-lg {{feature.type.icon}}"></i>
-    &nbsp;Add {{feature.typeName.toLowerCase()}} row
+    <i class="fa fa-lg fa-plus-circle"></i>
+    Add {{feature.typeName.toLowerCase()}} row
 </button>

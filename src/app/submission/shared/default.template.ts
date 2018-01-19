@@ -68,6 +68,7 @@ export const DefaultTemplate = {
                     {
                         'name': 'Organisation',
                         'valueType': 'text',
+                        'values': ['European Bioinformatics Institute', 'Wellcome Sanger Institute', 'Francis Crick Institute', 'MRC Laboratory of Molecular Biology'],
                         'required': true
                     },
                     {

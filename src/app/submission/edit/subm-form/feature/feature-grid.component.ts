@@ -10,6 +10,7 @@ import {
 import {Feature, Attribute, ValueMap} from '../../../shared/submission.model';
 import {FeatureForm} from '../subm-form.service';
 import {UserData} from "../../../../auth/user-data";
+import {TypeaheadDirective} from "ngx-bootstrap";
 
 @Component({
     selector: 'subm-feature-grid',
@@ -19,6 +20,7 @@ import {UserData} from "../../../../auth/user-data";
 export class FeatureGridComponent implements AfterViewInit {
     @Input() featureForm: FeatureForm;
     @Input() readonly? = false;
+    @ViewChildren('ahead') typeaheads: QueryList<TypeaheadDirective>;
     @ViewChildren('rowEl') rowEls: QueryList<ElementRef>;
     @ViewChildren('colEl') colEls: QueryList<ElementRef>;
 
@@ -55,6 +57,12 @@ export class FeatureGridComponent implements AfterViewInit {
 
             oldNumRows = this.featureForm.rows.length;
             oldNumCols = this.featureForm.columns.length;
+        });
+
+        //Forces all typeahead overlays are attached to the body element
+        //NOTE: Could not be done directly in the template without also modifying the container for popovers
+        this.typeaheads.forEach((typeahead) => {
+           typeahead.container = "body";
         });
     }
 
