@@ -7,7 +7,7 @@ import {
     FeatureType,
     ValueType,
     FieldType,
-    SubmissionType
+    SubmissionType, ColumnType
 } from './submission-type.model';
 
 import * as pluralize from "pluralize";
@@ -55,17 +55,19 @@ export class UpdateEvent {
 
 export class Attribute extends HasUpdates<UpdateEvent> {
     readonly id: string;
-    readonly required: boolean;
-    readonly displayed: boolean;
-    readonly valueType: ValueType;
+    required: boolean;
+    displayed: boolean;
+    valueType: ValueType;
+    values: string[];
 
     private _name: string;
 
-    constructor(name: string = '', required: boolean = false, displayed: boolean = false, valueType: ValueType = 'text') {
+    constructor(name: string = '', required: boolean = false, displayed: boolean = false, valueType: ValueType = 'text', values: string[] = []) {
         super();
         this.required = required;
         this.displayed = displayed;
         this.valueType = valueType;
+        this.values = values;
         this._name = name;
         this.id = `attr_${nextId()}`;
     }
@@ -80,6 +82,13 @@ export class Attribute extends HasUpdates<UpdateEvent> {
         }
         this._name = name;
         this.notify(new UpdateEvent('name', name));
+    }
+
+    updateType(type: ColumnType) {
+        this.required = type.required;
+        this.displayed = type.displayed;
+        this.valueType = type.valueType;
+        this.values = type.values;
     }
 }
 
@@ -288,7 +297,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
 
         type.columnTypes.forEach(ct => {
             if (ct.required || ct.displayed) {
-                this.addColumn(ct.name, ct.required, ct.displayed, ct.valueType);
+                this.addColumn(ct.name, ct.required, ct.displayed, ct.valueType, ct.values);
             }
         });
 
@@ -301,8 +310,12 @@ export class Feature extends HasUpdates<UpdateEvent> {
         }
 
         this._columns.updates()
-            .subscribe(m => {
-                this.notify(new UpdateEvent('columns_update', {id: this.id}, m));
+            .subscribe(event => {
+                this.notify(new UpdateEvent('columns_update', {id: this.id}, event));
+
+                if (event.name == 'column_name_update') {
+                    this.onColumnRename(event.source.value, event.value.index);
+                }
             });
         this._rows.updates()
             .subscribe(m => {
@@ -331,6 +344,14 @@ export class Feature extends HasUpdates<UpdateEvent> {
 
     get columns(): Attribute[] {
         return this._columns.list();
+    }
+
+    /**
+     * Convenience method to retrieve the names of the feature's current columns
+     * @returns {string[]} Column names
+     */
+    get colNames(): string[] {
+        return this._columns.names();
     }
 
     rowSize(): number {
@@ -372,7 +393,9 @@ export class Feature extends HasUpdates<UpdateEvent> {
         attrNames
             .filter(attrName => colNames.indexOf(attrName.toLowerCase()) < 0)
             .forEach((name) => {
-                    this.addColumn(_.capitalize(name));
+                const capName = _.capitalize(name);
+                const colType = this.type.getColumnType(capName);
+                this.addColumn(capName, colType.required, colType.displayed, colType.valueType, colType.values);
             });
 
         //If row not provided, add it if applicable.
@@ -391,7 +414,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
         });
     }
 
-    addColumn(name?: string, required?: boolean, displayed?: boolean, valueType?: ValueType): Attribute {
+    addColumn(name?: string, required?: boolean, displayed?: boolean, valueType?: ValueType, values?: string[]): Attribute {
         let defColName = ' ' + (this.colSize() + 1);
         let col;
 
@@ -401,7 +424,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
         } else {
             defColName = 'Column' + defColName;
         }
-        col = new Attribute(name || defColName, required, displayed, valueType);
+        col = new Attribute(name || defColName, required, displayed, valueType, values);
 
         //Updates row and column maps
         this._rows.addKey(col.id);
@@ -414,6 +437,10 @@ export class Feature extends HasUpdates<UpdateEvent> {
         if (this._columns.remove(id)) {
             this._rows.removeKey(id);
         }
+    }
+
+    onColumnRename(newName: string, colIndex: number) {
+        this._columns.at(colIndex).updateType(this.type.getColumnType(newName));
     }
 
     addRow(): ValueMap {

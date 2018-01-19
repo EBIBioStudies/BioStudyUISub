@@ -9,7 +9,8 @@ export const DefaultTemplate = {
             'columnTypes': [
                 {
                     'name': 'Organism',
-                    'valueType': 'text'
+                    'valueType': 'text',
+                    'values': ['Homo sapiens', 'Gallus gallus', 'Rattus norvegicus', 'Mus musculus', 'Arabidopsis thaliana', 'Escherichia coli', 'Danio rerio']
                 },
                 {
                     'name': 'Experimental design',

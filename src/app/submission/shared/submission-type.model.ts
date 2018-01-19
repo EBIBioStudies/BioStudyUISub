@@ -55,8 +55,8 @@ class BaseType {
     }
 }
 
-/* Fields are always required by default. User can't add/change/delete fields. Only changing its value is allowed.
- * In PageTab it's selected by name attribute from an 'attributes' section.
+/* Top-level fields are always required by default. User can't add/change/delete fields. Only changing
+ * its value is allowed. In PageTab, it's selected by name attribute from an 'attributes' section.
  */
 export type ValueType = 'text' | 'textblob' | 'date' | 'file';
 
@@ -154,11 +154,22 @@ export class FeatureType extends BaseType {
 
     }
 
-    getColumnType(name: string): ColumnType {
+    /**
+     * Gets the column type corresponding to a certain given name, creating a new one if so required.
+     * @param {string} name - Name of the column whose type object is required.
+     * @param {boolean} [isCreate = true] - Flag to enable the automatic creation of types for unknown columns.
+     * @returns {ColumnType} Type object for the searched column. Null if creation disabled.
+     */
+    getColumnType(name: string, isCreate: boolean = true): ColumnType {
         if (this.columnScope.has(name)) {
             return this.columnScope.get(name);
         }
-        return ColumnType.createDefault(name, this.columnScope);
+
+        if (isCreate) {
+            return ColumnType.createDefault(name, this.columnScope);
+        }
+
+        return null;
     }
 }
 
@@ -176,6 +187,7 @@ export class ColumnType extends BaseType {
     readonly required: boolean;     //required data-wise: its fields should have data associated with it to be valid
     readonly displayed: boolean;    //required render-wise: should be visually available regardless of its fields being required or not
     readonly valueType: ValueType;  //type of data for the fields under this column
+    readonly values: string[];      //suggested values for the field
 
     static createDefault(name: string, scope?: Map<string, any>): ColumnType {
         return new ColumnType(name, undefined, scope);
@@ -188,6 +200,7 @@ export class ColumnType extends BaseType {
         this.valueType = other.valueType || 'text';
         this.required = other.required === true;
         this.displayed = other.displayed || false;
+        this.values = other.values || [];
     }
 }
 

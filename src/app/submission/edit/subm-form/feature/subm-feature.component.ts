@@ -51,8 +51,7 @@ export class SubmFeatureComponent implements OnInit {
      * Gets the names of allowed new column names. Since they have to be unique, it takes all columns from
      * the list of column types and removes the names for the current columns.
      */
-    get colNames(): string[] {
-        const currColNames = this.featureForm.columns.map(column => column.name);
+    get uniqueColNames(): string[] {
 
         //Feature not loaded yet => returns no column names.
         if (this.feature === undefined) {
@@ -60,7 +59,7 @@ export class SubmFeatureComponent implements OnInit {
 
         //Feature loaded => gets only uniques column names.
         } else {
-            return this.colTypeNames.filter(name => currColNames.indexOf(name) == -1);
+            return this.colTypeNames.filter(name => this.feature.colNames.indexOf(name) == -1);
         }
     }
 
