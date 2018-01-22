@@ -20,7 +20,8 @@ import {TypeaheadDirective} from "ngx-bootstrap";
 export class FeatureGridComponent implements AfterViewInit {
     @Input() featureForm: FeatureForm;
     @Input() readonly? = false;
-    @ViewChildren('ahead') typeaheads: QueryList<TypeaheadDirective>;
+    @Input() colNames: string[] = [];       //List of allowed column names out of the list specified in the default template
+    @ViewChildren('ahead1, ahead2') typeaheads: QueryList<TypeaheadDirective>;
     @ViewChildren('rowEl') rowEls: QueryList<ElementRef>;
     @ViewChildren('colEl') colEls: QueryList<ElementRef>;
 
@@ -59,10 +60,19 @@ export class FeatureGridComponent implements AfterViewInit {
             oldNumCols = this.featureForm.columns.length;
         });
 
-        //Forces all typeahead overlays are attached to the body element
+        //Initialises and sets every typeahead's container to the body element every time a new row/column is added.
         //NOTE: Could not be done directly in the template without also modifying the container for popovers
+        this.setTaContainer('body');
+        this.typeaheads.changes.subscribe(this.setTaContainer.bind(this, 'body'));
+    }
+
+    /**
+     * Forces all typeahead overlays to be attached to a given DOM element.
+     * @param {string} container - DOM element identifier.
+     */
+    setTaContainer(container: string) {
         this.typeaheads.forEach((typeahead) => {
-           typeahead.container = "body";
+            typeahead.container = container;
         });
     }
 

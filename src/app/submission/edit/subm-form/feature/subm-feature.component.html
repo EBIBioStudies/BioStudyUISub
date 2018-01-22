@@ -22,6 +22,7 @@
     <div class="panel-body" #featureEl>
         <subm-feature-grid *ngIf="!feature.singleRow"
                            [featureForm]="featureForm"
+                           [colNames]="uniqueColNames"
                            [readonly]="readonly">
         </subm-feature-grid>
         <subm-feature-list *ngIf="feature.singleRow"

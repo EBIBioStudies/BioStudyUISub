@@ -1,24 +1,36 @@
 <div class="container-fluid container-scroll" [formGroup]="featureForm.form">
     <div class="row">
         <div class="cell canton col-xs-1 col-md-1 text-center">
-            <button *ngIf="userData.isPrivileged" class="btn-add btn btn-link btn-md" type="button" tabindex="-1"
-                    [ngClass]="{'invisible': readonly}"
+            <button class="btn-add btn btn-link btn-md" type="button" tabindex="-1"
+                    [ngClass]="{'invisible': readonly || !userData.isPrivileged}"
                     [tooltip]="'Add a new ' + feature.typeName.toLowerCase() + ' attribute'"
                     container="body"
                     (click)="feature.addColumn()">
                 <i class="fa fa-plus-circle" aria-hidden="true"></i> Column
             </button>
-            {{userData.isPrivileged ? '' : '&nbsp;'}}
 
         </div><!--
-        --><div class="cell heading-cell column-heading col-xs-3 col-md-2" *ngFor="let column of columns; let idx = index">
+        --><div *ngFor="let column of columns; let idx = index" class="cell heading-cell column-heading col-xs-3 col-md-2"
+                [ngClass]="{'has-error': !column.required &&
+                                             featureForm.columnControl(column.id).invalid &&
+                                             featureForm.columnControl(column.id).touched}">
             <inline-edit
+                    placement="bottom"
+                    triggers="focus"
+                    containerClass="validation-pop text-danger"
+                    popover="Please use a unique column name"
                     [(ngModel)]="column.name"
                     emptyValue="{{'Column ' + (idx + 1)}}"
                     (remove)="feature.removeColumn(column.id)"
                     [formControl]="featureForm.columnControl(column.id)"
                     [required]="column.required"
-                    [disableEdit]="column.displayed || readonly || !userData.isPrivileged">
+                    [disableEdit]="column.displayed || readonly || !userData.isPrivileged"
+                    [typeahead]="colNames"
+                    #ahead1="bs-typeahead"
+                    unique
+                    validate-onblur
+                    (keyup.enter)="ahead1._container ? $event.stopPropagation() : return"
+            >
             </inline-edit>
         </div>
     </div>
@@ -50,8 +62,8 @@
                             [required]="column.required"
                             [formControl]="featureForm.rowValueControl(rowIdx, column.id)"
                             [typeahead]="column.values"
-                            #ahead="bs-typeahead"
-                            (keyup.enter)="ahead._container ? $event.stopPropagation() : return"
+                            #ahead2="bs-typeahead"
+                            (keyup.enter)="ahead2._container ? $event.stopPropagation() : return"
                             (async)="addOnAsync($event, rowIdx)"
                             isSmall="true"
                             validate-onblur>
