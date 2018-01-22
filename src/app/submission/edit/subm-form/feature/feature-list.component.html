@@ -5,8 +5,10 @@
     </div>
     <div class="row" #rowEl *ngFor="let column of columns; let idx = index; let first = first; let last = last">
         <div class="cell col-xs-3">
+            <!-- NOTE: required columns cannot be edited => will never be the one causing name collision -->
             <div class="form-group key-field"
-                 [ngClass]="{'has-error': !column.required && featureForm.columnControl(column.id).invalid &&
+                 [ngClass]="{'has-error': !column.required &&
+                                          featureForm.columnControl(column.id).invalid &&
                                           featureForm.columnControl(column.id).touched}">
                 <div class="input-group">
                     <span *ngIf="!readonly && !column.required && !column.displayed"

@@ -17,7 +17,10 @@
                 <template tabHeading>
                     Check
                     <span *ngIf="errors.total()" class="badge badge-corner"
-                          [ngClass]="{'badge-danger': numPending}">{{errors.total()}}</span>
+                          [ngClass]="{'badge-half-danger': numPending > 0 && numPending < errors.total(),
+                                      'badge-danger': numPending == errors.total()}">
+                        {{errors.total()}}
+                    </span>
                 </template>
             </tab>
             <tab heading="Add"

@@ -13,9 +13,9 @@ import {FeatureForm} from '../subm-form.service';
     styleUrls: ['./feature-list.component.css']
 })
 export class FeatureListComponent implements AfterViewInit {
-    @Input() featureForm: FeatureForm;
-    @Input() readonly?: boolean = false;
-    @Input() colNames: string[] = [];
+    @Input() featureForm: FeatureForm;      //Reactive data structure for the form containing this feature
+    @Input() readonly?: boolean = false;    //Flag for features that cannot be edited (e.g. sent state for submissions)
+    @Input() colNames: string[] = [];       //List of allowed column names out of the list specified in the default template
     @ViewChildren('rowEl') rowEls: QueryList<ElementRef>;
 
     get columns(): Attribute[] {

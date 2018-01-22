@@ -170,15 +170,28 @@ export class Columns extends HasUpdates<UpdateEvent> {
         return this.columns.slice();
     }
 
+    /**
+     * Adds a new column to the attribute array, updating the event system in the process.
+     * @param {Attribute} column - Column to be added
+     */
     add(column: Attribute): void {
-        const columnId = {id: column.id, index: this.columns.length};
-        this.columns.push(column);
+        const columns = this.columns;
+
+        //Makes sure the new column notifies name changes, dynamically working out its current array index.
+        //NOTE: Mind you, columns could be removed. Therefore, the initial array index may no longer apply.
+        columns.push(column);
         this.subscriptions.push(
-            column.updates()
-                .subscribe(m => {
-                    this.notify(new UpdateEvent('column_name_update', columnId, m));
-                }));
-        this.notify(new UpdateEvent('column_add', columnId));
+            column.updates().subscribe(event => {
+                this.notify(new UpdateEvent(
+                    'column_name_update',
+                    {id: column.id, index: columns.indexOf(column)},
+                    event
+                ));
+            })
+        );
+
+        //Triggers the corresponding event for the add operation
+        this.notify(new UpdateEvent('column_add', {id: column.id, index: columns.length - 1}));
     }
 
     remove(id: string): boolean {
