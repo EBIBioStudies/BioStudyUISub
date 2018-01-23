@@ -367,29 +367,25 @@ export class FeatureForm {
 
     private removeColumnControl(colId: string) {
         this.columnsFormGroup.removeControl(colId);
-        this.rows.forEach(
-            (row, rowIndex) => {
-                (<FormGroup>this.rowsFormArray.at(rowIndex)).removeControl(colId);
+        this.rows.forEach((row, rowIndex) => {
+            (<FormGroup>this.rowsFormArray.at(rowIndex)).removeControl(colId);
 
-                //Removes the error entry in the current row for the deleted column
-                delete this.rowErrors[rowIndex][colId];
-            }
-        );
+            //Removes the error entry in the current row for the deleted column
+            delete this.rowErrors[rowIndex][colId];
+        });
     }
 
     private addColumnControl(column: Attribute) {
         const t = this.feature.type.getColumnType(column.name);
         const colValidators = [Validators.required];
         this.columnsFormGroup.addControl(column.id, new FormControl(column.name, colValidators));
-        this.rows.forEach(
-            (row, rowIndex) => {
-                const fg = (<FormGroup>this.rowsFormArray.at(rowIndex));
-                this.addRowValueControl(fg, column.id, row, t);
+        this.rows.forEach((row, rowIndex) => {
+            const fg = (<FormGroup>this.rowsFormArray.at(rowIndex));
+            this.addRowValueControl(fg, column.id, row, t);
 
-                //Regenerates the field errors for the whole current row
-                this.addRowErrors(fg);
-            }
-        );
+            //Regenerates the field errors for the whole current row
+            this.addRowErrors(fg);
+        });
     }
 
     private removeRowArray(index: number) {
@@ -431,14 +427,14 @@ export class FeatureForm {
     private updateColumnControls(ue?: UpdateEvent): void {
         this._columns = this.feature.columns;
 
-        if (ue && ue.name === 'column_remove') {
-            this.removeColumnControl(ue.value.id);
+        if (ue && ue.source.name === 'column_remove') {
+            this.removeColumnControl(ue.source.value.id);
             return;
         }
 
         let toAdd: Attribute[] = this.columns;
-        if (ue && ue.name === 'column_add') {
-            toAdd = [this.columns[ue.value.index]];
+        if (ue && ue.source.name === 'column_add') {
+            toAdd = [this.columns[ue.source.value.index]];
         }
 
         toAdd.forEach(

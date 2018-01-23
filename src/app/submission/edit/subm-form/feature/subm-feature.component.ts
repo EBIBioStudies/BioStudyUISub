@@ -19,14 +19,15 @@ export class SubmFeatureComponent implements OnInit {
     @Input() isMenu?: boolean = true;
     @ViewChild('featureEl') featureEl: ElementRef;
 
-    actions: any[] = [];
-    errorNum: number = 0;
-
+    private actions: any[] = [];
+    private errorNum: number = 0;
+    private colTypeNames: string[];
 
     constructor(private changeRef: ChangeDetectorRef) {}
 
     /**
-     * Defines the actions of the feature's menu according to its type (list or not).
+     * Defines the actions of the feature's menu according to its type (list or not). It also gets the type names
+     * of all possible columns just once.
      */
     ngOnInit() {
         this.actions.push({
@@ -39,10 +40,27 @@ export class SubmFeatureComponent implements OnInit {
                 invoke: () => this.feature.addRow()
             });
         }
+        this.colTypeNames = this.feature.type.columnTypes.map(type => type.name);
     }
 
     get feature(): Feature {
         return this.featureForm === undefined ? undefined : this.featureForm.feature;
+    }
+
+    /**
+     * Gets the names of allowed new column names. Since they have to be unique, it takes all columns from
+     * the list of column types and removes the names for the current columns.
+     */
+    get uniqueColNames(): string[] {
+
+        //Feature not loaded yet => returns no column names.
+        if (this.feature === undefined) {
+            return [];
+
+        //Feature loaded => gets only uniques column names.
+        } else {
+            return this.colTypeNames.filter(name => this.feature.colNames.indexOf(name) == -1);
+        }
     }
 
     /**

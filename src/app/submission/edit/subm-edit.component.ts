@@ -116,20 +116,20 @@ export class SubmEditComponent implements OnInit, OnDestroy {
                 this.errors = SubmissionValidator.validate(this.subm);
 
                 //Re-validates the submission on change (including non-text updates).
-                this.subm.updates().switchMap((ue) => {
+                this.subm.updates().switchMap((event) => {
 
-                        //Inspects the original event producing the cascade of subsequent ones and saves the submission if it was triggered by a non-text update.
-                        //NOTE: Leaf nodes in the update event tree have no source.
-                        if (SubmEditComponent.watchedUpdates.indexOf(ue.leafEvent.name) > -1) {
-                            this.onChange();
-                        }
+                    //Inspects the original event producing the cascade of subsequent ones and saves the submission if it was triggered by a non-text update.
+                    //NOTE: Leaf nodes in the update event tree have no source.
+                    if (SubmEditComponent.watchedUpdates.indexOf(event.leafEvent.name) > -1) {
+                        this.onChange();
+                    }
 
-                        //Performs programmatic validation, its results being aggregated in a modal log.
-                        return SubmissionValidator.createObservable(this.subm);
+                    //Performs programmatic validation, its results being aggregated in a modal log.
+                    return SubmissionValidator.createObservable(this.subm);
 
-                    }).subscribe(errors => {
-                        this.errors = errors;
-                    });
+                }).subscribe(errors => {
+                    this.errors = errors;
+                });
 
                 //Determines the current section (in case the user navigates down to a subsection)
                 this.changeSection(this.subm.root.id);
@@ -186,8 +186,17 @@ export class SubmEditComponent implements OnInit, OnDestroy {
         return this.subm.sectionPath(this.section.id);
     }
 
+    /**
+     * Checks that the form contains no errors. It does so with a double test to guarantee resilience:
+     * batch validator's count and a DOM-based count. The latter for errors that don't concern the form itself
+     * and therefore and not likely to be caught by the batch validator, such as repeated columns.
+     * TODO: There is already an array for row errors. Columns should have a similar one.
+     * @see {@link SubmFormComponent}
+     * @see {@link SubmissionValidator}
+     * @returns {boolean} True is there are no errors.
+     */
     get formValid(): boolean {
-        return this.errors.empty();
+        return this.errors.empty() && !this.submForm.hasError;
     }
 
     onSectionClick(section: Section): void {

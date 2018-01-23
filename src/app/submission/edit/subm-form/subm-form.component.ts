@@ -1,5 +1,5 @@
 import {
-    Component,
+    Component, ElementRef,
     Input,
     OnChanges
 } from '@angular/core';
@@ -21,11 +21,24 @@ export class SubmFormComponent implements OnChanges {
     @Input() readonly: boolean;
 
     sectionForm: SectionForm;
+    hasError: boolean = false;
 
-    constructor(private submFormService: SubmFormService) {}
+    private hasErrorEls: NodeListOf<Element>;
+
+    constructor(private submFormService: SubmFormService, private rootEl: ElementRef) {}
 
     ngOnChanges(): void {
         this.sectionForm = this.submFormService.createForm(this.section);
+    }
+
+    ngDoCheck(): void {
+        if (this.hasErrorEls) {
+            this.hasError = this.hasErrorEls.length != 0;
+        }
+    }
+
+    ngAfterViewInit(): void {
+        this.hasErrorEls = this.rootEl.nativeElement.getElementsByClassName('has-error');
     }
 
     /**

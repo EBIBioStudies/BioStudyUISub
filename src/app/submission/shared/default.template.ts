@@ -2,7 +2,6 @@ export const DefaultTemplate = {
     'name': 'DeafultTemplate',
     'sectionType': {
         'name': 'Study',
-        'required': true,
         'annotationsType': {
             'title': 'Describe your study',
             'description': 'Provide any supplementary details of the study that may help discover and/or interpret it',
@@ -10,7 +9,8 @@ export const DefaultTemplate = {
             'columnTypes': [
                 {
                     'name': 'Organism',
-                    'valueType': 'text'
+                    'valueType': 'text',
+                    'values': ['Homo sapiens', 'Gallus gallus', 'Rattus norvegicus', 'Mus musculus', 'Arabidopsis thaliana', 'Escherichia coli', 'Danio rerio']
                 },
                 {
                     'name': 'Experimental design',
@@ -68,6 +68,7 @@ export const DefaultTemplate = {
                     {
                         'name': 'Organisation',
                         'valueType': 'text',
+                        'values': ['European Bioinformatics Institute', 'Wellcome Sanger Institute', 'Francis Crick Institute', 'MRC Laboratory of Molecular Biology'],
                         'required': true
                     },
                     {
@@ -94,6 +95,50 @@ export const DefaultTemplate = {
                     },
                     {
                         'name': 'Funding',
+                        'valueType': 'text'
+                    }
+                ]
+            },
+            {
+                'name': 'File',
+                'title': 'Add Files',
+                'description': 'List the data files for the study and describe their respective scopes',
+                'icon': 'fa-file',
+                'columnTypes': [
+                    {
+                        'name': 'Path',
+                        'valueType': 'file',
+                        'required': true
+                    },
+                    {
+                        'name': 'Description',
+                        'valueType': 'text',
+                        'required': true
+                    },
+                    {
+                        'name': 'Type',
+                        'valueType': 'text'
+                    }
+                ]
+            },
+            {
+                'name': 'Link',
+                'title': 'Add Links',
+                'description': 'Provide links to any additional documentation that may be of relevance',
+                'icon': 'fa-link',
+                'columnTypes': [
+                    {
+                        'name': 'URL',
+                        'valueType': 'text',
+                        'required': true
+                    },
+                    {
+                        'name': 'Description',
+                        'valueType': 'text',
+                        'required': true
+                    },
+                    {
+                        'name': 'Type',
                         'valueType': 'text'
                     }
                 ]
@@ -146,50 +191,6 @@ export const DefaultTemplate = {
                         'name': 'DOI',
                         'valueType': 'text'
                     },
-                ]
-            },
-            {
-                'name': 'Link',
-                'title': 'Add Links',
-                'description': 'Provide links to any additional documentation that may be of relevance',
-                'icon': 'fa-link',
-                'columnTypes': [
-                    {
-                        'name': 'URL',
-                        'valueType': 'text',
-                        'required': true
-                    },
-                    {
-                        'name': 'Description',
-                        'valueType': 'text',
-                        'required': true
-                    },
-                    {
-                        'name': 'Type',
-                        'valueType': 'text'
-                    }
-                ]
-            },
-            {
-                'name': 'File',
-                'title': 'Add Files',
-                'description': 'List the data files for the study and describe their respective scopes',
-                'icon': 'fa-file',
-                'columnTypes': [
-                    {
-                        'name': 'Path',
-                        'valueType': 'file',
-                        'required': true
-                    },
-                    {
-                        'name': 'Description',
-                        'valueType': 'text',
-                        'required': true
-                    },
-                    {
-                        'name': 'Type',
-                        'valueType': 'text'
-                    }
                 ]
             }
         ]
