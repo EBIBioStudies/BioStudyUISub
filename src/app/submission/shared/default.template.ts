@@ -56,7 +56,7 @@ export const DefaultTemplate = {
             {
                 'name': 'Contact',
                 'title': 'Add Contacts',
-                'description': 'Include contact information for one or more authors of the study',
+                'description': 'Include the contact details for the authors of the study',
                 'icon': 'fa-vcard',
                 'required': true,
                 'columnTypes': [
@@ -66,14 +66,14 @@ export const DefaultTemplate = {
                         'required': true
                     },
                     {
-                        'name': 'Organisation',
+                        'name': 'E-mail',
                         'valueType': 'text',
-                        'values': ['European Bioinformatics Institute', 'Wellcome Sanger Institute', 'Francis Crick Institute', 'MRC Laboratory of Molecular Biology'],
                         'required': true
                     },
                     {
-                        'name': 'E-mail',
+                        'name': 'Organisation',
                         'valueType': 'text',
+                        'values': ['European Bioinformatics Institute', 'Wellcome Sanger Institute', 'Francis Crick Institute', 'MRC Laboratory of Molecular Biology'],
                         'required': true
                     },
                     {

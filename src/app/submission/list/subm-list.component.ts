@@ -143,6 +143,7 @@ export class SubmListComponent {
             paginationPageSize: 15,
             rowHeight: 30,
             localeText: {noRowsToShow: 'No submissions found'},
+            icons: {menu: '<i class="fa fa-filter"/>'},
             getRowNodeId: (item) => {
                 return item.accno;
             },

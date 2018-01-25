@@ -46,6 +46,13 @@ export class UniqueValidator implements Validator {
             }
         });
     }
+
+    /**
+     * Updates validity after deletion to avoid inconsistencies.
+     */
+    ngOnDestroy(): void {
+        this.onChange();
+    }
 }
 
 /**

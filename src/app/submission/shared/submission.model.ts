@@ -331,7 +331,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
                 this.notify(new UpdateEvent('columns_update', {id: this.id}, event));
 
                 if (event.name == 'column_name_update') {
-                    this.onColumnRename(event.source.value, event.value.index);
+                    this.onColumnUpdate(event.source.value, event.value.index);
                 }
             });
         this._rows.updates()
@@ -457,12 +457,15 @@ export class Feature extends HasUpdates<UpdateEvent> {
     }
 
     /**
-     * Handler for column name updates. It refreshes the type properties of a given column according to name.
+     * Handler for column name updates. It refreshes the type properties of a given column if
+     * the new name is unique.
      * @param {string} newName - Updated column name.
      * @param {number} colIndex - Index of the updated column.
      */
-    onColumnRename(newName: string, colIndex: number) {
-        this._columns.at(colIndex).updateType(this.type.getColumnType(newName));
+    onColumnUpdate(newName: string, colIndex: number) {
+        if (this._columns.allWithName(newName).length == 1) {
+            this._columns.at(colIndex).updateType(this.type.getColumnType(newName));
+        }
     }
 
     addRow(): ValueMap {

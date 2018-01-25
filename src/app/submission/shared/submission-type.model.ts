@@ -63,20 +63,22 @@ export type ValueType = 'text' | 'textblob' | 'date' | 'file';
 export class FieldType extends BaseType {
     readonly required: boolean;
     readonly valueType: ValueType;
+    readonly values: string[];      //suggested values for the field
     readonly minlength: number;
     readonly maxlength: number;
     readonly icon: string;
 
-    constructor(name, obj?: any, scope?: Map<string, any>) {
+    constructor(name, other?: any, scope?: Map<string, any>) {
         super(name, true, scope);
-        obj = obj || {};
-        this.valueType = obj.valueType || 'text';
-        this.minlength = obj.minlength || -1;
-        this.maxlength = obj.maxlength || -1;
+        other = other || {};
+        this.valueType = other.valueType || 'text';
+        this.values = other.values || [];
+        this.minlength = other.minlength || -1;
+        this.maxlength = other.maxlength || -1;
 
         //Sets required to false if not present. If the field has a mininum length, it must be required.
-        if (obj.hasOwnProperty('required')) {
-            this.required = obj.required;
+        if (other.hasOwnProperty('required')) {
+            this.required = other.required;
         } else if (this.minlength > 0) {
             this.required = true;
         } else {
@@ -84,8 +86,8 @@ export class FieldType extends BaseType {
         }
 
         //Normalises the icon for the present type.
-        if (obj.hasOwnProperty('icon')) {
-            this.icon = obj.icon;
+        if (other.hasOwnProperty('icon')) {
+            this.icon = other.icon;
         } else {
             this.icon = 'fa-pencil-square-o';
         }

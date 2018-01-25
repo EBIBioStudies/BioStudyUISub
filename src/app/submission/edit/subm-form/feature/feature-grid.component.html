@@ -26,11 +26,10 @@
                     [required]="column.required"
                     [disableEdit]="column.displayed || readonly || !userData.isPrivileged"
                     [typeahead]="colNames"
-                    #ahead1="bs-typeahead"
+                    #ahead="bs-typeahead"
                     unique
                     validate-onblur
-                    (keyup.enter)="ahead1._container ? $event.stopPropagation() : return"
-            >
+                    (keyup.enter)="ahead._container ? $event.stopPropagation() : return">
             </inline-edit>
         </div>
     </div>
@@ -55,15 +54,12 @@
                             triggers="focus"
                             containerClass="validation-pop text-danger"
                             popover="{{featureForm.rowErrors[rowIdx][column.id]}}"
-                            [name]="column.name"
                             [type]="column.valueType"
                             [(ngModel)]="row.valueFor(column.id).value"
                             [readonly]="readonly"
                             [required]="column.required"
                             [formControl]="featureForm.rowValueControl(rowIdx, column.id)"
-                            [typeahead]="column.values"
-                            #ahead2="bs-typeahead"
-                            (keyup.enter)="ahead2._container ? $event.stopPropagation() : return"
+                            [autosuggest]="column.values"
                             (async)="addOnAsync($event, rowIdx)"
                             isSmall="true"
                             validate-onblur>

@@ -4,6 +4,7 @@
     <input type="text" class="form-control" readonly
            bsDatepicker
            (bsValueChange)="onPickerSet($event)"
+           (onShown)="onPickerShown()"
            [ngModel]="dateValue"
            [required]="required"
            #dp="bsDatepicker">

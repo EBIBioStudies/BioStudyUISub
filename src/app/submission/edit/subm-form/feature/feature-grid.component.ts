@@ -21,7 +21,7 @@ export class FeatureGridComponent implements AfterViewInit {
     @Input() featureForm: FeatureForm;
     @Input() readonly? = false;
     @Input() colNames: string[] = [];       //List of allowed column names out of the list specified in the default template
-    @ViewChildren('ahead1, ahead2') typeaheads: QueryList<TypeaheadDirective>;
+    @ViewChildren('ahead') typeaheads: QueryList<TypeaheadDirective>;
     @ViewChildren('rowEl') rowEls: QueryList<ElementRef>;
     @ViewChildren('colEl') colEls: QueryList<ElementRef>;
 

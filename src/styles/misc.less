@@ -111,16 +111,31 @@
   }
 }
 
-/* Prevents cell menu buttons from being hidden. By default, only shown on hover. */
+/* Prevents cell menu buttons from being hidden. By default, only shown on hover.
+   Additionally, it uses the cell menu's icon to make the two filtering states visually explicit */
 .ag-header-cell-menu-button {
   float: left;
   opacity: 1 !important;
 }
+.ag-fresh .ag-header-cell-menu-button {
+  color: #3c8b9f;
+}
+.ag-header-cell-filtered .ag-header-cell-menu-button {
+  color: #fafafa;
+}
 .ag-header-cell-menu-button, .ag-header-cell-label {
   cursor: pointer;
 }
-.ag-fresh .ag-header-cell-menu-button:hover  {
+.ag-fresh .ag-header-cell-menu-button:hover {
   border-color: #fafafa;
+}
+
+/* Mutes the unsort icon and highlights what the next state is on hover */
+.ag-fresh .ag-sort-none-icon svg {
+  fill: #3c8b9f;
+}
+.ag-header-cell-label:hover polygon:first-child {
+  fill: #fafafa;
 }
 
 /* Permanently hides filter icon */
@@ -154,6 +169,15 @@
 }
 .ag-fresh .ag-ltr .ag-cell-no-focus:last-of-type, .ag-fresh .ag-ltr .ag-header-cell:last-of-type {
   border-right: none;
+}
+
+/* Brings styles of ag-grid's floating menu in line with rest of the app */
+.ag-fresh .ag-menu {
+  padding: 10px;
+  border-color: #d7d7d7;
+}
+.ag-menu .form-group {
+  padding: 0;
 }
 
 //Prevents highlighting of single cells
@@ -194,20 +218,29 @@ component */
   cursor: pointer;
 }
 
-//Makes validation popovers show up only when there is indeed an error.
+//Makes validation popovers show up only when there is indeed an error, preventing it from overflowing its
+//container (eg: scrollable area in feature grids).
 .validation-pop {
-  visibility: hidden;
+  display: none !important;
   z-index: 950;           //above any dropdowns but below any nav bar
-  min-width: 300px;
   text-align: center;
 }
-.has-error .validation-pop {
-  visibility: visible;
+.validation-pop .popover-body {
+  padding: 0;
 }
-
-//Forces muted italics to have a slightly lighter shade
-.text-muted i:not(.fa) {
-  color: #a2a2a2;
+.has-error .validation-pop {
+  display: block !important;
+}
+.has-error .popover-body {
+  color: #bb4a48;
+}
+@media screen and (min-width: 1360px) {
+  .validation-pop {
+    min-width: 300px;
+  }
+  .validation-pop .popover-body {
+    padding: .5rem .7rem;
+  }
 }
 
 //Shades an entire area, preventing any interaction as well.
