@@ -9,6 +9,8 @@
        [required]="required"
        (blur)="onBlur()"
        [typeahead]="autosuggest"
+       [typeaheadMinLength]="suggestThreshold"
+       [typeaheadOptionsLimit]="suggestLength"
        #ahead="bs-typeahead"
        (keyup.enter)="ahead._container ? $event.stopPropagation() : return">
 

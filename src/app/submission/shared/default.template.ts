@@ -6,6 +6,7 @@ export const DefaultTemplate = {
             'title': 'Describe your study',
             'description': 'Provide any supplementary details of the study that may help discover and/or interpret it',
             'icon': 'fa-tag',
+            'uniqueCols': false,
             'columnTypes': [
                 {
                     'name': 'Organism',
@@ -59,6 +60,7 @@ export const DefaultTemplate = {
                 'description': 'Include the contact details for the authors of the study',
                 'icon': 'fa-vcard',
                 'required': true,
+                'uniqueCols': true,
                 'columnTypes': [
                     {
                         'name': 'Name',
@@ -104,6 +106,7 @@ export const DefaultTemplate = {
                 'title': 'Add Files',
                 'description': 'List the data files for the study and describe their respective scopes',
                 'icon': 'fa-file',
+                'uniqueCols': true,
                 'columnTypes': [
                     {
                         'name': 'Path',
@@ -126,6 +129,7 @@ export const DefaultTemplate = {
                 'title': 'Add Links',
                 'description': 'Provide links to any additional documentation that may be of relevance',
                 'icon': 'fa-link',
+                'uniqueCols': true,
                 'columnTypes': [
                     {
                         'name': 'URL',
@@ -148,6 +152,7 @@ export const DefaultTemplate = {
                 'title': 'Add Publications',
                 'description': 'Add the details of publications relevant or complementary to the study',
                 'icon': 'fa-book',
+                'uniqueCols': true,
                 'columnTypes': [
                     {
                         'name': 'PMID',

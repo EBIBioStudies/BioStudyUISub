@@ -344,6 +344,10 @@ export class Feature extends HasUpdates<UpdateEvent> {
         return this.type.singleRow;
     }
 
+    get uniqueCols(): boolean {
+        return this.type.uniqueCols;
+    }
+
     get typeName(): string {
         return this.type.name;
     }
@@ -463,7 +467,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
      * @param {number} colIndex - Index of the updated column.
      */
     onColumnUpdate(newName: string, colIndex: number) {
-        if (this._columns.allWithName(newName).length == 1) {
+        if (this._columns.allWithName(newName).length == 1 || !this.type.uniqueCols) {
             this._columns.at(colIndex).updateType(this.type.getColumnType(newName));
         }
     }

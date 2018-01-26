@@ -67,7 +67,7 @@ export class UserData {
      * @returns {UserRole} Public (hard-coded for the moment).
      */
     get role(): UserRole {
-        return UserRole.Public;
+        return UserRole.User;
     }
 
     /**

@@ -104,6 +104,7 @@ export class FeatureType extends BaseType {
     private columnScope: Map<string, any> = new Map();
 
     readonly singleRow: boolean;
+    readonly uniqueCols: boolean;
     readonly required: boolean;
     readonly title: string;
     readonly description: string;
@@ -113,12 +114,14 @@ export class FeatureType extends BaseType {
      * Instantiates a feature widget type with a pre-defined set of sub-type elements.
      * @param {string} name - Effectively, the widget's name to be displayed in the app.
      * @param {boolean} singleRow - If true, the feature will be rendered as a list where each column is actually a row.
+     * @param {boolean} uniqueCols - If true, columns with duplicate names will be flagged up during validation.
      * @param {Object} typeObj - Contains all the sub-type parameters defining this feature widget.
      * @param {Map<string, any>} scope - Set of already existing featureType instances.
      */
-    constructor(name: string, singleRow: boolean, typeObj?: any, scope?: Map<string, any>) {
+    constructor(name: string, singleRow: boolean, uniqueCols: boolean, typeObj?: any, scope?: Map<string, any>) {
         super(name, typeObj !== undefined, scope);
         this.singleRow = singleRow === true;
+        this.uniqueCols = uniqueCols === true;
 
         typeObj = typeObj || {};
         this.required = typeObj.required === true;
@@ -144,11 +147,12 @@ export class FeatureType extends BaseType {
      * Convenience static factory method for features without pre-defined parameters.
      * @param {string} name - Name to be displayed as the feature's.
      * @param {boolean} [singleRow] - Optional list mode.
+     * @param {boolean} [uniqueCols] - Optional unique columns mode.
      * @param {Map<string, any>} [scope] - Optional set of already existing featureType instances.
      * @returns {FeatureType} Newly instantiated feature widget.
      */
-    static createDefault(name: string, singleRow?: boolean, scope?: Map<string, any>): FeatureType {
-        return new FeatureType(name, singleRow === true, undefined, scope);
+    static createDefault(name: string, singleRow?: boolean, uniqueCols?: boolean, scope?: Map<string, any>): FeatureType {
+        return new FeatureType(name, singleRow === true, uniqueCols === true, undefined, scope);
     }
 
     get columnTypes(): ColumnType[] {
@@ -181,7 +185,7 @@ export class FeatureType extends BaseType {
  */
 export class AnnotationsType extends FeatureType {
     constructor(other?: any, scope?: Map<string, any>) {
-        super('Annotation', true, other, scope);
+        super('Annotation', true, false, other, scope);
     }
 }
 
@@ -227,7 +231,7 @@ export class SectionType extends BaseType {
         (other.fieldTypes || [])
             .forEach(f => new FieldType(f.name, f, this.fieldScope));
         (other.featureTypes || [])
-            .forEach(f => new FeatureType(f.name, f.singleRow, f, this.featureScope));
+            .forEach(f => new FeatureType(f.name, f.singleRow, f.uniqueCols, f, this.featureScope));
         (other.sectionTypes || [])
             .forEach(s => new SectionType(s.name, s, this.sectionScope));
     }
@@ -248,11 +252,11 @@ export class SectionType extends BaseType {
         return this.fieldScope.get(name);
     }
 
-    getFeatureType(name: string, singleRow: boolean = false): FeatureType {
+    getFeatureType(name: string, singleRow: boolean = false, uniqueCols: boolean = false): FeatureType {
         if (this.featureScope.has(name)) {
             return this.featureScope.get(name);
         }
-        return FeatureType.createDefault(name, singleRow, this.featureScope);
+        return FeatureType.createDefault(name, singleRow, uniqueCols, this.featureScope);
     }
 
     getSectionType(name: string): SectionType {

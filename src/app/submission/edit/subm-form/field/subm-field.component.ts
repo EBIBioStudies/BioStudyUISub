@@ -33,8 +33,11 @@ export class SubmFieldComponent implements ControlValueAccessor {
     @Input() readonly: boolean;                 //if true, the field will be rendered but its value cannot be changed
     @Input() required: boolean;                 //if true, the field must not be left blank
     @Input() formControl: FieldControl;         //reactive control associated with this field
-    @Input() autosuggest: any[] = [];           //typeahead list of suggested values
     @Input() isSmall: boolean = true;           //flag for making the input area the same size as grid fields
+    @Input() autosuggest: any[] = [];           //typeahead list of suggested values
+    @Input() suggestThreshold: number = 0;      //the typeahead is meant to act as a reminder of other fields too
+    @Input() suggestLength: number = 30;        //max number of suggested values to be displayed at once
+
 
     @Output() async: EventEmitter<any> = new EventEmitter<any>();  //signals availability of asynchronous attributes
 

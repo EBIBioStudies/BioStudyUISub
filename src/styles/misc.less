@@ -223,10 +223,11 @@ component */
 .validation-pop {
   display: none !important;
   z-index: 950;           //above any dropdowns but below any nav bar
+  font-size: 12px;
   text-align: center;
 }
 .validation-pop .popover-body {
-  padding: 0;
+  padding: .5rem .7rem;
 }
 .has-error .validation-pop {
   display: block !important;
@@ -237,9 +238,7 @@ component */
 @media screen and (min-width: 1360px) {
   .validation-pop {
     min-width: 300px;
-  }
-  .validation-pop .popover-body {
-    padding: .5rem .7rem;
+    font-size: 14px;
   }
 }
 

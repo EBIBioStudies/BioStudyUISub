@@ -32,8 +32,10 @@
                            [formControl]="featureForm.columnControl(column.id)"
                            [readonly]="readonly || column.required || column.displayed"
                            [typeahead]="colNames"
+                           [typeaheadMinLength]="0"
+                           [typeaheadOptionsLimit]="15"
                            #ahead="bs-typeahead"
-                           unique
+                           [unique]="feature.uniqueCols"
                            validate-onblur
                            (keyup.enter)="ahead._container ? $event.stopPropagation() : return"
                            (change)="column.name = $event.target.value"
@@ -57,6 +59,7 @@
                             isSmall="true"
                             [formControl]="featureForm.rowValueControl(0,column.id)"
                             [autosuggest]="column.values"
+                            [suggestLength]="15"
                             validate-onblur>
                 </subm-field>
             </div>
