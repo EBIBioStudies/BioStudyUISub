@@ -11,7 +11,7 @@
                 <span *ngIf="get(field.id).invalid && get(field.id).touched">
                     {{sectionForm.formErrors[field.id] ? sectionForm.formErrors[field.id] : ''}}
                 </span>
-                <span [hidden]="readonly || get(field.id).invalid && get(field.id).touched" class="text-muted">
+                <span class="text-muted" [hidden]="readonly || get(field.id).invalid && get(field.id).touched">
                      <span *ngIf="(get(field.id, 'minlength') > 0) && (get(field.id, 'maxlength') < 0)">
                          (at least {{get(field.id, 'minlength')}}
                      </span>
@@ -33,11 +33,11 @@
                 </span>
                 <subm-field class="subm-field"
                     [type]="field.valueType"
-                    [name]="field.name"
                     [readonly]="readonly"
                     [required]="field.type.required"
                     [(ngModel)]="field.value"
                     [formControl]="get(field.id)"
+                    [autosuggest]="field.type.values"
                     validate-onblur>
                 </subm-field>
             </div>

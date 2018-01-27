@@ -22,6 +22,7 @@ export class SubmFeatureComponent implements OnInit {
     private actions: any[] = [];
     private errorNum: number = 0;
     private colTypeNames: string[];
+    private allowedCols: string[];
 
     constructor(private changeRef: ChangeDetectorRef) {}
 
@@ -48,10 +49,9 @@ export class SubmFeatureComponent implements OnInit {
     }
 
     /**
-     * Gets the names of allowed new column names. Since they have to be unique, it takes all columns from
-     * the list of column types and removes the names for the current columns.
+     * It takes all columns from the list of column types and removes the names for the current columns.
      */
-    get uniqueColNames(): string[] {
+    uniqueColNames(): string[] {
 
         //Feature not loaded yet => returns no column names.
         if (this.feature === undefined) {
@@ -69,6 +69,13 @@ export class SubmFeatureComponent implements OnInit {
     ngDoCheck(): void {
         if (this.featureEl) {
             this.errorNum = this.featureEl.nativeElement.getElementsByClassName('has-error').length;
+
+            if (this.feature.uniqueCols) {
+                this.allowedCols = this.uniqueColNames();
+            } else {
+                this.allowedCols = this.colTypeNames;
+            }
+
             this.changeRef.detectChanges();
         }
     }

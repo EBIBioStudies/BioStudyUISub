@@ -1,5 +1,5 @@
 import {
-    Directive, Injector
+    Directive, Injector, Input
 } from '@angular/core';
 import {
     NG_VALIDATORS,
@@ -21,12 +21,18 @@ import {
 export class UniqueValidator implements Validator {
     validator: ValidatorFn;
 
+    @Input('unique') isUnique: boolean;     //allows the directive to be conditionally applied
+
     constructor(private injector: Injector) {
         this.validator = uniqueValidatorFactory();
     }
 
     validate(formControl: FormControl) {
-        return this.validator(formControl);
+        if (this.isUnique) {
+            return this.validator(formControl);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -45,6 +51,13 @@ export class UniqueValidator implements Validator {
                 controls[key].markAsTouched();
             }
         });
+    }
+
+    /**
+     * Updates validity after deletion to avoid inconsistencies.
+     */
+    ngOnDestroy(): void {
+        this.onChange();
     }
 }
 

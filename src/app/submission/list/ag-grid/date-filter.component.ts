@@ -63,37 +63,14 @@ class DateRange {
 
 @Component({
     selector: 'ag-date-filter',
-    template: `
-<div style="width:250px">
-    <div style="padding:5px;">
-        <select style="margin: 5px 0" (change)="onSelectionChange($event)">
-            <option value="after" [selected]="after">after</option>
-            <option value="before" [selected]="before">before</option>
-            <option value="between" [selected]="between">between</option>
-        </select>
-        <date-input
-            *ngIf="after || between"
-            [canUsePastDates]="true"
-            [(ngModel)]="date.from">
-        </date-input>
-        <date-input
-            *ngIf="before || between"
-            [(ngModel)]="date.to">
-        </date-input>
-    </div>
-    <div style="padding:0 5px 5px 5px;text-align:right">
-        <button (click)="onApplyClick($event)">apply</button>
-    </div>
-</div>
-    `
+    templateUrl: 'date-filter.component.html'
 })
 export class DateFilterComponent implements AgFilterComponent {
     private params: IFilterParams;
     private valueGetter: (rowNode: RowNode) => any;
-
-    private date: DateRange = new DateRange();
+    private hide: Function;
     private selection: string = 'after';
-
+    private date: DateRange = new DateRange();
     private prev: DateRange;
 
     agInit(params: IFilterParams): void {
@@ -129,6 +106,7 @@ export class DateFilterComponent implements AgFilterComponent {
     }
 
     afterGuiAttached(params: IAfterGuiAttachedParams): void {
+        this.hide = params.hidePopup;
     }
 
     private notifyAboutChanges() {
@@ -136,6 +114,7 @@ export class DateFilterComponent implements AgFilterComponent {
             this.prev = this.date.copy();
             this.params.filterChangedCallback();
         }
+        this.hide();
     }
 
     get after(): boolean {
@@ -161,6 +140,12 @@ export class DateFilterComponent implements AgFilterComponent {
     }
 
     onApplyClick(ev): void {
+        this.notifyAboutChanges();
+    }
+
+    onClearClick(event): void {
+        this.date.to = '';
+        this.date.from = '';
         this.notifyAboutChanges();
     }
 }

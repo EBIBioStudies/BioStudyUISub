@@ -7,14 +7,13 @@
        [(ngModel)]="value"
        [readonly]="readonly"
        [required]="required"
-       (blur)="onBlur()">
+       (blur)="onBlur()"
+       [typeahead]="autosuggest"
+       [typeaheadMinLength]="suggestThreshold"
+       [typeaheadOptionsLimit]="suggestLength"
+       #ahead="bs-typeahead"
+       (keyup.enter)="ahead._container ? $event.stopPropagation() : return">
 
-<!--
-           [typeahead]="typeaheadAttrValues(attr.name)"
-           typeaheadAppendToBody="true"
-           typeaheadMinLength="0"
-           typeaheadOptionsLimit="30"
--->
 <date-input
         *ngIf="type === 'date'"
         [(ngModel)]="value"

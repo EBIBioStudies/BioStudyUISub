@@ -34,7 +34,7 @@ import {AppConfig} from "../app.config";
  * It allows the display format for the date to be different to the transactional one if needed (the latter is
  * hard-coded to ISO 8601 YYYY-MM-DD).
  * NOTE: Contrary to what its name suggests, DatePicker's "bsValueChange" output event is triggered every time
- * a date is set, NOT on change exclusively.
+ * a date is set, NOT on value change exclusively.
  * @see {@link https://valor-software.com/ngx-bootstrap/old/1.9.3/#/datepicker}
  * @see {@link ControlValueAccessor}
  */
@@ -126,6 +126,15 @@ export class DateInputComponent implements ControlValueAccessor {
             this.onChange(formatDate(this.dateValue));
             isChange && this.rootEl.nativeElement.dispatchEvent(new Event('change', {bubbles: true}));
         }
+    }
+
+    /**
+     * Prevents any click events from bubbling beyond the date picker to avoid conflict with any external listeners.
+     */
+    onPickerShown() {
+        document.querySelector('.bs-datepicker-container').addEventListener('click', (event) => {
+            event.stopPropagation();
+        });
     }
 
     /**

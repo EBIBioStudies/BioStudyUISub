@@ -26,15 +26,18 @@ export class SubmFieldComponent implements ControlValueAccessor {
     private onChange: any = (_:any) => {};      //placeholder for handler propagating changes outside the custom control
     private onTouched: any = () => {};          //placeholder for handler after the control has been "touched"
 
-    private _value = '';
+    private _value = '';                        //internal data model for the field's value
     private isOverflow: boolean = false;        //indicates if the text content is longer than the field itself.
 
-    @Input() name: string;
-    @Input() type: string;
-    @Input() readonly: boolean;
-    @Input() required: boolean;
-    @Input() formControl: FieldControl;
+    @Input() type: string;                      //type of field: text, date, pubmedid, orcid...
+    @Input() readonly: boolean;                 //if true, the field will be rendered but its value cannot be changed
+    @Input() required: boolean;                 //if true, the field must not be left blank
+    @Input() formControl: FieldControl;         //reactive control associated with this field
     @Input() isSmall: boolean = true;           //flag for making the input area the same size as grid fields
+    @Input() autosuggest: any[] = [];           //typeahead list of suggested values
+    @Input() suggestThreshold: number = 0;      //the typeahead is meant to act as a reminder of other fields too
+    @Input() suggestLength: number = 30;        //max number of suggested values to be displayed at once
+
 
     @Output() async: EventEmitter<any> = new EventEmitter<any>();  //signals availability of asynchronous attributes
 

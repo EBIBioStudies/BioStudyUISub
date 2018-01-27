@@ -351,7 +351,6 @@ export class SubmSideBarComponent implements OnChanges {
 
     /**
      * Removes the submission item from the list of controls and marks it for deletion.
-     * It also makes sure that validation is consistent with current input values.
      * @param {Event} event - Click event object.
      * @param {FormControl[]} controls - Array of controls making up the component's form.
      * @param {string} nameInput - Name of the input control corresponding to the item being removed.
@@ -360,12 +359,7 @@ export class SubmSideBarComponent implements OnChanges {
     onItemDelete(event: Event, nameInput: string, controls: FormControl[], itemIdx: number): void {
         event.preventDefault();
         this.items.delete(itemIdx);
-
-        //Updates validity after deletion to avoid inconsistencies, especially regarding the uniqueness test.
         delete controls[nameInput];
-        Object.keys(controls).forEach((key) => {
-            controls[key].updateValueAndValidity();
-        });
     }
 
     /**

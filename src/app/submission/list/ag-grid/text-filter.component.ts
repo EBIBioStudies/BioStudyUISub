@@ -1,7 +1,6 @@
 import {
     Component,
-    ViewChild,
-    ViewContainerRef
+    ViewChild
 } from '@angular/core';
 
 import {
@@ -15,16 +14,7 @@ import {AgFilterComponent} from 'ag-grid-angular/main';
 
 @Component({
     selector: 'ag-acc-filter',
-    template: `
-    <div style="padding:5px">
-        <span>Filter:&nbsp;</span>
-        <input #input 
-              [(ngModel)]="text">
-    </div>
-    <div style="padding:0 5px 5px 5px;text-align:right">
-        <button (click)="onApplyClick($event)">apply</button>
-    </div>
-    `
+    templateUrl: 'text-filter.component.html'
 })
 export class TextFilterComponent implements AgFilterComponent {
     private params: IFilterParams;
@@ -32,8 +22,9 @@ export class TextFilterComponent implements AgFilterComponent {
 
     text: string = '';
     private prev: string = '';
+    private hide: Function;
 
-    @ViewChild('input', {read: ViewContainerRef}) public input;
+    @ViewChild('inputEl') public inputEl;
 
     agInit(params: IFilterParams): void {
         this.params = params;
@@ -61,10 +52,16 @@ export class TextFilterComponent implements AgFilterComponent {
     }
 
     afterGuiAttached(params: IAfterGuiAttachedParams): void {
-        this.input.element.nativeElement.focus();
+        this.inputEl.nativeElement.focus();
+        this.hide = params.hidePopup;
     }
 
     onApplyClick(ev): void {
+        this.notifyAboutChanges();
+    }
+
+    onClearClick(event): void {
+        this.text = '';
         this.notifyAboutChanges();
     }
 
@@ -73,5 +70,6 @@ export class TextFilterComponent implements AgFilterComponent {
             this.prev = this.text;
             this.params.filterChangedCallback();
         }
+        this.hide();
     }
 }

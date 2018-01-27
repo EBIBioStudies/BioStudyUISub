@@ -46,7 +46,7 @@
                     </option>
                 </select>
             </div>
-            <div class="form-group">
+            <div *ngIf="isBusy || projectsToAttachTo.length" class="form-group">
                 <label class="control-label">Projects</label>
                 <span class="text-muted pull-right"><i>Optional</i></span>
                 <ul *ngIf="model.projects.length > 0">

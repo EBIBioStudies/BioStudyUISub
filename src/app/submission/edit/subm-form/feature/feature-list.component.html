@@ -32,10 +32,12 @@
                            [formControl]="featureForm.columnControl(column.id)"
                            [readonly]="readonly || column.required || column.displayed"
                            [typeahead]="colNames"
-                           #ahead1="bs-typeahead"
-                           unique
+                           [typeaheadMinLength]="0"
+                           [typeaheadOptionsLimit]="15"
+                           #ahead="bs-typeahead"
+                           [unique]="feature.uniqueCols"
                            validate-onblur
-                           (keyup.enter)="ahead1._container ? $event.stopPropagation() : return"
+                           (keyup.enter)="ahead._container ? $event.stopPropagation() : return"
                            (change)="column.name = $event.target.value"
                            (blur)="featureForm.columnControl(column.id).value ||
                                    featureForm.columnControl(column.id).setValue(feature.typeName + ' ' + (idx + 1))">
@@ -56,10 +58,9 @@
                             [required]="column.required"
                             isSmall="true"
                             [formControl]="featureForm.rowValueControl(0,column.id)"
-                            [typeahead]="column.values"
-                            #ahead2="bs-typeahead"
-                            validate-onblur
-                            (keyup.enter)="ahead2._container ? $event.stopPropagation() : return">
+                            [autosuggest]="column.values"
+                            [suggestLength]="15"
+                            validate-onblur>
                 </subm-field>
             </div>
         </div>
