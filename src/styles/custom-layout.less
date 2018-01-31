@@ -224,9 +224,11 @@ aside {
 
 //Gives readonly inputs and features the appearance of standard text
 input[readonly], textarea[readonly] {
-  font-size: @font-size-base;
   text-overflow: ellipsis;
   background: #fff !important;
+}
+.readonly input, .readonly textarea {
+  font-size: @font-size-base;
 }
 .readonly .form-control, .readonly .feature {
   border: none !important;

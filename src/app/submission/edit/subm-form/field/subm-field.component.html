@@ -8,14 +8,16 @@
        [readonly]="readonly"
        [required]="required"
        (blur)="onBlur()"
-       [typeahead]="autosuggest"
+       [typeahead]="readonly ? [] : autosuggest"
        [typeaheadMinLength]="suggestThreshold"
        [typeaheadOptionsLimit]="suggestLength"
        #ahead="bs-typeahead"
-       (keyup.enter)="ahead._container ? $event.stopPropagation() : return">
+       (keyup.enter)="ahead._container ? $event.stopPropagation() : return"
+       (typeaheadOnSelect)="onSuggestSelect($event)">
 
 <date-input
         *ngIf="type === 'date'"
+        [isSmall]="isSmall"
         [(ngModel)]="value"
         [required]="required"
         [readonly]="readonly"

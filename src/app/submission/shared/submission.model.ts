@@ -406,17 +406,25 @@ export class Feature extends HasUpdates<UpdateEvent> {
      * added if the feature is not limited to a single row, in which case the first row is changed.
      */
     add(attributes: { name: string, value: string }[] = [], rowIdx: number = null): void {
-        const attrNames = attributes.filter(attr => attr.name !== '').map(attr => attr.name);
-        const colNames = this._columns.names().map(name => name.toLowerCase());
+        const attrNames = attributes.filter(attr => attr.name !== '').map(attr => attr.name.toLowerCase());
+
+        const usedColIds = [];
         let rowMap;
 
         //Adds a column if any of the passed-in attribute names doesn't exist, capitalizing it just for display purposes.
         attrNames
-            .filter(attrName => colNames.indexOf(attrName.toLowerCase()) < 0)
-            .forEach((name) => {
-                const capName = _.capitalize(name);
+            /*.filter(attrName => colNames.indexOf(attrName.toLowerCase()) < 0)*/
+            .forEach((attrName) => {
+                const colNames = this._columns.names().map(name => name.toLowerCase());
+                const instancesFn = (name) => attrName == name;
+                const occurAttrs = attrNames.filter(instancesFn).length;
+                const occurCols = colNames.filter(instancesFn).length;
+                const capName = _.capitalize(attrName);
                 const colType = this.type.getColumnType(capName);
-                this.addColumn(capName, colType.required, colType.displayed, colType.valueType, colType.values);
+
+                if (occurAttrs != occurCols) {
+                    this.addColumn(capName, colType.required, colType.displayed, colType.valueType, colType.values);
+                }
             });
 
         //If row not provided, add it if applicable.
@@ -428,10 +436,15 @@ export class Feature extends HasUpdates<UpdateEvent> {
 
         //Finds out the column corresponding to each of the attributes and sets its value
         attributes.forEach(attr => {
-            const cols: Attribute[] = this._columns.allWithName(attr.name);
-            cols.forEach(col => {
-                rowMap.valueFor(col.id).value = attr.value;
+            let cols: Attribute[] = this._columns.allWithName(attr.name);
+
+            //Prevents the same attribute becoming the value for multiple columns of the same name
+            cols = cols.filter((col) => {
+                return usedColIds.indexOf(col.id) == -1;
             });
+            usedColIds.push(cols[0].id);
+
+            rowMap.valueFor(cols[0].id).value = attr.value;
         });
     }
 

@@ -25,13 +25,10 @@
                     [formControl]="featureForm.columnControl(column.id)"
                     [required]="column.required"
                     [disableEdit]="column.displayed || readonly || !userData.isPrivileged"
-                    [typeahead]="colNames"
-                    [typeaheadMinLength]="0"
-                    [typeaheadOptionsLimit]="15"
-                    #ahead="bs-typeahead"
+                    [autosuggest]="colNames"
+                    [suggestLength]="15"
                     [unique]="feature.uniqueCols"
-                    validate-onblur
-                    (keyup.enter)="ahead._container ? $event.stopPropagation() : return">
+                    validate-onblur>
             </inline-edit>
         </div>
     </div>
@@ -64,7 +61,6 @@
                             [autosuggest]="column.values"
                             [suggestLength]="15"
                             (async)="addOnAsync($event, rowIdx)"
-                            isSmall="true"
                             validate-onblur>
                 </subm-field>
             </div>

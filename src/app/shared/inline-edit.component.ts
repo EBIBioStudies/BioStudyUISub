@@ -21,6 +21,9 @@ export class InlineEditComponent implements ControlValueAccessor {
     @Input() disableEdit?: boolean = false;
     @Input() emptyValue?: string = '';
     @Input() placeholder?: string = '';
+    @Input() autosuggest: any[] = [];           //typeahead list of suggested values
+    @Input() suggestThreshold: number = 0;      //the typeahead is meant to act as a reminder of other fields too
+    @Input() suggestLength: number = 30;        //max number of suggested values to be displayed at once
     @Output() remove: EventEmitter<any> = new EventEmitter<any>();
 
     editing: boolean = false;
@@ -75,8 +78,15 @@ export class InlineEditComponent implements ControlValueAccessor {
         this.stopEditing();
     }
 
-    private onEditBoxKeyUp(ev: KeyboardEvent): void {
-        if (ev.key === 'Enter') {
+    /**
+     * Handler for enter key press event. It cancels the press event's propagation and makes the component
+     * go into display mode if the event is not resulting from the selection of a suggested column name.
+     * @param {Event} event - DOM event object.
+     * @param {boolean} isSuggestOpen - If true, the autosuggest typeahead list is being displayed.
+     */
+    private onEditBoxEnter(event: Event, isSuggestOpen: boolean): void {
+        event.stopPropagation();
+        if (!isSuggestOpen) {
             this.stopEditing();
         }
     }

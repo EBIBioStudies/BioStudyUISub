@@ -102,7 +102,7 @@ export class FeatureGridComponent implements AfterViewInit {
             }
         });
 
-        //Updates the row and notifies the a single change.
+        //Updates the row and notifies the outside world as a single change event.
         this.feature.add(attributes, rowIdx);
         this.rootEl.nativeElement.dispatchEvent(new Event('change', {bubbles: true}));
     }

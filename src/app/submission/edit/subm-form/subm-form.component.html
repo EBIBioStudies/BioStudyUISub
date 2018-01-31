@@ -38,6 +38,7 @@
                     [(ngModel)]="field.value"
                     [formControl]="get(field.id)"
                     [autosuggest]="field.type.values"
+                    [isSmall]="false"
                     validate-onblur>
                 </subm-field>
             </div>

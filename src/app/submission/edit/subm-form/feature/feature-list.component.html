@@ -11,7 +11,7 @@
                                           featureForm.columnControl(column.id).invalid &&
                                           featureForm.columnControl(column.id).touched}">
                 <div class="input-group">
-                    <span *ngIf="!readonly && !column.required && !column.displayed"
+                    <span *ngIf="!readonly && !column.required"
                           class="input-group-btn">
                           <button type="button" tabindex="-1"
                                   class="btn btn-sm btn-danger btn-flat"
@@ -31,14 +31,15 @@
                            [ngModel]="column.name"
                            [formControl]="featureForm.columnControl(column.id)"
                            [readonly]="readonly || column.required || column.displayed"
-                           [typeahead]="colNames"
+                           [typeahead]="readonly ? [] : colNames"
                            [typeaheadMinLength]="0"
                            [typeaheadOptionsLimit]="15"
                            #ahead="bs-typeahead"
                            [unique]="feature.uniqueCols"
                            validate-onblur
                            (keyup.enter)="ahead._container ? $event.stopPropagation() : return"
-                           (change)="column.name = $event.target.value"
+                           (change)="onColumnChange(column, $event.target.value)"
+                           (typeaheadOnSelect)="onSuggestSelect($event, column)"
                            (blur)="featureForm.columnControl(column.id).value ||
                                    featureForm.columnControl(column.id).setValue(feature.typeName + ' ' + (idx + 1))">
                 </div>
@@ -56,7 +57,6 @@
                             [(ngModel)]="feature.rows[0].valueFor(column.id).value"
                             [readonly]="readonly"
                             [required]="column.required"
-                            isSmall="true"
                             [formControl]="featureForm.rowValueControl(0,column.id)"
                             [autosuggest]="column.values"
                             [suggestLength]="15"

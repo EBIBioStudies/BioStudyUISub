@@ -42,6 +42,7 @@ export class DateInputComponent implements ControlValueAccessor {
     private dateValue: Date;
 
     @Input() canUsePastDates?: boolean = undefined;
+    @Input() isSmall?: boolean = false;
     @Input() required?: boolean = false;
     @Input() readonly?: boolean = false;
     @ViewChild('dp') private datepicker: BsDatepickerComponent;
