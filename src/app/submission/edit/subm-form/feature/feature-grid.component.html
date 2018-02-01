@@ -14,42 +14,45 @@
                 [ngClass]="{'has-error': !column.required &&
                                              featureForm.columnControl(column.id).invalid &&
                                              featureForm.columnControl(column.id).touched}">
-            <inline-edit
-                    placement="bottom"
-                    triggers="focus"
-                    containerClass="validation-pop text-danger"
-                    popover="Please use a unique column name"
-                    [(ngModel)]="column.name"
-                    emptyValue="{{'Column ' + (idx + 1)}}"
-                    (remove)="feature.removeColumn(column.id)"
-                    [formControl]="featureForm.columnControl(column.id)"
-                    [required]="column.required"
-                    [disableEdit]="column.displayed || readonly || !userData.isPrivileged"
-                    [autosuggest]="colNames"
-                    [suggestLength]="15"
-                    [unique]="feature.uniqueCols"
-                    validate-onblur>
+            <inline-edit placement="bottom"
+                         triggers="focus"
+                         containerClass="validation-pop text-danger"
+                         popover="Please use a unique column name"
+                         [(ngModel)]="column.name"
+                         emptyValue="{{'Column ' + (idx + 1)}}"
+                         (remove)="feature.removeColumn(column.id)"
+                         [formControl]="featureForm.columnControl(column.id)"
+                         [required]="column.required"
+                         [disableEdit]="readonly || !userData.isPrivileged"
+                         [autosuggest]="colNames"
+                         [suggestLength]="15"
+                         [unique]="feature.uniqueCols"
+                         validate-onblur>
             </inline-edit>
         </div>
     </div>
     <div class="row" #rowEl
          *ngFor="let row of rows; let rowIdx = index; let first = first; let last = last">
         <div class="cell heading-cell row-heading col-xs-1 col-md-1 text-center">
+            <span container="body"
+                  placement="bottom"
+                  [tooltip]="feature.canRemoveRowAt(index) ? '' : 'The table must contain one row at least'">
+                <button class="btn btn-danger btn-sm" type="button"
+                        [ngClass]="{'invisible': readonly}"
+                        [disabled]="!feature.canRemoveRowAt(index)"
+                        (click)="feature.removeRowAt(rowIdx)"
+                        [tooltip]="'Delete ' + feature.typeName.toLowerCase() + ' ' + (rowIdx + 1)"
+                        placement="bottom"
+                        container="body">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </span>
             {{rowIdx+1}}
-            <button class="btn btn-danger btn-sm" type="button"
-                    [ngClass]="{'invisible': readonly}"
-                    [disabled]="!feature.canRemoveRowAt(index)"
-                    (click)="feature.removeRowAt(rowIdx)"
-                    [tooltip]="'Delete ' + feature.typeName.toLowerCase() + ' ' + (rowIdx + 1)"
-                    placement="bottom"
-                    container="body">
-                <i class="fa fa-trash"></i>
-            </button>
         </div>
         <div class="cell body-cell column-entry col-xs-3 col-md-2" #colEl *ngFor="let column of columns">
             <div [ngClass]="{'has-error': featureForm.rowValueControl(rowIdx, column.id).invalid &&
                                           featureForm.rowValueControl(rowIdx, column.id).touched}">
-                <subm-field placement="{{first && !last ? 'bottom' : 'top'}}"
+                <subm-field placement="{{first && !last && !column.values.length ? 'bottom' : 'top'}}"
                             triggers="focus"
                             containerClass="validation-pop text-danger"
                             popover="{{featureForm.rowErrors[rowIdx][column.id]}}"

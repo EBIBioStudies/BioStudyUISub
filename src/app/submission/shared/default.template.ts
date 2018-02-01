@@ -96,7 +96,6 @@ export const DefaultTemplate = {
                             'Wellcome Trust Sanger Institute',
                             'Wellcome Trust Centre for Human Genetics',
                             'International Plant Genetic Resources Institute',
-                            'Max Planck Institute for Molecular Cell Biology and Genetics',
                             'Francis Crick Institute',
                             'MRC Human Genetics Unit',
                             'MRC Institute of Genetics and Molecular Medicine',
@@ -215,7 +214,7 @@ export const DefaultTemplate = {
                     {
                         'name': 'PMID',
                         'valueType': 'pubmedid',
-                        'displayed': true
+                        'required': true
                     },
                     {
                         'name': 'Authors',

@@ -395,7 +395,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
      * @author Hector Casanova <hector@ebi.ac.uk>
      */
     pluralName(): string {
-        return pluralize(this.type.name, this.size());
+        return pluralize(this.type.name);
     }
 
 
@@ -411,15 +411,14 @@ export class Feature extends HasUpdates<UpdateEvent> {
         const usedColIds = [];
         let rowMap;
 
-        //Adds a column if any of the passed-in attribute names doesn't exist, capitalizing it just for display purposes.
+        //Adds a column if any of the passed-in attribute names doesn't occur as often as it does in the column list.
         attrNames
-            /*.filter(attrName => colNames.indexOf(attrName.toLowerCase()) < 0)*/
             .forEach((attrName) => {
                 const colNames = this._columns.names().map(name => name.toLowerCase());
                 const instancesFn = (name) => attrName == name;
                 const occurAttrs = attrNames.filter(instancesFn).length;
                 const occurCols = colNames.filter(instancesFn).length;
-                const capName = _.capitalize(attrName);
+                const capName = _.capitalize(attrName);             //capitalizingfor display purposes.
                 const colType = this.type.getColumnType(capName);
 
                 if (occurAttrs != occurCols) {

@@ -3,7 +3,7 @@ import {
     Input,
     Output,
     forwardRef,
-    EventEmitter
+    EventEmitter, ElementRef
 } from '@angular/core';
 
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
@@ -89,5 +89,12 @@ export class InlineEditComponent implements ControlValueAccessor {
         if (!isSuggestOpen) {
             this.stopEditing();
         }
+    }
+
+    /**
+     * Determines if the field's contents are longer than the actual field's dimensions by probing the DOM directly.
+     */
+    private isOverflow(inputEl: HTMLInputElement): boolean {
+        return inputEl.scrollWidth > inputEl.clientWidth;
     }
 }
