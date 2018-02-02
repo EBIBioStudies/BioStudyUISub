@@ -236,7 +236,7 @@ export const DefaultTemplate = {
                     {
                         'name': 'Authors',
                         'valueType': 'text',
-                        'displayed': true
+                        'required': true
                     },
                     {
                         'name': 'Title',
@@ -246,7 +246,7 @@ export const DefaultTemplate = {
                     {
                         'name': 'Year',
                         'valueType': 'text',
-                        'displayed': true
+                        'required': true
                     },
                     {
                         'name': 'Volume',

@@ -11,9 +11,10 @@
 
         </div><!--
         --><div *ngFor="let column of columns; let idx = index" class="cell heading-cell column-heading col-xs-3 col-md-2"
-                [ngClass]="{'has-error': !column.required &&
-                                             featureForm.columnControl(column.id).invalid &&
-                                             featureForm.columnControl(column.id).touched}">
+                [ngClass]="{'optional': !column.required,
+                            'has-error': !column.required &&
+                                         featureForm.columnControl(column.id).invalid &&
+                                         featureForm.columnControl(column.id).touched}">
             <inline-edit placement="bottom"
                          triggers="focus"
                          containerClass="validation-pop text-danger"
@@ -24,6 +25,7 @@
                          [formControl]="featureForm.columnControl(column.id)"
                          [required]="column.required"
                          [disableEdit]="readonly || !userData.isPrivileged"
+                         [disableChange]="column.displayed"
                          [autosuggest]="colNames"
                          [suggestLength]="15"
                          [unique]="feature.uniqueCols"
@@ -35,7 +37,6 @@
          *ngFor="let row of rows; let rowIdx = index; let first = first; let last = last">
         <div class="cell heading-cell row-heading col-xs-1 col-md-1 text-center">
             <span container="body"
-                  placement="bottom"
                   [tooltip]="feature.canRemoveRowAt(index) ? '' : 'The table must contain one row at least'">
                 <button class="btn btn-danger btn-sm" type="button"
                         [ngClass]="{'invisible': readonly}"
@@ -50,7 +51,8 @@
             {{rowIdx+1}}
         </div>
         <div class="cell body-cell column-entry col-xs-3 col-md-2" #colEl *ngFor="let column of columns">
-            <div [ngClass]="{'has-error': featureForm.rowValueControl(rowIdx, column.id).invalid &&
+            <div [ngClass]="{'optional': !column.required,
+                             'has-error': featureForm.rowValueControl(rowIdx, column.id).invalid &&
                                           featureForm.rowValueControl(rowIdx, column.id).touched}">
                 <subm-field placement="{{first && !last && !column.values.length ? 'bottom' : 'top'}}"
                             triggers="focus"

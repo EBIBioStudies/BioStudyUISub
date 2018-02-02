@@ -312,6 +312,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
             this.addRow();
         }
 
+        //TODO: Make displayed columns less permanent. Should be added once when the submission is new. Link with "isNew" from submission edit view.
         type.columnTypes.forEach(ct => {
             if (ct.required || ct.displayed) {
                 this.addColumn(ct.name, ct.required, ct.displayed, ct.valueType, ct.values);
@@ -406,7 +407,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
      * added if the feature is not limited to a single row, in which case the first row is changed.
      */
     add(attributes: { name: string, value: string }[] = [], rowIdx: number = null): void {
-        const attrNames = attributes.filter(attr => attr.name !== '').map(attr => attr.name.toLowerCase());
+        const attrNames = attributes.filter(attr => attr.name !== '').map(attr => attr.name);
 
         const usedColIds = [];
         let rowMap;
@@ -414,15 +415,14 @@ export class Feature extends HasUpdates<UpdateEvent> {
         //Adds a column if any of the passed-in attribute names doesn't occur as often as it does in the column list.
         attrNames
             .forEach((attrName) => {
-                const colNames = this._columns.names().map(name => name.toLowerCase());
+                const colNames = this._columns.names();
                 const instancesFn = (name) => attrName == name;
                 const occurAttrs = attrNames.filter(instancesFn).length;
                 const occurCols = colNames.filter(instancesFn).length;
-                const capName = _.capitalize(attrName);             //capitalizingfor display purposes.
-                const colType = this.type.getColumnType(capName);
+                const colType = this.type.getColumnType(attrName);
 
                 if (occurAttrs != occurCols) {
-                    this.addColumn(capName, colType.required, colType.displayed, colType.valueType, colType.values);
+                    this.addColumn(attrName, colType.required, colType.displayed, colType.valueType, colType.values);
                 }
             });
 
@@ -892,6 +892,12 @@ export class Submission {
 
     readonly tags: Tags;
 
+    /**
+     * Creates a new submission from PageTab-formatted data and pre-defined type definitions.
+     * @see {@link PageTab}
+     * @param {SubmissionType} type Type definitions object
+     * @param {SubmissionData} data Submission data in PageTab format.
+     */
     constructor(type: SubmissionType, data: SubmissionData = {} as SubmissionData) {
         this.tags = Tags.create(data);
         this.type = type;

@@ -214,12 +214,12 @@ export const DefaultTemplate = {
                     {
                         'name': 'PMID',
                         'valueType': 'pubmedid',
-                        'required': true
+                        'displayed': true
                     },
                     {
                         'name': 'Authors',
                         'valueType': 'text',
-                        'displayed': true
+                        'required': true
                     },
                     {
                         'name': 'Title',
@@ -229,7 +229,7 @@ export const DefaultTemplate = {
                     {
                         'name': 'Year',
                         'valueType': 'text',
-                        'displayed': true
+                        'required': true
                     },
                     {
                         'name': 'Volume',

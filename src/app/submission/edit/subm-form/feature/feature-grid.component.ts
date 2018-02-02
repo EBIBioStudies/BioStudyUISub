@@ -78,7 +78,7 @@ export class FeatureGridComponent implements AfterViewInit {
 
     /**
      * Changes the values of an existing feature's row fields to those of a given a set of grid attributes,
-     * bubbling a single DOM change event for all of them.
+     * bubbling a single DOM change event for all of them. Attribute names are assumed to be in lower case.
      * @param {object} data - Grid attribute data retrieved asynchronously.
      * @param {number} rowIdx - Row whose field values are to be changed.
      */
@@ -90,15 +90,15 @@ export class FeatureGridComponent implements AfterViewInit {
         //The first column is assumed to be the source of the async event and, therefore, does not require updating.
         columns.shift();
 
-        //Converts data into attributes by filling in gaps (existing columns not included in the attributes).
+        //Converts data into attributes by filling in gaps (existing columns that are not included in the attributes).
         //This also guarantees that no new columns will be added.
         columns.forEach((column) => {
             const colName = column.name.toLowerCase();
 
             if (attrNames.indexOf(colName) == -1) {
-                attributes.push({name: colName, value: ''});
+                attributes.push({name: column.name, value: ''});
             } else {
-                attributes.push({name: colName, value: data[colName]});
+                attributes.push({name: column.name, value: data[colName]});
             }
         });
 

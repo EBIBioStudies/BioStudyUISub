@@ -10,10 +10,10 @@ import {Observable} from "rxjs/Observable";
 
 @Injectable()
 export class UserData {
-    static contactMap = {       //maps response property to submission attribute name for contact data
-        'email': 'e-mail',
-        'username': 'name',
-        'aux.orcid': 'orcid'    //allows flattening of nesting levels
+    static contactMap = {       //maps response property to submission attribute name for as shown in contact widget
+        'email': 'E-mail',
+        'username': 'Name',
+        'aux.orcid': 'ORCID'    //dot notation allows flattening of nesting levels
     }
     private _whenFetched: Subject<any> = new Subject<any>();
     private isFetched: boolean = false;                         //flags when data has been fetched already

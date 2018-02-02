@@ -238,6 +238,14 @@ input[readonly], textarea[readonly] {
   padding-left: 0;
 }
 
+//Optional fields (be them data or column ones) within features have discontinous outlines
+.optional .form-control {
+  border-style: dashed;
+}
+.heading-cell.optional {
+  border-bottom-style: dashed !important;
+}
+
 //Makes labels' size to reflect font-size without compromising spacing between form element
 .control-label {
   padding-top: 0 !important;
