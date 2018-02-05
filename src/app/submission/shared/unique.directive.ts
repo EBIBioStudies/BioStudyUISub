@@ -21,14 +21,21 @@ import {
 export class UniqueValidator implements Validator {
     validator: ValidatorFn;
 
-    @Input('unique') isUnique: boolean;     //allows the directive to be conditionally applied
+    @Input('unique') isApply: boolean | "";             //allows the directive to be conditionally applied
 
     constructor(private injector: Injector) {
         this.validator = uniqueValidatorFactory();
     }
 
+    //Applies the directive by default if no attribute value passed.
+    ngOnInit() {
+        if (this.isApply === "") {
+            this.isApply = true;
+        }
+    }
+
     validate(formControl: FormControl) {
-        if (this.isUnique) {
+        if (this.isApply) {
             return this.validator(formControl);
         } else {
             return null;
@@ -78,6 +85,7 @@ function uniqueValidatorFactory(): ValidatorFn {
         isValid = valueSet.size === values.length;
 
         //If some values are not unique, does the present control have one such value?
+        //NOTE: the uniqueness test may be passed if all controls with values equal to this control's are removed.
         if (!isValid) {
             isValid = values.reduce((occurrances, value) => {
                 return occurrances + (value === control.value);
