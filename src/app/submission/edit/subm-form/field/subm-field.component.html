@@ -1,6 +1,6 @@
 <input *ngIf="type === 'text'"
        type="text" class="form-control"
-       tooltip="{{isOverflow ? value : ''}}"
+       tooltip="{{isOverflow(fieldInput) && !ahead._container ? value : ''}}"
        container="body"
        placement="bottom"
        [ngClass]="{'input-sm': isSmall}"
@@ -13,7 +13,8 @@
        [typeaheadOptionsLimit]="suggestLength"
        #ahead="bs-typeahead"
        (keyup.enter)="ahead._container ? $event.stopPropagation() : return"
-       (typeaheadOnSelect)="onSuggestSelect($event)">
+       (typeaheadOnSelect)="onSuggestSelect($event)"
+       #fieldInput>
 
 <date-input
         *ngIf="type === 'date'"

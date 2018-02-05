@@ -94,8 +94,10 @@ export class InlineEditComponent implements ControlValueAccessor {
 
     /**
      * Determines if the field's contents are longer than the actual field's dimensions by probing the DOM directly.
+     * @param {Element} element - DOM element for the field.
+     * @returns {boolean} True if the text's length is greater than its container.
      */
-    private isOverflow(inputEl: HTMLInputElement): boolean {
-        return inputEl.scrollWidth > inputEl.clientWidth;
+    private isOverflow(element: Element): boolean {
+        return element.scrollWidth > element.clientWidth;
     }
 }

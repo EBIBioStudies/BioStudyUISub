@@ -28,7 +28,6 @@ export class SubmFieldComponent implements ControlValueAccessor {
     private onTouched: any = () => {};          //placeholder for handler after the control has been "touched"
 
     private _value = '';                        //internal data model for the field's value
-    private isOverflow: boolean = false;        //indicates if the text content is longer than the field itself.
 
     @Input() type: string;                      //type of field: text, date, pubmedid, orcid...
     @Input() readonly: boolean;                 //if true, the field will be rendered but its value cannot be changed
@@ -100,15 +99,11 @@ export class SubmFieldComponent implements ControlValueAccessor {
 
     /**
      * Determines if the field's contents are longer than the actual field's dimensions by probing the DOM directly.
+     * @param {Element} element - DOM element for the field.
+     * @returns {boolean} True if the text's length is greater than its container.
      */
-    ngAfterViewChecked(): void {
-        const controlEl = this.formControl.nativeElement;
-
-        if (controlEl) {
-            this.isOverflow = controlEl.scrollWidth > controlEl.clientWidth;
-        } else {
-            this.isOverflow = false;
-        }
+    private isOverflow(element: HTMLInputElement): boolean {
+        return element.scrollWidth > element.clientWidth;
     }
 
     /**
