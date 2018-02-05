@@ -144,8 +144,8 @@ export class DateFilterComponent implements AgFilterComponent {
     }
 
     onClearClick(event): void {
-        this.date.to = '';
-        this.date.from = '';
+        this.date.to = null;
+        this.date.from = null;
         this.notifyAboutChanges();
     }
 }

@@ -104,13 +104,14 @@ export class SubmEditComponent implements OnInit, OnDestroy {
             ]);
 
             eventStream.subscribe(results => {
-                let page;
+                let page, subm;
 
                 //Converts data coming from the server into the in-app submission format
                 this.wrappedSubm = results[0];
                 this.accno = this.wrappedSubm.accno;
                 page = new PageTab(this.wrappedSubm.data);
-                this.subm = page.toSubmission(SubmissionType.createDefault());
+                subm = page.toSubmission(SubmissionType.createDefault());
+                this.subm = subm;
 
                 //Validates the submission immediately
                 this.errors = SubmissionValidator.validate(this.subm);

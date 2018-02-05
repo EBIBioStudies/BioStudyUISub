@@ -6,6 +6,7 @@ import {
 
 import {Attribute, Feature} from '../../../shared/submission.model';
 import {FeatureForm} from '../subm-form.service';
+import {TypeaheadMatch} from "ngx-bootstrap";
 
 @Component({
     selector: 'subm-feature-list',
@@ -17,6 +18,8 @@ export class FeatureListComponent implements AfterViewInit {
     @Input() readonly?: boolean = false;    //Flag for features that cannot be edited (e.g. sent state for submissions)
     @Input() colNames: string[] = [];       //List of allowed column names out of the list specified in the default template
     @ViewChildren('rowEl') rowEls: QueryList<ElementRef>;
+
+    constructor(private rootEl: ElementRef) {}
 
     get columns(): Attribute[] {
         return this.featureForm.columns
@@ -31,5 +34,28 @@ export class FeatureListComponent implements AfterViewInit {
         this.rowEls.changes.subscribe((rowEls) => {
             rowEls.last.nativeElement.querySelector('select, input').focus();
         });
+    }
+
+    /**
+     * Handler for the change event. Only save a key's name when it has changed.
+     * @param {Attribute} column - Object representative of the current column.
+     * @param {string} newKey - New key name for the current column.
+     */
+    onColumnChange(column: Attribute, newKey: string) {
+        column.name = newKey;
+    }
+
+    /**
+     * Handler for select event from auto-suggest typeahead. Fixes the lack of a change event when
+     * selecting a value without any character being typed (typically in combination with typeaheadMinLength = 0).
+     * TODO: this might be sorted in newer versions of the ngx-bootstrap plugin.
+     * @param {TypeaheadMatch} selection - Object for the currently selected value.
+     * @param {Attribute} column - Current column whose new key has been selected.
+     */
+    onSuggestSelect(selection: TypeaheadMatch, column: Attribute) {
+        if (column.name != selection.value) {
+            this.rootEl.nativeElement.dispatchEvent(new Event('change', {bubbles: true}));
+            this.onColumnChange(column, selection.value);
+        }
     }
 }

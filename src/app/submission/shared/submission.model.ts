@@ -312,6 +312,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
             this.addRow();
         }
 
+        //TODO: Make displayed columns less permanent. Should be added once when the submission is new. Link with "isNew" from submission edit view.
         type.columnTypes.forEach(ct => {
             if (ct.required || ct.displayed) {
                 this.addColumn(ct.name, ct.required, ct.displayed, ct.valueType, ct.values);
@@ -395,7 +396,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
      * @author Hector Casanova <hector@ebi.ac.uk>
      */
     pluralName(): string {
-        return pluralize(this.type.name, this.size());
+        return pluralize(this.type.name);
     }
 
 
@@ -407,16 +408,22 @@ export class Feature extends HasUpdates<UpdateEvent> {
      */
     add(attributes: { name: string, value: string }[] = [], rowIdx: number = null): void {
         const attrNames = attributes.filter(attr => attr.name !== '').map(attr => attr.name);
-        const colNames = this._columns.names().map(name => name.toLowerCase());
+
+        const usedColIds = [];
         let rowMap;
 
-        //Adds a column if any of the passed-in attribute names doesn't exist, capitalizing it just for display purposes.
+        //Adds a column if any of the passed-in attribute names doesn't occur as often as it does in the column list.
         attrNames
-            .filter(attrName => colNames.indexOf(attrName.toLowerCase()) < 0)
-            .forEach((name) => {
-                const capName = _.capitalize(name);
-                const colType = this.type.getColumnType(capName);
-                this.addColumn(capName, colType.required, colType.displayed, colType.valueType, colType.values);
+            .forEach((attrName) => {
+                const colNames = this._columns.names();
+                const instancesFn = (name) => attrName == name;
+                const occurAttrs = attrNames.filter(instancesFn).length;
+                const occurCols = colNames.filter(instancesFn).length;
+                const colType = this.type.getColumnType(attrName);
+
+                if (occurAttrs != occurCols) {
+                    this.addColumn(attrName, colType.required, colType.displayed, colType.valueType, colType.values);
+                }
             });
 
         //If row not provided, add it if applicable.
@@ -428,10 +435,15 @@ export class Feature extends HasUpdates<UpdateEvent> {
 
         //Finds out the column corresponding to each of the attributes and sets its value
         attributes.forEach(attr => {
-            const cols: Attribute[] = this._columns.allWithName(attr.name);
-            cols.forEach(col => {
-                rowMap.valueFor(col.id).value = attr.value;
+            let cols: Attribute[] = this._columns.allWithName(attr.name);
+
+            //Prevents the same attribute becoming the value for multiple columns of the same name
+            cols = cols.filter((col) => {
+                return usedColIds.indexOf(col.id) == -1;
             });
+            usedColIds.push(cols[0].id);
+
+            rowMap.valueFor(cols[0].id).value = attr.value;
         });
     }
 
@@ -880,6 +892,12 @@ export class Submission {
 
     readonly tags: Tags;
 
+    /**
+     * Creates a new submission from PageTab-formatted data and pre-defined type definitions.
+     * @see {@link PageTab}
+     * @param {SubmissionType} type Type definitions object
+     * @param {SubmissionData} data Submission data in PageTab format.
+     */
     constructor(type: SubmissionType, data: SubmissionData = {} as SubmissionData) {
         this.tags = Tags.create(data);
         this.type = type;

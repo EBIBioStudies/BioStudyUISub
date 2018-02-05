@@ -10,10 +10,10 @@ import {Observable} from "rxjs/Observable";
 
 @Injectable()
 export class UserData {
-    static contactMap = {       //maps response property to submission attribute name for contact data
-        'email': 'e-mail',
-        'username': 'name',
-        'aux.orcid': 'orcid'    //allows flattening of nesting levels
+    static contactMap = {       //maps response property to submission attribute name for as shown in contact widget
+        'email': 'E-mail',
+        'username': 'Name',
+        'aux.orcid': 'ORCID'    //dot notation allows flattening of nesting levels
     }
     private _whenFetched: Subject<any> = new Subject<any>();
     private isFetched: boolean = false;                         //flags when data has been fetched already
@@ -47,16 +47,24 @@ export class UserData {
     }
 
     /**
-     * Creates a new object from the one fetched from the server, changing the names of the properties if so
-     * required.
+     * Creates a new object from the one fetched from the server, changing the names and/or hierarchy of
+     * properties and normalising any undefined property as an empty string.
      * @returns {Object} Object containing contact data.
      */
     get contact(): object {
         const userData = this;      //gives context to eval op later on
         const contactObj = {};
 
+        //Flattens contact object according to pre-defined map
         Object.keys(UserData.contactMap).forEach((keyToChange) => {
-            contactObj[UserData.contactMap[keyToChange]] = eval('userData.' + keyToChange);
+            let userDatum;
+
+            try {
+                userDatum = eval('userData.' + keyToChange) || '';
+            } catch (exception) {
+                userDatum = '';
+            }
+            contactObj[UserData.contactMap[keyToChange]] = userDatum;
         });
 
         return contactObj;

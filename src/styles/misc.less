@@ -219,7 +219,7 @@ component */
 }
 
 //Makes validation popovers show up only when there is indeed an error, preventing it from overflowing its
-//container (eg: scrollable area in feature grids).
+//container (eg: scrollable area in feature grids). Only applies the extended format to laptop screens.
 .validation-pop {
   display: none !important;
   z-index: 950;           //above any dropdowns but below any nav bar
@@ -235,7 +235,7 @@ component */
 .has-error .popover-body {
   color: #bb4a48;
 }
-@media screen and (min-width: 1360px) {
+@media only screen and (min-width: 1160px) {
   .validation-pop {
     min-width: 300px;
     font-size: 14px;

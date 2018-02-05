@@ -5,14 +5,15 @@
     </div>
     <div class="row" #rowEl *ngFor="let column of columns; let idx = index; let first = first; let last = last">
         <div class="cell col-xs-3">
-            <!-- NOTE: required columns cannot be edited => will never be the one causing name collision -->
             <div class="form-group key-field"
-                 [ngClass]="{'has-error': !column.required &&
+                 [ngClass]="{'optional': !column.required,
+                             'has-error': !column.required &&
                                           featureForm.columnControl(column.id).invalid &&
                                           featureForm.columnControl(column.id).touched}">
-                <div class="input-group">
-                    <span *ngIf="!readonly && !column.required && !column.displayed"
-                          class="input-group-btn">
+                <div [ngClass]="{'input-group': !readonly && !column.required}">
+                    <span *ngIf="!readonly && !column.required" class="input-group-btn"
+                          container="body"
+                          [tooltip]="feature.canRemoveRowAt(index) ? '' : 'The list must contain one entry at least'">
                           <button type="button" tabindex="-1"
                                   class="btn btn-sm btn-danger btn-flat"
                                   (click)="feature.removeRowAt(idx)"
@@ -24,21 +25,22 @@
                           </button>
                     </span>
                     <input type="text" class="form-control input-sm"
-                           placement="{{first && !last ? 'bottom' : 'top'}}"
+                           placement="{{first && !last && !colNames.length? 'bottom' : 'top'}}"
                            triggers="focus"
                            containerClass="validation-pop text-danger"
                            popover="Please use a unique key name"
                            [ngModel]="column.name"
                            [formControl]="featureForm.columnControl(column.id)"
                            [readonly]="readonly || column.required || column.displayed"
-                           [typeahead]="colNames"
+                           [typeahead]="readonly || column.required || column.displayed ? [] : colNames"
                            [typeaheadMinLength]="0"
                            [typeaheadOptionsLimit]="15"
                            #ahead="bs-typeahead"
                            [unique]="feature.uniqueCols"
                            validate-onblur
                            (keyup.enter)="ahead._container ? $event.stopPropagation() : return"
-                           (change)="column.name = $event.target.value"
+                           (change)="onColumnChange(column, $event.target.value)"
+                           (typeaheadOnSelect)="onSuggestSelect($event, column)"
                            (blur)="featureForm.columnControl(column.id).value ||
                                    featureForm.columnControl(column.id).setValue(feature.typeName + ' ' + (idx + 1))">
                 </div>
@@ -46,9 +48,10 @@
         </div>
         <div class="cell col-xs-9">
             <div class="form-group"
-                 [ngClass]="{'has-error': featureForm.rowValueControl(0,column.id).invalid &&
+                 [ngClass]="{'optional': !column.required,
+                             'has-error': featureForm.rowValueControl(0,column.id).invalid &&
                                           featureForm.rowValueControl(0,column.id).touched}">
-                <subm-field placement="{{first && !last ? 'bottom' : 'top'}}"
+                <subm-field placement="{{first && !last && !column.values.length? 'bottom' : 'top'}}"
                             triggers="focus"
                             containerClass="validation-pop text-danger"
                             popover="{{featureForm.rowErrors[0][column.id]}}"
@@ -56,7 +59,6 @@
                             [(ngModel)]="feature.rows[0].valueFor(column.id).value"
                             [readonly]="readonly"
                             [required]="column.required"
-                            isSmall="true"
                             [formControl]="featureForm.rowValueControl(0,column.id)"
                             [autosuggest]="column.values"
                             [suggestLength]="15"

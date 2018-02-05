@@ -1,11 +1,12 @@
 <div class="dropdown"
      [ngClass]="{'readonly': readonly}"
      (click)="onClick($event)">
-    <input type="text" class="form-control" readonly
-           bsDatepicker
-           (bsValueChange)="onPickerSet($event)"
-           (onShown)="onPickerShown()"
+    <input class="form-control" type="text" readonly
+           [ngClass]="{'input-sm': isSmall}"
            [ngModel]="dateValue"
            [required]="required"
+           (bsValueChange)="onPickerSet($event)"
+           (onShown)="onPickerShown()"
+           bsDatepicker
            #dp="bsDatepicker">
 </div>

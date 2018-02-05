@@ -1,23 +1,28 @@
 <div class="inline-edit-wrapper"
-     [ngClass]="{'editable': canEdit, 'text-muted': !editing}">
+     [ngClass]="{'editable': canEdit, 'changeable': !disableChange, 'text-muted': !editing}">
     <input class="form-control form-control-auto" type="text" tabindex="-1" autocomplete="off"
+           name="inline-edit-box"
+           container="body"
+           placement="bottom"
+           [tooltip]="isOverflow(inlineEditBox) ? value : ''"
            [required]="required"
            [(ngModel)]="value"
            [placeholder]="placeholder"
-           (blur)="onEditBoxBlur($event)"
-           (keyup)="onEditBoxKeyUp($event)"
-           (click)="canEdit && startEditing()"
            [readonly]="!editing"
-           name="inline-edit-box"
+           [typeahead]="!editing ? [] : autosuggest"
+           [typeaheadMinLength]="suggestThreshold"
+           [typeaheadOptionsLimit]="suggestLength"
+           (blur)="onEditBoxBlur($event)"
+           (click)="canEdit && !disableChange && startEditing()"
+           (keyup.enter)="onEditBoxEnter($event, ahead._container)"
+           #ahead="bs-typeahead"
            #inlineEditBox/>
     <div *ngIf="!editing" class="icons">
-        <button class="btn btn-xs btn-link"
-                *ngIf="canEdit"
+        <button *ngIf="canEdit && !disableChange" class="btn btn-xs btn-link" type="button"
                 (click)="startEditing()">
             <i class="fa fa-pencil"></i>
         </button>
-        <button class="btn btn-xs btn-link"
-                *ngIf="canEdit"
+        <button *ngIf="canEdit" class="btn btn-xs btn-link" type="button"
                 (click)="onRemoveClick($event)">
             <i class="text-danger fa fa-trash-o"></i>
         </button>

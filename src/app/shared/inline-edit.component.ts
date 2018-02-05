@@ -3,7 +3,7 @@ import {
     Input,
     Output,
     forwardRef,
-    EventEmitter
+    EventEmitter, ElementRef
 } from '@angular/core';
 
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
@@ -17,10 +17,14 @@ import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
     ]
 })
 export class InlineEditComponent implements ControlValueAccessor {
-    @Input() required?: boolean = false;
-    @Input() disableEdit?: boolean = false;
-    @Input() emptyValue?: string = '';
-    @Input() placeholder?: string = '';
+    @Input() required?: boolean = false;        //flag indicating if the field must have a value
+    @Input() disableEdit?: boolean = false;     //flag indicating if changing or removing the field is not allowed
+    @Input() disableChange?: boolean = false;   //flag indicating if changing the field's initial value is allowed
+    @Input() emptyValue?: string = '';          //default value for the field if left empty
+    @Input() placeholder?: string = '';         //indicative text inside the field if not in focus
+    @Input() autosuggest: any[] = [];           //typeahead list of suggested values
+    @Input() suggestThreshold: number = 0;      //the typeahead is meant to act as a reminder of other fields too
+    @Input() suggestLength: number = 30;        //max number of suggested values to be displayed at once
     @Output() remove: EventEmitter<any> = new EventEmitter<any>();
 
     editing: boolean = false;
@@ -75,9 +79,25 @@ export class InlineEditComponent implements ControlValueAccessor {
         this.stopEditing();
     }
 
-    private onEditBoxKeyUp(ev: KeyboardEvent): void {
-        if (ev.key === 'Enter') {
+    /**
+     * Handler for enter key press event. It cancels the press event's propagation and makes the component
+     * go into display mode if the event is not resulting from the selection of a suggested column name.
+     * @param {Event} event - DOM event object.
+     * @param {boolean} isSuggestOpen - If true, the autosuggest typeahead list is being displayed.
+     */
+    private onEditBoxEnter(event: Event, isSuggestOpen: boolean): void {
+        event.stopPropagation();
+        if (!isSuggestOpen) {
             this.stopEditing();
         }
+    }
+
+    /**
+     * Determines if the field's contents are longer than the actual field's dimensions by probing the DOM directly.
+     * @param {Element} element - DOM element for the field.
+     * @returns {boolean} True if the text's length is greater than its container.
+     */
+    private isOverflow(element: Element): boolean {
+        return element.scrollWidth > element.clientWidth;
     }
 }

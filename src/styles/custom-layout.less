@@ -224,9 +224,11 @@ aside {
 
 //Gives readonly inputs and features the appearance of standard text
 input[readonly], textarea[readonly] {
-  font-size: @font-size-base;
   text-overflow: ellipsis;
   background: #fff !important;
+}
+.readonly input, .readonly textarea {
+  font-size: @font-size-base;
 }
 .readonly .form-control, .readonly .feature {
   border: none !important;
@@ -234,6 +236,14 @@ input[readonly], textarea[readonly] {
 }
 .readonly .feature .form-control {
   padding-left: 0;
+}
+
+//Optional fields (be them data or column ones) within features have discontinous outlines
+.optional .form-control {
+  border-style: dashed;
+}
+.heading-cell.optional {
+  border-bottom-style: dashed !important;
 }
 
 //Makes labels' size to reflect font-size without compromising spacing between form element
@@ -269,9 +279,15 @@ input[readonly], textarea[readonly] {
   font-weight: bold;
 }
 
-//Convenience text for vertical clockwise text
+//Convenience class for vertical clockwise text
 .vertical-text {
   transform: rotate(-90deg);
+}
+
+//Convenience class for a dashed outline of inline text
+.text-dashed {
+  border: 1px dashed;
+  border-radius: @border-radius-small;
 }
 
 //Brings date picker's styles in line with the app's and removes pointer over inactive/disabled day cells

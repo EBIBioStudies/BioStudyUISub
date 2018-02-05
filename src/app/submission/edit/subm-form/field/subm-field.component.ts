@@ -11,6 +11,7 @@ import {
     NG_VALUE_ACCESSOR, NgModel, Validators,
 } from '@angular/forms';
 import {FieldControl} from "../subm-form.service";
+import {TypeaheadMatch} from "ngx-bootstrap";
 
 
 @Component({
@@ -27,7 +28,6 @@ export class SubmFieldComponent implements ControlValueAccessor {
     private onTouched: any = () => {};          //placeholder for handler after the control has been "touched"
 
     private _value = '';                        //internal data model for the field's value
-    private isOverflow: boolean = false;        //indicates if the text content is longer than the field itself.
 
     @Input() type: string;                      //type of field: text, date, pubmedid, orcid...
     @Input() readonly: boolean;                 //if true, the field will be rendered but its value cannot be changed
@@ -35,18 +35,19 @@ export class SubmFieldComponent implements ControlValueAccessor {
     @Input() formControl: FieldControl;         //reactive control associated with this field
     @Input() isSmall: boolean = true;           //flag for making the input area the same size as grid fields
     @Input() autosuggest: any[] = [];           //typeahead list of suggested values
-    @Input() suggestThreshold: number = 0;      //the typeahead is meant to act as a reminder of other fields too
     @Input() suggestLength: number = 30;        //max number of suggested values to be displayed at once
-
+    @Input() suggestThreshold: number = 0;      //number of typed characters before suggestions are displayed.
+                                                //a value of 0 makes typeahead behave like an auto-suggest box.
 
     @Output() async: EventEmitter<any> = new EventEmitter<any>();  //signals availability of asynchronous attributes
 
-    constructor(private elementRef: ElementRef) { }
+    constructor(private rootEl: ElementRef) {}
 
     get value() {
         return this._value;
     }
 
+    //TODO: this is being called twice. Why?
     set value(value) {
         this._value = value;
         this.onChange(value);
@@ -93,20 +94,16 @@ export class SubmFieldComponent implements ControlValueAccessor {
      * Updates the pointer to the DOM element too.
      */
     ngAfterViewInit(): void {
-        this.formControl.nativeElement = this.elementRef.nativeElement.querySelector('.form-control');
+        this.formControl.nativeElement = this.rootEl.nativeElement.querySelector('.form-control');
     }
 
     /**
      * Determines if the field's contents are longer than the actual field's dimensions by probing the DOM directly.
+     * @param {Element} element - DOM element for the field.
+     * @returns {boolean} True if the text's length is greater than its container.
      */
-    ngAfterViewChecked(): void {
-        const controlEl = this.formControl.nativeElement;
-
-        if (controlEl) {
-            this.isOverflow = controlEl.scrollWidth > controlEl.clientWidth;
-        } else {
-            this.isOverflow = false;
-        }
+    private isOverflow(element: HTMLInputElement): boolean {
+        return element.scrollWidth > element.clientWidth;
     }
 
     /**
@@ -115,5 +112,15 @@ export class SubmFieldComponent implements ControlValueAccessor {
      */
     asyncData(data: any): void {
         this.async.emit(data);
+    }
+
+    /**
+     * Handler for select event from auto-suggest typeahead. Fixes the lack of a change event when
+     * selecting a value without any character being typed (typically in combination with typeaheadMinLength = 0).
+     * TODO: this might be sorted in newer versions of the ngx-bootstrap plugin. Duplicate events may occur due to the repeated calling of set value() above (cannot keep track of the last value and, by extension, can't detect change).
+     * @param {TypeaheadMatch} selection - Object for the currently selected value.
+     */
+    onSuggestSelect(selection: TypeaheadMatch) {
+        this.rootEl.nativeElement.dispatchEvent(new Event('change', {bubbles: true}));
     }
 }

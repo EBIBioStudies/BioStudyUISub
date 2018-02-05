@@ -279,6 +279,11 @@ export class PageTab implements SubmissionData {
         }
     }
 
+    /**
+     * Converts from PageTab format into the app's internal data format for submissions.
+     * @param {SubmissionType} type - Type definitions object.
+     * @returns {Submission} Object representing the submission.
+     */
     toSubmission(type: SubmissionType): Submission {
         return new Submission(type, this);
     }
