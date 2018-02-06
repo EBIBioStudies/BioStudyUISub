@@ -104,14 +104,15 @@
                         </span>
                         <span class="btn-toolbar pull-right">
                             <button type="button" class="section-edit btn btn-link btn-xs btn-flat"
-                                    tooltip="edit"
+                                    tooltip="Edit section &quot;{{subsection.typeName}}&quot;"
                                     container="body"
                                     (click)="onSectionClick(subsection)">
                                 <i class="fa fa-pencil fa-fw fa-lg"></i>
                             </button>
                             <button type="button" *ngIf="section.sections.isRemovable(subsection)" class="section-delete btn btn-danger btn-xs btn-flat"
-                                    tooltip="delete"
+                                    tooltip="Delete section &quot;{{subsection.typeName}}&quot;"
                                     container="body"
+                                    placement="left"
                                     (click)="onSectionDelete(subsection)">
                                 <i class="fa fa-trash-o fa-fw"></i>
                             </button>

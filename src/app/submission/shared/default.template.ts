@@ -6,7 +6,6 @@ export const DefaultTemplate = {
             'title': 'Describe your study',
             'description': 'Provide any supplementary details of the study that may help discover and/or interpret it',
             'icon': 'fa-tag',
-            'uniqueCols': false,
             'columnTypes': [
                 {
                     'name': 'Organism',

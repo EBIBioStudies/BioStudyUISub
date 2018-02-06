@@ -6,22 +6,25 @@ import {
     AfterViewInit
 } from '@angular/core';
 
-import {ModalDirective} from 'ngx-bootstrap';
+import {ModalDirective, PopoverDirective} from 'ngx-bootstrap';
 import {
     NgForm,
     NgModel
 } from "@angular/forms";
+import {Section} from "../../shared/submission.model";
+import {SectionType} from "../../shared/submission-type.model";
+import {BsComponentRef} from "ngx-bootstrap/component-loader/bs-component-ref.class";
 
 @Component({
     selector: 'subm-add-dialog',
     templateUrl: './subm-add.component.html'
 })
-export class SubmAddDialogComponent implements AfterViewInit {
-    private _type: string;       //form model member for the type property
-    name: string;                //form model member for the new type's name property
-    isUnique: boolean;           //uniqueness flag of the chosen type name
+export class SubmAddDialogComponent {
+    private type: string = 'Grid';       //form model member for the type property
+    private name: string;                //form model member for the new type's name property
+    private featNames: string[];         //existing feature type names
 
-    @Input() onAddType: Function = () => {}; //callback for add action (acts as an ad-hoc, async validator)
+    @Input() section: Section;
 
     @ViewChild('focusBtn')
     private focusEl: ElementRef;
@@ -29,57 +32,43 @@ export class SubmAddDialogComponent implements AfterViewInit {
     private modalDirective: ModalDirective;
     @ViewChild('typeName')
     private typeName: NgModel;
-    
-    get type(): string {
-        return this._type;
-    }
+    @ViewChild('uniquePop')
+    private uniquePop: PopoverDirective;
 
     /**
-     * Sets the type of the new type item. If it's a section, then the type name doesn't have to be unique.
-     * @param {boolean} value Type of the new type item.
+     * Generates the list of type names for all features (including annotations) from section data.
+     * @returns {string[]} Type names of all defined features.
      */
-    set type(value: string) {
-        if (value == 'Section') {
-            this.isUnique = true;
+    private getFeatNames(): string[] {
+        let nonAnnotNames: string[];
+        if (this.section) {
+            nonAnnotNames = this.section.features.list().map((feature) => {
+                return feature.typeName;
+            });
+            return [this.section.annotations.typeName].concat(nonAnnotNames)
         }
-        this._type = value;
-    }
-
-    ngOnInit(): void {
-        this.type = 'Grid';
     }
 
     /**
      * Renders the modal with default values.
      */
     show(): void {
+        this.featNames = this.getFeatNames();
         this.modalDirective.show();
     }
 
     /**
-     * Closes the modal, making sure the last typeName typed in is not lost while
-     * clearing any validation messages.
+     * Closes the modal, clearing any validation messages.
      */
     hide(): void {
-        this.typeName.control.markAsUntouched({onlySelf: true});
         this.modalDirective.hide();
-    }
-
-    /**
-     * Every time the type name is blank, it will be marked as unique (no existing type name is blank after all).
-     */
-    ngAfterViewInit() {
-        this.typeName.statusChanges.subscribe((status) => {
-            if (status == 'INVALID') {
-                this.isUnique = true;
-            }
-        });
     }
 
     /**
      * Handler for "onShown" event, triggered exactly after the modal has been fully revealed.
      */
     onShown(): void {
+        this.typeName.control.markAsUntouched({onlySelf: true});
         this.focusEl.nativeElement.focus();
     }
 
@@ -102,26 +91,77 @@ export class SubmAddDialogComponent implements AfterViewInit {
         let isSection: boolean = false;
 
         //Adds type if all form fields completed satisfactorily
-        if (form.valid && this.isUnique) {
-            if (this._type == 'Section') {
+        if (form.valid) {
+            if (this.type == 'Section') {
                 isSection = true;
-            } else if (this._type == 'List') {
+            } else if (this.type == 'List') {
                 isSingleRow = true;
             }
 
             //Add operation successful => gets form ready for further additions
             if (this.onAddType(this.name, isSection, isSingleRow)) {
-                this.hide();
-                form.reset({type: 'Grid', name: ''});
+               this.onCancel();
 
-            //Add operation failed => type name was not unique => show error
+            //Add operation failed => show error
             } else {
-                this.isUnique = false;
+                this.typeName.control.markAsTouched({ onlySelf: true });
             }
 
         //Triggers form-led validation of all fields.
         } else {
             this.typeName.control.markAsTouched({ onlySelf: true });
         }
+    }
+
+    /**
+     * Handler for adding the new type to the existing set of type items.
+     * @param {string} name - Name of the new type.
+     * @param {boolean} isSection - Indicates a section will be added.
+     * @param {boolean} isSingleRow - Indicates a list will be added.
+     * @returns {any} Result of the addition operation, which could be empty if the new type is not valid.
+     */
+    onAddType(name: string, isSection: boolean, isSingleRow: boolean = false): any {
+        const rootType: SectionType = this.section.type;
+        let addedType: any;
+
+        if (isSection) {
+            const sectionType = rootType.getSectionType(name);
+            addedType = this.section.sections.add(sectionType);
+
+        } else {
+            const featureType = rootType.getFeatureType(name, isSingleRow);
+            addedType = this.section.features.add(featureType);
+        }
+
+        return addedType;
+    }
+
+    /**
+     * Handler for focus event on the type name field. It displays the popover with a list of existing type names.
+     * NOTE: The popover is only rendered when the uniqueness test fails.
+     */
+    onNameFocus() {
+        if (this.uniquePop) {
+            this.uniquePop.show();
+        }
+    }
+
+    /**
+     * Handler for blur event on the type name field. Hides the popover displayed by the method above.
+     * NOTE: The popover is only rendered when the uniqueness test fails.
+     */
+    onNameBlur() {
+        if (this.uniquePop) {
+            this.uniquePop.hide();
+        }
+    }
+
+    /**
+     * Handler for blur event on the type class field. Ensures the submission of sections with duplicate
+     * names goes ahead.
+     * NOTE: Section names do not have to be unique.
+     */
+    onTypeBlur() {
+        this.typeName.control.updateValueAndValidity();
     }
 }

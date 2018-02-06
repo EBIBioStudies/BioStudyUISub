@@ -181,11 +181,20 @@ export class FeatureType extends BaseType {
 
 /**
  * All annotations are features with the "singleRow" flag set to true so that the controls
- * for adding rows/columns are not shown.
+ * for adding columns are not shown. Additionally, duplicate keys are implicitly allowed
+ * unless stated otherwise.
  */
 export class AnnotationsType extends FeatureType {
     constructor(other?: any, scope?: Map<string, any>) {
-        super('Annotation', true, false, other, scope);
+        let isUniqueCols;
+
+        if (other && other.hasOwnProperty('uniqueCols')) {
+            isUniqueCols = other.uniqueCols;
+        } else {
+            isUniqueCols = false;
+        }
+
+        super('Annotation', true, isUniqueCols, other, scope);
     }
 }
 

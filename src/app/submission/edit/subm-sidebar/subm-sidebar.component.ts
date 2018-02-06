@@ -327,29 +327,6 @@ export class SubmSideBarComponent implements OnChanges {
     }
 
     /**
-     * Handler for adding the new type to the existing set of type items.
-     * @param {string} name - Name of the new type.
-     * @param {boolean} isSection - Indicates a section will be added.
-     * @param {boolean} isSingleRow - Indicates a list will be added.
-     * @returns {any} Result of the addition operation, which could be empty if the new type is not valid.
-     */
-    onAddType(name: string, isSection: boolean, isSingleRow: boolean = false): any {
-        const rootType: SectionType = this.section.type;
-        let addedType: any;
-
-        if (isSection) {
-            const sectionType = rootType.getSectionType(name);
-            addedType = this.section.sections.add(sectionType);
-
-        } else {
-            const featureType = rootType.getFeatureType(name, isSingleRow);
-            addedType = this.section.features.add(featureType);
-        }
-
-        return addedType;
-    }
-
-    /**
      * Removes the submission item from the list of controls and marks it for deletion.
      * @param {Event} event - Click event object.
      * @param {FormControl[]} controls - Array of controls making up the component's form.
