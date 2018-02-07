@@ -63,15 +63,24 @@ export class AppConfig {
         return this.config.APP_CAN_PAST_DATES;
     }
 
-    //Promise is required here
+    /**
+     * Uses promises exclusively to fetch the JSON file specifying the app's configuration options.
+     * NOTE: URL data may be included in those options. To ensure that correct URLs are generated, this
+     * method has to be called before anything else, during app initialisation. Angular provides a mechanism
+     * for that through the "APP_INITIALIZER" injector token. However, this feature is still experimental in v4,
+     * requiring strict use of promises for it to be dependable.
+     * @returns {Promise<any>} Promise fulfilled once the config data has been fetched.
+     * @see {@link /src/app/app.module.ts}
+     * @see {@link https://stackoverflow.com/a/40222544}
+     */
     load(): Promise<any> {
-        let req: Observable<any> = this.http.get('./config.json');
+        const whenFetched: Promise<any> = this.http.get('./config.json').toPromise();
 
-        req.subscribe(res => {
-                this.config = res;
-                console.log('config', this.config);
-            });
+        whenFetched.then(res => {
+            this.config = res;
+            console.log('config', this.config);
+        });
 
-        return req.toPromise();
+        return whenFetched;
     }
 }
