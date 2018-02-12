@@ -1,5 +1,5 @@
 export const DefaultTemplate = {
-    'name': 'DeafultTemplate',
+    'name': 'Default',
     'sectionType': {
         'name': 'Study',
         'annotationsType': {

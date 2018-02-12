@@ -12,16 +12,24 @@
 
 /* Navbar submission */
 .navbar-subm-fixed {
-  position: fixed !important;
-  top: @navbar-height;
   width: 100%;
-  min-height: 54px;
-  display: flex;
-  align-items: center;
-  z-index: @zindex-navbar;
   padding: 13px 0 12px @left-side-width;
 
-  & > div {
+  nav {
+    position: fixed !important;
+    top: @navbar-height;
+    left: 0;
+    z-index: @zindex-navbar-fixed;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 54px;
+    padding: inherit;
+    background: inherit;
+    box-shadow: inherit;
+  }
+
+  .nav-block {
     float: none;
     display: inline-block;
     vertical-align: middle;
@@ -102,7 +110,7 @@ aside {
 .sidebar {
   overflow-y: auto;
   overflow-x: hidden;
-  z-index: @zindex-navbar + 1;
+  z-index: calc(@zindex-navbar-fixed + 1);
 }
 
 .sidebar-offcanvas {
@@ -238,6 +246,12 @@ input[readonly], textarea[readonly] {
   padding-left: 0;
 }
 
+//Makes radio buttons stand out more
+input[type="radio"] {
+  width: 1.6rem;
+  height: 1.6rem;
+}
+
 //Optional fields (be them data or column ones) within features have discontinous outlines
 .optional .form-control {
   border-style: dashed;
@@ -274,6 +288,22 @@ input[readonly], textarea[readonly] {
   background: @brand-danger !important;
 }
 
+//Makes alerts take up no more space than its contents
+.alert {
+  display: inline-block;
+  margin: 5px;
+}
+
+//Removes the gray shading over close buttons, instead using white to make them evident
+.modal .close, .alert .close {
+  color: #fafafa;
+  opacity: 1;
+  text-shadow: none;
+
+  &:hover {
+    color: @text-color;
+  }
+}
 //Convenience class for bold typography
 .font-bold {
   font-weight: bold;
@@ -290,9 +320,10 @@ input[readonly], textarea[readonly] {
   border-radius: @border-radius-small;
 }
 
-//Brings date picker's styles in line with the app's and removes pointer over inactive/disabled day cells
+//Brings date picker's styles in line with the app's, removes pointer over inactive/disabled day cells
+//and keeps the dialogue on top of all form elements.
 .bs-datepicker {
-  z-index: 2000;
+  z-index: calc(@zindex-navbar-fixed - 10);
   border-radius: 4px;
 }
 .bs-datepicker .bs-datepicker-head {

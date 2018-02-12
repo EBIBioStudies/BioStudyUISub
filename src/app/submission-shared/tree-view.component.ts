@@ -76,7 +76,7 @@ li:last-child::before {
 }
 `]
 })
-export class TreeViewNodeComponent implements OnInit {
+export class TreeViewNodeComponent {
     @Input() data: any;
     @Input() config: TreeViewConfig;
 
@@ -96,13 +96,6 @@ export class TreeViewNodeComponent implements OnInit {
         return this.children.length > 0;
     }
 
-    //Reveals only branches of the tree that indicate error.
-    ngOnInit() {
-        if (this.hasChildren && this.data.level == "ERROR") {
-            this.isCollapsed = false;
-        }
-    }
-
     ngAfterViewInit() {
         let compFactory = this.componentFactoryResolver.resolveComponentFactory(this.config.nodeComponentClass);
         this.compRef = this.vcr.createComponent(compFactory);
@@ -111,6 +104,11 @@ export class TreeViewNodeComponent implements OnInit {
 
     ngOnChanges() {
         this.detectChanges();
+
+        //Reveals only branches of the tree that indicate error.
+        if (this.hasChildren && this.data.level == "ERROR") {
+            this.isCollapsed = false;
+        }
     }
 
     private detectChanges() {

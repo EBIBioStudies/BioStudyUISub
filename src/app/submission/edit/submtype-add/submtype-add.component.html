@@ -7,7 +7,7 @@
                   #form="ngForm"
                   (ngSubmit)="onSubmit(form)">
                 <div class="modal-header bg-primary">
-                    New type item
+                    Add new type item
                     <button type="button" class="close pull-right" aria-label="Close" (click)="hide()">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -39,7 +39,7 @@
                                     Please use a unique name
                                 </span>
                             </span>
-                            <span [hidden]="typeName.invalid && typeName.touched" class="text-muted">
+                            <span [hidden]="type == 'Section' || typeName.invalid && typeName.touched" class="text-muted">
                                 (must be unique)
                             </span>
                         </label>

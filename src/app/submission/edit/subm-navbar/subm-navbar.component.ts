@@ -11,6 +11,7 @@ import {SubmissionService} from "../../shared/submission.service";
 import {PageTab} from "app/submission/shared/pagetab.model";
 import {ConfirmDialogComponent} from "../../../shared/confirm-dialog.component";
 import {Observable} from "rxjs/Observable";
+import {SubmAddDialogComponent} from "../../list/subm-add.component";
 
 @Component({
     selector: 'subm-navbar',
@@ -26,6 +27,9 @@ export class SubmNavBarComponent {
     @Output() sectionClick: EventEmitter<Section> = new EventEmitter<Section>();
     @Output() revertClick: EventEmitter<Event> = new EventEmitter<Event>();
     @Output() submitClick: EventEmitter<Event> = new EventEmitter<Event>();
+
+    @ViewChild('addDialog')
+    addDialog: SubmAddDialogComponent;
 
     constructor(private submService: SubmissionService,
                 private router: Router) {}
@@ -43,13 +47,22 @@ export class SubmNavBarComponent {
     }
 
     /**
-     * Creates a blank submission using PageTab's data structure and brings up a form to edit it.
-     * //TODO: at present, the app relies on the backend to generate a ready instance of a submission. This leads to two requests for every new submission, one to create it and another to retrieve it for the edit view.
+     * Renders the new submission dialogue that allows the user to choose what type definitions template is used.
+     * @param {Event} event - Click event object, the bubbling of which will be prevented
      */
-    createSubmission() {
-        this.submService.createSubmission(PageTab.createNew())
-            .subscribe((s) => {
-                this.router.navigate(['/submissions/new/', s.accno]);
-            });
+    onNewSubmClick(event: Event): void {
+        event.preventDefault();
+        this.addDialog.show();
+    }
+
+    /**
+     * Creates a new submission using PageTab's data structure and brings up a form to edit it.
+     * @param {string} tmplId - ID for the type definitions template to be used for the submission.
+     * TODO: at present, the app relies on the backend to generate a ready instance of a submission. This leads to two requests for every new submission, one to create it and another to retrieve it for the edit view.
+     */
+    createSubmission(tmplId: string) {
+        this.submService.createSubmission(PageTab.createNew(tmplId)).subscribe((subm) => {
+            this.router.navigate(['/submissions/new/', subm.accno]);
+        });
     };
 }

@@ -10,17 +10,19 @@
 
     <div class="navbar-default navbar-subm-fixed"
          [ngClass]="{'collapse-left': !readonly && sideBarCollapsed}">
-        <div class="col-xs-10">
-            Path: <directory-path [path]="path.rel" (change)="onRelativePathChange($event)"></directory-path>
-        </div><!--
-        --><div class="col-xs-2 clearfix">
-            <file-upload-badge class="upload-count"
-                               (select)="onUploadSelect($event)"></file-upload-badge>
-            <file-upload-button class="pull-right"
-                                title="Upload files..."
-                                [multiple]="true"
-                                (select)="onUploadFilesSelect($event)"></file-upload-button>
-        </div>
+        <nav>
+            <div class="col-xs-10 nav-block">
+                Path: <directory-path [path]="path.rel" (change)="onRelativePathChange($event)"></directory-path>
+            </div><!--
+            --><div class="col-xs-2 nav-block clearfix">
+                <file-upload-badge class="upload-count"
+                                   (select)="onUploadSelect($event)"></file-upload-badge>
+                <file-upload-button class="pull-right"
+                                    title="Upload files..."
+                                    [multiple]="true"
+                                    (select)="onUploadFilesSelect($event)"></file-upload-button>
+            </div>
+        </nav>
     </div>
     <div class="container-fluid navbar-subm-margin">
         <aside class="right-side" [ngClass]="{'collapse-left' : sideBarCollapsed}">
