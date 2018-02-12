@@ -1,5 +1,5 @@
-export const DefaultTemplate = {
-    'name': 'DeafultTemplate',
+export const HecatosTemplate = {
+    'name': 'HeCaToS',
     'sectionType': {
         'name': 'Study',
         'required': true,

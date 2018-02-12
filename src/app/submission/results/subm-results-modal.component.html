@@ -30,7 +30,7 @@
             </p>
         </div>
     </div>
-    <subm-results-tree *ngIf="!isSuccess()" [log]="log"></subm-results-tree>
+    <subm-results-tree *ngIf="!isLogEmpty() && !isSuccess()" [log]="log"></subm-results-tree>
 </div>
 <div class="modal-footer">
     <div class="pull-right">

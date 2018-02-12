@@ -33,13 +33,14 @@ import {FeatureGridComponent} from './edit/subm-form/feature/feature-grid.compon
 import {FeatureListComponent} from './edit/subm-form/feature/feature-list.component';
 import {SubmNavBarComponent} from './edit/subm-navbar/subm-navbar.component';
 import {SubmValidationErrorsComponent} from './edit/subm-navbar/subm-validation-errors.component';
-import {SubmAddDialogComponent} from './edit/subm-add/subm-add.component';
+import {SubmTypeAddDialogComponent} from './edit/submtype-add/submtype-add.component';
 import {SubmFormService} from './edit/subm-form/subm-form.service';
 import {SubmResultsModalComponent} from './results/subm-results-modal.component';
 import {ResultsLogNodeComponent} from './results/results-log-node.component';
 import {SubmResultsTreeComponent} from './results/subm-results-tree.component';
 
 import {UniqueValidator} from './shared/unique.directive';
+import {SubmAddDialogComponent} from "./list/subm-add.component";
 
 @NgModule({
     imports: [
@@ -75,6 +76,7 @@ import {UniqueValidator} from './shared/unique.directive';
         SubmValidationErrorsComponent,
         SubmResultsModalComponent,
         SubmResultsTreeComponent,
+        SubmTypeAddDialogComponent,
         SubmAddDialogComponent,
         FeatureGridComponent,
         FeatureListComponent,

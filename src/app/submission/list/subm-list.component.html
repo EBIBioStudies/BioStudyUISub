@@ -4,14 +4,18 @@
 
         <span class="pull-right">
             <button class="btn btn-primary"
-                    (click)="uploadSubmission()"
-                    [disabled]="isBusy">
+                    (click)="onUploadSubmClick($event)"
+                    [disabled]="isBusy"
+                    tooltip="Create/Update a submission from a file"
+                    container="body">
                 <i class="fa fa-upload" aria-hidden="true"></i>
                 <span>Direct upload</span>
             </button>
             <button class="btn btn-primary"
-                    (click)="createSubmission()"
-                    [disabled]="isBusy">
+                    (click)="onNewSubmClick($event)"
+                    [disabled]="isBusy"
+                    tooltip="Create a new submission manually"
+                    container="body">
                 <i class="fa fa-plus-circle" aria-hidden="true"></i>
                 <span>Add new</span>
             </button>
@@ -20,15 +24,21 @@
             <tab [active]="!showSubmitted"
                  (select)="onSubmTabSelect(false)">
                 <template tabHeading>
-                    <i class="fa fa-clock-o" aria-hidden="true"></i>
-                    Pending
+                    <span tooltip="New studies pending submission or incomplete"
+                          container="body">
+                        <i class="fa fa-clock-o" aria-hidden="true"></i>
+                        Pending
+                    </span>
                 </template>
             </tab>
             <tab [active]="showSubmitted"
                  (select)="onSubmTabSelect(true)">
                 <template tabHeading>
-                    <i class="fa fa-database" aria-hidden="true"></i>
-                    Sent
+                    <span tooltip="Studies already submitted or revised"
+                          container="body">
+                        <i class="fa fa-database" aria-hidden="true"></i>
+                        Sent
+                    </span>
                 </template>
             </tab>
         </tabset>
@@ -51,5 +61,7 @@
         </a>
     </aside>
 </container-root>
-
+<subm-add-dialog #addDialog
+                 [onSubmit]="createSubmission.bind(this)">
+</subm-add-dialog>
 <confirm-dialog #confirmDialog></confirm-dialog>

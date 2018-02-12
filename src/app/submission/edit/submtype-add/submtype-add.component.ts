@@ -2,8 +2,7 @@ import {
     Component,
     ViewChild,
     ElementRef,
-    Input,
-    AfterViewInit
+    Input
 } from '@angular/core';
 
 import {ModalDirective, PopoverDirective} from 'ngx-bootstrap';
@@ -13,13 +12,12 @@ import {
 } from "@angular/forms";
 import {Section} from "../../shared/submission.model";
 import {SectionType} from "../../shared/submission-type.model";
-import {BsComponentRef} from "ngx-bootstrap/component-loader/bs-component-ref.class";
 
 @Component({
-    selector: 'subm-add-dialog',
-    templateUrl: './subm-add.component.html'
+    selector: 'type-add-dialog',
+    templateUrl: './submtype-add.component.html'
 })
-export class SubmAddDialogComponent {
+export class SubmTypeAddDialogComponent {
     private type: string = 'Grid';       //form model member for the type property
     private name: string;                //form model member for the new type's name property
     private featNames: string[];         //existing feature type names

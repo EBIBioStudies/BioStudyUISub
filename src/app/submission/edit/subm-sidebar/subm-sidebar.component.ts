@@ -20,7 +20,7 @@ import {
     Section,
     Feature
 } from '../../shared/submission.model';
-import { SubmAddDialogComponent } from '../subm-add/subm-add.component';
+import { SubmTypeAddDialogComponent } from '../submtype-add/submtype-add.component';
 import { ConfirmDialogComponent } from 'app/shared/index';
 import { SectionType } from '../../shared/submission-type.model';
 import {SubmValidationErrors} from "../../shared/submission.validator";
@@ -164,7 +164,7 @@ export class SubmSideBarComponent implements OnChanges {
     @Input() errors: SubmValidationErrors = SubmValidationErrors.EMPTY;      //errors from validator service
     @Output() toggle? = new EventEmitter();                                  //event triggered when collapsed state changes
 
-    @ViewChild('addDialog') addDialog: SubmAddDialogComponent;
+    @ViewChild('addDialog') addDialog: SubmTypeAddDialogComponent;
     @ViewChild('confirmDialog') confirmDialog: ConfirmDialogComponent;
 
     isAdvancedOpen: boolean = false; //flag indicating if advanced options for types are being displayed

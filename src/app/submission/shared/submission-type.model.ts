@@ -1,4 +1,5 @@
 import {DefaultTemplate} from './default.template';
+import {HecatosTemplate} from './hecatos.template';
 
 const defined = (val: string) => {
     return val !== undefined && val.length > 0;
@@ -294,11 +295,29 @@ export class SubmissionType extends BaseType {
     readonly sectionType: SectionType;
 
     static createDefault(): SubmissionType {
-        return SubmissionType.fromTemplate(DefaultTemplate);
+        return SubmissionType.fromTemplate('');
     }
 
-    static fromTemplate(tmpl: any): SubmissionType {
-        return TemplateType.create(tmpl).submissionType;
+    /**
+     * Creates a new submission using the type definitions present in a given project template.
+     * @param {string} tmplId - ID of the template containing the type definitions.
+     * @returns {SubmissionType} New submission.
+     */
+    static fromTemplate(tmplId): SubmissionType {
+        switch (tmplId.toLowerCase()) {
+            case 'hecatos':
+                return TemplateType.create(HecatosTemplate).submissionType;
+            default:
+                return TemplateType.create(DefaultTemplate).submissionType;
+        }
+    }
+
+    /**
+     * Retrieves the names of all the templates available in the app.
+     * @returns {string[]} Array of template names, with the default template's always first.
+     */
+    static listTmplNames(): any[] {
+        return [DefaultTemplate, HecatosTemplate].map(tmpl => tmpl.name);
     }
 
     /**

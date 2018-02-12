@@ -110,7 +110,7 @@ export class SubmEditComponent implements OnInit, OnDestroy {
                 this.wrappedSubm = results[0];
                 this.accno = this.wrappedSubm.accno;
                 page = new PageTab(this.wrappedSubm.data);
-                subm = page.toSubmission(SubmissionType.createDefault());
+                subm = page.toSubmission(SubmissionType.fromTemplate(page.firstAttachTo));
                 this.subm = subm;
 
                 //Validates the submission immediately

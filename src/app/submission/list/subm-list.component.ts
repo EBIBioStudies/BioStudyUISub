@@ -12,6 +12,7 @@ import {DateFilterComponent} from './ag-grid/date-filter.component';
 import {PageTab} from '../shared/pagetab.model';
 import {Subscription} from "rxjs/Subscription";
 import {AppConfig} from "../../app.config";
+import {SubmAddDialogComponent} from "./subm-add.component";
 
 @Component({
     selector: 'action-buttons-cell',
@@ -118,6 +119,8 @@ export class SubmListComponent {
     columnDefs: any[];
     private datasource: any;
 
+    @ViewChild('addDialog')
+    addDialog: SubmAddDialogComponent;
     @ViewChild('confirmDialog')
     confirmDialog: ConfirmDialogComponent;
 
@@ -296,6 +299,7 @@ export class SubmListComponent {
 
                     //Deletion canceled: reflects it on the button
                     } else {
+                        this.isBusy = false;
                         onCancel();
                     }
                 };
@@ -331,20 +335,35 @@ export class SubmListComponent {
     };
 
     /**
-     * Creates a blank submission using PageTab's data structure and brings up a form to edit it.
+     * Handler for the click event on the upload submission button, redirecting to a new view.
+     * @param {Event} event - Click event object, the bubbling of which will be prevented.
      */
-    createSubmission() {
-        this.isBusy = true;
-        this.submService.createSubmission(PageTab.createNew())
-            .subscribe((s) => {
-                this.isBusy = false;
-                this.router.navigate(['/submissions/new/', s.accno]);
-            });
-    };
-
-    uploadSubmission() {
+    onUploadSubmClick() {
+        event.preventDefault();
         this.router.navigate(['/submissions/direct_upload']);
     }
+
+    /**
+     * Renders the new submission dialogue that allows the user to choose what type definitions template is used.
+     * @param {Event} event - Click event object, the bubbling of which will be prevented
+     */
+    onNewSubmClick(event: Event): void {
+        event.preventDefault();
+        this.addDialog.show();
+    }
+
+    /**
+     * Creates a new submission using PageTab's data structure and brings up a form to edit it.
+     * @param {string} tmplId - ID for the type definitions template to be used for the submission.
+     * TODO: at present, the app relies on the backend to generate a ready instance of a submission. This leads to two requests for every new submission, one to create it and another to retrieve it for the edit view.
+     */
+    createSubmission(tmplId: string) {
+        this.isBusy = true;
+        this.submService.createSubmission(PageTab.createNew(tmplId)).subscribe((subm) => {
+            this.isBusy = false;
+            this.router.navigate(['/submissions/new/', subm.accno]);
+        });
+    };
 
     /**
      * Handler for click events on a row. It redirects the user to the study's edit mode, unless over the actions cell

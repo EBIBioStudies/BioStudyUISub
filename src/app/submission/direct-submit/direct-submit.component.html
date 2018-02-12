@@ -5,11 +5,13 @@
     </direct-submit-sidebar>
     <div class="navbar-default navbar-subm-fixed"
          [ngClass]="{'collapse-left': collapseSideBar}">
-        <div class="col-xs-12">
-            <a routerLink="/submissions">Submission list</a>
-            &nbsp;<i class="fa fa-angle-right font-bold"></i>&nbsp;
-            <strong>Direct upload</strong>
-        </div>
+        <nav>
+            <div class="col-xs-12 nav-block">
+                <a routerLink="/submissions">Submission list</a>
+                &nbsp;<i class="fa fa-angle-right font-bold"></i>&nbsp;
+                <strong>Direct upload</strong>
+            </div>
+        </nav>
     </div>
     <div class="container-fluid">
         <aside class="right-side navbar-subm-margin"
@@ -47,7 +49,7 @@
                         <p class="panel-title">
                             <strong>{{request.filename}}</strong>
                         </p>
-                        {{request.created | date: 'd MMM y, hh:mm'}}
+                        {{request.created | date: 'd MMM y, H:mm'}}
                     </div>
                 </div>
                 <div *ngIf="request.failed" class="panel-body container-fluid">

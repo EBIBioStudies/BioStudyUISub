@@ -29,6 +29,10 @@ export class SubmResultsModalComponent {
         return window.location;
     }
 
+    isLogEmpty() {
+        return this.log && Object.keys(this.log).length == 0;
+    }
+
     /**
      * Formats the response's log section as a URI string.
      * @returns {string} Serialised contents of the log section.

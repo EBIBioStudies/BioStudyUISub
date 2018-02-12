@@ -110,7 +110,7 @@ class PtSection extends PtEntry implements SectionData {
 }
 
 export class PageTab implements SubmissionData {
-    static externalAttrs: string[] = ['Title', 'ReleaseDate'];
+    static externalAttrs: string[] = ['Title', 'ReleaseDate', 'AttachTo'];
     readonly accno: string;
     readonly isRevised: boolean;
     readonly section: PtSection;
@@ -131,6 +131,7 @@ export class PageTab implements SubmissionData {
         pt.section = PageTab.fromSection(subm.root);
 
         //As per requirements of pagetab's current implementation, some attributes must not be within the section.
+        //NOTE: AttacthTo, ReleaseDate and Title are special attributes that pertain the whole submission.
         pt['attributes'] = [];
         pt.section.attributes = _.filter(pt.section.attributes, (attribute) => {
 
@@ -153,9 +154,25 @@ export class PageTab implements SubmissionData {
         return convertContactsToAuthors(pt);
     }
 
-    static createNew(): any {
-        const pt = new PageTab({});
-        return PageTab.fromSubmission(pt.toSubmission(SubmissionType.createDefault()));
+    /**
+     * Creates a new PageTab-formatted submission following a given project template. It also sets the "AttachTo"
+     * attribute to the passed-in template ID as a permanent record of the chosen template, the semantics of which
+     * is in line with the attribute's. If the default template is in use, the submission is assumed as standalone.
+     * @param {string} [tmplId = ''] - ID of the template containing the type definitions. If not provided, a
+     * generic template is used instead.
+     * @returns {any} New submission in PageTab format.
+     */
+    static createNew(tmplId: string = ''): any {
+        const ptData = {};
+        let pt;
+
+        if (tmplId && tmplId != 'Default') {
+            ptData['section'] = {};
+            ptData['attributes'] = [{name: 'AttachTo', value: tmplId}];
+        }
+
+        pt = new PageTab(ptData);
+        return PageTab.fromSubmission(pt.toSubmission(SubmissionType.fromTemplate(tmplId)));
     }
 
     private static fromSection(sec: Section): any {
@@ -279,12 +296,18 @@ export class PageTab implements SubmissionData {
         }
     }
 
+    get firstAttachTo(): string {
+        const attachToAttr = this.section.attributes.find(attr => attr.name == 'AttachTo');
+        return attachToAttr && attachToAttr.value || '';
+    }
+
     /**
      * Converts from PageTab format into the app's internal data format for submissions.
      * @param {SubmissionType} type - Type definitions object.
      * @returns {Submission} Object representing the submission.
      */
     toSubmission(type: SubmissionType): Submission {
-        return new Submission(type, this);
+        let subm = new Submission(type, this);
+        return subm;
     }
 }
