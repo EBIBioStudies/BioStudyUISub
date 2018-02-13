@@ -39,6 +39,11 @@ export const DefaultTemplate = {
                 {
                     'name': 'Cell type',
                     'valueType': 'text'
+                },
+                {
+                    'name': 'AttachTo',
+                    'valueType': 'text',
+                    'readonly': true
                 }
             ]
         },
