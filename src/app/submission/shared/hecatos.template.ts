@@ -1,5 +1,6 @@
 export const HecatosTemplate = {
     'name': 'HeCaToS',
+    'description': 'Hepatic and Cardiac Toxicity Systems modelling',
     'sectionType': {
         'name': 'Study',
         'required': true,
@@ -11,8 +12,18 @@ export const HecatosTemplate = {
                 {
                     'name': 'Factor',
                     'valueType': 'text',
-                    'values': ['Age', 'Compound', 'Dose', 'Dose duration', 'Dose frequency', 'Post treatment duration',
-                         'Sampling time point', 'Sampling date', 'Time range', 'Incubation time with respective conc. [uM]'],
+                    'values': [
+                        'Age',
+                        'Compound',
+                        'Dose',
+                        'Dose duration',
+                        'Dose frequency',
+                        'Post treatment duration',
+                        'Sampling time point',
+                        'Sampling date',
+                        'Time range',
+                        'Incubation time with respective conc. [uM]'
+                    ],
                     'displayed': true
                 },
                 {
@@ -56,19 +67,62 @@ export const HecatosTemplate = {
             {
                 'name': 'Organism',
                 'valueType': 'text',
-                'values': ['Homo sapiens', 'Mus musculus', 'Arabidopsis thaliana', 'Rattus norvegicus',
-                    'Drosophila melanogaster', 'Oryza sativa Japonica Group', 'Anas platyrhyncho',
-                    'Anolis carolinensis', 'Anopheles gambiae', 'Arabidopsis lyrata', 'Aspergillus fumigatus',
-                    'Bos Taurus', 'Brachypodium distachyon', 'Brassica oleracea', 'Brassica rapa',
-                    'Caenorhabditis elegans', 'Canis familiaris', 'Chlorocebus sabaeus', 'Ciona intestinalis',
-                    'Ciona savignyi', 'Danio rerio', 'Dasypus novemcinctus', 'Equus caballus', 'Gallus gallus',
-                    'Glycine max', 'Gorilla gorilla', 'Hordeum vulgare', 'Macaca mulatta', 'Medicago truncatula',
-                    'Monodelphis domestica', 'Musa acuminate', 'Ornithorhynchus anatinus', 'Oryctolagus cuniculus',
-                    'Oryza rufipogon', 'Ovis aries', 'Pan troglodytes', 'Papio Anubis',  'Physcomitrella patens',
-                    'Pongo abelii', 'Populus trichocarpa', 'Saccharomyces cerevisiae', 'Schistosoma mansoni',
-                    'Schizosaccharomyces pombe', 'Solanum lycopersicum', 'Solanum tuberosum', 'Sorghum bicolor',
-                    'Sus scrofa', 'Tetraodon nigroviridis', 'Theobroma cacao', 'Triticum aestivum', 'Vitis vinifera',
-                    'Xenopus tropicalis', 'Yarrowia lipolytica', 'Zea mays']
+                'values': [
+                    'Homo sapiens',
+                    'Mus musculus',
+                    'Arabidopsis thaliana',
+                    'Rattus norvegicus',
+                    'Drosophila melanogaster',
+                    'Oryza sativa Japonica Group',
+                    'Anas platyrhyncho',
+                    'Anolis carolinensis',
+                    'Anopheles gambiae',
+                    'Arabidopsis lyrata',
+                    'Aspergillus fumigatus',
+                    'Bos Taurus',
+                    'Brachypodium distachyon',
+                    'Brassica oleracea',
+                    'Brassica rapa',
+                    'Caenorhabditis elegans',
+                    'Canis familiaris',
+                    'Chlorocebus sabaeus',
+                    'Ciona intestinalis',
+                    'Ciona savignyi',
+                    'Danio rerio',
+                    'Dasypus novemcinctus',
+                    'Equus caballus',
+                    'Gallus gallus',
+                    'Glycine max',
+                    'Gorilla gorilla',
+                    'Hordeum vulgare',
+                    'Macaca mulatta',
+                    'Medicago truncatula',
+                    'Monodelphis domestica',
+                    'Musa acuminate',
+                    'Ornithorhynchus anatinus',
+                    'Oryctolagus cuniculus',
+                    'Oryza rufipogon',
+                    'Ovis aries',
+                    'Pan troglodytes',
+                    'Papio Anubis',
+                    'Physcomitrella patens',
+                    'Pongo abelii',
+                    'Populus trichocarpa',
+                    'Saccharomyces cerevisiae',
+                    'Schistosoma mansoni',
+                    'Schizosaccharomyces pombe',
+                    'Solanum lycopersicum',
+                    'Solanum tuberosum',
+                    'Sorghum bicolor',
+                    'Sus scrofa',
+                    'Tetraodon nigroviridis',
+                    'Theobroma cacao',
+                    'Triticum aestivum',
+                    'Vitis vinifera',
+                    'Xenopus tropicalis',
+                    'Yarrowia lipolytica',
+                    'Zea mays'
+                ]
             },
             {
                 'name': 'Organ',
@@ -162,7 +216,8 @@ export const HecatosTemplate = {
                     },
                     {
                         'name': 'Address',
-                        'valueType': 'text'
+                        'valueType': 'text',
+                        'removable': false
                     },
                     {
                         'name': 'Department',
@@ -236,7 +291,8 @@ export const HecatosTemplate = {
                     {
                         'name': 'PMID',
                         'valueType': 'pubmedid',
-                        'displayed': true
+                        'displayed': true,
+                        'removable': false
                     },
                     {
                         'name': 'Authors',

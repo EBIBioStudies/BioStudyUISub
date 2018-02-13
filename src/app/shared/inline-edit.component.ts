@@ -18,8 +18,9 @@ import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
 })
 export class InlineEditComponent implements ControlValueAccessor {
     @Input() required?: boolean = false;        //flag indicating if the field must have a value
-    @Input() disableEdit?: boolean = false;     //flag indicating if changing or removing the field is not allowed
+    @Input() disableEdit?: boolean = false;     //flag indicating if changing and removing the field is not allowed
     @Input() disableChange?: boolean = false;   //flag indicating if changing the field's initial value is allowed
+    @Input() disableRemove?: boolean = false;   //flag indicating if removing the field is not allowed
     @Input() emptyValue?: string = '';          //default value for the field if left empty
     @Input() placeholder?: string = '';         //indicative text inside the field if not in focus
     @Input() autosuggest: any[] = [];           //typeahead list of suggested values

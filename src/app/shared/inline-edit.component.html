@@ -22,7 +22,7 @@
                 (click)="startEditing()">
             <i class="fa fa-pencil"></i>
         </button>
-        <button *ngIf="canEdit" class="btn btn-xs btn-link" type="button"
+        <button *ngIf="canEdit && !disableRemove" class="btn btn-xs btn-link" type="button"
                 (click)="onRemoveClick($event)">
             <i class="text-danger fa fa-trash-o"></i>
         </button>

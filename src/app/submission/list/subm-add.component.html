@@ -1,7 +1,7 @@
 <div bsModal class="modal fade" role="dialog" aria-hidden="true"
      #bsModal="bs-modal"
      (onShown)="onShown(focusBtn)">
-    <div class="modal-dialog modal-sm">
+    <div class="modal-dialog">
         <div class="modal-content">
             <form novalidate autocomplete="off"
                   #form="ngForm"
@@ -13,8 +13,8 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    Please select a project from the list below. Leave the default option if the new submission is
-                    a standalone study or its project is not in the list.
+                    To create a blank submission, please select a project from the list below. You may leave the default
+                    option if the new submission is a stand-alone study or its parent project is not in the list.
                     <div class="form-group">
                         <label class="control-label">What is the study's parent project?</label>
                         <div *ngFor="let name of projectNames" class="radio">
