@@ -28,7 +28,7 @@ export class SubmFeatureComponent implements OnInit {
 
     /**
      * Defines the actions of the feature's menu according to its type (list or not). It also gets the type names
-     * of all possible columns just once.
+     * of all readable columns just once.
      */
     ngOnInit() {
         this.actions.push({
@@ -41,7 +41,9 @@ export class SubmFeatureComponent implements OnInit {
                 invoke: () => this.feature.addRow()
             });
         }
-        this.colTypeNames = this.feature.type.columnTypes.map(type => type.name);
+        this.colTypeNames = this.feature.type.columnTypes
+            .filter(type => !type.readonly)
+            .map(type => type.name);
     }
 
     get feature(): Feature {

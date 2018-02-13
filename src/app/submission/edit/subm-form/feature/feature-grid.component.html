@@ -11,7 +11,7 @@
 
         </div><!--
         --><div *ngFor="let column of columns; let idx = index" class="cell heading-cell column-heading col-xs-3 col-md-2"
-                [ngClass]="{'optional': !column.required && !readonly,
+                [ngClass]="{'optional': !column.required && !column.readonly && !readonly,
                             'has-error': !column.required &&
                                          featureForm.columnControl(column.id).invalid &&
                                          featureForm.columnControl(column.id).touched}">
@@ -24,7 +24,7 @@
                          (remove)="feature.removeColumn(column.id)"
                          [formControl]="featureForm.columnControl(column.id)"
                          [required]="column.required"
-                         [disableEdit]="readonly || !userData.isPrivileged"
+                         [disableEdit]="readonly || column.readonly || !userData.isPrivileged"
                          [disableChange]="column.displayed"
                          [autosuggest]="colNames"
                          [suggestLength]="15"
@@ -51,7 +51,8 @@
             {{rowIdx+1}}
         </div>
         <div class="cell body-cell column-entry col-xs-3 col-md-2" #colEl *ngFor="let column of columns">
-            <div [ngClass]="{'optional': !column.required && !readonly,
+            <div [ngClass]="{'readonly': column.readonly,
+                             'optional': !column.required && !column.readonly && !readonly,
                              'has-error': featureForm.rowValueControl(rowIdx, column.id).invalid &&
                                           featureForm.rowValueControl(rowIdx, column.id).touched}">
                 <subm-field placement="{{first && !last && !column.values.length ? 'bottom' : 'top'}}"
@@ -60,7 +61,7 @@
                             popover="{{featureForm.rowErrors[rowIdx][column.id]}}"
                             [type]="column.valueType"
                             [(ngModel)]="row.valueFor(column.id).value"
-                            [readonly]="readonly"
+                            [readonly]="readonly || column.readonly"
                             [required]="column.required"
                             [formControl]="featureForm.rowValueControl(rowIdx, column.id)"
                             [autosuggest]="column.values"

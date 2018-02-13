@@ -63,6 +63,7 @@ export type ValueType = 'text' | 'textblob' | 'date' | 'file';
 
 export class FieldType extends BaseType {
     readonly required: boolean;
+    readonly readonly: boolean;
     readonly valueType: ValueType;
     readonly values: string[];      //suggested values for the field
     readonly minlength: number;
@@ -84,6 +85,12 @@ export class FieldType extends BaseType {
             this.required = true;
         } else {
             this.required = false;
+        }
+
+        if (other.hasOwnProperty('readonly')) {
+            this.readonly = other.required;
+        } else {
+            this.readonly = false;
         }
 
         //Normalises the icon for the present type.
@@ -202,6 +209,7 @@ export class AnnotationsType extends FeatureType {
 export class ColumnType extends BaseType {
     readonly required: boolean;     //required data-wise: its fields should have data associated with it to be valid
     readonly displayed: boolean;    //required render-wise: should be visually available regardless of its fields being required or not
+    readonly readonly: boolean;     //renders the column and its member fields as a readonly inputs
     readonly valueType: ValueType;  //type of data for the fields under this column
     readonly values: string[];      //suggested values for the field
 
@@ -215,6 +223,7 @@ export class ColumnType extends BaseType {
         other = other || {};
         this.valueType = other.valueType || 'text';
         this.required = other.required === true;
+        this.readonly = other.readonly === true;
         this.displayed = other.displayed || false;
         this.values = other.values || [];
     }

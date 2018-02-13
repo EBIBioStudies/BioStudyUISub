@@ -14,6 +14,11 @@ export const HecatosTemplate = {
                     'values': ['Age', 'Compound', 'Dose', 'Dose duration', 'Dose frequency', 'Post treatment duration',
                          'Sampling time point', 'Sampling date', 'Time range', 'Incubation time with respective conc. [uM]'],
                     'displayed': true
+                },
+                {
+                    'name': 'AttachTo',
+                    'valueType': 'text',
+                    'readonly': true
                 }
             ]
         },

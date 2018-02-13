@@ -27,13 +27,14 @@
                 </span>
             </label>
             <span *ngIf="!readonly && !field.type.required" class="text-muted pull-right"><i>Optional</i></span>
-            <div [ngClass]="{'input-group': !readonly}">
-                <span *ngIf="!readonly" class="input-group-addon">
+            <div [ngClass]="{'input-group': !readonly && !field.readonly,
+                             'readonly': field.readonly}">
+                <span *ngIf="!readonly && !field.readonly" class="input-group-addon">
                     <i class="fa {{get(field.id, 'icon')}}"></i>
                 </span>
                 <subm-field class="subm-field"
                     [type]="field.valueType"
-                    [readonly]="readonly"
+                    [readonly]="readonly || field.readonly"
                     [required]="field.type.required"
                     [(ngModel)]="field.value"
                     [formControl]="get(field.id)"
