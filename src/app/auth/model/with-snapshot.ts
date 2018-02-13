@@ -1,5 +1,5 @@
 export class WithSnapshot {
-    dataSnapshot(properties: [string]) {
+    dataSnapshot(properties: Array<string>) {
         const s = {};
         for (let p of properties) {
             s[p] = this[p];
