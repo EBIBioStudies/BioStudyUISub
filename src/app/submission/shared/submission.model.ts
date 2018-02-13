@@ -58,16 +58,19 @@ export class Attribute extends HasUpdates<UpdateEvent> {
     required: boolean;
     displayed: boolean;
     readonly: boolean;
+    removable: boolean;
     valueType: ValueType;
     values: string[];
 
     private _name: string;
 
-    constructor(name: string = '', required: boolean = false, displayed: boolean = false, readonly: boolean = false, valueType: ValueType = 'text', values: string[] = []) {
+    constructor(name: string = '', required: boolean = false, displayed: boolean = false, readonly: boolean = false,
+                removable: boolean = true, valueType: ValueType = 'text', values: string[] = []) {
         super();
         this.required = required;
         this.displayed = displayed;
         this.readonly = readonly;
+        this.removable = removable;
         this.valueType = valueType;
         this.values = values;
         this._name = name;
@@ -88,11 +91,15 @@ export class Attribute extends HasUpdates<UpdateEvent> {
 
     /**
      * Changes the type properties of the column to a given set.
+     * NOTE: Columns whose type are updated are only those columns that were non-readonly in the first place.
+     * Given the sweeping effects of the "readonly" flag (making uneditable not just the column but all its member
+     * fields too), to avoid the update coming across as an uninteded, it is ignored on purpose.
      * @param {ColumnType} colType - New type values for the column.
      */
     updateType(colType: ColumnType) {
         this.required = colType.required;
         this.displayed = colType.displayed;
+        this.removable = colType.removable;
         this.valueType = colType.valueType;
         this.values = colType.values;
     }
@@ -317,7 +324,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
         //TODO: Make displayed columns less permanent. Should be added once when the submission is new. Link with "isNew" from submission edit view.
         type.columnTypes.forEach(ct => {
             if (ct.required || ct.displayed) {
-                this.addColumn(ct.name, ct.required, ct.displayed, ct.readonly, ct.valueType, ct.values);
+                this.addColumn(ct.name, ct.required, ct.displayed, ct.readonly, ct.removable, ct.valueType, ct.values);
             }
         });
 
@@ -424,7 +431,8 @@ export class Feature extends HasUpdates<UpdateEvent> {
                 const colType = this.type.getColumnType(attrName);
 
                 if (occurAttrs != occurCols) {
-                    this.addColumn(attrName, colType.required, colType.displayed, colType.readonly, colType.valueType, colType.values);
+                    this.addColumn(attrName, colType.required, colType.displayed, colType.readonly, colType.removable,
+                                   colType.valueType, colType.values);
                 }
             });
 
@@ -449,7 +457,8 @@ export class Feature extends HasUpdates<UpdateEvent> {
         });
     }
 
-    addColumn(name?: string, required?: boolean, displayed?: boolean, readonly?: boolean, valueType?: ValueType, values?: string[]): Attribute {
+    addColumn(name?: string, required?: boolean, displayed?: boolean, readonly?: boolean, removable?: boolean,
+              valueType?: ValueType, values?: string[]): Attribute {
         let defColName = ' ' + (this.colSize() + 1);
         let col;
 
@@ -459,7 +468,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
         } else {
             defColName = 'Column' + defColName;
         }
-        col = new Attribute(name || defColName, required, displayed, readonly, valueType, values);
+        col = new Attribute(name || defColName, required, displayed, readonly, removable, valueType, values);
 
         //Updates row and column maps
         this._rows.addKey(col.id);
@@ -753,7 +762,7 @@ export class Section extends HasUpdates<UpdateEvent> {
 
         this.fields = new Fields(type, data);
 
-        //Any attribute names that do not match field names are added as annotations.
+        //Any attribute names from the server that do not match top-level field names are added as annotations.
         //NOTE: Attribute names from the server are camel-cased whereas field names are in human-readable form with spaces.
         this.annotations = AnnotationFeature.create(type.annotationsType,
             (data.attributes || []).filter((attribute) => {

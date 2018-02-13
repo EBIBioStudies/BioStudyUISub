@@ -58,4 +58,14 @@ export class FeatureListComponent implements AfterViewInit {
             this.onColumnChange(column, selection.value);
         }
     }
+
+    /**
+     * Tests if a given column is required in terms of the UI. For example, a column may not be required
+     * validation-wise but may still have to be rendered with the same styling applied to required fields.
+     * @param {Attribute} attr - Attribute object corresponding to the column to be rendered.
+     * @returns {boolean} True if the column has to be rendered as required.
+     */
+    isColUIReq(attr: Attribute) {
+        return this.readonly || attr.readonly || attr.required;
+    }
 }

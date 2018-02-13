@@ -11,7 +11,7 @@
 
         </div><!--
         --><div *ngFor="let column of columns; let idx = index" class="cell heading-cell column-heading col-xs-3 col-md-2"
-                [ngClass]="{'optional': !column.required && !column.readonly && !readonly,
+                [ngClass]="{'optional': column.removable && !isColUIReq(column),
                             'has-error': !column.required &&
                                          featureForm.columnControl(column.id).invalid &&
                                          featureForm.columnControl(column.id).touched}">
@@ -26,6 +26,7 @@
                          [required]="column.required"
                          [disableEdit]="readonly || column.readonly || !userData.isPrivileged"
                          [disableChange]="column.displayed"
+                         [disableRemove]="!column.removable"
                          [autosuggest]="colNames"
                          [suggestLength]="15"
                          [unique]="feature.uniqueCols"
@@ -52,7 +53,7 @@
         </div>
         <div class="cell body-cell column-entry col-xs-3 col-md-2" #colEl *ngFor="let column of columns">
             <div [ngClass]="{'readonly': column.readonly,
-                             'optional': !column.required && !column.readonly && !readonly,
+                             'optional': !isColUIReq(column),
                              'has-error': featureForm.rowValueControl(rowIdx, column.id).invalid &&
                                           featureForm.rowValueControl(rowIdx, column.id).touched}">
                 <subm-field placement="{{first && !last && !column.values.length ? 'bottom' : 'top'}}"

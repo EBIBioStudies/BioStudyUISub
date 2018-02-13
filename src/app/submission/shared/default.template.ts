@@ -1,5 +1,6 @@
 export const DefaultTemplate = {
     'name': 'Default',
+    'description': 'Generic submission for stand-alone or unsupported studies',
     'sectionType': {
         'name': 'Study',
         'annotationsType': {
@@ -10,19 +11,62 @@ export const DefaultTemplate = {
                 {
                     'name': 'Organism',
                     'valueType': 'text',
-                    'values': ['Homo sapiens', 'Mus musculus', 'Arabidopsis thaliana', 'Rattus norvegicus',
-                        'Drosophila melanogaster', 'Oryza sativa Japonica Group', 'Anas platyrhyncho',
-                        'Anolis carolinensis', 'Anopheles gambiae', 'Arabidopsis lyrata', 'Aspergillus fumigatus',
-                        'Bos Taurus', 'Brachypodium distachyon', 'Brassica oleracea', 'Brassica rapa',
-                        'Caenorhabditis elegans', 'Canis familiaris', 'Chlorocebus sabaeus', 'Ciona intestinalis',
-                        'Ciona savignyi', 'Danio rerio', 'Dasypus novemcinctus', 'Equus caballus', 'Gallus gallus',
-                        'Glycine max', 'Gorilla gorilla', 'Hordeum vulgare', 'Macaca mulatta', 'Medicago truncatula',
-                        'Monodelphis domestica', 'Musa acuminate', 'Ornithorhynchus anatinus', 'Oryctolagus cuniculus',
-                        'Oryza rufipogon', 'Ovis aries', 'Pan troglodytes', 'Papio Anubis',  'Physcomitrella patens',
-                        'Pongo abelii', 'Populus trichocarpa', 'Saccharomyces cerevisiae', 'Schistosoma mansoni',
-                        'Schizosaccharomyces pombe', 'Solanum lycopersicum', 'Solanum tuberosum', 'Sorghum bicolor',
-                        'Sus scrofa', 'Tetraodon nigroviridis', 'Theobroma cacao', 'Triticum aestivum', 'Vitis vinifera',
-                        'Xenopus tropicalis', 'Yarrowia lipolytica', 'Zea mays']
+                    'values': [
+                        'Homo sapiens',
+                        'Mus musculus',
+                        'Arabidopsis thaliana',
+                        'Rattus norvegicus',
+                        'Drosophila melanogaster',
+                        'Oryza sativa Japonica Group',
+                        'Anas platyrhyncho',
+                        'Anolis carolinensis',
+                        'Anopheles gambiae',
+                        'Arabidopsis lyrata',
+                        'Aspergillus fumigatus',
+                        'Bos Taurus',
+                        'Brachypodium distachyon',
+                        'Brassica oleracea',
+                        'Brassica rapa',
+                        'Caenorhabditis elegans',
+                        'Canis familiaris',
+                        'Chlorocebus sabaeus',
+                        'Ciona intestinalis',
+                        'Ciona savignyi',
+                        'Danio rerio',
+                        'Dasypus novemcinctus',
+                        'Equus caballus',
+                        'Gallus gallus',
+                        'Glycine max',
+                        'Gorilla gorilla',
+                        'Hordeum vulgare',
+                        'Macaca mulatta',
+                        'Medicago truncatula',
+                        'Monodelphis domestica',
+                        'Musa acuminate',
+                        'Ornithorhynchus anatinus',
+                        'Oryctolagus cuniculus',
+                        'Oryza rufipogon',
+                        'Ovis aries',
+                        'Pan troglodytes',
+                        'Papio Anubis',
+                        'Physcomitrella patens',
+                        'Pongo abelii',
+                        'Populus trichocarpa',
+                        'Saccharomyces cerevisiae',
+                        'Schistosoma mansoni',
+                        'Schizosaccharomyces pombe',
+                        'Solanum lycopersicum',
+                        'Solanum tuberosum',
+                        'Sorghum bicolor',
+                        'Sus scrofa',
+                        'Tetraodon nigroviridis',
+                        'Theobroma cacao',
+                        'Triticum aestivum',
+                        'Vitis vinifera',
+                        'Xenopus tropicalis',
+                        'Yarrowia lipolytica',
+                        'Zea mays'
+                    ]
                 },
                 {
                     'name': 'Experimental design',
@@ -146,7 +190,8 @@ export const DefaultTemplate = {
                     {
                         'name': 'ORCID',
                         'valueType': 'orcid',
-                        'displayed': true
+                        'displayed': true,
+                        'removable': false
                     },
                     {
                         'name': 'Address',
@@ -218,7 +263,8 @@ export const DefaultTemplate = {
                     {
                         'name': 'PMID',
                         'valueType': 'pubmedid',
-                        'displayed': true
+                        'displayed': true,
+                        'removable': false
                     },
                     {
                         'name': 'Authors',

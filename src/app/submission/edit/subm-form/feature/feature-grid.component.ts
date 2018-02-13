@@ -18,8 +18,8 @@ import {TypeaheadDirective} from "ngx-bootstrap";
     styleUrls: ['./feature-grid.component.css']
 })
 export class FeatureGridComponent implements AfterViewInit {
-    @Input() featureForm: FeatureForm;
-    @Input() readonly? = false;
+    @Input() featureForm: FeatureForm;      //Reactive data structure for the form containing this feature
+    @Input() readonly? = false;             //Flag for features that cannot be edited (e.g. sent state for submissions)
     @Input() colNames: string[] = [];       //List of allowed column names out of the list specified in the default template
     @ViewChildren('ahead') typeaheads: QueryList<TypeaheadDirective>;
     @ViewChildren('rowEl') rowEls: QueryList<ElementRef>;
@@ -105,5 +105,15 @@ export class FeatureGridComponent implements AfterViewInit {
         //Updates the row and notifies the outside world as a single change event.
         this.feature.add(attributes, rowIdx);
         this.rootEl.nativeElement.dispatchEvent(new Event('change', {bubbles: true}));
+    }
+
+    /**
+     * Tests if a given column is required in terms of the UI. For example, a column may not be required
+     * validation-wise but may still have to be rendered with the same styling applied to required fields.
+     * @param {Attribute} attr - Attribute object corresponding to the column to be rendered.
+     * @returns {boolean} True if the column has to be rendered as required.
+     */
+    isColUIReq(attr: Attribute) {
+        return this.readonly || attr.readonly || attr.required;
     }
 }

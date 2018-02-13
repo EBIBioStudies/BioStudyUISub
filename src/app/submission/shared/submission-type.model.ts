@@ -88,7 +88,7 @@ export class FieldType extends BaseType {
         }
 
         if (other.hasOwnProperty('readonly')) {
-            this.readonly = other.required;
+            this.readonly = other.readonly;
         } else {
             this.readonly = false;
         }
@@ -208,8 +208,12 @@ export class AnnotationsType extends FeatureType {
 
 export class ColumnType extends BaseType {
     readonly required: boolean;     //required data-wise: its fields should have data associated with it to be valid
+                                    //NOTE: A required column's name cannot be changed.
     readonly displayed: boolean;    //required render-wise: should be visually available regardless of its fields being required or not
+                                    //NOTE: This guaranteed rendering implies that the column's name cannot be changed.
     readonly readonly: boolean;     //renders the column and its member fields as a readonly inputs
+                                    //NOTE: Notice that BOTH the column field and member fields will be readonly.
+    readonly removable: boolean;    //renders the column without removal controls (useful for un-required yet un-removable columns).
     readonly valueType: ValueType;  //type of data for the fields under this column
     readonly values: string[];      //suggested values for the field
 
@@ -226,6 +230,13 @@ export class ColumnType extends BaseType {
         this.readonly = other.readonly === true;
         this.displayed = other.displayed || false;
         this.values = other.values || [];
+
+        //All columns are removable unless stated otherwise.
+        if (other.hasOwnProperty('removable')) {
+            this.removable = other.removable;
+        } else {
+            this.removable = true;
+        }
     }
 }
 

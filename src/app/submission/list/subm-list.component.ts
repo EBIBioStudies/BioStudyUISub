@@ -75,7 +75,7 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
 
 @Component({
     selector: 'date-cell',
-    template: `{{value | date: appConfig.dateListFormat}}`
+    template: `{{!value ? '&mdash;' : value | date: appConfig.dateListFormat}}`
 })
 export class DateCellComponent implements AgRendererComponent {
     value: Date;

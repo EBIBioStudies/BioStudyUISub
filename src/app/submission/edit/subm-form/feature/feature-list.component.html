@@ -6,13 +6,12 @@
     <div class="row" #rowEl *ngFor="let column of columns; let idx = index; let first = first; let last = last">
         <div class="cell col-xs-3">
             <div class="form-group key-field"
-                 [ngClass]="{'optional': !column.required && !column.readonly && !readonly,
+                 [ngClass]="{'optional': column.removable && !isColUIReq(column),
                              'has-error': !column.required &&
                                           featureForm.columnControl(column.id).invalid &&
                                           featureForm.columnControl(column.id).touched}">
-                <div [ngClass]="{'input-group': !readonly && !column.required,
-                                 'readonly': column.readonly}">
-                    <span *ngIf="!readonly && !column.readonly && !column.required" class="input-group-btn"
+                <div [ngClass]="{'input-group': column.removable && !isColUIReq(column), 'readonly': column.readonly}">
+                    <span *ngIf="column.removable && !isColUIReq(column)" class="input-group-btn"
                           container="body"
                           [tooltip]="feature.canRemoveRowAt(index) ? '' : 'The list must contain one entry at least'">
                           <button type="button" tabindex="-1"
@@ -32,8 +31,8 @@
                            popover="Please use a unique key name"
                            [ngModel]="column.name"
                            [formControl]="featureForm.columnControl(column.id)"
-                           [readonly]="readonly || column.readonly || column.required || column.displayed"
-                           [typeahead]="readonly || column.readonly || column.required || column.displayed ? [] : colNames"
+                           [readonly]="isColUIReq(column) || column.displayed"
+                           [typeahead]="isColUIReq(column) || column.displayed ? [] : colNames"
                            [typeaheadMinLength]="0"
                            [typeaheadOptionsLimit]="15"
                            #ahead="bs-typeahead"
@@ -50,7 +49,7 @@
         <div class="cell col-xs-9">
             <div class="form-group"
                  [ngClass]="{'readonly': column.readonly,
-                             'optional': !column.required && !column.readonly && !readonly,
+                             'optional': !isColUIReq(column),
                              'has-error': featureForm.rowValueControl(0,column.id).invalid &&
                                           featureForm.rowValueControl(0,column.id).touched}">
                 <subm-field placement="{{first && !last && !column.values.length? 'bottom' : 'top'}}"
