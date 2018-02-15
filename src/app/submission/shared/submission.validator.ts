@@ -71,7 +71,10 @@ class ValidationRules {
             feature.rows.forEach((row, rowIndex) => {
                 const rowValue = row.valueFor(col.id).value;
                 const rowName = `${feature.type.name}: (col: ${colIndex}, row: ${rowIndex}):`;
-                if (col.required) {
+
+                //If a member field is marked as required but its parent feature is not, the field should be optional
+                //NOTE: Features added interactively are optional and fields may be required at the row level (eg: publication rows).
+                if (feature.type.required && col.required) {
                     valueRules.push(ValidationRules.requiredValue(rowValue, rowName));
                 }
                 valueRules.push(ValidationRules.formattedValue(rowValue, col.valueType, rowName));
