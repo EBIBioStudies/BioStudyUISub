@@ -5,7 +5,7 @@ import {
     EventEmitter,
     ViewChild,
     OnChanges,
-    SimpleChange, ViewChildren, QueryList, ElementRef
+    SimpleChange
 } from '@angular/core';
 import {
     NgForm,
@@ -22,7 +22,6 @@ import {
 } from '../../shared/submission.model';
 import { SubmTypeAddDialogComponent } from '../submtype-add/submtype-add.component';
 import { ConfirmDialogComponent } from 'app/shared/index';
-import { SectionType } from '../../shared/submission-type.model';
 import {SubmValidationErrors} from "../../shared/submission.validator";
 import {FieldControl} from "../subm-form/subm-form.service";
 import {UserData} from "../../../auth/user-data";

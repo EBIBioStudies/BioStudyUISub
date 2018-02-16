@@ -54,7 +54,11 @@
         <div class="cell body-cell column-entry col-xs-3 col-md-2" #colEl *ngFor="let column of columns">
             <div [ngClass]="{'readonly': column.readonly,
                              'optional': !isColUIReq(column),
-                             'has-error': featureForm.rowValueControl(rowIdx, column.id).invalid &&
+                             'has-warning': !featureForm.feature.type.required &&
+                                            featureForm.rowValueControl(rowIdx, column.id).invalid &&
+                                            featureForm.rowValueControl(rowIdx, column.id).touched,
+                             'has-error': featureForm.feature.type.required &&
+                                          featureForm.rowValueControl(rowIdx, column.id).invalid &&
                                           featureForm.rowValueControl(rowIdx, column.id).touched}">
                 <subm-field placement="{{first && !last && !column.values.length ? 'bottom' : 'top'}}"
                             triggers="focus"

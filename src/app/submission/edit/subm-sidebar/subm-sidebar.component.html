@@ -124,7 +124,7 @@
                 <h4 class="action-title">You may submit your study now</h4>
             </li>
             <li class="sidebar-item" *ngFor="let control of formControls; let i = index">
-                <a *ngIf="control.invalid"
+                <a *ngIf="control.parentType.required && control.invalid"
                    tooltip="{{collapsed ? '&quot;' + control.template.name + '&quot; field is ' + tipText(control.errors) : 'Highlight field on the form'}}"
                    container="body"
                    placement="{{collapsed ? 'right' : 'top'}}"
@@ -132,7 +132,7 @@
                     <i class="fa fa-lg text-center {{control.parentType.icon}}"></i>
                     {{!collapsed ? '&nbsp;' + control.template.name + '&nbsp;' : ''}}
                     <strong class="label label-default"
-                            [ngClass]="{'label-danger': control.invalid && control.touched}"
+                            [ngClass]="{'label-danger': control.touched}"
                             #labelEl>
                         {{!collapsed ? tipText(control.errors) : ''}}
                         <i *ngIf="collapsed && control.errors.required" class="fa fa-lg fa-asterisk"></i>
