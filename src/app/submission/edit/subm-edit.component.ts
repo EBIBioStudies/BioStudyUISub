@@ -277,31 +277,31 @@ export class SubmEditComponent implements OnInit, OnDestroy {
         }
 
         //TODO: this could probably do with its own method
-        this.submService.submitSubmission(this.wrap())
-            .subscribe(
-                resp => {
+        this.submService.submitSubmission(this.wrap(true)).subscribe(
+            resp => {
 
-                    //Updates the acccession number of a temporary submission with the one assigned by the server.
-                    if (this.subm.isTemp) {
-                        this.accno = resp.mapping[0].assigned;
-                        this.subm.accno = this.accno;
-                    }
+                //Updates the acccession number of a temporary submission with the one assigned by the server.
+                if (this.subm.isTemp) {
+                    this.accno = resp.mapping[0].assigned;
+                    this.subm.accno = this.accno;
+                }
 
-                    //Updates the view to reflect the "sent" state of the submission without knock-on effects on history
-                    this.location.replaceState('/submissions/' + this.accno);
-                    this.readonly = true;
+                //Updates the view to reflect the "sent" state of the submission without knock-on effects on history
+                this.location.replaceState('/submissions/' + this.accno);
+                this.readonly = true;
 
-                    this.showSubmitResults(resp);
-                },
-                (error: ServerError) => {
+                this.showSubmitResults(resp);
+            },
+            (error: ServerError) => {
 
-                    //Uses the original error object given by the server
-                    this.showSubmitResults(error.data.error);
+                //Uses the original error object given by the server
+                this.showSubmitResults(error.data.error);
 
-                    if (!error.isDataError) {
-                        throw error;
-                    }
-                });
+                if (!error.isDataError) {
+                    throw error;
+                }
+            }
+        );
     }
 
     canSubmit() {
@@ -349,9 +349,15 @@ export class SubmEditComponent implements OnInit, OnDestroy {
         this.section = path[path.length - 1];
     }
 
-    private wrap(): any {
-        const w = Object.assign({}, this.wrappedSubm);
-        w.data = PageTab.fromSubmission(this.subm);
-        return w;
+    /**
+     * Produces a formatted version of the submission data compliant with requests.
+     * @param {boolean} isSubmit - The submission is to cease being a temporary one.
+     * @returns {any} Data to be sent in a request.
+     */
+    private wrap(isSubmit: boolean = false): any {
+        const copy = Object.assign({}, this.wrappedSubm);
+
+        copy.data = PageTab.fromSubmission(this.subm, isSubmit);
+        return copy;
     }
 }

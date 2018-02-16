@@ -10,7 +10,7 @@ import {
 import {SubmissionType} from './submission-type.model';
 import {convertAuthorsToContacts, convertContactsToAuthors} from './pagetab-authors.utils';
 import {flattenDoubleArrays} from './pagetab-doublearrays.utils';
-import {copyAttributes} from './pagetab-attributes.utils';
+import {copyAttributes, removeBlankAttrs} from './pagetab-attributes.utils';
 import * as _ from 'lodash';
 import {formatDate} from "../../submission-shared/date.utils";
 
@@ -117,23 +117,25 @@ export class PageTab implements SubmissionData {
     readonly tags: any[];
     readonly accessTags: string[];
 
-    static fromSubmission(subm: Submission): any {
+    static fromSubmission(subm: Submission, isSanitise: boolean = false): any {
 
         //Properties outside the "section" property
-        const pt: any = {
+        const page: any = {
             type: subm.type.name,
             accno: subm.accno,
             tags: subm.tags.tags,
             accessTags: subm.tags.accessTags
         };
 
-        //Properties under the "section" property
-        pt.section = PageTab.fromSection(subm.root);
-
+        page.section = PageTab.fromSection(subm.root);
+        if (isSanitise) { console.log(page);
+            removeBlankAttrs(page.section);
+        }
+        console.log(page);
         //As per requirements of pagetab's current implementation, some attributes must not be within the section.
         //NOTE: AttacthTo, ReleaseDate and Title are special attributes that pertain the whole submission.
-        pt['attributes'] = [];
-        pt.section.attributes = _.filter(pt.section.attributes, (attribute) => {
+        page['attributes'] = [];
+        page.section.attributes = _.filter(page.section.attributes, (attribute) => {
 
             //While at it, sets the release date to today by default
             if (attribute.name === 'ReleaseDate' && !attribute.value) {
@@ -142,7 +144,7 @@ export class PageTab implements SubmissionData {
 
             //Moves attributes labelled as "external" outside the section
             if (_.includes(this.externalAttrs, attribute.name)) {
-                pt.attributes.push(attribute);
+                page.attributes.push(attribute);
                 return false;
 
             //For the rest, leave them inside.
@@ -151,7 +153,7 @@ export class PageTab implements SubmissionData {
             }
         });
 
-        return convertContactsToAuthors(pt);
+        return convertContactsToAuthors(page);
     }
 
     /**
@@ -163,16 +165,20 @@ export class PageTab implements SubmissionData {
      * @returns {any} New submission in PageTab format.
      */
     static createNew(tmplId: string = ''): any {
-        const ptData = {};
-        let pt;
+        let subm;   //submission object
+        let page;   //pageTab object
+        const pageData = {};
 
+        //Guarantees that for non-default templates, an AttachTo attribute always exists.
+        //NOTE: The PageTab constructor does not bother with attributes if the section is empty.
         if (tmplId && tmplId != 'Default') {
-            ptData['section'] = {};
-            ptData['attributes'] = [{name: 'AttachTo', value: tmplId}];
+            pageData['section'] = {};
+            pageData['attributes'] = [{name: 'AttachTo', value: tmplId}];
         }
 
-        pt = new PageTab(ptData);
-        return PageTab.fromSubmission(pt.toSubmission(SubmissionType.fromTemplate(tmplId)));
+        page = new PageTab(pageData);
+        subm = page.toSubmission(SubmissionType.fromTemplate(tmplId));
+        return PageTab.fromSubmission(subm);
     }
 
     private static fromSection(sec: Section): any {
@@ -296,6 +302,11 @@ export class PageTab implements SubmissionData {
         }
     }
 
+    /**
+     * Retrieves the first ocurrence of the "AttachTo" attribute at the root level. This is convenience method
+     * to allow the storing of selected template (determined in turn by the project in question).
+     * @returns {string} An empty string if no such attribute found.
+     */
     get firstAttachTo(): string {
         const attachToAttr = this.section.attributes.find(attr => attr.name == 'AttachTo');
         return attachToAttr && attachToAttr.value || '';
