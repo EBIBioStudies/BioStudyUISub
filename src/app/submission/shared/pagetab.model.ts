@@ -128,10 +128,10 @@ export class PageTab implements SubmissionData {
         };
 
         page.section = PageTab.fromSection(subm.root);
-        if (isSanitise) { console.log(page);
+        if (isSanitise) {
             removeBlankAttrs(page.section);
         }
-        console.log(page);
+
         //As per requirements of pagetab's current implementation, some attributes must not be within the section.
         //NOTE: AttacthTo, ReleaseDate and Title are special attributes that pertain the whole submission.
         page['attributes'] = [];

@@ -23,15 +23,20 @@
     </div>
 
     <div class="panel-body" #featureEl>
-        <subm-feature-grid *ngIf="!feature.singleRow"
-                           [featureForm]="featureForm"
-                           [colNames]="allowedCols"
-                           [readonly]="readonly">
-        </subm-feature-grid>
-        <subm-feature-list *ngIf="feature.singleRow"
-                           [featureForm]="featureForm"
-                           [colNames]="allowedCols"
-                           [readonly]="readonly">
-        </subm-feature-list>
+        <div *ngIf="!readonly || !feature.isEmpty()">
+            <subm-feature-grid *ngIf="!feature.singleRow"
+                               [featureForm]="featureForm"
+                               [colNames]="allowedCols"
+                               [readonly]="readonly">
+            </subm-feature-grid>
+            <subm-feature-list *ngIf="feature.singleRow"
+                               [featureForm]="featureForm"
+                               [colNames]="allowedCols"
+                               [readonly]="readonly">
+            </subm-feature-list>
+        </div>
+        <div *ngIf="readonly && feature.isEmpty()">
+            No data provided
+        </div>
     </div>
 </div>

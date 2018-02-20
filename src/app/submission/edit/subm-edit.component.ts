@@ -257,6 +257,8 @@ export class SubmEditComponent implements OnInit, OnDestroy {
     }
 
     onSubmit(event) {
+        let wrappedSubm;
+
         //TODO: Why is this needed?
         if (event) {
             event.preventDefault();
@@ -277,7 +279,8 @@ export class SubmEditComponent implements OnInit, OnDestroy {
         }
 
         //TODO: this could probably do with its own method
-        this.submService.submitSubmission(this.wrap(true)).subscribe(
+        wrappedSubm = this.wrap(true);
+        this.submService.submitSubmission(wrappedSubm).subscribe(
             resp => {
 
                 //Updates the acccession number of a temporary submission with the one assigned by the server.

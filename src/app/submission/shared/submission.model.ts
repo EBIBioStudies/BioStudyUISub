@@ -131,6 +131,19 @@ export class ValueMap extends HasUpdates<UpdateEvent> {
         (keys || []).forEach(key => this.add(key));
     }
 
+    /**
+     * Determines if the values making this map up are all empty strings.
+     * @returns {boolean} True if the map has no non-empty value.
+     */
+    get isEmpty(): boolean {
+        let valuesLength = 0;
+
+        this.valueMap.forEach(valueObj => {
+            valuesLength = valuesLength + valueObj.value.length;
+        });
+        return valuesLength == 0;
+    }
+
     valueFor(key: string): AttributeValue {
         return this.valueMap.get(key);
     }
@@ -395,6 +408,16 @@ export class Feature extends HasUpdates<UpdateEvent> {
 
     size(): number {
         return this.singleRow ? this.colSize() : this.rowSize();
+    }
+
+    /**
+     * Determines the feature is made up of empty rows.
+     * NOTE: This is equally applicable to lists as long as they are considered transposed grids, the
+     * only row being the set of values for each key.
+     * @returns {boolean} True if all rows are empty.
+     */
+    isEmpty(): boolean {
+        return this.rows.every(row => row.isEmpty);
     }
 
     /**

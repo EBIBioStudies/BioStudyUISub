@@ -34,46 +34,47 @@
             </inline-edit>
         </div>
     </div>
-    <div class="row" #rowEl
-         *ngFor="let row of rows; let rowIdx = index; let first = first; let last = last">
-        <div class="cell heading-cell row-heading col-xs-1 col-md-1 text-center">
-            <span container="body"
-                  [tooltip]="feature.canRemoveRowAt(index) ? '' : 'The table must contain one row at least'">
-                <button class="btn btn-danger btn-sm" type="button"
-                        [ngClass]="{'invisible': readonly}"
-                        [disabled]="!feature.canRemoveRowAt(index)"
-                        (click)="feature.removeRowAt(rowIdx)"
-                        [tooltip]="'Delete ' + feature.typeName.toLowerCase() + ' ' + (rowIdx + 1)"
-                        placement="bottom"
-                        container="body">
-                    <i class="fa fa-trash"></i>
-                </button>
-            </span>
-            {{rowIdx+1}}
-        </div>
-        <div class="cell body-cell column-entry col-xs-3 col-md-2" #colEl *ngFor="let column of columns">
-            <div [ngClass]="{'readonly': column.readonly,
-                             'optional': !isColUIReq(column),
-                             'has-warning': !featureForm.feature.type.required &&
-                                            featureForm.rowValueControl(rowIdx, column.id).invalid &&
-                                            featureForm.rowValueControl(rowIdx, column.id).touched,
-                             'has-error': featureForm.feature.type.required &&
-                                          featureForm.rowValueControl(rowIdx, column.id).invalid &&
-                                          featureForm.rowValueControl(rowIdx, column.id).touched}">
-                <subm-field placement="{{first && !last && !column.values.length ? 'bottom' : 'top'}}"
-                            triggers="focus"
-                            containerClass="validation-pop text-danger"
-                            popover="{{featureForm.rowErrors[rowIdx][column.id]}}"
-                            [type]="column.valueType"
-                            [(ngModel)]="row.valueFor(column.id).value"
-                            [readonly]="readonly || column.readonly"
-                            [required]="column.required"
-                            [formControl]="featureForm.rowValueControl(rowIdx, column.id)"
-                            [autosuggest]="column.values"
-                            [suggestLength]="15"
-                            (async)="addOnAsync($event, rowIdx)"
-                            validate-onblur>
-                </subm-field>
+    <div *ngFor="let row of rows; let rowIdx = index; let first = first; let last = last">
+        <div *ngIf="!readonly || !row.isEmpty" class="row" #rowEl>
+            <div class="cell heading-cell row-heading col-xs-1 col-md-1 text-center">
+                <span container="body"
+                      [tooltip]="feature.canRemoveRowAt(index) ? '' : 'The table must contain one row at least'">
+                    <button class="btn btn-danger btn-sm" type="button"
+                            [ngClass]="{'invisible': readonly}"
+                            [disabled]="!feature.canRemoveRowAt(index)"
+                            (click)="feature.removeRowAt(rowIdx)"
+                            [tooltip]="'Delete ' + feature.typeName.toLowerCase() + ' ' + (rowIdx + 1)"
+                            placement="bottom"
+                            container="body">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </span>
+                {{rowIdx+1}}
+            </div>
+            <div class="cell body-cell column-entry col-xs-3 col-md-2" #colEl *ngFor="let column of columns">
+                <div [ngClass]="{'readonly': column.readonly,
+                                 'optional': !isColUIReq(column),
+                                 'has-warning': !featureForm.feature.type.required &&
+                                                featureForm.rowValueControl(rowIdx, column.id).invalid &&
+                                                featureForm.rowValueControl(rowIdx, column.id).touched,
+                                 'has-error': featureForm.feature.type.required &&
+                                              featureForm.rowValueControl(rowIdx, column.id).invalid &&
+                                              featureForm.rowValueControl(rowIdx, column.id).touched}">
+                    <subm-field placement="{{first && !last && !column.values.length ? 'bottom' : 'top'}}"
+                                triggers="focus"
+                                containerClass="validation-pop text-danger"
+                                popover="{{featureForm.rowErrors[rowIdx][column.id]}}"
+                                [type]="column.valueType"
+                                [(ngModel)]="row.valueFor(column.id).value"
+                                [readonly]="readonly || column.readonly"
+                                [required]="column.required"
+                                [formControl]="featureForm.rowValueControl(rowIdx, column.id)"
+                                [autosuggest]="column.values"
+                                [suggestLength]="15"
+                                (async)="addOnAsync($event, rowIdx)"
+                                validate-onblur>
+                    </subm-field>
+                </div>
             </div>
         </div>
     </div>
