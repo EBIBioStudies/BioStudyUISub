@@ -34,7 +34,7 @@ import {SubmAddDialogComponent} from "./subm-add.component";
 })
 export class ActionButtonsCellComponent implements AgRendererComponent {
     private accno: string;
-    private isBusy: boolean;        //flags if a previous button action is in progress
+    public isBusy: boolean;        //flags if a previous button action is in progress
     private isTemp: boolean;        //flags if the corresponding submission is a temporary one
     private onDelete: (accno: string, onCancel: Function) => {};
     private onEdit: (string) => {};
