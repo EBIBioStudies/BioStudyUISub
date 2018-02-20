@@ -18,8 +18,8 @@ import {SectionType} from "../../shared/submission-type.model";
     templateUrl: './submtype-add.component.html'
 })
 export class SubmTypeAddDialogComponent {
-    private type: string = 'Grid';       //form model member for the type property
-    private name: string;                //form model member for the new type's name property
+    public type: string = 'Grid';       //form model member for the type property
+    public name: string;                //form model member for the new type's name property
     private featNames: string[];         //existing feature type names
 
     @Input() section: Section;
