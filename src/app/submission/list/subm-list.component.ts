@@ -84,7 +84,7 @@ export class DateCellComponent implements AgRendererComponent {
      * Exposes app's configuration to the template.
      * @param {AppConfig} appConfig - Global configuration object with app-wide settings.
      */
-    constructor(private appConfig: AppConfig) {}
+    constructor(public appConfig: AppConfig) {}
 
     agInit(params: any): void {
         this.value = this.asDate(params.value);
