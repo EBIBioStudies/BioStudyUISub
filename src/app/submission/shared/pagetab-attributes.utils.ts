@@ -83,3 +83,16 @@ export function removeBlankAttrs(obj: any) {
         }
     }
 }
+
+export function attachTo(obj: any, projectIds: string[]): any {
+    if (obj === undefined) {
+        return obj;
+    }
+    const newObj = Object.assign({}, obj);
+    const attachAttrs = projectIds.map(pid => {
+        return {name: 'AttachTo', value: pid}
+    });
+    const otherAttrs = (newObj.attributes || []).filter(a => a.name.toLowerCase() !== 'attachto');
+    newObj.attributes = [otherAttrs, attachAttrs];
+    return newObj;
+}
