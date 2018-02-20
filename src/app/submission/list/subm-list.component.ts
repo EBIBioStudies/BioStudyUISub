@@ -338,7 +338,7 @@ export class SubmListComponent {
      * Handler for the click event on the upload submission button, redirecting to a new view.
      * @param {Event} event - Click event object, the bubbling of which will be prevented.
      */
-    onUploadSubmClick() {
+    onUploadSubmClick(event: Event) {
         event.preventDefault();
         this.router.navigate(['/submissions/direct_upload']);
     }
