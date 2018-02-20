@@ -12,7 +12,7 @@ import {
 export class DirectoryPathComponent {
     @Output() change: EventEmitter<string> = new EventEmitter<string>();
 
-    private dirs:string[] = [];
+    public dirs:string[] = [];
     private _path:string = '';
 
     @Input()
