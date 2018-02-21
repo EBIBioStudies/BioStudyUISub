@@ -2,8 +2,31 @@ p .scale {
     height: 2.3rem;
 }
 p img {
-    max-width: 100%;
+    display: block;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+p .btn, li .btn {
+    font-size: 1rem;
+}
+.ag-header-cell-menu-button {
+    float: none;
+    margin-top: 0;
+}
+.pull-left {
+    clear: both;
+    margin-right: 1rem;
+}
+.text-block {
+    overflow: hidden;
 }
 .col-md-12 {
     margin-bottom: 35px;
+}
+.row {
+    margin: 0 0 15px 0;
+}
+.row:last-of-type {
+    margin-bottom: 0;
 }
