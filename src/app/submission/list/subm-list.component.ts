@@ -34,7 +34,7 @@ import {SubmAddDialogComponent} from "./subm-add.component";
 })
 export class ActionButtonsCellComponent implements AgRendererComponent {
     private accno: string;
-    private isBusy: boolean;        //flags if a previous button action is in progress
+    public isBusy: boolean;        //flags if a previous button action is in progress
     private isTemp: boolean;        //flags if the corresponding submission is a temporary one
     private onDelete: (accno: string, onCancel: Function) => {};
     private onEdit: (string) => {};
@@ -84,7 +84,7 @@ export class DateCellComponent implements AgRendererComponent {
      * Exposes app's configuration to the template.
      * @param {AppConfig} appConfig - Global configuration object with app-wide settings.
      */
-    constructor(private appConfig: AppConfig) {}
+    constructor(public appConfig: AppConfig) {}
 
     agInit(params: any): void {
         this.value = this.asDate(params.value);
@@ -338,7 +338,7 @@ export class SubmListComponent {
      * Handler for the click event on the upload submission button, redirecting to a new view.
      * @param {Event} event - Click event object, the bubbling of which will be prevented.
      */
-    onUploadSubmClick() {
+    onUploadSubmClick(event: Event) {
         event.preventDefault();
         this.router.navigate(['/submissions/direct_upload']);
     }

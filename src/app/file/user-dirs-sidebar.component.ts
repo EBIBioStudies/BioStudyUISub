@@ -23,7 +23,6 @@ import {FileService} from './file.service';
     <div class="menu-toggle">
         <button class="minimise-btn btn pull-right"
                 [ngClass]="{'inactive': !collapsed}"
-                [disabled]="editing"
                 (click)="onToggle($event)"
                 tooltip="{{collapsed ? 'Expand sidebar' : 'Collapse sidebar'}}"
                 container="body"

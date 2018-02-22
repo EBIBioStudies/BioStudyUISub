@@ -175,7 +175,7 @@ export class SubmSideBarComponent implements OnChanges {
 
     private subscr: Subscription;
 
-    constructor(private userData: UserData) {}
+    constructor(public userData: UserData) {}
 
     /**
      * Updates the list of type items whenever a feature is added or removed.

@@ -62,7 +62,7 @@ export class SubmEditComponent implements OnInit, OnDestroy {
 
     private subscr: Subscription;
     private isSubmitting: boolean = false;      //flag indicating submission data is being sent
-    private isReverting: boolean = false;       //flag indicating submission is being rolled back to its latest release
+    public isReverting: boolean = false;       //flag indicating submission is being rolled back to its latest release
     private isSaving: boolean = false;          //flag indicating submission data is being backed up
     private isNew: boolean = false;             //flag indicating submission has just been created
     private isRevised: boolean = false;         //flag indicating a revision of an already sent submission

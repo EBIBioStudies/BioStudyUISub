@@ -7,8 +7,8 @@ import {SubmissionType} from "../shared/submission-type.model";
     templateUrl: './subm-add.component.html'
 })
 export class SubmAddDialogComponent {
-    private projectName: string = 'Default';
-    private projectNames: string[] = [];
+    public projectName: string = 'Default';
+    public projectNames: string[] = [];
 
     @Input() onSubmit: Function;    //callback for submit action
     @ViewChild('bsModal')
