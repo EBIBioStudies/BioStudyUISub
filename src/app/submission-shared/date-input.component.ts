@@ -39,7 +39,7 @@ import {AppConfig} from "../app.config";
  * @see {@link ControlValueAccessor}
  */
 export class DateInputComponent implements ControlValueAccessor {
-    private dateValue: Date;
+    public dateValue: Date;
 
     @Input() canUsePastDates?: boolean = undefined;
     @Input() isSmall?: boolean = false;

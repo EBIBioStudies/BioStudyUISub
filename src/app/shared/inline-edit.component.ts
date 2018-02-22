@@ -57,11 +57,11 @@ export class InlineEditComponent implements ControlValueAccessor {
         this.onTouched = fn;
     }
 
-    private get canEdit(): boolean {
+    public get canEdit(): boolean {
         return !this.required && !this.disableEdit;
     }
 
-    private startEditing(): void {
+    public startEditing(): void {
         this.editing = true;
     }
 
@@ -73,7 +73,7 @@ export class InlineEditComponent implements ControlValueAccessor {
         this.remove.emit();
     }
 
-    private onEditBoxBlur(ev): void {
+    public onEditBoxBlur(ev): void {
         if (!this.value.length) {
             this.value = this.emptyValue;
         }
@@ -86,7 +86,7 @@ export class InlineEditComponent implements ControlValueAccessor {
      * @param {Event} event - DOM event object.
      * @param {boolean} isSuggestOpen - If true, the autosuggest typeahead list is being displayed.
      */
-    private onEditBoxEnter(event: Event, isSuggestOpen: boolean): void {
+    public onEditBoxEnter(event: Event, isSuggestOpen: boolean): void {
         event.stopPropagation();
         if (!isSuggestOpen) {
             this.stopEditing();
@@ -98,7 +98,7 @@ export class InlineEditComponent implements ControlValueAccessor {
      * @param {Element} element - DOM element for the field.
      * @returns {boolean} True if the text's length is greater than its container.
      */
-    private isOverflow(element: Element): boolean {
+    public isOverflow(element: Element): boolean {
         return element.scrollWidth > element.clientWidth;
     }
 }

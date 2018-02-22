@@ -9,7 +9,7 @@
     </user-dirs-sidebar>
 
     <div class="navbar-default navbar-subm-fixed"
-         [ngClass]="{'collapse-left': !readonly && sideBarCollapsed}">
+         [ngClass]="{'collapse-left': sideBarCollapsed}">
         <nav>
             <div class="col-xs-10 nav-block">
                 Path: <directory-path [path]="path.rel" (change)="onRelativePathChange($event)"></directory-path>

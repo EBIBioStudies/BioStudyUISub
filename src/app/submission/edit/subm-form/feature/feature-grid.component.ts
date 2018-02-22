@@ -25,7 +25,7 @@ export class FeatureGridComponent implements AfterViewInit {
     @ViewChildren('rowEl') rowEls: QueryList<ElementRef>;
     @ViewChildren('colEl') colEls: QueryList<ElementRef>;
 
-    constructor(private rootEl: ElementRef, private userData: UserData) {}
+    constructor(private rootEl: ElementRef, public userData: UserData) {}
 
     get rows(): ValueMap[] {
         return this.featureForm.rows;
