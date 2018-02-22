@@ -8,6 +8,7 @@ p img {
     margin: 0 auto;
 }
 p .btn, li .btn {
+    padding: .3rem .7rem;
     font-size: 1rem;
 }
 .ag-header-cell-menu-button {
@@ -21,6 +22,9 @@ p .btn, li .btn {
 .text-block {
     overflow: hidden;
 }
+.text-block img {
+    margin-top: 10px;
+}
 .col-md-12 {
     margin-bottom: 35px;
 }
@@ -29,4 +33,12 @@ p .btn, li .btn {
 }
 .row:last-of-type {
     margin-bottom: 0;
+}
+.fa-stack {
+    font-size: .78rem;
+    top: -.3rem;
+    left: -.1rem;
+}
+.navbar-btn {
+    margin: 0;
 }

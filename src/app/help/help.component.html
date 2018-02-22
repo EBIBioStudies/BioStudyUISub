@@ -9,21 +9,19 @@
                     <dt name="help-list"><h4>1.Listing all your studies</h4></dt>
                     <dd class="col-md-12">
                         <p>
-                            The first screen shown after login is the list of so-called "Submissions". Each of these is
-                            effectively a form for the study data to be added to the BioStudies database.
-                        </p>
-                        <p>
-                            There are two main categories of submissions depending on the stage they are at:
+                            The first screen shown after login is the list of so-called "Submissions". Each of these is,
+                            effectively, a form with or without study data for a current or prospective BioStudies entry.
+                            In fact, there are two main categories of submissions depending on the stage they are at:
                         </p>
                         <ul>
                             <li>
                                 <strong><i class="fa fa-clock-o" aria-hidden="true"></i> Pending</strong>:
-                                These are new or incomplete submission that have not been added to the BioStudies
+                                These are new or incomplete submissions that have not been added to the BioStudies
                                 database yet.
                             </li>
                             <li>
                                 <strong><i class="fa fa-database" aria-hidden="true"></i> Sent</strong>:
-                                These are submission already added to the BioStudies database.
+                                These are submissions already added to the BioStudies database.
                             </li>
                         </ul>
                         <p><img src="images/help/submission_list.png"/></p>
@@ -73,8 +71,8 @@
                             <p class="text-block">
                                 Creates a blank submission form to be manually filled in with study data and added to
                                 the database at your own discretion. As part of the process, the project your study belongs
-                                to must be selected. The study data required by the new form varies according to parent
-                                project.
+                                to must be selected. This is due to the difference in data requirements that exists from
+                                project to project.
                                 <img src="images/help/new_submission.png"/>
                             </p>
                         </div>
@@ -98,87 +96,92 @@
                            A given study can be edited at any point of its lifecycle: before being added to the database
                            &mdash;as a "pending" submission&mdash; or after &mdash;as "sent" submission&mdash;.
                            Additionally, in the case of a sent submission, any recent changes in the form can be cancelled,
-                           reverting the submission to its latest submitted version.
+                           reverting the form to its previous state before the changes.
                         </p>
+                        <p><img src="images/help/revert_submission.gif"/></p>
                         <p>
                             In most submission forms, some of the fields may be required, such as the study's title or
-                            its release date. If the form is submitted with any required fields blank, the application
-                            will cancel the submission process and highlight the field.
+                            its release date. For ease of reference, all required fields are listed under the "Check"
+                            tab on the left-hand side of the form at all times. Clicking on any entry of the checklist
+                            sets the focus on the relevant field.
+                        </p>
+                        <p><img src="images/help/check_tab.gif"/></p>
+                        <p>
+                            New fields may be added through the "Add" tab on the left-hand side of the form, which
+                            includes the most common field types for a study: files, links or annotations for example.
+                        </p>
+                        <p><img src="images/help/add_tab.png"/></p>
+                        <p>
+                            For more advanced field operations, two options are provided:
+                        </p>
+                        <ul>
+                            <li>
+                                <strong class="fa-stack">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+                                </strong>
+                                <strong>Edit types</strong>:
+                                It sets the "Add" tab on edit mode, allowing the change of properties of existing
+                                field types. As of the application's current version, only the name can be changed.
+                            </li>
+                            <li>
+                                <strong><i class="fa fa-plus-circle" aria-hidden="true"></i> New type</strong>:
+                                It allows the creation of new list, table or section types to choose from when adding
+                                fields to the form.
+                            </li>
+                        </ul>
+                        <i class="fa fa-hand-o-right fa-lg pull-left text-info"></i>
+                        <p class="text-block">
+                            Please note that sections are not stable in the current version.
+                        </p>
+                    </dd>
+                    <dt name="help-save"><h4>4.Saving and submitting a study</h4></dt>
+                    <dd class="col-md-12">
+                        <p>
+                            Submission forms are automatically backed up every time a change is made, so you can leave
+                            an incomplete form and come back to it later.
                         </p>
                         <p>
-                            For ease of reference, all required fields are listed under the "Check" tab on the left-hand
-                            side of the form at all times. Clicking on any entry of the checklist sets the focus on the
-                            relevant field.
+                            Once all the study data has been provided, the form can be submitted by pressing the "Submit"
+                            button, located both  in the secondary top bar and at the bottom of the form. If the
+                            submission has been successful, the study is allocated an accession number with which it can
+                            be accessed online.
                         </p>
+                        <p><img src="images/help/success_submission.gif"/></p>
                         <p>
-
+                            If the form is submitted with any required fields blank, the application will cancel the
+                            submission process and highlight the relevant fields.
                         </p>
-                        <p>Please note that any submitted study will remain private and will only be accessed using
-                            login credentials until the release date.</p>
+                        <p><img src="images/help/submit_blanks.png"/></p>
+                        <i class="fa fa-hand-o-right fa-lg pull-left text-info"></i>
+                        <p class="text-block">
+                            Please note that any submitted study will remain private and accessible only through login
+                            until the release date.
+                        </p>
+                        <i class="fa fa-hand-o-right fa-lg pull-left text-info"></i>
+                        <p class="text-block">
+                            Also note that studies are made available online approximately 24 hours after submission.
+                        </p>
                     </dd>
-                    <dt name="help-desc-subm"><h4>4.Adding study fields</h4></dt>
+                    <dt name="help-upload"><h4>5.Uploading files</h4></dt>
                     <dd class="col-md-12">
-                        <p>New fields may be added through the "Add" tab on the left-hand
-                        side of the form, which includes the most common field types for a study. For more advanced
-                            field operations, two options are provided:</p>
-                        <p>Add more information using <img class="scale" src="images/help/btn_add.png"/> such as keywords,
-                            organism, experimental variables and experiment type.</p>
-                        <p><img src="images/help/screen_study_description.png"/></p>
-                    </dd>
-                    <dt name="help-contacts-subm"><h4>5.Adding contacts</h4></dt>
-                    <dd class="col-md-12">
-                        <p>Describe people involved in the study. More information such as address, department
-                            and role can be added using <img class="scale" src="images/help/btn_create_description.png"/></p>
-                        <p><img src="images/help/screen_adding_contacts.png"/></p>
-                        <p>More contacts can be added using <img class="scale" src="images/help/btn_create.png"/></p>
-                        <p>The summary of contacts is displayed using "All contacts".</p>
-                    </dd>
-                    <dt name="help-links-subm"><h4>6.Adding links</h4></dt>
-                    <dd class="col-md-12">
-                        <p>The Links mechanism is for pointing to data held in other databases, or to
-                            associated information on the web, to enable a complete overview of a study.</p>
-                        <p><img src="images/help/screen_adding_links.png"/></p>
-                        <p>Similar to contacts, more information on a link, such as description, can be added
-                            using <img class="scale" src="images/help/btn_create_description.png"/></p>
-                        <p>More links can be added using <img class="scale" src="images/help/btn_create.png"/></p>
-                        <p>The summary of all links is displayed using "All links".</p>
-                    </dd>
-                    <dt name="help-pubs-subm"><h4>7.Publications</h4></dt>
-                    <dd class="col-md-12">
-                        <p>Adding PubMed Identifier will enable autofill of publication details. Publication
-                            details can be manually added using
-                            <img class="scale" src="images/help/btn_create_description.png"/></p>
-                        <p><img src="images/help/screen_publications.png"/></p>
-                    </dd>
-                    <dt name="help-file-upload"><h4>8.Uploading files</h4></dt>
-                    <dd class="col-md-12">
-                        <p>All files must be uploaded first, before being used in a BioStudy. The files for
-                            each user are stored in a central repository and are available for all
-                            submissions.</p>
-                        <p><img src="images/help/screen_files.png"/></p>
-                        <p>To load files select <img class="scale" src="images/help/btn_files.png"/> from the toolbar. This
-                            displays all the files that have been uploaded by the user.</p>
-                        <p>Files can be directly uploaded using <img class="scale" src="images/help/btn_upload.png"/></p>
-                        <p>Multiple files can be selected using shift key.</p>
-                        <p>Progress indicates if the file has been successfully uploaded.</p>
-                    </dd>
-                    <dt name="help-files-subm"><h4>9.Attaching a file to a BioStudy</h4></dt>
-                    <dd class="col-md-12">
-                        <p>Files can be associated with a BioStudy submission using
-                            <img class="scale" src="images/help/btn_add_file.png"/>.</p>
-                        <p><img src="images/help/screen_add_file.png"/></p>
-                        <p>Path selects the relevant file for the submission.</p>
-                        <p>Description allows to describe what the file contains.</p>
-                        <p>Further information such as the type of file can be supplied using <img
-                                class="scale" src="images/help/btn_create_description.png"/>.</p>
-                        <p>More files can be added using <img class="scale" src="images/help/btn_create.png"/>.</p>
-                    </dd>
-                    <dt name="help-save-subm"><h4>10.Saving and submitting a BioStudy</h4></dt>
-                    <dd class="col-md-12">
-                        <p>Studies are automatically saved, so you can leave an incomplete submission and
-                            return to it later.</p>
-                        <p>Press "Submit" to receive an accession number and load the submission into
-                            BioStudies.</p>
+                        <p>
+                            Each user's files are stored in a central repository and made available for all your
+                            submissions. To navigate and list all your files, click on
+                            <button class="btn navbar-btn">
+                                <i class="fa fa-fw fa-folder-open"></i>
+                                Files
+                            </button>
+                        </p>
+                        <p><img src="images/help/upload_files.png"/></p>
+                        <p>
+                            Click the
+                            <button type="button" class="btn btn-primary btn-sm">
+                                Upload files...
+                            </button>
+                            button above the list to upload new files. Multiple selection is supported using
+                            the conventional shift key. Upload progress is shown for each individual file.
+                        </p>
                     </dd>
                 </dl>
             </div>
