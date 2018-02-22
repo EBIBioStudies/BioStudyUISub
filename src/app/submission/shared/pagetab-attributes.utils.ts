@@ -93,6 +93,6 @@ export function attachTo(obj: any, projectIds: string[]): any {
         return {name: 'AttachTo', value: pid}
     });
     const otherAttrs = (newObj.attributes || []).filter(a => a.name.toLowerCase() !== 'attachto');
-    newObj.attributes = [otherAttrs, attachAttrs];
+    newObj.attributes = [...otherAttrs, ...attachAttrs];
     return newObj;
 }

@@ -116,7 +116,7 @@ describe('Submission Attributes:', () => {
         obj = attachTo(obj, projects);
 
         expect(obj.attributes).toBeDefined();
-        expect(obj.attributes).toEqual([[attr], projects.map(p => {
+        expect(obj.attributes).toEqual([...[attr], ...projects.map(p => {
             return {name: 'AttachTo', value: p}
         })]);
     });
@@ -128,7 +128,7 @@ describe('Submission Attributes:', () => {
         obj = attachTo(obj, projects);
 
         expect(obj.attributes).toBeDefined();
-        expect(obj.attributes).toEqual([[attr], projects.map(p => {
+        expect(obj.attributes).toEqual([...[attr], ...projects.map(p => {
             return {name: 'AttachTo', value: p}
         })]);
     });
