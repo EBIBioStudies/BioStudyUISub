@@ -320,15 +320,19 @@ export class SubmissionType extends BaseType {
 
     /**
      * Creates a new submission using the type definitions present in a given project template.
-     * @param {string} tmplId - ID of the template containing the type definitions.
+     * @param {string | Object} tmpl - ID of the template containing the type definitions or the template itself.
      * @returns {SubmissionType} New submission.
      */
-    static fromTemplate(tmplId): SubmissionType {
-        switch (tmplId.toLowerCase()) {
-            case 'hecatos':
-                return TemplateType.create(HecatosTemplate).submissionType;
-            default:
-                return TemplateType.create(DefaultTemplate).submissionType;
+    static fromTemplate(tmpl: string | Object): SubmissionType {
+        if (typeof tmpl === 'string') {
+            switch (tmpl.toLowerCase()) {
+                case 'hecatos':
+                    return TemplateType.create(HecatosTemplate).submissionType;
+                default:
+                    return TemplateType.create(DefaultTemplate).submissionType;
+            }
+        } else {
+            return TemplateType.create(tmpl).submissionType;
         }
     }
 

@@ -21,7 +21,7 @@ export class UserData {
     /**
      * Waits until the session for the current user has been created to fetch the latter's data.
      * @param {UserSession} userSession - Async session manager.
-     * @param {AuthService} authService - API interface for athentication-related server transactions
+     * @param {AuthService} authService - API interface for authentication-related server transactions
      */
     constructor(userSession: UserSession, authService: AuthService) {
         userSession.created$.subscribe(created => {

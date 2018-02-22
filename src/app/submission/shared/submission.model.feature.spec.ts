@@ -102,7 +102,7 @@ describe('Submission Model: Feature', () => {
     });
 
     it('creates required columns according the type definition', () => {
-        const type = new FeatureType('MyFeatureType', true, {
+        const type = new FeatureType('MyFeatureType', true, false, {
             columnTypes: [
                 {name: 'col1', required: true},
                 {name: 'col2', required: false}
@@ -114,7 +114,7 @@ describe('Submission Model: Feature', () => {
     });
 
     it('must not allow to remove/or modify required column', () => {
-        const type = new FeatureType('MyFeatureType', true, {
+        const type = new FeatureType('MyFeatureType', true, false, {
             columnTypes: [
                 {name: 'col1', required: true},
                 {name: 'col2', required: false}
