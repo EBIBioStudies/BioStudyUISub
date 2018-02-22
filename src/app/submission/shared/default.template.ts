@@ -5,7 +5,8 @@ export const DefaultTemplate = {
         'name': 'Study',
         'annotationsType': {
             'title': 'Describe your study',
-            'description': 'Provide any supplementary details of the study that may help discover and/or interpret it',
+            'description': 'Provide any supplementary details of the study that may help discover and/or interpret it ' +
+                           'such as organism, cell type or experimental design.',
             'icon': 'fa-tag',
             'columnTypes': [
                 {
@@ -117,7 +118,8 @@ export const DefaultTemplate = {
             {
                 'name': 'Contact',
                 'title': 'Add Contacts',
-                'description': 'Include the contact details for the authors of the study',
+                'description': 'Add the contact details for the authors involved in the study. Additional columns ' +
+                               'include address, department, funding and role.',
                 'icon': 'fa-vcard',
                 'required': true,
                 'uniqueCols': true,
@@ -233,7 +235,8 @@ export const DefaultTemplate = {
             {
                 'name': 'Link',
                 'title': 'Add Links',
-                'description': 'Provide links to any additional documentation that may be of relevance',
+                'description': 'Provide pointers to data held in other databases, or to associated information on the ' +
+                               'web, to enable a complete overview of a study.',
                 'icon': 'fa-link',
                 'uniqueCols': true,
                 'columnTypes': [
@@ -256,7 +259,8 @@ export const DefaultTemplate = {
             {
                 'name': 'Publication',
                 'title': 'Add Publications',
-                'description': 'Add the details of publications relevant or complementary to the study',
+                'description': 'Add the details of publications relevant or complementary to the study. Autofill is ' +
+                               'available when searching by PubMed identifier',
                 'icon': 'fa-book',
                 'uniqueCols': true,
                 'columnTypes': [

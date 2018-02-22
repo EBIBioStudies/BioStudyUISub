@@ -283,7 +283,7 @@ export class PageTab implements SubmissionData {
         });
     }
 
-    constructor(obj?: any | {}) {
+    constructor(obj: any = {}) {
         let newObj = flattenDoubleArrays(copyAttributes(obj));
         newObj = convertAuthorsToContacts(newObj);
 

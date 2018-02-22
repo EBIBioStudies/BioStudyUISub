@@ -24,7 +24,7 @@
                             placement="bottom"
                             container="body"
                             (click)="toggleCollapsed()">
-                        <i class="fa fa-user-plus fa-fw"></i>
+                        <i class="fa fa-user-plus fa-fw fa-lg"></i>
                         Register
                     </button>
                 </li>
@@ -35,7 +35,7 @@
                             placement="bottom"
                             container="body"
                             (click)="toggleCollapsed()">
-                        <i class="fa fa-sign-in"></i>
+                        <i class="fa fa-sign-in fa-lg"></i>
                         Log in
                     </button>
                 </li>
@@ -48,7 +48,7 @@
                             placement="bottom"
                             container="body"
                             (click)="toggleCollapsed()">
-                        <i class="fa fa-fw fa-table"></i>
+                        <i class="fa fa-fw fa-lg fa-cloud-upload"></i>
                         Submissions
                     </button>
                 </li>
@@ -61,7 +61,7 @@
                             placement="bottom"
                             container="body"
                             (click)="toggleCollapsed()">
-                        <i class="fa fa-fw fa-upload"></i>
+                        <i class="fa fa-fw fa-folder-open fa-lg"></i>
                         Files
                     </button>
                 </li>
@@ -74,7 +74,7 @@
                             placement="bottom"
                             container="body"
                             (click)="toggleCollapsed()">
-                        <i class="fa fa-fw fa-question"></i>
+                        <i class="fa fa-fw fa-question-circle fa-lg"></i>
                         Help
                     </button>
                 </li>
@@ -83,7 +83,7 @@
                     <button class="btn navbar-btn"
                             (click)="signOut()"
                             [disabled]="isBusy">
-                        <i *ngIf="!isBusy" class="fa fa-fw fa-sign-out"></i>
+                        <i *ngIf="!isBusy" class="fa fa-fw fa-sign-out fa-lg"></i>
                         <i *ngIf="isBusy" class="fa fa-fw fa-cog fa-spin"></i>
                         Log out
                     </button>

@@ -212,11 +212,12 @@ describe('PageTab', () => {
 
         expect(pt.type).toBe('Submission');
         expect(pt.accno).toEqual('');
+        expect(pt.attributes.length).toBe(2);   //Title and ReleaseDate
         expect(pt.section).toBeDefined();
         expect(pt.section.type).toBe('Study');
         expect(pt.section.accno).toBeUndefined();
         expect(pt.section.attributes).toBeDefined();
-        expect(pt.section.attributes.length).toBe(secType.fieldTypes.length);
+        expect(pt.section.attributes.length).toBe(secType.fieldTypes.length - 2);  //Title and ReleaseDate  are always at root level
 
         expect(pt.section.links).toBeUndefined(); // no links defined
         expect(pt.section.files).toBeUndefined(); // no files defined

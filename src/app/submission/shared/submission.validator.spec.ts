@@ -16,9 +16,11 @@ describe('Submission Validator', () => {
                 fieldTypes: [
                     {
                         name: 'FieldType1',
+                        required: true
                     },
                     {
-                        name: 'FieldType2'
+                        name: 'FieldType2',
+                        required: true
                     }
                 ]
             }
@@ -77,12 +79,14 @@ describe('Submission Validator', () => {
                 fieldTypes: [
                     {
                         name: 'FieldType1',
-                        valueType: 'date'
+                        valueType: 'date',
+                        required: true
                     },
                     {
                         name: 'FieldType2',
                         valueType: 'text',
-                        minlength: 5
+                        minlength: 5,
+                        required: true
                     }
                 ]
             }

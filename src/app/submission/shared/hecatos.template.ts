@@ -7,7 +7,8 @@ export const HecatosTemplate = {
         'annotationsType': {
             'title': 'Describe your study',
             'icon': 'fa-tag',
-            'description': 'Provide any supplementary details of the study that may help discover and/or interpret it',
+            'description': 'Provide any supplementary details of the study that may help discover and/or interpret it ' +
+                           'such as experimental factors.',
             'columnTypes': [
                 {
                     'name': 'Factor',
@@ -166,7 +167,8 @@ export const HecatosTemplate = {
                 'name': 'Contact',
                 'title': 'Add Contacts',
                 'icon': 'fa-vcard',
-                'description': 'Include the contact details for the authors of the study',
+                'description': 'Add the contact details for the authors involved in the study. Additional columns ' +
+                               'include address, department, funding and role.',
                 'uniqueCols': true,
                 'required': true,
                 'columnTypes': [
@@ -261,7 +263,8 @@ export const HecatosTemplate = {
             {
                 'name': 'Link',
                 'title': 'Add Links',
-                'description': 'Provide links to any additional documentation that may be of relevance',
+                'description': 'Provide pointers to data held in other databases, or to associated information on the ' +
+                               'web, to enable a complete overview of a study.',
                 'icon': 'fa-link',
                 'uniqueCols': true,
                 'columnTypes': [
@@ -284,7 +287,8 @@ export const HecatosTemplate = {
             {
                 'name': 'Publication',
                 'title': 'Add Publications',
-                'description': 'Add the details of publications relevant or complementary to the study',
+                'description': 'Add the details of publications relevant or complementary to the study. Autofill is ' +
+                               'available when searching by PubMed identifier',
                 'icon': 'fa-book',
                 'uniqueCols': true,
                 'columnTypes': [

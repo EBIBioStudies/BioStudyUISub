@@ -37,7 +37,7 @@
               (ngSubmit)="onSubmit(form)">
             <li class="sidebar-item" *ngFor="let item of items; let i = index">
                 <a *ngIf="!isStatus && !editing"
-                   tooltip="Add to the form"
+                   tooltip="{{item.feature.size() ? 'Add to the form' : item.feature.type.description}}"
                    container="body"
                    (click)="item.onClick($event)">
                     <i class="fa fa-lg text-center {{item.feature.type.icon}}"></i>
