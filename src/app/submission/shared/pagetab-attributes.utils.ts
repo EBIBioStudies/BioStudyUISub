@@ -83,3 +83,22 @@ export function removeBlankAttrs(obj: any) {
         }
     }
 }
+
+/**
+ * Sets 'AttachTo' attributes to the given object
+ * @param obj an obj to set the attributes to
+ * @param {string[]} projectIds an array of project identifiers to get attribute values from
+ * @returns {any} a modified object
+ */
+export function attachTo(obj: any, projectIds: string[]): any {
+    if (obj === undefined) {
+        return obj;
+    }
+    const newObj = Object.assign({}, obj);
+    const attachAttrs = projectIds.map(pid => {
+        return {name: 'AttachTo', value: pid}
+    });
+    const otherAttrs = (newObj.attributes || []).filter(a => a.name.toLowerCase() !== 'attachto');
+    newObj.attributes = [...otherAttrs, ...attachAttrs];
+    return newObj;
+}

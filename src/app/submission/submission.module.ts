@@ -5,7 +5,6 @@ import {AgGridModule} from 'ag-grid-angular/main';
 
 import {HttpCustomClientModule} from 'app/http/http-custom-client.module';
 import {SharedModule} from 'app/shared/shared.module';
-import {SubmissionModelModule} from 'app/submission-model/submission-model.module';
 import {SubmissionSharedModule} from 'app/submission-shared/submission-shared.module';
 
 import {SubmissionService} from './shared/submission.service';
@@ -53,7 +52,6 @@ import {SubmAddDialogComponent} from "./list/subm-add.component";
         ]),
         SharedModule,
         RouterModule,
-        SubmissionModelModule,
         SubmissionSharedModule
     ],
     providers: [

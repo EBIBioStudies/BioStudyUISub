@@ -3,9 +3,9 @@ import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs/Subject';
 
 import {SubmissionService} from '../shared/submission.service';
-import {PageTabProxy} from 'app/submission-model/index';
 import {ServerError} from 'app/http/index';
 import {Observable} from "rxjs/Observable";
+import {attachTo} from '../shared/pagetab-attributes.utils';
 
 enum ReqStatus {CONVERT, SUBMIT, ERROR, SUCCESS}
 
@@ -153,14 +153,10 @@ export class DirectSubmitService {
 
     //TODO: incorporate create request to event stream used for the convert one. Otherwise,
     private submit(req: DirectSubmitRequest, subm: any): void {
-        let pt: PageTabProxy;
-
-        //Prepares the payload
-        pt = PageTabProxy.create(subm);
-        pt.attachTo = req.projects;
+        subm = attachTo(subm, req.projects);
 
         //Updates request object's state
-        this.submService.directCreateOrUpdate(pt.data, req.type === ReqType.CREATE).subscribe(
+        this.submService.directCreateOrUpdate(subm, req.type === ReqType.CREATE).subscribe(
             data => {
                     req.onResponse(data, ReqStatus.SUCCESS);
             },
