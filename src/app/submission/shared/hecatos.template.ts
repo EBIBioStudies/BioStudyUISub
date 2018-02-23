@@ -178,6 +178,11 @@ export const HecatosTemplate = {
                         'required': true
                     },
                     {
+                        'name': 'E-mail',
+                        'valueType': 'text',
+                        'required': true
+                    },
+                    {
                         'name': 'Organisation',
                         'valueType': 'text',
                         'values': [
@@ -200,11 +205,6 @@ export const HecatosTemplate = {
                             'Microdiscovery GMBH',
                             'Optibrium limited'
                         ],
-                        'required': true
-                    },
-                    {
-                        'name': 'E-mail',
-                        'valueType': 'text',
                         'required': true
                     },
                     {
