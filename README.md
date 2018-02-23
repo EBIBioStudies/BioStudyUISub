@@ -30,6 +30,7 @@ $ npm start
 
 ### Run (prod mode) ###
 ```
+$ gulp config
 $ ng build --prod
 $ gulp webserver
 ```
