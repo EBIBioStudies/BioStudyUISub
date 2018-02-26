@@ -62,13 +62,14 @@ export class SubmEditComponent implements OnInit, OnDestroy {
 
     private subscr: Subscription;
     private isSubmitting: boolean = false;      //flag indicating submission data is being sent
-    public isReverting: boolean = false;       //flag indicating submission is being rolled back to its latest release
+    public isReverting: boolean = false;        //flag indicating submission is being rolled back to its latest release
     private isSaving: boolean = false;          //flag indicating submission data is being backed up
     private isNew: boolean = false;             //flag indicating submission has just been created
     private isRevised: boolean = false;         //flag indicating a revision of an already sent submission
 
     @ViewChild('confirmSectionDel') confirmSectionDel: ConfirmDialogComponent;
     @ViewChild('confirmRevert') confirmRevert: ConfirmDialogComponent;
+    @ViewChild('confirmSubmit') confirmSubmit: ConfirmDialogComponent;
     @ViewChild('submForm') submForm: SubmFormComponent;
 
     constructor(public route: ActivatedRoute,
@@ -256,8 +257,15 @@ export class SubmEditComponent implements OnInit, OnDestroy {
         });
     }
 
-    onSubmit(event) {
-        let wrappedSubm;
+    /**
+     * Handler for form submission events. Checks that the form is valid. If not, it highlights all fields
+     * that are incorrect and updates the checklist on the sidebar. Additionally, user confirmation before
+     * submission can be requested.
+     * @param event - DOM event triggering the submission. It can be a keypress event.
+     * @param {boolean} [isConfirm = false] - If true, a modal is rendered before actually submitting.
+     */
+    onSubmit(event, isConfirm: boolean = false) {
+        let confirmShown = Observable.of(true);     //dummy observable in case modal not shown
 
         //TODO: Why is this needed?
         if (event) {
@@ -275,11 +283,29 @@ export class SubmEditComponent implements OnInit, OnDestroy {
             //Updates the pending fields counter
             this.submForm.sectionForm.controls(this.formControls);
 
-            return;
+        //Form has been fully filled in and is valid => submits, requesting confirmation if applicable
+        } else {
+            if (isConfirm) {
+                confirmShown = this.confirmSubmit.confirm(this.confirmSubmit.body, false);
+            }
+            confirmShown.subscribe((isOk: boolean) => {
+                if (isOk) {
+                    this.submitForm()
+                } else {
+                    this.isSubmitting = false;
+                }
+            });
         }
+    }
 
-        //TODO: this could probably do with its own method
-        wrappedSubm = this.wrap(true);
+    /**
+     * Performs the actual request to save the submission, updating the view afterwards. In the event of a
+     * submission error, it shows the error tree. If, instead, the error is an application exception, the error
+     * banner is rendered.
+     */
+    submitForm() {
+        const wrappedSubm = this.wrap(true);
+
         this.submService.submitSubmission(wrappedSubm).subscribe(
             resp => {
 

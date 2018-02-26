@@ -56,5 +56,6 @@
           [readonly]="readonly"
           [required]="required"
           autosize="200"
+          (keyup.enter)="$event.stopPropagation()"
           (blur)="onBlur()">
 </textarea>
