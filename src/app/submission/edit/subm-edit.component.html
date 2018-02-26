@@ -90,7 +90,7 @@
 
                 <subm-form #submForm
                            [section]="section"
-                           (keyup.enter)="onSubmit($event)"
+                           (keyup.enter)="onSubmit($event, true)"
                            [readonly]="readonly">
                 </subm-form>
 
@@ -157,6 +157,11 @@
                         headerTitle="Revert to released version"
                         confirmLabel="Revert"
                         body="You are about to discard all changes made to this submission since it was last released. This operation cannot be undone.">
+        </confirm-dialog>
+        <confirm-dialog #confirmSubmit
+                        headerTitle="Submit the study"
+                        confirmLabel="Submit"
+                        body="You have hit the enter key while filling in the form. If you continue, the study data will be submitted.">
         </confirm-dialog>
     </div>
 </div>
