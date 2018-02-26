@@ -1,13 +1,29 @@
 <container-root>
     <aside class="col-md-10 col-md-offset-1">
-        <!-- Main content -->
         <section class="row">
             <div class="col-md-12">
                 <h3>Help</h3>
+                <ol class="list-group">
+                    <li class="list-group-item">
+                        <a href="#help-list" (click)="jumpTo($event)">Listing all your studies</a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="#help-files" (click)="jumpTo($event)">Uploading files</a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="#help-start" (click)="jumpTo($event)">Adding a study to the database</a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="#help-edit" (click)="jumpTo($event)">Editing a study</a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="#help-save" (click)="jumpTo($event)">Saving and submitting a study</a>
+                    </li>
+                </ol>
 
                 <dl>
-                    <dt name="help-list"><h4>1.Listing all your studies</h4></dt>
-                    <dd class="col-md-12">
+                    <dt><h4>1.Listing all your studies</h4></dt>
+                    <dd id="help-list" class="col-md-12">
                         <p>
                             The first screen shown after login is the list of so-called "Submissions". Each of these is,
                             effectively, a form with or without study data for a current or prospective BioStudies entry.
@@ -54,8 +70,28 @@
                             </span> icon.
                         </p>
                     </dd>
-                    <dt name="help-start"><h4>2.Adding a study to the database</h4></dt>
-                    <dd class="col-md-12">
+                    <dt><h4>2.Uploading files</h4></dt>
+                    <dd id="help-files" class="col-md-12">
+                        <p>
+                            Each user's files are stored in a central repository and made available for all your
+                            submissions. To navigate and list all your files, click on
+                            <button class="btn navbar-btn">
+                                <i class="fa fa-fw fa-lg fa-folder-open"></i>
+                                Files
+                            </button>
+                        </p>
+                        <p><img src="images/help/upload_files.png"/></p>
+                        <p>
+                            Click the
+                            <button type="button" class="btn btn-primary btn-sm">
+                                Upload files...
+                            </button>
+                            button above the list to upload new files. Multiple selection is supported using
+                            the conventional shift key. Upload progress is shown for each individual file.
+                        </p>
+                    </dd>
+                    <dt><h4>3.Adding a study to the database</h4></dt>
+                    <dd id="help-start" class="col-md-12">
                         <p>
                             Depending on how experimental data is provided, there are two possible ways of adding
                             a given study to the database. Both require clicking one of the two buttons above the
@@ -90,8 +126,8 @@
                             </p>
                         </div>
                     </dd>
-                    <dt name="help-edit"><h4>3.Editing a study</h4></dt>
-                    <dd class="col-md-12">
+                    <dt><h4>4.Editing a study</h4></dt>
+                    <dd id="help-edit" class="col-md-12">
                         <p>
                            A given study can be edited at any point of its lifecycle: before being added to the database
                            &mdash;as a "pending" submission&mdash; or after &mdash;as "sent" submission&mdash;.
@@ -107,10 +143,24 @@
                         </p>
                         <p><img src="images/help/check_tab.gif"/></p>
                         <p>
-                            New fields may be added through the "Add" tab on the left-hand side of the form, which
-                            includes the most common field types for a study: files, links or annotations for example.
+                            New fields may be added through the "Add" tab on the left-hand side of the form. It includes
+                            the most common field types for a study: files, links or annotations for example.
                         </p>
                         <p><img src="images/help/add_tab.png"/></p>
+                        <p>
+                            The controls allow the addition of sections, lists, tables or rows. The latter can be added
+                            using the
+                            <button type="button" class="btn-add btn btn-link">
+                                <i class="fa fa-lg fa-plus-circle"></i>
+                                Add <i>[name of the table]</i> row
+                            </button>
+                            button inside the corresponding table or list in the form.
+                            Pre-defined or custom table columns may be added too through the
+                            <button type="button" class="btn-add btn btn-link">
+                                <i class="fa fa-lg fa-plus-circle"></i>
+                                Column
+                            </button>
+                        </p>
                         <p>
                             For more advanced field operations, two options are provided:
                         </p>
@@ -130,20 +180,26 @@
                                 fields to the form.
                             </li>
                         </ul>
-                        <i class="fa fa-hand-o-right fa-lg pull-left text-info"></i>
-                        <p class="text-block">
-                            Please note that sections are not stable in the current version.
-                        </p>
+                        <div class="alert alert-warning">
+                            <div class="pull-left">
+                                <i class="fa fa-hand-o-right fa-lg"></i>
+                                <strong>Please note</strong>
+                            </div>
+                            <p class="text-block text-black">
+                                Sections are not stable in the current version.
+                            </p>
+                        </div>
                     </dd>
-                    <dt name="help-save"><h4>4.Saving and submitting a study</h4></dt>
-                    <dd class="col-md-12">
+                    <dt><h4>5.Saving and submitting a study</h4></dt>
+                    <dd id="help-save" class="col-md-12">
                         <p>
                             Submission forms are automatically backed up every time a change is made, so you can leave
                             an incomplete form and come back to it later.
                         </p>
                         <p>
-                            Once all the study data has been provided, the form can be submitted by pressing the "Submit"
-                            button, located both  in the secondary top bar and at the bottom of the form. If the
+                            Once all the study data has been provided, the form can be submitted by pressing the
+                            <button type="button" class="btn-submit btn btn-primary">Submit</button>
+                            button, located both in the secondary top bar and at the bottom of the form. If the
                             submission has been successful, the study is allocated an accession number with which it can
                             be accessed online.
                         </p>
@@ -153,35 +209,26 @@
                             submission process and highlight the relevant fields.
                         </p>
                         <p><img src="images/help/submit_blanks.png"/></p>
-                        <i class="fa fa-hand-o-right fa-lg pull-left text-info"></i>
-                        <p class="text-block">
-                            Please note that any submitted study will remain private and accessible only through login
-                            until the release date.
-                        </p>
-                        <i class="fa fa-hand-o-right fa-lg pull-left text-info"></i>
-                        <p class="text-block">
-                            Also note that studies are made available online approximately 24 hours after submission.
-                        </p>
-                    </dd>
-                    <dt name="help-upload"><h4>5.Uploading files</h4></dt>
-                    <dd class="col-md-12">
-                        <p>
-                            Each user's files are stored in a central repository and made available for all your
-                            submissions. To navigate and list all your files, click on
-                            <button class="btn navbar-btn">
-                                <i class="fa fa-fw fa-folder-open"></i>
-                                Files
-                            </button>
-                        </p>
-                        <p><img src="images/help/upload_files.png"/></p>
-                        <p>
-                            Click the
-                            <button type="button" class="btn btn-primary btn-sm">
-                                Upload files...
-                            </button>
-                            button above the list to upload new files. Multiple selection is supported using
-                            the conventional shift key. Upload progress is shown for each individual file.
-                        </p>
+                        <div class="alert alert-warning">
+                            <div class="pull-left">
+                                <i class="fa fa-hand-o-right fa-lg"></i>
+                                <strong>Please note</strong>
+                            </div>
+                            <p class="text-block text-black">
+                                The system may take up to 24 hours after submission to register any new studies in the
+                                database.
+                            </p>
+                        </div>
+                        <div class="alert alert-warning">
+                            <div class="pull-left">
+                                <i class="fa fa-hand-o-right fa-lg"></i>
+                                <strong>Please note</strong>
+                            </div>
+                            <p class="text-block text-black">
+                                Any registered study will remain private and accessible only through login
+                                until the release date.
+                            </p>
+                        </div>
                     </dd>
                 </dl>
             </div>
