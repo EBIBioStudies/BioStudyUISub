@@ -4,7 +4,7 @@ import {ActivatedRoute} from "@angular/router";
 @Component({
     selector: 'help-page',
     templateUrl: './help.component.html',
-    styleUrls: ['/help.component.css']
+    styleUrls: ['./help.component.css']
 })
 
 /**
