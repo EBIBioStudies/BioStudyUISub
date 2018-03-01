@@ -63,6 +63,14 @@ export class DateInputComponent implements ControlValueAccessor {
     }
 
     /**
+     * Gets the datepicker's input back to its state at instantiation, namely a blank value.
+     */
+    reset() {
+        this.dateValue = undefined;
+        this.onChange(formatDate(this.dateValue));
+    }
+
+    /**
      * Sets the date field to today's date if no value is coming from the encompassing form. It is assumed that
      * the type of the incoming data is always "string".
      * @see {@link ControlValueAccessor}

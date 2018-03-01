@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, QueryList, ViewChildren} from '@angular/core';
 
 import {
     IFilterParams,
@@ -10,10 +10,11 @@ import {
 import {AgFilterComponent} from 'ag-grid-angular/main';
 
 import {parseDate, formatDate} from 'app/submission-shared/date.utils';
+import {DateInputComponent} from "../../../submission-shared/date-input.component";
 
 class DateRange {
-    constructor(public from: string = '',
-                public to: string = '') {
+    constructor(public from: string = null,
+                public to: string = null) {
     }
 
     isEmpty(): boolean {
@@ -69,13 +70,28 @@ export class DateFilterComponent implements AgFilterComponent {
     private params: IFilterParams;
     private valueGetter: (rowNode: RowNode) => any;
     private hide: Function;
-    private selection: string = 'after';
-    private date: DateRange = new DateRange();
+    private selection;
+    private date: DateRange;
     private prev: DateRange;
+
+    @ViewChildren(DateInputComponent) dateInputs: QueryList<DateInputComponent>;
 
     agInit(params: IFilterParams): void {
         this.params = params;
         this.valueGetter = params.valueGetter;
+        this.reset();
+    }
+
+    /**
+     * Sets all date fields and the underlying date range model to initial values.
+     */
+    reset() {
+        this.selection = 'after';
+        this.date = new DateRange();
+
+        if (this.dateInputs) {
+            this.dateInputs.forEach((dateInput) => dateInput.reset());
+        }
     }
 
     isFilterActive(): boolean {
@@ -132,10 +148,10 @@ export class DateFilterComponent implements AgFilterComponent {
     onSelectionChange(ev): void {
         this.selection = ev.target.value;
         if (this.after) {
-            this.date.to = '';
+            this.date.to = null;
         }
         if (this.before) {
-            this.date.from = '';
+            this.date.from = null;
         }
     }
 
@@ -143,9 +159,14 @@ export class DateFilterComponent implements AgFilterComponent {
         this.notifyAboutChanges();
     }
 
+    /**
+     * Resets the state so that it ceases to be on filtered mode. This is fulfilled by
+     * setting the date to any "empty" value.
+     * @see {@link DateRange.hasValue}
+     * @param event DOM event for the click action.
+     */
     onClearClick(event): void {
-        this.date.to = null;
-        this.date.from = null;
+        this.reset();
         this.notifyAboutChanges();
     }
 }
