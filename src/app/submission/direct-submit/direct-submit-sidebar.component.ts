@@ -5,9 +5,8 @@ import {
     EventEmitter,
     OnInit
 } from '@angular/core';
-
 import {DirectSubmitService} from './direct-submit.service';
-import {SubmissionService} from '../shared/submission.service';
+import {UserData} from "../../auth/user-data";
 
 @Component({
     selector: 'direct-submit-sidebar',
@@ -39,18 +38,17 @@ export class DirectSubmitSideBarComponent implements OnInit {
     private projectsToAttachTo: string[] = [];           //available projects fetched asynchronously
 
     constructor(private directSubmitService: DirectSubmitService,
-                private submService: SubmissionService) {
+                private userData: UserData) {
     }
 
     ngOnInit(): void {
         this.isBusy = true;
-        this.submService.getProjects()
-            .subscribe(data => {
-                this.projectsToAttachTo = data.map(s => s.accno);
-                this.isBusy = false;
-            }, () => {
-                this.isBusy = false;
-            });
+        this.userData.whenFetched.subscribe((data) => {
+            this.projectsToAttachTo = data['projects'].map(s => s.accno);
+            this.isBusy = false;
+        }, () => {
+            this.isBusy = false;
+        });
     }
 
     onToggle(e): void {

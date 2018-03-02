@@ -5,10 +5,7 @@ import {
     ViewChild, ChangeDetectorRef
 } from '@angular/core';
 import { Location } from '@angular/common';
-import {
-    ActivatedRoute,
-    Params
-} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 
 import {Subscription} from 'rxjs/Subscription';
 import {Observable} from 'rxjs/Observable';
