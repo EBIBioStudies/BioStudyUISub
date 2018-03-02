@@ -90,10 +90,10 @@ export class SubmFieldComponent implements ControlValueAccessor {
     }
 
     /**
-     * Lifecycle hook for operations after all child views have been initialised.
-     * Updates the pointer to the DOM element too.
+     * Lifecycle hook for operations after all child views have been changed.
+     * Used to update the pointer to the DOM element.
      */
-    ngAfterViewInit(): void {
+    ngAfterViewChecked(): void {
         this.formControl.nativeElement = this.rootEl.nativeElement.querySelector('.form-control');
     }
 
