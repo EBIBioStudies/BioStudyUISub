@@ -62,6 +62,7 @@
     </aside>
 </container-root>
 <subm-add-dialog #addDialog
+                 [projectNames]="allowedPrj"
                  [onSubmit]="createSubmission.bind(this)">
 </subm-add-dialog>
 <confirm-dialog #confirmDialog></confirm-dialog>

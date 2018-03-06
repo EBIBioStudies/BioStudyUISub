@@ -36,12 +36,14 @@
                 (click)="onNewSubmClick($event)"
                 tooltip="Create a new submission"
                 placement="left"
-                container="body">
+                container="body"
+                [disabled]="isBusy">
             <i class="fa fa-plus-circle" aria-hidden="true"></i>
             Add new
         </button>
     </div>
 </nav>
 <subm-add-dialog #addDialog
+                 [projectNames]="allowedPrj"
                  [onSubmit]="createSubmission.bind(this)">
 </subm-add-dialog>

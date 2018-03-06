@@ -7,6 +7,8 @@ import {AuthService} from './auth.service';
 import {UserSession} from './user-session';
 import {Subject} from "rxjs/Subject";
 import {Observable} from "rxjs/Observable";
+import {forkJoin} from "rxjs/observable/forkJoin";
+import {SubmissionService} from "../submission/shared/submission.service";
 
 @Injectable()
 export class UserData {
@@ -23,24 +25,45 @@ export class UserData {
      * @param {UserSession} userSession - Async session manager.
      * @param {AuthService} authService - API interface for authentication-related server transactions
      */
-    constructor(userSession: UserSession, authService: AuthService) {
+    constructor(userSession: UserSession, authService: AuthService, submService: SubmissionService) {
+
+        //NOTE: Given the dependency between session and authentication, the two are marshalled in the right order here.
         userSession.created$.subscribe(created => {
-            created && authService.checkUser().subscribe(data => {
-                _.merge(this, data);
-                this._whenFetched.next(data);
-                this.isFetched = true;
-                this._whenFetched.complete();
-            });
+            let whenChecked;
+            let whenACLFetched;
+            let eventStream;
+
+            //Retrieves the actual user's data, including allowed projects to submit to.
+            //NOTE: Projects will be fetched only once instead of every time a view is rendered.
+            if (created) {
+                eventStream = forkJoin([
+                    whenChecked = authService.checkUser(),
+                    whenACLFetched = submService.getProjects()
+                ]);
+                eventStream.subscribe(results => {
+                    const userData = results[0];
+                    const projectData = results[1];
+
+                    //Grabs the project names and appends the list to the other user data
+                    userData['projects'] = projectData;
+                    _.merge(this, userData);
+
+                    //Signals that user data is available.
+                    this._whenFetched.next(userData);
+                    this.isFetched = true;
+                    this._whenFetched.complete();
+                });
+            }
         });
     }
 
     /**
      * Creates an observable normalised to resolve instantly if the user data has already been retrieved.
-     * @returns {Observable<any>} Observable from subject
+     * @returns {Observable<any>} Observable from subject.
      */
     get whenFetched(): Observable<any> {
         if (this.isFetched) {
-            return Observable.of(true);     //dummy observable in case user data has already been fetched
+            return Observable.of(this);
         } else {
             return this._whenFetched.asObservable();
         }
@@ -82,7 +105,40 @@ export class UserData {
      * Convenience method to determine if the user has any priviledges.
      * @returns {boolean} True if the user enjoys any privileges.
      */
-    get isPrivileged() : boolean {
+    get isPrivileged(): boolean {
         return this.role != UserRole.Public;
+    }
+
+    /**
+     * Extracts as an array the names of the projects this user is allowed to attach to. Notice that it can
+     * differ substantially from the projects that are available.
+     * @returns {string[]} Project names.
+     */
+    projectNames(): string[] {
+        let projNames = [];
+
+        if (this.hasOwnProperty('projects')) {
+            projNames = this['projects'].map((project) => project.accno);
+        }
+
+        return projNames;
+    }
+
+    /**
+     * Returns only the names of the available projects the user is allowed to attach to. Effectively,
+     * the list of user projects coming from the server acts as an ACL for available projects. It uses a
+     * normalised comparison of strings to intersect the two project lists.
+     * @param {string[]} availableProjects - Names of the projects that are available.
+     * @returns {string[]} Names of the allowed projects as the provided in availableProjects list.
+     */
+    allowedProjects(availableProjects: string[]): string[] {
+        const lowerCaseAllowedPrj = this.projectNames().map(name => name.toLowerCase());
+
+        return availableProjects.filter(name => {
+            const lowerCasePrj = name.toLowerCase();
+
+            //The default template must be available at all times and appear first on any list.
+            return (lowerCasePrj == 'default') || lowerCaseAllowedPrj.indexOf(lowerCasePrj) != -1;
+        });
     }
 }

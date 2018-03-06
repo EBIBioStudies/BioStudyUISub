@@ -314,6 +314,10 @@ export class SectionType extends BaseType {
 export class SubmissionType extends BaseType {
     readonly sectionType: SectionType;
 
+    static defaultTmplName() {
+        return DefaultTemplate.name;
+    }
+
     static createDefault(): SubmissionType {
         return SubmissionType.fromTemplate('');
     }
