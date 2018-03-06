@@ -105,7 +105,40 @@ export class UserData {
      * Convenience method to determine if the user has any priviledges.
      * @returns {boolean} True if the user enjoys any privileges.
      */
-    get isPrivileged() : boolean {
+    get isPrivileged(): boolean {
         return this.role != UserRole.Public;
+    }
+
+    /**
+     * Extracts as an array the names of the projects this user is allowed to attach to. Notice that it can
+     * differ substantially from the projects that are available.
+     * @returns {string[]} Project names.
+     */
+    projectNames(): string[] {
+        let projNames = [];
+
+        if (this.hasOwnProperty('projects')) {
+            projNames = this['projects'].map((project) => project.accno);
+        }
+
+        return projNames;
+    }
+
+    /**
+     * Returns only the names of the available projects the user is allowed to attach to. Effectively,
+     * the list of user projects coming from the server acts as an ACL for available projects. It uses a
+     * normalised comparison of strings to intersect the two project lists.
+     * @param {string[]} availableProjects - Names of the projects that are available.
+     * @returns {string[]} Names of the allowed projects as the provided in availableProjects list.
+     */
+    allowedProjects(availableProjects: string[]): string[] {
+        const lowerCaseAllowedPrj = this.projectNames().map(name => name.toLowerCase());
+
+        return availableProjects.filter(name => {
+            const lowerCasePrj = name.toLowerCase();
+
+            //The default template must be available at all times and appear first on any list.
+            return (lowerCasePrj == 'default') || lowerCaseAllowedPrj.indexOf(lowerCasePrj) != -1;
+        });
     }
 }

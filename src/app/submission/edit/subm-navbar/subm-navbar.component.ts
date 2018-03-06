@@ -12,6 +12,8 @@ import {PageTab} from "app/submission/shared/pagetab.model";
 import {ConfirmDialogComponent} from "../../../shared/confirm-dialog.component";
 import {Observable} from "rxjs/Observable";
 import {SubmAddDialogComponent} from "../../list/subm-add.component";
+import {UserData} from "../../../auth/user-data";
+import {SubmissionType} from "../../shared/submission-type.model";
 
 @Component({
     selector: 'subm-navbar',
@@ -19,6 +21,9 @@ import {SubmAddDialogComponent} from "../../list/subm-add.component";
     styleUrls: ['./subm-navbar.component.css']
 })
 export class SubmNavBarComponent {
+    isBusy: boolean = false;            //flag indicating if a request is in progress
+    allowedPrj: string[];               //names of projects with templates the user is allowed to attach submissions to
+
     @Input() accno: string;
     @Input() readonly: boolean;
     @Input() isTemp: boolean;
@@ -32,7 +37,16 @@ export class SubmNavBarComponent {
     addDialog: SubmAddDialogComponent;
 
     constructor(private submService: SubmissionService,
-                private router: Router) {}
+                private userData: UserData,
+                private router: Router) {
+
+        //Works out the list of allowed projects by comparison with template names
+        this.isBusy = true;
+        this.userData.whenFetched.subscribe((data) => {
+            this.isBusy = false;
+            this.allowedPrj = this.userData.allowedProjects(SubmissionType.listTmplNames());
+        });
+    }
 
     onSectionClick(section: Section): void {
         this.sectionClick.next(section);
@@ -48,11 +62,19 @@ export class SubmNavBarComponent {
 
     /**
      * Renders the new submission dialogue that allows the user to choose what type definitions template is used.
+     * If only one template is available, the modal is bypassed altogether and a default submission is created.
+     * NOTE: The default template will always be available.
+     * @see {@link UserData.allowedProjects}
      * @param {Event} event - Click event object, the bubbling of which will be prevented
      */
     onNewSubmClick(event: Event): void {
         event.preventDefault();
-        this.addDialog.show();
+
+        if (this.allowedPrj.length > 1) {
+            this.addDialog.show();
+        } else {
+            this.createSubmission('');
+        }
     }
 
     /**

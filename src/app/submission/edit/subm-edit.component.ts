@@ -302,10 +302,10 @@ export class SubmEditComponent implements OnInit, OnDestroy {
      */
     submitForm() {
         const wrappedSubm = this.wrap(true);
-
+const route = this.route;
         this.submService.submitSubmission(wrappedSubm).subscribe(
             resp => {
-
+const route = this.route;
                 //Updates the acccession number of a temporary submission with the one assigned by the server.
                 if (this.subm.isTemp) {
                     this.accno = resp.mapping[0].assigned;

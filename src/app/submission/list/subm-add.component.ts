@@ -1,6 +1,5 @@
 import {Component, Input, ViewChild} from "@angular/core";
 import {ModalDirective} from "ngx-bootstrap";
-import {SubmissionType} from "../shared/submission-type.model";
 
 @Component({
     selector: 'subm-add-dialog',
@@ -8,15 +7,11 @@ import {SubmissionType} from "../shared/submission-type.model";
 })
 export class SubmAddDialogComponent {
     public projectName: string = 'Default';
-    public projectNames: string[] = [];
 
-    @Input() onSubmit: Function;    //callback for submit action
+    @Input() onSubmit: Function;            //callback for submit action
+    @Input() projectNames: string[] = [];   //names of projects with templates
     @ViewChild('bsModal')
     private modalDirective: ModalDirective;
-
-    constructor () {
-        this.projectNames = SubmissionType.listTmplNames();
-    }
 
     /**
      * Renders the modal with default values.

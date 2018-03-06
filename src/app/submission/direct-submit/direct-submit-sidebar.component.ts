@@ -44,7 +44,7 @@ export class DirectSubmitSideBarComponent implements OnInit {
     ngOnInit(): void {
         this.isBusy = true;
         this.userData.whenFetched.subscribe((data) => {
-            this.projectsToAttachTo = data['projects'].map(s => s.accno);
+            this.projectsToAttachTo = this.userData.projectNames();
             this.isBusy = false;
         }, () => {
             this.isBusy = false;

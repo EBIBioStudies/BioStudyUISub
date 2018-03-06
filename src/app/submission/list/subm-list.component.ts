@@ -13,6 +13,8 @@ import {PageTab} from '../shared/pagetab.model';
 import {Subscription} from "rxjs/Subscription";
 import {AppConfig} from "../../app.config";
 import {SubmAddDialogComponent} from "./subm-add.component";
+import {UserData} from "../../auth/user-data";
+import {SubmissionType} from "../shared/submission-type.model";
 
 @Component({
     selector: 'action-buttons-cell',
@@ -113,6 +115,7 @@ export class DateCellComponent implements AgRendererComponent {
 export class SubmListComponent {
     showSubmitted: boolean = false;     //flag indicating if the list of sent submissions is to be displayed
     isBusy: boolean = false;            //flag indicating if a request is in progress
+    allowedPrj: string[];               //names of projects with templates the user is allowed to attach submissions to
 
     //AgGrid-related properties
     gridOptions: GridOptions;
@@ -125,6 +128,7 @@ export class SubmListComponent {
     confirmDialog: ConfirmDialogComponent;
 
     constructor(private submService: SubmissionService,
+                private userData: UserData,
                 private router: Router,
                 private route: ActivatedRoute) {
 
@@ -157,6 +161,13 @@ export class SubmListComponent {
         };
 
         this.createColumnDefs();
+
+        //Works out the list of allowed projects by comparison with template names
+        this.isBusy = true;
+        this.userData.whenFetched.subscribe((data) => {
+            this.isBusy = false;
+            this.allowedPrj = this.userData.allowedProjects(SubmissionType.listTmplNames());
+        });
     }
 
     createColumnDefs() {
@@ -344,12 +355,20 @@ export class SubmListComponent {
     }
 
     /**
-     * Renders the new submission dialogue that allows the user to choose what type definitions template is used.
+     * Renders the new submission dialogue that allows the user to choose what type definitions template is employed
+     * to create a submission later on. If only one template is available, the modal is bypassed altogether.
+     * NOTE: The default template will always be available.
+     * @see {@link UserData.allowedProjects}
      * @param {Event} event - Click event object, the bubbling of which will be prevented
      */
     onNewSubmClick(event: Event): void {
         event.preventDefault();
-        this.addDialog.show();
+
+        if (this.allowedPrj.length > 1) {
+            this.addDialog.show();
+        } else {
+            this.createSubmission('');
+        }
     }
 
     /**
