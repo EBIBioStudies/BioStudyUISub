@@ -21,6 +21,7 @@ export class DirectSubmitRequest {
     private _status: ReqStatus;
     private _log: any;
     private _accno: string =  '';
+    private _releaseDate: string;
 
     constructor(filename: string, format: string, projects: string[], type: ReqType) {
         this._filename = filename;
@@ -80,8 +81,12 @@ export class DirectSubmitRequest {
         return this._log || {};
     }
 
-    get accno(): any {
+    get accno(): string {
         return this._accno;
+    }
+
+    get releaseDate(): string {
+        return this._releaseDate;
     }
 
     //Handler for responses from conversion or final submission
@@ -100,6 +105,16 @@ export class DirectSubmitRequest {
             //If the response is from final submit request, exposes the accession number
             if (successStatus == ReqStatus.SUCCESS) {
                 this._accno = res.mapping[0].assigned;
+
+            //If back from conversion, extracts the release date if found.
+            } else if (successStatus == ReqStatus.SUBMIT) {
+                const dateAttr = res.document.submissions[0].attributes.find(attribute => {
+                    return attribute.name == 'ReleaseDate';
+                });
+
+                if (dateAttr) {
+                    this._releaseDate = dateAttr.value;
+                }
             }
         }
     }

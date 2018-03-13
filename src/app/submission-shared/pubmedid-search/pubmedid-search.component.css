@@ -33,6 +33,11 @@
     padding: 2px 10px;
     white-space: normal;
 }
+.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+    color: #fff;
+    outline: 0;
+    background-color: #3c8b9f;
+}
 .open > .dropdown-menu {
     display: block;
     display: -webkit-box;

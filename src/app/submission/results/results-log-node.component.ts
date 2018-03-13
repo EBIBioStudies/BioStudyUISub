@@ -15,6 +15,11 @@ export class ResultsLogNodeComponent implements TreeViewCustomNodeComponent {
     onNodeData(data: any = {}): void {
         this._message = data.message || '';
         this._logLevel = (data.level || 'info').toLowerCase();
+
+        //Makes parent ERRORS display as normal info nodes.
+        if (data.subnodes && this._logLevel == 'error') {
+            this._logLevel = 'info';
+        }
     }
 
     get message(): string {

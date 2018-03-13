@@ -17,10 +17,17 @@ export class DirectSubmitComponent implements OnInit, OnDestroy {
     request: DirectSubmitRequest;
     collapseSideBar: Boolean = false;
 
-    constructor(private submitService: DirectSubmitService, private appConfig: AppConfig) {
-
-        //Initally collapses the sidebar for tablet-sized screens
+    /**
+     * Initally collapses the sidebar for tablet-sized screens.
+     * @param {DirectSubmitService} submitService - Singleton service for all submission transactions.
+     * @param {AppConfig} appConfig - Global configuration object with app-wide settings.
+     */
+    constructor(private submitService: DirectSubmitService, public appConfig: AppConfig) {
         this.collapseSideBar = window.innerWidth < this.appConfig.tabletBreak;
+    }
+
+    get location() {
+        return window.location;
     }
 
     ngOnInit(): void {

@@ -20,8 +20,17 @@
                 <div *ngIf="!request" class="panel-body">
                     <h4>New direct submission</h4>
                     <p>Please fill in the form on the left. A data file must be provided and may be attached
-                        to one or multiple projects. If updating an existing study, the filename must match the study's
-                        accession number.</p>
+                        to one or multiple projects.
+                    </p>
+                    <div class="alert alert-warning">
+                        <div class="pull-left">
+                            <i class="fa fa-hand-o-right fa-lg"></i>
+                            <strong>Please note</strong>
+                        </div>
+                        <p class="text-block text-black">
+                            If updating an existing study, the filename must match the study's accession number.
+                        </p>
+                    </div>
                 </div>
                 <div *ngIf="request && request.inprogress" class="panel-body">
                     <h4>Submitting study...</h4>
@@ -30,12 +39,48 @@
                 </div>
                 <div *ngIf="request && request.failed" class="panel-body">
                     <h4>Error while submitting study</h4>
-                    <p>The submitted data file is invalid or an unexpected error was encountered. Try to correct at least the
+                    <p>The submitted data file is invalid or an unexpected error was encountered. Try to correct the
                     issues highlighted in red and submit again.</p>
                 </div>
                 <div *ngIf="request && request.successful" class="panel-body">
-                    <h4>Submitted study</h4>
-                    <p>The study has been added to the BioStudies database with accession number <strong>{{request.accno}}</strong>.</p>
+                    <h4>Study {{request.type ? 'updated' : 'created'}}</h4>
+                    <p>
+                        The study with accession number
+                        <strong>{{request.accno}}</strong>
+                        <span *ngIf="request.releaseDate">
+                            and release date <strong>{{request.releaseDate | date: 'dd MMMM yyyy'}}</strong>
+                        </span>
+                        <span *ngIf="request.type">
+                            has been successfully updated.
+                        </span>
+                        <span *ngIf="!request.type">
+                            has been successfully added to the BioStudies database.
+                        </span>
+                        It {{request.type ? 'is available' : 'will be available in the next 24 hours'}} at
+                        <a target="_blank" href="{{location.origin}}/biostudies/studies/{{accno}}">
+                            {{location.hostname}}/biostudies/studies/{{request.accno}}</a>.
+                    </p>
+                    <strong>
+                        <a target="_blank" href="https://www.ebi.ac.uk/biostudies/about.html">
+                            Citing my study
+                            <i class="fa fa-fw fa-external-link-square"></i>
+                        </a>
+                    </strong>
+                    <blockquote class="blockquote">
+                        Data are available in the BioStudies database (http://www.ebi.ac.uk/biostudies)
+                        under accession number {{request.accno}}.
+                    </blockquote>
+                    <strong>
+                        <a target="_blank" href="http://europepmc.org/abstract/MED/26700850">
+                            Citing the BioStudies database
+                            <i class="fa fa-fw fa-external-link-square"></i>
+                        </a>
+                    </strong>
+                    <blockquote class="blockquote">
+                        McEntyre J, Sarkans U, Brazma A (2015) The
+                        BioStudies database. <i>Mol. Syst. Biol.</i> 11(12):847.
+                        https://doi.org/10.15252/msb.20156658.
+                    </blockquote>
                 </div>
             </div>
             <div *ngIf="request" class="panel panel-default">

@@ -16,9 +16,7 @@
         <div class="media-body media-middle">
             <p class="media-heading">
                 <span *ngIf="isSuccess()">
-                    Your submission has been successfully added to the BioStudies database with accession number <strong>{{accno}}</strong>. It
-                    will be available in the next 24 hours at <a target="_blank" href="{{location.origin}}/biostudies/studies/{{accno}}">
-                    {{location.hostname}}/biostudies/studies/{{accno}}</a>.
+                    Your submission has been successfully {{isUpdate ? 'updated' : 'added to the BioStudies database'}}.
                 </span>
                 <span *ngIf="!isSuccess()">
                     An error has occurred while submitting the data to BioStudies. You may review your submission and try again. If the error
@@ -29,6 +27,26 @@
                 </span>
             </p>
         </div>
+    </div>
+    <div  *ngIf="isSuccess() && !isUpdate" class="alert alert-warning">
+        <div class="pull-left">
+            <i class="fa fa-hand-o-right fa-lg"></i>
+            <strong>Please note</strong>
+        </div>
+        <p class="text-block text-black">
+            The system may take up to 24 hours after submission to register any new studies in the
+            database.
+        </p>
+    </div>
+    <div  *ngIf="isSuccess() && !isUpdate" class="alert alert-warning">
+        <div class="pull-left">
+            <i class="fa fa-hand-o-right fa-lg"></i>
+            <strong>Please note</strong>
+        </div>
+        <p class="text-block text-black">
+            Any registered study will remain private and accessible only through login
+            until the release date.
+        </p>
     </div>
     <subm-results-tree *ngIf="!isLogEmpty() && !isSuccess()" [log]="log"></subm-results-tree>
 </div>

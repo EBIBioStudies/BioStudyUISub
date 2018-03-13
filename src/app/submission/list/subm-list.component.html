@@ -16,7 +16,8 @@
                     [disabled]="isBusy"
                     tooltip="Create a new submission manually"
                     container="body">
-                <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                <i *ngIf="!isCreating" class="fa fa-plus-circle" aria-hidden="true"></i>
+                <i *ngIf="isCreating" class="fa fa-cog fa-spin"></i>
                 <span>Add new</span>
             </button>
         </span>
@@ -57,7 +58,7 @@
             </div>
         </section>
         <a href="https://www.ebi.ac.uk/biostudies/studies/" target="_blank">
-            <i class="fa fa-fw fa-external-link-square"></i>Search published submissions
+            Search published submissions <i class="fa fa-fw fa-external-link-square"></i>
         </a>
     </aside>
 </container-root>

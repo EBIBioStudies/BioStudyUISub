@@ -67,9 +67,9 @@ export class FieldControl extends FormControl {
     /**
      * Recursively traverses a given form grouping to get all controls as a flattened array.
      * @param {FormGroup | FormArray} formGroup - Group containing all controls, regardless of any nested groups or arrays.
-     * @param {FormControl[]} controlList - Flattened array of form controls.
+     * @param {FieldControl[]} controlList - Flattened array of form controls.
      */
-    static toArray(formGroup: FormGroup | FormArray, controlList: FormControl[]) {
+    static toArray(formGroup: FormGroup | FormArray, controlList: FieldControl[]) {
 
         //Alternative to ES7's Object.values() method to get all controls within the grouping
         (<any>Object).keys(formGroup.controls).map(key => formGroup.controls[key]).forEach(control => {
@@ -81,7 +81,7 @@ export class FieldControl extends FormControl {
                 controlList.push(control);
 
                 //Keeps track of controls that have been modified but still invalid
-                if (control.touched && control.invalid) {
+                if (control.touched && control.invalid && control.parentType.required) {
                     this.numPending++;
                 }
             }
@@ -187,9 +187,9 @@ export class SectionForm {
     /**
      * Traverses the form in its entirety in order to get all its controls, both the section's and features' controls.
      * While at it, it initialises the current number of pending fields.
-     * @param {FormControl[]} controls - Final array with all the form's controls.
+     * @param {FieldControl[]} controls - Final array with all the form's controls.
      */
-    controls(controls: FormControl[]) {
+    controls(controls: FieldControl[]) {
         FieldControl.numPending = 0;
 
         controls.length = 0;

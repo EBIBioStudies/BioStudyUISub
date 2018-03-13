@@ -25,9 +25,6 @@ h4 {
     clear: both;
     padding-right: 1rem;
 }
-.text-block {
-    overflow: hidden;
-}
 
 /* Scales image to width of paragraphs */
 p img {
@@ -60,21 +57,4 @@ p .btn, li .btn {
     font-size: .78rem;
     top: -.3rem;
     left: -.1rem;
-}
-
-/* Makes notes stand out by means of styled boxes */
-.alert {
-    padding: 0;
-    overflow: hidden;
-    border-width: 2px;
-}
-.alert-warning .pull-left {
-    color: #dca700;
-}
-.alert .text-block {
-    border-radius: 0 4px 4px 0;
-    background: white;
-}
-.alert .pull-left, .alert .text-block {
-    padding: 10px;
 }

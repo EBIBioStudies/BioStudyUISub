@@ -1,11 +1,11 @@
 <div bsModal class="modal fade" role="dialog" aria-hidden="true"
      #bsModal="bs-modal"
-     (onShown)="onShown(focusBtn)">
+     (onShown)="onShown()">
     <div class="modal-dialog">
         <div class="modal-content">
             <form novalidate autocomplete="off"
                   #form="ngForm"
-                  (ngSubmit)="onSubmit(projectName)">
+                  (ngSubmit)="bsModal.hide(); onSubmit(projectName)">
                 <div class="modal-header bg-primary">
                     Add new submission
                     <button type="button" class="close pull-right" aria-label="Close" (click)="hide()">
@@ -20,6 +20,7 @@
                         <div *ngFor="let name of projectNames" class="radio">
                             <label>
                                 <input type="radio"
+                                       class="project-radio"
                                        [name]="name"
                                        [value]="name"
                                        [(ngModel)]="projectName">
@@ -30,8 +31,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="pull-right">
-                        <button type="submit" class="btn btn-primary btn-sm"
-                                #focusBtn>
+                        <button type="submit" class="btn btn-primary btn-sm">
                             Add
                         </button>
                         <button type="button"

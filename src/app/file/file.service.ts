@@ -7,11 +7,13 @@ import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
 
 import * as _ from 'lodash';
+import {Subscription} from "rxjs/Subscription";
 
 @Injectable()
 export class FileService {
-    constructor(private http: HttpCustomClient) {
-    }
+    subscriptions: Subscription[] = [];
+
+    constructor(private http: HttpCustomClient) {}
 
     getUserDirs(): Observable<any> {
         return this.getFiles('/Groups', 1, false)
@@ -25,6 +27,6 @@ export class FileService {
     }
 
     removeFile(fullPath): Observable<any> {
-        return this.http.del(`/api/files?path=${fullPath}`);
+        return this.http.del(`/api/files?path=${encodeURIComponent(fullPath)}`);
     }
 }

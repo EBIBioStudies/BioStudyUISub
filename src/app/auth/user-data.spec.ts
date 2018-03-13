@@ -6,8 +6,14 @@ import {AuthService} from './auth.service';
 import {UserSession} from './user-session';
 
 describe('UserData', () => {
+    let submService;
+
+    beforeEach(() => {
+        submService = {getProjects: () => Observable.of([])};
+    });
+
     it('should be empty when the session is not set', () => {
-        const ud = new UserData(new UserSession(), {} as AuthService);
+        const ud = new UserData(new UserSession(), {} as AuthService, submService);
         const contact = ud.contact;
         expect(contact['Name']).toBe('');
         expect(contact['E-mail']).toBe('');
@@ -21,7 +27,7 @@ describe('UserData', () => {
              email: 'vasya@pupkin.com'
          })};
         const session = new UserSession();
-        const ud = new UserData(session, checkUser as AuthService);
+        const ud = new UserData(session, checkUser as AuthService, submService);
 
         session.create('12345');
         const contact = ud.contact;
@@ -48,7 +54,7 @@ describe('UserData', () => {
             }
         })};
         const session = new UserSession();
-        const ud = new UserData(session, checkUser as AuthService);
+        const ud = new UserData(session, checkUser as AuthService, submService);
 
         session.create('123456');
         const contact = ud.contact;

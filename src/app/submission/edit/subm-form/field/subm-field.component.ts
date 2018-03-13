@@ -123,4 +123,14 @@ export class SubmFieldComponent implements ControlValueAccessor {
     onSuggestSelect(selection: TypeaheadMatch) {
         this.rootEl.nativeElement.dispatchEvent(new Event('change', {bubbles: true}));
     }
+
+    /**
+     * Convenience method for the equivalen date n years into the future.
+     * @param {number} years - Number of years the date is incremented in.
+     * @returns {Date} - Resulting date object.
+     */
+    nowInNyears(years: number = 0): Date {
+        const currDate = new Date();
+        return new Date(currDate.setFullYear(currDate.getFullYear() + years));
+    }
 }

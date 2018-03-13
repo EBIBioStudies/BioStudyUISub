@@ -7,8 +7,8 @@ export const HecatosTemplate = {
         'annotationsType': {
             'title': 'Describe your study',
             'icon': 'fa-tag',
-            'description': 'Provide any supplementary details of the study that may help discover and/or interpret it ' +
-                           'such as experimental factors.',
+            'description': 'Provide any factors that may help discover or interpret the study. For example, ' +
+                           'age, dose frequency or time range.',
             'columnTypes': [
                 {
                     'name': 'Factor',
@@ -50,116 +50,82 @@ export const HecatosTemplate = {
                 'minlength': 50
             },
             {
-                'name': 'Design Type',
-                'valueType': 'text'
-            },
-            {
-                'name': 'Assay Measurement Type',
-                'valueType': 'text'
-            },
-            {
-                'name': 'Assay Technology Type',
-                'valueType': 'text'
-            },
-            {
-                'name': 'Assay Technology Platform',
-                'valueType': 'text'
-            },
-            {
-                'name': 'Organism',
+                'name': 'Sample Type',
+                'icon': 'fa-eyedropper',
                 'valueType': 'text',
-                'values': [
-                    'Homo sapiens',
-                    'Mus musculus',
-                    'Arabidopsis thaliana',
-                    'Rattus norvegicus',
-                    'Drosophila melanogaster',
-                    'Oryza sativa Japonica Group',
-                    'Anas platyrhyncho',
-                    'Anolis carolinensis',
-                    'Anopheles gambiae',
-                    'Arabidopsis lyrata',
-                    'Aspergillus fumigatus',
-                    'Bos Taurus',
-                    'Brachypodium distachyon',
-                    'Brassica oleracea',
-                    'Brassica rapa',
-                    'Caenorhabditis elegans',
-                    'Canis familiaris',
-                    'Chlorocebus sabaeus',
-                    'Ciona intestinalis',
-                    'Ciona savignyi',
-                    'Danio rerio',
-                    'Dasypus novemcinctus',
-                    'Equus caballus',
-                    'Gallus gallus',
-                    'Glycine max',
-                    'Gorilla gorilla',
-                    'Hordeum vulgare',
-                    'Macaca mulatta',
-                    'Medicago truncatula',
-                    'Monodelphis domestica',
-                    'Musa acuminate',
-                    'Ornithorhynchus anatinus',
-                    'Oryctolagus cuniculus',
-                    'Oryza rufipogon',
-                    'Ovis aries',
-                    'Pan troglodytes',
-                    'Papio Anubis',
-                    'Physcomitrella patens',
-                    'Pongo abelii',
-                    'Populus trichocarpa',
-                    'Saccharomyces cerevisiae',
-                    'Schistosoma mansoni',
-                    'Schizosaccharomyces pombe',
-                    'Solanum lycopersicum',
-                    'Solanum tuberosum',
-                    'Sorghum bicolor',
-                    'Sus scrofa',
-                    'Tetraodon nigroviridis',
-                    'Theobroma cacao',
-                    'Triticum aestivum',
-                    'Vitis vinifera',
-                    'Xenopus tropicalis',
-                    'Yarrowia lipolytica',
-                    'Zea mays'
-                ]
+                'values': ['Cardiac microtissue', 'Heart biopsy', 'Liver microtissue', 'Liver biopsy', 'Serum sample']
             },
             {
                 'name': 'Organ',
-                'valueType': 'text'
+                'icon': 'fa-eyedropper',
+                'valueType': 'text',
+                'values': ['Heart', 'Liver']
             },
             {
-                'name': 'Sample Type',
-                'valueType': 'text'
+                'name': 'Organism',
+                'icon': 'fa-eyedropper',
+                'valueType': 'text',
+                'values': ['Homo sapiens', 'Sus scrofa']
+            },
+            {
+                'name': 'Dose',
+                'icon': 'fa-eyedropper',
+                'valueType': 'text',
+                'values': ['Therapeutic', 'Toxic', 'Control', '0.1% DMSO', 'Fluctuating DMSO']
             },
             {
                 'name': 'Biological Replicate',
+                'icon': 'fa-eyedropper',
                 'valueType': 'text'
             },
             {
                 'name': 'Compound',
-                'valueType': 'text'
+                'icon': 'fa-flask',
+                'valueType': 'text',
+                'values': ['Doxorubicin', 'Epirubicin', 'Idarubicin', 'DMSO', 'Untreated']
             },
             {
                 'name': 'Chembl ID',
-                'valueType': 'text'
+                'icon': 'fa-flask',
+                'valueType': 'text',
+                'values': ['CHEMBL53463', 'CHEMBL417', 'CHEMBL1117']
             },
             {
                 'name': 'Std In Chi Key',
+                'icon': 'fa-flask',
+                'valueType': 'text',
+                'values': ['AOJJSUZBOXZQNB-TZSSRYMLSA-N', 'AOJJSUZBOXZQNB-VTZDEGQISA-N', 'XDXDZDZNSLXDNA-TZNDIEGXSA-N']
+            },
+            {
+                'name': 'Design Type',
+                'icon': 'fa-cogs',
                 'valueType': 'text'
             },
             {
-                'name': 'Dose',
+                'name': 'Assay Measurement Type',
+                'icon': 'fa-cogs',
+                'valueType': 'text'
+            },
+            {
+                'name': 'Assay Technology Type',
+                'icon': 'fa-cogs',
+                'valueType': 'text'
+            },
+            {
+                'name': 'Assay Technology Platform',
+                'icon': 'fa-cogs',
                 'valueType': 'text'
             },
             {
                 'name': 'Protocol Type',
+                'icon': 'fa-cogs',
                 'valueType': 'text'
             },
             {
                 'name': 'Data Type',
-                'valueType': 'text'
+                'icon': 'fa-cogs',
+                'valueType': 'text',
+                'values': ['Genomic data', 'Proteomics data', 'Metabolomic data']
             }
         ],
         'featureTypes': [
@@ -263,8 +229,7 @@ export const HecatosTemplate = {
             {
                 'name': 'Link',
                 'title': 'Add Links',
-                'description': 'Provide pointers to data held in other databases, or to associated information on the ' +
-                               'web, to enable a complete overview of a study.',
+                'description': 'Provide pointers to data held in external databases or to related information on the web.',
                 'icon': 'fa-link',
                 'uniqueCols': true,
                 'columnTypes': [
@@ -287,7 +252,7 @@ export const HecatosTemplate = {
             {
                 'name': 'Publication',
                 'title': 'Add Publications',
-                'description': 'Add the details of publications relevant or complementary to the study. Autofill is ' +
+                'description': 'Add the details of publications relevant to the study. Autofill is ' +
                                'available when searching by PubMed identifier',
                 'icon': 'fa-book',
                 'uniqueCols': true,

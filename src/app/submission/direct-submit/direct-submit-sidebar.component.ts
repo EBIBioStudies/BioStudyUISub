@@ -15,6 +15,8 @@ import {UserData} from "../../auth/user-data";
 })
 
 export class DirectSubmitSideBarComponent implements OnInit {
+    submitType: string = 'create';
+
     @Input() collapsed? = false;
     @Input() readonly? = false;
     @Output() toggle? = new EventEmitter();
