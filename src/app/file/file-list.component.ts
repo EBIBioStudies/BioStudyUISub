@@ -27,6 +27,8 @@ import * as _ from 'lodash';
 
 import 'rxjs/add/operator/filter';
 import {AppConfig} from "../app.config";
+import "rxjs/add/operator/takeUntil";
+import {Subject} from "rxjs/Subject";
 
 @Component({
     selector: 'file-actions-cell',
@@ -146,8 +148,8 @@ export class ProgressCellComponent implements AgRendererComponent {
 })
 
 export class FileListComponent implements OnInit, OnDestroy {
+    protected ngUnsubscribe: Subject<void>;     //stopper for all subscriptions
     private rowData: any[];
-    private uploadSubscription: Subscription;
 
     path: Path = new Path('/User', '/');
 
@@ -161,6 +163,8 @@ export class FileListComponent implements OnInit, OnDestroy {
                 private route: ActivatedRoute,
                 private appConfig: AppConfig) {
 
+        this.ngUnsubscribe = new Subject<void>();
+
         //Initally collapses the sidebar for tablet-sized screens
         this.sideBarCollapsed = window.innerWidth < this.appConfig.tabletBreak;
 
@@ -173,8 +177,9 @@ export class FileListComponent implements OnInit, OnDestroy {
             localeText: {noRowsToShow: 'No files found'}
         };
 
-        this.uploadSubscription = this.fileUploadService.uploadFinish$
+        this.fileUploadService.uploadFinish$
             .filter((path) => path.startsWith(this.currentPath))
+            .takeUntil(this.ngUnsubscribe)
             .subscribe(() => {
                 this.loadData();
             });
@@ -189,8 +194,14 @@ export class FileListComponent implements OnInit, OnDestroy {
         });
     }
 
+    /**
+     * Removes all subscriptions whenever the file view is abandoned.
+     * Requires the takeUntil operator before every subscription.
+     * @see {@link https://stackoverflow.com/a/41177163}
+     */
     ngOnDestroy() {
-        this.uploadSubscription.unsubscribe();
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     private get currentPath() {
@@ -237,6 +248,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     private loadData(path?: Path) {
         let p: Path = path ? path : this.path;
         this.fileService.getFiles(p.fullPath())
+            .takeUntil(this.ngUnsubscribe)
             .subscribe(
                 data => {
                     if (data.status === 'OK') { //use proper http codes for this!!!!!!
@@ -281,7 +293,6 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     onUploadFilesSelect(files) {
-        console.debug("Files to upload:", files);
         let upload = this.fileUploadService.upload(this.path, files);
         this.updateDataRows([].concat(this.decorateUploads([upload]), this.rowData));
     }
@@ -316,6 +327,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     private removeFile(fileName: string): void {
         this.fileService
             .removeFile(this.path.fullPath(fileName))
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((resp) => {
                 this.loadData();
             });

@@ -42,6 +42,7 @@ export class DateInputComponent implements ControlValueAccessor {
     public dateValue: Date;
 
     @Input() canUsePastDates?: boolean = undefined;
+    @Input() maxDate?: Date = undefined;
     @Input() isSmall?: boolean = false;
     @Input() required?: boolean = false;
     @Input() readonly?: boolean = false;
@@ -60,6 +61,22 @@ export class DateInputComponent implements ControlValueAccessor {
     constructor(config: BsDatepickerConfig, private appConfig: AppConfig, private rootEl: ElementRef) {
         config.showWeekNumbers = false;
         config.dateInputFormat = appConfig.dateInputFormat;
+    }
+
+    /**
+     * Disables past dates if so defined in the corresponding input binding. If there is none, it falls back
+     * on the app-wide config's relevant entry. Otherwise, the default behaviour is to allow past dates.
+     * Also sets the maximum date for selection only if the corresponding input binding is provided. If not,
+     * any future date can be set.
+     */
+    ngOnInit(): void {
+        if ((typeof this.canUsePastDates === 'undefined' && !this.appConfig.canUsePastDates) ||
+            (this.canUsePastDates === false)) {
+            this.datepicker.minDate = new Date(Date.now());
+        }
+        if (this.maxDate instanceof Date) {
+            this.datepicker.maxDate = this.maxDate;
+        }
     }
 
     /**
@@ -144,17 +161,6 @@ export class DateInputComponent implements ControlValueAccessor {
         document.querySelector('.bs-datepicker-container').addEventListener('click', (event) => {
             event.stopPropagation();
         });
-    }
-
-    /**
-     * Disables past dates if so defined in the corresponding input binding. If there is none, it falls back
-     * on the app-wide config's relevant entry.
-     */
-    ngOnInit(): void {
-        if ((typeof this.canUsePastDates === 'undefined' && !this.appConfig.canUsePastDates) ||
-            (this.canUsePastDates === false)) {
-            this.datepicker.minDate = new Date(Date.now());
-        }
     }
 }
 

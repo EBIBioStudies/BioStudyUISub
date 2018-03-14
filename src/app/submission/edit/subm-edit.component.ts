@@ -37,6 +37,7 @@ import {FieldControl} from "./subm-form/subm-form.service";
 import {UserData} from "../../auth/user-data";
 import {SubmValidationErrorsComponent} from "./subm-navbar/subm-validation-errors.component";
 import * as _ from "lodash";
+import {SubmSideBarComponent} from "./subm-sidebar/subm-sidebar.component";
 
 @Component({
     selector: 'subm-edit',
@@ -55,23 +56,25 @@ export class SubmEditComponent implements OnInit, OnDestroy {
     sideBarCollapsed: boolean = false;
     readonly: boolean = false;
     accno: string = '';
+    releaseDate: string = '';
     wrappedSubm: any;
 
+    public isReverting: boolean = false;        //flag indicating submission is being rolled back to its latest release
+    public isUpdate: boolean;                   //flag indicating if updating an already existing submission
     private subscr: Subscription;
     private isSubmitting: boolean = false;      //flag indicating submission data is being sent
-    public isReverting: boolean = false;        //flag indicating submission is being rolled back to its latest release
     private isSaving: boolean = false;          //flag indicating submission data is being backed up
-    private isNew: boolean = false;             //flag indicating submission has just been created
-    private isRevised: boolean = false;         //flag indicating a revision of an already sent submission
+    private isNew: boolean = false;             //flag indicating submission has just been created through the UI
 
+    @ViewChild(SubmSideBarComponent) sideBar: SubmSideBarComponent;
+    @ViewChild('submForm') submForm: SubmFormComponent;
     @ViewChild('confirmSectionDel') confirmSectionDel: ConfirmDialogComponent;
     @ViewChild('confirmRevert') confirmRevert: ConfirmDialogComponent;
     @ViewChild('confirmSubmit') confirmSubmit: ConfirmDialogComponent;
-    @ViewChild('submForm') submForm: SubmFormComponent;
 
     constructor(public route: ActivatedRoute,
                 public submService: SubmissionService,
-                private location: Location,
+                private locService: Location,
                 private modalService: BsModalService,
                 private appConfig: AppConfig,
                 private userData: UserData,
@@ -84,6 +87,10 @@ export class SubmEditComponent implements OnInit, OnDestroy {
         //NOTE: All calls are coalesced into the last one since it's that one that will lead to the most
         //up-to-date copy of the submission.
         this.onChange = _.throttle(this.onChange, 500, {'leading': false});
+    }
+
+    get location() {
+        return window.location;
     }
 
     //TODO: this need splitting up. Especially the part dealing with server transactions and transformation of data.
@@ -136,7 +143,6 @@ export class SubmEditComponent implements OnInit, OnDestroy {
                 //Newly created submission => sets default values
                 if (this.isNew) {
                     this.setDefaults(this.section);
-                    this.isRevised = false;
                 }
             });
         });
@@ -245,7 +251,7 @@ export class SubmEditComponent implements OnInit, OnDestroy {
 
         this.submService.saveSubmission(this.wrap()).subscribe((result) => {
             this.isSaving = false;
-            this.isNew && this.location.replaceState('/submissions/edit/' + this.accno);
+            this.isNew && this.locService.replaceState('/submissions/edit/' + this.accno);
 
             //A sent submission has been backed up. It follows it's been revised.
             if (!this.subm.isTemp && !this.subm.isRevised) {
@@ -280,6 +286,12 @@ export class SubmEditComponent implements OnInit, OnDestroy {
             //Updates the pending fields counter
             this.submForm.sectionForm.controls(this.formControls);
 
+            //Switches to "Check" tab if not active already
+            //TODO: check for validator errors needed to rule out column errors. Remove it.
+            if (this.sideBar && !this.sideBar.isStatus && !this.errors.empty()) {
+                this.sideBar.onTabClick(true);
+            }
+
         //Form has been fully filled in and is valid => submits, requesting confirmation if applicable
         } else {
             if (isConfirm) {
@@ -302,10 +314,18 @@ export class SubmEditComponent implements OnInit, OnDestroy {
      */
     submitForm() {
         const wrappedSubm = this.wrap(true);
-const route = this.route;
+
         this.submService.submitSubmission(wrappedSubm).subscribe(
             resp => {
-const route = this.route;
+
+                //Extracts the release date if present
+                const dateAttr = wrappedSubm.data.attributes.find(attribute => {
+                    return attribute.name == 'ReleaseDate';
+                });
+                if (dateAttr) {
+                    this.releaseDate = dateAttr.value;
+                }
+
                 //Updates the acccession number of a temporary submission with the one assigned by the server.
                 if (this.subm.isTemp) {
                     this.accno = resp.mapping[0].assigned;
@@ -313,8 +333,12 @@ const route = this.route;
                 }
 
                 //Updates the view to reflect the "sent" state of the submission without knock-on effects on history
-                this.location.replaceState('/submissions/' + this.accno);
+                this.locService.replaceState('/submissions/' + this.accno);
                 this.readonly = true;
+
+                //Flushes all updates synchronously so that the scroll reset happens exactly after them.
+                this.changeRef.detectChanges();
+                window.scrollTo(0,0);
 
                 this.showSubmitResults(resp);
             },
@@ -347,24 +371,12 @@ const route = this.route;
     showSubmitResults(resp: any) {
         this.isSubmitting = false;
 
-        const subscriptions = (function () {
-            let list = [];
-            return {
-                push: function (i) {
-                    list.push(i);
-                },
-                unsubscribe: function () {
-                    list.forEach(i => i.unsubscribe());
-                    list = [];
-                }
-            }
-        })();
-
-        const bsModalRef = this.modalService.show(SubmResultsModalComponent);
-        bsModalRef.content.log = resp.log || {};
-        bsModalRef.content.mapping = resp.mapping || [];
-        bsModalRef.content.status = resp.status;
-        bsModalRef.content.accno = this.subm.accno;
+        const bsModalRef = this.modalService.show(SubmResultsModalComponent).content;
+        bsModalRef.isUpdate = this.isUpdate;
+        bsModalRef.log = resp.log || {};
+        bsModalRef.mapping = resp.mapping || [];
+        bsModalRef.status = resp.status;
+        bsModalRef.accno = this.subm.accno;
     }
 
     changeSection(sectionId: string) {
@@ -384,6 +396,10 @@ const route = this.route;
         const copy = Object.assign({}, this.wrappedSubm);
 
         copy.data = PageTab.fromSubmission(this.subm, isSubmit);
+
+        //NOTE: for creation, the accession number remains blank when creating the PageTab object above
+        this.isUpdate = !_.isEmpty(copy.data.accno);
+
         return copy;
     }
 }

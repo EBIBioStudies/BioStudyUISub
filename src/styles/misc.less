@@ -12,50 +12,6 @@
   width: 70%;
 }
 
-/* sliding out tooltips in the panel headers */
-@bs-slide-out-tip-width: 580px;
-
-.bs-slide-out-tip {
-  display: inline-block;
-  position: relative;
-  margin: 0 0 0 5px;
-  padding: 0;
-  width: 70%;
-  height: 18px;
-  overflow: hidden;
-}
-
-.bs-slide-out-tip .tip-icon {
-  display: inline-block;
-  cursor: pointer;
-  width: 15px;
-}
-
-.bs-slide-out-tip .tip-text-wrap {
-  display: inline-block;
-  position: relative;
-  overflow: hidden;
-  width: 600px;
-  height: 100%;
-}
-
-.bs-slide-out-tip .tip-text {
-  position: absolute;
-  top: 0;
-  left: -@bs-slide-out-tip-width;
-  width: @bs-slide-out-tip-width;
-  display: inline-block;
-  -webkit-transition: left 0.5s ease-in-out;
-  -moz-transition: left 0.5s ease-in-out;
-  -o-transition: left 0.5s ease-in-out;
-  -ms-transition: left 0.5s ease-in-out;
-  transition: left 0.5s ease-in-out;
-}
-
-.bs-slide-out-tip .tip-text.show {
-  left: 0;
-}
-
 /* Prevents flicker when hovering over tabs */
 .nav-tabs .nav-link:hover {
   border-color: transparent;
@@ -240,6 +196,42 @@ component */
     min-width: 300px;
     font-size: 14px;
   }
+}
+
+//Prevents flickering tooltips when hovering near the edge of an element
+.tooltip {
+  pointer-events: none;
+}
+
+///Makes notes stand out by means of styled boxes
+.alert-warning {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 0;
+  overflow: hidden;
+  border-width: 2px;
+}
+.alert-warning .pull-left {
+  color: #dca700;
+}
+.alert-warning .text-block {
+  border-radius: 0 4px 4px 0;
+  background: white;
+}
+.alert-warning .pull-left, .alert-warning .text-block {
+  padding: 10px;
+}
+
+//Creates new blocking context useful for media sitting on one side.
+.text-block {
+  overflow: hidden;
+}
+
+//Normalises quotation blocks for citation examples
+.blockquote {
+  font: inherit;
+  margin: 4px 0 12px;
+  padding: .5rem 1rem;
 }
 
 //Shades an entire area, preventing any interaction as well.

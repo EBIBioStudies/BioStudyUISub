@@ -9,3 +9,7 @@
     padding: 15px 0;
     background: #fff;
 }
+
+.radio:first-of-type {
+    margin-top: 0;
+}

@@ -15,6 +15,7 @@ import {AppConfig} from "../../app.config";
 import {SubmAddDialogComponent} from "./subm-add.component";
 import {UserData} from "../../auth/user-data";
 import {SubmissionType} from "../shared/submission-type.model";
+import {Subject} from "rxjs/Subject";
 
 @Component({
     selector: 'action-buttons-cell',
@@ -113,8 +114,10 @@ export class DateCellComponent implements AgRendererComponent {
 })
 
 export class SubmListComponent {
+    protected ngUnsubscribe: Subject<void>;     //stopper for all subscriptions to HTTP get operations
     showSubmitted: boolean = false;     //flag indicating if the list of sent submissions is to be displayed
     isBusy: boolean = false;            //flag indicating if a request is in progress
+    isCreating: boolean = false;        //flag indicating if submission creation is in progress
     allowedPrj: string[];               //names of projects with templates the user is allowed to attach submissions to
 
     //AgGrid-related properties
@@ -131,6 +134,8 @@ export class SubmListComponent {
                 private userData: UserData,
                 private router: Router,
                 private route: ActivatedRoute) {
+
+        this.ngUnsubscribe = new Subject<void>();
 
         //Microstate - Allows going back to the sent submissions list directly
         this.route.data.subscribe((data) => {
@@ -168,6 +173,16 @@ export class SubmListComponent {
             this.isBusy = false;
             this.allowedPrj = this.userData.allowedProjects(SubmissionType.listTmplNames());
         });
+    }
+
+    /**
+     * Removes all subscriptions whenever the file view is abandoned.
+     * Requires the takeUntil operator before every subscription.
+     * @see {@link https://stackoverflow.com/a/41177163}
+     */
+    ngOnDestroy() {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     createColumnDefs() {
@@ -237,7 +252,7 @@ export class SubmListComponent {
                         keywords: fm.title && fm.title.value ? fm.title.value : undefined
 
                     //Once all submissions fetched, determines last row for display purposes.
-                    }).subscribe((rows) => {
+                    }).takeUntil(this.ngUnsubscribe).subscribe((rows) => {
                         let lastRow = -1;
 
                         agApi.hideOverlay();
@@ -289,7 +304,7 @@ export class SubmListComponent {
                 const onNext = (isOk: boolean) => {
                     this.isBusy = true;
 
-                    //Deletion confirmed => makes a request to removes the submission from the server
+                    //Deletion confirmed => makes a request to remove the submission from the server
                     if (isOk) {
                         this.submService
                             .deleteSubmission(accno)
@@ -378,6 +393,7 @@ export class SubmListComponent {
      */
     createSubmission(tmplId: string) {
         this.isBusy = true;
+        this.isCreating = true;
         this.submService.createSubmission(PageTab.createNew(tmplId)).subscribe((subm) => {
             this.isBusy = false;
             this.router.navigate(['/submissions/new/', subm.accno]);
@@ -389,7 +405,7 @@ export class SubmListComponent {
      * @param event - ag-Grid's custom event object that includes data represented by the clicked row.
      */
     onRowClicked(event): void {
-        if (event.colDef.headerName !== "Actions") {
+        if (!this.isBusy && event.colDef.headerName !== "Actions") {
             this.router.navigate(['/submissions/edit', event.data.accno]);
         }
     }

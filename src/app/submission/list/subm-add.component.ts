@@ -29,9 +29,10 @@ export class SubmAddDialogComponent {
 
     /**
      * Handler for "onShown" event, triggered exactly after the modal has been fully revealed.
+     * It sets focus on the first radio button for project selection.
      */
-    onShown(focusEl: HTMLElement): void {
-        focusEl.focus();
+    onShown(): void {
+        (<HTMLInputElement>document.getElementsByClassName('project-radio')[0]).focus();
     }
 
     /**
@@ -39,7 +40,6 @@ export class SubmAddDialogComponent {
      */
     onCancel(): void {
         this.projectName = 'Default';
-        //this.typeName.control.reset();
         this.hide();
     }
 }

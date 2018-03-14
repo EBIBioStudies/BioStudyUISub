@@ -64,17 +64,37 @@
                         [options]="projectsToAttachTo"
                         [(ngModel)]="model.projects"></multi-select>
             </div>
-            <div class="btn-group" dropdown [isDisabled]="isBusy">
+            <div class="form-group">
+                <label class="control-label">Action</label>
+                <div class="radio">
+                    <label>
+                        <input type="radio"
+                               class="project-radio"
+                               name="submitType"
+                               value="create"
+                               [(ngModel)]="submitType">
+                        Create a new study
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio"
+                               class="project-radio"
+                               name="submitType"
+                               value="update"
+                               [(ngModel)]="submitType">
+                        Update a study
+                    </label>
+                </div>
+            </div>
+            <div class="btn-group">
                 <button id="single-button"
                         type="button"
-                        class="btn-submit btn btn-primary"
-                        dropdownToggle>
-                    Submit as <span class="caret"></span>
+                        [disabled]="isBusy"
+                        (click)="onSubmit(submitType)"
+                        class="btn-submit btn btn-primary">
+                    Submit
                 </button>
-                <ul *dropdownMenu role="menu" aria-labelledby="single-button" class="dropdown-menu">
-                    <li role="menuitem"><a class="dropdown-item" (click)="onSubmit('create')">Create</a></li>
-                    <li role="menuitem"><a class="dropdown-item" (click)="onSubmit('update')">Update</a></li>
-                </ul>
             </div>
         </form>
     </div>

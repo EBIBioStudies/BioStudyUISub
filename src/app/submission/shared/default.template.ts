@@ -5,8 +5,8 @@ export const DefaultTemplate = {
         'name': 'Study',
         'annotationsType': {
             'title': 'Describe your study',
-            'description': 'Provide any supplementary details of the study that may help discover and/or interpret it ' +
-                           'such as organism, cell type or experimental design.',
+            'description': 'Provide any additional details that may help discover or interpret the study. For example, ' +
+                           'organism, cell type or experimental design.',
             'icon': 'fa-tag',
             'columnTypes': [
                 {
@@ -235,8 +235,7 @@ export const DefaultTemplate = {
             {
                 'name': 'Link',
                 'title': 'Add Links',
-                'description': 'Provide pointers to data held in other databases, or to associated information on the ' +
-                               'web, to enable a complete overview of a study.',
+                'description': 'Provide pointers to data held in external databases or to related information on the web.',
                 'icon': 'fa-link',
                 'uniqueCols': true,
                 'columnTypes': [
@@ -259,7 +258,7 @@ export const DefaultTemplate = {
             {
                 'name': 'Publication',
                 'title': 'Add Publications',
-                'description': 'Add the details of publications relevant or complementary to the study. Autofill is ' +
+                'description': 'Add the details of publications relevant to the study. Autofill is ' +
                                'available when searching by PubMed identifier',
                 'icon': 'fa-book',
                 'uniqueCols': true,
