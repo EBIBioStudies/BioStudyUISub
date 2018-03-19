@@ -40,7 +40,7 @@ export const HecatosTemplate = {
                 'icon': 'fa-font',
                 'valueType': 'textblob',
                 'required': true,
-                'minlength': 50
+                'minlength': 25
             },
             {
                 'name': 'Description',
@@ -71,7 +71,7 @@ export const HecatosTemplate = {
                 'name': 'Dose',
                 'icon': 'fa-eyedropper',
                 'valueType': 'text',
-                'values': ['Therapeutic', 'Toxic', 'Control', '0.1% DMSO', 'Fluctuating DMSO']
+                'values': ['DMSO(0.1%)', 'DMSO(Fluctuating)', 'None']
             },
             {
                 'name': 'Biological Replicate',
@@ -82,19 +82,78 @@ export const HecatosTemplate = {
                 'name': 'Compound',
                 'icon': 'fa-flask',
                 'valueType': 'text',
-                'values': ['Doxorubicin', 'Epirubicin', 'Idarubicin', 'DMSO', 'Untreated']
+                'values': [
+                    'Acetaminophen',
+                    'Amiodarone',
+                    'Azathioprine',
+                    'Celecoxib',
+                    'Cyclosporin',
+                    'Daunorubicin',
+                    'Diclofenac',
+                    'Docetaxel',
+                    'Doxorubicin',
+                    'Epirubicin',
+                    'Fluorouracil',
+                    'Idarubicin',
+                    'Isoniazid',
+                    'Mitoxantrone',
+                    'Methotrexate',
+                    'Phenytoin',
+                    'Paclitaxel',
+                    'Rifampicin',
+                    'Valproic Acid'
+                ]
             },
             {
                 'name': 'Chembl ID',
                 'icon': 'fa-flask',
                 'valueType': 'text',
-                'values': ['CHEMBL53463', 'CHEMBL417', 'CHEMBL1117']
+                'values': [
+                    'CHEMBL112',
+                    'CHEMBL633',
+                    'CHEMBL1542',
+                    'CHEMBL118',
+                    'CHEMBL160',
+                    'CHEMBL178',
+                    'CHEMBL139',
+                    'CHEMBL92',
+                    'CHEMBL53463',
+                    'CHEMBL417',
+                    'CHEMBL185',
+                    'CHEMBL1117',
+                    'CHEMBL64',
+                    'CHEMBL58',
+                    'CHEMBL426',
+                    'CHEMBL16',
+                    'CHEMBL428647',
+                    'CHEMBL374478',
+                    'CHEMBL109'
+                ]
             },
             {
                 'name': 'Std In Chi Key',
                 'icon': 'fa-flask',
                 'valueType': 'text',
-                'values': ['AOJJSUZBOXZQNB-TZSSRYMLSA-N', 'AOJJSUZBOXZQNB-VTZDEGQISA-N', 'XDXDZDZNSLXDNA-TZNDIEGXSA-N']
+                'values': [
+                    'RZVAJINKPMORJF-UHFFFAOYSA-N',
+                    'IYIKLHRQXLHMJQ-UHFFFAOYSA-N',
+                    'LMEKQMALGUDUQG-UHFFFAOYSA-N',
+                    'RZEKVGVHFLEQIL-UHFFFAOYSA-N',
+                    'STQGQHZAVUOBTE-VGBVRHCVSA-N',
+                    'DCOPUUMXTXDBNB-UHFFFAOYSA-N',
+                    'ZDZOTLJHXYCWBA-VCVYQWHSSA-N',
+                    'AOJJSUZBOXZQNB-TZSSRYMLSA-N',
+                    'AOJJSUZBOXZQNB-VTZDEGQISA-N',
+                    'GHASVSINZRGABV-UHFFFAOYSA-N',
+                    'XDXDZDZNSLXDNA-TZNDIEGXSA-N',
+                    'QRXWMOHMRWLFEY-UHFFFAOYSA-N',
+                    'KKZJGLLVHKMTCM-UHFFFAOYSA-N',
+                    'FBOZXECLQNJBKD-UHFFFAOYSA-N',
+                    'CXOFVDLJLONNDW-UHFFFAOYSA-N',
+                    'RCINICONZNJXQF-MZXODVADSA-N',
+                    'JQXXHWHPUNPDRT-WLSIYKJHSA-N',
+                    'NIJJYAXOARWZEE-UHFFFAOYSA-N'
+                ]
             },
             {
                 'name': 'Design Type',

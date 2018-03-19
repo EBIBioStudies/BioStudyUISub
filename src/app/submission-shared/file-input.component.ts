@@ -16,7 +16,6 @@ import {FileService} from 'app/file/index';
 @Component({
     selector: 'file-input',
     templateUrl: './file-input.component.html',
-    styleUrls:['./file-input.component.css'],
     providers: [
         {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => FileInputComponent), multi: true}
     ]

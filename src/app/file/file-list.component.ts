@@ -85,7 +85,7 @@ export class FileActionsCellComponent implements AgRendererComponent {
 @Component({
     selector: 'file-type-cell',
     template: `
-    <div style="text-align:center;color:#3c8b9f">
+    <div class="text-center text-primary">
     <i class="fa" [ngClass]="{
                                'fa-file' : ftype === 'FILE', 
                                'fa-folder' : ftype === 'DIR', 

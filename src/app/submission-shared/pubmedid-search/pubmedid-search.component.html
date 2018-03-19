@@ -14,7 +14,9 @@
            [ngClass]="{ 'fa-cog fa-spin': isBusy, 'fa-search': !isBusy}"></i>
     </button>
     <ul class="dropdown-menu" role="menu">
-        <li role="menuitem">
+        <li role="menuitem"
+            (mouseenter)="$event.target.className = 'active'"
+            (mouseleave)="$event.target.className = ''">
             <a class="dropdown-item" href="javascript:void(0)"
                (click)="selectPub()">
                 {{publication.authors?.split(',').slice(0, 2).join(',')}} <!-- Shows just the two first authors -->

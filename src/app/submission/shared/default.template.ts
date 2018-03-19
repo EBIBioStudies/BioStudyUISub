@@ -98,7 +98,7 @@ export const DefaultTemplate = {
                 'icon': 'fa-font',
                 'valueType': 'textblob',
                 'required': true,
-                'minlength': 50
+                'minlength': 25
             },
             {
                 'name': 'Release Date',
@@ -215,6 +215,7 @@ export const DefaultTemplate = {
                 'description': 'List the data files for the study and describe their respective scopes',
                 'icon': 'fa-file',
                 'uniqueCols': true,
+                'required': 'assets',
                 'columnTypes': [
                     {
                         'name': 'Path',
@@ -225,6 +226,11 @@ export const DefaultTemplate = {
                         'name': 'Description',
                         'valueType': 'text',
                         'required': true
+                    },
+                    {
+                        'name': 'Release date',
+                        'valueType': 'date',
+                        'displayed': true
                     },
                     {
                         'name': 'Type',
@@ -238,6 +244,7 @@ export const DefaultTemplate = {
                 'description': 'Provide pointers to data held in external databases or to related information on the web.',
                 'icon': 'fa-link',
                 'uniqueCols': true,
+                'required': 'assets',
                 'columnTypes': [
                     {
                         'name': 'URL',

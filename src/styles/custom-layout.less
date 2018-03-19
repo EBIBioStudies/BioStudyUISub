@@ -3,7 +3,7 @@
 @left-side-width: 200px;
 @left-side-width-collapse: 40px;
 
-@sidebar-light-bg: #6db1c1;
+@sidebar-light-bg: #6d9fc1;
 @sidebar-light-hover-bg: @brand-primary;
 @sidebar-light-font: white;
 @sidebar-light-border: none;
@@ -121,7 +121,7 @@ aside {
 
     .minimise-btn {
       padding: 6px 7px;
-      color: #5792a0;
+      color: @link-color;
       outline: none;
       background: none;
     }
@@ -150,12 +150,59 @@ aside {
     list-style: none;
     margin: 0;
     padding: 0;
-    border-top: 3px solid #6db1c1;
+    border-top: 3px solid @sidebar-light-bg;
+
+    .fa-lg {
+      vertical-align: middle;
+    }
+    .fa-stack {
+      margin-left: -2.5px;
+      font-size: 12px;
+    }
+
+    .advanced-menu {
+      max-height: 200px;
+      overflow: hidden;
+      -webkit-transition: max-height .3s ease-in;
+      -moz-transition: max-height .3s ease-in;
+      transition: max-height .3s ease-in;
+    }
+    .collapsed-box {
+      max-height: 0;
+    }
+
+    .advanced-btn {
+      color: #fff;
+      outline: none !important;
+      text-decoration: none;
+    }
 
     .sidebar-item {
       margin: 0;
       padding: 0;
+      line-height: 30px;
       border-bottom: 1px solid @sidebar-light-border;
+
+      &.type-control {
+        background: #fff;
+
+        a {
+          color: @link-color;
+
+          &:hover {
+            color: #fff;
+
+            .fa-inverse {
+              color: @brand-primary;
+            }
+          }
+        }
+
+        .fa-lg {
+          font-size: 1.7em;
+          margin-left: -.8px;
+        }
+      }
 
       &.menu-toggle > a {
         background-color: #e3fdec;
@@ -286,6 +333,11 @@ input[type="radio"] {
 }
 .badge-danger {
   background: @brand-danger !important;
+}
+
+//Convenience class for underlined headings
+.underlined {
+  border-bottom: 1px solid @brand-primary;
 }
 
 //Makes alerts take up no more space than its contents

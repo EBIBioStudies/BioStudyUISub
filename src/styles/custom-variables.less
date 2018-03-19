@@ -14,7 +14,7 @@
 @gray-light:             lighten(@gray-base, 46.7%); // #777
 @gray-lighter:           lighten(@gray-base, 93.5%); // #eee
 
-@brand-primary:         #3c8b9f;
+@brand-primary:         #3c739f;
 @brand-success:         #A6D08A;
 @brand-info:            #7ad8d9;
 @brand-warning:         #f0ad4e;
@@ -31,7 +31,7 @@
 @text-color:            @gray-dark;
 
 //** Global textual link color.
-@link-color:            #317181;
+@link-color:            #315a81;
 //** Link hover color set via `darken()` function.
 @link-hover-color:      darken(@link-color, 15%);
 //** Link hover decoration.
@@ -201,7 +201,7 @@
 @input-border-radius-small:      @border-radius-small;
 
 //** Border color for inputs on focus
-@input-border-focus:             #4fb7d1;
+@input-border-focus:             #4f93d1;
 
 //** Placeholder text color
 @input-color-placeholder:        #999;
@@ -431,7 +431,7 @@
 
 @nav-tabs-link-hover-border-color:          @gray-lighter;
 
-@nav-tabs-active-link-hover-bg:             #6db1c1;
+@nav-tabs-active-link-hover-bg:             @sidebar-light-bg;
 @nav-tabs-active-link-hover-color:          #fff;
 @nav-tabs-active-link-hover-border-color:   none;
 
@@ -502,7 +502,7 @@
 @state-success-border:           darken(spin(@state-success-bg, -10), 5%);
 
 @state-info-text:                #31708f;
-@state-info-bg:                  #3c8b9f;
+@state-info-bg:                  @brand-primary;
 @state-info-border:              darken(spin(@state-info-bg, -10), 7%);
 
 @state-warning-text:             #e6b10c;
