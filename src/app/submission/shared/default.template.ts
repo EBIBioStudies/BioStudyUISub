@@ -3,6 +3,7 @@ export const DefaultTemplate = {
     'description': 'Generic submission for stand-alone or unsupported studies',
     'sectionType': {
         'name': 'Study',
+        'group': ['File', 'Link'],
         'annotationsType': {
             'title': 'Describe your study',
             'description': 'Provide any additional details that may help discover or interpret the study. For example, ' +
@@ -118,8 +119,7 @@ export const DefaultTemplate = {
             {
                 'name': 'Contact',
                 'title': 'Add Contacts',
-                'description': 'Add the contact details for the authors involved in the study. Additional columns ' +
-                               'include address, department, funding and role.',
+                'description': 'Add the contact details for the authors involved in the study.',
                 'icon': 'fa-vcard',
                 'required': true,
                 'uniqueCols': true,
@@ -212,10 +212,9 @@ export const DefaultTemplate = {
             {
                 'name': 'File',
                 'title': 'Add Files',
-                'description': 'List the data files for the study and describe their respective scopes',
+                'description': 'List the data files for the study and describe their respective scopes.',
                 'icon': 'fa-file',
                 'uniqueCols': true,
-                'required': 'assets',
                 'columnTypes': [
                     {
                         'name': 'Path',
@@ -226,11 +225,6 @@ export const DefaultTemplate = {
                         'name': 'Description',
                         'valueType': 'text',
                         'required': true
-                    },
-                    {
-                        'name': 'Release date',
-                        'valueType': 'date',
-                        'displayed': true
                     },
                     {
                         'name': 'Type',
@@ -244,7 +238,6 @@ export const DefaultTemplate = {
                 'description': 'Provide pointers to data held in external databases or to related information on the web.',
                 'icon': 'fa-link',
                 'uniqueCols': true,
-                'required': 'assets',
                 'columnTypes': [
                     {
                         'name': 'URL',
@@ -266,7 +259,7 @@ export const DefaultTemplate = {
                 'name': 'Publication',
                 'title': 'Add Publications',
                 'description': 'Add the details of publications relevant to the study. Autofill is ' +
-                               'available when searching by PubMed identifier',
+                               'available when searching by PubMed identifier.',
                 'icon': 'fa-book',
                 'uniqueCols': true,
                 'columnTypes': [

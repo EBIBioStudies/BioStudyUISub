@@ -1,6 +1,8 @@
 <span *ngIf="feature.size() > 0">
+    <strong class="text-muted" *ngIf="!errorNum && !readonly && feature.type.required && !featureForm.form.valid">
+        (at least one is required)
+    </strong>
     <strong class="text-danger" *ngIf="errorNum">Please review the fields below</strong>
-    <strong class="text-muted" *ngIf="!errorNum && !readonly && feature.type.required">(at least one is required)</strong>
 </span>
 <div class="panel panel-default feature">
 

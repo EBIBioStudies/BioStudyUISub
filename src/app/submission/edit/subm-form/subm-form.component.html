@@ -11,19 +11,23 @@
                 <span *ngIf="get(field.id).invalid && get(field.id).touched">
                     {{sectionForm.formErrors[field.id] ? sectionForm.formErrors[field.id] : ''}}
                 </span>
-                <span class="text-muted" [hidden]="readonly || get(field.id).invalid && get(field.id).touched">
-                     <span *ngIf="(get(field.id, 'minlength') > 0) && (get(field.id, 'maxlength') < 0)">
+                <span [hidden]="readonly ||
+                                (get(field.id).valid && get(field.id).value) ||
+                                (get(field.id).invalid && get(field.id).touched)"
+                      class="text-muted">
+
+                    <span *ngIf="(get(field.id, 'minlength') > 0) && (get(field.id, 'maxlength') < 0)">
                          (at least {{get(field.id, 'minlength')}}
-                     </span>
-                     <span *ngIf="(get(field.id, 'minlength') < 0) && (get(field.id, 'maxlength') > 0)">
+                    </span>
+                    <span *ngIf="(get(field.id, 'minlength') < 0) && (get(field.id, 'maxlength') > 0)">
                          (at most {{get(field.id, 'maxlength')}}
-                     </span>
-                     <span *ngIf="(get(field.id, 'minlength') > 0) && (get(field.id, 'maxlength') > 0)">
+                    </span>
+                    <span *ngIf="(get(field.id, 'minlength') > 0) && (get(field.id, 'maxlength') > 0)">
                          (between {{get(field.id, 'minlength')}} and {{get(field.id, 'maxlength')}}
-                     </span>
-                     <span *ngIf="(get(field.id, 'minlength') > 0) || (get(field.id, 'maxlength') > 0)">
+                    </span>
+                    <span *ngIf="(get(field.id, 'minlength') > 0) || (get(field.id, 'maxlength') > 0)">
                          characters long)
-                     </span>
+                    </span>
                 </span>
             </label>
             <span *ngIf="!readonly && !field.type.required" class="text-muted pull-right"><i>Optional</i></span>
@@ -50,7 +54,12 @@
         [ngClass]="{'form-group row': feature.size() > 0}">
         <div *ngIf="feature.size() > 0" class="col-xs-12">
             <label class="control-label">{{feature.pluralName()}}</label>
-            <span *ngIf="!readonly && !feature.type.required" class="text-muted pull-right"><i>Optional</i></span>
+            <span *ngIf="!readonly && (!feature.type.required || sectionForm.groupForm.get(feature.id))"
+                  class="text-muted pull-right">
+                <i>
+                    Optional{{sectionForm.groupForm.get(feature.id) ? ': ' + section.type.group.join(' or ') : ''}}
+                </i>
+            </span>
             <subm-feature [isMenu]="false"
                           [featureForm]="sectionForm.featureForm(feature.id)"
                           [readonly]="readonly">

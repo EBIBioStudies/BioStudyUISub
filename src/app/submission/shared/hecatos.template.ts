@@ -192,8 +192,7 @@ export const HecatosTemplate = {
                 'name': 'Contact',
                 'title': 'Add Contacts',
                 'icon': 'fa-vcard',
-                'description': 'Add the contact details for the authors involved in the study. Additional columns ' +
-                               'include address, department, funding and role.',
+                'description': 'Add the contact details for the authors involved in the study.',
                 'uniqueCols': true,
                 'required': true,
                 'columnTypes': [
@@ -260,7 +259,7 @@ export const HecatosTemplate = {
                 'name': 'File',
                 'title': 'Add Files',
                 'icon': 'fa-file',
-                'description': 'List the data files for the study and describe their respective scopes',
+                'description': 'List the data files for the study and describe their respective scopes.',
                 'uniqueCols': true,
                 'required': true,
                 'columnTypes': [
