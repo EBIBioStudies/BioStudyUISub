@@ -93,7 +93,7 @@ export class SubmEditComponent implements OnInit, OnDestroy {
         return window.location;
     }
 
-    //TODO: this need splitting up. Especially the part dealing with server transactions and transformation of data.
+
     ngOnInit(): Observable<any> {
         let eventStream;
 
@@ -118,23 +118,12 @@ export class SubmEditComponent implements OnInit, OnDestroy {
                 subm = page.toSubmission(SubmissionType.fromTemplate(page.firstAttachTo));
                 this.subm = subm;
 
-                //Validates the submission immediately
-                this.errors = SubmissionValidator.validate(this.subm);
-
-                //Re-validates the submission on change (including non-text updates).
-                this.subm.updates().switchMap((event) => {
-
-                    //Inspects the original event producing the cascade of subsequent ones and saves the submission if it was triggered by a non-text update.
-                    //NOTE: Leaf nodes in the update event tree have no source.
+                //Inspects the original event producing the cascade of subsequent ones and saves the submission if it was triggered by a non-text update.
+                //NOTE: Leaf nodes in the update event tree have no source.
+                this.subm.updates().subscribe((event) => {
                     if (SubmEditComponent.watchedUpdates.indexOf(event.leafEvent.name) > -1) {
                         this.onChange();
                     }
-
-                    //Performs programmatic validation, its results being aggregated in a modal log.
-                    return SubmissionValidator.createObservable(this.subm);
-
-                }).subscribe(errors => {
-                    this.errors = errors;
                 });
 
                 //Determines the current section (in case the user navigates down to a subsection)
@@ -166,13 +155,19 @@ export class SubmEditComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * As soon as there is a new form section created, traverse it and get all its controls.
-     * Note that, by design, the section –and effectively the whole form– is rebuilt every time there
+     * As soon as there is a new form section created, validate it, traverse it and get all its controls.
+     * NOTE: By design, the section –and effectively the whole form– is rebuilt every time there
      * is a change in the form.
      * @see {@link SubmFormComponent}
      */
     ngAfterViewChecked() {
         if (this.submForm) {
+
+            this.submForm.sectionForm.updateGroupForm();
+
+            //Validates the submission immediately
+            this.errors = SubmissionValidator.validate(this.subm);
+
             this.submForm.sectionForm.controls(this.formControls);
             this.changeRef.detectChanges();
         }

@@ -11,6 +11,36 @@ export const HecatosTemplate = {
                            'age, dose frequency or time range.',
             'columnTypes': [
                 {
+                    'name': 'Compound',
+                    'icon': 'fa-flask',
+                    'valueType': 'text',
+                    'displayed': true,
+                    'values': [
+                        'Acetaminophen',
+                        'Amiodarone',
+                        'Azathioprine',
+                        'Celecoxib',
+                        'Cyclosporin',
+                        'Daunorubicin',
+                        'Diclofenac',
+                        'Docetaxel',
+                        'Doxorubicin',
+                        'Epirubicin',
+                        'Fluorouracil',
+                        'Idarubicin',
+                        'Isoniazid',
+                        'Mitoxantrone',
+                        'Methotrexate',
+                        'Phenytoin',
+                        'Paclitaxel',
+                        'Rifampicin',
+                        'Valproic Acid',
+                        'DMSO(0.1%)',
+                        'DMSO(Fluctuating)',
+                        'None'
+                    ]
+                },
+                {
                     'name': 'Factor',
                     'valueType': 'text',
                     'values': [
@@ -46,7 +76,7 @@ export const HecatosTemplate = {
                 'name': 'Description',
                 'icon': 'fa-comment',
                 'valueType': 'textblob',
-                'required': true,
+                'required': false,
                 'minlength': 50
             },
             {
@@ -71,38 +101,12 @@ export const HecatosTemplate = {
                 'name': 'Dose',
                 'icon': 'fa-eyedropper',
                 'valueType': 'text',
-                'values': ['DMSO(0.1%)', 'DMSO(Fluctuating)', 'None']
+                'values': ['therapeutic', 'toxic']
             },
             {
                 'name': 'Biological Replicate',
                 'icon': 'fa-eyedropper',
                 'valueType': 'text'
-            },
-            {
-                'name': 'Compound',
-                'icon': 'fa-flask',
-                'valueType': 'text',
-                'values': [
-                    'Acetaminophen',
-                    'Amiodarone',
-                    'Azathioprine',
-                    'Celecoxib',
-                    'Cyclosporin',
-                    'Daunorubicin',
-                    'Diclofenac',
-                    'Docetaxel',
-                    'Doxorubicin',
-                    'Epirubicin',
-                    'Fluorouracil',
-                    'Idarubicin',
-                    'Isoniazid',
-                    'Mitoxantrone',
-                    'Methotrexate',
-                    'Phenytoin',
-                    'Paclitaxel',
-                    'Rifampicin',
-                    'Valproic Acid'
-                ]
             },
             {
                 'name': 'Chembl ID',
@@ -269,18 +273,28 @@ export const HecatosTemplate = {
                         'required': true
                     },
                     {
+                        'name': 'Roche ID',
+                        'valueType': 'text',
+                        'removable': false,
+                        'displayed': true
+                    },
+                    {
                         'name': 'Sampling date',
                         'valueType': 'date',
+                        'removable': false,
                         'displayed': true
                     },
                     {
                         'name': 'Sampling time point',
                         'valueType': 'text',
+                        'removable': false,
                         'displayed': true
                     },
                     {
-                        'name': 'Roche ID',
-                        'valueType': 'text'
+                        'name': 'Description',
+                        'valueType': 'text',
+                        'removable': false,
+                        'displayed': true
                     }
                 ]
             },

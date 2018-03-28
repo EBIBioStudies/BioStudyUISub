@@ -145,6 +145,7 @@ export class SectionForm {
     formErrors: { [key: string]: string } = {};
     readonly form: FormGroup;
     readonly groupForm: FormGroup;
+    readonly groupSize: number;
 
     private section: Section;
 
@@ -199,22 +200,12 @@ export class SectionForm {
                 memberControl = this.featureForm(member.id).form;
             }
 
-            //Unlikely but, if a member object was not found, then the control cannot be added
+            //Makes sure the named references in the group definition still exist in the current form
             if (member) {
                 this.groupForm.addControl(member.id, memberControl);
             }
         });
-
-        //Updates the required status of all members of the validation group whenever their validity changes
-        this.groupForm.statusChanges.subscribe(() => {
-           const isValid = _.some(this.groupForm.controls, (control) => {
-               return control.valid;
-           });
-
-           this.section.type.groupTypes.forEach((type) => {
-              type.required = !isValid;
-           });
-        });
+        this.groupSize = this.section.type.groupTypes.length;
     }
 
     get fields(): Field[] {
@@ -325,6 +316,33 @@ export class SectionForm {
                 this.addFeatureForm(feature);
             }
         );
+    }
+
+    /**
+     * Updates the required status of all members of the validation group whenever their validity changes.
+     * NOTE: Validation groups are really controls with requirement rules that are temporary. This is contrary to
+     * much of the app's architecture which assumes that requirement rules never change in the type templates.
+     */
+    updateGroupForm() {
+        const emptyNames = [];
+        let isValid = false;
+        let isForceReq;
+
+        //Checks that at least one of the members is valid
+        //NOTE: Features can be empty and yet never be removed from the global submission form group
+        _.forEach(this.groupForm.controls, (control, key) => {
+            if (control instanceof FormGroup && !control.value.rows.length) {
+                emptyNames.push(this.featureForm(key).feature.typeName);
+            } else {
+                isValid = isValid || control.valid;
+            }
+        });
+
+        //Makes all members optional if at least one of them is valid. If only one member not empty, set as required always.
+        isForceReq = emptyNames.length == this.groupSize -1
+        this.section.type.groupTypes.forEach((type) => {
+            type.required = (emptyNames.indexOf(type.name) == -1  && isForceReq) || !isValid;
+        });
     }
 
     /**
