@@ -3,6 +3,7 @@ export const DefaultTemplate = {
     'description': 'Generic submission for stand-alone or unsupported studies',
     'sectionType': {
         'name': 'Study',
+        'group': ['File', 'Link'],
         'annotationsType': {
             'title': 'Describe your study',
             'description': 'Provide any additional details that may help discover or interpret the study. For example, ' +
@@ -98,7 +99,7 @@ export const DefaultTemplate = {
                 'icon': 'fa-font',
                 'valueType': 'textblob',
                 'required': true,
-                'minlength': 50
+                'minlength': 25
             },
             {
                 'name': 'Release Date',
@@ -118,8 +119,7 @@ export const DefaultTemplate = {
             {
                 'name': 'Contact',
                 'title': 'Add Contacts',
-                'description': 'Add the contact details for the authors involved in the study. Additional columns ' +
-                               'include address, department, funding and role.',
+                'description': 'Add the contact details for the authors involved in the study.',
                 'icon': 'fa-vcard',
                 'required': true,
                 'uniqueCols': true,
@@ -212,7 +212,7 @@ export const DefaultTemplate = {
             {
                 'name': 'File',
                 'title': 'Add Files',
-                'description': 'List the data files for the study and describe their respective scopes',
+                'description': 'List the data files for the study and describe their respective scopes.',
                 'icon': 'fa-file',
                 'uniqueCols': true,
                 'columnTypes': [
@@ -259,7 +259,7 @@ export const DefaultTemplate = {
                 'name': 'Publication',
                 'title': 'Add Publications',
                 'description': 'Add the details of publications relevant to the study. Autofill is ' +
-                               'available when searching by PubMed identifier',
+                               'available when searching by PubMed identifier.',
                 'icon': 'fa-book',
                 'uniqueCols': true,
                 'columnTypes': [

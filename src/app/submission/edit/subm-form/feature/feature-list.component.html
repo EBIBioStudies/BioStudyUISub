@@ -19,7 +19,7 @@
                                       class="btn btn-sm btn-danger btn-flat"
                                       (click)="feature.removeRowAt(idx)"
                                       [disabled]="!feature.canRemoveRowAt(idx)"
-                                      [tooltip]="'Delete &quot;' + column.name + '&quot; entry'"
+                                      [tooltip]="feature.canRemoveRowAt(idx) ? 'Delete &quot;' + column.name + '&quot; entry' : ''"
                                       placement="bottom"
                                       container="body">
                                    <i class="fa fa-trash-o"></i>

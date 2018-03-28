@@ -3,7 +3,6 @@ import {
 } from '@angular/core';
 import {
     NG_VALIDATORS,
-    AbstractControl,
     FormControl,
     ValidatorFn,
     Validator, NgControl
@@ -87,8 +86,8 @@ function uniqueValidatorFactory(): ValidatorFn {
         //If some values are not unique, does the present control have one such value?
         //NOTE: the uniqueness test may be passed if all controls with values equal to this control's are removed.
         if (!isValid) {
-            isValid = values.reduce((occurrances, value) => {
-                return occurrances + (value === control.value);
+            isValid = values.reduce((occurrences, value) => {
+                return occurrences + (value === control.value);
             }, 0) == 1;
         }
 

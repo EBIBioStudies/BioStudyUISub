@@ -56,8 +56,8 @@
 .ag-paging-button {
   padding: .5rem 1rem;
   color: #fafafa;
-  background: #3c8b9f;
-  border: #6db1c1;
+  background: @brand-primary;
+  border: @sidebar-light-bg;
   border-radius: .3rem;
   outline: none;
 
@@ -107,10 +107,10 @@
 /* Brings ag-grid table's styles for cells in line with app's colour scheme */
 .ag-fresh .ag-root {
   border: none;
-  border-top: 3px solid #6db1c1;
+  border-top: 3px solid @sidebar-light-bg;
 }
 .ag-fresh .ag-header {
-  background: #6db1c1;
+  background: @sidebar-light-bg;
   border: none;
   color: #fff;
 }
@@ -165,7 +165,7 @@
 /* NOTE: The shadow-piercing descendant combinator is being deprecated. Hence why this is not within the subm-list
 component */
 .subm-list .ag-row-hover {
-  background-color: #b0e0e6 !important;
+  background-color: #b2e1fe !important;
 }
 .subm-list .ag-cell[colid="0"] {
   cursor: default;

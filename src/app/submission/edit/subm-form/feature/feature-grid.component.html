@@ -43,7 +43,7 @@
                             [ngClass]="{'invisible': readonly}"
                             [disabled]="!feature.canRemoveRowAt(index)"
                             (click)="feature.removeRowAt(rowIdx)"
-                            [tooltip]="'Delete ' + feature.typeName.toLowerCase() + ' ' + (rowIdx + 1)"
+                            [tooltip]="feature.canRemoveRowAt(index) ? 'Delete ' + feature.typeName.toLowerCase() + ' ' + (rowIdx + 1) : ''"
                             placement="bottom"
                             container="body">
                         <i class="fa fa-trash"></i>

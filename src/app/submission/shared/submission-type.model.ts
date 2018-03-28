@@ -16,15 +16,17 @@ class BaseType {
     constructor(name: string,
                 tmplBased: boolean,
                 scope: Map<string, any> = GlobalScope) {
+
+        //Aborts if no name given or the type already exists
         if (!defined(name)) {
             console.warn(`Error: Type name is undefined ${name}`);
             return;
         }
-
         if (scope.has(name)) {
             console.warn(`Error: Type with name ${name} already exists in the scope`);
             return;
         }
+
         scope.set(name, this);
         this.typeName = name;
         this.tmplBased = tmplBased;
@@ -62,7 +64,7 @@ class BaseType {
 export type ValueType = 'text' | 'textblob' | 'date' | 'file';
 
 export class FieldType extends BaseType {
-    readonly required: boolean;
+    required: boolean;              //NOTE: externally modified if the field is part of a validation group
     readonly readonly: boolean;
     readonly valueType: ValueType;
     readonly values: string[];      //suggested values for the field
@@ -111,9 +113,9 @@ export class FieldType extends BaseType {
 export class FeatureType extends BaseType {
     private columnScope: Map<string, any> = new Map();
 
+    required: boolean;              //NOTE: externally modified if the feature is part of a validation group
     readonly singleRow: boolean;
     readonly uniqueCols: boolean;
-    readonly required: boolean;
     readonly title: string;
     readonly description: string;
     readonly icon: string;
@@ -243,6 +245,9 @@ export class ColumnType extends BaseType {
 export class SectionType extends BaseType {
     readonly required: boolean;
     readonly annotationsType: AnnotationsType;
+    readonly group: string[];             //lists the names of any fields/features belonging to the same validation group
+                                          //NOTE: validation groups are valid if at least one member feature is.
+    readonly groupTypes: any[] = [];      //Lookup table of types for validation group members
 
     private fieldScope: Map<string, any> = new Map();
     private featureScope: Map<string, any> = new Map();
@@ -257,6 +262,15 @@ export class SectionType extends BaseType {
 
         other = other || {};
         this.required = other.required === true;
+
+        //Normalises the group property to an array.
+        if (Array.isArray(other.group)) {
+            this.group =  other.group;
+        } else {
+            this.group = [];
+        }
+
+
         this.annotationsType = new AnnotationsType(other.annotationsType, new Map());
         (other.fieldTypes || [])
             .forEach(f => new FieldType(f.name, f, this.fieldScope));
@@ -264,6 +278,27 @@ export class SectionType extends BaseType {
             .forEach(f => new FeatureType(f.name, f.singleRow, f.uniqueCols, f, this.featureScope));
         (other.sectionTypes || [])
             .forEach(s => new SectionType(s.name, s, this.sectionScope));
+
+
+        //Traverses the list of validation group members, finding the type for the available ones and forcing it to be
+        //set as "required". This simplifies UI feedback later when highlighting fields/features correctly.
+        this.group.forEach((name) => {
+            let memberType: FieldType | FeatureType;
+
+            if (name == 'Annotation') {
+                memberType = this.annotationsType;
+            } else {
+                memberType = this.getFieldType(name);
+                if (!memberType) {
+                    memberType = this.getFeatureType(name);
+                }
+            }
+            if (memberType) {
+                this.groupTypes.push(memberType);
+                memberType.required = true;
+            }
+        });
+
     }
 
     get fieldTypes(): FieldType[] {
@@ -369,6 +404,8 @@ export class TemplateType extends BaseType {
 
     constructor(name: string, obj?: any, scope?: Map<string, any>) {
         super(name, obj !== undefined, scope);
+
+        //Submission types are not tracked (no existing scope passed in)
         this.submissionType = new SubmissionType('Submission', obj, new Map());
     }
 
@@ -377,10 +414,9 @@ export class TemplateType extends BaseType {
         if (tmplName === undefined) {
             throw Error('name is not defined for the template');
         }
-        if (GlobalScope.has(tmplName)) {
-            return GlobalScope.get(tmplName);
-        }
-        return new TemplateType(tmplName, tmpl, GlobalScope);
+
+        //Template types are not tracked (no existing scope passed in)
+        return new TemplateType(tmplName, tmpl, new Map());
     }
 }
 

@@ -11,7 +11,6 @@ import {
 } from './submission-type.model';
 
 import * as pluralize from "pluralize";
-import * as _ from "lodash";
 
 const nextId = (function () {
     let count = 0;
@@ -759,6 +758,19 @@ export class Fields extends HasUpdates<UpdateEvent> {
         field.updates().subscribe(
             u => this.notify(new UpdateEvent('field_change', fieldId, u))
         )
+    }
+
+    /**
+     * Retrieves the field object that fulfills a scalar comparison with one of its property values.
+     * By default, it will look for a given ID.
+     * @param {string} value - Value of the required field's property.
+     * @param {string} [property = 'id'] - Property name by which fields are looked up.
+     * @returns {Field} Field fulfilling the predicated comparison.
+     */
+    find(value: string, property: string = 'id'): Field {
+        return this.fields.find((field) => {
+            return field[property] === value
+        });
     }
 }
 

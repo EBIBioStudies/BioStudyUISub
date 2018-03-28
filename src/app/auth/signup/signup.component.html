@@ -53,7 +53,10 @@
                                 <span *ngIf="password.errors?.required">Please enter your new password</span>
                                 <span *ngIf="password.errors?.minlength">Please use at least 6 characters</span>
                             </span>
-                            <span [hidden]="password.invalid && password.touched" class="text-muted">(at least 6 characters long)</span>
+                            <span [hidden]="password.valid || (password.invalid && password.touched)"
+                                  class="text-muted">
+                                (at least 6 characters long)
+                            </span>
                         </label>
                         <input type="password"
                                name="password"
@@ -72,7 +75,10 @@
                             <span *ngIf="orcid.invalid && orcid.touched">
                                 <span *ngIf="orcid.errors?.pattern">Please match the dddd-dddd-dddd-dddd format</span>
                             </span>
-                            <span [hidden]="orcid.invalid && orcid.touched" class="text-muted">(should follow dddd-dddd-dddd-dddd format)</span>
+                            <span [hidden]="(orcid.valid && model.orcid) || (orcid.invalid && orcid.touched)"
+                                  class="text-muted">
+                                (should follow dddd-dddd-dddd-dddd format)
+                            </span>
                         </label>
                         <span class="text-muted pull-right"><i>Optional</i></span>
                         <orcid-input-box

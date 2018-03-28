@@ -11,6 +11,36 @@ export const HecatosTemplate = {
                            'age, dose frequency or time range.',
             'columnTypes': [
                 {
+                    'name': 'Compound',
+                    'icon': 'fa-flask',
+                    'valueType': 'text',
+                    'displayed': true,
+                    'values': [
+                        'Acetaminophen',
+                        'Amiodarone',
+                        'Azathioprine',
+                        'Celecoxib',
+                        'Cyclosporin',
+                        'Daunorubicin',
+                        'Diclofenac',
+                        'Docetaxel',
+                        'Doxorubicin',
+                        'Epirubicin',
+                        'Fluorouracil',
+                        'Idarubicin',
+                        'Isoniazid',
+                        'Mitoxantrone',
+                        'Methotrexate',
+                        'Phenytoin',
+                        'Paclitaxel',
+                        'Rifampicin',
+                        'Valproic Acid',
+                        'DMSO(0.1%)',
+                        'DMSO(Fluctuating)',
+                        'None'
+                    ]
+                },
+                {
                     'name': 'Factor',
                     'valueType': 'text',
                     'values': [
@@ -40,13 +70,13 @@ export const HecatosTemplate = {
                 'icon': 'fa-font',
                 'valueType': 'textblob',
                 'required': true,
-                'minlength': 50
+                'minlength': 25
             },
             {
                 'name': 'Description',
                 'icon': 'fa-comment',
                 'valueType': 'textblob',
-                'required': true,
+                'required': false,
                 'minlength': 50
             },
             {
@@ -71,7 +101,7 @@ export const HecatosTemplate = {
                 'name': 'Dose',
                 'icon': 'fa-eyedropper',
                 'valueType': 'text',
-                'values': ['Therapeutic', 'Toxic', 'Control', '0.1% DMSO', 'Fluctuating DMSO']
+                'values': ['therapeutic', 'toxic']
             },
             {
                 'name': 'Biological Replicate',
@@ -79,22 +109,55 @@ export const HecatosTemplate = {
                 'valueType': 'text'
             },
             {
-                'name': 'Compound',
-                'icon': 'fa-flask',
-                'valueType': 'text',
-                'values': ['Doxorubicin', 'Epirubicin', 'Idarubicin', 'DMSO', 'Untreated']
-            },
-            {
                 'name': 'Chembl ID',
                 'icon': 'fa-flask',
                 'valueType': 'text',
-                'values': ['CHEMBL53463', 'CHEMBL417', 'CHEMBL1117']
+                'values': [
+                    'CHEMBL112',
+                    'CHEMBL633',
+                    'CHEMBL1542',
+                    'CHEMBL118',
+                    'CHEMBL160',
+                    'CHEMBL178',
+                    'CHEMBL139',
+                    'CHEMBL92',
+                    'CHEMBL53463',
+                    'CHEMBL417',
+                    'CHEMBL185',
+                    'CHEMBL1117',
+                    'CHEMBL64',
+                    'CHEMBL58',
+                    'CHEMBL426',
+                    'CHEMBL16',
+                    'CHEMBL428647',
+                    'CHEMBL374478',
+                    'CHEMBL109'
+                ]
             },
             {
                 'name': 'Std In Chi Key',
                 'icon': 'fa-flask',
                 'valueType': 'text',
-                'values': ['AOJJSUZBOXZQNB-TZSSRYMLSA-N', 'AOJJSUZBOXZQNB-VTZDEGQISA-N', 'XDXDZDZNSLXDNA-TZNDIEGXSA-N']
+                'values': [
+                    'RZVAJINKPMORJF-UHFFFAOYSA-N',
+                    'IYIKLHRQXLHMJQ-UHFFFAOYSA-N',
+                    'LMEKQMALGUDUQG-UHFFFAOYSA-N',
+                    'RZEKVGVHFLEQIL-UHFFFAOYSA-N',
+                    'STQGQHZAVUOBTE-VGBVRHCVSA-N',
+                    'DCOPUUMXTXDBNB-UHFFFAOYSA-N',
+                    'ZDZOTLJHXYCWBA-VCVYQWHSSA-N',
+                    'AOJJSUZBOXZQNB-TZSSRYMLSA-N',
+                    'AOJJSUZBOXZQNB-VTZDEGQISA-N',
+                    'GHASVSINZRGABV-UHFFFAOYSA-N',
+                    'XDXDZDZNSLXDNA-TZNDIEGXSA-N',
+                    'QRXWMOHMRWLFEY-UHFFFAOYSA-N',
+                    'KKZJGLLVHKMTCM-UHFFFAOYSA-N',
+                    'FBOZXECLQNJBKD-UHFFFAOYSA-N',
+                    'CXOFVDLJLONNDW-UHFFFAOYSA-N',
+                    'RCINICONZNJXQF-MZXODVADSA-N',
+                    'JQXXHWHPUNPDRT-WLSIYKJHSA-N',
+                    'NIJJYAXOARWZEE-UHFFFAOYSA-N'
+                ]
             },
             {
                 'name': 'Design Type',
@@ -133,8 +196,7 @@ export const HecatosTemplate = {
                 'name': 'Contact',
                 'title': 'Add Contacts',
                 'icon': 'fa-vcard',
-                'description': 'Add the contact details for the authors involved in the study. Additional columns ' +
-                               'include address, department, funding and role.',
+                'description': 'Add the contact details for the authors involved in the study.',
                 'uniqueCols': true,
                 'required': true,
                 'columnTypes': [
@@ -201,7 +263,7 @@ export const HecatosTemplate = {
                 'name': 'File',
                 'title': 'Add Files',
                 'icon': 'fa-file',
-                'description': 'List the data files for the study and describe their respective scopes',
+                'description': 'List the data files for the study and describe their respective scopes.',
                 'uniqueCols': true,
                 'required': true,
                 'columnTypes': [
@@ -211,18 +273,28 @@ export const HecatosTemplate = {
                         'required': true
                     },
                     {
+                        'name': 'Roche ID',
+                        'valueType': 'text',
+                        'removable': false,
+                        'displayed': true
+                    },
+                    {
                         'name': 'Sampling date',
                         'valueType': 'date',
+                        'removable': false,
                         'displayed': true
                     },
                     {
                         'name': 'Sampling time point',
                         'valueType': 'text',
+                        'removable': false,
                         'displayed': true
                     },
                     {
-                        'name': 'Roche ID',
-                        'valueType': 'text'
+                        'name': 'Description',
+                        'valueType': 'text',
+                        'removable': false,
+                        'displayed': true
                     }
                 ]
             },

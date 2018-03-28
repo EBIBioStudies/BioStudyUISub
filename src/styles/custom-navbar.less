@@ -4,9 +4,9 @@
 
 @navbar-bsst-link-color:                #383838;
 @navbar-bsst-link-hover-color:          #fff;
-@navbar-bsst-link-hover-bg:             #3c8b9f;
+@navbar-bsst-link-hover-bg:             @brand-primary;
 @navbar-bsst-link-active-color:         #fff;
-@navbar-bsst-link-active-bg:            #3c8b9f;
+@navbar-bsst-link-active-bg:            @brand-primary;
 @navbar-bsst-link-disabled-color:       #ccc;
 @navbar-bsst-link-disabled-bg:          transparent;
 
@@ -21,10 +21,6 @@
 .navbar-bsst {
   z-index: calc(@zindex-navbar-fixed + 2);   //apart from the top menu, the side menu and the subm-nav are also on top.
   background: @navbar-bsst-bg;
-  background: -webkit-linear-gradient(right top, #d7eaca, #98C7D7);
-  background: -o-linear-gradient(top right, #d7eaca, #98C7D7);
-  background: -moz-linear-gradient(top right, #d7eaca, #98C7D7);
-  background: linear-gradient(to top right, #d7eaca, #98C7D7);
 
   .navbar-brand {
     padding-top: 10px;
@@ -87,10 +83,9 @@
     border-color: @navbar-bsst-border;
   }
 
-  // Dropdown menu items
+  //Dropdown menu items
   .navbar-nav {
-    // Remove background color from open dropdown
-    > .open > a {
+    > .open > a {   //Remove background color from open dropdown
       &,
       &:hover,
       &:focus {
@@ -99,8 +94,25 @@
       }
     }
 
+    li {
+      margin: 0 5px;
+    }
+
+    .navbar-btn {
+      background-color: transparent;
+
+      &:focus {
+        outline: none;
+      }
+
+      &.active {
+        color: #fff;
+        background-color: @brand-primary;
+      }
+    }
+
+    //Dropdowns get custom display when collapsed
     @media (max-width: @grid-float-breakpoint-max) {
-      // Dropdowns get custom display when collapsed
       .open .dropdown-menu {
         > li > a {
           color: @navbar-bsst-link-color;
@@ -126,35 +138,6 @@
             background-color: @navbar-bsst-link-disabled-bg;
           }
         }
-      }
-    }
-  }
-
-
-  // Links in navbars
-  //
-  // Add a class to ensure links outside the navbar nav are colored correctly.
-
-  .navbar-link {
-    color: @navbar-bsst-link-color;
-    &:hover {
-      color: @navbar-bsst-link-hover-color;
-    }
-  }
-
-  .btn-link {
-    color: @navbar-bsst-link-color;
-    &:hover,
-    &:focus {
-      color: @navbar-bsst-link-hover-color;
-      text-decoration: none;
-      outline: 0;
-    }
-    &[disabled],
-    fieldset[disabled] & {
-      &:hover,
-      &:focus {
-        color: @navbar-bsst-link-disabled-color;
       }
     }
   }

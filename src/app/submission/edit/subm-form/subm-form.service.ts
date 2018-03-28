@@ -3,11 +3,12 @@ import {
     FormGroup,
     Validators,
     FormControl,
-    FormArray
+    FormArray, AbstractControl
 } from '@angular/forms';
 import {Subscription} from 'rxjs/Subscription';
 
 import {
+    AnnotationsType,
     ColumnType,
     FeatureType,
     FieldType
@@ -20,6 +21,7 @@ import {
     Attribute,
     ValueMap
 } from '../../shared/submission.model';
+import * as _ from "lodash";
 
 /**
  * Augments the FormControl class with various pointers to structures related to the control for ease of access during
@@ -142,6 +144,8 @@ export class FieldControl extends FormControl {
 export class SectionForm {
     formErrors: { [key: string]: string } = {};
     readonly form: FormGroup;
+    readonly groupForm: FormGroup;
+    readonly groupSize: number;
 
     private section: Section;
 
@@ -154,26 +158,54 @@ export class SectionForm {
     constructor(section: Section) {
         this.section = section;
 
+        //Reactive model for the submission form.
         this.form = new FormGroup({
             fields: new FormGroup({}),
             features: new FormGroup({})
         });
 
+        //Generates form controls for every field, keeping track of changes
         this.createFieldControls();
-        this.updateFeatureForms();
+        this.fieldsFormGroup.valueChanges.subscribe(
+            data => this.formErrors = FieldControl.getErrors(this.section, this.fieldsFormGroup)
+        );
+        this.formErrors = FieldControl.getErrors(this.section, this.fieldsFormGroup);
 
+        //Generates form groups and controls for every feature, keeping track of changes.
+        this.updateFeatureForms();
         this.subscriptions.push(
             this.section.features
                 .updates()
                 .filter(ue => (['feature_add', 'feature_remove'].indexOf(ue.name) > -1))
                 .subscribe(ue => {
                     this.updateFeatureForms(ue);
-                }));
-
-        this.fieldsFormGroup.valueChanges.subscribe(
-            data => this.formErrors = FieldControl.getErrors(this.section, this.fieldsFormGroup)
+                })
         );
-        this.formErrors = FieldControl.getErrors(this.section, this.fieldsFormGroup);
+
+        //Generates a virtual form group for the members of any existing validation group
+        this.groupForm = new FormGroup({});
+        this.section.type.groupTypes.forEach((type) => {
+            let member: Field | Feature;
+            let memberControl: AbstractControl;
+
+            if (type instanceof FieldType) {
+                member = this.section.fields.find(type.name, 'typeName');
+                memberControl = this.fieldControl(member.id);
+            } else if (type instanceof FeatureType) {
+                if (type instanceof AnnotationsType) {
+                    member = this.section.annotations;
+                } else {
+                    member = this.section.features.find(type.name, 'typeName');
+                }
+                memberControl = this.featureForm(member.id).form;
+            }
+
+            //Makes sure the named references in the group definition still exist in the current form
+            if (member) {
+                this.groupForm.addControl(member.id, memberControl);
+            }
+        });
+        this.groupSize = this.section.type.groupTypes.length;
     }
 
     get fields(): Field[] {
@@ -284,6 +316,33 @@ export class SectionForm {
                 this.addFeatureForm(feature);
             }
         );
+    }
+
+    /**
+     * Updates the required status of all members of the validation group whenever their validity changes.
+     * NOTE: Validation groups are really controls with requirement rules that are temporary. This is contrary to
+     * much of the app's architecture which assumes that requirement rules never change in the type templates.
+     */
+    updateGroupForm() {
+        const emptyNames = [];
+        let isValid = false;
+        let isForceReq;
+
+        //Checks that at least one of the members is valid
+        //NOTE: Features can be empty and yet never be removed from the global submission form group
+        _.forEach(this.groupForm.controls, (control, key) => {
+            if (control instanceof FormGroup && !control.value.rows.length) {
+                emptyNames.push(this.featureForm(key).feature.typeName);
+            } else {
+                isValid = isValid || control.valid;
+            }
+        });
+
+        //Makes all members optional if at least one of them is valid. If only one member not empty, set as required always.
+        isForceReq = emptyNames.length == this.groupSize -1
+        this.section.type.groupTypes.forEach((type) => {
+            type.required = (emptyNames.indexOf(type.name) == -1  && isForceReq) || !isValid;
+        });
     }
 
     /**
