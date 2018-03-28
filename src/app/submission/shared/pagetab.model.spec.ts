@@ -209,6 +209,7 @@ describe('PageTab', () => {
         const secType = type.sectionType;
         const subm = (new PageTab({})).toSubmission(type);
         const pt = PageTab.fromSubmission(subm);
+        let isLinks, isFiles;
 
         expect(pt.type).toBe('Submission');
         expect(pt.accno).toEqual('');
@@ -219,8 +220,6 @@ describe('PageTab', () => {
         expect(pt.section.attributes).toBeDefined();
         expect(pt.section.attributes.length).toBe(secType.fieldTypes.length - 2);  //Title and ReleaseDate  are always at root level
 
-        expect(pt.section.links).toBeUndefined(); // no links defined
-        expect(pt.section.files).toBeUndefined(); // no files defined
         expect(pt.section.subsections).toBeDefined();
         expect(pt.section.subsections.length).toBe(1); // at least one contact is required
 
