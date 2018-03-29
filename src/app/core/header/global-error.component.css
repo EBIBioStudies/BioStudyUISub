@@ -1,0 +1,9 @@
+.alert-container {
+    position: absolute;
+    margin-left: -100%;
+    z-index: 1000;
+    transition: margin-left .7s ease-out;
+}
+.slide-in {
+    margin-left: 0;
+}
