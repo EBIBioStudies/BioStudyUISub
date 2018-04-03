@@ -1,5 +1,7 @@
-<div [hidden]="!error.length" class="alert-container">
-    <alert type="danger" dismissible="true">
-        {{error}}
-    </alert>
+<div role="alert" class="alert alert-container alert-danger alert-dismissible">
+    <span class="message-container">{{error}}</span>
+    <button aria-label="Close" class="close" type="button"
+            (click)="onClose()">
+        <i class="fa fa-times"></i>
+    </button>
 </div>

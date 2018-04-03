@@ -1,9 +1,27 @@
 .alert-container {
-    position: absolute;
-    margin-left: -100%;
     z-index: 1000;
-    transition: margin-left .7s ease-out;
+    position: absolute;
+    margin-top: 3.5px;
+    margin-left: -100%;
+    padding: 0;
+    transition: margin-left .5s ease-in-out;
+    -webkit-box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.18);
+    -moz-box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.18);
+    box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.18);
+}
+.message-container {
+    padding: 15px 7.5px 15px 15px;
+}
+.close {
+    position: static;
+    float: none;
+    display: inline-block;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    background: #d99997;
+    border-radius: 0 4px 4px 0;
 }
 .slide-in {
-    margin-left: 0;
+    margin-left: 3.5px;
 }

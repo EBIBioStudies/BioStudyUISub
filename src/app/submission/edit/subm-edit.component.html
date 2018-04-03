@@ -159,7 +159,7 @@
                 </subm-form>
 
                 <div *ngIf="section.sections.list().length > 0" class="list-group form-group">
-                    <label class="control-label">Sections</label>
+                    <label class="control-label">Pages</label>
                     <div *ngFor="let subsection of section.sections.list()"
                           class="list-group-item">
                         {{subsection.typeName}}
@@ -168,13 +168,13 @@
                         </span>
                         <span class="btn-toolbar pull-right">
                             <button type="button" class="section-edit btn btn-link btn-xs btn-flat"
-                                    tooltip="Edit section &quot;{{subsection.typeName}}&quot;"
+                                    tooltip="Edit page &quot;{{subsection.typeName}}&quot;"
                                     container="body"
                                     (click)="onSectionClick(subsection)">
                                 <i class="fa fa-pencil fa-fw fa-lg"></i>
                             </button>
                             <button type="button" *ngIf="section.sections.isRemovable(subsection)" class="section-delete btn btn-danger btn-xs btn-flat"
-                                    tooltip="Delete section &quot;{{subsection.typeName}}&quot;"
+                                    tooltip="Delete page &quot;{{subsection.typeName}}&quot;"
                                     container="body"
                                     placement="left"
                                     (click)="onSectionDelete(subsection)">
@@ -213,8 +213,8 @@
             </div>
         </aside>
         <confirm-dialog #confirmSectionDel
-                        headerTitle="Delete section"
-                        body="You are about to permanently delete the section"
+                        headerTitle="Delete page"
+                        body="You are about to permanently delete the page"
                         confirmLabel="Delete">
         </confirm-dialog>
         <confirm-dialog #confirmRevert

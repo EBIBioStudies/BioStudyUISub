@@ -38,7 +38,6 @@ export class HeaderComponent implements OnDestroy {
                 private userData: UserData,
                 private router: Router,
                 private authService: AuthService,
-                private appConfig: AppConfig,
                 private requestStatus: RequestStatusService,
                 private appRef: ApplicationRef) {
         const header = this;
@@ -75,10 +74,6 @@ export class HeaderComponent implements OnDestroy {
         this.reqStatusSubs = this.requestStatus.whenStatusChanged.subscribe(hasPendingRequests => {
             header.isPendingReq = hasPendingRequests;
         });
-    }
-
-    get appVersion(): string {
-        return this.appConfig.version;
     }
 
     signOut() {

@@ -19,6 +19,9 @@
                     <li class="list-group-item">
                         <a href="#help-save" (click)="jumpTo($event)">Saving and submitting a study</a>
                     </li>
+                    <li class="list-group-item">
+                        <a href="#help-about" (click)="jumpTo($event)">About</a>
+                    </li>
                 </ol>
 
                 <dl>
@@ -109,7 +112,7 @@
                                 the database at your own discretion. As part of the process, the project your study belongs
                                 to must be selected. This is due to the difference in data requirements that exists from
                                 project to project.
-                                <img src="images/help/new_submission.png"/>
+                                <img src="images/help/new_submission.gif"/>
                             </p>
                         </div>
                         <div class="row">
@@ -200,15 +203,14 @@
                             Once all the study data has been provided, the form can be submitted by pressing the
                             <button type="button" class="btn-submit btn btn-primary">Submit</button>
                             button, located both in the secondary top bar and at the bottom of the form. If the
-                            submission has been successful, the study is allocated an accession number with which it can
-                            be accessed online.
+                            submission has been successful, a summary of all the information pertaining the study is shown.
                         </p>
                         <p><img src="images/help/success_submission.gif"/></p>
                         <p>
                             If the form is submitted with any required fields blank, the application will cancel the
                             submission process and highlight the relevant fields.
                         </p>
-                        <p><img src="images/help/submit_blanks.png"/></p>
+                        <p><img src="images/help/submit_blanks.gif"/></p>
                         <div class="alert alert-warning">
                             <div class="pull-left">
                                 <i class="fa fa-hand-o-right fa-lg"></i>
@@ -229,6 +231,17 @@
                                 until the release date.
                             </p>
                         </div>
+                    </dd>
+                    <dt><h4 class="underlined">6.About</h4></dt>
+                    <dd id="help-about" class="col-md-12">
+                        <p>
+                            The submission tool is a single-page app based on the
+                            <a href="https://github.com/angular/angular">Angular</a>
+                            framework and the <a href="https://github.com/twbs/bootstrap">Bootstrap</a> library.
+                            The current version of the app is {{appVersion}}. The team behind it is part of the
+                            <a href="https://www.ebi.ac.uk/about/people/ugis-sarkans">Functional Genomics Development
+                            team</a>, led by Ugis Sarkans.
+                        </p>
                     </dd>
                 </dl>
             </div>
