@@ -95,7 +95,7 @@ export class DirectSubmitRequest {
         //Failed server response from direct submit => reflects failure in this request object
         if (res.status !== 'OK') {
             this._status = ReqStatus.ERROR;
-            this._log = res.log || {message: 'no results available', level: 'error'};
+            this._log = res.log || {message: 'No results available', level: 'error'};
 
         //Successful server response from direct submit => reflects success accordingly
         } else {

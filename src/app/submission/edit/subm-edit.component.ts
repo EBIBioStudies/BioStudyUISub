@@ -225,7 +225,7 @@ export class SubmEditComponent implements OnInit, OnDestroy {
      * @param {Section} section - Section to be deleted
      */
     onSectionDelete(section: Section): void {
-        let confirmMsg: string = `You are about to permanently delete the section named "${section.typeName}"`;
+        let confirmMsg: string = `You are about to permanently delete the page named "${section.typeName}"`;
 
         if (section.accno) {
             confirmMsg += ` with accession number ${section.accno}`;

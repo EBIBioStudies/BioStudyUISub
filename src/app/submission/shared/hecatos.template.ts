@@ -101,7 +101,7 @@ export const HecatosTemplate = {
                 'name': 'Dose',
                 'icon': 'fa-eyedropper',
                 'valueType': 'text',
-                'values': ['therapeutic', 'toxic']
+                'values': ['Therapeutic', 'Toxic']
             },
             {
                 'name': 'Biological Replicate',

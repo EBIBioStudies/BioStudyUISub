@@ -34,8 +34,7 @@
             <strong>Please note</strong>
         </div>
         <p class="text-block text-black">
-            The system may take up to 24 hours after submission to register any new studies in the
-            database.
+            The system may take up to 24 hours after submission to register any new studies in the database.
         </p>
     </div>
     <div  *ngIf="isSuccess() && !isUpdate" class="alert alert-warning">
@@ -44,19 +43,21 @@
             <strong>Please note</strong>
         </div>
         <p class="text-block text-black">
-            Any registered study will remain private and accessible only through login
-            until the release date.
+            Any registered study will remain private and accessible only through login until the release date.
         </p>
     </div>
     <subm-results-tree *ngIf="!isLogEmpty() && !isSuccess()" [log]="log"></subm-results-tree>
 </div>
 <div class="modal-footer">
     <div class="pull-right">
-        <button type="button" class="btn btn-xs"
-                tooltip="{{isSuccess() ? 'List all submissions sent' : 'Go back to the current submission'}}"
-                [ngClass]="{'btn-primary': isSuccess(), 'btn-default': !isSuccess()}"
+        <button *ngIf="isSuccess()" type="button" class="btn-primary btn btn-xs"
+                tooltip="List all other submitted studies"
                 (click)="onConfirm()">
-            {{isSuccess() ? 'Show all sent' : 'Review submission'}}
+            Show all sent
+        </button>
+        <button type="button" class="btn-default btn btn-xs"
+                (click)="bsModalRef.hide()">
+            Close
         </button>
     </div>
 </div>
