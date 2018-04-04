@@ -5,10 +5,10 @@
     <div *ngFor="let field of sectionForm.fields"
          class="form-group row">
         <div class="col-xs-12"
-             [ngClass]="{'has-error': get(field.id).invalid && get(field.id).touched}">
+             [ngClass]="{'has-error': field.type.required && get(field.id).invalid && get(field.id).touched}">
             <label class="control-label">
                 <span class="text-black">{{field.name}}</span>
-                <span *ngIf="get(field.id).invalid && get(field.id).touched">
+                <span *ngIf="field.type.required && get(field.id).invalid && get(field.id).touched">
                     {{sectionForm.formErrors[field.id] ? sectionForm.formErrors[field.id] : ''}}
                 </span>
                 <span [hidden]="readonly ||
@@ -30,7 +30,12 @@
                     </span>
                 </span>
             </label>
-            <span *ngIf="!readonly && !field.type.required" class="text-muted pull-right"><i>Optional</i></span>
+            <span *ngIf="!readonly && (!field.type.required || sectionForm.groupForm.get(field.id))"
+                  class="text-muted pull-right">
+                <i>
+                    Optional{{sectionForm.groupForm.get(field.id) ? ': ' + section.type.group.join(' or ') : ''}}
+                </i>
+            </span>
             <div [ngClass]="{'input-group': !readonly && !field.readonly,
                              'readonly': field.readonly}">
                 <span *ngIf="!readonly && !field.readonly" class="input-group-addon">
