@@ -163,11 +163,13 @@ export class SubmEditComponent implements OnInit, OnDestroy {
     ngAfterViewChecked() {
         if (this.submForm) {
 
+            //Refreshes the required status of all members of a validation group
             this.submForm.sectionForm.updateGroupForm();
 
             //Validates the submission immediately
             this.errors = SubmissionValidator.validate(this.subm);
 
+            //Retrieves all form controls as a flat array.
             this.submForm.sectionForm.controls(this.formControls);
             this.changeRef.detectChanges();
         }

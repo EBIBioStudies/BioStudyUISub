@@ -185,11 +185,13 @@ export class SectionForm {
         //Generates a virtual form group for the members of any existing validation group
         this.groupForm = new FormGroup({});
         this.section.type.groupTypes.forEach((type) => {
-            let member: Field | Feature;
-            let memberControl: AbstractControl;
+            let member: Field | Feature;            //submission element for a validation group's member
+            let memberControl: AbstractControl;     //form control corresponding to that element
 
+            //Grabs the form control according to submission element type (top-level field, annotation or feature)
+            //TODO: Normalise the relationship with type for each of the submission elements.
             if (type instanceof FieldType) {
-                member = this.section.fields.find(type.name, 'typeName');
+                member = this.section.fields.find(type.name, 'name');
                 memberControl = this.fieldControl(member.id);
             } else if (type instanceof FeatureType) {
                 if (type instanceof AnnotationsType) {
@@ -200,7 +202,8 @@ export class SectionForm {
                 memberControl = this.featureForm(member.id).form;
             }
 
-            //Makes sure the named references in the group definition still exist in the current form
+            //Makes sure the named references in the group definition still exist in the current form. If so, adds it.
+            //NOTE: There is an edge case; if the type of control is in the template but not in the form.
             if (member) {
                 this.groupForm.addControl(member.id, memberControl);
             }
