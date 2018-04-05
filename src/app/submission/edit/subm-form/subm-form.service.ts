@@ -3,7 +3,7 @@ import {
     FormGroup,
     Validators,
     FormControl,
-    FormArray, AbstractControl
+    FormArray, AbstractControl, ValidatorFn
 } from '@angular/forms';
 import {Subscription} from 'rxjs/Subscription';
 
@@ -22,6 +22,22 @@ import {
     ValueMap
 } from '../../shared/submission.model';
 import * as _ from "lodash";
+
+/**
+ * Makes sure whitespaces are only allowed as part of a string.
+ * NOTE: Angular's required validator does not exclude empty strings with just whitespaces.
+ * @returns {ValidatorFn} Null if no error or an object descriptive of the source of the error.
+ */
+export function nonBlankVal(): ValidatorFn {
+    return (control: AbstractControl): {[key: string]: any} => {
+
+        if (control.value.trim().length == 0) {
+            return {'required': {value: control.value}};
+        } else {
+            return null;
+        }
+    };
+}
 
 /**
  * Augments the FormControl class with various pointers to structures related to the control for ease of access during
@@ -91,22 +107,22 @@ export class FieldControl extends FormControl {
     }
 
     /**
-     * Determines all the error messages for each of the members of a given control group.
+     * Grabs the first error message for each of the members of a given control group.
      * @param parent The structure encompassing this control group.
      * @param {FormGroup} fieldsGroup - The group of fields for which errors are to be determined
      * @returns {{[key: string]: string}} to error message map.
      */
     static getErrors(parent: any, fieldsGroup: FormGroup): { [key: string]: string } {
         const formErrors: { [key: string]: string } = {};
+        let firstErrorKey: string;
         let control;
 
         fieldsGroup.controls && Object.keys(fieldsGroup.controls).forEach(fieldId => {
             formErrors[fieldId] = '';
             control = fieldsGroup.get(fieldId);
             if (control && !control.valid) {
-                Object.keys(control.errors).forEach(key => {
-                    formErrors[fieldId] += this.errorMessage(parent, control.template.name, key, control.errors[key]);
-                });
+                firstErrorKey = Object.keys(control.errors)[0];
+                formErrors[fieldId] += this.errorMessage(parent, control.template.name, firstErrorKey);
             }
         });
 
@@ -115,13 +131,15 @@ export class FieldControl extends FormControl {
 
     /**
      * Builds the string to be used as a validation error message.
+     * NOTE: Only top-level fields are expected to have length constraints.
+     * TODO: Generalise both this and validators across types of fields.
      * @param parent - Structure that encompasses the control, eg: feature.
      * @param {string} fieldName - Name with which the control will be identified to the user.
      * @param {string} errorKey - Property in error object pointing to the type of issue.
-     * @param errorString - Value of the property in error object.
      * @returns {string} The error message.
      */
-    static errorMessage(parent: any, fieldName: string, errorKey: string, errorString?: any | null): string {
+    static errorMessage(parent: any, fieldName: string, errorKey: string): string {
+
         if (errorKey === 'required') {
             return `Please enter the ${parent.typeName.toLowerCase()}'s ${fieldName.toLowerCase()}`;
         }
@@ -134,8 +152,7 @@ export class FieldControl extends FormControl {
             return `Please use up to ${type.maxlength} characters`;
         }
         if (errorKey === 'pattern') {
-            const type = parent.type.getFieldType(fieldName);
-            return `Please match the ${errorString} format`;
+            return 'Invalid format';
         }
         return errorKey;
     }
@@ -267,7 +284,7 @@ export class SectionForm {
         let control;
 
         if (type.required) {
-            validators.push(Validators.required);
+            validators.push(nonBlankVal());
         }
         if (type.minlength > 0) {
             validators.push(Validators.minLength(type.minlength));
@@ -439,7 +456,7 @@ export class FeatureForm {
 
     private addColumnControl(column: Attribute) {
         const t = this.feature.type.getColumnType(column.name);
-        const colValidators = [Validators.required];
+        const colValidators = [nonBlankVal()];
         this.columnsFormGroup.addControl(column.id, new FormControl(column.name, colValidators));
         this.rows.forEach((row, rowIndex) => {
             const fg = (<FormGroup>this.rowsFormArray.at(rowIndex));
@@ -478,7 +495,7 @@ export class FeatureForm {
         let control;
 
         if (tmpl.required) {
-            valueValidators.push(Validators.required);
+            valueValidators.push(nonBlankVal());
         }
 
         colAttr = this.columns.find(column => column.id === columnId);
