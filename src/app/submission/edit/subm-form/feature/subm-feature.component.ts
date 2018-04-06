@@ -7,6 +7,7 @@ import {
 
 import {Feature} from '../../../shared/submission.model';
 import {FeatureForm} from '../subm-form.service';
+import {UserData} from "../../../../auth/user-data";
 
 @Component({
     selector: 'subm-feature',
@@ -24,7 +25,7 @@ export class SubmFeatureComponent implements OnInit {
     private colTypeNames: string[];
     private allowedCols: string[];
 
-    constructor(private changeRef: ChangeDetectorRef) {}
+    constructor(private changeRef: ChangeDetectorRef, public userData: UserData) {}
 
     /**
      * Defines the actions of the feature's menu according to its type (list or not). It also gets the type names

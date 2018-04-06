@@ -157,7 +157,8 @@ class SubmItems extends Array<SubmItem> {
     styleUrls: ['./subm-sidebar.component.css']
 })
 export class SubmSideBarComponent implements OnChanges {
-    @Input() collapsed? = false;                                             //flag indicating if menu is minimized/collapsed
+    @Input() isSubmitting: boolean = false;                                  //flag indicating submission data is being sent
+    @Input() collapsed?:boolean = false;                                     //flag indicating if menu is minimized/collapsed
     @Input() section: Section;                                               //section of the form being displayed
     @Input() formControls: FieldControl[] = [];                              //refreshed array of form controls
     @Input() errors: SubmValidationErrors = SubmValidationErrors.EMPTY;      //errors from validator service
@@ -166,6 +167,7 @@ export class SubmSideBarComponent implements OnChanges {
     @ViewChild('addDialog') addDialog: SubmTypeAddDialogComponent;
     @ViewChild('confirmDialog') confirmDialog: ConfirmDialogComponent;
 
+    isLoading: boolean = true;       //flag indicating the submission is being loaded
     isAdvancedOpen: boolean = false; //flag indicating if advanced options for types are being displayed
     isStatus: boolean = true;        //flag indicating if form status or "check" tab is being displayed
     editing: boolean = false;        //flag indicating component's mode: display or editing, with different renderings
@@ -204,9 +206,16 @@ export class SubmSideBarComponent implements OnChanges {
 
     /**
      * Updates the pending fields counter only after the digest cycle. Otherwise Angular predictably complains
-     * the change happened too early.
+     * the change happened too early. While at it, works out if the submission is being loaded if the section ID
+     * is not known yet after validation.
+     * NOTE: The list of validation errors is initialised to empty before the submission is loaded.
      */
     ngDoCheck() {
+        if (this.errors.secId.length) {
+            this.isLoading = false;
+        } else {
+            this.isLoading = true;
+        }
         this.numPending = FieldControl.numPending;
     }
 
@@ -403,7 +412,9 @@ export class SubmSideBarComponent implements OnChanges {
      * @returns {string} Abbreviated text
      */
     tipText(errors: ValidationErrors): string {
-        if (errors.required) {
+        if (errors.required && errors.required.leadtrail) {
+            return 'spaces';
+        } else if (errors.required) {
             return 'blank';
         } else if (errors.maxlength) {
             return 'too long';

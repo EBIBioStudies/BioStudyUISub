@@ -24,17 +24,26 @@ import {
 import * as _ from "lodash";
 
 /**
- * Makes sure whitespaces are only allowed as part of a string.
+ * Checks if the control's value has no whitespaces surrounding a non-empty string.
  * NOTE: Angular's required validator does not exclude empty strings with just whitespaces.
  * @returns {ValidatorFn} Null if no error or an object descriptive of the source of the error.
  */
 export function nonBlankVal(): ValidatorFn {
     return (control: AbstractControl): {[key: string]: any} => {
 
-        if (control.value.trim().length == 0) {
-            return {'required': {value: control.value}};
-        } else {
+        if (/^(\S+|\S.*\S)$/.test(control.value)) {
             return null;
+
+        //Only whitespaces. Value effectively empty.
+        } else if (control.value.trim().length == 0) {
+            return {'required': {value: control.value}};
+
+        //Leading or trailing whitespaces present
+        } else {
+            return {'required': {
+                value: control.value,
+                leadtrail: true
+            }};
         }
     };
 }
@@ -114,15 +123,15 @@ export class FieldControl extends FormControl {
      */
     static getErrors(parent: any, fieldsGroup: FormGroup): { [key: string]: string } {
         const formErrors: { [key: string]: string } = {};
-        let firstErrorKey: string;
+        let errorKey: string;
         let control;
 
         fieldsGroup.controls && Object.keys(fieldsGroup.controls).forEach(fieldId => {
             formErrors[fieldId] = '';
             control = fieldsGroup.get(fieldId);
             if (control && !control.valid) {
-                firstErrorKey = Object.keys(control.errors)[0];
-                formErrors[fieldId] += this.errorMessage(parent, control.template.name, firstErrorKey);
+                errorKey = Object.keys(control.errors)[0];
+                formErrors[fieldId] += this.errorMessage(parent, control.template.name, errorKey, control.errors[errorKey]);
             }
         });
 
@@ -136,11 +145,14 @@ export class FieldControl extends FormControl {
      * @param parent - Structure that encompasses the control, eg: feature.
      * @param {string} fieldName - Name with which the control will be identified to the user.
      * @param {string} errorKey - Property in error object pointing to the type of issue.
+     * @param errorValue - Value of the property in error object.
      * @returns {string} The error message.
      */
-    static errorMessage(parent: any, fieldName: string, errorKey: string): string {
+    static errorMessage(parent: any, fieldName: string, errorKey: string, errorValue?: any | null): string {
 
-        if (errorKey === 'required') {
+        if (errorKey === 'required' && errorValue.leadtrail) {
+            return 'Please remove any leading or trailing spaces';
+        } else if (errorKey === 'required') {
             return `Please enter the ${parent.typeName.toLowerCase()}'s ${fieldName.toLowerCase()}`;
         }
         if (errorKey === 'minlength') {

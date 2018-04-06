@@ -83,9 +83,10 @@ export class SubmFieldComponent implements ControlValueAccessor {
     }
 
     /**
-     * Handler for blur events. Normalises the behaviour of the "touched" flag.
+     * Handler for blur events. Removes spurious whitespaces and normalises the behaviour of the "touched" flag.
      */
     onBlur() {
+        this.value = this.value.trim();
         this.onTouched();
     }
 

@@ -3,8 +3,8 @@
       (ngSubmit)="onSubmit($event)">
 
     <div *ngFor="let field of sectionForm.fields"
-         class="form-group row">
-        <div class="col-xs-12"
+         [ngClass]="{'form-group row': !readonly || field.value.length}">
+        <div *ngIf="!readonly || field.value.length" class="col-xs-12"
              [ngClass]="{'has-error': field.type.required && get(field.id).invalid && get(field.id).touched}">
             <label class="control-label">
                 <span class="text-black">{{field.name}}</span>
@@ -57,7 +57,7 @@
 
     <div *ngFor="let feature of sectionForm.features"
         [ngClass]="{'form-group row': feature.size() > 0}">
-        <div *ngIf="feature.size() > 0" class="col-xs-12">
+        <div *ngIf="(!readonly && feature.size() > 0) || (readonly && !feature.isEmpty())" class="col-xs-12">
             <label class="control-label">{{feature.pluralName()}}</label>
             <span *ngIf="!readonly && (!feature.type.required || sectionForm.groupForm.get(feature.id))"
                   class="text-muted pull-right">

@@ -181,21 +181,22 @@ component */
   z-index: 950;           //above any dropdowns but below any nav bar
   font-size: 12px;
   text-align: center;
-}
-.validation-pop .popover-body {
-  padding: .5rem .7rem;
-}
-.has-error .validation-pop {
-  display: block !important;
-}
-.has-error .popover-body {
-  color: #bb4a48;
-}
-@media only screen and (min-width: 1160px) {
-  .validation-pop {
+
+  .popover-body {
+    padding: .5rem .7rem;
+  }
+
+  .has-error & {
+    display: block !important;
+  }
+
+  @media only screen and (min-width: 1160px) {
     min-width: 300px;
     font-size: 14px;
   }
+}
+.has-error .popover-body {
+  color: #bb4a48;
 }
 
 //Prevents flickering tooltips when hovering near the edge of an element
@@ -210,16 +211,19 @@ component */
   padding: 0;
   overflow: hidden;
   border-width: 2px;
-}
-.alert-warning .pull-left {
-  color: #dca700;
-}
-.alert-warning .text-block {
-  border-radius: 0 4px 4px 0;
-  background: white;
-}
-.alert-warning .pull-left, .alert-warning .text-block {
-  padding: 10px;
+
+  .pull-left {
+    color: #dca700;
+  }
+
+  .text-block {
+    border-radius: 0 4px 4px 0;
+    background: white;
+  }
+
+  .pull-left, .text-block {
+    padding: 10px;
+  }
 }
 
 //Creates new blocking context useful for media sitting on one side.
@@ -241,4 +245,31 @@ component */
   ms-filter: gray;
   filter: grayscale(100%);
   pointer-events: none;
+}
+
+//Creates a new font-awesome-like icon for titles
+.fa-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+
+  &:before {
+    content: 'T';
+  }
+
+  &.fa-lg {
+    font-size: 2rem;
+  }
+}
+
+//Highlights the label for the selected radio button
+input[type=radio] {
+  cursor: pointer;
+
+  & + span {
+    color: @gray-light;
+  }
+
+  &:checked + span, &:hover + span {
+    color: black;
+  }
 }
