@@ -24,7 +24,7 @@ import {
 import * as _ from "lodash";
 
 /**
- * Checks if the control's value has no whitespaces surrounding a non-empty string.
+ * Checks if the control's value is a non-empty string.
  * NOTE: Angular's required validator does not exclude empty strings with just whitespaces.
  * @returns {ValidatorFn} Null if no error or an object descriptive of the source of the error.
  */
@@ -38,12 +38,10 @@ export function nonBlankVal(): ValidatorFn {
         } else if (control.value.trim().length == 0) {
             return {'required': {value: control.value}};
 
-        //Leading or trailing whitespaces present
+        //Leading or trailing whitespaces present.
+        //NOTE: Surrounding whitespaces are removed automatically later on.
         } else {
-            return {'required': {
-                value: control.value,
-                leadtrail: true
-            }};
+            return null;
         }
     };
 }
@@ -373,14 +371,12 @@ export class SectionForm {
         //Makes all rendered members optional if at least one of them is valid.
         //If only one member not empty, set only that one as required always.
         isOneRendered = emptyNames.length == this.groupSize - 1;
-        this.section.type.groupTypes.forEach((type) => { console.log(type.name + ': ' + (emptyNames.indexOf(type.name) == -1) + '; ' + isOneRendered); console.log(type.name + ' - Group validity: ' + isValid);
+        this.section.type.groupTypes.forEach((type) => {
             if (emptyNames.indexOf(type.name) == -1) {
                 type.required = isOneRendered || !isValid;
             } else {
                 type.required = false;
             }
-            /*type.required = (emptyNames.indexOf(type.name) == -1  && isOneRendered) || !isValid;*/
-            console.log(type.name + ' - Required: ' + type.required)
         });
     }
 

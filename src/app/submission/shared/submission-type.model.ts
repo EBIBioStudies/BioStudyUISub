@@ -65,11 +65,12 @@ export type ValueType = 'text' | 'textblob' | 'date' | 'file';
 
 export class FieldType extends BaseType {
     required: boolean;              //NOTE: externally modified if the field is part of a validation group
-    readonly readonly: boolean;
     readonly valueType: ValueType;
+    readonly readonly: boolean;
     readonly values: string[];      //suggested values for the field
     readonly minlength: number;
     readonly maxlength: number;
+    readonly allowPast: boolean;
     readonly icon: string;
 
     constructor(name, other?: any, scope?: Map<string, any>) {
@@ -77,10 +78,11 @@ export class FieldType extends BaseType {
         other = other || {};
         this.valueType = other.valueType || 'text';
         this.values = other.values || [];
+        this.readonly = other.readonly === true;
         this.minlength = other.minlength || -1;
         this.maxlength = other.maxlength || -1;
 
-        //Sets required to false if not present. If the field has a mininum length, it must be required.
+        //Sets "required" to false if not present. If the field has a mininum length, it must be required.
         if (other.hasOwnProperty('required')) {
             this.required = other.required;
         } else if (this.minlength > 0) {
@@ -89,17 +91,18 @@ export class FieldType extends BaseType {
             this.required = false;
         }
 
-        if (other.hasOwnProperty('readonly')) {
-            this.readonly = other.readonly;
-        } else {
-            this.readonly = false;
-        }
-
-        //Normalises the icon for the present type.
+        //Sets field's icon to a default one if not present.
         if (other.hasOwnProperty('icon')) {
             this.icon = other.icon;
         } else {
             this.icon = 'fa-pencil-square-o';
+        }
+
+        //Sets the ability of setting past dates to true by default.
+        if (this.valueType == 'date' && other.hasOwnProperty('allowPast')) {
+            this.allowPast = other.allowPast;
+        } else {
+            this.allowPast = true;
         }
     }
 }
@@ -216,6 +219,7 @@ export class ColumnType extends BaseType {
     readonly readonly: boolean;     //renders the column and its member fields as a readonly inputs
                                     //NOTE: Notice that BOTH the column field and member fields will be readonly.
     readonly removable: boolean;    //renders the column without removal controls (useful for un-required yet un-removable columns).
+    readonly allowPast: boolean;    //enables past dates on calendar picker if applicable
     readonly valueType: ValueType;  //type of data for the fields under this column
     readonly values: string[];      //suggested values for the field
 
@@ -238,6 +242,13 @@ export class ColumnType extends BaseType {
             this.removable = other.removable;
         } else {
             this.removable = true;
+        }
+
+        //Sets the ability of setting past dates to true by default.
+        if (this.valueType == 'date' && other.hasOwnProperty('allowPast')) {
+            this.allowPast = other.allowPast;
+        } else {
+            this.allowPast = true;
         }
     }
 }

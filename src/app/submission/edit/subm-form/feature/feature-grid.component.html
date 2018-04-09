@@ -69,6 +69,7 @@
                                 [readonly]="readonly || column.readonly"
                                 [required]="column.required"
                                 [formControl]="featureForm.rowValueControl(rowIdx, column.id)"
+                                [allowPast]="column.allowPast"
                                 [autosuggest]="column.values"
                                 [suggestLength]="15"
                                 (async)="addOnAsync($event, rowIdx)"

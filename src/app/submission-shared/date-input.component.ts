@@ -41,7 +41,7 @@ import {AppConfig} from "../app.config";
 export class DateInputComponent implements ControlValueAccessor {
     public dateValue: Date;
 
-    @Input() canUsePastDates?: boolean = undefined;
+    @Input() allowPast?: boolean = undefined;
     @Input() maxDate?: Date = undefined;
     @Input() isSmall?: boolean = false;
     @Input() required?: boolean = false;
@@ -70,8 +70,8 @@ export class DateInputComponent implements ControlValueAccessor {
      * any future date can be set.
      */
     ngOnInit(): void {
-        if ((typeof this.canUsePastDates === 'undefined' && !this.appConfig.canUsePastDates) ||
-            (this.canUsePastDates === false)) {
+        if ((typeof this.allowPast === 'undefined' && !this.appConfig.allowPast) ||
+            (this.allowPast === false)) {
             this.datepicker.minDate = new Date(Date.now());
         }
         if (this.maxDate instanceof Date) {

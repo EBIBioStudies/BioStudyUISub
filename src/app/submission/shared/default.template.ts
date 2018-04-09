@@ -104,6 +104,7 @@ export const DefaultTemplate = {
                 'name': 'Release Date',
                 'icon': 'fa-calendar',
                 'valueType': 'date',
+                'allowPast': false,
                 'required': true
             },
             {

@@ -39,17 +39,19 @@
             <div [ngClass]="{'input-group': !readonly && !field.readonly,
                              'readonly': field.readonly}">
                 <span *ngIf="!readonly && !field.readonly" class="input-group-addon">
-                    <i class="fa {{get(field.id, 'icon')}}"></i>
+                    <i class="fa {{field.type.icon}}"></i>
                 </span>
                 <subm-field class="subm-field"
-                    [type]="field.valueType"
-                    [readonly]="readonly || field.readonly"
-                    [required]="field.type.required"
-                    [(ngModel)]="field.value"
-                    [formControl]="get(field.id)"
-                    [autosuggest]="field.type.values"
-                    [isSmall]="false"
-                    validate-onblur>
+                            [type]="field.valueType"
+                            [readonly]="readonly || field.readonly"
+                            [required]="field.type.required"
+                            [(ngModel)]="field.value"
+                            [formControl]="get(field.id)"
+                            [allowPast]="field.type.allowPast"
+                            [autosuggest]="field.type.values"
+                            [suggestLength]="15"
+                            [isSmall]="false"
+                            validate-onblur>
                 </subm-field>
             </div>
         </div>
