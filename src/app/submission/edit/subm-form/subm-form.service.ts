@@ -358,10 +358,10 @@ export class SectionForm {
     updateGroupForm() {
         const emptyNames = [];
         let isValid = false;
-        let isForceReq;
+        let isOneRendered;
 
-        //Checks that at least one of the members is valid
-        //NOTE: Features can be empty and yet never be removed from the global submission form group
+        //Checks that at least one of the rendered validation members is valid. Empty ones are ignored.
+        //NOTE: Features can be empty, not rendered and yet never be removed from the global submission form group.
         _.forEach(this.groupForm.controls, (control, key) => {
             if (control instanceof FormGroup && !control.value.rows.length) {
                 emptyNames.push(this.featureForm(key).feature.typeName);
@@ -370,10 +370,17 @@ export class SectionForm {
             }
         });
 
-        //Makes all members optional if at least one of them is valid. If only one member not empty, set as required always.
-        isForceReq = emptyNames.length == this.groupSize -1
-        this.section.type.groupTypes.forEach((type) => {
-            type.required = (emptyNames.indexOf(type.name) == -1  && isForceReq) || !isValid;
+        //Makes all rendered members optional if at least one of them is valid.
+        //If only one member not empty, set only that one as required always.
+        isOneRendered = emptyNames.length == this.groupSize - 1;
+        this.section.type.groupTypes.forEach((type) => { console.log(type.name + ': ' + (emptyNames.indexOf(type.name) == -1) + '; ' + isOneRendered); console.log(type.name + ' - Group validity: ' + isValid);
+            if (emptyNames.indexOf(type.name) == -1) {
+                type.required = isOneRendered || !isValid;
+            } else {
+                type.required = false;
+            }
+            /*type.required = (emptyNames.indexOf(type.name) == -1  && isOneRendered) || !isValid;*/
+            console.log(type.name + ' - Required: ' + type.required)
         });
     }
 
