@@ -16,7 +16,7 @@
         <div class="media-body media-middle">
             <p class="media-heading">
                 <span *ngIf="isSuccess()">
-                    Your submission has been successfully {{isUpdate ? 'updated' : 'added to the BioStudies database'}}.
+                    Your submission has been successfully added to the BioStudies database.
                 </span>
                 <span *ngIf="!isSuccess()">
                     An error has occurred while submitting the data to BioStudies. You may review your submission and try again. If the error
@@ -28,7 +28,7 @@
             </p>
         </div>
     </div>
-    <div  *ngIf="isSuccess() && !isUpdate" class="alert alert-warning">
+    <div  *ngIf="isSuccess()" class="alert alert-warning">
         <div class="pull-left">
             <i class="fa fa-hand-o-right fa-lg"></i>
             <strong>Please note</strong>
@@ -37,7 +37,7 @@
             The system may take up to 24 hours after submission to register any new studies in the database.
         </p>
     </div>
-    <div  *ngIf="isSuccess() && !isUpdate" class="alert alert-warning">
+    <div  *ngIf="isSuccess()" class="alert alert-warning">
         <div class="pull-left">
             <i class="fa fa-hand-o-right fa-lg"></i>
             <strong>Please note</strong>

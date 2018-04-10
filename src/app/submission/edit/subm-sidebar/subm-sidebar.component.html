@@ -116,12 +116,17 @@
 
         <!-- Check tab -->
         <div *ngIf="isStatus">
-            <li *ngIf="errors.empty()" class="no-error-msg text-center"
+            <li *ngIf="errors.empty() || isSubmitting" class="no-error-msg text-center"
                 [ngClass]="{'col-md-12': !collapsed}">
-                <i class="fa fa-check-circle" aria-hidden="true"
-                    [ngClass]="{'fa-2x': collapsed, 'fa-4x': !collapsed}"></i>
-                <h4 [ngClass]="{'vertical-text': collapsed}">All fields are valid</h4>
-                <h4 class="action-title">You may submit your study now</h4>
+                <i class="fa " aria-hidden="true"
+                    [ngClass]="{
+                    'fa-2x': collapsed, 'fa-4x': !collapsed,
+                    'fa-check-circle': !isLoading && !isSubmitting,
+                    'fa-cog fa-spin': isLoading || isSubmitting}"></i>
+                <h4 [ngClass]="{'vertical-text': collapsed}">
+                    {{isLoading ? 'Loading study...' : isSubmitting? 'Submitting study...' : 'All fields are valid'}}
+                </h4>
+                <h4 class="action-title">{{isLoading || isSubmitting ? 'Please wait' : 'You may submit your study now'}}</h4>
             </li>
             <li class="sidebar-item" *ngFor="let control of formControls; let i = index">
                 <a *ngIf="control.parentType.required && control.invalid"
@@ -135,8 +140,10 @@
                             [ngClass]="{'label-danger': control.touched}"
                             #labelEl>
                         {{!collapsed ? tipText(control.errors) : ''}}
-                        <i *ngIf="collapsed && control.errors.required" class="fa fa-lg fa-asterisk"></i>
-                        <i *ngIf="collapsed && (control.errors.maxlength || control.errors.minlength)" class="fa fa-lg fa-arrows-h"></i>
+                        <i *ngIf="collapsed"
+                            class="fa fa-lg {{control.errors.required ? 'fa-asterisk' :
+                            control.errors.maxlength || control.errors.minlength ? 'fa-arrows-h' : 'fa-ban'}}">
+                        </i>
                     </strong>
                 </a>
             </li>

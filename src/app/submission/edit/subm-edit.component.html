@@ -5,7 +5,8 @@
                   [collapsed]="sideBarCollapsed"
                   [section]="section"
                   [formControls]="formControls"
-                  [errors]="errors">
+                  [errors]="errors"
+                  [isSubmitting]="isSubmitting">
     </subm-sidebar>
 
     <subm-navbar class="navbar-subm-fixed navbar-default"
@@ -47,7 +48,7 @@
                     </div>
                 </div>
 
-                <div *ngIf="!isNew && errors.total()" class="panel">
+                <div *ngIf="!isNew && !readonly && errors.total()" class="panel">
                     <div class="panel-body">
                         <h4>Incomplete submission</h4>
                         <p>
@@ -196,8 +197,7 @@
                         </button>
                     </p>
                     <p class="text-muted col-xs-9">
-                        <i class="fa fa-cog fa-spin" *ngIf="isSubmitting || isSaving"></i>
-                        <span *ngIf="isSubmitting">Submitting study...</span>
+                        <i *ngIf="isSaving" class="fa fa-cog fa-spin"></i>
                         <span *ngIf="isSaving">Backing up study data...</span>
                     </p>
                     <p class="col-xs-2 text-right">

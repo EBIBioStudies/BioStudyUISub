@@ -1,15 +1,19 @@
 export const DefaultTemplate = {
     'name': 'Default',
-    'description': 'Generic submission for stand-alone or unsupported studies',
+    'description': 'Generic submission for stand-alone or generic studies',
     'sectionType': {
         'name': 'Study',
         'group': ['File', 'Link'],
         'annotationsType': {
             'title': 'Describe your study',
-            'description': 'Provide any additional details that may help discover or interpret the study. For example, ' +
-                           'organism, cell type or experimental design.',
+            'description': 'Provide any additional details that may help discover or interpret the study.',
             'icon': 'fa-tag',
             'columnTypes': [
+                {
+                    'name': 'AttachTo',
+                    'valueType': 'text',
+                    'readonly': true
+                },
                 {
                     'name': 'Organism',
                     'valueType': 'text',
@@ -85,18 +89,13 @@ export const DefaultTemplate = {
                 {
                     'name': 'Cell type',
                     'valueType': 'text'
-                },
-                {
-                    'name': 'AttachTo',
-                    'valueType': 'text',
-                    'readonly': true
                 }
             ]
         },
         'fieldTypes': [
             {
                 'name': 'Title',
-                'icon': 'fa-font',
+                'icon': 'fa-title',
                 'valueType': 'textblob',
                 'required': true,
                 'minlength': 25
@@ -105,6 +104,7 @@ export const DefaultTemplate = {
                 'name': 'Release Date',
                 'icon': 'fa-calendar',
                 'valueType': 'date',
+                'allowPast': false,
                 'required': true
             },
             {
@@ -228,7 +228,8 @@ export const DefaultTemplate = {
                     },
                     {
                         'name': 'Type',
-                        'valueType': 'text'
+                        'valueType': 'text',
+                        'displayed': true
                     }
                 ]
             },
@@ -251,7 +252,8 @@ export const DefaultTemplate = {
                     },
                     {
                         'name': 'Type',
-                        'valueType': 'text'
+                        'valueType': 'text',
+                        'displayed': true
                     }
                 ]
             },

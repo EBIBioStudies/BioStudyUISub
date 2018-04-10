@@ -7,9 +7,31 @@ export const HecatosTemplate = {
         'annotationsType': {
             'title': 'Describe your study',
             'icon': 'fa-tag',
-            'description': 'Provide any factors that may help discover or interpret the study. For example, ' +
-                           'age, dose frequency or time range.',
+            'description': 'Provide any additional details that may help discover or interpret the study.',
             'columnTypes': [
+                {
+                    'name': 'AttachTo',
+                    'valueType': 'text',
+                    'displayed': true,
+                    'readonly': true
+                },
+                {
+                    'name': 'Factor',
+                    'valueType': 'text',
+                    'displayed': true,
+                    'values': [
+                        'Age',
+                        'Compound',
+                        'Dose',
+                        'Dose duration',
+                        'Dose frequency',
+                        'Post treatment duration',
+                        'Sampling time point',
+                        'Sampling date',
+                        'Time range',
+                        'Incubation time with respective conc. [uM]'
+                    ]
+                },
                 {
                     'name': 'Compound',
                     'icon': 'fa-flask',
@@ -39,35 +61,13 @@ export const HecatosTemplate = {
                         'DMSO(Fluctuating)',
                         'None'
                     ]
-                },
-                {
-                    'name': 'Factor',
-                    'valueType': 'text',
-                    'values': [
-                        'Age',
-                        'Compound',
-                        'Dose',
-                        'Dose duration',
-                        'Dose frequency',
-                        'Post treatment duration',
-                        'Sampling time point',
-                        'Sampling date',
-                        'Time range',
-                        'Incubation time with respective conc. [uM]'
-                    ],
-                    'displayed': true
-                },
-                {
-                    'name': 'AttachTo',
-                    'valueType': 'text',
-                    'readonly': true
                 }
             ]
         },
         'fieldTypes': [
             {
                 'name': 'Title',
-                'icon': 'fa-font',
+                'icon': 'fa-title',
                 'valueType': 'textblob',
                 'required': true,
                 'minlength': 25

@@ -22,6 +22,7 @@
         [(ngModel)]="value"
         [required]="required"
         [readonly]="readonly"
+        [allowPast]="allowPast"
         [maxDate]="nowInNyears(2)"
         (focusout)="onBlur()">
 </date-input>

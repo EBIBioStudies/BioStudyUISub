@@ -18,9 +18,7 @@ import {BsModalRef} from 'ngx-bootstrap/modal/modal-options.class';
 })
 export class SubmResultsModalComponent {
     @Input() status: string;        //Status the server comes back with
-    @Input() accno: string;         //Submission's accession number
     @Input() log: any;              //Log part of the server's response
-    @Input() isUpdate: boolean;     //Indicates if the results come from updating a submission.
 
     constructor(private router: Router, public bsModalRef: BsModalRef) {}
 

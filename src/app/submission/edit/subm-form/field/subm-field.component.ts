@@ -32,6 +32,7 @@ export class SubmFieldComponent implements ControlValueAccessor {
     @Input() type: string;                      //type of field: text, date, pubmedid, orcid...
     @Input() readonly: boolean;                 //if true, the field will be rendered but its value cannot be changed
     @Input() required: boolean;                 //if true, the field must not be left blank
+    @Input() allowPast: boolean;                //if true, allows past dates for calendar fields
     @Input() formControl: FieldControl;         //reactive control associated with this field
     @Input() isSmall: boolean = true;           //flag for making the input area the same size as grid fields
     @Input() autosuggest: any[] = [];           //typeahead list of suggested values
@@ -83,9 +84,10 @@ export class SubmFieldComponent implements ControlValueAccessor {
     }
 
     /**
-     * Handler for blur events. Normalises the behaviour of the "touched" flag.
+     * Handler for blur events. Removes spurious whitespaces and normalises the behaviour of the "touched" flag.
      */
     onBlur() {
+        this.value = this.value.trim();
         this.onTouched();
     }
 

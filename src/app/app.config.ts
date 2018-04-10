@@ -57,8 +57,8 @@ export class AppConfig {
      * Synonym getter providing a flag indicating whether past date selection is allowed.
      * @returns {boolean} Flag for past date allowance.
      */
-    get canUsePastDates(): boolean {
-        return this.config.APP_CAN_PAST_DATES;
+    get allowPast(): boolean {
+        return this.config.APP_ALLOW_PAST_DATES;
     }
 
     /**

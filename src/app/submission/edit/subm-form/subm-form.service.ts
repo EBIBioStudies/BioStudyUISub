@@ -3,7 +3,7 @@ import {
     FormGroup,
     Validators,
     FormControl,
-    FormArray, AbstractControl
+    FormArray, AbstractControl, ValidatorFn
 } from '@angular/forms';
 import {Subscription} from 'rxjs/Subscription';
 
@@ -22,6 +22,29 @@ import {
     ValueMap
 } from '../../shared/submission.model';
 import * as _ from "lodash";
+
+/**
+ * Checks if the control's value is a non-empty string.
+ * NOTE: Angular's required validator does not exclude empty strings with just whitespaces.
+ * @returns {ValidatorFn} Null if no error or an object descriptive of the source of the error.
+ */
+export function nonBlankVal(): ValidatorFn {
+    return (control: AbstractControl): {[key: string]: any} => {
+
+        if (/^(\S+|\S.*\S)$/.test(control.value)) {
+            return null;
+
+        //Only whitespaces. Value effectively empty.
+        } else if (control.value.trim().length == 0) {
+            return {'required': {value: control.value}};
+
+        //Leading or trailing whitespaces present.
+        //NOTE: Surrounding whitespaces are removed automatically later on.
+        } else {
+            return null;
+        }
+    };
+}
 
 /**
  * Augments the FormControl class with various pointers to structures related to the control for ease of access during
@@ -91,22 +114,22 @@ export class FieldControl extends FormControl {
     }
 
     /**
-     * Determines all the error messages for each of the members of a given control group.
+     * Grabs the first error message for each of the members of a given control group.
      * @param parent The structure encompassing this control group.
      * @param {FormGroup} fieldsGroup - The group of fields for which errors are to be determined
      * @returns {{[key: string]: string}} to error message map.
      */
     static getErrors(parent: any, fieldsGroup: FormGroup): { [key: string]: string } {
         const formErrors: { [key: string]: string } = {};
+        let errorKey: string;
         let control;
 
         fieldsGroup.controls && Object.keys(fieldsGroup.controls).forEach(fieldId => {
             formErrors[fieldId] = '';
             control = fieldsGroup.get(fieldId);
             if (control && !control.valid) {
-                Object.keys(control.errors).forEach(key => {
-                    formErrors[fieldId] += this.errorMessage(parent, control.template.name, key, control.errors[key]);
-                });
+                errorKey = Object.keys(control.errors)[0];
+                formErrors[fieldId] += this.errorMessage(parent, control.template.name, errorKey, control.errors[errorKey]);
             }
         });
 
@@ -115,14 +138,19 @@ export class FieldControl extends FormControl {
 
     /**
      * Builds the string to be used as a validation error message.
+     * NOTE: Only top-level fields are expected to have length constraints.
+     * TODO: Generalise both this and validators across types of fields.
      * @param parent - Structure that encompasses the control, eg: feature.
      * @param {string} fieldName - Name with which the control will be identified to the user.
      * @param {string} errorKey - Property in error object pointing to the type of issue.
-     * @param errorString - Value of the property in error object.
+     * @param errorValue - Value of the property in error object.
      * @returns {string} The error message.
      */
-    static errorMessage(parent: any, fieldName: string, errorKey: string, errorString?: any | null): string {
-        if (errorKey === 'required') {
+    static errorMessage(parent: any, fieldName: string, errorKey: string, errorValue?: any | null): string {
+
+        if (errorKey === 'required' && errorValue.leadtrail) {
+            return 'Please remove any leading or trailing spaces';
+        } else if (errorKey === 'required') {
             return `Please enter the ${parent.typeName.toLowerCase()}'s ${fieldName.toLowerCase()}`;
         }
         if (errorKey === 'minlength') {
@@ -134,8 +162,7 @@ export class FieldControl extends FormControl {
             return `Please use up to ${type.maxlength} characters`;
         }
         if (errorKey === 'pattern') {
-            const type = parent.type.getFieldType(fieldName);
-            return `Please match the ${errorString} format`;
+            return 'Invalid format';
         }
         return errorKey;
     }
@@ -267,7 +294,7 @@ export class SectionForm {
         let control;
 
         if (type.required) {
-            validators.push(Validators.required);
+            validators.push(nonBlankVal());
         }
         if (type.minlength > 0) {
             validators.push(Validators.minLength(type.minlength));
@@ -329,10 +356,10 @@ export class SectionForm {
     updateGroupForm() {
         const emptyNames = [];
         let isValid = false;
-        let isForceReq;
+        let isOneRendered;
 
-        //Checks that at least one of the members is valid
-        //NOTE: Features can be empty and yet never be removed from the global submission form group
+        //Checks that at least one of the rendered validation members is valid. Empty ones are ignored.
+        //NOTE: Features can be empty, not rendered and yet never be removed from the global submission form group.
         _.forEach(this.groupForm.controls, (control, key) => {
             if (control instanceof FormGroup && !control.value.rows.length) {
                 emptyNames.push(this.featureForm(key).feature.typeName);
@@ -341,10 +368,15 @@ export class SectionForm {
             }
         });
 
-        //Makes all members optional if at least one of them is valid. If only one member not empty, set as required always.
-        isForceReq = emptyNames.length == this.groupSize -1
+        //Makes all rendered members optional if at least one of them is valid.
+        //If only one member not empty, set only that one as required always.
+        isOneRendered = emptyNames.length == this.groupSize - 1;
         this.section.type.groupTypes.forEach((type) => {
-            type.required = (emptyNames.indexOf(type.name) == -1  && isForceReq) || !isValid;
+            if (emptyNames.indexOf(type.name) == -1) {
+                type.required = isOneRendered || !isValid;
+            } else {
+                type.required = false;
+            }
         });
     }
 
@@ -439,7 +471,7 @@ export class FeatureForm {
 
     private addColumnControl(column: Attribute) {
         const t = this.feature.type.getColumnType(column.name);
-        const colValidators = [Validators.required];
+        const colValidators = [nonBlankVal()];
         this.columnsFormGroup.addControl(column.id, new FormControl(column.name, colValidators));
         this.rows.forEach((row, rowIndex) => {
             const fg = (<FormGroup>this.rowsFormArray.at(rowIndex));
@@ -478,7 +510,7 @@ export class FeatureForm {
         let control;
 
         if (tmpl.required) {
-            valueValidators.push(Validators.required);
+            valueValidators.push(nonBlankVal());
         }
 
         colAttr = this.columns.find(column => column.id === columnId);

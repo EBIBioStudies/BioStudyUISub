@@ -12,7 +12,7 @@
         <span class="text-muted">(including date)</span>
     </label>
     <date-input id="date-from"
-                [canUsePastDates]="true"
+                [allowPast]="true"
                 [(ngModel)]="date.from">
     </date-input>
 </div>
@@ -22,7 +22,7 @@
         <span class="text-muted">(excluding date)</span>
     </label>
     <date-input id="date-to"
-                [canUsePastDates]="true"
+                [allowPast]="true"
                 [(ngModel)]="date.to">
     </date-input>
 </div>

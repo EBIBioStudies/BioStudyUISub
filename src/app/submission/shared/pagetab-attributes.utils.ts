@@ -1,5 +1,5 @@
 /**
- * It shifts attributes from submission section to study section, allowing duplicates if so specified.
+ * Shifts attributes from the submission section to the study section, allowing duplicates if so specified.
  * NOTE: PageTab allows duplicate attributes and some projects such as HECATOS do take advantage of them.
  * @param obj - Data object to be compliant with the PageTab format.
  * @param {boolean} [isUniqueAttrs = false] - If true, it suffixes duplicate attribute names with a number.

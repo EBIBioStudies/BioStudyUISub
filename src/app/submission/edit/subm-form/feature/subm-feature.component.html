@@ -20,7 +20,13 @@
             </div>
         </div>
         <i class="fa fa-lg {{feature.type.icon}}"></i>
-        <span class="panel-description">{{feature.type.description}}</span>
+        <div class="panel-description">
+            <div>{{feature.type.description}}</div>
+            <div *ngIf="allowedCols.length && userData.isPrivileged">
+                <strong>{{feature.type.uniqueCols ? 'More' : 'Available'}} {{feature.singleRow ? 'key' : 'column'}}s</strong>:
+                <i>{{allowedCols.join(', ')}}.</i>
+            </div>
+        </div>
         <span class="label label-danger pull-right" *ngIf="errorNum">{{errorNum}} error{{errorNum > 1 ? 's' : ''}}</span>
     </div>
 
@@ -36,9 +42,6 @@
                                [colNames]="allowedCols"
                                [readonly]="readonly">
             </subm-feature-list>
-        </div>
-        <div *ngIf="readonly && feature.isEmpty()">
-            No data provided
         </div>
     </div>
 </div>

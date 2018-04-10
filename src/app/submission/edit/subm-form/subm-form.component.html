@@ -3,8 +3,8 @@
       (ngSubmit)="onSubmit($event)">
 
     <div *ngFor="let field of sectionForm.fields"
-         class="form-group row">
-        <div class="col-xs-12"
+         [ngClass]="{'form-group row': !readonly || field.value.length}">
+        <div *ngIf="!readonly || field.value.length" class="col-xs-12"
              [ngClass]="{'has-error': field.type.required && get(field.id).invalid && get(field.id).touched}">
             <label class="control-label">
                 <span class="text-black">{{field.name}}</span>
@@ -39,17 +39,19 @@
             <div [ngClass]="{'input-group': !readonly && !field.readonly,
                              'readonly': field.readonly}">
                 <span *ngIf="!readonly && !field.readonly" class="input-group-addon">
-                    <i class="fa {{get(field.id, 'icon')}}"></i>
+                    <i class="fa {{field.type.icon}}"></i>
                 </span>
                 <subm-field class="subm-field"
-                    [type]="field.valueType"
-                    [readonly]="readonly || field.readonly"
-                    [required]="field.type.required"
-                    [(ngModel)]="field.value"
-                    [formControl]="get(field.id)"
-                    [autosuggest]="field.type.values"
-                    [isSmall]="false"
-                    validate-onblur>
+                            [type]="field.valueType"
+                            [readonly]="readonly || field.readonly"
+                            [required]="field.type.required"
+                            [(ngModel)]="field.value"
+                            [formControl]="get(field.id)"
+                            [allowPast]="field.type.allowPast"
+                            [autosuggest]="field.type.values"
+                            [suggestLength]="15"
+                            [isSmall]="false"
+                            validate-onblur>
                 </subm-field>
             </div>
         </div>
@@ -57,7 +59,7 @@
 
     <div *ngFor="let feature of sectionForm.features"
         [ngClass]="{'form-group row': feature.size() > 0}">
-        <div *ngIf="feature.size() > 0" class="col-xs-12">
+        <div *ngIf="(!readonly && feature.size() > 0) || (readonly && !feature.isEmpty())" class="col-xs-12">
             <label class="control-label">{{feature.pluralName()}}</label>
             <span *ngIf="!readonly && (!feature.type.required || sectionForm.groupForm.get(feature.id))"
                   class="text-muted pull-right">

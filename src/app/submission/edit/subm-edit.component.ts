@@ -43,7 +43,7 @@ import {SubmSideBarComponent} from "./subm-sidebar/subm-sidebar.component";
     selector: 'subm-edit',
     templateUrl: './subm-edit.component.html'
 })
-export class SubmEditComponent implements OnInit, OnDestroy {
+export class SubmEditComponent implements OnInit {
 
     //List of non-bubbling events to trigger auto-save
     //NOTE: 'section_add' has been omitted since adding sections is buggy at present
@@ -61,7 +61,6 @@ export class SubmEditComponent implements OnInit, OnDestroy {
 
     public isReverting: boolean = false;        //flag indicating submission is being rolled back to its latest release
     public isUpdate: boolean;                   //flag indicating if updating an already existing submission
-    private subscr: Subscription;
     private isSubmitting: boolean = false;      //flag indicating submission data is being sent
     private isSaving: boolean = false;          //flag indicating submission data is being backed up
     private isNew: boolean = false;             //flag indicating submission has just been created through the UI
@@ -172,12 +171,6 @@ export class SubmEditComponent implements OnInit, OnDestroy {
             //Retrieves all form controls as a flat array.
             this.submForm.sectionForm.controls(this.formControls);
             this.changeRef.detectChanges();
-        }
-    }
-
-    ngOnDestroy() {
-        if (this.subscr) {
-            this.subscr.unsubscribe();
         }
     }
 
@@ -337,7 +330,7 @@ export class SubmEditComponent implements OnInit, OnDestroy {
                 this.changeRef.detectChanges();
                 window.scrollTo(0,0);
 
-                this.showSubmitResults(resp);
+                !this.isUpdate && this.showSubmitResults(resp);
             },
             (error: ServerError) => {
 
@@ -369,7 +362,6 @@ export class SubmEditComponent implements OnInit, OnDestroy {
         this.isSubmitting = false;
 
         const bsModalRef = this.modalService.show(SubmResultsModalComponent).content;
-        bsModalRef.isUpdate = this.isUpdate;
         bsModalRef.log = resp.log || {};
         bsModalRef.mapping = resp.mapping || [];
         bsModalRef.status = resp.status;
