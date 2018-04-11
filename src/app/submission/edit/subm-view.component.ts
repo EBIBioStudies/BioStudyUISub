@@ -1,12 +1,5 @@
-import {
-    Component,
-    OnInit
-} from '@angular/core';
-
-import {
-    ActivatedRoute,
-    Params
-} from '@angular/router';
+import {Component} from '@angular/core';
+import {Params} from '@angular/router';
 
 import {SubmEditComponent} from "./subm-edit.component";
 import {PageTab} from "../shared/pagetab.model";
@@ -15,11 +8,10 @@ import {Observable} from "rxjs/Observable";
 
 @Component({
     selector: 'subm-view',
-    templateUrl: './subm-edit.component.html',
+    templateUrl: './subm-view.component.html',
 })
 export class SubmViewComponent extends SubmEditComponent {
     ngOnInit(): Observable<any> {
-        this.readonly = true;
         this.route.params.forEach((params: Params) => {
             this.accno = params['accno'];
             this.submService

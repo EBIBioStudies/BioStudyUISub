@@ -1,13 +1,13 @@
 import {
     Component,
     OnInit,
-    OnDestroy,
-    ViewChild, ChangeDetectorRef
+    ViewChild,
+    ChangeDetectorRef, Input
 } from '@angular/core';
 import { Location } from '@angular/common';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
-import {Subscription} from 'rxjs/Subscription';
+
 import {Observable} from 'rxjs/Observable';
 import {forkJoin} from "rxjs/observable/forkJoin";
 import 'rxjs/add/operator/switchMap';
@@ -44,17 +44,19 @@ import {SubmSideBarComponent} from "./subm-sidebar/subm-sidebar.component";
     templateUrl: './subm-edit.component.html'
 })
 export class SubmEditComponent implements OnInit {
+    @Input() readonly: boolean = false;
 
-    //List of non-bubbling events to trigger auto-save
-    //NOTE: 'section_add' has been omitted since adding sections is buggy at present
-    static watchedUpdates = ['column_add', 'column_remove', 'row_add', 'row_remove', 'section_remove'];
+    @ViewChild(SubmSideBarComponent) sideBar: SubmSideBarComponent;
+    @ViewChild('submForm') submForm: SubmFormComponent;
+    @ViewChild('confirmSectionDel') confirmSectionDel: ConfirmDialogComponent;
+    @ViewChild('confirmRevert') confirmRevert: ConfirmDialogComponent;
+    @ViewChild('confirmSubmit') confirmSubmit: ConfirmDialogComponent;
 
     subm: Submission;
     section: Section;
     errors: SubmValidationErrors = SubmValidationErrors.EMPTY;
-    formControls: FieldControl[] = [];       //immutable list of controls making up the form's section (fields, features...)
+    formControls: FieldControl[] = [];          //immutable list of controls making up the form's section (fields, features...)
     sideBarCollapsed: boolean = false;
-    readonly: boolean = false;
     accno: string = '';
     releaseDate: string = '';
     wrappedSubm: any;
@@ -65,13 +67,12 @@ export class SubmEditComponent implements OnInit {
     private isSaving: boolean = false;          //flag indicating submission data is being backed up
     private isNew: boolean = false;             //flag indicating submission has just been created through the UI
 
-    @ViewChild(SubmSideBarComponent) sideBar: SubmSideBarComponent;
-    @ViewChild('submForm') submForm: SubmFormComponent;
-    @ViewChild('confirmSectionDel') confirmSectionDel: ConfirmDialogComponent;
-    @ViewChild('confirmRevert') confirmRevert: ConfirmDialogComponent;
-    @ViewChild('confirmSubmit') confirmSubmit: ConfirmDialogComponent;
+    //List of non-bubbling events to trigger auto-save
+    //NOTE: 'section_add' has been omitted since adding sections is buggy at present
+    static watchedUpdates = ['column_add', 'column_remove', 'row_add', 'row_remove', 'section_remove'];
 
     constructor(public route: ActivatedRoute,
+                public router: Router,
                 public submService: SubmissionService,
                 private locService: Location,
                 private modalService: BsModalService,
@@ -215,6 +216,12 @@ export class SubmEditComponent implements OnInit {
         });
     }
 
+    onEditBack() {
+        this.readonly = false;
+        this.subm.isRevised = false;
+        this.router.navigate(['/submissions/edit/' + this.accno]);
+    }
+
     /**
      * Builds the string of text to be displayed in a confirmation modal rendered before deleting a section.
      * @param {Section} section - Section to be deleted
@@ -331,6 +338,7 @@ export class SubmEditComponent implements OnInit {
                 window.scrollTo(0,0);
 
                 !this.isUpdate && this.showSubmitResults(resp);
+                this.isSubmitting = false;
             },
             (error: ServerError) => {
 
@@ -340,6 +348,7 @@ export class SubmEditComponent implements OnInit {
                 if (!error.isDataError) {
                     throw error;
                 }
+                this.isSubmitting = false;
             }
         );
     }

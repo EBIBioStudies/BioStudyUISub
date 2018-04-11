@@ -8,8 +8,10 @@
         </a>
         <span *ngFor="let sec of sectionPath; let idx = index; let last = last;">
             &nbsp;<i class="fa fa-angle-right font-bold"></i>&nbsp;
-            <a href="javascript:void(0)" (click)="onSectionClick(sec)">
-                <span [ngClass]="{'current-section': last}">
+            <a href="javascript:void(0)"
+               [ngClass]="{'current-section': last}"
+               (click)="onSectionClick(sec)">
+                <span>
                     <span *ngIf="idx == 0">{{accno}}{{isDiscardable? ' (revised)' : ''}}</span>
                     <span *ngIf="idx > 0">{{sec.typeName}}</span>
                 </span>
@@ -19,7 +21,7 @@
     --><div class="col-xs-4 col-md-3 btn-toolbar nav-block">
         <button *ngIf="!readonly" class="button-link btn btn-primary btn-sm btn-submit pull-right"
                 tooltip="Send to the BioStudies database"
-                placement="{{isRevised ? 'bottom' : 'left'}}"
+                placement="bottom"
                 container="body"
                 (click)="onSubmit($event)">
             {{isTemp ? 'S' : 'Re-s'}}ubmit
@@ -32,10 +34,19 @@
             <i class="fa fa-undo" aria-hidden="true"></i>
             Revert
         </button>
-        <button *ngIf="readonly" class="button-link btn btn-primary btn-sm pull-right"
+        <button *ngIf="readonly" class="btn btn-default btn-sm pull-right"
+                (click)="onEdit($event)"
+                tooltip="Edit this submission"
+                placement="bottom"
+                container="body"
+                [disabled]="isBusy">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+            Edit
+        </button>
+        <button *ngIf="readonly" class="btn btn-primary btn-sm pull-right"
                 (click)="onNewSubmClick($event)"
                 tooltip="Create a new submission"
-                placement="left"
+                placement="bottom"
                 container="body"
                 [disabled]="isBusy">
             <i class="fa fa-plus-circle" aria-hidden="true"></i>
