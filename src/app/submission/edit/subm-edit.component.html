@@ -162,8 +162,8 @@
 
                 <div *ngIf="section.sections.list().length > 0" class="list-group form-group">
                     <label class="control-label">Pages</label>
-                    <div *ngFor="let subsection of section.sections.list()"
-                          class="list-group-item">
+                    <div *ngFor="let subsection of section.sections.list()" class="list-group-item" style="cursor: pointer"
+                        (click)="onSectionClick(subsection)">
                         {{subsection.typeName}}
                         <span *ngIf="subsection.accno">
                             : {{subsection.accno}}
@@ -179,7 +179,7 @@
                                     tooltip="Delete page &quot;{{subsection.typeName}}&quot;"
                                     container="body"
                                     placement="left"
-                                    (click)="onSectionDelete(subsection)">
+                                    (click)="$event.stopPropagation(); onSectionDelete(subsection)">
                                 <i class="fa fa-trash-o fa-fw"></i>
                             </button>
                         </span>

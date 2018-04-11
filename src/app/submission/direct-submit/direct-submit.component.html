@@ -19,7 +19,7 @@
             <div class="help-msg panel">
                 <div *ngIf="!request" class="panel-body">
                     <h4>New direct submission</h4>
-                    <p>Please fill in the form on the left. A data file must be provided and may be attached
+                    <p>Please fill in the form on the left. A study file must be provided and may be attached
                         to one or multiple projects.
                     </p>
                     <div class="alert alert-warning">
@@ -34,12 +34,12 @@
                 </div>
                 <div *ngIf="request && request.inprogress" class="panel-body">
                     <h4>Submitting study...</h4>
-                    <p>Please wait while the data file is being submitted and validated. Any invalid sections in the file
+                    <p>Please wait while the study file is being submitted and validated. Any invalid sections in the file
                         will be listed below.</p>
                 </div>
                 <div *ngIf="request && request.failed" class="panel-body">
                     <h4>Error while submitting study</h4>
-                    <p>The submitted data file is invalid or an unexpected error was encountered. Try to correct the
+                    <p>The submitted study file is invalid or an unexpected error was encountered. Try to correct the
                     issues highlighted in red and submit again.</p>
                 </div>
                 <div *ngIf="request && request.successful" class="panel-body">

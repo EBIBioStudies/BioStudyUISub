@@ -27,6 +27,9 @@ export class SubmFormComponent implements OnChanges {
 
     constructor(private submFormService: SubmFormService, private rootEl: ElementRef) {}
 
+    /**
+     * Updates the form whenever the section being rendered is changed.
+     */
     ngOnChanges(): void {
         this.sectionForm = this.submFormService.createForm(this.section);
     }

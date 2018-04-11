@@ -27,7 +27,7 @@
               #uploadForm="ngForm">
 
             <div class="form-group" [ngClass]="{'has-error': !model.file && fileTouched}">
-                <label class="control-label">Data file</label>
+                <label class="control-label">Study file</label>
                 <file-upload-button class="show"
                                     (select)="onUploadFilesSelect($event)">
                 </file-upload-button>
