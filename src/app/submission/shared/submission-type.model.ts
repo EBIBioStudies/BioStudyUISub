@@ -1,5 +1,6 @@
 import {DefaultTemplate} from './default.template';
 import {HecatosTemplate} from './hecatos.template';
+import {EutoxriskTemplate} from "./eutoxrisk.template";
 
 const defined = (val: string) => {
     return val !== undefined && val.length > 0;
@@ -376,6 +377,8 @@ export class SubmissionType extends BaseType {
     static fromTemplate(tmpl: string | Object): SubmissionType {
         if (typeof tmpl === 'string') {
             switch (tmpl.toLowerCase()) {
+                case 'eu-toxrisk':
+                    return TemplateType.create(EutoxriskTemplate).submissionType;
                 case 'hecatos':
                     return TemplateType.create(HecatosTemplate).submissionType;
                 default:
@@ -391,7 +394,7 @@ export class SubmissionType extends BaseType {
      * @returns {string[]} Array of template names, with the default template's always first.
      */
     static listTmplNames(): any[] {
-        return [DefaultTemplate, HecatosTemplate].map(tmpl => tmpl.name);
+        return [DefaultTemplate, EutoxriskTemplate, HecatosTemplate].map(tmpl => tmpl.name);
     }
 
     /**
