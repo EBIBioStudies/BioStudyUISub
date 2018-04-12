@@ -21,6 +21,10 @@
                     </li>
                     <li class="list-group-item">
                         <a href="#help-about" (click)="jumpTo($event)">About</a>
+                        <a href="mailto:biostudies@ebi.ac.uk?Subject=Submission%20Tool" class="pull-right">
+                            <i class="fa fa-envelope-square"></i>
+                            Contact us
+                        </a>
                     </li>
                 </ol>
 
@@ -132,15 +136,8 @@
                     <dt><h4 class="underlined">4.Editing a study</h4></dt>
                     <dd id="help-edit" class="col-md-12">
                         <p>
-                           A given study can be edited at any point of its lifecycle: before being added to the database
-                            &mdash;as a <i>"Pending"</i> submission&mdash; or after &mdash;as <i>"Sent"</i> submission&mdash;.
-                           Additionally, in the case of a sent submission, any recent changes in the form can be cancelled,
-                           reverting the form to its previous state before the changes.
-                        </p>
-                        <p><img src="images/help/revert_submission.gif"/></p>
-                        <p>
-                            In most submission forms, some of the fields may be required, such as the study's title or
-                            its release date. For ease of reference, all required fields are listed under the "Check"
+                            In most submission forms, only some of the fields may be required, such as the study's title or
+                            its release date. For ease of reference, all required fields are listed under the <i>"Check"</i>
                             tab on the left-hand side of the form at all times. Clicking on any entry of the checklist
                             sets the focus on the relevant field, scrolling directly to it if needed.
                         </p>
@@ -194,6 +191,13 @@
                                 Sections are not stable in the current version.
                             </p>
                         </div>
+                        <p>
+                            A given study can be edited at any point of its lifecycle: before being added to the database
+                            (as a <i>"Pending"</i> submission) or afterwards (as <i>"Sent"</i> submission).
+                            Additionally, in the case of a sent submission, any recent changes in the form can be cancelled,
+                            reverting the form to its previous state before the changes.
+                        </p>
+                        <p><img src="images/help/revert_submission.gif"/></p>
                     </dd>
                     <dt><h4 class="underlined">5.Saving and submitting a study</h4></dt>
                     <dd id="help-save" class="col-md-12">
@@ -242,7 +246,8 @@
                             framework and the <a href="https://github.com/twbs/bootstrap">Bootstrap</a> library.
                             The current version of the app is {{appVersion}}. The team behind it is part of the
                             <a href="https://www.ebi.ac.uk/about/people/ugis-sarkans">Functional Genomics Development
-                            team</a>, led by Ugis Sarkans.
+                            team</a>, led by Ugis Sarkans. You can reach us at
+                            <a href="mailto:biostudies@ebi.ac.uk?Subject=Submission%20Tool">biostudies[at]ebi.ac.uk</a>.
                         </p>
                     </dd>
                 </dl>

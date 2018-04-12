@@ -2,15 +2,15 @@ import {
     Component,
     Input,
     Output,
-    EventEmitter, ViewChild
+    EventEmitter,
+    ViewChild
 } from '@angular/core';
+import {Location} from '@angular/common';
 import {Router} from "@angular/router";
 
 import {Section} from '../../shared/submission.model';
 import {SubmissionService} from "../../shared/submission.service";
 import {PageTab} from "app/submission/shared/pagetab.model";
-import {ConfirmDialogComponent} from "../../../shared/confirm-dialog.component";
-import {Observable} from "rxjs/Observable";
 import {SubmAddDialogComponent} from "../../list/subm-add.component";
 import {UserData} from "../../../auth/user-data";
 import {SubmissionType} from "../../shared/submission-type.model";
@@ -32,12 +32,14 @@ export class SubmNavBarComponent {
     @Output() sectionClick: EventEmitter<Section> = new EventEmitter<Section>();
     @Output() revertClick: EventEmitter<Event> = new EventEmitter<Event>();
     @Output() submitClick: EventEmitter<Event> = new EventEmitter<Event>();
+    @Output() editClick: EventEmitter<Event> = new EventEmitter<Event>();
 
     @ViewChild('addDialog')
     addDialog: SubmAddDialogComponent;
 
     constructor(private submService: SubmissionService,
                 private userData: UserData,
+                private locService: Location,
                 private router: Router) {
 
         //Works out the list of allowed projects by comparison with template names
@@ -58,6 +60,10 @@ export class SubmNavBarComponent {
 
     onSubmit(event: Event): void {
         this.submitClick.next(event);
+    }
+
+    onEdit(event: Event): void {
+        this.editClick.next(event)
     }
 
     /**

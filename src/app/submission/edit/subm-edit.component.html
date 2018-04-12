@@ -18,7 +18,8 @@
             [sectionPath]="sectionPath"
             (sectionClick)="onSectionClick($event)"
             (revertClick)="onRevert($event)"
-            (submitClick)="onSubmit($event)">
+            (submitClick)="onSubmit($event)"
+            (editClick)="onEditBack($event)">
     </subm-navbar>
 
     <div class="container-fluid">
@@ -161,24 +162,24 @@
 
                 <div *ngIf="section.sections.list().length > 0" class="list-group form-group">
                     <label class="control-label">Pages</label>
-                    <div *ngFor="let subsection of section.sections.list()"
-                          class="list-group-item">
+                    <div *ngFor="let subsection of section.sections.list()" class="list-group-item" style="cursor: pointer"
+                        (click)="onSectionClick(subsection)">
                         {{subsection.typeName}}
                         <span *ngIf="subsection.accno">
                             : {{subsection.accno}}
                         </span>
                         <span class="btn-toolbar pull-right">
                             <button type="button" class="section-edit btn btn-link btn-xs btn-flat"
-                                    tooltip="Edit page &quot;{{subsection.typeName}}&quot;"
+                                    tooltip="{{readonly ? 'View' : 'Edit'}} page &quot;{{subsection.typeName}}&quot;"
                                     container="body"
                                     (click)="onSectionClick(subsection)">
-                                <i class="fa fa-pencil fa-fw fa-lg"></i>
+                                <i class="fa {{readonly ? 'fa-eye' : 'fa-pencil'}} fa-fw fa-lg"></i>
                             </button>
-                            <button type="button" *ngIf="section.sections.isRemovable(subsection)" class="section-delete btn btn-danger btn-xs btn-flat"
+                            <button type="button" *ngIf="section.sections.isRemovable(subsection) && !readonly" class="section-delete btn btn-danger btn-xs btn-flat"
                                     tooltip="Delete page &quot;{{subsection.typeName}}&quot;"
                                     container="body"
                                     placement="left"
-                                    (click)="onSectionDelete(subsection)">
+                                    (click)="$event.stopPropagation(); onSectionDelete(subsection)">
                                 <i class="fa fa-trash-o fa-fw"></i>
                             </button>
                         </span>

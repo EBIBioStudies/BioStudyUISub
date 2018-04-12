@@ -4,6 +4,29 @@ export const DefaultTemplate = {
     'sectionType': {
         'name': 'Study',
         'group': ['File', 'Link'],
+        'fieldTypes': [
+            {
+                'name': 'Title',
+                'icon': 'fa-title',
+                'valueType': 'textblob',
+                'required': true,
+                'minlength': 25
+            },
+            {
+                'name': 'Release Date',
+                'icon': 'fa-calendar',
+                'valueType': 'date',
+                'allowPast': false,
+                'required': true
+            },
+            {
+                'name': 'Description',
+                'icon': 'fa-comment',
+                'valueType': 'textblob',
+                'required': true,
+                'minlength': 50
+            }
+        ],
         'annotationsType': {
             'title': 'Describe your study',
             'description': 'Provide any additional details that may help discover or interpret the study.',
@@ -92,29 +115,6 @@ export const DefaultTemplate = {
                 }
             ]
         },
-        'fieldTypes': [
-            {
-                'name': 'Title',
-                'icon': 'fa-title',
-                'valueType': 'textblob',
-                'required': true,
-                'minlength': 25
-            },
-            {
-                'name': 'Release Date',
-                'icon': 'fa-calendar',
-                'valueType': 'date',
-                'allowPast': false,
-                'required': true
-            },
-            {
-                'name': 'Description',
-                'icon': 'fa-comment',
-                'valueType': 'textblob',
-                'required': true,
-                'minlength': 50
-            }
-        ],
         'featureTypes': [
             {
                 'name': 'Contact',
@@ -137,51 +137,52 @@ export const DefaultTemplate = {
                     {
                         'name': 'Organisation',
                         'valueType': 'text',
-                        'values': ['European Bioinformatics Institute',
-                            'European Molecular Biology Laboratory',
-                            'Swiss Institute of Bioinformatics',
-                            'Netherlands Bioinformatics Centre',
-                            'Science for Life Laboratory',
+                        'values': [
                             'Australia Bioinformatics Resource',
-                            'Wellcome Trust Sanger Institute',
-                            'Wellcome Trust Centre for Human Genetics',
-                            'International Plant Genetic Resources Institute',
-                            'Francis Crick Institute',
-                            'MRC Human Genetics Unit',
-                            'MRC Institute of Genetics and Molecular Medicine',
-                            'MRC Laboratory of Molecular Biology',
-                            'MRC Centre for Drug Safety Science',
-                            'MRC Biostatistics Unit',
-                            'MRC Cancer Unit',
-                            'MRC Laboratory for Molecular Cell Biology',
-                            'MRC Weatherall Institute of Molecular Medicine',
-                            'MRC Mammalian Genetics Unit',
-                            'MRC Toxicology Unit',
-                            'Mary Lyon Centre',
-                            'Translational Genomics Research Institute',
-                            'National Center for Biotechnology Information',
-                            'Genetic Information Research Institute',
-                            'Joint Genome Institute',
-                            'Salk Institute for Biological Studies',
-                            'Broad Institute',
-                            'Dana-Farber Cancer Institute',
-                            'Whitehead Institute for Biomedical Research',
-                            'New York Genome Center',
-                            'Icahn Institute for Genomics and Multiscale Biology',
-                            'Cold Spring Harbor Laboratory',
-                            'Scripps Research Institute',
-                            'Garvan Institute of Medical Research',
                             'Beijing Genomics Institute',
+                            'Broad Institute',
                             'Chinese National Human Genome Center',
-                            'Royan Institute',
+                            'Cold Spring Harbor Laboratory',
+                            'Dana-Farber Cancer Institute',
+                            'European Bioinformatics Institute (EBI)',
+                            'European Molecular Biology Laboratory (EMBL)',
+                            'Francis Crick Institute',
+                            'Garvan Institute of Medical Research',
+                            'Genetic Information Research Institute',
                             'Genome Institute of Singapore',
+                            'Icahn Institute for Genomics and Multiscale Biology',
+                            'Institute of Biotechnology and Pharmaceutical Research of Taiwan',
                             'Institute of Molecular and Cell Biology of Singapore',
                             'Institute of Molecular and Genomic Medicine of Taiwan',
-                            'Institute of Biotechnology and Pharmaceutical Research of Taiwan',
+                            'International Plant Genetic Resources Institute',
+                            'Joint Genome Institute',
+                            'MRC Biostatistics Unit',
+                            'MRC Cancer Unit',
+                            'MRC Centre for Drug Safety Science',
+                            'MRC Human Genetics Unit',
+                            'MRC Institute of Genetics and Molecular Medicine',
+                            'MRC Laboratory for Molecular Cell Biology',
+                            'MRC Laboratory of Molecular Biology',
+                            'MRC Mammalian Genetics Unit',
+                            'MRC Toxicology Unit',
+                            'MRC Weatherall Institute of Molecular Medicine',
+                            'Mary Lyon Centre',
+                            'National Center for Biotechnology Information',
                             'National Institute of Cancer Research of Taiwan',
                             'National Institute of Genetics of Japan',
+                            'Netherlands Bioinformatics Centre',
+                            'New York Genome Center',
                             'Okinawa Institute of Science and Technology',
-                            'The Centre for Applied Genomics of Toronto'
+                            'Royan Institute',
+                            'Salk Institute for Biological Studies',
+                            'Science for Life Laboratory',
+                            'Scripps Research Institute',
+                            'Swiss Institute of Bioinformatics',
+                            'The Centre for Applied Genomics of Toronto',
+                            'Translational Genomics Research Institute',
+                            'Wellcome Trust Centre for Human Genetics',
+                            'Wellcome Trust Sanger Institute',
+                            'Whitehead Institute for Biomedical Research'
                         ],
                         'required': true
                     },

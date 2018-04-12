@@ -305,6 +305,7 @@ export class PageTab implements SubmissionData {
     /**
      * Retrieves the first ocurrence of the "AttachTo" attribute at the root level. This is convenience method
      * to allow the storing of selected template (determined in turn by the project in question).
+     * NOTE: Submissions created through the direct upload flow may be attached to multiple projects.
      * @returns {string} An empty string if no such attribute found.
      */
     get firstAttachTo(): string {

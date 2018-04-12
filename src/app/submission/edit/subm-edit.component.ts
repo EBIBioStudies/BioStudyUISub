@@ -1,13 +1,13 @@
 import {
     Component,
     OnInit,
-    OnDestroy,
-    ViewChild, ChangeDetectorRef
+    ViewChild,
+    ChangeDetectorRef, Input
 } from '@angular/core';
 import { Location } from '@angular/common';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
-import {Subscription} from 'rxjs/Subscription';
+
 import {Observable} from 'rxjs/Observable';
 import {forkJoin} from "rxjs/observable/forkJoin";
 import 'rxjs/add/operator/switchMap';
@@ -44,17 +44,19 @@ import {SubmSideBarComponent} from "./subm-sidebar/subm-sidebar.component";
     templateUrl: './subm-edit.component.html'
 })
 export class SubmEditComponent implements OnInit {
+    @Input() readonly: boolean = false;
 
-    //List of non-bubbling events to trigger auto-save
-    //NOTE: 'section_add' has been omitted since adding sections is buggy at present
-    static watchedUpdates = ['column_add', 'column_remove', 'row_add', 'row_remove', 'section_remove'];
+    @ViewChild(SubmSideBarComponent) sideBar: SubmSideBarComponent;
+    @ViewChild('submForm') submForm: SubmFormComponent;
+    @ViewChild('confirmSectionDel') confirmSectionDel: ConfirmDialogComponent;
+    @ViewChild('confirmRevert') confirmRevert: ConfirmDialogComponent;
+    @ViewChild('confirmSubmit') confirmSubmit: ConfirmDialogComponent;
 
     subm: Submission;
     section: Section;
     errors: SubmValidationErrors = SubmValidationErrors.EMPTY;
-    formControls: FieldControl[] = [];       //immutable list of controls making up the form's section (fields, features...)
+    formControls: FieldControl[] = [];          //immutable list of controls making up the form's section (fields, features...)
     sideBarCollapsed: boolean = false;
-    readonly: boolean = false;
     accno: string = '';
     releaseDate: string = '';
     wrappedSubm: any;
@@ -65,13 +67,12 @@ export class SubmEditComponent implements OnInit {
     private isSaving: boolean = false;          //flag indicating submission data is being backed up
     private isNew: boolean = false;             //flag indicating submission has just been created through the UI
 
-    @ViewChild(SubmSideBarComponent) sideBar: SubmSideBarComponent;
-    @ViewChild('submForm') submForm: SubmFormComponent;
-    @ViewChild('confirmSectionDel') confirmSectionDel: ConfirmDialogComponent;
-    @ViewChild('confirmRevert') confirmRevert: ConfirmDialogComponent;
-    @ViewChild('confirmSubmit') confirmSubmit: ConfirmDialogComponent;
+    //List of non-bubbling events to trigger auto-save
+    //NOTE: 'section_add' has been omitted since adding sections is buggy at present
+    static watchedUpdates = ['column_add', 'column_remove', 'row_add', 'row_remove', 'section_remove'];
 
     constructor(public route: ActivatedRoute,
+                public router: Router,
                 public submService: SubmissionService,
                 private locService: Location,
                 private modalService: BsModalService,
@@ -92,7 +93,10 @@ export class SubmEditComponent implements OnInit {
         return window.location;
     }
 
-
+    /**
+     * Builds the submission model from the server data, doing any necessary initial updates for brand new submissions.
+     * @returns {Observable<any>} Combined event stream for the async retrieval of submission and user data.
+     */
     ngOnInit(): Observable<any> {
         let eventStream;
 
@@ -111,13 +115,16 @@ export class SubmEditComponent implements OnInit {
                 let page, subm;
 
                 //Converts data coming from the server into the in-app submission format
+                //NOTE: Type definitions are determined based on the first occurrence of the AttachTo attribute.
+                //NOTE: Submissions created through the direct upload flow may be attached to multiple projects.
                 this.wrappedSubm = results[0];
                 this.accno = this.wrappedSubm.accno;
                 page = new PageTab(this.wrappedSubm.data);
                 subm = page.toSubmission(SubmissionType.fromTemplate(page.firstAttachTo));
                 this.subm = subm;
 
-                //Inspects the original event producing the cascade of subsequent ones and saves the submission if it was triggered by a non-text update.
+                //Inspects the original event producing the cascade of subsequent ones and saves the submission if
+                //it was triggered by a non-text update.
                 //NOTE: Leaf nodes in the update event tree have no source.
                 this.subm.updates().subscribe((event) => {
                     if (SubmEditComponent.watchedUpdates.indexOf(event.leafEvent.name) > -1) {
@@ -155,8 +162,7 @@ export class SubmEditComponent implements OnInit {
 
     /**
      * As soon as there is a new form section created, validate it, traverse it and get all its controls.
-     * NOTE: By design, the section –and effectively the whole form– is rebuilt every time there
-     * is a change in the form.
+     * NOTE: By design, the section form is generated after the form child view has been render.
      * @see {@link SubmFormComponent}
      */
     ngAfterViewChecked() {
@@ -213,6 +219,15 @@ export class SubmEditComponent implements OnInit {
                 });
             });
         });
+    }
+
+    /**
+     * Reverts the view back to its editing mode, making it consistent with the submission's status.
+     */
+    onEditBack() {
+        this.readonly = false;
+        this.subm.isRevised = false;
+        this.router.navigate(['/submissions/edit/' + this.accno]);
     }
 
     /**
@@ -331,6 +346,7 @@ export class SubmEditComponent implements OnInit {
                 window.scrollTo(0,0);
 
                 !this.isUpdate && this.showSubmitResults(resp);
+                this.isSubmitting = false;
             },
             (error: ServerError) => {
 
@@ -340,6 +356,7 @@ export class SubmEditComponent implements OnInit {
                 if (!error.isDataError) {
                     throw error;
                 }
+                this.isSubmitting = false;
             }
         );
     }

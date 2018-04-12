@@ -1,6 +1,6 @@
-export const HecatosTemplate = {
-    'name': 'HeCaToS',
-    'description': 'Hepatic and Cardiac Toxicity Systems modelling',
+export const EutoxriskTemplate = {
+    'name': 'EU-ToxRisk',
+    'description': 'Integrated European programme for mechanism-based Toxicity testing and Risk assessment',
     'sectionType': {
         'name': 'Study',
         'required': true,
@@ -20,115 +20,92 @@ export const HecatosTemplate = {
                 'minlength': 50
             },
             {
-                'name': 'Sample Type',
-                'icon': 'fa-eyedropper',
+                'name': 'Project Part',
+                'icon': 'fa-comment',
                 'valueType': 'text',
-                'values': ['Cardiac microtissue', 'Heart biopsy', 'Liver microtissue', 'Liver biopsy', 'Serum sample']
             },
             {
                 'name': 'Organism',
                 'icon': 'fa-eyedropper',
                 'valueType': 'text',
-                'values': ['Homo sapiens', 'Sus scrofa']
+                'values': ['Homo sapiens', 'Danio rerio']
             },
             {
                 'name': 'Organ',
                 'icon': 'fa-eyedropper',
                 'valueType': 'text',
-                'values': ['Heart', 'Liver']
-            },
-            {
-                'name': 'Dose',
-                'icon': 'fa-eyedropper',
-                'valueType': 'text',
-                'values': ['Therapeutic', 'Toxic']
-            },
-            {
-                'name': 'Biological Replicate',
-                'icon': 'fa-eyedropper',
-                'valueType': 'text'
-            },
-            {
-                'name': 'Chembl ID',
-                'icon': 'fa-flask',
-                'valueType': 'text',
                 'values': [
-                    'CHEMBL112',
-                    'CHEMBL633',
-                    'CHEMBL1542',
-                    'CHEMBL118',
-                    'CHEMBL160',
-                    'CHEMBL178',
-                    'CHEMBL139',
-                    'CHEMBL92',
-                    'CHEMBL53463',
-                    'CHEMBL417',
-                    'CHEMBL185',
-                    'CHEMBL1117',
-                    'CHEMBL64',
-                    'CHEMBL58',
-                    'CHEMBL426',
-                    'CHEMBL16',
-                    'CHEMBL428647',
-                    'CHEMBL374478',
-                    'CHEMBL109'
+                    'Liver',
+                    'Brain',
+                    'Embryo',
+                    'Lung',
+                    'Kidney',
+                    'Whole body',
+                    'Other'
                 ]
             },
             {
-                'name': 'Std In Chi Key',
-                'icon': 'fa-flask',
+                'name': 'Cell Type',
+                'icon': 'fa-eyedropper',
                 'valueType': 'text',
                 'values': [
-                    'RZVAJINKPMORJF-UHFFFAOYSA-N',
-                    'IYIKLHRQXLHMJQ-UHFFFAOYSA-N',
-                    'LMEKQMALGUDUQG-UHFFFAOYSA-N',
-                    'RZEKVGVHFLEQIL-UHFFFAOYSA-N',
-                    'STQGQHZAVUOBTE-VGBVRHCVSA-N',
-                    'DCOPUUMXTXDBNB-UHFFFAOYSA-N',
-                    'ZDZOTLJHXYCWBA-VCVYQWHSSA-N',
-                    'AOJJSUZBOXZQNB-TZSSRYMLSA-N',
-                    'AOJJSUZBOXZQNB-VTZDEGQISA-N',
-                    'GHASVSINZRGABV-UHFFFAOYSA-N',
-                    'XDXDZDZNSLXDNA-TZNDIEGXSA-N',
-                    'QRXWMOHMRWLFEY-UHFFFAOYSA-N',
-                    'KKZJGLLVHKMTCM-UHFFFAOYSA-N',
-                    'FBOZXECLQNJBKD-UHFFFAOYSA-N',
-                    'CXOFVDLJLONNDW-UHFFFAOYSA-N',
-                    'RCINICONZNJXQF-MZXODVADSA-N',
-                    'JQXXHWHPUNPDRT-WLSIYKJHSA-N',
-                    'NIJJYAXOARWZEE-UHFFFAOYSA-N'
+                    'Cell line',
+                    'Primary cells',
+                    'Stem cells',
+                    'Stem cell derived'
                 ]
             },
             {
-                'name': 'Design Type',
-                'icon': 'fa-cogs',
-                'valueType': 'text'
+                'name': 'Cell Name',
+                'icon': 'fa-eyedropper',
+                'valueType': 'text',
+                'values': [
+                    'HepG2',
+                    'HEK',
+                    'LUHMES'
+                ]
             },
             {
-                'name': 'Assay Measurement Type',
-                'icon': 'fa-cogs',
-                'valueType': 'text'
-            },
-            {
-                'name': 'Assay Technology Type',
-                'icon': 'fa-cogs',
-                'valueType': 'text'
-            },
-            {
-                'name': 'Assay Technology Platform',
-                'icon': 'fa-cogs',
-                'valueType': 'text'
-            },
-            {
-                'name': 'Protocol Type',
-                'icon': 'fa-cogs',
-                'valueType': 'text'
-            },
-            {
-                'name': 'Data Type',
+                'name': 'Exposure Time',
                 'icon': 'fa-cogs',
                 'valueType': 'text',
-                'values': ['Genomic data', 'Proteomics data', 'Metabolomic data']
+                'values': ['6h', '12h', '24h']
+            },
+            {
+                'name': 'Treatment Modality',
+                'icon': 'fa-cogs',
+                'valueType': 'text',
+                'values': [
+                    'Single dose',
+                    'Repeated dose',
+                    'Recovery'
+                ]
+            },
+            {
+                'name': 'Information Domain',
+                'icon': 'fa-cogs',
+                'valueType': 'text',
+                'values': [
+                    'Cytotoxicity',
+                    'Cell function',
+                    'Biochemical',
+                    'Reporter',
+                    'Metabolomics',
+                    'Transcriptomics',
+                    'Biokinetics',
+                    'Other'
+                ]
+            },
+            {
+                'name': 'Toxicity Domain',
+                'icon': 'fa-cogs',
+                'valueType': 'text',
+                'values': [
+                    'DART (Dev/Repro)',
+                    'RDT (= organ toxicity)',
+                    'BOTH',
+                    'OTHER'
+                ]
             }
         ],
         'annotationsType': {
@@ -141,53 +118,6 @@ export const HecatosTemplate = {
                     'valueType': 'text',
                     'displayed': true,
                     'readonly': true
-                },
-                {
-                    'name': 'Factor',
-                    'valueType': 'text',
-                    'displayed': true,
-                    'values': [
-                        'Age',
-                        'Compound',
-                        'Dose',
-                        'Dose duration',
-                        'Dose frequency',
-                        'Post treatment duration',
-                        'Sampling time point',
-                        'Sampling date',
-                        'Time range',
-                        'Incubation time with respective conc. [uM]'
-                    ]
-                },
-                {
-                    'name': 'Compound',
-                    'icon': 'fa-flask',
-                    'valueType': 'text',
-                    'displayed': true,
-                    'values': [
-                        'Acetaminophen',
-                        'Amiodarone',
-                        'Azathioprine',
-                        'Celecoxib',
-                        'Cyclosporin',
-                        'Daunorubicin',
-                        'Diclofenac',
-                        'Docetaxel',
-                        'Doxorubicin',
-                        'Epirubicin',
-                        'Fluorouracil',
-                        'Idarubicin',
-                        'Isoniazid',
-                        'Mitoxantrone',
-                        'Methotrexate',
-                        'Phenytoin',
-                        'Paclitaxel',
-                        'Rifampicin',
-                        'Valproic Acid',
-                        'DMSO(0.1%)',
-                        'DMSO(Fluctuating)',
-                        'None'
-                    ]
                 }
             ]
         },
@@ -214,35 +144,50 @@ export const HecatosTemplate = {
                         'name': 'Organisation',
                         'valueType': 'text',
                         'values': [
-                            'ETH Zürich',
+                            'BASF',
+                            'BioDetection Systems B.V.',
+                            'BioTalentum Ltd',
+                            'Cosmetics Europe',
+                            'Cyprotex Ltd',
                             'European Bioinformatics Institute (EBI)',
                             'European Molecular Biology Laboratory (EMBL)',
                             'F. Hoffmann-La Roche Ltd',
-                            'Francis Crick Institute',
-                            'Genedata AG',
-                            'Imperial College London',
+                            'Fraunhofer Institute for Toxicology and Experimental Medicine',
+                            'Heidelberg University',
                             'InSphero AG',
+                            'Ineris',
                             'Instituto de Investigación Sanitaria La Fe (IIS La Fe)',
-                            'King\'s College London',
-                            'Luxcel Biosciences',
-                            'MRC Laboratory of Molecular Biology',
+                            'Italian National Health Institute (ISS)',
+                            'Johns Hopkins Bloomberg School of Public Health',
+                            'KU Leuven',
+                            'Konstanz University',
+                            'Leibniz Research Centre for Working Environment and Human Factors (IfADo)',
+                            'Leiden University Medical Center (LUMC)',
+                            'L’Oréal',
                             'Maastricht University',
-                            'Max Planck Institute for Molecular Cell Biology and Genetics',
-                            'Microdiscovery GMBH',
-                            'Optibrium Ltd',
-                            'RWTH Aachen University',
-                            'Wellcome Sanger Institute'
+                            'Mario Negri Institute for Pharmacological Research (IRCCS)',
+                            'Medical University of Innsbruck',
+                            'Netherlands Organisation for Applied Scientific Research (TNO)',
+                            'Novo Nordisk Foundation Center for Protein Research',
+                            'Pompeu Fabra University',
+                            'Swetox',
+                            'The Danish Environmental Protection Agency',
+                            'The Federal Institute for Occupational Safety and Health (BAuA)',
+                            'TissUse GmbH',
+                            'Unilever',
+                            'University of Vienna'
                         ],
+                        'required': true
+                    },
+                    {
+                        'name': 'Role',
+                        'valueType': 'text',
                         'required': true
                     },
                     {
                         'name': 'ORCID',
                         'valueType': 'text',
                         'displayed': true
-                    },
-                    {
-                        'name': 'Role',
-                        'valueType': 'text'
                     },
                     {
                         'name': 'Address',
@@ -259,12 +204,99 @@ export const HecatosTemplate = {
                 ]
             },
             {
+                'name': 'Endpoint',
+                'title': 'Add endpoints',
+                'icon': 'fa-medkit',
+                'description': "Provide at least the method and analytical measure of the study's endpoints.",
+                'uniqueCols': true,
+                'required': true,
+                'columnTypes': [
+                    {
+                        'name': 'Method',
+                        'valueType': 'text',
+                        'required': true
+                    },
+                    {
+                        'name': 'Analytical measure',
+                        'valueType': 'text',
+                        'required': true
+                    },
+                    {
+                        'name': 'Type',
+                        'valueType': 'text'
+                    },
+                    {
+                        'name': 'Readout method',
+                        'valueType': 'text'
+                    }
+                ]
+            },
+            {
+                'name': 'Compound',
+                'title': 'Add compounds',
+                'icon': 'fa-flask',
+                'description': "List all parent compounds by their most common chemical name. " +
+                               "For example, \"Valproic acid\" instead of \"Valproate\".",
+                'uniqueCols': true,
+                'required': true,
+                'columnTypes': [
+                    {
+                        'name': 'Name',
+                        'valueType': 'text',
+                        'required': true
+                    },
+                    {
+                        'name': 'CAS number',
+                        'valueType': 'text'
+                    },
+                    {
+                        'name': 'SMILES',
+                        'valueType': 'text'
+                    },
+                    {
+                        'name': 'Supplier',
+                        'valueType': 'text'
+                    },
+                    {
+                        'name': 'Order number',
+                        'valueType': 'text'
+                    },
+                    {
+                        'name': 'Lot number',
+                        'valueType': 'text'
+                    },
+                    {
+                        'name': 'Compound form',
+                        'valueType': 'text'
+                    },
+                    {
+                        'name': 'Storage temp',
+                        'valueType': 'text'
+                    },
+                    {
+                        'name': 'Stock solvent',
+                        'valueType': 'text'
+                    },
+                    {
+                        'name': 'Stock conc',
+                        'valueType': 'text'
+                    },
+                    {
+                        'name': 'Stock aliquot storage',
+                        'valueType': 'text'
+                    },
+                    {
+                        'name': 'Other info',
+                        'valueType': 'text'
+                    }
+                ]
+            },
+            {
                 'name': 'File',
                 'title': 'Add Files',
                 'icon': 'fa-file',
                 'description': 'List the data files for the study and describe their respective scopes.',
                 'uniqueCols': true,
-                'required': true,
                 'columnTypes': [
                     {
                         'name': 'Path',
@@ -324,7 +356,7 @@ export const HecatosTemplate = {
                 'name': 'Publication',
                 'title': 'Add Publications',
                 'description': 'Add the details of publications relevant to the study. Autofill is ' +
-                               'available when searching by PubMed identifier',
+                'available when searching by PubMed identifier',
                 'icon': 'fa-book',
                 'uniqueCols': true,
                 'columnTypes': [

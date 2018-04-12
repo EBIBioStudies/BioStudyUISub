@@ -130,13 +130,16 @@
             </li>
             <li class="sidebar-item" *ngFor="let control of formControls; let i = index">
                 <a *ngIf="control.parentType.required && control.invalid"
+                   [ngClass]="{'center-spread': !collapsed}"
                    tooltip="{{collapsed ? '&quot;' + control.template.name + '&quot; field is ' + tipText(control.errors) : 'Highlight field on the form'}}"
                    container="body"
                    placement="{{collapsed ? 'right' : 'top'}}"
                    (click)="onReviewClick($event, control)">
-                    <i class="fa fa-lg text-center {{control.parentType.icon}}"></i>
-                    {{!collapsed ? '&nbsp;' + control.template.name + '&nbsp;' : ''}}
-                    <strong class="label label-default"
+                    <span>
+                        <i class="entry-item fa fa-lg text-center {{control.parentType.icon}}"></i>
+                        {{!collapsed ? '&nbsp;' + control.template.name + '&nbsp;' : ''}}
+                    </span>
+                    <strong class="entry-item label label-default"
                             [ngClass]="{'label-danger': control.touched}"
                             #labelEl>
                         {{!collapsed ? tipText(control.errors) : ''}}
