@@ -223,8 +223,9 @@ export class SubmEditComponent implements OnInit {
 
     /**
      * Reverts the view back to its editing mode, making it consistent with the submission's status.
+     * @param {Event} event - DOM event for the click action.
      */
-    onEditBack() {
+    onEditBack(event: Event) {
         this.readonly = false;
         this.subm.isRevised = false;
         this.router.navigate(['/submissions/edit/' + this.accno]);
