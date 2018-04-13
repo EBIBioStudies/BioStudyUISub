@@ -15,9 +15,7 @@ export const HecatosTemplate = {
             {
                 'name': 'Description',
                 'icon': 'fa-comment',
-                'valueType': 'textblob',
-                'required': false,
-                'minlength': 50
+                'valueType': 'textblob'
             },
             {
                 'name': 'Sample Type',

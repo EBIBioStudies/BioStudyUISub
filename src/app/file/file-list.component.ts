@@ -174,7 +174,8 @@ export class FileListComponent implements OnInit, OnDestroy {
             },
             rowSelection: 'single',
             unSortIcon: true,
-            localeText: {noRowsToShow: 'No files found'}
+            localeText: {noRowsToShow: 'No files found'},
+            overlayLoadingTemplate: '<span class="ag-overlay-loading-center"><i class="fa fa-cog fa-spin"></i> Loading...</span>',
         };
 
         this.fileUploadService.uploadFinish$
@@ -195,7 +196,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Removes all subscriptions whenever the file view is abandoned.
+     * Removes all subscriptions whenever the user navigates away from this view.
      * Requires the takeUntil operator before every subscription.
      * @see {@link https://stackoverflow.com/a/41177163}
      */

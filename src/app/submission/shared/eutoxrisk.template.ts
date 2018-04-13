@@ -15,9 +15,7 @@ export const EutoxriskTemplate = {
             {
                 'name': 'Description',
                 'icon': 'fa-comment',
-                'valueType': 'textblob',
-                'required': false,
-                'minlength': 50
+                'valueType': 'textblob'
             },
             {
                 'name': 'Project Part',
