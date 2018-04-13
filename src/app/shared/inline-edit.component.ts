@@ -76,8 +76,9 @@ export class InlineEditComponent implements ControlValueAccessor {
     /**
      * Handler for the blur event triggered by the input part of the edit box.
      * Returns the box to its non-edit state and normalises the input value to the default if empty.
+     * @param {Event} event - DOM event for the click action.
      */
-    public onEditBoxBlur(): void {
+    public onEditBoxBlur(event: Event): void {
         this.value = this.value.trim();
         if (!this.value.length) {
             this.value = this.emptyValue;
