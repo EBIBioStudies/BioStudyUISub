@@ -16,6 +16,7 @@ import {SubmAddDialogComponent} from "./subm-add.component";
 import {UserData} from "../../auth/user-data";
 import {SubmissionType} from "../shared/submission-type.model";
 import {Subject} from "rxjs/Subject";
+import {RequestStatusService} from "../../http/request-status.service";
 
 @Component({
     selector: 'action-buttons-cell',
@@ -133,7 +134,8 @@ export class SubmListComponent {
     constructor(private submService: SubmissionService,
                 private userData: UserData,
                 private router: Router,
-                private route: ActivatedRoute) {
+                private route: ActivatedRoute,
+                private requestStatus: RequestStatusService) {
 
         this.ngUnsubscribe = new Subject<void>();
 
@@ -156,6 +158,7 @@ export class SubmListComponent {
             rowHeight: 30,
             localeText: {noRowsToShow: 'No submissions found'},
             icons: {menu: '<i class="fa fa-filter"/>'},
+            overlayLoadingTemplate: '<span class="ag-overlay-loading-center"><i class="fa fa-cog fa-spin"></i> Loading...</span>',
             getRowNodeId: (item) => {
                 return item.accno;
             },
@@ -176,7 +179,7 @@ export class SubmListComponent {
     }
 
     /**
-     * Removes all subscriptions whenever the file view is abandoned.
+     * Removes all subscriptions whenever the user navigates away from this view.
      * Requires the takeUntil operator before every subscription.
      * @see {@link https://stackoverflow.com/a/41177163}
      */

@@ -38,6 +38,7 @@ import {UserData} from "../../auth/user-data";
 import {SubmValidationErrorsComponent} from "./subm-navbar/subm-validation-errors.component";
 import * as _ from "lodash";
 import {SubmSideBarComponent} from "./subm-sidebar/subm-sidebar.component";
+import {Subject} from "rxjs/Subject";
 
 @Component({
     selector: 'subm-edit',
@@ -66,6 +67,7 @@ export class SubmEditComponent implements OnInit {
     private isSubmitting: boolean = false;      //flag indicating submission data is being sent
     private isSaving: boolean = false;          //flag indicating submission data is being backed up
     private isNew: boolean = false;             //flag indicating submission has just been created through the UI
+    protected ngUnsubscribe: Subject<void>;     //stopper for all subscriptions to HTTP get operations
 
     //List of non-bubbling events to trigger auto-save
     //NOTE: 'section_add' has been omitted since adding sections is buggy at present
@@ -87,6 +89,8 @@ export class SubmEditComponent implements OnInit {
         //NOTE: All calls are coalesced into the last one since it's that one that will lead to the most
         //up-to-date copy of the submission.
         this.onChange = _.throttle(this.onChange, 500, {'leading': false});
+
+        this.ngUnsubscribe = new Subject<void>();
     }
 
     get location() {
@@ -100,7 +104,7 @@ export class SubmEditComponent implements OnInit {
     ngOnInit(): Observable<any> {
         let eventStream;
 
-        this.route.params.subscribe((params) => {
+        this.route.params.takeUntil(this.ngUnsubscribe).subscribe((params) => {
 
             //Determines if the current submission has just been created
             this.isNew = this.route.snapshot.data.isNew || false;
@@ -143,6 +147,16 @@ export class SubmEditComponent implements OnInit {
         });
 
         return eventStream;
+    }
+
+    /**
+     * Removes all subscriptions whenever the user navigates away from this view.
+     * Requires the takeUntil operator before every subscription.
+     * @see {@link https://stackoverflow.com/a/41177163}
+     */
+    ngOnDestroy() {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     /**
@@ -211,7 +225,7 @@ export class SubmEditComponent implements OnInit {
      * TODO: This produces an spurious GET request. ngOnInit needs to be split up.
      */
     onRevert(event: Event) {
-        this.confirmRevert.confirm().subscribe(() => {
+        this.confirmRevert.confirm().takeUntil(this.ngUnsubscribe).subscribe(() => {
             this.isReverting = true;
             this.submService.deleteSubmission(this.accno).subscribe(() => {
                 this.ngOnInit().subscribe(() => {
@@ -243,7 +257,7 @@ export class SubmEditComponent implements OnInit {
         }
         confirmMsg += '. This operation cannot be undone.'
 
-        this.confirmSectionDel.confirm(confirmMsg).subscribe(() => {
+        this.confirmSectionDel.confirm(confirmMsg).takeUntil(this.ngUnsubscribe).subscribe(() => {
             this.section.sections.remove(section);
         });
     }
@@ -255,7 +269,7 @@ export class SubmEditComponent implements OnInit {
     onChange() {
         this.isSaving = true;
 
-        this.submService.saveSubmission(this.wrap()).subscribe((result) => {
+        this.submService.saveSubmission(this.wrap()).takeUntil(this.ngUnsubscribe).subscribe((result) => {
             this.isSaving = false;
             this.isNew && this.locService.replaceState('/submissions/edit/' + this.accno);
 
@@ -303,7 +317,7 @@ export class SubmEditComponent implements OnInit {
             if (isConfirm) {
                 confirmShown = this.confirmSubmit.confirm(this.confirmSubmit.body, false);
             }
-            confirmShown.subscribe((isOk: boolean) => {
+            confirmShown.takeUntil(this.ngUnsubscribe).subscribe((isOk: boolean) => {
                 if (isOk) {
                     this.submitForm()
                 } else {
@@ -321,7 +335,7 @@ export class SubmEditComponent implements OnInit {
     submitForm() {
         const wrappedSubm = this.wrap(true);
 
-        this.submService.submitSubmission(wrappedSubm).subscribe(
+        this.submService.submitSubmission(wrappedSubm).takeUntil(this.ngUnsubscribe).subscribe(
             resp => {
 
                 //Extracts the release date if present

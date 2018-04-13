@@ -11,10 +11,10 @@
                 <span *ngIf="field.type.required && get(field.id).invalid && get(field.id).touched">
                     {{sectionForm.formErrors[field.id] ? sectionForm.formErrors[field.id] : ''}}
                 </span>
-                <span [hidden]="readonly ||
+                <span class="text-muted"
+                      [hidden]="readonly ||
                                 (get(field.id).valid && get(field.id).value) ||
-                                (get(field.id).invalid && get(field.id).touched)"
-                      class="text-muted">
+                                (get(field.id).invalid && get(field.id).touched)">
 
                     <span *ngIf="(get(field.id, 'minlength') > 0) && (get(field.id, 'maxlength') < 0)">
                          (at least {{get(field.id, 'minlength')}}
