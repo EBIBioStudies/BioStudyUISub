@@ -265,19 +265,25 @@ export class SubmEditComponent implements OnInit {
     /**
      * Handler for field change events. Saves the current data to the server, flagging the request's progress,
      * and updates the state of the view if the submission was new (replacing whatever route already exists).
+     * NOTE: Views may be detached from the DOM before destruction and, during that time, events can still bubble up.
+     * @param [event = null] - DOM event for the bubbled change.
      */
-    onChange() {
-        this.isSaving = true;
+    onChange(event: Event = null) {
 
-        this.submService.saveSubmission(this.wrap()).takeUntil(this.ngUnsubscribe).subscribe((result) => {
-            this.isSaving = false;
-            this.isNew && this.locService.replaceState('/submissions/edit/' + this.accno);
+        //If the save operation was triggered interactively, it checks if the view is still attached to the DOM
+        if (event === null || document.body.contains(event.target as Node)) {
+            this.isSaving = true;
 
-            //A sent submission has been backed up. It follows it's been revised.
-            if (!this.subm.isTemp && !this.subm.isRevised) {
-                this.subm.isRevised = true;
-            }
-        });
+            this.submService.saveSubmission(this.wrap()).takeUntil(this.ngUnsubscribe).subscribe((result) => {
+                this.isSaving = false;
+                this.isNew && this.locService.replaceState('/submissions/edit/' + this.accno);
+
+                //A sent submission has been backed up. It follows it's been revised.
+                if (!this.subm.isTemp && !this.subm.isRevised) {
+                    this.subm.isRevised = true;
+                }
+            });
+        }
     }
 
     /**
