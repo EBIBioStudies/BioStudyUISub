@@ -266,7 +266,7 @@ export class SubmEditComponent implements OnInit {
      * Handler for field change events. Saves the current data to the server, flagging the request's progress,
      * and updates the state of the view if the submission was new (replacing whatever route already exists).
      * NOTE: Views may be detached from the DOM before destruction and, during that time, events can still bubble up.
-     * @param [event = null] - DOM event for the bubbled change.
+     * @param {Event} [event = null] - DOM event for the bubbled change.
      */
     onChange(event: Event = null) {
 
