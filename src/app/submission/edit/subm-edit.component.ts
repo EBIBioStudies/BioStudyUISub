@@ -55,13 +55,15 @@ export class SubmEditComponent implements OnInit {
 
     subm: Submission;
     section: Section;
-    errors: SubmValidationErrors = SubmValidationErrors.EMPTY;
     formControls: FieldControl[] = [];          //immutable list of controls making up the form's section (fields, features...)
     sideBarCollapsed: boolean = false;
     accno: string = '';
     releaseDate: string = '';
     wrappedSubm: any;
+    serverError: ServerError = null;
+    errors: SubmValidationErrors = SubmValidationErrors.EMPTY;  //form validation errors
 
+    public isLoading: boolean;                  //flag indicating the submission is being loaded
     public isReverting: boolean = false;        //flag indicating submission is being rolled back to its latest release
     public isUpdate: boolean;                   //flag indicating if updating an already existing submission
     private isSubmitting: boolean = false;      //flag indicating submission data is being sent
@@ -105,6 +107,7 @@ export class SubmEditComponent implements OnInit {
         let eventStream;
 
         this.route.params.takeUntil(this.ngUnsubscribe).subscribe((params) => {
+            this.isLoading = true;
 
             //Determines if the current submission has just been created
             this.isNew = this.route.snapshot.data.isNew || false;
@@ -115,35 +118,48 @@ export class SubmEditComponent implements OnInit {
                 this.userData.whenFetched
             ]);
 
-            eventStream.subscribe(results => {
-                let page, subm;
+            eventStream.subscribe(
 
-                //Converts data coming from the server into the in-app submission format
-                //NOTE: Type definitions are determined based on the first occurrence of the AttachTo attribute.
-                //NOTE: Submissions created through the direct upload flow may be attached to multiple projects.
-                this.wrappedSubm = results[0];
-                this.accno = this.wrappedSubm.accno;
-                page = new PageTab(this.wrappedSubm.data);
-                subm = page.toSubmission(SubmissionType.fromTemplate(page.firstAttachTo));
-                this.subm = subm;
+                //Data retrieved successfully => converts pageTab submission data, makes changes detectable and sets defaults
+                results => {
+                    let page, subm;
 
-                //Inspects the original event producing the cascade of subsequent ones and saves the submission if
-                //it was triggered by a non-text update.
-                //NOTE: Leaf nodes in the update event tree have no source.
-                this.subm.updates().subscribe((event) => {
-                    if (SubmEditComponent.watchedUpdates.indexOf(event.leafEvent.name) > -1) {
-                        this.onChange();
+                    //Converts data coming from the server into the in-app submission format
+                    //NOTE: Type definitions are determined based on the first occurrence of the AttachTo attribute.
+                    //NOTE: Submissions created through the direct upload flow may be attached to multiple projects.
+                    this.wrappedSubm = results[0];
+                    this.accno = this.wrappedSubm.accno;
+                    page = new PageTab(this.wrappedSubm.data);
+                    subm = page.toSubmission(SubmissionType.fromTemplate(page.firstAttachTo));
+                    this.subm = subm;
+
+                    //Inspects the original event producing the cascade of subsequent ones and saves the submission if
+                    //it was triggered by a non-text update.
+                    //NOTE: Leaf nodes in the update event tree have no source.
+                    this.subm.updates().subscribe((event) => {
+                        if (SubmEditComponent.watchedUpdates.indexOf(event.leafEvent.name) > -1) {
+                            this.onChange();
+                        }
+                    });
+
+                    //Determines the current section (in case the user navigates down to a subsection)
+                    this.changeSection(this.subm.root.id);
+
+                    //Newly created submission => sets default values
+                    if (this.isNew) {
+                        this.setDefaults(this.section);
                     }
-                });
 
-                //Determines the current section (in case the user navigates down to a subsection)
-                this.changeSection(this.subm.root.id);
+                    this.isLoading = false;
+                    this.serverError = null;
+                },
 
-                //Newly created submission => sets default values
-                if (this.isNew) {
-                    this.setDefaults(this.section);
+                //Failed to retrieve submission data
+                error => {
+                    this.serverError = error;
+                    this.reset();
                 }
-            });
+            );
         });
 
         return eventStream;
@@ -157,6 +173,18 @@ export class SubmEditComponent implements OnInit {
     ngOnDestroy() {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
+    }
+
+    /**
+     * Sets the form's main state properties to their initial values.
+     */
+    reset() {
+        this.isLoading = false;
+        this.isSubmitting = false;
+        this.subm = undefined;
+        this.section = undefined;
+        this.formControls = [];
+        this.errors = SubmValidationErrors.EMPTY
     }
 
     /**

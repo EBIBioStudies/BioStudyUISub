@@ -75,6 +75,18 @@ aside {
   -webkit-transition: width .3s ease;
   -moz-transition: width .3s ease;
   transition: width .3s ease;
+
+  &.server-error {
+    background: @brand-danger;
+
+    .sidebar-menu {
+      border-top-color: @brand-danger;
+    }
+  }
+
+  &.collapse-left {
+    width: @left-side-width-collapse;
+  }
 }
 
 .right-side.collapse-left {
@@ -84,10 +96,6 @@ aside {
 
 .navbar-subm-fixed.collapse-left {
   padding-left: @left-side-width-collapse;
-}
-
-.left-side.collapse-left {
-  width: @left-side-width-collapse;
 }
 
 @media screen and (max-width: @screen-md) {
@@ -265,6 +273,7 @@ aside {
 }
 
 //Makes unselected tabs be on a plane behind selected ones with a permanent shaded appearance. Also bumps up their weight
+//and changes the background to reflect a server error.
 .nav-tabs > .nav-item > .nav-link {
   font-weight: 500;
 }
@@ -273,6 +282,10 @@ aside {
 }
 .nav-tabs > .nav-item > .nav-link.active {
   z-index: 100;
+
+  .server-error & {
+    background: @brand-danger;
+  }
 }
 
 //Gives readonly inputs and features the appearance of standard text
