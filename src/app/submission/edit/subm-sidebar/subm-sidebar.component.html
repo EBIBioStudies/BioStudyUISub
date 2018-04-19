@@ -1,5 +1,5 @@
 <aside class="left-side sidebar sidebar-offcanvas"
-       [ngClass]="{'collapse-left' : collapsed}">
+       [ngClass]="{'collapse-left' : collapsed, 'server-error': serverError}">
     <div class="menu-toggle">
         <button class="minimise-btn btn pull-right"
                 [ngClass]="{'inactive': !collapsed}"
@@ -23,7 +23,8 @@
                     </span>
                 </template>
             </tab>
-            <tab heading="Add"
+            <tab *ngIf="section"
+                 heading="Add"
                  [active]="!isStatus"
                  (select)="onTabClick(false)"></tab>
         </tabset>
@@ -121,12 +122,17 @@
                 <i class="fa " aria-hidden="true"
                     [ngClass]="{
                     'fa-2x': collapsed, 'fa-4x': !collapsed,
-                    'fa-check-circle': !isLoading && !isSubmitting,
+                    'fa-times-circle': serverError,
+                    'fa-check-circle': !serverError && !isLoading && !isSubmitting,
                     'fa-cog fa-spin': isLoading || isSubmitting}"></i>
                 <h4 [ngClass]="{'vertical-text': collapsed}">
-                    {{isLoading ? 'Loading study...' : isSubmitting? 'Submitting study...' : 'All fields are valid'}}
+                    {{isLoading ? 'Loading study...' :
+                                    isSubmitting? 'Submitting study...' :
+                                                    serverError ?  errorMsg() : 'All fields are valid'}}
                 </h4>
-                <h4 class="action-title">{{isLoading || isSubmitting ? 'Please wait' : 'You may submit your study now'}}</h4>
+                <h4 *ngIf="!serverError" class="action-title">
+                    {{isLoading || isSubmitting ? 'Please wait' : 'You may submit your study now'}}
+                </h4>
             </li>
             <li class="sidebar-item" *ngFor="let control of formControls; let i = index">
                 <a *ngIf="control.parentType.required && control.invalid"

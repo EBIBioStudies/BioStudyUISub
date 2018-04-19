@@ -175,7 +175,7 @@ export class FileListComponent implements OnInit, OnDestroy {
             rowSelection: 'single',
             unSortIcon: true,
             localeText: {noRowsToShow: 'No files found'},
-            overlayLoadingTemplate: '<span class="ag-overlay-loading-center"><i class="fa fa-cog fa-spin"></i> Loading...</span>',
+            overlayLoadingTemplate: '<span class="ag-overlay-loading-center"><i class="fa fa-cog fa-spin fa-lg"></i> Loading...</span>',
         };
 
         this.fileUploadService.uploadFinish$
