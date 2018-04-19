@@ -6,10 +6,24 @@
     <div class="navbar-default navbar-subm-fixed"
          [ngClass]="{'collapse-left': collapseSideBar}">
         <nav>
-            <div class="col-xs-12 nav-block">
-                <a routerLink="/submissions">Submission list</a>
+            <div class="col-xs-10 nav-block">
+                <a routerLink="/submissions{{request && request.successful ? '/sent' : ''}}">
+                    <i *ngIf="request?.successful" class="fa fa-database" aria-hidden="true"></i>
+                    {{request && request.successful ? 'Sent' : 'Submission list'}}
+                </a>
                 &nbsp;<i class="fa fa-angle-right font-bold"></i>&nbsp;
-                <strong>Direct upload</strong>
+                <strong>{{request && request.successful ? request.accno : 'Direct upload' }}</strong>
+            </div>
+            <div *ngIf="request?.successful" class="col-xs-2 nav-block">
+                <button class="btn btn-default btn-sm pull-right"
+                        routerLink="/submissions/edit/{{request.accno}}"
+                        tooltip="Edit newly created submission"
+                        placement="bottom"
+                        container="body"
+                        [disabled]="isBusy">
+                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                    Edit submission
+                </button>
             </div>
         </nav>
     </div>
