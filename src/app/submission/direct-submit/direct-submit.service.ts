@@ -108,7 +108,10 @@ export class DirectSubmitRequest {
 
             //If back from conversion, extracts the release date if found.
             } else if (successStatus == ReqStatus.SUBMIT) {
-                const dateAttr = res.document.submissions[0].attributes.find(attribute => {
+                let dateAttr = res.document.submissions[0].attributes;
+
+                //NOTE: The server may come back with no root-level attributes despite PageTab requirements
+                dateAttr = dateAttr && dateAttr.find(attribute => {
                     return attribute.name == 'ReleaseDate';
                 });
 

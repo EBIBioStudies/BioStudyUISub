@@ -292,8 +292,8 @@ export const EutoxriskTemplate = {
             {
                 'name': 'File',
                 'title': 'Add Files',
-                'icon': 'fa-file',
                 'description': 'List the data files for the study and describe their respective scopes.',
+                'icon': 'fa-file',
                 'uniqueCols': true,
                 'columnTypes': [
                     {
@@ -302,27 +302,13 @@ export const EutoxriskTemplate = {
                         'required': true
                     },
                     {
-                        'name': 'Roche ID',
-                        'valueType': 'text',
-                        'removable': false,
-                        'displayed': true
-                    },
-                    {
-                        'name': 'Sampling date',
-                        'valueType': 'date',
-                        'removable': false,
-                        'displayed': true
-                    },
-                    {
-                        'name': 'Sampling time point',
-                        'valueType': 'text',
-                        'removable': false,
-                        'displayed': true
-                    },
-                    {
                         'name': 'Description',
                         'valueType': 'text',
-                        'removable': false,
+                        'required': true
+                    },
+                    {
+                        'name': 'Type',
+                        'valueType': 'text',
                         'displayed': true
                     }
                 ]
