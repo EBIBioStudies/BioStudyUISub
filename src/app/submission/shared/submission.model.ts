@@ -11,6 +11,8 @@ import {
 } from './submission-type.model';
 
 import * as pluralize from "pluralize";
+import * as _ from 'lodash';
+import {externalAttrs} from "./pagetab.model";
 
 const nextId = (function () {
     let count = 0;
@@ -725,10 +727,17 @@ export class Fields extends HasUpdates<UpdateEvent> {
         this.fields = [];
 
         //Converts the array of attribute objects from the server to an object of type {attrName: attrValue}
-        //NOTE: Attribute names from the server are camel-cased whereas field names are in human-readable form with spaces.
         const attrObj = (data.attributes || []).reduce((obj, attr) => {
-            const attrName = attr.name.replace(/([a-z])([A-Z])/g, '$1 $2');  //uncamelcased version
-            const fieldType = type.getFieldType(attrName);
+            let attrName = attr.name; //.name.replace(/([a-z])([A-Z])/g, '$1 $2');  //uncamelcased version
+            let fieldType;
+
+            //NOTE: Root-level attribute names from the server are UpperCamelCased whereas type field names are
+            //in human-readable form. For external attributes only, this means lower-case and only first letter
+            //capitalised with spaces in between.
+            if (_.includes(externalAttrs, attrName)) {
+                attrName = _.upperFirst(attrName.replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase());
+            }
+            fieldType = type.getFieldType(attrName);
 
             if (fieldType !== undefined) {
                 obj[attrName] = attr.value;
@@ -798,11 +807,18 @@ export class Section extends HasUpdates<UpdateEvent> {
         this.fields = new Fields(type, data);
 
         //Any attribute names from the server that do not match top-level field names are added as annotations.
-        //NOTE: Attribute names from the server are camel-cased whereas field names are in human-readable form with spaces.
         this.annotations = AnnotationFeature.create(type.annotationsType,
             (data.attributes || []).filter((attribute) => {
-                const humanName = attribute.name.replace(/([a-z])([A-Z])/g, '$1 $2');  //uncamelcased version
-                return (type.getFieldType(humanName) === undefined);
+                let attrName = attribute.name;
+
+                //NOTE: Root-level attribute names from the server are UpperCamelCased whereas type field names are
+                //in human-readable form. For external attributes only, this means lower-case and only first letter
+                //capitalised with spaces in between.
+                if (_.includes(externalAttrs, attrName)) {
+                    attrName = _.upperFirst(attrName.replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase());
+                }
+
+                return (type.getFieldType(attrName) === undefined);
             })
         );
         this.features = new Features(type, data);

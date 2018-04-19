@@ -14,6 +14,13 @@ import {copyAttributes, removeBlankAttrs} from './pagetab-attributes.utils';
 import * as _ from 'lodash';
 import {formatDate} from "../../submission-shared/date.utils";
 
+//Names of attributes as they come from the server that must be external.
+//NOTE: As per PageTab's requirements, "AttachTo", "ReleaseDate" and "Title" are special attributes that pertain the
+//whole submission and must therefore be outside the section.
+//NOTE: Only these attributes follow an Upper Camel Case convention. Any attributes different from these are arbitrarily
+//formatted.
+export const externalAttrs: string[] = ['Title', 'ReleaseDate', 'AttachTo'];
+
 class PtEntry implements AttributesData {
     readonly attributes: { name: string, value: string }[];
 
@@ -110,7 +117,6 @@ class PtSection extends PtEntry implements SectionData {
 }
 
 export class PageTab implements SubmissionData {
-    static externalAttrs: string[] = ['Title', 'ReleaseDate', 'AttachTo'];
     readonly accno: string;
     readonly isRevised: boolean;
     readonly section: PtSection;
@@ -133,7 +139,6 @@ export class PageTab implements SubmissionData {
         }
 
         //As per requirements of pagetab's current implementation, some attributes must not be within the section.
-        //NOTE: AttacthTo, ReleaseDate and Title are special attributes that pertain the whole submission.
         page['attributes'] = [];
         page.section.attributes = _.filter(page.section.attributes, (attribute) => {
 
@@ -143,7 +148,7 @@ export class PageTab implements SubmissionData {
             }
 
             //Moves attributes labelled as "external" outside the section
-            if (_.includes(this.externalAttrs, attribute.name)) {
+            if (_.includes(externalAttrs, attribute.name)) {
                 page.attributes.push(attribute);
                 return false;
 
@@ -194,10 +199,20 @@ export class PageTab implements SubmissionData {
 
         let attributes = [];
         if (sec.fields.length > 0) {
-            attributes = attributes.concat(sec.fields.list().map(fld => ({
-                name: fld.name.split(' ').join(''),     //PageTab's property names are whitespace-free
-                value: fld.value
-            })));
+            attributes = attributes.concat(sec.fields.list().map((field) => {
+                let attrName = field.name;
+
+                //NOTE: Root-level attributes in PageTab are assumed to be in UpperCamelCase always whereas submission
+                //field names are in human-readable form with spaces.
+                if (_.includes(externalAttrs, _.upperFirst(_.camelCase(attrName)))) {
+                    attrName = _.upperFirst(_.camelCase(field.name));
+                }
+
+                return {
+                    name: attrName, //.split(' ').join(''),     //PageTab's property names are whitespace-free
+                    value: field.value
+                }
+            }));
         }
 
         if (sec.annotations.size() > 0) {
