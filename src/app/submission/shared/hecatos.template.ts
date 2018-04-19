@@ -21,25 +21,37 @@ export const HecatosTemplate = {
                 'name': 'Sample Type',
                 'icon': 'fa-eyedropper',
                 'valueType': 'text',
-                'values': ['Cardiac microtissue', 'Heart biopsy', 'Liver microtissue', 'Liver biopsy', 'Serum sample']
+                'values': [
+                    'cardiac microtissue',
+                    'heart biopsy',
+                    'liver microtissue',
+                    'liver biopsy',
+                    'serum sample'
+                ]
             },
             {
                 'name': 'Organism',
                 'icon': 'fa-eyedropper',
                 'valueType': 'text',
-                'values': ['Homo sapiens', 'Sus scrofa']
+                'values': ['Homo sapiens (human)', 'Sus scrofa (pig)']
             },
             {
                 'name': 'Organ',
                 'icon': 'fa-eyedropper',
                 'valueType': 'text',
-                'values': ['Heart', 'Liver']
+                'values': ['heart', 'liver']
             },
             {
                 'name': 'Dose',
                 'icon': 'fa-eyedropper',
                 'valueType': 'text',
-                'values': ['Therapeutic', 'Toxic']
+                'values': ['therapeutic', 'toxic']
+            },
+            {
+                'name': 'Raw/Processed',
+                'icon': 'fa-eyedropper',
+                'valueType': 'text',
+                'values': ['raw', 'processed']
             },
             {
                 'name': 'Biological Replicate',
@@ -47,7 +59,7 @@ export const HecatosTemplate = {
                 'valueType': 'text'
             },
             {
-                'name': 'Chembl ID',
+                'name': 'CHEMBL ID',
                 'icon': 'fa-flask',
                 'valueType': 'text',
                 'values': [
@@ -73,7 +85,7 @@ export const HecatosTemplate = {
                 ]
             },
             {
-                'name': 'Std In Chi Key',
+                'name': 'StdInChIKey',
                 'icon': 'fa-flask',
                 'valueType': 'text',
                 'values': [
@@ -126,7 +138,12 @@ export const HecatosTemplate = {
                 'name': 'Data Type',
                 'icon': 'fa-cogs',
                 'valueType': 'text',
-                'values': ['Genomic data', 'Proteomics data', 'Metabolomic data']
+                'values': [
+                    'genomic data',
+                    'proteomics data',
+                    'metabolomic data',
+                    'functional data'
+                ]
             }
         ],
         'annotationsType': {

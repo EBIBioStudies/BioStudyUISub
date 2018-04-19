@@ -18,7 +18,7 @@ export const EutoxriskTemplate = {
                 'valueType': 'textblob'
             },
             {
-                'name': 'Project Part',
+                'name': 'Project part',
                 'icon': 'fa-comment',
                 'valueType': 'text',
             },
@@ -26,76 +26,77 @@ export const EutoxriskTemplate = {
                 'name': 'Organism',
                 'icon': 'fa-eyedropper',
                 'valueType': 'text',
-                'values': ['Homo sapiens', 'Danio rerio']
+                'values': ['Homo sapiens (human)', 'Danio rerio (zebrafish)']
             },
             {
                 'name': 'Organ',
                 'icon': 'fa-eyedropper',
                 'valueType': 'text',
                 'values': [
-                    'Liver',
-                    'Brain',
-                    'Embryo',
-                    'Lung',
-                    'Kidney',
-                    'Whole body',
-                    'Other'
+                    'liver',
+                    'brain',
+                    'embryo',
+                    'lung',
+                    'kidney',
+                    'whole body',
+                    'other'
                 ]
             },
             {
-                'name': 'Cell Type',
+                'name': 'Cell type',
                 'icon': 'fa-eyedropper',
                 'valueType': 'text',
                 'values': [
-                    'Cell line',
-                    'Primary cells',
-                    'Stem cells',
-                    'Stem cell derived'
+                    'cell line',
+                    'primary cells',
+                    'stem cells',
+                    'stem cell derived'
                 ]
             },
             {
-                'name': 'Cell Name',
+                'name': 'Cell name',
                 'icon': 'fa-eyedropper',
                 'valueType': 'text',
                 'values': [
+                    'CELLLINE',
                     'HepG2',
                     'HEK',
                     'LUHMES'
                 ]
             },
             {
-                'name': 'Exposure Time',
+                'name': 'Exposure time',
                 'icon': 'fa-cogs',
                 'valueType': 'text',
                 'values': ['6h', '12h', '24h']
             },
             {
-                'name': 'Treatment Modality',
+                'name': 'Treatment modality',
                 'icon': 'fa-cogs',
                 'valueType': 'text',
                 'values': [
-                    'Single dose',
-                    'Repeated dose',
-                    'Recovery'
+                    'single dose',
+                    'repeated dose',
+                    'recovery'
                 ]
             },
             {
-                'name': 'Information Domain',
+                'name': 'Information domain',
                 'icon': 'fa-cogs',
                 'valueType': 'text',
                 'values': [
-                    'Cytotoxicity',
-                    'Cell function',
-                    'Biochemical',
-                    'Reporter',
-                    'Metabolomics',
-                    'Transcriptomics',
-                    'Biokinetics',
-                    'Other'
+                    'cytotoxicity',
+                    'cell function',
+                    'biochemical',
+                    'reporter',
+                    'metabolomics',
+                    'transcriptomics',
+                    'biokinetics',
+                    'other'
                 ]
             },
             {
-                'name': 'Toxicity Domain',
+                'name': 'Toxicity domain',
                 'icon': 'fa-cogs',
                 'valueType': 'text',
                 'values': [
