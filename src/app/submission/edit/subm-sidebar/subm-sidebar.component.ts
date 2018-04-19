@@ -25,6 +25,7 @@ import { ConfirmDialogComponent } from 'app/shared/index';
 import {SubmValidationErrors} from "../../shared/submission.validator";
 import {FieldControl} from "../subm-form/subm-form.service";
 import {UserData} from "../../../auth/user-data";
+import {ServerError} from "../../../http/server-error.handler";
 
 /**
  * Submission item class aggregating its corresponding feature with UI-relevant metadata. It enables
@@ -157,17 +158,18 @@ class SubmItems extends Array<SubmItem> {
     styleUrls: ['./subm-sidebar.component.css']
 })
 export class SubmSideBarComponent implements OnChanges {
+    @Input() isLoading: boolean;                                             //flag indicating the submission is being loaded
     @Input() isSubmitting: boolean = false;                                  //flag indicating submission data is being sent
     @Input() collapsed?:boolean = false;                                     //flag indicating if menu is minimized/collapsed
     @Input() section: Section;                                               //section of the form being displayed
     @Input() formControls: FieldControl[] = [];                              //refreshed array of form controls
     @Input() errors: SubmValidationErrors = SubmValidationErrors.EMPTY;      //errors from validator service
+    @Input() serverError: ServerError;                                       //errors from server requests
     @Output() toggle? = new EventEmitter();                                  //event triggered when collapsed state changes
 
     @ViewChild('addDialog') addDialog: SubmTypeAddDialogComponent;
     @ViewChild('confirmDialog') confirmDialog: ConfirmDialogComponent;
 
-    isLoading: boolean = true;       //flag indicating the submission is being loaded
     isAdvancedOpen: boolean = false; //flag indicating if advanced options for types are being displayed
     isStatus: boolean = true;        //flag indicating if form status or "check" tab is being displayed
     editing: boolean = false;        //flag indicating component's mode: display or editing, with different renderings
@@ -180,13 +182,11 @@ export class SubmSideBarComponent implements OnChanges {
     constructor(public userData: UserData) {}
 
     /**
-     * Updates the list of type items whenever a feature is added or removed.
+     * Updates the list of type items whenever a feature is added or removed, cleaning up subscriptions if necessary
      * @param changes -  Object of current and previous property values.
      */
     ngOnChanges(changes: any): void {
-        const change: SimpleChange = changes.section;
-
-        if (change) {
+        if (changes.section) {
             if (this.subscr) {
                 this.subscr.unsubscribe();
             }
@@ -206,16 +206,9 @@ export class SubmSideBarComponent implements OnChanges {
 
     /**
      * Updates the pending fields counter only after the digest cycle. Otherwise Angular predictably complains
-     * the change happened too early. While at it, works out if the submission is being loaded if the section ID
-     * is not known yet after validation.
-     * NOTE: The list of validation errors is initialised to empty before the submission is loaded.
+     * the change happened too early.
      */
     ngDoCheck() {
-        if (this.errors.secId.length) {
-            this.isLoading = false;
-        } else {
-            this.isLoading = true;
-        }
         this.numPending = FieldControl.numPending;
     }
 
@@ -391,6 +384,24 @@ export class SubmSideBarComponent implements OnChanges {
 
         window.scrollBy(0, scrollTop);
         control.nativeElement.focus();
+    }
+
+    /**
+     * Determines the text corresponding to a certain error status in the event of no message being provided already.
+     * @returns {string} Descriptive text for the error.
+     */
+    errorMsg(): string {
+        const error = this.serverError;
+
+        if (error.message) {
+            return this.serverError.message;
+        } else switch (error.status) {
+            case 401: return 'Authorisation error';
+            case 403: return 'Forbidden access';
+            case 404: return 'Submission not found';
+            case 500: return 'Server error';
+            default: return 'Error encountered';
+        }
     }
 
     /**

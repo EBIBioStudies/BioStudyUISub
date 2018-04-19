@@ -6,10 +6,12 @@
                   [section]="section"
                   [formControls]="formControls"
                   [errors]="errors"
-                  [isSubmitting]="isSubmitting">
+                  [isLoading]="isLoading"
+                  [isSubmitting]="isSubmitting"
+                  [serverError]="serverError">
     </subm-sidebar>
 
-    <subm-navbar class="navbar-subm-fixed navbar-default"
+    <subm-navbar *ngIf="subm" class="navbar-subm-fixed navbar-default"
             [ngClass]="{'collapse-left': !readonly && sideBarCollapsed}"
             [readonly]="readonly"
             [accno]="accno"

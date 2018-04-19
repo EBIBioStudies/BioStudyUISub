@@ -158,7 +158,7 @@ export class SubmListComponent {
             rowHeight: 30,
             localeText: {noRowsToShow: 'No submissions found'},
             icons: {menu: '<i class="fa fa-filter"/>'},
-            overlayLoadingTemplate: '<span class="ag-overlay-loading-center"><i class="fa fa-cog fa-spin"></i> Loading...</span>',
+            overlayLoadingTemplate: '<span class="ag-overlay-loading-center"><i class="fa fa-cog fa-spin fa-lg"></i> Loading...</span>',
             getRowNodeId: (item) => {
                 return item.accno;
             },
