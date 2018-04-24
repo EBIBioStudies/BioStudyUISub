@@ -24,11 +24,11 @@ export class SubmNavBarComponent {
     isBusy: boolean = false;            //flag indicating if a request is in progress
     allowedPrj: string[];               //names of projects with templates the user is allowed to attach submissions to
 
-    @Input() accno: string;
-    @Input() readonly: boolean;
-    @Input() isTemp: boolean;
     @Input() sectionPath: Section[];
-    @Input() isRevised: boolean;
+    @Input() accno: string;             //accession number for the current submission
+    @Input() readonly: boolean;         //read-only status of the submission form
+    @Input() isTemp: boolean;           //flag indicating if the submission is temporary
+    @Input() isRevised: boolean;        //flag indicating if the sent submission has been changed
     @Output() sectionClick: EventEmitter<Section> = new EventEmitter<Section>();
     @Output() revertClick: EventEmitter<Event> = new EventEmitter<Event>();
     @Output() submitClick: EventEmitter<Event> = new EventEmitter<Event>();

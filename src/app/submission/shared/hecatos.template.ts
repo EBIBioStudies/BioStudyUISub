@@ -230,7 +230,7 @@ export const HecatosTemplate = {
                         'valueType': 'text',
                         'values': [
                             'ETH Zürich',
-                            'European Bioinformatics Institute (EBI)',
+                            'European Bioinformatics Institute (EMBL-EBI)',
                             'European Molecular Biology Laboratory (EMBL)',
                             'F. Hoffmann-La Roche Ltd',
                             'Francis Crick Institute',

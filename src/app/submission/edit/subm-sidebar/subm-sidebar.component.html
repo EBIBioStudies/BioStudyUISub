@@ -117,8 +117,8 @@
 
         <!-- Check tab -->
         <div *ngIf="isStatus">
-            <li *ngIf="errors.empty() || isSubmitting" class="no-error-msg text-center"
-                [ngClass]="{'col-md-12': !collapsed}">
+            <li *ngIf="errors.empty() || isSubmitting" class="center-vertically text-center"
+                [ngClass]="{'col-xs-12': !collapsed}">
                 <i class="fa " aria-hidden="true"
                     [ngClass]="{
                     'fa-2x': collapsed, 'fa-4x': !collapsed,
@@ -151,7 +151,7 @@
                         {{!collapsed ? tipText(control.errors) : ''}}
                         <i *ngIf="collapsed"
                             class="fa fa-lg {{control.errors.required ? 'fa-asterisk' :
-                            control.errors.maxlength || control.errors.minlength ? 'fa-arrows-h' : 'fa-ban'}}">
+                                                                         control.errors.maxlength || control.errors.minlength ? 'fa-arrows-h' : 'fa-ban'}}">
                         </i>
                     </strong>
                 </a>

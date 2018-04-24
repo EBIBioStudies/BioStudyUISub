@@ -117,6 +117,14 @@ export const EutoxriskTemplate = {
                     'valueType': 'text',
                     'displayed': true,
                     'readonly': true
+                },
+                {
+                    'name': 'Compound',
+                    'valueType': 'text'
+                },
+                {
+                    'name': 'Endpoint',
+                    'valueType': 'text'
                 }
             ]
         },
@@ -148,7 +156,7 @@ export const EutoxriskTemplate = {
                             'BioTalentum Ltd',
                             'Cosmetics Europe',
                             'Cyprotex Ltd',
-                            'European Bioinformatics Institute (EBI)',
+                            'European Bioinformatics Institute (EMBL-EBI)',
                             'European Molecular Biology Laboratory (EMBL)',
                             'F. Hoffmann-La Roche Ltd',
                             'Fraunhofer Institute for Toxicology and Experimental Medicine',
@@ -208,7 +216,6 @@ export const EutoxriskTemplate = {
                 'icon': 'fa-medkit',
                 'description': "Provide at least the method and analytical measure of the study's endpoints.",
                 'uniqueCols': true,
-                'required': true,
                 'columnTypes': [
                     {
                         'name': 'Method',
@@ -237,7 +244,6 @@ export const EutoxriskTemplate = {
                 'description': "List all parent compounds by their most common chemical name. " +
                                "For example, \"Valproic acid\" instead of \"Valproate\".",
                 'uniqueCols': true,
-                'required': true,
                 'columnTypes': [
                     {
                         'name': 'Name',
