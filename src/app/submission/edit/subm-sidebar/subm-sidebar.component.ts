@@ -4,12 +4,12 @@ import {
     Output,
     EventEmitter,
     ViewChild,
-    OnChanges,
-    SimpleChange
+    OnChanges
 } from '@angular/core';
 import {
     NgForm,
-    FormControl, ValidationErrors,
+    FormControl,
+    ValidationErrors
 } from '@angular/forms';
 
 import { Subscription } from 'rxjs/Subscription';
@@ -20,8 +20,8 @@ import {
     Section,
     Feature
 } from '../../shared/submission.model';
-import { SubmTypeAddDialogComponent } from '../submtype-add/submtype-add.component';
-import { ConfirmDialogComponent } from 'app/shared/index';
+import {SubmTypeAddDialogComponent} from '../submtype-add/submtype-add.component';
+import {ConfirmDialogComponent} from 'app/shared/index';
 import {SubmValidationErrors} from "../../shared/submission.validator";
 import {FieldControl} from "../subm-form/subm-form.service";
 import {UserData} from "../../../auth/user-data";

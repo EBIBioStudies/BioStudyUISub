@@ -28,19 +28,22 @@
 }
 
 /* Check tab */
-.no-error-msg {
+.center-vertically {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
     color: #fff;
 }
-.no-error-msg h4 {
+.center-vertically h4 {
+    overflow: hidden;
     font-weight: 400;
+    word-break: break-word;
+    text-overflow: ellipsis;
 }
-.collapse-left .no-error-msg {
+.collapse-left .center-vertically {
     width: 100%;
 }
-.collapse-left .no-error-msg .action-title {
+.collapse-left .center-vertically .action-title {
     display: none;
 }
 .center-spread {

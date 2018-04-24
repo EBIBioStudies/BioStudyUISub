@@ -299,7 +299,7 @@ export class SubmEditComponent implements OnInit {
     onChange(event: Event = null) {
 
         //If the save operation was triggered interactively, it checks if the view is still attached to the DOM
-        if (event === null || document.body.contains(event.target as Node)) {
+        if (!this.readonly && (event === null || document.body.contains(event.target as Node))) {
             this.isSaving = true;
 
             this.submService.saveSubmission(this.wrap()).takeUntil(this.ngUnsubscribe).subscribe((result) => {
