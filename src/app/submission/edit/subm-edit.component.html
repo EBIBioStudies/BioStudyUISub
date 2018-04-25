@@ -1,183 +1,234 @@
-<div *ngIf="!readonly" bsModal #submitResults="bs-modal"
-     class="modal fade"
-     tabindex="-1"
-     role="dialog"
-     aria-labelledby="myLargeModalLabel"
-     aria-hidden="true"
-     (onHide)="onSubmitResultsHide()">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" (click)="submitResults.hide()" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 *ngIf="errors.length > 0" class="modal-title">Submit failed</h4>
-                <h4 *ngIf="errors.length == 0" class="modal-title">Submit succeeded</h4>
-            </div>
-            <div class="modal-body">
-                <ul class="list-group">
-                    <li *ngFor="let error of errors" class="list-group-item text-danger">
-                        <span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;{{error}}</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
+<div class="row-offcanvas row-offcanvas-left"
+     [ngClass]="{'readonly': readonly, 'grayout': isReverting}">
+    <subm-sidebar *ngIf="!readonly"
+                  (toggle)="sideBarCollapsed=!sideBarCollapsed"
+                  [collapsed]="sideBarCollapsed"
+                  [section]="section"
+                  [formControls]="formControls"
+                  [errors]="errors"
+                  [isLoading]="isLoading"
+                  [isSubmitting]="isSubmitting"
+                  [serverError]="serverError">
+    </subm-sidebar>
 
-<div class="row-offcanvas row-offcanvas-left">
+    <subm-navbar *ngIf="subm" class="navbar-subm-fixed navbar-default"
+            [ngClass]="{'collapse-left': !readonly && sideBarCollapsed}"
+            [readonly]="readonly"
+            [accno]="accno"
+            [isTemp]="subm?.isTemp"
+            [isRevised]="subm?.isRevised"
+            [sectionPath]="sectionPath"
+            (sectionClick)="onSectionClick($event)"
+            (revertClick)="onRevert($event)"
+            (submitClick)="onSubmit($event)"
+            (editClick)="onEditBack($event)">
+    </subm-navbar>
 
-    <form *ngIf="submission" class="form-horizontal" id="subm-form" novalidate name="submForm" role="form" method="post"
-          (ngSubmit)="submForm.valid && onSubmit($event)" #submForm="ngForm">
+    <div class="container-fluid">
+        <aside [ngClass]="{'collapse-left' : !readonly && sideBarCollapsed, 'right-side': !readonly}">
+            <div *ngIf="subm"
+                 (change)="onChange($event)"
+                 class="navbar-subm-margin">
 
-        <subm-sidebar *ngIf="!readonly"
-                (toggle)="uisettings.collapseLeftSide=!uisettings.collapseLeftSide"
-                [collapsed]="uisettings.collapseLeftSide">
-            <sidebar-item
-                    (click)="addAnnotation();"
-                    label="Describe your study"
-                    icon="fa-comment-o"></sidebar-item>
-            <sidebar-item
-                    (click)="addFile();"
-                    label="Add a file"
-                    icon="fa-file-o"></sidebar-item>
-
-            <sidebar-item
-                    (click)="addContact();"
-                    label="Add a contact"
-                    icon="fa-user"></sidebar-item>
-
-            <sidebar-item
-                    (click)="addLink();"
-                    label="Add a link"
-                    icon="fa-link"></sidebar-item>
-
-            <sidebar-item
-                    (click)="addPublication();"
-                    label="Add a publication"
-                    icon="fa-book"></sidebar-item>
-
-            <sidebar-item
-                    (click)="onSubmit()"
-                    label="Submit"
-                    icon="fa-database"
-                    [disabled]="submForm.invalid"></sidebar-item>
-        </subm-sidebar>
-
-        <div class="container-fluid">
-
-            <aside class="right-side content" [ngClass]="{'collapse-left' : !readonly && uisettings.collapseLeftSide}">
-
-                <div class="panel" [ngClass]="{'panel-danger': submForm.invalid, 'panel-info':submForm.valid}">
-                    <div class="panel-heading">
-                        <span>Submission {{accno}}</span><span *ngIf="!readonly && submForm.invalid"> << There are some validation errors. Please correct them before to proceed to submit >> </span>
-                        <div class="pull-right" *ngIf="readonly">
-                            <a class="pull-right btn btn-success btn-xs" (click)="onEditSubmission()">Edit</a>
-                        </div>
-                    </div>
+                <div *ngIf="isNew && errors.total()" class="panel">
                     <div class="panel-body">
-
-                        <div class="form-group row"
-                             [ngClass]="{'has-error':title.invalid}">
-                            <div class="col-sm-12 ">
-                                <label class="control-label">Title
-                                    <span *ngIf="title.errors">
-                                        <span *ngIf="title.errors.required">: cannot be blank</span>
-                                        <span *ngIf="title.errors.minlength">: must be at least 50 characters</span>
-                                    </span>
-                                </label>
-                                <input type="text" class="form-control" id="title" name="title"
-                                       placeholder="Enter a title"
-                                       [(ngModel)]="submission.title"
-                                       [readonly]="readonly"
-                                       minlength="50"
-                                       required
-                                       #title="ngModel">
-                                <!--ng-model-options="{ allowInvalid: true }"-->
+                        <h4>New submission</h4>
+                        <p>
+                            Please fill in the form below. The <span class="font-bold">Check</span> tab on the
+                            left-hand side lists those fields still incomplete or incorrect. Use the
+                            <span class="font-bold">Add</span> tab to quickly add new rows or tables.
+                        </p>
+                        <div class="alert alert-warning">
+                            <div class="pull-left">
+                                <i class="fa fa-hand-o-right fa-lg"></i>
+                                <strong>Please note</strong>
                             </div>
-                        </div>
-
-                        <div class="form-group row"
-                             [ngClass]="{'has-error':releaseDate.invalid}">
-                            <div class="col-sm-12">
-                                <label class="control-label">Release date
-                                    <span *ngIf="releaseDate.errors">
-                                        <span *ngIf="releaseDate.errors.required">: cannot be blank</span>
-                                        <span *ngIf="releaseDate.errors.bsstDateFormat">: should be in YYYY-MM-DD format</span>
-                                    </span>
-                                </label>
-                                <date-input-box
-                                        name="releaseDate"
-                                        [(ngModel)]="submission.releaseDate"
-                                        #releaseDate="ngModel"
-                                        required
-                                        bsstDateFormat></date-input-box>
-                            </div>
-                        </div>
-
-                        <div class="form-group row"
-                             [ngClass]="{'has-error':description.invalid}">
-                            <div class="col-sm-12">
-                                <label class="control-label">Description
-                                    <span *ngIf="description.errors">
-                                        <span *ngIf="description.errors.required">: cannot be blank</span>
-                                        <span *ngIf="description.errors.minlength">: must be at least 50 characters</span>
-                                    </span>
-                                </label>
-                                <textarea id="description" name="description" class="form-control input-sm"
-                                          [(ngModel)]="submission.description"
-                                          [readonly]="readonly"
-                                          minlength="50"
-                                          required
-                                          autosize="200"
-                                          #description="ngModel"></textarea>
-                            </div>
-                        </div>
-
-                        <p></p>
-
-                        <div class="col-lg-12" style="padding:0">
-                            <subm-attributes-panel
-                                    [attributes]="submission.annotations.items[0].attributes"
-                                    [parentForm]="submForm.form"
-                                    [readonly]="readonly"
-                                    type="annotation">
-                            </subm-attributes-panel>
-
-                            <subm-items-panel
-                                    [items]="submission.contacts"
-                                    [parentForm]="submForm.form"
-                                    [readonly]="readonly"
-                                    type="contact"></subm-items-panel>
-
-                            <subm-items-panel
-                                    [items]="submission.links"
-                                    [parentForm]="submForm.form"
-                                    [readonly]="readonly"
-                                    type="link"></subm-items-panel>
-
-                            <subm-items-panel
-                                    [items]="submission.files"
-                                    [parentForm]="submForm.form"
-                                    [readonly]="readonly"
-                                    type="file"></subm-items-panel>
-
-                            <subm-items-panel
-                                    [items]="submission.publications"
-                                    [parentForm]="submForm.form"
-                                    [readonly]="readonly"
-                                    type="publication"></subm-items-panel>
-                        </div>
-                        <div>
-                            <button type="submit" class="btn btn-primary btn-lg"
-                                    *ngIf="!readonly && !submForm.invalid">Submit
-                            </button>
-                            <span *ngIf="submitting"><i class="fa fa-spinner fa-spin"></i></span>
+                            <p class="text-block text-black">
+                                All fields are required unless with a
+                                <span class="text-dashed">&nbsp;dashed outline&nbsp;</span> or marked as "<i>Optional</i>"
+                            </p>
                         </div>
                     </div>
                 </div>
 
-            </aside>
-        </div>
-    </form>
-    <!-- /.right-side -->
+                <div *ngIf="!isNew && !readonly && errors.total()" class="panel">
+                    <div class="panel-body">
+                        <h4>Incomplete submission</h4>
+                        <p>
+                            Some information in this submission is still missing or incorrect. Refer to the
+                            <span class="font-bold">Check</span> tab on the left-hand side for the
+                            list of fields that need updating.
+                        </p>
+                        <div class="alert alert-warning">
+                            <div class="pull-left">
+                                <i class="fa fa-hand-o-right fa-lg"></i>
+                                <strong>Please note</strong>
+                            </div>
+                            <p class="text-block text-black">
+                                All fields are required unless with a
+                                <span class="text-dashed">&nbsp;dashed outline&nbsp;</span> or marked as "<i>Optional</i>"
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="!errors.total() && !readonly">
+                    <div *ngIf="subm.isTemp && !isSubmitting" class="panel">
+                        <div class="panel-body">
+                            <h4>Study ready for submission</h4>
+                            <p>
+                                You may submit the data on this form now. After submission, your study will be allocated
+                                a permanent accession number under which it will be published.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div *ngIf="!subm.isTemp && !isSubmitting" class="panel">
+                        <div class="panel-body">
+                            <h4>Study ready for re-submission</h4>
+                            <p>
+                                You may re-submit the data on this form now. Your study will retain
+                                the same accession number under which it was registered.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div *ngIf="isSubmitting" class="panel">
+                        <div class="panel-body">
+                            <h4>Submitting study...</h4>
+                            <p>Please wait while the data in the form is being submitted and validated.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="!subm.isTemp && readonly" class="panel">
+                    <div class="panel-body">
+                        <h4>Study
+                            <span *ngIf="isUpdate == undefined">
+                                entry
+                            </span>
+                            <span *ngIf="isUpdate == false">
+                                created
+                            </span>
+                            <span *ngIf="isUpdate">
+                                updated
+                            </span>
+                        </h4>
+                        <p>
+                            The study with accession number <strong>{{accno}}</strong>
+                            <span *ngIf="releaseDate">
+                                and release date <strong>{{releaseDate | date: 'dd MMMM yyyy'}}</strong>
+                            </span>
+                            <span *ngIf="isUpdate == undefined">
+                                is present on the BioStudies database with the data shown below.
+                            </span>
+                            <span *ngIf="isUpdate == false">
+                                has been successfully added to the BioStudies database.
+                            </span>
+                            <span *ngIf="isUpdate">
+                                has been successfully updated.
+                            </span>
+                            It {{isUpdate == false ? 'will be available in the next 24 hours' : 'is available' }} at
+                            <a target="_blank" href="{{location.origin}}/biostudies/studies/{{accno}}">
+                            {{location.hostname}}/biostudies/studies/{{accno}}</a>.
+                        </p>
+                        <strong>
+                            <a target="_blank" href="https://www.ebi.ac.uk/biostudies/about.html">
+                                Citing my study
+                                <i class="fa fa-fw fa-external-link-square"></i>
+                            </a>
+                        </strong>
+                        <blockquote class="blockquote">
+                            Data are available in the BioStudies database (http://www.ebi.ac.uk/biostudies)
+                            under accession number {{accno}}.
+                        </blockquote>
+                        <strong>
+                            <a target="_blank" href="http://europepmc.org/abstract/MED/26700850">
+                                Citing the BioStudies database
+                                <i class="fa fa-fw fa-external-link-square"></i>
+                            </a>
+                        </strong>
+                        <blockquote class="blockquote">
+                            McEntyre J, Sarkans U, Brazma A (2015) The
+                            BioStudies database. <i>Mol. Syst. Biol.</i> 11(12):847.
+                            https://doi.org/10.15252/msb.20156658.
+                        </blockquote>
+                    </div>
+                </div>
+
+                <subm-form #submForm
+                           [section]="section"
+                           (keyup.enter)="onSubmit($event, true)"
+                           [readonly]="readonly">
+                </subm-form>
+
+                <div *ngIf="section.sections.list().length > 0" class="list-group form-group">
+                    <label class="control-label">Pages</label>
+                    <div *ngFor="let subsection of section.sections.list()" class="list-group-item" style="cursor: pointer"
+                        (click)="onSectionClick(subsection)">
+                        {{subsection.typeName}}
+                        <span *ngIf="subsection.accno">
+                            : {{subsection.accno}}
+                        </span>
+                        <span class="btn-toolbar pull-right">
+                            <button type="button" class="section-edit btn btn-link btn-xs btn-flat"
+                                    tooltip="{{readonly ? 'View' : 'Edit'}} page &quot;{{subsection.typeName}}&quot;"
+                                    container="body"
+                                    (click)="onSectionClick(subsection)">
+                                <i class="fa {{readonly ? 'fa-eye' : 'fa-pencil'}} fa-fw fa-lg"></i>
+                            </button>
+                            <button type="button" *ngIf="section.sections.isRemovable(subsection) && !readonly" class="section-delete btn btn-danger btn-xs btn-flat"
+                                    tooltip="Delete page &quot;{{subsection.typeName}}&quot;"
+                                    container="body"
+                                    placement="left"
+                                    (click)="$event.stopPropagation(); onSectionDelete(subsection)">
+                                <i class="fa fa-trash-o fa-fw"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+
+                <div *ngIf="!readonly" class="row row-submit">
+                    <p class="col-xs-2">
+                        <button type="button" class="btn-submit btn btn-primary"
+                                [disabled]="isSubmitting || isSaving"
+                                tooltip="Send to the BioStudies database"
+                                placement="top"
+                                container="body"
+                                (click)="onSubmit($event)">
+                            {{subm.isTemp ? 'S' : 'Re-s'}}ubmit
+                        </button>
+                    </p>
+                    <p class="text-muted col-xs-9">
+                        <i *ngIf="isSaving" class="fa fa-cog fa-spin"></i>
+                        <span *ngIf="isSaving">Backing up study data...</span>
+                    </p>
+                    <p class="col-xs-2 text-right">
+                        <button *ngIf="!readonly && errors && !errors.empty()" class="btn btn-default btn-sm btn-log"
+                                tooltip="Show validation log"
+                                placement="left"
+                                container="body"
+                                (click)="onViewLog($event)">
+                            View log
+                        </button>
+                    </p>
+                </div>
+            </div>
+        </aside>
+        <confirm-dialog #confirmSectionDel
+                        headerTitle="Delete page"
+                        body="You are about to permanently delete the page"
+                        confirmLabel="Delete">
+        </confirm-dialog>
+        <confirm-dialog #confirmRevert
+                        headerTitle="Revert to released version"
+                        confirmLabel="Revert"
+                        body="You are about to discard all changes made to this submission since it was last released. This operation cannot be undone.">
+        </confirm-dialog>
+        <confirm-dialog #confirmSubmit
+                        headerTitle="Submit the study"
+                        confirmLabel="Submit"
+                        body="You have hit the enter key while filling in the form. If you continue, the study data will be submitted.">
+        </confirm-dialog>
+    </div>
 </div>

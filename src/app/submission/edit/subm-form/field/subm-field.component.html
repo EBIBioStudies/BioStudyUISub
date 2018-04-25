@@ -1,0 +1,63 @@
+<input *ngIf="type === 'text'"
+       type="text" class="form-control"
+       tooltip="{{isOverflow(fieldInput) && !ahead._container ? value : ''}}"
+       container="body"
+       placement="bottom"
+       [ngClass]="{'input-sm': isSmall}"
+       [(ngModel)]="value"
+       [readonly]="readonly"
+       [required]="required"
+       (blur)="onBlur()"
+       [typeahead]="readonly ? [] : autosuggest"
+       [typeaheadMinLength]="suggestThreshold"
+       [typeaheadOptionsLimit]="suggestLength"
+       #ahead="bs-typeahead"
+       (keyup.enter)="ahead._container ? $event.stopPropagation() : return"
+       (typeaheadOnSelect)="onSuggestSelect($event)"
+       #fieldInput>
+
+<date-input
+        *ngIf="type === 'date'"
+        [isSmall]="isSmall"
+        [(ngModel)]="value"
+        [required]="required"
+        [readonly]="readonly"
+        [allowPast]="allowPast"
+        [maxDate]="nowInNyears(2)"
+        (focusout)="onBlur()">
+</date-input>
+
+<!-- TODO: Template-driven validation for ORCID is not bubbling up to the reactive form control wrapping it -->
+<orcid-input-box
+        *ngIf="type === 'orcid'"
+        [isSmall]="isSmall"
+        [required]="required"
+        [readonly]="readonly"
+        [isPopupButton]="false"
+        [(ngModel)]="value">
+</orcid-input-box>
+
+<file-input *ngIf="type === 'file'"
+            [(ngModel)]="value"
+            [required]="required"
+            [readonly]="readonly"
+            (focusout)="onBlur()">
+</file-input>
+
+<pubmedid-search
+        *ngIf="type === 'pubmedid'"
+        [(ngModel)]="value"
+        [readonly]="readonly"
+        [required]="required"
+        (found)="asyncData($event)">
+</pubmedid-search>
+
+<textarea *ngIf="type === 'textblob'"
+          class="form-control"
+          [(ngModel)]="value"
+          [readonly]="readonly"
+          [required]="required"
+          autosize="200"
+          (keyup.enter)="$event.stopPropagation()"
+          (blur)="onBlur()">
+</textarea>

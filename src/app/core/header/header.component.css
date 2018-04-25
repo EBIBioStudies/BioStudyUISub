@@ -1,0 +1,29 @@
+/* Logo area */
+.logo {
+    height: 100%;
+}
+
+/* Indeterminate progress bar */
+.navbar-fixed-top {
+    border-width: 0 0 2px;
+    border-color: #ededed;
+}
+.loading-bar {
+    position: absolute;
+    background: #25a9e0;
+    height: 2px;
+    width: 0%;
+}
+.animate {
+    -webkit-animation: progress 10s infinite linear;
+    -moz-animation: progress 10s infinite linear;
+    animation: progress 10s infinite linear;
+}
+@-webkit-keyframes progress {
+    0% {
+        width: 0%;
+    }
+    100% {
+        width: 100%;
+    }
+}

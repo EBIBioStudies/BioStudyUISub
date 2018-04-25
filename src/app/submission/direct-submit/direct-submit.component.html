@@ -1,0 +1,120 @@
+<div class="row-offcanvas row-offcanvas-left">
+    <direct-submit-sidebar
+            (toggle)="onToggle($event)"
+            [collapsed]="collapseSideBar">
+    </direct-submit-sidebar>
+    <div class="navbar-default navbar-subm-fixed"
+         [ngClass]="{'collapse-left': collapseSideBar}">
+        <nav>
+            <div class="col-xs-10 nav-block">
+                <a routerLink="/submissions{{request && request.successful ? '/sent' : ''}}">
+                    <i *ngIf="request?.successful" class="fa fa-database" aria-hidden="true"></i>
+                    {{request && request.successful ? 'Sent' : 'Submission list'}}
+                </a>
+                &nbsp;<i class="fa fa-angle-right font-bold"></i>&nbsp;
+                <strong>{{request && request.successful ? request.accno : 'Direct upload' }}</strong>
+            </div>
+            <div *ngIf="request?.successful" class="col-xs-2 nav-block">
+                <button class="btn btn-default btn-sm pull-right"
+                        routerLink="/submissions/edit/{{request.accno}}"
+                        tooltip="Edit newly created submission"
+                        placement="bottom"
+                        container="body"
+                        [disabled]="isBusy">
+                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                    Edit submission
+                </button>
+            </div>
+        </nav>
+    </div>
+    <div class="container-fluid">
+        <aside class="right-side navbar-subm-margin"
+               [ngClass]="{'collapse-left': collapseSideBar}">
+            <div class="help-msg panel">
+                <div *ngIf="!request" class="panel-body">
+                    <h4>New direct submission</h4>
+                    <p>Please fill in the form on the left. A study file must be provided and may be attached
+                        to one or multiple projects.
+                    </p>
+                    <div class="alert alert-warning">
+                        <div class="pull-left">
+                            <i class="fa fa-hand-o-right fa-lg"></i>
+                            <strong>Please note</strong>
+                        </div>
+                        <p class="text-block text-black">
+                            If updating an existing study, the filename must match the study's accession number.
+                        </p>
+                    </div>
+                </div>
+                <div *ngIf="request && request.inprogress" class="panel-body">
+                    <h4>Submitting study...</h4>
+                    <p>Please wait while the study file is being submitted and validated. Any invalid sections in the file
+                        will be listed below.</p>
+                </div>
+                <div *ngIf="request && request.failed" class="panel-body">
+                    <h4>Error while submitting study</h4>
+                    <p>The submitted study file is invalid or an unexpected error was encountered. Try to correct the
+                    issues highlighted in red and submit again.</p>
+                </div>
+                <div *ngIf="request && request.successful" class="panel-body">
+                    <h4>Study {{request.type ? 'updated' : 'created'}}</h4>
+                    <p>
+                        The study with accession number
+                        <strong>{{request.accno}}</strong>
+                        <span *ngIf="request.releaseDate">
+                            and release date <strong>{{request.releaseDate | date: 'dd MMMM yyyy'}}</strong>
+                        </span>
+                        <span *ngIf="request.type">
+                            has been successfully updated.
+                        </span>
+                        <span *ngIf="!request.type">
+                            has been successfully added to the BioStudies database.
+                        </span>
+                        It {{request.type ? 'is available' : 'will be available in the next 24 hours'}} at
+                        <a target="_blank" href="{{location.origin}}/biostudies/studies/{{accno}}">
+                            {{location.hostname}}/biostudies/studies/{{request.accno}}</a>.
+                    </p>
+                    <strong>
+                        <a target="_blank" href="https://www.ebi.ac.uk/biostudies/about.html">
+                            Citing my study
+                            <i class="fa fa-fw fa-external-link-square"></i>
+                        </a>
+                    </strong>
+                    <blockquote class="blockquote">
+                        Data are available in the BioStudies database (http://www.ebi.ac.uk/biostudies)
+                        under accession number {{request.accno}}.
+                    </blockquote>
+                    <strong>
+                        <a target="_blank" href="http://europepmc.org/abstract/MED/26700850">
+                            Citing the BioStudies database
+                            <i class="fa fa-fw fa-external-link-square"></i>
+                        </a>
+                    </strong>
+                    <blockquote class="blockquote">
+                        McEntyre J, Sarkans U, Brazma A (2015) The
+                        BioStudies database. <i>Mol. Syst. Biol.</i> 11(12):847.
+                        https://doi.org/10.15252/msb.20156658.
+                    </blockquote>
+                </div>
+            </div>
+            <div *ngIf="request" class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <i class="fa fa-2x" aria-hidden="true"
+                       [ngClass]="{ 'fa-times-circle text-danger': request.failed,
+                                    'fa-check text-success': request.successful,
+                                    'fa-cog fa-spin': request.inprogress
+                       }"></i>
+                    <div class="panel-description">
+                        <p class="panel-title">
+                            <strong>{{request.filename}}</strong>
+                        </p>
+                        {{request.created | date: 'd MMM y, H:mm'}}
+                    </div>
+                </div>
+                <div *ngIf="request.failed" class="panel-body container-fluid">
+                    <subm-results-tree [log]="request.log"></subm-results-tree>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>

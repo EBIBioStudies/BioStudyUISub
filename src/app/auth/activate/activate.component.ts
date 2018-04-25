@@ -2,12 +2,9 @@ import {
     Component,
     OnInit
 } from '@angular/core';
-
-import {Response} from '@angular/http';
 import {ActivatedRoute} from '@angular/router';
 
 import {ServerError} from 'app/http/index';
-
 import {AuthService} from '../auth.service';
 
 @Component({
@@ -33,15 +30,17 @@ export class ActivateComponent implements OnInit {
     }
 
     private activate(key: string): void {
+        const component = this;     //SelfSubscriber object overwrites context for "subscribe" method
+
         this.authService
             .activate(key)
             .subscribe(
                 (data) => {
-                    this.message = 'Activation was successful';
+                    component.message = 'Activation was successful';
                 },
-                (error: Response) => {
-                    this.hasError = true;
-                    this.message = ServerError.fromResponse(error).message;
+                (error: ServerError) => {
+                    component.hasError = true;
+                    component.message = error.data.message;
                 });
     }
 }

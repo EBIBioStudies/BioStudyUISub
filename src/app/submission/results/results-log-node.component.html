@@ -1,0 +1,8 @@
+<span [ngClass]="{
+        'text-info': info,
+        'text-danger': error,
+        'text-warning': warn,
+        'text-success': success}">
+    <i *ngIf="error" class="fa fa-times-circle text-danger" aria-hidden="true"></i>
+    <i *ngIf="warn" class="fa fa-exclamation-triangle text-warn" aria-hidden="true"></i> {{message}}
+</span>

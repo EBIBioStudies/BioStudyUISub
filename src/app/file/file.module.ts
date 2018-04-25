@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {AgGridModule} from 'ag-grid-angular/main';
 
-import {HttpClientModule} from 'app/http/http-client.module';
+import {HttpCustomClientModule} from 'app/http/http-custom-client.module';
 import {SharedModule} from 'app/shared/shared.module';
 
 import {FileService} from './file.service';
@@ -18,7 +18,7 @@ import {
 
 @NgModule({
     imports: [
-        HttpClientModule,
+        HttpCustomClientModule,
         RouterModule,
         SharedModule,
         AgGridModule.withComponents([

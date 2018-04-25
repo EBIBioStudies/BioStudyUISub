@@ -1,59 +1,110 @@
+/* Styles that modify default Bootstrap behaviour or relies on Bootstrap's variables */
+
 @left-side-width: 200px;
 @left-side-width-collapse: 40px;
 
-@sidebar-light-bg: white;
+@sidebar-light-bg: #6d9fc1;
 @sidebar-light-hover-bg: @brand-primary;
 @sidebar-light-font: white;
 @sidebar-light-border: none;
 
-/* Layout */
+@navbar-subm-height: 46px;
 
-/*right side - contains main content*/
-.right-side {
-  background-color: @body-bg;
-  margin-left: @left-side-width;
-  position: relative;
-  top: -@navbar-height;
+/* Navbar submission */
+.navbar-subm-fixed {
+  width: 100%;
+  padding: 13px 0 12px @left-side-width;
+
+  nav {
+    position: fixed !important;
+    top: @navbar-height;
+    left: 0;
+    z-index: @zindex-navbar-fixed;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 54px;
+    padding: inherit;
+    background: inherit;
+    box-shadow: inherit;
+  }
+
+  .nav-block {
+    float: none;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .readonly & {
+    padding: 0;
+  }
 }
 
-.right-side.stretch {
-  margin-left: 0 !important;
+.navbar-subm-margin {
+  padding-top: calc(@navbar-subm-height + 16px);
+}
+
+/* Layout */
+
+//Top spacing to make room for top bar on login-related screens */
+//TODO: Untangle the styling used for the authentication screens, which is spread over "container-md" and the auth component in question
+.auth-content {
+  margin-top: calc(@navbar-height + 20px);
+}
+
+//Top spacing for screens past the login-related ones */
+aside {
+  margin-top: @navbar-height;
+}
+
+/*right side - main content*/
+.right-side {
+  margin-left: @left-side-width;
 }
 
 /*left side - contains sidebar*/
 .left-side {
   position: fixed;
-  top: @navbar-height;
+  top: 0;
+  bottom: 0;
   width: @left-side-width;
   background: @sidebar-light-bg;
-  -webkit-box-shadow: 10px 10px 5px -9px rgba(0, 0, 0, 0.24);
-  -moz-box-shadow: 10px 10px 5px -9px rgba(0, 0, 0, 0.24);
-  box-shadow: 10px 10px 5px -9px rgba(0, 0, 0, 0.24);
-}
+  -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.24);
+  -moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.24);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.24);
+  -webkit-transition: width .3s ease;
+  -moz-transition: width .3s ease;
+  transition: width .3s ease;
 
-@media screen and (min-width: @screen-md) {
+  &.server-error {
+    background: @brand-danger;
 
-  .right-side.collapse-left {
-    margin-left: @left-side-width-collapse;
-    display: block !important;
-  }
-
-  .right-side.ng-hide {
-    display: block !important;
-    margin-left: 0;
-    > .content-header {
-      margin-top: 0;
+    .sidebar-menu {
+      border-top-color: @brand-danger;
     }
   }
 
-  .left-side.collapse-left {
+  &.collapse-left {
     width: @left-side-width-collapse;
   }
+}
+
+.right-side.collapse-left {
+  margin-left: @left-side-width-collapse;
+  display: block !important;
+}
+
+.navbar-subm-fixed.collapse-left {
+  padding-left: @left-side-width-collapse;
 }
 
 @media screen and (max-width: @screen-md) {
   .right-side {
     margin-left: 0;
+  }
+
+  .navbar-subm-fixed {
+    padding-left: 0;
   }
 }
 
@@ -63,27 +114,104 @@
   padding-top: 10px;
 }
 
-/* Sidebar */
-
+/* Off-canvas side menu */
 .sidebar {
-  height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
+  z-index: calc(@zindex-navbar-fixed + 1);
 }
 
 .sidebar-offcanvas {
-  margin-bottom: 5px;
-  border-bottom: 1px solid #fff;
+  .menu-toggle {
+    overflow: hidden;
+    padding-top: 12px;
+    background: #fafafa;
+
+    .minimise-btn {
+      padding: 6px 7px;
+      color: @link-color;
+      outline: none;
+      background: none;
+    }
+
+    .nav-tabs > li > a {
+      padding: 10px 12px;
+    }
+  }
+
+  .vertical-text {
+    position: absolute;
+    top: 50%;
+    left: -50px;
+    text-transform: uppercase;
+    color: #fff;
+    font-weight: bold;
+    letter-spacing: 3px;
+    white-space: nowrap;
+  }
+
+  &.collapse-left .menu-toggle {
+    height: 54px;
+  }
 
   .sidebar-menu {
     list-style: none;
     margin: 0;
     padding: 0;
+    border-top: 3px solid @sidebar-light-bg;
+
+    .fa-stack {
+      margin-left: -2.5px;
+      font-size: 12px;
+    }
+
+    .advanced-menu {
+      max-height: 200px;
+      overflow: hidden;
+      -webkit-transition: max-height .3s ease-in;
+      -moz-transition: max-height .3s ease-in;
+      transition: max-height .3s ease-in;
+
+      .fa-lg {
+        vertical-align: middle;
+      }
+    }
+    .collapsed-box {
+      max-height: 0;
+    }
+
+    .advanced-btn {
+      color: #fff;
+      outline: none !important;
+      text-decoration: none;
+    }
+
     .sidebar-item {
       margin: 0;
       padding: 0;
-      border-top: 1px solid #fff;
+      line-height: 30px;
       border-bottom: 1px solid @sidebar-light-border;
+
+      &.type-control {
+        background: #fff;
+
+        a {
+          color: @link-color;
+
+          &:hover {
+            color: #fff;
+
+            .fa-inverse {
+              color: @brand-primary;
+            }
+          }
+        }
+
+        .fa-lg {
+          font-size: 1.7em;
+          margin-left: -.8px;
+        }
+      }
 
       &.menu-toggle > a {
         background-color: #e3fdec;
@@ -102,10 +230,6 @@
         color: @brand-info;
       }
 
-      > a > span {
-        color: #737373;
-      }
-
       > a:hover, &.active > a {
         text-decoration: none;
         cursor: pointer;
@@ -119,6 +243,8 @@
       > a {
         padding: 12px 10px 12px 10px;
         display: block;
+        color: #fff;
+
         > .fa, > .glyphicon {
           width: 20px;
         }
@@ -135,47 +261,174 @@
   }
 }
 
-/*
- * Off Canvas
- * --------------------------------------------------
- */
-@media screen and (max-width: @screen-md) {
-  .row-offcanvas {
-    position: relative;
-    -webkit-transition: all .25s ease-out;
-    -o-transition: all .25s ease-out;
-    transition: all .25s ease-out;
-  }
+//Ensures text inside panel headings flushes against any other element on the left.
+.panel-heading .fa {
+  vertical-align: middle;
+}
+.panel-description {
+  display: inline-block;
+  margin: 0 .8rem;
+  width: 83%;
+  vertical-align: middle;
+}
 
-  .row-offcanvas-right {
-    right: 0;
-  }
+//Makes unselected tabs be on a plane behind selected ones with a permanent shaded appearance. Also bumps up their weight
+//and changes the background to reflect a server error.
+.nav-tabs > .nav-item > .nav-link {
+  font-weight: 500;
+}
+.nav-tabs > .nav-item > .nav-link:not(.active) {
+  background: @gray-lighter;
+}
+.nav-tabs > .nav-item > .nav-link.active {
+  z-index: 100;
 
-  .row-offcanvas-left {
-    left: 0;
+  .server-error & {
+    background: @brand-danger;
   }
+}
 
-  .row-offcanvas-right
-  .sidebar-offcanvas {
-    right: -@left-side-width;
-  }
+//Gives readonly inputs and features the appearance of standard text
+input[readonly], textarea[readonly] {
+  text-overflow: ellipsis;
+  background: #fff !important;
+}
+.readonly input, .readonly textarea {
+  font-size: @font-size-base;
+}
+.readonly .form-control, .readonly .feature {
+  border: none !important;
+  box-shadow: none !important;
+}
+.readonly .feature .form-control {
+  padding-left: 0;
+}
 
-  .row-offcanvas-left
-  .sidebar-offcanvas {
-    left: -@left-side-width;
-  }
+//Makes radio buttons stand out more
+input[type="radio"] {
+  width: 1.6rem;
+  height: 1.6rem;
+  outline: none !important;
+}
 
-  .row-offcanvas-right.active {
-    right: @left-side-width;
-  }
+//Optional fields (be them data or column ones) within features have discontinous outlines
+.optional .form-control {
+  border-style: dashed;
+  border-width: 1.5px;
+}
+.heading-cell.optional {
+  border-bottom-style: dashed !important;
+}
 
-  .row-offcanvas-left.active {
-    left: @left-side-width;
-  }
+//Makes labels' size to reflect font-size without compromising spacing between form element
+.control-label {
+  padding-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+.form-group {
+  padding-top: 7px;
+}
 
-  .sidebar-offcanvas {
-    position: absolute;
-    top: 0;
-    width: @left-side-width;
+//Convenience classes for top-right-corner badge indicators
+.badge-parent {
+  position: relative;
+}
+.badge-corner {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+}
+.badge-half-danger {
+  background: -webkit-linear-gradient(to right, transparent 49%, @brand-danger 50%, @brand-danger 100%);
+  background: -o-linear-gradient(to right, transparent 49%, @brand-danger 50%, @brand-danger 100%);
+  background: -moz-linear-gradient(to right, transparent 49%, @brand-danger 50%, @brand-danger 100%);
+  background: linear-gradient(to right, transparent 49%, @brand-danger 50%, @brand-danger 100%);
+}
+.badge-danger {
+  background: @brand-danger !important;
+}
+
+//Convenience class for underlined headings
+.underlined {
+  border-bottom: 1px solid @brand-primary;
+}
+
+//Makes alerts take up no more space than its contents
+.alert {
+  display: inline-block;
+  margin: 5px;
+}
+
+//Removes the gray shading over close buttons, instead using white to make them evident
+.modal .close, .alert .close {
+  color: #fafafa;
+  opacity: 1;
+  text-shadow: none;
+
+  &:hover {
+    color: @text-color;
   }
+}
+
+//Allows the collapse of common spacing between body and footer in a modal
+.modal-footer {
+  padding-top: 0 !important;
+}
+
+//Convenience class for bold typography
+.font-bold {
+  font-weight: bold;
+}
+
+//Convenience class for vertical clockwise text
+.vertical-text {
+  transform: rotate(-90deg);
+}
+
+//Convenience class for a dashed outline of inline text
+.text-dashed {
+  border: 1px dashed;
+  border-radius: @border-radius-small;
+}
+
+//Convenience class to force black typography
+.text-black {
+  color: #000;
+}
+
+//Brings date picker's styles in line with the app's, removes pointer over inactive/disabled day cells
+//and keeps the dialogue on top of all form elements.
+.bs-datepicker {
+  z-index: calc(@zindex-navbar-fixed - 10);
+  border-radius: 4px;
+}
+.bs-datepicker .bs-datepicker-head {
+  background: @brand-primary;
+}
+.bs-datepicker .selected {
+  background: @brand-primary !important;
+}
+.bs-datepicker-container {
+  padding: 0;
+}
+.bs-datepicker-body table td {
+  color: @link-color;
+}
+.bs-datepicker-body table td span:not(.disabled):not(.is-other-month) {
+  font-weight: 500;
+}
+.bs-datepicker-body table td span.disabled,
+.bs-datepicker-body table td span.is-other-month,
+.bs-datepicker-body table td.disabled span {
+  cursor: default;
+}
+.bs-datepicker-head button[disabled] {
+  background: transparent !important;
+  color: #979797 !important;
+}
+
+//Restores the border radius applied to right corners on fields inside input-groups
+.input-group .subm-field .form-control {
+  border-top-right-radius: @border-radius-base !important;
+  border-bottom-right-radius: @border-radius-base !important;
 }

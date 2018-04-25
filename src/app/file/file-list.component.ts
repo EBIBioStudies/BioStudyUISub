@@ -26,17 +26,26 @@ import {Path} from './path';
 import * as _ from 'lodash';
 
 import 'rxjs/add/operator/filter';
+import {AppConfig} from "../app.config";
+import "rxjs/add/operator/takeUntil";
+import {Subject} from "rxjs/Subject";
 
 @Component({
     selector: 'file-actions-cell',
     template: `
 <div style="text-align:center">
-    <button *ngIf="canRemove" 
-            type="button" class="btn btn-danger btn-xs"
-            (click)="onFileRemove($event)">Delete</button>
+    <button *ngIf="canRemove"
+            type="button" class="btn btn-danger btn-xs btn-flat"
+            tooltip="Delete"
+            (click)="onFileRemove($event)">
+        <i class="fa fa-trash-o fa-fw"></i>
+    </button>
     <button *ngIf="canCancel" 
             type="button" class="btn btn-warning btn-xs"
-            (click)="onCancelUpload($event)">Cancel</button>        
+            tooltip="Cancel"
+            (click)="onCancelUpload($event)">
+        Cancel
+    </button>        
 </div>
 `
 })
@@ -76,7 +85,7 @@ export class FileActionsCellComponent implements AgRendererComponent {
 @Component({
     selector: 'file-type-cell',
     template: `
-    <div style="text-align:center;color:#82b0bc">
+    <div class="text-center text-primary">
     <i class="fa" [ngClass]="{
                                'fa-file' : ftype === 'FILE', 
                                'fa-folder' : ftype === 'DIR', 
@@ -134,60 +143,13 @@ export class ProgressCellComponent implements AgRendererComponent {
 
 @Component({
     selector: 'file-list',
-    template: `
-<div class="row-offcanvas row-offcanvas-left">
-
-   <user-dirs-sidebar 
-       name="userDirsSidebar"
-       [(ngModel)]="rootPath"
-       (select)="onRootPathSelect($event)"
-       (toggle)="sideBarCollapsed=!sideBarCollapsed"
-       [collapsed]="sideBarCollapsed">
-   </user-dirs-sidebar>
-          
-   <div class="container-fluid">
-        <aside class="right-side" [ngClass]="{'collapse-left' : sideBarCollapsed}">    
-            <section class="content">
-                <div class="panel panel-info">
-                    <div class="panel-heading clearfix">
-                        <div class="panel-title pull-left">
-                            <button class="btn btn-default btn-xs"
-                                    (click)="onBackButtonClick()"
-                                    *ngIf="backButton"><i class="fa fa-long-arrow-left" aria-hidden="true"></i>&nbsp;Back
-                                to submission
-                            </button>
-                            &nbsp;<directory-path [path]="path.rel" (change)="onRelativePathChange($event)"></directory-path>
-                        </div>
-                        <div class="pull-right">
-                            <file-upload-badge (select)="onUploadSelect($event)"></file-upload-badge>
-                            <file-upload-button title="Upload Files" 
-                                                [multiple]="true"
-                                                (select)="onUploadFilesSelect($event)"></file-upload-button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                             <ag-grid-angular #agGrid style="width: 100%; height: 450px;" class="ag-fresh"
-                                  [gridOptions]="gridOptions"
-                                  [columnDefs]="columnDefs"
-                                  enableSorting
-                                  enableColResize
-                                  rowHeight="30"
-                                  (rowDoubleClicked)="onRowDoubleClick($event)">
-                             </ag-grid-angular>
-                        </div>
-                    </div>
-                </div>
-              </section>
-          </aside>
-    </div>
-</div>
-`
+    templateUrl: './file-list.component.html',
+    styleUrls: ['./file-list.component.css']
 })
 
 export class FileListComponent implements OnInit, OnDestroy {
+    protected ngUnsubscribe: Subject<void>;     //stopper for all subscriptions
     private rowData: any[];
-    private uploadSubscription: Subscription;
 
     path: Path = new Path('/User', '/');
 
@@ -198,18 +160,28 @@ export class FileListComponent implements OnInit, OnDestroy {
 
     constructor(private fileService: FileService,
                 private fileUploadService: FileUploadService,
-                private route: ActivatedRoute) {
+                private route: ActivatedRoute,
+                private appConfig: AppConfig) {
+
+        this.ngUnsubscribe = new Subject<void>();
+
+        //Initally collapses the sidebar for tablet-sized screens
+        this.sideBarCollapsed = window.innerWidth < this.appConfig.tabletBreak;
+
         this.gridOptions = <GridOptions>{
             onGridReady: () => {
                 this.gridOptions.api.sizeColumnsToFit();
             },
-            rowSelection: 'single'
+            rowSelection: 'single',
+            unSortIcon: true,
+            localeText: {noRowsToShow: 'No files found'},
+            overlayLoadingTemplate: '<span class="ag-overlay-loading-center"><i class="fa fa-cog fa-spin fa-lg"></i> Loading...</span>',
         };
 
-        this.uploadSubscription = this.fileUploadService.uploadFinish$
+        this.fileUploadService.uploadFinish$
             .filter((path) => path.startsWith(this.currentPath))
+            .takeUntil(this.ngUnsubscribe)
             .subscribe(() => {
-                console.log('on upload finished');
                 this.loadData();
             });
         this.rowData = [];
@@ -218,14 +190,19 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.route.params.forEach((params: Params) => {
-            this.backButton = params['bb'];
+        this.route.queryParams.forEach((params: Params) => {
+            this.backButton = params.bb;
         });
     }
 
+    /**
+     * Removes all subscriptions whenever the user navigates away from this view.
+     * Requires the takeUntil operator before every subscription.
+     * @see {@link https://stackoverflow.com/a/41177163}
+     */
     ngOnDestroy() {
-        console.log('onDestroy()');
-        this.uploadSubscription.unsubscribe();
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     private get currentPath() {
@@ -245,7 +222,8 @@ export class FileListComponent implements OnInit, OnDestroy {
             {
                 headerName: 'Type',
                 field: 'type',
-                width: 30,
+                minWidth: 45,
+                maxWidth: 45,
                 suppressSorting: true,
                 cellRendererFramework: FileTypeCellComponent
             },
@@ -255,12 +233,12 @@ export class FileListComponent implements OnInit, OnDestroy {
             },
             {
                 headerName: 'Progress',
-                width: 200,
+                maxWidth: 200,
                 cellRendererFramework: ProgressCellComponent
             },
             {
                 headerName: 'Actions',
-                width: 100,
+                maxWidth: 100,
                 suppressMenu: true,
                 suppressSorting: true,
                 cellRendererFramework: FileActionsCellComponent
@@ -271,6 +249,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     private loadData(path?: Path) {
         let p: Path = path ? path : this.path;
         this.fileService.getFiles(p.fullPath())
+            .takeUntil(this.ngUnsubscribe)
             .subscribe(
                 data => {
                     if (data.status === 'OK') { //use proper http codes for this!!!!!!
@@ -315,7 +294,6 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     onUploadFilesSelect(files) {
-        console.debug("Files to upload:", files);
         let upload = this.fileUploadService.upload(this.path, files);
         this.updateDataRows([].concat(this.decorateUploads([upload]), this.rowData));
     }
@@ -348,9 +326,9 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     private removeFile(fileName: string): void {
-        console.log('removeFile', fileName);
         this.fileService
             .removeFile(this.path.fullPath(fileName))
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((resp) => {
                 this.loadData();
             });

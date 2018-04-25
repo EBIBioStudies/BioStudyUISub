@@ -1,39 +1,49 @@
-import {NgModule}  from '@angular/core';
+import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 
 import {AgGridModule} from 'ag-grid-angular/main';
 
-import {HttpClientModule} from 'app/http/http-client.module';
+import {HttpCustomClientModule} from 'app/http/http-custom-client.module';
 import {SharedModule} from 'app/shared/shared.module';
-import {SubmissionModelModule} from 'app/submission-model/submission-model.module';
 import {SubmissionSharedModule} from 'app/submission-shared/submission-shared.module';
 
-import {SubmissionService} from './submission.service';
+import {SubmissionService} from './shared/submission.service';
 
 import {
-    SubmissionListComponent,
+    SubmListComponent,
     ActionButtonsCellComponent,
     DateCellComponent
 } from './list/subm-list.component';
 import {TextFilterComponent} from './list/ag-grid/text-filter.component';
 import {DateFilterComponent} from './list/ag-grid/date-filter.component';
 
-import {SubmissionEditComponent} from './edit/subm-edit.component';
-import {SubmissionViewComponent} from './edit/subm-view.component';
+import {SubmEditComponent} from './edit/subm-edit.component';
+import {SubmViewComponent} from './edit/subm-view.component';
 
 import {DirectSubmitSideBarComponent} from './direct-submit/direct-submit-sidebar.component';
-import {DirectSubmitComponent, ResultLogNodeComponent} from './direct-submit/direct-submit.component';
+import {DirectSubmitComponent} from './direct-submit/direct-submit.component';
 import {DirectSubmitService} from './direct-submit/direct-submit.service';
 
-import {
-    SideBarComponent,
-    SideBarItemComponent
-} from './edit/subm-sidebar.component';
+import {SubmSideBarComponent} from './edit/subm-sidebar/subm-sidebar.component';
+import {SubmFormComponent} from './edit/subm-form/subm-form.component';
+import {SubmFieldComponent} from './edit/subm-form/field/subm-field.component';
+import {SubmFeatureComponent} from './edit/subm-form/feature/subm-feature.component';
+import {FeatureGridComponent} from './edit/subm-form/feature/feature-grid.component';
+import {FeatureListComponent} from './edit/subm-form/feature/feature-list.component';
+import {SubmNavBarComponent} from './edit/subm-navbar/subm-navbar.component';
+import {SubmValidationErrorsComponent} from './edit/subm-navbar/subm-validation-errors.component';
+import {SubmTypeAddDialogComponent} from './edit/submtype-add/submtype-add.component';
+import {SubmFormService} from './edit/subm-form/subm-form.service';
+import {SubmResultsModalComponent} from './results/subm-results-modal.component';
+import {ResultsLogNodeComponent} from './results/results-log-node.component';
+import {SubmResultsTreeComponent} from './results/subm-results-tree.component';
 
+import {UniqueValidator} from './shared/unique.directive';
+import {SubmAddDialogComponent} from "./list/subm-add.component";
 
 @NgModule({
     imports: [
-        HttpClientModule,
+        HttpCustomClientModule,
         AgGridModule.withComponents([
             ActionButtonsCellComponent,
             DateCellComponent,
@@ -42,34 +52,49 @@ import {
         ]),
         SharedModule,
         RouterModule,
-        SubmissionModelModule,
         SubmissionSharedModule
     ],
     providers: [
+        SubmFormService,
         SubmissionService,
         DirectSubmitService
     ],
     declarations: [
-        SubmissionListComponent,
-        SubmissionEditComponent,
-        SubmissionViewComponent,
+        SubmListComponent,
+        SubmEditComponent,
+        SubmViewComponent,
         DirectSubmitComponent,
-        ResultLogNodeComponent,
+        ResultsLogNodeComponent,
         DirectSubmitSideBarComponent,
-        SideBarComponent,
-        SideBarItemComponent,
+        SubmFormComponent,
+        SubmFieldComponent,
+        SubmFeatureComponent,
+        SubmSideBarComponent,
+        SubmNavBarComponent,
+        SubmValidationErrorsComponent,
+        SubmResultsModalComponent,
+        SubmResultsTreeComponent,
+        SubmTypeAddDialogComponent,
+        SubmAddDialogComponent,
+        FeatureGridComponent,
+        FeatureListComponent,
         ActionButtonsCellComponent,
         DateCellComponent,
         TextFilterComponent,
-        DateFilterComponent
+        DateFilterComponent,
+        UniqueValidator
     ],
     exports: [
-        SubmissionListComponent,
-        SubmissionEditComponent,
-        SubmissionViewComponent,
-        DirectSubmitComponent
+        SubmListComponent,
+        SubmEditComponent,
+        SubmViewComponent,
+        DirectSubmitComponent,
     ],
-    entryComponents: [ResultLogNodeComponent]
+    entryComponents: [
+        ResultsLogNodeComponent,
+        SubmValidationErrorsComponent,
+        SubmResultsModalComponent
+    ]
 })
 export class SubmissionModule {
 }

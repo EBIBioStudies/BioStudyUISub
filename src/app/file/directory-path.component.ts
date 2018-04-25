@@ -7,28 +7,23 @@ import {
 
 @Component({
     selector: 'directory-path',
-    template: `
-    <span *ngFor="let dir of dirs; let last = last; let index = index">
-        <a *ngIf="!last"
-           (click)="onDirectoryClick(index)" style="color:black">
-           {{dir}}
-        </a>
-        <span *ngIf="last">{{dir}}</span>
-        <span>/</span>
-</span>
-`
+    templateUrl:'./directory-path.component.html'
 })
 export class DirectoryPathComponent {
     @Output() change: EventEmitter<string> = new EventEmitter<string>();
 
-    dirs = [];
+    public dirs:string[] = [];
+    private _path:string = '';
 
     @Input()
+    get path() {
+        return this._path;
+    }
     set path(path: string) {
-        if (path) {
-            let p = path.replace(/\/\s*$/, '');
-            this.dirs = (('\u2022' + p).split('/'));
+        if (path.trim().length) {
+            this.dirs = path.split('/').filter(Boolean);
         }
+        this._path = path;
     }
 
     onDirectoryClick(idx) {

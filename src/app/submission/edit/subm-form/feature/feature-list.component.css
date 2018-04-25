@@ -1,0 +1,10 @@
+.headings {
+    margin-bottom: 15px;
+    border-bottom: 1px solid #ccc;
+}
+.heading {
+    padding-left: 0;
+}
+.key-field {
+    margin-right:15px;
+}

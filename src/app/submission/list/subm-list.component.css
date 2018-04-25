@@ -1,0 +1,15 @@
+/* Makes top of the panel flush against tabs */
+.panel-info {
+    border: none;
+    box-shadow: none;
+}
+.panel-heading {
+    border-top-left-radius: 0;
+}
+
+/* Hides button text for small screens */
+@media screen and (max-width: 650px) {
+    .btn-primary span {
+        display: none;
+    }
+}

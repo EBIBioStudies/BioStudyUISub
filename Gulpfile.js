@@ -6,10 +6,8 @@ var zip = require('gulp-zip');
 var del = require('del');
 var extend = require('gulp-extend');
 
-/* sync app config with changes in config.json and version.json */
 gulp.task('config', function () {
-    return gulp.src(['config.json', 'version.json'])
-        .pipe(extend('config.json'))
+    return gulp.src(['config.json'])
         .pipe(gulp.dest('src'));
 });
 

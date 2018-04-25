@@ -9,7 +9,7 @@ import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
-import {HttpClient} from 'app/http/http-client'
+import {HttpCustomClient} from 'app/http/http-custom-client.service'
 import {Path} from './path';
 
 import * as _ from 'lodash';
@@ -35,7 +35,7 @@ export class FileUpload {
 
     finish$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-    constructor(path: Path, files: File[], httpClient: HttpClient) {
+    constructor(path: Path, files: File[], httpClient: HttpCustomClient) {
         this._path = path;
         this._files = _.map(files, 'name');
         this._progress = 0;
@@ -46,7 +46,6 @@ export class FileUpload {
 
         let uploadStatus = upload
             .map((res) => {
-                console.log(res);
                 if (res.kind === 'progress') {
                     return new FileUploadStatus('uploading', res.progress, undefined);
                 }
@@ -59,9 +58,7 @@ export class FileUpload {
                 return failed;
             });
 
-        this._statusSubject.subscribe(
-            (fus) => {
-                console.log(fus);
+        this._statusSubject.subscribe((fus) => {
                 this._progress = fus.progress;
                 this._status = fus.status;
                 this._error = fus.error;
@@ -70,8 +67,7 @@ export class FileUpload {
                     this.finish$.complete();
                     this._statusSubject.complete();
                 }
-            },
-            console.log);
+            }, console.log);
 
         this._sb = uploadStatus.subscribe(this._statusSubject);
     }
@@ -126,7 +122,7 @@ export class FileUploadService {
     private _uploads: FileUpload[] = [];
     uploadFinish$: Subject<string> = new Subject<string>();
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpCustomClient) {
     }
 
     activeUploads(): FileUpload[] {
@@ -144,7 +140,6 @@ export class FileUploadService {
     }
 
     remove(u: FileUpload) {
-        console.log("remove upload", u, this._uploads);
         _.pull(this._uploads, u);
     }
 }
