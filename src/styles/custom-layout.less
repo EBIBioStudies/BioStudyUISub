@@ -340,10 +340,10 @@ input[type="radio"] {
   right: -7px;
 }
 .badge-half-danger {
-  background: -webkit-linear-gradient(to right, #777777 49%, @brand-danger 50%, @brand-danger 100%);
-  background: -o-linear-gradient(to right, #777777 49%, @brand-danger 50%, @brand-danger 100%);
-  background: -moz-linear-gradient(to right, #777777 49%, @brand-danger 50%, @brand-danger 100%);
-  background: linear-gradient(to right, #777777 49%, @brand-danger 50%, @brand-danger 100%);
+  background: -webkit-linear-gradient(to right, transparent 49%, @brand-danger 50%, @brand-danger 100%);
+  background: -o-linear-gradient(to right, transparent 49%, @brand-danger 50%, @brand-danger 100%);
+  background: -moz-linear-gradient(to right, transparent 49%, @brand-danger 50%, @brand-danger 100%);
+  background: linear-gradient(to right, transparent 49%, @brand-danger 50%, @brand-danger 100%);
 }
 .badge-danger {
   background: @brand-danger !important;
@@ -390,6 +390,11 @@ input[type="radio"] {
 .text-dashed {
   border: 1px dashed;
   border-radius: @border-radius-small;
+}
+
+//Convenience class to force black typography
+.text-black {
+  color: #000;
 }
 
 //Brings date picker's styles in line with the app's, removes pointer over inactive/disabled day cells
