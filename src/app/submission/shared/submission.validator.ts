@@ -137,7 +137,10 @@ class ValidationRules {
                     return undefined;
                 }
                 if (valueType === 'date' && parseDate(value) === undefined) {
-                    return `'${name}' format is invalid`;
+                    return `'${name}' has an invalid format`;
+                }
+                if (valueType === 'orcid' && !/^\d{4}-\d{4}-\d{4}-\d{4}$/.test(value)) {
+                    return `'${name}' has an invalid format`;
                 }
                 return undefined;
             }

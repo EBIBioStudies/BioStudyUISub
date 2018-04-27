@@ -162,7 +162,7 @@ export class FieldControl extends FormControl {
             return `Please use up to ${type.maxlength} characters`;
         }
         if (errorKey === 'pattern') {
-            return 'Invalid format';
+            return `Please provide a valid ${fieldName.toLowerCase()}`;
         }
         return errorKey;
     }

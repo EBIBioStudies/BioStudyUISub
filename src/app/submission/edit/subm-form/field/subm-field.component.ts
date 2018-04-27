@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 
 import {
-    AsyncValidator,
+    AsyncValidator, AsyncValidatorFn,
     ControlValueAccessor,
     NG_VALUE_ACCESSOR, NgModel, Validators,
 } from '@angular/forms';
@@ -41,6 +41,8 @@ export class SubmFieldComponent implements ControlValueAccessor {
                                                 //a value of 0 makes typeahead behave like an auto-suggest box.
 
     @Output() async: EventEmitter<any> = new EventEmitter<any>();  //signals availability of asynchronous attributes
+    @ViewChild(NgModel)
+    private inputModel: NgModel;
 
     constructor(private rootEl: ElementRef) {}
 
@@ -84,11 +86,21 @@ export class SubmFieldComponent implements ControlValueAccessor {
     }
 
     /**
-     * Handler for blur events. Removes spurious whitespaces and normalises the behaviour of the "touched" flag.
+     * Handler for blur events. Normalises the behaviour of the "touched" flag.
      */
     onBlur() {
-        this.value = this.value.trim();
         this.onTouched();
+    }
+
+    /**
+     * Lifecycle hook for operations after all child views have been initialised. It merges all validators of
+     * the actual input and the wrapping component.
+     */
+    ngAfterViewInit() {
+        const control = this.formControl;
+
+        control.setValidators(Validators.compose([control.validator, this.inputModel.control.validator]));
+        control.setAsyncValidators(Validators.composeAsync([control.asyncValidator, this.inputModel.control.asyncValidator]));
     }
 
     /**
@@ -101,11 +113,11 @@ export class SubmFieldComponent implements ControlValueAccessor {
 
     /**
      * Determines if the field's contents are longer than the actual field's dimensions by probing the DOM directly.
-     * @param {Element} element - DOM element for the field.
+     * @param {HTMLElement} formEl - DOM element for the field control.
      * @returns {boolean} True if the text's length is greater than its container.
      */
-    private isOverflow(element: HTMLInputElement): boolean {
-        return element.scrollWidth > element.clientWidth;
+    isOverflow(formEl: HTMLElement = this.formControl.nativeElement): boolean {
+        return formEl && formEl.scrollWidth > formEl.clientWidth;
     }
 
     /**

@@ -6,8 +6,7 @@
            (blur)="onBlur()"
            pattern="\d{4}-\d{4}-\d{4}-\d{4}"
            placeholder="{{!readonly ? 'e.g. 1892-5647-2571-9436' : ''}}"
-           [readonly]="readonly"
-           #inputModel="ngModel">
+           [readonly]="readonly">
     <span *ngIf="isPopupButton" class="input-group-btn">
         <button class="btn btn-sm btn-primary" type="button"
                 [ngClass]="{'btn-sm': isSmall}"
