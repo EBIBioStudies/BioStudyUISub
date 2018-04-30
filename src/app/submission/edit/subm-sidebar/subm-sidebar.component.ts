@@ -22,7 +22,6 @@ import {
 } from '../../shared/submission.model';
 import {SubmTypeAddDialogComponent} from '../submtype-add/submtype-add.component';
 import {ConfirmDialogComponent} from 'app/shared/index';
-import {SubmValidationErrors} from "../../shared/submission.validator";
 import {FieldControl} from "../subm-form/subm-form.service";
 import {UserData} from "../../../auth/user-data";
 import {ServerError} from "../../../http/server-error.handler";
@@ -163,7 +162,6 @@ export class SubmSideBarComponent implements OnChanges {
     @Input() collapsed?:boolean = false;                                     //flag indicating if menu is minimized/collapsed
     @Input() section: Section;                                               //section of the form being displayed
     @Input() formControls: FieldControl[] = [];                              //refreshed array of form controls
-    @Input() errors: SubmValidationErrors = SubmValidationErrors.EMPTY;      //errors from validator service
     @Input() serverError: ServerError;                                       //errors from server requests
     @Output() toggle? = new EventEmitter();                                  //event triggered when collapsed state changes
 
@@ -176,6 +174,7 @@ export class SubmSideBarComponent implements OnChanges {
     items: SubmItems;                //current collection of feature/subsection items
     iconMap: any = {};               //lookup table for icons
     numPending: number = 0;          //number of modified fields still pending review (still invalid)
+    numInvalid: number = 0;          //number of fields still invalid (modified or not)
 
     private subscr: Subscription;
 
@@ -210,6 +209,7 @@ export class SubmSideBarComponent implements OnChanges {
      */
     ngDoCheck() {
         this.numPending = FieldControl.numPending;
+        this.numInvalid = FieldControl.numInvalid;
     }
 
     /**

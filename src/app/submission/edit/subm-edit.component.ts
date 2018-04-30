@@ -231,15 +231,15 @@ export class SubmEditComponent implements OnInit {
 
     /**
      * Checks that the form contains no errors. It does so with a double test to guarantee resilience:
-     * batch validator's count and a DOM-based count. The latter for errors that don't concern the form itself
-     * and therefore are not likely to be caught by the batch validator, such as repeated columns.
+     * dynamic count (coming from Angular) and a DOM-based count. The latter count is for cater for errors that don't
+     * concern the form itself and therefore are not likely to be caught by the dynamic count, such as repeated columns.
      * TODO: This is temporary. There is already an array for row errors. Columns should have a similar one.
      * @see {@link SubmFormComponent}
      * @see {@link SubmissionValidator}
      * @returns {boolean} True is there are no errors.
      */
     get formValid(): boolean {
-        return this.errors.empty() && !this.submForm.hasError;
+        return !FieldControl.numInvalid && !this.submForm.hasError;
     }
 
     onSectionClick(section: Section): void {
@@ -342,7 +342,7 @@ export class SubmEditComponent implements OnInit {
 
             //Switches to "Check" tab if not active already
             //TODO: check for validator errors needed to rule out column errors. Remove it.
-            if (this.sideBar && !this.sideBar.isStatus && !this.errors.empty()) {
+            if (this.sideBar && !this.sideBar.isStatus && FieldControl.numInvalid) {
                 this.sideBar.onTabClick(true);
             }
 

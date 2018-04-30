@@ -54,6 +54,7 @@ export function nonBlankVal(): ValidatorFn {
  */
 export class FieldControl extends FormControl {
     static numPending: number = 0;          //total number of touched controls still invalid
+    static numInvalid: number = 0;          //total number of controls still invalid (touched or not)
     template: Field | Attribute;            //the control's model containing reference properties such as its name
     parentType: FieldType | FeatureType;    //the type descriptor the control refers to for things such as validation
     nativeElement: HTMLElement;             //DOM element the control is rendered into
@@ -105,9 +106,13 @@ export class FieldControl extends FormControl {
             } else if (control.template) {
                 controlList.push(control);
 
-                //Keeps track of controls that have been modified but still invalid
-                if (control.touched && control.invalid && control.parentType.required) {
-                    this.numPending++;
+                //Keeps track of controls that are invalid (both before and after modification)
+                //NOTE: required controls may be part of an encompassing structure that is not required.
+                if (control.invalid && control.parentType.required) {
+                    this.numInvalid++;
+                    if (control.touched) {
+                        this.numPending++;
+                    }
                 }
             }
         });
@@ -253,6 +258,7 @@ export class SectionForm {
      */
     controls(controls: FieldControl[]) {
         FieldControl.numPending = 0;
+        FieldControl.numInvalid = 0;
 
         controls.length = 0;
         FieldControl.toArray(this.fieldsFormGroup, controls);

@@ -130,6 +130,7 @@ class ValidationRules {
         }
     }
 
+    //TODO: this method is a sign that the whole validator should disappear. It has to know dynamic details beyond the field types in advance (eg: date's format, ORCID's format). This should remain implicit in the type. Also a problem when dynamic server-side validation exists.
     static formattedValue(value: string, valueType: string, name: string): ValidationRule {
         return {
             validate() {
