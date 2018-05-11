@@ -1,12 +1,14 @@
 <select  *ngIf="files.length > 0 && !readonly"
-         class="form-control input-sm"
+         class="form-control"
+         [ngClass]="{'input-sm': isSmall}"
          [name]="name"
          [(ngModel)]="value"
          [required]="required">
     <option value="" disabled>Select a file</option>
     <option *ngFor="let file of files" [value]="file">{{file}}</option>
 </select>
-<a *ngIf="files.length == 0 && !readonly" class="form-control input-sm"
+<a *ngIf="files.length == 0 && !readonly" class="form-control"
+   [ngClass]="{'input-sm': isSmall}"
    routerLink="/files"
    [queryParams]="{bb: true}">
     <span class="btn-link">
@@ -15,7 +17,8 @@
     </span>
 </a>
 <input *ngIf="readonly"
-       class="form-control input-sm"
+       class="form-control"
+       [ngClass]="{'input-sm': isSmall}"
        [name]="name"
        [ngModel]="(files.length > 0 && isFound) ? value : 'File not found'"
        readonly>

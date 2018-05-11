@@ -158,7 +158,7 @@ export const HecatosTemplate = {
                     'readonly': true
                 },
                 {
-                    'name': 'Factor',
+                    'name': 'Factor Name',
                     'valueType': 'text',
                     'displayed': true,
                     'values': [
@@ -274,6 +274,26 @@ export const HecatosTemplate = {
                 ]
             },
             {
+                'name': 'Link',
+                'title': 'Add Links',
+                'description': 'Provide pointers to data held in external databases or to related information on the web. ' +
+                               'Compact URIs from Identifiers.org are supported. URLs must include the scheme, e.g. "http://".',
+                'icon': 'fa-link',
+                'uniqueCols': true,
+                'columnTypes': [
+                    {
+                        'name': 'URL',
+                        'valueType': 'idlink',
+                        'required': true
+                    },
+                    {
+                        'name': 'Description',
+                        'valueType': 'text',
+                        'required': true
+                    }
+                ]
+            },
+            {
                 'name': 'File',
                 'title': 'Add Files',
                 'icon': 'fa-file',
@@ -309,29 +329,6 @@ export const HecatosTemplate = {
                         'valueType': 'text',
                         'removable': false,
                         'displayed': true
-                    }
-                ]
-            },
-            {
-                'name': 'Link',
-                'title': 'Add Links',
-                'description': 'Provide pointers to data held in external databases or to related information on the web.',
-                'icon': 'fa-link',
-                'uniqueCols': true,
-                'columnTypes': [
-                    {
-                        'name': 'URL',
-                        'valueType': 'text',
-                        'required': true
-                    },
-                    {
-                        'name': 'Description',
-                        'valueType': 'text',
-                        'required': true
-                    },
-                    {
-                        'name': 'Type',
-                        'valueType': 'text'
                     }
                 ]
             },

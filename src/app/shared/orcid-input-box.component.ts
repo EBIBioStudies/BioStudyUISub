@@ -9,7 +9,8 @@ import {
     ControlValueAccessor,
     NG_VALUE_ACCESSOR,
     NgControl,
-    NgModel, Validators,
+    NgModel,
+    Validators,
 } from '@angular/forms';
 
 import 'rxjs/add/observable/timer';

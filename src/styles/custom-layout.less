@@ -398,9 +398,10 @@ input[type="radio"] {
 }
 
 //Brings date picker's styles in line with the app's, removes pointer over inactive/disabled day cells
-//and keeps the dialogue on top of all form elements.
+//keeps the dialogue on top of all form elements and positions it with enough distance from any sidebar.
 .bs-datepicker {
   z-index: calc(@zindex-navbar-fixed - 10);
+  margin-left: 35px;
   border-radius: 4px;
 }
 .bs-datepicker .bs-datepicker-head {
@@ -432,4 +433,16 @@ input[type="radio"] {
 .input-group .subm-field .form-control {
   border-top-right-radius: @border-radius-base !important;
   border-bottom-right-radius: @border-radius-base !important;
+}
+
+//
+.cell .form-group {
+  margin-bottom: 0;
+  padding-top: 0;
+}
+.cell .form-control-feedback {
+  width: 34px;
+  height: 34px;
+  line-height: initial;
+  pointer-events: auto
 }

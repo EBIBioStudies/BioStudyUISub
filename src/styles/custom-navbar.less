@@ -34,8 +34,12 @@
     }
   }
 
-  .navbar-text {
-    color: @navbar-bsst-color;
+  .navbar-right {
+    margin-right: 0;          //cancels out Bootstrap's negative margin to prevent flushing with the navbar's right edge.
+  }
+
+  li {
+    margin: 0 5px;
   }
 
   .navbar-nav {
@@ -69,10 +73,8 @@
   .navbar-toggle {
     padding: 6px 10px;
     border-color: @navbar-bsst-toggle-border-color;
-    &:hover,
-    &:focus {
-      background-color: @navbar-bsst-toggle-hover-bg;
-    }
+    background-color: @navbar-bsst-toggle-hover-bg;
+
     .icon-bar {
       background-color: @navbar-bsst-toggle-icon-bar-bg;
     }
@@ -92,10 +94,6 @@
         background-color: @navbar-bsst-link-active-bg;
         color: @navbar-bsst-link-active-color;
       }
-    }
-
-    li {
-      margin: 0 5px;
     }
 
     .navbar-btn {

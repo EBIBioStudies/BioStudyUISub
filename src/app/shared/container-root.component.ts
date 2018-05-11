@@ -4,7 +4,7 @@ import {Component} from '@angular/core';
     selector: 'container-root',
     template: `
     <div class="container-fluid">
-    <div class="row-offcanvas row-offcanvas-left">
+    <div class="row-offcanvas row-offcanvas-left clearfix">
          <ng-content></ng-content>
     </div>
 </div>

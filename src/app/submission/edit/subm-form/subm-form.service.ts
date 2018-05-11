@@ -133,8 +133,13 @@ export class FieldControl extends FormControl {
             formErrors[fieldId] = '';
             control = fieldsGroup.get(fieldId);
             if (control && !control.valid) {
-                errorKey = Object.keys(control.errors)[0];
-                formErrors[fieldId] += this.errorMessage(parent, control.template.name, errorKey, control.errors[errorKey]);
+
+                //Uses the error map to determine the most appropriate message, reducing multiple errors to a single one.
+                //NOTE: While an async validator has not resolved (eg: pending a request) the "errors" property is NULL.
+                if (control.errors) {
+                    errorKey = Object.keys(control.errors)[0];
+                    formErrors[fieldId] = this.errorMessage(parent, control.template.name, errorKey, control.errors[errorKey]);
+                }
             }
         });
 
@@ -196,9 +201,9 @@ export class SectionForm {
             features: new FormGroup({})
         });
 
-        //Generates form controls for every field, keeping track of changes
+        //Generates form controls for every field, keeping track of errors whenever a validity change takes place
         this.createFieldControls();
-        this.fieldsFormGroup.valueChanges.subscribe(
+        this.fieldsFormGroup.statusChanges.subscribe(
             data => this.formErrors = FieldControl.getErrors(this.section, this.fieldsFormGroup)
         );
         this.formErrors = FieldControl.getErrors(this.section, this.fieldsFormGroup);
@@ -568,7 +573,7 @@ export class FeatureForm {
     private addRowErrors(rowGroup: FormGroup) {
         const newIdx = this.rowsFormArray.controls.indexOf(rowGroup);
 
-        rowGroup.valueChanges.subscribe((data) => {
+        rowGroup.statusChanges.subscribe((data) => {
             this.rowErrors[newIdx] = FieldControl.getErrors(this.feature, rowGroup);
         });
         this.rowErrors[newIdx] = FieldControl.getErrors(this.feature, rowGroup);

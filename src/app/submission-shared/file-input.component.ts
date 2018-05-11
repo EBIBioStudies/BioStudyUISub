@@ -23,6 +23,7 @@ import {FileService} from 'app/file/index';
 export class FileInputComponent implements ControlValueAccessor {
     @Input() required?: boolean = false;
     @Input() readonly?: boolean = false;
+    @Input() isSmall: boolean = true;              //flag for making the input area the same size as grid fields
     @Input() name: string;
     @Input('value') private selected: string = '';
 

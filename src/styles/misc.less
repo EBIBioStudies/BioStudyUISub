@@ -249,3 +249,12 @@ input[type=radio] {
     color: black;
   }
 }
+
+//Prevents captcha widget from overflowing, especially on small screens
+//SOURCE: https://geekgoddess.com/how-to-resize-the-google-nocaptcha-recaptcha/
+.captcha-root > div {
+  transform: scale(0.855);
+  -webkit-transform: scale(0.855);
+  transform-origin: 0 0;
+  -webkit-transform-origin: 0 0;
+}

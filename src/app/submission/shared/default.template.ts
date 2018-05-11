@@ -3,7 +3,7 @@ export const DefaultTemplate = {
     'description': 'Generic submission for stand-alone or generic studies',
     'sectionType': {
         'name': 'Study',
-        'group': ['File', 'Link'],
+        'group': ['Link', 'File'],
         'fieldTypes': [
             {
                 'name': 'Title',
@@ -216,6 +216,26 @@ export const DefaultTemplate = {
                 ]
             },
             {
+                'name': 'Link',
+                'title': 'Add Links',
+                'description': 'Provide pointers to data held in external databases or to related information on the web. ' +
+                               'Compact URIs from Identifiers.org are supported. URLs must include the scheme, e.g. "http://".',
+                'icon': 'fa-link',
+                'uniqueCols': true,
+                'columnTypes': [
+                    {
+                        'name': 'URL',
+                        'valueType': 'idlink',
+                        'required': true
+                    },
+                    {
+                        'name': 'Description',
+                        'valueType': 'text',
+                        'required': true
+                    }
+                ]
+            },
+            {
                 'name': 'File',
                 'title': 'Add Files',
                 'description': 'List the data files for the study and describe their respective scopes.',
@@ -225,30 +245,6 @@ export const DefaultTemplate = {
                     {
                         'name': 'Path',
                         'valueType': 'file',
-                        'required': true
-                    },
-                    {
-                        'name': 'Description',
-                        'valueType': 'text',
-                        'required': true
-                    },
-                    {
-                        'name': 'Type',
-                        'valueType': 'text',
-                        'displayed': true
-                    }
-                ]
-            },
-            {
-                'name': 'Link',
-                'title': 'Add Links',
-                'description': 'Provide pointers to data held in external databases or to related information on the web.',
-                'icon': 'fa-link',
-                'uniqueCols': true,
-                'columnTypes': [
-                    {
-                        'name': 'URL',
-                        'valueType': 'text',
                         'required': true
                     },
                     {
@@ -313,7 +309,7 @@ export const DefaultTemplate = {
                     {
                         'name': 'DOI',
                         'valueType': 'text'
-                    },
+                    }
                 ]
             }
         ]
