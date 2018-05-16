@@ -38,7 +38,7 @@
               (ngSubmit)="onSubmit(form)">
             <li class="sidebar-item" *ngFor="let item of items; let i = index">
                 <a *ngIf="!isStatus && !editing"
-                   tooltip="{{item.feature.size() ? 'Add to the form' : item.feature.type.description}}"
+                   tooltip="{{item.feature.size() ? 'Add to the form' : item.feature.type.description | stripHtml}}"
                    container="body"
                    (click)="item.onClick($event)">
                     <i class="fa fa-lg text-center {{item.feature.type.icon}}"></i>
@@ -117,7 +117,7 @@
 
         <!-- Check tab -->
         <div *ngIf="isStatus">
-            <li *ngIf="!numInvalid || isSubmitting" class="center-vertically text-center"
+            <li *ngIf="!numInvalid || isLoading || isSubmitting" class="center-vertically text-center"
                 [ngClass]="{'col-xs-12': !collapsed}">
                 <i class="fa " aria-hidden="true"
                     [ngClass]="{

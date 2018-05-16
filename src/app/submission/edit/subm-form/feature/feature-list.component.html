@@ -1,4 +1,4 @@
-<div class="container-fluid" [formGroup]="featureForm.form">
+<div class="form-horizontal container-fluid" [formGroup]="featureForm.form">
     <div class="headings row text-muted">
         <div class="cell heading col-xs-3">Key</div>
         <div class="cell heading col-xs-9">Value</div>
@@ -26,7 +26,7 @@
                               </button>
                         </span>
                         <input type="text" class="form-control input-sm"
-                               placement="{{first && !last && !colNames.length? 'bottom' : 'top'}}"
+                               placement="top"
                                triggers="focus"
                                containerClass="validation-pop text-danger"
                                popover="Please use a unique key name"
@@ -57,7 +57,7 @@
                                  'has-error': featureForm.feature.type.required &&
                                               featureForm.rowValueControl(0,column.id).invalid &&
                                               featureForm.rowValueControl(0,column.id).touched}">
-                    <subm-field placement="{{first && !last && !column.values.length? 'bottom' : 'top'}}"
+                    <subm-field placement="top"
                                 triggers="focus"
                                 containerClass="validation-pop text-danger"
                                 popover="{{featureForm.rowErrors[0][column.id]}}"

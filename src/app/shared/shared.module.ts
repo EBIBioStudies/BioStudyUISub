@@ -26,6 +26,7 @@ import {ConfirmDialogComponent} from './confirm-dialog.component';
 import {MultiSelectComponent, FilterPipe} from './multi-select.component';
 import {InlineEditComponent} from './inline-edit.component';
 import {ValidateOnBlurDirective} from "./validate-onblur.directive";
+import {StripHtmlPipe} from "./strip-html.pipe";
 
 @NgModule({
     imports: [
@@ -51,7 +52,8 @@ import {ValidateOnBlurDirective} from "./validate-onblur.directive";
         MultiSelectComponent,
         InlineEditComponent,
         FilterPipe,
-        ValidateOnBlurDirective
+        StripHtmlPipe,
+        ValidateOnBlurDirective,
     ],
     exports: [
         CommonModule,
@@ -75,6 +77,7 @@ import {ValidateOnBlurDirective} from "./validate-onblur.directive";
         MultiSelectComponent,
         InlineEditComponent,
         FilterPipe,
+        StripHtmlPipe,
         ValidateOnBlurDirective
     ]
 })

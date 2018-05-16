@@ -1,10 +1,12 @@
 import {
-  AfterViewInit,
-  Component,
-  forwardRef,
-  Injector,
-  Input, Optional,
-  ViewChild
+    AfterViewInit,
+    Component,
+    forwardRef,
+    Injector,
+    Input,
+    Output,
+    ViewChild,
+    EventEmitter
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, NgModel, Validators} from '@angular/forms';
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
@@ -18,6 +20,7 @@ import 'rxjs/add/observable/interval';
 import {IdLinkModel} from './id-link.model';
 import {IdLinkService} from './id-link.service';
 import {IdLinkValue} from './id-link.value';
+import {IdLinkValueValidatorDirective} from "./id-link.validator.directive";
 
 @Component({
   selector: 'id-link',
@@ -47,6 +50,11 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
 
     @ViewChild(NgModel)
     private inputModel: NgModel;
+
+    @ViewChild(IdLinkValueValidatorDirective)
+    private validator: IdLinkValueValidatorDirective;
+
+    @Output() selected: EventEmitter<string> = new EventEmitter<string>();
 
     /**
      * Instantiates a new custom input component. Validates the input's contents on debounced keypresses.
@@ -79,25 +87,16 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
      * @returns {boolean} True if pointing to Identifier's website.
      */
     get isIdLink(): boolean {
-        return this.link() && (<string>this.link()).indexOf('identifiers.org') > -1;
+        return this.validator.extra.isId;
     }
 
     /**
      * Web link for the current URL or prefix:id pointer if valid, sanitised if so wished.
-     * NOTE: A blank field could be valid if not required. Hence the check for an existing URL.
      * @param {boolean} [isSanitise = false] - Enables protection against XSS if necessary.
      * @returns {SafeUrl | string} Sanitised URL for the link corresponding to the field's current contents.
      */
     link(isSanitise: boolean = false): SafeUrl | string {
-        let url = '';
-
-        if (this.inputModel.valid) {
-            if (this.linkModel.url) {
-                url =  this.linkModel.url;
-            } if (this.linkModel.id) {
-                url = this.linkService.url;
-            }
-        }
+        let url = this.validator.extra.url;
 
         if (isSanitise) {
             return this.sanitizer.bypassSecurityTrustResourceUrl(url);
@@ -114,7 +113,7 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
      */
     writeValue(newValue: string | IdLinkValue): void {
         if (typeof newValue === 'string') {
-            this.linkModel.update(newValue);
+            this.update(newValue);
         } else if (newValue && newValue instanceof IdLinkValue) {
             this.value = newValue;
         }
@@ -168,7 +167,8 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
     }
 
     /**
-     * Handler for typeahead selection events. Replaces the present prefix with the one selected.
+     * Handler for typeahead selection events. Replaces the present prefix with the one selected and notifies the
+     * outside world of the selection.
      * @param {string} selection - Selected prefix.
      */
     onSelect(selection: string) {
@@ -177,12 +177,16 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
         } else {
             this.update(selection + ':');
         }
+        this.selected.emit(selection);
+
+        //Forces the control's "viewModel" and "value" to update on selection, not later.
+        this.inputModel.reset(this.linkModel.asString());
     }
 
     /**
      * Updates the link model, notifying the outside world.
      * @param {string} value - New value for the link model.
-     * @param {boolean} [prefixOnly = false] - Not clear purpose.
+     * @param {boolean} [prefixOnly = false] - No clear purpose.
      * TODO: what is the exact purpose of prefixOnly (beyond idlink.model's corresponding code) and is it still necessary?
      */
     private update(value: string, prefixOnly = false) {

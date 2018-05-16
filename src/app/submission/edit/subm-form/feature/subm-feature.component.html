@@ -21,7 +21,7 @@
         </div>
         <i class="fa fa-lg {{feature.type.icon}}"></i>
         <div class="panel-description">
-            <div>{{feature.type.description}}</div>
+            <div [innerHTML]="feature.type.description"></div>
             <div *ngIf="allowedCols.length && userData.isPrivileged">
                 <strong>{{feature.type.uniqueCols ? 'More' : 'Available'}} {{feature.singleRow ? 'key' : 'column'}}s</strong>:
                 <i>{{allowedCols.join(', ')}}.</i>

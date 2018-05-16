@@ -13,7 +13,7 @@ import {Subject} from "rxjs/Subject";
 export class IdLinkService {
     static BASE_URL: string = 'https://identifiers.org/rest';   //base URL for the service endpoint
     public prefixes: string[] = [];                             //all possible prefixes for formatted links
-    public url: string;                                         //last URL for valid identifier
+    public idUrl: string;                                       //last URL for valid identifier
     private isFetched: boolean = false;                         //flags when data has been fetched already
     private _whenFetched: Subject<any> = new Subject<any>();
 
@@ -85,7 +85,7 @@ export class IdLinkService {
     validate(prefix: string, id: string): Observable<boolean> {
         return this.http.get(`${IdLinkService.BASE_URL}/identifiers/validate/${prefix}:${id}`)
             .map((response) => {
-                this.url = response['url'];
+                this.idUrl = response['url'];
                 return response;
             })
             .catch((err) => {

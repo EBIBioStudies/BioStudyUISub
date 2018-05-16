@@ -22,7 +22,8 @@
          [(ngModel)]="value"
          [suggestThreshold]="suggestThreshold"
          [suggestLength]="suggestLength"
-         (focusout)="onBlur()"></id-link>
+         (focusout)="onBlur()"
+         (selected)="onSuggestSelect($event)"></id-link>
 
 <date-input
         *ngIf="type === 'date'"

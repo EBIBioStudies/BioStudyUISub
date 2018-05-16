@@ -1,3 +1,5 @@
+import * as _ from 'lodash';
+
 /**
  * Shifts attributes from the submission section to the study section, allowing duplicates if so specified.
  * NOTE: PageTab allows duplicate attributes and some projects such as HECATOS do take advantage of them.
@@ -5,8 +7,6 @@
  * @param {boolean} [isUniqueAttrs = false] - If true, it suffixes duplicate attribute names with a number.
  * @returns {any} Study section object.
  */
-import * as _ from 'lodash';
-
 export function copyAttributes(obj: any, isUniqueAttrs: boolean = false) {
     if (obj === undefined || obj.attributes === undefined || obj.section === undefined) {
         return obj;
@@ -51,7 +51,7 @@ export function copyAttributes(obj: any, isUniqueAttrs: boolean = false) {
  * an empty string or anything that can be regarded as such (eg: null). Those attributes that do have a blank
  * are removed. If all attributes are blank, the whole object property containing the attributes is removed if all
  * other properties are blank too.
- * NOTE: the app keeps the a temporary submission form's state in the server by sending even blank fields if necessary.
+ * NOTE: the app keeps the temporary submission form's state in the server by sending even blank fields if necessary.
  * By default, the data from submissions about to be sent undergoes the same process. This method helps avoid cluttering
  * the server with blank values.
  * @param obj - Data object to be compliant with the PageTab format or an object within.

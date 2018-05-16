@@ -13,6 +13,7 @@ import {flattenDoubleArrays} from './pagetab-doublearrays.utils';
 import {copyAttributes, removeBlankAttrs} from './pagetab-attributes.utils';
 import * as _ from 'lodash';
 import {formatDate} from "../../submission-shared/date.utils";
+import {LinksUtils} from "./pagetab-links.utils";
 
 //Names of attributes as they come from the server that must be external.
 //NOTE: As per PageTab's requirements, "AttachTo", "ReleaseDate" and "Title" are special attributes that pertain the
@@ -56,7 +57,7 @@ class PtFeature implements FeatureData {
             entries.map(e => {
                 const ee = Object.assign({}, e);
                 ee.attributes = (e.attributes || []).slice();
-                ee.attributes.push({name: 'URL', value: ee.url});
+                LinksUtils.toUntyped(ee);       //Packs the type and URL of every link into a pointer entry
                 return ee;
             }));
     }
@@ -133,6 +134,7 @@ export class PageTab implements SubmissionData {
             accessTags: subm.tags.accessTags
         };
 
+        //NOTE: Given the app's reliance on the server to maintain state, sanitation must be selective.
         page.section = PageTab.fromSection(subm.root);
         if (isSanitise) {
             removeBlankAttrs(page.section);
@@ -209,7 +211,7 @@ export class PageTab implements SubmissionData {
                 }
 
                 return {
-                    name: attrName, //.split(' ').join(''),     //PageTab's property names are whitespace-free
+                    name: attrName,
                     value: field.value
                 }
             }));
@@ -264,12 +266,12 @@ export class PageTab implements SubmissionData {
     /**
      * Converts features of file or link type into the corresponding PageTab's section sets.
      * @param {Feature} feature - Feature to be converted
-     * @param {string} [locRegex = /^(path|url)$/] - Regular expresion used to extract the location attribute.
+     * @param {string} [locRegex = /^(path|pointer)$/] - Regular expression used to extract the location attribute.
      * @returns {any[]} Array of converted features
      *
      * @author Hector Casanova <hector@ebi.ac.uk>
      */
-    private static fromLocationFeature(feature: Feature, locRegex: RegExp = /^(path|url)$/): any[] {
+    private static fromLocationFeature(feature: Feature, locRegex: RegExp = /^(path|pointer)$/): any[] {
 
         //Flattens each of the feature's row objects, adding other properties if necessary.
         return PageTab.fromFeature(feature).map(pagedRow => {
@@ -292,6 +294,10 @@ export class PageTab implements SubmissionData {
             //Only adds the type attribute if it's a file feature. Otherwise, submissions with links fail.
             if (pagedRow.type == 'File') {
                 pagedLoc.type = pagedRow.type;
+
+            //Unpacks any pointer into a URL + type link
+            } else {
+                LinksUtils.toTyped(pagedLoc);
             }
 
             return pagedLoc;
@@ -318,8 +324,8 @@ export class PageTab implements SubmissionData {
     }
 
     /**
-     * Retrieves the first ocurrence of the "AttachTo" attribute at the root level. This is convenience method
-     * to allow the storing of selected template (determined in turn by the project in question).
+     * Retrieves the first ocurrence of the "AttachTo" attribute at the root level. This is a convenience method
+     * to allow the storage of the selected template (determined in turn by the project in question).
      * NOTE: Submissions created through the direct upload flow may be attached to multiple projects.
      * @returns {string} An empty string if no such attribute found.
      */
