@@ -29,129 +29,121 @@
                  (change)="onChange($event)"
                  class="navbar-subm-margin">
 
-                <div *ngIf="isNew && errors.total()" class="panel">
+                <div class="panel">
                     <div class="panel-body">
-                        <h4>New submission</h4>
-                        <p>
-                            Please fill in the form below. The <span class="font-bold">Check</span> tab on the
-                            left-hand side lists those fields still incomplete or incorrect. Use the
-                            <span class="font-bold">Add</span> tab to quickly add new rows or tables.
-                        </p>
-                        <div class="alert alert-warning">
-                            <div class="pull-left">
-                                <i class="fa fa-hand-o-right fa-lg"></i>
-                                <strong>Please note</strong>
-                            </div>
-                            <p class="text-block text-black">
-                                All fields are required unless with a
-                                <span class="text-dashed">&nbsp;dashed outline&nbsp;</span> or marked as "<i>Optional</i>"
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <div *ngIf="!isNew && !readonly && errors.total()" class="panel">
-                    <div class="panel-body">
-                        <h4>Incomplete submission</h4>
-                        <p>
-                            Some information in this submission is still missing or incorrect. Refer to the
-                            <span class="font-bold">Check</span> tab on the left-hand side for the
-                            list of fields that need updating.
-                        </p>
-                        <div class="alert alert-warning">
-                            <div class="pull-left">
-                                <i class="fa fa-hand-o-right fa-lg"></i>
-                                <strong>Please note</strong>
-                            </div>
-                            <p class="text-block text-black">
-                                All fields are required unless with a
-                                <span class="text-dashed">&nbsp;dashed outline&nbsp;</span> or marked as "<i>Optional</i>"
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <div *ngIf="!errors.total() && !readonly">
-                    <div *ngIf="subm.isTemp && !isSubmitting" class="panel">
-                        <div class="panel-body">
-                            <h4>Study ready for submission</h4>
+                        <div *ngIf="isNew && errors.total()">
+                            <h4>New submission</h4>
                             <p>
-                                You may submit the data on this form now. After submission, your study will be allocated
-                                a permanent accession number under which it will be published.
+                                Please fill in the form below. The <span class="font-bold">Check</span> tab on the
+                                left-hand side lists those fields still incomplete or incorrect. Use the
+                                <span class="font-bold">Add</span> tab to quickly add new rows or tables.
                             </p>
+                            <div class="alert alert-warning">
+                                <div class="pull-left">
+                                    <i class="fa fa-hand-o-right fa-lg"></i>
+                                    <strong>Please note</strong>
+                                </div>
+                                <p class="text-block text-black">
+                                    All fields are required unless with a
+                                    <span class="text-dashed">&nbsp;dashed outline&nbsp;</span> or marked as "<i>Optional</i>"
+                                </p>
+                            </div>
                         </div>
-                    </div>
 
-                    <div *ngIf="!subm.isTemp && !isSubmitting" class="panel">
-                        <div class="panel-body">
-                            <h4>Study ready for re-submission</h4>
+                        <div *ngIf="!isNew && !readonly && errors.total()">
+                            <h4>Incomplete submission</h4>
                             <p>
-                                You may re-submit the data on this form now. Your study will retain
-                                the same accession number under which it was registered.
+                                Some information in this submission is still missing or incorrect. Refer to the
+                                <span class="font-bold">Check</span> tab on the left-hand side for the
+                                list of fields that need updating.
                             </p>
+                            <div class="alert alert-warning">
+                                <div class="pull-left">
+                                    <i class="fa fa-hand-o-right fa-lg"></i>
+                                    <strong>Please note</strong>
+                                </div>
+                                <p class="text-block text-black">
+                                    All fields are required unless with a
+                                    <span class="text-dashed">&nbsp;dashed outline&nbsp;</span> or marked as "<i>Optional</i>"
+                                </p>
+                            </div>
                         </div>
-                    </div>
 
-                    <div *ngIf="isSubmitting" class="panel">
-                        <div class="panel-body">
-                            <h4>Submitting study...</h4>
-                            <p>Please wait while the data in the form is being submitted and validated.</p>
+                        <div *ngIf="!errors.total() && !readonly">
+                            <div *ngIf="subm.isTemp && !isSubmitting">
+                                <h4>Study ready for submission</h4>
+                                <p>
+                                    You may submit the data on this form now. After submission, your study will be allocated
+                                    a permanent accession number under which it will be published.
+                                </p>
+                            </div>
+
+                            <div *ngIf="!subm.isTemp && !isSubmitting">
+                                <h4>Study ready for re-submission</h4>
+                                <p>
+                                    You may re-submit the data on this form now. Your study will retain
+                                    the same accession number under which it was registered.
+                                </p>
+                            </div>
+
+                            <div *ngIf="isSubmitting">
+                                <h4>Submitting study...</h4>
+                                <p>Please wait while the data in the form is being submitted and validated.</p>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-                <div *ngIf="!subm.isTemp && readonly" class="panel">
-                    <div class="panel-body">
-                        <h4>Study
-                            <span *ngIf="isUpdate == undefined">
-                                entry
-                            </span>
-                            <span *ngIf="isUpdate == false">
-                                created
-                            </span>
-                            <span *ngIf="isUpdate">
-                                updated
-                            </span>
-                        </h4>
-                        <p>
-                            The study with accession number <strong>{{accno}}</strong>
-                            <span *ngIf="releaseDate">
-                                and release date <strong>{{releaseDate | date: 'dd MMMM yyyy'}}</strong>
-                            </span>
-                            <span *ngIf="isUpdate == undefined">
-                                is present on the BioStudies database with the data shown below.
-                            </span>
-                            <span *ngIf="isUpdate == false">
-                                has been successfully added to the BioStudies database.
-                            </span>
-                            <span *ngIf="isUpdate">
-                                has been successfully updated.
-                            </span>
-                            It {{isUpdate == false ? 'will be available in the next 24 hours' : 'is available' }} at
-                            <a target="_blank" href="{{location.origin}}/biostudies/studies/{{accno}}">
-                            {{location.hostname}}/biostudies/studies/{{accno}}</a>.
-                        </p>
-                        <strong>
-                            <a target="_blank" href="https://www.ebi.ac.uk/biostudies/about.html">
-                                Citing my study
-                                <i class="fa fa-fw fa-external-link-square"></i>
-                            </a>
-                        </strong>
-                        <blockquote class="blockquote">
-                            Data are available in the BioStudies database (http://www.ebi.ac.uk/biostudies)
-                            under accession number {{accno}}.
-                        </blockquote>
-                        <strong>
-                            <a target="_blank" href="http://europepmc.org/abstract/MED/26700850">
-                                Citing the BioStudies database
-                                <i class="fa fa-fw fa-external-link-square"></i>
-                            </a>
-                        </strong>
-                        <blockquote class="blockquote">
-                            McEntyre J, Sarkans U, Brazma A (2015) The
-                            BioStudies database. <i>Mol. Syst. Biol.</i> 11(12):847.
-                            https://doi.org/10.15252/msb.20156658.
-                        </blockquote>
+                        <div *ngIf="!subm.isTemp && readonly">
+                            <h4>Study
+                                <span *ngIf="isUpdate == undefined">
+                            entry
+                        </span>
+                                <span *ngIf="isUpdate == false">
+                            created
+                        </span>
+                                <span *ngIf="isUpdate">
+                            updated
+                        </span>
+                            </h4>
+                            <p>
+                                The study with accession number <strong>{{accno}}</strong>
+                                <span *ngIf="releaseDate">
+                            and release date <strong>{{releaseDate | date: 'dd MMMM yyyy'}}</strong>
+                        </span>
+                                <span *ngIf="isUpdate == undefined">
+                            is present on the BioStudies database with the data shown below.
+                        </span>
+                                <span *ngIf="isUpdate == false">
+                            has been successfully added to the BioStudies database.
+                        </span>
+                                <span *ngIf="isUpdate">
+                            has been successfully updated.
+                        </span>
+                                It {{isUpdate == false ? 'will be available in the next 24 hours' : 'is available' }} at
+                                <a target="_blank" href="{{location.origin}}/biostudies/studies/{{accno}}">
+                                    {{location.hostname}}/biostudies/studies/{{accno}}</a>.
+                            </p>
+                            <strong>
+                                <a target="_blank" href="https://www.ebi.ac.uk/biostudies/about.html">
+                                    Citing my study
+                                    <i class="fa fa-fw fa-external-link-square"></i>
+                                </a>
+                            </strong>
+                            <blockquote class="blockquote">
+                                Data are available in the BioStudies database (http://www.ebi.ac.uk/biostudies)
+                                under accession number {{accno}}.
+                            </blockquote>
+                            <strong>
+                                <a target="_blank" href="http://europepmc.org/abstract/MED/26700850">
+                                    Citing the BioStudies database
+                                    <i class="fa fa-fw fa-external-link-square"></i>
+                                </a>
+                            </strong>
+                            <blockquote class="blockquote">
+                                McEntyre J, Sarkans U, Brazma A (2015) The
+                                BioStudies database. <i>Mol. Syst. Biol.</i> 11(12):847.
+                                https://doi.org/10.15252/msb.20156658.
+                            </blockquote>
+                        </div>
                     </div>
                 </div>
 

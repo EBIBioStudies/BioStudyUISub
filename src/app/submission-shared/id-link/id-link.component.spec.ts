@@ -40,7 +40,7 @@ describe('IdLinkComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should be instantiated', () => {
     expect(component).toBeTruthy();
     expect(component.value).toBeDefined();
     expect(component.value.asString()).toBe(':');

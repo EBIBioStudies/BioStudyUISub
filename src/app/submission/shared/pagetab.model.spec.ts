@@ -127,7 +127,7 @@ describe('PageTab', () => {
                 value: 'url1'
             },
             {
-                name: 'URL',
+                name: 'Pointer',
                 value: 'url1'
             }
         ]);

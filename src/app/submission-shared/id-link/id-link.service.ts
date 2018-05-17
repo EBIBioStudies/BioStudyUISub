@@ -14,7 +14,7 @@ export class IdLinkService {
     static BASE_URL: string = 'https://identifiers.org/rest';   //base URL for the service endpoint
     public prefixes: string[] = [];                             //all possible prefixes for formatted links
     public idUrl: string;                                       //last URL for valid identifier
-    private isFetched: boolean = false;                         //flags when data has been fetched already
+    private isFetched: boolean = false;                         //flags when collection data has been fetched already
     private _whenFetched: Subject<any> = new Subject<any>();
 
     /**

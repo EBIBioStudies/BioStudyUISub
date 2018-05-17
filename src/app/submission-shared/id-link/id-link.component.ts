@@ -87,7 +87,12 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
      * @returns {boolean} True if pointing to Identifier's website.
      */
     get isIdLink(): boolean {
-        return this.validator.extra.isId;
+        try {
+            return this.validator.extra.isId;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
     }
 
     /**
@@ -96,7 +101,14 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
      * @returns {SafeUrl | string} Sanitised URL for the link corresponding to the field's current contents.
      */
     link(isSanitise: boolean = false): SafeUrl | string {
-        let url = this.validator.extra.url;
+        let url;
+
+        try {
+            url = this.validator.extra.url;
+        } catch (error) {
+            console.log(error);
+            url = '';
+        }
 
         if (isSanitise) {
             return this.sanitizer.bypassSecurityTrustResourceUrl(url);
