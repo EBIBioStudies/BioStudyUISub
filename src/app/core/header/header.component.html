@@ -1,9 +1,14 @@
 <!-- Header Navbar: style can be found in header.less -->
 <nav class="navbar navbar-bsst navbar-fixed-top" role="navigation">
     <global-error></global-error>
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" (click)="toggleCollapsed()">
+    <div class="container-fluid"
+         [ngClass]="{'logged': userLoggedIn}">
+        <div class="navbar-header"
+             [ngClass]="{'pull-left': !userLoggedIn}">
+            <button type="button"
+                    [ngClass]="{'navbar-toggle': userLoggedIn}"
+                    [hidden]="!userLoggedIn"
+                    (click)="toggleCollapsed()">
                 <i class="fa fa-bars" aria-hidden="true"></i>
             </button>
             <a  class="navbar-brand" routerLink="/submissions">
@@ -11,8 +16,10 @@
             </a>
         </div>
 
-        <div class="collapse navbar-collapse" [collapse]="navCollapsed">
-            <ul class="nav navbar-nav navbar-right">
+        <div [ngClass]="{'collapse navbar-collapse': userLoggedIn}"
+             [collapse]="userLoggedIn && navCollapsed">
+            <ul class="nav navbar-right"
+                [ngClass]="{'navbar-nav': userLoggedIn, 'pull-right': !userLoggedIn}">
                 <li *ngIf="!userLoggedIn && !userRegistering">
                     <button class="btn navbar-btn"
                             routerLink="/signup"
@@ -22,7 +29,7 @@
                             container="body"
                             (click)="toggleCollapsed()">
                         <i class="fa fa-user-plus fa-fw fa-lg"></i>
-                        Register
+                        <span>Register</span>
                     </button>
                 </li>
                 <li *ngIf="!userLoggedIn && !userLoggingIn">
@@ -33,7 +40,7 @@
                             container="body"
                             (click)="toggleCollapsed()">
                         <i class="fa fa-sign-in fa-lg"></i>
-                        Log in
+                        <span>Log in</span>
                     </button>
                 </li>
 
@@ -46,7 +53,7 @@
                             container="body"
                             (click)="toggleCollapsed()">
                         <i class="fa fa-fw fa-lg fa-cloud-upload"></i>
-                        Submissions
+                        <span>Submissions</span>
                     </button>
                 </li>
 
@@ -59,7 +66,7 @@
                             container="body"
                             (click)="toggleCollapsed()">
                         <i class="fa fa-fw fa-folder-open fa-lg"></i>
-                        Files
+                        <span>Files</span>
                     </button>
                 </li>
 
@@ -72,7 +79,7 @@
                             container="body"
                             (click)="toggleCollapsed()">
                         <i class="fa fa-fw fa-question-circle fa-lg"></i>
-                        Help
+                        <span>Help</span>
                     </button>
                 </li>
 
@@ -82,7 +89,7 @@
                             [disabled]="isBusy">
                         <i *ngIf="!isBusy" class="fa fa-fw fa-sign-out fa-lg"></i>
                         <i *ngIf="isBusy" class="fa fa-fw fa-cog fa-spin fa-lg"></i>
-                        Log out
+                        <span>Log out</span>
                     </button>
                 </li>
             </ul>

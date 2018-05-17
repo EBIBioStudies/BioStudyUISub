@@ -16,10 +16,10 @@
                  (select)="onTabClick(true)">
                 <template tabHeading>
                     Check
-                    <span *ngIf="errors.total()" class="badge badge-corner"
-                          [ngClass]="{'badge-half-danger': numPending > 0 && numPending < errors.total(),
-                                      'badge-danger': numPending == errors.total()}">
-                        {{errors.total()}}
+                    <span *ngIf="numInvalid" class="badge badge-corner"
+                          [ngClass]="{'badge-half-danger': numPending > 0 && numPending < numInvalid,
+                                      'badge-danger': numPending == numInvalid}">
+                        {{numInvalid}}
                     </span>
                 </template>
             </tab>
@@ -38,7 +38,7 @@
               (ngSubmit)="onSubmit(form)">
             <li class="sidebar-item" *ngFor="let item of items; let i = index">
                 <a *ngIf="!isStatus && !editing"
-                   tooltip="{{item.feature.size() ? 'Add to the form' : item.feature.type.description}}"
+                   tooltip="{{item.feature.size() ? 'Add to the form' : item.feature.type.description | stripHtml}}"
                    container="body"
                    (click)="item.onClick($event)">
                     <i class="fa fa-lg text-center {{item.feature.type.icon}}"></i>
@@ -117,7 +117,7 @@
 
         <!-- Check tab -->
         <div *ngIf="isStatus">
-            <li *ngIf="errors.empty() || isSubmitting" class="center-vertically text-center"
+            <li *ngIf="!numInvalid || isLoading || isSubmitting" class="center-vertically text-center"
                 [ngClass]="{'col-xs-12': !collapsed}">
                 <i class="fa " aria-hidden="true"
                     [ngClass]="{

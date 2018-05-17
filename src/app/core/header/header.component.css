@@ -1,6 +1,25 @@
 /* Logo area */
 .logo {
-    height: 100%;
+    height: 95%;
+}
+
+/* Overrides Safari's default grey background for buttons. */
+.navbar-btn {
+    background: #fafafa;
+}
+
+/* Hides nav button text when logged out and on mobile */
+/* NOTE: Button number is restricted to a single one on guest mode */
+.navbar-btn span {
+    display: none;
+}
+.logged .navbar-btn span {
+    display: inline;
+}
+@media screen and (min-width: 425px) {
+    .nav .navbar-btn span{
+        display: inline;
+    }
 }
 
 /* Indeterminate progress bar */

@@ -54,6 +54,7 @@ export function nonBlankVal(): ValidatorFn {
  */
 export class FieldControl extends FormControl {
     static numPending: number = 0;          //total number of touched controls still invalid
+    static numInvalid: number = 0;          //total number of controls still invalid (touched or not)
     template: Field | Attribute;            //the control's model containing reference properties such as its name
     parentType: FieldType | FeatureType;    //the type descriptor the control refers to for things such as validation
     nativeElement: HTMLElement;             //DOM element the control is rendered into
@@ -105,9 +106,13 @@ export class FieldControl extends FormControl {
             } else if (control.template) {
                 controlList.push(control);
 
-                //Keeps track of controls that have been modified but still invalid
-                if (control.touched && control.invalid && control.parentType.required) {
-                    this.numPending++;
+                //Keeps track of controls that are invalid (both before and after modification)
+                //NOTE: required controls may be part of an encompassing structure that is not required.
+                if (control.invalid && control.parentType.required) {
+                    this.numInvalid++;
+                    if (control.touched) {
+                        this.numPending++;
+                    }
                 }
             }
         });
@@ -128,8 +133,13 @@ export class FieldControl extends FormControl {
             formErrors[fieldId] = '';
             control = fieldsGroup.get(fieldId);
             if (control && !control.valid) {
-                errorKey = Object.keys(control.errors)[0];
-                formErrors[fieldId] += this.errorMessage(parent, control.template.name, errorKey, control.errors[errorKey]);
+
+                //Uses the error map to determine the most appropriate message, reducing multiple errors to a single one.
+                //NOTE: While an async validator has not resolved (eg: pending a request) the "errors" property is NULL.
+                if (control.errors) {
+                    errorKey = Object.keys(control.errors)[0];
+                    formErrors[fieldId] = this.errorMessage(parent, control.template.name, errorKey, control.errors[errorKey]);
+                }
             }
         });
 
@@ -162,7 +172,7 @@ export class FieldControl extends FormControl {
             return `Please use up to ${type.maxlength} characters`;
         }
         if (errorKey === 'pattern') {
-            return 'Invalid format';
+            return `Please provide a valid ${fieldName.toLowerCase()}`;
         }
         return errorKey;
     }
@@ -191,9 +201,9 @@ export class SectionForm {
             features: new FormGroup({})
         });
 
-        //Generates form controls for every field, keeping track of changes
+        //Generates form controls for every field, keeping track of errors whenever a validity change takes place
         this.createFieldControls();
-        this.fieldsFormGroup.valueChanges.subscribe(
+        this.fieldsFormGroup.statusChanges.subscribe(
             data => this.formErrors = FieldControl.getErrors(this.section, this.fieldsFormGroup)
         );
         this.formErrors = FieldControl.getErrors(this.section, this.fieldsFormGroup);
@@ -253,6 +263,7 @@ export class SectionForm {
      */
     controls(controls: FieldControl[]) {
         FieldControl.numPending = 0;
+        FieldControl.numInvalid = 0;
 
         controls.length = 0;
         FieldControl.toArray(this.fieldsFormGroup, controls);
@@ -562,7 +573,7 @@ export class FeatureForm {
     private addRowErrors(rowGroup: FormGroup) {
         const newIdx = this.rowsFormArray.controls.indexOf(rowGroup);
 
-        rowGroup.valueChanges.subscribe((data) => {
+        rowGroup.statusChanges.subscribe((data) => {
             this.rowErrors[newIdx] = FieldControl.getErrors(this.feature, rowGroup);
         });
         this.rowErrors[newIdx] = FieldControl.getErrors(this.feature, rowGroup);

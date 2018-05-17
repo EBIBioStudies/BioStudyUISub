@@ -3,7 +3,7 @@ export const DefaultTemplate = {
     'description': 'Generic submission for stand-alone or generic studies',
     'sectionType': {
         'name': 'Study',
-        'group': ['File', 'Link'],
+        'group': ['Link', 'File'],
         'fieldTypes': [
             {
                 'name': 'Title',
@@ -216,6 +216,27 @@ export const DefaultTemplate = {
                 ]
             },
             {
+                'name': 'Link',
+                'title': 'Add Links',
+                'description': 'Provide pointers to data held in external databases or to related information on the web. ' +
+                               'Compact URIs from <a target="_blank" href="https://www.ebi.ac.uk/miriam/main/collections">Identifiers.org</a> ' +
+                               'are supported. URLs must include the scheme, e.g. "http://".',
+                'icon': 'fa-link',
+                'uniqueCols': true,
+                'columnTypes': [
+                    {
+                        'name': 'Pointer',
+                        'valueType': 'idlink',
+                        'required': true
+                    },
+                    {
+                        'name': 'Description',
+                        'valueType': 'text',
+                        'required': true
+                    }
+                ]
+            },
+            {
                 'name': 'File',
                 'title': 'Add Files',
                 'description': 'List the data files for the study and describe their respective scopes.',
@@ -240,34 +261,12 @@ export const DefaultTemplate = {
                 ]
             },
             {
-                'name': 'Link',
-                'title': 'Add Links',
-                'description': 'Provide pointers to data held in external databases or to related information on the web.',
-                'icon': 'fa-link',
-                'uniqueCols': true,
-                'columnTypes': [
-                    {
-                        'name': 'URL',
-                        'valueType': 'text',
-                        'required': true
-                    },
-                    {
-                        'name': 'Description',
-                        'valueType': 'text',
-                        'required': true
-                    },
-                    {
-                        'name': 'Type',
-                        'valueType': 'text',
-                        'displayed': true
-                    }
-                ]
-            },
-            {
                 'name': 'Publication',
                 'title': 'Add Publications',
-                'description': 'Add the details of publications relevant to the study. Autofill is ' +
-                               'available when searching by PubMed identifier.',
+                'description': 'Add the bibliography relevant to the study. Autofill is available when searching by ' +
+                               '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pubmed/">PubMed</a> identifier. ' +
+                               'For other IDs, you may use ' +
+                               '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pmc/pmctopmid/#converter">PubMed\'s converter</a>.',
                 'icon': 'fa-book',
                 'uniqueCols': true,
                 'columnTypes': [
@@ -313,7 +312,7 @@ export const DefaultTemplate = {
                     {
                         'name': 'DOI',
                         'valueType': 'text'
-                    },
+                    }
                 ]
             }
         ]

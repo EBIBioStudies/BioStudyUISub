@@ -9,7 +9,8 @@ import {
     ControlValueAccessor,
     NG_VALUE_ACCESSOR,
     NgControl,
-    NgModel, Validators,
+    NgModel,
+    Validators,
 } from '@angular/forms';
 
 import 'rxjs/add/observable/timer';
@@ -40,8 +41,8 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor {
     @Input() isPopupButton: boolean = true;     //flag for showing/hiding popup button
     @Input() isSmall: boolean = true;           //flag for making the input area the same size as grid fields
 
-    @ViewChild('inputModel')
-    private inputModel:NgModel;
+    @ViewChild(NgModel)
+    private inputModel: NgModel;
 
     /**
      * Instantiates a new custom component.
@@ -67,6 +68,7 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor {
     writeValue(newValue: any) {
         if (newValue) {
             this.orcidValue = newValue;
+            this.onChange(newValue);
         }
     }
 
@@ -129,7 +131,7 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor {
         const control = this.injector.get(NgControl).control;
 
         control.setValidators(Validators.compose([control.validator, this.inputModel.control.validator]));
-        control.setAsyncValidators(Validators.compose([control.asyncValidator, this.inputModel.control.asyncValidator]));
+        control.setAsyncValidators(Validators.composeAsync([control.asyncValidator, this.inputModel.control.asyncValidator]));
     }
 
     ngOnDestroy() {

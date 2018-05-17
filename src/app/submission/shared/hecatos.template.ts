@@ -158,7 +158,7 @@ export const HecatosTemplate = {
                     'readonly': true
                 },
                 {
-                    'name': 'Factor',
+                    'name': 'Factor Name',
                     'valueType': 'text',
                     'displayed': true,
                     'values': [
@@ -274,10 +274,32 @@ export const HecatosTemplate = {
                 ]
             },
             {
+                'name': 'Link',
+                'title': 'Add Links',
+                'description': 'Add the bibliography relevant to the study. Autofill is available when searching by ' +
+                               '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pubmed/">PubMed</a> identifier. ' +
+                               'For other IDs, you may use ' +
+                               '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pmc/pmctopmid/#converter">PubMed\'s converter</a>.',
+                'icon': 'fa-link',
+                'uniqueCols': true,
+                'columnTypes': [
+                    {
+                        'name': 'Pointer',
+                        'valueType': 'idlink',
+                        'required': true
+                    },
+                    {
+                        'name': 'Description',
+                        'valueType': 'text',
+                        'required': true
+                    }
+                ]
+            },
+            {
                 'name': 'File',
                 'title': 'Add Files',
-                'icon': 'fa-file',
                 'description': 'List the data files for the study and describe their respective scopes.',
+                'icon': 'fa-file',
                 'uniqueCols': true,
                 'required': true,
                 'columnTypes': [
@@ -313,33 +335,11 @@ export const HecatosTemplate = {
                 ]
             },
             {
-                'name': 'Link',
-                'title': 'Add Links',
-                'description': 'Provide pointers to data held in external databases or to related information on the web.',
-                'icon': 'fa-link',
-                'uniqueCols': true,
-                'columnTypes': [
-                    {
-                        'name': 'URL',
-                        'valueType': 'text',
-                        'required': true
-                    },
-                    {
-                        'name': 'Description',
-                        'valueType': 'text',
-                        'required': true
-                    },
-                    {
-                        'name': 'Type',
-                        'valueType': 'text'
-                    }
-                ]
-            },
-            {
                 'name': 'Publication',
                 'title': 'Add Publications',
-                'description': 'Add the details of publications relevant to the study. Autofill is ' +
-                               'available when searching by PubMed identifier',
+                'description': 'Add the bibliography relevant to the study. Autofill is available when searching by ' +
+                               '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pubmed/">PubMed</a> identifier. For other IDs, you ' +
+                               'may use <a target="_blank" href="https://www.ncbi.nlm.nih.gov/pmc/pmctopmid/#converter">this converter</a>.',
                 'icon': 'fa-book',
                 'uniqueCols': true,
                 'columnTypes': [
