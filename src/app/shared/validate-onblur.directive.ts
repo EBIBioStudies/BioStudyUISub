@@ -26,7 +26,9 @@ export class ValidateOnBlurDirective {
     }
 
     markOnBlur() {
-        this.formControl.control.setValue(this.formControl.control.value.trim());
+        if (typeof this.formControl.control.value === 'string') {
+            this.formControl.control.setValue(this.formControl.control.value.trim());
+        }
         this.formControl.control.markAsTouched({onlySelf: true});
     }
 }
