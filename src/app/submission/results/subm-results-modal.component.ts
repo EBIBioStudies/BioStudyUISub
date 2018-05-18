@@ -3,11 +3,7 @@ import {
     Input
 } from '@angular/core';
 
-import {
-    Router
-} from '@angular/router';
-
-import {BsModalRef} from 'ngx-bootstrap/modal/modal-options.class';
+import {BsModalRef} from 'ngx-bootstrap';
 
 /**
  * UI component for the modal being rendered with a given study's submission results.
@@ -19,8 +15,7 @@ import {BsModalRef} from 'ngx-bootstrap/modal/modal-options.class';
 export class SubmResultsModalComponent {
     @Input() status: string;        //Status the server comes back with
     @Input() log: any;              //Log part of the server's response
-
-    constructor(private router: Router, public bsModalRef: BsModalRef) {}
+    @Input() modalRef: BsModalRef;
 
     isLogEmpty() {
         return this.log && Object.keys(this.log).length == 0;
@@ -40,13 +35,5 @@ export class SubmResultsModalComponent {
      */
     isSuccess(): boolean {
         return this.status === 'OK';
-    }
-
-    /**
-     * Handler for confirmation event. Hides the modal, redirecting to list of sent submissions.
-     */
-    onConfirm(): void {
-        this.bsModalRef.hide();
-        this.router.navigate(['/submissions/sent']);
     }
 }

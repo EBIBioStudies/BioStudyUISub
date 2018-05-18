@@ -12,7 +12,7 @@ import {Observable} from 'rxjs/Observable';
 import {forkJoin} from "rxjs/observable/forkJoin";
 import 'rxjs/add/operator/switchMap';
 
-import {BsModalService} from 'ngx-bootstrap/modal';
+import {BsModalService} from 'ngx-bootstrap';
 
 import {
     Submission,
@@ -302,6 +302,7 @@ export class SubmEditComponent implements OnInit {
         if (!this.readonly && (event === null || document.body.contains(event.target as Node))) {
             this.isSaving = true;
 
+            //Prepares the view in case the user chooses to reload it after saving.
             this.submService.saveSubmission(this.wrap()).takeUntil(this.ngUnsubscribe).subscribe((result) => {
                 this.isSaving = false;
                 this.isNew && this.locService.replaceState('/submissions/edit/' + this.accno);
@@ -421,17 +422,19 @@ export class SubmEditComponent implements OnInit {
 
     onViewLog(event: Event): void {
         const bsModalRef = this.modalService.show(SubmValidationErrorsComponent);
+        bsModalRef.content.modalRef = bsModalRef;
         bsModalRef.content.errors = this.errors;
     }
 
     showSubmitResults(resp: any) {
         this.isSubmitting = false;
 
-        const bsModalRef = this.modalService.show(SubmResultsModalComponent).content;
-        bsModalRef.log = resp.log || {};
-        bsModalRef.mapping = resp.mapping || [];
-        bsModalRef.status = resp.status;
-        bsModalRef.accno = this.subm.accno;
+        const bsModalRef = this.modalService.show(SubmResultsModalComponent);
+        bsModalRef.content.modalRef = bsModalRef;
+        bsModalRef.content.log = resp.log || {};
+        bsModalRef.content.mapping = resp.mapping || [];
+        bsModalRef.content.status = resp.status;
+        bsModalRef.content.accno = this.subm.accno;
     }
 
     changeSection(sectionId: string) {

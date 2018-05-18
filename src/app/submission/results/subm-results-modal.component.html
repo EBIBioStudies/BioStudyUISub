@@ -3,7 +3,7 @@
     Submission {{isSuccess() ? 'successful' : 'failed'}}
     <button type="button"
             class="close"
-            (click)="bsModalRef.hide()"
+            (click)="modalRef.hide()"
             aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -52,11 +52,12 @@
     <div class="pull-right">
         <button *ngIf="isSuccess()" type="button" class="btn-primary btn btn-xs"
                 tooltip="List all other submitted studies"
-                (click)="onConfirm()">
+                routerLink="/submissions/sent"
+                (click)="modalRef.hide();">
             Show all sent
         </button>
         <button type="button" class="btn-default btn btn-xs"
-                (click)="bsModalRef.hide()">
+                (click)="modalRef.hide()">
             Close
         </button>
     </div>

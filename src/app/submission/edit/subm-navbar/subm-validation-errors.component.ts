@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 
 import {SubmValidationErrors} from '../../shared/submission.validator';
-import {BsModalRef} from 'ngx-bootstrap/modal/modal-options.class';
+import {BsModalRef} from 'ngx-bootstrap';
 
 @Component({
     selector: 'subm-validation-errors',
@@ -13,9 +13,7 @@ import {BsModalRef} from 'ngx-bootstrap/modal/modal-options.class';
 })
 export class SubmValidationErrorsComponent {
     @Input() errors: SubmValidationErrors = SubmValidationErrors.EMPTY;
-
-    constructor(public bsModalRef: BsModalRef) {
-    }
+    @Input() modalRef: BsModalRef;
 
     get errorList(): { level: number[], message: string }[] {
         const collect = (level: number, errors: SubmValidationErrors): { level: number[], message: string }[] => {
