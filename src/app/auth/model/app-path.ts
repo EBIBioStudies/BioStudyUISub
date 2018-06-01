@@ -11,7 +11,6 @@ export class AppPath {
 
     private getAppPath(ancor: string = '') {
         let loc = window.location;
-        console.log(loc, loc.pathname);
         return loc.origin + loc.pathname + ancor;
     }
 }

@@ -29,7 +29,7 @@ export class DateFormatDirective implements Validator {
         if (v !== '') {
             if (!this.valid(v)) {
                 return {
-                    bsstDateFormat: true
+                    pattern: 'YYYY-MM-DD'
                 }
             }
         }

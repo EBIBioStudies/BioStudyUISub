@@ -6,7 +6,8 @@ import {
     Pipe,
     PipeTransform,
     forwardRef,
-    OnChanges
+    OnChanges,
+    ElementRef
 } from '@angular/core';
 
 import {
@@ -101,8 +102,8 @@ export class FilterPipe implements PipeTransform {
     ]
 })
 export class MultiSelectComponent implements ControlValueAccessor, OnChanges, OnInit, OnDestroy {
-    @Input() placeholder = 'Select...';
-    @Input() filterPlaceholder = 'Filter...';
+    @Input() placeholder = 'Select an option';
+    @Input() filterPlaceholder = 'Filter list';
     @Input() filterEnabled = true;
     @Input() options: string[] = [];
 
@@ -115,19 +116,24 @@ export class MultiSelectComponent implements ControlValueAccessor, OnChanges, On
     private selected: string[] = [];
     private sb: Subscription;
 
+    constructor(private rootEl: ElementRef) {}
+
     ngOnInit(): void {
         this.sb = this.filterInputValue$.subscribe(term => {
             this.filterText = term;
-        })
+        });
+
+        //Detects clicks outside the multi-select box.
+        document.body.addEventListener('click', this.closeOnClick.bind(this));
     }
 
     ngOnDestroy(): void {
         this.sb.unsubscribe();
+        document.body.removeEventListener('click', this.closeOnClick);
     }
 
     ngOnChanges(): void {
         this.items = this.options.map(opt => ({checked: false, label: opt}));
-        console.log(this.items);
         this.selected = [];
         this.onChange(this.selected);
     }
@@ -138,6 +144,16 @@ export class MultiSelectComponent implements ControlValueAccessor, OnChanges, On
 
     onClearFilter() {
         this.filterText = '';
+    }
+
+    /**
+     * Handler for click events. Closes the select box if left open.
+     * @param {Event} event - DOM object for the click event.
+     */
+    closeOnClick(event: Event) {
+        if (!this.rootEl.nativeElement.contains(event.target) && this.isOpen) {
+            this.onToggle();
+        }
     }
 
     onToggle(): void {

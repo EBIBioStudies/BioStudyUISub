@@ -1,64 +1,260 @@
-/* elastic description box */
-.msd-elastic {
-  max-height: 500px;
+//Prevents flicker when hovering over tabs
+.nav-tabs .nav-link:hover {
+  border-color: transparent;
 }
 
-/* panel (submission section) heading */
-.panel-heading h4 {
-  white-space: nowrap;
-  overflow: hidden;
-  line-height: inherit;
-  font-size: inherit; //14px
-  width: 70%;
+//Convenience class to force black typography
+.text-black {
+  color: #000;
 }
 
-/* sliding out tooltips in the panel headers */
-@bs-slide-out-tip-width: 580px;
-
-.bs-slide-out-tip {
-  display: inline-block;
-  position: relative;
-  margin: 0 0 0 5px;
-  padding: 0;
-  width: 70%;
-  height: 18px;
-  overflow: hidden;
+//Adds a red border a la Bootstrap to the recaptcha's iframe if invalid
+.has-error iframe[title="recaptcha widget"] {
+  border: 1px solid #C05F5D;
+  border-radius: 4px;
 }
 
-.bs-slide-out-tip .tip-icon {
-  display: inline-block;
+//Vertically aligns any indicators beside a submit button
+.row-submit {
+  display: flex;
+  align-items: center;
+}
+
+//Makes all main submit/cancel buttons stand out clearly
+.btn-submit, .btn-cancel {
+  text-transform: uppercase;
+}
+
+//Prevents highlighting for add links
+.btn-add.btn-link:hover, .btn-add.button-link:active, .btn-add.button-link:focus {
+  text-decoration: none;
+  outline: 0;
+}
+
+//Gets rid of default styling for ag-grid's buttons
+.ag-paging-button {
+  padding: .5rem 1rem;
+  color: #fafafa;
+  background: @brand-primary;
+  border: @sidebar-light-bg;
+  border-radius: .3rem;
+  outline: none;
+
+  //Makes disabled state for ag-grid's buttons more apparent
+  &[disabled] {
+    opacity: .4;
+  }
+}
+
+//Prevents cell menu buttons from being hidden. By default, only shown on hover.
+//Additionally, it uses the cell menu's icon to make the two filtering states visually explicit.
+.ag-header-cell-menu-button {
+  float: left;
+  opacity: 1 !important;
+}
+.ag-fresh .ag-header-cell-menu-button {
+  color: @link-color;
+}
+.ag-header-cell-filtered .ag-header-cell-menu-button {
+  color: #fafafa;
+}
+.ag-header-cell-menu-button, .ag-header-cell-label {
   cursor: pointer;
-  width: 15px;
+}
+.ag-fresh .ag-header-cell-menu-button:hover {
+  border-color: #fafafa;
 }
 
-.bs-slide-out-tip .tip-text-wrap {
-  display: inline-block;
-  position: relative;
+//Mutes the unsort icon and highlights what the next state is on hover
+.ag-fresh .ag-sort-none-icon svg {
+  fill: @link-color;
+}
+.ag-header-cell-label:hover polygon:first-child {
+  fill: #fafafa;
+}
+
+//Permanently hides filter icon
+.ag-filter-icon {
+  display: none !important;
+}
+
+//Center-aligns ag-grid cells marked accordingly
+.ag-cell-centered {
+  text-align: center;
+}
+
+//Brings ag-grid table's styles for cells in line with app's colour scheme
+.ag-fresh .ag-root {
+  border: none;
+  border-top: 3px solid @sidebar-light-bg;
+}
+.ag-fresh .ag-header {
+  background: @sidebar-light-bg;
+  border: none;
+  color: #fff;
+}
+.ag-fresh .ag-header-icon {
+  fill: #fff;
+}
+.ag-fresh .ag-ltr .ag-header-cell {
+  border-right-color: #c8c8c8;
+}
+.ag-fresh .ag-ltr .ag-cell-no-focus {
+  border-right: 1px solid #c8c8c8;
+}
+.ag-fresh .ag-ltr .ag-cell-no-focus:last-of-type, .ag-fresh .ag-ltr .ag-header-cell:last-of-type {
+  border-right: none;
+}
+
+//Brings styles of ag-grid's floating menu in line with rest of the app
+.ag-fresh .ag-menu {
+  padding: 10px;
+  border-color: #d7d7d7;
+}
+.ag-menu .form-group {
+  padding: 0;
+}
+
+//Prevents highlighting of single cells
+.ag-cell {
+  outline: none !important;
+}
+.ag-fresh .ag-cell-focus {
+  border-left: none;
+  border-top: none;
+  border-bottom: none;
+}
+
+//Prevents page controls from wrapping onto the next line when on smaller screens
+.ag-fresh .ag-paging-row-summary-panel {
+  width: auto;
+  float: left
+}
+@media screen and (max-width: 650px) {
+  .ag-fresh .ag-paging-row-summary-panel {
+    display: none;
+  }
+}
+.ag-fresh .ag-paging-panel {
+  text-align: center;
+}
+
+//Highlights row being hovered on, except when over the "actions" cell if applicable
+//NOTE: The rows' zebra colour pattern has to be overriden
+//NOTE: The shadow-piercing descendant combinator is being deprecated. Hence why this is not within the subm-list component
+.subm-list .ag-row-hover {
+  background-color: #b2e1fe !important;
+}
+.subm-list .ag-cell[colid="0"] {
+  cursor: default;
+}
+.subm-list .ag-cell {
+  cursor: pointer;
+}
+
+//Makes validation popovers show up only when there is indeed an error, preventing it from overflowing its
+//container (eg: scrollable area in feature grids). Only applies the extended format to laptop screens.
+.validation-pop {
+  display: none !important;
+  z-index: 950;           //above any dropdowns but below any nav bar
+  left: 0 !important;     //centers even when the field is a select-box (ie negative positioning is used)
+  font-size: 12px;
+  text-align: center;
+
+  .popover-body {
+    padding: .5rem .7rem;
+  }
+
+  .has-error & {
+    display: block !important;
+  }
+
+  @media only screen and (min-width: 1160px) {
+    min-width: 300px;
+    font-size: 14px;
+  }
+}
+.has-error .popover-body {
+  color: #bb4a48;
+}
+
+//Prevents flickering tooltips when hovering near the edge of an element
+.tooltip {
+  pointer-events: none;
+}
+
+///Makes notes stand out by means of styled boxes
+.alert-warning {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 0;
   overflow: hidden;
-  width: 600px;
-  height: 100%;
+  border-width: 2px;
+
+  .text-block {
+    border-radius: 0 4px 4px 0;
+    background: white;
+  }
+
+  .pull-left, .text-block {
+    padding: 10px;
+  }
 }
 
-.bs-slide-out-tip .tip-text {
-  position: absolute;
-  top: 0;
-  left: -@bs-slide-out-tip-width;
-  width: @bs-slide-out-tip-width;
-  display: inline-block;
-  -webkit-transition: left 0.5s ease-in-out;
-  -moz-transition: left 0.5s ease-in-out;
-  -o-transition: left 0.5s ease-in-out;
-  -ms-transition: left 0.5s ease-in-out;
-  transition: left 0.5s ease-in-out;
+//Creates new blocking context useful for media sitting on one side.
+.text-block {
+  overflow: hidden;
 }
 
-.bs-slide-out-tip .tip-text.show {
-  left: 0;
+//Normalises quotation blocks for citation examples
+.blockquote {
+  font: inherit;
+  margin: 4px 0 12px;
+  padding: .5rem 1rem;
 }
 
-/* saving spinner */
+//Shades an entire area, preventing any interaction as well.
+//TODO: Optimistic approach (IE11+). Depending on user response, this could need replacing with the traditional method.
+.grayout {
+  -webkit-filter: grayscale(100%);
+  ms-filter: gray;
+  filter: grayscale(100%);
+  pointer-events: none;
+}
 
-.fa-spin-2x {
-  -webkit-animation: fa-spin 1s infinite linear;
-  animation: fa-spin 1s infinite linear;
+//Creates a new font-awesome-like icon for titles
+.fa-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+
+  &:before {
+    content: 'T';
+    font-family: 'Georgia';
+  }
+
+  &.fa-lg {
+    font-size: 2.4rem;
+  }
+}
+
+//Highlights the label for the selected radio button
+input[type=radio] {
+  cursor: pointer;
+
+  & + span {
+    color: @gray-light;
+  }
+
+  &:checked + span, &:hover + span {
+    color: black;
+  }
+}
+
+//Prevents captcha widget from overflowing, especially on small screens
+//SOURCE: https://geekgoddess.com/how-to-resize-the-google-nocaptcha-recaptcha/
+.captcha-root > div {
+  transform: scale(0.855);
+  -webkit-transform: scale(0.855);
+  transform-origin: 0 0;
+  -webkit-transform-origin: 0 0;
 }

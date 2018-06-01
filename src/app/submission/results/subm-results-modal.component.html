@@ -1,0 +1,64 @@
+<div class="modal-header"
+     [ngClass]="{'bg-primary': isSuccess(), 'bg-danger': !isSuccess()}">
+    Submission {{isSuccess() ? 'successful' : 'failed'}}
+    <button type="button"
+            class="close"
+            (click)="modalRef.hide()"
+            aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="media">
+        <span class="media-left media-middle">
+            <i aria-hidden="true" class="fa" [ngClass]="{'fa-check-circle': isSuccess(), 'text-danger fa-times-circle': !isSuccess()}"></i>
+        </span>
+        <div class="media-body media-middle">
+            <p class="media-heading">
+                <span *ngIf="isSuccess()">
+                    Your submission has been successfully added to the BioStudies database.
+                </span>
+                <span *ngIf="!isSuccess()">
+                    An error has occurred while submitting the data to BioStudies. You may review your submission and try again. If the error
+                    persists, please contact us at
+                    <a href="mailto:biostudies@ebi.ac.uk?Subject=Error%20while%20submitting%20study&Body=%0A%0A%0A%0A______________%0A{{toLogURI()}}">
+                        biostudies@ebi.ac.uk
+                    </a>.
+                </span>
+            </p>
+        </div>
+    </div>
+    <div  *ngIf="isSuccess()" class="alert alert-warning">
+        <div class="pull-left">
+            <i class="fa fa-hand-o-right fa-lg"></i>
+            <strong>Please note</strong>
+        </div>
+        <p class="text-block text-black">
+            The system may take up to 24 hours after submission to register any new studies in the database.
+        </p>
+    </div>
+    <div  *ngIf="isSuccess()" class="alert alert-warning">
+        <div class="pull-left">
+            <i class="fa fa-hand-o-right fa-lg"></i>
+            <strong>Please note</strong>
+        </div>
+        <p class="text-block text-black">
+            Any registered study will remain private and accessible only through login until the release date.
+        </p>
+    </div>
+    <subm-results-tree *ngIf="!isLogEmpty() && !isSuccess()" [log]="log"></subm-results-tree>
+</div>
+<div class="modal-footer">
+    <div class="pull-right">
+        <button *ngIf="isSuccess()" type="button" class="btn-primary btn btn-xs"
+                tooltip="List all other submitted studies"
+                routerLink="/submissions/sent"
+                (click)="modalRef.hide();">
+            Show all sent
+        </button>
+        <button type="button" class="btn-default btn btn-xs"
+                (click)="modalRef.hide()">
+            Close
+        </button>
+    </div>
+</div>

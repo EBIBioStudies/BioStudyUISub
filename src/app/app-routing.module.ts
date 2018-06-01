@@ -17,9 +17,9 @@ import {
 } from './auth/index';
 
 import {
-    SubmissionListComponent,
-    SubmissionEditComponent,
-    SubmissionViewComponent,
+    SubmListComponent,
+    SubmEditComponent,
+    SubmViewComponent,
     DirectSubmitComponent
 } from './submission/index';
 
@@ -33,11 +33,47 @@ const appRoutes: Routes = [
     {path: 'password_reset_request', component: PasswordResetReqComponent},
     {path: 'password_reset/:key', component: PasswordResetComponent},
     {path: 'resend_activation_link', component: ActivationLinkReqComponent},
-    {path: 'submissions', component: SubmissionListComponent, canActivate: [AuthGuard]},
-    {path: 'direct_upload', component: DirectSubmitComponent, canActivate: [AuthGuard]},
-    {path: 'edit/:accno', component: SubmissionEditComponent, canActivate: [AuthGuard]},
-    {path: 'view/:accno', component: SubmissionViewComponent, canActivate: [AuthGuard]},
-    {path: 'files', component: FileListComponent, canActivate: [AuthGuard]}
+    {
+        path: 'submissions',
+        component: SubmListComponent,
+        data: {reuse: true},
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'submissions/sent',
+        component: SubmListComponent,
+        data: {isSent: true, reuse: true},
+        canActivate: [AuthGuard]},
+    {
+        path: 'submissions/direct_upload',
+        component: DirectSubmitComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'submissions/edit/:accno',
+        component: SubmEditComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'submissions/new/:accno',
+        component: SubmEditComponent,
+        data: {isNew: true},
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'submissions/:accno',
+        component: SubmViewComponent,
+        data: {reuse: true},
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'files',
+        component: FileListComponent,
+        canActivate: [AuthGuard]
+    }
+
+    //NOTE: some components should be reused instead of re-instantiated when navigating to certain routes (the ones with a "reuse" data property).
+    //TODO: As of now, angular does not support this feature but is soon to be added (https://github.com/angular/angular/issues/12446). We should take advantage of this to save requests.
 ];
 
 @NgModule({

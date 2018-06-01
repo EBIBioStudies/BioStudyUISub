@@ -1,6 +1,7 @@
 import {
     Component,
-    ViewChild
+    ViewChild,
+    Input, ElementRef
 } from '@angular/core';
 
 import {ModalDirective} from 'ngx-bootstrap/modal';
@@ -9,67 +10,85 @@ import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import 'rxjs/add/operator/take';
 
+/**
+ * UI component for confirmation modals with all its text parts parameterised.
+ */
 @Component({
     selector: 'confirm-dialog',
-    template: `
-<div class="modal fade" bsModal #staticModal="bs-modal" 
-     [config]="{backdrop: 'static'}"
-     tabindex="-1" 
-     role="dialog">
-
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header alert-warning">
-                <!--button type="button" class="close pull-right" aria-label="Close" (click)="no()">
-                    <span aria-hidden="true">&times;</span>
-                </button-->
-                <div class="media">
-                    <span class="media-left">
-                        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
-                    </span>
-                    <div class="media-body">
-                        <p class="media-heading">{{message}}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <div class="pull-right">
-                    <button type="button" class="btn btn-primary btn-xs" (click)="yes()">Yes</button>
-                    <button type="button" class="btn btn-default btn-xs" (click)="no()">No</button>                
-                </div>
-            </div>  
-        </div>
-    </div>
-    
-</div>         
-    `
+    templateUrl: './confirm-dialog.component.html'
 })
 export class ConfirmDialogComponent {
-    private buttonClicks: Subject<boolean> = new Subject<boolean>();
+    private buttonClicks: Subject<boolean>;
 
     @ViewChild('staticModal')
     private modalDirective: ModalDirective;
+    @ViewChild('focusBtn')
+    private focusEl: ElementRef;
 
-    message: string = '';
+    @Input('headerTitle') title: string = 'Confirm';    //Summary text for the modal's title
+    @Input() confirmLabel: string = 'Ok';               //Default name for positive action
+    @Input() abortLabel: string = 'Cancel';             //Default name for negative action
+    @Input() body: string = 'Are you sure?';            //Descriptive message for the modal's body
 
-    confirm(message: string): Observable<any> {
-        this.message = message;
+    /**
+     * Renders the confirmation modal, allowing subscription to button events.
+     * @param {string} [message] - Optional text for the modal's body section.
+     * @param {boolean} [isDiscardCancel = true] - Optional RxJS stream behaviour. By default,
+     * events are assumed to come from the confirmation button exclusively.
+     * @returns {Observable<any>} Stream of button events.
+     */
+    confirm(message: string = this.body, isDiscardCancel: boolean = true): Observable<any> {
+        let observable;
+
+        //Initialises the stream of button events.
+        //NOTE: Since the observable is created every time the modal is rendered,
+        //it must be initialised to avoid a cumulative effect on subscriptions.
+        this.buttonClicks = new Subject<boolean>();
+        observable = this.buttonClicks.asObservable();
+
+        //Renders the modal
+        this.body = message;
         this.modalDirective.show();
-        return this.buttonClicks
-            .asObservable()
-            .take(1)
-            .filter(x => x)
-            .map(x => {
-            });
+
+        //Discards anything that returns false if required
+        if (isDiscardCancel) {
+            return observable.take(1).filter(x => x).map(x => {});
+        } else {
+            return observable;
+        }
     }
 
-    yes(): void {
+    /**
+     * Handler for confirmation event. Notifies such confirmation with a "true" in the event stream.
+     */
+    ok(): void {
         this.buttonClicks.next(true);
         this.modalDirective.hide();
     }
 
-    no(): void {
+    /**
+     * Handler for abort event. Notifies such confirmation with a "false" in the event stream.
+     */
+    cancel(): void {
         this.buttonClicks.next(false);
         this.modalDirective.hide();
+    }
+
+    /**
+     * Handler for "onShown" event, triggered exactly after the modal has been fully revealed.
+     */
+    onShown(): void {
+        this.focusEl.nativeElement.focus();
+    }
+
+    /**
+     * Monitors modal dismissals and, if any of them are due to clicks on the backdrop area,
+     * it is interpreted as a cancel action.
+     * @param event - Custom modal event indicating the reason for the modal's dismissal
+     */
+    onHidden(event: ModalDirective): void {
+        if (event.dismissReason == 'backdrop-click') {
+            this.cancel();
+        }
     }
 }

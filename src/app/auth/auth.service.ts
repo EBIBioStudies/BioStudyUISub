@@ -1,12 +1,11 @@
 import {Injectable} from '@angular/core';
-import {Response} from '@angular/http';
 
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/map';
 
 import {
-    HttpClient,
+    HttpCustomClient,
     ServerError
 } from 'app/http/index'
 
@@ -22,56 +21,47 @@ import {UserSession} from './user-session';
 @Injectable()
 export class AuthService {
 
-    constructor(private http: HttpClient,
+    constructor(private http: HttpCustomClient,
                 private userSession: UserSession) {
     }
 
     signIn(obj: { login: string, password: string }): Observable<any> {
-        return this.http.post('/raw/auth/signin', obj)
-            .map((res: Response) => {
-                let data = res.json();
-                if (data.status === 'OK') {
-                    this.userSession.create(data.sessid);
-                    return data;
-                }
-                return Observable.throw(ServerError.dataError(data));
-            });
+        return this.http.post('/raw/auth/signin', obj).map((response) => {
+            if (response.status === 'OK') {
+                this.userSession.create(response.sessid);
+                return response;
+            }
+            return Observable.throw(ServerError.dataError(response));
+        });
     }
 
     checkUser(): Observable<any> {
-        return this.http.get('/raw/auth/check?format=json')
-            .map((res: Response) => {
-                let data = res.json();
-                if (data.status === 'OK') {
-                    return data;
-                }
-                return Observable.throw(ServerError.dataError(data));
-            });
+        return this.http.get('/raw/auth/check?format=json').map((response) => {
+            if (response.status === 'OK') {
+                return response;
+            }
+            return Observable.throw(ServerError.dataError(response));
+        });
     }
 
     passwordResetReq(obj: PasswordResetRequestData): Observable<any> {
-        return this.http.post('/api/auth/password/reset_request', obj.snapshot())
-            .map((res: Response) => res.json());
+        return this.http.post('/api/auth/password/reset_request', obj.snapshot());
     }
 
     passwordReset(obj: PasswordResetData): Observable<any> {
-        return this.http.post('/api/auth/password/reset', obj.snapshot())
-            .map((res: Response) => res.json());
+        return this.http.post('/api/auth/password/reset', obj.snapshot());
     }
 
     activationLinkReq(obj: ActivationLinkRequestData): Observable<any> {
-        return this.http.post('/api/auth/activation/link', obj.snapshot())
-            .map((resp: Response) => resp.json());
+        return this.http.post('/api/auth/activation/link', obj.snapshot());
     }
 
     activate(key: string): Observable<any> {
-        return this.http.post('/api/auth/activation/check/' + key, {})
-            .map((res: Response) => res.json());
+        return this.http.post('/api/auth/activation/check/' + key, {});
     }
 
     signUp(regData: RegistrationData): Observable<any> {
-        return this.http.post('/api/auth/signup', regData.snapshot())
-            .map((resp: Response) => resp.json());
+        return this.http.post('/api/auth/signup', regData.snapshot());
     }
 
     signOut(): Observable<any> {

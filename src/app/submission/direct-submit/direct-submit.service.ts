@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
-import {Response} from '@angular/http';
 
 import {Subject} from 'rxjs/Subject';
 
-import {SubmissionService} from '../submission.service';
-import {PageTabProxy} from 'app/submission-model/index';
+import {SubmissionService} from '../shared/submission.service';
 import {ServerError} from 'app/http/index';
+import {Observable} from "rxjs/Observable";
+import {attachTo} from '../shared/pagetab-attributes.utils';
 
 enum ReqStatus {CONVERT, SUBMIT, ERROR, SUCCESS}
 
@@ -20,6 +20,8 @@ export class DirectSubmitRequest {
     private _created: Date;
     private _status: ReqStatus;
     private _log: any;
+    private _accno: string =  '';
+    private _releaseDate: string;
 
     constructor(filename: string, format: string, projects: string[], type: ReqType) {
         this._filename = filename;
@@ -56,7 +58,7 @@ export class DirectSubmitRequest {
     }
 
     get formatText(): string {
-        return this.format || '<auto-detect>';
+        return this.format || 'auto-detect';
     }
 
     get created(): Date {
@@ -79,22 +81,45 @@ export class DirectSubmitRequest {
         return this._log || {};
     }
 
-    onConvertResponse(res: any): void {
-        this.onResponse(res, ReqStatus.SUBMIT);
+    get accno(): string {
+        return this._accno;
     }
 
-    onSubmitResponse(res: any): void {
-        this.onResponse(res, ReqStatus.SUCCESS);
+    get releaseDate(): string {
+        return this._releaseDate;
     }
 
-    private onResponse(res: any, successStatus: ReqStatus): void {
+    //Handler for responses from conversion or final submission
+    onResponse(res: any, successStatus: ReqStatus): void {
+
+        //Failed server response from direct submit => reflects failure in this request object
         if (res.status !== 'OK') {
-            this._log = res.log || {message: 'no results available', level: 'error'};
             this._status = ReqStatus.ERROR;
-            return;
+            this._log = res.log || {message: 'No results available', level: 'error'};
+
+        //Successful server response from direct submit => reflects success accordingly
+        } else {
+            this._status = successStatus;
+            this._log = res.log || undefined;
+
+            //If the response is from final submit request, exposes the accession number
+            if (successStatus == ReqStatus.SUCCESS) {
+                this._accno = res.mapping[0].assigned;
+
+            //If back from conversion, extracts the release date if found.
+            } else if (successStatus == ReqStatus.SUBMIT) {
+                let dateAttr = res.document.submissions[0].attributes;
+
+                //NOTE: The server may come back with no root-level attributes despite PageTab requirements
+                dateAttr = dateAttr && dateAttr.find(attribute => {
+                    return attribute.name == 'ReleaseDate';
+                });
+
+                if (dateAttr) {
+                    this._releaseDate = dateAttr.value;
+                }
+            }
         }
-        this._status = successStatus;
-        this._log = res.log || undefined;
     }
 }
 
@@ -108,14 +133,6 @@ export class DirectSubmitService {
     constructor(private submService: SubmissionService) {
     }
 
-    create(file: File, format: string, projects: string[]): void {
-        this.addRequest(file, format, projects, ReqType.CREATE);
-    }
-
-    update(file: File, format: string, projects: string[]): void {
-        this.addRequest(file, format, projects, ReqType.UPDATE);
-    }
-
     request(index: number) {
         if (index >= 0 && index < this.requests.length) {
             return this.requests[index];
@@ -124,55 +141,49 @@ export class DirectSubmitService {
         return undefined;
     }
 
-    private addRequest(file: File, format: string, projects: string[], type: ReqType): void {
-        const req = new DirectSubmitRequest(file.name, format, projects, type);
+    addRequest(file: File, format: string, projects: string[], type: string): Observable<any> {
+        const req = new DirectSubmitRequest(file.name, format, projects, ReqType[type.toUpperCase()]);
         const index = this.requests.length;
         this.requests.push(req);
         this.newRequest$.next(index);
 
-        this.convert(req, file, format);
+        return this.convert(req, file, format);
     }
 
-    private convert(req: DirectSubmitRequest, file: File, format: string): void {
-        this.submService.convert(file, format)
-            .subscribe(
-                data => {
-                    this.onConvertRequestFinished(req, data);
-                },
-                (error: any) => {
-                    this.onConvertRequestFinished(req, error.data || {});
-                    if (!error.isDataError) {
-                        throw error;
-                    }
+    //TODO: There is a lot of code in common between the methods below. Refactor using RxJS' concat and finally operators to dry it out.
+    private convert(req: DirectSubmitRequest, file: File, format: string): Observable<any> {
+        return this.submService.convert(file, format).map(
+
+            //Updates request object's state and submits if successful
+            data => {
+                req.onResponse(data, ReqStatus.SUBMIT);
+                !req.failed && this.submit(req, data.document.submissions[0]);
+
+            //Updates request object's state and bubbles server error up to support additional subscriptions
+            }).catch((error: any) => {
+                req.onResponse(error.data || {}, ReqStatus.SUBMIT);
+                if (!error.isDataError) {
+                    throw error;
                 }
-            );
+                return Observable.throw(error);
+            });
     }
 
+    //TODO: incorporate create request to event stream used for the convert one. Otherwise,
     private submit(req: DirectSubmitRequest, subm: any): void {
-        const pt: PageTabProxy = PageTabProxy.create(subm);
-        pt.attachTo = req.projects;
-        this.submService.directCreateOrUpdate(pt.data, req.type === ReqType.CREATE)
-            .subscribe(
-                data => {
-                    this.onSubmitRequestFinished(req, data);
-                },
-                (error: ServerError) => {
-                    this.onSubmitRequestFinished(req, error.data || {});
-                    if (!error.isDataError) {
-                        throw error;
-                    }
+        subm = attachTo(subm, req.projects);
+
+        //Updates request object's state
+        this.submService.directCreateOrUpdate(subm, req.type === ReqType.CREATE).subscribe(
+            data => {
+                    req.onResponse(data, ReqStatus.SUCCESS);
+            },
+            (error: ServerError) => {     //NOTE: ServerErrors have the whole error object under a "data" property
+                req.onResponse(error.data.error || {}, ReqStatus.SUCCESS);
+                if (!error.isDataError) {
+                    throw error;
                 }
-            );
-    }
-
-    private onConvertRequestFinished(req: DirectSubmitRequest, resp: any) {
-        req.onConvertResponse(resp);
-        if (!req.failed) {
-            this.submit(req, resp.document.submissions[0]);
-        }
-    }
-
-    private onSubmitRequestFinished(req: DirectSubmitRequest, resp: any) {
-        req.onSubmitResponse(resp);
+            }
+        );
     }
 }

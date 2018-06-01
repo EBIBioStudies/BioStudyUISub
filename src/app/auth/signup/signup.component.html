@@ -1,78 +1,113 @@
 <container-root>
     <container-md>
-        <div>
-            <div class="alert alert-danger" style="margin-left:0" *ngIf="error">
-                {{error.status}} : {{error.message}}
-            </div>
-            <div class="alert" *ngIf="!error">
-                &nbsp;
+        <div class="auth-content">
+            <div class="alert" [ngClass]="{'alert-danger': error, 'invisible': !error}">
+                {{error ? error.message : '&nbsp;'}}
             </div>
         </div>
-        <div *ngIf="success" class="panel panel-success">
-            <div class="panel-body">
-                <h4 class="text-success">Thank you for registering. Please check your email for the account activation link.</h4>
-            </div>
+        <p>
+            <a routerLink="/signin"><i class="fa fa-chevron-circle-left" aria-hidden="true"></i> Back to Log in</a>
+        </p>
+        <div *ngIf="success">
+            <h4 class="text-success">Thank you for registering</h4>
+            <p>An email has been sent with a link to activate your new account.</p>
         </div>
-        <div *ngIf="!success" class="panel panel-info">
+        <div *ngIf="!success">
+            <h4>Registration</h4>
+            <p>Please provide the information below to create a new account. Note that both the <i>Full name</i> and
+                <i>ORCID</i> fields are optional.</p>
+        </div>
+        <div *ngIf="!success" class="panel panel-default">
             <div class="panel-body">
-                <form id="signUpForm" novalidate name="signUpForm" role="form"
-                      (ngSubmit)="signUpForm.valid && model.valid() && onSubmit($event)" #signUpForm="ngForm">
-                    <div class="form-group form-group-sm">
+                <form id="signUpForm" novalidate name="signUpForm" role="form" autocomplete="off"
+                      (ngSubmit)="onSubmit(signUpForm)" #signUpForm="ngForm">
+                    <div class="form-group">
                         <label class="control-label" for="username">Full name</label>
-                        <input type="text"
+                        <span class="text-muted pull-right"><i>Optional</i></span>
+                        <input type="text" autofocus
                                id="username"
                                name="username"
-                               tabindex="1"
                                class="form-control"
-                               placeholder="Full name"
                                [(ngModel)]="model.username"
-                               (change)="onChange()"/>
+                               (change)="resetGlobalError()"
+                               #focusEl />
                     </div>
-                    <div class="form-group form-group-sm" [ngClass]="{'has-error': email.invalid && email.dirty}">
-                        <label for="email">Email
-                            <span [hidden]="email.valid || email.pristine">: cannot be blank</span>
+                    <div class="form-group" [ngClass]="{'has-error': email.invalid && email.touched}">
+                        <label class="control-label" for="email">
+                            <span class="text-black">Email address</span>
+                            <span *ngIf="email.invalid && email.touched">Please enter an email address</span>
                         </label>
-                        <input type="email"
-                               id="email"
-                               name="email"
+                        <input type="email" id="email" name="email" autofocus
                                class="form-control"
-                               placeholder="Email"
                                [(ngModel)]="model.email"
-                               (change)="onChange()"
+                               (change)="resetGlobalError()"
+                               #email="ngModel"
+                               #emailEl
                                required
-                               #email="ngModel"/>
+                               validate-onblur>
                     </div>
-                    <div class="form-group form-group-sm" [ngClass]="{'has-error': orcid.invalid}">
-                        <label>ORCID
-                            <span [hidden]="orcid.valid">: wrong format; the value should be in 0000-0000-0000-0000 format.</span>
+                    <div class="form-group" [ngClass]="{'has-error': password.invalid && password.touched}">
+                        <label class="control-label" for="password">
+                            <span class="text-black">Password</span>
+                            <span *ngIf="password.invalid && password.touched">
+                                <span *ngIf="password.errors?.required">Please enter your new password</span>
+                                <span *ngIf="password.errors?.minlength">Please use at least 6 characters</span>
+                            </span>
+                            <span [hidden]="password.valid || (password.invalid && password.touched)"
+                                  class="text-muted">
+                                (at least 6 characters long)
+                            </span>
                         </label>
+                        <input type="password" id="password" autocomplete="nope"
+                               name="password"
+                               class="form-control"
+                               [(ngModel)]="model.password"
+                               (change)="resetGlobalError()"
+                               validate-onblur
+                               required
+                               minlength="6"
+                               #password="ngModel" bsDatepicker/>
+                    </div>
+                    <div class="form-group" [ngClass]="{'has-error': orcid.invalid && orcid.touched}">
+                        <label class="control-label">
+                            <span class="text-black">ORCID</span>
+                            <span *ngIf="orcid.invalid && orcid.touched">
+                                <span *ngIf="orcid.errors?.pattern">Please match the dddd-dddd-dddd-dddd format</span>
+                            </span>
+                            <span [hidden]="(orcid.valid && model.orcid) || (orcid.invalid && orcid.touched)"
+                                  class="text-muted">
+                                (use 4x4 digit format)
+                            </span>
+                        </label>
+                        <span class="text-muted pull-right"><i>Optional</i></span>
                         <orcid-input-box
                                 [(ngModel)]="model.orcid"
+                                [isSmall]="false"
                                 name="orcid"
-                                #orcid="ngModel">
+                                #orcid="ngModel"
+                                validate-onblur>
                         </orcid-input-box>
                     </div>
-                    <div class="form-group form-group-sm" [ngClass]="{'has-error': password.invalid && password.dirty}">
-                        <label for="password">Password
-                            <span [hidden]="password.valid || password.pristine">: cannot be blank</span>
+                    <div class="form-group" [ngClass]="{'has-error': captcha.invalid && (captcha.dirty || captcha.touched)}">
+                        <label class="control-label">
+                            <span class="text-black">Verify you are a human</span>
+                            <span [hidden]="captcha.valid || (captcha.pristine && captcha.untouched)">Please confirm you are not a robot</span>
                         </label>
-                        <input type="password"
-                               name="password"
-                               id="password"
-                               class="form-control"
-                               placeholder="Password"
-                               [(ngModel)]="model.password"
-                               (change)="onChange()"
-                               required
-                               #password="ngModel"/>
+                        <re-captcha (resolved)="onRecaptchaResolved($event)"
+                                    [(ngModel)]="model.captcha"
+                                    name="captcha"
+                                    #captcha="ngModel"
+                                    required
+                                    siteKey="6Lcmlv0SAAAAAHofnIcb29l1LMZsnGFcSlH8Reve"
+                                    class="captcha-root"
+                                    #recaptchaEl></re-captcha>
                     </div>
-                    <re-captcha
-                            (resolved)="onRecaptchaResolved($event)"
-                            siteKey="6Lcmlv0SAAAAAHofnIcb29l1LMZsnGFcSlH8Reve"
-                            #recaptcha>
-                    </re-captcha>
-                    <div class="form-group margin-top-large">
-                        <button type="submit" class="btn btn-primary">Sign up</button>
+                    <div class="row-submit">
+                        <button type="submit" class="btn btn-primary btn-submit"
+                                [disabled]="isLoading">Register</button>
+                        <div class="text-muted col-md-10">
+                            <span *ngIf="isLoading"><i class="fa fa-cog fa-spin"></i> Registering...</span>
+                        </div>
                     </div>
                 </form>
             </div>

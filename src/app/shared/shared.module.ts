@@ -24,6 +24,9 @@ import {ORCIDInputBoxComponent} from './orcid-input-box.component';
 import {FileUploadButtonComponent} from './file-upload-button.component';
 import {ConfirmDialogComponent} from './confirm-dialog.component';
 import {MultiSelectComponent, FilterPipe} from './multi-select.component';
+import {InlineEditComponent} from './inline-edit.component';
+import {ValidateOnBlurDirective} from "./validate-onblur.directive";
+import {StripHtmlPipe} from "./strip-html.pipe";
 
 @NgModule({
     imports: [
@@ -47,7 +50,10 @@ import {MultiSelectComponent, FilterPipe} from './multi-select.component';
         FileUploadButtonComponent,
         ConfirmDialogComponent,
         MultiSelectComponent,
-        FilterPipe
+        InlineEditComponent,
+        FilterPipe,
+        StripHtmlPipe,
+        ValidateOnBlurDirective,
     ],
     exports: [
         CommonModule,
@@ -69,7 +75,10 @@ import {MultiSelectComponent, FilterPipe} from './multi-select.component';
         FileUploadButtonComponent,
         ConfirmDialogComponent,
         MultiSelectComponent,
-        FilterPipe
+        InlineEditComponent,
+        FilterPipe,
+        StripHtmlPipe,
+        ValidateOnBlurDirective
     ]
 })
 export class SharedModule {

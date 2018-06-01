@@ -1,58 +1,31 @@
-import {
-    Component,
-    OnInit
-} from '@angular/core';
+import {Component} from '@angular/core';
+import {Params} from '@angular/router';
 
-import {
-    ActivatedRoute,
-    Router,
-    Params
-} from '@angular/router';
-
-import {
-    Submission,
-    PageTab,
-    DictionaryService
-} from 'app/submission-model/index';
-
-import {SubmissionService} from '../submission.service';
+import {SubmEditComponent} from "./subm-edit.component";
+import {PageTab} from "../shared/pagetab.model";
+import {SubmissionType} from "../shared/submission-type.model";
+import {Observable} from "rxjs/Observable";
 
 @Component({
     selector: 'subm-view',
-    templateUrl: './subm-edit.component.html',
-    styles: [`
-    .popup {
-      position: absolute;
-      background-color: #fff;
-      border-radius: 3px;
-      border: 1px solid #ddd;
-      height: 251px;
-    }
-`]
+    templateUrl: './subm-view.component.html',
 })
-export class SubmissionViewComponent implements OnInit {
-    submission: Submission;
-    readonly: boolean = true;
-
-    constructor(private route: ActivatedRoute,
-                private submService: SubmissionService,
-                private dictService: DictionaryService,
-                private router: Router) {
-    }
-
-    ngOnInit() {
+export class SubmViewComponent extends SubmEditComponent {
+    ngOnInit(): Observable<any> {
         this.route.params.forEach((params: Params) => {
-            let accno = params['accno'];
+            this.accno = params['accno'];
             this.submService
-                .getSubmittedSubmission(accno)
-                .subscribe(resp => {
-                    let pt = new PageTab(resp.data);
-                    this.submission = pt.asSubmission(this.dictService.dict());
+                .getSubmittedSubmission(this.accno)
+                .subscribe(wrappedSubm => {
+                    const page = new PageTab(wrappedSubm.data);
+
+                    this.wrappedSubm = wrappedSubm;
+                    this.accno = wrappedSubm.accno;
+                    this.subm = page.toSubmission(SubmissionType.fromTemplate(page.firstAttachTo));
+                    this.changeSection(this.subm.root.id);
                 });
         });
-    }
 
-    onEditSubmission() {
-        this.router.navigate(['/edit', this.submission.accno])
+        return Observable.of(true);
     }
 }

@@ -1,0 +1,12 @@
+.list-group {
+    margin: 7px;
+}
+.list-group-item {
+    color: white;
+    font-family: Courier;
+    border: none;
+    background: black;
+}
+.list-group-item .fa {
+    width: 20px;
+}

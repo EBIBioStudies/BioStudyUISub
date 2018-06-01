@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
+import {Subject} from "rxjs/Subject";
 
 import {
     setLoginToken,
@@ -12,7 +13,7 @@ import {
 @Injectable()
 export class UserSession {
 
-    private sessionCreated = new BehaviorSubject<boolean>(false);
+    private sessionCreated = new Subject<boolean>();
 
     created$: Observable<boolean> = this.sessionCreated.asObservable();
 

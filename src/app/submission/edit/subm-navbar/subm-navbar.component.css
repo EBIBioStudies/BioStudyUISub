@@ -1,0 +1,6 @@
+.current-section {
+    text-decoration: none;
+    font-weight: bold;
+    color: #000;
+    cursor: default;
+}
