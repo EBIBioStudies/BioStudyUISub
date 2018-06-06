@@ -72,10 +72,10 @@
                         <label class="control-label">
                             <span class="text-black">ORCID</span>
                             <span *ngIf="orcid.invalid && orcid.touched">
-                                <span *ngIf="orcid.errors?.pattern">Please match the dddd-dddd-dddd-dddd format</span>
+                                <span *ngIf="orcid.errors?.pattern">(use 4x4 digit format)</span>
                             </span>
                             <span [hidden]="(orcid.valid && model.orcid) || (orcid.invalid && orcid.touched)"
-                                  class="text-muted">
+                                  [ngClass]="{'text-muted': orcid.untouched}">
                                 (use 4x4 digit format)
                             </span>
                         </label>

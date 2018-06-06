@@ -12,7 +12,13 @@ import {
 
 import * as pluralize from "pluralize";
 import * as _ from 'lodash';
-import {externalAttrs} from "./pagetab.model";
+
+//Names of attributes as they come from the server that must be external.
+//NOTE: As per PageTab's requirements, "AttachTo", "ReleaseDate" and "Title" are special attributes that pertain the
+//whole submission and must therefore be outside the section.
+//NOTE: Only these attributes follow an Upper Camel Case convention. Any attributes different from these are arbitrarily
+//formatted.
+export const rootAttrs: string[] = ['Title', 'ReleaseDate', 'AttachTo'];
 
 const nextId = (function () {
     let count = 0;
@@ -734,7 +740,7 @@ export class Fields extends HasUpdates<UpdateEvent> {
             //NOTE: Root-level attribute names from the server are UpperCamelCased whereas type field names are
             //in human-readable form. For external attributes only, this means lower-case and only first letter
             //capitalised with spaces in between.
-            if (_.includes(externalAttrs, attrName)) {
+            if (_.includes(rootAttrs, attrName)) {
                 attrName = _.upperFirst(attrName.replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase());
             }
             fieldType = type.getFieldType(attrName);
@@ -814,7 +820,7 @@ export class Section extends HasUpdates<UpdateEvent> {
                 //NOTE: Root-level attribute names from the server are UpperCamelCased whereas type field names are
                 //in human-readable form. For external attributes only, this means lower-case and only first letter
                 //capitalised with spaces in between.
-                if (_.includes(externalAttrs, attrName)) {
+                if (_.includes(rootAttrs, attrName)) {
                     attrName = _.upperFirst(attrName.replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase());
                 }
 
