@@ -20,7 +20,7 @@
              [collapse]="userLoggedIn && navCollapsed">
             <ul class="nav navbar-right"
                 [ngClass]="{'navbar-nav': userLoggedIn, 'pull-right': !userLoggedIn}">
-                <li *ngIf="!userLoggedIn && !userRegistering">
+                <li *ngIf="userLoggingIn">
                     <button class="btn navbar-btn"
                             routerLink="/signup"
                             routerLinkActive="active"

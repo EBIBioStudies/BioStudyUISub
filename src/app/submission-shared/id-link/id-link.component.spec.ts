@@ -37,7 +37,6 @@ describe('IdLinkComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(IdLinkComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should be instantiated', () => {
