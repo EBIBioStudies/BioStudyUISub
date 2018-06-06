@@ -37,8 +37,8 @@ export class PubMedIdSearchComponent implements ControlValueAccessor {
     private onChange: any = (_:any) => {};      //placeholder for handler propagating changes outside the custom control
     private onTouched: any = () => {};          //placeholder for handler after the control has been "touched"
 
+    public isPreviewPub: boolean = false;       //indicates if the retrieved publication's summary preview is on display
     private isBusy: boolean = false;            //indicates a transaction is in progress
-    private isPreviewPub: boolean = false;      //indicates if the retrieved publication's summary preview is on display
     private pubMedId: string;                   //last PubMed ID number typed in
     private lastIDfetched: string;              //helps cancel unnecessary search actions triggered by enter key
     private publication: object = {};           //last publication retrieved

@@ -1,4 +1,5 @@
 import {
+    rootAttrs,
     AttributesData,
     Feature,
     FeatureData,
@@ -14,13 +15,6 @@ import {copyAttributes, removeBlankAttrs} from './pagetab-attributes.utils';
 import * as _ from 'lodash';
 import {formatDate} from "../../submission-shared/date.utils";
 import {LinksUtils} from "./pagetab-links.utils";
-
-//Names of attributes as they come from the server that must be external.
-//NOTE: As per PageTab's requirements, "AttachTo", "ReleaseDate" and "Title" are special attributes that pertain the
-//whole submission and must therefore be outside the section.
-//NOTE: Only these attributes follow an Upper Camel Case convention. Any attributes different from these are arbitrarily
-//formatted.
-export const externalAttrs: string[] = ['Title', 'ReleaseDate', 'AttachTo'];
 
 class PtEntry implements AttributesData {
     readonly attributes: { name: string, value: string }[];
@@ -149,8 +143,8 @@ export class PageTab implements SubmissionData {
                 attribute.value = formatDate(new Date(Date.now()));
             }
 
-            //Moves attributes labelled as "external" outside the section
-            if (_.includes(externalAttrs, attribute.name)) {
+            //Moves attributes labelled as "root" outside the section
+            if (_.includes(rootAttrs, attribute.name)) {
                 page.attributes.push(attribute);
                 return false;
 
@@ -206,7 +200,7 @@ export class PageTab implements SubmissionData {
 
                 //NOTE: Root-level attributes in PageTab are assumed to be in UpperCamelCase always whereas submission
                 //field names are in human-readable form with spaces.
-                if (_.includes(externalAttrs, _.upperFirst(_.camelCase(attrName)))) {
+                if (_.includes(rootAttrs, _.upperFirst(_.camelCase(attrName)))) {
                     attrName = _.upperFirst(_.camelCase(field.name));
                 }
 
