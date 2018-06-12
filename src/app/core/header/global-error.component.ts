@@ -12,7 +12,7 @@ import {GlobalErrorHandler} from 'app/global-error.handler';
     styleUrls: ['./global-error.component.css']
 })
 export class GlobalErrorComponent {
-    error: string = '';
+    message: string = '';
 
     /**
      * Captures async errors and refreshes the UI (slides an alert in).
@@ -23,7 +23,14 @@ export class GlobalErrorComponent {
     constructor (geh: ErrorHandler, changeRef: ChangeDetectorRef, private rootEl: ElementRef) {
         if (geh instanceof GlobalErrorHandler) {
             geh.anErrorDetected$.subscribe(error => {
-                this.error = this.message(error);
+
+                //Message conversion is bypassed to allow for plain strings are error exception objects.
+                if (typeof error == 'string') {
+                    this.message = error;
+                } else {
+                    this.message = this.toMessage(error);
+                }
+
                 changeRef.detectChanges();
                 rootEl.nativeElement.firstChild.classList.add('slide-in');
             });
@@ -31,18 +38,27 @@ export class GlobalErrorComponent {
     }
 
     /**
-     * Merges different error properties to produce the string to be shown as an error message.
+     * Merges different error properties to produce the string to be shown as an error message. If there is
+     * no network, the user is instead alerted to that.
      * @param error - Error object containing fragments of the error message.
      * @returns {string} - Text to be used as an error message.
      */
-    message(error: any): string {
-        const name = error.name || '';
-        const message = error.message || '';
-        return (name + message).length === 0 ? 'Unknown error' : (name + ' ' + message);
+    toMessage(error: any): string {
+
+        //There seems to be network connection
+        if (navigator.onLine) {
+            const name = error.name || '';
+            const message = error.message || '';
+            return (name + message).length === 0 ? 'Unknown error' : (name + ' ' + message);
+
+        //Definitely not connected
+        } else {
+            return 'You seem to be offline. Please check your network.'
+        }
     }
 
     /**
-     * Slides the alert out when closed.
+     * Slides the alert out of view when performing the close action.
      */
     onClose() {
         this.rootEl.nativeElement.firstChild.classList.remove('slide-in');

@@ -240,6 +240,7 @@ export class SubmListComponent {
                     const fm = params.filterModel || {};
                     this.isBusy = true;
 
+                    //Shows loading progress overlay box.
                     if (agApi != null) {
                         agApi.showLoadingOverlay();
                     }
@@ -254,10 +255,16 @@ export class SubmListComponent {
                         rTimeTo: fm.rtime && fm.rtime.value && fm.rtime.value.to ? fm.rtime.value.to : undefined,
                         keywords: fm.title && fm.title.value ? fm.title.value : undefined
 
+                    //Hides the overlaid progress box if request failed
+                    }).takeUntil(this.ngUnsubscribe).catch(error => {
+                        agApi.hideOverlay();
+                        return Observable.throw(error);
+
                     //Once all submissions fetched, determines last row for display purposes.
-                    }).takeUntil(this.ngUnsubscribe).subscribe((rows) => {
+                    }).subscribe((rows) => {
                         let lastRow = -1;
 
+                        //Hides progress box.
                         agApi.hideOverlay();
 
                         //Removes any entries that are really revisions of sent submissions if showing temporary ones
