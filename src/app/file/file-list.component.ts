@@ -29,6 +29,7 @@ import 'rxjs/add/operator/filter';
 import {AppConfig} from "../app.config";
 import "rxjs/add/operator/takeUntil";
 import {Subject} from "rxjs/Subject";
+import {Observable} from "rxjs/Observable";
 
 @Component({
     selector: 'file-actions-cell',
@@ -111,7 +112,7 @@ export class FileTypeCellComponent implements AgRendererComponent {
                 [ngStyle]="{ 'width': value + '%'}">{{value}}%</div>
     </div>
     <div *ngIf="value === 100" style="text-align:center;color:green"><i class="fa fa-check"></i></div>
-    <div *ngIf="value < 0" class="text-danger">{{error}}</div>
+    <div *ngIf="value < 0" class="text-danger text-center"><i class="fa fa-times-circle"></i> {{error}}</div>
 `
 })
 export class ProgressCellComponent implements AgRendererComponent {
@@ -250,7 +251,12 @@ export class FileListComponent implements OnInit, OnDestroy {
         let p: Path = path ? path : this.path;
         this.fileService.getFiles(p.fullPath())
             .takeUntil(this.ngUnsubscribe)
-            .subscribe(
+
+            .catch(error => {
+                this.gridOptions.api.hideOverlay();
+                return Observable.throw(error);
+
+            }).subscribe(
                 data => {
                     if (data.status === 'OK') { //use proper http codes for this!!!!!!
                         this.path = p;
