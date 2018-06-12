@@ -17,22 +17,36 @@ export class FileUploadBadgeComponent {
     @Output() select: EventEmitter<any> = new EventEmitter<any>();
 
     private _uploads = [];
+    hasFailed: boolean;       //has any upload request failed?
 
-    constructor(private uploader: FileUploadService) {
-    }
+    constructor(private uploader: FileUploadService) {}
 
     get count(): number {
         return this.uploads.length;
     }
 
     get uploads(): any[] {
-        return this.merge(_.flatMap(this.uploader.activeUploads(), (u) => {
-            return _.map(u.files, (f) => ({
-                name: f,
-                path: u.path,
-                progress: u.failed() ? 'error' : u.progress + "%"
-            }))
+
+        //Collection of upload requests.
+        //NOTE: When multiple files are uploaded simultaneously, a single request is made.
+        const uploadReqs = this.uploader.activeUploads();
+
+        this.hasFailed = false;
+
+        //Collection of upload operations, one per file (as opposed to multiple-file requests).
+        const fileUploads = this.merge(_.flatMap(uploadReqs, (request) => {
+            if (request.failed()) {
+                this.hasFailed = this.hasFailed || request.failed();
+            }
+
+            return _.map(request.files, (file) => ({
+                name: file,
+                path: request.path,
+                progress: request.failed() ? 'error' : request.progress + "%"
+            }));
         }));
+
+        return fileUploads;
     }
 
     merge(dest: any[]): any[] {

@@ -64,6 +64,8 @@ export class HttpCustomClient {
         for (let fi of files) {
             input.append('file', fi);
         }
+
+        //TODO: The error handler is only allowed within whatever routine calls the "upload" method. It should be brought back to this layer so that a "catch" can be used, just like with the other REST verb operations.
         return this.uploadService.post(this.transform(url), input, this.headers());
     }
 
