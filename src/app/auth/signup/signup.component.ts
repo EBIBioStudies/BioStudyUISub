@@ -24,7 +24,7 @@ export class SignUpComponent implements AfterViewInit {
     isLoading: boolean = false;
 
     model: RegistrationData = new RegistrationData();
-    error: ServerError = null;
+    error: ServerError = null;          //global object for showing error feedback
 
     @ViewChild('recaptchaEl')
     private recaptcha: RecaptchaComponent;
@@ -76,6 +76,9 @@ export class SignUpComponent implements AfterViewInit {
         }
     }
 
+    /**
+     * Resets the value of the error object to effectively hide feedback.
+     */
     resetGlobalError(): void {
         this.error = null;
     }
