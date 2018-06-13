@@ -118,7 +118,7 @@ aside {
 .sidebar {
   overflow-y: auto;
   overflow-x: hidden;
-  z-index: calc(@zindex-navbar-fixed + 1);
+  z-index: @zindex-side-fixed;
 }
 
 .sidebar-offcanvas {
@@ -312,6 +312,14 @@ input[type="radio"] {
   outline: none !important;
 }
 
+//Corrects vertical mis-alignment of text besides checkboxes or radio buttons
+//Source: https://github.com/twbs/bootstrap/issues/16426
+input[type="radio"], input[type="checkbox"] {
+  margin-top: ((@line-height-base - 1)/2) * 1em;
+  width: 1em;
+  height: 1em;
+}
+
 //Optional fields (be them data or column ones) within features have discontinous outlines
 .optional .form-control {
   border-style: dashed;
@@ -400,7 +408,7 @@ input[type="radio"] {
 //Brings date picker's styles in line with the app's, removes pointer over inactive/disabled day cells
 //keeps the dialogue on top of all form elements and positions it with enough distance from any sidebar.
 .bs-datepicker {
-  z-index: calc(@zindex-navbar-fixed - 10);
+  z-index: @zindex-popover;
   margin-left: 35px;
   border-radius: 4px;
 }
@@ -446,3 +454,4 @@ input[type="radio"] {
   line-height: initial;
   pointer-events: auto
 }
+
