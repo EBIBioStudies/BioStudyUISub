@@ -12,90 +12,129 @@
                [ngClass]="{'fa-toggle-left': !collapsed, 'fa-toggle-right': collapsed}"></i>
         </button>
         <tabset [ngClass]="{'invisible': collapsed}">
-            <tab heading="Upload form" active="true"></tab>
+            <tab active="true"
+                 customClass="badge-parent">
+                <template tabHeading>
+                    Upload files
+                    <span *ngIf="pendingFiles" class="badge badge-corner">
+                        {{pendingFiles}}
+                    </span>
+                </template>
+            </tab>
         </tabset>
     </div>
-    <div *ngIf="collapsed" class="vertical-text">Upload form</div>
-    <div class="sidebar-menu sidebar-contents clearfix" *ngIf="!collapsed">
-        <form id="subm-upload-form"
-              class="col-sm-12"
-              name="submUploadForm"
-              novalidate
-              role="form"
-              method="post"
-              (ngSubmit)="onSubmit($event)"
-              #uploadForm="ngForm">
+    <div *ngIf="collapsed" class="vertical-text">Upload files</div>
+    <ul class="sidebar-menu clearfix" *ngIf="!collapsed"
+        [ngClass]="{'sidebar-contents': !isStatus('busy')}">
+        <li [hidden]="isStatus('busy')">
+            <form id="subm-upload-form"
+                  class="col-sm-12"
+                  name="submUploadForm"
+                  novalidate
+                  role="form"
+                  method="post"
+                  (ngSubmit)="onSubmit($event)"
+                  #uploadForm="ngForm">
 
-            <div class="form-group" [ngClass]="{'has-error': !model.file && fileTouched}">
-                <label class="control-label">Study file</label>
-                <file-upload-button class="show"
-                                    (select)="onUploadFilesSelect($event)">
-                </file-upload-button>
-                <p class="form-text"
-                   [ngClass]="{'text-muted': !model.file, 'text-danger': !model.file && fileTouched}">{{fileName}}</p>
-            </div>
+                <div class="form-group" [ngClass]="{'has-error': !selectedFileCount && fileTouched}">
+                    <label class="control-label">1. Study files</label>
+                    <div class="control-list files-control center-spread">
+                        <file-upload-button [multiple]="true"
+                                            [isResetOnClick]="false"
+                                            [isDirOnly]="isBulkMode"
+                                            (select)="onUploadFilesSelect($event)"
+                                            #fileEl>
+                        </file-upload-button>
+                        <span *ngIf="fileEl.isDirSupport" class="mode-toggle checkbox">
+                            <label tooltip="Enable folder selection for bulk upload"
+                                   container="body"
+                                   placement="bottom">
+                                <input type="checkbox"
+                                       name="folder-mode"
+                                       [(ngModel)]="isBulkMode">
+                                <span>Bulk folder</span>
+                            </label>
+                        </span>
+                    </div>
+                </div>
 
-            <div class="form-group">
-                <label class="control-label">File format</label>
-                <span class="text-muted pull-right"><i>Optional</i></span>
-                <select name="formatSelect"
-                        class="form-control"
-                        [(ngModel)]="model.format">
-                    <option *ngFor="let format of formats" [value]="format.value" [selected]="model.format === format.value">
-                        {{format.name}}
-                    </option>
-                </select>
-            </div>
-            <div *ngIf="isBusy || projectsToAttachTo.length" class="form-group">
-                <label class="control-label">Projects</label>
-                <span class="text-muted pull-right"><i>Optional</i></span>
-                <ul *ngIf="model.projects.length > 0">
-                    <li *ngFor="let p of model.projects">{{p}}</li>
-                </ul>
-                <p *ngIf="isBusy && !projectsToAttachTo.length" class="text-muted">
-                    <i class="fa fa-cog fa-spin"></i>
-                    Loading projects...
-                </p>
-                <multi-select
-                        name="selectedProjects"
-                        placeholder="Select one or more"
-                        filterPlaceholder="Filter by name"
-                        *ngIf="projectsToAttachTo.length"
-                        [options]="projectsToAttachTo"
-                        [(ngModel)]="model.projects"></multi-select>
-            </div>
-            <div class="form-group">
-                <label class="control-label">Action</label>
-                <div class="radio">
-                    <label>
-                        <input type="radio"
-                               class="project-radio"
-                               name="submitType"
-                               value="create"
-                               [(ngModel)]="submitType">
-                        <span>Create a new study</span>
-                    </label>
+                <div class="form-group">
+                    <label class="control-label">2. Projects</label>
+                    <span class="text-muted pull-right"><i>Optional</i></span>
+                    <div class="control-list">
+                        <p *ngIf="!model.projects.length" class="text-muted">
+                            <span *ngIf="isProjFetch">
+                                <i class="fa fa-cog fa-spin"></i>
+                                Loading projects...
+                            </span>
+                            <span *ngIf="!isProjFetch">
+                                Only generic allowed.
+                            </span>
+                        </p>
+                        <div *ngIf="model.projects.length" (change)="onProjChange($event)">
+                            <div *ngFor="let project of model.projects" class="checkbox">
+                                <label>
+                                    <input type="checkbox"
+                                           name="projects"
+                                           value="{{project.name}}"
+                                           [(ngModel)]="project.checked">
+                                    <span>{{project.name}}</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="radio">
-                    <label>
-                        <input type="radio"
-                               class="project-radio"
-                               name="submitType"
-                               value="update"
-                               [(ngModel)]="submitType">
-                        <span>Update a study</span>
-                    </label>
+                <div class="form-group">
+                    <label class="control-label">3. Upload mode</label>
+                    <div class="control-list">
+                        <div class="radio">
+                            <label>
+                                <input type="radio"
+                                       class="project-radio"
+                                       name="submitType"
+                                       value="create"
+                                       [(ngModel)]="submitType">
+                                <span>Create new studies</span>
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio"
+                                       class="project-radio"
+                                       name="submitType"
+                                       value="update"
+                                       [(ngModel)]="submitType">
+                                <span>Update studies</span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="btn-group">
-                <button id="single-button"
-                        type="button"
-                        [disabled]="isBusy"
-                        (click)="onSubmit(submitType)"
-                        class="btn-submit btn btn-primary">
-                    Submit
-                </button>
-            </div>
-        </form>
-    </div>
+                <div class="btn-group">
+                    <button id="single-button"
+                            type="button"
+                            [disabled]="isProjFetch || isStatus('busy')"
+                            (click)="onSubmit(submitType)"
+                            class="btn-submit btn btn-primary">
+                        Upload
+                    </button>
+                </div>
+            </form>
+        </li>
+        <li *ngIf="isStatus('busy')" class="center-vertically text-center"
+            [ngClass]="{'col-xs-12': !collapsed}">
+            <i class="fa fa-cog fa-spin" aria-hidden="true"
+               [ngClass]="{'fa-2x': collapsed, 'fa-4x': !collapsed}"></i>
+            <h4 [ngClass]="{'vertical-text': collapsed}">
+                {{submitType == 'create' ? 'Creating' : 'Updating'}}
+                {{selectedFileCount > 1 ? 'studies' : 'study'}}...
+            </h4>
+            <button class="btn btn-danger btn-sm"
+                    tooltip="Stop all pending uploads"
+                    placement="bottom"
+                    container="body"
+                    (click)="onCancelPending($event)">
+                CANCEL
+            </button>
+        </li>
+    </ul>
 </aside>

@@ -20,8 +20,8 @@
             </div>
         </div>
         <i class="fa fa-lg {{feature.type.icon}}"></i>
-        <div class="panel-description">
-            <div [innerHTML]="feature.type.description"></div>
+        <div class="panel-description col-xs-9 col-sm-10 col-md-11">
+            <span [innerHTML]="feature.type.description"></span>
             <div *ngIf="allowedCols.length && userData.isPrivileged">
                 <strong>{{feature.type.uniqueCols ? 'More' : 'Available'}} {{feature.singleRow ? 'key' : 'column'}}s</strong>:
                 <i>{{allowedCols.join(', ')}}.</i>

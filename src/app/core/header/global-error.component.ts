@@ -24,7 +24,7 @@ export class GlobalErrorComponent {
         if (geh instanceof GlobalErrorHandler) {
             geh.anErrorDetected$.subscribe(error => {
 
-                //Message conversion is bypassed to allow for plain strings are error exception objects.
+                //Message conversion is bypassed to allow for plain strings as error exception objects.
                 if (typeof error == 'string') {
                     this.message = error;
                 } else {
