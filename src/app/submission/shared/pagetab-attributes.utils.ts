@@ -85,10 +85,10 @@ export function removeBlankAttrs(obj: any) {
 }
 
 /**
- * Sets 'AttachTo' attributes to the given object
- * @param obj an obj to set the attributes to
- * @param {string[]} projectIds an array of project identifiers to get attribute values from
- * @returns {any} a modified object
+ * Adds 'AttachTo' attributes to a given submission's root level, leaving other existing attributes intact.
+ * @param obj - A submission obj to set the attributes to.
+ * @param {string[]} projectIds - An array of project identifiers to get attribute values from.
+ * @returns {any} Cloned submission object with the attributes.
  */
 export function attachTo(obj: any, projectIds: string[]): any {
     if (obj === undefined) {

@@ -1,28 +1,24 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {Subscription} from 'rxjs/Subscription';
+import {Component, ViewChild} from '@angular/core';
 
-import {
-    DirectSubmitService,
-    DirectSubmitRequest
-} from './direct-submit.service';
 import {AppConfig} from "../../app.config";
+
+import * as pluralize from "pluralize";
 
 @Component({
     selector: 'direct-submit',
     templateUrl: './direct-submit.component.html'
 })
-export class DirectSubmitComponent implements OnInit, OnDestroy {
-    private sb: Subscription;
-
-    request: DirectSubmitRequest;
+export class DirectSubmitComponent {
     collapseSideBar: Boolean = false;
+
+    @ViewChild('sidebar')
+    private sidebar;
 
     /**
      * Initally collapses the sidebar for tablet-sized screens.
-     * @param {DirectSubmitService} submitService - Singleton service for all submission transactions.
      * @param {AppConfig} appConfig - Global configuration object with app-wide settings.
      */
-    constructor(private submitService: DirectSubmitService, public appConfig: AppConfig) {
+    constructor(public appConfig: AppConfig) {
         this.collapseSideBar = window.innerWidth < this.appConfig.tabletBreak;
     }
 
@@ -30,14 +26,32 @@ export class DirectSubmitComponent implements OnInit, OnDestroy {
         return window.location;
     }
 
-    ngOnInit(): void {
-        this.sb = this.submitService.newRequest$.subscribe((index: number) => {
-            this.request = this.submitService.request(index);
-        });
+    getAccno(studyIdx: number) {
+        return this.sidebar.studyProp(studyIdx, 'accno');
     }
 
-    ngOnDestroy(): void {
-        this.sb.unsubscribe();
+    getRelease(studyIdx: number) {
+        return this.sidebar.studyProp(studyIdx, 'releaseDate');
+    }
+
+    getLog(studyIdx: number) {
+        return this.sidebar.studyProp(studyIdx, 'log');
+    }
+
+    isBusy(studyIdx: number) {
+        return this.sidebar.studyProp(studyIdx, 'inprogress');
+    }
+
+    isSuccess(studyIdx: number) {
+        return this.sidebar.studyProp(studyIdx, 'successful');
+    }
+
+    isFail(studyIdx: number) {
+        return this.sidebar.studyProp(studyIdx, 'failed');
+    }
+
+    pluralise(noun: string) {
+        return pluralize(noun, this.sidebar.selectedFileCount);
     }
 
     onToggle(ev): void {

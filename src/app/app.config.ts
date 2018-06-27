@@ -62,6 +62,24 @@ export class AppConfig {
     }
 
     /**
+     * Synonym getter providing the URL for the script containing the GDPR banner's logic.
+     * @returns {string} URL.
+     */
+    get bannerUrl(): string {
+        return this.config.GDPR_BANNER_URL;
+    }
+
+    /**
+     * Maximum number of concurrent connections supported by the browser. It should be in accordance to
+     * a ball-park average for different browsers.
+     * @see {@link http://www.browserscope.org/?category=network&v=top}
+     * @returns {number} Number of allowed concurrent connections.
+     */
+    get maxConcurrent(): number {
+        return this.config.MAX_CONCURRENT;
+    }
+
+    /**
      * Uses promises exclusively to fetch the JSON file specifying the app's configuration options.
      * NOTE: URL data may be included in those options. To ensure that correct URLs are generated, this
      * method has to be called before anything else, during app initialisation. Angular provides a mechanism
