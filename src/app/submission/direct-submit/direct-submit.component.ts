@@ -6,7 +6,8 @@ import * as pluralize from "pluralize";
 
 @Component({
     selector: 'direct-submit',
-    templateUrl: './direct-submit.component.html'
+    templateUrl: './direct-submit.component.html',
+    styleUrls: ['./direct-submit.component.css']
 })
 export class DirectSubmitComponent {
     collapseSideBar: Boolean = false;
@@ -50,11 +51,33 @@ export class DirectSubmitComponent {
         return this.sidebar.studyProp(studyIdx, 'failed');
     }
 
+    error(studyIdx: number) {
+        return this.sidebar.studyProp(studyIdx, 'errorMessage');
+    }
+
     pluralise(noun: string) {
         return pluralize(noun, this.sidebar.selectedFileCount);
     }
 
     onToggle(ev): void {
         this.collapseSideBar = !this.collapseSideBar;
+    }
+
+    /**
+     * Toggles the width of the request card and the log's visibility on click.
+     * @param {Event} event - DOM object for the click action.
+     */
+    onClickError(event: Event) {
+        const containerEl = event.currentTarget as HTMLElement;
+        const targetEl = event.target as HTMLElement;
+        const headingEl = containerEl.querySelector('.panel-heading');
+        const logEl = containerEl.querySelector('.panel-body');
+
+        if (logEl) {
+            if (headingEl.contains(targetEl)) {
+                logEl.classList.toggle('hidden');
+            }
+            containerEl.classList.toggle('container-full', !logEl.classList.contains('hidden'));
+        }
     }
 }
