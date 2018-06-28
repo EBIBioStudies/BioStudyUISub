@@ -79,7 +79,9 @@
                     <div *ngIf="sidebar.isStatus('failed') && sidebar.isStatus('done')" class="panel-body">
                         <h4>Error while {{sidebar.submitType == 'create' ? 'creating' : 'updating'}} {{pluralise('study')}}</h4>
                         <p>The {{pluralise('study')}} highlighted below {{pluralise('is')}} invalid or an unexpected
-                            error was encountered. Please try to correct any issues and upload the affected {{pluralise('files')}} again.</p>
+                            error was encountered. Please try to correct any issues before uploading the affected {{pluralise('files')}} again.
+                            To show the error log, simply click on the relevant failed file.
+                        </p>
                     </div>
                     <div *ngIf="sidebar.isStatus('successful')" class="panel-body">
                         <h4>{{pluralise('Study')}} {{sidebar.submitType + 'd'}}</h4>
@@ -127,29 +129,37 @@
             </div>
             <div class="row">
                 <div *ngFor="let file of sidebar.model.files; let i = index">
-                    <div *ngIf="file" class="col-xs-12"
-                         [ngClass]="{'col-lg-6': sidebar.selectedFileCount > 1 && isFail(i),
-                                     'col-md-6': sidebar.selectedFileCount > 1 && !isFail(i)}">
+                    <div *ngIf="file" class="col-xs-6" (click)="onClickError($event)">
                         <div class="panel"
                              [ngClass]="{'panel-default': !getAccno(i), 'text-primary': getAccno(i)}"
-                             [ngStyle]="{'cursor': getAccno(i) ? 'pointer' : 'default'}"
+                             [ngStyle]="{'cursor': getAccno(i) || isFail(i) ? 'pointer' : 'default'}"
                              [routerLink]="getAccno(i) ? '/submissions/edit/' + getAccno(i) : null"
-                             [tooltip]="getAccno(i) ? 'Edit this study' : ''"
+                             [tooltip]="getAccno(i) ? 'Edit this study' : isFail(i) ? 'Show error log' : ''"
                              placement="top"
                              container="body">
                             <div class="panel-heading">
                                 <i class="fa fa-2x" aria-hidden="true"
                                    [ngClass]="{ 'fa-plus': !sidebar.hasRequests && sidebar.submitType == 'create',
                                             'fa-refresh': !sidebar.hasRequests && sidebar.submitType == 'update',
-                                            'fa-times-circle text-danger': isFail(i),
-                                            'fa-chevron-circle-right': isSuccess(i),
+                                            'fa-caret-square-o-down text-danger': isFail(i),
+                                            'fa-pencil': isSuccess(i),
                                             'fa-exchange': isBusy(i)}">
                                 </i>
-                                <div class="panel-description col-xs-7">
+                                <i class="fa fa-2x fa-caret-square-o-up text-danger" aria-hidden="true"></i>
+                                <div class="panel-description"
+                                     [ngClass]="{'col-xs-7': sidebar.hasRequests && !isFail(i),
+                                                 'col-xs-11': !sidebar.hasRequests || isFail(i)}">
                                     <p class="panel-title">
                                         <strong>{{file.name}}</strong>
                                     </p>
-                                    {{sidebar.selectedProj.length ? sidebar.selectedProj.join(', ') : 'Generic project'}}
+                                    <div class="panel-extra">
+                                        <span *ngIf="!isFail(i)">
+                                            {{sidebar.selectedProj.length ? sidebar.selectedProj.join(', ') : 'Generic project'}}
+                                        </span>
+                                        <span *ngIf="isFail(i)" class="text-danger">
+                                            {{error(i)}}
+                                        </span>
+                                    </div>
                                 </div>
                                 <div *ngIf="isSuccess(i)" class="pull-right text-right">
                                     <p class="panel-title">
@@ -163,7 +173,7 @@
                                     </span>
                                 </div>
                             </div>
-                            <div *ngIf="isFail(i)" class="panel-body container-fluid">
+                            <div *ngIf="isFail(i)" class="hidden panel-body container-fluid">
                                 <subm-results-tree [log]="getLog(i)"></subm-results-tree>
                             </div>
                         </div>

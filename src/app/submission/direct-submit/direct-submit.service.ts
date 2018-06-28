@@ -5,6 +5,7 @@ import {Subject} from 'rxjs/Subject';
 import {SubmissionService} from '../shared/submission.service';
 import {Observable} from "rxjs/Observable";
 import {attachTo} from '../shared/pagetab-attributes.utils';
+import * as _ from "lodash";
 
 enum ReqStatus {CONVERT, SUBMIT, ERROR, SUCCESS}
 
@@ -80,6 +81,14 @@ export class DirectSubmitRequest {
         return this._log || {};
     }
 
+    get errorMessage(): string {
+        if (this.failed) {
+            return DirectSubmitRequest.deepestError(this._log);
+        } else {
+            return '';
+        }
+    }
+
     get accno(): string {
         return this._accno;
     }
@@ -88,7 +97,31 @@ export class DirectSubmitRequest {
         return this._releaseDate;
     }
 
-    //
+    static deepestError(obj: Array<Object> | Object): string {
+
+        //Subnodes passed in => gets the first node out of all in the list that has an error
+        if (Array.isArray(obj)) {
+            return this.deepestError(obj.find(nestedObj => nestedObj['level'].toLowerCase() == 'error'));
+
+        //Node passed in => only processes nodes with errors.
+        } else if (_.isObject(obj) && obj.hasOwnProperty('level') && obj['level'].toLowerCase() == 'error') {
+
+            //Travels down the hierarchy in search of deeper error nodes
+            if (obj.hasOwnProperty('subnodes')) {
+                return this.deepestError(obj['subnodes']);
+
+            //Leaf error node reached => gets the error message proper.
+            } else if (obj.hasOwnProperty('message')) {
+                return obj['message'];
+            }
+
+        //The node had no error or was not a node anyway.
+        } else {
+            return '';
+        }
+    }
+
+
     /**
      * Handler for responses from conversion or final submission, updating request status accordingly.
      * @param {Object} res - Data object representative of response to the request.

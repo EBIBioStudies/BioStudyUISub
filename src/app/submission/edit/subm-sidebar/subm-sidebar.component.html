@@ -91,8 +91,9 @@
         <li *ngIf="!isStatus && !editing && userData.isPrivileged" class="text-right">
             <button *ngIf="!collapsed" class="advanced-btn btn btn-link btn-sm"
                     (click)="toggleAdvanced()">
-                <i class="fa fa-chevron-circle-right" aria-hidden="true"
-                   [ngClass]="{'fa-rotate-90': isAdvancedOpen}"></i>
+                <i class="fa fa-lg" aria-hidden="true"
+                   [ngClass]="{'fa-caret-square-o-down': !isAdvancedOpen,
+                               'fa-caret-square-o-up': isAdvancedOpen}"></i>
                 Advanced
             </button>
             <ul class="sidebar-menu advanced-menu text-left"
