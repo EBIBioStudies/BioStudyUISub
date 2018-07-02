@@ -3,9 +3,9 @@ import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs/Subject';
 
 import {SubmissionService} from '../shared/submission.service';
-import {ServerError} from 'app/http/index';
 import {Observable} from "rxjs/Observable";
 import {attachTo} from '../shared/pagetab-attributes.utils';
+import * as _ from "lodash";
 
 enum ReqStatus {CONVERT, SUBMIT, ERROR, SUCCESS}
 
@@ -81,6 +81,14 @@ export class DirectSubmitRequest {
         return this._log || {};
     }
 
+    get errorMessage(): string {
+        if (this.failed) {
+            return DirectSubmitRequest.deepestError(this._log);
+        } else {
+            return '';
+        }
+    }
+
     get accno(): string {
         return this._accno;
     }
@@ -89,13 +97,47 @@ export class DirectSubmitRequest {
         return this._releaseDate;
     }
 
-    //Handler for responses from conversion or final submission
+    static deepestError(obj: Array<Object> | Object): string {
+
+        //Subnodes passed in => gets the first node out of all in the list that has an error
+        if (Array.isArray(obj)) {
+            return this.deepestError(obj.find(nestedObj => nestedObj['level'].toLowerCase() == 'error'));
+
+        //Node passed in => only processes nodes with errors.
+        } else if (_.isObject(obj) && obj.hasOwnProperty('level') && obj['level'].toLowerCase() == 'error') {
+
+            //Travels down the hierarchy in search of deeper error nodes
+            if (obj.hasOwnProperty('subnodes')) {
+                return this.deepestError(obj['subnodes']);
+
+            //Leaf error node reached => gets the error message proper.
+            } else if (obj.hasOwnProperty('message')) {
+                return obj['message'];
+            }
+
+        //The node had no error or was not a node anyway.
+        } else {
+            return '';
+        }
+    }
+
+
+    /**
+     * Handler for responses from conversion or final submission, updating request status accordingly.
+     * @param {Object} res - Data object representative of response to the request.
+     * @param {ReqStatus} successStatus - Used when the request has been successful to determine the upload stage.
+     */
     onResponse(res: any, successStatus: ReqStatus): void {
 
-        //Failed server response from direct submit => reflects failure in this request object
+        //Failed server response from direct submit => reflects failure in this request object ignoring passed-in status
         if (res.status !== 'OK') {
             this._status = ReqStatus.ERROR;
-            this._log = res.log || {message: 'No results available', level: 'error'};
+
+            if (typeof res === 'string') {
+                this._log = {message: res, level: 'error'};
+            } else {
+                this._log = res.log || {message: 'No results available', level: 'error'};
+            }
 
         //Successful server response from direct submit => reflects success accordingly
         } else {
@@ -125,65 +167,130 @@ export class DirectSubmitRequest {
 
 @Injectable()
 export class DirectSubmitService {
-
     newRequest$: Subject<Number> = new Subject<Number>();
+    private _requests: DirectSubmitRequest[] = [];
 
-    private requests: DirectSubmitRequest[] = [];
+    constructor(private submService: SubmissionService) {}
 
-    constructor(private submService: SubmissionService) {
+    get requestCount(): number {
+        return this._requests.length;
     }
 
-    request(index: number) {
-        if (index >= 0 && index < this.requests.length) {
-            return this.requests[index];
+    get pendingReqs(): number {
+        return this._requests.filter(request => !request.done).length;
+    }
+
+    getRequest(index: number) {
+        if (index >= 0 && index < this._requests.length) {
+            return this._requests[index];
+        } else {
+            return undefined;
         }
-        console.warn('DirectSubmitRequest index out of bounds: ' + index);
-        return undefined;
     }
 
+    /**
+     * Checks the overall status of the request queue by probing its members.
+     * @param {string} statusName - Descriptive name of the status.
+     * @returns {boolean} True if the queue is with the status checked.
+     */
+    isQueueStatus(statusName: string): boolean {
+        let condition = 'some';
+
+        if (statusName == 'busy') {
+            statusName = 'inprogress';
+        } else if (statusName == 'successful' || statusName == 'done') {
+            condition = 'every';
+        }
+
+        return this._requests[condition](request => {
+            return request[statusName];
+        });
+    }
+
+    /**
+     * Given a study file an its properties, it adds a new request to the queue and starts the submission process.
+     * @param {File} file - Object representative of the file to be submitted.
+     * @param {string} format - Format of the file. If omitted, it automatically detects it.
+     * @param {string[]} projects - Projects the file should be attached to.
+     * @param {string} type - Indicates whether the submitted file should create or update an existing database entry.
+     * @returns {Observable<any>} Stream of inputs coming from the subsequent responses.
+     */
     addRequest(file: File, format: string, projects: string[], type: string): Observable<any> {
         const req = new DirectSubmitRequest(file.name, format, projects, ReqType[type.toUpperCase()]);
-        const index = this.requests.length;
-        this.requests.push(req);
+        const index = this._requests.length;
+
+        this._requests.push(req);
         this.newRequest$.next(index);
 
-        return this.convert(req, file, format);
+        return this.dirSubmit(req, file, format);
     }
 
-    //TODO: There is a lot of code in common between the methods below. Refactor using RxJS' concat and finally operators to dry it out.
-    private convert(req: DirectSubmitRequest, file: File, format: string): Observable<any> {
-        return this.submService.convert(file, format).map(
+    /**
+     * Wipes out the request queue in case a new battery of requests is going to be issued.
+     */
+    reset() {
+        this._requests.length = 0;
+    }
 
-            //Updates request object's state and submits if successful
+    /**
+     * Marks all requests as failed at once.
+     */
+    cancelAll() {
+        this._requests.forEach(request => {
+            if (!request.successful) {
+                request.onResponse('Upload cancelled', ReqStatus.ERROR);
+            }
+        });
+    }
+
+    /**
+     * Makes the two inter-dependent requests necessary to submit a given file.
+     * @param {DirectSubmitRequest} req - Request object to be updated on response.
+     * @param {File} file - Object representative of the file to be submitted.
+     * @param {string} format - Format of the file. If omitted it automatically detects it.
+     * @returns {Observable<any>} Flat stream of inputs coming from the responses to the requests issued.
+     */
+    private dirSubmit(req: DirectSubmitRequest, file: File, format: string): Observable<any> {
+        return this.submService.convert(file, format).switchMap(
+
+            //Signals the successful completion of the conversion stage and submits if successful
             data => {
                 req.onResponse(data, ReqStatus.SUBMIT);
-                !req.failed && this.submit(req, data.document.submissions[0]);
+                return this.submit(req, data.document.submissions[0]);
 
-            //Updates request object's state and bubbles server error up to support additional subscriptions
+            //Finds where the relevant error data is before updating the request's status accordingly.
+            //This block will catch errors from either conversion or submission.
             }).catch((error: any) => {
-                req.onResponse(error.data || {}, ReqStatus.SUBMIT);
-                if (!error.isDataError) {
-                    throw error;
-                }
-                return Observable.throw(error);
-            });
-    }
+                let errData = error.data;
 
-    //TODO: incorporate create request to event stream used for the convert one. Otherwise,
-    private submit(req: DirectSubmitRequest, subm: any): void {
-        subm = attachTo(subm, req.projects);
-
-        //Updates request object's state
-        this.submService.directCreateOrUpdate(subm, req.type === ReqType.CREATE).subscribe(
-            data => {
-                    req.onResponse(data, ReqStatus.SUCCESS);
-            },
-            (error: ServerError) => {     //NOTE: ServerErrors have the whole error object under a "data" property
-                req.onResponse(error.data.error || {}, ReqStatus.SUCCESS);
-                if (!error.isDataError) {
-                    throw error;
+                if (errData && errData.hasOwnProperty('error')) {
+                    errData = error.data.error;
+                } else if (!errData) {
+                    errData = {};
                 }
+
+                req.onResponse(errData, ReqStatus.ERROR);
+
+                //NOTE: an empty observable is used instead of throwing an exception to prevent this transaction
+                //cancelling any remaining ones.
+                return Observable.of(null);
             }
         );
+    }
+
+    /**
+     * Makes the request to create or update the study. While at it, it updates the study with the projects
+     * it is meant to be attached to.
+     * @param {DirectSubmitRequest} req - Status object representing the request.
+     * @param {Object} subm - Submission object for the study to be created or updated.
+     * @returns {Observable<any>} - Stream of events for the request.
+     */
+    private submit(req: DirectSubmitRequest, subm: any): Observable<any> {
+        return this.submService.directCreateOrUpdate(
+            attachTo(subm, req.projects),
+            req.type === ReqType.CREATE
+        ).map(data => {
+            req.onResponse(data, ReqStatus.SUCCESS);
+        });
     }
 }

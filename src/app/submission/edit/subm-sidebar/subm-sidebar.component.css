@@ -27,37 +27,6 @@
     border: none;
 }
 
-/* Check tab */
-.center-vertically {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #fff;
-}
-.center-vertically h4 {
-    overflow: hidden;
-    font-weight: 400;
-    word-break: break-word;
-    text-overflow: ellipsis;
-}
-.collapse-left .center-vertically {
-    width: 100%;
-}
-.collapse-left .center-vertically .action-title {
-    display: none;
-}
-.center-spread {
-    display: flex !important;
-    align-items: center;
-    justify-content: space-between;
-}
-.label {
-    font-size: 80%;
-}
-.collapse-left .label {
-    padding: .2em .17em .5em;
-}
-
 /* Ripple effect on error count when highlighted */
 .badge-corner:after {
     content: "";

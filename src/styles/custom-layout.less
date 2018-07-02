@@ -150,8 +150,42 @@ aside {
     white-space: nowrap;
   }
 
-  &.collapse-left .menu-toggle {
-    height: 54px;
+  .center-vertically {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #fff;
+  }
+
+  .center-vertically h4 {
+    overflow: hidden;
+    line-height: inherit;
+    font-weight: 400;
+    word-break: break-word;
+    text-overflow: ellipsis;
+  }
+
+  .label {
+    font-size: 80%;
+  }
+
+  &.collapse-left {
+
+    .menu-toggle {
+      height: 54px;
+    }
+
+    .label {
+      padding: .2em .17em .5em;
+    }
+
+    .center-vertically {
+      width: 100%;
+
+      .action-title {
+        display: none;
+      }
+    }
   }
 
   .sidebar-menu {
@@ -261,15 +295,21 @@ aside {
   }
 }
 
-//Ensures text inside panel headings flushes against any other element on the left.
+//Ensures text inside panel headings flushes against any other element on the left and doesn't overflow.
+//If it does, it degrades gracefully to truncated text.
 .panel-heading .fa {
   vertical-align: middle;
 }
 .panel-description {
   display: inline-block;
-  margin: 0 .8rem;
-  width: 83%;
+  float: none;
   vertical-align: middle;
+  overflow: hidden;
+}
+.panel-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 //Makes unselected tabs be on a plane behind selected ones with a permanent shaded appearance. Also bumps up their weight
@@ -305,19 +345,17 @@ input[readonly], textarea[readonly] {
   padding-left: 0;
 }
 
-//Makes radio buttons stand out more
-input[type="radio"] {
-  width: 1.6rem;
-  height: 1.6rem;
-  outline: none !important;
-}
-
-//Corrects vertical mis-alignment of text besides checkboxes or radio buttons
+//Corrects vertical mis-alignment of text besides checkboxes or radio buttons and highlights button's text on focus
 //Source: https://github.com/twbs/bootstrap/issues/16426
 input[type="radio"], input[type="checkbox"] {
-  margin-top: ((@line-height-base - 1)/2) * 1em;
   width: 1em;
   height: 1em;
+  margin-top: ((@line-height-base - 1)/2) * 1em;
+  outline: none !important;
+
+  &:focus + span {
+    background: #d3ebff;
+  }
 }
 
 //Optional fields (be them data or column ones) within features have discontinous outlines
@@ -453,5 +491,12 @@ input[type="radio"], input[type="checkbox"] {
   height: 34px;
   line-height: initial;
   pointer-events: auto
+}
+
+//Space child elements out so that they take up all horizontal space.
+.center-spread {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
 }
 

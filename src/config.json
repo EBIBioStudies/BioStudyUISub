@@ -7,5 +7,7 @@
   "APP_TABLET_BREAKPOINT": 993,
   "APP_ALLOW_PAST_DATES": true,
   "APP_DATE_LIST_FORMAT": "dd MMM yyyy",
-  "APP_DATE_INPUT_FORMAT": "DD MMM YYYY"
+  "APP_DATE_INPUT_FORMAT": "DD MMM YYYY",
+  "MAX_CONCURRENT": 4,
+  "GDPR_BANNER_URL": "https://ebi.emblstatic.net/web_guidelines/EBI-Framework/v1.3/js/ebi-global-includes/script/5_ebiFrameworkNotificationBanner.js"
 }

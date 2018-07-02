@@ -238,7 +238,7 @@
 }
 
 //Highlights the label for the selected radio button
-input[type=radio] {
+input[type=radio], input[type=checkbox] {
   cursor: pointer;
 
   & + span {
@@ -257,4 +257,23 @@ input[type=radio] {
   -webkit-transform: scale(0.855);
   transform-origin: 0 0;
   -webkit-transform-origin: 0 0;
+}
+
+//GDPR bottom banner's style corrections
+.data-protection-banner {
+  z-index: @zindex-modal !important;
+  padding: 1rem !important;
+
+  .row {
+    margin: 0;
+  }
+
+  a:hover {
+    color: #9bc9e5 !important;
+  }
+}
+
+//Makes external links stand out when placed within blocks of text
+span > a:not([routerLink]), p > a:not([routerLink]) {
+  text-decoration: underline;
 }

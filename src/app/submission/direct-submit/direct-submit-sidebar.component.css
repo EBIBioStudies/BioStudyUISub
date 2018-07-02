@@ -1,8 +1,9 @@
-/* Truncates if it overflows */
-.form-text {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
+.files-control {
+    padding-top: 10px;
+}
+
+.mode-toggle {
+    margin: 0;
 }
 
 .sidebar-contents {
@@ -10,6 +11,14 @@
     background: #fff;
 }
 
-.radio:first-of-type {
-    margin-top: 0;
+.control-list {
+    border-top: 1px solid #cadde8;
+}
+
+.has-error .control-list {
+    border-color: #fbd9cb;
+}
+
+.row {
+
 }
