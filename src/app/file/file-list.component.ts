@@ -108,10 +108,12 @@ export class FileTypeCellComponent implements AgRendererComponent {
     template: `
     <div *ngIf="value >= 1 && value < 100" class="progress" 
          style="margin-bottom: 0;">
-         <div class="progress-bar" [ngClass]="{'progress-bar-success' : !error }" role="progressbar"
-                [ngStyle]="{ 'width': value + '%'}">{{value}}%</div>
+         <div class="progress-bar" role="progressbar"
+                [ngStyle]="{ 'width': value + '%'}">
+             {{value}}%
+         </div>
     </div>
-    <div *ngIf="value === 100" style="text-align:center;color:green"><i class="fa fa-check"></i></div>
+    <div *ngIf="value === 100" class="text-success text-center"><i class="fa fa-check"></i></div>
     <div *ngIf="value < 0" class="text-danger text-center"><i class="fa fa-times-circle"></i> {{error}}</div>
 `
 })

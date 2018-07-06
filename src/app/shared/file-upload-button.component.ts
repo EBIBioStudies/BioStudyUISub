@@ -16,8 +16,6 @@ import {
            #inputFile/>
     <button type="button"
             class="btn btn-primary btn-sm"
-            tooltip="Select {{isDirOnly ? 'a folder' : 'files'}}"
-            placement="bottom"
             (click)="onButtonClick($event)">
             {{title}}
     </button>

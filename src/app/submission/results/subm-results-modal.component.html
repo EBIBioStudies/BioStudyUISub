@@ -46,7 +46,14 @@
             Any registered study will remain private and accessible only through login until the release date.
         </p>
     </div>
-    <subm-results-tree *ngIf="!isLogEmpty() && !isSuccess()" [log]="log"></subm-results-tree>
+    <div *ngIf="!isLogEmpty() && !isSuccess()" class="modal-body">
+        <div role="button" class="text-danger"
+             (click)="collapsedLog = !collapsedLog">
+            <i class="fa fa-caret-square-o-down"></i>
+            {{errorMessage}}
+        </div>
+        <subm-results-tree *ngIf="collapsedLog" [log]="log"></subm-results-tree>
+    </div>
 </div>
 <div class="modal-footer">
     <div class="pull-right">

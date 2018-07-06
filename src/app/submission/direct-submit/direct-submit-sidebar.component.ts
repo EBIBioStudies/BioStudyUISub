@@ -56,11 +56,13 @@ export class DirectSubmitSideBarComponent implements OnInit {
 
     /**
      * Gets the current number of selected files, normalising to 0 if there are none.
+     * NOTE: When successful uploads are cleared, the selected file count must reflect that. Hence the boolean filter.
+     * @see {@link clearUploads}
      * @returns {number} Number of files selected.
      */
     get selectedFileCount(): number {
         if (this.model.files) {
-            return this.model.files.length;
+            return this.model.files.filter(Boolean).length;
         } else {
             return 0;
         }
@@ -72,14 +74,35 @@ export class DirectSubmitSideBarComponent implements OnInit {
 
     /**
      * Gives the number of files that have not been uploaded yet. Before any requests are made, this number will
-     * naturally be equal to the number of selected files.
+     * be assumed to be equal to the number of selected files.
      * @returns {number} Count of pending files.
      */
     get pendingFiles(): number {
         if (this.directSubmitSvc.requestCount) {
-            return this.directSubmitSvc.pendingReqs;
+            return this.directSubmitSvc.pendingCount;
         } else {
             return this.selectedFileCount;
+        }
+    }
+
+    /**
+     * Calculates the global progress rate of all active uploads.
+     * @returns {number} Percentage of completed queued requests.
+     */
+    get progress(): number {
+        return Math.floor((this.selectedFileCount - this.pendingFiles) * 100 / this.selectedFileCount);
+    }
+
+    /**
+     * Gives the number of files whose upload has failed. Before any requests are made, this number will
+     * be assumed to be equal to 0.
+     * @returns {number} Count of erroneous files.
+     */
+    get errorFiles(): number {
+        if (this.directSubmitSvc.requestCount) {
+            return this.directSubmitSvc.errorCount;
+        } else {
+            return 0;
         }
     }
 
@@ -205,7 +228,7 @@ export class DirectSubmitSideBarComponent implements OnInit {
      * Marks successful uploads as not present or unselected by setting the corresponding indexed member to null.
      * NOTE: Angular's change detection cycle tends to work best when the original array is not wiped out such as
      * when using map.
-     * NOTE: The files list is independent of the requests one. A different in length between the two would lead to
+     * NOTE: The files list is independent of the requests one. A difference in length between the two would lead to
      * state inconsistencies. Hence also the conservative assignment approach.
      */
     private clearUploads() {
@@ -243,7 +266,6 @@ export class DirectSubmitSideBarComponent implements OnInit {
             this.directSubmitSvc.reset();
 
             //Performs the double-request submits and flattens the resulting high-order observables onto a single one.
-
             this.uploadSubs = Observable.from(nonClearedFiles).map((file: File) => {
                 return this.directSubmitSvc.addRequest(file, '', this.selectedProj, submType);
 

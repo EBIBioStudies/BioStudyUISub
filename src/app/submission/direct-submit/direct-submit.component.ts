@@ -39,6 +39,10 @@ export class DirectSubmitComponent {
         return this.sidebar.studyProp(studyIdx, 'log');
     }
 
+    getError(studyIdx: number) {
+        return this.sidebar.studyProp(studyIdx, 'errorMessage');
+    }
+
     isBusy(studyIdx: number) {
         return this.sidebar.studyProp(studyIdx, 'inprogress');
     }
@@ -51,12 +55,18 @@ export class DirectSubmitComponent {
         return this.sidebar.studyProp(studyIdx, 'failed');
     }
 
-    error(studyIdx: number) {
-        return this.sidebar.studyProp(studyIdx, 'errorMessage');
+    uploadedCount() {
+        return this.sidebar.selectedFileCount - this.sidebar.errorFiles;
     }
 
-    pluralise(noun: string) {
-        return pluralize(noun, this.sidebar.selectedFileCount);
+    /**
+     * Convenience alias to pluralise a given noun.
+     * @param {string} noun - Target noun.
+     * @param {number} count - Number of noun-designated entities.
+     * @returns {string} Noun in the
+     */
+    pluralise(noun: string, count: number = this.sidebar.selectedFileCount) {
+        return pluralize(noun, count);
     }
 
     onToggle(ev): void {
