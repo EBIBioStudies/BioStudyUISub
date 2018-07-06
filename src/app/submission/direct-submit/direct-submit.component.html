@@ -7,7 +7,7 @@
     <div class="navbar-default navbar-subm-fixed"
          [ngClass]="{'collapse-left': collapseSideBar}">
         <nav>
-            <div class="col-xs-10 nav-block">
+            <div class="col-xs-4 nav-block">
                 <a routerLink="/submissions{{sidebar.hasRequests && sidebar.isStatus('successful') ? '/sent' : ''}}">
                     <i *ngIf="sidebar.hasRequests && sidebar.isStatus('successful')" class="fa fa-database" aria-hidden="true"></i>
                     {{sidebar.hasRequests && sidebar.isStatus('successful') ? 'Sent' : 'Submission list'}}
@@ -15,7 +15,18 @@
                 &nbsp;<i class="fa fa-angle-right font-bold"></i>&nbsp;
                 <strong>Direct upload</strong>
             </div>
-            <div class="col-xs-2 nav-block">
+            <div class="col-xs-4 nav-block text-center text-muted">
+                <span *ngIf="sidebar.pendingFiles">
+                    <strong>{{sidebar.pendingFiles}}</strong> {{pluralise('files')}} pending upload
+                </span>
+                <span *ngIf="!sidebar.pendingFiles && sidebar.hasRequests">
+                    <strong>{{uploadedCount()}}</strong> {{pluralise('files')}} uploaded
+                </span>
+                <span *ngIf="sidebar.hasRequests && sidebar.isStatus('failed')" class="text-danger">
+                    <strong>{{sidebar.errorFiles}}</strong> failed
+                </span>
+            </div>
+            <div class="col-xs-4 nav-block">
                 <button *ngIf="sidebar.hasRequests && sidebar.isStatus('done')" class="btn btn-primary btn-sm pull-right"
                         tooltip="Remove successful uploads from the list"
                         placement="bottom"
@@ -73,8 +84,8 @@
                 <div *ngIf="sidebar.hasRequests">
                     <div *ngIf="sidebar.isStatus('busy')" class="panel-body">
                         <h4>{{sidebar.submitType == 'create' ? 'Creating' : 'Updating'}} {{pluralise('study')}}...</h4>
-                        <p>Please wait while the {{pluralise('file')}} {{pluralise('is')}} being {{sidebar.submitType + 'd'}} and validated.
-                            Any invalid sections in the {{pluralise('file')}} will be listed below.</p>
+                        <p>Please wait while the {{pluralise('studies')}} {{pluralise('is')}} being {{sidebar.submitType + 'd'}} and validated.
+                            Any invalid ones will be highlighted below. Click on them to reveal more details.</p>
                     </div>
                     <div *ngIf="sidebar.isStatus('failed') && sidebar.isStatus('done')" class="panel-body">
                         <h4>Error while {{sidebar.submitType == 'create' ? 'creating' : 'updating'}} {{pluralise('study')}}</h4>
@@ -129,7 +140,7 @@
             </div>
             <div class="row">
                 <div *ngFor="let file of sidebar.model.files; let i = index">
-                    <div *ngIf="file" class="col-xs-6" (click)="onClickError($event)">
+                    <div *ngIf="file" class="col-xs-12 col-md-6 col-lg-4" (click)="onClickError($event)">
                         <div class="panel"
                              [ngClass]="{'panel-default': !getAccno(i), 'text-primary': getAccno(i)}"
                              [ngStyle]="{'cursor': getAccno(i) || isFail(i) ? 'pointer' : 'default'}"
@@ -140,15 +151,15 @@
                             <div class="panel-heading">
                                 <i class="fa fa-2x" aria-hidden="true"
                                    [ngClass]="{ 'fa-plus': !sidebar.hasRequests && sidebar.submitType == 'create',
-                                            'fa-refresh': !sidebar.hasRequests && sidebar.submitType == 'update',
-                                            'fa-caret-square-o-down text-danger': isFail(i),
-                                            'fa-pencil': isSuccess(i),
-                                            'fa-exchange': isBusy(i)}">
+                                                'fa-refresh': !sidebar.hasRequests && sidebar.submitType == 'update',
+                                                'fa-caret-square-o-down text-danger': isFail(i),
+                                                'fa-pencil': isSuccess(i),
+                                                'fa-exchange': isBusy(i)}">
                                 </i>
                                 <i class="fa fa-2x fa-caret-square-o-up text-danger" aria-hidden="true"></i>
                                 <div class="panel-description"
-                                     [ngClass]="{'col-xs-7': sidebar.hasRequests && !isFail(i),
-                                                 'col-xs-11': !sidebar.hasRequests || isFail(i)}">
+                                     [ngClass]="{'col-xs-6': sidebar.hasRequests && !isFail(i),
+                                                 'col-xs-10': !sidebar.hasRequests || isFail(i)}">
                                     <p class="panel-title">
                                         <strong>{{file.name}}</strong>
                                     </p>
@@ -157,7 +168,7 @@
                                             {{sidebar.selectedProj.length ? sidebar.selectedProj.join(', ') : 'Generic project'}}
                                         </span>
                                         <span *ngIf="isFail(i)" class="text-danger">
-                                            {{error(i)}}
+                                            {{getError(i)}}
                                         </span>
                                     </div>
                                 </div>

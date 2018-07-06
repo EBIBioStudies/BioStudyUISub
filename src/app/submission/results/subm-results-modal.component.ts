@@ -4,6 +4,7 @@ import {
 } from '@angular/core';
 
 import {BsModalRef} from 'ngx-bootstrap';
+import {SubmissionService} from "../shared/submission.service";
 
 /**
  * UI component for the modal being rendered with a given study's submission results.
@@ -15,7 +16,12 @@ import {BsModalRef} from 'ngx-bootstrap';
 export class SubmResultsModalComponent {
     @Input() status: string;        //Status the server comes back with
     @Input() log: any;              //Log part of the server's response
+    @Input() collapsedLog: boolean; //Flag indicating if the log tree is on display.
     @Input() modalRef: BsModalRef;
+
+    get errorMessage() {
+        return SubmissionService.deepestError(this.log);
+    }
 
     isLogEmpty() {
         return this.log && Object.keys(this.log).length == 0;

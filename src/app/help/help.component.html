@@ -87,15 +87,26 @@
                                 Files
                             </button>
                         </p>
-                        <p><img src="images/help/upload_files.jpg" width="1402" height="204" /></p>
+                        <p><img src="images/help/upload_files.gif" width="1402" height="204" /></p>
                         <p>
                             Click the
                             <button type="button" class="btn btn-primary btn-sm">
-                                Upload files...
+                                Browse...
                             </button>
-                            button above the list to upload new files. Multiple selection is supported using
-                            the conventional shift key. Upload progress is shown for each individual file.
+                            button above the list to select additional files to upload to your folder. Multiple selection
+                            is supported using the conventional shift key. A <i>"Bulk folder"</i> mode is also provided
+                            to allow the upload of all the files under a given folder.
                         </p>
+                        <div class="alert alert-warning">
+                            <div class="pull-left">
+                                <i class="fa fa-hand-o-right fa-lg"></i>
+                                <strong>Please note</strong>
+                            </div>
+                            <p class="text-block text-black">
+                                The <i>"Bulk folder"</i> mode is non-standard and may not be supported by your browser.
+                                Please upgrade to the latest version or move to Chrome if possible.
+                            </p>
+                        </div>
                     </dd>
                     <dt><h4 class="underlined">3.Adding a study to the database</h4></dt>
                     <dd id="help-start" class="col-md-12">
@@ -129,7 +140,9 @@
                             <p class="text-block">
                                 Allows the automatic extraction of study data from a selected pre-formatted file. The data
                                 can then be incorporated into the database as a new study or used to update an existing one.
-                                <img src="images/help/direct_upload.jpg" width="1402" height="675" />
+                                As with user files (see the <i>Uploading files</i> section), study files can be submitted in
+                                bulk, feedback being shown separately for each.
+                                <img src="images/help/direct_upload.jpg" width="2734" height="800" />
                             </p>
                         </div>
                     </dd>
@@ -246,7 +259,7 @@
                             framework and the <a href="https://github.com/twbs/bootstrap">Bootstrap</a> library.
                             The current version of the app is {{appVersion}}. The team behind it is part of the
                             <a href="https://www.ebi.ac.uk/about/people/ugis-sarkans">Functional Genomics Development
-                            team</a>, led by Ugis Sarkans. You can reach us at
+                            group</a>, led by Ugis Sarkans. You can reach us at
                             <a href="mailto:biostudies@ebi.ac.uk?Subject=Submission%20Tool">biostudies[at]ebi.ac.uk</a>.
                         </p>
                     </dd>
