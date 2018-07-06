@@ -18,7 +18,7 @@
 }
 
 .panel.text-primary:hover {
-  color: white;
-  background: #3c739f;
-  transition: background-color .25s ease-in;
+    color: white;
+    background: #3c739f;
+    transition: background-color .25s ease-in;
 }

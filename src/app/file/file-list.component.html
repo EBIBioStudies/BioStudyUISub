@@ -11,16 +11,27 @@
     <div class="navbar-default navbar-subm-fixed"
          [ngClass]="{'collapse-left': sideBarCollapsed}">
         <nav>
-            <div class="col-xs-10 nav-block">
+            <div class="nav-block col-xs-8">
                 Path: <directory-path [path]="path.rel" (change)="onRelativePathChange($event)"></directory-path>
             </div><!--
-            --><div class="col-xs-2 nav-block clearfix">
+            --><div class="nav-block clearfix col-xs-4">
                 <file-upload-badge class="upload-count"
                                    (select)="onUploadSelect($event)"></file-upload-badge>
                 <file-upload-button class="pull-right"
-                                    title="Upload files..."
                                     [multiple]="true"
-                                    (select)="onUploadFilesSelect($event)"></file-upload-button>
+                                    [isDirOnly]="isBulkMode"
+                                    (select)="onUploadFilesSelect($event)"
+                                    tooltip="{{isBulkMode ? 'Select a folder' : 'Select files'}}"
+                                    placement="bottom"
+                                    #fileEl></file-upload-button>
+                <span *ngIf="fileEl.isDirSupport" class="mode-toggle checkbox pull-right">
+                    <label>
+                        <input type="checkbox"
+                               name="folder-mode"
+                               [(ngModel)]="isBulkMode">
+                        <span>Bulk folder</span>
+                    </label>
+                </span>
             </div>
         </nav>
     </div>

@@ -13,13 +13,8 @@
         </button>
         <tabset [ngClass]="{'invisible': collapsed}">
             <tab active="true"
-                 customClass="badge-parent">
-                <template tabHeading>
-                    Upload files
-                    <span *ngIf="pendingFiles" class="badge badge-corner">
-                        {{pendingFiles}}
-                    </span>
-                </template>
+                 customClass="badge-parent"
+                 heading="Upload files">
             </tab>
         </tabset>
     </div>
@@ -37,18 +32,22 @@
                   #uploadForm="ngForm">
 
                 <div class="form-group" [ngClass]="{'has-error': !selectedFileCount && fileTouched}">
-                    <label class="control-label">1. Study files</label>
+                    <label class="control-label">
+                        1. Study files
+                    </label>
+                    <span *ngIf="selectedFileCount" class="badge pull-right">
+                        {{selectedFileCount}}
+                    </span>
                     <div class="control-list files-control center-spread">
                         <file-upload-button [multiple]="true"
-                                            [isResetOnClick]="false"
                                             [isDirOnly]="isBulkMode"
                                             (select)="onUploadFilesSelect($event)"
+                                            tooltip="{{isBulkMode ? 'Select a folder' : 'Select files'}}"
+                                            placement="bottom"
                                             #fileEl>
                         </file-upload-button>
                         <span *ngIf="fileEl.isDirSupport" class="mode-toggle checkbox">
-                            <label tooltip="Enable folder selection for bulk upload"
-                                   container="body"
-                                   placement="bottom">
+                            <label>
                                 <input type="checkbox"
                                        name="folder-mode"
                                        [(ngModel)]="isBulkMode">
@@ -124,6 +123,12 @@
             [ngClass]="{'col-xs-12': !collapsed}">
             <i class="fa fa-cog fa-spin" aria-hidden="true"
                [ngClass]="{'fa-2x': collapsed, 'fa-4x': !collapsed}"></i>
+            <div class="progress">
+                <div class="progress-bar"
+                     [ngStyle]="{ 'width': progress + '%'}">
+                    {{progress}}%
+                </div>
+            </div>
             <h4 [ngClass]="{'vertical-text': collapsed}">
                 {{submitType == 'create' ? 'Creating' : 'Updating'}}
                 {{selectedFileCount > 1 ? 'studies' : 'study'}}...

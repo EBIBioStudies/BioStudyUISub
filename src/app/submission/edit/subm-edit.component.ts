@@ -427,11 +427,22 @@ export class SubmEditComponent implements OnInit {
     }
 
     showSubmitResults(resp: any) {
+        let logObj = {level: 'error'};
+
         this.isSubmitting = false;
+
+        //Normalises error to object
+        if (typeof resp === 'string') {
+            logObj['message'] = resp;
+        } else if (resp.log) {
+            logObj = resp.log;
+        } else {
+            logObj['message'] = 'Unknown error. No log available.';
+        }
 
         const bsModalRef = this.modalService.show(SubmResultsModalComponent);
         bsModalRef.content.modalRef = bsModalRef;
-        bsModalRef.content.log = resp.log || {};
+        bsModalRef.content.log = resp.log;
         bsModalRef.content.mapping = resp.mapping || [];
         bsModalRef.content.status = resp.status;
         bsModalRef.content.accno = this.subm.accno;
