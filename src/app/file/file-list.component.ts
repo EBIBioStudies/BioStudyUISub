@@ -160,6 +160,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     backButton: boolean = false;
     gridOptions: GridOptions;
     columnDefs: any[];
+    isBulkMode: boolean = false;
 
     constructor(private fileService: FileService,
                 private fileUploadService: FileUploadService,
