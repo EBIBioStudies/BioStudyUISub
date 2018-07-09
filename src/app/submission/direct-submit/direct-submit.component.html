@@ -19,7 +19,7 @@
                 <span *ngIf="sidebar.pendingFiles">
                     <strong>{{sidebar.pendingFiles}}</strong> {{pluralise('files')}} pending upload
                 </span>
-                <span *ngIf="!sidebar.pendingFiles && sidebar.hasRequests">
+                <span *ngIf="!sidebar.pendingFiles && sidebar.hasRequests && uploadedCount()">
                     <strong>{{uploadedCount()}}</strong> {{pluralise('files')}} uploaded
                 </span>
                 <span *ngIf="sidebar.hasRequests && sidebar.isStatus('failed')" class="text-danger">
@@ -60,8 +60,9 @@
                         </li>
                         <li>
                             <strong>Which projects are you attaching your studies to?</strong>
-                            <p>Choose the projects all your files will be attached to. If no project is selected, a
-                                generic one is assumed.
+                            <p>Choose the projects all your files will be attached to. If no project is selected, studies
+                                will be uploaded as stand-alone and will be allocated an accession number with format
+                                <i>S-BSST&lt;number&gt;</i>.
                             </p>
                         </li>
                         <li>
@@ -77,7 +78,8 @@
                             <strong>Please note</strong>
                         </div>
                         <p class="text-block text-black">
-                            If updating existing studies, each filename must match the accession number of the respective study.
+                            If updating existing studies, each study file must have the accession number as its first
+                            entry. In a spreadsheet, for example, the number would be in the first line.
                         </p>
                     </div>
                 </div>
@@ -165,7 +167,7 @@
                                     </p>
                                     <div class="panel-extra">
                                         <span *ngIf="!isFail(i)">
-                                            {{sidebar.selectedProj.length ? sidebar.selectedProj.join(', ') : 'Generic project'}}
+                                            {{sidebar.selectedProj.length ? sidebar.selectedProj.join(', ') : 'No project'}}
                                         </span>
                                         <span *ngIf="isFail(i)" class="text-danger">
                                             {{getError(i)}}
@@ -180,7 +182,7 @@
                                         <i class="fa fa-bullhorn"></i>&nbsp; {{getRelease(i) | date: 'dd MMM yyyy'}}
                                     </span>
                                     <span *ngIf="!getRelease(i)">
-                                        Release omitted
+                                        No release date
                                     </span>
                                 </div>
                             </div>
