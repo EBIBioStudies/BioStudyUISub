@@ -55,7 +55,7 @@ export class DirectSubmitComponent {
         return this.sidebar.studyProp(studyIdx, 'failed');
     }
 
-    uploadedCount() {
+    uploadedCount(): number {
         return this.sidebar.selectedFileCount - this.sidebar.errorFiles;
     }
 

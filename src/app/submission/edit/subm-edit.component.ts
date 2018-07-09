@@ -197,8 +197,11 @@ export class SubmEditComponent implements OnInit {
         const attributes = Object.keys(usrContact).map((key) => {
             return {name: key, value: usrContact[key]}
         });
+        const contactFeature = section.features.find('Contact', 'typeName');
 
-        section.features.find('Contact', 'typeName').add(attributes, 0);
+        if (contactFeature) {
+            contactFeature.add(attributes, 0);
+        }
         this.onChange();
     }
 
