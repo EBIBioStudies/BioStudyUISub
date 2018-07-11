@@ -62,6 +62,23 @@ export class AppConfig {
     }
 
     /**
+     * Synonym getter providing the number of years ahead of the current date that the date picker will render
+     * selectable dates of.
+     * @returns {number} Maximum number of years into the future.
+     */
+    get maxDateYears(): number {
+        return this.config.APP_MAX_DATE_YEARS;
+    }
+
+    /**
+     * Synonym getter providing the maximum number of suggested entries in a typeahead box.
+     * @returns {number} Maximum length of the suggestion list.
+     */
+    get maxSuggestLength(): number {
+        return this.config.APP_MAX_SUGGEST_LENGTH;
+    }
+
+    /**
      * Synonym getter providing the URL for the script containing the GDPR banner's logic.
      * @returns {string} URL.
      */

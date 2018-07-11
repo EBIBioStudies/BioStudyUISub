@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
+import {AppConfig} from "../app.config";
 
 @Component({
     selector: 'inline-edit',
@@ -25,7 +26,7 @@ export class InlineEditComponent implements ControlValueAccessor {
     @Input() placeholder?: string = '';         //indicative text inside the field if not in focus
     @Input() autosuggest: any[] = [];           //typeahead list of suggested values
     @Input() suggestThreshold: number = 0;      //the typeahead is meant to act as a reminder of other fields too
-    @Input() suggestLength: number = 30;        //max number of suggested values to be displayed at once
+    @Input() suggestLength: number;             //max number of suggested values to be displayed at once
     @Output() remove: EventEmitter<any> = new EventEmitter<any>();
 
     editing: boolean = false;
@@ -33,6 +34,14 @@ export class InlineEditComponent implements ControlValueAccessor {
     onTouched: any = () => {};
 
     private _value: string = '';
+
+    /**
+     * Sets the max number of suggestions shown at any given time.
+     * @param {AppConfig} appConfig - Global configuration object with app-wide settings.
+     */
+    constructor(private appConfig: AppConfig) {
+        this.suggestLength = appConfig.maxSuggestLength;
+    }
 
     get value(): any {
         return this._value;

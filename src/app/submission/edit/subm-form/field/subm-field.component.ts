@@ -12,6 +12,7 @@ import {
 } from '@angular/forms';
 import {FieldControl} from "../subm-form.service";
 import {TypeaheadMatch} from "ngx-bootstrap";
+import {AppConfig} from "../../../../app.config";
 
 
 @Component({
@@ -36,7 +37,7 @@ export class SubmFieldComponent implements ControlValueAccessor {
     @Input() formControl: FieldControl;         //reactive control associated with this field
     @Input() isSmall: boolean = true;           //flag for making the input area the same size as grid fields
     @Input() autosuggest: any[] = [];           //typeahead list of suggested values
-    @Input() suggestLength: number = 30;        //max number of suggested values to be displayed at once
+    @Input() suggestLength: number;             //max number of suggested values to be displayed at once
     @Input() suggestThreshold: number = 0;      //number of typed characters before suggestions are displayed.
                                                 //a value of 0 makes typeahead behave like an auto-suggest box.
 
@@ -44,7 +45,14 @@ export class SubmFieldComponent implements ControlValueAccessor {
     @ViewChild(NgModel)
     private inputModel: NgModel;
 
-    constructor(private rootEl: ElementRef) {}
+    /**
+     * Sets the max number of suggestions shown at any given time.
+     * @param {AppConfig} appConfig - Global configuration object with app-wide settings.
+     * @param {ElementRef} rootEl - Reference to the root element of the component's template.
+     */
+    constructor(private rootEl: ElementRef, private appConfig: AppConfig) {
+        this.suggestLength = appConfig.maxSuggestLength;
+    }
 
     get value() {
         return this._value;
@@ -143,7 +151,7 @@ export class SubmFieldComponent implements ControlValueAccessor {
      * @param {number} years - Number of years the date is incremented in.
      * @returns {Date} - Resulting date object.
      */
-    nowInNyears(years: number = 0): Date {
+    nowInNyears(years: number = this.appConfig.maxDateYears): Date {
         const currDate = new Date();
         return new Date(currDate.setFullYear(currDate.getFullYear() + years));
     }

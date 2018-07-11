@@ -28,7 +28,6 @@
                          [disableChange]="column.required || column.displayed"
                          [disableRemove]="!column.removable"
                          [autosuggest]="colNames"
-                         [suggestLength]="15"
                          [unique]="feature.uniqueCols"
                          validate-onblur>
             </inline-edit>
@@ -71,7 +70,6 @@
                                 [formControl]="featureForm.rowValueControl(rowIdx, column.id)"
                                 [allowPast]="column.allowPast"
                                 [autosuggest]="column.values"
-                                [suggestLength]="15"
                                 (async)="addOnAsync($event, rowIdx)"
                                 validate-onblur>
                     </subm-field>
