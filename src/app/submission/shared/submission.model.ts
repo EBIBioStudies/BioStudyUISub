@@ -446,7 +446,8 @@ export class Feature extends HasUpdates<UpdateEvent> {
      * added if the feature is not limited to a single row, in which case the first row is changed.
      */
     add(attributes: { name: string, value: string }[] = [], rowIdx: number = null): void {
-        const attrNames = attributes.filter(attr => attr.name !== '').map(attr => attr.name);
+        const attrsWithName = attributes.filter(attr => attr.name !== '');
+        const attrNames = attrsWithName.map(attr => attr.name);
 
         const usedColIds = [];
         let rowMap;
@@ -474,7 +475,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
         }
 
         //Finds out the column corresponding to each of the attributes and sets its value
-        attributes.forEach(attr => {
+        attrsWithName.forEach(attr => {
             let cols: Attribute[] = this._columns.allWithName(attr.name);
 
             //Prevents the same attribute becoming the value for multiple columns of the same name

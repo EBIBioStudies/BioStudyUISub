@@ -35,7 +35,9 @@
                                [readonly]="isColUIReq(column) || column.displayed"
                                [typeahead]="isColUIReq(column) || column.displayed ? [] : colNames"
                                [typeaheadMinLength]="0"
-                               [typeaheadOptionsLimit]="15"
+                               [typeaheadOptionsLimit]="200"
+                               [typeaheadScrollable]="true"
+                               [typeaheadOptionsInScrollableView]="suggestLength"
                                #ahead="bs-typeahead"
                                [unique]="feature.uniqueCols"
                                validate-onblur

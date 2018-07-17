@@ -10,9 +10,9 @@ import {
 } from '@angular/forms';
 
 import {
-    BsDatepickerComponent,
     BsDatepickerConfig
 } from "ngx-bootstrap/datepicker";
+import {BsDatepickerDirective} from "ngx-bootstrap";
 
 import {formatDate, isEqualDate} from './date.utils';
 import {AppConfig} from "../app.config";
@@ -33,9 +33,6 @@ import {AppConfig} from "../app.config";
  * component behaves exactly like a read-only input field (so that input is only allowed through the date picker).
  * It allows the display format for the date to be different to the transactional one if needed (the latter is
  * hard-coded to ISO 8601 YYYY-MM-DD).
- * NOTE: Contrary to what its name suggests, DatePicker's "bsValueChange" output event is triggered every time
- * a date is set, NOT on value change exclusively.
- * @see {@link https://valor-software.com/ngx-bootstrap/old/1.9.3/#/datepicker}
  * @see {@link ControlValueAccessor}
  */
 export class DateInputComponent implements ControlValueAccessor {
@@ -46,7 +43,7 @@ export class DateInputComponent implements ControlValueAccessor {
     @Input() isSmall?: boolean = false;
     @Input() required?: boolean = false;
     @Input() readonly?: boolean = false;
-    @ViewChild('dp') private datepicker: BsDatepickerComponent;
+    @ViewChild('dp') private datepicker: BsDatepickerDirective;
 
     private onChange: any = () => {};
     private onTouched: any = () => {};
@@ -145,6 +142,9 @@ export class DateInputComponent implements ControlValueAccessor {
      * @param {Boolean} [isChange = false] - Forces/Cancels the triggering of a change event (and, possibly,
      * its corresponding backup action. @see {@link SubmEditComponent}). By default, any programmatic change will be
      * cancelled (because they are not initiated by the user in the first place).
+     * NOTE: Contrary to what its name suggests, DatePicker's "bsValueChange" output event is triggered every time
+     * a date is set, NOT on value change exclusively.
+     * @see {@link https://valor-software.com/ngx-bootstrap/#/datepicker}
      */
     onPickerSet(dateObj: Date, isChange: boolean = this.datepicker.isOpen) {
         if (dateObj && !isEqualDate(dateObj, this.dateValue)) {
@@ -163,5 +163,3 @@ export class DateInputComponent implements ControlValueAccessor {
         });
     }
 }
-
-

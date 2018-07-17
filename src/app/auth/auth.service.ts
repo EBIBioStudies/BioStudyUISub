@@ -17,6 +17,7 @@ import {
 } from './model/email-req-data';
 
 import {UserSession} from './user-session';
+import {throwError} from "rxjs/index";
 
 @Injectable()
 export class AuthService {
@@ -31,7 +32,7 @@ export class AuthService {
                 this.userSession.create(response.sessid);
                 return response;
             }
-            return Observable.throw(ServerError.dataError(response));
+            return throwError(ServerError.dataError(response));
         });
     }
 
@@ -40,7 +41,7 @@ export class AuthService {
             if (response.status === 'OK') {
                 return response;
             }
-            return Observable.throw(ServerError.dataError(response));
+            return throwError(ServerError.dataError(response));
         });
     }
 

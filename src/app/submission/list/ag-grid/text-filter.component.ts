@@ -48,7 +48,9 @@ export class TextFilterComponent implements AgFilterComponent {
     }
 
     setModel(model: any): void {
-        this.text = model.value;
+        if (model) {
+            this.text = model.value;
+        }
     }
 
     afterGuiAttached(params: IAfterGuiAttachedParams): void {

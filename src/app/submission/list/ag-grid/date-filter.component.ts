@@ -118,7 +118,9 @@ export class DateFilterComponent implements AgFilterComponent {
     }
 
     setModel(model: any): void {
-        this.date = DateRange.fromSeconds(model.value.from, model.value.to);
+        if (model) {
+            this.date = DateRange.fromSeconds(model.value.from, model.value.to);
+        }
     }
 
     afterGuiAttached(params: IAfterGuiAttachedParams): void {

@@ -22,13 +22,13 @@
                     <div class="form-group"[ngClass]="{'has-error': typeName.invalid && typeName.touched}">
                         <label class="control-label" for="typeName">
                             <span class="text-black">Name</span>
-                            <template #popTemplate>
+                            <ng-template #popTemplate>
                                 <strong class="text-muted">Existing names</strong>:
                                 <span *ngFor="let featName of featNames; let last = last"
                                       [ngClass]="{'text-danger': featName == name}">
                                     {{featName}}{{last ? '': ', '}}
                                 </span>
-                            </template>
+                            </ng-template>
                             <span *ngIf="typeName.invalid && typeName.touched">
                                 <span *ngIf="typeName.errors?.required">Please enter a name</span>
                                 <span *ngIf="typeName.errors?.unique"

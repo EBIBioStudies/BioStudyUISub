@@ -11,7 +11,9 @@
            container="body"
            [typeahead]="readonly ? [] : linkService.prefixes"
            [typeaheadMinLength]="suggestThreshold"
-           [typeaheadOptionsLimit]="suggestLength"
+           [typeaheadOptionsLimit]="200"
+           [typeaheadScrollable]="true"
+           [typeaheadOptionsInScrollableView]="suggestLength"
            (typeaheadOnSelect)="onSelect($event)"
            #ahead="bs-typeahead"
            (keyup.enter)="ahead._container ? $event.stopPropagation() : ''"/>

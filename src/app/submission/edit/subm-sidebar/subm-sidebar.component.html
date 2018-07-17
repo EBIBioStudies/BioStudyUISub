@@ -14,14 +14,14 @@
             <tab [active]="isStatus"
                  customClass="badge-parent"
                  (select)="onTabClick(true)">
-                <template tabHeading>
+                <ng-template tabHeading>
                     Check
                     <span *ngIf="numInvalid" class="badge badge-corner"
                           [ngClass]="{'badge-half-danger': numPending > 0 && numPending < numInvalid,
                                       'badge-danger': numPending == numInvalid}">
                         {{numInvalid}}
                     </span>
-                </template>
+                </ng-template>
             </tab>
             <tab *ngIf="section"
                  heading="Add"
