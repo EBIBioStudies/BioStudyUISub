@@ -15,7 +15,7 @@ export class GlobalErrorHandler extends ErrorHandler {
     anErrorDetected$ = this.errors.asObservable();
 
     constructor(private userSession: UserSession, private zone: NgZone) {
-        super(true);
+        super();
     }
 
     handleError(error) {

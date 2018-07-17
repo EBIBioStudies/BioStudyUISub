@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 
 import {Observable} from 'rxjs/Observable';
+import {throwError} from "rxjs/index";
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
 
@@ -29,7 +30,7 @@ export class PubMedSearchService {
                     err.message = error.statusText || 'Server error';
                 }
                 console.error(err);
-                return Observable.throw(err);
+                return throwError(err);
             });
     }
 }

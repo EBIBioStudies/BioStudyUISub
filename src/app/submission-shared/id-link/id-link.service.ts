@@ -8,6 +8,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
 import {Subject} from "rxjs/Subject";
+import {throwError} from "rxjs/index";
 
 @Injectable()
 export class IdLinkService {
@@ -71,7 +72,7 @@ export class IdLinkService {
                 if (err.status === 404) {
                     return Observable.of([]);
                 }
-                return Observable.throw(err);
+                return throwError(err);
             }
         );
     }
@@ -92,7 +93,7 @@ export class IdLinkService {
                 if (err.status === 404) {
                     return Observable.of(err.error);
                 }
-                return Observable.throw(err);
+                return throwError(err);
             }
         );
     }

@@ -10,7 +10,9 @@
        (blur)="onBlur()"
        [typeahead]="readonly ? [] : autosuggest"
        [typeaheadMinLength]="suggestThreshold"
-       [typeaheadOptionsLimit]="suggestLength"
+       [typeaheadOptionsLimit]="200"
+       [typeaheadScrollable]="true"
+       [typeaheadOptionsInScrollableView]="suggestLength"
        #ahead="bs-typeahead"
        (keyup.enter)="ahead._container ? $event.stopPropagation() : return"
        (typeaheadOnSelect)="onSuggestSelect($event)">

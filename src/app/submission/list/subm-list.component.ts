@@ -1,6 +1,10 @@
 import {Component, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
+
 import {Observable} from 'rxjs/Observable';
+import {Subscription} from "rxjs/Subscription";
+import {Subject} from "rxjs/Subject";
+import {throwError} from "rxjs/index";
 
 import {GridOptions} from 'ag-grid/main';
 import {AgRendererComponent} from 'ag-grid-angular/main';
@@ -10,24 +14,22 @@ import {SubmissionService} from '../shared/submission.service';
 import {TextFilterComponent} from './ag-grid/text-filter.component';
 import {DateFilterComponent} from './ag-grid/date-filter.component';
 import {PageTab} from '../shared/pagetab.model';
-import {Subscription} from "rxjs/Subscription";
 import {AppConfig} from "../../app.config";
 import {SubmAddDialogComponent} from "./subm-add.component";
 import {UserData} from "../../auth/user-data";
 import {SubmissionType} from "../shared/submission-type.model";
-import {Subject} from "rxjs/Subject";
 import {RequestStatusService} from "../../http/request-status.service";
 
 @Component({
     selector: 'action-buttons-cell',
     template: `
-        <button type="button" class="btn btn-link btn-xs btn-flat"
+        <button *ngIf="rowData" type="button" class="btn btn-link btn-xs btn-flat"
                 (click)="onEditSubmission()"
                 tooltip="Edit this submission"
                 container="body">
             <i class="fa fa-pencil fa-fw fa-lg"></i>
         </button>
-        <button type="button" class="btn btn-danger btn-xs btn-flat"
+        <button *ngIf="rowData" type="button" class="btn btn-danger btn-xs btn-flat"
                 [disabled]="isBusy"
                 (click)="onDeleteSubmission()"
                 tooltip="Delete this submission"
@@ -37,26 +39,15 @@ import {RequestStatusService} from "../../http/request-status.service";
         </button>`
 })
 export class ActionButtonsCellComponent implements AgRendererComponent {
+    public isBusy: boolean;         //flags if a previous button action is in progress
+    public rowData: any;            //object including the data values for the row this cell belongs to
+
     private accno: string;
-    public isBusy: boolean;        //flags if a previous button action is in progress
-    private isTemp: boolean;        //flags if the corresponding submission is a temporary one
     private onDelete: (accno: string, onCancel: Function) => {};
     private onEdit: (string) => {};
-    private onView: (string) => {};
-
-    status: string;
 
     agInit(params: any): void {
-        const data = params.data;
-        const noop = (accno: string) => {};
-
-        this.status = data.status;
-        this.accno = data.accno;
-        this.isTemp = data.isTemp;
-        this.onDelete = data.onDelete || noop;
-        this.onEdit = data.onEdit || noop;
-        this.onView = data.onView || noop;
-
+        this.rowData = params.data;
         this.reset();
     }
 
@@ -69,11 +60,27 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
 
     onDeleteSubmission() {
         this.isBusy = true;
-        this.onDelete(this.accno, this.reset.bind(this));
+
+        if (this.rowData) {
+            this.rowData.onDelete(this.rowData.accno, this.reset.bind(this));
+        }
+
     }
 
     onEditSubmission() {
-        this.onEdit(this.accno);
+        if (this.rowData) {
+            this.rowData.onEdit(this.rowData.accno);
+        }
+    }
+
+    /**
+     * Mandatory - Get the cell to refresh.
+     * @see {@link https://www.ag-grid.com/javascript-grid-cell-editor/}
+     * @returns {boolean} By returning false, the grid will remove the component from the DOM and create
+     * a new component in it's place with the new values.
+     */
+    refresh(): boolean {
+        return false;
     }
 }
 
@@ -105,6 +112,16 @@ export class DateCellComponent implements AgRendererComponent {
             return new Date(seconds * 1000);
         }
         return null;
+    }
+
+    /**
+     * Mandatory - Get the cell to refresh.
+     * @see {@link https://www.ag-grid.com/javascript-grid-cell-editor/}
+     * @returns {boolean} By returning false, the grid will remove the component from the DOM and create
+     * a new component in it's place with the new values.
+     */
+    refresh(): boolean {
+        return false;
     }
 }
 
@@ -146,6 +163,11 @@ export class SubmListComponent {
             }
         });
 
+        //TODO: After updating Ag-Grid to the latest version, pagination should be enabled using the following options:
+        //rowModelType: 'infinite',
+        //pagination: true,
+        //cacheBlockSize: 15,
+        //TODO: In later versions, client-side sorting is disabled when using the "infinite" row model.
         this.gridOptions = <GridOptions>{
             debug: false,
             rowSelection: 'single',
@@ -258,7 +280,7 @@ export class SubmListComponent {
                     //Hides the overlaid progress box if request failed
                     }).takeUntil(this.ngUnsubscribe).catch(error => {
                         agApi.hideOverlay();
-                        return Observable.throw(error);
+                        return throwError(error);
 
                     //Once all submissions fetched, determines last row for display purposes.
                     }).subscribe((rows) => {

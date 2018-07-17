@@ -11,6 +11,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/finally';
 import 'rxjs/add/observable/throw';
+import {throwError} from "rxjs/index";
 
 /**
  * Global listener to HTTP requests. Reports the status of any request in progress by means of observables,
@@ -66,7 +67,7 @@ export class RequestStatusService implements HttpInterceptor {
         return next.handle(req).map(event => {
             return event;
         }).catch(error => {
-            return Observable.throw(error);
+            return throwError(error);
         }).finally(() => {
             if (!shouldBypass) {
                 this._pendingRequests--;

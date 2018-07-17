@@ -1,5 +1,6 @@
 import {Observable} from 'rxjs/Observable';
 import {HttpErrorResponse} from "@angular/common/http";
+import {throwError} from "rxjs/index";
 
 export class ServerError {
 
@@ -56,5 +57,5 @@ export class ServerError {
 //TODO: come up with a generalised logic for human-readable error messages based on the info available from HttpErrorResponse.
 //TODO: the global handler should be manually called up. (globalHandler.handleError(ServerError.fromResponse(error));)
 export function serverErrorHandler(error: HttpErrorResponse): Observable<any> {
-    return Observable.throw(ServerError.fromResponse(error));
+    return throwError(ServerError.fromResponse(error));
 }
