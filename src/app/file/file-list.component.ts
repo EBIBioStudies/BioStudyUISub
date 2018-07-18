@@ -9,8 +9,6 @@ import {
     Params
 } from '@angular/router';
 
-import {Subscription} from 'rxjs/Subscription';
-
 import {GridOptions} from 'ag-grid/main';
 import {AgRendererComponent} from 'ag-grid-angular/main';
 
@@ -29,7 +27,7 @@ import 'rxjs/add/operator/filter';
 import {AppConfig} from "../app.config";
 import "rxjs/add/operator/takeUntil";
 import {Subject} from "rxjs/Subject";
-import {Observable} from "rxjs/Observable";
+import {throwError} from "rxjs/index";
 
 @Component({
     selector: 'file-actions-cell',
@@ -81,6 +79,10 @@ export class FileActionsCellComponent implements AgRendererComponent {
             this.upload.cancel();
         }
     }
+
+    refresh(): boolean {
+        return false;
+    }
 }
 
 @Component({
@@ -100,6 +102,16 @@ export class FileTypeCellComponent implements AgRendererComponent {
 
     agInit(params: any): void {
         this.ftype = params.value;
+    }
+
+    /**
+     * Mandatory - Get the cell to refresh.
+     * @see {@link https://www.ag-grid.com/javascript-grid-cell-editor/}
+     * @returns {boolean} By returning false, the grid will remove the component from the DOM and create
+     * a new component in it's place with the new values.
+     */
+    refresh(): boolean {
+        return false;
     }
 }
 
@@ -141,6 +153,16 @@ export class ProgressCellComponent implements AgRendererComponent {
 
     get error(): string {
         return this.upload.error;
+    }
+
+    /**
+     * Mandatory - Get the cell to refresh.
+     * @see {@link https://www.ag-grid.com/javascript-grid-cell-editor/}
+     * @returns {boolean} By returning false, the grid will remove the component from the DOM and create
+     * a new component in it's place with the new values.
+     */
+    refresh(): boolean {
+        return false;
     }
 }
 
@@ -257,7 +279,7 @@ export class FileListComponent implements OnInit, OnDestroy {
 
             .catch(error => {
                 this.gridOptions.api.hideOverlay();
-                return Observable.throw(error);
+                return throwError(error);
 
             }).subscribe(
                 data => {

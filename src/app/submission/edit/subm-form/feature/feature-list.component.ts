@@ -7,6 +7,7 @@ import {
 import {Attribute, Feature} from '../../../shared/submission.model';
 import {FeatureForm} from '../subm-form.service';
 import {TypeaheadMatch} from "ngx-bootstrap";
+import {AppConfig} from "../../../../app.config";
 
 @Component({
     selector: 'subm-feature-list',
@@ -19,7 +20,11 @@ export class FeatureListComponent implements AfterViewInit {
     @Input() colNames: string[] = [];       //List of allowed column names out of the list specified in the default template
     @ViewChildren('rowEl') rowEls: QueryList<ElementRef>;
 
-    constructor(private rootEl: ElementRef) {}
+    public suggestLength: number;           //max number of suggested values to be displayed at once
+
+    constructor(private rootEl: ElementRef, private appConfig: AppConfig) {
+        this.suggestLength = appConfig.maxSuggestLength;
+    }
 
     get columns(): Attribute[] {
         return this.featureForm.columns

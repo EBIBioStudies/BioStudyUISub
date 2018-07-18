@@ -3,9 +3,10 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import {defer} from 'rxjs/observable/defer';
 import 'rxjs/add/observable/throw';
+import {throwError} from "rxjs/index";
 
 function asyncError<T>(errorObject: any) {
-  return defer(() => Observable.throw(errorObject));
+  return defer(() => throwError(errorObject));
 }
 
 function asyncData<T>(data: T) {

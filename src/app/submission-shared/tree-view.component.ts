@@ -26,7 +26,7 @@ export interface TreeViewConfig {
            [ngClass]="{'fa-minus-square-o': !isCollapsed, 'fa-plus-square-o': isCollapsed}"
            (click)="isCollapsed = !isCollapsed"
            aria-hidden="true"></i>
-           <template #nodeTemplate></template>
+           <ng-template #nodeTemplate></ng-template>
     </span>
     <ul [collapse]="isCollapsed">
         <li  *ngFor="let child of children">
