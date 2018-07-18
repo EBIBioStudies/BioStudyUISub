@@ -16,10 +16,10 @@
                 <strong>Direct upload</strong>
             </div>
             <div class="col-xs-4 nav-block text-center text-muted">
-                <span *ngIf="sidebar.pendingFiles">
+                <span *ngIf="sidebar.pendingFiles > 0">
                     <strong>{{sidebar.pendingFiles}}</strong> {{pluralise('files')}} pending upload
                 </span>
-                <span *ngIf="!sidebar.pendingFiles && sidebar.hasRequests && uploadedCount()">
+                <span *ngIf="sidebar.pendingFiles === 0 && sidebar.hasRequests && uploadedCount()">
                     <strong>{{uploadedCount()}}</strong> {{pluralise('files')}} uploaded
                 </span>
                 <span *ngIf="sidebar.hasRequests && sidebar.isStatus('failed')" class="text-danger">
