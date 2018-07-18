@@ -17,8 +17,10 @@
                                          featureForm.columnControl(column.id).touched}">
             <inline-edit placement="bottom"
                          triggers="focus"
-                         containerClass="validation-pop text-danger"
-                         popover="Please use a unique column name"
+                         container="body"
+                         containerClass="text-danger"
+                         popover="{{featureForm.columnControl(column.id).invalid &&
+                                    featureForm.columnControl(column.id).touched ? 'Please use a unique column name' : ''}}"
                          [(ngModel)]="column.name"
                          emptyValue="{{'Column ' + (idx + 1)}}"
                          (remove)="feature.removeColumn(column.id)"
@@ -61,8 +63,10 @@
                                               featureForm.rowValueControl(rowIdx, column.id).touched}">
                     <subm-field placement="top"
                                 triggers="focus"
-                                containerClass="validation-pop text-danger"
-                                popover="{{featureForm.rowErrors[rowIdx][column.id]}}"
+                                container="body"
+                                containerClass="{{featureForm.feature.type.required ? 'text-danger' : 'text-warning'}}"
+                                popover="{{featureForm.rowValueControl(rowIdx, column.id).invalid &&
+                                           featureForm.rowValueControl(rowIdx, column.id).touched ? featureForm.rowErrors[rowIdx][column.id] : ''}}"
                                 [type]="column.valueType"
                                 [(ngModel)]="row.valueFor(column.id).value"
                                 [readonly]="readonly || column.readonly"
