@@ -157,32 +157,6 @@
   cursor: pointer;
 }
 
-//Makes validation popovers show up only when there is indeed an error, preventing it from overflowing its
-//container (eg: scrollable area in feature grids). Only applies the extended format to laptop screens.
-.validation-pop {
-  display: none !important;
-  z-index: 950;           //above any dropdowns but below any nav bar
-  left: 0 !important;     //centers even when the field is a select-box (ie negative positioning is used)
-  font-size: 12px;
-  text-align: center;
-
-  .popover-body {
-    padding: .5rem .7rem;
-  }
-
-  .has-error & {
-    display: block !important;
-  }
-
-  @media only screen and (min-width: 1160px) {
-    min-width: 300px;
-    font-size: 14px;
-  }
-}
-.has-error .popover-body {
-  color: #bb4a48;
-}
-
 //Prevents flickering tooltips when hovering near the edge of an element
 .tooltip {
   pointer-events: none;

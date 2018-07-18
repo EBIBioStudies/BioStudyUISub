@@ -59,21 +59,6 @@ export class FeatureGridComponent implements AfterViewInit {
             oldNumRows = this.featureForm.rows.length;
             oldNumCols = this.featureForm.columns.length;
         });
-
-        //Initialises and sets every typeahead's container to the body element every time a new row/column is added.
-        //NOTE: Could not be done directly in the template without also modifying the container for popovers
-        this.setTaContainer('body');
-        this.typeaheads.changes.subscribe(this.setTaContainer.bind(this, 'body'));
-    }
-
-    /**
-     * Forces all typeahead overlays to be attached to a given DOM element.
-     * @param {string} container - DOM element identifier.
-     */
-    setTaContainer(container: string) {
-        this.typeaheads.forEach((typeahead) => {
-            typeahead.container = container;
-        });
     }
 
     /**
