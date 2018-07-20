@@ -269,7 +269,7 @@ export class DirectSubmitSideBarComponent implements OnInit {
             this.uploadSubs = Observable.from(nonClearedFiles).map((file: File) => {
                 return this.directSubmitSvc.addRequest(file, '', this.selectedProj, submType);
 
-            //Throttles the number of requests allowed in parallel and takes just the last event to monitor for the end.
+            //Throttles the number of requests allowed in parallel and takes just the last event to signal the end of the upload process.
             }).pipe(mergeAll(this.appConfig.maxConcurrent)).pipe(last())
 
             //Cancels all requests on demand and keeps the files list in sync with the list of requests.
