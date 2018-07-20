@@ -163,19 +163,19 @@ export class SubmListComponent {
             }
         });
 
-        //TODO: After updating Ag-Grid to the latest version, pagination should be enabled using the following options:
-        //rowModelType: 'infinite',
-        //pagination: true,
-        //cacheBlockSize: 15,
-        //TODO: In later versions, client-side sorting is disabled when using the "infinite" row model.
+        //TODO: enable server-side sorting once sorting parameters are added to the submission list endpoint
+        //NOTE: Ag-Grid doesn't support client-side filtering/sorting and server-side pagination simultaneously.
+        //https://www.ag-grid.com/javascript-grid-infinite-scrolling/#sorting-filtering
         this.gridOptions = <GridOptions>{
             debug: false,
             rowSelection: 'single',
             enableColResize: true,
             unSortIcon: true,
-            enableSorting: true,
+            enableSorting: false,
             enableServerSideFilter: true,
-            rowModelType: 'pagination',
+            rowModelType: 'infinite',
+            pagination: true,
+            cacheBlockSize: 15,
             paginationPageSize: 15,
             rowHeight: 30,
             localeText: {noRowsToShow: 'No submissions found'},
