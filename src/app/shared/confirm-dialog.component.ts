@@ -28,6 +28,7 @@ export class ConfirmDialogComponent {
     @Input('headerTitle') title: string = 'Confirm';    //Summary text for the modal's title
     @Input() confirmLabel: string = 'Ok';               //Default name for positive action
     @Input() abortLabel: string = 'Cancel';             //Default name for negative action
+    @Input() isHideCancel: boolean = false;             //Hides the cancel button. Suitable for info modals.
     @Input() body: string = 'Are you sure?';            //Descriptive message for the modal's body
 
     /**

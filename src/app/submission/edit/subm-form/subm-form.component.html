@@ -59,7 +59,7 @@
     <div *ngFor="let feature of sectionForm.features"
         [ngClass]="{'form-group row': feature.size() > 0}">
         <div *ngIf="(!readonly && feature.size() > 0) || (readonly && !feature.isEmpty())" class="col-xs-12">
-            <label class="control-label">{{feature.pluralName()}}</label>
+            <label class="control-label">{{feature.splitName(feature.pluralName())}}</label>
             <span *ngIf="!readonly && (!feature.type.required || sectionForm.groupForm.get(feature.id))"
                   class="text-muted pull-right">
                 <i>
