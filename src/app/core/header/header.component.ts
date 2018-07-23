@@ -112,14 +112,13 @@ export class HeaderComponent implements OnDestroy {
     }
 
     /**
-     * Renders the confirmation dialogue, internally creating a new reactive stream.
+     * Renders the confirmation dialogue.
      * @param {string} message - Text to be shown within the dialogue's body section.
      * @param {string} title - Title for the modal.
-     * @returns {Observable<any>} Reactive stream for listening to confirmation event.
      */
-    confirm(text: string, title: string): Observable<any> {
+    confirm(text: string, title: string) {
         this.confirmDialog.title = title;
-        return this.confirmDialog.confirm(text, false);
+        this.confirmDialog.confirm(text, false);
     }
 
     toggleCollapsed() {
