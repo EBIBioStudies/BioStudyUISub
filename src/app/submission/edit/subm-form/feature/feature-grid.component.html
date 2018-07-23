@@ -83,9 +83,9 @@
     </div>
 </div>
 <button *ngIf="!readonly" type="button" class="btn-add btn btn-link" tabindex="-1"
-        [tooltip]="'Add a new ' + feature.typeName.toLowerCase()"
+        [tooltip]="'Add a new ' + feature.splitName(feature.typeName).toLowerCase()"
         container="body"
         (click)="feature.addRow()">
     <i class="fa fa-lg fa-plus-circle"></i>
-    Add {{feature.typeName.toLowerCase()}} row
+    Add {{feature.splitName(feature.typeName).toLowerCase()}} row
 </button>

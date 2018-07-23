@@ -30,6 +30,7 @@ export function flattenDoubleArrays(obj: any): any {
 
     if (obj.hasOwnProperty('section')) {
         newObj.section = flatten(obj.section);
+        newObj.section = flattenDoubleArrays(obj.section);
     }
     return newObj;
 }

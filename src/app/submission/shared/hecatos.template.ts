@@ -301,11 +301,11 @@ export const HecatosTemplate = {
                 'description': 'List the data files for the study and describe their respective scopes.',
                 'icon': 'fa-file',
                 'uniqueCols': true,
-                'required': true,
                 'columnTypes': [
                     {
                         'name': 'Path',
-                        'valueType': 'file',
+                        'valueType': 'text',
+                        'readonly': true,
                         'required': true
                     },
                     {
@@ -386,6 +386,35 @@ export const HecatosTemplate = {
                         'name': 'DOI',
                         'valueType': 'text'
                     },
+                ]
+            },
+            {
+                'name': 'ProtocolName',
+                'title': 'Add protocols',
+                'description': 'List the details of any experimental protocols employed.',
+                'icon': 'fa-cogs',
+                'uniqueCols': true,
+                'columnTypes': [
+                    {
+                        'name': 'Name',
+                        'valueType': 'text',
+                        'required': true
+                    },
+                    {
+                        'name': 'Type',
+                        'valueType': 'text',
+                        'required': true
+                    },
+                    {
+                        'name': 'Description',
+                        'valueType': 'text',
+                        'displayed': true
+                    },
+                    {
+                        'name': 'URI',
+                        'valueType': 'text',
+                        'displayed': true
+                    }
                 ]
             }
         ]

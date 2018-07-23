@@ -10,6 +10,8 @@ import {Observable} from "rxjs/Observable";
 import {forkJoin} from "rxjs/observable/forkJoin";
 import {SubmissionService} from "../submission/shared/submission.service";
 
+const SECRET_ID_PROP_NAME = 'secret';
+
 @Injectable()
 export class UserData {
     static contactMap = {       //maps response property to submission attribute name for as shown in contact widget
@@ -91,6 +93,16 @@ export class UserData {
         });
 
         return contactObj;
+    }
+
+    /**
+     * Retrieves the ID for sharing submissions or using FTP/Aspera
+     * @returns {string} - Secret ID.
+     */
+    get secretId(): string {
+        if (this.hasOwnProperty(SECRET_ID_PROP_NAME)) {
+            return this[SECRET_ID_PROP_NAME];
+        }
     }
 
     /**

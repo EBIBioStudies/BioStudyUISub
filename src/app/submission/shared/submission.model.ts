@@ -438,6 +438,17 @@ export class Feature extends HasUpdates<UpdateEvent> {
         return pluralize(this.type.name);
     }
 
+    /**
+     * Splits a given camel-cased name into words.
+     * @param {string} Name of the feature.
+     * @returns {string} Separated words.
+     *
+     * @author Hector Casanova <hector@ebi.ac.uk>
+     */
+    splitName(name: string): string {
+        return name.replace(/([a-z])([A-Z])/g, '$1 $2');
+    }
+
 
     /**
      * Sets the values of a given row.

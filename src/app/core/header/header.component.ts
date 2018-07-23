@@ -1,7 +1,7 @@
 import {
     ApplicationRef,
     Component,
-    OnDestroy
+    OnDestroy, ViewChild
 } from '@angular/core';
 import {
     Router,
@@ -18,6 +18,7 @@ import {AppConfig} from 'app/app.config';
 import {RequestStatusService} from "../../http/request-status.service";
 import {Subscription} from "rxjs/Subscription";
 import {UserData} from "../../auth/user-data";
+import {ConfirmDialogComponent} from "../../shared/confirm-dialog.component";
 
 @Component({
     selector: 'app-header',
@@ -26,13 +27,17 @@ import {UserData} from "../../auth/user-data";
 })
 export class HeaderComponent implements OnDestroy {
     reqStatusSubs: Subscription;
+    secretId: string = '';                  //current user's secret ID
 
     navCollapsed: boolean = true;
     userLoggedIn: boolean = false;
     userLoggingIn: boolean = false;
     userRegistering: boolean = false;
-    isPendingReq: boolean = false;       //flags whether there is a transaction in progress (from anywhere in the app)
-    isBusy: boolean = false;             //flags whether there is a transaction triggered by this component
+    isPendingReq: boolean = false;          //flags whether there is a transaction in progress (from anywhere in the app)
+    isBusy: boolean = false;                //flags whether there is a transaction triggered by this component
+
+    @ViewChild('confirmDialog')
+    confirmDialog: ConfirmDialogComponent;
 
     constructor(private userSession: UserSession,
                 private userData: UserData,
@@ -74,6 +79,11 @@ export class HeaderComponent implements OnDestroy {
         this.reqStatusSubs = this.requestStatus.whenStatusChanged.subscribe(hasPendingRequests => {
             header.isPendingReq = hasPendingRequests;
         });
+
+        //Updates the secret ID as soon as it becomes available.
+        this.userData.whenFetched.subscribe(data => {
+            this.secretId = this.userData.secretId;
+        });
     }
 
     signOut() {
@@ -89,6 +99,26 @@ export class HeaderComponent implements OnDestroy {
                     }
                     this.isBusy = false;
                 });
+    }
+
+    /**
+     * Shows the modal with the user's secret ID.
+     */
+    showSecretModal() {
+        this.confirm(
+            'Your secret ID is: ' + this.secretId + '. It is normally required for FTP/Aspera transactions and when sharing submissions.',
+            'Secret ID'
+        );
+    }
+
+    /**
+     * Renders the confirmation dialogue.
+     * @param {string} message - Text to be shown within the dialogue's body section.
+     * @param {string} title - Title for the modal.
+     */
+    confirm(text: string, title: string) {
+        this.confirmDialog.title = title;
+        this.confirmDialog.confirm(text, false);
     }
 
     toggleCollapsed() {
