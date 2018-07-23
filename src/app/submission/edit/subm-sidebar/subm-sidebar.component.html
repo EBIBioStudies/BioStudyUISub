@@ -42,7 +42,7 @@
                    container="body"
                    (click)="item.onClick($event)">
                     <i class="fa fa-lg text-center {{item.feature.type.icon}}"></i>
-                    {{!collapsed ? '&nbsp;&nbsp;' + item.feature.typeName + ' ' + addUnit(item.feature.size()) : ''}}
+                    {{!collapsed ? '&nbsp;&nbsp;' + item.feature.splitName(item.feature.typeName) + ' ' + addUnit(item.feature.size()) : ''}}
                 </a>
                 <div class="row-input"
                    [ngClass]="{'has-error': itemType.invalid && itemType.touched}"
