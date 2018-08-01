@@ -46,13 +46,16 @@
         (focusout)="onBlur()">
 </orcid-input-box>
 
-<file-input *ngIf="type === 'file'"
+<!--file-input *ngIf="type === 'file'"
             [isSmall]="isSmall"
             [(ngModel)]="value"
             [required]="required"
             [readonly]="readonly"
             (focusout)="onBlur()">
-</file-input>
+</file-input-->
+<file-select *ngIf="type === 'file'"
+             [(ngModel)]="value">
+</file-select>
 
 <pubmedid-search
         *ngIf="type === 'pubmedid'"
