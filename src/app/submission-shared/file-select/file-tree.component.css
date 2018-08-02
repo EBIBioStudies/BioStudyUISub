@@ -1,5 +1,5 @@
 div.panel:first-child {
-    margin-top: 20px;
+    margin-top: 0;
 }
 
 div.treeview {
@@ -8,10 +8,8 @@ div.treeview {
     max-height: 256px;
     overflow: auto;
     padding: 4px;
-    margin-bottom: 20px;
+    margin-bottom: 0;
     color: #369;
-    border: solid 1px;
-    border-radius: 4px;
 }
 
 div.treeview ul:first-child:before {
@@ -68,15 +66,17 @@ div.treeview ul:first-child:before {
 
 .tree-indicator {
     margin-right: 5px;
-
     cursor: pointer;
 }
 
 .treeview li a {
     text-decoration: none;
     color: inherit;
-
     cursor: pointer;
+}
+
+.treeview li a:hover {
+    background-color: #eee;
 }
 
 .treeview li button, .treeview li button:active, .treeview li button:focus {
@@ -84,7 +84,7 @@ div.treeview ul:first-child:before {
     color: inherit;
     border: none;
     background: transparent;
-    margin: 0px 0px 0px 0px;
-    padding: 0px 0px 0px 0px;
+    margin: 0;
+    padding: 0;
     outline: 0;
 }

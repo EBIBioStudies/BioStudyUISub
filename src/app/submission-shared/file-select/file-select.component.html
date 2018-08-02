@@ -1,13 +1,6 @@
-<div class="input-group">
-    <input type="text" class="form-control" />
-    <div class="input-group-btn">
-        <div class="btn-group" role="group">
-            <div class="dropdown dropdown-lg">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
-                <div class="dropdown-menu dropdown-menu-right" role="menu">
-                    <file-tree></file-tree>
-                </div>
-            </div>
-        </div>
+<input type="text" [(ngModel)]="selected" class="form-control input-sm" (click)="onInputClick($event)" #inputbox/>
+<div class="dropdown" [ngClass]="{'open':isOpen}" #dropdown>
+    <div class="dropdown-menu dropdown-menu-right" style="height:auto;max-height:200px;overflow-x: hidden;">
+        <file-tree (select)="onFileSelect($event)"></file-tree>
     </div>
 </div>
