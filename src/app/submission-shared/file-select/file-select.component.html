@@ -1,4 +1,8 @@
-<input type="text" [(ngModel)]="selected" class="form-control input-sm" (click)="onInputClick($event)" #inputbox/>
+<input type="text"
+       [ngModel]="selected"
+       (keydown)="doNothing($event)"
+       (keyup)="doNothing($event)"
+       class="form-control input-sm" (click)="onInputClick($event)" #inputbox/>
 <div class="dropdown" [ngClass]="{'open':isOpen}" #dropdown>
     <div class="dropdown-menu dropdown-menu-right" style="height:auto;max-height:200px;overflow-x: hidden;">
         <file-tree (select)="onFileSelect($event)"></file-tree>

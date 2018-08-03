@@ -37,6 +37,11 @@ export class FileSelectComponent implements ControlValueAccessor {
         }
     }
 
+    doNothing(event: Event): boolean {
+        event.preventDefault();
+        return false;
+    }
+
     get value() {
         return this.selected;
     }
