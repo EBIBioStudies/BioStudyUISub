@@ -2,7 +2,7 @@
     <li *ngFor="let node of nodes">
         <span class="iconButton" [ngClass]='{"tree-node-no-children": !node.isDir}'
               (click)="node.expand()">{{node.icon}}</span>
-        <span (click)="onNodeClick(node.path)">{{ node.name }}</span>
+        <span (click)="onNodeClick(node)">{{ node.name }}</span>
         <div *ngIf="node.expanded">
             <file-tree [root]="node" (select)="onChildTreeClick($event)"></file-tree>
         </div>

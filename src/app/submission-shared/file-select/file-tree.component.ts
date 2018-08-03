@@ -48,7 +48,9 @@ export class FileTreeComponent implements OnInit{
         this.select.emit(value)
     }
 
-    onNodeClick(value: string) {
-        this.select.emit(value);
+    onNodeClick(node: FileNode) {
+        if (!node.isDir) {
+            this.select.emit(node.path);
+        }
     }
 }
