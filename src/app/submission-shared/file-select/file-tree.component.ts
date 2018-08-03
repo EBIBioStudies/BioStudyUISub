@@ -1,13 +1,13 @@
-import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {FileService} from 'app/file/index';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from "@angular/core";
 import {FileNode} from "./file-tree.model";
+import {FileTreeStore} from "./file-tree.store";
 
 @Component({
     selector: 'file-tree',
     templateUrl: './file-tree.component.html',
     styleUrls: ['./file-tree.component.css']
 })
-export class FileTreeComponent implements OnInit{
+export class FileTreeComponent implements OnInit, OnDestroy{
 
     @Input() root: FileNode;
     @Output() select = new EventEmitter();
@@ -16,25 +16,16 @@ export class FileTreeComponent implements OnInit{
 
     subscription;
 
-    constructor(private fileService: FileService) {
+    constructor(private fileStore: FileTreeStore) {
     }
 
     ngOnInit() {
         if (this.root === undefined) {
-            this.subscription = this.fileService.getUserDirs()
-                .map(dirs => dirs.map(dir => new FileNode(true, dir.path)))
-                .subscribe(nodes => {
-                    console.log(nodes);
-                    this.nodes = nodes;
-                })
+            this.subscription = this.fileStore.getUserDirs()
+                .subscribe(nodes => {this.nodes = nodes})
         } else if (this.root.isDir) {
-            this.subscription = this.fileService.getFiles(this.root.path)
-                .subscribe(
-                        data => {
-                            if (data.status === 'OK') {
-                                this.nodes = data.files.map(file => new FileNode(file.type === 'DIR', file.path));
-                            }
-                        })
+            this.subscription = this.fileStore.getFiles(this.root.path)
+                .subscribe(nodes => {this.nodes = nodes})
         }
     }
 
@@ -42,6 +33,7 @@ export class FileTreeComponent implements OnInit{
         if (this.subscription !== undefined) {
             this.subscription.unsubscribe();
         }
+        this.fileStore.clearCache();
     }
 
     onChildTreeClick(value: string) {
