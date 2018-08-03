@@ -418,6 +418,16 @@ export class Feature extends HasUpdates<UpdateEvent> {
     }
 
     /**
+     * ID of the first column with a matching name. For features with unique columns (eg: grids), it's a safe guess
+     * for any given attribute name.
+     * @param {string} name - Name of the column whose ID is to be retrieved.
+     * @returns {string} Attribute ID for the named column.
+     */
+    firstId(name: string): string {
+        return this._columns.allWithName(name)[0].id
+    }
+
+    /**
      * Determines the feature is made up of empty rows.
      * NOTE: This is equally applicable to lists as long as they are considered transposed grids, the
      * only row being the set of values for each key.

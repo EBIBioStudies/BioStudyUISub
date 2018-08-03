@@ -53,7 +53,7 @@ export class DateInputComponent implements ControlValueAccessor {
      * its default formats.
      * @param {BsDatepickerConfig} config - Configuration object for the datepicker directive.
      * @param {AppConfig} appConfig - Global configuration object with app-wide settings.
-     * @param {ElementRef} rootEl - Reference to the root element of the component's template.
+     * @param {ElementRef} rootEl - Reference to the component's wrapping element
      */
     constructor(config: BsDatepickerConfig, private appConfig: AppConfig, private rootEl: ElementRef) {
         config.showWeekNumbers = false;
@@ -147,10 +147,19 @@ export class DateInputComponent implements ControlValueAccessor {
      * @see {@link https://valor-software.com/ngx-bootstrap/#/datepicker}
      */
     onPickerSet(dateObj: Date, isChange: boolean = this.datepicker.isOpen) {
+        let formattedDate;          //date in format expected by backend
+
         if (dateObj && !isEqualDate(dateObj, this.dateValue)) {
             this.dateValue = dateObj;
-            this.onChange(formatDate(this.dateValue));
-            isChange && this.rootEl.nativeElement.dispatchEvent(new Event('change', {bubbles: true}));
+            formattedDate = formatDate(this.dateValue);
+            this.onChange(formattedDate);
+
+            //Propagates the date change through the DOM if so wished.
+            if (isChange) {
+                this.rootEl.nativeElement.value = formattedDate;
+                this.rootEl.nativeElement.dispatchEvent(new Event('change', {bubbles: true}));
+            }
+
         }
     }
 

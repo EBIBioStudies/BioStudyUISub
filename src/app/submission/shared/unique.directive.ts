@@ -9,7 +9,7 @@ import {
 } from '@angular/forms';
 
 @Directive({
-    selector: '[unique][ngModel]',
+    selector: '[unique]',
     host: {
         '(change)': 'onChange()'
     },

@@ -462,6 +462,15 @@ export class FeatureForm {
         this.subscriptions = [];
     }
 
+    /**
+     * Updates a given group of the form controls making up a certain row.
+     * @param {number} rowIdx - Index for the row to be changed.
+     * @param rowValues - New row values in object form.
+     */
+    patchRow(rowIdx: number, rowValues: any) {
+        this.rowsFormArray.controls[rowIdx].patchValue(rowValues);
+    }
+
     private get columnsFormGroup(): FormGroup {
         return <FormGroup>this.form.get('columns');
     }
@@ -520,6 +529,7 @@ export class FeatureForm {
         let colAttr;                    //attribute corresponding to the column under which this control will lie
         let control;
 
+        //TODO: follow a recipe similar to addFieldControl's to support other validators
         if (tmpl.required) {
             valueValidators.push(nonBlankVal());
         }

@@ -21,9 +21,9 @@
                          containerClass="text-danger"
                          popover="{{featureForm.columnControl(column.id).invalid &&
                                     featureForm.columnControl(column.id).touched ? 'Please use a unique column name' : ''}}"
-                         [(ngModel)]="column.name"
                          emptyValue="{{'Column ' + (idx + 1)}}"
                          (remove)="feature.removeColumn(column.id)"
+                         (change)="onFieldChange(column, $event.target.value, 'name')"
                          [formControl]="featureForm.columnControl(column.id)"
                          [required]="column.required"
                          [disableEdit]="readonly || column.readonly || !userData.isPrivileged"
@@ -68,13 +68,13 @@
                                 popover="{{featureForm.rowValueControl(rowIdx, column.id).invalid &&
                                            featureForm.rowValueControl(rowIdx, column.id).touched ? featureForm.rowErrors[rowIdx][column.id] : ''}}"
                                 [type]="column.valueType"
-                                [(ngModel)]="row.valueFor(column.id).value"
                                 [readonly]="readonly || column.readonly"
                                 [required]="column.required"
                                 [formControl]="featureForm.rowValueControl(rowIdx, column.id)"
                                 [allowPast]="column.allowPast"
                                 [autosuggest]="column.values"
                                 (async)="addOnAsync($event, rowIdx)"
+                                (change)="onFieldChange(row.valueFor(column.id), $event.target.value)"
                                 validate-onblur>
                     </subm-field>
                 </div>

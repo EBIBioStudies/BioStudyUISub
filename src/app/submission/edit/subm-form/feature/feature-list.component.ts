@@ -42,12 +42,13 @@ export class FeatureListComponent implements AfterViewInit {
     }
 
     /**
-     * Handler for the change event. Only save a key's name when it has changed.
-     * @param {Attribute} column - Object representative of the current column.
-     * @param {string} newKey - New key name for the current column.
+     * Handler for the change event. Only save an attribute when its associated cell changes.
+     * @param {Object} attrObj - Object representative of the attribute.
+     * @param {string} newValue - New value for the specified attribute.
+     * @param {string} [attrName = 'value'] - Name of the attribute whose value is being saved.
      */
-    onColumnChange(column: Attribute, newKey: string) {
-        column.name = newKey;
+    onFieldChange(attrObj: any, newValue: string, attrName: string = 'value') {
+        attrObj[attrName] = newValue;
     }
 
     /**
@@ -60,7 +61,7 @@ export class FeatureListComponent implements AfterViewInit {
     onSuggestSelect(selection: TypeaheadMatch, column: Attribute) {
         if (column.name != selection.value) {
             this.rootEl.nativeElement.dispatchEvent(new Event('change', {bubbles: true}));
-            this.onColumnChange(column, selection.value);
+            this.onFieldChange(column, selection.value,'name');
         }
     }
 

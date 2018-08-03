@@ -2,6 +2,7 @@ import {
     Component,
     Input,
     Output,
+    ElementRef,
     forwardRef,
     EventEmitter
 } from '@angular/core';
@@ -38,8 +39,9 @@ export class InlineEditComponent implements ControlValueAccessor {
     /**
      * Sets the max number of suggestions shown at any given time.
      * @param {AppConfig} appConfig - Global configuration object with app-wide settings.
+     * @param {ElementRef} rootEl - Reference to the component's wrapping element.
      */
-    constructor(private appConfig: AppConfig) {
+    constructor(private rootEl: ElementRef, private appConfig: AppConfig) {
         this.suggestLength = appConfig.maxSuggestLength;
     }
 
@@ -93,6 +95,17 @@ export class InlineEditComponent implements ControlValueAccessor {
             this.value = this.emptyValue;
         }
         this.stopEditing();
+    }
+
+    /**
+     * Handler for select event from auto-suggest typeahead. Fixes the lack of a change event when selecting
+     * a value without any character being typed (typically in combination with typeaheadMinLength = 0).
+     * The closest input element descendant will be the event's target.
+     * TODO: this might be sorted in newer versions of the ngx-bootstrap plugin. Duplicate events may occur due to the repeated calling of "set value(value)" above (cannot keep track of the last value and, by extension, can't detect change).
+     * @param selection - Object for the currently selected value.
+     */
+    onSuggestSelect(selection: any) {
+        this.rootEl.nativeElement.getElementsByTagName('input')[0].dispatchEvent(new Event('change', {bubbles: true}));
     }
 
     /**

@@ -32,7 +32,6 @@
                                containerClass="text-danger"
                                popover="{{featureForm.columnControl(column.id).invalid &&
                                           featureForm.columnControl(column.id).touched ? 'Please use a unique key name' : ''}}"
-                               [ngModel]="column.name"
                                [formControl]="featureForm.columnControl(column.id)"
                                [readonly]="isColUIReq(column) || column.displayed"
                                [typeahead]="isColUIReq(column) || column.displayed ? [] : colNames"
@@ -44,7 +43,7 @@
                                [unique]="feature.uniqueCols"
                                validate-onblur
                                (keyup.enter)="ahead._container ? $event.stopPropagation() : return"
-                               (change)="onColumnChange(column, $event.target.value)"
+                               (change)="onFieldChange(column, $event.target.value, 'name')"
                                (typeaheadOnSelect)="onSuggestSelect($event, column)"
                                (blur)="featureForm.columnControl(column.id).value ||
                                        featureForm.columnControl(column.id).setValue(feature.typeName + ' ' + (idx + 1))">
@@ -67,8 +66,8 @@
                                 containerClass="{{featureForm.feature.type.required ? 'text-danger' : 'text-warning'}}"
                                 popover="{{featureForm.rowValueControl(0, column.id).invalid &&
                                            featureForm.rowValueControl(0, column.id).touched ? featureForm.rowErrors[0][column.id] : ''}}"
+                                (change)="onFieldChange(feature.rows[0].valueFor(column.id), $event.target.value)"
                                 [type]="column.valueType"
-                                [(ngModel)]="feature.rows[0].valueFor(column.id).value"
                                 [readonly]="readonly || column.readonly"
                                 [required]="column.required"
                                 [formControl]="featureForm.rowValueControl(0,column.id)"
