@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from "@angular/core";
 import {FileNode} from "./file-tree.model";
 import {FileTreeStore} from "./file-tree.store";
+import {Subject} from "rxjs/Subject";
 
 @Component({
     selector: 'file-tree',
@@ -14,25 +15,26 @@ export class FileTreeComponent implements OnInit, OnDestroy{
 
     nodes: FileNode[] = [];
 
-    subscription;
+    private unsubscribe = new Subject();
 
     constructor(private fileStore: FileTreeStore) {
     }
 
     ngOnInit() {
         if (this.root === undefined) {
-            this.subscription = this.fileStore.getUserDirs()
+            this.fileStore.getUserDirs()
+                .takeUntil(this.unsubscribe)
                 .subscribe(nodes => {this.nodes = nodes})
         } else if (this.root.isDir) {
-            this.subscription = this.fileStore.getFiles(this.root.path)
+            this.fileStore.getFiles(this.root.path)
+                .takeUntil(this.unsubscribe)
                 .subscribe(nodes => {this.nodes = nodes})
         }
     }
 
     ngOnDestroy() {
-        if (this.subscription !== undefined) {
-            this.subscription.unsubscribe();
-        }
+        this.unsubscribe.next();
+        this.unsubscribe.complete();
         this.fileStore.clearCache();
     }
 

@@ -1,6 +1,8 @@
-import {Component, ElementRef, forwardRef, HostListener, Input, ViewChild} from '@angular/core';
+import {Component, ElementRef, forwardRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {FileTreeStore} from "./file-tree.store";
+import {Subject} from "rxjs/Subject";
 
 @Component({
     selector: 'file-select',
@@ -12,23 +14,44 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
         '(document:click)': 'onOutsideClick($event)',
     },
 })
-export class FileSelectComponent implements ControlValueAccessor {
+export class FileSelectComponent implements ControlValueAccessor, OnInit, OnDestroy {
     @ViewChild("dropdown") ddRef: ElementRef;
     @ViewChild("inputbox") inRef: ElementRef;
 
-    @Input('value') private selected: string = '';
+    @Input('value') private selected = '';
 
-    isOpen: boolean = false;
+    isOpen = false;
+    isEmpty = false;
+    isLoading = true;
+
+    private unsubscribe = new Subject();
 
     private onChange: any = () => {};
     private onTouched: any = () => {};
+
+    constructor(private fileStore: FileTreeStore){
+    }
+
+    ngOnInit(): void {
+        this.fileStore.isEmpty()
+            .takeUntil(this.unsubscribe)
+            .subscribe(fileNode => {
+                this.isLoading = false;
+                this.isEmpty = fileNode === undefined;
+            });
+    }
+
+    ngOnDestroy(): void {
+        this.unsubscribe.next();
+        this.unsubscribe.complete();
+    }
 
     onInputClick(event: Event): void {
         this.isOpen = true;
     }
 
     onOutsideClick(event: Event): void {
-        if (!this.ddRef) {
+        if (!this.isOpen || !this.ddRef) {
             return;
         }
         if (!this.ddRef.nativeElement.contains(event.target)

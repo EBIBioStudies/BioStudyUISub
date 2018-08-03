@@ -5,7 +5,7 @@ import {FileService} from '../../file';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/publishReplay';
-import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/find';
 
 @Injectable()
 export class FileTreeStore {
@@ -15,6 +15,21 @@ export class FileTreeStore {
     private files$ = {}; // path -> Observable<FileNode[]>
 
     constructor(private fileService: FileService) {
+    }
+
+    /* checks if a file exists in the file tree */
+    isEmpty(): Observable<FileNode> {
+        return this.getUserDirs()
+            .flatMap(dirs => this.dfs(dirs))
+            .find(node => !node.isDir);
+    }
+
+    private dfs(nodes: FileNode[]): Observable<FileNode> {
+        return Observable.from(nodes)
+            .flatMap(node =>
+                node.isDir ?
+                    this.getFiles(node.path)
+                        .flatMap(nodes => this.dfs(nodes)) : Observable.of(node))
     }
 
     getUserDirs(): Observable<FileNode[]> {
@@ -40,6 +55,6 @@ export class FileTreeStore {
 
     clearCache(): void {
         this.userDirs$ = undefined;
-        this.files$ = undefined;
+        this.files$ = {};
     }
 }
