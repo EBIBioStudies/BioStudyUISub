@@ -17,6 +17,7 @@ import {TreeViewComponent, TreeViewNodeComponent} from './tree-view.component';
 import {BsDatepickerModule} from "ngx-bootstrap";
 import {IdLinkComponent} from "./id-link/id-link.component";
 import {IdLinkModule} from "./id-link/id-link.module";
+import {FileTreeStore} from './file-select/file-tree.store';
 
 @NgModule({
     imports: [
@@ -28,6 +29,7 @@ import {IdLinkModule} from "./id-link/id-link.module";
     ],
     providers: [
         PubMedSearchService,
+        FileTreeStore
     ],
     declarations: [
         DateFormatDirective,
