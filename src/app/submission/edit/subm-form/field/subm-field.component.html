@@ -54,7 +54,8 @@
             (focusout)="onBlur()">
 </file-input-->
 <file-select *ngIf="type === 'file'"
-             [(ngModel)]="value">
+             [(ngModel)]="value"
+             (ngModelChange)="onSuggestSelect($event)">
 </file-select>
 
 <pubmedid-search
