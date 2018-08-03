@@ -60,4 +60,14 @@ export class SubmFormComponent implements OnChanges {
             return fieldControl;
         }
     }
+
+    /**
+     * Handler for the change event. Only save an attribute when its associated cell changes.
+     * @param {Object} attrObj - Object representative of the attribute.
+     * @param {string} newValue - New value for the specified attribute.
+     * @param {string} [attrName = 'value'] - Name of the attribute whose value is being saved.
+     */
+    onFieldChange(attrObj: any, newValue: string, attrName: string = 'value') {
+        attrObj[attrName] = newValue;
+    }
 }

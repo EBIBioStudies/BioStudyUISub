@@ -17,6 +17,7 @@
            (blur)="onEditBoxBlur($event)"
            (click)="canEdit && !disableChange && startEditing()"
            (keyup.enter)="onEditBoxEnter($event, ahead._container)"
+           (typeaheadOnSelect)="onSuggestSelect($event)"
            #ahead="bs-typeahead"
            #inlineEditBox/>
     <div *ngIf="!editing" class="icons">

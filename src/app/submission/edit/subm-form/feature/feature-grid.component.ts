@@ -70,7 +70,8 @@ export class FeatureGridComponent implements AfterViewInit {
     addOnAsync(data: any, rowIdx: number) {
         const columns = this.feature.columns.slice(0);
         const attrNames = Object.keys(data);
-        const attributes = [];
+        const attributes = [];      //column attributes to be changed with their respective values
+        const formValues = {};      //formgroup version of the above
 
         //The first column is assumed to be the source of the async event and, therefore, does not require updating.
         columns.shift();
@@ -87,9 +88,25 @@ export class FeatureGridComponent implements AfterViewInit {
             }
         });
 
-        //Updates the row and notifies the outside world as a single change event.
+        //Updates the form controls corresponding to the fields of the affected row in the feature.
+        attributes.forEach(attribute => {
+            formValues[this.feature.firstId(attribute.name)] = attribute.value;
+        });
+        this.featureForm.patchRow(rowIdx, formValues);
+
+        //Updates the submission model's row and notifies the outside world as a single change event.
         this.feature.add(attributes, rowIdx);
         this.rootEl.nativeElement.dispatchEvent(new Event('change', {bubbles: true}));
+    }
+
+    /**
+     * Handler for the change event. Only save an attribute when its associated cell changes.
+     * @param {Object} attrObj - Object representative of the attribute.
+     * @param {string} newValue - New value for the specified attribute.
+     * @param {string} [attrName = 'value'] - Name of the attribute whose value is being saved.
+     */
+    onFieldChange(attrObj: any, newValue: string, attrName: string = 'value') {
+        attrObj[attrName] = newValue;
     }
 
     /**

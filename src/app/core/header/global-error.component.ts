@@ -18,7 +18,7 @@ export class GlobalErrorComponent {
      * Captures async errors and refreshes the UI (slides an alert in).
      * @param {ErrorHandler} geh - Global handler for errors.
      * @param {ChangeDetectorRef} changeRef - Forces change detection on this component.
-     * @param {ElementRef} rootEl - Reference to the root element of the component's template.
+     * @param {ElementRef} rootEl - Reference to the component's wrapping element
      */
     constructor (geh: ErrorHandler, changeRef: ChangeDetectorRef, private rootEl: ElementRef) {
         if (geh instanceof GlobalErrorHandler) {

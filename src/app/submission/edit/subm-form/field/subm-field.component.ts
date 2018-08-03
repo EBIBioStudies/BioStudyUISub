@@ -2,7 +2,10 @@ import {
     Component,
     Input,
     forwardRef,
-    ElementRef, ViewChild, Output, EventEmitter
+    ElementRef,
+    ViewChild,
+    Output,
+    EventEmitter
 } from '@angular/core';
 
 import {
@@ -48,7 +51,7 @@ export class SubmFieldComponent implements ControlValueAccessor {
     /**
      * Sets the max number of suggestions shown at any given time.
      * @param {AppConfig} appConfig - Global configuration object with app-wide settings.
-     * @param {ElementRef} rootEl - Reference to the root element of the component's template.
+     * @param {ElementRef} rootEl - Reference to the component's wrapping element.
      */
     constructor(private rootEl: ElementRef, private appConfig: AppConfig) {
         this.suggestLength = appConfig.maxSuggestLength;
@@ -137,13 +140,14 @@ export class SubmFieldComponent implements ControlValueAccessor {
     }
 
     /**
-     * Handler for select event from auto-suggest typeahead. Fixes the lack of a change event when
-     * selecting a value without any character being typed (typically in combination with typeaheadMinLength = 0).
-     * TODO: this might be sorted in newer versions of the ngx-bootstrap plugin. Duplicate events may occur due to the repeated calling of set value() above (cannot keep track of the last value and, by extension, can't detect change).
+     * Handler for select event from auto-suggest typeahead. Fixes the lack of a change event when selecting
+     * a value without any character being typed (typically in combination with typeaheadMinLength = 0).
+     * The closest input element descendant will be the event's target.
+     * TODO: this might be sorted in newer versions of the ngx-bootstrap plugin. Duplicate events may occur due to the repeated calling of "set value(value)" above (cannot keep track of the last value and, by extension, can't detect change).
      * @param {TypeaheadMatch} selection - Object for the currently selected value.
      */
     onSuggestSelect(selection: TypeaheadMatch) {
-        this.rootEl.nativeElement.dispatchEvent(new Event('change', {bubbles: true}));
+        this.rootEl.nativeElement.getElementsByTagName('input')[0].dispatchEvent(new Event('change', {bubbles: true}));
     }
 
     /**

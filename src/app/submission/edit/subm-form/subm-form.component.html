@@ -45,11 +45,11 @@
                             [type]="field.valueType"
                             [readonly]="readonly || field.readonly"
                             [required]="field.type.required"
-                            [(ngModel)]="field.value"
                             [formControl]="get(field.id)"
                             [allowPast]="field.type.allowPast"
                             [autosuggest]="field.type.values"
                             [isSmall]="false"
+                            (change)="onFieldChange(field, $event.target.value)"
                             validate-onblur>
                 </subm-field>
             </div>
