@@ -1,8 +1,11 @@
-<ul class="treeview">
+<div class="treeview loading" *ngIf="!loaded">
+    <i class="fa fa-refresh fa-spin" style="font-size:10px"></i> Loading...
+</div>
+<ul class="treeview" *ngIf="loaded">
     <li *ngFor="let node of nodes">
-        <span class="iconButton" [ngClass]='{"tree-node-no-children": !node.isDir}'
-              (click)="node.expand()">{{node.icon}}</span>
-        <span (click)="onNodeClick(node)">{{ node.name }}</span>
+        <a (click)="onNodeClick(node)">
+            <span>{{node.icon}}</span>{{node.name}}
+        </a>
         <div *ngIf="node.expanded">
             <file-tree [root]="node" (select)="onChildTreeClick($event)"></file-tree>
         </div>

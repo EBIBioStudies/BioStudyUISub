@@ -8,13 +8,14 @@ import {Subject} from "rxjs/Subject";
     templateUrl: './file-tree.component.html',
     styleUrls: ['./file-tree.component.css']
 })
-export class FileTreeComponent implements OnInit, OnDestroy{
+export class FileTreeComponent implements OnInit, OnDestroy {
 
     @Input() root: FileNode;
     @Output() select = new EventEmitter();
 
-    nodes: FileNode[] = [];
+    loaded = false;
 
+    private _nodes: FileNode[] = [];
     private unsubscribe = new Subject();
 
     constructor(private fileStore: FileTreeStore) {
@@ -24,18 +25,21 @@ export class FileTreeComponent implements OnInit, OnDestroy{
         if (this.root === undefined) {
             this.fileStore.getUserDirs()
                 .takeUntil(this.unsubscribe)
-                .subscribe(nodes => {this.nodes = nodes})
+                .subscribe(nodes => {
+                    this.nodes = nodes
+                })
         } else if (this.root.isDir) {
             this.fileStore.getFiles(this.root.path)
                 .takeUntil(this.unsubscribe)
-                .subscribe(nodes => {this.nodes = nodes})
+                .subscribe(nodes => {
+                    this.nodes = nodes
+                })
         }
     }
 
     ngOnDestroy() {
         this.unsubscribe.next();
         this.unsubscribe.complete();
-        this.fileStore.clearCache();
     }
 
     onChildTreeClick(value: string) {
@@ -43,8 +47,23 @@ export class FileTreeComponent implements OnInit, OnDestroy{
     }
 
     onNodeClick(node: FileNode) {
-        if (!node.isDir) {
+        if (node.isDir) {
+            node.expandOrCollapse();
+        } else {
             this.select.emit(node.path);
         }
+    }
+
+    get nodes(): FileNode[] {
+        return this._nodes;
+    }
+
+    set nodes(nodes: FileNode[]) {
+        this._nodes = nodes.map(n => new FileNode(n.isDir, n.path));
+        this.loaded = true;
+    }
+
+    collapseAll() {
+        this.nodes.forEach(node => node.collapse());
     }
 }

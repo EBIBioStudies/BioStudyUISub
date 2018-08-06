@@ -8,9 +8,15 @@ export class FileNode {
         this.name = this.getName();
     }
 
-    expand() {
+    expandOrCollapse() {
         this.expanded = !this.expanded;
         this.icon = this.getIcon();
+    }
+
+    collapse() {
+        if (this.expanded) {
+            this.expandOrCollapse();
+        }
     }
 
     private getIcon(): String {
