@@ -281,18 +281,22 @@ export class FileListComponent implements OnInit, OnDestroy {
                 this.gridOptions.api.hideOverlay();
                 return throwError(error);
 
-            }).subscribe(
-                data => {
-                    if (data.status === 'OK') { //use proper http codes for this!!!!!!
-                        this.path = p;
-                        this.updateDataRows([].concat(
-                            this.decorateUploads(this.fileUploadService.activeUploads()),
-                            this.decorateFiles(data.files)));
-                    } else {
-                        console.error("Error", data);
-                    }
+            }).subscribe(data => {
+                let decoratedRows;
+
+                if (data.status === 'OK') { //use proper http codes for this!!!!!!
+                    decoratedRows = [].concat(
+                        this.decorateUploads(this.fileUploadService.activeUploads()),
+                        this.decorateFiles(data.files)
+                    );
+
+                    this.path = p;
+                    this.updateDataRows(decoratedRows);
+                } else {
+                    console.error("Error", data);
                 }
-            );
+            }
+        );
     }
 
     updateDataRows(rows) {

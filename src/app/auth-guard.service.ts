@@ -22,7 +22,5 @@ export class AuthGuard implements CanActivate {
         } else {
             return true;
         }
-
-        //TODO this.authService.redirectUrl = state.url;
     }
 }
