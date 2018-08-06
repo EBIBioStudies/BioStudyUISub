@@ -39,6 +39,7 @@ import {SubmValidationErrorsComponent} from "./subm-navbar/subm-validation-error
 import * as _ from "lodash";
 import {SubmSideBarComponent} from "./subm-sidebar/subm-sidebar.component";
 import {Subject} from "rxjs/Subject";
+import {FileService} from "../../file/file.service";
 
 @Component({
     selector: 'subm-edit',
@@ -82,7 +83,8 @@ export class SubmEditComponent implements OnInit {
                 private modalService: BsModalService,
                 private appConfig: AppConfig,
                 private userData: UserData,
-                private changeRef: ChangeDetectorRef) {
+                private changeRef: ChangeDetectorRef,
+                fileService: FileService) {
 
         //Initally collapses the sidebar for tablet-sized screens if applicable
         this.sideBarCollapsed = window.innerWidth < this.appConfig.tabletBreak;
@@ -91,6 +93,10 @@ export class SubmEditComponent implements OnInit {
         //NOTE: All calls are coalesced into the last one since it's that one that will lead to the most
         //up-to-date copy of the submission.
         this.onChange = _.throttle(this.onChange, 500, {'leading': false});
+
+        //Makes sure user files are fetched every time a submission is edited to ensure up-to-date file data for file inputs.
+        //TODO: File inputs are not passed in the list of files as of now. Ideally, the request should be done at the submission level, not the control level.
+        fileService.flushCache();
 
         this.ngUnsubscribe = new Subject<void>();
     }

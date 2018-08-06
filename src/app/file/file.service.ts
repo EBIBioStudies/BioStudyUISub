@@ -13,8 +13,7 @@ import {Subscription} from "rxjs/Subscription";
 export class FileService {
     subscriptions: Subscription[] = [];
 
-    constructor(private http: HttpCustomClient) {
-    }
+    constructor(private http: HttpCustomClient) {}
 
     getUserDirs(): Observable<any> {
         return this.getFiles('/Groups', 1, false)

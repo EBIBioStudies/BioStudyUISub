@@ -5,10 +5,8 @@ import {
 } from '@angular/core';
 
 import {
-    FormControl,
     ControlValueAccessor,
-    NG_VALUE_ACCESSOR,
-    NG_VALIDATORS
+    NG_VALUE_ACCESSOR
 } from '@angular/forms';
 
 import {FileService} from 'app/file/index';
@@ -55,7 +53,7 @@ export class FileInputComponent implements ControlValueAccessor {
      */
     ngOnInit() {
         this.fileService
-            .getFiles('/User')
+            .getFiles('/User', 1, true, true)
             .map(data => data.files)
             .map(files => files.map(f => f.path.replace(/^\/User\//, '')))
             .subscribe((files) => {
@@ -70,7 +68,8 @@ export class FileInputComponent implements ControlValueAccessor {
                 if (!this.isFound) {
                     this.value = '';
                 }
-            });
+            }
+        );
     }
 
     /**
