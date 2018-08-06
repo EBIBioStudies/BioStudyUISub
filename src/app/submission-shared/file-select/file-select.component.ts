@@ -7,6 +7,7 @@ import {Subject} from "rxjs/Subject";
 @Component({
     selector: 'file-select',
     templateUrl: './file-select.component.html',
+    styleUrls: ['./file-select.component.css'],
     providers: [
         {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => FileSelectComponent), multi: true}
     ],
@@ -26,10 +27,12 @@ export class FileSelectComponent implements ControlValueAccessor, OnInit, OnDest
 
     private unsubscribe = new Subject();
 
-    private onChange: any = () => {};
-    private onTouched: any = () => {};
+    private onChange: any = () => {
+    };
+    private onTouched: any = () => {
+    };
 
-    constructor(private fileStore: FileTreeStore){
+    constructor(private fileStore: FileTreeStore) {
     }
 
     ngOnInit(): void {
@@ -44,6 +47,7 @@ export class FileSelectComponent implements ControlValueAccessor, OnInit, OnDest
     ngOnDestroy(): void {
         this.unsubscribe.next();
         this.unsubscribe.complete();
+        this.fileStore.clearCache();
     }
 
     onInputClick(event: Event): void {
