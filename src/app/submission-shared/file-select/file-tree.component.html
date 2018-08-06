@@ -1,7 +1,4 @@
-<div class="treeview loading" *ngIf="!loaded">
-    <i class="fa fa-refresh fa-spin" style="font-size:10px"></i> Loading...
-</div>
-<ul class="treeview" *ngIf="loaded">
+<ul class="treeview" *ngIf="loaded; else loadingBlock">
     <li *ngFor="let node of nodes">
         <a (click)="onNodeClick(node)">
             <span>{{node.icon}}</span>{{node.name}}
@@ -11,3 +8,8 @@
         </div>
     </li>
 </ul>
+<ng-template #loadingBlock>
+    <div class="treeview loading">
+        <i class="fa fa-refresh fa-spin" style="font-size:10px"></i> Loading...
+    </div>
+</ng-template>

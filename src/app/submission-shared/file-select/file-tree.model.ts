@@ -13,12 +13,6 @@ export class FileNode {
         this.icon = this.getIcon();
     }
 
-    collapse() {
-        if (this.expanded) {
-            this.expandOrCollapse();
-        }
-    }
-
     private getIcon(): String {
         if (this.isDir) {
             if (this.expanded) {
