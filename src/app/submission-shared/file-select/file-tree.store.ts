@@ -7,17 +7,20 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/publishReplay';
 import 'rxjs/add/operator/find';
 
+type UserGroup = { name: string, path: string, id?: string }
+type UserFile = { type: string, path: string }
+
 @Injectable()
 export class FileTreeStore {
 
-    private userDirs$: Observable<FileNode[]>;
+    private userGroups$: Observable<UserGroup[]>;
 
     private files$ = {}; // path -> Observable<FileNode[]>
 
     constructor(private fileService: FileService) {
     }
 
-    /* checks if a file exists in the file tree */
+    /* checks if at least one file exists in the user's directories */
     isEmpty(): Observable<FileNode> {
         return this.getUserDirs()
             .flatMap(dirs => this.dfs(dirs))
@@ -33,28 +36,55 @@ export class FileTreeStore {
     }
 
     getUserDirs(): Observable<FileNode[]> {
-        if (this.userDirs$ === undefined) {
-            this.userDirs$ = this.fileService.getUserDirs()
-                .map(dirs => dirs.map(dir => new FileNode(true, dir.path)))
-                .publishReplay(1) //cache the most recent value
-                .refCount(); // keep the observable alive for as long as there are subscribers
-        }
-        return this.userDirs$;
+        return this.getUserGroups().map(groups => groups.map(g => new FileNode(true, g.path)));
     }
 
-    getFiles(path: string): Observable<FileNode[]> {
+    getFiles(path: string) {
+        return this.getUserFiles(path)
+            .map(files => files.map(file => new FileNode(file.type === 'DIR', file.path)));
+    }
+
+    getUserFiles(path: string): Observable<UserFile[]> {
         if (this.files$[path] === undefined) {
             this.files$[path] = this.fileService.getFiles(path)
                 .map(data => (data.files || []))
-                .map(files => files.map(file => new FileNode(file.type === 'DIR', file.path)))
                 .publishReplay(1) //cache the most recent value
                 .refCount(); // keep the observable alive for as long as there are subscribers
         }
         return this.files$[path];
     }
 
+    getUserGroups(): Observable<UserGroup[]> {
+        if (this.userGroups$ === undefined) {
+            this.userGroups$ = this.fileService.getUserGroups()
+                .publishReplay(1) //cache the most recent value
+                .refCount(); // keep the observable alive for as long as there are subscribers
+        }
+        return this.userGroups$;
+    }
+
+    findFile(filePath: string): Observable<string> {
+        let parts = (filePath || '').split('/');
+        let fileName = parts[parts.length - 1];
+        let fileDir = parts.slice(0, -1).join('/');
+
+        return this.getUserGroups()
+            .map(groups => groups.find(g => g.id !== undefined && fileDir.startsWith(g.id)))
+            .flatMap(group => group ?
+                Observable.of(fileDir.replace(group.id, '/Groups/' + group.name)) :
+                Observable.of(fileDir))
+            .flatMap(dir => this.getFiles(dir))
+            .catch((err) => {
+                console.log(err);
+                return Observable.of([]);
+            })
+            .flatMap(fileNodes => Observable.from(fileNodes))
+            .find(fileNode => fileNode.name === fileName)
+            .map(fileNode => fileNode ? fileNode.path : undefined);
+    }
+
     clearCache(): void {
-        this.userDirs$ = undefined;
+        this.userGroups$ = undefined;
         this.files$ = {};
     }
 }

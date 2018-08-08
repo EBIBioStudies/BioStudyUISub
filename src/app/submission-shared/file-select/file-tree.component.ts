@@ -59,7 +59,7 @@ export class FileTreeComponent implements OnInit, OnDestroy {
     }
 
     set nodes(nodes: FileNode[]) {
-        this._nodes = nodes.map(n => new FileNode(n.isDir, n.path));
+        this._nodes = nodes;
         this.loaded = true;
     }
 }

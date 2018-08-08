@@ -80,7 +80,11 @@ export class FileSelectComponent implements ControlValueAccessor, OnInit, OnDest
 
     writeValue(value: any): void {
         if (value) {
-            this.selected = value;
+            this.fileStore.findFile(value)
+                .takeUntil(this.unsubscribe)
+                .subscribe(path => {
+                    this.selected = path || '';
+                });
         }
     }
 
