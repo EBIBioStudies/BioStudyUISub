@@ -7,6 +7,8 @@ import {SharedModule} from 'app/shared/shared.module';
 import {DateFormatDirective} from './date-format.directive';
 import {DateInputComponent} from './date-input.component';
 import {FileInputComponent} from './file-input.component';
+import {FileSelectComponent} from './file-select/file-select.component';
+import {FileTreeComponent} from './file-select/file-tree.component';
 import {PubMedSearchService} from './pubmedid-search/pubmedid-search.service';
 import {PubMedIdSearchComponent} from './pubmedid-search/pubmedid-search.component';
 import {SlideOutTipComponent} from './slide-out-tip.component';
@@ -15,6 +17,7 @@ import {TreeViewComponent, TreeViewNodeComponent} from './tree-view.component';
 import {BsDatepickerModule} from "ngx-bootstrap";
 import {IdLinkComponent} from "./id-link/id-link.component";
 import {IdLinkModule} from "./id-link/id-link.module";
+import {FileTreeStore} from './file-select/file-tree.store';
 
 @NgModule({
     imports: [
@@ -26,11 +29,14 @@ import {IdLinkModule} from "./id-link/id-link.module";
     ],
     providers: [
         PubMedSearchService,
+        FileTreeStore
     ],
     declarations: [
         DateFormatDirective,
         DateInputComponent,
         FileInputComponent,
+        FileSelectComponent,
+        FileTreeComponent,
         PubMedIdSearchComponent,
         SlideOutTipComponent,
         TextareaAutosize,
@@ -41,6 +47,7 @@ import {IdLinkModule} from "./id-link/id-link.module";
         DateFormatDirective,
         DateInputComponent,
         FileInputComponent,
+        FileSelectComponent,
         PubMedIdSearchComponent,
         SlideOutTipComponent,
         TextareaAutosize,

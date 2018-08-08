@@ -1,0 +1,22 @@
+<a *ngIf="isEmpty" class="form-control" style="position:absolute;top:0;left:0"
+   [ngClass]="{'input-sm': isSmall}"
+   routerLink="/files"
+   [queryParams]="{bb: true}">
+    <span class="btn-link">
+         Upload a file
+        <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+    </span>
+</a>
+<a *ngIf="isLoading" class="form-control" style="position:absolute;top:0;left:0">
+    Loading...
+</a>
+<input type="text"
+       [ngModel]="value"
+       (keydown)="doNothing($event)"
+       (keyup)="doNothing($event)"
+       class="form-control input-sm" (click)="onInputClick($event)" #inputbox/>
+<div class="dropdown" [ngClass]="{'open':isOpen}" #dropdown>
+    <div class="dropdown-menu dropdown-menu-right file-tree">
+        <file-tree *ngIf="isOpen" (select)="onFileSelect($event)"></file-tree>
+    </div>
+</div>
