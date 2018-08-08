@@ -13,7 +13,8 @@ import {Subscription} from "rxjs/Subscription";
 export class FileService {
     subscriptions: Subscription[] = [];
 
-    constructor(private http: HttpCustomClient) {}
+    constructor(private http: HttpCustomClient) {
+    }
 
     getUserDirs(): Observable<any> {
         return this.getFiles('/Groups', 1, false)
@@ -28,5 +29,11 @@ export class FileService {
 
     removeFile(fullPath): Observable<any> {
         return this.http.del(`/api/files?path=${encodeURIComponent(fullPath)}`);
+    }
+
+    getUserGroups(): Observable<any> {
+        return this.http.get('/raw/groups')
+            .map(groups => groups.map(g => ({name: g.name, path: '/Groups/' + g.name, id: g.groupId})))
+            .map(paths => [].concat([{name: 'Home', path: '/User'}], paths))
     }
 }
