@@ -102,6 +102,7 @@ export class AppConfig {
      * method has to be called before anything else, during app initialisation. Angular provides a mechanism
      * for that through the "APP_INITIALIZER" injector token. However, this feature is still experimental in v4,
      * requiring strict use of promises for it to be dependable.
+     * TODO: Since Angular has been bumped up to v7, the much cleaner "APP_INITIALIZER" approach should be followed instead.
      * @returns {Promise<any>} Promise fulfilled once the config data has been fetched.
      * @see {@link /src/app/app.module.ts}
      * @see {@link https://stackoverflow.com/a/40222544}
