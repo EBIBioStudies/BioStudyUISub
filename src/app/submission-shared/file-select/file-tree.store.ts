@@ -64,6 +64,9 @@ export class FileTreeStore {
     }
 
     findFile(filePath: string): Observable<string> {
+        if (filePath.trim().length === 0) {
+            return Observable.of(filePath);
+        }
         let parts = (filePath || '').split('/');
         let fileName = parts[parts.length - 1];
         let fileDir = parts.slice(0, -1).join('/');
@@ -73,14 +76,16 @@ export class FileTreeStore {
             .flatMap(group => group ?
                 Observable.of(fileDir.replace(group.id, '/Groups/' + group.name)) :
                 Observable.of(fileDir))
-            .flatMap(dir => this.getFiles(dir))
-            .catch((err) => {
-                console.log(err);
-                return Observable.of([]);
-            })
-            .flatMap(fileNodes => Observable.from(fileNodes))
-            .find(fileNode => fileNode.name === fileName)
-            .map(fileNode => fileNode ? fileNode.path : undefined);
+            .map(dir => dir + "/" + fileName)
+        /*.flatMap(dir => this.getFiles(dir))
+        .catch((err) => {
+            console.log(err);
+            return Observable.of([]);
+        })
+        .flatMap(fileNodes => Observable.from(fileNodes))
+        .find(fileNode => fileNode.name === fileName)
+        .map(fileNode => fileNode ? fileNode.path : undefined);
+        */
     }
 
     clearCache(): void {

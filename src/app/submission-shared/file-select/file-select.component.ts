@@ -83,7 +83,7 @@ export class FileSelectComponent implements ControlValueAccessor, OnInit, OnDest
             this.fileStore.findFile(value)
                 .takeUntil(this.unsubscribe)
                 .subscribe(path => {
-                    this.selected = path || '';
+                    this.selected = path;
                     // temporary fix: implicitly converting file path to /Groups/<group group_name>/..
                     if (path !== value) {
                         this.onChange(path);
