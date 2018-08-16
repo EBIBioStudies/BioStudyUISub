@@ -74,8 +74,9 @@ export class FileTreeStore {
         return this.getUserGroups()
             .map(groups => groups.find(g => g.id !== undefined && fileDir.startsWith(g.id)))
             .flatMap(group => group ?
-                Observable.of(fileDir.replace(group.id, '/Groups/' + group.name + '/')) :
+                Observable.of(fileDir.replace(group.id, '/Groups/' + group.name)) :
                 Observable.of(fileDir))
+            .map(dir => dir === '' ? dir : dir + '/')
             .map(dir => dir + fileName)
         /*.flatMap(dir => this.getFiles(dir))
         .catch((err) => {
