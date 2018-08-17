@@ -9,6 +9,7 @@ import {DateInputComponent} from './date-input.component';
 import {FileInputComponent} from './file-input.component';
 import {FileSelectComponent} from './file-select/file-select.component';
 import {FileTreeComponent} from './file-select/file-tree.component';
+import {FileTreeDropdownComponent} from './file-select/file-tree-dropdown.component';
 import {PubMedSearchService} from './pubmedid-search/pubmedid-search.service';
 import {PubMedIdSearchComponent} from './pubmedid-search/pubmedid-search.component';
 import {SlideOutTipComponent} from './slide-out-tip.component';
@@ -37,6 +38,7 @@ import {FileTreeStore} from './file-select/file-tree.store';
         FileInputComponent,
         FileSelectComponent,
         FileTreeComponent,
+        FileTreeDropdownComponent,
         PubMedIdSearchComponent,
         SlideOutTipComponent,
         TextareaAutosize,

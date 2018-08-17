@@ -1,4 +1,4 @@
-import {Component, ElementRef, forwardRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, forwardRef, Input, OnDestroy, OnInit} from '@angular/core';
 
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {FileTreeStore} from "./file-tree.store";
@@ -10,15 +10,9 @@ import {Subject} from "rxjs/Subject";
     styleUrls: ['./file-select.component.css'],
     providers: [
         {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => FileSelectComponent), multi: true}
-    ],
-    host: {
-        '(document:click)': 'onOutsideClick($event)',
-    },
+    ]
 })
 export class FileSelectComponent implements ControlValueAccessor, OnInit, OnDestroy {
-    @ViewChild("dropdown") ddRef: ElementRef;
-    @ViewChild("inputbox") inRef: ElementRef;
-
     @Input('value') private selected = '';
 
     isOpen = false;
@@ -50,18 +44,8 @@ export class FileSelectComponent implements ControlValueAccessor, OnInit, OnDest
         this.fileStore.clearCache();
     }
 
-    onInputClick(event: Event): void {
-        this.isOpen = true;
-    }
-
-    onOutsideClick(event: Event): void {
-        if (!this.isOpen || !this.ddRef) {
-            return;
-        }
-        if (!this.ddRef.nativeElement.contains(event.target)
-            && !this.inRef.nativeElement.contains(event.target)) {
-            this.isOpen = false;
-        }
+    onInputClick(event: MouseEvent): void {
+        setTimeout(()=>{ this.isOpen = true }, 100);
     }
 
     doNothing(event: Event): boolean {
@@ -105,6 +89,9 @@ export class FileSelectComponent implements ControlValueAccessor, OnInit, OnDest
 
     onFileSelect(path: string) {
         this.value = path;
+    }
+
+    onFileDropdownClose() {
         this.isOpen = false;
     }
 }
