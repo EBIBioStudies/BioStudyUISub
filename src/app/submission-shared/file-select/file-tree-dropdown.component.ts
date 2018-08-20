@@ -9,6 +9,7 @@ import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} f
     },
 })
 export class FileTreeDropdownComponent implements OnInit {
+    @Input() isOpen = false;
     @Input() targetElement: any;
     @Output() fileSelect = new EventEmitter();
     @Output() close = new EventEmitter();
@@ -17,14 +18,11 @@ export class FileTreeDropdownComponent implements OnInit {
 
     private _style: any;
 
-    isOpen = false;
-
     constructor(private elementRef: ElementRef) {
     }
 
-    @Input()
-    set keepItOpen(value: boolean) {
-        this.isOpen = value;
+    get isVisible(): boolean {
+        return this.isInBodyContainer() || this.isOpen;
     }
 
     get style(): any {
@@ -35,15 +33,15 @@ export class FileTreeDropdownComponent implements OnInit {
     }
 
     private computeStyle(): any {
-        if (this.targetElement === undefined) {
-            return {};
+        if (this.isInBodyContainer()) {
+            let pos = this.computePosition(this.targetElement);
+            return {
+                position: 'absolute',
+                top: pos.top,
+                left: pos.left
+            }
         }
-        let pos = this.computePosition(this.targetElement);
-        return {
-            position: 'absolute',
-            top: pos.top,
-            left: pos.left
-        }
+        return {};
     }
 
     private computePosition(nativeElement): { top: string, left: string } {
@@ -54,8 +52,12 @@ export class FileTreeDropdownComponent implements OnInit {
         }
     }
 
+    private isInBodyContainer(): boolean {
+        return this.targetElement !== undefined;
+    }
+
     ngOnInit(): void {
-        if (this.targetElement !== undefined) {
+        if (this.isInBodyContainer()) {
             document.body.appendChild(this.elementRef.nativeElement);
         }
     }
@@ -66,9 +68,10 @@ export class FileTreeDropdownComponent implements OnInit {
     }
 
     onOutsideClick(event: Event): void {
-        if (!this.isOpen || !this.ddRef) {
+        if (!this.isVisible || this.ddRef === undefined) {
             return;
         }
+
         if (!this.ddRef.nativeElement.contains(event.target)) {
             this.close.emit();
         }
