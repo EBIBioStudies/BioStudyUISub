@@ -24,29 +24,29 @@ import {Path} from './path';
 import * as _ from 'lodash';
 
 import 'rxjs/add/operator/filter';
-import {AppConfig} from "../app.config";
-import "rxjs/add/operator/takeUntil";
-import {Subject} from "rxjs/Subject";
-import {throwError} from "rxjs/index";
+import {AppConfig} from '../app.config';
+import 'rxjs/add/operator/takeUntil';
+import {Subject} from 'rxjs/Subject';
+import {throwError} from 'rxjs/index';
 
 @Component({
     selector: 'file-actions-cell',
     template: `
-<div style="text-align:center">
-    <button *ngIf="canRemove"
-            type="button" class="btn btn-danger btn-xs btn-flat"
-            tooltip="Delete"
-            (click)="onFileRemove($event)">
-        <i class="fa fa-trash-o fa-fw"></i>
-    </button>
-    <button *ngIf="canCancel" 
-            type="button" class="btn btn-warning btn-xs"
-            tooltip="Cancel"
-            (click)="onCancelUpload($event)">
-        Cancel
-    </button>        
-</div>
-`
+        <div style="text-align:center">
+            <button *ngIf="canRemove"
+                    type="button" class="btn btn-danger btn-xs btn-flat"
+                    tooltip="Delete"
+                    (click)="onFileRemove($event)">
+                <i class="fa fa-trash-o fa-fw"></i>
+            </button>
+            <button *ngIf="canCancel"
+                    type="button" class="btn btn-warning btn-xs"
+                    tooltip="Cancel"
+                    (click)="onCancelUpload($event)">
+                Cancel
+            </button>
+        </div>
+    `
 })
 export class FileActionsCellComponent implements AgRendererComponent {
     private type: string;
@@ -57,7 +57,7 @@ export class FileActionsCellComponent implements AgRendererComponent {
         this.type = params.data.type;
         this.upload = params.data.upload;
         this.onRemove = params.data.onRemove || (() => {
-            });
+        });
     }
 
     get canRemove(): boolean {
@@ -88,14 +88,14 @@ export class FileActionsCellComponent implements AgRendererComponent {
 @Component({
     selector: 'file-type-cell',
     template: `
-    <div class="text-center text-primary">
-    <i class="fa" [ngClass]="{
+        <div class="text-center text-primary">
+            <i class="fa" [ngClass]="{
                                'fa-file' : ftype === 'FILE', 
                                'fa-folder' : ftype === 'DIR', 
                                'fa-archive' : ftype === 'ARCHIVE', 
                                'fa-file-archive-o' : ftype === 'FILE_IN_ARCHIVE'}"></i>
-    </div>                                     
-`
+        </div>
+    `
 })
 export class FileTypeCellComponent implements AgRendererComponent {
     ftype: string;
@@ -118,16 +118,16 @@ export class FileTypeCellComponent implements AgRendererComponent {
 @Component({
     selector: 'progress-cell',
     template: `
-    <div *ngIf="value >= 1 && value < 100" class="progress" 
-         style="margin-bottom: 0;">
-         <div class="progress-bar" role="progressbar"
-                [ngStyle]="{ 'width': value + '%'}">
-             {{value}}%
-         </div>
-    </div>
-    <div *ngIf="value === 100" class="text-success text-center"><i class="fa fa-check"></i></div>
-    <div *ngIf="value < 0" class="text-danger text-center"><i class="fa fa-times-circle"></i> {{error}}</div>
-`
+        <div *ngIf="value >= 1 && value < 100" class="progress"
+             style="margin-bottom: 0;">
+            <div class="progress-bar" role="progressbar"
+                 [ngStyle]="{ 'width': value + '%'}">
+                {{value}}%
+            </div>
+        </div>
+        <div *ngIf="value === 100" class="text-success text-center"><i class="fa fa-check"></i></div>
+        <div *ngIf="value < 0" class="text-danger text-center"><i class="fa fa-times-circle"></i> {{error}}</div>
+    `
 })
 export class ProgressCellComponent implements AgRendererComponent {
     private upload: FileUpload;
@@ -281,20 +281,14 @@ export class FileListComponent implements OnInit, OnDestroy {
                 this.gridOptions.api.hideOverlay();
                 return throwError(error);
 
-            }).subscribe(data => {
-                let decoratedRows;
+            }).subscribe(files => {
+                let decoratedRows = [].concat(
+                    this.decorateUploads(this.fileUploadService.activeUploads()),
+                    this.decorateFiles(files)
+                );
 
-                if (data.status === 'OK') { //use proper http codes for this!!!!!!
-                    decoratedRows = [].concat(
-                        this.decorateUploads(this.fileUploadService.activeUploads()),
-                        this.decorateFiles(data.files)
-                    );
-
-                    this.path = p;
-                    this.updateDataRows(decoratedRows);
-                } else {
-                    console.error("Error", data);
-                }
+                this.path = p;
+                this.updateDataRows(decoratedRows);
             }
         );
     }

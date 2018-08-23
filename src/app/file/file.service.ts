@@ -1,38 +1,33 @@
 import {Injectable} from '@angular/core';
+import {HttpClient, HttpParams} from '@angular/common/http';
 
-import {HttpCustomClient} from '../http/http-custom-client.service'
 import {Observable} from 'rxjs/Observable';
-
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
-
-import * as _ from 'lodash';
-import {Subscription} from "rxjs/Subscription";
+import {PathInfo, UserGroup} from './file.model';
 
 @Injectable()
 export class FileService {
-    subscriptions: Subscription[] = [];
 
-    constructor(private http: HttpCustomClient) {}
-
-    getUserDirs(): Observable<any> {
-        return this.getFiles('/Groups', 1, false)
-            .map(data => data.files)
-            .map(files => _.map(files, (f) => ({name: f.name, path: '/Groups/' + f.name})))
-            .map(files => [].concat([{name: 'Home', path: '/User'}], files))
+    constructor(private http: HttpClient) {
     }
 
-    getFiles(path: string = '/', depth: number = 1, showArchive: boolean = true): Observable<any> {
-        return this.http.get(`/api/files?showArchive=${showArchive}&depth=${depth}&path=${path}`);
+    getUserDirs(): Observable<PathInfo[]> {
+        return this.getUserGroups()
+            .map(groups => groups.map(g => ({ame: g.name, path: '/Groups/' + g.name, type: 'DIR'})))
+            .map(paths => [].concat([{name: 'Home', path: '/User', type: 'DIR'}], paths));
     }
 
-    removeFile(fullPath): Observable<any> {
-        return this.http.del(`/api/files?path=${encodeURIComponent(fullPath)}`);
+    getFiles(path: string): Observable<PathInfo[]> {
+        let params = new HttpParams();//.set('showArchives', showArchive + '');
+        return this.http.get<PathInfo[]>(`/raw/files${path}`, {params});
     }
 
-    getUserGroups(): Observable<any> {
-        return this.http.get('/raw/groups')
-            .map(groups => groups.map(g => ({name: g.name, path: '/Groups/' + g.name, id: g.groupId})))
-            .map(paths => [].concat([{name: 'Home', path: '/User'}], paths))
+    removeFile(fullPath: string): Observable<any> {
+        return this.http.delete(`/raw/files${fullPath}`);
+    }
+
+    getUserGroups(): Observable<UserGroup[]> {
+        return this.http.get<UserGroup[]>('/raw/groups');
     }
 }

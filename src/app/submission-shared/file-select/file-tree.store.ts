@@ -1,15 +1,12 @@
 import {Injectable} from '@angular/core';
 import {FileNode} from './file-tree.model';
-import {FileService} from '../../file';
+import {FileService, UserGroup, PathInfo} from '../../file';
 
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/publishReplay';
 import 'rxjs/add/operator/find';
 import 'rxjs/add/operator/mergeMap';
-
-type UserGroup = { name: string, path: string, id?: string }
-type UserFile = { type: string, path: string }
 
 @Injectable()
 export class FileTreeStore {
@@ -37,7 +34,10 @@ export class FileTreeStore {
     }
 
     getUserDirs(): Observable<FileNode[]> {
-        return this.getUserGroups().map(groups => groups.map(g => new FileNode(true, g.path)));
+        return this.getUserGroups()
+            .map(groups => groups.map(g => ({name: g.name, path: '/Groups/' + g.name, type: 'DIR'})))
+            .map(paths => [].concat([{name: 'Home', path: '/User', type: 'DIR'}], paths))
+            .map(groups => groups.map(g => new FileNode(true, g.path)));
     }
 
     getFiles(path: string) {
@@ -45,10 +45,9 @@ export class FileTreeStore {
             .map(files => files.map(file => new FileNode(file.type === 'DIR', file.path)));
     }
 
-    getUserFiles(path: string): Observable<UserFile[]> {
+    getUserFiles(path: string): Observable<PathInfo[]> {
         if (this.files$[path] === undefined) {
             this.files$[path] = this.fileService.getFiles(path)
-                .map(data => (data.files || []))
                 .publishReplay(1) //cache the most recent value
                 .refCount(); // keep the observable alive for as long as there are subscribers
         }
@@ -73,7 +72,7 @@ export class FileTreeStore {
         let fileDir = parts.slice(0, -1).join('/');
 
         return this.getUserGroups()
-            .map(groups => groups.find(g => g.id !== undefined && fileDir.startsWith(g.id)))
+            .map(groups => groups.find(g => g.groupId !== undefined && fileDir.startsWith(g.id)))
             .mergeMap(group => group ?
                 Observable.of(fileDir.replace(group.id, '/Groups/' + group.name)) :
                 Observable.of(fileDir))

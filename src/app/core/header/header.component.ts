@@ -1,20 +1,7 @@
-import {
-    ApplicationRef,
-    Component,
-    OnDestroy, ViewChild
-} from '@angular/core';
-import {
-    Router,
-    NavigationEnd,
-    Event
-} from '@angular/router';
+import {ApplicationRef, Component, OnDestroy, ViewChild} from '@angular/core';
+import {Event, NavigationEnd, Router} from '@angular/router';
 
-import {
-    AuthService,
-    UserSession
-} from 'app/auth/index';
-
-import {AppConfig} from 'app/app.config';
+import {AuthService, UserSession} from 'app/auth/index';
 import {RequestStatusService} from "../../http/request-status.service";
 import {Subscription} from "rxjs/Subscription";
 import {UserData} from "../../auth/user-data";
