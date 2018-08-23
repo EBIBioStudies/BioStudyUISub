@@ -6,6 +6,7 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/publishReplay';
 import 'rxjs/add/operator/find';
+import 'rxjs/add/operator/mergeMap';
 
 type UserGroup = { name: string, path: string, id?: string }
 type UserFile = { type: string, path: string }
@@ -23,16 +24,16 @@ export class FileTreeStore {
     /* checks if at least one file exists in the user's directories */
     isEmpty(): Observable<FileNode> {
         return this.getUserDirs()
-            .flatMap(dirs => this.dfs(dirs))
+            .mergeMap(dirs => this.dfs(dirs))
             .find(node => !node.isDir);
     }
 
     private dfs(nodes: FileNode[]): Observable<FileNode> {
         return Observable.from(nodes)
-            .flatMap(node =>
+            .mergeMap(node =>
                 node.isDir ?
                     this.getFiles(node.path)
-                        .flatMap(nodes => this.dfs(nodes)) : Observable.of(node))
+                        .mergeMap(nodes => this.dfs(nodes)) : Observable.of(node))
     }
 
     getUserDirs(): Observable<FileNode[]> {
@@ -73,7 +74,7 @@ export class FileTreeStore {
 
         return this.getUserGroups()
             .map(groups => groups.find(g => g.id !== undefined && fileDir.startsWith(g.id)))
-            .flatMap(group => group ?
+            .mergeMap(group => group ?
                 Observable.of(fileDir.replace(group.id, '/Groups/' + group.name)) :
                 Observable.of(fileDir))
             .map(dir => dir === '' ? dir : dir + '/')
