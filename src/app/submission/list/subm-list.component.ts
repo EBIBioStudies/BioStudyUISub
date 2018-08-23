@@ -18,7 +18,6 @@ import {AppConfig} from "../../app.config";
 import {SubmAddDialogComponent} from "./subm-add.component";
 import {UserData} from "../../auth/user-data";
 import {SubmissionType} from "../shared/submission-type.model";
-import {RequestStatusService} from "../../http/request-status.service";
 
 @Component({
     selector: 'action-buttons-cell',
@@ -151,8 +150,7 @@ export class SubmListComponent {
     constructor(private submService: SubmissionService,
                 private userData: UserData,
                 private router: Router,
-                private route: ActivatedRoute,
-                private requestStatus: RequestStatusService) {
+                private route: ActivatedRoute) {
 
         this.ngUnsubscribe = new Subject<void>();
 
