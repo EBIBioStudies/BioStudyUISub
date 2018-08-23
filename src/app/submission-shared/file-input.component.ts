@@ -53,7 +53,7 @@ export class FileInputComponent implements ControlValueAccessor {
      */
     ngOnInit() {
         this.fileService
-            .getFiles('/User', 1, true, true)
+            .getFiles('/User', 1, true)
             .map(data => data.files)
             .map(files => files.map(f => f.path.replace(/^\/User\//, '')))
             .subscribe((files) => {
