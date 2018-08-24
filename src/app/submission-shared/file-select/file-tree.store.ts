@@ -11,7 +11,7 @@ import 'rxjs/add/operator/mergeMap';
 @Injectable()
 export class FileTreeStore {
 
-    private userGroups$: Observable<UserGroup[]>;
+    private userGroups$?: Observable<UserGroup[]>;
 
     private files$ = {}; // path -> Observable<FileNode[]>
 
@@ -34,9 +34,7 @@ export class FileTreeStore {
     }
 
     getUserDirs(): Observable<FileNode[]> {
-        return this.getUserGroups()
-            .map(groups => groups.map(g => ({name: g.name, path: '/Groups/' + g.name, type: 'DIR'})))
-            .map(paths => [].concat([{name: 'Home', path: '/User', type: 'DIR'}], paths))
+        return this.fileService.getUserDirs(this.getUserGroups())
             .map(groups => groups.map(g => new FileNode(true, g.path)));
     }
 

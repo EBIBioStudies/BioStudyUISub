@@ -13,16 +13,16 @@ import {parseDate, formatDate} from 'app/submission-shared/date.utils';
 import {DateInputComponent} from "../../../submission-shared/date-input.component";
 
 class DateRange {
-    constructor(public from: string = null,
-                public to: string = null) {
+    constructor(public from?: string,
+                public to?: string) {
     }
 
     isEmpty(): boolean {
-        return !DateRange.hasValue(this.from) && !DateRange.hasValue(this.to);
+        return DateRange.isValueEmpty(this.from) && DateRange.isValueEmpty(this.to);
     }
 
-    equalsTo(obj: DateRange): boolean {
-        return obj && this.from === obj.from && this.to === obj.to;
+    equalsTo(obj?: DateRange): boolean {
+        return (obj && this.from === obj.from && this.to === obj.to) === true;
     }
 
     copy(): DateRange {
@@ -41,24 +41,24 @@ class DateRange {
             DateRange.asDateString(from), DateRange.asDateString(to));
     }
 
-    private static asSeconds(dateString: string): number {
-        if (!DateRange.hasValue(dateString)) {
+    private static asSeconds(dateString?: string): number | undefined {
+        if (DateRange.isValueEmpty(dateString)) {
             return undefined;
         }
-        return parseDate(dateString).getTime() / 1000;
+        return parseDate(dateString!).getTime() / 1000;
     }
 
-    private static asDateString(seconds: number): string {
-        if (!DateRange.hasValue(seconds)) {
+    private static asDateString(seconds?: number): string {
+        if (DateRange.isValueEmpty(seconds)) {
             return '';
         }
         let date = new Date();
-        date.setTime(seconds * 1000);
+        date.setTime(seconds! * 1000);
         return formatDate(date);
     }
 
-    private static hasValue(v: any): boolean {
-        return v !== null && v !== undefined && v !== '';
+    private static isValueEmpty(v: any): boolean {
+        return v === null || v === undefined && v === '';
     }
 }
 
@@ -67,14 +67,14 @@ class DateRange {
     templateUrl: 'date-filter.component.html'
 })
 export class DateFilterComponent implements AgFilterComponent {
-    private params: IFilterParams;
-    private valueGetter: (rowNode: RowNode) => any;
-    private hide: Function;
+    private params?: IFilterParams;
+    private valueGetter?: (rowNode: RowNode) => any;
+    private hide?: Function;
     private selection;
-    private date: DateRange;
-    private prev: DateRange;
+    private date?: DateRange;
+    private prev?: DateRange;
 
-    @ViewChildren(DateInputComponent) dateInputs: QueryList<DateInputComponent>;
+    @ViewChildren(DateInputComponent) dateInputs?: QueryList<DateInputComponent>;
 
     agInit(params: IFilterParams): void {
         this.params = params;
@@ -95,15 +95,15 @@ export class DateFilterComponent implements AgFilterComponent {
     }
 
     isFilterActive(): boolean {
-        return !this.date.isEmpty();
+        return !this.date!.isEmpty();
     }
 
     doesFilterPass(params: IDoesFilterPassParams): boolean {
-        let seconds = this.valueGetter(params.node);
+        let seconds = this.valueGetter!(params.node);
         if (seconds == undefined || seconds == null || seconds < 0) {
             return false;
         }
-        const s = this.date.toSeconds();
+        const s = this.date!.toSeconds();
         if (this.after) {
             return seconds >= s.from;
         } else if (this.before) {
@@ -111,10 +111,11 @@ export class DateFilterComponent implements AgFilterComponent {
         } else if (this.between) {
             return seconds >= s.from && seconds < s.to;
         }
+        return true;
     }
 
     getModel(): any {
-        return {value: this.date.toSeconds()};
+        return {value: this.date!.toSeconds()};
     }
 
     setModel(model: any): void {
@@ -128,11 +129,11 @@ export class DateFilterComponent implements AgFilterComponent {
     }
 
     private notifyAboutChanges() {
-        if (!this.date.equalsTo(this.prev)) {
-            this.prev = this.date.copy();
-            this.params.filterChangedCallback();
+        if (!this.date!.equalsTo(this.prev)) {
+            this.prev = this.date!.copy();
+            this.params!.filterChangedCallback();
         }
-        this.hide();
+        this.hide && this.hide();
     }
 
     get after(): boolean {
@@ -150,10 +151,10 @@ export class DateFilterComponent implements AgFilterComponent {
     onSelectionChange(ev): void {
         this.selection = ev.target.value;
         if (this.after) {
-            this.date.to = null;
+            this.date!.to = undefined;
         }
         if (this.before) {
-            this.date.from = null;
+            this.date!.from = undefined;
         }
     }
 

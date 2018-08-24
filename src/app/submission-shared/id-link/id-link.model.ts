@@ -4,9 +4,9 @@ export class IdLinkModel {
   private urlRegexp = /^(http|https|ftp)+[^\s]+$/;  //used to check if the link is a URL
   private idRegexp = /^([^:]*)(:.*)?$/;             //used to split link into valid tokens, not for validation
 
-  private _prefix: string;
-  private _id: string;
-  private _url: string;
+  private _prefix?: string;
+  private _id?: string;
+  private _url?: string;
 
   update(input = '', prefixOnly = false): string {
     if (this.urlRegexp.test(input)) {
@@ -28,19 +28,19 @@ export class IdLinkModel {
     this._url = values.url;
   }
 
-  get prefix(): string {
+  get prefix(): string | undefined {
     return this._prefix === undefined ? this._prefix : this._prefix.trim();
   }
 
-  get id(): string {
+  get id(): string | undefined{
     if (this._id !== undefined) {
       const v = this._id.trim().substring(1);
       return v.length === 0 ? undefined : v;
     }
-    return undefined;
+    return;
   }
 
-  get url(): string {
+  get url(): string | undefined {
     return this._url === undefined ? this._url : this._url.trim();
   }
 

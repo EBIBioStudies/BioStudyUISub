@@ -17,12 +17,12 @@ import {AgFilterComponent} from 'ag-grid-angular/main';
     templateUrl: 'text-filter.component.html'
 })
 export class TextFilterComponent implements AgFilterComponent {
-    private params: IFilterParams;
-    private valueGetter: (rowNode: RowNode) => any;
+    private params?: IFilterParams;
+    private valueGetter?: (rowNode: RowNode) => any;
 
     text: string = '';
     private prev: string = '';
-    private hide: Function;
+    private hide?: Function;
 
     @ViewChild('inputEl') public inputEl;
 
@@ -39,7 +39,7 @@ export class TextFilterComponent implements AgFilterComponent {
         return this.text.toLowerCase()
             .split(" ")
             .every((filterWord) => {
-                return this.valueGetter(params.node).toString().toLowerCase().indexOf(filterWord) >= 0;
+                return this.valueGetter!(params.node).toString().toLowerCase().indexOf(filterWord) >= 0;
             });
     }
 
@@ -70,8 +70,8 @@ export class TextFilterComponent implements AgFilterComponent {
     notifyAboutChanges() {
         if (this.text !== this.prev) {
             this.prev = this.text;
-            this.params.filterChangedCallback();
+            this.params!.filterChangedCallback();
         }
-        this.hide();
+        this.hide && this.hide();
     }
 }

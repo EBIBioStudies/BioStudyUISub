@@ -1,19 +1,13 @@
-import {
-    Component,
-    Input,
-    Output,
-    EventEmitter,
-    ViewChild
-} from '@angular/core';
+import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {Location} from '@angular/common';
-import {Router} from "@angular/router";
+import {Router} from '@angular/router';
 
 import {Section} from '../../shared/submission.model';
-import {SubmissionService} from "../../shared/submission.service";
-import {PageTab} from "app/submission/shared/pagetab.model";
-import {SubmAddDialogComponent} from "../../list/subm-add.component";
-import {UserData} from "../../../auth/user-data";
-import {SubmissionType} from "../../shared/submission-type.model";
+import {SubmissionService} from '../../shared/submission.service';
+import {PageTab} from 'app/submission/shared/pagetab.model';
+import {SubmAddDialogComponent} from '../../list/subm-add.component';
+import {UserData} from '../../../auth/user-data';
+import {SubmissionType} from '../../shared/submission-type.model';
 
 @Component({
     selector: 'subm-navbar',
@@ -22,20 +16,20 @@ import {SubmissionType} from "../../shared/submission-type.model";
 })
 export class SubmNavBarComponent {
     isBusy: boolean = false;            //flag indicating if a request is in progress
-    allowedPrj: string[];               //names of projects with templates the user is allowed to attach submissions to
+    allowedPrj?: string[];               //names of projects with templates the user is allowed to attach submissions to
 
-    @Input() sectionPath: Section[];
-    @Input() accno: string;             //accession number for the current submission
-    @Input() readonly: boolean;         //read-only status of the submission form
-    @Input() isTemp: boolean;           //flag indicating if the submission is temporary
-    @Input() isRevised: boolean;        //flag indicating if the sent submission has been changed
+    @Input() sectionPath?: Section[];
+    @Input() accno?: string;             //accession number for the current submission
+    @Input() readonly: boolean = false;         //read-only status of the submission form
+    @Input() isTemp: boolean = false;           //flag indicating if the submission is temporary
+    @Input() isRevised: boolean = false;        //flag indicating if the sent submission has been changed
     @Output() sectionClick: EventEmitter<Section> = new EventEmitter<Section>();
     @Output() revertClick: EventEmitter<Event> = new EventEmitter<Event>();
     @Output() submitClick: EventEmitter<Event> = new EventEmitter<Event>();
     @Output() editClick: EventEmitter<Event> = new EventEmitter<Event>();
 
     @ViewChild('addDialog')
-    addDialog: SubmAddDialogComponent;
+    addDialog?: SubmAddDialogComponent;
 
     constructor(private submService: SubmissionService,
                 private userData: UserData,
@@ -76,8 +70,8 @@ export class SubmNavBarComponent {
     onNewSubmClick(event: Event): void {
         event.preventDefault();
 
-        if (this.allowedPrj.length > 1) {
-            this.addDialog.show();
+        if (this.allowedPrj!.length > 1) {
+            this.addDialog!.show();
         } else {
             this.createSubmission('');
         }

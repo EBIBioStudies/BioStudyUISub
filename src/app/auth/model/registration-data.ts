@@ -1,37 +1,21 @@
-import {Captcha} from './captcha';
 import {AppPath} from './app-path';
-import {WithSnapshot} from './with-snapshot';
+import {DataWithCaptchaAndPath} from './data-base';
 
-export class RegistrationData extends WithSnapshot {
+export class RegistrationData extends DataWithCaptchaAndPath {
     username: string = '';
     password: string = '';
     email: string = '';
     orcid: string = '';
 
-    private _captcha: Captcha = new Captcha();
-    private _path: AppPath = new AppPath('#/activate');
-
-    get path(): string {
-        return this._path.value;
-    }
-
-    get captcha(): string {
-        return this._captcha.value;
-    }
-
-    set captcha(value: string) {
-        this._captcha.value = value;
-    }
-
-    valid(): boolean {
-        return this._captcha.hasValue();
-    }
-
-    resetCaptcha(): void {
-        this._captcha.reset();
+    constructor() {
+        super(new AppPath('#/activate'));
     }
 
     snapshot(): any {
-        return this.dataSnapshot(['username', 'password', 'email', 'orcid', 'captcha', 'path']);
+        return this.snapshot()
+            .add('username', this.username)
+            .add('password', this.password)
+            .add('email', this.email)
+            .add('orcid', this.orcid);
     }
 }

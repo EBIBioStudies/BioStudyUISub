@@ -1,21 +1,9 @@
-import {
-    Component,
-    Input,
-    forwardRef,
-    ElementRef,
-    ViewChild,
-    Output,
-    EventEmitter
-} from '@angular/core';
+import {Component, ElementRef, EventEmitter, forwardRef, Input, Output, ViewChild} from '@angular/core';
 
-import {
-    AsyncValidator, AsyncValidatorFn,
-    ControlValueAccessor,
-    NG_VALUE_ACCESSOR, NgModel, Validators,
-} from '@angular/forms';
-import {FieldControl} from "../subm-form.service";
-import {TypeaheadMatch} from "ngx-bootstrap";
-import {AppConfig} from "../../../../app.config";
+import {ControlValueAccessor, NG_VALUE_ACCESSOR, NgModel, Validators,} from '@angular/forms';
+import {FieldControl} from '../subm-form.service';
+import {TypeaheadMatch} from 'ngx-bootstrap';
+import {AppConfig} from '../../../../app.config';
 
 
 @Component({
@@ -33,11 +21,11 @@ export class SubmFieldComponent implements ControlValueAccessor {
 
     private _value = '';                        //internal data model for the field's value
 
-    @Input() type: string;                      //type of field: text, date, pubmedid, orcid...
-    @Input() readonly: boolean;                 //if true, the field will be rendered but its value cannot be changed
-    @Input() required: boolean;                 //if true, the field must not be left blank
-    @Input() allowPast: boolean;                //if true, allows past dates for calendar fields
-    @Input() formControl: FieldControl;         //reactive control associated with this field
+    @Input() type?: string;                      //type of field: text, date, pubmedid, orcid...
+    @Input() readonly: boolean = false;                 //if true, the field will be rendered but its value cannot be changed
+    @Input() required: boolean = false;                 //if true, the field must not be left blank
+    @Input() allowPast: boolean = false;                //if true, allows past dates for calendar fields
+    @Input() formControl?: FieldControl;         //reactive control associated with this field
     @Input() isSmall: boolean = true;           //flag for making the input area the same size as grid fields
     @Input() autosuggest: any[] = [];           //typeahead list of suggested values
     @Input() suggestLength: number;             //max number of suggested values to be displayed at once
@@ -45,8 +33,8 @@ export class SubmFieldComponent implements ControlValueAccessor {
                                                 //a value of 0 makes typeahead behave like an auto-suggest box.
 
     @Output() async: EventEmitter<any> = new EventEmitter<any>();  //signals availability of asynchronous attributes
-    @ViewChild(NgModel)
-    private inputModel: NgModel;
+
+    @ViewChild(NgModel) private inputModel?: NgModel;
 
     /**
      * Sets the max number of suggestions shown at any given time.
@@ -110,8 +98,8 @@ export class SubmFieldComponent implements ControlValueAccessor {
     ngAfterViewInit() {
         const control = this.formControl;
 
-        control.setValidators(Validators.compose([control.validator, this.inputModel.control.validator]));
-        control.setAsyncValidators(Validators.composeAsync([control.asyncValidator, this.inputModel.control.asyncValidator]));
+        control!.setValidators(Validators.compose([control!.validator, this.inputModel!.control.validator]));
+        control!.setAsyncValidators(Validators.composeAsync([control!.asyncValidator, this.inputModel!.control.asyncValidator]));
     }
 
     /**
@@ -119,7 +107,7 @@ export class SubmFieldComponent implements ControlValueAccessor {
      * Used to update the pointer to the DOM element.
      */
     ngAfterViewChecked(): void {
-        this.formControl.nativeElement = this.rootEl.nativeElement.querySelector('.form-control');
+        this.formControl!.nativeElement = this.rootEl.nativeElement.querySelector('.form-control');
     }
 
     /**
@@ -127,8 +115,8 @@ export class SubmFieldComponent implements ControlValueAccessor {
      * @param {HTMLElement} formEl - DOM element for the field control.
      * @returns {boolean} True if the text's length is greater than its container.
      */
-    isOverflow(formEl: HTMLElement = this.formControl.nativeElement): boolean {
-        return formEl && formEl.scrollWidth > formEl.clientWidth;
+    isOverflow(formEl: HTMLElement | undefined = this.formControl!.nativeElement): boolean {
+        return (formEl && formEl.scrollWidth > formEl.clientWidth) === true;
     }
 
     /**

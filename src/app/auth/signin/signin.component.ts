@@ -1,12 +1,6 @@
-import {
-    AfterViewInit,
-    Component,
-    ElementRef,
-    OnInit,
-    ViewChild
-} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
-import {NgForm} from "@angular/forms";
+import {NgForm} from '@angular/forms';
 
 import {ServerError} from 'app/http/index';
 import {AuthService} from '../auth.service';
@@ -18,12 +12,12 @@ import {UserSession} from '../user-session';
     styleUrls: ['./signin.component.css']
 })
 export class SignInComponent implements OnInit, AfterViewInit {
-    model = {login: "", password: ""};      //Data model for the component's form
-    error: ServerError = null;              //Server response object in case of error
+    model = {login: '', password: ''};      //Data model for the component's form
+    error?: ServerError;             //Server response object in case of error
     isLoading: boolean = false;             //Flag indicating if login request in progress
 
     @ViewChild('focusEl')
-    private focusEl: ElementRef;
+    private focusRef?: ElementRef;
 
     constructor(private authService: AuthService,
                 private session: UserSession,
@@ -38,7 +32,7 @@ export class SignInComponent implements OnInit, AfterViewInit {
 
     //TODO: Turn autofocus on render into a directive
     ngAfterViewInit(): void {
-        this.focusEl.nativeElement.focus();
+        this.focusRef!.nativeElement.focus();
     }
 
     onSubmit(form: NgForm) {
@@ -68,6 +62,6 @@ export class SignInComponent implements OnInit, AfterViewInit {
     }
 
     resetGlobalError() {
-        this.error = null;
+        this.error = undefined;
     }
 }

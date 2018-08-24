@@ -1,9 +1,4 @@
-import {
-    AfterViewInit,
-    Component, ElementRef,
-    OnInit,
-    ViewChild
-} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 
 import {RecaptchaComponent} from 'ng-recaptcha';
 
@@ -11,7 +6,7 @@ import {ActivatedRoute} from '@angular/router';
 
 import {AuthService} from '../auth.service';
 import {PasswordResetData} from '../model/password-reset-data';
-import {AbstractControl, NgForm} from "@angular/forms";
+import {AbstractControl, NgForm} from '@angular/forms';
 
 @Component({
     selector: 'auth-passwd-reset',
@@ -26,10 +21,10 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
     message: string = '';
 
     @ViewChild('recaptchaEl')
-    private recaptcha: RecaptchaComponent;
+    private recaptcha?: RecaptchaComponent;
 
     @ViewChild('focusEl')
-    private focusEl: ElementRef;
+    private focusRef?: ElementRef;
 
     constructor(private authService: AuthService,
                 private activatedRoute: ActivatedRoute) {
@@ -40,13 +35,14 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
         if (key === null) {
             this.hasError = true;
             this.message = 'Invalid path';
+        } else {
+            this.model.key = key;
         }
-        this.model.key = key;
     }
 
     //TODO: Turn autofocus on render into a directive
     ngAfterViewInit(): void {
-        this.focusEl.nativeElement.focus();
+        this.focusRef!.nativeElement.focus();
     }
 
     onSubmit(form:NgForm): void {
@@ -88,9 +84,7 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
      * @param {AbstractControl} control - Form control for the captcha.
      */
     resetRecaptcha(control:AbstractControl): void {
-
-        //Resets captcha's component and model
-        this.recaptcha.reset();
+        this.recaptcha!.reset();
         this.model.resetCaptcha();
 
         //Resets the state of captcha's control

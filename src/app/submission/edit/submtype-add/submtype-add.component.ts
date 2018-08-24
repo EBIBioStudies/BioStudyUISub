@@ -9,9 +9,9 @@ import {ModalDirective, PopoverDirective} from 'ngx-bootstrap';
 import {
     NgForm,
     NgModel
-} from "@angular/forms";
-import {Section} from "../../shared/submission.model";
-import {SectionType} from "../../shared/submission-type.model";
+} from '@angular/forms';
+import {Section} from '../../shared/submission.model';
+import {SectionType} from '../../shared/submission-type.model';
 
 @Component({
     selector: 'type-add-dialog',
@@ -19,19 +19,19 @@ import {SectionType} from "../../shared/submission-type.model";
 })
 export class SubmTypeAddDialogComponent {
     public type: string = 'Grid';       //form model member for the type property
-    public name: string;                //form model member for the new type's name property
-    private featNames: string[];         //existing feature type names
+    public name?: string;                //form model member for the new type's name property
+    private featNames?: string[];         //existing feature type names
 
-    @Input() section: Section;
+    @Input() section?: Section;
 
     @ViewChild('focusBtn')
-    private focusEl: ElementRef;
+    private focusEl?: ElementRef;
     @ViewChild('bsModal')
-    private modalDirective: ModalDirective;
+    private modalDirective?: ModalDirective;
     @ViewChild('typeName')
-    private typeName: NgModel;
+    private typeName?: NgModel;
     @ViewChild('uniquePop')
-    private uniquePop: PopoverDirective;
+    private uniquePop?: PopoverDirective;
 
     /**
      * Generates the list of type names for all features (including annotations) from section data.
@@ -43,8 +43,9 @@ export class SubmTypeAddDialogComponent {
             nonAnnotNames = this.section.features.list().map((feature) => {
                 return feature.typeName;
             });
-            return [this.section.annotations.typeName].concat(nonAnnotNames)
+            return [this.section.annotations.typeName].concat(nonAnnotNames);
         }
+        return [];
     }
 
     /**
@@ -52,22 +53,22 @@ export class SubmTypeAddDialogComponent {
      */
     show(): void {
         this.featNames = this.getFeatNames();
-        this.modalDirective.show();
+        this.modalDirective!.show();
     }
 
     /**
      * Closes the modal, clearing any validation messages.
      */
     hide(): void {
-        this.modalDirective.hide();
+        this.modalDirective!.hide();
     }
 
     /**
      * Handler for "onShown" event, triggered exactly after the modal has been fully revealed.
      */
     onShown(): void {
-        this.typeName.control.markAsUntouched({onlySelf: true});
-        this.focusEl.nativeElement.focus();
+        this.typeName!.control.markAsUntouched({onlySelf: true});
+        this.focusEl!.nativeElement.focus();
     }
 
     /**
@@ -75,7 +76,7 @@ export class SubmTypeAddDialogComponent {
      */
     onCancel(): void {
         this.type = 'Grid';
-        this.typeName.control.reset();
+        this.typeName!.control.reset();
         this.hide();
     }
 
@@ -97,17 +98,17 @@ export class SubmTypeAddDialogComponent {
             }
 
             //Add operation successful => gets form ready for further additions
-            if (this.onAddType(this.name, isSection, isSingleRow)) {
-               this.onCancel();
+            if (this.name && this.onAddType(this.name, isSection, isSingleRow)) {
+                this.onCancel();
 
-            //Add operation failed => show error
+                //Add operation failed => show error
             } else {
-                this.typeName.control.markAsTouched({ onlySelf: true });
+                this.typeName!.control.markAsTouched({onlySelf: true});
             }
 
-        //Triggers form-led validation of all fields.
+            //Triggers form-led validation of all fields.
         } else {
-            this.typeName.control.markAsTouched({ onlySelf: true });
+            this.typeName!.control.markAsTouched({onlySelf: true});
         }
     }
 
@@ -119,16 +120,16 @@ export class SubmTypeAddDialogComponent {
      * @returns {any} Result of the addition operation, which could be empty if the new type is not valid.
      */
     onAddType(name: string, isSection: boolean, isSingleRow: boolean = false): any {
-        const rootType: SectionType = this.section.type;
+        const rootType: SectionType = this.section!.type;
         let addedType: any;
 
         if (isSection) {
             const sectionType = rootType.getSectionType(name);
-            addedType = this.section.sections.add(sectionType);
+            addedType = this.section!.sections.add(sectionType);
 
         } else {
             const featureType = rootType.getFeatureType(name, isSingleRow);
-            addedType = this.section.features.add(featureType);
+            addedType = this.section!.features.add(featureType);
         }
 
         return addedType;
@@ -160,6 +161,6 @@ export class SubmTypeAddDialogComponent {
      * NOTE: Section names do not have to be unique.
      */
     onTypeBlur() {
-        this.typeName.control.updateValueAndValidity();
+        this.typeName!.control.updateValueAndValidity();
     }
 }

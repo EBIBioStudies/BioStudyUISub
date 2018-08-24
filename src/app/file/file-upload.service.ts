@@ -13,7 +13,7 @@ import {HttpCustomClient} from 'app/http/http-custom-client.service'
 import {Path} from './path';
 
 import * as _ from 'lodash';
-import {ServerError} from "../http/server-error.handler";
+import {ServerError} from '../http/server-error.handler';
 
 const FILE_UPLOAD_URL = '/raw/fileUpload'; 
 
@@ -26,8 +26,8 @@ class FileUploadStatus {
 
 export class FileUpload {
     private _status: string = 'uploading';
-    private _error: string;
-    private _sb: Subscription;
+    private _error?: string;
+    private _sb?: Subscription;
     private _progress: number;
     private _files: string[];
     private _path: Path;
@@ -90,14 +90,14 @@ export class FileUpload {
         return _.map(this._files, _.identity);
     }
 
-    get error(): string {
+    get error(): string | undefined {
         return this._error;
     }
 
     cancel(): void {
         if (!this.finished()) {
-            this._sb.unsubscribe();
-            this._sb = null;
+            this._sb!.unsubscribe();
+            this._sb = undefined;
             this._statusSubject.next(new FileUploadStatus('cancelled', this._progress, undefined));
         }
     }

@@ -13,7 +13,7 @@ export class UserGroup {
 export class PathInfo {
     constructor(readonly name: string,
                 readonly path: string,
-                readonly size?: number,
-                readonly type: 'FILE' | 'DIR' | 'ARCHIVE') {
+                readonly type: 'FILE' | 'DIR' | 'ARCHIVE',
+                readonly size?: number) {
     }
 }

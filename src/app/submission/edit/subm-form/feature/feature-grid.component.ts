@@ -1,16 +1,9 @@
-import {
-    Component,
-    AfterViewInit,
-    ElementRef,
-    Input,
-    QueryList,
-    ViewChildren,
-} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, QueryList, ViewChildren,} from '@angular/core';
 
-import {Feature, Attribute, ValueMap} from '../../../shared/submission.model';
+import {Attribute, Feature, ValueMap} from '../../../shared/submission.model';
 import {FeatureForm} from '../subm-form.service';
-import {UserData} from "../../../../auth/user-data";
-import {TypeaheadDirective} from "ngx-bootstrap";
+import {UserData} from '../../../../auth/user-data';
+import {TypeaheadDirective} from 'ngx-bootstrap';
 
 @Component({
     selector: 'subm-feature-grid',
@@ -18,46 +11,47 @@ import {TypeaheadDirective} from "ngx-bootstrap";
     styleUrls: ['./feature-grid.component.css']
 })
 export class FeatureGridComponent implements AfterViewInit {
-    @Input() featureForm: FeatureForm;      //Reactive data structure for the form containing this feature
+    @Input() featureForm?: FeatureForm;      //Reactive data structure for the form containing this feature
     @Input() readonly? = false;             //Flag for features that cannot be edited (e.g. sent state for submissions)
     @Input() colNames: string[] = [];       //List of allowed column names out of the list specified in the default template
-    @ViewChildren('ahead') typeaheads: QueryList<TypeaheadDirective>;
-    @ViewChildren('rowEl') rowEls: QueryList<ElementRef>;
-    @ViewChildren('colEl') colEls: QueryList<ElementRef>;
+    @ViewChildren('ahead') typeaheads?: QueryList<TypeaheadDirective>;
+    @ViewChildren('rowEl') rowEls?: QueryList<ElementRef>;
+    @ViewChildren('colEl') colEls?: QueryList<ElementRef>;
 
-    constructor(private rootEl: ElementRef, public userData: UserData) {}
+    constructor(private rootEl: ElementRef, public userData: UserData) {
+    }
 
     get rows(): ValueMap[] {
-        return this.featureForm.rows;
+        return this.featureForm!.rows;
     }
 
     get columns(): Attribute[] {
-        return this.featureForm.columns;
+        return this.featureForm!.columns;
     }
 
     get feature(): Feature {
-       return this.featureForm.feature;
+        return this.featureForm!.feature;
     }
 
     ngAfterViewInit(): void {
-        let oldNumRows = this.featureForm.rows.length;      //initial row count
-        let oldNumCols = this.featureForm.columns.length;   //initial column count
+        let oldNumRows = this.featureForm!.rows.length;      //initial row count
+        let oldNumCols = this.featureForm!.columns.length;   //initial column count
 
         //On DOM change, compares current row and column count with the respective old value to find out if
         //a row or column was added.
-        this.rowEls.changes.subscribe((rowEls) => {
+        this.rowEls!.changes.subscribe((rowEls) => {
 
             //Row added => sets focus to the first field of the row
-            if (oldNumRows < this.featureForm.rows.length) {
+            if (oldNumRows < this.featureForm!.rows.length) {
                 rowEls.last.nativeElement.querySelector('.form-control').focus();
 
-            //Column added => sets focus to last field of the first row (first field of the added column)
-            } else if (oldNumCols < this.featureForm.columns.length) {
+                //Column added => sets focus to last field of the first row (first field of the added column)
+            } else if (oldNumCols < this.featureForm!.columns.length) {
                 rowEls.first.nativeElement.querySelectorAll('.form-control')[oldNumCols].focus();
             }
 
-            oldNumRows = this.featureForm.rows.length;
-            oldNumCols = this.featureForm.columns.length;
+            oldNumRows = this.featureForm!.rows.length;
+            oldNumCols = this.featureForm!.columns.length;
         });
     }
 
@@ -70,7 +64,7 @@ export class FeatureGridComponent implements AfterViewInit {
     addOnAsync(data: any, rowIdx: number) {
         const columns = this.feature.columns.slice(0);
         const attrNames = Object.keys(data);
-        const attributes = [];      //column attributes to be changed with their respective values
+        const attributes: { name: string, value: string }[] = [];      //column attributes to be changed with their respective values
         const formValues = {};      //formgroup version of the above
 
         //The first column is assumed to be the source of the async event and, therefore, does not require updating.
@@ -92,7 +86,7 @@ export class FeatureGridComponent implements AfterViewInit {
         attributes.forEach(attribute => {
             formValues[this.feature.firstId(attribute.name)] = attribute.value;
         });
-        this.featureForm.patchRow(rowIdx, formValues);
+        this.featureForm!.patchRow(rowIdx, formValues);
 
         //Updates the submission model's row and notifies the outside world as a single change event.
         this.feature.add(attributes, rowIdx);

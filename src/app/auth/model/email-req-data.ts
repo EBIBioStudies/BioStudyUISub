@@ -1,36 +1,15 @@
-import {Captcha} from './captcha';
 import {AppPath} from './app-path';
-import {WithSnapshot} from './with-snapshot';
+import {DataWithCaptchaAndPath} from './data-base';
 
-class EmailRequestData extends WithSnapshot {
-    email: string;
-
-    private _captcha: Captcha = new Captcha();
-    private _path: AppPath;
+class EmailRequestData extends DataWithCaptchaAndPath {
+    email: string = '';
 
     constructor(pathAncor: string) {
-        super();
-        this._path = new AppPath(pathAncor);
-    }
-
-    get path(): string {
-        return this._path.value;
-    }
-
-    get captcha(): string {
-        return this._captcha.value;
-    }
-
-    set captcha(value: string) {
-        this._captcha.value = value;
-    }
-
-    resetCaptcha(): void {
-        this._captcha.reset();
+        super(new AppPath(pathAncor));
     }
 
     snapshot(): any {
-        return this.dataSnapshot(['email', 'captcha', 'path']);
+        return super.snapshot().add('email', this.email);
     }
 }
 

@@ -16,10 +16,11 @@ import * as _ from 'lodash';
 export class FileUploadBadgeComponent {
     @Output() select: EventEmitter<any> = new EventEmitter<any>();
 
-    private _uploads = [];
-    hasFailed: boolean;       //has any upload request failed?
+    private _uploads: any[] = [];
+    hasFailed: boolean = false;       //has any upload request failed?
 
-    constructor(private uploader: FileUploadService) {}
+    constructor(private uploader: FileUploadService) {
+    }
 
     get count(): number {
         return this.uploads.length;
@@ -42,7 +43,7 @@ export class FileUploadBadgeComponent {
             return _.map(request.files, (file) => ({
                 name: file,
                 path: request.path,
-                progress: request.failed() ? 'error' : request.progress + "%"
+                progress: request.failed() ? 'error' : request.progress + '%'
             }));
         }));
 

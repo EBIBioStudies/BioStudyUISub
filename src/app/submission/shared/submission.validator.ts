@@ -17,7 +17,7 @@ interface ValidationRule {
 
 class ValidationRules {
     static forSection(section: Section): ValidationRule[] {
-        let rules = [];
+        let rules: ValidationRule[] = [];
 
         rules = rules.concat(
             section.fields.list()
@@ -65,11 +65,11 @@ class ValidationRules {
             rules.push(ValidationRules.atLeastOneRowFeature(feature))
         }
 
-        const valueRules = [];
+        const valueRules: ValidationRule[] = [];
         feature.columns.forEach((col, colIndex) => {
             rules.push(ValidationRules.requiredValue(col.name, `${feature.type.name}: (col ${colIndex}):`));
             feature.rows.forEach((row, rowIndex) => {
-                const rowValue = row.valueFor(col.id).value;
+                const rowValue = row.valueFor(col.id)!.value;
                 const rowName = `${feature.type.name}: (col: ${colIndex}, row: ${rowIndex}):`;
 
                 //If a member field is marked as required but its parent feature is not, the field should be optional
@@ -203,7 +203,7 @@ export class SubmissionValidator {
     private static validateSection(section: Section): SubmValidationErrors {
         const errors = ValidationRules.forSection(section)
             .map(vr => vr.validate())
-            .filter(m => m !== undefined);
+            .filter(m => m !== undefined) as string[];
         const sections = section.sections.list()
             .map(s => SubmissionValidator.validateSection(s))
             .filter(ve => !ve.empty());

@@ -9,29 +9,24 @@ const defined = (val: string) => {
 const GlobalScope: Map<string, any> = new Map();
 
 class BaseType {
-    private scope: Map<string, any>;
-    private typeName: string;
+    readonly tmplBased?: boolean;
 
-    readonly tmplBased: boolean;
-
-    constructor(name: string,
+    constructor(private typeName: string,
                 tmplBased: boolean,
-                scope: Map<string, any> = GlobalScope) {
+                private scope: Map<string, any> = GlobalScope) {
 
         //Aborts if no name given or the type already exists
-        if (!defined(name)) {
-            console.warn(`Error: Type name is undefined ${name}`);
+        if (!defined(typeName)) {
+            console.warn(`Error: Type name is undefined ${typeName}`);
             return;
         }
-        if (scope.has(name)) {
-            console.warn(`Error: Type with name ${name} already exists in the scope`);
+        if (scope.has(typeName)) {
+            console.warn(`Error: Type with name ${typeName} already exists in the scope`);
             return;
         }
 
-        scope.set(name, this);
-        this.typeName = name;
+        scope.set(typeName, this);
         this.tmplBased = tmplBased;
-        this.scope = scope;
     }
 
     get name(): string {
@@ -40,9 +35,9 @@ class BaseType {
 
     set name(name: string) {
         if (!this.tmplBased && !this.scope.has(name)) {
-            this.scope.delete(this.typeName);
+            this.scope!.delete(this.typeName);
             this.typeName = name;
-            this.scope.set(name, this);
+            this.scope!.set(name, this);
         }
     }
 
@@ -180,7 +175,7 @@ export class FeatureType extends BaseType {
      * @param {boolean} [isCreate = true] - Flag to enable the automatic creation of types for unknown columns.
      * @returns {ColumnType} Type object for the searched column. Null if creation disabled.
      */
-    getColumnType(name: string, isCreate: boolean = true): ColumnType {
+    getColumnType(name: string, isCreate: boolean = true): ColumnType | undefined {
         if (this.columnScope.has(name)) {
             return this.columnScope.get(name);
         }
@@ -189,7 +184,7 @@ export class FeatureType extends BaseType {
             return ColumnType.createDefault(name, this.columnScope);
         }
 
-        return null;
+        return undefined;
     }
 }
 

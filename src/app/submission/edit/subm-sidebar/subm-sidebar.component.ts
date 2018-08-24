@@ -34,7 +34,7 @@ import {ServerError} from "../../../http/server-error.handler";
  */
 class SubmItem {
     feature: Feature;           //submission item
-    icon: string;               //class for fontawesome's icon representing the item
+    icon?: string;               //class for fontawesome's icon representing the item
     private _deleted: boolean;  //is item marked for deletion?
 
     /**
@@ -106,7 +106,7 @@ class SubmItems extends Array<SubmItem> {
      * @param {Array<SubmItem>} [items] - Optional literal of initial items.
      */
     private constructor(items?: Array<SubmItem>) {
-        super(...items);
+        super(...items || []);
         this._isDeletion = false;
     }
 
@@ -157,26 +157,26 @@ class SubmItems extends Array<SubmItem> {
     styleUrls: ['./subm-sidebar.component.css']
 })
 export class SubmSideBarComponent implements OnChanges {
-    @Input() isLoading: boolean;                                             //flag indicating the submission is being loaded
+    @Input() isLoading: boolean = false;                                             //flag indicating the submission is being loaded
     @Input() isSubmitting: boolean = false;                                  //flag indicating submission data is being sent
     @Input() collapsed?:boolean = false;                                     //flag indicating if menu is minimized/collapsed
-    @Input() section: Section;                                               //section of the form being displayed
+    @Input() section?: Section;                                               //section of the form being displayed
     @Input() formControls: FieldControl[] = [];                              //refreshed array of form controls
-    @Input() serverError: ServerError;                                       //errors from server requests
+    @Input() serverError?: ServerError;                                       //errors from server requests
     @Output() toggle? = new EventEmitter();                                  //event triggered when collapsed state changes
 
-    @ViewChild('addDialog') addDialog: SubmTypeAddDialogComponent;
-    @ViewChild('confirmDialog') confirmDialog: ConfirmDialogComponent;
+    @ViewChild('addDialog') addDialog?: SubmTypeAddDialogComponent;
+    @ViewChild('confirmDialog') confirmDialog?: ConfirmDialogComponent;
 
     isAdvancedOpen: boolean = false; //flag indicating if advanced options for types are being displayed
     isStatus: boolean = true;        //flag indicating if form status or "check" tab is being displayed
     editing: boolean = false;        //flag indicating component's mode: display or editing, with different renderings
-    items: SubmItems;                //current collection of feature/subsection items
+    items?: SubmItems;                //current collection of feature/subsection items
     iconMap: any = {};               //lookup table for icons
     numPending: number = 0;          //number of modified fields still pending review (still invalid)
     numInvalid: number = 0;          //number of fields still invalid (modified or not)
 
-    private subscr: Subscription;
+    private subscr?: Subscription;
 
     constructor(public userData: UserData) {}
 
@@ -226,7 +226,7 @@ export class SubmSideBarComponent implements OnChanges {
      * @param {Event} [event] - Optional click event object.
      */
     onToggleCollapse(event?:Event): void {
-        event.preventDefault();
+        event && event.preventDefault();
         this.toggle && this.toggle.emit();
     }
 
@@ -246,8 +246,8 @@ export class SubmSideBarComponent implements OnChanges {
         if (!form.errors) {
 
             //Removes features marked as deleted, showing a confirmation dialogue if applicable.
-            if (this.items.isDeletion) {
-                deleted = this.items.getDeleted();
+            if (this.items!.isDeletion) {
+                deleted = this.items!.getDeleted();
                 isPlural = deleted.length > 1;
 
                 confirmShown = this.confirm(`The submission 
@@ -260,10 +260,10 @@ export class SubmSideBarComponent implements OnChanges {
                 confirmShown.subscribe((isConfirmed: boolean) => {
                     if (isConfirmed) {
                         deleted.forEach(({feature}) => {
-                            this.section.features.remove(feature);
+                            this.section!.features.remove(feature);
                         });
                     } else {
-                        this.items.reset();
+                        this.items!.reset();
                     }
                 });
             }
@@ -273,7 +273,7 @@ export class SubmSideBarComponent implements OnChanges {
             confirmShown.subscribe((isConfirmed: boolean) => {
                 if (form.dirty && form.valid && isConfirmed) {
                     Object.keys(form.value).forEach((key) => {
-                        this.section.features.find(key).typeName = form.value[key];
+                        this.section!.features.find(key).typeName = form.value[key];
                     }, this);
                 }
 
@@ -295,7 +295,7 @@ export class SubmSideBarComponent implements OnChanges {
      * @returns {Observable<any>} Reactive stream for listening to confirmation event.
      */
     private confirm(message: string): Observable<any> {
-        return this.confirmDialog.confirm(message, false);
+        return this.confirmDialog!.confirm(message, false);
     }
 
     /**
@@ -303,8 +303,8 @@ export class SubmSideBarComponent implements OnChanges {
      * @param {Event} [event] - Optional click event object.
      */
     onCancel(event?: Event): void {
-        if (this.items.isDeletion) {
-            this.items.reset();
+        if (this.items!.isDeletion) {
+            this.items!.reset();
         }
         this.onEditModeToggle(event);
     }
@@ -324,7 +324,7 @@ export class SubmSideBarComponent implements OnChanges {
      */
     onNewTypeClick(event: Event): void {
         event.preventDefault();
-        this.addDialog.show();
+        this.addDialog!.show();
     }
 
     /**
@@ -336,7 +336,7 @@ export class SubmSideBarComponent implements OnChanges {
      */
     onItemDelete(event: Event, nameInput: string, controls: FormControl[], itemIdx: number): void {
         event.preventDefault();
-        this.items.delete(itemIdx);
+        this.items!.delete(itemIdx);
         delete controls[nameInput];
     }
 
@@ -347,9 +347,9 @@ export class SubmSideBarComponent implements OnChanges {
         this.items = SubmItems.create();
 
         //Builds the item collection
-        this.items.push(new SubmItem(this.section.annotations));
-        this.section.features.list().forEach((feature) => {
-            this.items.push(new SubmItem(feature))
+        this.items.push(new SubmItem(this.section!.annotations));
+        this.section!.features.list().forEach((feature) => {
+            this.items!.push(new SubmItem(feature))
         });
 
         //Indexes icons by type name
@@ -393,8 +393,12 @@ export class SubmSideBarComponent implements OnChanges {
     errorMsg(): string {
         const error = this.serverError;
 
+        if (!error) {
+            return '';
+        }
+
         if (error.message) {
-            return this.serverError.message;
+            return error.message;
         } else switch (error.status) {
             case 401: return 'Authorisation error';
             case 403: return 'Forbidden access';
@@ -434,5 +438,6 @@ export class SubmSideBarComponent implements OnChanges {
         } else if (errors.pattern) {
             return 'wrong format';
         }
+        return '';
     }
 }

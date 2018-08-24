@@ -1,27 +1,18 @@
 import {Injectable} from '@angular/core';
 import {
-    FormGroup,
-    Validators,
+    AbstractControl,
+    FormArray,
     FormControl,
-    FormArray, AbstractControl, ValidatorFn
+    FormGroup,
+    ValidationErrors,
+    ValidatorFn,
+    Validators
 } from '@angular/forms';
 import {Subscription} from 'rxjs/Subscription';
 
-import {
-    AnnotationsType,
-    ColumnType,
-    FeatureType,
-    FieldType
-} from '../../shared/submission-type.model';
-import {
-    Section,
-    Field,
-    Feature,
-    UpdateEvent,
-    Attribute,
-    ValueMap
-} from '../../shared/submission.model';
-import * as _ from "lodash";
+import {AnnotationsType, ColumnType, FeatureType, FieldType} from '../../shared/submission-type.model';
+import {Attribute, Feature, Field, Section, UpdateEvent, ValueMap} from '../../shared/submission.model';
+import * as _ from 'lodash';
 
 /**
  * Checks if the control's value is a non-empty string.
@@ -29,17 +20,17 @@ import * as _ from "lodash";
  * @returns {ValidatorFn} Null if no error or an object descriptive of the source of the error.
  */
 export function nonBlankVal(): ValidatorFn {
-    return (control: AbstractControl): {[key: string]: any} => {
+    return (control: AbstractControl): ValidationErrors | null => {
 
         if (/^(\S+|\S.*\S)$/.test(control.value)) {
             return null;
 
-        //Only whitespaces. Value effectively empty.
+            //Only whitespaces. Value effectively empty.
         } else if (control.value.trim().length == 0) {
             return {'required': {value: control.value}};
 
-        //Leading or trailing whitespaces present.
-        //NOTE: Surrounding whitespaces are removed automatically later on.
+            //Leading or trailing whitespaces present.
+            //NOTE: Surrounding whitespaces are removed automatically later on.
         } else {
             return null;
         }
@@ -57,7 +48,7 @@ export class FieldControl extends FormControl {
     static numInvalid: number = 0;          //total number of controls still invalid (touched or not)
     template: Field | Attribute;            //the control's model containing reference properties such as its name
     parentType: FieldType | FeatureType;    //the type descriptor the control refers to for things such as validation
-    nativeElement: HTMLElement;             //DOM element the control is rendered into
+    nativeElement: HTMLElement | undefined;             //DOM element the control is rendered into
 
     /**
      * Instantiates a simple form control with validators, keeping a reference to related model or type structures.
@@ -67,7 +58,7 @@ export class FieldControl extends FormControl {
      * @param {FieldType | FeatureType} parentType - The reference type descriptor for the control.
      * @param {HTMLElement} nativeEl - DOM element which the control render into.
      */
-    constructor(value: any, validators: any, template: Field | Attribute, parentType: FieldType | FeatureType, nativeEl?: HTMLElement | null) {
+    constructor(value: any, validators: any, template: Field | Attribute, parentType: FieldType | FeatureType, nativeEl?: HTMLElement) {
         super(value, validators);
         this.template = template;
         this.parentType = parentType;
@@ -102,7 +93,7 @@ export class FieldControl extends FormControl {
             if (control.controls) {
                 this.toArray(control, controlList);
 
-            //Leaf objects characterised by a "template" property (the name of the control)
+                //Leaf objects characterised by a "template" property (the name of the control)
             } else if (control.template) {
                 controlList.push(control);
 
@@ -222,26 +213,30 @@ export class SectionForm {
         //Generates a virtual form group for the members of any existing validation group
         this.groupForm = new FormGroup({});
         this.section.type.groupTypes.forEach((type) => {
-            let member: Field | Feature;            //submission element for a validation group's member
-            let memberControl: AbstractControl;     //form control corresponding to that element
+            let member: Field | Feature | undefined;            //submission element for a validation group's member
+            let memberControl: AbstractControl | undefined;     //form control corresponding to that element
 
             //Grabs the form control according to submission element type (top-level field, annotation or feature)
             //TODO: Normalise the relationship with type for each of the submission elements.
             if (type instanceof FieldType) {
                 member = this.section.fields.find(type.name, 'name');
-                memberControl = this.fieldControl(member.id);
+                if (member) {
+                    memberControl = this.fieldControl(member.id);
+                }
             } else if (type instanceof FeatureType) {
                 if (type instanceof AnnotationsType) {
                     member = this.section.annotations;
                 } else {
                     member = this.section.features.find(type.name, 'typeName');
                 }
-                memberControl = this.featureForm(member.id).form;
+                if (member) {
+                    memberControl = this.featureForm(member.id)!.form;
+                }
             }
 
             //Makes sure the named references in the group definition still exist in the current form. If so, adds it.
             //NOTE: There is an edge case; if the type of control is in the template but not in the form.
-            if (member) {
+            if (member && memberControl) {
                 this.groupForm.addControl(member.id, memberControl);
             }
         });
@@ -274,8 +269,8 @@ export class SectionForm {
         return <FieldControl>this.fieldsFormGroup.get(fieldId);
     }
 
-    featureForm(featureId: string): FeatureForm {
-        return this.featureForms.get(featureId);
+    featureForm(featureId: string): FeatureForm | undefined {
+        return this.featureForms!.get(featureId);
     }
 
     valid(): boolean {
@@ -301,7 +296,7 @@ export class SectionForm {
 
     private addFieldControl(field: Field): void {
         const type = this.section.type.getFieldType(field.name);
-        const validators = [];
+        const validators: ValidatorFn[] = [];
         let control;
 
         if (type.required) {
@@ -328,7 +323,7 @@ export class SectionForm {
     }
 
     private removeFeatureForm(featureId: string): void {
-        this.featureForms.get(featureId).destroy();
+        this.featureForms.get(featureId)!.destroy();
         this.featureForms.delete(featureId);
         this.featuresFormGroup.removeControl(featureId);
     }
@@ -365,7 +360,7 @@ export class SectionForm {
      * much of the app's architecture which assumes that requirement rules never change in the type templates.
      */
     updateGroupForm() {
-        const emptyNames = [];
+        const emptyNames: string[] = [];
         let isValid = false;
         let isOneRendered;
 
@@ -373,7 +368,7 @@ export class SectionForm {
         //NOTE: Features can be empty, not rendered and yet never be removed from the global submission form group.
         _.forEach(this.groupForm.controls, (control, key) => {
             if (control instanceof FormGroup && !control.value.rows.length) {
-                emptyNames.push(this.featureForm(key).feature.typeName);
+                emptyNames.push(this.featureForm(key)!.feature.typeName);
             } else {
                 isValid = isValid || control.valid;
             }
@@ -425,10 +420,10 @@ export class FeatureForm {
             this.feature.updates()
                 .filter(ue => ue.source !== undefined)
                 .subscribe(ue => {
-                    if (['column_add', 'column_remove'].indexOf(ue.source.name) > -1) {
+                    if (['column_add', 'column_remove'].indexOf(ue.source!.name) > -1) {
                         this.updateColumnControls(ue);
                     }
-                    if (['row_add', 'row_remove'].indexOf(ue.source.name) > -1) {
+                    if (['row_add', 'row_remove'].indexOf(ue.source!.name) > -1) {
                         this.updateRowControls(ue);
                     }
                 })
@@ -452,9 +447,9 @@ export class FeatureForm {
         return <FormControl>fg.get(colId);
     }
 
-    columnType(colId: string): ColumnType {
+    columnType(colId: string): ColumnType | undefined {
         const column = this.columns.find(c => c.id === colId);
-        return this.feature.type.getColumnType(column.name);
+        return this.feature.type.getColumnType(column!.name);
     }
 
     destroy() {
@@ -495,7 +490,7 @@ export class FeatureForm {
         this.columnsFormGroup.addControl(column.id, new FormControl(column.name, colValidators));
         this.rows.forEach((row, rowIndex) => {
             const fg = (<FormGroup>this.rowsFormArray.at(rowIndex));
-            this.addRowValueControl(fg, column.id, row, t);
+            this.addRowValueControl(fg, column.id, row, t!);
 
             //Regenerates the field errors for the whole current row
             this.addRowErrors(fg);
@@ -518,14 +513,14 @@ export class FeatureForm {
         this.columns.forEach(
             column => {
                 const t = this.feature.type.getColumnType(column.name);
-                this.addRowValueControl(formGroup, column.id, row, t);
+                this.addRowValueControl(formGroup, column.id, row, t!);
             });
 
         return formGroup;
     }
 
     private addRowValueControl(fg: FormGroup, columnId: string, row: ValueMap, tmpl: ColumnType): void {
-        const valueValidators = [];     //validators for the control
+        const valueValidators: ValidatorFn[] = [];     //validators for the control
         let colAttr;                    //attribute corresponding to the column under which this control will lie
         let control;
 
@@ -535,21 +530,21 @@ export class FeatureForm {
         }
 
         colAttr = this.columns.find(column => column.id === columnId);
-        control = new FieldControl(row.valueFor(columnId).value, valueValidators, colAttr, this.feature.type);
+        control = new FieldControl(row.valueFor(columnId)!.value, valueValidators, colAttr, this.feature.type);
         fg.addControl(columnId, control);
     }
 
     private updateColumnControls(ue?: UpdateEvent): void {
         this._columns = this.feature.columns;
 
-        if (ue && ue.source.name === 'column_remove') {
-            this.removeColumnControl(ue.source.value.id);
+        if (ue && ue.source!.name === 'column_remove') {
+            this.removeColumnControl(ue.source!.value.id);
             return;
         }
 
         let toAdd: Attribute[] = this.columns;
-        if (ue && ue.source.name === 'column_add') {
-            toAdd = [this.columns[ue.source.value.index]];
+        if (ue && ue.source!.name === 'column_add') {
+            toAdd = [this.columns[ue.source!.value.index]];
         }
 
         toAdd.forEach(
@@ -599,9 +594,9 @@ export class FeatureForm {
 
 @Injectable()
 export class SubmFormService {
-    private sectionForm: SectionForm;
+    private sectionForm?: SectionForm;
 
-    createForm(section: Section): SectionForm {
+    createForm(section?: Section): SectionForm | undefined {
         if (this.sectionForm) {
             this.sectionForm.destroy();
         }

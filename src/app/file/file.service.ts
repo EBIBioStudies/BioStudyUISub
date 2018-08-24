@@ -12,10 +12,10 @@ export class FileService {
     constructor(private http: HttpClient) {
     }
 
-    getUserDirs(): Observable<PathInfo[]> {
-        return this.getUserGroups()
-            .map(groups => groups.map(g => ({ame: g.name, path: '/Groups/' + g.name, type: 'DIR'})))
-            .map(paths => [].concat([{name: 'Home', path: '/User', type: 'DIR'}], paths));
+    getUserDirs(groups?: Observable<UserGroup[]>): Observable<PathInfo[]> {
+        return (groups || this.getUserGroups())
+            .map(groups => groups.map(g => new PathInfo(g.name, '/Groups/' + g.name, 'DIR')))
+            .map(paths => ([] as PathInfo[]).concat([new PathInfo('Home', '/User', 'DIR')], paths));
     }
 
     getFiles(path: string): Observable<PathInfo[]> {

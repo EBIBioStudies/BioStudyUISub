@@ -5,10 +5,10 @@ import * as _ from 'lodash';
 import {UserRole} from './user-role';
 import {AuthService} from './auth.service';
 import {UserSession} from './user-session';
-import {Subject} from "rxjs/Subject";
-import {Observable} from "rxjs/Observable";
-import {forkJoin} from "rxjs/observable/forkJoin";
-import {SubmissionService} from "../submission/shared/submission.service";
+import {Subject} from 'rxjs/Subject';
+import {Observable} from 'rxjs/Observable';
+import {forkJoin} from 'rxjs/observable/forkJoin';
+import {SubmissionService} from '../submission/shared/submission.service';
 
 const SECRET_ID_PROP_NAME = 'secret';
 
@@ -99,10 +99,11 @@ export class UserData {
      * Retrieves the ID for sharing submissions or using FTP/Aspera
      * @returns {string} - Secret ID.
      */
-    get secretId(): string {
+    get secretId(): string | undefined {
         if (this.hasOwnProperty(SECRET_ID_PROP_NAME)) {
             return this[SECRET_ID_PROP_NAME];
         }
+        return undefined;
     }
 
     /**

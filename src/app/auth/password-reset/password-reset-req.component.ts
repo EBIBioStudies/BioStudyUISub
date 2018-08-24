@@ -1,8 +1,4 @@
-import {
-    AfterViewInit,
-    Component, ElementRef,
-    ViewChild
-} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
 
 import {RecaptchaComponent} from 'ng-recaptcha';
 
@@ -10,7 +6,7 @@ import {ServerError} from 'app/http/index';
 
 import {AuthService} from '../auth.service';
 import {PasswordResetRequestData} from '../model/email-req-data';
-import {AbstractControl, NgForm} from "@angular/forms";
+import {AbstractControl, NgForm} from '@angular/forms';
 
 @Component({
     selector: 'auth-passwd-reset-req',
@@ -25,16 +21,16 @@ export class PasswordResetReqComponent implements AfterViewInit {
     message: string = '';
 
     @ViewChild('recaptchaEl')
-    private recaptcha: RecaptchaComponent;
+    private recaptcha?: RecaptchaComponent;
 
     @ViewChild('emailEl')
-    private focusEl: ElementRef;
+    private focusRef?: ElementRef;
 
     constructor(private authService: AuthService) {}
 
     //TODO: Turn autofocus on render into a directive
     ngAfterViewInit(): void {
-        this.focusEl.nativeElement.focus();
+        this.focusRef!.nativeElement.focus();
     }
 
     onSubmit(form:NgForm): void {
@@ -78,9 +74,7 @@ export class PasswordResetReqComponent implements AfterViewInit {
      * @param {AbstractControl} control - Form control for the captcha.
      */
     resetRecaptcha(control:AbstractControl): void {
-
-        //Resets captcha's component and model
-        this.recaptcha.reset();
+        this.recaptcha!.reset();
         this.model.resetCaptcha();
 
         //Resets the state of captcha's control

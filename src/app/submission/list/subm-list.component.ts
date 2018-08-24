@@ -2,9 +2,9 @@ import {Component, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 
 import {Observable} from 'rxjs/Observable';
-import {Subscription} from "rxjs/Subscription";
-import {Subject} from "rxjs/Subject";
-import {throwError} from "rxjs/index";
+import {Subscription} from 'rxjs/Subscription';
+import {Subject} from 'rxjs/Subject';
+import {throwError} from 'rxjs/index';
 
 import {GridOptions} from 'ag-grid/main';
 import {AgRendererComponent} from 'ag-grid-angular/main';
@@ -14,10 +14,10 @@ import {SubmissionService} from '../shared/submission.service';
 import {TextFilterComponent} from './ag-grid/text-filter.component';
 import {DateFilterComponent} from './ag-grid/date-filter.component';
 import {PageTab} from '../shared/pagetab.model';
-import {AppConfig} from "../../app.config";
-import {SubmAddDialogComponent} from "./subm-add.component";
-import {UserData} from "../../auth/user-data";
-import {SubmissionType} from "../shared/submission-type.model";
+import {AppConfig} from '../../app.config';
+import {SubmAddDialogComponent} from './subm-add.component';
+import {UserData} from '../../auth/user-data';
+import {SubmissionType} from '../shared/submission-type.model';
 
 @Component({
     selector: 'action-buttons-cell',
@@ -38,12 +38,12 @@ import {SubmissionType} from "../shared/submission-type.model";
         </button>`
 })
 export class ActionButtonsCellComponent implements AgRendererComponent {
-    public isBusy: boolean;         //flags if a previous button action is in progress
+    public isBusy: boolean = false;         //flags if a previous button action is in progress
     public rowData: any;            //object including the data values for the row this cell belongs to
 
-    private accno: string;
-    private onDelete: (accno: string, onCancel: Function) => {};
-    private onEdit: (string) => {};
+    private accno?: string;
+    private onDelete?: (accno: string, onCancel: Function) => {};
+    private onEdit?: (string) => {};
 
     agInit(params: any): void {
         this.rowData = params.data;
@@ -88,13 +88,14 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
     template: `{{!value ? '&mdash;' : value | date: appConfig.dateListFormat}}`
 })
 export class DateCellComponent implements AgRendererComponent {
-    value: Date;
+    value?: Date;
 
     /**
      * Exposes app's configuration to the template.
      * @param {AppConfig} appConfig - Global configuration object with app-wide settings.
      */
-    constructor(public appConfig: AppConfig) {}
+    constructor(public appConfig: AppConfig) {
+    }
 
     agInit(params: any): void {
         this.value = this.asDate(params.value);
@@ -106,11 +107,11 @@ export class DateCellComponent implements AgRendererComponent {
      * @param {number} seconds - Seconds since 1 January 1970 UTC
      * @returns {Date} Equivalent JavaScript Date object.
      */
-    private asDate(seconds: number): Date {
+    private asDate(seconds: number): Date | undefined {
         if (seconds && seconds > 0) {
             return new Date(seconds * 1000);
         }
-        return null;
+        return undefined;
     }
 
     /**
@@ -135,17 +136,15 @@ export class SubmListComponent {
     showSubmitted: boolean = false;     //flag indicating if the list of sent submissions is to be displayed
     isBusy: boolean = false;            //flag indicating if a request is in progress
     isCreating: boolean = false;        //flag indicating if submission creation is in progress
-    allowedPrj: string[];               //names of projects with templates the user is allowed to attach submissions to
+    allowedPrj?: string[];               //names of projects with templates the user is allowed to attach submissions to
 
     //AgGrid-related properties
     gridOptions: GridOptions;
-    columnDefs: any[];
+    columnDefs?: any[];
     private datasource: any;
 
-    @ViewChild('addDialog')
-    addDialog: SubmAddDialogComponent;
-    @ViewChild('confirmDialog')
-    confirmDialog: ConfirmDialogComponent;
+    @ViewChild('addDialog') addDialog?: SubmAddDialogComponent;
+    @ViewChild('confirmDialog') confirmDialog?: ConfirmDialogComponent;
 
     constructor(private submService: SubmissionService,
                 private userData: UserData,
@@ -183,7 +182,7 @@ export class SubmListComponent {
                 return item.accno;
             },
             onGridReady: (params) => {
-                this.gridOptions.api.sizeColumnsToFit();
+                this.gridOptions!.api!.sizeColumnsToFit();
                 this.setDatasource();
             }
         };
@@ -275,17 +274,17 @@ export class SubmListComponent {
                         rTimeTo: fm.rtime && fm.rtime.value && fm.rtime.value.to ? fm.rtime.value.to : undefined,
                         keywords: fm.title && fm.title.value ? fm.title.value : undefined
 
-                    //Hides the overlaid progress box if request failed
+                        //Hides the overlaid progress box if request failed
                     }).takeUntil(this.ngUnsubscribe).catch(error => {
-                        agApi.hideOverlay();
+                        agApi!.hideOverlay();
                         return throwError(error);
 
-                    //Once all submissions fetched, determines last row for display purposes.
+                        //Once all submissions fetched, determines last row for display purposes.
                     }).subscribe((rows) => {
                         let lastRow = -1;
 
                         //Hides progress box.
-                        agApi.hideOverlay();
+                        agApi!.hideOverlay();
 
                         //Removes any entries that are really revisions of sent submissions if showing temporary ones
                         if (!this.showSubmitted) {
@@ -304,7 +303,7 @@ export class SubmListComponent {
                 }
             }
         }
-        agApi.setDatasource(this.datasource);
+        agApi!.setDatasource(this.datasource);
     }
 
     onSubmTabSelect(isSubmitted: boolean) {
@@ -318,7 +317,7 @@ export class SubmListComponent {
                 fragment = 'sent';
             }
 
-            this.router.navigate([fragment], {relativeTo: this.route, replaceUrl:true});
+            this.router.navigate([fragment], {relativeTo: this.route, replaceUrl: true});
         }
     }
 
@@ -353,7 +352,7 @@ export class SubmListComponent {
                                 }
                             });
 
-                    //Deletion canceled: reflects it on the button
+                        //Deletion canceled: reflects it on the button
                     } else {
                         this.isBusy = false;
                         onCancel();
@@ -368,7 +367,7 @@ export class SubmListComponent {
                         'Delete'
                     ).subscribe(onNext);
 
-                //Shows the confirm dialogue for a temporary submission
+                    //Shows the confirm dialogue for a temporary submission
                 } else {
                     return this.confirm(
                         `The submission with accession number ${accno} has not been sent yet. If you proceed, it will be permanently deleted.`,
@@ -409,8 +408,8 @@ export class SubmListComponent {
     onNewSubmClick(event: Event): void {
         event.preventDefault();
 
-        if (this.allowedPrj.length > 1) {
-            this.addDialog.show();
+        if (this.allowedPrj!.length > 1) {
+            this.addDialog!.show();
         } else {
             this.createSubmission('');
         }
@@ -435,14 +434,14 @@ export class SubmListComponent {
      * @param event - ag-Grid's custom event object that includes data represented by the clicked row.
      */
     onRowClicked(event): void {
-        if (!this.isBusy && event.colDef.headerName !== "Actions") {
+        if (!this.isBusy && event.colDef.headerName !== 'Actions') {
             this.router.navigate(['/submissions/edit', event.data.accno]);
         }
     }
 
     confirm(text: string, title: string, confirmLabel: string): Observable<any> {
-        this.confirmDialog.title = title;
-        this.confirmDialog.confirmLabel = confirmLabel;
-        return this.confirmDialog.confirm(text, false);
+        this.confirmDialog!.title = title;
+        this.confirmDialog!.confirmLabel = confirmLabel;
+        return this.confirmDialog!.confirm(text, false);
     }
 }

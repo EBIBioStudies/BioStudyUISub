@@ -14,7 +14,7 @@ import {ConfirmDialogComponent} from "../../shared/confirm-dialog.component";
 })
 export class HeaderComponent implements OnDestroy {
     reqStatusSubs: Subscription;
-    secretId: string = '';                  //current user's secret ID
+    secretId: string | undefined = '';                  //current user's secret ID
 
     navCollapsed: boolean = true;
     userLoggedIn: boolean = false;
@@ -24,7 +24,7 @@ export class HeaderComponent implements OnDestroy {
     isBusy: boolean = false;                //flags whether there is a transaction triggered by this component
 
     @ViewChild('confirmDialog')
-    confirmDialog: ConfirmDialogComponent;
+    confirmDialog?: ConfirmDialogComponent;
 
     constructor(private userSession: UserSession,
                 private userData: UserData,
@@ -104,8 +104,10 @@ export class HeaderComponent implements OnDestroy {
      * @param {string} title - Title for the modal.
      */
     confirm(text: string, title: string) {
-        this.confirmDialog.title = title;
-        this.confirmDialog.confirm(text, false);
+        if (this.confirmDialog !== undefined) {
+            this.confirmDialog.title = title;
+            this.confirmDialog.confirm(text, false);
+        }
     }
 
     toggleCollapsed() {

@@ -1,5 +1,5 @@
-import {NgControl} from "@angular/forms";
-import {Directive} from "@angular/core";
+import {NgControl} from '@angular/forms';
+import {Directive} from '@angular/core';
 
 /**
  * Directive that replicates "touched" flag behaviour beyond the first blur event. Otherwise, once the latter happens,
@@ -22,13 +22,13 @@ export class ValidateOnBlurDirective {
     constructor(public formControl: NgControl) {}
 
     onKeyDown() {
-        this.formControl.control.markAsUntouched({onlySelf: false});
+        this.formControl.control!.markAsUntouched({onlySelf: false});
     }
 
     markOnBlur() {
-        if (typeof this.formControl.control.value === 'string') {
-            this.formControl.control.setValue(this.formControl.control.value.trim());
+        if (typeof this.formControl.control!.value === 'string') {
+            this.formControl.control!.setValue(this.formControl.control!.value.trim());
         }
-        this.formControl.control.markAsTouched({onlySelf: true});
+        this.formControl.control!.markAsTouched({onlySelf: true});
     }
 }

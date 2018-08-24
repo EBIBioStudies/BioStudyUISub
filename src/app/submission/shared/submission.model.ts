@@ -2,15 +2,9 @@ import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/from';
-import {
-    SectionType,
-    FeatureType,
-    ValueType,
-    FieldType,
-    SubmissionType, ColumnType
-} from './submission-type.model';
+import {ColumnType, FeatureType, FieldType, SectionType, SubmissionType, ValueType} from './submission-type.model';
 
-import * as pluralize from "pluralize";
+import * as pluralize from 'pluralize';
 import * as _ from 'lodash';
 
 //Names of attributes as they come from the server that must be external.
@@ -44,15 +38,15 @@ export class HasUpdates<T> {
 }
 
 export class UpdateEvent {
-    leafEvent: UpdateEvent = null;      //pointer to original first event if a cascade is triggered
+    leafEvent?: UpdateEvent;      //pointer to original first event if a cascade is triggered
 
     constructor(public name: string,
                 public value: any,
-                public source: UpdateEvent = undefined) {
+                public source?: UpdateEvent) {
 
         //Keeps track of the source event.
         //NOTE: In certain instances, the chain of events is recorded as a nested object.
-        if (this.source && !this.source.leafEvent.source) {
+        if (this.source && this.source.leafEvent && !this.source.leafEvent.source) {
             this.leafEvent = this.source.leafEvent;
         } else {
             this.leafEvent = this;
@@ -151,7 +145,7 @@ export class ValueMap extends HasUpdates<UpdateEvent> {
         return valuesLength == 0;
     }
 
-    valueFor(key: string): AttributeValue {
+    valueFor(key: string): AttributeValue | undefined {
         return this.valueMap.get(key);
     }
 
@@ -173,12 +167,12 @@ export class ValueMap extends HasUpdates<UpdateEvent> {
             console.warn(`remove: the key '${key}' does not exist in the map`);
             return;
         }
-        this.subscriptionMap.get(key).unsubscribe();
+        this.subscriptionMap.get(key)!.unsubscribe();
         this.subscriptionMap.delete(key);
         this.valueMap.delete(key);
     }
 
-    values(keys?: string[]): AttributeValue[] {
+    values(keys?: string[]): (AttributeValue | undefined)[] {
         return (keys || this.keys()).map(key => this.valueMap.get(key));
     }
 
@@ -240,7 +234,7 @@ export class Columns extends HasUpdates<UpdateEvent> {
         return true;
     }
 
-    at(index: number): Attribute {
+    at(index: number): Attribute | undefined {
         return (index >= 0) && (index < this.columns.length) ? this.columns[index] : undefined;
     }
 
@@ -361,7 +355,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
                 this.notify(new UpdateEvent('columns_update', {id: this.id}, event));
 
                 if (event.name == 'column_name_update') {
-                    this.onColumnUpdate(event.source.value, event.value.index);
+                    this.onColumnUpdate(event.source!.value, event.value.index);
                 }
             });
         this._rows.updates()
@@ -466,11 +460,11 @@ export class Feature extends HasUpdates<UpdateEvent> {
      * @param {number} [rowIdx = null] - Index of row to be set to the provided attributes. By default, the row will be
      * added if the feature is not limited to a single row, in which case the first row is changed.
      */
-    add(attributes: { name: string, value: string }[] = [], rowIdx: number = null): void {
+    add(attributes: { name: string, value: string }[] = [], rowIdx?: number): void {
         const attrsWithName = attributes.filter(attr => attr.name !== '');
         const attrNames = attrsWithName.map(attr => attr.name);
 
-        const usedColIds = [];
+        const usedColIds: string[] = [];
         let rowMap;
 
         //Adds a column if any of the passed-in attribute names doesn't occur as often as it does in the column list.
@@ -483,13 +477,13 @@ export class Feature extends HasUpdates<UpdateEvent> {
                 const colType = this.type.getColumnType(attrName);
 
                 if (occurAttrs != occurCols) {
-                    this.addColumn(attrName, colType.required, colType.displayed, colType.readonly, colType.removable,
-                                   colType.valueType, colType.values);
+                    this.addColumn(attrName, colType!.required, colType!.displayed, colType!.readonly, colType!.removable,
+                        colType!.valueType, colType!.values);
                 }
             });
 
         //If row not provided, add it if applicable.
-        if (rowIdx === null) {
+        if (rowIdx === undefined) {
             rowMap = this.singleRow ? this.rows[0] : this.addRow();
         } else {
             rowMap = this.rows[rowIdx];
@@ -500,7 +494,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
             let cols: Attribute[] = this._columns.allWithName(attr.name);
 
             //Prevents the same attribute becoming the value for multiple columns of the same name
-            cols = cols.filter((col) => {
+            cols = cols.filter(col => {
                 return usedColIds.indexOf(col.id) == -1;
             });
             usedColIds.push(cols[0].id);
@@ -543,11 +537,11 @@ export class Feature extends HasUpdates<UpdateEvent> {
      */
     onColumnUpdate(newName: string, colIndex: number) {
         if (this._columns.allWithName(newName).length == 1 || !this.type.uniqueCols) {
-            this._columns.at(colIndex).updateType(this.type.getColumnType(newName));
+            this._columns.at(colIndex)!.updateType(this.type.getColumnType(newName)!);
         }
     }
 
-    addRow(): ValueMap {
+    addRow(): ValueMap | undefined {
         if (this.singleRow && this._rows.size() > 0) {
             console.warn(`addRow: The feature [type=${this.type.name}] can't have more than one row`);
             return;
@@ -662,7 +656,7 @@ export class Features extends HasUpdates<UpdateEvent> {
         return this.features.slice();
     }
 
-    add(type: FeatureType, data?: FeatureData): Feature {
+    add(type: FeatureType, data?: FeatureData): Feature | undefined {
         if (this.features.filter(f => f.type === type).length > 0) {
             console.error(`Feature of type ${type} already exists in the section`);
             return;
@@ -702,7 +696,7 @@ export class Features extends HasUpdates<UpdateEvent> {
      * @param {string} [property = 'id'] - Property name by which features are looked up.
      * @returns {Feature} Feature fulfilling the predicated comparison.
      */
-    find(value: string, property: string = 'id'): Feature {
+    find(value: string, property: string = 'id'): Feature | undefined {
         return this.features.find((feature) => {
             return feature[property] === value
         });
@@ -804,7 +798,7 @@ export class Fields extends HasUpdates<UpdateEvent> {
      * @param {string} [property = 'id'] - Property name by which fields are looked up.
      * @returns {Field} Field fulfilling the predicated comparison.
      */
-    find(value: string, property: string = 'id'): Field {
+    find(value: string, property: string = 'id'): Field | undefined {
         return this.fields.find((field) => {
             return field[property] === value
         });
@@ -891,7 +885,7 @@ export class Section extends HasUpdates<UpdateEvent> {
             .map(s => s.sectionPath(id))
             .filter(p => p.length > 0);
 
-        return (path.length > 0) ? [].concat([this], path[0]) : [];
+        return (path.length > 0) ? ([] as Section[]).concat([this], path[0]) : [];
     }
 
     subscribeTo(hasUpdates: HasUpdates<UpdateEvent>, type: string) {
@@ -910,7 +904,7 @@ export class Sections extends HasUpdates<UpdateEvent> {
         this.sections = [];
         this.subscriptions = [];
 
-        const sd: { [key: string]: SectionData } = (data.sections || []).reduce((rv, d) => {
+        const sd: { [key: string]: SectionData | undefined } = (data.sections || []).reduce((rv, d) => {
             rv[d.type] = d;
             return rv;
         }, {});

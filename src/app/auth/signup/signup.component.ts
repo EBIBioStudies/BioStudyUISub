@@ -1,8 +1,4 @@
-import {
-    AfterViewInit,
-    Component, ElementRef,
-    ViewChild
-} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
 
 import {Router} from '@angular/router';
 
@@ -13,7 +9,7 @@ import {ServerError} from 'app/http/index';
 import {AuthService} from '../auth.service';
 import {UserSession} from '../user-session';
 import {RegistrationData} from '../model/registration-data';
-import {AbstractControl, FormControl, NgForm} from "@angular/forms";
+import {AbstractControl, NgForm} from '@angular/forms';
 
 @Component({
     selector: 'auth-signup',
@@ -24,13 +20,13 @@ export class SignUpComponent implements AfterViewInit {
     isLoading: boolean = false;
 
     model: RegistrationData = new RegistrationData();
-    error: ServerError = null;          //global object for showing error feedback
+    error?: ServerError;          //global object for showing error feedback
 
     @ViewChild('recaptchaEl')
-    private recaptcha: RecaptchaComponent;
+    private recaptcha?: RecaptchaComponent;
 
     @ViewChild('focusEl')
-    private focusEl: ElementRef;
+    private focusRef?: ElementRef;
 
     constructor(private authService: AuthService,
                 private session: UserSession,
@@ -39,7 +35,7 @@ export class SignUpComponent implements AfterViewInit {
 
     //TODO: Turn autofocus on render into a directive
     ngAfterViewInit(): void {
-        this.focusEl.nativeElement.focus();
+        this.focusRef!.nativeElement.focus();
     }
 
     ngOnInit() {
@@ -80,7 +76,7 @@ export class SignUpComponent implements AfterViewInit {
      * Resets the value of the error object to effectively hide feedback.
      */
     resetGlobalError(): void {
-        this.error = null;
+        this.error = undefined;
     }
 
     /**
@@ -89,9 +85,7 @@ export class SignUpComponent implements AfterViewInit {
      * @param {AbstractControl} control - Form control for the captcha.
      */
     resetReCaptcha(control:AbstractControl): void {
-
-        //Resets captcha's component and model
-        this.recaptcha.reset();
+        this.recaptcha!.reset();
         this.model.resetCaptcha();
 
         //Resets the state of captcha's control

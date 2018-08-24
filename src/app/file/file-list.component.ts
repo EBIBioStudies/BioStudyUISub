@@ -49,8 +49,8 @@ import {throwError} from 'rxjs/index';
     `
 })
 export class FileActionsCellComponent implements AgRendererComponent {
-    private type: string;
-    private upload: FileUpload;
+    private type?: string;
+    private upload?: FileUpload;
     private onRemove;
 
     agInit(params: any): void {
@@ -65,7 +65,7 @@ export class FileActionsCellComponent implements AgRendererComponent {
     }
 
     get canCancel(): boolean {
-        return this.upload && !this.upload.finished();
+        return (this.upload && !this.upload.finished()) === true;
     }
 
     onFileRemove(ev) {
@@ -98,7 +98,7 @@ export class FileActionsCellComponent implements AgRendererComponent {
     `
 })
 export class FileTypeCellComponent implements AgRendererComponent {
-    ftype: string;
+    ftype?: string;
 
     agInit(params: any): void {
         this.ftype = params.value;
@@ -130,8 +130,8 @@ export class FileTypeCellComponent implements AgRendererComponent {
     `
 })
 export class ProgressCellComponent implements AgRendererComponent {
-    private upload: FileUpload;
-    private type: string;
+    private upload?: FileUpload;
+    private type?: string;
 
     agInit(params: any): void {
         this.type = params.data.type;
@@ -152,7 +152,7 @@ export class ProgressCellComponent implements AgRendererComponent {
     }
 
     get error(): string {
-        return this.upload.error;
+        return this.upload ? this.upload.error : '';
     }
 
     /**
@@ -181,7 +181,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     sideBarCollapsed: boolean = false;
     backButton: boolean = false;
     gridOptions: GridOptions;
-    columnDefs: any[];
+    columnDefs?: any[];
     isBulkMode: boolean = false;
 
     constructor(private fileService: FileService,
@@ -196,7 +196,7 @@ export class FileListComponent implements OnInit, OnDestroy {
 
         this.gridOptions = <GridOptions>{
             onGridReady: () => {
-                this.gridOptions.api.sizeColumnsToFit();
+                this.gridOptions!.api!.sizeColumnsToFit();
             },
             rowSelection: 'single',
             unSortIcon: true,
@@ -278,11 +278,11 @@ export class FileListComponent implements OnInit, OnDestroy {
             .takeUntil(this.ngUnsubscribe)
 
             .catch(error => {
-                this.gridOptions.api.hideOverlay();
+                this.gridOptions!.api!.hideOverlay();
                 return throwError(error);
 
             }).subscribe(files => {
-                let decoratedRows = [].concat(
+                let decoratedRows = ([] as any[]).concat(
                     this.decorateUploads(this.fileUploadService.activeUploads()),
                     this.decorateFiles(files)
                 );
@@ -295,7 +295,7 @@ export class FileListComponent implements OnInit, OnDestroy {
 
     updateDataRows(rows) {
         this.rowData = rows;
-        this.gridOptions.api.setRowData(rows);
+        this.gridOptions!.api!.setRowData(rows);
     }
 
     private onBackButtonClick() {
@@ -324,7 +324,7 @@ export class FileListComponent implements OnInit, OnDestroy {
 
     onUploadFilesSelect(files) {
         let upload = this.fileUploadService.upload(this.path, files);
-        this.updateDataRows([].concat(this.decorateUploads([upload]), this.rowData));
+        this.updateDataRows(([] as any[]).concat(this.decorateUploads([upload]), this.rowData));
     }
 
     decorateUploads(uploads: FileUpload[]): any[] {

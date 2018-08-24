@@ -20,17 +20,10 @@ import {
 export class UniqueValidator implements Validator {
     validator: ValidatorFn;
 
-    @Input('unique') isApply: boolean | "";             //allows the directive to be conditionally applied
+    @Input('unique') isApply?: boolean = true;
 
     constructor(private injector: Injector) {
         this.validator = uniqueValidatorFactory();
-    }
-
-    //Applies the directive by default if no attribute value passed.
-    ngOnInit() {
-        if (this.isApply === "") {
-            this.isApply = true;
-        }
     }
 
     validate(formControl: FormControl) {
