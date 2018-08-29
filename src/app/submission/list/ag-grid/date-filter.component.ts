@@ -10,7 +10,7 @@ import {
 import {AgFilterComponent} from 'ag-grid-angular/main';
 
 import {parseDate, formatDate} from 'app/submission-shared/date.utils';
-import {DateInputComponent} from "../../../submission-shared/date-input.component";
+import {DateInputComponent} from '../../../submission-shared/date-input.component';
 
 class DateRange {
     constructor(public from?: string,
@@ -45,7 +45,8 @@ class DateRange {
         if (DateRange.isValueEmpty(dateString)) {
             return undefined;
         }
-        return parseDate(dateString!).getTime() / 1000;
+        let date = parseDate(dateString!);
+        return date ? date.getTime() / 1000 : undefined;
     }
 
     private static asDateString(seconds?: number): string {
@@ -137,15 +138,15 @@ export class DateFilterComponent implements AgFilterComponent {
     }
 
     get after(): boolean {
-        return this.selection === "after";
+        return this.selection === 'after';
     }
 
     get before(): boolean {
-        return this.selection === "before";
+        return this.selection === 'before';
     }
 
     get between(): boolean {
-        return this.selection === "between";
+        return this.selection === 'between';
     }
 
     onSelectionChange(ev): void {

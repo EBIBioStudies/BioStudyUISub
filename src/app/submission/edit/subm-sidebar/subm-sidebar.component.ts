@@ -1,30 +1,16 @@
-import {
-    Component,
-    Input,
-    Output,
-    EventEmitter,
-    ViewChild,
-    OnChanges
-} from '@angular/core';
-import {
-    NgForm,
-    FormControl,
-    ValidationErrors
-} from '@angular/forms';
+import {Component, EventEmitter, Input, OnChanges, Output, ViewChild} from '@angular/core';
+import {FormControl, NgForm, ValidationErrors} from '@angular/forms';
 
-import { Subscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
+import {Subscription} from 'rxjs/Subscription';
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 
-import {
-    Section,
-    Feature
-} from '../../shared/submission.model';
+import {Feature, Section} from '../../shared/submission.model';
 import {SubmTypeAddDialogComponent} from '../submtype-add/submtype-add.component';
 import {ConfirmDialogComponent} from 'app/shared/index';
-import {FieldControl} from "../subm-form/subm-form.service";
-import {UserData} from "../../../auth/user-data";
-import {ServerError} from "../../../http/server-error.handler";
+import {FieldControl} from '../subm-form/subm-form.service';
+import {UserData} from '../../../auth/user-data';
+import {ServerError} from '../../../http/server-error.handler';
 
 /**
  * Submission item class aggregating its corresponding feature with UI-relevant metadata. It enables
@@ -273,7 +259,7 @@ export class SubmSideBarComponent implements OnChanges {
             confirmShown.subscribe((isConfirmed: boolean) => {
                 if (form.dirty && form.valid && isConfirmed) {
                     Object.keys(form.value).forEach((key) => {
-                        this.section!.features.find(key).typeName = form.value[key];
+                        this.section!.features.find(key)!.typeName = form.value[key];
                     }, this);
                 }
 
@@ -375,7 +361,7 @@ export class SubmSideBarComponent implements OnChanges {
         const buttonEl = <HTMLElement>event.target;
 
         //Determines the scrolling offset needed to get the control alongside the review button just clicked.
-        let scrollTop = control.nativeElement.getBoundingClientRect().top - buttonEl.getBoundingClientRect().top;
+        let scrollTop = control.nativeElement!.getBoundingClientRect().top - buttonEl.getBoundingClientRect().top;
 
         //Prevents the submission topbar from overlapping the control's label area if it's at the top.
         if (this.formControls.indexOf(control) == 0) {
@@ -383,7 +369,7 @@ export class SubmSideBarComponent implements OnChanges {
         }
 
         window.scrollBy(0, scrollTop);
-        control.nativeElement.focus();
+        control.nativeElement!.focus();
     }
 
     /**

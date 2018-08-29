@@ -36,14 +36,14 @@ import {AppConfig} from "../app.config";
  * @see {@link ControlValueAccessor}
  */
 export class DateInputComponent implements ControlValueAccessor {
-    public dateValue: Date;
+    public dateValue: Date | undefined;
 
     @Input() allowPast?: boolean = undefined;
     @Input() maxDate?: Date = undefined;
     @Input() isSmall?: boolean = false;
     @Input() required?: boolean = false;
     @Input() readonly?: boolean = false;
-    @ViewChild('dp') private datepicker: BsDatepickerDirective;
+    @ViewChild('dp') private datepicker?: BsDatepickerDirective;
 
     private onChange: any = () => {};
     private onTouched: any = () => {};
@@ -69,10 +69,10 @@ export class DateInputComponent implements ControlValueAccessor {
     ngOnInit(): void {
         if ((typeof this.allowPast === 'undefined' && !this.appConfig.allowPast) ||
             (this.allowPast === false)) {
-            this.datepicker.minDate = new Date(Date.now());
+            this.datepicker!.minDate = new Date(Date.now());
         }
         if (this.maxDate instanceof Date) {
-            this.datepicker.maxDate = this.maxDate;
+            this.datepicker!.maxDate = this.maxDate;
         }
     }
 
@@ -128,11 +128,11 @@ export class DateInputComponent implements ControlValueAccessor {
         //Cancels the datepicker dialogue by closing it as soon as it's opened.
         //NOTE: As of ngx-bootstrap's current version, a disabled state is still WIP.
         if (this.readonly) {
-            this.datepicker.toggle();
+            this.datepicker!.toggle();
 
         //Checks click happened on the wrapping element
         } else if ((<Element>event.target).classList.contains('dropdown')) {
-            this.datepicker.show();
+            this.datepicker!.show();
         }
     }
 
@@ -146,7 +146,7 @@ export class DateInputComponent implements ControlValueAccessor {
      * a date is set, NOT on value change exclusively.
      * @see {@link https://valor-software.com/ngx-bootstrap/#/datepicker}
      */
-    onPickerSet(dateObj: Date, isChange: boolean = this.datepicker.isOpen) {
+    onPickerSet(dateObj: Date, isChange: boolean = this.datepicker!.isOpen) {
         let formattedDate;          //date in format expected by backend
 
         if (dateObj && !isEqualDate(dateObj, this.dateValue)) {
@@ -167,7 +167,7 @@ export class DateInputComponent implements ControlValueAccessor {
      * Prevents any click events from bubbling beyond the date picker to avoid conflict with any external listeners.
      */
     onPickerShown() {
-        document.querySelector('.bs-datepicker-container').addEventListener('click', (event) => {
+        document.querySelector('.bs-datepicker-container')!.addEventListener('click', (event) => {
             event.stopPropagation();
         });
     }

@@ -14,7 +14,7 @@ export class FileTreeDropdownComponent implements OnInit {
     @Output() fileSelect = new EventEmitter();
     @Output() close = new EventEmitter();
 
-    @ViewChild('dropdown', {read: ElementRef}) ddRef: ElementRef;
+    @ViewChild('dropdown', {read: ElementRef}) ddRef?: ElementRef;
 
     private _style: any;
 

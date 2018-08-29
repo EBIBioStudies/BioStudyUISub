@@ -18,12 +18,12 @@ import 'rxjs/add/operator/take';
     templateUrl: './confirm-dialog.component.html'
 })
 export class ConfirmDialogComponent {
-    private buttonClicks: Subject<boolean>;
+    private buttonClicks?: Subject<boolean>;
 
     @ViewChild('staticModal')
-    private modalDirective: ModalDirective;
+    private modalDirective?: ModalDirective;
     @ViewChild('focusBtn')
-    private focusEl: ElementRef;
+    private focusEl?: ElementRef;
 
     @Input('headerTitle') title: string = 'Confirm';    //Summary text for the modal's title
     @Input() confirmLabel: string = 'Ok';               //Default name for positive action
@@ -49,7 +49,7 @@ export class ConfirmDialogComponent {
 
         //Renders the modal
         this.body = message;
-        this.modalDirective.show();
+        this.modalDirective!.show();
 
         //Discards anything that returns false if required
         if (isDiscardCancel) {
@@ -63,23 +63,23 @@ export class ConfirmDialogComponent {
      * Handler for confirmation event. Notifies such confirmation with a "true" in the event stream.
      */
     ok(): void {
-        this.buttonClicks.next(true);
-        this.modalDirective.hide();
+        this.buttonClicks!.next(true);
+        this.modalDirective!.hide();
     }
 
     /**
      * Handler for abort event. Notifies such confirmation with a "false" in the event stream.
      */
     cancel(): void {
-        this.buttonClicks.next(false);
-        this.modalDirective.hide();
+        this.buttonClicks!.next(false);
+        this.modalDirective!.hide();
     }
 
     /**
      * Handler for "onShown" event, triggered exactly after the modal has been fully revealed.
      */
     onShown(): void {
-        this.focusEl.nativeElement.focus();
+        this.focusEl!.nativeElement.focus();
     }
 
     /**

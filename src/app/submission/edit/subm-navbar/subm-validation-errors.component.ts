@@ -13,7 +13,7 @@ import {BsModalRef} from 'ngx-bootstrap';
 })
 export class SubmValidationErrorsComponent {
     @Input() errors: SubmValidationErrors = SubmValidationErrors.EMPTY;
-    @Input() modalRef: BsModalRef;
+    @Input() modalRef?: BsModalRef;
 
     get errorList(): { level: number[], message: string }[] {
         const collect = (level: number, errors: SubmValidationErrors): { level: number[], message: string }[] => {

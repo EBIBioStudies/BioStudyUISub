@@ -22,7 +22,7 @@ export class SubmViewComponent extends SubmEditComponent {
                     this.wrappedSubm = wrappedSubm;
                     this.accno = wrappedSubm.accno;
                     this.subm = page.toSubmission(SubmissionType.fromTemplate(page.firstAttachTo));
-                    this.changeSection(this.subm.root.id);
+                    this.changeSection(this.subm.section.id);
                 });
         });
 

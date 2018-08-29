@@ -10,7 +10,7 @@ import {Subject} from "rxjs/Subject";
 })
 export class FileTreeComponent implements OnInit, OnDestroy {
 
-    @Input() root: FileNode;
+    @Input() root?: FileNode;
     @Output() select = new EventEmitter();
 
     loaded = false;

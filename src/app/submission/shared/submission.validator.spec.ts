@@ -30,7 +30,7 @@ describe('Submission Validator', () => {
         let errors = SubmissionValidator.validate(subm);
         expect(errors.total()).toEqual(2);
 
-        subm.root.fields.list().forEach(fld => fld.value = '123');
+        subm.section.fields.list().forEach(fld => fld.value = '123');
         errors = SubmissionValidator.validate(subm);
         expect(errors.total()).toEqual(0);
     });
@@ -61,7 +61,7 @@ describe('Submission Validator', () => {
         let errors = SubmissionValidator.validate(subm);
         expect(errors.total()).toEqual(1); // one row, one required column
 
-        const feature = subm.root.features.list()[0];
+        const feature = subm.section.features.list()[0];
         feature.columns.forEach(c => {
             if (c.name === 'Title') {
                 feature.rows[0].valueFor(c.id).value = '123';
@@ -96,11 +96,11 @@ describe('Submission Validator', () => {
         let errors = SubmissionValidator.validate(subm);
         expect(errors.total()).toEqual(2);
 
-        subm.root.fields.list().forEach(fld => fld.value = 'v');
+        subm.section.fields.list().forEach(fld => fld.value = 'v');
         errors = SubmissionValidator.validate(subm);
         expect(errors.total()).toEqual(2); // date format is invalid; text value is too short
 
-        subm.root.fields.list().forEach(fld => {
+        subm.section.fields.list().forEach(fld => {
             if (fld.type.name === 'FieldType1') {
                 fld.value = '2017-09-09';
             }

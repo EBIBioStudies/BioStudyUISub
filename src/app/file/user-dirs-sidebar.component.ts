@@ -1,19 +1,9 @@
-import {
-    Component,
-    Input,
-    Output,
-    EventEmitter,
-    OnInit,
-    forwardRef
-} from '@angular/core';
+import {Component, EventEmitter, forwardRef, Input, OnInit, Output} from '@angular/core';
 
-import {
-    FormControl,
-    ControlValueAccessor,
-    NG_VALUE_ACCESSOR
-} from '@angular/forms';
+import {ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR} from '@angular/forms';
 
 import {FileService} from './file.service';
+import {PathInfo} from './file.model';
 
 @Component({
     selector: 'user-dirs-sidebar',
@@ -56,9 +46,9 @@ export class UserDirsSideBarComponent implements OnInit, ControlValueAccessor {
     @Output() toggle? = new EventEmitter();
     @Output() select = new EventEmitter();
 
-    private selectedPath: string;
+    private selectedPath?: string;
 
-    dirs = [];
+    dirs: PathInfo[] = [];
 
     constructor(private fileService: FileService) {
     }
@@ -103,8 +93,8 @@ export class UserDirsSideBarComponent implements OnInit, ControlValueAccessor {
     ngOnInit() {
         this.fileService.getUserDirs()
             .subscribe(
-                (data) => {
-                    this.dirs = data;
+                (dirs) => {
+                    this.dirs = dirs;
                 }
             );
     }

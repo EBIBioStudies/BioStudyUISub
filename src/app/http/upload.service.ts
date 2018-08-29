@@ -76,14 +76,14 @@ export class UploadService {
 
             xhr.open('post', url);
 
-            if (headers == null) {
+            if (headers === null) {
                 headers = new HttpHeaders();
             }
             if (!headers.has('Accept')) {
                 headers = headers.append('Accept', 'application/json, text/plain, */*');
             }
             headers.keys().forEach((key) => {
-                xhr.setRequestHeader(key, headers.getAll(key).join(','));
+                xhr.setRequestHeader(key, headers.getAll(key)!.join(','));
             });
 
             xhr.upload.addEventListener('progress', onProgress);

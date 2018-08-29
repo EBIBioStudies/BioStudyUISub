@@ -56,7 +56,7 @@ import {
 
 })
 export class SlideOutTipComponent {
-    @Input() tip: string;
+    @Input() tip?: string;
     showTip: boolean = false;
 
     show() {

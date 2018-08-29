@@ -152,7 +152,7 @@ export class ProgressCellComponent implements AgRendererComponent {
     }
 
     get error(): string {
-        return this.upload ? this.upload.error : '';
+        return ((this.upload || {}) as any).error || '';
     }
 
     /**

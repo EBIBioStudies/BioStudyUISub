@@ -14,10 +14,10 @@ import {SubmissionService} from "../shared/submission.service";
     templateUrl: './subm-results-modal.component.html'
 })
 export class SubmResultsModalComponent {
-    @Input() status: string;        //Status the server comes back with
+    @Input() status?: string;        //Status the server comes back with
     @Input() log: any;              //Log part of the server's response
-    @Input() collapsedLog: boolean; //Flag indicating if the log tree is on display.
-    @Input() modalRef: BsModalRef;
+    @Input() collapsedLog?: boolean; //Flag indicating if the log tree is on display.
+    @Input() modalRef?: BsModalRef;
 
     get errorMessage() {
         return SubmissionService.deepestError(this.log);

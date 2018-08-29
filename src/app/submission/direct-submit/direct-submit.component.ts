@@ -84,7 +84,7 @@ export class DirectSubmitComponent {
         const logEl = containerEl.querySelector('.panel-body');
 
         if (logEl) {
-            if (headingEl.contains(targetEl)) {
+            if (headingEl!.contains(targetEl)) {
                 logEl.classList.toggle('hidden');
             }
             containerEl.classList.toggle('container-full', !logEl.classList.contains('hidden'));

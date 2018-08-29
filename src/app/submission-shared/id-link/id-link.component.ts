@@ -49,10 +49,10 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
     @Input() suggestThreshold: number = 0;         //number of typed characters before suggestions are displayed.
 
     @ViewChild(NgModel)
-    private inputModel: NgModel;
+    private inputModel?: NgModel;
 
     @ViewChild(IdLinkValueValidatorDirective)
-    private validator: IdLinkValueValidatorDirective;
+    private validator?: IdLinkValueValidatorDirective;
 
     @Output() selected: EventEmitter<string> = new EventEmitter<string>();
 
@@ -88,7 +88,7 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
      */
     get isIdLink(): boolean {
         try {
-            return this.validator.extra.isId;
+            return this.validator!.extra.isId;
         } catch (error) {
             console.log(error);
             return false;
@@ -104,7 +104,7 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
         let url;
 
         try {
-            url = this.validator.extra.url;
+            url = this.validator!.extra.url;
         } catch (error) {
             console.log(error);
             url = '';
@@ -163,8 +163,8 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
         try {
             const control = this.injector.get(NgControl).control;
 
-            control.setValidators(Validators.compose([control.validator, this.inputModel.control.validator]));
-            control.setAsyncValidators(Validators.composeAsync([control.asyncValidator, this.inputModel.control.asyncValidator]));
+            control.setValidators(Validators.compose([control.validator, this.inputModel!.control.validator]));
+            control.setAsyncValidators(Validators.composeAsync([control.asyncValidator, this.inputModel!.control.asyncValidator]));
         } catch (event) {
             console.log('Validator merge bypassed. ' + event);
         }
@@ -192,7 +192,7 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
         this.selected.emit(selection);
 
         //Forces the control's "viewModel" and "value" to update on selection, not later.
-        this.inputModel.reset(this.linkModel.asString());
+        this.inputModel!.reset(this.linkModel.asString());
     }
 
     /**

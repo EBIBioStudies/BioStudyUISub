@@ -114,7 +114,7 @@ export class MultiSelectComponent implements ControlValueAccessor, OnChanges, On
     filterInputValue$: Subject<string> = new Subject<string>();
 
     private selected: string[] = [];
-    private sb: Subscription;
+    private sb?: Subscription;
 
     constructor(private rootEl: ElementRef) {}
 
@@ -128,7 +128,7 @@ export class MultiSelectComponent implements ControlValueAccessor, OnChanges, On
     }
 
     ngOnDestroy(): void {
-        this.sb.unsubscribe();
+        this.sb!.unsubscribe();
         document.body.removeEventListener('click', this.closeOnClick);
     }
 

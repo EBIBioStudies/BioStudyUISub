@@ -1,12 +1,4 @@
-import {
-    Component,
-    Input,
-    Type,
-    ViewChild,
-    ViewContainerRef,
-    ComponentFactoryResolver,
-    OnInit
-} from '@angular/core';
+import {Component, ComponentFactoryResolver, Input, Type, ViewChild, ViewContainerRef} from '@angular/core';
 
 export interface TreeViewCustomNodeComponent {
     onNodeData(data: any): void;
@@ -77,8 +69,8 @@ li:last-child::before {
 `]
 })
 export class TreeViewNodeComponent {
-    @Input() data: any;
-    @Input() config: TreeViewConfig;
+    @Input() data?: any;
+    @Input() config?: TreeViewConfig;
 
     @ViewChild('nodeTemplate', {read: ViewContainerRef}) vcr;
 
@@ -89,7 +81,7 @@ export class TreeViewNodeComponent {
     }
 
     get children(): any [] {
-        return this.config.children(this.data);
+        return this.config ? this.config.children(this.data) : [];
     }
 
     get hasChildren(): boolean {
@@ -97,9 +89,11 @@ export class TreeViewNodeComponent {
     }
 
     ngAfterViewInit() {
-        let compFactory = this.componentFactoryResolver.resolveComponentFactory(this.config.nodeComponentClass);
-        this.compRef = this.vcr.createComponent(compFactory);
-        this.detectChanges();
+        if (this.config) {
+            let compFactory = this.componentFactoryResolver.resolveComponentFactory(this.config.nodeComponentClass);
+            this.compRef = this.vcr.createComponent(compFactory);
+            this.detectChanges();
+        }
     }
 
     ngOnChanges() {
@@ -137,6 +131,6 @@ export class TreeViewNodeComponent {
 `]
 })
 export class TreeViewComponent {
-    @Input() data: any;
-    @Input() config: TreeViewConfig;
+    @Input() data?: any;
+    @Input() config?: TreeViewConfig;
 }

@@ -17,13 +17,13 @@ import {Section} from '../../shared/submission.model';
     styleUrls: ['./subm-form.component.css']
 })
 export class SubmFormComponent implements OnChanges {
-    @Input() section: Section;
-    @Input() readonly: boolean;
+    @Input() section?: Section;
+    @Input() readonly: boolean = false;
 
-    sectionForm: SectionForm;
+    sectionForm?: SectionForm;
     hasError: boolean = false;
 
-    private hasErrorEls: NodeListOf<Element>;
+    private hasErrorEls?: NodeListOf<Element>;
 
     constructor(private submFormService: SubmFormService, private rootEl: ElementRef) {}
 
@@ -52,7 +52,7 @@ export class SubmFormComponent implements OnChanges {
      * @returns {FieldControl} - Extended form control for the field.
      */
     get(fieldId: string, typeAttr?: string | ''): FieldControl | any {
-        const fieldControl = this.sectionForm.fieldControl(fieldId);
+        const fieldControl = this.sectionForm!.fieldControl(fieldId);
 
         if (typeAttr) {
             return fieldControl.parentType[typeAttr];

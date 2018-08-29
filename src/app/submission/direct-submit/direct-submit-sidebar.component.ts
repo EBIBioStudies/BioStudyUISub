@@ -7,14 +7,14 @@ import {
 } from '@angular/core';
 
 import {DirectSubmitService} from './direct-submit.service';
-import {UserData} from "../../auth/user-data";
-import {FileUploadButtonComponent} from "../../shared/file-upload-button.component";
+import {UserData} from '../../auth/user-data';
+import {FileUploadButtonComponent} from '../../shared/file-upload-button.component';
 
-import {Observable} from "rxjs/Observable";
-import {last, mergeAll} from "rxjs/operators";
-import {AppConfig} from "../../app.config";
-import {Subject} from "rxjs/Subject";
-import {Subscription} from "rxjs/Subscription";
+import {Observable} from 'rxjs/Observable';
+import {last, mergeAll} from 'rxjs/operators';
+import {AppConfig} from '../../app.config';
+import {Subject} from 'rxjs/Subject';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'direct-submit-sidebar',
@@ -24,8 +24,8 @@ import {Subscription} from "rxjs/Subscription";
 
 export class DirectSubmitSideBarComponent implements OnInit {
     protected ngUnsubscribe: Subject<void>;     //stopper for all subscriptions
-    private uploadSubs: Subscription;           //subscription for the battery of upload requests
-    private model = {
+    private uploadSubs?: Subscription;           //subscription for the battery of upload requests
+    private model: { files: any | undefined[], projects: any | undefined[] } = {
         files: undefined,               //no file selection at first
         projects: []                    //chebox-ised representation of project list
     };
@@ -62,7 +62,7 @@ export class DirectSubmitSideBarComponent implements OnInit {
      */
     get selectedFileCount(): number {
         if (this.model.files) {
-            return this.model.files.filter(Boolean).length;
+            return this.model.files!.filter(Boolean).length;
         } else {
             return 0;
         }
@@ -179,7 +179,7 @@ export class DirectSubmitSideBarComponent implements OnInit {
      * @param {string[]} projects - Names of projects.
      * @returns {{name: string; checked: boolean}[]} Checkbox-compliant object.
      */
-    private initProjModel(projects: string[]): {name: string, checked: boolean}[] {
+    private initProjModel(projects: string[]): { name: string, checked: boolean }[] {
         return projects.map(name => {
             return {name: name, checked: false}
         });
@@ -220,7 +220,7 @@ export class DirectSubmitSideBarComponent implements OnInit {
      * @param {Event} event - DOM event object for the click action.
      */
     private onCancelPending(event: Event) {
-        this.uploadSubs.unsubscribe();
+        this.uploadSubs!.unsubscribe();
         this.directSubmitSvc.cancelAll();
     }
 
@@ -235,7 +235,7 @@ export class DirectSubmitSideBarComponent implements OnInit {
         let files = this.model.files;
 
         files.forEach((file, index) => {
-            if (this.directSubmitSvc.getRequest(index).successful) {
+            if (this.directSubmitSvc!.getRequest(index)!.successful) {
                 files[index] = null;
             }
         });
@@ -269,13 +269,13 @@ export class DirectSubmitSideBarComponent implements OnInit {
             this.uploadSubs = Observable.from(nonClearedFiles).map((file: File) => {
                 return this.directSubmitSvc.addRequest(file, '', this.selectedProj, submType);
 
-            //Throttles the number of requests allowed in parallel and takes just the last event to signal the end of the upload process.
+                //Throttles the number of requests allowed in parallel and takes just the last event to signal the end of the upload process.
             }).pipe(mergeAll(this.appConfig.maxConcurrent)).pipe(last())
 
             //Cancels all requests on demand and keeps the files list in sync with the list of requests.
-            .takeUntil(this.ngUnsubscribe).finally(() => this.model.files = nonClearedFiles).subscribe();
+                .takeUntil(this.ngUnsubscribe).finally(() => this.model.files = nonClearedFiles).subscribe();
 
-        //Most probably file selection was left out.
+            //Most probably file selection was left out.
         } else {
             this.markFileTouched();
         }

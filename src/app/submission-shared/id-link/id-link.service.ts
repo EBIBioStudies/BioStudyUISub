@@ -7,14 +7,14 @@ import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
-import {Subject} from "rxjs/Subject";
-import {throwError} from "rxjs/index";
+import {Subject} from 'rxjs/Subject';
+import {throwError} from 'rxjs/index';
 
 @Injectable()
 export class IdLinkService {
     static BASE_URL: string = 'https://identifiers.org/rest';   //base URL for the service endpoint
     public prefixes: string[] = [];                             //all possible prefixes for formatted links
-    public idUrl: string;                                       //last URL for valid identifier
+    public idUrl: string | undefined;                                       //last URL for valid identifier
     private isFetched: boolean = false;                         //flags when collection data has been fetched already
     private _whenFetched: Subject<any> = new Subject<any>();
 

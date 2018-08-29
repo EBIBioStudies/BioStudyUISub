@@ -17,7 +17,7 @@ interface CSSStyleDeclarationWithResize extends CSSStyleDeclaration {
     selector: 'textarea[autosize]'
 })
 export class TextareaAutosize {
-    @Input('autosize') private maxHeight: number;
+    @Input('autosize') private maxHeight: number = 100;
     private minHeight: number = 50;
 
     constructor(private element: ElementRef) {

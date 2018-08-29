@@ -3,7 +3,7 @@ import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs/Subject';
 
 import {SubmissionService} from '../shared/submission.service';
-import {Observable} from "rxjs/Observable";
+import {Observable} from 'rxjs/Observable';
 import {attachTo} from '../shared/pagetab-attributes.utils';
 
 enum ReqStatus {CONVERT, SUBMIT, ERROR, SUCCESS}
@@ -20,7 +20,7 @@ export class DirectSubmitRequest {
     private _status: ReqStatus;
     private _log: any;
     private _accno: string =  '';
-    private _releaseDate: string;
+    private _releaseDate: string | undefined;
 
     constructor(filename: string, format: string, projects: string[], type: ReqType) {
         this._filename = filename;
@@ -92,7 +92,7 @@ export class DirectSubmitRequest {
         return this._accno;
     }
 
-    get releaseDate(): string {
+    get releaseDate(): string | undefined {
         return this._releaseDate;
     }
 

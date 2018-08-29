@@ -5,7 +5,7 @@
  * @param {Date} date - Date object
  * @returns {string} The date in simplified extended ISO format without the time offset (YYYY-MM-DD).
  */
-export function formatDate(date: Date): string {
+export function formatDate(date: Date | undefined): string {
     let day;        //zero-padded day number
     let month;      //zero-padded month number
     let year;       //full year number
@@ -17,19 +17,19 @@ export function formatDate(date: Date): string {
         year = date.getFullYear();
         return [year, month, day].join('-');
 
-    //Returns an empty string instead of a zero-padded string corresponding to the start of the Unix epoch if null.
+        //Returns an empty string instead of a zero-padded string corresponding to the start of the Unix epoch if null.
     } else {
         return '';
     }
 
 }
 
-export function parseDate(date: string): Date {
+export function parseDate(date: string): Date | undefined {
     if (!date) {
         return undefined;
     }
-    const d: string[] = date.match(/(\d{4})\-(\d{2})\-(\d{2})/);
-    if (!d) {
+    const d: string[] = date.match(/(\d{4})\-(\d{2})\-(\d{2})/) || [];
+    if (d.length === 0) {
         console.log('Date in a wrong format: ', date);
         return undefined;
     }
@@ -42,7 +42,10 @@ export function parseDate(date: string): Date {
  * @param {Date} date2 - Date object
  * @returns {boolean} True if both dates are equal.
  */
-export function isEqualDate(date1: Date, date2: Date): boolean {
+export function isEqualDate(date1: Date | undefined, date2: Date | undefined): boolean {
+    if (date1 === undefined || date2 === undefined) {
+        return false;
+    }
 
     //If any of the dates is undefined, it's clear that they are both different
     if (typeof date2 === typeof date1) {

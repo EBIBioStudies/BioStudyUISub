@@ -1,6 +1,6 @@
 export class FileNode {
     expanded: boolean = false;
-    icon: string = undefined;
+    icon: string | undefined = undefined;
     name: string;
 
     constructor(public isDir: boolean, public path: string) {
@@ -13,7 +13,7 @@ export class FileNode {
         this.icon = this.getIcon();
     }
 
-    private getIcon(): string {
+    private getIcon(): string | undefined {
         if (this.isDir) {
             if (this.expanded) {
                 return '- ';
@@ -25,7 +25,7 @@ export class FileNode {
 
     private getName(): string {
         var name = this.path.split(/\//).pop();
-        name = name.replace('User', 'Home');
+        name = name!.replace('User', 'Home');
         return name;
     }
 }

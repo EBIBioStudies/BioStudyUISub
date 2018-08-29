@@ -132,7 +132,7 @@ export class SubmEditComponent implements OnInit {
                     });
 
                     //Determines the current section (in case the user navigates down to a subsection)
-                    this.changeSection(this.subm!.root.id);
+                    this.changeSection(this.subm!.section.id);
 
                     //Newly created submission => sets default values
                     if (this.isNew) {
@@ -203,13 +203,13 @@ export class SubmEditComponent implements OnInit {
         if (this.submForm) {
 
             //Refreshes the required status of all members of a validation group
-            this.submForm.sectionForm.updateGroupForm();
+            this.submForm!.sectionForm!.updateGroupForm();
 
             //Validates the submission immediately
             this.errors = SubmissionValidator.validate(this.subm!);
 
             //Retrieves all form controls as a flat array.
-            this.submForm.sectionForm.controls(this.formControls);
+            this.submForm!.sectionForm!.controls(this.formControls);
             this.changeRef.detectChanges();
         }
     }
@@ -324,14 +324,14 @@ export class SubmEditComponent implements OnInit {
 
         //Validates in bulk if form incomplete
         if (!this.canSubmit() || !this.formValid) {
-            this.submForm!.sectionForm.markAsTouched();
+            this.submForm!.sectionForm!.markAsTouched();
             this.isSubmitting = false;
 
             //Stopping the click event from bubbling messes up change detection for features => forces it.
             this.changeRef.detectChanges();
 
             //Updates the pending fields counter
-            this.submForm!.sectionForm.controls(this.formControls);
+            this.submForm!.sectionForm!.controls(this.formControls);
 
             //Switches to "Check" tab if not active already
             //TODO: check for validator errors needed to rule out column errors. Remove it.

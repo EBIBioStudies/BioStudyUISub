@@ -6,7 +6,7 @@ import {
 import {
     Validator,
     AbstractControl,
-    NG_VALIDATORS
+    NG_VALIDATORS, ValidationErrors
 } from '@angular/forms';
 
 import {
@@ -24,7 +24,7 @@ export class DateFormatDirective implements Validator {
 
     private regexp = /(\d{4})\-(\d{2})\-(\d{2})/;
 
-    validate(c: AbstractControl): {[key: string]: any} {
+    validate(c: AbstractControl): ValidationErrors | null {
         let v = c.value || '';
         if (v !== '') {
             if (!this.valid(v)) {
