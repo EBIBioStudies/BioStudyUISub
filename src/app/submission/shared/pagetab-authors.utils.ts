@@ -1,135 +1,96 @@
-function authorsToContacts(subsections: any[]): any[] {
-    const isAffiliation = (s) => {
+import {PtAttribute, PtSection} from './pagetab.model';
+
+export function authors2Contacts(sections: PtSection[] = []): PtSection[] {
+    const isAffiliation = (s: string) => {
         return s !== undefined && ['organization', 'organisation', 'affiliation'].indexOf(s.toLowerCase()) > -1;
     };
-    const isAuthor = (s) => {
+
+    const isAuthor = (s: string) => {
         return s !== undefined && s.toLowerCase() === 'author';
     };
 
-    const sections = (subsections || []);
-    const authors = sections.filter(s => isAuthor(s.type));
-    const affiliations = sections
-        .filter(s => isAffiliation(s.type) && s.accno !== undefined)
-        .reduce((rv, af) => {
-            rv[af.accno] = ((af.attributes || [])
-                .filter(at => at.name !== undefined)
-                .find(at => at.name.toLowerCase() === 'name') || {value: ''})
-                .value;
+    const affiliations: { [key: string]: string } =
+        sections.filter(s => isAffiliation(s.type) && s.accno !== undefined)
+            .reduce((rv, affil) => {
+                rv[affil.accno!] =
+                    ((affil.attributes || []).find(at => at.name.toLowerCase() === 'name') || {value: ''}).value;
+                return rv;
+            }, {});
 
-            return rv;
-        }, {});
-
-    const contacts =
-        authors.map(a => {
-            const c = Object.assign({}, a);
-            c.type = 'Contact';
-            c.attributes = (a.attributes || [])
+    const contacts = sections.filter(s => isAuthor(s.type))
+        .map(a => {
+            const contact = new PtSection('Contact');
+            contact.attributes = (a.attributes || [])
                 .map(attr => {
                     if (isAffiliation(attr.name)) {
-                        return {
-                            name: 'Organisation',
-                            value: attr.isReference ?
-                                (affiliations[attr.value] || attr.value) :
-                                attr.value
-                        }
+                        const affil = attr.isReference ? (affiliations[attr.value] || attr.value) : attr.value;
+                        return new PtAttribute('Organisation', affil);
                     }
                     return attr;
                 });
-            return c;
+            return contact;
         });
     return sections
         .filter(s => !isAuthor(s.type) && !isAffiliation(s.type))
-        .map(s => convertAuthorsToContacts(s))
         .concat(contacts);
 }
 
-function contactsToAuthors(subsections: any[] = []): any[] {
-    const isContact = (s) => {
+class Organisations {
+    private refs: { [key: string]: string } = {};
+    private names: { [key: string]: string } = {};
+
+    private refFor(value: string): string {
+        const key = value.trim().toLowerCase();
+        this.refs[key] = this.refs[key] || `o${Object.keys(this.refs).length + 1}`;
+        this.names[key] = value;
+        return this.refs[key];
+    }
+
+    toReference(attr: PtAttribute): PtAttribute {
+        const orgRef = this.refFor(attr.value);
+        return new PtAttribute('Affiliation', orgRef, true);
+    }
+
+    list(): { accno: string, name: string }[] {
+        return Object.keys(this.refs).map(key => ({accno: this.refs[key], name: this.names[key]}));
+    }
+}
+
+export function contacts2Authors(sections: PtSection[] = []): PtSection[] {
+    const isContact = (s: string) => {
         return s !== undefined && s.toLowerCase() === 'contact';
     };
 
-    const sections = (subsections || []);
-    const orgRefs = {}, orgNames = {};
+    const isOrganisation = (s: string) => {
+        return s !== undefined && s.toLowerCase() === 'organisation';
+    };
 
-    const authors = sections
+    const orgs = new Organisations();
+
+    const authors: PtSection[] = sections
         .filter(s => isContact(s.type))
-        .map(c => {
-            const author: any = {type: 'Author'};
-            const attributes = c.attributes
-                .filter(a => a.value.trim().length > 0)
-                .map(a => {
-                    if (a.name.toLowerCase() === 'organisation') {
-                        const v = a.value.trim().toLowerCase();
-                        const orgRef = orgRefs[v] || `o${Object.keys(orgRefs).length + 1}`;
-                        orgRefs[v] = orgRef;
-                        orgNames[v] = orgNames[v] || a.value.trim();
-                        return {
-                            name: 'Affiliation',
-                            isReference: true,
-                            value: orgRef
-                        }
+        .map(contact => {
+            const author = new PtSection('Author');
+            author.attributes = (contact.attributes || [])
+                .map(attr => {
+                    if (isOrganisation(attr.name)) {
+                        return orgs.toReference(attr);
                     }
-                    return a;
+                    return attr;
                 });
-
-            if (attributes.length > 0) {
-                author.attributes = attributes;
-            }
             return author;
         });
 
-    const affiliations = Object.keys(orgRefs).map(k => (
-        {
-            type: 'Organization',
-            accno: orgRefs[k],
-            attributes: [{
-                name: 'Name',
-                value: orgNames[k]
-            }]
+    const affiliations: PtSection[] = orgs.list().map(org => {
+            const affil = new PtSection('Organization');
+            affil.accno = org.accno;
+            affil.attributes = [new PtAttribute('Name', org.name)];
+            return affil;
         }
-    ));
+    );
 
     return sections
         .filter(s => !isContact(s.type))
         .concat(authors)
         .concat(affiliations);
-}
-
-export function convertAuthorsToContacts(obj: any): any {
-    if (obj === undefined) {
-        return obj;
-    }
-
-    if (obj.section !== undefined) {
-        const newObj = Object.assign({}, obj);
-        newObj.section = convertAuthorsToContacts(obj.section);
-        return newObj;
-    }
-
-    if (obj.subsections !== undefined) {
-        const newObj = Object.assign({}, obj);
-        newObj.subsections = authorsToContacts(obj.subsections);
-        return newObj;
-    }
-    return obj;
-}
-
-export function convertContactsToAuthors(obj: any): any {
-    if (obj === undefined) {
-        return obj;
-    }
-
-    if (obj.section !== undefined) {
-        const newObj = Object.assign({}, obj);
-        newObj.section = convertContactsToAuthors(obj.section);
-        return newObj;
-    }
-
-
-    if (obj.subsections !== undefined) {
-        const newObj = Object.assign({}, obj);
-        newObj.subsections = contactsToAuthors(obj.subsections);
-        return newObj;
-    }
-    return obj;
 }

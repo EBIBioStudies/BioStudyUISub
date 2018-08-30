@@ -163,11 +163,11 @@ describe('PageTab', () => {
 
         const subm = pt.toSubmission(type);
         expect(subm.accno).toBe('123');
-        expect(subm.root).toBeDefined();
-        expect(subm.root.type).toBeDefined();
-        expect(subm.root.type.name).toBe('Study');
+        expect(subm.section).toBeDefined();
+        expect(subm.section.type).toBeDefined();
+        expect(subm.section.type.name).toBe('Study');
 
-        const study = subm.root;
+        const study = subm.section;
         expect(study.sections.length).toBe(0);
         expect(study.fields.length).toBe(studyType.fieldTypes.length);
         expect(study.annotations.size()).toBe(1);
@@ -194,8 +194,8 @@ describe('PageTab', () => {
         const subm = pt.toSubmission(SubmissionType.createDefault());
         expect(subm.tags.accessTags).toEqual(accessTags);
         expect(subm.tags.tags).toEqual(tags);
-        expect(subm.root.tags.accessTags).toEqual(accessTags);
-        expect(subm.root.tags.tags).toEqual(tags);
+        expect(subm.section.tags.accessTags).toEqual(accessTags);
+        expect(subm.section.tags.tags).toEqual(tags);
 
         const pt2 = PageTab.fromSubmission(subm);
         expect(pt2.accessTags).toEqual(accessTags);

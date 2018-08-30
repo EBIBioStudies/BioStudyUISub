@@ -10,8 +10,9 @@ import {
     SubmissionType, ColumnType
 } from './submission-type.model';
 
-import * as pluralize from "pluralize";
+import * as pluralize from 'pluralize';
 import * as _ from 'lodash';
+import {NameAndValue, Tag} from './model.common';
 
 //Names of attributes as they come from the server that must be external.
 //NOTE: As per PageTab's requirements, "AttachTo", "ReleaseDate" and "Title" are special attributes that pertain the
@@ -44,15 +45,15 @@ export class HasUpdates<T> {
 }
 
 export class UpdateEvent {
-    leafEvent: UpdateEvent = null;      //pointer to original first event if a cascade is triggered
+    leafEvent?: UpdateEvent;      //pointer to original first event if a cascade is triggered
 
     constructor(public name: string,
                 public value: any,
-                public source: UpdateEvent = undefined) {
+                public source?: UpdateEvent) {
 
         //Keeps track of the source event.
         //NOTE: In certain instances, the chain of events is recorded as a nested object.
-        if (this.source && !this.source.leafEvent.source) {
+        if (this.source && this.source.leafEvent && !this.source.leafEvent.source) {
             this.leafEvent = this.source.leafEvent;
         } else {
             this.leafEvent = this;
@@ -151,7 +152,7 @@ export class ValueMap extends HasUpdates<UpdateEvent> {
         return valuesLength == 0;
     }
 
-    valueFor(key: string): AttributeValue {
+    valueFor(key: string): AttributeValue | undefined {
         return this.valueMap.get(key);
     }
 
@@ -173,13 +174,13 @@ export class ValueMap extends HasUpdates<UpdateEvent> {
             console.warn(`remove: the key '${key}' does not exist in the map`);
             return;
         }
-        this.subscriptionMap.get(key).unsubscribe();
+        this.subscriptionMap.get(key)!.unsubscribe();
         this.subscriptionMap.delete(key);
         this.valueMap.delete(key);
     }
 
     values(keys?: string[]): AttributeValue[] {
-        return (keys || this.keys()).map(key => this.valueMap.get(key));
+        return (keys || this.keys()).map(key => this.valueMap.get(key)!);
     }
 
     keys(): string[] {
@@ -240,7 +241,7 @@ export class Columns extends HasUpdates<UpdateEvent> {
         return true;
     }
 
-    at(index: number): Attribute {
+    at(index: number): Attribute | undefined {
         return (index >= 0) && (index < this.columns.length) ? this.columns[index] : undefined;
     }
 
@@ -321,13 +322,11 @@ export class Feature extends HasUpdates<UpdateEvent> {
     private _columns: Columns = new Columns();
     private _rows: Rows = new Rows();
 
-    static create(type: FeatureType, attrs: { name: string, value: string }[]): Feature {
+    static create(type: FeatureType, attrs: NameAndValue[]): Feature {
         return new Feature(type,
             {
                 type: type.name,
-                entries: [{
-                    attributes: attrs
-                }]
+                entries: [attrs]
             });
     }
 
@@ -349,7 +348,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
         });
 
         (data.entries || []).forEach(entry => {
-            this.add(entry.attributes);
+            this.add(entry);
         });
 
         if (type.required && this.rowSize() === 0) {
@@ -361,7 +360,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
                 this.notify(new UpdateEvent('columns_update', {id: this.id}, event));
 
                 if (event.name == 'column_name_update') {
-                    this.onColumnUpdate(event.source.value, event.value.index);
+                    this.onColumnUpdate(event.source!.value, event.value.index);
                 }
             });
         this._rows.updates()
@@ -466,11 +465,11 @@ export class Feature extends HasUpdates<UpdateEvent> {
      * @param {number} [rowIdx = null] - Index of row to be set to the provided attributes. By default, the row will be
      * added if the feature is not limited to a single row, in which case the first row is changed.
      */
-    add(attributes: { name: string, value: string }[] = [], rowIdx: number = null): void {
+    add(attributes: { name: string, value: string }[] = [], rowIdx?: number): void {
         const attrsWithName = attributes.filter(attr => attr.name !== '');
         const attrNames = attrsWithName.map(attr => attr.name);
 
-        const usedColIds = [];
+        const usedColIds: string[] = [];
         let rowMap;
 
         //Adds a column if any of the passed-in attribute names doesn't occur as often as it does in the column list.
@@ -484,12 +483,12 @@ export class Feature extends HasUpdates<UpdateEvent> {
 
                 if (occurAttrs != occurCols) {
                     this.addColumn(attrName, colType.required, colType.displayed, colType.readonly, colType.removable,
-                                   colType.valueType, colType.values);
+                        colType.valueType, colType.values);
                 }
             });
 
         //If row not provided, add it if applicable.
-        if (rowIdx === null) {
+        if (rowIdx === undefined) {
             rowMap = this.singleRow ? this.rows[0] : this.addRow();
         } else {
             rowMap = this.rows[rowIdx];
@@ -500,9 +499,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
             let cols: Attribute[] = this._columns.allWithName(attr.name);
 
             //Prevents the same attribute becoming the value for multiple columns of the same name
-            cols = cols.filter((col) => {
-                return usedColIds.indexOf(col.id) == -1;
-            });
+            cols = cols.filter((col) => (usedColIds.indexOf(col.id) === -1));
             usedColIds.push(cols[0].id);
 
             rowMap.valueFor(cols[0].id).value = attr.value;
@@ -542,12 +539,12 @@ export class Feature extends HasUpdates<UpdateEvent> {
      * @param {number} colIndex - Index of the updated column.
      */
     onColumnUpdate(newName: string, colIndex: number) {
-        if (this._columns.allWithName(newName).length == 1 || !this.type.uniqueCols) {
-            this._columns.at(colIndex).updateType(this.type.getColumnType(newName));
+        if (this._columns.allWithName(newName).length === 1 || !this.type.uniqueCols) {
+            this._columns.at(colIndex)!.updateType(this.type.getColumnType(newName));
         }
     }
 
-    addRow(): ValueMap {
+    addRow(): ValueMap | undefined {
         if (this.singleRow && this._rows.size() > 0) {
             console.warn(`addRow: The feature [type=${this.type.name}] can't have more than one row`);
             return;
@@ -580,7 +577,7 @@ export class AnnotationFeature extends Feature {
      * @param {FeatureType} type - Normally of type "annotationsType"
      * @param {FeatureData} data - Key-value pairs wrapped with type.
      */
-    constructor(type: FeatureType, data: FeatureData = {} as FeatureData) {
+    constructor(type: FeatureType, data: FeatureData = <FeatureData>{}) {
         super(type, data);
     }
 
@@ -589,13 +586,11 @@ export class AnnotationFeature extends Feature {
      * @param {FeatureType} type - Normally of type "annotationsType"
      * @param {{name: string; value: string}[]} attrs - Key-value pairs
      */
-    static create(type: FeatureType, attrs: { name: string, value: string }[]): Feature {
+    static create(type: FeatureType, attrs: NameAndValue[]): Feature {
         return new AnnotationFeature(type,
             {
                 type: type.name,
-                entries: [{
-                    attributes: attrs
-                }]
+                entries: [attrs]
             });
     }
 
@@ -662,7 +657,7 @@ export class Features extends HasUpdates<UpdateEvent> {
         return this.features.slice();
     }
 
-    add(type: FeatureType, data?: FeatureData): Feature {
+    add(type: FeatureType, data?: FeatureData): Feature | undefined {
         if (this.features.filter(f => f.type === type).length > 0) {
             console.error(`Feature of type ${type} already exists in the section`);
             return;
@@ -702,10 +697,8 @@ export class Features extends HasUpdates<UpdateEvent> {
      * @param {string} [property = 'id'] - Property name by which features are looked up.
      * @returns {Feature} Feature fulfilling the predicated comparison.
      */
-    find(value: string, property: string = 'id'): Feature {
-        return this.features.find((feature) => {
-            return feature[property] === value
-        });
+    find(value: string, property: string = 'id'): Feature | undefined {
+        return this.features.find((feature) => (feature[property] === value));
     }
 }
 
@@ -804,10 +797,8 @@ export class Fields extends HasUpdates<UpdateEvent> {
      * @param {string} [property = 'id'] - Property name by which fields are looked up.
      * @returns {Field} Field fulfilling the predicated comparison.
      */
-    find(value: string, property: string = 'id'): Field {
-        return this.fields.find((field) => {
-            return field[property] === value
-        });
+    find(value: string, property: string = 'id'): Field | undefined {
+        return this.fields.find((field) => (field[property] === value));
     }
 }
 
@@ -822,7 +813,7 @@ export class Section extends HasUpdates<UpdateEvent> {
     readonly sections: Sections;
     readonly tags: Tags;
 
-    constructor(type: SectionType, data: SectionData = {} as SectionData) {
+    constructor(type: SectionType, data: SectionData = <SectionData>{}) {
         super();
 
         this.tags = Tags.create(data);
@@ -891,7 +882,7 @@ export class Section extends HasUpdates<UpdateEvent> {
             .map(s => s.sectionPath(id))
             .filter(p => p.length > 0);
 
-        return (path.length > 0) ? [].concat([this], path[0]) : [];
+        return (path.length > 0) ? ([] as Section[]).concat([this], path[0]) : [];
     }
 
     subscribeTo(hasUpdates: HasUpdates<UpdateEvent>, type: string) {
@@ -910,7 +901,7 @@ export class Sections extends HasUpdates<UpdateEvent> {
         this.sections = [];
         this.subscriptions = [];
 
-        const sd: { [key: string]: SectionData } = (data.sections || []).reduce((rv, d) => {
+        const sd: { [key: string]: SectionData | undefined } = (data.sections || []).reduce((rv, d) => {
             rv[d.type] = d;
             return rv;
         }, {});
@@ -981,7 +972,7 @@ export class Sections extends HasUpdates<UpdateEvent> {
 export class Submission {
     accno: string;
     isRevised: boolean;        //true if submission has been sent and is marked as revised by PageTab class.
-    readonly root: Section;
+    readonly section: Section;
     readonly type;
 
     readonly tags: Tags;
@@ -992,12 +983,12 @@ export class Submission {
      * @param {SubmissionType} type Type definitions object
      * @param {SubmissionData} data Submission data in PageTab format.
      */
-    constructor(type: SubmissionType, data: SubmissionData = {} as SubmissionData) {
+    constructor(type: SubmissionType, data: SubmissionData = <SubmissionData>{}) {
         this.tags = Tags.create(data);
         this.type = type;
         this.accno = data.accno || '';
         this.isRevised = !this.isTemp && data.isRevised;
-        this.root = new Section(type.sectionType, data.section);
+        this.section = new Section(type.sectionType, data.section);
     }
 
     /**
@@ -1009,30 +1000,28 @@ export class Submission {
     }
 
     sectionPath(id: string): Section[] {
-        return this.root.sectionPath(id);
+        return this.section.sectionPath(id);
     }
 
     updates(): Observable<UpdateEvent> {
-        return this.root.updates();
+        return this.section.updates();
     }
 }
 
 export class Tags {
-    private _tags: { classifier: string, tag: string }[];
+    private _tags: Tag[];
     private _accessTags: string[];
 
-    static create(data: any): Tags {
-        return new Tags(data.tags, data.accessTags);
+    static create(data?: TaggedData): Tags {
+        if (data !== undefined) {
+            return new Tags(data.tags, data.accessTags);
+        }
+        return new Tags();
     }
 
-    constructor(tags: any[] = [], accessTags: any[] = []) {
-        const defined = function (v: string) {
-            return v !== undefined && v.trim().length > 0;
-        };
-        this._tags = (tags || [])
-            .filter(t => defined(t.classifier) && defined(t.tag))
-            .map(t => ({classifier: t.classifier, tag: t.tag}));
-        this._accessTags = (accessTags || []).slice();
+    constructor(tags: Tag[] = [], accessTags: string[] = []) {
+        this._tags = tags.slice();
+        this._accessTags = accessTags.slice();
     }
 
     get tags(): any[] {
@@ -1044,29 +1033,34 @@ export class Tags {
     }
 }
 
-export interface AttributesData {
-    attributes: { name: string, value: string }[];
+export interface AttributeData {
+    name: string;
+    value: string;
+    rootLevel: boolean;
+    reference: boolean;
+    terms: NameAndValue[];
 }
 
 export interface FeatureData {
     type: string;
-    entries: AttributesData[];
+    entries: AttributeData[][];
 }
 
-export interface SectionData extends AttributesData {
-    tags: any[];
-    accessTags: any[];
+export interface TaggedData {
+    tags: Tag[];
+    accessTags: string[];
+}
 
+export interface SectionData extends TaggedData {
     type: string;
     accno: string;
+    attributes: AttributeData[];
     features: FeatureData[];
     sections: SectionData[];
 }
 
-export interface SubmissionData {
-    tags: any[];
-    accessTags: any[];
-    isRevised: boolean;
+export interface SubmissionData extends TaggedData {
     accno: string;
     section: SectionData;
+    isRevised: boolean;
 }
