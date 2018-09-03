@@ -1,26 +1,54 @@
-import {Feature, Section, Submission} from './submission.model';
-import {PageTab, PtAttribute, PtFile, PtFileItem, PtLink, PtLinkItem, PtSection} from './pagetab.model';
+import {AttributeData, Feature, Section, Submission} from './submission.model';
+import {
+    ATTACH_TO_ATTR,
+    ATTRIBUTE_DUPLICATES_CONTAINS,
+    PageTab, PageTabUtils,
+    PtAttribute,
+    PtFile,
+    PtFileItem,
+    PtLink,
+    PtLinkItem,
+    PtSection
+} from './pagetab.model';
 import {contacts2Authors} from './pagetab-authors.utils';
+import {SubmissionType} from './submission-type.model';
+import {LinksUtils} from './pagetab-links.utils';
 
-export function submission2PageTab(subm: Submission, isSanitise: boolean = false): PageTab {
-    let ptSection = section2PtSection(subm.section, isSanitise);
-    let pageTab = new PageTab(subm.accno, ptSection);
-    pageTab.tags = subm.tags.tags;
-    pageTab.accessTags = subm.tags.accessTags;
-    pageTab.addAttributes(extractSectionAttributes(subm.section, isSanitise).filter(/* todo: root attributes*/));
+export function newPageTab(templateName: string = 'Default'): PageTab {
+    const subm = new Submission(SubmissionType.fromTemplate(templateName));
+    const pageTab = submission2PageTab(subm);
+
+    //Guarantees that for non-default templates, an AttachTo attribute always exists.
+    //NOTE: The PageTab constructor does not bother with attributes if the section is empty.
+    if (templateName && templateName != 'Default') {
+        new PageTabUtils(pageTab).addAttributes([{name: ATTACH_TO_ATTR, value: templateName}]);
+    }
     return pageTab;
 }
 
+export function submission2PageTab(subm: Submission, isSanitise: boolean = false): PageTab {
+    let ptSection = section2PtSection(subm.section, isSanitise);
+    return new PageTabUtils(<PageTab>{
+        accno: subm.accno,
+        section: ptSection,
+        tags: subm.tags.tags,
+        accessTags: subm.tags.accessTags,
+        attributes: subm.attributes.map(at => attributeData2PtAttribute(at))
+    }).addAttributes((ptSection.attributes || []).filter(at => ATTRIBUTE_DUPLICATES_CONTAINS(at.name)))
+        .pageTab;
+}
+
 function section2PtSection(section: Section, isSanitise: boolean = false): PtSection {
-    let ptSection = new PtSection(section.typeName);
-    ptSection.tags = section.tags.tags;
-    ptSection.accessTags = section.tags.accessTags;
-    ptSection.accno = section.accno;
-    ptSection.attributes = extractSectionAttributes(section, isSanitise);
-    ptSection.links = extractSectionLinks(section, isSanitise);
-    ptSection.files = extractSectionFiles(section, isSanitise);
-    ptSection.sections = contacts2Authors(extractSectionSubsections(section, isSanitise));
-    return ptSection;
+    return <PtSection>{
+        type: section.typeName,
+        tags: section.tags.tags,
+        accessTags: section.tags.accessTags,
+        accno: section.accno,
+        attributes: extractSectionAttributes(section, isSanitise),
+        links: extractSectionLinks(section, isSanitise),
+        files: extractSectionFiles(section, isSanitise),
+        subsections: contacts2Authors(extractSectionSubsections(section, isSanitise))
+    };
 }
 
 function extractSectionSubsections(section: Section, isSanitize): PtSection[] {
@@ -30,7 +58,7 @@ function extractSectionSubsections(section: Section, isSanitize): PtSection[] {
 function extractSectionAttributes(section: Section, isSanitise: boolean): PtAttribute[] {
     return ([] as PtAttribute[]).concat(
         fieldsAsAttributes(section, isSanitise),
-        (extractFeatureAttributes(section.annotations, isSanitise).pop() ||[]));
+        (extractFeatureAttributes(section.annotations, isSanitise).pop() || []));
 }
 
 function extractSectionLinks(section: Section, isSanitise: boolean): PtLinkItem[] {
@@ -43,6 +71,7 @@ function extractSectionLinks(section: Section, isSanitise: boolean): PtLinkItem[
 
 function extractSectionFiles(section: Section, isSanitise: boolean): PtFileItem[] {
     const feature = section.features.list().find(f => f.typeName.toLowerCase() === 'file');
+    console.log('fileFeature', feature);
     if (feature !== undefined) {
         return extractFeatureAttributes(feature, isSanitise).map(attrs => attributesAsFile(attrs));
     }
@@ -50,24 +79,41 @@ function extractSectionFiles(section: Section, isSanitise: boolean): PtFileItem[
 }
 
 function fieldsAsAttributes(section: Section, isSanitise: boolean) {
-    return section.fields.list().map((field) => new PtAttribute(field.name, field.value))
-        .filter(attr => (isSanitise && !attr.isEmpty()) || !isSanitise);
+    return section.fields.list().map((field) => <PtAttribute>{name: field.name, value: field.value})
+        .filter(attr => (isSanitise && !isEmptyAttr(attr)) || !isSanitise);
 }
 
 function extractFeatureAttributes(feature: Feature, isSanitise: boolean): PtAttribute[][] {
     return feature.rows.map(row =>
-        feature.columns.map(c => new PtAttribute(c.name, row.valueFor(c.id).value))
-            .filter(attr => (isSanitise && !attr.isEmpty()) || !isSanitise));
+        feature.columns.map(c => <PtAttribute>{name: c.name, value: row.valueFor(c.id)!.value})
+            .filter(attr => (isSanitise && !isEmptyAttr(attr)) || !isSanitise));
 }
 
 function attributesAsLink(attributes: PtAttribute[]): PtLink {
-    const attr = attributes.find(at => at.value.toLowerCase() === 'url');
+    return LinksUtils.toTyped(attributes);
+    /*const attr = attributes.find(at => at.name.toLowerCase() === 'url');
     const attrs = attributes.filter(at => at !== attr);
-    return new PtLink(attr!.value, attrs);
+    return <PtLink>{url: attr!.value, attributes: attrs};*/
 }
 
 function attributesAsFile(attributes: PtAttribute[]): PtFile {
-    const attr = attributes.find(at => at.value.toLowerCase() === 'path');
-    const attrs = attributes.filter(at => at !== attr);
-    return new PtFile(attr!.value, attrs);
+    const attr = attributes.find(at => at.name.toLowerCase() === 'path');
+    const attrs = attributes.filter(at => at.name.toLowerCase() !== 'path');
+    return <PtFile>{path: attr!.value, attributes: attrs};
+}
+
+function attributeData2PtAttribute(attr: AttributeData): PtAttribute {
+    const ptAttr = <PtAttribute>{
+        name: attr.name,
+        value: attr.value,
+        isReference: attr.reference
+    };
+    if ((attr.terms || []).length > 0) {
+        ptAttr.valqual = attr.terms.slice();
+    }
+    return ptAttr;
+}
+
+function isEmptyAttr(attr: PtAttribute): boolean {
+    return attr.value == undefined || attr.value.trim().length === 0;
 }

@@ -322,7 +322,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
     private _columns: Columns = new Columns();
     private _rows: Rows = new Rows();
 
-    static create(type: FeatureType, attrs: NameAndValue[]): Feature {
+    static create(type: FeatureType, attrs: AttributeData[]): Feature {
         return new Feature(type,
             {
                 type: type.name,
@@ -586,7 +586,7 @@ export class AnnotationFeature extends Feature {
      * @param {FeatureType} type - Normally of type "annotationsType"
      * @param {{name: string; value: string}[]} attrs - Key-value pairs
      */
-    static create(type: FeatureType, attrs: NameAndValue[]): Feature {
+    static create(type: FeatureType, attrs: AttributeData[]): Feature {
         return new AnnotationFeature(type,
             {
                 type: type.name,
@@ -976,6 +976,7 @@ export class Submission {
     readonly type;
 
     readonly tags: Tags;
+    readonly attributes: AttributeData[];
 
     /**
      * Creates a new submission from PageTab-formatted data and pre-defined type definitions.
@@ -987,6 +988,7 @@ export class Submission {
         this.tags = Tags.create(data);
         this.type = type;
         this.accno = data.accno || '';
+        this.attributes = data.attributes || [];
         this.isRevised = !this.isTemp && data.isRevised;
         this.section = new Section(type.sectionType, data.section);
     }
@@ -1036,7 +1038,6 @@ export class Tags {
 export interface AttributeData {
     name: string;
     value: string;
-    rootLevel: boolean;
     reference: boolean;
     terms: NameAndValue[];
 }
@@ -1061,6 +1062,7 @@ export interface SectionData extends TaggedData {
 
 export interface SubmissionData extends TaggedData {
     accno: string;
+    attributes: AttributeData[];
     section: SectionData;
     isRevised: boolean;
 }

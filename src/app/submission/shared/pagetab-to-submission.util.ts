@@ -1,41 +1,53 @@
 import {AttributeData, FeatureData, SectionData, Submission, SubmissionData} from './submission.model';
-import {PageTab, PtAttribute, PtSection} from './pagetab.model';
+import {ATTRIBUTE_DUPLICATES_CONTAINS, PageTab, PtAttribute, PtSection} from './pagetab.model';
 import {authors2Contacts} from './pagetab-authors.utils';
+import {SubmissionType} from './submission-type.model';
+import {LinksUtils} from './pagetab-links.utils';
 
-export function pageTab2Submission(pageTab: PageTab): SubmissionData {
+export function pageTab2Submission(type: SubmissionType, pageTab: PageTab) {
+    return new Submission(type, pageTab2SubmissionData(pageTab));
+}
+
+export function pageTab2SubmissionData(pageTab: PageTab): SubmissionData {
+    const attributes = ptAttributes2AttributeData(pageTab.attributes || []);
     return <SubmissionData>{
         accno: pageTab.accno,
-        isRevised: pageTab.isRevised,
         tags: pageTab.tags,
+        isRevised: (pageTab.tags || []).length > 0,
         accessTags: pageTab.accessTags,
-        section: ptSection2Section(pageTab.section, pageTab.attributes)
+        attributes: attributes,
+        section: ptSection2SectionData(pageTab.section, attributes)
     };
 }
 
-function ptSection2Section(ptSection: PtSection, parentAttributes: PtAttribute[] = []): SectionData {
+function ptSection2SectionData(ptSection: PtSection, parentAttributes: AttributeData[] = []): SectionData {
 
     const attributes = (<AttributeData[]>[]).concat(
-        ptAttributes2Attributes(ptSection.attributes || []),
-        ptAttributes2Attributes(parentAttributes, true));
+        ptAttributes2AttributeData(ptSection.attributes || []),
+        parentAttributes.filter(at => ATTRIBUTE_DUPLICATES_CONTAINS(at.name)));
 
     const links = flatArray(ptSection.links || []);
     const files = flatArray(ptSection.files || []);
-    const allSections = flatArray(ptSection.sections || []);
+    const allSections = flatArray(ptSection.subsections || []);
     const featureSections = authors2Contacts(allSections.filter(section => !hasSubsections(section)));
 
     const features: FeatureData[] = [];
     if (links.length > 0) {
         features.push(<FeatureData> {
             type: 'Link',
-            entries: links.map(lnk => ptAttributes2Attributes(lnk.attributes || []))
-        })
+            entries: links.map(lnk => LinksUtils.toUntyped(lnk))
+                .map(attrs => ptAttributes2AttributeData(attrs))
+        });
     }
 
     if (files.length > 0) {
         features.push(<FeatureData> {
             type: 'File',
-            entries: files.map(file => ptAttributes2Attributes(file.attributes || []))
+            entries: files.map(file =>
+                [<PtAttribute>{name: 'path', value: file.path}].concat(file.attributes || []))
+                .map(attrs => ptAttributes2AttributeData(attrs))
         })
+        console.log(features[features.length -1], files);
     }
 
     if (featureSections.length > 0) {
@@ -45,7 +57,8 @@ function ptSection2Section(ptSection: PtSection, parentAttributes: PtAttribute[]
         }, {}));
         featureTypes.forEach(type => {
             const entries =
-                featureSections.filter(section => section.type === type).map(section => ptAttributes2Attributes(section.attributes || []))
+                featureSections.filter(section => section.type === type)
+                    .map(section => ptAttributes2AttributeData(section.attributes || []));
             features.push(<FeatureData>{
                 type: type,
                 entries: entries
@@ -56,7 +69,7 @@ function ptSection2Section(ptSection: PtSection, parentAttributes: PtAttribute[]
     const sections: SectionData[] =
         allSections
             .filter(section => hasSubsections(section))
-            .map(section => ptSection2Section(section));
+            .map(section => ptSection2SectionData(section));
 
     return <SectionData> {
         type: ptSection.type,
@@ -68,18 +81,17 @@ function ptSection2Section(ptSection: PtSection, parentAttributes: PtAttribute[]
 }
 
 function hasSubsections(section: PtSection): boolean {
-    return ((section.sections || []).length > 0) ||
+    return ((section.subsections || []).length > 0) ||
         ((section.links || []).length > 0) ||
         ((section.files || []).length > 0);
 }
 
-function ptAttributes2Attributes(attrs: PtAttribute[], rootLevel: boolean = false): AttributeData[] {
+function ptAttributes2AttributeData(attrs: PtAttribute[]): AttributeData[] {
     return attrs.map(at => <AttributeData>{
         name: at.name,
         value: at.value,
         reference: at.isReference,
-        terms: at.valqual,
-        rootLevel: rootLevel
+        terms: at.valqual
     });
 }
 

@@ -10,10 +10,10 @@ import {Router} from "@angular/router";
 
 import {Section} from '../../shared/submission.model';
 import {SubmissionService} from "../../shared/submission.service";
-import {PageTab} from "app/submission/shared/pagetab.model";
 import {SubmAddDialogComponent} from "../../list/subm-add.component";
 import {UserData} from "../../../auth/user-data";
 import {SubmissionType} from "../../shared/submission-type.model";
+import {newPageTab} from '../../shared/submission-to-pagetab.util';
 
 @Component({
     selector: 'subm-navbar',
@@ -89,7 +89,7 @@ export class SubmNavBarComponent {
      * TODO: at present, the app relies on the backend to generate a ready instance of a submission. This leads to two requests for every new submission, one to create it and another to retrieve it for the edit view.
      */
     createSubmission(tmplId: string) {
-        this.submService.createSubmission(PageTab.createNew(tmplId)).subscribe((subm) => {
+        this.submService.createSubmission(newPageTab(tmplId)).subscribe((subm) => {
             this.router.navigate(['/submissions/new/', subm.accno]);
         });
     };

@@ -2,9 +2,9 @@ import {Component, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 
 import {Observable} from 'rxjs/Observable';
-import {Subscription} from "rxjs/Subscription";
-import {Subject} from "rxjs/Subject";
-import {throwError} from "rxjs/index";
+import {Subscription} from 'rxjs/Subscription';
+import {Subject} from 'rxjs/Subject';
+import {throwError} from 'rxjs/index';
 
 import {GridOptions} from 'ag-grid/main';
 import {AgRendererComponent} from 'ag-grid-angular/main';
@@ -13,11 +13,12 @@ import {ConfirmDialogComponent} from 'app/shared/index';
 import {SubmissionService} from '../shared/submission.service';
 import {TextFilterComponent} from './ag-grid/text-filter.component';
 import {DateFilterComponent} from './ag-grid/date-filter.component';
-import {PageTab} from '../shared/pagetab.model';
-import {AppConfig} from "../../app.config";
-import {SubmAddDialogComponent} from "./subm-add.component";
-import {UserData} from "../../auth/user-data";
-import {SubmissionType} from "../shared/submission-type.model";
+
+import {AppConfig} from '../../app.config';
+import {SubmAddDialogComponent} from './subm-add.component';
+import {UserData} from '../../auth/user-data';
+import {SubmissionType} from '../shared/submission-type.model';
+import {newPageTab} from '../shared/submission-to-pagetab.util';
 
 @Component({
     selector: 'action-buttons-cell',
@@ -424,7 +425,7 @@ export class SubmListComponent {
     createSubmission(tmplId: string) {
         this.isBusy = true;
         this.isCreating = true;
-        this.submService.createSubmission(PageTab.createNew(tmplId)).subscribe((subm) => {
+        this.submService.createSubmission(newPageTab(tmplId)).subscribe((subm) => {
             this.isBusy = false;
             this.router.navigate(['/submissions/new/', subm.accno]);
         });

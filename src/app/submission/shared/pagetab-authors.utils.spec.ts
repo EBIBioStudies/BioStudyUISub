@@ -1,10 +1,9 @@
 import {authors2Contacts, contacts2Authors} from './pagetab-authors.utils';
 
-/* todo update
 describe('AuthorsAndAffiliations:', () => {
     it('authorsToContacts: authors and affiliations are merged into contacts', () => {
-        expect(convertAuthorsToContacts({
-            subsections: [
+        expect(authors2Contacts(
+            [
                 {
                     type: 'Author',
                     attributes: [
@@ -52,11 +51,10 @@ describe('AuthorsAndAffiliations:', () => {
                     ]
                 },
                 {
-                     type: 'Other'
+                    type: 'Other'
                 }
-            ]
-        })).toEqual({
-            subsections: [
+            ])).toEqual(
+            [
                 {
                     type: 'Other'
                 },
@@ -95,13 +93,12 @@ describe('AuthorsAndAffiliations:', () => {
                         }
                     ]
                 }
-            ]
-        });
+            ]);
     });
 
     it('contactsToAuthors: [contact] sections are split into authors and affiliations', () => {
-        expect(convertContactsToAuthors({
-            subsections: [
+        expect(contacts2Authors(
+            [
                 {
                     type: 'Contact',
                     attributes: [
@@ -142,9 +139,8 @@ describe('AuthorsAndAffiliations:', () => {
                 },
                 {
                     type: 'Other'
-                }]
-        })).toEqual({
-            subsections: [
+                }])).toEqual(
+            [
                 {
                     type: 'Other'
                 },
@@ -196,9 +192,7 @@ describe('AuthorsAndAffiliations:', () => {
                     ]
                 }
             ]
-        });
+        );
 
     });
 });
-
-*/

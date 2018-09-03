@@ -211,7 +211,7 @@ export class SubmissionValidator {
     }
 
     static validate(subm: Submission): SubmValidationErrors {
-        return this.validateSection(subm.root);
+        return this.validateSection(subm.section);
     }
 
     static createObservable(subm: Submission): Observable<SubmValidationErrors> {

@@ -24,7 +24,7 @@ export function copyAttributes(obj: any, isUniqueAttrs: boolean = false) {
                 return rv;
             }, {});
 
-    newObj.section.attributes = Object.keys(attrMap).map(key => {
+    newObj.section.addAttributes = Object.keys(attrMap).map(key => {
         let mapFn;
 
         if (isUniqueAttrs) {

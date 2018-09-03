@@ -18,21 +18,24 @@ export function authors2Contacts(sections: PtSection[] = []): PtSection[] {
             }, {});
 
     const contacts = sections.filter(s => isAuthor(s.type))
-        .map(a => {
-            const contact = new PtSection('Contact');
-            contact.attributes = (a.attributes || [])
-                .map(attr => {
-                    if (isAffiliation(attr.name)) {
-                        const affil = attr.isReference ? (affiliations[attr.value] || attr.value) : attr.value;
-                        return new PtAttribute('Organisation', affil);
-                    }
-                    return attr;
-                });
-            return contact;
-        });
-    return sections
+        .map(a =>
+            <PtSection>{
+                type: 'Contact',
+                attributes: (a.attributes || [])
+                    .map(attr => {
+                        if (isAffiliation(attr.name)) {
+                            const affil = attr.isReference ? (affiliations[attr.value] || attr.value) : attr.value;
+                            return <PtAttribute>{name: 'Organisation', value: affil};
+                        }
+                        return attr;
+                    })
+            });
+    let res = sections
         .filter(s => !isAuthor(s.type) && !isAffiliation(s.type))
         .concat(contacts);
+
+    console.log(sections, res);
+    return res;
 }
 
 class Organisations {
@@ -48,7 +51,7 @@ class Organisations {
 
     toReference(attr: PtAttribute): PtAttribute {
         const orgRef = this.refFor(attr.value);
-        return new PtAttribute('Affiliation', orgRef, true);
+        return <PtAttribute>{name: 'Affiliation', value: orgRef, isReference: true};
     }
 
     list(): { accno: string, name: string }[] {
@@ -69,23 +72,23 @@ export function contacts2Authors(sections: PtSection[] = []): PtSection[] {
 
     const authors: PtSection[] = sections
         .filter(s => isContact(s.type))
-        .map(contact => {
-            const author = new PtSection('Author');
-            author.attributes = (contact.attributes || [])
-                .map(attr => {
-                    if (isOrganisation(attr.name)) {
-                        return orgs.toReference(attr);
-                    }
-                    return attr;
-                });
-            return author;
-        });
+        .map(contact =>
+            <PtSection>{
+                type: 'Author',
+                attributes: (contact.attributes || [])
+                    .map(attr => {
+                        if (isOrganisation(attr.name)) {
+                            return orgs.toReference(attr);
+                        }
+                        return attr;
+                    })
+            });
 
-    const affiliations: PtSection[] = orgs.list().map(org => {
-            const affil = new PtSection('Organization');
-            affil.accno = org.accno;
-            affil.attributes = [new PtAttribute('Name', org.name)];
-            return affil;
+    const affiliations: PtSection[] = orgs.list().map(org =>
+        <PtSection>{
+            type: 'Organization',
+            accno: org.accno,
+            attributes: [<PtAttribute>{name: 'Name', value: org.name}]
         }
     );
 
