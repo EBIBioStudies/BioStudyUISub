@@ -5,7 +5,8 @@ import 'rxjs/add/observable/from';
 import {ColumnType, FeatureType, FieldType, SectionType, SubmissionType, ValueType} from './submission-type.model';
 
 import * as pluralize from 'pluralize';
-import * as _ from 'lodash';
+
+import {NameAndValue, Tag} from './model.common';
 
 //Names of attributes as they come from the server that must be external.
 //NOTE: As per PageTab's requirements, "AttachTo", "ReleaseDate" and "Title" are special attributes that pertain the
@@ -172,8 +173,8 @@ export class ValueMap extends HasUpdates<UpdateEvent> {
         this.valueMap.delete(key);
     }
 
-    values(keys?: string[]): (AttributeValue | undefined)[] {
-        return (keys || this.keys()).map(key => this.valueMap.get(key));
+    values(keys?: string[]): AttributeValue[] {
+        return (keys || this.keys()).map(key => this.valueMap.get(key)!);
     }
 
     keys(): string[] {
@@ -315,13 +316,11 @@ export class Feature extends HasUpdates<UpdateEvent> {
     private _columns: Columns = new Columns();
     private _rows: Rows = new Rows();
 
-    static create(type: FeatureType, attrs: { name: string, value: string }[]): Feature {
+    static create(type: FeatureType, attrs: AttributeData[]): Feature {
         return new Feature(type,
             {
                 type: type.name,
-                entries: [{
-                    attributes: attrs
-                }]
+                entries: [attrs]
             });
     }
 
@@ -343,7 +342,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
         });
 
         (data.entries || []).forEach(entry => {
-            this.add(entry.attributes);
+            this.add(entry);
         });
 
         if (type.required && this.rowSize() === 0) {
@@ -494,9 +493,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
             let cols: Attribute[] = this._columns.allWithName(attr.name);
 
             //Prevents the same attribute becoming the value for multiple columns of the same name
-            cols = cols.filter(col => {
-                return usedColIds.indexOf(col.id) == -1;
-            });
+            cols = cols.filter((col) => (usedColIds.indexOf(col.id) === -1));
             usedColIds.push(cols[0].id);
 
             rowMap.valueFor(cols[0].id).value = attr.value;
@@ -536,8 +533,8 @@ export class Feature extends HasUpdates<UpdateEvent> {
      * @param {number} colIndex - Index of the updated column.
      */
     onColumnUpdate(newName: string, colIndex: number) {
-        if (this._columns.allWithName(newName).length == 1 || !this.type.uniqueCols) {
-            this._columns.at(colIndex)!.updateType(this.type.getColumnType(newName)!);
+        if (this._columns.allWithName(newName).length === 1 || !this.type.uniqueCols) {
+            this._columns.at(colIndex)!.updateType(this.type.getColumnType(newName));
         }
     }
 
@@ -574,7 +571,7 @@ export class AnnotationFeature extends Feature {
      * @param {FeatureType} type - Normally of type "annotationsType"
      * @param {FeatureData} data - Key-value pairs wrapped with type.
      */
-    constructor(type: FeatureType, data: FeatureData = {} as FeatureData) {
+    constructor(type: FeatureType, data: FeatureData = <FeatureData>{}) {
         super(type, data);
     }
 
@@ -583,13 +580,11 @@ export class AnnotationFeature extends Feature {
      * @param {FeatureType} type - Normally of type "annotationsType"
      * @param {{name: string; value: string}[]} attrs - Key-value pairs
      */
-    static create(type: FeatureType, attrs: { name: string, value: string }[]): Feature {
+    static create(type: FeatureType, attrs: AttributeData[]): Feature {
         return new AnnotationFeature(type,
             {
                 type: type.name,
-                entries: [{
-                    attributes: attrs
-                }]
+                entries: [attrs]
             });
     }
 
@@ -697,9 +692,7 @@ export class Features extends HasUpdates<UpdateEvent> {
      * @returns {Feature} Feature fulfilling the predicated comparison.
      */
     find(value: string, property: string = 'id'): Feature | undefined {
-        return this.features.find((feature) => {
-            return feature[property] === value
-        });
+        return this.features.find((feature) => (feature[property] === value));
     }
 }
 
@@ -750,19 +743,10 @@ export class Fields extends HasUpdates<UpdateEvent> {
 
         //Converts the array of attribute objects from the server to an object of type {attrName: attrValue}
         const attrObj = (data.attributes || []).reduce((obj, attr) => {
-            let attrName = attr.name; //.name.replace(/([a-z])([A-Z])/g, '$1 $2');  //uncamelcased version
-            let fieldType;
-
-            //NOTE: Root-level attribute names from the server are UpperCamelCased whereas type field names are
-            //in human-readable form. For external attributes only, this means lower-case and only first letter
-            //capitalised with spaces in between.
-            if (_.includes(rootAttrs, attrName)) {
-                attrName = _.upperFirst(attrName.replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase());
-            }
-            fieldType = type.getFieldType(attrName);
+            let fieldType = type.getFieldType(attr.name);
 
             if (fieldType !== undefined) {
-                obj[attrName] = attr.value;
+                obj[attr.name] = attr.value;
             }
 
             return obj;
@@ -799,9 +783,7 @@ export class Fields extends HasUpdates<UpdateEvent> {
      * @returns {Field} Field fulfilling the predicated comparison.
      */
     find(value: string, property: string = 'id'): Field | undefined {
-        return this.fields.find((field) => {
-            return field[property] === value
-        });
+        return this.fields.find((field) => (field[property] === value));
     }
 }
 
@@ -816,7 +798,7 @@ export class Section extends HasUpdates<UpdateEvent> {
     readonly sections: Sections;
     readonly tags: Tags;
 
-    constructor(type: SectionType, data: SectionData = {} as SectionData) {
+    constructor(type: SectionType, data: SectionData = <SectionData>{}) {
         super();
 
         this.tags = Tags.create(data);
@@ -830,18 +812,7 @@ export class Section extends HasUpdates<UpdateEvent> {
 
         //Any attribute names from the server that do not match top-level field names are added as annotations.
         this.annotations = AnnotationFeature.create(type.annotationsType,
-            (data.attributes || []).filter((attribute) => {
-                let attrName = attribute.name;
-
-                //NOTE: Root-level attribute names from the server are UpperCamelCased whereas type field names are
-                //in human-readable form. For external attributes only, this means lower-case and only first letter
-                //capitalised with spaces in between.
-                if (_.includes(rootAttrs, attrName)) {
-                    attrName = _.upperFirst(attrName.replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase());
-                }
-
-                return (type.getFieldType(attrName) === undefined);
-            })
+            (data.attributes || []).filter(a => type.getFieldType(a.name) === undefined)
         );
         this.features = new Features(type, data);
         this.sections = new Sections(type, data);
@@ -975,10 +946,11 @@ export class Sections extends HasUpdates<UpdateEvent> {
 export class Submission {
     accno: string;
     isRevised: boolean;        //true if submission has been sent and is marked as revised by PageTab class.
-    readonly root: Section;
+    readonly section: Section;
     readonly type;
 
     readonly tags: Tags;
+    readonly attributes: AttributeData[];
 
     /**
      * Creates a new submission from PageTab-formatted data and pre-defined type definitions.
@@ -986,12 +958,13 @@ export class Submission {
      * @param {SubmissionType} type Type definitions object
      * @param {SubmissionData} data Submission data in PageTab format.
      */
-    constructor(type: SubmissionType, data: SubmissionData = {} as SubmissionData) {
+    constructor(type: SubmissionType, data: SubmissionData = <SubmissionData>{}) {
         this.tags = Tags.create(data);
         this.type = type;
         this.accno = data.accno || '';
+        this.attributes = data.attributes || [];
         this.isRevised = !this.isTemp && data.isRevised;
-        this.root = new Section(type.sectionType, data.section);
+        this.section = new Section(type.sectionType, data.section);
     }
 
     /**
@@ -1003,30 +976,28 @@ export class Submission {
     }
 
     sectionPath(id: string): Section[] {
-        return this.root.sectionPath(id);
+        return this.section.sectionPath(id);
     }
 
     updates(): Observable<UpdateEvent> {
-        return this.root.updates();
+        return this.section.updates();
     }
 }
 
 export class Tags {
-    private _tags: { classifier: string, tag: string }[];
+    private _tags: Tag[];
     private _accessTags: string[];
 
-    static create(data: any): Tags {
-        return new Tags(data.tags, data.accessTags);
+    static create(data?: TaggedData): Tags {
+        if (data !== undefined) {
+            return new Tags(data.tags, data.accessTags);
+        }
+        return new Tags();
     }
 
-    constructor(tags: any[] = [], accessTags: any[] = []) {
-        const defined = function (v: string) {
-            return v !== undefined && v.trim().length > 0;
-        };
-        this._tags = (tags || [])
-            .filter(t => defined(t.classifier) && defined(t.tag))
-            .map(t => ({classifier: t.classifier, tag: t.tag}));
-        this._accessTags = (accessTags || []).slice();
+    constructor(tags: Tag[] = [], accessTags: string[] = []) {
+        this._tags = tags.slice();
+        this._accessTags = accessTags.slice();
     }
 
     get tags(): any[] {
@@ -1038,29 +1009,34 @@ export class Tags {
     }
 }
 
-export interface AttributesData {
-    attributes: { name: string, value: string }[];
+export interface AttributeData {
+    name: string;
+    value: string;
+    reference: boolean;
+    terms: NameAndValue[];
 }
 
 export interface FeatureData {
     type: string;
-    entries: AttributesData[];
+    entries: AttributeData[][];
 }
 
-export interface SectionData extends AttributesData {
-    tags: any[];
-    accessTags: any[];
+export interface TaggedData {
+    tags: Tag[];
+    accessTags: string[];
+}
 
+export interface SectionData extends TaggedData {
     type: string;
     accno: string;
+    attributes: AttributeData[];
     features: FeatureData[];
     sections: SectionData[];
 }
 
-export interface SubmissionData {
-    tags: any[];
-    accessTags: any[];
-    isRevised: boolean;
+export interface SubmissionData extends TaggedData {
     accno: string;
+    attributes: AttributeData[];
     section: SectionData;
+    isRevised: boolean;
 }

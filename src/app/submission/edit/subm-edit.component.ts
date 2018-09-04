@@ -13,7 +13,7 @@ import {Section, Submission} from '../shared/submission.model';
 import {SubmissionService} from '../shared/submission.service';
 import {SubmissionType} from '../shared/submission-type.model';
 
-import {PageTab} from '../shared/pagetab.model';
+import {firstAttachTo, PageTab} from '../shared/pagetab.model';
 import {SubmissionValidator, SubmValidationErrors} from '../shared/submission.validator';
 import {ServerError} from '../../http/server-error.handler';
 import {SubmResultsModalComponent} from '../results/subm-results-modal.component';
@@ -27,6 +27,8 @@ import * as _ from 'lodash';
 import {SubmSideBarComponent} from './subm-sidebar/subm-sidebar.component';
 import {Subject} from 'rxjs/Subject';
 import {FileService} from '../../file/file.service';
+import {submission2PageTab} from '../shared/submission-to-pagetab.util';
+import {pageTab2Submission} from '../shared/pagetab-to-submission.util';
 
 @Component({
     selector: 'subm-edit',
@@ -111,15 +113,15 @@ export class SubmEditComponent implements OnInit {
 
                 //Data retrieved successfully => converts pageTab submission data, makes changes detectable and sets defaults
                 results => {
-                    let page, subm;
+                    let page:PageTab, subm;
 
                     //Converts data coming from the server into the in-app submission format
                     //NOTE: Type definitions are determined based on the first occurrence of the AttachTo attribute.
                     //NOTE: Submissions created through the direct upload flow may be attached to multiple projects.
                     this.wrappedSubm = results[0];
                     this.accno = this.wrappedSubm.accno;
-                    page = new PageTab(this.wrappedSubm.data);
-                    subm = page.toSubmission(SubmissionType.fromTemplate(page.firstAttachTo));
+                    page = this.wrappedSubm.data;
+                    subm = pageTab2Submission(SubmissionType.fromTemplate(firstAttachTo(page)), page);
                     this.subm = subm;
 
                     //Inspects the original event producing the cascade of subsequent ones and saves the submission if
@@ -456,7 +458,7 @@ export class SubmEditComponent implements OnInit {
     private wrap(isSubmit: boolean = false): any {
         const copy = Object.assign({}, this.wrappedSubm);
 
-        copy.data = PageTab.fromSubmission(this.subm!, isSubmit);
+        copy.data = submission2PageTab(this.subm!, isSubmit);
 
         //NOTE: for creation, the accession number remains blank when creating the PageTab object above
         this.isUpdate = !_.isEmpty(copy.data.accno);

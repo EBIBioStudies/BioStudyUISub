@@ -74,7 +74,7 @@
                                 [allowPast]="column.allowPast"
                                 [autosuggest]="column.values"
                                 (async)="addOnAsync($event, rowIdx)"
-                                (change)="onFieldChange(row.valueFor(column.id), $event.target.value)"
+                                (ngModelChange)="onFieldChange(row.valueFor(column.id), $event)"
                                 validate-onblur>
                     </subm-field>
                 </div>

@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import {PtAttribute, PtLink} from './pagetab.model';
 
 /**
  * Utility class bridging the differences between PageTab's specs for links and the app's internal submission model.
@@ -16,30 +16,24 @@ export class LinksUtils {
      * @param {Object} linkObj - Submission model's object for the link.
      * @returns {Object} Submission-ready link object.
      */
-    static toUntyped(linkObj: {url: string, attributes: Object[]}): Object {
-        const pointerAttr = {name: 'Pointer', value: linkObj.url};
-        let typeIdx = _.findIndex(linkObj.attributes, ['name', 'Type']);
-        let typePrefix;         //value of the 'Type' attribute when the link is of type prefix:ID
+    static toUntyped(linkObj: PtLink): PtAttribute[]  {
+        const result = linkObj.attributes.slice();
 
-        linkObj.attributes.push(pointerAttr);
+        const pointerAttr = {name: 'Pointer', value: linkObj.url};
+        let typeAttr = linkObj.attributes.find(at => at.name ==='Type');
 
         //Abnormal PageTab link from the server => normalises adding 'Type' attribute
-        if (typeIdx == -1) {
-            typeIdx = linkObj.attributes.length;
-            linkObj.attributes.push({name: 'Type', value: ''});
+        if (typeAttr === undefined) {
+            result.push({name: 'Type', value: ''});
         }
-
-        typePrefix = linkObj.attributes[typeIdx]['value'];
 
         //The 'Type' attribute is not blank => prefix:ID link
-        if (typePrefix) {
-            pointerAttr.value = typePrefix + ':' + linkObj.url;
+        if (typeAttr && typeAttr.value.length > 0) {
+            pointerAttr.value = typeAttr.value + ':' + linkObj.url;
         }
 
-        linkObj.attributes.splice(typeIdx, 1);
-
-        delete linkObj.url;
-        return linkObj;
+        result.push(pointerAttr);
+        return result;
     }
 
     /**
@@ -50,17 +44,20 @@ export class LinksUtils {
      * @param {Object} linkObj - PageTab's data object for the link.
      * @returns {Object} PageTab-ready link object.
      */
-    static toTyped(linkObj: {pointer: string, attributes: Object[]}) {
+    static toTyped(attributes: PtAttribute[]) : PtLink {
+        const pointer: string | undefined = (attributes.find(at => at.name === 'Pointer') || {value: undefined}).value;
         const typeAttr = {name: 'Type', value: ''};
-        const isUrl = this.URL_REGEXP.test(linkObj.pointer);
-        let linkParts;         //prefix and ID of the link
+        const isUrl = this.URL_REGEXP.test(pointer);
+
+
+        const linkObj = <PtLink>{ attributes: [] };
 
         linkObj.attributes.push(typeAttr);
-        if (linkObj.pointer) {
+        if (pointer) {
             if (isUrl) {
-                linkObj['url'] = linkObj.pointer;
+                linkObj.url = pointer;
             } else {
-                linkParts = linkObj.pointer.split(':');
+                let linkParts = pointer.split(':');
 
                 //It must be a prefix:ID link
                 if (linkParts.length > 1) {
@@ -82,7 +79,6 @@ export class LinksUtils {
             linkObj['url'] = '';
         }
 
-        delete linkObj.pointer;
         return linkObj;
     }
 }

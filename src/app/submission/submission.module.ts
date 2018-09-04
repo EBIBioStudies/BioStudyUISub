@@ -40,6 +40,7 @@ import {SubmResultsTreeComponent} from './results/subm-results-tree.component';
 
 import {UniqueValidator} from './shared/unique.directive';
 import {SubmAddDialogComponent} from "./list/subm-add.component";
+import {Camelcase2LabelPipe} from './shared/pipes/camelcase-to-label.pipe';
 
 @NgModule({
     imports: [
@@ -82,7 +83,8 @@ import {SubmAddDialogComponent} from "./list/subm-add.component";
         DateCellComponent,
         TextFilterComponent,
         DateFilterComponent,
-        UniqueValidator
+        UniqueValidator,
+        Camelcase2LabelPipe
     ],
     exports: [
         SubmListComponent,
