@@ -7,7 +7,7 @@
         <div *ngIf="!readonly || field.value.length" class="col-xs-12"
              [ngClass]="{'has-error': field.type.required && get(field.id).invalid && get(field.id).touched}">
             <label class="control-label">
-                <span class="text-black">{{field.name}}</span>
+                <span class="text-black">{{field.name | camelcase2label}}</span>
                 <span *ngIf="field.type.required && get(field.id).invalid && get(field.id).touched">
                     {{sectionForm.formErrors[field.id] ? sectionForm.formErrors[field.id] : ''}}
                 </span>
@@ -49,7 +49,7 @@
                             [allowPast]="field.type.allowPast"
                             [autosuggest]="field.type.values"
                             [isSmall]="false"
-                            (change)="onFieldChange(field, $event.target.value)"
+                            (ngModelChange)="onFieldChange(field, $event)"
                             validate-onblur>
                 </subm-field>
             </div>

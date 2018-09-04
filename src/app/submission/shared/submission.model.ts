@@ -11,7 +11,7 @@ import {
 } from './submission-type.model';
 
 import * as pluralize from 'pluralize';
-import * as _ from 'lodash';
+
 import {NameAndValue, Tag} from './model.common';
 
 //Names of attributes as they come from the server that must be external.
@@ -749,19 +749,10 @@ export class Fields extends HasUpdates<UpdateEvent> {
 
         //Converts the array of attribute objects from the server to an object of type {attrName: attrValue}
         const attrObj = (data.attributes || []).reduce((obj, attr) => {
-            let attrName = attr.name; //.name.replace(/([a-z])([A-Z])/g, '$1 $2');  //uncamelcased version
-            let fieldType;
-
-            //NOTE: Root-level attribute names from the server are UpperCamelCased whereas type field names are
-            //in human-readable form. For external attributes only, this means lower-case and only first letter
-            //capitalised with spaces in between.
-            if (_.includes(rootAttrs, attrName)) {
-                attrName = _.upperFirst(attrName.replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase());
-            }
-            fieldType = type.getFieldType(attrName);
+            let fieldType = type.getFieldType(attr.name);
 
             if (fieldType !== undefined) {
-                obj[attrName] = attr.value;
+                obj[attr.name] = attr.value;
             }
 
             return obj;
@@ -827,18 +818,7 @@ export class Section extends HasUpdates<UpdateEvent> {
 
         //Any attribute names from the server that do not match top-level field names are added as annotations.
         this.annotations = AnnotationFeature.create(type.annotationsType,
-            (data.attributes || []).filter((attribute) => {
-                let attrName = attribute.name;
-
-                //NOTE: Root-level attribute names from the server are UpperCamelCased whereas type field names are
-                //in human-readable form. For external attributes only, this means lower-case and only first letter
-                //capitalised with spaces in between.
-                if (_.includes(rootAttrs, attrName)) {
-                    attrName = _.upperFirst(attrName.replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase());
-                }
-
-                return (type.getFieldType(attrName) === undefined);
-            })
+            (data.attributes || []).filter(a => type.getFieldType(a.name) === undefined)
         );
         this.features = new Features(type, data);
         this.sections = new Sections(type, data);

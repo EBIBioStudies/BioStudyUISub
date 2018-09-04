@@ -1,8 +1,8 @@
 import {AttributeData, Feature, Section, Submission} from './submission.model';
 import {
     ATTACH_TO_ATTR,
-    ATTRIBUTE_DUPLICATES_CONTAINS,
-    PageTab, PageTabUtils,
+    ATTRIBUTE_DUPLICATES_CONTAINS, mergeDuplicatedAttributes,
+    PageTab,
     PtAttribute,
     PtFile,
     PtFileItem,
@@ -26,21 +26,25 @@ export function newPageTab(templateName: string = 'Default'): PageTab {
     //Guarantees that for non-default templates, an AttachTo attribute always exists.
     //NOTE: The PageTab constructor does not bother with attributes if the section is empty.
     if (templateName && templateName != 'Default') {
-        new PageTabUtils(pageTab).addAttributes([{name: ATTACH_TO_ATTR, value: templateName}]);
+        pageTab.attributes = mergeDuplicatedAttributes(pageTab.attributes, [{
+            name: ATTACH_TO_ATTR,
+            value: templateName
+        }]);
     }
     return pageTab;
 }
 
 export function submission2PageTab(subm: Submission, isSanitise: boolean = false): PageTab {
     let ptSection = section2PtSection(subm.section, isSanitise);
-    return new PageTabUtils(<PageTab>{
+    return <PageTab>{
         accno: subm.accno,
         section: ptSection,
         tags: subm.tags.tags,
         accessTags: subm.tags.accessTags,
-        attributes: subm.attributes.map(at => attributeData2PtAttribute(at))
-    }).addAttributes((ptSection.attributes || []).filter(at => ATTRIBUTE_DUPLICATES_CONTAINS(at.name)))
-        .pageTab;
+        attributes: mergeDuplicatedAttributes(
+            subm.attributes.map(at => attributeData2PtAttribute(at)),
+            (ptSection.attributes || []).filter(at => ATTRIBUTE_DUPLICATES_CONTAINS(at.name)))
+    };
 }
 
 function section2PtSection(section: Section, isSanitise: boolean = false): PtSection {

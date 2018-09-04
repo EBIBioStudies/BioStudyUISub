@@ -49,32 +49,20 @@ export interface PageTab {
     accessTags?: string[];
 }
 
-export class PageTabUtils {
-    pageTab: PageTab;
+export function mergeDuplicatedAttributes(attrs1: PtAttribute[], attrs2: PtAttribute[]): PtAttribute[] {
+    const merged: PtAttribute[] = [];
+    const visited: { [key: string]: number } = {};
 
-    constructor(pageTab: PageTab) {
-        this.pageTab = pageTab;
-    }
-
-    addAttributes(attrs: PtAttribute[]): PageTabUtils {
-        this.pageTab.attributes = this.mergeAttributes(this.pageTab.attributes || [], attrs);
-        return this;
-    }
-
-    private mergeAttributes(current: PtAttribute[], toAdd: PtAttribute[]): PtAttribute[] {
-        const merged: PtAttribute[] = [];
-        const visited: { [key: string]: number } = {};
-
-        current.concat(toAdd).forEach(at => {
-            if (visited[at.name]) {
-                merged[visited[at.name]] = at;
-            } else {
-                visited[at.name] = merged.length;
-                merged.push(at);
-            }
-        });
-        return merged;
-    }
+    attrs1.concat(attrs2).forEach(at => {
+        if (visited[at.name] === undefined) {
+            visited[at.name] = merged.length;
+            merged.push(at);
+        } else {
+            merged[visited[at.name]] = at;
+        }
+    });
+    console.log(attrs1, attrs2, merged);
+    return merged;
 }
 
 /* todo: why we have it here? */

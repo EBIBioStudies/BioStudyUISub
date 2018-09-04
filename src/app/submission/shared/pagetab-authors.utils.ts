@@ -34,7 +34,6 @@ export function authors2Contacts(sections: PtSection[] = []): PtSection[] {
         .filter(s => !isAuthor(s.type) && !isAffiliation(s.type))
         .concat(contacts);
 
-    console.log(sections, res);
     return res;
 }
 
@@ -60,7 +59,6 @@ class Organisations {
 }
 
 export function contacts2Authors(sections: PtSection[] = []): PtSection[] {
-    console.log(sections);
     const isContact = (s: string) => {
         return s !== undefined && s.toLowerCase() === 'contact';
     };

@@ -13,7 +13,7 @@ export const DefaultTemplate = {
                 'minlength': 25
             },
             {
-                'name': 'Release date',
+                'name': 'ReleaseDate',
                 'icon': 'fa-calendar',
                 'valueType': 'date',
                 'allowPast': false,

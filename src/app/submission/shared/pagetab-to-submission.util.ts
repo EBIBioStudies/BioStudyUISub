@@ -1,5 +1,11 @@
 import {AttributeData, FeatureData, SectionData, Submission, SubmissionData} from './submission.model';
-import {ATTRIBUTE_DUPLICATES_CONTAINS, PageTab, PtAttribute, PtSection} from './pagetab.model';
+import {
+    ATTRIBUTE_DUPLICATES_CONTAINS,
+    mergeDuplicatedAttributes,
+    PageTab,
+    PtAttribute,
+    PtSection
+} from './pagetab.model';
 import {authors2Contacts} from './pagetab-authors.utils';
 import {SubmissionType} from './submission-type.model';
 import {LinksUtils} from './pagetab-links.utils';
@@ -22,9 +28,9 @@ export function pageTab2SubmissionData(pageTab: PageTab): SubmissionData {
 
 function ptSection2SectionData(ptSection: PtSection, parentAttributes: AttributeData[] = []): SectionData {
 
-    const attributes = (<AttributeData[]>[]).concat(
-        ptAttributes2AttributeData(ptSection.attributes || []),
-        parentAttributes.filter(at => ATTRIBUTE_DUPLICATES_CONTAINS(at.name)));
+    const attributes = mergeDuplicatedAttributes(
+            ptAttributes2AttributeData(ptSection.attributes || []),
+            parentAttributes.filter(at => ATTRIBUTE_DUPLICATES_CONTAINS(at.name)));
 
     const links = flatArray(ptSection.links || []);
     const files = flatArray(ptSection.files || []);
