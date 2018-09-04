@@ -44,10 +44,9 @@ function ptSection2SectionData(ptSection: PtSection, parentAttributes: Attribute
         features.push(<FeatureData> {
             type: 'File',
             entries: files.map(file =>
-                [<PtAttribute>{name: 'path', value: file.path}].concat(file.attributes || []))
+                [<PtAttribute>{name: 'Path', value: file.path}].concat(file.attributes || []))
                 .map(attrs => ptAttributes2AttributeData(attrs))
-        })
-        console.log(features[features.length -1], files);
+        });
     }
 
     if (featureSections.length > 0) {

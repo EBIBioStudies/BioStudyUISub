@@ -60,6 +60,7 @@ class Organisations {
 }
 
 export function contacts2Authors(sections: PtSection[] = []): PtSection[] {
+    console.log(sections);
     const isContact = (s: string) => {
         return s !== undefined && s.toLowerCase() === 'contact';
     };

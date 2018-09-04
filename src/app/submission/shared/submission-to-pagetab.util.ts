@@ -14,6 +14,22 @@ import {contacts2Authors} from './pagetab-authors.utils';
 import {SubmissionType} from './submission-type.model';
 import {LinksUtils} from './pagetab-links.utils';
 
+const isFileType = (type: string) => type.toLowerCase() === 'file';
+const isLinkType = (type: string) => type.toLowerCase() === 'link';
+
+interface Array<T> {
+    flatMap<E>(callback: (t: T) => Array<E>): Array<E>
+}
+
+Object.defineProperty(Array.prototype, 'flatMap', {
+    value: function (f: Function) {
+        return this.reduce((ys: any, x: any) => {
+            return ys.concat(f.call(this, x))
+        }, [])
+    },
+    enumerable: false,
+});
+
 export function newPageTab(templateName: string = 'Default'): PageTab {
     const subm = new Submission(SubmissionType.fromTemplate(templateName));
     const pageTab = submission2PageTab(subm);
@@ -39,6 +55,7 @@ export function submission2PageTab(subm: Submission, isSanitise: boolean = false
 }
 
 function section2PtSection(section: Section, isSanitise: boolean = false): PtSection {
+    console.log(section.typeName)
     return <PtSection>{
         type: section.typeName,
         tags: section.tags.tags,
@@ -47,12 +64,8 @@ function section2PtSection(section: Section, isSanitise: boolean = false): PtSec
         attributes: extractSectionAttributes(section, isSanitise),
         links: extractSectionLinks(section, isSanitise),
         files: extractSectionFiles(section, isSanitise),
-        subsections: contacts2Authors(extractSectionSubsections(section, isSanitise))
+        subsections: extractSectionSubsections(section, isSanitise)
     };
-}
-
-function extractSectionSubsections(section: Section, isSanitize): PtSection[] {
-    return section.sections.list().map(s => section2PtSection(s, isSanitize));
 }
 
 function extractSectionAttributes(section: Section, isSanitise: boolean): PtAttribute[] {
@@ -61,8 +74,19 @@ function extractSectionAttributes(section: Section, isSanitise: boolean): PtAttr
         (extractFeatureAttributes(section.annotations, isSanitise).pop() || []));
 }
 
+function extractSectionSubsections(section: Section, isSanitize): PtSection[] {
+    const featureSections = contacts2Authors(
+        section.features.list().filter(f => !isFileType(f.typeName) && !isLinkType(f.typeName))
+            .map(f => extractFeatureAttributes(f, isSanitize)
+                .map(attrs => <PtSection>{type: f.typeName, attributes: attrs})
+            ).reduce((rv, el) => rv.concat(el), [])
+    );
+
+    return featureSections.concat(section.sections.list().map(s => section2PtSection(s, isSanitize)));
+}
+
 function extractSectionLinks(section: Section, isSanitise: boolean): PtLinkItem[] {
-    const feature = section.features.list().find(f => f.typeName.toLowerCase() === 'link');
+    const feature = section.features.list().find(f => isLinkType(f.typeName));
     if (feature !== undefined) {
         return extractFeatureAttributes(feature, isSanitise).map(attrs => attributesAsLink(attrs));
     }
@@ -97,6 +121,7 @@ function attributesAsLink(attributes: PtAttribute[]): PtLink {
 }
 
 function attributesAsFile(attributes: PtAttribute[]): PtFile {
+    console.log('attributes', attributes);
     const attr = attributes.find(at => at.name.toLowerCase() === 'path');
     const attrs = attributes.filter(at => at.name.toLowerCase() !== 'path');
     return <PtFile>{path: attr!.value, attributes: attrs};
