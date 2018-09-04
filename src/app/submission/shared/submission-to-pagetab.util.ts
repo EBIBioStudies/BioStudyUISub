@@ -17,18 +17,7 @@ import {LinksUtils} from './pagetab-links.utils';
 const isFileType = (type: string) => type.toLowerCase() === 'file';
 const isLinkType = (type: string) => type.toLowerCase() === 'link';
 
-interface Array<T> {
-    flatMap<E>(callback: (t: T) => Array<E>): Array<E>
-}
-
-Object.defineProperty(Array.prototype, 'flatMap', {
-    value: function (f: Function) {
-        return this.reduce((ys: any, x: any) => {
-            return ys.concat(f.call(this, x))
-        }, [])
-    },
-    enumerable: false,
-});
+const isEmptyAttr = (attr: PtAttribute) => attr.value == undefined || attr.value.trim().length === 0;
 
 export function newPageTab(templateName: string = 'Default'): PageTab {
     const subm = new Submission(SubmissionType.fromTemplate(templateName));
@@ -115,9 +104,6 @@ function extractFeatureAttributes(feature: Feature, isSanitise: boolean): PtAttr
 
 function attributesAsLink(attributes: PtAttribute[]): PtLink {
     return LinksUtils.toTyped(attributes);
-    /*const attr = attributes.find(at => at.name.toLowerCase() === 'url');
-    const attrs = attributes.filter(at => at !== attr);
-    return <PtLink>{url: attr!.value, attributes: attrs};*/
 }
 
 function attributesAsFile(attributes: PtAttribute[]): PtFile {
@@ -137,8 +123,4 @@ function attributeData2PtAttribute(attr: AttributeData): PtAttribute {
         ptAttr.valqual = attr.terms.slice();
     }
     return ptAttr;
-}
-
-function isEmptyAttr(attr: PtAttribute): boolean {
-    return attr.value == undefined || attr.value.trim().length === 0;
 }
