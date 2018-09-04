@@ -1,7 +1,4 @@
-import {Submission} from './submission.model';
-import {SubmissionType} from './submission-type.model';
 import {NameAndValue, Tag} from './model.common';
-import {submission2PageTab} from './submission-to-pagetab.util';
 
 export const ATTACH_TO_ATTR = 'AttachTo';
 export const RELEASE_DATE_ATTR = 'ReleaseDate';
