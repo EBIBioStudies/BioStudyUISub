@@ -44,7 +44,6 @@ export function submission2PageTab(subm: Submission, isSanitise: boolean = false
 }
 
 function section2PtSection(section: Section, isSanitise: boolean = false): PtSection {
-    console.log(section.typeName)
     return <PtSection>{
         type: section.typeName,
         tags: section.tags.tags,
@@ -84,7 +83,6 @@ function extractSectionLinks(section: Section, isSanitise: boolean): PtLinkItem[
 
 function extractSectionFiles(section: Section, isSanitise: boolean): PtFileItem[] {
     const feature = section.features.list().find(f => f.typeName.toLowerCase() === 'file');
-    console.log('fileFeature', feature);
     if (feature !== undefined) {
         return extractFeatureAttributes(feature, isSanitise).map(attrs => attributesAsFile(attrs));
     }
@@ -107,7 +105,6 @@ function attributesAsLink(attributes: PtAttribute[]): PtLink {
 }
 
 function attributesAsFile(attributes: PtAttribute[]): PtFile {
-    console.log('attributes', attributes);
     const attr = attributes.find(at => at.name.toLowerCase() === 'path');
     const attrs = attributes.filter(at => at.name.toLowerCase() !== 'path');
     return <PtFile>{path: attr!.value, attributes: attrs};
