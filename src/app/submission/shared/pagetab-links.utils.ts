@@ -17,10 +17,10 @@ export class LinksUtils {
      * @returns {Object} Submission-ready link object.
      */
     static toUntyped(linkObj: PtLink): PtAttribute[]  {
-        const result = linkObj.attributes.slice();
+        const result = (linkObj.attributes || []).slice();
 
         const pointerAttr = {name: 'Pointer', value: linkObj.url};
-        let typeAttr = linkObj.attributes.find(at => at.name ==='Type');
+        let typeAttr = result.find(at => at.name ==='Type');
 
         //Abnormal PageTab link from the server => normalises adding 'Type' attribute
         if (typeAttr === undefined) {
@@ -45,14 +45,13 @@ export class LinksUtils {
      * @returns {Object} PageTab-ready link object.
      */
     static toTyped(attributes: PtAttribute[]) : PtLink {
-        const pointer: string | undefined = (attributes.find(at => at.name === 'Pointer') || {value: undefined}).value;
+        const pointer: string = (attributes.find(at => at.name === 'Pointer') || {value: ''}).value;
         const typeAttr = {name: 'Type', value: ''};
         const isUrl = this.URL_REGEXP.test(pointer);
 
+        const linkObj = <PtLink>{ url: '', attributes: <PtAttribute[]>[] };
 
-        const linkObj = <PtLink>{ attributes: [] };
-
-        linkObj.attributes.push(typeAttr);
+        linkObj.attributes!.push(typeAttr);
         if (pointer) {
             if (isUrl) {
                 linkObj.url = pointer;

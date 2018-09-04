@@ -103,7 +103,7 @@ export class SubmissionService {
      * @param {Array<Object> | Object} obj - Log tree's root node or subnode list.
      * @returns {string} Error message.
      */
-    static deepestError(obj: Array<Object> | Object | undefined): string | undefined {
+    static deepestError(obj: Array<Object> | Object | undefined): string {
 
         //Subnodes passed in => gets the first node out of all in the list that has an error
         if (Array.isArray(obj)) {
@@ -120,10 +120,8 @@ export class SubmissionService {
             } else if (obj!.hasOwnProperty('message')) {
                 return obj!['message'];
             }
-
-        //The node had no error or was not a node anyway.
-        } else {
-            return '';
         }
+        //The node had no error or was not a node anyway.
+        return '';
     }
 }

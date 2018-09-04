@@ -26,7 +26,7 @@ export function newPageTab(templateName: string = 'Default'): PageTab {
     //Guarantees that for non-default templates, an AttachTo attribute always exists.
     //NOTE: The PageTab constructor does not bother with attributes if the section is empty.
     if (templateName && templateName != 'Default') {
-        pageTab.attributes = mergeDuplicatedAttributes(pageTab.attributes, [{
+        pageTab.attributes = mergeDuplicatedAttributes((pageTab.attributes || []), [{
             name: ATTACH_TO_ATTR,
             value: templateName
         }]);

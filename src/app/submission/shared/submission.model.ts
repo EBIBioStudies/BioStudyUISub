@@ -534,7 +534,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
      */
     onColumnUpdate(newName: string, colIndex: number) {
         if (this._columns.allWithName(newName).length === 1 || !this.type.uniqueCols) {
-            this._columns.at(colIndex)!.updateType(this.type.getColumnType(newName));
+            this._columns.at(colIndex)!.updateType(this.type.getColumnType(newName)!);
         }
     }
 
