@@ -61,7 +61,6 @@ export function mergeDuplicatedAttributes(attrs1: PtAttribute[], attrs2: PtAttri
             merged[visited[at.name]] = at;
         }
     });
-    console.log(attrs1, attrs2, merged);
     return merged;
 }
 
