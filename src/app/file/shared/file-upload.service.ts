@@ -13,7 +13,7 @@ import {HttpCustomClient} from 'app/http/http-custom-client.service'
 import {Path} from './path';
 
 import * as _ from 'lodash';
-import {ServerError} from '../http/server-error.handler';
+import {ServerError} from '../../http';
 
 const FILE_UPLOAD_URL = '/raw/fileUpload'; 
 

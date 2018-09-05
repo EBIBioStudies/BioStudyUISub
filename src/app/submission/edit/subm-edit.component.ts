@@ -26,7 +26,6 @@ import {SubmValidationErrorsComponent} from './subm-navbar/subm-validation-error
 import * as _ from 'lodash';
 import {SubmSideBarComponent} from './subm-sidebar/subm-sidebar.component';
 import {Subject} from 'rxjs/Subject';
-import {FileService} from '../../file/file.service';
 import {submission2PageTab} from '../shared/submission-to-pagetab.util';
 import {pageTab2Submission} from '../shared/pagetab-to-submission.util';
 
@@ -72,8 +71,7 @@ export class SubmEditComponent implements OnInit {
                 private modalService: BsModalService,
                 private appConfig: AppConfig,
                 private userData: UserData,
-                private changeRef: ChangeDetectorRef,
-                fileService: FileService) {
+                private changeRef: ChangeDetectorRef) {
 
         //Initally collapses the sidebar for tablet-sized screens if applicable
         this.sideBarCollapsed = window.innerWidth < this.appConfig.tabletBreak;

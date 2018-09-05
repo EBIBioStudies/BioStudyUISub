@@ -1,12 +1,13 @@
 import {Injectable} from '@angular/core';
 import {FileNode} from './file-tree.model';
-import {FileService, UserGroup, PathInfo} from '../../file';
 
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/publishReplay';
 import 'rxjs/add/operator/find';
 import 'rxjs/add/operator/mergeMap';
+import {PathInfo, UserGroup} from '../../file/shared/file-rest.model';
+import {FileService} from '../../file/shared/file.service';
 
 @Injectable()
 export class FileTreeStore {

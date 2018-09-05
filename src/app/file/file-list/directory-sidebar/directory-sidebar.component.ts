@@ -1,47 +1,17 @@
 import {Component, EventEmitter, forwardRef, Input, OnInit, Output} from '@angular/core';
 
 import {ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR} from '@angular/forms';
-
-import {FileService} from './file.service';
-import {PathInfo} from './file.model';
+import {PathInfo} from '../../shared/file-rest.model';
+import {FileService} from '../../shared/file.service';
 
 @Component({
-    selector: 'user-dirs-sidebar',
-    template: `
-<aside class="left-side sidebar sidebar-offcanvas"
-       [ngClass]="{'collapse-left' : collapsed}">
-    <div class="menu-toggle">
-        <button class="minimise-btn btn pull-right"
-                [ngClass]="{'inactive': !collapsed}"
-                (click)="onToggle($event)"
-                tooltip="{{collapsed ? 'Expand sidebar' : 'Collapse sidebar'}}"
-                container="body"
-                placement="right">
-            <i class="fa fa-fw fa-lg"
-               [ngClass]="{'fa-toggle-left': !collapsed, 'fa-toggle-right': collapsed}"></i>
-        </button>
-        <tabset [ngClass]="{'invisible': collapsed}">
-            <tab heading="Explorer" active="true"></tab>
-        </tabset>
-    </div>
-    <ul class="sidebar-menu">
-        <li *ngFor="let dir of dirs" class="sidebar-item success" [ngClass]="{'active': dir.path === selectedPath}">
-            <a *ngIf="collapsed" 
-                (click)="onDirSelect(dir)"> 
-                <i class="fa fa-fw fa-folder"></i>
-            </a>
-            <a *ngIf="!collapsed"    
-                (click)="onDirSelect(dir)">
-                <i class="fa fa-fw fa-folder"></i><span>{{dir.name}}</span>
-            </a>
-        </li>
-    </ul>
-</aside>
-`, providers: [
-        {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => UserDirsSideBarComponent), multi: true}
+    selector: 'directory-sidebar',
+    templateUrl: './directory-sidebar.component.html',
+    providers: [
+        {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DirectorySidebarComponent), multi: true}
     ]
 })
-export class UserDirsSideBarComponent implements OnInit, ControlValueAccessor {
+export class DirectorySidebarComponent implements OnInit, ControlValueAccessor {
     @Input() collapsed?: boolean = false;
     @Output() toggle? = new EventEmitter();
     @Output() select = new EventEmitter();

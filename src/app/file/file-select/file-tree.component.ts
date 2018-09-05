@@ -1,7 +1,7 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from "@angular/core";
-import {FileNode} from "./file-tree.model";
-import {FileTreeStore} from "./file-tree.store";
-import {Subject} from "rxjs/Subject";
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {FileNode} from './file-tree.model';
+import {FileTreeStore} from './file-tree.store';
+import {Subject} from 'rxjs/Subject';
 
 @Component({
     selector: 'file-tree',

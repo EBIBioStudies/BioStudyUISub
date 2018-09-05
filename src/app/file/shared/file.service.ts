@@ -4,7 +4,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
-import {PathInfo, UserGroup} from './file.model';
+import {PathInfo, UserGroup} from './file-rest.model';
 
 @Injectable()
 export class FileService {
@@ -18,9 +18,9 @@ export class FileService {
             .map(paths => ([] as PathInfo[]).concat([new PathInfo('Home', '/User', 'DIR')], paths));
     }
 
-    getFiles(path: string): Observable<PathInfo[]> {
-        let params = new HttpParams();//.set('showArchives', showArchive + '');
-        return this.http.get<PathInfo[]>(`/raw/files${path}`, {params});
+    getFiles(fullPath: string): Observable<PathInfo[]> {
+        let params = new HttpParams().set('showArchives', 'true');
+        return this.http.get<PathInfo[]>(`/raw/files${fullPath}`, {params});
     }
 
     removeFile(fullPath: string): Observable<any> {

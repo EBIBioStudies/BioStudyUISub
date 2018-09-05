@@ -1,8 +1,8 @@
 import {Component, forwardRef, Input, OnDestroy, OnInit} from '@angular/core';
 
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {FileTreeStore} from "./file-tree.store";
-import {Subject} from "rxjs/Subject";
+import {FileTreeStore} from './file-tree.store';
+import {Subject} from 'rxjs/Subject';
 
 @Component({
     selector: 'file-select',

@@ -1,12 +1,12 @@
 <div class="row-offcanvas row-offcanvas-left">
 
-    <user-dirs-sidebar
+    <directory-sidebar
             name="userDirsSidebar"
             [(ngModel)]="rootPath"
             (select)="onRootPathSelect($event)"
             (toggle)="sideBarCollapsed=!sideBarCollapsed"
             [collapsed]="sideBarCollapsed">
-    </user-dirs-sidebar>
+    </directory-sidebar>
 
     <div class="navbar-default navbar-subm-fixed"
          [ngClass]="{'collapse-left': sideBarCollapsed}">

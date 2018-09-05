@@ -1,29 +1,21 @@
 import {NgModule} from '@angular/core';
 
-import {
-    RouterModule,
-    Routes
-} from '@angular/router';
+import {RouterModule, Routes} from '@angular/router';
 
 import {AuthGuard} from './auth-guard.service';
 
 import {
-    SignInComponent,
-    SignUpComponent,
     ActivateComponent,
     ActivationLinkReqComponent,
+    PasswordResetComponent,
     PasswordResetReqComponent,
-    PasswordResetComponent
+    SignInComponent,
+    SignUpComponent
 } from './auth/index';
 
-import {
-    SubmListComponent,
-    SubmEditComponent,
-    SubmViewComponent,
-    DirectSubmitComponent
-} from './submission/index';
+import {DirectSubmitComponent, SubmEditComponent, SubmListComponent, SubmViewComponent} from './submission/index';
 
-import {FileListComponent} from './file/index';
+import {FileListComponent} from './file/file-list/file-list.component';
 
 const appRoutes: Routes = [
     {path: '', redirectTo: 'submissions', pathMatch: 'full'},

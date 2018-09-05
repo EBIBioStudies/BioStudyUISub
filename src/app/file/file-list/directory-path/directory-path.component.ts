@@ -1,24 +1,20 @@
-import {
-    Component,
-    EventEmitter,
-    Input,
-    Output
-} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
     selector: 'directory-path',
-    templateUrl:'./directory-path.component.html'
+    templateUrl: './directory-path.component.html'
 })
 export class DirectoryPathComponent {
     @Output() change: EventEmitter<string> = new EventEmitter<string>();
 
-    public dirs:string[] = [];
-    private _path:string = '';
+    public dirs: string[] = [];
+    private _path: string = '';
 
     @Input()
     get path() {
         return this._path;
     }
+
     set path(path: string) {
         if (path.trim().length) {
             this.dirs = path.split('/').filter(Boolean);

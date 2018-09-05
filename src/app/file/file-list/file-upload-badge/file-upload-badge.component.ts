@@ -1,12 +1,5 @@
-import {
-    Component,
-    EventEmitter,
-    Output
-} from '@angular/core';
-
-import {FileUploadService} from './file-upload.service';
-
-import * as _ from 'lodash';
+import {Component, EventEmitter, Output} from '@angular/core';
+import {FileUploadService} from '../../shared/file-upload.service';
 
 @Component({
     selector: 'file-upload-badge',
@@ -32,22 +25,16 @@ export class FileUploadBadgeComponent {
         //NOTE: When multiple files are uploaded simultaneously, a single request is made.
         const uploadReqs = this.uploader.activeUploads();
 
-        this.hasFailed = false;
+        this.hasFailed = uploadReqs.find(req => req.failed()) !== undefined;
 
         //Collection of upload operations, one per file (as opposed to multiple-file requests).
-        const fileUploads = this.merge(_.flatMap(uploadReqs, (request) => {
-            if (request.failed()) {
-                this.hasFailed = this.hasFailed || request.failed();
-            }
-
-            return _.map(request.files, (file) => ({
+        return this.merge(uploadReqs.map(req =>
+            req.files.map(file => ({
                 name: file,
-                path: request.path,
-                progress: request.failed() ? 'error' : request.progress + '%'
-            }));
-        }));
-
-        return fileUploads;
+                path: req.path,
+                progress: req.failed() ? 'error' : req.progress + '%'
+            }))
+        ).reduce((rv, v) => rv.concat(v), []));
     }
 
     merge(dest: any[]): any[] {

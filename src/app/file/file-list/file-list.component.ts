@@ -1,170 +1,20 @@
-import {
-    Component,
-    OnInit,
-    OnDestroy
-} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 
-import {
-    ActivatedRoute,
-    Params
-} from '@angular/router';
+import {ActivatedRoute, Params} from '@angular/router';
 
 import {GridOptions} from 'ag-grid/main';
-import {AgRendererComponent} from 'ag-grid-angular/main';
-
-import {FileService} from './file.service';
-
-import {
-    FileUploadService,
-    FileUpload
-} from './file-upload.service';
-
-import {Path} from './path';
-
-import * as _ from 'lodash';
 
 import 'rxjs/add/operator/filter';
-import {AppConfig} from '../app.config';
+import {AppConfig} from '../../app.config';
 import 'rxjs/add/operator/takeUntil';
 import {Subject} from 'rxjs/Subject';
-import {throwError} from 'rxjs/index';
-
-@Component({
-    selector: 'file-actions-cell',
-    template: `
-        <div style="text-align:center">
-            <button *ngIf="canRemove"
-                    type="button" class="btn btn-danger btn-xs btn-flat"
-                    tooltip="Delete"
-                    (click)="onFileRemove($event)">
-                <i class="fa fa-trash-o fa-fw"></i>
-            </button>
-            <button *ngIf="canCancel"
-                    type="button" class="btn btn-warning btn-xs"
-                    tooltip="Cancel"
-                    (click)="onCancelUpload($event)">
-                Cancel
-            </button>
-        </div>
-    `
-})
-export class FileActionsCellComponent implements AgRendererComponent {
-    private type?: string;
-    private upload?: FileUpload;
-    private onRemove;
-
-    agInit(params: any): void {
-        this.type = params.data.type;
-        this.upload = params.data.upload;
-        this.onRemove = params.data.onRemove || (() => {
-        });
-    }
-
-    get canRemove(): boolean {
-        return !this.canCancel && (this.type === 'FILE' || this.type === 'ARCHIVE')
-    }
-
-    get canCancel(): boolean {
-        return (this.upload && !this.upload.finished()) === true;
-    }
-
-    onFileRemove(ev) {
-        ev.preventDefault();
-        this.onRemove();
-    }
-
-    onCancelUpload(ev) {
-        ev.preventDefault();
-        if (this.upload) {
-            this.upload.cancel();
-        }
-    }
-
-    refresh(): boolean {
-        return false;
-    }
-}
-
-@Component({
-    selector: 'file-type-cell',
-    template: `
-        <div class="text-center text-primary">
-            <i class="fa" [ngClass]="{
-                               'fa-file' : ftype === 'FILE', 
-                               'fa-folder' : ftype === 'DIR', 
-                               'fa-archive' : ftype === 'ARCHIVE', 
-                               'fa-file-archive-o' : ftype === 'FILE_IN_ARCHIVE'}"></i>
-        </div>
-    `
-})
-export class FileTypeCellComponent implements AgRendererComponent {
-    ftype?: string;
-
-    agInit(params: any): void {
-        this.ftype = params.value;
-    }
-
-    /**
-     * Mandatory - Get the cell to refresh.
-     * @see {@link https://www.ag-grid.com/javascript-grid-cell-editor/}
-     * @returns {boolean} By returning false, the grid will remove the component from the DOM and create
-     * a new component in it's place with the new values.
-     */
-    refresh(): boolean {
-        return false;
-    }
-}
-
-@Component({
-    selector: 'progress-cell',
-    template: `
-        <div *ngIf="value >= 1 && value < 100" class="progress"
-             style="margin-bottom: 0;">
-            <div class="progress-bar" role="progressbar"
-                 [ngStyle]="{ 'width': value + '%'}">
-                {{value}}%
-            </div>
-        </div>
-        <div *ngIf="value === 100" class="text-success text-center"><i class="fa fa-check"></i></div>
-        <div *ngIf="value < 0" class="text-danger text-center"><i class="fa fa-times-circle"></i> {{error}}</div>
-    `
-})
-export class ProgressCellComponent implements AgRendererComponent {
-    private upload?: FileUpload;
-    private type?: string;
-
-    agInit(params: any): void {
-        this.type = params.data.type;
-        this.upload = params.data.upload;
-    }
-
-    get value(): number {
-        if (this.upload) {
-            if (this.upload.failed()) {
-                return -1;
-            }
-            return this.upload.progress;
-        }
-        if (this.type === 'FILE' || this.type === 'ARCHIVE') {
-            return 100;
-        }
-        return 0;
-    }
-
-    get error(): string {
-        return ((this.upload || {}) as any).error || '';
-    }
-
-    /**
-     * Mandatory - Get the cell to refresh.
-     * @see {@link https://www.ag-grid.com/javascript-grid-cell-editor/}
-     * @returns {boolean} By returning false, the grid will remove the component from the DOM and create
-     * a new component in it's place with the new values.
-     */
-    refresh(): boolean {
-        return false;
-    }
-}
+import {throwError} from 'rxjs';
+import {FileActionsCellComponent} from './ag-grid/file-actions-cell.component';
+import {ProgressCellComponent} from './ag-grid/upload-progress-cell.component';
+import {FileTypeCellComponent} from './ag-grid/file-type-cell.component';
+import {Path} from '../shared/path';
+import {FileService} from '../shared/file.service';
+import {FileUpload, FileUploadService} from '../shared/file-upload.service';
 
 @Component({
     selector: 'file-list',
@@ -328,11 +178,11 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     decorateUploads(uploads: FileUpload[]): any[] {
-        return _.flatMap(uploads, (u) => {
+        return uploads.map(u => {
             if (!u.path.fullPath().startsWith(this.currentPath)) {
                 return [];
             }
-            return _.map(u.files, (f) => ({
+            return u.files.map(f => ({
                 name: f,
                 upload: u,
                 type: 'FILE',
@@ -340,11 +190,11 @@ export class FileListComponent implements OnInit, OnDestroy {
                     this.removeUpload(u);
                 }
             }));
-        });
+        }).reduce((rv, v) => rv.concat(v), []);
     }
 
-    decorateFiles(files): any[] {
-        return _.map(files, (f) => ({
+    decorateFiles(files: any[] | undefined): any[] {
+        return (files || []).map(f => ({
             name: f.name,
             type: f.type,
             files: this.decorateFiles(f.files),

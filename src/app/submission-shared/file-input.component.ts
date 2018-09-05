@@ -1,15 +1,7 @@
-import {
-    Component,
-    Input,
-    forwardRef
-} from '@angular/core';
+import {Component, forwardRef, Input} from '@angular/core';
 
-import {
-    ControlValueAccessor,
-    NG_VALUE_ACCESSOR
-} from '@angular/forms';
-
-import {FileService} from 'app/file/index';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {FileService} from '../file/shared/file.service';
 
 @Component({
     selector: 'file-input',
