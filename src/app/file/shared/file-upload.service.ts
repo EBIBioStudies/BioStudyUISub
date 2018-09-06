@@ -8,12 +8,8 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-
-import {HttpCustomClient} from 'app/http/http-custom-client.service'
 import {Path} from './path';
-import {ServerError} from '../../http';
-
-const FILE_UPLOAD_URL = '/raw/fileUpload';
+import {FileService, UploadErrorEvent, UploadEvent, UploadOtherEvent, UploadProgressEvent} from './file.service';
 
 enum UploadState {
     ERROR = 'error',
@@ -22,24 +18,7 @@ enum UploadState {
     CANCELLED = 'cancelled'
 }
 
-class FileUploadStatus {
-    constructor(public state: UploadState,
-                public progress: number,
-                public errorMessage: string | undefined = undefined) {
-    }
-
-    static ERROR = new FileUploadStatus(UploadState.ERROR, -1, 'Upload failure');
-
-    static SUCCESS = new FileUploadStatus(UploadState.SUCCESS, 100);
-
-    static uploading(progress: number): FileUploadStatus {
-        return new FileUploadStatus(UploadState.UPLOADING, progress);
-    }
-
-    static cancelled(progress: number): FileUploadStatus {
-        return new FileUploadStatus(UploadState.CANCELLED, progress);
-    }
-}
+const CANCEL_EVENT = new UploadOtherEvent('cancel');
 
 export class FileUpload {
     private state: UploadState = UploadState.UPLOADING;
@@ -50,44 +29,45 @@ export class FileUpload {
     private errorMessage?: string;
     private progressPercentage: number;
 
-    private status$: Subject<FileUploadStatus> = new Subject<FileUploadStatus>();
+    private uploadEvent$: Subject<UploadEvent> = new Subject<UploadEvent>();
     finish$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-    constructor(path: Path, files: File[], httpClient: HttpCustomClient, globalHandler: ErrorHandler) {
+    constructor(path: Path, files: File[], fileService: FileService, globalHandler: ErrorHandler) {
         console.log('files', files);
         this.filePath = path;
         this.fileNames = files.map(f => f.name);
         this.progressPercentage = 0;
 
-        let upload = httpClient.upload(FILE_UPLOAD_URL, files, path.fullPath());
+        let upload$: Observable<UploadEvent> =
+            fileService.upload(path.fullPath(), files)
+                .catch((error: UploadErrorEvent) => {
+                    console.log(error.message);
+                    return Observable.of(error);
+                });
 
-        let uploadStatus$ = upload
-            .map((res) => {
-                if (res.kind === 'progress') {
-                    return FileUploadStatus.uploading(res.progress);
-                }
-                if (res.kind === 'response') {
-                    return FileUploadStatus.SUCCESS;
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-                globalHandler.handleError(ServerError.fromResponse(error));
-                return Observable.of(FileUploadStatus.ERROR);
-            });
-
-        this.status$.subscribe((fus) => {
-            this.progressPercentage = fus.progress;
-            this.state = fus.state;
-            this.errorMessage = fus.errorMessage;
+        this.uploadEvent$.subscribe((event: UploadEvent) => {
+            if (event.isProgress()) {
+                this.progressPercentage = (<UploadProgressEvent>event).percentage;
+                this.state = UploadState.UPLOADING;
+            }
+            if (event.isError()) {
+                this.errorMessage = (<UploadErrorEvent>event).message;
+                this.state = UploadState.ERROR;
+            }
+            if (event.isSuccess()) {
+                this.state = UploadState.SUCCESS;
+            }
+            if (event === CANCEL_EVENT) {
+                this.state = UploadState.CANCELLED;
+            }
             if (this.isDone()) {
                 this.finish$.next(true);
                 this.finish$.complete();
-                this.status$.complete();
+                this.uploadEvent$.complete();
             }
         }, console.log);
 
-        this.sb = uploadStatus$.subscribe(this.status$);
+        this.sb = upload$.subscribe(this.uploadEvent$);
     }
 
     get path(): Path {
@@ -114,7 +94,7 @@ export class FileUpload {
         if (!this.isFinished()) {
             this.sb!.unsubscribe();
             this.sb = undefined;
-            this.status$.next(FileUploadStatus.cancelled(this.progressPercentage));
+            this.uploadEvent$.next(CANCEL_EVENT);
         }
     }
 
@@ -140,7 +120,7 @@ export class FileUploadService {
     private uploads: FileUpload[] = [];
     uploadCompleted$: Subject<string> = new Subject<string>();
 
-    constructor(private http: HttpCustomClient, private globalHandler: ErrorHandler) {
+    constructor(private fileService: FileService, private globalHandler: ErrorHandler) {
     }
 
     /**
@@ -161,7 +141,7 @@ export class FileUploadService {
      * @returns {FileUpload} Tracking object for the resulting upload request.
      */
     upload(path: Path, files: File[]): FileUpload {
-        let upload = new FileUpload(path, files, this.http, this.globalHandler);
+        let upload = new FileUpload(path, files, this.fileService, this.globalHandler);
 
         this.uploads.push(upload);
 

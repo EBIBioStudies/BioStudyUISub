@@ -39,7 +39,7 @@ export class FileActionsCellComponent implements AgRendererComponent {
     }
 
     get canCancel(): boolean {
-        return (this.upload && !this.upload.finished()) === true;
+        return (this.upload && !this.upload.isFinished()) === true;
     }
 
     onFileRemove(ev) {

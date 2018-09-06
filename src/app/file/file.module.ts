@@ -18,6 +18,7 @@ import {DirectorySidebarComponent} from './file-list/directory-sidebar/directory
 import {DirectoryPathComponent} from './file-list/directory-path/directory-path.component';
 import {FileUploadBadgeComponent} from './file-list/file-upload-badge/file-upload-badge.component';
 import {FileTreeStore} from './file-select/file-tree.store';
+import {XhrUploadService} from './shared/xhr-upload.service';
 
 @NgModule({
     imports: [
@@ -43,6 +44,7 @@ import {FileTreeStore} from './file-select/file-tree.store';
         FileTreeDropdownComponent,
     ],
     providers: [
+        XhrUploadService,
         FileService,
         FileUploadService,
         FileTreeStore

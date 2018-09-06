@@ -11,14 +11,12 @@ import 'rxjs/add/operator/catch';
 import {AppConfig} from 'app/app.config';
 import {getLoginToken} from 'app/auth/user-cookies';
 
-import {UploadService} from './upload.service';
 import {serverErrorHandler} from './server-error.handler';
 
 @Injectable()
 export class HttpCustomClient {
 
     constructor(private http: HttpClient,
-                private uploadService: UploadService,
                 private appConfig: AppConfig) {
     }
 
@@ -65,7 +63,7 @@ export class HttpCustomClient {
      * @param {string} path - Global path for all the uploads.
      * @returns {Observable<any>} Stream of asynchronous events for the POST request.
      */
-    upload(url, files: File[], path: string): Observable<any> {
+   /* upload(url, files: File[], path: string): Observable<UploadResponse> {
         let input = new FormData();
         let file;
 
@@ -78,7 +76,7 @@ export class HttpCustomClient {
 
         //TODO: The error handler is only allowed within whatever routine calls the "upload" method. It should be brought back to this layer so that a "catch" can be used, just like with the other REST verb operations.
         return this.uploadService.post(this.transform(url), input, this.headers());
-    }
+    }*/
 
     private headers(): HttpHeaders {
         let headers = new HttpHeaders();

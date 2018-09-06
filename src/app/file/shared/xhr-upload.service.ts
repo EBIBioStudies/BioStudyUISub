@@ -1,32 +1,53 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Observer} from 'rxjs/Observer';
-import {HttpHeaders} from "@angular/common/http";
+import {HttpHeaders} from '@angular/common/http';
 
 const isSuccess = (status: number): boolean => (status >= 200 && status < 300);
 
-export class UploadProgress {
-    public kind = "progress";
+export class UploadResponse {
+    constructor(private kind: string) {
+    };
 
+    isProgress(): boolean {
+        return this.kind === 'progress'
+    };
+
+    isSuccess(): boolean {
+        return this.kind === 'success'
+    };
+
+    isError(): boolean {
+        return this.kind === 'error'
+    };
+}
+
+export class UploadProgress extends UploadResponse {
     constructor(public progress: number) {
+        super('progress');
     }
 }
-export class UploadResponse {
-    public kind = "response";
 
+export class UploadSuccess extends UploadResponse {
     constructor(public status: number,
                 public statusText: string,
-                public type: string,
                 public body: any) {
+        super('success');
     }
 }
 
-type UploadResponseType = UploadProgress | UploadResponse;
+export class UploadError extends UploadResponse {
+    constructor(public status: number,
+                public statusText: string,
+                public body: any) {
+        super('error');
+    }
+}
 
 @Injectable()
-export class UploadService {
-    post(url: string, formData: FormData, headers: HttpHeaders): Observable<UploadResponseType> {
-        return Observable.create((observer: Observer<UploadResponseType>) => {
+export class XhrUploadService {
+    post(url: string, formData: FormData, headers?: HttpHeaders): Observable<UploadResponse> {
+        return Observable.create((observer: Observer<UploadResponse>) => {
             let xhr: XMLHttpRequest = new XMLHttpRequest();
 
             const onProgress = (event) => {
@@ -35,10 +56,9 @@ export class UploadService {
             };
 
             const onError = (err: ErrorEvent) => {
-                observer.error(new UploadResponse(
+                observer.error(new UploadError(
                     xhr.status,
                     xhr.statusText,
-                    'Error',
                     err
                 ));
             };
@@ -57,33 +77,31 @@ export class UploadService {
                 const statusText: string = xhr.statusText || 'OK';
 
                 if (isSuccess(status)) {
-                    observer.next(new UploadResponse(
+                    observer.next(new UploadSuccess(
                         status,
                         statusText,
-                        'Success',
                         body
                     ));
                     observer.complete();
                     return;
                 }
-                observer.error(new UploadResponse(
+                observer.error(new UploadError(
                     status,
                     statusText,
-                    'Error',
                     body
                 ));
             };
 
             xhr.open('post', url);
 
-            if (headers === null) {
+            if (headers === undefined) {
                 headers = new HttpHeaders();
             }
             if (!headers.has('Accept')) {
                 headers = headers.append('Accept', 'application/json, text/plain, */*');
             }
             headers.keys().forEach((key) => {
-                xhr.setRequestHeader(key, headers.getAll(key)!.join(','));
+                xhr.setRequestHeader(key, headers!.getAll(key)!.join(','));
             });
 
             xhr.upload.addEventListener('progress', onProgress);

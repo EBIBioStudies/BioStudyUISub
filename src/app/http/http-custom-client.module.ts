@@ -2,7 +2,6 @@ import {NgModule} from '@angular/core';
 import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 
 import {HttpCustomClient} from './http-custom-client.service';
-import {UploadService} from './upload.service';
 import {RequestStatusService, RequestStatusServiceFactory} from './request-status.service';
 import {AuthInterceptorService} from './auth-interceptor.service';
 
@@ -15,7 +14,6 @@ import {AuthInterceptorService} from './auth-interceptor.service';
     ],
     providers: [
         HttpCustomClient,
-        UploadService,
         {
             provide: RequestStatusService,
             useFactory: RequestStatusServiceFactory

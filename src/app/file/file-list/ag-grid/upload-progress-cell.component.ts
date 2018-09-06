@@ -28,7 +28,7 @@ export class ProgressCellComponent implements AgRendererComponent {
 
     get value(): number {
         if (this.upload) {
-            if (this.upload.failed()) {
+            if (this.upload.isFailed()) {
                 return -1;
             }
             return this.upload.progress;

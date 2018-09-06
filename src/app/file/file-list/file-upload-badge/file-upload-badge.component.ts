@@ -25,14 +25,14 @@ export class FileUploadBadgeComponent {
         //NOTE: When multiple files are uploaded simultaneously, a single request is made.
         const uploadReqs = this.uploader.activeUploads();
 
-        this.hasFailed = uploadReqs.find(req => req.failed()) !== undefined;
+        this.hasFailed = uploadReqs.find(req => req.isFailed()) !== undefined;
 
         //Collection of upload operations, one per file (as opposed to multiple-file requests).
         return this.merge(uploadReqs.map(req =>
             req.files.map(file => ({
                 name: file,
                 path: req.path,
-                progress: req.failed() ? 'error' : req.progress + '%'
+                progress: req.isFailed() ? 'error' : req.progress + '%'
             }))
         ).reduce((rv, v) => rv.concat(v), []));
     }
