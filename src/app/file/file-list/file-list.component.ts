@@ -54,7 +54,7 @@ export class FileListComponent implements OnInit, OnDestroy {
             overlayLoadingTemplate: '<span class="ag-overlay-loading-center"><i class="fa fa-cog fa-spin fa-lg"></i> Loading...</span>',
         };
 
-        this.fileUploadService.uploadFinish$
+        this.fileUploadService.uploadCompleted$
             .filter((path) => path.startsWith(this.currentPath))
             .takeUntil(this.ngUnsubscribe)
             .subscribe(() => {
@@ -172,8 +172,8 @@ export class FileListComponent implements OnInit, OnDestroy {
         this.loadData();
     }
 
-    onUploadFilesSelect(files) {
-        let upload = this.fileUploadService.upload(this.path, files);
+    onUploadFilesSelect(files: FileList) {
+        let upload = this.fileUploadService.upload(this.path, Array.from(files));
         this.updateDataRows(([] as any[]).concat(this.decorateUploads([upload]), this.rowData));
     }
 
