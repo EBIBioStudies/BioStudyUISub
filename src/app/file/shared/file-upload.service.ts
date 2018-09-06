@@ -11,127 +11,144 @@ import 'rxjs/add/operator/catch';
 
 import {HttpCustomClient} from 'app/http/http-custom-client.service'
 import {Path} from './path';
-
-import * as _ from 'lodash';
 import {ServerError} from '../../http';
 
-const FILE_UPLOAD_URL = '/raw/fileUpload'; 
+const FILE_UPLOAD_URL = '/raw/fileUpload';
+
+enum UploadState {
+    ERROR = 'error',
+    SUCCESS = 'success',
+    UPLOADING = 'uploading',
+    CANCELLED = 'cancelled'
+}
 
 class FileUploadStatus {
-    constructor(public status,
-                public progress,
-                public error) {
+    constructor(public state: UploadState,
+                public progress: number,
+                public errorMessage: string | undefined = undefined) {
+    }
+
+    static ERROR = new FileUploadStatus(UploadState.ERROR, -1, 'Upload failure');
+
+    static SUCCESS = new FileUploadStatus(UploadState.SUCCESS, 100);
+
+    static uploading(progress: number): FileUploadStatus {
+        return new FileUploadStatus(UploadState.UPLOADING, progress);
+    }
+
+    static cancelled(progress: number): FileUploadStatus {
+        return new FileUploadStatus(UploadState.CANCELLED, progress);
     }
 }
 
 export class FileUpload {
-    private _status: string = 'uploading';
-    private _error?: string;
-    private _sb?: Subscription;
-    private _progress: number;
-    private _files: string[];
-    private _path: Path;
+    private state: UploadState = UploadState.UPLOADING;
+    private fileNames: string[];
+    private filePath: Path;
 
-    private _statusSubject: Subject<FileUploadStatus> = new Subject<FileUploadStatus>();
+    private sb?: Subscription;
+    private errorMessage?: string;
+    private progressPercentage: number;
 
+    private status$: Subject<FileUploadStatus> = new Subject<FileUploadStatus>();
     finish$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
     constructor(path: Path, files: File[], httpClient: HttpCustomClient, globalHandler: ErrorHandler) {
-        this._path = path;
-        this._files = _.map(files, 'name');
-        this._progress = 0;
-
-        const failed = Observable.of(new FileUploadStatus('error', -1, 'Upload failure.'));
+        console.log('files', files);
+        this.filePath = path;
+        this.fileNames = files.map(f => f.name);
+        this.progressPercentage = 0;
 
         let upload = httpClient.upload(FILE_UPLOAD_URL, files, path.fullPath());
 
-        let uploadStatus = upload
+        let uploadStatus$ = upload
             .map((res) => {
                 if (res.kind === 'progress') {
-                    return new FileUploadStatus('uploading', res.progress, undefined);
+                    return FileUploadStatus.uploading(res.progress);
                 }
                 if (res.kind === 'response') {
-                    return new FileUploadStatus('success', 100, undefined);
+                    return FileUploadStatus.SUCCESS;
                 }
             })
             .catch((error) => {
                 console.log(error);
                 globalHandler.handleError(ServerError.fromResponse(error));
-                return failed;
+                return Observable.of(FileUploadStatus.ERROR);
             });
 
-        this._statusSubject.subscribe((fus) => {
-                this._progress = fus.progress;
-                this._status = fus.status;
-                this._error = fus.error;
-                if (this.done()) {
-                    this.finish$.next(true);
-                    this.finish$.complete();
-                    this._statusSubject.complete();
-                }
-            }, console.log);
+        this.status$.subscribe((fus) => {
+            this.progressPercentage = fus.progress;
+            this.state = fus.state;
+            this.errorMessage = fus.errorMessage;
+            if (this.isDone()) {
+                this.finish$.next(true);
+                this.finish$.complete();
+                this.status$.complete();
+            }
+        }, console.log);
 
-        this._sb = uploadStatus.subscribe(this._statusSubject);
+        this.sb = uploadStatus$.subscribe(this.status$);
     }
 
     get path(): Path {
-        return this._path;
+        return this.filePath;
     }
 
     get progress(): number {
-        return this._progress;
+        return this.progressPercentage;
     }
 
     get status(): string {
-        return this._status;
+        return this.state;
     }
 
     get files(): string[] {
-        return _.map(this._files, _.identity);
+        return this.fileNames.slice();
     }
 
     get error(): string | undefined {
-        return this._error;
+        return this.errorMessage;
     }
 
     cancel(): void {
-        if (!this.finished()) {
-            this._sb!.unsubscribe();
-            this._sb = undefined;
-            this._statusSubject.next(new FileUploadStatus('cancelled', this._progress, undefined));
+        if (!this.isFinished()) {
+            this.sb!.unsubscribe();
+            this.sb = undefined;
+            this.status$.next(FileUploadStatus.cancelled(this.progressPercentage));
         }
     }
 
-    cancelled(): boolean {
-        return this._status === 'cancelled';
+    isCancelled(): boolean {
+        return this.state === UploadState.CANCELLED;
     }
 
-    finished(): boolean {
-        return this.done() || this.failed();
+    isFinished(): boolean {
+        return this.isDone() || this.isFailed();
     }
 
-    done(): boolean {
-        return this._status === 'success' || this.cancelled();
+    isDone(): boolean {
+        return this.state === UploadState.SUCCESS || this.isCancelled();
     }
 
-    failed(): boolean {
-        return this._status === 'error';
+    isFailed(): boolean {
+        return this.state === UploadState.ERROR;
     }
 }
 
 @Injectable()
 export class FileUploadService {
-    private _uploads: FileUpload[] = [];        //Batches of file uploads
-    uploadFinish$: Subject<string> = new Subject<string>();
+    private uploads: FileUpload[] = [];
+    uploadCompleted$: Subject<string> = new Subject<string>();
 
-    constructor(private http: HttpCustomClient, private globalHandler: ErrorHandler) {}
+    constructor(private http: HttpCustomClient, private globalHandler: ErrorHandler) {
+    }
 
     /**
      * Retrieves only the upload requests that are still in progress.
      * @returns {FileUpload[]} Deep-cloned collection with incomplete requests filtered out.
      */
     activeUploads(): FileUpload[] {
-        return _.filter(_.map(this._uploads, _.identity), (upload) => !upload.done());
+        return this.uploads.filter(u => !u.isDone());
     }
 
     /**
@@ -146,13 +163,12 @@ export class FileUploadService {
     upload(path: Path, files: File[]): FileUpload {
         let upload = new FileUpload(path, files, this.http, this.globalHandler);
 
-        this._uploads.push(upload);
-        upload.finish$.filter(_.identity)
-            .map(() => upload.path.fullPath())
+        this.uploads.push(upload);
 
-            // do not subscribe uploadFinish$ directly here.
-            // as cancellation of finish$ will cancel uploadFinish$ as well
-            .subscribe((path) => this.uploadFinish$.next(path));
+        // do not subscribe uploadFinish$ directly here.
+        // as cancellation of finish$ will cancel uploadFinish$ as well
+        upload.finish$.map(() => upload.path.fullPath())
+            .subscribe(fullPath => this.uploadCompleted$.next(fullPath));
 
         return upload;
     }
@@ -162,6 +178,9 @@ export class FileUploadService {
      * @param {FileUpload} upload - Group of simultaneously uploaded files.
      */
     remove(upload: FileUpload) {
-        _.pull(this._uploads, upload);
+        const index = this.uploads.indexOf(upload);
+        if (index > -1) {
+            this.uploads.splice(index, 1);
+        }
     }
 }
