@@ -21,7 +21,6 @@ import {
 } from 'ngx-bootstrap';
 
 import {AppRoutingModule} from './app-routing.module';
-import {CoreModule} from './core/core.module';
 import {HelpModule} from './help/help.module';
 import {AuthModule} from './auth/auth.module';
 import {FileModule} from './file/file.module';
@@ -30,6 +29,7 @@ import {SubmissionModule} from './submission/submission.module';
 import {AppComponent} from './app.component';
 import {GlobalErrorHandler} from './global-error.handler';
 import {AppConfig} from './app.config';
+import {HeaderModule} from './header/header.module';
 
 export function initConfig(config: AppConfig): () => Promise<any> {
     return () => config.load();
@@ -48,7 +48,7 @@ export function initConfig(config: AppConfig): () => Promise<any> {
         CollapseModule.forRoot(),
         AlertModule.forRoot(),
         AppRoutingModule,
-        CoreModule,
+        HeaderModule,
         HelpModule,
         AuthModule,
         SubmissionModule,

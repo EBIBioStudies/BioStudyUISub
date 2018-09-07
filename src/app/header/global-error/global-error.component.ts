@@ -1,8 +1,4 @@
-import {
-    ErrorHandler,
-    Component,
-    ElementRef, ChangeDetectorRef
-} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, ErrorHandler} from '@angular/core';
 
 import {GlobalErrorHandler} from 'app/global-error.handler';
 

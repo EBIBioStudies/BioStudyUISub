@@ -2,17 +2,17 @@ import {ApplicationRef, Component, OnDestroy, ViewChild} from '@angular/core';
 import {Event, NavigationEnd, Router} from '@angular/router';
 
 import {AuthService, UserSession} from 'app/auth/index';
-import {RequestStatusService} from "../../http/request-status.service";
-import {Subscription} from "rxjs/Subscription";
-import {UserData} from "../../auth/user-data";
-import {ConfirmDialogComponent} from "../../shared/confirm-dialog.component";
+import {RequestStatusService} from '../../http/request-status.service';
+import {Subscription} from 'rxjs/Subscription';
+import {UserData} from '../../auth/user-data';
+import {ConfirmDialogComponent} from '../../shared/confirm-dialog.component';
 
 @Component({
     selector: 'app-header',
-    templateUrl: './header.component.html',
-    styleUrls: ['./header.component.css']
+    templateUrl: './app-header.component.html',
+    styleUrls: ['./app-header.component.css']
 })
-export class HeaderComponent implements OnDestroy {
+export class AppHeaderComponent implements OnDestroy {
     reqStatusSubs: Subscription;
     secretId: string | undefined = '';                  //current user's secret ID
 

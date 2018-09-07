@@ -3,8 +3,8 @@ import {RouterModule} from '@angular/router';
 
 import {SharedModule} from 'app/shared/shared.module';
 
-import {HeaderComponent} from './header/header.component';
-import {GlobalErrorComponent} from './header/global-error.component';
+import {AppHeaderComponent} from './app-header/app-header.component';
+import {GlobalErrorComponent} from './global-error/global-error.component';
 
 @NgModule({
     imports: [
@@ -12,12 +12,12 @@ import {GlobalErrorComponent} from './header/global-error.component';
         SharedModule
     ],
     exports: [
-        HeaderComponent
+        AppHeaderComponent
     ],
     declarations: [
-        HeaderComponent,
+        AppHeaderComponent,
         GlobalErrorComponent
     ]
 })
-export class CoreModule {
+export class HeaderModule {
 }
