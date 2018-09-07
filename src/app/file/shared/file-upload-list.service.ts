@@ -1,16 +1,13 @@
-import {ErrorHandler, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Subscription} from 'rxjs/Subscription';
 
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
 import {Path} from './path';
 import {FileService} from './file.service';
 import {UploadErrorEvent, UploadEvent, UploadProgressEvent} from './http-upload-client.service';
+import {catchError, map} from 'rxjs/operators';
 
 enum UploadState {
     ERROR = 'error',
@@ -41,11 +38,12 @@ export class FileUpload {
         this.percentage = 0;
 
         let upload$: Observable<UploadEvent> =
-            fileService.upload(path.absolutePath(), files)
-                .catch((error: UploadErrorEvent) => {
+            fileService.upload(path.absolutePath(), files).pipe(
+                catchError((error: UploadErrorEvent) => {
                     console.log(error.message);
                     return Observable.of(error);
-                });
+                })
+            );
 
         this.uploadEvent$.subscribe((event: UploadEvent) => {
             if (event.isProgress()) {
@@ -132,8 +130,9 @@ export class FileUploadList {
 
         // do not subscribe uploadFinish$ directly here.
         // as cancellation of finish$ will cancel uploadFinish$ as well
-        upload.finish$.map(() => upload.absoluteFilePath)
-            .subscribe(fullPath => this.uploadCompleted$.next(fullPath));
+        upload.finish$.pipe(
+            map(() => upload.absoluteFilePath)
+        ).subscribe(fullPath => this.uploadCompleted$.next(fullPath));
 
         return upload;
     }
