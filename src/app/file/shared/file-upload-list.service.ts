@@ -9,7 +9,8 @@ import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import {Path} from './path';
-import {FileService, UploadErrorEvent, UploadEvent, UploadOtherEvent, UploadProgressEvent} from './file.service';
+import {FileService} from './file.service';
+import {UploadErrorEvent, UploadEvent, UploadProgressEvent} from './http-upload-client.service';
 
 enum UploadState {
     ERROR = 'error',
@@ -18,28 +19,29 @@ enum UploadState {
     CANCELLED = 'cancelled'
 }
 
-const CANCEL_EVENT = new UploadOtherEvent('cancel');
+const CANCEL_UPLOAD_EVENT = new UploadEvent();
 
 export class FileUpload {
     private state: UploadState = UploadState.UPLOADING;
-    private fileNames: string[];
-    private filePath: Path;
+    private percentage: number;
+    private errorMessage?: string;
 
     private sb?: Subscription;
-    private errorMessage?: string;
-    private progressPercentage: number;
-
     private uploadEvent$: Subject<UploadEvent> = new Subject<UploadEvent>();
+
     finish$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-    constructor(path: Path, files: File[], fileService: FileService, globalHandler: ErrorHandler) {
+    readonly filePath: Path;
+    readonly fileNames: string[];
+
+    constructor(path: Path, files: File[], fileService: FileService) {
         console.log('files', files);
         this.filePath = path;
         this.fileNames = files.map(f => f.name);
-        this.progressPercentage = 0;
+        this.percentage = 0;
 
         let upload$: Observable<UploadEvent> =
-            fileService.upload(path.fullPath(), files)
+            fileService.upload(path.absolutePath(), files)
                 .catch((error: UploadErrorEvent) => {
                     console.log(error.message);
                     return Observable.of(error);
@@ -47,7 +49,7 @@ export class FileUpload {
 
         this.uploadEvent$.subscribe((event: UploadEvent) => {
             if (event.isProgress()) {
-                this.progressPercentage = (<UploadProgressEvent>event).percentage;
+                this.percentage = (<UploadProgressEvent>event).percentage;
                 this.state = UploadState.UPLOADING;
             }
             if (event.isError()) {
@@ -57,7 +59,7 @@ export class FileUpload {
             if (event.isSuccess()) {
                 this.state = UploadState.SUCCESS;
             }
-            if (event === CANCEL_EVENT) {
+            if (event === CANCEL_UPLOAD_EVENT) {
                 this.state = UploadState.CANCELLED;
             }
             if (this.isDone()) {
@@ -70,31 +72,27 @@ export class FileUpload {
         this.sb = upload$.subscribe(this.uploadEvent$);
     }
 
-    get path(): Path {
-        return this.filePath;
-    }
-
     get progress(): number {
-        return this.progressPercentage;
+        return this.percentage;
     }
 
     get status(): string {
         return this.state;
     }
 
-    get files(): string[] {
-        return this.fileNames.slice();
+    get error(): string | undefined {
+        return this.errorMessage
     }
 
-    get error(): string | undefined {
-        return this.errorMessage;
+    get absoluteFilePath(): string {
+        return this.filePath.absolutePath();
     }
 
     cancel(): void {
         if (!this.isFinished()) {
             this.sb!.unsubscribe();
             this.sb = undefined;
-            this.uploadEvent$.next(CANCEL_EVENT);
+            this.uploadEvent$.next(CANCEL_UPLOAD_EVENT);
         }
     }
 
@@ -116,47 +114,30 @@ export class FileUpload {
 }
 
 @Injectable()
-export class FileUploadService {
+export class FileUploadList {
     private uploads: FileUpload[] = [];
     uploadCompleted$: Subject<string> = new Subject<string>();
 
-    constructor(private fileService: FileService, private globalHandler: ErrorHandler) {
+    constructor(private fileService: FileService) {
     }
 
-    /**
-     * Retrieves only the upload requests that are still in progress.
-     * @returns {FileUpload[]} Deep-cloned collection with incomplete requests filtered out.
-     */
     activeUploads(): FileUpload[] {
         return this.uploads.filter(u => !u.isDone());
     }
 
-    /**
-     * Starts the request process for the selected files and keeps track of it.
-     * NOTE: Multiple-file uploads are allowed. Each group of simultaneous uploads is bundled into one request.
-     * @see {@link FileUpload}
-     * @see {@link UploadService}
-     * @param {Path} path - Path common to all files to be uploaded.
-     * @param {File[]} files - Files to be uploaded.
-     * @returns {FileUpload} Tracking object for the resulting upload request.
-     */
     upload(path: Path, files: File[]): FileUpload {
-        let upload = new FileUpload(path, files, this.fileService, this.globalHandler);
+        let upload = new FileUpload(path, files, this.fileService);
 
         this.uploads.push(upload);
 
         // do not subscribe uploadFinish$ directly here.
         // as cancellation of finish$ will cancel uploadFinish$ as well
-        upload.finish$.map(() => upload.path.fullPath())
+        upload.finish$.map(() => upload.absoluteFilePath)
             .subscribe(fullPath => this.uploadCompleted$.next(fullPath));
 
         return upload;
     }
 
-    /**
-     * Removes a given upload request from the collection.
-     * @param {FileUpload} upload - Group of simultaneously uploaded files.
-     */
     remove(upload: FileUpload) {
         const index = this.uploads.indexOf(upload);
         if (index > -1) {

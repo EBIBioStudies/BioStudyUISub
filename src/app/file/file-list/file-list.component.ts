@@ -14,7 +14,8 @@ import {ProgressCellComponent} from './ag-grid/upload-progress-cell.component';
 import {FileTypeCellComponent} from './ag-grid/file-type-cell.component';
 import {Path} from '../shared/path';
 import {FileService} from '../shared/file.service';
-import {FileUpload, FileUploadService} from '../shared/file-upload.service';
+import {FileUpload, FileUploadList} from '../shared/file-upload-list.service';
+import {UploadBadgeItem} from './file-upload-badge/file-upload-badge.component';
 
 @Component({
     selector: 'file-list',
@@ -35,7 +36,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     isBulkMode: boolean = false;
 
     constructor(private fileService: FileService,
-                private fileUploadService: FileUploadService,
+                private fileUploadService: FileUploadList,
                 private route: ActivatedRoute,
                 private appConfig: AppConfig) {
 
@@ -82,7 +83,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     private get currentPath() {
-        return this.path.fullPath();
+        return this.path.absolutePath();
     }
 
     get rootPath(): string {
@@ -124,7 +125,7 @@ export class FileListComponent implements OnInit, OnDestroy {
 
     private loadData(path?: Path) {
         let p: Path = path ? path : this.path;
-        this.fileService.getFiles(p.fullPath())
+        this.fileService.getFiles(p.absolutePath())
             .takeUntil(this.ngUnsubscribe)
 
             .catch(error => {
@@ -167,8 +168,8 @@ export class FileListComponent implements OnInit, OnDestroy {
         this.loadData();
     }
 
-    onUploadSelect(upload) {
-        this.path = upload.path;
+    onUploadSelect(upload: UploadBadgeItem) {
+        this.path = upload.filePath;
         this.loadData();
     }
 
@@ -179,10 +180,10 @@ export class FileListComponent implements OnInit, OnDestroy {
 
     decorateUploads(uploads: FileUpload[]): any[] {
         return uploads.map(u => {
-            if (!u.path.fullPath().startsWith(this.currentPath)) {
+            if (!u.absoluteFilePath.startsWith(this.currentPath)) {
                 return [];
             }
-            return u.files.map(f => ({
+            return u.fileNames.map(f => ({
                 name: f,
                 upload: u,
                 type: 'FILE',
@@ -206,7 +207,7 @@ export class FileListComponent implements OnInit, OnDestroy {
 
     private removeFile(fileName: string): void {
         this.fileService
-            .removeFile(this.path.fullPath(fileName))
+            .removeFile(this.path.absolutePath(fileName))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((resp) => {
                 this.loadData();

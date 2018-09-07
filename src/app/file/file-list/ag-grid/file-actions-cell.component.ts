@@ -1,6 +1,6 @@
 import {AgRendererComponent} from 'ag-grid-angular/src/interfaces';
 import {Component} from '@angular/core';
-import {FileUpload} from '../../shared/file-upload.service';
+import {FileUpload} from '../../shared/file-upload-list.service';
 
 @Component({
     selector: 'file-actions-cell',

@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 
 import {AgRendererComponent} from 'ag-grid-angular/src/interfaces';
-import {FileUpload} from '../../shared/file-upload.service';
+import {FileUpload} from '../../shared/file-upload-list.service';
 
 @Component({
     selector: 'progress-cell',
