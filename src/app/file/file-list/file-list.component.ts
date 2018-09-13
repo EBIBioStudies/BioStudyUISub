@@ -36,7 +36,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     isBulkMode: boolean = false;
 
     constructor(private fileService: FileService,
-                private fileUploadService: FileUploadList,
+                private fileUploadList: FileUploadList,
                 private route: ActivatedRoute,
                 private appConfig: AppConfig) {
 
@@ -55,7 +55,7 @@ export class FileListComponent implements OnInit, OnDestroy {
             overlayLoadingTemplate: '<span class="ag-overlay-loading-center"><i class="fa fa-cog fa-spin fa-lg"></i> Loading...</span>',
         };
 
-        this.fileUploadService.uploadCompleted$
+        this.fileUploadList.uploadCompleted$
             .filter((path) => path.startsWith(this.currentPath))
             .takeUntil(this.ngUnsubscribe)
             .subscribe(() => {
@@ -134,7 +134,7 @@ export class FileListComponent implements OnInit, OnDestroy {
 
             }).subscribe(files => {
                 let decoratedRows = ([] as any[]).concat(
-                    this.decorateUploads(this.fileUploadService.activeUploads()),
+                    this.decorateUploads(this.fileUploadList.activeUploads),
                     this.decorateFiles(files)
                 );
 
@@ -174,7 +174,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     onUploadFilesSelect(files: FileList) {
-        let upload = this.fileUploadService.upload(this.path, Array.from(files));
+        let upload = this.fileUploadList.upload(this.path, Array.from(files));
         this.updateDataRows(([] as any[]).concat(this.decorateUploads([upload]), this.rowData));
     }
 
@@ -215,7 +215,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     private removeUpload(u: FileUpload) {
-        this.fileUploadService.remove(u);
+        this.fileUploadList.remove(u);
         this.loadData();
     }
 }

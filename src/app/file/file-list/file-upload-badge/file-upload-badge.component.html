@@ -1,11 +1,11 @@
 <div *ngIf="count > 0" dropdown>
     <button class="badge btn" dropdownToggle
-            [ngClass]="{'badge-danger': hasFailed}">
+            [ngClass]="{'badge-danger': hasFailedUploads}">
         {{count}}
     </button>
     <ul class="dropdown-menu dropdown-menu-right" *dropdownMenu role="menu">
         <li role="menuitem" *ngFor="let upload of uploads">
-            <a class="dropdown-item" (click)="onMenuItemClick(upload)">Show <i>{{upload.name}}</i> in path</a>
+            <a class="dropdown-item" (click)="onMenuItemClick(upload)">Show <i>{{upload.fileName}}</i> in path</a>
         </li>
     </ul>
 </div>

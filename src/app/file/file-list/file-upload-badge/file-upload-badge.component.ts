@@ -1,11 +1,13 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, Output} from '@angular/core';
 import {FileUploadList} from '../../shared/file-upload-list.service';
 import {Path} from '../../shared/path';
+import {Subscription} from 'rxjs';
 
 export class UploadBadgeItem {
     constructor(public readonly fileName: string,
                 public readonly filePath: Path,
-                public progress: string) {}
+                public progress: string) {
+    }
 }
 
 @Component({
@@ -13,13 +15,28 @@ export class UploadBadgeItem {
     templateUrl: './file-upload-badge.component.html',
     styleUrls: ['./file-upload-badge.component.css']
 })
-export class FileUploadBadgeComponent {
+export class FileUploadBadgeComponent implements OnDestroy {
     @Output() select: EventEmitter<UploadBadgeItem> = new EventEmitter<UploadBadgeItem>();
 
+    private sb?: Subscription;
     private uploadItems: UploadBadgeItem[] = [];
-    hasFailed: boolean = false;       //has any upload request failed?
+    hasFailedUploads: boolean = false;       //has any upload request failed?
 
-    constructor(private fileUploadList: FileUploadList) {
+    constructor(fileUploadList: FileUploadList) {
+        this.sb = fileUploadList.activeUploadsChanged$.subscribe(activeUploads => {
+
+            this.hasFailedUploads = activeUploads.find(req => req.isFailed()) !== undefined;
+
+            //Collection of upload operations, one per file (as opposed to multiple-file requests).
+            return this.merge(
+                activeUploads.map(fileUpload =>
+                    fileUpload.fileNames.map(fileName => ({
+                        fileName: fileName,
+                        filePath: fileUpload.filePath,
+                        progress: fileUpload.isFailed() ? 'error' : fileUpload.progress + '%'
+                    }))
+                ).reduce((rv, v) => rv.concat(v), (<UploadBadgeItem[]>[])));
+        })
     }
 
     get count(): number {
@@ -27,24 +44,11 @@ export class FileUploadBadgeComponent {
     }
 
     get uploads(): UploadBadgeItem[] {
-
-        //Collection of upload requests.
-        //NOTE: When multiple files are uploaded simultaneously, a single request is made.
-        const activeFileUploads = this.fileUploadList.activeUploads();
-
-        this.hasFailed = activeFileUploads.find(req => req.isFailed()) !== undefined;
-
-        //Collection of upload operations, one per file (as opposed to multiple-file requests).
-        return this.merge(activeFileUploads.map(fileUpload =>
-            fileUpload.fileNames.map(fileName => ({
-                fileName: fileName,
-                filePath: fileUpload.filePath,
-                progress: fileUpload.isFailed() ? 'error' : fileUpload.progress + '%'
-            }))
-        ).reduce((rv, v) => rv.concat(v), (<UploadBadgeItem[]>[])));
+        return this.uploadItems;
     }
 
     merge(dest: UploadBadgeItem[]): UploadBadgeItem[] {
+        console.log('merge', dest)
         if (this.uploadItems.length == 0) {
             this.uploadItems = dest;
             return dest;
@@ -71,10 +75,15 @@ export class FileUploadBadgeComponent {
             i++;
             j++;
         }
+        console.log(this.uploadItems.length);
         return src;
     }
 
     onMenuItemClick(uploadItem: UploadBadgeItem) {
         this.select.emit({...uploadItem});
+    }
+
+    ngOnDestroy(): void {
+        this.sb!.unsubscribe();
     }
 }

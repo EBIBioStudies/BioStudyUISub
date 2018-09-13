@@ -114,12 +114,14 @@ export class FileUpload {
 @Injectable()
 export class FileUploadList {
     private uploads: FileUpload[] = [];
+
     uploadCompleted$: Subject<string> = new Subject<string>();
+    activeUploadsChanged$: Subject<FileUpload[]> = new BehaviorSubject<FileUpload[]>([]);
 
     constructor(private fileService: FileService) {
     }
 
-    activeUploads(): FileUpload[] {
+    get activeUploads(): FileUpload[] {
         return this.uploads.filter(u => !u.isDone());
     }
 
@@ -132,7 +134,12 @@ export class FileUploadList {
         // as cancellation of finish$ will cancel uploadFinish$ as well
         upload.finish$.pipe(
             map(() => upload.absoluteFilePath)
-        ).subscribe(fullPath => this.uploadCompleted$.next(fullPath));
+        ).subscribe(fullPath => {
+            this.uploadCompleted$.next(fullPath);
+            this.notifyActiveUploadsChanged();
+        });
+
+        this.notifyActiveUploadsChanged();
 
         return upload;
     }
@@ -141,6 +148,11 @@ export class FileUploadList {
         const index = this.uploads.indexOf(upload);
         if (index > -1) {
             this.uploads.splice(index, 1);
+            this.notifyActiveUploadsChanged();
         }
+    }
+
+    private notifyActiveUploadsChanged() {
+        this.activeUploadsChanged$.next(this.activeUploads)
     }
 }
