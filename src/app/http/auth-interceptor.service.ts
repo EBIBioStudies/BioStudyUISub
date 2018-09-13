@@ -11,12 +11,10 @@ export class AuthInterceptorService implements HttpInterceptor {
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         if (req.url.startsWith('/raw/files') || req.url.startsWith('/raw/groups') ) {
-            console.log('before: ', req.url);
             req = req.clone({
                 headers: this.updateHeaders(req.headers),
                 url: this.updateUrl(req.url)
             });
-            console.log('after: ', req.url)
         }
         return next.handle(req);
     }
