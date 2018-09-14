@@ -1,28 +1,27 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 
 @Component({
     selector: 'directory-path',
-    templateUrl: './directory-path.component.html'
+    templateUrl: './directory-path.component.html',
+    styleUrls: ['./directory-path.component.css']
 })
-export class DirectoryPathComponent {
+export class DirectoryPathComponent implements OnChanges {
     @Output() change: EventEmitter<string> = new EventEmitter<string>();
+    @Input() path: string = '';
 
-    public dirs: string[] = [];
-    private _path: string = '';
+    dirs: string[] = [];
 
-    @Input()
-    get path() {
-        return this._path;
+    get isEmpty(): boolean {
+        return this.dirs.length === 0;
     }
 
-    set path(path: string) {
-        if (path.trim().length) {
-            this.dirs = path.split('/').filter(Boolean);
-        }
-        this._path = path;
+    ngOnChanges(changes: SimpleChanges): void {
+        const pathValue = changes.path.currentValue;
+        this.dirs = (pathValue || '').split('/').filter(Boolean);
     }
 
     onDirectoryClick(idx) {
-        this.change.emit('/' + (this.dirs.slice(1, idx + 1)).join('/'));
+        const dir = '/' + (this.dirs.slice(0, idx + 1)).join('/');
+        this.change.emit(dir);
     }
 }

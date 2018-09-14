@@ -1,10 +1,10 @@
-<span *ngIf="path[0] == '/'">/</span>
-<span *ngFor="let dir of dirs; let last = last; let index = index">
+<span class="dot" *ngIf="isEmpty">.</span>
+<span *ngFor="let dir of dirs; let last = last; let index = index" class="dir">
     <a *ngIf="!last"
        href="javascript:void(0)"
        (click)="onDirectoryClick(index)">
         {{dir}}
     </a>
-    <span *ngIf="!last">/</span>
-    <strong *ngIf="last">{{dir}}</strong>
+    <span *ngIf="!last"><i class="fa fa-angle-right"></i></span>
+    <span *ngIf="last">{{dir}}</span>
 </span>
