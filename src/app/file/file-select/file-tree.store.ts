@@ -6,8 +6,8 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/publishReplay';
 import 'rxjs/add/operator/find';
 import 'rxjs/add/operator/mergeMap';
-import {PathInfo, UserGroup} from '../../file/shared/file-rest.model';
-import {FileService} from '../../file/shared/file.service';
+import {PathInfo, UserGroup} from '../shared/file-rest.model';
+import {FileService} from '../shared/file.service';
 
 @Injectable()
 export class FileTreeStore {
@@ -20,7 +20,7 @@ export class FileTreeStore {
     }
 
     /* checks if at least one file exists in the user's directories */
-    isEmpty(): Observable<FileNode> {
+    isEmpty(): Observable<FileNode | undefined> {
         return this.getUserDirs()
             .mergeMap(dirs => this.dfs(dirs))
             .find(node => !node.isDir);
