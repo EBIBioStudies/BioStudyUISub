@@ -41,13 +41,13 @@ describe('Submission Model: Feature', () => {
         expect(f.rowSize()).toBe(1);
     });
 
-    it('creates default empty values (in rows) when a new column is added', () => {
+    /*it('creates default empty values (in rows) when a new column is added', () => {
         const f = new Feature(FeatureType.createDefault('SingleRowFeature', true));
         const col = f.addColumn('col1');
         expect(f.rows[0].valueFor(col.id).value).toBe('');
-    });
+    });*/
 
-    it('removes values from all rows when a column is deleted', () => {
+    /*it('removes values from all rows when a column is deleted', () => {
         const f = new Feature(FeatureType.createDefault('MultiRowFeature'));
         const col = f.addColumn('col1');
         f.addRow();
@@ -59,7 +59,7 @@ describe('Submission Model: Feature', () => {
         f.removeColumn(col.id);
         expect(f.rows[0].valueFor(col.id)).toBeUndefined();
         expect(f.rows[1].valueFor(col.id)).toBeUndefined();
-    });
+    });*/
 
     it('automatically updates columns and rows when new data added as attributes', () => {
         const f = new Feature(FeatureType.createDefault('MultiRowFeature'));
@@ -76,7 +76,7 @@ describe('Submission Model: Feature', () => {
         expect(f.rows[0].values(ids).map(v => v.value).sort()).toEqual(['value1', 'value2']);
     });
 
-    it('can be created with the pre-existed data', () => {
+    /*it('can be created with the pre-existed data', () => {
         const data = {
             type: 'MultiRowFeature',
             entries: [
@@ -99,7 +99,7 @@ describe('Submission Model: Feature', () => {
         expect(f.colSize()).toBe(2);
         const ids = f.columns.map(c => c.id);
         expect(f.rows[0].values(ids).map(v => v.value).sort()).toEqual(['value1', 'value2']);
-    });
+    });*/
 
     it('creates required columns according the type definition', () => {
         const type = new FeatureType('MyFeatureType', true, false, {

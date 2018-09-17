@@ -1,32 +1,24 @@
 import {AttributeData, Feature, Section, Submission} from './submission.model';
-import {
-    ATTACH_TO_ATTR,
-    ATTRIBUTE_DUPLICATES_CONTAINS, mergeDuplicatedAttributes,
-    PageTab,
-    PtAttribute,
-    PtFile,
-    PtFileItem,
-    PtLink,
-    PtLinkItem,
-    PtSection
-} from './pagetab.model';
+import {ATTACH_TO_ATTR, PageTab, PtAttribute, PtFile, PtFileItem, PtLink, PtLinkItem, PtSection} from './pagetab.model';
 import {contacts2Authors} from './pagetab-authors.utils';
 import {SubmissionType} from './submission-type.model';
 import {LinksUtils} from './pagetab-links.utils';
+import {mergeAttributes, SHARED_ATTRIBUTES_CONTAIN} from './pagetab.utils';
+import {DEFAULT_TEMPLATE_NAME} from './submission.templates';
 
 const isFileType = (type: string) => type.toLowerCase() === 'file';
 const isLinkType = (type: string) => type.toLowerCase() === 'link';
 
 const isEmptyAttr = (attr: PtAttribute) => attr.value == undefined || attr.value.trim().length === 0;
 
-export function newPageTab(templateName: string = 'Default'): PageTab {
+export function newPageTab(templateName: string = DEFAULT_TEMPLATE_NAME): PageTab {
     const subm = new Submission(SubmissionType.fromTemplate(templateName));
     const pageTab = submission2PageTab(subm);
 
     //Guarantees that for non-default templates, an AttachTo attribute always exists.
     //NOTE: The PageTab constructor does not bother with attributes if the section is empty.
-    if (templateName && templateName != 'Default') {
-        pageTab.attributes = mergeDuplicatedAttributes((pageTab.attributes || []), [{
+    if (templateName && templateName != DEFAULT_TEMPLATE_NAME) {
+        pageTab.attributes = mergeAttributes((pageTab.attributes || []), [{
             name: ATTACH_TO_ATTR,
             value: templateName
         }]);
@@ -41,9 +33,9 @@ export function submission2PageTab(subm: Submission, isSanitise: boolean = false
         section: ptSection,
         tags: subm.tags.tags,
         accessTags: subm.tags.accessTags,
-        attributes: mergeDuplicatedAttributes(
+        attributes: mergeAttributes(
             subm.attributes.map(at => attributeData2PtAttribute(at)),
-            (ptSection.attributes || []).filter(at => ATTRIBUTE_DUPLICATES_CONTAINS(at.name)))
+            (ptSection.attributes || []).filter(at => SHARED_ATTRIBUTES_CONTAIN(at.name)))
     };
 }
 

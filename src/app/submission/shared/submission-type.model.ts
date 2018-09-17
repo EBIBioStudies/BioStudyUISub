@@ -1,6 +1,4 @@
-import {DefaultTemplate} from './default.template';
-import {HecatosTemplate} from './hecatos.template';
-import {EutoxriskTemplate} from "./eutoxrisk.template";
+import {findSubmissionTemplateByName} from './submission.templates';
 
 const defined = (val: string) => {
     return val !== undefined && val.length > 0;
@@ -272,7 +270,7 @@ export class SectionType extends BaseType {
 
         //Normalises the group property to an array.
         if (Array.isArray(other.group)) {
-            this.group =  other.group;
+            this.group = other.group;
         } else {
             this.group = [];
         }
@@ -356,40 +354,8 @@ export class SectionType extends BaseType {
 export class SubmissionType extends BaseType {
     readonly sectionType: SectionType;
 
-    static defaultTmplName() {
-        return DefaultTemplate.name;
-    }
-
-    static createDefault(): SubmissionType {
-        return SubmissionType.fromTemplate('');
-    }
-
-    /**
-     * Creates a new submission using the type definitions present in a given project template.
-     * @param {string | Object} tmpl - ID of the template containing the type definitions or the template itself.
-     * @returns {SubmissionType} New submission.
-     */
-    static fromTemplate(tmpl: string | Object): SubmissionType {
-        if (typeof tmpl === 'string') {
-            switch (tmpl.toLowerCase()) {
-                case 'eu-toxrisk':
-                    return TemplateType.create(EutoxriskTemplate).submissionType;
-                case 'hecatos':
-                    return TemplateType.create(HecatosTemplate).submissionType;
-                default:
-                    return TemplateType.create(DefaultTemplate).submissionType;
-            }
-        } else {
-            return TemplateType.create(tmpl).submissionType;
-        }
-    }
-
-    /**
-     * Retrieves the names of all the templates available in the app.
-     * @returns {string[]} Array of template names, with the default template's always first.
-     */
-    static listTmplNames(): any[] {
-        return [DefaultTemplate, EutoxriskTemplate, HecatosTemplate].map(tmpl => tmpl.name);
+    static fromTemplate(tmplName: string): SubmissionType {
+        return TemplateType.create(findSubmissionTemplateByName(tmplName)).submissionType;
     }
 
     /**
@@ -399,7 +365,7 @@ export class SubmissionType extends BaseType {
      * @param {Object} typeObj - Contains all the sub-type parameters defining this submission.
      * @param {Map<string, any>} [scope] - Optional set of already existing SubmissionType instances.
      */
-    constructor(name: string, typeObj: any, scope?: Map<string, any>) {
+    constructor(name: string, typeObj: SubmissionType, scope?: Map<string, any>) {
         super('Submission', typeObj !== undefined, scope);
         if (typeObj.sectionType === undefined) {
             throw Error('sectionType is not defined in the template');

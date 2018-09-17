@@ -3,10 +3,7 @@ import {NameAndValue, Tag} from './model.common';
 export const ATTACH_TO_ATTR = 'AttachTo';
 export const RELEASE_DATE_ATTR = 'ReleaseDate';
 export const TITLE_ATTR = 'Title';
-
-/* attributes which are duplicated in submission and its root section (workaround for PageTab bad design) */
-export const ATTRIBUTE_DUPLICATES = [TITLE_ATTR, RELEASE_DATE_ATTR];
-export const ATTRIBUTE_DUPLICATES_CONTAINS = (s: string) => ATTRIBUTE_DUPLICATES.indexOf(s) >= 0;
+export const ROOT_PATH_ATTR = 'RootPath';
 
 export type PtSectionItem = PtSection | PtSection[];
 export type PtLinkItem = PtLink | PtLink[];
@@ -42,40 +39,62 @@ export interface PtSection {
 
 export interface PageTab {
     type: string;
-    accno: string;
     section: PtSection;
+    accno?: string;
     attributes?: PtAttribute[];
     tags?: any[];
     accessTags?: string[];
 }
 
-export function mergeDuplicatedAttributes(attrs1: PtAttribute[], attrs2: PtAttribute[]): PtAttribute[] {
-    const merged: PtAttribute[] = [];
-    const visited: { [key: string]: number } = {};
-
-    attrs1.concat(attrs2).forEach(at => {
-        if (visited[at.name] === undefined) {
-            visited[at.name] = merged.length;
-            merged.push(at);
-        } else {
-            merged[visited[at.name]] = at;
-        }
-    });
-    return merged;
+export function emptyPageTab(): PageTab {
+    return asPageTab({});
 }
 
-/* todo: why we have it here? */
-/**
- * Retrieves the first ocurrence of the "AttachTo" attribute at the root level. This is a convenience method
- * to allow the storage of the selected template (determined in turn by the project in question).
- * NOTE: Submissions created through the direct upload flow may be attached to multiple projects.
- * @returns {string} An empty string if no such attribute found.
- */
-export function firstAttachTo(pageTab: PageTab): string {
-    const attrs = filterAttributesByName(pageTab, ATTACH_TO_ATTR);
-    return attrs.length === 0 ? '' : attrs[0].value;
+export function asPageTab(obj: any): PageTab {
+    obj.type = obj.type || 'Submission';
+    obj.section = obj.section || asPtSection({}, 'Study');
+    obj.attributes = mapIfExists<PtAttribute>(obj.attributes, at => asPtAttribute(at));
+    obj.tags = mapIfExists<Tag>(obj.tags, t => asTag(t));
+    return obj;
 }
 
-function filterAttributesByName(pageTab: PageTab, name: string): PtAttribute[] {
-    return (pageTab.section.attributes || []).filter(attr => attr.name === name);
+function asPtSection(obj: any, type: string): PtSection {
+    obj.type = obj.type || type;
+    obj.attributes = mapIfExists<PtAttribute>(obj.attributes, at => asPtAttribute(at));
+    obj.tags = mapIfExists<Tag>(obj.tags, t => asTag(t));
+    obj.links = mapIfExists<PtLink>(obj.links, lnk => asPtLink(lnk));
+    obj.files = mapIfExists<PtFile>(obj.files, fl => asPtFile(fl));
+    obj.subsections = mapIfExists<PtSection>(obj.subsections, s => asPtSection(s, 'UnknownSectionType'));
+    return obj;
+}
+
+function asPtAttribute(obj: any): PtAttribute {
+    obj.name = obj.name || '';
+    obj.value = obj.value || '';
+    return obj;
+}
+
+function asPtLink(obj: any): PtLink {
+    obj.url = obj.url || '';
+    obj.attributes = mapIfExists<PtAttribute>(obj.attributes, at => asPtAttribute(at));
+    return obj;
+}
+
+function asPtFile(obj: any): PtFile {
+    obj.path = obj.path || '';
+    obj.attributes = mapIfExists<PtAttribute>(obj.attributes, at => asPtAttribute(at));
+    return obj;
+}
+
+function asTag(obj: any): Tag {
+    obj.classifier = obj.classifier || '';
+    obj.tag = obj.tag || '';
+    return obj;
+}
+
+function mapIfExists<T>(arr: any[] | undefined, func: (any) => T): T[] | undefined {
+    if (arr === undefined) {
+        return arr;
+    }
+    return arr.map(el => func(el));
 }

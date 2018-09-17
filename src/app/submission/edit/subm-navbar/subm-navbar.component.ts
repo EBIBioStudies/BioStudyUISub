@@ -6,8 +6,8 @@ import {Section} from '../../shared/submission.model';
 import {SubmissionService} from '../../shared/submission.service';
 import {SubmAddDialogComponent} from '../../list/subm-add.component';
 import {UserData} from '../../../auth/user-data';
-import {SubmissionType} from '../../shared/submission-type.model';
 import {newPageTab} from '../../shared/submission-to-pagetab.util';
+import {SUBMISSION_TEMPLATE_NAMES} from '../../shared/submission.templates';
 
 @Component({
     selector: 'subm-navbar',
@@ -40,7 +40,7 @@ export class SubmNavBarComponent {
         this.isBusy = true;
         this.userData.whenFetched.subscribe((data) => {
             this.isBusy = false;
-            this.allowedPrj = this.userData.allowedProjects(SubmissionType.listTmplNames());
+            this.allowedPrj = this.userData.allowedProjects(SUBMISSION_TEMPLATE_NAMES);
         });
     }
 

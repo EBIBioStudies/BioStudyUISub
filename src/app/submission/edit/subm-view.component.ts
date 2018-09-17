@@ -2,10 +2,10 @@ import {Component} from '@angular/core';
 import {Params} from '@angular/router';
 
 import {SubmEditComponent} from './subm-edit.component';
-import {firstAttachTo} from '../shared/pagetab.model';
 import {SubmissionType} from '../shared/submission-type.model';
 import {Observable} from 'rxjs/Observable';
 import {pageTab2Submission} from '../shared/pagetab-to-submission.util';
+import {findSubmissionTemplateName} from '../shared/submission.templates';
 
 @Component({
     selector: 'subm-view',
@@ -22,7 +22,7 @@ export class SubmViewComponent extends SubmEditComponent {
 
                     this.wrappedSubm = wrappedSubm;
                     this.accno = wrappedSubm.accno;
-                    this.subm = pageTab2Submission(SubmissionType.fromTemplate(firstAttachTo(page)), page);
+                    this.subm = pageTab2Submission(SubmissionType.fromTemplate(findSubmissionTemplateName(page)), page);
                     this.changeSection(this.subm.section.id);
                 });
         });

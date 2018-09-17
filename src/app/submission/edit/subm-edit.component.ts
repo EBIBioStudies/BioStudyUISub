@@ -13,7 +13,7 @@ import {Section, Submission} from '../shared/submission.model';
 import {SubmissionService} from '../shared/submission.service';
 import {SubmissionType} from '../shared/submission-type.model';
 
-import {firstAttachTo, PageTab} from '../shared/pagetab.model';
+import {PageTab} from '../shared/pagetab.model';
 import {SubmissionValidator, SubmValidationErrors} from '../shared/submission.validator';
 import {ServerError} from '../../http/server-error.handler';
 import {SubmResultsModalComponent} from '../results/subm-results-modal.component';
@@ -28,6 +28,7 @@ import {SubmSideBarComponent} from './subm-sidebar/subm-sidebar.component';
 import {Subject} from 'rxjs/Subject';
 import {submission2PageTab} from '../shared/submission-to-pagetab.util';
 import {pageTab2Submission} from '../shared/pagetab-to-submission.util';
+import {findSubmissionTemplateName} from '../shared/submission.templates';
 
 @Component({
     selector: 'subm-edit',
@@ -119,7 +120,7 @@ export class SubmEditComponent implements OnInit {
                     this.wrappedSubm = results[0];
                     this.accno = this.wrappedSubm.accno;
                     page = this.wrappedSubm.data;
-                    subm = pageTab2Submission(SubmissionType.fromTemplate(firstAttachTo(page)), page);
+                    subm = pageTab2Submission(SubmissionType.fromTemplate(findSubmissionTemplateName(page)), page);
                     this.subm = subm;
 
                     //Inspects the original event producing the cascade of subsequent ones and saves the submission if

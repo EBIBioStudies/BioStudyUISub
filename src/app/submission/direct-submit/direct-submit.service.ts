@@ -4,7 +4,8 @@ import {Subject} from 'rxjs/Subject';
 
 import {SubmissionService} from '../shared/submission.service';
 import {Observable} from 'rxjs/Observable';
-import {attachTo} from '../shared/pagetab-attributes.utils';
+import {updateAttachToAttribute} from '../shared/pagetab.utils';
+import {PageTab} from '../shared/pagetab.model';
 
 enum ReqStatus {CONVERT, SUBMIT, ERROR, SUCCESS}
 
@@ -264,9 +265,9 @@ export class DirectSubmitService {
      * @param {Object} subm - Submission object for the study to be created or updated.
      * @returns {Observable<any>} - Stream of events for the request.
      */
-    private submit(req: DirectSubmitRequest, subm: any): Observable<any> {
+    private submit(req: DirectSubmitRequest, subm: PageTab): Observable<any> {
         return this.submService.directCreateOrUpdate(
-            attachTo(subm, req.projects),
+            updateAttachToAttribute(subm, req.projects),
             req.type === ReqType.CREATE
         ).map(data => {
             req.onResponse(data, ReqStatus.SUCCESS);

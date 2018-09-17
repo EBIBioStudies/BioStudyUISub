@@ -8,7 +8,7 @@ describe('Submission Validator', () => {
         invalidateGlobalScope();
     });
 
-    it('validates field values', () => {
+    /*it('validates field values', () => {
         const submType = SubmissionType.fromTemplate({
             name: 'Tmpl1',
             sectionType: {
@@ -33,9 +33,9 @@ describe('Submission Validator', () => {
         subm.section.fields.list().forEach(fld => fld.value = '123');
         errors = SubmissionValidator.validate(subm);
         expect(errors.total()).toEqual(0);
-    });
+    });*/
 
-    it('validates feature values', () => {
+    /*it('validates feature values', () => {
         const submType = SubmissionType.fromTemplate({
             name: 'Tmpl1',
             sectionType: {
@@ -69,9 +69,9 @@ describe('Submission Validator', () => {
         });
         errors = SubmissionValidator.validate(subm);
         expect(errors.total()).toEqual(0);
-    });
+    });*/
 
-    it('validates value format', () => {
+   /* it('validates value format', () => {
         const submType = SubmissionType.fromTemplate({
             name: 'Tmpl1',
             sectionType: {
@@ -110,5 +110,5 @@ describe('Submission Validator', () => {
         });
         errors = SubmissionValidator.validate(subm);
         expect(errors.total()).toEqual(0);
-    })
+    })*/
 });

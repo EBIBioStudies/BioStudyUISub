@@ -44,7 +44,7 @@ class Organisations {
     private refFor(value: string): string {
         const key = value.trim().toLowerCase();
         this.refs[key] = this.refs[key] || `o${Object.keys(this.refs).length + 1}`;
-        this.names[key] = value;
+        this.names[key] = this.names[key] || value;
         return this.refs[key];
     }
 
@@ -75,6 +75,7 @@ export function contacts2Authors(sections: PtSection[] = []): PtSection[] {
             <PtSection>{
                 type: 'Author',
                 attributes: (contact.attributes || [])
+                    .filter(attr => attr.value.trim().length > 0)
                     .map(attr => {
                         if (isOrganisation(attr.name)) {
                             return orgs.toReference(attr);
