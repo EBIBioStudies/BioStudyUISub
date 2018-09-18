@@ -10,22 +10,21 @@ export function pageTab2Submission(type: SubmissionType, pageTab: PageTab) {
 }
 
 export function pageTab2SubmissionData(pageTab: PageTab): SubmissionData {
-    const attributes = ptAttributes2AttributeData(pageTab.attributes || []);
     return <SubmissionData>{
         accno: pageTab.accno,
         tags: pageTab.tags,
         isRevised: (pageTab.tags || []).length > 0,
         accessTags: pageTab.accessTags,
-        attributes: attributes,
-        section: ptSection2SectionData(pageTab.section, attributes)
+        attributes: ptAttributes2AttributeData(pageTab.attributes || []),
+        section: ptSection2SectionData(pageTab.section, pageTab.attributes)
     };
 }
 
-function ptSection2SectionData(ptSection: PtSection, parentAttributes: AttributeData[] = []): SectionData {
+function ptSection2SectionData(ptSection: PtSection, parentAttributes: PtAttribute[] = []): SectionData {
 
-    const attributes = mergeAttributes(
-        ptAttributes2AttributeData(ptSection.attributes || []),
-        parentAttributes.filter(at => SHARED_ATTRIBUTES_CONTAIN(at.name)));
+    const attributes = ptAttributes2AttributeData(
+        mergeAttributes(parentAttributes.filter(at => SHARED_ATTRIBUTES_CONTAIN(at.name)),
+            ptSection.attributes || []));
 
     const links = flatArray(ptSection.links || []);
     const files = flatArray(ptSection.files || []);

@@ -459,8 +459,8 @@ export class Feature extends HasUpdates<UpdateEvent> {
      * @param {number} [rowIdx = null] - Index of row to be set to the provided attributes. By default, the row will be
      * added if the feature is not limited to a single row, in which case the first row is changed.
      */
-    add(attributes: { name: string, value: string }[] = [], rowIdx?: number): void {
-        const attrsWithName = attributes.filter(attr => attr.name !== '');
+    add(attributes: AttributeData[] = [], rowIdx?: number): void {
+        const attrsWithName = attributes.filter(attr => String.isDefinedAndNotEmpty(attr.name));
         const attrNames = attrsWithName.map(attr => attr.name);
 
         const usedColIds: string[] = [];
@@ -473,7 +473,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
                 const instancesFn = (name) => attrName == name;
                 const occurAttrs = attrNames.filter(instancesFn).length;
                 const occurCols = colNames.filter(instancesFn).length;
-                const colType = this.type.getColumnType(attrName);
+                const colType = this.type.getColumnType(attrName!);
 
                 if (occurAttrs != occurCols) {
                     this.addColumn(attrName, colType!.required, colType!.displayed, colType!.readonly, colType!.removable,
@@ -490,7 +490,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
 
         //Finds out the column corresponding to each of the attributes and sets its value
         attrsWithName.forEach(attr => {
-            let cols: Attribute[] = this._columns.allWithName(attr.name);
+            let cols: Attribute[] = this._columns.allWithName(attr.name!);
 
             //Prevents the same attribute becoming the value for multiple columns of the same name
             cols = cols.filter((col) => (usedColIds.indexOf(col.id) === -1));
@@ -625,10 +625,11 @@ export class Features extends HasUpdates<UpdateEvent> {
     constructor(type: SectionType, data: SectionData) {
         super();
 
-        const fd = (data.features || []).reduce((rv, d) => {
-            rv[d.type] = d;
-            return rv;
-        }, {});
+        const fd = (data.features || []).filter(f => String.isDefinedAndNotEmpty(f.type))
+            .reduce((rv, d) => {
+                rv[d.type!] = d;
+                return rv;
+            }, {});
 
         type.featureTypes.forEach(ft => {
             this.add(ft, fd[ft.name]);
@@ -741,16 +742,12 @@ export class Fields extends HasUpdates<UpdateEvent> {
         super();
         this.fields = [];
 
-        //Converts the array of attribute objects from the server to an object of type {attrName: attrValue}
-        const attrObj = (data.attributes || []).reduce((obj, attr) => {
-            let fieldType = type.getFieldType(attr.name);
-
-            if (fieldType !== undefined) {
-                obj[attr.name] = attr.value;
-            }
-
-            return obj;
-        }, {});
+        const attrObj = (data.attributes || [])
+            .filter(attr => attr.name && type.getFieldType(attr.name) !== undefined)
+            .reduce((rv, attr) => {
+                rv[attr.name!] = attr.value;
+                return rv;
+            }, {});
 
         type.fieldTypes.forEach(fieldType => {
             this.add(fieldType, attrObj[fieldType.name] || '');
@@ -812,7 +809,7 @@ export class Section extends HasUpdates<UpdateEvent> {
 
         //Any attribute names from the server that do not match top-level field names are added as annotations.
         this.annotations = AnnotationFeature.create(type.annotationsType,
-            (data.attributes || []).filter(a => type.getFieldType(a.name) === undefined)
+            (data.attributes || []).filter(a => a.name && type.getFieldType(a.name) === undefined)
         );
         this.features = new Features(type, data);
         this.sections = new Sections(type, data);
@@ -875,20 +872,21 @@ export class Sections extends HasUpdates<UpdateEvent> {
         this.sections = [];
         this.subscriptions = [];
 
-        const sd: { [key: string]: SectionData | undefined } = (data.sections || []).reduce((rv, d) => {
-            rv[d.type] = d;
-            return rv;
-        }, {});
+        const sectionData = (data.sections || []).filter(s => String.isDefinedAndNotEmpty(s.type))
+            .reduce((rv, s) => {
+                rv[s.type!] = s;
+                return rv;
+            }, {});
 
         type.sectionTypes.forEach(st => {
             if (st.required) {
-                this.add(st, sd[st.name]);
-                sd[st.name] = undefined;
+                this.add(st, sectionData[st.name]);
+                sectionData[st.name] = undefined;
             }
         });
 
-        Object.keys(sd).forEach(key => {
-            const d = sd[key];
+        Object.keys(sectionData).forEach(key => {
+            const d = sectionData[key];
             if (d !== undefined) {
                 this.add(type.getSectionType(d.type), d);
             }
@@ -963,7 +961,7 @@ export class Submission {
         this.type = type;
         this.accno = data.accno || '';
         this.attributes = data.attributes || [];
-        this.isRevised = !this.isTemp && data.isRevised;
+        this.isRevised = !this.isTemp && data.isRevised === true;
         this.section = new Section(type.sectionType, data.section);
     }
 
@@ -1010,33 +1008,33 @@ export class Tags {
 }
 
 export interface AttributeData {
-    name: string;
-    value: string;
-    reference: boolean;
-    terms: NameAndValue[];
+    name?: string;
+    value?: string;
+    reference?: boolean;
+    terms?: NameAndValue[];
 }
 
 export interface FeatureData {
-    type: string;
-    entries: AttributeData[][];
+    type?: string;
+    entries?: AttributeData[][];
 }
 
 export interface TaggedData {
-    tags: Tag[];
-    accessTags: string[];
+    tags?: Tag[];
+    accessTags?: string[];
 }
 
 export interface SectionData extends TaggedData {
-    type: string;
-    accno: string;
-    attributes: AttributeData[];
-    features: FeatureData[];
-    sections: SectionData[];
+    type?: string;
+    accno?: string;
+    attributes?: AttributeData[];
+    features?: FeatureData[];
+    sections?: SectionData[];
 }
 
 export interface SubmissionData extends TaggedData {
-    accno: string;
-    attributes: AttributeData[];
-    section: SectionData;
-    isRevised: boolean;
+    accno?: string;
+    attributes?: AttributeData[];
+    section?: SectionData;
+    isRevised?: boolean;
 }

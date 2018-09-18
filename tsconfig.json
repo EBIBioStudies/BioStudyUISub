@@ -14,7 +14,8 @@
     "noFallthroughCasesInSwitch": true,
     "target": "es5",
     "typeRoots": [
-      "node_modules/@types"
+      "node_modules/@types",
+      "src/app.d.ts"
     ],
     "lib": [
       "es2016",
