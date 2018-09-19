@@ -5,3 +5,7 @@ interface StringConstructor {
 
     isDefinedAndNotEmpty(s: string | undefined | null): boolean;
 }
+
+type AnyString = string | null | undefined
+
+type Dictionary<T> = { [key: string]: T | undefined }
