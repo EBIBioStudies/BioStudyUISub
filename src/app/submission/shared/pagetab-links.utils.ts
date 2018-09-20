@@ -16,19 +16,16 @@ export class LinksUtils {
      * @param {Object} linkObj - Submission model's object for the link.
      * @returns {Object} Submission-ready link object.
      */
-    static toUntyped(linkObj: PtLink): PtAttribute[]  {
+    static toUntyped(linkObj: PtLink): PtAttribute[] {
         const result = (linkObj.attributes || []).slice();
 
         const pointerAttr = {name: 'Pointer', value: linkObj.url};
-        let typeAttr = result.find(at => at.name ==='Type');
+        let typeAttr = result.find(at => at.name === 'Type');
 
         //Abnormal PageTab link from the server => normalises adding 'Type' attribute
         if (typeAttr === undefined) {
             result.push({name: 'Type', value: ''});
-        }
-
-        //The 'Type' attribute is not blank => prefix:ID link
-        if (typeAttr && typeAttr.value.length > 0) {
+        } else if (String.isDefinedAndNotEmpty(typeAttr.value)) {
             pointerAttr.value = typeAttr.value + ':' + linkObj.url;
         }
 
@@ -44,12 +41,12 @@ export class LinksUtils {
      * @param {Object} linkObj - PageTab's data object for the link.
      * @returns {Object} PageTab-ready link object.
      */
-    static toTyped(attributes: PtAttribute[]) : PtLink {
-        const pointer: string = (attributes.find(at => at.name === 'Pointer') || {value: ''}).value;
+    static toTyped(attributes: PtAttribute[]): PtLink {
+        const pointer: string = (attributes.find(at => at.name === 'Pointer') || {value: ''}).value || '';
         const typeAttr = {name: 'Type', value: ''};
         const isUrl = this.URL_REGEXP.test(pointer);
 
-        const linkObj = <PtLink>{ url: '', attributes: <PtAttribute[]>[] };
+        const linkObj = <PtLink>{url: '', attributes: <PtAttribute[]>[]};
 
         linkObj.attributes!.push(typeAttr);
         if (pointer) {
@@ -63,17 +60,17 @@ export class LinksUtils {
                     typeAttr.value = linkParts[0];
                     linkObj['url'] = linkParts[1];
 
-                //Invalid link value
-                //NOTE: field values could be backed up regardless of their validity.
+                    //Invalid link value
+                    //NOTE: field values could be backed up regardless of their validity.
                 } else {
                     linkObj['url'] = linkParts[0];
                 }
             }
 
-        //Empty submission link object => normalises adding a url property
-        //NOTE: Only when creating brand new submissions, this anomalous situation will apply. Otherwise, this would
-        //never be sent since it is not a valid link if the pointer is required and it's blank data (and therefore
-        //scrapped) if the pointer is not required.
+            //Empty submission link object => normalises adding a url property
+            //NOTE: Only when creating brand new submissions, this anomalous situation will apply. Otherwise, this would
+            //never be sent since it is not a valid link if the pointer is required and it's blank data (and therefore
+            //scrapped) if the pointer is not required.
         } else {
             linkObj['url'] = '';
         }

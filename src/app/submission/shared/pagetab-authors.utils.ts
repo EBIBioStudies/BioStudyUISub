@@ -6,7 +6,7 @@ const isEqualTo = (value: string) => {
 
 export function authors2Contacts(sections: PtSection[] = []): PtSection[] {
     const isAffiliation = (s: AnyString) => {
-        return String.isDefined(s) && ['organization', 'organisation', 'affiliation'].indexOf(s!.toLowerCase()) > -1;
+        return String.isDefined(s) && ['organization', 'organisation', 'affiliation'].includes(s!.toLowerCase());
     };
 
     const isAuthor = isEqualTo('author');

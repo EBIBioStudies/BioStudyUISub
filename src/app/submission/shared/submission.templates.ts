@@ -1,5 +1,5 @@
 import {ATTACH_TO_ATTR, PageTab} from './pagetab.model';
-import {filterAttributesByName} from './pagetab.utils';
+import {filterAttributesByName} from './pagetab-attributes.utils';
 
 import {DefaultTemplate} from './default.template';
 import {HecatosTemplate} from './hecatos.template';
@@ -11,8 +11,10 @@ export const DEFAULT_TEMPLATE_NAME = 'Default';
 export const SUBMISSION_TEMPLATE_NAMES = SUBMISSION_TEMPLATES.map(tmpl => tmpl.name);
 
 export function findSubmissionTemplateName(pageTab: PageTab): string {
-    const attachToAttributes = filterAttributesByName(pageTab, ATTACH_TO_ATTR);
-    return attachToAttributes.length > 1 ? DEFAULT_TEMPLATE_NAME : attachToAttributes[0].value;
+    const attachToValues: string[] = filterAttributesByName(pageTab, ATTACH_TO_ATTR)
+        .filter(at => String.isDefinedAndNotEmpty(at.value))
+        .map(at => at.value!);
+    return attachToValues.length > 1 ? DEFAULT_TEMPLATE_NAME : attachToValues[0];
 }
 
 export function findSubmissionTemplateByName(tmplName: string): any {

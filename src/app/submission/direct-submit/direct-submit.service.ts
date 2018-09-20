@@ -4,7 +4,7 @@ import {Subject} from 'rxjs/Subject';
 
 import {SubmissionService} from '../shared/submission.service';
 import {Observable} from 'rxjs/Observable';
-import {updateAttachToAttribute} from '../shared/pagetab.utils';
+import {updateAttachToAttribute} from '../shared/pagetab-attributes.utils';
 import {PageTab} from '../shared/pagetab.model';
 
 enum ReqStatus {CONVERT, SUBMIT, ERROR, SUCCESS}

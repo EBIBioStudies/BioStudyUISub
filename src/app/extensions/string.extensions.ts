@@ -4,6 +4,8 @@ interface String {
     isNotDefinedOrEmpty(s: string | undefined | null): boolean;
 
     isDefinedAndNotEmpty(s: string | undefined | null): boolean;
+
+    isEqualIgnoringCase(value: string): boolean;
 }
 
 String.prototype.isDefined = function (s: string | undefined | null) {
@@ -15,5 +17,9 @@ String.prototype.isNotDefinedOrEmpty = function (s: string | undefined | null) {
 };
 
 String.prototype.isDefinedAndNotEmpty = function (s: string | undefined | null) {
-    return  String.isDefined(s) && s!.trim().length > 0;
+    return String.isDefined(s) && s!.trim().length > 0;
+};
+
+String.prototype.isEqualIgnoringCase = function (value: string) {
+    return this.toLowerCase() === value.toLowerCase();
 };

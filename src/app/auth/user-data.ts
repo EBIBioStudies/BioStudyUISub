@@ -18,8 +18,9 @@ export class UserData {
         'email': 'E-mail',
         'username': 'Name',
         'aux.orcid': 'ORCID'    //dot notation allows flattening of nesting levels
-    }
-    private _whenFetched: Subject<any> = new Subject<any>();
+    };
+
+    private _whenFetched$: Subject<any> = new Subject<any>();
     private isFetched: boolean = false;                         //flags when data has been fetched already
 
     /**
@@ -31,29 +32,24 @@ export class UserData {
 
         //NOTE: Given the dependency between session and authentication, the two are marshalled in the right order here.
         userSession.created$.subscribe(created => {
-            let whenChecked;
-            let whenACLFetched;
-            let eventStream;
-
             //Retrieves the actual user's data, including allowed projects to submit to.
             //NOTE: Projects will be fetched only once instead of every time a view is rendered.
             if (created) {
-                eventStream = forkJoin([
-                    whenChecked = authService.checkUser(),
-                    whenACLFetched = submService.getProjects()
-                ]);
-                eventStream.subscribe(results => {
+                forkJoin(
+                    authService.checkUser(),
+                    submService.getProjects()
+                ).subscribe(results => {
                     const userData = results[0];
-                    const projectData = results[1];
+                    userData['projects'] = results[1];
 
-                    //Grabs the project names and appends the list to the other user data
-                    userData['projects'] = projectData;
+                    console.log(userData)
+
                     _.merge(this, userData);
 
                     //Signals that user data is available.
-                    this._whenFetched.next(userData);
+                    this._whenFetched$.next(userData);
+                    this._whenFetched$.complete();
                     this.isFetched = true;
-                    this._whenFetched.complete();
                 });
             }
         });
@@ -67,7 +63,7 @@ export class UserData {
         if (this.isFetched) {
             return Observable.of(this);
         } else {
-            return this._whenFetched.asObservable();
+            return this._whenFetched$.asObservable();
         }
     }
 

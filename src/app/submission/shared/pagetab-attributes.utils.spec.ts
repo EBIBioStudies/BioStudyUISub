@@ -1,11 +1,11 @@
-import {mergeAttributes, updateAttachToAttribute} from './pagetab.utils';
-import {asPageTab, emptyPageTab, PageTab} from './pagetab.model';
+import {mergeAttributes, updateAttachToAttribute} from './pagetab-attributes.utils';
+import {PageTab} from './pagetab.model';
 
 describe('Submission Attributes:', () => {
 
     it('creates empty list of attributes and adds AttachTo attributes to it', () => {
         const projects = ['proj1', 'proj2'];
-        let obj: PageTab = emptyPageTab();
+        let obj: PageTab = {};
         obj = updateAttachToAttribute(obj, projects);
 
         expect(obj.attributes).toBeDefined();
@@ -17,7 +17,7 @@ describe('Submission Attributes:', () => {
     it('adds AttachTo attributes to the existing list of attributes', () => {
         const projects = ['proj1', 'proj2'];
         const attr = {name: 'otherAttr', value: 'otherValue'};
-        let obj: any = asPageTab( {attributes: [attr]});
+        let obj: any = {attributes: [attr]};
         obj = updateAttachToAttribute(obj, projects);
 
         expect(obj.attributes).toBeDefined();

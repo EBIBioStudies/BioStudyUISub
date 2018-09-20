@@ -3,13 +3,13 @@ import {ATTACH_TO_ATTR, PageTab, PtAttribute, PtFile, PtFileItem, PtLink, PtLink
 import {contacts2Authors} from './pagetab-authors.utils';
 import {SubmissionType} from './submission-type.model';
 import {LinksUtils} from './pagetab-links.utils';
-import {mergeAttributes, SHARED_ATTRIBUTES_CONTAIN} from './pagetab.utils';
+import {mergeAttributes, SHARED_ATTRIBUTES} from './pagetab-attributes.utils';
 import {DEFAULT_TEMPLATE_NAME} from './submission.templates';
 
-const isFileType = (type: string) => type.toLowerCase() === 'file';
-const isLinkType = (type: string) => type.toLowerCase() === 'link';
+const isFileType = (type: string) => type.isEqualIgnoringCase('file');
+const isLinkType = (type: string) => type.isEqualIgnoringCase('link');
 
-const isEmptyAttr = (attr: PtAttribute) => attr.value == undefined || attr.value.trim().length === 0;
+const isEmptyAttr = (attr: PtAttribute) => String.isNotDefinedOrEmpty(attr.value);
 
 export function newPageTab(templateName: string = DEFAULT_TEMPLATE_NAME): PageTab {
     const subm = new Submission(SubmissionType.fromTemplate(templateName));
@@ -35,7 +35,9 @@ export function submission2PageTab(subm: Submission, isSanitise: boolean = false
         accessTags: subm.tags.accessTags,
         attributes: mergeAttributes(
             subm.attributes.map(at => attributeData2PtAttribute(at)),
-            (ptSection.attributes || []).filter(at => SHARED_ATTRIBUTES_CONTAIN(at.name)))
+            (ptSection.attributes || [])
+                .filter(at => String.isDefined(at.name))
+                .filter(at => SHARED_ATTRIBUTES.includes(at.name!)))
     };
 }
 
@@ -78,7 +80,7 @@ function extractSectionLinks(section: Section, isSanitise: boolean): PtLinkItem[
 }
 
 function extractSectionFiles(section: Section, isSanitise: boolean): PtFileItem[] {
-    const feature = section.features.list().find(f => f.typeName.toLowerCase() === 'file');
+    const feature = section.features.list().find(f => isFileType(f.typeName));
     if (feature !== undefined) {
         return extractFeatureAttributes(feature, isSanitise).map(attrs => attributesAsFile(attrs));
     }
@@ -101,8 +103,9 @@ function attributesAsLink(attributes: PtAttribute[]): PtLink {
 }
 
 function attributesAsFile(attributes: PtAttribute[]): PtFile {
-    const attr = attributes.find(at => at.name.toLowerCase() === 'path');
-    const attrs = attributes.filter(at => at.name.toLowerCase() !== 'path');
+    const isPathAttr = (at: PtAttribute) => String.isDefined(at.name) && at.name!.isEqualIgnoringCase('path');
+    const attr = attributes.find(at => isPathAttr(at));
+    const attrs = attributes.filter(at => !isPathAttr(at));
     return <PtFile>{path: attr!.value, attributes: attrs};
 }
 
@@ -112,8 +115,8 @@ function attributeData2PtAttribute(attr: AttributeData): PtAttribute {
         value: attr.value,
         isReference: attr.reference
     };
-    if ((attr.terms || []).length > 0) {
-        ptAttr.valqual = attr.terms.slice();
+    if (!(attr.terms || []).isEmpty()) {
+        ptAttr.valqual = attr.terms!.slice();
     }
     return ptAttr;
 }
