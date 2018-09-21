@@ -97,7 +97,7 @@ describe('AuthorsAndAffiliations:', () => {
     });
 
     it('contactsToAuthors: [contact] sections are split into authors and affiliations', () => {
-        expect(contacts2Authors(
+        const authors = contacts2Authors(
             [
                 {
                     type: 'Contact',
@@ -139,7 +139,11 @@ describe('AuthorsAndAffiliations:', () => {
                 },
                 {
                     type: 'Other'
-                }])).toEqual(
+                }]);
+
+        console.debug(authors);
+
+        expect(authors).toEqual(
             [
                 {
                     type: 'Other'
@@ -178,6 +182,10 @@ describe('AuthorsAndAffiliations:', () => {
                         {
                             name: 'Name',
                             value: 'Guy R'
+                        },
+                        {
+                            name: 'Affiliation',
+                            value: ''
                         }
                     ]
                 },
