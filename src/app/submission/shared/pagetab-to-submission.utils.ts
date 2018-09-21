@@ -50,7 +50,7 @@ function ptSection2SectionData(ptSection: PtSection, parentAttributes: PtAttribu
         });
     }
 
-    if (featureSections.isEmpty()) {
+    if (!featureSections.isEmpty()) {
         const featureTypes = featureSections
             .filter(s => String.isDefinedAndNotEmpty(s.type))
             .map(s => s.type).uniqueValues();

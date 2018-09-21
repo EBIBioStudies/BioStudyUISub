@@ -1,0 +1,77 @@
+import {Submission, SubmissionData} from './submission.model';
+import {SubmissionType} from './submission-type.model';
+import {EMPTY_TEMPLATE_NAME} from './submission.templates';
+import {submission2PageTab} from './submission-to-pagetab.utils';
+import {PtFile, PtLink} from './pagetab.model';
+
+describe('Submission To PageTab Util:', () => {
+
+    let submType;
+
+    beforeAll(() => {
+        submType = SubmissionType.fromTemplate(EMPTY_TEMPLATE_NAME);
+    });
+
+    it('Title and ReleaseDate attributes should be merged to the submission level attributes', () => {
+        const subm = new Submission(submType, <SubmissionData>{
+            attributes: [
+                {name: 'AttachTo', value: 'proj1'}
+            ],
+            section: {
+                attributes: [
+                    {name: 'Title', value: 'A title'},
+                    {name: 'ReleaseDate', value: 'A release date'},
+                    {name: 'Attr1', value: 'Value1'}
+                ]
+            }
+        });
+
+        const pageTab = submission2PageTab(subm);
+        expect(pageTab.attributes!.length).toBe(3);
+        expect(pageTab.attributes!.find(at => at.name === 'Title')).toBeDefined();
+        expect(pageTab.attributes!.find(at => at.name === 'ReleaseDate')).toBeDefined();
+        expect(pageTab.attributes!.find(at => at.name === 'AttachTo')).toBeDefined();
+
+        const secAttributes = pageTab.section!.attributes!;
+        expect(secAttributes.length).toBe(3);
+    });
+
+    it('Section Link features should go to section links list', () => {
+        const subm = new Submission(submType, <SubmissionData>{
+            section: {
+                features: [
+                    {
+                        type: 'Link',
+                        entries: [
+                            [{name: 'Pointer', value: 'url1'}, {name: 'Type', value: ''}]
+                        ]
+                    }
+                ]
+            }
+        });
+
+        const pageTab = submission2PageTab(subm);
+        expect(pageTab.section!.links!.length).toBe(1);
+        expect((<PtLink>pageTab.section!.links![0]).url).toBe('url1');
+    });
+
+    it('Section File features should go to section files list', () => {
+        const subm = new Submission(submType, <SubmissionData>{
+            section: {
+                features: [
+                    {
+                        type: 'File',
+                        entries: [
+                            [{name: 'Path', value: 'path1'}]
+                        ]
+                    }
+                ]
+            }
+        });
+
+        const pageTab = submission2PageTab(subm);
+        expect(pageTab.section!.files!.length).toBe(1);
+        expect((<PtFile>pageTab.section!.files![0]).path).toBe('path1');
+    });
+
+});

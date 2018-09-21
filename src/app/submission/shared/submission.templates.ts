@@ -4,10 +4,12 @@ import {filterAttributesByName} from './pagetab-attributes.utils';
 import {DefaultTemplate} from './default.template';
 import {HecatosTemplate} from './hecatos.template';
 import {EutoxriskTemplate} from './eutoxrisk.template';
+import {EmptyTemplate} from './empty.template';
 
-const SUBMISSION_TEMPLATES = [EutoxriskTemplate, HecatosTemplate, DefaultTemplate];
+const SUBMISSION_TEMPLATES = [EutoxriskTemplate, HecatosTemplate, DefaultTemplate, EmptyTemplate];
 
 export const DEFAULT_TEMPLATE_NAME = 'Default';
+export const EMPTY_TEMPLATE_NAME = 'Empty';
 export const SUBMISSION_TEMPLATE_NAMES = SUBMISSION_TEMPLATES.map(tmpl => tmpl.name);
 
 export function findSubmissionTemplateName(pageTab: PageTab): string {
@@ -17,7 +19,9 @@ export function findSubmissionTemplateName(pageTab: PageTab): string {
     return attachToValues.length > 1 ? DEFAULT_TEMPLATE_NAME : attachToValues[0];
 }
 
-export function findSubmissionTemplateByName(tmplName: string): any {
-    const tmpl = SUBMISSION_TEMPLATES.find(tmpl => tmpl.name.toLowerCase() === tmplName.toLowerCase());
+export function findSubmissionTemplateByName(name: string): any {
+    console.log(name);
+    const tmplName = name.toLowerCase();
+    const tmpl = SUBMISSION_TEMPLATES.find(tmpl => tmpl.name.toLowerCase() === tmplName);
     return tmpl ? tmpl : DefaultTemplate;
 }

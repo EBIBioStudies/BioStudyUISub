@@ -61,15 +61,90 @@ describe('PageTab To Submission Util:', () => {
     });
 
     it('Files should go to section feature list', () => {
-        //TODO
+        const pageTab = {
+            section: {
+                files: [
+                    {
+                        path: 'path1'
+                    },
+                    [
+                        {
+                            path: 'path2'
+
+                        },
+                        {
+                            path: 'path3'
+                        }
+                    ]
+                ]
+            }
+        };
+
+        const submData = pageTab2SubmissionData(pageTab);
+        expect(submData.section!.features!.length).toEqual(1);
+        expect(submData.section!.features![0].entries!.length).toEqual(3);
     });
 
     it('Sections without subsections should go to section feature list', () => {
-        //TODO
+        const pageTab = {
+            section: {
+                subsections: [
+                    {
+                        type: 'secType1'
+                    },
+                    [
+                        {
+                            type: 'secType2'
+
+                        },
+                        {
+                            type: 'secType2'
+                        }
+                    ]
+                ]
+            }
+        };
+
+        const submData = pageTab2SubmissionData(pageTab);
+        expect(submData.section!.features!.length).toEqual(2);
+
+        const f1 = submData.section!.features!.find(f => f.type === 'secType1');
+        expect(f1).toBeDefined();
+        expect(f1!.entries!.length).toEqual(1);
+
+        const f2 = submData.section!.features!.find(f => f.type === 'secType2');
+        expect(f2!.entries!.length).toEqual(2);
     });
 
     it('Sections with subsections should go to section subsections list', () => {
-        //TODO
+        const pageTab = {
+            section: {
+                subsections: [
+                    {
+                        type: 'secType1',
+                        links: [{url: 'url1'}]
+                    },
+                    [
+                        {
+                            type: 'secType2',
+                            links: [{url: 'url2'}]
+                        },
+                        {
+                            type: 'secType2',
+                            links: [{url: 'url3'}]
+                        }
+                    ]
+                ]
+            }
+        };
+
+        const submData = pageTab2SubmissionData(pageTab);
+        expect(submData.section!.features!.isEmpty()).toBeTruthy();
+        expect(submData.section!.sections!.length).toBe(3);
+
+        const s1 = submData.section!.sections!.find(s => s.type === 'secType1');
+        expect(s1).toBeDefined();
+        expect(s1!.features!.length).toEqual(1);
     });
 
 });
