@@ -1,4 +1,4 @@
-import {pageTab2SubmissionData} from './pagetab-to-submission.util';
+import {pageTab2SubmissionData} from './pagetab-to-submission.utils';
 
 describe('PageTab To Submission Util:', () => {
     it('Title and ReleaseDate attributes should be merged to the section level attributes', () => {
@@ -58,8 +58,6 @@ describe('PageTab To Submission Util:', () => {
         const submData = pageTab2SubmissionData(pageTab);
         expect(submData.section!.features!.length).toEqual(1);
         expect(submData.section!.features![0].entries!.length).toEqual(3);
-
-
     });
 
     it('Files should go to section feature list', () => {
