@@ -42,8 +42,6 @@ export class UserData {
                     const userData = results[0];
                     userData['projects'] = results[1];
 
-                    console.log(userData)
-
                     _.merge(this, userData);
 
                     //Signals that user data is available.
