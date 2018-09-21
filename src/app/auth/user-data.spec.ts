@@ -1,11 +1,9 @@
-import {Observable} from 'rxjs/Observable';
-
+import {async} from '@angular/core/testing';
 import {of} from 'rxjs';
 
 import {UserData} from './user-data';
 import {AuthService} from './auth.service';
 import {UserSession} from './user-session';
-import {async} from '@angular/core/testing';
 
 describe('UserData', () => {
     let submService;
@@ -56,25 +54,26 @@ describe('UserData', () => {
     }));
 
     it('should return valid ORCID value when it is set', async(() => {
+        const user = {
+            sessid: '123',
+            username: 'vasya',
+            email: 'vasya@pupkin.com',
+            aux: {
+                orcid: '1234-5678-9999'
+            }
+        };
         const checkUser = {
-            checkUser: () => of({
-                sessid: '123',
-                username: 'vasya',
-                email: 'vasya@pupkin.com',
-                aux: {
-                    orcid: '1234-5678-9999'
-                }
-            })
+            checkUser: () => of(user)
         };
         const session = new UserSession();
         const _ud = new UserData(session, checkUser as AuthService, submService);
         _ud.whenFetched.subscribe(ud => {
             const contact = _ud.contact;
-            expect(ud['username']).toBe('vasya');
-            expect(contact['Name']).toBe('vasya');
-            expect(ud['email']).toBe('vasya@pupkin.com');
-            expect(contact['E-mail']).toBe('vasya@pupkin.com');
-            expect(contact['ORCID']).toBe('1234-5678-9999');
+            expect(ud['username']).toBe(user.username);
+            expect(contact['Name']).toBe(user.username);
+            expect(ud['email']).toBe(user.email);
+            expect(contact['E-mail']).toBe(user.email);
+            expect(contact['ORCID']).toBe(user.aux.orcid);
         });
 
         session.create('123456');
