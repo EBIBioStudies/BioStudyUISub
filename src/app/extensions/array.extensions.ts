@@ -1,11 +1,3 @@
-interface Array<T> {
-    isEmpty(): boolean;
-
-    uniqueValues(): Array<T>;
-
-    flatMap<U>(mapFunc: (x: T) => U[]): Array<U>;
-}
-
 Array.prototype.isEmpty = function () {
     return this.length === 0;
 };

@@ -1,14 +1,16 @@
-interface StringConstructor {
+declare interface StringConstructor {
     isDefined(s: string | undefined | null): boolean;
 
     isNotDefinedOrEmpty(s: string | undefined | null): boolean;
 
     isDefinedAndNotEmpty(s: string | undefined | null): boolean;
+}
 
+declare interface String {
     isEqualIgnoringCase(value: string): boolean;
 }
 
-interface Array<T> {
+declare interface Array<T> {
     isEmpty(): boolean;
 
     uniqueValues(): Array<T>;
@@ -16,6 +18,6 @@ interface Array<T> {
     flatMap<U>(mapFunc: (x: T) => U[]): Array<U>;
 }
 
-type AnyString = string | null | undefined
+declare type AnyString = string | null | undefined
 
-type Dictionary<T> = { [key: string]: T | undefined }
+declare type Dictionary<T> = { [key: string]: T | undefined }
