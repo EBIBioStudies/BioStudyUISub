@@ -1,14 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
-
-import 'rxjs/add/observable/of';
-import 'rxjs/add/observable/throw';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-
 import {Subject} from 'rxjs/Subject';
-import {throwError} from 'rxjs/index';
+import {of, throwError} from 'rxjs';
 
 @Injectable()
 export class IdLinkService {
@@ -37,7 +31,7 @@ export class IdLinkService {
      */
     get whenListed(): Observable<any> {
         if (this.isFetched) {
-            return Observable.of(this.prefixes);
+            return of(this.prefixes);
         } else {
             return this._whenFetched.asObservable();
         }
@@ -64,13 +58,13 @@ export class IdLinkService {
         } else if (prefix.length) {
             url = `${IdLinkService.BASE_URL}/collections/name/${prefix}`;
         } else {
-            return Observable.of([]);
+            return of([]);
         }
 
         return this.http.get(url).map((data: Array<any>) => data.map(d => d.prefix))
             .catch((err) => {
                 if (err.status === 404) {
-                    return Observable.of([]);
+                    return of([]);
                 }
                 return throwError(err);
             }
@@ -91,7 +85,7 @@ export class IdLinkService {
             })
             .catch((err) => {
                 if (err.status === 404) {
-                    return Observable.of(err.error);
+                    return of(err.error);
                 }
                 return throwError(err);
             }

@@ -1,16 +1,15 @@
 import {IdLinkService} from './id-link.service';
 import {HttpErrorResponse} from '@angular/common/http';
-import {Observable} from 'rxjs/Observable';
-import {defer} from 'rxjs/observable/defer';
-import 'rxjs/add/observable/throw';
-import {throwError} from "rxjs/index";
+import {defer, of, throwError} from 'rxjs';
+
+
 
 function asyncError<T>(errorObject: any) {
   return defer(() => throwError(errorObject));
 }
 
 function asyncData<T>(data: T) {
-  return defer(() => Observable.of(data));
+  return defer(() => of(data));
 }
 
 describe('IdLinkService', () => {
