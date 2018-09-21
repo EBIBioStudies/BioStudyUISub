@@ -141,8 +141,6 @@ describe('AuthorsAndAffiliations:', () => {
                     type: 'Other'
                 }]);
 
-        console.debug(authors);
-
         expect(authors).toEqual(
             [
                 {
