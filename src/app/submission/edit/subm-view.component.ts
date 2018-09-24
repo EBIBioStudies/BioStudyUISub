@@ -4,7 +4,7 @@ import {Params} from '@angular/router';
 import {SubmEditComponent} from './subm-edit.component';
 import {SubmissionType} from '../shared/submission-type.model';
 import {Observable} from 'rxjs/Observable';
-import {pageTab2Submission} from '../shared/pagetab-to-submission.util';
+import {pageTab2Submission} from '../shared/pagetab-to-submission.utils';
 import {findSubmissionTemplateName} from '../shared/submission.templates';
 
 @Component({

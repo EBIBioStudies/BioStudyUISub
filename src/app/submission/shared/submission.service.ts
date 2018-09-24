@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/throw';
-import * as _ from "lodash";
+import * as _ from 'lodash';
 
 import {HttpCustomClient} from 'app/http/http-custom-client.service';
 import {PageTab} from './pagetab.model';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 class UrlParams {
     private params: any[] = [];
@@ -55,17 +55,19 @@ export class SubmissionService {
 
     getSubmissions(args: any = {}): Observable<SubmissionListItem[]> {
         const urlParams = new UrlParams(args);
-        return this.http.get('/api/submissions', urlParams.list)
-            .map((response: any) => {
+        return this.http.get('/api/submissions', urlParams.list).pipe(
+            map((response: any) => {
                 return response.submissions;
-            });
+            })
+        );
     }
 
     getProjects(): Observable<any> {
-        return this.http.get('/api/projects')
-            .map((response: any) => {
+        return this.http.get('/api/projects').pipe(
+            map((response: any) => {
                 return response.submissions;
-            });
+            })
+        );
     }
 
     createSubmission(pt: any): Observable<PendingSubmission> {
@@ -73,8 +75,9 @@ export class SubmissionService {
     }
 
     saveSubmission(pt: any): Observable<any> {
-        return this.http.post('/api/submissions/tmp/save', pt)
-            .map((response: any) => 'done');
+        return this.http.post('/api/submissions/tmp/save', pt).pipe(
+            map((response: any) => 'done')
+        );
     }
 
     submitSubmission(pt: any): Observable<any> {
@@ -109,14 +112,14 @@ export class SubmissionService {
         if (Array.isArray(obj)) {
             return this.deepestError(obj.find(nestedObj => nestedObj['level'].toLowerCase() == 'error'));
 
-        //Node passed in => only processes nodes with errors.
+            //Node passed in => only processes nodes with errors.
         } else if (_.isObject(obj) && obj!.hasOwnProperty('level') && obj!['level'].toLowerCase() == 'error') {
 
             //Travels down the hierarchy in search of deeper error nodes
             if (obj!.hasOwnProperty('subnodes')) {
                 return this.deepestError(obj!['subnodes']);
 
-            //Leaf error node reached => gets the error message proper.
+                //Leaf error node reached => gets the error message proper.
             } else if (obj!.hasOwnProperty('message')) {
                 return obj!['message'];
             }

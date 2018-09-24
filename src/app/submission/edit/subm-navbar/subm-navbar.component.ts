@@ -6,7 +6,7 @@ import {Section} from '../../shared/submission.model';
 import {SubmissionService} from '../../shared/submission.service';
 import {SubmAddDialogComponent} from '../../list/subm-add.component';
 import {UserData} from '../../../auth/user-data';
-import {newPageTab} from '../../shared/submission-to-pagetab.util';
+import {newPageTab} from '../../shared/submission-to-pagetab.utils';
 import {SUBMISSION_TEMPLATE_NAMES} from '../../shared/submission.templates';
 
 @Component({

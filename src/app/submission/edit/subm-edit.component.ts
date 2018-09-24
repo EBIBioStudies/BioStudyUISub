@@ -26,8 +26,8 @@ import {SubmValidationErrorsComponent} from './subm-navbar/subm-validation-error
 import * as _ from 'lodash';
 import {SubmSideBarComponent} from './subm-sidebar/subm-sidebar.component';
 import {Subject} from 'rxjs/Subject';
-import {submission2PageTab} from '../shared/submission-to-pagetab.util';
-import {pageTab2Submission} from '../shared/pagetab-to-submission.util';
+import {submission2PageTab} from '../shared/submission-to-pagetab.utils';
+import {pageTab2Submission} from '../shared/pagetab-to-submission.utils';
 import {findSubmissionTemplateName} from '../shared/submission.templates';
 
 @Component({

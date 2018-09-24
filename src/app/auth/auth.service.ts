@@ -1,9 +1,5 @@
 import {Injectable} from '@angular/core';
 
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/throw';
-import 'rxjs/add/operator/map';
-
 import {
     HttpCustomClient,
     ServerError
@@ -17,7 +13,8 @@ import {
 } from './model/email-req-data';
 
 import {UserSession} from './user-session';
-import {throwError} from "rxjs/index";
+import {Observable, of, throwError} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 @Injectable()
 export class AuthService {
@@ -27,22 +24,24 @@ export class AuthService {
     }
 
     signIn(obj: { login: string, password: string }): Observable<any> {
-        return this.http.post('/raw/auth/signin', obj).map((response) => {
-            if (response.status === 'OK') {
-                this.userSession.create(response.sessid);
-                return response;
-            }
-            return throwError(ServerError.dataError(response));
-        });
+        return this.http.post('/raw/auth/signin', obj).pipe(
+            map((response) => {
+                if (response.status === 'OK') {
+                    this.userSession.create(response.sessid);
+                    return response;
+                }
+                return throwError(ServerError.dataError(response));
+            }));
     }
 
     checkUser(): Observable<any> {
-        return this.http.get('/raw/auth/check?format=json').map((response) => {
-            if (response.status === 'OK') {
-                return response;
-            }
-            return throwError(ServerError.dataError(response));
-        });
+        return this.http.get('/raw/auth/check?format=json').pipe(
+            map((response) => {
+                if (response.status === 'OK') {
+                    return response;
+                }
+                return throwError(ServerError.dataError(response));
+            }));
     }
 
     passwordResetReq(obj: PasswordResetRequestData): Observable<any> {
@@ -67,9 +66,9 @@ export class AuthService {
 
     signOut(): Observable<any> {
         if (this.userSession.isAnonymous()) {
-            return Observable.of({});
+            return of({});
         }
-        return this.http.post("/api/auth/signout", {})
+        return this.http.post('/api/auth/signout', {})
             .map(() => {
                 this.userSession.destroy();
                 return {};
