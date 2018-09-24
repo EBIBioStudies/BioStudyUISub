@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 
-import {Subject} from 'rxjs/Subject';
 
 import {SubmissionService} from '../shared/submission.service';
-import {Observable} from 'rxjs/Observable';
 import {updateAttachToAttribute} from '../shared/pagetab-attributes.utils';
 import {PageTab} from '../shared/pagetab.model';
+import {Observable, of, Subject} from 'rxjs';
+import {catchError, switchMap} from 'rxjs/operators';
 
 enum ReqStatus {CONVERT, SUBMIT, ERROR, SUCCESS}
 
@@ -20,7 +20,7 @@ export class DirectSubmitRequest {
     private _created: Date;
     private _status: ReqStatus;
     private _log: any;
-    private _accno: string =  '';
+    private _accno: string = '';
     private _releaseDate: string | undefined;
 
     constructor(filename: string, format: string, projects: string[], type: ReqType) {
@@ -115,7 +115,7 @@ export class DirectSubmitRequest {
                 this._log = res.log || {message: 'No results available', level: 'error'};
             }
 
-        //Successful server response from direct submit => reflects success accordingly
+            //Successful server response from direct submit => reflects success accordingly
         } else {
             this._status = successStatus;
             this._log = res.log || undefined;
@@ -124,7 +124,7 @@ export class DirectSubmitRequest {
             if (successStatus == ReqStatus.SUCCESS) {
                 this._accno = res.mapping[0].assigned;
 
-            //If back from conversion, extracts the release date if found.
+                //If back from conversion, extracts the release date if found.
             } else if (successStatus == ReqStatus.SUBMIT) {
                 let dateAttr = res.document.submissions[0].attributes;
 
@@ -146,7 +146,8 @@ export class DirectSubmitService {
     newRequest$: Subject<Number> = new Subject<Number>();
     private _requests: DirectSubmitRequest[] = [];
 
-    constructor(private submService: SubmissionService) {}
+    constructor(private submService: SubmissionService) {
+    }
 
     get requestCount(): number {
         return this._requests.length;
@@ -231,16 +232,18 @@ export class DirectSubmitService {
      * @returns {Observable<any>} Flat stream of inputs coming from the responses to the requests issued.
      */
     private dirSubmit(req: DirectSubmitRequest, file: File, format: string): Observable<any> {
-        return this.submService.convert(file, format).switchMap(
+        return this.submService.convert(file, format).pipe(
+            switchMap(
+                //Signals the successful completion of the conversion stage and submits if successful
+                data => {
+                    req.onResponse(data, ReqStatus.SUBMIT);
+                    return this.submit(req, data.document.submissions[0]);
 
-            //Signals the successful completion of the conversion stage and submits if successful
-            data => {
-                req.onResponse(data, ReqStatus.SUBMIT);
-                return this.submit(req, data.document.submissions[0]);
-
-            //Finds where the relevant error data is before updating the request's status accordingly.
-            //This block will catch errors from either conversion or submission.
-            }).catch((error: any) => {
+                    //Finds where the relevant error data is before updating the request's status accordingly.
+                    //This block will catch errors from either conversion or submission.
+                }
+            ),
+            catchError((error: any) => {
                 let errData = error.data;
 
                 if (errData && errData.hasOwnProperty('error')) {
@@ -253,9 +256,8 @@ export class DirectSubmitService {
 
                 //NOTE: an empty observable is used instead of throwing an exception to prevent this transaction
                 //cancelling any remaining ones.
-                return Observable.of(null);
-            }
-        );
+                return of(null);
+            }));
     }
 
     /**

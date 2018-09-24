@@ -4,14 +4,12 @@ import {IdLinkComponent} from './id-link.component';
 import {FormsModule} from '@angular/forms';
 import {IdLinkService} from './id-link.service';
 
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
-
 import {TypeaheadModule} from "ngx-bootstrap";
+import {Observable, of} from 'rxjs';
 
 class IdLinkServiceMock {
   suggest(prefix: string): Observable<string[]> {
-    return prefix === 'cheb' ? Observable.of(['chebi']) : Observable.of([]);
+    return prefix === 'cheb' ? of(['chebi']) : of([]);
   }
 }
 

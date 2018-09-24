@@ -1,13 +1,10 @@
 import {Injectable} from '@angular/core';
-import {Subject} from 'rxjs/Subject';
-import {Observable} from 'rxjs/Observable';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Subscription} from 'rxjs/Subscription';
 
 import {Path} from './path';
 import {FileService} from './file.service';
 import {UploadErrorEvent, UploadEvent, UploadProgressEvent} from './http-upload-client.service';
 import {catchError, map} from 'rxjs/operators';
+import {BehaviorSubject, Observable, of, Subject, Subscription} from 'rxjs';
 
 enum UploadState {
     ERROR = 'error',
@@ -41,7 +38,7 @@ export class FileUpload {
             fileService.upload(path.absolutePath(), files).pipe(
                 catchError((error: UploadErrorEvent) => {
                     console.log(error.message);
-                    return Observable.of(error);
+                    return of(error);
                 })
             );
 

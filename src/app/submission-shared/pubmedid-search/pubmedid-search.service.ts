@@ -1,11 +1,8 @@
 import {Injectable} from '@angular/core';
 
-import {Observable} from 'rxjs/Observable';
-import {throwError} from "rxjs/index";
-import 'rxjs/add/observable/throw';
-import 'rxjs/add/operator/catch';
-
 import {HttpCustomClient} from 'app/http/http-custom-client.service';
+import {Observable, of, throwError} from 'rxjs';
+import {catchError} from 'rxjs/operators';
 
 @Injectable()
 export class PubMedSearchService {
@@ -14,11 +11,11 @@ export class PubMedSearchService {
 
     search(pmid): Observable<any> {
         if (!pmid) {
-            console.warn("PubMedSearch: no pubMedId given");
-            return Observable.of({});
+            console.warn('PubMedSearch: no pubMedId given');
+            return of({});
         }
-        return this.http.get('/api/pubMedSearch/' + pmid)
-            .catch((error: any) => {
+        return this.http.get('/api/pubMedSearch/' + pmid).pipe(
+            catchError((error: any) => {
                 let err = {status: '', message: ''};
                 try {
                     let jsonError = error.json ? error.json() : error;
@@ -31,6 +28,6 @@ export class PubMedSearchService {
                 }
                 console.error(err);
                 return throwError(err);
-            });
+            }));
     }
 }

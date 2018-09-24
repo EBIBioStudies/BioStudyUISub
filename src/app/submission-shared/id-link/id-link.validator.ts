@@ -1,7 +1,6 @@
-import {AsyncValidatorFn, AbstractControl, ValidationErrors} from '@angular/forms';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
+import {AbstractControl, AsyncValidatorFn, ValidationErrors} from '@angular/forms';
 import {IdLinkService} from './id-link.service';
+import {Observable, of} from 'rxjs';
 
 const VALUE_REGEXP = /^([\w-.]+):([\w-.]+)$/;
 const URL_REGEXP = /^(http|https|ftp):\/\/.+$/;
@@ -26,7 +25,7 @@ export function idLinkValidator(service: IdLinkService, extra: any, prev: any): 
         if (!value.length || URL_REGEXP.test(value)) {
             extra.url = value;
             prev.url = value;
-            return Observable.of(null);
+            return of(null);
         }
 
         //If the control's value is a well-formed prefix:identifier, validate it against Identifier.org
@@ -35,7 +34,7 @@ export function idLinkValidator(service: IdLinkService, extra: any, prev: any): 
 
             //To save on requests, make sure the prefix is a known one. Otherwise, it's clear the link is invalid.
             if (service.prefixes.length && service.prefixes.indexOf(currLinkMatches[1]) == -1) {
-                return Observable.of({pattern: true});
+                return of({pattern: true});
             }
 
             //Validation requests are made only once for the same invalid link. Otherwise, the last result is provided.
@@ -51,7 +50,7 @@ export function idLinkValidator(service: IdLinkService, extra: any, prev: any): 
                         prev.url = res['url'];
                         prev.error = null;
 
-                    //The response is an error => the link is invalid
+                        //The response is an error => the link is invalid
                     } else {
                         extra.url = '';
                         extra.isId = false;
@@ -67,10 +66,10 @@ export function idLinkValidator(service: IdLinkService, extra: any, prev: any): 
                 extra.url = prev.url;
                 extra.isId = true;
             }
-            return Observable.of(prev.error);
+            return of(prev.error);
         }
 
         //The control's value is neither a valid URL nor a valid prefix:identifier link
-        return Observable.of({pattern: true});
+        return of({pattern: true});
     };
 }

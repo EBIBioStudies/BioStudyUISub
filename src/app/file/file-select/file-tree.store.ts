@@ -65,7 +65,7 @@ export class FileTreeStore {
 
     findFile(filePath: string): Observable<string> {
         if (filePath.trim().length === 0) {
-            return Observable.of(filePath);
+            return of(filePath);
         }
         let parts = (filePath || '').split('/');
         let fileName = parts[parts.length - 1];
@@ -82,7 +82,7 @@ export class FileTreeStore {
         /*.flatMap(dir => this.getFiles(dir))
         .catch((err) => {
             console.log(err);
-            return Observable.of([]);
+            return of([]);
         })
         .flatMap(fileNodes => Observable.from(fileNodes))
         .find(fileNode => fileNode.name === fileName)

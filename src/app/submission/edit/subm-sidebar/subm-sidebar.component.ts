@@ -1,16 +1,13 @@
 import {Component, EventEmitter, Input, OnChanges, Output, ViewChild} from '@angular/core';
 import {FormControl, NgForm, ValidationErrors} from '@angular/forms';
 
-import {Subscription} from 'rxjs/Subscription';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
-
 import {Feature, Section} from '../../shared/submission.model';
 import {SubmTypeAddDialogComponent} from '../submtype-add/submtype-add.component';
 import {ConfirmDialogComponent} from 'app/shared/index';
 import {FieldControl} from '../subm-form/subm-form.service';
 import {UserData} from '../../../auth/user-data';
 import {ServerError} from '../../../http/server-error.handler';
+import {Observable, of, Subscription} from 'rxjs';
 
 /**
  * Submission item class aggregating its corresponding feature with UI-relevant metadata. It enables
@@ -83,7 +80,7 @@ class SubmItem {
  * {@link https://blog.simontest.net/extend-array-with-typescript-965cc1134b3}
  *
  * @author Hector Casanova <hector@ebi.ac.uk>
-  */
+ */
 class SubmItems extends Array<SubmItem> {
     private _isDeletion: boolean;    //has any of the items been deleted?
 
@@ -145,7 +142,7 @@ class SubmItems extends Array<SubmItem> {
 export class SubmSideBarComponent implements OnChanges {
     @Input() isLoading: boolean = false;                                             //flag indicating the submission is being loaded
     @Input() isSubmitting: boolean = false;                                  //flag indicating submission data is being sent
-    @Input() collapsed?:boolean = false;                                     //flag indicating if menu is minimized/collapsed
+    @Input() collapsed?: boolean = false;                                     //flag indicating if menu is minimized/collapsed
     @Input() section?: Section;                                               //section of the form being displayed
     @Input() formControls: FieldControl[] = [];                              //refreshed array of form controls
     @Input() serverError?: ServerError;                                       //errors from server requests
@@ -164,7 +161,8 @@ export class SubmSideBarComponent implements OnChanges {
 
     private subscr?: Subscription;
 
-    constructor(public userData: UserData) {}
+    constructor(public userData: UserData) {
+    }
 
     /**
      * Updates the list of type items whenever a feature is added or removed, cleaning up subscriptions if necessary
@@ -211,7 +209,7 @@ export class SubmSideBarComponent implements OnChanges {
      * bubbling the menu's state up.
      * @param {Event} [event] - Optional click event object.
      */
-    onToggleCollapse(event?:Event): void {
+    onToggleCollapse(event?: Event): void {
         event && event.preventDefault();
         this.toggle && this.toggle.emit();
     }
@@ -222,7 +220,7 @@ export class SubmSideBarComponent implements OnChanges {
      * @param {NgForm} form Object generated from type name fields.
      */
     onSubmit(form: NgForm): void {
-        let confirmShown = Observable.of(true);     //dummy observable in case modal not shown
+        let confirmShown = of(true);     //dummy observable in case modal not shown
         let deleted;                                //collection of items marked for deletion
         let isPlural;                               //more than one item is being deleted?
 
@@ -267,10 +265,10 @@ export class SubmSideBarComponent implements OnChanges {
                 isConfirmed && this.onEditModeToggle();
             });
 
-        //Triggers validation of all fields at once.
+            //Triggers validation of all fields at once.
         } else {
             Object.keys(form.controls).forEach((key) => {
-                form.controls[key].markAsTouched({ onlySelf: true });
+                form.controls[key].markAsTouched({onlySelf: true});
             });
         }
     }
@@ -386,11 +384,16 @@ export class SubmSideBarComponent implements OnChanges {
         if (error.message) {
             return error.message;
         } else switch (error.status) {
-            case 401: return 'Authorisation error';
-            case 403: return 'Forbidden access';
-            case 404: return 'Submission not found';
-            case 500: return 'Server error';
-            default: return 'Error encountered';
+            case 401:
+                return 'Authorisation error';
+            case 403:
+                return 'Forbidden access';
+            case 404:
+                return 'Submission not found';
+            case 500:
+                return 'Server error';
+            default:
+                return 'Error encountered';
         }
     }
 

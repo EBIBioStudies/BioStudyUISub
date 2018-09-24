@@ -2,11 +2,6 @@ import {ChangeDetectorRef, Component, Input, OnInit, ViewChild} from '@angular/c
 import {Location} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
 
-
-import {Observable} from 'rxjs/Observable';
-import {forkJoin} from 'rxjs/observable/forkJoin';
-import 'rxjs/add/operator/switchMap';
-
 import {BsModalService} from 'ngx-bootstrap';
 
 import {Section, Submission} from '../shared/submission.model';
@@ -29,6 +24,7 @@ import {Subject} from 'rxjs/Subject';
 import {submission2PageTab} from '../shared/submission-to-pagetab.utils';
 import {pageTab2Submission} from '../shared/pagetab-to-submission.utils';
 import {findSubmissionTemplateName} from '../shared/submission.templates';
+import {forkJoin, Observable, of} from 'rxjs';
 
 @Component({
     selector: 'subm-edit',
@@ -316,7 +312,7 @@ export class SubmEditComponent implements OnInit {
      * @param {boolean} [isConfirm = false] - If true, a modal is rendered before actually submitting.
      */
     onSubmit(event, isConfirm: boolean = false) {
-        let confirmShown = Observable.of(true);     //dummy observable in case modal not shown
+        let confirmShown = of(true);     //dummy observable in case modal not shown
 
         //TODO: Why is this needed?
         if (event) {
