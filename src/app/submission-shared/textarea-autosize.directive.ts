@@ -1,13 +1,6 @@
-import {
-    Input,
-    ElementRef,
-    HostListener,
-    Directive
-} from '@angular/core';
+import {Directive, ElementRef, HostListener, Input} from '@angular/core';
 
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/operator/distinctUntilChanged';
+import {fromEvent} from 'rxjs';
 
 interface CSSStyleDeclarationWithResize extends CSSStyleDeclaration {
     resize: string
@@ -30,7 +23,7 @@ export class TextareaAutosize {
         style.resize = 'none';
         style.maxHeight = `${this.maxHeight}px`;
 
-        Observable.fromEvent(window, 'resize')
+        fromEvent(window, 'resize')
             .debounceTime(250)
             .distinctUntilChanged((evt: any) => evt.timeStamp)
             .subscribe(() => this.adjust());
