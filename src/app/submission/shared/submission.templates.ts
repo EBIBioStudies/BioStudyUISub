@@ -16,11 +16,10 @@ export function findSubmissionTemplateName(pageTab: PageTab): string {
     const attachToValues: string[] = filterAttributesByName(pageTab, ATTACH_TO_ATTR)
         .filter(at => String.isDefinedAndNotEmpty(at.value))
         .map(at => at.value!);
-    return attachToValues.length > 1 ? DEFAULT_TEMPLATE_NAME : attachToValues[0];
+    return attachToValues.length === 1 ? attachToValues[0] : DEFAULT_TEMPLATE_NAME;
 }
 
 export function findSubmissionTemplateByName(name: string): any {
-    console.log(name);
     const tmplName = name.toLowerCase();
     const tmpl = SUBMISSION_TEMPLATES.find(tmpl => tmpl.name.toLowerCase() === tmplName);
     return tmpl ? tmpl : DefaultTemplate;
