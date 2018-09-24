@@ -5,10 +5,10 @@ import * as _ from 'lodash';
 import {UserRole} from './user-role';
 import {AuthService} from './auth.service';
 import {UserSession} from './user-session';
-import {Subject} from 'rxjs/Subject';
-import {Observable} from 'rxjs/Observable';
+
 import {forkJoin} from 'rxjs/observable/forkJoin';
 import {SubmissionService} from '../submission/shared/submission.service';
+import {Observable, of, Subject} from 'rxjs';
 
 const SECRET_ID_PROP_NAME = 'secret';
 
@@ -59,7 +59,7 @@ export class UserData {
      */
     get whenFetched(): Observable<any> {
         if (this.isFetched) {
-            return Observable.of(this);
+            return of(this);
         } else {
             return this._whenFetched$.asObservable();
         }
