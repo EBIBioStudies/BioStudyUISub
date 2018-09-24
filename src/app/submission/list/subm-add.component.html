@@ -5,7 +5,7 @@
         <div class="modal-content">
             <form novalidate autocomplete="off"
                   #form="ngForm"
-                  (ngSubmit)="bsModal.hide(); onSubmit(projectName)">
+                  (ngSubmit)="bsModal?.hide(); onSubmit(projectName)">
                 <div class="modal-header bg-primary">
                     Add new submission
                     <button type="button" class="close pull-right" aria-label="Close" (click)="hide()">

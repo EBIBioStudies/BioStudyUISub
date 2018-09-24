@@ -1,4 +1,4 @@
-<span *ngIf="feature.size() > 0">
+<span *ngIf="feature && feature.size() > 0">
     <strong class="text-muted" *ngIf="!errorNum && !readonly && feature.type.required && !featureForm.form.valid">
         (at least one is required)
     </strong>
@@ -31,7 +31,7 @@
     </div>
 
     <div class="panel-body" #featureEl>
-        <div *ngIf="!readonly || !feature.isEmpty()">
+        <div *ngIf="!readonly || (feature && !feature.isEmpty())">
             <subm-feature-grid *ngIf="!feature.singleRow"
                                [featureForm]="featureForm"
                                [colNames]="allowedCols"

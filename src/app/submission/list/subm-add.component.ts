@@ -8,7 +8,7 @@ import {ModalDirective} from "ngx-bootstrap";
 export class SubmAddDialogComponent {
     public projectName: string = 'Default';
 
-    @Input() onSubmit?: Function;            //callback for submit action
+    @Input('onSubmit') onSubmitCallback?: Function;            //callback for submit action
     @Input() projectNames?: string[] = [];   //names of projects with templates
     @ViewChild('bsModal')
     private modalDirective?: ModalDirective;
@@ -41,5 +41,11 @@ export class SubmAddDialogComponent {
     onCancel(): void {
         this.projectName = 'Default';
         this.hide();
+    }
+
+    onSubmit(projectName: string): void {
+        if (this.onSubmitCallback){
+            this.onSubmitCallback(projectName);
+        }
     }
 }
