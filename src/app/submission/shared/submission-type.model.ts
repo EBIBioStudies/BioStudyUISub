@@ -212,7 +212,7 @@ export class FeatureType extends TypeBase {
     }
 
     get columnTypes(): ColumnType[] {
-        return this.columnScope.values().filter(ct => ct.tmplBased);
+        return this.columnScope.filterValues(ct => ct.tmplBased);
     }
 
     getColumnType(name: string, createDefault: boolean = true): ColumnType | undefined {
