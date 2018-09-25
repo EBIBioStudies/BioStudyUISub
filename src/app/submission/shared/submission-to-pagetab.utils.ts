@@ -4,7 +4,7 @@ import {contacts2Authors} from './pagetab-authors.utils';
 import {SubmissionType} from './submission-type.model';
 import {LinksUtils} from './pagetab-links.utils';
 import {mergeAttributes, SHARED_ATTRIBUTES} from './pagetab-attributes.utils';
-import {DEFAULT_TEMPLATE_NAME} from './submission.templates';
+import {DEFAULT_TEMPLATE_NAME} from './templates/submission.templates';
 
 const isFileType = (type: string) => type.isEqualIgnoringCase('file');
 const isLinkType = (type: string) => type.isEqualIgnoringCase('link');

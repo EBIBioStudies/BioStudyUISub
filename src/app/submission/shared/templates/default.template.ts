@@ -8,7 +8,7 @@ export const DefaultTemplate = {
             {
                 'name': 'Title',
                 'icon': 'fa-title',
-                'valueType': 'textblob',
+                'valueType': 'largetext',
                 'required': true,
                 'minlength': 25
             },
@@ -22,7 +22,7 @@ export const DefaultTemplate = {
             {
                 'name': 'Description',
                 'icon': 'fa-comment',
-                'valueType': 'textblob',
+                'valueType': 'largetext',
                 'required': true,
                 'minlength': 50
             }

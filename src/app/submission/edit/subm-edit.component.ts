@@ -23,8 +23,8 @@ import {SubmSideBarComponent} from './subm-sidebar/subm-sidebar.component';
 import {Subject} from 'rxjs/Subject';
 import {submission2PageTab} from '../shared/submission-to-pagetab.utils';
 import {pageTab2Submission} from '../shared/pagetab-to-submission.utils';
-import {findSubmissionTemplateName} from '../shared/submission.templates';
 import {forkJoin, Observable, of} from 'rxjs';
+import {findSubmissionTemplateName} from '../shared/templates/submission.templates';
 
 @Component({
     selector: 'subm-edit',

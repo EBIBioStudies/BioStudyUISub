@@ -18,7 +18,7 @@ import {AppConfig} from '../../app.config';
 import {SubmAddDialogComponent} from './subm-add.component';
 import {UserData} from '../../auth/user-data';
 import {newPageTab} from '../shared/submission-to-pagetab.utils';
-import {SUBMISSION_TEMPLATE_NAMES} from '../shared/submission.templates';
+import {SUBMISSION_TEMPLATE_NAMES} from '../shared/templates/submission.templates';
 
 @Component({
     selector: 'action-buttons-cell',

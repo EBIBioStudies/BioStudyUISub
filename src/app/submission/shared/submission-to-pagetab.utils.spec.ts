@@ -1,6 +1,5 @@
 import {Submission, SubmissionData} from './submission.model';
 import {SubmissionType} from './submission-type.model';
-import {EMPTY_TEMPLATE_NAME} from './submission.templates';
 import {submission2PageTab} from './submission-to-pagetab.utils';
 import {PtFile, PtLink} from './pagetab.model';
 
@@ -9,7 +8,7 @@ describe('Submission To PageTab Util:', () => {
     let submType;
 
     beforeAll(() => {
-        submType = SubmissionType.fromTemplate(EMPTY_TEMPLATE_NAME);
+        submType = SubmissionType.fromEmptyTemplate();
     });
 
     it('Title and ReleaseDate attributes should be merged to the submission level attributes', () => {

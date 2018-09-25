@@ -8,13 +8,6 @@ import * as pluralize from 'pluralize';
 
 import {NameAndValue, Tag} from './model.common';
 
-//Names of attributes as they come from the server that must be external.
-//NOTE: As per PageTab's requirements, "AttachTo", "ReleaseDate" and "Title" are special attributes that pertain the
-//whole submission and must therefore be outside the section.
-//NOTE: Only these attributes follow an Upper Camel Case convention. Any attributes different from these are arbitrarily
-//formatted.
-export const rootAttrs: string[] = ['Title', 'ReleaseDate', 'AttachTo'];
-
 const nextId = (function () {
     let count = 0;
     return function () {

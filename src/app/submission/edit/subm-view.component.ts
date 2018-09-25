@@ -5,8 +5,8 @@ import {SubmEditComponent} from './subm-edit.component';
 import {SubmissionType} from '../shared/submission-type.model';
 
 import {pageTab2Submission} from '../shared/pagetab-to-submission.utils';
-import {findSubmissionTemplateName} from '../shared/submission.templates';
 import {Observable, of} from 'rxjs';
+import {findSubmissionTemplateName} from '../shared/templates/submission.templates';
 
 @Component({
     selector: 'subm-view',

@@ -1,10 +1,9 @@
-import {ATTACH_TO_ATTR, PageTab} from './pagetab.model';
-import {filterAttributesByName} from './pagetab-attributes.utils';
-
-import {DefaultTemplate} from './default.template';
-import {HecatosTemplate} from './hecatos.template';
 import {EutoxriskTemplate} from './eutoxrisk.template';
+import {HecatosTemplate} from './hecatos.template';
+import {DefaultTemplate} from './default.template';
 import {EmptyTemplate} from './empty.template';
+import {ATTACH_TO_ATTR, PageTab} from '../pagetab.model';
+import {filterAttributesByName} from '../pagetab-attributes.utils';
 
 const SUBMISSION_TEMPLATES = [EutoxriskTemplate, HecatosTemplate, DefaultTemplate, EmptyTemplate];
 

@@ -8,6 +8,8 @@ declare interface StringConstructor {
 
 declare interface String {
     isEqualIgnoringCase(value: string): boolean;
+
+    isEmpty(): boolean;
 }
 
 declare interface Array<T> {

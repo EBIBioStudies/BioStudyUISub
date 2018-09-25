@@ -8,14 +8,14 @@ export const EutoxriskTemplate = {
             {
                 'name': 'Title',
                 'icon': 'fa-title',
-                'valueType': 'textblob',
+                'valueType': 'largetext',
                 'required': true,
                 'minlength': 25
             },
             {
                 'name': 'Description',
                 'icon': 'fa-comment',
-                'valueType': 'textblob'
+                'valueType': 'largetext'
             },
             {
                 'name': 'Project part',
