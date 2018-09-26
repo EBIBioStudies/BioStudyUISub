@@ -1,10 +1,4 @@
-import {
-    Component,
-    Input,
-    Output,
-    EventEmitter,
-    OnInit, ViewChild, ElementRef
-} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 
 import {DirectSubmitService} from './direct-submit.service';
 import {UserData} from '../../auth/user-data';
@@ -13,8 +7,8 @@ import {FileUploadButtonComponent} from '../../shared/file-upload-button.compone
 import {Observable} from 'rxjs/Observable';
 import {last, mergeAll} from 'rxjs/operators';
 import {AppConfig} from '../../app.config';
-import {Subject} from 'rxjs/Subject';
-import {Subscription} from 'rxjs/Subscription';
+import {from, Subject, Subscription} from 'rxjs';
+
 
 @Component({
     selector: 'direct-submit-sidebar',
@@ -266,7 +260,7 @@ export class DirectSubmitSideBarComponent implements OnInit {
             this.directSubmitSvc.reset();
 
             //Performs the double-request submits and flattens the resulting high-order observables onto a single one.
-            this.uploadSubs = Observable.from(nonClearedFiles).map((file: File) => {
+            this.uploadSubs = from(nonClearedFiles).map((file: File) => {
                 return this.directSubmitSvc.addRequest(file, '', this.selectedProj, submType);
 
                 //Throttles the number of requests allowed in parallel and takes just the last event to signal the end of the upload process.
