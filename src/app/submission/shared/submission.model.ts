@@ -1,12 +1,9 @@
-import {Subject} from 'rxjs/Subject';
-import {Subscription} from 'rxjs/Subscription';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/from';
-import {ColumnType, FeatureType, FieldType, SectionType, SubmissionType, ValueType} from './submission-type.model';
+import {FeatureType, FieldType, SectionType, SubmissionType, ValueType} from './submission-type.model';
 
 import * as pluralize from 'pluralize';
 
 import {NameAndValue, Tag} from './model.common';
+import {Observable, Subject, Subscription} from 'rxjs';
 
 const nextId = (function () {
     let count = 0;
@@ -50,25 +47,14 @@ export class UpdateEvent {
 
 export class Attribute extends HasUpdates<UpdateEvent> {
     readonly id: string;
-    required: boolean;
-    displayed: boolean;
-    readonly: boolean;
-    removable: boolean;
-    valueType: ValueType;
-    values: string[];
 
-    private _name: string;
-
-    constructor(name: string = '', required: boolean = false, displayed: boolean = false, readonly: boolean = false,
-                removable: boolean = true, valueType: ValueType = 'text', values: string[] = []) {
+    constructor(private _name: string = '',
+                public isRequired: boolean = false,
+                public isDisplayed: boolean = false,
+                public isReadonly: boolean = false,
+                public isRemovable: boolean = true,
+                public valueType: ValueType) {
         super();
-        this.required = required;
-        this.displayed = displayed;
-        this.readonly = readonly;
-        this.removable = removable;
-        this.valueType = valueType;
-        this.values = values;
-        this._name = name;
         this.id = `attr_${nextId()}`;
     }
 
@@ -77,26 +63,14 @@ export class Attribute extends HasUpdates<UpdateEvent> {
     }
 
     set name(name: string) {
-        if (this.required || this._name === name) {
-            return;
+        if (this.canBeModified && this._name !== name) {
+            this._name = name;
+            this.notify(new UpdateEvent('name', name));
         }
-        this._name = name;
-        this.notify(new UpdateEvent('name', name));
     }
 
-    /**
-     * Changes the type properties of the column to a given set.
-     * NOTE: Columns whose type are updated are only those columns that were non-readonly in the first place.
-     * Given the sweeping effects of the "readonly" flag (making uneditable not just the column but all its member
-     * fields too), to avoid the update coming across as an uninteded, it is ignored on purpose.
-     * @param {ColumnType} colType - New type values for the column.
-     */
-    updateType(colType: ColumnType) {
-        this.required = colType.required;
-        this.displayed = colType.displayed;
-        this.removable = colType.removable;
-        this.valueType = colType.valueType;
-        this.values = colType.values;
+    get canBeModified(): boolean {
+        return !this.isReadonly && !this.isRequired;
     }
 }
 
@@ -126,17 +100,8 @@ export class ValueMap extends HasUpdates<UpdateEvent> {
         (keys || []).forEach(key => this.add(key));
     }
 
-    /**
-     * Determines if the values making this map up are all empty strings.
-     * @returns {boolean} True if the map has no non-empty value.
-     */
     get isEmpty(): boolean {
-        let valuesLength = 0;
-
-        this.valueMap.forEach(valueObj => {
-            valuesLength = valuesLength + valueObj.value.length;
-        });
-        return valuesLength == 0;
+        return Array.from(this.valueMap.values()).every(v => v.value.isEmpty());
     }
 
     valueFor(key: string): AttributeValue | undefined {
@@ -187,15 +152,9 @@ export class Columns extends HasUpdates<UpdateEvent> {
         return this.columns.slice();
     }
 
-    /**
-     * Adds a new column to the attribute array, updating the event system in the process.
-     * @param {Attribute} column - Column to be added
-     */
     add(column: Attribute): void {
         const columns = this.columns;
 
-        //Makes sure the new column notifies name changes, dynamically working out its current array index.
-        //NOTE: Mind you, columns could be removed. Therefore, the initial array index may no longer apply.
         columns.push(column);
         this.subscriptions.push(
             column.updates().subscribe(event => {
@@ -207,7 +166,6 @@ export class Columns extends HasUpdates<UpdateEvent> {
             })
         );
 
-        //Triggers the corresponding event for the add operation
         this.notify(new UpdateEvent('column_add', {id: column.id, index: columns.length - 1}));
     }
 
@@ -217,7 +175,7 @@ export class Columns extends HasUpdates<UpdateEvent> {
             console.warn(`Column index out of bounds: ${index}`);
             return false;
         }
-        if (this.columns[index].required) {
+        if (this.columns[index].isRequired) {
             console.warn(`Can't remove required column [index: ${index}`);
             return false;
         }
@@ -233,7 +191,7 @@ export class Columns extends HasUpdates<UpdateEvent> {
     }
 
     allWithName(name: string): Attribute[] {
-        return this.columns.filter(attr => attr.name.toLowerCase() === name.toLowerCase());
+        return this.columns.filter(attr => attr.name.isEqualIgnoringCase(name));
     }
 
     keys(): string[] {
@@ -330,7 +288,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
         //TODO: Make displayed columns less permanent. Should be added once when the submission is new. Link with "isNew" from submission edit view.
         type.columnTypes.forEach(ct => {
             if (ct.required || ct.displayed) {
-                this.addColumn(ct.name, ct.required, ct.displayed, ct.readonly, ct.removable, ct.valueType, ct.values);
+                this.addColumn(ct.name, ct.required, ct.displayed, ct.readonly, ct.removable, ct.valueType);
             }
         });
 
@@ -346,9 +304,9 @@ export class Feature extends HasUpdates<UpdateEvent> {
             .subscribe(event => {
                 this.notify(new UpdateEvent('columns_update', {id: this.id}, event));
 
-                if (event.name == 'column_name_update') {
+                /*if (event.name == 'column_name_update') {
                     this.onColumnUpdate(event.source!.value, event.value.index);
-                }
+                }*/
             });
         this._rows.updates()
             .subscribe(m => {
@@ -383,10 +341,6 @@ export class Feature extends HasUpdates<UpdateEvent> {
         return this._columns.list();
     }
 
-    /**
-     * Convenience method to retrieve the names of the feature's current columns
-     * @returns {string[]} Column names
-     */
     get colNames(): string[] {
         return this._columns.names();
     }
@@ -459,7 +413,6 @@ export class Feature extends HasUpdates<UpdateEvent> {
         const usedColIds: string[] = [];
         let rowMap;
 
-        //Adds a column if any of the passed-in attribute names doesn't occur as often as it does in the column list.
         attrNames
             .forEach((attrName) => {
                 const colNames = this._columns.names();
@@ -470,22 +423,19 @@ export class Feature extends HasUpdates<UpdateEvent> {
 
                 if (occurAttrs != occurCols) {
                     this.addColumn(attrName, colType!.required, colType!.displayed, colType!.readonly, colType!.removable,
-                        colType!.valueType, colType!.values);
+                        colType!.valueType);
                 }
             });
 
-        //If row not provided, add it if applicable.
         if (rowIdx === undefined) {
             rowMap = this.singleRow ? this.rows[0] : this.addRow();
         } else {
             rowMap = this.rows[rowIdx];
         }
 
-        //Finds out the column corresponding to each of the attributes and sets its value
         attrsWithName.forEach(attr => {
             let cols: Attribute[] = this._columns.allWithName(attr.name!);
 
-            //Prevents the same attribute becoming the value for multiple columns of the same name
             cols = cols.filter((col) => (usedColIds.indexOf(col.id) === -1));
             usedColIds.push(cols[0].id);
 
@@ -494,19 +444,17 @@ export class Feature extends HasUpdates<UpdateEvent> {
     }
 
     addColumn(name?: string, required?: boolean, displayed?: boolean, readonly?: boolean, removable?: boolean,
-              valueType?: ValueType, values?: string[]): Attribute {
+              valueType?: ValueType): Attribute {
         let defColName = ' ' + (this.colSize() + 1);
         let col;
 
-        //Creates the new column with the appropriate name (it could be a single-row grid column)
         if (this.singleRow) {
             defColName = this.typeName + defColName;
         } else {
             defColName = 'Column' + defColName;
         }
-        col = new Attribute(name || defColName, required, displayed, readonly, removable, valueType, values);
+        col = new Attribute(name || defColName, required, displayed, readonly, removable, valueType || ValueType.create());
 
-        //Updates row and column maps
         this._rows.addKey(col.id);
         this._columns.add(col);
 
@@ -525,11 +473,11 @@ export class Feature extends HasUpdates<UpdateEvent> {
      * @param {string} newName - Updated column name.
      * @param {number} colIndex - Index of the updated column.
      */
-    onColumnUpdate(newName: string, colIndex: number) {
+    /*onColumnUpdate(newName: string, colIndex: number) {
         if (this._columns.allWithName(newName).length === 1 || !this.type.uniqueCols) {
             this._columns.at(colIndex)!.updateType(this.type.getColumnType(newName)!);
         }
-    }
+    }*/
 
     addRow(): ValueMap | undefined {
         if (this.singleRow && this._rows.size() > 0) {

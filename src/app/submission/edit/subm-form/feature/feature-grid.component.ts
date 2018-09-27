@@ -110,6 +110,6 @@ export class FeatureGridComponent implements AfterViewInit {
      * @returns {boolean} True if the column has to be rendered as required.
      */
     isColUIReq(attr: Attribute) {
-        return this.readonly || attr.readonly || attr.required;
+        return this.readonly || attr.isReadonly || attr.isRequired;
     }
 }

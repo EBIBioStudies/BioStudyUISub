@@ -43,7 +43,7 @@ export function nonBlankVal(): ValidatorFn {
  *
  * @author Hector Casanova <hector@ebi.ac.uk>
  */
-export class FieldControl extends FormControl {
+export class FieldControlOld extends FormControl {
     static numPending: number = 0;          //total number of touched controls still invalid
     static numInvalid: number = 0;          //total number of controls still invalid (touched or not)
     template: Field | Attribute;            //the control's model containing reference properties such as its name
@@ -86,7 +86,7 @@ export class FieldControl extends FormControl {
      * @param {FormGroup | FormArray} formGroup - Group containing all controls, regardless of any nested groups or arrays.
      * @param {FieldControl[]} controlList - Flattened array of form controls.
      */
-    static toArray(formGroup: FormGroup | FormArray, controlList: FieldControl[]) {
+    static toArray(formGroup: FormGroup | FormArray, controlList: FieldControlOld[]) {
 
         //Alternative to ES7's Object.values() method to get all controls within the grouping
         (<any>Object).keys(formGroup.controls).map(key => formGroup.controls[key]).forEach(control => {
@@ -169,7 +169,7 @@ export class FieldControl extends FormControl {
     }
 }
 
-export class SectionForm {
+export class SectionFormOld {
     formErrors: { [key: string]: string } = {};
     readonly form: FormGroup;
     readonly groupForm: FormGroup;
@@ -181,7 +181,7 @@ export class SectionForm {
     private _features: Feature[] = [];
 
     private subscriptions: Subscription[] = [];
-    private featureForms: Map<string, FeatureForm> = new Map();
+    private featureForms: Map<string, FeatureFormOld> = new Map();
 
     constructor(section: Section) {
         this.section = section;
@@ -195,9 +195,9 @@ export class SectionForm {
         //Generates form controls for every field, keeping track of errors whenever a validity change takes place
         this.createFieldControls();
         this.fieldsFormGroup.statusChanges.subscribe(
-            data => this.formErrors = FieldControl.getErrors(this.section, this.fieldsFormGroup)
+            data => this.formErrors = FieldControlOld.getErrors(this.section, this.fieldsFormGroup)
         );
-        this.formErrors = FieldControl.getErrors(this.section, this.fieldsFormGroup);
+        this.formErrors = FieldControlOld.getErrors(this.section, this.fieldsFormGroup);
 
         //Generates form groups and controls for every feature, keeping track of changes.
         this.updateFeatureForms();
@@ -256,20 +256,20 @@ export class SectionForm {
      * While at it, it initialises the current number of pending fields.
      * @param {FieldControl[]} controls - Final array with all the form's controls.
      */
-    controls(controls: FieldControl[]) {
-        FieldControl.numPending = 0;
-        FieldControl.numInvalid = 0;
+    controls(controls: FieldControlOld[]) {
+        FieldControlOld.numPending = 0;
+        FieldControlOld.numInvalid = 0;
 
         controls.length = 0;
-        FieldControl.toArray(this.fieldsFormGroup, controls);
-        FieldControl.toArray(this.featuresFormGroup, controls);
+        FieldControlOld.toArray(this.fieldsFormGroup, controls);
+        FieldControlOld.toArray(this.featuresFormGroup, controls);
     }
 
-    fieldControl(fieldId: string): FieldControl {
-        return <FieldControl>this.fieldsFormGroup.get(fieldId);
+    fieldControl(fieldId: string): FieldControlOld {
+        return <FieldControlOld>this.fieldsFormGroup.get(fieldId);
     }
 
-    featureForm(featureId: string): FeatureForm | undefined {
+    featureForm(featureId: string): FeatureFormOld | undefined {
         return this.featureForms!.get(featureId);
     }
 
@@ -309,7 +309,7 @@ export class SectionForm {
             validators.push(Validators.maxLength(type.maxlength));
         }
 
-        control = new FieldControl(field.value, validators, field, field.type);
+        control = new FieldControlOld(field.value, validators, field, field.type);
         this.fieldsFormGroup.addControl(field.id, control);
     }
 
@@ -390,12 +390,12 @@ export class SectionForm {
      * Marks all the controls of the section and its features as touched.
      */
     markAsTouched(): void {
-        FieldControl.groupTouched(this.fieldsFormGroup);
-        FieldControl.groupTouched(this.featuresFormGroup);
+        FieldControlOld.groupTouched(this.fieldsFormGroup);
+        FieldControlOld.groupTouched(this.featuresFormGroup);
     }
 }
 
-export class FeatureForm {
+export class FeatureFormOld {
     readonly form: FormGroup;
     readonly feature: Feature;
 
@@ -530,7 +530,7 @@ export class FeatureForm {
         }
 
         colAttr = this.columns.find(column => column.id === columnId);
-        control = new FieldControl(row.valueFor(columnId)!.value, valueValidators, colAttr, this.feature.type);
+        control = new FieldControlOld(row.valueFor(columnId)!.value, valueValidators, colAttr, this.feature.type);
         fg.addControl(columnId, control);
     }
 
@@ -579,27 +579,27 @@ export class FeatureForm {
         const newIdx = this.rowsFormArray.controls.indexOf(rowGroup);
 
         rowGroup.statusChanges.subscribe((data) => {
-            this.rowErrors[newIdx] = FieldControl.getErrors(this.feature, rowGroup);
+            this.rowErrors[newIdx] = FieldControlOld.getErrors(this.feature, rowGroup);
         });
-        this.rowErrors[newIdx] = FieldControl.getErrors(this.feature, rowGroup);
+        this.rowErrors[newIdx] = FieldControlOld.getErrors(this.feature, rowGroup);
     }
 
     /**
      * Marks the controls of every row of the feature as touched
      */
     private markAsTouched(): void {
-        FieldControl.groupTouched(this.rowsFormArray);
+        FieldControlOld.groupTouched(this.rowsFormArray);
     }
 }
 
 @Injectable()
 export class SubmFormService {
-    private sectionForm?: SectionForm;
+    private sectionForm?: SectionFormOld;
 
-    createForm(section?: Section): SectionForm | undefined {
+    createForm(section?: Section): SectionFormOld | undefined {
         if (this.sectionForm) {
             this.sectionForm.destroy();
         }
-        return section === undefined ? undefined : new SectionForm(section);
+        return section === undefined ? undefined : new SectionFormOld(section);
     }
 }

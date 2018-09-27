@@ -1,4 +1,5 @@
 import {EMPTY_TEMPLATE_NAME, findSubmissionTemplateByName} from './templates/submission.templates';
+import {ValidatorFn} from '@angular/forms';
 
 class TypeScope<T extends TypeBase> {
     private map: Map<String, T> = new Map();
@@ -106,14 +107,19 @@ export enum ValueTypeName {
     text,
     largetext,
     date,
-    select
+    select,
+    file,
+    link,
+    idLink
 }
 
 export abstract class ValueType {
+    readonly required = false;
+
     constructor(readonly name: ValueTypeName) {
     }
 
-    static create(data: Partial<ValueType>): ValueType {
+    static create(data: Partial<ValueType> = {}): ValueType {
         const typeName = ValueTypeName[data.name || ValueTypeName.text] || ValueTypeName.text;
         switch (typeName) {
             case ValueTypeName.largetext:
@@ -122,6 +128,8 @@ export abstract class ValueType {
                 return new DateValueType(data);
             case ValueTypeName.select:
                 return new SelectValueType(data);
+            case ValueTypeName.file:
+                return new FileValueType(data);
             default:
                 return new TextValueType(data);
         }
@@ -162,6 +170,13 @@ export class SelectValueType extends ValueType {
         this.values = data.values || [];
     }
 }
+
+export class FileValueType extends TextValueType {
+    constructor(data: Partial<FileValueType> = {}) {
+        super(data, ValueTypeName.file);
+    }
+}
+
 
 export class FieldType extends TypeBase {
     readonly required: boolean;

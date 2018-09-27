@@ -2,74 +2,16 @@
       [formGroup]="sectionForm.form"
       (ngSubmit)="onSubmit($event)">
 
-    <div *ngFor="let field of sectionForm.fields"
-         [ngClass]="{'form-group row': !readonly || field.value.length}">
-        <div *ngIf="!readonly || field.value.length" class="col-xs-12"
-             [ngClass]="{'has-error': field.type.required && get(field.id).invalid && get(field.id).touched}">
-            <label class="control-label">
-                <span class="text-black">{{field.name | camelcase2label}}</span>
-                <span *ngIf="field.type.required && get(field.id).invalid && get(field.id).touched">
-                    {{sectionForm.formErrors[field.id] ? sectionForm.formErrors[field.id] : ''}}
-                </span>
-                <span class="text-muted"
-                      [hidden]="readonly ||
-                                (get(field.id).valid && get(field.id).value) ||
-                                (get(field.id).invalid && get(field.id).touched)">
-
-                    <span *ngIf="(get(field.id, 'minlength') > 0) && (get(field.id, 'maxlength') < 0)">
-                         (at least {{get(field.id, 'minlength')}}
-                    </span>
-                    <span *ngIf="(get(field.id, 'minlength') < 0) && (get(field.id, 'maxlength') > 0)">
-                         (at most {{get(field.id, 'maxlength')}}
-                    </span>
-                    <span *ngIf="(get(field.id, 'minlength') > 0) && (get(field.id, 'maxlength') > 0)">
-                         (between {{get(field.id, 'minlength')}} and {{get(field.id, 'maxlength')}}
-                    </span>
-                    <span *ngIf="(get(field.id, 'minlength') > 0) || (get(field.id, 'maxlength') > 0)">
-                         characters long)
-                    </span>
-                </span>
-            </label>
-            <span *ngIf="!readonly && (!field.type.required || sectionForm.groupForm.get(field.id))"
-                  class="text-muted pull-right">
-                <i>
-                    Optional{{sectionForm.groupForm.get(field.id) ? ': ' + section.type.group.join(' or ') : ''}}
-                </i>
-            </span>
-            <div [ngClass]="{'input-group': !readonly && !field.readonly,
-                             'readonly': field.readonly}">
-                <span *ngIf="!readonly && !field.readonly" class="input-group-addon">
-                    <i class="fa {{field.type.icon}}"></i>
-                </span>
-                <subm-field class="subm-field"
-                            [type]="field.valueType"
-                            [readonly]="readonly || field.readonly"
-                            [required]="field.type.required"
-                            [formControl]="get(field.id)"
-                            [allowPast]="field.type.allowPast"
-                            [autosuggest]="field.type.values"
-                            [isSmall]="false"
-                            (ngModelChange)="onFieldChange(field, $event)"
-                            validate-onblur>
-                </subm-field>
-            </div>
-        </div>
+    <div *ngFor="let fieldControl of sectionForm.fieldControls" class="{'form-group row'}">
+        <subm-field [fieldControl]="fieldControl"
+                    [readonly]="readonly">
+        </subm-field>
     </div>
 
-    <div *ngFor="let feature of sectionForm.features"
-        [ngClass]="{'form-group row': feature.size() > 0}">
-        <div *ngIf="(!readonly && feature.size() > 0) || (readonly && !feature.isEmpty())" class="col-xs-12">
-            <label class="control-label">{{feature.splitName(feature.pluralName())}}</label>
-            <span *ngIf="!readonly && (!feature.type.required || sectionForm.groupForm.get(feature.id))"
-                  class="text-muted pull-right">
-                <i>
-                    Optional{{sectionForm.groupForm.get(feature.id) ? ': ' + section.type.group.join(' or ') : ''}}
-                </i>
-            </span>
-            <subm-feature [isMenu]="false"
-                          [featureForm]="sectionForm.featureForm(feature.id)"
-                          [readonly]="readonly">
-            </subm-feature>
-        </div>
+    <div *ngFor="let featureForm of sectionForm.featureForms"
+         [ngClass]="{'form-group row': featureForm.size() > 0}">
+        <subm-feature [featureForm]="featureForm"
+                      [readonly]="readonly">
+        </subm-feature>
     </div>
 </form>

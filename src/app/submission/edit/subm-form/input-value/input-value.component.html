@@ -1,0 +1,71 @@
+<div [ngSwitch]="fieldType.valueType.name">
+    <input *ngSwitchCase="'text'"
+           type="text" class="form-control"
+           tooltip="{{isOverflow() && !ahead._container ? value : ''}}"
+           container="body"
+           placement="bottom"
+           [ngClass]="{'input-sm': isSmall}"
+           [(ngModel)]="value"
+           [readonly]="readonly"
+           [required]="required"
+           (blur)="onBlur()"
+           [typeahead]="readonly ? [] : autosuggest"
+           [typeaheadMinLength]="suggestThreshold"
+           [typeaheadOptionsLimit]="200"
+           [typeaheadScrollable]="true"
+           [typeaheadOptionsInScrollableView]="suggestLength"
+           #ahead="bs-typeahead"
+           (keyup.enter)="ahead._container ? $event.stopPropagation() : return"
+           (typeaheadOnSelect)="onSuggestSelect($event)">
+
+    <id-link *ngSwitchCase="'idLink'"
+             [isSmall]="isSmall"
+             [required]="required"
+             [readonly]="readonly"
+             [(ngModel)]="value"
+             [suggestThreshold]="suggestThreshold"
+             [suggestLength]="suggestLength"
+             (focusout)="onBlur()"
+             (selected)="onSuggestSelect($event)"></id-link>
+
+    <date-input *ngSwitchCase="'date'"
+                [isSmall]="isSmall"
+                [(ngModel)]="value"
+                [required]="required"
+                [readonly]="readonly"
+                [allowPast]="allowPast"
+                [maxDate]="nowInNyears()"
+                (focusout)="onBlur()">
+    </date-input>
+
+    <orcid-input-box *ngSwitchCase="'orcid'"
+                     [isSmall]="isSmall"
+                     [required]="required"
+                     [readonly]="readonly"
+                     [isPopupButton]="false"
+                     [(ngModel)]="value"
+                     (focusout)="onBlur()">
+    </orcid-input-box>
+
+    <file-select *ngSwitchCase="'file'"
+                 [(ngModel)]="value"
+                 (ngModelChange)="onSuggestSelect($event)">
+    </file-select>
+
+    <pubmedid-search *ngSwitchCase="'pubmedid'"
+                     [(ngModel)]="value"
+                     [readonly]="readonly"
+                     [required]="required"
+                     (found)="asyncData($event)">
+    </pubmedid-search>
+
+    <textarea *ngIf="type === 'largetext'"
+              class="form-control"
+              [(ngModel)]="value"
+              [readonly]="readonly"
+              [required]="required"
+              autosize="200"
+              (keyup.enter)="$event.stopPropagation()"
+              (blur)="onBlur()">
+</textarea>
+</div>

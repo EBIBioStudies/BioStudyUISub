@@ -3,7 +3,9 @@ export const DefaultTemplate = {
     'description': 'Generic submission for stand-alone or generic studies',
     'sectionType': {
         'name': 'Study',
-        'group': ['Link', 'File'],
+        'rules': {
+            'atLeastOneLinkOrFile': 'atLeastOneEntryInAFeatureGroup'
+        },
         'fieldTypes': [
             {
                 'name': 'Title',
@@ -230,10 +232,11 @@ export const DefaultTemplate = {
                 'name': 'Link',
                 'title': 'Add Links',
                 'description': 'Provide pointers to data held in external databases or to related information on the web. ' +
-                               'Compact URIs from <a target="_blank" href="https://www.ebi.ac.uk/miriam/main/collections">Identifiers.org</a> ' +
-                               'are supported. URLs must include the scheme, e.g. "http://".',
+                    'Compact URIs from <a target="_blank" href="https://www.ebi.ac.uk/miriam/main/collections">Identifiers.org</a> ' +
+                    'are supported. URLs must include the scheme, e.g. "http://".',
                 'icon': 'fa-link',
                 'uniqueCols': true,
+                'ruleTags': ['atLeastOneLinkOrFile'],
                 'columnTypes': [
                     {
                         'name': 'Pointer',
@@ -253,6 +256,7 @@ export const DefaultTemplate = {
                 'description': 'List the data files for the study and describe their respective scopes.',
                 'icon': 'fa-file',
                 'uniqueCols': true,
+                'ruleTags': ['atLeastOneLinkOrFile'],
                 'columnTypes': [
                     {
                         'name': 'Path',
@@ -275,9 +279,9 @@ export const DefaultTemplate = {
                 'name': 'Publication',
                 'title': 'Add Publications',
                 'description': 'Add the bibliography relevant to the study. Autofill is available when searching by ' +
-                               '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pubmed/">PubMed</a> identifier. ' +
-                               'For other IDs, you may use ' +
-                               '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pmc/pmctopmid/#converter">PubMed\'s converter</a>.',
+                    '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pubmed/">PubMed</a> identifier. ' +
+                    'For other IDs, you may use ' +
+                    '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pmc/pmctopmid/#converter">PubMed\'s converter</a>.',
                 'icon': 'fa-book',
                 'uniqueCols': true,
                 'columnTypes': [

@@ -1,79 +1,42 @@
-<input *ngIf="type === 'text'"
-       type="text" class="form-control"
-       tooltip="{{isOverflow() && !ahead._container ? value : ''}}"
-       container="body"
-       placement="bottom"
-       [ngClass]="{'input-sm': isSmall}"
-       [(ngModel)]="value"
-       [readonly]="readonly"
-       [required]="required"
-       (blur)="onBlur()"
-       [typeahead]="readonly ? [] : autosuggest"
-       [typeaheadMinLength]="suggestThreshold"
-       [typeaheadOptionsLimit]="200"
-       [typeaheadScrollable]="true"
-       [typeaheadOptionsInScrollableView]="suggestLength"
-       #ahead="bs-typeahead"
-       (keyup.enter)="ahead._container ? $event.stopPropagation() : return"
-       (typeaheadOnSelect)="onSuggestSelect($event)">
+<div *ngIf="!readonly || !isEmpty" class="col-xs-12"
+     [ngClass]="{'has-error': hasErrors}">
+    <label class="control-label">
+        <span class="text-black">{{name | camelcase2label}}</span>
+        <span *ngIf="hasErrors"> ??? </span>
+        <span class="text-muted"
+              [hidden]="readonly || (isValid && !isEmpty) || (isInvalid && isTouched)">
+                    <span *ngIf="valueLength.isAtLeast">
+                         (at least {{valueLength.min}}
+                    </span>
+                    <span *ngIf="valueLength.isAtMost">
+                         (at most {{valueLength.max}}
+                    </span>
+                    <span *ngIf="valueLength.isBetween">
+                         (between {{valueLength.min}} and {{valueLength.max}}
+                    </span>
+                    <span *ngIf="valueLength.isDefined">
+                         characters long)
+                    </span>
+        </span>
+    </label>
+    <span *ngIf="!readonly && !isRequired"
+          class="text-muted pull-right">
+                <i>Optional</i>
+    </span>
+    <div [ngClass]="{'input-group': !readonly, 'readonly': readonly}">
+                <span *ngIf="!readonly" class="input-group-addon">
+                    <i class="fa {{fieldType.icon}}"></i>
+                </span>
 
-<id-link *ngIf="type === 'idlink'"
-         [isSmall]="isSmall"
-         [required]="required"
-         [readonly]="readonly"
-         [(ngModel)]="value"
-         [suggestThreshold]="suggestThreshold"
-         [suggestLength]="suggestLength"
-         (focusout)="onBlur()"
-         (selected)="onSuggestSelect($event)"></id-link>
+        <input-value class="subm-field"
+                     [type]="valueType"
+                     [readonly]="isReadonly"
+                     [required]="field.type.required"
+                     [formControl]="fieldControl.control"
+                     [isSmall]="false"
+                     (ngModelChange)="onValueChange($event)"
+                     validate-onblur>
+        </input-value>
 
-<date-input
-        *ngIf="type === 'date'"
-        [isSmall]="isSmall"
-        [(ngModel)]="value"
-        [required]="required"
-        [readonly]="readonly"
-        [allowPast]="allowPast"
-        [maxDate]="nowInNyears()"
-        (focusout)="onBlur()">
-</date-input>
-
-<orcid-input-box
-        *ngIf="type === 'orcid'"
-        [isSmall]="isSmall"
-        [required]="required"
-        [readonly]="readonly"
-        [isPopupButton]="false"
-        [(ngModel)]="value"
-        (focusout)="onBlur()">
-</orcid-input-box>
-
-<!--file-input *ngIf="type === 'file'"
-            [isSmall]="isSmall"
-            [(ngModel)]="value"
-            [required]="required"
-            [readonly]="readonly"
-            (focusout)="onBlur()">
-</file-input-->
-<file-select *ngIf="type === 'file'"
-             [(ngModel)]="value"
-             (ngModelChange)="onSuggestSelect($event)">
-</file-select>
-
-<pubmedid-search
-        *ngIf="type === 'pubmedid'"
-        [(ngModel)]="value"
-        [readonly]="readonly"
-        [required]="required"
-        (found)="asyncData($event)">
-</pubmedid-search>
-
-<textarea *ngIf="type === 'largetext'"
-          class="form-control"
-          [(ngModel)]="value"
-          [readonly]="readonly"
-          [required]="required"
-          autosize="200"
-          (keyup.enter)="$event.stopPropagation()"
-          (blur)="onBlur()">
-</textarea>
+    </div>
+</div>
