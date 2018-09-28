@@ -3,7 +3,7 @@ String.prototype.isEqualIgnoringCase = function (value: string) {
 };
 
 String.prototype.isEmpty = function () {
-    return this.trim().length > 0;
+    return this.trim().length === 0;
 };
 
 String.isDefined = function (s: string | undefined | null) {
