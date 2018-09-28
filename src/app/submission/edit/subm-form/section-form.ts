@@ -1,26 +1,27 @@
 import {Feature, Field, Section} from '../../shared/submission.model';
 import {FormArray, FormControl, FormGroup} from '@angular/forms';
-import {FieldType} from '../../shared/submission-type.model';
 import {ValueValidators} from './value-validators';
 
 export class FieldControl {
     readonly control: FormControl;
-    readonly fieldType: FieldType;
 
-    constructor(field: Field) {
-        this.fieldType = field.type;
-        this.control = new FormControl(field.value, ValueValidators.for(this.fieldType.valueType))
+    constructor(readonly field: Field, readonly parentRef: string) {
+        this.control = new FormControl(field.value, ValueValidators.forField(this.field, parentRef))
     }
 }
 
 export class FeatureForm {
     readonly form: FormGroup;
 
-    constructor(feature: Feature) {
+    constructor(readonly feature: Feature) {
         this.form = new FormGroup({
             columns: new FormGroup({}),
             rows: new FormArray([])
         });
+    }
+
+    get isEmpty(): boolean {
+        return this.feature.rowSize() === 0;
     }
 }
 
@@ -38,7 +39,7 @@ export class SectionForm {
 
         section.fields.list().forEach(
             field => {
-                this.addFieldControl(field);
+                this.addFieldControl(field, section.typeName);
             }
         );
 
@@ -57,8 +58,8 @@ export class SectionForm {
         return <FormGroup>this.form.get('features');
     }
 
-    private addFieldControl(field: Field): void {
-        const fieldControl = new FieldControl(field);
+    private addFieldControl(field: Field, parentRef: string): void {
+        const fieldControl = new FieldControl(field, parentRef);
         this.fieldControls.push(fieldControl);
         this.fieldsForm.addControl(field.id, fieldControl.control);
     }

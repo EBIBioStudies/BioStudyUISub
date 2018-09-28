@@ -1,6 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {FieldControl} from '../section-form';
-import {FieldType} from '../../../shared/submission-type.model';
+import {FieldType, TextValueType, ValueType, ValueTypeName} from '../../../shared/submission-type.model';
+import {ErrorMessages} from '../value-validators';
 
 class ValueLength {
     constructor(readonly min = -1, readonly max = -1) {
@@ -28,22 +29,35 @@ class ValueLength {
 @Component({
     selector: 'subm-field',
     templateUrl: './subm-field.component.html',
+    styleUrls: ['./subm-field.component.css']
 })
 export class SubmFieldComponent {
     @Input() fieldControl?: FieldControl;
     @Input() readonly = false;
 
-    valueLength = ValueLength.unknown;
+    private valueLen?: ValueLength;
 
     constructor() {
     }
 
     get fieldType(): FieldType {
-        return this.fieldControl!.fieldType;
+        return this.fieldControl!.field.type;
+    }
+
+    get fieldName(): string {
+        return this.fieldControl!.field.name;
+    }
+
+    get valueType(): ValueType {
+        return this.fieldType.valueType;
     }
 
     get isRequired(): boolean {
         return this.fieldType.required;
+    }
+
+    get isReadonly(): boolean {
+        return this.readonly || this.fieldType.readonly;
     }
 
     get isInvalid(): boolean {
@@ -58,7 +72,30 @@ export class SubmFieldComponent {
         return this.fieldControl!.control.touched;
     }
 
-    hasErrors() {
+    get hasErrors(): boolean {
         return this.isRequired && this.isInvalid && this.isTouched;
+    }
+
+    get errors(): string[] {
+        return ErrorMessages.map(this.fieldControl!.control.errors);
+    }
+
+    get valueLength() {
+        if (this.valueLen === undefined) {
+            const vt = this.valueType;
+            if (vt.isText()) {
+                console.log(vt);
+                const min = (<TextValueType>vt).minlength;
+                const max = (<TextValueType>vt).maxlength;
+                this.valueLen = new ValueLength(min, max);
+            } else {
+                this.valueLen = ValueLength.unknown;
+            }
+        }
+        return this.valueLen;
+    }
+
+    onValueChange(event) {
+        //TODO
     }
 }

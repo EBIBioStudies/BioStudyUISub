@@ -110,7 +110,9 @@ export enum ValueTypeName {
     select,
     file,
     link,
-    idLink
+    idLink,
+    orcid,
+    pubmedid
 }
 
 export abstract class ValueType {
@@ -119,20 +121,12 @@ export abstract class ValueType {
     constructor(readonly name: ValueTypeName) {
     }
 
-    static create(data: Partial<ValueType> = {}): ValueType {
-        const typeName = ValueTypeName[data.name || ValueTypeName.text] || ValueTypeName.text;
-        switch (typeName) {
-            case ValueTypeName.largetext:
-                return new LargeTextValueType(data);
-            case ValueTypeName.date:
-                return new DateValueType(data);
-            case ValueTypeName.select:
-                return new SelectValueType(data);
-            case ValueTypeName.file:
-                return new FileValueType(data);
-            default:
-                return new TextValueType(data);
-        }
+    is(...name: ValueTypeName[]): boolean {
+        return this.name in name;
+    }
+
+    isText(): boolean {
+        return this.is(ValueTypeName.text, ValueTypeName.largetext);
     }
 }
 
@@ -144,12 +138,6 @@ export class TextValueType extends ValueType {
         super(valueTypeName || ValueTypeName.text);
         this.minlength = data.minlength || -1;
         this.maxlength = data.maxlength || -1;
-    }
-}
-
-export class LargeTextValueType extends TextValueType {
-    constructor(data: Partial<LargeTextValueType> = {}) {
-        super(data, ValueTypeName.largetext);
     }
 }
 
@@ -171,12 +159,21 @@ export class SelectValueType extends ValueType {
     }
 }
 
-export class FileValueType extends TextValueType {
-    constructor(data: Partial<FileValueType> = {}) {
-        super(data, ValueTypeName.file);
+export class ValueTypeFactory {
+    static create(data: Partial<ValueType> = {}): ValueType {
+        const typeName: ValueTypeName = ValueTypeName[data.name || ''] || ValueTypeName.text;
+        switch (typeName) {
+            case ValueTypeName.date:
+                return new DateValueType(data);
+            case ValueTypeName.select:
+                return new SelectValueType(data);
+            default:
+                return new TextValueType(data, typeName);
+        }
     }
-}
 
+    static DEFAULT = ValueTypeFactory.create();
+}
 
 export class FieldType extends TypeBase {
     readonly required: boolean;
@@ -187,7 +184,7 @@ export class FieldType extends TypeBase {
     constructor(name: string, data: Partial<FieldType> = {}, scope?: TypeScope<TypeBase>) {
         super(name, true, scope);
 
-        this.valueType = ValueType.create(data.valueType || {});
+        this.valueType = ValueTypeFactory.create(data.valueType || {});
         this.readonly = data.readonly === true;
         this.required = data.required === true;
         this.icon = data.icon || 'fa-pencil-square-o'
@@ -265,7 +262,7 @@ export class ColumnType extends TypeBase {
         super(name, data !== undefined, scope as TypeScope<TypeBase>);
 
         data = data || {};
-        this.valueType = ValueType.create(data.valueType || {});
+        this.valueType = ValueTypeFactory.create(data.valueType || {});
         this.required = data.required === true;
         this.readonly = data.readonly === true;
         this.displayed = data.displayed === true;

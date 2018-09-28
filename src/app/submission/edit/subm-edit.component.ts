@@ -15,7 +15,6 @@ import {SubmResultsModalComponent} from '../results/subm-results-modal.component
 import {ConfirmDialogComponent} from 'app/shared/index';
 import {SubmFormComponent} from './subm-form/subm-form.component';
 import {AppConfig} from '../../app.config';
-import {FieldControl} from './subm-form/subm-form.service';
 import {UserData} from '../../auth/user-data';
 import {SubmValidationErrorsComponent} from './subm-navbar/subm-validation-errors.component';
 import * as _ from 'lodash';
@@ -41,7 +40,7 @@ export class SubmEditComponent implements OnInit {
 
     subm?: Submission;
     section?: Section;
-    formControls: FieldControl[] = [];          //immutable list of controls making up the form's section (fields, features...)
+   // formControls: FieldControl[] = [];          //immutable list of controls making up the form's section (fields, features...)
     sideBarCollapsed: boolean = false;
     accno: string = '';
     releaseDate: string = '';
@@ -169,7 +168,7 @@ export class SubmEditComponent implements OnInit {
         this.isSubmitting = false;
         this.subm = undefined;
         this.section = undefined;
-        this.formControls = [];
+       // this.formControls = [];
         this.errors = SubmValidationErrors.EMPTY
     }
 
@@ -196,7 +195,7 @@ export class SubmEditComponent implements OnInit {
      * NOTE: By design, the section form is generated after the form child view has been render.
      * @see {@link SubmFormComponent}
      */
-    ngAfterViewChecked() {
+   /* ngAfterViewChecked() {
         if (this.submForm) {
 
             //Refreshes the required status of all members of a validation group
@@ -209,7 +208,7 @@ export class SubmEditComponent implements OnInit {
             this.submForm!.sectionForm!.controls(this.formControls);
             this.changeRef.detectChanges();
         }
-    }
+    }*/
 
     get sectionPath(): Section[] {
         if (this.subm === undefined || this.section === undefined) {
@@ -228,7 +227,8 @@ export class SubmEditComponent implements OnInit {
      * @returns {boolean} True is there are no errors.
      */
     get formValid(): boolean {
-        return !FieldControl.numInvalid && !this.submForm!.hasError;
+       // return !FieldControl.numInvalid && !this.submForm!.hasError;
+        return false;
     }
 
     onSectionClick(section: Section): void {
@@ -321,20 +321,20 @@ export class SubmEditComponent implements OnInit {
 
         //Validates in bulk if form incomplete
         if (!this.canSubmit() || !this.formValid) {
-            this.submForm!.sectionForm!.markAsTouched();
+           // this.submForm!.sectionForm!.markAsTouched();
             this.isSubmitting = false;
 
             //Stopping the click event from bubbling messes up change detection for features => forces it.
             this.changeRef.detectChanges();
 
             //Updates the pending fields counter
-            this.submForm!.sectionForm!.controls(this.formControls);
+           // this.submForm!.sectionForm!.controls(this.formControls);
 
             //Switches to "Check" tab if not active already
             //TODO: check for validator errors needed to rule out column errors. Remove it.
-            if (this.sideBar && !this.sideBar.isStatus && FieldControl.numInvalid) {
-                this.sideBar.onTabClick(true);
-            }
+            //if (this.sideBar && !this.sideBar.isStatus && FieldControl.numInvalid) {
+            //    this.sideBar.onTabClick(true);
+            //}
 
         //Form has been fully filled in and is valid => submits, requesting confirmation if applicable
         } else {

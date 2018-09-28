@@ -4,10 +4,10 @@ import {FormControl, NgForm, ValidationErrors} from '@angular/forms';
 import {Feature, Section} from '../../shared/submission.model';
 import {SubmTypeAddDialogComponent} from '../submtype-add/submtype-add.component';
 import {ConfirmDialogComponent} from 'app/shared/index';
-import {FieldControl} from '../subm-form/subm-form.service';
 import {UserData} from '../../../auth/user-data';
 import {ServerError} from '../../../http/server-error.handler';
 import {Observable, of, Subscription} from 'rxjs';
+import {FieldControl} from '../subm-form/section-form';
 
 /**
  * Submission item class aggregating its corresponding feature with UI-relevant metadata. It enables
@@ -192,8 +192,8 @@ export class SubmSideBarComponent implements OnChanges {
      * the change happened too early.
      */
     ngDoCheck() {
-        this.numPending = FieldControl.numPending;
-        this.numInvalid = FieldControl.numInvalid;
+      /*  this.numPending = FieldControl.numPending;
+        this.numInvalid = FieldControl.numInvalid;*/
     }
 
     /**
@@ -359,15 +359,15 @@ export class SubmSideBarComponent implements OnChanges {
         const buttonEl = <HTMLElement>event.target;
 
         //Determines the scrolling offset needed to get the control alongside the review button just clicked.
-        let scrollTop = control.nativeElement!.getBoundingClientRect().top - buttonEl.getBoundingClientRect().top;
+       // let scrollTop = control.nativeElement!.getBoundingClientRect().top - buttonEl.getBoundingClientRect().top;
 
         //Prevents the submission topbar from overlapping the control's label area if it's at the top.
         if (this.formControls.indexOf(control) == 0) {
-            scrollTop -= 25;
+           // scrollTop -= 25;
         }
 
-        window.scrollBy(0, scrollTop);
-        control.nativeElement!.focus();
+       // window.scrollBy(0, scrollTop);
+       // control.nativeElement!.focus();
     }
 
     /**

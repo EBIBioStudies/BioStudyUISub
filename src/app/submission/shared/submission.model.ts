@@ -1,4 +1,11 @@
-import {FeatureType, FieldType, SectionType, SubmissionType, ValueType} from './submission-type.model';
+import {
+    FeatureType,
+    FieldType,
+    SectionType,
+    SubmissionType,
+    ValueType,
+    ValueTypeFactory
+} from './submission-type.model';
 
 import * as pluralize from 'pluralize';
 
@@ -453,7 +460,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
         } else {
             defColName = 'Column' + defColName;
         }
-        col = new Attribute(name || defColName, required, displayed, readonly, removable, valueType || ValueType.create());
+        col = new Attribute(name || defColName, required, displayed, readonly, removable, valueType || ValueTypeFactory.DEFAULT);
 
         this._rows.addKey(col.id);
         this._columns.add(col);
@@ -473,6 +480,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
      * @param {string} newName - Updated column name.
      * @param {number} colIndex - Index of the updated column.
      */
+
     /*onColumnUpdate(newName: string, colIndex: number) {
         if (this._columns.allWithName(newName).length === 1 || !this.type.uniqueCols) {
             this._columns.at(colIndex)!.updateType(this.type.getColumnType(newName)!);
@@ -640,7 +648,7 @@ export class Features extends HasUpdates<UpdateEvent> {
 
 export class Field extends HasUpdates<UpdateEvent> {
     readonly id: string;
-    readonly type;
+    readonly type: FieldType;
 
     private _value: string;
 
@@ -656,11 +664,11 @@ export class Field extends HasUpdates<UpdateEvent> {
         return this.type.name;
     }
 
-    get valueType(): string {
+    get valueType(): ValueType {
         return this.type.valueType;
     }
 
-    get readonly(): string {
+    get readonly(): boolean {
         return this.type.readonly;
     }
 

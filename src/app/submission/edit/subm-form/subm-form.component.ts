@@ -4,8 +4,7 @@ import {SectionForm} from './section-form';
 
 @Component({
     selector: 'subm-form',
-    templateUrl: './subm-form.component.html',
-    styleUrls: ['./subm-form.component.css']
+    templateUrl: './subm-form.component.html'
 })
 export class SubmFormComponent implements OnChanges {
     @Input() section?: Section;

@@ -1,10 +1,10 @@
-<div *ngIf="!readonly || !isEmpty" class="col-xs-12"
+<div *ngIf="!isReadonly || !isEmpty" class="col-xs-12"
      [ngClass]="{'has-error': hasErrors}">
     <label class="control-label">
-        <span class="text-black">{{name | camelcase2label}}</span>
-        <span *ngIf="hasErrors"> ??? </span>
+        <span class="text-black">{{fieldName | camelcase2label}}</span>
+        <span *ngIf="hasErrors">{{errors}}</span>
         <span class="text-muted"
-              [hidden]="readonly || (isValid && !isEmpty) || (isInvalid && isTouched)">
+              [hidden]="isReadonly || (isValid && !isEmpty) || (isInvalid && isTouched)">
                     <span *ngIf="valueLength.isAtLeast">
                          (at least {{valueLength.min}}
                     </span>
@@ -19,23 +19,19 @@
                     </span>
         </span>
     </label>
-    <span *ngIf="!readonly && !isRequired"
+    <span *ngIf="!isReadonly && !isRequired"
           class="text-muted pull-right">
                 <i>Optional</i>
     </span>
-    <div [ngClass]="{'input-group': !readonly, 'readonly': readonly}">
-                <span *ngIf="!readonly" class="input-group-addon">
-                    <i class="fa {{fieldType.icon}}"></i>
-                </span>
-
-        <input-value class="subm-field"
-                     [type]="valueType"
+    <div [ngClass]="{'input-group': !isReadonly, 'readonly': isReadonly}">
+        <span *ngIf="!isReadonly" class="input-group-addon">
+            <i class="fa {{fieldType.icon}}"></i>
+        </span>
+        <input-value [valueType]="valueType"
                      [readonly]="isReadonly"
-                     [required]="field.type.required"
                      [formControl]="fieldControl.control"
                      [isSmall]="false"
-                     (ngModelChange)="onValueChange($event)"
-                     validate-onblur>
+                     (ngModelChange)="onValueChange($event)">
         </input-value>
 
     </div>

@@ -1,15 +1,7 @@
-import {
-    Feature,
-    Field,
-    Section,
-    Submission
-} from './submission.model';
+import {Feature, Field, Section, Submission} from './submission.model';
 import {Observable} from 'rxjs/Observable';
 import {parseDate} from '../../submission-shared/date.utils';
-import {
-    FeatureType,
-    SectionType
-} from './submission-type.model';
+import {FeatureType, SectionType, TextValueType, ValueType, ValueTypeName} from './submission-type.model';
 
 interface ValidationRule {
     validate(): string | undefined;
@@ -54,9 +46,17 @@ class ValidationRules {
         return [
             ValidationRules.requiredValue(value, field.name, field.type.required),
             ValidationRules.formattedValue(value, field.valueType, field.name),
-            ValidationRules.maxlengthValue(value, field.type.maxlength, field.name),
-            ValidationRules.minlengthValue(value, field.type.minlength, field.name)
+            ...ValidationRules.forValue(field.value, field.name, field.valueType)
         ];
+    }
+
+    static forValue(value: string, fieldName: string, valueType: ValueType): ValidationRule[] {
+        const rules:ValidationRule[] = [];
+        if (valueType.is(ValueTypeName.text, ValueTypeName.largetext)) {
+            rules.push(ValidationRules.maxlengthValue(value, (<TextValueType>valueType).maxlength, fieldName));
+            rules.push(ValidationRules.minlengthValue(value, (<TextValueType>valueType).minlength, fieldName));
+        }
+        return rules;
     }
 
     static forFeature(feature: Feature): ValidationRule[] {
@@ -74,7 +74,7 @@ class ValidationRules {
 
                 //If a member field is marked as required but its parent feature is not, the field should be optional
                 //NOTE: Features added interactively are optional and fields may be required at the row level (eg: publication rows).
-                if (feature.type.required && col.required) {
+                if (feature.type.required && col.isRequired) {
                     valueRules.push(ValidationRules.requiredValue(rowValue, rowName));
                 }
                 valueRules.push(ValidationRules.formattedValue(rowValue, col.valueType, rowName));
@@ -131,16 +131,16 @@ class ValidationRules {
     }
 
     //TODO: this method is a sign that the whole validator should disappear. It has to know dynamic details beyond the field types in advance (eg: date's format, ORCID's format). This should remain implicit in the type. Also a problem when dynamic server-side validation exists.
-    static formattedValue(value: string, valueType: string, name: string): ValidationRule {
+    static formattedValue(value: string, valueType: ValueType, name: string): ValidationRule {
         return {
             validate() {
                 if (ValidationRules.isEmpty(value)) {
                     return undefined;
                 }
-                if (valueType === 'date' && parseDate(value) === undefined) {
+                if (valueType.is(ValueTypeName.date) && parseDate(value) === undefined) {
                     return `'${name}' has an invalid format`;
                 }
-                if (valueType === 'orcid' && !/^\d{4}-\d{4}-\d{4}-\d{4}$/.test(value)) {
+                if (valueType.is(ValueTypeName.orcid) && !/^\d{4}-\d{4}-\d{4}-\d{4}$/.test(value)) {
                     return `'${name}' has an invalid format`;
                 }
                 return undefined;

@@ -42,6 +42,7 @@ import {UniqueValidator} from './shared/unique.directive';
 import {SubmAddDialogComponent} from "./list/subm-add.component";
 import {Camelcase2LabelPipe} from './shared/pipes/camelcase-to-label.pipe';
 import {FileModule} from '../file/file.module';
+import {InputValueComponent} from './edit/subm-form/input-value/input-value.component';
 
 @NgModule({
     imports: [
@@ -69,6 +70,7 @@ import {FileModule} from '../file/file.module';
         DirectSubmitComponent,
         ResultsLogNodeComponent,
         DirectSubmitSideBarComponent,
+        InputValueComponent,
         SubmFormComponent,
         SubmFieldComponent,
         SubmFeatureComponent,

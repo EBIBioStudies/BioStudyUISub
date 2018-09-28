@@ -4,29 +4,35 @@ export const DefaultTemplate = {
     'sectionType': {
         'name': 'Study',
         'rules': {
-            'atLeastOneLinkOrFile': 'atLeastOneEntryInAFeatureGroup'
+            'atLeastOneRowIn': ['Link', 'File']
         },
         'fieldTypes': [
             {
                 'name': 'Title',
                 'icon': 'fa-title',
-                'valueType': 'largetext',
                 'required': true,
-                'minlength': 25
+                'valueType': {
+                    'name': 'largetext',
+                    'minlength': 25,
+                }
             },
             {
                 'name': 'ReleaseDate',
                 'icon': 'fa-calendar',
-                'valueType': 'date',
-                'allowPast': false,
-                'required': true
+                'required': true,
+                'valueType': {
+                    'name': 'date',
+                    'allowPast': false
+                }
             },
             {
                 'name': 'Description',
                 'icon': 'fa-comment',
-                'valueType': 'largetext',
                 'required': true,
-                'minlength': 50
+                'valueType': {
+                    'name': 'largetext',
+                    'minlength': 50
+                }
             }
         ],
         'annotationsType': {
@@ -236,7 +242,6 @@ export const DefaultTemplate = {
                     'are supported. URLs must include the scheme, e.g. "http://".',
                 'icon': 'fa-link',
                 'uniqueCols': true,
-                'ruleTags': ['atLeastOneLinkOrFile'],
                 'columnTypes': [
                     {
                         'name': 'Pointer',
@@ -256,7 +261,6 @@ export const DefaultTemplate = {
                 'description': 'List the data files for the study and describe their respective scopes.',
                 'icon': 'fa-file',
                 'uniqueCols': true,
-                'ruleTags': ['atLeastOneLinkOrFile'],
                 'columnTypes': [
                     {
                         'name': 'Path',

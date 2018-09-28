@@ -1,5 +1,5 @@
-<div [ngSwitch]="fieldType.valueType.name">
-    <input *ngSwitchCase="'text'"
+<div [ngSwitch]="valueType.name">
+    <input *ngSwitchCase="ValueTypeNameEnum.text"
            type="text" class="form-control"
            tooltip="{{isOverflow() && !ahead._container ? value : ''}}"
            container="body"
@@ -7,20 +7,35 @@
            [ngClass]="{'input-sm': isSmall}"
            [(ngModel)]="value"
            [readonly]="readonly"
-           [required]="required"
            (blur)="onBlur()"
            [typeahead]="readonly ? [] : autosuggest"
            [typeaheadMinLength]="suggestThreshold"
            [typeaheadOptionsLimit]="200"
            [typeaheadScrollable]="true"
            [typeaheadOptionsInScrollableView]="suggestLength"
-           #ahead="bs-typeahead"
            (keyup.enter)="ahead._container ? $event.stopPropagation() : return"
-           (typeaheadOnSelect)="onSuggestSelect($event)">
+           (typeaheadOnSelect)="onSuggestSelect($event)"
+           #ahead="bs-typeahead"/>
 
-    <id-link *ngSwitchCase="'idLink'"
+    <textarea *ngSwitchCase="ValueTypeNameEnum.largetext"
+              class="form-control"
+              [(ngModel)]="value"
+              [readonly]="readonly"
+              autosize="200"
+              (keyup.enter)="$event.stopPropagation()"
+              (blur)="onBlur()"></textarea>
+
+    <date-input *ngSwitchCase="ValueTypeNameEnum.date"
+                [isSmall]="isSmall"
+                [(ngModel)]="value"
+                [readonly]="readonly"
+                [maxDate]="nowInNyears()"
+                [allowPast]="allowPast"
+                (focusout)="onBlur()">
+    </date-input>
+
+    <id-link *ngSwitchCase="ValueTypeNameEnum.idLink"
              [isSmall]="isSmall"
-             [required]="required"
              [readonly]="readonly"
              [(ngModel)]="value"
              [suggestThreshold]="suggestThreshold"
@@ -28,44 +43,22 @@
              (focusout)="onBlur()"
              (selected)="onSuggestSelect($event)"></id-link>
 
-    <date-input *ngSwitchCase="'date'"
-                [isSmall]="isSmall"
-                [(ngModel)]="value"
-                [required]="required"
-                [readonly]="readonly"
-                [allowPast]="allowPast"
-                [maxDate]="nowInNyears()"
-                (focusout)="onBlur()">
-    </date-input>
-
-    <orcid-input-box *ngSwitchCase="'orcid'"
+    <orcid-input-box *ngSwitchCase="ValueTypeNameEnum.orcid"
                      [isSmall]="isSmall"
-                     [required]="required"
                      [readonly]="readonly"
                      [isPopupButton]="false"
                      [(ngModel)]="value"
                      (focusout)="onBlur()">
     </orcid-input-box>
 
-    <file-select *ngSwitchCase="'file'"
+    <file-select *ngSwitchCase="ValueTypeNameEnum.file"
                  [(ngModel)]="value"
                  (ngModelChange)="onSuggestSelect($event)">
     </file-select>
 
-    <pubmedid-search *ngSwitchCase="'pubmedid'"
+    <pubmedid-search *ngSwitchCase="ValueTypeNameEnum.pubmedid"
                      [(ngModel)]="value"
                      [readonly]="readonly"
-                     [required]="required"
                      (found)="asyncData($event)">
     </pubmedid-search>
-
-    <textarea *ngIf="type === 'largetext'"
-              class="form-control"
-              [(ngModel)]="value"
-              [readonly]="readonly"
-              [required]="required"
-              autosize="200"
-              (keyup.enter)="$event.stopPropagation()"
-              (blur)="onBlur()">
-</textarea>
 </div>

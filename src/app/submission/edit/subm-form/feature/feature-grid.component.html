@@ -61,7 +61,7 @@
                                  'has-error': featureForm.feature.type.required &&
                                               featureForm.rowValueControl(rowIdx, column.id).invalid &&
                                               featureForm.rowValueControl(rowIdx, column.id).touched}">
-                    <subm-field placement="top"
+                    <!--subm-field placement="top"
                                 triggers="focus"
                                 container="body"
                                 containerClass="{{featureForm.feature.type.required ? 'text-danger' : 'text-warning'}}"
@@ -76,7 +76,7 @@
                                 (async)="addOnAsync($event, rowIdx)"
                                 (ngModelChange)="onFieldChange(row.valueFor(column.id), $event)"
                                 validate-onblur>
-                    </subm-field>
+                    </subm-field-->
                 </div>
             </div>
         </div>

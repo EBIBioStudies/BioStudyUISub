@@ -16,6 +16,7 @@ import {BsDatepickerDirective} from "ngx-bootstrap";
 
 import {formatDate, isEqualDate} from './date.utils';
 import {AppConfig} from "../app.config";
+import {DateValueType, ValueType} from '../submission/shared/submission-type.model';
 
 @Component({
     selector: 'date-input',
@@ -67,8 +68,7 @@ export class DateInputComponent implements ControlValueAccessor {
      * any future date can be set.
      */
     ngOnInit(): void {
-        if ((typeof this.allowPast === 'undefined' && !this.appConfig.allowPast) ||
-            (this.allowPast === false)) {
+        if (!this.allowPast) {
             this.datepicker!.minDate = new Date(Date.now());
         }
         if (this.maxDate instanceof Date) {

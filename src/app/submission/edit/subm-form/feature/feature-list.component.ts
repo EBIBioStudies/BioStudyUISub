@@ -1,13 +1,9 @@
-import {
-    AfterViewInit,
-    Component, ElementRef,
-    Input, QueryList, ViewChildren
-} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, QueryList, ViewChildren} from '@angular/core';
 
 import {Attribute, Feature} from '../../../shared/submission.model';
-import {FeatureForm} from '../subm-form.service';
-import {TypeaheadMatch} from "ngx-bootstrap";
-import {AppConfig} from "../../../../app.config";
+import {TypeaheadMatch} from 'ngx-bootstrap';
+import {AppConfig} from '../../../../app.config';
+import {FeatureForm} from '../section-form';
 
 @Component({
     selector: 'subm-feature-list',
@@ -27,7 +23,7 @@ export class FeatureListComponent implements AfterViewInit {
     }
 
     get columns(): Attribute[] {
-        return this.featureForm!.columns
+        return [] //this.featureForm!.columns
     }
 
     get feature(): Feature {
@@ -61,7 +57,7 @@ export class FeatureListComponent implements AfterViewInit {
     onSuggestSelect(selection: TypeaheadMatch, column: Attribute) {
         if (column.name != selection.value) {
             this.rootEl.nativeElement.dispatchEvent(new Event('change', {bubbles: true}));
-            this.onFieldChange(column, selection.value,'name');
+            this.onFieldChange(column, selection.value, 'name');
         }
     }
 

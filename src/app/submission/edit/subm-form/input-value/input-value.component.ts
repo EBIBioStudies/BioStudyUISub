@@ -1,8 +1,9 @@
-import {Component, ElementRef, EventEmitter, forwardRef, Input, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, forwardRef, Input, Output} from '@angular/core';
 
-import {ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NgModel, Validators} from '@angular/forms';
+import {ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {TypeaheadMatch} from 'ngx-bootstrap';
 import {AppConfig} from '../../../../app.config';
+import {DateValueType, ValueType, ValueTypeFactory, ValueTypeName} from '../../../shared/submission-type.model';
 
 
 @Component({
@@ -15,33 +16,30 @@ import {AppConfig} from '../../../../app.config';
     }]
 })
 export class InputValueComponent implements ControlValueAccessor {
+    @Input() valueType: ValueType = ValueTypeFactory.DEFAULT;
+    @Input() readonly: boolean = false;
+    @Input() formControl?: FormControl;
+    @Input() isSmall: boolean = true;
+    @Input() suggestLength: number;
+
+    /*
+        @Input() autosuggest: any[] = [];           //typeahead list of suggested values
+        @Input() suggestLength: number;             //max number of suggested values to be displayed at once
+        @Input() suggestThreshold: number = 0;      //number of typed characters before suggestions are displayed.
+    */
+    //a value of 0 makes typeahead behave like an auto-suggest box.
+
+    ValueTypeNameEnum = ValueTypeName;
+
     private onChange: any = (_: any) => {
-    };      //placeholder for handler propagating changes outside the custom control
+    };
     private onTouched: any = () => {
-    };          //placeholder for handler after the control has been "touched"
+    };
 
-    private _value = '';                        //internal data model for the field's value
-
-    @Input() type?: string;                      //type of field: text, date, pubmedid, orcid...
-    @Input() readonly: boolean = false;                 //if true, the field will be rendered but its value cannot be changed
-    @Input() required: boolean = false;                 //if true, the field must not be left blank
-    @Input() allowPast: boolean = false;                //if true, allows past dates for calendar fields
-    @Input() formControl?: FormControl;         //reactive control associated with this field
-    @Input() isSmall: boolean = true;           //flag for making the input area the same size as grid fields
-    @Input() autosuggest: any[] = [];           //typeahead list of suggested values
-    @Input() suggestLength: number;             //max number of suggested values to be displayed at once
-    @Input() suggestThreshold: number = 0;      //number of typed characters before suggestions are displayed.
-                                                //a value of 0 makes typeahead behave like an auto-suggest box.
+    private _value = '';
 
     @Output() async: EventEmitter<any> = new EventEmitter<any>();  //signals availability of asynchronous attributes
 
-    @ViewChild(NgModel) private inputModel?: NgModel;
-
-    /**
-     * Sets the max number of suggestions shown at any given time.
-     * @param {AppConfig} appConfig - Global configuration object with app-wide settings.
-     * @param {ElementRef} rootEl - Reference to the component's wrapping element.
-     */
     constructor(private rootEl: ElementRef, private appConfig: AppConfig) {
         this.suggestLength = appConfig.maxSuggestLength;
     }
@@ -50,65 +48,36 @@ export class InputValueComponent implements ControlValueAccessor {
         return this._value;
     }
 
-    //TODO: this is being called twice. Why?
     set value(value) {
         this._value = value;
         this.onChange(value);
     }
 
-    /**
-     * Writes a new value from the form model into the view or (if needed) DOM property.
-     * @see {@link ControlValueAccessor}
-     * @param value - Value to be stored
-     */
     writeValue(value: any): void {
-        if (typeof value !== 'undefined') {
+        if (value !== undefined) {
             this.value = value;
         }
     }
 
-    /**
-     * Registers a handler that should be called when something in the view has changed.
-     * @see {@link ControlValueAccessor}
-     * @param fn - Handler telling other form directives and form controls to update their values.
-     */
     registerOnChange(fn: any): void {
         this.onChange = fn;
     }
 
-    /**
-     * Registers a handler specifically for when a control receives a touch event.
-     * @see {@link ControlValueAccessor}
-     * @param fn - Handler for touch events.
-     */
     registerOnTouched(fn: any) {
         this.onTouched = fn;
     }
 
-    /**
-     * Handler for blur events. Normalises the behaviour of the "touched" flag.
-     */
     onBlur() {
         this.onTouched();
     }
 
-    /**
-     * Lifecycle hook for operations after all child views have been initialised. It merges all validators of
-     * the actual input and the wrapping component.
-     */
-    ngAfterViewInit() {
-        const control = this.formControl;
-
-        control!.setValidators(Validators.compose([control!.validator, this.inputModel!.control.validator]));
-        control!.setAsyncValidators(Validators.composeAsync([control!.asyncValidator, this.inputModel!.control.asyncValidator]));
-    }
 
     /**
      * Lifecycle hook for operations after all child views have been changed.
      * Used to update the pointer to the DOM element.
      */
     ngAfterViewChecked(): void {
-        this.formControl!.nativeElement = this.rootEl.nativeElement.querySelector('.form-control');
+        //this.formControl!.nativeElement = this.rootEl.nativeElement.querySelector('.form-control');
     }
 
     /**
@@ -116,8 +85,9 @@ export class InputValueComponent implements ControlValueAccessor {
      * @param {HTMLElement} formEl - DOM element for the field control.
      * @returns {boolean} True if the text's length is greater than its container.
      */
-    isOverflow(formEl: HTMLElement | undefined = this.formControl!.nativeElement): boolean {
-        return (formEl && formEl.scrollWidth > formEl.clientWidth) === true;
+    isOverflow(formEl: HTMLElement | undefined /*= this.formControl!.nativeElement*/): boolean {
+        // return (formEl && formEl.scrollWidth > formEl.clientWidth) === true;
+        return false;
     }
 
     /**
@@ -125,7 +95,7 @@ export class InputValueComponent implements ControlValueAccessor {
      * @param data - Data retrieved asynchronously.
      */
     asyncData(data: any): void {
-        this.async.emit(data);
+        //this.async.emit(data);
     }
 
     /**
@@ -136,7 +106,7 @@ export class InputValueComponent implements ControlValueAccessor {
      * @param {TypeaheadMatch} selection - Object for the currently selected value.
      */
     onSuggestSelect(selection: TypeaheadMatch) {
-        this.rootEl.nativeElement.getElementsByTagName('input')[0].dispatchEvent(new Event('change', {bubbles: true}));
+        // this.rootEl.nativeElement.getElementsByTagName('input')[0].dispatchEvent(new Event('change', {bubbles: true}));
     }
 
     /**
@@ -147,5 +117,9 @@ export class InputValueComponent implements ControlValueAccessor {
     nowInNyears(years: number = this.appConfig.maxDateYears): Date {
         const currDate = new Date();
         return new Date(currDate.setFullYear(currDate.getFullYear() + years));
+    }
+
+    allowPast(): boolean {
+        return (<DateValueType>this.valueType).allowPast;
     }
 }

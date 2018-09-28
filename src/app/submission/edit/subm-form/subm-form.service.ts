@@ -173,7 +173,7 @@ export class SectionFormOld {
     formErrors: { [key: string]: string } = {};
     readonly form: FormGroup;
     readonly groupForm: FormGroup;
-    readonly groupSize: number;
+    //readonly groupSize: number;
 
     private section: Section;
 
@@ -212,7 +212,7 @@ export class SectionFormOld {
 
         //Generates a virtual form group for the members of any existing validation group
         this.groupForm = new FormGroup({});
-        this.section.type.groupTypes.forEach((type) => {
+        /*this.section.type.groupTypes.forEach((type) => {
             let member: Field | Feature | undefined;            //submission element for a validation group's member
             let memberControl: AbstractControl | undefined;     //form control corresponding to that element
 
@@ -240,7 +240,7 @@ export class SectionFormOld {
                 this.groupForm.addControl(member.id, memberControl);
             }
         });
-        this.groupSize = this.section.type.groupTypes.length;
+        this.groupSize = this.section.type.groupTypes.length;*/
     }
 
     get fields(): Field[] {
@@ -299,16 +299,16 @@ export class SectionFormOld {
         const validators: ValidatorFn[] = [];
         let control;
 
-        if (type.required) {
+        /*if (type.required) {
             validators.push(nonBlankVal());
-        }
-        if (type.minlength > 0) {
+        }*/
+        /*if (type.minlength > 0) {
             validators.push(Validators.minLength(type.minlength));
         }
         if (type.maxlength > 0) {
             validators.push(Validators.maxLength(type.maxlength));
         }
-
+*/
         control = new FieldControlOld(field.value, validators, field, field.type);
         this.fieldsFormGroup.addControl(field.id, control);
     }
@@ -329,9 +329,9 @@ export class SectionFormOld {
     }
 
     private addFeatureForm(feature: Feature) {
-        const featureForm = new FeatureForm(feature);
+       /* const featureForm = new FeatureForm(feature);
         this.featureForms.set(feature.id, featureForm);
-        this.featuresFormGroup.addControl(feature.id, featureForm.form);
+        this.featuresFormGroup.addControl(feature.id, featureForm.form);*/
     }
 
     private updateFeatureForms(ue?: UpdateEvent): void {
@@ -376,14 +376,14 @@ export class SectionFormOld {
 
         //Makes all rendered members optional if at least one of them is valid.
         //If only one member not empty, set only that one as required always.
-        isOneRendered = emptyNames.length == this.groupSize - 1;
-        this.section.type.groupTypes.forEach((type) => {
+        //isOneRendered = emptyNames.length == this.groupSize - 1;
+        /*this.section.type.groupTypes.forEach((type) => {
             if (emptyNames.indexOf(type.name) == -1) {
                 type.required = isOneRendered || !isValid;
             } else {
                 type.required = false;
             }
-        });
+        });*/
     }
 
     /**

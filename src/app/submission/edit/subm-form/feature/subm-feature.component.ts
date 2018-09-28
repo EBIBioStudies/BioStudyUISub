@@ -6,8 +6,8 @@ import {
 } from '@angular/core';
 
 import {Feature} from '../../../shared/submission.model';
-import {FeatureForm} from '../subm-form.service';
 import {UserData} from "../../../../auth/user-data";
+import {FeatureForm} from '../section-form';
 
 @Component({
     selector: 'subm-feature',
@@ -32,7 +32,7 @@ export class SubmFeatureComponent implements OnInit {
      * of all readable columns just once.
      */
     ngOnInit() {
-        this.actions.push({
+        /*this.actions.push({
             label: 'Add column',
             invoke: () => this.feature!.addColumn()
         });
@@ -44,26 +44,27 @@ export class SubmFeatureComponent implements OnInit {
         }
         this.colTypeNames = this.feature!.type.columnTypes
             .filter(type => !type.readonly)
-            .map(type => type.name);
+            .map(type => type.name);*/
     }
 
-    get feature(): Feature | undefined {
+   /* get feature(): Feature | undefined {
         return this.featureForm === undefined ? undefined : this.featureForm.feature;
     }
-
+*/
     /**
      * It takes all columns from the list of column types and removes the names for the current columns.
      */
     uniqueColNames(): string[] {
+        return [];
 
         //Feature not loaded yet => returns no column names.
-        if (this.feature === undefined) {
+       /* if (this.feature === undefined) {
             return [];
 
         //Feature loaded => gets only uniques column names.
         } else {
             return this.colTypeNames!.filter(name => this.feature!.colNames.indexOf(name) == -1);
-        }
+        }*/
     }
 
     /**
@@ -73,13 +74,13 @@ export class SubmFeatureComponent implements OnInit {
         if (this.featureEl) {
             this.errorNum = this.featureEl.nativeElement.getElementsByClassName('has-error').length;
 
-            if (this.feature!.uniqueCols) {
+            /*if (this.feature!.uniqueCols) {
                 this.allowedCols = this.uniqueColNames();
             } else {
                 this.allowedCols = this.colTypeNames;
             }
 
-            this.changeRef.detectChanges();
+            this.changeRef.detectChanges();*/
         }
     }
 }

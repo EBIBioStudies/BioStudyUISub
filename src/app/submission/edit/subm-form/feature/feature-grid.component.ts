@@ -1,9 +1,9 @@
 import {AfterViewInit, Component, ElementRef, Input, QueryList, ViewChildren,} from '@angular/core';
 
 import {Attribute, Feature, ValueMap} from '../../../shared/submission.model';
-import {FeatureForm} from '../subm-form.service';
 import {UserData} from '../../../../auth/user-data';
 import {TypeaheadDirective} from 'ngx-bootstrap';
+import {FeatureForm} from '../section-form';
 
 @Component({
     selector: 'subm-feature-grid',
@@ -22,11 +22,11 @@ export class FeatureGridComponent implements AfterViewInit {
     }
 
     get rows(): ValueMap[] {
-        return this.featureForm!.rows;
+        return []; //this.featureForm!.rows;
     }
 
     get columns(): Attribute[] {
-        return this.featureForm!.columns;
+        return []; //this.featureForm!.columns;
     }
 
     get feature(): Feature {
@@ -34,7 +34,7 @@ export class FeatureGridComponent implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        let oldNumRows = this.featureForm!.rows.length;      //initial row count
+        /*let oldNumRows = this.featureForm!.rows.length;      //initial row count
         let oldNumCols = this.featureForm!.columns.length;   //initial column count
 
         //On DOM change, compares current row and column count with the respective old value to find out if
@@ -52,7 +52,7 @@ export class FeatureGridComponent implements AfterViewInit {
 
             oldNumRows = this.featureForm!.rows.length;
             oldNumCols = this.featureForm!.columns.length;
-        });
+        });*/
     }
 
     /**
@@ -86,7 +86,7 @@ export class FeatureGridComponent implements AfterViewInit {
         attributes.forEach(attribute => {
             formValues[this.feature.firstId(attribute.name)] = attribute.value;
         });
-        this.featureForm!.patchRow(rowIdx, formValues);
+       // this.featureForm!.patchRow(rowIdx, formValues);
 
         //Updates the submission model's row and notifies the outside world as a single change event.
         this.feature.add(attributes, rowIdx);
