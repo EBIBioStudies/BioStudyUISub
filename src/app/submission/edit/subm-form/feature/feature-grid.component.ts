@@ -3,7 +3,7 @@ import {AfterViewInit, Component, ElementRef, Input, QueryList, ViewChildren,} f
 import {Attribute, Feature, ValueMap} from '../../../shared/submission.model';
 import {UserData} from '../../../../auth/user-data';
 import {TypeaheadDirective} from 'ngx-bootstrap';
-import {FeatureForm} from '../section-form';
+import {ColumnControl, FeatureForm, RowForm} from '../section-form';
 
 @Component({
     selector: 'subm-feature-grid',
@@ -11,9 +11,9 @@ import {FeatureForm} from '../section-form';
     styleUrls: ['./feature-grid.component.css']
 })
 export class FeatureGridComponent implements AfterViewInit {
-    @Input() featureForm?: FeatureForm;      //Reactive data structure for the form containing this feature
-    @Input() readonly? = false;             //Flag for features that cannot be edited (e.g. sent state for submissions)
-    @Input() colNames: string[] = [];       //List of allowed column names out of the list specified in the default template
+    @Input() featureForm?: FeatureForm;
+    @Input() readonly? = false;
+
     @ViewChildren('ahead') typeaheads?: QueryList<TypeaheadDirective>;
     @ViewChildren('rowEl') rowEls?: QueryList<ElementRef>;
     @ViewChildren('colEl') colEls?: QueryList<ElementRef>;
@@ -21,18 +21,18 @@ export class FeatureGridComponent implements AfterViewInit {
     constructor(private rootEl: ElementRef, public userData: UserData) {
     }
 
-    get rows(): ValueMap[] {
-        return []; //this.featureForm!.rows;
+    get rows(): RowForm[] {
+        return this.featureForm!.rows;
     }
 
-    get columns(): Attribute[] {
-        return []; //this.featureForm!.columns;
+    get columns(): ColumnControl[] {
+        return this.featureForm!.columns;
     }
 
-    get feature(): Feature {
+    /*get feature(): Feature {
         return this.featureForm!.feature;
     }
-
+*/
     ngAfterViewInit(): void {
         /*let oldNumRows = this.featureForm!.rows.length;      //initial row count
         let oldNumCols = this.featureForm!.columns.length;   //initial column count
@@ -62,17 +62,17 @@ export class FeatureGridComponent implements AfterViewInit {
      * @param {number} rowIdx - Row whose field values are to be changed.
      */
     addOnAsync(data: any, rowIdx: number) {
-        const columns = this.feature.columns.slice(0);
+       // const columns = this.feature.columns.slice(0);
         const attrNames = Object.keys(data);
         const attributes: { name: string, value: string }[] = [];      //column attributes to be changed with their respective values
         const formValues = {};      //formgroup version of the above
 
         //The first column is assumed to be the source of the async event and, therefore, does not require updating.
-        columns.shift();
+      //  columns.shift();
 
         //Converts data into attributes by filling in gaps (existing columns that are not included in the attributes).
         //This also guarantees that no new columns will be added.
-        columns.forEach((column) => {
+        /*columns.forEach((column) => {
             const colName = column.name.toLowerCase();
 
             if (attrNames.indexOf(colName) == -1) {
@@ -80,16 +80,16 @@ export class FeatureGridComponent implements AfterViewInit {
             } else {
                 attributes.push({name: column.name, value: data[colName]});
             }
-        });
+        });*/
 
         //Updates the form controls corresponding to the fields of the affected row in the feature.
         attributes.forEach(attribute => {
-            formValues[this.feature.firstId(attribute.name)] = attribute.value;
+           // formValues[this.feature.firstId(attribute.name)] = attribute.value;
         });
        // this.featureForm!.patchRow(rowIdx, formValues);
 
         //Updates the submission model's row and notifies the outside world as a single change event.
-        this.feature.add(attributes, rowIdx);
+        //TODO this.feature.add(attributes, rowIdx);
         this.rootEl.nativeElement.dispatchEvent(new Event('change', {bubbles: true}));
     }
 

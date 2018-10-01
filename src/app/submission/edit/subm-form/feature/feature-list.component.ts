@@ -3,7 +3,7 @@ import {AfterViewInit, Component, ElementRef, Input, QueryList, ViewChildren} fr
 import {Attribute, Feature} from '../../../shared/submission.model';
 import {TypeaheadMatch} from 'ngx-bootstrap';
 import {AppConfig} from '../../../../app.config';
-import {FeatureForm} from '../section-form';
+import {ColumnControl, FeatureForm} from '../section-form';
 
 @Component({
     selector: 'subm-feature-list',
@@ -13,7 +13,7 @@ import {FeatureForm} from '../section-form';
 export class FeatureListComponent implements AfterViewInit {
     @Input() featureForm?: FeatureForm;      //Reactive data structure for the form containing this feature
     @Input() readonly?: boolean = false;    //Flag for features that cannot be edited (e.g. sent state for submissions)
-    @Input() colNames: string[] = [];       //List of allowed column names out of the list specified in the default template
+
     @ViewChildren('rowEl') rowEls?: QueryList<ElementRef>;
 
     public suggestLength: number;           //max number of suggested values to be displayed at once
@@ -22,12 +22,8 @@ export class FeatureListComponent implements AfterViewInit {
         this.suggestLength = appConfig.maxSuggestLength;
     }
 
-    get columns(): Attribute[] {
-        return [] //this.featureForm!.columns
-    }
-
-    get feature(): Feature {
-        return this.featureForm!.feature;
+    get columns(): ColumnControl[] {
+        return this.featureForm!.columns
     }
 
     //On DOM change, sets focus on first field of newly added row

@@ -1,6 +1,6 @@
 import {FieldType, TextValueType, ValueType, ValueTypeName} from '../../shared/submission-type.model';
 import {AbstractControl, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
-import {Field} from '../../shared/submission.model';
+import {Attribute, Field} from '../../shared/submission.model';
 
 const nonEmptyStringValidator = (controlName: string, controlParent: string) => {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -39,6 +39,14 @@ export class ValueValidators {
         }
 
         return [...validators, ...ValueValidators.forValueType(field.type.valueType)];
+    }
+
+    static forCell(column: Attribute, parentRef: string): ValidatorFn[] {
+        return []; //TODO
+    }
+
+    static forColumn(column: Attribute, parentRef: string): ValidatorFn[] {
+        return []; //TODO
     }
 }
 

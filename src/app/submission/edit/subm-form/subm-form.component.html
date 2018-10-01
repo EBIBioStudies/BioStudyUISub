@@ -11,8 +11,8 @@
 
     <div *ngFor="let featureForm of sectionForm.featureForms"
          [ngClass]="{'form-group row': !featureForm.isEmpty}">
-        <!--subm-feature [featureForm]="featureForm"
+        <subm-feature [featureForm]="featureForm"
                       [readonly]="readonly">
-        </subm-feature-->
+        </subm-feature>
     </div>
 </form>

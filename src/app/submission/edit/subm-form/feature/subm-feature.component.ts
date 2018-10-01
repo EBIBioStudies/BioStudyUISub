@@ -1,87 +1,80 @@
 import {
     ChangeDetectorRef,
-    Component, ElementRef,
+    Component, DoCheck, ElementRef,
     Input,
     OnInit, ViewChild
 } from '@angular/core';
 
 import {Feature} from '../../../shared/submission.model';
-import {UserData} from "../../../../auth/user-data";
+import {UserData} from '../../../../auth/user-data';
 import {FeatureForm} from '../section-form';
+
+interface FeatureOperation {
+    label: string,
+    callback: () => void
+}
 
 @Component({
     selector: 'subm-feature',
     templateUrl: './subm-feature.component.html',
     styleUrls: ['./subm-feature.component.css']
 })
-export class SubmFeatureComponent implements OnInit {
+export class SubmFeatureComponent implements OnInit, DoCheck {
     @Input() featureForm?: FeatureForm;
     @Input() readonly?: boolean = false;
-    @Input() isMenu?: boolean = true;
+    @Input() isMenu?: boolean = false;
     @ViewChild('featureEl') featureEl?: ElementRef;
 
-    private actions: any[] = [];
-    private errorNum: number = 0;
-    private colTypeNames?: string[];
-    private allowedCols?: string[];
+    operations: FeatureOperation[] = [];
+    private colTypeNames: string[] = [];
 
-    constructor(private changeRef: ChangeDetectorRef, public userData: UserData) {}
+    private _errorNum: number = 0;
+    private _uniqueColNames: string[] = [];
+    private _allowedColNames: string[] = [];
 
-    /**
-     * Defines the actions of the feature's menu according to its type (list or not). It also gets the type names
-     * of all readable columns just once.
-     */
+    constructor(private changeRef: ChangeDetectorRef, public userData: UserData) {
+    }
+
     ngOnInit() {
-        /*this.actions.push({
-            label: 'Add column',
-            invoke: () => this.feature!.addColumn()
-        });
-        if (!this.feature!.singleRow) {
-            this.actions.push({
-                label: 'Add row',
-                invoke: () => this.feature!.addRow()
-            });
+        if (this.featureForm === undefined) {
+            return;
         }
-        this.colTypeNames = this.feature!.type.columnTypes
-            .filter(type => !type.readonly)
-            .map(type => type.name);*/
+
+        this.operations.push({
+            label: 'Add column',
+            callback: () => {
+                this.featureForm!.onColumnAdd()
+            }
+        });
+
+        this.operations.push({
+            label: 'Add row',
+            callback: () => {
+                this.featureForm!.onRowAdd()
+            }
+        });
     }
 
-   /* get feature(): Feature | undefined {
-        return this.featureForm === undefined ? undefined : this.featureForm.feature;
+    get allowedColNames(): string [] {
+        return this._allowedColNames;
     }
-*/
-    /**
-     * It takes all columns from the list of column types and removes the names for the current columns.
-     */
-    uniqueColNames(): string[] {
-        return [];
 
-        //Feature not loaded yet => returns no column names.
-       /* if (this.feature === undefined) {
-            return [];
+    get uniqueColNames(): string[] {
+        return this._uniqueColNames;
+    }
 
-        //Feature loaded => gets only uniques column names.
-        } else {
-            return this.colTypeNames!.filter(name => this.feature!.colNames.indexOf(name) == -1);
-        }*/
+    get errorNum(): number {
+        return this._errorNum;
     }
 
     /**
      * Counts the number of errors if the feature is not empty.
      */
     ngDoCheck(): void {
-        if (this.featureEl) {
-            this.errorNum = this.featureEl.nativeElement.getElementsByClassName('has-error').length;
-
-            /*if (this.feature!.uniqueCols) {
-                this.allowedCols = this.uniqueColNames();
-            } else {
-                this.allowedCols = this.colTypeNames;
-            }
-
-            this.changeRef.detectChanges();*/
-        }
+        this._errorNum = Object.keys(this.featureForm!.form.errors || {}).length;
+        this._uniqueColNames = this.colTypeNames.filter(name => this.featureForm!.columnNames.includes(name));
+        this._allowedColNames = this.featureForm!.hasUniqueColumns ? this._uniqueColNames : this.colTypeNames;
+        this.changeRef.detectChanges();
     }
 }
 

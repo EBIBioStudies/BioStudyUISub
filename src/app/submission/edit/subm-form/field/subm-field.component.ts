@@ -1,7 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {FieldControl} from '../section-form';
-import {FieldType, TextValueType, ValueType, ValueTypeName} from '../../../shared/submission-type.model';
-import {ErrorMessages} from '../value-validators';
+import {FieldType, TextValueType, ValueType} from '../../../shared/submission-type.model';
 
 class ValueLength {
     constructor(readonly min = -1, readonly max = -1) {
@@ -77,14 +76,13 @@ export class SubmFieldComponent {
     }
 
     get errors(): string[] {
-        return ErrorMessages.map(this.fieldControl!.control.errors);
+        return this.fieldControl!.errors;
     }
 
     get valueLength() {
         if (this.valueLen === undefined) {
             const vt = this.valueType;
             if (vt.isText()) {
-                console.log(vt);
                 const min = (<TextValueType>vt).minlength;
                 const max = (<TextValueType>vt).maxlength;
                 this.valueLen = new ValueLength(min, max);
