@@ -119,7 +119,7 @@ export class InputValueComponent implements ControlValueAccessor {
         return new Date(currDate.setFullYear(currDate.getFullYear() + years));
     }
 
-    allowPast(): boolean {
+    get allowPast(): boolean {
         return (<DateValueType>this.valueType).allowPast;
     }
 }
