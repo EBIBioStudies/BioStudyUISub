@@ -11,7 +11,7 @@
 
         </div>
         <div *ngFor="let column of columns; let idx = index" class="cell heading-cell column-heading col-xs-3 col-md-2"
-                [ngClass]="{'optional': !readonly && column.isRemovable,
+             [ngClass]="{'optional': !readonly && column.isRemovable,
                             'has-error': column.control.invalid && column.control.touched}">
             <inline-edit placement="bottom"
                          triggers="focus"
@@ -25,7 +25,7 @@
                          [disableEdit]="readonly || column.isReadonly || !userData.isPrivileged"
                          [disableChange]="column.isRequired || column.isDisplayed"
                          [disableRemove]="!column.isRemovable"
-                         [autosuggest]="featureForm.columnNameSuggestions"
+                         [autosuggest]="featureForm.columnNameValues"
                          [unique]="featureForm.hasUniqueColumns"
                          validate-onblur>
             </inline-edit>
@@ -51,19 +51,18 @@
             <div class="cell body-cell column-entry col-xs-3 col-md-2" #colEl *ngFor="let column of columns">
                 <div [ngClass]="{'readonly': column.isReadonly,
                                  'optional': !column.isRequired,
-                                 'has-error': featureForm.feature.type.required &&
-                                              row.cellControlAt(column.id).invalid &&
-                                              row.cellControlAt(column.id).touched}">
+                                 'has-error': row.hasErrorsAt(column.id)}">
                     <input-value placement="top"
-                                triggers="focus"
-                                container="body"
-                                containerClass="{{featureForm.isRequired ? 'text-danger' : 'text-warning'}}"
-                                popover="{{row.cellControlAt(column.id).invalid && row.cellControlAt(column.id).touched ? featureForm.rowErrors[rowIdx][column.id] : ''}}"
-                                [valueType]="column.valueType"
-                                [readonly]="readonly || column.isReadonly"
-                                [required]="column.required"
-                                [formControl]="row.cellControlAt(column.id)"
-                                validate-onblur>
+                                 triggers="focus"
+                                 container="body"
+                                 containerClass="{{featureForm.isRequired ? 'text-danger' : 'text-warning'}}"
+                                 popover="{{row.hasErrorsAt(column.id) ? row.errorsAt(column.id) : ''}}"
+                                 [valueType]="column.valueType"
+                                 [readonly]="readonly || column.isReadonly"
+                                 [required]="column.required"
+                                 [formControl]="row.cellControlAt(column.id).control"
+                                 [autosuggest]="featureForm.columnValuesAt(column.id)"
+                                 validate-onblur>
                     </input-value>
                 </div>
             </div>

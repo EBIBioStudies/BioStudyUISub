@@ -8,7 +8,7 @@
             <div class="cell col-xs-3">
                 <div class="form-group key-field"
                      [ngClass]="{'optional': column.isRemovable,
-                                 'has-error': column.control.invalid && column.control.touched}">
+                                 'has-error': column.hasErrors}">
                     <div [ngClass]="{'input-group': column.isRemovable, 'readonly': column.isReadonly}">
                         <span *ngIf="column.isRemovable" class="input-group-btn"
                               container="body"
@@ -28,22 +28,21 @@
                                triggers="focus"
                                container="body"
                                containerClass="text-danger"
-                               popover="{{column.control.invalid && column.control.touched ? 'Please use a unique key name' : ''}}"
+                               popover="{{column.hasErrors ? 'Please use a unique key name' : ''}}"
                                [formControl]="column.control"
                                [readonly]="column.isReadonly"
-                               [typeahead]="featureForm.columnNameSuggestions"
+                               [typeahead]="featureForm.columnNameValueSource(column.control.value)"
                                [typeaheadMinLength]="0"
                                [typeaheadOptionsLimit]="200"
                                [typeaheadScrollable]="true"
                                [typeaheadOptionsInScrollableView]="suggestLength"
-                               #ahead="bs-typeahead"
                                [unique]="featureForm.hasUniqueColumns"
                                validate-onblur
-                               (keyup.enter)="ahead._container ? $event.stopPropagation() : return"
                                (change)="onFieldChange(column, $event.target.value, 'name')"
                                (typeaheadOnSelect)="onSuggestSelect($event, column)"
                                (blur)="column.control.value ||
-                                       column.control.setValue(featureForm.featureTypeName + ' ' + (idx + 1))">
+                                       column.control.setValue(featureForm.featureTypeName + ' ' + (idx + 1))"
+                               #ahead="bs-typeahead">
                     </div>
                 </div>
             </div>
@@ -52,21 +51,18 @@
                      [ngClass]="{'readonly': column.isReadonly,
                                  'optional': !column.isRequired,
                                  'has-error': cell.control.invalid && cell.control.touched}">
-                    <!--subm-field placement="top"
+                    <input-value placement="top"
                                 triggers="focus"
                                 container="body"
-                                containerClass="{{featureForm.feature.type.required ? 'text-danger' : 'text-warning'}}"
-                                popover="{{featureForm.rowValueControl(0, column.id).invalid &&
-                                           featureForm.rowValueControl(0, column.id).touched ? featureForm.rowErrors[0][column.id] : ''}}"
-                                (ngModelChange)="onFieldChange(feature.rows[0].valueFor(column.id), $event)"
-                                [type]="column.valueType"
-                                [readonly]="readonly || column.readonly"
-                                [required]="column.required"
-                                [formControl]="featureForm.rowValueControl(0,column.id)"
-                                [allowPast]="column.allowPast"
-                                [autosuggest]="column.values"
+                                containerClass="{{featureForm.isRequired ? 'text-danger' : 'text-warning'}}"
+                                popover="{{cell.hasErrors ? cell.errors : ''}}"
+                                [valueType]="column.valueType"
+                                [readonly]="readonly || column.isReadonly"
+                                [required]="column.isRequired"
+                                [formControl]="cell.control"
+                                [autosuggest]="featureForm.columnValuesAt(column.id)"
                                 validate-onblur>
-                    </subm-field-->
+                    </input-value>
                 </div>
             </div>
         </div>

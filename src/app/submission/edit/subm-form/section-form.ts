@@ -1,7 +1,10 @@
 import {Attribute, Feature, Field, Section, ValueMap} from '../../shared/submission.model';
 import {FormArray, FormControl, FormGroup} from '@angular/forms';
 import {ErrorMessages, ValueValidators} from './value-validators';
-import {ColumnType, ValueType} from '../../shared/submission-type.model';
+import {ColumnType, SelectValueType, ValueType, ValueTypeName} from '../../shared/submission-type.model';
+import {fromNullable} from 'fp-ts/lib/Option';
+import {Observable} from 'rxjs';
+import {createTypeaheadSource} from './typeahead.utils';
 
 export class FieldControl {
     readonly control: FormControl;
@@ -34,6 +37,10 @@ export class ColumnControl {
         return this.column.isDisplayed;
     }
 
+    get isReadonly() {
+        return this.column.isReadonly;
+    }
+
     get id(): string {
         return this.column.id;
     }
@@ -45,6 +52,10 @@ export class ColumnControl {
     get valueType(): ValueType {
         return this.column.valueType;
     }
+
+    get hasErrors(): boolean {
+        return this.control.invalid && this.control.touched;
+    }
 }
 
 export class CellControl {
@@ -54,8 +65,12 @@ export class CellControl {
         this.control = new FormControl(value, ValueValidators.forCell(column, parentRef));
     }
 
-    errors(): string[] {
+    get errors(): string[] {
         return ErrorMessages.map(this.control.errors);
+    }
+
+    get hasErrors(): boolean {
+        return this.control.invalid && this.control.touched
     }
 }
 
@@ -66,7 +81,6 @@ export class RowForm {
 
     constructor(private row: ValueMap, columns: Attribute[], private parentRef: string) {
         this.form = new FormGroup({});
-
         columns.forEach(column => this.addCellControl(column));
     }
 
@@ -78,6 +92,18 @@ export class RowForm {
 
     cellControlAt(columnId: string): CellControl | undefined {
         return this.controls.get(columnId);
+    }
+
+    hasErrorsAt(columnId: string): boolean {
+        return fromNullable(this.cellControlAt(columnId))
+            .map(c => c.hasErrors)
+            .getOrElse(false);
+    }
+
+    errorsAt(columnId: string): string[] {
+        return fromNullable(this.cellControlAt(columnId))
+            .map(c => c.errors)
+            .getOrElse([]);
     }
 }
 
@@ -152,8 +178,8 @@ export class FeatureForm {
         return <FormGroup>this.form.get('columns');
     }
 
-    private rowForm(index: number): FormGroup {
-        return <FormGroup>(<FormArray>this.form.get('rows')).at(index);
+    private get rowsFormArray(): FormArray {
+        return <FormArray>this.form.get('rows');
     }
 
     get isEmpty(): boolean {
@@ -210,7 +236,11 @@ export class FeatureForm {
             .map(type => type.name);
     }
 
-    get columnNameSuggestions(): string[] {
+    columnNameValueSource(value: string): Observable<string[]> {
+        return createTypeaheadSource(() => {return this.columnNameValues()}, value);
+    }
+
+    columnNameValues(): string[] {
         if (this.hasUniqueColumns) {
             const colNames = this.columnNames;
             return this.colTypeNames.filter(name => colNames.includes(name));
@@ -247,9 +277,20 @@ export class FeatureForm {
         return true;
     }
 
+    columnValuesAt(columnId: string): () => string[] {
+        return () => {
+            return this.rowForms.map(row => row.cellControlAt(columnId))
+                .filter(c => c !== undefined)
+                .map(c => c!.control.value)
+                .filter((v: string) => !v.isEmpty())
+                .uniqueValues();
+        }
+    }
+
     private addRowForm(row: ValueMap, columns: Attribute[]) {
         const rowForm = new RowForm(row, columns, this.featureTypeName);
         this.rowForms.push(rowForm);
+        this.rowsFormArray.push(rowForm.form);
     }
 
     private addColumnControl(column: Attribute) {

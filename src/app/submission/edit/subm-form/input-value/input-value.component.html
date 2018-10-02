@@ -1,5 +1,5 @@
 <div [ngSwitch]="valueType.name">
-    <input *ngSwitchCase="ValueTypeNameEnum.text"
+    <input *ngSwitchCase="[ValueTypeNameEnum.text, ValueTypeNameEnum.select].includes(valueType.name) ? valueType.name : ''"
            type="text" class="form-control"
            tooltip="{{isOverflow() && !ahead._container ? value : ''}}"
            container="body"
@@ -8,12 +8,11 @@
            [(ngModel)]="value"
            [readonly]="readonly"
            (blur)="onBlur()"
-           [typeahead]="readonly ? [] : autosuggest"
+           [typeahead]="readonly ? [] : typeahead"
            [typeaheadMinLength]="suggestThreshold"
            [typeaheadOptionsLimit]="200"
            [typeaheadScrollable]="true"
            [typeaheadOptionsInScrollableView]="suggestLength"
-           (keyup.enter)="ahead._container ? $event.stopPropagation() : return"
            (typeaheadOnSelect)="onSuggestSelect($event)"
            #ahead="bs-typeahead"/>
 

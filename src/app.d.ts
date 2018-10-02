@@ -20,6 +20,6 @@ declare interface Array<T> {
     flatMap<U>(mapFunc: (x: T) => U[]): Array<U>;
 }
 
-declare type AnyString = string | null | undefined
-
 declare type Dictionary<T> = { [key: string]: T | undefined }
+
+declare type Nullable<T> = T | null | undefined

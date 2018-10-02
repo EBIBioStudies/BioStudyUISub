@@ -1,11 +1,11 @@
 import {PtAttribute, PtSection} from './pagetab.model';
 
 const isEqualTo = (value: string) => {
-    return (s: AnyString) => (String.isDefined(s) && s!.toLowerCase() === value);
+    return (s: Nullable<string>) => (String.isDefined(s) && s!.toLowerCase() === value);
 };
 
 export function authors2Contacts(sections: PtSection[] = []): PtSection[] {
-    const isAffiliation = (s: AnyString) => {
+    const isAffiliation = (s: Nullable<string>) => {
         return String.isDefined(s) && ['organization', 'organisation', 'affiliation'].includes(s!.toLowerCase());
     };
 

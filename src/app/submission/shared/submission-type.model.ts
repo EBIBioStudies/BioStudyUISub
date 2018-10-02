@@ -121,8 +121,8 @@ export abstract class ValueType {
     constructor(readonly name: ValueTypeName) {
     }
 
-    is(...name: ValueTypeName[]): boolean {
-        return this.name in name;
+    is(...names: ValueTypeName[]): boolean {
+        return names.includes(this.name);
     }
 
     isText(): boolean {
@@ -153,7 +153,7 @@ export class DateValueType extends ValueType {
 export class SelectValueType extends ValueType {
     readonly values: string[];
 
-    constructor(name, data: Partial<SelectValueType> = {}) {
+    constructor(data: Partial<SelectValueType> = {}) {
         super(ValueTypeName.select);
         this.values = data.values || [];
     }

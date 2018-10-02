@@ -3,7 +3,16 @@ import {Component, ElementRef, EventEmitter, forwardRef, Input, Output} from '@a
 import {ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {TypeaheadMatch} from 'ngx-bootstrap';
 import {AppConfig} from '../../../../app.config';
-import {DateValueType, ValueType, ValueTypeFactory, ValueTypeName} from '../../../shared/submission-type.model';
+import {
+    DateValueType,
+    SelectValueType,
+    ValueType,
+    ValueTypeFactory,
+    ValueTypeName
+} from '../../../shared/submission-type.model';
+import {Observable, of} from 'rxjs';
+import {mergeMap} from 'rxjs/operators';
+import {createTypeaheadSource} from '../typeahead.utils';
 
 
 @Component({
@@ -17,13 +26,14 @@ import {DateValueType, ValueType, ValueTypeFactory, ValueTypeName} from '../../.
 })
 export class InputValueComponent implements ControlValueAccessor {
     @Input() valueType: ValueType = ValueTypeFactory.DEFAULT;
-    @Input() readonly: boolean = false;
+    @Input() readonly = false;
     @Input() formControl?: FormControl;
-    @Input() isSmall: boolean = true;
+    @Input() isSmall = true;
     @Input() suggestLength: number;
-
+    @Input() suggestThreshold: number = 0;
+    @Input() autosuggest: () => string[] = () => [];
     /*
-        @Input() autosuggest: any[] = [];           //typeahead list of suggested values
+
         @Input() suggestLength: number;             //max number of suggested values to be displayed at once
         @Input() suggestThreshold: number = 0;      //number of typed characters before suggestions are displayed.
     */
@@ -38,10 +48,20 @@ export class InputValueComponent implements ControlValueAccessor {
 
     private _value = '';
 
+    private typeahead: Observable<string>;
+
     @Output() async: EventEmitter<any> = new EventEmitter<any>();  //signals availability of asynchronous attributes
 
     constructor(private rootEl: ElementRef, private appConfig: AppConfig) {
         this.suggestLength = appConfig.maxSuggestLength;
+        this.typeahead = createTypeaheadSource(this.autosuggestValues, this.value)
+    }
+
+    private autosuggestValues(): string[] {
+        if (this.valueType.is(ValueTypeName.select)) {
+            return (<SelectValueType>this.valueType).values;
+        }
+        return this.autosuggest();
     }
 
     get value() {

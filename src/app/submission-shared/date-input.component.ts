@@ -1,22 +1,11 @@
-import {
-    Component,
-    Input,
-    forwardRef,
-    ElementRef, ViewChild
-} from '@angular/core';
-import {
-    ControlValueAccessor,
-    NG_VALUE_ACCESSOR
-} from '@angular/forms';
+import {Component, ElementRef, forwardRef, Input, ViewChild} from '@angular/core';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 
-import {
-    BsDatepickerConfig
-} from "ngx-bootstrap/datepicker";
-import {BsDatepickerDirective} from "ngx-bootstrap";
+import {BsDatepickerConfig} from 'ngx-bootstrap/datepicker';
+import {BsDatepickerDirective} from 'ngx-bootstrap';
 
 import {formatDate, isEqualDate} from './date.utils';
-import {AppConfig} from "../app.config";
-import {DateValueType, ValueType} from '../submission/shared/submission-type.model';
+import {AppConfig} from '../app.config';
 
 @Component({
     selector: 'date-input',
