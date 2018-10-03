@@ -1,10 +1,11 @@
 import {Attribute, Feature, Field, Section, ValueMap} from '../../shared/submission.model';
 import {FormArray, FormControl, FormGroup} from '@angular/forms';
 import {ErrorMessages, ValueValidators} from './value-validators';
-import {ColumnType, SelectValueType, ValueType, ValueTypeName} from '../../shared/submission-type.model';
+import {ColumnType, ValueType} from '../../shared/submission-type.model';
 import {fromNullable} from 'fp-ts/lib/Option';
-import {Observable} from 'rxjs';
-import {createTypeaheadSource} from './typeahead.utils';
+import {Observable, of} from 'rxjs';
+import {mergeMap} from 'rxjs/operators';
+import {typeaheadSource} from './typeahead.utils';
 
 export class FieldControl {
     readonly control: FormControl;
@@ -20,6 +21,8 @@ export class FieldControl {
 
 export class ColumnControl {
     readonly control: FormControl;
+
+    private typeahead: Observable<string[]> | undefined;
 
     constructor(private column: Attribute, readonly parentRef: string) {
         this.control = new FormControl(column.name, ValueValidators.forColumn(column, parentRef));
@@ -55,6 +58,13 @@ export class ColumnControl {
 
     get hasErrors(): boolean {
         return this.control.invalid && this.control.touched;
+    }
+
+    typeaheadSource(sourceFunc: () => string[]): Observable<string[]> {
+        if (this.typeahead === undefined) {
+            this.typeahead = typeaheadSource(sourceFunc, this.control.valueChanges);
+        }
+        return this.typeahead;
     }
 }
 
@@ -152,6 +162,7 @@ export class RowForm {
     }
 
  */
+
 export class FeatureForm {
     readonly form: FormGroup;
 
@@ -236,8 +247,10 @@ export class FeatureForm {
             .map(type => type.name);
     }
 
-    columnNameValueSource(value: string): Observable<string[]> {
-        return createTypeaheadSource(() => {return this.columnNameValues()}, value);
+    columnNamesTypeahead(column: ColumnControl): Observable<string[]> {
+        return column.typeaheadSource(() => {
+            return this.columnNameValues();
+        });
     }
 
     columnNameValues(): string[] {
@@ -248,8 +261,18 @@ export class FeatureForm {
         return this.colTypeNames;
     }
 
-    cellControlAt(rowIndex: number, colId: string): CellControl | undefined {
-        return this.rowForms[rowIndex].cellControlAt(colId);
+    columnValuesTypeaheadFunc(columnId: string): () => string[] {
+        return () => {
+            return this.rowForms.map(row => row.cellControlAt(columnId))
+                .filter(c => c !== undefined)
+                .map(c => c!.control.value)
+                .filter((v: string) => !v.isEmpty())
+                .uniqueValues();
+        }
+    }
+
+    cellControlAt(rowIndex: number, columnId: string): CellControl | undefined {
+        return this.rowForms[rowIndex].cellControlAt(columnId);
     }
 
     onRowAdd() {
@@ -275,16 +298,6 @@ export class FeatureForm {
     canDeleteRowAt(index: number): boolean {
         //TODO
         return true;
-    }
-
-    columnValuesAt(columnId: string): () => string[] {
-        return () => {
-            return this.rowForms.map(row => row.cellControlAt(columnId))
-                .filter(c => c !== undefined)
-                .map(c => c!.control.value)
-                .filter((v: string) => !v.isEmpty())
-                .uniqueValues();
-        }
     }
 
     private addRowForm(row: ValueMap, columns: Attribute[]) {

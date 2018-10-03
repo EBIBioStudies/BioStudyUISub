@@ -1,21 +1,11 @@
 import {Observable, of} from 'rxjs';
-import {mergeMap} from 'rxjs/operators';
+import {debounceTime, map, mergeMap} from 'rxjs/operators';
 
-export function createTypeaheadSource(source: () => string[], value:string): Observable<string[]> {
-    console.log('createTypeaheadSource');
-    const valuesFor = (token: string, sourceFunc: () => string[]) => {
-        const query = new RegExp(token, 'ig');
-        return of(
-            sourceFunc().filter((state: any) => {
-                return query.test(state.name);
-            })
-        );
-    };
-
-    return Observable.create((observer: any) => {
-        observer.next(value);
-    })
-        .pipe(
-            mergeMap((token: string) => valuesFor(token, source))
-        );
+export function typeaheadSource(sourceFunc: () => string[], valueChanges: Observable<string>): Observable<string[]> {
+    console.log('create typeahead source');
+    return valueChanges.pipe(
+  /*      debounceTime<string>(200),*/
+        map((token: string) => new RegExp(token, 'ig')),
+        mergeMap((query: RegExp) => of(sourceFunc().filter(v => query.test(v))))
+    );
 }

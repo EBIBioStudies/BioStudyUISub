@@ -121,11 +121,11 @@ export class SubmEditComponent implements OnInit {
                     //Inspects the original event producing the cascade of subsequent ones and saves the submission if
                     //it was triggered by a non-text update.
                     //NOTE: Leaf nodes in the update event tree have no source.
-                    this.subm!.updates().subscribe((event) => {
+                    /*this.subm!.updates().subscribe((event) => {
                         if (SubmEditComponent.watchedUpdates.indexOf(event.leafEvent!.name) > -1) {
                             this.onChange();
                         }
-                    });
+                    });*/
 
                     //Determines the current section (in case the user navigates down to a subsection)
                     this.changeSection(this.subm!.section.id);

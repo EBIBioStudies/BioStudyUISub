@@ -31,15 +31,12 @@
                                popover="{{column.hasErrors ? 'Please use a unique key name' : ''}}"
                                [formControl]="column.control"
                                [readonly]="column.isReadonly"
-                               [typeahead]="featureForm.columnNameValueSource(column.control.value)"
+                               [typeahead]="featureForm.columnNamesTypeahead(column)"
                                [typeaheadMinLength]="0"
                                [typeaheadOptionsLimit]="200"
                                [typeaheadScrollable]="true"
                                [typeaheadOptionsInScrollableView]="suggestLength"
                                [unique]="featureForm.hasUniqueColumns"
-                               validate-onblur
-                               (change)="onFieldChange(column, $event.target.value, 'name')"
-                               (typeaheadOnSelect)="onSuggestSelect($event, column)"
                                (blur)="column.control.value ||
                                        column.control.setValue(featureForm.featureTypeName + ' ' + (idx + 1))"
                                #ahead="bs-typeahead">
@@ -60,7 +57,7 @@
                                 [readonly]="readonly || column.isReadonly"
                                 [required]="column.isRequired"
                                 [formControl]="cell.control"
-                                [autosuggest]="featureForm.columnValuesAt(column.id)"
+                                [autosuggestSource]="featureForm.columnValuesTypeaheadFunc(column.id)"
                                 validate-onblur>
                     </input-value>
                 </div>

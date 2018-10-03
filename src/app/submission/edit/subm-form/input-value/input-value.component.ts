@@ -10,9 +10,9 @@ import {
     ValueTypeFactory,
     ValueTypeName
 } from '../../../shared/submission-type.model';
-import {Observable, of} from 'rxjs';
+import {Observable, of, Subject} from 'rxjs';
 import {mergeMap} from 'rxjs/operators';
-import {createTypeaheadSource} from '../typeahead.utils';
+import {typeaheadSource} from '../typeahead.utils';
 
 
 @Component({
@@ -31,7 +31,7 @@ export class InputValueComponent implements ControlValueAccessor {
     @Input() isSmall = true;
     @Input() suggestLength: number;
     @Input() suggestThreshold: number = 0;
-    @Input() autosuggest: () => string[] = () => [];
+    @Input() autosuggestSource: () => string[] = () => [];
     /*
 
         @Input() suggestLength: number;             //max number of suggested values to be displayed at once
@@ -48,20 +48,21 @@ export class InputValueComponent implements ControlValueAccessor {
 
     private _value = '';
 
-    private typeahead: Observable<string>;
+    private typeahead: Observable<string[]>;
+    private valueChanges$: Subject<string> = new Subject<string>();
 
     @Output() async: EventEmitter<any> = new EventEmitter<any>();  //signals availability of asynchronous attributes
 
     constructor(private rootEl: ElementRef, private appConfig: AppConfig) {
         this.suggestLength = appConfig.maxSuggestLength;
-        this.typeahead = createTypeaheadSource(this.autosuggestValues, this.value)
+        this.typeahead = typeaheadSource(() => {return this.autosuggestValues();}, this.valueChanges$);
     }
 
     private autosuggestValues(): string[] {
         if (this.valueType.is(ValueTypeName.select)) {
             return (<SelectValueType>this.valueType).values;
         }
-        return this.autosuggest();
+        return this.autosuggestSource();
     }
 
     get value() {
@@ -71,6 +72,7 @@ export class InputValueComponent implements ControlValueAccessor {
     set value(value) {
         this._value = value;
         this.onChange(value);
+        this.valueChanges$.next(value);
     }
 
     writeValue(value: any): void {

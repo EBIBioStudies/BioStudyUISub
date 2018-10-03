@@ -25,9 +25,9 @@
                          [disableEdit]="readonly || column.isReadonly || !userData.isPrivileged"
                          [disableChange]="column.isRequired || column.isDisplayed"
                          [disableRemove]="!column.isRemovable"
-                         [autosuggest]="featureForm.columnNameValues"
                          [unique]="featureForm.hasUniqueColumns"
                          validate-onblur>
+<!--                [autosuggest]="featureForm.columnNameValues"-->
             </inline-edit>
         </div>
     </div>
@@ -61,7 +61,7 @@
                                  [readonly]="readonly || column.isReadonly"
                                  [required]="column.required"
                                  [formControl]="row.cellControlAt(column.id).control"
-                                 [autosuggest]="featureForm.columnValuesAt(column.id)"
+                                 [autosuggestSource]="featureForm.columnValuesTypeaheadFunc(column.id)"
                                  validate-onblur>
                     </input-value>
                 </div>
