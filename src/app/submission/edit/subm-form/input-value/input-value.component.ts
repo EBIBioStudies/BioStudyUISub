@@ -1,7 +1,6 @@
 import {Component, ElementRef, EventEmitter, forwardRef, Input, Output} from '@angular/core';
 
 import {ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {TypeaheadMatch} from 'ngx-bootstrap';
 import {AppConfig} from '../../../../app.config';
 import {
     DateValueType,
@@ -10,8 +9,7 @@ import {
     ValueTypeFactory,
     ValueTypeName
 } from '../../../shared/submission-type.model';
-import {Observable, of, Subject} from 'rxjs';
-import {mergeMap} from 'rxjs/operators';
+import {Observable, Subject} from 'rxjs';
 import {typeaheadSource} from '../typeahead.utils';
 
 
@@ -127,9 +125,9 @@ export class InputValueComponent implements ControlValueAccessor {
      * TODO: this might be sorted in newer versions of the ngx-bootstrap plugin. Duplicate events may occur due to the repeated calling of "set value(value)" above (cannot keep track of the last value and, by extension, can't detect change).
      * @param {TypeaheadMatch} selection - Object for the currently selected value.
      */
-    onSuggestSelect(selection: TypeaheadMatch) {
+   /* onSuggestSelect(selection: TypeaheadMatch) {
         // this.rootEl.nativeElement.getElementsByTagName('input')[0].dispatchEvent(new Event('change', {bubbles: true}));
-    }
+    }*/
 
     /**
      * Convenience method for the equivalen date n years into the future.

@@ -1,7 +1,6 @@
 import {AfterViewInit, Component, ElementRef, Input, QueryList, ViewChildren} from '@angular/core';
 
-import {Attribute, Feature} from '../../../shared/submission.model';
-import {TypeaheadMatch} from 'ngx-bootstrap';
+import {Attribute} from '../../../shared/submission.model';
 import {AppConfig} from '../../../../app.config';
 import {ColumnControl, FeatureForm} from '../section-form';
 
@@ -28,9 +27,9 @@ export class FeatureListComponent implements AfterViewInit {
 
     //On DOM change, sets focus on first field of newly added row
     ngAfterViewInit(): void {
-        this.rowEls!.changes.subscribe((rowEls) => {
+        /*this.rowEls!.changes.subscribe((rowEls) => {
             rowEls.last.nativeElement.querySelector('select, input').focus();
-        });
+        });*/
     }
 
     /**
@@ -50,12 +49,12 @@ export class FeatureListComponent implements AfterViewInit {
      * @param {TypeaheadMatch} selection - Object for the currently selected value.
      * @param {Attribute} column - Current column whose new key has been selected.
      */
-    onSuggestSelect(selection: TypeaheadMatch, column: Attribute) {
+    /*onSuggestSelect(selection: TypeaheadMatch, column: Attribute) {
         if (column.name != selection.value) {
             this.rootEl.nativeElement.dispatchEvent(new Event('change', {bubbles: true}));
             this.onFieldChange(column, selection.value, 'name');
         }
-    }
+    }*/
 
     /**
      * Tests if a given column is required in terms of the UI. For example, a column may not be required

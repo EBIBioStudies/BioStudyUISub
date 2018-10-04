@@ -1,19 +1,59 @@
-import {FieldType, TextValueType, ValueType, ValueTypeName} from '../../shared/submission-type.model';
-import {AbstractControl, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
-import {Attribute, Field} from '../../shared/submission.model';
+import {TextValueType, ValueType, ValueTypeName} from '../../shared/submission-type.model';
+import {
+    AbstractControl,
+    FormArray,
+    FormControl,
+    FormGroup,
+    ValidationErrors,
+    ValidatorFn,
+    Validators
+} from '@angular/forms';
+import {Attribute, Feature, Field} from '../../shared/submission.model';
 
-const nonEmptyStringValidator = (controlName: string, controlParent: string) => {
+const nonEmptyStringValidator = (controlName: string, parentRef: string) => {
     return (control: AbstractControl): ValidationErrors | null => {
         if (typeof control.value !== 'string') {
             return null;
         } else if (control.value.isEmpty()) {
-            return {'required': {value: control.value, controlName: controlName, controlParent: controlParent}};
+            return {'required': {value: control.value, controlName: controlName || '', controlParent: parentRef}};
         } else {
             return null;
         }
     };
 };
 
+const uniqueColumnsValidator = (parentRef: string) => {
+    return (control: AbstractControl): ValidationErrors | null => {
+        const columns = <FormGroup> control;
+        const keys = Object.keys(columns.controls);
+
+        const valueCounts = keys.map(key => <FormControl>columns.controls[key])
+            .map(c => c.value)
+            .filter(v => !(<string>v).isEmpty())
+            .reduce((rv, v) => {
+                rv[v] = (rv[v] || 0) + 1;
+                return rv;
+            }, {});
+
+        let errorCount = 0;
+        Object.keys(columns.controls).forEach(key => {
+            const control = columns.controls[key];
+            let errors = control.errors;
+            if (valueCounts[control.value] > 1) {
+                errors = errors || {};
+                errors['uniqueColumn'] = {columnName: control.value, controlParent: parentRef};
+                errorCount += 1;
+            } else if (errors !== null) {
+                delete errors['uniqueColumn'];
+                if (Object.keys(errors).length === 0) {
+                    errors = null;
+                }
+            }
+            control.setErrors(errors);
+        });
+        return errorCount === 0 ? null : {'uniqueFeatureColumns': {controlParent: parentRef}}
+    }
+};
 
 export class ValueValidators {
     static forValueType(valueType: ValueType): ValidatorFn[] {
@@ -33,11 +73,9 @@ export class ValueValidators {
 
     static forField(field: Field, parentRef: string): ValidatorFn[] {
         const validators: ValidatorFn[] = [];
-
         if (field.type.required) {
             validators.push(nonEmptyStringValidator(field.name, parentRef));
         }
-
         return [...validators, ...ValueValidators.forValueType(field.type.valueType)];
     }
 
@@ -46,7 +84,17 @@ export class ValueValidators {
     }
 
     static forColumn(column: Attribute, parentRef: string): ValidatorFn[] {
-        return []; //TODO
+        return [nonEmptyStringValidator('key', parentRef)]
+    }
+}
+
+export class FormValidators {
+    static forFeatureColumns(feature: Feature) {
+        const validators: ValidatorFn[] = [];
+        if (feature.type.uniqueCols) {
+            validators.push(uniqueColumnsValidator(feature.typeName))
+        }
+        return validators;
     }
 }
 
@@ -66,6 +114,12 @@ const CustomErrorMessages = (() => {
         },
         'pattern': (error: any, prefix?: string) => {
             return prefixed(`Please provide a valid value`, prefix);
+        },
+        'uniqueColumn': (error: any, prefix?: string) => {
+            return prefixed(`${error.controlParent}'s ${error.columnName} column is not unique`, prefix);
+        },
+        'uniqueFeatureColumns': (error: any, prefix?: string) => {
+            return prefixed(`${error.controlParent}'s columns should be unique`, prefix);
         }
     };
 })();

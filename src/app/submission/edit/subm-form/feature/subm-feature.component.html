@@ -1,5 +1,5 @@
 <div *ngIf="!featureForm.isEmpty" class="col-xs-12">
-    <label class="control-label">{{featureForm.featureName}}</label>
+    <label class="control-label">{{featureForm.featureName | titlecase}}</label>
     <span *ngIf="!readonly && !featureForm.isRequired"
           class="text-muted pull-right">
                 <i>

@@ -1,10 +1,10 @@
 <div [ngSwitch]="valueType.name">
     <input *ngSwitchCase="[ValueTypeNameEnum.text, ValueTypeNameEnum.select].includes(valueType.name) ? valueType.name : ''"
            type="text" class="form-control"
+           [ngClass]="{'input-sm': isSmall}"
            tooltip="{{isOverflow() && !ahead._container ? value : ''}}"
            container="body"
            placement="bottom"
-           [ngClass]="{'input-sm': isSmall}"
            [(ngModel)]="value"
            [readonly]="readonly"
            (blur)="onBlur()"
@@ -13,7 +13,6 @@
            [typeaheadOptionsLimit]="200"
            [typeaheadScrollable]="true"
            [typeaheadOptionsInScrollableView]="suggestLength"
-           (typeaheadOnSelect)="onSuggestSelect($event)"
            #ahead="bs-typeahead"/>
 
     <textarea *ngSwitchCase="ValueTypeNameEnum.largetext"

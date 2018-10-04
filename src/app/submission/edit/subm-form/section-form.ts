@@ -1,10 +1,9 @@
 import {Attribute, Feature, Field, Section, ValueMap} from '../../shared/submission.model';
 import {FormArray, FormControl, FormGroup} from '@angular/forms';
-import {ErrorMessages, ValueValidators} from './value-validators';
+import {ErrorMessages, FormValidators, ValueValidators} from './value-validators';
 import {ColumnType, ValueType} from '../../shared/submission-type.model';
 import {fromNullable} from 'fp-ts/lib/Option';
-import {Observable, of} from 'rxjs';
-import {mergeMap} from 'rxjs/operators';
+import {Observable} from 'rxjs';
 import {typeaheadSource} from './typeahead.utils';
 
 export class FieldControl {
@@ -58,6 +57,10 @@ export class ColumnControl {
 
     get hasErrors(): boolean {
         return this.control.invalid && this.control.touched;
+    }
+
+    get errors(): string[] {
+        return ErrorMessages.map(this.control.errors);
     }
 
     typeaheadSource(sourceFunc: () => string[]): Observable<string[]> {
@@ -171,7 +174,7 @@ export class FeatureForm {
 
     constructor(private feature: Feature) {
         this.form = new FormGroup({
-            columns: new FormGroup({}),
+            columns: new FormGroup({}, FormValidators.forFeatureColumns(feature)),
             rows: new FormArray([])
         });
 
@@ -248,22 +251,29 @@ export class FeatureForm {
     }
 
     columnNamesTypeahead(column: ColumnControl): Observable<string[]> {
-        return column.typeaheadSource(() => {
-            return this.columnNameValues();
-        });
+        return column.typeaheadSource(this.columnNamesTypeaheadFunc());
     }
 
     columnNameValues(): string[] {
         if (this.hasUniqueColumns) {
             const colNames = this.columnNames;
-            return this.colTypeNames.filter(name => colNames.includes(name));
+            return this.colTypeNames.filter(name => !colNames.includes(name));
         }
         return this.colTypeNames;
     }
 
-    columnValuesTypeaheadFunc(columnId: string): () => string[] {
+    columnNamesTypeaheadFunc(): () => string[] {
         return () => {
-            return this.rowForms.map(row => row.cellControlAt(columnId))
+            return this.columnNameValues();
+        };
+    }
+
+    columnValuesTypeaheadFunc(rowIndex: number, columnId: string): () => string[] {
+        const skipRow = this.rowForms[rowIndex];
+        return () => {
+            return this.rowForms
+                .filter(row => row !== skipRow)
+                .map(row => row.cellControlAt(columnId))
                 .filter(c => c !== undefined)
                 .map(c => c!.control.value)
                 .filter((v: string) => !v.isEmpty())
@@ -288,7 +298,12 @@ export class FeatureForm {
     }
 
     onColumnDelete(columnId: string) {
-        //TODO
+        const index = this.columnControls.findIndex(c => c.id === columnId);
+        if (index >= 0) {
+            this.columnControls.splice(index, 1);
+            this.columnsForm.removeControl(columnId);
+            this.feature.removeColumn(columnId);
+        }
     }
 
     onRowDelete(rowIndex: string) {

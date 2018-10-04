@@ -53,16 +53,13 @@
                                  'optional': !column.isRequired,
                                  'has-error': row.hasErrorsAt(column.id)}">
                     <input-value placement="top"
-                                 triggers="focus"
                                  container="body"
                                  containerClass="{{featureForm.isRequired ? 'text-danger' : 'text-warning'}}"
                                  popover="{{row.hasErrorsAt(column.id) ? row.errorsAt(column.id) : ''}}"
                                  [valueType]="column.valueType"
                                  [readonly]="readonly || column.isReadonly"
-                                 [required]="column.required"
                                  [formControl]="row.cellControlAt(column.id).control"
-                                 [autosuggestSource]="featureForm.columnValuesTypeaheadFunc(column.id)"
-                                 validate-onblur>
+                                 [autosuggestSource]="featureForm.columnValuesTypeaheadFunc(rowIdx, column.id)">
                     </input-value>
                 </div>
             </div>

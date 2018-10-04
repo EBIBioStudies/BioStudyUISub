@@ -3,7 +3,7 @@
         <div class="cell heading col-xs-3">Key</div>
         <div class="cell heading col-xs-9">Value</div>
     </div>
-    <div *ngFor="let column of columns; let idx = index; let first = first; let last = last">
+    <div *ngFor="let column of columns">
         <div class="row" #rowEl *ngIf="!readonly">
             <div class="cell col-xs-3">
                 <div class="form-group key-field"
@@ -11,13 +11,12 @@
                                  'has-error': column.hasErrors}">
                     <div [ngClass]="{'input-group': column.isRemovable, 'readonly': column.isReadonly}">
                         <span *ngIf="column.isRemovable" class="input-group-btn"
-                              container="body"
-                              [tooltip]="featureForm.canDeleteRowAt(index) ? '' : 'The list must contain one entry at least'">
+                              container="body">
                               <button type="button" tabindex="-1"
                                       class="btn btn-sm btn-danger btn-flat"
-                                      (click)="featureForm.onRowDelete(idx)"
-                                      [disabled]="!featureForm.canDeleteRowAt(idx)"
-                                      [tooltip]="featureForm.canDeleteRowAt(idx) ? 'Delete &quot;' + column.name + '&quot; entry' : ''"
+                                      (click)="featureForm.onColumnDelete(column.id)"
+                                      [disabled]="!column.isRemovable"
+                                      [tooltip]="column.isRemovable ? 'Delete &quot;' + column.name + '&quot; entry' : ''"
                                       placement="bottom"
                                       container="body">
                                    <i class="fa fa-trash-o"></i>
@@ -25,21 +24,16 @@
                         </span>
                         <input type="text" class="form-control input-sm"
                                placement="top"
-                               triggers="focus"
                                container="body"
                                containerClass="text-danger"
-                               popover="{{column.hasErrors ? 'Please use a unique key name' : ''}}"
+                               popover="{{column.hasErrors ? column.errors : ''}}"
                                [formControl]="column.control"
                                [readonly]="column.isReadonly"
                                [typeahead]="featureForm.columnNamesTypeahead(column)"
                                [typeaheadMinLength]="0"
                                [typeaheadOptionsLimit]="200"
                                [typeaheadScrollable]="true"
-                               [typeaheadOptionsInScrollableView]="suggestLength"
-                               [unique]="featureForm.hasUniqueColumns"
-                               (blur)="column.control.value ||
-                                       column.control.setValue(featureForm.featureTypeName + ' ' + (idx + 1))"
-                               #ahead="bs-typeahead">
+                               [typeaheadOptionsInScrollableView]="suggestLength">
                     </div>
                 </div>
             </div>
@@ -47,7 +41,7 @@
                 <div class="form-group"
                      [ngClass]="{'readonly': column.isReadonly,
                                  'optional': !column.isRequired,
-                                 'has-error': cell.control.invalid && cell.control.touched}">
+                                 'has-error': cell.hasErrors}">
                     <input-value placement="top"
                                 triggers="focus"
                                 container="body"
