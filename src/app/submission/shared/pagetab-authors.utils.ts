@@ -29,9 +29,9 @@ export function authors2Contacts(sections: PtSection[] = []): PtSection[] {
                 type: 'Contact',
                 attributes: (a.attributes || [])
                     .map(attr => {
-                        if (isAffiliation(attr.name) && String.isDefinedAndNotEmpty(attr.value)) {
-                            const affil = attr.isReference ? (affiliations[attr.value!] || attr.value) : attr.value;
-                            return <PtAttribute>{name: 'Organisation', value: affil};
+                        if (isAffiliation(attr.name)) {
+                            const value = attr.isReference && String.isDefinedAndNotEmpty(attr.value) ? (affiliations[attr.value!] || attr.value) : attr.value;
+                            return <PtAttribute>{name: 'Organisation', value: value};
                         }
                         return attr;
                     })
