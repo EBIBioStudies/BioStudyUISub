@@ -189,7 +189,7 @@ export class Columns extends HasUpdates<UpdateEvent> {
             return false;
         }
         if (this.columns[index].isRequired) {
-            console.warn(`Can't remove required column [index: ${index}`);
+            console.warn(`Can't remove required column [index: ${index}]`);
             return false;
         }
         this.columns.splice(index, 1);
