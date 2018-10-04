@@ -151,8 +151,14 @@ export class Columns extends HasUpdates<UpdateEvent> {
     private columns: Attribute[] = [];
     private subscriptions: Subscription[] = [];
 
+    private _nextIndex: number = 0;
+
     constructor() {
         super();
+    }
+
+    get nextIndex(): number {
+        return ++this._nextIndex;
     }
 
     list(): Attribute[] {
@@ -452,15 +458,8 @@ export class Feature extends HasUpdates<UpdateEvent> {
 
     addColumn(name?: string, required?: boolean, displayed?: boolean, readonly?: boolean, removable?: boolean,
               valueType?: ValueType): Attribute {
-        let defColName = ' ' + (this.colSize() + 1);
-        let col;
-
-        if (this.singleRow) {
-            defColName = this.typeName + defColName;
-        } else {
-            defColName = 'Column' + defColName;
-        }
-        col = new Attribute(name || defColName, required, displayed, readonly, removable, valueType || ValueTypeFactory.DEFAULT);
+        let defColName = (this.singleRow ? this.typeName : 'Column') + ' ' + this._columns.nextIndex;
+        let col = new Attribute(name || defColName, required, displayed, readonly, removable, valueType || ValueTypeFactory.DEFAULT);
 
         this._rows.addKey(col.id);
         this._columns.add(col);
