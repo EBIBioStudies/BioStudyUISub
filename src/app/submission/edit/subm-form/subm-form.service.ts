@@ -525,7 +525,7 @@ export class FeatureFormOld {
         let control;
 
         //TODO: follow a recipe similar to addFieldControl's to support other validators
-        if (tmpl.required) {
+        if (tmpl.displayType.isRequired) {
             valueValidators.push(nonBlankVal());
         }
 

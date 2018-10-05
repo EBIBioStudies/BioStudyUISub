@@ -1,5 +1,4 @@
 import {EMPTY_TEMPLATE_NAME, findSubmissionTemplateByName} from './templates/submission.templates';
-import {ValidatorFn} from '@angular/forms';
 
 class TypeScope<T extends TypeBase> {
     private map: Map<String, T> = new Map();
@@ -103,6 +102,50 @@ abstract class TypeBase {
     }
 }
 
+export class DisplayType {
+    readonly name: string;
+
+    private constructor(name: string) {
+        this.name = name;
+    }
+
+    public get isRequired(): boolean {
+        return this === DisplayType.Required;
+    }
+
+    public get isReadonly(): boolean {
+        return this === DisplayType.Readonly;
+    }
+
+    public get isDesirable(): boolean {
+        return this === DisplayType.Desirable;
+    }
+
+    public get isShownByDefault(): boolean {
+        return this.isRequired || this.isDesirable;
+    }
+
+    public get isRemovable(): boolean {
+        return !this.isRequired && !this.isDesirable;
+    }
+
+    public static Required = new DisplayType('required');
+    public static Desirable = new DisplayType('desirable');
+    public static Readonly = new DisplayType('readonly');
+    public static Optional = new DisplayType('optional');
+
+    public static all = [
+        DisplayType.Required,
+        DisplayType.Desirable,
+        DisplayType.Readonly,
+        DisplayType.Optional
+    ];
+
+    public static create(name: string = 'optional'): DisplayType {
+        return DisplayType.all.find(t => t.name === name) || DisplayType.Optional;
+    }
+}
+
 export enum ValueTypeName {
     text,
     largetext,
@@ -176,8 +219,8 @@ export class ValueTypeFactory {
 }
 
 export class FieldType extends TypeBase {
-    readonly required: boolean;
-    readonly readonly: boolean;
+    readonly display: string;
+    readonly displayType: DisplayType;
     readonly valueType: ValueType;
     readonly icon: string;
 
@@ -185,21 +228,23 @@ export class FieldType extends TypeBase {
         super(name, true, scope);
 
         this.valueType = ValueTypeFactory.create(data.valueType || {});
-        this.readonly = data.readonly === true;
-        this.required = data.required === true;
-        this.icon = data.icon || 'fa-pencil-square-o'
+        this.icon = data.icon || 'fa-pencil-square-o';
+
+        this.displayType = DisplayType.create(data.display);
+        this.display = this.displayType.name;
     }
 }
 
 export class FeatureType extends TypeBase {
-    private columnScope: TypeScope<ColumnType> = new TypeScope<ColumnType>();
-
-    readonly required: boolean;
+    readonly display: string;
+    readonly displayType: DisplayType;
     readonly singleRow: boolean;
     readonly uniqueCols: boolean;
     readonly title: string;
     readonly description: string;
     readonly icon: string;
+
+    private columnScope: TypeScope<ColumnType> = new TypeScope<ColumnType>();
 
     constructor(name: string, singleRow: boolean, uniqueCols: boolean, data?: Partial<FeatureType>, scope?: TypeScope<TypeBase>) {
         super(name, data !== undefined, scope);
@@ -207,9 +252,11 @@ export class FeatureType extends TypeBase {
         this.uniqueCols = uniqueCols;
 
         data = data || {};
-        this.required = data.required === true;
         this.title = data.title || 'Add ' + this.name;
         this.description = data.description || '';
+
+        this.displayType = DisplayType.create(data.display);
+        this.display = this.displayType.name;
 
         this.icon = data.icon || (this.singleRow ? 'fa-list' : 'fa-th');
 
@@ -248,10 +295,8 @@ export class AnnotationsType extends FeatureType {
 }
 
 export class ColumnType extends TypeBase {
-    readonly required: boolean;
-    readonly displayed: boolean;
-    readonly readonly: boolean;
-    readonly removable: boolean;
+    readonly display: string;
+    readonly displayType: DisplayType;
     readonly valueType: ValueType;
 
     static createDefault(name: string, scope?: TypeScope<ColumnType>): ColumnType {
@@ -263,15 +308,26 @@ export class ColumnType extends TypeBase {
 
         data = data || {};
         this.valueType = ValueTypeFactory.create(data.valueType || {});
-        this.required = data.required === true;
-        this.readonly = data.readonly === true;
-        this.displayed = data.displayed === true;
-        this.removable = data.removable !== false;
+        this.displayType = DisplayType.create(data.display);
+        this.display = this.displayType.name;
+    }
+
+    get isRequired(): boolean {
+        return this.displayType.isRequired;
+    }
+
+    get isDesirable(): boolean {
+        return this.displayType.isDesirable;
+    }
+
+    get isReadonly(): boolean {
+        return this.displayType.isReadonly;
     }
 }
 
 export class SectionType extends TypeBase {
-    readonly required: boolean;
+    readonly display: string;
+    readonly displayType: DisplayType;
     readonly annotationsType: AnnotationsType;
 
     private fieldScope: TypeScope<FieldType> = new TypeScope<FieldType>();
@@ -286,7 +342,8 @@ export class SectionType extends TypeBase {
         super(name, data !== undefined, scope);
 
         data = data || {};
-        this.required = data.required === true;
+        this.displayType = DisplayType.create(data.display);
+        this.display = this.displayType.name;
 
         this.annotationsType = new AnnotationsType(data.annotationsType, new TypeScope<AnnotationsType>());
 

@@ -14,7 +14,7 @@
                               container="body">
                               <button type="button" tabindex="-1"
                                       class="btn btn-sm btn-danger btn-flat"
-                                      (click)="featureForm.onColumnDelete(column.id)"
+                                      (click)="featureForm.onColumnRemove(column.id)"
                                       [disabled]="!column.isRemovable"
                                       [tooltip]="column.isRemovable ? 'Delete &quot;' + column.name + '&quot; entry' : ''"
                                       placement="bottom"
@@ -28,7 +28,7 @@
                                containerClass="text-danger"
                                popover="{{column.hasErrors ? column.errors : ''}}"
                                [formControl]="column.control"
-                               [readonly]="column.isReadonly"
+                               [readonly]="!column.canEditName"
                                [typeahead]="featureForm.columnNamesTypeahead(column)"
                                [typeaheadMinLength]="0"
                                [typeaheadOptionsLimit]="200"

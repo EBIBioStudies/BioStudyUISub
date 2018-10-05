@@ -43,6 +43,7 @@ import {SubmAddDialogComponent} from "./list/subm-add.component";
 import {Camelcase2LabelPipe} from './shared/pipes/camelcase-to-label.pipe';
 import {FileModule} from '../file/file.module';
 import {InputValueComponent} from './edit/subm-form/input-value/input-value.component';
+import {InlineEditComponent} from './edit/subm-form/inline-edit/inline-edit.component';
 
 @NgModule({
     imports: [
@@ -71,6 +72,7 @@ import {InputValueComponent} from './edit/subm-form/input-value/input-value.comp
         ResultsLogNodeComponent,
         DirectSubmitSideBarComponent,
         InputValueComponent,
+        InlineEditComponent,
         SubmFormComponent,
         SubmFieldComponent,
         SubmFeatureComponent,

@@ -52,11 +52,11 @@ export class SubmFieldComponent {
     }
 
     get isRequired(): boolean {
-        return this.fieldType.required;
+        return this.fieldType.displayType.isRequired;
     }
 
     get isReadonly(): boolean {
-        return this.readonly || this.fieldType.readonly;
+        return this.readonly || this.fieldType.displayType.isReadonly;
     }
 
     get isInvalid(): boolean {

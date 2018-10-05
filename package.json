@@ -25,6 +25,7 @@
     "ag-grid-angular": "^18.0",
     "core-js": "^2.4.1",
     "font-awesome": "^4.7.0",
+    "fp-ts": "^1.9.0",
     "lodash": "^4.17.4",
     "ng-recaptcha": "^4.0.0-beta.1",
     "ng2-cookies": "^1.0.2",

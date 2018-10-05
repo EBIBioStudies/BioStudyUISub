@@ -13,10 +13,6 @@
 /* Truncates text when not editing */
 .editable .form-control[readonly] {
     width: 70%;
-}
-
-/* Shows pointer over field only if changeable */
-.changeable .form-control[readonly] {
     cursor: pointer;
 }
 

@@ -10,7 +10,7 @@ export const DefaultTemplate = {
             {
                 'name': 'Title',
                 'icon': 'fa-title',
-                'required': true,
+                'display': 'required',
                 'valueType': {
                     'name': 'largetext',
                     'minlength': 25,
@@ -19,7 +19,7 @@ export const DefaultTemplate = {
             {
                 'name': 'ReleaseDate',
                 'icon': 'fa-calendar',
-                'required': true,
+                'display': 'required',
                 'valueType': {
                     'name': 'date',
                     'allowPast': false
@@ -28,7 +28,7 @@ export const DefaultTemplate = {
             {
                 'name': 'Description',
                 'icon': 'fa-comment',
-                'required': true,
+                'display': 'required',
                 'valueType': {
                     'name': 'largetext',
                     'minlength': 50
@@ -39,11 +39,12 @@ export const DefaultTemplate = {
             'title': 'Describe your study',
             'description': 'Provide any additional details that may help discover or interpret the study.',
             'icon': 'fa-tag',
+            'uniqueCols': true,
             'columnTypes': [
                 {
                     'name': 'AttachTo',
                     'valueType': {'name': 'text'},
-                    'readonly': true
+                    'display': 'readonly'
                 },
                 {
                     'name': 'Organism',
@@ -131,18 +132,18 @@ export const DefaultTemplate = {
                 'title': 'Add Contacts',
                 'description': 'Add the contact details for the authors involved in the study.',
                 'icon': 'fa-vcard',
-                'required': true,
+                'display': 'required',
                 'uniqueCols': true,
                 'columnTypes': [
                     {
                         'name': 'Name',
                         'valueType': {'name': 'text'},
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'E-mail',
                         'valueType': {'name': 'text'},
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'Organisation',
@@ -212,7 +213,7 @@ export const DefaultTemplate = {
                                 'Whitehead Institute for Biomedical Research'
                             ]
                         },
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'Role',
@@ -221,8 +222,8 @@ export const DefaultTemplate = {
                     {
                         'name': 'ORCID',
                         'valueType': {'name': 'orcid'},
-                        'displayed': true,
-                        'removable': false
+                        'display': 'desirable'
+
                     },
                     {
                         'name': 'Address',
@@ -250,12 +251,12 @@ export const DefaultTemplate = {
                     {
                         'name': 'Pointer',
                         'valueType': {'name': 'idlink'},
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'Description',
                         'valueType': {'name': 'text'},
-                        'required': true
+                        'display': 'required'
                     }
                 ]
             },
@@ -269,17 +270,17 @@ export const DefaultTemplate = {
                     {
                         'name': 'Path',
                         'valueType': {'name': 'file'},
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'Description',
                         'valueType': {'name': 'text'},
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'Type',
                         'valueType': {'name': 'text'},
-                        'displayed': true
+                        'display': 'desirable'
                     }
                 ]
             },
@@ -296,33 +297,32 @@ export const DefaultTemplate = {
                     {
                         'name': 'PMID',
                         'valueType': {'name': 'pubmedid'},
-                        'displayed': true,
-                        'removable': false
+                        'display': 'desirable'
                     },
                     {
                         'name': 'Authors',
                         'valueType': {'name': 'text'},
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'Title',
                         'valueType': {'name': 'text'},
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'Year',
                         'valueType': {'name': 'text'},
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'Volume',
                         'valueType': {'name': 'text'},
-                        'displayed': true
+                        'display': 'desirable'
                     },
                     {
                         'name': 'Issue',
                         'valueType': {'name': 'text'},
-                        'displayed': true
+                        'display': 'desirable'
                     },
                     {
                         'name': 'Type',

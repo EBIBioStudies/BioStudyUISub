@@ -1,8 +1,9 @@
 import {
+    DisplayType,
     FeatureType,
     FieldType,
     SectionType,
-    SubmissionType,
+    SubmissionType, TextValueType,
     ValueType,
     ValueTypeFactory
 } from './submission-type.model';
@@ -56,11 +57,9 @@ export class Attribute extends HasUpdates<UpdateEvent> {
     readonly id: string;
 
     constructor(private _name: string = '',
-                public isRequired: boolean = false,
-                public isDisplayed: boolean = false,
-                public isReadonly: boolean = false,
-                public isRemovable: boolean = true,
-                public valueType: ValueType) {
+                readonly valueType: ValueType = ValueTypeFactory.DEFAULT,
+                readonly displayType: DisplayType = DisplayType.Optional,
+                readonly isTemplateBased: boolean = false) {
         super();
         this.id = `attr_${nextId()}`;
     }
@@ -70,14 +69,14 @@ export class Attribute extends HasUpdates<UpdateEvent> {
     }
 
     set name(name: string) {
-        if (this.canBeModified && this._name !== name) {
+        if (this.canEditName && this._name !== name) {
             this._name = name;
             this.notify(new UpdateEvent('name', name));
         }
     }
 
-    get canBeModified(): boolean {
-        return !this.isReadonly && !this.isRequired;
+    get canEditName(): boolean {
+        return !this.isTemplateBased;
     }
 }
 
@@ -182,14 +181,18 @@ export class Columns extends HasUpdates<UpdateEvent> {
         this.notify(new UpdateEvent('column_add', {id: column.id, index: columns.length - 1}));
     }
 
+    canRemove(id: string) {
+        const index = this.columns.findIndex(attr => attr.id === id);
+        return this.canRemoveAt(index);
+    }
+
+    canRemoveAt(index: number) {
+        return index >= 0 && this.columns[index].displayType.isRemovable;
+    }
+
     remove(id: string): boolean {
         const index = this.columns.findIndex(attr => attr.id === id);
-        if (index < 0) {
-            console.warn(`Column index out of bounds: ${index}`);
-            return false;
-        }
-        if (this.columns[index].isRequired) {
-            console.warn(`Can't remove required column [index: ${index}]`);
+        if (!this.canRemoveAt(index)) {
             return false;
         }
         this.columns.splice(index, 1);
@@ -298,18 +301,16 @@ export class Feature extends HasUpdates<UpdateEvent> {
             this.addRow();
         }
 
-        //TODO: Make displayed columns less permanent. Should be added once when the submission is new. Link with "isNew" from submission edit view.
-        type.columnTypes.forEach(ct => {
-            if (ct.required || ct.displayed) {
-                this.addColumn(ct.name, ct.required, ct.displayed, ct.readonly, ct.removable, ct.valueType);
-            }
-        });
+        type.columnTypes.filter(ct => ct.isRequired || ct.isDesirable)
+            .forEach(ct => {
+                this.addColumn(ct.name, ct.valueType, ct.displayType, true);
+            });
 
         (data.entries || []).forEach(entry => {
             this.add(entry);
         });
 
-        if (type.required && this.rowSize() === 0) {
+        if (type.displayType.isShownByDefault && this.rowSize() === 0) {
             this.addRow();
         }
 
@@ -435,8 +436,7 @@ export class Feature extends HasUpdates<UpdateEvent> {
                 const colType = this.type.getColumnType(attrName!);
 
                 if (occurAttrs != occurCols) {
-                    this.addColumn(attrName, colType!.required, colType!.displayed, colType!.readonly, colType!.removable,
-                        colType!.valueType);
+                    this.addColumn(attrName, colType!.valueType, colType!.displayType);
                 }
             });
 
@@ -456,10 +456,9 @@ export class Feature extends HasUpdates<UpdateEvent> {
         });
     }
 
-    addColumn(name?: string, required?: boolean, displayed?: boolean, readonly?: boolean, removable?: boolean,
-              valueType?: ValueType): Attribute {
+    addColumn(name?: string, valueType?: ValueType, displayType?: DisplayType, isTemplateBased: boolean = false): Attribute {
         let defColName = (this.singleRow ? this.typeName : 'Column') + ' ' + this._columns.nextIndex;
-        let col = new Attribute(name || defColName, required, displayed, readonly, removable, valueType || ValueTypeFactory.DEFAULT);
+        let col = new Attribute(name || defColName, valueType, displayType, isTemplateBased);
 
         this._rows.addKey(col.id);
         this._columns.add(col);
@@ -467,24 +466,15 @@ export class Feature extends HasUpdates<UpdateEvent> {
         return col;
     }
 
+    canRemoveColumn(id: string): boolean {
+        return this._columns.canRemove(id);
+    }
+
     removeColumn(id: string): void {
         if (this._columns.remove(id)) {
             this._rows.removeKey(id);
         }
     }
-
-    /**
-     * Handler for column name updates. It refreshes the type properties of a given column if
-     * the new name is unique.
-     * @param {string} newName - Updated column name.
-     * @param {number} colIndex - Index of the updated column.
-     */
-
-    /*onColumnUpdate(newName: string, colIndex: number) {
-        if (this._columns.allWithName(newName).length === 1 || !this.type.uniqueCols) {
-            this._columns.at(colIndex)!.updateType(this.type.getColumnType(newName)!);
-        }
-    }*/
 
     addRow(): ValueMap | undefined {
         if (this.singleRow && this._rows.size() > 0) {
@@ -494,12 +484,12 @@ export class Feature extends HasUpdates<UpdateEvent> {
         return this._rows.add(this._columns.keys());
     }
 
-    canRemoveRowAt(index: number): boolean {
-        return !this.singleRow && !(this.type.required && this.rowSize() === 1);
+    get canRemoveRow(): boolean {
+        return !this.singleRow && !(!this.type.displayType.isRemovable && this.rowSize() === 1);
     }
 
     removeRowAt(index: number): void {
-        if (!this.canRemoveRowAt(index)) {
+        if (!this.canRemoveRow) {
             console.warn(`removeRowAt: The feature [type=${this.type.name}] can't have less than one row`);
             return;
         }
@@ -507,62 +497,17 @@ export class Feature extends HasUpdates<UpdateEvent> {
     }
 }
 
-/**
- * Annotation groups are implemented as grid features whose columns act as different annotations or rows.
- *
- * @author Hector Casanova <hector@ebi.ac.uk>
- */
 export class AnnotationFeature extends Feature {
-
-    /**
-     * Instantiates an annotation group based on its type and data.
-     * @param {FeatureType} type - Normally of type "annotationsType"
-     * @param {FeatureData} data - Key-value pairs wrapped with type.
-     */
     constructor(type: FeatureType, data: FeatureData = <FeatureData>{}) {
         super(type, data);
     }
 
-    /**
-     * Convenience method for instantiating this annotation from attributes
-     * @param {FeatureType} type - Normally of type "annotationsType"
-     * @param {{name: string; value: string}[]} attrs - Key-value pairs
-     */
     static create(type: FeatureType, attrs: AttributeData[]): Feature {
         return new AnnotationFeature(type,
             {
                 type: type.name,
                 entries: [attrs]
             });
-    }
-
-    /**
-     * Uses columns when counting the name of annotation "rows"
-     * @returns {number} Number of columns.
-     */
-    rowSize(): number {
-        return this.colSize();
-    }
-
-    /**
-     * Bypasses the check for the singleRow flag as this is always true for annotations. See {@link AnnotationsType}
-     * @param {number} index - Index in the list of columns
-     * @returns {boolean} True if removable.
-     */
-    canRemoveRowAt(index: number): boolean {
-        return this.rowSize() > 1 || !this.type.required;
-    }
-
-    /**
-     * Checks that a column-like row can be removed.
-     * @param {number} index - Index in the list of columns
-     */
-    removeRowAt(index: number): void {
-        if (!this.canRemoveRowAt(index)) {
-            console.warn(`removeRowAt: This annotation group is required. It cannot have less than one row`);
-            return;
-        }
-        this.removeColumn(this.columns[index].id);
     }
 }
 
@@ -668,7 +613,7 @@ export class Field extends HasUpdates<UpdateEvent> {
     }
 
     get readonly(): boolean {
-        return this.type.readonly;
+        return this.type.displayType.isReadonly;
     }
 
     get value(): string {
@@ -789,7 +734,7 @@ export class Section extends HasUpdates<UpdateEvent> {
     }
 
     isRequired(): boolean {
-        return this.type.required;
+        return this.type.displayType.isRequired;
     }
 
     sectionPath(id: string): Section[] {
@@ -827,7 +772,7 @@ export class Sections extends HasUpdates<UpdateEvent> {
             }, {});
 
         type.sectionTypes.forEach(st => {
-            if (st.required) {
+            if (st.displayType.isShownByDefault) {
                 this.add(st, sectionData[st.name]);
                 sectionData[st.name] = undefined;
             }

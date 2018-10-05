@@ -12,22 +12,20 @@
         </div>
         <div *ngFor="let column of columns; let idx = index" class="cell heading-cell column-heading col-xs-3 col-md-2"
              [ngClass]="{'optional': !readonly && column.isRemovable,
-                            'has-error': column.control.invalid && column.control.touched}">
+                            'has-error': column.hasErrors}">
             <inline-edit placement="bottom"
-                         triggers="focus"
                          container="body"
                          containerClass="text-danger"
-                         popover="{{column.control.invalid && column.control.touched ? 'Please use a unique column name' : ''}}"
+                         popover="{{column.hasErrors ? column.errors : ''}}"
                          emptyValue="{{'Column ' + (idx + 1)}}"
-                         (remove)="featureForm.onColumnDelete(column.id)"
+                         (remove)="featureForm.onColumnRemove(column.id)"
                          (change)="onColumnChange(column, $event.target.value, 'name')"
                          [formControl]="column.control"
-                         [disableEdit]="readonly || column.isReadonly || !userData.isPrivileged"
-                         [disableChange]="column.isRequired || column.isDisplayed"
-                         [disableRemove]="!column.isRemovable"
-                         [unique]="featureForm.hasUniqueColumns"
+                         [readonly]="readonly || column.isReadonly || !userData.isPrivileged"
+                         [removable]="column.isRemovable"
+                         [required]="column.isRequired"
+                         [autosuggestSource]="featureForm.columnNamesTypeaheadFunc()"
                          validate-onblur>
-<!--                [autosuggest]="featureForm.columnNameValues"-->
             </inline-edit>
         </div>
     </div>
@@ -35,12 +33,12 @@
         <div *ngIf="!readonly || !row.isEmpty" class="row" #rowEl>
             <div class="cell heading-cell row-heading col-xs-1 col-md-1 text-center">
                 <span container="body"
-                      [tooltip]="featureForm.canDeleteRowAt(index) ? '' : 'The table must contain one row at least'">
+                      [tooltip]="featureForm.canRemoveRow ? '' : 'The table must contain one row at least'">
                     <button class="btn btn-danger btn-sm" type="button"
                             [ngClass]="{'invisible': readonly}"
-                            [disabled]="!featureForm.canDeleteRowAt(index)"
-                            (click)="featureForm.onRowDelete(rowIdx)"
-                            [tooltip]="featureForm.canDeleteRowAt(index) ? 'Delete ' + featureForm.featureTypeName.toLowerCase() + ' ' + (rowIdx + 1) : ''"
+                            [disabled]="!featureForm.canRemoveRow"
+                            (click)="featureForm.onRowRemove(rowIdx)"
+                            [tooltip]="featureForm.canRemoveRow ? 'Delete ' + featureForm.featureTypeName.toLowerCase() + ' ' + (rowIdx + 1) : ''"
                             placement="bottom"
                             container="body">
                         <i class="fa fa-trash"></i>

@@ -1,14 +1,9 @@
-import {
-    Component,
-    Input,
-    Output,
-    ElementRef,
-    forwardRef,
-    EventEmitter
-} from '@angular/core';
+import {Component, ElementRef, EventEmitter, forwardRef, Input, Output} from '@angular/core';
 
-import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
-import {AppConfig} from "../app.config";
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {AppConfig} from '../../../../app.config';
+import {Observable, Subject} from 'rxjs';
+import {typeaheadSource} from '../typeahead.utils';
 
 @Component({
     selector: 'inline-edit',
@@ -19,22 +14,29 @@ import {AppConfig} from "../app.config";
     ]
 })
 export class InlineEditComponent implements ControlValueAccessor {
-    @Input() required?: boolean = false;        //flag indicating if the field must have a value
-    @Input() disableEdit?: boolean = false;     //flag indicating if changing and removing the field is not allowed
-    @Input() disableChange?: boolean = false;   //flag indicating if changing the field's initial value is allowed
-    @Input() disableRemove?: boolean = false;   //flag indicating if removing the field is not allowed
-    @Input() emptyValue?: string = '';          //default value for the field if left empty
-    @Input() placeholder?: string = '';         //indicative text inside the field if not in focus
-    @Input() autosuggest: any[] = [];           //typeahead list of suggested values
-    @Input() suggestThreshold: number = 0;      //the typeahead is meant to act as a reminder of other fields too
-    @Input() suggestLength: number;             //max number of suggested values to be displayed at once
-    @Output() remove: EventEmitter<any> = new EventEmitter<any>();
+    @Input() required = false;
+    @Input() readonly = false;
+    @Input() removable = true;
+    @Input() emptyValue = '';
+    @Input() placeholder = '';
+    @Input() suggestThreshold = 0;
+    @Input() autosuggestSource: () => string[] = () => [];
+
+
+    @Output() remove = new EventEmitter<any>();
 
     editing: boolean = false;
-    onChange: any = () => {};
-    onTouched: any = () => {};
+
+    onChange: any = () => {
+    };
+    onTouched: any = () => {
+    };
 
     private _value: string = '';
+    private suggestLength: number;
+
+    private typeahead: Observable<string[]>;
+    private valueChanges$: Subject<string> = new Subject<string>();
 
     /**
      * Sets the max number of suggestions shown at any given time.
@@ -43,6 +45,7 @@ export class InlineEditComponent implements ControlValueAccessor {
      */
     constructor(private rootEl: ElementRef, private appConfig: AppConfig) {
         this.suggestLength = appConfig.maxSuggestLength;
+        this.typeahead = typeaheadSource(this.autosuggestSource, this.valueChanges$);
     }
 
     get value(): any {
@@ -53,6 +56,7 @@ export class InlineEditComponent implements ControlValueAccessor {
         if (v !== this._value) {
             this._value = v;
             this.onChange(v);
+            this.valueChanges$.next(v);
         }
     }
 
@@ -60,41 +64,43 @@ export class InlineEditComponent implements ControlValueAccessor {
         this._value = value;
     }
 
-    public registerOnChange(fn: () => {}): void {
+    registerOnChange(fn: () => {}): void {
         this.onChange = fn;
     }
 
-    public registerOnTouched(fn: () => {}): void {
+    registerOnTouched(fn: () => {}): void {
         this.onTouched = fn;
     }
 
-    public get canEdit(): boolean {
-        return !this.required && !this.disableEdit;
+    get canEdit(): boolean {
+        return !this.required && !this.readonly;
     }
 
-    public startEditing(): void {
-        this.editing = true;
+    get canDelete(): boolean {
+        return this.canEdit && this.removable;
+    }
+
+    onEdit(ev): void {
+        this.startEditing();
+    }
+
+    onDelete(ev): void {
+        this.remove.emit();
+    }
+
+    onBlur(event: Event): void {
+        if (!(<string>this.value).isEmpty()) {
+            this.value = this.emptyValue;
+        }
+        this.stopEditing();
+    }
+
+    private startEditing(): void {
+        this.editing = this.canEdit;
     }
 
     private stopEditing(): void {
         this.editing = false;
-    }
-
-    private onRemoveClick(ev): void {
-        this.remove.emit();
-    }
-
-    /**
-     * Handler for the blur event triggered by the input part of the edit box.
-     * Returns the box to its non-edit state and normalises the input value to the default if empty.
-     * @param {Event} event - DOM event for the click action.
-     */
-    public onEditBoxBlur(event: Event): void {
-        this.value = this.value.trim();
-        if (!this.value.length) {
-            this.value = this.emptyValue;
-        }
-        this.stopEditing();
     }
 
     /**
@@ -104,9 +110,10 @@ export class InlineEditComponent implements ControlValueAccessor {
      * TODO: this might be sorted in newer versions of the ngx-bootstrap plugin. Duplicate events may occur due to the repeated calling of "set value(value)" above (cannot keep track of the last value and, by extension, can't detect change).
      * @param selection - Object for the currently selected value.
      */
-    onSuggestSelect(selection: any) {
+
+    /*onSuggestSelect(selection: any) {
         this.rootEl.nativeElement.getElementsByTagName('input')[0].dispatchEvent(new Event('change', {bubbles: true}));
-    }
+    }*/
 
     /**
      * Handler for enter key press event. It cancels the press event's propagation and makes the component
@@ -114,7 +121,7 @@ export class InlineEditComponent implements ControlValueAccessor {
      * @param {Event} event - DOM event object.
      * @param {boolean} isSuggestOpen - If true, the autosuggest typeahead list is being displayed.
      */
-    public onEditBoxEnter(event: Event, isSuggestOpen: boolean): void {
+    public onEnterKey(event: Event, isSuggestOpen: boolean): void {
         event.stopPropagation();
         if (!isSuggestOpen) {
             this.stopEditing();

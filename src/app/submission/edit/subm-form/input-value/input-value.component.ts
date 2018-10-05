@@ -27,7 +27,6 @@ export class InputValueComponent implements ControlValueAccessor {
     @Input() readonly = false;
     @Input() formControl?: FormControl;
     @Input() isSmall = true;
-    @Input() suggestLength: number;
     @Input() suggestThreshold: number = 0;
     @Input() autosuggestSource: () => string[] = () => [];
     /*
@@ -45,6 +44,7 @@ export class InputValueComponent implements ControlValueAccessor {
     };
 
     private _value = '';
+    private suggestLength: number;
 
     private typeahead: Observable<string[]>;
     private valueChanges$: Subject<string> = new Subject<string>();

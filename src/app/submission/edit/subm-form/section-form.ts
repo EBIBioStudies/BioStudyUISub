@@ -28,19 +28,19 @@ export class ColumnControl {
     }
 
     get isRemovable(): boolean {
-        return this.column.isRemovable
+        return this.column.displayType.isRemovable
     }
 
     get isRequired(): boolean {
-        return this.column.isRequired;
+        return this.column.displayType.isRequired;
     }
 
-    get isDisplayed() {
-        return this.column.isDisplayed;
+    get canEditName() {
+        return this.column.canEditName;
     }
 
     get isReadonly() {
-        return this.column.isReadonly;
+        return this.column.displayType.isReadonly;
     }
 
     get id(): string {
@@ -225,7 +225,7 @@ export class FeatureForm {
     }
 
     get isRequired(): boolean {
-        return this.feature.type.required;
+        return this.feature.type.displayType.isRequired;
     }
 
     get icon(): string {
@@ -246,7 +246,7 @@ export class FeatureForm {
 
     get colTypeNames(): string[] {
         return this.columnTypes
-            .filter(type => !type.readonly)
+            .filter(type => !type.displayType.isReadonly)
             .map(type => type.name);
     }
 
@@ -297,7 +297,7 @@ export class FeatureForm {
         this.rowForms.forEach(rf => rf.addCellControl(column));
     }
 
-    onColumnDelete(columnId: string) {
+    onColumnRemove(columnId: string) {
         const index = this.columnControls.findIndex(c => c.id === columnId);
         if (index >= 0) {
             this.columnControls.splice(index, 1);
@@ -306,13 +306,12 @@ export class FeatureForm {
         }
     }
 
-    onRowDelete(rowIndex: string) {
+    onRowRemove(rowIndex: string) {
         //TODO
     }
 
-    canDeleteRowAt(index: number): boolean {
-        //TODO
-        return true;
+    get canRemoveRow(): boolean {
+        return this.feature.canRemoveRow;
     }
 
     private addRowForm(row: ValueMap, columns: Attribute[]) {

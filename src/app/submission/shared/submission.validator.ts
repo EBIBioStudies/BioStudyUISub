@@ -29,13 +29,13 @@ class ValidationRules {
 
         rules = rules.concat(
             section.type.featureTypes
-                .filter(ft => ft.required)
+                .filter(ft => ft.displayType.isRequired)
                 .map(ft => ValidationRules.requiredFeature(ft, section))
         );
 
         rules = rules.concat(
             section.type.sectionTypes
-                .filter(st => st.required)
+                .filter(st => st.displayType.isRequired)
                 .map(st => ValidationRules.requiredSection(st, section))
         );
         return rules;
@@ -44,7 +44,7 @@ class ValidationRules {
     static forField(field: Field): ValidationRule[] {
         const value = field.value;
         return [
-            ValidationRules.requiredValue(value, field.name, field.type.required),
+            ValidationRules.requiredValue(value, field.name, field.type.displayType.isRequired),
             ValidationRules.formattedValue(value, field.valueType, field.name),
             ...ValidationRules.forValue(field.value, field.name, field.valueType)
         ];
@@ -61,7 +61,7 @@ class ValidationRules {
 
     static forFeature(feature: Feature): ValidationRule[] {
         const rules: ValidationRule[] = [];
-        if (feature.type.required) {
+        if (feature.type.displayType.isRequired) {
             rules.push(ValidationRules.atLeastOneRowFeature(feature))
         }
 
@@ -74,7 +74,7 @@ class ValidationRules {
 
                 //If a member field is marked as required but its parent feature is not, the field should be optional
                 //NOTE: Features added interactively are optional and fields may be required at the row level (eg: publication rows).
-                if (feature.type.required && col.isRequired) {
+                if (feature.type.displayType.isRequired && col.displayType.isRequired) {
                     valueRules.push(ValidationRules.requiredValue(rowValue, rowName));
                 }
                 valueRules.push(ValidationRules.formattedValue(rowValue, col.valueType, rowName));

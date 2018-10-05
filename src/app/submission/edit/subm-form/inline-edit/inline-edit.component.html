@@ -1,5 +1,5 @@
 <div class="inline-edit-wrapper"
-     [ngClass]="{'editable': canEdit, 'changeable': !disableChange, 'text-muted': !editing}">
+     [ngClass]="{'editable': canEdit, 'text-muted': !editing}">
     <input class="form-control form-control-auto" type="text" tabindex="-1" autocomplete="off"
            name="inline-edit-box"
            container="body"
@@ -9,24 +9,23 @@
            [(ngModel)]="value"
            [placeholder]="placeholder"
            [readonly]="!editing"
-           [typeahead]="!editing ? [] : autosuggest"
+           [typeahead]="!editing ? [] : typeahead"
            [typeaheadMinLength]="suggestThreshold"
            [typeaheadOptionsLimit]="200"
            [typeaheadScrollable]="true"
            [typeaheadOptionsInScrollableView]="suggestLength"
-           (blur)="onEditBoxBlur($event)"
-           (click)="canEdit && !disableChange && startEditing()"
-           (keyup.enter)="onEditBoxEnter($event, ahead._container)"
-           (typeaheadOnSelect)="onSuggestSelect($event)"
+           (blur)="onBlur($event)"
+           (click)="canEdit && startEditing()"
+           (keyup.enter)="onEnterKey($event, ahead._container)"
            #ahead="bs-typeahead"
            #inlineEditBox/>
     <div *ngIf="!editing" class="icons">
-        <button *ngIf="canEdit && !disableChange" class="btn btn-xs btn-link" type="button"
-                (click)="startEditing()">
+        <button *ngIf="canEdit" class="btn btn-xs btn-link" type="button"
+                (click)="onEdit($event)">
             <i class="fa fa-pencil"></i>
         </button>
-        <button *ngIf="canEdit && !disableRemove" class="btn btn-xs btn-link" type="button"
-                (click)="onRemoveClick($event)">
+        <button *ngIf="canDelete" class="btn btn-xs btn-link" type="button"
+                (click)="onDelete($event)">
             <i class="text-danger fa fa-trash-o"></i>
         </button>
     </div>

@@ -73,7 +73,7 @@ export class ValueValidators {
 
     static forField(field: Field, parentRef: string): ValidatorFn[] {
         const validators: ValidatorFn[] = [];
-        if (field.type.required) {
+        if (field.type.displayType.isRequired) {
             validators.push(nonEmptyStringValidator(field.name, parentRef));
         }
         return [...validators, ...ValueValidators.forValueType(field.type.valueType)];

@@ -24,7 +24,6 @@ import {ORCIDInputBoxComponent} from './orcid-input-box.component';
 import {FileUploadButtonComponent} from './file-upload-button.component';
 import {ConfirmDialogComponent} from './confirm-dialog.component';
 import {MultiSelectComponent, FilterPipe} from './multi-select.component';
-import {InlineEditComponent} from './inline-edit.component';
 import {ValidateOnBlurDirective} from "./validate-onblur.directive";
 import {StripHtmlPipe} from "./strip-html.pipe";
 
@@ -50,7 +49,6 @@ import {StripHtmlPipe} from "./strip-html.pipe";
         FileUploadButtonComponent,
         ConfirmDialogComponent,
         MultiSelectComponent,
-        InlineEditComponent,
         FilterPipe,
         StripHtmlPipe,
         ValidateOnBlurDirective,
@@ -75,7 +73,6 @@ import {StripHtmlPipe} from "./strip-html.pipe";
         FileUploadButtonComponent,
         ConfirmDialogComponent,
         MultiSelectComponent,
-        InlineEditComponent,
         FilterPipe,
         StripHtmlPipe,
         ValidateOnBlurDirective
