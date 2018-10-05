@@ -18,12 +18,11 @@
                          containerClass="text-danger"
                          popover="{{column.hasErrors ? column.errors : ''}}"
                          emptyValue="{{'Column ' + (idx + 1)}}"
-                         (remove)="featureForm.onColumnRemove(column.id)"
                          [formControl]="column.control"
                          [readonly]="readonly || !column.canEditName || !userData.isPrivileged"
                          [removable]="column.isRemovable"
                          [autosuggestSource]="featureForm.columnNamesTypeaheadFunc()"
-                         validate-onblur>
+                         (remove)="featureForm.onColumnRemove(column.id)">
             </inline-edit>
         </div>
     </div>

@@ -10,7 +10,7 @@ export class FieldControl {
     readonly control: FormControl;
 
     constructor(readonly field: Field, readonly parentRef: string) {
-        this.control = new FormControl(field.value, ValueValidators.forField(this.field, parentRef))
+        this.control = new FormControl(field.value, ValueValidators.forField(this.field, parentRef));
     }
 
     get errors(): string[] {
@@ -25,6 +25,9 @@ export class ColumnControl {
 
     constructor(private column: Attribute, readonly parentRef: string) {
         this.control = new FormControl(column.name, ValueValidators.forColumn(column, parentRef));
+        this.control.valueChanges.subscribe(v => {
+            column.name = v;
+        });
     }
 
     get isRemovable(): boolean {

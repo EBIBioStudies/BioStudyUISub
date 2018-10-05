@@ -26,7 +26,7 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor {
     private orcidValue = '';                    //internal data model
     private mlistener: any = null;
 
-    @Input() readonly?: boolean = false;
+    @Input() readonly: boolean = false;
     @Input() isPopupButton: boolean = true;     //flag for showing/hiding popup button
     @Input() isSmall: boolean = true;           //flag for making the input area the same size as grid fields
 
