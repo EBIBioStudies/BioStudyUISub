@@ -120,52 +120,6 @@ export class RowForm {
     }
 }
 
-/**
- *
- *
- *  private addColumnControl(column: Attribute) {
-        const t = this.feature.type.getColumnType(column.name);
-        const colValidators = [nonBlankVal()];
-        this.columnsFormGroup.addControl(column.id, new FormControl(column.name, colValidators));
-        this.rows.forEach((row, rowIndex) => {
-            const fg = (<FormGroup>this.rowsFormArray.at(rowIndex));
-            this.addRowValueControl(fg, column.id, row, t!);
-
-            //Regenerates the field errors for the whole current row
-            this.addRowErrors(fg);
-        });
-    }
-
- private addRowArray(row: ValueMap): FormGroup {
-        const formGroup = new FormGroup({});
-        this.rowsFormArray.push(formGroup);
-
-        this.columns.forEach(
-            column => {
-                const t = this.feature.type.getColumnType(column.name);
-                this.addRowValueControl(formGroup, column.id, row, t!);
-            });
-
-        return formGroup;
-    }
-
- private addRowValueControl(fg: FormGroup, columnId: string, row: ValueMap, tmpl: ColumnType): void {
-        const valueValidators: ValidatorFn[] = [];     //validators for the control
-        let colAttr;                    //attribute corresponding to the column under which this control will lie
-        let control;
-
-        //TODO: follow a recipe similar to addFieldControl's to support other validators
-        if (tmpl.required) {
-            valueValidators.push(nonBlankVal());
-        }
-
-        colAttr = this.columns.find(column => column.id === columnId);
-        control = new FieldControlOld(row.valueFor(columnId)!.value, valueValidators, colAttr, this.feature.type);
-        fg.addControl(columnId, control);
-    }
-
- */
-
 export class FeatureForm {
     readonly form: FormGroup;
 
@@ -192,7 +146,7 @@ export class FeatureForm {
         return <FormGroup>this.form.get('columns');
     }
 
-    private get rowsFormArray(): FormArray {
+    private get rowFormArray(): FormArray {
         return <FormArray>this.form.get('rows');
     }
 
@@ -306,8 +260,10 @@ export class FeatureForm {
         }
     }
 
-    onRowRemove(rowIndex: string) {
-        //TODO
+    onRowRemove(rowIndex: number) {
+        this.rowForms.splice(rowIndex, 1);
+        this.rowFormArray.removeAt(rowIndex);
+        this.feature.removeRowAt(rowIndex);
     }
 
     get canRemoveRow(): boolean {
@@ -317,7 +273,7 @@ export class FeatureForm {
     private addRowForm(row: ValueMap, columns: Attribute[]) {
         const rowForm = new RowForm(row, columns, this.featureTypeName);
         this.rowForms.push(rowForm);
-        this.rowsFormArray.push(rowForm.form);
+        this.rowFormArray.push(rowForm.form);
     }
 
     private addColumnControl(column: Attribute) {

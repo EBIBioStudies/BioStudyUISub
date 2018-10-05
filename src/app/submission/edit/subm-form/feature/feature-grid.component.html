@@ -19,11 +19,9 @@
                          popover="{{column.hasErrors ? column.errors : ''}}"
                          emptyValue="{{'Column ' + (idx + 1)}}"
                          (remove)="featureForm.onColumnRemove(column.id)"
-                         (change)="onColumnChange(column, $event.target.value, 'name')"
                          [formControl]="column.control"
-                         [readonly]="readonly || column.isReadonly || !userData.isPrivileged"
+                         [readonly]="readonly || !column.canEditName || !userData.isPrivileged"
                          [removable]="column.isRemovable"
-                         [required]="column.isRequired"
                          [autosuggestSource]="featureForm.columnNamesTypeaheadFunc()"
                          validate-onblur>
             </inline-edit>

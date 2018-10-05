@@ -5,11 +5,10 @@
            container="body"
            placement="bottom"
            [tooltip]="isOverflow(inlineEditBox) ? value : ''"
-           [required]="required"
            [(ngModel)]="value"
            [placeholder]="placeholder"
            [readonly]="!editing"
-           [typeahead]="!editing ? [] : typeahead"
+           [typeahead]="typeahead"
            [typeaheadMinLength]="suggestThreshold"
            [typeaheadOptionsLimit]="200"
            [typeaheadScrollable]="true"
@@ -24,8 +23,8 @@
                 (click)="onEdit($event)">
             <i class="fa fa-pencil"></i>
         </button>
-        <button *ngIf="canDelete" class="btn btn-xs btn-link" type="button"
-                (click)="onDelete($event)">
+        <button *ngIf="canRemove" class="btn btn-xs btn-link" type="button"
+                (click)="onRemove($event)">
             <i class="text-danger fa fa-trash-o"></i>
         </button>
     </div>

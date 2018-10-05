@@ -36,7 +36,9 @@ export class InputValueComponent implements ControlValueAccessor {
     */
     //a value of 0 makes typeahead behave like an auto-suggest box.
 
-    ValueTypeNameEnum = ValueTypeName;
+    readonly ValueTypeNameEnum = ValueTypeName;
+
+    readonly typeahead: Observable<string[]>;
 
     private onChange: any = (_: any) => {
     };
@@ -46,14 +48,15 @@ export class InputValueComponent implements ControlValueAccessor {
     private _value = '';
     private suggestLength: number;
 
-    private typeahead: Observable<string[]>;
     private valueChanges$: Subject<string> = new Subject<string>();
 
     @Output() async: EventEmitter<any> = new EventEmitter<any>();  //signals availability of asynchronous attributes
 
     constructor(private rootEl: ElementRef, private appConfig: AppConfig) {
         this.suggestLength = appConfig.maxSuggestLength;
-        this.typeahead = typeaheadSource(() => {return this.autosuggestValues();}, this.valueChanges$);
+        this.typeahead = typeaheadSource(() => {
+            return this.autosuggestValues();
+        }, this.valueChanges$);
     }
 
     private autosuggestValues(): string[] {
@@ -125,9 +128,10 @@ export class InputValueComponent implements ControlValueAccessor {
      * TODO: this might be sorted in newer versions of the ngx-bootstrap plugin. Duplicate events may occur due to the repeated calling of "set value(value)" above (cannot keep track of the last value and, by extension, can't detect change).
      * @param {TypeaheadMatch} selection - Object for the currently selected value.
      */
-   /* onSuggestSelect(selection: TypeaheadMatch) {
-        // this.rootEl.nativeElement.getElementsByTagName('input')[0].dispatchEvent(new Event('change', {bubbles: true}));
-    }*/
+
+    /* onSuggestSelect(selection: TypeaheadMatch) {
+         // this.rootEl.nativeElement.getElementsByTagName('input')[0].dispatchEvent(new Event('change', {bubbles: true}));
+     }*/
 
     /**
      * Convenience method for the equivalen date n years into the future.

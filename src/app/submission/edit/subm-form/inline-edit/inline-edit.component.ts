@@ -14,7 +14,6 @@ import {typeaheadSource} from '../typeahead.utils';
     ]
 })
 export class InlineEditComponent implements ControlValueAccessor {
-    @Input() required = false;
     @Input() readonly = false;
     @Input() removable = true;
     @Input() emptyValue = '';
@@ -35,7 +34,7 @@ export class InlineEditComponent implements ControlValueAccessor {
     private _value: string = '';
     private suggestLength: number;
 
-    private typeahead: Observable<string[]>;
+    readonly typeahead: Observable<string[]>;
     private valueChanges$: Subject<string> = new Subject<string>();
 
     /**
@@ -45,7 +44,9 @@ export class InlineEditComponent implements ControlValueAccessor {
      */
     constructor(private rootEl: ElementRef, private appConfig: AppConfig) {
         this.suggestLength = appConfig.maxSuggestLength;
-        this.typeahead = typeaheadSource(this.autosuggestSource, this.valueChanges$);
+        this.typeahead = typeaheadSource(() => {
+            return this.autosuggestSource();
+        }, this.valueChanges$);
     }
 
     get value(): any {
@@ -73,10 +74,10 @@ export class InlineEditComponent implements ControlValueAccessor {
     }
 
     get canEdit(): boolean {
-        return !this.required && !this.readonly;
+        return !this.readonly;
     }
 
-    get canDelete(): boolean {
+    get canRemove(): boolean {
         return this.canEdit && this.removable;
     }
 
@@ -84,7 +85,7 @@ export class InlineEditComponent implements ControlValueAccessor {
         this.startEditing();
     }
 
-    onDelete(ev): void {
+    onRemove(ev): void {
         this.remove.emit();
     }
 

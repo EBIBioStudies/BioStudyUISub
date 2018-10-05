@@ -31,9 +31,9 @@
             <i class="fa fa-lg {{featureForm.icon}}"></i>
             <div class="panel-description col-xs-9 col-sm-10 col-lg-11">
                 <span [innerHTML]="featureForm.description"></span>
-                <!--TODO: div *ngIf="allowedColNames.length && userData.isPrivileged">
+                <!-- TODO div *ngIf="featureForm.columnNameValues().length && userData.isPrivileged">
                     <strong>{{featureForm.uniqueColumnsOnly ? 'More' : 'Available'}} {{featureForm.canHaveMultipleRows ? 'column' : 'key'}}s</strong>:
-                    <i>{{allowedColNames.join(', ')}}.</i>
+                    <i>{{featureForm.columnNameValues().join(', ')}}.</i>
                 </div-->
             </div>
             <span class="label label-danger pull-right"
