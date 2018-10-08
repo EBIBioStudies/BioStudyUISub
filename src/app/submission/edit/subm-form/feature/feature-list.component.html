@@ -3,7 +3,7 @@
         <div class="cell heading col-xs-3">Key</div>
         <div class="cell heading col-xs-9">Value</div>
     </div>
-    <div *ngFor="let column of columns">
+    <div *ngFor="let column of columns; let idx = index">
         <div class="row" #rowEl *ngIf="!readonly">
             <div class="cell col-xs-3">
                 <div class="form-group key-field"
@@ -33,7 +33,9 @@
                                [typeaheadMinLength]="0"
                                [typeaheadOptionsLimit]="200"
                                [typeaheadScrollable]="true"
-                               [typeaheadOptionsInScrollableView]="suggestLength">
+                               [typeaheadOptionsInScrollableView]="suggestLength"
+                               [submControlName]="column.name || 'Key (' + idx + ')'"
+                               [submControlIcon]="featureForm.icon">
                     </div>
                 </div>
             </div>
@@ -43,16 +45,18 @@
                                  'optional': !column.isRequired,
                                  'has-error': cell.hasErrors}">
                     <input-value placement="top"
-                                triggers="focus"
-                                container="body"
-                                containerClass="{{featureForm.isRequired ? 'text-danger' : 'text-warning'}}"
-                                popover="{{cell.hasErrors ? cell.errors : ''}}"
-                                [valueType]="column.valueType"
-                                [readonly]="readonly || column.isReadonly"
-                                [required]="column.isRequired"
-                                [formControl]="cell.control"
-                                [autosuggestSource]="featureForm.cellValuesTypeaheadFunc(column.id)"
-                                validate-onblur>
+                                 triggers="focus"
+                                 container="body"
+                                 containerClass="{{featureForm.isRequired ? 'text-danger' : 'text-warning'}}"
+                                 popover="{{cell.hasErrors ? cell.errors : ''}}"
+                                 [valueType]="column.valueType"
+                                 [readonly]="readonly || column.isReadonly"
+                                 [required]="column.isRequired"
+                                 [formControl]="cell.control"
+                                 [autosuggestSource]="featureForm.cellValuesTypeaheadFunc(column.id)"
+                                 [submControlName]="column.name"
+                                 [submControlIcon]="featureForm.icon"
+                                 validate-onblur>
                     </input-value>
                 </div>
             </div>

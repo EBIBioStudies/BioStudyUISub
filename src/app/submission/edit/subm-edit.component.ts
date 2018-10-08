@@ -24,6 +24,7 @@ import {submission2PageTab} from '../shared/submission-to-pagetab.utils';
 import {pageTab2Submission} from '../shared/pagetab-to-submission.utils';
 import {forkJoin, Observable, of} from 'rxjs';
 import {findSubmissionTemplateName} from '../shared/templates/submission.templates';
+import {SectionForm} from './subm-form/section-form';
 
 @Component({
     selector: 'subm-edit',
@@ -40,7 +41,7 @@ export class SubmEditComponent implements OnInit {
 
     subm?: Submission;
     section?: Section;
-   // formControls: FieldControl[] = [];          //immutable list of controls making up the form's section (fields, features...)
+    sectionForm?: SectionForm;
     sideBarCollapsed: boolean = false;
     accno: string = '';
     releaseDate: string = '';
@@ -443,6 +444,7 @@ export class SubmEditComponent implements OnInit {
             console.log(`Section with id ${sectionId} was not found`);
         }
         this.section = path[path.length - 1];
+        this.sectionForm = new SectionForm(this.section);
     }
 
     /**

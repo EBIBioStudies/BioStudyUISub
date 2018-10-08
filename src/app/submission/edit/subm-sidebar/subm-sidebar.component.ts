@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnChanges, Output, ViewChild} from '@angular/core';
-import {FormControl, NgForm, ValidationErrors} from '@angular/forms';
+import {AbstractControl, FormArray, FormControl, FormGroup, NgForm, ValidationErrors} from '@angular/forms';
 
 import {Feature, Section} from '../../shared/submission.model';
 import {SubmTypeAddDialogComponent} from '../submtype-add/submtype-add.component';
@@ -7,7 +7,7 @@ import {ConfirmDialogComponent} from 'app/shared/index';
 import {UserData} from '../../../auth/user-data';
 import {ServerError} from '../../../http/server-error.handler';
 import {Observable, of, Subscription} from 'rxjs';
-import {FieldControl} from '../subm-form/section-form';
+import {FieldControl, SectionForm} from '../subm-form/section-form';
 
 /**
  * Submission item class aggregating its corresponding feature with UI-relevant metadata. It enables
@@ -144,7 +144,7 @@ export class SubmSideBarComponent implements OnChanges {
     @Input() isSubmitting: boolean = false;                                  //flag indicating submission data is being sent
     @Input() collapsed?: boolean = false;                                     //flag indicating if menu is minimized/collapsed
     @Input() section?: Section;                                               //section of the form being displayed
-    @Input() formControls: FieldControl[] = [];                              //refreshed array of form controls
+    @Input() sectionForm?: SectionForm;
     @Input() serverError?: ServerError;                                       //errors from server requests
     @Output() toggle? = new EventEmitter();                                  //event triggered when collapsed state changes
 
@@ -152,16 +152,63 @@ export class SubmSideBarComponent implements OnChanges {
     @ViewChild('confirmDialog') confirmDialog?: ConfirmDialogComponent;
 
     isAdvancedOpen: boolean = false; //flag indicating if advanced options for types are being displayed
-    isStatus: boolean = true;        //flag indicating if form status or "check" tab is being displayed
-    editing: boolean = false;        //flag indicating component's mode: display or editing, with different renderings
+    isCheckTabActive: boolean = true;        //flag indicating if form status or "check" tab is being displayed
+    isEditModeOn: boolean = false;        //flag indicating component's mode: display or editing, with different renderings
     items?: SubmItems;                //current collection of feature/subsection items
     iconMap: any = {};               //lookup table for icons
-    numPending: number = 0;          //number of modified fields still pending review (still invalid)
-    numInvalid: number = 0;          //number of fields still invalid (modified or not)
 
     private subscr?: Subscription;
 
+    private invalidControls: FormControl[] = [];
+
     constructor(public userData: UserData) {
+    }
+
+    get isAddTabActive(): boolean {
+        return !this.isCheckTabActive;
+    }
+
+    get isEditModeOff(): boolean {
+        return !this.isEditModeOn;
+    }
+
+    get isAdvancedClosed(): boolean {
+        return !this.isAdvancedOpen;
+    }
+
+    onCheckTabClick(): void {
+        this.isCheckTabActive = true;
+    }
+
+    onAddTabClick(): void {
+        this.isCheckTabActive = false;
+    }
+
+    private updateInvalidControlList(form: FormGroup) {
+        this.invalidControls = this.listControls(form)
+            .filter(control => control.invalid);
+    }
+
+    listControls(control: AbstractControl): FormControl[] {
+        if (control instanceof FormGroup) {
+            const map = (<FormGroup>control).controls;
+            return Object.keys(map)
+                .map(key => map[key])
+                .flatMap(control => this.listControls(control));
+        }
+        else if (control instanceof FormArray) {
+            const array = (<FormArray>control).controls;
+            return array.flatMap(control => this.listControls(control));
+        }
+        return [<FormControl>control];
+    }
+
+    ngOnInit() {
+        if (this.sectionForm) {
+            const form = this.sectionForm.form;
+            form.valueChanges.subscribe(() => this.updateInvalidControlList(form));
+            this.updateInvalidControlList(form);
+        }
     }
 
     /**
@@ -169,6 +216,14 @@ export class SubmSideBarComponent implements OnChanges {
      * @param changes -  Object of current and previous property values.
      */
     ngOnChanges(changes: any): void {
+        if (changes.sectionForm) {
+            if (this.sectionForm) {
+                const form = this.sectionForm.form;
+                form.valueChanges.subscribe(() => this.updateInvalidControlList(form));
+                this.updateInvalidControlList(form);
+            }
+        }
+
         if (changes.section) {
             if (this.subscr) {
                 this.subscr.unsubscribe();
@@ -187,21 +242,9 @@ export class SubmSideBarComponent implements OnChanges {
         }
     }
 
-    /**
-     * Updates the pending fields counter only after the digest cycle. Otherwise Angular predictably complains
-     * the change happened too early.
-     */
     ngDoCheck() {
-      /*  this.numPending = FieldControl.numPending;
-        this.numInvalid = FieldControl.numInvalid;*/
-    }
-
-    /**
-     * Handler for clicks on the sidebar's tabs.
-     * @param {boolean} isStatus - Is the status tab to be displayed after click?
-     */
-    onTabClick(isStatus: boolean): void {
-        this.isStatus = isStatus;
+        /*  this.numPending = FieldControl.numPending;
+          this.numInvalid = FieldControl.numInvalid;*/
     }
 
     /**
@@ -286,7 +329,7 @@ export class SubmSideBarComponent implements OnChanges {
      * Cancels any pending deletion and goes back to display mode.
      * @param {Event} [event] - Optional click event object.
      */
-    onCancel(event?: Event): void {
+    onCancelChanges(event?: Event): void {
         if (this.items!.isDeletion) {
             this.items!.reset();
         }
@@ -299,7 +342,7 @@ export class SubmSideBarComponent implements OnChanges {
      */
     onEditModeToggle(event?: Event): void {
         event && event.preventDefault();
-        this.editing = !this.editing;
+        this.isEditModeOn = !this.isEditModeOn;
     }
 
     /**
@@ -355,19 +398,21 @@ export class SubmSideBarComponent implements OnChanges {
      * @param {Event} event - Click event object
      * @param {FieldControl} control - Form control augmented with the DOM element for the field.
      */
-    onReviewClick(event: Event, control: FieldControl) {
+    onReviewClick(event: Event, control: FormControl) {
+        const controlEl = (<any>control).nativeElement;
+        if (!controlEl) {
+            return;
+        }
         const buttonEl = <HTMLElement>event.target;
-
-        //Determines the scrolling offset needed to get the control alongside the review button just clicked.
-       // let scrollTop = control.nativeElement!.getBoundingClientRect().top - buttonEl.getBoundingClientRect().top;
+        let scrollTop = controlEl.getBoundingClientRect().top - buttonEl.getBoundingClientRect().top;
 
         //Prevents the submission topbar from overlapping the control's label area if it's at the top.
-        if (this.formControls.indexOf(control) == 0) {
-           // scrollTop -= 25;
-        }
+        //if (this.formControls.indexOf(control) == 0) {
+        //    scrollTop -= 25;
+        //}
 
-       // window.scrollBy(0, scrollTop);
-       // control.nativeElement!.focus();
+        window.scrollBy(0, scrollTop);
+        controlEl.querySelectorAll('input, select, textarea')[0].focus();
     }
 
     /**
@@ -416,9 +461,7 @@ export class SubmSideBarComponent implements OnChanges {
      * @returns {string} Abbreviated text
      */
     tipText(errors: ValidationErrors): string {
-        if (errors.required && errors.required.leadtrail) {
-            return 'spaces';
-        } else if (errors.required) {
+        if (errors.required) {
             return 'blank';
         } else if (errors.maxlength) {
             return 'too long';
@@ -426,7 +469,9 @@ export class SubmSideBarComponent implements OnChanges {
             return 'too short';
         } else if (errors.pattern) {
             return 'wrong format';
+        } else if (errors.uniqueColumn) {
+            return 'not unique'
         }
-        return '';
+        return Object.keys(errors)[0];
     }
 }

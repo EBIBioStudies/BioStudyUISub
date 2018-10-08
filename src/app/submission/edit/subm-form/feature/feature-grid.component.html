@@ -22,7 +22,9 @@
                          [readonly]="readonly || !column.canEditName || !userData.isPrivileged"
                          [removable]="column.isRemovable"
                          [autosuggestSource]="featureForm.columnNamesAvailable"
-                         (remove)="featureForm.onColumnRemove(column.id)">
+                         (remove)="featureForm.onColumnRemove(column.id)"
+                         [submControlName]="featureForm.featureTypeName + ' column name'"
+                         [submControlIcon]="featureForm.icon">
             </inline-edit>
         </div>
     </div>
@@ -54,7 +56,9 @@
                                  [valueType]="column.valueType"
                                  [readonly]="readonly || column.isReadonly"
                                  [formControl]="row.cellControlAt(column.id).control"
-                                 [autosuggestSource]="featureForm.cellValuesTypeaheadFunc(rowIdx, column.id)">
+                                 [autosuggestSource]="featureForm.cellValuesTypeaheadFunc(rowIdx, column.id)"
+                                 [submControlName]="column.name"
+                                 [submControlIcon]="featureForm.icon">
                     </input-value>
                 </div>
             </div>

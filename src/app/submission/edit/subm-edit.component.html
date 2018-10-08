@@ -3,8 +3,7 @@
     <subm-sidebar *ngIf="!readonly"
                   (toggle)="sideBarCollapsed=!sideBarCollapsed"
                   [collapsed]="sideBarCollapsed"
-                  [section]="section"
-                  [formControls]="formControls"
+                  [sectionForm]="sectionForm"
                   [isLoading]="isLoading"
                   [isSubmitting]="isSubmitting"
                   [serverError]="serverError">
@@ -148,7 +147,7 @@
                 </div>
 
                 <subm-form #submForm
-                           [section]="section"
+                           [sectionForm]="sectionForm"
                            (keyup.enter)="onSubmit($event, true)"
                            [readonly]="readonly">
                 </subm-form>

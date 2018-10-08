@@ -80,7 +80,11 @@ export class ValueValidators {
     }
 
     static forCell(column: Attribute, parentRef: string): ValidatorFn[] {
-        return []; //TODO
+        const validators: ValidatorFn[] = [];
+        if (column.displayType.isRequired) {
+            validators.push(nonEmptyStringValidator(column.name, parentRef));
+        }
+        return [...validators, ...ValueValidators.forValueType(column.valueType)];
     }
 
     static forColumn(column: Attribute, parentRef: string): ValidatorFn[] {

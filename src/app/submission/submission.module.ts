@@ -44,6 +44,7 @@ import {Camelcase2LabelPipe} from './shared/pipes/camelcase-to-label.pipe';
 import {FileModule} from '../file/file.module';
 import {InputValueComponent} from './edit/subm-form/input-value/input-value.component';
 import {InlineEditComponent} from './edit/subm-form/inline-edit/inline-edit.component';
+import {SubmControlDirective} from './edit/subm-form/subm-control.directive';
 
 @NgModule({
     imports: [
@@ -89,8 +90,9 @@ import {InlineEditComponent} from './edit/subm-form/inline-edit/inline-edit.comp
         DateCellComponent,
         TextFilterComponent,
         DateFilterComponent,
+        Camelcase2LabelPipe,
         UniqueValidator,
-        Camelcase2LabelPipe
+        SubmControlDirective
     ],
     exports: [
         SubmListComponent,
