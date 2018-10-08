@@ -21,7 +21,7 @@
                          [formControl]="column.control"
                          [readonly]="readonly || !column.canEditName || !userData.isPrivileged"
                          [removable]="column.isRemovable"
-                         [autosuggestSource]="featureForm.columnNamesTypeaheadFunc()"
+                         [autosuggestSource]="featureForm.columnNamesAvailable"
                          (remove)="featureForm.onColumnRemove(column.id)">
             </inline-edit>
         </div>
@@ -54,7 +54,7 @@
                                  [valueType]="column.valueType"
                                  [readonly]="readonly || column.isReadonly"
                                  [formControl]="row.cellControlAt(column.id).control"
-                                 [autosuggestSource]="featureForm.columnValuesTypeaheadFunc(rowIdx, column.id)">
+                                 [autosuggestSource]="featureForm.cellValuesTypeaheadFunc(rowIdx, column.id)">
                     </input-value>
                 </div>
             </div>

@@ -129,6 +129,8 @@ export class FeatureForm {
     private columnControls: ColumnControl[] = [];
     private rowForms: RowForm[] = [];
 
+    private cellValueTypeahead: Map<string, () => string[]> = new Map();
+
     constructor(private feature: Feature) {
         this.form = new FormGroup({
             columns: new FormGroup({}, FormValidators.forFeatureColumns(feature)),
@@ -208,34 +210,38 @@ export class FeatureForm {
     }
 
     columnNamesTypeahead(column: ColumnControl): Observable<string[]> {
-        return column.typeaheadSource(this.columnNamesTypeaheadFunc());
+        return column.typeaheadSource(this.columnNamesAvailable);
     }
 
-    columnNameValues(): string[] {
+    /* returns a list of column names available for a new column to add */
+    columnNamesAvailable = () => {
         if (this.hasUniqueColumns) {
             const colNames = this.columnNames;
             return this.colTypeNames.filter(name => !colNames.includes(name));
         }
         return this.colTypeNames;
-    }
+    };
 
-    columnNamesTypeaheadFunc(): () => string[] {
-        return () => {
-            return this.columnNameValues();
-        };
-    }
-
-    columnValuesTypeaheadFunc(rowIndex: number, columnId: string): () => string[] {
-        const skipRow = this.rowForms[rowIndex];
-        return () => {
-            return this.rowForms
-                .filter(row => row !== skipRow)
-                .map(row => row.cellControlAt(columnId))
-                .filter(c => c !== undefined)
-                .map(c => c!.control.value)
-                .filter((v: string) => !v.isEmpty())
-                .uniqueValues();
+    cellValuesTypeaheadFunc(rowIndex: number, columnId: string): () => string[] {
+        const key = `${rowIndex}_${columnId}`;
+        if (!this.cellValueTypeahead.has(key)) {
+            this.cellValueTypeahead.set(key, () => {
+                return this.cellValues(rowIndex, columnId);
+            });
         }
+        return this.cellValueTypeahead.get(key)!;
+    }
+
+    /* returns list of current values for a column, excludes value in the current row */
+    cellValues(rowIndex: number, columnId: string): string[] {
+        const skipRow = this.rowForms[rowIndex];
+        return this.rowForms
+            .filter(row => row !== skipRow)
+            .map(row => row.cellControlAt(columnId))
+            .filter(c => c !== undefined)
+            .map(c => c!.control.value)
+            .filter((v: string) => !v.isEmpty())
+            .uniqueValues();
     }
 
     cellControlAt(rowIndex: number, columnId: string): CellControl | undefined {

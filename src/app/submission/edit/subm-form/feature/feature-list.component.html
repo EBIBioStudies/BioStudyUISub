@@ -51,7 +51,7 @@
                                 [readonly]="readonly || column.isReadonly"
                                 [required]="column.isRequired"
                                 [formControl]="cell.control"
-                                [autosuggestSource]="featureForm.columnValuesTypeaheadFunc(column.id)"
+                                [autosuggestSource]="featureForm.cellValuesTypeaheadFunc(column.id)"
                                 validate-onblur>
                     </input-value>
                 </div>
