@@ -3,13 +3,13 @@ export const EutoxriskTemplate = {
     'description': 'Integrated European programme for mechanism-based Toxicity testing and Risk assessment',
     'sectionType': {
         'name': 'Study',
-        'required': true,
+        'display': 'required',
         'fieldTypes': [
             {
                 'name': 'Title',
                 'icon': 'fa-title',
                 'valueType': 'largetext',
-                'required': true,
+                'display': 'required',
                 'minlength': 25
             },
             {
@@ -115,8 +115,7 @@ export const EutoxriskTemplate = {
                 {
                     'name': 'AttachTo',
                     'valueType': 'text',
-                    'displayed': true,
-                    'readonly': true
+                    'display': 'readonly'
                 },
                 {
                     'name': 'Compound',
@@ -135,17 +134,17 @@ export const EutoxriskTemplate = {
                 'icon': 'fa-vcard',
                 'description': 'Add the contact details for the authors involved in the study.',
                 'uniqueCols': true,
-                'required': true,
+                'display': 'required',
                 'columnTypes': [
                     {
                         'name': 'Name',
                         'valueType': 'text',
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'E-mail',
                         'valueType': 'text',
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'Organisation',
@@ -184,17 +183,17 @@ export const EutoxriskTemplate = {
                             'Unilever',
                             'University of Vienna'
                         ],
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'Role',
                         'valueType': 'text',
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'ORCID',
                         'valueType': 'text',
-                        'displayed': true
+                        'display': 'desirable'
                     },
                     {
                         'name': 'Address',
@@ -220,12 +219,12 @@ export const EutoxriskTemplate = {
                     {
                         'name': 'Method',
                         'valueType': 'text',
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'Analytical measure',
                         'valueType': 'text',
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'Type',
@@ -248,7 +247,7 @@ export const EutoxriskTemplate = {
                     {
                         'name': 'Name',
                         'valueType': 'text',
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'CAS number',
@@ -308,12 +307,12 @@ export const EutoxriskTemplate = {
                     {
                         'name': 'Pointer',
                         'valueType': 'idlink',
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'Description',
                         'valueType': 'text',
-                        'required': true
+                        'display': 'required'
                     }
                 ]
             },
@@ -327,17 +326,17 @@ export const EutoxriskTemplate = {
                     {
                         'name': 'Path',
                         'valueType': 'file',
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'Description',
                         'valueType': 'text',
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'Type',
                         'valueType': 'text',
-                        'displayed': true
+                        'display': 'desirable'
                     }
                 ]
             },
@@ -354,33 +353,33 @@ export const EutoxriskTemplate = {
                     {
                         'name': 'PMID',
                         'valueType': 'pubmedid',
-                        'displayed': true,
+                        'display': 'desirable',
                         'removable': false
                     },
                     {
                         'name': 'Authors',
                         'valueType': 'text',
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'Title',
                         'valueType': 'text',
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'Year',
                         'valueType': 'text',
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'Volume',
                         'valueType': 'text',
-                        'displayed': true
+                        'display': 'desirable'
                     },
                     {
                         'name': 'Issue',
                         'valueType': 'text',
-                        'displayed': true
+                        'display': 'desirable'
                     },
                     {
                         'name': 'Type',
