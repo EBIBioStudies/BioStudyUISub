@@ -229,14 +229,14 @@ export class SubmSideBarComponent implements OnChanges {
                 this.subscr.unsubscribe();
             }
             if (this.section !== undefined) {
-                this.subscr = this.section.features
+                /*this.subscr = this.section.features
                     .updates()
                     .subscribe(ev => {
                         if (ev.name === 'feature_add' ||
                             ev.name === 'feature_remove') {
                             this.onItemsChange();
                         }
-                    });
+                    });*/
                 this.onItemsChange();
             }
         }

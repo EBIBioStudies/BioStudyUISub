@@ -1,6 +1,6 @@
 import {
     DisplayType,
-    FeatureType,
+    FeatureType, FeatureTypeRule,
     FieldType,
     SectionType,
     SubmissionType,
@@ -193,12 +193,66 @@ export class Rows {
     }
 }
 
+export interface FeatureRule {
+    canRemoveRow(): boolean;
+
+    canAddRow(): boolean;
+}
+
+export class FeatureRuleAggregate implements FeatureRule {
+    private rules: FeatureRule[] = [];
+
+    canRemoveRow(): boolean {
+        return this.rules.every(r => r.canRemoveRow());
+    }
+
+    canAddRow(): boolean {
+        return this.rules.every(r => r.canAddRow());
+    }
+
+    add(rule: FeatureRule) {
+        this.rules.push(rule);
+    }
+}
+
+export class SingleRowFeatureRule implements FeatureRule {
+    constructor(private isSingleRow: boolean, private feature: Feature) {
+    }
+
+    canRemoveRow(): boolean {
+        return !this.isSingleRow;
+    }
+
+    canAddRow(): boolean {
+        return !this.isSingleRow || this.feature.rowSize() === 0;
+    }
+}
+
+export class DisplayFeatureRule implements FeatureRule {
+    constructor(private type: DisplayType, private feature: Feature) {
+    }
+
+    canAddRow(): boolean {
+        return !this.type.isReadonly;
+    }
+
+    canRemoveRow(): boolean {
+        return !this.type.isReadonly && !(this.type.isRequired && this.feature.rowSize() === 1);
+    }
+}
+
+export class AtLeastOneRowIn implements FeatureRule {
+    //tODO
+}
+
 export class Feature {
     readonly id: string;
     readonly type: FeatureType;
 
     private _columns: Columns = new Columns();
     private _rows: Rows = new Rows();
+
+    private rule: FeatureRuleAggregate = new FeatureRuleAggregate();
 
     static create(type: FeatureType, attrs: AttributeData[]): Feature {
         return new Feature(type,
@@ -212,9 +266,20 @@ export class Feature {
         this.id = `feature_${nextId()}`;
         this.type = type;
 
-        if (type.singleRow) {
-            this.addRow();
+        // todo add rules externaly as feature.addRule(...);
+        if (rule != undefined) {
+            this.rule.add(rule);
         }
+
+        //if (type.singleRow) {
+        this.rule.add(new SingleRowFeatureRule(type.singleRow, this));
+        //this.addRow();
+        //}
+
+        //if (type.displayType.isShownByDefault) {
+        this.rule.add(new DisplayFeatureRule(type.displayType, this));
+        //this.addRow(); if rowSize === 0
+        //}
 
         type.columnTypes.filter(ct => ct.isRequired || ct.isDesirable)
             .forEach(ct => {
@@ -228,6 +293,10 @@ export class Feature {
         if (type.displayType.isShownByDefault && this.rowSize() === 0) {
             this.addRow();
         }
+    }
+
+    addRule(rule: FeatureRule) {
+        this.rule.add(rule);
     }
 
     get singleRow(): boolean {
@@ -376,7 +445,7 @@ export class Feature {
     }
 
     addRow(): ValueMap | undefined {
-        if (this.singleRow && this._rows.size() > 0) {
+        if (this.rule.canAddRow()) {
             console.warn(`addRow: The feature [type=${this.type.name}] can't have more than one row`);
             return;
         }
@@ -384,7 +453,7 @@ export class Feature {
     }
 
     get canRemoveRow(): boolean {
-        return !this.singleRow && !(!this.type.displayType.isRemovable && this.rowSize() === 1);
+        return this.rule.canRemoveRow();
     }
 
     removeRowAt(index: number): void {
@@ -431,6 +500,8 @@ export class Features {
                 this.add(ft, fd[ft.name]);
             }
         });
+
+        type.featureRules.map(rule => new FeatureRule(rule));
     }
 
     get length(): number {

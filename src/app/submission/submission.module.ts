@@ -33,7 +33,6 @@ import {FeatureListComponent} from './edit/subm-form/feature/feature-list.compon
 import {SubmNavBarComponent} from './edit/subm-navbar/subm-navbar.component';
 import {SubmValidationErrorsComponent} from './edit/subm-navbar/subm-validation-errors.component';
 import {SubmTypeAddDialogComponent} from './edit/submtype-add/submtype-add.component';
-import {SubmFormService} from './edit/subm-form/subm-form.service';
 import {SubmResultsModalComponent} from './results/subm-results-modal.component';
 import {ResultsLogNodeComponent} from './results/results-log-node.component';
 import {SubmResultsTreeComponent} from './results/subm-results-tree.component';
@@ -61,7 +60,6 @@ import {SubmControlDirective} from './edit/subm-form/subm-control.directive';
         SubmissionSharedModule
     ],
     providers: [
-        SubmFormService,
         SubmissionService,
         DirectSubmitService
     ],
