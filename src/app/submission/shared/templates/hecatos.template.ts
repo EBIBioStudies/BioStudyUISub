@@ -3,13 +3,13 @@ export const HecatosTemplate = {
     'description': 'Hepatic and Cardiac Toxicity Systems modelling',
     'sectionType': {
         'name': 'Study',
-        'required': true,
+        'display': 'required',
         'fieldTypes': [
             {
                 'name': 'Title',
                 'icon': 'fa-title',
                 'valueType': 'largetext',
-                'required': true,
+                'display': 'required',
                 'minlength': 25
             },
             {
@@ -154,13 +154,12 @@ export const HecatosTemplate = {
                 {
                     'name': 'AttachTo',
                     'valueType': 'text',
-                    'displayed': true,
-                    'readonly': true
+                    'display':  'readonly'
                 },
                 {
                     'name': 'Factor Name',
                     'valueType': 'text',
-                    'displayed': true,
+                    'display':  'desirable',
                     'values': [
                         'Age',
                         'Compound',
@@ -178,7 +177,7 @@ export const HecatosTemplate = {
                     'name': 'Compound',
                     'icon': 'fa-flask',
                     'valueType': 'text',
-                    'displayed': true,
+                    'display':  'desirable',
                     'values': [
                         'Acetaminophen',
                         'Amiodarone',
@@ -213,17 +212,17 @@ export const HecatosTemplate = {
                 'icon': 'fa-vcard',
                 'description': 'Add the contact details for the authors involved in the study.',
                 'uniqueCols': true,
-                'required': true,
+                'display': 'required',
                 'columnTypes': [
                     {
                         'name': 'Name',
                         'valueType': 'text',
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'E-mail',
                         'valueType': 'text',
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'Organisation',
@@ -248,12 +247,12 @@ export const HecatosTemplate = {
                             'RWTH Aachen University',
                             'Wellcome Sanger Institute'
                         ],
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'ORCID',
                         'valueType': 'text',
-                        'displayed': true
+                        'display':  'desirable'
                     },
                     {
                         'name': 'Role',
@@ -286,12 +285,12 @@ export const HecatosTemplate = {
                     {
                         'name': 'Pointer',
                         'valueType': 'idlink',
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'Description',
                         'valueType': 'text',
-                        'required': true
+                        'display': 'required'
                     }
                 ]
             },
@@ -305,32 +304,27 @@ export const HecatosTemplate = {
                     {
                         'name': 'Path',
                         'valueType': 'text',
-                        'readonly': true,
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'Roche ID',
                         'valueType': 'text',
-                        'removable': false,
-                        'displayed': true
+                        'display':  'desirable'
                     },
                     {
                         'name': 'Sampling date',
                         'valueType': 'date',
-                        'removable': false,
-                        'displayed': true
+                        'display':  'desirable'
                     },
                     {
                         'name': 'Sampling time point',
                         'valueType': 'text',
-                        'removable': false,
-                        'displayed': true
+                        'display':  'desirable'
                     },
                     {
                         'name': 'Description',
                         'valueType': 'text',
-                        'removable': false,
-                        'displayed': true
+                        'display':  'desirable'
                     }
                 ]
             },
@@ -346,33 +340,32 @@ export const HecatosTemplate = {
                     {
                         'name': 'PMID',
                         'valueType': 'pubmedid',
-                        'displayed': true,
-                        'removable': false
+                        'display':  'desirable',
                     },
                     {
                         'name': 'Authors',
                         'valueType': 'text',
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'Title',
                         'valueType': 'text',
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'Year',
                         'valueType': 'text',
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'Volume',
                         'valueType': 'text',
-                        'displayed': true
+                        'display':  'desirable'
                     },
                     {
                         'name': 'Issue',
                         'valueType': 'text',
-                        'displayed': true
+                        'display':  'desirable'
                     },
                     {
                         'name': 'Type',
@@ -398,22 +391,22 @@ export const HecatosTemplate = {
                     {
                         'name': 'Name',
                         'valueType': 'text',
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'Type',
                         'valueType': 'text',
-                        'required': true
+                        'display': 'required'
                     },
                     {
                         'name': 'Description',
                         'valueType': 'text',
-                        'displayed': true
+                        'display':  'desirable'
                     },
                     {
                         'name': 'URI',
                         'valueType': 'text',
-                        'displayed': true
+                        'display':  'desirable'
                     }
                 ]
             }
