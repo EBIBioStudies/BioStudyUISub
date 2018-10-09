@@ -3,7 +3,7 @@ import {
     FeatureType,
     FieldType,
     SectionType,
-    SubmissionType, TextValueType,
+    SubmissionType,
     ValueType,
     ValueTypeFactory
 } from './submission-type.model';
@@ -11,7 +11,6 @@ import {
 import * as pluralize from 'pluralize';
 
 import {NameAndValue, Tag} from './model.common';
-import {Observable, Subject, Subscription} from 'rxjs';
 
 const nextId = (function () {
     let count = 0;
@@ -20,47 +19,13 @@ const nextId = (function () {
     }
 })();
 
-export class HasUpdates<T> {
-    private subj$: Subject<T>;
-
-    constructor() {
-        this.subj$ = new Subject<T>();
-    }
-
-    updates(): Observable<T> {
-        return this.subj$.asObservable();
-    }
-
-    protected notify(v: T) {
-        this.subj$.next(v);
-    }
-}
-
-export class UpdateEvent {
-    leafEvent?: UpdateEvent;      //pointer to original first event if a cascade is triggered
-
-    constructor(public name: string,
-                public value: any,
-                public source?: UpdateEvent) {
-
-        //Keeps track of the source event.
-        //NOTE: In certain instances, the chain of events is recorded as a nested object.
-        if (this.source && this.source.leafEvent && !this.source.leafEvent.source) {
-            this.leafEvent = this.source.leafEvent;
-        } else {
-            this.leafEvent = this;
-        }
-    }
-}
-
-export class Attribute extends HasUpdates<UpdateEvent> {
+export class Attribute {
     readonly id: string;
 
     constructor(private _name: string = '',
                 readonly valueType: ValueType = ValueTypeFactory.DEFAULT,
                 readonly displayType: DisplayType = DisplayType.Optional,
                 readonly isTemplateBased: boolean = false) {
-        super();
         this.id = `attr_${nextId()}`;
     }
 
@@ -71,7 +36,6 @@ export class Attribute extends HasUpdates<UpdateEvent> {
     set name(name: string) {
         if (this.canEditName && this._name !== name) {
             this._name = name;
-            this.notify(new UpdateEvent('name', name));
         }
     }
 
@@ -80,15 +44,13 @@ export class Attribute extends HasUpdates<UpdateEvent> {
     }
 }
 
-export class AttributeValue extends HasUpdates<UpdateEvent> {
+export class AttributeValue {
     constructor(private _value: string = '') {
-        super();
     }
 
     set value(value: string) {
         if (this.value !== value) {
             this._value = value;
-            this.notify(new UpdateEvent('value', value));
         }
     }
 
@@ -97,12 +59,10 @@ export class AttributeValue extends HasUpdates<UpdateEvent> {
     }
 }
 
-export class ValueMap extends HasUpdates<UpdateEvent> {
+export class ValueMap {
     private valueMap: Map<string, AttributeValue> = new Map();
-    private subscriptionMap: Map<string, Subscription> = new Map();
 
     constructor(keys?: string[]) {
-        super();
         (keys || []).forEach(key => this.add(key));
     }
 
@@ -121,10 +81,6 @@ export class ValueMap extends HasUpdates<UpdateEvent> {
         }
         const v = new AttributeValue(value);
         this.valueMap.set(key, v);
-        this.subscriptionMap.set(key,
-            v.updates().subscribe(m => {
-                this.notify(new UpdateEvent('value_update', {key: key}, m));
-            }));
     }
 
     remove(key: string): void {
@@ -132,8 +88,6 @@ export class ValueMap extends HasUpdates<UpdateEvent> {
             console.warn(`remove: the key '${key}' does not exist in the map`);
             return;
         }
-        this.subscriptionMap.get(key)!.unsubscribe();
-        this.subscriptionMap.delete(key);
         this.valueMap.delete(key);
     }
 
@@ -146,15 +100,9 @@ export class ValueMap extends HasUpdates<UpdateEvent> {
     }
 }
 
-export class Columns extends HasUpdates<UpdateEvent> {
+export class Columns {
     private columns: Attribute[] = [];
-    private subscriptions: Subscription[] = [];
-
     private _nextIndex: number = 0;
-
-    constructor() {
-        super();
-    }
 
     get nextIndex(): number {
         return ++this._nextIndex;
@@ -165,20 +113,7 @@ export class Columns extends HasUpdates<UpdateEvent> {
     }
 
     add(column: Attribute): void {
-        const columns = this.columns;
-
-        columns.push(column);
-        this.subscriptions.push(
-            column.updates().subscribe(event => {
-                this.notify(new UpdateEvent(
-                    'column_name_update',
-                    {id: column.id, index: columns.indexOf(column)},
-                    event
-                ));
-            })
-        );
-
-        this.notify(new UpdateEvent('column_add', {id: column.id, index: columns.length - 1}));
+        this.columns.push(column);
     }
 
     canRemove(id: string) {
@@ -196,9 +131,6 @@ export class Columns extends HasUpdates<UpdateEvent> {
             return false;
         }
         this.columns.splice(index, 1);
-        this.subscriptions[index].unsubscribe();
-        this.subscriptions.splice(index, 1);
-        this.notify(new UpdateEvent('column_remove', {id: id, index: index}));
         return true;
     }
 
@@ -223,13 +155,8 @@ export class Columns extends HasUpdates<UpdateEvent> {
     }
 }
 
-export class Rows extends HasUpdates<UpdateEvent> {
+export class Rows {
     private rows: ValueMap[] = [];
-    private subscriptions: Subscription[] = [];
-
-    constructor() {
-        super();
-    }
 
     list(): ValueMap[] {
         return this.rows.slice();
@@ -237,14 +164,7 @@ export class Rows extends HasUpdates<UpdateEvent> {
 
     add(keys: string[]): ValueMap {
         const row = new ValueMap(keys);
-        const rowIndex = {index: this.rows.length};
         this.rows.push(row);
-        this.subscriptions.push(
-            row.updates()
-                .subscribe(m => {
-                    this.notify(new UpdateEvent('row_value_update', rowIndex, m));
-                }));
-        this.notify(new UpdateEvent('row_add', rowIndex));
         return row;
     }
 
@@ -254,9 +174,6 @@ export class Rows extends HasUpdates<UpdateEvent> {
             return;
         }
         this.rows.splice(index, 1);
-        this.subscriptions[index].unsubscribe();
-        this.subscriptions.splice(index, 1);
-        this.notify(new UpdateEvent('row_remove', {index: index}));
     }
 
     addKey(key: string) {
@@ -276,7 +193,7 @@ export class Rows extends HasUpdates<UpdateEvent> {
     }
 }
 
-export class Feature extends HasUpdates<UpdateEvent> {
+export class Feature {
     readonly id: string;
     readonly type: FeatureType;
 
@@ -292,8 +209,6 @@ export class Feature extends HasUpdates<UpdateEvent> {
     }
 
     constructor(type: FeatureType, data: FeatureData = {} as FeatureData) {
-        super();
-
         this.id = `feature_${nextId()}`;
         this.type = type;
 
@@ -313,19 +228,6 @@ export class Feature extends HasUpdates<UpdateEvent> {
         if (type.displayType.isShownByDefault && this.rowSize() === 0) {
             this.addRow();
         }
-
-        this._columns.updates()
-            .subscribe(event => {
-                this.notify(new UpdateEvent('columns_update', {id: this.id}, event));
-
-                /*if (event.name == 'column_name_update') {
-                    this.onColumnUpdate(event.source!.value, event.value.index);
-                }*/
-            });
-        this._rows.updates()
-            .subscribe(m => {
-                this.notify(new UpdateEvent('rows_update', {id: this.id}, m));
-            });
     }
 
     get singleRow(): boolean {
@@ -342,9 +244,6 @@ export class Feature extends HasUpdates<UpdateEvent> {
 
     set typeName(val: string) {
         this.type.name = val;
-        if (this.type.name === val) {
-            this.notify(new UpdateEvent('type', val));
-        }
     }
 
     get rows(): ValueMap[] {
@@ -511,13 +410,10 @@ export class AnnotationFeature extends Feature {
     }
 }
 
-export class Features extends HasUpdates<UpdateEvent> {
+export class Features {
     private features: Feature[] = [];
-    private subscriptions: Subscription[] = [];
 
     constructor(type: SectionType, data: SectionData) {
-        super();
-
         const fd = (data.features || []).filter(f => String.isDefinedAndNotEmpty(f.type))
             .reduce((rv, d) => {
                 rv[d.type!] = d;
@@ -553,11 +449,6 @@ export class Features extends HasUpdates<UpdateEvent> {
         const feature = new Feature(type, data);
         const featureId = {id: feature.id, index: (this.features.length), key: type.name};
         this.features.push(feature);
-        this.subscriptions.push(
-            feature.updates().subscribe(
-                u => this.notify(new UpdateEvent('feature_update', featureId, u))
-            ));
-        this.notify(new UpdateEvent('feature_add', featureId));
         return feature;
     }
 
@@ -569,12 +460,8 @@ export class Features extends HasUpdates<UpdateEvent> {
         if (index < 0) {
             return;
         }
-        this.subscriptions[index].unsubscribe();
-        this.subscriptions.splice(index, 1);
         this.features.splice(index, 1);
-        this.notify(new UpdateEvent('feature_remove', {index: index, id: feature.id}));
 
-        //NOTE: Existing type names in the scope are guaranteed to be unique at setting time
         feature.type.destroy();
     }
 
@@ -590,7 +477,7 @@ export class Features extends HasUpdates<UpdateEvent> {
     }
 }
 
-export class Field extends HasUpdates<UpdateEvent> {
+export class Field {
     readonly id: string;
     readonly type: FieldType;
 
@@ -598,7 +485,6 @@ export class Field extends HasUpdates<UpdateEvent> {
 
     constructor(type: FieldType,
                 value: string = '') {
-        super();
         this.id = `field_${nextId()}`;
         this.type = type;
         this._value = value;
@@ -623,16 +509,14 @@ export class Field extends HasUpdates<UpdateEvent> {
     set value(v: string) {
         if (this._value !== v) {
             this._value = v;
-            this.notify(new UpdateEvent('value', v));
         }
     }
 }
 
-export class Fields extends HasUpdates<UpdateEvent> {
+export class Fields {
     private fields: Field[];
 
     constructor(type: SectionType, data: SectionData) {
-        super();
         this.fields = [];
 
         const attrObj = (data.attributes || [])
@@ -657,12 +541,7 @@ export class Fields extends HasUpdates<UpdateEvent> {
 
     private add(type: FieldType, value?: string): void {
         const field = new Field(type, value);
-        const fieldId = {id: field.id, index: this.fields.length};
         this.fields.push(field);
-
-        field.updates().subscribe(
-            u => this.notify(new UpdateEvent('field_change', fieldId, u))
-        )
     }
 
     /**
@@ -677,7 +556,7 @@ export class Fields extends HasUpdates<UpdateEvent> {
     }
 }
 
-export class Section extends HasUpdates<UpdateEvent> {
+export class Section {
     private _accno: string;
 
     readonly id: string;
@@ -689,8 +568,6 @@ export class Section extends HasUpdates<UpdateEvent> {
     readonly tags: Tags;
 
     constructor(type: SectionType, data: SectionData = <SectionData>{}) {
-        super();
-
         this.tags = Tags.create(data);
 
         this.id = `section_${nextId()}`;
@@ -706,11 +583,6 @@ export class Section extends HasUpdates<UpdateEvent> {
         );
         this.features = new Features(type, data);
         this.sections = new Sections(type, data);
-
-        this.subscribeTo(this.fields, 'fields');
-        this.subscribeTo(this.annotations, 'annotations');
-        this.subscribeTo(this.features, 'features');
-        this.subscribeTo(this.sections, 'sections');
     }
 
     get accno(): string {
@@ -719,7 +591,6 @@ export class Section extends HasUpdates<UpdateEvent> {
 
     set accno(accno: string) {
         this._accno = accno;
-        this.notify(new UpdateEvent('accno', accno));
     }
 
     get typeName(): string {
@@ -728,9 +599,6 @@ export class Section extends HasUpdates<UpdateEvent> {
 
     set typeName(name: string) {
         this.type.name = name;
-        if (this.type.name === name) {
-            this.notify(new UpdateEvent('type', name));
-        }
     }
 
     isRequired(): boolean {
@@ -748,22 +616,13 @@ export class Section extends HasUpdates<UpdateEvent> {
 
         return (path.length > 0) ? ([] as Section[]).concat([this], path[0]) : [];
     }
-
-    subscribeTo(hasUpdates: HasUpdates<UpdateEvent>, type: string) {
-        hasUpdates.updates().subscribe(
-            m => this.notify(new UpdateEvent(type, undefined, m))
-        );
-    }
 }
 
-export class Sections extends HasUpdates<UpdateEvent> {
+export class Sections {
     private sections: Section[];
-    private subscriptions: Subscription[];
 
     constructor(type: SectionType, data: SectionData = {} as SectionData) {
-        super();
         this.sections = [];
-        this.subscriptions = [];
 
         const sectionData = (data.sections || []).filter(s => String.isDefinedAndNotEmpty(s.type))
             .reduce((rv, s) => {
@@ -796,15 +655,7 @@ export class Sections extends HasUpdates<UpdateEvent> {
 
     add(type: SectionType, data?: SectionData): Section {
         const s = new Section(type, data);
-
-        const sectionId = {id: s.id, index: this.sections.length};
         this.sections.push(s);
-        this.subscriptions.push(
-            s.updates().subscribe(
-                u => this.notify(new UpdateEvent('section_change', sectionId, u))
-            )
-        );
-        this.notify(new UpdateEvent('section_add', sectionId));
         return s;
     }
 
@@ -813,15 +664,10 @@ export class Sections extends HasUpdates<UpdateEvent> {
         const index = sections.indexOf(section);
 
         if (this.isRemovable(section)) {
-            this.subscriptions[index].unsubscribe();
-            this.subscriptions.splice(index, 1);
-            this.notify(new UpdateEvent('section_remove', {index: index}));
-
             sections.splice(index, 1);
         }
     }
 
-    //It is assumed that removable sections
     isRemovable(section: Section): boolean {
         return !section.isRequired() || !this.isLastOfType(section.typeName);
     }
@@ -868,10 +714,6 @@ export class Submission {
 
     sectionPath(id: string): Section[] {
         return this.section.sectionPath(id);
-    }
-
-    updates(): Observable<UpdateEvent> {
-        return this.section.updates();
     }
 }
 
