@@ -325,32 +325,11 @@ export class ColumnType extends TypeBase {
     }
 }
 
-export class FeatureTypeRule {
-    readonly name: string;
-    readonly group: string[];
-
-    constructor(data?: Partial<FeatureTypeRule>) {
-        data = data || {};
-        this.name = this.findName(data.name) || '';
-        this.group = data.group || [];
-    }
-
-    get isValid(): boolean {
-        return !this.name.isEmpty() && !this.group.isEmpty();
-    }
-
-    private findName(name: string | undefined): string | undefined {
-        return [FeatureTypeRule.AtLeastOneIn].find(n => n === name);
-    }
-
-    static AtLeastOneIn = 'AtLeastOneIn';
-}
-
 export class SectionType extends TypeBase {
     readonly display: string;
     readonly displayType: DisplayType;
     readonly annotationsType: AnnotationsType;
-    readonly featureRules: FeatureTypeRule[];
+    readonly featureGroups: string[][];
 
     private fieldScope: TypeScope<FieldType> = new TypeScope<FieldType>();
     private featureScope: TypeScope<FeatureType> = new TypeScope<FeatureType>();
@@ -366,10 +345,9 @@ export class SectionType extends TypeBase {
         data = data || {};
         this.displayType = DisplayType.create(data.display);
         this.display = this.displayType.name;
+        this.featureGroups = data.featureGroups || [];
 
         this.annotationsType = new AnnotationsType(data.annotationsType, new TypeScope<AnnotationsType>());
-
-        this.featureRules = (data.featureRules || []).map(r => new FeatureTypeRule(r)).filter(r => r.isValid);
 
         (data.fieldTypes || [])
             .forEach(f => new FieldType(f.name, f, this.fieldScope));

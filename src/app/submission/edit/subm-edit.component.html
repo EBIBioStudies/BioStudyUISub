@@ -25,7 +25,6 @@
     <div class="container-fluid">
         <aside [ngClass]="{'collapse-left' : !readonly && sideBarCollapsed, 'right-side': !readonly}">
             <div *ngIf="subm"
-                 (change)="onChange($event)"
                  class="navbar-subm-margin">
 
                 <div class="panel">

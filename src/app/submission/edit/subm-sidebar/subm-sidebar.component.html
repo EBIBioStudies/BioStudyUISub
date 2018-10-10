@@ -23,8 +23,7 @@
                     </span>
                 </ng-template>
             </tab>
-            <tab *ngIf="section"
-                 heading="Add"
+            <tab heading="Add"
                  [active]="isAddTabActive"
                  (select)="onAddTabClick()"></tab>
         </tabset>
@@ -42,7 +41,7 @@
                    container="body"
                    (click)="item.onClick($event)">
                     <i class="fa fa-lg text-center {{item.feature.type.icon}}"></i>
-                    {{!collapsed ? '&nbsp;&nbsp;' + item.feature.splitName(item.feature.typeName) + ' ' + addUnit(item.feature.size()) : ''}}
+                    {{!collapsed ? '&nbsp;&nbsp;' + item.feature.splitName(item.feature.typeName) : ''}}
                 </a>
                 <div class="row-input"
                    [ngClass]="{'has-error': itemType.invalid && itemType.touched}"
@@ -159,8 +158,9 @@
         </div>
     </ul>
 </aside>
-<type-add-dialog #addDialog
-                [section]="section">
+<type-add-dialog *ngIf="sectionForm"
+                #addDialog
+                [section]="sectionForm.section">
 </type-add-dialog>
 <confirm-dialog #confirmDialog
                 headerTitle="Delete items"

@@ -2,8 +2,11 @@
     <label class="control-label">{{featureForm.featureName | titlecase}}</label>
     <span *ngIf="!readonly && !featureForm.isRequired"
           class="text-muted pull-right">
-                <i>
-                    Optional (TODO: add feature group support)
+                <i *ngIf="featureForm.optionalGroup.length > 0">
+                   Required at least one {{featureForm.optionalGroup.join(' or ')}}
+                </i>
+                <i *ngIf="featureForm.optionalGroup.length === 0">
+                    Optional
                 </i>
     </span>
 
@@ -31,10 +34,10 @@
             <i class="fa fa-lg {{featureForm.icon}}"></i>
             <div class="panel-description col-xs-9 col-sm-10 col-lg-11">
                 <span [innerHTML]="featureForm.description"></span>
-                <!-- TODO div *ngIf="featureForm.columnNameValues().length && userData.isPrivileged">
-                    <strong>{{featureForm.uniqueColumnsOnly ? 'More' : 'Available'}} {{featureForm.canHaveMultipleRows ? 'column' : 'key'}}s</strong>:
-                    <i>{{featureForm.columnNameValues().join(', ')}}.</i>
-                </div-->
+                <div *ngIf="featureForm.columnNamesAvailableCached.length && userData.isPrivileged">
+                    <strong>{{featureForm.hasUniqueColumns ? 'More' : 'Available'}} {{featureForm.canHaveMultipleRows ? 'column' : 'key'}}s</strong>:
+                    <i>{{featureForm.columnNamesAvailableCached.join(', ')}}.</i>
+                </div>
             </div>
             <span class="label label-danger pull-right"
                   *ngIf="errorNum">{{errorNum}} error{{errorNum > 1 ? 's' : ''}}</span>

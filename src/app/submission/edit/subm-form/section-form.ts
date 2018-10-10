@@ -131,6 +131,8 @@ export class FeatureForm {
 
     private cellValueTypeahead: Map<string, () => string[]> = new Map();
 
+    columnNamesAvailableCached: string[] = [];
+
     constructor(private feature: Feature) {
         this.form = new FormGroup({
             columns: new FormGroup({}, FormValidators.forFeatureColumns(feature)),
@@ -145,6 +147,12 @@ export class FeatureForm {
         feature.rows.forEach(row => {
             this.addRowForm(row, feature.columns);
         });
+
+        this.columnsForm.valueChanges.subscribe(() => {
+            this.columnNamesAvailableCached = this.columnNamesAvailable();
+        });
+
+        this.columnNamesAvailableCached = this.columnNamesAvailable();
     }
 
     private get columnsForm(): FormGroup {
@@ -209,6 +217,10 @@ export class FeatureForm {
             .map(type => type.name);
     }
 
+    get optionalGroup(): string [] {
+        return this.feature.groups.length > 1 ? this.feature.groups[1].map(f => f.typeName) : [];
+    }
+
     columnNamesTypeahead(column: ColumnControl): Observable<string[]> {
         return column.typeaheadSource(this.columnNamesAvailable);
     }
@@ -262,10 +274,12 @@ export class FeatureForm {
 
     onColumnRemove(columnId: string) {
         const index = this.columnControls.findIndex(c => c.id === columnId);
-        if (index >= 0) {
+        if (index < 0) {
+            return;
+        }
+        if (this.feature.removeColumn(columnId)) {
             this.columnControls.splice(index, 1);
             this.columnsForm.removeControl(columnId);
-            this.feature.removeColumn(columnId);
         }
     }
 
@@ -298,7 +312,7 @@ export class SectionForm {
     readonly fieldControls: FieldControl[] = [];
     readonly featureForms: FeatureForm[] = [];
 
-    constructor(section: Section) {
+    constructor(readonly section: Section) {
         this.form = new FormGroup({
             fields: new FormGroup({}),
             features: new FormGroup({})

@@ -3,11 +3,8 @@ export const DefaultTemplate = {
     'description': 'Generic submission for stand-alone or generic studies',
     'sectionType': {
         'name': 'Study',
-        'featureRules': [
-            {
-                'name': 'AtLeastOneIn',
-                'group': ['Link', 'File']
-            }
+        'featureGroups': [
+            ['Link', 'File']
         ],
         'fieldTypes': [
             {
@@ -42,6 +39,7 @@ export const DefaultTemplate = {
             'title': 'Describe your study',
             'description': 'Provide any additional details that may help discover or interpret the study.',
             'icon': 'fa-tag',
+            'display': 'desirable',
             'columnTypes': [
                 {
                     'name': 'AttachTo',

@@ -1,6 +1,6 @@
 import {
     DisplayType,
-    FeatureType, FeatureTypeRule,
+    FeatureType,
     FieldType,
     SectionType,
     SubmissionType,
@@ -168,12 +168,12 @@ export class Rows {
         return row;
     }
 
-    removeAt(index: number): void {
+    removeAt(index: number): boolean {
         if ((index < 0) || (index > this.rows.length)) {
-            console.warn(`index is out of range: ${index}`);
-            return;
+            return false;
         }
         this.rows.splice(index, 1);
+        return true;
     }
 
     addKey(key: string) {
@@ -193,66 +193,40 @@ export class Rows {
     }
 }
 
-export interface FeatureRule {
-    canRemoveRow(): boolean;
+type Rule<T> = (t: T) => boolean;
 
-    canAddRow(): boolean;
+function productOf<T>(...rules: Rule<T>[]): Rule<T> {
+    return (t: T) => {
+        return rules.every(r => r(t));
+    };
 }
 
-export class FeatureRuleAggregate implements FeatureRule {
-    private rules: FeatureRule[] = [];
-
-    canRemoveRow(): boolean {
-        return this.rules.every(r => r.canRemoveRow());
-    }
-
-    canAddRow(): boolean {
-        return this.rules.every(r => r.canAddRow());
-    }
-
-    add(rule: FeatureRule) {
-        this.rules.push(rule);
-    }
+function sumOf<T>(...rules: Rule<T>[]): Rule<T> {
+    return (t: T) => {
+        return rules.some(r => r(t));
+    };
 }
 
-export class SingleRowFeatureRule implements FeatureRule {
-    constructor(private isSingleRow: boolean, private feature: Feature) {
-    }
+const CanRemoveRow: Rule<Feature> = productOf(
+    (f: Feature) => !f.type.displayType.isReadonly,
+    sumOf(
+        (f: Feature) => !f.type.displayType.isShownByDefault,
+        (f: Feature) => f.rowSize() > 1));
 
-    canRemoveRow(): boolean {
-        return !this.isSingleRow;
-    }
+const CanAddRow: Rule<Feature> = productOf(
+    (f: Feature) => !f.type.displayType.isReadonly,
+    sumOf((f: Feature) => !f.singleRow,
+        (f: Feature) => f.rowSize() === 0));
 
-    canAddRow(): boolean {
-        return !this.isSingleRow || this.feature.rowSize() === 0;
-    }
-}
-
-export class DisplayFeatureRule implements FeatureRule {
-    constructor(private type: DisplayType, private feature: Feature) {
-    }
-
-    canAddRow(): boolean {
-        return !this.type.isReadonly;
-    }
-
-    canRemoveRow(): boolean {
-        return !this.type.isReadonly && !(this.type.isRequired && this.feature.rowSize() === 1);
-    }
-}
-
-export class AtLeastOneRowIn implements FeatureRule {
-    //tODO
-}
+type FeatureGroup = Feature[];
 
 export class Feature {
     readonly id: string;
     readonly type: FeatureType;
+    readonly groups: FeatureGroup[] = [];
 
     private _columns: Columns = new Columns();
     private _rows: Rows = new Rows();
-
-    private rule: FeatureRuleAggregate = new FeatureRuleAggregate();
 
     static create(type: FeatureType, attrs: AttributeData[]): Feature {
         return new Feature(type,
@@ -265,21 +239,7 @@ export class Feature {
     constructor(type: FeatureType, data: FeatureData = {} as FeatureData) {
         this.id = `feature_${nextId()}`;
         this.type = type;
-
-        // todo add rules externaly as feature.addRule(...);
-        if (rule != undefined) {
-            this.rule.add(rule);
-        }
-
-        //if (type.singleRow) {
-        this.rule.add(new SingleRowFeatureRule(type.singleRow, this));
-        //this.addRow();
-        //}
-
-        //if (type.displayType.isShownByDefault) {
-        this.rule.add(new DisplayFeatureRule(type.displayType, this));
-        //this.addRow(); if rowSize === 0
-        //}
+        this.groups = [[this]];
 
         type.columnTypes.filter(ct => ct.isRequired || ct.isDesirable)
             .forEach(ct => {
@@ -290,13 +250,9 @@ export class Feature {
             this.add(entry);
         });
 
-        if (type.displayType.isShownByDefault && this.rowSize() === 0) {
+        if (type.displayType.isShownByDefault) {
             this.addRow();
         }
-    }
-
-    addRule(rule: FeatureRule) {
-        this.rule.add(rule);
     }
 
     get singleRow(): boolean {
@@ -389,6 +345,10 @@ export class Feature {
      * added if the feature is not limited to a single row, in which case the first row is changed.
      */
     add(attributes: AttributeData[] = [], rowIdx?: number): void {
+        if (attributes.isEmpty()) {
+            return;
+        }
+
         const attrsWithName = attributes.filter(attr => String.isDefinedAndNotEmpty(attr.name));
         const attrNames = attrsWithName.map(attr => attr.name);
 
@@ -409,7 +369,7 @@ export class Feature {
             });
 
         if (rowIdx === undefined) {
-            rowMap = this.singleRow ? this.rows[0] : this.addRow();
+            rowMap = this.addRow() || this.rows[0];
         } else {
             rowMap = this.rows[rowIdx];
         }
@@ -425,6 +385,9 @@ export class Feature {
     }
 
     addColumn(name?: string, valueType?: ValueType, displayType?: DisplayType, isTemplateBased: boolean = false): Attribute {
+        if (this.singleRow && this.rowSize() === 0) {
+            this.addRow();
+        }
         let defColName = (this.singleRow ? this.typeName : 'Column') + ' ' + this._columns.nextIndex;
         let col = new Attribute(name || defColName, valueType, displayType, isTemplateBased);
 
@@ -438,30 +401,37 @@ export class Feature {
         return this._columns.canRemove(id);
     }
 
-    removeColumn(id: string): void {
+    removeColumn(id: string): boolean {
         if (this._columns.remove(id)) {
             this._rows.removeKey(id);
+            if (this._columns.size() === 0 && this.singleRow) {
+                this.removeRowAt(0);
+            }
+            return true;
         }
+        return false;
     }
 
     addRow(): ValueMap | undefined {
-        if (this.rule.canAddRow()) {
-            console.warn(`addRow: The feature [type=${this.type.name}] can't have more than one row`);
-            return;
+        if (this.canAddRow) {
+            return this._rows.add(this._columns.keys());
         }
-        return this._rows.add(this._columns.keys());
+        return undefined;
+    }
+
+    get canAddRow(): boolean {
+        return this.groups.every(g => g.some(f => CanAddRow(f)))
     }
 
     get canRemoveRow(): boolean {
-        return this.rule.canRemoveRow();
+        return this.groups.every(g => g.some(f => CanRemoveRow(f)))
     }
 
-    removeRowAt(index: number): void {
-        if (!this.canRemoveRow) {
-            console.warn(`removeRowAt: The feature [type=${this.type.name}] can't have less than one row`);
-            return;
+    removeRowAt(index: number): boolean {
+        if (this.canRemoveRow) {
+            return this._rows.removeAt(index);
         }
-        this._rows.removeAt(index);
+        return false;
     }
 }
 
@@ -501,7 +471,10 @@ export class Features {
             }
         });
 
-        type.featureRules.map(rule => new FeatureRule(rule));
+        type.featureGroups.forEach(group => {
+            const featureGroup = this.features.filter(f => group.includes(f.typeName));
+            featureGroup.forEach(f => f.groups.push(featureGroup));
+        });
     }
 
     get length(): number {
@@ -518,7 +491,6 @@ export class Features {
             return;
         }
         const feature = new Feature(type, data);
-        const featureId = {id: feature.id, index: (this.features.length), key: type.name};
         this.features.push(feature);
         return feature;
     }

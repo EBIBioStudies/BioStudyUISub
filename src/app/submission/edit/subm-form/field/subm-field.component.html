@@ -4,7 +4,7 @@
         <span class="text-black">{{fieldName | camelcase2label}}</span>
         <span *ngIf="hasErrors">{{errors}}</span>
         <span class="text-muted"
-              [hidden]="isReadonly || (isValid && !isEmpty) || (isInvalid && isTouched)">
+              [hidden]="isReadonly || (isDefined && !isEmpty) || (isInvalid && isTouched)">
                     <span *ngIf="valueLength.isAtLeast">
                          (at least {{valueLength.min}}
                     </span>

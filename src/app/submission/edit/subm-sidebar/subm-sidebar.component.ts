@@ -143,7 +143,6 @@ export class SubmSideBarComponent implements OnChanges {
     @Input() isLoading: boolean = false;                                             //flag indicating the submission is being loaded
     @Input() isSubmitting: boolean = false;                                  //flag indicating submission data is being sent
     @Input() collapsed?: boolean = false;                                     //flag indicating if menu is minimized/collapsed
-    @Input() section?: Section;                                               //section of the form being displayed
     @Input() sectionForm?: SectionForm;
     @Input() serverError?: ServerError;                                       //errors from server requests
     @Output() toggle? = new EventEmitter();                                  //event triggered when collapsed state changes
@@ -186,7 +185,8 @@ export class SubmSideBarComponent implements OnChanges {
 
     private updateInvalidControlList(form: FormGroup) {
         this.invalidControls = this.listControls(form)
-            .filter(control => control.invalid);
+            .filter(control => control.invalid)
+            .reverse();
     }
 
     listControls(control: AbstractControl): FormControl[] {
@@ -221,22 +221,7 @@ export class SubmSideBarComponent implements OnChanges {
                 const form = this.sectionForm.form;
                 form.valueChanges.subscribe(() => this.updateInvalidControlList(form));
                 this.updateInvalidControlList(form);
-            }
-        }
 
-        if (changes.section) {
-            if (this.subscr) {
-                this.subscr.unsubscribe();
-            }
-            if (this.section !== undefined) {
-                /*this.subscr = this.section.features
-                    .updates()
-                    .subscribe(ev => {
-                        if (ev.name === 'feature_add' ||
-                            ev.name === 'feature_remove') {
-                            this.onItemsChange();
-                        }
-                    });*/
                 this.onItemsChange();
             }
         }
@@ -287,7 +272,7 @@ export class SubmSideBarComponent implements OnChanges {
                 confirmShown.subscribe((isConfirmed: boolean) => {
                     if (isConfirmed) {
                         deleted.forEach(({feature}) => {
-                            this.section!.features.remove(feature);
+                            this.sectionForm!.section.features.remove(feature);
                         });
                     } else {
                         this.items!.reset();
@@ -300,7 +285,7 @@ export class SubmSideBarComponent implements OnChanges {
             confirmShown.subscribe((isConfirmed: boolean) => {
                 if (form.dirty && form.valid && isConfirmed) {
                     Object.keys(form.value).forEach((key) => {
-                        this.section!.features.find(key)!.typeName = form.value[key];
+                        this.sectionForm!.section.features.find(key)!.typeName = form.value[key];
                     }, this);
                 }
 
@@ -374,8 +359,8 @@ export class SubmSideBarComponent implements OnChanges {
         this.items = SubmItems.create();
 
         //Builds the item collection
-        this.items.push(new SubmItem(this.section!.annotations));
-        this.section!.features.list().forEach((feature) => {
+        this.items.push(new SubmItem(this.sectionForm!.section.annotations));
+        this.sectionForm!.section.features.list().forEach((feature) => {
             this.items!.push(new SubmItem(feature))
         });
 
