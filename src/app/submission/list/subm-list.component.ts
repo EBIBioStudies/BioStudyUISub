@@ -192,9 +192,9 @@ export class SubmListComponent {
 
         //Works out the list of allowed projects by comparison with template names
         this.isBusy = true;
-        this.userData.whenFetched.subscribe((data) => {
+        this.userData.filteredProjectAccNumbers$(SUBMISSION_TEMPLATE_NAMES).subscribe(projects => {
             this.isBusy = false;
-            this.allowedPrj = this.userData.allowedProjects(SUBMISSION_TEMPLATE_NAMES);
+            this.allowedPrj = projects;
         });
     }
 

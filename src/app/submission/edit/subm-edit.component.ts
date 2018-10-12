@@ -4,16 +4,12 @@ import {ActivatedRoute, Router} from '@angular/router';
 
 import {BsModalService} from 'ngx-bootstrap';
 
-import {Section, Submission} from '../shared/submission.model';
+import {AttributeData, Section, Submission} from '../shared/submission.model';
 import {SubmissionService} from '../shared/submission.service';
-import {SubmissionType} from '../shared/submission-type.model';
-
-import {PageTab} from '../shared/pagetab.model';
-import {SubmissionValidator, SubmValidationErrors} from '../shared/submission.validator';
+import {SubmValidationErrors} from '../shared/submission.validator';
 import {ServerError} from '../../http/server-error.handler';
 import {SubmResultsModalComponent} from '../results/subm-results-modal.component';
 import {ConfirmDialogComponent} from 'app/shared/index';
-import {SubmFormComponent} from './subm-form/subm-form.component';
 import {AppConfig} from '../../app.config';
 import {UserData} from '../../auth/user-data';
 import {SubmValidationErrorsComponent} from './subm-navbar/subm-validation-errors.component';
@@ -23,8 +19,9 @@ import {Subject} from 'rxjs/Subject';
 import {submission2PageTab} from '../shared/submission-to-pagetab.utils';
 import {pageTab2Submission} from '../shared/pagetab-to-submission.utils';
 import {forkJoin, Observable, of} from 'rxjs';
-import {findSubmissionTemplateName} from '../shared/templates/submission.templates';
 import {SectionForm} from './subm-form/section-form';
+import {UserInfo} from '../../auth/model/user-info';
+import {switchMap, switchMap} from 'rxjs/operators';
 
 @Component({
     selector: 'subm-edit',
@@ -34,7 +31,6 @@ export class SubmEditComponent implements OnInit {
     @Input() readonly: boolean = false;
 
     @ViewChild(SubmSideBarComponent) sideBar?: SubmSideBarComponent;
-    @ViewChild('submForm') submForm?: SubmFormComponent;
     @ViewChild('confirmSectionDel') confirmSectionDel?: ConfirmDialogComponent;
     @ViewChild('confirmRevert') confirmRevert?: ConfirmDialogComponent;
     @ViewChild('confirmSubmit') confirmSubmit?: ConfirmDialogComponent;
@@ -49,17 +45,14 @@ export class SubmEditComponent implements OnInit {
     serverError?: ServerError;
     errors: SubmValidationErrors = SubmValidationErrors.EMPTY;  //form validation errors
 
-    public isLoading: boolean = false;                  //flag indicating the submission is being loaded
-    public isReverting: boolean = false;        //flag indicating submission is being rolled back to its latest release
-    public isUpdate: boolean = false;                   //flag indicating if updating an already existing submission
     private isSubmitting: boolean = false;      //flag indicating submission data is being sent
     private isSaving: boolean = false;          //flag indicating submission data is being backed up
-    private isNew: boolean = false;             //flag indicating submission has just been created through the UI
-    protected ngUnsubscribe: Subject<void>;     //stopper for all subscriptions to HTTP get operations
 
-    //List of non-bubbling events to trigger auto-save
-    //NOTE: 'section_add' has been omitted since adding sections is buggy at present
-    static watchedUpdates = ['column_add', 'column_remove', 'row_add', 'row_remove', 'section_remove'];
+    private isNew: boolean = false;             //flag indicating submission has just been created through the UI
+
+    private unsubscribe: Subject<void> = new Subject<void>();     //stopper for all subscriptions to HTTP get operations
+
+    private editState: EditState = EditState.Default;
 
     constructor(public route: ActivatedRoute,
                 public router: Router,
@@ -73,143 +66,113 @@ export class SubmEditComponent implements OnInit {
         //Initally collapses the sidebar for tablet-sized screens if applicable
         this.sideBarCollapsed = window.innerWidth < this.appConfig.tabletBreak;
 
-        //Avoids unnecessary post requests in case there's a cascade of updates from programmatic changes
-        //NOTE: All calls are coalesced into the last one since it's that one that will lead to the most
-        //up-to-date copy of the submission.
         this.onChange = _.throttle(this.onChange, 500, {'leading': false});
-
-        this.ngUnsubscribe = new Subject<void>();
     }
 
     get location() {
         return window.location;
     }
 
-    /**
-     * Builds the submission model from the server data, doing any necessary initial updates for brand new submissions.
-     * @returns {Observable<any>} Combined event stream for the async retrieval of submission and user data.
-     */
-    ngOnInit(): Observable<any> {
-        let eventStream;
+    ngOnInit(): void {
+        this.isNew = this.route.snapshot.data.isNew || false;
 
-        this.route.params.takeUntil(this.ngUnsubscribe).subscribe((params) => {
-            this.isLoading = true;
-
-            //Determines if the current submission has just been created
-            this.isNew = this.route.snapshot.data.isNew || false;
-
-            //Waits for the parallel fetching of both the user data and the submission data to proceed
-            eventStream = forkJoin([
-                this.submService.getSubmission(params.accno),
-                this.userData.whenFetched
-            ]);
-
-            eventStream.subscribe(
-
-                //Data retrieved successfully => converts pageTab submission data, makes changes detectable and sets defaults
-                results => {
-                    let page:PageTab, subm;
-
-                    //Converts data coming from the server into the in-app submission format
-                    //NOTE: Type definitions are determined based on the first occurrence of the AttachTo attribute.
-                    //NOTE: Submissions created through the direct upload flow may be attached to multiple projects.
-                    this.wrappedSubm = results[0];
-                    this.accno = this.wrappedSubm.accno;
-                    page = this.wrappedSubm.data;
-                    subm = pageTab2Submission(SubmissionType.fromTemplate(findSubmissionTemplateName(page)), page);
-                    this.subm = subm;
-
-                    //Inspects the original event producing the cascade of subsequent ones and saves the submission if
-                    //it was triggered by a non-text update.
-                    //NOTE: Leaf nodes in the update event tree have no source.
-                    /*this.subm!.updates().subscribe((event) => {
-                        if (SubmEditComponent.watchedUpdates.indexOf(event.leafEvent!.name) > -1) {
-                            this.onChange();
-                        }
-                    });*/
-
-                    //Determines the current section (in case the user navigates down to a subsection)
-                    this.changeSection(this.subm!.section.id);
-
-                    //Newly created submission => sets default values
-                    if (this.isNew) {
-                        this.setDefaults(this.section!);
-                    }
-
-                    this.isLoading = false;
-                    this.serverError = undefined;
-                },
-
-                //Failed to retrieve submission data
-                error => {
-                    this.serverError = error;
-                    this.reset();
-                }
-            );
+        this.route.params.takeUntil(this.unsubscribe).subscribe(params => {
+            this.accno = params.accno;
+            this.startLoading();
+            this.load().subscribe( (error) => this.stopLoading(error));
         });
-
-        return eventStream;
     }
 
-    /**
-     * Removes all subscriptions whenever the user navigates away from this view.
-     * Requires the takeUntil operator before every subscription.
-     * @see {@link https://stackoverflow.com/a/41177163}
-     */
     ngOnDestroy() {
-        this.ngUnsubscribe.next();
-        this.ngUnsubscribe.complete();
+        this.unsubscribe.next();
+        this.unsubscribe.complete();
     }
 
-    /**
-     * Sets the form's main state properties to their initial values.
-     */
-    reset() {
-        this.isLoading = false;
-        this.isSubmitting = false;
+    private load(): Observable<LoadError> {
+
+        const loadFinished$ = new Subject<LoadError>();
+
+        this.submService.getSubmission(this.accno).subscribe(
+            wrappedSubm => {
+                this.wrappedSubm = wrappedSubm;
+                this.subm = pageTab2Submission(this.wrappedSubm.data);
+                this.updateCurrentSection(this.subm.section.id);
+
+                if (this.isNew) {
+                    this.setDefaults(this.subm.section);
+                }
+                loadFinished$.next(LoadError.NoError);
+            },
+
+            error => {
+                loadFinished$.next(LoadError.from(error));
+                this.reset();
+            }
+        );
+        return loadFinished$;
+    }
+
+    private startLoading() {
+        this.editState = EditState.Loading;
+    }
+
+    private stopLoading(error:Loaderror) {
+        if (error.isEmpty) {
+            this.editState = EditState.Editting;
+            return;
+        }
+        this.editState = EditState.Error;
+        this.serverError = error;
+        this.reset();
+    }
+
+    private startReverting() {
+        this.editState = EditState.Reverting;
+    }
+
+    private stopReverting(error:LoadError) {
+        this.editState = EditState.Editting;
+    }
+
+    private reset() {
         this.subm = undefined;
         this.section = undefined;
-       // this.formControls = [];
         this.errors = SubmValidationErrors.EMPTY
     }
 
-    /**
-     * Sets default values for a given section of the submission
-     * @param {Section} section - Section on which default values are to be applied
-     * TODO: Apply defaults once recursively in case submission has subsections.
-     */
     setDefaults(section: Section): void {
-        const usrContact = this.userData.contact;
-        const attributes = Object.keys(usrContact).map((key) => {
-            return {name: key, value: usrContact[key]}
-        });
-        const contactFeature = section.features.find('Contact', 'typeName');
+        this.userData.info$.subscribe(info => {
+            const contactFeature = section.features.find('Contact', 'typeName');
 
-        if (contactFeature) {
-            contactFeature.add(attributes, 0);
-        }
-        this.onChange();
+            if (contactFeature) {
+                contactFeature.add(this.asContactAttributes(info), 0);
+            }
+            this.onChange();
+        });
     }
 
-    /**
-     * As soon as there is a new form section created, validate it, traverse it and get all its controls.
-     * NOTE: By design, the section form is generated after the form child view has been render.
-     * @see {@link SubmFormComponent}
-     */
-   /* ngAfterViewChecked() {
-        if (this.submForm) {
+    private asContactAttributes(userInfo: UserInfo): AttributeData[] {
+        return [
+            {name: 'Name', value: userInfo.username},
+            {name: 'E-mail', value: userInfo.email},
+            {name: 'ORCID', value: userInfo.aux.orcid}
+        ];
+    }
 
-            //Refreshes the required status of all members of a validation group
-            this.submForm!.sectionForm!.updateGroupForm();
+    /* ngAfterViewChecked() {
+         if (this.submForm) {
 
-            //Validates the submission immediately
-            this.errors = SubmissionValidator.validate(this.subm!);
+             //Refreshes the required status of all members of a validation group
+             this.submForm!.sectionForm!.updateGroupForm();
 
-            //Retrieves all form controls as a flat array.
-            this.submForm!.sectionForm!.controls(this.formControls);
-            this.changeRef.detectChanges();
-        }
-    }*/
+             //Validates the submission immediately
+             this.errors = SubmissionValidator.validate(this.subm!);
+
+             //Retrieves all form controls as a flat array.
+             this.submForm!.sectionForm!.controls(this.formControls);
+             this.changeRef.detectChanges();
+         }
+     }*/
 
     get sectionPath(): Section[] {
         if (this.subm === undefined || this.section === undefined) {
@@ -218,37 +181,29 @@ export class SubmEditComponent implements OnInit {
         return this.subm.sectionPath(this.section.id);
     }
 
-    /**
-     * Checks that the form contains no errors. It does so with a double test to guarantee resilience:
-     * dynamic count (coming from Angular) and a DOM-based count. The latter count is for cater for errors that don't
-     * concern the form itself and therefore are not likely to be caught by the dynamic count, such as repeated columns.
-     * TODO: This is temporary. There is already an array for row errors. Columns should have a similar one.
-     * @see {@link SubmFormComponent}
-     * @see {@link SubmissionValidator}
-     * @returns {boolean} True is there are no errors.
-     */
     get formValid(): boolean {
-       // return !FieldControl.numInvalid && !this.submForm!.hasError;
-        return false;
+        return this.sectionForm === undefined || this.sectionForm.form.valid;
     }
 
     onSectionClick(section: Section): void {
-        this.changeSection(section.id);
+        this.updateCurrentSection(section.id);
     }
 
-    /**
-     * Handler for revert action. It deletes the current revision and loads the latest released version by
-     * fetching the same submission again (after deletion).
-     * @param {Event} event - DOM event for the click action.
-     * TODO: This produces an spurious GET request. ngOnInit needs to be split up.
-     */
     onRevert(event: Event) {
-        this.confirmRevert!.confirm().takeUntil(this.ngUnsubscribe).subscribe(() => {
-            this.isReverting = true;
+        this.startReverting();
+
+        this.confirmRevert!.confirm().takeUntil(this.unsubscribe)
+            .pipe(
+                switchMap(() => this.submService.deleteSubmission(this.accno)),
+                switchMap(() => this.load())
+            ).subscribe(error => this.stopReverting(error));
+
+
+
+        subscribe(() => {
+            this.startReverting();
             this.submService.deleteSubmission(this.accno).subscribe(() => {
-                this.ngOnInit().subscribe(() => {
-                    this.isReverting = false;
-                });
+                this.load();
             });
         });
     }
@@ -322,14 +277,14 @@ export class SubmEditComponent implements OnInit {
 
         //Validates in bulk if form incomplete
         if (!this.canSubmit() || !this.formValid) {
-           // this.submForm!.sectionForm!.markAsTouched();
+            // this.submForm!.sectionForm!.markAsTouched();
             this.isSubmitting = false;
 
             //Stopping the click event from bubbling messes up change detection for features => forces it.
             this.changeRef.detectChanges();
 
             //Updates the pending fields counter
-           // this.submForm!.sectionForm!.controls(this.formControls);
+            // this.submForm!.sectionForm!.controls(this.formControls);
 
             //Switches to "Check" tab if not active already
             //TODO: check for validator errors needed to rule out column errors. Remove it.
@@ -337,7 +292,7 @@ export class SubmEditComponent implements OnInit {
             //    this.sideBar.onTabClick(true);
             //}
 
-        //Form has been fully filled in and is valid => submits, requesting confirmation if applicable
+            //Form has been fully filled in and is valid => submits, requesting confirmation if applicable
         } else {
             if (isConfirm) {
                 confirmShown = this.confirmSubmit!.confirm(this.confirmSubmit!.body, false);
@@ -383,7 +338,7 @@ export class SubmEditComponent implements OnInit {
 
                 //Flushes all updates synchronously so that the scroll reset happens exactly after them.
                 this.changeRef.detectChanges();
-                window.scrollTo(0,0);
+                window.scrollTo(0, 0);
 
                 !this.isUpdate && this.showSubmitResults(resp);
                 this.isSubmitting = false;
@@ -438,7 +393,7 @@ export class SubmEditComponent implements OnInit {
         bsModalRef.content.accno = this.subm!.accno;
     }
 
-    changeSection(sectionId: string) {
+    updateCurrentSection(sectionId: string) {
         const path: Section[] = this.subm!.sectionPath(sectionId);
         if (path.length === 0) {
             console.log(`Section with id ${sectionId} was not found`);

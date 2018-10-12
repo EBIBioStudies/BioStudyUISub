@@ -145,8 +145,7 @@
                     </div>
                 </div>
 
-                <subm-form #submForm
-                           [sectionForm]="sectionForm"
+                <subm-form [sectionForm]="sectionForm"
                            (keyup.enter)="onSubmit($event, true)"
                            [readonly]="readonly">
                 </subm-form>

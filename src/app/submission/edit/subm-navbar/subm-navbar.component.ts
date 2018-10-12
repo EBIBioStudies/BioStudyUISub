@@ -38,9 +38,9 @@ export class SubmNavBarComponent {
 
         //Works out the list of allowed projects by comparison with template names
         this.isBusy = true;
-        this.userData.whenFetched.subscribe((data) => {
+        this.userData.filteredProjectAccNumbers$(SUBMISSION_TEMPLATE_NAMES).subscribe(projects => {
             this.isBusy = false;
-            this.allowedPrj = this.userData.allowedProjects(SUBMISSION_TEMPLATE_NAMES);
+            this.allowedPrj = projects;
         });
     }
 
@@ -64,7 +64,7 @@ export class SubmNavBarComponent {
      * Renders the new submission dialogue that allows the user to choose what type definitions template is used.
      * If only one template is available, the modal is bypassed altogether and a default submission is created.
      * NOTE: The default template will always be available.
-     * @see {@link UserData.allowedProjects}
+     * @see {@link UserData.filteredProjectAccNumbers$}
      * @param {Event} event - Click event object, the bubbling of which will be prevented
      */
     onNewSubmClick(event: Event): void {

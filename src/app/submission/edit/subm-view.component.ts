@@ -24,7 +24,7 @@ export class SubmViewComponent extends SubmEditComponent {
                     this.wrappedSubm = wrappedSubm;
                     this.accno = wrappedSubm.accno;
                     this.subm = pageTab2Submission(SubmissionType.fromTemplate(findSubmissionTemplateName(page)), page);
-                    this.changeSection(this.subm.section.id);
+                    this.updateCurrentSection(this.subm.section.id);
                 });
         });
 

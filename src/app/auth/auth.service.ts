@@ -15,6 +15,7 @@ import {
 import {UserSession} from './user-session';
 import {Observable, of, throwError} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {UserInfo} from './model/user-info';
 
 @Injectable()
 export class AuthService {
@@ -34,14 +35,8 @@ export class AuthService {
             }));
     }
 
-    checkUser(): Observable<any> {
-        return this.http.get('/raw/auth/check?format=json').pipe(
-            map((response) => {
-                if (response.status === 'OK') {
-                    return response;
-                }
-                return throwError(ServerError.dataError(response));
-            }));
+    checkUser(): Observable<UserInfo> {
+        return this.http.get('/raw/auth/check?format=json');
     }
 
     passwordResetReq(obj: PasswordResetRequestData): Observable<any> {

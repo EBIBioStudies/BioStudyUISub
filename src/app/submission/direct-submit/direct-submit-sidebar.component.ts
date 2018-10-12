@@ -120,8 +120,8 @@ export class DirectSubmitSideBarComponent implements OnInit {
      * is known.
      */
     ngOnInit(): void {
-        this.userData.whenFetched.subscribe((data) => {
-            this.model.projects = this.initProjModel(this.userData.projectNames());
+        this.userData.projectAccNumbers$.subscribe(projects => {
+            this.model.projects = this.initProjModel(projects);
             this.isProjFetch = false;
         }, () => {
             this.isProjFetch = false;

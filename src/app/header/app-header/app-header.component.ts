@@ -68,8 +68,8 @@ export class AppHeaderComponent implements OnDestroy {
         });
 
         //Updates the secret ID as soon as it becomes available.
-        this.userData.whenFetched.subscribe(data => {
-            this.secretId = this.userData.secretId;
+        this.userData.secretId$.subscribe(secret => {
+            this.secretId = secret;
         });
     }
 

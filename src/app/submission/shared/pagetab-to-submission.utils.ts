@@ -4,8 +4,10 @@ import {authors2Contacts} from './pagetab-authors.utils';
 import {SubmissionType} from './submission-type.model';
 import {LinksUtils} from './pagetab-links.utils';
 import {mergeAttributes, SHARED_ATTRIBUTES} from './pagetab-attributes.utils';
+import {findSubmissionTemplateName} from './templates/submission.templates';
 
-export function pageTab2Submission(type: SubmissionType, pageTab: PageTab) {
+export function pageTab2Submission(pageTab: PageTab) {
+    const type = SubmissionType.fromTemplate(findSubmissionTemplateName(pageTab));
     return new Submission(type, pageTab2SubmissionData(pageTab));
 }
 

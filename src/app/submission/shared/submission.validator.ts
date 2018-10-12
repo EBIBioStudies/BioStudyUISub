@@ -213,14 +213,4 @@ export class SubmissionValidator {
     static validate(subm: Submission): SubmValidationErrors {
         return this.validateSection(subm.section);
     }
-
-    static createObservable(subm: Submission): Observable<SubmValidationErrors> {
-        return Observable.create((observer) => {
-            observer.next(SubmissionValidator.validate(subm));
-            observer.complete();
-
-            return () => {
-            };
-        });
-    }
 }
