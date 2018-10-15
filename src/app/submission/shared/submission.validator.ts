@@ -1,5 +1,4 @@
 import {Feature, Field, Section, Submission} from './submission.model';
-import {Observable} from 'rxjs/Observable';
 import {parseDate} from '../../submission-shared/date.utils';
 import {FeatureType, SectionType, TextValueType, ValueType, ValueTypeName} from './submission-type.model';
 
@@ -38,6 +37,10 @@ class ValidationRules {
                 .filter(st => st.displayType.isRequired)
                 .map(st => ValidationRules.requiredSection(st, section))
         );
+
+        rules = rules.concat(
+            section.type.featureGroups.map(gr => ValidationRules.atLeastOneFeatureFromGroup(gr, section))
+        );
         return rules;
     }
 
@@ -51,7 +54,7 @@ class ValidationRules {
     }
 
     static forValue(value: string, fieldName: string, valueType: ValueType): ValidationRule[] {
-        const rules:ValidationRule[] = [];
+        const rules: ValidationRule[] = [];
         if (valueType.is(ValueTypeName.text, ValueTypeName.largetext)) {
             rules.push(ValidationRules.maxlengthValue(value, (<TextValueType>valueType).maxlength, fieldName));
             rules.push(ValidationRules.minlengthValue(value, (<TextValueType>valueType).minlength, fieldName));
@@ -72,8 +75,6 @@ class ValidationRules {
                 const rowValue = row.valueFor(col.id)!.value;
                 const rowName = `${feature.type.name}: (col: ${colIndex}, row: ${rowIndex}):`;
 
-                //If a member field is marked as required but its parent feature is not, the field should be optional
-                //NOTE: Features added interactively are optional and fields may be required at the row level (eg: publication rows).
                 if (feature.type.displayType.isRequired && col.displayType.isRequired) {
                     valueRules.push(ValidationRules.requiredValue(rowValue, rowName));
                 }
@@ -84,11 +85,26 @@ class ValidationRules {
         return rules.concat(valueRules);
     }
 
+    static atLeastOneFeatureFromGroup(group: string[], section: Section) {
+        return {
+            validate() {
+                const rowCount = section.features.list()
+                    .filter(f => group.includes(f.typeName))
+                    .map(f => f.rowSize())
+                    .reduce((rv, v) => rv + v, 0);
+                if (rowCount === 0) {
+                    return `At least one ${group.join(' or ')} is required`;
+                }
+                return undefined;
+            }
+        };
+    }
+
     static atLeastOneRowFeature(feature: Feature): ValidationRule {
         return {
             validate() {
                 if (feature.rowSize() === 0) {
-                    return `At least one of ${feature.type.name} is required`;
+                    return `At least one of ${feature.typeName} is required`;
                 }
                 return undefined;
             }
@@ -130,7 +146,6 @@ class ValidationRules {
         }
     }
 
-    //TODO: this method is a sign that the whole validator should disappear. It has to know dynamic details beyond the field types in advance (eg: date's format, ORCID's format). This should remain implicit in the type. Also a problem when dynamic server-side validation exists.
     static formattedValue(value: string, valueType: ValueType, name: string): ValidationRule {
         return {
             validate() {

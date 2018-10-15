@@ -31,7 +31,6 @@
                      [readonly]="isReadonly"
                      [formControl]="fieldControl.control"
                      [isSmall]="false"
-                     (ngModelChange)="onValueChange($event)"
                      [submControlName]="fieldName | camelcase2label"
                      [submControlIcon]="fieldType.icon">
         </input-value>

@@ -13,7 +13,7 @@ import {
     SignUpComponent
 } from './auth/index';
 
-import {DirectSubmitComponent, SubmEditComponent, SubmListComponent, SubmViewComponent} from './submission/index';
+import {DirectSubmitComponent, SubmEditComponent, SubmListComponent} from './submission/index';
 
 import {FileListComponent} from './file/file-list/file-list.component';
 
@@ -54,8 +54,8 @@ const appRoutes: Routes = [
     },
     {
         path: 'submissions/:accno',
-        component: SubmViewComponent,
-        data: {reuse: true},
+        component: SubmEditComponent,
+        data: {reuse: true, readonly: true},
         canActivate: [AuthGuard]
     },
     {

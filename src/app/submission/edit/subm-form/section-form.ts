@@ -1,4 +1,4 @@
-import {Attribute, Feature, Field, Section, ValueMap} from '../../shared/submission.model';
+import {Attribute, AttributeValue, Feature, Field, Section, ValueMap} from '../../shared/submission.model';
 import {FormArray, FormControl, FormGroup} from '@angular/forms';
 import {ErrorMessages, FormValidators, ValueValidators} from './value-validators';
 import {ColumnType, ValueType} from '../../shared/submission-type.model';
@@ -11,6 +11,9 @@ export class FieldControl {
 
     constructor(readonly field: Field, readonly parentRef: string) {
         this.control = new FormControl(field.value, ValueValidators.forField(this.field, parentRef));
+        this.control.valueChanges.subscribe((value) => {
+            field.value = value;
+        });
     }
 
     get errors(): string[] {
@@ -77,8 +80,9 @@ export class ColumnControl {
 export class CellControl {
     readonly control: FormControl;
 
-    constructor(value: string, column: Attribute, readonly parentRef: string) {
-        this.control = new FormControl(value, ValueValidators.forCell(column, parentRef));
+    constructor(attrValue: AttributeValue, column: Attribute, readonly parentRef: string) {
+        this.control = new FormControl(attrValue.value, ValueValidators.forCell(column, parentRef));
+        this.control.valueChanges.subscribe(value => attrValue.value = value);
     }
 
     get errors(): string[] {
@@ -101,9 +105,14 @@ export class RowForm {
     }
 
     addCellControl(column: Attribute) {
-        const cellControl = new CellControl(this.row.valueFor(column.id)!.value, column, this.parentRef);
+        const cellControl = new CellControl(this.row.valueFor(column.id)!, column, this.parentRef);
         this.form.addControl(column.id, cellControl.control);
         this.controls.set(column.id, cellControl);
+    }
+
+    removeCellControl(columnId: string) {
+        this.form.removeControl(columnId);
+        this.controls.delete(columnId);
     }
 
     cellControlAt(columnId: string): CellControl | undefined {
@@ -261,8 +270,10 @@ export class FeatureForm {
     }
 
     onRowAdd() {
-        if (this.canHaveMultipleRows) {
+        const row = this.feature.addRow();
+        if (row !== undefined) {
             this.addRowForm(this.feature.addRow()!, this.feature.columns);
+            this.updateValueAndValidity();
         }
     }
 
@@ -270,6 +281,7 @@ export class FeatureForm {
         const column = this.feature.addColumn();
         this.addColumnControl(column);
         this.rowForms.forEach(rf => rf.addCellControl(column));
+        this.updateValueAndValidity();
     }
 
     onColumnRemove(columnId: string) {
@@ -280,17 +292,25 @@ export class FeatureForm {
         if (this.feature.removeColumn(columnId)) {
             this.columnControls.splice(index, 1);
             this.columnsForm.removeControl(columnId);
+            this.rowForms.forEach(rf => rf.removeCellControl(columnId));
+            this.updateValueAndValidity();
         }
     }
 
     onRowRemove(rowIndex: number) {
-        this.rowForms.splice(rowIndex, 1);
-        this.rowFormArray.removeAt(rowIndex);
-        this.feature.removeRowAt(rowIndex);
+        if (this.feature.removeRowAt(rowIndex)) {
+            this.rowForms.splice(rowIndex, 1);
+            this.rowFormArray.removeAt(rowIndex);
+            this.updateValueAndValidity();
+        }
     }
 
     get canRemoveRow(): boolean {
         return this.feature.canRemoveRow;
+    }
+
+    updateValueAndValidity() {
+        this.form.updateValueAndValidity();
     }
 
     private addRowForm(row: ValueMap, columns: Attribute[]) {

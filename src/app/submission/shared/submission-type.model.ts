@@ -153,7 +153,7 @@ export enum ValueTypeName {
     select,
     file,
     link,
-    idLink,
+    idlink,
     orcid,
     pubmedid
 }
@@ -345,7 +345,7 @@ export class SectionType extends TypeBase {
         data = data || {};
         this.displayType = DisplayType.create(data.display);
         this.display = this.displayType.name;
-        this.featureGroups = data.featureGroups || [];
+        this.featureGroups = (data.featureGroups || []).filter(gr => !gr.isEmpty());
 
         this.annotationsType = new AnnotationsType(data.annotationsType, new TypeScope<AnnotationsType>());
 

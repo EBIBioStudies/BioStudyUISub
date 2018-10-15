@@ -66,10 +66,6 @@ export class ValueMap {
         (keys || []).forEach(key => this.add(key));
     }
 
-    get isEmpty(): boolean {
-        return Array.from(this.valueMap.values()).every(v => v.value.isEmpty());
-    }
-
     valueFor(key: string): AttributeValue | undefined {
         return this.valueMap.get(key);
     }
@@ -250,7 +246,7 @@ export class Feature {
             this.add(entry);
         });
 
-        if (type.displayType.isShownByDefault) {
+        if (type.displayType.isShownByDefault && this.rows.isEmpty()) {
             this.addRow();
         }
     }
@@ -303,16 +299,6 @@ export class Feature {
      */
     firstId(name: string): string {
         return this._columns.allWithName(name)[0].id
-    }
-
-    /**
-     * Determines the feature is made up of empty rows.
-     * NOTE: This is equally applicable to lists as long as they are considered transposed grids, the
-     * only row being the set of values for each key.
-     * @returns {boolean} True if all rows are empty.
-     */
-    isEmpty(): boolean {
-        return this.rows.every(row => row.isEmpty);
     }
 
     /**
@@ -474,6 +460,10 @@ export class Features {
         type.featureGroups.forEach(group => {
             const featureGroup = this.features.filter(f => group.includes(f.typeName));
             featureGroup.forEach(f => f.groups.push(featureGroup));
+            const rowCount = featureGroup.map(f => f.rowSize()).reduce((rv, v) => rv + v, 0);
+            if (rowCount === 0) {
+                featureGroup[0].addRow();
+            }
         });
     }
 

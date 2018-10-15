@@ -92,8 +92,4 @@ export class SubmFieldComponent {
         }
         return this.valueLen;
     }
-
-    onValueChange(event) {
-        //TODO
-    }
 }

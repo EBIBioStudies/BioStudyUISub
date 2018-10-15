@@ -29,7 +29,7 @@
 
                 <div class="panel">
                     <div class="panel-body">
-                        <div *ngIf="isNew && errors.total()">
+                        <div *ngIf="isFirstTimeHere && errors.total()">
                             <h4>New submission</h4>
                             <p>
                                 Please fill in the form below. The <span class="font-bold">Check</span> tab on the
@@ -48,7 +48,7 @@
                             </div>
                         </div>
 
-                        <div *ngIf="!isNew && !readonly && errors.total()">
+                        <div *ngIf="!isFirstTimeHere && !readonly && errors.total()">
                             <h4>Incomplete submission</h4>
                             <p>
                                 Some information in this submission is still missing or incorrect. Refer to the
@@ -67,7 +67,7 @@
                             </div>
                         </div>
 
-                        <div *ngIf="!errors.total() && !readonly">
+                        <div *ngIf="errors.empty() && !readonly">
                             <div *ngIf="subm.isTemp && !isSubmitting">
                                 <h4>Study ready for submission</h4>
                                 <p>
@@ -192,7 +192,7 @@
                         <span *ngIf="isSaving">Backing up study data...</span>
                     </p>
                     <p class="col-xs-2 text-right">
-                        <button *ngIf="!readonly && errors && !errors.empty()" class="btn btn-default btn-sm btn-log"
+                        <button *ngIf="!readonly && !errors.empty()" class="btn btn-default btn-sm btn-log"
                                 tooltip="Show validation log"
                                 placement="left"
                                 container="body"

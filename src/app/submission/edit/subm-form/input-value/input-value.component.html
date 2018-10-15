@@ -17,7 +17,7 @@
 
     <textarea *ngSwitchCase="ValueTypeNameEnum.largetext"
               class="form-control"
-              [(ngModel)]="value"
+              [formControl]="formControl"
               [readonly]="readonly"
               autosize="200"
               (keyup.enter)="$event.stopPropagation()"
@@ -25,37 +25,35 @@
 
     <date-input *ngSwitchCase="ValueTypeNameEnum.date"
                 [isSmall]="isSmall"
-                [(ngModel)]="value"
+                [formControl]="formControl"
                 [readonly]="readonly"
                 [maxDate]="nowInNyears()"
                 [allowPast]="allowPast"
                 (focusout)="onBlur()">
     </date-input>
 
-    <id-link *ngSwitchCase="ValueTypeNameEnum.idLink"
+    <id-link *ngSwitchCase="ValueTypeNameEnum.idlink"
              [isSmall]="isSmall"
              [readonly]="readonly"
-             [(ngModel)]="value"
              [suggestThreshold]="suggestThreshold"
              [suggestLength]="suggestLength"
-             (focusout)="onBlur()"
-             (selected)="onSuggestSelect($event)"></id-link>
+             [formControl]="formControl"
+             (focusout)="onBlur()"></id-link>
 
     <orcid-input-box *ngSwitchCase="ValueTypeNameEnum.orcid"
                      [isSmall]="isSmall"
                      [readonly]="readonly"
                      [isPopupButton]="false"
-                     [(ngModel)]="value"
+                     [formControl]="formControl"
                      (focusout)="onBlur()">
     </orcid-input-box>
 
     <file-select *ngSwitchCase="ValueTypeNameEnum.file"
-                 [(ngModel)]="value"
-                 (ngModelChange)="onSuggestSelect($event)">
+                 [formControl]="formControl">
     </file-select>
 
     <pubmedid-search *ngSwitchCase="ValueTypeNameEnum.pubmedid"
-                     [(ngModel)]="value"
+                     [formControl]="formControl"
                      [readonly]="readonly"
                      (found)="asyncData($event)">
     </pubmedid-search>

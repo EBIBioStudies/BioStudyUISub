@@ -18,7 +18,6 @@ import {TextFilterComponent} from './list/ag-grid/text-filter.component';
 import {DateFilterComponent} from './list/ag-grid/date-filter.component';
 
 import {SubmEditComponent} from './edit/subm-edit.component';
-import {SubmViewComponent} from './edit/subm-view.component';
 
 import {DirectSubmitSideBarComponent} from './direct-submit/direct-submit-sidebar.component';
 import {DirectSubmitComponent} from './direct-submit/direct-submit.component';
@@ -66,7 +65,6 @@ import {SubmControlDirective} from './edit/subm-form/subm-control.directive';
     declarations: [
         SubmListComponent,
         SubmEditComponent,
-        SubmViewComponent,
         DirectSubmitComponent,
         ResultsLogNodeComponent,
         DirectSubmitSideBarComponent,
@@ -95,7 +93,6 @@ import {SubmControlDirective} from './edit/subm-form/subm-control.directive';
     exports: [
         SubmListComponent,
         SubmEditComponent,
-        SubmViewComponent,
         DirectSubmitComponent,
     ],
     entryComponents: [
