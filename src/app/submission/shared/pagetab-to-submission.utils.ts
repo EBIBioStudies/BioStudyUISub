@@ -52,6 +52,13 @@ function ptSection2SectionData(ptSection: PtSection, parentAttributes: PtAttribu
         });
     }
 
+    if (String.isDefinedAndNotEmpty(ptSection.libraryFile)) {
+        features.push(<FeatureData> {
+            type: 'LibraryFile',
+            entries: [[<PtAttribute>{name: 'Path', value: ptSection.libraryFile}]]
+        })
+    }
+
     if (!featureSections.isEmpty()) {
         const featureTypes = featureSections
             .filter(s => String.isDefinedAndNotEmpty(s.type))

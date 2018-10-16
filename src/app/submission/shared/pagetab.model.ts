@@ -34,6 +34,7 @@ export interface PtSection {
     tags?: Partial<Tag>[];
     accessTags?: string[];
     subsections?: PtSectionItem [];
+    libraryFile?: string;
     links?: PtLinkItem [];
     files?: PtFileItem [];
 }
