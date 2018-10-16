@@ -197,7 +197,7 @@ class ValidationRules {
 }
 
 export class SubmValidationErrors {
-    static EMPTY = new SubmValidationErrors('');
+    static Empty = new SubmValidationErrors('');
 
     constructor(readonly secId: string,
                 readonly errors: string [] = [],

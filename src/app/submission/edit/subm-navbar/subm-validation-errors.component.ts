@@ -12,7 +12,7 @@ import {BsModalRef} from 'ngx-bootstrap';
     styleUrls:['./subm-validation-errors.component.css']
 })
 export class SubmValidationErrorsComponent {
-    @Input() errors: SubmValidationErrors = SubmValidationErrors.EMPTY;
+    @Input() errors: SubmValidationErrors = SubmValidationErrors.Empty;
     @Input() modalRef?: BsModalRef;
 
     get errorList(): { level: number[], message: string }[] {

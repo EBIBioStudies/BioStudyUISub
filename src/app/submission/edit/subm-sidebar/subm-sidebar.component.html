@@ -17,8 +17,8 @@
                 <ng-template tabHeading>
                     Check
                     <span *ngIf="numInvalid" class="badge badge-corner"
-                          [ngClass]="{'badge-half-danger': numPending > 0 && numPending < numInvalid,
-                                      'badge-danger': numPending === numInvalid}">
+                          [ngClass]="{'badge-half-danger': numInvalidAndTouched > 0 && numInvalidAndTouched < numInvalid,
+                                      'badge-danger': numInvalidAndTouched === numInvalid}">
                         {{numInvalid}}
                     </span>
                 </ng-template>
@@ -135,7 +135,8 @@
                 </h4>
             </li>
             <li class="sidebar-item" *ngFor="let control of invalidControls; let i = index">
-                <a [ngClass]="{'center-spread': !collapsed}"
+                <a *ngIf="control.invalid"
+                   [ngClass]="{'center-spread': !collapsed}"
                    tooltip="{{collapsed ? '&quot;' + control.controlName + '&quot; field is ' + tipText(control.errors) : 'Highlight field on the form'}}"
                    container="body"
                    placement="{{collapsed ? 'right' : 'top'}}"

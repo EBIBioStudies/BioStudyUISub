@@ -1,4 +1,5 @@
 import {NameAndValue, Tag} from './model.common';
+import {fromNullable} from 'fp-ts/lib/Option';
 
 export const ATTACH_TO_ATTR = 'AttachTo';
 export const RELEASE_DATE_ATTR = 'ReleaseDate';
@@ -44,4 +45,10 @@ export interface PageTab {
     attributes?: PtAttribute[];
     tags?: Partial<Tag>[];
     accessTags?: string[];
+}
+
+export function findReleaseDate(pageTab: PageTab): string | undefined {
+    return fromNullable((pageTab.attributes || []).find(at => at.name === RELEASE_DATE_ATTR))
+        .map(at => at.value)
+        .getOrElse(undefined);
 }

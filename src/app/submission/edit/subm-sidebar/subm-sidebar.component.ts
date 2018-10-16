@@ -175,6 +175,14 @@ export class SubmSideBarComponent implements OnChanges {
         return !this.isAdvancedOpen;
     }
 
+    get numInvalid(): number {
+        return this.invalidControls.length;
+    }
+
+    get numInvalidAndTouched(): number {
+        return this.invalidControls.filter(c => c.touched).length;
+    }
+
     onCheckTabClick(): void {
         this.isCheckTabActive = true;
     }
@@ -183,32 +191,8 @@ export class SubmSideBarComponent implements OnChanges {
         this.isCheckTabActive = false;
     }
 
-    private updateInvalidControlList(form: FormGroup) {
-        this.invalidControls = this.listControls(form)
-            .filter(control => control.invalid)
-            .reverse();
-    }
-
-    listControls(control: AbstractControl): FormControl[] {
-        if (control instanceof FormGroup) {
-            const map = (<FormGroup>control).controls;
-            return Object.keys(map)
-                .map(key => map[key])
-                .flatMap(control => this.listControls(control));
-        }
-        else if (control instanceof FormArray) {
-            const array = (<FormArray>control).controls;
-            return array.flatMap(control => this.listControls(control));
-        }
-        return [<FormControl>control];
-    }
-
     ngOnInit() {
-        if (this.sectionForm) {
-            const form = this.sectionForm.form;
-            form.valueChanges.subscribe(() => this.updateInvalidControlList(form));
-            this.updateInvalidControlList(form);
-        }
+        this.onSectionFormUpdate();
     }
 
     /**
@@ -217,18 +201,27 @@ export class SubmSideBarComponent implements OnChanges {
      */
     ngOnChanges(changes: any): void {
         if (changes.sectionForm) {
-            if (this.sectionForm) {
-                const form = this.sectionForm.form;
-                form.valueChanges.subscribe(() => this.updateInvalidControlList(form));
-                this.updateInvalidControlList(form);
+            this.onSectionFormUpdate();
+        }
+    }
 
-                this.onItemsChange();
-            }
+    private onSectionFormUpdate() {
+        if (this.subscr) {
+            this.subscr.unsubscribe();
+            this.subscr = undefined;
+        }
+
+        if (this.sectionForm !== undefined) {
+            this.subscr = this.sectionForm.valueChanges$.subscribe(() => {
+                this.invalidControls = this.sectionForm!.invalidControls();
+            });
+
+            this.onItemsChange();
         }
     }
 
     ngDoCheck() {
-        /*  this.numPending = FieldControl.numPending;
+        /*  this.numInvalidAndTouched = FieldControl.numInvalidAndTouched;
           this.numInvalid = FieldControl.numInvalid;*/
     }
 

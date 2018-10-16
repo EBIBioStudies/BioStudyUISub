@@ -13,7 +13,6 @@ import {ConfirmDialogComponent} from 'app/shared/index';
 import {AppConfig} from '../../app.config';
 import {UserData} from '../../auth/user-data';
 import {SubmValidationErrorsComponent} from './subm-navbar/subm-validation-errors.component';
-import * as _ from 'lodash';
 import {SubmSideBarComponent} from './subm-sidebar/subm-sidebar.component';
 import {Subject} from 'rxjs/Subject';
 import {submission2PageTab} from '../shared/submission-to-pagetab.utils';
@@ -21,8 +20,8 @@ import {pageTab2Submission} from '../shared/pagetab-to-submission.utils';
 import {Observable, of} from 'rxjs';
 import {SectionForm} from './subm-form/section-form';
 import {UserInfo} from '../../auth/model/user-info';
-import {switchMap, throttleTime} from 'rxjs/operators';
-import {throttle} from 'rxjs-compat/operator/throttle';
+import {filter, switchMap, throttleTime} from 'rxjs/operators';
+import {findReleaseDate} from '../shared/pagetab.model';
 
 class EditState {
     private state: string;
@@ -102,6 +101,24 @@ class ServerErrorResponse {
     static NoError = new ServerErrorResponse();
 }
 
+class SubmitOperation {
+    get isUnknown(): boolean {
+        return this === SubmitOperation.Unknown;
+    }
+
+    get isCreate(): boolean {
+        return this === SubmitOperation.Create;
+    }
+
+    get isUpdate(): boolean {
+        return this === SubmitOperation.Update;
+    }
+
+    static Unknown = new SubmitOperation();
+    static Create = new SubmitOperation();
+    static Update = new SubmitOperation();
+}
+
 @Component({
     selector: 'subm-edit',
     templateUrl: './subm-edit.component.html'
@@ -123,9 +140,10 @@ export class SubmEditComponent implements OnInit {
     wrappedSubm: any;
     serverError?: ServerError;
 
-    errors: SubmValidationErrors = SubmValidationErrors.EMPTY;  //form validation errors
+    errors: SubmValidationErrors = SubmValidationErrors.Empty;
+    submitOperation: SubmitOperation = SubmitOperation.Unknown;
 
-    private isFirstTimeHere: boolean = false;             //flag indicating submission has just been created through the UI
+    private hasJustCreated: boolean = false;             //flag indicating submission has just been created through the UI
     private editState: EditState = new EditState();
     private unsubscribe: Subject<void> = new Subject<void>();
 
@@ -163,7 +181,7 @@ export class SubmEditComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.isFirstTimeHere = this.route.snapshot.data.isNew || false;
+        this.hasJustCreated = this.route.snapshot.data.isNew || false;
 
         this.route.params.takeUntil(this.unsubscribe).subscribe(params => {
             this.accno = params.accno;
@@ -179,95 +197,41 @@ export class SubmEditComponent implements OnInit {
         this.unsubscribe.complete();
     }
 
-    private load(): Observable<ServerErrorResponse> {
-
-        const loadFinished$ = new Subject<ServerErrorResponse>();
-
-        this.submService.getSubmission(this.accno).subscribe(
-            wrappedSubm => {
-                this.wrappedSubm = wrappedSubm;
-                this.subm = pageTab2Submission(this.wrappedSubm.data);
-                this.updateCurrentSection(this.subm.section.id);
-
-                if (this.isFirstTimeHere) {
-                    this.setDefaults(this.subm.section);
-                }
-                loadFinished$.next(ServerErrorResponse.NoError);
-            },
-
-            error => {
-                loadFinished$.next(new ServerErrorResponse(error));
-                this.serverError = error;
-                this.reset();
-            }
-        );
-        return loadFinished$;
-    }
-
-    private reset() {
-        this.subm = undefined;
-        this.section = undefined;
-        this.errors = SubmValidationErrors.EMPTY
-    }
-
-    setDefaults(section: Section): void {
-        this.userData.info$.subscribe(info => {
-            const contactFeature = section.features.find('Contact', 'typeName');
-
-            if (contactFeature) {
-                contactFeature.add(this.asContactAttributes(info), 0);
-            }
-            this.onDataChange();
-        });
-    }
-
-    private asContactAttributes(userInfo: UserInfo): AttributeData[] {
-        return [
-            {name: 'Name', value: userInfo.username},
-            {name: 'E-mail', value: userInfo.email},
-            {name: 'ORCID', value: userInfo.aux.orcid}
-        ];
-    }
-
-    get sectionPath(): Section[] {
-        if (this.subm === undefined || this.section === undefined) {
-            return [];
-        }
-        return this.subm.sectionPath(this.section.id);
-    }
-
-    get isFormValid(): boolean {
-        return this.sectionForm === undefined || this.sectionForm.form.valid;
-    }
-
     onSectionClick(section: Section): void {
         this.updateCurrentSection(section.id);
     }
 
     onRevert(event: Event) {
-        this.editState.startReverting();
-
-        this.confirmRevert!.confirm().takeUntil(this.unsubscribe)
-            .pipe(
-                switchMap(() => this.submService.deleteSubmission(this.accno)),
-                switchMap(() => this.load())
-            ).subscribe(error => this.editState.stopReverting(error.error));
+        this.revert();
     }
 
-    /**
-     * Reverts the view back to its editing mode, making it consistent with the submission's status.
-     * @param {Event} event - DOM event for the click action.
-     */
+    onSubmit(event, isConfirm: boolean = false) {
+        if (event) {
+            event.preventDefault();
+        }
+
+        if (this.isSubmitting) {
+            return;
+        }
+
+        if (!this.isValid) {
+            this.sideBar!.onCheckTabClick();
+            return;
+        }
+
+        let confirmShown = of(true);
+        if (isConfirm) {
+            confirmShown = this.confirmSubmit!.confirm(this.confirmSubmit!.body, false);
+        }
+        confirmShown.takeUntil(this.unsubscribe).pipe(filter(v => v)).subscribe(() => this.submit());
+    }
+
     onEditBack(event: Event) {
         this.readonly = false;
         this.subm!.isRevised = false;
         this.router.navigate(['/submissions/edit/' + this.accno]);
     }
 
-    /**
-     * Builds the string of text to be displayed in a confirmation modal rendered before deleting a section.
-     * @param {Section} section - Section to be deleted
-     */
     onSectionDelete(section: Section): void {
         let confirmMsg: string = `You are about to permanently delete the page named "${section.typeName}"`;
 
@@ -281,136 +245,17 @@ export class SubmEditComponent implements OnInit {
         });
     }
 
-    onDataChange(event?: Event) {
-        if (this.readonly) {
-            return;
-        }
-
-        this.editState.startSaving();
-        this.submService.saveSubmission(this.wrap()).takeUntil(this.unsubscribe).subscribe(
-            () => {
-                this.editState.stopSaving();
-
-                this.isFirstTimeHere && this.locService.replaceState('/submissions/edit/' + this.accno);
-
-                //A sent submission has been backed up. It follows it's been revised.
-                if (!this.subm!.isTemp && !this.subm!.isRevised) {
-                    this.subm!.isRevised = true;
-                }
-            },
-            (error) => this.editState.stopSaving(new ServerErrorResponse(error)));
-
-        this.validate();
-    }
-
-    /**
-     * Handler for form submission events. Checks that the form is valid. If not, it highlights all fields
-     * that are incorrect and updates the checklist on the sidebar. Additionally, user confirmation before
-     * submission can be requested.
-     * @param event - DOM event triggering the submission. It can be a keypress event.
-     * @param {boolean} [isConfirm = false] - If true, a modal is rendered before actually submitting.
-     */
-    onSubmit(event, isConfirm: boolean = false) {
-        let confirmShown = of(true);     //dummy observable in case modal not shown
-
-        //TODO: Why is this needed?
-        if (event) {
-            event.preventDefault();
-        }
-
-        //Validates in bulk if form incomplete
-        if (!this.canSubmit() || !this.isFormValid) {
-            // this.submForm!.sectionForm!.markAsTouched();
-            this.editState.stopSubmitting();
-
-            //Stopping the click event from bubbling messes up change detection for features => forces it.
-            this.changeRef.detectChanges();
-
-            //Updates the pending fields counter
-            // this.submForm!.sectionForm!.controls(this.formControls);
-
-            //Switches to "Check" tab if not active already
-            //TODO: check for validator errors needed to rule out column errors. Remove it.
-            //if (this.sideBar && !this.sideBar.isStatus && FieldControl.numInvalid) {
-            //    this.sideBar.onTabClick(true);
-            //}
-
-            //Form has been fully filled in and is valid => submits, requesting confirmation if applicable
-        } else {
-            if (isConfirm) {
-                confirmShown = this.confirmSubmit!.confirm(this.confirmSubmit!.body, false);
-            }
-            confirmShown.takeUntil(this.unsubscribe).subscribe((isOk: boolean) => {
-                if (isOk) {
-                    this.submitForm()
-                } else {
-                    this.editState.stopSubmitting();
-                }
-            });
-        }
-    }
-
-    /**
-     * Performs the actual request to save the submission, updating the view afterwards. In the event of a
-     * submission error, it shows the error tree. If, instead, the error is an application exception, the error
-     * banner is rendered.
-     */
-    submitForm() {
-        const wrappedSubm = this.wrap(true);
-
-        this.submService.submitSubmission(wrappedSubm).takeUntil(this.unsubscribe).subscribe(
-            resp => {
-
-                //Extracts the release date if present
-                const dateAttr = wrappedSubm.data.attributes.find(attribute => {
-                    return attribute.name == 'ReleaseDate';
-                });
-                if (dateAttr) {
-                    this.releaseDate = dateAttr.value;
-                }
-
-                //Updates the acccession number of a temporary submission with the one assigned by the server.
-                if (this.subm!.isTemp) {
-                    this.accno = resp.mapping[0].assigned;
-                    this.subm!.accno = this.accno;
-                }
-
-                //Updates the view to reflect the "sent" state of the submission without knock-on effects on history
-                this.locService.replaceState('/submissions/' + this.accno);
-                this.readonly = true;
-
-                //Flushes all updates synchronously so that the scroll reset happens exactly after them.
-                this.changeRef.detectChanges();
-                window.scrollTo(0, 0);
-
-                //TODO !this.isUpdate && this.showSubmitResults(resp);
-                this.editState.stopSubmitting()
-            },
-            (error: ServerError) => {
-
-                //Uses the original error object given by the server
-                this.showSubmitResults(error.data.error);
-
-                if (!error.isDataError) {
-                    throw error;
-                }
-                this.editState.stopSubmitting();
-            }
-        );
-    }
-
-    canSubmit() {
-        if (this.editState.isSubmitting) {
-            return false;
-        }
-        this.editState.startSubmitting();
-        return true;
-    }
-
     onViewLog(event: Event): void {
         const bsModalRef = this.modalService.show(SubmValidationErrorsComponent);
         bsModalRef.content.modalRef = bsModalRef;
         bsModalRef.content.errors = this.errors;
+    }
+
+    get sectionPath(): Section[] {
+        if (this.subm === undefined || this.section === undefined) {
+            return [];
+        }
+        return this.subm.sectionPath(this.section.id);
     }
 
     showSubmitResults(resp: any) {
@@ -435,16 +280,141 @@ export class SubmEditComponent implements OnInit {
         bsModalRef.content.accno = this.subm!.accno;
     }
 
-    updateCurrentSection(sectionId: string) {
+    private get isValid(): boolean {
+        return this.sectionForm !== undefined && this.sectionForm.form.valid && this.errors.empty();
+    }
+
+    private load(): Observable<ServerErrorResponse> {
+        const loadFinished$ = new Subject<ServerErrorResponse>();
+
+        this.submService.getSubmission(this.accno).subscribe(
+            wrappedSubm => {
+                this.wrappedSubm = wrappedSubm;
+                this.subm = pageTab2Submission(this.wrappedSubm.data);
+                this.updateCurrentSection(this.subm.section.id);
+
+                if (this.hasJustCreated) {
+                    this.setDefaults(this.subm.section);
+                }
+                loadFinished$.next(ServerErrorResponse.NoError);
+            },
+
+            error => {
+                loadFinished$.next(new ServerErrorResponse(error));
+                this.serverError = error;
+                this.reset();
+            }
+        );
+        return loadFinished$;
+    }
+
+    private revert() {
+        this.editState.startReverting();
+
+        this.confirmRevert!.confirm().takeUntil(this.unsubscribe)
+            .pipe(
+                switchMap(() => this.submService.deleteSubmission(this.accno)),
+                switchMap(() => this.load())
+            ).subscribe(error => this.editState.stopReverting(error.error));
+    }
+
+    private save() {
+        this.editState.startSaving();
+        this.submService.saveSubmission(this.wrap()).takeUntil(this.unsubscribe).subscribe(
+            () => {
+                this.editState.stopSaving();
+
+                this.hasJustCreated && this.locService.replaceState('/submissions/edit/' + this.accno);
+
+                //A sent submission has been backed up. It follows it's been revised.
+                if (!this.subm!.isTemp && !this.subm!.isRevised) {
+                    this.subm!.isRevised = true;
+                }
+            },
+            (error) => this.editState.stopSaving(new ServerErrorResponse(error)));
+
+        this.validate();
+    }
+
+    private submit() {
+        const wrappedSubm = this.wrap(true);
+        const isNewSubmission = this.subm!.isTemp;
+
+        this.submService.submitSubmission(wrappedSubm).takeUntil(this.unsubscribe).subscribe(
+            resp => {
+                this.editState.stopSubmitting();
+
+                this.releaseDate = findReleaseDate(wrappedSubm.data) || '';
+
+                if (this.subm!.isTemp) {
+                    this.accno = resp.mapping[0].assigned;
+                    this.subm!.accno = this.accno;
+                }
+
+                this.locService.replaceState('/submissions/' + this.accno);
+                this.readonly = true;
+
+                this.submitOperation = isNewSubmission ? SubmitOperation.Create : SubmitOperation.Update;
+                this.submitOperation.isCreate && this.showSubmitResults(resp);
+
+                //Flushes all updates synchronously so that the scroll reset happens exactly after them.
+                //this.changeRef.detectChanges();
+                window.scrollTo(0, 0);
+
+            },
+            (error: ServerError) => {
+                this.editState.stopSubmitting(new ServerErrorResponse(error));
+
+                this.showSubmitResults(error.data.error);
+
+                if (!error.isDataError) {
+                    throw error;
+                }
+            }
+        );
+    }
+
+    private reset() {
+        this.subm = undefined;
+        this.section = undefined;
+        this.errors = SubmValidationErrors.Empty
+    }
+
+    /* TODO: set defaults when submission object is created and not yet sent to the server (NOT HERE!!!)*/
+    private setDefaults(section: Section): void {
+        this.userData.info$.subscribe(info => {
+            const contactFeature = section.features.find('Contact', 'typeName');
+
+            if (contactFeature) {
+                contactFeature.add(this.asContactAttributes(info), 0);
+            }
+            this.onDataChange();
+        });
+    }
+
+    private asContactAttributes(userInfo: UserInfo): AttributeData[] {
+        return [
+            {name: 'Name', value: userInfo.username},
+            {name: 'E-mail', value: userInfo.email},
+            {name: 'ORCID', value: userInfo.aux.orcid}
+        ];
+    }
+
+    private onDataChange(event?: Event) {
+        if (this.readonly) {
+            return;
+        }
+        this.save();
+    }
+
+    private updateCurrentSection(sectionId: string) {
         const path: Section[] = this.subm!.sectionPath(sectionId);
         if (path.length === 0) {
             console.log(`Section with id ${sectionId} was not found`);
         }
         this.section = path[path.length - 1];
         this.sectionForm = new SectionForm(this.section);
-        this.sectionForm.form.valueChanges.pipe(
-            throttleTime(500)
-        ).subscribe(() => this.onDataChange());
+        this.sectionForm.valueChanges$.subscribe(() => this.onDataChange());
     }
 
     private validate() {
@@ -456,9 +426,6 @@ export class SubmEditComponent implements OnInit {
     private wrap(isSubmit: boolean = false): any {
         const copy = Object.assign({}, this.wrappedSubm);
         copy.data = submission2PageTab(this.subm!, isSubmit);
-
-        //NOTE: for creation, the accession number remains blank when creating the PageTab object above
-        // TODO this.isUpdate = !_.isEmpty(copy.data.accno);
         return copy;
     }
 }

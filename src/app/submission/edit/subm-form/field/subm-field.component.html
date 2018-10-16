@@ -4,7 +4,7 @@
         <span class="text-black">{{fieldName | camelcase2label}}</span>
         <span *ngIf="hasErrors">{{errors}}</span>
         <span class="text-muted"
-              [hidden]="isReadonly || (isDefined && !isEmpty) || (isInvalid && isTouched)">
+              [hidden]="isReadonly || isValid || (isInvalid && isTouched)">
                     <span *ngIf="valueLength.isAtLeast">
                          (at least {{valueLength.min}}
                     </span>
@@ -32,7 +32,8 @@
                      [formControl]="fieldControl.control"
                      [isSmall]="false"
                      [submControlName]="fieldName | camelcase2label"
-                     [submControlIcon]="fieldType.icon">
+                     [submControlIcon]="fieldType.icon"
+                     validate-onblur>
         </input-value>
     </div>
 </div>

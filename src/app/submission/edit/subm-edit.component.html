@@ -29,7 +29,7 @@
 
                 <div class="panel">
                     <div class="panel-body">
-                        <div *ngIf="isFirstTimeHere && errors.total()">
+                        <div *ngIf="hasJustCreated && errors.total()">
                             <h4>New submission</h4>
                             <p>
                                 Please fill in the form below. The <span class="font-bold">Check</span> tab on the
@@ -48,7 +48,7 @@
                             </div>
                         </div>
 
-                        <div *ngIf="!isFirstTimeHere && !readonly && errors.total()">
+                        <div *ngIf="!hasJustCreated && !readonly && errors.total()">
                             <h4>Incomplete submission</h4>
                             <p>
                                 Some information in this submission is still missing or incorrect. Refer to the
@@ -92,31 +92,19 @@
 
                         <div *ngIf="!subm.isTemp && readonly">
                             <h4>Study
-                                <span *ngIf="isUpdate == undefined">
-                            entry
-                        </span>
-                                <span *ngIf="isUpdate == false">
-                            created
-                        </span>
-                                <span *ngIf="isUpdate">
-                            updated
-                        </span>
+                                <span *ngIf="submitOperation.isUnknown">entry</span>
+                                <span *ngIf="submitOperation.isCreate">created</span>
+                                <span *ngIf="submitOperation.isUpdate">updated</span>
                             </h4>
                             <p>
                                 The study with accession number <strong>{{accno}}</strong>
                                 <span *ngIf="releaseDate">
                             and release date <strong>{{releaseDate | date: 'dd MMMM yyyy'}}</strong>
                         </span>
-                                <span *ngIf="isUpdate == undefined">
-                            is present on the BioStudies database with the data shown below.
-                        </span>
-                                <span *ngIf="isUpdate == false">
-                            has been successfully added to the BioStudies database.
-                        </span>
-                                <span *ngIf="isUpdate">
-                            has been successfully updated.
-                        </span>
-                                It {{isUpdate == false ? 'will be available in the next 24 hours' : 'is available' }} at
+                                <span *ngIf="submitOperation.isUnknown">is present on the BioStudies database with the data shown below.</span>
+                                <span *ngIf="submitOperation.isCreate">has been successfully added to the BioStudies database.</span>
+                                <span *ngIf="submitOperation.isUpdate">has been successfully updated.</span>
+                                It {{submitOperation.isCreate ? 'will be available in the next 24 hours' : 'is available' }} at
                                 <a target="_blank" href="{{location.origin}}/biostudies/studies/{{accno}}">
                                     {{location.hostname}}/biostudies/studies/{{accno}}</a>.
                             </p>

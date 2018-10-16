@@ -1,10 +1,31 @@
 import {Attribute, AttributeValue, Feature, Field, Section, ValueMap} from '../../shared/submission.model';
-import {FormArray, FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms';
 import {ErrorMessages, FormValidators, ValueValidators} from './value-validators';
 import {ColumnType, ValueType} from '../../shared/submission-type.model';
 import {fromNullable} from 'fp-ts/lib/Option';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable, ReplaySubject, Subject} from 'rxjs';
 import {typeaheadSource} from './typeahead.utils';
+import {switchMap, throttleTime} from 'rxjs/operators';
+
+function listOfControls(control: AbstractControl): FormControl[] {
+    if (control instanceof FormGroup) {
+        const map = (<FormGroup>control).controls;
+        return Object.keys(map)
+            .map(key => map[key])
+            .flatMap(control => listOfControls(control));
+    }
+    else if (control instanceof FormArray) {
+        const array = (<FormArray>control).controls;
+        return array.flatMap(control => listOfControls(control));
+    }
+    return [<FormControl>control];
+}
+
+function listOfInvalidControls(control: AbstractControl) {
+    return listOfControls(control)
+             .filter(control => control.invalid)
+             .reverse()
+}
 
 export class FieldControl {
     readonly control: FormControl;
@@ -140,6 +161,8 @@ export class FeatureForm {
 
     private cellValueTypeahead: Map<string, () => string[]> = new Map();
 
+    errorCount: number = 0;
+
     columnNamesAvailableCached: string[] = [];
 
     constructor(private feature: Feature) {
@@ -162,6 +185,10 @@ export class FeatureForm {
         });
 
         this.columnNamesAvailableCached = this.columnNamesAvailable();
+
+        this.form.valueChanges.pipe(throttleTime(500)).subscribe(() => {
+            this.errorCount = listOfInvalidControls(this.form).length;
+        });
     }
 
     private get columnsForm(): FormGroup {
@@ -228,6 +255,10 @@ export class FeatureForm {
 
     get optionalGroup(): string [] {
         return this.feature.groups.length > 1 ? this.feature.groups[1].map(f => f.typeName) : [];
+    }
+
+    get hasErrors(): boolean {
+        return this.form.invalid && this.form.touched;
     }
 
     columnNamesTypeahead(column: ColumnControl): Observable<string[]> {
@@ -332,6 +363,8 @@ export class SectionForm {
     readonly fieldControls: FieldControl[] = [];
     readonly featureForms: FeatureForm[] = [];
 
+    readonly valueChanges$ = new BehaviorSubject<any>({});
+
     constructor(readonly section: Section) {
         this.form = new FormGroup({
             fields: new FormGroup({}),
@@ -349,6 +382,14 @@ export class SectionForm {
                 this.addFeatureForm(feature);
             }
         );
+
+        this.form.valueChanges.pipe(
+            throttleTime(500)
+        ).subscribe(changes => this.valueChanges$.next(changes));
+    }
+
+    invalidControls(): FormControl[] {
+        return listOfInvalidControls(this.form);
     }
 
     private get fieldsForm(): FormGroup {
