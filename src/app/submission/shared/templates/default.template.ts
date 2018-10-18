@@ -290,7 +290,8 @@ export const DefaultTemplate = {
                 'description': 'Specify library file',
                 'icon': 'fa-file',
                 'singleRow': true,
-                'moreColumns': false,
+                'uniqueCols': true,
+                'allowCustomCols': false,
                 'columnTypes': [
                     {
                         'name': 'Path',

@@ -63,7 +63,7 @@
         </div>
     </div>
 </div>
-<div class="row">
+<div class="row" *ngIf="featureForm.canAddMoreColumns()">
     <div class="col-xs-1 col-md-1">
         <button *ngIf="!readonly"
                 type="button"

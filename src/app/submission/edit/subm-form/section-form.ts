@@ -6,6 +6,7 @@ import {fromNullable} from 'fp-ts/lib/Option';
 import {BehaviorSubject, Observable, ReplaySubject, Subject} from 'rxjs';
 import {typeaheadSource} from './typeahead.utils';
 import {switchMap, throttleTime} from 'rxjs/operators';
+import * as pluralize from 'pluralize';
 
 function listOfControls(control: AbstractControl): FormControl[] {
     if (control instanceof FormGroup) {
@@ -23,8 +24,8 @@ function listOfControls(control: AbstractControl): FormControl[] {
 
 function listOfInvalidControls(control: AbstractControl) {
     return listOfControls(control)
-             .filter(control => control.invalid)
-             .reverse()
+        .filter(control => control.invalid)
+        .reverse()
 }
 
 export class FieldControl {
@@ -220,7 +221,13 @@ export class FeatureForm {
     }
 
     get featureName(): string {
-        return this.feature.splitName(this.feature.pluralName()).toLowerCase();
+        const isSingleElementFeature =
+            this.feature.singleRow &&
+            this.feature.colSize() === 1 &&
+            !this.feature.canAddMoreColumns();
+
+        return (isSingleElementFeature ?
+            this.feature.typeName : pluralize(this.feature.typeName)).toLowerCase();
     }
 
     get featureTypeName(): string {
@@ -310,9 +317,11 @@ export class FeatureForm {
 
     onColumnAdd() {
         const column = this.feature.addColumn();
-        this.addColumnControl(column);
-        this.rowForms.forEach(rf => rf.addCellControl(column));
-        this.updateValueAndValidity();
+        if (column !== undefined) {
+            this.addColumnControl(column);
+            this.rowForms.forEach(rf => rf.addCellControl(column));
+            this.updateValueAndValidity();
+        }
     }
 
     onColumnRemove(columnId: string) {
@@ -336,8 +345,12 @@ export class FeatureForm {
         }
     }
 
-    get canRemoveRow(): boolean {
-        return this.feature.canRemoveRow;
+    canRemoveRow(): boolean {
+        return this.feature.canRemoveRow();
+    }
+
+    canAddMoreColumns(): boolean {
+        return this.feature.canAddMoreColumns();
     }
 
     updateValueAndValidity() {

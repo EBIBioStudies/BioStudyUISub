@@ -8,9 +8,8 @@ import {
     ValueTypeFactory
 } from './submission-type.model';
 
-import * as pluralize from 'pluralize';
-
 import {NameAndValue, Tag} from './model.common';
+import {zip} from 'fp-ts/lib/Array';
 
 const nextId = (function () {
     let count = 0;
@@ -112,26 +111,24 @@ export class Columns {
         this.columns.push(column);
     }
 
-    canRemove(id: string) {
-        const index = this.columns.findIndex(attr => attr.id === id);
-        return this.canRemoveAt(index);
-    }
-
-    canRemoveAt(index: number) {
-        return index >= 0 && this.columns[index].displayType.isRemovable;
-    }
-
     remove(id: string): boolean {
-        const index = this.columns.findIndex(attr => attr.id === id);
-        if (!this.canRemoveAt(index)) {
-            return false;
+        return this.removeAt(this.columns.findIndex(attr => attr.id === id));
+    }
+
+    removeAt(index: number): boolean {
+        if (index >= 0) {
+            this.columns.splice(index, 1);
+            return true;
         }
-        this.columns.splice(index, 1);
-        return true;
+        return false;
     }
 
     at(index: number): Attribute | undefined {
         return (index >= 0) && (index < this.columns.length) ? this.columns[index] : undefined;
+    }
+
+    findById(id: string): Attribute | undefined {
+        return this.columns.find(col => col.id === id);
     }
 
     allWithName(name: string): Attribute[] {
@@ -156,6 +153,10 @@ export class Rows {
 
     list(): ValueMap[] {
         return this.rows.slice();
+    }
+
+    at(index: number): ValueMap | undefined {
+        return (index >= 0) && (index < this.rows.length) ? this.rows[index] : undefined;
     }
 
     add(keys: string[]): ValueMap {
@@ -292,27 +293,7 @@ export class Feature {
     }
 
     /**
-     * ID of the first column with a matching name. For features with unique columns (eg: grids), it's a safe guess
-     * for any given attribute name.
-     * @param {string} name - Name of the column whose ID is to be retrieved.
-     * @returns {string} Attribute ID for the named column.
-     */
-    firstId(name: string): string {
-        return this._columns.allWithName(name)[0].id
-    }
-
-    /**
-     * Converts the feature's name to plural if it has more than one row (or column if only one row allowed).
-     * It employs the Pluralize global JS plugin: {@link https://github.com/blakeembrey/pluralize}
-     * @returns {string} Pluralized or unmodified feature name.
-     *
-     * @author Hector Casanova <hector@ebi.ac.uk>
-     */
-    pluralName(): string {
-        return pluralize(this.type.name);
-    }
-
-    /**
+     * // TODO move these to the component | pipe .. etc
      * Splits a given camel-cased name into words.
      * @param {string} Name of the feature.
      * @returns {string} Separated words.
@@ -323,72 +304,67 @@ export class Feature {
         return name.replace(/([a-z])([A-Z])/g, '$1 $2');
     }
 
-
-    /**
-     * Sets the values of a given row.
-     * @param {{name: string; value: string}[]} attributes - Data the row will be set to.
-     * @param {number} [rowIdx = null] - Index of row to be set to the provided attributes. By default, the row will be
-     * added if the feature is not limited to a single row, in which case the first row is changed.
-     */
     add(attributes: AttributeData[] = [], rowIdx?: number): void {
         if (attributes.isEmpty()) {
             return;
         }
 
-        const attrsWithName = attributes.filter(attr => String.isDefinedAndNotEmpty(attr.name));
-        const attrNames = attrsWithName.map(attr => attr.name);
-
-        const usedColIds: string[] = [];
-        let rowMap;
-
-        attrNames
-            .forEach((attrName) => {
-                const colNames = this._columns.names();
-                const instancesFn = (name) => attrName == name;
-                const occurAttrs = attrNames.filter(instancesFn).length;
-                const occurCols = colNames.filter(instancesFn).length;
-                const colType = this.type.getColumnType(attrName!);
-
-                if (occurAttrs != occurCols) {
-                    this.addColumn(attrName, colType!.valueType, colType!.displayType);
-                }
-            });
-
-        if (rowIdx === undefined) {
-            rowMap = this.addRow() || this.rows[0];
-        } else {
-            rowMap = this.rows[rowIdx];
+        let rowMap = this.getOrCreateRow(rowIdx);
+        if (rowMap === undefined) {
+            throw new Error(`Can't add new row to ${this.typeName}: ${attributes.map(at=>at.name).join(',')}`);
         }
 
-        attrsWithName.forEach(attr => {
-            let cols: Attribute[] = this._columns.allWithName(attr.name!);
+        const attrsWithName = attributes.filter(attr => String.isDefinedAndNotEmpty(attr.name));
+        const newColNames = attrsWithName.map(attr => attr.name!);
 
-            cols = cols.filter((col) => (usedColIds.indexOf(col.id) === -1));
-            usedColIds.push(cols[0].id);
+        const existedColNames = this._columns.names();
 
-            rowMap.valueFor(cols[0].id).value = attr.value;
+        newColNames.uniqueValues().forEach(colName => {
+            const colType = this.type.getColumnType(colName);
+            const requiredColCount = newColNames.filter(name => name === colName).length;
+            let colCount = existedColNames.filter(name => name === colName).length;
+            while (colCount < requiredColCount) {
+                const col = this.addColumn(colName, colType!.valueType, colType!.displayType);
+                colCount++;
+                if (col === undefined) {
+                    throw new Error(`can't add column ${colName}`);
+                }
+            }
+
+            const attrs = attrsWithName.filter(attr => attr.name === colName);
+            const columns = this._columns.allWithName(colName);
+            zip(attrs, columns).forEach((pair) => {
+                rowMap!.valueFor(pair[1].id)!.value = pair[0].value || '';
+            });
         });
     }
 
-    addColumn(name?: string, valueType?: ValueType, displayType?: DisplayType, isTemplateBased: boolean = false): Attribute {
-        if (this.singleRow && this.rowSize() === 0) {
-            this.addRow();
+    private getOrCreateRow(rowIdx: number | undefined): ValueMap | undefined {
+        if (rowIdx === undefined) {
+            return this.addRow() || this.rows[0];
         }
-        let defColName = (this.singleRow ? this.typeName : 'Column') + ' ' + this._columns.nextIndex;
-        let col = new Attribute(name || defColName, valueType, displayType, isTemplateBased);
-
-        this._rows.addKey(col.id);
-        this._columns.add(col);
-
-        return col;
+        this._rows.at(rowIdx);
     }
 
-    canRemoveColumn(id: string): boolean {
-        return this._columns.canRemove(id);
+    addColumn(name?: string, valueType?: ValueType, displayType?: DisplayType, isTemplateBased: boolean = false): Attribute | undefined {
+        const defColName = (this.singleRow ? this.typeName : 'Column') + ' ' + this._columns.nextIndex;
+        const colName = name || defColName;
+
+        if (this.canAddColumn(colName, isTemplateBased)) {
+            let col = new Attribute(colName, valueType, displayType, isTemplateBased);
+
+            this._rows.addKey(col.id);
+            this._columns.add(col);
+
+            return col;
+        }
+        return undefined;
     }
 
     removeColumn(id: string): boolean {
-        if (this._columns.remove(id)) {
+        const column = this._columns.findById(id);
+        if (column !== undefined && column.displayType.isRemovable) {
+            this._columns.remove(id);
             this._rows.removeKey(id);
             if (this._columns.size() === 0 && this.singleRow) {
                 this.removeRowAt(0);
@@ -405,11 +381,23 @@ export class Feature {
         return undefined;
     }
 
-    get canAddRow(): boolean {
+    canAddMoreColumns(): boolean {
+        return this.type.allowCustomCols || !this.type.uniqueCols || this._columns.size() < this.type.columnTypes.length;
+    }
+
+    canAddColumn(name: string, isTemplateBased: boolean): boolean {
+        const notExists = this.columns.find(col => col.name === name) === undefined;
+        if (notExists) {
+            return isTemplateBased || this.type.allowCustomCols;
+        }
+        return !this.type.uniqueCols;
+    }
+
+    canAddRow(): boolean {
         return this.groups.every(g => g.some(f => CanAddRow(f)))
     }
 
-    get canRemoveRow(): boolean {
+    canRemoveRow(): boolean {
         return this.groups.every(g => g.some(f => CanRemoveRow(f)))
     }
 
