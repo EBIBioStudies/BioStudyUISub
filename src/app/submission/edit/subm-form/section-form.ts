@@ -1,7 +1,7 @@
 import {Attribute, AttributeValue, Feature, Field, Section, ValueMap} from '../../shared/submission.model';
 import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms';
-import {ErrorMessages, FormValidators, ValueValidators} from './value-validators';
-import {ColumnType, ValueType} from '../../shared/submission-type.model';
+import {ErrorMessages, FormValidators, ValueValidators} from './form-validators';
+import {ColumnType, FeatureType, ValueType} from '../../shared/submission-type.model';
 import {fromNullable} from 'fp-ts/lib/Option';
 import {BehaviorSubject, Observable, ReplaySubject, Subject} from 'rxjs';
 import {typeaheadSource} from './typeahead.utils';
@@ -220,6 +220,14 @@ export class FeatureForm {
         return this.feature.colNames;
     }
 
+    get featureType(): FeatureType {
+        return this.feature.type;
+    }
+
+    get id(): string {
+        return this.feature.id;
+    }
+
     get featureName(): string {
         const isSingleElementFeature =
             this.feature.singleRow &&
@@ -403,6 +411,18 @@ export class SectionForm {
 
     invalidControls(): FormControl[] {
         return listOfInvalidControls(this.form);
+    }
+
+    removeFeature(featureId: string): void {
+        const index = this.featureForms.findIndex(f => f.id === featureId);
+        if (index < 0) {
+            return;
+        }
+
+        if (this.section.features.removeById(featureId)) {
+            this.featureForms.splice(index, 1);
+            this.featuresForm.removeControl(featureId);
+        }
     }
 
     private get fieldsForm(): FormGroup {

@@ -24,146 +24,56 @@
                 </ng-template>
             </tab>
             <tab heading="Add"
-                 [active]="isAddTabActive"
+                 [active]="isEditTabActive"
                  (select)="onAddTabClick()"></tab>
         </tabset>
     </div>
-    <ul class="sidebar-menu">
 
-        <!-- Add tab -->
-        <form novalidate
-              [ngClass]="{'edit-type-form': isEditModeOn}"
-              #form="ngForm"
-              (ngSubmit)="onSubmit(form)">
-            <li class="sidebar-item" *ngFor="let item of items; let i = index">
-                <a *ngIf="isAddTabActive && isEditModeOff"
-                   tooltip="{{item.feature.size() ? 'Add to the form' : item.feature.type.description | stripHtml}}"
-                   container="body"
-                   (click)="item.onClick($event)">
-                    <i class="fa fa-lg text-center {{item.feature.type.icon}}"></i>
-                    {{!collapsed ? '&nbsp;&nbsp;' + item.feature.splitName(item.feature.typeName) : ''}}
-                </a>
-                <div class="row-input"
-                   [ngClass]="{'has-error': itemType.invalid && itemType.touched}"
-                   *ngIf="isAddTabActive && isEditModeOn && !item.isDeleted">
-                    <label [hidden]="!itemType.errors?.unique || !itemType.touched"
-                           class="control-label small">
-                        Please use a unique type name
-                    </label>
-                    <label [hidden]="!itemType.errors?.required || !itemType.touched"
-                           class="control-label small">
-                        Please enter a type name
-                    </label>
-                    <span class="input-group">
-                        <span class="input-group-addon">
-                            <i class="fa fa-lg text-center {{item.feature.type.icon}} text-primary"></i>
-                        </span>
-                        <input type="text"
-                               class="form-control input-sm form-control-auto"
-                               [disabled]="item.isReadOnly()"
-                               [ngModel]="item.feature.typeName"
-                               name="{{item.feature.id}}"
-                               #itemType="ngModel"
-                               unique
-                               validate-onblur
-                               required />
-                        <span class="input-group-btn">
-                            <button class="item-delete btn btn-danger btn-sm btn-flat"
-                                    [disabled]="item.isReadOnly()"
-                                    tooltip="delete"
-                                    (click)="onItemDelete($event, item.feature.id, form.controls, i)">
-                                <i class="fa fa-trash-o fa-fw"></i>
-                            </button>
-                        </span>
-                    </span>
-                </div>
-            </li>
-            <li *ngIf="isAddTabActive && isEditModeOn && !collapsed" class="row-submit btn-toolbar">
-                <button class="btn btn-primary btn-submit" type="submit">
-                    Save
-                </button>
-                <button class="btn btn-default btn-cancel"(click)="onCancelChanges($event)">
-                    Cancel
-                </button>
-            </li>
-        </form>
-        <li *ngIf="isAddTabActive && isEditModeOff && userData.isPrivileged" class="text-right">
-            <button *ngIf="!collapsed" class="advanced-btn btn btn-link btn-sm"
-                    (click)="toggleAdvanced()">
-                <i class="fa fa-lg" aria-hidden="true"
-                   [ngClass]="{'fa-caret-square-o-down': isAdvancedClosed,
-                               'fa-caret-square-o-up': isAdvancedOpen}"></i>
-                Advanced
-            </button>
-            <ul class="sidebar-menu advanced-menu text-left"
-                [ngClass]="{'collapsed-box': !isAdvancedOpen}">
-                <li class="sidebar-item type-control">
-                    <a (click)="onEditModeToggle($event)">
-                        <strong class="fa-stack">
-                            <i class="fa fa-circle fa-stack-2x"></i>
-                            <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
-                        </strong>
-                        {{!collapsed ? '&nbsp;Edit types' : ''}}
-                    </a>
-                </li>
-                <li *ngIf="isAddTabActive && isEditModeOff" class="sidebar-item type-control">
-                    <a (click)="onNewTypeClick($event)">
-                        <i class="fa fa-fw fa-plus-circle fa-lg"></i>
-                        {{!collapsed ? '&nbsp;&nbsp;New type...' : ''}}
-                    </a>
-                </li>
-            </ul>
-        </li>
+    <!-- Add tab -->
+    <subm-edit-sidebar *ngIf="isEditTabActive"
+                       [sectionForm]="sectionForm">
+    </subm-edit-sidebar>
 
-        <!-- Check tab -->
-        <div *ngIf="isCheckTabActive">
-            <li *ngIf="invalidControls.isEmpty() || isLoading || isSubmitting" class="center-vertically text-center"
-                [ngClass]="{'col-xs-12': !collapsed}">
-                <i class="fa " aria-hidden="true"
-                    [ngClass]="{
+    <!-- Check tab -->
+    <ul *ngIf="isCheckTabActive" class="sidebar-menu">
+        <li *ngIf="invalidControls.isEmpty() || isLoading || isSubmitting" class="center-vertically text-center"
+            [ngClass]="{'col-xs-12': !collapsed}">
+            <i class="fa " aria-hidden="true"
+               [ngClass]="{
                     'fa-2x': collapsed, 'fa-4x': !collapsed,
                     'fa-times-circle': serverError,
                     'fa-check-circle': !serverError && !isLoading && !isSubmitting,
                     'fa-cog fa-spin': isLoading || isSubmitting}"></i>
-                <h4 [ngClass]="{'vertical-text': collapsed}">
-                    {{isLoading ? 'Loading study...' :
-                                    isSubmitting? 'Submitting study...' :
-                                                    serverError ?  errorMsg() : 'All fields are valid'}}
-                </h4>
-                <h4 *ngIf="!serverError" class="action-title">
-                    {{isLoading || isSubmitting ? 'Please wait' : 'You may submit your study now'}}
-                </h4>
-            </li>
-            <li class="sidebar-item" *ngFor="let control of invalidControls; let i = index">
-                <a *ngIf="control.invalid"
-                   [ngClass]="{'center-spread': !collapsed}"
-                   tooltip="{{collapsed ? '&quot;' + control.controlName + '&quot; field is ' + tipText(control.errors) : 'Highlight field on the form'}}"
-                   container="body"
-                   placement="{{collapsed ? 'right' : 'top'}}"
-                   (click)="onReviewClick($event, control)">
+            <h4 [ngClass]="{'vertical-text': collapsed}">
+                {{isLoading ? 'Loading study...' :
+                isSubmitting? 'Submitting study...' :
+                serverError ? errorMsg() : 'All fields are valid'}}
+            </h4>
+            <h4 *ngIf="!serverError" class="action-title">
+                {{isLoading || isSubmitting ? 'Please wait' : 'You may submit your study now'}}
+            </h4>
+        </li>
+        <li class="sidebar-item" *ngFor="let control of invalidControls; let i = index">
+            <a *ngIf="control.invalid"
+               [ngClass]="{'center-spread': !collapsed}"
+               tooltip="{{collapsed ? '&quot;' + control.controlName + '&quot; field is ' + tipText(control.errors) : 'Highlight field on the form'}}"
+               container="body"
+               placement="{{collapsed ? 'right' : 'top'}}"
+               (click)="onReviewClick($event, control)">
                     <span>
                         <i class="entry-item fa fa-lg text-center {{control.controlIcon}}"></i>
                         {{!collapsed ? '&nbsp;' + control.controlName + '&nbsp;' : ''}}
                     </span>
-                    <strong class="entry-item label label-default"
-                            [ngClass]="{'label-danger': control.touched}"
-                            #labelEl>
-                        {{!collapsed ? tipText(control.errors) : ''}}
-                        <i *ngIf="collapsed"
-                            class="fa fa-lg {{control.errors.required ? 'fa-asterisk' :
+                <strong class="entry-item label label-default"
+                        [ngClass]="{'label-danger': control.touched}"
+                        #labelEl>
+                    {{!collapsed ? tipText(control.errors) : ''}}
+                    <i *ngIf="collapsed"
+                       class="fa fa-lg {{control.errors.required ? 'fa-asterisk' :
                                                                          control.errors.maxlength || control.errors.minlength ? 'fa-arrows-h' : 'fa-ban'}}">
-                        </i>
-                    </strong>
-                </a>
-            </li>
-        </div>
+                    </i>
+                </strong>
+            </a>
+        </li>
     </ul>
 </aside>
-<type-add-dialog *ngIf="sectionForm"
-                #addDialog
-                [section]="sectionForm.section">
-</type-add-dialog>
-<confirm-dialog #confirmDialog
-                headerTitle="Delete items"
-                confirmLabel="Delete">
-</confirm-dialog>

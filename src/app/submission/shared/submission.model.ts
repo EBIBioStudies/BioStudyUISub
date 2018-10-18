@@ -292,18 +292,6 @@ export class Feature {
         return this.singleRow ? this.colSize() : this.rowSize();
     }
 
-    /**
-     * // TODO move these to the component | pipe .. etc
-     * Splits a given camel-cased name into words.
-     * @param {string} Name of the feature.
-     * @returns {string} Separated words.
-     *
-     * @author Hector Casanova <hector@ebi.ac.uk>
-     */
-    splitName(name: string): string {
-        return name.replace(/([a-z])([A-Z])/g, '$1 $2');
-    }
-
     add(attributes: AttributeData[] = [], rowIdx?: number): void {
         if (attributes.isEmpty()) {
             return;
@@ -473,17 +461,23 @@ export class Features {
         return feature;
     }
 
-    remove(feature: Feature): void {
+    removeById(featureId: string): boolean {
+        const feature = this.features.find(f => f.id === featureId);
+        return feature !== undefined && this.remove(feature);
+    }
+
+    remove(feature: Feature): boolean {
         if (feature.type.tmplBased) {
-            return;
+            return false;
         }
         const index = this.features.indexOf(feature);
         if (index < 0) {
-            return;
+            return false;
         }
         this.features.splice(index, 1);
 
         feature.type.destroy();
+        return true;
     }
 
     /**

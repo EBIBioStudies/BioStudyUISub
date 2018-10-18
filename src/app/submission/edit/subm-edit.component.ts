@@ -13,14 +13,14 @@ import {ConfirmDialogComponent} from 'app/shared/index';
 import {AppConfig} from '../../app.config';
 import {UserData} from '../../auth/user-data';
 import {SubmValidationErrorsComponent} from './subm-navbar/subm-validation-errors.component';
-import {SubmSideBarComponent} from './subm-sidebar/subm-sidebar.component';
+import {SubmSidebarComponent} from './subm-sidebar/subm-sidebar.component';
 import {Subject} from 'rxjs/Subject';
 import {submission2PageTab} from '../shared/submission-to-pagetab.utils';
 import {pageTab2Submission} from '../shared/pagetab-to-submission.utils';
 import {Observable, of} from 'rxjs';
 import {SectionForm} from './subm-form/section-form';
 import {UserInfo} from '../../auth/model/user-info';
-import {filter, switchMap, throttleTime} from 'rxjs/operators';
+import {filter, switchMap} from 'rxjs/operators';
 import {findReleaseDate} from '../shared/pagetab.model';
 
 class EditState {
@@ -126,7 +126,7 @@ class SubmitOperation {
 export class SubmEditComponent implements OnInit {
     @Input() readonly: boolean = false;
 
-    @ViewChild(SubmSideBarComponent) sideBar?: SubmSideBarComponent;
+    @ViewChild(SubmSidebarComponent) sideBar?: SubmSidebarComponent;
     @ViewChild('confirmSectionDel') confirmSectionDel?: ConfirmDialogComponent;
     @ViewChild('confirmRevert') confirmRevert?: ConfirmDialogComponent;
     @ViewChild('confirmSubmit') confirmSubmit?: ConfirmDialogComponent;

@@ -1,28 +1,21 @@
-import {
-    Component,
-    ViewChild,
-    ElementRef,
-    Input
-} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 
-import {ModalDirective, PopoverDirective} from 'ngx-bootstrap';
-import {
-    NgForm,
-    NgModel
-} from '@angular/forms';
+import {BsModalRef, BsModalService, ModalDirective, PopoverDirective} from 'ngx-bootstrap';
+import {NgForm, NgModel} from '@angular/forms';
 import {Section} from '../../shared/submission.model';
 import {SectionType} from '../../shared/submission-type.model';
 
 @Component({
-    selector: 'type-add-dialog',
-    templateUrl: './submtype-add.component.html'
+    selector: 'add-subm-type-modal',
+    templateUrl: './add-subm-type-modal.component.html'
 })
-export class SubmTypeAddDialogComponent {
+export class AddSubmTypeModalComponent implements OnInit {
+    section?: Section;
+
+
     public type: string = 'Grid';       //form model member for the type property
     public name?: string;                //form model member for the new type's name property
     private featNames?: string[];         //existing feature type names
-
-    @Input() section?: Section;
 
     @ViewChild('focusBtn')
     private focusEl?: ElementRef;
@@ -32,6 +25,12 @@ export class SubmTypeAddDialogComponent {
     private typeName?: NgModel;
     @ViewChild('uniquePop')
     private uniquePop?: PopoverDirective;
+
+    constructor(public bsModalRef: BsModalRef) {}
+
+    ngOnInit(): void {
+        this.featNames = this.getFeatNames();
+    }
 
     /**
      * Generates the list of type names for all features (including annotations) from section data.
@@ -53,14 +52,13 @@ export class SubmTypeAddDialogComponent {
      */
     show(): void {
         this.featNames = this.getFeatNames();
-        this.modalDirective!.show();
     }
 
     /**
      * Closes the modal, clearing any validation messages.
      */
     hide(): void {
-        this.modalDirective!.hide();
+        this.bsModalRef.hide();
     }
 
     /**

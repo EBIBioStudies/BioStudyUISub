@@ -4,7 +4,7 @@ import {
     APP_INITIALIZER
 } from '@angular/core';
 
-import {BrowserModule}  from '@angular/platform-browser';
+import {BrowserModule} from '@angular/platform-browser';
 import {HashLocationStrategy, LocationStrategy} from '@angular/common';
 
 import {RecaptchaModule} from 'ng-recaptcha';

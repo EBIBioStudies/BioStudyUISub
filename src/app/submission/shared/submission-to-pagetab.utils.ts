@@ -8,6 +8,7 @@ import {DEFAULT_TEMPLATE_NAME} from './templates/submission.templates';
 
 const isFileType = (type: string) => type.isEqualIgnoringCase('file');
 const isLinkType = (type: string) => type.isEqualIgnoringCase('link');
+const isLibraryFileType = (type: string) => type.isEqualIgnoringCase('libraryfile');
 
 const isEmptyAttr = (attr: PtAttribute) => String.isNotDefinedOrEmpty(attr.value);
 
@@ -50,6 +51,7 @@ function section2PtSection(section: Section, isSanitise: boolean = false): PtSec
         attributes: extractSectionAttributes(section, isSanitise),
         links: extractSectionLinks(section, isSanitise),
         files: extractSectionFiles(section, isSanitise),
+        libraryFile: extractSectionLibraryFile(section, isSanitise),
         subsections: extractSectionSubsections(section, isSanitise)
     };
 }
@@ -60,15 +62,23 @@ function extractSectionAttributes(section: Section, isSanitise: boolean): PtAttr
         (extractFeatureAttributes(section.annotations, isSanitise).pop() || []));
 }
 
-function extractSectionSubsections(section: Section, isSanitize): PtSection[] {
+function extractSectionSubsections(section: Section, isSanitize: boolean): PtSection[] {
     const featureSections = contacts2Authors(
-        section.features.list().filter(f => !isFileType(f.typeName) && !isLinkType(f.typeName))
+        section.features.list().filter(f => !isFileType(f.typeName) && !isLinkType(f.typeName) && !isLibraryFileType(f.typeName))
             .map(f => extractFeatureAttributes(f, isSanitize)
                 .map(attrs => <PtSection>{type: f.typeName, attributes: attrs})
             ).reduce((rv, el) => rv.concat(el), [])
     );
 
     return featureSections.concat(section.sections.list().map(s => section2PtSection(s, isSanitize)));
+}
+
+function extractSectionLibraryFile(section: Section, isSanitise: boolean): string | undefined {
+    const feature = section.features.list().find(f => isLibraryFileType(f.typeName));
+    if (feature !== undefined && feature.rowSize() > 0) {
+        return feature.rows[0].values()[0].value;
+    }
+    return undefined;
 }
 
 function extractSectionLinks(section: Section, isSanitise: boolean): PtLinkItem[] {

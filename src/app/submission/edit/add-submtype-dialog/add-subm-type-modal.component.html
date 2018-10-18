@@ -1,0 +1,76 @@
+<form novalidate autocomplete="off"
+      #form="ngForm"
+      (ngSubmit)="onSubmit(form)">
+    <div class="modal-header bg-primary">
+        Add new type
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hide()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+                    <span *ngIf="type != 'Section'">
+                        <input *ngFor="let featName of featNames; let i = index" type="hidden"
+                               [(ngModel)]="featNames[i]"
+                               name="{{featName + i}}"
+                               unique>
+                    </span>
+        <div class="form-group" [ngClass]="{'has-error': typeName.invalid && typeName.touched}">
+            <label class="control-label" for="typeName">
+                <span class="text-black">Name</span>
+                <ng-template #popTemplate>
+                    <strong class="text-muted">Existing names</strong>:
+                    <span *ngFor="let featName of featNames; let last = last"
+                          [ngClass]="{'text-danger': featName == name}">
+                                    {{featName}}{{last ? '': ', '}}
+                                </span>
+                </ng-template>
+                <span *ngIf="typeName.invalid && typeName.touched">
+                                <span *ngIf="typeName.errors?.required">Please enter a name</span>
+                                <span *ngIf="typeName.errors?.unique"
+                                      container="body"
+                                      placement="top"
+                                      [popover]="popTemplate"
+                                      #uniquePop="bs-popover">
+                                    Please use a unique name
+                                </span>
+                            </span>
+                <span [hidden]="type == 'Section' || typeName.invalid && typeName.touched" class="text-muted">
+                                (must be unique)
+                            </span>
+            </label>
+            <input type="text" class="form-control"
+                   [(ngModel)]="name"
+                   name="name"
+                   id="typeName"
+                   #typeName="ngModel"
+                   validate-onblur
+                   required
+                   [unique]="type != 'Section'"
+                   (focus)="onNameFocus()"
+                   (blur)="onNameBlur()"
+                   #focusBtn>
+        </div>
+        <div class="form-group">
+            <label class="control-label">Class</label>
+            <select class="form-control"
+                    [(ngModel)]="type"
+                    name="type"
+                    (blur)="onTypeBlur()">
+                <option value="List">List</option>
+                <option value="Grid">Grid</option>
+                <option value="Section">Page</option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="pull-right">
+            <button type="submit" class="btn btn-primary btn-sm">
+                Add
+            </button>
+            <button type="button"
+                    class="btn btn-default btn-sm"
+                    (click)="onCancel()">Cancel
+            </button>
+        </div>
+    </div>
+</form>

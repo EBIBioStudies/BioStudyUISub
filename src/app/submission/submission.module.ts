@@ -23,7 +23,7 @@ import {DirectSubmitSideBarComponent} from './direct-submit/direct-submit-sideba
 import {DirectSubmitComponent} from './direct-submit/direct-submit.component';
 import {DirectSubmitService} from './direct-submit/direct-submit.service';
 
-import {SubmSideBarComponent} from './edit/subm-sidebar/subm-sidebar.component';
+import {SubmSidebarComponent} from './edit/subm-sidebar/subm-sidebar.component';
 import {SubmFormComponent} from './edit/subm-form/subm-form.component';
 import {SubmFieldComponent} from './edit/subm-form/field/subm-field.component';
 import {SubmFeatureComponent} from './edit/subm-form/feature/subm-feature.component';
@@ -31,7 +31,6 @@ import {FeatureGridComponent} from './edit/subm-form/feature/feature-grid.compon
 import {FeatureListComponent} from './edit/subm-form/feature/feature-list.component';
 import {SubmNavBarComponent} from './edit/subm-navbar/subm-navbar.component';
 import {SubmValidationErrorsComponent} from './edit/subm-navbar/subm-validation-errors.component';
-import {SubmTypeAddDialogComponent} from './edit/submtype-add/submtype-add.component';
 import {SubmResultsModalComponent} from './results/subm-results-modal.component';
 import {ResultsLogNodeComponent} from './results/results-log-node.component';
 import {SubmResultsTreeComponent} from './results/subm-results-tree.component';
@@ -43,6 +42,8 @@ import {FileModule} from '../file/file.module';
 import {InputValueComponent} from './edit/subm-form/input-value/input-value.component';
 import {InlineEditComponent} from './edit/subm-form/inline-edit/inline-edit.component';
 import {SubmControlDirective} from './edit/subm-form/subm-control.directive';
+import {SubmEditSidebarComponent} from './edit/subm-sidebar/subm-edit-sidebar/subm-edit-sidebar.component';
+import {AddSubmTypeModalComponent} from './edit/add-submtype-dialog/add-subm-type-modal.component';
 
 @NgModule({
     imports: [
@@ -73,12 +74,13 @@ import {SubmControlDirective} from './edit/subm-form/subm-control.directive';
         SubmFormComponent,
         SubmFieldComponent,
         SubmFeatureComponent,
-        SubmSideBarComponent,
+        SubmSidebarComponent,
+        SubmEditSidebarComponent,
         SubmNavBarComponent,
         SubmValidationErrorsComponent,
         SubmResultsModalComponent,
         SubmResultsTreeComponent,
-        SubmTypeAddDialogComponent,
+        AddSubmTypeModalComponent,
         SubmAddDialogComponent,
         FeatureGridComponent,
         FeatureListComponent,
@@ -98,7 +100,8 @@ import {SubmControlDirective} from './edit/subm-form/subm-control.directive';
     entryComponents: [
         ResultsLogNodeComponent,
         SubmValidationErrorsComponent,
-        SubmResultsModalComponent
+        SubmResultsModalComponent,
+        AddSubmTypeModalComponent
     ]
 })
 export class SubmissionModule {
