@@ -1,4 +1,4 @@
-import {AttributeData, Feature, Section, Submission} from './submission.model';
+import {AttributeData, Feature, Section, Submission} from './submission';
 import {
     ATTACH_TO_ATTR,
     contacts2Authors,
@@ -12,8 +12,8 @@ import {
     PtLinkItem,
     PtSection,
     SHARED_ATTRIBUTES
-} from '../pagetab';
-import {DEFAULT_TEMPLATE_NAME, SubmissionType} from '../templates';
+} from './pagetab';
+import {DEFAULT_TEMPLATE_NAME, SubmissionType} from './templates';
 
 const isFileType = (type: string) => type.isEqualIgnoringCase('file');
 const isLinkType = (type: string) => type.isEqualIgnoringCase('link');

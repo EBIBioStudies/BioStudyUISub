@@ -4,9 +4,17 @@ import {ActivatedRoute, Router} from '@angular/router';
 
 import {BsModalService} from 'ngx-bootstrap';
 
-import {AttributeData, Section, Submission} from '../shared/submission.model';
+import {
+    AttributeData,
+    findReleaseDate,
+    pageTab2Submission,
+    Section,
+    Submission,
+    submission2PageTab,
+    SubmissionValidator,
+    SubmValidationErrors
+} from '../shared/model';
 import {SubmissionService} from '../shared/submission.service';
-import {SubmissionValidator, SubmValidationErrors} from '../shared/submission.validator';
 import {ServerError} from '../../http/server-error.handler';
 import {SubmResultsModalComponent} from '../results/subm-results-modal.component';
 import {ConfirmDialogComponent} from 'app/shared/index';
@@ -15,13 +23,10 @@ import {UserData} from '../../auth/user-data';
 import {SubmValidationErrorsComponent} from './subm-navbar/subm-validation-errors.component';
 import {SubmSidebarComponent} from './subm-sidebar/subm-sidebar.component';
 import {Subject} from 'rxjs/Subject';
-import {submission2PageTab} from '../shared/submission-to-pagetab.utils';
-import {pageTab2Submission} from '../shared/pagetab-to-submission.utils';
 import {Observable, of} from 'rxjs';
 import {SectionForm} from './subm-form/section-form';
 import {UserInfo} from '../../auth/model/user-info';
 import {filter, switchMap} from 'rxjs/operators';
-import {findReleaseDate} from '../shared/pagetab.model';
 
 class EditState {
     private state: string;

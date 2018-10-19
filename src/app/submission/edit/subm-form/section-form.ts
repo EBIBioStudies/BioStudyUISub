@@ -1,11 +1,20 @@
-import {Attribute, AttributeValue, Feature, Field, Section, ValueMap} from '../../shared/submission.model';
+import {
+    Attribute,
+    AttributeValue,
+    ColumnType,
+    Feature,
+    FeatureType,
+    Field,
+    Section,
+    ValueMap,
+    ValueType
+} from '../../shared/model';
 import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms';
 import {ErrorMessages, FormValidators, ValueValidators} from './form-validators';
-import {ColumnType, FeatureType, ValueType} from '../../shared/submission-type.model';
 import {fromNullable} from 'fp-ts/lib/Option';
-import {BehaviorSubject, Observable, ReplaySubject, Subject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {typeaheadSource} from './typeahead.utils';
-import {switchMap, throttleTime} from 'rxjs/operators';
+import {throttleTime} from 'rxjs/operators';
 import * as pluralize from 'pluralize';
 
 function listOfControls(control: AbstractControl): FormControl[] {

@@ -4,10 +4,10 @@ import {Observable} from 'rxjs';
 import {SectionForm} from '../../subm-form/section-form';
 import {ConfirmDialogComponent} from '../../../../shared';
 import {UserData} from '../../../../auth';
-import {FeatureType} from '../../../shared/submission-type.model';
+import {FeatureType} from '../../../shared/model';
 import {CustomValidators} from '../../../shared/custom-validators';
 import {BsModalService} from 'ngx-bootstrap';
-import {AddSubmTypeModalComponent} from '../../add-submtype-dialog/add-subm-type-modal.component';
+import {AddSubmTypeModalComponent} from '../../add-subm-type-modal/add-subm-type-modal.component';
 
 class FeatureTypeControl {
     deleted = false;

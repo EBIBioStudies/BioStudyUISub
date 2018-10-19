@@ -1,6 +1,4 @@
 import {AfterViewInit, Component, ElementRef, Input, QueryList, ViewChildren,} from '@angular/core';
-
-import {Attribute, Feature, ValueMap} from '../../../shared/submission.model';
 import {UserData} from '../../../../auth/user-data';
 import {TypeaheadDirective} from 'ngx-bootstrap';
 import {ColumnControl, FeatureForm, RowForm} from '../section-form';

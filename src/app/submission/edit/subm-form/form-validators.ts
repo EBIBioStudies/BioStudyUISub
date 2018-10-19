@@ -1,6 +1,5 @@
-import {TextValueType, ValueType, ValueTypeName} from '../../shared/submission-type.model';
+import {Attribute, Feature, Field, TextValueType, ValueType, ValueTypeName} from '../../shared/model';
 import {ValidatorFn, Validators} from '@angular/forms';
-import {Attribute, Feature, Field} from '../../shared/submission.model';
 import {CustomValidators} from '../../shared/custom-validators';
 
 export class ValueValidators {

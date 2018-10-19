@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ElementRef, Input, QueryList, ViewChildren} from '@angular/core';
 
-import {Attribute} from '../../../shared/submission.model';
+import {Attribute} from '../../../shared/model';
 import {AppConfig} from '../../../../app.config';
 import {ColumnControl, FeatureForm} from '../section-form';
 

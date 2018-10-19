@@ -2,12 +2,10 @@ import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {Location} from '@angular/common';
 import {Router} from '@angular/router';
 
-import {Section} from '../../shared/submission.model';
+import {newPageTab, Section, SUBMISSION_TEMPLATE_NAMES} from '../../shared/model';
 import {SubmissionService} from '../../shared/submission.service';
 import {SubmAddDialogComponent} from '../../list/subm-add.component';
 import {UserData} from '../../../auth/user-data';
-import {newPageTab} from '../../shared/submission-to-pagetab.utils';
-import {SUBMISSION_TEMPLATE_NAMES} from '../../shared/templates/submission.templates';
 
 @Component({
     selector: 'subm-navbar',

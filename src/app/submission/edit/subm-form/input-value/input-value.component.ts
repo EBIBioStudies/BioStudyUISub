@@ -8,7 +8,7 @@ import {
     ValueType,
     ValueTypeFactory,
     ValueTypeName
-} from '../../../shared/submission-type.model';
+} from '../../../shared/model';
 import {Observable, Subject} from 'rxjs';
 import {typeaheadSource} from '../typeahead.utils';
 

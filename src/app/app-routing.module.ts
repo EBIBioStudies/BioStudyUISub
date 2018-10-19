@@ -13,9 +13,10 @@ import {
     SignUpComponent
 } from './auth/index';
 
-import {DirectSubmitComponent, SubmEditComponent, SubmListComponent} from './submission/index';
-
 import {FileListComponent} from './file/file-list/file-list.component';
+import {SubmListComponent} from './submission/list/subm-list.component';
+import {DirectSubmitComponent} from './submission/direct-submit/direct-submit.component';
+import {SubmEditComponent} from './submission/edit/subm-edit.component';
 
 const appRoutes: Routes = [
     {path: '', redirectTo: 'submissions', pathMatch: 'full'},

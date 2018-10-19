@@ -43,7 +43,7 @@ import {InputValueComponent} from './edit/subm-form/input-value/input-value.comp
 import {InlineEditComponent} from './edit/subm-form/inline-edit/inline-edit.component';
 import {SubmControlDirective} from './edit/subm-form/subm-control.directive';
 import {SubmEditSidebarComponent} from './edit/subm-sidebar/subm-edit-sidebar/subm-edit-sidebar.component';
-import {AddSubmTypeModalComponent} from './edit/add-submtype-dialog/add-subm-type-modal.component';
+import {AddSubmTypeModalComponent} from './edit/add-subm-type-modal/add-subm-type-modal.component';
 
 @NgModule({
     imports: [

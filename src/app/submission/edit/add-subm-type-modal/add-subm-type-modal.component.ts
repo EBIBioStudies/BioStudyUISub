@@ -1,9 +1,8 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 
-import {BsModalRef, BsModalService, ModalDirective, PopoverDirective} from 'ngx-bootstrap';
+import {BsModalRef, PopoverDirective} from 'ngx-bootstrap';
 import {NgForm, NgModel} from '@angular/forms';
-import {Section} from '../../shared/submission.model';
-import {SectionType} from '../../shared/submission-type.model';
+import {Section, SectionType} from '../../shared/model';
 
 @Component({
     selector: 'add-subm-type-modal',
@@ -12,15 +11,12 @@ import {SectionType} from '../../shared/submission-type.model';
 export class AddSubmTypeModalComponent implements OnInit {
     section?: Section;
 
-
     public type: string = 'Grid';       //form model member for the type property
     public name?: string;                //form model member for the new type's name property
     private featNames?: string[];         //existing feature type names
 
     @ViewChild('focusBtn')
     private focusEl?: ElementRef;
-    @ViewChild('bsModal')
-    private modalDirective?: ModalDirective;
     @ViewChild('typeName')
     private typeName?: NgModel;
     @ViewChild('uniquePop')

@@ -9,8 +9,8 @@ import {
 
 import {AgFilterComponent} from 'ag-grid-angular/main';
 
-import {parseDate, formatDate} from 'app/submission-shared/date.utils';
-import {DateInputComponent} from '../../../submission-shared/date-input.component';
+import {parseDate, formatDate} from 'app/utils';
+import {DateInputComponent} from '../../../shared/date-input.component';
 
 class DateRange {
     constructor(public from?: string,

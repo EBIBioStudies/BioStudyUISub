@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {FieldControl} from '../section-form';
-import {FieldType, TextValueType, ValueType} from '../../../shared/submission-type.model';
+import {FieldType, TextValueType, ValueType} from '../../../shared/model';
 
 class ValueLength {
     constructor(readonly min = -1, readonly max = -1) {
