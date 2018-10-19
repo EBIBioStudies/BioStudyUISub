@@ -4,7 +4,7 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {BsDatepickerConfig} from 'ngx-bootstrap/datepicker';
 import {BsDatepickerDirective} from 'ngx-bootstrap';
 
-import {formatDate, isEqualDate} from './date.utils';
+import {formatDate, isEqualDate} from '../utils';
 import {AppConfig} from '../app.config';
 
 @Component({

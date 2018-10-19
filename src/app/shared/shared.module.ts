@@ -4,7 +4,7 @@ import {CommonModule} from '@angular/common';
 import {
     FormsModule,
     ReactiveFormsModule
-}  from '@angular/forms';
+} from '@angular/forms';
 
 import {
     TypeaheadModule,
@@ -26,6 +26,8 @@ import {ConfirmDialogComponent} from './confirm-dialog.component';
 import {MultiSelectComponent, FilterPipe} from './multi-select.component';
 import {ValidateOnBlurDirective} from "./validate-onblur.directive";
 import {StripHtmlPipe} from "./strip-html.pipe";
+import {DateFormatDirective} from './date-format.directive';
+import {DateInputComponent} from './date-input.component';
 
 @NgModule({
     imports: [
@@ -52,6 +54,8 @@ import {StripHtmlPipe} from "./strip-html.pipe";
         FilterPipe,
         StripHtmlPipe,
         ValidateOnBlurDirective,
+        DateFormatDirective,
+        DateInputComponent
     ],
     exports: [
         CommonModule,
@@ -75,7 +79,9 @@ import {StripHtmlPipe} from "./strip-html.pipe";
         MultiSelectComponent,
         FilterPipe,
         StripHtmlPipe,
-        ValidateOnBlurDirective
+        ValidateOnBlurDirective,
+        DateFormatDirective,
+        DateInputComponent
     ]
 })
 export class SharedModule {

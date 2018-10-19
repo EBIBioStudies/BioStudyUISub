@@ -1,5 +1,5 @@
 import {SubmissionValidator} from './submission.validator';
-import {SubmissionType, invalidateGlobalScope} from './submission-type.model';
+import {SubmissionType, invalidateGlobalScope} from '../templates';
 import {Submission} from './submission.model';
 
 describe('Submission Validator', () => {

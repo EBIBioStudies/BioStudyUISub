@@ -1,5 +1,5 @@
 import {Section} from './submission.model';
-import {SectionType, invalidateGlobalScope} from './submission-type.model';
+import {FeatureType, FieldType, invalidateGlobalScope, SectionType} from '../templates';
 
 describe('Submission Model: Section', () => {
 
@@ -9,8 +9,8 @@ describe('Submission Model: Section', () => {
 
     it('can be empty', () => {
         const sec = new Section(SectionType.createDefault('MySectionType'));
-        expect(sec.type.name).toBe('MySectionType');
-        expect(sec.typeName).toBe('MySectionType');
+        expect(sec.type.name).toBe('ASectionType');
+        expect(sec.typeName).toBe('ASectionType');
         expect(sec.accno).toBe('');
         expect(sec.annotations.size()).toBe(0);
         expect(sec.fields.length).toBe(0);
@@ -19,36 +19,36 @@ describe('Submission Model: Section', () => {
     });
 
     it('auto creates all fields declared in the type', () => {
-        const type = new SectionType('MySectionType', {
+        const type = new SectionType('ASectionType', {
             fieldTypes: [
                 {
                     name: 'Field1'
-                },
+                } as FieldType,
                 {
                     name: 'Field2'
-                }
+                } as FieldType
             ]
         });
         const sec = new Section(type);
-        expect(sec.typeName).toBe('MySectionType');
+        expect(sec.typeName).toBe('ASectionType');
         expect(sec.fields.length).toBe(2);
     });
 
     it('auto creates all features declared in the type', () => {
-        const type = new SectionType('MySectionType', {
+        const type = new SectionType('ASectionType', {
             featureTypes: [
                 {
                     name: 'Feature1',
-                    required: true
-                },
+                    display: 'required'
+                } as FeatureType,
                 {
                     name: 'Feature2',
-                    required: false
-                }
+                    display: 'required'
+                } as FeatureType
             ]
         });
         const sec = new Section(type);
-        expect(sec.typeName).toBe('MySectionType');
+        expect(sec.typeName).toBe('ASectionType');
         expect(sec.features.length).toBe(2);
     });
 
@@ -57,12 +57,12 @@ describe('Submission Model: Section', () => {
             sectionTypes: [
                 {
                     name: 'Section1',
-                    required: true
-                },
+                    display: 'required'
+                } as SectionType,
                 {
                     name: 'Feature2',
-                    required: false
-                }
+                    display: 'optional'
+                } as SectionType
             ]
         });
         const sec = new Section(type);

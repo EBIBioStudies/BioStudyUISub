@@ -1,18 +1,8 @@
-import {
-    Directive,
-    forwardRef
-} from '@angular/core';
+import {Directive, forwardRef} from '@angular/core';
 
-import {
-    Validator,
-    AbstractControl,
-    NG_VALIDATORS, ValidationErrors
-} from '@angular/forms';
+import {AbstractControl, NG_VALIDATORS, ValidationErrors, Validator} from '@angular/forms';
 
-import {
-    parseDate,
-    formatDate
-} from './date.utils';
+import {formatDate, parseDate} from '../utils';
 
 @Directive({
     selector: '[bsstDateFormat]',

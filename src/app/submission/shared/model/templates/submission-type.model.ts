@@ -1,4 +1,4 @@
-import {EMPTY_TEMPLATE_NAME, findSubmissionTemplateByName} from './templates/submission.templates';
+import {EMPTY_TEMPLATE_NAME, findSubmissionTemplateByName} from './submission.templates';
 
 class TypeScope<T extends TypeBase> {
     private map: Map<String, T> = new Map();
@@ -119,6 +119,10 @@ export class DisplayType {
 
     public get isDesirable(): boolean {
         return this === DisplayType.Desirable;
+    }
+
+    public get isOptional(): boolean {
+        return this === DisplayType.Optional;
     }
 
     public get isShownByDefault(): boolean {

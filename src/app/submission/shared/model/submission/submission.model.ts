@@ -6,9 +6,9 @@ import {
     SubmissionType,
     ValueType,
     ValueTypeFactory
-} from './submission-type.model';
+} from '../templates';
 
-import {NameAndValue, Tag} from './model.common';
+import {NameAndValue, Tag} from '../model.common';
 import {zip} from 'fp-ts/lib/Array';
 
 const nextId = (function () {
@@ -299,7 +299,7 @@ export class Feature {
 
         let rowMap = this.getOrCreateRow(rowIdx);
         if (rowMap === undefined) {
-            throw new Error(`Can't add new row to ${this.typeName}: ${attributes.map(at=>at.name).join(',')}`);
+            throw new Error(`Can't add new row to ${this.typeName}: ${attributes.map(at => at.name).join(',')}`);
         }
 
         const attrsWithName = attributes.filter(attr => String.isDefinedAndNotEmpty(attr.name));

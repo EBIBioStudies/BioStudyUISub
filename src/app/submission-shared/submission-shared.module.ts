@@ -4,8 +4,6 @@ import {RouterModule} from '@angular/router';
 import {FileModule} from 'app/file/file.module';
 import {SharedModule} from 'app/shared/shared.module';
 
-import {DateFormatDirective} from './date-format.directive';
-import {DateInputComponent} from './date-input.component';
 import {FileInputComponent} from './file-input.component';
 import {PubMedSearchService} from './pubmedid-search/pubmedid-search.service';
 import {PubMedIdSearchComponent} from './pubmedid-search/pubmedid-search.component';
@@ -28,8 +26,6 @@ import {IdLinkModule} from './id-link/id-link.module';
         PubMedSearchService
     ],
     declarations: [
-        DateFormatDirective,
-        DateInputComponent,
         FileInputComponent,
         PubMedIdSearchComponent,
         SlideOutTipComponent,
@@ -38,8 +34,6 @@ import {IdLinkModule} from './id-link/id-link.module';
         TreeViewNodeComponent
     ],
     exports: [
-        DateFormatDirective,
-        DateInputComponent,
         FileInputComponent,
         PubMedIdSearchComponent,
         SlideOutTipComponent,

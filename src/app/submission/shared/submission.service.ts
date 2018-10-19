@@ -3,7 +3,7 @@ import {Injectable} from '@angular/core';
 import * as _ from 'lodash';
 
 import {HttpCustomClient} from 'app/http/http-custom-client.service';
-import {PageTab} from './pagetab.model';
+import {PageTab} from './model';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 

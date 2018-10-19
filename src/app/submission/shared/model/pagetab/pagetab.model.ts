@@ -1,4 +1,4 @@
-import {NameAndValue, Tag} from './model.common';
+import {NameAndValue, Tag} from '../model.common';
 import {fromNullable} from 'fp-ts/lib/Option';
 
 export const ATTACH_TO_ATTR = 'AttachTo';

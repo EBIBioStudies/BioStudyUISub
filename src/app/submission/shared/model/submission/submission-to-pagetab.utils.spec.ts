@@ -1,7 +1,7 @@
 import {Submission, SubmissionData} from './submission.model';
-import {SubmissionType} from './submission-type.model';
+import {SubmissionType} from '../templates';
 import {submission2PageTab} from './submission-to-pagetab.utils';
-import {PtFile, PtLink} from './pagetab.model';
+import {PtFile, PtLink} from '../pagetab';
 
 describe('Submission To PageTab Util:', () => {
 

@@ -1,10 +1,9 @@
-import {AttributeData, FeatureData, SectionData, Submission, SubmissionData} from './submission.model';
+import {AttributeData, FeatureData, SectionData, Submission, SubmissionData} from '../submission';
 import {PageTab, PtAttribute, PtSection} from './pagetab.model';
 import {authors2Contacts} from './pagetab-authors.utils';
-import {SubmissionType} from './submission-type.model';
+import {findSubmissionTemplateName, SubmissionType} from '../templates';
 import {LinksUtils} from './pagetab-links.utils';
 import {mergeAttributes, SHARED_ATTRIBUTES} from './pagetab-attributes.utils';
-import {findSubmissionTemplateName} from './templates/submission.templates';
 
 export function pageTab2Submission(pageTab: PageTab) {
     const type = SubmissionType.fromTemplate(findSubmissionTemplateName(pageTab));

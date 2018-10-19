@@ -61,6 +61,6 @@ export class UserData {
     }
 
     get isPrivileged(): boolean {
-        return this.role != UserRole.Public;
+        return this.role !== UserRole.Public;
     }
 }
