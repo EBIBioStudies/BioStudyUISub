@@ -10,7 +10,7 @@ import {BsModalService} from 'ngx-bootstrap';
 import {AddSubmTypeModalComponent} from '../../add-submtype-dialog/add-subm-type-modal.component';
 
 class FeatureTypeControl {
-    deleted: boolean = false;
+    deleted = false;
 
     readonly control: FormControl;
     readonly isReadonly: boolean;
@@ -119,10 +119,10 @@ export class SubmEditSidebarComponent implements OnInit, OnChanges {
         if (deleted.length > 0) {
             const isPlural = deleted.length > 1;
 
-            const confirmShown = this.confirm(`The submission 
+            const confirmShown = this.confirm(`The submission
                     ${isPlural ? `items` : `item`} with type
-                    ${deleted.map(({typeName}) => `"${typeName}"`).join(', ')} 
-                    ${isPlural ? `have` : `has`} been deleted. If you proceed, 
+                    ${deleted.map(({typeName}) => `"${typeName}"`).join(', ')}
+                    ${isPlural ? `have` : `has`} been deleted. If you proceed,
                     ${isPlural ? `they` : `it`} will be removed from the
                     list of items and any related features or sections will be permanently deleted.`);
 
