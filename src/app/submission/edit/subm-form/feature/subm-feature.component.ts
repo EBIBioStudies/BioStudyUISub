@@ -36,14 +36,14 @@ export class SubmFeatureComponent implements OnInit, DoCheck {
         this.operations.push({
             label: 'Add column',
             callback: () => {
-                this.featureForm!.onColumnAdd()
+                this.featureForm!.addColumn()
             }
         });
 
         this.operations.push({
             label: 'Add row',
             callback: () => {
-                this.featureForm!.onRowAdd()
+                this.featureForm!.addRow()
             }
         });
     }

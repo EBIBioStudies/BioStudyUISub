@@ -7,7 +7,7 @@ import {UserData} from '../../../../auth';
 import {FeatureType} from '../../../shared/model';
 import {CustomValidators} from '../../../shared/custom-validators';
 import {BsModalService} from 'ngx-bootstrap';
-import {AddSubmTypeModalComponent} from '../../add-subm-type-modal/add-subm-type-modal.component';
+import {AddSubmTypeModalComponent} from '../../modals/add-subm-type-modal.component';
 
 class FeatureTypeControl {
     deleted = false;
@@ -90,6 +90,27 @@ export class SubmEditSidebarComponent implements OnInit, OnChanges {
         bsModalRef.content.closeBtnName = 'Close';
     }
 
+    onItemClick(item: FeatureTypeControl): void {
+        this.sectionForm!.addFeatureEntry(item.id);
+
+        // scroll to the row/column
+        const control = this.sectionForm!.scrollToControl(item.id);
+        if (control === undefined) {
+            return;
+        }
+
+        setTimeout(() => {
+            let controlEl = (<any>control).nativeElement;
+            if (controlEl !== undefined) {
+                controlEl = controlEl.querySelectorAll('input, select, textarea')[0];
+                const scrollTop = controlEl.top;
+                window.scrollBy(0, scrollTop);
+                controlEl.focus();
+            }
+        }, 50);
+
+    }
+
     onItemDelete(item: FeatureTypeControl): void {
         item.deleted = true;
         this.form!.removeControl(item.id);
@@ -148,8 +169,6 @@ export class SubmEditSidebarComponent implements OnInit, OnChanges {
 
         this.items!.filter(item => !item.deleted).forEach(item => item.update());
         this.onEditModeToggle();
-
-        //TODO notify about updates
     }
 
     private updateItems(): void {

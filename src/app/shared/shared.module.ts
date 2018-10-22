@@ -1,21 +1,18 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
-import {
-    FormsModule,
-    ReactiveFormsModule
-} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import {
-    TypeaheadModule,
-    TooltipModule,
-    TabsModule,
+    AlertModule,
+    BsDatepickerModule,
     BsDropdownModule,
-    ModalModule,
-    DatepickerModule,
-    PopoverModule,
     CollapseModule,
-    AlertModule
+    ModalModule,
+    PopoverModule,
+    TabsModule,
+    TooltipModule,
+    TypeaheadModule
 } from 'ngx-bootstrap';
 
 import {ContainerRootComponent} from './container-root.component';
@@ -23,9 +20,9 @@ import {ContainerMdComponent} from './container-md.component';
 import {ORCIDInputBoxComponent} from './orcid-input-box.component';
 import {FileUploadButtonComponent} from './file-upload-button.component';
 import {ConfirmDialogComponent} from './confirm-dialog.component';
-import {MultiSelectComponent, FilterPipe} from './multi-select.component';
-import {ValidateOnBlurDirective} from "./validate-onblur.directive";
-import {StripHtmlPipe} from "./strip-html.pipe";
+import {FilterPipe, MultiSelectComponent} from './multi-select.component';
+import {ValidateOnBlurDirective} from './validate-onblur.directive';
+import {StripHtmlPipe} from './strip-html.pipe';
 import {DateFormatDirective} from './date-format.directive';
 import {DateInputComponent} from './date-input.component';
 
@@ -37,8 +34,8 @@ import {DateInputComponent} from './date-input.component';
         TooltipModule,
         TabsModule,
         BsDropdownModule,
+        BsDatepickerModule,
         ModalModule,
-        DatepickerModule,
         PopoverModule,
         CollapseModule,
         AlertModule
@@ -66,8 +63,8 @@ import {DateInputComponent} from './date-input.component';
         TooltipModule,
         TabsModule,
         BsDropdownModule,
+        BsDatepickerModule,
         ModalModule,
-        DatepickerModule,
         PopoverModule,
         CollapseModule,
         AlertModule,

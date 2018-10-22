@@ -17,7 +17,7 @@ import {
     ModalModule,
     PopoverModule,
     CollapseModule,
-    AlertModule
+    AlertModule, BsDatepickerModule
 } from 'ngx-bootstrap';
 
 import {AppRoutingModule} from './app-routing.module';
@@ -43,6 +43,7 @@ export function initConfig(config: AppConfig): () => Promise<any> {
         TooltipModule.forRoot(),
         TabsModule.forRoot(),
         BsDropdownModule.forRoot(),
+        BsDatepickerModule.forRoot(),
         ModalModule.forRoot(),
         PopoverModule.forRoot(),
         CollapseModule.forRoot(),

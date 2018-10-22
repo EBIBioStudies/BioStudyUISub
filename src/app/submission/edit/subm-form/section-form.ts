@@ -237,14 +237,14 @@ export class FeatureForm {
         return this.feature.id;
     }
 
-    get featureName(): string {
+    get prettyName(): string {
         const isSingleElementFeature =
             this.feature.singleRow &&
             this.feature.colSize() === 1 &&
             !this.feature.canAddMoreColumns();
 
-        return (isSingleElementFeature ?
-            this.feature.typeName : pluralize(this.feature.typeName)).toLowerCase();
+        const name = this.feature.typeName.replace(/([A-Z])/g, ' $1');
+        return (isSingleElementFeature ? name : pluralize(name));
     }
 
     get featureTypeName(): string {
@@ -283,6 +283,20 @@ export class FeatureForm {
 
     get hasErrors(): boolean {
         return this.form.invalid && this.form.touched;
+    }
+
+    get scrollToControl(): FormControl | undefined {
+        if (this.rowForms.isEmpty() || this.columnControls.isEmpty()) {
+            return undefined;
+        }
+
+        const rowForm = this.rowForms[this.rowForms.length - 1];
+        const firstColumn = this.columnControls[0].id;
+        const lastColumn = this.columnControls[this.columnControls.length - 1].id;
+        if (this.canHaveMultipleRows) {
+            return rowForm.cellControlAt(firstColumn)!.control;
+        }
+        return rowForm.cellControlAt(lastColumn)!.control;
     }
 
     columnNamesTypeahead(column: ColumnControl): Observable<string[]> {
@@ -324,7 +338,16 @@ export class FeatureForm {
         return this.rowForms[rowIndex].cellControlAt(columnId);
     }
 
-    onRowAdd() {
+    /*adds one row or column depending on feature type */
+    addEntry(): void {
+        if (this.isEmpty || this.canHaveMultipleRows) {
+            this.addRow();
+        } else {
+            this.addColumn();
+        }
+    }
+
+    addRow() {
         const row = this.feature.addRow();
         if (row !== undefined) {
             this.addRowForm(this.feature.addRow()!, this.feature.columns);
@@ -332,7 +355,15 @@ export class FeatureForm {
         }
     }
 
-    onColumnAdd() {
+    removeRow(rowIndex: number) {
+        if (this.feature.removeRowAt(rowIndex)) {
+            this.rowForms.splice(rowIndex, 1);
+            this.rowFormArray.removeAt(rowIndex);
+            this.updateValueAndValidity();
+        }
+    }
+
+    addColumn() {
         const column = this.feature.addColumn();
         if (column !== undefined) {
             this.addColumnControl(column);
@@ -341,7 +372,7 @@ export class FeatureForm {
         }
     }
 
-    onColumnRemove(columnId: string) {
+    removeColumn(columnId: string) {
         const index = this.columnControls.findIndex(c => c.id === columnId);
         if (index < 0) {
             return;
@@ -350,14 +381,6 @@ export class FeatureForm {
             this.columnControls.splice(index, 1);
             this.columnsForm.removeControl(columnId);
             this.rowForms.forEach(rf => rf.removeCellControl(columnId));
-            this.updateValueAndValidity();
-        }
-    }
-
-    onRowRemove(rowIndex: number) {
-        if (this.feature.removeRowAt(rowIndex)) {
-            this.rowForms.splice(rowIndex, 1);
-            this.rowFormArray.removeAt(rowIndex);
             this.updateValueAndValidity();
         }
     }
@@ -422,6 +445,13 @@ export class SectionForm {
         return listOfInvalidControls(this.form);
     }
 
+    scrollToControl(featureId: string): FormControl | undefined {
+        const featureForm = this.featureForms.find(f => f.id === featureId);
+        if (featureForm !== undefined) {
+            return featureForm.scrollToControl;
+        }
+    }
+
     removeFeature(featureId: string): void {
         const index = this.featureForms.findIndex(f => f.id === featureId);
         if (index < 0) {
@@ -431,6 +461,14 @@ export class SectionForm {
         if (this.section.features.removeById(featureId)) {
             this.featureForms.splice(index, 1);
             this.featuresForm.removeControl(featureId);
+            this.featuresForm.updateValueAndValidity();
+        }
+    }
+
+    addFeatureEntry(featureId: string): void {
+        const featureForm = this.featureForms.find(f => f.id === featureId);
+        if (featureForm !== undefined) {
+            featureForm.addEntry();
         }
     }
 

@@ -10,7 +10,6 @@ import {PubMedIdSearchComponent} from './pubmedid-search/pubmedid-search.compone
 import {SlideOutTipComponent} from './slide-out-tip.component';
 import {TextareaAutosize} from './textarea-autosize.directive';
 import {TreeViewComponent, TreeViewNodeComponent} from './tree-view.component';
-import {BsDatepickerModule} from 'ngx-bootstrap';
 import {IdLinkComponent} from './id-link/id-link.component';
 import {IdLinkModule} from './id-link/id-link.module';
 
@@ -19,8 +18,7 @@ import {IdLinkModule} from './id-link/id-link.module';
         SharedModule,
         FileModule,
         RouterModule,
-        IdLinkModule,
-        BsDatepickerModule.forRoot(),
+        IdLinkModule
     ],
     providers: [
         PubMedSearchService

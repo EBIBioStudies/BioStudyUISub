@@ -14,7 +14,7 @@
                               container="body">
                               <button type="button" tabindex="-1"
                                       class="btn btn-sm btn-danger btn-flat"
-                                      (click)="featureForm.onColumnRemove(column.id)"
+                                      (click)="featureForm.removeColumn(column.id)"
                                       [disabled]="!column.isRemovable"
                                       [tooltip]="column.isRemovable ? 'Delete &quot;' + column.name + '&quot; entry' : ''"
                                       placement="bottom"
@@ -68,11 +68,11 @@
         <button *ngIf="!readonly"
                 type="button"
                 class="btn-add btn btn-link"
-                [tooltip]="'Add a new ' + featureForm.featureName"
+                [tooltip]="'Add a new ' + featureForm.prettyName"
                 container="body"
-                (click)="featureForm.onColumnAdd()">
+                (click)="featureForm.addColumn()">
             <i class="fa fa-lg fa-plus-circle"></i>
-            Add {{featureForm.featureName}} row
+            Add {{featureForm.prettyName}} row
         </button>
     </div>
 </div>

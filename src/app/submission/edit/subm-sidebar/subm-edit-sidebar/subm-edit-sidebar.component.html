@@ -9,6 +9,7 @@
         <li class="sidebar-item" *ngFor="let item of items; let i = index">
             <a *ngIf="isEditModeOff"
                tooltip="{{item.description | stripHtml}}"
+               placement="top"
                container="body"
                (click)="onItemClick(item)">
                 <i class="fa fa-lg text-center {{item.icon}}"></i>

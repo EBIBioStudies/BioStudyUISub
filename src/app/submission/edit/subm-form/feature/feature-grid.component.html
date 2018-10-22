@@ -6,7 +6,7 @@
                     [ngClass]="{'invisible': readonly || !userData.isPrivileged}"
                     [tooltip]="'Add a new ' + featureForm.featureTypeName.toLowerCase() + ' attribute'"
                     container="body"
-                    (click)="featureForm.onColumnAdd()">
+                    (click)="featureForm.addColumn()">
                 <i class="fa fa-plus-circle" aria-hidden="true"></i> Column
             </button>
 
@@ -23,7 +23,7 @@
                          [readonly]="readonly || !column.canEditName || !userData.isPrivileged"
                          [removable]="column.isRemovable"
                          [autosuggestSource]="featureForm.columnNamesAvailable"
-                         (remove)="featureForm.onColumnRemove(column.id)"
+                         (remove)="featureForm.removeColumn(column.id)"
                          [submControlName]="featureForm.featureTypeName + ' column name'"
                          [submControlIcon]="featureForm.icon">
             </inline-edit>
@@ -37,7 +37,7 @@
                     <button class="btn btn-danger btn-sm" type="button"
                             [ngClass]="{'invisible': readonly}"
                             [disabled]="!featureForm.canRemoveRow()"
-                            (click)="featureForm.onRowRemove(rowIdx)"
+                            (click)="featureForm.removeRow(rowIdx)"
                             [tooltip]="featureForm.canRemoveRow ? 'Delete ' + featureForm.featureTypeName.toLowerCase() + ' ' + (rowIdx + 1) : ''"
                             placement="bottom"
                             container="body">
@@ -67,9 +67,9 @@
     </div>
 </div>
 <button *ngIf="!readonly" type="button" class="btn-add btn btn-link" tabindex="-1"
-        [tooltip]="'Add a new ' + featureForm.featureName"
+        [tooltip]="'Add a new ' + featureForm.prettyName"
         container="body"
-        (click)="featureForm.onRowAdd()">
+        (click)="featureForm.addRow()">
     <i class="fa fa-lg fa-plus-circle"></i>
-    Add {{featureForm.featureName}} row
+    Add {{featureForm.prettyName}} row
 </button>
