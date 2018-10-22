@@ -40,6 +40,7 @@ export const DefaultTemplate = {
             'description': 'Provide any additional details that may help discover or interpret the study.',
             'icon': 'fa-tag',
             'display': 'desirable',
+            'singleRow': true,
             'columnTypes': [
                 {
                     'name': 'AttachTo',

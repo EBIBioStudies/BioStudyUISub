@@ -190,32 +190,8 @@ export class Rows {
     }
 }
 
-type Rule<T> = (t: T) => boolean;
-
-function productOf<T>(...rules: Rule<T>[]): Rule<T> {
-    return (t: T) => {
-        return rules.every(r => r(t));
-    };
-}
-
-function sumOf<T>(...rules: Rule<T>[]): Rule<T> {
-    return (t: T) => {
-        return rules.some(r => r(t));
-    };
-}
-
-const CanRemoveRow: Rule<Feature> = productOf(
-    (f: Feature) => !f.type.displayType.isReadonly,
-    sumOf(
-        (f: Feature) => !f.type.displayType.isShownByDefault,
-        (f: Feature) => f.rowSize() > 1));
-
-const CanAddRow: Rule<Feature> = productOf(
-    (f: Feature) => !f.type.displayType.isReadonly,
-    sumOf((f: Feature) => !f.singleRow,
-        (f: Feature) => f.rowSize() === 0));
-
 type FeatureGroup = Feature[];
+const featureGroupSize = (g: FeatureGroup) => g.map(f => f.rowSize()).reduce((rv, v) => rv + v, 0);
 
 export class Feature {
     readonly id: string;
@@ -236,7 +212,6 @@ export class Feature {
     constructor(type: FeatureType, data: FeatureData = {} as FeatureData) {
         this.id = `feature_${nextId()}`;
         this.type = type;
-        this.groups = [[this]];
 
         type.columnTypes.filter(ct => ct.isRequired || ct.isDesirable)
             .forEach(ct => {
@@ -349,19 +324,6 @@ export class Feature {
         return undefined;
     }
 
-    removeColumn(id: string): boolean {
-        const column = this._columns.findById(id);
-        if (column !== undefined && column.displayType.isRemovable) {
-            this._columns.remove(id);
-            this._rows.removeKey(id);
-            if (this._columns.size() === 0 && this.singleRow) {
-                this.removeRowAt(0);
-            }
-            return true;
-        }
-        return false;
-    }
-
     addRow(): ValueMap | undefined {
         if (this.canAddRow) {
             return this._rows.add(this._columns.keys());
@@ -382,32 +344,36 @@ export class Feature {
     }
 
     canAddRow(): boolean {
-        return this.groups.every(g => g.some(f => CanAddRow(f)))
+        return !this.type.displayType.isReadonly && (!this.singleRow || this.rowSize() === 0);
     }
 
     canRemoveRow(): boolean {
-        return this.groups.every(g => g.some(f => CanRemoveRow(f)))
+        return !this.type.displayType.isReadonly &&
+            (!this.type.displayType.isShownByDefault || this.rowSize() > 1) &&
+            this.groups.every(g => featureGroupSize(g) > 1);
     }
 
     removeRowAt(index: number): boolean {
-        if (this.canRemoveRow) {
+        if (this.canRemoveRow()) {
             return this._rows.removeAt(index);
         }
         return false;
     }
-}
 
-export class AnnotationFeature extends Feature {
-    constructor(type: FeatureType, data: FeatureData = <FeatureData>{}) {
-        super(type, data);
+    canRemoveColumn(id: string): boolean {
+        const column = this._columns.findById(id);
+        return column !== undefined &&
+            !this.type.displayType.isReadonly &&
+            ((this.singleRow && this.type.displayType.isRemovable) || (!this.singleRow && column.displayType.isRemovable));
     }
 
-    static create(type: FeatureType, attrs: AttributeData[]): Feature {
-        return new AnnotationFeature(type,
-            {
-                type: type.name,
-                entries: [attrs]
-            });
+    removeColumn(id: string): boolean {
+        if (this.canRemoveColumn(id)) {
+            this._columns.remove(id);
+            this._rows.removeKey(id);
+            return true;
+        }
+        return false;
     }
 }
 
@@ -593,7 +559,7 @@ export class Section {
         this.fields = new Fields(type, data);
 
         //Any attribute names from the server that do not match top-level field names are added as annotations.
-        this.annotations = AnnotationFeature.create(type.annotationsType,
+        this.annotations = Feature.create(type.annotationsType,
             (data.attributes || []).filter(a => a.name && type.getFieldType(a.name) === undefined)
         );
         this.features = new Features(type, data);

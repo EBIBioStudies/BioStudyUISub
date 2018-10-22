@@ -52,7 +52,7 @@ export class FormValidators {
 const CustomErrorMessages = (() => {
     return {
         'required': (error: { value: string, controlName: string, controlParent: string }) => {
-            return `Please enter the ${error.controlParent.toLowerCase()}'s ${error.controlName.toLowerCase()}`;
+            return `Please enter the ${error.controlParent}'s ${error.controlName.toLowerCase()}`;
         },
         'minlength': (error: { requiredLength: number, actualLength: number }) => {
             return `Please use at least ${error.requiredLength} characters`;

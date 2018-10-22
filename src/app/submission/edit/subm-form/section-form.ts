@@ -255,6 +255,10 @@ export class FeatureForm {
         return this.feature.type.displayType.isRequired;
     }
 
+    get isRemovable(): boolean {
+        return this.feature.type.displayType.isRemovable;
+    }
+
     get icon(): string {
         return this.feature.type.icon;
     }
@@ -278,7 +282,7 @@ export class FeatureForm {
     }
 
     get optionalGroup(): string [] {
-        return this.feature.groups.length > 1 ? this.feature.groups[1].map(f => f.typeName) : [];
+        return this.feature.groups.length > 0 ? this.feature.groups[0].map(f => f.typeName) : [];
     }
 
     get hasErrors(): boolean {
@@ -342,7 +346,8 @@ export class FeatureForm {
     addEntry(): void {
         if (this.isEmpty || this.canHaveMultipleRows) {
             this.addRow();
-        } else {
+        }
+        if (!this.canHaveMultipleRows) {
             this.addColumn();
         }
     }
@@ -350,7 +355,7 @@ export class FeatureForm {
     addRow() {
         const row = this.feature.addRow();
         if (row !== undefined) {
-            this.addRowForm(this.feature.addRow()!, this.feature.columns);
+            this.addRowForm(row, this.feature.columns);
             this.updateValueAndValidity();
         }
     }
@@ -373,10 +378,16 @@ export class FeatureForm {
     }
 
     removeColumn(columnId: string) {
-        const index = this.columnControls.findIndex(c => c.id === columnId);
-        if (index < 0) {
+        if (!this.feature.canRemoveColumn(columnId)) {
             return;
         }
+
+        if (this.columnControls.length === 1 && this.feature.singleRow) {
+            this.removeRow(0);
+            return;
+        }
+
+        const index = this.columnControls.findIndex(c => c.id === columnId);
         if (this.feature.removeColumn(columnId)) {
             this.columnControls.splice(index, 1);
             this.columnsForm.removeControl(columnId);
@@ -387,6 +398,10 @@ export class FeatureForm {
 
     canRemoveRow(): boolean {
         return this.feature.canRemoveRow();
+    }
+
+    canRemoveColumn(column: ColumnControl): boolean {
+        return this.feature.canRemoveColumn(column.id);
     }
 
     canAddMoreColumns(): boolean {

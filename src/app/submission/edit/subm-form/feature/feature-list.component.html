@@ -7,16 +7,15 @@
         <div class="row" #rowEl *ngIf="!readonly">
             <div class="cell col-xs-3">
                 <div class="form-group key-field"
-                     [ngClass]="{'optional': column.isRemovable,
-                                 'has-error': column.hasErrors}">
-                    <div [ngClass]="{'input-group': column.isRemovable, 'readonly': column.isReadonly}">
-                        <span *ngIf="column.isRemovable" class="input-group-btn"
+                     [ngClass]="{'has-error': column.hasErrors}">
+                    <div [ngClass]="{'input-group': featureForm.canRemoveColumn(column), 'readonly': column.isReadonly}">
+                        <span *ngIf="featureForm.canRemoveColumn(column)" class="input-group-btn"
                               container="body">
                               <button type="button" tabindex="-1"
                                       class="btn btn-sm btn-danger btn-flat"
                                       (click)="featureForm.removeColumn(column.id)"
-                                      [disabled]="!column.isRemovable"
-                                      [tooltip]="column.isRemovable ? 'Delete &quot;' + column.name + '&quot; entry' : ''"
+                                      [disabled]="!featureForm.canRemoveColumn(column)"
+                                      [tooltip]="'Delete &quot;' + column.name + '&quot; entry'"
                                       placement="bottom"
                                       container="body">
                                    <i class="fa fa-trash-o"></i>
@@ -51,7 +50,6 @@
                                  popover="{{cell.hasErrors ? cell.errors : ''}}"
                                  [valueType]="column.valueType"
                                  [readonly]="readonly || column.isReadonly"
-                                 [required]="column.isRequired"
                                  [formControl]="cell.control"
                                  [autosuggestSource]="featureForm.cellValuesTypeaheadFunc(column.id)"
                                  [submControlName]="column.name"
