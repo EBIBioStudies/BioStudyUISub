@@ -210,7 +210,7 @@ export class FeatureForm {
     }
 
     get isEmpty(): boolean {
-        return this.feature.rowSize() === 0;
+        return this.feature.isEmpty;
     }
 
     get canHaveMultipleRows(): boolean {
@@ -281,8 +281,12 @@ export class FeatureForm {
             .map(type => type.name);
     }
 
-    get optionalGroup(): string [] {
+    get requiredGroups(): string [] {
         return this.feature.groups.length > 0 ? this.feature.groups[0].map(f => f.typeName) : [];
+    }
+
+    get hasRequiredGroups(): boolean {
+        return this.requiredGroups.length > 0;
     }
 
     get hasErrors(): boolean {
@@ -344,10 +348,9 @@ export class FeatureForm {
 
     /*adds one row or column depending on feature type */
     addEntry(): void {
-        if (this.isEmpty || this.canHaveMultipleRows) {
+        if (this.canHaveMultipleRows) {
             this.addRow();
-        }
-        if (!this.canHaveMultipleRows) {
+        } else {
             this.addColumn();
         }
     }
@@ -378,15 +381,6 @@ export class FeatureForm {
     }
 
     removeColumn(columnId: string) {
-        if (!this.feature.canRemoveColumn(columnId)) {
-            return;
-        }
-
-        if (this.columnControls.length === 1 && this.feature.singleRow) {
-            this.removeRow(0);
-            return;
-        }
-
         const index = this.columnControls.findIndex(c => c.id === columnId);
         if (this.feature.removeColumn(columnId)) {
             this.columnControls.splice(index, 1);

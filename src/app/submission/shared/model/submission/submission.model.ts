@@ -44,17 +44,7 @@ export class Attribute {
 }
 
 export class AttributeValue {
-    constructor(private _value: string = '') {
-    }
-
-    set value(value: string) {
-        if (this.value !== value) {
-            this._value = value;
-        }
-    }
-
-    get value(): string {
-        return this._value;
+    constructor(public value: string = '') {
     }
 }
 
@@ -97,10 +87,10 @@ export class ValueMap {
 
 export class Columns {
     private columns: Attribute[] = [];
-    private _nextIndex: number = 0;
+    private counter: number = 0;
 
     get nextIndex(): number {
-        return ++this._nextIndex;
+        return ++this.counter;
     }
 
     list(): Attribute[] {
@@ -131,7 +121,7 @@ export class Columns {
         return this.columns.find(col => col.id === id);
     }
 
-    allWithName(name: string): Attribute[] {
+    filterByName(name: string): Attribute[] {
         return this.columns.filter(attr => attr.name.isEqualIgnoringCase(name));
     }
 
@@ -148,8 +138,21 @@ export class Columns {
     }
 }
 
-export class Rows {
+class Rows {
     private rows: ValueMap[] = [];
+
+    constructor(singleRow: boolean = false) {
+        if (singleRow) {
+            this.add([]);
+
+            this.add = (_: string[]) => {
+                throw new Error('Can not add row to a single row set');
+            };
+            this.removeAt = (_: number) => {
+                throw new Error('Can not remove row from a single row set');
+            };
+        }
+    }
 
     list(): ValueMap[] {
         return this.rows.slice();
@@ -198,8 +201,8 @@ export class Feature {
     readonly type: FeatureType;
     readonly groups: FeatureGroup[] = [];
 
-    private _columns: Columns = new Columns();
-    private _rows: Rows = new Rows();
+    private _columns: Columns;
+    private _rows: Rows;
 
     static create(type: FeatureType, attrs: AttributeData[]): Feature {
         return new Feature(type,
@@ -212,6 +215,8 @@ export class Feature {
     constructor(type: FeatureType, data: FeatureData = {} as FeatureData) {
         this.id = `feature_${nextId()}`;
         this.type = type;
+        this._columns = new Columns();
+        this._rows = new Rows(type.singleRow);
 
         type.columnTypes.filter(ct => ct.isRequired || ct.isDesirable)
             .forEach(ct => {
@@ -222,7 +227,7 @@ export class Feature {
             this.add(entry);
         });
 
-        if (type.displayType.isShownByDefault && this.rows.isEmpty()) {
+        if (type.displayType.isShownByDefault && this.isEmpty) {
             this.addRow();
         }
     }
@@ -263,8 +268,8 @@ export class Feature {
         return this._columns.size();
     }
 
-    size(): number {
-        return this.singleRow ? this.colSize() : this.rowSize();
+    get isEmpty(): boolean {
+        return (this.singleRow ? this.colSize() : this.rowSize()) === 0;
     }
 
     add(attributes: AttributeData[] = [], rowIdx?: number): void {
@@ -295,7 +300,7 @@ export class Feature {
             }
 
             const attrs = attrsWithName.filter(attr => attr.name === colName);
-            const columns = this._columns.allWithName(colName);
+            const columns = this._columns.filterByName(colName);
             zip(attrs, columns).forEach((pair) => {
                 rowMap!.valueFor(pair[1].id)!.value = pair[0].value || '';
             });
@@ -348,7 +353,8 @@ export class Feature {
     }
 
     canRemoveRow(): boolean {
-        return !this.type.displayType.isReadonly &&
+        return !this.singleRow &&
+            !this.type.displayType.isReadonly &&
             (!this.type.displayType.isShownByDefault || this.rowSize() > 1) &&
             this.groups.every(g => featureGroupSize(g) > 1);
     }

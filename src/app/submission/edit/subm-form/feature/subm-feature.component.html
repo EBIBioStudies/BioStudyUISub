@@ -2,10 +2,10 @@
     <label class="control-label">{{featureForm.prettyName | lowercase | titlecase}}</label>
     <span *ngIf="!readonly && !featureForm.isRequired"
           class="text-muted pull-right">
-                <i *ngIf="featureForm.optionalGroup.length > 0">
-                   Required at least one {{featureForm.optionalGroup.join(' or ')}}
+                <i *ngIf="featureForm.hasRequiredGroups">
+                   Required at least one {{featureForm.requiredGroups.join(' or ')}}
                 </i>
-                <i *ngIf="featureForm.optionalGroup.length === 0">
+                <i *ngIf="!featureForm.hasRequiredGroups">
                     Optional
                 </i>
     </span>
