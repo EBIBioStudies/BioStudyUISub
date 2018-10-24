@@ -8,103 +8,121 @@ export const EutoxriskTemplate = {
             {
                 'name': 'Title',
                 'icon': 'fa-title',
-                'valueType': 'largetext',
-                'display': 'required',
-                'minlength': 25
+                'valueType': {
+                    'name': 'largetext',
+                    'minlength': 25
+                },
+                'display': 'required'
             },
             {
                 'name': 'Description',
                 'icon': 'fa-comment',
-                'valueType': 'largetext'
+                'valueType': {'name': 'largetext'}
             },
             {
                 'name': 'Project part',
                 'icon': 'fa-comment',
-                'valueType': 'text',
+                'valueType': {'name': 'text'},
             },
             {
                 'name': 'Organism',
                 'icon': 'fa-eyedropper',
-                'valueType': 'text',
-                'values': ['Homo sapiens (human)', 'Danio rerio (zebrafish)']
+                'valueType': {
+                    'name': 'select',
+                    'values': ['Homo sapiens (human)', 'Danio rerio (zebrafish)']
+                }
             },
             {
                 'name': 'Organ',
                 'icon': 'fa-eyedropper',
-                'valueType': 'text',
-                'values': [
-                    'liver',
-                    'brain',
-                    'embryo',
-                    'lung',
-                    'kidney',
-                    'whole body',
-                    'other'
-                ]
+                'valueType': {
+                    'name': 'select',
+                    'values': [
+                        'liver',
+                        'brain',
+                        'embryo',
+                        'lung',
+                        'kidney',
+                        'whole body',
+                        'other'
+                    ]
+                }
             },
             {
                 'name': 'Cell type',
                 'icon': 'fa-eyedropper',
-                'valueType': 'text',
-                'values': [
-                    'cell line',
-                    'primary cells',
-                    'stem cells',
-                    'stem cell derived'
-                ]
+                'valueType': {
+                    'name': 'select',
+                    'values': [
+                        'cell line',
+                        'primary cells',
+                        'stem cells',
+                        'stem cell derived'
+                    ]
+                }
             },
             {
                 'name': 'Cell name',
                 'icon': 'fa-eyedropper',
-                'valueType': 'text',
-                'values': [
-                    'CELLLINE',
-                    'HepG2',
-                    'HEK',
-                    'LUHMES'
-                ]
+                'valueType': {
+                    'name': 'select',
+                    'values': [
+                        'CELLLINE',
+                        'HepG2',
+                        'HEK',
+                        'LUHMES'
+                    ]
+                }
             },
             {
                 'name': 'Exposure time',
                 'icon': 'fa-cogs',
-                'valueType': 'text',
-                'values': ['6h', '12h', '24h']
+                'valueType': {
+                    'name': 'select',
+                    'values': ['6h', '12h', '24h']
+                }
             },
             {
                 'name': 'Treatment modality',
                 'icon': 'fa-cogs',
-                'valueType': 'text',
-                'values': [
-                    'single dose',
-                    'repeated dose',
-                    'recovery'
-                ]
+                'valueType': {
+                    'name': 'text',
+                    'values': [
+                        'single dose',
+                        'repeated dose',
+                        'recovery'
+                    ]
+                }
             },
             {
                 'name': 'Information domain',
                 'icon': 'fa-cogs',
-                'valueType': 'text',
-                'values': [
-                    'cytotoxicity',
-                    'cell function',
-                    'biochemical',
-                    'reporter',
-                    'metabolomics',
-                    'transcriptomics',
-                    'biokinetics',
-                    'other'
-                ]
+                'valueType': {
+                    'name': 'select',
+                    'values': [
+                        'cytotoxicity',
+                        'cell function',
+                        'biochemical',
+                        'reporter',
+                        'metabolomics',
+                        'transcriptomics',
+                        'biokinetics',
+                        'other'
+                    ]
+                }
             },
             {
                 'name': 'Toxicity domain',
                 'icon': 'fa-cogs',
-                'valueType': 'text',
-                'values': [
-                    'DART (Dev/Repro)',
-                    'RDT (= organ toxicity)',
-                    'BOTH',
-                    'OTHER'
-                ]
+                'valueType': {
+                    'name': 'select',
+                    'values': [
+                        'DART (Dev/Repro)',
+                        'RDT (= organ toxicity)',
+                        'BOTH',
+                        'OTHER'
+                    ]
+                }
             }
         ],
         'annotationsType': {
@@ -114,16 +132,16 @@ export const EutoxriskTemplate = {
             'columnTypes': [
                 {
                     'name': 'AttachTo',
-                    'valueType': 'text',
+                    'valueType': {'name': 'text'},
                     'display': 'readonly'
                 },
                 {
                     'name': 'Compound',
-                    'valueType': 'text'
+                    'valueType': {'name': 'text'}
                 },
                 {
                     'name': 'Endpoint',
-                    'valueType': 'text'
+                    'valueType': {'name': 'text'}
                 }
             ]
         },
@@ -138,74 +156,76 @@ export const EutoxriskTemplate = {
                 'columnTypes': [
                     {
                         'name': 'Name',
-                        'valueType': 'text',
+                        'valueType': {'name': 'text'},
                         'display': 'required'
                     },
                     {
                         'name': 'E-mail',
-                        'valueType': 'text',
+                        'valueType': {'name': 'text'},
                         'display': 'required'
                     },
                     {
                         'name': 'Organisation',
-                        'valueType': 'text',
-                        'values': [
-                            'BASF',
-                            'BioDetection Systems B.V.',
-                            'BioTalentum Ltd',
-                            'Cosmetics Europe',
-                            'Cyprotex Ltd',
-                            'European Bioinformatics Institute (EMBL-EBI)',
-                            'European Molecular Biology Laboratory (EMBL)',
-                            'F. Hoffmann-La Roche Ltd',
-                            'Fraunhofer Institute for Toxicology and Experimental Medicine',
-                            'Heidelberg University',
-                            'InSphero AG',
-                            'Ineris',
-                            'Instituto de Investigación Sanitaria La Fe (IIS La Fe)',
-                            'Italian National Health Institute (ISS)',
-                            'Johns Hopkins Bloomberg School of Public Health',
-                            'KU Leuven',
-                            'Konstanz University',
-                            'Leibniz Research Centre for Working Environment and Human Factors (IfADo)',
-                            'Leiden University Medical Center (LUMC)',
-                            'L’Oréal',
-                            'Maastricht University',
-                            'Mario Negri Institute for Pharmacological Research (IRCCS)',
-                            'Medical University of Innsbruck',
-                            'Netherlands Organisation for Applied Scientific Research (TNO)',
-                            'Novo Nordisk Foundation Center for Protein Research',
-                            'Pompeu Fabra University',
-                            'Swetox',
-                            'The Danish Environmental Protection Agency',
-                            'The Federal Institute for Occupational Safety and Health (BAuA)',
-                            'TissUse GmbH',
-                            'Unilever',
-                            'University of Vienna'
-                        ],
+                        'valueType': {
+                            'name': 'text',
+                            'values': [
+                                'BASF',
+                                'BioDetection Systems B.V.',
+                                'BioTalentum Ltd',
+                                'Cosmetics Europe',
+                                'Cyprotex Ltd',
+                                'European Bioinformatics Institute (EMBL-EBI)',
+                                'European Molecular Biology Laboratory (EMBL)',
+                                'F. Hoffmann-La Roche Ltd',
+                                'Fraunhofer Institute for Toxicology and Experimental Medicine',
+                                'Heidelberg University',
+                                'InSphero AG',
+                                'Ineris',
+                                'Instituto de Investigación Sanitaria La Fe (IIS La Fe)',
+                                'Italian National Health Institute (ISS)',
+                                'Johns Hopkins Bloomberg School of Public Health',
+                                'KU Leuven',
+                                'Konstanz University',
+                                'Leibniz Research Centre for Working Environment and Human Factors (IfADo)',
+                                'Leiden University Medical Center (LUMC)',
+                                'L’Oréal',
+                                'Maastricht University',
+                                'Mario Negri Institute for Pharmacological Research (IRCCS)',
+                                'Medical University of Innsbruck',
+                                'Netherlands Organisation for Applied Scientific Research (TNO)',
+                                'Novo Nordisk Foundation Center for Protein Research',
+                                'Pompeu Fabra University',
+                                'Swetox',
+                                'The Danish Environmental Protection Agency',
+                                'The Federal Institute for Occupational Safety and Health (BAuA)',
+                                'TissUse GmbH',
+                                'Unilever',
+                                'University of Vienna'
+                            ]
+                        },
                         'display': 'required'
                     },
                     {
                         'name': 'Role',
-                        'valueType': 'text',
+                        'valueType': {'name': 'text'},
                         'display': 'required'
                     },
                     {
                         'name': 'ORCID',
-                        'valueType': 'text',
+                        'valueType': {'name': 'text'},
                         'display': 'desirable'
                     },
                     {
                         'name': 'Address',
-                        'valueType': 'text'
+                        'valueType': {'name': 'text'}
                     },
                     {
                         'name': 'Department',
-                        'valueType': 'text'
+                        'valueType': {'name': 'text'}
                     },
                     {
                         'name': 'Funding',
-                        'valueType': 'text'
+                        'valueType': {'name': 'text'}
                     }
                 ]
             },
@@ -213,26 +233,26 @@ export const EutoxriskTemplate = {
                 'name': 'Endpoint',
                 'title': 'Add endpoints',
                 'icon': 'fa-medkit',
-                'description': "Provide at least the method and analytical measure of the study's endpoints.",
+                'description': 'Provide at least the method and analytical measure of the study\'s endpoints.',
                 'uniqueCols': true,
                 'columnTypes': [
                     {
                         'name': 'Method',
-                        'valueType': 'text',
+                        'valueType': {'name': 'text'},
                         'display': 'required'
                     },
                     {
                         'name': 'Analytical measure',
-                        'valueType': 'text',
+                        'valueType': {'name': 'text'},
                         'display': 'required'
                     },
                     {
                         'name': 'Type',
-                        'valueType': 'text'
+                        'valueType': {'name': 'text'}
                     },
                     {
                         'name': 'Readout method',
-                        'valueType': 'text'
+                        'valueType': {'name': 'text'}
                     }
                 ]
             },
@@ -240,58 +260,58 @@ export const EutoxriskTemplate = {
                 'name': 'Compound',
                 'title': 'Add compounds',
                 'icon': 'fa-flask',
-                'description': "List all parent compounds by their most common chemical name. " +
-                               "For example, \"Valproic acid\" instead of \"Valproate\".",
+                'description': 'List all parent compounds by their most common chemical name. ' +
+                    'For example, "Valproic acid" instead of "Valproate".',
                 'uniqueCols': true,
                 'columnTypes': [
                     {
                         'name': 'Name',
-                        'valueType': 'text',
+                        'valueType': {'name': 'text'},
                         'display': 'required'
                     },
                     {
                         'name': 'CAS number',
-                        'valueType': 'text'
+                        'valueType': {'name': 'text'}
                     },
                     {
                         'name': 'SMILES',
-                        'valueType': 'text'
+                        'valueType': {'name': 'text'}
                     },
                     {
                         'name': 'Supplier',
-                        'valueType': 'text'
+                        'valueType': {'name': 'text'}
                     },
                     {
                         'name': 'Order number',
-                        'valueType': 'text'
+                        'valueType': {'name': 'text'}
                     },
                     {
                         'name': 'Lot number',
-                        'valueType': 'text'
+                        'valueType': {'name': 'text'}
                     },
                     {
                         'name': 'Compound form',
-                        'valueType': 'text'
+                        'valueType': {'name': 'text'}
                     },
                     {
                         'name': 'Storage temp',
-                        'valueType': 'text'
+                        'valueType': {'name': 'text'}
                     },
                     {
                         'name': 'Stock solvent',
-                        'valueType': 'text'
+                        'valueType': {'name': 'text'}
                     },
                     {
                         'name': 'Stock conc',
-                        'valueType': 'text'
+                        'valueType': {'name': 'text'}
                     },
                     {
                         'name': 'Stock aliquot storage',
-                        'valueType': 'text'
+                        'valueType': {'name': 'text'}
                     },
                     {
                         'name': 'Other info',
-                        'valueType': 'text'
+                        'valueType': {'name': 'text'}
                     }
                 ]
             },
@@ -299,19 +319,19 @@ export const EutoxriskTemplate = {
                 'name': 'Link',
                 'title': 'Add Links',
                 'description': 'Provide pointers to data held in external databases or to related information on the web. ' +
-                               'Compact URIs from <a target="_blank" href="https://www.ebi.ac.uk/miriam/main/collections">Identifiers.org</a> ' +
-                               'are supported. URLs must include the scheme, e.g. "http://".',
+                    'Compact URIs from <a target="_blank" href="https://www.ebi.ac.uk/miriam/main/collections">Identifiers.org</a> ' +
+                    'are supported. URLs must include the scheme, e.g. "http://".',
                 'icon': 'fa-link',
                 'uniqueCols': true,
                 'columnTypes': [
                     {
                         'name': 'Pointer',
-                        'valueType': 'idlink',
+                        'valueType': {'name': 'idlink'},
                         'display': 'required'
                     },
                     {
                         'name': 'Description',
-                        'valueType': 'text',
+                        'valueType': {'name': 'text'},
                         'display': 'required'
                     }
                 ]
@@ -325,17 +345,17 @@ export const EutoxriskTemplate = {
                 'columnTypes': [
                     {
                         'name': 'Path',
-                        'valueType': 'file',
+                        'valueType': {'name': 'file'},
                         'display': 'required'
                     },
                     {
                         'name': 'Description',
-                        'valueType': 'text',
+                        'valueType': {'name': 'text'},
                         'display': 'required'
                     },
                     {
                         'name': 'Type',
-                        'valueType': 'text',
+                        'valueType': {'name': 'text'},
                         'display': 'desirable'
                     }
                 ]
@@ -344,54 +364,53 @@ export const EutoxriskTemplate = {
                 'name': 'Publication',
                 'title': 'Add Publications',
                 'description': 'Add the bibliography relevant to the study. Autofill is available when searching by ' +
-                               '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pubmed/">PubMed</a> identifier. ' +
-                               'For other IDs, you may use ' +
-                               '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pmc/pmctopmid/#converter">PubMed\'s converter</a>.',
+                    '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pubmed/">PubMed</a> identifier. ' +
+                    'For other IDs, you may use ' +
+                    '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pmc/pmctopmid/#converter">PubMed\'s converter</a>.',
                 'icon': 'fa-book',
                 'uniqueCols': true,
                 'columnTypes': [
                     {
                         'name': 'PMID',
-                        'valueType': 'pubmedid',
+                        'valueType': {'name': 'pubmedid'},
                         'display': 'desirable',
-                        'removable': false
                     },
                     {
                         'name': 'Authors',
-                        'valueType': 'text',
+                        'valueType': {'name': 'text'},
                         'display': 'required'
                     },
                     {
                         'name': 'Title',
-                        'valueType': 'text',
+                        'valueType': {'name': 'text'},
                         'display': 'required'
                     },
                     {
                         'name': 'Year',
-                        'valueType': 'text',
+                        'valueType': {'name': 'text'},
                         'display': 'required'
                     },
                     {
                         'name': 'Volume',
-                        'valueType': 'text',
+                        'valueType': {'name': 'text'},
                         'display': 'desirable'
                     },
                     {
                         'name': 'Issue',
-                        'valueType': 'text',
+                        'valueType': {'name': 'text'},
                         'display': 'desirable'
                     },
                     {
                         'name': 'Type',
-                        'valueType': 'text'
+                        'valueType': {'name': 'text'}
                     },
                     {
                         'name': 'Issn',
-                        'valueType': 'text'
+                        'valueType': {'name': 'text'}
                     },
                     {
                         'name': 'DOI',
-                        'valueType': 'text'
+                        'valueType': {'name': 'text'}
                     },
                 ]
             }
