@@ -1,4 +1,5 @@
 import {
+    ColumnType,
     DisplayType,
     FeatureType,
     FieldType,
@@ -119,6 +120,10 @@ export class Columns {
 
     findById(id: string): Attribute | undefined {
         return this.columns.find(col => col.id === id);
+    }
+
+    findByType(colType: ColumnType): Attribute | undefined {
+        return this.columns.find(col => col.name === colType.name && col.valueType === colType.valueType && col.isTemplateBased);
     }
 
     filterByName(name: string): Attribute[] {
@@ -316,7 +321,22 @@ export class Feature {
 
     addColumn(name?: string, valueType?: ValueType, displayType?: DisplayType, isTemplateBased: boolean = false): Attribute | undefined {
         const defColName = (this.singleRow ? this.typeName : 'Column') + ' ' + this._columns.nextIndex;
-        const colName = name || defColName;
+        let colName = name || defColName;
+
+        if (!isTemplateBased && !this.type.allowCustomCols) {
+            if (this.type.columnTypes.length === 0) {
+                console.error(`Can't create column for ${this.typeName}; column types are not defined and custom columns are not allowed`);
+                return undefined;
+            }
+            let colType = this.type.columnTypes.find(t => this._columns.findByType(t) === undefined);
+            if (colType === undefined && this.type.uniqueCols) {
+                return undefined;
+            }
+            colType = colType || this.type.columnTypes[0];
+            colName = colType.name;
+            valueType = colType.valueType;
+            isTemplateBased = true;
+        }
 
         if (this.canAddColumn(colName, isTemplateBased)) {
             let col = new Attribute(colName, valueType, displayType, isTemplateBased);
