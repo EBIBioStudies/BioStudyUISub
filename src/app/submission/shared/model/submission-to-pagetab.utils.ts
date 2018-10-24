@@ -84,7 +84,7 @@ function extractSectionSubsections(section: Section, isSanitize: boolean): PtSec
 
 function extractSectionLibraryFile(section: Section, isSanitise: boolean): string | undefined {
     const feature = section.features.list().find(f => isLibraryFileType(f.typeName));
-    if (feature !== undefined && feature.rowSize() > 0) {
+    if (feature !== undefined && !feature.isEmpty) {
         return feature.rows[0].values()[0].value;
     }
     return undefined;

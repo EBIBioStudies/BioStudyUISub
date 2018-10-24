@@ -307,11 +307,11 @@ export class Feature {
         });
     }
 
-    private getOrCreateRow(rowIdx: number | undefined): ValueMap | undefined {
-        if (rowIdx === undefined) {
-            return this.addRow() || this.rows[0];
+    private getOrCreateRow(rowIdx?: number): ValueMap | undefined {
+        if (this.singleRow) {
+            return this._rows.at(0);
         }
-        this._rows.at(rowIdx);
+        return (rowIdx === undefined) ? this.addRow() : this._rows.at(rowIdx);
     }
 
     addColumn(name?: string, valueType?: ValueType, displayType?: DisplayType, isTemplateBased: boolean = false): Attribute | undefined {
@@ -340,7 +340,7 @@ export class Feature {
         return this.type.allowCustomCols || !this.type.uniqueCols || this._columns.size() < this.type.columnTypes.length;
     }
 
-    canAddColumn(name: string, isTemplateBased: boolean): boolean {
+    private canAddColumn(name: string, isTemplateBased: boolean): boolean {
         const notExists = this.columns.find(col => col.name === name) === undefined;
         if (notExists) {
             return isTemplateBased || this.type.allowCustomCols;
@@ -349,7 +349,7 @@ export class Feature {
     }
 
     canAddRow(): boolean {
-        return !this.type.displayType.isReadonly && (!this.singleRow || this.rowSize() === 0);
+        return !this.type.displayType.isReadonly && !this.singleRow;
     }
 
     canRemoveRow(): boolean {

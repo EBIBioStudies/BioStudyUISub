@@ -26,7 +26,7 @@ import {Subject} from 'rxjs/Subject';
 import {Observable, of} from 'rxjs';
 import {SectionForm} from './subm-form/section-form';
 import {UserInfo} from '../../auth/model/user-info';
-import {filter, switchMap} from 'rxjs/operators';
+import {filter, switchMap, throttleTime} from 'rxjs/operators';
 
 class EditState {
     private state: string;
@@ -419,7 +419,8 @@ export class SubmEditComponent implements OnInit {
         }
         this.section = path[path.length - 1];
         this.sectionForm = new SectionForm(this.section);
-        this.sectionForm.valueChanges$.subscribe(() => this.onDataChange());
+        this.sectionForm.form.valueChanges.pipe(throttleTime(500))
+            .subscribe(() => this.onDataChange());
     }
 
     private validate() {

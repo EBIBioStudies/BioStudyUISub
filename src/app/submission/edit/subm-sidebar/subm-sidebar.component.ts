@@ -73,12 +73,11 @@ export class SubmSidebarComponent implements OnChanges, DoCheck {
         }
 
         if (this.sectionForm !== undefined) {
-            this.subscr = this.sectionForm.valueChanges$.subscribe(() => {
+            this.subscr = this.sectionForm.structureChanges$.subscribe(() => {
                 this.invalidControls = this.sectionForm!.invalidControls();
             });
         }
     }
-
 
     /**
      * Scrolls to and sets focus on the field represented by the form control clicked on within the check tab.

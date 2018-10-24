@@ -12,7 +12,7 @@ import {
 import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms';
 import {ErrorMessages, FormValidators, ValueValidators} from './form-validators';
 import {fromNullable} from 'fp-ts/lib/Option';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, Subject, Subscription} from 'rxjs';
 import {typeaheadSource} from './typeahead.utils';
 import {throttleTime} from 'rxjs/operators';
 import * as pluralize from 'pluralize';
@@ -175,6 +175,8 @@ export class FeatureForm {
 
     columnNamesAvailableCached: string[] = [];
 
+    structureChanges$: Subject<StructureChangeEvent> = new Subject<StructureChangeEvent>();
+
     constructor(private feature: Feature) {
         this.form = new FormGroup({
             columns: new FormGroup({}, FormValidators.forFeatureColumns(feature)),
@@ -197,8 +199,14 @@ export class FeatureForm {
         this.columnNamesAvailableCached = this.columnNamesAvailable();
 
         this.form.valueChanges.pipe(throttleTime(500)).subscribe(() => {
-            this.errorCount = listOfInvalidControls(this.form).length;
+            this.onValueFormChanges();
         });
+
+        this.onValueFormChanges();
+    }
+
+    private onValueFormChanges() {
+        this.errorCount = listOfInvalidControls(this.form).length;
     }
 
     private get columnsForm(): FormGroup {
@@ -359,15 +367,14 @@ export class FeatureForm {
         const row = this.feature.addRow();
         if (row !== undefined) {
             this.addRowForm(row, this.feature.columns);
-            this.updateValueAndValidity();
+            this.structureChanges$.next(StructureChangeEvent.featureRowAdd);
         }
     }
 
     removeRow(rowIndex: number) {
         if (this.feature.removeRowAt(rowIndex)) {
-            this.rowForms.splice(rowIndex, 1);
-            this.rowFormArray.removeAt(rowIndex);
-            this.updateValueAndValidity();
+            this.removeRowForm(rowIndex);
+            this.structureChanges$.next(StructureChangeEvent.featureRowRemove);
         }
     }
 
@@ -376,17 +383,15 @@ export class FeatureForm {
         if (column !== undefined) {
             this.addColumnControl(column);
             this.rowForms.forEach(rf => rf.addCellControl(column));
-            this.updateValueAndValidity();
+            this.structureChanges$.next(StructureChangeEvent.featureColumnAdd);
         }
     }
 
     removeColumn(columnId: string) {
-        const index = this.columnControls.findIndex(c => c.id === columnId);
         if (this.feature.removeColumn(columnId)) {
-            this.columnControls.splice(index, 1);
-            this.columnsForm.removeControl(columnId);
+            this.removeColumnControl(columnId);
             this.rowForms.forEach(rf => rf.removeCellControl(columnId));
-            this.updateValueAndValidity();
+            this.structureChanges$.next(StructureChangeEvent.featureColumnRemove);
         }
     }
 
@@ -402,14 +407,15 @@ export class FeatureForm {
         return this.feature.canAddMoreColumns();
     }
 
-    updateValueAndValidity() {
-        this.form.updateValueAndValidity();
-    }
-
     private addRowForm(row: ValueMap, columns: Attribute[]) {
         const rowForm = new RowForm(row, columns, this.featureTypeName);
         this.rowForms.push(rowForm);
         this.rowFormArray.push(rowForm.form);
+    }
+
+    private removeRowForm(rowIndex: number) {
+        this.rowForms.splice(rowIndex, 1);
+        this.rowFormArray.removeAt(rowIndex);
     }
 
     private addColumnControl(column: Attribute) {
@@ -417,6 +423,23 @@ export class FeatureForm {
         this.columnControls.push(colControl);
         this.columnsForm.addControl(column.id, colControl.control);
     }
+
+    private removeColumnControl(columnId: string) {
+        const index = this.columnControls.findIndex(c => c.id === columnId);
+        this.columnControls.splice(index, 1);
+        this.columnsForm.removeControl(columnId);
+    }
+}
+
+export class StructureChangeEvent {
+    constructor(readonly name: string){}
+    static init: StructureChangeEvent = new StructureChangeEvent('init');
+    static featureAdd: StructureChangeEvent = new StructureChangeEvent('featureAdd');
+    static featureRemove: StructureChangeEvent = new StructureChangeEvent('featureRemove');
+    static featureRowAdd: StructureChangeEvent = new StructureChangeEvent('featureRowAdd');
+    static featureRowRemove: StructureChangeEvent = new StructureChangeEvent('featureRowRemove');
+    static featureColumnAdd: StructureChangeEvent = new StructureChangeEvent('featureColumnAdd');
+    static featureColumnRemove: StructureChangeEvent = new StructureChangeEvent('featureColumnRemove');
 }
 
 export class SectionForm {
@@ -425,7 +448,11 @@ export class SectionForm {
     readonly fieldControls: FieldControl[] = [];
     readonly featureForms: FeatureForm[] = [];
 
-    readonly valueChanges$ = new BehaviorSubject<any>({});
+    /* can use form's valueChanges, but then the operations like add/remove column will not be atomic,
+    as it requires to apply multiple changes at once */
+    readonly structureChanges$ = new BehaviorSubject<StructureChangeEvent>(StructureChangeEvent.init);
+
+    private sb: Map<string, Subscription> = new Map<string, Subscription>();
 
     constructor(readonly section: Section) {
         this.form = new FormGroup({
@@ -444,10 +471,6 @@ export class SectionForm {
                 this.addFeatureForm(feature);
             }
         );
-
-        this.form.valueChanges.pipe(
-            throttleTime(500)
-        ).subscribe(changes => this.valueChanges$.next(changes));
     }
 
     invalidControls(): FormControl[] {
@@ -468,9 +491,10 @@ export class SectionForm {
         }
 
         if (this.section.features.removeById(featureId)) {
+            this.unsubscribe(featureId);
             this.featureForms.splice(index, 1);
             this.featuresForm.removeControl(featureId);
-            this.featuresForm.updateValueAndValidity();
+            this.structureChanges$.next(StructureChangeEvent.featureRemove);
         }
     }
 
@@ -499,5 +523,17 @@ export class SectionForm {
         const featureForm = new FeatureForm(feature);
         this.featureForms.push(featureForm);
         this.featuresForm.addControl(feature.id, featureForm.form);
+        this.subscribe(featureForm);
+    }
+
+    private subscribe(featureForm : FeatureForm) {
+        this.sb.set(featureForm.id, featureForm.structureChanges$.subscribe(ev => {
+            this.structureChanges$.next(ev);
+        }));
+    }
+
+    private unsubscribe(featureId: string) {
+        this.sb.get(featureId)!.unsubscribe();
+        this.sb.delete(featureId);
     }
 }
