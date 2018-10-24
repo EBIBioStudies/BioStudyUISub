@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 
 @Component({
     selector: 'file-tree-dropdown',
@@ -8,7 +8,7 @@ import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} f
         '(document:click)': 'onOutsideClick($event)',
     },
 })
-export class FileTreeDropdownComponent implements OnInit {
+export class FileTreeDropdownComponent implements OnInit, OnDestroy {
     @Input() isOpen = false;
     @Input() targetElement: any;
     @Output() fileSelect = new EventEmitter();
@@ -59,6 +59,12 @@ export class FileTreeDropdownComponent implements OnInit {
     ngOnInit(): void {
         if (this.isInBodyContainer()) {
             document.body.appendChild(this.elementRef.nativeElement);
+        }
+    }
+
+    ngOnDestroy(): void {
+        if (this.isInBodyContainer()) {
+            document.body.removeChild(this.elementRef.nativeElement);
         }
     }
 
