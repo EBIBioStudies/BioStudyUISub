@@ -1,5 +1,5 @@
 export const BIATemplate = {
-    'name': 'High Content Screen Image Template',
+    'name': 'BIA',
     'description': 'High Content Screen Image Study',
     'sectionType': {
         'name': 'Study',
@@ -10,6 +10,15 @@ export const BIATemplate = {
                 'icon': 'fa-title',
                 'valueType': {'name': 'largetext', 'minlength': 25},
                 'display': 'required',
+            },
+            {
+                'name': 'ReleaseDate',
+                'icon': 'fa-calendar',
+                'display': 'required',
+                'valueType': {
+                    'name': 'date',
+                    'allowPast': false
+                }
             },
             {
                 'name': 'Description',
@@ -31,9 +40,10 @@ export const BIATemplate = {
                 'name': 'Key words',
                 'icon': 'fa-comment',
                 'valueType': {'name': 'largetext'}
-            },
+            }
         ],
-        'sectionType': {
+        'sectionTypes': [
+            {
             'name': 'Screen',
             'display': 'required',
             'minCount': 3,
@@ -297,5 +307,6 @@ export const BIATemplate = {
                 }
             ]
         }
+        ]
     }
 };

@@ -9,7 +9,7 @@ import {
     ValueTypeFactory,
     ValueTypeName
 } from '../../../shared/model';
-import {Observable, Subject} from 'rxjs';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {typeaheadSource} from '../typeahead.utils';
 
 
@@ -48,7 +48,7 @@ export class InputValueComponent implements ControlValueAccessor {
     private _value = '';
     private suggestLength: number;
 
-    private valueChanges$: Subject<string> = new Subject<string>();
+    private valueChanges$: Subject<string> = new BehaviorSubject<string>('');
 
     @Output() async: EventEmitter<any> = new EventEmitter<any>();  //signals availability of asynchronous attributes
 
@@ -73,7 +73,10 @@ export class InputValueComponent implements ControlValueAccessor {
     set value(value) {
         this._value = value;
         this.onChange(value);
-        this.valueChanges$.next(value);
+    }
+
+    onKeyDown() {
+        this.valueChanges$.next(this.value);
     }
 
     writeValue(value: any): void {

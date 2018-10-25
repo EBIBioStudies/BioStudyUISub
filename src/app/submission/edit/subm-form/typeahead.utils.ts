@@ -3,11 +3,9 @@ import {map, mergeMap} from 'rxjs/operators';
 
 export function typeaheadSource(sourceFunc: () => string[], valueChanges: Observable<string>): Observable<string[]> {
     return valueChanges.pipe(
-        map((token: string) => {
-            return new RegExp(token, 'ig');
-        }),
-        mergeMap((query: RegExp) => {
-                const v = sourceFunc().filter(v => v.match(query));
+        map(token => token.toLowerCase()),
+        mergeMap((token: string) => {
+                const v = sourceFunc().filter(v => v.toLowerCase().includes(token));
                 return of(v);
             }
         )

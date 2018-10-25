@@ -146,17 +146,7 @@ export class Columns {
 class Rows {
     private rows: ValueMap[] = [];
 
-    constructor(singleRow: boolean = false) {
-        if (singleRow) {
-            this.add([]);
-
-            this.add = (_: string[]) => {
-                throw new Error('Can not add row to a single row set');
-            };
-            this.removeAt = (_: number) => {
-                throw new Error('Can not remove row from a single row set');
-            };
-        }
+    constructor(private singleRow: boolean = false) {
     }
 
     list(): ValueMap[] {
@@ -168,6 +158,9 @@ class Rows {
     }
 
     add(keys: string[]): ValueMap {
+        if (this.singleRow && !this.rows.isEmpty()) {
+            throw new Error('Can not add more than one row to a single row feature');
+        }
         const row = new ValueMap(keys);
         this.rows.push(row);
         return row;
@@ -274,7 +267,7 @@ export class Feature {
     }
 
     get isEmpty(): boolean {
-        return (this.singleRow ? this.colSize() : this.rowSize()) === 0;
+        return this.rowSize() === 0;
     }
 
     add(attributes: AttributeData[] = [], rowIdx?: number): void {
@@ -313,9 +306,6 @@ export class Feature {
     }
 
     private getOrCreateRow(rowIdx?: number): ValueMap | undefined {
-        if (this.singleRow) {
-            return this._rows.at(0);
-        }
         return (rowIdx === undefined) ? this.addRow() : this._rows.at(rowIdx);
     }
 
@@ -369,12 +359,11 @@ export class Feature {
     }
 
     canAddRow(): boolean {
-        return !this.type.displayType.isReadonly && !this.singleRow;
+        return !this.type.displayType.isReadonly && (!this.singleRow || this.rowSize() === 0);
     }
 
     canRemoveRow(): boolean {
-        return !this.singleRow &&
-            !this.type.displayType.isReadonly &&
+        return !this.type.displayType.isReadonly &&
             (!this.type.displayType.isShownByDefault || this.rowSize() > 1) &&
             this.groups.every(g => featureGroupSize(g) > 1);
     }
@@ -389,8 +378,7 @@ export class Feature {
     canRemoveColumn(id: string): boolean {
         const column = this._columns.findById(id);
         return column !== undefined &&
-            !this.type.displayType.isReadonly &&
-            ((this.singleRow && this.type.displayType.isRemovable) || (!this.singleRow && column.displayType.isRemovable));
+            !this.type.displayType.isReadonly && column.displayType.isRemovable;
     }
 
     removeColumn(id: string): boolean {

@@ -1,7 +1,6 @@
 import {
     ATTACH_TO_ATTR,
     authors2Contacts,
-    filterAttributesByName,
     LinksUtils,
     mergeAttributes,
     PageTab,
@@ -13,7 +12,8 @@ import {DEFAULT_TEMPLATE_NAME, SubmissionType} from './templates';
 import {AttributeData, FeatureData, SectionData, Submission, SubmissionData} from './submission';
 
 function findSubmissionTemplateName(pageTab: PageTab): string {
-    const attachToValues: string[] = filterAttributesByName(pageTab, ATTACH_TO_ATTR)
+    const attachToValues: string[] = (pageTab.attributes || [])
+        .filter(attr => attr.name === ATTACH_TO_ATTR)
         .filter(at => String.isDefinedAndNotEmpty(at.value))
         .map(at => at.value!);
     return attachToValues.length === 1 ? attachToValues[0] : DEFAULT_TEMPLATE_NAME;

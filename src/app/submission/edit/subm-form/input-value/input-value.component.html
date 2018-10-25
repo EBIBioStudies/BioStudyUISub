@@ -8,12 +8,12 @@
            [(ngModel)]="value"
            [readonly]="readonly"
            (blur)="onBlur()"
+           (keydown)="onKeyDown()"
            [typeahead]="readonly ? [] : typeahead"
            [typeaheadMinLength]="suggestThreshold"
            [typeaheadOptionsLimit]="200"
            [typeaheadScrollable]="true"
-           [typeaheadOptionsInScrollableView]="suggestLength"
-           #ahead="bs-typeahead"/>
+           [typeaheadOptionsInScrollableView]="suggestLength"/>
 
     <textarea *ngSwitchCase="ValueTypeNameEnum.largetext"
               class="form-control"

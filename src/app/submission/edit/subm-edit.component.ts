@@ -419,7 +419,7 @@ export class SubmEditComponent implements OnInit {
         }
         this.section = path[path.length - 1];
         this.sectionForm = new SectionForm(this.section);
-        this.sectionForm.form.valueChanges.pipe(throttleTime(500))
+        this.sectionForm.form.valueChanges.pipe(throttleTime(900))
             .subscribe(() => this.onDataChange());
     }
 

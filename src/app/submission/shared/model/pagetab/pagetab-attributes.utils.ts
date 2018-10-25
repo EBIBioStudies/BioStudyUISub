@@ -26,13 +26,6 @@ export function mergeAttributes(attrs1: PtAttribute[], attrs2: PtAttribute[]): P
     return merged;
 }
 
-export function filterAttributesByName(pageTab: PageTab, name: string): PtAttribute[] {
-    if (pageTab.section === undefined) {
-        return [];
-    }
-    return (pageTab.section.attributes || []).filter(attr => attr.name === name);
-}
-
 /* Adds 'AttachTo' attributes to a given submission's root level, leaving other existing attributes intact.*/
 export function updateAttachToAttribute(obj: PageTab, projectIds: string[]): PageTab {
     const objCopy = Object.assign({}, obj);
