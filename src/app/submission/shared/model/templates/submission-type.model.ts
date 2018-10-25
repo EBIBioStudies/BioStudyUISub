@@ -336,6 +336,7 @@ export class SectionType extends TypeBase {
     readonly displayType: DisplayType;
     readonly annotationsType: AnnotationsType;
     readonly featureGroups: string[][];
+    readonly minRequired: number;
 
     private fieldScope: TypeScope<FieldType> = new TypeScope<FieldType>();
     private featureScope: TypeScope<FeatureType> = new TypeScope<FeatureType>();
@@ -352,6 +353,7 @@ export class SectionType extends TypeBase {
         this.displayType = DisplayType.create(data.display);
         this.display = this.displayType.name;
         this.featureGroups = (data.featureGroups || []).filter(gr => !gr.isEmpty());
+        this.minRequired = data.minRequired || 1;
 
         this.annotationsType = new AnnotationsType(data.annotationsType, new TypeScope<AnnotationsType>(), isTemplBased);
 

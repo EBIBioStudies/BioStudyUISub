@@ -562,13 +562,13 @@ export class Section {
     readonly sections: Sections;
     readonly tags: Tags;
 
-    constructor(type: SectionType, data: SectionData = <SectionData>{}) {
+    constructor(type: SectionType, data: SectionData = <SectionData>{}, accno:string = '') {
         this.tags = Tags.create(data);
 
         this.id = `section_${nextId()}`;
         this.type = type;
 
-        this._accno = data.accno || '';
+        this._accno = data.accno || accno;
 
         this.fields = new Fields(type, data);
 
@@ -627,7 +627,9 @@ export class Sections {
 
         type.sectionTypes.forEach(st => {
             if (st.displayType.isShownByDefault) {
-                this.add(st, sectionData[st.name]);
+                Array(st.minRequired).fill(0).forEach((_, i) => {
+                    this.add(st, sectionData[st.name], st.name + '-' + (i + 1));
+                });
                 sectionData[st.name] = undefined;
             }
         });
@@ -648,8 +650,8 @@ export class Sections {
         return this.sections.slice();
     }
 
-    add(type: SectionType, data?: SectionData): Section {
-        const s = new Section(type, data);
+    add(type: SectionType, data?: SectionData, accno?:string): Section {
+        const s = new Section(type, data, accno);
         this.sections.push(s);
         return s;
     }
