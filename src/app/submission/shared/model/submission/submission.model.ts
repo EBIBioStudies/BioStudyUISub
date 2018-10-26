@@ -615,6 +615,7 @@ export class Section {
 
 export class Sections {
     private sections: Section[];
+    private nextIdx: number = 0;
 
     /* Fills in existed data if given. Data with types defined in the template goes first. */
     constructor(type: SectionType, data: SectionData = {} as SectionData) {
@@ -648,8 +649,8 @@ export class Sections {
         return this.sections.slice();
     }
 
-    add(type: SectionType, data?: SectionData, accno?:string): Section {
-        const s = new Section(type, data, accno);
+    add(type: SectionType, data?: SectionData, accno?: string): Section {
+        const s = new Section(type, data, accno || type.name + '-' + (++this.nextIdx));
         this.sections.push(s);
         return s;
     }
