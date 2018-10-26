@@ -59,9 +59,9 @@
     <li *ngIf="isEditModeOff && userData.isPrivileged" class="text-right">
         <button *ngIf="!collapsed" class="advanced-btn btn btn-link btn-sm"
                 (click)="onAdvancedToggle()">
-            <i class="fa fa-lg" aria-hidden="true"
-               [ngClass]="{'fa-caret-square-o-down': isAdvancedClosed,
-                               'fa-caret-square-o-up': isAdvancedOpen}"></i>
+            <i class="far fa-lg" aria-hidden="true"
+               [ngClass]="{'fa-caret-square-down': isAdvancedClosed,
+                               'fa-caret-square-up': isAdvancedOpen}"></i>
             Advanced
         </button>
         <ul class="sidebar-menu advanced-menu text-left"
