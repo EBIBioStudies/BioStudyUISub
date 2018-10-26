@@ -18,8 +18,7 @@ export class SubmSidebarComponent implements OnChanges, DoCheck {
     @Output() toggle? = new EventEmitter();                                  //event triggered when collapsed state changes
 
     isCheckTabActive: boolean = true;        //flag indicating if form status or "check" tab is being displayed
-    numInvalid: number = 0;
-    numInvalidAndTouched: number = 0;
+    invalidControls: FormControl[] = [];
 
     private subscr?: Subscription;
 
@@ -28,6 +27,13 @@ export class SubmSidebarComponent implements OnChanges, DoCheck {
     get isEditTabActive(): boolean {
         return !this.isCheckTabActive;
     }
+
+    get numInvalid(): number {
+        return this.invalidControls.length;
+    }
+    get numInvalidAndTouched(): number {
+        return this.invalidControls.filter(c => c.touched).length;
+    };
 
     onCheckTabClick(): void {
         this.isCheckTabActive = true;
@@ -42,9 +48,7 @@ export class SubmSidebarComponent implements OnChanges, DoCheck {
     }
 
     ngDoCheck() {
-        const invalid = this.controls.filter(c => c.invalid);
-        this.numInvalidAndTouched = invalid.filter(c => c.touched).length;
-        this.numInvalid = invalid.length;
+        this.invalidControls = this.controls.filter(c => c.invalid);
     }
 
     /**
