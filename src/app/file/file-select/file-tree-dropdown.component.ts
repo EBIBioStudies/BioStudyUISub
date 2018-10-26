@@ -63,7 +63,7 @@ export class FileTreeDropdownComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        if (this.isInBodyContainer()) {
+        if (this.isInBodyContainer() && document.body.contains(this.elementRef.nativeElement)) {
             document.body.removeChild(this.elementRef.nativeElement);
         }
     }
