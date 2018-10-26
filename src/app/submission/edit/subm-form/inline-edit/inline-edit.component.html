@@ -16,6 +16,7 @@
            (blur)="onBlur($event)"
            (click)="canEdit && startEditing()"
            (keyup.enter)="onEnterKey($event, ahead._container)"
+           (keydown)="onKeyDown()"
            #ahead="bs-typeahead"
            #inlineEditBox/>
     <div *ngIf="!editing" class="icons">
@@ -25,7 +26,7 @@
         </button>
         <button *ngIf="canRemove" class="btn btn-xs btn-link" type="button"
                 (click)="onRemove($event)">
-            <i class="text-danger fa fa-trash-o"></i>
+            <i class="text-danger fas fa-trash-alt"></i>
         </button>
     </div>
 </div>

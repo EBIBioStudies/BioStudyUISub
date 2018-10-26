@@ -149,7 +149,7 @@ export const EutoxriskTemplate = {
             {
                 'name': 'Contact',
                 'title': 'Add Contacts',
-                'icon': 'fa-vcard',
+                'icon': 'fa-address-card',
                 'description': 'Add the contact details for the authors involved in the study.',
                 'uniqueCols': true,
                 'display': 'required',

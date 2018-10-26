@@ -52,7 +52,7 @@
                             placement="bottom"
                             container="body"
                             (click)="toggleCollapsed()">
-                        <i class="fa fa-fw fa-lg fa-cloud-upload"></i>
+                        <i class="fas fa-fw fa-lg fa-cloud-upload-alt"></i>
                         <span>Submissions</span>
                     </button>
                 </li>
@@ -98,7 +98,7 @@
                     <button class="btn navbar-btn"
                             (click)="signOut()"
                             [disabled]="isBusy">
-                        <i *ngIf="!isBusy" class="fa fa-fw fa-sign-out fa-lg"></i>
+                        <i *ngIf="!isBusy" class="fa fa-fw fa-sign-out-alt fa-lg"></i>
                         <i *ngIf="isBusy" class="fa fa-fw fa-cog fa-spin fa-lg"></i>
                         <span>Log out</span>
                     </button>

@@ -18,7 +18,7 @@ export const DefaultTemplate = {
             },
             {
                 'name': 'ReleaseDate',
-                'icon': 'fa-calendar',
+                'icon': 'fa-calendar-alt',
                 'display': 'required',
                 'valueType': {
                     'name': 'date',
@@ -132,7 +132,7 @@ export const DefaultTemplate = {
                 'name': 'Contact',
                 'title': 'Add Contacts',
                 'description': 'Add the contact details for the authors involved in the study.',
-                'icon': 'fa-vcard',
+                'icon': 'fa-address-card',
                 'display': 'required',
                 'uniqueCols': true,
                 'columnTypes': [

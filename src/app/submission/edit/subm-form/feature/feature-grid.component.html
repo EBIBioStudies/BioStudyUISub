@@ -1,7 +1,7 @@
 <div class="container-fluid container-scroll" [formGroup]="featureForm?.form">
     <div class="row">
         <div class="cell canton col-xs-1 col-md-1 text-center">
-            <button *ngIf="featureForm.canAddMoreColumns()"
+            <button *ngIf="featureForm.canAddColumn()"
                     class="btn-add btn btn-link btn-md" type="button" tabindex="-1"
                     [ngClass]="{'invisible': readonly || !userData.isPrivileged}"
                     [tooltip]="'Add a new ' + featureForm.featureTypeName.toLowerCase() + ' attribute'"
@@ -12,7 +12,7 @@
 
         </div>
         <div *ngFor="let column of columns; let idx = index" class="cell heading-cell column-heading col-xs-3 col-md-2"
-             [ngClass]="{'optional': !readonly && column.isRemovable,
+             [ngClass]="{'optional': featureForm.canRemoveColumn(column),
                             'has-error': column.hasErrors}">
             <inline-edit placement="bottom"
                          container="body"
@@ -21,10 +21,10 @@
                          emptyValue="{{'Column ' + (idx + 1)}}"
                          [formControl]="column.control"
                          [readonly]="readonly || !column.canEditName || !userData.isPrivileged"
-                         [removable]="column.isRemovable"
+                         [removable]="featureForm.canRemoveColumn(column)"
                          [autosuggestSource]="featureForm.columnNamesAvailable"
-                         (remove)="featureForm.removeColumn(column.id)"
-                         [submControlName]="featureForm.featureTypeName + ' column name'"
+                         (remove)="featureForm.removeColumn(column)"
+                         [submControlName]="column.name"
                          [submControlIcon]="featureForm.icon">
             </inline-edit>
         </div>
@@ -33,7 +33,7 @@
         <div *ngIf="!readonly || !row.isEmpty" class="row" #rowEl>
             <div class="cell heading-cell row-heading col-xs-1 col-md-1 text-center">
                 <span container="body"
-                      [tooltip]="featureForm.canRemoveRow ? '' : 'The table must contain one row at least'">
+                      [tooltip]="featureForm.canRemoveRow() ? '' : 'The table must contain one row at least'">
                     <button class="btn btn-danger btn-sm" type="button"
                             [ngClass]="{'invisible': readonly}"
                             [disabled]="!featureForm.canRemoveRow()"
@@ -41,7 +41,7 @@
                             [tooltip]="featureForm.canRemoveRow ? 'Delete ' + featureForm.featureTypeName.toLowerCase() + ' ' + (rowIdx + 1) : ''"
                             placement="bottom"
                             container="body">
-                        <i class="fa fa-trash"></i>
+                        <i class="far fa-trash-alt"></i>
                     </button>
                 </span>
                 {{rowIdx+1}}
@@ -66,7 +66,7 @@
         </div>
     </div>
 </div>
-<button *ngIf="!readonly" type="button" class="btn-add btn btn-link" tabindex="-1"
+<button *ngIf="featureForm.canAddRow()" type="button" class="btn-add btn btn-link" tabindex="-1"
         [tooltip]="'Add a new ' + featureForm.prettyName"
         container="body"
         (click)="featureForm.addRow()">

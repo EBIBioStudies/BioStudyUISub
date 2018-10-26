@@ -160,7 +160,7 @@ export class SubmSidebarComponent implements OnChanges, DoCheck {
             return 'too short';
         } else if (errors.pattern) {
             return 'wrong format';
-        } else if (errors.uniqueColumn) {
+        } else if (errors.unique) {
             return 'not unique'
         }
         return Object.keys(errors)[0];

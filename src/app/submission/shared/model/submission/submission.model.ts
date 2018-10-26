@@ -192,7 +192,6 @@ class Rows {
 }
 
 type FeatureGroup = Feature[];
-const featureGroupSize = (g: FeatureGroup) => g.map(f => f.rowSize()).reduce((rv, v) => rv + v, 0);
 
 export class Feature {
     readonly id: string;
@@ -290,11 +289,8 @@ export class Feature {
             const requiredColCount = newColNames.filter(name => name === colName).length;
             let colCount = existedColNames.filter(name => name === colName).length;
             while (colCount < requiredColCount) {
-                const col = this.addColumn(colName, colType!.valueType, colType!.displayType);
+                this.addColumn(colName, colType!.valueType, colType!.displayType);
                 colCount++;
-                if (col === undefined) {
-                    throw new Error(`can't add column ${colName}`);
-                }
             }
 
             const attrs = attrsWithName.filter(attr => attr.name === colName);
@@ -309,85 +305,38 @@ export class Feature {
         return (rowIdx === undefined) ? this.addRow() : this._rows.at(rowIdx);
     }
 
-    addColumn(name?: string, valueType?: ValueType, displayType?: DisplayType, isTemplateBased: boolean = false): Attribute | undefined {
+    addColumn(name?: string, valueType?: ValueType, displayType?: DisplayType, isTemplateBased: boolean = false): Attribute {
         const defColName = (this.singleRow ? this.typeName : 'Column') + ' ' + this._columns.nextIndex;
         let colName = name || defColName;
-
-        if (!isTemplateBased && !this.type.allowCustomCols) {
-            if (this.type.columnTypes.length === 0) {
-                console.error(`Can't create column for ${this.typeName}; column types are not defined and custom columns are not allowed`);
-                return undefined;
-            }
-            let colType = this.type.columnTypes.find(t => this._columns.findByType(t) === undefined);
-            if (colType === undefined && this.type.uniqueCols) {
-                return undefined;
-            }
-            colType = colType || this.type.columnTypes[0];
-            colName = colType.name;
-            valueType = colType.valueType;
-            isTemplateBased = true;
-        }
-
-        if (this.canAddColumn(colName, isTemplateBased)) {
-            let col = new Attribute(colName, valueType, displayType, isTemplateBased);
-
-            this._rows.addKey(col.id);
-            this._columns.add(col);
-
-            return col;
-        }
-        return undefined;
+        let col = new Attribute(colName, valueType, displayType, isTemplateBased);
+        this._rows.addKey(col.id);
+        this._columns.add(col);
+        return col;
     }
 
     addRow(): ValueMap | undefined {
-        if (this.canAddRow) {
+        if (this.canAddRow()) {
             return this._rows.add(this._columns.keys());
         }
         return undefined;
     }
 
-    canAddMoreColumns(): boolean {
-        return this.type.allowCustomCols || !this.type.uniqueCols || this._columns.size() < this.type.columnTypes.length;
-    }
-
-    private canAddColumn(name: string, isTemplateBased: boolean): boolean {
-        const notExists = this.columns.find(col => col.name === name) === undefined;
-        if (notExists) {
-            return isTemplateBased || this.type.allowCustomCols;
-        }
-        return !this.type.uniqueCols;
-    }
-
     canAddRow(): boolean {
-        return !this.type.displayType.isReadonly && (!this.singleRow || this.rowSize() === 0);
-    }
-
-    canRemoveRow(): boolean {
-        return !this.type.displayType.isReadonly &&
-            (!this.type.displayType.isShownByDefault || this.rowSize() > 1) &&
-            this.groups.every(g => featureGroupSize(g) > 1);
+        return (!this.singleRow || this.rowSize() === 0);
     }
 
     removeRowAt(index: number): boolean {
-        if (this.canRemoveRow()) {
-            return this._rows.removeAt(index);
-        }
-        return false;
-    }
-
-    canRemoveColumn(id: string): boolean {
-        const column = this._columns.findById(id);
-        return column !== undefined &&
-            !this.type.displayType.isReadonly && column.displayType.isRemovable;
+        return this._rows.removeAt(index);
     }
 
     removeColumn(id: string): boolean {
-        if (this.canRemoveColumn(id)) {
-            this._columns.remove(id);
-            this._rows.removeKey(id);
-            return true;
-        }
-        return false;
+        this._columns.remove(id);
+        this._rows.removeKey(id);
+        return true;
+    }
+
+    findColumnById(columnId: string): Attribute | undefined {
+        return this._columns.findById(columnId);
     }
 }
 

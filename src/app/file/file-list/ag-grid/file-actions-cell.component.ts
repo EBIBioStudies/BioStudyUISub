@@ -10,7 +10,7 @@ import {FileUpload} from '../../shared/file-upload-list.service';
                     type="button" class="btn btn-danger btn-xs btn-flat"
                     tooltip="Delete"
                     (click)="onFileRemove($event)">
-                <i class="fa fa-trash-o fa-fw"></i>
+                <i class="fas fa-trash-alt fa-fw"></i>
             </button>
             <button *ngIf="canCancel"
                     type="button" class="btn btn-warning btn-xs"

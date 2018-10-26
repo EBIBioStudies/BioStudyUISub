@@ -13,12 +13,12 @@
                               container="body">
                               <button type="button" tabindex="-1"
                                       class="btn btn-sm btn-danger btn-flat"
-                                      (click)="featureForm.removeColumn(column.id)"
+                                      (click)="featureForm.removeColumn(column)"
                                       [disabled]="!featureForm.canRemoveColumn(column)"
                                       [tooltip]="'Delete &quot;' + column.name + '&quot; entry'"
                                       placement="bottom"
                                       container="body">
-                                   <i class="fa fa-trash-o"></i>
+                                   <i class="fas fa-trash-alt"></i>
                               </button>
                         </span>
                         <input type="text" class="form-control input-sm"
@@ -61,7 +61,7 @@
         </div>
     </div>
 </div>
-<div class="row" *ngIf="featureForm.canAddMoreColumns()">
+<div class="row" *ngIf="featureForm.canAddColumn()">
     <div class="col-xs-1 col-md-1">
         <button *ngIf="!readonly"
                 type="button"

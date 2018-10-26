@@ -2,7 +2,7 @@ import {Component, ElementRef, EventEmitter, forwardRef, Input, Output} from '@a
 
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {AppConfig} from '../../../../app.config';
-import {Observable, Subject} from 'rxjs';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {typeaheadSource} from '../typeahead.utils';
 
 @Component({
@@ -21,7 +21,6 @@ export class InlineEditComponent implements ControlValueAccessor {
     @Input() suggestThreshold = 0;
     @Input() autosuggestSource: () => string[] = () => [];
 
-
     @Output() remove = new EventEmitter<any>();
 
     editing: boolean = false;
@@ -35,7 +34,7 @@ export class InlineEditComponent implements ControlValueAccessor {
     private suggestLength: number;
 
     readonly typeahead: Observable<string[]>;
-    private valueChanges$: Subject<string> = new Subject<string>();
+    private valueChanges$: Subject<string> = new BehaviorSubject<string>('');
 
     /**
      * Sets the max number of suggestions shown at any given time.
@@ -57,7 +56,6 @@ export class InlineEditComponent implements ControlValueAccessor {
         if (v !== this._value) {
             this._value = v;
             this.onChange(v);
-            this.valueChanges$.next(v);
         }
     }
 
@@ -71,6 +69,10 @@ export class InlineEditComponent implements ControlValueAccessor {
 
     registerOnTouched(fn: () => {}): void {
         this.onTouched = fn;
+    }
+
+    onKeyDown() {
+        this.valueChanges$.next(this.value);
     }
 
     get canEdit(): boolean {

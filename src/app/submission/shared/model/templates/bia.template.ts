@@ -13,7 +13,7 @@ export const BIATemplate = {
             },
             {
                 'name': 'ReleaseDate',
-                'icon': 'fa-calendar',
+                'icon': 'fa-calendar-alt',
                 'display': 'required',
                 'valueType': {
                     'name': 'date',
@@ -120,7 +120,7 @@ export const BIATemplate = {
                 {
                     'name': 'Contact',
                     'title': 'Add Contacts',
-                    'icon': 'fa-vcard',
+                    'icon': 'fa-address-card',
                     'description': 'Add the contact details for the authors involved in the study.',
                     'uniqueCols': true,
                     'display': 'required',
@@ -208,12 +208,28 @@ export const BIATemplate = {
                     ]
                 },
                 {
+                    'name': 'LibraryFile',
+                    'title': 'Add Library File',
+                    'description': 'Specify library file',
+                    'icon': 'fa-file',
+                    'singleRow': true,
+                    'uniqueCols': true,
+                    'allowCustomCols': false,
+                    'display': 'required',
+                    'columnTypes': [
+                        {
+                            'name': 'Path',
+                            'valueType': {'name': 'file'},
+                            'display': 'required'
+                        }
+                    ]
+                },
+                {
                     'name': 'File',
                     'title': 'Add Files',
                     'description': 'Add the library file for the study and describe their respective scopes.',
                     'icon': 'fa-file',
                     'uniqueCols': true,
-                    'display': 'required',
                     'columnTypes': [
                         {
                             'name': 'Path',

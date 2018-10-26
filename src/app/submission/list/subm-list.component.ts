@@ -33,7 +33,7 @@ import {newPageTab, SUBMISSION_TEMPLATE_NAMES} from '../shared/model';
                 (click)="onDeleteSubmission()"
                 tooltip="Delete this submission"
                 container="body">
-            <i *ngIf="!isBusy" class="fa fa-trash-o fa-fw"></i>
+            <i *ngIf="!isBusy" class="fas fa-trash-alt fa-fw"></i>
             <i *ngIf="isBusy" class="fa fa-cog fa-spin fa-fw"></i>
         </button>`
 })
@@ -193,7 +193,7 @@ export class SubmListComponent {
         this.isBusy = true;
         this.userData.filteredProjectAccNumbers$(SUBMISSION_TEMPLATE_NAMES).subscribe(projects => {
             this.isBusy = false;
-            this.allowedPrj = projects;
+            this.allowedPrj = ['BIA', 'HeCaToS', 'EU-ToxRisk'];//projects;
         });
     }
 
