@@ -26,8 +26,6 @@ import {AppConfig} from '../app.config';
  * @see {@link ControlValueAccessor}
  */
 export class DateInputComponent implements ControlValueAccessor {
-    public dateValue: Date | undefined;
-
     @Input() allowPast?: boolean = undefined;
     @Input() maxDate?: Date = undefined;
     @Input() isSmall?: boolean = false;
@@ -37,6 +35,8 @@ export class DateInputComponent implements ControlValueAccessor {
 
     private onChange: any = () => {};
     private onTouched: any = () => {};
+
+    dateValue: Date | undefined;
 
     /**
      * Instantiates a new custom component, hiding the weeks column on the calendar and setting
@@ -80,12 +80,8 @@ export class DateInputComponent implements ControlValueAccessor {
      * @param value - Value to be stored.
      */
     writeValue(value: any) {
-        let dateArg: any;
-
-        //NOTE: The first time the field is rendered, it receives a value of null. Hence the typeof check.
-        if (typeof value === 'string') {
-            dateArg = value || Date.now();
-            this.onPickerSet(new Date(dateArg));
+        if (String.isDefinedAndNotEmpty(value)) {
+            this.onPickerSet(new Date(value));
         }
     }
 
