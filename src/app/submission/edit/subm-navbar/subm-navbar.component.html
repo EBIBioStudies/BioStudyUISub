@@ -13,7 +13,7 @@
                (click)="onSectionClick(sec)">
                 <span>
                     <span *ngIf="idx == 0">{{accno}}{{isDiscardable? ' (revised)' : ''}}</span>
-                    <span *ngIf="idx > 0">{{sec.typeName}}</span>
+                    <span *ngIf="idx > 0">{{sec.accno ? sec.accno : sec.typeName}}</span>
                 </span>
             </a>
         </span>

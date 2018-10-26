@@ -23,7 +23,7 @@ export class SubmSidebarComponent implements OnChanges, DoCheck {
 
     private subscr?: Subscription;
 
-    private invalidControls: FormControl[] = [];
+    private controls: FormControl[] = [];
 
     get isEditTabActive(): boolean {
         return !this.isCheckTabActive;
@@ -42,8 +42,9 @@ export class SubmSidebarComponent implements OnChanges, DoCheck {
     }
 
     ngDoCheck() {
-        this.numInvalidAndTouched = this.invalidControls.filter(c => c.touched).length;
-        this.numInvalid = this.invalidControls.length;
+        const invalid = this.controls.filter(c => c.invalid);
+        this.numInvalidAndTouched = invalid.filter(c => c.touched).length;
+        this.numInvalid = invalid.length;
     }
 
     /**
@@ -74,7 +75,7 @@ export class SubmSidebarComponent implements OnChanges, DoCheck {
 
         if (this.sectionForm !== undefined) {
             this.subscr = this.sectionForm.structureChanges$.subscribe(() => {
-                this.invalidControls = this.sectionForm!.invalidControls();
+                this.controls = this.sectionForm!.controls();
             });
         }
     }

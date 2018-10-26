@@ -120,5 +120,6 @@ function ptAttributes2AttributeData(attrs: PtAttribute[]): AttributeData[] {
 function flatArray<T>(array: (T | T[])[]): T[] {
     return array
         .map(el => Array.isArray(el) ? el : [el])
-        .reduce((rv, ar) => [...ar, ...rv], <T[]>[]);
+        .reduce((rv, ar) => [...ar, ...rv], <T[]>[])
+        .reverse();
 }

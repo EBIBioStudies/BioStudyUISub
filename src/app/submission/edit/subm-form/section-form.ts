@@ -473,8 +473,8 @@ export class SectionForm {
         );
     }
 
-    invalidControls(): FormControl[] {
-        return listOfInvalidControls(this.form);
+    controls(): FormControl[] {
+        return listOfControls(this.form).reverse();
     }
 
     scrollToControl(featureId: string): FormControl | undefined {

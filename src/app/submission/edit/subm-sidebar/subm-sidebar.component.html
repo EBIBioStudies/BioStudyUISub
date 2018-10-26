@@ -36,7 +36,7 @@
 
     <!-- Check tab -->
     <ul *ngIf="isCheckTabActive" class="sidebar-menu">
-        <li *ngIf="invalidControls.isEmpty() || isLoading || isSubmitting" class="center-vertically text-center"
+        <li *ngIf="numInvalid === 0 || isLoading || isSubmitting" class="center-vertically text-center"
             [ngClass]="{'col-xs-12': !collapsed}">
             <i class="fa " aria-hidden="true"
                [ngClass]="{

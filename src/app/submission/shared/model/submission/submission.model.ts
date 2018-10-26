@@ -562,7 +562,7 @@ export class Section {
     readonly sections: Sections;
     readonly tags: Tags;
 
-    constructor(type: SectionType, data: SectionData = <SectionData>{}, accno:string = '') {
+    constructor(type: SectionType, data: SectionData = <SectionData>{}, accno: string = '') {
         this.tags = Tags.create(data);
 
         this.id = `section_${nextId()}`;
@@ -616,30 +616,28 @@ export class Section {
 export class Sections {
     private sections: Section[];
 
+    /* Fills in existed data if given. Data with types defined in the template goes first. */
     constructor(type: SectionType, data: SectionData = {} as SectionData) {
         this.sections = [];
 
-        const sectionData = (data.sections || []).filter(s => String.isDefinedAndNotEmpty(s.type))
-            .reduce((rv, s) => {
-                rv[s.type!] = s;
-                return rv;
-            }, {});
-
         type.sectionTypes.forEach(st => {
-            if (st.displayType.isShownByDefault) {
-                Array(st.minRequired).fill(0).forEach((_, i) => {
-                    this.add(st, sectionData[st.name], st.name + '-' + (i + 1));
+            const sd = (data.sections || []).filter(s => s.type === st.name);
+            sd.forEach(d => {
+                this.add(st, d);
+            });
+
+            if (st.displayType.isShownByDefault && sd.length < st.minRequired) {
+                Array(st.minRequired - sd.length).fill(0).forEach((_, i) => {
+                    this.add(st, {});
                 });
-                sectionData[st.name] = undefined;
             }
         });
 
-        Object.keys(sectionData).forEach(key => {
-            const d = sectionData[key];
-            if (d !== undefined) {
-                this.add(type.getSectionType(d.type), d);
-            }
-        });
+        const definedTypes = type.sectionTypes.map(t => t.name);
+        (data.sections || []).filter(sd => sd.type === undefined || !definedTypes.includes(sd.type))
+            .forEach(sd => {
+                this.add(type.getSectionType(sd.type || 'UnknownSectionType'), sd);
+            });
     }
 
     get length(): number {
