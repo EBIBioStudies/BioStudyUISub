@@ -11,7 +11,7 @@
     </span>
 
     <span>
-        <strong class="text-muted" *ngIf="featureForm.isRequired">
+        <strong class="text-muted" *ngIf="featureForm.isRequired && featureForm.canHaveMultipleRows">
         (at least one is required)
         </strong>
         <strong class="text-danger" *ngIf="errorNum">Please review the fields below</strong>
