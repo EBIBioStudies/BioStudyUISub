@@ -4,21 +4,34 @@ import {Observable} from 'rxjs';
 import {SectionForm} from '../../subm-form/section-form';
 import {ConfirmDialogComponent} from '../../../../shared';
 import {UserData} from '../../../../auth';
-import {FeatureType} from '../../../shared/model';
+import {FeatureType, SectionType, TypeBase} from '../../../shared/model';
 import {CustomValidators} from '../../../shared/custom-validators';
 import {BsModalService} from 'ngx-bootstrap';
 import {AddSubmTypeModalComponent} from '../../modals/add-subm-type-modal.component';
 
-class FeatureTypeControl {
+const SECTION_ID = '@SECTION@';
+
+class DataTypeControl {
     deleted = false;
 
     readonly control: FormControl;
     readonly isReadonly: boolean;
 
-    constructor(private type: FeatureType, readonly id: string) {
+    constructor(private type: TypeBase,
+                readonly icon: string,
+                readonly description: string,
+                readonly id: string) {
         this.isReadonly = !type.canModify;
         this.control = new FormControl({value: type.name, disabled: this.isReadonly},
             [Validators.required, Validators.pattern('[a-zA-Z0-9_ ]*')]);
+    }
+
+    static fromFeatureType(type: FeatureType, id: string): DataTypeControl {
+        return new DataTypeControl(type, type.icon, type.description, id);
+    }
+
+    static fromSectionType(type: SectionType) {
+        return new DataTypeControl(type, 'fa-folder-plus', '', SECTION_ID);
     }
 
     reset(): void {
@@ -28,14 +41,6 @@ class FeatureTypeControl {
 
     update(): void {
         this.type.name = this.control.value;
-    }
-
-    get icon(): string {
-        return this.type.icon;
-    }
-
-    get description(): string {
-        return this.type.description;
     }
 
     get typeName(): string {
@@ -57,7 +62,7 @@ export class SubmEditSidebarComponent implements OnInit, OnChanges {
 
     isEditModeOn: boolean = false;
     isAdvancedOpen: boolean = false;
-    items: FeatureTypeControl[] = [];
+    items: DataTypeControl[] = [];
 
     @ViewChild('confirmDialog') confirmDialog?: ConfirmDialogComponent;
 
@@ -90,7 +95,11 @@ export class SubmEditSidebarComponent implements OnInit, OnChanges {
         bsModalRef.content.closeBtnName = 'Close';
     }
 
-    onItemClick(item: FeatureTypeControl): void {
+    onItemClick(item: DataTypeControl): void {
+        if (item.id === SECTION_ID) {
+            return;
+        }
+
         this.sectionForm!.addFeatureEntry(item.id);
 
         // scroll to the row/column
@@ -111,7 +120,7 @@ export class SubmEditSidebarComponent implements OnInit, OnChanges {
 
     }
 
-    onItemDelete(item: FeatureTypeControl): void {
+    onItemDelete(item: DataTypeControl): void {
         item.deleted = true;
         this.form!.removeControl(item.id);
     }
@@ -172,7 +181,9 @@ export class SubmEditSidebarComponent implements OnInit, OnChanges {
     }
 
     private updateItems(): void {
-        this.items = this.sectionForm!.featureForms.map(ff => new FeatureTypeControl(ff.featureType, ff.id));
+        this.items =
+            [...this.sectionForm!.featureForms.map(ff => DataTypeControl.fromFeatureType(ff.featureType, ff.id)),
+                ...this.sectionForm!.section.type.sectionTypes.map(st => DataTypeControl.fromSectionType(st))];
 
         const form = new FormGroup({}, CustomValidators.uniqueValues());
         this.items.forEach(item => form.addControl(item.id, item.control));

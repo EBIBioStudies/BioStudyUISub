@@ -59,7 +59,7 @@ class TypeScope<T extends TypeBase> {
 
 const GLOBAL_TYPE_SCOPE: TypeScope<TypeBase> = new TypeScope<TypeBase>();
 
-abstract class TypeBase {
+export abstract class TypeBase {
     constructor(private typeName: string,
                 readonly tmplBased: boolean,
                 private scope: TypeScope<TypeBase> = GLOBAL_TYPE_SCOPE) {

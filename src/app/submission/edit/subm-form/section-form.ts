@@ -354,11 +354,10 @@ export class FeatureForm {
         return this.rowForms[rowIndex].cellControlAt(columnId);
     }
 
-    /*adds one row or column depending on feature type */
     addEntry(): void {
-        if (this.canHaveMultipleRows) {
-            this.addRow();
-        } else {
+        this.addRow();
+
+        if (!this.canHaveMultipleRows) {
             this.addColumn();
         }
     }
