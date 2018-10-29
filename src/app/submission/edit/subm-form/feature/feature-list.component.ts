@@ -2,7 +2,7 @@ import {AfterViewInit, Component, ElementRef, Input, QueryList, ViewChildren} fr
 
 import {Attribute} from '../../../shared/model';
 import {AppConfig} from '../../../../app.config';
-import {ColumnControl, FeatureForm} from '../section-form';
+import {ColumnControl, FeatureForm} from '../../section-form';
 
 @Component({
     selector: 'subm-feature-list',

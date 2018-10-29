@@ -2,7 +2,7 @@ import {Component, DoCheck, EventEmitter, Input, OnChanges, Output} from '@angul
 import {FormControl, ValidationErrors} from '@angular/forms';
 import {ServerError} from '../../../http/server-error.handler';
 import {Subscription} from 'rxjs';
-import {FieldControl, SectionForm} from '../subm-form/section-form';
+import {FieldControl, SectionForm} from '../section-form';
 
 @Component({
     selector: 'subm-sidebar',

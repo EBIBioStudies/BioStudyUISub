@@ -1,5 +1,5 @@
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {SectionForm} from './section-form';
+import {SectionForm} from '../section-form';
 
 @Component({
     selector: 'subm-form',

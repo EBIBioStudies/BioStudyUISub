@@ -8,14 +8,14 @@ import {
     Section,
     ValueMap,
     ValueType
-} from '../../shared/model';
-import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms';
-import {ErrorMessages, FormValidators, ValueValidators} from './form-validators';
+} from '../shared/model';
+import {AbstractControl, FormArray, FormControl, FormGroup, ValidationErrors} from '@angular/forms';
 import {fromNullable} from 'fp-ts/lib/Option';
 import {BehaviorSubject, Observable, Subject, Subscription} from 'rxjs';
 import {typeaheadSource} from './typeahead.utils';
 import {throttleTime} from 'rxjs/operators';
 import * as pluralize from 'pluralize';
+import {ErrorMessages, SubmFormValidators} from './form-validators';
 
 function listOfControls(control: AbstractControl): FormControl[] {
     if (control instanceof FormGroup) {
@@ -41,7 +41,7 @@ export class FieldControl {
     readonly control: FormControl;
 
     constructor(readonly field: Field, readonly parentRef: string) {
-        this.control = new FormControl(field.value, ValueValidators.forField(this.field, parentRef));
+        this.control = new FormControl(field.value, SubmFormValidators.forField(this.field, parentRef));
         this.control.valueChanges.subscribe((value) => {
             field.value = value;
         });
@@ -58,7 +58,7 @@ export class ColumnControl {
     private typeahead: Observable<string[]> | undefined;
 
     constructor(private column: Attribute, readonly parentRef: string) {
-        this.control = new FormControl(column.name, ValueValidators.forColumn(column, parentRef));
+        this.control = new FormControl(column.name, SubmFormValidators.forColumn(column, parentRef));
         this.control.valueChanges.subscribe(v => {
             column.name = v;
         });
@@ -112,7 +112,7 @@ export class CellControl {
     readonly control: FormControl;
 
     constructor(attrValue: AttributeValue, column: Attribute, readonly parentRef: string) {
-        this.control = new FormControl(attrValue.value, ValueValidators.forCell(column, parentRef));
+        this.control = new FormControl(attrValue.value, SubmFormValidators.forCell(column, parentRef));
         this.control.valueChanges.subscribe(value => attrValue.value = value);
     }
 
@@ -181,7 +181,7 @@ export class FeatureForm {
 
     constructor(private feature: Feature) {
         this.form = new FormGroup({
-            columns: new FormGroup({}, FormValidators.forFeatureColumns(feature)),
+            columns: new FormGroup({}, SubmFormValidators.forFeatureColumns(feature)),
             rows: new FormArray([])
         });
 
@@ -305,6 +305,10 @@ export class FeatureForm {
 
     get hasErrors(): boolean {
         return this.form.invalid && this.form.touched;
+    }
+
+    get invalid(): boolean {
+        return this.form.invalid;
     }
 
     get scrollToControl(): FormControl | undefined {
@@ -490,6 +494,7 @@ export class SectionForm {
 
     readonly fieldControls: FieldControl[] = [];
     readonly featureForms: FeatureForm[] = [];
+    readonly subsectionForms: SectionForm[] = [];
 
     /* can use form's valueChanges, but then the operations like add/remove column will not be atomic,
     as it requires to apply multiple changes at once */
@@ -500,20 +505,24 @@ export class SectionForm {
     constructor(readonly section: Section) {
         this.form = new FormGroup({
             fields: new FormGroup({}),
-            features: new FormGroup({})
+            features: new FormGroup({}),
+            sections: new FormGroup({})
         });
 
         section.fields.list().forEach(
             field => {
                 this.addFieldControl(field, section.typeName);
-            }
-        );
+            });
 
-        [section.annotations].concat(section.features.list()).forEach(
+        [...[section.annotations], ...section.features.list()].forEach(
             feature => {
                 this.addFeatureForm(feature);
-            }
-        );
+            });
+
+        section.sections.list().forEach(
+            s => {
+                this.addSubsectionForm(s);
+            });
     }
 
     controls(): FormControl[] {
@@ -536,7 +545,7 @@ export class SectionForm {
         if (this.section.features.removeById(featureId)) {
             this.unsubscribe(featureId);
             this.featureForms.splice(index, 1);
-            this.featuresForm.removeControl(featureId);
+            this.featureFormGroups.removeControl(featureId);
             this.structureChanges$.next(StructureChangeEvent.featureRemove);
         }
     }
@@ -548,25 +557,43 @@ export class SectionForm {
         }
     }
 
-    private get fieldsForm(): FormGroup {
+    get invalid(): boolean {
+        return this.form.invalid;
+    }
+
+    get valid(): boolean {
+        return this.form.valid;
+    }
+
+    private get fieldFormGroup(): FormGroup {
         return <FormGroup>this.form.get('fields');
     }
 
-    private get featuresForm(): FormGroup {
+    private get featureFormGroups(): FormGroup {
         return <FormGroup>this.form.get('features');
+    }
+
+    private get subsectionFormGroups(): FormGroup {
+        return <FormGroup>this.form.get('sections');
     }
 
     private addFieldControl(field: Field, parentRef: string): void {
         const fieldControl = new FieldControl(field, parentRef);
         this.fieldControls.push(fieldControl);
-        this.fieldsForm.addControl(field.id, fieldControl.control);
+        this.fieldFormGroup.addControl(field.id, fieldControl.control);
     }
 
     private addFeatureForm(feature: Feature) {
         const featureForm = new FeatureForm(feature);
         this.featureForms.push(featureForm);
-        this.featuresForm.addControl(feature.id, featureForm.form);
+        this.featureFormGroups.addControl(feature.id, featureForm.form);
         this.subscribe(featureForm);
+    }
+
+    private addSubsectionForm(section: Section) {
+        const sectionForm = new SectionForm(section);
+        this.subsectionForms.push(sectionForm);
+        this.subsectionFormGroups.addControl(section.id, sectionForm.form);
     }
 
     private subscribe(featureForm: FeatureForm) {

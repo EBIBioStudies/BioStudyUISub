@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ElementRef, Input, QueryList, ViewChildren,} from '@angular/core';
 import {UserData} from '../../../../auth/user-data';
 import {TypeaheadDirective} from 'ngx-bootstrap';
-import {ColumnControl, FeatureForm, RowForm} from '../section-form';
+import {ColumnControl, FeatureForm, RowForm} from '../../section-form';
 
 @Component({
     selector: 'subm-feature-grid',

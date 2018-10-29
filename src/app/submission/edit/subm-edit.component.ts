@@ -23,8 +23,8 @@ import {UserData} from '../../auth/user-data';
 import {SubmValidationErrorsComponent} from './subm-navbar/subm-validation-errors.component';
 import {SubmSidebarComponent} from './subm-sidebar/subm-sidebar.component';
 import {Subject} from 'rxjs/Subject';
-import {Observable, of} from 'rxjs';
-import {SectionForm} from './subm-form/section-form';
+import {Observable, of, Subscription} from 'rxjs';
+import {SectionForm} from './section-form';
 import {UserInfo} from '../../auth/model/user-info';
 import {filter, switchMap, throttleTime} from 'rxjs/operators';
 
@@ -152,6 +152,8 @@ export class SubmEditComponent implements OnInit {
     private editState: EditState = new EditState();
     private unsubscribe: Subject<void> = new Subject<void>();
 
+    private sb?: Subscription;
+
     constructor(private route: ActivatedRoute,
                 private router: Router,
                 private submService: SubmissionService,
@@ -202,8 +204,8 @@ export class SubmEditComponent implements OnInit {
         this.unsubscribe.complete();
     }
 
-    onSectionClick(section: Section): void {
-        this.updateCurrentSection(section.id);
+    onSectionClick(sectionForm: SectionForm): void {
+        this.updateCurrentSection(sectionForm);
     }
 
     onRevert(event: Event) {
@@ -296,7 +298,7 @@ export class SubmEditComponent implements OnInit {
             wrappedSubm => {
                 this.wrappedSubm = wrappedSubm;
                 this.subm = pageTab2Submission(this.wrappedSubm.data);
-                this.updateCurrentSection(this.subm.section.id);
+                this.updateCurrentSection(new SectionForm(this.subm.section));
 
                 if (this.hasJustCreated) {
                     this.setDefaults(this.subm.section);
@@ -412,20 +414,22 @@ export class SubmEditComponent implements OnInit {
         this.save();
     }
 
-    private updateCurrentSection(sectionId: string) {
-        const path: Section[] = this.subm!.sectionPath(sectionId);
-        if (path.length === 0) {
-            console.log(`Section with id ${sectionId} was not found`);
+    private updateCurrentSection(sectionForm:SectionForm) {
+        //todo unsubscribe
+        if (this.sb !== undefined) {
+            this.sb.unsubscribe();
+            this.sb = undefined;
         }
-        this.section = path[path.length - 1];
-        this.sectionForm = new SectionForm(this.section);
-        this.sectionForm.form.valueChanges.pipe(throttleTime(900))
+        this.sectionForm = sectionForm;
+        this.sb = this.sectionForm.form.valueChanges.pipe(throttleTime(900))
             .subscribe(() => this.onDataChange());
     }
 
     private validate() {
         setTimeout(() => {
-            this.errors = SubmissionValidator.validate(this.subm!);
+            /*this.errors = SubmissionValidator.validate(this.subm!);*/
+            //const errors = this.section!.sections.list().map(s => SectionForm.validate(s));
+            //console.log(errors);
         }, 10);
     }
 

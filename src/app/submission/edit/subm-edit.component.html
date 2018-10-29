@@ -22,14 +22,13 @@
             (editClick)="onEditBack($event)">
     </subm-navbar>
 
-    <div class="container-fluid">
+    <div *ngIf="sectionForm" class="container-fluid">
         <aside [ngClass]="{'collapse-left' : !readonly && sideBarCollapsed, 'right-side': !readonly}">
-            <div *ngIf="subm"
-                 class="navbar-subm-margin">
+            <div class="navbar-subm-margin">
 
                 <div class="panel">
                     <div class="panel-body">
-                        <div *ngIf="hasJustCreated && errors.total()">
+                        <div *ngIf="hasJustCreated && sectionForm.invalid">
                             <h4>New submission</h4>
                             <p>
                                 Please fill in the form below. The <span class="font-bold">Check</span> tab on the
@@ -48,7 +47,7 @@
                             </div>
                         </div>
 
-                        <div *ngIf="!hasJustCreated && !readonly && errors.total()">
+                        <div *ngIf="!hasJustCreated && !readonly && sectionForm.invalid">
                             <h4>Incomplete submission</h4>
                             <p>
                                 Some information in this submission is still missing or incorrect. Refer to the
@@ -67,7 +66,7 @@
                             </div>
                         </div>
 
-                        <div *ngIf="errors.empty() && !readonly">
+                        <div *ngIf="sectionForm.valid && !readonly">
                             <div *ngIf="subm.isTemp && !isSubmitting">
                                 <h4>Study ready for submission</h4>
                                 <p>
@@ -138,26 +137,28 @@
                            [readonly]="readonly">
                 </subm-form>
 
-                <div *ngIf="section.sections.list().length > 0" class="list-group form-group">
+                <div *ngIf="sectionForm.subsectionForms.length > 0" class="list-group form-group">
                     <label class="control-label">Pages</label>
-                    <div *ngFor="let subsection of section.sections.list()" class="list-group-item" style="cursor: pointer"
-                        (click)="onSectionClick(subsection)">
-                        {{subsection.typeName}}
-                        <span *ngIf="subsection.accno">
-                            : {{subsection.accno}}
+                    <div *ngFor="let subsectionForm of sectionForm.subsectionForms" class="list-group-item" style="cursor: pointer"
+                        (click)="onSectionClick(subsectionForm)">
+                        {{subsectionForm.section.typeName}}
+                        <span *ngIf="subsectionForm.section.accno">
+                            : {{subsectionForm.section.accno}}
                         </span>
+                        <span class="label label-danger pull-right"
+                              *ngIf="subsectionForm.invalid">{{'??'}} error{{2 > 1 ? 's' : ''}}</span>
                         <span class="btn-toolbar pull-right">
                             <button type="button" class="section-edit btn btn-link btn-xs btn-flat"
-                                    tooltip="{{readonly ? 'View' : 'Edit'}} page &quot;{{subsection.typeName}}&quot;"
+                                    tooltip="{{readonly ? 'View' : 'Edit'}} page &quot;{{subsectionForm.section.typeName}}&quot;"
                                     container="body"
-                                    (click)="onSectionClick(subsection)">
+                                    (click)="onSectionClick(subsectionForm)">
                                 <i class="fa {{readonly ? 'fa-eye' : 'fa-pencil'}} fa-fw fa-lg"></i>
                             </button>
-                            <button type="button" *ngIf="section.sections.isRemovable(subsection) && !readonly" class="section-delete btn btn-danger btn-xs btn-flat"
-                                    tooltip="Delete page &quot;{{subsection.typeName}}&quot;"
+                            <button type="button" *ngIf="!readonly && subsectionForm.section.type.displayType.isRemovable" class="section-delete btn btn-danger btn-xs btn-flat"
+                                    tooltip="Delete page &quot;{{subsectionForm.section.typeName}}&quot;"
                                     container="body"
                                     placement="left"
-                                    (click)="$event.stopPropagation(); onSectionDelete(subsection)">
+                                    (click)="$event.stopPropagation(); onSectionDelete(subsectionForm.id)">
                                 <i class="fas fa-trash-alt fa-fw"></i>
                             </button>
                         </span>

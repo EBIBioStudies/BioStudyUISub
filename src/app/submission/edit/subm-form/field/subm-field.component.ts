@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {FieldControl} from '../section-form';
+import {FieldControl} from '../../section-form';
 import {FieldType, TextValueType, ValueType} from '../../../shared/model';
 
 class ValueLength {

@@ -10,8 +10,7 @@ import {
     ValueTypeName
 } from '../../../shared/model';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {typeaheadSource} from '../typeahead.utils';
-
+import {typeaheadSource} from '../../typeahead.utils';
 
 @Component({
     selector: 'input-value',

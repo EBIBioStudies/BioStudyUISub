@@ -1,13 +1,13 @@
 import {Component, Input, OnChanges, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Observable} from 'rxjs';
-import {SectionForm} from '../../subm-form/section-form';
+import {SectionForm} from '../../section-form';
 import {ConfirmDialogComponent} from '../../../../shared';
 import {UserData} from '../../../../auth';
 import {FeatureType, SectionType, TypeBase} from '../../../shared/model';
-import {CustomValidators} from '../../../shared/custom-validators';
 import {BsModalService} from 'ngx-bootstrap';
 import {AddSubmTypeModalComponent} from '../../modals/add-subm-type-modal.component';
+import {FormValidators} from '../../form-validators';
 
 const SECTION_ID = '@SECTION@';
 
@@ -185,7 +185,7 @@ export class SubmEditSidebarComponent implements OnInit, OnChanges {
             [...this.sectionForm!.featureForms.map(ff => DataTypeControl.fromFeatureType(ff.featureType, ff.id)),
                 ...this.sectionForm!.section.type.sectionTypes.map(st => DataTypeControl.fromSectionType(st))];
 
-        const form = new FormGroup({}, CustomValidators.uniqueValues());
+        const form = new FormGroup({}, FormValidators.uniqueValues());
         this.items.forEach(item => form.addControl(item.id, item.control));
 
         this.form = form;
