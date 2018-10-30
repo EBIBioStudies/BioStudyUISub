@@ -24,12 +24,13 @@
                          [removable]="featureForm.canRemoveColumn(column)"
                          [autosuggestSource]="featureForm.columnNamesAvailable"
                          (remove)="featureForm.removeColumn(column)"
-                         [submControlName]="column.name"
-                         [submControlIcon]="featureForm.icon">
+                         [errorCheckName]="column.name"
+                         [errorCheckIcon]="featureForm.icon"
+                         [errorCheckRef]="column.ref.id">
             </inline-edit>
         </div>
     </div>
-    <div *ngFor="let row of rows; let rowIdx = index; let first = first; let last = last">
+    <div *ngFor="let row of rows; let rowIdx = index;">
         <div *ngIf="!readonly || !row.isEmpty" class="row" #rowEl>
             <div class="cell heading-cell row-heading col-xs-1 col-md-1 text-center">
                 <span container="body"
@@ -58,8 +59,9 @@
                                  [readonly]="readonly || column.isReadonly"
                                  [formControl]="row.cellControlAt(column.id).control"
                                  [autosuggestSource]="featureForm.cellValuesTypeaheadFunc(rowIdx, column.id)"
-                                 [submControlName]="column.name"
-                                 [submControlIcon]="featureForm.icon">
+                                 [errorCheckName]="column.name"
+                                 [errorCheckIcon]="featureForm.icon"
+                                 [errorCheckRef]="row.cellControlAt(column.id).ref.id">
                     </input-value>
                 </div>
             </div>

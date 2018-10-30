@@ -15,11 +15,11 @@
             [accno]="accno"
             [isTemp]="subm?.isTemp"
             [isRevised]="subm?.isRevised"
-            [sectionPath]="sectionPath"
+            [sectionForm]="sectionForm"
             (sectionClick)="onSectionClick($event)"
-            (revertClick)="onRevert($event)"
-            (submitClick)="onSubmit($event)"
-            (editClick)="onEditBack($event)">
+            (revertClick)="onRevertClick($event)"
+            (submitClick)="onSubmitClick($event)"
+            (editClick)="onEditBackClick($event)">
     </subm-navbar>
 
     <div *ngIf="sectionForm" class="container-fluid">
@@ -133,7 +133,7 @@
                 </div>
 
                 <subm-form [sectionForm]="sectionForm"
-                           (keyup.enter)="onSubmit($event, true)"
+                           (keyup.enter)="onSubmitClick($event, true)"
                            [readonly]="readonly">
                 </subm-form>
 
@@ -158,7 +158,7 @@
                                     tooltip="Delete page &quot;{{subsectionForm.section.typeName}}&quot;"
                                     container="body"
                                     placement="left"
-                                    (click)="$event.stopPropagation(); onSectionDelete(subsectionForm.id)">
+                                    (click)="$event.stopPropagation(); onSectionDeleteClick(subsectionForm.id)">
                                 <i class="fas fa-trash-alt fa-fw"></i>
                             </button>
                         </span>
@@ -179,15 +179,6 @@
                     <p class="text-muted col-xs-9">
                         <i *ngIf="isSaving" class="fa fa-cog fa-spin"></i>
                         <span *ngIf="isSaving">Backing up study data...</span>
-                    </p>
-                    <p class="col-xs-2 text-right">
-                        <button *ngIf="!readonly && !errors.empty()" class="btn btn-default btn-sm btn-log"
-                                tooltip="Show validation log"
-                                placement="left"
-                                container="body"
-                                (click)="onViewLog($event)">
-                            View log
-                        </button>
                     </p>
                 </div>
             </div>

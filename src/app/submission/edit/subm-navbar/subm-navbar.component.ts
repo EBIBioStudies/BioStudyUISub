@@ -6,6 +6,7 @@ import {newPageTab, Section, SUBMISSION_TEMPLATE_NAMES} from '../../shared/model
 import {SubmissionService} from '../../shared/submission.service';
 import {SubmAddDialogComponent} from '../../list/subm-add.component';
 import {UserData} from '../../../auth/user-data';
+import {SectionForm} from '../section-form';
 
 @Component({
     selector: 'subm-navbar',
@@ -16,7 +17,7 @@ export class SubmNavBarComponent {
     isBusy: boolean = false;            //flag indicating if a request is in progress
     allowedPrj?: string[];               //names of projects with templates the user is allowed to attach submissions to
 
-    @Input() sectionPath?: Section[];
+    @Input() sectionForm?: SectionForm;
     @Input() accno?: string;             //accession number for the current submission
     @Input() readonly: boolean = false;         //read-only status of the submission form
     @Input() isTemp: boolean = false;           //flag indicating if the submission is temporary

@@ -103,7 +103,7 @@ export class SubmEditSidebarComponent implements OnInit, OnChanges {
         this.sectionForm!.addFeatureEntry(item.id);
 
         // scroll to the row/column
-        const control = this.sectionForm!.scrollToControl(item.id);
+        const control = this.sectionForm!.scrollToTheLastControl(item.id);
         if (control === undefined) {
             return;
         }

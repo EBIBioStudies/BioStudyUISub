@@ -33,8 +33,10 @@
                                [typeaheadOptionsLimit]="200"
                                [typeaheadScrollable]="true"
                                [typeaheadOptionsInScrollableView]="suggestLength"
-                               [submControlName]="column.name || 'Key (' + idx + ')'"
-                               [submControlIcon]="featureForm.icon">
+                               [errorCheckName]="column.name || 'Key (' + idx + ')'"
+                               [errorCheckIcon]="featureForm.icon"
+                               [errorCheckRef]="column.ref.id"
+                               validate-onblur>
                     </div>
                 </div>
             </div>
@@ -52,8 +54,9 @@
                                  [readonly]="readonly || column.isReadonly"
                                  [formControl]="cell.control"
                                  [autosuggestSource]="featureForm.cellValuesTypeaheadFunc(column.id)"
-                                 [submControlName]="column.name"
-                                 [submControlIcon]="featureForm.icon"
+                                 [errorCheckName]="column.name"
+                                 [errorCheckIcon]="featureForm.icon"
+                                 [errorCheckRef]="column.ref.id"
                                  validate-onblur>
                     </input-value>
                 </div>

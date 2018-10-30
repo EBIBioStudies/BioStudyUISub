@@ -40,11 +40,11 @@ export class SubmFieldComponent {
     }
 
     get fieldType(): FieldType {
-        return this.fieldControl!.field.type;
+        return this.fieldControl!.type;
     }
 
     get fieldName(): string {
-        return this.fieldControl!.field.name;
+        return this.fieldControl!.name;
     }
 
     get valueType(): ValueType {

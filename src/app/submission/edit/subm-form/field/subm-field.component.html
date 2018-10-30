@@ -31,8 +31,9 @@
                      [readonly]="isReadonly"
                      [formControl]="fieldControl.control"
                      [isSmall]="false"
-                     [submControlName]="fieldName | camelcase2label"
-                     [submControlIcon]="fieldType.icon"
+                     [errorCheckName]="fieldName | camelcase2label"
+                     [errorCheckIcon]="fieldType.icon"
+                     [errorCheckRef]="fieldControl.ref.id"
                      validate-onblur>
         </input-value>
     </div>
