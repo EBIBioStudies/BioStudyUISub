@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {Location} from '@angular/common';
 import {Router} from '@angular/router';
 
@@ -13,7 +13,7 @@ import {SectionForm} from '../section-form';
     templateUrl: './subm-navbar.component.html',
     styleUrls: ['./subm-navbar.component.css']
 })
-export class SubmNavBarComponent {
+export class SubmNavBarComponent implements OnChanges {
     isBusy: boolean = false;            //flag indicating if a request is in progress
     allowedPrj?: string[];               //names of projects with templates the user is allowed to attach submissions to
 
@@ -30,6 +30,8 @@ export class SubmNavBarComponent {
     @ViewChild('addDialog')
     addDialog?: SubmAddDialogComponent;
 
+    sectionPath: SectionForm[] = [];
+
     constructor(private submService: SubmissionService,
                 private userData: UserData,
                 private locService: Location,
@@ -41,6 +43,12 @@ export class SubmNavBarComponent {
             this.isBusy = false;
             this.allowedPrj = projects;
         });
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes.sectionForm !== null) {
+            this.sectionPath = this.findSectionPath(this.sectionForm);
+        }
     }
 
     onSectionClick(section: Section): void {
@@ -86,4 +94,11 @@ export class SubmNavBarComponent {
             this.router.navigate(['/submissions/new/', subm.accno]);
         });
     };
+
+    private findSectionPath(sectionForm?: SectionForm): SectionForm[] {
+        if (sectionForm === undefined) {
+            return [];
+        }
+        return [...this.findSectionPath(sectionForm.parent), ...[sectionForm]];
+    }
 }

@@ -82,7 +82,7 @@ class EditState {
     }
 
     private backToEditing(error: any) {
-        if (error.error === undefined) {
+        if (error === undefined) {
             this.state = EditState.Editing;
             return;
         }
@@ -298,6 +298,7 @@ export class SubmEditComponent implements OnInit {
         }
 
         this.submWrap = resp.payload!;
+        this.accno = this.submWrap.accno;
         this.subm = pageTab2Submission(this.submWrap.data);
         this.switchSection(new SectionForm(this.subm.section));
 

@@ -6,14 +6,14 @@
         <a *ngIf="!isTemp" routerLink="/submissions/sent">
             <i class="fa fa-database" aria-hidden="true"></i> Sent
         </a>
-        <span *ngFor="let sec of sectionPath; let idx = index; let last = last;">
+        <span *ngFor="let secForm of sectionPath; let idx = index; let last = last;">
             &nbsp;<i class="fa fa-angle-right font-bold"></i>&nbsp;
             <a href="javascript:void(0)"
                [ngClass]="{'current-section': last}"
-               (click)="onSectionClick(sec)">
+               (click)="onSectionClick(secForm)">
                 <span>
                     <span *ngIf="idx == 0">{{accno}}{{isDiscardable? ' (revised)' : ''}}</span>
-                    <span *ngIf="idx > 0">{{sec.accno ? sec.accno : sec.typeName}}</span>
+                    <span *ngIf="idx > 0">{{secForm.accno ? secForm.accno : secForm.typeName}}</span>
                 </span>
             </a>
         </span>

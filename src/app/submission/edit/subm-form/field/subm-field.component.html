@@ -31,9 +31,7 @@
                      [readonly]="isReadonly"
                      [formControl]="fieldControl.control"
                      [isSmall]="false"
-                     [errorCheckName]="fieldName | camelcase2label"
-                     [errorCheckIcon]="fieldType.icon"
-                     [errorCheckRef]="fieldControl.ref.id"
+                     nativeElementAttach
                      validate-onblur>
         </input-value>
     </div>

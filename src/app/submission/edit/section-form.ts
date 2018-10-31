@@ -4,7 +4,8 @@ import {
     ColumnType,
     Feature,
     FeatureType,
-    Field, FieldType,
+    Field,
+    FieldType,
     Section,
     ValueMap,
     ValueType
@@ -15,7 +16,7 @@ import {BehaviorSubject, Observable, Subject, Subscription} from 'rxjs';
 import {typeaheadSource} from './typeahead.utils';
 import {throttleTime} from 'rxjs/operators';
 import * as pluralize from 'pluralize';
-import {ErrorMessages, SubmFormValidators} from './form-validators';
+import {ControlRef, ErrorMessages, MyFormControl, MyFormGroup, ControlGroupRef, SubmFormValidators} from './form-validators';
 
 function listOfControls(control: AbstractControl): FormControl[] {
     if (control instanceof FormGroup) {
@@ -37,49 +38,18 @@ function listOfInvalidControls(control: AbstractControl) {
         .reverse()
 }
 
-export class ControlRef {
-    readonly id: string;
-    readonly parentName: string;
-
-    constructor(sectionPath: string[], id: string, parentName: string) {
-        this.id = [sectionPath.join('.'), [parentName, id].join('_')].filter(s => !s.isEmpty()).join('.');
-        this.parentName = parentName;
-    }
-}
-
-export class ParentRef {
-    constructor(
-        private sectionPath: string[],
-        private name: string) {
-    };
-
-    fieldRef(fieldId: string) {
-        return new ControlRef(this.sectionPath, fieldId, this.name);
-    };
-
-    columnRef(columnId: string) {
-        return new ControlRef(this.sectionPath, columnId, this.name);
-    };
-
-    rowValueRef(columnId: string, rowId: string){
-        return new ControlRef(this.sectionPath, columnId + '#' + rowId, this.name);
-    };
-}
-
 export class FieldControl {
-    readonly ref: ControlRef;
-    readonly control: FormControl;
+    readonly control: MyFormControl;
 
-    constructor(private field: Field, parentRef: ParentRef) {
-        this.ref = parentRef.fieldRef(field.id);
-        this.control = new FormControl(field.value, SubmFormValidators.forField(field, this.ref.parentName));
+    constructor(private field: Field, ref: ControlRef) {
+        this.control = new MyFormControl(field.value, SubmFormValidators.forField(field)).withRef(ref);
         this.control.valueChanges.subscribe((value) => {
             field.value = value;
         });
     }
 
     get errors(): string[] {
-        return ErrorMessages.map(this.control.errors);
+        return ErrorMessages.map(this.control);
     }
 
     get type(): FieldType {
@@ -92,17 +62,12 @@ export class FieldControl {
 }
 
 export class ColumnControl {
-    readonly ref: ControlRef;
-    readonly control: FormControl;
+    readonly control: MyFormControl;
 
     private typeahead: Observable<string[]> | undefined;
-    private column: Attribute;
 
-    constructor(column: Attribute, parentRef: ParentRef) {
-        this.ref = parentRef.columnRef(column.id);
-        this.column = column;
-
-        this.control = new FormControl(column.name, SubmFormValidators.forColumn(column, this.ref.parentName));
+    constructor(private column: Attribute, ref: ControlRef) {
+        this.control = new MyFormControl(column.name, SubmFormValidators.forColumn(column)).withRef(ref);
         this.control.valueChanges.subscribe(v => {
             column.name = v;
         });
@@ -141,7 +106,7 @@ export class ColumnControl {
     }
 
     get errors(): string[] {
-        return ErrorMessages.map(this.control.errors);
+        return ErrorMessages.map(this.control);
     }
 
     typeaheadSource(sourceFunc: () => string[]): Observable<string[]> {
@@ -153,17 +118,15 @@ export class ColumnControl {
 }
 
 export class CellControl {
-    readonly ref: ControlRef;
-    readonly control: FormControl;
+    readonly control: MyFormControl;
 
     constructor(attrValue: AttributeValue, column: Attribute, ref: ControlRef) {
-        this.ref = ref;
-        this.control = new FormControl(attrValue.value, SubmFormValidators.forCell(column, this.ref.parentName));
+        this.control = new MyFormControl(attrValue.value, SubmFormValidators.forCell(column)).withRef(ref);
         this.control.valueChanges.subscribe(value => attrValue.value = value);
     }
 
     get errors(): string[] {
-        return ErrorMessages.map(this.control.errors);
+        return ErrorMessages.map(this.control);
     }
 
     get hasErrors(): boolean {
@@ -176,9 +139,9 @@ export class RowForm {
 
     private controls: Map<String, CellControl> = new Map();
     private row: ValueMap;
-    private parentRef: ParentRef;
+    private parentRef: ControlGroupRef;
 
-    constructor(row: ValueMap, columns: Attribute[], parentRef: ParentRef) {
+    constructor(row: ValueMap, columns: Attribute[], parentRef: ControlGroupRef) {
         this.row = row;
         this.parentRef = parentRef;
         this.form = new FormGroup({});
@@ -186,7 +149,7 @@ export class RowForm {
     }
 
     addCellControl(column: Attribute) {
-        const cellControl = new CellControl(this.row.valueFor(column.id)!, column, this.parentRef.rowValueRef(column.id, this.row.id));
+        const cellControl = new CellControl(this.row.valueFor(column.id)!, column, this.parentRef.rowValueRef(column, this.row.id));
         this.form.addControl(column.id, cellControl.control);
         this.controls.set(column.id, cellControl);
     }
@@ -222,7 +185,6 @@ export class FeatureForm {
     private rowForms: RowForm[] = [];
 
     private cellValueTypeahead: Map<string, () => string[]> = new Map();
-    private featureRef: ParentRef;
 
     errorCount: number = 0;
 
@@ -230,11 +192,9 @@ export class FeatureForm {
 
     structureChanges$: Subject<StructureChangeEvent> = new Subject<StructureChangeEvent>();
 
-    constructor(private feature: Feature, sectionPath: string[]) {
-        this.featureRef = new ParentRef(sectionPath, feature.typeName);
-
+    constructor(private feature: Feature, private featureRef: ControlGroupRef ) {
         this.form = new FormGroup({
-            columns: new FormGroup({}, SubmFormValidators.forFeatureColumns(feature)),
+            columns: new MyFormGroup({}, SubmFormValidators.forFeatureColumns(feature)).withRef(this.featureRef),
             rows: new FormArray([])
         });
 
@@ -517,7 +477,7 @@ export class FeatureForm {
     }
 
     private addColumnControl(column: Attribute) {
-        const colControl = new ColumnControl(column, this.featureRef);
+        const colControl = new ColumnControl(column, this.featureRef.columnRef(column));
         this.columnControls.push(colControl);
         this.columnsForm.addControl(column.id, colControl.control);
     }
@@ -556,11 +516,11 @@ export class SectionForm {
 
     private sb: Map<string, Subscription> = new Map<string, Subscription>();
 
-    private sectionRef: ParentRef;
+    private sectionRef: ControlGroupRef;
 
     constructor(readonly section: Section, readonly parent?: SectionForm) {
         this.sectionPath = this.parent === undefined ? [] : [...this.parent.sectionPath, ...[this.id]];
-        this.sectionRef = new ParentRef(this.sectionPath, section.typeName);
+        this.sectionRef = new ControlGroupRef(this.id, section.accno || section.typeName);
 
         this.form = new FormGroup({
             fields: new FormGroup({}),
@@ -636,6 +596,10 @@ export class SectionForm {
         return this.section.id;
     }
 
+    get accno(): string {
+        return this.section.accno;
+    }
+
     private get fieldFormGroup(): FormGroup {
         return <FormGroup>this.form.get('fields');
     }
@@ -649,13 +613,13 @@ export class SectionForm {
     }
 
     private addFieldControl(field: Field): void {
-        const fieldControl = new FieldControl(field, this.sectionRef);
+        const fieldControl = new FieldControl(field, this.sectionRef.fieldRef(field));
         this.fieldControls.push(fieldControl);
         this.fieldFormGroup.addControl(field.id, fieldControl.control);
     }
 
     private addFeatureForm(feature: Feature) {
-        const featureForm = new FeatureForm(feature, this.sectionPath);
+        const featureForm = new FeatureForm(feature, this.sectionRef.featureRef(feature));
         this.featureForms.push(featureForm);
         this.featureFormGroups.addControl(feature.id, featureForm.form);
         this.subscribe(featureForm);

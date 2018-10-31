@@ -56,13 +56,13 @@
         <li class="sidebar-item" *ngFor="let control of invalidControls">
             <a *ngIf="control.invalid"
                [ngClass]="{'center-spread': !collapsed}"
-               tooltip="{{collapsed ? '&quot;' + control.controlName + '&quot; field is ' + tipText(control.errors) : 'Highlight field on the form'}}"
+               tooltip="{{collapsed ? '&quot;' + control.ref.name + '&quot; field is ' + tipText(control.errors) : 'Highlight field on the form'}}"
                container="body"
                placement="{{collapsed ? 'right' : 'top'}}"
                (click)="onReviewClick($event, control)">
                     <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                        <i class="entry-item fa fa-lg text-center {{control.controlIcon}}"></i>
-                        {{!collapsed ? '&nbsp;' + control.controlName + '&nbsp;' : ''}}
+                        <i class="entry-item far fa-lg text-center {{control.ref.icon}}"></i>
+                        {{!collapsed ? '&nbsp;' + control.ref.name + '&nbsp;' : ''}}
                     </span>
                 <strong class="entry-item label label-default"
                         [ngClass]="{'label-danger': control.touched}"

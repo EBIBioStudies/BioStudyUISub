@@ -185,7 +185,7 @@ export class SubmEditSidebarComponent implements OnInit, OnChanges {
             [...this.sectionForm!.featureForms.map(ff => DataTypeControl.fromFeatureType(ff.featureType, ff.id)),
                 ...this.sectionForm!.section.type.sectionTypes.map(st => DataTypeControl.fromSectionType(st))];
 
-        const form = new FormGroup({}, FormValidators.uniqueValues());
+        const form = new FormGroup({}, FormValidators.uniqueValues);
         this.items.forEach(item => form.addControl(item.id, item.control));
 
         this.form = form;

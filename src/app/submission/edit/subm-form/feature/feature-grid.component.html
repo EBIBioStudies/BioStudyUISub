@@ -24,9 +24,8 @@
                          [removable]="featureForm.canRemoveColumn(column)"
                          [autosuggestSource]="featureForm.columnNamesAvailable"
                          (remove)="featureForm.removeColumn(column)"
-                         [errorCheckName]="column.name"
-                         [errorCheckIcon]="featureForm.icon"
-                         [errorCheckRef]="column.ref.id">
+                         nativeElementAttach
+                         validate-onblur>
             </inline-edit>
         </div>
     </div>
@@ -59,9 +58,8 @@
                                  [readonly]="readonly || column.isReadonly"
                                  [formControl]="row.cellControlAt(column.id).control"
                                  [autosuggestSource]="featureForm.cellValuesTypeaheadFunc(rowIdx, column.id)"
-                                 [errorCheckName]="column.name"
-                                 [errorCheckIcon]="featureForm.icon"
-                                 [errorCheckRef]="row.cellControlAt(column.id).ref.id">
+                                 nativeElementAttach
+                                 validate-onblur>
                     </input-value>
                 </div>
             </div>

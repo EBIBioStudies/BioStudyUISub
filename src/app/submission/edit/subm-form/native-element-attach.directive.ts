@@ -2,13 +2,9 @@ import {NgControl} from '@angular/forms';
 import {Directive, ElementRef, Input, OnChanges, OnDestroy} from '@angular/core';
 
 @Directive({
-    selector: '[errorCheckName]'
+    selector: '[nativeElementAttach]'
 })
-export class ErrorCheckDirective implements OnChanges, OnDestroy {
-    @Input('errorCheckName') controlName?: string;
-    @Input('errorCheckIcon') controlIcon?: string;
-    @Input('errorCheckRef') controlRef?: string;
-
+export class NativeElementAttachDirective implements OnChanges, OnDestroy {
     constructor(private el: ElementRef, private ngControl: NgControl) {
     }
 
@@ -24,9 +20,6 @@ export class ErrorCheckDirective implements OnChanges, OnDestroy {
         if (this.ngControl && this.ngControl.control) {
             const ctrl = <any>this.ngControl.control;
             ctrl.nativeElement = this.el.nativeElement;
-            ctrl.controlName = this.controlName || '<Control Name>';
-            ctrl.controlIcon = this.controlIcon || 'fa-question';
-            ctrl.controlRef = this.controlRef;
         }
     }
 }
