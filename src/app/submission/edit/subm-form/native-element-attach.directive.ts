@@ -1,14 +1,14 @@
 import {NgControl} from '@angular/forms';
-import {Directive, ElementRef, Input, OnChanges, OnDestroy} from '@angular/core';
+import {AfterViewInit, Directive, ElementRef, OnDestroy} from '@angular/core';
 
 @Directive({
     selector: '[nativeElementAttach]'
 })
-export class NativeElementAttachDirective implements OnChanges, OnDestroy {
+export class NativeElementAttachDirective implements AfterViewInit, OnDestroy {
     constructor(private el: ElementRef, private ngControl: NgControl) {
     }
 
-    ngOnChanges() {
+    ngAfterViewInit(): void {
         setTimeout(this.update);
     }
 

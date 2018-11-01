@@ -51,8 +51,10 @@ export class AttributeValue {
 
 export class ValueMap {
     private valueMap: Map<string, AttributeValue> = new Map();
+    readonly id: string;
 
     constructor(keys?: string[]) {
+        this.id = nextId();
         (keys || []).forEach(key => this.add(key));
     }
 

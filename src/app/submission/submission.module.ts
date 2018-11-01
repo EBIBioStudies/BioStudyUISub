@@ -41,9 +41,10 @@ import {Camelcase2LabelPipe} from './shared/pipes/camelcase-to-label.pipe';
 import {FileModule} from '../file/file.module';
 import {InputValueComponent} from './edit/subm-form/input-value/input-value.component';
 import {InlineEditComponent} from './edit/subm-form/inline-edit/inline-edit.component';
-import {SubmControlDirective} from './edit/subm-form/subm-control.directive';
+import {NativeElementAttachDirective} from './edit/subm-form/native-element-attach.directive';
 import {SubmEditSidebarComponent} from './edit/subm-sidebar/subm-edit-sidebar/subm-edit-sidebar.component';
 import {AddSubmTypeModalComponent} from './edit/modals/add-subm-type-modal.component';
+import {SubmCheckSidebarComponent} from './edit/subm-sidebar/subm-check-sidebar/subm-check-sidebar.component';
 
 
 @NgModule({
@@ -77,6 +78,7 @@ import {AddSubmTypeModalComponent} from './edit/modals/add-subm-type-modal.compo
         SubmFeatureComponent,
         SubmSidebarComponent,
         SubmEditSidebarComponent,
+        SubmCheckSidebarComponent,
         SubmNavBarComponent,
         SubmValidationErrorsComponent,
         SubmResultsModalComponent,
@@ -91,7 +93,7 @@ import {AddSubmTypeModalComponent} from './edit/modals/add-subm-type-modal.compo
         DateFilterComponent,
         Camelcase2LabelPipe,
         UniqueValidator,
-        SubmControlDirective
+        NativeElementAttachDirective
     ],
     exports: [
         SubmListComponent,

@@ -163,8 +163,6 @@ export enum ValueTypeName {
 }
 
 export abstract class ValueType {
-    readonly required = false;
-
     constructor(readonly name: ValueTypeName) {
     }
 

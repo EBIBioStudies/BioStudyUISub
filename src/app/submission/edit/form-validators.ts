@@ -23,6 +23,14 @@ export class ControlRef {
         return this.parentRef ? this.parentRef.name : '';
     }
 
+    get sectionId(): string {
+        return this.parentRef ? this.parentRef.sectionId : '';
+    }
+
+    get sectionName(): string {
+        return this.parentRef ? this.parentRef.sectionName : '';
+    }
+
     static unknown = new ControlRef('unknown_control', 'unknown');
 }
 
@@ -57,14 +65,14 @@ export class ControlGroupRef {
     private create(id: string, name: string, icon?: string) {
         const parentName = this.featureName || this.sectionName;
         const uniqueId = [parentName, id].join('_');
-        return new ControlRef(uniqueId, name, this, icon);
+        return new ControlRef(uniqueId, name, this, icon || this.icon);
     }
 
     static unknown = new ControlGroupRef('unknown_section', 'unknown');
 }
 
 export class MyFormControl extends FormControl {
-    ref?: ControlRef;
+    ref: ControlRef = ControlRef.unknown;
 
     constructor(formState?: any,
                 validatorOrOpts?: ValidatorFn | ValidatorFn[] | AbstractControlOptions | null,
@@ -76,10 +84,21 @@ export class MyFormControl extends FormControl {
         this.ref = ref;
         return this;
     }
+
+    static compareBySectionId = (c1: FormControl, c2: FormControl) => {
+        if (c1 instanceof MyFormControl && c2 instanceof MyFormControl) {
+            return c1.ref.sectionId.localeCompare(c2.ref.sectionId);
+        } else if (c1 instanceof  MyFormControl) {
+            return 1;
+        } else if (c2 instanceof  MyFormControl) {
+            return -1;
+        }
+        return 0;
+    };
 }
 
 export class MyFormGroup extends FormGroup {
-    ref?: ControlGroupRef;
+    ref: ControlGroupRef = ControlGroupRef.unknown;
 
     constructor(controls: { [p: string]: AbstractControl },
                 validatorOrOpts?: ValidatorFn | ValidatorFn[] | AbstractControlOptions | null,

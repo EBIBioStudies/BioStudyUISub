@@ -8,7 +8,7 @@
                 container="body"
                 placement="right">
             <i class="fa fa-fw fa-lg"
-               [ngClass]="{'fa-toggle-left': !collapsed, 'fa-toggle-right': collapsed}"></i>
+               [ngClass]="{'fa-toggle-on': !collapsed, 'fa-toggle-off': collapsed}"></i>
         </button>
         <tabset [ngClass]="{'invisible': collapsed}">
             <tab [active]="isCheckTabActive"
@@ -29,51 +29,16 @@
         </tabset>
     </div>
 
-    <!-- Add tab -->
     <subm-edit-sidebar *ngIf="isEditTabActive"
                        [sectionForm]="sectionForm">
     </subm-edit-sidebar>
 
-    <!-- Check tab -->
-    <ul *ngIf="isCheckTabActive" class="sidebar-menu">
-        <li *ngIf="numInvalid === 0 || isLoading || isSubmitting" class="center-vertically text-center"
-            [ngClass]="{'col-xs-12': !collapsed}">
-            <i class="fa " aria-hidden="true"
-               [ngClass]="{
-                    'fa-2x': collapsed, 'fa-4x': !collapsed,
-                    'fa-times-circle': serverError,
-                    'fa-check-circle': !serverError && !isLoading && !isSubmitting,
-                    'fa-cog fa-spin': isLoading || isSubmitting}"></i>
-            <h4 [ngClass]="{'vertical-text': collapsed}">
-                {{isLoading ? 'Loading study...' :
-                isSubmitting? 'Submitting study...' :
-                serverError ? errorMsg() : 'All fields are valid'}}
-            </h4>
-            <h4 *ngIf="!serverError" class="action-title">
-                {{isLoading || isSubmitting ? 'Please wait' : 'You may submit your study now'}}
-            </h4>
-        </li>
-        <li class="sidebar-item" *ngFor="let control of invalidControls">
-            <a *ngIf="control.invalid"
-               [ngClass]="{'center-spread': !collapsed}"
-               tooltip="{{collapsed ? '&quot;' + control.ref.name + '&quot; field is ' + tipText(control.errors) : 'Highlight field on the form'}}"
-               container="body"
-               placement="{{collapsed ? 'right' : 'top'}}"
-               (click)="onReviewClick($event, control)">
-                    <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                        <i class="entry-item far fa-lg text-center {{control.ref.icon}}"></i>
-                        {{!collapsed ? '&nbsp;' + control.ref.name + '&nbsp;' : ''}}
-                    </span>
-                <strong class="entry-item label label-default"
-                        [ngClass]="{'label-danger': control.touched}"
-                        #labelEl>
-                    {{!collapsed ? tipText(control.errors) : ''}}
-                    <i *ngIf="collapsed"
-                       class="fa fa-lg {{control.errors.required ? 'fa-asterisk' :
-                                                                         control.errors.maxlength || control.errors.minlength ? 'fa-arrows-h' : 'fa-ban'}}">
-                    </i>
-                </strong>
-            </a>
-        </li>
-    </ul>
+    <subm-check-sidebar *ngIf="isCheckTabActive"
+                        [collapsed]="collapsed"
+                        [invalidControls]="invalidControls"
+                        [isLoading]="isLoading"
+                        [isSubmitting]="isSubmitting"
+                        [serverError]="serverError"
+                        (review)="onReviewClick($event)">
+    </subm-check-sidebar>
 </aside>
