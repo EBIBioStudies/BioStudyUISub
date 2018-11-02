@@ -1,113 +1,20 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Location} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
 
 import {BsModalService} from 'ngx-bootstrap';
 
-import {
-    AttributeData,
-    findReleaseDate,
-    pageTab2Submission,
-    Section,
-    Submission,
-    submission2PageTab
-} from '../shared/model';
-import {PendingSubmission, SubmissionService} from '../shared/submission.service';
-import {ServerError} from '../../http/server-error.handler';
+import {Section} from '../shared/model';
 import {SubmResultsModalComponent} from '../results/subm-results-modal.component';
 import {ConfirmDialogComponent} from 'app/shared/index';
 import {AppConfig} from '../../app.config';
-import {UserData} from '../../auth/user-data';
-import {SubmValidationErrorsComponent} from './subm-navbar/subm-validation-errors.component';
 import {SubmSidebarComponent} from './subm-sidebar/subm-sidebar.component';
 import {Subject} from 'rxjs/Subject';
-import {Observable, of, Subscription} from 'rxjs';
+import {of} from 'rxjs';
 import {SectionForm} from './section-form';
-import {UserInfo} from '../../auth/model/user-info';
-import {catchError, filter, map, switchMap, throttleTime} from 'rxjs/operators';
-
-class EditState {
-    private state: string;
-
-    constructor() {
-        this.state = EditState.Loading;
-    }
-
-    startLoading() {
-        this.state = EditState.Loading;
-    }
-
-    stopLoading(error?: any) {
-        this.backToEditing(error);
-    }
-
-    startReverting() {
-        this.state = EditState.Reverting;
-    }
-
-    stopReverting(error?: any) {
-        this.backToEditing(error);
-    }
-
-    startSaving() {
-        this.state = EditState.Saving;
-    }
-
-    stopSaving(error?: any) {
-        this.backToEditing(error);
-    }
-
-    startSubmitting() {
-        this.state = EditState.Submitting;
-    }
-
-    stopSubmitting(error?: any) {
-        this.backToEditing(error);
-    }
-
-    get isSubmitting(): boolean {
-        return this.state === EditState.Submitting;
-    }
-
-    get isLoading(): boolean {
-        return this.state === EditState.Loading;
-    }
-
-    get isSaving(): boolean {
-        return this.state === EditState.Saving;
-    }
-
-    get isReverting(): boolean {
-        return this.state === EditState.Reverting;
-    }
-
-    private backToEditing(error: any) {
-        if (error === undefined) {
-            this.state = EditState.Editing;
-            return;
-        }
-        this.state = EditState.Error;
-    }
-
-    static Loading = 'Loading';
-    static Reverting = 'Reverting';
-    static Editing = 'Editing';
-    static Saving = 'Saving';
-    static Submitting = 'Submitting';
-    static Error = 'Error';
-}
-
-class ServerResponse<T> {
-    constructor(readonly payload?: T, readonly error?: any) {
-    }
-
-    get isError(): boolean {
-        return this.error !== undefined;
-    }
-
-    static NoError = <T>(payload: T) => new ServerResponse<T>(payload, undefined);
-    static Error = (error: any) => new ServerResponse<any>(undefined, error);
-}
+import {filter, switchMap} from 'rxjs/operators';
+import {SubmEditService} from './subm-edit-state.service';
+import {Option} from 'fp-ts/lib/Option';
 
 class SubmitOperation {
     get isUnknown(): boolean {
@@ -131,7 +38,7 @@ class SubmitOperation {
     selector: 'subm-edit',
     templateUrl: './subm-edit.component.html'
 })
-export class SubmEditComponent implements OnInit {
+export class SubmEditComponent implements OnInit, OnDestroy {
     @Input() readonly: boolean = false;
 
     @ViewChild(SubmSidebarComponent) sideBar?: SubmSidebarComponent;
@@ -139,34 +46,30 @@ export class SubmEditComponent implements OnInit {
     @ViewChild('confirmRevert') confirmRevert?: ConfirmDialogComponent;
     @ViewChild('confirmSubmit') confirmSubmit?: ConfirmDialogComponent;
 
-    subm?: Submission;
-    submWrap?: PendingSubmission;
-    sectionForm?: SectionForm;
+    accno?: string;
+    releaseDate: string = ''; //???
 
+    sectionForm?: SectionForm;
     sideBarCollapsed: boolean = false;
 
-    accno: string = '';
-    releaseDate: string = '';
-    serverError?: ServerError;
-
+    hasJustCreated: boolean = false;
     submitOperation: SubmitOperation = SubmitOperation.Unknown;
 
-    private hasJustCreated: boolean = false;             //flag indicating submission has just been created through the UI
-    private editState: EditState = new EditState();
-
     private unsubscribe: Subject<void> = new Subject<void>();
-    private sectionFormSub?: Subscription;
 
     constructor(private route: ActivatedRoute,
                 private router: Router,
-                private submService: SubmissionService,
                 private locService: Location,
                 private modalService: BsModalService,
                 private appConfig: AppConfig,
-                private userData: UserData) {
+                private submEditService: SubmEditService) {
 
         //Initally collapses the sidebar for tablet-sized screens if applicable
         this.sideBarCollapsed = window.innerWidth < this.appConfig.tabletBreak;
+
+        submEditService.sectionSwitch$
+            .takeUntil(this.unsubscribe)
+            .subscribe(sectionForm => this.switchSection(sectionForm));
     }
 
     get location() {
@@ -174,45 +77,57 @@ export class SubmEditComponent implements OnInit {
     }
 
     get isSubmitting(): boolean {
-        return this.editState.isSubmitting;
+        return this.submEditService.isSubmitting;
     }
 
     get isLoading(): boolean {
-        return this.editState.isLoading;
+        return this.submEditService.isLoading;
     }
 
     get isSaving(): boolean {
-        return this.editState.isSaving;
+        return this.submEditService.isSaving;
     }
 
     get isReverting(): boolean {
-        return this.editState.isReverting;
+        return this.submEditService.isReverting;
+    }
+
+    //TODO: a temporary workaround
+    get isTemp(): boolean {
+        return this.accno!.startsWith('TMP_');
     }
 
     ngOnInit(): void {
         this.hasJustCreated = this.route.snapshot.data.isNew || false;
 
-        this.route.params.takeUntil(this.unsubscribe).pipe(
-            switchMap(params => {
-                this.editState.startLoading();
-                return this.load(params.accno);
-            })).subscribe(resp => {
-            this.editState.stopLoading(resp.error);
-            this.onLoadFinished(resp);
+        this.route.params.takeUntil(this.unsubscribe)
+            .pipe(
+                switchMap(params => {
+                    this.accno = params.accno;
+                    return this.submEditService.load(params.accno, this.hasJustCreated)
+                })
+            ).subscribe(() => {
+            if (this.hasJustCreated) {
+                this.locService.replaceState('/submissions/edit/' + this.accno);
+            }
         });
     }
 
     ngOnDestroy() {
         this.unsubscribe.next();
         this.unsubscribe.complete();
+        this.submEditService.reset();
     }
 
     onSectionClick(sectionForm: SectionForm): void {
-        this.switchSection(sectionForm);
+        this.submEditService.switchSection(sectionForm);
     }
 
     onRevertClick(event: Event) {
-        this.revert();
+        this.confirmRevert!.confirm().takeUntil(this.unsubscribe)
+            .pipe(switchMap(() => this.submEditService.revert())
+            ).subscribe(() => {
+        });
     }
 
     onSubmitClick(event, isConfirm: boolean = false) {
@@ -233,12 +148,12 @@ export class SubmEditComponent implements OnInit {
         if (isConfirm) {
             confirmShown = this.confirmSubmit!.confirm(this.confirmSubmit!.body, false);
         }
+        //TODO switchmap
         confirmShown.takeUntil(this.unsubscribe).pipe(filter(v => v)).subscribe(() => this.submit());
     }
 
     onEditBackClick(event: Event) {
         this.readonly = false;
-        this.subm!.isRevised = false;
         this.router.navigate(['/submissions/edit/' + this.accno]);
     }
 
@@ -255,10 +170,37 @@ export class SubmEditComponent implements OnInit {
         });
     }
 
-    showSubmitResults(resp: any) {
-        let logObj = {level: 'error'};
+    private get isValid(): boolean {
+        return this.sectionForm !== undefined && this.sectionForm.form.valid;
+    }
 
-        this.editState.stopSubmitting();
+    private submit() {
+        this.submEditService.submit().takeUntil(this.unsubscribe)
+            .subscribe(resp => this.onSubmitFinished(resp));
+    }
+
+    // todo: add proper type for submit response
+    private onSubmitFinished(resp: any) {
+        if (resp.data.error) {
+            this.showSubmitLog(resp.data.error);
+            return;
+        }
+        this.locService.replaceState('/submissions/' + this.accno);
+        this.readonly = true;
+
+        this.submitOperation = SubmitOperation.Update;
+
+        if (resp.mapping[0].assigned) {
+            this.accno = resp.mapping[0].assigned;
+            this.submitOperation = SubmitOperation.Create;
+            this.showSubmitLog(resp);
+        }
+
+        window.scrollTo(0, 0);
+    }
+
+    private showSubmitLog(resp: any) {
+        let logObj = {level: 'error'};
 
         //Normalises error to object
         if (typeof resp === 'string') {
@@ -274,171 +216,11 @@ export class SubmEditComponent implements OnInit {
         bsModalRef.content.log = resp.log;
         bsModalRef.content.mapping = resp.mapping || [];
         bsModalRef.content.status = resp.status;
-        bsModalRef.content.accno = this.subm!.accno;
+        bsModalRef.content.accno = this.accno;
     }
 
-    private get isValid(): boolean {
-        return this.sectionForm !== undefined && this.sectionForm.form.valid;
-    }
-
-    private load(accno: string): Observable<ServerResponse<PendingSubmission>> {
-        return this.submService.getSubmission(accno).pipe(
-            switchMap(submWrap => {
-                return of(ServerResponse.NoError(submWrap));
-            }),
-            catchError(error => {
-                return of(ServerResponse.Error(error));
-            }));
-    }
-
-    private onLoadFinished(resp: ServerResponse<PendingSubmission>) {
-        if (resp.isError) {
-            this.onErrorResponse(resp.error);
-            return;
-        }
-
-        this.submWrap = resp.payload!;
-        this.accno = this.submWrap.accno;
-        this.subm = pageTab2Submission(this.submWrap.data);
-        this.switchSection(new SectionForm(this.subm.section));
-
-        if (this.hasJustCreated) {
-            this.setDefaults(this.subm.section);
-        }
-    }
-
-    private onErrorResponse(error: any) {
-        this.serverError = error;
-    }
-
-    private revert() {
-        this.editState.startReverting();
-
-        this.confirmRevert!.confirm().takeUntil(this.unsubscribe)
-            .pipe(
-                switchMap(() => this.submService.deleteSubmission(this.accno)), // delete pending submission
-                switchMap(() => this.load(this.accno)) // and load original
-            ).subscribe(resp => {
-            this.editState.stopReverting(resp.error);
-            this.onLoadFinished(resp);
-        });
-    }
-
-    private save() {
-        this.editState.startSaving();
-
-        this.submService.saveSubmission(this.wrap()).takeUntil(this.unsubscribe)
-            .pipe(
-                map(resp => ServerResponse.NoError<any>(resp)),
-                catchError(error => of(ServerResponse.Error(error))))
-            .subscribe(resp => {
-                this.editState.stopSaving(resp.error);
-                this.onSaveFinished(resp);
-            });
-    }
-
-    private onSaveFinished(resp: ServerResponse<any>) {
-        if (resp.isError) {
-            this.onErrorResponse(resp.error);
-            return;
-        }
-        this.hasJustCreated && this.locService.replaceState('/submissions/edit/' + this.accno);
-
-        //A sent submission has been backed up. It follows it's been revised.
-        if (!this.subm!.isTemp && !this.subm!.isRevised) {
-            this.subm!.isRevised = true;
-        }
-    }
-
-    private submit() {
-        const wrap = this.wrap(true);
-
-        this.submService.submitSubmission(wrap).takeUntil(this.unsubscribe)
-            .pipe(
-                map(resp => ServerResponse.NoError<any>(resp)),
-                catchError(error => of(ServerResponse.Error(error))))
-            .subscribe(
-            resp => {
-                this.editState.stopSubmitting(resp.error);
-                this.onSubmitFinished(resp, wrap);
-            }
-        );
-    }
-
-    // todo: add proper type for submit response
-    private onSubmitFinished(resp:ServerResponse<any>, wrap: PendingSubmission) {
-        if (resp.isError) {
-            this.onErrorResponse(resp.error);
-            return;
-        }
-
-        if (resp.payload.data.error) {
-            this.showSubmitResults(resp.payload.data.error);
-            return;
-        }
-
-        const isNewSubmission = this.subm!.isTemp;
-
-        this.releaseDate = findReleaseDate(wrap.data) || '';
-
-        if (this.subm!.isTemp) {
-            this.accno = resp.payload.mapping[0].assigned;
-            this.subm!.accno = this.accno;
-        }
-
-        this.locService.replaceState('/submissions/' + this.accno);
-        this.readonly = true;
-
-        this.submitOperation = isNewSubmission ? SubmitOperation.Create : SubmitOperation.Update;
-        this.submitOperation.isCreate && this.showSubmitResults(resp);
-
-        //Flushes all updates synchronously so that the scroll reset happens exactly after them.
-        //this.changeRef.detectChanges();
-        window.scrollTo(0, 0);
-    }
-
-    /* TODO: set defaults when submission object is created and not yet sent to the server (NOT HERE!!!)*/
-    private setDefaults(section: Section): void {
-        this.userData.info$.subscribe(info => {
-            const contactFeature = section.features.find('Contact', 'typeName');
-
-            if (contactFeature) {
-                contactFeature.add(this.asContactAttributes(info), 0);
-            }
-            this.onDataChange();
-        });
-    }
-
-    private asContactAttributes(userInfo: UserInfo): AttributeData[] {
-        return [
-            {name: 'Name', value: userInfo.username},
-            {name: 'E-mail', value: userInfo.email},
-            {name: 'ORCID', value: userInfo.aux.orcid}
-        ];
-    }
-
-    private onDataChange(event?: Event) {
-        if (this.readonly) {
-            return;
-        }
-        this.save();
-    }
-
-    private switchSection(sectionForm: SectionForm) {
-        this.unsubscribe.next();
-
-        if (this.sectionFormSub !== undefined) {
-            this.sectionFormSub.unsubscribe();
-            this.sectionFormSub = undefined;
-        }
-        this.sectionForm = sectionForm;
-        this.sectionFormSub = this.sectionForm.form.valueChanges.pipe(throttleTime(900))
-            .subscribe(() => this.onDataChange());
-    }
-
-    private wrap(isSubmit: boolean = false): any {
-        const copy = Object.assign({}, this.submWrap);
-        copy.data = submission2PageTab(this.subm!, isSubmit);
-        return copy;
+    private switchSection(sectionForm: Option<SectionForm>) {
+        this.sectionForm = sectionForm.toUndefined();
+        console.log(this.sectionForm);
     }
 }

@@ -5,16 +5,13 @@
                   [collapsed]="sideBarCollapsed"
                   [sectionForm]="sectionForm"
                   [isLoading]="isLoading"
-                  [isSubmitting]="isSubmitting"
-                  [serverError]="serverError">
+                  [isSubmitting]="isSubmitting">
     </subm-sidebar>
 
-    <subm-navbar *ngIf="subm" class="navbar-subm-fixed navbar-default"
+    <subm-navbar *ngIf="sectionForm" class="navbar-subm-fixed navbar-default"
             [ngClass]="{'collapse-left': !readonly && sideBarCollapsed}"
             [readonly]="readonly"
             [accno]="accno"
-            [isTemp]="subm?.isTemp"
-            [isRevised]="subm?.isRevised"
             [sectionForm]="sectionForm"
             (sectionClick)="onSectionClick($event)"
             (revertClick)="onRevertClick($event)"
@@ -67,7 +64,7 @@
                         </div>
 
                         <div *ngIf="sectionForm.valid && !readonly">
-                            <div *ngIf="subm.isTemp && !isSubmitting">
+                            <div *ngIf="isTemp && !isSubmitting">
                                 <h4>Study ready for submission</h4>
                                 <p>
                                     You may submit the data on this form now. After submission, your study will be allocated
@@ -75,7 +72,7 @@
                                 </p>
                             </div>
 
-                            <div *ngIf="!subm.isTemp && !isSubmitting">
+                            <div *ngIf="!isTemp && !isSubmitting">
                                 <h4>Study ready for re-submission</h4>
                                 <p>
                                     You may re-submit the data on this form now. Your study will retain
@@ -89,7 +86,7 @@
                             </div>
                         </div>
 
-                        <div *ngIf="!subm.isTemp && readonly">
+                        <div *ngIf="!isTemp && readonly">
                             <h4>Study
                                 <span *ngIf="submitOperation.isUnknown">entry</span>
                                 <span *ngIf="submitOperation.isCreate">created</span>
@@ -173,7 +170,7 @@
                                 placement="top"
                                 container="body"
                                 (click)="onSubmit($event)">
-                            {{subm.isTemp ? 'S' : 'Re-s'}}ubmit
+                            {{isTemp ? 'S' : 'Re-s'}}ubmit
                         </button>
                     </p>
                     <p class="text-muted col-xs-9">

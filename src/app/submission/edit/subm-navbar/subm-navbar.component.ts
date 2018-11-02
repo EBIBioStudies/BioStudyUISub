@@ -20,8 +20,6 @@ export class SubmNavBarComponent implements OnChanges {
     @Input() sectionForm?: SectionForm;
     @Input() accno?: string;             //accession number for the current submission
     @Input() readonly: boolean = false;         //read-only status of the submission form
-    @Input() isTemp: boolean = false;           //flag indicating if the submission is temporary
-    @Input() isRevised: boolean = false;        //flag indicating if the sent submission has been changed
     @Output() sectionClick: EventEmitter<Section> = new EventEmitter<Section>();
     @Output() revertClick: EventEmitter<Event> = new EventEmitter<Event>();
     @Output() submitClick: EventEmitter<Event> = new EventEmitter<Event>();
@@ -94,6 +92,16 @@ export class SubmNavBarComponent implements OnChanges {
             this.router.navigate(['/submissions/new/', subm.accno]);
         });
     };
+
+    //TODO: a temporary workaround
+    get isTemp(): boolean {
+        return this.accno!.startsWith('TMP_');
+    }
+
+    //TODO: a temporary workaround
+    get isRevised(): boolean {
+        return true;
+    }
 
     private findSectionPath(sectionForm?: SectionForm): SectionForm[] {
         if (sectionForm === undefined) {

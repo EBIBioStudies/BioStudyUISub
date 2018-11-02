@@ -45,6 +45,7 @@ import {NativeElementAttachDirective} from './edit/subm-form/native-element-atta
 import {SubmEditSidebarComponent} from './edit/subm-sidebar/subm-edit-sidebar/subm-edit-sidebar.component';
 import {AddSubmTypeModalComponent} from './edit/modals/add-subm-type-modal.component';
 import {SubmCheckSidebarComponent} from './edit/subm-sidebar/subm-check-sidebar/subm-check-sidebar.component';
+import {SubmEditService} from './edit/subm-edit-state.service';
 
 
 @NgModule({
@@ -63,6 +64,7 @@ import {SubmCheckSidebarComponent} from './edit/subm-sidebar/subm-check-sidebar/
     ],
     providers: [
         SubmissionService,
+        SubmEditService,
         DirectSubmitService
     ],
     declarations: [
