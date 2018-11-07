@@ -122,16 +122,11 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     ngAfterViewChecked(): void {
-        if (this.scrollToCtrl === undefined) {
-            return;
+        if (this.scrollToCtrl !== undefined) {
+            setTimeout(() => {
+                this.scroll()
+            }, 500);
         }
-        if ((<any>this.scrollToCtrl).nativeElement !== undefined) {
-            const controlEl = (<any>this.scrollToCtrl).nativeElement;
-            let scrollTop = controlEl.getBoundingClientRect().top;
-            window.scrollBy(0, scrollTop);
-            controlEl.querySelectorAll('input, select, textarea')[0].focus();
-        }
-        this.scrollToCtrl = undefined;
     }
 
     ngOnDestroy() {
@@ -191,6 +186,19 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
         });
     }
 
+    private scroll() {
+        if (this.scrollToCtrl === undefined) {
+            return;
+        }
+        const el = (<any>this.scrollToCtrl).nativeElement;
+        if (el !== undefined) {
+            let scrollTop = el.getBoundingClientRect().top;
+            window.scrollBy(0, scrollTop);
+            el.querySelectorAll('input, select, textarea')[0].focus();
+        }
+        this.scrollToCtrl = undefined;
+    }
+
     private get isValid(): boolean {
         return this.sectionForm !== undefined && this.sectionForm.form.valid;
     }
@@ -242,6 +250,5 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     private switchSection(sectionForm: Option<SectionForm>) {
         this.sectionForm = sectionForm.toUndefined();
-        console.log(this.sectionForm);
     }
 }

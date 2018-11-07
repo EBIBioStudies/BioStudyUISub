@@ -283,6 +283,10 @@ export class SubmEditService {
         if (resp.isError) {
             return;
         }
+        if (this.submModel === undefined) {
+            return;
+        }
+        //TODO: re-implement 'revised' feature
         //A sent submission has been backed up. It follows it's been revised.
         if (!this.submModel!.isTemp && !this.submModel!.isRevised) {
             this.submModel!.isRevised = true;

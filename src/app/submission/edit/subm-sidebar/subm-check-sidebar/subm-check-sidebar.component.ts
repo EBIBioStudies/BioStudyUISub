@@ -45,11 +45,6 @@ export class SubmCheckSidebarComponent {
      * @param {FieldControl} control - Form control augmented with the DOM element for the field.
      */
     onReviewClick(event: Event, control: FormControl) {
-        const controlEl = (<any>control).nativeElement;
-        console.log(controlEl);
-        if (!controlEl) {
-            return;
-        }
         if (control instanceof MyFormControl) {
             this.submEditService.scrollToControl(control);
         }

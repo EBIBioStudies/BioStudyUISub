@@ -193,7 +193,7 @@ export class SubmListComponent {
         this.isBusy = true;
         this.userData.filteredProjectAccNumbers$(SUBMISSION_TEMPLATE_NAMES).subscribe(projects => {
             this.isBusy = false;
-            this.allowedPrj = ['BIA', 'HeCaToS', 'EU-ToxRisk'];//projects;
+            this.allowedPrj = ['BIA', 'HeCaToS', 'EU-ToxRisk', 'Default'];//projects;
         });
     }
 
