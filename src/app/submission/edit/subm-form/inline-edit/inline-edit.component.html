@@ -14,7 +14,7 @@
            [typeaheadScrollable]="true"
            [typeaheadOptionsInScrollableView]="suggestLength"
            (blur)="onBlur($event)"
-           (click)="canEdit && startEditing()"
+           (click)="canEdit && onEdit()"
            (keyup.enter)="onEnterKey($event, ahead._container)"
            (keydown)="onKeyDown()"
            #ahead="bs-typeahead"

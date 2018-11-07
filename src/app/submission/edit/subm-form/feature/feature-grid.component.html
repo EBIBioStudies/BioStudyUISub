@@ -1,4 +1,6 @@
-<div class="container-fluid container-scroll" [formGroup]="featureForm?.form">
+<div *ngIf="featureForm"
+     class="container-fluid container-scroll"
+     [formGroup]="featureForm.form">
     <div class="row">
         <div class="cell canton col-xs-1 col-md-1 text-center">
             <button *ngIf="featureForm.canAddColumn()"
@@ -66,7 +68,7 @@
         </div>
     </div>
 </div>
-<button *ngIf="featureForm.canAddRow()" type="button" class="btn-add btn btn-link" tabindex="-1"
+<button *ngIf="featureForm && featureForm.canAddRow()" type="button" class="btn-add btn btn-link" tabindex="-1"
         [tooltip]="'Add a new ' + featureForm.prettyName"
         container="body"
         (click)="featureForm.addRow()">

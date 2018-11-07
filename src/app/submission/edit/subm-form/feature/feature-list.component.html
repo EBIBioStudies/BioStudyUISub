@@ -1,4 +1,6 @@
-<div class="form-horizontal container-fluid" [formGroup]="featureForm?.form">
+<div *ngIf="featureForm"
+     class="form-horizontal container-fluid"
+     [formGroup]="featureForm.form">
     <div class="headings row text-muted">
         <div class="cell heading col-xs-3">Key</div>
         <div class="cell heading col-xs-9">Value</div>
@@ -60,7 +62,7 @@
         </div>
     </div>
 </div>
-<div class="row" *ngIf="featureForm.canAddColumn()">
+<div class="row" *ngIf="featureForm && featureForm.canAddColumn()">
     <div class="col-xs-1 col-md-1">
         <button *ngIf="!readonly"
                 type="button"

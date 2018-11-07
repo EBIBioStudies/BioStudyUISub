@@ -24,6 +24,7 @@ export class InlineEditComponent implements ControlValueAccessor {
     @Output() remove = new EventEmitter<any>();
 
     editing: boolean = false;
+    suggestLength: number;
 
     onChange: any = () => {
     };
@@ -31,7 +32,6 @@ export class InlineEditComponent implements ControlValueAccessor {
     };
 
     private _value: string = '';
-    private suggestLength: number;
 
     readonly typeahead: Observable<string[]>;
     private valueChanges$: Subject<string> = new BehaviorSubject<string>('');
@@ -83,11 +83,11 @@ export class InlineEditComponent implements ControlValueAccessor {
         return this.canEdit && this.removable;
     }
 
-    onEdit(ev): void {
+    onEdit(): void {
         this.startEditing();
     }
 
-    onRemove(ev): void {
+    onRemove(): void {
         this.remove.emit();
     }
 

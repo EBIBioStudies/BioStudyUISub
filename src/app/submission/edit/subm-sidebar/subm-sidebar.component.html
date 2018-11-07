@@ -35,10 +35,7 @@
 
     <subm-check-sidebar *ngIf="isCheckTabActive"
                         [collapsed]="collapsed"
-                        [invalidControls]="invalidControls"
-                        [isLoading]="isLoading"
-                        [isSubmitting]="isSubmitting"
-                        [serverError]="serverError"
-                        (review)="onReviewClick($event)">
+                        (review)="onReviewClick($event)"
+                        #checkTab>
     </subm-check-sidebar>
 </aside>

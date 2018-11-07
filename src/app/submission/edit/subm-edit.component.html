@@ -3,9 +3,7 @@
     <subm-sidebar *ngIf="!readonly"
                   (toggle)="sideBarCollapsed=!sideBarCollapsed"
                   [collapsed]="sideBarCollapsed"
-                  [sectionForm]="sectionForm"
-                  [isLoading]="isLoading"
-                  [isSubmitting]="isSubmitting">
+                  [sectionForm]="sectionForm">
     </subm-sidebar>
 
     <subm-navbar *ngIf="sectionForm" class="navbar-subm-fixed navbar-default"

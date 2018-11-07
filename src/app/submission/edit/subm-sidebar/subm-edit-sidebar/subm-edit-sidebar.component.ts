@@ -66,7 +66,7 @@ export class SubmEditSidebarComponent implements OnInit, OnChanges {
 
     @ViewChild('confirmDialog') confirmDialog?: ConfirmDialogComponent;
 
-    private form?: FormGroup;
+    form?: FormGroup;
 
     constructor(public userData: UserData, private modalService: BsModalService) {
     }

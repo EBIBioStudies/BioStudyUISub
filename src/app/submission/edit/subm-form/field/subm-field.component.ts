@@ -51,6 +51,10 @@ export class SubmFieldComponent {
         return this.fieldType.valueType;
     }
 
+    get isEmpty(): boolean {
+        return (<string>this.fieldControl!.control.value).isEmpty();
+    }
+
     get isRequired(): boolean {
         return this.fieldType.displayType.isRequired;
     }
