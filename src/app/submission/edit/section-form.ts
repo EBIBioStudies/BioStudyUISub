@@ -580,6 +580,10 @@ export class SectionForm {
         }
     }
 
+    findSectionForm(sectionId: string) {
+        return this.findRoot().lookupSectionForm(sectionId);
+    }
+
     get invalid(): boolean {
         return this.form.invalid;
     }
@@ -640,5 +644,19 @@ export class SectionForm {
     private unsubscribe(featureId: string) {
         this.sb.get(featureId)!.unsubscribe();
         this.sb.delete(featureId);
+    }
+
+    private findRoot(): SectionForm {
+        if (this.parent === undefined) {
+            return this;
+        }
+        return this.parent.findRoot();
+    }
+
+    private lookupSectionForm(sectionId: string): SectionForm | undefined {
+        if (this.section.id === sectionId) {
+            return this;
+        }
+        return this.subsectionForms.find(sf => sf.lookupSectionForm(sectionId) != undefined);
     }
 }

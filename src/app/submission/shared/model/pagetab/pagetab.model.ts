@@ -50,5 +50,5 @@ export interface PageTab {
 
 export function findReleaseDate(pageTab: PageTab): string | undefined {
     return fromNullable((pageTab.attributes || []).find(at => at.name === RELEASE_DATE_ATTR))
-        .map(at => at.value).getOrElse(undefined);
+        .map(at => at.value).toUndefined();
 }

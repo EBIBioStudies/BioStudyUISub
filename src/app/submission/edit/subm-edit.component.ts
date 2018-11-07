@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewChecked, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Location} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
 
@@ -13,8 +13,9 @@ import {Subject} from 'rxjs/Subject';
 import {of} from 'rxjs';
 import {SectionForm} from './section-form';
 import {filter, switchMap} from 'rxjs/operators';
-import {SubmEditService} from './subm-edit-state.service';
+import {SubmEditService} from './subm-edit.service';
 import {Option} from 'fp-ts/lib/Option';
+import {FormControl} from '@angular/forms';
 
 class SubmitOperation {
     get isUnknown(): boolean {
@@ -38,7 +39,7 @@ class SubmitOperation {
     selector: 'subm-edit',
     templateUrl: './subm-edit.component.html'
 })
-export class SubmEditComponent implements OnInit, OnDestroy {
+export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
     @Input() readonly: boolean = false;
 
     @ViewChild(SubmSidebarComponent) sideBar?: SubmSidebarComponent;
@@ -56,6 +57,7 @@ export class SubmEditComponent implements OnInit, OnDestroy {
     submitOperation: SubmitOperation = SubmitOperation.Unknown;
 
     private unsubscribe: Subject<void> = new Subject<void>();
+    private scrollToCtrl?: FormControl;
 
     constructor(private route: ActivatedRoute,
                 private router: Router,
@@ -70,6 +72,12 @@ export class SubmEditComponent implements OnInit, OnDestroy {
         submEditService.sectionSwitch$
             .takeUntil(this.unsubscribe)
             .subscribe(sectionForm => this.switchSection(sectionForm));
+
+        submEditService.scroll2Control$
+            .takeUntil(this.unsubscribe)
+            .subscribe(ctrl => {
+                this.scrollToCtrl = ctrl;
+            });
     }
 
     get location() {
@@ -111,6 +119,19 @@ export class SubmEditComponent implements OnInit, OnDestroy {
                 this.locService.replaceState('/submissions/edit/' + this.accno);
             }
         });
+    }
+
+    ngAfterViewChecked(): void {
+        if (this.scrollToCtrl === undefined) {
+            return;
+        }
+        if ((<any>this.scrollToCtrl).nativeElement !== undefined) {
+            const controlEl = (<any>this.scrollToCtrl).nativeElement;
+            let scrollTop = controlEl.getBoundingClientRect().top;
+            window.scrollBy(0, scrollTop);
+            controlEl.querySelectorAll('input, select, textarea')[0].focus();
+        }
+        this.scrollToCtrl = undefined;
     }
 
     ngOnDestroy() {

@@ -1,6 +1,8 @@
 import {FormControl, ValidationErrors} from '@angular/forms';
 import {Component, Input} from '@angular/core';
 import {ServerError} from '../../../../http';
+import {SubmEditService} from '../../subm-edit.service';
+import {MyFormControl} from '../../form-validators';
 
 
 @Component({
@@ -13,6 +15,9 @@ export class SubmCheckSidebarComponent {
     @Input() isSubmitting: boolean = false;
     @Input() collapsed?: boolean = false;
     @Input() serverError?: ServerError;
+
+    constructor(private submEditService:SubmEditService) {
+    }
 
     /**
      * Determines the abbreviated text matching a certain error key.
@@ -45,16 +50,19 @@ export class SubmCheckSidebarComponent {
         if (!controlEl) {
             return;
         }
-        const buttonEl = <HTMLElement>event.target;
-        let scrollTop = controlEl.getBoundingClientRect().top - buttonEl.getBoundingClientRect().top;
+        if (control instanceof MyFormControl) {
+            this.submEditService.scrollToControl(control);
+        }
+       // const buttonEl = <HTMLElement>event.target;
+       // let scrollTop = controlEl.getBoundingClientRect().top - buttonEl.getBoundingClientRect().top;
 
         //Prevents the submission topbar from overlapping the control's label area if it's at the top.
         //if (this.formControls.indexOf(control) == 0) {
         //    scrollTop -= 25;
         //}
 
-        window.scrollBy(0, scrollTop);
-        controlEl.querySelectorAll('input, select, textarea')[0].focus();
+        //window.scrollBy(0, scrollTop);
+        //controlEl.querySelectorAll('input, select, textarea')[0].focus();
     }
 
     /**

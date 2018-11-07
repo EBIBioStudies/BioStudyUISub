@@ -3,17 +3,23 @@ import {AttributeData, Section, Submission} from '../shared/model/submission';
 import {PendingSubmission, SubmissionService} from '../shared/submission.service';
 import {SectionForm} from './section-form';
 import {catchError, map, switchMap, throttleTime} from 'rxjs/operators';
-import {BehaviorSubject, concat, Observable, Observer, of, ReplaySubject, Subject, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, of, Subject, Subscription} from 'rxjs';
 import {pageTab2Submission, submission2PageTab} from '../shared/model';
 import {UserInfo} from '../../auth/model/user-info';
-import {none, None, Option, some, Some} from 'fp-ts/lib/Option';
+import {none, Option, some} from 'fp-ts/lib/Option';
 import {UserData} from '../../auth';
+import {FormControl} from '@angular/forms';
+import {MyFormControl} from './form-validators';
 
 
 class EditState {
     private state: string;
 
     constructor() {
+        this.state = EditState.Init;
+    }
+
+    reset() {
         this.state = EditState.Init;
     }
 
@@ -105,12 +111,12 @@ export class SubmEditService {
     private editState: EditState = new EditState();
     private sectionFormSub?: Subscription;
 
-    sectionSwitch$: ReplaySubject<Option<SectionForm>> = new ReplaySubject<Option<SectionForm>>(1);
+    sectionSwitch$: BehaviorSubject<Option<SectionForm>> = new BehaviorSubject<Option<SectionForm>>(none);
     serverError$: Subject<any> = new Subject<any>();
+    scroll2Control$: Subject<FormControl> = new Subject<FormControl>();
 
     constructor(private userData: UserData,
                 private submService: SubmissionService) {
-        this.sectionSwitch$.next(none)
     };
 
     get isSubmitting(): boolean {
@@ -135,6 +141,11 @@ export class SubmEditService {
 
     get isRevised() {
         return this.submModel!.isRevised;
+    }
+
+    scrollToControl(ctrl: MyFormControl) {
+        this.switchSectionById(ctrl.ref.sectionId);
+        this.scroll2Control$.next(ctrl);
     }
 
     load(accno: string, setDefaults?: boolean): Observable<ServerResponse<any>> {
@@ -183,19 +194,37 @@ export class SubmEditService {
     }
 
     reset() {
-        //TODO reset all
+        this.editState.reset();
+        this.switchSection(undefined);
+        this.submModel = undefined;
+        this.submWrap = undefined;
+        this.accno = undefined;
     }
 
-    switchSection(sectionForm: SectionForm) {
+    switchSectionById(sectionId: string) {
+        this.switchSection(
+            this.sectionSwitch$.value.map(sf =>
+                sf.findSectionForm(sectionId)
+            ).toUndefined());
+    }
+
+    switchSection(sectionForm: SectionForm | undefined) {
+        if (this.sectionSwitch$.value.toUndefined() === sectionForm) {
+            return;
+        }
+
         if (this.sectionFormSub) {
             this.sectionFormSub.unsubscribe();
             this.sectionFormSub = undefined;
         }
 
-        this.sectionFormSub = sectionForm.form.valueChanges.pipe(throttleTime(900))
-            .subscribe(() => this.save());
-
-        this.sectionSwitch$.next(some(sectionForm));
+        if (sectionForm !== undefined) {
+            this.sectionFormSub = sectionForm.form.valueChanges.pipe(throttleTime(900))
+                .subscribe(() => this.save());
+            this.sectionSwitch$.next(some(sectionForm));
+        } else {
+            this.sectionSwitch$.next(none);
+        }
     }
 
     private save() {
@@ -229,7 +258,9 @@ export class SubmEditService {
             if (contactFeature) {
                 contactFeature.add(this.asContactAttributes(info), 0);
             }
-            setTimeout(() => {subscr.unsubscribe()}, 10);
+            setTimeout(() => {
+                subscr.unsubscribe()
+            }, 10);
             this.save();
         });
     }
