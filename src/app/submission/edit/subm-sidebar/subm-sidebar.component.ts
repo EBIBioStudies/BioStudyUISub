@@ -1,38 +1,54 @@
-import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
 import {ServerError} from '../../../http/server-error.handler';
 import {SectionForm} from '../section-form';
-import {SubmCheckSidebarComponent} from './subm-check-sidebar/subm-check-sidebar.component';
-import {fromNullable} from 'fp-ts/lib/Option';
+import {Option} from 'fp-ts/lib/Option';
+import {FormControl} from '@angular/forms';
+import {Subject} from 'rxjs';
+import {SubmEditService} from '../subm-edit.service';
+import {throttleTime} from 'rxjs/operators';
+import {MyFormControl} from '../form-validators';
 
+type FormControlGroup = Array<FormControl>;
 
 @Component({
     selector: 'subm-sidebar',
     templateUrl: './subm-sidebar.component.html',
     styleUrls: ['./subm-sidebar.component.css']
 })
-export class SubmSidebarComponent {
+export class SubmSidebarComponent implements OnDestroy {
     @Input() collapsed?: boolean = false;
     @Input() sectionForm?: SectionForm;
     @Output() toggle? = new EventEmitter();
 
-    @ViewChild('checkTab') checkTab?: SubmCheckSidebarComponent;
+    serverError?: ServerError;
+    invalidControls: FormControlGroup[] = [];
 
     isCheckTabActive: boolean = true;
 
+    private controls: Array<FormControl>[] = [];
+    private unsubscribe = new Subject<void>();
+    private unsubscribeForm = new Subject<void>();
+
+    constructor(private submEditService: SubmEditService) {
+        this.submEditService.serverError$.takeUntil(this.unsubscribe)
+            .subscribe(error => {
+                this.serverError = ServerError.fromResponse(error);
+            });
+
+        this.submEditService.sectionSwitch$.takeUntil(this.unsubscribe)
+            .subscribe(sectionForm => this.switchSection(sectionForm));
+    }
+
+    ngOnDestroy(): void {
+        this.unsubscribeForm.next();
+        this.unsubscribeForm.complete();
+
+        this.unsubscribe.next();
+        this.unsubscribe.complete();
+    }
+
     get isEditTabActive(): boolean {
         return !this.isCheckTabActive;
-    }
-
-    get numInvalid(): number {
-        return fromNullable(this.checkTab).map(tab => tab.numInvalid).getOrElse(0);
-    }
-
-    get numInvalidAndTouched(): number {
-        return fromNullable(this.checkTab).map(tab => tab.numInvalidAndTouched).getOrElse(0);
-    }
-
-    get serverError(): ServerError | undefined {
-        return fromNullable(this.checkTab).map(tab => tab.serverError).toUndefined();
     }
 
     onCheckTabClick(): void {
@@ -43,6 +59,14 @@ export class SubmSidebarComponent {
         this.isCheckTabActive = false;
     }
 
+    get numInvalid(): number {
+        return this.invalidControls.flatMap(c => c).length;
+    }
+
+    get numInvalidAndTouched(): number {
+        return this.invalidControls.flatMap(c => c).filter(c => c.touched).length;
+    }
+
     /**
      * Handler for the button toggling the collapsed state of the whole sidebar menu,
      * bubbling the menu's state up.
@@ -51,5 +75,42 @@ export class SubmSidebarComponent {
     onToggleCollapse(event?: Event): void {
         event && event.preventDefault();
         this.toggle && this.toggle.emit();
+    }
+
+    private switchSection(sectionFormOp: Option<SectionForm>) {
+        this.unsubscribeForm.next();
+
+        if (sectionFormOp.isSome()) {
+            const secForm = sectionFormOp.toUndefined()!;
+            secForm.structureChanges$.takeUntil(this.unsubscribeForm).subscribe(
+                () => {
+                    this.controls = this.groupControlsBySectionId(secForm.controls());
+                    this.updateInvalidControls();
+                }
+            );
+            secForm.form.valueChanges.takeUntil(this.unsubscribeForm).pipe(throttleTime(1000)).subscribe(() => {
+                this.updateInvalidControls();
+            });
+
+        }
+    }
+
+    private updateInvalidControls() {
+        this.invalidControls =
+            this.controls.map(g => g.filter(c => c.invalid)).filter(g => !g.isEmpty());
+    }
+
+    private groupControlsBySectionId(controls: FormControl[]): FormControlGroup[] {
+        return controls
+            .reduce((rv, c) => {
+                const group = rv.isEmpty() ? undefined : rv[rv.length - 1];
+                const prevControl = group === undefined ? undefined : group[group.length - 1];
+                if (prevControl !== undefined && MyFormControl.compareBySectionId(prevControl, c) === 0) {
+                    group!.push(c);
+                } else {
+                    rv.push([c]);
+                }
+                return rv;
+            }, [] as Array<FormControlGroup>);
     }
 }
