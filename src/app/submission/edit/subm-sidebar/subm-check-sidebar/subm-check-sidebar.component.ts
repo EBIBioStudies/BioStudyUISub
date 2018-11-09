@@ -129,7 +129,7 @@ export class SubmCheckSidebarComponent implements OnDestroy {
     private switchSection(sectionFormOp: Option<SectionForm>) {
         this.unsubscribeForm.next();
 
-        if (sectionFormOp.isSome) {
+        if (sectionFormOp.isSome()) {
             const secForm = sectionFormOp.toUndefined()!;
             secForm.structureChanges$.takeUntil(this.unsubscribeForm).subscribe(
                 () => {
