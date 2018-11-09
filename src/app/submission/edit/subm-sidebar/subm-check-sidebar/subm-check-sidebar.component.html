@@ -1,5 +1,5 @@
 <ul class="sidebar-menu">
-    <li *ngIf="numInvalid === 0 || isLoading || isSubmitting" class="center-vertically text-center"
+    <li *ngIf="invalidControls.isEmpty() || isLoading || isSubmitting" class="center-vertically text-center"
         [ngClass]="{'col-xs-12': !collapsed}">
         <i class="fa " aria-hidden="true"
            [ngClass]="{
@@ -18,7 +18,7 @@
     </li>
 </ul>
 <ul class="sidebar-menu" *ngFor="let controlGroup of invalidControls">
-    <li class="sidebar-item-header">
+    <li *ngIf="!controlGroup[0].ref.isRootSection" class="sidebar-item-header">
         <span>{{collapsed ? '' : controlGroup[0].ref.sectionName}}</span>
     </li>
     <li class="sidebar-item" *ngFor="let control of controlGroup">

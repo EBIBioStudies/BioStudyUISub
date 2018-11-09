@@ -519,8 +519,8 @@ export class SectionForm {
     private sectionRef: ControlGroupRef;
 
     constructor(readonly section: Section, readonly parent?: SectionForm) {
-        this.sectionPath = this.parent === undefined ? [] : [...this.parent.sectionPath, ...[this.id]];
-        this.sectionRef = new ControlGroupRef(this.id, section.accno || section.typeName);
+        this.sectionPath = this.isRootSection ? [] : [...this.parent!.sectionPath, ...[this.id]];
+        this.sectionRef = ControlGroupRef.sectionRef(section, this.isRootSection);
 
         this.form = new FormGroup({
             fields: new FormGroup({}),
@@ -602,6 +602,10 @@ export class SectionForm {
 
     get accno(): string {
         return this.section.accno;
+    }
+
+    private get isRootSection():boolean {
+        return this.parent === undefined;
     }
 
     private get fieldFormGroup(): FormGroup {

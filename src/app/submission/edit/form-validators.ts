@@ -9,7 +9,7 @@ import {
     Validators
 } from '@angular/forms';
 import {TextValueType, ValueType, ValueTypeName} from '../shared/model/templates';
-import {Attribute, Feature, Field} from '../shared/model/submission';
+import {Attribute, Feature, Field, Section} from '../shared/model/submission';
 import {parseDate} from '../../utils';
 
 export class ControlRef {
@@ -31,6 +31,10 @@ export class ControlRef {
         return this.parentRef ? this.parentRef.sectionName : '';
     }
 
+    get isRootSection(): boolean {
+        return this.parentRef ? this.parentRef.isRoot : true;
+    }
+
     static unknown = new ControlRef('unknown_control', 'unknown');
 }
 
@@ -39,7 +43,8 @@ export class ControlGroupRef {
         readonly sectionId: string,
         readonly sectionName: string,
         readonly featureName?: string,
-        readonly icon: string = 'fa-square') {
+        readonly icon: string = 'fa-square',
+        readonly isRoot: boolean = false) {
     };
 
     get name(): string {
@@ -69,6 +74,10 @@ export class ControlGroupRef {
     }
 
     static unknown = new ControlGroupRef('unknown_section', 'unknown');
+
+    static sectionRef(section: Section, isRoot: boolean = false) {
+        return new ControlGroupRef(section.id, section.accno || section.typeName, undefined, undefined, isRoot);
+    }
 }
 
 export class MyFormControl extends FormControl {
@@ -88,9 +97,9 @@ export class MyFormControl extends FormControl {
     static compareBySectionId = (c1: FormControl, c2: FormControl) => {
         if (c1 instanceof MyFormControl && c2 instanceof MyFormControl) {
             return c1.ref.sectionId.localeCompare(c2.ref.sectionId);
-        } else if (c1 instanceof  MyFormControl) {
+        } else if (c1 instanceof MyFormControl) {
             return 1;
-        } else if (c2 instanceof  MyFormControl) {
+        } else if (c2 instanceof MyFormControl) {
             return -1;
         }
         return 0;
