@@ -1,8 +1,8 @@
 import {Component, ViewChild} from '@angular/core';
 
-import {AppConfig} from "../../app.config";
+import {AppConfig} from '../../app.config';
 
-import * as pluralize from "pluralize";
+import * as pluralize from 'pluralize';
 
 @Component({
     selector: 'direct-submit',

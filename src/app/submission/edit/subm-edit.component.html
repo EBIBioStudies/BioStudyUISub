@@ -141,7 +141,7 @@
                             : {{subsectionForm.section.accno}}
                         </span>
                         <span class="label label-danger pull-right"
-                              *ngIf="subsectionForm.invalid">{{'??'}} error{{2 > 1 ? 's' : ''}}</span>
+                              *ngIf="subsectionForm.invalid">{{subsectionForm.errorCount | plural: 'error' }}</span>
                         <span class="btn-toolbar pull-right">
                             <button type="button" class="section-edit btn btn-link btn-xs btn-flat"
                                     tooltip="{{readonly ? 'View' : 'Edit'}} page &quot;{{subsectionForm.section.typeName}}&quot;"

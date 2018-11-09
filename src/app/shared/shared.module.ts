@@ -25,6 +25,7 @@ import {ValidateOnBlurDirective} from './validate-onblur.directive';
 import {StripHtmlPipe} from './strip-html.pipe';
 import {DateFormatDirective} from './date-format.directive';
 import {DateInputComponent} from './date-input.component';
+import {PluralPipe} from './plural.pipe';
 
 @NgModule({
     imports: [
@@ -52,7 +53,8 @@ import {DateInputComponent} from './date-input.component';
         StripHtmlPipe,
         ValidateOnBlurDirective,
         DateFormatDirective,
-        DateInputComponent
+        DateInputComponent,
+        PluralPipe
     ],
     exports: [
         CommonModule,
@@ -78,7 +80,8 @@ import {DateInputComponent} from './date-input.component';
         StripHtmlPipe,
         ValidateOnBlurDirective,
         DateFormatDirective,
-        DateInputComponent
+        DateInputComponent,
+        PluralPipe
     ]
 })
 export class SharedModule {

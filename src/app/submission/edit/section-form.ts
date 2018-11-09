@@ -32,12 +32,6 @@ function listOfControls(control: AbstractControl): FormControl[] {
     return [<FormControl>control];
 }
 
-function listOfInvalidControls(control: AbstractControl) {
-    return listOfControls(control)
-        .filter(control => control.invalid)
-        .reverse()
-}
-
 export class FieldControl {
     readonly control: MyFormControl;
 
@@ -176,27 +170,61 @@ export class RowForm {
     }
 }
 
+export class FormBase {
+    private _errorCount: number = 0;
+
+    constructor(readonly form: FormGroup) {
+        form.statusChanges.subscribe(() => {
+            this.onStatusChanges();
+        });
+    }
+
+    get errorCount(): number {
+        return this._errorCount;
+    }
+
+    get hasErrors(): boolean {
+        return this.form.invalid && this.form.touched;
+    }
+
+    get invalid(): boolean {
+        return this.form.invalid;
+    }
+
+    get valid(): boolean {
+        return this.form.valid;
+    }
+
+    controls(): FormControl[] {
+        return listOfControls(this.form).reverse();
+    }
+
+    invalidControls(): FormControl[] {
+        return this.controls().filter(control => control.invalid);
+    }
+
+    private onStatusChanges() {
+        this._errorCount = this.invalidControls().length;
+    }
+}
+
 const featureGroupSize = (g: Feature[]) => g.map(f => f.rowSize()).reduce((rv, v) => rv + v, 0);
 
-export class FeatureForm {
-    readonly form: FormGroup;
-
+export class FeatureForm extends FormBase {
     private columnControls: ColumnControl[] = [];
     private rowForms: RowForm[] = [];
 
     private cellValueTypeahead: Map<string, () => string[]> = new Map();
-
-    errorCount: number = 0;
 
     columnNamesAvailableCached: string[] = [];
 
     structureChanges$: Subject<StructureChangeEvent> = new Subject<StructureChangeEvent>();
 
     constructor(private feature: Feature, private featureRef: ControlGroupRef ) {
-        this.form = new FormGroup({
-            columns: new MyFormGroup({}, SubmFormValidators.forFeatureColumns(feature)).withRef(this.featureRef),
+        super(new FormGroup({
+            columns: new MyFormGroup({}, SubmFormValidators.forFeatureColumns(feature)).withRef(featureRef),
             rows: new FormArray([])
-        });
+        }));
 
         feature.columns.forEach(column => {
                 this.addColumnControl(column);
@@ -212,16 +240,6 @@ export class FeatureForm {
         });
 
         this.columnNamesAvailableCached = this.columnNamesAvailable();
-
-        this.form.valueChanges.pipe(throttleTime(500)).subscribe(() => {
-            this.onValueFormChanges();
-        });
-
-        this.onValueFormChanges();
-    }
-
-    private onValueFormChanges() {
-        this.errorCount = listOfInvalidControls(this.form).length;
     }
 
     private get columnsForm(): FormGroup {
@@ -314,14 +332,6 @@ export class FeatureForm {
 
     get hasRequiredGroups(): boolean {
         return this.requiredGroups.length > 0;
-    }
-
-    get hasErrors(): boolean {
-        return this.form.invalid && this.form.touched;
-    }
-
-    get invalid(): boolean {
-        return this.form.invalid;
     }
 
     get scrollToTheLastControl(): FormControl | undefined {
@@ -502,8 +512,7 @@ export class StructureChangeEvent {
     static featureColumnRemove: StructureChangeEvent = new StructureChangeEvent('featureColumnRemove');
 }
 
-export class SectionForm {
-    readonly form: FormGroup;
+export class SectionForm extends FormBase {
 
     readonly fieldControls: FieldControl[] = [];
     readonly featureForms: FeatureForm[] = [];
@@ -519,14 +528,14 @@ export class SectionForm {
     private sectionRef: ControlGroupRef;
 
     constructor(readonly section: Section, readonly parent?: SectionForm) {
-        this.sectionPath = this.isRootSection ? [] : [...this.parent!.sectionPath, ...[this.id]];
-        this.sectionRef = ControlGroupRef.sectionRef(section, this.isRootSection);
-
-        this.form = new FormGroup({
+        super(new FormGroup({
             fields: new FormGroup({}),
             features: new FormGroup({}),
             sections: new FormGroup({})
-        });
+        }));
+
+        this.sectionPath = this.isRootSection ? [] : [...this.parent!.sectionPath, ...[this.id]];
+        this.sectionRef = ControlGroupRef.sectionRef(section, this.isRootSection);
 
         section.fields.list().forEach(
             field => {
@@ -542,10 +551,6 @@ export class SectionForm {
             s => {
                 this.addSubsectionForm(s);
             });
-    }
-
-    controls(): FormControl[] {
-        return listOfControls(this.form).reverse();
     }
 
     scrollToTheLastControl(featureId: string): FormControl | undefined {
@@ -582,14 +587,6 @@ export class SectionForm {
 
     findSectionForm(sectionId: string) {
         return this.findRoot().lookupSectionForm(sectionId);
-    }
-
-    get invalid(): boolean {
-        return this.form.invalid;
-    }
-
-    get valid(): boolean {
-        return this.form.valid;
     }
 
     get typeName(): string {

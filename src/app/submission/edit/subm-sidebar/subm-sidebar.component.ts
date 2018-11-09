@@ -88,16 +88,14 @@ export class SubmSidebarComponent implements OnDestroy {
                     this.updateInvalidControls();
                 }
             );
-            secForm.form.valueChanges.takeUntil(this.unsubscribeForm).pipe(throttleTime(1000)).subscribe(() => {
+            secForm.form.statusChanges.takeUntil(this.unsubscribeForm).subscribe(() => {
                 this.updateInvalidControls();
             });
-
         }
     }
 
     private updateInvalidControls() {
-        this.invalidControls =
-            this.controls.map(g => g.filter(c => c.invalid)).filter(g => !g.isEmpty());
+        this.invalidControls = this.controls.map(g => g.filter(c => c.invalid)).filter(g => !g.isEmpty());
     }
 
     private groupControlsBySectionId(controls: FormControl[]): FormControlGroup[] {
