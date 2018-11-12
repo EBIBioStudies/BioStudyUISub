@@ -6,7 +6,7 @@ import {
     FeatureType,
     Field,
     FieldType,
-    Section,
+    Section, SectionType,
     ValueMap,
     ValueType
 } from '../shared/model';
@@ -553,7 +553,7 @@ export class SectionForm extends FormBase {
             });
     }
 
-    scrollToTheLastControl(featureId: string): FormControl | undefined {
+    getFeatureControl(featureId: string): FormControl | undefined {
         const featureForm = this.featureForms.find(f => f.id === featureId);
         if (featureForm !== undefined) {
             return featureForm.scrollToTheLastControl;
@@ -583,6 +583,10 @@ export class SectionForm extends FormBase {
         if (featureForm !== undefined) {
             featureForm.addEntry();
         }
+    }
+
+    addSection(type:SectionType) {
+        return this.addSubsectionForm(this.section.sections.add(type));
     }
 
     findSectionForm(sectionId: string) {
@@ -623,17 +627,19 @@ export class SectionForm extends FormBase {
         this.fieldFormGroup.addControl(field.id, fieldControl.control);
     }
 
-    private addFeatureForm(feature: Feature) {
+    private addFeatureForm(feature: Feature): FeatureForm {
         const featureForm = new FeatureForm(feature, this.sectionRef.featureRef(feature));
         this.featureForms.push(featureForm);
         this.featureFormGroups.addControl(feature.id, featureForm.form);
         this.subscribe(featureForm);
+        return featureForm;
     }
 
-    private addSubsectionForm(section: Section) {
+    private addSubsectionForm(section: Section): SectionForm {
         const sectionForm = new SectionForm(section, this);
         this.subsectionForms.push(sectionForm);
         this.subsectionFormGroups.addControl(section.id, sectionForm.form);
+        return sectionForm;
     }
 
     private subscribe(featureForm: FeatureForm) {

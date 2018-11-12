@@ -8,6 +8,7 @@ import {FeatureType, SectionType, TypeBase} from '../../../shared/model';
 import {BsModalService} from 'ngx-bootstrap';
 import {AddSubmTypeModalComponent} from '../../modals/add-subm-type-modal.component';
 import {FormValidators} from '../../form-validators';
+import {SubmEditService} from '../../subm-edit.service';
 
 const SECTION_ID = '@SECTION@';
 
@@ -17,7 +18,7 @@ class DataTypeControl {
     readonly control: FormControl;
     readonly isReadonly: boolean;
 
-    constructor(private type: TypeBase,
+    constructor(readonly type: TypeBase,
                 readonly icon: string,
                 readonly description: string,
                 readonly id: string) {
@@ -68,7 +69,7 @@ export class SubmEditSidebarComponent implements OnInit, OnChanges {
 
     form?: FormGroup;
 
-    constructor(public userData: UserData, private modalService: BsModalService) {
+    constructor(public userData: UserData, private modalService: BsModalService, private submEditService: SubmEditService) {
     }
 
     get isEditModeOff(): boolean {
@@ -97,13 +98,13 @@ export class SubmEditSidebarComponent implements OnInit, OnChanges {
 
     onItemClick(item: DataTypeControl): void {
         if (item.id === SECTION_ID) {
+            const sf = this.sectionForm!.addSection(item.type as SectionType);
+            this.submEditService.switchSection(sf);
             return;
         }
 
         this.sectionForm!.addFeatureEntry(item.id);
-
-        // scroll to the row/column
-        const control = this.sectionForm!.scrollToTheLastControl(item.id);
+        const control = this.sectionForm!.getFeatureControl(item.id);
         if (control === undefined) {
             return;
         }
