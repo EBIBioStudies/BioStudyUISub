@@ -13,7 +13,7 @@ import {Subject} from 'rxjs/Subject';
 import {of} from 'rxjs';
 import {SectionForm} from './section-form';
 import {filter, switchMap} from 'rxjs/operators';
-import {SubmEditService} from './subm-edit.service';
+import {ServerResponse, SubmEditService} from './subm-edit.service';
 import {Option} from 'fp-ts/lib/Option';
 import {FormControl} from '@angular/forms';
 
@@ -173,16 +173,16 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.router.navigate(['/submissions/edit/' + this.accno]);
     }
 
-    onSectionDeleteClick(section: Section): void {
-        let confirmMsg: string = `You are about to permanently delete the page named "${section.typeName}"`;
+    onSectionDeleteClick(sectionForm: SectionForm): void {
+        let confirmMsg: string = `You are about to permanently delete the page named "${sectionForm.typeName}"`;
 
-        if (section.accno) {
-            confirmMsg += ` with accession number ${section.accno}`;
+        if (sectionForm.accno) {
+            confirmMsg += ` with accession number ${sectionForm.accno}`;
         }
         confirmMsg += '. This operation cannot be undone.';
 
         this.confirmSectionDel!.confirm(confirmMsg).takeUntil(this.unsubscribe).subscribe(() => {
-            // todo this.sectionForm!.removeSection(section);
+            this.sectionForm!.removeSection(sectionForm.id);
         });
     }
 
@@ -209,9 +209,9 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     // todo: add proper type for submit response
-    private onSubmitFinished(resp: any) {
-        if (resp.data.error) {
-            this.showSubmitLog(resp.data.error);
+    private onSubmitFinished(resp: ServerResponse<any>) {
+        if (resp.isError) {
+            this.showSubmitLog(resp.error);
             return;
         }
         this.locService.replaceState('/submissions/' + this.accno);
@@ -219,8 +219,8 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
 
         this.submitOperation = SubmitOperation.Update;
 
-        if (resp.mapping[0].assigned) {
-            this.accno = resp.mapping[0].assigned;
+        if (resp.payload.mapping[0].assigned) {
+            this.accno = resp.payload.mapping[0].assigned;
             this.submitOperation = SubmitOperation.Create;
             this.showSubmitLog(resp);
         }

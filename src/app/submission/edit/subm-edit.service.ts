@@ -88,7 +88,7 @@ class EditState {
     static Error = 'Error';
 }
 
-class ServerResponse<T> {
+export class ServerResponse<T> {
     private constructor(readonly payload: T, readonly error?: any) {
     }
 

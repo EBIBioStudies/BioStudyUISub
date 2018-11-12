@@ -151,7 +151,7 @@
                                     tooltip="Delete page &quot;{{subsectionForm.section.typeName}}&quot;"
                                     container="body"
                                     placement="left"
-                                    (click)="$event.stopPropagation(); sectionForm.removeSection(subsectionForm.id)">
+                                    (click)="$event.stopPropagation(); onSectionDeleteClick(subsectionForm.id)">
                                 <i class="fas fa-trash-alt fa-fw"></i>
                             </button>
                         </span>
@@ -167,7 +167,7 @@
                                 tooltip="Send to the BioStudies database"
                                 placement="top"
                                 container="body"
-                                (click)="onSubmit($event)">
+                                (click)="onSubmitClick($event)">
                             {{isTemp ? 'S' : 'Re-s'}}ubmit
                         </button>
                     </p>
