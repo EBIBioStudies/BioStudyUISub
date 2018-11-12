@@ -5,7 +5,6 @@ import {Option} from 'fp-ts/lib/Option';
 import {FormControl} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {SubmEditService} from '../subm-edit.service';
-import {throttleTime} from 'rxjs/operators';
 import {MyFormControl} from '../form-validators';
 
 type FormControlGroup = Array<FormControl>;
@@ -78,10 +77,14 @@ export class SubmSidebarComponent implements OnDestroy {
     }
 
     private switchSection(sectionFormOp: Option<SectionForm>) {
-        this.unsubscribeForm.next();
-
         if (sectionFormOp.isSome()) {
             const secForm = sectionFormOp.toUndefined()!;
+            if (!secForm.isRootSection) {
+                return;
+            }
+
+            this.unsubscribeForm.next();
+
             secForm.structureChanges$.takeUntil(this.unsubscribeForm).subscribe(
                 () => {
                     this.controls = this.groupControlsBySectionId(secForm.controls());

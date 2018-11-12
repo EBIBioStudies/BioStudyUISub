@@ -561,7 +561,7 @@ export class SectionForm extends FormBase {
         }
     }
 
-    removeFeature(featureId: string): void {
+    removeFeatureType(featureId: string): void {
         const index = this.featureForms.findIndex(f => f.id === featureId);
         if (index < 0) {
             return;
@@ -623,13 +623,13 @@ export class SectionForm extends FormBase {
         return this.section.type.minRequired;
     }
 
+    get isRootSection():boolean {
+        return this.parent === undefined;
+    }
+
     isSectionRemovable(sectionForm:SectionForm): boolean {
         const min = sectionForm.typeMinRequired;
         return sectionForm.isTypeRemovable || (this.section.sections.byType(sectionForm.typeName).length > min);
-    }
-
-    private get isRootSection():boolean {
-        return this.parent === undefined;
     }
 
     private get fieldFormGroup(): FormGroup {

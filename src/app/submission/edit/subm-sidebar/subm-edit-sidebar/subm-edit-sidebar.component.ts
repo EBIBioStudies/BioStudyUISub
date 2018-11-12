@@ -1,6 +1,6 @@
-import {Component, Input, OnChanges, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {Observable} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {SectionForm} from '../../section-form';
 import {ConfirmDialogComponent} from '../../../../shared';
 import {UserData} from '../../../../auth';
@@ -9,6 +9,7 @@ import {BsModalService} from 'ngx-bootstrap';
 import {AddSubmTypeModalComponent} from '../../modals/add-subm-type-modal.component';
 import {FormValidators} from '../../form-validators';
 import {SubmEditService} from '../../subm-edit.service';
+import {Option} from 'fp-ts/lib/Option';
 
 const SECTION_ID = '@SECTION@';
 
@@ -58,9 +59,7 @@ class DataTypeControl {
     templateUrl: './subm-edit-sidebar.component.html',
     styleUrls: ['./subm-edit-sidebar.component.css']
 })
-export class SubmEditSidebarComponent implements OnInit, OnChanges {
-    @Input() sectionForm?: SectionForm;
-
+export class SubmEditSidebarComponent implements OnInit, OnDestroy {
     isEditModeOn: boolean = false;
     isAdvancedOpen: boolean = false;
     items: DataTypeControl[] = [];
@@ -68,8 +67,13 @@ export class SubmEditSidebarComponent implements OnInit, OnChanges {
     @ViewChild('confirmDialog') confirmDialog?: ConfirmDialogComponent;
 
     form?: FormGroup;
+    sectionForm?: SectionForm;
+
+    private unsubscribe: Subject<void> = new Subject<void>();
 
     constructor(public userData: UserData, private modalService: BsModalService, private submEditService: SubmEditService) {
+        this.submEditService.sectionSwitch$.takeUntil(this.unsubscribe)
+            .subscribe(sectionForm => this.switchSection(sectionForm));
     }
 
     get isEditModeOff(): boolean {
@@ -84,10 +88,9 @@ export class SubmEditSidebarComponent implements OnInit, OnChanges {
         this.updateItems();
     }
 
-    ngOnChanges(changes: any): void {
-        if (changes.sectionForm) {
-            this.updateItems();
-        }
+    ngOnDestroy(): void {
+        this.unsubscribe.next();
+        this.unsubscribe.complete();
     }
 
     onNewTypeClick(event?: Event): void {
@@ -167,6 +170,15 @@ export class SubmEditSidebarComponent implements OnInit, OnChanges {
         }
     }
 
+    private switchSection(sectionFormOp: Option<SectionForm>) {
+        this.unsubscribe.next();
+
+        if (sectionFormOp.isSome()) {
+            this.sectionForm = sectionFormOp.toUndefined();
+            this.updateItems();
+        }
+    }
+
     private confirm(message: string): Observable<any> {
         return this.confirmDialog!.confirm(message, false);
     }
@@ -174,7 +186,7 @@ export class SubmEditSidebarComponent implements OnInit, OnChanges {
     private applyChanges() {
         const deleted = this.items!.filter(item => item.deleted);
         deleted.forEach(({id}) => {
-            this.sectionForm!.removeFeature(id);
+            this.sectionForm!.removeFeatureType(id);
         });
 
         this.items!.filter(item => !item.deleted).forEach(item => item.update());
