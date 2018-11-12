@@ -606,24 +606,26 @@ export class Sections {
         return s;
     }
 
-    remove(section: Section): void {
+    remove(section: Section): boolean {
         const sections = this.sections;
         const index = sections.indexOf(section);
 
-        if (this.isRemovable(section)) {
+        if (index >= 0) {
             sections.splice(index, 1);
+            return true;
         }
+        return false;
     }
 
-    isRemovable(section: Section): boolean {
-        return !section.isRequired() || !this.isLastOfType(section.typeName);
+    removeById(sectionId:string) {
+        const section = this.sections.find(s => s.id === sectionId);
+        return section !== undefined ? this.remove(section) : false;
     }
 
-    isLastOfType(typeName: string): boolean {
-        const sectionsFiltered = this.sections.filter(section => {
+    byType(typeName: string): Section[] {
+        return this.sections.filter(section => {
             return section.type.name === typeName;
         });
-        return sectionsFiltered.length === 1;
     }
 }
 

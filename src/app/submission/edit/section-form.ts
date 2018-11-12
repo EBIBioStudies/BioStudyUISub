@@ -510,6 +510,7 @@ export class StructureChangeEvent {
     static featureRowRemove: StructureChangeEvent = new StructureChangeEvent('featureRowRemove');
     static featureColumnAdd: StructureChangeEvent = new StructureChangeEvent('featureColumnAdd');
     static featureColumnRemove: StructureChangeEvent = new StructureChangeEvent('featureColumnRemove');
+    static sectionRemove: StructureChangeEvent = new StructureChangeEvent('sectionRemove');
 }
 
 export class SectionForm extends FormBase {
@@ -574,10 +575,6 @@ export class SectionForm extends FormBase {
         }
     }
 
-    removeSection(sectionId: string): void {
-        //TODO
-    }
-
     addFeatureEntry(featureId: string): void {
         const featureForm = this.featureForms.find(f => f.id === featureId);
         if (featureForm !== undefined) {
@@ -587,6 +584,19 @@ export class SectionForm extends FormBase {
 
     addSection(type:SectionType) {
         return this.addSubsectionForm(this.section.sections.add(type));
+    }
+
+    removeSection(sectionId: string): void {
+        const index = this.subsectionForms.findIndex(s => s.id === sectionId);
+        if (index < 0) {
+            return;
+        }
+
+        if (this.section.sections.removeById(sectionId)) {
+            this.subsectionForms.splice(index, 1);
+            this.subsectionFormGroups.removeControl(sectionId);
+            this.structureChanges$.next(StructureChangeEvent.sectionRemove);
+        }
     }
 
     findSectionForm(sectionId: string) {
@@ -603,6 +613,19 @@ export class SectionForm extends FormBase {
 
     get accno(): string {
         return this.section.accno;
+    }
+
+    get isTypeRemovable(): boolean {
+        return this.section.type.displayType.isRemovable;
+    }
+
+    get typeMinRequired(): number {
+        return this.section.type.minRequired;
+    }
+
+    isSectionRemovable(sectionForm:SectionForm): boolean {
+        const min = sectionForm.typeMinRequired;
+        return sectionForm.isTypeRemovable || (this.section.sections.byType(sectionForm.typeName).length > min);
     }
 
     private get isRootSection():boolean {

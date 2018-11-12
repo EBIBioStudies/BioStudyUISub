@@ -140,23 +140,23 @@
                         <span *ngIf="subsectionForm.section.accno">
                             : {{subsectionForm.section.accno}}
                         </span>
-                        <span class="label label-danger pull-right"
-                              *ngIf="subsectionForm.invalid">{{subsectionForm.errorCount | plural: 'error' }}</span>
                         <span class="btn-toolbar pull-right">
-                            <button type="button" class="section-edit btn btn-link btn-xs btn-flat"
+                            <!--button type="button" class="section-edit btn btn-link btn-xs btn-flat"
                                     tooltip="{{readonly ? 'View' : 'Edit'}} page &quot;{{subsectionForm.section.typeName}}&quot;"
                                     container="body"
                                     (click)="onSectionClick(subsectionForm)">
-                                <i class="fa {{readonly ? 'fa-eye' : 'fa-pencil'}} fa-fw fa-lg"></i>
-                            </button>
-                            <button type="button" *ngIf="!readonly && subsectionForm.section.type.displayType.isRemovable" class="section-delete btn btn-danger btn-xs btn-flat"
+                                <i class="fa {{readonly ? 'fa-eye' : 'fa-pencil-alt'}} fa-fw fa-lg"></i>
+                            </button-->
+                            <button type="button" *ngIf="!readonly && sectionForm.isSectionRemovable(subsectionForm)" class="section-delete btn btn-danger btn-xs btn-flat"
                                     tooltip="Delete page &quot;{{subsectionForm.section.typeName}}&quot;"
                                     container="body"
                                     placement="left"
-                                    (click)="$event.stopPropagation(); onSectionDeleteClick(subsectionForm.id)">
+                                    (click)="$event.stopPropagation(); sectionForm.removeSection(subsectionForm.id)">
                                 <i class="fas fa-trash-alt fa-fw"></i>
                             </button>
                         </span>
+                        <span class="label label-danger pull-right" style="margin-right: 10px"
+                              *ngIf="subsectionForm.invalid">{{subsectionForm.errorCount | plural: 'error' }}</span>
                     </div>
                 </div>
 
