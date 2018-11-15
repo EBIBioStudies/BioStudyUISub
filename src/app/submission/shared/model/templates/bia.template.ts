@@ -1,5 +1,5 @@
 export const BIATemplate = {
-    'name': 'BIA',
+    'name': 'BioImages',
     'description': 'High Content Screen Image Study',
     'sectionType': {
         'name': 'Study',
@@ -40,6 +40,98 @@ export const BIATemplate = {
                 'name': 'Key words',
                 'icon': 'fa-comment',
                 'valueType': {'name': 'largetext'}
+            }
+        ],
+        'featureTypes': [
+            {
+                'name': 'Contact',
+                'title': 'Add Contacts',
+                'icon': 'fa-address-card',
+                'description': 'Add the contact details for the authors involved in the study.',
+                'uniqueCols': true,
+                'display': 'required',
+                'columnTypes': [
+                    {
+                        'name': 'Name',
+                        'valueType': {'name': 'text'},
+                        'required': true
+                    },
+                    {
+                        'name': 'E-mail',
+                        'valueType': {'name': 'text'},
+                        'required': true
+                    },
+                    {
+                        'name': 'Organisation',
+                        'valueType': {
+                            'name': 'select',
+                            'values': [
+                                'ETH Zürich',
+                                'European Bioinformatics Institute (EMBL-EBI)',
+                                'European Molecular Biology Laboratory (EMBL)',
+                                'F. Hoffmann-La Roche Ltd',
+                                'Francis Crick Institute',
+                                'Genedata AG',
+                                'Imperial College London',
+                                'InSphero AG',
+                                'Instituto de Investigación Sanitaria La Fe (IIS La Fe)',
+                                'King\'s College London',
+                                'Luxcel Biosciences',
+                                'MRC Laboratory of Molecular Biology',
+                                'Maastricht University',
+                                'Max Planck Institute for Molecular Cell Biology and Genetics',
+                                'Microdiscovery GMBH',
+                                'Optibrium Ltd',
+                                'RWTH Aachen University',
+                                'Wellcome Sanger Institute'
+                            ]
+                        },
+                        'display': 'required'
+                    },
+                    {
+                        'name': 'ORCID',
+                        'valueType': {'name': 'text'},
+                        'display': 'desirable'
+                    },
+                    {
+                        'name': 'Role',
+                        'valueType': {'name': 'text'}
+                    },
+                    {
+                        'name': 'Address',
+                        'valueType': {'name': 'text'}
+                    },
+                    {
+                        'name': 'Department',
+                        'valueType': {'name': 'text'}
+                    },
+                    {
+                        'name': 'Funding',
+                        'valueType': {'name': 'text'}
+                    }
+                ]
+            },
+            {
+                'name': 'Link',
+                'title': 'Add Links',
+                'description': 'Add the bibliography relevant to the study. Autofill is available when searching by ' +
+                    '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pubmed/">PubMed</a> identifier. ' +
+                    'For other IDs, you may use ' +
+                    '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pmc/pmctopmid/#converter">PubMed\'s converter</a>.',
+                'icon': 'fa-link',
+                'uniqueCols': true,
+                'columnTypes': [
+                    {
+                        'name': 'Pointer',
+                        'valueType': {'name': 'idlink'},
+                        'display': 'required'
+                    },
+                    {
+                        'name': 'Description',
+                        'valueType': {'name': 'text'},
+                        'display': 'required'
+                    }
+                ]
             }
         ],
         'sectionTypes': [
@@ -117,96 +209,6 @@ export const BIATemplate = {
                 }
             ],
             'featureTypes': [
-                {
-                    'name': 'Contact',
-                    'title': 'Add Contacts',
-                    'icon': 'fa-address-card',
-                    'description': 'Add the contact details for the authors involved in the study.',
-                    'uniqueCols': true,
-                    'display': 'required',
-                    'columnTypes': [
-                        {
-                            'name': 'Name',
-                            'valueType': {'name': 'text'},
-                            'required': true
-                        },
-                        {
-                            'name': 'E-mail',
-                            'valueType': {'name': 'text'},
-                            'required': true
-                        },
-                        {
-                            'name': 'Organisation',
-                            'valueType': {
-                                'name': 'select',
-                                'values': [
-                                    'ETH Zürich',
-                                    'European Bioinformatics Institute (EMBL-EBI)',
-                                    'European Molecular Biology Laboratory (EMBL)',
-                                    'F. Hoffmann-La Roche Ltd',
-                                    'Francis Crick Institute',
-                                    'Genedata AG',
-                                    'Imperial College London',
-                                    'InSphero AG',
-                                    'Instituto de Investigación Sanitaria La Fe (IIS La Fe)',
-                                    'King\'s College London',
-                                    'Luxcel Biosciences',
-                                    'MRC Laboratory of Molecular Biology',
-                                    'Maastricht University',
-                                    'Max Planck Institute for Molecular Cell Biology and Genetics',
-                                    'Microdiscovery GMBH',
-                                    'Optibrium Ltd',
-                                    'RWTH Aachen University',
-                                    'Wellcome Sanger Institute'
-                                ]
-                            },
-                            'display': 'required'
-                        },
-                        {
-                            'name': 'ORCID',
-                            'valueType': {'name': 'text'},
-                            'display': 'desirable'
-                        },
-                        {
-                            'name': 'Role',
-                            'valueType': {'name': 'text'}
-                        },
-                        {
-                            'name': 'Address',
-                            'valueType': {'name': 'text'}
-                        },
-                        {
-                            'name': 'Department',
-                            'valueType': {'name': 'text'}
-                        },
-                        {
-                            'name': 'Funding',
-                            'valueType': {'name': 'text'}
-                        }
-                    ]
-                },
-                {
-                    'name': 'Link',
-                    'title': 'Add Links',
-                    'description': 'Add the bibliography relevant to the study. Autofill is available when searching by ' +
-                        '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pubmed/">PubMed</a> identifier. ' +
-                        'For other IDs, you may use ' +
-                        '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pmc/pmctopmid/#converter">PubMed\'s converter</a>.',
-                    'icon': 'fa-link',
-                    'uniqueCols': true,
-                    'columnTypes': [
-                        {
-                            'name': 'Pointer',
-                            'valueType': {'name': 'idlink'},
-                            'display': 'required'
-                        },
-                        {
-                            'name': 'Description',
-                            'valueType': {'name': 'text'},
-                            'display': 'required'
-                        }
-                    ]
-                },
                 {
                     'name': 'LibraryFile',
                     'title': 'Add Library File',

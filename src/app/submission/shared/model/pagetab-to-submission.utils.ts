@@ -10,6 +10,7 @@ import {
 } from './pagetab';
 import {DEFAULT_TEMPLATE_NAME, SubmissionType} from './templates';
 import {AttributeData, FeatureData, SectionData, Submission, SubmissionData} from './submission';
+import {PAGE_TAG} from './model.common';
 
 function findSubmissionTemplateName(pageTab: PageTab): string {
     const attachToValues: string[] = (pageTab.attributes || [])
@@ -93,6 +94,8 @@ function ptSection2SectionData(ptSection: PtSection, parentAttributes: PtAttribu
             .filter(section => hasSubsections(section))
             .map(section => ptSection2SectionData(section));
 
+    console.log(sections);
+
     return <SectionData> {
         type: ptSection.type,
         accno: ptSection.accno,
@@ -103,9 +106,12 @@ function ptSection2SectionData(ptSection: PtSection, parentAttributes: PtAttribu
 }
 
 function hasSubsections(section: PtSection): boolean {
-    return (!(section.subsections || []).isEmpty()) ||
-        (!(section.links || []).isEmpty()) ||
-        (!(section.files || []).isEmpty());
+    console.log(section.type, PAGE_TAG.value, (section.tags ||[]).map(t => t.value));
+
+    return !(section.subsections || []).isEmpty() ||
+        !(section.links || []).isEmpty() ||
+        !(section.files || []).isEmpty() ||
+        ((section.tags ||[]).find(t => t.value == PAGE_TAG.value) !== undefined);
 }
 
 function ptAttributes2AttributeData(attrs: PtAttribute[]): AttributeData[] {

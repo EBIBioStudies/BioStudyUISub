@@ -14,7 +14,7 @@ export interface PtAttribute {
     name?: string;
     value?: string;
     isReference?: boolean;
-    valqual?: Partial<NameAndValue>[];
+    valqual?: NameAndValue[];
 }
 
 export interface PtLink {
@@ -31,7 +31,7 @@ export interface PtSection {
     type?: string;
     accno?: string;
     attributes?: PtAttribute[];
-    tags?: Partial<Tag>[];
+    tags?: Tag[];
     accessTags?: string[];
     subsections?: PtSectionItem [];
     libraryFile?: string;
@@ -44,7 +44,7 @@ export interface PageTab {
     section?: PtSection;
     accno?: string;
     attributes?: PtAttribute[];
-    tags?: Partial<Tag>[];
+    tags?: Tag[];
     accessTags?: string[];
 }
 

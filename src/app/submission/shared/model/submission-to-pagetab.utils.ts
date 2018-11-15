@@ -14,6 +14,7 @@ import {
     SHARED_ATTRIBUTES
 } from './pagetab';
 import {DEFAULT_TEMPLATE_NAME, SubmissionType} from './templates';
+import {PAGE_TAG, Tag} from './model.common';
 
 const isFileType = (type: string) => type.isEqualIgnoringCase('file');
 const isLinkType = (type: string) => type.isEqualIgnoringCase('link');
@@ -54,7 +55,7 @@ export function submission2PageTab(subm: Submission, isSanitise: boolean = false
 function section2PtSection(section: Section, isSanitise: boolean = false): PtSection {
     return <PtSection>{
         type: section.typeName,
-        tags: section.tags.tags,
+        tags: withPageTag(section.tags.tags),
         accessTags: section.tags.accessTags,
         accno: section.accno,
         attributes: extractSectionAttributes(section, isSanitise),
@@ -63,6 +64,13 @@ function section2PtSection(section: Section, isSanitise: boolean = false): PtSec
         libraryFile: extractSectionLibraryFile(section, isSanitise),
         subsections: extractSectionSubsections(section, isSanitise)
     };
+}
+
+function withPageTag(tags: Tag[]): Tag[] {
+    if (tags.find(t => t.value == PAGE_TAG.value) !== undefined) {
+        return tags;
+    }
+    return [...tags, ...[PAGE_TAG]];
 }
 
 function extractSectionAttributes(section: Section, isSanitise: boolean): PtAttribute[] {
