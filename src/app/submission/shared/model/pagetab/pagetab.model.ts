@@ -10,11 +10,21 @@ export type PtSectionItem = PtSection | PtSection[];
 export type PtLinkItem = PtLink | PtLink[];
 export type PtFileItem = PtFile | PtFile[];
 
+export interface PtTag {
+    classifier?: string;
+    tag?: string
+}
+
+export interface PtNameAndValue {
+    name?: string;
+    value?: string;
+}
+
 export interface PtAttribute {
     name?: string;
     value?: string;
     isReference?: boolean;
-    valqual?: NameAndValue[];
+    valqual?: PtNameAndValue[];
 }
 
 export interface PtLink {
@@ -31,7 +41,7 @@ export interface PtSection {
     type?: string;
     accno?: string;
     attributes?: PtAttribute[];
-    tags?: Tag[];
+    tags?: PtTag[];
     accessTags?: string[];
     subsections?: PtSectionItem [];
     libraryFile?: string;
