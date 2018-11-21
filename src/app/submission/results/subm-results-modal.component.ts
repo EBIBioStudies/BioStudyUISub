@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 
 import {BsModalRef} from 'ngx-bootstrap';
-import {SubmissionService} from "../shared/submission.service";
+import {SubmissionService, SubmitLog} from '../shared/submission.service';
 
 /**
  * UI component for the modal being rendered with a given study's submission results.
@@ -14,17 +14,18 @@ import {SubmissionService} from "../shared/submission.service";
     templateUrl: './subm-results-modal.component.html'
 })
 export class SubmResultsModalComponent {
-    @Input() status?: string;        //Status the server comes back with
-    @Input() log: any;              //Log part of the server's response
-    @Input() collapsedLog?: boolean; //Flag indicating if the log tree is on display.
-    @Input() modalRef?: BsModalRef;
+    status?: string;
+    log?: SubmitLog;
+    collapsedLog?: boolean = false;
+
+    constructor(public modalRef: BsModalRef){}
 
     get errorMessage() {
-        return SubmissionService.deepestError(this.log);
+        return this.hasLog ? SubmissionService.deepestError(this.log!!) : 'Unknown error';
     }
 
-    isLogEmpty() {
-        return this.log && Object.keys(this.log).length == 0;
+    get hasLog(): boolean {
+        return this.log !== undefined;
     }
 
     /**
@@ -39,7 +40,11 @@ export class SubmResultsModalComponent {
      * Checks if the request to the server was successful.
      * @returns {boolean} True if the server comes back with a success code.
      */
-    isSuccess(): boolean {
+    get isSuccess(): boolean {
         return this.status === 'OK';
+    }
+
+    get isError(): boolean {
+        return !this.isSuccess;
     }
 }

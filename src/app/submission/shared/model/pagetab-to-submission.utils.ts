@@ -94,8 +94,6 @@ function ptSection2SectionData(ptSection: PtSection, parentAttributes: PtAttribu
             .filter(section => hasSubsections(section))
             .map(section => ptSection2SectionData(section));
 
-    console.log(sections);
-
     return <SectionData> {
         type: ptSection.type,
         accno: ptSection.accno,

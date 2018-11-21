@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {AttributeData, Section, Submission} from '../shared/model/submission';
-import {PendingSubmission, SubmissionService} from '../shared/submission.service';
+import {PendingSubmission, SubmissionService, SubmitResponse} from '../shared/submission.service';
 import {SectionForm} from './section-form';
 import {catchError, map, switchMap, throttleTime} from 'rxjs/operators';
-import {BehaviorSubject, Observable, of, Subject, Subscription} from 'rxjs';
+import {BehaviorSubject, EMPTY, Observable, of, Subject, Subscription} from 'rxjs';
 import {pageTab2Submission, submission2PageTab} from '../shared/model';
 import {UserInfo} from '../../auth/model/user-info';
 import {none, Option, some} from 'fp-ts/lib/Option';
@@ -89,17 +89,17 @@ class EditState {
 }
 
 export class ServerResponse<T> {
-    private constructor(readonly payload: T, readonly error?: any) {
+    private constructor(readonly payload: Option<T>, readonly error: Option<any>) {
     }
 
     get isError(): boolean {
-        return this.error !== undefined;
+        return this.error.isSome();
     }
 
     static Error = (error: any) => {
-        return new ServerResponse(undefined, error)
+        return new ServerResponse(none, some(error))
     };
-    static Ok = <T>(payload: T) => new ServerResponse<T>(payload, undefined);
+    static Ok = <T>(payload: T) => new ServerResponse<T>(some(payload), none);
 }
 
 @Injectable()
@@ -177,19 +177,20 @@ export class SubmEditService {
             }));
     }
 
-    submit(): Observable<ServerResponse<any>> {
+    submit(): Observable<SubmitResponse> {
         this.editState.startSubmitting();
         const wrap = this.wrap(true);
         return this.submService.submitSubmission(wrap).pipe(
             map(resp => {
                 this.editState.stopSubmitting();
                 this.onSubmitFinished(resp);
-                return ServerResponse.Ok(resp);
+                return resp;
             }),
             catchError(error => {
+                console.log(error);
                 this.editState.stopSubmitting(error);
                 this.onErrorResponse(error);
-                return of(ServerResponse.Error(error))
+                return EMPTY
             }));
     }
 
@@ -294,7 +295,7 @@ export class SubmEditService {
     }
 
     private onSubmitFinished(resp: any) {
-        if (this.submModel!.isTemp) {
+        if (this.submModel!.isTemp && ((resp.mapping ||[]).length > 0)) {
             this.accno = resp.mapping[0].assigned;
             this.submModel!.accno = this.accno!;
         }

@@ -39,6 +39,18 @@ export interface SubmissionListItem {
     status: string
 }
 
+export interface SubmitResponse {
+    status: string,
+    mapping: Array<any>,
+    log: SubmitLog
+}
+
+export interface SubmitLog {
+    level: string, // 'INFO'|'WARN'|'ERROR'
+    message: string,
+    subnodes: Array<SubmitLog>
+}
+
 @Injectable()
 export class SubmissionService {
 
@@ -80,7 +92,7 @@ export class SubmissionService {
         );
     }
 
-    submitSubmission(pt: any): Observable<any> {
+    submitSubmission(pt: any): Observable<SubmitResponse> {
         return this.http.post('/api/submissions/tmp/submit', pt);
     }
 
@@ -106,25 +118,11 @@ export class SubmissionService {
      * @param {Array<Object> | Object} obj - Log tree's root node or subnode list.
      * @returns {string} Error message.
      */
-    static deepestError(obj: Array<Object> | Object | undefined): string {
-
-        //Subnodes passed in => gets the first node out of all in the list that has an error
-        if (Array.isArray(obj)) {
-            return this.deepestError(obj.find(nestedObj => nestedObj['level'].toLowerCase() == 'error'));
-
-            //Node passed in => only processes nodes with errors.
-        } else if (_.isObject(obj) && obj!.hasOwnProperty('level') && obj!['level'].toLowerCase() == 'error') {
-
-            //Travels down the hierarchy in search of deeper error nodes
-            if (obj!.hasOwnProperty('subnodes')) {
-                return this.deepestError(obj!['subnodes']);
-
-                //Leaf error node reached => gets the error message proper.
-            } else if (obj!.hasOwnProperty('message')) {
-                return obj!['message'];
-            }
+    static deepestError(log: SubmitLog): string {
+        const errorNode = (log.subnodes||[]).find(n => n.level === 'ERROR');
+        if (errorNode === undefined) {
+            return log.message || 'Unknown error';
         }
-        //The node had no error or was not a node anyway.
-        return '';
+        return this.deepestError(errorNode);
     }
 }

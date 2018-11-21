@@ -16,6 +16,7 @@ import {filter, switchMap} from 'rxjs/operators';
 import {ServerResponse, SubmEditService} from './subm-edit.service';
 import {Option} from 'fp-ts/lib/Option';
 import {FormControl} from '@angular/forms';
+import {SubmitResponse} from '../shared/submission.service';
 
 class SubmitOperation {
     get isUnknown(): boolean {
@@ -209,9 +210,9 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     // todo: add proper type for submit response
-    private onSubmitFinished(resp: ServerResponse<any>) {
-        if (resp.isError) {
-            this.showSubmitLog(resp.error);
+    private onSubmitFinished(resp: SubmitResponse) {
+        if (resp.status !== 'OK') {
+            this.showSubmitLog(resp);
             return;
         }
         this.locService.replaceState('/submissions/' + this.accno);
@@ -219,8 +220,8 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
 
         this.submitOperation = SubmitOperation.Update;
 
-        if (resp.payload.mapping[0].assigned) {
-            this.accno = resp.payload.mapping[0].assigned;
+        if (resp.mapping[0].assigned) {
+            this.accno = resp.mapping[0].assigned;
             this.submitOperation = SubmitOperation.Create;
             this.showSubmitLog(resp);
         }
@@ -228,24 +229,13 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
         window.scrollTo(0, 0);
     }
 
-    private showSubmitLog(resp: any) {
-        let logObj = {level: 'error'};
-
-        //Normalises error to object
-        if (typeof resp === 'string') {
-            logObj['message'] = resp;
-        } else if (resp.log) {
-            logObj = resp.log;
-        } else {
-            logObj['message'] = 'Unknown error. No log available.';
-        }
-
-        const bsModalRef = this.modalService.show(SubmResultsModalComponent);
-        bsModalRef.content.modalRef = bsModalRef;
-        bsModalRef.content.log = resp.log;
-        bsModalRef.content.mapping = resp.mapping || [];
-        bsModalRef.content.status = resp.status;
-        bsModalRef.content.accno = this.accno;
+    private showSubmitLog(resp: SubmitResponse) {
+        console.log(resp);
+        this.modalService.show(SubmResultsModalComponent, {initialState: {
+                log: resp.log,
+                status: resp.status
+            }
+        });
     }
 
     private switchSection(sectionForm: Option<SectionForm>) {
