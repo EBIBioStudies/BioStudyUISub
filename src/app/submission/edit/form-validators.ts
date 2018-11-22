@@ -234,6 +234,9 @@ export class CustomErrorMessages {
             'format': (error: any) => {
                 return `Please provide a valid value`;
             },
+            'pattern': (error: {actualValue: string, requiredPattern: string}) => {
+                return `Please provide a value in '${error.requiredPattern}' format`;
+            },
             'unique': (error: { value: string }) => {
                 return `${groupRef.name}'s ${error.value} column is not unique`;
             }
