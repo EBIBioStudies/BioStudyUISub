@@ -230,7 +230,6 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     private showSubmitLog(resp: SubmitResponse) {
-        console.log(resp);
         this.modalService.show(SubmResultsModalComponent, {initialState: {
                 log: resp.log,
                 status: resp.status
