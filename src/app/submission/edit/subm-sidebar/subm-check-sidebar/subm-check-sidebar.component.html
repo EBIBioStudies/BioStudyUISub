@@ -29,7 +29,7 @@
            placement="{{collapsed ? 'right' : 'top'}}"
            (click)="onReviewClick($event, control)">
                     <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                        <i class="entry-item far fa-lg text-center {{control.ref.icon}}"></i>
+                        <i class="entry-item fas fa-lg text-center {{control.ref.icon}}"></i>
                         {{!collapsed ? '&nbsp;' + control.ref.name + '&nbsp;' : ''}}
                     </span>
             <strong *ngIf="!collapsed" class="entry-item label label-default"
