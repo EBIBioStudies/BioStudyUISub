@@ -194,7 +194,7 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
         const el = (<any>this.scrollToCtrl).nativeElement;
         if (el !== undefined) {
             let scrollTop = el.getBoundingClientRect().top;
-            window.scrollBy(0, scrollTop);
+            window.scrollBy(0, scrollTop - 120); //TODO: header height
             el.querySelectorAll('input, select, textarea')[0].focus();
         }
         this.scrollToCtrl = undefined;
