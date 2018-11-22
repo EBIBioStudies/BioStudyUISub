@@ -203,10 +203,7 @@ export class SubmEditService {
     }
 
     switchSectionById(sectionId: string) {
-        this.switchSection(
-            this.sectionSwitch$.value.map(sf =>
-                sf.findSectionForm(sectionId)
-            ).toUndefined());
+        this.switchSection(this.sectionSwitch$.value.map(sf => sf.findSectionForm(sectionId)).toUndefined());
     }
 
     switchSection(sectionForm: SectionForm | undefined) {
