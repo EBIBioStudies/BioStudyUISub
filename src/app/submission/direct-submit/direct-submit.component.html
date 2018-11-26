@@ -154,11 +154,10 @@
                                 <i class="fa fa-2x" aria-hidden="true"
                                    [ngClass]="{ 'fa-plus': !sidebar.hasRequests && sidebar.submitType == 'create',
                                                 'fa-refresh': !sidebar.hasRequests && sidebar.submitType == 'update',
-                                                'fa-caret-square-o-down text-danger': isFail(i),
+                                                'fa-caret-square-down text-danger': isFail(i),
                                                 'fa-pencil': isSuccess(i),
                                                 'fa-exchange': isBusy(i)}">
                                 </i>
-                                <i class="fa fa-2x fa-caret-square-o-up text-danger" aria-hidden="true"></i>
                                 <div class="panel-description"
                                      [ngClass]="{'col-xs-6': sidebar.hasRequests && !isFail(i),
                                                  'col-xs-10': !sidebar.hasRequests || isFail(i)}">
