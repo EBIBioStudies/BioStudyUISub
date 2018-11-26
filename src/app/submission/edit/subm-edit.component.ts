@@ -3,8 +3,6 @@ import {Location} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
 
 import {BsModalService} from 'ngx-bootstrap';
-
-import {Section} from '../shared/model';
 import {SubmResultsModalComponent} from '../results/subm-results-modal.component';
 import {ConfirmDialogComponent} from 'app/shared/index';
 import {AppConfig} from '../../app.config';
@@ -13,7 +11,7 @@ import {Subject} from 'rxjs/Subject';
 import {of} from 'rxjs';
 import {SectionForm} from './section-form';
 import {filter, switchMap} from 'rxjs/operators';
-import {ServerResponse, SubmEditService} from './subm-edit.service';
+import {SubmEditService} from './subm-edit.service';
 import {Option} from 'fp-ts/lib/Option';
 import {FormControl} from '@angular/forms';
 import {SubmitResponse} from '../shared/submission.service';
@@ -193,11 +191,22 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
         const el = (<any>this.scrollToCtrl).nativeElement;
         if (el !== undefined) {
-            let scrollTop = el.getBoundingClientRect().top;
-            window.scrollBy(0, scrollTop - 120); //TODO: header height
+            let rect = el.getBoundingClientRect();
+            if (!this.isInViewPort(rect)) {
+                window.scrollBy(0, rect.top - 120); //TODO: header height
+            }
             el.querySelectorAll('input, select, textarea')[0].focus();
         }
         this.scrollToCtrl = undefined;
+    }
+
+    private isInViewPort(rect: { top: number, left: number, bottom: number, right: number }) {
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
     }
 
     private get isValid(): boolean {
@@ -230,7 +239,8 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     private showSubmitLog(resp: SubmitResponse) {
-        this.modalService.show(SubmResultsModalComponent, {initialState: {
+        this.modalService.show(SubmResultsModalComponent, {
+            initialState: {
                 log: resp.log,
                 status: resp.status
             }
