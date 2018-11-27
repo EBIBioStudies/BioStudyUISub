@@ -38,23 +38,16 @@
                 (click)="onEdit($event)"
                 tooltip="Edit this submission"
                 placement="bottom"
-                container="body"
-                [disabled]="isBusy">
+                container="body">
             <i class="fa fa-pencil" aria-hidden="true"></i>
             Edit
         </button>
         <button *ngIf="readonly" class="btn btn-primary btn-sm pull-right"
-                (click)="onNewSubmClick($event)"
                 tooltip="Create a new submission"
                 placement="bottom"
                 container="body"
-                [disabled]="isBusy">
-            <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                newSubmissionButton>
             Add new
         </button>
     </div>
 </nav>
-<subm-add-dialog #addDialog
-                 [projectNames]="allowedPrj"
-                 [onSubmit]="createSubmission.bind(this)">
-</subm-add-dialog>

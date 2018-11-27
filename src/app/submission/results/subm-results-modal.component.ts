@@ -1,7 +1,4 @@
-import {
-    Component,
-    Input
-} from '@angular/core';
+import {Component} from '@angular/core';
 
 import {BsModalRef} from 'ngx-bootstrap';
 import {SubmissionService, SubmitLog} from '../shared/submission.service';

@@ -86,14 +86,14 @@ export class SubmissionService {
         return this.http.post('/api/submissions/tmp/create', pt);
     }
 
-    saveSubmission(pt: any): Observable<any> {
-        return this.http.post('/api/submissions/tmp/save', pt).pipe(
+    saveSubmission(accno: string, pt: PageTab): Observable<any> {
+        return this.http.post(`/api/submissions/pending/${accno}`, pt).pipe(
             map((response: any) => 'done')
         );
     }
 
-    submitSubmission(pt: any): Observable<SubmitResponse> {
-        return this.http.post('/api/submissions/tmp/submit', pt);
+    submitSubmission(accno: string, pt: PageTab): Observable<SubmitResponse> {
+        return this.http.post(`/api/submissions/pending/${accno}/submit`, pt);
     }
 
     directCreateOrUpdate(pt: any, create: boolean): Observable<any> {

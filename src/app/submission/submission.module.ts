@@ -36,7 +36,7 @@ import {ResultsLogNodeComponent} from './results/results-log-node.component';
 import {SubmResultsTreeComponent} from './results/subm-results-tree.component';
 
 import {UniqueValidator} from './shared/unique.directive';
-import {SubmAddDialogComponent} from "./list/subm-add.component";
+import {AddSubmModalComponent} from './shared/modals/add-subm-modal.component';
 import {Camelcase2LabelPipe} from './shared/pipes/camelcase-to-label.pipe';
 import {FileModule} from '../file/file.module';
 import {InputValueComponent} from './edit/subm-form/input-value/input-value.component';
@@ -46,6 +46,7 @@ import {SubmEditSidebarComponent} from './edit/subm-sidebar/subm-edit-sidebar/su
 import {AddSubmTypeModalComponent} from './edit/modals/add-subm-type-modal.component';
 import {SubmCheckSidebarComponent} from './edit/subm-sidebar/subm-check-sidebar/subm-check-sidebar.component';
 import {SubmEditService} from './edit/subm-edit.service';
+import {NewSubmissionButtonDirective} from './shared/new-submission-button.directive';
 
 
 @NgModule({
@@ -86,7 +87,7 @@ import {SubmEditService} from './edit/subm-edit.service';
         SubmResultsModalComponent,
         SubmResultsTreeComponent,
         AddSubmTypeModalComponent,
-        SubmAddDialogComponent,
+        AddSubmModalComponent,
         FeatureGridComponent,
         FeatureListComponent,
         ActionButtonsCellComponent,
@@ -95,7 +96,8 @@ import {SubmEditService} from './edit/subm-edit.service';
         DateFilterComponent,
         Camelcase2LabelPipe,
         UniqueValidator,
-        NativeElementAttachDirective
+        NativeElementAttachDirective,
+        NewSubmissionButtonDirective
     ],
     exports: [
         SubmListComponent,
@@ -106,7 +108,8 @@ import {SubmEditService} from './edit/subm-edit.service';
         ResultsLogNodeComponent,
         SubmValidationErrorsComponent,
         SubmResultsModalComponent,
-        AddSubmTypeModalComponent
+        AddSubmTypeModalComponent,
+        AddSubmModalComponent
     ]
 })
 export class SubmissionModule {

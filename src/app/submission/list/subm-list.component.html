@@ -12,12 +12,9 @@
                 <span>Direct upload</span>
             </button>
             <button class="btn btn-primary"
-                    (click)="onNewSubmClick($event)"
-                    [disabled]="isBusy"
                     tooltip="Create a new submission manually"
-                    container="body">
-                <i *ngIf="!isCreating" class="fa fa-plus-circle" aria-hidden="true"></i>
-                <i *ngIf="isCreating" class="fa fa-cog fa-spin"></i>
+                    container="body"
+                    newSubmissionButton>
                 <span>Add new</span>
             </button>
         </span>
@@ -62,8 +59,4 @@
         </a>
     </aside>
 </container-root>
-<subm-add-dialog #addDialog
-                 [projectNames]="allowedPrj"
-                 [onSubmit]="createSubmission.bind(this)">
-</subm-add-dialog>
 <confirm-dialog #confirmDialog></confirm-dialog>

@@ -15,7 +15,6 @@ import {TextFilterComponent} from './ag-grid/text-filter.component';
 import {DateFilterComponent} from './ag-grid/date-filter.component';
 
 import {AppConfig} from '../../app.config';
-import {SubmAddDialogComponent} from './subm-add.component';
 import {UserData} from '../../auth/user-data';
 import {newPageTab, SUBMISSION_TEMPLATE_NAMES} from '../shared/model';
 
@@ -143,7 +142,6 @@ export class SubmListComponent {
     columnDefs?: any[];
     private datasource: any;
 
-    @ViewChild('addDialog') addDialog?: SubmAddDialogComponent;
     @ViewChild('confirmDialog') confirmDialog?: ConfirmDialogComponent;
 
     constructor(private submService: SubmissionService,
@@ -190,11 +188,7 @@ export class SubmListComponent {
         this.createColumnDefs();
 
         //Works out the list of allowed projects by comparison with template names
-        this.isBusy = true;
-        this.userData.filteredProjectAccNumbers$(SUBMISSION_TEMPLATE_NAMES).subscribe(projects => {
-            this.isBusy = false;
-            this.allowedPrj = ['BioImages', 'HeCaToS', 'EU-ToxRisk', 'Default'];//projects;
-        });
+        //this.isBusy = true;
     }
 
     /**
@@ -397,37 +391,6 @@ export class SubmListComponent {
         event.preventDefault();
         this.router.navigate(['/submissions/direct_upload']);
     }
-
-    /**
-     * Renders the new submission dialogue that allows the user to choose what type definitions template is employed
-     * to create a submission later on. If only one template is available, the modal is bypassed altogether.
-     * NOTE: The default template will always be available.
-     * @see {@link UserData.allowedProjects}
-     * @param {Event} event - Click event object, the bubbling of which will be prevented
-     */
-    onNewSubmClick(event: Event): void {
-        event.preventDefault();
-
-        if (this.allowedPrj!.length > 1) {
-            this.addDialog!.show();
-        } else {
-            this.createSubmission('');
-        }
-    }
-
-    /**
-     * Creates a new submission using PageTab's data structure and brings up a form to edit it.
-     * @param {string} tmplId - ID for the type definitions template to be used for the submission.
-     * TODO: at present, the app relies on the backend to generate a ready instance of a submission. This leads to two requests for every new submission, one to create it and another to retrieve it for the edit view.
-     */
-    createSubmission(tmplId: string) {
-        this.isBusy = true;
-        this.isCreating = true;
-        this.submService.createSubmission(newPageTab(tmplId)).subscribe((subm) => {
-            this.isBusy = false;
-            this.router.navigate(['/submissions/new/', subm.accno]);
-        });
-    };
 
     /**
      * Handler for click events on a row. It redirects the user to the study's edit mode, unless over the actions cell

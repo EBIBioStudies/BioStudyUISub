@@ -12,6 +12,7 @@ import {TextValueType, ValueType, ValueTypeName} from '../shared/model/templates
 import {Attribute, Feature, Field, Section} from '../shared/model/submission';
 import {parseDate} from '../../utils';
 
+//experimental: Control Reference details for using in error messages
 export class ControlRef {
     constructor(readonly id: string,
                 readonly name: string = '',
@@ -38,45 +39,62 @@ export class ControlRef {
     static unknown = new ControlRef('unknown_control', 'unknown');
 }
 
+//experimental: Controls Groups Reference (for sections and features) for using in error list
 export class ControlGroupRef {
-    constructor(
-        readonly sectionId: string,
-        readonly sectionName: string,
-        readonly featureName?: string,
-        readonly icon: string = 'fa-square',
-        readonly isRoot: boolean = false) {
-    };
+    readonly sectionId: string;
+    readonly sectionName: string;
+    readonly featureName?: string;
+    readonly icon: string;
+    readonly isRoot: boolean;
+
+    private constructor(params: Partial<ControlGroupRef>={}) {
+       this.sectionId = params.sectionId || 'unknown_section_id';
+       this.sectionName = params.sectionName || 'unknown_section_name';
+       this.featureName = params.featureName;
+       this.icon = params.icon || 'fa-square';
+       this.isRoot = params.isRoot === true;
+    }
 
     get name(): string {
         return this.featureName || this.sectionName;
     }
 
-    featureRef(feature: Feature) {
-        return new ControlGroupRef(this.sectionId, this.sectionName, feature.typeName, feature.type.icon);
+    fieldRef(field: Field): ControlRef {
+        return this.createRef(field.id, field.name, field.type.icon);
     }
 
-    fieldRef(field: Field) {
-        return this.create(field.id, field.name, field.type.icon);
-    };
+    columnRef(column: Attribute): ControlRef {
+        return this.createRef(column.id, 'Column');
+    }
 
-    columnRef(column: Attribute) {
-        return this.create(column.id, 'Column');
-    };
+    rowValueRef(column: Attribute, rowId: string): ControlRef {
+        return this.createRef(column.id + '#' + rowId, column.name);
+    }
 
-    rowValueRef(column: Attribute, rowId: string) {
-        return this.create(column.id + '#' + rowId, column.name);
-    };
+    featureRef(feature: Feature): ControlGroupRef {
+        return new ControlGroupRef({
+            sectionId: this.sectionId,
+            sectionName: this.sectionName,
+            featureName: feature.typeName,
+            icon: feature.type.icon,
+            isRoot: this.isRoot
+        });
+    }
 
-    private create(id: string, name: string, icon?: string) {
+    private createRef(id: string, name: string, icon?: string) {
         const parentName = this.featureName || this.sectionName;
         const uniqueId = [parentName, id].join('_');
         return new ControlRef(uniqueId, name, this, icon || this.icon);
     }
 
-    static unknown = new ControlGroupRef('unknown_section', 'unknown');
+    static unknown = new ControlGroupRef();
 
     static sectionRef(section: Section, isRoot: boolean = false) {
-        return new ControlGroupRef(section.id, section.accno || section.typeName, undefined, undefined, isRoot);
+        return new ControlGroupRef({
+            sectionId: section.id,
+            sectionName: section.accno || section.typeName,
+            isRoot: isRoot
+        });
     }
 }
 
@@ -234,7 +252,7 @@ export class CustomErrorMessages {
             'format': (error: any) => {
                 return `Please provide a valid value`;
             },
-            'pattern': (error: {actualValue: string, requiredPattern: string}) => {
+            'pattern': (error: { actualValue: string, requiredPattern: string }) => {
                 return `Please provide a value in '${error.requiredPattern}' format`;
             },
             'unique': (error: { value: string }) => {

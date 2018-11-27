@@ -4,7 +4,7 @@ import {PendingSubmission, SubmissionService, SubmitResponse} from '../shared/su
 import {SectionForm} from './section-form';
 import {catchError, map, switchMap, throttleTime} from 'rxjs/operators';
 import {BehaviorSubject, EMPTY, Observable, of, Subject, Subscription} from 'rxjs';
-import {pageTab2Submission, submission2PageTab} from '../shared/model';
+import {PageTab, pageTab2Submission, submission2PageTab} from '../shared/model';
 import {UserInfo} from '../../auth/model/user-info';
 import {none, Option, some} from 'fp-ts/lib/Option';
 import {UserData} from '../../auth';
@@ -105,7 +105,6 @@ export class ServerResponse<T> {
 @Injectable()
 export class SubmEditService {
     private submModel?: Submission;
-    private submWrap?: PendingSubmission;
     private accno?: string;
 
     private editState: EditState = new EditState();
@@ -179,8 +178,7 @@ export class SubmEditService {
 
     submit(): Observable<SubmitResponse> {
         this.editState.startSubmitting();
-        const wrap = this.wrap(true);
-        return this.submService.submitSubmission(wrap).pipe(
+        return this.submService.submitSubmission(this.accno!!, this.asPageTab(true)).pipe(
             map(resp => {
                 this.editState.stopSubmitting();
                 this.onSubmitFinished(resp);
@@ -198,7 +196,6 @@ export class SubmEditService {
         this.editState.reset();
         this.switchSection(undefined);
         this.submModel = undefined;
-        this.submWrap = undefined;
         this.accno = undefined;
     }
 
@@ -227,7 +224,7 @@ export class SubmEditService {
 
     private save() {
         this.editState.startSaving();
-        this.submService.saveSubmission(this.wrap())
+        this.submService.saveSubmission(this.accno!!, this.asPageTab())
             .pipe(
                 map(resp => ServerResponse.Ok(resp)),
                 catchError(error => of(ServerResponse.Error(error))))
@@ -238,9 +235,8 @@ export class SubmEditService {
     }
 
     private createForm(pendingSubm: PendingSubmission, setDefaults: boolean = false) {
-        this.submWrap = pendingSubm;
-        this.accno = this.submWrap.accno;
-        this.submModel = pageTab2Submission(this.submWrap.data);
+        this.accno = pendingSubm.accno;
+        this.submModel = pageTab2Submission(pendingSubm.data);
 
         if (setDefaults) {
             this.setDefaults(this.submModel.section);
@@ -298,9 +294,7 @@ export class SubmEditService {
         }
     }
 
-    private wrap(isSubmit: boolean = false): any {
-        const copy = Object.assign({}, this.submWrap);
-        copy.data = submission2PageTab(this.submModel!, isSubmit);
-        return copy;
+    private asPageTab(isSubmit: boolean = false): PageTab {
+        return submission2PageTab(this.submModel!, isSubmit);
     }
 }

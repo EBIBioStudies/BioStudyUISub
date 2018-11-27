@@ -6,7 +6,8 @@ import {
     FeatureType,
     Field,
     FieldType,
-    Section, SectionType,
+    Section,
+    SectionType,
     ValueMap,
     ValueType
 } from '../shared/model';
@@ -14,9 +15,15 @@ import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms
 import {fromNullable} from 'fp-ts/lib/Option';
 import {BehaviorSubject, Observable, Subject, Subscription} from 'rxjs';
 import {typeaheadSource} from './typeahead.utils';
-import {throttleTime} from 'rxjs/operators';
 import * as pluralize from 'pluralize';
-import {ControlRef, ErrorMessages, MyFormControl, MyFormGroup, ControlGroupRef, SubmFormValidators} from './form-validators';
+import {
+    ControlGroupRef,
+    ControlRef,
+    ErrorMessages,
+    MyFormControl,
+    MyFormGroup,
+    SubmFormValidators
+} from './form-validators';
 
 function listOfControls(control: AbstractControl): FormControl[] {
     if (control instanceof FormGroup) {

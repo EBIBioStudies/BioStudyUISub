@@ -65,15 +65,12 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
                 private appConfig: AppConfig,
                 private submEditService: SubmEditService) {
 
-        //Initally collapses the sidebar for tablet-sized screens if applicable
         this.sideBarCollapsed = window.innerWidth < this.appConfig.tabletBreak;
 
-        submEditService.sectionSwitch$
-            .takeUntil(this.unsubscribe)
+        submEditService.sectionSwitch$.takeUntil(this.unsubscribe)
             .subscribe(sectionForm => this.switchSection(sectionForm));
 
-        submEditService.scroll2Control$
-            .takeUntil(this.unsubscribe)
+        submEditService.scroll2Control$.takeUntil(this.unsubscribe)
             .subscribe(ctrl => {
                 this.scrollToCtrl = ctrl;
             });
