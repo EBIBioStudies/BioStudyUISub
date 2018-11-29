@@ -176,11 +176,13 @@ export class FormValidators {
     };
 
     static formatDate: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-        return parseDate(control.value) !== undefined ? null : {'format': {value: control.value}};
+        const v = control.value;
+        return String.isNotDefinedOrEmpty(v) || (parseDate(v) !== undefined) ? null : {'format': {value: v}};
     };
 
     static formatOrcid: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-        return /^\d{4}-\d{4}-\d{4}-\d{4}$/.test(control.value) ? null : {'format': {value: control.value}};
+        const v = control.value;
+        return String.isNotDefinedOrEmpty(v) || /^\d{4}-\d{4}-\d{4}-\d{4}$/.test(v) ? null : {'format': {value: v}};
     };
 }
 

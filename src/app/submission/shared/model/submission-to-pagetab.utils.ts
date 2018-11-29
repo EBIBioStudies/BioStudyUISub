@@ -1,6 +1,6 @@
 import {AttributeData, Feature, Section, Submission} from './submission';
 import {
-    ATTACH_TO_ATTR,
+    AttrExceptions,
     contacts2Authors,
     LinksUtils,
     mergeAttributes,
@@ -10,8 +10,7 @@ import {
     PtFileItem,
     PtLink,
     PtLinkItem,
-    PtSection,
-    SHARED_ATTRIBUTES
+    PtSection
 } from './pagetab';
 import {DEFAULT_TEMPLATE_NAME, SubmissionType} from './templates';
 import {PAGE_TAG, Tag} from './model.common';
@@ -30,7 +29,7 @@ export function newPageTab(templateName: string = DEFAULT_TEMPLATE_NAME): PageTa
     //NOTE: The PageTab constructor does not bother with attributes if the section is empty.
     if (templateName && templateName != DEFAULT_TEMPLATE_NAME) {
         pageTab.attributes = mergeAttributes((pageTab.attributes || []), [{
-            name: ATTACH_TO_ATTR,
+            name: AttrExceptions.attachToAttr,
             value: templateName
         }]);
     }
@@ -48,7 +47,7 @@ export function submission2PageTab(subm: Submission, isSanitise: boolean = false
             subm.attributes.map(at => attributeData2PtAttribute(at)),
             (ptSection.attributes || [])
                 .filter(at => String.isDefined(at.name))
-                .filter(at => SHARED_ATTRIBUTES.includes(at.name!)))
+                .filter(at => AttrExceptions.editable.includes(at.name!)))
     };
 }
 
@@ -76,7 +75,7 @@ function withPageTag(tags: Tag[]): Tag[] {
 function extractSectionAttributes(section: Section, isSanitise: boolean): PtAttribute[] {
     return ([] as PtAttribute[]).concat(
         fieldsAsAttributes(section, isSanitise),
-        (extractFeatureAttributes(section.annotations, isSanitise).pop() || []));
+        (extractFeatureAttributes(section.annotations, isSanitise).pop() || []).filter(at => !AttrExceptions.editableAndRootOnly.includes(at.name!)));
 }
 
 function extractSectionSubsections(section: Section, isSanitize: boolean): PtSection[] {

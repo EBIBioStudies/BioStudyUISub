@@ -1,12 +1,11 @@
 import {
-    ATTACH_TO_ATTR,
+    AttrExceptions,
     authors2Contacts,
     LinksUtils,
     mergeAttributes,
     PageTab,
     PtAttribute,
-    PtSection,
-    SHARED_ATTRIBUTES
+    PtSection
 } from './pagetab';
 import {DEFAULT_TEMPLATE_NAME, SubmissionType} from './templates';
 import {AttributeData, FeatureData, SectionData, Submission, SubmissionData} from './submission';
@@ -14,7 +13,7 @@ import {NameAndValue, PAGE_TAG, Tag} from './model.common';
 
 function findSubmissionTemplateName(pageTab: PageTab): string {
     const attachToValues: string[] = (pageTab.attributes || [])
-        .filter(attr => attr.name === ATTACH_TO_ATTR)
+        .filter(attr => attr.name === AttrExceptions.attachToAttr)
         .filter(at => String.isDefinedAndNotEmpty(at.value))
         .map(at => at.value!);
     return attachToValues.length === 1 ? attachToValues[0] : DEFAULT_TEMPLATE_NAME;
@@ -40,7 +39,7 @@ function ptSection2SectionData(ptSection: PtSection, parentAttributes: PtAttribu
     const attributes = ptAttributes2AttributeData(
         mergeAttributes(parentAttributes
                 .filter(at => String.isDefined(at.name))
-                .filter(at => SHARED_ATTRIBUTES.includes(at.name!)),
+                .filter(at => AttrExceptions.editable.includes(at.name!)),
             ptSection.attributes || []));
 
     const links = flatArray(ptSection.links || []);

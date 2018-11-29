@@ -1,7 +1,7 @@
-import {Submission, SubmissionData} from './submission.model';
-import {SubmissionType} from '../templates';
+import {Submission, SubmissionData} from './submission';
+import {SubmissionType} from './templates';
 import {submission2PageTab} from './submission-to-pagetab.utils';
-import {PtFile, PtLink} from '../pagetab';
+import {PtFile, PtLink} from './pagetab';
 
 describe('Submission To PageTab Util:', () => {
 
@@ -11,7 +11,7 @@ describe('Submission To PageTab Util:', () => {
         submType = SubmissionType.fromEmptyTemplate();
     });
 
-    it('Title and ReleaseDate attributes should be merged to the submission level attributes', () => {
+    it('Title and ReleaseDate attributes should be moved to the submission level', () => {
         const subm = new Submission(submType, <SubmissionData>{
             attributes: [
                 {name: 'AttachTo', value: 'proj1'}
