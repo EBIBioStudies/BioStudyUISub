@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {AttributeData, Section, Submission} from '../shared/model/submission';
 import {PendingSubmission, SubmissionService, SubmitResponse} from '../shared/submission.service';
 import {SectionForm} from './section-form';
-import {catchError, map, switchMap, throttleTime} from 'rxjs/operators';
+import {catchError, debounceTime, map, switchMap} from 'rxjs/operators';
 import {BehaviorSubject, EMPTY, Observable, of, Subject, Subscription} from 'rxjs';
 import {PageTab, pageTab2Submission, submission2PageTab} from '../shared/model';
 import {UserInfo} from '../../auth/model/user-info';
@@ -214,7 +214,7 @@ export class SubmEditService {
         }
 
         if (sectionForm !== undefined) {
-            this.sectionFormSub = sectionForm.form.valueChanges.pipe(throttleTime(900))
+            this.sectionFormSub = sectionForm.form.valueChanges.pipe(debounceTime(900))
                 .subscribe(() => this.save());
             this.sectionSwitch$.next(some(sectionForm));
         } else {
