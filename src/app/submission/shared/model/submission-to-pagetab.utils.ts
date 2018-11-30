@@ -75,7 +75,8 @@ function withPageTag(tags: Tag[]): Tag[] {
 function extractSectionAttributes(section: Section, isSanitise: boolean): PtAttribute[] {
     return ([] as PtAttribute[]).concat(
         fieldsAsAttributes(section, isSanitise),
-        (extractFeatureAttributes(section.annotations, isSanitise).pop() || []).filter(at => !AttrExceptions.editableAndRootOnly.includes(at.name!)));
+        (extractFeatureAttributes(section.annotations, isSanitise).pop() || []))
+        .filter(at => !AttrExceptions.editableAndRootOnly.includes(at.name!));
 }
 
 function extractSectionSubsections(section: Section, isSanitize: boolean): PtSection[] {
