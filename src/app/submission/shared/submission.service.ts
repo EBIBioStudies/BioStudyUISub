@@ -57,14 +57,6 @@ export class SubmissionService {
     constructor(private http: HttpCustomClient) {
     }
 
-    getSubmission(accno: string): Observable<PendingSubmission> {
-        return this.http.get(`/api/submissions/${accno}`);
-    }
-
-    getSubmittedSubmission(accno: string): Observable<PendingSubmission> {
-        return this.http.get(`/api/submissions/origin/${accno}`);
-    }
-
     getSubmissions(args: any = {}): Observable<SubmissionListItem[]> {
         const urlParams = new UrlParams(args);
         return this.http.get('/api/submissions', urlParams.list).pipe(
@@ -83,7 +75,11 @@ export class SubmissionService {
     }
 
     createSubmission(pt: any): Observable<PendingSubmission> {
-        return this.http.post('/api/submissions/tmp/create', pt);
+        return this.http.post('/api/submissions/pending', pt);
+    }
+
+    getSubmission(accno: string): Observable<PendingSubmission> {
+        return this.http.get(`/api/submissions/pending/${accno}`);
     }
 
     saveSubmission(accno: string, pt: PageTab): Observable<any> {
