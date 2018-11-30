@@ -1,5 +1,8 @@
 import {PtAttribute, PtLink} from './pagetab.model';
 
+const POINTER_ATTR = 'Pointer';
+const TYPE_ATTR = 'Type';
+
 /**
  * Utility class bridging the differences between PageTab's specs for links and the app's internal submission model.
  *
@@ -17,20 +20,17 @@ export class LinksUtils {
      * @returns {Object} Submission-ready link object.
      */
     static toUntyped(linkObj: PtLink): PtAttribute[] {
-        const result = (linkObj.attributes || []).slice();
+        const attrs = (linkObj.attributes || []);
 
-        const pointerAttr = {name: 'Pointer', value: linkObj.url};
-        let typeAttr = result.find(at => at.name === 'Type');
+        const pointerAttr = {name: POINTER_ATTR, value: linkObj.url};
 
-        //Abnormal PageTab link from the server => normalises adding 'Type' attribute
-        if (typeAttr === undefined) {
-            result.push({name: 'Type', value: ''});
-        } else if (String.isDefinedAndNotEmpty(typeAttr.value)) {
+        let typeAttr = attrs.find(at => at.name ===  TYPE_ATTR);
+
+        if (typeAttr != undefined && String.isDefinedAndNotEmpty(typeAttr.value)) {
             pointerAttr.value = typeAttr.value + ':' + linkObj.url;
         }
 
-        result.push(pointerAttr);
-        return result;
+        return [...[pointerAttr], ...attrs.filter(at => ![TYPE_ATTR,  POINTER_ATTR].includes(at.name!))];
     }
 
     /**
@@ -42,11 +42,11 @@ export class LinksUtils {
      * @returns {Object} PageTab-ready link object.
      */
     static toTyped(attributes: PtAttribute[]): PtLink {
-        const pointer: string = (attributes.find(at => at.name === 'Pointer') || {value: ''}).value || '';
-        const typeAttr = {name: 'Type', value: ''};
+        const pointer: string = (attributes.find(at => at.name === POINTER_ATTR) || {value: ''}).value || '';
+        const typeAttr = {name: TYPE_ATTR, value: ''};
         const isUrl = this.URL_REGEXP.test(pointer);
 
-        const linkObj = <PtLink>{url: '', attributes: <PtAttribute[]>[]};
+        const linkObj = <PtLink>{url: '', attributes: attributes.filter(at => ![TYPE_ATTR,  POINTER_ATTR].includes(at.name!))};
 
         linkObj.attributes!.push(typeAttr);
         if (pointer) {
@@ -58,21 +58,11 @@ export class LinksUtils {
                 //It must be a prefix:ID link
                 if (linkParts.length > 1) {
                     typeAttr.value = linkParts[0];
-                    linkObj['url'] = linkParts[1];
-
-                    //Invalid link value
-                    //NOTE: field values could be backed up regardless of their validity.
+                    linkObj.url = linkParts[1];
                 } else {
-                    linkObj['url'] = linkParts[0];
+                    linkObj.url = linkParts[0];
                 }
             }
-
-            //Empty submission link object => normalises adding a url property
-            //NOTE: Only when creating brand new submissions, this anomalous situation will apply. Otherwise, this would
-            //never be sent since it is not a valid link if the pointer is required and it's blank data (and therefore
-            //scrapped) if the pointer is not required.
-        } else {
-            linkObj['url'] = '';
         }
 
         return linkObj;
