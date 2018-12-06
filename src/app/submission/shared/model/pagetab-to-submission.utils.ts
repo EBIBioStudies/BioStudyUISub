@@ -19,7 +19,7 @@ function findSubmissionTemplateName(pageTab: PageTab): string {
     return attachToValues.length === 1 ? attachToValues[0] : DEFAULT_TEMPLATE_NAME;
 }
 
-export function pageTab2Submission(pageTab: PageTab) {
+export function pageTab2Submission(pageTab: PageTab): Submission {
     const type = SubmissionType.fromTemplate(findSubmissionTemplateName(pageTab));
     return new Submission(type, pageTab2SubmissionData(pageTab));
 }
@@ -106,6 +106,7 @@ function hasSubsections(section: PtSection): boolean {
     return !(section.subsections || []).isEmpty() ||
         !(section.links || []).isEmpty() ||
         !(section.files || []).isEmpty() ||
+        String.isDefinedAndNotEmpty(section.libraryFile) ||
         ((section.tags ||[]).map(t => new Tag(t.classifier, t.tag))
             .find(t => t.equals(PAGE_TAG)) !== undefined);
 }

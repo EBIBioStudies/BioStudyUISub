@@ -1,7 +1,7 @@
 import {Submission, SubmissionData} from './submission';
 import {SubmissionType} from './templates';
 import {submission2PageTab} from './submission-to-pagetab.utils';
-import {PtFile, PtLink} from './pagetab';
+import {AttrExceptions, PtFile, PtLink} from './pagetab';
 
 describe('Submission To PageTab Util:', () => {
 
@@ -32,7 +32,7 @@ describe('Submission To PageTab Util:', () => {
         expect(pageTab.attributes!.find(at => at.name === 'AttachTo')).toBeDefined();
 
         const secAttributes = pageTab.section!.attributes!;
-        expect(secAttributes.length).toBe(3);
+        expect(secAttributes.length).toBe(2);
     });
 
     it('Section Link features should go to section links list', () => {

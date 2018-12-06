@@ -18,9 +18,8 @@ describe('Submission Model: Feature', () => {
     it('can be single row', () => {
         const f = new Feature(FeatureType.createDefault('SingleRowFeature', true));
         expect(f.colSize()).toBe(0);
-        expect(f.rowSize()).toBe(1);
+        expect(f.rowSize()).toBe(0);
         expect(f.singleRow).toBeTruthy();
-        expect(f.type.name).toEqual('SingleRowFeature');
     });
 
     it('allows to add more rows to a multi row feature', () => {
@@ -32,11 +31,11 @@ describe('Submission Model: Feature', () => {
         expect(f.rowSize()).toBe(2);
     });
 
-    it('does not allow to add rows to a single row feature', () => {
+    it('does not allow to add more than 1 row to a single row feature', () => {
         const f = new Feature(FeatureType.createDefault('SingleRowFeature', true));
         expect(f.singleRow).toBeTruthy();
-        expect(f.rowSize()).toBe(1);
         f.addRow();
+        expect(f.rowSize()).toBe(1);
         f.addRow();
         expect(f.rowSize()).toBe(1);
     });
@@ -109,24 +108,6 @@ describe('Submission Model: Feature', () => {
         }, undefined, true);
         const f = new Feature(type);
         expect(f.rowSize()).toBe(0);
-        expect(f.colSize()).toBe(1);
-    });
-
-    it('must not allow to remove/or modify required column', () => {
-        const type = new FeatureType('AFeature', {
-            columnTypes: [
-                {name: 'col1', display: 'required'} as ColumnType,
-                {name: 'col2', display: 'optional'} as ColumnType
-            ]
-        }, undefined, true);
-        const f = new Feature(type);
-        expect(f.colSize()).toBe(1);
-
-        const col = f.columns[0];
-        col.name = 'col11';
-        expect(col.name).toEqual('col1');
-
-        f.removeColumn(col.id);
         expect(f.colSize()).toBe(1);
     });
 });

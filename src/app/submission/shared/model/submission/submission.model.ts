@@ -12,12 +12,21 @@ import {
 import {NameAndValue, Tag} from '../model.common';
 import {zip} from 'fp-ts/lib/Array';
 
+class Counter {
+    private count = 0;
+
+    get next(): number {
+        return ++this.count;
+    }
+}
+
 const nextId = (function () {
-    let count = 0;
+    let counter = new Counter();
     return function () {
-        return `id${count++}`;
+        return `id${counter.next}`;
     }
 })();
+
 
 export class Attribute {
     readonly id: string;
@@ -89,12 +98,9 @@ export class ValueMap {
 }
 
 export class Columns {
-    private columns: Attribute[] = [];
-    private counter: number = 0;
+    readonly index = new Counter();
 
-    get nextIndex(): number {
-        return ++this.counter;
-    }
+    private columns: Attribute[] = [];
 
     list(): Attribute[] {
         return this.columns.slice();
@@ -146,12 +152,12 @@ export class Columns {
 }
 
 class Rows {
-    private rows: ValueMap[] = [];
+    private rows: Array<ValueMap> = [];
 
-    constructor(private singleRow: boolean = false) {
+    constructor(private capacity: number = -1) {
     }
 
-    list(): ValueMap[] {
+    list(): Array<ValueMap> {
         return this.rows.slice();
     }
 
@@ -160,8 +166,8 @@ class Rows {
     }
 
     add(keys: string[]): ValueMap {
-        if (this.singleRow && !this.rows.isEmpty()) {
-            throw new Error('Can not add more than one row to a single row feature');
+        if (this.isFull()) {
+            throw new Error(`Can not add more than ${this.capacity} row(s) to a feature`);
         }
         const row = new ValueMap(keys);
         this.rows.push(row);
@@ -191,6 +197,10 @@ class Rows {
     size(): number {
         return this.rows.length;
     }
+
+    private isFull(): boolean {
+        return this.capacity > 0 && this.rows.length === this.capacity;
+    }
 }
 
 type FeatureGroup = Feature[];
@@ -215,7 +225,7 @@ export class Feature {
         this.id = `feature_${nextId()}`;
         this.type = type;
         this._columns = new Columns();
-        this._rows = new Rows(type.singleRow);
+        this._rows = new Rows(type.singleRow ? 1 : undefined);
 
         type.columnTypes.filter(ct => ct.isRequired || ct.isDesirable)
             .forEach(ct => {
@@ -308,7 +318,7 @@ export class Feature {
     }
 
     addColumn(name?: string, valueType?: ValueType, displayType?: DisplayType, isTemplateBased: boolean = false): Attribute {
-        const defColName = (this.singleRow ? this.typeName : 'Column') + ' ' + this._columns.nextIndex;
+        const defColName = (this.singleRow ? this.typeName : 'Column') + ' ' + this._columns.index.next;
         let colName = name || defColName;
         let col = new Attribute(colName, valueType, displayType, isTemplateBased);
         this._rows.addKey(col.id);
@@ -345,8 +355,8 @@ export class Feature {
 export class Features {
     private features: Feature[] = [];
 
-    constructor(type: SectionType, data: SectionData) {
-        const fd = (data.features || []).filter(f => String.isDefinedAndNotEmpty(f.type))
+    constructor(type: SectionType, features: Array<FeatureData> = []) {
+        const fd = features.filter(f => String.isDefinedAndNotEmpty(f.type))
             .reduce((rv, d) => {
                 rv[d.type!] = d;
                 return rv;
@@ -462,18 +472,17 @@ export class Field {
 export class Fields {
     private fields: Field[];
 
-    constructor(type: SectionType, data: SectionData) {
+    constructor(type: SectionType, attributes: Array<AttributeData> = []) {
         this.fields = [];
 
-        const attrObj = (data.attributes || [])
-            .filter(attr => attr.name && type.getFieldType(attr.name) !== undefined)
+        const attrMap = attributes.filter(at => String.isDefined(at.name))
             .reduce((rv, attr) => {
                 rv[attr.name!] = attr.value;
                 return rv;
             }, {});
 
         type.fieldTypes.forEach(fieldType => {
-            this.add(fieldType, attrObj[fieldType.name] || '');
+            this.add(fieldType, attrMap[fieldType.name] || '');
         });
     }
 
@@ -521,14 +530,14 @@ export class Section {
 
         this._accno = data.accno || accno;
 
-        this.fields = new Fields(type, data);
+        this.fields = new Fields(type, data.attributes);
 
         //Any attribute names from the server that do not match top-level field names are added as annotations.
         this.annotations = Feature.create(type.annotationsType,
             (data.attributes || []).filter(a => a.name && type.getFieldType(a.name) === undefined)
         );
-        this.features = new Features(type, data);
-        this.sections = new Sections(type, data);
+        this.features = new Features(type, data.features);
+        this.sections = new Sections(type, data.sections);
     }
 
     get accno(): string {
@@ -569,11 +578,11 @@ export class Sections {
     private nextIdx: number = 0;
 
     /* Fills in existed data if given. Data with types defined in the template goes first. */
-    constructor(type: SectionType, data: SectionData = {} as SectionData) {
+    constructor(type: SectionType, sections: Array<SectionData> = []) {
         this.sections = [];
 
         type.sectionTypes.forEach(st => {
-            const sd = (data.sections || []).filter(s => s.type === st.name);
+            const sd = sections.filter(s => s.type === st.name);
             sd.forEach(d => {
                 this.add(st, d);
             });
@@ -586,7 +595,7 @@ export class Sections {
         });
 
         const definedTypes = type.sectionTypes.map(t => t.name);
-        (data.sections || []).filter(sd => sd.type === undefined || !definedTypes.includes(sd.type))
+        sections.filter(sd => sd.type === undefined || !definedTypes.includes(sd.type))
             .forEach(sd => {
                 this.add(type.getSectionType(sd.type || 'UnknownSectionType'), sd);
             });
@@ -617,7 +626,7 @@ export class Sections {
         return false;
     }
 
-    removeById(sectionId:string) {
+    removeById(sectionId: string) {
         const section = this.sections.find(s => s.id === sectionId);
         return section !== undefined ? this.remove(section) : false;
     }

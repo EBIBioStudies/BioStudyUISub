@@ -9,10 +9,10 @@ describe('Submission Model: Section', () => {
 
     it('can be empty', () => {
         const sec = new Section(SectionType.createDefault('MySectionType'));
-        expect(sec.type.name).toBe('ASectionType');
-        expect(sec.typeName).toBe('ASectionType');
+        expect(sec.type.name).toBe('MySectionType');
+        expect(sec.typeName).toBe('MySectionType');
         expect(sec.accno).toBe('');
-        expect(sec.annotations.size()).toBe(0);
+        expect(sec.annotations.isEmpty).toBeTruthy();
         expect(sec.fields.length).toBe(0);
         expect(sec.features.length).toBe(0);
         expect(sec.sections.length).toBe(0);

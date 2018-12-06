@@ -37,16 +37,14 @@ export function newPageTab(templateName: string = DEFAULT_TEMPLATE_NAME): PageTa
 }
 
 export function submission2PageTab(subm: Submission, isSanitise: boolean = false): PageTab {
-    let ptSection = section2PtSection(subm.section, isSanitise);
     return <PageTab>{
         accno: subm.accno,
-        section: ptSection,
+        section: section2PtSection(subm.section, isSanitise),
         tags: subm.tags.tags,
         accessTags: subm.tags.accessTags,
         attributes: mergeAttributes(
             subm.attributes.map(at => attributeData2PtAttribute(at)),
-            (ptSection.attributes || [])
-                .filter(at => String.isDefined(at.name))
+            extractSectionAttributes(subm.section, isSanitise)
                 .filter(at => AttrExceptions.editable.includes(at.name!)))
     };
 }
@@ -57,7 +55,8 @@ function section2PtSection(section: Section, isSanitise: boolean = false): PtSec
         tags: withPageTag(section.tags.tags),
         accessTags: section.tags.accessTags,
         accno: section.accno,
-        attributes: extractSectionAttributes(section, isSanitise),
+        attributes: extractSectionAttributes(section, isSanitise)
+            .filter(at => !AttrExceptions.editableAndRootOnly.includes(at.name!)),
         links: extractSectionLinks(section, isSanitise),
         files: extractSectionFiles(section, isSanitise),
         libraryFile: extractSectionLibraryFile(section, isSanitise),
@@ -73,10 +72,9 @@ function withPageTag(tags: Tag[]): Tag[] {
 }
 
 function extractSectionAttributes(section: Section, isSanitise: boolean): PtAttribute[] {
-    return ([] as PtAttribute[]).concat(
+    return ([] as Array<PtAttribute>).concat(
         fieldsAsAttributes(section, isSanitise),
-        (extractFeatureAttributes(section.annotations, isSanitise).pop() || []))
-        .filter(at => !AttrExceptions.editableAndRootOnly.includes(at.name!));
+        (extractFeatureAttributes(section.annotations, isSanitise).pop() || []));
 }
 
 function extractSectionSubsections(section: Section, isSanitize: boolean): PtSection[] {
