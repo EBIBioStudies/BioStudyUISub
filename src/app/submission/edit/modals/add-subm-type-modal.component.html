@@ -2,63 +2,56 @@
       #form="ngForm"
       (ngSubmit)="onSubmit(form)">
     <div class="modal-header bg-primary">
-        Add new type
+        Add new...
         <button type="button" class="close pull-right" aria-label="Close" (click)="hide()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
     <div class="modal-body">
-                    <span *ngIf="type != 'Section'">
-                        <input *ngFor="let featName of featNames; let i = index" type="hidden"
-                               [(ngModel)]="featNames[i]"
-                               name="{{featName + i}}"
-                               unique>
-                    </span>
-        <div class="form-group" [ngClass]="{'has-error': typeName.invalid && typeName.touched}">
+        <div class="form-group" [ngClass]="{'has-error': form.invalid && !form.pristine}">
             <label class="control-label" for="typeName">
                 <span class="text-black">Name</span>
                 <ng-template #popTemplate>
                     <strong class="text-muted">Existing names</strong>:
                     <span *ngFor="let featName of featNames; let last = last"
-                          [ngClass]="{'text-danger': featName == name}">
+                          [ngClass]="{'text-danger': featName === typeName}">
                                     {{featName}}{{last ? '': ', '}}
-                                </span>
+                    </span>
                 </ng-template>
-                <span *ngIf="typeName.invalid && typeName.touched">
-                                <span *ngIf="typeName.errors?.required">Please enter a name</span>
-                                <span *ngIf="typeName.errors?.unique"
-                                      container="body"
-                                      placement="top"
-                                      [popover]="popTemplate"
-                                      #uniquePop="bs-popover">
-                                    Please use a unique name
-                                </span>
-                            </span>
-                <span [hidden]="type == 'Section' || typeName.invalid && typeName.touched" class="text-muted">
-                                (must be unique)
-                            </span>
+                <span *ngIf="typeNameCtrl.invalid && !typeNameCtrl.pristine">
+                    <span *ngIf="typeNameCtrl.errors?.required">Please enter a name</span>
+                    <span *ngIf="typeNameCtrl.errors?.unique"
+                          container="body"
+                          placement="top"
+                          [popover]="popTemplate"
+                          #uniquePop="bs-popover">
+                        Please use a unique name
+                    </span>
+                </span>
+                <span [hidden]="typeBase === 'Section' || (typeNameCtrl.invalid && typeNameCtrl.touched)" class="text-muted">
+                    (must be unique)
+                </span>
             </label>
             <input type="text" class="form-control"
-                   [(ngModel)]="name"
-                   name="name"
+                   [(ngModel)]="typeName"
                    id="typeName"
-                   #typeName="ngModel"
+                   #typeNameCtrl="ngModel"
                    validate-onblur
                    required
-                   [unique]="type != 'Section'"
-                   (focus)="onNameFocus()"
-                   (blur)="onNameBlur()"
+                   [unique]="typeBase !== 'Section'"
+                   (focus)="onTypeNameFocus()"
+                   (blur)="onTypeNameBlur()"
                    #focusBtn>
         </div>
         <div class="form-group">
-            <label class="control-label">Class</label>
+            <label class="control-label">As</label>
             <select class="form-control"
-                    [(ngModel)]="type"
-                    name="type"
-                    (blur)="onTypeBlur()">
+                    [(ngModel)]="typeBase"
+                    id="typeBase"
+                    (blur)="onTypeBaseBlur()">
                 <option value="List">List</option>
                 <option value="Grid">Grid</option>
-                <option value="Section">Page</option>
+                <option value="Section">Section</option>
             </select>
         </div>
     </div>

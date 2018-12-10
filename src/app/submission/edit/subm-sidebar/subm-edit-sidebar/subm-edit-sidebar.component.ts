@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Observable, Subject} from 'rxjs';
 import {SectionForm} from '../../section-form';
@@ -95,7 +95,7 @@ export class SubmEditSidebarComponent implements OnInit, OnDestroy {
 
     onNewTypeClick(event?: Event): void {
         event && event.preventDefault();
-        const bsModalRef = this.modalService.show(AddSubmTypeModalComponent, {initialState: {section: this.sectionForm!.section}});
+        const bsModalRef = this.modalService.show(AddSubmTypeModalComponent, {initialState: {sectionForm: this.sectionForm}});
         bsModalRef.content.closeBtnName = 'Close';
     }
 
@@ -196,7 +196,7 @@ export class SubmEditSidebarComponent implements OnInit, OnDestroy {
     private updateItems(): void {
         this.items =
             [...this.sectionForm!.featureForms.map(ff => DataTypeControl.fromFeatureType(ff.featureType, ff.id)),
-                ...this.sectionForm!.section.type.sectionTypes.map(st => DataTypeControl.fromSectionType(st))];
+                ...this.sectionForm!.type.sectionTypes.map(st => DataTypeControl.fromSectionType(st))];
 
         const form = new FormGroup({}, FormValidators.uniqueValues);
         this.items.forEach(item => form.addControl(item.id, item.control));

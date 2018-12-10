@@ -1,76 +1,56 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 
 import {BsModalRef, PopoverDirective} from 'ngx-bootstrap';
-import {NgForm, NgModel} from '@angular/forms';
+import {NgForm} from '@angular/forms';
 import {Section, SectionType} from '../../shared/model';
+import {SectionForm} from '../section-form';
 
 @Component({
     selector: 'add-subm-type-modal',
     templateUrl: './add-subm-type-modal.component.html'
 })
-export class AddSubmTypeModalComponent implements OnInit {
-    section?: Section;
+export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
+    sectionForm?: SectionForm;
 
-    public type: string = 'Grid';       //form model member for the type property
-    public name?: string;                //form model member for the new type's name property
-    private featNames?: string[];         //existing feature type names
+    public typeBase: string = 'Grid';
+    public typeName?: string;
+
+    private featNames?: string[];
 
     @ViewChild('focusBtn')
     private focusEl?: ElementRef;
-    @ViewChild('typeName')
-    private typeName?: NgModel;
+
     @ViewChild('uniquePop')
     private uniquePop?: PopoverDirective;
 
     constructor(public bsModalRef: BsModalRef) {}
 
     ngOnInit(): void {
-        this.featNames = this.getFeatNames();
+        this.featNames = this.getFeatureNames();
+    }
+
+    ngAfterViewInit(): void {
+       this.focusEl!.nativeElement.focus();
     }
 
     /**
      * Generates the list of type names for all features (including annotations) from section data.
      * @returns {string[]} Type names of all defined features.
      */
-    private getFeatNames(): string[] {
-        let nonAnnotNames: string[];
-        if (this.section) {
-            nonAnnotNames = this.section.features.list().map((feature) => {
-                return feature.typeName;
-            });
-            return [this.section.annotations.typeName].concat(nonAnnotNames);
+    private getFeatureNames(): string[] {
+        if (this.sectionForm) {
+            return this.sectionForm.featureForms.map(ff => ff.featureTypeName);
         }
         return [];
     }
 
-    /**
-     * Renders the modal with default values.
-     */
-    show(): void {
-        this.featNames = this.getFeatNames();
-    }
-
-    /**
-     * Closes the modal, clearing any validation messages.
-     */
     hide(): void {
         this.bsModalRef.hide();
     }
 
-    /**
-     * Handler for "onShown" event, triggered exactly after the modal has been fully revealed.
-     */
-    onShown(): void {
-        this.typeName!.control.markAsUntouched({onlySelf: true});
-        this.focusEl!.nativeElement.focus();
-    }
-
-    /**
-     * Handler for click events on "Cancel" button.
-     */
-    onCancel(): void {
-        this.type = 'Grid';
-        this.typeName!.control.reset();
+    onCancel(form: NgForm): void {
+        form.reset();
+        this.typeBase = 'Grid';
         this.hide();
     }
 
@@ -80,29 +60,15 @@ export class AddSubmTypeModalComponent implements OnInit {
      * @param {NgForm} form New type submit form.
      */
     onSubmit(form: NgForm): void {
-        let isSingleRow: boolean = false;
-        let isSection: boolean = false;
-
         //Adds type if all form fields completed satisfactorily
         if (form.valid) {
-            if (this.type == 'Section') {
-                isSection = true;
-            } else if (this.type == 'List') {
-                isSingleRow = true;
-            }
+            const isSection = this.typeBase === 'Section';
+            const isSingleRow = this.typeBase === 'List';
 
             //Add operation successful => gets form ready for further additions
-            if (this.name && this.onAddType(this.name, isSection, isSingleRow)) {
-                this.onCancel();
-
-                //Add operation failed => show error
-            } else {
-                this.typeName!.control.markAsTouched({onlySelf: true});
+            if (this.typeName && this.onAddType(this.typeName, isSection, isSingleRow)) {
+                this.onCancel(form);
             }
-
-            //Triggers form-led validation of all fields.
-        } else {
-            this.typeName!.control.markAsTouched({onlySelf: true});
         }
     }
 
@@ -114,16 +80,16 @@ export class AddSubmTypeModalComponent implements OnInit {
      * @returns {any} Result of the addition operation, which could be empty if the new type is not valid.
      */
     onAddType(name: string, isSection: boolean, isSingleRow: boolean = false): any {
-        const rootType: SectionType = this.section!.type;
+        const rootType: SectionType = this.sectionForm!.type;
         let addedType: any;
 
         if (isSection) {
             const sectionType = rootType.getSectionType(name);
-            addedType = this.section!.sections.add(sectionType);
+            addedType = this.sectionForm!.addSection(sectionType);
 
         } else {
             const featureType = rootType.getFeatureType(name, isSingleRow);
-            addedType = this.section!.features.add(featureType);
+            addedType = this.sectionForm!.addFeature(featureType);
         }
 
         return addedType;
@@ -133,7 +99,7 @@ export class AddSubmTypeModalComponent implements OnInit {
      * Handler for focus event on the type name field. It displays the popover with a list of existing type names.
      * NOTE: The popover is only rendered when the uniqueness test fails.
      */
-    onNameFocus() {
+    onTypeNameFocus() {
         if (this.uniquePop) {
             this.uniquePop.show();
         }
@@ -143,18 +109,9 @@ export class AddSubmTypeModalComponent implements OnInit {
      * Handler for blur event on the type name field. Hides the popover displayed by the method above.
      * NOTE: The popover is only rendered when the uniqueness test fails.
      */
-    onNameBlur() {
+    onTypeNameBlur() {
         if (this.uniquePop) {
             this.uniquePop.hide();
         }
-    }
-
-    /**
-     * Handler for blur event on the type class field. Ensures the submission of sections with duplicate
-     * names goes ahead.
-     * NOTE: Section names do not have to be unique.
-     */
-    onTypeBlur() {
-        this.typeName!.control.updateValueAndValidity();
     }
 }

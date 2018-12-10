@@ -227,7 +227,7 @@ export class FeatureForm extends FormBase {
 
     structureChanges$: Subject<StructureChangeEvent> = new Subject<StructureChangeEvent>();
 
-    constructor(private feature: Feature, private featureRef: ControlGroupRef ) {
+    constructor(private feature: Feature, private featureRef: ControlGroupRef) {
         super(new FormGroup({
             columns: new MyFormGroup({}, SubmFormValidators.forFeatureColumns(feature)).withRef(featureRef),
             rows: new FormArray([])
@@ -535,7 +535,7 @@ export class SectionForm extends FormBase {
 
     private sectionRef: ControlGroupRef;
 
-    constructor(readonly section: Section, readonly parent?: SectionForm) {
+    constructor(private section: Section, readonly parent?: SectionForm) {
         super(new FormGroup({
             fields: new FormGroup({}),
             features: new FormGroup({}),
@@ -589,7 +589,14 @@ export class SectionForm extends FormBase {
         }
     }
 
-    addSection(type:SectionType) {
+    addFeature(type: FeatureType) {
+        const feature = this.section.features.add(type);
+        if (feature) {
+            this.addFeatureForm(feature);
+        }
+    }
+
+    addSection(type: SectionType) {
         return this.addSubsectionForm(this.section.sections.add(type));
     }
 
@@ -608,6 +615,10 @@ export class SectionForm extends FormBase {
 
     findSectionForm(sectionId: string) {
         return this.findRoot().lookupSectionForm(sectionId);
+    }
+
+    get type(): SectionType {
+        return this.section.type;
     }
 
     get typeName(): string {
@@ -630,11 +641,11 @@ export class SectionForm extends FormBase {
         return this.section.type.minRequired;
     }
 
-    get isRootSection():boolean {
+    get isRootSection(): boolean {
         return this.parent === undefined;
     }
 
-    isSectionRemovable(sectionForm:SectionForm): boolean {
+    isSectionRemovable(sectionForm: SectionForm): boolean {
         const min = sectionForm.typeMinRequired;
         return sectionForm.isTypeRemovable || (this.section.sections.byType(sectionForm.typeName).length > min);
     }
