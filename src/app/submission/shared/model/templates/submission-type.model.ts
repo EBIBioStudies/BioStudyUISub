@@ -1,5 +1,9 @@
 import {EMPTY_TEMPLATE_NAME, findSubmissionTemplateByName} from './submission.templates';
 
+/*
+*  Type scopes are used to check if the types with a given name already exists in the scope
+*  (SubmissionScope, SectionScope, FeatureScope, FieldsScope.. etc.). Each type must be in a scope.
+* */
 class TypeScope<T extends TypeBase> {
     private map: Map<String, T> = new Map();
 
