@@ -17,4 +17,4 @@ export class Tag {
     }
 }
 
-export const PAGE_TAG = new Tag('type', 'page');
+export const PAGE_TAG = new Tag('SubmissionElement', 'page');
