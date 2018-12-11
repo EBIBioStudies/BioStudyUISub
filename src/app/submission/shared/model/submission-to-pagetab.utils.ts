@@ -38,6 +38,7 @@ export function newPageTab(templateName: string = DEFAULT_TEMPLATE_NAME): PageTa
 
 export function submission2PageTab(subm: Submission, isSanitise: boolean = false): PageTab {
     return <PageTab>{
+        type: 'Submission',
         accno: subm.accno,
         section: section2PtSection(subm.section, isSanitise),
         tags: subm.tags.tags,
