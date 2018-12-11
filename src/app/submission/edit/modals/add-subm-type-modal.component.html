@@ -47,8 +47,7 @@
             <label class="control-label">As</label>
             <select class="form-control"
                     [(ngModel)]="typeBase"
-                    id="typeBase"
-                    (blur)="onTypeBaseBlur()">
+                    id="typeBase">
                 <option value="List">List</option>
                 <option value="Grid">Grid</option>
                 <option value="Section">Section</option>
@@ -62,7 +61,7 @@
             </button>
             <button type="button"
                     class="btn btn-default btn-sm"
-                    (click)="onCancel()">Cancel
+                    (click)="onCancel(form)">Cancel
             </button>
         </div>
     </div>
