@@ -518,6 +518,7 @@ export class StructureChangeEvent {
     static featureColumnAdd: StructureChangeEvent = new StructureChangeEvent('featureColumnAdd');
     static featureColumnRemove: StructureChangeEvent = new StructureChangeEvent('featureColumnRemove');
     static sectionRemove: StructureChangeEvent = new StructureChangeEvent('sectionRemove');
+    static sectionAdd: StructureChangeEvent = new StructureChangeEvent('sectionAdd');
 }
 
 export class SectionForm extends FormBase {
@@ -589,15 +590,19 @@ export class SectionForm extends FormBase {
         }
     }
 
-    addFeature(type: FeatureType) {
+    addFeature(type: FeatureType): Feature | undefined {
         const feature = this.section.features.add(type);
         if (feature) {
             this.addFeatureForm(feature);
+            this.structureChanges$.next(StructureChangeEvent.featureAdd);
         }
+        return feature;
     }
 
-    addSection(type: SectionType) {
-        return this.addSubsectionForm(this.section.sections.add(type));
+    addSection(type: SectionType): SectionForm {
+        const form = this.addSubsectionForm(this.section.sections.add(type));
+        this.structureChanges$.next(StructureChangeEvent.sectionAdd);
+        return form;
     }
 
     removeSection(sectionId: string): void {
@@ -643,6 +648,17 @@ export class SectionForm extends FormBase {
 
     get isRootSection(): boolean {
         return this.parent === undefined;
+    }
+
+    get sectionTypes(): Array<SectionType> {
+        return <SectionType[]>[...this.section.type.sectionTypes, ...this.subsectionForms.map(sf => sf.type)]
+            .reduce((rv, v) => {
+                if (rv[0][v.name] === undefined) {
+                    rv[0][v.name] = 1;
+                    rv[1].push(v);
+                }
+                return rv;
+            }, [{} as { [key: string]: any }, [] as Array<SectionType>])[1];
     }
 
     isSectionRemovable(sectionForm: SectionForm): boolean {

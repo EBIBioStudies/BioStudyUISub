@@ -141,17 +141,11 @@
                             : {{subsectionForm.section.accno}}
                         </span>
                         <span class="btn-toolbar pull-right">
-                            <!--button type="button" class="section-edit btn btn-link btn-xs btn-flat"
-                                    tooltip="{{readonly ? 'View' : 'Edit'}} page &quot;{{subsectionForm.section.typeName}}&quot;"
-                                    container="body"
-                                    (click)="onSectionClick(subsectionForm)">
-                                <i class="fa {{readonly ? 'fa-eye' : 'fa-pencil-alt'}} fa-fw fa-lg"></i>
-                            </button-->
                             <button type="button" *ngIf="!readonly && sectionForm.isSectionRemovable(subsectionForm)" class="section-delete btn btn-danger btn-xs btn-flat"
-                                    tooltip="Delete page &quot;{{subsectionForm.section.typeName}}&quot;"
+                                    tooltip="Delete page &quot;{{subsectionForm.typeName}}&quot;"
                                     container="body"
                                     placement="left"
-                                    (click)="$event.stopPropagation(); onSectionDeleteClick(subsectionForm.id)">
+                                    (click)="$event.stopPropagation(); onSectionDeleteClick(subsectionForm)">
                                 <i class="fas fa-trash-alt fa-fw"></i>
                             </button>
                         </span>

@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {Observable, Subject} from 'rxjs';
+import {Observable, Subject, Subscription} from 'rxjs';
 import {SectionForm} from '../../section-form';
 import {ConfirmDialogComponent} from '../../../../shared';
 import {UserData} from '../../../../auth';
@@ -70,6 +70,7 @@ export class SubmEditSidebarComponent implements OnInit, OnDestroy {
     sectionForm?: SectionForm;
 
     private unsubscribe: Subject<void> = new Subject<void>();
+    private sectionSubscription?: Subscription;
 
     constructor(public userData: UserData, private modalService: BsModalService, private submEditService: SubmEditService) {
         this.submEditService.sectionSwitch$.takeUntil(this.unsubscribe)
@@ -171,11 +172,15 @@ export class SubmEditSidebarComponent implements OnInit, OnDestroy {
     }
 
     private switchSection(sectionFormOp: Option<SectionForm>) {
-        this.unsubscribe.next();
+        if (this.sectionSubscription) {
+            this.sectionSubscription.unsubscribe();
+        }
 
         if (sectionFormOp.isSome()) {
             this.sectionForm = sectionFormOp.toUndefined();
-            this.updateItems();
+            if (this.sectionForm) {
+                this.sectionSubscription = this.sectionForm.structureChanges$.subscribe(it => this.updateItems());
+            }
         }
     }
 
@@ -196,7 +201,7 @@ export class SubmEditSidebarComponent implements OnInit, OnDestroy {
     private updateItems(): void {
         this.items =
             [...this.sectionForm!.featureForms.map(ff => DataTypeControl.fromFeatureType(ff.featureType, ff.id)),
-                ...this.sectionForm!.type.sectionTypes.map(st => DataTypeControl.fromSectionType(st))];
+                ...this.sectionForm!.sectionTypes.map(st => DataTypeControl.fromSectionType(st))];
 
         const form = new FormGroup({}, FormValidators.uniqueValues);
         this.items.forEach(item => form.addControl(item.id, item.control));

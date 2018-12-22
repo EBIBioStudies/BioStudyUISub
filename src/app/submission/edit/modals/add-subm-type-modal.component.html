@@ -34,6 +34,7 @@
             </label>
             <input type="text" class="form-control"
                    [(ngModel)]="typeName"
+                   name="typeName"
                    id="typeName"
                    #typeNameCtrl="ngModel"
                    validate-onblur
@@ -47,6 +48,7 @@
             <label class="control-label">As</label>
             <select class="form-control"
                     [(ngModel)]="typeBase"
+                    name="typeBase"
                     id="typeBase">
                 <option value="List">List</option>
                 <option value="Grid">Grid</option>

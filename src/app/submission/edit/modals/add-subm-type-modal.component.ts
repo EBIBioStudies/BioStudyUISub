@@ -72,27 +72,18 @@ export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
         }
     }
 
-    /**
-     * Handler for adding the new type to the existing set of type items.
-     * @param {string} name - Name of the new type.
-     * @param {boolean} isSection - Indicates a section will be added.
-     * @param {boolean} isSingleRow - Indicates a list will be added.
-     * @returns {any} Result of the addition operation, which could be empty if the new type is not valid.
-     */
-    onAddType(name: string, isSection: boolean, isSingleRow: boolean = false): any {
+    onAddType(name: string, isSection: boolean, isSingleRow: boolean): boolean {
         const rootType: SectionType = this.sectionForm!.type;
-        let addedType: any;
 
         if (isSection) {
             const sectionType = rootType.getSectionType(name);
-            addedType = this.sectionForm!.addSection(sectionType);
-
-        } else {
-            const featureType = rootType.getFeatureType(name, isSingleRow);
-            addedType = this.sectionForm!.addFeature(featureType);
+            console.log(sectionType);
+            this.sectionForm!.addSection(sectionType);
+            return true;
         }
 
-        return addedType;
+        const featureType = rootType.getFeatureType(name, isSingleRow);
+        return this.sectionForm!.addFeature(featureType) !== undefined;
     }
 
     /**
