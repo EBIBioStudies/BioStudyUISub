@@ -1,4 +1,4 @@
-import {ApplicationRef, Component, OnDestroy, ViewChild} from '@angular/core';
+import {ApplicationRef, Component, OnDestroy} from '@angular/core';
 import {Event, NavigationEnd, Router} from '@angular/router';
 
 import {AuthService, UserSession} from 'app/auth/index';
@@ -6,6 +6,7 @@ import {RequestStatusService} from '../../http/request-status.service';
 import {Subscription} from 'rxjs/Subscription';
 import {UserData} from '../../auth/user-data';
 import {ConfirmDialogComponent} from '../../shared/confirm-dialog.component';
+import {BsModalService} from 'ngx-bootstrap';
 
 @Component({
     selector: 'app-header',
@@ -23,15 +24,13 @@ export class AppHeaderComponent implements OnDestroy {
     isPendingReq: boolean = false;          //flags whether there is a transaction in progress (from anywhere in the app)
     isBusy: boolean = false;                //flags whether there is a transaction triggered by this component
 
-    @ViewChild('confirmDialog')
-    confirmDialog?: ConfirmDialogComponent;
-
     constructor(private userSession: UserSession,
                 private userData: UserData,
                 private router: Router,
                 private authService: AuthService,
                 private requestStatus: RequestStatusService,
-                private appRef: ApplicationRef) {
+                private appRef: ApplicationRef,
+                private modalService: BsModalService) {
         const header = this;
 
         this.userLoggedIn = !this.userSession.isAnonymous();
@@ -103,11 +102,17 @@ export class AppHeaderComponent implements OnDestroy {
      * @param {string} message - Text to be shown within the dialogue's body section.
      * @param {string} title - Title for the modal.
      */
-    confirm(text: string, title: string) {
-        if (this.confirmDialog !== undefined) {
-            this.confirmDialog.title = title;
-            this.confirmDialog.confirm(text, false);
-        }
+    confirm(message: string, title: string) {
+        this.modalService.show(ConfirmDialogComponent,
+            {
+                initialState: {
+                    isHideCancel: true,
+                    title: title,
+                    body: message,
+                    isDiscardCancel: false,
+                    callback: () => {}
+                }
+            });
     }
 
     toggleCollapsed() {

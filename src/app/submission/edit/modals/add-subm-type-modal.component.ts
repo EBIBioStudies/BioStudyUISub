@@ -65,10 +65,8 @@ export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
             const isSection = this.typeBase === 'Section';
             const isSingleRow = this.typeBase === 'List';
 
-            //Add operation successful => gets form ready for further additions
-            if (this.typeName && this.onAddType(this.typeName, isSection, isSingleRow)) {
-                this.onCancel(form);
-            }
+            this.onAddType(this.typeName!, isSection, isSingleRow);
+            this.onCancel(form);
         }
     }
 

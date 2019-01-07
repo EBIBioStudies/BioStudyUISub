@@ -28,12 +28,12 @@ import {TestBackendInterceptor} from './test-backend-interceptor.service';
             provide: HTTP_INTERCEPTORS,
             useClass: AuthInterceptorService,
             multi: true
-        },
+        }/*,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: TestBackendInterceptor,
             multi: true
-        }
+        }*/
     ]
 })
 export class HttpCustomClientModule {

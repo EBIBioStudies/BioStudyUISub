@@ -8,7 +8,7 @@ import {ConfirmDialogComponent} from 'app/shared/index';
 import {AppConfig} from '../../app.config';
 import {SubmSidebarComponent} from './subm-sidebar/subm-sidebar.component';
 import {Subject} from 'rxjs/Subject';
-import {of} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {SectionForm} from './section-form';
 import {filter, switchMap} from 'rxjs/operators';
 import {SubmEditService} from './subm-edit.service';
@@ -42,9 +42,6 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
     @Input() readonly: boolean = false;
 
     @ViewChild(SubmSidebarComponent) sideBar?: SubmSidebarComponent;
-    @ViewChild('confirmSectionDel') confirmSectionDel?: ConfirmDialogComponent;
-    @ViewChild('confirmRevert') confirmRevert?: ConfirmDialogComponent;
-    @ViewChild('confirmSubmit') confirmSubmit?: ConfirmDialogComponent;
 
     accno?: string;
     releaseDate: string = ''; //???
@@ -136,7 +133,7 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     onRevertClick(event: Event) {
-        this.confirmRevert!.confirm().takeUntil(this.unsubscribe)
+        this.confirmRevert().takeUntil(this.unsubscribe)
             .pipe(switchMap(() => this.submEditService.revert())
             ).subscribe(() => {
         });
@@ -156,12 +153,11 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
             return;
         }
 
-        let confirmShown = of(true);
-        if (isConfirm) {
-            confirmShown = this.confirmSubmit!.confirm(this.confirmSubmit!.body, false);
-        }
-        //TODO switchmap
-        confirmShown.takeUntil(this.unsubscribe).pipe(filter(v => v)).subscribe(() => this.submit());
+        (isConfirm ? this.confirmSubmit() : of(true))
+            .pipe(filter(v => v))
+            .switchMap(() => this.submEditService.submit())
+            .takeUntil(this.unsubscribe)
+            .subscribe(resp => this.onSubmitFinished(resp))
     }
 
     onEditBackClick(event: Event) {
@@ -177,7 +173,7 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
         confirmMsg += '. This operation cannot be undone.';
 
-        this.confirmSectionDel!.confirm(confirmMsg).takeUntil(this.unsubscribe).subscribe(() => {
+        this.confirmPageDelete(confirmMsg).subscribe(() => {
             this.sectionForm!.removeSection(sectionForm.id);
         });
     }
@@ -208,11 +204,6 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     private get isValid(): boolean {
         return this.sectionForm !== undefined && this.sectionForm.form.valid;
-    }
-
-    private submit() {
-        this.submEditService.submit().takeUntil(this.unsubscribe)
-            .subscribe(resp => this.onSubmitFinished(resp));
     }
 
     // todo: add proper type for submit response
@@ -246,5 +237,42 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     private switchSection(sectionForm: Option<SectionForm>) {
         this.sectionForm = sectionForm.toUndefined();
+    }
+
+    private confirm(title: string, label: string, body: string): Observable<boolean> {
+        const subj = new Subject<boolean>();
+        this.modalService.show(ConfirmDialogComponent,
+            {
+                initialState: {
+                    headerTitle: title,
+                    confirmLabel: label,
+                    body: body,
+                    isDiscardCancel: false,
+                    callback: (value: boolean) => subj.next(value)
+                }
+            });
+        return subj.asObservable().take(1);
+    }
+
+    private confirmRevert(): Observable<boolean> {
+        return this.confirm(
+            'Revert to released version',
+            'Revert',
+            'You are about to discard all changes made to this submission since it was last released. This operation cannot be undone.');
+
+    }
+
+    private confirmSubmit(): Observable<boolean> {
+        return this.confirm(
+            'Submit the study',
+            'Submit',
+            'You have hit the enter key while filling in the form. If you continue, the study data will be submitted');
+    }
+
+    private confirmPageDelete(message: string): Observable<boolean> {
+        return this.confirm(
+            'Delete page',
+            'Delete',
+            message);
     }
 }

@@ -82,6 +82,9 @@ import {PluralPipe} from './plural.pipe';
         DateFormatDirective,
         DateInputComponent,
         PluralPipe
+    ],
+    entryComponents: [
+        ConfirmDialogComponent
     ]
 })
 export class SharedModule {

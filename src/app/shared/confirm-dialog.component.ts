@@ -1,13 +1,6 @@
-import {
-    Component,
-    ViewChild,
-    Input, ElementRef
-} from '@angular/core';
+import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 
-import {ModalDirective} from 'ngx-bootstrap/modal';
-
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
+import {BsModalRef, ModalDirective} from 'ngx-bootstrap/modal';
 import 'rxjs/add/operator/take';
 
 /**
@@ -18,10 +11,6 @@ import 'rxjs/add/operator/take';
     templateUrl: './confirm-dialog.component.html'
 })
 export class ConfirmDialogComponent {
-    private buttonClicks?: Subject<boolean>;
-
-    @ViewChild('staticModal')
-    private modalDirective?: ModalDirective;
     @ViewChild('focusBtn')
     private focusEl?: ElementRef;
 
@@ -31,48 +20,25 @@ export class ConfirmDialogComponent {
     @Input() isHideCancel: boolean = false;             //Hides the cancel button. Suitable for info modals.
     @Input() body: string = 'Are you sure?';            //Descriptive message for the modal's body
 
-    /**
-     * Renders the confirmation modal, allowing subscription to button events.
-     * @param {string} [message] - Optional text for the modal's body section.
-     * @param {boolean} [isDiscardCancel = true] - Optional RxJS stream behaviour. By default,
-     * events are assumed to come from the confirmation button exclusively.
-     * @returns {Observable<any>} Stream of button events.
-     */
-    confirm(message: string = this.body, isDiscardCancel: boolean = true): Observable<any> {
-        let observable;
+    callback?: (v: boolean) => any;
 
-        //Initialises the stream of button events.
-        //NOTE: Since the observable is created every time the modal is rendered,
-        //it must be initialised to avoid a cumulative effect on subscriptions.
-        this.buttonClicks = new Subject<boolean>();
-        observable = this.buttonClicks.asObservable();
-
-        //Renders the modal
-        this.body = message;
-        this.modalDirective!.show();
-
-        //Discards anything that returns false if required
-        if (isDiscardCancel) {
-            return observable.take(1).filter(x => x).map(x => {});
-        } else {
-            return observable;
-        }
+    constructor(public bsModalRef: BsModalRef) {
     }
 
     /**
      * Handler for confirmation event. Notifies such confirmation with a "true" in the event stream.
      */
     ok(): void {
-        this.buttonClicks!.next(true);
-        this.modalDirective!.hide();
+        this.response(true);
+        this.bsModalRef.hide();
     }
 
     /**
      * Handler for abort event. Notifies such confirmation with a "false" in the event stream.
      */
     cancel(): void {
-        this.buttonClicks!.next(false);
-        this.modalDirective!.hide();
+        this.response(false);
+        this.bsModalRef.hide();
     }
 
     /**
@@ -90,6 +56,12 @@ export class ConfirmDialogComponent {
     onHidden(event: ModalDirective): void {
         if (event.dismissReason == 'backdrop-click') {
             this.cancel();
+        }
+    }
+
+    private response(resp: boolean): void {
+        if (this.callback) {
+            this.callback(resp);
         }
     }
 }

@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 
 import {Observable} from 'rxjs/Observable';
@@ -16,7 +16,7 @@ import {DateFilterComponent} from './ag-grid/date-filter.component';
 
 import {AppConfig} from '../../app.config';
 import {UserData} from '../../auth/user-data';
-import {newPageTab, SUBMISSION_TEMPLATE_NAMES} from '../shared/model';
+import {BsModalService} from 'ngx-bootstrap';
 
 @Component({
     selector: 'action-buttons-cell',
@@ -142,9 +142,8 @@ export class SubmListComponent {
     columnDefs?: any[];
     private datasource: any;
 
-    @ViewChild('confirmDialog') confirmDialog?: ConfirmDialogComponent;
-
     constructor(private submService: SubmissionService,
+                private modalService: BsModalService,
                 private userData: UserData,
                 private router: Router,
                 private route: ActivatedRoute) {
@@ -402,9 +401,18 @@ export class SubmListComponent {
         }
     }
 
-    confirm(text: string, title: string, confirmLabel: string): Observable<any> {
-        this.confirmDialog!.title = title;
-        this.confirmDialog!.confirmLabel = confirmLabel;
-        return this.confirmDialog!.confirm(text, false);
+    confirm(text: string, title: string, confirmLabel: string): Observable<boolean> {
+        const subj = new Subject<boolean>();
+        this.modalService.show(ConfirmDialogComponent,
+            {
+                initialState: {
+                    headerTitle: title,
+                    confirmLabel: confirmLabel,
+                    body: text,
+                    isDiscardCancel: false,
+                    callback: (value: boolean) => subj.next(value)
+                }
+            });
+        return subj.asObservable().take(1);
     }
 }

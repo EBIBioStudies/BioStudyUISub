@@ -1,6 +1,6 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {Observable, Subject, Subscription} from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
 import {SectionForm} from '../../section-form';
 import {ConfirmDialogComponent} from '../../../../shared';
 import {UserData} from '../../../../auth';
@@ -64,15 +64,15 @@ export class SubmEditSidebarComponent implements OnInit, OnDestroy {
     isAdvancedOpen: boolean = false;
     items: DataTypeControl[] = [];
 
-    @ViewChild('confirmDialog') confirmDialog?: ConfirmDialogComponent;
-
     form?: FormGroup;
     sectionForm?: SectionForm;
 
     private unsubscribe: Subject<void> = new Subject<void>();
-    private sectionSubscription?: Subscription;
+    private formSubscription?: Subscription;
 
-    constructor(public userData: UserData, private modalService: BsModalService, private submEditService: SubmEditService) {
+    constructor(public userData: UserData,
+                private modalService: BsModalService,
+                private submEditService: SubmEditService) {
         this.submEditService.sectionSwitch$.takeUntil(this.unsubscribe)
             .subscribe(sectionForm => this.switchSection(sectionForm));
     }
@@ -154,38 +154,50 @@ export class SubmEditSidebarComponent implements OnInit, OnDestroy {
         if (deleted.length > 0) {
             const isPlural = deleted.length > 1;
 
-            const confirmShown = this.confirm(`The submission
+            this.confirm(`The submission
                     ${isPlural ? `items` : `item`} with type
                     ${deleted.map(({typeName}) => `"${typeName}"`).join(', ')}
                     ${isPlural ? `have` : `has`} been deleted. If you proceed,
                     ${isPlural ? `they` : `it`} will be removed from the
-                    list of items and any related features or sections will be permanently deleted.`);
-
-            confirmShown.subscribe((isConfirmed: boolean) => {
-                if (isConfirmed) {
-                    this.applyChanges();
-                }
-            });
+                    list of items and any related features or sections will be permanently deleted.`,
+                (isConfirmed: boolean) => {
+                console.log(isConfirmed);
+                    if (isConfirmed) {
+                        this.applyChanges();
+                    } else {
+                        this.onCancelChanges();
+                    }
+                });
         } else {
             this.applyChanges()
         }
     }
 
     private switchSection(sectionFormOp: Option<SectionForm>) {
-        if (this.sectionSubscription) {
-            this.sectionSubscription.unsubscribe();
-        }
+        this.unsubscribe.next();
 
         if (sectionFormOp.isSome()) {
             this.sectionForm = sectionFormOp.toUndefined();
+            if (this.formSubscription) {
+                this.formSubscription.unsubscribe();
+            }
             if (this.sectionForm) {
-                this.sectionSubscription = this.sectionForm.structureChanges$.subscribe(it => this.updateItems());
+                this.formSubscription = this.sectionForm.structureChanges$.subscribe(it => this.updateItems())
             }
         }
     }
 
-    private confirm(message: string): Observable<any> {
-        return this.confirmDialog!.confirm(message, false);
+    private confirm(message: string, callback: (v: boolean) => any) {
+        this.modalService.show(ConfirmDialogComponent,
+            {
+                initialState: {
+                    headerTitle: 'Delete items',
+                    confirmLabel: 'Delete',
+                    body: message,
+                    isDiscardCancel: false,
+                    callback: callback
+                }
+            });
     }
 
     private applyChanges() {
@@ -201,7 +213,7 @@ export class SubmEditSidebarComponent implements OnInit, OnDestroy {
     private updateItems(): void {
         this.items =
             [...this.sectionForm!.featureForms.map(ff => DataTypeControl.fromFeatureType(ff.featureType, ff.id)),
-                ...this.sectionForm!.sectionTypes.map(st => DataTypeControl.fromSectionType(st))];
+                ...this.sectionForm!.type.sectionTypes.map(st => DataTypeControl.fromSectionType(st))];
 
         const form = new FormGroup({}, FormValidators.uniqueValues);
         this.items.forEach(item => form.addControl(item.id, item.control));
