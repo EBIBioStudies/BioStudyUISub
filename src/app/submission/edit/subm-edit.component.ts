@@ -3,18 +3,18 @@ import {Location} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
 
 import {BsModalService} from 'ngx-bootstrap';
-import {SubmResultsModalComponent} from '../results/subm-results-modal.component';
-import {ConfirmDialogComponent} from 'app/shared/index';
-import {AppConfig} from '../../app.config';
-import {SubmSidebarComponent} from './subm-sidebar/subm-sidebar.component';
+import {SubmResultsModalComponent} from 'app/submission/results/subm-results-modal.component';
+import {ConfirmDialogComponent} from 'app/shared';
+import {AppConfig} from 'app/app.config';
+import {SubmSidebarComponent} from 'app/submission/edit/subm-sidebar/subm-sidebar.component';
 import {Subject} from 'rxjs/Subject';
 import {Observable, of} from 'rxjs';
-import {SectionForm} from './section-form';
+import {SectionForm} from 'app/submission/edit/shared/section-form';
 import {filter, switchMap} from 'rxjs/operators';
-import {SubmEditService} from './subm-edit.service';
+import {SubmEditService} from 'app/submission/edit/shared/subm-edit.service';
 import {Option} from 'fp-ts/lib/Option';
 import {FormControl} from '@angular/forms';
-import {SubmitResponse} from '../shared/submission.service';
+import {SubmitResponse} from 'app/submission/shared/submission.service';
 
 class SubmitOperation {
     get isUnknown(): boolean {

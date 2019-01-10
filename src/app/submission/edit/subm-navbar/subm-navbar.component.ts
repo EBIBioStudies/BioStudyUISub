@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 
-import {Section} from '../../shared/model';
-import {SectionForm} from '../section-form';
+import {Section} from 'app/submission/shared/model';
+import {SectionForm} from 'app/submission/edit//shared/section-form';
 
 @Component({
     selector: 'subm-navbar',

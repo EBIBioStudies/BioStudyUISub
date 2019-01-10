@@ -10,11 +10,11 @@ import {
     SectionType,
     ValueMap,
     ValueType
-} from '../shared/model';
+} from 'app/submission/shared/model';
 import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms';
 import {fromNullable} from 'fp-ts/lib/Option';
 import {BehaviorSubject, Observable, Subject, Subscription} from 'rxjs';
-import {typeaheadSource} from './typeahead.utils';
+import {typeaheadSource} from 'app/submission/edit/shared/typeahead.utils';
 import * as pluralize from 'pluralize';
 import {
     ControlGroupRef,

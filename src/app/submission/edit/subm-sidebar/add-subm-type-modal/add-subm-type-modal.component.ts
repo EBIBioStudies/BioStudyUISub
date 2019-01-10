@@ -2,8 +2,8 @@ import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/
 
 import {BsModalRef, PopoverDirective} from 'ngx-bootstrap';
 import {NgForm} from '@angular/forms';
-import {Section, SectionType} from '../../shared/model';
-import {SectionForm} from '../section-form';
+import {Section, SectionType} from 'app/submission/shared/model';
+import {SectionForm} from 'app/submission/edit/shared/section-form';
 
 @Component({
     selector: 'add-subm-type-modal',

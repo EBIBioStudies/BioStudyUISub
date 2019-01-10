@@ -1,9 +1,9 @@
 import {Component, ElementRef, EventEmitter, forwardRef, Input, Output} from '@angular/core';
 
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {AppConfig} from '../../../../app.config';
+import {AppConfig} from 'app/app.config';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {typeaheadSource} from '../../typeahead.utils';
+import {typeaheadSource} from 'app/submission/edit/shared/typeahead.utils';
 
 @Component({
     selector: 'inline-edit',

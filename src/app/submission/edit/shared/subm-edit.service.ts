@@ -1,16 +1,15 @@
 import {Injectable} from '@angular/core';
-import {AttributeData, Section, Submission} from '../shared/model/submission';
-import {PendingSubmission, SubmissionService, SubmitResponse} from '../shared/submission.service';
-import {SectionForm} from './section-form';
+import {AttributeData, Section, Submission} from 'app/submission/shared/model/submission';
+import {PendingSubmission, SubmissionService, SubmitResponse} from 'app/submission/shared/submission.service';
+import {SectionForm} from 'app/submission/edit/shared/section-form';
 import {catchError, debounceTime, map, switchMap} from 'rxjs/operators';
 import {BehaviorSubject, EMPTY, Observable, of, Subject, Subscription} from 'rxjs';
-import {PageTab, pageTab2Submission, submission2PageTab} from '../shared/model';
-import {UserInfo} from '../../auth/model/user-info';
+import {PageTab, pageTab2Submission, submission2PageTab} from 'app/submission/shared/model';
+import {UserInfo} from 'app/auth/model/user-info';
 import {none, Option, some} from 'fp-ts/lib/Option';
-import {UserData} from '../../auth';
+import {UserData} from 'app/auth';
 import {FormControl} from '@angular/forms';
-import {MyFormControl} from './form-validators';
-
+import {MyFormControl} from 'app/submission/edit/shared/form-validators';
 
 class EditState {
     private state: string;
@@ -288,7 +287,7 @@ export class SubmEditService {
     }
 
     private onSubmitFinished(resp: any) {
-        if (this.submModel!.isTemp && ((resp.mapping ||[]).length > 0)) {
+        if (this.submModel!.isTemp && ((resp.mapping || []).length > 0)) {
             this.accno = resp.mapping[0].assigned;
             this.submModel!.accno = this.accno!;
         }

@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ElementRef, Input, QueryList, ViewChildren,} from '@angular/core';
-import {UserData} from '../../../../auth/user-data';
+import {UserData} from 'app/auth/user-data';
 import {TypeaheadDirective} from 'ngx-bootstrap';
-import {ColumnControl, FeatureForm, RowForm} from '../../section-form';
+import {ColumnControl, FeatureForm, RowForm} from 'app/submission/edit/shared/section-form';
 
 @Component({
     selector: 'subm-feature-grid',
@@ -56,13 +56,13 @@ export class FeatureGridComponent implements AfterViewInit {
      * @param {number} rowIdx - Row whose field values are to be changed.
      */
     addOnAsync(data: any, rowIdx: number) {
-       // const columns = this.feature.columns.slice(0);
+        // const columns = this.feature.columns.slice(0);
         const attrNames = Object.keys(data);
         const attributes: { name: string, value: string }[] = [];      //column attributes to be changed with their respective values
         const formValues = {};      //formgroup version of the above
 
         //The first column is assumed to be the source of the async event and, therefore, does not require updating.
-      //  columns.shift();
+        //  columns.shift();
 
         //Converts data into attributes by filling in gaps (existing columns that are not included in the attributes).
         //This also guarantees that no new columns will be added.
@@ -78,9 +78,9 @@ export class FeatureGridComponent implements AfterViewInit {
 
         //Updates the form controls corresponding to the fields of the affected row in the feature.
         attributes.forEach(attribute => {
-           // formValues[this.feature.firstId(attribute.name)] = attribute.value;
+            // formValues[this.feature.firstId(attribute.name)] = attribute.value;
         });
-       // this.featureForm!.patchRow(rowIdx, formValues);
+        // this.featureForm!.patchRow(rowIdx, formValues);
 
         //Updates the submission model's row and notifies the outside world as a single change event.
         //TODO this.feature.add(attributes, rowIdx);

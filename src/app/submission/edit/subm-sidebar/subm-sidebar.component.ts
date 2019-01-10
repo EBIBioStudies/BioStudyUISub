@@ -1,11 +1,11 @@
 import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
-import {ServerError} from '../../../http/server-error.handler';
-import {SectionForm} from '../section-form';
+import {ServerError} from 'app/http/server-error.handler';
+import {SectionForm} from 'app/submission/edit//shared/section-form';
 import {Option} from 'fp-ts/lib/Option';
 import {FormControl} from '@angular/forms';
 import {Subject} from 'rxjs';
-import {SubmEditService} from '../subm-edit.service';
-import {MyFormControl} from '../form-validators';
+import {SubmEditService} from 'app/submission/edit//shared/subm-edit.service';
+import {MyFormControl} from 'app/submission/edit/shared/form-validators';
 
 type FormControlGroup = Array<FormControl>;
 

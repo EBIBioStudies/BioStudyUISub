@@ -1,8 +1,8 @@
 import {FormControl, ValidationErrors} from '@angular/forms';
 import {Component, Input} from '@angular/core';
-import {ServerError} from '../../../../http';
-import {SubmEditService} from '../../subm-edit.service';
-import {MyFormControl} from '../../form-validators';
+import {ServerError} from 'app/http';
+import {SubmEditService} from 'app/submission/edit/shared/subm-edit.service';
+import {MyFormControl} from 'app/submission/edit/shared/form-validators';
 
 
 @Component({

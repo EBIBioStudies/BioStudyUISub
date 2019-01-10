@@ -8,9 +8,9 @@ import {
     ValidatorFn,
     Validators
 } from '@angular/forms';
-import {TextValueType, ValueType, ValueTypeName} from '../shared/model/templates';
-import {Attribute, Feature, Field, Section} from '../shared/model/submission';
-import {parseDate} from '../../utils';
+import {TextValueType, ValueType, ValueTypeName} from 'app/submission/shared/model';
+import {Attribute, Feature, Field, Section} from 'app/submission/shared/model/submission';
+import {parseDate} from 'app/utils';
 
 //experimental: Control Reference details for using in error messages
 export class ControlRef {

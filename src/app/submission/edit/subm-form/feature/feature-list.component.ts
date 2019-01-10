@@ -1,8 +1,8 @@
 import {AfterViewInit, Component, ElementRef, Input, QueryList, ViewChildren} from '@angular/core';
 
-import {Attribute} from '../../../shared/model';
-import {AppConfig} from '../../../../app.config';
-import {ColumnControl, FeatureForm} from '../../section-form';
+import {Attribute} from 'app/submission/shared/model';
+import {AppConfig} from 'app/app.config';
+import {ColumnControl, FeatureForm} from 'app/submission/edit/shared/section-form';
 
 @Component({
     selector: 'subm-feature-list',

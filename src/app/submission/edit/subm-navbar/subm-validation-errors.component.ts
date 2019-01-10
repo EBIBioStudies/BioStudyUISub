@@ -3,7 +3,7 @@ import {
     Input
 } from '@angular/core';
 
-import {SubmValidationErrors} from '../../shared/model';
+import {SubmValidationErrors} from 'app/submission/shared/model';
 import {BsModalRef} from 'ngx-bootstrap';
 
 @Component({

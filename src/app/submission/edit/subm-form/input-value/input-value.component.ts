@@ -1,16 +1,16 @@
 import {Component, ElementRef, EventEmitter, forwardRef, Input, Output} from '@angular/core';
 
 import {ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {AppConfig} from '../../../../app.config';
+import {AppConfig} from 'app/app.config';
 import {
     DateValueType,
     SelectValueType,
     ValueType,
     ValueTypeFactory,
     ValueTypeName
-} from '../../../shared/model';
+} from 'app/submission/shared/model';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {typeaheadSource} from '../../typeahead.utils';
+import {typeaheadSource} from 'app/submission/edit/shared/typeahead.utils';
 
 @Component({
     selector: 'input-value',

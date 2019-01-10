@@ -1,14 +1,14 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Subject, Subscription} from 'rxjs';
-import {SectionForm} from '../../section-form';
-import {ConfirmDialogComponent} from '../../../../shared';
-import {UserData} from '../../../../auth';
-import {FeatureType, SectionType, TypeBase} from '../../../shared/model';
+import {SectionForm} from 'app/submission/edit/shared/section-form';
+import {ConfirmDialogComponent} from 'app/shared';
+import {UserData} from 'app/auth';
+import {FeatureType, SectionType, TypeBase} from 'app/submission/shared/model';
 import {BsModalService} from 'ngx-bootstrap';
-import {AddSubmTypeModalComponent} from '../../modals/add-subm-type-modal.component';
-import {FormValidators} from '../../form-validators';
-import {SubmEditService} from '../../subm-edit.service';
+import {AddSubmTypeModalComponent} from 'app/submission/edit/subm-sidebar/add-subm-type-modal/add-subm-type-modal.component';
+import {FormValidators} from 'app/submission/edit/shared/form-validators';
+import {SubmEditService} from 'app/submission/edit/shared/subm-edit.service';
 import {Option} from 'fp-ts/lib/Option';
 
 const SECTION_ID = '@SECTION@';
@@ -161,7 +161,7 @@ export class SubmEditSidebarComponent implements OnInit, OnDestroy {
                     ${isPlural ? `they` : `it`} will be removed from the
                     list of items and any related features or sections will be permanently deleted.`,
                 (isConfirmed: boolean) => {
-                console.log(isConfirmed);
+                    console.log(isConfirmed);
                     if (isConfirmed) {
                         this.applyChanges();
                     } else {
