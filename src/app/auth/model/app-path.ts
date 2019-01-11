@@ -1,16 +1,16 @@
 export class AppPath {
     private _value: string;
 
-    constructor(ancor: string) {
-        this._value = this.getAppPath(ancor);
+    constructor(anchor: string) {
+        this._value = this.getAppPath(anchor);
     }
 
     get value(): string {
         return this._value;
     }
 
-    private getAppPath(ancor: string = '') {
+    private getAppPath(anchor: string = '') {
         let loc = window.location;
-        return loc.origin + loc.pathname + ancor;
+        return loc.origin + loc.pathname + anchor;
     }
 }
