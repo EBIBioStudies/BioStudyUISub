@@ -3,7 +3,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Subject, Subscription} from 'rxjs';
 import {SectionForm} from 'app/submission/edit/shared/section-form';
 import {ConfirmDialogComponent} from 'app/shared';
-import {UserData} from 'app/auth';
+import {UserData} from 'app/auth/shared';
 import {FeatureType, SectionType, TypeBase} from 'app/submission/shared/model';
 import {BsModalService} from 'ngx-bootstrap';
 import {AddSubmTypeModalComponent} from 'app/submission/edit/subm-sidebar/add-subm-type-modal/add-subm-type-modal.component';

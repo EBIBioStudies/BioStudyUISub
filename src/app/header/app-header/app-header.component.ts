@@ -1,11 +1,10 @@
 import {ApplicationRef, Component, OnDestroy} from '@angular/core';
 import {Event, NavigationEnd, Router} from '@angular/router';
 
-import {AuthService, UserSession} from 'app/auth/index';
-import {RequestStatusService} from '../../http/request-status.service';
+import {AuthService, UserSession, UserData} from 'app/auth/shared';
+import {RequestStatusService} from 'app/http/request-status.service';
 import {Subscription} from 'rxjs/Subscription';
-import {UserData} from '../../auth/user-data';
-import {ConfirmDialogComponent} from '../../shared/confirm-dialog.component';
+import {ConfirmDialogComponent} from 'app/shared/confirm-dialog.component';
 import {BsModalService} from 'ngx-bootstrap';
 
 @Component({

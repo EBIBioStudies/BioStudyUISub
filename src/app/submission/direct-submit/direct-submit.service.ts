@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {SubmissionService} from '../shared/submission.service';
-import {PageTab, updateAttachToAttribute} from '../shared/model';
+import {SubmissionService} from 'app/submission/shared/submission.service';
+import {PageTab, updateAttachToAttribute} from 'app/submission/shared/model';
 import {Observable, of, Subject} from 'rxjs';
 import {catchError, switchMap} from 'rxjs/operators';
 

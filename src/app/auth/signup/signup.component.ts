@@ -4,11 +4,10 @@ import {Router} from '@angular/router';
 
 import {RecaptchaComponent} from 'ng-recaptcha';
 
-import {ServerError} from 'app/http/index';
+import {ServerError} from 'app/http';
 
-import {AuthService} from '../auth.service';
-import {UserSession} from '../user-session';
-import {RegistrationData} from '../model/registration-data';
+import {AuthService, UserSession} from 'app/auth/shared';
+import {RegistrationData} from 'app/auth/model';
 import {AbstractControl, NgForm} from '@angular/forms';
 
 @Component({
@@ -44,7 +43,7 @@ export class SignUpComponent implements AfterViewInit {
         }
     }
 
-    onSubmit(form:NgForm): void {
+    onSubmit(form: NgForm): void {
         this.resetGlobalError();
 
         //Makes request if all form fields completed satisfactorily
@@ -64,10 +63,10 @@ export class SignUpComponent implements AfterViewInit {
                     }
                 );
 
-        //Validates in bulk if form incomplete
+            //Validates in bulk if form incomplete
         } else {
             Object.keys(form.controls).forEach((key) => {
-                form.controls[key].markAsTouched({ onlySelf: true });
+                form.controls[key].markAsTouched({onlySelf: true});
             });
         }
     }
@@ -84,7 +83,7 @@ export class SignUpComponent implements AfterViewInit {
      * @see {@link RecaptchaComponent}
      * @param {AbstractControl} control - Form control for the captcha.
      */
-    resetReCaptcha(control:AbstractControl): void {
+    resetReCaptcha(control: AbstractControl): void {
         this.recaptcha!.reset();
         this.model.resetCaptcha();
 

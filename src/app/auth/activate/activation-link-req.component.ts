@@ -1,16 +1,12 @@
-import {
-    AfterViewInit,
-    Component, ElementRef,
-    ViewChild
-} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
+import {AbstractControl, NgForm} from '@angular/forms';
+import {ActivationLinkRequestData} from 'app/auth/model';
+
+import {AuthService} from 'app/auth/shared';
+
+import {ServerError} from 'app/http';
 
 import {RecaptchaComponent} from 'ng-recaptcha';
-
-import {ServerError} from 'app/http/index';
-
-import {AuthService} from '../auth.service';
-import {ActivationLinkRequestData} from '../model/email-req-data';
-import {AbstractControl, NgForm} from '@angular/forms';
 
 @Component({
     selector: 'auth-activation-resend',

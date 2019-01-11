@@ -1,22 +1,23 @@
 import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-
-import {Observable} from 'rxjs/Observable';
-import {Subscription} from 'rxjs/Subscription';
-import {Subject} from 'rxjs/Subject';
-import {throwError} from 'rxjs/index';
-
-import {GridOptions} from 'ag-grid/main';
 import {AgRendererComponent} from 'ag-grid-angular/main';
 
-import {ConfirmDialogComponent} from 'app/shared/index';
-import {SubmissionService} from '../shared/submission.service';
-import {TextFilterComponent} from './ag-grid/text-filter.component';
-import {DateFilterComponent} from './ag-grid/date-filter.component';
 
-import {AppConfig} from '../../app.config';
-import {UserData} from '../../auth/user-data';
+import {GridOptions} from 'ag-grid/main';
+
+import {AppConfig} from 'app/app.config';
+import {UserData} from 'app/auth/shared';
+
+import {ConfirmDialogComponent} from 'app/shared';
+import {SubmissionService} from 'app/submission/shared/submission.service';
 import {BsModalService} from 'ngx-bootstrap';
+import {throwError} from 'rxjs';
+
+import {Observable} from 'rxjs/Observable';
+import {Subject} from 'rxjs/Subject';
+import {Subscription} from 'rxjs/Subscription';
+import {DateFilterComponent} from './ag-grid/date-filter.component';
+import {TextFilterComponent} from './ag-grid/text-filter.component';
 
 @Component({
     selector: 'action-buttons-cell',

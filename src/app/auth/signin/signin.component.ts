@@ -1,10 +1,9 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {Router} from '@angular/router';
 import {NgForm} from '@angular/forms';
+import {Router} from '@angular/router';
+import {AuthService, UserSession} from 'app/auth/shared';
 
-import {ServerError} from 'app/http/index';
-import {AuthService} from '../auth.service';
-import {UserSession} from '../user-session';
+import {ServerError} from 'app/http';
 
 @Component({
     selector: 'auth-signin',
@@ -25,9 +24,9 @@ export class SignInComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-       if (!this.session.isAnonymous()) {
-           this.router.navigate(['']);
-       }
+        if (!this.session.isAnonymous()) {
+            this.router.navigate(['']);
+        }
     }
 
     //TODO: Turn autofocus on render into a directive
@@ -53,10 +52,10 @@ export class SignInComponent implements OnInit, AfterViewInit {
                     }
                 );
 
-        //Validates in bulk if form incomplete
+            //Validates in bulk if form incomplete
         } else {
             Object.keys(form.controls).forEach((key) => {
-                form.controls[key].markAsTouched({ onlySelf: true });
+                form.controls[key].markAsTouched({onlySelf: true});
             });
         }
     }

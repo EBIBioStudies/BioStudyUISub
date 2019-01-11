@@ -7,7 +7,7 @@ import {BehaviorSubject, EMPTY, Observable, of, Subject, Subscription} from 'rxj
 import {PageTab, pageTab2Submission, submission2PageTab} from 'app/submission/shared/model';
 import {UserInfo} from 'app/auth/model/user-info';
 import {none, Option, some} from 'fp-ts/lib/Option';
-import {UserData} from 'app/auth';
+import {UserData} from 'app/auth/shared';
 import {FormControl} from '@angular/forms';
 import {MyFormControl} from 'app/submission/edit/shared/form-validators';
 

@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, DoCheck, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
-import {UserData} from 'app/auth/user-data';
+import {UserData} from 'app/auth/shared';
 import {FeatureForm} from 'app/submission/edit/shared/section-form';
 
 interface FeatureOperation {

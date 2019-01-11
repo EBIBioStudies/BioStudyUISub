@@ -1,16 +1,19 @@
 import {Injectable} from '@angular/core';
 import {HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {getLoginToken} from '../auth/user-cookies';
-import {AppConfig} from '../app.config';
+import {getLoginToken} from 'app/auth/shared';
+import {AppConfig} from 'app/app.config';
 
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
 
-    constructor(private appConfig: AppConfig) {}
+    constructor(private appConfig: AppConfig) {
+    }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        if (req.url.startsWith('/raw/files') || req.url.startsWith('/raw/groups') ) {
+        if (req.url.startsWith('/raw')
+            || req.url.startsWith('/api')
+        ) {
             req = req.clone({
                 headers: this.updateHeaders(req.headers),
                 url: this.updateUrl(req.url)

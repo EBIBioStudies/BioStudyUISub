@@ -1,15 +1,11 @@
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {
-    HttpClient,
-    HttpHeaders,
-    HttpParams
-} from "@angular/common/http";
-
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/catch';
 
 import {AppConfig} from 'app/app.config';
-import {getLoginToken} from 'app/auth/user-cookies';
+import {getLoginToken} from 'app/auth/shared';
+import 'rxjs/add/operator/catch';
+
+import {Observable} from 'rxjs/Observable';
 
 import {serverErrorHandler} from './server-error.handler';
 

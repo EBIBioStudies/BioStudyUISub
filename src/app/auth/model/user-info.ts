@@ -8,6 +8,9 @@ export interface UserInfo {
     email: string,
     superuser: boolean,
     secret: string,
-    aux: Aux,
+    aux: Aux
+}
+
+export interface ExtendedUserInfo extends UserInfo {
     projects: string[]
 }

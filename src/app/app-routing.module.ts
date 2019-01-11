@@ -3,15 +3,12 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 
 import {AuthGuard} from './auth-guard.service';
-
-import {
-    ActivateComponent,
-    ActivationLinkReqComponent,
-    PasswordResetComponent,
-    PasswordResetReqComponent,
-    SignInComponent,
-    SignUpComponent
-} from './auth/index';
+import {ActivateComponent} from './auth/activate/activate.component';
+import {ActivationLinkReqComponent} from './auth/activate/activation-link-req.component';
+import {PasswordResetReqComponent} from './auth/password-reset/password-reset-req.component';
+import {PasswordResetComponent} from './auth/password-reset/password-reset.component';
+import {SignInComponent} from './auth/signin/signin.component';
+import {SignUpComponent} from './auth/signup/signup.component';
 
 import {FileListComponent} from './file/file-list/file-list.component';
 import {SubmListComponent} from './submission/list/subm-list.component';

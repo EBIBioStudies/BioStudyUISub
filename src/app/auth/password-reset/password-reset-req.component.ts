@@ -2,10 +2,10 @@ import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
 
 import {RecaptchaComponent} from 'ng-recaptcha';
 
-import {ServerError} from 'app/http/index';
+import {ServerError} from 'app/http';
 
-import {AuthService} from '../auth.service';
-import {PasswordResetRequestData} from '../model/email-req-data';
+import {AuthService} from 'app/auth/shared';
+import {PasswordResetRequestData} from 'app/auth/model';
 import {AbstractControl, NgForm} from '@angular/forms';
 
 @Component({
@@ -26,14 +26,15 @@ export class PasswordResetReqComponent implements AfterViewInit {
     @ViewChild('emailEl')
     private focusRef?: ElementRef;
 
-    constructor(private authService: AuthService) {}
+    constructor(private authService: AuthService) {
+    }
 
     //TODO: Turn autofocus on render into a directive
     ngAfterViewInit(): void {
         this.focusRef!.nativeElement.focus();
     }
 
-    onSubmit(form:NgForm): void {
+    onSubmit(form: NgForm): void {
         const component = this;     //SelfSubscriber object sometimes overwrites context for "subscribe" method
 
         this.resetGlobalError();
@@ -55,10 +56,10 @@ export class PasswordResetReqComponent implements AfterViewInit {
                     }
                 );
 
-        //Validates in bulk if form incomplete
+            //Validates in bulk if form incomplete
         } else {
             Object.keys(form.controls).forEach((key) => {
-                form.controls[key].markAsTouched({ onlySelf: true });
+                form.controls[key].markAsTouched({onlySelf: true});
             });
         }
     }
@@ -73,7 +74,7 @@ export class PasswordResetReqComponent implements AfterViewInit {
      * @see {@link RecaptchaComponent}
      * @param {AbstractControl} control - Form control for the captcha.
      */
-    resetRecaptcha(control:AbstractControl): void {
+    resetRecaptcha(control: AbstractControl): void {
         this.recaptcha!.reset();
         this.model.resetCaptcha();
 

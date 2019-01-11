@@ -1,13 +1,11 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-
-import {DirectSubmitService} from './direct-submit.service';
-import {UserData} from '../../auth/user-data';
-import {FileUploadButtonComponent} from '../../shared/file-upload-button.component';
-
-import {Observable} from 'rxjs/Observable';
-import {last, mergeAll} from 'rxjs/operators';
-import {AppConfig} from '../../app.config';
+import {UserData} from 'app/auth/shared';
+import {FileUploadButtonComponent} from 'app/shared/file-upload-button.component';
 import {from, Subject, Subscription} from 'rxjs';
+import {last, mergeAll} from 'rxjs/operators';
+import {AppConfig} from 'app/app.config';
+
+import {DirectSubmitService} from 'app/submission/direct-submit/direct-submit.service';
 
 
 @Component({

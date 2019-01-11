@@ -1,6 +1,6 @@
 import {Component, ViewChild} from '@angular/core';
 
-import {AppConfig} from '../../app.config';
+import {AppConfig} from 'app/app.config';
 
 import * as pluralize from 'pluralize';
 

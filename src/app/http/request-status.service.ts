@@ -5,13 +5,14 @@ import {
     HttpInterceptor,
     HttpRequest
 } from '@angular/common/http';
+import {throwError} from 'rxjs';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/finally';
 import 'rxjs/add/observable/throw';
-import {throwError} from "rxjs/index";
+
 
 /**
  * Global listener to HTTP requests. Reports the status of any request in progress by means of observables,

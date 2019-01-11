@@ -4,8 +4,8 @@ import {RecaptchaComponent} from 'ng-recaptcha';
 
 import {ActivatedRoute} from '@angular/router';
 
-import {AuthService} from '../auth.service';
-import {PasswordResetData} from '../model/password-reset-data';
+import {AuthService} from 'app/auth/shared';
+import {PasswordResetData} from 'app/auth/model';
 import {AbstractControl, NgForm} from '@angular/forms';
 
 @Component({
@@ -45,7 +45,7 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
         this.focusRef!.nativeElement.focus();
     }
 
-    onSubmit(form:NgForm): void {
+    onSubmit(form: NgForm): void {
         this.resetGlobalError();
 
         //Makes request if all form fields completed satisfactorily
@@ -65,17 +65,17 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
                         this.resetRecaptcha(form.controls['captcha']);
                     });
 
-        //Validates in bulk if form incomplete
+            //Validates in bulk if form incomplete
         } else {
             Object.keys(form.controls).forEach((key) => {
-                form.controls[key].markAsTouched({ onlySelf: true });
+                form.controls[key].markAsTouched({onlySelf: true});
             });
         }
     }
 
     resetGlobalError(): void {
         this.hasError = false;
-        this.message = "";
+        this.message = '';
     }
 
     /**
@@ -83,7 +83,7 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
      * @see {@link RecaptchaComponent}
      * @param {AbstractControl} control - Form control for the captcha.
      */
-    resetRecaptcha(control:AbstractControl): void {
+    resetRecaptcha(control: AbstractControl): void {
         this.recaptcha!.reset();
         this.model.resetCaptcha();
 

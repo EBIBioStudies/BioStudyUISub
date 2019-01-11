@@ -4,8 +4,8 @@ import {DataWithCaptchaAndPath} from './data-base';
 class EmailRequestData extends DataWithCaptchaAndPath {
     email: string = '';
 
-    constructor(pathAncor: string) {
-        super(new AppPath(pathAncor));
+    constructor(pathAnchor: string) {
+        super(new AppPath(pathAnchor));
     }
 
     snapshot(): any {
@@ -19,7 +19,7 @@ export class PasswordResetRequestData extends EmailRequestData {
     }
 }
 
-export class ActivationLinkRequestData extends  EmailRequestData {
+export class ActivationLinkRequestData extends EmailRequestData {
     constructor() {
         super('#/activate');
     }

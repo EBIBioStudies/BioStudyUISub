@@ -1,10 +1,8 @@
 import {async} from '@angular/core/testing';
-import {of} from 'rxjs';
 
-import {UserData} from './user-data';
-import {AuthService} from './auth.service';
-import {UserSession} from './user-session';
-import {UserInfo} from './model/user-info';
+import {UserInfo} from 'app/auth/model';
+import {AuthService, UserData, UserSession} from 'app/auth/shared';
+import {of} from 'rxjs';
 
 describe('UserData', () => {
     let submService;

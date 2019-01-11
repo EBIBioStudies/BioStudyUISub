@@ -1,27 +1,9 @@
+import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
-import {HttpCustomClient} from 'app/http/http-custom-client.service';
-import {PageTab} from './model';
+import {PageTab} from './model/pagetab';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-
-class UrlParams {
-    private params: any[] = [];
-
-    constructor(obj: any) {
-        Object.keys(obj).forEach(k => {
-            this.addParam(k, obj[k]);
-        });
-    }
-
-    addParam(name, value) {
-        this.params.push({name: name, value: value});
-    }
-
-    get list() {
-        return this.params;
-    }
-}
 
 export interface PendingSubmission {
     accno: string,
@@ -49,15 +31,24 @@ export interface SubmitLog {
     subnodes: Array<SubmitLog>
 }
 
+export interface SubmissionListParams {
+    submitted?: boolean,
+    offset?: number,
+    limit?: number,
+    accNo?: string,
+    rTimeFrom?: number,
+    rTimeTo?: number,
+    keywords?: string[]
+}
+
 @Injectable()
 export class SubmissionService {
 
-    constructor(private http: HttpCustomClient) {
+    constructor(private http: HttpClient) {
     }
 
-    getSubmissions(args: any = {}): Observable<SubmissionListItem[]> {
-        const urlParams = new UrlParams(args);
-        return this.http.get('/api/submissions', urlParams.list).pipe(
+    getSubmissions(params: SubmissionListParams = {}): Observable<SubmissionListItem[]> {
+        return this.http.get<SubmissionListItem[]>('/api/submissions', {params: <any>params}).pipe(
             map((response: any) => {
                 return response.submissions;
             })
@@ -73,21 +64,21 @@ export class SubmissionService {
     }
 
     createSubmission(pt: any): Observable<PendingSubmission> {
-        return this.http.post('/api/submissions/pending', pt);
+        return this.http.post<PendingSubmission>('/api/submissions/pending', pt);
     }
 
     getSubmission(accno: string): Observable<PendingSubmission> {
-        return this.http.get(`/api/submissions/pending/${accno}`);
+        return this.http.get<PendingSubmission>(`/api/submissions/pending/${accno}`);
     }
 
     saveSubmission(accno: string, pt: PageTab): Observable<any> {
-        return this.http.post(`/api/submissions/pending/${accno}`, pt).pipe(
+        return this.http.post<PendingSubmission>(`/api/submissions/pending/${accno}`, pt).pipe(
             map((response: any) => 'done')
         );
     }
 
     submitSubmission(accno: string, pt: PageTab): Observable<SubmitResponse> {
-        return this.http.post(`/api/submissions/pending/${accno}/submit`, pt);
+        return this.http.post<SubmitResponse>(`/api/submissions/pending/${accno}/submit`, pt);
     }
 
     directCreateOrUpdate(pt: any, create: boolean): Observable<any> {
@@ -104,7 +95,7 @@ export class SubmissionService {
     }
 
     deleteSubmission(accno) {
-        return this.http.del('/api/submissions/' + accno);
+        return this.http.delete(`/api/submissions/${accno}`);
     }
 
     /**
@@ -113,7 +104,7 @@ export class SubmissionService {
      * @returns {string} Error message.
      */
     static deepestError(log: SubmitLog): string {
-        const errorNode = (log.subnodes||[]).find(n => n.level === 'ERROR');
+        const errorNode = (log.subnodes || []).find(n => n.level === 'ERROR');
         if (errorNode === undefined) {
             return log.message || 'Unknown error';
         }

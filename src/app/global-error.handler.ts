@@ -5,7 +5,7 @@ import {
 
 import {Subject} from 'rxjs/Subject';
 
-import {UserSession} from './auth/index';
+import {UserSession} from 'app/auth/shared';
 
 @Injectable()
 export class GlobalErrorHandler extends ErrorHandler {

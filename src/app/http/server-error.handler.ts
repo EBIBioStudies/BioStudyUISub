@@ -1,6 +1,6 @@
+import {throwError} from 'rxjs';
 import {Observable} from 'rxjs/Observable';
 import {HttpErrorResponse} from "@angular/common/http";
-import {throwError} from "rxjs/index";
 
 export class ServerError {
 

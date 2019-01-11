@@ -1,14 +1,8 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
-import {Subject} from "rxjs/Subject";
+import {Subject} from 'rxjs/Subject';
 
-import {
-    setLoginToken,
-    getLoginToken,
-    destroyLoginToken,
-    cleanUpOldCookies
-} from './user-cookies';
+import {setLoginToken, getLoginToken, destroyLoginToken, cleanUpOldCookies} from './user-cookies';
 
 @Injectable()
 export class UserSession {

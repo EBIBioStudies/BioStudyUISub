@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, ElementRef, Input, QueryList, ViewChildren,} from '@angular/core';
-import {UserData} from 'app/auth/user-data';
+import {UserData} from 'app/auth/shared';
 import {TypeaheadDirective} from 'ngx-bootstrap';
 import {ColumnControl, FeatureForm, RowForm} from 'app/submission/edit/shared/section-form';
 

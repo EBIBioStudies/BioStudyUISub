@@ -3,7 +3,7 @@ import {BsModalService} from 'ngx-bootstrap';
 import {AddSubmModalComponent} from './modals/add-subm-modal.component';
 import {newPageTab, SUBMISSION_TEMPLATE_NAMES} from './model';
 import {SubmissionService} from './submission.service';
-import {UserData} from '../../auth';
+import {UserData} from 'app/auth/shared';
 import {Router} from '@angular/router';
 
 const PLUS_ICON = '<i class="fa fa-plus-circle" aria-hidden="true"></i>';

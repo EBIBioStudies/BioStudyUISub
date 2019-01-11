@@ -3,8 +3,8 @@ import {
     OnInit
 } from '@angular/core';
 
-import {UserSession} from './auth/index';
-import {AppConfig} from "./app.config";
+import {UserSession} from 'app/auth/shared';
+import {AppConfig} from 'app/app.config';
 
 @Component({
     selector: 'app-root',

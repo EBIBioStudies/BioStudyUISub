@@ -1,19 +1,19 @@
 import {Injectable} from '@angular/core';
+import {ExtendedUserInfo} from 'app/auth/model';
+
+import {SubmissionService} from 'app/submission/shared/submission.service';
+import {Observable, ReplaySubject, Subject} from 'rxjs';
+import {forkJoin} from 'rxjs/observable/forkJoin';
+import {map} from 'rxjs/operators';
+import {AuthService} from './auth.service';
 
 import {UserRole} from './user-role';
-import {AuthService} from './auth.service';
 import {UserSession} from './user-session';
-
-import {forkJoin} from 'rxjs/observable/forkJoin';
-import {SubmissionService} from '../submission/shared/submission.service';
-import {Observable, ReplaySubject, Subject} from 'rxjs';
-import {UserInfo} from './model/user-info';
-import {map} from 'rxjs/operators';
 
 @Injectable()
 export class UserData {
 
-    private whenFetched$: Subject<UserInfo> = new ReplaySubject<UserInfo>(1);
+    private whenFetched$: Subject<ExtendedUserInfo> = new ReplaySubject<ExtendedUserInfo>(1);
 
     constructor(userSession: UserSession, authService: AuthService, submService: SubmissionService) {
 
@@ -23,7 +23,7 @@ export class UserData {
                     authService.checkUser(),
                     submService.getProjects()
                 ).subscribe(results => {
-                    const userInfo = results[0];
+                    const userInfo = <ExtendedUserInfo>results[0];
                     userInfo.projects = results[1].map(project => project.accno);
 
                     this.whenFetched$.next(userInfo);
@@ -33,7 +33,7 @@ export class UserData {
         });
     }
 
-    get info$(): Observable<UserInfo> {
+    get info$(): Observable<ExtendedUserInfo> {
         return this.whenFetched$;
     }
 
