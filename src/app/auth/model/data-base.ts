@@ -1,12 +1,9 @@
 import {AppPath} from './app-path';
 
-export class DataSnapshot {
-    constructor(private snapshot: any = {}){};
-    add(name: string, value: string): DataSnapshot {
-        let copy = {...this.snapshot};
-        copy[name] = value;
-        return new DataSnapshot(copy);
-    }
+export function copyAndExtend(obj: any, extension: any): any {
+    let copy = {...obj};
+    Object.keys(extension).forEach(k => copy[k] = extension[k]);
+    return copy;
 }
 
 export class DataWithCaptcha {
@@ -20,8 +17,8 @@ export class DataWithCaptcha {
         this.captcha = '';
     }
 
-    snapshot(): DataSnapshot {
-        return new DataSnapshot().add('captcha', this.captcha);
+    snapshot(): any {
+        return {'recaptcha2-response': this.captcha};
     }
 }
 
@@ -38,6 +35,6 @@ export class DataWithCaptchaAndPath extends DataWithCaptcha {
     }
 
     snapshot(): any {
-        return super.snapshot().add('path', this.path);
+        return copyAndExtend(super.snapshot(), {'path': this.path});
     }
 }

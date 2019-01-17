@@ -1,4 +1,4 @@
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {
@@ -12,19 +12,16 @@ import {
 import {ServerError} from 'app/http'
 
 import {Observable, of} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {map, catchError} from 'rxjs/operators';
 
 import {UserSession} from './user-session';
 
 interface StatusResponse {
-    status: string // 'OK' or 'FAIL'
+    status: string, // 'OK' or 'FAIL'
+    message?: string
 }
 
 interface UserInfoResponse extends UserInfo, StatusResponse {
-}
-
-interface SignUpResponse extends StatusResponse {
-    message: string
 }
 
 @Injectable()
@@ -36,6 +33,7 @@ export class AuthService {
 
     signIn(obj: { login: string, password: string }): Observable<UserInfo> {
         return this.http.post<UserInfoResponse>('/raw/auth/signin', obj).pipe(
+            catchError(resp => AuthService.catch403Error<UserInfoResponse>(resp)),
             map(resp => AuthService.statusCheck(resp)),
             map(resp => {
                 this.userSession.create(resp.sessid);
@@ -53,20 +51,21 @@ export class AuthService {
             map(resp => AuthService.statusCheck(resp)));
     }
 
-    passwordReset(obj: PasswordResetData): Observable<any> {
-        return this.http.post('/api/auth/password/reset', obj.snapshot());
+    passwordReset(obj: PasswordResetData): Observable<StatusResponse> {
+        return this.http.post<StatusResponse>('/raw/auth/passreset', obj.snapshot());
     }
 
     activationLinkReq(obj: ActivationLinkRequestData): Observable<any> {
         return this.http.post('/api/auth/activation/link', obj.snapshot());
     }
 
-    activate(key: string): Observable<any> {
-        return this.http.post(`/api/auth/activation/check/${key}`, {});
+    activate(key: string): Observable<StatusResponse> {
+        return this.http.post<StatusResponse>(`/raw/auth/activate/${key}`, {});
     }
 
-    signUp(regData: RegistrationData): Observable<SignUpResponse> {
-        return this.http.post<SignUpResponse>('/api/auth/signup', regData.snapshot()).pipe(
+    signUp(regData: RegistrationData): Observable<StatusResponse> {
+        return this.http.post<StatusResponse>('/api/auth/signup', regData.snapshot()).pipe(
+            catchError(resp => AuthService.catch403Error<StatusResponse>(resp)),
             map(resp => AuthService.statusCheck(resp)));
     }
 
@@ -86,5 +85,10 @@ export class AuthService {
             return resp;
         }
         throw ServerError.dataError(resp);
+    }
+
+    private static catch403Error<T>(resp: HttpErrorResponse): Observable<T> {
+        if (resp.status === 403) return of(resp.error); // server should not return 403 status
+        throw resp;
     }
 }

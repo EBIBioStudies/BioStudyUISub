@@ -1,4 +1,4 @@
-import {DataWithCaptcha} from './data-base';
+import {DataWithCaptcha, copyAndExtend} from './data-base';
 
 export class PasswordResetData extends DataWithCaptcha {
     key: string = '';
@@ -23,7 +23,7 @@ export class PasswordResetData extends DataWithCaptcha {
         return true;
     }
 
-    snapshot(): any {
-        return super.snapshot().add('key', this.key).add('password', this.password);
+    snapshot(): { [key: string]: string } {
+        return copyAndExtend(super.snapshot(), {'key': this.key, 'password': this.password});
     }
 }

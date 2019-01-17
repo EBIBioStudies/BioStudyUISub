@@ -1,5 +1,5 @@
 import {AppPath} from './app-path';
-import {DataWithCaptchaAndPath} from './data-base';
+import {DataWithCaptchaAndPath, copyAndExtend} from './data-base';
 
 export class RegistrationData extends DataWithCaptchaAndPath {
     username: string = '';
@@ -12,10 +12,11 @@ export class RegistrationData extends DataWithCaptchaAndPath {
     }
 
     snapshot(): any {
-        return this.snapshot()
-            .add('username', this.username)
-            .add('password', this.password)
-            .add('email', this.email)
-            .add('orcid', this.orcid);
+        return copyAndExtend(super.snapshot(), {
+            'username': this.username,
+            'password': this.password,
+            'email': this.email,
+            'aux': [`orcid:${this.orcid}`]
+        });
     }
 }
