@@ -32,7 +32,6 @@ export interface SubmitLog {
 }
 
 export interface SubmissionListParams {
-    submitted?: boolean,
     offset?: number,
     limit?: number,
     accNo?: string,
@@ -41,14 +40,32 @@ export interface SubmissionListParams {
     keywords?: string[]
 }
 
+function definedPropertiesOnly(obj: any): any {
+    if (obj === null || obj === undefined || (typeof obj !== 'object')) {
+        return obj;
+    }
+    const result = {};
+    Object.keys(obj).forEach(key => {
+        if (obj[key] !== undefined && obj[key] !== null) {
+            let value = obj[key];
+            if (typeof obj[key] === 'object') {
+                value = definedPropertiesOnly(value);
+            }
+            result[key] = value;
+        }
+    });
+    return result;
+}
+
 @Injectable()
 export class SubmissionService {
 
     constructor(private http: HttpClient) {
     }
 
-    getSubmissions(params: SubmissionListParams = {}): Observable<SubmissionListItem[]> {
-        return this.http.get<SubmissionListItem[]>('/api/submissions', {params: <any>params}).pipe(
+    getSubmissions(submitted: boolean, params: SubmissionListParams = {}): Observable<SubmissionListItem[]> {
+        const url = submitted ? '/raw/sbmlist' : '/raw/submissions/pending';
+        return this.http.get<SubmissionListItem[]>(url, {params: definedPropertiesOnly(<any>params)}).pipe(
             map((response: any) => {
                 return response.submissions;
             })
@@ -56,7 +73,7 @@ export class SubmissionService {
     }
 
     getProjects(): Observable<any> {
-        return this.http.get('/api/projects').pipe(
+        return this.http.get('/raw/atthost?type=Project&format=json').pipe(
             map((response: any) => {
                 return response.submissions;
             })
