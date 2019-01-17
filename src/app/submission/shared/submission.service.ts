@@ -81,7 +81,7 @@ export class SubmissionService {
     }
 
     createSubmission(pt: any): Observable<PendingSubmission> {
-        return this.http.post<PendingSubmission>('/api/submissions/pending', pt);
+        return this.http.post<PendingSubmission>('/raw/submissions/pending', pt);
     }
 
     getSubmission(accno: string): Observable<PendingSubmission> {
@@ -89,13 +89,13 @@ export class SubmissionService {
     }
 
     saveSubmission(accno: string, pt: PageTab): Observable<any> {
-        return this.http.post<PendingSubmission>(`/api/submissions/pending/${accno}`, pt).pipe(
+        return this.http.put<PendingSubmission>(`/raw/submissions/pending/${accno}`, pt).pipe(
             map((response: any) => 'done')
         );
     }
 
     submitSubmission(accno: string, pt: PageTab): Observable<SubmitResponse> {
-        return this.http.post<SubmitResponse>(`/api/submissions/pending/${accno}/submit`, pt);
+        return this.http.post<SubmitResponse>(`/raw/submissions/pending/${accno}/submit`, pt);
     }
 
     directCreateOrUpdate(pt: any, create: boolean): Observable<any> {
