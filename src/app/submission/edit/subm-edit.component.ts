@@ -154,9 +154,10 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
 
         (isConfirm ? this.confirmSubmit() : of(true))
-            .pipe(filter(v => v))
-            .switchMap(() => this.submEditService.submit())
-            .takeUntil(this.unsubscribe)
+            .pipe(
+                filter(v => v),
+                switchMap(() => this.submEditService.submit())
+            ).takeUntil(this.unsubscribe)
             .subscribe(resp => this.onSubmitFinished(resp))
     }
 
