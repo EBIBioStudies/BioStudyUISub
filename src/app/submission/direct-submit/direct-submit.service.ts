@@ -1,10 +1,9 @@
 import {Injectable} from '@angular/core';
 import {SubmissionService} from 'app/submission/shared/submission.service';
-import {PageTab, updateAttachToAttribute} from 'app/submission/shared/model';
 import {Observable, of, Subject} from 'rxjs';
-import {catchError, switchMap} from 'rxjs/operators';
+import {catchError, map} from 'rxjs/operators';
 
-enum ReqStatus {CONVERT, SUBMIT, ERROR, SUCCESS}
+enum ReqStatus {SUBMIT, ERROR, SUCCESS}
 
 enum ReqType {CREATE, UPDATE}
 
@@ -27,7 +26,7 @@ export class DirectSubmitRequest {
         this._type = type;
 
         this._created = new Date();
-        this._status = ReqStatus.CONVERT;
+        this._status = ReqStatus.SUBMIT;
     }
 
     get failed(): boolean {
@@ -48,14 +47,6 @@ export class DirectSubmitRequest {
 
     get statusText(): string {
         return ReqStatus[this._status];
-    }
-
-    get format(): string {
-        return this._format;
-    }
-
-    get formatText(): string {
-        return this.format || 'auto-detect';
     }
 
     get created(): Date {
@@ -229,17 +220,10 @@ export class DirectSubmitService {
      * @returns {Observable<any>} Flat stream of inputs coming from the responses to the requests issued.
      */
     private dirSubmit(req: DirectSubmitRequest, file: File, format: string): Observable<any> {
-        return this.submService.convert(file, format).pipe(
-            switchMap(
-                //Signals the successful completion of the conversion stage and submits if successful
-                data => {
-                    req.onResponse(data, ReqStatus.SUBMIT);
-                    return this.submit(req, data.document.submissions[0]);
-
-                    //Finds where the relevant error data is before updating the request's status accordingly.
-                    //This block will catch errors from either conversion or submission.
-                }
-            ),
+        return this.submService.directSubmit(file, req.type === ReqType.CREATE, req.projects).pipe(
+            map(data => {
+                req.onResponse(data, ReqStatus.SUCCESS);
+            }),
             catchError((error: any) => {
                 let errData = error.data;
 
@@ -255,21 +239,5 @@ export class DirectSubmitService {
                 //cancelling any remaining ones.
                 return of(null);
             }));
-    }
-
-    /**
-     * Makes the request to create or update the study. While at it, it updates the study with the projects
-     * it is meant to be attached to.
-     * @param {DirectSubmitRequest} req - Status object representing the request.
-     * @param {Object} subm - Submission object for the study to be created or updated.
-     * @returns {Observable<any>} - Stream of events for the request.
-     */
-    private submit(req: DirectSubmitRequest, subm: PageTab): Observable<any> {
-        return this.submService.directCreateOrUpdate(
-            updateAttachToAttribute(subm, req.projects),
-            req.type === ReqType.CREATE
-        ).map(data => {
-            req.onResponse(data, ReqStatus.SUCCESS);
-        });
     }
 }

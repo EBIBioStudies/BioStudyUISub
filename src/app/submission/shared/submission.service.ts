@@ -98,17 +98,14 @@ export class SubmissionService {
         return this.http.post<SubmitResponse>(`/raw/submissions/pending/${accno}/submit`, pt);
     }
 
-    directCreateOrUpdate(pt: any, create: boolean): Observable<any> {
-        return this.http.post(`/api/submissions/origin/submit?create=${create}`, pt);
-    }
-
-    convert(file: File, format: string = ''): Observable<any> {
+    directSubmit(file: File, create: boolean, attachTo: Array<string> = []): Observable<SubmitResponse> {
+        const operation = create ? 'CREATE' : 'CREATE_OR_UPDATE';
         const formData = new FormData();
-        formData.append('op', 'CONVERT');
-        formData.append('type', format);
+        attachTo.forEach(projectName => {
+            formData.append('attachTo', projectName);
+        });
         formData.append('file', file);
-
-        return this.http.post('/raw/formsubmit', formData);
+        return this.http.post<SubmitResponse>(`/raw/submissions/file_submit/${operation}`, formData);
     }
 
     deleteSubmission(accno) {
