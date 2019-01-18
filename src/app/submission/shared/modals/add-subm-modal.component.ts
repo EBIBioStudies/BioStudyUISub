@@ -5,15 +5,12 @@ import {BsModalRef} from 'ngx-bootstrap';
     selector: 'add-subm-modal',
     templateUrl: './add-subm-modal.component.html'
 })
-export class AddSubmModalComponent implements OnInit, AfterViewInit {
+export class AddSubmModalComponent implements AfterViewInit {
     selected: string = 'Default';
-    projectNames?: string[] = [];
+    templates?: Array<{ name: string, description: string }> = [];
     onOk?: Function;
 
     constructor(public bsModalRef: BsModalRef) {
-    }
-
-    ngOnInit(): void {
     }
 
     ngAfterViewInit(): void {

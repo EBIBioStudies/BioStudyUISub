@@ -49,13 +49,6 @@ export class UserData {
         );
     }
 
-    filteredProjectAccNumbers$(availableProjects: string[]): Observable<string[]> {
-        return this.projectAccNumbers$.pipe(
-            map(projects => projects.map(p => p.toLowerCase())),
-            map(projects => projects.filter(p => availableProjects.includes(p))),
-            map(filtered => [...['default'], ...filtered]));
-    }
-
     get role(): UserRole {
         return UserRole.User;
     }

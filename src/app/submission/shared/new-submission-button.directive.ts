@@ -1,7 +1,7 @@
 import {AfterViewInit, Directive, ElementRef, HostBinding, HostListener} from '@angular/core';
 import {BsModalService} from 'ngx-bootstrap';
 import {AddSubmModalComponent} from './modals/add-subm-modal.component';
-import {newPageTab, SUBMISSION_TEMPLATE_NAMES} from './model';
+import {newPageTab, getSubmissionTemplates} from './model';
 import {SubmissionService} from './submission.service';
 import {UserData} from 'app/auth/shared';
 import {Router} from '@angular/router';
@@ -33,28 +33,28 @@ export class NewSubmissionButtonDirective implements AfterViewInit {
     @HostBinding('disabled') disabled?: boolean;
 
     private onNewSubmissionClick() {
-        this.userData.filteredProjectAccNumbers$(SUBMISSION_TEMPLATE_NAMES).subscribe(projects => {
-            const projectNames = ['BioImages', 'HeCaToS', 'EU-ToxRisk']; //TODO projects;
-            if (projectNames.length > 0) {
-                this.selectProject([...projectNames, ...['Default']])
+        this.userData.projectAccNumbers$.subscribe(projectNames => {
+            const templates = getSubmissionTemplates(projectNames);
+            if (templates.length > 0) {
+                this.selectTemplate(templates)
             } else {
                 this.onOk();
             }
         });
     }
 
-    private selectProject(projectNames: Array<string>) {
+    private selectTemplate(templates: Array<{ name: string, description: string }>) {
         this.modalService.show(AddSubmModalComponent, {
             initialState: {
-                projectNames: projectNames,
-                onOk: (project:string) => this.onOk(project)
+                templates: templates,
+                onOk: (project: string) => this.onOk(project)
             }
         });
     }
 
-    private onOk(project?: string) {
+    private onOk(template?: string) {
         this.startCreating();
-        this.submService.createSubmission(newPageTab(project)).subscribe((subm) => {
+        this.submService.createSubmission(newPageTab(template)).subscribe((subm) => {
             this.stopCreating();
             this.router.navigate(['/submissions/new/', subm.accno]);
         });

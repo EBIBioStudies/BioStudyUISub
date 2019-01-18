@@ -1,5 +1,4 @@
 <form novalidate autocomplete="off"
-      #form="ngForm"
       (ngSubmit)="hide(); ok()">
     <div class="modal-header bg-primary">
         Add new submission
@@ -12,14 +11,14 @@
         option if the new submission is a stand-alone study or its parent project is not in the list.
         <div class="form-group">
             <label class="control-label">What is the study's parent project?</label>
-            <div *ngFor="let name of projectNames" class="radio">
-                <label>
+            <div *ngFor="let tmpl of templates" class="radio">
+                <label [tooltip]="tmpl.description" placement="right">
                     <input type="radio"
                            class="project-radio"
-                           [name]="name"
-                           [value]="name"
+                           [name]="tmpl.name"
+                           [value]="tmpl.name"
                            [(ngModel)]="selected">
-                    <span>{{name}}</span>
+                    <span>{{tmpl.name}}</span>
                 </label>
             </div>
         </div>
