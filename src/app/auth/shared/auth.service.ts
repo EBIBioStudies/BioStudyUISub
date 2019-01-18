@@ -69,15 +69,19 @@ export class AuthService {
             map(resp => AuthService.statusCheck(resp)));
     }
 
-    signOut(): Observable<any> {
+    signOut(): Observable<StatusResponse> {
         if (this.userSession.isAnonymous()) {
-            return of({});
-        }
-        return this.http.post('/api/auth/signout', {})
-            .map(() => {
-                this.userSession.destroy();
-                return {};
+            return of({
+                status: 'OK'
             });
+        }
+        return this.http.post<StatusResponse>('/raw/auth/signout', {sessid: this.userSession.token()}).pipe(
+            map(resp => AuthService.statusCheck(resp)),
+            map(resp => {
+                this.userSession.destroy();
+                return resp;
+            })
+        );
     }
 
     private static statusCheck<T extends StatusResponse>(resp: T): T {
