@@ -29,7 +29,7 @@
     "lodash": "^4.17.4",
     "ng-recaptcha": "^4.0.0-beta.1",
     "ng2-cookies": "^1.0.2",
-    "ngx-bootstrap": "^3.0.1",
+    "ngx-bootstrap": "^3.1.4",
     "pluralize": "^7.0.0",
     "rxjs": "^6.2.1",
     "rxjs-compat": "^6.0.0-rc.0",
