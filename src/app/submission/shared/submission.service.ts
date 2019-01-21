@@ -1,9 +1,9 @@
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
+import {Observable, of} from 'rxjs';
+import {map, catchError, switchMap} from 'rxjs/operators';
 
 import {PageTab} from './model/pagetab';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
 
 export interface PendingSubmission {
     accno: string,
@@ -85,11 +85,23 @@ export class SubmissionService {
     }
 
     getSubmission(accno: string): Observable<PendingSubmission> {
-        return this.http.get<PendingSubmission>(`/api/submissions/pending/${accno}`);
+        return this.getPending(accno).pipe(
+            catchError(resp =>
+                this.getSubmitted(accno).pipe(map(resp => ({
+                    accno: accno,
+                    changed: 0,
+                    data: resp
+                })))));
     }
 
     saveSubmission(accno: string, pt: PageTab): Observable<any> {
         return this.http.put<PendingSubmission>(`/raw/submissions/pending/${accno}`, pt).pipe(
+            catchError((resp: HttpErrorResponse) => {
+                if (resp.status === 400) {
+                    return this.createSubmission(pt);
+                }
+                throw resp;
+            }),
             map((response: any) => 'done')
         );
     }
@@ -108,8 +120,32 @@ export class SubmissionService {
         return this.http.post<SubmitResponse>(`/raw/submissions/file_submit/${operation}`, formData);
     }
 
-    deleteSubmission(accno) {
-        return this.http.delete(`/api/submissions/${accno}`);
+    deleteSubmission(accno: string): Observable<boolean> {
+        return this.getPending(accno).pipe(
+            catchError(_ => of(undefined)),
+            switchMap(resp => resp === undefined ? this.deleteSubmitted(accno) : this.deletePending(accno))
+        )
+    }
+
+    private deleteSubmitted(accno: string): Observable<boolean> {
+        // todo: Why GET ??!!!
+        return this.http.get(`/raw/submit/delete?id=${accno}`).pipe(
+            map(resp => resp['level'] === 'success')
+        );
+    }
+
+    private deletePending(accno: string): Observable<boolean> {
+        return this.http.delete(`/raw/submissions/pending/${accno}`).pipe(
+            map(resp => true)
+        );
+    }
+
+    private getPending(accno: string): Observable<PendingSubmission> {
+        return this.http.get<PendingSubmission>(`/raw/submissions/pending/${accno}`);
+    }
+
+    private getSubmitted(accno: string): Observable<PageTab> {
+        return this.http.get<PageTab>(`/raw/submission/${accno}`);
     }
 
     /**

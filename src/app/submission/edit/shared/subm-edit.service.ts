@@ -162,7 +162,7 @@ export class SubmEditService {
 
     revert(): Observable<ServerResponse<any>> {
         this.editState.startReverting();
-        return this.submService.deleteSubmission(this.accno).pipe(
+        return this.submService.deleteSubmission(this.accno!).pipe(
             switchMap(() => this.submService.getSubmission(this.accno!)),
             map(pendingSubm => {
                 this.editState.stopReverting();
@@ -177,7 +177,7 @@ export class SubmEditService {
 
     submit(): Observable<SubmitResponse> {
         this.editState.startSubmitting();
-        return this.submService.submitSubmission(this.accno!!, this.asPageTab(true)).pipe(
+        return this.submService.submitSubmission(this.accno!, this.asPageTab(true)).pipe(
             map(resp => {
                 this.editState.stopSubmitting();
                 this.onSubmitFinished(resp);
