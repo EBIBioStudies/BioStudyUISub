@@ -28,6 +28,7 @@
                                container="body"
                                containerClass="text-danger"
                                popover="{{column.hasErrors ? column.errors : ''}}"
+                               triggers="focus"
                                [formControl]="column.control"
                                [readonly]="!column.canEditName"
                                [typeahead]="featureForm.columnNamesTypeahead(column)"
@@ -46,10 +47,10 @@
                                  'optional': !column.isRequired,
                                  'has-error': cell.hasErrors}">
                     <input-value placement="top"
-                                 triggers="focus"
                                  container="body"
                                  containerClass="{{featureForm.isRequired ? 'text-danger' : 'text-warning'}}"
                                  popover="{{cell.hasErrors ? cell.errors : ''}}"
+                                 triggers="focus"
                                  [valueType]="column.valueType"
                                  [readonly]="readonly || column.isReadonly"
                                  [formControl]="cell.control"
