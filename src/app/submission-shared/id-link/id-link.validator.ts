@@ -34,7 +34,7 @@ export function idLinkValidator(service: IdLinkService, extra: any, prev: any): 
 
             //To save on requests, make sure the prefix is a known one. Otherwise, it's clear the link is invalid.
             if (service.prefixes.length && service.prefixes.indexOf(currLinkMatches[1]) == -1) {
-                return of({pattern: true});
+                return of({format: true});
             }
 
             //Validation requests are made only once for the same invalid link. Otherwise, the last result is provided.
@@ -55,7 +55,7 @@ export function idLinkValidator(service: IdLinkService, extra: any, prev: any): 
                         extra.url = '';
                         extra.isId = false;
                         prev.url = '';
-                        prev.error = {pattern: true};
+                        prev.error = {format: true};
                     }
                     return prev.error;
                 });
@@ -70,6 +70,6 @@ export function idLinkValidator(service: IdLinkService, extra: any, prev: any): 
         }
 
         //The control's value is neither a valid URL nor a valid prefix:identifier link
-        return of({pattern: true});
+        return of({format: true});
     };
 }
