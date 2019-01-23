@@ -138,7 +138,7 @@ export const BIATemplate = {
             {
             'name': 'Screen',
             'display': 'required',
-            'minRequired': 3,
+            'minRequired': 1,
             'fieldTypes': [
                 {
                     'name': 'Screen Number',
