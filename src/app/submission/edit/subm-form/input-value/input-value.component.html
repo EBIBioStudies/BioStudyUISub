@@ -55,6 +55,6 @@
     <pubmedid-search *ngSwitchCase="ValueTypeNameEnum.pubmedid"
                      [formControl]="formControl"
                      [readonly]="readonly"
-                     (found)="asyncData($event)">
+                     (found)="selectData($event)">
     </pubmedid-search>
 </div>

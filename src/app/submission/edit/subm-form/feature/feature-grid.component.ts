@@ -55,35 +55,20 @@ export class FeatureGridComponent implements AfterViewInit {
      * @param {object} data - Grid attribute data retrieved asynchronously.
      * @param {number} rowIdx - Row whose field values are to be changed.
      */
-    addOnAsync(data: any, rowIdx: number) {
-        // const columns = this.feature.columns.slice(0);
+    onInputValueSelect(data: { [key: string]: string }, rowIdx: number) {
         const attrNames = Object.keys(data);
-        const attributes: { name: string, value: string }[] = [];      //column attributes to be changed with their respective values
-        const formValues = {};      //formgroup version of the above
+        if (attrNames.length === 0) {
+            return;
+        }
 
-        //The first column is assumed to be the source of the async event and, therefore, does not require updating.
-        //  columns.shift();
-
-        //Converts data into attributes by filling in gaps (existing columns that are not included in the attributes).
-        //This also guarantees that no new columns will be added.
-        /*columns.forEach((column) => {
-            const colName = column.name.toLowerCase();
-
-            if (attrNames.indexOf(colName) == -1) {
-                attributes.push({name: column.name, value: ''});
-            } else {
-                attributes.push({name: column.name, value: data[colName]});
+        attrNames.forEach(attrName => {
+            const rowForm = this.featureForm!.rows[rowIdx];
+            const col = this.featureForm!.columns.find(c => c.name.toLowerCase() === attrName.toLowerCase());
+            if (col !== undefined) {
+                rowForm.cellControlAt(col.id)!.control.setValue(data[attrName]);
             }
-        });*/
-
-        //Updates the form controls corresponding to the fields of the affected row in the feature.
-        attributes.forEach(attribute => {
-            // formValues[this.feature.firstId(attribute.name)] = attribute.value;
         });
-        // this.featureForm!.patchRow(rowIdx, formValues);
 
-        //Updates the submission model's row and notifies the outside world as a single change event.
-        //TODO this.feature.add(attributes, rowIdx);
         this.rootEl.nativeElement.dispatchEvent(new Event('change', {bubbles: true}));
     }
 

@@ -49,7 +49,7 @@ export class InputValueComponent implements ControlValueAccessor {
 
     private valueChanges$: Subject<string> = new BehaviorSubject<string>('');
 
-    @Output() async: EventEmitter<any> = new EventEmitter<any>();  //signals availability of asynchronous attributes
+    @Output() select = new EventEmitter<{ [key: string]: string }>();
 
     constructor(private rootEl: ElementRef, private appConfig: AppConfig) {
         this.suggestLength = appConfig.maxSuggestLength;
@@ -119,8 +119,8 @@ export class InputValueComponent implements ControlValueAccessor {
      * Bubbles up an event for any inbound event in turn triggered by data fetched asynchronously.
      * @param data - Data retrieved asynchronously.
      */
-    asyncData(data: any): void {
-        //this.async.emit(data);
+    selectData(data: { [key: string]: string }): void {
+        this.select.emit(data);
     }
 
     /**

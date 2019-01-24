@@ -14,7 +14,7 @@ import {
 import * as _ from 'lodash';
 
 import {PubMedSearchService} from './pubmedid-search.service';
-import {Observable} from "rxjs/Observable";
+import {Observable} from 'rxjs/Observable';
 
 @Component({
     selector: 'pubmedid-search',
@@ -34,14 +34,16 @@ import {Observable} from "rxjs/Observable";
  * to be displayed again (1st enter key press) or actioned upon (2nd key press).
  */
 export class PubMedIdSearchComponent implements ControlValueAccessor {
-    private onChange: any = (_:any) => {};      //placeholder for handler propagating changes outside the custom control
-    private onTouched: any = () => {};          //placeholder for handler after the control has been "touched"
+    private onChange: any = (_: any) => {
+    };      //placeholder for handler propagating changes outside the custom control
+    private onTouched: any = () => {
+    };          //placeholder for handler after the control has been "touched"
 
     public isPreviewPub: boolean = false;       //indicates if the retrieved publication's summary preview is on display
     private isBusy: boolean = false;            //indicates a transaction is in progress
     private pubMedId: string | undefined;                   //last PubMed ID number typed in
     private lastIDfetched: string | undefined;              //helps cancel unnecessary search actions triggered by enter key
-    private publication: object = {};           //last publication retrieved
+    private publication: { [key: string]: string } = {};           //last publication retrieved
 
     @Input() required?: boolean = false;
     @Input() readonly?: boolean = false;
@@ -155,7 +157,7 @@ export class PubMedIdSearchComponent implements ControlValueAccessor {
      * has just been rendered, it checks for an already existing ID and retrieves the publication for that one.
      */
     togglePreviewPub() {
-        if (this.pubMedId && _.isEmpty(this.publication) && !this.isPreviewPub ) {
+        if (this.pubMedId && _.isEmpty(this.publication) && !this.isPreviewPub) {
             this.pubMedFetch();
             return;
         }

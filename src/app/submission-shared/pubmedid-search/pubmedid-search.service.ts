@@ -1,12 +1,11 @@
+import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-
-import {HttpCustomClient} from 'app/http/http-custom-client.service';
 import {Observable, of, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 
 @Injectable()
 export class PubMedSearchService {
-    constructor(private http: HttpCustomClient) {
+    constructor(private http: HttpClient) {
     }
 
     search(pmid): Observable<any> {
