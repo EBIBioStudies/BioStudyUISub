@@ -1,7 +1,6 @@
 import {NgModule} from '@angular/core';
 import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 
-import {HttpCustomClient} from './http-custom-client.service';
 import {RequestStatusService, RequestStatusServiceFactory} from './request-status.service';
 import {AuthInterceptorService} from './auth-interceptor.service';
 import {TestBackendInterceptor} from './test-backend-interceptor.service';
@@ -14,7 +13,6 @@ import {TestBackendInterceptor} from './test-backend-interceptor.service';
         HttpClientModule
     ],
     providers: [
-        HttpCustomClient,
         {
             provide: RequestStatusService,
             useFactory: RequestStatusServiceFactory
