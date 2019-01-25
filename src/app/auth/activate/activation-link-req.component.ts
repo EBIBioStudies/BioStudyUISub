@@ -1,3 +1,4 @@
+import {HttpErrorResponse} from '@angular/common/http';
 import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
 import {AbstractControl, NgForm} from '@angular/forms';
 import {ActivationLinkRequestData} from 'app/auth/model';
@@ -49,10 +50,10 @@ export class ActivationLinkReqComponent implements AfterViewInit {
                         this.isLoading = false;
                         component.showSuccess = true;
                     },
-                    (error: ServerError) => {
+                    (error: HttpErrorResponse) => {
                         this.isLoading = false;
                         component.hasError = true;
-                        component.message = error.data.message;
+                        component.message = error.message;
                         component.resetRecaptcha(form.controls['captcha']);
                     }
                 );

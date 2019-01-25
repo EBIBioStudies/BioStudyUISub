@@ -55,8 +55,8 @@ export class AuthService {
         return this.http.post<StatusResponse>('/raw/auth/passreset', obj.snapshot());
     }
 
-    activationLinkReq(obj: ActivationLinkRequestData): Observable<any> {
-        return this.http.post('/api/auth/activation/link', obj.snapshot());
+    activationLinkReq(obj: ActivationLinkRequestData): Observable<StatusResponse> {
+        return this.http.post<StatusResponse>('/api/auth/activation/link', obj.snapshot());
     }
 
     activate(key: string): Observable<StatusResponse> {
