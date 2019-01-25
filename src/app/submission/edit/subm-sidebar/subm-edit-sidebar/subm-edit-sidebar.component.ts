@@ -1,15 +1,15 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {Subject, Subscription} from 'rxjs';
-import {SectionForm} from 'app/submission/edit/shared/section-form';
-import {ConfirmDialogComponent} from 'app/shared';
 import {UserData} from 'app/auth/shared';
-import {FeatureType, SectionType, TypeBase} from 'app/submission/shared/model';
-import {BsModalService} from 'ngx-bootstrap';
-import {AddSubmTypeModalComponent} from 'app/submission/edit/subm-sidebar/add-subm-type-modal/add-subm-type-modal.component';
+import {ConfirmDialogComponent} from 'app/shared';
 import {FormValidators} from 'app/submission/edit/shared/form-validators';
+import {SectionForm} from 'app/submission/edit/shared/section-form';
 import {SubmEditService} from 'app/submission/edit/shared/subm-edit.service';
+import {AddSubmTypeModalComponent} from 'app/submission/edit/subm-sidebar/add-subm-type-modal/add-subm-type-modal.component';
+import {FeatureType, SectionType, TypeBase} from 'app/submission/shared/model';
 import {Option} from 'fp-ts/lib/Option';
+import {BsModalService} from 'ngx-bootstrap';
+import {Subject, Subscription} from 'rxjs';
 
 const SECTION_ID = '@SECTION@';
 
@@ -59,7 +59,7 @@ class DataTypeControl {
     templateUrl: './subm-edit-sidebar.component.html',
     styleUrls: ['./subm-edit-sidebar.component.css']
 })
-export class SubmEditSidebarComponent implements OnInit, OnDestroy {
+export class SubmEditSidebarComponent implements OnDestroy {
     isEditModeOn: boolean = false;
     isAdvancedOpen: boolean = false;
     items: DataTypeControl[] = [];
@@ -83,10 +83,6 @@ export class SubmEditSidebarComponent implements OnInit, OnDestroy {
 
     get isAdvancedClosed(): boolean {
         return !this.isAdvancedOpen;
-    }
-
-    ngOnInit(): void {
-        this.updateItems();
     }
 
     ngOnDestroy(): void {
@@ -174,8 +170,6 @@ export class SubmEditSidebarComponent implements OnInit, OnDestroy {
     }
 
     private switchSection(sectionFormOp: Option<SectionForm>) {
-        this.unsubscribe.next();
-
         if (sectionFormOp.isSome()) {
             this.sectionForm = sectionFormOp.toUndefined();
             if (this.formSubscription) {

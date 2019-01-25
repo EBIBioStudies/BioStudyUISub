@@ -109,9 +109,9 @@ export class SubmEditService {
     private editState: EditState = new EditState();
     private sectionFormSub?: Subscription;
 
-    sectionSwitch$: BehaviorSubject<Option<SectionForm>> = new BehaviorSubject<Option<SectionForm>>(none);
-    serverError$: Subject<any> = new Subject<any>();
-    scroll2Control$: Subject<FormControl> = new Subject<FormControl>();
+    readonly sectionSwitch$: BehaviorSubject<Option<SectionForm>> = new BehaviorSubject<Option<SectionForm>>(none);
+    readonly serverError$: Subject<any> = new Subject<any>();
+    readonly scroll2Control$: Subject<FormControl> = new Subject<FormControl>();
 
     constructor(private userData: UserData,
                 private submService: SubmissionService) {

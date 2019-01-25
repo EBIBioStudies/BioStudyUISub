@@ -44,7 +44,7 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
     @ViewChild(SubmSidebarComponent) sideBar?: SubmSidebarComponent;
 
     accno?: string;
-    releaseDate: string = ''; //???
+    releaseDate: string = '';
 
     sectionForm?: SectionForm;
     sideBarCollapsed: boolean = false;
@@ -128,10 +128,6 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.submEditService.reset();
     }
 
-    onSectionClick(sectionForm: SectionForm): void {
-        this.submEditService.switchSection(sectionForm);
-    }
-
     onRevertClick(event: Event) {
         this.confirmRevert().takeUntil(this.unsubscribe)
             .pipe(switchMap(() => this.submEditService.revert())
@@ -164,6 +160,10 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
     onEditBackClick(event: Event) {
         this.readonly = false;
         this.router.navigate(['/submissions/edit/' + this.accno]);
+    }
+
+    onSectionClick(sectionForm: SectionForm): void {
+        this.submEditService.switchSection(sectionForm);
     }
 
     onSectionDeleteClick(sectionForm: SectionForm): void {
