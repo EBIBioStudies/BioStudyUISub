@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {AuthService} from 'app/auth/shared';
+import {AuthService} from '../shared';
 
 import {ServerError} from 'app/http';
 

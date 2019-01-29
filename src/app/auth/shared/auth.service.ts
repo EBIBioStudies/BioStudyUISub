@@ -1,18 +1,17 @@
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
-import {
-    RegistrationData,
-    PasswordResetData,
-    ActivationLinkRequestData,
-    PasswordResetRequestData,
-    UserInfo
-} from 'app/auth/model';
-
 import {ServerError} from 'app/http'
 
 import {Observable, of} from 'rxjs';
 import {map, catchError} from 'rxjs/operators';
+import {
+    UserInfo,
+    PasswordResetRequestData,
+    PasswordResetData,
+    ActivationLinkRequestData,
+    RegistrationData
+} from './model';
 
 import {UserSession} from './user-session';
 

@@ -1,16 +1,7 @@
-import {
-    HTTP_INTERCEPTORS,
-    HttpEvent,
-    HttpHandler,
-    HttpInterceptor,
-    HttpRequest,
-    HttpResponse
-} from '@angular/common/http';
+import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Rx';
 import {of} from 'rxjs';
-import {SubmissionListItem} from '../submission/shared/submission.service';
-import {PageTab} from '../submission/shared/model/pagetab';
+import {Observable} from 'rxjs/Rx';
 
 @Injectable()
 export class TestBackendInterceptor implements HttpInterceptor {

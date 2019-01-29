@@ -24,12 +24,16 @@ import {AppRoutingModule} from './app-routing.module';
 import {HelpModule} from './help/help.module';
 import {AuthModule} from './auth/auth.module';
 import {FileModule} from './file/file.module';
-import {SubmissionModule} from './submission/submission.module';
+
 
 import {AppComponent} from './app.component';
 import {GlobalErrorHandler} from './global-error.handler';
 import {AppConfig} from './app.config';
 import {HeaderModule} from './header/header.module';
+import {SubmissionDirectModule} from './submission/submission-direct/submission-direct.module';
+import {SubmissionEditModule} from './submission/submission-edit/submission-edit.module';
+import {SubmissionListModule} from './submission/submission-list/submission-list.module';
+import { AgGridModule } from 'ag-grid-angular';
 
 export function initConfig(config: AppConfig): () => Promise<any> {
     return () => config.load();
@@ -52,8 +56,11 @@ export function initConfig(config: AppConfig): () => Promise<any> {
         HeaderModule,
         HelpModule,
         AuthModule,
-        SubmissionModule,
-        FileModule
+        SubmissionListModule,
+        SubmissionEditModule,
+        SubmissionDirectModule,
+        FileModule//,
+        //AgGridModule.withComponents([])
     ],
     declarations: [
         AppComponent

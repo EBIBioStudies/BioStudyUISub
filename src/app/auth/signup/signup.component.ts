@@ -6,8 +6,8 @@ import {RecaptchaComponent} from 'ng-recaptcha';
 
 import {ServerError} from 'app/http';
 
-import {AuthService, UserSession} from 'app/auth/shared';
-import {RegistrationData} from 'app/auth/model';
+import {AuthService, UserSession} from '../shared';
+import {RegistrationData} from '../shared/model';
 import {AbstractControl, NgForm} from '@angular/forms';
 
 @Component({

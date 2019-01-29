@@ -1,11 +1,9 @@
 import {HttpErrorResponse} from '@angular/common/http';
 import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
 import {AbstractControl, NgForm} from '@angular/forms';
-import {ActivationLinkRequestData} from 'app/auth/model';
+import {ActivationLinkRequestData} from '../shared/model';
 
 import {AuthService} from 'app/auth/shared';
-
-import {ServerError} from 'app/http';
 
 import {RecaptchaComponent} from 'ng-recaptcha';
 

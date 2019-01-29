@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 
 import {ActivatedRoute, Params} from '@angular/router';
 
-import {GridOptions} from 'ag-grid/main';
+import {GridOptions} from 'ag-grid-community/main';
 
 import 'rxjs/add/operator/filter';
 import {AppConfig} from '../../app.config';

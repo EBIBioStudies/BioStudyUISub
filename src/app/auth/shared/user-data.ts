@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
-import {ExtendedUserInfo} from 'app/auth/model';
 
-import {SubmissionService} from 'app/submission/shared/submission.service';
 import {Observable, ReplaySubject, Subject} from 'rxjs';
 import {forkJoin} from 'rxjs/observable/forkJoin';
 import {map} from 'rxjs/operators';
+import {SubmissionService} from '../../submission/submission-shared/submission.service';
 import {AuthService} from './auth.service';
+import {ExtendedUserInfo} from './model';
 
 import {UserRole} from './user-role';
 import {UserSession} from './user-session';

@@ -1,6 +1,7 @@
+import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
-import {AgGridModule} from 'ag-grid-angular/main';
+import {AgGridModule} from 'ag-grid-angular';
 
 import {HttpCustomClientModule} from 'app/http/http-custom-client.module';
 import {SharedModule} from 'app/shared/shared.module';

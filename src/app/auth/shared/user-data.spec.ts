@@ -1,8 +1,8 @@
 import {async} from '@angular/core/testing';
-
-import {UserInfo} from 'app/auth/model';
 import {AuthService, UserData, UserSession} from 'app/auth/shared';
 import {of} from 'rxjs';
+
+import {UserInfo, ExtendedUserInfo} from './model';
 
 describe('UserData', () => {
     let submService;
@@ -24,8 +24,7 @@ describe('UserData', () => {
             secret: 'secret',
             aux: {
                 orcid: '1234-5678-9999'
-            },
-            projects: []
+            }
         };
 
         const authService = {
@@ -38,7 +37,7 @@ describe('UserData', () => {
 
         new UserData(session, authService as AuthService, submService).info$
             .subscribe(info => {
-                expect(info).toEqual(user);
+                expect(info).toEqual(user as ExtendedUserInfo);
             });
 
         session.create('12345');
