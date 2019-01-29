@@ -9,6 +9,7 @@ import {SubmissionResultsModule} from '../submission-results/submission-results.
 import {SubmissionSharedModule} from '../submission-shared/submission-shared.module';
 import {Camelcase2LabelPipe} from './shared/camelcase-to-label.pipe';
 import {SubmEditService} from './shared/subm-edit.service';
+import {TextareaAutosizeDirective} from './shared/textarea-autosize.directive';
 import {UniqueValidator} from './shared/unique.directive';
 import {SubmEditComponent} from './subm-edit.component';
 import {FeatureGridComponent} from './subm-form/feature/feature-grid.component';
@@ -58,7 +59,8 @@ import {SubmSidebarComponent} from './subm-sidebar/subm-sidebar.component';
         FeatureListComponent,
         Camelcase2LabelPipe,
         UniqueValidator,
-        NativeElementAttachDirective
+        NativeElementAttachDirective,
+        TextareaAutosizeDirective
     ],
     exports: [
         SubmEditComponent

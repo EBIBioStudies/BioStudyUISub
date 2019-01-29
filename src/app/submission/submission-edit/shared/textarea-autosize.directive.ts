@@ -1,4 +1,4 @@
-import {Directive, ElementRef, HostListener, Input} from '@angular/core';
+import {Directive, ElementRef, HostListener, Input, AfterContentInit, AfterContentChecked} from '@angular/core';
 
 import {fromEvent} from 'rxjs';
 
@@ -9,7 +9,7 @@ interface CSSStyleDeclarationWithResize extends CSSStyleDeclaration {
 @Directive({
     selector: 'textarea[autosize]'
 })
-export class TextareaAutosize {
+export class TextareaAutosizeDirective implements AfterContentInit, AfterContentChecked {
     @Input('autosize') private maxHeight: number = 100;
     private minHeight: number = 50;
 
