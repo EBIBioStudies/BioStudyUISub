@@ -29,6 +29,6 @@ export class AuthInterceptorService implements HttpInterceptor {
     }
 
     private updateUrl(url: string): string {
-        return this.appConfig.proxy_base + url;
+        return this.appConfig.proxyBase + url;
     }
 }

@@ -1,3 +1,4 @@
+import {HttpErrorResponse} from '@angular/common/http';
 import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
 
 import {RecaptchaComponent} from 'ng-recaptcha';
@@ -48,10 +49,10 @@ export class PasswordResetReqComponent implements AfterViewInit {
                         this.isLoading = false;
                         component.showSuccess = true;
                     },
-                    (error: ServerError) => {
+                    (error: HttpErrorResponse) => {
                         this.isLoading = false;
                         component.hasError = true;
-                        component.message = error.data.message;
+                        component.message = error.message;
                         component.resetRecaptcha(form.controls['captcha']);
                     }
                 );

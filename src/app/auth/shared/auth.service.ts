@@ -5,12 +5,13 @@ import {ServerError} from 'app/http'
 
 import {Observable, of} from 'rxjs';
 import {map, catchError} from 'rxjs/operators';
+import {AppConfig} from '../../app.config';
 import {
     UserInfo,
     PasswordResetRequestData,
     PasswordResetData,
     ActivationLinkRequestData,
-    RegistrationData
+    RegistrationData, copyAndExtend
 } from './model';
 
 import {UserSession} from './user-session';
@@ -27,7 +28,8 @@ interface UserInfoResponse extends UserInfo, StatusResponse {
 export class AuthService {
 
     constructor(private http: HttpClient,
-                private userSession: UserSession) {
+                private userSession: UserSession,
+                private appConfig: AppConfig) {
     }
 
     signIn(obj: { login: string, password: string }): Observable<UserInfo> {
@@ -46,7 +48,7 @@ export class AuthService {
     }
 
     passwordResetReq(obj: PasswordResetRequestData): Observable<StatusResponse> {
-        return this.http.post<StatusResponse>('/api/auth/password/reset_request', obj.snapshot()).pipe(
+        return this.http.post<StatusResponse>('/raw/auth/password/reset_request', this.withInstanceKey(obj.snapshot())).pipe(
             map(resp => AuthService.statusCheck(resp)));
     }
 
@@ -55,7 +57,7 @@ export class AuthService {
     }
 
     activationLinkReq(obj: ActivationLinkRequestData): Observable<StatusResponse> {
-        return this.http.post<StatusResponse>('/api/auth/activation/link', obj.snapshot());
+        return this.http.post<StatusResponse>('/raw/auth/activation/link', this.withInstanceKey(obj.snapshot()));
     }
 
     activate(key: string): Observable<StatusResponse> {
@@ -63,7 +65,7 @@ export class AuthService {
     }
 
     signUp(regData: RegistrationData): Observable<StatusResponse> {
-        return this.http.post<StatusResponse>('/api/auth/signup', regData.snapshot()).pipe(
+        return this.http.post<StatusResponse>('/raw/auth/signup', this.withInstanceKey(regData.snapshot())).pipe(
             catchError(resp => AuthService.catch403Error<StatusResponse>(resp)),
             map(resp => AuthService.statusCheck(resp)));
     }
@@ -81,6 +83,13 @@ export class AuthService {
                 return resp;
             })
         );
+    }
+
+    private withInstanceKey(obj: { [key: string]: string }): { [key: string]: string } {
+        return copyAndExtend(obj, {
+            instanceKey: this.appConfig.instanceKey,
+            path: this.appConfig.contextPath + '/' + obj.path
+        });
     }
 
     private static statusCheck<T extends StatusResponse>(resp: T): T {
