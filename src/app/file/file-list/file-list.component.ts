@@ -99,8 +99,9 @@ export class FileListComponent implements OnInit, OnDestroy {
             {
                 headerName: 'Type',
                 field: 'type',
-                minWidth: 45,
-                maxWidth: 45,
+                width: 70,
+                minWidth: 70,
+                maxWidth: 70,
                 suppressSorting: true,
                 cellRendererFramework: FileTypeCellComponent
             },

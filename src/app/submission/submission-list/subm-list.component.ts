@@ -41,7 +41,6 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
     public isBusy: boolean = false;         //flags if a previous button action is in progress
     public rowData: any;            //object including the data values for the row this cell belongs to
 
-    private accno?: string;
     private onDelete?: (accno: string, onCancel: Function) => {};
     private onEdit?: (string) => {};
 
@@ -136,7 +135,6 @@ export class SubmListComponent {
     showSubmitted: boolean = false;     //flag indicating if the list of sent submissions is to be displayed
     isBusy: boolean = false;            //flag indicating if a request is in progress
     isCreating: boolean = false;        //flag indicating if submission creation is in progress
-    allowedPrj?: string[];               //names of projects with templates the user is allowed to attach submissions to
 
     //AgGrid-related properties
     gridOptions: GridOptions;
