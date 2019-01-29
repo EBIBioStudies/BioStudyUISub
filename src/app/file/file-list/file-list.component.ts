@@ -99,7 +99,6 @@ export class FileListComponent implements OnInit, OnDestroy {
             {
                 headerName: 'Type',
                 field: 'type',
-                width: 70,
                 minWidth: 70,
                 maxWidth: 70,
                 suppressSorting: true,
