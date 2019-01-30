@@ -234,7 +234,7 @@ export class SubmListComponent {
                 cellClass: 'ag-cell-centered',
                 maxWidth: 100,
                 suppressMenu: true,
-                suppressSorting: true,
+                sortable: false,
                 cellRendererFramework: ActionButtonsCellComponent
             }
         ];
