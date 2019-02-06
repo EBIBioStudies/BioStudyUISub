@@ -57,7 +57,7 @@ export class AuthService {
     }
 
     activationLinkReq(obj: ActivationLinkRequestData): Observable<StatusResponse> {
-        return this.http.post<StatusResponse>('/raw/auth/activation/link', this.withInstanceKey(obj.snapshot()));
+        return this.http.post<StatusResponse>('/raw/auth/retryact', this.withInstanceKey(obj.snapshot()));
     }
 
     activate(key: string): Observable<StatusResponse> {
