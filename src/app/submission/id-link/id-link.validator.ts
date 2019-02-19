@@ -1,4 +1,5 @@
 import {AbstractControl, AsyncValidatorFn, ValidationErrors} from '@angular/forms';
+import {map} from 'rxjs/operators';
 import {IdLinkService} from './id-link.service';
 import {Observable, of} from 'rxjs';
 
@@ -41,7 +42,8 @@ export function idLinkValidator(service: IdLinkService, extra: any, prev: any): 
             currLink = currLinkMatches.slice(1);
             if (currLink.join() != prev.link.join()) {
                 prev.link = currLink;
-                return service.validate(currLink[0], currLink[1]).map(res => {
+                return service.validate(currLink[0], currLink[1]).pipe(
+                    map(res => {
 
                     //The response has a URL => the link is valid
                     if (res['url']) {
@@ -58,7 +60,7 @@ export function idLinkValidator(service: IdLinkService, extra: any, prev: any): 
                         prev.error = {format: true};
                     }
                     return prev.error;
-                });
+                }));
             }
 
             //The validation request was for the same link => just outputs whatever previous outcome there was

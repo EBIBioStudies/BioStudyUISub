@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
+import {map, catchError} from 'rxjs/operators';
 import {Subject} from 'rxjs/Subject';
 import {of, throwError} from 'rxjs';
 
@@ -61,13 +62,14 @@ export class IdLinkService {
             return of([]);
         }
 
-        return this.http.get(url).map((data: Array<any>) => data.map(d => d.prefix))
-            .catch((err) => {
+        return this.http.get(url).pipe(
+            map((data: Array<any>) => data.map(d => d.prefix)),
+            catchError(err => {
                 if (err.status === 404) {
                     return of([]);
                 }
                 return throwError(err);
-            }
+            })
         );
     }
 
@@ -78,17 +80,17 @@ export class IdLinkService {
      * @returns {Observable<boolean>} Observable the request has been turned into.
      */
     validate(prefix: string, id: string): Observable<boolean> {
-        return this.http.get(`${IdLinkService.BASE_URL}/identifiers/validate/${prefix}:${id}`)
-            .map((response) => {
+        return this.http.get(`${IdLinkService.BASE_URL}/identifiers/validate/${prefix}:${id}`).pipe(
+            map(response => {
                 this.idUrl = response['url'];
                 return response;
-            })
-            .catch((err) => {
+            }),
+            catchError(err => {
                 if (err.status === 404) {
                     return of(err.error);
                 }
                 return throwError(err);
-            }
+            })
         );
     }
 }
