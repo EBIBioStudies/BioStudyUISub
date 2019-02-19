@@ -80,7 +80,7 @@ export class SubmissionService {
         );
     }
 
-    createSubmission(pt: any): Observable<PendingSubmission> {
+    createSubmission(pt: PageTab): Observable<PendingSubmission> {
         return this.http.post<PendingSubmission>('/raw/submissions/pending', pt);
     }
 
