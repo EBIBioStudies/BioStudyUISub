@@ -48,7 +48,7 @@ export class AuthService {
     }
 
     passwordResetReq(obj: PasswordResetRequestData): Observable<StatusResponse> {
-        return this.http.post<StatusResponse>('/raw/auth/password/reset_request', this.withInstanceKey(obj.snapshot())).pipe(
+        return this.http.post<StatusResponse>('/raw/auth/passrstreq', this.withInstanceKey(obj.snapshot())).pipe(
             map(resp => AuthService.statusCheck(resp)));
     }
 
