@@ -1,17 +1,12 @@
-import {
-    AfterViewInit,
-    Component, ElementRef,
-    OnInit,
-    ViewChild
-} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 
 import {RecaptchaComponent} from 'ng-recaptcha';
 
 import {ActivatedRoute} from '@angular/router';
 
-import {AuthService} from '../auth.service';
-import {PasswordResetData} from '../model/password-reset-data';
-import {AbstractControl, NgForm} from "@angular/forms";
+import {AuthService} from 'app/auth/shared';
+import {PasswordResetData} from '../shared/model';
+import {AbstractControl, NgForm} from '@angular/forms';
 
 @Component({
     selector: 'auth-passwd-reset',
@@ -26,10 +21,10 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
     message: string = '';
 
     @ViewChild('recaptchaEl')
-    private recaptcha: RecaptchaComponent;
+    private recaptcha?: RecaptchaComponent;
 
     @ViewChild('focusEl')
-    private focusEl: ElementRef;
+    private focusRef?: ElementRef;
 
     constructor(private authService: AuthService,
                 private activatedRoute: ActivatedRoute) {
@@ -40,16 +35,17 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
         if (key === null) {
             this.hasError = true;
             this.message = 'Invalid path';
+        } else {
+            this.model.key = key;
         }
-        this.model.key = key;
     }
 
     //TODO: Turn autofocus on render into a directive
     ngAfterViewInit(): void {
-        this.focusEl.nativeElement.focus();
+        this.focusRef!.nativeElement.focus();
     }
 
-    onSubmit(form:NgForm): void {
+    onSubmit(form: NgForm): void {
         this.resetGlobalError();
 
         //Makes request if all form fields completed satisfactorily
@@ -69,17 +65,17 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
                         this.resetRecaptcha(form.controls['captcha']);
                     });
 
-        //Validates in bulk if form incomplete
+            //Validates in bulk if form incomplete
         } else {
             Object.keys(form.controls).forEach((key) => {
-                form.controls[key].markAsTouched({ onlySelf: true });
+                form.controls[key].markAsTouched({onlySelf: true});
             });
         }
     }
 
     resetGlobalError(): void {
         this.hasError = false;
-        this.message = "";
+        this.message = '';
     }
 
     /**
@@ -87,10 +83,8 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
      * @see {@link RecaptchaComponent}
      * @param {AbstractControl} control - Form control for the captcha.
      */
-    resetRecaptcha(control:AbstractControl): void {
-
-        //Resets captcha's component and model
-        this.recaptcha.reset();
+    resetRecaptcha(control: AbstractControl): void {
+        this.recaptcha!.reset();
         this.model.resetCaptcha();
 
         //Resets the state of captcha's control

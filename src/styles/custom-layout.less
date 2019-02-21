@@ -220,6 +220,46 @@ aside {
       text-decoration: none;
     }
 
+    .sidebar-divider {
+      height: 1px;
+      margin: ((@line-height-computed / 2) - 1) 0;
+      overflow: hidden;
+      background-color: #9ab9b3;
+    }
+
+    .sidebar-item-header {
+      margin: 0;
+      padding: 0;
+      line-height: 20px;
+
+      > span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        text-align: center;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+
+        &:before, &:after {
+          flex-grow: 1;
+          height: 1px;
+          content: '\a0';
+          background-color: #ddd;
+          position: relative;
+          top: 0.5em;
+        }
+
+        &:before {
+          margin-right: 10px;
+        }
+        &:after {
+          margin-left: 10px;
+        }
+      }
+    }
+
     .sidebar-item {
       margin: 0;
       padding: 0;

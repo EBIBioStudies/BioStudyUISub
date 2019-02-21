@@ -1,0 +1,41 @@
+<aside class="left-side sidebar sidebar-offcanvas"
+       [ngClass]="{'collapse-left' : collapsed, 'server-error': serverError}">
+    <div class="menu-toggle">
+        <button class="minimise-btn btn pull-right"
+                [ngClass]="{'inactive': !collapsed}"
+                (click)="onToggleCollapse($event)"
+                tooltip="{{collapsed ? 'Expand sidebar' : 'Collapse sidebar'}}"
+                container="body"
+                placement="right">
+            <i class="fa fa-fw fa-lg"
+               [ngClass]="{'fa-toggle-on': !collapsed, 'fa-toggle-off': collapsed}"></i>
+        </button>
+        <tabset [ngClass]="{'invisible': collapsed}">
+            <tab [active]="isCheckTabActive"
+                 customClass="badge-parent"
+                 (select)="onCheckTabClick()">
+                <ng-template tabHeading>
+                    Check
+                    <span *ngIf="numInvalid" class="badge badge-corner"
+                          [ngClass]="{'badge-half-danger': numInvalidAndTouched > 0 && numInvalidAndTouched < numInvalid,
+                                      'badge-danger': numInvalidAndTouched === numInvalid}">
+                        {{numInvalid}}
+                    </span>
+                </ng-template>
+            </tab>
+            <tab heading="Add"
+                 [active]="isEditTabActive"
+                 (select)="onAddTabClick()"></tab>
+        </tabset>
+    </div>
+
+    <subm-edit-sidebar *ngIf="isEditTabActive">
+    </subm-edit-sidebar>
+
+    <subm-check-sidebar *ngIf="isCheckTabActive"
+                        [collapsed]="collapsed"
+                        [invalidControls]="invalidControls"
+                        [serverError]="serverError"
+                        (review)="onReviewClick($event)">
+    </subm-check-sidebar>
+</aside>

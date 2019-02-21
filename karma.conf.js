@@ -1,8 +1,5 @@
-// Karma configuration
-// Generated on Mon May 16 2016 11:10:10 GMT+0100 (BST)
-
 module.exports = function (config) {
-    const conf = {
+    config.set({
         basePath: '',
         frameworks: [
             'jasmine',
@@ -19,20 +16,16 @@ module.exports = function (config) {
         client: {
             clearContext: false // leave Jasmine Spec Runner output visible in browser
         },
-        files: [
-            {pattern: './src/test.ts', watched: false}
-        ],
-        preprocessors: {
-            
-        },
         mime: {
-            'text/x-typescript': ['ts','tsx']
+            'text/x-typescript': ['ts', 'tsx']
         },
         coverageIstanbulReporter: {
-            dir: require('path').join(__dirname, 'coverage'), reports: [ 'html', 'lcovonly' ],
+            reports: ['html', 'lcovonly'],
             fixWebpackSourcePaths: true
         },
-        
+        angularCli: {
+            environment: 'dev'
+        },
         reporters: config.angularCli && config.angularCli.codeCoverage
             ? ['progress', 'coverage-istanbul']
             : ['progress', 'kjhtml'],
@@ -42,6 +35,5 @@ module.exports = function (config) {
         autoWatch: true,
         browsers: ['Chrome'],
         singleRun: false
-    };
-    config.set(conf);
+    });
 };

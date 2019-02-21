@@ -14,7 +14,7 @@ export class AppConfig {
         return this.config.APP_VERSION;
     }
 
-    get proxy_base(): string {
+    get proxyBase(): string {
         return this.config.APP_PROXY_BASE;
     }
 
@@ -24,6 +24,14 @@ export class AppConfig {
 
     get prod(): boolean {
         return this.config.APP_PROD;
+    }
+
+    get instanceKey(): string {
+        return this.config.APP_INSTANCE_KEY;
+    }
+
+    get contextPath(): string {
+        return this.config.APP_CONTEXT;
     }
 
     /**

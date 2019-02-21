@@ -1,16 +1,9 @@
-import {
-    AfterViewInit,
-    Component,
-    ElementRef,
-    OnInit,
-    ViewChild
-} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {NgForm} from '@angular/forms';
 import {Router} from '@angular/router';
-import {NgForm} from "@angular/forms";
+import {AuthService, UserSession} from 'app/auth/shared';
 
-import {ServerError} from 'app/http/index';
-import {AuthService} from '../auth.service';
-import {UserSession} from '../user-session';
+import {ServerError} from 'app/http';
 
 @Component({
     selector: 'auth-signin',
@@ -18,12 +11,12 @@ import {UserSession} from '../user-session';
     styleUrls: ['./signin.component.css']
 })
 export class SignInComponent implements OnInit, AfterViewInit {
-    model = {login: "", password: ""};      //Data model for the component's form
-    error: ServerError = null;              //Server response object in case of error
+    model = {login: '', password: ''};      //Data model for the component's form
+    error?: ServerError;             //Server response object in case of error
     isLoading: boolean = false;             //Flag indicating if login request in progress
 
     @ViewChild('focusEl')
-    private focusEl: ElementRef;
+    private focusRef?: ElementRef;
 
     constructor(private authService: AuthService,
                 private session: UserSession,
@@ -31,14 +24,14 @@ export class SignInComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-       if (!this.session.isAnonymous()) {
-           this.router.navigate(['']);
-       }
+        if (!this.session.isAnonymous()) {
+            this.router.navigate(['']);
+        }
     }
 
     //TODO: Turn autofocus on render into a directive
     ngAfterViewInit(): void {
-        this.focusEl.nativeElement.focus();
+        this.focusRef!.nativeElement.focus();
     }
 
     onSubmit(form: NgForm) {
@@ -59,15 +52,15 @@ export class SignInComponent implements OnInit, AfterViewInit {
                     }
                 );
 
-        //Validates in bulk if form incomplete
+            //Validates in bulk if form incomplete
         } else {
             Object.keys(form.controls).forEach((key) => {
-                form.controls[key].markAsTouched({ onlySelf: true });
+                form.controls[key].markAsTouched({onlySelf: true});
             });
         }
     }
 
     resetGlobalError() {
-        this.error = null;
+        this.error = undefined;
     }
 }

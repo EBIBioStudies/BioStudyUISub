@@ -31,14 +31,14 @@ export class FileUploadButtonComponent {
     @Input() isDirOnly: boolean = false;
 
     @ViewChild('inputFile')
-    private inputEl: ElementRef;
+    private inputEl?: ElementRef;
 
     ngOnInit() {
-        this.isDirSupport = 'webkitdirectory' in this.inputEl.nativeElement;
+        this.isDirSupport = 'webkitdirectory' in this.inputEl!.nativeElement;
     }
 
     ngOnChanges() {
-        this.inputEl.nativeElement.webkitdirectory = this.isDirSupport && this.isDirOnly;
+        this.inputEl!.nativeElement.webkitdirectory = this.isDirSupport && this.isDirOnly;
     }
 
     onInputChange(event) {
@@ -48,8 +48,8 @@ export class FileUploadButtonComponent {
     //Makes sure every subsequent selection triggers a "select" event even if the file selected is the same.
     onButtonClick(event) {
         if (this.isResetOnClick) {
-            this.inputEl.nativeElement.value = '';
+            this.inputEl!.nativeElement.value = '';
         }
-        this.inputEl.nativeElement.click();
+        this.inputEl!.nativeElement.click();
     }
 }

@@ -1,43 +1,39 @@
-import {
-    AfterViewInit,
-    Component, ElementRef,
-    ViewChild
-} from '@angular/core';
+import {HttpErrorResponse} from '@angular/common/http';
+import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
+import {AbstractControl, NgForm} from '@angular/forms';
+import {ActivationLinkRequestData} from '../shared/model';
+
+import {AuthService} from 'app/auth/shared';
 
 import {RecaptchaComponent} from 'ng-recaptcha';
-
-import {ServerError} from 'app/http/index';
-
-import {AuthService} from '../auth.service';
-import {ActivationLinkRequestData} from '../model/email-req-data';
-import {AbstractControl, NgForm} from "@angular/forms";
 
 @Component({
     selector: 'auth-activation-resend',
     templateUrl: './activation-link-req.component.html'
 })
 export class ActivationLinkReqComponent implements AfterViewInit {
-    hasError: boolean;
-    showSuccess: boolean;
+    hasError: boolean = false;
+    showSuccess: boolean = false;
     isLoading: boolean = false;
 
     model: ActivationLinkRequestData = new ActivationLinkRequestData();
-    message: string;
+    message: string = '';
 
     @ViewChild('recaptchaEl')
-    private recaptcha: RecaptchaComponent;
+    private recaptchaRef?: RecaptchaComponent;
 
     @ViewChild('emailEl')
-    private focusEl: ElementRef;
+    private focusRef?: ElementRef;
 
-    constructor(private authService: AuthService) {}
+    constructor(private authService: AuthService) {
+    }
 
     //TODO: Turn autofocus on render into a directive
     ngAfterViewInit(): void {
-        this.focusEl.nativeElement.focus();
+        this.focusRef!.nativeElement.focus();
     }
 
-    onSubmit(form:NgForm) {
+    onSubmit(form: NgForm) {
         const component = this;     //SelfSubscriber object overwrites context for "subscribe" method
 
         this.resetGlobalError();
@@ -52,18 +48,18 @@ export class ActivationLinkReqComponent implements AfterViewInit {
                         this.isLoading = false;
                         component.showSuccess = true;
                     },
-                    (error: ServerError) => {
+                    (error: HttpErrorResponse) => {
                         this.isLoading = false;
                         component.hasError = true;
-                        component.message = error.data.message;
+                        component.message = error.message;
                         component.resetRecaptcha(form.controls['captcha']);
                     }
                 );
 
-        //Validates in bulk if form incomplete
+            //Validates in bulk if form incomplete
         } else {
             Object.keys(form.controls).forEach((key) => {
-                form.controls[key].markAsTouched({ onlySelf: true });
+                form.controls[key].markAsTouched({onlySelf: true});
             });
         }
     }
@@ -78,10 +74,8 @@ export class ActivationLinkReqComponent implements AfterViewInit {
      * @see {@link RecaptchaComponent}
      * @param {AbstractControl} control - Form control for the captcha.
      */
-    resetRecaptcha(control:AbstractControl): void {
-
-        //Resets captcha's component and model
-        this.recaptcha.reset();
+    resetRecaptcha(control: AbstractControl): void {
+        this.recaptchaRef!.reset();
         this.model.resetCaptcha();
 
         //Resets the state of captcha's control
