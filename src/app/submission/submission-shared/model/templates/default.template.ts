@@ -286,22 +286,6 @@ export const DefaultTemplate = {
                 ]
             },
             {
-                'name': 'LibraryFile',
-                'title': 'Add Library File',
-                'description': 'Specify library file',
-                'icon': 'fa-file',
-                'singleRow': true,
-                'uniqueCols': true,
-                'allowCustomCols': false,
-                'columnTypes': [
-                    {
-                        'name': 'Path',
-                        'valueType': {'name': 'file'},
-                        'display': 'required'
-                    }
-                ]
-            },
-            {
                 'name': 'Publication',
                 'title': 'Add Publications',
                 'description': 'Add the bibliography relevant to the study. Autofill is available when searching by ' +
