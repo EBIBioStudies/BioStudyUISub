@@ -86,7 +86,6 @@ export class AuthService {
     }
 
     private withInstanceKey(obj: { [key: string]: string }): { [key: string]: string } {
-        console.log(this.appConfig);
         return copyAndExtend(obj, {
             instanceKey: this.appConfig.instanceKey,
             path: this.appConfig.contextPath + '/' + obj.path
