@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable, of, Subject} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
-import {SubmissionService} from '../submission-shared/submission.service';
+import {SubmissionService, SubmitResponse} from '../submission-shared/submission.service';
 
 enum ReqStatus {SUBMIT, ERROR, SUCCESS}
 
@@ -90,40 +90,35 @@ export class DirectSubmitRequest {
      * @param {Object} res - Data object representative of response to the request.
      * @param {ReqStatus} successStatus - Used when the request has been successful to determine the upload stage.
      */
-    onResponse(res: any, successStatus: ReqStatus): void {
+    onResponse(res: SubmitResponse | string, successStatus: ReqStatus): void {
+        console.log(res);
 
-        //Failed server response from direct submit => reflects failure in this request object ignoring passed-in status
-        if (res.status !== 'OK') {
+        //Normalises error to object
+        if (typeof res === 'string') {
+            this._log = {message: res, level: 'error'};
+        } else if (res.log.level === "ERROR") {
+           //Failed server response from direct submit => reflects failure in this request object ignoring passed-in status
             this._status = ReqStatus.ERROR;
-
-            //Normalises error to object
-            if (typeof res === 'string') {
-                this._log = {message: res, level: 'error'};
-            } else {
-                this._log = res.log || {message: 'No results available', level: 'error'};
-            }
+            this._log = res.log || {message: 'No results available', level: 'error'};
 
             //Successful server response from direct submit => reflects success accordingly
         } else {
             this._status = successStatus;
             this._log = res.log || undefined;
 
-            //If the response is from final submit request, exposes the accession number
-            if (successStatus == ReqStatus.SUCCESS) {
-                this._accno = res.mapping[0].assigned;
+            // exposes the accession number
+            this._accno = res.mapping[0].assigned;
+            // extracts the release date if found.
 
-                //If back from conversion, extracts the release date if found.
-            } else if (successStatus == ReqStatus.SUBMIT) {
-                let dateAttr = res.document.submissions[0].attributes;
+            let dateAttr = res.document.submissions[0].attributes;
 
-                //NOTE: The server may come back with no root-level attributes despite PageTab requirements
-                dateAttr = dateAttr && dateAttr.find(attribute => {
-                    return attribute.name == 'ReleaseDate';
-                });
+            //NOTE: The server may come back with no root-level attributes despite PageTab requirements
+            dateAttr = dateAttr && dateAttr.find(attribute => {
+                return attribute.name == 'ReleaseDate';
+            });
 
-                if (dateAttr) {
-                    this._releaseDate = dateAttr.value;
-                }
+            if (dateAttr) {
+                this._releaseDate = dateAttr.value;
             }
         }
     }
