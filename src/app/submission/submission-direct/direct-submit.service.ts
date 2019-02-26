@@ -91,7 +91,6 @@ export class DirectSubmitRequest {
      * @param {ReqStatus} successStatus - Used when the request has been successful to determine the upload stage.
      */
     onResponse(res: SubmitResponse | string, successStatus: ReqStatus): void {
-        console.log(res);
 
         //Normalises error to object
         if (typeof res === 'string') {
