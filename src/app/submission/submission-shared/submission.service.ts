@@ -22,7 +22,8 @@ export interface SubmissionListItem {
 export interface SubmitResponse {
     status: string,
     mapping: Array<any>,
-    log: SubmitLog
+    log: SubmitLog,
+    document?: any
 }
 
 export interface SubmitLog {
