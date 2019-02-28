@@ -107,18 +107,6 @@ export class DirectSubmitRequest {
 
             // exposes the accession number
             this._accno = res.mapping[0].assigned;
-            // extracts the release date if found.
-
-            let dateAttr = res.document.submissions[0].attributes;
-
-            //NOTE: The server may come back with no root-level attributes despite PageTab requirements
-            dateAttr = dateAttr && dateAttr.find(attribute => {
-                return attribute.name == 'ReleaseDate';
-            });
-
-            if (dateAttr) {
-                this._releaseDate = dateAttr.value;
-            }
         }
     }
 }
@@ -219,15 +207,7 @@ export class DirectSubmitService {
                 req.onResponse(data, ReqStatus.SUCCESS);
             }),
             catchError((error: any) => {
-                let errData = error.data;
-
-                if (errData && errData.hasOwnProperty('error')) {
-                    errData = error.data.error;
-                } else if (!errData) {
-                    errData = {};
-                }
-
-                req.onResponse(errData, ReqStatus.ERROR);
+                req.onResponse(error.message || 'unknown error', ReqStatus.ERROR);
 
                 //NOTE: an empty observable is used instead of throwing an exception to prevent this transaction
                 //cancelling any remaining ones.
