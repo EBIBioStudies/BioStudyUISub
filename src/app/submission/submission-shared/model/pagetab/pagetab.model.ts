@@ -21,7 +21,9 @@ export class AttrExceptions {
     private static all: Array<AttrException> = [
         {name: 'AttachTo', rootLevel: true, studyLevel: false, systemOnly: true, unique: false},
         {name: 'ReleaseDate', rootLevel: true, studyLevel: false, systemOnly: false, unique: true},
-        {name: 'Title', rootLevel: true, studyLevel: true, systemOnly: false, unique: true}
+        {name: 'Title', rootLevel: true, studyLevel: true, systemOnly: false, unique: true},
+        {name: 'AccNoPattern', rootLevel: true, studyLevel: false, systemOnly: true, unique: true},
+        {name: 'AccNoTemplate', rootLevel: true, studyLevel: false, systemOnly: true, unique: true}
     ];
 
     private static _editable: Array<string> = AttrExceptions.all
