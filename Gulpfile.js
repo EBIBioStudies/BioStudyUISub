@@ -1,10 +1,6 @@
 var gulp = require('gulp');
-var debug = require('gulp-debug');
-
-var webserver = require('gulp-webserver');
 var zip = require('gulp-zip');
 var del = require('del');
-var extend = require('gulp-extend');
 
 gulp.task('config', function () {
     return gulp.src(['config.json'])
@@ -23,25 +19,6 @@ gulp.task('zip', function () {
         .pipe(gulp.dest('.dist'));
 });
 
-gulp.task('webserver', function () {
-
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
-    gulp.src('.build')
-        .pipe(webserver({
-            port: 7000,
-            https: true,
-            proxies: [
-                {
-                    source: '/proxy/api', target: 'https://localhost:10281/proxy/api'
-                },
-                {
-                    source: '/proxy/raw', target: 'https://localhost:10281/proxy/raw'
-                }
-            ]
-        }));
-});
-
 var Server = require('karma').Server;
 
 gulp.task('test', function (done) {
@@ -50,4 +27,3 @@ gulp.task('test', function (done) {
         singleRun: true
     }, done).start();
 });
-

@@ -1,0 +1,78 @@
+<div *ngIf="featureForm"
+     class="form-horizontal container-fluid"
+     [formGroup]="featureForm.form">
+    <div class="headings row text-muted">
+        <div class="cell heading col-xs-3">Key</div>
+        <div class="cell heading col-xs-9">Value</div>
+    </div>
+    <div *ngFor="let column of columns; let idx = index">
+        <div class="row" #rowEl *ngIf="!readonly">
+            <div class="cell col-xs-3">
+                <div class="form-group key-field"
+                     [ngClass]="{'has-error': column.hasErrors}">
+                    <div [ngClass]="{'input-group': featureForm.canRemoveColumn(column), 'readonly': column.isReadonly}">
+                        <span *ngIf="featureForm.canRemoveColumn(column)" class="input-group-btn"
+                              container="body">
+                              <button type="button" tabindex="-1"
+                                      class="btn btn-sm btn-danger btn-flat"
+                                      (click)="featureForm.removeColumn(column)"
+                                      [disabled]="!featureForm.canRemoveColumn(column)"
+                                      [tooltip]="'Delete &quot;' + column.name + '&quot; entry'"
+                                      placement="bottom"
+                                      container="body">
+                                   <i class="fas fa-trash-alt"></i>
+                              </button>
+                        </span>
+                        <input type="text" class="form-control input-sm"
+                               placement="top"
+                               container="body"
+                               containerClass="text-danger"
+                               popover="{{column.hasErrors ? column.errors : ''}}"
+                               triggers="focus"
+                               [formControl]="column.control"
+                               [readonly]="!column.canEditName"
+                               [typeahead]="featureForm.columnNamesTypeahead(column)"
+                               [typeaheadMinLength]="0"
+                               [typeaheadOptionsLimit]="200"
+                               [typeaheadScrollable]="true"
+                               [typeaheadOptionsInScrollableView]="suggestLength"
+                               nativeElementAttach
+                               validate-onblur>
+                    </div>
+                </div>
+            </div>
+            <div class="cell col-xs-9" *ngFor="let cell of [featureForm.cellControlAt(0,column.id)]">
+                <div class="form-group"
+                     [ngClass]="{'readonly': column.isReadonly,
+                                 'optional': !column.isRequired,
+                                 'has-error': cell.hasErrors}">
+                    <input-value placement="top"
+                                 container="body"
+                                 containerClass="{{featureForm.isRequired ? 'text-danger' : 'text-warning'}}"
+                                 popover="{{cell.hasErrors ? cell.errors : ''}}"
+                                 triggers="focus"
+                                 [valueType]="column.valueType"
+                                 [readonly]="readonly || column.isReadonly"
+                                 [formControl]="cell.control"
+                                 [autosuggestSource]="featureForm.cellValuesTypeaheadFunc(column.id)"
+                                 nativeElementAttach
+                                 validate-onblur>
+                    </input-value>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" *ngIf="featureForm && featureForm.canAddColumn()">
+    <div class="col-xs-1 col-md-1">
+        <button *ngIf="!readonly"
+                type="button"
+                class="btn-add btn btn-link"
+                [tooltip]="'Add a new ' + featureForm.prettyName"
+                container="body"
+                (click)="featureForm.addColumn()">
+            <i class="fa fa-lg fa-plus-circle"></i>
+            Add {{featureForm.prettyName}} row
+        </button>
+    </div>
+</div>

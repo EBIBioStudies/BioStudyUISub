@@ -1,14 +1,6 @@
-import {
-    Directive,
-    forwardRef,
-    Input
-} from '@angular/core';
+import {Directive, forwardRef, Input} from '@angular/core';
 
-import {
-    Validator,
-    AbstractControl,
-    NG_VALIDATORS
-} from '@angular/forms';
+import {AbstractControl, NG_VALIDATORS, ValidationErrors, Validator} from '@angular/forms';
 
 @Directive({
     selector: '[equals2][formControlName],[equals2][formControl],[equals2][ngModel]',
@@ -17,9 +9,9 @@ import {
     ]
 })
 export class Equals2 implements Validator {
-    @Input('equals2') target: AbstractControl;
+    @Input('equals2') target?: AbstractControl;
 
-    validate(c: AbstractControl): {[key: string]: any} {
+    validate(c: AbstractControl): ValidationErrors | null {
         let v = c.value;
 
         if (this.target && v !== this.target.value) {

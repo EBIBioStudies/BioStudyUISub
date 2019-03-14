@@ -4,16 +4,17 @@
     "outDir": "../out-tsc/spec",
     "module": "commonjs",
     "target": "es5",
-    "baseUrl": "",
     "types": [
       "jasmine",
       "node"
     ]
   },
   "files": [
-    "test.ts"
+    "test.ts",
+    "polyfills.ts"
   ],
   "include": [
+    "**/*.extensions.ts",
     "**/*.spec.ts",
     "**/*.d.ts"
   ]

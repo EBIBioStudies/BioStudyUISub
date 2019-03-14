@@ -1,29 +1,19 @@
 import {NgModule} from '@angular/core';
 
-import {
-    RouterModule,
-    Routes
-} from '@angular/router';
+import {RouterModule, Routes} from '@angular/router';
 
 import {AuthGuard} from './auth-guard.service';
+import {ActivateComponent} from './auth/activate/activate.component';
+import {ActivationLinkReqComponent} from './auth/activate/activation-link-req.component';
+import {PasswordResetReqComponent} from './auth/password-reset/password-reset-req.component';
+import {PasswordResetComponent} from './auth/password-reset/password-reset.component';
+import {SignInComponent} from './auth/signin/signin.component';
+import {SignUpComponent} from './auth/signup/signup.component';
 
-import {
-    SignInComponent,
-    SignUpComponent,
-    ActivateComponent,
-    ActivationLinkReqComponent,
-    PasswordResetReqComponent,
-    PasswordResetComponent
-} from './auth/index';
-
-import {
-    SubmListComponent,
-    SubmEditComponent,
-    SubmViewComponent,
-    DirectSubmitComponent
-} from './submission/index';
-
-import {FileListComponent} from './file/index';
+import {FileListComponent} from './file/file-list/file-list.component';
+import {DirectSubmitComponent} from './submission/submission-direct/direct-submit.component';
+import {SubmEditComponent} from './submission/submission-edit/subm-edit.component';
+import {SubmListComponent} from './submission/submission-list/subm-list.component';
 
 const appRoutes: Routes = [
     {path: '', redirectTo: 'submissions', pathMatch: 'full'},
@@ -62,8 +52,8 @@ const appRoutes: Routes = [
     },
     {
         path: 'submissions/:accno',
-        component: SubmViewComponent,
-        data: {reuse: true},
+        component: SubmEditComponent,
+        data: {reuse: true, readonly: true},
         canActivate: [AuthGuard]
     },
     {

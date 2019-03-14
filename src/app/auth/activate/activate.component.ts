@@ -1,11 +1,8 @@
-import {
-    Component,
-    OnInit
-} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
+import {AuthService} from '../shared';
 
-import {ServerError} from 'app/http/index';
-import {AuthService} from '../auth.service';
+import {ServerError} from 'app/http';
 
 @Component({
     selector: 'auth-activate',

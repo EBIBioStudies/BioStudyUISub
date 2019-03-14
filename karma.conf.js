@@ -1,12 +1,9 @@
-// Karma configuration
-// Generated on Mon May 16 2016 11:10:10 GMT+0100 (BST)
-
 module.exports = function (config) {
-    const conf = {
+    config.set({
         basePath: '',
         frameworks: [
             'jasmine',
-            '@angular/cli'
+            '@angular-devkit/build-angular'
         ],
 
         plugins: [
@@ -14,22 +11,16 @@ module.exports = function (config) {
             require('karma-chrome-launcher'),
             require('karma-jasmine-html-reporter'),
             require('karma-coverage-istanbul-reporter'),
-            require('@angular/cli/plugins/karma')
+            require('@angular-devkit/build-angular/plugins/karma')
         ],
         client: {
             clearContext: false // leave Jasmine Spec Runner output visible in browser
         },
-        files: [
-            {pattern: './src/test.ts', watched: false}
-        ],
-        preprocessors: {
-            './src/test.ts': ['@angular/cli']
-        },
         mime: {
-            'text/x-typescript': ['ts','tsx']
+            'text/x-typescript': ['ts', 'tsx']
         },
         coverageIstanbulReporter: {
-            reports: [ 'html', 'lcovonly' ],
+            reports: ['html', 'lcovonly'],
             fixWebpackSourcePaths: true
         },
         angularCli: {
@@ -44,6 +35,5 @@ module.exports = function (config) {
         autoWatch: true,
         browsers: ['Chrome'],
         singleRun: false
-    };
-    config.set(conf);
+    });
 };

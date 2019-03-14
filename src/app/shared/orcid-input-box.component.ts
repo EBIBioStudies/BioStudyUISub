@@ -1,11 +1,7 @@
-import {
-    Component,
-    forwardRef,
-    Injector, Input,
-    ViewChild
-} from '@angular/core';
+import {Component, forwardRef, Injector, Input, ViewChild} from '@angular/core';
 
 import {
+    AbstractControl,
     ControlValueAccessor,
     NG_VALUE_ACCESSOR,
     NgControl,
@@ -31,24 +27,27 @@ import 'rxjs/add/observable/timer';
  * @see {@link ControlValueAccessor}
  */
 export class ORCIDInputBoxComponent implements ControlValueAccessor {
-    private onChange: any = (_:any) => {};      //placeholder for handler propagating changes outside the custom control
-    private onTouched: any = () => {};          //placeholder for handler after the control has been "touched"
+    private onChange: any = (_: any) => {
+    };      //placeholder for handler propagating changes outside the custom control
+    private onTouched: any = () => {
+    };          //placeholder for handler after the control has been "touched"
 
     private orcidValue = '';                    //internal data model
-    private mlistener = null;
+    private mlistener: any = null;
 
-    @Input() readonly?: boolean = false;
+    @Input() readonly: boolean = false;
     @Input() isPopupButton: boolean = true;     //flag for showing/hiding popup button
     @Input() isSmall: boolean = true;           //flag for making the input area the same size as grid fields
 
     @ViewChild(NgModel)
-    private inputModel: NgModel;
+    private inputModel?: NgModel;
 
     /**
      * Instantiates a new custom component.
      * @param {Injector} injector - Parent's injector retrieved to get the component's form control later on.
      */
-    constructor(private injector: Injector) {}
+    constructor(private injector: Injector) {
+    }
 
 
     get value() {
@@ -128,10 +127,11 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor {
      * the actual input and the wrapping component.
      */
     ngAfterViewInit() {
-        const control = this.injector.get(NgControl).control;
+        const control: AbstractControl = this.injector.get(NgControl).control;
 
-        control.setValidators(Validators.compose([control.validator, this.inputModel.control.validator]));
-        control.setAsyncValidators(Validators.composeAsync([control.asyncValidator, this.inputModel.control.asyncValidator]));
+        control.setValidators(Validators.compose([control.validator, this.inputModel!.control.validator]));
+        control.setAsyncValidators(Validators.composeAsync([control.asyncValidator, this.inputModel!.control.asyncValidator]));
+        setTimeout(() => {control.updateValueAndValidity()}, 10);
     }
 
     ngOnDestroy() {
@@ -139,11 +139,11 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor {
     }
 
     openPopup() {
-        let thorIFrame: any = document.getElementById("thor");
-        console.debug("thor iframe", thorIFrame);
+        let thorIFrame: any = document.getElementById('thor');
+        console.debug('thor iframe', thorIFrame);
 
         let w = thorIFrame.contentWindow;
-        console.debug("thor iframe.wondow", w);
+        console.debug('thor iframe.wondow', w);
 
         w.postMessage('openPopup', '*');
     }

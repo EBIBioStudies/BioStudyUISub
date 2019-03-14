@@ -1,26 +1,9 @@
-import {NgModule}  from '@angular/core';
-import {
-    HttpClientModule,
-    HTTP_INTERCEPTORS
-} from "@angular/common/http";
+import {NgModule} from '@angular/core';
+import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 
-import {HttpCustomClient} from './http-custom-client.service';
-import {UploadService} from './upload.service';
-import {
-    RequestStatusService, RequestStatusServiceFactory
-} from "./request-status.service";
-
-//NOTE: required if the same service instance is to be shared across all the app.
-//Otherwise, a "No provider for..." exception is thrown if a conventional "useClass" entry is added.
-const RequestStatusServiceFactoryProvider = {
-    provide: RequestStatusService,
-    useFactory: RequestStatusServiceFactory
-};
-const RequestStatusServiceExistingProvider = {
-    provide: HTTP_INTERCEPTORS,
-    useExisting: RequestStatusService,
-    multi: true
-};
+import {RequestStatusService, RequestStatusServiceFactory} from './request-status.service';
+import {AuthInterceptorService} from './auth-interceptor.service';
+import {TestBackendInterceptor} from './test-backend-interceptor.service';
 
 @NgModule({
     imports: [
@@ -30,10 +13,25 @@ const RequestStatusServiceExistingProvider = {
         HttpClientModule
     ],
     providers: [
-        HttpCustomClient,
-        UploadService,
-        RequestStatusServiceExistingProvider,
-        RequestStatusServiceFactoryProvider
+        {
+            provide: RequestStatusService,
+            useFactory: RequestStatusServiceFactory
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useExisting: RequestStatusService,
+            multi: true
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthInterceptorService,
+            multi: true
+        }/*,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: TestBackendInterceptor,
+            multi: true
+        }*/
     ]
 })
 export class HttpCustomClientModule {

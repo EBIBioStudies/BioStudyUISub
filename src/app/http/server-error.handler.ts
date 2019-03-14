@@ -1,6 +1,6 @@
+import {throwError} from 'rxjs';
 import {Observable} from 'rxjs/Observable';
 import {HttpErrorResponse} from "@angular/common/http";
-
 
 export class ServerError {
 
@@ -20,8 +20,9 @@ export class ServerError {
     }
 
     /**
-     * Checks if the error returned by the server based on the status code.
-     * @returns {boolean} True if the source of the error is the client.
+     * Checks if the server error is due to correctly formatted data (for the API) yet invalid (for the database).
+     * For example, the data is was sent as a JSON object as expected but it's an invalid submission.
+     * @returns {boolean} True for invalid data.
      */
     get isDataError(): boolean {
         return this.status === 422 || this.status === 400;
@@ -53,6 +54,8 @@ export class ServerError {
     }
 }
 
+//TODO: come up with a generalised logic for human-readable error messages based on the info available from HttpErrorResponse.
+//TODO: the global handler should be manually called up. (globalHandler.handleError(ServerError.fromResponse(error));)
 export function serverErrorHandler(error: HttpErrorResponse): Observable<any> {
-    throw ServerError.fromResponse(error);
+    return throwError(ServerError.fromResponse(error));
 }

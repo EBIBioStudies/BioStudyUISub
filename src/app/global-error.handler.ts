@@ -5,7 +5,7 @@ import {
 
 import {Subject} from 'rxjs/Subject';
 
-import {UserSession} from './auth/index';
+import {UserSession} from 'app/auth/shared';
 
 @Injectable()
 export class GlobalErrorHandler extends ErrorHandler {
@@ -15,7 +15,7 @@ export class GlobalErrorHandler extends ErrorHandler {
     anErrorDetected$ = this.errors.asObservable();
 
     constructor(private userSession: UserSession, private zone: NgZone) {
-        super(true);
+        super();
     }
 
     handleError(error) {

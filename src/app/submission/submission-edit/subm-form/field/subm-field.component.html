@@ -1,0 +1,38 @@
+<div *ngIf="!isReadonly || !isEmpty" class="col-xs-12"
+     [ngClass]="{'has-error': hasErrors}">
+    <label class="control-label">
+        <span class="text-black">{{fieldName | camelcase2label}}</span>
+        <span *ngIf="hasErrors">{{errors}}</span>
+        <span class="text-muted"
+              [hidden]="isReadonly || isValid || (isInvalid && isTouched)">
+                    <span *ngIf="valueLength.isAtLeast">
+                         (at least {{valueLength.min}}
+                    </span>
+                    <span *ngIf="valueLength.isAtMost">
+                         (at most {{valueLength.max}}
+                    </span>
+                    <span *ngIf="valueLength.isBetween">
+                         (between {{valueLength.min}} and {{valueLength.max}}
+                    </span>
+                    <span *ngIf="valueLength.isDefined">
+                         characters long)
+                    </span>
+        </span>
+    </label>
+    <span *ngIf="!isReadonly && !isRequired"
+          class="text-muted pull-right">
+                <i>Optional</i>
+    </span>
+    <div [ngClass]="{'input-group': !isReadonly, 'readonly': isReadonly}">
+        <span *ngIf="!isReadonly" class="input-group-addon">
+            <i class="fa {{fieldType.icon}}"></i>
+        </span>
+        <input-value [valueType]="valueType"
+                     [readonly]="isReadonly"
+                     [formControl]="fieldControl.control"
+                     [isSmall]="false"
+                     nativeElementAttach
+                     validate-onblur>
+        </input-value>
+    </div>
+</div>

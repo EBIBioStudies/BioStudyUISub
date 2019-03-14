@@ -1,0 +1,60 @@
+<div [ngSwitch]="valueType.name">
+    <input *ngSwitchCase="[ValueTypeNameEnum.text, ValueTypeNameEnum.select].includes(valueType.name) ? valueType.name : ''"
+           type="text" class="form-control"
+           [ngClass]="{'input-sm': isSmall}"
+           tooltip="{{isOverflow() && !ahead._container ? value : ''}}"
+           container="body"
+           placement="bottom"
+           [(ngModel)]="value"
+           [readonly]="readonly"
+           (blur)="onBlur()"
+           (keydown)="onKeyDown()"
+           [typeahead]="readonly ? [] : typeahead"
+           [typeaheadMinLength]="suggestThreshold"
+           [typeaheadOptionsLimit]="200"
+           [typeaheadScrollable]="true"
+           [typeaheadOptionsInScrollableView]="suggestLength"/>
+
+    <textarea *ngSwitchCase="ValueTypeNameEnum.largetext"
+              class="form-control"
+              [formControl]="formControl"
+              [readonly]="readonly"
+              autosize="200"
+              (keyup.enter)="$event.stopPropagation()"
+              (blur)="onBlur()"></textarea>
+
+    <date-input *ngSwitchCase="ValueTypeNameEnum.date"
+                [isSmall]="isSmall"
+                [formControl]="formControl"
+                [readonly]="readonly"
+                [maxDate]="nowInNyears()"
+                [allowPast]="allowPast"
+                (focusout)="onBlur()">
+    </date-input>
+
+    <id-link *ngSwitchCase="ValueTypeNameEnum.idlink"
+             [isSmall]="isSmall"
+             [readonly]="readonly"
+             [suggestThreshold]="suggestThreshold"
+             [suggestLength]="suggestLength"
+             [formControl]="formControl"
+             (focusout)="onBlur()"></id-link>
+
+    <orcid-input-box *ngSwitchCase="ValueTypeNameEnum.orcid"
+                     [isSmall]="isSmall"
+                     [readonly]="readonly"
+                     [isPopupButton]="false"
+                     [formControl]="formControl"
+                     (focusout)="onBlur()">
+    </orcid-input-box>
+
+    <file-select *ngSwitchCase="ValueTypeNameEnum.file"
+                 [formControl]="formControl">
+    </file-select>
+
+    <pubmedid-search *ngSwitchCase="ValueTypeNameEnum.pubmedid"
+                     [formControl]="formControl"
+                     [readonly]="readonly"
+                     (found)="selectData($event)">
+    </pubmedid-search>
+</div>

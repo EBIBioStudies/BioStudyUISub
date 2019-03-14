@@ -1,36 +1,27 @@
-<div class="modal fade" bsModal #staticModal="bs-modal"
-     (onHidden)="onHidden($event)"
-     (onShown)="onShown()"
-     tabindex="-1"
-     role="dialog">
-
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header bg-primary">
-                {{title}}
-                <button type="button"
-                        class="close"
-                        (click)="cancel()"
-                        aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="media">
-                    <span class="media-left media-middle">
-                        <i aria-hidden="true" class="fa fa-exclamation-triangle"></i>
-                    </span>
-                    <div class="media-body media-middle">
-                        <p class="media-heading">{{body}}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <form class="pull-right">
-                    <button type="button" class="btn btn-primary btn-xs" (click)="ok()" autofocus #focusBtn>{{confirmLabel}}</button>
-                    <button type="button" class="btn btn-default btn-xs" (click)="cancel()">{{abortLabel}}</button>
-                </form>
-            </div>
+<div class="modal-header bg-primary">
+    {{title}}
+    <button type="button"
+            class="close"
+            (click)="cancel()"
+            aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="media">
+        <span class="media-left media-middle">
+            <i aria-hidden="true" class="fa fa-exclamation-triangle"></i>
+        </span>
+        <div class="media-body media-middle">
+            <p class="media-heading">{{body}}</p>
         </div>
     </div>
+</div>
+<div class="modal-footer">
+    <form class="pull-right">
+        <button type="button" class="btn btn-primary btn-xs" (click)="ok()" autofocus #focusBtn>{{confirmLabel}}
+        </button>
+        <button *ngIf="!isHideCancel" type="button" class="btn btn-default btn-xs" (click)="cancel()">{{abortLabel}}
+        </button>
+    </form>
 </div>

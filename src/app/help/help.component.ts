@@ -1,6 +1,5 @@
 import {Component} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
-import {AppConfig} from "../app.config";
+import {AppConfig} from '../app.config';
 
 @Component({
     selector: 'help-page',

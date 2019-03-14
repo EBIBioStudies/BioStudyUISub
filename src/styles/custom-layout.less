@@ -118,7 +118,7 @@ aside {
 .sidebar {
   overflow-y: auto;
   overflow-x: hidden;
-  z-index: calc(@zindex-navbar-fixed + 1);
+  z-index: @zindex-side-fixed;
 }
 
 .sidebar-offcanvas {
@@ -150,8 +150,42 @@ aside {
     white-space: nowrap;
   }
 
-  &.collapse-left .menu-toggle {
-    height: 54px;
+  .center-vertically {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #fff;
+  }
+
+  .center-vertically h4 {
+    overflow: hidden;
+    line-height: inherit;
+    font-weight: 400;
+    word-break: break-word;
+    text-overflow: ellipsis;
+  }
+
+  .label {
+    font-size: 80%;
+  }
+
+  &.collapse-left {
+
+    .menu-toggle {
+      height: 54px;
+    }
+
+    .label {
+      padding: .2em .17em .5em;
+    }
+
+    .center-vertically {
+      width: 100%;
+
+      .action-title {
+        display: none;
+      }
+    }
   }
 
   .sidebar-menu {
@@ -186,11 +220,51 @@ aside {
       text-decoration: none;
     }
 
+    .sidebar-divider {
+      height: 1px;
+      margin: ((@line-height-computed / 2) - 1) 0;
+      overflow: hidden;
+      background-color: #9ab9b3;
+    }
+
+    .sidebar-item-header {
+      margin: 0;
+      padding: 0;
+      line-height: 20px;
+
+      > span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        text-align: center;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+
+        &:before, &:after {
+          flex-grow: 1;
+          height: 1px;
+          content: '\a0';
+          background-color: #ddd;
+          position: relative;
+          top: 0.5em;
+        }
+
+        &:before {
+          margin-right: 10px;
+        }
+        &:after {
+          margin-left: 10px;
+        }
+      }
+    }
+
     .sidebar-item {
       margin: 0;
       padding: 0;
       line-height: 30px;
-      border-bottom: 1px solid @sidebar-light-border;
+      border-bottom: @sidebar-light-border;
 
       &.type-control {
         background: #fff;
@@ -261,15 +335,21 @@ aside {
   }
 }
 
-//Ensures text inside panel headings flushes against any other element on the left.
+//Ensures text inside panel headings flushes against any other element on the left and doesn't overflow.
+//If it does, it degrades gracefully to truncated text.
 .panel-heading .fa {
   vertical-align: middle;
 }
 .panel-description {
   display: inline-block;
-  margin: 0 .8rem;
-  width: 83%;
+  float: none;
   vertical-align: middle;
+  overflow: hidden;
+}
+.panel-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 //Makes unselected tabs be on a plane behind selected ones with a permanent shaded appearance. Also bumps up their weight
@@ -305,11 +385,17 @@ input[readonly], textarea[readonly] {
   padding-left: 0;
 }
 
-//Makes radio buttons stand out more
-input[type="radio"] {
-  width: 1.6rem;
-  height: 1.6rem;
+//Corrects vertical mis-alignment of text besides checkboxes or radio buttons and highlights button's text on focus
+//Source: https://github.com/twbs/bootstrap/issues/16426
+input[type="radio"], input[type="checkbox"] {
+  width: 1em;
+  height: 1em;
+  margin-top: ((@line-height-base - 1)/2) * 1em;
   outline: none !important;
+
+  &:focus + span {
+    background: #d3ebff;
+  }
 }
 
 //Optional fields (be them data or column ones) within features have discontinous outlines
@@ -400,7 +486,7 @@ input[type="radio"] {
 //Brings date picker's styles in line with the app's, removes pointer over inactive/disabled day cells
 //keeps the dialogue on top of all form elements and positions it with enough distance from any sidebar.
 .bs-datepicker {
-  z-index: calc(@zindex-navbar-fixed - 10);
+  z-index: @zindex-popover;
   margin-left: 35px;
   border-radius: 4px;
 }
@@ -446,3 +532,11 @@ input[type="radio"] {
   line-height: initial;
   pointer-events: auto
 }
+
+//Space child elements out so that they take up all horizontal space.
+.center-spread {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+}
+

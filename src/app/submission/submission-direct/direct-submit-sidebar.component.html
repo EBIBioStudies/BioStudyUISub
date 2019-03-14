@@ -1,0 +1,145 @@
+<aside *ngIf="!readonly" class="left-side sidebar sidebar-offcanvas"
+       [ngClass]="{'collapse-left' : collapsed}">
+    <div class="menu-toggle">
+        <button class="minimise-btn btn pull-right"
+                [ngClass]="{'inactive': !collapsed}"
+                [disabled]="editing"
+                (click)="onToggle($event)"
+                tooltip="{{collapsed ? 'Expand sidebar' : 'Collapse sidebar'}}"
+                container="body"
+                placement="right">
+            <i class="fa fa-fw fa-lg"
+               [ngClass]="{'fa-toggle-left': !collapsed, 'fa-toggle-right': collapsed}"></i>
+        </button>
+        <tabset [ngClass]="{'invisible': collapsed}">
+            <tab active="true"
+                 customClass="badge-parent"
+                 heading="Upload files">
+            </tab>
+        </tabset>
+    </div>
+    <div *ngIf="collapsed" class="vertical-text">Upload files</div>
+    <ul class="sidebar-menu clearfix" *ngIf="!collapsed"
+        [ngClass]="{'sidebar-contents': !isStatus('busy')}">
+        <li [hidden]="isStatus('busy')">
+            <form id="subm-upload-form"
+                  class="col-sm-12"
+                  name="submUploadForm"
+                  novalidate
+                  role="form"
+                  method="post"
+                  (ngSubmit)="onSubmit($event)"
+                  #uploadForm="ngForm">
+
+                <div class="form-group" [ngClass]="{'has-error': !selectedFileCount && fileTouched}">
+                    <label class="control-label">
+                        1. Study files
+                    </label>
+                    <span *ngIf="selectedFileCount" class="badge pull-right">
+                        {{selectedFileCount}}
+                    </span>
+                    <div class="control-list files-control center-spread">
+                        <file-upload-button [multiple]="true"
+                                            [isDirOnly]="isBulkMode"
+                                            (select)="onUploadFilesSelect($event)"
+                                            tooltip="{{isBulkMode ? 'Select a folder' : 'Select files'}}"
+                                            placement="bottom"
+                                            #fileEl>
+                        </file-upload-button>
+                        <span *ngIf="fileEl.isDirSupport" class="mode-toggle checkbox">
+                            <label>
+                                <input type="checkbox"
+                                       name="folder-mode"
+                                       [(ngModel)]="isBulkMode">
+                                <span>Bulk folder</span>
+                            </label>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">2. Projects</label>
+                    <span class="text-muted pull-right"><i>Optional</i></span>
+                    <div class="control-list">
+                        <p *ngIf="!model.projects.length" class="text-muted">
+                            <span *ngIf="isProjFetch">
+                                <i class="fa fa-cog fa-spin"></i>
+                                Loading projects...
+                            </span>
+                            <span *ngIf="!isProjFetch">
+                                Only generic allowed.
+                            </span>
+                        </p>
+                        <div *ngIf="model.projects.length" (change)="onProjChange($event)">
+                            <div *ngFor="let project of model.projects" class="checkbox">
+                                <label>
+                                    <input type="checkbox"
+                                           name="projects"
+                                           value="{{project.name}}"
+                                           [(ngModel)]="project.checked">
+                                    <span>{{project.name}}</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">3. Upload mode</label>
+                    <div class="control-list">
+                        <div class="radio">
+                            <label>
+                                <input type="radio"
+                                       class="project-radio"
+                                       name="submitType"
+                                       value="create"
+                                       [(ngModel)]="submitType">
+                                <span>Create new studies</span>
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio"
+                                       class="project-radio"
+                                       name="submitType"
+                                       value="update"
+                                       [(ngModel)]="submitType">
+                                <span>Update studies</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button id="single-button"
+                            type="button"
+                            [disabled]="isProjFetch || isStatus('busy')"
+                            (click)="onSubmit(submitType)"
+                            class="btn-submit btn btn-primary">
+                        Upload
+                    </button>
+                </div>
+            </form>
+        </li>
+        <li *ngIf="isStatus('busy')" class="center-vertically text-center"
+            [ngClass]="{'col-xs-12': !collapsed}">
+            <i class="fa fa-cog fa-spin" aria-hidden="true"
+               [ngClass]="{'fa-2x': collapsed, 'fa-4x': !collapsed}"></i>
+            <div class="progress">
+                <div class="progress-bar"
+                     [ngStyle]="{ 'width': progress + '%'}">
+                    {{progress}}%
+                </div>
+            </div>
+            <h4 [ngClass]="{'vertical-text': collapsed}">
+                {{submitType == 'create' ? 'Creating' : 'Updating'}}
+                {{selectedFileCount > 1 ? 'studies' : 'study'}}...
+            </h4>
+            <button class="btn btn-danger btn-sm"
+                    tooltip="Stop all pending uploads"
+                    placement="bottom"
+                    container="body"
+                    (click)="onCancelPending($event)">
+                CANCEL
+            </button>
+        </li>
+    </ul>
+</aside>

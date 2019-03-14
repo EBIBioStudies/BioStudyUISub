@@ -1,0 +1,28 @@
+/* Add tab - edit mode */
+.row-input, .row-submit {
+    padding: 12px 10px 12px 10px;
+}
+
+.edit-type-form {
+    background: #fff;
+}
+
+.control-label {
+    margin-bottom: 0;
+}
+
+.type-input {
+    cursor: default;
+    background: none;
+}
+
+.input-group {
+    margin-left: -5px;
+}
+
+.input-group-addon {
+    min-width: 41px;
+    padding-left: 3px;
+    background: none;
+    border: none;
+}

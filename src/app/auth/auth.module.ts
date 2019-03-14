@@ -1,4 +1,4 @@
-import {NgModule}  from '@angular/core';
+import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 
 import {RecaptchaModule} from 'ng-recaptcha';
@@ -6,9 +6,7 @@ import {RecaptchaFormsModule} from 'ng-recaptcha/forms';
 import {HttpCustomClientModule} from 'app/http/http-custom-client.module';
 import {SharedModule} from 'app/shared/shared.module';
 
-import {AuthService} from './auth.service';
-import {UserSession} from './user-session';
-import {UserData} from './user-data';
+import {AuthService, UserSession, UserData} from 'app/auth/shared';
 
 import {SignInComponent} from './signin/signin.component';
 import {ActivateComponent} from './activate/activate.component';

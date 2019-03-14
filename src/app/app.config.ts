@@ -14,7 +14,7 @@ export class AppConfig {
         return this.config.APP_VERSION;
     }
 
-    get proxy_base(): string {
+    get proxyBase(): string {
         return this.config.APP_PROXY_BASE;
     }
 
@@ -24,6 +24,14 @@ export class AppConfig {
 
     get prod(): boolean {
         return this.config.APP_PROD;
+    }
+
+    get instanceKey(): string {
+        return this.config.APP_INSTANCE_KEY;
+    }
+
+    get contextPath(): string {
+        return this.config.APP_CONTEXT;
     }
 
     /**
@@ -62,11 +70,47 @@ export class AppConfig {
     }
 
     /**
+     * Synonym getter providing the number of years ahead of the current date that the date picker will render
+     * selectable dates of.
+     * @returns {number} Maximum number of years into the future.
+     */
+    get maxDateYears(): number {
+        return this.config.APP_MAX_DATE_YEARS;
+    }
+
+    /**
+     * Synonym getter providing the maximum number of suggested entries in a typeahead box.
+     * @returns {number} Maximum length of the suggestion list.
+     */
+    get maxSuggestLength(): number {
+        return this.config.APP_MAX_SUGGEST_LENGTH;
+    }
+
+    /**
+     * Synonym getter providing the URL for the script containing the GDPR banner's logic.
+     * @returns {string} URL.
+     */
+    get bannerUrl(): string {
+        return this.config.GDPR_BANNER_URL;
+    }
+
+    /**
+     * Maximum number of concurrent connections supported by the browser. It should be in accordance to
+     * a ball-park average for different browsers.
+     * @see {@link http://www.browserscope.org/?category=network&v=top}
+     * @returns {number} Number of allowed concurrent connections.
+     */
+    get maxConcurrent(): number {
+        return this.config.MAX_CONCURRENT;
+    }
+
+    /**
      * Uses promises exclusively to fetch the JSON file specifying the app's configuration options.
      * NOTE: URL data may be included in those options. To ensure that correct URLs are generated, this
      * method has to be called before anything else, during app initialisation. Angular provides a mechanism
      * for that through the "APP_INITIALIZER" injector token. However, this feature is still experimental in v4,
      * requiring strict use of promises for it to be dependable.
+     * TODO: Since Angular has been bumped up to v7, the much cleaner "APP_INITIALIZER" approach should be followed instead.
      * @returns {Promise<any>} Promise fulfilled once the config data has been fetched.
      * @see {@link /src/app/app.module.ts}
      * @see {@link https://stackoverflow.com/a/40222544}

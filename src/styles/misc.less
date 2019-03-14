@@ -46,13 +46,18 @@
   }
 }
 
+//Centers the labels inside each flex-enabled header cell
+.ag-theme-fresh .ag-header-cell-label {
+  justify-content: center;
+}
+
 //Prevents cell menu buttons from being hidden. By default, only shown on hover.
 //Additionally, it uses the cell menu's icon to make the two filtering states visually explicit.
 .ag-header-cell-menu-button {
-  float: left;
   opacity: 1 !important;
+  width: 12px;
 }
-.ag-fresh .ag-header-cell-menu-button {
+.ag-theme-fresh .ag-header-cell-menu-button {
   color: @link-color;
 }
 .ag-header-cell-filtered .ag-header-cell-menu-button {
@@ -61,12 +66,12 @@
 .ag-header-cell-menu-button, .ag-header-cell-label {
   cursor: pointer;
 }
-.ag-fresh .ag-header-cell-menu-button:hover {
+.ag-theme-fresh .ag-header-cell-menu-button:hover {
   border-color: #fafafa;
 }
 
 //Mutes the unsort icon and highlights what the next state is on hover
-.ag-fresh .ag-sort-none-icon svg {
+.ag-theme-fresh .ag-sort-none-icon svg {
   fill: @link-color;
 }
 .ag-header-cell-label:hover polygon:first-child {
@@ -84,30 +89,30 @@
 }
 
 //Brings ag-grid table's styles for cells in line with app's colour scheme
-.ag-fresh .ag-root {
+.ag-theme-fresh .ag-root {
   border: none;
   border-top: 3px solid @sidebar-light-bg;
 }
-.ag-fresh .ag-header {
+.ag-theme-fresh .ag-header {
   background: @sidebar-light-bg;
   border: none;
   color: #fff;
 }
-.ag-fresh .ag-header-icon {
+.ag-theme-fresh .ag-header-icon {
   fill: #fff;
 }
-.ag-fresh .ag-ltr .ag-header-cell {
+.ag-theme-fresh .ag-ltr .ag-header-cell {
   border-right-color: #c8c8c8;
 }
-.ag-fresh .ag-ltr .ag-cell-no-focus {
+.ag-theme-fresh .ag-ltr .ag-cell-no-focus {
   border-right: 1px solid #c8c8c8;
 }
-.ag-fresh .ag-ltr .ag-cell-no-focus:last-of-type, .ag-fresh .ag-ltr .ag-header-cell:last-of-type {
+.ag-theme-fresh .ag-ltr .ag-cell-no-focus:last-of-type, .ag-theme-fresh .ag-ltr .ag-header-cell:last-of-type {
   border-right: none;
 }
 
 //Brings styles of ag-grid's floating menu in line with rest of the app
-.ag-fresh .ag-menu {
+.ag-theme-fresh .ag-menu {
   padding: 10px;
   border-color: #d7d7d7;
 }
@@ -119,23 +124,23 @@
 .ag-cell {
   outline: none !important;
 }
-.ag-fresh .ag-cell-focus {
+.ag-theme-fresh .ag-cell-focus {
   border-left: none;
   border-top: none;
   border-bottom: none;
 }
 
 //Prevents page controls from wrapping onto the next line when on smaller screens
-.ag-fresh .ag-paging-row-summary-panel {
+.ag-theme-fresh .ag-paging-row-summary-panel {
   width: auto;
   float: left
 }
 @media screen and (max-width: 650px) {
-  .ag-fresh .ag-paging-row-summary-panel {
+  .ag-theme-fresh .ag-paging-row-summary-panel {
     display: none;
   }
 }
-.ag-fresh .ag-paging-panel {
+.ag-theme-fresh .ag-paging-panel {
   text-align: center;
 }
 
@@ -150,32 +155,6 @@
 }
 .subm-list .ag-cell {
   cursor: pointer;
-}
-
-//Makes validation popovers show up only when there is indeed an error, preventing it from overflowing its
-//container (eg: scrollable area in feature grids). Only applies the extended format to laptop screens.
-.validation-pop {
-  display: none !important;
-  z-index: 950;           //above any dropdowns but below any nav bar
-  left: 0 !important;     //centers even when the field is a select-box (ie negative positioning is used)
-  font-size: 12px;
-  text-align: center;
-
-  .popover-body {
-    padding: .5rem .7rem;
-  }
-
-  .has-error & {
-    display: block !important;
-  }
-
-  @media only screen and (min-width: 1160px) {
-    min-width: 300px;
-    font-size: 14px;
-  }
-}
-.has-error .popover-body {
-  color: #bb4a48;
 }
 
 //Prevents flickering tooltips when hovering near the edge of an element
@@ -238,7 +217,7 @@
 }
 
 //Highlights the label for the selected radio button
-input[type=radio] {
+input[type=radio], input[type=checkbox] {
   cursor: pointer;
 
   & + span {
@@ -257,4 +236,23 @@ input[type=radio] {
   -webkit-transform: scale(0.855);
   transform-origin: 0 0;
   -webkit-transform-origin: 0 0;
+}
+
+//GDPR bottom banner's style corrections
+.data-protection-banner {
+  z-index: @zindex-modal !important;
+  padding: 1rem !important;
+
+  .row {
+    margin: 0;
+  }
+
+  a:hover {
+    color: #9bc9e5 !important;
+  }
+}
+
+//Makes external links stand out when placed within blocks of text
+span > a:not([routerLink]), p > a:not([routerLink]) {
+  text-decoration: underline;
 }
