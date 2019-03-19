@@ -10,6 +10,7 @@ import {FileActionsCellComponent} from './file-list/ag-grid/file-actions-cell.co
 import {FileTypeCellComponent} from './file-list/ag-grid/file-type-cell.component';
 import {ProgressCellComponent} from './file-list/ag-grid/upload-progress-cell.component';
 import {FileListComponent} from './file-list/file-list.component';
+import {FTPUploadButtonComponent} from './file-list/ftp-upload-button/ftp-upload-button.component';
 import {FileUploadList} from './shared/file-upload-list.service';
 import {FileService} from './shared/file.service';
 import {FileSelectComponent} from './file-select/file-select.component';
@@ -43,6 +44,7 @@ import {HttpUploadClientService} from './shared/http-upload-client.service';
         FileSelectComponent,
         FileTreeComponent,
         FileTreeDropdownComponent,
+        FTPUploadButtonComponent
     ],
     providers: [
         HttpUploadClientService,

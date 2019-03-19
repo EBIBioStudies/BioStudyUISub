@@ -25,7 +25,7 @@ export class FileUploadButtonComponent {
     public isDirSupport: boolean = false;
 
     @Output() select: EventEmitter<File[]> = new EventEmitter<File[]>();
-    @Input() title: string = 'Browse...';
+    @Input() title: string = 'Upload Files';
     @Input() multiple: boolean = false;
     @Input() isResetOnClick: boolean = true;
     @Input() isDirOnly: boolean = false;
