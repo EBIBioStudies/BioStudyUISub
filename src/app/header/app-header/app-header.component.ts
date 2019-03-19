@@ -3,9 +3,9 @@ import {Event, NavigationEnd, Router} from '@angular/router';
 
 import {AuthService, UserSession, UserData} from 'app/auth/shared';
 import {RequestStatusService} from 'app/http/request-status.service';
-import {Subscription} from 'rxjs/Subscription';
 import {ConfirmDialogComponent} from 'app/shared/confirm-dialog.component';
 import {BsModalService} from 'ngx-bootstrap';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-header',
@@ -14,7 +14,6 @@ import {BsModalService} from 'ngx-bootstrap';
 })
 export class AppHeaderComponent implements OnDestroy {
     reqStatusSubs: Subscription;
-    secretId: string | undefined = '';                  //current user's secret ID
 
     navCollapsed: boolean = true;
     userLoggedIn: boolean = false;
@@ -64,11 +63,6 @@ export class AppHeaderComponent implements OnDestroy {
         this.reqStatusSubs = this.requestStatus.whenStatusChanged.subscribe(hasPendingRequests => {
             header.isPendingReq = hasPendingRequests;
         });
-
-        //Updates the secret ID as soon as it becomes available.
-        this.userData.secretId$.subscribe(secret => {
-            this.secretId = secret;
-        });
     }
 
     signOut() {
@@ -84,16 +78,6 @@ export class AppHeaderComponent implements OnDestroy {
                     }
                     this.isBusy = false;
                 });
-    }
-
-    /**
-     * Shows the modal with the user's secret ID.
-     */
-    showSecretModal() {
-        this.confirm(
-            'Your secret ID is: ' + this.secretId + '. It is normally required for FTP/Aspera transactions and when sharing submissions.',
-            'Secret ID'
-        );
     }
 
     /**

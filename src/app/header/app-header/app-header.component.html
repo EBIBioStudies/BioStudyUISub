@@ -83,17 +83,6 @@
                     </button>
                 </li>
 
-                <li *ngIf="userLoggedIn && secretId">
-                    <button class="btn navbar-btn"
-                            tooltip="Show the secret ID"
-                            placement="bottom"
-                            container="body"
-                            (click)="showSecretModal()">
-                        <i class="fa fa-fw fa-lg fa-key"></i>
-                        <span class="secret-id">Secret ID</span>
-                    </button>
-                </li>
-
                 <li *ngIf="userLoggedIn">
                     <button class="btn navbar-btn"
                             (click)="signOut()"
