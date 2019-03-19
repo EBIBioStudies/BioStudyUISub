@@ -3,18 +3,18 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Params} from '@angular/router';
 
 import {GridOptions} from 'ag-grid-community/main';
+import {throwError} from 'rxjs';
 
 import 'rxjs/add/operator/filter';
-import {AppConfig} from '../../app.config';
 import 'rxjs/add/operator/takeUntil';
 import {Subject} from 'rxjs/Subject';
-import {throwError} from 'rxjs';
-import {FileActionsCellComponent} from './ag-grid/file-actions-cell.component';
-import {ProgressCellComponent} from './ag-grid/upload-progress-cell.component';
-import {FileTypeCellComponent} from './ag-grid/file-type-cell.component';
-import {Path} from '../shared/path';
-import {FileService} from '../shared/file.service';
+import {AppConfig} from '../../app.config';
 import {FileUpload, FileUploadList} from '../shared/file-upload-list.service';
+import {FileService} from '../shared/file.service';
+import {Path} from '../shared/path';
+import {FileActionsCellComponent} from './ag-grid/file-actions-cell.component';
+import {FileTypeCellComponent} from './ag-grid/file-type-cell.component';
+import {ProgressCellComponent} from './ag-grid/upload-progress-cell.component';
 import {UploadBadgeItem} from './file-upload-badge/file-upload-badge.component';
 
 @Component({

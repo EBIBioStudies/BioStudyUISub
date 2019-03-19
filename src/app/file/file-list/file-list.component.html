@@ -17,6 +17,10 @@
             --><div class="nav-block clearfix col-xs-4">
                 <file-upload-badge class="upload-count"
                                    (select)="onUploadSelect($event)"></file-upload-badge>
+            <div class="btn-group pull-right" role="group">
+                <ftp-upload-button></ftp-upload-button>
+            </div>
+            <div class="btn-group pull-right" style="margin-right:1em;background-color:#b5d7ec" role="group">
                 <file-upload-button class="pull-right"
                                     [multiple]="true"
                                     [isDirOnly]="isBulkMode"
@@ -24,7 +28,7 @@
                                     tooltip="{{isBulkMode ? 'Select a folder' : 'Select files'}}"
                                     placement="bottom"
                                     #fileEl></file-upload-button>
-                <span *ngIf="fileEl.isDirSupport" class="mode-toggle checkbox pull-right">
+                <span *ngIf="fileEl.isDirSupport" class="mode-toggle checkbox pull-right" style="padding-left:2px">
                     <label>
                         <input type="checkbox"
                                name="folder-mode"
@@ -32,6 +36,7 @@
                         <span>Bulk folder</span>
                     </label>
                 </span>
+            </div>
             </div>
         </nav>
     </div>

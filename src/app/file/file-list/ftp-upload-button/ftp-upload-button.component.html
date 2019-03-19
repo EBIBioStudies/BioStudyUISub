@@ -1,0 +1,26 @@
+<button type="button"
+        class="btn btn-primary btn-sm"
+        (click)="openModal(template)">FTP Upload</button>
+
+<ng-template #template>
+    <div class="modal-header bg-primary">
+        FTP Upload
+    </div>
+    <div class="modal-body">
+        <div class="media">
+        <span class="media-left media-middle">
+            <i aria-hidden="true" class="fa fa-exclamation-triangle"></i>
+        </span>
+            <div class="media-body media-middle">
+                <p class="media-heading">
+                    Your secret ID is:  {{secretId}}. It is normally required for FTP/Aspera transactions and when sharing submissions.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <form class="pull-right">
+            <button type="button" class="btn btn-primary btn-xs" (click)="modalRef.hide()" autofocus>Ok</button>
+        </form>
+    </div>
+</ng-template>
