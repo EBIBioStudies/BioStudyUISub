@@ -7,17 +7,13 @@ import {GridOptions} from 'ag-grid-community/main';
 
 import {AppConfig} from 'app/app.config';
 import {UserData} from 'app/auth/shared';
-
-import {ConfirmDialogComponent} from 'app/shared';
-import {BsModalService} from 'ngx-bootstrap';
 import {throwError} from 'rxjs';
-
-import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
 import {SubmissionService} from '../submission-shared/submission.service';
 import {DateFilterComponent} from './ag-grid/date-filter.component';
 import {TextFilterComponent} from './ag-grid/text-filter.component';
+import {ModalService} from '../../shared/modal.service';
 
 @Component({
     selector: 'action-buttons-cell',
@@ -142,7 +138,7 @@ export class SubmListComponent {
     private datasource: any;
 
     constructor(private submService: SubmissionService,
-                private modalService: BsModalService,
+                private modalService: ModalService,
                 private userData: UserData,
                 private router: Router,
                 private route: ActivatedRoute) {
@@ -324,17 +320,19 @@ export class SubmListComponent {
                 const onNext = (isOk: boolean) => {
                     this.isBusy = true;
 
-                    //Deletion confirmed => makes a request to remove the submission from the server
+                    // Deletion confirmed => makes a request to remove the submission from the server
                     if (isOk) {
                         this.submService
                             .deleteSubmission(accno)
                             .subscribe(() => {
 
-                                //Issues an additional delete request for modified submissions
-                                //TODO: This is a crude approach to the problem of no response data coming from the API (whether there are revisions or not is unknown).
+                                // Issues an additional delete request for modified submissions
+                                // TODO: This is a crude approach to the problem of no response data coming from the
+                                // API (whether there are revisions or not is unknown).
                                 if (this.showSubmitted) {
                                     this.submService.deleteSubmission(accno).subscribe(() => {
-                                        this.setDatasource();               //TODO: refreshes grid by re-fetching data. Better approach is to use a singleton.
+                                        this.setDatasource();
+                                        // TODO: refreshes grid by re-fetching data.Better approach is to use a singleton
                                         this.isBusy = false;
                                     });
                                 } else {
@@ -343,30 +341,30 @@ export class SubmListComponent {
                                 }
                             });
 
-                        //Deletion canceled: reflects it on the button
+                        // Deletion canceled: reflects it on the button
                     } else {
                         this.isBusy = false;
                         onCancel();
                     }
                 };
 
-                //Shows the confim dialogue for an already sent submission (including its revisions).
+                // Shows the confirm dialogue for an already sent submission (including its revisions).
                 if (this.showSubmitted) {
-                    return this.confirm(
-                        `The submission with accession number ${accno} may have un-submitted changes. If you proceed, both the submission and any changes will be permanently lost.`,
+                    return this.modalService.confirm(
+                        `The submission with accession number ${accno} may have un-submitted changes. \
+                        If you proceed, both the submission and any changes will be permanently lost.`,
                         `Delete submission and its revisions`,
                         'Delete'
                     ).subscribe(onNext);
 
-                    //Shows the confirm dialogue for a temporary submission
+                    // Shows the confirm dialogue for a temporary submission
                 } else {
-                    return this.confirm(
-                        `The submission with accession number ${accno} has not been submitted yet. If you proceed, it will be permanently deleted.`,
+                    return this.modalService.confirm(
+                        `The submission with accession number ${accno} has not been submitted yet. If you proceed, \
+                        it will be permanently deleted.`,
                         `Delete pending submission`,
                         'Delete'
                     ).subscribe(onNext);
-
-
                 }
             },
 
@@ -399,18 +397,4 @@ export class SubmListComponent {
         }
     }
 
-    confirm(text: string, title: string, confirmLabel: string): Observable<boolean> {
-        const subj = new Subject<boolean>();
-        this.modalService.show(ConfirmDialogComponent,
-            {
-                initialState: {
-                    headerTitle: title,
-                    confirmLabel: confirmLabel,
-                    body: text,
-                    isDiscardCancel: false,
-                    callback: (value: boolean) => subj.next(value)
-                }
-            });
-        return subj.asObservable().take(1);
-    }
 }
