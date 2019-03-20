@@ -210,7 +210,8 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
     private removeFile(fileName: string): void {
         this.modalService.confirm(`Do you want to delete "${fileName}"?`, 'Delete a file', 'Delete')
-            .pipe( switchMap( (r: boolean)  => r ? this.fileService.removeFile(this.path.absolutePath(fileName)) : Observable.of({}) ))
+            .filter( v => v === true)
+            .pipe( switchMap( (it) => this.fileService.removeFile(this.path.absolutePath(fileName))))
             .takeUntil(this.ngUnsubscribe)
             .subscribe(it => this.loadData());
     }

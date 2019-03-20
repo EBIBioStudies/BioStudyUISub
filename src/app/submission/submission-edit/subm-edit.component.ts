@@ -137,7 +137,6 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     onRevertClick(event: Event) {
         this.confirmRevert().takeUntil(this.unsubscribe)
-            .filter(v => v === true)
             .pipe(switchMap(() => this.submEditService.revert())
             ).subscribe(() => {
         });
@@ -250,27 +249,12 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.sectionForm = sectionForm.toUndefined();
     }
 
-    private confirm(title: string, label: string, body: string): Observable<boolean> {
-        const subj = new Subject<boolean>();
-        this.bsModalService.show(ConfirmDialogComponent,
-            {
-                initialState: {
-                    headerTitle: title,
-                    confirmLabel: label,
-                    body: body,
-                    isDiscardCancel: false,
-                    callback: (value: boolean) => subj.next(value)
-                }
-            });
-        return subj.asObservable().take(1);
-    }
-
     private confirmRevert(): Observable<boolean> {
         return this.modalService.confirm(
             'You are about to discard all changes made to this submission since it was last released. This operation cannot be undone.',
             'Revert to released version',
             'Revert'
-            );
+            ).filter(v => v === true);
 
     }
 
