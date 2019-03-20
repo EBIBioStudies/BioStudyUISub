@@ -19,6 +19,16 @@
             </button>
         </span>
         <tabset>
+            <tab [active]="showSubmitted"
+                 (select)="onSubmTabSelect(true)">
+                <ng-template tabHeading>
+                    <span tooltip="Studies already submitted or revised"
+                          container="body">
+                        <i class="fas fa-database" aria-hidden="true"></i>
+                        Submitted
+                    </span>
+                </ng-template>
+            </tab>
             <tab [active]="!showSubmitted"
                  (select)="onSubmTabSelect(false)">
                 <ng-template tabHeading>
@@ -26,16 +36,6 @@
                           container="body">
                         <i class="fas fa-clock" aria-hidden="true"></i>
                         Pending
-                    </span>
-                </ng-template>
-            </tab>
-            <tab [active]="showSubmitted"
-                 (select)="onSubmTabSelect(true)">
-                <ng-template tabHeading>
-                    <span tooltip="Studies already submitted or revised"
-                          container="body">
-                        <i class="fas fa-database" aria-hidden="true"></i>
-                        Sent
                     </span>
                 </ng-template>
             </tab>

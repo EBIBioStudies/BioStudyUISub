@@ -132,7 +132,7 @@ export class DateCellComponent implements AgRendererComponent {
 
 export class SubmListComponent {
     protected ngUnsubscribe: Subject<void>;     //stopper for all subscriptions to HTTP get operations
-    showSubmitted: boolean = false;     //flag indicating if the list of sent submissions is to be displayed
+    showSubmitted: boolean = true;     //flag indicating if the list of sent submissions is to be displayed
     isBusy: boolean = false;            //flag indicating if a request is in progress
     isCreating: boolean = false;        //flag indicating if submission creation is in progress
 
@@ -298,14 +298,14 @@ export class SubmListComponent {
     }
 
     onSubmTabSelect(isSubmitted: boolean) {
-        let fragment = '';
+        let fragment = 'pending';
 
         //Ignores actions that don't carry with them a change in state.
         if (this.showSubmitted !== isSubmitted) {
 
             //Submitted list's route has 'sent' as a fragment while temp list has no fragment.
             if (isSubmitted) {
-                fragment = 'sent';
+                fragment = '';
             }
 
             this.router.navigate([fragment], {relativeTo: this.route, replaceUrl: true});
@@ -361,7 +361,7 @@ export class SubmListComponent {
                     //Shows the confirm dialogue for a temporary submission
                 } else {
                     return this.confirm(
-                        `The submission with accession number ${accno} has not been sent yet. If you proceed, it will be permanently deleted.`,
+                        `The submission with accession number ${accno} has not been submitted yet. If you proceed, it will be permanently deleted.`,
                         `Delete pending submission`,
                         'Delete'
                     ).subscribe(onNext);

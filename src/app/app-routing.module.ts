@@ -26,14 +26,15 @@ const appRoutes: Routes = [
     {
         path: 'submissions',
         component: SubmListComponent,
-        data: {reuse: true},
+        data: {isSent: true, reuse: true},
         canActivate: [AuthGuard]
     },
     {
-        path: 'submissions/sent',
+        path: 'submissions/pending',
         component: SubmListComponent,
-        data: {isSent: true, reuse: true},
-        canActivate: [AuthGuard]},
+        data: {isSent: false, reuse: true},
+        canActivate: [AuthGuard]
+    },
     {
         path: 'submissions/direct_upload',
         component: DirectSubmitComponent,
