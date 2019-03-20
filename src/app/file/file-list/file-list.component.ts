@@ -206,6 +206,10 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     private removeFile(fileName: string): void {
+
+        if (!confirm('Do you really want to delete ' + fileName + '?')) {
+            return;
+        }
         this.fileService
             .removeFile(this.path.absolutePath(fileName))
             .takeUntil(this.ngUnsubscribe)
