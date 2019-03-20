@@ -3,7 +3,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Params} from '@angular/router';
 
 import {GridOptions} from 'ag-grid-community/main';
-import {throwError} from 'rxjs';
+import {Observable, throwError} from 'rxjs';
 
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/takeUntil';
@@ -16,6 +16,9 @@ import {FileActionsCellComponent} from './ag-grid/file-actions-cell.component';
 import {FileTypeCellComponent} from './ag-grid/file-type-cell.component';
 import {ProgressCellComponent} from './ag-grid/upload-progress-cell.component';
 import {UploadBadgeItem} from './file-upload-badge/file-upload-badge.component';
+import {ConfirmDialogComponent} from "../../shared";
+import {switchMap} from "rxjs/operators";
+import {BsModalService} from "ngx-bootstrap";
 
 @Component({
     selector: 'file-list',
@@ -24,7 +27,7 @@ import {UploadBadgeItem} from './file-upload-badge/file-upload-badge.component';
 })
 
 export class FileListComponent implements OnInit, OnDestroy {
-    protected ngUnsubscribe: Subject<void>;     //stopper for all subscriptions
+    protected ngUnsubscribe: Subject<void>;     // stopper for all subscriptions
     private rowData: any[];
 
     path: Path = new Path('/User', '/');
@@ -38,11 +41,12 @@ export class FileListComponent implements OnInit, OnDestroy {
     constructor(private fileService: FileService,
                 private fileUploadList: FileUploadList,
                 private route: ActivatedRoute,
+                private modalService: BsModalService,
                 private appConfig: AppConfig) {
 
         this.ngUnsubscribe = new Subject<void>();
 
-        //Initally collapses the sidebar for tablet-sized screens
+        // Initially collapses the sidebar for tablet-sized screens
         this.sideBarCollapsed = window.innerWidth < this.appConfig.tabletBreak;
 
         this.gridOptions = <GridOptions>{
@@ -204,22 +208,28 @@ export class FileListComponent implements OnInit, OnDestroy {
             }
         }));
     }
-
     private removeFile(fileName: string): void {
-
-        if (!confirm('Do you really want to delete ' + fileName + '?')) {
-            return;
-        }
-        this.fileService
-            .removeFile(this.path.absolutePath(fileName))
+        this.confirm(`Do you want to delete "${fileName}"?`, 'Delete a file', 'Delete')
+            .pipe( switchMap(it => this.fileService.removeFile(this.path.absolutePath(fileName))))
             .takeUntil(this.ngUnsubscribe)
-            .subscribe((resp) => {
-                this.loadData();
-            });
+            .subscribe(it => this.loadData());
     }
-
     private removeUpload(u: FileUpload) {
         this.fileUploadList.remove(u);
         this.loadData();
+    }
+    private confirm(text: string, title: string, confirmLabel: string): Observable<boolean> {
+        const subj = new Subject<boolean>();
+        this.modalService.show(ConfirmDialogComponent,
+            {
+                initialState: {
+                    headerTitle: title,
+                    confirmLabel: confirmLabel,
+                    body: text,
+                    isDiscardCancel: false,
+                    callback: (value: boolean) => subj.next(value)
+                }
+            });
+        return subj.asObservable().take(1).filter(v => v === true);
     }
 }
