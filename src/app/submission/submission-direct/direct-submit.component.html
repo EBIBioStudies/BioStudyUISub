@@ -10,7 +10,7 @@
             <div class="col-xs-4 nav-block">
                 <a routerLink="/submissions{{sidebar.hasRequests && sidebar.isStatus('successful') ? '/sent' : ''}}">
                     <i *ngIf="sidebar.hasRequests && sidebar.isStatus('successful')" class="fa fa-database" aria-hidden="true"></i>
-                    {{sidebar.hasRequests && sidebar.isStatus('successful') ? 'Sent' : 'Submission list'}}
+                    {{sidebar.hasRequests && sidebar.isStatus('successful') ? 'Submitted' : 'Submission list'}}
                 </a>
                 &nbsp;<i class="fa fa-angle-right font-bold"></i>&nbsp;
                 <strong>Direct upload</strong>
