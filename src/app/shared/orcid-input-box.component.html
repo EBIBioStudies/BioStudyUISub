@@ -9,6 +9,7 @@
            [readonly]="readonly">
     <span *ngIf="isPopupButton" class="input-group-btn">
         <button class="btn btn-sm btn-primary" type="button"
+                title="Log into ORCID system to retrieve your ORCID identifier"
                 [ngClass]="{'btn-sm': isSmall}"
                 (click)="openPopup()">
             <i class="fa fa-external-link-alt" aria-hidden="true"></i>
