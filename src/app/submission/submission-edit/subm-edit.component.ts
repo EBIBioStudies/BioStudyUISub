@@ -182,7 +182,6 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
         confirmMsg += '. This operation cannot be undone.';
 
         this.confirmPageDelete(confirmMsg)
-            .filter(v => v === true)
             .subscribe(() => {
             this.sectionForm!.removeSection(sectionForm.id);
         });
@@ -250,11 +249,11 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     private confirmRevert(): Observable<boolean> {
-        return this.modalService.confirm(
+        return this.modalService.whenConfirmed(
             'You are about to discard all changes made to this submission since it was last released. This operation cannot be undone.',
             'Revert to released version',
             'Revert'
-            ).filter(v => v === true);
+            );
 
     }
 
@@ -267,7 +266,7 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     private confirmPageDelete(message: string): Observable<boolean> {
-        return this.modalService.confirm(
+        return this.modalService.whenConfirmed(
             message,
             'Delete page',
             'Delete'

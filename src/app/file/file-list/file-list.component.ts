@@ -3,7 +3,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Params} from '@angular/router';
 
 import {GridOptions} from 'ag-grid-community/main';
-import {Observable, throwError} from 'rxjs';
+import {Observable, of, throwError} from 'rxjs';
 import 'rxjs/add/observable/of';
 
 import 'rxjs/add/operator/filter';
@@ -17,7 +17,7 @@ import {FileActionsCellComponent} from './ag-grid/file-actions-cell.component';
 import {FileTypeCellComponent} from './ag-grid/file-type-cell.component';
 import {ProgressCellComponent} from './ag-grid/upload-progress-cell.component';
 import {UploadBadgeItem} from './file-upload-badge/file-upload-badge.component';
-import {switchMap} from 'rxjs/operators';
+import {filter, switchMap} from 'rxjs/operators';
 import {ModalService} from '../../shared/modal.service';
 
 @Component({
@@ -178,6 +178,24 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     onUploadFilesSelect(files: FileList) {
+        const uploadedFiles = new Set(this.rowData.map( f => f.name));
+        const newFiles =  Array.from(files).map( f => f.name);
+        const overlap = newFiles.filter(name => uploadedFiles.has(name));
+
+        (overlap.length > 0 ? this.confirmOverwrite(overlap) : of(true))
+            .takeUntil(this.ngUnsubscribe)
+            .subscribe( () => this.upload(files));
+
+    }
+
+    private confirmOverwrite(overlap) {
+        const overlapString = overlap.length === 1 ? overlap[0] + '?' :
+            overlap.length + ' files? (' + overlap.join(', ') + ')' ;
+        return this.modalService.whenConfirmed(`Do you want to overwrite ${overlapString}`,
+            'Overwrite files?', 'Overwrite');
+    }
+
+    private upload(files: FileList) {
         const upload = this.fileUploadList.upload(this.path, Array.from(files));
         this.updateDataRows(([] as any[]).concat(this.decorateUploads([upload]), this.rowData));
     }
@@ -209,8 +227,7 @@ export class FileListComponent implements OnInit, OnDestroy {
         }));
     }
     private removeFile(fileName: string): void {
-        this.modalService.confirm(`Do you want to delete "${fileName}"?`, 'Delete a file', 'Delete')
-            .filter( v => v === true)
+        this.modalService.whenConfirmed(`Do you want to delete "${fileName}"?`, 'Delete a file', 'Delete')
             .pipe( switchMap( (it) => this.fileService.removeFile(this.path.absolutePath(fileName))))
             .takeUntil(this.ngUnsubscribe)
             .subscribe(it => this.loadData());

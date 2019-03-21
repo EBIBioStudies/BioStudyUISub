@@ -1,7 +1,6 @@
 import {Component, OnDestroy} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {UserData} from 'app/auth/shared';
-import {ConfirmDialogComponent} from 'app/shared';
 
 import {Option} from 'fp-ts/lib/Option';
 import {BsModalService} from 'ngx-bootstrap';
@@ -11,7 +10,7 @@ import {FormValidators} from '../../shared/form-validators';
 import {SectionForm} from '../../shared/section-form';
 import {SubmEditService} from '../../shared/subm-edit.service';
 import {AddSubmTypeModalComponent} from '../add-subm-type-modal/add-subm-type-modal.component';
-import {ModalService} from "../../../../shared/modal.service";
+import {ModalService} from '../../../../shared/modal.service';
 
 const SECTION_ID = '@SECTION@';
 

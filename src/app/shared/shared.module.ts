@@ -26,7 +26,7 @@ import {StripHtmlPipe} from './strip-html.pipe';
 import {DateFormatDirective} from './date-format.directive';
 import {DateInputComponent} from './date-input.component';
 import {PluralPipe} from './plural.pipe';
-import {ModalService} from "./modal.service";
+import {ModalService} from './modal.service';
 
 @NgModule({
     imports: [

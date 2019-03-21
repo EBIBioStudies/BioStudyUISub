@@ -22,5 +22,7 @@ export class ModalService {
         return subj.asObservable().take(1);
     }
 
-
+    whenConfirmed(text: string, title: string, confirmLabel: string): Observable<boolean> {
+        return this.confirm(text, title, confirmLabel).filter(v => v === true);
+    }
 }
