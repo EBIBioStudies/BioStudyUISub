@@ -80,24 +80,6 @@ export class AppHeaderComponent implements OnDestroy {
                 });
     }
 
-    /**
-     * Renders the confirmation dialogue.
-     * @param {string} message - Text to be shown within the dialogue's body section.
-     * @param {string} title - Title for the modal.
-     */
-    confirm(message: string, title: string) {
-        this.modalService.show(ConfirmDialogComponent,
-            {
-                initialState: {
-                    isHideCancel: true,
-                    title: title,
-                    body: message,
-                    isDiscardCancel: false,
-                    callback: () => {}
-                }
-            });
-    }
-
     toggleCollapsed() {
         this.navCollapsed = !this.navCollapsed;
     }

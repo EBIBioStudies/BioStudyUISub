@@ -26,6 +26,7 @@ import {StripHtmlPipe} from './strip-html.pipe';
 import {DateFormatDirective} from './date-format.directive';
 import {DateInputComponent} from './date-input.component';
 import {PluralPipe} from './plural.pipe';
+import {ModalService} from './modal.service';
 
 @NgModule({
     imports: [
@@ -41,7 +42,9 @@ import {PluralPipe} from './plural.pipe';
         CollapseModule,
         AlertModule
     ],
-    providers: [],
+    providers: [
+        ModalService
+    ],
     declarations: [
         ContainerRootComponent,
         ContainerMdComponent,

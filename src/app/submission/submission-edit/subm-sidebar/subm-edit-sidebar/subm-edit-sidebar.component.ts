@@ -1,7 +1,6 @@
 import {Component, OnDestroy} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {UserData} from 'app/auth/shared';
-import {ConfirmDialogComponent} from 'app/shared';
 
 import {Option} from 'fp-ts/lib/Option';
 import {BsModalService} from 'ngx-bootstrap';
@@ -11,6 +10,7 @@ import {FormValidators} from '../../shared/form-validators';
 import {SectionForm} from '../../shared/section-form';
 import {SubmEditService} from '../../shared/subm-edit.service';
 import {AddSubmTypeModalComponent} from '../add-subm-type-modal/add-subm-type-modal.component';
+import {ModalService} from '../../../../shared/modal.service';
 
 const SECTION_ID = '@SECTION@';
 
@@ -72,7 +72,8 @@ export class SubmEditSidebarComponent implements OnDestroy {
     private formSubscription?: Subscription;
 
     constructor(public userData: UserData,
-                private modalService: BsModalService,
+                private bsModalService: BsModalService,
+                private modalService: ModalService,
                 private submEditService: SubmEditService) {
         this.submEditService.sectionSwitch$.takeUntil(this.unsubscribe)
             .subscribe(sectionForm => this.switchSection(sectionForm));
@@ -93,7 +94,7 @@ export class SubmEditSidebarComponent implements OnDestroy {
 
     onNewTypeClick(event?: Event): void {
         event && event.preventDefault();
-        const bsModalRef = this.modalService.show(AddSubmTypeModalComponent, {initialState: {sectionForm: this.sectionForm}});
+        const bsModalRef = this.bsModalService.show(AddSubmTypeModalComponent, {initialState: {sectionForm: this.sectionForm}});
         bsModalRef.content.closeBtnName = 'Close';
     }
 
@@ -151,20 +152,23 @@ export class SubmEditSidebarComponent implements OnDestroy {
         if (deleted.length > 0) {
             const isPlural = deleted.length > 1;
 
-            this.confirm(`The submission
+            const message = `The submission
                     ${isPlural ? `items` : `item`} with type
                     ${deleted.map(({typeName}) => `"${typeName}"`).join(', ')}
                     ${isPlural ? `have` : `has`} been deleted. If you proceed,
                     ${isPlural ? `they` : `it`} will be removed from the
-                    list of items and any related features or sections will be permanently deleted.`,
-                (isConfirmed: boolean) => {
-                    console.log(isConfirmed);
-                    if (isConfirmed) {
-                        this.applyChanges();
-                    } else {
-                        this.onCancelChanges();
+                    list of items and any related features or sections will be permanently deleted.`;
+            this.modalService.confirm(message, 'Delete items', 'Delete')
+                .subscribe(
+                    (isConfirmed: boolean) => {
+                        console.log(isConfirmed);
+                        if (isConfirmed) {
+                            this.applyChanges();
+                        } else {
+                            this.onCancelChanges();
+                        }
                     }
-                });
+                )
         } else {
             this.applyChanges()
         }
@@ -180,19 +184,6 @@ export class SubmEditSidebarComponent implements OnDestroy {
                 this.formSubscription = this.sectionForm.structureChanges$.subscribe(it => this.updateItems())
             }
         }
-    }
-
-    private confirm(message: string, callback: (v: boolean) => any) {
-        this.modalService.show(ConfirmDialogComponent,
-            {
-                initialState: {
-                    headerTitle: 'Delete items',
-                    confirmLabel: 'Delete',
-                    body: message,
-                    isDiscardCancel: false,
-                    callback: callback
-                }
-            });
     }
 
     private applyChanges() {

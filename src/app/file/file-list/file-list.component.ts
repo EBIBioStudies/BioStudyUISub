@@ -3,7 +3,8 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Params} from '@angular/router';
 
 import {GridOptions} from 'ag-grid-community/main';
-import {Observable, throwError} from 'rxjs';
+import {Observable, of, throwError} from 'rxjs';
+import 'rxjs/add/observable/of';
 
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/takeUntil';
@@ -16,9 +17,8 @@ import {FileActionsCellComponent} from './ag-grid/file-actions-cell.component';
 import {FileTypeCellComponent} from './ag-grid/file-type-cell.component';
 import {ProgressCellComponent} from './ag-grid/upload-progress-cell.component';
 import {UploadBadgeItem} from './file-upload-badge/file-upload-badge.component';
-import {ConfirmDialogComponent} from "../../shared";
-import {switchMap} from "rxjs/operators";
-import {BsModalService} from "ngx-bootstrap";
+import {filter, switchMap} from 'rxjs/operators';
+import {ModalService} from '../../shared/modal.service';
 
 @Component({
     selector: 'file-list',
@@ -32,16 +32,16 @@ export class FileListComponent implements OnInit, OnDestroy {
 
     path: Path = new Path('/User', '/');
 
-    sideBarCollapsed: boolean = false;
-    backButton: boolean = false;
+    sideBarCollapsed = false;
+    backButton = false;
     gridOptions: GridOptions;
     columnDefs?: any[];
-    isBulkMode: boolean = false;
+    isBulkMode = false;
 
     constructor(private fileService: FileService,
                 private fileUploadList: FileUploadList,
                 private route: ActivatedRoute,
-                private modalService: BsModalService,
+                private modalService: ModalService,
                 private appConfig: AppConfig) {
 
         this.ngUnsubscribe = new Subject<void>();
@@ -128,7 +128,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     private loadData(path?: Path) {
-        let p: Path = path ? path : this.path;
+        const p: Path = path ? path : this.path;
         this.fileService.getFiles(p.absolutePath())
             .takeUntil(this.ngUnsubscribe)
 
@@ -137,7 +137,7 @@ export class FileListComponent implements OnInit, OnDestroy {
                 return throwError(error);
 
             }).subscribe(files => {
-                let decoratedRows = ([] as any[]).concat(
+                const decoratedRows = ([] as any[]).concat(
                     this.decorateUploads(this.fileUploadList.activeUploads),
                     this.decorateFiles(files)
                 );
@@ -178,7 +178,25 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     onUploadFilesSelect(files: FileList) {
-        let upload = this.fileUploadList.upload(this.path, Array.from(files));
+        const uploadedFiles = new Set(this.rowData.map( f => f.name));
+        const newFiles =  Array.from(files).map( f => f.name);
+        const overlap = newFiles.filter(name => uploadedFiles.has(name));
+
+        (overlap.length > 0 ? this.confirmOverwrite(overlap) : of(true))
+            .takeUntil(this.ngUnsubscribe)
+            .subscribe( () => this.upload(files));
+
+    }
+
+    private confirmOverwrite(overlap) {
+        const overlapString = overlap.length === 1 ? overlap[0] + '?' :
+            overlap.length + ' files? (' + overlap.join(', ') + ')' ;
+        return this.modalService.whenConfirmed(`Do you want to overwrite ${overlapString}`,
+            'Overwrite files?', 'Overwrite');
+    }
+
+    private upload(files: FileList) {
+        const upload = this.fileUploadList.upload(this.path, Array.from(files));
         this.updateDataRows(([] as any[]).concat(this.decorateUploads([upload]), this.rowData));
     }
 
@@ -209,8 +227,8 @@ export class FileListComponent implements OnInit, OnDestroy {
         }));
     }
     private removeFile(fileName: string): void {
-        this.confirm(`Do you want to delete "${fileName}"?`, 'Delete a file', 'Delete')
-            .pipe( switchMap(it => this.fileService.removeFile(this.path.absolutePath(fileName))))
+        this.modalService.whenConfirmed(`Do you want to delete "${fileName}"?`, 'Delete a file', 'Delete')
+            .pipe( switchMap( (it) => this.fileService.removeFile(this.path.absolutePath(fileName))))
             .takeUntil(this.ngUnsubscribe)
             .subscribe(it => this.loadData());
     }
@@ -218,18 +236,5 @@ export class FileListComponent implements OnInit, OnDestroy {
         this.fileUploadList.remove(u);
         this.loadData();
     }
-    private confirm(text: string, title: string, confirmLabel: string): Observable<boolean> {
-        const subj = new Subject<boolean>();
-        this.modalService.show(ConfirmDialogComponent,
-            {
-                initialState: {
-                    headerTitle: title,
-                    confirmLabel: confirmLabel,
-                    body: text,
-                    isDiscardCancel: false,
-                    callback: (value: boolean) => subj.next(value)
-                }
-            });
-        return subj.asObservable().take(1).filter(v => v === true);
-    }
+
 }
