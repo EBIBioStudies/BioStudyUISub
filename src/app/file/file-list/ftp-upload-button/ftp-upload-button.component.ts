@@ -4,7 +4,8 @@ import {UserData} from '../../../auth/shared';
 
 @Component({
     selector: 'ftp-upload-button',
-    templateUrl: './ftp-upload-button.component.html'
+    templateUrl: './ftp-upload-button.component.html',
+    styleUrls:['./ftp-upload-button.component.css']
 })
 
 export class FTPUploadButtonComponent {
