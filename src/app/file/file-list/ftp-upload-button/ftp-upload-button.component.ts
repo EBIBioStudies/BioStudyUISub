@@ -21,7 +21,7 @@ export class FTPUploadButtonComponent {
     openModal(template: TemplateRef<any>) {
         this.userData.secretId$.subscribe(secret => {
             this.secretId = secret;
-            this.modalRef = this.modalService.show(template);
+            this.modalRef = this.modalService.show(template, {class: 'modal-lg'});
         });
     }
 }
