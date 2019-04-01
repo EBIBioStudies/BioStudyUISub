@@ -37,7 +37,7 @@ export class AuthService {
             catchError(resp => AuthService.catch403Error<UserInfoResponse>(resp)),
             map(resp => AuthService.statusCheck(resp)),
             map(resp => {
-                this.userSession.create(resp.sessid);
+                this.userSession.create(resp.sessid, resp.username);
                 return resp;
             }));
     }

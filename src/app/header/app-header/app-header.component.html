@@ -86,12 +86,15 @@
                 <li *ngIf="userLoggedIn">
                     <button class="btn navbar-btn"
                             (click)="signOut()"
-                            [disabled]="isBusy">
+                            [disabled]="isBusy"
+                            placement="bottom"
+                            [tooltip]="logoutTooltip">
                         <i *ngIf="!isBusy" class="fa fa-fw fa-sign-out-alt fa-lg"></i>
                         <i *ngIf="isBusy" class="fa fa-fw fa-cog fa-spin fa-lg"></i>
                         <span>Log out</span>
                     </button>
                 </li>
+                <ng-template #logoutTooltip>Log out <br/> {{userName}}</ng-template>
             </ul>
         </div>
     </div>

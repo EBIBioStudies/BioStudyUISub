@@ -2,7 +2,15 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 
-import {setLoginToken, getLoginToken, destroyLoginToken, cleanUpOldCookies} from './user-cookies';
+import {
+    setLoginToken,
+    getLoginToken,
+    setUserName,
+    getUserName,
+    destroyLoginToken,
+    cleanUpOldCookies,
+    destroyUserName
+} from './user-cookies';
 
 @Injectable()
 export class UserSession {
@@ -19,18 +27,24 @@ export class UserSession {
         }
     }
 
-    create(token: string): void {
+    create(token: string, userName: string): void {
         setLoginToken(token);
+        setUserName(userName);
         this.notifySessionCreated();
     }
 
     destroy(): void {
         destroyLoginToken();
+        destroyUserName();
         this.notifySessionDestroyed();
     }
 
     token(): string {
         return getLoginToken();
+    }
+
+    userName(): string {
+        return getUserName();
     }
 
     isAnonymous(): boolean {

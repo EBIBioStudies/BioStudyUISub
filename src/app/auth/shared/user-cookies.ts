@@ -1,6 +1,7 @@
 import {Cookie} from 'ng2-cookies/ng2-cookies';
 
 const LOGIN_TOKEN = 'BsstToken';
+const USER_NAME = 'BsstUserName';
 const AE_COOKIES = ['AeLoggedUser_', 'AeLoginToken_'];
 const PATH = '/';
 
@@ -28,6 +29,10 @@ export function destroyLoginToken(): void {
     localStorage.removeItem(LOGIN_TOKEN);
 }
 
+export function destroyUserName(): void {
+    localStorage.removeItem(USER_NAME);
+}
+
 /**
  * Wipes out any ArrayExpress-related cookies.
  */
@@ -35,4 +40,12 @@ export function cleanUpOldCookies() {
     AE_COOKIES.forEach((name) => {
         Cookie.delete(name, PATH);
     });
+}
+
+export function setUserName(userName: string): void {
+    localStorage.setItem(USER_NAME, userName);
+}
+
+export function getUserName(): string {
+    return localStorage.getItem(USER_NAME) || '';
 }

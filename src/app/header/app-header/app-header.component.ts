@@ -15,12 +15,13 @@ import {Subscription} from 'rxjs/Subscription';
 export class AppHeaderComponent implements OnDestroy {
     reqStatusSubs: Subscription;
 
-    navCollapsed: boolean = true;
-    userLoggedIn: boolean = false;
-    userLoggingIn: boolean = false;
-    userRegistering: boolean = false;
-    isPendingReq: boolean = false;          //flags whether there is a transaction in progress (from anywhere in the app)
-    isBusy: boolean = false;                //flags whether there is a transaction triggered by this component
+    navCollapsed = true;
+    userLoggedIn = false;
+    userLoggingIn = false;
+    userRegistering = false;
+    isPendingReq = false;          // flags whether there is a transaction in progress (from anywhere in the app)
+    isBusy = false;                // flags whether there is a transaction triggered by this component
+    userName: string;
 
     constructor(private userSession: UserSession,
                 private userData: UserData,
@@ -32,17 +33,18 @@ export class AppHeaderComponent implements OnDestroy {
         const header = this;
 
         this.userLoggedIn = !this.userSession.isAnonymous();
+        this.userName = this.userSession.userName();
 
-        //If the session has expired (hence destroyed), it updates the view.
-        //NOTE: the component's context has to be closed in. Otherwise, "this" points to SafeSubscriber.
+        // If the session has expired (hence destroyed), it updates the view.
+        // NOTE: the component's context has to be closed in. Otherwise, "this" points to SafeSubscriber.
         this.userSession.created$.subscribe(created => {
             const sessionDestroyed = header.userLoggedIn && !created;
 
             header.userLoggedIn = created;
 
-            //Since the session has been destroyed, it logs the user out.
-            //NOTE: property change does not always trigger a view update. Hence the subsequent
-            //forcing of change detection. //TODO: find out why this is.
+            // Since the session has been destroyed, it logs the user out.
+            // NOTE: property change does not always trigger a view update. Hence the subsequent
+            // forcing of change detection. //TODO: find out why this is.
             if (sessionDestroyed) {
                 router.navigate(['/signin']).then(() => {
                     appRef.tick();
@@ -51,7 +53,7 @@ export class AppHeaderComponent implements OnDestroy {
             }
         });
 
-        //Updates the view's state whenever the current URL is among the login-related routes.
+        // Updates the view's state whenever the current URL is among the login-related routes.
         this.router.events.subscribe((event: Event) => {
            if (event instanceof NavigationEnd) {
                header.userRegistering = router.url === '/signup';
@@ -59,7 +61,7 @@ export class AppHeaderComponent implements OnDestroy {
             }
         });
 
-        //Shows visual feedback while the apps awaits request resolution.
+        // Shows visual feedback while the apps awaits request resolution.
         this.reqStatusSubs = this.requestStatus.whenStatusChanged.subscribe(hasPendingRequests => {
             header.isPendingReq = hasPendingRequests;
         });
