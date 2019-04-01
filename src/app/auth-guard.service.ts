@@ -17,7 +17,7 @@ export class AuthGuard implements CanActivate {
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
         if (this.userSession.isAnonymous()) {
-            this.router.navigate(['/signin']);
+            this.router.navigate(['/signin', {next: state.url}]);
             return false;
         } else {
             return true;
