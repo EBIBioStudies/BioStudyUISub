@@ -114,9 +114,17 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
                     this.accno = params.accno;
                     return this.submEditService.load(params.accno, this.hasJustCreated)
                 })
-            ).subscribe(() => {
+            ).subscribe((resp) => {
             if (this.hasJustCreated) {
                 this.locService.replaceState('/submissions/edit/' + this.accno);
+            }
+            if (resp.error.isSome() ) {
+                this.modalService.alert('Submission could not be retrieved. ' +
+                    'Please make sure the URL is correct and contact us in case the problem persists.', 'Error', 'Ok')
+                    .takeUntil(this.unsubscribe)
+                    .pipe(switchMap(() => this.router.navigate(['/submissions/']))
+                    ).subscribe(() => {
+                });
             }
         });
     }
@@ -183,8 +191,8 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
 
         this.confirmPageDelete(confirmMsg)
             .subscribe(() => {
-            this.sectionForm!.removeSection(sectionForm.id);
-        });
+                this.sectionForm!.removeSection(sectionForm.id);
+            });
     }
 
     private scroll() {
@@ -253,7 +261,7 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
             'You are about to discard all changes made to this submission since it was last released. This operation cannot be undone.',
             'Revert to released version',
             'Revert'
-            );
+        );
 
     }
 
@@ -262,7 +270,7 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
             'You have hit the enter key while filling in the form. If you continue, the study data will be submitted',
             'Submit the study',
             'Submit',
-            );
+        );
     }
 
     private confirmPageDelete(message: string): Observable<boolean> {
@@ -270,6 +278,6 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
             message,
             'Delete page',
             'Delete'
-            );
+        );
     }
 }

@@ -12,10 +12,10 @@ export class ModalService {
         this.modalService.show(ConfirmDialogComponent,
             {
                 initialState: {
-                    headerTitle: title,
+                    title: title,
                     confirmLabel: confirmLabel,
                     body: text,
-                    isDiscardCancel: false,
+                    isHideCancel: false,
                     callback: (value: boolean) => subj.next(value)
                 }
             });
@@ -24,5 +24,20 @@ export class ModalService {
 
     whenConfirmed(text: string, title: string, confirmLabel: string): Observable<boolean> {
         return this.confirm(text, title, confirmLabel).filter(v => v === true);
+    }
+
+    alert(text: string, title: string, confirmLabel: string): Observable<boolean> {
+        const subj = new Subject<boolean>();
+        this.modalService.show(ConfirmDialogComponent,
+            {
+                initialState: {
+                    title: title,
+                    confirmLabel: confirmLabel,
+                    body: text,
+                    isHideCancel: true,
+                    callback: (value: boolean) => subj.next(value)
+                }
+            });
+        return subj.asObservable().take(1);
     }
 }
