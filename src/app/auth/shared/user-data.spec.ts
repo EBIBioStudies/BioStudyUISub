@@ -40,6 +40,6 @@ describe('UserData', () => {
                 expect(info).toEqual(user as ExtendedUserInfo);
             });
 
-        session.create('12345');
+        session.create('12345', 'vasya');
     }));
 });

@@ -86,6 +86,10 @@ export class AppHeaderComponent implements OnDestroy {
         this.navCollapsed = !this.navCollapsed;
     }
 
+    submitFeedback() {
+        window.location.href = 'mailto:biostudies@ebi.ac.uk?Subject=BioStudies Submission Tool Feedback';
+    }
+
     ngOnDestroy(): void {
         this.reqStatusSubs.unsubscribe();
     }

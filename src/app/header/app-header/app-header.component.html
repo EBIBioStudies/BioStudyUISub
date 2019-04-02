@@ -82,7 +82,16 @@
                         <span>Help</span>
                     </button>
                 </li>
-
+                <li>
+                    <button class="btn navbar-btn"
+                            tooltip="Submit feedback"
+                            placement="bottom"
+                            container="body"
+                            (click)="submitFeedback()">
+                        <i class="fa fa-fw fa-paper-plane fa-lg"></i>
+                        <span>Feedback</span>
+                    </button>
+                </li>
                 <li *ngIf="userLoggedIn">
                     <button class="btn navbar-btn"
                             (click)="signOut()"
