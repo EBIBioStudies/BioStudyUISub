@@ -3,6 +3,7 @@ import {AuthService, UserData, UserSession} from 'app/auth/shared';
 import {of} from 'rxjs';
 
 import {UserInfo, ExtendedUserInfo} from './model';
+import {userInfo} from "os";
 
 describe('UserData', () => {
     let submService;
@@ -40,6 +41,6 @@ describe('UserData', () => {
                 expect(info).toEqual(user as ExtendedUserInfo);
             });
 
-        session.create('12345', 'vasya');
+        session.create(user);
     }));
 });
