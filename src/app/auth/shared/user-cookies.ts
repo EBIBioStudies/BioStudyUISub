@@ -6,7 +6,7 @@ const COOKIE_PATH = '/';
 
 
 export function setLoginToken(token: string): void {
-    Cookie.set(LOGIN_TOKEN, token, 31557600, COOKIE_PATH);
+    Cookie.set(LOGIN_TOKEN, token, 365, COOKIE_PATH);
 }
 
 export function getLoginToken(): string {
@@ -14,7 +14,7 @@ export function getLoginToken(): string {
 }
 
 export function destroyLoginToken(): void {
-    Cookie.delete(LOGIN_TOKEN);
+    Cookie.delete(LOGIN_TOKEN, COOKIE_PATH);
 }
 
 export function destroyUser(): void {
