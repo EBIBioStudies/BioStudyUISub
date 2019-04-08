@@ -5,11 +5,10 @@ import {Subject} from 'rxjs/Subject';
 import {
     setLoginToken,
     getLoginToken,
-    setUserName,
-    getUserName,
+    setUser,
+    getUser,
     destroyLoginToken,
-    cleanUpOldCookies,
-    destroyUserName
+    destroyUser
 } from './user-cookies';
 
 @Injectable()
@@ -21,21 +20,24 @@ export class UserSession {
 
     // call it when the app is bootstrapped
     init(): void {
-        cleanUpOldCookies(); // keep it for a while
         if (!this.isAnonymous()) {
             this.notifySessionCreated();
         }
     }
 
-    create(token: string, userName: string): void {
-        setLoginToken(token);
-        setUserName(userName);
+    create(user: any): void {
+        this.update(user);
         this.notifySessionCreated();
+    }
+
+    update(user: any) {
+        setLoginToken(user.sessid);
+        setUser(user);
     }
 
     destroy(): void {
         destroyLoginToken();
-        destroyUserName();
+        destroyUser();
         this.notifySessionDestroyed();
     }
 
@@ -44,7 +46,7 @@ export class UserSession {
     }
 
     userName(): string {
-        return getUserName();
+        return getUser().fullname;
     }
 
     isAnonymous(): boolean {

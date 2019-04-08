@@ -11,7 +11,7 @@
                     (click)="toggleCollapsed()">
                 <i class="fa fa-bars" aria-hidden="true"></i>
             </button>
-            <a  class="navbar-brand" routerLink="/submissions">
+            <a class="navbar-brand" routerLink="/submissions">
                 <img src="images/logo.png" class="logo" alt="Submission tool"/>
             </a>
         </div>
@@ -92,18 +92,32 @@
                         <span>Feedback</span>
                     </button>
                 </li>
-                <li *ngIf="userLoggedIn">
-                    <button class="btn navbar-btn"
-                            (click)="signOut()"
+                <li [class.hidden]="!userLoggedIn" dropdown>
+                    <button dropdownToggle type="button" class="btn navbar-btn dropdown-toggle"
                             [disabled]="isBusy"
+                            [tooltip]="profileTooltip"
                             placement="bottom"
-                            [tooltip]="logoutTooltip">
-                        <i *ngIf="!isBusy" class="fa fa-fw fa-sign-out-alt fa-lg"></i>
+                            container="body"
+                            (mouseenter)="changeProfileTooltip()"
+                            #user
+                            aria-controls="dropdown-basic">
+                        <i *ngIf="!isBusy" class="fa fa-fw fa-user-circle fa-lg"></i>
                         <i *ngIf="isBusy" class="fa fa-fw fa-cog fa-spin fa-lg"></i>
-                        <span>Log out</span>
+                        <i *ngIf="!isBusy" class="fa fa-fw fa-caret-down"></i>
                     </button>
+                    <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
+                        role="menu" aria-labelledby="button-basic">
+                        <li role="menuitem">
+                            <a class="dropdown-item"
+                               tooltip="Log out"
+                               placement="bottom"
+                               container="body"
+                               href="#"
+                               (click)="signOut()"
+                               >Log out</a>
+                        </li>
+                    </ul>
                 </li>
-                <ng-template #logoutTooltip>Log out <br/> {{userName}}</ng-template>
             </ul>
         </div>
     </div>

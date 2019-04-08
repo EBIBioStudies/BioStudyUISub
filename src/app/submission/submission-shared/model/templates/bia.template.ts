@@ -144,16 +144,19 @@ export const BIATemplate = {
                     'name': 'Screen Number',
                     'icon': 'fa-comment',
                     'valueType': {'name': 'text'},
+                    'display': 'required'
                 },
                 {
                     'name': 'Screen Name',
                     'icon': 'fa-comment',
-                    'valueType': {'name': 'largetext'}
+                    'valueType': {'name': 'largetext'},
+                    'display': 'required'
                 },
                 {
                     'name': 'Description',
                     'icon': 'fa-comment',
-                    'valueType': {'name': 'largetext'}
+                    'valueType': {'name': 'largetext'},
+                    'display': 'required'
                 },
                 {
                     'name': 'Imaging Method',
@@ -171,7 +174,8 @@ export const BIATemplate = {
                             'protein screen',
                             'compound screen',
                             'antibody screen',
-                            'ORF overexpression screen'
+                            'ORF overexpression screen',
+                            'Other'
                         ]
                     }
                 },

@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 
 import {Observable, ReplaySubject, Subject} from 'rxjs';
-import {forkJoin} from 'rxjs/observable/forkJoin';
 import {map} from 'rxjs/operators';
 import {SubmissionService} from '../../submission/submission-shared/submission.service';
 import {AuthService} from './auth.service';
@@ -9,6 +8,7 @@ import {ExtendedUserInfo} from './model';
 
 import {UserRole} from './user-role';
 import {UserSession} from './user-session';
+
 
 @Injectable()
 export class UserData {
@@ -19,15 +19,14 @@ export class UserData {
 
         userSession.created$.subscribe(created => {
             if (created) {
-                forkJoin(
-                    authService.checkUser(),
-                    submService.getProjects()
-                ).subscribe(results => {
-                    const userInfo = <ExtendedUserInfo>results[0];
-                    userInfo.projects = results[1].map(project => project.accno);
-
-                    this.whenFetched$.next(userInfo);
-                    this.whenFetched$.complete();
+                authService.checkUser().subscribe( resp => {
+                    const userInfo = resp;
+                    submService.getProjects().subscribe( result => {
+                        const extendedUserInfo = <ExtendedUserInfo>userInfo;
+                        extendedUserInfo.projects = result.map(project => project.accno);
+                        this.whenFetched$.next(extendedUserInfo);
+                        this.whenFetched$.complete();
+                    })
                 });
             }
         });

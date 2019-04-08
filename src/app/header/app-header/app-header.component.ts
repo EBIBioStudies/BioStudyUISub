@@ -1,9 +1,8 @@
-import {ApplicationRef, Component, OnDestroy} from '@angular/core';
+import {ApplicationRef, Component, ElementRef, OnDestroy, ViewChild} from '@angular/core';
 import {Event, NavigationEnd, Router} from '@angular/router';
 
 import {AuthService, UserSession, UserData} from 'app/auth/shared';
 import {RequestStatusService} from 'app/http/request-status.service';
-import {ConfirmDialogComponent} from 'app/shared/confirm-dialog.component';
 import {BsModalService} from 'ngx-bootstrap';
 import {Subscription} from 'rxjs/Subscription';
 
@@ -21,7 +20,9 @@ export class AppHeaderComponent implements OnDestroy {
     userRegistering = false;
     isPendingReq = false;          // flags whether there is a transaction in progress (from anywhere in the app)
     isBusy = false;                // flags whether there is a transaction triggered by this component
-    userName: string;
+    profileTooltip = 'Profile';
+    @ViewChild('logout') logout;
+    @ViewChild('user') user;
 
     constructor(private userSession: UserSession,
                 private userData: UserData,
@@ -32,14 +33,12 @@ export class AppHeaderComponent implements OnDestroy {
                 private modalService: BsModalService) {
         const header = this;
 
-        this.userLoggedIn = !this.userSession.isAnonymous();
-        this.userName = this.userSession.userName();
 
         // If the session has expired (hence destroyed), it updates the view.
         // NOTE: the component's context has to be closed in. Otherwise, "this" points to SafeSubscriber.
         this.userSession.created$.subscribe(created => {
             const sessionDestroyed = header.userLoggedIn && !created;
-
+            this.userLoggedIn = !this.userSession.isAnonymous();
             header.userLoggedIn = created;
 
             // Since the session has been destroyed, it logs the user out.
@@ -65,6 +64,10 @@ export class AppHeaderComponent implements OnDestroy {
         this.reqStatusSubs = this.requestStatus.whenStatusChanged.subscribe(hasPendingRequests => {
             header.isPendingReq = hasPendingRequests;
         });
+    }
+
+    changeProfileTooltip() {
+        this.profileTooltip = this.userSession.userName();
     }
 
     signOut() {

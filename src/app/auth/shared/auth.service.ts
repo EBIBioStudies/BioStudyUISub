@@ -37,14 +37,18 @@ export class AuthService {
             catchError(resp => AuthService.catch403Error<UserInfoResponse>(resp)),
             map(resp => AuthService.statusCheck(resp)),
             map(resp => {
-                this.userSession.create(resp.sessid, resp.username);
+                this.userSession.create(resp);
                 return resp;
             }));
     }
 
     checkUser(): Observable<UserInfo> {
         return this.http.get<UserInfoResponse>('/raw/auth/check?format=json').pipe(
-            map(resp => AuthService.statusCheck(resp)));
+            map(resp => {
+                const value = AuthService.statusCheck(resp);
+                this.userSession.update(resp);
+                return value;
+            }));
     }
 
     passwordResetReq(obj: PasswordResetRequestData): Observable<StatusResponse> {

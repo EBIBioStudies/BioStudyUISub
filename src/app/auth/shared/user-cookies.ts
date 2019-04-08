@@ -1,51 +1,28 @@
 import {Cookie} from 'ng2-cookies/ng2-cookies';
 
-const LOGIN_TOKEN = 'BsstToken';
-const USER_NAME = 'BsstUserName';
-const AE_COOKIES = ['AeLoggedUser_', 'AeLoginToken_'];
-const PATH = '/';
+const LOGIN_TOKEN = 'BioStudiesToken';
+const USER = 'BioStudiesUser';
 
-/**
- * Stores the login token in LocalStorage to ensure authentication across different subdomains (or ports) remains separate.
- * NOTE: Local storage uses a separate definition of origins than cookis. Hence its use here.
- * @param {string} token - Request token.
- */
+
 export function setLoginToken(token: string): void {
-    localStorage.setItem(LOGIN_TOKEN, token);
+    Cookie.set(LOGIN_TOKEN, token);
 }
 
-/**
- * Retrieves the login token from LocalStorage.
- * @returns {string} - Request token. Empty string if not found.
- */
 export function getLoginToken(): string {
-    return localStorage.getItem(LOGIN_TOKEN) || '';
+    return Cookie.get(LOGIN_TOKEN) || '';
 }
 
-/**
- * Removes the login token from LocalStorage.
- */
 export function destroyLoginToken(): void {
-    localStorage.removeItem(LOGIN_TOKEN);
+    Cookie.delete(LOGIN_TOKEN);
 }
 
-export function destroyUserName(): void {
-    localStorage.removeItem(USER_NAME);
+export function destroyUser(): void {
+    localStorage.removeItem(USER);
+}
+export function setUser(user: any): void {
+    localStorage.setItem(USER, JSON.stringify(user));
 }
 
-/**
- * Wipes out any ArrayExpress-related cookies.
- */
-export function cleanUpOldCookies() {
-    AE_COOKIES.forEach((name) => {
-        Cookie.delete(name, PATH);
-    });
-}
-
-export function setUserName(userName: string): void {
-    localStorage.setItem(USER_NAME, userName);
-}
-
-export function getUserName(): string {
-    return localStorage.getItem(USER_NAME) || '';
+export function getUser(): any {
+    return JSON.parse(localStorage.getItem(USER) || '{}');
 }
