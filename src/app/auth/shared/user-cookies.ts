@@ -2,10 +2,11 @@ import {Cookie} from 'ng2-cookies/ng2-cookies';
 
 const LOGIN_TOKEN = 'BioStudiesToken';
 const USER = 'BioStudiesUser';
+const COOKIE_PATH = '/';
 
 
 export function setLoginToken(token: string): void {
-    Cookie.set(LOGIN_TOKEN, token);
+    Cookie.set(LOGIN_TOKEN, token, 31557600, COOKIE_PATH);
 }
 
 export function getLoginToken(): string {
