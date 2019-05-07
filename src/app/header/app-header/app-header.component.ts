@@ -20,7 +20,7 @@ export class AppHeaderComponent implements OnDestroy {
     userRegistering = false;
     isPendingReq = false;          // flags whether there is a transaction in progress (from anywhere in the app)
     isBusy = false;                // flags whether there is a transaction triggered by this component
-    profileTooltip = 'Profile';
+    profileTooltip = '';
     @ViewChild('logout') logout;
     @ViewChild('user') user;
 
