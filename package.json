@@ -6,6 +6,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.conf.json --ssl true --ssl-key ssl/localhost.key --ssl-cert ssl/localhost.crt --progress",
+    "start-no-ssl": "ng serve --proxy-config proxy.conf.json --progress",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
