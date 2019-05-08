@@ -1,5 +1,5 @@
+import { Router } from '@angular/router';
 import {Component} from '@angular/core';
-
 import {BsModalRef} from 'ngx-bootstrap';
 import {SubmitLog, SubmissionService} from '../submission-shared/submission.service';
 
@@ -15,8 +15,13 @@ export class SubmResultsModalComponent {
     status?: string;
     log?: SubmitLog;
     collapsedLog?: boolean = false;
+    private modalRef: BsModalRef;
+    private router: Router;
 
-    constructor(public modalRef: BsModalRef){}
+    constructor(modalRef: BsModalRef, router: Router){
+        this.modalRef = modalRef;
+        this.router = router;
+    }
 
     get errorMessage() {
         return this.hasLog ? SubmissionService.deepestError(this.log!!) : 'Unknown error';
@@ -32,6 +37,15 @@ export class SubmResultsModalComponent {
      */
     toLogURI(): string {
         return encodeURIComponent(JSON.stringify(this.log));
+    }
+
+    hideModal() {
+        this.modalRef.hide();
+    }
+
+    goToSubmissions() {
+        this.hideModal();
+        this.router.navigateByUrl('/submissions');
     }
 
     /**
