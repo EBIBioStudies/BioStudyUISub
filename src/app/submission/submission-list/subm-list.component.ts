@@ -158,10 +158,8 @@ export class SubmListComponent {
         this.gridOptions = <GridOptions>{
             debug: false,
             rowSelection: 'single',
-            enableColResize: true,
             unSortIcon: true,
             enableSorting: false,
-            enableServerSideFilter: true,
             rowModelType: 'infinite',
             pagination: true,
             cacheBlockSize: 15,
@@ -198,40 +196,50 @@ export class SubmListComponent {
     createColumnDefs() {
         this.columnDefs = [
             {
-                headerName: 'Accession',
                 cellClass: 'ag-cell-centered',
-                maxWidth: 175,
                 field: 'accno',
-                filterFramework: TextFilterComponent
+                filter: true,
+                filterFramework: TextFilterComponent,
+                headerName: 'Accession',
+                maxWidth: 175,
+                resizable: true
             },
             {
-                headerName: 'Version',
+                cellClass: 'ag-cell-centered',
                 field: 'version',
-                maxWidth: 100,
-                cellClass: 'ag-cell-centered',
+                filter: true,
+                filterFramework: TextFilterComponent,
+                headerName: 'Version',
                 hide: !this.showSubmitted,
-                filterFramework: TextFilterComponent
-            },
-            {
-                headerName: this.showSubmitted ? 'Latest title' : 'Title',
-                field: 'title',
-                filterFramework: TextFilterComponent
-            },
-            {
-                headerName: this.showSubmitted ? 'First Released' : 'Release Date',
-                cellClass: 'ag-cell-centered',
-                maxWidth: 150,
-                field: 'rtime',
-                cellRendererFramework: DateCellComponent,
-                filterFramework: DateFilterComponent
-            },
-            {
-                headerName: 'Actions',
-                cellClass: 'ag-cell-centered',
                 maxWidth: 100,
-                suppressMenu: true,
+                resizable: true
+            },
+            {
+                field: 'title',
+                filter: true,
+                filterFramework: TextFilterComponent,
+                headerName: this.showSubmitted ? 'Latest title' : 'Title',
+                resizable: true
+            },
+            {
+                cellClass: 'ag-cell-centered',
+                cellRendererFramework: DateCellComponent,
+                field: 'rtime',
+                filter: true,
+                filterFramework: DateFilterComponent,
+                headerName: this.showSubmitted ? 'First Released' : 'Release Date',
+                maxWidth: 150,
+                resizable: true
+            },
+            {
+                cellClass: 'ag-cell-centered',
+                cellRendererFramework: ActionButtonsCellComponent,
+                filter: true,
+                headerName: 'Actions',
+                maxWidth: 100,
                 sortable: false,
-                cellRendererFramework: ActionButtonsCellComponent
+                suppressMenu: true,
+                resizable: true
             }
         ];
     }
