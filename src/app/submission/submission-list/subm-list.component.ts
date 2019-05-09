@@ -158,7 +158,6 @@ export class SubmListComponent {
         this.gridOptions = <GridOptions>{
             debug: false,
             rowSelection: 'single',
-            enableColResize: true,
             unSortIcon: true,
             enableSorting: false,
             rowModelType: 'infinite',
@@ -203,6 +202,7 @@ export class SubmListComponent {
                 filterFramework: TextFilterComponent,
                 headerName: 'Accession',
                 maxWidth: 175,
+                resizable: true
             },
             {
                 cellClass: 'ag-cell-centered',
@@ -211,13 +211,15 @@ export class SubmListComponent {
                 filterFramework: TextFilterComponent,
                 headerName: 'Version',
                 hide: !this.showSubmitted,
-                maxWidth: 100
+                maxWidth: 100,
+                resizable: true
             },
             {
                 field: 'title',
                 filter: true,
                 filterFramework: TextFilterComponent,
-                headerName: this.showSubmitted ? 'Latest title' : 'Title'
+                headerName: this.showSubmitted ? 'Latest title' : 'Title',
+                resizable: true
             },
             {
                 cellClass: 'ag-cell-centered',
@@ -226,7 +228,8 @@ export class SubmListComponent {
                 filter: true,
                 filterFramework: DateFilterComponent,
                 headerName: this.showSubmitted ? 'First Released' : 'Release Date',
-                maxWidth: 150
+                maxWidth: 150,
+                resizable: true
             },
             {
                 cellClass: 'ag-cell-centered',
@@ -235,7 +238,8 @@ export class SubmListComponent {
                 headerName: 'Actions',
                 maxWidth: 100,
                 sortable: false,
-                suppressMenu: true
+                suppressMenu: true,
+                resizable: true
             }
         ];
     }
