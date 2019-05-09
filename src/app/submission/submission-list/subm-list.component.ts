@@ -156,26 +156,26 @@ export class SubmListComponent {
         //NOTE: Ag-Grid doesn't support client-side filtering/sorting and server-side pagination simultaneously.
         //https://www.ag-grid.com/javascript-grid-infinite-scrolling/#sorting-filtering
         this.gridOptions = <GridOptions>{
-            debug: false,
-            rowSelection: 'single',
-            enableColResize: true,
-            unSortIcon: true,
-            enableSorting: false,
-            enableServerSideFilter: true,
-            rowModelType: 'infinite',
-            pagination: true,
             cacheBlockSize: 15,
+            debug: false,
+            enableColResize: true,
+            enableServerSideFilter: true,
+            enableSorting: false,
+            icons: {menu: '<i class="fa fa-filter"/>'},
+            localeText: {noRowsToShow: 'No submissions found'},
+            overlayLoadingTemplate: '<span class="ag-overlay-loading-center"><i class="fa fa-cog fa-spin fa-lg"></i> Loading...</span>',
+            pagination: true,
             paginationPageSize: 15,
             rowHeight: 30,
-            localeText: {noRowsToShow: 'No submissions found'},
-            icons: {menu: '<i class="fa fa-filter"/>'},
-            overlayLoadingTemplate: '<span class="ag-overlay-loading-center"><i class="fa fa-cog fa-spin fa-lg"></i> Loading...</span>',
-            getRowNodeId: (item) => {
-                return item.accno;
-            },
-            onGridReady: (params) => {
+            rowModelType: 'infinite',
+            rowSelection: 'single',
+            unSortIcon: true,
+            getRowNodeId: (item) => item.accno,
+            onGridReady: () => {
                 this.gridOptions!.api!.sizeColumnsToFit();
                 this.setDatasource();
+
+                window.onresize = () => this.gridOptions!.api!.sizeColumnsToFit();
             }
         };
 
