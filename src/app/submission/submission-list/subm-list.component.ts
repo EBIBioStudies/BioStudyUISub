@@ -18,11 +18,11 @@ import {ModalService} from '../../shared/modal.service';
 @Component({
     selector: 'action-buttons-cell',
     template: `
-        <button *ngIf="rowData" type="button" class="btn btn-link btn-xs btn-flat"
+        <button *ngIf="rowData" type="button" class="btn btn-primary btn-xs btn-flat"
                 (click)="onEditSubmission()"
                 tooltip="Edit this submission"
                 container="body">
-            <i class="fa fa-pencil fa-fw fa-lg"></i>
+            <i class="fas fa-pencil-alt fa-fw"></i>
         </button>
         <button *ngIf="rowData" type="button" class="btn btn-danger btn-xs btn-flat"
                 [disabled]="isBusy"
