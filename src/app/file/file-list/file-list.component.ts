@@ -1,13 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-
 import {ActivatedRoute, Params} from '@angular/router';
-
 import {GridOptions} from 'ag-grid-community/main';
-import {Observable, of, throwError} from 'rxjs';
-import 'rxjs/add/observable/of';
-
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/takeUntil';
+import {of, throwError} from 'rxjs';
 import {Subject} from 'rxjs/Subject';
 import {AppConfig} from '../../app.config';
 import {FileUpload, FileUploadList} from '../shared/file-upload-list.service';
@@ -17,15 +11,17 @@ import {FileActionsCellComponent} from './ag-grid/file-actions-cell.component';
 import {FileTypeCellComponent} from './ag-grid/file-type-cell.component';
 import {ProgressCellComponent} from './ag-grid/upload-progress-cell.component';
 import {UploadBadgeItem} from './file-upload-badge/file-upload-badge.component';
-import {filter, switchMap} from 'rxjs/operators';
+import {switchMap} from 'rxjs/operators';
 import {ModalService} from '../../shared/modal.service';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/takeUntil';
 
 @Component({
     selector: 'file-list',
     templateUrl: './file-list.component.html',
     styleUrls: ['./file-list.component.css']
 })
-
 export class FileListComponent implements OnInit, OnDestroy {
     protected ngUnsubscribe: Subject<void>;     // stopper for all subscriptions
     private rowData: any[];
@@ -178,19 +174,19 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     onUploadFilesSelect(files: FileList) {
-        const uploadedFiles = new Set(this.rowData.map( f => f.name));
-        const newFiles =  Array.from(files).map( f => f.name);
-        const overlap = newFiles.filter(name => uploadedFiles.has(name));
+        const uploadedFileNames = this.rowData.map((file) => file.name);
+        const filesToUpload =  Array.from(files).map((file) => file.name);
+        const overlap = filesToUpload.filter((fileToUpload) => uploadedFileNames.includes(fileToUpload));
 
         (overlap.length > 0 ? this.confirmOverwrite(overlap) : of(true))
             .takeUntil(this.ngUnsubscribe)
-            .subscribe( () => this.upload(files));
-
+            .subscribe(() => this.upload(files));
     }
 
     private confirmOverwrite(overlap) {
         const overlapString = overlap.length === 1 ? overlap[0] + '?' :
             overlap.length + ' files? (' + overlap.join(', ') + ')' ;
+
         return this.modalService.whenConfirmed(`Do you want to overwrite ${overlapString}`,
             'Overwrite files?', 'Overwrite');
     }
@@ -226,15 +222,16 @@ export class FileListComponent implements OnInit, OnDestroy {
             }
         }));
     }
+
     private removeFile(fileName: string): void {
         this.modalService.whenConfirmed(`Do you want to delete "${fileName}"?`, 'Delete a file', 'Delete')
             .pipe( switchMap( (it) => this.fileService.removeFile(this.path.absolutePath(fileName))))
             .takeUntil(this.ngUnsubscribe)
             .subscribe(it => this.loadData());
     }
+
     private removeUpload(u: FileUpload) {
         this.fileUploadList.remove(u);
         this.loadData();
     }
-
 }

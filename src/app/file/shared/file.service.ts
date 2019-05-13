@@ -32,7 +32,7 @@ export class FileService {
     }
 
     upload(fullPath: string, files: File[]): Observable<UploadEvent> {
-        let formData = new FormData();
+        const formData = new FormData();
 
         files.forEach(file => {
             formData.append('files', file, file.name)

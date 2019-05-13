@@ -123,7 +123,7 @@ export class FileUploadList {
     }
 
     upload(path: Path, files: File[]): FileUpload {
-        let upload = new FileUpload(path, files, this.fileService);
+        const upload = new FileUpload(path, files, this.fileService);
 
         this.uploads.push(upload);
 

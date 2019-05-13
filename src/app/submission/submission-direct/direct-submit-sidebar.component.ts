@@ -1,29 +1,31 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {UserData} from 'app/auth/shared';
-import {FileUploadButtonComponent} from 'app/shared/file-upload-button.component';
-import {from, Subject, Subscription} from 'rxjs';
-import {last, mergeAll} from 'rxjs/operators';
-import {AppConfig} from 'app/app.config';
-import {DirectSubmitService} from './direct-submit.service';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { UserData } from 'app/auth/shared';
+import { FileUploadButtonComponent } from 'app/shared/file-upload-button.component';
+import { Observable, from, Subject, Subscription } from 'rxjs';
+import { last, mergeAll } from 'rxjs/operators';
+import { AppConfig } from 'app/app.config';
+import { DirectSubmitService } from './direct-submit.service';
+import { DirectSubmitFileUploadService } from './direct-submit-file-upload.service';
+import { UploadEvent } from 'app/file/shared/http-upload-client.service';
 
 @Component({
     selector: 'direct-submit-sidebar',
     templateUrl: './direct-submit-sidebar.component.html',
     styleUrls: ['./direct-submit-sidebar.component.css']
 })
-
 export class DirectSubmitSideBarComponent implements OnInit {
-    protected ngUnsubscribe: Subject<void>;     //stopper for all subscriptions
-    private uploadSubs?: Subscription;           //subscription for the battery of upload requests
+    protected ngUnsubscribe: Subject<void>; // Stopper for all subscriptions
+    private uploadSubs?: Subscription; // Subscription for the battery of upload requests
+    private uploadFilesSubscription?: Subscription;
     private model: { files: any | undefined[], projects: any | undefined[] } = {
-        files: undefined,               //no file selection at first
-        projects: []                    //chebox-ised representation of project list
+        files: undefined, // No file selection at first
+        projects: [] // Chebox-ised representation of project list
     };
-    isProjFetch: boolean = true;        //are projects still being retrieved?
-    isBulkMode: boolean = false;        //flags if single directory with all study files is expected
-    isBulkSupport: boolean = false;     //indicates if directory selection is supported by the browser
-    submitType: string = 'create';      //will the upload create or update studies?
-    selectedProj: string[] = [];        //projects selected for attachment
+    isProjFetch: boolean = true; // Are projects still being retrieved?
+    isBulkMode: boolean = false; // Flags if single directory with all study files is expected
+    isBulkSupport: boolean = false; // Indicates if directory selection is supported by the browser
+    submitType: string = 'create'; // Will the upload create or update studies?
+    selectedProj: string[] = []; // Projects selected for attachment
 
     @Input() collapsed? = false;
     @Input() readonly? = false;
@@ -33,14 +35,19 @@ export class DirectSubmitSideBarComponent implements OnInit {
     private fileSelector;
 
     /**
-     * Initialises subscription stopper so that pending requests can be cancelled on view destruction.
-     * @param {DirectSubmitService} submitSvc - Singleton service for all submission transactions.
-     * @param {UserData} userData - Singleton service for fetching and accessing the current user's profile data.
+     * Initializes subscription stopper so that pending requests can be cancelled on view destruction.
+     *
      * @param {AppConfig} appConfig - Global configuration object with app-wide settings.
+     * @param {DirectSubmitService} submitSvc - Singleton service for all submission transactions.
+     * @param {FileUploadList} fileUpload - Service to upload files.
+     * @param {UserData} userData - Singleton service for fetching and accessing the current user's profile data.
      */
-    constructor(private directSubmitSvc: DirectSubmitService,
-                private userData: UserData,
-                private appConfig: AppConfig) {
+    constructor(
+        private appConfig: AppConfig,
+        private directSubmitSvc: DirectSubmitService,
+        private directSubmitFileUploadService: DirectSubmitFileUploadService,
+        private userData: UserData
+    ) {
         this.ngUnsubscribe = new Subject<void>();
     }
 
@@ -157,11 +164,7 @@ export class DirectSubmitSideBarComponent implements OnInit {
     studyProp(studyIdx: number, property: string): string {
         const request = this.directSubmitSvc.getRequest(studyIdx);
 
-        if (request) {
-            return request[property];
-        } else {
-            return '';
-        }
+        return typeof request !== 'undefined' ? request[property] : '';
     }
 
     /**
@@ -195,11 +198,12 @@ export class DirectSubmitSideBarComponent implements OnInit {
      * Converts a list of would-be upload files into a native array. The upload service is reset as part of the
      * process since it signals the start of a new upload process and allows treating the list of files as
      * "nascent uploads".
+     *
      * @param {FileList} files - List of files to be uploaded.
      */
     private onUploadFilesSelect(files: FileList): void {
         if (files.length > 0) {
-            this.model.files = Array.prototype.slice.call(files);
+            this.model.files = Array.from(files);
             this.directSubmitSvc.reset();
         }
     }
@@ -211,6 +215,7 @@ export class DirectSubmitSideBarComponent implements OnInit {
      */
     private onCancelPending(event: Event) {
         this.uploadSubs!.unsubscribe();
+        this.uploadFilesSubscription!.unsubscribe();
         this.directSubmitSvc.cancelAll();
     }
 
@@ -244,31 +249,49 @@ export class DirectSubmitSideBarComponent implements OnInit {
      * Carries out the necessary requests for the selected files, detecting their format automatically.
      * NOTE: Requests are bundled into groups of MAX_CONCURRENT requests to avoid overwhelming the browser and/or
      * the server when dealing with a high number of files.
-     * @param {string} submType - Indicates whether the submitted file should create or update an existing database entry.
+     *
+     * @param {string} submissionType - Indicates whether the submitted file should create or update an existing database entry.
      */
-    private onSubmit(submType: string): void {
+    private onSubmit(submissionType: string): void {
         let nonClearedFiles;
 
         if (this.canSubmit) {
             nonClearedFiles = this.model.files.filter(Boolean);
 
-            //In case the same files are re-submitted, the previous list of requests is reset.
-            this.directSubmitSvc.reset();
+            this.uploadFilesSubscription = this.uploadFiles(nonClearedFiles).subscribe((uploadEvent) => {
+                if (uploadEvent.isSuccess()) {
+                    this.uploadSubs = this.createDirectSubmission(nonClearedFiles, submissionType).subscribe();
+                }
+            });
 
-            //Performs the double-request submits and flattens the resulting high-order observables onto a single one.
-            this.uploadSubs = from(nonClearedFiles).map((file: File) => {
-                return this.directSubmitSvc.addRequest(file, '', this.selectedProj, submType);
-
-                //Throttles the number of requests allowed in parallel and takes just the last event to signal the end of the upload process.
-            }).pipe(mergeAll(this.appConfig.maxConcurrent)).pipe(last())
-
-            //Cancels all requests on demand and keeps the files list in sync with the list of requests.
-                .takeUntil(this.ngUnsubscribe).finally(() => this.model.files = nonClearedFiles).subscribe();
-
-            //Most probably file selection was left out.
+            // Most probably file selection was left out.
         } else {
             this.markFileTouched();
         }
+    }
+
+    private createDirectSubmission(files: File[], submissionType: string): Observable<any> {
+        // In case the same files are re-submitted, the previous list of requests is reset.
+        this.directSubmitSvc.reset();
+
+         // Performs the double-request submits and flattens the resulting high-order observables onto a single one.
+        return from(files)
+            .map((file: File) => this.directSubmitSvc.addRequest(file, '', this.selectedProj, submissionType))
+            // Throttles the number of requests allowed in parallel and takes just the last event
+            // to signal the end of the upload process.
+            .pipe(mergeAll(this.appConfig.maxConcurrent))
+            .pipe(last())
+            // Cancels all requests on demand and keeps the files list in sync with the list of requests.
+            .takeUntil(this.ngUnsubscribe)
+            .finally(() => this.model.files = files);
+    }
+
+    private uploadFiles(files: File[]): Observable<any> {
+        return from(files)
+            .map((file) => this.directSubmitFileUploadService.doUpload(file))
+            .pipe(mergeAll(this.appConfig.maxConcurrent))
+            .pipe(last())
+            .takeUntil(this.ngUnsubscribe);
     }
 
     /**

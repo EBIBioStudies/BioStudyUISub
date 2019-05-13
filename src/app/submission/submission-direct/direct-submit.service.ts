@@ -141,21 +141,20 @@ export class DirectSubmitService {
 
     /**
      * Checks the overall status of the request queue by probing its members.
+     *
      * @param {string} statusName - Descriptive name of the status.
      * @returns {boolean} True if the queue is with the status checked.
      */
     isQueueStatus(statusName: string): boolean {
         let condition = 'some';
 
-        if (statusName == 'busy') {
+        if (statusName === 'busy') {
             statusName = 'inprogress';
-        } else if (statusName == 'successful' || statusName == 'done') {
+        } else if (statusName === 'successful' || statusName === 'done') {
             condition = 'every';
         }
 
-        return this._requests[condition](request => {
-            return request[statusName];
-        });
+        return this._requests[condition](request => request[statusName]);
     }
 
     /**
@@ -209,8 +208,8 @@ export class DirectSubmitService {
             catchError((error: any) => {
                 req.onResponse(error.message || 'unknown error', ReqStatus.ERROR);
 
-                //NOTE: an empty observable is used instead of throwing an exception to prevent this transaction
-                //cancelling any remaining ones.
+                // NOTE: an empty observable is used instead of throwing an exception to prevent this transaction
+                // cancelling any remaining ones.
                 return of(null);
             }));
     }
