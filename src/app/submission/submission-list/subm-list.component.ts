@@ -174,7 +174,7 @@ export class SubmListComponent {
                 this.gridOptions!.api!.sizeColumnsToFit();
                 this.setDatasource();
 
-                window.onresize = () => this.gridOptions!.api!.sizeColumnsToFit();
+                window.onresize = () => this.gridOptions!.api! && this.gridOptions!.api!.sizeColumnsToFit();
             }
         };
 
