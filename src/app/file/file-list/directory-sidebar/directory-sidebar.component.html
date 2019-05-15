@@ -8,7 +8,7 @@
                 container="body"
                 placement="right">
             <i class="fa fa-fw fa-lg"
-               [ngClass]="{'fa-toggle-left': !collapsed, 'fa-toggle-right': collapsed}"></i>
+               [ngClass]="{'fa-toggle-on': !collapsed, 'fa-toggle-off': collapsed}"></i>
         </button>
         <tabset [ngClass]="{'invisible': collapsed}">
             <tab heading="Explorer" active="true"></tab>
