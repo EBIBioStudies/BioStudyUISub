@@ -351,7 +351,7 @@ export const EutoxriskTemplate = {
                     {
                         'name': 'Description',
                         'valueType': {'name': 'text'},
-                        'display': 'required'
+                        'display': 'desirable'
                     },
                     {
                         'name': 'Type',
