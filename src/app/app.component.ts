@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
         //NOTE: ebiFrameworkRunDataProtectionBanner is defined after the script loads.
         bannerEl.src = this.appConfig.bannerUrl;
         bannerEl.onload = function () {window['ebiFrameworkRunDataProtectionBanner']('other')};
-        document.head.appendChild(bannerEl);
+        document.head!.appendChild(bannerEl);
 
         this.userSession.init();
     }
