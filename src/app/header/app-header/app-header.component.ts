@@ -1,10 +1,9 @@
-import {ApplicationRef, Component, ElementRef, OnDestroy, ViewChild} from '@angular/core';
-import {Event, NavigationEnd, Router} from '@angular/router';
-
-import {AuthService, UserSession, UserData} from 'app/auth/shared';
-import {RequestStatusService} from 'app/http/request-status.service';
-import {BsModalService} from 'ngx-bootstrap';
-import {Subscription} from 'rxjs/Subscription';
+import { ApplicationRef, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { Event, NavigationEnd, Router } from '@angular/router';
+import { AuthService, UserSession, UserData } from 'app/auth/shared';
+import { RequestStatusService } from 'app/http/request-status.service';
+import { BsModalService } from 'ngx-bootstrap';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-header',
@@ -13,13 +12,12 @@ import {Subscription} from 'rxjs/Subscription';
 })
 export class AppHeaderComponent implements OnDestroy {
     reqStatusSubs: Subscription;
-
     navCollapsed = true;
     userLoggedIn = false;
     userLoggingIn = false;
     userRegistering = false;
-    isPendingReq = false;          // flags whether there is a transaction in progress (from anywhere in the app)
-    isBusy = false;                // flags whether there is a transaction triggered by this component
+    isPendingReq = false; // flags whether there is a transaction in progress (from anywhere in the app)
+    isBusy = false; // flags whether there is a transaction triggered by this component
     profileTooltip = '';
     @ViewChild('logout') logout;
     @ViewChild('user') user;
@@ -75,7 +73,7 @@ export class AppHeaderComponent implements OnDestroy {
         this.authService
             .signOut()
             .subscribe(
-                () => {this.isBusy = false},
+                () => { this.isBusy = false; },
                 (error) => {
                     // fix this: 403 response should not be returned here
                     if (error.status === 403) {

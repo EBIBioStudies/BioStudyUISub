@@ -1,8 +1,6 @@
-import {AfterViewInit, Component, ElementRef, Input, QueryList, ViewChildren} from '@angular/core';
-
-import {Attribute} from 'app/submission/submission-shared/model';
-import {AppConfig} from 'app/app.config';
-import {FeatureForm, ColumnControl} from '../../shared/section-form';
+import { AfterViewInit, Component, ElementRef, Input, QueryList, ViewChildren } from '@angular/core';
+import { AppConfig } from 'app/app.config';
+import { FeatureForm, ColumnControl } from '../../shared/section-form';
 
 @Component({
     selector: 'subm-feature-list',
@@ -10,22 +8,22 @@ import {FeatureForm, ColumnControl} from '../../shared/section-form';
     styleUrls: ['./feature-list.component.css']
 })
 export class FeatureListComponent implements AfterViewInit {
-    @Input() featureForm?: FeatureForm;      //Reactive data structure for the form containing this feature
-    @Input() readonly?: boolean = false;    //Flag for features that cannot be edited (e.g. sent state for submissions)
+    @Input() featureForm?: FeatureForm; // Reactive data structure for the form containing this feature
+    @Input() readonly?: boolean = false; // Flag for features that cannot be edited (e.g. sent state for submissions)
 
     @ViewChildren('rowEl') rowEls?: QueryList<ElementRef>;
 
-    public suggestLength: number;           //max number of suggested values to be displayed at once
+    public suggestLength: number; // max number of suggested values to be displayed at once
 
     constructor(private rootEl: ElementRef, private appConfig: AppConfig) {
         this.suggestLength = appConfig.maxSuggestLength;
     }
 
     get columns(): ColumnControl[] {
-        return this.featureForm!.columns
+        return this.featureForm!.columns;
     }
 
-    //On DOM change, sets focus on first field of newly added row
+    // On DOM change, sets focus on first field of newly added row
     ngAfterViewInit(): void {
         /*this.rowEls!.changes.subscribe((rowEls) => {
             rowEls.last.nativeElement.querySelector('select, input').focus();

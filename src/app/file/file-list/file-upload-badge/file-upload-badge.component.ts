@@ -1,7 +1,7 @@
-import {Component, EventEmitter, OnDestroy, Output} from '@angular/core';
-import {FileUploadList} from '../../shared/file-upload-list.service';
-import {Path} from '../../shared/path';
-import {Subscription} from 'rxjs';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
+import { FileUploadList } from '../../shared/file-upload-list.service';
+import { Path } from '../../shared/path';
+import { Subscription } from 'rxjs';
 
 export class UploadBadgeItem {
     constructor(public readonly fileName: string,
@@ -35,7 +35,7 @@ export class FileUploadBadgeComponent implements OnDestroy {
                         progress: fileUpload.isFailed() ? 'error' : fileUpload.progress + '%'
                     }))
                 ).reduce((rv, v) => rv.concat(v), (<UploadBadgeItem[]>[]));
-        })
+        });
     }
 
     get count(): number {

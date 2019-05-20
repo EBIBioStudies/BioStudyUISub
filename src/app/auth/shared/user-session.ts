@@ -1,7 +1,6 @@
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
-
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 import {
     setLoginToken,
     getLoginToken,
@@ -13,7 +12,6 @@ import {
 
 @Injectable()
 export class UserSession {
-
     private sessionCreated = new Subject<boolean>();
 
     created$: Observable<boolean> = this.sessionCreated.asObservable();

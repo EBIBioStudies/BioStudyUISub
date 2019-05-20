@@ -1,10 +1,8 @@
-import {Component, ElementRef, EventEmitter, forwardRef, Input, Output} from '@angular/core';
-
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {AppConfig} from 'app/app.config';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {typeaheadSource} from '../../shared/typeahead.utils';
-
+import { Component, ElementRef, EventEmitter, forwardRef, Input, Output } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { AppConfig } from 'app/app.config';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { typeaheadSource } from '../../shared/typeahead.utils';
 
 @Component({
     selector: 'inline-edit',
@@ -15,6 +13,10 @@ import {typeaheadSource} from '../../shared/typeahead.utils';
     ]
 })
 export class InlineEditComponent implements ControlValueAccessor {
+    private _value: string = '';
+    readonly typeahead: Observable<string[]>;
+    private valueChanges$: Subject<string> = new BehaviorSubject<string>('');
+
     @Input() readonly = false;
     @Input() removable = true;
     @Input() emptyValue = '';
@@ -27,15 +29,8 @@ export class InlineEditComponent implements ControlValueAccessor {
     editing: boolean = false;
     suggestLength: number;
 
-    onChange: any = () => {
-    };
-    onTouched: any = () => {
-    };
-
-    private _value: string = '';
-
-    readonly typeahead: Observable<string[]>;
-    private valueChanges$: Subject<string> = new BehaviorSubject<string>('');
+    onChange: any = () => {};
+    onTouched: any = () => {};
 
     /**
      * Sets the max number of suggestions shown at any given time.
@@ -111,7 +106,8 @@ export class InlineEditComponent implements ControlValueAccessor {
      * Handler for select event from auto-suggest typeahead. Fixes the lack of a change event when selecting
      * a value without any character being typed (typically in combination with typeaheadMinLength = 0).
      * The closest input element descendant will be the event's target.
-     * TODO: this might be sorted in newer versions of the ngx-bootstrap plugin. Duplicate events may occur due to the repeated calling of "set value(value)" above (cannot keep track of the last value and, by extension, can't detect change).
+     * TODO: this might be sorted in newer versions of the ngx-bootstrap plugin. Duplicate events may occur due to the
+     * repeated calling of "set value(value)" above (cannot keep track of the last value and, by extension, can't detect change).
      * @param selection - Object for the currently selected value.
      */
 

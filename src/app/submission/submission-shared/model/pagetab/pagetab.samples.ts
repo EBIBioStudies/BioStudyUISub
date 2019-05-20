@@ -11,7 +11,8 @@ export function pageTabSample1() {
             },
             {
                 'name': 'Title',
-                'value': 'A genomic Multiprocess survey of machineries that control and link cell shape, microtubule organization, and cell-cycle progression.'
+                'value': 'A genomic Multiprocess survey of machineries that control and' +
+                         ' link cell shape, microtubule organization, and cell-cycle progression.'
             },
             {
                 'name': 'ReleaseDate',
@@ -51,7 +52,8 @@ export function pageTabSample1() {
                     'attributes': [
                         {
                             'name': 'Name',
-                            'value': 'Department of Genetics, University of Cambridge, Downing Street, Cambridge, Cambs CB2 3EH, United Kingdom'
+                            'value': 'Department of Genetics, University of Cambridge,' +
+                                    ' Downing Street, Cambridge, Cambs CB2 3EH, United Kingdom'
                         }
                     ],
                     'type': 'Organization'
@@ -77,7 +79,9 @@ export function pageTabSample1() {
                                 },
                                 {
                                     'name': 'Description',
-                                    'value': 'KO mutants were grown exponentially for >48 hr and imaged in 96-well micro- plates (lectin-coated glass bottom, 10 mg/well) containing Cascade Blue Dextran-labeled YES medium (0.1 mg/ml).'
+                                    'value': 'KO mutants were grown exponentially for >48 hr and imaged in ' +
+                                             '96-well micro- plates (lectin-coated glass bottom, 10 mg/well) ' +
+                                             'containing Cascade Blue Dextran-labeled YES medium (0.1 mg/ml).'
                                 }
                             ],
                             'type': 'Protocol'
@@ -101,7 +105,9 @@ export function pageTabSample1() {
                                 },
                                 {
                                     'name': 'Description',
-                                    'value': 'The Bioneer haploid deletion (knockout, KO) library v.2 (Bioneer, Korea) was modified to generate a GFP-tubulin expressing library (Dixon et al., 2008).'
+                                    'value': 'The Bioneer haploid deletion (knockout, KO) library v.2 ' +
+                                             '(Bioneer, Korea) was modified to generate a GFP-tubulin ' +
+                                             'expressing library (Dixon et al., 2008).'
                                 }
                             ],
                             'type': 'Protocol'
@@ -125,7 +131,12 @@ export function pageTabSample1() {
                                 },
                                 {
                                     'name': 'Description',
-                                    'value': 'Two-color images were acquired using an automated OperaLX spinning-disk confocal microscope (Perkin Elmer) with 603 water-immersion objective (NA 1.2). Six stacks of 16 z planes 0.4 mm separation were collected for each well. The entire genomic KO library was filmed twice. Customized software was used for image analysis and feature extraction.'
+                                    'value': 'Two-color images were acquired using an automated OperaLX ' +
+                                             'spinning-disk confocal microscope (Perkin Elmer) with 603 ' +
+                                             'water-immersion objective (NA 1.2). Six stacks of 16 z planes ' +
+                                             '0.4 mm separation were collected for each well. The entire ' +
+                                             'genomic KO library was filmed twice. Customized software was ' +
+                                             'used for image analysis and feature extraction.'
                                 }
                             ],
                             'type': 'Protocol'
@@ -155,7 +166,9 @@ export function pageTabSample1() {
                                 },
                                 {
                                     'name': 'Version',
-                                    'value': 'Bioneer haploid deletion library v.2 modified to generate a GFP-tubulin expressing library (Dixon et al., 2008). http://eng.bioneer.com/products/YeastGenome/Library-overview.aspx.'
+                                    'value': 'Bioneer haploid deletion library v.2 modified to generate a ' +
+                                             'GFP-tubulin expressing library (Dixon et al., 2008).' +
+                                             ' http://eng.bioneer.com/products/YeastGenome/Library-overview.aspx.'
                                 },
                                 {
                                     'name': 'Experimental conditions',
@@ -178,7 +191,8 @@ export function pageTabSample1() {
                                 },
                                 {
                                     'name': 'Description',
-                                    'value': 'This file contains information about the phenotypes observed, their reproducibility per gene and conservation across species.'
+                                    'value': 'This file contains information about the phenotypes observed, ' +
+                                             'their reproducibility per gene and conservation across species.'
                                 }
                             ],
                             'type': 'file'
@@ -187,7 +201,10 @@ export function pageTabSample1() {
                     'attributes': [
                         {
                             'name': 'Description',
-                            'value': 'Primary screen of fission yeast knock out mutants looking for genes controlling cell shape, microtubules, and cell-cycle progression. 262 genes controlling specific aspects of those processes are identifed, validated, and functionally annotated.'
+                            'value': 'Primary screen of fission yeast knock out mutants looking for ' +
+                                     'genes controlling cell shape, microtubules, and cell-cycle progression. ' +
+                                     '262 genes controlling specific aspects of those processes are identifed, ' +
+                                     'validated, and functionally annotated.'
                         },
                         {
                             'name': 'Technology type',
@@ -218,7 +235,11 @@ export function pageTabSample1() {
                             'valqual': [
                                 {
                                     'name': 'Description',
-                                    'value': 'We used two complementary strategies for detecting KO mu- tants with aberrant cell shape or microtubules (hits; Figures 1B, 1C, and S4). The first strategy identified mutants with a prominent alteration in a single feature (p value; Figure 1). The second strat- egy identified mutants with multiple subtle feature alterations (multiparametric profile scoring, Figure 1)'
+                                    'value': 'We used two complementary strategies for detecting KO mu- tants with ' +
+                                             'aberrant cell shape or microtubules (hits; Figures 1B, 1C, and S4). ' +
+                                             'The first strategy identified mutants with a prominent alteration in a ' +
+                                             'single feature (p value; Figure 1). The second strat- egy identified ' +
+                                             'mutants with multiple subtle feature alterations (multiparametric profile scoring, Figure 1)'
                                 },
                                 {
                                     'name': 'Score type',
@@ -244,7 +265,11 @@ export function pageTabSample1() {
                             'valqual': [
                                 {
                                     'name': 'Description',
-                                    'value': 'We used two complementary strategies for detecting KO mu- tants with aberrant cell shape or microtubules (hits; Figures 1B, 1C, and S4). The first strategy identified mutants with a prominent alteration in a single feature (p value; Figure 1). The second strat- egy identified mutants with multiple subtle feature alterations (multiparametric profile scoring, Figure 1)'
+                                    'value': 'We used two complementary strategies for detecting KO mu- tants with ' +
+                                             'aberrant cell shape or microtubules (hits; Figures 1B, 1C, and S4). ' +
+                                             'The first strategy identified mutants with a prominent alteration in a ' +
+                                             'single feature (p value; Figure 1). The second strat- egy identified mutants' +
+                                             'with multiple subtle feature alterations (multiparametric profile scoring, Figure 1)'
                                 },
                                 {
                                     'name': 'Score type',
@@ -270,7 +295,11 @@ export function pageTabSample1() {
                             'valqual': [
                                 {
                                     'name': 'Description',
-                                    'value': 'We used two complementary strategies for detecting KO mutants with aberrant cell shape or microtubules (hits; Figures 1B, 1C, and S4). The first strategy identified mutants with a prominent alteration in a single feature (p value; Figure 1). The second strategy identified mutants with multiple subtle feature alterations (multiparametric profile scoring, Figure 1)'
+                                    'value': 'We used two complementary strategies for detecting KO mutants with aberrant ' +
+                                             'cell shape or microtubules (hits; Figures 1B, 1C, and S4). The first strategy' +
+                                             'identified mutants with a prominent alteration in a single feature (p value; Figure 1). ' +
+                                             'The second strategy identified mutants with multiple subtle feature alterations ' +
+                                             '(multiparametric profile scoring, Figure 1)'
                                 },
                                 {
                                     'name': 'Score type',
@@ -296,7 +325,11 @@ export function pageTabSample1() {
                             'valqual': [
                                 {
                                     'name': 'Description',
-                                    'value': 'We used two complementary strategies for detecting KO mu- tants with aberrant cell shape or microtubules (hits; Figures 1B, 1C, and S4). The first strategy identified mutants with a prominent alteration in a single feature (p value; Figure 1). The second strat- egy identified mutants with multiple subtle feature alterations (multiparametric profile scoring, Figure 1)'
+                                    'value': 'We used two complementary strategies for detecting KO mu- tants with aberrant cell ' +
+                                            'shape or microtubules (hits; Figures 1B, 1C, and S4). The first strategy identified ' +
+                                            'mutants with a prominent alteration in a single feature (p value; Figure 1). ' +
+                                            'The second strat- egy identified mutants with multiple subtle feature alterations ' +
+                                            '(multiparametric profile scoring, Figure 1)'
                                 },
                                 {
                                     'name': 'Score type',
@@ -322,7 +355,10 @@ export function pageTabSample1() {
                             'valqual': [
                                 {
                                     'name': 'Description',
-                                    'value': 'Cell shape hit classification was done using eight support vector machine classifiers trained to recognize eight basic phenotypic classes on an individual cell basis: stubby (wide), banana (curved), orb (round), kinky (S-shaped), long (elongated), skittle (with one side wider than the other), and T-shaped (branched).'
+                                    'value': 'Cell shape hit classification was done using eight support vector machine classifiers ' +
+                                             'trained to recognize eight basic phenotypic classes on an individual cell basis: stubby ' +
+                                             '(wide), banana (curved), orb (round), kinky (S-shaped), long (elongated), skittle ' +
+                                             '(with one side wider than the other), and T-shaped (branched).'
                                 },
                                 {
                                     'name': 'Score type',
@@ -348,7 +384,10 @@ export function pageTabSample1() {
                             'valqual': [
                                 {
                                     'name': 'Description',
-                                    'value': 'Cell shape hit classification was done using eight support vector machine classifiers trained to recognize eight basic phenotypic classes on an individual cell basis: stubby (wide), banana (curved), orb (round), kinky (S-shaped), long (elongated), skittle (with one side wider than the other), and T-shaped (branched).'
+                                    'value': 'Cell shape hit classification was done using eight support vector machine classifiers ' +
+                                             'trained to recognize eight basic phenotypic classes on an individual cell basis: stubby ' +
+                                             '(wide), banana (curved), orb (round), kinky (S-shaped), long (elongated), skittle ' +
+                                             '(with one side wider than the other), and T-shaped (branched).'
                                 },
                                 {
                                     'name': 'Score type',
@@ -374,7 +413,10 @@ export function pageTabSample1() {
                             'valqual': [
                                 {
                                     'name': 'Description',
-                                    'value': 'Cell shape hit classification was done using eight support vector machine classifiers trained to recognize eight basic phenotypic classes on an individual cell basis: stubby (wide), banana (curved), orb (round), kinky (S-shaped), long (elongated), skittle (with one side wider than the other), and T-shaped (branched).'
+                                    'value': 'Cell shape hit classification was done using eight support vector machine classifiers ' +
+                                             'trained to recognize eight basic phenotypic classes on an individual cell basis: stubby ' +
+                                             '(wide), banana (curved), orb (round), kinky (S-shaped), long (elongated), skittle ' +
+                                             '(with one side wider than the other), and T-shaped (branched).'
                                 },
                                 {
                                     'name': 'Score type',
@@ -400,7 +442,10 @@ export function pageTabSample1() {
                             'valqual': [
                                 {
                                     'name': 'Description',
-                                    'value': 'Cell shape hit classification was done using eight support vector machine classifiers trained to recognize eight basic phenotypic classes on an individual cell basis: stubby (wide), banana (curved), orb (round), kinky (S-shaped), long (elongated), skittle (with one side wider than the other), and T-shaped (branched).'
+                                    'value': 'Cell shape hit classification was done using eight support vector machine classifiers ' +
+                                             'trained to recognize eight basic phenotypic classes on an individual cell basis: stubby ' +
+                                             '(wide), banana (curved), orb (round), kinky (S-shaped), long (elongated), skittle ' +
+                                             '(with one side wider than the other), and T-shaped (branched).'
                                 },
                                 {
                                     'name': 'Score type',
@@ -426,7 +471,10 @@ export function pageTabSample1() {
                             'valqual': [
                                 {
                                     'name': 'Description',
-                                    'value': 'Cell shape hit classification was done using eight support vector machine classifiers trained to recognize eight basic phenotypic classes on an individual cell basis: stubby (wide), banana (curved), orb (round), kinky (S-shaped), long (elongated), skittle (with one side wider than the other), and T-shaped (branched).'
+                                    'value': 'Cell shape hit classification was done using eight support vector machine classifiers ' +
+                                             'trained to recognize eight basic phenotypic classes on an individual cell basis: stubby ' +
+                                             '(wide), banana (curved), orb (round), kinky (S-shaped), long (elongated), skittle ' +
+                                             '(with one side wider than the other), and T-shaped (branched).'
                                 },
                                 {
                                     'name': 'Score type',
@@ -452,7 +500,10 @@ export function pageTabSample1() {
                             'valqual': [
                                 {
                                     'name': 'Description',
-                                    'value': 'Cell shape hit classification was done using eight support vector machine classifiers trained to recognize eight basic phenotypic classes on an individual cell basis: stubby (wide), banana (curved), orb (round), kinky (S-shaped), long (elongated), skittle/pear (with one side wider than the other), and T-shaped (branched).'
+                                    'value': 'Cell shape hit classification was done using eight support vector machine classifiers ' +
+                                             'trained to recognize eight basic phenotypic classes on an individual cell basis: stubby ' +
+                                             '(wide), banana (curved), orb (round), kinky (S-shaped), long (elongated), skittle/pear ' +
+                                             '(with one side wider than the other), and T-shaped (branched).'
                                 },
                                 {
                                     'name': 'Score type',
@@ -478,7 +529,10 @@ export function pageTabSample1() {
                             'valqual': [
                                 {
                                     'name': 'Description',
-                                    'value': 'Cell shape hit classification was done using eight support vector machine classifiers trained to recognize eight basic phenotypic classes on an individual cell basis: stubby (wide), banana (curved), orb (round), kinky (S-shaped), long (elongated), skittle (with one side wider than the other), and T-shaped (branched).'
+                                    'value': 'Cell shape hit classification was done using eight support vector machine classifiers ' +
+                                             'trained to recognize eight basic phenotypic classes on an individual cell basis: stubby ' +
+                                             '(wide), banana (curved), orb (round), kinky (S-shaped), long (elongated), skittle ' +
+                                             '(with one side wider than the other), and T-shaped (branched).'
                                 },
                                 {
                                     'name': 'Score type',
@@ -504,7 +558,10 @@ export function pageTabSample1() {
                             'valqual': [
                                 {
                                     'name': 'Description',
-                                    'value': 'To detect KO mutants (hits) with altered cell-cycle progression, we used bootstrap statistics to estimate the typical proportions of wild-type cells in each cell-cycle stage, scoring as hits KOs where at least two cell-cycle stages were statistically disproportionate with respect to the wild-type (i.e., under- or overrepresented; Figure 1D).'
+                                    'value': 'To detect KO mutants (hits) with altered cell-cycle progression, we used bootstrap ' +
+                                             'statistics to estimate the typical proportions of wild-type cells in each cell-cycle ' +
+                                             'stage, scoring as hits KOs where at least two cell-cycle stages were statistically ' +
+                                             'disproportionate with respect to the wild-type (i.e., under- or overrepresented; Figure 1D).'
                                 },
                                 {
                                     'name': 'Score type',
@@ -530,7 +587,10 @@ export function pageTabSample1() {
                             'valqual': [
                                 {
                                     'name': 'Description',
-                                    'value': 'To detect KO mutants (hits) with altered cell-cycle progression, we used bootstrap statistics to estimate the typical proportions of wild-type cells in each cell-cycle stage, scoring as hits KOs where at least two cell-cycle stages were statistically disproportionate with respect to the wild-type (i.e., under- or overrepresented; Figure 1D).'
+                                    'value': 'To detect KO mutants (hits) with altered cell-cycle progression, we used bootstrap ' +
+                                             'statistics to estimate the typical proportions of wild-type cells in each cell-cycle ' +
+                                             'stage, scoring as hits KOs where at least two cell-cycle stages were statistically ' +
+                                             'disproportionate with respect to the wild-type (i.e., under- or overrepresented; Figure 1D).'
                                 },
                                 {
                                     'name': 'Score type',
@@ -556,7 +616,10 @@ export function pageTabSample1() {
                             'valqual': [
                                 {
                                     'name': 'Description',
-                                    'value': 'To detect KO mutants (hits) with altered cell-cycle progression, we used bootstrap statistics to estimate the typical proportions of wild-type cells in each cell-cycle stage, scoring as hits KOs where at least two cell-cycle stages were statistically disproportionate with respect to the wild-type (i.e., under- or overrepresented; Figure 1D).'
+                                    'value': 'To detect KO mutants (hits) with altered cell-cycle progression, we used bootstrap ' +
+                                             'statistics to estimate the typical proportions of wild-type cells in each cell-cycle ' +
+                                             'stage, scoring as hits KOs where at least two cell-cycle stages were statistically ' +
+                                             'disproportionate with respect to the wild-type (i.e., under- or overrepresented; Figure 1D).'
                                 },
                                 {
                                     'name': 'Score type',
@@ -582,7 +645,10 @@ export function pageTabSample1() {
                             'valqual': [
                                 {
                                     'name': 'Description',
-                                    'value': 'To detect KO mutants (hits) with altered cell-cycle progression, we used bootstrap statistics to estimate the typical proportions of wild-type cells in each cell-cycle stage, scoring as hits KOs where at least two cell-cycle stages were statistically disproportionate with respect to the wild-type (i.e., under- or overrepresented; Figure 1D).'
+                                    'value': 'To detect KO mutants (hits) with altered cell-cycle progression, we used bootstrap ' +
+                                    'statistics to estimate the typical proportions of wild-type cells in each cell-cycle stage, ' +
+                                    'scoring as hits KOs where at least two cell-cycle stages were statistically disproportionate ' +
+                                    'with respect to the wild-type (i.e., under- or overrepresented; Figure 1D).'
                                 },
                                 {
                                     'name': 'Score type',
@@ -608,7 +674,10 @@ export function pageTabSample1() {
                             'valqual': [
                                 {
                                     'name': 'Description',
-                                    'value': 'To detect KO mutants (hits) with altered cell-cycle progression, we used bootstrap statistics to estimate the typical proportions of wild-type cells in each cell-cycle stage, scoring as hits KOs where at least two cell-cycle stages were statistically disproportionate with respect to the wild-type (i.e., under- or overrepresented; Figure 1D).'
+                                    'value': 'To detect KO mutants (hits) with altered cell-cycle progression, we used bootstrap ' +
+                                    'statistics to estimate the typical proportions of wild-type cells in each cell-cycle stage, ' +
+                                    'scoring as hits KOs where at least two cell-cycle stages were statistically disproportionate ' +
+                                    'with respect to the wild-type (i.e., under- or overrepresented; Figure 1D).'
                                 },
                                 {
                                     'name': 'Score type',
@@ -634,7 +703,10 @@ export function pageTabSample1() {
                             'valqual': [
                                 {
                                     'name': 'Description',
-                                    'value': 'To detect KO mutants (hits) with altered cell-cycle progression, we used bootstrap statistics to estimate the typical proportions of wild-type cells in each cell-cycle stage, scoring as hits KOs where at least two cell-cycle stages were statistically disproportionate with respect to the wild-type (i.e., under- or overrepresented; Figure 1D).'
+                                    'value': 'To detect KO mutants (hits) with altered cell-cycle progression, we used bootstrap ' +
+                                    'statistics to estimate the typical proportions of wild-type cells in each cell-cycle stage, ' +
+                                    'scoring as hits KOs where at least two cell-cycle stages were statistically disproportionate ' +
+                                    'with respect to the wild-type (i.e., under- or overrepresented; Figure 1D).'
                                 },
                                 {
                                     'name': 'Score type',
@@ -660,7 +732,10 @@ export function pageTabSample1() {
                             'valqual': [
                                 {
                                     'name': 'Description',
-                                    'value': 'To detect KO mutants (hits) with altered cell-cycle progression, we used bootstrap statistics to estimate the typical proportions of wild-type cells in each cell-cycle stage, scoring as hits KOs where at least two cell-cycle stages were statistically disproportionate with respect to the wild-type (i.e., under- or overrepresented; Figure 1D).'
+                                    'value': 'To detect KO mutants (hits) with altered cell-cycle progression, we used bootstrap ' +
+                                    'statistics to estimate the typical proportions of wild-type cells in each cell-cycle stage, ' +
+                                    'scoring as hits KOs where at least two cell-cycle stages were statistically disproportionate ' +
+                                    'with respect to the wild-type (i.e., under- or overrepresented; Figure 1D).'
                                 },
                                 {
                                     'name': 'Score type',
@@ -686,7 +761,10 @@ export function pageTabSample1() {
                             'valqual': [
                                 {
                                     'name': 'Description',
-                                    'value': 'To detect KO mutants (hits) with altered cell-cycle progression, we used bootstrap statistics to estimate the typical proportions of wild-type cells in each cell-cycle stage, scoring as hits KOs where at least two cell-cycle stages were statistically disproportionate with respect to the wild-type (i.e., under- or overrepresented; Figure 1D).'
+                                    'value': 'To detect KO mutants (hits) with altered cell-cycle progression, we used bootstrap ' +
+                                    'statistics to estimate the typical proportions of wild-type cells in each cell-cycle stage, ' +
+                                    'scoring as hits KOs where at least two cell-cycle stages were statistically disproportionate ' +
+                                    'with respect to the wild-type (i.e., under- or overrepresented; Figure 1D).'
                                 },
                                 {
                                     'name': 'Score type',
@@ -733,7 +811,12 @@ export function pageTabSample1() {
                                 },
                                 {
                                     'name': 'Image organization',
-                                    'value': 'The genome wide screen was repeated twice and then a follow up replicates focussed on genes which showed possible phentoypes in the first two replicates. 35 x 96 well plates in the first replicate, 68 in the second and 92 in the third (total 195 plates).  Approximately 6 images taken per well (fields).   3 plates have missing files and could not be correctly visualized. They have been deleted from the screen in the IDR: JL_120904_S32B, JL_130305_R1_6 and X_110227_S3) leaving 192 plates.'
+                                    'value': 'The genome wide screen was repeated twice and then a follow up replicates focussed ' +
+                                             'on genes which showed possible phentoypes in the first two replicates. 35 x 96 well ' +
+                                             'plates in the first replicate, 68 in the second and 92 in the third (total 195 plates). ' +
+                                             'Approximately 6 images taken per well (fields). 3 plates have missing files and could ' +
+                                             'not be correctly visualized. They have been deleted from the screen in the IDR: ' +
+                                             'JL_120904_S32B, JL_130305_R1_6 and X_110227_S3) leaving 192 plates.'
                                 }
                             ],
                             'url': 'http://idr-demo.openmicroscopy.org/webclient/?show=screen-3'
@@ -745,11 +828,25 @@ export function pageTabSample1() {
             'attributes': [
                 {
                     'name': 'Title',
-                    'value': 'A genomic Multiprocess survey of machineries that control and link cell shape, microtubule organization, and cell-cycle progression.'
+                    'value': 'A genomic Multiprocess survey of machineries that control and link ' +
+                             'cell shape, microtubule organization, and cell-cycle progression.'
                 },
                 {
                     'name': 'Description',
-                    'value': 'Understanding cells as integrated systems requires that we systematically decipher how single genes affect multiple biological processes and how processes are functionally linked. Here, we used multiprocess phenotypic profiling, combining high-resolution 3D confocal microscopy and multiparametric image analysis, to simultaneously survey the fission yeast genome with respect to three key cellular processes: cell shape, microtubule organization, and cell-cycle progression. We identify, validate, and functionally annotate 262 genes controlling specific aspects of those processes. Of these, 62% had not been linked to these processes before and 35% are implicated in multiple processes. Importantly, we identify a conserved role for DNA-damage responses in controlling microtubule stability. In addition, we investigate how the processes are functionally linked. We show unexpectedly that disruption of cell-cycle progression does not necessarily affect cell size control and that distinct aspects of cell shape regulate microtubules and vice versa, identifying important systems-level links across these processes.'
+                    'value': 'Understanding cells as integrated systems requires that we systematically ' +
+                             'decipher how single genes affect multiple biological processes and how ' +
+                             'processes are functionally linked. Here, we used multiprocess phenotypic ' +
+                             'profiling, combining high-resolution 3D confocal microscopy and multiparametric ' +
+                             'image analysis, to simultaneously survey the fission yeast genome with respect ' +
+                             'to three key cellular processes: cell shape, microtubule organization, and ' +
+                             'cell-cycle progression. We identify, validate, and functionally annotate 262 genes ' +
+                             'controlling specific aspects of those processes. Of these, 62% had not been linked ' +
+                             'to these processes before and 35% are implicated in multiple processes. ' +
+                             'Importantly, we identify a conserved role for DNA-damage responses in controlling ' +
+                             'microtubule stability. In addition, we investigate how the processes are functionally ' +
+                             'linked. We show unexpectedly that disruption of cell-cycle progression does not ' +
+                             'necessarily affect cell size control and that distinct aspects of cell shape regulate ' +
+                             'microtubules and vice versa, identifying important systems-level links across these processes.'
                 },
                 {
                     'name': 'Study type',
@@ -784,5 +881,5 @@ export function pageTabSample1() {
             'type': 'Study'
         },
         'type': 'submission'
-    }
+    };
 }

@@ -1,8 +1,9 @@
-import {AppPath} from './app-path';
+import { AppPath } from './app-path';
 
 export function copyAndExtend(obj: any, extension: any): any {
-    let copy = {...obj};
+    const copy = { ...obj };
     Object.keys(extension).forEach(k => copy[k] = extension[k]);
+
     return copy;
 }
 

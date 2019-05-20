@@ -1,5 +1,5 @@
-import {ColumnType, FeatureType, invalidateGlobalScope} from '../templates';
-import {Feature, FeatureData} from './submission.model';
+import { ColumnType, FeatureType, invalidateGlobalScope } from '../templates';
+import { Feature, FeatureData } from './submission.model';
 
 describe('Submission Model: Feature', () => {
 
@@ -111,4 +111,3 @@ describe('Submission Model: Feature', () => {
         expect(f.colSize()).toBe(1);
     });
 });
-

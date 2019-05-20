@@ -24,7 +24,7 @@ export class FileNode {
     }
 
     private getName(): string {
-        var name = this.path.split(/\//).pop();
+        let name = this.path.split(/\//).pop();
         name = name!.replace('User', 'Home');
         return name;
     }

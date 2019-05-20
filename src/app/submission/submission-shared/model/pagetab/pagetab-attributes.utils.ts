@@ -1,4 +1,4 @@
-import {AttrExceptions, PageTab, PtAttribute} from './pagetab.model';
+import { AttrExceptions, PageTab, PtAttribute } from './pagetab.model';
 
 /* merges to attribute lists by overriding only single value attributes*/
 export function mergeAttributes(attrs1: PtAttribute[], attrs2: PtAttribute[]): PtAttribute[] {

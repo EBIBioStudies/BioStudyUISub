@@ -1,19 +1,16 @@
-import {NgModule} from '@angular/core';
-
-import {RouterModule, Routes} from '@angular/router';
-
-import {AuthGuard} from './auth-guard.service';
-import {ActivateComponent} from './auth/activate/activate.component';
-import {ActivationLinkReqComponent} from './auth/activate/activation-link-req.component';
-import {PasswordResetReqComponent} from './auth/password-reset/password-reset-req.component';
-import {PasswordResetComponent} from './auth/password-reset/password-reset.component';
-import {SignInComponent} from './auth/signin/signin.component';
-import {SignUpComponent} from './auth/signup/signup.component';
-
-import {FileListComponent} from './file/file-list/file-list.component';
-import {DirectSubmitComponent} from './submission/submission-direct/direct-submit.component';
-import {SubmEditComponent} from './submission/submission-edit/subm-edit.component';
-import {SubmListComponent} from './submission/submission-list/subm-list.component';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './auth-guard.service';
+import { ActivateComponent } from './auth/activate/activate.component';
+import { ActivationLinkReqComponent } from './auth/activate/activation-link-req.component';
+import { PasswordResetReqComponent } from './auth/password-reset/password-reset-req.component';
+import { PasswordResetComponent } from './auth/password-reset/password-reset.component';
+import { SignInComponent } from './auth/signin/signin.component';
+import { SignUpComponent } from './auth/signup/signup.component';
+import { FileListComponent } from './file/file-list/file-list.component';
+import { DirectSubmitComponent } from './submission/submission-direct/direct-submit.component';
+import { SubmEditComponent } from './submission/submission-edit/subm-edit.component';
+import { SubmListComponent } from './submission/submission-list/subm-list.component';
 
 const appRoutes: Routes = [
     {path: '', redirectTo: 'submissions', pathMatch: 'full'},
@@ -62,9 +59,11 @@ const appRoutes: Routes = [
         component: FileListComponent,
         canActivate: [AuthGuard]
     }
+    // NOTE: some components should be reused instead of re-instantiated
+    // when navigating to certain routes (the ones with a "reuse" data property).
 
-    //NOTE: some components should be reused instead of re-instantiated when navigating to certain routes (the ones with a "reuse" data property).
-    //TODO: As of now, angular does not support this feature but is soon to be added (https://github.com/angular/angular/issues/12446). We should take advantage of this to save requests.
+    // TODO: As of now, angular does not support this feature but is soon to be
+    // added (https://github.com/angular/angular/issues/12446). We should take advantage of this to save requests.
 ];
 
 @NgModule({

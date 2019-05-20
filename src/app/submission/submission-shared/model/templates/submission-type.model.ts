@@ -1,4 +1,4 @@
-import {EMPTY_TEMPLATE_NAME, findSubmissionTemplateByName} from './submission.templates';
+import { EMPTY_TEMPLATE_NAME, findSubmissionTemplateByName } from './submission.templates';
 
 /*
 *  Type scopes are used to check if the types with a given name already exists in the scope
@@ -107,7 +107,23 @@ export abstract class TypeBase {
 }
 
 export class DisplayType {
+    public static Required = new DisplayType('required');
+    public static Desirable = new DisplayType('desirable');
+    public static Readonly = new DisplayType('readonly');
+    public static Optional = new DisplayType('optional');
+
+    public static all = [
+        DisplayType.Required,
+        DisplayType.Desirable,
+        DisplayType.Readonly,
+        DisplayType.Optional
+    ];
+
     readonly name: string;
+
+    public static create(name: string = 'optional'): DisplayType {
+        return DisplayType.all.find(t => t.name === name) || DisplayType.Optional;
+    }
 
     private constructor(name: string) {
         this.name = name;
@@ -135,22 +151,6 @@ export class DisplayType {
 
     public get isRemovable(): boolean {
         return !this.isShownByDefault;
-    }
-
-    public static Required = new DisplayType('required');
-    public static Desirable = new DisplayType('desirable');
-    public static Readonly = new DisplayType('readonly');
-    public static Optional = new DisplayType('optional');
-
-    public static all = [
-        DisplayType.Required,
-        DisplayType.Desirable,
-        DisplayType.Readonly,
-        DisplayType.Optional
-    ];
-
-    public static create(name: string = 'optional'): DisplayType {
-        return DisplayType.all.find(t => t.name === name) || DisplayType.Optional;
     }
 }
 
@@ -209,6 +209,8 @@ export class SelectValueType extends ValueType {
 }
 
 export class ValueTypeFactory {
+    static DEFAULT = ValueTypeFactory.create();
+
     static create(data: Partial<ValueType> = {}): ValueType {
         const typeName: ValueTypeName = ValueTypeName[data.name || ''] || ValueTypeName.text;
         switch (typeName) {
@@ -220,8 +222,6 @@ export class ValueTypeFactory {
                 return new TextValueType(data, typeName);
         }
     }
-
-    static DEFAULT = ValueTypeFactory.create();
 }
 
 export class FieldType extends TypeBase {
@@ -253,6 +253,10 @@ export class FeatureType extends TypeBase {
 
     private columnScope: TypeScope<ColumnType> = new TypeScope<ColumnType>();
 
+    static createDefault(name: string, singleRow?: boolean, uniqueCols?: boolean, scope?: TypeScope<TypeBase>): FeatureType {
+        return new FeatureType(name, {singleRow: singleRow, uniqueCols: uniqueCols}, scope, false);
+    }
+
     constructor(name: string, data?: Partial<FeatureType>, scope?: TypeScope<TypeBase>, isTemplBased: boolean = true) {
         super(name, isTemplBased, scope);
 
@@ -272,10 +276,6 @@ export class FeatureType extends TypeBase {
             .forEach(ct => {
                 new ColumnType(ct.name, ct, this.columnScope);
             });
-    }
-
-    static createDefault(name: string, singleRow?: boolean, uniqueCols?: boolean, scope?: TypeScope<TypeBase>): FeatureType {
-        return new FeatureType(name, {singleRow: singleRow, uniqueCols: uniqueCols}, scope, false);
     }
 
     get columnTypes(): ColumnType[] {

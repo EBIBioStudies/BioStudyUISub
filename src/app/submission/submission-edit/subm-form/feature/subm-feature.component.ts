@@ -1,6 +1,6 @@
-import {ChangeDetectorRef, Component, DoCheck, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
-import {UserData} from 'app/auth/shared';
-import {FeatureForm} from '../../shared/section-form';
+import { ChangeDetectorRef, Component, DoCheck, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { UserData } from 'app/auth/shared';
+import { FeatureForm } from '../../shared/section-form';
 
 interface FeatureOperation {
     label: string,
@@ -36,14 +36,14 @@ export class SubmFeatureComponent implements OnInit, DoCheck {
         this.operations.push({
             label: 'Add column',
             callback: () => {
-                this.featureForm!.addColumn()
+                this.featureForm!.addColumn();
             }
         });
 
         this.operations.push({
             label: 'Add row',
             callback: () => {
-                this.featureForm!.addRow()
+                this.featureForm!.addRow();
             }
         });
     }
@@ -70,4 +70,3 @@ export class SubmFeatureComponent implements OnInit, DoCheck {
         this.changeRef.detectChanges();
     }
 }
-

@@ -1,11 +1,9 @@
-import {HttpErrorResponse} from '@angular/common/http';
-import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
-import {AbstractControl, NgForm} from '@angular/forms';
-import {ActivationLinkRequestData} from '../shared/model';
-
-import {AuthService} from 'app/auth/shared';
-
-import {RecaptchaComponent} from 'ng-recaptcha';
+import { HttpErrorResponse } from '@angular/common/http';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AbstractControl, NgForm } from '@angular/forms';
+import { RecaptchaComponent } from 'ng-recaptcha';
+import { AuthService } from 'app/auth/shared';
+import { ActivationLinkRequestData } from '../shared/model';
 
 @Component({
     selector: 'auth-activation-resend',
@@ -28,17 +26,17 @@ export class ActivationLinkReqComponent implements AfterViewInit {
     constructor(private authService: AuthService) {
     }
 
-    //TODO: Turn autofocus on render into a directive
+    // TODO: Turn autofocus on render into a directive
     ngAfterViewInit(): void {
         this.focusRef!.nativeElement.focus();
     }
 
     onSubmit(form: NgForm) {
-        const component = this;     //SelfSubscriber object overwrites context for "subscribe" method
+        const component = this; // SelfSubscriber object overwrites context for "subscribe" method
 
         this.resetGlobalError();
 
-        //Makes request for login if all form fields completed satisfactorily
+        // Makes request for login if all form fields completed satisfactorily
         if (form.valid) {
             this.isLoading = true;
             this.authService
@@ -56,7 +54,7 @@ export class ActivationLinkReqComponent implements AfterViewInit {
                     }
                 );
 
-            //Validates in bulk if form incomplete
+            // Validates in bulk if form incomplete
         } else {
             Object.keys(form.controls).forEach((key) => {
                 form.controls[key].markAsTouched({onlySelf: true});
@@ -78,7 +76,7 @@ export class ActivationLinkReqComponent implements AfterViewInit {
         this.recaptchaRef!.reset();
         this.model.resetCaptcha();
 
-        //Resets the state of captcha's control
+        // Resets the state of captcha's control
         control.markAsUntouched({onlySelf: true});
         control.markAsPristine({onlySelf: true});
     }

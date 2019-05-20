@@ -1,16 +1,14 @@
-import {Component, ElementRef, EventEmitter, forwardRef, Input, Output} from '@angular/core';
-
-import {ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {AppConfig} from 'app/app.config';
-
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import { Component, ElementRef, EventEmitter, forwardRef, Input, Output, AfterViewChecked } from '@angular/core';
+import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { AppConfig } from 'app/app.config';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import {
     ValueType,
     ValueTypeFactory,
     ValueTypeName,
     SelectValueType, DateValueType
 } from 'app/submission/submission-shared/model/templates';
-import {typeaheadSource} from '../../shared/typeahead.utils';
+import { typeaheadSource } from '../../shared/typeahead.utils';
 
 
 @Component({
@@ -22,7 +20,14 @@ import {typeaheadSource} from '../../shared/typeahead.utils';
         multi: true
     }]
 })
-export class InputValueComponent implements ControlValueAccessor {
+export class InputValueComponent implements ControlValueAccessor, AfterViewChecked {
+    readonly ValueTypeNameEnum = ValueTypeName;
+    readonly typeahead: Observable<string[]>;
+    private _value = '';
+    private suggestLength: number;
+    private valueChanges$: Subject<string> = new BehaviorSubject<string>('');
+
+    @Output() select = new EventEmitter<{ [key: string]: string }>();
     @Input() valueType: ValueType = ValueTypeFactory.DEFAULT;
     @Input() readonly = false;
     @Input() formControl?: FormControl;
@@ -30,27 +35,13 @@ export class InputValueComponent implements ControlValueAccessor {
     @Input() suggestThreshold: number = 0;
     @Input() autosuggestSource: () => string[] = () => [];
     /*
-
         @Input() suggestLength: number;             //max number of suggested values to be displayed at once
         @Input() suggestThreshold: number = 0;      //number of typed characters before suggestions are displayed.
     */
-    //a value of 0 makes typeahead behave like an auto-suggest box.
+    // a value of 0 makes typeahead behave like an auto-suggest box.
 
-    readonly ValueTypeNameEnum = ValueTypeName;
-
-    readonly typeahead: Observable<string[]>;
-
-    private onChange: any = (_: any) => {
-    };
-    private onTouched: any = () => {
-    };
-
-    private _value = '';
-    private suggestLength: number;
-
-    private valueChanges$: Subject<string> = new BehaviorSubject<string>('');
-
-    @Output() select = new EventEmitter<{ [key: string]: string }>();
+    private onChange: any = (_: any) => {};
+    private onTouched: any = () => {};
 
     constructor(private rootEl: ElementRef, private appConfig: AppConfig) {
         this.suggestLength = appConfig.maxSuggestLength;
@@ -97,13 +88,12 @@ export class InputValueComponent implements ControlValueAccessor {
         this.onTouched();
     }
 
-
     /**
      * Lifecycle hook for operations after all child views have been changed.
      * Used to update the pointer to the DOM element.
      */
     ngAfterViewChecked(): void {
-        //this.formControl!.nativeElement = this.rootEl.nativeElement.querySelector('.form-control');
+        // this.formControl!.nativeElement = this.rootEl.nativeElement.querySelector('.form-control');
     }
 
     /**
@@ -128,7 +118,8 @@ export class InputValueComponent implements ControlValueAccessor {
      * Handler for select event from auto-suggest typeahead. Fixes the lack of a change event when selecting
      * a value without any character being typed (typically in combination with typeaheadMinLength = 0).
      * The closest input element descendant will be the event's target.
-     * TODO: this might be sorted in newer versions of the ngx-bootstrap plugin. Duplicate events may occur due to the repeated calling of "set value(value)" above (cannot keep track of the last value and, by extension, can't detect change).
+     * TODO: this might be sorted in newer versions of the ngx-bootstrap plugin. Duplicate events may occur due to the
+     * repeated calling of "set value(value)" above (cannot keep track of the last value and, by extension, can't detect change).
      * @param {TypeaheadMatch} selection - Object for the currently selected value.
      */
 

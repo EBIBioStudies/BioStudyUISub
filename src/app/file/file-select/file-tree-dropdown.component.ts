@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 
 @Component({
     selector: 'file-tree-dropdown',
@@ -34,22 +34,24 @@ export class FileTreeDropdownComponent implements OnInit, OnDestroy {
 
     private computeStyle(): any {
         if (this.isInBodyContainer()) {
-            let pos = this.computePosition(this.targetElement);
+            const pos = this.computePosition(this.targetElement);
+
             return {
                 position: 'absolute',
                 top: pos.top,
                 left: pos.left
-            }
+            };
         }
         return {};
     }
 
     private computePosition(nativeElement): { top: string, left: string } {
-        let rect = nativeElement.getBoundingClientRect();
+        const rect = nativeElement.getBoundingClientRect();
+
         return {
             top: (rect.bottom + window.scrollY) + 'px',
             left: (rect.right + window.scrollX) + 'px'
-        }
+        };
     }
 
     private isInBodyContainer(): boolean {

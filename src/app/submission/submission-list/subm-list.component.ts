@@ -1,19 +1,16 @@
-import {Component} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {AgRendererComponent} from 'ag-grid-angular/main';
-
-
-import {GridOptions} from 'ag-grid-community/main';
-
-import {AppConfig} from 'app/app.config';
-import {UserData} from 'app/auth/shared';
-import {throwError} from 'rxjs';
-import {Subject} from 'rxjs/Subject';
-import {Subscription} from 'rxjs/Subscription';
-import {SubmissionService} from '../submission-shared/submission.service';
-import {DateFilterComponent} from './ag-grid/date-filter.component';
-import {TextFilterComponent} from './ag-grid/text-filter.component';
-import {ModalService} from '../../shared/modal.service';
+import { Component } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AgRendererComponent } from 'ag-grid-angular/main';
+import { GridOptions } from 'ag-grid-community/main';
+import { AppConfig } from 'app/app.config';
+import { UserData } from 'app/auth/shared';
+import { throwError } from 'rxjs';
+import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
+import { SubmissionService } from '../submission-shared/submission.service';
+import { DateFilterComponent } from './ag-grid/date-filter.component';
+import { TextFilterComponent } from './ag-grid/text-filter.component';
+import { ModalService } from '../../shared/modal.service';
 
 @Component({
     selector: 'action-buttons-cell',
@@ -34,8 +31,8 @@ import {ModalService} from '../../shared/modal.service';
         </button>`
 })
 export class ActionButtonsCellComponent implements AgRendererComponent {
-    public isBusy: boolean = false;         //flags if a previous button action is in progress
-    public rowData: any;            //object including the data values for the row this cell belongs to
+    public isBusy: boolean = false; // flags if a previous button action is in progress
+    public rowData: any; // object including the data values for the row this cell belongs to
 
     private onDelete?: (accno: string, onCancel: Function) => {};
     private onEdit?: (string) => {};
@@ -125,14 +122,13 @@ export class DateCellComponent implements AgRendererComponent {
     templateUrl: './subm-list.component.html',
     styleUrls: ['./subm-list.component.css']
 })
-
 export class SubmListComponent {
-    protected ngUnsubscribe: Subject<void>;     //stopper for all subscriptions to HTTP get operations
-    showSubmitted: boolean = true;     //flag indicating if the list of sent submissions is to be displayed
-    isBusy: boolean = false;            //flag indicating if a request is in progress
-    isCreating: boolean = false;        //flag indicating if submission creation is in progress
+    protected ngUnsubscribe: Subject<void>; // Stopper for all subscriptions to HTTP get operations
+    showSubmitted: boolean = true; // Flag indicating if the list of sent submissions is to be displayed
+    isBusy: boolean = false; // Flag indicating if a request is in progress
+    isCreating: boolean = false; // Flag indicating if submission creation is in progress
 
-    //AgGrid-related properties
+    // AgGrid-related properties
     gridOptions: GridOptions;
     columnDefs?: any[];
     private datasource: any;
@@ -145,16 +141,16 @@ export class SubmListComponent {
 
         this.ngUnsubscribe = new Subject<void>();
 
-        //Microstate - Allows going back to the sent submissions list directly
+        // Microstate - Allows going back to the sent submissions list directly
         this.route.data.subscribe((data) => {
             if (data.hasOwnProperty('isSent')) {
                 this.showSubmitted = data.isSent;
             }
         });
 
-        //TODO: enable server-side sorting once sorting parameters are added to the submission list endpoint
-        //NOTE: Ag-Grid doesn't support client-side filtering/sorting and server-side pagination simultaneously.
-        //https://www.ag-grid.com/javascript-grid-infinite-scrolling/#sorting-filtering
+        // TODO: enable server-side sorting once sorting parameters are added to the submission list endpoint
+        // NOTE: Ag-Grid doesn't support client-side filtering/sorting and server-side pagination simultaneously.
+        // https://www.ag-grid.com/javascript-grid-infinite-scrolling/#sorting-filtering
         this.gridOptions = <GridOptions>{
             cacheBlockSize: 15,
             debug: false,
@@ -180,8 +176,8 @@ export class SubmListComponent {
 
         this.createColumnDefs();
 
-        //Works out the list of allowed projects by comparison with template names
-        //this.isBusy = true;
+        // Works out the list of allowed projects by comparison with template names
+        // this.isBusy = true;
     }
 
     /**
@@ -246,7 +242,7 @@ export class SubmListComponent {
     }
 
     setDatasource() {
-        const agApi = this.gridOptions.api;     //AgGrid's API
+        const agApi = this.gridOptions.api; // AgGrid's API
 
         if (!this.datasource) {
             this.datasource = {
@@ -256,12 +252,12 @@ export class SubmListComponent {
                     const fm = params.filterModel || {};
                     this.isBusy = true;
 
-                    //Shows loading progress overlay box.
+                    // Shows loading progress overlay box.
                     if (agApi != null) {
                         agApi.showLoadingOverlay();
                     }
 
-                    //Makes the request taking into account any filtering arguments supplied through the UI.
+                    // Makes the request taking into account any filtering arguments supplied through the UI.
                     this.submService.getSubmissions( this.showSubmitted, {
                         offset: params.startRow,
                         limit: pageSize,
@@ -270,22 +266,22 @@ export class SubmListComponent {
                         rTimeTo: fm.rtime && fm.rtime.value && fm.rtime.value.to ? fm.rtime.value.to : undefined,
                         keywords: fm.title && fm.title.value ? fm.title.value : undefined
 
-                        //Hides the overlaid progress box if request failed
+                    // Hides the overlaid progress box if request failed
                     }).takeUntil(this.ngUnsubscribe).catch(error => {
                         agApi!.hideOverlay();
                         return throwError(error);
 
-                        //Once all submissions fetched, determines last row for display purposes.
+                    // Once all submissions fetched, determines last row for display purposes.
                     }).subscribe((rows) => {
                         let lastRow = -1;
 
-                        //Hides progress box.
+                        // Hides progress box.
                         agApi!.hideOverlay();
 
-                        //Removes any entries that are really revisions of sent submissions if showing temporary ones
+                        // Removes any entries that are really revisions of sent submissions if showing temporary ones
                         if (!this.showSubmitted) {
                             rows = rows.filter((subm) => {
-                                return subm.accno.indexOf('TMP') == 0;
+                                return subm.accno.indexOf('TMP') === 0;
                             });
                         }
 
@@ -297,7 +293,7 @@ export class SubmListComponent {
                         this.isBusy = false;
                     });
                 }
-            }
+            };
         }
         agApi!.setDatasource(this.datasource);
     }
@@ -305,10 +301,10 @@ export class SubmListComponent {
     onSubmTabSelect(isSubmitted: boolean) {
         let fragment = 'pending';
 
-        //Ignores actions that don't carry with them a change in state.
+        // Ignores actions that don't carry with them a change in state.
         if (this.showSubmitted !== isSubmitted) {
 
-            //Submitted list's route has 'sent' as a fragment while temp list has no fragment.
+            // Submitted list's route has 'sent' as a fragment while temp list has no fragment.
             if (isSubmitted) {
                 fragment = '';
             }
@@ -334,7 +330,6 @@ export class SubmListComponent {
                         this.submService
                             .deleteSubmission(accno)
                             .subscribe(() => {
-
                                 // Issues an additional delete request for modified submissions
                                 // TODO: This is a crude approach to the problem of no response data coming from the
                                 // API (whether there are revisions or not is unknown).
@@ -385,7 +380,7 @@ export class SubmListComponent {
                 this.router.navigate(['/submissions', accno]);
             }
         }));
-    };
+    }
 
     /**
      * Handler for the click event on the upload submission button, redirecting to a new view.

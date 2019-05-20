@@ -1,4 +1,4 @@
-import {Component, ComponentFactoryResolver, Input, Type, ViewChild, ViewContainerRef} from '@angular/core';
+import { Component, ComponentFactoryResolver, Input, Type, ViewChild, ViewContainerRef } from '@angular/core';
 
 export interface TreeViewCustomNodeComponent {
     onNodeData(data: any): void;
@@ -13,7 +13,7 @@ export interface TreeViewConfig {
     selector: 'tree-view-node',
     template: `
     <span class="node">
-        <i *ngIf="hasChildren" 
+        <i *ngIf="hasChildren"
            class="fa"
            [ngClass]="{'fa-minus-square-o': !isCollapsed, 'fa-plus-square-o': isCollapsed}"
            (click)="isCollapsed = !isCollapsed"
@@ -75,7 +75,7 @@ export class TreeViewNodeComponent {
     @ViewChild('nodeTemplate', {read: ViewContainerRef}) vcr;
 
     private compRef;
-    isCollapsed: boolean = true;        //All branches will be collapsed by default.
+    isCollapsed: boolean = true; // All branches will be collapsed by default.
 
     constructor(private componentFactoryResolver: ComponentFactoryResolver) {
     }
@@ -99,8 +99,8 @@ export class TreeViewNodeComponent {
     ngOnChanges() {
         this.detectChanges();
 
-        //Reveals only branches of the tree that indicate error.
-        if (this.hasChildren && this.data.level == "ERROR") {
+        // Reveals only branches of the tree that indicate error.
+        if (this.hasChildren && this.data.level === 'ERROR') {
             this.isCollapsed = false;
         }
     }
@@ -118,9 +118,9 @@ export class TreeViewNodeComponent {
     selector: 'tree-view',
     template: `
 <div class="tree">
-     <tree-view-node [data]="data" 
-                     [config]="config"></tree-view-node>                   
-</div>        
+     <tree-view-node [data]="data"
+                     [config]="config"></tree-view-node>
+</div>
 
 `,
     styles: [`

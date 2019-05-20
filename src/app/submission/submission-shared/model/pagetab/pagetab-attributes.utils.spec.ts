@@ -1,8 +1,7 @@
-import {mergeAttributes, updateAttachToAttribute} from './pagetab-attributes.utils';
-import {PageTab} from './pagetab.model';
+import { mergeAttributes, updateAttachToAttribute } from './pagetab-attributes.utils';
+import { PageTab } from './pagetab.model';
 
 describe('Submission Attributes:', () => {
-
     it('creates empty list of attributes and adds AttachTo attributes to it', () => {
         const projects = ['proj1', 'proj2'];
         let obj: PageTab = {};
@@ -10,7 +9,7 @@ describe('Submission Attributes:', () => {
 
         expect(obj.attributes).toBeDefined();
         expect(obj.attributes).toEqual(projects.map(p => {
-            return {name: 'AttachTo', value: p}
+            return {name: 'AttachTo', value: p};
         }));
     });
 
@@ -22,7 +21,7 @@ describe('Submission Attributes:', () => {
 
         expect(obj.attributes).toBeDefined();
         expect(obj.attributes).toEqual([...[attr], ...projects.map(p => {
-            return {name: 'AttachTo', value: p}
+            return {name: 'AttachTo', value: p};
         })]);
     });
 

@@ -1,8 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {AuthService} from '../shared';
-
-import {ServerError} from 'app/http';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { AuthService } from '../shared';
+import { ServerError } from 'app/http';
 
 @Component({
     selector: 'auth-activate',
@@ -12,12 +11,15 @@ export class ActivateComponent implements OnInit {
     hasError: boolean = false;
     message: string = '';
 
-    constructor(private authService: AuthService,
-                private activatedRoute: ActivatedRoute) {
+    constructor(
+        private authService: AuthService,
+        private activatedRoute: ActivatedRoute
+    ) {
     }
 
     ngOnInit(): void {
         const key = this.activatedRoute.snapshot.paramMap.get('key');
+
         if (key === null) {
             this.hasError = true;
             this.message = 'Invalid path';
@@ -27,7 +29,7 @@ export class ActivateComponent implements OnInit {
     }
 
     private activate(key: string): void {
-        const component = this;     //SelfSubscriber object overwrites context for "subscribe" method
+        const component = this; // SelfSubscriber object overwrites context for "subscribe" method
 
         this.authService
             .activate(key)

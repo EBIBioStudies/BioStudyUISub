@@ -1,4 +1,4 @@
-import {Pipe, PipeTransform} from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 
 /**
  * Custom Angular pipe for stripping a given string of all HTML tags.
@@ -10,6 +10,6 @@ import {Pipe, PipeTransform} from '@angular/core';
 })
 export class StripHtmlPipe implements PipeTransform {
     transform(value: string): string {
-        return value.replace(/<\/?[^>]+>/gi, "");
+        return value.replace(/<\/?[^>]+>/gi, '');
     }
 }

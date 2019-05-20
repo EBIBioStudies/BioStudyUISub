@@ -7,9 +7,9 @@ import {
     PtAttribute,
     PtSection
 } from './pagetab';
-import {DEFAULT_TEMPLATE_NAME, SubmissionType} from './templates';
-import {AttributeData, FeatureData, SectionData, Submission, SubmissionData} from './submission';
-import {NameAndValue, PAGE_TAG, Tag} from './model.common';
+import { DEFAULT_TEMPLATE_NAME, SubmissionType } from './templates';
+import { AttributeData, FeatureData, SectionData, Submission, SubmissionData } from './submission';
+import { NameAndValue, PAGE_TAG, Tag } from './model.common';
 
 function findSubmissionTemplateName(pageTab: PageTab): string {
     const attachToValues: string[] = (pageTab.attributes || [])
@@ -69,7 +69,7 @@ function ptSection2SectionData(ptSection: PtSection, parentAttributes: PtAttribu
         features.push(<FeatureData> {
             type: 'LibraryFile',
             entries: [[<PtAttribute>{name: 'Path', value: ptSection.libraryFile}]]
-        })
+        });
     }
 
     if (!featureSections.isEmpty()) {
@@ -99,7 +99,7 @@ function ptSection2SectionData(ptSection: PtSection, parentAttributes: PtAttribu
         attributes: attributes,
         features: features,
         sections: sections
-    }
+    };
 }
 
 function hasSubsections(section: PtSection): boolean {
@@ -107,7 +107,7 @@ function hasSubsections(section: PtSection): boolean {
         !(section.links || []).isEmpty() ||
         !(section.files || []).isEmpty() ||
         String.isDefinedAndNotEmpty(section.libraryFile) ||
-        ((section.tags ||[]).map(t => new Tag(t.classifier, t.tag))
+        ((section.tags || []).map(t => new Tag(t.classifier, t.tag))
             .find(t => t.equals(PAGE_TAG)) !== undefined);
 }
 

@@ -1,5 +1,5 @@
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {SectionForm} from '../shared/section-form';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { SectionForm } from '../shared/section-form';
 
 @Component({
     selector: 'subm-form',
@@ -9,14 +9,9 @@ export class SubmFormComponent implements OnChanges {
     @Input() sectionForm?: SectionForm;
     @Input() readonly?: boolean = false;
 
-    constructor() {
-    }
+    constructor() {}
 
-    ngOnChanges(changes: SimpleChanges): void {
+    ngOnChanges(changes: SimpleChanges): void {}
 
-    }
-
-    onSubmit(event) {
-        //TODO
-    }
+    onSubmit(event) {}
 }

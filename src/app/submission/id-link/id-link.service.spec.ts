@@ -1,8 +1,6 @@
-import {IdLinkService} from './id-link.service';
-import {HttpErrorResponse} from '@angular/common/http';
-import {defer, of, throwError} from 'rxjs';
-
-
+import { IdLinkService } from './id-link.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { defer, of, throwError } from 'rxjs';
 
 function asyncError<T>(errorObject: any) {
   return defer(() => throwError(errorObject));
@@ -69,7 +67,6 @@ describe('IdLinkService', () => {
     service.suggest('prefix').subscribe(
       items => expect(items).toEqual(expectedPrefixes)
     );
-    expect(httpClientSpy.get.calls.count()).toBe(2);  //one for complete list and the other the suggested prefixes
+    expect(httpClientSpy.get.calls.count()).toBe(2);  // one for complete list and the other the suggested prefixes
   });
-
 });

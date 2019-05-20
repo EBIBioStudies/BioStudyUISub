@@ -1,6 +1,6 @@
-import {Feature, Field, Section, Submission} from './submission.model';
-import {FeatureType, SectionType, TextValueType, ValueType, ValueTypeName} from '../templates';
-import {parseDate} from '../../../../utils';
+import { Feature, Field, Section, Submission } from './submission.model';
+import { FeatureType, SectionType, TextValueType, ValueType, ValueTypeName } from '../templates';
+import { parseDate } from '../../../../utils';
 
 interface ValidationRule {
     validate(): string | undefined;
@@ -108,7 +108,7 @@ class ValidationRules {
                 }
                 return undefined;
             }
-        }
+        };
     }
 
     static requiredFeature(ft: FeatureType, section: Section): ValidationRule {
@@ -120,7 +120,7 @@ class ValidationRules {
                 }
                 return undefined;
             }
-        }
+        };
     }
 
     static requiredSection(st: SectionType, section: Section): ValidationRule {
@@ -132,7 +132,7 @@ class ValidationRules {
                 }
                 return undefined;
             }
-        }
+        };
     }
 
     static requiredValue(value: string, name: string, isRequired: boolean = true): ValidationRule {
@@ -143,7 +143,7 @@ class ValidationRules {
                 }
                 return undefined;
             }
-        }
+        };
     }
 
     static formattedValue(value: string, valueType: ValueType, name: string): ValidationRule {
@@ -160,7 +160,7 @@ class ValidationRules {
                 }
                 return undefined;
             }
-        }
+        };
     }
 
     static maxlengthValue(value: string, maxlength: number, name: string): ValidationRule {
@@ -174,7 +174,7 @@ class ValidationRules {
                 }
                 return undefined;
             }
-        }
+        };
     }
 
     static minlengthValue(value: string, minlength: number, name: string): ValidationRule {
@@ -188,7 +188,7 @@ class ValidationRules {
                 }
                 return undefined;
             }
-        }
+        };
     }
 
     private static isEmpty(value: string) {

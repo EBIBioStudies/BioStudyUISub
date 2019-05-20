@@ -1,4 +1,4 @@
-import {Cookie} from 'ng2-cookies/ng2-cookies';
+import { Cookie } from 'ng2-cookies/ng2-cookies';
 
 const LOGIN_TOKEN = 'BioStudiesToken';
 const USER = 'BioStudiesUser';

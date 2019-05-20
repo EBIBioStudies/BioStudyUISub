@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpEvent, HttpEventType, HttpRequest} from '@angular/common/http';
-import {Observable, throwError} from 'rxjs';
-import {catchError, last, map} from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse, HttpEvent, HttpEventType, HttpRequest } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError, last, map } from 'rxjs/operators';
 
 enum UploadEventType {
     PROGRESS,
@@ -11,9 +11,6 @@ enum UploadEventType {
 }
 
 export class UploadEvent {
-    constructor(private readonly type: UploadEventType = UploadEventType.OTHER) {
-    }
-
     private static SUCCESS_EVENT = new UploadEvent(UploadEventType.SUCCESS);
 
     static progress(percentage: number): UploadEvent {
@@ -40,6 +37,9 @@ export class UploadEvent {
                 console.log(event);
                 return new UploadEvent();
         }
+    }
+
+    constructor(private readonly type: UploadEventType = UploadEventType.OTHER) {
     }
 
     isProgress(): boolean {
