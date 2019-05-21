@@ -1,7 +1,7 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {FileNode} from './file-tree.model';
-import {FileTreeStore} from './file-tree.store';
-import {Subject} from 'rxjs/Subject';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FileNode } from './file-tree.model';
+import { FileTreeStore } from './file-tree.store';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'file-tree',
@@ -9,7 +9,6 @@ import {Subject} from 'rxjs/Subject';
     styleUrls: ['./file-tree.component.css']
 })
 export class FileTreeComponent implements OnInit, OnDestroy {
-
     @Input() root?: FileNode;
     @Output() select = new EventEmitter();
 
@@ -26,14 +25,14 @@ export class FileTreeComponent implements OnInit, OnDestroy {
             this.fileStore.getUserDirs()
                 .takeUntil(this.unsubscribe)
                 .subscribe(nodes => {
-                    this.nodes = nodes
-                })
+                    this.nodes = nodes;
+                });
         } else if (this.root.isDir) {
             this.fileStore.getFiles(this.root.path)
                 .takeUntil(this.unsubscribe)
                 .subscribe(nodes => {
-                    this.nodes = nodes
-                })
+                    this.nodes = nodes;
+                });
         }
     }
 
@@ -43,7 +42,7 @@ export class FileTreeComponent implements OnInit, OnDestroy {
     }
 
     onChildTreeClick(value: string) {
-        this.select.emit(value)
+        this.select.emit(value);
     }
 
     onNodeClick(node: FileNode) {

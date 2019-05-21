@@ -1,16 +1,16 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs/Observable';
-import {map, catchError} from 'rxjs/operators';
-import {Subject} from 'rxjs/Subject';
-import {of, throwError} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
+import { map, catchError } from 'rxjs/operators';
+import { Subject } from 'rxjs/Subject';
+import { of, throwError } from 'rxjs';
 
 @Injectable()
 export class IdLinkService {
-    static BASE_URL: string = 'https://identifiers.org/rest';   //base URL for the service endpoint
-    public prefixes: string[] = [];                             //all possible prefixes for formatted links
-    public idUrl: string | undefined;                                       //last URL for valid identifier
-    private isFetched: boolean = false;                         //flags when collection data has been fetched already
+    static BASE_URL: string = 'https://identifiers.org/rest'; // base URL for the service endpoint
+    public prefixes: string[] = []; // all possible prefixes for formatted links
+    public idUrl: string | undefined; // last URL for valid identifier
+    private isFetched: boolean = false; // flags when collection data has been fetched already
     private _whenFetched: Subject<any> = new Subject<any>();
 
     /**

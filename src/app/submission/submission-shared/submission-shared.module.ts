@@ -1,5 +1,5 @@
-import {NgModule} from '@angular/core';
-import {SubmissionService} from './submission.service';
+import { NgModule } from '@angular/core';
+import { SubmissionService } from './submission.service';
 
 @NgModule({
     imports: [],

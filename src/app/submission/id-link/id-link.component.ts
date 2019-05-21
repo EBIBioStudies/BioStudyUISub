@@ -8,19 +8,17 @@ import {
     ViewChild,
     EventEmitter
 } from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, NgModel, Validators} from '@angular/forms';
-import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
-
-import {Subject} from 'rxjs/Subject';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, NgModel, Validators } from '@angular/forms';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { Subject } from 'rxjs/Subject';
+import { IdLinkModel } from './id-link.model';
+import { IdLinkService } from './id-link.service';
+import { IdLinkValue } from './id-link.value';
+import { IdLinkValueValidatorDirective } from './id-link.validator.directive';
 
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/observable/interval';
-
-import {IdLinkModel} from './id-link.model';
-import {IdLinkService} from './id-link.service';
-import {IdLinkValue} from './id-link.value';
-import {IdLinkValueValidatorDirective} from "./id-link.validator.directive";
 
 @Component({
   selector: 'id-link',
@@ -35,8 +33,6 @@ import {IdLinkValueValidatorDirective} from "./id-link.validator.directive";
   ]
 })
 export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
-    private onChange: any = (_: any) => {};        //placeholder for handler propagating changes outside the custom control
-    private onTouched: any = () => {};             //placeholder for handler after the control has been "touched"
     private linkModel: IdLinkModel = new IdLinkModel();
     private inputChanged: Subject<string> = new Subject<string>();
 
@@ -44,9 +40,9 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
     @Input() disabled = false;
     @Input() required?: boolean = false;
     @Input() readonly?: boolean = false;
-    @Input() isSmall: boolean = true;              //flag for making the input area the same size as grid fields
-    @Input() suggestLength: number = 30;           //max number of suggested values to be displayed at once
-    @Input() suggestThreshold: number = 0;         //number of typed characters before suggestions are displayed.
+    @Input() isSmall: boolean = true; // flag for making the input area the same size as grid fields
+    @Input() suggestLength: number = 30; // max number of suggested values to be displayed at once
+    @Input() suggestThreshold: number = 0; // number of typed characters before suggestions are displayed.
 
     @ViewChild(NgModel)
     private inputModel?: NgModel;
@@ -55,6 +51,9 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
     private validator?: IdLinkValueValidatorDirective;
 
     @Output() selected: EventEmitter<string> = new EventEmitter<string>();
+
+    private onChange: any = (_: any) => {}; // placeholder for handler propagating changes outside the custom control
+    private onTouched: any = () => {}; // placeholder for handler after the control has been "touched"
 
     /**
      * Instantiates a new custom input component. Validates the input's contents on debounced keypresses.
@@ -191,7 +190,7 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
         }
         this.selected.emit(selection);
 
-        //Forces the control's "viewModel" and "value" to update on selection, not later.
+        // Forces the control's "viewModel" and "value" to update on selection, not later.
         this.inputModel!.reset(this.linkModel.asString());
     }
 

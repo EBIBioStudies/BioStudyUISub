@@ -1,4 +1,4 @@
-import {IdLinkModel} from './id-link.model';
+import { IdLinkModel } from './id-link.model';
 
 describe('IdLinkModel', () => {
   it('has undefined properties by default', () => {

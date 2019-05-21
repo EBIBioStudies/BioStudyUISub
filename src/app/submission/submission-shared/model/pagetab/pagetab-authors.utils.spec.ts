@@ -1,4 +1,4 @@
-import {authors2Contacts, contacts2Authors} from './pagetab-authors.utils';
+import { authors2Contacts, contacts2Authors } from './pagetab-authors.utils';
 
 describe('AuthorsAndAffiliations:', () => {
     it('authorsToContacts: authors and affiliations are merged into contacts', () => {

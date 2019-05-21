@@ -1,13 +1,9 @@
-import {HttpErrorResponse} from '@angular/common/http';
-import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
-
-import {RecaptchaComponent} from 'ng-recaptcha';
-
-import {ServerError} from 'app/http';
-
-import {AuthService} from 'app/auth/shared';
-import {PasswordResetRequestData} from '../shared/model';
-import {AbstractControl, NgForm} from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AbstractControl, NgForm } from '@angular/forms';
+import { RecaptchaComponent } from 'ng-recaptcha';
+import { AuthService } from 'app/auth/shared';
+import { PasswordResetRequestData } from '../shared/model';
 
 @Component({
     selector: 'auth-passwd-reset-req',
@@ -16,8 +12,7 @@ import {AbstractControl, NgForm} from '@angular/forms';
 export class PasswordResetReqComponent implements AfterViewInit {
     hasError: boolean = false;
     showSuccess: boolean = false;
-    isLoading: boolean = false;             //Flag indicating if login request in progress
-
+    isLoading: boolean = false; // Flag indicating if login request in progress
     model: PasswordResetRequestData = new PasswordResetRequestData();
     message: string = '';
 
@@ -30,17 +25,17 @@ export class PasswordResetReqComponent implements AfterViewInit {
     constructor(private authService: AuthService) {
     }
 
-    //TODO: Turn autofocus on render into a directive
+    // TODO: Turn autofocus on render into a directive
     ngAfterViewInit(): void {
         this.focusRef!.nativeElement.focus();
     }
 
     onSubmit(form: NgForm): void {
-        const component = this;     //SelfSubscriber object sometimes overwrites context for "subscribe" method
+        const component = this; // SelfSubscriber object sometimes overwrites context for "subscribe" method
 
         this.resetGlobalError();
 
-        //Makes request if all form fields completed satisfactorily
+        // Makes request if all form fields completed satisfactorily
         if (form.valid) {
             this.isLoading = true;
             this.authService.passwordResetReq(this.model)
@@ -57,7 +52,7 @@ export class PasswordResetReqComponent implements AfterViewInit {
                     }
                 );
 
-            //Validates in bulk if form incomplete
+            // Validates in bulk if form incomplete
         } else {
             Object.keys(form.controls).forEach((key) => {
                 form.controls[key].markAsTouched({onlySelf: true});
@@ -79,7 +74,7 @@ export class PasswordResetReqComponent implements AfterViewInit {
         this.recaptcha!.reset();
         this.model.resetCaptcha();
 
-        //Resets the state of captcha's control
+        // Resets the state of captcha's control
         control.markAsUntouched({onlySelf: true});
         control.markAsPristine({onlySelf: true});
     }

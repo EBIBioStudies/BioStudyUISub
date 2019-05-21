@@ -12,7 +12,7 @@ export class Tag {
         return this.classifier.toLowerCase() + ':' + this.tag.toLowerCase();
     }
 
-    equals(other:Tag): boolean {
+    equals(other: Tag): boolean {
         return this.value === other.value;
     }
 }

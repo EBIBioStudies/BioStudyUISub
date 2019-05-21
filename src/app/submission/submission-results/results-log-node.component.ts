@@ -1,5 +1,5 @@
-import {Component} from '@angular/core';
-import {TreeViewCustomNodeComponent} from './tree-view.component';
+import { Component } from '@angular/core';
+import { TreeViewCustomNodeComponent } from './tree-view.component';
 
 @Component({
     selector: 'results-log-node',
@@ -13,8 +13,8 @@ export class ResultsLogNodeComponent implements TreeViewCustomNodeComponent {
         this._message = data.message || '';
         this._logLevel = (data.level || 'info').toLowerCase();
 
-        //Makes parent ERRORS display as normal info nodes.
-        if (data.subnodes && this._logLevel == 'error') {
+        // Makes parent ERRORS display as normal info nodes.
+        if (data.subnodes && this._logLevel === 'error') {
             this._logLevel = 'info';
         }
     }

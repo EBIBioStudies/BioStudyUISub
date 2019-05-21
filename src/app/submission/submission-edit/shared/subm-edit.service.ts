@@ -1,20 +1,25 @@
-import {Injectable} from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {UserData} from 'app/auth/shared';
-import {pageTab2Submission, PageTab, submission2PageTab} from 'app/submission/submission-shared/model';
-import {Submission, AttributeData, Section} from 'app/submission/submission-shared/model/submission';
-
-
-import {none, Option, some} from 'fp-ts/lib/Option';
-import {BehaviorSubject, EMPTY, Observable, of, Subject, Subscription} from 'rxjs';
-
-import {catchError, debounceTime, map, switchMap} from 'rxjs/operators';
-import {UserInfo} from '../../../auth/shared/model';
-import {SubmissionService, SubmitResponse, PendingSubmission} from '../../submission-shared/submission.service';
-import {MyFormControl} from './form-validators';
-import {SectionForm} from './section-form';
+import { Injectable } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { UserData } from 'app/auth/shared';
+import { pageTab2Submission, PageTab, submission2PageTab } from 'app/submission/submission-shared/model';
+import { Submission, AttributeData, Section } from 'app/submission/submission-shared/model/submission';
+import { none, Option, some } from 'fp-ts/lib/Option';
+import { BehaviorSubject, EMPTY, Observable, of, Subject, Subscription } from 'rxjs';
+import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
+import { UserInfo } from '../../../auth/shared/model';
+import { SubmissionService, SubmitResponse, PendingSubmission } from '../../submission-shared/submission.service';
+import { MyFormControl } from './form-validators';
+import { SectionForm } from './section-form';
 
 class EditState {
+    static Init = 'Init';
+    static Loading = 'Loading';
+    static Reverting = 'Reverting';
+    static Editing = 'Editing';
+    static Saving = 'Saving';
+    static Submitting = 'Submitting';
+    static Error = 'Error';
+
     private state: string;
 
     constructor() {
@@ -80,28 +85,20 @@ class EditState {
         }
         this.state = EditState.Error;
     }
-
-    static Init = 'Init';
-    static Loading = 'Loading';
-    static Reverting = 'Reverting';
-    static Editing = 'Editing';
-    static Saving = 'Saving';
-    static Submitting = 'Submitting';
-    static Error = 'Error';
 }
 
 export class ServerResponse<T> {
+    static Error = (error: any) => {
+        return new ServerResponse(none, some(error));
+    }
+    static Ok = <T>(payload: T) => new ServerResponse<T>(some(payload), none);
+
     private constructor(readonly payload: Option<T>, readonly error: Option<any>) {
     }
 
     get isError(): boolean {
         return this.error.isSome();
     }
-
-    static Error = (error: any) => {
-        return new ServerResponse(none, some(error))
-    };
-    static Ok = <T>(payload: T) => new ServerResponse<T>(some(payload), none);
 }
 
 @Injectable()
@@ -118,7 +115,7 @@ export class SubmEditService {
 
     constructor(private userData: UserData,
                 private submService: SubmissionService) {
-    };
+    }
 
     get isSubmitting(): boolean {
         return this.editState.isSubmitting;
@@ -190,7 +187,8 @@ export class SubmEditService {
                 console.log(error);
                 this.editState.stopSubmitting(error);
                 this.onErrorResponse(error);
-                return EMPTY
+
+                return EMPTY;
             }));
     }
 
@@ -255,7 +253,7 @@ export class SubmEditService {
                 contactFeature.add(this.asContactAttributes(info), 0);
             }
             setTimeout(() => {
-                subscr.unsubscribe()
+                subscr.unsubscribe();
             }, 10);
             this.save();
         });
@@ -282,8 +280,8 @@ export class SubmEditService {
         if (this.submModel === undefined) {
             return;
         }
-        //TODO: re-implement 'revised' feature
-        //A sent submission has been backed up. It follows it's been revised.
+        // TODO: re-implement 'revised' feature
+        // A sent submission has been backed up. It follows it's been revised.
         if (!this.submModel!.isTemp && !this.submModel!.isRevised) {
             this.submModel!.isRevised = true;
         }

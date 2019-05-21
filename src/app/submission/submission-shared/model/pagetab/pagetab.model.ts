@@ -1,11 +1,11 @@
-import {Tag} from '../model.common';
+import { Tag } from '../model.common';
 
 interface AttrException {
     name: string,
     rootLevel: boolean,
     studyLevel: boolean,
     systemOnly: boolean,
-    unique:boolean
+    unique: boolean
 }
 
 /* Here are the attributes which we have to deal with exceptionally (unfortunately):

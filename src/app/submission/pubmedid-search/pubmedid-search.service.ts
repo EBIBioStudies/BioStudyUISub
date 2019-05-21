@@ -1,7 +1,7 @@
-import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {Observable, of, throwError} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 const PublAttrMapping = {
     title: 'title',
@@ -25,10 +25,10 @@ export class PubMedSearchService {
         }
         return this.http.get<any>(`https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=ext_id:${pmid}&format=json`).pipe(
             map(resp => {
-                let hitCount = resp.hitCount;
-                let data = {};
+                const hitCount = resp.hitCount;
+                const data = {};
                 if (hitCount >= 1) {
-                    let publ = resp.resultList.result[0];
+                    const publ = resp.resultList.result[0];
                     Object.keys(PublAttrMapping).forEach(key => {
                         if (publ.hasOwnProperty(key)) {
                             data[PublAttrMapping[key]] = publ[key] + '';
@@ -38,9 +38,9 @@ export class PubMedSearchService {
                 return data;
             }),
             catchError((error: any) => {
-                let err = {status: '', message: ''};
+                const err = {status: '', message: ''};
                 try {
-                    let jsonError = error.json ? error.json() : error;
+                    const jsonError = error.json ? error.json() : error;
                     err.status = (jsonError.status) ? jsonError.status : 'Error';
                     err.message = (jsonError.message) ? jsonError.message : 'Server error';
                 } catch (e) {

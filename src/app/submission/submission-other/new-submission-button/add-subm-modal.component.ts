@@ -1,5 +1,5 @@
-import {AfterViewInit, Component} from '@angular/core';
-import {BsModalRef} from 'ngx-bootstrap';
+import { AfterViewInit, Component } from '@angular/core';
+import { BsModalRef } from 'ngx-bootstrap';
 
 @Component({
     selector: 'add-subm-modal',
@@ -18,7 +18,7 @@ export class AddSubmModalComponent implements AfterViewInit {
     }
 
     hide(): void {
-        this.bsModalRef.hide()
+        this.bsModalRef.hide();
     }
 
     ok(): void {

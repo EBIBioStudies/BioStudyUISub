@@ -1,10 +1,9 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-
-import {Observable} from 'rxjs/Observable';
-import {PathInfo, UserGroup} from './file-rest.model';
-import {map} from 'rxjs/operators';
-import {HttpUploadClientService, UploadEvent} from './http-upload-client.service';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
+import { PathInfo, UserGroup } from './file-rest.model';
+import { map } from 'rxjs/operators';
+import { HttpUploadClientService, UploadEvent } from './http-upload-client.service';
 
 @Injectable()
 export class FileService {
@@ -16,7 +15,7 @@ export class FileService {
             .pipe(
                 map(groups => groups.map(g => new PathInfo(g.name, '/Groups/' + g.name, 'DIR'))),
                 map(paths => ([] as PathInfo[]).concat([new PathInfo('Home', '/User', 'DIR')], paths))
-            )
+            );
     }
 
     getFiles(fullPath: string): Observable<PathInfo[]> {
@@ -32,10 +31,10 @@ export class FileService {
     }
 
     upload(fullPath: string, files: File[]): Observable<UploadEvent> {
-        let formData = new FormData();
+        const formData = new FormData();
 
         files.forEach(file => {
-            formData.append('files', file, file.name)
+            formData.append('files', file, file.name);
         });
 
         return this.httpUpload.upload(`/raw/files${fullPath}`, formData);

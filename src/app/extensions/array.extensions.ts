@@ -3,7 +3,7 @@ Array.prototype.isEmpty = function () {
 };
 
 Array.prototype.uniqueValues = function () {
-    return this.filter((x, i, a) => a.indexOf(x) == i);
+    return this.filter((x, i, a) => a.indexOf(x) === i);
 };
 
 Array.prototype.flatMap = function (mapFunc) {

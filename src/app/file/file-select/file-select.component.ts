@@ -1,8 +1,7 @@
-import {Component, forwardRef, Input, OnDestroy, OnInit} from '@angular/core';
-
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {FileTreeStore} from './file-tree.store';
-import {Subject} from 'rxjs/Subject';
+import { Component, forwardRef, Input, OnDestroy, OnInit } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FileTreeStore } from './file-tree.store';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'file-select',
@@ -21,12 +20,13 @@ export class FileSelectComponent implements ControlValueAccessor, OnInit, OnDest
 
     private unsubscribe = new Subject();
 
-    private onChange: any = () => {
-    };
-    private onTouched: any = () => {
-    };
-
     constructor(private fileStore: FileTreeStore) {
+    }
+
+    private onChange: any = () => {
+    }
+
+    private onTouched: any = () => {
     }
 
     ngOnInit(): void {
@@ -45,7 +45,7 @@ export class FileSelectComponent implements ControlValueAccessor, OnInit, OnDest
     }
 
     onInputClick(event: MouseEvent): void {
-        setTimeout(()=>{ this.isOpen = true }, 100);
+        setTimeout(() => { this.isOpen = true; }, 100);
     }
 
     doNothing(event: Event): boolean {

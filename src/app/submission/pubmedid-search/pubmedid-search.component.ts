@@ -10,11 +10,9 @@ import {
     ControlValueAccessor,
     NG_VALUE_ACCESSOR
 } from '@angular/forms';
-
 import * as _ from 'lodash';
-
-import {PubMedSearchService} from './pubmedid-search.service';
-import {Observable} from 'rxjs/Observable';
+import { PubMedSearchService } from './pubmedid-search.service';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
     selector: 'pubmedid-search',
@@ -34,20 +32,21 @@ import {Observable} from 'rxjs/Observable';
  * to be displayed again (1st enter key press) or actioned upon (2nd key press).
  */
 export class PubMedIdSearchComponent implements ControlValueAccessor {
-    private onChange: any = (_: any) => {
-    };      //placeholder for handler propagating changes outside the custom control
-    private onTouched: any = () => {
-    };          //placeholder for handler after the control has been "touched"
-
-    public isPreviewPub: boolean = false;       //indicates if the retrieved publication's summary preview is on display
-    private isBusy: boolean = false;            //indicates a transaction is in progress
-    private pubMedId: string | undefined;                   //last PubMed ID number typed in
-    private lastIDfetched: string | undefined;              //helps cancel unnecessary search actions triggered by enter key
-    private publication: { [key: string]: string } = {};           //last publication retrieved
+    public isPreviewPub: boolean = false; // indicates if the retrieved publication's summary preview is on display
+    private isBusy: boolean = false; // indicates a transaction is in progress
+    private pubMedId: string | undefined; // last PubMed ID number typed in
+    private lastIDfetched: string | undefined; // helps cancel unnecessary search actions triggered by enter key
+    private publication: { [key: string]: string } = {}; // last publication retrieved
 
     @Input() required?: boolean = false;
     @Input() readonly?: boolean = false;
     @Output() found: EventEmitter<any> = new EventEmitter<any>();
+
+    // placeholder for handler propagating changes outside the custom control
+    private onChange: any = (_: any) => {};
+
+    // placeholder for handler after the control has been "touched"
+    private onTouched: any = () => {}
 
     constructor(private pubMedSearchService: PubMedSearchService) {
         this.pubMedFetch = _.debounce(this.pubMedFetch, 300);
@@ -114,7 +113,7 @@ export class PubMedIdSearchComponent implements ControlValueAccessor {
     searchOnKeypress(event: Event) {
         event.stopPropagation();
 
-        if (this.pubMedId != this.lastIDfetched) {
+        if (this.pubMedId !== this.lastIDfetched) {
             this.search();
         } else if (this.pubMedId) {
             this.selectPub();

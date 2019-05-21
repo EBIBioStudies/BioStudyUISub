@@ -1,10 +1,10 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {UserData} from 'app/auth/shared';
-import {FileUploadButtonComponent} from 'app/shared/file-upload-button.component';
-import {from, Subject, Subscription} from 'rxjs';
-import {last, mergeAll} from 'rxjs/operators';
-import {AppConfig} from 'app/app.config';
-import {DirectSubmitService} from './direct-submit.service';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild, OnDestroy, DoCheck } from '@angular/core';
+import { UserData } from 'app/auth/shared';
+import { FileUploadButtonComponent } from 'app/shared/file-upload-button.component';
+import { from, Subject, Subscription } from 'rxjs';
+import { last, mergeAll } from 'rxjs/operators';
+import { AppConfig } from 'app/app.config';
+import { DirectSubmitService } from './direct-submit.service';
 
 @Component({
     selector: 'direct-submit-sidebar',
@@ -12,18 +12,18 @@ import {DirectSubmitService} from './direct-submit.service';
     styleUrls: ['./direct-submit-sidebar.component.css']
 })
 
-export class DirectSubmitSideBarComponent implements OnInit {
-    protected ngUnsubscribe: Subject<void>;     //stopper for all subscriptions
-    private uploadSubs?: Subscription;           //subscription for the battery of upload requests
+export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck {
+    protected ngUnsubscribe: Subject<void>; // stopper for all subscriptions
+    private uploadSubs?: Subscription; // subscription for the battery of upload requests
     private model: { files: any | undefined[], projects: any | undefined[] } = {
-        files: undefined,               //no file selection at first
-        projects: []                    //chebox-ised representation of project list
+        files: undefined, // no file selection at first
+        projects: [] // chebox-ised representation of project list
     };
-    isProjFetch: boolean = true;        //are projects still being retrieved?
-    isBulkMode: boolean = false;        //flags if single directory with all study files is expected
-    isBulkSupport: boolean = false;     //indicates if directory selection is supported by the browser
-    submitType: string = 'create';      //will the upload create or update studies?
-    selectedProj: string[] = [];        //projects selected for attachment
+    isProjFetch: boolean = true; // are projects still being retrieved?
+    isBulkMode: boolean = false; // flags if single directory with all study files is expected
+    isBulkSupport: boolean = false; // indicates if directory selection is supported by the browser
+    submitType: string = 'create'; // will the upload create or update studies?
+    selectedProj: string[] = []; // projects selected for attachment
 
     @Input() collapsed? = false;
     @Input() readonly? = false;
@@ -171,7 +171,7 @@ export class DirectSubmitSideBarComponent implements OnInit {
      */
     private initProjModel(projects: string[]): { name: string, checked: boolean }[] {
         return projects.map(name => {
-            return {name: name, checked: false}
+            return { name: name, checked: false };
         });
     }
 
@@ -185,7 +185,7 @@ export class DirectSubmitSideBarComponent implements OnInit {
         const checkboxEl = <HTMLInputElement>event.target;
 
         if (checkboxEl.checked) {
-            this.selectedProj.push(checkboxEl.value)
+            this.selectedProj.push(checkboxEl.value);
         } else {
             this.selectedProj.splice(this.selectedProj.indexOf(checkboxEl.value), 1);
         }
@@ -222,7 +222,7 @@ export class DirectSubmitSideBarComponent implements OnInit {
      * state inconsistencies. Hence also the conservative assignment approach.
      */
     private clearUploads() {
-        let files = this.model.files;
+        const files = this.model.files;
 
         files.forEach((file, index) => {
             if (this.directSubmitSvc!.getRequest(index)!.successful) {
@@ -252,20 +252,20 @@ export class DirectSubmitSideBarComponent implements OnInit {
         if (this.canSubmit) {
             nonClearedFiles = this.model.files.filter(Boolean);
 
-            //In case the same files are re-submitted, the previous list of requests is reset.
+            // In case the same files are re-submitted, the previous list of requests is reset.
             this.directSubmitSvc.reset();
 
-            //Performs the double-request submits and flattens the resulting high-order observables onto a single one.
+            // Performs the double-request submits and flattens the resulting high-order observables onto a single one.
             this.uploadSubs = from(nonClearedFiles).map((file: File) => {
                 return this.directSubmitSvc.addRequest(file, '', this.selectedProj, submType);
 
-                //Throttles the number of requests allowed in parallel and takes just the last event to signal the end of the upload process.
+            // Throttles the number of requests allowed in parallel and takes just the last event to signal the end of the upload process.
             }).pipe(mergeAll(this.appConfig.maxConcurrent)).pipe(last())
 
-            //Cancels all requests on demand and keeps the files list in sync with the list of requests.
-                .takeUntil(this.ngUnsubscribe).finally(() => this.model.files = nonClearedFiles).subscribe();
+            // Cancels all requests on demand and keeps the files list in sync with the list of requests.
+            .takeUntil(this.ngUnsubscribe).finally(() => this.model.files = nonClearedFiles).subscribe();
 
-            //Most probably file selection was left out.
+            // Most probably file selection was left out.
         } else {
             this.markFileTouched();
         }

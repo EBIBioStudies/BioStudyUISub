@@ -1,6 +1,6 @@
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {Section} from 'app/submission/submission-shared/model/submission';
-import {SectionForm} from '../shared/section-form';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Section } from 'app/submission/submission-shared/model/submission';
+import { SectionForm } from '../shared/section-form';
 
 @Component({
     selector: 'subm-navbar',
@@ -9,8 +9,8 @@ import {SectionForm} from '../shared/section-form';
 })
 export class SubmNavBarComponent implements OnChanges {
     @Input() sectionForm?: SectionForm;
-    @Input() accno?: string;             //accession number for the current submission
-    @Input() readonly: boolean = false;         //read-only status of the submission form
+    @Input() accno?: string; // accession number for the current submission
+    @Input() readonly: boolean = false; // read-only status of the submission form
     @Output() sectionClick: EventEmitter<Section> = new EventEmitter<Section>();
     @Output() revertClick: EventEmitter<Event> = new EventEmitter<Event>();
     @Output() submitClick: EventEmitter<Event> = new EventEmitter<Event>();
@@ -37,15 +37,15 @@ export class SubmNavBarComponent implements OnChanges {
     }
 
     onEdit(event: Event): void {
-        this.editClick.next(event)
+        this.editClick.next(event);
     }
 
-    //TODO: a temporary workaround
+    // TODO: a temporary workaround
     get isTemp(): boolean {
         return this.accno!.startsWith('TMP_');
     }
 
-    //TODO: a temporary workaround
+    // TODO: a temporary workaround
     get isRevised(): boolean {
         return true;
     }

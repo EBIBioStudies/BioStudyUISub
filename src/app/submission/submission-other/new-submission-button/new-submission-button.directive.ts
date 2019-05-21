@@ -1,10 +1,10 @@
-import {AfterViewInit, Directive, ElementRef, HostBinding, HostListener} from '@angular/core';
-import {Router} from '@angular/router';
-import {UserData} from 'app/auth/shared';
-import {newPageTab, getSubmissionTemplates} from 'app/submission/submission-shared/model';
-import {SubmissionService} from 'app/submission/submission-shared/submission.service';
-import {BsModalService} from 'ngx-bootstrap';
-import {AddSubmModalComponent} from './add-subm-modal.component';
+import { AfterViewInit, Directive, ElementRef, HostBinding, HostListener } from '@angular/core';
+import { Router } from '@angular/router';
+import { UserData } from 'app/auth/shared';
+import { newPageTab, getSubmissionTemplates } from 'app/submission/submission-shared/model';
+import { SubmissionService } from 'app/submission/submission-shared/submission.service';
+import { BsModalService } from 'ngx-bootstrap';
+import { AddSubmModalComponent } from './add-subm-modal.component';
 
 const PLUS_ICON = '<i class="fa fa-plus-circle" aria-hidden="true"></i>';
 const SPINNER_ICON = '<i class="fa fa-cog fa-spin"></i>';
@@ -36,7 +36,7 @@ export class NewSubmissionButtonDirective implements AfterViewInit {
         this.userData.projectAccNumbers$.subscribe(projectNames => {
             const templates = getSubmissionTemplates(projectNames);
             if (templates.length > 0) {
-                this.selectTemplate(templates)
+                this.selectTemplate(templates);
             } else {
                 this.onOk();
             }

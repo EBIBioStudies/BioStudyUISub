@@ -1,7 +1,7 @@
-import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {of} from 'rxjs';
-import {Observable} from 'rxjs/Rx';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { of } from 'rxjs';
+import { Observable } from 'rxjs/Rx';
 
 @Injectable()
 export class TestBackendInterceptor implements HttpInterceptor {
@@ -19,9 +19,9 @@ export class TestBackendInterceptor implements HttpInterceptor {
 
         if (req.url.endsWith('check?format=json') && req.method === 'GET') {
             // check for fake auth token in header and return users if valid, this security is implemented server side in a real application
-            //if (req.headers.get('Authorization') === 'Bearer fake-jwt-token') {
+            // if (req.headers.get('Authorization') === 'Bearer fake-jwt-token') {
             return of(new HttpResponse({status: 200, body: this.userInfo}));
-            //} else {
+            // } else {
             //     // return 401 not authorised if token is null or invalid
             //     return throwError({ error: { message: 'Unauthorised' } });
             // }

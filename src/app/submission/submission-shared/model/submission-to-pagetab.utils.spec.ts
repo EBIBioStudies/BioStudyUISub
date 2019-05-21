@@ -1,10 +1,9 @@
-import {Submission, SubmissionData} from './submission';
-import {SubmissionType} from './templates';
-import {submission2PageTab} from './submission-to-pagetab.utils';
-import {AttrExceptions, PtFile, PtLink} from './pagetab';
+import { Submission, SubmissionData } from './submission';
+import { SubmissionType } from './templates';
+import { submission2PageTab } from './submission-to-pagetab.utils';
+import { AttrExceptions, PtFile, PtLink } from './pagetab';
 
 describe('Submission To PageTab Util:', () => {
-
     let submType;
 
     beforeAll(() => {

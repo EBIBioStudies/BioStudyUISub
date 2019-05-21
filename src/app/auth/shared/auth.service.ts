@@ -1,11 +1,10 @@
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-
-import {ServerError} from 'app/http'
-
-import {Observable, of} from 'rxjs';
-import {map, catchError} from 'rxjs/operators';
-import {AppConfig} from '../../app.config';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { ServerError } from 'app/http';
+import { Observable, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+import { AppConfig } from '../../app.config';
+import { UserSession } from './user-session';
 import {
     UserInfo,
     PasswordResetRequestData,
@@ -14,7 +13,6 @@ import {
     RegistrationData, copyAndExtend
 } from './model';
 
-import {UserSession} from './user-session';
 
 interface StatusResponse {
     status: string, // 'OK' or 'FAIL'
@@ -26,6 +24,20 @@ interface UserInfoResponse extends UserInfo, StatusResponse {
 
 @Injectable()
 export class AuthService {
+    private static statusCheck<T extends StatusResponse>(resp: T): T {
+        if (resp.status === 'OK') {
+            return resp;
+        }
+        throw ServerError.dataError(resp);
+    }
+
+    private static catch403Error<T>(resp: HttpErrorResponse): Observable<T> {
+        if (resp.status === 403) {
+            return of(resp.error); // server should not return 403 status
+        }
+
+        throw resp;
+    }
 
     constructor(private http: HttpClient,
                 private userSession: UserSession,
@@ -94,17 +106,5 @@ export class AuthService {
             instanceKey: this.appConfig.instanceKey,
             path: this.appConfig.contextPath + '/' + obj.path
         });
-    }
-
-    private static statusCheck<T extends StatusResponse>(resp: T): T {
-        if (resp.status === 'OK') {
-            return resp;
-        }
-        throw ServerError.dataError(resp);
-    }
-
-    private static catch403Error<T>(resp: HttpErrorResponse): Observable<T> {
-        if (resp.status === 403) return of(resp.error); // server should not return 403 status
-        throw resp;
     }
 }

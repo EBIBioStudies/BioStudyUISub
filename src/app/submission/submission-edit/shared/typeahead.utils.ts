@@ -1,5 +1,5 @@
-import {Observable, of} from 'rxjs';
-import {map, mergeMap} from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
 
 export function typeaheadSource(sourceFunc: () => string[], valueChanges: Observable<string>): Observable<string[]> {
     return valueChanges.pipe(
