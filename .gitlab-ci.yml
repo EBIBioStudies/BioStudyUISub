@@ -1,8 +1,9 @@
+image: thompsnm/nodejs-chrome:latest
 stages:
   - test
+  - build
 
 unit_test:
-  image: thompsnm/nodejs-chrome:latest
   stage: test
   variables:
     NODE_ENV: test
@@ -10,3 +11,15 @@ unit_test:
     - npm install
   script:
     - npm test
+  only:
+    - master@ndiaz/BioStudyUISub
+
+build:
+  stage: build
+  script:
+    - npm run build
+  artifacts:
+    name: $CI_JOB_NAME
+    paths:
+      - artifacts/subtool.tar.gz
+    expire_in: 1 day
