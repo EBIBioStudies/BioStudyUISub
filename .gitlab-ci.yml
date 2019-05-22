@@ -3,17 +3,22 @@ stages:
   - test
   - build
 
+cache:
+  paths:
+    - node_modules/
+
 install_dependencies:
   stage: test
   script:
     - npm install
+  artifacts:
+    paths:
+      - node_modules/
 
 unit_test:
   stage: test
   variables:
     NODE_ENV: test
-  before_script:
-    - npm install
   script:
     - npm test
   only:
