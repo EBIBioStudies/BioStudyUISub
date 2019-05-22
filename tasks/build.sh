@@ -13,4 +13,13 @@ rm -rf dist && mkdir dist
 npx ng build --outputPath=dist --deleteOutputPath=true
 
 # Create artifact
-tar -czf ~/subtool.tar.gz -C dist .
+if [ -n "${CI}" ]; then
+  # Create artifacts folder
+  mkdir -p artifacts
+
+  # Create artifact
+  tar -czf subtool.tar.gz -C dist .
+
+  # Copy artifact into "artifacts" folder
+  cp locations.tar.gz artifacts/
+fi
