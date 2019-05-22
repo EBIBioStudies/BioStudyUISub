@@ -26,4 +26,4 @@ offlineMode=${offlineMode}
 offlineUserDir=${offlineUserDir}
 " > gradle.properties
 
-gradle clean build war -x test
+./gradlew clean build war -x test
