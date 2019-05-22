@@ -15,7 +15,7 @@ install_dependencies:
     paths:
       - node_modules/
 
-unit_test:
+test:
   stage: test
   variables:
     NODE_ENV: test
@@ -31,5 +31,5 @@ build:
   artifacts:
     name: $CI_JOB_NAME
     paths:
-      - artifacts/subtool.tar.gz
+      - artifacts/.build
     expire_in: 1 day
