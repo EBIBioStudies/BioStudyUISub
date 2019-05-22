@@ -9,6 +9,7 @@
     "start-no-ssl": "ng serve --proxy-config proxy.conf.json --progress",
     "build": "ng build",
     "test": "ng test",
+    "test": "ng test --watch=false",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
