@@ -3,6 +3,11 @@ stages:
   - test
   - build
 
+install_dependencies:
+  stage: test
+  script:
+    - npm install
+
 unit_test:
   stage: test
   variables:
