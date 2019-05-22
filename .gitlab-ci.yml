@@ -1,4 +1,4 @@
-image: thompsnm/nodejs-chrome:latest
+image: karlrun/java-node-gradle
 stages:
   - test
   - build
@@ -36,7 +36,6 @@ build:
     expire_in: 2 days
 
 build_proxy:
-  image: timbru31/java-node:latest
   stage: build
   script:
     - npm run build:proxy
