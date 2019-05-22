@@ -2,7 +2,7 @@ stages:
   - test
 
 unit_test:
-  image: node
+  image: geekykaran/headless-chrome-node-docker:latest
   stage: test
   variables:
     NODE_ENV: test
