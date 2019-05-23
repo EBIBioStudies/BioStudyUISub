@@ -31,7 +31,6 @@ build_ui:
   script:
     - npm run build
   artifacts:
-    name: $CI_JOB_NAME
     paths:
       - subtool.tar.gz
     expire_in: 2 days
@@ -41,9 +40,6 @@ build_proxy:
   script:
     - npm run build:proxy
   artifacts:
-    name: $CI_JOB_NAME
     paths:
       - proxy/build/libs/proxy.war
     expire_in: 2 days
-  dependencies:
-    - build_ui
