@@ -29,7 +29,7 @@ test:
 build_ui:
   stage: build_ui
   script:
-    - npm run build:ui
+    - npm run build
   artifacts:
     name: $CI_JOB_NAME
     paths:
