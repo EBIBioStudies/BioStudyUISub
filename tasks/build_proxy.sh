@@ -4,12 +4,12 @@ set -e
 set -v
 
 # Clone Proxy into proxy folder
-git clone https://github.com/EBIBioStudies/BioStudySubmProxy.git .
+git clone https://github.com/EBIBioStudies/BioStudySubmProxy.git proxy
 
 # Copy the artifacts generated in build_ui stage
 if [ -f subtool.tar.gz ]; then
   cp subtool.tar.gz .;
-  tar -xvf subtool.tar.gz -C src/main/webapp;
+  tar -xvf subtool.tar.gz -C proxy/src/main/webapp;
 fi
 
 # Get property values from Environment Variables
@@ -29,6 +29,6 @@ logLevel=${logLevel}
 httpsFilterDisabled=${httpsFilterDisabled}
 offlineMode=${offlineMode}
 offlineUserDir=${offlineUserDir}
-" > gradle.properties
+" > proxy/gradle.properties
 
-./gradlew clean build war -x test
+cd proxy && ./gradlew clean build war -x test
