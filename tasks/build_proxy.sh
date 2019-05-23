@@ -9,6 +9,8 @@ git clone https://github.com/EBIBioStudies/BioStudySubmProxy.git proxy
 # Go to proxy folder
 cd proxy
 
+ls
+
 # Copy the artifacts generated in build_ui stage
 # if [ -f subtool.tar.gz ]; then
 cp subtool.tar.gz .;
