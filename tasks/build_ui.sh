@@ -1,9 +1,6 @@
 #!/bin/bash
 
-# Exit immediately if a command exits with a non-zero status
 set -e
-
-# Print shell input lines as they are read
 set -v
 
 # Clean build dist folder

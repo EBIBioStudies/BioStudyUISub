@@ -1,9 +1,6 @@
 #!/bin/bash
 
-# Exit immediately if a command exits with a non-zero status
 set -e
-
-# Print shell input lines as they are read
 set -v
 
 # Clone Proxy into proxy folder
@@ -13,10 +10,10 @@ git clone https://github.com/EBIBioStudies/BioStudySubmProxy.git proxy
 cd proxy
 
 # Copy the artifacts generated in build_ui stage
-if [ -f subtool.tar.gz ]; then
-  cp subtool.tar.gz .;
-  tar -xvf subtool.tar.gz -C src/main/webapp;
-fi
+# if [ -f subtool.tar.gz ]; then
+cp subtool.tar.gz .;
+tar -xvf subtool.tar.gz -C src/main/webapp;
+# fi
 
 # Get property values from Environment Variables
 bsBackendUrl=${PROXY_BACKEND_URL}
