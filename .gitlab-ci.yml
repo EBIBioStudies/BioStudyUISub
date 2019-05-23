@@ -44,3 +44,5 @@ build_proxy:
     paths:
       - build/libs/proxy.war
     expire_in: 2 days
+  dependencies:
+    - build_ui
