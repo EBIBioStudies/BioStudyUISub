@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Exit immediately if a command exits with a non-zero status
+set -e
+
+# Print shell input lines as they are read
+set -v
+
 # Clone Proxy into proxy folder
 git clone https://github.com/EBIBioStudies/BioStudySubmProxy.git proxy
 
