@@ -1,7 +1,8 @@
 image: karlrun/java-node-gradle
 stages:
   - test
-  - build
+  - build_ui
+  - build_proxy
 
 cache:
   paths:
@@ -26,7 +27,7 @@ test:
     - master@ndiaz/BioStudyUISub
 
 build_ui:
-  stage: build
+  stage: build_ui
   script:
     - npm run build:ui
   artifacts:
@@ -36,7 +37,7 @@ build_ui:
     expire_in: 2 days
 
 build_proxy:
-  stage: build
+  stage: build_proxy
   script:
     - npm run build:proxy
   artifacts:
@@ -44,5 +45,3 @@ build_proxy:
     paths:
       - build/libs/proxy.war
     expire_in: 2 days
-  dependencies:
-    - build_ui
