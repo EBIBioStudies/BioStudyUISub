@@ -25,10 +25,10 @@ test:
   only:
     - master@ndiaz/BioStudyUISub
 
-build:
+build_ui:
   stage: build
   script:
-    - npm run build
+    - npm run build:ui
   artifacts:
     name: $CI_JOB_NAME
     paths:
@@ -39,3 +39,8 @@ build_proxy:
   stage: build
   script:
     - npm run build:proxy
+  artifacts:
+    name: $CI_JOB_NAME
+    paths:
+      - build/libs/proxy.war
+    expire_in: 2 days
