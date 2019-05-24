@@ -13,7 +13,7 @@ appDebugEnabled=$APP_DEBUG_ENABLED;
 appInstanceKey=$APP_INSTANCE_KEY;
 
 # Update config
-sed -i 's/"APP_PROXY_BASE":(.*)/"'$appProxyBase'",' config.json
+sed -i 's%"APP_PROXY_BASE":.*%"APP_PROXY_BASE":"'$appProxyBase'",%' config.json
 # sed -i 's/\(.*"APP_CONTEXT":\)\(.*\)/\1"'$appContext'",/' config.json
 # sed -i 's/\(.*"APP_DEBUG_ENABLED":\)\(.*\)/\1'$appDebugEnabled',/' config.json
 # Last line, don't append a comma
