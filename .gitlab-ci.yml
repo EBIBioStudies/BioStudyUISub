@@ -34,6 +34,8 @@ build_ui:
     paths:
       - subtool.tar.gz
     expire_in: 2 days
+  environment:
+    name: DEV
 
 build_proxy:
   stage: build_proxy
@@ -43,3 +45,5 @@ build_proxy:
     paths:
       - proxy/build/libs/proxy.war
     expire_in: 2 days
+  only:
+    - master@ndiaz/BioStudyUISub
