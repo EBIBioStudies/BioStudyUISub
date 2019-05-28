@@ -11,6 +11,7 @@ appProxyBase=$APP_PROXY_BASE;
 appContext=$APP_CONTEXT;
 appDebugEnabled=$APP_DEBUG_ENABLED;
 appInstanceKey=$APP_INSTANCE_KEY;
+ciEnvironment=$CI_ENVIRONMENT_SLUG;
 
 # Update config.json
 sed -i 's%"APP_PROXY_BASE":.*%"APP_PROXY_BASE":"'$appProxyBase'",%' src/config.json
@@ -25,5 +26,5 @@ npx ng build --outputPath=dist --deleteOutputPath=true
 # Create artifact
 if [ -n "${CI}" ]; then
   # Create artifact
-  tar -czf subtool.tar.gz -C dist .
+  tar -czf subtool-$ciEnvironment.tar.gz -C dist .
 fi

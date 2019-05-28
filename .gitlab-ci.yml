@@ -4,6 +4,15 @@ stages:
   - build_ui
   - build_proxy
 
+.build_ui_template: &build_ui_definition
+  stage: build_ui
+  script:
+    - sh ./tasks/build_ui.sh
+  artifacts:
+    paths:
+      - subtool-$CI_ENVIRONMENT_SLUG.tar.gz
+    expire_in: 2 days
+
 cache:
   paths:
     - node_modules/
@@ -27,14 +36,16 @@ test:
     - master@ndiaz/BioStudyUISub
 
 build_ui_dev:
+  <<: *build_ui_definition
   environment: DEV
-  stage: build_ui
-  script:
-    - sh ./tasks/build_ui.sh
-  artifacts:
-    paths:
-      - subtool-$CI_ENVIRONMENT_SLUG.tar.gz
-    expire_in: 2 days
+
+build_ui_beta:
+  <<: *build_ui_definition
+  environment: BETA
+
+build_ui_prod:
+  <<: *build_ui_definition
+  environment: PROD
 
 build_proxy:
   stage: build_proxy
