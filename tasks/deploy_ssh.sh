@@ -3,15 +3,17 @@
 set -e
 set -v
 
-# Install ssh-agent if not already installed, it is required by Docker.
-which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
+# Create the SSH directory and give it the right permissions
+mkdir -p ~/.ssh
+
+# Copy the SSH key stored in SSH_KEY into id_rsa
+echo "$SSH_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+
+# Give the right permissions
+chmod 700 ~/.ssh/id_rsa
 
 # Run ssh-agent (inside the build environment)
 eval $(ssh-agent -s)
 
-# Add the SSH key stored in SSH_PRIVATE_KEY variable to the agent store
-echo "$SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
-
-# Create the SSH directory and give it the right permissions
-mkdir -p ~/.ssh
-chmod 700 ~/.ssh
+# Add the SSH key stored in SSH_KEY variable to the agent store
+ssh-add ~/.ssh/id_rsa
