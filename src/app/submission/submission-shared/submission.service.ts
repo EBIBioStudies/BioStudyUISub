@@ -1,9 +1,8 @@
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
-import {map, catchError, switchMap} from 'rxjs/operators';
-
-import {PageTab} from './model/pagetab';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { map, catchError, switchMap } from 'rxjs/operators';
+import { PageTab } from './model/pagetab';
 
 export interface PendingSubmission {
     accno: string,
@@ -60,6 +59,20 @@ function definedPropertiesOnly(obj: any): any {
 
 @Injectable()
 export class SubmissionService {
+    /**
+     * Traverses the error log tree to find the first deepest error message.
+     * @param {Array<Object> | Object} obj - Log tree's root node or subnode list.
+     * @returns {string} Error message.
+     */
+    static deepestError(log: SubmitLog): string {
+        const errorNode = (log.subnodes || []).find(n => n.level === 'ERROR');
+
+        if (errorNode === undefined) {
+            return log.message || 'Unknown error';
+        }
+
+        return this.deepestError(errorNode);
+    }
 
     constructor(private http: HttpClient) {
     }
@@ -125,7 +138,7 @@ export class SubmissionService {
         return this.getPending(accno).pipe(
             catchError(_ => of(undefined)),
             switchMap(resp => resp === undefined ? this.deleteSubmitted(accno) : this.deletePending(accno))
-        )
+        );
     }
 
     private deleteSubmitted(accno: string): Observable<boolean> {
@@ -147,18 +160,5 @@ export class SubmissionService {
 
     private getSubmitted(accno: string): Observable<PageTab> {
         return this.http.get<PageTab>(`/raw/submission/${accno}`);
-    }
-
-    /**
-     * Traverses the error log tree to find the first deepest error message.
-     * @param {Array<Object> | Object} obj - Log tree's root node or subnode list.
-     * @returns {string} Error message.
-     */
-    static deepestError(log: SubmitLog): string {
-        const errorNode = (log.subnodes || []).find(n => n.level === 'ERROR');
-        if (errorNode === undefined) {
-            return log.message || 'Unknown error';
-        }
-        return this.deepestError(errorNode);
     }
 }

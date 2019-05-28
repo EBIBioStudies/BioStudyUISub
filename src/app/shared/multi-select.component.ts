@@ -9,15 +9,12 @@ import {
     OnChanges,
     ElementRef
 } from '@angular/core';
-
 import {
     ControlValueAccessor,
     NG_VALUE_ACCESSOR
 } from '@angular/forms';
-
-import {Subject} from 'rxjs/Subject';
-import {Subscription} from 'rxjs/Subscription';
-
+import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
 import * as _ from 'lodash';
 
 @Pipe({
@@ -49,9 +46,9 @@ export class FilterPipe implements PipeTransform {
     <ul *dropdownMenu class="dropdown-menu" role="menu">
         <li [hidden]="empty || !filterEnabled" role="menuitem">
             <div class="form-group filter">
-                <input class="form-control" 
-                       type="text" 
-                       [value]="filterText" 
+                <input class="form-control"
+                       type="text"
+                       [value]="filterText"
                        [placeholder]="filterPlaceholder"
                        (input)="filterInputValue$.next(filterInput.value)"
                        #filterInput/>
@@ -76,7 +73,7 @@ export class FilterPipe implements PipeTransform {
 }
 `, `
 .filter {
-    padding: 5px; 
+    padding: 5px;
 }
 .clear-filter  {
     cursor: pointer;
@@ -123,7 +120,7 @@ export class MultiSelectComponent implements ControlValueAccessor, OnChanges, On
             this.filterText = term;
         });
 
-        //Detects clicks outside the multi-select box.
+        // Detects clicks outside the multi-select box.
         document.body.addEventListener('click', this.closeOnClick.bind(this));
     }
 
@@ -174,14 +171,13 @@ export class MultiSelectComponent implements ControlValueAccessor, OnChanges, On
         this.selected = value;
         const ht = _.zipObject(value, _.fill(Array(value.length), 1));
         _.forEach(this.items, item => {
-            item.checked = (ht[item.label] == 1);
+            item.checked = (ht[item.label] === 1);
         });
     }
 
-    private onChange: any = () => {
-    };
-    private onTouched: any = () => {
-    };
+    private onChange: any = () => {};
+
+    private onTouched: any = () => {};
 
     get value(): any {
         return this.selected;

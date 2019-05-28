@@ -1,6 +1,6 @@
-import {AgRendererComponent} from 'ag-grid-angular/src/interfaces';
-import {Component} from '@angular/core';
-import {FileUpload} from '../../shared/file-upload-list.service';
+import { AgRendererComponent } from 'ag-grid-angular/src/interfaces';
+import { Component } from '@angular/core';
+import { FileUpload } from '../../shared/file-upload-list.service';
 
 @Component({
     selector: 'file-actions-cell',
@@ -35,7 +35,7 @@ export class FileActionsCellComponent implements AgRendererComponent {
     }
 
     get canRemove(): boolean {
-        return !this.canCancel && (this.type === 'FILE' || this.type === 'ARCHIVE')
+        return !this.canCancel && (this.type === 'FILE' || this.type === 'ARCHIVE');
     }
 
     get canCancel(): boolean {

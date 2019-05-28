@@ -1,4 +1,4 @@
-import {DataWithCaptcha, copyAndExtend} from './data-base';
+import { DataWithCaptcha, copyAndExtend } from './data-base';
 
 export class PasswordResetData extends DataWithCaptcha {
     key: string = '';

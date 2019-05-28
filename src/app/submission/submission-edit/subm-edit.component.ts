@@ -1,26 +1,19 @@
-import {Location} from '@angular/common';
-import {AfterViewChecked, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
-import {AppConfig} from 'app/app.config';
-
-import {ConfirmDialogComponent} from 'app/shared';
-
-import {Option} from 'fp-ts/lib/Option';
-
-import {BsModalService} from 'ngx-bootstrap';
-import {Observable, of} from 'rxjs';
-
-import {filter, switchMap} from 'rxjs/operators';
-
-import {Subject} from 'rxjs/Subject';
-import {SubmResultsModalComponent} from '../submission-results/subm-results-modal.component';
-import {SubmitResponse} from '../submission-shared/submission.service';
-import {SectionForm} from './shared/section-form';
-import {SubmEditService} from './shared/subm-edit.service';
-import {SubmSidebarComponent} from './subm-sidebar/subm-sidebar.component';
-import {ModalService} from '../../shared/modal.service';
-
+import { Location } from '@angular/common';
+import { AfterViewChecked, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AppConfig } from 'app/app.config';
+import { Option } from 'fp-ts/lib/Option';
+import { BsModalService } from 'ngx-bootstrap';
+import { Observable, of } from 'rxjs';
+import { filter, switchMap } from 'rxjs/operators';
+import { Subject } from 'rxjs/Subject';
+import { SubmResultsModalComponent } from '../submission-results/subm-results-modal.component';
+import { SubmitResponse } from '../submission-shared/submission.service';
+import { SectionForm } from './shared/section-form';
+import { SubmEditService } from './shared/subm-edit.service';
+import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
+import { ModalService } from '../../shared/modal.service';
 
 class SubmitOperation {
     get isUnknown(): boolean {
@@ -112,7 +105,8 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
             .pipe(
                 switchMap(params => {
                     this.accno = params.accno;
-                    return this.submEditService.load(params.accno, this.hasJustCreated)
+
+                    return this.submEditService.load(params.accno, this.hasJustCreated);
                 })
             ).subscribe((resp) => {
             if (this.hasJustCreated) {
@@ -132,7 +126,7 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
     ngAfterViewChecked(): void {
         if (this.scrollToCtrl !== undefined) {
             setTimeout(() => {
-                this.scroll()
+                this.scroll();
             }, 500);
         }
     }
@@ -169,7 +163,7 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
                 filter(v => v),
                 switchMap(() => this.submEditService.submit())
             ).takeUntil(this.unsubscribe)
-            .subscribe(resp => this.onSubmitFinished(resp))
+            .subscribe(resp => this.onSubmitFinished(resp));
     }
 
     onEditBackClick(event: Event) {
@@ -214,8 +208,8 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
         return (
             rect.top >= 0 &&
             rect.left >= 0 &&
-            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+            rect.bottom <= (window.innerHeight || document.documentElement!.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement!.clientWidth)
         );
     }
 

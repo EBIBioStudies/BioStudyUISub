@@ -2,15 +2,13 @@ import {
     Component,
     ViewChild
 } from '@angular/core';
-
 import {
     IFilterParams,
     IDoesFilterPassParams,
     RowNode,
     IAfterGuiAttachedParams
 } from 'ag-grid-community/main';
-
-import {AgFilterComponent} from 'ag-grid-angular/main';
+import { AgFilterComponent } from 'ag-grid-angular/main';
 
 @Component({
     selector: 'ag-acc-filter',
@@ -37,7 +35,7 @@ export class TextFilterComponent implements AgFilterComponent {
 
     doesFilterPass(params: IDoesFilterPassParams): boolean {
         return this.text.toLowerCase()
-            .split(" ")
+            .split(' ')
             .every((filterWord) => {
                 return this.valueGetter!(params.node).toString().toLowerCase().indexOf(filterWord) >= 0;
             });

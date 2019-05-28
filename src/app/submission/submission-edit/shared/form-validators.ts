@@ -8,17 +8,19 @@ import {
     ValidatorFn,
     Validators
 } from '@angular/forms';
-import {TextValueType, ValueType, ValueTypeName} from 'app/submission/submission-shared/model';
-import {Attribute, Feature, Field, Section} from 'app/submission/submission-shared/model/submission';
-import {parseDate} from 'app/utils';
+import { TextValueType, ValueType, ValueTypeName } from 'app/submission/submission-shared/model';
+import { Attribute, Feature, Field, Section } from 'app/submission/submission-shared/model/submission';
+import { parseDate } from 'app/utils';
 
-//experimental: Control Reference details for using in error messages
+// experimental: Control Reference details for using in error messages
 export class ControlRef {
+    static unknown = new ControlRef('unknown_control', 'unknown');
+
     constructor(readonly id: string,
                 readonly name: string = '',
                 readonly parentRef?: ControlGroupRef,
                 readonly icon: string = 'fa-square') {
-    };
+    }
 
     get parentName(): string {
         return this.parentRef ? this.parentRef.name : '';
@@ -35,19 +37,27 @@ export class ControlRef {
     get isRootSection(): boolean {
         return this.parentRef ? this.parentRef.isRoot : true;
     }
-
-    static unknown = new ControlRef('unknown_control', 'unknown');
 }
 
-//experimental: Controls Groups Reference (for sections and features) for using in error list
+// experimental: Controls Groups Reference (for sections and features) for using in error list
 export class ControlGroupRef {
+    static unknown = new ControlGroupRef();
+
     readonly sectionId: string;
     readonly sectionName: string;
     readonly featureName?: string;
     readonly icon: string;
     readonly isRoot: boolean;
 
-    private constructor(params: Partial<ControlGroupRef>={}) {
+    static sectionRef(section: Section, isRoot: boolean = false) {
+        return new ControlGroupRef({
+            sectionId: section.id,
+            sectionName: section.accno || section.typeName,
+            isRoot: isRoot
+        });
+    }
+
+    private constructor(params: Partial<ControlGroupRef> = {}) {
        this.sectionId = params.sectionId || 'unknown_section_id';
        this.sectionName = params.sectionName || 'unknown_section_name';
        this.featureName = params.featureName;
@@ -86,20 +96,21 @@ export class ControlGroupRef {
         const uniqueId = [parentName, id].join('_');
         return new ControlRef(uniqueId, name, this, icon || this.icon);
     }
-
-    static unknown = new ControlGroupRef();
-
-    static sectionRef(section: Section, isRoot: boolean = false) {
-        return new ControlGroupRef({
-            sectionId: section.id,
-            sectionName: section.accno || section.typeName,
-            isRoot: isRoot
-        });
-    }
 }
 
 export class MyFormControl extends FormControl {
     ref: ControlRef = ControlRef.unknown;
+
+    static compareBySectionId = (c1: FormControl, c2: FormControl) => {
+        if (c1 instanceof MyFormControl && c2 instanceof MyFormControl) {
+            return c1.ref.sectionId.localeCompare(c2.ref.sectionId);
+        } else if (c1 instanceof MyFormControl) {
+            return 1;
+        } else if (c2 instanceof MyFormControl) {
+            return -1;
+        }
+        return 0;
+    }
 
     constructor(formState?: any,
                 validatorOrOpts?: ValidatorFn | ValidatorFn[] | AbstractControlOptions | null,
@@ -111,17 +122,6 @@ export class MyFormControl extends FormControl {
         this.ref = ref;
         return this;
     }
-
-    static compareBySectionId = (c1: FormControl, c2: FormControl) => {
-        if (c1 instanceof MyFormControl && c2 instanceof MyFormControl) {
-            return c1.ref.sectionId.localeCompare(c2.ref.sectionId);
-        } else if (c1 instanceof MyFormControl) {
-            return 1;
-        } else if (c2 instanceof MyFormControl) {
-            return -1;
-        }
-        return 0;
-    };
 }
 
 export class MyFormGroup extends FormGroup {
@@ -173,17 +173,17 @@ export class FormValidators {
             control.setErrors(errors);
         });
         return {'unique': {value: duplicates[0]}};
-    };
+    }
 
     static formatDate: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
         const v = control.value;
         return String.isNotDefinedOrEmpty(v) || (parseDate(v) !== undefined) ? null : {'format': {value: v}};
-    };
+    }
 
     static formatOrcid: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
         const v = control.value;
         return String.isNotDefinedOrEmpty(v) || /^\d{4}-\d{4}-\d{4}-\d{4}$/.test(v) ? null : {'format': {value: v}};
-    };
+    }
 }
 
 export class SubmFormValidators {
@@ -268,6 +268,7 @@ export class ErrorMessages {
     static map(control: AbstractControl): string[] {
         const errors = control.errors || {};
         const messages = CustomErrorMessages.for(control);
-        return Object.keys(errors).map(errorKey => messages[errorKey](errors[errorKey]))
+
+        return Object.keys(errors).map(errorKey => messages[errorKey](errors[errorKey]));
     }
 }

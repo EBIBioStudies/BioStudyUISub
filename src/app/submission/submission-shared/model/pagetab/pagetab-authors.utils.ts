@@ -1,4 +1,4 @@
-import {PtAttribute, PtSection} from './pagetab.model';
+import { PtAttribute, PtSection } from './pagetab.model';
 
 const isEqualTo = (value: string) => {
     return (s: Nullable<string>) => (String.isDefined(s) && s!.toLowerCase() === value);

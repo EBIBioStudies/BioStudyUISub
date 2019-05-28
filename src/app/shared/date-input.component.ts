@@ -1,11 +1,9 @@
-import {Component, ElementRef, forwardRef, Input, ViewChild} from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-
-import {BsDatepickerConfig} from 'ngx-bootstrap/datepicker';
-import {BsDatepickerDirective} from 'ngx-bootstrap';
-
-import {formatDate, isEqualDate} from '../utils';
-import {AppConfig} from '../app.config';
+import { Component, ElementRef, forwardRef, Input, ViewChild, OnInit } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { BsDatepickerDirective } from 'ngx-bootstrap';
+import { formatDate, isEqualDate } from '../utils';
+import { AppConfig } from '../app.config';
 
 @Component({
     selector: 'date-input',
@@ -25,7 +23,7 @@ import {AppConfig} from '../app.config';
  * hard-coded to ISO 8601 YYYY-MM-DD).
  * @see {@link ControlValueAccessor}
  */
-export class DateInputComponent implements ControlValueAccessor {
+export class DateInputComponent implements ControlValueAccessor, OnInit {
     @Input() allowPast?: boolean = undefined;
     @Input() maxDate?: Date = undefined;
     @Input() isSmall?: boolean = false;
@@ -109,13 +107,12 @@ export class DateInputComponent implements ControlValueAccessor {
      * @param {Event} event - DOM event for the click action.
      */
     onClick(event: Event) {
-
-        //Cancels the datepicker dialogue by closing it as soon as it's opened.
-        //NOTE: As of ngx-bootstrap's current version, a disabled state is still WIP.
+        // Cancels the datepicker dialogue by closing it as soon as it's opened.
+        // NOTE: As of ngx-bootstrap's current version, a disabled state is still WIP.
         if (this.readonly) {
             this.datepicker!.toggle();
 
-        //Checks click happened on the wrapping element
+        // Checks click happened on the wrapping element
         } else if ((<Element>event.target).classList.contains('dropdown')) {
             this.datepicker!.show();
         }
@@ -132,14 +129,14 @@ export class DateInputComponent implements ControlValueAccessor {
      * @see {@link https://valor-software.com/ngx-bootstrap/#/datepicker}
      */
     onPickerSet(dateObj: Date, isChange: boolean = this.datepicker!.isOpen) {
-        let formattedDate;          //date in format expected by backend
+        let formattedDate; // date in format expected by backend
 
         if (dateObj && !isEqualDate(dateObj, this.dateValue)) {
             this.dateValue = dateObj;
             formattedDate = formatDate(this.dateValue);
             this.onChange(formattedDate);
 
-            //Propagates the date change through the DOM if so wished.
+            // Propagates the date change through the DOM if so wished.
             if (isChange) {
                 this.rootEl.nativeElement.value = formattedDate;
                 this.rootEl.nativeElement.dispatchEvent(new Event('change', {bubbles: true}));

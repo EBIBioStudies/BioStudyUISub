@@ -2,14 +2,13 @@ import {
     Component,
     Input
 } from '@angular/core';
-
-import {SubmValidationErrors} from 'app/submission/submission-shared/model';
-import {BsModalRef} from 'ngx-bootstrap';
+import { SubmValidationErrors } from 'app/submission/submission-shared/model';
+import { BsModalRef } from 'ngx-bootstrap';
 
 @Component({
     selector: 'subm-validation-errors',
     templateUrl: './subm-validation-errors.component.html',
-    styleUrls:['./subm-validation-errors.component.css']
+    styleUrls: ['./subm-validation-errors.component.css']
 })
 export class SubmValidationErrorsComponent {
     @Input() errors: SubmValidationErrors = SubmValidationErrors.Empty;

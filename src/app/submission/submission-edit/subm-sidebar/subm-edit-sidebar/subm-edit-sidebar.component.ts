@@ -1,16 +1,15 @@
-import {Component, OnDestroy} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {UserData} from 'app/auth/shared';
-
-import {Option} from 'fp-ts/lib/Option';
-import {BsModalService} from 'ngx-bootstrap';
-import {Subject, Subscription} from 'rxjs';
-import {TypeBase, FeatureType, SectionType} from 'app/submission/submission-shared/model/templates';
-import {FormValidators} from '../../shared/form-validators';
-import {SectionForm} from '../../shared/section-form';
-import {SubmEditService} from '../../shared/subm-edit.service';
-import {AddSubmTypeModalComponent} from '../add-subm-type-modal/add-subm-type-modal.component';
-import {ModalService} from '../../../../shared/modal.service';
+import { Component, OnDestroy } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UserData } from 'app/auth/shared';
+import { Option } from 'fp-ts/lib/Option';
+import { BsModalService } from 'ngx-bootstrap';
+import { Subject, Subscription } from 'rxjs';
+import { TypeBase, FeatureType, SectionType } from 'app/submission/submission-shared/model/templates';
+import { FormValidators } from '../../shared/form-validators';
+import { SectionForm } from '../../shared/section-form';
+import { SubmEditService } from '../../shared/subm-edit.service';
+import { AddSubmTypeModalComponent } from '../add-subm-type-modal/add-subm-type-modal.component';
+import { ModalService } from '../../../../shared/modal.service';
 
 const SECTION_ID = '@SECTION@';
 
@@ -20,6 +19,14 @@ class DataTypeControl {
     readonly control: FormControl;
     readonly isReadonly: boolean;
 
+    static fromFeatureType(type: FeatureType, id: string): DataTypeControl {
+        return new DataTypeControl(type, type.icon, type.description, id);
+    }
+
+    static fromSectionType(type: SectionType) {
+        return new DataTypeControl(type, 'fa-folder-plus', '', SECTION_ID);
+    }
+
     constructor(readonly type: TypeBase,
                 readonly icon: string,
                 readonly description: string,
@@ -27,14 +34,6 @@ class DataTypeControl {
         this.isReadonly = !type.canModify;
         this.control = new FormControl({value: type.name, disabled: this.isReadonly},
             [Validators.required, Validators.pattern('[a-zA-Z0-9_ ]*')]);
-    }
-
-    static fromFeatureType(type: FeatureType, id: string): DataTypeControl {
-        return new DataTypeControl(type, type.icon, type.description, id);
-    }
-
-    static fromSectionType(type: SectionType) {
-        return new DataTypeControl(type, 'fa-folder-plus', '', SECTION_ID);
     }
 
     reset(): void {
@@ -93,6 +92,7 @@ export class SubmEditSidebarComponent implements OnDestroy {
     }
 
     onNewTypeClick(event?: Event): void {
+        // tslint:disable-next-line: no-unused-expression
         event && event.preventDefault();
         const bsModalRef = this.bsModalService.show(AddSubmTypeModalComponent, {initialState: {sectionForm: this.sectionForm}});
         bsModalRef.content.closeBtnName = 'Close';
@@ -134,6 +134,7 @@ export class SubmEditSidebarComponent implements OnDestroy {
     }
 
     onEditModeToggle(event?: Event): void {
+        // tslint:disable-next-line: no-unused-expression
         event && event.preventDefault();
         this.isEditModeOn = !this.isEditModeOn;
     }
@@ -170,7 +171,7 @@ export class SubmEditSidebarComponent implements OnDestroy {
                     }
                 )
         } else {
-            this.applyChanges()
+            this.applyChanges();
         }
     }
 
@@ -181,7 +182,7 @@ export class SubmEditSidebarComponent implements OnDestroy {
                 this.formSubscription.unsubscribe();
             }
             if (this.sectionForm) {
-                this.formSubscription = this.sectionForm.structureChanges$.subscribe(it => this.updateItems())
+                this.formSubscription = this.sectionForm.structureChanges$.subscribe(it => this.updateItems());
             }
         }
     }

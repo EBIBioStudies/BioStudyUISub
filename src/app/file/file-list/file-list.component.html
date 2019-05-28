@@ -1,5 +1,4 @@
 <div class="row-offcanvas row-offcanvas-left">
-
     <directory-sidebar
             name="userDirsSidebar"
             [(ngModel)]="rootPath"
@@ -13,8 +12,8 @@
         <nav>
             <div class="nav-block col-xs-8">
                 <i class="fa fa-angle-double-right"></i>&nbsp;<directory-path [path]="path.rel" (change)="onRelativePathChange($event)"></directory-path>
-            </div><!--
-            --><div class="nav-block clearfix col-xs-4">
+            </div>
+                <div class="nav-block clearfix col-xs-4">
                 <file-upload-badge class="upload-count"
                                    (select)="onUploadSelect($event)"></file-upload-badge>
             <div class="btn-group pull-right" role="group">

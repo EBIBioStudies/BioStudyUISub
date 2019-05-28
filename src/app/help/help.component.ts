@@ -1,5 +1,5 @@
-import {Component} from '@angular/core';
-import {AppConfig} from '../app.config';
+import { Component } from '@angular/core';
+import { AppConfig } from '../app.config';
 
 @Component({
     selector: 'help-page',
@@ -20,11 +20,10 @@ export class HelpComponent {
     }
 
     jumpTo(event): void {
-
-        //Cancels any routing
+        // Cancels any routing
         event.preventDefault();
 
-        //Scrolls down to the relevant section taking into account sticky header's height.
+        // Scrolls down to the relevant section taking into account sticky header's height.
         try {
             const sectionEl = document.querySelector(event.target.getAttribute('href'));
             window.scrollBy(0, sectionEl.getBoundingClientRect().top - 100);

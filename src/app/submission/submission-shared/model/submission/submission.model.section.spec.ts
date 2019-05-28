@@ -1,5 +1,5 @@
-import {Section} from './submission.model';
-import {FeatureType, FieldType, invalidateGlobalScope, SectionType} from '../templates';
+import { Section } from './submission.model';
+import { FeatureType, FieldType, invalidateGlobalScope, SectionType } from '../templates';
 
 describe('Submission Model: Section', () => {
 

@@ -5,7 +5,7 @@ import {
     HttpInterceptor,
     HttpRequest
 } from '@angular/common/http';
-import {throwError} from 'rxjs';
+import { throwError } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
@@ -22,8 +22,8 @@ import 'rxjs/add/observable/throw';
 @Injectable()
 export class RequestStatusService implements HttpInterceptor {
     private _whenStatusChanged: Subject<boolean> = new Subject<boolean>();
-    private _filteredUrlPatterns: RegExp[] = [];        //URLs to exclude from request status tracking
-    private _pendingRequests = 0;                       //counter for pending requests
+    private _filteredUrlPatterns: RegExp[] = []; // URLs to exclude from request status tracking
+    private _pendingRequests = 0; // counter for pending requests
 
     get filteredUrlPatterns(): RegExp[] {
         return this._filteredUrlPatterns;

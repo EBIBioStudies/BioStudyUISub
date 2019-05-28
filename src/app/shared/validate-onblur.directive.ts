@@ -1,5 +1,5 @@
-import {NgControl} from '@angular/forms';
-import {Directive} from '@angular/core';
+import { NgControl } from '@angular/forms';
+import { Directive } from '@angular/core';
 
 /**
  * Directive that replicates "touched" flag behaviour beyond the first blur event. Otherwise, once the latter happens,

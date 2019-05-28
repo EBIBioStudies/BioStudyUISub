@@ -1,9 +1,8 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {NgForm} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
-import {AuthService, UserSession} from 'app/auth/shared';
-
-import {ServerError} from 'app/http';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService, UserSession } from 'app/auth/shared';
+import { ServerError } from 'app/http';
 
 @Component({
     selector: 'auth-signin',
@@ -11,9 +10,9 @@ import {ServerError} from 'app/http';
     styleUrls: ['./signin.component.css']
 })
 export class SignInComponent implements OnInit, AfterViewInit {
-    model = {login: '', password: '', next: ''};      // Data model for the component's form
-    error?: ServerError;             // Server response object in case of error
-    isLoading = false;             // Flag indicating if login request in progress
+    model = {login: '', password: '', next: ''}; // Data model for the component's form
+    error?: ServerError; // Server response object in case of error
+    isLoading = false; // Flag indicating if login request in progress
 
     @ViewChild('focusEl')
     private focusRef?: ElementRef;

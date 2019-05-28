@@ -1,8 +1,8 @@
-import {FormControl, ValidationErrors} from '@angular/forms';
-import {Component, Input} from '@angular/core';
-import {ServerError} from 'app/http';
-import {MyFormControl} from '../../shared/form-validators';
-import {SubmEditService} from '../../shared/subm-edit.service';
+import { FormControl, ValidationErrors } from '@angular/forms';
+import { Component, Input } from '@angular/core';
+import { ServerError } from 'app/http';
+import { MyFormControl } from '../../shared/form-validators';
+import { SubmEditService } from '../../shared/subm-edit.service';
 
 @Component({
     selector: 'subm-check-sidebar',
@@ -56,13 +56,13 @@ export class SubmCheckSidebarComponent {
         // const buttonEl = <HTMLElement>event.target;
         // let scrollTop = controlEl.getBoundingClientRect().top - buttonEl.getBoundingClientRect().top;
 
-        //Prevents the submission topbar from overlapping the control's label area if it's at the top.
-        //if (this.formControls.indexOf(control) == 0) {
+        // Prevents the submission topbar from overlapping the control's label area if it's at the top.
+        // if (this.formControls.indexOf(control) == 0) {
         //    scrollTop -= 25;
-        //}
+        // }
 
-        //window.scrollBy(0, scrollTop);
-        //controlEl.querySelectorAll('input, select, textarea')[0].focus();
+        // window.scrollBy(0, scrollTop);
+        // controlEl.querySelectorAll('input, select, textarea')[0].focus();
     }
 
     /**
@@ -78,17 +78,19 @@ export class SubmCheckSidebarComponent {
 
         if (error.message) {
             return error.message;
-        } else switch (error.status) {
-            case 401:
-                return 'Authorisation error';
-            case 403:
-                return 'Forbidden access';
-            case 404:
-                return 'Submission not found';
-            case 500:
-                return 'Server error';
-            default:
-                return 'Error encountered';
+        } else {
+            switch (error.status) {
+                case 401:
+                    return 'Authorization error';
+                case 403:
+                    return 'Forbidden access';
+                case 404:
+                    return 'Submission not found';
+                case 500:
+                    return 'Server error';
+                default:
+                    return 'Error encountered';
+            }
         }
     }
 }

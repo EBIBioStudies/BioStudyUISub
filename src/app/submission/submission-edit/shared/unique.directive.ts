@@ -1,5 +1,5 @@
 import {
-    Directive, Injector, Input
+    Directive, Injector, Input, OnDestroy
 } from '@angular/core';
 import {
     NG_VALIDATORS,
@@ -17,7 +17,7 @@ import {
         { provide: NG_VALIDATORS, useExisting: UniqueValidator, multi: true }
     ]
 })
-export class UniqueValidator implements Validator {
+export class UniqueValidator implements Validator, OnDestroy {
     validator: ValidatorFn;
 
     @Input('unique') isApply?: boolean = true;
@@ -43,7 +43,7 @@ export class UniqueValidator implements Validator {
         const control = this.injector.get(NgControl).control;
         const controls = control.parent.controls;
 
-        //Updates validity of fields, forcing the display of feedback even if not "touched" yet.
+        // Updates validity of fields, forcing the display of feedback even if not "touched" yet.
         Object.keys(controls).forEach((key) => {
             controls[key].updateValueAndValidity();
             if (controls[key].invalid) {
@@ -72,16 +72,16 @@ function uniqueValidatorFactory(): ValidatorFn {
         const valueSet = new Set(values);
         let isValid = false;
 
-        //If all values of all form controls are unique, the present control must be valid
-        //NOTE: Set conversion drops any duplicated entries
+        // If all values of all form controls are unique, the present control must be valid
+        // NOTE: Set conversion drops any duplicated entries
         isValid = valueSet.size === values.length;
 
-        //If some values are not unique, does the present control have one such value?
-        //NOTE: the uniqueness test may be passed if all controls with values equal to this control's are removed.
+        // If some values are not unique, does the present control have one such value?
+        // NOTE: the uniqueness test may be passed if all controls with values equal to this control's are removed.
         if (!isValid) {
             isValid = values.reduce((occurrences, value) => {
                 return occurrences + (value === control.value);
-            }, 0) == 1;
+            }, 0) === 1;
         }
 
         if (isValid) {
@@ -93,5 +93,5 @@ function uniqueValidatorFactory(): ValidatorFn {
                 }
             };
         }
-    }
+    };
 }

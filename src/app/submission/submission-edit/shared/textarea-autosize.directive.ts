@@ -1,6 +1,5 @@
-import {Directive, ElementRef, HostListener, Input, AfterContentInit, AfterContentChecked} from '@angular/core';
-
-import {fromEvent} from 'rxjs';
+import { Directive, ElementRef, HostListener, Input, AfterContentInit, AfterContentChecked } from '@angular/core';
+import { fromEvent } from 'rxjs';
 
 interface CSSStyleDeclarationWithResize extends CSSStyleDeclaration {
     resize: string
@@ -17,7 +16,7 @@ export class TextareaAutosizeDirective implements AfterContentInit, AfterContent
     }
 
     ngAfterContentInit(): void {
-        let el = this.element.nativeElement;
+        const el = this.element.nativeElement;
         const style: CSSStyleDeclarationWithResize = el.style as CSSStyleDeclarationWithResize;
         style.overflowY = 'hidden';
         style.resize = 'none';
@@ -38,7 +37,7 @@ export class TextareaAutosizeDirective implements AfterContentInit, AfterContent
     }
 
     private adjust(): void {
-        let el = this.element.nativeElement;
+        const el = this.element.nativeElement;
 
         el.style.height = 'auto';
         el.style.height = (el.scrollHeight < this.minHeight ? this.minHeight : el.scrollHeight) + 'px';

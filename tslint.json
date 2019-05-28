@@ -1,4 +1,5 @@
 {
+  "extends": "rxjs-tslint-rules",
   "rulesDirectory": [
     "node_modules/codelyzer"
   ],
@@ -25,11 +26,7 @@
       140
     ],
     "member-access": false,
-    "member-ordering": [
-      true,
-      "static-before-instance",
-      "variables-before-functions"
-    ],
+    "member-ordering": [true, "static-before-instance", "variables-before-functions"],
     "no-arg": true,
     "no-bitwise": true,
     "no-console": [
@@ -46,7 +43,7 @@
     "no-empty": false,
     "no-empty-interface": true,
     "no-eval": true,
-    "no-inferrable-types": [true, "ignore-params"],
+    "no-inferrable-types": false,
     "no-shadowed-variable": true,
     "no-string-literal": false,
     "no-string-throw": true,
@@ -69,13 +66,8 @@
       "single"
     ],
     "radix": true,
-    "semicolon": [
-      "always"
-    ],
-    "triple-equals": [
-      true,
-      "allow-null-check"
-    ],
+    "semicolon": [true, "always", "ignore-interfaces"],
+    "triple-equals": [true, "allow-null-check"],
     "typedef-whitespace": [
       true,
       {
@@ -93,7 +85,11 @@
       true,
       "check-branch",
       "check-decl",
+      "check-module",
       "check-operator",
+      "check-postbrace",
+      "check-preblock",
+      "check-rest-spread",
       "check-separator",
       "check-type"
     ],
@@ -109,9 +105,7 @@
     "use-pipe-transform-interface": true,
     "component-class-suffix": true,
     "directive-class-suffix": true,
-    "no-access-missing-member": true,
-    "templates-use-public": true,
-    "invoke-injectable": true,
+    "no-unused-variable": true,
     "rxjs-no-add": { "severity": "error" },
     "rxjs-no-operator": { "severity": "error" },
     "rxjs-no-patched": { "severity": "error" },

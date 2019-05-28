@@ -174,7 +174,7 @@ export class DirectSubmitSideBarComponent implements OnInit {
      */
     private initProjModel(projects: string[]): { name: string, checked: boolean }[] {
         return projects.map(name => {
-            return {name: name, checked: false}
+            return { name: name, checked: false };
         });
     }
 
@@ -188,7 +188,7 @@ export class DirectSubmitSideBarComponent implements OnInit {
         const checkboxEl = <HTMLInputElement>event.target;
 
         if (checkboxEl.checked) {
-            this.selectedProj.push(checkboxEl.value)
+            this.selectedProj.push(checkboxEl.value);
         } else {
             this.selectedProj.splice(this.selectedProj.indexOf(checkboxEl.value), 1);
         }
@@ -227,7 +227,7 @@ export class DirectSubmitSideBarComponent implements OnInit {
      * state inconsistencies. Hence also the conservative assignment approach.
      */
     private clearUploads() {
-        let files = this.model.files;
+        const files = this.model.files;
 
         files.forEach((file, index) => {
             if (this.directSubmitSvc!.getRequest(index)!.successful) {

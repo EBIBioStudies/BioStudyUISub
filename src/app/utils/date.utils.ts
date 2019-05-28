@@ -6,22 +6,21 @@
  * @returns {string} The date in simplified extended ISO format without the time offset (YYYY-MM-DD).
  */
 export function formatDate(date: Date | undefined): string {
-    let day;        //zero-padded day number
-    let month;      //zero-padded month number
-    let year;       //full year number
+    let day; // zero-padded day number
+    let month; // zero-padded month number
+    let year; // full year number
 
-    //Non-empty date object.
+    // Non-empty date object.
     if (date) {
         day = ('00' + date.getDate()).slice(-2);
         month = ('00' + (date.getMonth() + 1)).slice(-2);
         year = date.getFullYear();
         return [year, month, day].join('-');
 
-        //Returns an empty string instead of a zero-padded string corresponding to the start of the Unix epoch if null.
+    // Returns an empty string instead of a zero-padded string corresponding to the start of the Unix epoch if null.
     } else {
         return '';
     }
-
 }
 
 export function parseDate(date: string): Date | undefined {
@@ -47,12 +46,10 @@ export function isEqualDate(date1: Date | undefined, date2: Date | undefined): b
         return false;
     }
 
-    //If any of the dates is undefined, it's clear that they are both different
+    // If any of the dates is undefined, it's clear that they are both different
     if (typeof date2 === typeof date1) {
-        return date2.getTime() - date1.getTime() == 0;
+        return date2.getTime() - date1.getTime() === 0;
     } else {
         return false;
     }
-
-
 }

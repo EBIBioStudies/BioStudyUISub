@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
-import {Observable, of, Subject} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
-import {SubmissionService, SubmitResponse} from '../submission-shared/submission.service';
+import { Injectable } from '@angular/core';
+import { Observable, of, Subject } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { SubmissionService, SubmitResponse } from '../submission-shared/submission.service';
 
 enum ReqStatus {SUBMIT, ERROR, SUCCESS}
 
@@ -92,15 +92,15 @@ export class DirectSubmitRequest {
      */
     onResponse(res: SubmitResponse | string, successStatus: ReqStatus): void {
 
-        //Normalises error to object
+        // Normalises error to object
         if (typeof res === 'string') {
             this._log = {message: res, level: 'error'};
-        } else if (res.log.level === "ERROR") {
-           //Failed server response from direct submit => reflects failure in this request object ignoring passed-in status
+        } else if (res.log.level === 'ERROR') {
+           // Failed server response from direct submit => reflects failure in this request object ignoring passed-in status
             this._status = ReqStatus.ERROR;
             this._log = res.log || {message: 'No results available', level: 'error'};
 
-            //Successful server response from direct submit => reflects success accordingly
+        // Successful server response from direct submit => reflects success accordingly
         } else {
             this._status = successStatus;
             this._log = res.log || undefined;

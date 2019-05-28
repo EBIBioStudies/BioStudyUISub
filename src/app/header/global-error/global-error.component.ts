@@ -1,6 +1,5 @@
-import {ChangeDetectorRef, Component, ElementRef, ErrorHandler} from '@angular/core';
-
-import {GlobalErrorHandler} from 'app/global-error.handler';
+import { ChangeDetectorRef, Component, ElementRef, ErrorHandler } from '@angular/core';
+import { GlobalErrorHandler } from 'app/global-error.handler';
 
 @Component({
     selector: 'global-error',
@@ -20,8 +19,8 @@ export class GlobalErrorComponent {
         if (geh instanceof GlobalErrorHandler) {
             geh.anErrorDetected$.subscribe(error => {
 
-                //Message conversion is bypassed to allow for plain strings as error exception objects.
-                if (typeof error == 'string') {
+                // Message conversion is bypassed to allow for plain strings as error exception objects.
+                if (typeof error === 'string') {
                     this.message = error;
                 } else {
                     this.message = this.toMessage(error);
@@ -41,15 +40,15 @@ export class GlobalErrorComponent {
      */
     toMessage(error: any): string {
 
-        //There seems to be network connection
+        // There seems to be network connection
         if (navigator.onLine) {
             const name = error.name || '';
             const message = error.message || '';
             return (name + message).length === 0 ? 'Unknown error' : (name + ' ' + message);
 
-        //Definitely not connected
+        // Definitely not connected
         } else {
-            return 'You seem to be offline. Please check your network.'
+            return 'You seem to be offline. Please check your network.';
         }
     }
 

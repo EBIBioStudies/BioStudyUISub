@@ -1,6 +1,6 @@
 .container-scroll {
     overflow-x: auto;
-    margin-bottom: 10px;
+    padding-bottom: 20px;
     white-space: nowrap;
 }
 .cell:not(.canton) {
