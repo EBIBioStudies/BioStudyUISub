@@ -33,4 +33,4 @@ offlineMode=${offlineMode}
 offlineUserDir=${offlineUserDir}
 " > proxy/gradle.properties
 
-cd proxy && ./gradlew clean build war -x test -warName=proxy-$ciEnvironment.war
+cd proxy && ./gradlew clean build war -x test -PwarName=proxy-$ciEnvironment.war
