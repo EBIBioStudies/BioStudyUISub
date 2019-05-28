@@ -12,8 +12,10 @@ echo "$SSH_KEY" | tr -d '\r' > ~/.ssh/id_rsa
 # Give the right permissions
 chmod 700 ~/.ssh/id_rsa
 
+echo ~/.ssh/id_rsa
+
 # Run ssh-agent (inside the build environment)
-eval $(ssh-agent -s)
+# eval $(ssh-agent -s)
 
 # Add the SSH key stored in SSH_KEY variable to the agent store
-ssh-add ~/.ssh/id_rsa
+# ssh-add ~/.ssh/id_rsa
