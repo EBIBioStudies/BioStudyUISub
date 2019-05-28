@@ -26,16 +26,15 @@ test:
   only:
     - master@ndiaz/BioStudyUISub
 
-build_ui:
+build_ui_dev:
+  environment: DEV
   stage: build_ui
   script:
-    - npm run build
+    - sh ./tasks/build_ui.sh
   artifacts:
     paths:
-      - subtool.tar.gz
+      - subtool-$CI_ENVIRONMENT_SLUG.tar.gz
     expire_in: 2 days
-  environment:
-    name: DEV
 
 build_proxy:
   stage: build_proxy

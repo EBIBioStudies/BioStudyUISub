@@ -7,10 +7,8 @@
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.conf.json --ssl true --ssl-key ssl/localhost.key --ssl-cert ssl/localhost.crt --progress",
     "start-no-ssl": "ng serve --proxy-config proxy.conf.json --progress",
-    "build": "sh tasks/build_ui.sh",
-    "build:proxy": "sh tasks/build_proxy.sh",
+    "build": "ng build",
     "test": "ng test",
-    "test": "ng test --watch=false",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
