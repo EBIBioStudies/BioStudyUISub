@@ -13,6 +13,15 @@ stages:
       - subtool-$CI_ENVIRONMENT_SLUG.tar.gz
     expire_in: 2 days
 
+.build_proxy_template: &build_proxy_definition
+  stage: build_proxy
+  script:
+    - sh ./tasks/build_proxy.sh
+  artifacts:
+    paths:
+      - proxy/build/libs/proxy-$CI_ENVIRONMENT_SLUG.war
+    expire_in: 2 days
+
 cache:
   paths:
     - node_modules/
@@ -47,13 +56,14 @@ build_ui_prod:
   <<: *build_ui_definition
   environment: PROD
 
-build_proxy:
-  stage: build_proxy
-  script:
-    - npm run build:proxy
-  artifacts:
-    paths:
-      - proxy/build/libs/proxy.war
-    expire_in: 2 days
-  only:
-    - master@ndiaz/BioStudyUISub
+build_proxy_dev:
+  <<: *build_proxy_definition
+  environment: DEV
+
+build_proxy_beta:
+  <<: *build_proxy_definition
+  environment: BETA
+
+build_proxy_prod:
+  <<: *build_proxy_definition
+  environment: PROD
