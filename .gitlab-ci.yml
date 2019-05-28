@@ -82,6 +82,8 @@ build_proxy:prod:
     - build_ui:prod
 
 deploy:
+  before_script:
+    - sh ./tasks/deploy_ssh.sh
   stage: deploy
   script:
     - sh ./tasks/deploy.sh
