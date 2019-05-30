@@ -4,10 +4,13 @@ const isEqualTo = (value: string) => {
     return (s: Nullable<string>) => (String.isDefined(s) && s!.toLowerCase() === value);
 };
 
-export function getOrganizationFromSubsection(section) {
+export function getOrganizationFromSubsection(section, orgName) {
     const subsections = section.subsections || [];
 
-    return subsections.sections.find((sectionItem) => (sectionItem.typeName === 'Organization')) || {};
+    return subsections.sections.find((sectionItem) => (
+        sectionItem.typeName === 'Organization' &&
+        sectionItem.data.attributes.some((attribute) => attribute.value === orgName )
+    )) || {};
 }
 
 export function authors2Contacts(sections: PtSection[] = []): PtSection[] {
@@ -81,19 +84,17 @@ export function contacts2Authors(sections: PtSection[] = []): PtSection[] {
 
     const authors: PtSection[] = sections
         .filter(s => isContact(s.type))
-        .map(contact => {
-            const organization = getOrganizationFromSubsection(contact);
+        .map(contact => <PtSection>{
+            type: 'Author',
+            attributes: (contact.attributes || [])
+                .map(attr => {
+                    if (isOrganisation(attr.name)) {
+                        const organization = getOrganizationFromSubsection(contact, attr.value);
 
-            return <PtSection>{
-                type: 'Author',
-                attributes: (contact.attributes || [])
-                    .map(attr => {
-                        if (isOrganisation(attr.name)) {
-                            return orgs.toReference({ ...attr, accno: organization.accno });
-                        }
-                        return attr;
-                    })
-            };
+                        return orgs.toReference({ ...attr, accno: organization.accno });
+                    }
+                    return attr;
+                })
         });
 
     const affiliations: PtSection[] = orgs.list().map(org =>

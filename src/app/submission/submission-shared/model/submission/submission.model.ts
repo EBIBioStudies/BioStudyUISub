@@ -521,6 +521,7 @@ export class Section {
     readonly sections: Sections;
     readonly subsections: Sections;
     readonly tags: Tags;
+    readonly data: SectionData;
 
     constructor(type: SectionType, data: SectionData = <SectionData>{}, accno: string = '') {
         this.tags = Tags.create(data);
@@ -532,6 +533,7 @@ export class Section {
         this.annotations = Feature.create(type.annotationsType,
             (data.attributes || []).filter(a => a.name && type.getFieldType(a.name) === undefined)
         );
+        this.data = data;
         this.features = new Features(type, data.features);
         this.sections = new Sections(type, data.sections);
         this.subsections = new Sections(type, data.subsections);

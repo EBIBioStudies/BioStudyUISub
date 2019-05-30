@@ -88,17 +88,19 @@ function pageTabSectionToSectionData(ptSection: PtSection, parentAttributes: PtA
         });
     }
 
-    const formattedSubSections = subsections
+    const formattedSections = subsections
         .filter(hasSubsections)
         .map((section) => pageTabSectionToSectionData(section));
+
+    const formattedSubSections = subsections.map((subSection) => pageTabSectionToSectionData(subSection));
 
     return <SectionData> {
         type: ptSection.type,
         accno: ptSection.accno,
         attributes: attributes,
         features: features,
-        sections: formattedSubSections,
-        subsections: subsections
+        sections: formattedSections,
+        subsections: formattedSubSections
     };
 }
 
