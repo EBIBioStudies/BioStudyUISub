@@ -30,13 +30,13 @@ export function pageTab2SubmissionData(pageTab: PageTab): SubmissionData {
         tags: (pageTab.tags || []).map(t => new Tag(t.classifier, t.tag)),
         isRevised: !(pageTab.tags || []).isEmpty(),
         accessTags: pageTab.accessTags,
-        attributes: ptAttributes2AttributeData(pageTab.attributes || []),
-        section: pageTab.section ? ptSection2SectionData(pageTab.section, pageTab.attributes) : undefined
+        attributes: pageTabAttributesToAttributeData(pageTab.attributes || []),
+        section: pageTab.section ? pageTabSectionToSectionData(pageTab.section, pageTab.attributes) : undefined
     };
 }
 
-function ptSection2SectionData(ptSection: PtSection, parentAttributes: PtAttribute[] = []): SectionData {
-    const attributes = ptAttributes2AttributeData(
+function pageTabSectionToSectionData(ptSection: PtSection, parentAttributes: PtAttribute[] = []): SectionData {
+    const attributes = pageTabAttributesToAttributeData(
         mergeAttributes(parentAttributes
                 .filter(at => String.isDefined(at.name))
                 .filter(at => AttrExceptions.editable.includes(at.name!)),
@@ -44,15 +44,15 @@ function ptSection2SectionData(ptSection: PtSection, parentAttributes: PtAttribu
 
     const links = flatArray(ptSection.links || []);
     const files = flatArray(ptSection.files || []);
-    const allSections = flatArray(ptSection.subsections || []);
-    const featureSections = authors2Contacts(allSections.filter(section => !hasSubsections(section)));
+    const subsections = flatArray(ptSection.subsections || []);
+    const featureSections = authors2Contacts(subsections.filter(section => !hasSubsections(section)));
 
     const features: FeatureData[] = [];
     if (!links.isEmpty()) {
         features.push(<FeatureData> {
             type: 'Link',
             entries: links.map(lnk => LinksUtils.toUntyped(lnk))
-                .map(attrs => ptAttributes2AttributeData(attrs))
+                .map(attrs => pageTabAttributesToAttributeData(attrs))
         });
     }
 
@@ -61,7 +61,7 @@ function ptSection2SectionData(ptSection: PtSection, parentAttributes: PtAttribu
             type: 'File',
             entries: files.map(file =>
                 [<PtAttribute>{name: 'Path', value: file.path}].concat(file.attributes || []))
-                .map(attrs => ptAttributes2AttributeData(attrs))
+                .map(attrs => pageTabAttributesToAttributeData(attrs))
         });
     }
 
@@ -80,7 +80,7 @@ function ptSection2SectionData(ptSection: PtSection, parentAttributes: PtAttribu
         featureTypes.forEach(type => {
             const entries =
                 featureSections.filter(section => section.type === type)
-                    .map(section => ptAttributes2AttributeData(section.attributes || []));
+                    .map(section => pageTabAttributesToAttributeData(section.attributes || []));
             features.push(<FeatureData>{
                 type: type,
                 entries: entries
@@ -88,30 +88,34 @@ function ptSection2SectionData(ptSection: PtSection, parentAttributes: PtAttribu
         });
     }
 
-    const sections: SectionData[] =
-        allSections
-            .filter(section => hasSubsections(section))
-            .map(section => ptSection2SectionData(section));
+    const formattedSubSections = subsections
+        .filter(hasSubsections)
+        .map((section) => pageTabSectionToSectionData(section));
 
     return <SectionData> {
         type: ptSection.type,
         accno: ptSection.accno,
         attributes: attributes,
         features: features,
-        sections: sections
+        sections: formattedSubSections,
+        subsections: subsections
     };
 }
 
 function hasSubsections(section: PtSection): boolean {
-    return !(section.subsections || []).isEmpty() ||
-        !(section.links || []).isEmpty() ||
-        !(section.files || []).isEmpty() ||
-        String.isDefinedAndNotEmpty(section.libraryFile) ||
-        ((section.tags || []).map(t => new Tag(t.classifier, t.tag))
-            .find(t => t.equals(PAGE_TAG)) !== undefined);
+    const hasSubsection = typeof section.subsections !== 'undefined' && section.subsections.length > 0;
+    const hasLinks = typeof section.links !== 'undefined' && section.links.length > 0;
+    const hasFiles = typeof section.files !== 'undefined' && section.files.length > 0;
+    const hasLibraryFile = typeof section.libraryFile !== 'undefined' && section.libraryFile.length > 0;
+    const sectionTags = section.tags || [];
+    const hasPageTag = sectionTags
+        .map((tagItem) => new Tag(tagItem.classifier, tagItem.tag))
+        .some((tagInstance) => tagInstance.equals(PAGE_TAG));
+
+    return hasSubsection || hasLinks || hasFiles || hasLibraryFile || hasPageTag;
 }
 
-function ptAttributes2AttributeData(attrs: PtAttribute[]): AttributeData[] {
+function pageTabAttributesToAttributeData(attrs: PtAttribute[]): AttributeData[] {
     return attrs.map(at => <AttributeData>{
         name: at.name,
         value: at.value,
