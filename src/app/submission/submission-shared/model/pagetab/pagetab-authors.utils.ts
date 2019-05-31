@@ -5,9 +5,9 @@ const isEqualTo = (value: string) => {
 };
 
 export function getOrganizationFromSubsection(section, orgName) {
-    const subsections = section.subsections || [];
+    const { sections = [] } = section.subsections || {};
 
-    return subsections.sections.find((sectionItem) => (
+    return sections.find((sectionItem) => (
         sectionItem.typeName === 'Organization' &&
         sectionItem.data.attributes.some((attribute) => attribute.value === orgName )
     )) || {};
