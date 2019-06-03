@@ -12,5 +12,5 @@
   "APP_MAX_SUGGEST_LENGTH": 15,
   "MAX_CONCURRENT": 4,
   "GDPR_BANNER_URL": "https://ebi.emblstatic.net/web_guidelines/EBI-Framework/v1.3/js/ebi-global-includes/script/5_ebiFrameworkNotificationBanner.js",
-  "APP_INSTANCE_KEY": "https://localhost:4200"
+  "APP_INSTANCE_KEY": "/"
 }
