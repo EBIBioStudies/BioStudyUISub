@@ -36,11 +36,10 @@ export function pageTab2SubmissionData(pageTab: PageTab): SubmissionData {
 }
 
 function pageTabSectionToSectionData(ptSection: PtSection, parentAttributes: PtAttribute[] = []): SectionData {
-    const attributes = pageTabAttributesToAttributeData(
-        mergeAttributes(parentAttributes
-                .filter(at => String.isDefined(at.name))
-                .filter(at => AttrExceptions.editable.includes(at.name!)),
-            ptSection.attributes || []));
+    const parentAttributesWithName = parentAttributes.filter((attribute) => String.isDefined(attribute.name));
+    const editableParentAttributes = parentAttributesWithName.filter((attribute) => AttrExceptions.editable.includes(attribute.name!));
+    const parentAndChildAttributes = mergeAttributes(editableParentAttributes, ptSection.attributes || []);
+    const attributes = pageTabAttributesToAttributeData(parentAndChildAttributes);
 
     const links = flatArray(ptSection.links || []);
     const files = flatArray(ptSection.files || []);
@@ -48,41 +47,49 @@ function pageTabSectionToSectionData(ptSection: PtSection, parentAttributes: PtA
     const featureSections = authors2Contacts(subsections.filter(section => !hasSubsections(section)));
 
     const features: FeatureData[] = [];
-    if (!links.isEmpty()) {
+    const hasLinks = links.length > 0;
+    const hasFiles = files.length > 0;
+    const hasFeatureSections = featureSections.length > 0;
+    const hasLibraryFile = String.isDefinedAndNotEmpty(ptSection.libraryFile);
+
+    if (hasLinks) {
         features.push(<FeatureData> {
             type: 'Link',
-            entries: links.map(lnk => LinksUtils.toUntyped(lnk))
-                .map(attrs => pageTabAttributesToAttributeData(attrs))
+            entries: links
+                .map((link) => LinksUtils.toUntyped(link))
+                .map((link) => pageTabAttributesToAttributeData(link))
         });
     }
 
-    if (!files.isEmpty()) {
+    if (hasFiles) {
         features.push(<FeatureData> {
             type: 'File',
-            entries: files.map(file =>
-                [<PtAttribute>{name: 'Path', value: file.path}].concat(file.attributes || []))
-                .map(attrs => pageTabAttributesToAttributeData(attrs))
+            entries: files
+                .map((file) => [<PtAttribute>{ name: 'Path', value: file.path }].concat(file.attributes || []))
+                .map((file) => pageTabAttributesToAttributeData(file))
         });
     }
 
-    if (String.isDefinedAndNotEmpty(ptSection.libraryFile)) {
+    if (hasLibraryFile) {
         features.push(<FeatureData> {
             type: 'LibraryFile',
-            entries: [[<PtAttribute>{name: 'Path', value: ptSection.libraryFile}]]
+            entries: [[<PtAttribute>{ name: 'Path', value: ptSection.libraryFile }]]
         });
     }
 
-    if (!featureSections.isEmpty()) {
+    if (hasFeatureSections) {
         const featureTypes = featureSections
-            .filter(s => String.isDefinedAndNotEmpty(s.type))
-            .map(s => s.type).uniqueValues();
+            .filter((featureSection) => String.isDefinedAndNotEmpty(featureSection.type))
+            .map((featureSection) => featureSection.type)
+            .uniqueValues();
 
-        featureTypes.forEach(type => {
-            const entries =
-                featureSections.filter(section => section.type === type)
-                    .map(section => pageTabAttributesToAttributeData(section.attributes || []));
+        featureTypes.forEach((featureType) => {
+            const entries = featureSections
+                .filter((featureSection) => (featureSection.type === featureType))
+                .map((featureSection) => pageTabAttributesToAttributeData(featureSection.attributes || []));
+
             features.push(<FeatureData>{
-                type: type,
+                type: featureType,
                 entries: entries
             });
         });
@@ -127,8 +134,10 @@ function pageTabAttributesToAttributeData(attrs: PtAttribute[]): AttributeData[]
 }
 
 function flatArray<T>(array: (T | T[])[]): T[] {
-    return array
-        .map(el => Array.isArray(el) ? el : [el])
-        .reduce((rv, ar) => [...ar, ...rv], <T[]>[])
+    const elements = Array.isArray(array) ? array : new Array(array);
+
+    return elements
+        .map((element) => Array.isArray(element) ? element : [element])
+        .reduce((previousElement, currentElement) => [ ...previousElement, ...currentElement ], <T[]>[])
         .reverse();
 }
