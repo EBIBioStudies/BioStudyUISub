@@ -34,34 +34,31 @@ class SubmitOperation {
 }
 
 @Component({
-    selector: 'subm-edit',
+    selector: 'app-subm-edit',
     templateUrl: './subm-edit.component.html'
 })
-export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChecked {
     @Input() readonly = false;
-
     @ViewChild(SubmSidebarComponent) sideBar?: SubmSidebarComponent;
 
-    accno?: string;
-    releaseDate = '';
-
-    sectionForm?: SectionForm;
-    sideBarCollapsed = false;
-
-    hasJustCreated = false;
-    submitOperation: SubmitOperation = SubmitOperation.Unknown;
-
-    private unsubscribe: Subject<void> = new Subject<void>();
+    private accno?: string;
+    private hasJustCreated = false;
+    private releaseDate = '';
     private scrollToCtrl?: FormControl;
+    private sectionForm?: SectionForm;
+    private sideBarCollapsed = false;
+    private submitOperation: SubmitOperation = SubmitOperation.Unknown;
+    private unsubscribe: Subject<void> = new Subject<void>();
 
-    constructor(private route: ActivatedRoute,
-                private router: Router,
-                private locService: Location,
-                private bsModalService: BsModalService,
-                private modalService: ModalService,
-                private appConfig: AppConfig,
-                private submEditService: SubmEditService) {
-
+    constructor(
+        private route: ActivatedRoute,
+        private router: Router,
+        private locService: Location,
+        private bsModalService: BsModalService,
+        private modalService: ModalService,
+        private appConfig: AppConfig,
+        private submEditService: SubmEditService
+    ) {
         this.sideBarCollapsed = window.innerWidth < this.appConfig.tabletBreak;
 
         submEditService.sectionSwitch$.takeUntil(this.unsubscribe)
@@ -100,13 +97,12 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     ngOnInit(): void {
         this.hasJustCreated = this.route.snapshot.data.isNew || false;
-
-        this.route.params.takeUntil(this.unsubscribe)
+        this.route.params
             .pipe(
-                switchMap(params => {
-                    this.accno = params.accno;
+                switchMap(({ accno }) => {
+                    this.accno = accno;
 
-                    return this.submEditService.load(params.accno, this.hasJustCreated);
+                    return this.submEditService.load(accno, this.hasJustCreated);
                 })
             ).subscribe((resp) => {
                 if (this.hasJustCreated) {
@@ -139,10 +135,11 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     onRevertClick(event: Event) {
-        this.confirmRevert().takeUntil(this.unsubscribe)
-            .pipe(switchMap(() => this.submEditService.revert())
-            ).subscribe(() => {
-        });
+        this.confirmRevert()
+            .takeUntil(this.unsubscribe)
+            .pipe(
+                switchMap(() => this.submEditService.revert())
+            ).subscribe(() => {});
     }
 
     onSubmitClick(event, isConfirm: boolean = false) {
