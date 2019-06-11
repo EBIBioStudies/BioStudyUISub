@@ -109,18 +109,19 @@ export class SubmEditComponent implements OnInit, OnDestroy, AfterViewChecked {
                     return this.submEditService.load(params.accno, this.hasJustCreated);
                 })
             ).subscribe((resp) => {
-            if (this.hasJustCreated) {
-                this.locService.replaceState('/submissions/edit/' + this.accno);
-            }
-            if (resp.error.isSome() ) {
-                this.modalService.alert('Submission could not be retrieved. ' +
-                    'Please make sure the URL is correct and contact us in case the problem persists.', 'Error', 'Ok')
-                    .takeUntil(this.unsubscribe)
-                    .pipe(switchMap(() => this.router.navigate(['/submissions/']))
+                if (this.hasJustCreated) {
+                    this.locService.replaceState('/submissions/edit/' + this.accno);
+                }
+
+                if (resp.error.isSome() ) {
+                    this.modalService.alert(
+                        'Submission could not be retrieved. ' +
+                        'Please make sure the URL is correct and contact us in case the problem persists.', 'Error', 'Ok'
                     ).subscribe(() => {
-                });
-            }
-        });
+                        this.router.navigate(['/submissions/']);
+                    });
+                }
+            });
     }
 
     ngAfterViewChecked(): void {

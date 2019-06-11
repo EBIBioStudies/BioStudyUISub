@@ -168,6 +168,21 @@ export const BIATemplate = {
                 ]
             },
             {
+                'name': 'Study Wide Protocols',
+                'title': 'Study Wide Protocols',
+                'icon': 'fa-address-card',
+                'description': 'Add the wide protocols involved in the study.',
+                'uniqueCols': true,
+                'columnTypes': [
+                    {
+                        'name': 'Protocol',
+                        'valueType': {'name': 'text'},
+                        'required': true,
+                        'display': 'required'
+                    }
+                ]
+            },
+            {
                 'name': 'Link',
                 'title': 'Add Links',
                 'description': 'Provide pointers to data held in external databases or to related information on the web. ' +
@@ -316,7 +331,7 @@ export const BIATemplate = {
             ],
             'featureTypes': [
                 {
-                    'name': 'LibraryFile',
+                    'name': 'FileList',
                     'title': 'File List',
                     'description': 'Specify file list',
                     'icon': 'fa-file',
