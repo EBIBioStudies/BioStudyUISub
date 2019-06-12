@@ -327,26 +327,15 @@ export const BIATemplate = {
                     'name': 'Data Analysis Protocol',
                     'icon': 'fa-comment',
                     'valueType': {'name': 'text'}
+                },
+                {
+                    'name': 'File List',
+                    'icon': 'fa-file',
+                    'valueType': {'name': 'file'},
+                    'display': 'required'
                 }
             ],
             'featureTypes': [
-                {
-                    'name': 'FileList',
-                    'title': 'File List',
-                    'description': 'Specify file list',
-                    'icon': 'fa-file',
-                    'singleRow': true,
-                    'uniqueCols': true,
-                    'allowCustomCols': false,
-                    'display': 'required',
-                    'columnTypes': [
-                        {
-                            'name': 'Path',
-                            'valueType': {'name': 'file'},
-                            'display': 'required'
-                        }
-                    ]
-                },
                 {
                     'name': 'File',
                     'title': 'Add Files',
