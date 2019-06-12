@@ -9,7 +9,7 @@ import { SignInComponent } from './auth/signin/signin.component';
 import { SignUpComponent } from './auth/signup/signup.component';
 import { FileListComponent } from './file/file-list/file-list.component';
 import { DirectSubmitComponent } from './submission/submission-direct/direct-submit.component';
-import { SubmEditComponent } from './submission/submission-edit/subm-edit.component';
+import { SubmissionEditComponent } from './submission/submission-edit/submission-edit.component';
 import { SubmListComponent } from './submission/submission-list/subm-list.component';
 
 const appRoutes: Routes = [
@@ -39,18 +39,18 @@ const appRoutes: Routes = [
     },
     {
         path: 'submissions/edit/:accno',
-        component: SubmEditComponent,
+        component: SubmissionEditComponent,
         canActivate: [AuthGuard]
     },
     {
         path: 'submissions/new/:accno',
-        component: SubmEditComponent,
+        component: SubmissionEditComponent,
         data: {isNew: true},
         canActivate: [AuthGuard]
     },
     {
         path: 'submissions/:accno',
-        component: SubmEditComponent,
+        component: SubmissionEditComponent,
         data: {reuse: true, readonly: true},
         canActivate: [AuthGuard]
     },
