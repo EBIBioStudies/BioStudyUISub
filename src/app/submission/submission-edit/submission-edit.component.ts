@@ -48,7 +48,8 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
     private sideBarCollapsed = false;
     private submitOperation: SubmitOperation = SubmitOperation.Unknown;
     private unsubscribe: Subject<void> = new Subject<void>();
-    protected sectionForm?: SectionForm;
+
+    sectionForm?: SectionForm;
 
     constructor(
         private route: ActivatedRoute,
