@@ -45,10 +45,10 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
     private hasJustCreated = false;
     private releaseDate = '';
     private scrollToCtrl?: FormControl;
-    private sectionForm?: SectionForm;
     private sideBarCollapsed = false;
     private submitOperation: SubmitOperation = SubmitOperation.Unknown;
     private unsubscribe: Subject<void> = new Subject<void>();
+    protected sectionForm?: SectionForm;
 
     constructor(
         private route: ActivatedRoute,
