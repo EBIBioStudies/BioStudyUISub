@@ -148,14 +148,17 @@ export class SubmEditService {
 
     load(accno: string, setDefaults?: boolean): Observable<ServerResponse<any>> {
         this.editState.startLoading();
+
         return this.submService.getSubmission(accno).pipe(
             map(pendingSubm => {
                 this.editState.stopLoading();
                 this.createForm(pendingSubm, setDefaults);
+
                 return ServerResponse.Ok({});
             }),
             catchError(error => {
                 this.editState.stopLoading(error);
+
                 return of(ServerResponse.Error(error));
             }));
     }

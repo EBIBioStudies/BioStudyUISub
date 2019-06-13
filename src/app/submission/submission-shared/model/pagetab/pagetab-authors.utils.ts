@@ -1,4 +1,4 @@
-import { PtAttribute, PtSection } from './pagetab.model';
+import { PtAttribute, PageTabSection } from './pagetab.model';
 
 const isEqualTo = (value: string) => {
     return (s: Nullable<string>) => (String.isDefined(s) && s!.toLowerCase() === value);
@@ -13,7 +13,7 @@ export function getOrganizationFromSubsection(section, orgName) {
     )) || {};
 }
 
-export function authors2Contacts(sections: PtSection[] = []): PtSection[] {
+export function authors2Contacts(sections: PageTabSection[] = []): PageTabSection[] {
     const isAffiliation = (s: Nullable<string>) => {
         return String.isDefined(s) && ['organization', 'organisation', 'affiliation'].includes(s!.toLowerCase());
     };
@@ -34,7 +34,7 @@ export function authors2Contacts(sections: PtSection[] = []): PtSection[] {
     const contacts = sections
         .filter(s => isAuthor(s.type))
         .map(a =>
-            <PtSection>{
+            <PageTabSection>{
                 type: 'Contact',
                 attributes: (a.attributes || [])
                     .map(attr => {
@@ -77,14 +77,14 @@ class Organisations {
     }
 }
 
-export function contacts2Authors(sections: PtSection[] = []): PtSection[] {
+export function contacts2Authors(sections: PageTabSection[] = []): PageTabSection[] {
     const isContact = isEqualTo('contact');
     const isOrganisation = isEqualTo('organisation');
     const orgs = new Organisations();
 
-    const authors: PtSection[] = sections
+    const authors: PageTabSection[] = sections
         .filter(s => isContact(s.type))
-        .map(contact => <PtSection>{
+        .map(contact => <PageTabSection>{
             type: 'Author',
             attributes: (contact.attributes || [])
                 .map(attr => {
@@ -97,8 +97,8 @@ export function contacts2Authors(sections: PtSection[] = []): PtSection[] {
                 })
         });
 
-    const affiliations: PtSection[] = orgs.list().map(org =>
-        <PtSection>{
+    const affiliations: PageTabSection[] = orgs.list().map(org =>
+        <PageTabSection>{
             type: 'Organization',
             accno: org.accno,
             attributes: [<PtAttribute>{name: 'Name', value: org.name}]

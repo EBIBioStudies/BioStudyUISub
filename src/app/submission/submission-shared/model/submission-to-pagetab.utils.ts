@@ -8,11 +8,9 @@ import {
     PtFileItem,
     PtLink,
     PtLinkItem,
-    PtSection,
+    PageTabSection,
     contacts2Authors,
-    getOrganizationFromSubsection,
-    mergeAttributes,
-    PtSectionItem
+    mergeAttributes
 } from './pagetab';
 import {DEFAULT_TEMPLATE_NAME, SubmissionType} from './templates';
 import {PAGE_TAG, Tag} from './model.common';
@@ -52,8 +50,8 @@ export function submission2PageTab(subm: Submission, isSanitise: boolean = false
     };
 }
 
-function section2PtSection(section: Section, isSanitise: boolean = false): PtSection {
-    return <PtSection>{
+function section2PtSection(section: Section, isSanitise: boolean = false): PageTabSection {
+    return <PageTabSection>{
         type: section.typeName,
         tags: withPageTag(section.tags.tags),
         accessTags: section.tags.accessTags,
@@ -80,14 +78,14 @@ function extractSectionAttributes(section: Section, isSanitise: boolean): PtAttr
         (extractFeatureAttributes(section.annotations, isSanitise).pop() || []));
 }
 
-function extractSectionSubsections(section: Section, isSanitize: boolean): PtSection[] {
+function extractSectionSubsections(section: Section, isSanitize: boolean): PageTabSection[] {
     const featureSections = contacts2Authors(
         section.features.list().filter(f => !isFileType(f.typeName) && !isLinkType(f.typeName) && !isLibraryFileType(f.typeName))
             .map(f => {
                 const featureAttributes = extractFeatureAttributes(f, isSanitize);
 
                 return featureAttributes.map(attrs => {
-                    return <PtSection>{type: f.typeName, attributes: attrs, subsections: <PtSectionItem> section.subsections };
+                    return <PageTabSection>{type: f.typeName, attributes: attrs, subsections: <PageTabSection[]> [section.subsections] };
                 });
             }).reduce((rv, el) => rv.concat(el), [])
     );

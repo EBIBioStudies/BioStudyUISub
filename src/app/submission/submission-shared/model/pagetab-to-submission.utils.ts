@@ -5,7 +5,7 @@ import {
     mergeAttributes,
     PageTab,
     PtAttribute,
-    PtSection
+    PageTabSection
 } from './pagetab';
 import { DEFAULT_TEMPLATE_NAME, SubmissionType } from './templates';
 import { AttributeData, FeatureData, SectionData, Submission, SubmissionData } from './submission';
@@ -35,7 +35,7 @@ export function pageTab2SubmissionData(pageTab: PageTab): SubmissionData {
     };
 }
 
-function pageTabSectionToSectionData(ptSection: PtSection, parentAttributes: PtAttribute[] = []): SectionData {
+function pageTabSectionToSectionData(ptSection: PageTabSection, parentAttributes: PtAttribute[] = []): SectionData {
     const parentAttributesWithName = parentAttributes.filter((attribute) => String.isDefined(attribute.name));
     const editableParentAttributes = parentAttributesWithName.filter((attribute) => AttrExceptions.editable.includes(attribute.name!));
     const parentAndChildAttributes = mergeAttributes(editableParentAttributes, ptSection.attributes || []);
@@ -111,7 +111,7 @@ function pageTabSectionToSectionData(ptSection: PtSection, parentAttributes: PtA
     };
 }
 
-function hasSubsections(section: PtSection): boolean {
+function hasSubsections(section: PageTabSection): boolean {
     const hasSubsection = typeof section.subsections !== 'undefined' && section.subsections.length > 0;
     const hasLinks = typeof section.links !== 'undefined' && section.links.length > 0;
     const hasFiles = typeof section.files !== 'undefined' && section.files.length > 0;

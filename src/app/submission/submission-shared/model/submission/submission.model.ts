@@ -11,6 +11,10 @@ import {
 import { NameAndValue, Tag } from '../model.common';
 import { zip } from 'fp-ts/lib/Array';
 
+interface SubmissionSection {
+    subsections: Sections
+}
+
 class Counter {
     private count = 0;
 
@@ -511,7 +515,7 @@ export class Fields {
     }
 }
 
-export class Section {
+export class Section implements SubmissionSection {
     private _accno: string;
     readonly id: string;
     readonly type: SectionType;
