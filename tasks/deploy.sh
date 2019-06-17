@@ -3,4 +3,4 @@
 set -e
 set -v
 
-ssh ves-hx-f2
+ssh ma-svc@ves-hx-f2
