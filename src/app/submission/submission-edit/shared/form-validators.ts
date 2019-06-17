@@ -9,7 +9,10 @@ import {
     Validators
 } from '@angular/forms';
 import { TextValueType, ValueType, ValueTypeName } from 'app/submission/submission-shared/model';
-import { Attribute, Feature, Field, Section } from 'app/submission/submission-shared/model/submission';
+import Attribute from 'app/submission/submission-shared/model/submission/model/submission-attribute.model';
+import Feature from 'app/submission/submission-shared/model/submission/model/submission-feature.model';
+import Field from 'app/submission/submission-shared/model/submission/model/submission-field.model';
+import SubmissionSection from 'app/submission/submission-shared/model/submission/model/submission-section.model';
 import { parseDate } from 'app/utils';
 
 // experimental: Control Reference details for using in error messages
@@ -49,7 +52,7 @@ export class ControlGroupRef {
     readonly icon: string;
     readonly isRoot: boolean;
 
-    static sectionRef(section: Section, isRoot: boolean = false) {
+    static sectionRef(section: SubmissionSection, isRoot: boolean = false) {
         return new ControlGroupRef({
             sectionId: section.id,
             sectionName: section.accno || section.typeName,

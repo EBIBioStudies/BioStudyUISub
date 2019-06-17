@@ -8,7 +8,13 @@ import {
     PageTabSection
 } from './pagetab';
 import { DEFAULT_TEMPLATE_NAME, SubmissionType } from './templates';
-import { AttributeData, FeatureData, SectionData, Submission, SubmissionData } from './submission';
+import { Submission } from './submission';
+import {
+    AttributeData,
+    FeatureData,
+    SectionData,
+    SubmissionData
+} from 'app/submission/submission-shared/model/submission/model/submission';
 import { NameAndValue, PAGE_TAG, Tag } from './model.common';
 
 function findSubmissionTemplateName(pageTab: PageTab): string {
