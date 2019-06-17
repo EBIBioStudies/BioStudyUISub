@@ -3,4 +3,4 @@
 set -e
 set -v
 
-ssh ma-svc@ves-hx-f2
+ssh -oStrictHostKeyChecking=no ma-svc@ves-hx-f2
