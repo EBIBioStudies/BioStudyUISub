@@ -1,12 +1,9 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-
-import {RecaptchaComponent} from 'ng-recaptcha';
-
-import {ActivatedRoute} from '@angular/router';
-
-import {AuthService} from 'app/auth/shared';
-import {PasswordResetData} from '../shared/model';
-import {AbstractControl, NgForm} from '@angular/forms';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { RecaptchaComponent } from 'ng-recaptcha';
+import { ActivatedRoute } from '@angular/router';
+import { AbstractControl, NgForm } from '@angular/forms';
+import { AuthService } from 'app/auth/shared';
+import { PasswordResetData } from '../shared/model';
 
 @Component({
     selector: 'auth-passwd-reset',
@@ -16,7 +13,6 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
     hasError: boolean = false;
     showSuccess: boolean = false;
     isLoading: boolean = false;
-
     model: PasswordResetData = new PasswordResetData();
     message: string = '';
 
@@ -40,7 +36,7 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
         }
     }
 
-    //TODO: Turn autofocus on render into a directive
+    // TODO: Turn autofocus on render into a directive
     ngAfterViewInit(): void {
         this.focusRef!.nativeElement.focus();
     }
@@ -48,7 +44,7 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
     onSubmit(form: NgForm): void {
         this.resetGlobalError();
 
-        //Makes request if all form fields completed satisfactorily
+        // Makes request if all form fields completed satisfactorily
         if (form.valid) {
             this.isLoading = true;
             this.authService
@@ -65,7 +61,7 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
                         this.resetRecaptcha(form.controls['captcha']);
                     });
 
-            //Validates in bulk if form incomplete
+            // Validates in bulk if form incomplete
         } else {
             Object.keys(form.controls).forEach((key) => {
                 form.controls[key].markAsTouched({onlySelf: true});
@@ -87,7 +83,7 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
         this.recaptcha!.reset();
         this.model.resetCaptcha();
 
-        //Resets the state of captcha's control
+        // Resets the state of captcha's control
         control.markAsUntouched({onlySelf: true});
         control.markAsPristine({onlySelf: true});
     }

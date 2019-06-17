@@ -1,11 +1,12 @@
-import {NgModule} from '@angular/core';
-import {RouterModule} from '@angular/router';
-import {SharedModule} from '../../shared/shared.module';
-import {SubmissionResultsModule} from '../submission-results/submission-results.module';
-import {SubmissionSharedModule} from '../submission-shared/submission-shared.module';
-import {DirectSubmitSideBarComponent} from './direct-submit-sidebar.component';
-import {DirectSubmitComponent} from './direct-submit.component';
-import {DirectSubmitService} from './direct-submit.service';
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { SharedModule } from '../../shared/shared.module';
+import { SubmissionResultsModule } from '../submission-results/submission-results.module';
+import { SubmissionSharedModule } from '../submission-shared/submission-shared.module';
+import { DirectSubmitSideBarComponent } from './direct-submit-sidebar.component';
+import { DirectSubmitComponent } from './direct-submit.component';
+import { DirectSubmitFileUploadService } from './direct-submit-file-upload.service';
+import { DirectSubmitService } from './direct-submit.service';
 
 @NgModule({
     imports: [
@@ -15,6 +16,7 @@ import {DirectSubmitService} from './direct-submit.service';
         SubmissionResultsModule
     ],
     providers: [
+        DirectSubmitFileUploadService,
         DirectSubmitService
     ],
     declarations: [

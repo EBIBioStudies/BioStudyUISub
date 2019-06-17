@@ -1,5 +1,4 @@
-import {Component, forwardRef, Injector, Input, ViewChild} from '@angular/core';
-
+import { Component, forwardRef, Injector, Input, ViewChild, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import {
     AbstractControl,
     ControlValueAccessor,
@@ -8,7 +7,6 @@ import {
     NgModel,
     Validators,
 } from '@angular/forms';
-
 import 'rxjs/add/observable/timer';
 
 @Component({
@@ -26,21 +24,24 @@ import 'rxjs/add/observable/timer';
  * inside of the custom control and the outside, i.e. on the wrapping component itself.
  * @see {@link ControlValueAccessor}
  */
-export class ORCIDInputBoxComponent implements ControlValueAccessor {
-    private onChange: any = (_: any) => {
-    };      //placeholder for handler propagating changes outside the custom control
-    private onTouched: any = () => {
-    };          //placeholder for handler after the control has been "touched"
-
-    private orcidValue = '';                    //internal data model
+export class ORCIDInputBoxComponent implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy {
+    private orcidValue = ''; // internal data model
     private mlistener: any = null;
 
     @Input() readonly: boolean = false;
-    @Input() isPopupButton: boolean = true;     //flag for showing/hiding popup button
-    @Input() isSmall: boolean = true;           //flag for making the input area the same size as grid fields
+    @Input() isPopupButton: boolean = true; // flag for showing/hiding popup button
+    @Input() isSmall: boolean = true; // flag for making the input area the same size as grid fields
 
     @ViewChild(NgModel)
     private inputModel?: NgModel;
+
+    // placeholder for handler propagating changes outside the custom control
+    private onChange: any = (_: any) => {
+    }
+
+    // placeholder for handler after the control has been "touched"
+    private onTouched: any = () => {
+    }
 
     /**
      * Instantiates a new custom component.
@@ -99,22 +100,22 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor {
 
     messageListener() {
         if (!this.mlistener) {
-            let obj = this;
+            const obj = this;
 
             this.mlistener = function (event) {
-                console.debug('in message callback..', event);
-                let msg = event.data;
+                const msg = event.data;
+
                 if (!msg.thor) {
                     return;
                 }
 
-                let data = JSON.parse(msg.thor);
-                let orcid = data['orcid-profile']['orcid-identifier']['path'];
-                console.debug('orcid: ' + orcid);
+                const data = JSON.parse(msg.thor);
+                const orcid = data['orcid-profile']['orcid-identifier']['path'];
 
                 obj.value = orcid;
-            }
+            };
         }
+
         return this.mlistener;
     }
 
@@ -131,7 +132,9 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor {
 
         control.setValidators(Validators.compose([control.validator, this.inputModel!.control.validator]));
         control.setAsyncValidators(Validators.composeAsync([control.asyncValidator, this.inputModel!.control.asyncValidator]));
-        setTimeout(() => {control.updateValueAndValidity()}, 10);
+        setTimeout(() => {
+            control.updateValueAndValidity();
+        }, 10);
     }
 
     ngOnDestroy() {
@@ -139,14 +142,9 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor {
     }
 
     openPopup() {
-        let thorIFrame: any = document.getElementById('thor');
-        console.debug('thor iframe', thorIFrame);
-
-        let w = thorIFrame.contentWindow;
-        console.debug('thor iframe.wondow', w);
+        const thorIFrame: any = document.getElementById('thor');
+        const w = thorIFrame.contentWindow;
 
         w.postMessage('openPopup', '*');
     }
 }
-
-

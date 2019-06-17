@@ -1,48 +1,48 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-
-import {ActivatedRoute, Params} from '@angular/router';
-
-import {GridOptions} from 'ag-grid-community/main';
-
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
+import { GridOptions } from 'ag-grid-community/main';
+import { Subject } from 'rxjs/Subject';
+import { throwError, of } from 'rxjs';
+import { AppConfig } from '../../app.config';
+import { FileActionsCellComponent } from './ag-grid/file-actions-cell.component';
+import { FileTypeCellComponent } from './ag-grid/file-type-cell.component';
+import { ProgressCellComponent } from './ag-grid/upload-progress-cell.component';
+import { Path } from '../shared/path';
+import { FileService } from '../shared/file.service';
+import { FileUpload, FileUploadList } from '../shared/file-upload-list.service';
+import { UploadBadgeItem } from './file-upload-badge/file-upload-badge.component';
+import { filter, switchMap } from 'rxjs/operators';
+import { ModalService } from '../../shared/modal.service';
+import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/filter';
-import {AppConfig} from '../../app.config';
 import 'rxjs/add/operator/takeUntil';
-import {Subject} from 'rxjs/Subject';
-import {throwError} from 'rxjs';
-import {FileActionsCellComponent} from './ag-grid/file-actions-cell.component';
-import {ProgressCellComponent} from './ag-grid/upload-progress-cell.component';
-import {FileTypeCellComponent} from './ag-grid/file-type-cell.component';
-import {Path} from '../shared/path';
-import {FileService} from '../shared/file.service';
-import {FileUpload, FileUploadList} from '../shared/file-upload-list.service';
-import {UploadBadgeItem} from './file-upload-badge/file-upload-badge.component';
 
 @Component({
     selector: 'file-list',
     templateUrl: './file-list.component.html',
     styleUrls: ['./file-list.component.css']
 })
-
 export class FileListComponent implements OnInit, OnDestroy {
-    protected ngUnsubscribe: Subject<void>;     //stopper for all subscriptions
+    protected ngUnsubscribe: Subject<void>;     // stopper for all subscriptions
     private rowData: any[];
 
     path: Path = new Path('/User', '/');
 
-    sideBarCollapsed: boolean = false;
-    backButton: boolean = false;
+    sideBarCollapsed = false;
+    backButton = false;
     gridOptions: GridOptions;
     columnDefs?: any[];
-    isBulkMode: boolean = false;
+    isBulkMode = false;
 
     constructor(private fileService: FileService,
                 private fileUploadList: FileUploadList,
                 private route: ActivatedRoute,
+                private modalService: ModalService,
                 private appConfig: AppConfig) {
 
         this.ngUnsubscribe = new Subject<void>();
 
-        //Initally collapses the sidebar for tablet-sized screens
+        // Initially collapses the sidebar for tablet-sized screens
         this.sideBarCollapsed = window.innerWidth < this.appConfig.tabletBreak;
 
         this.gridOptions = <GridOptions>{
@@ -124,16 +124,15 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     private loadData(path?: Path) {
-        let p: Path = path ? path : this.path;
+        const p: Path = path ? path : this.path;
         this.fileService.getFiles(p.absolutePath())
             .takeUntil(this.ngUnsubscribe)
-
             .catch(error => {
                 this.gridOptions!.api!.hideOverlay();
                 return throwError(error);
 
             }).subscribe(files => {
-                let decoratedRows = ([] as any[]).concat(
+                const decoratedRows = ([] as any[]).concat(
                     this.decorateUploads(this.fileUploadList.activeUploads),
                     this.decorateFiles(files)
                 );
@@ -149,12 +148,8 @@ export class FileListComponent implements OnInit, OnDestroy {
         this.gridOptions!.api!.setRowData(rows);
     }
 
-    private onBackButtonClick() {
-        window.history.back();
-    }
-
     onRowDoubleClick(ev) {
-        if (ev.data.type != 'FILE') {
+        if (ev.data.type !== 'FILE') {
             this.loadData(this.path.addRel(ev.data.name));
         }
     }
@@ -174,7 +169,25 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     onUploadFilesSelect(files: FileList) {
-        let upload = this.fileUploadList.upload(this.path, Array.from(files));
+        const uploadedFileNames = this.rowData.map((file) => file.name);
+        const filesToUpload =  Array.from(files).map((file) => file.name);
+        const overlap = filesToUpload.filter((fileToUpload) => uploadedFileNames.includes(fileToUpload));
+
+        (overlap.length > 0 ? this.confirmOverwrite(overlap) : of(true))
+            .takeUntil(this.ngUnsubscribe)
+            .subscribe(() => this.upload(files));
+    }
+
+    private confirmOverwrite(overlap) {
+        const overlapString = overlap.length === 1 ? overlap[0] + '?' :
+            overlap.length + ' files? (' + overlap.join(', ') + ')' ;
+
+        return this.modalService.whenConfirmed(`Do you want to overwrite ${overlapString}`,
+            'Overwrite files?', 'Overwrite');
+    }
+
+    private upload(files: FileList) {
+        const upload = this.fileUploadList.upload(this.path, Array.from(files));
         this.updateDataRows(([] as any[]).concat(this.decorateUploads([upload]), this.rowData));
     }
 
@@ -206,12 +219,10 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     private removeFile(fileName: string): void {
-        this.fileService
-            .removeFile(this.path.absolutePath(fileName))
+        this.modalService.whenConfirmed(`Do you want to delete "${fileName}"?`, 'Delete a file', 'Delete')
+            .pipe( switchMap( (it) => this.fileService.removeFile(this.path.absolutePath(fileName))))
             .takeUntil(this.ngUnsubscribe)
-            .subscribe((resp) => {
-                this.loadData();
-            });
+            .subscribe(it => this.loadData());
     }
 
     private removeUpload(u: FileUpload) {

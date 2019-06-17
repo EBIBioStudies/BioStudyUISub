@@ -11,10 +11,10 @@ import {
     ValueMap,
     ValueType
 } from 'app/submission/submission-shared/model';
-import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms';
-import {fromNullable} from 'fp-ts/lib/Option';
-import {BehaviorSubject, Observable, Subject, Subscription} from 'rxjs';
-import {typeaheadSource} from 'app/submission/submission-edit/shared/typeahead.utils';
+import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
+import { fromNullable } from 'fp-ts/lib/Option';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
+import { typeaheadSource } from 'app/submission/submission-edit/shared/typeahead.utils';
 import * as pluralize from 'pluralize';
 import {
     ControlGroupRef,
@@ -31,8 +31,7 @@ function listOfControls(control: AbstractControl): FormControl[] {
         return Object.keys(map)
             .map(key => map[key])
             .flatMap(control => listOfControls(control));
-    }
-    else if (control instanceof FormArray) {
+    } else if (control instanceof FormArray) {
         const array = (<FormArray>control).controls;
         return array.flatMap(control => listOfControls(control));
     }
@@ -75,7 +74,7 @@ export class ColumnControl {
     }
 
     get isRemovable(): boolean {
-        return this.column.displayType.isRemovable
+        return this.column.displayType.isRemovable;
     }
 
     get isRequired(): boolean {
@@ -131,7 +130,7 @@ export class CellControl {
     }
 
     get hasErrors(): boolean {
-        return this.control.invalid && this.control.touched
+        return this.control.invalid && this.control.touched;
     }
 }
 
@@ -366,7 +365,7 @@ export class FeatureForm extends FormBase {
             return this.colTypeNames.filter(name => !colNames.includes(name));
         }
         return this.colTypeNames;
-    };
+    }
 
     cellValuesTypeaheadFunc(rowIndex: number, columnId: string): () => string[] {
         const key = `${rowIndex}_${columnId}`;
@@ -507,9 +506,6 @@ export class FeatureForm extends FormBase {
 }
 
 export class StructureChangeEvent {
-    constructor(readonly name: string) {
-    }
-
     static init: StructureChangeEvent = new StructureChangeEvent('init');
     static featureAdd: StructureChangeEvent = new StructureChangeEvent('featureAdd');
     static featureRemove: StructureChangeEvent = new StructureChangeEvent('featureRemove');
@@ -519,6 +515,9 @@ export class StructureChangeEvent {
     static featureColumnRemove: StructureChangeEvent = new StructureChangeEvent('featureColumnRemove');
     static sectionRemove: StructureChangeEvent = new StructureChangeEvent('sectionRemove');
     static sectionAdd: StructureChangeEvent = new StructureChangeEvent('sectionAdd');
+
+    constructor(readonly name: string) {
+    }
 }
 
 export class SectionForm extends FormBase {
@@ -721,6 +720,6 @@ export class SectionForm extends FormBase {
         if (this.section.id === sectionId) {
             return this;
         }
-        return this.subsectionForms.find(sf => sf.lookupSectionForm(sectionId) != undefined);
+        return this.subsectionForms.find(sf => sf.lookupSectionForm(sectionId) !== undefined);
     }
 }

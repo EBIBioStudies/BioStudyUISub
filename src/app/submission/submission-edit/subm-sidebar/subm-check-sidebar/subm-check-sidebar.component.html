@@ -8,8 +8,8 @@
                     'fa-check-circle': !serverError && !isLoading && !isSubmitting,
                     'fa-cog fa-spin': isLoading || isSubmitting}"></i>
         <h4 [ngClass]="{'vertical-text': collapsed}">
-            {{isLoading ? 'Loading study...' :
-            isSubmitting? 'Submitting study...' :
+            {{isLoading ? 'Loading submission...' :
+            isSubmitting? 'Submitting submission...' :
             serverError ? errorMsg() : 'All fields are valid'}}
         </h4>
         <h4 *ngIf="!serverError" class="action-title">

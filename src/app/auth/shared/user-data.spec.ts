@@ -1,8 +1,7 @@
-import {async} from '@angular/core/testing';
-import {AuthService, UserData, UserSession} from 'app/auth/shared';
-import {of} from 'rxjs';
-
-import {UserInfo, ExtendedUserInfo} from './model';
+import { async } from '@angular/core/testing';
+import { AuthService, UserData, UserSession } from 'app/auth/shared';
+import { of } from 'rxjs';
+import { UserInfo, ExtendedUserInfo } from './model';
 
 describe('UserData', () => {
     let submService;
@@ -40,6 +39,6 @@ describe('UserData', () => {
                 expect(info).toEqual(user as ExtendedUserInfo);
             });
 
-        session.create('12345');
+        session.create(user);
     }));
 });

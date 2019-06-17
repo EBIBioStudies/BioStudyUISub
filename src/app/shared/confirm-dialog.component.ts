@@ -1,10 +1,9 @@
-import {Component, ElementRef, Input, ViewChild} from '@angular/core';
-
-import {BsModalRef, ModalDirective} from 'ngx-bootstrap/modal';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { BsModalRef, ModalDirective } from 'ngx-bootstrap/modal';
 import 'rxjs/add/operator/take';
 
 /**
- * UI component for confirmation modals with all its text parts parameterised.
+ * UI component for confirmation modals with all its text parts parameterized.
  */
 @Component({
     selector: 'confirm-dialog',
@@ -14,11 +13,11 @@ export class ConfirmDialogComponent {
     @ViewChild('focusBtn')
     private focusEl?: ElementRef;
 
-    @Input('headerTitle') title: string = 'Confirm';    //Summary text for the modal's title
-    @Input() confirmLabel: string = 'Ok';               //Default name for positive action
-    @Input() abortLabel: string = 'Cancel';             //Default name for negative action
-    @Input() isHideCancel: boolean = false;             //Hides the cancel button. Suitable for info modals.
-    @Input() body: string = 'Are you sure?';            //Descriptive message for the modal's body
+    @Input() title: string = 'Confirm'; // Summary text for the modal's title.
+    @Input() confirmLabel: string = 'Ok'; // Default name for positive action.
+    @Input() abortLabel: string = 'Cancel'; // Default name for negative action.
+    @Input() isHideCancel: boolean = false; // Hides the cancel button. Suitable for info modals.
+    @Input() body: string = 'Are you sure?'; // Descriptive message for the modal's body.
 
     callback?: (v: boolean) => any;
 
@@ -54,7 +53,7 @@ export class ConfirmDialogComponent {
      * @param event - Custom modal event indicating the reason for the modal's dismissal
      */
     onHidden(event: ModalDirective): void {
-        if (event.dismissReason == 'backdrop-click') {
+        if (event.dismissReason === 'backdrop-click') {
             this.cancel();
         }
     }

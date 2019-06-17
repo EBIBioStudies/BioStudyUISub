@@ -11,9 +11,9 @@ String.isDefined = function (s: string | undefined | null) {
 };
 
 String.isNotDefinedOrEmpty = function (s: string | undefined | null) {
-    return !String.isDefinedAndNotEmpty(s)
+    return !String.isDefinedAndNotEmpty(s);
 };
 
 String.isDefinedAndNotEmpty = function (s: string | undefined | null) {
-    return String.isDefined(s) && !s!.isEmpty()
+    return String.isDefined(s) && !s!.isEmpty();
 };

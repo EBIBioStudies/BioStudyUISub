@@ -1,10 +1,9 @@
-import {Injectable} from '@angular/core';
-
-import {Path} from './path';
-import {FileService} from './file.service';
-import {UploadErrorEvent, UploadEvent, UploadProgressEvent} from './http-upload-client.service';
-import {catchError, map} from 'rxjs/operators';
-import {BehaviorSubject, Observable, of, Subject, Subscription} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { Path } from './path';
+import { FileService } from './file.service';
+import { UploadErrorEvent, UploadEvent, UploadProgressEvent } from './http-upload-client.service';
 
 enum UploadState {
     ERROR = 'error',
@@ -34,7 +33,7 @@ export class FileUpload {
         this.fileNames = files.map(f => f.name);
         this.percentage = 0;
 
-        let upload$: Observable<UploadEvent> =
+        const upload$: Observable<UploadEvent> =
             fileService.upload(path.absolutePath(), files).pipe(
                 catchError((error: UploadErrorEvent) => {
                     console.log(error.message);
@@ -76,7 +75,7 @@ export class FileUpload {
     }
 
     get error(): string | undefined {
-        return this.errorMessage
+        return this.errorMessage;
     }
 
     get absoluteFilePath(): string {
@@ -123,7 +122,7 @@ export class FileUploadList {
     }
 
     upload(path: Path, files: File[]): FileUpload {
-        let upload = new FileUpload(path, files, this.fileService);
+        const upload = new FileUpload(path, files, this.fileService);
 
         this.uploads.push(upload);
 
@@ -150,6 +149,6 @@ export class FileUploadList {
     }
 
     private notifyActiveUploadsChanged() {
-        this.activeUploadsChanged$.next(this.activeUploads)
+        this.activeUploadsChanged$.next(this.activeUploads);
     }
 }

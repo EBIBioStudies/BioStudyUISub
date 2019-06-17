@@ -1,18 +1,41 @@
-import {Component, QueryList, ViewChildren} from '@angular/core';
-
+import { Component, QueryList, ViewChildren } from '@angular/core';
 import {
     IFilterParams,
     IDoesFilterPassParams,
     RowNode,
     IAfterGuiAttachedParams
 } from 'ag-grid-community/main';
-
-import {AgFilterComponent} from 'ag-grid-angular/main';
-
-import {parseDate, formatDate} from 'app/utils';
-import {DateInputComponent} from '../../../shared/date-input.component';
+import { AgFilterComponent } from 'ag-grid-angular/main';
+import { parseDate, formatDate } from 'app/utils';
+import { DateInputComponent } from '../../../shared/date-input.component';
 
 class DateRange {
+    public static fromSeconds(from: number, to: number): DateRange {
+        return new DateRange(
+            DateRange.asDateString(from), DateRange.asDateString(to));
+    }
+
+    private static asSeconds(dateString?: string): number | undefined {
+        if (DateRange.isValueEmpty(dateString)) {
+            return undefined;
+        }
+        const date = parseDate(dateString!);
+        return date ? date.getTime() / 1000 : undefined;
+    }
+
+    private static asDateString(seconds?: number): string {
+        if (DateRange.isValueEmpty(seconds)) {
+            return '';
+        }
+        const date = new Date();
+        date.setTime(seconds! * 1000);
+        return formatDate(date);
+    }
+
+    private static isValueEmpty(v: any): boolean {
+        return v === null || v === undefined && v === '';
+    }
+
     constructor(public from?: string,
                 public to?: string) {
     }
@@ -33,33 +56,7 @@ class DateRange {
         return {
             from: DateRange.asSeconds(this.from),
             to: DateRange.asSeconds(this.to)
-        }
-    }
-
-    public static fromSeconds(from: number, to: number): DateRange {
-        return new DateRange(
-            DateRange.asDateString(from), DateRange.asDateString(to));
-    }
-
-    private static asSeconds(dateString?: string): number | undefined {
-        if (DateRange.isValueEmpty(dateString)) {
-            return undefined;
-        }
-        let date = parseDate(dateString!);
-        return date ? date.getTime() / 1000 : undefined;
-    }
-
-    private static asDateString(seconds?: number): string {
-        if (DateRange.isValueEmpty(seconds)) {
-            return '';
-        }
-        let date = new Date();
-        date.setTime(seconds! * 1000);
-        return formatDate(date);
-    }
-
-    private static isValueEmpty(v: any): boolean {
-        return v === null || v === undefined && v === '';
+        };
     }
 }
 
@@ -100,8 +97,8 @@ export class DateFilterComponent implements AgFilterComponent {
     }
 
     doesFilterPass(params: IDoesFilterPassParams): boolean {
-        let seconds = this.valueGetter!(params.node);
-        if (seconds == undefined || seconds == null || seconds < 0) {
+        const seconds = this.valueGetter!(params.node);
+        if (seconds === undefined || seconds === null || seconds < 0) {
             return false;
         }
         const s = this.date!.toSeconds();

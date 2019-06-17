@@ -1,32 +1,25 @@
-import {Component} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {AgRendererComponent} from 'ag-grid-angular/main';
-
-
-import {GridOptions} from 'ag-grid-community/main';
-
-import {AppConfig} from 'app/app.config';
-import {UserData} from 'app/auth/shared';
-
-import {ConfirmDialogComponent} from 'app/shared';
-import {BsModalService} from 'ngx-bootstrap';
-import {throwError} from 'rxjs';
-
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
-import {Subscription} from 'rxjs/Subscription';
-import {SubmissionService} from '../submission-shared/submission.service';
-import {DateFilterComponent} from './ag-grid/date-filter.component';
-import {TextFilterComponent} from './ag-grid/text-filter.component';
+import { Component } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AgRendererComponent } from 'ag-grid-angular/main';
+import { GridOptions } from 'ag-grid-community/main';
+import { AppConfig } from 'app/app.config';
+import { UserData } from 'app/auth/shared';
+import { throwError } from 'rxjs';
+import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
+import { SubmissionService } from '../submission-shared/submission.service';
+import { DateFilterComponent } from './ag-grid/date-filter.component';
+import { TextFilterComponent } from './ag-grid/text-filter.component';
+import { ModalService } from '../../shared/modal.service';
 
 @Component({
     selector: 'action-buttons-cell',
     template: `
-        <button *ngIf="rowData" type="button" class="btn btn-link btn-xs btn-flat"
+        <button *ngIf="rowData" type="button" class="btn btn-primary btn-xs btn-flat"
                 (click)="onEditSubmission()"
                 tooltip="Edit this submission"
                 container="body">
-            <i class="fa fa-pencil fa-fw fa-lg"></i>
+            <i class="fas fa-pencil-alt fa-fw"></i>
         </button>
         <button *ngIf="rowData" type="button" class="btn btn-danger btn-xs btn-flat"
                 [disabled]="isBusy"
@@ -38,8 +31,8 @@ import {TextFilterComponent} from './ag-grid/text-filter.component';
         </button>`
 })
 export class ActionButtonsCellComponent implements AgRendererComponent {
-    public isBusy: boolean = false;         //flags if a previous button action is in progress
-    public rowData: any;            //object including the data values for the row this cell belongs to
+    public isBusy: boolean = false; // flags if a previous button action is in progress
+    public rowData: any; // object including the data values for the row this cell belongs to
 
     private onDelete?: (accno: string, onCancel: Function) => {};
     private onEdit?: (string) => {};
@@ -129,64 +122,62 @@ export class DateCellComponent implements AgRendererComponent {
     templateUrl: './subm-list.component.html',
     styleUrls: ['./subm-list.component.css']
 })
-
 export class SubmListComponent {
-    protected ngUnsubscribe: Subject<void>;     //stopper for all subscriptions to HTTP get operations
-    showSubmitted: boolean = false;     //flag indicating if the list of sent submissions is to be displayed
-    isBusy: boolean = false;            //flag indicating if a request is in progress
-    isCreating: boolean = false;        //flag indicating if submission creation is in progress
+    protected ngUnsubscribe: Subject<void>; // Stopper for all subscriptions to HTTP get operations
+    showSubmitted: boolean = true; // Flag indicating if the list of sent submissions is to be displayed
+    isBusy: boolean = false; // Flag indicating if a request is in progress
+    isCreating: boolean = false; // Flag indicating if submission creation is in progress
 
-    //AgGrid-related properties
+    // AgGrid-related properties
     gridOptions: GridOptions;
     columnDefs?: any[];
     private datasource: any;
 
     constructor(private submService: SubmissionService,
-                private modalService: BsModalService,
+                private modalService: ModalService,
                 private userData: UserData,
                 private router: Router,
                 private route: ActivatedRoute) {
 
         this.ngUnsubscribe = new Subject<void>();
 
-        //Microstate - Allows going back to the sent submissions list directly
+        // Microstate - Allows going back to the sent submissions list directly
         this.route.data.subscribe((data) => {
             if (data.hasOwnProperty('isSent')) {
                 this.showSubmitted = data.isSent;
             }
         });
 
-        //TODO: enable server-side sorting once sorting parameters are added to the submission list endpoint
-        //NOTE: Ag-Grid doesn't support client-side filtering/sorting and server-side pagination simultaneously.
-        //https://www.ag-grid.com/javascript-grid-infinite-scrolling/#sorting-filtering
+        // TODO: enable server-side sorting once sorting parameters are added to the submission list endpoint
+        // NOTE: Ag-Grid doesn't support client-side filtering/sorting and server-side pagination simultaneously.
+        // https://www.ag-grid.com/javascript-grid-infinite-scrolling/#sorting-filtering
         this.gridOptions = <GridOptions>{
-            debug: false,
-            rowSelection: 'single',
-            enableColResize: true,
-            unSortIcon: true,
-            enableSorting: false,
-            enableServerSideFilter: true,
-            rowModelType: 'infinite',
-            pagination: true,
             cacheBlockSize: 15,
+            debug: false,
+            enableColResize: true,
+            enableSorting: false,
+            icons: {menu: '<i class="fa fa-filter"/>'},
+            localeText: {noRowsToShow: 'No submissions found'},
+            overlayLoadingTemplate: '<span class="ag-overlay-loading-center"><i class="fa fa-cog fa-spin fa-lg"></i> Loading...</span>',
+            pagination: true,
             paginationPageSize: 15,
             rowHeight: 30,
-            localeText: {noRowsToShow: 'No submissions found'},
-            icons: {menu: '<i class="fa fa-filter"/>'},
-            overlayLoadingTemplate: '<span class="ag-overlay-loading-center"><i class="fa fa-cog fa-spin fa-lg"></i> Loading...</span>',
-            getRowNodeId: (item) => {
-                return item.accno;
-            },
-            onGridReady: (params) => {
+            rowModelType: 'infinite',
+            rowSelection: 'single',
+            unSortIcon: true,
+            getRowNodeId: (item) => item.accno,
+            onGridReady: () => {
                 this.gridOptions!.api!.sizeColumnsToFit();
                 this.setDatasource();
+
+                window.onresize = () => this.gridOptions!.api! && this.gridOptions!.api!.sizeColumnsToFit();
             }
         };
 
         this.createColumnDefs();
 
-        //Works out the list of allowed projects by comparison with template names
-        //this.isBusy = true;
+        // Works out the list of allowed projects by comparison with template names
+        // this.isBusy = true;
     }
 
     /**
@@ -202,46 +193,56 @@ export class SubmListComponent {
     createColumnDefs() {
         this.columnDefs = [
             {
-                headerName: 'Accession',
                 cellClass: 'ag-cell-centered',
-                maxWidth: 175,
                 field: 'accno',
-                filterFramework: TextFilterComponent
+                filter: true,
+                filterFramework: TextFilterComponent,
+                headerName: 'Accession',
+                maxWidth: 175,
+                resizable: true
             },
             {
-                headerName: 'Version',
+                cellClass: 'ag-cell-centered',
                 field: 'version',
-                maxWidth: 100,
-                cellClass: 'ag-cell-centered',
+                filter: true,
+                filterFramework: TextFilterComponent,
+                headerName: 'Version',
                 hide: !this.showSubmitted,
-                filterFramework: TextFilterComponent
-            },
-            {
-                headerName: this.showSubmitted ? 'Latest title' : 'Title',
-                field: 'title',
-                filterFramework: TextFilterComponent
-            },
-            {
-                headerName: this.showSubmitted ? 'First Released' : 'Release Date',
-                cellClass: 'ag-cell-centered',
-                maxWidth: 150,
-                field: 'rtime',
-                cellRendererFramework: DateCellComponent,
-                filterFramework: DateFilterComponent
-            },
-            {
-                headerName: 'Actions',
-                cellClass: 'ag-cell-centered',
                 maxWidth: 100,
-                suppressMenu: true,
+                resizable: true
+            },
+            {
+                field: 'title',
+                filter: true,
+                filterFramework: TextFilterComponent,
+                headerName: this.showSubmitted ? 'Latest title' : 'Title',
+                resizable: true
+            },
+            {
+                cellClass: 'ag-cell-centered',
+                cellRendererFramework: DateCellComponent,
+                field: 'rtime',
+                filter: true,
+                filterFramework: DateFilterComponent,
+                headerName: this.showSubmitted ? 'First Released' : 'Release Date',
+                maxWidth: 150,
+                resizable: true
+            },
+            {
+                cellClass: 'ag-cell-centered',
+                cellRendererFramework: ActionButtonsCellComponent,
+                filter: true,
+                headerName: 'Actions',
+                maxWidth: 100,
                 sortable: false,
-                cellRendererFramework: ActionButtonsCellComponent
+                suppressMenu: true,
+                resizable: true
             }
         ];
     }
 
     setDatasource() {
-        const agApi = this.gridOptions.api;     //AgGrid's API
+        const agApi = this.gridOptions.api; // AgGrid's API
 
         if (!this.datasource) {
             this.datasource = {
@@ -251,12 +252,12 @@ export class SubmListComponent {
                     const fm = params.filterModel || {};
                     this.isBusy = true;
 
-                    //Shows loading progress overlay box.
+                    // Shows loading progress overlay box.
                     if (agApi != null) {
                         agApi.showLoadingOverlay();
                     }
 
-                    //Makes the request taking into account any filtering arguments supplied through the UI.
+                    // Makes the request taking into account any filtering arguments supplied through the UI.
                     this.submService.getSubmissions( this.showSubmitted, {
                         offset: params.startRow,
                         limit: pageSize,
@@ -265,22 +266,22 @@ export class SubmListComponent {
                         rTimeTo: fm.rtime && fm.rtime.value && fm.rtime.value.to ? fm.rtime.value.to : undefined,
                         keywords: fm.title && fm.title.value ? fm.title.value : undefined
 
-                        //Hides the overlaid progress box if request failed
+                    // Hides the overlaid progress box if request failed
                     }).takeUntil(this.ngUnsubscribe).catch(error => {
                         agApi!.hideOverlay();
                         return throwError(error);
 
-                        //Once all submissions fetched, determines last row for display purposes.
+                    // Once all submissions fetched, determines last row for display purposes.
                     }).subscribe((rows) => {
                         let lastRow = -1;
 
-                        //Hides progress box.
+                        // Hides progress box.
                         agApi!.hideOverlay();
 
-                        //Removes any entries that are really revisions of sent submissions if showing temporary ones
+                        // Removes any entries that are really revisions of sent submissions if showing temporary ones
                         if (!this.showSubmitted) {
                             rows = rows.filter((subm) => {
-                                return subm.accno.indexOf('TMP') == 0;
+                                return subm.accno.indexOf('TMP') === 0;
                             });
                         }
 
@@ -292,20 +293,20 @@ export class SubmListComponent {
                         this.isBusy = false;
                     });
                 }
-            }
+            };
         }
         agApi!.setDatasource(this.datasource);
     }
 
     onSubmTabSelect(isSubmitted: boolean) {
-        let fragment = '';
+        let fragment = 'pending';
 
-        //Ignores actions that don't carry with them a change in state.
+        // Ignores actions that don't carry with them a change in state.
         if (this.showSubmitted !== isSubmitted) {
 
-            //Submitted list's route has 'sent' as a fragment while temp list has no fragment.
+            // Submitted list's route has 'sent' as a fragment while temp list has no fragment.
             if (isSubmitted) {
-                fragment = 'sent';
+                fragment = '';
             }
 
             this.router.navigate([fragment], {relativeTo: this.route, replaceUrl: true});
@@ -324,17 +325,18 @@ export class SubmListComponent {
                 const onNext = (isOk: boolean) => {
                     this.isBusy = true;
 
-                    //Deletion confirmed => makes a request to remove the submission from the server
+                    // Deletion confirmed => makes a request to remove the submission from the server
                     if (isOk) {
                         this.submService
                             .deleteSubmission(accno)
                             .subscribe(() => {
-
-                                //Issues an additional delete request for modified submissions
-                                //TODO: This is a crude approach to the problem of no response data coming from the API (whether there are revisions or not is unknown).
+                                // Issues an additional delete request for modified submissions
+                                // TODO: This is a crude approach to the problem of no response data coming from the
+                                // API (whether there are revisions or not is unknown).
                                 if (this.showSubmitted) {
                                     this.submService.deleteSubmission(accno).subscribe(() => {
-                                        this.setDatasource();               //TODO: refreshes grid by re-fetching data. Better approach is to use a singleton.
+                                        this.setDatasource();
+                                        // TODO: refreshes grid by re-fetching data.Better approach is to use a singleton
                                         this.isBusy = false;
                                     });
                                 } else {
@@ -343,30 +345,30 @@ export class SubmListComponent {
                                 }
                             });
 
-                        //Deletion canceled: reflects it on the button
+                        // Deletion canceled: reflects it on the button
                     } else {
                         this.isBusy = false;
                         onCancel();
                     }
                 };
 
-                //Shows the confim dialogue for an already sent submission (including its revisions).
+                // Shows the confirm dialogue for an already sent submission (including its revisions).
                 if (this.showSubmitted) {
-                    return this.confirm(
-                        `The submission with accession number ${accno} may have un-submitted changes. If you proceed, both the submission and any changes will be permanently lost.`,
+                    return this.modalService.confirm(
+                        `The submission with accession number ${accno} may have un-submitted changes. \
+                        If you proceed, both the submission and any changes will be permanently lost.`,
                         `Delete submission and its revisions`,
                         'Delete'
                     ).subscribe(onNext);
 
-                    //Shows the confirm dialogue for a temporary submission
+                    // Shows the confirm dialogue for a temporary submission
                 } else {
-                    return this.confirm(
-                        `The submission with accession number ${accno} has not been sent yet. If you proceed, it will be permanently deleted.`,
+                    return this.modalService.confirm(
+                        `The submission with accession number ${accno} has not been submitted yet. If you proceed, \
+                        it will be permanently deleted.`,
                         `Delete pending submission`,
                         'Delete'
                     ).subscribe(onNext);
-
-
                 }
             },
 
@@ -378,7 +380,7 @@ export class SubmListComponent {
                 this.router.navigate(['/submissions', accno]);
             }
         }));
-    };
+    }
 
     /**
      * Handler for the click event on the upload submission button, redirecting to a new view.
@@ -399,18 +401,4 @@ export class SubmListComponent {
         }
     }
 
-    confirm(text: string, title: string, confirmLabel: string): Observable<boolean> {
-        const subj = new Subject<boolean>();
-        this.modalService.show(ConfirmDialogComponent,
-            {
-                initialState: {
-                    headerTitle: title,
-                    confirmLabel: confirmLabel,
-                    body: text,
-                    isDiscardCancel: false,
-                    callback: (value: boolean) => subj.next(value)
-                }
-            });
-        return subj.asObservable().take(1);
-    }
 }

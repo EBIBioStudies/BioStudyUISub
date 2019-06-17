@@ -1,12 +1,11 @@
-import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
-import {ServerError} from 'app/http/server-error.handler';
-import {Option} from 'fp-ts/lib/Option';
-import {FormControl} from '@angular/forms';
-import {Subject} from 'rxjs';
-import {MyFormControl} from '../shared/form-validators';
-import {SectionForm} from '../shared/section-form';
-import {SubmEditService} from '../shared/subm-edit.service';
-
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { ServerError } from 'app/http/server-error.handler';
+import { Option } from 'fp-ts/lib/Option';
+import { FormControl } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { MyFormControl } from '../shared/form-validators';
+import { SectionForm } from '../shared/section-form';
+import { SubmEditService } from '../shared/subm-edit.service';
 
 type FormControlGroup = Array<FormControl>;
 
@@ -73,7 +72,9 @@ export class SubmSidebarComponent implements OnDestroy {
      * @param {Event} [event] - Optional click event object.
      */
     onToggleCollapse(event?: Event): void {
+        // tslint:disable-next-line: no-unused-expression
         event && event.preventDefault();
+
         this.toggle && this.toggle.emit();
     }
 

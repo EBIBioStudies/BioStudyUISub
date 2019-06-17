@@ -1,6 +1,11 @@
 export class Path {
-    constructor(private rootPath: string,
-                private relativePath: string) {
+    static join(...parts: string[]) {
+        return parts.join('/').replace(/\/[\/]+/, '/');
+    }
+
+    constructor(
+        private rootPath: string,
+        private relativePath: string) {
     }
 
     get root(): string {
@@ -28,9 +33,5 @@ export class Path {
 
     addRel(name: string): Path {
         return new Path(this.rootPath, Path.join(this.relativePath, name));
-    }
-
-    static join(...parts: string[]) {
-        return parts.join('/').replace(/\/[\/]+/, '/');
     }
 }

@@ -1,9 +1,8 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-
-import {BsModalRef, PopoverDirective} from 'ngx-bootstrap';
-import {NgForm} from '@angular/forms';
-import {SectionType} from 'app/submission/submission-shared/model/templates';
-import {SectionForm} from '../../shared/section-form';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { BsModalRef, PopoverDirective } from 'ngx-bootstrap';
+import { NgForm } from '@angular/forms';
+import { SectionType } from 'app/submission/submission-shared/model/templates';
+import { SectionForm } from '../../shared/section-form';
 
 @Component({
     selector: 'add-subm-type-modal',
@@ -60,7 +59,7 @@ export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
      * @param {NgForm} form New type submit form.
      */
     onSubmit(form: NgForm): void {
-        //Adds type if all form fields completed satisfactorily
+        // Adds type if all form fields completed satisfactorily
         if (form.valid) {
             const isSection = this.typeBase === 'Section';
             const isSingleRow = this.typeBase === 'List';

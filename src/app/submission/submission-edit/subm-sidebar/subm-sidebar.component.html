@@ -15,7 +15,7 @@
                  customClass="badge-parent"
                  (select)="onCheckTabClick()">
                 <ng-template tabHeading>
-                    Check
+                    Validation
                     <span *ngIf="numInvalid" class="badge badge-corner"
                           [ngClass]="{'badge-half-danger': numInvalidAndTouched > 0 && numInvalidAndTouched < numInvalid,
                                       'badge-danger': numInvalidAndTouched === numInvalid}">

@@ -1,15 +1,15 @@
-import {Component} from '@angular/core';
-import {AgRendererComponent} from 'ag-grid-angular/src/interfaces';
+import { Component } from '@angular/core';
+import { AgRendererComponent } from 'ag-grid-angular/src/interfaces';
 
 @Component({
     selector: 'file-type-cell',
     template: `
         <div class="text-center text-primary">
             <i class="fa" [ngClass]="{
-                               'fa-file' : ftype === 'FILE', 
-                               'fa-folder' : ftype === 'DIR', 
-                               'fa-archive' : ftype === 'ARCHIVE', 
-                               'fa-file-archive-o' : ftype === 'FILE_IN_ARCHIVE'}"></i>
+                'fa-file' : ftype === 'FILE',
+                'fa-folder' : ftype === 'DIR',
+                'fa-archive' : ftype === 'ARCHIVE',
+                'fa-file-archive-o' : ftype === 'FILE_IN_ARCHIVE'}"></i>
         </div>
     `
 })

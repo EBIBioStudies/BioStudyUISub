@@ -1,4 +1,4 @@
-import {Attribute} from './submission.model';
+import { Attribute } from './submission.model';
 
 describe('Submission Model: Attribute', () => {
     it('it has default values if nothing is specified', () => {

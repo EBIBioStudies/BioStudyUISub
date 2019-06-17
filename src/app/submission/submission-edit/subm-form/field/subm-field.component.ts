@@ -1,8 +1,10 @@
-import {Component, Input} from '@angular/core';
-import {FieldType, ValueType, TextValueType} from 'app/submission/submission-shared/model/templates';
-import {FieldControl} from '../../shared/section-form';
+import { Component, Input } from '@angular/core';
+import { FieldType, ValueType, TextValueType } from 'app/submission/submission-shared/model/templates';
+import { FieldControl } from '../../shared/section-form';
 
 class ValueLength {
+    static unknown: ValueLength = new ValueLength();
+
     constructor(readonly min = -1, readonly max = -1) {
     }
 
@@ -21,8 +23,6 @@ class ValueLength {
     get isAtMost(): boolean {
         return this.min < 0 && this.max > 0;
     }
-
-    static unknown: ValueLength = new ValueLength();
 }
 
 @Component({

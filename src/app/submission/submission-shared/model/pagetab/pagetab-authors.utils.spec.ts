@@ -1,4 +1,4 @@
-import {authors2Contacts, contacts2Authors} from './pagetab-authors.utils';
+import { authors2Contacts, contacts2Authors } from './pagetab-authors.utils';
 
 describe('AuthorsAndAffiliations:', () => {
     it('authorsToContacts: authors and affiliations are merged into contacts', () => {
@@ -120,7 +120,7 @@ describe('AuthorsAndAffiliations:', () => {
                         },
                         {
                             name: 'Organisation',
-                            value: 'ORG1'
+                            value: 'Org1'
                         }
                     ]
                 },
@@ -154,7 +154,7 @@ describe('AuthorsAndAffiliations:', () => {
                             value: 'John D'
                         },
                         {
-                            name: 'Affiliation',
+                            name: 'affiliation',
                             isReference: true,
                             value: 'o1'
                         }
@@ -168,9 +168,9 @@ describe('AuthorsAndAffiliations:', () => {
                             value: 'Bob D'
                         },
                         {
-                            name: 'Affiliation',
+                            name: 'affiliation',
                             isReference: true,
-                            value: 'o1'
+                            value: 'o2'
                         }
                     ]
                 },
@@ -182,14 +182,14 @@ describe('AuthorsAndAffiliations:', () => {
                             value: 'Guy R'
                         },
                         {
-                            name: 'Affiliation',
+                            name: 'affiliation',
                             value: ''
                         }
                     ]
                 },
                 {
                     type: 'Organization',
-                    accno: 'o1',
+                    accno: 'o2',
                     attributes: [
                         {
                             name: 'Name',

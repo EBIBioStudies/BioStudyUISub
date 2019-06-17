@@ -6,8 +6,8 @@ export class UserGroup {
     }
 
     get id(): string {
-        return this.groupId + ''
-    };
+        return this.groupId + '';
+    }
 }
 
 export class PathInfo {

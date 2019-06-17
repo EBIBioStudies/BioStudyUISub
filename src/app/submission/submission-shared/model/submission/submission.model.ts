@@ -8,9 +8,8 @@ import {
     ValueType,
     ValueTypeFactory
 } from '../templates';
-
-import {NameAndValue, Tag} from '../model.common';
-import {zip} from 'fp-ts/lib/Array';
+import { NameAndValue, Tag } from '../model.common';
+import { zip } from 'fp-ts/lib/Array';
 
 class Counter {
     private count = 0;
@@ -21,10 +20,11 @@ class Counter {
 }
 
 const nextId = (function () {
-    let counter = new Counter();
+    const counter = new Counter();
+
     return function () {
         return `id${counter.next}`;
-    }
+    };
 })();
 
 
@@ -286,7 +286,7 @@ export class Feature {
             return;
         }
 
-        let rowMap = this.getOrCreateRow(rowIdx);
+        const rowMap = this.getOrCreateRow(rowIdx);
         if (rowMap === undefined) {
             throw new Error(`Can't add new row to ${this.typeName}: ${attributes.map(at => at.name).join(',')}`);
         }
@@ -319,8 +319,8 @@ export class Feature {
 
     addColumn(name?: string, valueType?: ValueType, displayType?: DisplayType, isTemplateBased: boolean = false): Attribute {
         const defColName = (this.singleRow ? this.typeName : 'Column') + ' ' + this._columns.index.next;
-        let colName = name || defColName;
-        let col = new Attribute(colName, valueType, displayType, isTemplateBased);
+        const colName = name || defColName;
+        const col = new Attribute(colName, valueType, displayType, isTemplateBased);
         this._rows.addKey(col.id);
         this._columns.add(col);
         return col;
@@ -513,31 +513,30 @@ export class Fields {
 
 export class Section {
     private _accno: string;
-
     readonly id: string;
     readonly type: SectionType;
     readonly annotations: Feature;
     readonly fields: Fields;
     readonly features: Features;
     readonly sections: Sections;
+    readonly subsections: Sections;
     readonly tags: Tags;
+    readonly data: SectionData;
 
     constructor(type: SectionType, data: SectionData = <SectionData>{}, accno: string = '') {
         this.tags = Tags.create(data);
-
         this.id = `section_${nextId()}`;
         this.type = type;
-
         this._accno = data.accno || accno;
-
         this.fields = new Fields(type, data.attributes);
-
-        //Any attribute names from the server that do not match top-level field names are added as annotations.
+        // Any attribute names from the server that do not match top-level field names are added as annotations.
         this.annotations = Feature.create(type.annotationsType,
             (data.attributes || []).filter(a => a.name && type.getFieldType(a.name) === undefined)
         );
+        this.data = data;
         this.features = new Features(type, data.features);
         this.sections = new Sections(type, data.sections);
+        this.subsections = new Sections(type, data.subsections);
     }
 
     get accno(): string {
@@ -597,7 +596,8 @@ export class Sections {
         const definedTypes = type.sectionTypes.map(t => t.name);
         sections.filter(sd => sd.type === undefined || !definedTypes.includes(sd.type))
             .forEach(sd => {
-                this.add(type.getSectionType(sd.type || 'UnknownSectionType'), sd);
+                const accno = sd.accno;
+                this.add(type.getSectionType(sd.type || 'UnknownSectionType'), sd, accno);
             });
     }
 
@@ -640,7 +640,7 @@ export class Sections {
 
 export class Submission {
     accno: string;
-    isRevised: boolean;        //true if submission has been sent and is marked as revised by PageTab class.
+    isRevised: boolean; // true if submission has been sent and is marked as revised by PageTab class.
     readonly section: Section;
     readonly type;
 
@@ -667,7 +667,7 @@ export class Submission {
      * @returns {boolean} True if the submission is temporary.
      */
     get isTemp(): boolean {
-        return this.accno.length == 0 || this.accno.indexOf('TMP') == 0;
+        return this.accno.length === 0 || this.accno.indexOf('TMP') === 0;
     }
 
     sectionPath(id: string): Section[] {
@@ -718,16 +718,17 @@ export interface TaggedData {
 }
 
 export interface SectionData extends TaggedData {
-    type?: string;
     accno?: string;
     attributes?: AttributeData[];
     features?: FeatureData[];
     sections?: SectionData[];
+    subsections?: SectionData[];
+    type?: string;
 }
 
 export interface SubmissionData extends TaggedData {
     accno?: string;
     attributes?: AttributeData[];
-    section?: SectionData;
     isRevised?: boolean;
+    section?: SectionData;
 }

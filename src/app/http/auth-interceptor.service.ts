@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {getLoginToken} from 'app/auth/shared';
-import {AppConfig} from 'app/app.config';
+import { Injectable } from '@angular/core';
+import { HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { getLoginToken } from 'app/auth/shared';
+import { AppConfig } from 'app/app.config';
 
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
@@ -24,7 +24,7 @@ export class AuthInterceptorService implements HttpInterceptor {
 
     private updateHeaders(headers: HttpHeaders): any {
         headers = headers || new HttpHeaders();
-        let sessionId = getLoginToken();
+        const sessionId = getLoginToken();
         return sessionId ? headers.set('X-Session-Token', sessionId) : headers;
     }
 

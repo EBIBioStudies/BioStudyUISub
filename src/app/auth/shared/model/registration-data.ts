@@ -1,5 +1,5 @@
-import {AppPath} from './app-path';
-import {DataWithCaptchaAndPath, copyAndExtend} from './data-base';
+import { AppPath } from './app-path';
+import { DataWithCaptchaAndPath, copyAndExtend } from './data-base';
 
 export class RegistrationData extends DataWithCaptchaAndPath {
     username: string = '';

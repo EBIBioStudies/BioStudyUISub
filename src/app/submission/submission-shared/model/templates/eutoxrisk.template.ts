@@ -167,7 +167,7 @@ export const EutoxriskTemplate = {
                     {
                         'name': 'Organisation',
                         'valueType': {
-                            'name': 'text',
+                            'name': 'select',
                             'values': [
                                 'BASF',
                                 'BioDetection Systems B.V.',
@@ -351,7 +351,7 @@ export const EutoxriskTemplate = {
                     {
                         'name': 'Description',
                         'valueType': {'name': 'text'},
-                        'display': 'required'
+                        'display': 'desirable'
                     },
                     {
                         'name': 'Type',

@@ -1,11 +1,9 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-
-import {IdLinkComponent} from './id-link.component';
-import {FormsModule} from '@angular/forms';
-import {IdLinkService} from './id-link.service';
-
-import {TypeaheadModule} from "ngx-bootstrap";
-import {Observable, of} from 'rxjs';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { TypeaheadModule } from 'ngx-bootstrap';
+import { IdLinkComponent } from './id-link.component';
+import { IdLinkService } from './id-link.service';
+import { Observable, of } from 'rxjs';
 
 class IdLinkServiceMock {
   suggest(prefix: string): Observable<string[]> {
