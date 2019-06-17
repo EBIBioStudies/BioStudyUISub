@@ -513,31 +513,30 @@ export class Fields {
 
 export class Section {
     private _accno: string;
-
     readonly id: string;
     readonly type: SectionType;
     readonly annotations: Feature;
     readonly fields: Fields;
     readonly features: Features;
     readonly sections: Sections;
+    readonly subsections: Sections;
     readonly tags: Tags;
+    readonly data: SectionData;
 
     constructor(type: SectionType, data: SectionData = <SectionData>{}, accno: string = '') {
         this.tags = Tags.create(data);
-
         this.id = `section_${nextId()}`;
         this.type = type;
-
         this._accno = data.accno || accno;
-
         this.fields = new Fields(type, data.attributes);
-
         // Any attribute names from the server that do not match top-level field names are added as annotations.
         this.annotations = Feature.create(type.annotationsType,
             (data.attributes || []).filter(a => a.name && type.getFieldType(a.name) === undefined)
         );
+        this.data = data;
         this.features = new Features(type, data.features);
         this.sections = new Sections(type, data.sections);
+        this.subsections = new Sections(type, data.subsections);
     }
 
     get accno(): string {
@@ -597,7 +596,8 @@ export class Sections {
         const definedTypes = type.sectionTypes.map(t => t.name);
         sections.filter(sd => sd.type === undefined || !definedTypes.includes(sd.type))
             .forEach(sd => {
-                this.add(type.getSectionType(sd.type || 'UnknownSectionType'), sd);
+                const accno = sd.accno;
+                this.add(type.getSectionType(sd.type || 'UnknownSectionType'), sd, accno);
             });
     }
 
@@ -718,16 +718,17 @@ export interface TaggedData {
 }
 
 export interface SectionData extends TaggedData {
-    type?: string;
     accno?: string;
     attributes?: AttributeData[];
     features?: FeatureData[];
     sections?: SectionData[];
+    subsections?: SectionData[];
+    type?: string;
 }
 
 export interface SubmissionData extends TaggedData {
     accno?: string;
     attributes?: AttributeData[];
-    section?: SectionData;
     isRevised?: boolean;
+    section?: SectionData;
 }

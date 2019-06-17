@@ -5,6 +5,7 @@ import { SubmissionResultsModule } from '../submission-results/submission-result
 import { SubmissionSharedModule } from '../submission-shared/submission-shared.module';
 import { DirectSubmitSideBarComponent } from './direct-submit-sidebar.component';
 import { DirectSubmitComponent } from './direct-submit.component';
+import { DirectSubmitFileUploadService } from './direct-submit-file-upload.service';
 import { DirectSubmitService } from './direct-submit.service';
 
 @NgModule({
@@ -15,6 +16,7 @@ import { DirectSubmitService } from './direct-submit.service';
         SubmissionResultsModule
     ],
     providers: [
+        DirectSubmitFileUploadService,
         DirectSubmitService
     ],
     declarations: [

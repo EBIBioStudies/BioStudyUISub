@@ -3,8 +3,9 @@ export class Path {
         return parts.join('/').replace(/\/[\/]+/, '/');
     }
 
-    constructor(private rootPath: string,
-                private relativePath: string) {
+    constructor(
+        private rootPath: string,
+        private relativePath: string) {
     }
 
     get root(): string {

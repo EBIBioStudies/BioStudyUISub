@@ -1,16 +1,18 @@
 import {AttributeData, Feature, Section, Submission} from './submission';
 import {
     AttrExceptions,
-    contacts2Authors,
     LinksUtils,
-    mergeAttributes,
     PageTab,
     PtAttribute,
     PtFile,
     PtFileItem,
     PtLink,
     PtLinkItem,
-    PtSection
+    PtSection,
+    contacts2Authors,
+    getOrganizationFromSubsection,
+    mergeAttributes,
+    PtSectionItem
 } from './pagetab';
 import {DEFAULT_TEMPLATE_NAME, SubmissionType} from './templates';
 import {PAGE_TAG, Tag} from './model.common';
@@ -66,7 +68,7 @@ function section2PtSection(section: Section, isSanitise: boolean = false): PtSec
 }
 
 function withPageTag(tags: Tag[]): Tag[] {
-    if (tags.find(t => t.value == PAGE_TAG.value) !== undefined) {
+    if (tags.find(t => t.value === PAGE_TAG.value) !== undefined) {
         return tags;
     }
     return [...tags, ...[PAGE_TAG]];
@@ -81,9 +83,13 @@ function extractSectionAttributes(section: Section, isSanitise: boolean): PtAttr
 function extractSectionSubsections(section: Section, isSanitize: boolean): PtSection[] {
     const featureSections = contacts2Authors(
         section.features.list().filter(f => !isFileType(f.typeName) && !isLinkType(f.typeName) && !isLibraryFileType(f.typeName))
-            .map(f => extractFeatureAttributes(f, isSanitize)
-                .map(attrs => <PtSection>{type: f.typeName, attributes: attrs})
-            ).reduce((rv, el) => rv.concat(el), [])
+            .map(f => {
+                const featureAttributes = extractFeatureAttributes(f, isSanitize);
+
+                return featureAttributes.map(attrs => {
+                    return <PtSection>{type: f.typeName, attributes: attrs, subsections: <PtSectionItem> section.subsections };
+                });
+            }).reduce((rv, el) => rv.concat(el), [])
     );
 
     return featureSections.concat(section.sections.list().map(s => section2PtSection(s, isSanitize)));

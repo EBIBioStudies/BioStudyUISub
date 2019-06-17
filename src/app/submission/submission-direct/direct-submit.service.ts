@@ -141,6 +141,7 @@ export class DirectSubmitService {
 
     /**
      * Checks the overall status of the request queue by probing its members.
+     *
      * @param {string} statusName - Descriptive name of the status.
      * @returns {boolean} True if the queue is with the status checked.
      */
@@ -153,9 +154,7 @@ export class DirectSubmitService {
             condition = 'every';
         }
 
-        return this._requests[condition](request => {
-            return request[statusName];
-        });
+        return this._requests[condition](request => request[statusName]);
     }
 
     /**

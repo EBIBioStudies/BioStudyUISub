@@ -169,19 +169,19 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     onUploadFilesSelect(files: FileList) {
-        const uploadedFiles = new Set(this.rowData.map( f => f.name));
-        const newFiles =  Array.from(files).map( f => f.name);
-        const overlap = newFiles.filter(name => uploadedFiles.has(name));
+        const uploadedFileNames = this.rowData.map((file) => file.name);
+        const filesToUpload =  Array.from(files).map((file) => file.name);
+        const overlap = filesToUpload.filter((fileToUpload) => uploadedFileNames.includes(fileToUpload));
 
         (overlap.length > 0 ? this.confirmOverwrite(overlap) : of(true))
             .takeUntil(this.ngUnsubscribe)
-            .subscribe( () => this.upload(files));
-
+            .subscribe(() => this.upload(files));
     }
 
     private confirmOverwrite(overlap) {
         const overlapString = overlap.length === 1 ? overlap[0] + '?' :
             overlap.length + ' files? (' + overlap.join(', ') + ')' ;
+
         return this.modalService.whenConfirmed(`Do you want to overwrite ${overlapString}`,
             'Overwrite files?', 'Overwrite');
     }
