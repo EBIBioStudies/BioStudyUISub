@@ -4,7 +4,7 @@ set -e
 set -v
 
 # Clone Proxy into proxy folder
-git clone -b build https://github.com/EBIBioStudies/BioStudySubmProxy.git proxy
+git clone -b master https://github.com/EBIBioStudies/BioStudySubmProxy.git proxy
 
 # Get property values from Environment Variables
 bsBackendUrl=${PROXY_BACKEND_URL}
