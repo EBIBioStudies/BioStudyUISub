@@ -86,3 +86,5 @@ deploy:
     - sh ./tasks/deploy.sh
   dependencies:
     - build_proxy:dev
+  only:
+    - master@ndiaz/BioStudyUISub
