@@ -100,12 +100,14 @@ export class SubmissionService {
 
     getSubmission(accno: string): Observable<PendingSubmission> {
         return this.getPending(accno).pipe(
-            catchError(resp =>
-                this.getSubmitted(accno).pipe(map(resp => ({
-                    accno: accno,
-                    changed: 0,
-                    data: resp
-                })))));
+            catchError(() =>
+                this.getSubmitted(accno).pipe(
+                    map(resp => ({
+                        accno: accno,
+                        changed: 0,
+                        data: resp
+                    }))
+                )));
     }
 
     saveSubmission(accno: string, pt: PageTab): Observable<any> {
