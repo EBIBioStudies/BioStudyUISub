@@ -88,3 +88,5 @@ deploy:
   stage: deploy
   script:
     - sh ./tasks/deploy.sh
+  dependencies:
+    - build_proxy:dev
