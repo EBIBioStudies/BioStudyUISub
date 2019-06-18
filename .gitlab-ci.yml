@@ -13,8 +13,6 @@ stages:
     paths:
       - subtool-$CI_ENVIRONMENT_SLUG.tar.gz
     expire_in: 2 days
-  only:
-    - master@ndiaz/BioStudyUISub
 
 .build_proxy_template: &build_proxy_definition
   stage: build_proxy
@@ -24,8 +22,6 @@ stages:
     paths:
       - proxy/build/libs/proxy-$CI_ENVIRONMENT_SLUG.war
     expire_in: 2 days
-  only:
-    - master@ndiaz/BioStudyUISub
 
 cache:
   paths:
