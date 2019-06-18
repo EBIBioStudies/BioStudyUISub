@@ -9,10 +9,11 @@ artifact=proxy/build/libs/proxy-${CI_ENVIRONMENT_SLUG}.war
 # Command to be ran in the VM
 restart_command="cd ${VM_HOME_DIR} && bin/stop && bin/clean_dirs && cp deploy/proxy-${CI_ENVIRONMENT_SLUG}.war webapps/ && bin/start"
 
+echo ${VM_USER}@${VM_HOSTNAME}
+
 # Copy Artifacts
 scp -o StrictHostKeyChecking=no $artifact ${VM_USER}@${VM_HOSTNAME}:${VM_HOME_DIR}/deploy/proxy-${CI_ENVIRONMENT_SLUG}.war
 
-echo ${VM_USER}@${VM_HOSTNAME}
 
 # SSH the instance
 # ssh -oStrictHostKeyChecking=no ${VM_USER}@${VM_HOSTNAME}
