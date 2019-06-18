@@ -82,6 +82,7 @@ build_proxy:dev:
 #     - build_ui:prod
 
 deploy:
+  environment: DEV
   before_script:
     - sh ./tasks/ssh_setup.sh
   stage: deploy
