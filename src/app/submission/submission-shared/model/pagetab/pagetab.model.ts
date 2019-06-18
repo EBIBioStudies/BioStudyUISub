@@ -52,7 +52,6 @@ export class AttrExceptions {
     }
 }
 
-export type PtSectionItem = PtSection | PtSection[];
 export type PtLinkItem = PtLink | PtLink[];
 export type PtFileItem = PtFile | PtFile[];
 
@@ -84,23 +83,23 @@ export interface PtFile {
     attributes?: PtAttribute[];
 }
 
-export interface PtSection {
-    type?: string;
+export interface PageTabSection {
+    accessTags?: string[];
     accno?: string;
     attributes?: PtAttribute[];
-    tags?: PtTag[];
-    accessTags?: string[];
-    subsections?: PtSectionItem [];
+    files?: PtFileItem[];
     libraryFile?: string;
-    links?: PtLinkItem [];
-    files?: PtFileItem [];
+    links?: PtLinkItem[];
+    subsections?: PageTabSection[];
+    tags?: PtTag[];
+    type?: string;
 }
 
 export interface PageTab {
-    type?: string;
-    section?: PtSection;
+    accessTags?: string[];
     accno?: string;
     attributes?: PtAttribute[];
+    section?: PageTabSection;
     tags?: Tag[];
-    accessTags?: string[];
+    type?: string;
 }
