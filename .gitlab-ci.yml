@@ -39,8 +39,6 @@ install_dependencies:
     paths:
       - node_modules/
     expire_in: 2 days
-    only:
-      - master@ndiaz/BioStudyUISub
 
 test:
   stage: test
