@@ -10,7 +10,7 @@ artifact=proxy-${CI_ENVIRONMENT_SLUG}.war
 restart_command="cd ${VM_HOME_DIR} && bin/stop && bin/clean_dirs && cp deploy/$artifact webapps/ && bin/start"
 
 # Copy Artifacts
-scp $artifact ${VM_USER}@${VM_HOSTNAME}:${VM_HOME_DIR}/deploy/$artifact
+scp -o StrictHostKeyChecking=no $artifact ${VM_USER}@${VM_HOSTNAME}:${VM_HOME_DIR}/deploy/$artifact
 
 # SSH the instance
 # ssh -oStrictHostKeyChecking=no ${VM_USER}@${VM_HOSTNAME}
