@@ -12,5 +12,7 @@ restart_command="cd ${VM_HOME_DIR} && bin/stop && bin/clean_dirs && cp deploy/pr
 # Copy Artifacts
 scp -o StrictHostKeyChecking=no $artifact ${VM_USER}@${VM_HOSTNAME}:${VM_HOME_DIR}/deploy/proxy-${CI_ENVIRONMENT_SLUG}.war
 
+echo ${VM_USER}@${VM_HOSTNAME}
+
 # SSH the instance
 # ssh -oStrictHostKeyChecking=no ${VM_USER}@${VM_HOSTNAME}
