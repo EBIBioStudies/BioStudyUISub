@@ -15,7 +15,6 @@ offlineMode=${PROXY_OFFLINE_MODE}
 offlineUserDir=${PROXY_OFFLINE_MODE_DIR}
 ciEnvironment=$CI_ENVIRONMENT_SLUG;
 
-
 # Copy the artifacts generated in build_ui stage
 if [ -f subtool-$ciEnvironment.tar.gz ]; then
   mkdir proxy/WebContent

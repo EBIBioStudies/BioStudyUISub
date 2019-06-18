@@ -7,11 +7,11 @@ set -v
 rm -rf dist && mkdir dist
 
 # Config properties
-appProxyBase=$APP_PROXY_BASE;
-appContext=$APP_CONTEXT;
-appDebugEnabled=$APP_DEBUG_ENABLED;
-appInstanceKey=$APP_INSTANCE_KEY;
-ciEnvironment=$CI_ENVIRONMENT_SLUG;
+appProxyBase=${APP_PROXY_BASE};
+appContext=${APP_CONTEXT};
+appDebugEnabled=${APP_DEBUG_ENABLED};
+appInstanceKey=${APP_INSTANCE_KEY};
+ciEnvironment=${CI_ENVIRONMENT_SLUG};
 
 # Update config.json
 sed -i 's%"APP_PROXY_BASE":.*%"APP_PROXY_BASE":"'$appProxyBase'",%' src/config.json
