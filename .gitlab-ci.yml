@@ -84,11 +84,11 @@ build_proxy:beta:
 #   dependencies:
 #     - build_ui:prod
 
-deploy:dev:
-  <<: *deploy_definition
-  environment: DEV
-  dependencies:
-    - build_proxy:dev
+# deploy:dev:
+#   <<: *deploy_definition
+#   environment: DEV
+#   dependencies:
+#     - build_proxy:dev
 
 deploy:beta:
   <<: *deploy_definition
