@@ -89,3 +89,10 @@ deploy:
   environment: DEV
   dependencies:
     - build_proxy:dev
+
+deploy:
+  <<: *deploy_definition
+  environment: BETA
+  dependencies:
+    - build_proxy:beta
+  when: manual
