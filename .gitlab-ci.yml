@@ -57,9 +57,9 @@ build_ui:dev:
   <<: *build_ui_definition
   environment: DEV
 
-# build_ui:beta:
-#   <<: *build_ui_definition
-#   environment: BETA
+build_ui:beta:
+  <<: *build_ui_definition
+  environment: BETA
 
 # build_ui:prod:
 #   <<: *build_ui_definition
@@ -72,11 +72,11 @@ build_proxy:dev:
   dependencies:
     - build_ui:dev
 
-# build_proxy:beta:
-#   <<: *build_proxy_definition
-#   environment: BETA
-#   dependencies:
-#     - build_ui:beta
+build_proxy:beta:
+  <<: *build_proxy_definition
+  environment: BETA
+  dependencies:
+    - build_ui:beta
 
 # build_proxy:prod:
 #   <<: *build_proxy_definition
