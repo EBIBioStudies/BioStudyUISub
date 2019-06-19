@@ -49,8 +49,6 @@ test:
     NODE_ENV: test
   script:
     - npm test
-  only:
-    - master@ndiaz/BioStudyUISub
 
 # Build UI per environment
 build_ui:dev:
@@ -89,9 +87,13 @@ deploy:dev:
   environment: DEV
   dependencies:
     - build_proxy:dev
+  only:
+    - dev@ndiaz/BioStudyUISub
 
 deploy:beta:
   <<: *deploy_definition
   environment: BETA
   dependencies:
     - build_proxy:beta
+  only:
+    - dev@ndiaz/BioStudyUISub
