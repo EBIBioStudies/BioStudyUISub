@@ -14,6 +14,5 @@ echo ${VM_USER}@${VM_HOSTNAME}
 # Copy Artifacts
 scp -o StrictHostKeyChecking=no $artifact ${VM_USER}@${VM_HOSTNAME}:${VM_HOME_DIR}/deploy/submissions.war
 
-
 # SSH the instance
 ssh -oStrictHostKeyChecking=no ${VM_USER}@${VM_HOSTNAME} $restart_command
