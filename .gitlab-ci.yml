@@ -62,6 +62,7 @@ build_ui:beta:
   environment: BETA
   only:
     - dev@ndiaz/BioStudyUISub
+  when: manual
 
 # build_ui:prod:
 #   <<: *build_ui_definition
