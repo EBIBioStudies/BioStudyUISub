@@ -1,5 +1,6 @@
 image: karlrun/java-node-gradle
 stages:
+  - setup
   - test
   - build_ui
   - build_proxy
@@ -35,7 +36,7 @@ cache:
     - node_modules/
 
 install_dependencies:
-  stage: test
+  stage: setup
   script:
     - npm install
   artifacts:
