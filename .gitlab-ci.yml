@@ -45,6 +45,8 @@ install_dependencies:
 
 test:
   stage: test
+  dependencies:
+    - install_dependencies
   variables:
     NODE_ENV: test
   script:
@@ -62,7 +64,6 @@ build_ui:beta:
   environment: BETA
   only:
     - dev@ndiaz/BioStudyUISub
-  when: manual
 
 # build_ui:prod:
 #   <<: *build_ui_definition
@@ -106,3 +107,4 @@ deploy:beta:
     - build_proxy:beta
   only:
     - dev@ndiaz/BioStudyUISub
+  when: manual
