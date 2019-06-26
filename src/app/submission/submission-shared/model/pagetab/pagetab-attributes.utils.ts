@@ -21,6 +21,10 @@ export function mergeAttributes(attrs1: PtAttribute[], attrs2: PtAttribute[]): P
     return merged;
 }
 
+export function extractKeywordsFromAttributes(attributes: PtAttribute[]) {
+    return attributes.filter((attribute) => attribute.name === 'Keyword');
+}
+
 /* Adds 'AttachTo' attributes to a given submission's root level, leaving other existing attributes intact.*/
 export function updateAttachToAttribute(obj: PageTab, projectIds: string[]): PageTab {
     const objCopy = Object.assign({}, obj);

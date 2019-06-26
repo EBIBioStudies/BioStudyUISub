@@ -1,11 +1,12 @@
 import {
     AttrExceptions,
-    authors2Contacts,
     LinksUtils,
-    mergeAttributes,
     PageTab,
+    PageTabSection,
     PtAttribute,
-    PageTabSection
+    authors2Contacts,
+    extractKeywordsFromAttributes,
+    mergeAttributes,
 } from './pagetab';
 import { DEFAULT_TEMPLATE_NAME, SubmissionType } from './templates';
 import { Submission } from './submission';
@@ -51,12 +52,14 @@ function pageTabSectionToSectionData(ptSection: PageTabSection, parentAttributes
     const files = flatArray(ptSection.files || []);
     const subsections = flatArray(ptSection.subsections || []);
     const featureSections = authors2Contacts(subsections.filter(section => !hasSubsections(section)));
+    const keywords = extractKeywordsFromAttributes(ptSection.attributes || []);
 
     const features: FeatureData[] = [];
     const hasLinks = links.length > 0;
     const hasFiles = files.length > 0;
     const hasFeatureSections = featureSections.length > 0;
     const hasLibraryFile = String.isDefinedAndNotEmpty(ptSection.libraryFile);
+    const hasKeywords = keywords.length > 0;
 
     if (hasLinks) {
         features.push(<FeatureData> {
@@ -80,6 +83,13 @@ function pageTabSectionToSectionData(ptSection: PageTabSection, parentAttributes
         features.push(<FeatureData> {
             type: 'LibraryFile',
             entries: [[<PtAttribute>{ name: 'Path', value: ptSection.libraryFile }]]
+        });
+    }
+
+    if (hasKeywords) {
+        features.push(<FeatureData> {
+            type: 'Keywords',
+            entries: keywords.map((keyword) => [<PtAttribute>{ name: 'Keyword', value: keyword.value }])
         });
     }
 

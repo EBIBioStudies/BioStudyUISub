@@ -21,7 +21,7 @@ import { PAGE_TAG, Tag } from './model.common';
 const isFileType = (type: string) => type.isEqualIgnoringCase('file');
 const isLinkType = (type: string) => type.isEqualIgnoringCase('link');
 const isLibraryFileType = (type: string) => type.isEqualIgnoringCase('libraryfile');
-
+const isKeywordType = (type: string) => type.isEqualIgnoringCase('keywords');
 const isEmptyAttr = (attr: PtAttribute) => String.isNotDefinedOrEmpty(attr.value);
 
 export function newPageTab(templateName: string = DEFAULT_TEMPLATE_NAME): PageTab {
@@ -76,14 +76,26 @@ function withPageTag(tags: Tag[]): Tag[] {
 }
 
 function extractSectionAttributes(section: SubmissionSection, isSanitise: boolean): PtAttribute[] {
+    const keywordsFeature = section.features.list().find((feature) => feature.typeName === 'Keywords');
+    const keywordsAsAttributes = keywordsFeature ?
+        extractFeatureAttributes(keywordsFeature, isSanitise).map((keyword) => <PtAttribute>keyword.pop()) : [];
+
     return ([] as Array<PtAttribute>).concat(
         fieldsAsAttributes(section, isSanitise),
-        (extractFeatureAttributes(section.annotations, isSanitise).pop() || []));
+        (extractFeatureAttributes(section.annotations, isSanitise).pop() || []),
+        keywordsAsAttributes || []
+    );
 }
 
 function extractSectionSubsections(section: SubmissionSection, isSanitize: boolean): PageTabSection[] {
     const featureSections = contacts2Authors(
-        section.features.list().filter(f => !isFileType(f.typeName) && !isLinkType(f.typeName) && !isLibraryFileType(f.typeName))
+        section.features.list()
+            .filter((feature) => (
+                !isFileType(feature.typeName) &&
+                !isLinkType(feature.typeName) &&
+                !isLibraryFileType(feature.typeName) &&
+                !isKeywordType(feature.typeName)
+            ))
             .map(f => {
                 const featureAttributes = extractFeatureAttributes(f, isSanitize);
 

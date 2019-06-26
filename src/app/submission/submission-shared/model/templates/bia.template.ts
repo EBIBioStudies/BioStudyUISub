@@ -35,14 +35,24 @@ export const BIATemplate = {
                         'high content analysis of cells'
                     ]
                 }
-            },
-            {
-                'name': 'Keywords',
-                'icon': 'fa-comment',
-                'valueType': {'name': 'text'}
             }
         ],
         'featureTypes': [
+            {
+                'name': 'Keywords',
+                'title': 'Add Keywords',
+                'icon': 'fa-address-card',
+                'description': 'Add keywords',
+                'uniqueCols': true,
+                'display': 'desirable',
+                'columnTypes': [
+                    {
+                        'name': 'Keyword',
+                        'valueType': { 'name': 'text' },
+                        'display': 'desirable'
+                    }
+                ]
+            },
             {
                 'name': 'Contact',
                 'title': 'Add Contacts',
@@ -259,129 +269,129 @@ export const BIATemplate = {
         ],
         'sectionTypes': [
             {
-            'name': 'Screen',
-            'display': 'required',
-            'minRequired': 1,
-            'fieldTypes': [
-                {
-                    'name': 'Screen Name',
-                    'icon': 'fa-comment',
-                    'valueType': {'name': 'text'},
-                    'display': 'required'
-                },
-                {
-                    'name': 'Description',
-                    'icon': 'fa-comment',
-                    'valueType': {'name': 'largetext'},
-                    'display': 'required'
-                },
-                {
-                    'name': 'Imaging Method',
-                    'icon': 'fa-comment',
-                    'valueType': {'name': 'text'}
-                },
-                {
-                    'name': 'Technology Type',
-                    'icon': 'fa-comment',
-                    'valueType': {
-                        'name': 'select',
-                        'values': [
-                            'gene deletion screen',
-                            'RNAi screen',
-                            'protein screen',
-                            'compound screen',
-                            'antibody screen',
-                            'ORF overexpression screen',
-                            'Other'
-                        ]
-                    }
-                },
-                {
-                    'name': 'Screen Type',
-                    'icon': 'fa-comment',
-                    'valueType': {
-                        'name': 'select',
-                        'values': [
-                            'primary screen',
-                            'secondary screen',
-                            'validation screen'
-                        ]
-                    }
-                },
-                {
-                    'name': 'Growth Protocol',
-                    'icon': 'fa-comment',
-                    'valueType': 'text'
-                },
-                {
-                    'name': 'Library Protocol',
-                    'icon': 'fa-comment',
-                    'valueType': {'name': 'text'}
-                },
-                {
-                    'name': 'Image Acquisition and Feature Extraction Protocol',
-                    'icon': 'fa-comment',
-                    'valueType': {'name': 'text'}
-                },
-                {
-                    'name': 'Data Analysis Protocol',
-                    'icon': 'fa-comment',
-                    'valueType': {'name': 'text'}
-                },
-                {
-                    'name': 'File List',
-                    'icon': 'fa-file',
-                    'valueType': {'name': 'file'},
-                    'display': 'required'
-                }
-            ],
-            'featureTypes': [
-                {
-                    'name': 'File',
-                    'title': 'Add Files',
-                    'description': 'Add the library file for the study and describe their respective scopes.',
-                    'icon': 'fa-file',
-                    'uniqueCols': true,
-                    'columnTypes': [
-                        {
-                            'name': 'Path',
-                            'valueType': {'name': 'file'},
-                            'display': 'required'
-                        },
-                        {
-                            'name': 'Format',
-                            'valueType': 'text',
-                            'display': 'desirable'
-                        },
-                        {
-                            'name': 'Library Type',
-                            'valueType': {
-                                'name': 'select',
-                                'values': [
-                                    'siRNA library',
-                                    'diploid homozygous deletion library',
-                                    'haploid deletion library',
-                                    'compound library',
-                                    'tag protein fusion library',
-                                    'GFP protein fusion library',
-                                    'YFP protein fusion library',
-                                    'HA­-Flag protein fusion library',
-                                    'ORF library',
-                                    'antibody library',
-                                    'none'
-                                ]
-                            },
-                            'display': 'desirable'
-                        },
-                        {
-                            'name': 'Description',
-                            'valueType': {'name': 'text'},
-                            'display': 'desirable'
+                'name': 'Screen',
+                'display': 'required',
+                'minRequired': 1,
+                'fieldTypes': [
+                    {
+                        'name': 'Screen Name',
+                        'icon': 'fa-comment',
+                        'valueType': {'name': 'text'},
+                        'display': 'required'
+                    },
+                    {
+                        'name': 'Description',
+                        'icon': 'fa-comment',
+                        'valueType': {'name': 'largetext'},
+                        'display': 'required'
+                    },
+                    {
+                        'name': 'Imaging Method',
+                        'icon': 'fa-comment',
+                        'valueType': {'name': 'text'}
+                    },
+                    {
+                        'name': 'Technology Type',
+                        'icon': 'fa-comment',
+                        'valueType': {
+                            'name': 'select',
+                            'values': [
+                                'gene deletion screen',
+                                'RNAi screen',
+                                'protein screen',
+                                'compound screen',
+                                'antibody screen',
+                                'ORF overexpression screen',
+                                'Other'
+                            ]
                         }
-                    ]
-                }
-            ]
-        }
+                    },
+                    {
+                        'name': 'Screen Type',
+                        'icon': 'fa-comment',
+                        'valueType': {
+                            'name': 'select',
+                            'values': [
+                                'primary screen',
+                                'secondary screen',
+                                'validation screen'
+                            ]
+                        }
+                    },
+                    {
+                        'name': 'Growth Protocol',
+                        'icon': 'fa-comment',
+                        'valueType': 'text'
+                    },
+                    {
+                        'name': 'Library Protocol',
+                        'icon': 'fa-comment',
+                        'valueType': {'name': 'text'}
+                    },
+                    {
+                        'name': 'Image Acquisition and Feature Extraction Protocol',
+                        'icon': 'fa-comment',
+                        'valueType': {'name': 'text'}
+                    },
+                    {
+                        'name': 'Data Analysis Protocol',
+                        'icon': 'fa-comment',
+                        'valueType': {'name': 'text'}
+                    },
+                    {
+                        'name': 'File List',
+                        'icon': 'fa-file',
+                        'valueType': {'name': 'file'},
+                        'display': 'required'
+                    }
+                ],
+                'featureTypes': [
+                    {
+                        'name': 'File',
+                        'title': 'Add Files',
+                        'description': 'Add the library file for the study and describe their respective scopes.',
+                        'icon': 'fa-file',
+                        'uniqueCols': true,
+                        'columnTypes': [
+                            {
+                                'name': 'Path',
+                                'valueType': {'name': 'file'},
+                                'display': 'required'
+                            },
+                            {
+                                'name': 'Format',
+                                'valueType': 'text',
+                                'display': 'desirable'
+                            },
+                            {
+                                'name': 'Library Type',
+                                'valueType': {
+                                    'name': 'select',
+                                    'values': [
+                                        'siRNA library',
+                                        'diploid homozygous deletion library',
+                                        'haploid deletion library',
+                                        'compound library',
+                                        'tag protein fusion library',
+                                        'GFP protein fusion library',
+                                        'YFP protein fusion library',
+                                        'HA­-Flag protein fusion library',
+                                        'ORF library',
+                                        'antibody library',
+                                        'none'
+                                    ]
+                                },
+                                'display': 'desirable'
+                            },
+                            {
+                                'name': 'Description',
+                                'valueType': {'name': 'text'},
+                                'display': 'desirable'
+                            }
+                        ]
+                    }
+                ]
+            }
         ]
     }
 };
