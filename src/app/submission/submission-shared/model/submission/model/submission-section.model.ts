@@ -1,6 +1,5 @@
-import { SectionType } from '../../templates';
+import { SectionType, FeatureType } from '../../templates';
 import { Section, SectionData } from './submission';
-import { identifierGenerator } from '../utils/identifier-generator';
 import Feature from './submission-feature.model';
 import Features from './submission-features.model';
 import Fields from './submission-fields.model';
@@ -42,8 +41,13 @@ class SubmissionSection implements Section {
       this._accno = data.accno || accno;
       this.fields = new Fields(type, data.attributes);
       // Any attribute names from the server that do not match top-level field names are added as annotations.
-      this.annotations = Feature.create(type.annotationsType,
-          (data.attributes || []).filter(a => a.name && type.getFieldType(a.name) === undefined)
+      this.annotations = Feature.create(
+          type.annotationsType,
+          (data.attributes || []).filter((attribute) => (
+              (attribute).name &&
+              type.getFieldType(attribute.name || '') === undefined &&
+              type.getFeatureType(attribute.name || '') === undefined
+          ))
       );
       this.data = data;
       this.features = new Features(type, data.features);
