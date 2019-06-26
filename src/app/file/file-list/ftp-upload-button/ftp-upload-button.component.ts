@@ -1,6 +1,6 @@
-import {Component, TemplateRef} from '@angular/core';
-import {BsModalService, BsModalRef} from 'ngx-bootstrap';
-import {UserData} from '../../../auth/shared';
+import { Component, TemplateRef } from '@angular/core';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap';
+import { UserData } from 'app/auth/shared';
 
 @Component({
     selector: 'ftp-upload-button',
