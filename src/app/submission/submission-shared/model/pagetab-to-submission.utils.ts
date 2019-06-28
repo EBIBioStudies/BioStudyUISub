@@ -1,14 +1,21 @@
 import {
     AttrExceptions,
-    authors2Contacts,
     LinksUtils,
-    mergeAttributes,
     PageTab,
+    PageTabSection,
     PtAttribute,
-    PtSection
+    authors2Contacts,
+    extractKeywordsFromAttributes,
+    mergeAttributes,
 } from './pagetab';
 import { DEFAULT_TEMPLATE_NAME, SubmissionType } from './templates';
-import { AttributeData, FeatureData, SectionData, Submission, SubmissionData } from './submission';
+import { Submission } from './submission';
+import {
+    AttributeData,
+    FeatureData,
+    SectionData,
+    SubmissionData
+} from 'app/submission/submission-shared/model/submission/model/submission';
 import { NameAndValue, PAGE_TAG, Tag } from './model.common';
 
 function findSubmissionTemplateName(pageTab: PageTab): string {
@@ -35,54 +42,70 @@ export function pageTab2SubmissionData(pageTab: PageTab): SubmissionData {
     };
 }
 
-function pageTabSectionToSectionData(ptSection: PtSection, parentAttributes: PtAttribute[] = []): SectionData {
-    const attributes = pageTabAttributesToAttributeData(
-        mergeAttributes(parentAttributes
-                .filter(at => String.isDefined(at.name))
-                .filter(at => AttrExceptions.editable.includes(at.name!)),
-            ptSection.attributes || []));
+function pageTabSectionToSectionData(ptSection: PageTabSection, parentAttributes: PtAttribute[] = []): SectionData {
+    const parentAttributesWithName = parentAttributes.filter((attribute) => String.isDefined(attribute.name));
+    const editableParentAttributes = parentAttributesWithName.filter((attribute) => AttrExceptions.editable.includes(attribute.name!));
+    const parentAndChildAttributes = mergeAttributes(editableParentAttributes, ptSection.attributes || []);
+    const attributes = pageTabAttributesToAttributeData(parentAndChildAttributes);
 
     const links = flatArray(ptSection.links || []);
     const files = flatArray(ptSection.files || []);
     const subsections = flatArray(ptSection.subsections || []);
     const featureSections = authors2Contacts(subsections.filter(section => !hasSubsections(section)));
+    const keywords = extractKeywordsFromAttributes(ptSection.attributes || []);
 
     const features: FeatureData[] = [];
-    if (!links.isEmpty()) {
+    const hasLinks = links.length > 0;
+    const hasFiles = files.length > 0;
+    const hasFeatureSections = featureSections.length > 0;
+    const hasLibraryFile = String.isDefinedAndNotEmpty(ptSection.libraryFile);
+    const hasKeywords = keywords.length > 0;
+
+    if (hasLinks) {
         features.push(<FeatureData> {
             type: 'Link',
-            entries: links.map(lnk => LinksUtils.toUntyped(lnk))
-                .map(attrs => pageTabAttributesToAttributeData(attrs))
+            entries: links
+                .map((link) => LinksUtils.toUntyped(link))
+                .map((link) => pageTabAttributesToAttributeData(link))
         });
     }
 
-    if (!files.isEmpty()) {
+    if (hasFiles) {
         features.push(<FeatureData> {
             type: 'File',
-            entries: files.map(file =>
-                [<PtAttribute>{name: 'Path', value: file.path}].concat(file.attributes || []))
-                .map(attrs => pageTabAttributesToAttributeData(attrs))
+            entries: files
+                .map((file) => [<PtAttribute>{ name: 'Path', value: file.path }].concat(file.attributes || []))
+                .map((file) => pageTabAttributesToAttributeData(file))
         });
     }
 
-    if (String.isDefinedAndNotEmpty(ptSection.libraryFile)) {
+    if (hasLibraryFile) {
         features.push(<FeatureData> {
             type: 'LibraryFile',
-            entries: [[<PtAttribute>{name: 'Path', value: ptSection.libraryFile}]]
+            entries: [[<PtAttribute>{ name: 'Path', value: ptSection.libraryFile }]]
         });
     }
 
-    if (!featureSections.isEmpty()) {
-        const featureTypes = featureSections
-            .filter(s => String.isDefinedAndNotEmpty(s.type))
-            .map(s => s.type).uniqueValues();
+    if (hasKeywords) {
+        features.push(<FeatureData> {
+            type: 'Keywords',
+            entries: keywords.map((keyword) => [<PtAttribute>{ name: 'Keyword', value: keyword.value }])
+        });
+    }
 
-        featureTypes.forEach(type => {
-            const entries =
-                featureSections.filter(section => section.type === type)
-                    .map(section => pageTabAttributesToAttributeData(section.attributes || []));
+    if (hasFeatureSections) {
+        const featureTypes = featureSections
+            .filter((featureSection) => String.isDefinedAndNotEmpty(featureSection.type))
+            .map((featureSection) => featureSection.type)
+            .uniqueValues();
+
+        featureTypes.forEach((featureType) => {
+            const entries = featureSections
+                .filter((featureSection) => (featureSection.type === featureType))
+                .map((featureSection) => pageTabAttributesToAttributeData(featureSection.attributes || []));
+
             features.push(<FeatureData>{
-                type: type,
+                type: featureType,
                 entries: entries
             });
         });
@@ -104,7 +127,7 @@ function pageTabSectionToSectionData(ptSection: PtSection, parentAttributes: PtA
     };
 }
 
-function hasSubsections(section: PtSection): boolean {
+function hasSubsections(section: PageTabSection): boolean {
     const hasSubsection = typeof section.subsections !== 'undefined' && section.subsections.length > 0;
     const hasLinks = typeof section.links !== 'undefined' && section.links.length > 0;
     const hasFiles = typeof section.files !== 'undefined' && section.files.length > 0;
@@ -127,8 +150,10 @@ function pageTabAttributesToAttributeData(attrs: PtAttribute[]): AttributeData[]
 }
 
 function flatArray<T>(array: (T | T[])[]): T[] {
-    return array
-        .map(el => Array.isArray(el) ? el : [el])
-        .reduce((rv, ar) => [...ar, ...rv], <T[]>[])
+    const elements = Array.isArray(array) ? array : new Array(array);
+
+    return elements
+        .map((element) => Array.isArray(element) ? element : [element])
+        .reduce((previousElement, currentElement) => [ ...previousElement, ...currentElement ], <T[]>[])
         .reverse();
 }

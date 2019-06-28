@@ -1,4 +1,7 @@
-import { Feature, Field, Section, Submission } from './submission.model';
+import { Submission } from './submission.model';
+import SubmissionSection from './model/submission-section.model';
+import Feature from './model/submission-feature.model';
+import Field from './model/submission-field.model';
 import { FeatureType, SectionType, TextValueType, ValueType, ValueTypeName } from '../templates';
 import { parseDate } from '../../../../utils';
 
@@ -7,7 +10,7 @@ interface ValidationRule {
 }
 
 class ValidationRules {
-    static forSection(section: Section): ValidationRule[] {
+    static forSection(section: SubmissionSection): ValidationRule[] {
         let rules: ValidationRule[] = [];
 
         rules = rules.concat(
@@ -85,7 +88,7 @@ class ValidationRules {
         return rules.concat(valueRules);
     }
 
-    static atLeastOneFeatureFromGroup(group: string[], section: Section) {
+    static atLeastOneFeatureFromGroup(group: string[], section: SubmissionSection) {
         return {
             validate() {
                 const rowCount = section.features.list()
@@ -111,7 +114,7 @@ class ValidationRules {
         };
     }
 
-    static requiredFeature(ft: FeatureType, section: Section): ValidationRule {
+    static requiredFeature(ft: FeatureType, section: SubmissionSection): ValidationRule {
         return {
             validate() {
                 const features = section.features.list().filter(f => f.type.name === ft.name);
@@ -123,10 +126,10 @@ class ValidationRules {
         };
     }
 
-    static requiredSection(st: SectionType, section: Section): ValidationRule {
+    static requiredSection(st: SectionType, section: SubmissionSection): ValidationRule {
         return {
             validate() {
-                const sections = section.sections.list().filter(f => f.type.name === st.name);
+                const sections = section.sections.filter(f => f.type.name === st.name);
                 if (sections.length === 0) {
                     return `At least one subsection of ${st.name} is required`;
                 }
@@ -215,11 +218,11 @@ export class SubmValidationErrors {
 
 export class SubmissionValidator {
 
-    private static validateSection(section: Section): SubmValidationErrors {
+    private static validateSection(section: SubmissionSection): SubmValidationErrors {
         const errors = ValidationRules.forSection(section)
             .map(vr => vr.validate())
             .filter(m => m !== undefined) as string[];
-        const sections = section.sections.list()
+        const sections = section.sections
             .map(s => SubmissionValidator.validateSection(s))
             .filter(ve => !ve.empty());
         return new SubmValidationErrors(section.id, errors, sections);

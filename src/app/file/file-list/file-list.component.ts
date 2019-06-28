@@ -1,18 +1,19 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid-community/main';
 import { Subject } from 'rxjs/Subject';
+import { switchMap } from 'rxjs/operators';
 import { throwError, of } from 'rxjs';
 import { AppConfig } from '../../app.config';
+import { FileService } from '../shared/file.service';
+import { ModalService } from '../../shared/modal.service';
+import { Path } from '../shared/path';
 import { FileActionsCellComponent } from './ag-grid/file-actions-cell.component';
 import { FileTypeCellComponent } from './ag-grid/file-type-cell.component';
-import { ProgressCellComponent } from './ag-grid/upload-progress-cell.component';
-import { Path } from '../shared/path';
-import { FileService } from '../shared/file.service';
 import { FileUpload, FileUploadList } from '../shared/file-upload-list.service';
+import { ProgressCellComponent } from './ag-grid/upload-progress-cell.component';
 import { UploadBadgeItem } from './file-upload-badge/file-upload-badge.component';
-import { filter, switchMap } from 'rxjs/operators';
-import { ModalService } from '../../shared/modal.service';
+import { UserData } from 'app/auth/shared';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/takeUntil';
@@ -25,21 +26,24 @@ import 'rxjs/add/operator/takeUntil';
 export class FileListComponent implements OnInit, OnDestroy {
     protected ngUnsubscribe: Subject<void>;     // stopper for all subscriptions
     private rowData: any[];
+    private ftpUser: string = 'bsftp';
+    private ftpPass: string = 'bsftp1';
 
     path: Path = new Path('/User', '/');
-
     sideBarCollapsed = false;
     backButton = false;
     gridOptions: GridOptions;
     columnDefs?: any[];
     isBulkMode = false;
 
-    constructor(private fileService: FileService,
-                private fileUploadList: FileUploadList,
-                private route: ActivatedRoute,
-                private modalService: ModalService,
-                private appConfig: AppConfig) {
-
+    constructor(
+        private appConfig: AppConfig,
+        private fileService: FileService,
+        private fileUploadList: FileUploadList,
+        private modalService: ModalService,
+        private route: ActivatedRoute,
+        private userData: UserData
+    ) {
         this.ngUnsubscribe = new Subject<void>();
 
         // Initially collapses the sidebar for tablet-sized screens
@@ -214,6 +218,9 @@ export class FileListComponent implements OnInit, OnDestroy {
             files: this.decorateFiles(f.files),
             onRemove: () => {
                 this.removeFile(f.name);
+            },
+            onDownload: () => {
+                this.downloadFile(f.path);
             }
         }));
     }
@@ -228,5 +235,21 @@ export class FileListComponent implements OnInit, OnDestroy {
     private removeUpload(u: FileUpload) {
         this.fileUploadList.remove(u);
         this.loadData();
+    }
+
+    private downloadFile(filePath: string): void {
+        const relativePath = filePath.replace('/User/', '');
+
+        this.userData.secretId$.subscribe((secret) => {
+            const ftpPath = `ftp://${this.ftpUser}:${this.ftpPass}@ftp-private.ebi.ac.uk/${secret}/${relativePath}`;
+            const link = document.createElement('a');
+
+            link.href = ftpPath;
+            link.download = filePath.substr(filePath.lastIndexOf('/') + 1);
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
     }
 }

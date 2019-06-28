@@ -133,7 +133,7 @@
                 </subm-form>
 
                 <div *ngIf="sectionForm.subsectionForms.length > 0" class="list-group form-group">
-                    <label class="control-label">Pages</label>
+                    <label class="control-label">Subsections</label>
                     <div *ngFor="let subsectionForm of sectionForm.subsectionForms" class="list-group-item" style="cursor: pointer"
                         (click)="onSectionClick(subsectionForm)">
                         {{subsectionForm.section.typeName}}

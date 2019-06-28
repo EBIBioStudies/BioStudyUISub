@@ -6,8 +6,16 @@ import { FileUpload } from '../../shared/file-upload-list.service';
     selector: 'file-actions-cell',
     template: `
         <div style="text-align:center">
+            <button *ngIf="canDownload"
+                    type="button"
+                    class="btn btn-primary btn-xs btn-flat"
+                    tooltip="Download"
+                    (click)="onFileDownload($event)">
+                <i class="fas fa-download fa-fw"></i>
+            </button>
             <button *ngIf="canRemove"
-                    type="button" class="btn btn-danger btn-xs btn-flat"
+                    type="button"
+                    class="btn btn-danger btn-xs btn-flat"
                     tooltip="Delete"
                     (click)="onFileRemove($event)">
                 <i class="fas fa-trash-alt fa-fw"></i>
@@ -26,12 +34,13 @@ export class FileActionsCellComponent implements AgRendererComponent {
     private type?: string;
     private upload?: FileUpload;
     private onRemove;
+    private onDownload;
 
     agInit(params: any): void {
         this.type = params.data.type;
         this.upload = params.data.upload;
-        this.onRemove = params.data.onRemove || (() => {
-        });
+        this.onRemove = params.data.onRemove || (() => {});
+        this.onDownload = params.data.onDownload || (() => {});
     }
 
     get canRemove(): boolean {
@@ -42,9 +51,18 @@ export class FileActionsCellComponent implements AgRendererComponent {
         return (this.upload && !this.upload.isFinished()) === true;
     }
 
+    get canDownload(): boolean {
+        return this.type === 'FILE';
+    }
+
     onFileRemove(ev) {
         ev.preventDefault();
         this.onRemove();
+    }
+
+    onFileDownload(event) {
+        event.preventDefault();
+        this.onDownload();
     }
 
     onCancelUpload(ev) {

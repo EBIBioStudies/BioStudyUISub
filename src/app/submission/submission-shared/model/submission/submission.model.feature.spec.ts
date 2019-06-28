@@ -1,5 +1,6 @@
+import Feature from './model/submission-feature.model';
 import { ColumnType, FeatureType, invalidateGlobalScope } from '../templates';
-import { Feature, FeatureData } from './submission.model';
+import { FeatureData } from './model/submission';
 
 describe('Submission Model: Feature', () => {
 

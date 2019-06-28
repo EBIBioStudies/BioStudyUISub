@@ -11,7 +11,7 @@ import { Camelcase2LabelPipe } from './shared/camelcase-to-label.pipe';
 import { SubmEditService } from './shared/subm-edit.service';
 import { TextareaAutosizeDirective } from './shared/textarea-autosize.directive';
 import { UniqueValidator } from './shared/unique.directive';
-import { SubmEditComponent } from './subm-edit.component';
+import { SubmissionEditComponent } from './submission-edit.component';
 import { FeatureGridComponent } from './subm-form/feature/feature-grid.component';
 import { FeatureListComponent } from './subm-form/feature/feature-list.component';
 import { SubmFeatureComponent } from './subm-form/feature/subm-feature.component';
@@ -42,7 +42,7 @@ import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
         SubmEditService
     ],
     declarations: [
-        SubmEditComponent,
+        SubmissionEditComponent,
         InputValueComponent,
         InlineEditComponent,
         SubmFormComponent,
@@ -62,7 +62,7 @@ import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
         TextareaAutosizeDirective
     ],
     exports: [
-        SubmEditComponent
+        SubmissionEditComponent
     ],
     entryComponents: [
         SubmValidationErrorsComponent,
