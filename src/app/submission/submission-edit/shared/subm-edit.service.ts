@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { UserData } from 'app/auth/shared';
 import { pageTab2Submission, PageTab, submission2PageTab } from 'app/submission/submission-shared/model';
-import { Submission } from 'app/submission/submission-shared/model/submission';
-import { AttributeData } from 'app/submission/submission-shared/model/submission/model/submission';
-import SubmissionSection from 'app/submission/submission-shared/model/submission/model/submission-section.model';
+import { Submission, AttributeData, Section } from 'app/submission/submission-shared/model/submission';
 import { none, Option, some } from 'fp-ts/lib/Option';
 import { BehaviorSubject, EMPTY, Observable, of, Subject, Subscription } from 'rxjs';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
@@ -251,7 +249,7 @@ export class SubmEditService {
     }
 
     /* TODO: set defaults when submission object is created and not yet sent to the server (NOT HERE!!!)*/
-    private setDefaults(section: SubmissionSection): void {
+    private setDefaults(section: Section): void {
         const subscr = this.userData.info$.subscribe(info => {
             const contactFeature = section.features.find('Contact', 'typeName');
             if (contactFeature) {

@@ -1,7 +1,4 @@
-import { Submission } from './submission';
-import { AttributeData } from './submission/model/submission';
-import Feature from './submission/model/submission-feature.model';
-import SubmissionSection from './submission/model/submission-section.model';
+import { AttributeData, Feature, Section, Submission } from './submission';
 import {
     AttrExceptions,
     LinksUtils,
@@ -53,7 +50,7 @@ export function submission2PageTab(subm: Submission, isSanitise: boolean = false
     };
 }
 
-function section2PtSection(section: SubmissionSection, isSanitise: boolean = false): PageTabSection {
+function section2PtSection(section: Section, isSanitise: boolean = false): PageTabSection {
     return <PageTabSection>{
         type: section.typeName,
         tags: withPageTag(section.tags.tags),
@@ -75,7 +72,7 @@ function withPageTag(tags: Tag[]): Tag[] {
     return [...tags, ...[PAGE_TAG]];
 }
 
-function extractSectionAttributes(section: SubmissionSection, isSanitise: boolean): PtAttribute[] {
+function extractSectionAttributes(section: Section, isSanitise: boolean): PtAttribute[] {
     const keywordsFeature = section.features.list().find((feature) => feature.typeName === 'Keywords');
     const keywordsAsAttributes = keywordsFeature ?
         extractFeatureAttributes(keywordsFeature, isSanitise).map((keyword) => <PtAttribute>keyword.pop()) : [];
@@ -87,7 +84,7 @@ function extractSectionAttributes(section: SubmissionSection, isSanitise: boolea
     );
 }
 
-function extractSectionSubsections(section: SubmissionSection, isSanitize: boolean): PageTabSection[] {
+function extractSectionSubsections(section: Section, isSanitize: boolean): PageTabSection[] {
     const featureSections = contacts2Authors(
         section.features.list()
             .filter((feature) => (
@@ -105,10 +102,10 @@ function extractSectionSubsections(section: SubmissionSection, isSanitize: boole
             }).reduce((rv, el) => rv.concat(el), [])
     );
 
-    return featureSections.concat(section.sections.map(s => section2PtSection(s, isSanitize)));
+    return featureSections.concat(section.sections.list().map(s => section2PtSection(s, isSanitize)));
 }
 
-function extractSectionLibraryFile(section: SubmissionSection, isSanitise: boolean): string | undefined {
+function extractSectionLibraryFile(section: Section, isSanitise: boolean): string | undefined {
     const feature = section.features.list().find(f => isLibraryFileType(f.typeName));
     if (feature !== undefined && !feature.isEmpty) {
         return feature.rows[0].values()[0].value;
@@ -116,7 +113,7 @@ function extractSectionLibraryFile(section: SubmissionSection, isSanitise: boole
     return undefined;
 }
 
-function extractSectionLinks(section: SubmissionSection, isSanitise: boolean): PtLinkItem[] {
+function extractSectionLinks(section: Section, isSanitise: boolean): PtLinkItem[] {
     const feature = section.features.list().find(f => isLinkType(f.typeName));
     if (feature !== undefined) {
         return extractFeatureAttributes(feature, isSanitise).map(attrs => attributesAsLink(attrs));
@@ -124,7 +121,7 @@ function extractSectionLinks(section: SubmissionSection, isSanitise: boolean): P
     return [];
 }
 
-function extractSectionFiles(section: SubmissionSection, isSanitise: boolean): PtFileItem[] {
+function extractSectionFiles(section: Section, isSanitise: boolean): PtFileItem[] {
     const feature = section.features.list().find(f => isFileType(f.typeName));
     if (feature !== undefined) {
         return extractFeatureAttributes(feature, isSanitise).map(attrs => attributesAsFile(attrs));
@@ -132,7 +129,7 @@ function extractSectionFiles(section: SubmissionSection, isSanitise: boolean): P
     return [];
 }
 
-function fieldsAsAttributes(section: SubmissionSection, isSanitise: boolean) {
+function fieldsAsAttributes(section: Section, isSanitise: boolean) {
     return section.fields.list().map((field) => <PtAttribute>{name: field.name, value: field.value})
         .filter(attr => (isSanitise && !isEmptyAttr(attr)) || !isSanitise);
 }

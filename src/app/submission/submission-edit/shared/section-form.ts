@@ -1,16 +1,16 @@
 import {
+    Attribute,
+    AttributeValue,
     ColumnType,
+    Feature,
     FeatureType,
+    Field,
     FieldType,
+    Section,
     SectionType,
+    ValueMap,
     ValueType
 } from 'app/submission/submission-shared/model';
-import Attribute from 'app/submission/submission-shared/model/submission/model/submission-attribute.model';
-import ValueMap from 'app/submission/submission-shared/model/submission/common/value-map';
-import { AttributeValue } from 'app/submission/submission-shared/model/submission/common/value-map';
-import Feature from 'app/submission/submission-shared/model/submission/model/submission-feature.model';
-import Field from 'app/submission/submission-shared/model/submission/model/submission-field.model';
-import SubmissionSection from 'app/submission/submission-shared/model/submission/model/submission-section.model';
 import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { fromNullable } from 'fp-ts/lib/Option';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
@@ -535,7 +535,7 @@ export class SectionForm extends FormBase {
 
     private sectionRef: ControlGroupRef;
 
-    constructor(private section: SubmissionSection, readonly parent?: SectionForm) {
+    constructor(private section: Section, readonly parent?: SectionForm) {
         super(new FormGroup({
             fields: new FormGroup({}),
             features: new FormGroup({}),
@@ -555,9 +555,10 @@ export class SectionForm extends FormBase {
                 this.addFeatureForm(feature);
             });
 
-        section.sections.forEach((sectionItem) => {
-            this.addSubsectionForm(sectionItem);
-        });
+        section.sections.list().forEach(
+            s => {
+                this.addSubsectionForm(s);
+            });
     }
 
     getFeatureControl(featureId: string): FormControl | undefined {
@@ -598,7 +599,7 @@ export class SectionForm extends FormBase {
     }
 
     addSection(type: SectionType): SectionForm {
-        const form = this.addSubsectionForm(this.section.addSection(type));
+        const form = this.addSubsectionForm(this.section.sections.add(type));
         this.structureChanges$.next(StructureChangeEvent.sectionAdd);
         return form;
     }
@@ -609,7 +610,7 @@ export class SectionForm extends FormBase {
             return;
         }
 
-        if (this.section.removeSectionById(sectionId)) {
+        if (this.section.sections.removeById(sectionId)) {
             this.subsectionForms.splice(index, 1);
             this.subsectionFormGroups.removeControl(sectionId);
             this.structureChanges$.next(StructureChangeEvent.sectionRemove);
@@ -661,7 +662,7 @@ export class SectionForm extends FormBase {
 
     isSectionRemovable(sectionForm: SectionForm): boolean {
         const min = sectionForm.typeMinRequired;
-        return sectionForm.isTypeRemovable || (this.section.getSectionsByType(sectionForm.typeName).length > min);
+        return sectionForm.isTypeRemovable || (this.section.sections.byType(sectionForm.typeName).length > min);
     }
 
     private get fieldFormGroup(): FormGroup {
@@ -690,7 +691,7 @@ export class SectionForm extends FormBase {
         return featureForm;
     }
 
-    private addSubsectionForm(section: SubmissionSection): SectionForm {
+    private addSubsectionForm(section: Section): SectionForm {
         const sectionForm = new SectionForm(section, this);
         this.subsectionForms.push(sectionForm);
         this.subsectionFormGroups.addControl(section.id, sectionForm.form);
