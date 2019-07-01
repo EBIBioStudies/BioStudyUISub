@@ -534,8 +534,13 @@ export class Section implements SubmissionSection {
         this._accno = data.accno || accno;
         this.fields = new Fields(type, data.attributes);
         // Any attribute names from the server that do not match top-level field names are added as annotations.
-        this.annotations = Feature.create(type.annotationsType,
-            (data.attributes || []).filter(a => a.name && type.getFieldType(a.name) === undefined)
+        this.annotations = Feature.create(
+            type.annotationsType,
+            (data.attributes || []).filter((attribute) => (
+                (attribute).name &&
+                type.getFieldType(attribute.name || '') === undefined &&
+                type.getFeatureType(attribute.name || '') === undefined
+            ))
         );
         this.data = data;
         this.features = new Features(type, data.features);
