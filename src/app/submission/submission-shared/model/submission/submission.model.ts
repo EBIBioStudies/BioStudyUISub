@@ -538,8 +538,8 @@ export class Section implements SubmissionSection {
             type.annotationsType,
             (data.attributes || []).filter((attribute) => (
                 (attribute).name &&
-                type.getFieldType(attribute.name || '') === undefined &&
-                type.getFeatureType(attribute.name || '') === undefined
+                attribute.name !== 'Keyword' &&
+                type.getFieldType(attribute.name || '') === undefined
             ))
         );
         this.data = data;
