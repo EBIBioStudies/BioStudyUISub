@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import SubmissionSection from 'app/submission/submission-shared/model/submission/model/submission-section.model';
+import { Section } from 'app/submission/submission-shared/model/submission';
 import { SectionForm } from '../shared/section-form';
 
 @Component({
@@ -11,7 +11,7 @@ export class SubmNavBarComponent implements OnChanges {
     @Input() sectionForm?: SectionForm;
     @Input() accno?: string; // accession number for the current submission
     @Input() readonly: boolean = false; // read-only status of the submission form
-    @Output() sectionClick: EventEmitter<SubmissionSection> = new EventEmitter<SubmissionSection>();
+    @Output() sectionClick: EventEmitter<Section> = new EventEmitter<Section>();
     @Output() revertClick: EventEmitter<Event> = new EventEmitter<Event>();
     @Output() submitClick: EventEmitter<Event> = new EventEmitter<Event>();
     @Output() editClick: EventEmitter<Event> = new EventEmitter<Event>();
@@ -24,7 +24,7 @@ export class SubmNavBarComponent implements OnChanges {
         }
     }
 
-    onSectionClick(section: SubmissionSection): void {
+    onSectionClick(section: Section): void {
         this.sectionClick.next(section);
     }
 
