@@ -1,5 +1,4 @@
 import { pageTab2SubmissionData } from './pagetab-to-submission.utils';
-import { PageTab } from './pagetab/pagetab.model';
 
 describe('PageTab To Submission Util:', () => {
     it('Title and ReleaseDate attributes should be merged to the section level attributes', () => {
@@ -106,7 +105,7 @@ describe('PageTab To Submission Util:', () => {
             }
         };
 
-        const submData = pageTab2SubmissionData(<PageTab>(pageTab));
+        const submData = pageTab2SubmissionData(pageTab);
         expect(submData.section!.features!.length).toEqual(2);
 
         const f1 = submData.section!.features!.find(f => f.type === 'secType1');
@@ -139,7 +138,7 @@ describe('PageTab To Submission Util:', () => {
             }
         };
 
-        const submData = pageTab2SubmissionData(<PageTab>(pageTab));
+        const submData = pageTab2SubmissionData(pageTab);
         expect(submData.section!.features!.isEmpty()).toBeTruthy();
         expect(submData.section!.sections!.length).toBe(3);
 
