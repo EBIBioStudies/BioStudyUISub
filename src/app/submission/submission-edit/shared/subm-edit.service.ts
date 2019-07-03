@@ -180,7 +180,9 @@ export class SubmEditService {
 
     submit(): Observable<SubmitResponse> {
         this.editState.startSubmitting();
-        return this.submService.submitSubmission(this.accno!, this.asPageTab(true)).pipe(
+        const pageTab = this.asPageTab(true);
+
+        return this.submService.submitSubmission(this.accno!, pageTab).pipe(
             map(resp => {
                 this.editState.stopSubmitting();
                 this.onSubmitFinished(resp);

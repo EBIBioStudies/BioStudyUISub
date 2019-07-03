@@ -31,8 +31,8 @@ export const BIATemplate = {
                 'valueType': {
                     'name': 'select',
                     'values': [
-                        'high content screen',
-                        'high content analysis of cells'
+                        'High content screen',
+                        'High content analysis of cells'
                     ]
                 }
             }
@@ -178,16 +178,29 @@ export const BIATemplate = {
                 ]
             },
             {
-                'name': 'Study Wide Protocols',
-                'title': 'Study Wide Protocols',
+                'name': 'Study Protocols',
+                'title': 'Study Protocols',
                 'icon': 'fa-address-card',
-                'description': 'Add the wide protocols involved in the study.',
+                'description': 'Add the protocols involved in the study.',
                 'uniqueCols': true,
                 'columnTypes': [
                     {
-                        'name': 'Protocol',
-                        'valueType': {'name': 'text'},
-                        'required': true,
+                        'name': 'Protocol Type',
+                        'valueType': {
+                            'name': 'select',
+                            'values': [
+                                'Data Analysis Protocol',
+                                'Growth protocol',
+                                'Image acquisition and feature extraction protocol',
+                                'Library Protocol',
+                                'Treatment protocol'
+                            ]
+                        },
+                        'display': 'required'
+                    },
+                    {
+                        'name': 'Description',
+                        'valueType': { 'name': 'largetext' },
                         'display': 'required'
                     }
                 ]

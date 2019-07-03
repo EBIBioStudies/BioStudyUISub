@@ -4,7 +4,6 @@
     white-space: nowrap;
 }
 .cell:not(.canton) {
-    float: none;
     display: inline-block;
     padding: 0 0.5vw;
 }
