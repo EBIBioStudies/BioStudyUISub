@@ -1,4 +1,4 @@
-import SubmissionSection from './model/submission-section.model';
+import { Section } from './submission.model';
 import { FeatureType, FieldType, invalidateGlobalScope, SectionType } from '../templates';
 
 describe('Submission Model: Section', () => {
@@ -8,7 +8,7 @@ describe('Submission Model: Section', () => {
     });
 
     it('can be empty', () => {
-        const sec = new SubmissionSection(SectionType.createDefault('MySectionType'));
+        const sec = new Section(SectionType.createDefault('MySectionType'));
         expect(sec.type.name).toBe('MySectionType');
         expect(sec.typeName).toBe('MySectionType');
         expect(sec.accno).toBe('');
@@ -29,7 +29,7 @@ describe('Submission Model: Section', () => {
                 } as FieldType
             ]
         });
-        const sec = new SubmissionSection(type);
+        const sec = new Section(type);
         expect(sec.typeName).toBe('ASectionType');
         expect(sec.fields.length).toBe(2);
     });
@@ -47,7 +47,7 @@ describe('Submission Model: Section', () => {
                 } as FeatureType
             ]
         });
-        const sec = new SubmissionSection(type);
+        const sec = new Section(type);
         expect(sec.typeName).toBe('ASectionType');
         expect(sec.features.length).toBe(2);
     });
@@ -65,13 +65,13 @@ describe('Submission Model: Section', () => {
                 } as SectionType
             ]
         });
-        const sec = new SubmissionSection(type);
+        const sec = new Section(type);
         expect(sec.typeName).toBe('MySectionType');
         expect(sec.sections.length).toBe(1);
     });
 
     it('should not be possible to add two features of the same type', () => {
-        const sec = new SubmissionSection(new SectionType('MySectionType'));
+        const sec = new Section(new SectionType('MySectionType'));
         const ftype = sec.type.getFeatureType('MyFeatureType');
         sec.features.add(ftype);
         sec.features.add(ftype);
@@ -79,7 +79,7 @@ describe('Submission Model: Section', () => {
     });
 
     it('should not be possible to rename featureType on already existed one', () => {
-        const sec = new SubmissionSection(new SectionType('MySectionType'));
+        const sec = new Section(new SectionType('MySectionType'));
         const ftype1 = sec.type.getFeatureType('MyFeatureType1');
         const ftype2 = sec.type.getFeatureType('MyFeatureType2');
         sec.features.add(ftype1);
