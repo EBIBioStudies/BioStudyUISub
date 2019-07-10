@@ -200,11 +200,15 @@ export class DateValueType extends ValueType {
 }
 
 export class SelectValueType extends ValueType {
-    readonly values: string[];
+    values: string[];
 
     constructor(data: Partial<SelectValueType> = {}) {
         super(ValueTypeName.select);
         this.values = data.values || [];
+    }
+
+    setValues(values: string[]): void {
+        this.values = values;
     }
 }
 
@@ -242,14 +246,14 @@ export class FieldType extends TypeBase {
 }
 
 export class FeatureType extends TypeBase {
+    readonly allowCustomCols: boolean;
+    readonly description: string;
     readonly display: string;
     readonly displayType: DisplayType;
-    readonly singleRow: boolean;
-    readonly uniqueCols: boolean;
-    readonly allowCustomCols: boolean;
-    readonly title: string;
-    readonly description: string;
     readonly icon: string;
+    readonly singleRow: boolean;
+    readonly title: string;
+    readonly uniqueCols: boolean;
 
     private columnScope: TypeScope<ColumnType> = new TypeScope<ColumnType>();
 
@@ -266,10 +270,8 @@ export class FeatureType extends TypeBase {
         this.singleRow = data.singleRow === true;
         this.uniqueCols = data.uniqueCols === true;
         this.allowCustomCols = data.allowCustomCols !== false;
-
         this.displayType = DisplayType.create(data.display);
         this.display = this.displayType.name;
-
         this.icon = data.icon || (this.singleRow ? 'fa-list' : 'fa-th');
 
         (data.columnTypes || [])
@@ -302,7 +304,14 @@ export class AnnotationsType extends FeatureType {
     }
 }
 
+export interface ColumnDependency {
+    type: string;
+    segment: string;
+    column: string;
+}
+
 export class ColumnType extends TypeBase {
+    readonly dependency: ColumnDependency;
     readonly display: string;
     readonly displayType: DisplayType;
     readonly valueType: ValueType;
@@ -315,9 +324,10 @@ export class ColumnType extends TypeBase {
         super(name, isTemplBased, scope as TypeScope<TypeBase>);
 
         data = data || {};
-        this.valueType = ValueTypeFactory.create(data.valueType || {});
+        this.dependency = data.dependency || { type: '', segment: '', column: '' };
         this.displayType = DisplayType.create(data.display);
         this.display = this.displayType.name;
+        this.valueType = ValueTypeFactory.create(data.valueType || {});
     }
 
     get isRequired(): boolean {
@@ -330,6 +340,10 @@ export class ColumnType extends TypeBase {
 
     get isReadonly(): boolean {
         return this.displayType.isReadonly;
+    }
+
+    get hasDependency(): boolean {
+        return String.isDefinedAndNotEmpty(this.dependency.type);
     }
 }
 

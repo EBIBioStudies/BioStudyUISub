@@ -254,12 +254,13 @@ export class SubmEditService {
     private setDefaults(section: Section): void {
         const subscr = this.userData.info$.subscribe(info => {
             const contactFeature = section.features.find('Contact', 'typeName');
+
             if (contactFeature) {
                 contactFeature.add(this.asContactAttributes(info), 0);
             }
-            setTimeout(() => {
-                subscr.unsubscribe();
-            }, 10);
+
+            setTimeout(() => subscr.unsubscribe(), 10);
+
             this.save();
         });
     }

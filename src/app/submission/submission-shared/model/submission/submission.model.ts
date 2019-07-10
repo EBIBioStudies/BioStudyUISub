@@ -6,7 +6,9 @@ import {
     SectionType,
     SubmissionType,
     ValueType,
-    ValueTypeFactory
+    ValueTypeFactory,
+    ColumnDependency,
+    SelectValueType
 } from '../templates';
 import { NameAndValue, Tag } from '../model.common';
 import { zip } from 'fp-ts/lib/Array';
@@ -213,27 +215,40 @@ export class Feature {
     readonly id: string;
     readonly type: FeatureType;
     readonly groups: FeatureGroup[] = [];
-
     private _columns: Columns;
     private _rows: Rows;
 
-    static create(type: FeatureType, attrs: AttributeData[]): Feature {
-        return new Feature(type,
-            {
-                type: type.name,
-                entries: [attrs]
-            });
+    static create(type: FeatureType, attrs: AttributeData[], parentSection: Section): Feature {
+        return new Feature(type, { type: type.name, entries: [attrs] }, parentSection);
     }
 
-    constructor(type: FeatureType, data: FeatureData = {} as FeatureData) {
+    constructor(type: FeatureType, data: FeatureData = {} as FeatureData, parentSection: Section) {
         this.id = `feature_${nextId()}`;
         this.type = type;
         this._columns = new Columns();
         this._rows = new Rows(type.singleRow ? 1 : undefined);
 
-        type.columnTypes.filter(ct => ct.isRequired || ct.isDesirable)
+        type.columnTypes
+            .filter(ct => ct.isRequired || ct.isDesirable)
             .forEach(ct => {
-                this.addColumn(ct.name, ct.valueType, ct.displayType, true);
+                const hasDependency = ct.hasDependency;
+
+                if (hasDependency) {
+                    const { segment, type: dependencyType, column: columnName } = ct.dependency;
+                    const parentSectionData = parentSection.data;
+                    const segmentData = parentSectionData[segment] || [];
+                    const { entries = [] } = segmentData.find((segmentByType) => segmentByType.type === dependencyType) || {};
+
+                    const values = entries.map((entry) => {
+                        const columnData = entry.find((column) => column.name === columnName);
+
+                        return columnData.value;
+                    });
+
+                    this.addColumn(ct.name, ct.valueType, ct.displayType, true, values);
+                } else {
+                    this.addColumn(ct.name, ct.valueType, ct.displayType, true);
+                }
             });
 
         (data.entries || []).forEach(entry => {
@@ -321,12 +336,25 @@ export class Feature {
         return (rowIdx === undefined) ? this.addRow() : this._rows.at(rowIdx);
     }
 
-    addColumn(name?: string, valueType?: ValueType, displayType?: DisplayType, isTemplateBased: boolean = false): Attribute {
+    addColumn(
+        name?: string,
+        valueType?: ValueType,
+        displayType?: DisplayType,
+        isTemplateBased: boolean = false,
+        values: string[] = []
+    ): Attribute {
+        if (values.length > 0) {
+            const selectValueType = <SelectValueType>valueType;
+
+            selectValueType.setValues(values);
+        }
+
         const defColName = (this.singleRow ? this.typeName : 'Column') + ' ' + this._columns.index.next;
         const colName = name || defColName;
         const col = new Attribute(colName, valueType, displayType, isTemplateBased);
         this._rows.addKey(col.id);
         this._columns.add(col);
+
         return col;
     }
 
@@ -358,8 +386,11 @@ export class Feature {
 
 export class Features {
     private features: Feature[] = [];
+    private parentSection: Section;
 
-    constructor(type: SectionType, features: Array<FeatureData> = []) {
+    constructor(type: SectionType, features: Array<FeatureData> = [], parentSection: Section) {
+        this.parentSection = parentSection;
+
         const fd = features.filter(f => String.isDefinedAndNotEmpty(f.type))
             .reduce((rv, d) => {
                 rv[d.type!] = d;
@@ -401,7 +432,7 @@ export class Features {
             console.error(`Feature of type ${type} already exists in the section`);
             return;
         }
-        const feature = new Feature(type, data);
+        const feature = new Feature(type, data, this.parentSection);
         this.features.push(feature);
         return feature;
     }
@@ -526,13 +557,15 @@ export class Section implements SubmissionSection {
     readonly subsections: Sections;
     readonly tags: Tags;
     readonly data: SectionData;
+    readonly parent: Section;
 
-    constructor(type: SectionType, data: SectionData = <SectionData>{}, accno: string = '') {
+    constructor(type: SectionType, data: SectionData = <SectionData>{}, accno: string = '', parent?: Section) {
         this.tags = Tags.create(data);
         this.id = `section_${nextId()}`;
         this.type = type;
         this._accno = data.accno || accno;
         this.fields = new Fields(type, data.attributes);
+        this.parent = parent || this; // If doesn't have parent set itself as parent.
         // Any attribute names from the server that do not match top-level field names are added as annotations.
         this.annotations = Feature.create(
             type.annotationsType,
@@ -540,12 +573,13 @@ export class Section implements SubmissionSection {
                 (attribute).name &&
                 attribute.name !== 'Keyword' &&
                 type.getFieldType(attribute.name || '') === undefined
-            ))
+            )),
+            this.parent
         );
         this.data = data;
-        this.features = new Features(type, data.features);
-        this.sections = new Sections(type, data.sections);
-        this.subsections = new Sections(type, data.subsections);
+        this.features = new Features(type, data.features, this.parent);
+        this.sections = new Sections(type, data.sections, this);
+        this.subsections = new Sections(type, data.subsections, this);
     }
 
     get accno(): string {
@@ -584,10 +618,12 @@ export class Section implements SubmissionSection {
 export class Sections {
     private sections: Section[];
     private nextIdx: number = 0;
+    private parent: Section;
 
     /* Fills in existed data if given. Data with types defined in the template goes first. */
-    constructor(type: SectionType, sections: Array<SectionData> = []) {
+    constructor(type: SectionType, sections: Array<SectionData> = [], parent: Section) {
         this.sections = [];
+        this.parent = parent;
 
         type.sectionTypes.forEach(st => {
             const sd = sections.filter(s => s.type === st.name);
@@ -619,7 +655,7 @@ export class Sections {
     }
 
     add(type: SectionType, data?: SectionData, accno?: string): Section {
-        const s = new Section(type, data, accno || type.name + '-' + (++this.nextIdx));
+        const s = new Section(type, data, accno || type.name + '-' + (++this.nextIdx), this.parent);
         this.sections.push(s);
         return s;
     }
