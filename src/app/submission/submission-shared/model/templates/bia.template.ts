@@ -185,11 +185,6 @@ export const BIATemplate = {
                 'uniqueCols': true,
                 'columnTypes': [
                     {
-                        'name': 'Name',
-                        'valueType': { 'name': 'text' },
-                        'display': 'required'
-                    },
-                    {
                         'name': 'Type',
                         'valueType': {
                             'name': 'select',
@@ -350,19 +345,16 @@ export const BIATemplate = {
                         'icon': 'fa-address-card',
                         'description': 'Add the protocols involved in the screen.',
                         'uniqueCols': true,
+                        'dependency': 'Study Protocols',
                         'columnTypes': [
                             {
-                                'name': 'Protocol Type',
-                                'dependency': {
-                                    'type': 'Study Protocols',
-                                    'segment': 'features',
-                                    'column': 'Name'
-                                },
+                                'name': 'Protocol',
                                 'valueType': {
                                     'name': 'select',
                                     'values': []
                                 },
-                                'display': 'required'
+                                'display': 'required',
+                                'dependencyColumn': 'Type'
                             }
                         ]
                     }

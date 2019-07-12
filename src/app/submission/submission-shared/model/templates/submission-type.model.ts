@@ -254,6 +254,7 @@ export class FeatureType extends TypeBase {
     readonly singleRow: boolean;
     readonly title: string;
     readonly uniqueCols: boolean;
+    readonly dependency: string;
 
     private columnScope: TypeScope<ColumnType> = new TypeScope<ColumnType>();
 
@@ -273,6 +274,7 @@ export class FeatureType extends TypeBase {
         this.displayType = DisplayType.create(data.display);
         this.display = this.displayType.name;
         this.icon = data.icon || (this.singleRow ? 'fa-list' : 'fa-th');
+        this.dependency = data.dependency || '';
 
         (data.columnTypes || [])
             .forEach(ct => {
@@ -304,17 +306,11 @@ export class AnnotationsType extends FeatureType {
     }
 }
 
-export interface ColumnDependency {
-    type: string;
-    segment: string;
-    column: string;
-}
-
 export class ColumnType extends TypeBase {
-    readonly dependency: ColumnDependency;
     readonly display: string;
     readonly displayType: DisplayType;
     readonly valueType: ValueType;
+    readonly dependencyColumn: string;
 
     static createDefault(name: string, scope?: TypeScope<ColumnType>): ColumnType {
         return new ColumnType(name, {}, scope, false);
@@ -324,10 +320,10 @@ export class ColumnType extends TypeBase {
         super(name, isTemplBased, scope as TypeScope<TypeBase>);
 
         data = data || {};
-        this.dependency = data.dependency || { type: '', segment: '', column: '' };
         this.displayType = DisplayType.create(data.display);
         this.display = this.displayType.name;
         this.valueType = ValueTypeFactory.create(data.valueType || {});
+        this.dependencyColumn = data.dependencyColumn || '';
     }
 
     get isRequired(): boolean {
@@ -340,10 +336,6 @@ export class ColumnType extends TypeBase {
 
     get isReadonly(): boolean {
         return this.displayType.isReadonly;
-    }
-
-    get hasDependency(): boolean {
-        return String.isDefinedAndNotEmpty(this.dependency.type);
     }
 }
 

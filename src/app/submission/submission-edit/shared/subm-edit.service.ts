@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { UserData } from 'app/auth/shared';
-import { pageTab2Submission, PageTab, submission2PageTab } from 'app/submission/submission-shared/model';
-import { Submission, AttributeData, Section } from 'app/submission/submission-shared/model/submission';
+import { pageTab2Submission, PageTab, submission2PageTab, SelectValueType } from 'app/submission/submission-shared/model';
+import { Submission, AttributeData, Section, Feature, AttributeValue } from 'app/submission/submission-shared/model/submission';
 import { none, Option, some } from 'fp-ts/lib/Option';
 import { BehaviorSubject, EMPTY, Observable, of, Subject, Subscription } from 'rxjs';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
@@ -219,12 +219,52 @@ export class SubmEditService {
         }
 
         if (sectionForm !== undefined) {
-            this.sectionFormSub = sectionForm.form.valueChanges.pipe(debounceTime(900))
-                .subscribe(() => this.save());
+            this.sectionFormSub = sectionForm.form.valueChanges
+                .pipe(debounceTime(900))
+                .subscribe(() => {
+                    this.updateDependencyValues();
+                    this.save();
+                });
+
             this.sectionSwitch$.next(some(sectionForm));
         } else {
             this.sectionSwitch$.next(none);
         }
+    }
+
+    flatFeatures(section) {
+        let result = [...section.features.list()];
+
+        section.sections.list().forEach((sectionItem) => {
+            result = result.concat(sectionItem.features.list());
+
+            if (sectionItem.sections.length > 0) {
+                result = result.concat(this.flatFeatures(sectionItem.sections));
+            }
+        });
+
+        return result;
+    }
+
+    private updateDependencyValues() {
+        const section: Section = this.submModel!.section;
+        const features = this.flatFeatures(section);
+        const featureWithDependencies: Feature[] = features.filter((feature) => String.isDefinedAndNotEmpty(feature.dependency));
+
+        featureWithDependencies.forEach((withDependencies) => {
+            const dependency: Feature = features.find((feature) => feature.type.typeName === withDependencies.dependency);
+            const columnWithDependencies =
+                withDependencies.columns.filter((column) => String.isDefinedAndNotEmpty(column.dependencyColumn));
+
+            columnWithDependencies.forEach((columnWithDependency) => {
+                const columnWithValues = dependency.columns.find((column) => column.name === columnWithDependency.dependencyColumn);
+                const attributeValues = dependency.rows.map((row) => row.valueFor(columnWithValues!.id));
+                const rawValues: string[] = attributeValues.map((attributeValue) => attributeValue!.value);
+                const selectValueType = <SelectValueType>(columnWithDependency.valueType);
+
+                selectValueType.setValues(rawValues);
+            });
+        });
     }
 
     private save() {

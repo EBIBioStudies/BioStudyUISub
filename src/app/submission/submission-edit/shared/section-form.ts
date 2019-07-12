@@ -232,10 +232,7 @@ export class FeatureForm extends FormBase {
             rows: new FormArray([])
         }));
 
-        feature.columns.forEach(column => {
-                this.addColumnControl(column);
-            }
-        );
+        feature.columns.forEach(column => this.addColumnControl(column));
 
         feature.rows.forEach(row => {
             this.addRowForm(row, feature.columns);
