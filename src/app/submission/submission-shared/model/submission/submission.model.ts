@@ -280,6 +280,10 @@ export class Feature {
         return this._columns.size();
     }
 
+    attributeValuesForColumn(columnId: string) {
+        return this._rows.list().map((row) => row.valueFor(columnId));
+    }
+
     get isEmpty(): boolean {
         return this.rowSize() === 0;
     }
