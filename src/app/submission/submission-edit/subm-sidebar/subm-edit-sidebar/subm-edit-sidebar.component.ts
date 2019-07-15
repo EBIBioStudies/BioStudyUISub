@@ -73,8 +73,10 @@ export class SubmEditSidebarComponent implements OnDestroy {
     constructor(public userData: UserData,
                 private bsModalService: BsModalService,
                 private modalService: ModalService,
-                private submEditService: SubmEditService) {
-        this.submEditService.sectionSwitch$.takeUntil(this.unsubscribe)
+                private submEditService: SubmEditService
+    ) {
+        this.submEditService.sectionSwitch$
+            .takeUntil(this.unsubscribe)
             .subscribe(sectionForm => this.switchSection(sectionForm));
     }
 

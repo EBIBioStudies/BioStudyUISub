@@ -200,11 +200,15 @@ export class DateValueType extends ValueType {
 }
 
 export class SelectValueType extends ValueType {
-    readonly values: string[];
+    values: string[];
 
     constructor(data: Partial<SelectValueType> = {}) {
         super(ValueTypeName.select);
         this.values = data.values || [];
+    }
+
+    setValues(values: string[]): void {
+        this.values = values;
     }
 }
 
@@ -242,14 +246,15 @@ export class FieldType extends TypeBase {
 }
 
 export class FeatureType extends TypeBase {
+    readonly allowCustomCols: boolean;
+    readonly description: string;
     readonly display: string;
     readonly displayType: DisplayType;
-    readonly singleRow: boolean;
-    readonly uniqueCols: boolean;
-    readonly allowCustomCols: boolean;
-    readonly title: string;
-    readonly description: string;
     readonly icon: string;
+    readonly singleRow: boolean;
+    readonly title: string;
+    readonly uniqueCols: boolean;
+    readonly dependency: string;
 
     private columnScope: TypeScope<ColumnType> = new TypeScope<ColumnType>();
 
@@ -266,11 +271,10 @@ export class FeatureType extends TypeBase {
         this.singleRow = data.singleRow === true;
         this.uniqueCols = data.uniqueCols === true;
         this.allowCustomCols = data.allowCustomCols !== false;
-
         this.displayType = DisplayType.create(data.display);
         this.display = this.displayType.name;
-
         this.icon = data.icon || (this.singleRow ? 'fa-list' : 'fa-th');
+        this.dependency = data.dependency || '';
 
         (data.columnTypes || [])
             .forEach(ct => {
@@ -306,6 +310,7 @@ export class ColumnType extends TypeBase {
     readonly display: string;
     readonly displayType: DisplayType;
     readonly valueType: ValueType;
+    readonly dependencyColumn: string;
 
     static createDefault(name: string, scope?: TypeScope<ColumnType>): ColumnType {
         return new ColumnType(name, {}, scope, false);
@@ -315,9 +320,10 @@ export class ColumnType extends TypeBase {
         super(name, isTemplBased, scope as TypeScope<TypeBase>);
 
         data = data || {};
-        this.valueType = ValueTypeFactory.create(data.valueType || {});
         this.displayType = DisplayType.create(data.display);
         this.display = this.displayType.name;
+        this.valueType = ValueTypeFactory.create(data.valueType || {});
+        this.dependencyColumn = data.dependencyColumn || '';
     }
 
     get isRequired(): boolean {

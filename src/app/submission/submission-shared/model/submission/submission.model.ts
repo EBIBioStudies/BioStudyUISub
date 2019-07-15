@@ -38,7 +38,8 @@ export class Attribute {
     constructor(private _name: string = '',
                 readonly valueType: ValueType = ValueTypeFactory.DEFAULT,
                 readonly displayType: DisplayType = DisplayType.Optional,
-                readonly isTemplateBased: boolean = false) {
+                readonly isTemplateBased: boolean = false,
+                readonly dependencyColumn: string = '') {
         this.id = `attr_${nextId()}`;
     }
 
@@ -213,16 +214,12 @@ export class Feature {
     readonly id: string;
     readonly type: FeatureType;
     readonly groups: FeatureGroup[] = [];
-
+    readonly dependency;
     private _columns: Columns;
     private _rows: Rows;
 
     static create(type: FeatureType, attrs: AttributeData[]): Feature {
-        return new Feature(type,
-            {
-                type: type.name,
-                entries: [attrs]
-            });
+        return new Feature(type, { type: type.name, entries: [attrs] });
     }
 
     constructor(type: FeatureType, data: FeatureData = {} as FeatureData) {
@@ -230,10 +227,12 @@ export class Feature {
         this.type = type;
         this._columns = new Columns();
         this._rows = new Rows(type.singleRow ? 1 : undefined);
+        this.dependency = type.dependency;
 
-        type.columnTypes.filter(ct => ct.isRequired || ct.isDesirable)
+        type.columnTypes
+            .filter(ct => ct.isRequired || ct.isDesirable)
             .forEach(ct => {
-                this.addColumn(ct.name, ct.valueType, ct.displayType, true);
+                this.addColumn(ct.name, ct.valueType, ct.displayType, true, ct.dependencyColumn);
             });
 
         (data.entries || []).forEach(entry => {
@@ -281,6 +280,10 @@ export class Feature {
         return this._columns.size();
     }
 
+    attributeValuesForColumn(columnId: string) {
+        return this._rows.list().map((row) => row.valueFor(columnId));
+    }
+
     get isEmpty(): boolean {
         return this.rowSize() === 0;
     }
@@ -321,12 +324,19 @@ export class Feature {
         return (rowIdx === undefined) ? this.addRow() : this._rows.at(rowIdx);
     }
 
-    addColumn(name?: string, valueType?: ValueType, displayType?: DisplayType, isTemplateBased: boolean = false): Attribute {
+    addColumn(
+        name?: string,
+        valueType?: ValueType,
+        displayType?: DisplayType,
+        isTemplateBased: boolean = false,
+        dependencyColumn: string = ''
+    ): Attribute {
         const defColName = (this.singleRow ? this.typeName : 'Column') + ' ' + this._columns.index.next;
         const colName = name || defColName;
-        const col = new Attribute(colName, valueType, displayType, isTemplateBased);
+        const col = new Attribute(colName, valueType, displayType, isTemplateBased, dependencyColumn);
         this._rows.addKey(col.id);
         this._columns.add(col);
+
         return col;
     }
 
@@ -526,13 +536,15 @@ export class Section implements SubmissionSection {
     readonly subsections: Sections;
     readonly tags: Tags;
     readonly data: SectionData;
+    readonly parent: Section;
 
-    constructor(type: SectionType, data: SectionData = <SectionData>{}, accno: string = '') {
+    constructor(type: SectionType, data: SectionData = <SectionData>{}, accno: string = '', parent?: Section) {
         this.tags = Tags.create(data);
         this.id = `section_${nextId()}`;
         this.type = type;
         this._accno = data.accno || accno;
         this.fields = new Fields(type, data.attributes);
+        this.parent = parent || this; // If doesn't have parent set itself as parent.
         // Any attribute names from the server that do not match top-level field names are added as annotations.
         this.annotations = Feature.create(
             type.annotationsType,

@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { UserData } from 'app/auth/shared';
-import { pageTab2Submission, PageTab, submission2PageTab } from 'app/submission/submission-shared/model';
-import { Submission, AttributeData, Section } from 'app/submission/submission-shared/model/submission';
+import { pageTab2Submission, PageTab, submission2PageTab, SelectValueType } from 'app/submission/submission-shared/model';
+import { Submission, AttributeData, Section, Feature, AttributeValue, Attribute } from 'app/submission/submission-shared/model/submission';
 import { none, Option, some } from 'fp-ts/lib/Option';
 import { BehaviorSubject, EMPTY, Observable, of, Subject, Subscription } from 'rxjs';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 import { UserInfo } from '../../../auth/shared/model';
 import { SubmissionService, SubmitResponse, PendingSubmission } from '../../submission-shared/submission.service';
 import { MyFormControl } from './form-validators';
-import { SectionForm } from './section-form';
+import { SectionForm, FeatureForm } from './section-form';
 
 class EditState {
     static Init = 'Init';
@@ -180,7 +180,9 @@ export class SubmEditService {
 
     submit(): Observable<SubmitResponse> {
         this.editState.startSubmitting();
-        return this.submService.submitSubmission(this.accno!, this.asPageTab(true)).pipe(
+        const pageTab = this.asPageTab(true);
+
+        return this.submService.submitSubmission(this.accno!, pageTab).pipe(
             map(resp => {
                 this.editState.stopSubmitting();
                 this.onSubmitFinished(resp);
@@ -217,11 +219,71 @@ export class SubmEditService {
         }
 
         if (sectionForm !== undefined) {
-            this.sectionFormSub = sectionForm.form.valueChanges.pipe(debounceTime(900))
-                .subscribe(() => this.save());
+            this.sectionFormSub = sectionForm.form.valueChanges
+                .pipe(debounceTime(900))
+                .subscribe(() => {
+                    this.save();
+                });
+
+            this.updateDependencyValues(sectionForm);
+
             this.sectionSwitch$.next(some(sectionForm));
         } else {
             this.sectionSwitch$.next(none);
+        }
+    }
+
+    private flatFeatures(section) {
+        let result = [...section.features.list()];
+
+        section.sections.list().forEach((sectionItem) => {
+            result = result.concat(sectionItem.features.list());
+
+            if (sectionItem.sections.length > 0) {
+                result = result.concat(this.flatFeatures(sectionItem.sections));
+            }
+        });
+
+        return result;
+    }
+
+
+    private updateDependencyValues(sectionForm: SectionForm) {
+        const section: Section = this.submModel!.section;
+        const features = this.flatFeatures(section);
+        const featuresWithDependencies: Feature[] = features.filter((feature) => String.isDefinedAndNotEmpty(feature.dependency));
+
+        featuresWithDependencies.forEach((featureWithDependency) => {
+            const dependency: Feature = features.find((feature) => feature.type.typeName === featureWithDependency.dependency);
+            const columnWithDependencies = featureWithDependency.columns
+                .filter((column) => String.isDefinedAndNotEmpty(column.dependencyColumn));
+
+            columnWithDependencies.forEach((columnWithDependency) => {
+                const matchedColumn = dependency.columns.find((column) => column.name === columnWithDependency.dependencyColumn);
+                const attributeValues = dependency.attributeValuesForColumn(matchedColumn!.id);
+                const rawValues: string[] = attributeValues.map((attributeValue) => attributeValue!.value);
+                const selectValueType = <SelectValueType>(columnWithDependency.valueType);
+
+                selectValueType.setValues(rawValues);
+
+                this.validateDependenciesForColumn(rawValues, featureWithDependency, sectionForm, columnWithDependency);
+            });
+        });
+    }
+
+    private validateDependenciesForColumn(values: string[], feature: Feature, sectionForm: SectionForm, column?: Attribute) {
+        if (column) {
+            const attributeValues = feature.attributeValuesForColumn(column.id);
+
+            attributeValues.forEach((attribute, index) => {
+                if (String.isDefinedAndNotEmpty(attribute!.value) && !values.includes(attribute!.value)) {
+                    const formControl = sectionForm.getFeatureFormById(feature.id);
+
+                    if (formControl) {
+                        formControl.removeRow(index);
+                    }
+                }
+            });
         }
     }
 
@@ -252,12 +314,13 @@ export class SubmEditService {
     private setDefaults(section: Section): void {
         const subscr = this.userData.info$.subscribe(info => {
             const contactFeature = section.features.find('Contact', 'typeName');
+
             if (contactFeature) {
                 contactFeature.add(this.asContactAttributes(info), 0);
             }
-            setTimeout(() => {
-                subscr.unsubscribe();
-            }, 10);
+
+            setTimeout(() => subscr.unsubscribe(), 10);
+
             this.save();
         });
     }

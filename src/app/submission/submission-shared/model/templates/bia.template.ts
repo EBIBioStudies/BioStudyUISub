@@ -31,8 +31,8 @@ export const BIATemplate = {
                 'valueType': {
                     'name': 'select',
                     'values': [
-                        'high content screen',
-                        'high content analysis of cells'
+                        'High content screen',
+                        'High content analysis of cells'
                     ]
                 }
             }
@@ -178,16 +178,29 @@ export const BIATemplate = {
                 ]
             },
             {
-                'name': 'Study Wide Protocols',
-                'title': 'Study Wide Protocols',
+                'name': 'Study Protocols',
+                'title': 'Study Protocols',
                 'icon': 'fa-address-card',
-                'description': 'Add the wide protocols involved in the study.',
+                'description': 'Add the protocols involved in the study.',
                 'uniqueCols': true,
                 'columnTypes': [
                     {
-                        'name': 'Protocol',
-                        'valueType': {'name': 'text'},
-                        'required': true,
+                        'name': 'Type',
+                        'valueType': {
+                            'name': 'select',
+                            'values': [
+                                'Data Analysis Protocol',
+                                'Growth protocol',
+                                'Image acquisition and feature extraction protocol',
+                                'Library Protocol',
+                                'Treatment protocol'
+                            ]
+                        },
+                        'display': 'required'
+                    },
+                    {
+                        'name': 'Description',
+                        'valueType': { 'name': 'largetext' },
                         'display': 'required'
                     }
                 ]
@@ -319,26 +332,6 @@ export const BIATemplate = {
                         }
                     },
                     {
-                        'name': 'Growth Protocol',
-                        'icon': 'fa-comment',
-                        'valueType': 'text'
-                    },
-                    {
-                        'name': 'Library Protocol',
-                        'icon': 'fa-comment',
-                        'valueType': {'name': 'text'}
-                    },
-                    {
-                        'name': 'Image Acquisition and Feature Extraction Protocol',
-                        'icon': 'fa-comment',
-                        'valueType': {'name': 'text'}
-                    },
-                    {
-                        'name': 'Data Analysis Protocol',
-                        'icon': 'fa-comment',
-                        'valueType': {'name': 'text'}
-                    },
-                    {
                         'name': 'File List',
                         'icon': 'fa-file',
                         'valueType': {'name': 'file'},
@@ -347,46 +340,21 @@ export const BIATemplate = {
                 ],
                 'featureTypes': [
                     {
-                        'name': 'File',
-                        'title': 'Add Files',
-                        'description': 'Add the library file for the study and describe their respective scopes.',
-                        'icon': 'fa-file',
+                        'name': 'Protocols',
+                        'title': 'Protocols',
+                        'icon': 'fa-address-card',
+                        'description': 'Add the protocols involved in the screen.',
                         'uniqueCols': true,
+                        'dependency': 'Study Protocols',
                         'columnTypes': [
                             {
-                                'name': 'Path',
-                                'valueType': {'name': 'file'},
-                                'display': 'required'
-                            },
-                            {
-                                'name': 'Format',
-                                'valueType': 'text',
-                                'display': 'desirable'
-                            },
-                            {
-                                'name': 'Library Type',
+                                'name': 'Protocol',
                                 'valueType': {
                                     'name': 'select',
-                                    'values': [
-                                        'siRNA library',
-                                        'diploid homozygous deletion library',
-                                        'haploid deletion library',
-                                        'compound library',
-                                        'tag protein fusion library',
-                                        'GFP protein fusion library',
-                                        'YFP protein fusion library',
-                                        'HA­-Flag protein fusion library',
-                                        'ORF library',
-                                        'antibody library',
-                                        'none'
-                                    ]
+                                    'values': []
                                 },
-                                'display': 'desirable'
-                            },
-                            {
-                                'name': 'Description',
-                                'valueType': {'name': 'text'},
-                                'display': 'desirable'
+                                'display': 'required',
+                                'dependencyColumn': 'Type'
                             }
                         ]
                     }
