@@ -113,10 +113,10 @@ export class DisplayType {
     public static Optional = new DisplayType('optional');
 
     public static all = [
-        DisplayType.Required,
         DisplayType.Desirable,
+        DisplayType.Optional,
         DisplayType.Readonly,
-        DisplayType.Optional
+        DisplayType.Required
     ];
 
     readonly name: string;
@@ -311,6 +311,7 @@ export class ColumnType extends TypeBase {
     readonly displayType: DisplayType;
     readonly valueType: ValueType;
     readonly dependencyColumn: string;
+    readonly uniqueValues: boolean;
 
     static createDefault(name: string, scope?: TypeScope<ColumnType>): ColumnType {
         return new ColumnType(name, {}, scope, false);
@@ -324,6 +325,7 @@ export class ColumnType extends TypeBase {
         this.display = this.displayType.name;
         this.valueType = ValueTypeFactory.create(data.valueType || {});
         this.dependencyColumn = data.dependencyColumn || '';
+        this.uniqueValues = data.uniqueValues || false;
     }
 
     get isRequired(): boolean {

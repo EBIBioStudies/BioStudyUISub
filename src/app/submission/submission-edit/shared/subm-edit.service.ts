@@ -247,7 +247,6 @@ export class SubmEditService {
         return result;
     }
 
-
     private updateDependencyValues(sectionForm: SectionForm) {
         const section: Section = this.submModel!.section;
         const features = this.flatFeatures(section);
