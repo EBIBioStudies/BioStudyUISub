@@ -8,6 +8,7 @@ import {
     ValidatorFn,
     Validators
 } from '@angular/forms';
+import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { TextValueType, ValueType, ValueTypeName } from 'app/submission/submission-shared/model';
 import { Attribute, Feature, Field, Section } from 'app/submission/submission-shared/model/submission';
 import { parseDate } from 'app/utils';
@@ -163,16 +164,16 @@ export class FormValidators {
             let errors = control.errors;
             if (duplicates.includes(control.value)) {
                 errors = errors || {};
-                errors['unique'] = {value: control.value};
+                errors['uniqueCols'] = {value: control.value};
             } else if (errors !== null) {
-                delete errors['unique'];
+                delete errors['uniqueCols'];
                 if (Object.keys(errors).length === 0) {
                     errors = null;
                 }
             }
             control.setErrors(errors);
         });
-        return {'unique': {value: duplicates[0]}};
+        return {'uniqueCols': {value: duplicates[0]}};
     }
 
     static formatDate: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -201,9 +202,11 @@ export class SubmFormValidators {
         } else if (valueType.is(ValueTypeName.date)) {
             validators.push(FormValidators.formatDate);
         }
+
         if (valueType.is(ValueTypeName.orcid)) {
             validators.push(FormValidators.formatOrcid);
         }
+
         return validators;
     }
 
@@ -217,10 +220,19 @@ export class SubmFormValidators {
 
     static forCell(column: Attribute): ValidatorFn[] {
         const validators: ValidatorFn[] = [];
+
         if (column.displayType.isRequired) {
             validators.push(Validators.required);
         }
-        return [...validators, ...SubmFormValidators.forValueType(column.valueType)];
+
+        if (column.uniqueValues) {
+            validators.push(RxwebValidators.unique());
+        }
+
+        return [
+            ...validators,
+            ...SubmFormValidators.forValueType(column.valueType)
+        ];
     }
 
     static forColumn(column: Attribute): ValidatorFn[] {
@@ -229,9 +241,11 @@ export class SubmFormValidators {
 
     static forFeatureColumns(feature: Feature) {
         const validators: ValidatorFn[] = [];
+
         if (feature.type.uniqueCols) {
             validators.push(FormValidators.uniqueValues);
         }
+
         return validators;
     }
 }
@@ -257,8 +271,11 @@ export class CustomErrorMessages {
             'pattern': (error: { actualValue: string, requiredPattern: string }) => {
                 return `Please provide a value in '${error.requiredPattern}' format`;
             },
-            'unique': (error: { value: string }) => {
-                return `${groupRef.name}'s ${error.value} column is not unique`;
+            'uniqueCols': (error: { value: string }) => {
+                return `${ref.parentName}'s ${error.value} column is not unique`;
+            },
+            'unique': () => {
+                return `${ref.parentName}'s values should be unique`;
             }
         };
     }

@@ -39,7 +39,8 @@ export class Attribute {
                 readonly valueType: ValueType = ValueTypeFactory.DEFAULT,
                 readonly displayType: DisplayType = DisplayType.Optional,
                 readonly isTemplateBased: boolean = false,
-                readonly dependencyColumn: string = '') {
+                readonly dependencyColumn: string = '',
+                readonly uniqueValues: boolean = false) {
         this.id = `attr_${nextId()}`;
     }
 
@@ -232,7 +233,7 @@ export class Feature {
         type.columnTypes
             .filter(ct => ct.isRequired || ct.isDesirable)
             .forEach(ct => {
-                this.addColumn(ct.name, ct.valueType, ct.displayType, true, ct.dependencyColumn);
+                this.addColumn(ct.name, ct.valueType, ct.displayType, true, ct.dependencyColumn, ct.uniqueValues);
             });
 
         (data.entries || []).forEach(entry => {
@@ -329,11 +330,12 @@ export class Feature {
         valueType?: ValueType,
         displayType?: DisplayType,
         isTemplateBased: boolean = false,
-        dependencyColumn: string = ''
+        dependencyColumn: string = '',
+        uniqueValues: boolean = false,
     ): Attribute {
         const defColName = (this.singleRow ? this.typeName : 'Column') + ' ' + this._columns.index.next;
         const colName = name || defColName;
-        const col = new Attribute(colName, valueType, displayType, isTemplateBased, dependencyColumn);
+        const col = new Attribute(colName, valueType, displayType, isTemplateBased, dependencyColumn, uniqueValues);
         this._rows.addKey(col.id);
         this._columns.add(col);
 

@@ -185,6 +185,11 @@ export const BIATemplate = {
                 'uniqueCols': true,
                 'columnTypes': [
                     {
+                        'name': 'Name',
+                        'valueType': { 'name': 'text' },
+                        'display': 'required'
+                    },
+                    {
                         'name': 'Type',
                         'valueType': {
                             'name': 'select',
@@ -201,7 +206,7 @@ export const BIATemplate = {
                     {
                         'name': 'Description',
                         'valueType': { 'name': 'largetext' },
-                        'display': 'required'
+                        'display': 'desirable'
                     }
                 ]
             },
@@ -348,13 +353,14 @@ export const BIATemplate = {
                         'dependency': 'Study Protocols',
                         'columnTypes': [
                             {
+                                'dependencyColumn': 'Name',
+                                'display': 'required',
                                 'name': 'Protocol',
+                                'uniqueValues': true,
                                 'valueType': {
                                     'name': 'select',
                                     'values': []
-                                },
-                                'display': 'required',
-                                'dependencyColumn': 'Type'
+                                }
                             }
                         ]
                     }
