@@ -428,7 +428,7 @@ export class SubmissionType extends TypeBase {
         return SubmissionType.fromTemplate(EMPTY_TEMPLATE_NAME);
     }
 
-    constructor(name: string, typeObj: SubmissionType, scope?: TypeScope<TypeBase>) {
+    constructor(_name: string, typeObj: SubmissionType, scope?: TypeScope<TypeBase>) {
         super('Submission', true, scope);
         if (typeObj.sectionType === undefined) {
             throw Error('sectionType is not defined in the template');

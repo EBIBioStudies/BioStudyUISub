@@ -211,9 +211,8 @@ export class DirectSubmitSideBarComponent implements OnInit {
     /**
      * Cancels all currently pending requests by unsubscribing from the aggregated observable and updating their
      * respective statuses.
-     * @param {Event} event - DOM event object for the click action.
      */
-    private onCancelPending(event: Event) {
+    private onCancelPending() {
         this.uploadSubs!.unsubscribe();
         this.uploadFilesSubscription!.unsubscribe();
         this.directSubmitSvc.cancelAll();
@@ -229,7 +228,7 @@ export class DirectSubmitSideBarComponent implements OnInit {
     private clearUploads() {
         const files = this.model.files;
 
-        files.forEach((file, index) => {
+        files.forEach((_file, index) => {
             if (this.directSubmitSvc!.getRequest(index)!.successful) {
                 files[index] = null;
             }

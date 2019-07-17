@@ -34,7 +34,7 @@ export class ActivateComponent implements OnInit {
         this.authService
             .activate(key)
             .subscribe(
-                (data) => {
+                () => {
                     component.message = 'Activation was successful';
                 },
                 (error: ServerError) => {

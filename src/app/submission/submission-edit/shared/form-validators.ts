@@ -235,7 +235,7 @@ export class SubmFormValidators {
         ];
     }
 
-    static forColumn(column: Attribute): ValidatorFn[] {
+    static forColumn(_column: Attribute): ValidatorFn[] {
         return [Validators.required];
     }
 
@@ -256,7 +256,7 @@ export class CustomErrorMessages {
         const groupRef = ((control instanceof MyFormGroup) ? control.ref : undefined) || ControlGroupRef.unknown;
 
         return {
-            'required': (error: { value: string }) => {
+            'required': () => {
                 return `Please enter the ${ref.parentName}'s ${ref.name.toLowerCase()}`;
             },
             'minlength': (error: { requiredLength: number, actualLength: number }) => {
@@ -265,7 +265,7 @@ export class CustomErrorMessages {
             'maxlength': (error: { requiredLength: number, actualLength: number }) => {
                 return `Please use up to ${error.requiredLength} characters`;
             },
-            'format': (error: any) => {
+            'format': () => {
                 return `Please provide a valid value`;
             },
             'pattern': (error: { actualValue: string, requiredPattern: string }) => {

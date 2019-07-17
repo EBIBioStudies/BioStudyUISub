@@ -98,10 +98,9 @@ export class InputValueComponent implements ControlValueAccessor, AfterViewCheck
 
     /**
      * Determines if the field's contents are longer than the actual field's dimensions by probing the DOM directly.
-     * @param {HTMLElement} formEl - DOM element for the field control.
      * @returns {boolean} True if the text's length is greater than its container.
      */
-    isOverflow(formEl: HTMLElement | undefined /*= this.formControl!.nativeElement*/): boolean {
+    isOverflow(): boolean {
         // return (formEl && formEl.scrollWidth > formEl.clientWidth) === true;
         return false;
     }

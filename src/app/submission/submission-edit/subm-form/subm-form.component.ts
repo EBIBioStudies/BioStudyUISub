@@ -11,7 +11,7 @@ export class SubmFormComponent implements OnChanges {
 
     constructor() {}
 
-    ngOnChanges(changes: SimpleChanges): void {}
+    ngOnChanges(): void {}
 
-    onSubmit(event) {}
+    onSubmit() {}
 }

@@ -46,10 +46,9 @@ export class SubmCheckSidebarComponent {
 
     /**
      * Scrolls to and sets focus on the field represented by the form control clicked on within the check tab.
-     * @param {Event} event - Click event object
      * @param {FieldControl} control - Form control augmented with the DOM element for the field.
      */
-    onReviewClick(event: Event, control: FormControl) {
+    onReviewClick(control: FormControl) {
         if (control instanceof MyFormControl) {
             this.submEditService.scrollToControl(control);
         }

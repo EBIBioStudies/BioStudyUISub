@@ -156,7 +156,7 @@ export class DateFilterComponent implements AgFilterComponent {
         }
     }
 
-    onApplyClick(ev): void {
+    onApplyClick(): void {
         this.notifyAboutChanges();
     }
 
@@ -164,9 +164,8 @@ export class DateFilterComponent implements AgFilterComponent {
      * Resets the state so that it ceases to be on filtered mode. This is fulfilled by
      * setting the date to any "empty" value.
      * @see {@link DateRange.hasValue}
-     * @param event DOM event for the click action.
      */
-    onClearClick(event): void {
+    onClearClick(): void {
         this.reset();
         this.notifyAboutChanges();
     }
