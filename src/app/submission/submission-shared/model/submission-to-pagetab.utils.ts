@@ -57,7 +57,7 @@ function section2PtSection(section: Section, isSanitise: boolean = false): PageT
         attributes: extractSectionAttributes(section, isSanitise)
             .filter(at => !AttrExceptions.editableAndRootOnly.includes(at.name!)),
         files: extractSectionFiles(section, isSanitise),
-        libraryFile: extractSectionLibraryFile(section, isSanitise),
+        libraryFile: extractSectionLibraryFile(section),
         links: extractSectionLinks(section, isSanitise),
         subsections: extractSectionSubsections(section, isSanitise),
         tags: withPageTag(section.tags.tags),
@@ -112,7 +112,7 @@ function extractSectionSubsections(section: Section, isSanitize: boolean): PageT
     return authorsSections.concat(section.sections.list().map(s => section2PtSection(s, isSanitize)));
 }
 
-function extractSectionLibraryFile(section: Section, isSanitise: boolean): string | undefined {
+function extractSectionLibraryFile(section: Section): string | undefined {
     const feature = section.features.list().find(f => isLibraryFileType(f.typeName));
     if (feature !== undefined && !feature.isEmpty) {
         return feature.rows[0].values()[0].value;

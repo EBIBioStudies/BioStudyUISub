@@ -40,7 +40,7 @@ export class PasswordResetReqComponent implements AfterViewInit {
             this.isLoading = true;
             this.authService.passwordResetReq(this.model)
                 .subscribe(
-                    (data) => {
+                    () => {
                         this.isLoading = false;
                         component.showSuccess = true;
                     },

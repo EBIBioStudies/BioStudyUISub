@@ -26,7 +26,7 @@ export class NewSubmissionButtonDirective implements AfterViewInit {
         this.el.nativeElement.innerHTML = PLUS_ICON + html;
     }
 
-    @HostListener('click', ['$event.target']) onClick(btn) {
+    @HostListener('click', ['$event.target']) onClick() {
         this.onNewSubmissionClick();
     }
 

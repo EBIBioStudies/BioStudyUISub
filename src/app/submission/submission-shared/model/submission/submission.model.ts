@@ -610,9 +610,7 @@ export class Sections {
             });
 
             if (st.displayType.isShownByDefault && sd.length < st.minRequired) {
-                Array(st.minRequired - sd.length).fill(0).forEach((_, i) => {
-                    this.add(st, {});
-                });
+                Array(st.minRequired - sd.length).fill(0).forEach(() => this.add(st, {}));
             }
         });
 

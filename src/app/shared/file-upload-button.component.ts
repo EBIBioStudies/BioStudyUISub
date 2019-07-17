@@ -46,7 +46,7 @@ export class FileUploadButtonComponent implements OnInit, OnChanges {
     }
 
     // Makes sure every subsequent selection triggers a "select" event even if the file selected is the same.
-    onButtonClick(event) {
+    onButtonClick() {
         if (this.isResetOnClick) {
             this.inputEl!.nativeElement.value = '';
         }

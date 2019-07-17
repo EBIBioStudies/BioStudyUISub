@@ -184,7 +184,7 @@ export class SubmEditSidebarComponent implements OnDestroy {
                 this.formSubscription.unsubscribe();
             }
             if (this.sectionForm) {
-                this.formSubscription = this.sectionForm.structureChanges$.subscribe(it => this.updateItems());
+                this.formSubscription = this.sectionForm.structureChanges$.subscribe(() => this.updateItems());
             }
         }
     }

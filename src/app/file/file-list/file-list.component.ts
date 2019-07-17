@@ -227,9 +227,9 @@ export class FileListComponent implements OnInit, OnDestroy {
 
     private removeFile(fileName: string): void {
         this.modalService.whenConfirmed(`Do you want to delete "${fileName}"?`, 'Delete a file', 'Delete')
-            .pipe( switchMap( (it) => this.fileService.removeFile(this.path.absolutePath(fileName))))
+            .pipe( switchMap( () => this.fileService.removeFile(this.path.absolutePath(fileName))))
             .takeUntil(this.ngUnsubscribe)
-            .subscribe(it => this.loadData());
+            .subscribe(() => this.loadData());
     }
 
     private removeUpload(u: FileUpload) {

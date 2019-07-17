@@ -56,11 +56,11 @@ export class TextFilterComponent implements AgFilterComponent {
         this.hide = params.hidePopup;
     }
 
-    onApplyClick(ev): void {
+    onApplyClick(): void {
         this.notifyAboutChanges();
     }
 
-    onClearClick(event): void {
+    onClearClick(): void {
         this.text = '';
         this.notifyAboutChanges();
     }
@@ -70,6 +70,5 @@ export class TextFilterComponent implements AgFilterComponent {
             this.prev = this.text;
             this.params!.filterChangedCallback();
         }
-        this.hide && this.hide();
     }
 }

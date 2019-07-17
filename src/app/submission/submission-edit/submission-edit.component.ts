@@ -135,7 +135,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
         this.submEditService.reset();
     }
 
-    onRevertClick(event: Event) {
+    onRevertClick() {
         this.confirmRevert()
             .takeUntil(this.unsubscribe)
             .pipe(
@@ -165,7 +165,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
             .subscribe(resp => this.onSubmitFinished(resp));
     }
 
-    onEditBackClick(event: Event) {
+    onEditBackClick() {
         this.readonly = false;
         this.router.navigate(['/submissions/edit/' + this.accno]);
     }

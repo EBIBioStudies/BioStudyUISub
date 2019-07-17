@@ -44,7 +44,7 @@ export class FileSelectComponent implements ControlValueAccessor, OnInit, OnDest
         this.fileStore.clearCache();
     }
 
-    onInputClick(event: MouseEvent): void {
+    onInputClick(): void {
         setTimeout(() => { this.isOpen = true; }, 100);
     }
 
@@ -84,7 +84,7 @@ export class FileSelectComponent implements ControlValueAccessor, OnInit, OnDest
         this.onTouched = fn;
     }
 
-    setDisabledState(isDisabled: boolean): void {
+    setDisabledState(): void {
     }
 
     onFileSelect(path: string) {
