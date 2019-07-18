@@ -187,7 +187,8 @@ export const BIATemplate = {
                     {
                         'name': 'Name',
                         'valueType': { 'name': 'text' },
-                        'display': 'required'
+                        'display': 'required',
+                        'uniqueValues': true
                     },
                     {
                         'name': 'Type',
