@@ -65,15 +65,18 @@ class Organisations {
 
     toReference(attr: PtAttribute): PtAttribute {
         if (String.isNotDefinedOrEmpty(attr.value)) {
-            return <PtAttribute>{name: 'affiliation', value: attr.value};
+            return <PtAttribute>{ name: 'affiliation', value: attr.value };
         }
 
         const orgRef = this.refFor(attr.value!, attr.accno!);
-        return <PtAttribute>{name: 'affiliation', value: orgRef, isReference: true};
+        return <PtAttribute>{ name: 'affiliation', value: orgRef, isReference: true };
     }
 
     list(): { accno: string, name: string }[] {
-        return Object.keys(this.refs).map(key => ({accno: this.refs[key]!, name: this.names[key]!}));
+        return Object.keys(this.refs).map(key => ({
+            accno: this.refs[key]!,
+            name: this.names[key]!
+        }));
     }
 }
 

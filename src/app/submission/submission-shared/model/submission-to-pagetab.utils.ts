@@ -9,8 +9,9 @@ import {
     PtFileItem,
     PtLink,
     PtLinkItem,
+    buildProtocolReferences,
     contacts2Authors,
-    mergeAttributes
+    mergeAttributes,
 } from './pagetab';
 import { DEFAULT_TEMPLATE_NAME, SubmissionType } from './templates';
 import { PAGE_TAG, Tag } from './model.common';
@@ -108,8 +109,9 @@ function extractSectionSubsections(section: Section, isSanitize: boolean): PageT
         .reduce((rv, el) => rv.concat(el), []);
 
     const authorsSections = contacts2Authors(featureAttributesAsPageTabSection);
+    const protocolSections = buildProtocolReferences(authorsSections);
 
-    return authorsSections.concat(section.sections.list().map(s => section2PtSection(s, isSanitize)));
+    return protocolSections.concat(section.sections.list().map(s => section2PtSection(s, isSanitize)));
 }
 
 function extractSectionLibraryFile(section: Section): string | undefined {
