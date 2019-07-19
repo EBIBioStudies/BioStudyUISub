@@ -2,14 +2,15 @@ import { Injectable } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { UserData } from 'app/auth/shared';
 import { pageTab2Submission, PageTab, submission2PageTab, SelectValueType } from 'app/submission/submission-shared/model';
-import { Submission, AttributeData, Section, Feature, AttributeValue, Attribute } from 'app/submission/submission-shared/model/submission';
+import { Submission, AttributeData, Section, Feature, Attribute } from 'app/submission/submission-shared/model/submission';
 import { none, Option, some } from 'fp-ts/lib/Option';
 import { BehaviorSubject, EMPTY, Observable, of, Subject, Subscription } from 'rxjs';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 import { UserInfo } from '../../../auth/shared/model';
 import { SubmissionService, SubmitResponse, PendingSubmission } from '../../submission-shared/submission.service';
 import { MyFormControl } from './form-validators';
-import { SectionForm, FeatureForm } from './section-form';
+import { SectionForm } from './section-form';
+import { flatFeatures } from '../../utils';
 
 class EditState {
     static Init = 'Init';
@@ -233,33 +234,19 @@ export class SubmEditService {
         }
     }
 
-    private flatFeatures(section) {
-        let result = [...section.features.list()];
-
-        section.sections.list().forEach((sectionItem) => {
-            result = result.concat(sectionItem.features.list());
-
-            if (sectionItem.sections.length > 0) {
-                result = result.concat(this.flatFeatures(sectionItem.sections));
-            }
-        });
-
-        return result;
-    }
-
     private updateDependencyValues(sectionForm: SectionForm) {
         const section: Section = this.submModel!.section;
-        const features = this.flatFeatures(section);
+        const features: Feature[] = flatFeatures(section);
         const featuresWithDependencies: Feature[] = features.filter((feature) => String.isDefinedAndNotEmpty(feature.dependency));
 
         featuresWithDependencies.forEach((featureWithDependency) => {
-            const dependency: Feature = features.find((feature) => feature.type.typeName === featureWithDependency.dependency);
+            const dependency = features.find((feature) => feature.type.typeName === featureWithDependency.dependency);
             const columnWithDependencies = featureWithDependency.columns
                 .filter((column) => String.isDefinedAndNotEmpty(column.dependencyColumn));
 
             columnWithDependencies.forEach((columnWithDependency) => {
-                const matchedColumn = dependency.columns.find((column) => column.name === columnWithDependency.dependencyColumn);
-                const attributeValues = dependency.attributeValuesForColumn(matchedColumn!.id);
+                const matchedColumn = dependency!.columns.find((column) => column.name === columnWithDependency.dependencyColumn);
+                const attributeValues = dependency!.attributeValuesForColumn(matchedColumn!.id);
                 const rawValues: string[] = attributeValues.map((attributeValue) => attributeValue!.value);
                 const selectValueType = <SelectValueType>(columnWithDependency.valueType);
 
