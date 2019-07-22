@@ -9,7 +9,7 @@ import {
     Validators
 } from '@angular/forms';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
-import { TextValueType, ValueType, ValueTypeName } from 'app/submission/submission-shared/model';
+import { TextValueType, ValueType, ValueTypeName, SelectValueType } from 'app/submission/submission-shared/model';
 import { Attribute, Feature, Field, Section } from 'app/submission/submission-shared/model/submission';
 import { parseDate } from 'app/utils';
 
@@ -173,6 +173,7 @@ export class FormValidators {
             }
             control.setErrors(errors);
         });
+
         return {'uniqueCols': {value: duplicates[0]}};
     }
 
@@ -210,6 +211,19 @@ export class SubmFormValidators {
         return validators;
     }
 
+    static forCellWithDependency(valueType: SelectValueType): ValidatorFn {
+        return (control: AbstractControl) => {
+            const { value } = control;
+            const { values } = valueType;
+
+            if (value.length === 0) {
+                return null;
+            }
+
+            return values.includes(value) ? null : { dependency: { value: control.value } };
+        };
+    }
+
     static forField(field: Field): ValidatorFn[] {
         const validators: ValidatorFn[] = [];
         if (field.type.displayType.isRequired) {
@@ -227,6 +241,11 @@ export class SubmFormValidators {
 
         if (column.uniqueValues) {
             validators.push(RxwebValidators.unique());
+        }
+
+        if (column.dependencyColumn !== '') {
+            const selectValueType = <SelectValueType>column.valueType;
+            validators.push(SubmFormValidators.forCellWithDependency(selectValueType));
         }
 
         return [
@@ -276,6 +295,9 @@ export class CustomErrorMessages {
             },
             'unique': () => {
                 return `${ref.parentName}'s values should be unique`;
+            },
+            'dependency': (error: { value: string }) => {
+                return `${error.value} is not an Study Protocol. Please add and describe Protocols on the Study page firstly. `;
             }
         };
     }

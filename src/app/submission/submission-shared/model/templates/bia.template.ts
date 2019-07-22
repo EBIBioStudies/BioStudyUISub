@@ -294,7 +294,7 @@ export const BIATemplate = {
                 'minRequired': 1,
                 'fieldTypes': [
                     {
-                        'name': 'Study Component Name',
+                        'name': 'Name',
                         'icon': 'fa-comment',
                         'valueType': {'name': 'text'},
                         'display': 'required'
@@ -327,7 +327,7 @@ export const BIATemplate = {
                         }
                     },
                     {
-                        'name': 'Screen Type',
+                        'name': 'Type',
                         'icon': 'fa-comment',
                         'valueType': {
                             'name': 'select',
