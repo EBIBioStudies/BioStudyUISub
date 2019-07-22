@@ -178,10 +178,10 @@ export const BIATemplate = {
                 ]
             },
             {
+                'description': 'Add the protocols involved in the study.',
+                'icon': 'fa-address-card',
                 'name': 'Study Protocols',
                 'title': 'Study Protocols',
-                'icon': 'fa-address-card',
-                'description': 'Add the protocols involved in the study.',
                 'uniqueCols': true,
                 'columnTypes': [
                     {
@@ -288,12 +288,13 @@ export const BIATemplate = {
         ],
         'sectionTypes': [
             {
-                'name': 'Screen',
+                'name': 'Study Component',
+                'sectionExample': '(e.g., Screens)',
                 'display': 'required',
                 'minRequired': 1,
                 'fieldTypes': [
                     {
-                        'name': 'Screen Name',
+                        'name': 'Study Component Name',
                         'icon': 'fa-comment',
                         'valueType': {'name': 'text'},
                         'display': 'required'
@@ -349,7 +350,7 @@ export const BIATemplate = {
                         'name': 'Protocols',
                         'title': 'Protocols',
                         'icon': 'fa-address-card',
-                        'description': 'Add the protocols involved in the screen.',
+                        'description': 'Add the protocols used in this study component.',
                         'uniqueCols': true,
                         'dependency': 'Study Protocols',
                         'columnTypes': [

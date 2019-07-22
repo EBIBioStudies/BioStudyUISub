@@ -136,7 +136,7 @@
                     <label class="control-label">Subsections</label>
                     <div *ngFor="let subsectionForm of sectionForm.subsectionForms" class="list-group-item" style="cursor: pointer"
                         (click)="onSectionClick(subsectionForm)">
-                        {{subsectionForm.section.typeName}}
+                        {{subsectionForm.section.displayName}}
                         <span *ngIf="subsectionForm.section.accno">
                             : {{subsectionForm.section.accno}}
                         </span>

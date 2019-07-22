@@ -538,15 +538,13 @@ export class Section implements SubmissionSection {
     readonly subsections: Sections;
     readonly tags: Tags;
     readonly data: SectionData;
-    readonly parent: Section;
 
-    constructor(type: SectionType, data: SectionData = <SectionData>{}, accno: string = '', parent?: Section) {
+    constructor(type: SectionType, data: SectionData = <SectionData>{}, accno: string = '') {
         this.tags = Tags.create(data);
         this.id = `section_${nextId()}`;
         this.type = type;
         this._accno = data.accno || accno;
         this.fields = new Fields(type, data.attributes);
-        this.parent = parent || this; // If doesn't have parent set itself as parent.
         // Any attribute names from the server that do not match top-level field names are added as annotations.
         this.annotations = Feature.create(
             type.annotationsType,
@@ -576,6 +574,10 @@ export class Section implements SubmissionSection {
 
     set typeName(name: string) {
         this.type.name = name;
+    }
+
+    get displayName(): string {
+        return `${this.type.name} ${this.type.sectionExample}`;
     }
 
     isRequired(): boolean {
