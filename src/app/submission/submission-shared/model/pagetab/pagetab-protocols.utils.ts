@@ -1,5 +1,3 @@
-import { Section, Feature, Features } from '../submission';
-import { flatFeatures } from 'app/submission/utils';
 import { PageTabSection, PtAttribute } from './pagetab.model';
 
 const isEqualTo = (value: string) => {

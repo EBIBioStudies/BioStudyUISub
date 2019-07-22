@@ -343,6 +343,7 @@ export class ColumnType extends TypeBase {
 
 export class SectionType extends TypeBase {
     readonly display: string;
+    readonly sectionExample: string;
     readonly displayType: DisplayType;
     readonly annotationsType: AnnotationsType;
     readonly featureGroups: string[][];
@@ -364,8 +365,8 @@ export class SectionType extends TypeBase {
         this.display = this.displayType.name;
         this.featureGroups = (data.featureGroups || []).filter(gr => !gr.isEmpty());
         this.minRequired = data.minRequired || 1;
-
         this.annotationsType = new AnnotationsType(data.annotationsType, new TypeScope<AnnotationsType>(), isTemplBased);
+        this.sectionExample = data.sectionExample || '';
 
         (data.fieldTypes || [])
             .forEach(f => new FieldType(f.name, f, this.fieldScope));
