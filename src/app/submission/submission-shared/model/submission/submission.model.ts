@@ -1,3 +1,5 @@
+import { zip } from 'fp-ts/lib/Array';
+import { NameAndValue, Tag } from '../model.common';
 import {
     ColumnType,
     DisplayType,
@@ -8,8 +10,6 @@ import {
     ValueType,
     ValueTypeFactory
 } from '../templates';
-import { NameAndValue, Tag } from '../model.common';
-import { zip } from 'fp-ts/lib/Array';
 
 interface SubmissionSection {
     subsections: Sections

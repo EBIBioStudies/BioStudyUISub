@@ -1,4 +1,5 @@
 import { PageTabSection, PtAttribute } from './pagetab.model';
+import { Feature } from '../submission';
 
 const isEqualTo = (value: string) => {
   return (s: Nullable<string>) => (String.isDefined(s) && s!.toLowerCase() === value);
@@ -8,7 +9,7 @@ class Protocols {
   private refs: Dictionary<string> = {};
   private names: Dictionary<string> = {};
 
-  private refFor(value: string): string {
+  refFor(value: string): string {
     const key = value.trim().toLowerCase();
     this.refs[key] = `p${Object.keys(this.refs).length + 1}`;
     this.names[key] = this.names[key] || value;
@@ -35,19 +36,37 @@ class Protocols {
 
 export function buildProtocolReferences(pageTabSections: PageTabSection[]) {
   const protocols: Protocols = new Protocols();
-  const isProtocol = isEqualTo('protocols');
-  const protocolSections: PageTabSection[] = pageTabSections.filter((section) => isProtocol(section.type));
+  const isComponentProtocol = isEqualTo('protocols');
+  const isStudyProtocol = isEqualTo('study protocols');
+  const componentProtocols: PageTabSection[] = pageTabSections.filter((section) => isComponentProtocol(section.type));
+  const studyProtocols: PageTabSection[] = pageTabSections.filter((section) => isStudyProtocol(section.type));
 
-  const protocolReferences = protocolSections.map((protocolSection) => (
+  const componentProtocolWithReference = componentProtocols.map((componentProtocol) => (
     <PageTabSection>{
-      type: protocolSection.type,
-      attributes: protocolSection.attributes!.map((attribute) => {
+      type: componentProtocol.type,
+      attributes: componentProtocol.attributes!.map((attribute) => {
         return protocols.toReference({ ...attribute });
       })
     }
   ));
 
+  const studyProtocolToReference = studyProtocols.map((studyProtocol) => {
+    const attributes = studyProtocol.attributes;
+    const nameAttribute = attributes!.find((attribute) => attribute.name === 'Name') || {};
+    const studyProtocolName: string = nameAttribute.value || '';
+
+    return (
+      <PageTabSection>{
+        type: studyProtocol.type,
+        accno: protocols.refFor(studyProtocolName),
+        attributes: studyProtocol.attributes
+      }
+    );
+  });
+
   return pageTabSections
-    .filter((section) => !isProtocol(section.type))
-    .concat(protocolReferences);
+    .filter((section) => !isComponentProtocol(section.type))
+    .filter((section) => !isStudyProtocol(section.type))
+    .concat(studyProtocolToReference)
+    .concat(componentProtocolWithReference);
 }

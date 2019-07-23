@@ -1,4 +1,4 @@
-import { AttributeData, Feature, Section, Submission } from './submission';
+import { PAGE_TAG, Tag } from './model.common';
 import {
     AttrExceptions,
     LinksUtils,
@@ -13,8 +13,8 @@ import {
     contacts2Authors,
     mergeAttributes,
 } from './pagetab';
+import { AttributeData, Feature, Section, Submission } from './submission';
 import { DEFAULT_TEMPLATE_NAME, SubmissionType } from './templates';
-import { PAGE_TAG, Tag } from './model.common';
 
 const isFileType = (type: string) => type.isEqualIgnoringCase('file');
 const isLinkType = (type: string) => type.isEqualIgnoringCase('link');
