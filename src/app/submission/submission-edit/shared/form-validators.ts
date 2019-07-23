@@ -8,7 +8,8 @@ import {
     ValidatorFn,
     Validators
 } from '@angular/forms';
-import { TextValueType, ValueType, ValueTypeName } from 'app/submission/submission-shared/model';
+import { RxwebValidators } from '@rxweb/reactive-form-validators';
+import { TextValueType, ValueType, ValueTypeName, SelectValueType } from 'app/submission/submission-shared/model';
 import { Attribute, Feature, Field, Section } from 'app/submission/submission-shared/model/submission';
 import { parseDate } from 'app/utils';
 
@@ -163,16 +164,17 @@ export class FormValidators {
             let errors = control.errors;
             if (duplicates.includes(control.value)) {
                 errors = errors || {};
-                errors['unique'] = {value: control.value};
+                errors['uniqueCols'] = {value: control.value};
             } else if (errors !== null) {
-                delete errors['unique'];
+                delete errors['uniqueCols'];
                 if (Object.keys(errors).length === 0) {
                     errors = null;
                 }
             }
             control.setErrors(errors);
         });
-        return {'unique': {value: duplicates[0]}};
+
+        return {'uniqueCols': {value: duplicates[0]}};
     }
 
     static formatDate: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -201,10 +203,25 @@ export class SubmFormValidators {
         } else if (valueType.is(ValueTypeName.date)) {
             validators.push(FormValidators.formatDate);
         }
+
         if (valueType.is(ValueTypeName.orcid)) {
             validators.push(FormValidators.formatOrcid);
         }
+
         return validators;
+    }
+
+    static forCellWithDependency(valueType: SelectValueType): ValidatorFn {
+        return (control: AbstractControl) => {
+            const { value } = control;
+            const { values } = valueType;
+
+            if (value.length === 0) {
+                return null;
+            }
+
+            return values.includes(value) ? null : { dependency: { value: control.value } };
+        };
     }
 
     static forField(field: Field): ValidatorFn[] {
@@ -217,21 +234,37 @@ export class SubmFormValidators {
 
     static forCell(column: Attribute): ValidatorFn[] {
         const validators: ValidatorFn[] = [];
+
         if (column.displayType.isRequired) {
             validators.push(Validators.required);
         }
-        return [...validators, ...SubmFormValidators.forValueType(column.valueType)];
+
+        if (column.uniqueValues) {
+            validators.push(RxwebValidators.unique());
+        }
+
+        if (column.dependencyColumn !== '') {
+            const selectValueType = <SelectValueType>column.valueType;
+            validators.push(SubmFormValidators.forCellWithDependency(selectValueType));
+        }
+
+        return [
+            ...validators,
+            ...SubmFormValidators.forValueType(column.valueType)
+        ];
     }
 
-    static forColumn(column: Attribute): ValidatorFn[] {
+    static forColumn(_column: Attribute): ValidatorFn[] {
         return [Validators.required];
     }
 
     static forFeatureColumns(feature: Feature) {
         const validators: ValidatorFn[] = [];
+
         if (feature.type.uniqueCols) {
             validators.push(FormValidators.uniqueValues);
         }
+
         return validators;
     }
 }
@@ -242,7 +275,7 @@ export class CustomErrorMessages {
         const groupRef = ((control instanceof MyFormGroup) ? control.ref : undefined) || ControlGroupRef.unknown;
 
         return {
-            'required': (error: { value: string }) => {
+            'required': () => {
                 return `Please enter the ${ref.parentName}'s ${ref.name.toLowerCase()}`;
             },
             'minlength': (error: { requiredLength: number, actualLength: number }) => {
@@ -251,14 +284,20 @@ export class CustomErrorMessages {
             'maxlength': (error: { requiredLength: number, actualLength: number }) => {
                 return `Please use up to ${error.requiredLength} characters`;
             },
-            'format': (error: any) => {
+            'format': () => {
                 return `Please provide a valid value`;
             },
             'pattern': (error: { actualValue: string, requiredPattern: string }) => {
                 return `Please provide a value in '${error.requiredPattern}' format`;
             },
-            'unique': (error: { value: string }) => {
-                return `${groupRef.name}'s ${error.value} column is not unique`;
+            'uniqueCols': (error: { value: string }) => {
+                return `${ref.parentName}'s ${error.value} column is not unique`;
+            },
+            'unique': () => {
+                return `${ref.parentName}'s values should be unique`;
+            },
+            'dependency': (error: { value: string }) => {
+                return `${error.value} is not an Study Protocol. Please add and describe Protocols on the Study page firstly. `;
             }
         };
     }

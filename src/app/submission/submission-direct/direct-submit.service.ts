@@ -172,7 +172,7 @@ export class DirectSubmitService {
         this._requests.push(req);
         this.newRequest$.next(index);
 
-        return this.dirSubmit(req, file, format);
+        return this.dirSubmit(req, file);
     }
 
     /**
@@ -197,10 +197,9 @@ export class DirectSubmitService {
      * Makes the two inter-dependent requests necessary to submit a given file.
      * @param {DirectSubmitRequest} req - Request object to be updated on response.
      * @param {File} file - Object representative of the file to be submitted.
-     * @param {string} format - Format of the file. If omitted it automatically detects it.
      * @returns {Observable<any>} Flat stream of inputs coming from the responses to the requests issued.
      */
-    private dirSubmit(req: DirectSubmitRequest, file: File, format: string): Observable<any> {
+    private dirSubmit(req: DirectSubmitRequest, file: File): Observable<any> {
         return this.submService.directSubmit(file, req.type === ReqType.CREATE, req.projects).pipe(
             map(data => {
                 req.onResponse(data, ReqStatus.SUCCESS);

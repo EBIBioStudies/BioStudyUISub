@@ -50,7 +50,7 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
             this.authService
                 .passwordReset(this.model)
                 .subscribe(
-                    (data) => {
+                    () => {
                         this.isLoading = false;
                         this.showSuccess = true;
                     },

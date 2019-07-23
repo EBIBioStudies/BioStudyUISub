@@ -118,7 +118,7 @@ export class SubmissionService {
                 }
                 throw resp;
             }),
-            map((response: any) => 'done')
+            map(() => 'done')
         );
     }
 
@@ -152,7 +152,7 @@ export class SubmissionService {
 
     private deletePending(accno: string): Observable<boolean> {
         return this.http.delete(`/raw/submissions/pending/${accno}`).pipe(
-            map(resp => true)
+            map(() => true)
         );
     }
 

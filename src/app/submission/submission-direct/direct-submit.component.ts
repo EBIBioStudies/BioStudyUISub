@@ -67,7 +67,7 @@ export class DirectSubmitComponent {
         return pluralize(noun, count);
     }
 
-    onToggle(ev): void {
+    onToggle(): void {
         this.collapseSideBar = !this.collapseSideBar;
     }
 

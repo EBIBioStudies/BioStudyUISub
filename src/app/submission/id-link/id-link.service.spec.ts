@@ -2,7 +2,7 @@ import { IdLinkService } from './id-link.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { defer, of, throwError } from 'rxjs';
 
-function asyncError<T>(errorObject: any) {
+function asyncError(errorObject: any) {
   return defer(() => throwError(errorObject));
 }
 

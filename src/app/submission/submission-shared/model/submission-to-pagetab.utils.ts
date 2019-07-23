@@ -3,14 +3,15 @@ import {
     AttrExceptions,
     LinksUtils,
     PageTab,
+    PageTabSection,
     PtAttribute,
     PtFile,
     PtFileItem,
     PtLink,
     PtLinkItem,
-    PageTabSection,
+    buildProtocolReferences,
     contacts2Authors,
-    mergeAttributes
+    mergeAttributes,
 } from './pagetab';
 import { DEFAULT_TEMPLATE_NAME, SubmissionType } from './templates';
 import { PAGE_TAG, Tag } from './model.common';
@@ -52,16 +53,16 @@ export function submission2PageTab(subm: Submission, isSanitise: boolean = false
 
 function section2PtSection(section: Section, isSanitise: boolean = false): PageTabSection {
     return <PageTabSection>{
-        type: section.typeName,
-        tags: withPageTag(section.tags.tags),
         accessTags: section.tags.accessTags,
         accno: section.accno,
         attributes: extractSectionAttributes(section, isSanitise)
             .filter(at => !AttrExceptions.editableAndRootOnly.includes(at.name!)),
-        links: extractSectionLinks(section, isSanitise),
         files: extractSectionFiles(section, isSanitise),
-        libraryFile: extractSectionLibraryFile(section, isSanitise),
-        subsections: extractSectionSubsections(section, isSanitise)
+        libraryFile: extractSectionLibraryFile(section),
+        links: extractSectionLinks(section, isSanitise),
+        subsections: extractSectionSubsections(section, isSanitise),
+        tags: withPageTag(section.tags.tags),
+        type: section.typeName,
     };
 }
 
@@ -85,27 +86,35 @@ function extractSectionAttributes(section: Section, isSanitise: boolean): PtAttr
 }
 
 function extractSectionSubsections(section: Section, isSanitize: boolean): PageTabSection[] {
-    const featureSections = contacts2Authors(
-        section.features.list()
-            .filter((feature) => (
-                !isFileType(feature.typeName) &&
-                !isLinkType(feature.typeName) &&
-                !isLibraryFileType(feature.typeName) &&
-                !isKeywordType(feature.typeName)
-            ))
-            .map(f => {
-                const featureAttributes = extractFeatureAttributes(f, isSanitize);
+    const validFeatures = section.features.list().filter((feature) => (
+        !isFileType(feature.typeName) &&
+        !isLinkType(feature.typeName) &&
+        !isLibraryFileType(feature.typeName) &&
+        !isKeywordType(feature.typeName)
+    ));
 
-                return featureAttributes.map(attrs => {
-                    return <PageTabSection>{type: f.typeName, attributes: attrs, subsections: <PageTabSection[]> [section.subsections] };
-                });
-            }).reduce((rv, el) => rv.concat(el), [])
-    );
+    const featureToPageTabSection = (feature) => {
+        const featureAttributes = extractFeatureAttributes(feature, isSanitize);
 
-    return featureSections.concat(section.sections.list().map(s => section2PtSection(s, isSanitize)));
+        return featureAttributes.map(attrs => {
+            return <PageTabSection>{
+                type: feature.typeName,
+                attributes: attrs
+            };
+        });
+    };
+
+    const featureAttributesAsPageTabSection = validFeatures
+        .map(featureToPageTabSection)
+        .reduce((rv, el) => rv.concat(el), []);
+
+    const authorsSections = contacts2Authors(featureAttributesAsPageTabSection);
+    const protocolSections = buildProtocolReferences(authorsSections);
+
+    return protocolSections.concat(section.sections.list().map(s => section2PtSection(s, isSanitize)));
 }
 
-function extractSectionLibraryFile(section: Section, isSanitise: boolean): string | undefined {
+function extractSectionLibraryFile(section: Section): string | undefined {
     const feature = section.features.list().find(f => isLibraryFileType(f.typeName));
     if (feature !== undefined && !feature.isEmpty) {
         return feature.rows[0].values()[0].value;

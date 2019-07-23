@@ -48,7 +48,7 @@ export class SignUpComponent implements AfterViewInit, OnInit {
             this.authService
                 .signUp(this.model)
                 .subscribe(
-                    (data) => {
+                    () => {
                         this.isLoading = false;
                         this.success = true;
                     },

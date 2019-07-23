@@ -44,7 +44,7 @@ export class SignInComponent implements OnInit, AfterViewInit {
             this.authService
                 .signIn(this.model)
                 .subscribe(
-                    (data) => {
+                    () => {
                         this.router.navigate( [next]);
                     },
                     (error: ServerError) => {

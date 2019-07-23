@@ -38,7 +38,9 @@ export class Attribute {
     constructor(private _name: string = '',
                 readonly valueType: ValueType = ValueTypeFactory.DEFAULT,
                 readonly displayType: DisplayType = DisplayType.Optional,
-                readonly isTemplateBased: boolean = false) {
+                readonly isTemplateBased: boolean = false,
+                readonly dependencyColumn: string = '',
+                readonly uniqueValues: boolean = false) {
         this.id = `attr_${nextId()}`;
     }
 
@@ -213,16 +215,12 @@ export class Feature {
     readonly id: string;
     readonly type: FeatureType;
     readonly groups: FeatureGroup[] = [];
-
+    readonly dependency;
     private _columns: Columns;
     private _rows: Rows;
 
     static create(type: FeatureType, attrs: AttributeData[]): Feature {
-        return new Feature(type,
-            {
-                type: type.name,
-                entries: [attrs]
-            });
+        return new Feature(type, { type: type.name, entries: [attrs] });
     }
 
     constructor(type: FeatureType, data: FeatureData = {} as FeatureData) {
@@ -230,10 +228,12 @@ export class Feature {
         this.type = type;
         this._columns = new Columns();
         this._rows = new Rows(type.singleRow ? 1 : undefined);
+        this.dependency = type.dependency;
 
-        type.columnTypes.filter(ct => ct.isRequired || ct.isDesirable)
+        type.columnTypes
+            .filter(ct => ct.isRequired || ct.isDesirable)
             .forEach(ct => {
-                this.addColumn(ct.name, ct.valueType, ct.displayType, true);
+                this.addColumn(ct.name, ct.valueType, ct.displayType, true, ct.dependencyColumn, ct.uniqueValues);
             });
 
         (data.entries || []).forEach(entry => {
@@ -281,6 +281,10 @@ export class Feature {
         return this._columns.size();
     }
 
+    attributeValuesForColumn(columnId: string) {
+        return this._rows.list().map((row) => row.valueFor(columnId));
+    }
+
     get isEmpty(): boolean {
         return this.rowSize() === 0;
     }
@@ -321,12 +325,20 @@ export class Feature {
         return (rowIdx === undefined) ? this.addRow() : this._rows.at(rowIdx);
     }
 
-    addColumn(name?: string, valueType?: ValueType, displayType?: DisplayType, isTemplateBased: boolean = false): Attribute {
+    addColumn(
+        name?: string,
+        valueType?: ValueType,
+        displayType?: DisplayType,
+        isTemplateBased: boolean = false,
+        dependencyColumn: string = '',
+        uniqueValues: boolean = false,
+    ): Attribute {
         const defColName = (this.singleRow ? this.typeName : 'Column') + ' ' + this._columns.index.next;
         const colName = name || defColName;
-        const col = new Attribute(colName, valueType, displayType, isTemplateBased);
+        const col = new Attribute(colName, valueType, displayType, isTemplateBased, dependencyColumn, uniqueValues);
         this._rows.addKey(col.id);
         this._columns.add(col);
+
         return col;
     }
 
@@ -564,6 +576,10 @@ export class Section implements SubmissionSection {
         this.type.name = name;
     }
 
+    get displayName(): string {
+        return `${this.type.name} ${this.type.sectionExample}`;
+    }
+
     isRequired(): boolean {
         return this.type.displayType.isRequired;
     }
@@ -596,9 +612,7 @@ export class Sections {
             });
 
             if (st.displayType.isShownByDefault && sd.length < st.minRequired) {
-                Array(st.minRequired - sd.length).fill(0).forEach((_, i) => {
-                    this.add(st, {});
-                });
+                Array(st.minRequired - sd.length).fill(0).forEach(() => this.add(st, {}));
             }
         });
 

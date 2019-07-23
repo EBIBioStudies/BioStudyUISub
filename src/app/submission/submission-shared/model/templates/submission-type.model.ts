@@ -64,7 +64,7 @@ class TypeScope<T extends TypeBase> {
 const GLOBAL_TYPE_SCOPE: TypeScope<TypeBase> = new TypeScope<TypeBase>();
 
 export abstract class TypeBase {
-    constructor(private typeName: string,
+    constructor(public typeName: string,
                 readonly tmplBased: boolean,
                 private scope: TypeScope<TypeBase> = GLOBAL_TYPE_SCOPE) {
 
@@ -113,10 +113,10 @@ export class DisplayType {
     public static Optional = new DisplayType('optional');
 
     public static all = [
-        DisplayType.Required,
         DisplayType.Desirable,
+        DisplayType.Optional,
         DisplayType.Readonly,
-        DisplayType.Optional
+        DisplayType.Required
     ];
 
     readonly name: string;
@@ -200,11 +200,15 @@ export class DateValueType extends ValueType {
 }
 
 export class SelectValueType extends ValueType {
-    readonly values: string[];
+    values: string[];
 
     constructor(data: Partial<SelectValueType> = {}) {
         super(ValueTypeName.select);
         this.values = data.values || [];
+    }
+
+    setValues(values: string[]): void {
+        this.values = values;
     }
 }
 
@@ -242,14 +246,15 @@ export class FieldType extends TypeBase {
 }
 
 export class FeatureType extends TypeBase {
+    readonly allowCustomCols: boolean;
+    readonly description: string;
     readonly display: string;
     readonly displayType: DisplayType;
-    readonly singleRow: boolean;
-    readonly uniqueCols: boolean;
-    readonly allowCustomCols: boolean;
-    readonly title: string;
-    readonly description: string;
     readonly icon: string;
+    readonly singleRow: boolean;
+    readonly title: string;
+    readonly uniqueCols: boolean;
+    readonly dependency: string;
 
     private columnScope: TypeScope<ColumnType> = new TypeScope<ColumnType>();
 
@@ -266,11 +271,10 @@ export class FeatureType extends TypeBase {
         this.singleRow = data.singleRow === true;
         this.uniqueCols = data.uniqueCols === true;
         this.allowCustomCols = data.allowCustomCols !== false;
-
         this.displayType = DisplayType.create(data.display);
         this.display = this.displayType.name;
-
         this.icon = data.icon || (this.singleRow ? 'fa-list' : 'fa-th');
+        this.dependency = data.dependency || '';
 
         (data.columnTypes || [])
             .forEach(ct => {
@@ -306,6 +310,8 @@ export class ColumnType extends TypeBase {
     readonly display: string;
     readonly displayType: DisplayType;
     readonly valueType: ValueType;
+    readonly dependencyColumn: string;
+    readonly uniqueValues: boolean;
 
     static createDefault(name: string, scope?: TypeScope<ColumnType>): ColumnType {
         return new ColumnType(name, {}, scope, false);
@@ -315,9 +321,11 @@ export class ColumnType extends TypeBase {
         super(name, isTemplBased, scope as TypeScope<TypeBase>);
 
         data = data || {};
-        this.valueType = ValueTypeFactory.create(data.valueType || {});
         this.displayType = DisplayType.create(data.display);
         this.display = this.displayType.name;
+        this.valueType = ValueTypeFactory.create(data.valueType || {});
+        this.dependencyColumn = data.dependencyColumn || '';
+        this.uniqueValues = data.uniqueValues || false;
     }
 
     get isRequired(): boolean {
@@ -335,6 +343,7 @@ export class ColumnType extends TypeBase {
 
 export class SectionType extends TypeBase {
     readonly display: string;
+    readonly sectionExample: string;
     readonly displayType: DisplayType;
     readonly annotationsType: AnnotationsType;
     readonly featureGroups: string[][];
@@ -356,8 +365,8 @@ export class SectionType extends TypeBase {
         this.display = this.displayType.name;
         this.featureGroups = (data.featureGroups || []).filter(gr => !gr.isEmpty());
         this.minRequired = data.minRequired || 1;
-
         this.annotationsType = new AnnotationsType(data.annotationsType, new TypeScope<AnnotationsType>(), isTemplBased);
+        this.sectionExample = data.sectionExample || '';
 
         (data.fieldTypes || [])
             .forEach(f => new FieldType(f.name, f, this.fieldScope));
@@ -420,7 +429,7 @@ export class SubmissionType extends TypeBase {
         return SubmissionType.fromTemplate(EMPTY_TEMPLATE_NAME);
     }
 
-    constructor(name: string, typeObj: SubmissionType, scope?: TypeScope<TypeBase>) {
+    constructor(_name: string, typeObj: SubmissionType, scope?: TypeScope<TypeBase>) {
         super('Submission', true, scope);
         if (typeObj.sectionType === undefined) {
             throw Error('sectionType is not defined in the template');

@@ -28,7 +28,7 @@ export class FilterPipe implements PipeTransform {
         }, {});
 
         return _.filter(items, (item) =>
-            _.reduce(fltr, (acc, regexp, key) => acc && (fltr[key] === '' || fltr[key].test(item[key])), true)
+            _.reduce(fltr, (acc, _regexp, key) => acc && (fltr[key] === '' || fltr[key].test(item[key])), true)
         );
     }
 }
@@ -201,7 +201,7 @@ export class MultiSelectComponent implements ControlValueAccessor, OnChanges, On
     }
 
     // ControlValueAccessor interface
-    setDisabledState(isDisabled: boolean): void {
+    setDisabledState(): void {
         // not supported yet
     }
 }

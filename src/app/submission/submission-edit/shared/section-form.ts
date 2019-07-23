@@ -232,10 +232,7 @@ export class FeatureForm extends FormBase {
             rows: new FormArray([])
         }));
 
-        feature.columns.forEach(column => {
-                this.addColumnControl(column);
-            }
-        );
+        feature.columns.forEach(column => this.addColumnControl(column));
 
         feature.rows.forEach(row => {
             this.addRowForm(row, feature.columns);
@@ -545,20 +542,18 @@ export class SectionForm extends FormBase {
         this.sectionPath = this.isRootSection ? [] : [...this.parent!.sectionPath, ...[this.id]];
         this.sectionRef = ControlGroupRef.sectionRef(section, this.isRootSection);
 
-        section.fields.list().forEach(
-            field => {
-                this.addFieldControl(field);
-            });
+        this.buildElements();
+    }
 
-        [...[section.annotations], ...section.features.list()].forEach(
-            feature => {
-                this.addFeatureForm(feature);
-            });
+    buildElements() {
+        const section = this.section;
 
-        section.sections.list().forEach(
-            s => {
-                this.addSubsectionForm(s);
-            });
+        section.fields.list().forEach((field) => this.addFieldControl(field));
+
+        [...[section.annotations], ...section.features.list()]
+            .forEach((feature) => this.addFeatureForm(feature));
+
+        section.sections.list().forEach((sectionItem) => this.addSubsectionForm(sectionItem));
     }
 
     getFeatureControl(featureId: string): FormControl | undefined {
@@ -566,6 +561,10 @@ export class SectionForm extends FormBase {
         if (featureForm !== undefined) {
             return featureForm.scrollToTheLastControl;
         }
+    }
+
+    getFeatureFormById(featureId: string): FeatureForm | undefined {
+        return this.featureForms.find((feature) => feature.id === featureId);
     }
 
     removeFeatureType(featureId: string): void {

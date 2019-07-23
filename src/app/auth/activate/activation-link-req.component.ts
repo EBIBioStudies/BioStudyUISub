@@ -42,7 +42,7 @@ export class ActivationLinkReqComponent implements AfterViewInit {
             this.authService
                 .activationLinkReq(this.model)
                 .subscribe(
-                    (data) => {
+                    () => {
                         this.isLoading = false;
                         component.showSuccess = true;
                     },

@@ -73,8 +73,10 @@ export class SubmEditSidebarComponent implements OnDestroy {
     constructor(public userData: UserData,
                 private bsModalService: BsModalService,
                 private modalService: ModalService,
-                private submEditService: SubmEditService) {
-        this.submEditService.sectionSwitch$.takeUntil(this.unsubscribe)
+                private submEditService: SubmEditService
+    ) {
+        this.submEditService.sectionSwitch$
+            .takeUntil(this.unsubscribe)
             .subscribe(sectionForm => this.switchSection(sectionForm));
     }
 
@@ -182,7 +184,7 @@ export class SubmEditSidebarComponent implements OnDestroy {
                 this.formSubscription.unsubscribe();
             }
             if (this.sectionForm) {
-                this.formSubscription = this.sectionForm.structureChanges$.subscribe(it => this.updateItems());
+                this.formSubscription = this.sectionForm.structureChanges$.subscribe(() => this.updateItems());
             }
         }
     }
