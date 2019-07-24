@@ -9,7 +9,7 @@ import {
     PtFileItem,
     PtLink,
     PtLinkItem,
-    buildProtocolReferences,
+    submissionToPageTabProtocols,
     contacts2Authors,
     mergeAttributes,
 } from './pagetab';
@@ -109,7 +109,7 @@ function extractSectionSubsections(section: Section, isSanitize: boolean): PageT
         .reduce((rv, el) => rv.concat(el), []);
 
     const authorsSections = contacts2Authors(featureAttributesAsPageTabSection);
-    const protocolSections = buildProtocolReferences(authorsSections);
+    const protocolSections = submissionToPageTabProtocols(authorsSections);
 
     return protocolSections.concat(section.sections.list().map(s => section2PtSection(s, isSanitize)));
 }

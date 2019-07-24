@@ -1,20 +1,42 @@
 import { PageTabSection, PtAttribute } from './pagetab.model';
 import { Feature } from '../submission';
 
-const isEqualTo = (value: string) => {
-  return (s: Nullable<string>) => (String.isDefined(s) && s!.toLowerCase() === value);
-};
+const isEqualTo = (value: string) => (s: Nullable<string>) => (String.isDefined(s) && s!.toLowerCase() === value);
+const isComponentProtocol = isEqualTo('protocols');
+const isStudyProtocol = isEqualTo('study protocols');
 
 class Protocols {
+  private static instance: Protocols;
   private refs: Dictionary<string> = {};
-  private names: Dictionary<string> = {};
 
-  refFor(value: string): string {
-    const key = value.trim().toLowerCase();
-    this.refs[key] = `p${Object.keys(this.refs).length + 1}`;
-    this.names[key] = this.names[key] || value;
+  static getInstance() {
+    if (!Protocols.instance) {
+      Protocols.instance = new Protocols();
+    }
 
-    return this.refs[key]!;
+    return Protocols.instance;
+  }
+
+  private constructor() {}
+
+  getRefKeyByValue(value?: string): string {
+    return Object.keys(this.refs).find((key) => this.refs[key] === value) || '';
+  }
+
+  getRefValueByKey(accno?: string): string {
+    if (!accno) {
+      return '';
+    }
+
+    return this.refs[accno] || '';
+  }
+
+  refFor(value: string, accno: string): string {
+    if (!this.refs[accno]) {
+      this.refs[accno] = value;
+    }
+
+    return accno;
   }
 
   toReference(attr: PtAttribute): PtAttribute {
@@ -22,22 +44,17 @@ class Protocols {
         return <PtAttribute>{ name: 'protocol', value: attr.value };
     }
 
-    const protocolReference = this.refFor(attr.value!);
-    return <PtAttribute>{ name: 'protocol', value: protocolReference, isReference: true };
-  }
-
-  list(): { accno: string, name: string }[] {
-      return Object.keys(this.refs).map(key => ({
-        accno: this.refs[key]!,
-        name: this.names[key]!
-      }));
+    const refKeyForValue = this.getRefKeyByValue(attr.value);
+    return <PtAttribute>{
+      name: 'Protocol',
+      value: refKeyForValue,
+      isReference: true
+    };
   }
 }
 
-export function buildProtocolReferences(pageTabSections: PageTabSection[]) {
-  const protocols: Protocols = new Protocols();
-  const isComponentProtocol = isEqualTo('protocols');
-  const isStudyProtocol = isEqualTo('study protocols');
+export function submissionToPageTabProtocols(pageTabSections: PageTabSection[]): PageTabSection[] {
+  const protocols: Protocols = Protocols.getInstance();
   const componentProtocols: PageTabSection[] = pageTabSections.filter((section) => isComponentProtocol(section.type));
   const studyProtocols: PageTabSection[] = pageTabSections.filter((section) => isStudyProtocol(section.type));
 
@@ -50,15 +67,15 @@ export function buildProtocolReferences(pageTabSections: PageTabSection[]) {
     }
   ));
 
-  const studyProtocolToReference = studyProtocols.map((studyProtocol) => {
+  const studyProtocolToReference = studyProtocols.map((studyProtocol, index) => {
     const attributes = studyProtocol.attributes;
     const nameAttribute = attributes!.find((attribute) => attribute.name === 'Name') || {};
-    const studyProtocolName: string = nameAttribute.value || '';
+    const studyProtocolNameValue: string = nameAttribute.value || '';
 
     return (
       <PageTabSection>{
         type: studyProtocol.type,
-        accno: protocols.refFor(studyProtocolName),
+        accno: studyProtocol.accno ? studyProtocol.accno : protocols.refFor(studyProtocolNameValue, `p${index}`),
         attributes: studyProtocol.attributes
       }
     );
@@ -69,4 +86,42 @@ export function buildProtocolReferences(pageTabSections: PageTabSection[]) {
     .filter((section) => !isStudyProtocol(section.type))
     .concat(studyProtocolToReference)
     .concat(componentProtocolWithReference);
+}
+
+export function pageTabToSubmissionProtocols(pageTabSections: PageTabSection[]): PageTabSection[] {
+  const protocols: Protocols = Protocols.getInstance();
+  const studyProtocols: PageTabSection[] = pageTabSections.filter((section) => isStudyProtocol(section.type));
+  const componentProtocols: PageTabSection[] = pageTabSections.filter((section) => isComponentProtocol(section.type));
+
+  // Creates the reference for each study protocol on first load.
+  studyProtocols.forEach((studyProtocol) => {
+    const attributes = studyProtocol.attributes;
+    const nameAttribute = attributes!.find((attribute) => attribute.name === 'Name') || {};
+    const studyProtocolNameValue: string = nameAttribute.value || '';
+    const studyProtocolAccno: string = studyProtocol.accno || '';
+
+    protocols.refFor(studyProtocolNameValue, studyProtocolAccno);
+  });
+
+  const componentProtocolsWithReferenceValue = componentProtocols.map((componentProtocol) => {
+    const attributes = componentProtocol.attributes || [];
+    const protocolAttribute = attributes!.find((attribute) => attribute.name === 'Protocol') || {};
+
+    return (
+      <PageTabSection>{
+        ...componentProtocol,
+        attributes: attributes.map((attribute) => (
+          <PtAttribute>{
+            ...attribute,
+            name: 'Protocol',
+            value: protocols.getRefValueByKey(protocolAttribute.value)
+          })
+        )
+      }
+    );
+  });
+
+  return pageTabSections
+    .filter((section) => !isComponentProtocol(section.type))
+    .concat(componentProtocolsWithReferenceValue);
 }

@@ -7,6 +7,7 @@ import {
     authors2Contacts,
     extractKeywordsFromAttributes,
     mergeAttributes,
+    pageTabToSubmissionProtocols,
 } from './pagetab';
 import { DEFAULT_TEMPLATE_NAME, SubmissionType } from './templates';
 import { AttributeData, FeatureData, SectionData, Submission, SubmissionData } from './submission';
@@ -45,7 +46,8 @@ function pageTabSectionToSectionData(ptSection: PageTabSection, parentAttributes
     const links = flatArray(ptSection.links || []);
     const files = flatArray(ptSection.files || []);
     const subsections = flatArray(ptSection.subsections || []);
-    const featureSections = authors2Contacts(subsections.filter(section => !hasSubsections(section)));
+    const contacts = authors2Contacts(subsections.filter(section => !hasSubsections(section)));
+    const featureSections = pageTabToSubmissionProtocols(contacts);
     const keywords = extractKeywordsFromAttributes(ptSection.attributes || []);
 
     const features: FeatureData[] = [];
@@ -109,7 +111,9 @@ function pageTabSectionToSectionData(ptSection: PageTabSection, parentAttributes
         .filter(hasSubsections)
         .map((section) => pageTabSectionToSectionData(section));
 
-    const formattedSubSections = subsections.map((subSection) => pageTabSectionToSectionData(subSection));
+    const formattedSubSections = subsections
+        .filter((section) => section.type !== 'Protocol')
+        .map((subSection) => pageTabSectionToSectionData(subSection));
 
     return <SectionData> {
         type: ptSection.type,
