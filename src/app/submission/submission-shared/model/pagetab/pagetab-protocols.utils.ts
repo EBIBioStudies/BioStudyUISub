@@ -32,9 +32,7 @@ class Protocols {
   }
 
   refFor(value: string, accno: string): string {
-    if (!this.refs[accno]) {
-      this.refs[accno] = value;
-    }
+    this.refs[accno] = value;
 
     return accno;
   }
