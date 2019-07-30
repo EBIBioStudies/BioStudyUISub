@@ -7,7 +7,7 @@ import { of, throwError } from 'rxjs';
 
 @Injectable()
 export class IdLinkService {
-    static BASE_URL: string = 'https://identifiers.org/rest'; // base URL for the service endpoint
+    static BASE_URL: string = 'https://registry.api.identifiers.org/restApi'; // base URL for the service endpoint
     public prefixes: string[] = []; // all possible prefixes for formatted links
     public idUrl: string | undefined; // last URL for valid identifier
     private isFetched: boolean = false; // flags when collection data has been fetched already
@@ -55,15 +55,17 @@ export class IdLinkService {
         let url;
 
         if (typeof prefix === 'undefined') {
-            url = IdLinkService.BASE_URL + '/collections';
+            url = IdLinkService.BASE_URL + '/namespaces';
         } else if (prefix.length) {
-            url = `${IdLinkService.BASE_URL}/collections/name/${prefix}`;
+            url = `${IdLinkService.BASE_URL}/namespaces/search/findByPrefixContaining?content=${prefix}`;
         } else {
             return of([]);
         }
 
         return this.http.get(url).pipe(
-            map((data: Array<any>) => data.map(d => d.prefix)),
+            map((data: Array<any>) => {
+               return data.map(d => d.prefix);
+            }),
             catchError(err => {
                 if (err.status === 404) {
                     return of([]);
