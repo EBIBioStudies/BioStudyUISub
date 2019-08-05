@@ -4,6 +4,11 @@ import { Observable } from 'rxjs/Observable';
 import { map, catchError } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
 import { of, throwError } from 'rxjs';
+import {
+    IdentifierEmbedded,
+    IdentifierNamespace,
+    IdentifierResponse,
+} from './id-link.interfaces';
 
 @Injectable()
 export class IdLinkService {
@@ -63,8 +68,11 @@ export class IdLinkService {
         }
 
         return this.http.get(url).pipe(
-            map((data: Array<any>) => {
-               return data.map(d => d.prefix);
+            map((data: IdentifierResponse) => {
+                const _embedded: IdentifierEmbedded = data._embedded;
+                const namespaces: IdentifierNamespace[] = _embedded.namespaces;
+
+                return namespaces.map((namespace) => namespace.prefix);
             }),
             catchError(err => {
                 if (err.status === 404) {
