@@ -1,5 +1,6 @@
-import { IdLinkService } from './id-link.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { IdLinkService } from './id-link.service';
+import { IdentifierNamespace } from './id-link.interfaces';
 import { defer, of, throwError } from 'rxjs';
 
 function asyncError<T>(errorObject: any) {
@@ -10,14 +11,21 @@ function asyncData<T>(data: T) {
   return defer(() => of(data));
 }
 
+function buildResponse(namespaces: Array<IdentifierNamespace>) {
+  return { _embedded: { namespaces } };
+}
+
 describe('IdLinkService', () => {
 
   let httpClientSpy: { get: jasmine.Spy };
   let service: IdLinkService;
 
   beforeEach(() => {
+    const namespaces = [{ prefix: 'prefix1' }, { prefix: 'prefix2' }, { prefix: 'prefix3' }];
+    const response = buildResponse(namespaces);
+
     httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
-    httpClientSpy.get.and.returnValue(asyncData(['prefix1', 'prefix2', 'prefix3']));
+    httpClientSpy.get.and.returnValue(asyncData(response));
     service = new IdLinkService(<any> httpClientSpy);
   });
 
@@ -59,8 +67,9 @@ describe('IdLinkService', () => {
   });
 
   it('#suggest should return only list of valid prefixes', () => {
-    const resp = [{prefix: 'p1'}, {prefix: 'p2'}, {prefix: 'p3'}];
-    const expectedPrefixes: string[] = resp.map(p => p.prefix);
+    const namespaces = [{ prefix: 'p1' }, { prefix: 'p2' }, { prefix: 'p3' }];
+    const resp = buildResponse(namespaces);
+    const expectedPrefixes: string[] = namespaces.map(p => p.prefix);
 
     httpClientSpy.get.and.returnValue(asyncData(resp));
 

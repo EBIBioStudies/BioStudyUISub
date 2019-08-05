@@ -46,10 +46,10 @@ export function idLinkValidator(service: IdLinkService, extra: any, prev: any): 
                     map(res => {
 
                     // The response has a URL => the link is valid
-                    if (res['url']) {
-                        extra.url = res['url'];
+                    if (res['compactIdentifierResolvedUrl']) {
+                        extra.url = res['compactIdentifierResolvedUrl'];
                         extra.isId = true;
-                        prev.url = res['url'];
+                        prev.url = res['compactIdentifierResolvedUrl'];
                         prev.error = null;
 
                     // The response is an error => the link is invalid
