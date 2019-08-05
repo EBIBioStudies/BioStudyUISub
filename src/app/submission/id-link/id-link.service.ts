@@ -69,8 +69,8 @@ export class IdLinkService {
 
         return this.http.get(url).pipe(
             map((data: IdentifierResponse) => {
-                const _embedded: IdentifierEmbedded = data._embedded;
-                const namespaces: IdentifierNamespace[] = _embedded.namespaces;
+                const _embedded: IdentifierEmbedded = data._embedded || {};
+                const namespaces: IdentifierNamespace[] = _embedded.namespaces || [];
 
                 return namespaces.map((namespace) => namespace.prefix);
             }),
