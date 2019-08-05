@@ -1,0 +1,125 @@
+image: karlrun/java-node-gradle
+stages:
+  - setup
+  - test
+  - build_ui
+  - build_proxy
+  - deploy
+
+.build_ui_template: &build_ui_definition
+  stage: build_ui
+  script:
+    - sh ./tasks/build_ui.sh
+  artifacts:
+    paths:
+      - subtool-$CI_ENVIRONMENT_SLUG.tar.gz
+    expire_in: 2 days
+
+.build_proxy_template: &build_proxy_definition
+  stage: build_proxy
+  script:
+    - sh ./tasks/build_proxy.sh
+  artifacts:
+    paths:
+      - proxy/build/libs/proxy-$CI_ENVIRONMENT_SLUG.war
+    expire_in: 2 days
+
+.deploy_template: &deploy_definition
+  before_script:
+    - sh ./tasks/ssh_setup.sh
+  stage: deploy
+  script:
+    - sh ./tasks/deploy.sh
+
+cache:
+  paths:
+    - node_modules/
+
+install_dependencies:
+  stage: setup
+  script:
+    - npm install
+  artifacts:
+    paths:
+      - node_modules/
+    expire_in: 2 days
+
+test:
+  stage: test
+  dependencies:
+    - install_dependencies
+  variables:
+    NODE_ENV: test
+  script:
+    - npm test
+
+# Build UI per environment
+build_ui:dev:
+  <<: *build_ui_definition
+  environment: DEV
+  only:
+    - dev@ndiaz/BioStudyUISub
+
+build_ui:beta:
+  <<: *build_ui_definition
+  environment: BETA
+  only:
+    - dev@ndiaz/BioStudyUISub
+
+build_ui:prod:
+  <<: *build_ui_definition
+  environment: PROD
+  only:
+    - master@ndiaz/BioStudyUISub
+
+# Build Proxy per environment
+build_proxy:dev:
+  <<: *build_proxy_definition
+  environment: DEV
+  dependencies:
+    - build_ui:dev
+  only:
+    - dev@ndiaz/BioStudyUISub
+
+build_proxy:beta:
+  <<: *build_proxy_definition
+  environment: BETA
+  dependencies:
+    - build_ui:beta
+  only:
+    - dev@ndiaz/BioStudyUISub
+
+build_proxy:prod:
+  <<: *build_proxy_definition
+  environment: PROD
+  dependencies:
+    - build_ui:prod
+  only:
+    - master@ndiaz/BioStudyUISub
+
+# Deploy per environment
+deploy:dev:
+  <<: *deploy_definition
+  environment: DEV
+  dependencies:
+    - build_proxy:dev
+  only:
+    - dev@ndiaz/BioStudyUISub
+
+deploy:beta:
+  <<: *deploy_definition
+  environment: BETA
+  dependencies:
+    - build_proxy:beta
+  only:
+    - dev@ndiaz/BioStudyUISub
+  when: manual
+
+deploy:prod:
+  <<: *deploy_definition
+  environment: PROD
+  dependencies:
+    - build_proxy:prod
+  only:
+    - master@ndiaz/BioStudyUISub
+  when: manual
