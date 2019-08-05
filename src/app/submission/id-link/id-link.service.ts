@@ -8,11 +8,15 @@ import {
     IdentifierEmbedded,
     IdentifierNamespace,
     IdentifierResponse,
+    IdentifierResolverResponse,
+    IdentifierResolverPayload,
+    IdentifierResolvedResource,
 } from './id-link.interfaces';
 
 @Injectable()
 export class IdLinkService {
-    static BASE_URL: string = 'https://registry.api.identifiers.org/restApi'; // base URL for the service endpoint
+    static REGISTRY_URL: string = 'https://registry.api.identifiers.org/restApi'; // base URL for the service endpoint
+    static RESOLUTION_URL: string = 'https://resolver.api.identifiers.org';
     public prefixes: string[] = []; // all possible prefixes for formatted links
     public idUrl: string | undefined; // last URL for valid identifier
     private isFetched: boolean = false; // flags when collection data has been fetched already
@@ -60,9 +64,9 @@ export class IdLinkService {
         let url;
 
         if (typeof prefix === 'undefined') {
-            url = IdLinkService.BASE_URL + '/namespaces';
+            url = IdLinkService.REGISTRY_URL + '/namespaces';
         } else if (prefix.length) {
-            url = `${IdLinkService.BASE_URL}/namespaces/search/findByPrefixContaining?content=${prefix}`;
+            url = `${IdLinkService.REGISTRY_URL}/namespaces/search/findByPrefixContaining?content=${prefix}`;
         } else {
             return of([]);
         }
@@ -85,15 +89,18 @@ export class IdLinkService {
 
     /**
      * Checks if a prefix:id string is among the allowed ones.
+     *
      * @param {string} prefix - Section of the string containg just the prefix.
      * @param {string} id - Section of the string containing just the identifier.
      * @returns {Observable<boolean>} Observable the request has been turned into.
      */
     validate(prefix: string, id: string): Observable<boolean> {
-        return this.http.get(`${IdLinkService.BASE_URL}/identifiers/validate/${prefix}:${id}`).pipe(
-            map(response => {
-                this.idUrl = response['url'];
-                return response;
+        return this.http.get(`${IdLinkService.RESOLUTION_URL}/${prefix}:${id}`).pipe(
+            map((response: IdentifierResolverResponse) => {
+                const payload: IdentifierResolverPayload = response.payload || {};
+                const resolvedResources: IdentifierResolvedResource = payload.resolvedResources[0] || {};
+
+                return resolvedResources;
             }),
             catchError(err => {
                 if (err.status === 404) {
