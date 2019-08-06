@@ -56,7 +56,7 @@
 
     </form>
 
-    <li *ngIf="isEditModeOff && userData.isPrivileged" class="text-right">
+    <li *ngIf="isEditModeOff && userData.isPrivileged && isAdvancedVisible" class="text-right">
         <button *ngIf="!collapsed" class="advanced-btn btn btn-link btn-sm"
                 (click)="onAdvancedToggle()">
             <i class="far fa-lg" aria-hidden="true"
