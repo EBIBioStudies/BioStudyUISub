@@ -154,8 +154,11 @@ export class SubmEditService {
             map(pendingSubm => {
                 this.editState.stopLoading();
                 this.createForm(pendingSubm, setDefaults);
+                const projectAttribute = pendingSubm && pendingSubm.data && pendingSubm.data.attributes
+                    && pendingSubm.data.attributes.filter( att => att.name && att.name.toLowerCase() === 'attachto')
+                        .shift();
 
-                return ServerResponse.Ok({});
+                return ServerResponse.Ok(projectAttribute);
             }),
             catchError(error => {
                 this.editState.stopLoading(error);

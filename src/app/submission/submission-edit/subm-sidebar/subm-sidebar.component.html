@@ -24,6 +24,7 @@
                 </ng-template>
             </tab>
             <tab heading="Add"
+                 *ngIf="showAddTab"
                  [active]="isEditTabActive"
                  (select)="onAddTabClick()"></tab>
         </tabset>

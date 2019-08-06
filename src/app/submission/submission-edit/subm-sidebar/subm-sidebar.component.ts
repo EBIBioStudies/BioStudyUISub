@@ -23,6 +23,7 @@ export class SubmSidebarComponent implements OnDestroy {
     invalidControls: FormControlGroup[] = [];
 
     isCheckTabActive: boolean = true;
+    showAddTab: boolean = false;
 
     private controls: Array<FormControl>[] = [];
     private unsubscribe = new Subject<void>();
