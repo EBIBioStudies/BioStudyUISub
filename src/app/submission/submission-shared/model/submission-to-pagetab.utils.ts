@@ -1,4 +1,4 @@
-import { AttributeData, Feature, Section, Submission } from './submission';
+import { PAGE_TAG, Tag } from './model.common';
 import {
     AttrExceptions,
     LinksUtils,
@@ -9,12 +9,12 @@ import {
     PtFileItem,
     PtLink,
     PtLinkItem,
-    buildProtocolReferences,
+    submissionToPageTabProtocols,
     contacts2Authors,
     mergeAttributes,
 } from './pagetab';
+import { AttributeData, Feature, Section, Submission } from './submission';
 import { DEFAULT_TEMPLATE_NAME, SubmissionType } from './templates';
-import { PAGE_TAG, Tag } from './model.common';
 
 const isFileType = (type: string) => type.isEqualIgnoringCase('file');
 const isLinkType = (type: string) => type.isEqualIgnoringCase('link');
@@ -109,7 +109,7 @@ function extractSectionSubsections(section: Section, isSanitize: boolean): PageT
         .reduce((rv, el) => rv.concat(el), []);
 
     const authorsSections = contacts2Authors(featureAttributesAsPageTabSection);
-    const protocolSections = buildProtocolReferences(authorsSections);
+    const protocolSections = submissionToPageTabProtocols(authorsSections);
 
     return protocolSections.concat(section.sections.list().map(s => section2PtSection(s, isSanitize)));
 }

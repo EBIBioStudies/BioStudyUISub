@@ -39,7 +39,7 @@ export class SubmCheckSidebarComponent {
         } else if (errors.pattern) {
             return 'wrong format';
         } else if (errors.unique) {
-            return 'not unique'
+            return 'not unique';
         }
         return Object.keys(errors)[0];
     }

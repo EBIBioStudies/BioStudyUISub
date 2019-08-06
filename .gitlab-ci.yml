@@ -66,9 +66,11 @@ build_ui:beta:
   only:
     - dev@ndiaz/BioStudyUISub
 
-# build_ui:prod:
-#   <<: *build_ui_definition
-#   environment: PROD
+build_ui:prod:
+  <<: *build_ui_definition
+  environment: PROD
+  only:
+    - master@ndiaz/BioStudyUISub
 
 # Build Proxy per environment
 build_proxy:dev:
@@ -87,12 +89,15 @@ build_proxy:beta:
   only:
     - dev@ndiaz/BioStudyUISub
 
-# build_proxy:prod:
-#   <<: *build_proxy_definition
-#   environment: PROD
-#   dependencies:
-#     - build_ui:prod
+build_proxy:prod:
+  <<: *build_proxy_definition
+  environment: PROD
+  dependencies:
+    - build_ui:prod
+  only:
+    - master@ndiaz/BioStudyUISub
 
+# Deploy per environment
 deploy:dev:
   <<: *deploy_definition
   environment: DEV
@@ -108,4 +113,13 @@ deploy:beta:
     - build_proxy:beta
   only:
     - dev@ndiaz/BioStudyUISub
+  when: manual
+
+deploy:prod:
+  <<: *deploy_definition
+  environment: PROD
+  dependencies:
+    - build_proxy:prod
+  only:
+    - master@ndiaz/BioStudyUISub
   when: manual

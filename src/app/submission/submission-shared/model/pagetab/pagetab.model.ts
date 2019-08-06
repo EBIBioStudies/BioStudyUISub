@@ -67,10 +67,10 @@ export interface PtNameAndValue {
 
 export interface PtAttribute {
     accno?: string;
-    name?: string;
-    value?: string;
     isReference?: boolean;
+    name?: string;
     valqual?: PtNameAndValue[];
+    value?: string;
 }
 
 export interface PtLink {

@@ -220,6 +220,12 @@ export class SubmFormValidators {
                 return null;
             }
 
+            // This is to avoid a false positive while values are calculated
+            // for a dependant field.
+            if (value.length !== 0 && values.length === 0) {
+                return null;
+            }
+
             return values.includes(value) ? null : { dependency: { value: control.value } };
         };
     }
