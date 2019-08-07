@@ -1,6 +1,6 @@
 <div *ngIf="featureForm && !featureForm.isEmpty" class="col-xs-12">
     <label class="control-label">{{featureForm.prettyName | lowercase | titlecase}}</label>
-    <span *ngIf="!readonly && !featureForm.isRequired"
+    <span *ngIf="!readonly && !featureForm.isRequired && !featureForm.isReadonly"
           class="text-muted pull-right">
                 <i *ngIf="featureForm.hasRequiredGroups">
                    Required at least one {{featureForm.requiredGroups.join(' or ')}}
@@ -11,14 +11,14 @@
     </span>
 
     <span>
-        <strong class="text-muted" *ngIf="featureForm.isRequired && featureForm.canHaveMultipleRows">
+        <strong class="text-muted" *ngIf="featureForm.isRequired && featureForm.canHaveMultipleRows && !featureForm.isReadonly">
         (at least one is required)
         </strong>
         <strong class="text-danger" *ngIf="errorNum">Please review the fields below</strong>
     </span>
 
     <div class="panel panel-default feature">
-        <div *ngIf="!readonly" class="panel-heading clearfix">
+        <div *ngIf="!readonly && !featureForm.isReadonly" class="panel-heading clearfix">
             <div *ngIf="isMenu" class="btn-toolbar pull-left" role="toolbar">
                 <div class="btn-group" dropdown>
                     <button type="button" class="btn btn-xs btn-default" dropdownToggle>

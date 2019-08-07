@@ -10,8 +10,8 @@
             <div class="cell col-xs-3">
                 <div class="form-group key-field"
                      [ngClass]="{'has-error': column.hasErrors}">
-                    <div [ngClass]="{'input-group': featureForm.canRemoveColumn(column), 'readonly': column.isReadonly}">
-                        <span *ngIf="featureForm.canRemoveColumn(column)" class="input-group-btn"
+                    <div [ngClass]="{'input-group': featureForm.canRemoveColumn(column), 'readonly': column.isReadonly || featureForm.isReadonly}">
+                        <span *ngIf="featureForm.canRemoveColumn(column) && !featureForm.isReadonly" class="input-group-btn"
                               container="body">
                               <button type="button" tabindex="-1"
                                       class="btn btn-sm btn-danger btn-flat"
@@ -30,7 +30,7 @@
                                popover="{{column.hasErrors ? column.errors : ''}}"
                                triggers="focus"
                                [formControl]="column.control"
-                               [readonly]="!column.canEditName"
+                               [readonly]="!column.canEditName || featureForm.isReadonly"
                                [typeahead]="featureForm.columnNamesTypeahead(column)"
                                [typeaheadMinLength]="0"
                                [typeaheadOptionsLimit]="200"
@@ -43,7 +43,7 @@
             </div>
             <div class="cell col-xs-9" *ngFor="let cell of [featureForm.cellControlAt(0,column.id)]">
                 <div class="form-group"
-                     [ngClass]="{'readonly': column.isReadonly,
+                     [ngClass]="{'readonly': column.isReadonly || featureForm.isReadonly,
                                  'optional': !column.isRequired,
                                  'has-error': cell.hasErrors}">
                     <input-value placement="top"
@@ -52,7 +52,7 @@
                                  popover="{{cell.hasErrors ? cell.errors : ''}}"
                                  triggers="focus"
                                  [valueType]="column.valueType"
-                                 [readonly]="readonly || column.isReadonly"
+                                 [readonly]="readonly || column.isReadonly || featureForm.isReadonly"
                                  [formControl]="cell.control"
                                  [autosuggestSource]="featureForm.cellValuesTypeaheadFunc(column.id)"
                                  nativeElementAttach
@@ -65,7 +65,7 @@
 </div>
 <div class="row" *ngIf="featureForm && featureForm.canAddColumn()">
     <div class="col-xs-1 col-md-1">
-        <button *ngIf="!readonly"
+        <button *ngIf="!readonly && !featureForm.isReadonly"
                 type="button"
                 class="btn-add btn btn-link"
                 [tooltip]="'Add a new ' + featureForm.prettyName"
