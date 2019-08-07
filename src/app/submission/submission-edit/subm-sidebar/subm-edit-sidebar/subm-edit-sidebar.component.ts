@@ -1,10 +1,10 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserData } from 'app/auth/shared';
 import { Option } from 'fp-ts/lib/Option';
 import { BsModalService } from 'ngx-bootstrap';
 import { Subject, Subscription } from 'rxjs';
-import { TypeBase, FeatureType, SectionType } from 'app/submission/submission-shared/model/templates';
+import { TypeBase, FeatureType, SectionType, DisplayType } from 'app/submission/submission-shared/model/templates';
 import { FormValidators } from '../../shared/form-validators';
 import { SectionForm } from '../../shared/section-form';
 import { SubmEditService } from '../../shared/subm-edit.service';
@@ -18,20 +18,23 @@ class DataTypeControl {
 
     readonly control: FormControl;
     readonly isReadonly: boolean;
+    readonly isVisible: boolean;
 
     static fromFeatureType(type: FeatureType, id: string): DataTypeControl {
-        return new DataTypeControl(type, type.icon, type.description, id);
+        return new DataTypeControl(type, type.icon, type.displayType, type.description, id);
     }
 
     static fromSectionType(type: SectionType) {
-        return new DataTypeControl(type, 'fa-folder-plus', '', SECTION_ID);
+        return new DataTypeControl(type, 'fa-folder-plus', type.displayType, '', SECTION_ID);
     }
 
     constructor(readonly type: TypeBase,
                 readonly icon: string,
+                readonly displayType: DisplayType,
                 readonly description: string,
                 readonly id: string) {
         this.isReadonly = !type.canModify;
+        this.isVisible = !this.displayType.isReadonly;
         this.control = new FormControl({value: type.name, disabled: this.isReadonly},
             [Validators.required, Validators.pattern('[a-zA-Z0-9_ ]*')]);
     }
@@ -62,6 +65,7 @@ class DataTypeControl {
 export class SubmEditSidebarComponent implements OnDestroy {
     isEditModeOn: boolean = false;
     isAdvancedOpen: boolean = false;
+    @Input() isAdvancedVisible: boolean = true;
     items: DataTypeControl[] = [];
 
     form?: FormGroup;
@@ -171,7 +175,7 @@ export class SubmEditSidebarComponent implements OnDestroy {
                             this.onCancelChanges();
                         }
                     }
-                )
+                );
         } else {
             this.applyChanges();
         }
@@ -202,7 +206,8 @@ export class SubmEditSidebarComponent implements OnDestroy {
     private updateItems(): void {
         this.items =
             [...this.sectionForm!.featureForms.map(ff => DataTypeControl.fromFeatureType(ff.featureType, ff.id)),
-                ...this.sectionForm!.type.sectionTypes.map(st => DataTypeControl.fromSectionType(st))];
+                ...this.sectionForm!.type.sectionTypes.map(st => DataTypeControl.fromSectionType(st))]
+                .filter( item => item.isVisible );
 
         const form = new FormGroup({}, FormValidators.uniqueValues);
         this.items.forEach(item => form.addControl(item.id, item.control));

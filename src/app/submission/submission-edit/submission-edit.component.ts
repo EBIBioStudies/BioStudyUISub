@@ -109,7 +109,10 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
                 if (this.hasJustCreated) {
                     this.locService.replaceState('/submissions/edit/' + this.accno);
                 }
-
+                if (this.sideBar && resp.payload.isSome ) {
+                    const att = resp.payload.getOrElse({'name': 'AttachTo', value: '' });
+                    this.sideBar.showAdvanced = !(att.value.toLowerCase() === 'arrayexpress' );
+                }
                 if (resp.error.isSome() ) {
                     this.modalService.alert(
                         'Submission could not be retrieved. ' +
