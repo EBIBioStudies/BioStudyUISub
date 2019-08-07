@@ -11,7 +11,7 @@
          [ngClass]="{'collapse-left': sideBarCollapsed}">
         <nav>
             <div class="nav-block col-xs-8">
-                <i class="fa fa-angle-double-right"></i>&nbsp;<directory-path [path]="path.rel" (change)="onRelativePathChange($event)"></directory-path>
+                <i class="fa fa-folder-open"></i>&nbsp;<directory-path [path]="path.rel" (change)="onRelativePathChange($event)"></directory-path>
             </div>
                 <div class="nav-block clearfix col-xs-4">
                 <file-upload-badge class="upload-count"
