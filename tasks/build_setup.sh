@@ -28,7 +28,7 @@ sed -i 's%"APP_DEBUG_ENABLED":.*%"APP_DEBUG_ENABLED":'$appDebugEnabled',%' src/c
 sed -i 's%"APP_INSTANCE_KEY".*%"APP_INSTANCE_KEY":"'$appInstanceKey'"%' src/config.json
 
 # Create .env file
-echo -e "
+echo "
 BACKEND_PATH_CONTEXT=${backendPathContext}
 BACKEND_HOST_NAME=${backendHostName}
 BACKEND_PORT=${backendPort}
