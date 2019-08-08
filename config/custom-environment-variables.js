@@ -1,10 +1,13 @@
 module.exports = {
+  express: {
+    port: 'PORT'
+  },
   backend: {
-    context: 'PATH_CONTEXT',
+    context: 'BACKEND_PATH_CONTEXT',
     uri: {
-      hostname: 'HOST_NAME',
-      port: 'PORT',
-      protocol: 'PROTOCOL'
+      hostname: 'BACKEND_HOST_NAME',
+      port: 'BACKEND_PORT',
+      protocol: 'BACKEND_PROTOCOL'
     }
   },
 };

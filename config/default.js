@@ -1,6 +1,6 @@
 module.exports = {
   files: {
-    limit: '200mb'
+    limit: '1024mb'
   },
   express: {
     hostname: '0.0.0.0',
@@ -16,6 +16,6 @@ module.exports = {
     }
   },
   assets: {
-    path: 'server/public'
+    path: 'public'
   }
 };

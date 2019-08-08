@@ -6,6 +6,17 @@ stages:
   - build_proxy
   - deploy
 
+.build_template: &build_template
+  state: build_ui
+  before_script:
+    - sh ./tasks/build_setup.sh
+  script:
+    - sh ./tasks/build.sh
+  artifacts:
+    paths:
+      - subtool-$CI_ENVIRONMENT_SLUG.tar.gz
+    expire_in: 2 days
+
 .build_ui_template: &build_ui_definition
   stage: build_ui
   script:
@@ -55,10 +66,10 @@ test:
 
 # Build UI per environment
 build_ui:dev:
-  <<: *build_ui_definition
+  <<: *build_template
   environment: DEV
   only:
-    - dev@ndiaz/BioStudyUISub
+    - node@ndiaz/BioStudyUISub
 
 build_ui:beta:
   <<: *build_ui_definition

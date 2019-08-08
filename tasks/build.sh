@@ -3,11 +3,8 @@
 set -e
 set -v
 
-# Clean build dist folder
-rm -rf dist && mkdir dist
-
-# Clean build dist folder
-rm -rf dist/public && mkdir dist/public
+# Variables
+ciEnvironment=${CI_ENVIRONMENT_SLUG};
 
 # Build assets into dist/public folder
 npx ng build --outputPath=dist/public --deleteOutputPath=true
@@ -16,10 +13,20 @@ npx ng build --outputPath=dist/public --deleteOutputPath=true
 cp package.json dist/
 
 # Install dependencies
-npm install --production --prefix dist
+npm install --prefix dist
 
 # Copy server files
-cp -r server/ dist/
+cp -r server/ dist/server
 
 # Copy config files
 cp -r config dist/
+
+# Create log files
+mkdir dist/logs
+touch dist/logs/out.log
+
+# Create artifact if the script is ran in a CI environment
+if [ -n "${CI}" ]; then
+  # Create artifact
+  tar -czf subtool-$ciEnvironment.tar.gz -C dist .
+fi

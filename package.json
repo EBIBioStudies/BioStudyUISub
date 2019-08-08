@@ -12,9 +12,7 @@
     "node:beta": "NODE_ENV=beta node .",
     "node:dev": "NODE_ENV=development nodemon .",
     "node:prod": "NODE_ENV=production node .",
-    "start:prod": "run-s build node:prod",
     "start:dev": "run-p node:dev start-no-ssl",
-    "start:beta": "run-p build node:beta",
     "start-no-ssl": "ng serve --proxy-config proxy.conf.json --progress",
     "test": "ng test"
   },
@@ -59,6 +57,7 @@
     "@types/pluralize": "0.0.28",
     "codelyzer": "^4.4.2",
     "del": "^4.1.1",
+    "forever": "^1.0.0",
     "gulp": "^4.0.0",
     "gulp-zip": "^3.2.0",
     "jasmine-core": "^2.6.4",
