@@ -21,11 +21,11 @@ backendPort=${BACKEND_PORT}
 ciEnvironment=${CI_ENVIRONMENT_SLUG};
 
 # Update config.json
-sed -i 's%"APP_PROXY_BASE":.*%"APP_PROXY_BASE":"'$appProxyBase'",%' dist/public/config.json
-sed -i 's%"APP_CONTEXT":.*%"APP_CONTEXT":"'$appContext'",%' dist/public/config.json
-sed -i 's%"APP_DEBUG_ENABLED":.*%"APP_DEBUG_ENABLED":'$appDebugEnabled',%' dist/public/config.json
+sed -i 's%"APP_PROXY_BASE":.*%"APP_PROXY_BASE":"'$appProxyBase'",%' src/config.json
+sed -i 's%"APP_CONTEXT":.*%"APP_CONTEXT":"'$appContext'",%' src/config.json
+sed -i 's%"APP_DEBUG_ENABLED":.*%"APP_DEBUG_ENABLED":'$appDebugEnabled',%' src/config.json
 # Last line, don't append a comma
-sed -i 's%"APP_INSTANCE_KEY".*%"APP_INSTANCE_KEY":"'$appInstanceKey'"%' dist/public/config.json
+sed -i 's%"APP_INSTANCE_KEY".*%"APP_INSTANCE_KEY":"'$appInstanceKey'"%' src/config.json
 
 # Create .env file
 echo -e "
