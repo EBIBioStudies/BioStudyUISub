@@ -7,7 +7,7 @@ stages:
   - deploy
 
 .build_template: &build_template
-  state: build_ui
+  stage: build_ui
   before_script:
     - sh ./tasks/build_setup.sh
   script:
