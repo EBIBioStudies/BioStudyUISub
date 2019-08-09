@@ -12,9 +12,6 @@ npx ng build --outputPath=dist/public --deleteOutputPath=true
 # Copy package.json to server
 cp package.json dist/
 
-# Install dependencies
-npm install --prefix dist
-
 # Copy server files
 cp -r server/ dist/server
 
