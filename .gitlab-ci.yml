@@ -69,7 +69,7 @@ build_ui:dev:
   <<: *build_template
   environment: DEV
   only:
-    - feature/node@ndiaz/BioStudyUISub
+    - dev@ndiaz/BioStudyUISub
 
 build_ui:beta:
   <<: *build_ui_definition
@@ -115,7 +115,7 @@ deploy:dev:
   dependencies:
     - build_ui:dev
   only:
-    - feature/node@ndiaz/BioStudyUISub
+    - dev@ndiaz/BioStudyUISub
 
 deploy:beta:
   <<: *deploy_definition
