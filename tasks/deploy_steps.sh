@@ -3,13 +3,9 @@
 set -e
 set -v
 
-# Artifact name
-artifact=subtool-${CI_ENVIRONMENT_SLUG}.tar.gz
+# This script should only be executed in the VM.
 
-# Copy Artifact in home dir
-scp -o StrictHostKeyChecking=no $artifact ${VM_USER}@${VM_HOSTNAME}:${VM_HOME_DIR}/node/subtool-${CI_ENVIRONMENT_SLUG}.tar.gz
-
-# Execute next stops in home dir
+# Execute steps in home dir
 cd ${VM_HOME_DIR}/node
 
 # Extract files
