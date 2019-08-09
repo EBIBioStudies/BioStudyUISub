@@ -29,7 +29,7 @@ const proxyConfig = {
 app.use('/', router);
 router.use('/', express.static(config.assets.path));
 router.use(
-  ['/proxy/raw', '/proxy/api'],
+  ['*/raw', '*/api'],
   expressWinston.logger(loggerSettings),
   proxy(backendUri, proxyConfig)
 );
