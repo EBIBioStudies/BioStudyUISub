@@ -36,9 +36,9 @@ stages:
     expire_in: 2 days
 
 .deploy_template: &deploy_definition
+  stage: deploy
   before_script:
     - sh ./tasks/ssh_setup.sh
-  stage: deploy
   script:
     - sh ./tasks/deploy.sh
 
@@ -115,7 +115,7 @@ deploy:dev:
   dependencies:
     - build_proxy:dev
   only:
-    - dev@ndiaz/BioStudyUISub
+    - feature/node@ndiaz/BioStudyUISub
 
 deploy:beta:
   <<: *deploy_definition
