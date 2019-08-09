@@ -20,7 +20,7 @@ cp -r config dist/
 
 # Create log files
 mkdir dist/logs
-touch dist/logs/out.log
+touch dist/logs/forever.log
 
 # Create artifact if the script is ran in a CI environment
 if [ -n "${CI}" ]; then
