@@ -113,7 +113,7 @@ deploy:dev:
   <<: *deploy_definition
   environment: DEV
   dependencies:
-    - build_proxy:dev
+    - build_ui:dev
   only:
     - feature/node@ndiaz/BioStudyUISub
 
