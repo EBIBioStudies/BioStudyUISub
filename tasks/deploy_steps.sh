@@ -5,11 +5,15 @@ set -v
 
 # This script should only be executed in the VM.
 
+# Arguments
+homeDir=$1
+artifact=$2
+
 # Execute steps in home dir
-cd ${VM_HOME_DIR}/node
+cd $homeDir/node
 
 # Extract files
-tar xzf subtool-${CI_ENVIRONMENT_SLUG}.tar.gz
+tar xzf $artifact
 
 # Install dependencies
 npm install
@@ -18,7 +22,7 @@ npm install
 npx forever stopall
 
 # Start fresh execution
-npx forever start -l ${VM_HOME_DIR}/node/logs/forever.log --append server/app.js
+npx forever start -l $homeDir/node/logs/forever.log --append server/app.js
 
 # Clean up
-rm subtool-${CI_ENVIRONMENT_SLUG}.tar.gz
+rm $artifact
