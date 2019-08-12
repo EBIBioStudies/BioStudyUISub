@@ -3,14 +3,12 @@
 set -e
 set -v
 
-# Artifact name
-artifact=proxy/build/libs/proxy-${CI_ENVIRONMENT_SLUG}.war
+# Variables
+artifact=subtool-${CI_ENVIRONMENT_SLUG}.tar.gz
+homeDir=${VM_HOME_DIR}
 
-# Command to be ran in the VM
-restart_command="cd ${VM_HOME_DIR} && bin/stop && bin/clean_dirs && cp deploy/${WAR_NAME}.war webapps/ && bin/start"
+# Copy Artifact in home dir
+scp -o StrictHostKeyChecking=no $artifact ${VM_USER}@${VM_HOSTNAME}:$homeDir/node/$artifact
 
-# Copy Artifacts
-scp -o StrictHostKeyChecking=no $artifact ${VM_USER}@${VM_HOSTNAME}:${VM_HOME_DIR}/deploy/${WAR_NAME}.war
-
-# SSH the instance
-ssh -oStrictHostKeyChecking=no -v ${VM_USER}@${VM_HOSTNAME} $restart_command
+# Execute deplo_steps.sh file via SSH
+ssh -oStrictHostKeyChecking=no -v ${VM_USER}@${VM_HOSTNAME} 'bash -s' < ./tasks/deploy_steps.sh $homeDir $artifact
