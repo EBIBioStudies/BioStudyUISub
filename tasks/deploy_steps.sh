@@ -22,7 +22,7 @@ npm install
 npx forever stopall
 
 # Start fresh execution
-npx forever start -l $homeDir/node/logs/forever.log --append server/app.js
+NODE_ENV=production npx forever start -l $homeDir/node/logs/forever.log --append server/app.js
 
 # Clean up
 rm $artifact
