@@ -112,9 +112,11 @@
                                tooltip="Log out"
                                placement="bottom"
                                container="body"
-                               href="#"
-                               (click)="signOut()"
-                               >Log out</a>
+                               href="/"
+                               (click)="signOut($event); false"
+                            >
+                               Log out
+                            </a>
                         </li>
                     </ul>
                 </li>
