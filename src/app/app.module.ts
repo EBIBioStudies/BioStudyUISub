@@ -4,7 +4,7 @@ import {
     APP_INITIALIZER
 } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { APP_BASE_HREF, PathLocationStrategy, LocationStrategy } from '@angular/common';
 import { RecaptchaModule } from 'ng-recaptcha';
 import {
     TypeaheadModule,
@@ -62,8 +62,9 @@ export function initConfig(config: AppConfig): () => Promise<any> {
     providers: [
         AppConfig,
         {provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true},
-        {provide: LocationStrategy, useClass: HashLocationStrategy},
-        {provide: ErrorHandler, useClass: GlobalErrorHandler}
+        {provide: LocationStrategy, useClass: PathLocationStrategy},
+        {provide: ErrorHandler, useClass: GlobalErrorHandler},
+        { provide: APP_BASE_HREF, useValue: '/' }
     ],
     bootstrap: [AppComponent]
 })

@@ -6,11 +6,19 @@ set -v
 # Variables
 ciEnvironment=${CI_ENVIRONMENT_SLUG};
 
+# Clean build folder
+rm -rf dist && mkdir dist
+
 # Build assets into dist/public folder
-npx ng build --outputPath=dist/public --deleteOutputPath=true
+npx ng build --outputPath=dist/public --deleteOutputPath=true --baseHref=/static/
 
 # Copy package.json to server
 cp package.json dist/
+
+# Install dependencies only locally
+if [ -z "${CI}" ]; then
+  npm install --prefix dist
+fi
 
 # Copy server files
 cp -r server/ dist/server
