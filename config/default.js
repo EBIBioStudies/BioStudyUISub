@@ -17,5 +17,16 @@ module.exports = {
   },
   assets: {
     path: 'public'
+  },
+  identifiers: {
+    registry_uri: {
+      contextPath: 'restApi',
+      hostname: 'registry.api.identifiers.org',
+      protocol: 'https'
+    },
+    resolver_uri: {
+      hostname: 'resolver.api.identifiers.org',
+      protocol: 'https'
+    }
   }
 };

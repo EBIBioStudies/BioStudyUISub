@@ -84,14 +84,6 @@ build_ui:prod:
     - master@ndiaz/BioStudyUISub
 
 # Build Proxy per environment
-build_proxy:dev:
-  <<: *build_proxy_definition
-  environment: DEV
-  dependencies:
-    - build_ui:dev
-  only:
-    - dev@ndiaz/BioStudyUISub
-
 build_proxy:beta:
   <<: *build_proxy_definition
   environment: BETA
