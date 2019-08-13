@@ -20,7 +20,7 @@ module.exports = {
   },
   identifiers: {
     registry_uri: {
-      contextPath: 'restApi',
+      pathname: 'restApi',
       hostname: 'registry.api.identifiers.org',
       protocol: 'https'
     },
