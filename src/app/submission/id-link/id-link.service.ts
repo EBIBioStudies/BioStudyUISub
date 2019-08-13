@@ -15,8 +15,8 @@ import {
 
 @Injectable()
 export class IdLinkService {
-    static REGISTRY_URL: string = 'https://registry.api.identifiers.org/restApi'; // base URL for the service endpoint
-    static RESOLUTION_URL: string = 'https://resolver.api.identifiers.org';
+    static REGISTRY_URL: string = '/identifiers/registry'; // base URL for the service endpoint
+    static RESOLUTION_URL: string = '/identifiers/resolver';
     public prefixes: string[] = []; // all possible prefixes for formatted links
     public idUrl: string | undefined; // last URL for valid identifier
     private isFetched: boolean = false; // flags when collection data has been fetched already
@@ -76,7 +76,9 @@ export class IdLinkService {
                 const _embedded: IdentifierEmbedded = data._embedded || {};
                 const namespaces: IdentifierNamespace[] = _embedded.namespaces || [];
 
-                return namespaces.map((namespace) => namespace.prefix);
+                return namespaces.map((namespace) => {
+                    return namespace.prefix === 'chebi' ? namespace.prefix.toUpperCase() : namespace.prefix;
+                });
             }),
             catchError(err => {
                 if (err.status === 404) {
@@ -102,10 +104,15 @@ export class IdLinkService {
 
                 return resolvedResources;
             }),
-            catchError(err => {
+            catchError((err) => {
                 if (err.status === 404) {
                     return of(err.error);
                 }
+
+                if (err.status === 400) {
+                    return of(`INVALID resolution request for ${prefix}:${id}`);
+                }
+
                 return throwError(err);
             })
         );

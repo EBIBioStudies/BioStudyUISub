@@ -13,6 +13,7 @@ const { loggerSettings, errorLoggerSettings } = require('./logger');
 
 const { port, hostname, protocol } = config.express;
 const { context } = config.backend;
+const { contextPath: identifiersRegistryContextPath } = config.identifiers.registry_uri;
 const { limit } = config.files;
 
 const app = express();
@@ -20,17 +21,37 @@ app.use(helmet());
 app.use(compression());
 
 const backendUri = format(config.backend.uri);
-const proxyConfig = {
+const identifiersRegistryUri = format(config.identifiers.registry_uri);
+const resolverRegistryUri = format(config.identifiers.resolver_uri);
+const proxyConfig = (pathname) => ({
   limit,
   memoizeHost: true,
-  proxyReqPathResolver: (req) => `/${context}${req.url}`
-};
+  proxyReqPathResolver: (req) => {
+    return pathname ? `/${pathname}${req.url}` : req.url;
+  }
+});
 
 app.use('/static', express.static(config.assets.path));
+
+// Backend proxy
 app.use(
   ['*/raw', '*/api'],
   expressWinston.logger(loggerSettings),
-  proxy(backendUri, proxyConfig)
+  proxy(backendUri, proxyConfig(context))
+);
+
+// Identifiers registry proxy
+app.use(
+  '/identifiers/registry',
+  expressWinston.logger(loggerSettings),
+  proxy(identifiersRegistryUri, proxyConfig(identifiersRegistryContextPath))
+);
+
+// Identifiers resolver proxy
+app.use(
+  '/identifiers/resolver',
+  expressWinston.logger(loggerSettings),
+  proxy(resolverRegistryUri, proxyConfig())
 );
 
 // In DEV mode this service only proxies requests to the backend.
