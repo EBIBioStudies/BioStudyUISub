@@ -110,7 +110,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
                     this.locService.replaceState('/submissions/edit/' + this.accno);
                 }
                 if (this.sideBar && resp.payload.isSome ) {
-                    const att = resp.payload.getOrElse({'name': 'AttachTo', value: '' });
+                    const att = resp.payload.getOrElse({'name': 'AttachTo', value: '' }) || { value: '' };
                     this.sideBar.showAdvanced = !(att.value.toLowerCase() === 'arrayexpress' );
                 }
                 if (resp.error.isSome() ) {
