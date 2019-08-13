@@ -72,7 +72,7 @@ build_ui:dev:
     - dev@ndiaz/BioStudyUISub
 
 build_ui:beta:
-  <<: *build_ui_definition
+  <<: *build_template
   environment: BETA
   only:
     - dev@ndiaz/BioStudyUISub
@@ -84,14 +84,6 @@ build_ui:prod:
     - master@ndiaz/BioStudyUISub
 
 # Build Proxy per environment
-build_proxy:beta:
-  <<: *build_proxy_definition
-  environment: BETA
-  dependencies:
-    - build_ui:beta
-  only:
-    - dev@ndiaz/BioStudyUISub
-
 build_proxy:prod:
   <<: *build_proxy_definition
   environment: PROD
@@ -113,7 +105,7 @@ deploy:beta:
   <<: *deploy_definition
   environment: BETA
   dependencies:
-    - build_proxy:beta
+    - build_ui:beta
   only:
     - dev@ndiaz/BioStudyUISub
   when: manual
