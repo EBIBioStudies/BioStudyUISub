@@ -1,9 +1,10 @@
-.container-scroll {
-    overflow-x: auto;
+.grid-container {
     padding-bottom: 20px;
     white-space: nowrap;
 }
+
 .cell:not(.canton) {
+    float: none;
     display: inline-block;
     padding: 0 0.5vw;
 }
@@ -15,12 +16,16 @@
     justify-content: space-around;
     float: left;
 }
-.canton, .column-heading {
+
+.canton,
+.column-heading {
     border-bottom: 1px solid #CCC;
 }
+
 .column-heading.has-error {
     border-bottom-color: #C05F5D;
 }
+
 .canton .btn-add {
     overflow: hidden;
     width: 100%;
@@ -34,6 +39,7 @@
 .row {
     margin-top: 16px;
 }
+
 .row:last-of-type {
     margin-bottom: 10px;
 }
@@ -42,14 +48,17 @@
     .container-scroll .col-md-2 {
         width: 16.66666667vw;
     }
+
     .container-scroll .col-md-1 {
         width: 8.33333334vw;
     }
 }
+
 @media (max-width: 768px) {
     .container-scroll .col-xs-3 {
         width: 25vw;
     }
+
     .container-scroll .col-xs-1 {
         width: 8.33333334vw;
     }

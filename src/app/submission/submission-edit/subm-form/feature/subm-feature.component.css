@@ -1,6 +1,11 @@
 .panel {
     margin-bottom: 0;
 }
+
+.panel-body {
+    overflow: auto;
+}
+
 .panel-heading .fa {
      color: #777777;
  }
