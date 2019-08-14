@@ -66,6 +66,7 @@ export class SubmEditSidebarComponent implements OnDestroy {
     isEditModeOn: boolean = false;
     isAdvancedOpen: boolean = false;
     @Input() isAdvancedVisible: boolean = true;
+    @Input() collapsed?: boolean = false;
     items: DataTypeControl[] = [];
 
     form?: FormGroup;
