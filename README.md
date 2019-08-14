@@ -1,39 +1,60 @@
-# BioStudyUISub #
+# BioStudies - Submission Tool
 
-BioStudies DB submission web interface.
+- Angular v6
+- ExpressJS v4
+- Node v10.16.2
 
-### Install environment ###
+## Getting Started
+
+### 1. Configure
+This project uses [config](https://www.npmjs.com/package/config) module which expects a `.env` file in the root directory.
+
+Create a `.env` file in the root of the project and copy / pase the next environment variable definitions in it:
+
+```js
+BACKEND_PATH_CONTEXT=pathname
+BACKEND_HOST_NAME=hostname
+BACKEND_PORT=port
+```
+
+- `BACKEND_PATH_CONTEXT` is the pathname of the backend service URL
+- `BACKEND_HOST_NAME` is the hostname or backend URI
+- `BACKEND_PORT` is the port where the backend is running
+
+### 2. Install dependencies
+Be sure your local environment has `Node v10.16.2` and `NPM v6.9.0` at least.
+
+Run the next script to install dependencies:
+
 ```
  npm install
- npm install @angular/cli -g
- npm install gulp -g
- 
 ```
 
-### Configure ###
-* `./proxy.conf.json`: specify where is the proxy app server is running
-* `./config.json`: specify the context and proxy app context
-
+### 3. Run in development mode
+Run the next script to execute the application in **development mode**:
 ```
-{
-...
-"APP_PROXY_BASE": "/proxy",
-"APP_CONTEXT": "/",
-...
-}
+npm run start:dev
 ```
 
-### Run (dev mode) ###
-```
-$ npm start
-```
+- The `npm run start:dev` will run a **Node + Express** service which proxies the requests to **BioStudies** backend and a **Angular Dev Server** to get local development benefits (hot reload + live TS compilation)
+- By default **Node + Express** service runs on `8080` port
+- By default **Angular Dev Server** service runs on `4200` port
 
-### Run (prod mode) ###
+## Run production mode
+Make sure you have the `.env` file created as it's described in **Getting Started - Configure**
+
+Run the next steps to build and execute the application in  **production** mode:
+
 ```
-$ gulp config
-$ ng build --prod
-$ gulp webserver
+npm run build
+cp .env ./dist
+cd ./dist
+npm run node:prod
 ```
 
 ### Tests ###
-To be added...
+Run the next script to execute unit tests:
+
+```
+npm run test
+```

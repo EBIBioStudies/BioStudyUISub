@@ -14,7 +14,6 @@ const { loggerSettings, errorLoggerSettings } = require('./logger');
 
 const { port, hostname, protocol } = config.express;
 const { context } = config.backend;
-const { contextPath: identifiersRegistryContextPath } = config.identifiers.registry_uri;
 const { limit } = config.files;
 
 const app = express();
