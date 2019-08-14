@@ -74,11 +74,9 @@ export class AppHeaderComponent implements OnDestroy {
             .signOut()
             .subscribe(
                 () => { this.isBusy = false; },
-                (error) => {
+                () => {
                     // fix this: 403 response should not be returned here
-                    if (error.status === 403) {
-                        this.userSession.destroy();
-                    }
+                    this.userSession.destroy();
                     this.isBusy = false;
                 });
     }
