@@ -44,7 +44,7 @@
         </div>
 
         <div class="panel-body" #featureEl>
-            <div *ngIf="!readonly">
+            <div>
                 <subm-feature-grid *ngIf="featureForm.canHaveMultipleRows; else featureList"
                                    [featureForm]="featureForm"
                                    [readonly]="readonly">

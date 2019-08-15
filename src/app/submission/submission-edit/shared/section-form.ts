@@ -1,7 +1,7 @@
 import {
     Attribute,
     AttributeValue,
-    ColumnType,
+    ColumnType, DisplayType,
     Feature,
     FeatureType,
     Field,
@@ -622,6 +622,10 @@ export class SectionForm extends FormBase {
 
     get type(): SectionType {
         return this.section.type;
+    }
+
+    get isTypeReadonly(): boolean {
+        return this.section.type.displayType === DisplayType.Readonly;
     }
 
     get typeName(): string {

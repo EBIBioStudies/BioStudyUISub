@@ -141,7 +141,7 @@
                             : {{subsectionForm.section.accno}}
                         </span>
                         <span class="btn-toolbar pull-right">
-                            <button type="button" *ngIf="!readonly && sectionForm.isSectionRemovable(subsectionForm)" class="section-delete btn btn-danger btn-xs btn-flat"
+                            <button type="button" *ngIf="!readonly && !sectionForm.isTypeReadonly && sectionForm.isSectionRemovable(subsectionForm)" class="section-delete btn btn-danger btn-xs btn-flat"
                                     tooltip="Delete page &quot;{{subsectionForm.typeName}}&quot;"
                                     container="body"
                                     placement="left"
