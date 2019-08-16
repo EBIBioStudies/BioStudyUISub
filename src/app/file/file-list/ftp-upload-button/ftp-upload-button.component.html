@@ -2,12 +2,13 @@
 
 <ng-template #template>
     <div class="modal-header bg-primary">
-        FTP Upload
+        FTP/Aspera Upload
     </div>
     <div class="modal-body">
         <markdown ngPreserveWhitespaces>
             Your secret directory is: `{{secretId}}`
 
+            ## FTP
             The FTP server is `ftp-private.ebi.ac.uk`, FTP user is `bsftp`, and the password is `bsftp1`.
             You can use any FTP client such as *FileZilla*, or issue FTP commands via a common line, e.g.,
 
@@ -18,7 +19,8 @@
             ftp> cd xx/xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx-xxxx
             ftp> put testFile
             ```
-            ---
+
+            ## Aspera
             The **Aspera** `ascp` command line client is distributed as part of the **Aspera Connect**
             high-performance transfer browser plug-in which can be downloaded from
             <a target="_blank" href="https://asperasoft.com/software/clients/connect">https://asperasoft.com/software/clients/connect</a>
@@ -35,37 +37,36 @@
             window.
         </markdown>
         <markdown *ngIf="osName === 'macos'">
-            - `&lt;path to asperaweb_id_dsa.openssh file&gt;` is the public key for **Aspera** connection. It's available in *~/Applications/Aspera\ Connect.app/Contents/Resources*.
+            - `&lt;path to asperaweb_id_dsa.openssh file&gt;` is the public key for **Aspera** connection. It's available in `~/Applications/Aspera\ Connect.app/Contents/Resources`.
 
             ---
-            The **Aspera Connect** installer doesn't make the command line client (`ascp`) available in the terminal by default. There're two options
-            to execute it in the terminal:
+            The **Aspera Connect** installer doesn't make the command line client (`ascp`) available in the terminal by default.
 
-            1. Go to `~/Applications/Aspera\ Connect.app/Contents/Resources` and execute it from there
-            2. Or create an alias in your `~/.bashrc` file
+            To use it go to `~/Applications/Aspera\ Connect.app/Contents/Resources` and execute it from there, like so:
 
-            #### Follow next steps if the first option is preferred
             ```
             $ cd ~/Applications/Aspera\ Connect.app/Contents/Resources
             $ ./ascp -P33001 -i &lt;path to asperaweb_id_dsa.openssh file&gt; -d &lt;directory to upload&gt;
             bsaspera_w@hx-fasp-1.ebi.ac.uk:.dropbox/&lt;secret directory&gt;
             ```
-
-            #### Follow next steps if the second option is preferred
-            ```
-            $ echo "alias ascp=\"cd ~/Applications/Aspera\ Connect.app/Contents/Resources && ./ascp\"" >> ~/.bashrc
-            $ source ~/.bashrc
-            $ ascp -P33001 -i &lt;path to asperaweb_id_dsa.openssh file&gt; -d &lt;directory to upload&gt;
-            bsaspera_w@hx-fasp-1.ebi.ac.uk:.dropbox/&lt;secret directory&gt;
-            ```
         </markdown>
         <markdown *ngIf="osName === 'windows'">
             - `&lt;path to asperaweb_id_dsa.openssh file&gt;` is the public key for **Aspera** connection. It's available in
-            *%userprofile%\AppData\Local\Programs\Aspera\Aspera Connect\etc\asperaweb_id_dsa.openssh*.
+            `%APPDATA%\..\Local\Lxss\Programs\Aspera\Aspera Connect\etc\asperaweb_id_dsa.openssh`.
+
+            ---
+            The **Aspera Connect** installer doesn't make the command line client (`ascp`) available in the terminal by default.
+
+            To use it go to `%APPDATA%\..\Local\Lxss\Programs\Aspera\Aspera Connect\etc` and execute it from there, like so:
+
+            ```
+            $ cd %APPDATA%\..\Local\Lxss\Programs\Aspera\Aspera Connect\etc
+            $ ascp.exe -P33001 -i &lt;path to asperaweb_id_dsa.openssh file&gt; -d &lt;directory to upload&gt;
+            bsaspera_w@hx-fasp-1.ebi.ac.uk:.dropbox/&lt;secret directory&gt;
+            ```
         </markdown>
         <markdown *ngIf="osName === 'linux' || osName === 'unknown'">
-            - `&lt;path to asperaweb_id_dsa.openssh file&gt;` is the public key for **Aspera** connection. It's available in
-            *&lt;aspera connect installation directory&gt;/etc/asperaweb_id_dsa.openssh*.
+            - `&lt;path to asperaweb_id_dsa.openssh file&gt;` is the public key for **Aspera** connection. It's available in `&lt;aspera connect installation directory&gt;/etc/asperaweb_id_dsa.openssh`.
         </markdown>
     </div>
     <div class="modal-footer">
