@@ -52,17 +52,16 @@
         </markdown>
         <markdown *ngIf="osName === 'windows'">
             - `&lt;path to asperaweb_id_dsa.openssh file&gt;` is the public key for **Aspera** connection. It's available in
-            `%APPDATA%\..\Local\Lxss\Programs\Aspera\Aspera Connect\etc\asperaweb_id_dsa.openssh`.
+            `"%APPDATA%\..\Local\Programs\Aspera\Aspera Connect\etc\asperaweb_id_dsa.openssh"`.
 
             ---
             The **Aspera Connect** installer doesn't make the command line client (`ascp`) available in the terminal by default.
 
-            To use it go to `%APPDATA%\..\Local\Lxss\Programs\Aspera\Aspera Connect\etc` and execute it from there, like so:
+            To use it go to `"%APPDATA%\..\Local\Programs\Aspera\Aspera Connect\bin"` and execute it from there, like so:
 
             ```
-            $ cd %APPDATA%\..\Local\Lxss\Programs\Aspera\Aspera Connect\etc
-            $ ascp.exe -P33001 -i &lt;path to asperaweb_id_dsa.openssh file&gt; -d &lt;directory to upload&gt;
-            bsaspera_w@hx-fasp-1.ebi.ac.uk:.dropbox/&lt;secret directory&gt;
+            $ cd "%APPDATA%\..\Local\Programs\Aspera\Aspera Connect\bin"
+            $ ascp.exe -P33001 -i &lt;path to asperaweb_id_dsa.openssh file&gt; -d &lt;directory to upload&gt; bsaspera_w@hx-fasp-1.ebi.ac.uk:.dropbox/&lt;secret directory&gt;
             ```
         </markdown>
         <markdown *ngIf="osName === 'linux' || osName === 'unknown'">
