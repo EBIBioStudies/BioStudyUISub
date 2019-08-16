@@ -1,8 +1,8 @@
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
 import { AgGridModule } from 'ag-grid-angular';
 import { HttpCustomClientModule } from 'app/http/http-custom-client.module';
+import { MarkdownModule } from 'ngx-markdown';
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { SharedModule } from 'app/shared/shared.module';
 import { FileActionsCellComponent } from './file-list/ag-grid/file-actions-cell.component';
 import { FileTypeCellComponent } from './file-list/ag-grid/file-type-cell.component';
@@ -22,6 +22,7 @@ import { HttpUploadClientService } from './shared/http-upload-client.service';
 
 @NgModule({
     imports: [
+        MarkdownModule.forChild(),
         HttpCustomClientModule,
         RouterModule,
         SharedModule,

@@ -17,6 +17,7 @@ import {
     AlertModule,
     BsDatepickerModule
 } from 'ngx-bootstrap';
+import { MarkdownModule } from 'ngx-markdown';
 import { AppRoutingModule } from './app-routing.module';
 import { HelpModule } from './help/help.module';
 import { AuthModule } from './auth/auth.module';
@@ -36,6 +37,7 @@ export function initConfig(config: AppConfig): () => Promise<any> {
 @NgModule({
     imports: [
         BrowserModule,
+        MarkdownModule.forRoot(),
         RecaptchaModule.forRoot(),
         TypeaheadModule.forRoot(),
         TooltipModule.forRoot(),
