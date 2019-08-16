@@ -29,7 +29,9 @@
               "node_modules/@fortawesome/fontawesome-free/css/all.css",
               "src/styles/custom-bootstrap.less"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/marked/lib/marked.js"
+            ]
           },
           "configurations": {
             "production": {
