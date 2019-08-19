@@ -70,7 +70,7 @@
         </div>
     </div>
 </div>
-<button *ngIf="featureForm && featureForm.canAddRow() && !featureForm.isReadonly" type="button" class="btn-add btn btn-link" tabindex="-1"
+<button *ngIf="featureForm && featureForm.canAddRow() && !featureForm.isReadonly && !readonly" type="button" class="btn-add btn btn-link" tabindex="-1"
         [tooltip]="'Add a new ' + featureForm.prettyName"
         container="body"
         (click)="featureForm.addRow()">
