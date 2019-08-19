@@ -19,6 +19,7 @@ import { DirectoryPathComponent } from './file-list/directory-path/directory-pat
 import { FileUploadBadgeComponent } from './file-list/file-upload-badge/file-upload-badge.component';
 import { FileTreeStore } from './file-select/file-tree.store';
 import { HttpUploadClientService } from './shared/http-upload-client.service';
+import { AccordionModule } from 'ngx-bootstrap';
 
 @NgModule({
     imports: [
@@ -30,7 +31,8 @@ import { HttpUploadClientService } from './shared/http-upload-client.service';
             FileActionsCellComponent,
             FileTypeCellComponent,
             ProgressCellComponent
-        ])
+        ]),
+        AccordionModule.forRoot()
     ],
     declarations: [
         FileListComponent,

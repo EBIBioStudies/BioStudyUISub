@@ -5,68 +5,71 @@
         FTP/Aspera Upload
     </div>
     <div class="modal-body">
-        <markdown ngPreserveWhitespaces>
+        <markdown>
+            You can upload directories to your BioStudies filespace via FTP or Aspera. Please click on the relevant
+            method below.
             Your secret directory is: `{{secretId}}`
-
-            ## FTP
-            The FTP server is `ftp-private.ebi.ac.uk`, FTP user is `bsftp`, and the password is `bsftp1`.
-            You can use any FTP client such as *FileZilla*, or issue FTP commands via a common line, e.g.,
-
-            ```
-            ftp ftp-private.ebi.ac.uk
-            Name: bsftp
-            Password: bsftp1
-            ftp> cd xx/xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx-xxxx
-            ftp> put testFile
-            ```
-
-            ## Aspera
-            The **Aspera** `ascp` command line client is distributed as part of the **Aspera Connect**
-            high-performance transfer browser plug-in which can be downloaded from
-            <a target="_blank" href="https://asperasoft.com/software/clients/connect">https://asperasoft.com/software/clients/connect</a>
-
-            Your command for uploading a directory can be:
-            ```
-            ascp -P33001 -i &lt;path to asperaweb_id_dsa.openssh file&gt; -d &lt;directory to upload&gt;
-            bsaspera_w@hx-fasp-1.ebi.ac.uk:.dropbox/&lt;secret directory&gt;
-            ```
-            where
-            - `-P33001` and `bsaspera_w@hx-fasp-1.ebi.ac.uk` defines port, user and server for **Aspera** connection
-            - `&lt;directory to upload&gt;` is the path of the directory to be uploaded
-            - `&lt;secret directory&gt;` looks like `xx/xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx-xxxx`. Available at the top of this
-            window.
         </markdown>
-        <markdown *ngIf="osName === 'macos'">
-            - `&lt;path to asperaweb_id_dsa.openssh file&gt;` is the public key for **Aspera** connection. It's available in `~/Applications/Aspera\ Connect.app/Contents/Resources`.
-
-            ---
-            The **Aspera Connect** installer doesn't make the command line client (`ascp`) available in the terminal by default.
-
-            To use it go to `~/Applications/Aspera\ Connect.app/Contents/Resources` and execute it from there, like so:
-
-            ```
-            $ cd ~/Applications/Aspera\ Connect.app/Contents/Resources
-            $ ./ascp -P33001 -i &lt;path to asperaweb_id_dsa.openssh file&gt; -d &lt;directory to upload&gt;
-            bsaspera_w@hx-fasp-1.ebi.ac.uk:.dropbox/&lt;secret directory&gt;
-            ```
-        </markdown>
-        <markdown *ngIf="osName === 'windows'">
-            - `&lt;path to asperaweb_id_dsa.openssh file&gt;` is the public key for **Aspera** connection. It's available in
-            `"%APPDATA%\..\Local\Programs\Aspera\Aspera Connect\etc\asperaweb_id_dsa.openssh"`.
-
-            ---
-            The **Aspera Connect** installer doesn't make the command line client (`ascp`) available in the terminal by default.
-
-            To use it go to `"%APPDATA%\..\Local\Programs\Aspera\Aspera Connect\bin"` and execute it from there, like so:
-
-            ```
-            $ cd "%APPDATA%\..\Local\Programs\Aspera\Aspera Connect\bin"
-            $ ascp.exe -P33001 -i &lt;path to asperaweb_id_dsa.openssh file&gt; -d &lt;directory to upload&gt; bsaspera_w@hx-fasp-1.ebi.ac.uk:.dropbox/&lt;secret directory&gt;
-            ```
-        </markdown>
-        <markdown *ngIf="osName === 'linux' || osName === 'unknown'">
-            - `&lt;path to asperaweb_id_dsa.openssh file&gt;` is the public key for **Aspera** connection. It's available in `&lt;aspera connect installation directory&gt;/etc/asperaweb_id_dsa.openssh`.
-        </markdown>
+        <accordion closeOthers="true">
+            <accordion-group  #group [isOpen]="true">
+                <div accordion-heading class="clearfix">
+                   <span class="float-right pull-right">
+                       <i class="fa" [ngClass]="!group?.isOpen ? 'fa-chevron-down': 'fa-chevron-up'"></i>
+                   </span>
+                    Upload using FTP
+                </div>
+            You can use any FTP client such as **FileZilla**, or issue FTP commands via a common line, e.g.,
+                <markdown ngPreserveWhitespaces>
+                    ```
+                    ftp ftp-private.ebi.ac.uk
+                    Name: bsftp
+                    Password: bsftp1
+                    ftp> cd xx/xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx-xxxx
+                    ftp> put testFile
+                    ```
+                    where
+                    - `ftp-private.ebi.ac.uk` is the FT server.
+                    - `bsftp` is the username.
+                    - `bsftp1` is the password.
+                    - `xx/xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx-xxxx` is your secret directory shown above.
+                </markdown>
+            </accordion-group>
+            <accordion-group #group2 [isOpen]="false">
+                <div accordion-heading class="clearfix">
+                   <span class="float-right pull-right">
+                       <i class="fa" [ngClass]="!group2?.isOpen ? 'fa-chevron-down': 'fa-chevron-up'"></i>
+                   </span>
+                    Upload using Aspera
+                </div>
+                <markdown ngPreserveWhitespaces>
+                    The **Aspera** `ascp` command line client is distributed as part of the **Aspera CLI**
+                    high-performance transfer browser plug-in which can be downloaded from
+                    <a target="_blank" href="https://downloads.asperasoft.com/en/downloads/62">https://downloads.asperasoft.com/en/downloads/62</a>.
+                </markdown>
+                <markdown *ngIf="osName === 'macos' || osName === 'linux' || osName === 'unknown'">
+                    You will need to execute the downloaded file and switch to the CLI folder, e.g.,
+                    ```
+                    $ sh ~/Documents/ibm-aspera-cli-3.9.1.1401.be67d47-mac-10.7-64-release.sh
+                    $ cd ~/Applications/Aspera\ CLI/bin
+                    $ ./ascp -P33001 -i ../etc/asperaweb_id_dsa.openssh -d &lt;directory to upload&gt; bsaspera_w@hx-fasp-1.ebi.ac.uk:.dropbox/&lt;secret directory>
+                    ```
+                </markdown>
+                <markdown *ngIf="osName === 'windows'">
+                    You will need to extract the downloaded zip file to a directory of your choice and then switch to
+                    the subdirectory bin, e.g.,
+                    ```
+                    C:\>cd C:\cli\bin
+                    C:\cli\bin>ascp.exe -P33001 -i ..\etc\asperaweb_id_dsa.openssh -d &lt;directory to upload&gt; bsaspera_w@hx-fasp-1.ebi.ac.uk:.dropbox/&lt;secret directory&gt;
+                    ```
+                </markdown>
+                <markdown>
+                    where
+                    - `-P33001` and `bsaspera_w@hx-fasp-1.ebi.ac.uk` defines port, user and server for **Aspera** connection.
+                    - `&lt;directory to upload&gt;` is the path of the directory to be uploaded.
+                    - `&lt;secret directory&gt;` looks like `xx/xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx-xxxx` and is shown above.
+                </markdown>
+            </accordion-group>
+        </accordion>
     </div>
     <div class="modal-footer">
         <form class="pull-right">
