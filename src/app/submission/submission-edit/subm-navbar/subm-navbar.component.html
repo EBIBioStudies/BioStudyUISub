@@ -17,19 +17,23 @@
                 </span>
             </a>
         </span>
-    </div><!--
-    --><div class="col-xs-4 col-md-3 btn-toolbar nav-block">
-        <button *ngIf="!readonly" class="button-link btn btn-primary btn-sm btn-submit pull-right"
+    </div>
+    <div class="col-xs-4 col-md-3 btn-toolbar nav-block">
+        <button *ngIf="!readonly"
+                [disabled]="!isEditing"
+                class="button-link btn btn-primary btn-sm btn-submit pull-right"
                 tooltip="Send to the BioStudies database"
                 placement="bottom"
                 container="body"
                 (click)="onSubmit($event)">
             {{isTemp ? 'S' : 'Re-s'}}ubmit
         </button>
-        <button  *ngIf="!readonly && !isTemp && isRevised" class="button-link btn btn-primary btn-sm btn-danger pull-right"
-                 tooltip="Revert to last released version"
-                 placement="bottom"
-                 container="body"
+        <button *ngIf="!readonly && !isTemp && isRevised"
+                [disabled]="!isEditing"
+                class="button-link btn btn-primary btn-sm btn-danger pull-right"
+                tooltip="Revert to last released version"
+                placement="bottom"
+                container="body"
                 (click)="onRevert($event)">
             <i class="fa fa-undo" aria-hidden="true"></i>
             Revert

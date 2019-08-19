@@ -5,7 +5,7 @@ import { pageTab2Submission, PageTab, submission2PageTab, SelectValueType } from
 import { Submission, AttributeData, Section, Feature, Attribute } from 'app/submission/submission-shared/model/submission';
 import { none, Option, some } from 'fp-ts/lib/Option';
 import { BehaviorSubject, EMPTY, Observable, of, Subject, Subscription } from 'rxjs';
-import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
+import { catchError, debounceTime, map, switchMap, skip } from 'rxjs/operators';
 import { UserInfo } from '../../../auth/shared/model';
 import { SubmissionService, SubmitResponse, PendingSubmission } from '../../submission-shared/submission.service';
 import { MyFormControl } from './form-validators';
@@ -22,9 +22,11 @@ class EditState {
     static Error = 'Error';
 
     private state: string;
+    private editState: string;
 
     constructor() {
         this.state = EditState.Init;
+        this.editState = EditState.Init;
     }
 
     reset() {
@@ -45,6 +47,7 @@ class EditState {
 
     stopReverting(error?: any) {
         this.backToEditing(error);
+        this.editState = EditState.Init;
     }
 
     startSaving() {
@@ -59,8 +62,13 @@ class EditState {
         this.state = EditState.Submitting;
     }
 
+    startEditing() {
+        this.editState = EditState.Editing;
+    }
+
     stopSubmitting(error?: any) {
         this.backToEditing(error);
+        this.editState = EditState.Init;
     }
 
     get isSubmitting(): boolean {
@@ -77,6 +85,10 @@ class EditState {
 
     get isReverting(): boolean {
         return this.state === EditState.Reverting;
+    }
+
+    get isEditing(): boolean {
+        return this.editState === EditState.Editing;
     }
 
     private backToEditing(error: any) {
@@ -134,6 +146,10 @@ export class SubmEditService {
         return this.editState.isReverting;
     }
 
+    get isEditing(): boolean {
+        return this.editState.isEditing;
+    }
+
     get isTemp() {
         return this.submModel!.isTemp;
     }
@@ -154,8 +170,12 @@ export class SubmEditService {
             map(pendingSubm => {
                 this.editState.stopLoading();
                 this.createForm(pendingSubm, setDefaults);
-                const projectAttribute = pendingSubm && pendingSubm.data && pendingSubm.data.attributes
-                    && pendingSubm.data.attributes.filter( att => att.name && att.name.toLowerCase() === 'attachto')
+                const projectAttribute =
+                    pendingSubm &&
+                    pendingSubm.data &&
+                    pendingSubm.data.attributes &&
+                    pendingSubm.data.attributes
+                        .filter( att => att.name && att.name.toLowerCase() === 'attachto')
                         .shift();
 
                 return ServerResponse.Ok(projectAttribute);
@@ -164,7 +184,8 @@ export class SubmEditService {
                 this.editState.stopLoading(error);
 
                 return of(ServerResponse.Error(error));
-            }));
+            })
+        );
     }
 
     revert(): Observable<ServerResponse<any>> {
@@ -193,7 +214,6 @@ export class SubmEditService {
                 return resp;
             }),
             catchError(error => {
-                console.log(error);
                 this.editState.stopSubmitting(error);
                 this.onErrorResponse(error);
 
@@ -223,10 +243,15 @@ export class SubmEditService {
         }
 
         if (sectionForm !== undefined) {
+            this.save(); // Save a pending submission as soon as the edit form gets visible.
             this.sectionFormSub = sectionForm.form.valueChanges
-                .pipe(debounceTime(900))
+                .pipe(
+                    skip(1),
+                    debounceTime(900)
+                )
                 .subscribe(() => {
                     this.save();
+                    this.editState.startEditing();
                 });
 
             this.updateDependencyValues(sectionForm);

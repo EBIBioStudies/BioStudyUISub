@@ -40,7 +40,8 @@ const appRoutes: Routes = [
     {
         path: 'submissions/edit/:accno',
         component: SubmissionEditComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
+        runGuardsAndResolvers: 'always'
     },
     {
         path: 'submissions/new/:accno',
@@ -51,8 +52,9 @@ const appRoutes: Routes = [
     {
         path: 'submissions/:accno',
         component: SubmissionEditComponent,
-        data: {reuse: true, readonly: true},
-        canActivate: [AuthGuard]
+        data: {readonly: true},
+        canActivate: [AuthGuard],
+        runGuardsAndResolvers: 'always'
     },
     {
         path: 'files',
@@ -68,7 +70,7 @@ const appRoutes: Routes = [
 
 @NgModule({
     imports: [
-        RouterModule.forRoot(appRoutes)
+        RouterModule.forRoot(appRoutes, { onSameUrlNavigation: 'reload' })
     ],
     exports: [
         RouterModule

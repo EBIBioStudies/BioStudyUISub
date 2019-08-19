@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { Section } from 'app/submission/submission-shared/model/submission';
 import { SectionForm } from '../shared/section-form';
+import { SubmEditService } from '../shared/subm-edit.service';
 
 @Component({
     selector: 'subm-navbar',
@@ -17,6 +18,8 @@ export class SubmNavBarComponent implements OnChanges {
     @Output() editClick: EventEmitter<Event> = new EventEmitter<Event>();
 
     sectionPath: SectionForm[] = [];
+
+    constructor(private submEditService: SubmEditService) {}
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.sectionForm !== null) {
@@ -48,6 +51,10 @@ export class SubmNavBarComponent implements OnChanges {
     // TODO: a temporary workaround
     get isRevised(): boolean {
         return true;
+    }
+
+    get isEditing(): boolean {
+        return this.submEditService.isEditing;
     }
 
     private findSectionPath(sectionForm?: SectionForm): SectionForm[] {
