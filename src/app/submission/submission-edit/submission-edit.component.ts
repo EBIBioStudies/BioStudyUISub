@@ -170,7 +170,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
 
     onEditBackClick() {
         this.readonly = false;
-        this.router.navigate(['/submissions/edit/' + this.accno]);
+        this.router.navigate([`/submissions/edit/${this.accno}`]);
     }
 
     onSectionClick(sectionForm: SectionForm): void {
