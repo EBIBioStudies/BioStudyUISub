@@ -47,6 +47,7 @@ class EditState {
 
     stopReverting(error?: any) {
         this.backToEditing(error);
+        this.editState = EditState.Init;
     }
 
     startSaving() {
