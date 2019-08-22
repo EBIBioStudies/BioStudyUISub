@@ -1,32 +1,29 @@
 <div class="form-group">
-    <select class="form-control"
-            (change)="onSelectionChange($event)">
-        <option value="after" [selected]="after">From (inclusive)</option>
-        <option value="before" [selected]="before">To (exclusive)</option>
-        <option value="between" [selected]="between">Range</option>
-    </select>
+    <div class="btn-group">
+        <label class="btn btn-default" [(ngModel)]="selection" btnRadio="after" tabindex="0" role="button" (ngModelChange)="onSelectionChange($event)">After</label>
+        <label class="btn btn-default" [(ngModel)]="selection" btnRadio="before" tabindex="0" role="button" (ngModelChange)="onSelectionChange($event)">Before</label>
+        <label class="btn btn-default" [(ngModel)]="selection" btnRadio="between" tabindex="0" role="button" (ngModelChange)="onSelectionChange($event)">Between</label>
+    </div>
 </div>
-<div *ngIf="after || between" class="form-group">
-    <label  *ngIf="between" class="control-label" for="date-from">
-        From
-        <span class="text-muted">(including date)</span>
-    </label>
-    <date-input id="date-from"
-                [allowPast]="true"
-                [(ngModel)]="date.from">
-    </date-input>
-</div>
-<div *ngIf="before || between" class="form-group">
-    <label  *ngIf="between" class="control-label" for="date-to">
-        To
-        <span class="text-muted">(excluding date)</span>
-    </label>
-    <date-input id="date-to"
-                [allowPast]="true"
-                [(ngModel)]="date.to">
-    </date-input>
+<div class="form-group">
+    <div *ngIf="after || between">
+        <date-input id="date-from"
+                    [allowPast]="true"
+                    [(ngModel)]="date.from">
+        </date-input>
+    </div>
+    <div *ngIf="between" >
+        and
+    </div>
+    <div *ngIf="before || between" >
+        <date-input id="date-to"
+                    [allowPast]="true"
+                    [(ngModel)]="date.to">
+        </date-input>
+    </div>
 </div>
 <button class="btn btn-sm btn-primary btn-submit" type="submit"
+        [disabled]="isInvalidRange"
         (click)="onApplyClick($event)">
     Filter
 </button>
@@ -34,3 +31,4 @@
         (click)="onClearClick($event)">
     Clear
 </button>
+
