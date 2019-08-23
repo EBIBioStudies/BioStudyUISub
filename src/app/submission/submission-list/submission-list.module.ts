@@ -8,6 +8,7 @@ import { DateFilterComponent } from './ag-grid/date-filter.component';
 import { TextFilterComponent } from './ag-grid/text-filter.component';
 
 import { DateCellComponent, ActionButtonsCellComponent, SubmListComponent } from './subm-list.component';
+import {ButtonsModule} from "ngx-bootstrap";
 
 @NgModule({
     imports: [
@@ -20,7 +21,8 @@ import { DateCellComponent, ActionButtonsCellComponent, SubmListComponent } from
             DateFilterComponent
         ]),
         SubmissionSharedModule,
-        SubmissionOtherModule
+        SubmissionOtherModule,
+        ButtonsModule
     ],
     providers: [],
     declarations: [

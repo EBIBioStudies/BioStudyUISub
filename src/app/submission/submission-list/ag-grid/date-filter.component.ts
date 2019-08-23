@@ -12,23 +12,29 @@ import { DateInputComponent } from '../../../shared/date-input.component';
 class DateRange {
     public static fromSeconds(from: number, to: number): DateRange {
         return new DateRange(
-            DateRange.asDateString(from), DateRange.asDateString(to));
+            DateRange.asDateString(from), DateRange.asDateString(to, true));
     }
 
-    private static asSeconds(dateString?: string): number | undefined {
+    private static asSeconds(dateString?: string, setTillEndOfDay: boolean = false): number | undefined {
         if (DateRange.isValueEmpty(dateString)) {
             return undefined;
         }
-        const date = parseDate(dateString!);
+        let date = parseDate(dateString!);
+        if (date && setTillEndOfDay) {
+            date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
+        }
         return date ? date.getTime() / 1000 : undefined;
     }
 
-    private static asDateString(seconds?: number): string {
+    private static asDateString(seconds?: number, setTillEndOfDay: boolean = false): string {
         if (DateRange.isValueEmpty(seconds)) {
             return '';
         }
-        const date = new Date();
+        let date = new Date();
         date.setTime(seconds! * 1000);
+        if (setTillEndOfDay) {
+            date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
+        }
         return formatDate(date);
     }
 
@@ -55,7 +61,7 @@ class DateRange {
     toSeconds(): any {
         return {
             from: DateRange.asSeconds(this.from),
-            to: DateRange.asSeconds(this.to)
+            to: DateRange.asSeconds(this.to, true)
         };
     }
 }
@@ -71,7 +77,7 @@ export class DateFilterComponent implements AgFilterComponent {
     private selection;
     private date?: DateRange;
     private prev?: DateRange;
-
+    
     @ViewChildren(DateInputComponent) dateInputs?: QueryList<DateInputComponent>;
 
     agInit(params: IFilterParams): void {
@@ -96,6 +102,11 @@ export class DateFilterComponent implements AgFilterComponent {
         return !this.date!.isEmpty();
     }
 
+    get isInvalidRange(): boolean {
+        const s = this.date!.toSeconds();
+        return this.between && s.from > s.to;
+    }
+
     doesFilterPass(params: IDoesFilterPassParams): boolean {
         const seconds = this.valueGetter!(params.node);
         if (seconds === undefined || seconds === null || seconds < 0) {
@@ -107,7 +118,7 @@ export class DateFilterComponent implements AgFilterComponent {
         } else if (this.before) {
             return seconds < s.to;
         } else if (this.between) {
-            return seconds >= s.from && seconds < s.to;
+            return seconds >= s.from && seconds <= s.to && s.from <= s.to;
         }
         return true;
     }
@@ -146,8 +157,8 @@ export class DateFilterComponent implements AgFilterComponent {
         return this.selection === 'between';
     }
 
-    onSelectionChange(ev): void {
-        this.selection = ev.target.value;
+    onSelectionChange(value): void {
+        this.selection = value;
         if (this.after) {
             this.date!.to = undefined;
         }
@@ -168,5 +179,26 @@ export class DateFilterComponent implements AgFilterComponent {
     onClearClick(): void {
         this.reset();
         this.notifyAboutChanges();
+    }
+
+    onToChange($event) {
+        if (!this.between) {
+            return;
+        }
+        const s = this.date!.toSeconds();
+        if (s.from > s.to) {
+            $event.to
+        }
+    }
+
+    onFromChange($event) {
+        console.log($event)
+        if (!this.between) {
+            return;
+        }
+        const s = this.date!.toSeconds();
+        if (s.from > s.to) {
+            this.reset();
+        }
     }
 }
