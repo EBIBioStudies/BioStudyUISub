@@ -179,7 +179,11 @@ export class FileListComponent implements OnInit, OnDestroy {
 
         (overlap.length > 0 ? this.confirmOverwrite(overlap) : of(true))
             .takeUntil(this.ngUnsubscribe)
-            .subscribe(() => this.upload(files));
+            .subscribe(() =>
+                this.confirmSpecialExtensions(filesToUpload)
+                .takeUntil(this.ngUnsubscribe)
+                .subscribe(() => this.upload(files))
+            );
     }
 
     private confirmOverwrite(overlap) {
@@ -188,6 +192,22 @@ export class FileListComponent implements OnInit, OnDestroy {
 
         return this.modalService.whenConfirmed(`Do you want to overwrite ${overlapString}`,
             'Overwrite files?', 'Overwrite');
+    }
+
+    private confirmSpecialExtensions(filesToUpload: string[]) {
+        const dbMap = { '.cel': 'ArrayExpress', '.fastq': 'ENA'};
+        const extensions = Array.from(new Set(
+                filesToUpload.map( (file) => file.substring(file.lastIndexOf('.')).toLowerCase())
+                    .filter( x => x !== null && dbMap[x] )));
+        if (extensions.length === 0) { return of(true); }
+        return this.modalService.whenConfirmed(`We notice that you are trying to upload files with extension`
+            + ((extensions.length === 1) ? ` ` : `s `)
+            + extensions.join('/')
+            + ` which may be more appropriate for other databases such as `
+            + extensions.map( (ext) => dbMap[ext]).join('/')
+            + ((extensions.length === 1) ? `` : ` respectively`)
+            + `. Are you sure you want to continue with the upload?`,
+            'File Extension Check', 'Continue');
     }
 
     private upload(files: FileList) {
