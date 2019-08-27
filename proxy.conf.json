@@ -1,14 +1,14 @@
 {
   "/proxy/api": {
-    "target": "http://0.0.0.0:8080",
+    "target": "http://0.0.0.0:9090",
     "secure": false
   },
   "/proxy/raw": {
-    "target": "http://0.0.0.0:8080",
+    "target": "http://0.0.0.0:9090",
     "secure": false
   },
   "/identifiers": {
-    "target": "http://0.0.0.0:8080",
+    "target": "http://0.0.0.0:9090",
     "secure": false
   }
 }
