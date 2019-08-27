@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ServerError } from 'app/http';
 import { Observable, of } from 'rxjs';
@@ -44,23 +44,34 @@ export class AuthService {
                 private appConfig: AppConfig) {
     }
 
+    private checkStatus<T>(response: HttpResponse<T>): UserInfo {
+        if (response.status === 200) {
+            return <UserInfo>(response.body || {});
+        }
+
+        throw ServerError.dataError(response.body);
+    }
+
     signIn(obj: { login: string, password: string }): Observable<UserInfo> {
-        return this.http.post<UserInfoResponse>('/raw/auth/signin', obj).pipe(
-            catchError(resp => AuthService.catch403Error<UserInfoResponse>(resp)),
-            map(resp => AuthService.statusCheck(resp)),
-            map(resp => {
-                this.userSession.create(resp);
-                return resp;
-            }));
+        return this.http.post<UserInfoResponse>(
+            '/raw/auth/signin',
+            obj,
+            { observe: 'response' }
+        ).pipe(
+            catchError((response: HttpErrorResponse) => AuthService.catch403Error<UserInfoResponse>(response)),
+            map((response: HttpResponse<UserInfoResponse>) => this.checkStatus<UserInfoResponse>(response)),
+            map((user: UserInfo) => this.userSession.create(user))
+        );
     }
 
     checkUser(): Observable<UserInfo> {
-        return this.http.get<UserInfoResponse>('/raw/auth/check?format=json').pipe(
-            map(resp => {
-                const value = AuthService.statusCheck(resp);
-                this.userSession.update(resp);
-                return value;
-            }));
+        return this.http.get<UserInfoResponse>(
+            '/raw/auth/profile',
+            { observe: 'response' }
+        ).pipe(
+            map((response: HttpResponse<UserInfoResponse>) => this.checkStatus(response)),
+            map((user: UserInfo) => this.userSession.update(user))
+        );
     }
 
     passwordResetReq(obj: PasswordResetRequestData): Observable<StatusResponse> {
@@ -81,9 +92,15 @@ export class AuthService {
     }
 
     signUp(regData: RegistrationData): Observable<StatusResponse> {
-        return this.http.post<StatusResponse>('/raw/auth/signup', this.withInstanceKey(regData.snapshot())).pipe(
-            catchError(resp => AuthService.catch403Error<StatusResponse>(resp)),
-            map(resp => AuthService.statusCheck(resp)));
+        return this.http.post<StatusResponse>(
+            '/raw/auth/signup',
+            this.withInstanceKey(regData.snapshot()),
+            { observe: 'response' }
+        ).pipe(
+            catchError((response) => AuthService.catch403Error<StatusResponse>(response)),
+            map((response: HttpResponse<StatusResponse>) => this.checkStatus(response)),
+            map(() => ({ status: 'OK' }))
+        );
     }
 
     signOut(): Observable<StatusResponse> {

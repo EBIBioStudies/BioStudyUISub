@@ -9,6 +9,7 @@ import {
     destroyLoginToken,
     destroyUser
 } from './user-cookies';
+import { UserInfo } from './model';
 
 @Injectable()
 export class UserSession {
@@ -23,14 +24,18 @@ export class UserSession {
         }
     }
 
-    create(user: any): void {
+    create(user: any): UserInfo {
         this.update(user);
         this.notifySessionCreated();
+
+        return user;
     }
 
-    update(user: any) {
+    update(user: any): UserInfo {
         setLoginToken(user.sessid);
         setUser(user);
+
+        return user;
     }
 
     destroy(): void {
