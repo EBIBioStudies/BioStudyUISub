@@ -45,17 +45,15 @@ export class AuthService {
   }
 
   passwordResetReq(obj: PasswordResetRequestData): Observable<StatusResponse> {
-    return this.sendPostRequest<UserInfoResponse, StatusResponse>('/raw/auth/changePassword', this.withInstanceKey(obj.snapshot()))
-      .pipe(() => of({ status: 'OK' }));
+    return this.sendPostRequest<UserInfoResponse, StatusResponse>('/raw/auth/password/reset', this.withInstanceKey(obj.snapshot()));
   }
 
   passwordReset(obj: PasswordResetData): Observable<StatusResponse> {
-    return this.http.post<StatusResponse>('/raw/auth/passreset', obj.snapshot());
+    return this.http.post<StatusResponse>('/raw/auth/password/change', obj.snapshot());
   }
 
   activationLinkReq(obj: ActivationLinkRequestData): Observable<StatusResponse> {
-    return this.sendPostRequest<StatusResponse, StatusResponse>('/raw/auth/retryact', this.withInstanceKey(obj.snapshot()))
-      .pipe(() => of({ status: 'OK' }));
+    return this.sendPostRequest<StatusResponse, StatusResponse>('/raw/auth/retryact', this.withInstanceKey(obj.snapshot()));
   }
 
   activate(key: string): Observable<StatusResponse> {
@@ -63,8 +61,7 @@ export class AuthService {
   }
 
   signUp(regData: RegistrationData): Observable<StatusResponse> {
-    return this.sendPostRequest<StatusResponse, StatusResponse>('/raw/auth/signup', this.withInstanceKey(regData.snapshot()))
-      .pipe(() => of({ status: 'OK' }));
+    return this.sendPostRequest<StatusResponse, StatusResponse>('/raw/auth/signup', this.withInstanceKey(regData.snapshot()));
   }
 
   signOut(): Observable<StatusResponse> {
