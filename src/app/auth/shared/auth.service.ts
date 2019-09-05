@@ -28,12 +28,15 @@ export class AuthService {
     private appConfig: AppConfig
   ) { }
 
-  signIn(user: { login: string, password: string }): Observable<UserInfo> {
-    return this.sendPostRequest<UserInfoResponse, UserInfo>('/raw/auth/signin', user)
-      .pipe(map((userInfo: UserInfo) => this.userSession.create(userInfo)));
+  activate(key: string): Observable<StatusResponse> {
+    return this.http.post<StatusResponse>(`/raw/auth/activate/${key}`, {});
   }
 
-  checkUser(): Observable<UserInfo> {
+  changePassword(obj: PasswordResetData): Observable<StatusResponse> {
+    return this.http.post<StatusResponse>('/raw/auth/password/change', obj.snapshot());
+  }
+
+  getUserProfile(): Observable<UserInfo> {
     return this.http.get<UserInfoResponse>(
       '/raw/auth/profile',
       { observe: 'response' }
@@ -44,32 +47,17 @@ export class AuthService {
     );
   }
 
-  passwordResetReq(obj: PasswordResetRequestData): Observable<StatusResponse> {
-    return this.sendPostRequest<UserInfoResponse, StatusResponse>('/raw/auth/password/reset', this.withInstanceKey(obj.snapshot()));
+  login(user: { login: string, password: string }): Observable<UserInfo> {
+    return this.sendPostRequest<UserInfoResponse, UserInfo>('/raw/auth/login', user)
+      .pipe(map((userInfo: UserInfo) => this.userSession.create(userInfo)));
   }
 
-  passwordReset(obj: PasswordResetData): Observable<StatusResponse> {
-    return this.http.post<StatusResponse>('/raw/auth/password/change', obj.snapshot());
-  }
-
-  activationLinkReq(obj: ActivationLinkRequestData): Observable<StatusResponse> {
-    return this.sendPostRequest<StatusResponse, StatusResponse>('/raw/auth/retryact', this.withInstanceKey(obj.snapshot()));
-  }
-
-  activate(key: string): Observable<StatusResponse> {
-    return this.http.post<StatusResponse>(`/raw/auth/activate/${key}`, {});
-  }
-
-  signUp(regData: RegistrationData): Observable<StatusResponse> {
-    return this.sendPostRequest<StatusResponse, StatusResponse>('/raw/auth/signup', this.withInstanceKey(regData.snapshot()));
-  }
-
-  signOut(): Observable<StatusResponse> {
+  logout(): Observable<StatusResponse> {
     if (this.userSession.isAnonymous()) {
       return of({ status: 'OK' });
     }
 
-    return this.sendPostRequest<StatusResponse, StatusResponse>('/raw/auth/signout', { sessid: this.userSession.token() })
+    return this.sendPostRequest<StatusResponse, StatusResponse>('/raw/auth/logout', { sessid: this.userSession.token() })
       .pipe(
         map(() => {
           this.userSession.destroy();
@@ -77,6 +65,19 @@ export class AuthService {
           return { status: 'OK' };
         })
       );
+  }
+
+
+  sendPasswordResetRequest(obj: PasswordResetRequestData): Observable<StatusResponse> {
+    return this.sendPostRequest<UserInfoResponse, StatusResponse>('/raw/auth/password/reset', this.withInstanceKey(obj.snapshot()));
+  }
+
+  sendActivationLinkRequest(obj: ActivationLinkRequestData): Observable<StatusResponse> {
+    return this.sendPostRequest<StatusResponse, StatusResponse>('/raw/auth/retryact', this.withInstanceKey(obj.snapshot()));
+  }
+
+  register(regData: RegistrationData): Observable<StatusResponse> {
+    return this.sendPostRequest<StatusResponse, StatusResponse>('/raw/auth/register', this.withInstanceKey(regData.snapshot()));
   }
 
   private catchError<T>(resp: HttpErrorResponse): Observable<T> {

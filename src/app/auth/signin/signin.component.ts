@@ -42,7 +42,7 @@ export class SignInComponent implements OnInit, AfterViewInit {
         if (form.valid) {
             this.isLoading = true;
             this.authService
-                .signIn(this.model)
+                .login(this.model)
                 .subscribe(
                     () => {
                         this.router.navigate( [next]);
