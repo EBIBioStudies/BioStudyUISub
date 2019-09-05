@@ -27,7 +27,7 @@ describe('UserData', () => {
         };
 
         const authService = {
-            checkUser() {
+            getUserProfile() {
                 return of(user);
             }
         };
