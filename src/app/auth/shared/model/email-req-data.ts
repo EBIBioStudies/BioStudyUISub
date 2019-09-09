@@ -15,12 +15,12 @@ class EmailRequestData extends DataWithCaptchaAndPath {
 
 export class PasswordResetRequestData extends EmailRequestData {
     constructor() {
-        super('#/password_reset');
+        super('/password_reset');
     }
 }
 
 export class ActivationLinkRequestData extends EmailRequestData {
     constructor() {
-        super('#/activate');
+        super('/activate');
     }
 }

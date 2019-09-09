@@ -24,6 +24,6 @@ export class PasswordResetData extends DataWithCaptcha {
     }
 
     snapshot(): { [key: string]: string } {
-        return copyAndExtend(super.snapshot(), {'key': this.key, 'password': this.password});
+        return copyAndExtend(super.snapshot(), {'activationKey': this.key, 'password': this.password});
     }
 }
