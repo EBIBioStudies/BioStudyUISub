@@ -20,6 +20,7 @@ export class Path {
         if (name) {
             return Path.join(this.rootPath, this.relativePath, name);
         }
+
         return Path.join(this.rootPath, this.relativePath);
     }
 

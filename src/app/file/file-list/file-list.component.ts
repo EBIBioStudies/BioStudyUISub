@@ -29,7 +29,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     private ftpUser: string = 'bsftp';
     private ftpPass: string = 'bsftp1';
 
-    path: Path = new Path('/User', '/');
+    path: Path = new Path('/user', '/');
     sideBarCollapsed = false;
     backButton = false;
     gridOptions: GridOptions;
@@ -129,7 +129,7 @@ export class FileListComponent implements OnInit, OnDestroy {
 
     private loadData(path?: Path) {
         const p: Path = path ? path : this.path;
-        this.fileService.getFiles(p.absolutePath())
+        this.fileService.getFiles(p.root)
             .takeUntil(this.ngUnsubscribe)
             .catch(error => {
                 this.gridOptions!.api!.hideOverlay();
@@ -227,7 +227,9 @@ export class FileListComponent implements OnInit, OnDestroy {
 
     private removeFile(fileName: string): void {
         this.modalService.whenConfirmed(`Do you want to delete "${fileName}"?`, 'Delete a file', 'Delete')
-            .pipe( switchMap( () => this.fileService.removeFile(this.path.absolutePath(fileName))))
+            .pipe(
+                switchMap(() => this.fileService.removeFile(this.path.absolutePath(fileName)))
+            )
             .takeUntil(this.ngUnsubscribe)
             .subscribe(() => this.loadData());
     }

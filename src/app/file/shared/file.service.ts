@@ -11,11 +11,12 @@ export class FileService {
     }
 
     getUserDirs(groups?: Observable<UserGroup[]>): Observable<PathInfo[]> {
-        return (groups || this.getUserGroups())
-            .pipe(
-                map(groups => groups.map(g => new PathInfo(g.name, '/Groups/' + g.name, 'DIR'))),
-                map(paths => ([] as PathInfo[]).concat([new PathInfo('Home', '/User', 'DIR')], paths))
-            );
+        const userGroups = groups || this.getUserGroups();
+
+        return userGroups.pipe(
+            map((groupsByUser) => groupsByUser.map((group) => new PathInfo(group.name, '/groups/' + group.name, 'DIR'))),
+            map(paths => ([] as PathInfo[]).concat([new PathInfo('Home', '/user', 'DIR')], paths))
+        );
     }
 
     getFiles(fullPath: string): Observable<PathInfo[]> {
