@@ -121,6 +121,7 @@ export class SubmEditService {
 
     private editState: EditState = new EditState();
     private sectionFormSub?: Subscription;
+    private sectionFormSubEdit?: Subscription;
 
     readonly sectionSwitch$: BehaviorSubject<Option<SectionForm>> = new BehaviorSubject<Option<SectionForm>>(none);
     readonly serverError$: Subject<any> = new Subject<any>();
@@ -242,8 +243,18 @@ export class SubmEditService {
             this.sectionFormSub = undefined;
         }
 
+        if (this.sectionFormSubEdit) {
+            this.sectionFormSubEdit.unsubscribe();
+            this.sectionFormSubEdit = undefined;
+        }
+
         if (sectionForm !== undefined) {
             this.save(); // Save a pending submission as soon as the edit form gets visible.
+
+            this.sectionFormSubEdit = sectionForm.form.valueChanges.subscribe(() => {
+                this.editState.startEditing();
+            });
+
             this.sectionFormSub = sectionForm.form.valueChanges
                 .pipe(
                     skip(1),
@@ -251,7 +262,6 @@ export class SubmEditService {
                 )
                 .subscribe(() => {
                     this.save();
-                    this.editState.startEditing();
                 });
 
             this.updateDependencyValues(sectionForm);

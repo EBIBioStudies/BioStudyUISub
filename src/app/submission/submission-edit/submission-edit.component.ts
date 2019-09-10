@@ -91,6 +91,10 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
         return this.submEditService.isReverting;
     }
 
+    get isEditing(): boolean {
+        return this.submEditService.isEditing;
+    }
+
     // TODO: a temporary workaround
     get isTemp(): boolean {
         return this.accno!.startsWith('TMP_');
