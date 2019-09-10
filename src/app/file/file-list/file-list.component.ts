@@ -129,7 +129,7 @@ export class FileListComponent implements OnInit, OnDestroy {
 
     private loadData(path?: Path) {
         const p: Path = path ? path : this.path;
-        this.fileService.getFiles(p.root)
+        this.fileService.getFiles(p.absolutePath())
             .takeUntil(this.ngUnsubscribe)
             .catch(error => {
                 this.gridOptions!.api!.hideOverlay();
@@ -240,18 +240,14 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     private downloadFile(filePath: string): void {
-        const relativePath = filePath.replace('/User/', '');
+        const downloadPath = `/raw/files/${filePath}`;
+        const link = document.createElement('a');
 
-        this.userData.secretId$.subscribe((secret) => {
-            const ftpPath = `ftp://${this.ftpUser}:${this.ftpPass}@ftp-private.ebi.ac.uk/${secret}/${relativePath}`;
-            const link = document.createElement('a');
+        link.href = downloadPath;
+        link.download = filePath.substr(filePath.lastIndexOf('/') + 1);
 
-            link.href = ftpPath;
-            link.download = filePath.substr(filePath.lastIndexOf('/') + 1);
-
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        });
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 }
