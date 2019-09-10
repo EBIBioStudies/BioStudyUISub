@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { UserData } from 'app/auth/shared';
 import { pageTab2Submission, PageTab, submission2PageTab, SelectValueType } from 'app/submission/submission-shared/model';
-import { Submission, AttributeData, Section, Feature, Attribute } from 'app/submission/submission-shared/model/submission';
+import { Submission, AttributeData, Section, Feature, Attribute } from 'app/submission/submission-shared/model';
 import { none, Option, some } from 'fp-ts/lib/Option';
 import { BehaviorSubject, EMPTY, Observable, of, Subject, Subscription } from 'rxjs';
 import { catchError, debounceTime, map, switchMap, skip } from 'rxjs/operators';
