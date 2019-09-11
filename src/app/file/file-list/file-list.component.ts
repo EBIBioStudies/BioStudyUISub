@@ -220,7 +220,7 @@ export class FileListComponent implements OnInit, OnDestroy {
                 this.removeFile(f.name);
             },
             onDownload: () => {
-                this.downloadFile(f.path);
+                this.downloadFile(f.path, f.name);
             }
         }));
     }
@@ -239,15 +239,20 @@ export class FileListComponent implements OnInit, OnDestroy {
         this.loadData();
     }
 
-    private downloadFile(filePath: string): void {
-        const downloadPath = `/raw/files/${filePath}`;
-        const link = document.createElement('a');
+    private downloadFile(filePath: string, fileName: string): void {
+        this.fileService.download(filePath, fileName).subscribe((data) => {
+            const type: string = data.type;
+            const blob: Blob = new Blob([data], { type });
 
-        link.href = downloadPath;
-        link.download = filePath.substr(filePath.lastIndexOf('/') + 1);
+            const url: string = window.URL.createObjectURL(blob);
+            const link: HTMLAnchorElement = document.createElement('a');
 
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+            link.href = url;
+            link.download = fileName;
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
     }
 }

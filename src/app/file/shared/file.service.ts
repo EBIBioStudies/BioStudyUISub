@@ -31,6 +31,10 @@ export class FileService {
         return this.http.get<UserGroup[]>('/raw/groups');
     }
 
+    download(filePath: string, fileName: string): Observable<any> {
+        return this.http.get(`/raw/files/${filePath}?fileName=${fileName}`, { responseType: 'blob' });
+    }
+
     upload(fullPath: string, files: File[]): Observable<UploadEvent> {
         const formData = new FormData();
 
