@@ -89,7 +89,7 @@ export class AuthService {
   }
 
   private checkStatus<R, T>(response: HttpResponse<R>): T {
-    if (response.status === 200) {
+    if (response.status === 200 || response.status === 201) {
       return <T>(response.body || {});
     }
 
