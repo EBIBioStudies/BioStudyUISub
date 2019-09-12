@@ -15,7 +15,7 @@ export class DirectSubmitFileUploadService {
 
   doUpload(file: File): Observable<UploadEvent> {
     const absolutePath = this.path.absolutePath();
-    const uploadRequest = this.fileService.upload(absolutePath, [file]);
+    const uploadRequest = this.fileService.upload(absolutePath, [file], false);
 
     return uploadRequest;
   }

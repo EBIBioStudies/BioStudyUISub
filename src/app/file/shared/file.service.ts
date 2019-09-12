@@ -23,8 +23,8 @@ export class FileService {
         return this.http.get<PathInfo[]>(`/raw/files${fullPath}`);
     }
 
-    removeFile(fullPath: string): Observable<any> {
-        return this.http.delete(`/raw/files${fullPath}`);
+    removeFile(filePath: string, fileName: string): Observable<any> {
+        return this.http.delete(`/raw/files/${filePath}?fileName=${fileName}`);
     }
 
     getUserGroups(): Observable<UserGroup[]> {
@@ -35,11 +35,17 @@ export class FileService {
         return this.http.get(`/raw/files/${filePath}?fileName=${fileName}`, { responseType: 'blob' });
     }
 
-    upload(fullPath: string, files: File[]): Observable<UploadEvent> {
+    upload(fullPath: string, files: File[], keepFolders: boolean = true): Observable<UploadEvent> {
         const formData = new FormData();
 
-        files.forEach(file => {
-            formData.append('files', file, file.name);
+        files.forEach((file: FullPathFile) => {
+            // Keep file paths (folders) only if browser supports "webkitRelativePath".
+            // If it doesn't, files are uploaded without keeping folder structure.
+            if (String.isDefinedAndNotEmpty(file.webkitRelativePath) && keepFolders) {
+                formData.append('files', file, file.webkitRelativePath);
+            } else {
+                formData.append('files', file, file.name);
+            }
         });
 
         return this.httpUpload.upload(`/raw/files${fullPath}`, formData);

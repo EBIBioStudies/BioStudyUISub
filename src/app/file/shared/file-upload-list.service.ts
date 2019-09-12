@@ -28,17 +28,13 @@ export class FileUpload {
     readonly fileNames: string[];
 
     constructor(path: Path, files: File[], fileService: FileService) {
-        console.log('files', files);
         this.filePath = path;
         this.fileNames = files.map(f => f.name);
         this.percentage = 0;
 
         const upload$: Observable<UploadEvent> =
-            fileService.upload(path.absolutePath(), files).pipe(
-                catchError((error: UploadErrorEvent) => {
-                    console.log(error.message);
-                    return of(error);
-                })
+            fileService.upload(path.absolutePath(), files, true).pipe(
+                catchError((error: UploadErrorEvent) => of(error))
             );
 
         this.uploadEvent$.subscribe((event: UploadEvent) => {

@@ -26,8 +26,6 @@ import 'rxjs/add/operator/takeUntil';
 export class FileListComponent implements OnInit, OnDestroy {
     protected ngUnsubscribe: Subject<void>;     // stopper for all subscriptions
     private rowData: any[];
-    private ftpUser: string = 'bsftp';
-    private ftpPass: string = 'bsftp1';
 
     path: Path = new Path('/user', '/');
     sideBarCollapsed = false;
@@ -41,8 +39,7 @@ export class FileListComponent implements OnInit, OnDestroy {
         private fileService: FileService,
         private fileUploadList: FileUploadList,
         private modalService: ModalService,
-        private route: ActivatedRoute,
-        private userData: UserData
+        private route: ActivatedRoute
     ) {
         this.ngUnsubscribe = new Subject<void>();
 
@@ -217,7 +214,7 @@ export class FileListComponent implements OnInit, OnDestroy {
             type: f.type,
             files: this.decorateFiles(f.files),
             onRemove: () => {
-                this.removeFile(f.name);
+                this.removeFile(f.path, f.name);
             },
             onDownload: () => {
                 this.downloadFile(f.path, f.name);
@@ -225,10 +222,10 @@ export class FileListComponent implements OnInit, OnDestroy {
         }));
     }
 
-    private removeFile(fileName: string): void {
+    private removeFile(filePath: string, fileName: string): void {
         this.modalService.whenConfirmed(`Do you want to delete "${fileName}"?`, 'Delete a file', 'Delete')
             .pipe(
-                switchMap(() => this.fileService.removeFile(this.path.absolutePath(fileName)))
+                switchMap(() => this.fileService.removeFile(filePath, fileName))
             )
             .takeUntil(this.ngUnsubscribe)
             .subscribe(() => this.loadData());

@@ -23,3 +23,7 @@ declare interface Array<T> {
 declare type Dictionary<T> = { [key: string]: T | undefined }
 
 declare type Nullable<T> = T | null | undefined
+
+declare interface FullPathFile extends File {
+    webkitRelativePath: string;
+}
