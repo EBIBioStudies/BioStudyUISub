@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { AppConfig } from '../app.config';
 
 @Component({
     selector: 'help-page',
@@ -12,13 +11,6 @@ import { AppConfig } from '../app.config';
  * is just a fragment.
  */
 export class HelpComponent {
-
-    constructor(private appConfig: AppConfig) {}
-
-    get appVersion(): string {
-        return this.appConfig.version;
-    }
-
     jumpTo(event): void {
         // Cancels any routing
         event.preventDefault();
