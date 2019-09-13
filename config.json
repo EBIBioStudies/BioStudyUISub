@@ -1,11 +1,7 @@
 {
   "APP_PROXY_BASE": "/proxy",
   "APP_CONTEXT": "",
-  "APP_DEBUG_ENABLED": true,
-  "APP_PROD": true,
-  "APP_VERSION": "3.0",
   "APP_TABLET_BREAKPOINT": 993,
-  "APP_ALLOW_PAST_DATES": true,
   "APP_MAX_DATE_YEARS": 2,
   "APP_DATE_LIST_FORMAT": "dd MMM yyyy",
   "APP_DATE_INPUT_FORMAT": "DD MMM YYYY",
