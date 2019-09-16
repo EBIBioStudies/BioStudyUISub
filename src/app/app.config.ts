@@ -84,6 +84,14 @@ export class AppConfig {
     }
 
     /**
+     * The current environment where tha application is running.
+     * @returns {string} Name of the current environment.
+     */
+    get environment(): string {
+        return this.config.APP_ENV;
+    }
+
+    /**
      * Uses promises exclusively to fetch the JSON file specifying the app's configuration options.
      * NOTE: URL data may be included in those options. To ensure that correct URLs are generated, this
      * method has to be called before anything else, during app initialisation. Angular provides a mechanism

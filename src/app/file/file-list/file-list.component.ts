@@ -237,19 +237,14 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     private downloadFile(filePath: string, fileName: string): void {
-        this.fileService.download(filePath, fileName).subscribe((data) => {
-            const type: string = data.type;
-            const blob: Blob = new Blob([data], { type });
+        const downloadPath = `/raw/files/${filePath}?fileName=${fileName}`;
+        const link = document.createElement('a');
 
-            const url: string = window.URL.createObjectURL(blob);
-            const link: HTMLAnchorElement = document.createElement('a');
+        link.href = downloadPath;
+        link.download = fileName;
 
-            link.href = url;
-            link.download = fileName;
-
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        });
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 }

@@ -1,20 +1,25 @@
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 
-const LOGIN_TOKEN = 'BioStudiesToken';
+const LOGIN_TOKEN_NAME = 'BIOSTDSESS';
 const USER = 'BioStudiesUser';
 const COOKIE_PATH = '/';
 
+export function setLoginToken(token: string, environment: string): void {
+    const cookieName = `${LOGIN_TOKEN_NAME}-${environment}`;
 
-export function setLoginToken(token: string): void {
-    Cookie.set(LOGIN_TOKEN, token, 365, COOKIE_PATH);
+    Cookie.set(cookieName, token, 365, COOKIE_PATH);
 }
 
-export function getLoginToken(): string {
-    return Cookie.get(LOGIN_TOKEN) || '';
+export function getLoginToken(environment: string): string {
+    const cookieName = `${LOGIN_TOKEN_NAME}-${environment}`;
+
+    return Cookie.get(cookieName) || '';
 }
 
-export function destroyLoginToken(): void {
-    Cookie.delete(LOGIN_TOKEN, COOKIE_PATH);
+export function destroyLoginToken(environment: string): void {
+    const cookieName = `${LOGIN_TOKEN_NAME}-${environment}`;
+
+    Cookie.delete(LOGIN_TOKEN_NAME, COOKIE_PATH);
 }
 
 export function destroyUser(): void {

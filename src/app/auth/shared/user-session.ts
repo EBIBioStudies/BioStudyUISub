@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { AppConfig } from 'app/app.config';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import {
@@ -17,6 +18,10 @@ export class UserSession {
 
     created$: Observable<boolean> = this.sessionCreated.asObservable();
 
+    constructor(
+        private appConfig: AppConfig
+    ) {}
+
     // call it when the app is bootstrapped
     init(): void {
         if (!this.isAnonymous()) {
@@ -31,21 +36,21 @@ export class UserSession {
         return user;
     }
 
-    update(user: any): UserInfo {
-        setLoginToken(user.sessid);
+    update(user: any) {
+        setLoginToken(user.sessid, this.appConfig.environment);
         setUser(user);
 
         return user;
     }
 
     destroy(): void {
-        destroyLoginToken();
+        destroyLoginToken(this.appConfig.environment);
         destroyUser();
         this.notifySessionDestroyed();
     }
 
     token(): string {
-        return getLoginToken();
+        return getLoginToken(this.appConfig.environment);
     }
 
     userName(): string {
