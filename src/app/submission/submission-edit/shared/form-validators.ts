@@ -10,7 +10,7 @@ import {
 } from '@angular/forms';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { TextValueType, ValueType, ValueTypeName, SelectValueType } from 'app/submission/submission-shared/model';
-import { Attribute, Feature, Field, Section } from 'app/submission/submission-shared/model/submission';
+import { Attribute, Feature, Field, Section } from 'app/submission/submission-shared/model';
 import { parseDate } from 'app/utils';
 
 // experimental: Control Reference details for using in error messages

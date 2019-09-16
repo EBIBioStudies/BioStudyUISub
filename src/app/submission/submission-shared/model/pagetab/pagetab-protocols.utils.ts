@@ -38,8 +38,8 @@ class Protocols {
   }
 
   toReference(attr: PtAttribute): PtAttribute {
-    if (String.isNotDefinedOrEmpty(attr.value)) {
-        return <PtAttribute>{ name: 'protocol', value: attr.value };
+    if (String.isNotDefinedOrEmpty(attr.value) || attr.name !== 'Protocol') {
+      return <PtAttribute>{ name: attr.name, value: attr.value };
     }
 
     const refKeyForValue = this.getRefKeyByValue(attr.value);
@@ -104,17 +104,19 @@ export function pageTabToSubmissionProtocols(pageTabSections: PageTabSection[]):
   const componentProtocolsWithReferenceValue = componentProtocols.map((componentProtocol) => {
     const attributes = componentProtocol.attributes || [];
     const protocolAttribute = attributes!.find((attribute) => attribute.name === 'Protocol') || {};
+    const finalAttributes = attributes!.filter((attribute) => attribute.name !== 'Protocol') || [];
+
+    if (protocolAttribute) {
+      finalAttributes.push(<PtAttribute>{
+        name: 'Protocol',
+        value: protocols.getRefValueByKey(protocolAttribute.value)
+      });
+    }
 
     return (
       <PageTabSection>{
         ...componentProtocol,
-        attributes: attributes.map((attribute) => (
-          <PtAttribute>{
-            ...attribute,
-            name: 'Protocol',
-            value: protocols.getRefValueByKey(protocolAttribute.value)
-          })
-        )
+        attributes: finalAttributes
       }
     );
   });

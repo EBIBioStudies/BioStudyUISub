@@ -9,20 +9,8 @@ export class AppConfig {
     constructor(private http: HttpClient) {
     }
 
-    get version(): string {
-        return this.config.APP_VERSION;
-    }
-
     get proxyBase(): string {
         return this.config.APP_PROXY_BASE;
-    }
-
-    get debug(): boolean {
-        return this.config.APP_DEBUG_ENABLED;
-    }
-
-    get prod(): boolean {
-        return this.config.APP_PROD;
     }
 
     get instanceKey(): string {
@@ -58,14 +46,6 @@ export class AppConfig {
      */
     get dateInputFormat(): string {
         return this.config.APP_DATE_INPUT_FORMAT;
-    }
-
-    /**
-     * Synonym getter providing a flag indicating whether past date selection is allowed.
-     * @returns {boolean} Flag for past date allowance.
-     */
-    get allowPast(): boolean {
-        return this.config.APP_ALLOW_PAST_DATES;
     }
 
     /**
