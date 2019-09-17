@@ -1,4 +1,6 @@
 import { zip } from 'fp-ts/lib/Array';
+import { nextId } from './submission.model.counter';
+import { Attribute } from './submission.model.attribute';
 import { NameAndValue, Tag } from '../model.common';
 import {
     ColumnType,
@@ -7,60 +9,17 @@ import {
     FieldType,
     SectionType,
     SubmissionType,
-    ValueType,
-    ValueTypeFactory
+    ValueType
 } from '../templates';
 
 interface SubmissionSection {
     subsections: Sections
 }
 
-class Counter {
-    private count = 0;
-
-    get next(): number {
-        return ++this.count;
-    }
-}
-
-const nextId = (function () {
-    const counter = new Counter();
-
-    return function () {
-        return `id${counter.next}`;
-    };
-})();
-
-
-export class Attribute {
-    readonly id: string;
-
-    constructor(private _name: string = '',
-                readonly valueType: ValueType = ValueTypeFactory.DEFAULT,
-                readonly displayType: DisplayType = DisplayType.Optional,
-                readonly isTemplateBased: boolean = false,
-                readonly dependencyColumn: string = '',
-                readonly uniqueValues: boolean = false) {
-        this.id = `attr_${nextId()}`;
-    }
-
-    get name(): string {
-        return this._name;
-    }
-
-    set name(name: string) {
-        if (this.canEditName && this._name !== name) {
-            this._name = name;
-        }
-    }
-
-    get canEditName(): boolean {
-        return !this.isTemplateBased;
-    }
-}
-
 export class AttributeValue {
-    constructor(public value: string = '') {
+    constructor(
+        public value: string = ''
+    ) {
     }
 }
 
@@ -104,8 +63,6 @@ export class ValueMap {
 }
 
 export class Columns {
-    readonly index = new Counter();
-
     private columns: Attribute[] = [];
 
     list(): Attribute[] {
@@ -333,7 +290,7 @@ export class Feature {
         dependencyColumn: string = '',
         uniqueValues: boolean = false,
     ): Attribute {
-        const defColName = (this.singleRow ? this.typeName : 'Column') + ' ' + this._columns.index.next;
+        const defColName = (this.singleRow ? this.typeName : 'Column') + ' ' + (this._columns.size() + 1);
         const colName = name || defColName;
         const col = new Attribute(colName, valueType, displayType, isTemplateBased, dependencyColumn, uniqueValues);
         this._rows.addKey(col.id);

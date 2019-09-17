@@ -35,7 +35,7 @@ class SubmitOperation {
 
 @Component({
     selector: 'app-subm-edit',
-    templateUrl: './subm-edit.component.html'
+    templateUrl: './submission-edit.component.html'
 })
 export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChecked {
     @Input() readonly = false;
