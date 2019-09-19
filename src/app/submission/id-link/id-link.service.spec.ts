@@ -29,12 +29,6 @@ describe('IdLinkService', () => {
     service = new IdLinkService(<any> httpClientSpy);
   });
 
-  it('fetches the list of prefixes after instantiation', () => {
-    service.whenListed.subscribe(() => {
-      expect(service.prefixes.length).toBe(3);
-    });
-  });
-
   it('#suggest should return an empty list when the server returns a 404', () => {
     const errorResponse = new HttpErrorResponse({
       error: 'test 404 error',
