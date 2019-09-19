@@ -70,6 +70,6 @@ describe('IdLinkService', () => {
     service.suggest('prefix').subscribe(
       items => expect(items).toEqual(expectedPrefixes)
     );
-    expect(httpClientSpy.get.calls.count()).toBe(2);  // one for complete list and the other the suggested prefixes
+    expect(httpClientSpy.get.calls.count()).toBe(1);
   });
 });
