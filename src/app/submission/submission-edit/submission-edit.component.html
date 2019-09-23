@@ -156,7 +156,7 @@
                 <div *ngIf="!readonly" class="row row-submit">
                     <p class="col-xs-2">
                         <button type="button" class="btn-submit btn btn-primary"
-                                [disabled]="isSubmitting || isSaving"
+                                [disabled]="isSubmitting || isSaving || !isEditing"
                                 tooltip="Send to the BioStudies database"
                                 placement="top"
                                 container="body"

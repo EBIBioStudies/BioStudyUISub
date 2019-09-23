@@ -1,15 +1,17 @@
 <div class="form-group has-feedback">
-    <input type="text" class="form-control"
+    <input type="text"
+           class="form-control"
            [ngClass]="{'input-sm': isSmall}"
            placeholder="{{placeholder}}"
            [disabled]="disabled"
            [ngModel]="inputText"
            (input)="onInput($event)"
-           idLinkValue
            [readonly]="readonly"
            [required]="required"
            container="body"
-           [typeahead]="readonly ? [] : linkService.prefixes"
+           idLinkValue
+           [typeahead]="readonly ? [] : dataSource"
+           [typeaheadAsync]="true"
            [typeaheadMinLength]="suggestThreshold"
            [typeaheadOptionsLimit]="200"
            [typeaheadScrollable]="true"

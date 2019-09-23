@@ -620,6 +620,10 @@ export class SectionForm extends FormBase {
         return this.findRoot().lookupSectionForm(sectionId);
     }
 
+    findFieldControl(fieldName: string) {
+        return this.fieldControls.find((fieldControl) => fieldControl.name === fieldName);
+    }
+
     get type(): SectionType {
         return this.section.type;
     }

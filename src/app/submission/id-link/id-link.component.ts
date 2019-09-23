@@ -19,6 +19,8 @@ import { IdLinkValueValidatorDirective } from './id-link.validator.directive';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/observable/interval';
+import { Observable, of } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 
 @Component({
   selector: 'id-link',
@@ -36,12 +38,14 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
     private linkModel: IdLinkModel = new IdLinkModel();
     private inputChanged: Subject<string> = new Subject<string>();
 
+    dataSource!: Observable<any>;
+
     @Input() placeholder = 'URL or prefix:ID';
     @Input() disabled = false;
     @Input() required?: boolean = false;
     @Input() readonly?: boolean = false;
     @Input() isSmall: boolean = true; // flag for making the input area the same size as grid fields
-    @Input() suggestLength: number = 30; // max number of suggested values to be displayed at once
+    @Input() suggestLength: number = 10; // max number of suggested values to be displayed at once
     @Input() suggestThreshold: number = 0; // number of typed characters before suggestions are displayed.
 
     @ViewChild(NgModel)
@@ -61,10 +65,20 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
      * @param {Injector} injector - Parent's injector retrieved to get the component's form control later on.
      * @param {DomSanitizer} sanitizer - Marks URLs as safe for use in the different DOM contexts.
      */
-    constructor(public linkService: IdLinkService, private injector: Injector, private sanitizer: DomSanitizer) {
-        this.inputChanged.debounceTime(300).distinctUntilChanged().subscribe(value => {
-            this.update(value);
-        });
+    constructor(
+        private linkService: IdLinkService,
+        private injector: Injector,
+        private sanitizer: DomSanitizer
+    ) {
+        this.inputChanged
+            .distinctUntilChanged()
+            .subscribe((value) => this.update(value));
+
+        this.dataSource = Observable.create((observer: any) => {
+            // Runs on every typing
+            observer.next(this.inputText);
+        })
+        .pipe(mergeMap((value: string) => this.linkService.suggest(value)));
     }
 
     set value(value: IdLinkValue) {
@@ -89,7 +103,6 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
         try {
             return this.validator!.extra.isId;
         } catch (error) {
-            console.log(error);
             return false;
         }
     }
@@ -105,7 +118,6 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
         try {
             url = this.validator!.extra.url;
         } catch (error) {
-            console.log(error);
             url = '';
         }
 
