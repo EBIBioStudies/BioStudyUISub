@@ -251,9 +251,11 @@ export class SubmEditService {
         if (sectionForm !== undefined) {
             this.save(); // Save a pending submission as soon as the edit form gets visible.
 
-            this.sectionFormSubEdit = sectionForm.form.valueChanges.subscribe(() => {
-                this.editState.startEditing();
-            });
+            this.sectionFormSubEdit = sectionForm.form.valueChanges
+                .pipe(skip(1))
+                .subscribe(() => {
+                    this.editState.startEditing();
+                });
 
             this.sectionFormSub = sectionForm.form.valueChanges
                 .pipe(
