@@ -1,4 +1,4 @@
-import { ValueMap } from './submission.model';
+import { ValueMap } from './submission.model.valuemap';
 
 describe('Submission Model: ValueMap', () => {
     it('can be empty', () => {
