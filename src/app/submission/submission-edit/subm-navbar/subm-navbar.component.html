@@ -29,6 +29,7 @@
             {{isTemp ? 'S' : 'Re-s'}}ubmit
         </button>
         <button *ngIf="!readonly && !isTemp && isRevised"
+                [disabled]="!isEditing"
                 class="button-link btn btn-primary btn-sm btn-danger pull-right"
                 tooltip="Revert to last released version"
                 placement="bottom"
