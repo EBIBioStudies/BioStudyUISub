@@ -8,12 +8,18 @@ import {
 @Component({
     selector: 'file-upload-button',
     template: `
-    <input class="hidden" type="file"
-           id="fileInput"
-           name="fileInput"
-           (change)="onInputChange($event)"
-           [multiple]="multiple"
-           #inputFile/>
+    <input
+        id="files-input"
+        class="hidden"
+        name="files-input"
+        type="file"
+        (change)="onInputChange($event)"
+        [multiple]="multiple"
+        allowdirs
+        #inputFile
+        directory
+        webkitdirectory
+    />
     <button type="button"
             class="btn btn-primary btn-sm"
             (click)="onButtonClick($event)">

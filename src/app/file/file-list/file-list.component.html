@@ -20,13 +20,15 @@
                 <ftp-upload-button></ftp-upload-button>
             </div>
             <div class="btn-group pull-right" style="margin-right:1em;background-color:#b5d7ec;border-radius: 3px;" role="group">
-                <file-upload-button class="pull-right"
-                                    [multiple]="true"
-                                    [isDirOnly]="isBulkMode"
-                                    (select)="onUploadFilesSelect($event)"
-                                    tooltip="{{isBulkMode ? 'Select a folder' : 'Select files'}}"
-                                    placement="bottom"
-                                    #fileEl></file-upload-button>
+                <file-upload-button
+                    class="pull-right"
+                    [multiple]="true"
+                    [isDirOnly]="isBulkMode"
+                    (select)="onUploadFilesSelect($event)"
+                    tooltip="{{isBulkMode ? 'Select a folder' : 'Select files'}}"
+                    placement="bottom"
+                    #fileEl>
+                </file-upload-button>
                 <span *ngIf="fileEl.isDirSupport" class="mode-toggle checkbox pull-right" style="padding-left:6pt">
                     <label>
                         <input type="checkbox"

@@ -43,7 +43,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
 
     private accno?: string;
     private hasJustCreated = false;
-    private releaseDate = '';
+    private releaseDate: Date = new Date();
     private scrollToCtrl?: FormControl;
     private sideBarCollapsed = false;
     private submitOperation: SubmitOperation = SubmitOperation.Unknown;
@@ -91,6 +91,10 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
         return this.submEditService.isReverting;
     }
 
+    get isEditing(): boolean {
+        return this.submEditService.isEditing;
+    }
+
     // TODO: a temporary workaround
     get isTemp(): boolean {
         return this.accno!.startsWith('TMP_');
@@ -120,6 +124,10 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
                     ).subscribe(() => {
                         this.router.navigate(['/submissions/']);
                     });
+                } else {
+                    const releaseDateCtrl = this.sectionForm!.findFieldControl('ReleaseDate');
+                    this.releaseDate =  releaseDateCtrl ? new Date (Date.parse(releaseDateCtrl.control.value)) : new Date();
+                    this.releaseDate.setHours(0, 0, 0);
                 }
             });
     }
@@ -160,10 +168,11 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
             return;
         }
 
-        (isConfirm ? this.confirmSubmit() : of(true))
-            .pipe(
-                filter(v => v),
-                switchMap(() => this.submEditService.submit())
+            (isConfirm ? this.confirmSubmit() : of(true))
+                .pipe(
+                    filter(v => v),
+                    switchMap( () => this.confirmReleaseDateOverride()),
+                    switchMap(() => this.submEditService.submit())
             ).takeUntil(this.unsubscribe)
             .subscribe(resp => this.onSubmitFinished(resp));
     }
@@ -267,6 +276,20 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
             'Submit the study',
             'Submit',
         );
+    }
+
+    private confirmReleaseDateOverride(): Observable<boolean> {
+        const releaseDateCtrl = this.sectionForm!.findFieldControl('ReleaseDate');
+        const newReleaseDate = releaseDateCtrl ? new Date (Date.parse(releaseDateCtrl.control.value)) : new Date();
+        newReleaseDate.setHours(0, 0, 0);
+        const today = new Date();
+        today.setHours(0, 0, 0);
+        return (this.releaseDate <= today && newReleaseDate > today) ? this.modalService.whenConfirmed(
+            'This study has already been released and resetting the release date may make it ' +
+            'unavailable to the public. Are you sure you want to continue?',
+            'Submit the study',
+            'OK',
+        ) : of(true);
     }
 
     private confirmPageDelete(message: string): Observable<boolean> {

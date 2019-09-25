@@ -1,9 +1,10 @@
 import { zip } from 'fp-ts/lib/Array';
 import { nextId } from './submission.model.counter';
 import { Attribute } from './submission.model.attribute';
+import { ValueMap } from './submission.model.valuemap';
+import { Columns } from './submission.model.columns';
 import { NameAndValue, Tag } from '../model.common';
 import {
-    ColumnType,
     DisplayType,
     FeatureType,
     FieldType,
@@ -14,104 +15,6 @@ import {
 
 interface SubmissionSection {
     subsections: Sections
-}
-
-export class AttributeValue {
-    constructor(
-        public value: string = ''
-    ) {
-    }
-}
-
-export class ValueMap {
-    private valueMap: Map<string, AttributeValue> = new Map();
-    readonly id: string;
-
-    constructor(keys?: string[]) {
-        this.id = nextId();
-        (keys || []).forEach(key => this.add(key));
-    }
-
-    valueFor(key: string): AttributeValue | undefined {
-        return this.valueMap.get(key);
-    }
-
-    add(key: string, value?: string): void {
-        if (this.valueMap.has(key)) {
-            console.warn(`adding multiple values for a key:${key}`);
-            return;
-        }
-        const v = new AttributeValue(value);
-        this.valueMap.set(key, v);
-    }
-
-    remove(key: string): void {
-        if (!this.valueMap.has(key)) {
-            console.warn(`remove: the key '${key}' does not exist in the map`);
-            return;
-        }
-        this.valueMap.delete(key);
-    }
-
-    values(keys?: string[]): AttributeValue[] {
-        return (keys || this.keys()).map(key => this.valueMap.get(key)!);
-    }
-
-    keys(): string[] {
-        return Array.from(this.valueMap.keys());
-    }
-}
-
-export class Columns {
-    private columns: Attribute[] = [];
-
-    list(): Attribute[] {
-        return this.columns.slice();
-    }
-
-    add(column: Attribute): void {
-        this.columns.push(column);
-    }
-
-    remove(id: string): boolean {
-        return this.removeAt(this.columns.findIndex(attr => attr.id === id));
-    }
-
-    removeAt(index: number): boolean {
-        if (index >= 0) {
-            this.columns.splice(index, 1);
-            return true;
-        }
-        return false;
-    }
-
-    at(index: number): Attribute | undefined {
-        return (index >= 0) && (index < this.columns.length) ? this.columns[index] : undefined;
-    }
-
-    findById(id: string): Attribute | undefined {
-        return this.columns.find(col => col.id === id);
-    }
-
-    findByType(colType: ColumnType): Attribute | undefined {
-        return this.columns.find(col => col.name === colType.name && col.valueType === colType.valueType && col.isTemplateBased);
-    }
-
-    filterByName(name: string): Attribute[] {
-        return this.columns.filter(attr => attr.name.isEqualIgnoringCase(name));
-    }
-
-    keys(): string[] {
-        return this.columns.map(attr => attr.id);
-    }
-
-    names(): any {
-        return this.columns.map(attr => attr.name);
-    }
-
-    size(): number {
-        return this.columns.length;
-    }
 }
 
 class Rows {

@@ -48,7 +48,7 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
         if (form.valid) {
             this.isLoading = true;
             this.authService
-                .passwordReset(this.model)
+                .changePassword(this.model)
                 .subscribe(
                     () => {
                         this.isLoading = false;

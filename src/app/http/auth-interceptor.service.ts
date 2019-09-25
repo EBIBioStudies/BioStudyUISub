@@ -7,8 +7,9 @@ import { AppConfig } from 'app/app.config';
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
 
-    constructor(private appConfig: AppConfig) {
-    }
+    constructor(
+        private appConfig: AppConfig
+    ) {}
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         if (req.url.startsWith('/raw')
@@ -24,7 +25,7 @@ export class AuthInterceptorService implements HttpInterceptor {
 
     private updateHeaders(headers: HttpHeaders): any {
         headers = headers || new HttpHeaders();
-        const sessionId = getLoginToken();
+        const sessionId = getLoginToken(this.appConfig.environment);
         return sessionId ? headers.set('X-Session-Token', sessionId) : headers;
     }
 

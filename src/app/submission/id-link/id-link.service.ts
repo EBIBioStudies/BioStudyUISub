@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { map, catchError } from 'rxjs/operators';
-import { Subject } from 'rxjs/Subject';
 import { of, throwError } from 'rxjs';
 import {
     IdentifierEmbedded,
@@ -19,33 +18,14 @@ export class IdLinkService {
     static RESOLUTION_URL: string = '/identifiers/resolver';
     public prefixes: string[] = []; // all possible prefixes for formatted links
     public idUrl: string | undefined; // last URL for valid identifier
-    private isFetched: boolean = false; // flags when collection data has been fetched already
-    private _whenFetched: Subject<any> = new Subject<any>();
 
     /**
      * Caches the list of all prefixes, signalling when it's been retrieved and available.
      * @param {HttpClient} http - Client HTTP API.
      */
-    constructor(private http: HttpClient) {
-        this.list().subscribe(data => {
-            this.prefixes = data;
-            this._whenFetched.next(data);
-            this.isFetched = true;
-            this._whenFetched.complete();
-        });
-    }
-
-    /**
-     * Creates an observable normalised to resolve instantly if the list of prefixes has already been retrieved.
-     * @returns {Observable<any>} Observable from subject.
-     */
-    get whenListed(): Observable<any> {
-        if (this.isFetched) {
-            return of(this.prefixes);
-        } else {
-            return this._whenFetched.asObservable();
-        }
-    }
+    constructor(
+        private http: HttpClient
+    ) {}
 
     /**
      * Pseudonym for the "suggest" method without parameters to retrieve the complete list of prefixes.
@@ -63,8 +43,8 @@ export class IdLinkService {
     suggest(prefix?: string): Observable<string[]> {
         let url;
 
-        if (typeof prefix === 'undefined') {
-            url = IdLinkService.REGISTRY_URL + '/namespaces';
+        if (typeof prefix === 'undefined' || prefix.length === 0) {
+            url = `${IdLinkService.REGISTRY_URL}/namespaces`;
         } else if (prefix.length) {
             url = `${IdLinkService.REGISTRY_URL}/namespaces/search/findByPrefixContaining?content=${prefix}`;
         } else {

@@ -6,14 +6,15 @@
   "main": "server/app.js",
   "scripts": {
     "build": "sh ./tasks/build.sh",
+    "cypress:open": "cypress open",
     "e2e": "ng e2e",
     "lint": "ng lint",
     "ng": "ng",
     "node:beta": "cross-env NODE_ENV=beta node .",
     "node:dev": "cross-env NODE_ENV=development nodemon .",
     "node:prod": "cross-env NODE_ENV=production node .",
-    "start:dev": "run-p node:dev start-no-ssl",
     "start-no-ssl": "ng serve --proxy-config proxy.conf.json --progress",
+    "start:dev": "run-p node:dev start-no-ssl",
     "test": "ng test"
   },
   "dependencies": {
@@ -38,7 +39,7 @@
     "express-winston": "^3.1.0",
     "fp-ts": "^1.9.0",
     "helmet": "^3.18.0",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.15",
     "ng-recaptcha": "^4.0.0-beta.1",
     "ng2-cookies": "^1.0.2",
     "ngx-bootstrap": "^3.1.4",

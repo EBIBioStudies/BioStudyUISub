@@ -16,7 +16,7 @@ export class UserData {
 
         userSession.created$.subscribe(created => {
             if (created) {
-                authService.checkUser().subscribe( resp => {
+                authService.getUserProfile().subscribe( resp => {
                     const userInfo = resp;
                     submService.getProjects().subscribe( result => {
                         const extendedUserInfo = <ExtendedUserInfo>userInfo;

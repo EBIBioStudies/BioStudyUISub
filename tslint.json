@@ -15,10 +15,7 @@
     "forin": true,
     "import-blacklist": [true],
     "import-spacing": true,
-    "indent": [
-      true,
-      "spaces"
-    ],
+    "indent": [true, "spaces", 2],
     "interface-over-type-literal": true,
     "label-position": true,
     "max-line-length": [
@@ -108,7 +105,6 @@
     "no-unused-variable": true,
     "rxjs-no-add": { "severity": "error" },
     "rxjs-no-operator": { "severity": "error" },
-    "rxjs-no-patched": { "severity": "error" },
-    "rxjs-no-wholesale": { "severity": "error" }
+    "rxjs-no-patched": { "severity": "error" }
   }
 }

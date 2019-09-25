@@ -1,5 +1,6 @@
 module.exports = {
   express: {
+    hostname: 'HOSTNAME',
     port: 'PORT'
   },
   backend: {
