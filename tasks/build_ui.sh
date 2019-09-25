@@ -3,9 +3,6 @@
 set -e
 set -v
 
-# Clean build dist folder
-rm -rf dist && mkdir dist
-
 # Config properties
 appProxyBase=${APP_PROXY_BASE};
 appContext=${APP_CONTEXT};
