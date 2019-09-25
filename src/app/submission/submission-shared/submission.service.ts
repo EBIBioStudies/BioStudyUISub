@@ -79,19 +79,11 @@ export class SubmissionService {
 
     getSubmissions(submitted: boolean, params: SubmissionListParams = {}): Observable<SubmissionListItem[]> {
         const url = submitted ? '/raw/submissions' : '/raw/submissions/pending';
-        return this.http.get<SubmissionListItem[]>(url, {params: definedPropertiesOnly(<any>params)}).pipe(
-            map((response: any) => {
-                return response.submissions;
-            })
-        );
+        return this.http.get<SubmissionListItem[]>(url, {params: definedPropertiesOnly(<any>params)});
     }
 
     getProjects(): Observable<any> {
-        return this.http.get('/raw/atthost?type=Project&format=json').pipe(
-            map((response: any) => {
-                return response.submissions;
-            })
-        );
+        return this.http.get('/raw/projects');
     }
 
     createSubmission(pt: PageTab): Observable<PendingSubmission> {
