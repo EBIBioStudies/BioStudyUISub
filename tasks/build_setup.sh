@@ -25,9 +25,6 @@ sed -i 's%"APP_CONTEXT":.*%"APP_CONTEXT":"'$appContext'",%' src/config.json
 # Last line, don't append a comma
 sed -i 's%"APP_INSTANCE_KEY".*%"APP_INSTANCE_KEY":"'$appInstanceKey'"%' src/config.json
 
-# Clean build dist folder
-rm -rf dist && mkdir dist
-
 # Create .env file
 echo "
 BACKEND_PATH_CONTEXT=${backendPathContext}
