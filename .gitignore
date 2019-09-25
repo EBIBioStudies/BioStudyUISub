@@ -1,7 +1,5 @@
-.idea/
 .build/
 *.iml
-node_modules/
 .gen/
 dist/
 .DS_Store
@@ -12,3 +10,14 @@ jspm_packages/
 */jspm_packages/
 npm-debug.log
 server/public
+
+# Dependency directories
+node_modules
+
+# Editors
+.idea
+.vscode
+
+# Env variables files
+.env
+cypress.env.json

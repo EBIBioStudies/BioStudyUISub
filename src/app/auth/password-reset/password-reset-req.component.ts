@@ -38,7 +38,7 @@ export class PasswordResetReqComponent implements AfterViewInit {
         // Makes request if all form fields completed satisfactorily
         if (form.valid) {
             this.isLoading = true;
-            this.authService.passwordResetReq(this.model)
+            this.authService.sendPasswordResetRequest(this.model)
                 .subscribe(
                     () => {
                         this.isLoading = false;

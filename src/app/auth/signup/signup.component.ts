@@ -46,7 +46,7 @@ export class SignUpComponent implements AfterViewInit, OnInit {
         if (form.valid) {
             this.isLoading = true;
             this.authService
-                .signUp(this.model)
+                .register(this.model)
                 .subscribe(
                     () => {
                         this.isLoading = false;

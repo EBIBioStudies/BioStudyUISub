@@ -5,12 +5,17 @@ import { UserInfo, ExtendedUserInfo } from './model';
 
 describe('UserData', () => {
     let submService;
+    let appConfig;
 
     beforeEach(() => {
         submService = {
             getProjects() {
                 return of([]);
             }
+        };
+
+        appConfig = {
+            environment: 'DEV'
         };
     });
 
@@ -27,12 +32,12 @@ describe('UserData', () => {
         };
 
         const authService = {
-            checkUser() {
+            getUserProfile() {
                 return of(user);
             }
         };
 
-        const session = new UserSession();
+        const session = new UserSession(appConfig);
 
         new UserData(session, authService as AuthService, submService).info$
             .subscribe(info => {

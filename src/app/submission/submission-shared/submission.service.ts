@@ -78,20 +78,12 @@ export class SubmissionService {
     }
 
     getSubmissions(submitted: boolean, params: SubmissionListParams = {}): Observable<SubmissionListItem[]> {
-        const url = submitted ? '/raw/sbmlist' : '/raw/submissions/pending';
-        return this.http.get<SubmissionListItem[]>(url, {params: definedPropertiesOnly(<any>params)}).pipe(
-            map((response: any) => {
-                return response.submissions;
-            })
-        );
+        const url = submitted ? '/raw/submissions' : '/raw/submissions/pending';
+        return this.http.get<SubmissionListItem[]>(url, {params: definedPropertiesOnly(<any>params)});
     }
 
     getProjects(): Observable<any> {
-        return this.http.get('/raw/atthost?type=Project&format=json').pipe(
-            map((response: any) => {
-                return response.submissions;
-            })
-        );
+        return this.http.get('/raw/projects');
     }
 
     createSubmission(pt: PageTab): Observable<PendingSubmission> {
@@ -132,8 +124,8 @@ export class SubmissionService {
         attachTo.forEach(projectName => {
             formData.append('attachTo', projectName);
         });
-        formData.append('file', file);
-        return this.http.post<SubmitResponse>(`/raw/submissions/file_submit/${operation}`, formData);
+        formData.append('submission', file);
+        return this.http.post<SubmitResponse>(`/raw/submissions/direct`, formData);
     }
 
     deleteSubmission(accno: string): Observable<boolean> {

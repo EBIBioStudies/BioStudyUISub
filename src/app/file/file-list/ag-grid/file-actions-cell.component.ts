@@ -31,6 +31,7 @@ import { FileUpload } from '../../shared/file-upload-list.service';
 })
 
 export class FileActionsCellComponent implements AgRendererComponent {
+    readonly canDeleteTypes = ['FILE', 'ARCHIVE', 'DIR'];
     private type?: string;
     private upload?: FileUpload;
     private onRemove;
@@ -44,7 +45,7 @@ export class FileActionsCellComponent implements AgRendererComponent {
     }
 
     get canRemove(): boolean {
-        return !this.canCancel && (this.type === 'FILE' || this.type === 'ARCHIVE');
+        return !this.canCancel && this.canDeleteTypes.some((type) => type === this.type);
     }
 
     get canCancel(): boolean {

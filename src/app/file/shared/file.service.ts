@@ -11,30 +11,41 @@ export class FileService {
     }
 
     getUserDirs(groups?: Observable<UserGroup[]>): Observable<PathInfo[]> {
-        return (groups || this.getUserGroups())
-            .pipe(
-                map(groups => groups.map(g => new PathInfo(g.name, '/Groups/' + g.name, 'DIR'))),
-                map(paths => ([] as PathInfo[]).concat([new PathInfo('Home', '/User', 'DIR')], paths))
-            );
+        const userGroups = groups || this.getUserGroups();
+
+        return userGroups.pipe(
+            map((groupsByUser) => groupsByUser.map((group) => new PathInfo(group.name, '/groups/' + group.name, 'DIR'))),
+            map(paths => ([] as PathInfo[]).concat([new PathInfo('Home', '/user', 'DIR')], paths))
+        );
     }
 
     getFiles(fullPath: string): Observable<PathInfo[]> {
         return this.http.get<PathInfo[]>(`/raw/files${fullPath}`);
     }
 
-    removeFile(fullPath: string): Observable<any> {
-        return this.http.delete(`/raw/files${fullPath}`);
+    removeFile(filePath: string, fileName: string): Observable<any> {
+        return this.http.delete(`/raw/files/${filePath}?fileName=${fileName}`);
     }
 
     getUserGroups(): Observable<UserGroup[]> {
         return this.http.get<UserGroup[]>('/raw/groups');
     }
 
-    upload(fullPath: string, files: File[]): Observable<UploadEvent> {
+    download(filePath: string, fileName: string): Observable<any> {
+        return this.http.get(`/raw/files/${filePath}?fileName=${fileName}`, { responseType: 'blob' });
+    }
+
+    upload(fullPath: string, files: File[], keepFolders: boolean = true): Observable<UploadEvent> {
         const formData = new FormData();
 
-        files.forEach(file => {
-            formData.append('files', file, file.name);
+        files.forEach((file: FullPathFile) => {
+            // Keep file paths (folders) only if browser supports "webkitRelativePath".
+            // If it doesn't, files are uploaded without keeping folder structure.
+            if (String.isDefinedAndNotEmpty(file.webkitRelativePath) && keepFolders) {
+                formData.append('files', file, file.webkitRelativePath);
+            } else {
+                formData.append('files', file, file.name);
+            }
         });
 
         return this.httpUpload.upload(`/raw/files${fullPath}`, formData);

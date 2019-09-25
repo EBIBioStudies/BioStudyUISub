@@ -37,9 +37,9 @@ export class ActivateComponent implements OnInit {
                 () => {
                     component.message = 'Activation was successful';
                 },
-                (error: ServerError) => {
+                (error) => {
                     component.hasError = true;
-                    component.message = error.data.message;
+                    component.message = error.message;
                 });
     }
 }

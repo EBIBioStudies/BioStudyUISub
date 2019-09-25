@@ -40,7 +40,7 @@ export class ActivationLinkReqComponent implements AfterViewInit {
         if (form.valid) {
             this.isLoading = true;
             this.authService
-                .activationLinkReq(this.model)
+                .sendActivationLinkRequest(this.model)
                 .subscribe(
                     () => {
                         this.isLoading = false;

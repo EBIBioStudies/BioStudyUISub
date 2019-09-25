@@ -71,7 +71,7 @@ export class AppHeaderComponent implements OnDestroy {
     signOut() {
         this.isBusy = true;
         this.authService
-            .signOut()
+            .logout()
             .subscribe(
                 () => { this.isBusy = false; },
                 () => {
