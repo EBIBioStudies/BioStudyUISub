@@ -8,7 +8,7 @@ module.exports = {
     protocol: 'http'
   },
   backend: {
-    context: 'submission',
+    context: '',
     uri: {
       hostname: 'biostudy',
       port: '8585',
