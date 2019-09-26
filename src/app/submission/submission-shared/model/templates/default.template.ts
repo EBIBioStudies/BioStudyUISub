@@ -248,7 +248,6 @@ export const DefaultTemplate = {
                     'are supported. URLs must include the scheme, e.g. "http://".',
                 'icon': 'fa-link',
                 'uniqueCols': true,
-                'display': 'required',
                 'columnTypes': [
                     {
                         'name': 'Pointer',
@@ -268,7 +267,6 @@ export const DefaultTemplate = {
                 'description': 'List the data files for the study and describe their respective scopes.',
                 'icon': 'fa-file',
                 'uniqueCols': true,
-                'display': 'required',
                 'columnTypes': [
                     {
                         'name': 'Path',
