@@ -6,9 +6,6 @@ set -v
 # Variables
 ciEnvironment=${CI_ENVIRONMENT_SLUG};
 
-# Clean build folder
-rm -rf dist && mkdir dist
-
 # Build assets into dist/public folder
 npx ng build --outputPath=dist/public --deleteOutputPath=true --baseHref=/static/
 

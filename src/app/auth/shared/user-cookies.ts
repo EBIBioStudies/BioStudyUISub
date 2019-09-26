@@ -19,7 +19,7 @@ export function getLoginToken(environment: string): string {
 export function destroyLoginToken(environment: string): void {
     const cookieName = `${LOGIN_TOKEN_NAME}-${environment}`;
 
-    Cookie.delete(LOGIN_TOKEN_NAME, COOKIE_PATH);
+    Cookie.delete(cookieName, COOKIE_PATH);
 }
 
 export function destroyUser(): void {
