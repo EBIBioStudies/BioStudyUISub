@@ -70,10 +70,14 @@ export class FileTreeStore {
         const fileDir = parts.slice(0, -1).join('/');
 
         return this.getUserGroups().pipe(
-            map(groups => groups.find(g => g.groupId !== undefined && fileDir.startsWith(g.id))),
-            mergeMap(group => group ?
-                of(fileDir.replace(group.id, '/Groups/' + group.name)) :
-                of(fileDir)),
+            map(groups => {
+                return groups.find((group) => group.groupId !== undefined && fileDir.startsWith(group.groupId.toString()));
+            }),
+            mergeMap((group) => {
+                return group ?
+                    of(fileDir.replace(group.groupId.toString(), '/Groups/' + group.name)) :
+                    of(fileDir);
+            }),
             map(dir => dir === '' ? dir : dir + '/'),
             map(dir => dir + fileName)
         );
