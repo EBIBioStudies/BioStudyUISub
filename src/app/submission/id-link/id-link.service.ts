@@ -78,11 +78,13 @@ export class IdLinkService {
 
                 return namespaces.map((namespace) => namespace.prefix);
             }),
-            catchError(err => {
+            catchError((err) => {
                 if (err.status === 404) {
                     return of([]);
                 }
-                return throwError(err);
+
+                // return throwError(err);
+                return of([]);
             })
         );
     }
@@ -106,7 +108,9 @@ export class IdLinkService {
                 if (err.status === 404) {
                     return of(err.error);
                 }
-                return throwError(err);
+
+                // return throwError(err);
+                return of([]);
             })
         );
     }
