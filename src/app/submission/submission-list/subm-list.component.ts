@@ -21,7 +21,7 @@ import { ModalService } from '../../shared/modal.service';
                 container="body">
             <i class="fas fa-pencil-alt fa-fw"></i>
         </button>
-        <button *ngIf="rowData" type="button" class="btn btn-danger btn-xs btn-flat"
+        <button *ngIf="rowData && rowData.isDeletable" type="button" class="btn btn-danger btn-xs btn-flat"
                 [disabled]="isBusy"
                 (click)="onDeleteSubmission()"
                 tooltip="Delete this submission"
@@ -229,7 +229,6 @@ export class SubmListComponent {
                 resizable: true
             },
             {
-                cellClass: 'ag-cell-centered',
                 cellRendererFramework: ActionButtonsCellComponent,
                 filter: true,
                 headerName: 'Actions',
@@ -316,6 +315,7 @@ export class SubmListComponent {
     decorateDataRows(rows: any[]): any {
         return rows.map(row => ({
             isTemp: !this.showSubmitted,
+            isDeletable: row.accno.startsWith('S-'),
             accno: row.accno,
             title: row.title,
             rtime: row.rtime,
