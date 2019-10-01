@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map, catchError, switchMap } from 'rxjs/operators';
 import { PageTab } from './model/pagetab';
+import { LogService } from 'app/log/log.service';
 
 export interface PendingSubmission {
     accno: string,
@@ -79,6 +80,7 @@ export class SubmissionService {
 
     getSubmissions(submitted: boolean, params: SubmissionListParams = {}): Observable<SubmissionListItem[]> {
         const url = submitted ? '/raw/submissions' : '/raw/submissions/pending';
+
         return this.http.get<SubmissionListItem[]>(url, {params: definedPropertiesOnly(<any>params)});
     }
 

@@ -23,7 +23,7 @@ export class UserData {
                         extendedUserInfo.projects = result.map(project => project.accno);
                         this.whenFetched$.next(extendedUserInfo);
                         this.whenFetched$.complete();
-                    })
+                    });
                 });
             }
         });

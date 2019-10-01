@@ -29,14 +29,14 @@ export class UserSession {
         }
     }
 
-    create(user: any): UserInfo {
+    create(user: UserInfo): UserInfo {
         this.update(user);
         this.notifySessionCreated();
 
         return user;
     }
 
-    update(user: any) {
+    update(user: UserInfo) {
         setLoginToken(user.sessid, this.appConfig.environment);
         setUser(user);
 
@@ -54,7 +54,13 @@ export class UserSession {
     }
 
     userName(): string {
-        return getUser().fullname != null ? getUser().fullname : getUser().username ;
+        const {  username } = getUser();
+        return username;
+    }
+
+    getUserEmail(): string {
+        const { email } = getUser();
+        return email;
     }
 
     isAnonymous(): boolean {

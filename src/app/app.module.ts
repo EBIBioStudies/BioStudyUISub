@@ -56,7 +56,6 @@ export function initConfig(config: AppConfig): () => Promise<any> {
         SubmissionEditModule,
         SubmissionDirectModule,
         FileModule
-        // AgGridModule.withComponents([])
     ],
     declarations: [
         AppComponent

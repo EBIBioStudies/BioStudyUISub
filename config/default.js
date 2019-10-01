@@ -1,6 +1,6 @@
 module.exports = {
   files: {
-    limit: '1024mb'
+    limit: '10gb'
   },
   express: {
     hostname: '0.0.0.0',

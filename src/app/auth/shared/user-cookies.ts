@@ -1,4 +1,5 @@
 import { Cookie } from 'ng2-cookies/ng2-cookies';
+import { UserInfo } from './model';
 
 const LOGIN_TOKEN_NAME = 'BIOSTDSESS';
 const USER = 'BioStudiesUser';
@@ -25,10 +26,11 @@ export function destroyLoginToken(environment: string): void {
 export function destroyUser(): void {
     localStorage.removeItem(USER);
 }
-export function setUser(user: any): void {
+
+export function setUser(user: UserInfo): void {
     localStorage.setItem(USER, JSON.stringify(user));
 }
 
-export function getUser(): any {
+export function getUser(): UserInfo {
     return JSON.parse(localStorage.getItem(USER) || '{}');
 }
