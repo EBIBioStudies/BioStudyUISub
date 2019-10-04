@@ -153,6 +153,6 @@ export class SubmissionService {
     }
 
     private getSubmitted(accno: string): Observable<PageTab> {
-        return this.http.get<PageTab>(`/raw/submission/${accno}`);
+        return this.http.get<PageTab>(`/raw/submissions/${accno}.json`);
     }
 }
