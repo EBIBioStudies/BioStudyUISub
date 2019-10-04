@@ -299,7 +299,7 @@ export class SubmListComponent {
     }
 
     onSubmTabSelect(isSubmitted: boolean) {
-        let fragment = 'pending';
+        let fragment = 'draft';
 
         // Ignores actions that don't carry with them a change in state.
         if (this.showSubmitted !== isSubmitted) {
@@ -366,7 +366,7 @@ export class SubmListComponent {
                     return this.modalService.confirm(
                         `The submission with accession number ${accno} has not been submitted yet. If you proceed, \
                         it will be permanently deleted.`,
-                        `Delete pending submission`,
+                        `Delete draft submission`,
                         'Delete'
                     ).subscribe(onNext);
                 }

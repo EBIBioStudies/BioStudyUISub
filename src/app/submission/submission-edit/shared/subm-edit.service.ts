@@ -7,7 +7,7 @@ import { none, Option, some } from 'fp-ts/lib/Option';
 import { BehaviorSubject, EMPTY, Observable, of, Subject, Subscription } from 'rxjs';
 import { catchError, debounceTime, map, switchMap, skip } from 'rxjs/operators';
 import { UserInfo } from '../../../auth/shared/model';
-import { SubmissionService, SubmitResponse, PendingSubmission } from '../../submission-shared/submission.service';
+import { SubmissionService, SubmitResponse, DraftSubmission } from '../../submission-shared/submission.service';
 import { MyFormControl } from './form-validators';
 import { SectionForm } from './section-form';
 import { flatFeatures } from '../../utils';
@@ -168,14 +168,14 @@ export class SubmEditService {
         this.editState.startLoading();
 
         return this.submService.getSubmission(accno).pipe(
-            map(pendingSubm => {
+            map(draftSubm => {
                 this.editState.stopLoading();
-                this.createForm(pendingSubm, setDefaults);
+                this.createForm(draftSubm, setDefaults);
                 const projectAttribute =
-                    pendingSubm &&
-                    pendingSubm.data &&
-                    pendingSubm.data.attributes &&
-                    pendingSubm.data.attributes
+                    draftSubm &&
+                    draftSubm.data &&
+                    draftSubm.data.attributes &&
+                    draftSubm.data.attributes
                         .filter( att => att.name && att.name.toLowerCase() === 'attachto')
                         .shift();
 
@@ -193,9 +193,9 @@ export class SubmEditService {
         this.editState.startReverting();
         return this.submService.deleteSubmission(this.accno!).pipe(
             switchMap(() => this.submService.getSubmission(this.accno!)),
-            map(pendingSubm => {
+            map(draftSubm => {
                 this.editState.stopReverting();
-                this.createForm(pendingSubm);
+                this.createForm(draftSubm);
                 return ServerResponse.Ok({});
             }),
             catchError(error => {
@@ -249,7 +249,7 @@ export class SubmEditService {
         }
 
         if (sectionForm !== undefined) {
-            this.save(); // Save a pending submission as soon as the edit form gets visible.
+            this.save(); // Save a draft submission as soon as the edit form gets visible.
 
             this.sectionFormSubEdit = sectionForm.form.valueChanges
                 .pipe(skip(1))
@@ -325,9 +325,9 @@ export class SubmEditService {
             });
     }
 
-    private createForm(pendingSubm: PendingSubmission, setDefaults: boolean = false) {
-        this.accno = pendingSubm.accno;
-        this.submModel = pageTab2Submission(pendingSubm.data);
+    private createForm(draftSubm: DraftSubmission, setDefaults: boolean = false) {
+        this.accno = draftSubm.accno;
+        this.submModel = pageTab2Submission(draftSubm.data);
 
         if (setDefaults) {
             this.setDefaults(this.submModel.section);
