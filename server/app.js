@@ -3,56 +3,30 @@ require('dotenv').config();
 
 const compression = require('compression');
 const config = require('config');
+const bodyParser = require('body-parser');
 const express = require('express');
 const expressWinston = require('express-winston');
 const helmet = require('helmet');
-const proxy = require('express-http-proxy');
-const { format } = require('url');
 const path = require('path');
-const request = require('request');
-const { loggerSettings, errorLoggerSettings } = require('./logger');
+const submitterProxy = require('./proxies/submitter');
+const { errorLoggerSettings } = require('./logger');
+const { registryProxy, resolverProxy } = require('./proxies/identifiers');
+const loggerProxy = require('./proxies/logger');
 
 const { port, hostname, protocol } = config.express;
-const { context } = config.backend;
-const { limit } = config.files;
 
 const app = express();
 app.use(helmet());
 app.use(compression());
-
-const backendUri = format(config.backend.uri);
-const identifiersRegistryUri = format(config.identifiers.registry_uri);
-const resolverRegistryUri = format(config.identifiers.resolver_uri);
-const proxyConfig = (pathname) => ({
-  limit,
-  memoizeHost: true,
-  proxyReqPathResolver: (req) => {
-    return pathname ? `/${pathname}${req.url}` : req.url;
-  }
-});
+app.use(bodyParser.json());
 
 app.use('/static', express.static(config.assets.path));
 
-// Backend proxy
-app.use(
-  ['*/raw', '*/api'],
-  expressWinston.logger(loggerSettings),
-  proxy(backendUri, proxyConfig(context))
-);
-
-// Identifiers registry proxy
-app.use('/identifiers/registry', expressWinston.logger(loggerSettings), (req, res) => {
-  const identifiersUrl = `${identifiersRegistryUri}${req.url}`;
-
-  req.pipe(request(identifiersUrl)).pipe(res);
-});
-
-// Identifiers resolver proxy
-app.use('/identifiers/resolver', expressWinston.logger(loggerSettings), (req, res) => {
-  const identifiersUrl = `${resolverRegistryUri}${req.url}`;
-
-  req.pipe(request(identifiersUrl)).pipe(res);
-});
+// Proxies
+submitterProxy(app);
+registryProxy(app);
+resolverProxy(app);
+loggerProxy(app);
 
 // In DEV mode this service only proxies requests to the backend.
 // In PROD it serves the Angular static files as well.

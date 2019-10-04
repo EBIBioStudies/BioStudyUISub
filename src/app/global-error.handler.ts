@@ -5,7 +5,7 @@ import {
 import { Subject } from 'rxjs/Subject';
 import { UserSession } from 'app/auth/shared';
 import { INTERNAL_SERVER_ERROR, UNAUTHORIZED } from 'http-status-codes';
-import { LogService } from './log/log.service';
+import { LogService } from './logger/log.service';
 
 @Injectable()
 export class GlobalErrorHandler extends ErrorHandler {

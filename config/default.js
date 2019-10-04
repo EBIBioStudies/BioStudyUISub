@@ -18,6 +18,11 @@ module.exports = {
   assets: {
     path: 'public'
   },
+  log_stash_uri: {
+    hostname: 'ves-ebi-6d',
+    port: '3515',
+    protocol: 'http'
+  },
   identifiers: {
     registry_uri: {
       pathname: 'restApi',

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map, catchError, switchMap } from 'rxjs/operators';
 import { PageTab } from './model/pagetab';
-import { LogService } from 'app/log/log.service';
+import { LogService } from 'app/logger/log.service';
 
 export interface PendingSubmission {
     accno: string,
