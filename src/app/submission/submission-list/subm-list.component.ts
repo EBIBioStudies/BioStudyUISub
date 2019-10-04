@@ -94,16 +94,12 @@ export class DateCellComponent implements AgRendererComponent {
     }
 
     /**
-     * Converts the date to a JavaScript standard Date object. Note that dates are stored on the server in
-     * seconds, not in milliseconds as the Date object requires.
-     * @param {number} seconds - Seconds since 1 January 1970 UTC
+     * Formats date string into a JavaScript Date object.
+     * @param {string} date Date string to be formatted
      * @returns {Date} Equivalent JavaScript Date object.
      */
-    private asDate(seconds: number): Date | undefined {
-        if (seconds && seconds > 0) {
-            return new Date(seconds * 1000);
-        }
-        return undefined;
+    private asDate(date: string): Date {
+        return new Date(date);
     }
 
     /**
