@@ -5,7 +5,7 @@ import { map, catchError, switchMap } from 'rxjs/operators';
 import { PageTab } from './model/pagetab';
 import { LogService } from 'app/logger/log.service';
 
-export interface PendingSubmission {
+export interface DraftSubmission {
     accno: string,
     changed: number,
     data: PageTab
@@ -88,12 +88,12 @@ export class SubmissionService {
         return this.http.get('/raw/projects');
     }
 
-    createSubmission(pt: PageTab): Observable<PendingSubmission> {
-        return this.http.post<PendingSubmission>('/raw/submissions/pending', pt);
+    createSubmission(pt: PageTab): Observable<DraftSubmission> {
+        return this.http.post<DraftSubmission>('/raw/submissions/pending', pt);
     }
 
-    getSubmission(accno: string): Observable<PendingSubmission> {
-        return this.getPending(accno).pipe(
+    getSubmission(accno: string): Observable<DraftSubmission> {
+        return this.getDraft(accno).pipe(
             catchError(() =>
                 this.getSubmitted(accno).pipe(
                     map(resp => ({
@@ -105,7 +105,7 @@ export class SubmissionService {
     }
 
     saveSubmission(accno: string, pt: PageTab): Observable<any> {
-        return this.http.put<PendingSubmission>(`/raw/submissions/pending/${accno}`, pt).pipe(
+        return this.http.put<DraftSubmission>(`/raw/submissions/pending/${accno}`, pt).pipe(
             catchError((resp: HttpErrorResponse) => {
                 if (resp.status === 400) {
                     return this.createSubmission(pt);
@@ -131,9 +131,9 @@ export class SubmissionService {
     }
 
     deleteSubmission(accno: string): Observable<boolean> {
-        return this.getPending(accno).pipe(
+        return this.getDraft(accno).pipe(
             catchError(_ => of(undefined)),
-            switchMap(resp => resp === undefined ? this.deleteSubmitted(accno) : this.deletePending(accno))
+            switchMap(resp => resp === undefined ? this.deleteSubmitted(accno) : this.deleteDraft(accno))
         );
     }
 
@@ -144,17 +144,17 @@ export class SubmissionService {
         );
     }
 
-    private deletePending(accno: string): Observable<boolean> {
+    private deleteDraft(accno: string): Observable<boolean> {
         return this.http.delete(`/raw/submissions/pending/${accno}`).pipe(
             map(() => true)
         );
     }
 
-    private getPending(accno: string): Observable<PendingSubmission> {
-        return this.http.get<PendingSubmission>(`/raw/submissions/pending/${accno}`);
+    private getDraft(accno: string): Observable<DraftSubmission> {
+        return this.http.get<DraftSubmission>(`/raw/submissions/pending/${accno}`);
     }
 
     private getSubmitted(accno: string): Observable<PageTab> {
-        return this.http.get<PageTab>(`/raw/submission/${accno}`);
+        return this.http.get<PageTab>(`/raw/submissions/${accno}.json`);
     }
 }
