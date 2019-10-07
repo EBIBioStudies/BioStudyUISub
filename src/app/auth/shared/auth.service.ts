@@ -1,7 +1,8 @@
+import * as HttpStatus from 'http-status-codes';
 import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ServerError } from 'app/http';
 import { Observable, of } from 'rxjs';
+import { ServerError } from 'app/http';
 import { map, catchError } from 'rxjs/operators';
 import { AppConfig } from '../../app.config';
 import { UserSession } from './user-session';
@@ -41,8 +42,8 @@ export class AuthService {
       '/raw/auth/profile',
       { observe: 'response' }
     ).pipe(
-      catchError((response: HttpErrorResponse) => this.catchError<UserInfoResponse>(response)),
-      map((response: HttpResponse<UserInfoResponse>) => this.checkStatus(response)),
+      catchError((response: HttpErrorResponse) => this.catchProfileError<UserInfoResponse>(response)),
+      map((response: HttpResponse<UserInfoResponse>) => this.checkProfileStatus(response)),
       map((user: UserInfo) => this.userSession.update(user))
     );
   }
@@ -81,19 +82,29 @@ export class AuthService {
   }
 
   private catchError<T>(resp: HttpErrorResponse): Observable<T> {
-    if (resp.status === 403) {
-      return of(resp.error); // server should not return 403 status
-    }
-
     throw ServerError.fromResponse(resp);
   }
 
+  private catchProfileError<T>(response: HttpErrorResponse): Observable<T> {
+    this.userSession.destroy();
+
+    return of(response.error);
+  }
+
   private checkStatus<R, T>(response: HttpResponse<R>): T {
-    if (response.status === 200 || response.status === 201) {
+    if (response.status === HttpStatus.OK) {
       return <T>(response.body || {});
     }
 
     throw ServerError.dataError(response.body);
+  }
+
+  private checkProfileStatus<R, T>(response: HttpResponse<R>): T {
+    if (response.status !== HttpStatus.OK) {
+      this.userSession.destroy();
+    }
+
+    return <T>(response.body || {});
   }
 
   private sendPostRequest<R, T>(path: string, payload: any): Observable<T> {

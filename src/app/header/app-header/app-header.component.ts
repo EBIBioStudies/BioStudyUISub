@@ -75,7 +75,6 @@ export class AppHeaderComponent implements OnDestroy {
             .subscribe(
                 () => { this.isBusy = false; },
                 () => {
-                    // fix this: 403 response should not be returned here
                     this.userSession.destroy();
                     this.isBusy = false;
                 });
