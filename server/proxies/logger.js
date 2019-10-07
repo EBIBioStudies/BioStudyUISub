@@ -10,7 +10,7 @@ const loggerProxy = (app) => {
       url: logStashUri,
       method: "POST",
       json: true,
-      body: { log: req.body }
+      body: req.body
     }, () => res.send({ status: 'ok' }));
   });
 };
