@@ -254,7 +254,7 @@ export class SubmListComponent {
                     }
 
                     // Makes the request taking into account any filtering arguments supplied through the UI.
-                    this.submService.getSubmissions( this.showSubmitted, {
+                    this.submService.getSubmissions(this.showSubmitted, {
                         offset: params.startRow,
                         limit: pageSize,
                         accNo: fm.accno && fm.accno.value ? fm.accno.value : undefined,
