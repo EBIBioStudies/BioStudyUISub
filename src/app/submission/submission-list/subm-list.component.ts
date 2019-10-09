@@ -98,7 +98,11 @@ export class DateCellComponent implements AgRendererComponent {
      * @param {string} date Date string to be formatted
      * @returns {Date} Equivalent JavaScript Date object.
      */
-    private asDate(date: string): Date {
+    private asDate(date: string): Date | undefined {
+        if (String.isDefinedAndNotEmpty(date) || date === null) {
+            return undefined;
+        }
+
         return new Date(date);
     }
 
