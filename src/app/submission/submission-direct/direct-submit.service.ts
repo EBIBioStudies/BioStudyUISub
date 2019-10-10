@@ -205,7 +205,7 @@ export class DirectSubmitService {
                 req.onResponse(data, ReqStatus.SUCCESS);
             }),
             catchError((error: any) => {
-                req.onResponse(error.message || 'unknown error', ReqStatus.ERROR);
+                req.onResponse(error.error || 'unknown error', ReqStatus.ERROR);
 
                 // NOTE: an empty observable is used instead of throwing an exception to prevent this transaction
                 // cancelling any remaining ones.
