@@ -77,7 +77,7 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
 
 @Component({
     selector: 'date-cell',
-    template: `{{!value ? '&mdash;' : value | date: appConfig.dateListFormat}}`
+    template: `{{ value === undefined ? '&mdash;' : value | date: appConfig.dateListFormat }}`
 })
 export class DateCellComponent implements AgRendererComponent {
     value?: Date;
@@ -99,7 +99,7 @@ export class DateCellComponent implements AgRendererComponent {
      * @returns {Date} Equivalent JavaScript Date object.
      */
     private asDate(date: string): Date | undefined {
-        if (String.isDefinedAndNotEmpty(date) || date === null) {
+        if (date === undefined || date === null || date.length === 0) {
             return undefined;
         }
 
@@ -267,23 +267,17 @@ export class SubmListComponent {
                         keywords: fm.title && fm.title.value ? fm.title.value : undefined
 
                     // Hides the overlaid progress box if request failed
-                    }).takeUntil(this.ngUnsubscribe).catch(error => {
+                    })
+                    .takeUntil(this.ngUnsubscribe)
+                    .catch((error) => {
                         agApi!.hideOverlay();
                         return throwError(error);
-
-                    // Once all submissions fetched, determines last row for display purposes.
-                    }).subscribe((rows) => {
+                     })
+                    .subscribe((rows) => {
                         let lastRow = -1;
 
                         // Hides progress box.
                         agApi!.hideOverlay();
-
-                        // Removes any entries that are really revisions of sent submissions if showing temporary ones
-                        if (!this.showSubmitted) {
-                            rows = rows.filter((subm) => {
-                                return subm.accno.indexOf('TMP') === 0;
-                            });
-                        }
 
                         if (rows.length < pageSize) {
                             lastRow = params.startRow + rows.length;
