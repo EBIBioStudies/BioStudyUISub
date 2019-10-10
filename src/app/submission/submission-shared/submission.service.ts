@@ -87,7 +87,7 @@ export class SubmissionService {
         const url = submitted ? '/raw/submissions' : '/raw/submissions/drafts';
         return this.http.get<SubmissionListItem[]>(url, { params: definedPropertiesOnly(params) }).pipe(
             map((items) => {
-                return submitted ? items : this.submissionDraftUtils.formatDraftSubmissions(items);
+                return submitted ? items : this.submissionDraftUtils.filterAndFormatDraftSubmissions(items);
             })
         );
     }
