@@ -7,7 +7,7 @@ import { none, Option, some } from 'fp-ts/lib/Option';
 import { BehaviorSubject, EMPTY, Observable, of, Subject, Subscription } from 'rxjs';
 import { catchError, debounceTime, map, switchMap, skip } from 'rxjs/operators';
 import { UserInfo } from '../../../auth/shared/model';
-import { SubmissionService, SubmitResponse, DraftSubmission } from '../../submission-shared/submission.service';
+import { SubmissionService, SubmitResponse } from '../../submission-shared/submission.service';
 import { MyFormControl } from './form-validators';
 import { SectionForm } from './section-form';
 import { flatFeatures } from '../../utils';
@@ -173,9 +173,8 @@ export class SubmEditService {
                 this.createForm(draftSubm, setDefaults);
                 const projectAttribute =
                     draftSubm &&
-                    draftSubm.data &&
-                    draftSubm.data.attributes &&
-                    draftSubm.data.attributes
+                    draftSubm.attributes &&
+                    draftSubm.attributes
                         .filter( att => att.name && att.name.toLowerCase() === 'attachto')
                         .shift();
 
@@ -249,8 +248,6 @@ export class SubmEditService {
         }
 
         if (sectionForm !== undefined) {
-            this.save(); // Save a draft submission as soon as the edit form gets visible.
-
             this.sectionFormSubEdit = sectionForm.form.valueChanges
                 .pipe(skip(1))
                 .subscribe(() => {
@@ -262,9 +259,7 @@ export class SubmEditService {
                     skip(1),
                     debounceTime(900)
                 )
-                .subscribe(() => {
-                    this.save();
-                });
+                .subscribe(() => this.save());
 
             this.updateDependencyValues(sectionForm);
 
@@ -315,7 +310,7 @@ export class SubmEditService {
 
     private save() {
         this.editState.startSaving();
-        this.submService.saveSubmission(this.accno!!, this.asPageTab())
+        this.submService.saveDraftSubmission(this.accno!!, this.asPageTab())
             .pipe(
                 map(resp => ServerResponse.Ok(resp)),
                 catchError(error => of(ServerResponse.Error(error))))
@@ -325,9 +320,9 @@ export class SubmEditService {
             });
     }
 
-    private createForm(draftSubm: DraftSubmission, setDefaults: boolean = false) {
+    private createForm(draftSubm: PageTab, setDefaults: boolean = false) {
         this.accno = draftSubm.accno;
-        this.submModel = pageTab2Submission(draftSubm.data);
+        this.submModel = pageTab2Submission(draftSubm);
 
         if (setDefaults) {
             this.setDefaults(this.submModel.section);

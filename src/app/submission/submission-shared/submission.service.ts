@@ -1,15 +1,9 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map, catchError, switchMap } from 'rxjs/operators';
 import { PageTab } from './model/pagetab';
 import { SubmissionDraftUtils } from './utils/submission-draft.utils';
-
-export interface DraftSubmission {
-    accno: string,
-    changed: number,
-    data: PageTab
-}
 
 export interface SubmissionListItem {
     accno: string,
@@ -96,32 +90,16 @@ export class SubmissionService {
         return this.http.get('/raw/projects');
     }
 
-    createSubmission(pt: PageTab): Observable<DraftSubmission> {
-        return this.http.post<DraftSubmission>('/raw/submissions/pending', pt);
+    createDraftSubmission(pt: PageTab): Observable<PageTab> {
+        return this.http.post<PageTab>('/raw/submissions/drafts', pt);
     }
 
-    getSubmission(accno: string): Observable<DraftSubmission> {
-        return this.getDraft(accno).pipe(
-            catchError(() =>
-                this.getSubmitted(accno).pipe(
-                    map(resp => ({
-                        accno: accno,
-                        changed: 0,
-                        data: resp
-                    }))
-                )));
+    getSubmission(accno: string): Observable<PageTab> {
+        return this.getDraft(accno);
     }
 
-    saveSubmission(accno: string, pt: PageTab): Observable<any> {
-        return this.http.put<DraftSubmission>(`/raw/submissions/pending/${accno}`, pt).pipe(
-            catchError((resp: HttpErrorResponse) => {
-                if (resp.status === 400) {
-                    return this.createSubmission(pt);
-                }
-                throw resp;
-            }),
-            map(() => 'done')
-        );
+    saveDraftSubmission(accno: string, pt: PageTab): Observable<any> {
+        return this.http.put<PageTab>(`/raw/submissions/drafts/${accno}`, pt).pipe(map(() => 'done'));
     }
 
     submitSubmission(accno: string, pt: PageTab): Observable<SubmitResponse> {
@@ -153,13 +131,11 @@ export class SubmissionService {
     }
 
     private deleteDraft(accno: string): Observable<boolean> {
-        return this.http.delete(`/raw/submissions/pending/${accno}`).pipe(
-            map(() => true)
-        );
+        return this.http.delete(`/raw/submissions/drafts/${accno}`).pipe(map(() => true));
     }
 
-    private getDraft(accno: string): Observable<DraftSubmission> {
-        return this.http.get<DraftSubmission>(`/raw/submissions/pending/${accno}`);
+    private getDraft(accno: string): Observable<PageTab> {
+        return this.http.get<PageTab>(`/raw/submissions/drafts/${accno}`);
     }
 
     private getSubmitted(accno: string): Observable<PageTab> {
