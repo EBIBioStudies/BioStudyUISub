@@ -98,7 +98,11 @@ export class DateCellComponent implements AgRendererComponent {
      * @param {string} date Date string to be formatted
      * @returns {Date} Equivalent JavaScript Date object.
      */
-    private asDate(date: string): Date {
+    private asDate(date: string): Date | undefined {
+        if (String.isDefinedAndNotEmpty(date) || date === null) {
+            return undefined;
+        }
+
         return new Date(date);
     }
 
@@ -254,7 +258,7 @@ export class SubmListComponent {
                     }
 
                     // Makes the request taking into account any filtering arguments supplied through the UI.
-                    this.submService.getSubmissions( this.showSubmitted, {
+                    this.submService.getSubmissions(this.showSubmitted, {
                         offset: params.startRow,
                         limit: pageSize,
                         accNo: fm.accno && fm.accno.value ? fm.accno.value : undefined,

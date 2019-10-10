@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map, catchError, switchMap } from 'rxjs/operators';
 import { PageTab } from './model/pagetab';
+import { SubmissionDraftUtils } from './utils/submission-draft.utils';
 
 export interface DraftSubmission {
     accno: string,
@@ -59,6 +60,8 @@ function definedPropertiesOnly(obj: any): any {
 
 @Injectable()
 export class SubmissionService {
+    private submissionDraftUtils: SubmissionDraftUtils;
+
     /**
      * Traverses the error log tree to find the first deepest error message.
      * @param {Array<Object> | Object} obj - Log tree's root node or subnode list.
@@ -74,12 +77,19 @@ export class SubmissionService {
         return this.deepestError(errorNode);
     }
 
-    constructor(private http: HttpClient) {
+    constructor(
+        private http: HttpClient
+    ) {
+        this.submissionDraftUtils = new SubmissionDraftUtils();
     }
 
     getSubmissions(submitted: boolean, params: SubmissionListParams = {}): Observable<SubmissionListItem[]> {
-        const url = submitted ? '/raw/submissions' : '/raw/submissions/pending';
-        return this.http.get<SubmissionListItem[]>(url, {params: definedPropertiesOnly(<any>params)});
+        const url = submitted ? '/raw/submissions' : '/raw/submissions/drafts';
+        return this.http.get<SubmissionListItem[]>(url, { params: definedPropertiesOnly(params) }).pipe(
+            map((items) => {
+                return submitted ? items : this.submissionDraftUtils.formatDraftSubmissions(items);
+            })
+        );
     }
 
     getProjects(): Observable<any> {
