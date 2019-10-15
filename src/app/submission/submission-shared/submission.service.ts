@@ -20,6 +20,7 @@ export interface SubmissionListItem {
 }
 
 export interface SubmitResponse {
+    accno: string,
     status: string,
     mapping: Array<any>,
     log: SubmitLog,
