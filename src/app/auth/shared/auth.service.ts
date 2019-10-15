@@ -30,16 +30,16 @@ export class AuthService {
   ) { }
 
   activate(key: string): Observable<StatusResponse> {
-    return this.http.post<StatusResponse>(`/raw/auth/activate/${key}`, {});
+    return this.http.post<StatusResponse>(`/api/auth/activate/${key}`, {});
   }
 
   changePassword(obj: PasswordResetData): Observable<StatusResponse> {
-    return this.http.post<StatusResponse>('/raw/auth/password/change', obj.snapshot());
+    return this.http.post<StatusResponse>('/api/auth/password/change', obj.snapshot());
   }
 
   getUserProfile(): Observable<UserInfo> {
     return this.http.get<UserInfoResponse>(
-      '/raw/auth/profile',
+      '/api/auth/profile',
       { observe: 'response' }
     ).pipe(
       catchError((response: HttpErrorResponse) => this.catchProfileError<UserInfoResponse>(response)),
@@ -49,7 +49,7 @@ export class AuthService {
   }
 
   login(user: { login: string, password: string }): Observable<UserInfo> {
-    return this.sendPostRequest<UserInfoResponse, UserInfo>('/raw/auth/login', user)
+    return this.sendPostRequest<UserInfoResponse, UserInfo>('/api/auth/login', user)
       .pipe(map((userInfo: UserInfo) => this.userSession.create(userInfo)));
   }
 
@@ -58,7 +58,7 @@ export class AuthService {
       return of({ status: 'OK' });
     }
 
-    return this.sendPostRequest<StatusResponse, StatusResponse>('/raw/auth/logout', { sessid: this.userSession.token() })
+    return this.sendPostRequest<StatusResponse, StatusResponse>('/api/auth/logout', { sessid: this.userSession.token() })
       .pipe(
         map(() => {
           this.userSession.destroy();
@@ -70,15 +70,15 @@ export class AuthService {
 
 
   sendPasswordResetRequest(obj: PasswordResetRequestData): Observable<StatusResponse> {
-    return this.sendPostRequest<UserInfoResponse, StatusResponse>('/raw/auth/password/reset', this.withInstanceKey(obj.snapshot()));
+    return this.sendPostRequest<UserInfoResponse, StatusResponse>('/api/auth/password/reset', this.withInstanceKey(obj.snapshot()));
   }
 
   sendActivationLinkRequest(obj: ActivationLinkRequestData): Observable<StatusResponse> {
-    return this.sendPostRequest<StatusResponse, StatusResponse>('/raw/auth/retryact', this.withInstanceKey(obj.snapshot()));
+    return this.sendPostRequest<StatusResponse, StatusResponse>('/api/auth/retryact', this.withInstanceKey(obj.snapshot()));
   }
 
   register(regData: RegistrationData): Observable<StatusResponse> {
-    return this.sendPostRequest<StatusResponse, StatusResponse>('/raw/auth/register', this.withInstanceKey(regData.snapshot()));
+    return this.sendPostRequest<StatusResponse, StatusResponse>('/api/auth/register', this.withInstanceKey(regData.snapshot()));
   }
 
   private catchError<T>(resp: HttpErrorResponse): Observable<T> {

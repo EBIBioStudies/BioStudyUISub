@@ -79,7 +79,7 @@ export class SubmissionService {
     }
 
     getSubmissions(submitted: boolean, params: SubmissionListParams = {}): Observable<SubmissionListItem[]> {
-        const url = submitted ? '/raw/submissions' : '/raw/submissions/drafts';
+        const url = submitted ? '/api/submissions' : '/api/submissions/drafts';
         return this.http.get<SubmissionListItem[]>(url, { params: definedPropertiesOnly(params) }).pipe(
             map((items) => {
                 return submitted ? items : this.submissionDraftUtils.filterAndFormatDraftSubmissions(items);
@@ -88,11 +88,11 @@ export class SubmissionService {
     }
 
     getProjects(): Observable<any> {
-        return this.http.get('/raw/projects');
+        return this.http.get('/api/projects');
     }
 
     createDraftSubmission(pt: PageTab): Observable<string> {
-        return this.http.post<DraftPayload>('/raw/submissions/drafts', pt).pipe(
+        return this.http.post<DraftPayload>('/api/submissions/drafts', pt).pipe(
             map((response) => response.key)
         );
     }
@@ -102,13 +102,13 @@ export class SubmissionService {
     }
 
     saveDraftSubmission(accno: string, pt: PageTab): Observable<any> {
-        return this.http.put<PageTab>(`/raw/submissions/drafts/${accno}`, pt).pipe(map(() => 'done'));
+        return this.http.put<PageTab>(`/api/submissions/drafts/${accno}`, pt).pipe(map(() => 'done'));
     }
 
     submitSubmission(pt: PageTab): Observable<SubmitResponse> {
         const headers: HttpHeaders = new HttpHeaders().set('Submission_Type', 'application/json');
 
-        return this.http.post<SubmitResponse>('/raw/submissions', pt, { headers });
+        return this.http.post<SubmitResponse>('/api/submissions', pt, { headers });
     }
 
     directSubmit(file: File, create: boolean, attachTo: Array<string> = []): Observable<SubmitResponse> {
@@ -118,7 +118,7 @@ export class SubmissionService {
             formData.append('attachTo', projectName);
         });
         formData.append('submission', file);
-        return this.http.post<SubmitResponse>(`/raw/submissions/direct`, formData);
+        return this.http.post<SubmitResponse>(`/api/submissions/direct`, formData);
     }
 
     deleteSubmission(accno: string): Observable<boolean> {
@@ -130,20 +130,20 @@ export class SubmissionService {
 
     private deleteSubmitted(accno: string): Observable<boolean> {
         // todo: Why GET ??!!!
-        return this.http.get(`/raw/submit/delete?id=${accno}`).pipe(
+        return this.http.get(`/api/submit/delete?id=${accno}`).pipe(
             map(resp => resp['level'] === 'success')
         );
     }
 
     private deleteDraft(accno: string): Observable<boolean> {
-        return this.http.delete(`/raw/submissions/drafts/${accno}`).pipe(map(() => true));
+        return this.http.delete(`/api/submissions/drafts/${accno}`).pipe(map(() => true));
     }
 
     private getDraft(accno: string): Observable<PageTab> {
-        return this.http.get<PageTab>(`/raw/submissions/drafts/${accno}/content`);
+        return this.http.get<PageTab>(`/api/submissions/drafts/${accno}/content`);
     }
 
     private getSubmitted(accno: string): Observable<PageTab> {
-        return this.http.get<PageTab>(`/raw/submissions/${accno}.json`);
+        return this.http.get<PageTab>(`/api/submissions/${accno}.json`);
     }
 }
