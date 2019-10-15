@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map, catchError, switchMap } from 'rxjs/operators';
-import { PageTab } from './model/pagetab';
+import { PageTab, DraftPayload } from './model/pagetab';
 import { SubmissionDraftUtils } from './utils/submission-draft.utils';
 
 export interface SubmissionListItem {
@@ -90,8 +90,10 @@ export class SubmissionService {
         return this.http.get('/raw/projects');
     }
 
-    createDraftSubmission(pt: PageTab): Observable<PageTab> {
-        return this.http.post<PageTab>('/raw/submissions/drafts', pt);
+    createDraftSubmission(pt: PageTab): Observable<string> {
+        return this.http.post<DraftPayload>('/raw/submissions/drafts', pt).pipe(
+            map((response) => response.key)
+        );
     }
 
     getSubmission(accno: string): Observable<PageTab> {
