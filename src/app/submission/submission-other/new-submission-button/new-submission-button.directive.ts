@@ -54,10 +54,11 @@ export class NewSubmissionButtonDirective implements AfterViewInit {
 
     private onOk(template?: string) {
         this.startCreating();
-        this.submService.createSubmission(newPageTab(template)).subscribe((subm) => {
-            this.stopCreating();
-            this.router.navigate(['/submissions/new/', subm.accno]);
-        });
+        this.submService.createDraftSubmission(newPageTab(template))
+            .subscribe((accno) => {
+                this.stopCreating();
+                this.router.navigate(['/submissions/new/', accno]);
+            });
     }
 
     private startCreating() {
