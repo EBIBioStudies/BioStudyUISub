@@ -102,8 +102,10 @@ export class SubmissionService {
         return this.http.put<PageTab>(`/raw/submissions/drafts/${accno}`, pt).pipe(map(() => 'done'));
     }
 
-    submitSubmission(accno: string, pt: PageTab): Observable<SubmitResponse> {
-        return this.http.post<SubmitResponse>(`/raw/submissions/pending/${accno}/submit`, pt);
+    submitSubmission(pt: PageTab): Observable<SubmitResponse> {
+        const headers: HttpHeaders = new HttpHeaders().set('Submission_Type', 'application/json');
+
+        return this.http.post<SubmitResponse>('/raw/submissions', pt, { headers });
     }
 
     directSubmit(file: File, create: boolean, attachTo: Array<string> = []): Observable<SubmitResponse> {
@@ -135,7 +137,7 @@ export class SubmissionService {
     }
 
     private getDraft(accno: string): Observable<PageTab> {
-        return this.http.get<PageTab>(`/raw/submissions/drafts/${accno}`);
+        return this.http.get<PageTab>(`/raw/submissions/drafts/${accno}/content`);
     }
 
     private getSubmitted(accno: string): Observable<PageTab> {

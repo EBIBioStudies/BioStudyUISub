@@ -5,7 +5,7 @@ import { pageTab2Submission, PageTab, submission2PageTab, SelectValueType } from
 import { Submission, AttributeData, Section, Feature, Attribute } from 'app/submission/submission-shared/model';
 import { none, Option, some } from 'fp-ts/lib/Option';
 import { BehaviorSubject, EMPTY, Observable, of, Subject, Subscription } from 'rxjs';
-import { catchError, debounceTime, map, switchMap, skip } from 'rxjs/operators';
+import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 import { UserInfo } from '../../../auth/shared/model';
 import { SubmissionService, SubmitResponse } from '../../submission-shared/submission.service';
 import { MyFormControl } from './form-validators';
@@ -170,7 +170,7 @@ export class SubmEditService {
         return this.submService.getSubmission(accno).pipe(
             map(draftSubm => {
                 this.editState.stopLoading();
-                this.createForm(draftSubm, setDefaults);
+                this.createForm(draftSubm, accno, setDefaults);
                 const projectAttribute =
                     draftSubm &&
                     draftSubm.attributes &&
@@ -194,7 +194,7 @@ export class SubmEditService {
             switchMap(() => this.submService.getSubmission(this.accno!)),
             map(draftSubm => {
                 this.editState.stopReverting();
-                this.createForm(draftSubm);
+                this.createForm(draftSubm, this.accno);
                 return ServerResponse.Ok({});
             }),
             catchError(error => {
@@ -207,7 +207,7 @@ export class SubmEditService {
         this.editState.startSubmitting();
         const pageTab = this.asPageTab(true);
 
-        return this.submService.submitSubmission(this.accno!, pageTab).pipe(
+        return this.submService.submitSubmission(pageTab).pipe(
             map(resp => {
                 this.editState.stopSubmitting();
                 this.onSubmitFinished(resp);
@@ -248,21 +248,18 @@ export class SubmEditService {
         }
 
         if (sectionForm !== undefined) {
-            this.sectionFormSubEdit = sectionForm.form.valueChanges
-                .pipe(skip(1))
+            sectionForm.form.valueChanges
+                .pipe(debounceTime(500))
                 .subscribe(() => {
-                    this.editState.startEditing();
+                    const dirty: boolean = sectionForm.form.dirty;
+
+                    if (dirty) {
+                        this.editState.startEditing();
+                        this.save();
+                    }
                 });
 
-            this.sectionFormSub = sectionForm.form.valueChanges
-                .pipe(
-                    skip(1),
-                    debounceTime(900)
-                )
-                .subscribe(() => this.save());
-
             this.updateDependencyValues(sectionForm);
-
             this.sectionSwitch$.next(some(sectionForm));
         } else {
             this.sectionSwitch$.next(none);
@@ -320,9 +317,14 @@ export class SubmEditService {
             });
     }
 
-    private createForm(draftSubm: PageTab, setDefaults: boolean = false) {
-        this.accno = draftSubm.accno;
+    private createForm(draftSubm: PageTab, accno: string = '', setDefaults: boolean = false) {
         this.submModel = pageTab2Submission(draftSubm);
+
+        if (accno.length !== 0) {
+            this.accno = accno;
+        } else {
+            this.accno = draftSubm.accno;
+        }
 
         if (setDefaults) {
             this.setDefaults(this.submModel.section);
