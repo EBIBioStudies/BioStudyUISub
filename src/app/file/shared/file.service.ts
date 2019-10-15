@@ -20,19 +20,19 @@ export class FileService {
     }
 
     getFiles(fullPath: string): Observable<PathInfo[]> {
-        return this.http.get<PathInfo[]>(`/raw/files${fullPath}`);
+        return this.http.get<PathInfo[]>(`/api/files${fullPath}`);
     }
 
     removeFile(filePath: string, fileName: string): Observable<any> {
-        return this.http.delete(`/raw/files/${filePath}?fileName=${fileName}`);
+        return this.http.delete(`/api/files/${filePath}?fileName=${fileName}`);
     }
 
     getUserGroups(): Observable<UserGroup[]> {
-        return this.http.get<UserGroup[]>('/raw/groups');
+        return this.http.get<UserGroup[]>('/api/groups');
     }
 
     download(filePath: string, fileName: string): Observable<any> {
-        return this.http.get(`/raw/files/${filePath}?fileName=${fileName}`, { responseType: 'blob' });
+        return this.http.get(`/api/files/${filePath}?fileName=${fileName}`, { responseType: 'blob' });
     }
 
     upload(fullPath: string, files: File[], keepFolders: boolean = true): Observable<UploadEvent> {
@@ -48,6 +48,6 @@ export class FileService {
             }
         });
 
-        return this.httpUpload.upload(`/raw/files${fullPath}`, formData);
+        return this.httpUpload.upload(`/api/files${fullPath}`, formData);
     }
 }

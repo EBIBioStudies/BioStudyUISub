@@ -34,11 +34,7 @@ const proxyConfig = (pathname) => ({
 app.use('/static', express.static(config.assets.path));
 
 // Backend proxy
-app.use(
-  ['*/raw', '*/api'],
-  expressWinston.logger(loggerSettings),
-  proxy(backendUri, proxyConfig(context))
-);
+app.use('*/api', expressWinston.logger(loggerSettings), proxy(backendUri, proxyConfig(context)));
 
 // Identifiers registry proxy
 app.use('/identifiers/registry', expressWinston.logger(loggerSettings), (req, res) => {
