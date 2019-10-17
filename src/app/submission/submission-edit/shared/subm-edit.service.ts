@@ -5,9 +5,9 @@ import { pageTab2Submission, PageTab, submission2PageTab, SelectValueType } from
 import { Submission, AttributeData, Section, Feature, Attribute } from 'app/submission/submission-shared/model';
 import { none, Option, some } from 'fp-ts/lib/Option';
 import { BehaviorSubject, EMPTY, Observable, of, Subject, Subscription } from 'rxjs';
-import { catchError, debounceTime, map, switchMap, skip } from 'rxjs/operators';
+import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 import { UserInfo } from '../../../auth/shared/model';
-import { SubmissionService, SubmitResponse, PendingSubmission } from '../../submission-shared/submission.service';
+import { SubmissionService, SubmitResponse } from '../../submission-shared/submission.service';
 import { MyFormControl } from './form-validators';
 import { SectionForm } from './section-form';
 import { flatFeatures } from '../../utils';
@@ -168,14 +168,13 @@ export class SubmEditService {
         this.editState.startLoading();
 
         return this.submService.getSubmission(accno).pipe(
-            map(pendingSubm => {
+            map(draftSubm => {
                 this.editState.stopLoading();
-                this.createForm(pendingSubm, setDefaults);
+                this.createForm(draftSubm, accno, setDefaults);
                 const projectAttribute =
-                    pendingSubm &&
-                    pendingSubm.data &&
-                    pendingSubm.data.attributes &&
-                    pendingSubm.data.attributes
+                    draftSubm &&
+                    draftSubm.attributes &&
+                    draftSubm.attributes
                         .filter( att => att.name && att.name.toLowerCase() === 'attachto')
                         .shift();
 
@@ -193,9 +192,9 @@ export class SubmEditService {
         this.editState.startReverting();
         return this.submService.deleteSubmission(this.accno!).pipe(
             switchMap(() => this.submService.getSubmission(this.accno!)),
-            map(pendingSubm => {
+            map(draftSubm => {
                 this.editState.stopReverting();
-                this.createForm(pendingSubm);
+                this.createForm(draftSubm, this.accno);
                 return ServerResponse.Ok({});
             }),
             catchError(error => {
@@ -208,7 +207,7 @@ export class SubmEditService {
         this.editState.startSubmitting();
         const pageTab = this.asPageTab(true);
 
-        return this.submService.submitSubmission(this.accno!, pageTab).pipe(
+        return this.submService.submitSubmission(pageTab).pipe(
             map(resp => {
                 this.editState.stopSubmitting();
                 this.onSubmitFinished(resp);
@@ -249,25 +248,18 @@ export class SubmEditService {
         }
 
         if (sectionForm !== undefined) {
-            this.save(); // Save a pending submission as soon as the edit form gets visible.
-
-            this.sectionFormSubEdit = sectionForm.form.valueChanges
-                .pipe(skip(1))
+            sectionForm.form.valueChanges
+                .pipe(debounceTime(500))
                 .subscribe(() => {
-                    this.editState.startEditing();
-                });
+                    const dirty: boolean = sectionForm.form.dirty;
 
-            this.sectionFormSub = sectionForm.form.valueChanges
-                .pipe(
-                    skip(1),
-                    debounceTime(900)
-                )
-                .subscribe(() => {
-                    this.save();
+                    if (dirty) {
+                        this.editState.startEditing();
+                        this.save();
+                    }
                 });
 
             this.updateDependencyValues(sectionForm);
-
             this.sectionSwitch$.next(some(sectionForm));
         } else {
             this.sectionSwitch$.next(none);
@@ -315,7 +307,7 @@ export class SubmEditService {
 
     private save() {
         this.editState.startSaving();
-        this.submService.saveSubmission(this.accno!!, this.asPageTab())
+        this.submService.saveDraftSubmission(this.accno!!, this.asPageTab())
             .pipe(
                 map(resp => ServerResponse.Ok(resp)),
                 catchError(error => of(ServerResponse.Error(error))))
@@ -325,9 +317,14 @@ export class SubmEditService {
             });
     }
 
-    private createForm(pendingSubm: PendingSubmission, setDefaults: boolean = false) {
-        this.accno = pendingSubm.accno;
-        this.submModel = pageTab2Submission(pendingSubm.data);
+    private createForm(draftSubm: PageTab, accno: string = '', setDefaults: boolean = false) {
+        this.submModel = pageTab2Submission(draftSubm);
+
+        if (accno.length !== 0) {
+            this.accno = accno;
+        } else {
+            this.accno = draftSubm.accno;
+        }
 
         if (setDefaults) {
             this.setDefaults(this.submModel.section);

@@ -103,3 +103,8 @@ export interface PageTab {
     tags?: Tag[];
     type?: string;
 }
+
+export interface DraftPayload {
+    key: string,
+    content: PageTab
+}

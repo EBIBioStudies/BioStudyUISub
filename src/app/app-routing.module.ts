@@ -27,7 +27,7 @@ const appRoutes: Routes = [
         canActivate: [AuthGuard]
     },
     {
-        path: 'submissions/pending',
+        path: 'submissions/draft',
         component: SubmListComponent,
         data: {isSent: false, reuse: true},
         canActivate: [AuthGuard]

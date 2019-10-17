@@ -3,10 +3,6 @@
     "target": "http://0.0.0.0:8080",
     "secure": false
   },
-  "/raw": {
-    "target": "http://0.0.0.0:8080",
-    "secure": false
-  },
   "/identifiers": {
     "target": "http://0.0.0.0:8080",
     "secure": false

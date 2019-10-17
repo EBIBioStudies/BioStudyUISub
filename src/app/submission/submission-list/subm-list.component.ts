@@ -77,7 +77,7 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
 
 @Component({
     selector: 'date-cell',
-    template: `{{!value ? '&mdash;' : value | date: appConfig.dateListFormat}}`
+    template: `{{ value === undefined ? '&mdash;' : value | date: appConfig.dateListFormat }}`
 })
 export class DateCellComponent implements AgRendererComponent {
     value?: Date;
@@ -94,16 +94,16 @@ export class DateCellComponent implements AgRendererComponent {
     }
 
     /**
-     * Converts the date to a JavaScript standard Date object. Note that dates are stored on the server in
-     * seconds, not in milliseconds as the Date object requires.
-     * @param {number} seconds - Seconds since 1 January 1970 UTC
+     * Formats date string into a JavaScript Date object.
+     * @param {string} date Date string to be formatted
      * @returns {Date} Equivalent JavaScript Date object.
      */
-    private asDate(seconds: number): Date | undefined {
-        if (seconds && seconds > 0) {
-            return new Date(seconds * 1000);
+    private asDate(date: string): Date | undefined {
+        if (date === undefined || date === null || date.length === 0) {
+            return undefined;
         }
-        return undefined;
+
+        return new Date(date);
     }
 
     /**
@@ -257,7 +257,7 @@ export class SubmListComponent {
                     }
 
                     // Makes the request taking into account any filtering arguments supplied through the UI.
-                    this.submService.getSubmissions( this.showSubmitted, {
+                    this.submService.getSubmissions(this.showSubmitted, {
                         offset: params.startRow,
                         limit: pageSize,
                         accNo: fm.accno && fm.accno.value ? fm.accno.value : undefined,
@@ -266,23 +266,17 @@ export class SubmListComponent {
                         keywords: fm.title && fm.title.value ? fm.title.value : undefined
 
                     // Hides the overlaid progress box if request failed
-                    }).takeUntil(this.ngUnsubscribe).catch(error => {
+                    })
+                    .takeUntil(this.ngUnsubscribe)
+                    .catch((error) => {
                         agApi!.hideOverlay();
                         return throwError(error);
-
-                    // Once all submissions fetched, determines last row for display purposes.
-                    }).subscribe((rows) => {
+                     })
+                    .subscribe((rows) => {
                         let lastRow = -1;
 
                         // Hides progress box.
                         agApi!.hideOverlay();
-
-                        // Removes any entries that are really revisions of sent submissions if showing temporary ones
-                        if (!this.showSubmitted) {
-                            rows = rows.filter((subm) => {
-                                return subm.accno.indexOf('TMP') === 0;
-                            });
-                        }
 
                         if (rows.length < pageSize) {
                             lastRow = params.startRow + rows.length;
@@ -298,7 +292,7 @@ export class SubmListComponent {
     }
 
     onSubmTabSelect(isSubmitted: boolean) {
-        let fragment = 'pending';
+        let fragment = 'draft';
 
         // Ignores actions that don't carry with them a change in state.
         if (this.showSubmitted !== isSubmitted) {
@@ -366,7 +360,7 @@ export class SubmListComponent {
                     return this.modalService.confirm(
                         `The submission with accession number ${accno} has not been submitted yet. If you proceed, \
                         it will be permanently deleted.`,
-                        `Delete pending submission`,
+                        `Delete draft submission`,
                         'Delete'
                     ).subscribe(onNext);
                 }
