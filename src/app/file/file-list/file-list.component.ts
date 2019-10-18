@@ -237,7 +237,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     private downloadFile(filePath: string, fileName: string): void {
-        const downloadPath = `/raw/files/${filePath}?fileName=${fileName}`;
+        const downloadPath = `/api/files/${filePath}?fileName=${fileName}`;
         const link = document.createElement('a');
 
         link.href = downloadPath;

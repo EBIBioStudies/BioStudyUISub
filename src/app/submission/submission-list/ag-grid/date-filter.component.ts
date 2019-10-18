@@ -10,41 +10,14 @@ import { parseDate, formatDate } from 'app/utils';
 import { DateInputComponent } from '../../../shared/date-input.component';
 
 class DateRange {
-    public static fromSeconds(from: number, to: number): DateRange {
-        return new DateRange(
-            DateRange.asDateString(from), DateRange.asDateString(to, true));
-    }
-
-    private static asSeconds(dateString?: string, setTillEndOfDay: boolean = false): number | undefined {
-        if (DateRange.isValueEmpty(dateString)) {
-            return undefined;
-        }
-        let date = parseDate(dateString!);
-        if (date && setTillEndOfDay) {
-            date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
-        }
-        return date ? date.getTime() / 1000 : undefined;
-    }
-
-    private static asDateString(seconds?: number, setTillEndOfDay: boolean = false): string {
-        if (DateRange.isValueEmpty(seconds)) {
-            return '';
-        }
-        let date = new Date();
-        date.setTime(seconds! * 1000);
-        if (setTillEndOfDay) {
-            date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
-        }
-        return formatDate(date);
-    }
-
     private static isValueEmpty(v: any): boolean {
         return v === null || v === undefined && v === '';
     }
 
-    constructor(public from?: string,
-                public to?: string) {
-    }
+    constructor(
+        public from?: string,
+        public to?: string
+    ) {}
 
     isEmpty(): boolean {
         return DateRange.isValueEmpty(this.from) && DateRange.isValueEmpty(this.to);
@@ -58,10 +31,10 @@ class DateRange {
         return new DateRange(this.from, this.to);
     }
 
-    toSeconds(): any {
+    getRange(): any {
         return {
-            from: DateRange.asSeconds(this.from),
-            to: DateRange.asSeconds(this.to, true)
+            from: this.from,
+            to: this.to
         };
     }
 }
@@ -77,7 +50,7 @@ export class DateFilterComponent implements AgFilterComponent {
     private selection;
     private date?: DateRange;
     private prev?: DateRange;
-    
+
     @ViewChildren(DateInputComponent) dateInputs?: QueryList<DateInputComponent>;
 
     agInit(params: IFilterParams): void {
@@ -103,7 +76,7 @@ export class DateFilterComponent implements AgFilterComponent {
     }
 
     get isInvalidRange(): boolean {
-        const s = this.date!.toSeconds();
+        const s = this.date!.getRange();
         return this.between && s.from > s.to;
     }
 
@@ -112,7 +85,8 @@ export class DateFilterComponent implements AgFilterComponent {
         if (seconds === undefined || seconds === null || seconds < 0) {
             return false;
         }
-        const s = this.date!.toSeconds();
+
+        const s = this.date!.getRange();
         if (this.after) {
             return seconds >= s.from;
         } else if (this.before) {
@@ -120,16 +94,17 @@ export class DateFilterComponent implements AgFilterComponent {
         } else if (this.between) {
             return seconds >= s.from && seconds <= s.to && s.from <= s.to;
         }
+
         return true;
     }
 
     getModel(): any {
-        return {value: this.date!.toSeconds()};
+        return {value: this.date!.getRange()};
     }
 
     setModel(model: any): void {
         if (model) {
-            this.date = DateRange.fromSeconds(model.value.from, model.value.to);
+            this.date = new DateRange(model.value.from, model.value.to);
         }
     }
 
@@ -142,6 +117,7 @@ export class DateFilterComponent implements AgFilterComponent {
             this.prev = this.date!.copy();
             this.params!.filterChangedCallback();
         }
+
         this.hide && this.hide();
     }
 
@@ -185,7 +161,7 @@ export class DateFilterComponent implements AgFilterComponent {
         if (!this.between) {
             return;
         }
-        const s = this.date!.toSeconds();
+        const s = this.date!.getRange();
         if (s.from > s.to) {
             $event.to
         }
@@ -196,7 +172,7 @@ export class DateFilterComponent implements AgFilterComponent {
         if (!this.between) {
             return;
         }
-        const s = this.date!.toSeconds();
+        const s = this.date!.getRange();
         if (s.from > s.to) {
             this.reset();
         }

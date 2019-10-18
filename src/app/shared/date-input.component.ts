@@ -2,7 +2,7 @@ import { Component, ElementRef, forwardRef, Input, ViewChild, OnInit } from '@an
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { BsDatepickerDirective } from 'ngx-bootstrap';
-import { formatDate, isEqualDate } from '../utils';
+import { isEqualDate } from '../utils';
 import { AppConfig } from '../app.config';
 
 @Component({
@@ -68,7 +68,7 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
      */
     reset() {
         this.dateValue = undefined;
-        this.onChange(formatDate(this.dateValue));
+        this.onChange(this.dateValue);
     }
 
     /**
@@ -133,7 +133,7 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
 
         if (dateObj && !isEqualDate(dateObj, this.dateValue)) {
             this.dateValue = dateObj;
-            formattedDate = formatDate(this.dateValue);
+            formattedDate = this.dateValue.toISOString();
             this.onChange(formattedDate);
 
             // Propagates the date change through the DOM if so wished.

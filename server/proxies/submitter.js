@@ -20,11 +20,7 @@ const submitterProxy = (app) => {
   const { context } = config.backend;
   const backendUri = format(config.backend.uri);
 
-  app.use(
-    ['*/raw', '*/api'],
-    expressWinston.logger(loggerSettings),
-    proxy(backendUri, proxyConfig(context))
-  );
+  app.use('*/api', expressWinston.logger(loggerSettings), proxy(backendUri, proxyConfig(context)));
 };
 
 module.exports = submitterProxy;
