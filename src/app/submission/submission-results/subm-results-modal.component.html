@@ -47,8 +47,7 @@
         </p>
     </div>
     <div *ngIf="hasLog && isError" class="modal-body">
-        <div role="button" class="text-danger"
-             (click)="collapsedLog = !collapsedLog">
+        <div role="button" class="text-danger" (click)="collapsedLog = !collapsedLog">
             <i class="fa" [ngClass]="{'fa-caret-square-down':!collapsedLog, 'fa-caret-square-right': collapsedLog}"></i>
             {{errorMessage}}
         </div>

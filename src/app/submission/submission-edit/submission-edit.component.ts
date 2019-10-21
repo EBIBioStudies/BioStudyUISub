@@ -9,7 +9,7 @@ import { Observable, of } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
 import { SubmResultsModalComponent } from '../submission-results/subm-results-modal.component';
-import { SubmitResponse } from '../submission-shared/submission.service';
+import { SubmitResponse, SubmitLog } from '../submission-shared/submission.service';
 import { SectionForm } from './shared/section-form';
 import { SubmEditService } from './shared/subm-edit.service';
 import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
@@ -170,13 +170,18 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
             return;
         }
 
-            (isConfirm ? this.confirmSubmit() : of(true))
-                .pipe(
-                    filter(v => v),
-                    switchMap( () => this.confirmReleaseDateOverride()),
-                    switchMap(() => this.submEditService.submit())
-            ).takeUntil(this.unsubscribe)
-            .subscribe(resp => this.onSubmitFinished(resp));
+        const confirmObservable: Observable<boolean> = isConfirm ? this.confirmSubmit() : of(true);
+
+        confirmObservable
+            .pipe(
+                switchMap(() => this.confirmReleaseDateOverride()),
+                switchMap(() => this.submEditService.submit())
+            )
+            .takeUntil(this.unsubscribe)
+            .subscribe(
+                (resp) => this.onSubmitFinished(resp),
+                (resp) => this.showSubmitLog(false, resp.log)
+            );
     }
 
     onEditBackClick() {
@@ -232,30 +237,23 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
 
     // todo: add proper type for submit response
     private onSubmitFinished(resp: SubmitResponse) {
-        if (resp.status !== 'OK') {
-            this.showSubmitLog(resp);
-            return;
-        }
         this.locService.replaceState('/submissions/' + this.accno);
         this.readonly = true;
 
         this.submitOperation = SubmitOperation.Update;
 
-        if (resp.mapping[0].assigned) {
-            this.accno = resp.mapping[0].assigned;
+        if (resp.accno) {
+            this.accno = resp.accno;
             this.submitOperation = SubmitOperation.Create;
-            this.showSubmitLog(resp);
+            this.showSubmitLog(true);
         }
 
         window.scrollTo(0, 0);
     }
 
-    private showSubmitLog(resp: SubmitResponse) {
+    private showSubmitLog(isSuccess: boolean, log?: SubmitLog) {
         this.bsModalService.show(SubmResultsModalComponent, {
-            initialState: {
-                log: resp.log,
-                status: resp.status
-            }
+            initialState: { isSuccess, log }
         });
     }
 

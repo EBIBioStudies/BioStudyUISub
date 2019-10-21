@@ -1,6 +1,8 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import * as HttpStatus from 'http-status-codes';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { ServerError } from 'app/http';
 import { map, catchError, switchMap } from 'rxjs/operators';
 import { PageTab, DraftPayload } from './model/pagetab';
 import { SubmissionDraftUtils } from './utils/submission-draft.utils';
@@ -15,10 +17,7 @@ export interface SubmissionListItem {
 
 export interface SubmitResponse {
     accno: string,
-    status: string,
-    mapping: Array<any>,
-    log: SubmitLog,
-    document?: any
+    log: SubmitLog
 }
 
 export interface SubmitLog {
@@ -108,7 +107,7 @@ export class SubmissionService {
     submitSubmission(pt: PageTab): Observable<SubmitResponse> {
         const headers: HttpHeaders = new HttpHeaders().set('Submission_Type', 'application/json');
 
-        return this.http.post<SubmitResponse>('/api/submissions', pt, { headers });
+        return this.sendPostRequest('/api/submissions', pt, headers);
     }
 
     directSubmit(file: File, create: boolean, attachTo: Array<string> = []): Observable<SubmitResponse> {
@@ -118,6 +117,7 @@ export class SubmissionService {
             formData.append('attachTo', projectName);
         });
         formData.append('submission', file);
+
         return this.http.post<SubmitResponse>(`/api/submissions/direct`, formData);
     }
 
@@ -145,5 +145,22 @@ export class SubmissionService {
 
     private getSubmitted(accno: string): Observable<PageTab> {
         return this.http.get<PageTab>(`/api/submissions/${accno}.json`);
+    }
+
+    private checkStatus<R, T>(response: HttpResponse<R>): T {
+        if (response.status === HttpStatus.OK) {
+            return <T>(response.body || {});
+        }
+
+        throw response.body;
+    }
+
+    private sendPostRequest<R, T>(path: string, payload: any, headers: HttpHeaders): Observable<T> {
+        return this.http.post<R>(
+            path, payload, { headers, observe: 'response' }
+        ).pipe(
+            catchError((response: HttpErrorResponse) => { throw response.error; }),
+            map((response: HttpResponse<R>) => this.checkStatus<R, T>(response))
+        );
     }
 }

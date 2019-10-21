@@ -208,16 +208,16 @@ export class SubmEditService {
         const pageTab = this.asPageTab(true);
 
         return this.submService.submitSubmission(pageTab).pipe(
-            map(resp => {
+            map((resp) => {
                 this.editState.stopSubmitting();
                 this.onSubmitFinished(resp);
                 return resp;
             }),
-            catchError(error => {
+            catchError((error) => {
                 this.editState.stopSubmitting(error);
                 this.onErrorResponse(error);
 
-                return EMPTY;
+                throw error;
             }));
     }
 
