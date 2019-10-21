@@ -1,3 +1,4 @@
+import * as HttpStatus from 'http-status-codes';
 import { throwError } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -25,7 +26,7 @@ export class ServerError {
     }
 
     public static dataError(data: any): ServerError {
-        return new ServerError(422, 'Unprocessable Entity', data);
+        return new ServerError(HttpStatus.UNPROCESSABLE_ENTITY, 'Unprocessable Entity', data);
     }
 
     constructor(public status: number,

@@ -11,13 +11,13 @@ import { SubmitLog, SubmissionService } from '../submission-shared/submission.se
     templateUrl: './subm-results-modal.component.html'
 })
 export class SubmResultsModalComponent {
-    status?: string;
     log?: SubmitLog;
     collapsedLog?: boolean = false;
+    isSuccess: boolean = true;
     private modalRef: BsModalRef;
     private router: Router;
 
-    constructor(modalRef: BsModalRef, router: Router){
+    constructor(modalRef: BsModalRef, router: Router) {
         this.modalRef = modalRef;
         this.router = router;
     }
@@ -45,14 +45,6 @@ export class SubmResultsModalComponent {
     goToSubmissions() {
         this.hideModal();
         this.router.navigateByUrl('/submissions');
-    }
-
-    /**
-     * Checks if the request to the server was successful.
-     * @returns {boolean} True if the server comes back with a success code.
-     */
-    get isSuccess(): boolean {
-        return this.status === 'OK';
     }
 
     get isError(): boolean {
