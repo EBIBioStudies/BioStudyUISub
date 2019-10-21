@@ -2,7 +2,7 @@
     <container-md>
         <div class="auth-content">
             <div class="alert" [ngClass]="{'alert-danger': error, 'invisible': !error}">
-                {{error ? error.message.replace('FAIL', '') + ' Please check the fields below and try again.' : '&nbsp;'}}
+                {{error ? error.message + ' Please check the fields below and try again.' : '&nbsp;'}}
             </div>
             <h3>Welcome</h3>
             <p>

@@ -9,7 +9,7 @@ const expressWinston = require('express-winston');
 const helmet = require('helmet');
 const path = require('path');
 const submitterProxy = require('./proxies/submitter');
-const { errorLoggerSettings } = require('./logger');
+const { loggerSettings } = require('./logger');
 const { registryProxy, resolverProxy } = require('./proxies/identifiers');
 const loggerProxy = require('./proxies/logger');
 
@@ -37,7 +37,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // This has to be after app settings and routes definition.
-app.use(expressWinston.errorLogger(errorLoggerSettings));
+app.use(expressWinston.errorLogger(loggerSettings));
 
 app.listen(port, hostname, () => {
   console.log(`Proxy and host running on: ${protocol}://${hostname}:${port}`);

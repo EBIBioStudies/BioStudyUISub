@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map, catchError, switchMap } from 'rxjs/operators';
 import { PageTab, DraftPayload } from './model/pagetab';
-import { LogService } from 'app/logger/log.service';
 import { SubmissionDraftUtils } from './utils/submission-draft.utils';
 
 export interface DraftSubmission {

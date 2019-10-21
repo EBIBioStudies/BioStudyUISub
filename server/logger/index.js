@@ -1,36 +1,22 @@
-const { format, transports } = require('winston');
-const { combine, colorize, timestamp, printf, json } = format;
-
-const messageFormat = printf(({ level, message, timestamp }) => {
-  return `${timestamp} [${level}]: ${message}`;
-});
+const { createLogger, format, transports } = require('winston');
+const { timestamp, json } = format;
 
 const loggerSettings = {
   transports: [
-    new transports.Console()
-  ],
-  format: combine(
-    colorize(),
-    timestamp(),
-    messageFormat
-  ),
-  msg: "HTTP {{req.method}} {{req.url}}",
-  colorize: true,
-  expressFormat: false,
-  meta: false
-};
-
-const errorLoggerSettings = {
-  transports: [
-    new transports.Console()
+    new transports.Console(),
+    new transports.File({
+      filename: 'logs/main.log'
+    })
   ],
   format: format.combine(
-    colorize(),
+    timestamp(),
     json()
   )
 };
 
+const logger = createLogger(loggerSettings);
+
 module.exports = {
-  loggerSettings,
-  errorLoggerSettings
+  logger,
+  loggerSettings
 };
