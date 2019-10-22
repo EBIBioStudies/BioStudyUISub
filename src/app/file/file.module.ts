@@ -1,4 +1,5 @@
 import { AgGridModule } from 'ag-grid-angular';
+import { HttpCustomClientModule } from 'app/http/http-custom-client.module';
 import { MarkdownModule } from 'ngx-markdown';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -23,6 +24,7 @@ import { AccordionModule } from 'ngx-bootstrap';
 @NgModule({
     imports: [
         MarkdownModule.forChild(),
+        HttpCustomClientModule,
         RouterModule,
         SharedModule,
         AgGridModule.withComponents([

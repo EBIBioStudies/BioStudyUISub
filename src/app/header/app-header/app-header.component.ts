@@ -1,7 +1,7 @@
 import { ApplicationRef, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { Event, NavigationEnd, Router } from '@angular/router';
 import { AuthService, UserSession, UserData } from 'app/auth/shared';
-import { RequestProgressInterceptor } from 'app/core/interceptors/request-progress.interceptor';
+import { RequestStatusService } from 'app/http/request-status.service';
 import { BsModalService } from 'ngx-bootstrap';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -22,15 +22,13 @@ export class AppHeaderComponent implements OnDestroy {
     @ViewChild('logout') logout;
     @ViewChild('user') user;
 
-    constructor(
-        private userSession: UserSession,
-        private userData: UserData,
-        private router: Router,
-        private authService: AuthService,
-        private requestProgress: RequestProgressInterceptor,
-        private appRef: ApplicationRef,
-        private modalService: BsModalService
-    ) {
+    constructor(private userSession: UserSession,
+                private userData: UserData,
+                private router: Router,
+                private authService: AuthService,
+                private requestStatus: RequestStatusService,
+                private appRef: ApplicationRef,
+                private modalService: BsModalService) {
         const header = this;
 
 
@@ -61,7 +59,7 @@ export class AppHeaderComponent implements OnDestroy {
         });
 
         // Shows visual feedback while the apps awaits request resolution.
-        this.reqStatusSubs = this.requestProgress.whenStatusChanged.subscribe(hasPendingRequests => {
+        this.reqStatusSubs = this.requestStatus.whenStatusChanged.subscribe(hasPendingRequests => {
             header.isPendingReq = hasPendingRequests;
         });
     }
