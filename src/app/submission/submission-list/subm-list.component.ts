@@ -322,21 +322,10 @@ export class SubmListComponent {
                     // Deletion confirmed => makes a request to remove the submission from the server
                     if (isOk) {
                         this.submService
-                            .deleteSubmission(accno)
+                            .deleteSubmitted(accno)
                             .subscribe(() => {
-                                // Issues an additional delete request for modified submissions
-                                // TODO: This is a crude approach to the problem of no response data coming from the
-                                // API (whether there are revisions or not is unknown).
-                                if (this.showSubmitted) {
-                                    this.submService.deleteSubmission(accno).subscribe(() => {
-                                        this.setDatasource();
-                                        // TODO: refreshes grid by re-fetching data.Better approach is to use a singleton
-                                        this.isBusy = false;
-                                    });
-                                } else {
-                                    this.setDatasource();
-                                    this.isBusy = false;
-                                }
+                                this.setDatasource();
+                                this.isBusy = false;
                             });
 
                         // Deletion canceled: reflects it on the button

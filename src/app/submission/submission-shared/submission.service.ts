@@ -121,21 +121,11 @@ export class SubmissionService {
         return this.http.post<SubmitResponse>(`/api/submissions/direct`, formData);
     }
 
-    deleteSubmission(accno: string): Observable<boolean> {
-        return this.getDraft(accno).pipe(
-            catchError(_ => of(undefined)),
-            switchMap(resp => resp === undefined ? this.deleteSubmitted(accno) : this.deleteDraft(accno))
-        );
+    deleteSubmitted(accno: string): Observable<boolean> {
+        return this.http.delete(`/api/submissions/${accno}`).pipe(map(() => true));
     }
 
-    private deleteSubmitted(accno: string): Observable<boolean> {
-        // todo: Why GET ??!!!
-        return this.http.get(`/api/submit/delete?id=${accno}`).pipe(
-            map(resp => resp['level'] === 'success')
-        );
-    }
-
-    private deleteDraft(accno: string): Observable<boolean> {
+    deleteDraft(accno: string): Observable<boolean> {
         return this.http.delete(`/api/submissions/drafts/${accno}`).pipe(map(() => true));
     }
 

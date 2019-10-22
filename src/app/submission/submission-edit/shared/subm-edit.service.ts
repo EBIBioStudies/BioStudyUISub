@@ -190,9 +190,10 @@ export class SubmEditService {
 
     revert(): Observable<ServerResponse<any>> {
         this.editState.startReverting();
-        return this.submService.deleteSubmission(this.accno!).pipe(
+
+        return this.submService.deleteDraft(this.accno!).pipe(
             switchMap(() => this.submService.getSubmission(this.accno!)),
-            map(draftSubm => {
+            map((draftSubm) => {
                 this.editState.stopReverting();
                 this.createForm(draftSubm, this.accno);
                 return ServerResponse.Ok({});
