@@ -35,7 +35,7 @@ export class GlobalErrorHandler extends ErrorHandler {
             this.errors.next(
                 `Something went wrong at our side. Sorry for the inconvenience,
                 we are working to fix it. Please try again later and if the problem persists,
-                drop an email to biostudies@ebi.ac.uk`
+                drop an email to <a href="mailto:biostudies@ebi.ac.uk">biostudies@ebi.ac.uk</a>`
             );
         }
 
