@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { RecaptchaModule } from 'ng-recaptcha';
 import { RecaptchaFormsModule } from 'ng-recaptcha/forms';
+import { HttpCustomClientModule } from 'app/http/http-custom-client.module';
 import { SharedModule } from 'app/shared/shared.module';
 import { AuthService, UserSession, UserData } from 'app/auth/shared';
 import { SignInComponent } from './signin/signin.component';
@@ -17,6 +18,7 @@ import { Equals2 } from './password-reset/equals2.directive';
         RouterModule,
         RecaptchaModule,
         RecaptchaFormsModule,
+        HttpCustomClientModule,
         SharedModule
     ],
     providers: [
