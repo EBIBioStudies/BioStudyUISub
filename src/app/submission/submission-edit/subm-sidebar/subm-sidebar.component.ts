@@ -30,12 +30,18 @@ export class SubmSidebarComponent implements OnDestroy {
     private unsubscribeForm = new Subject<void>();
 
     constructor(private submEditService: SubmEditService) {
-        this.submEditService.serverError$.takeUntil(this.unsubscribe)
-            .subscribe(error => {
-                this.serverError = ServerError.fromResponse(error);
+        this.submEditService.serverError$
+            .takeUntil(this.unsubscribe)
+            .subscribe((error) => {
+                if (error.log !== undefined) {
+                    this.serverError = ServerError.fromResponse(error.log);
+                } else {
+                    this.serverError = ServerError.fromResponse(error);
+                }
             });
 
-        this.submEditService.sectionSwitch$.takeUntil(this.unsubscribe)
+        this.submEditService.sectionSwitch$
+            .takeUntil(this.unsubscribe)
             .subscribe(sectionForm => this.switchSection(sectionForm));
     }
 
