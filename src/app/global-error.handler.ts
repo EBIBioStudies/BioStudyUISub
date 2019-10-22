@@ -32,7 +32,11 @@ export class GlobalErrorHandler extends ErrorHandler {
         }
 
         if (error.status === INTERNAL_SERVER_ERROR) {
-            this.errors.next('Something went wrong from our side. Sorry for the inconvenience, we are working on it.');
+            this.errors.next(
+                `Something went wrong at our side. Sorry for the inconvenience,
+                we are working to fix it. Please try again later and if the problem persists,
+                drop an email to biostudies@ebi.ac.uk`
+            );
         }
 
         this.logService.error('global-error', error);
