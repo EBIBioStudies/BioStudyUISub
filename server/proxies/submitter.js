@@ -24,11 +24,6 @@ const proxyConfig = (pathname) => {
       }
 
       next(err);
-    },
-    proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
-      console.log(srcReq);
-
-      return proxyReqOpts;
     }
   });
 };
