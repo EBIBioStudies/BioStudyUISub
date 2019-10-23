@@ -49,7 +49,7 @@ export class FileTreeComponent implements OnInit, OnDestroy {
         if (node.isDir) {
             node.expandOrCollapse();
         } else {
-            this.select.emit(node.path);
+            this.select.emit(node.name);
         }
     }
 

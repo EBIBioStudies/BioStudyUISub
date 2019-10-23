@@ -1,11 +1,9 @@
 export class FileNode {
     expanded: boolean = false;
     icon: string | undefined = undefined;
-    name: string;
 
-    constructor(public isDir: boolean, public path: string) {
+    constructor(public name: string, public isDir: boolean, public path: string) {
         this.icon = this.getIcon();
-        this.name = this.getName();
     }
 
     expandOrCollapse(): void {
@@ -23,9 +21,4 @@ export class FileNode {
         return undefined;
     }
 
-    private getName(): string {
-        let name = this.path.split(/\//).pop();
-        name = name!.replace('User', 'Home');
-        return name;
-    }
 }

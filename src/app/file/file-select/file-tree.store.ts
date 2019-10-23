@@ -31,13 +31,13 @@ export class FileTreeStore {
 
     getUserDirs(): Observable<FileNode[]> {
         return this.fileService.getUserDirs(this.getUserGroups()).pipe(
-            map(groups => groups.map(g => new FileNode(true, g.path)))
+            map(groups => groups.map(g => new FileNode(g.name, true, g.path)))
         );
     }
 
     getFiles(path: string) {
         return this.getUserFiles(path).pipe(
-            map(files => files.map(file => new FileNode(file.type === 'DIR', file.path)))
+            map(files => files.map(file => new FileNode(file.name, file.type === 'DIR', file.path)))
         );
     }
 
