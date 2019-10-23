@@ -53,7 +53,7 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
         this.isBusy = true;
 
         if (this.rowData) {
-            this.rowData.onDelete(this.rowData.accno, this.reset.bind(this));
+            this.rowData.onDelete(this.rowData.accno, this.reset.bind(this), this.rowData.isTemp);
         }
 
     }
@@ -309,24 +309,26 @@ export class SubmListComponent {
     decorateDataRows(rows: any[]): any {
         return rows.map(row => ({
             isTemp: !this.showSubmitted,
-            isDeletable: row.accno.startsWith('S-'),
+            isDeletable: ['S-', 'TMP_'].some((prefix) => row.accno.indexOf(prefix) === 0),
             accno: row.accno,
             title: row.title,
             rtime: row.rtime,
             status: row.status,
             version: row.version,
-            onDelete: (accno: string, onCancel: Function): Subscription => {
+            onDelete: (accno: string, onCancel: Function, isTemp: boolean): Subscription => {
                 const onNext = (isOk: boolean) => {
                     this.isBusy = true;
 
                     // Deletion confirmed => makes a request to remove the submission from the server
                     if (isOk) {
-                        this.submService
-                            .deleteSubmitted(accno)
-                            .subscribe(() => {
-                                this.setDatasource();
-                                this.isBusy = false;
-                            });
+                        const action: Function = isTemp
+                            ? this.submService.deleteDraft.bind(this.submService)
+                            : this.submService.deleteSubmitted.bind(this.submService);
+
+                        action(accno).subscribe(() => {
+                            this.setDatasource();
+                            this.isBusy = false;
+                        });
 
                         // Deletion canceled: reflects it on the button
                     } else {
