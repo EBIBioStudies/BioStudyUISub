@@ -32,13 +32,13 @@
                 (focusout)="onBlur()">
     </date-input>
 
-    <id-link *ngSwitchCase="ValueTypeNameEnum.idlink"
+    <st-id-link *ngSwitchCase="ValueTypeNameEnum.idlink"
              [isSmall]="isSmall"
              [readonly]="readonly"
              [suggestThreshold]="suggestThreshold"
              [suggestLength]="suggestLength"
              [formControl]="formControl"
-             (focusout)="onBlur()"></id-link>
+             (focusout)="onBlur()"></st-id-link>
 
     <orcid-input-box *ngSwitchCase="ValueTypeNameEnum.orcid"
                      [isSmall]="isSmall"
@@ -48,9 +48,9 @@
                      (focusout)="onBlur()">
     </orcid-input-box>
 
-    <file-select *ngSwitchCase="ValueTypeNameEnum.file"
+    <st-file-select *ngSwitchCase="ValueTypeNameEnum.file"
                  [formControl]="formControl">
-    </file-select>
+    </st-file-select>
 
     <pubmedid-search *ngSwitchCase="ValueTypeNameEnum.pubmedid"
                      [formControl]="formControl"

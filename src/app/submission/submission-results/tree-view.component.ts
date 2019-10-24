@@ -90,7 +90,8 @@ export class TreeViewNodeComponent {
 
     ngAfterViewInit() {
         if (this.config) {
-            let compFactory = this.componentFactoryResolver.resolveComponentFactory(this.config.nodeComponentClass);
+            const compFactory = this.componentFactoryResolver.resolveComponentFactory(this.config.nodeComponentClass);
+
             this.compRef = this.vcr.createComponent(compFactory);
             this.detectChanges();
         }

@@ -13,6 +13,7 @@ const SPINNER_ICON = '<i class="fa fa-cog fa-spin"></i>';
     selector: 'button[newSubmissionButton]'
 })
 export class NewSubmissionButtonDirective implements AfterViewInit {
+    @HostBinding('disabled') disabled?: boolean;
 
     constructor(private modalService: BsModalService,
                 private submService: SubmissionService,
@@ -29,8 +30,6 @@ export class NewSubmissionButtonDirective implements AfterViewInit {
     @HostListener('click', ['$event.target']) onClick() {
         this.onNewSubmissionClick();
     }
-
-    @HostBinding('disabled') disabled?: boolean;
 
     private onNewSubmissionClick() {
         this.userData.projectAccNumbers$.subscribe(projectNames => {

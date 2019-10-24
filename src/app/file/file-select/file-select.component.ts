@@ -5,7 +5,7 @@ import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-    selector: 'file-select',
+    selector: 'st-file-select',
     templateUrl: './file-select.component.html',
     styleUrls: ['./file-select.component.css'],
     providers: [
@@ -13,6 +13,7 @@ import { takeUntil } from 'rxjs/operators';
     ]
 })
 export class FileSelectComponent implements ControlValueAccessor, OnInit, OnDestroy {
+    // tslint:disable-next-line: no-input-rename
     @Input('value') private selected = '';
 
     isOpen = false;
@@ -25,9 +26,6 @@ export class FileSelectComponent implements ControlValueAccessor, OnInit, OnDest
     }
 
     private onChange: any = () => {
-    }
-
-    private onTouched: any = () => {
     }
 
     ngOnInit(): void {
@@ -81,9 +79,7 @@ export class FileSelectComponent implements ControlValueAccessor, OnInit, OnDest
         this.onChange = fn;
     }
 
-    registerOnTouched(fn: any) {
-        this.onTouched = fn;
-    }
+    registerOnTouched() {}
 
     setDisabledState(): void {
     }

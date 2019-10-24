@@ -4,7 +4,7 @@
             <span>{{node.icon}}</span>{{node.name}}
         </a>
         <div *ngIf="node.expanded">
-            <file-tree [root]="node" (select)="onChildTreeClick($event)"></file-tree>
+            <st-file-tree [root]="node" (select)="onChildTreeClick($event)"></st-file-tree>
         </div>
     </li>
 </ul>

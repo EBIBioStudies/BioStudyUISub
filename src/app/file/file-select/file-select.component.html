@@ -15,8 +15,8 @@
        (keydown)="doNothing($event)"
        (keyup)="doNothing($event)"
        class="form-control input-sm" (click)="onInputClick($event)" #inputbox/>
-<file-tree-dropdown *ngIf="isOpen"
+<st-file-tree-dropdown *ngIf="isOpen"
                     [targetElement]="inputbox"
                     (fileSelect)="onFileSelect($event)"
                     (close)="onFileDropdownClose($event)">
-</file-tree-dropdown>
+</st-file-tree-dropdown>

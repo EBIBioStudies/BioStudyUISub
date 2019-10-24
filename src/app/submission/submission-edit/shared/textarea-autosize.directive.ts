@@ -1,5 +1,6 @@
 import { Directive, ElementRef, HostListener, Input, AfterContentInit, AfterContentChecked } from '@angular/core';
 import { fromEvent } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 interface CSSStyleDeclarationWithResize extends CSSStyleDeclaration {
     resize: string
@@ -10,6 +11,7 @@ interface CSSStyleDeclarationWithResize extends CSSStyleDeclaration {
 })
 export class TextareaAutosizeDirective implements AfterContentInit, AfterContentChecked {
     @Input('autosize') private maxHeight: number = 100;
+
     private minHeight: number = 50;
 
     constructor(private element: ElementRef) {
@@ -23,8 +25,10 @@ export class TextareaAutosizeDirective implements AfterContentInit, AfterContent
         style.maxHeight = `${this.maxHeight}px`;
 
         fromEvent(window, 'resize')
-            .debounceTime(250)
-            .distinctUntilChanged((evt: any) => evt.timeStamp)
+            .pipe(
+                debounceTime(250),
+                distinctUntilChanged((evt: any) => evt.timeStamp)
+            )
             .subscribe(() => this.adjust());
     }
 

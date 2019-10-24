@@ -15,15 +15,11 @@ import { IdLinkModel } from './id-link.model';
 import { IdLinkService } from './id-link.service';
 import { IdLinkValue } from './id-link.value';
 import { IdLinkValueValidatorDirective } from './id-link.validator.directive';
-
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/observable/interval';
-import { Observable, of } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { mergeMap, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
-  selector: 'id-link',
+  selector: 'st-id-link',
   templateUrl: './id-link.component.html',
   styleUrls: ['./id-link.component.css'],
   providers: [
@@ -57,7 +53,6 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
     @Output() selected: EventEmitter<string> = new EventEmitter<string>();
 
     private onChange: any = (_: any) => {}; // placeholder for handler propagating changes outside the custom control
-    private onTouched: any = () => {}; // placeholder for handler after the control has been "touched"
 
     /**
      * Instantiates a new custom input component. Validates the input's contents on debounced keypresses.
@@ -71,7 +66,7 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
         private sanitizer: DomSanitizer
     ) {
         this.inputChanged
-            .distinctUntilChanged()
+            .pipe(distinctUntilChanged())
             .subscribe((value) => this.update(value));
 
         this.dataSource = Observable.create((observer: any) => {
@@ -155,11 +150,8 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
     /**
      * Registers a handler specifically for when a control receives a touch event.
      * @see {@link ControlValueAccessor}
-     * @param fn - Handler for touch events.
      */
-    registerOnTouched(fn: any) {
-        this.onTouched = fn;
-    }
+    registerOnTouched() {}
 
     setDisabledState(disabled: boolean): void {
         this.disabled = disabled;

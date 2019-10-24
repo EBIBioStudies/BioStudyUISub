@@ -1,5 +1,4 @@
 import { PageTabSection, PtAttribute } from './pagetab.model';
-import { Feature } from '../submission';
 
 const isEqualTo = (value: string) => (s: Nullable<string>) => (String.isDefined(s) && s!.toLowerCase() === value);
 const isComponentProtocol = isEqualTo('protocols');
