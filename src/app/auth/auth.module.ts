@@ -11,7 +11,7 @@ import { ActivationLinkReqComponent } from './activate/activation-link-req.compo
 import { PasswordResetReqComponent } from './password-reset/password-reset-req.component';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { SignUpComponent } from './signup/signup.component';
-import { Equals2 } from './password-reset/equals2.directive';
+import { Equals2Directive } from './password-reset/equals2.directive';
 
 @NgModule({
     imports: [
@@ -33,7 +33,7 @@ import { Equals2 } from './password-reset/equals2.directive';
         ActivationLinkReqComponent,
         PasswordResetReqComponent,
         PasswordResetComponent,
-        Equals2
+        Equals2Directive
     ],
     exports: [
         SignInComponent,

@@ -6,7 +6,7 @@ import { AuthService } from 'app/auth/shared';
 import { ActivationLinkRequestData } from '../shared/model';
 
 @Component({
-    selector: 'auth-activation-resend',
+    selector: 'st-auth-activation-resend',
     templateUrl: './activation-link-req.component.html'
 })
 export class ActivationLinkReqComponent implements AfterViewInit {
