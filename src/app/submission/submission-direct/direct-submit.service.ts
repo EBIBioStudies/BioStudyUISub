@@ -70,10 +70,10 @@ export class DirectSubmitRequest {
     }
 
     get errorMessage(): string {
-        if (this.failed) {
+        if (this.failed && this._log !== undefined) {
             return this._log.message;
         } else {
-            return '';
+            return 'There was an error processing the study';
         }
     }
 

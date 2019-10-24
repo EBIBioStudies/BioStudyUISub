@@ -5,7 +5,7 @@ import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-    selector: 'file-tree',
+    selector: 'st-file-tree',
     templateUrl: './file-tree.component.html',
     styleUrls: ['./file-tree.component.css']
 })

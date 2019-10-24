@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 
 @Component({
-    selector: 'file-tree-dropdown',
+    selector: 'st-file-tree-dropdown',
     templateUrl: './file-tree-dropdown.component.html',
     styleUrls: ['./file-tree-dropdown.component.css'],
     host: {

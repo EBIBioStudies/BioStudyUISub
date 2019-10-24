@@ -1,9 +1,8 @@
 import * as HttpStatus from 'http-status-codes';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { ServerError } from 'app/http';
-import { map, catchError, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 import { PageTab, DraftPayload } from './model/pagetab';
 import { SubmissionDraftUtils } from './utils/submission-draft.utils';
 

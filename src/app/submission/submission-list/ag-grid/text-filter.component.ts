@@ -5,8 +5,7 @@ import {
 import {
     IFilterParams,
     IDoesFilterPassParams,
-    RowNode,
-    IAfterGuiAttachedParams
+    RowNode
 } from 'ag-grid-community/main';
 import { AgFilterComponent } from 'ag-grid-angular/main';
 
@@ -20,7 +19,6 @@ export class TextFilterComponent implements AgFilterComponent {
 
     text: string = '';
     private prev: string = '';
-    private hide?: Function;
 
     @ViewChild('inputEl') public inputEl;
 
@@ -51,9 +49,8 @@ export class TextFilterComponent implements AgFilterComponent {
         }
     }
 
-    afterGuiAttached(params: IAfterGuiAttachedParams): void {
+    afterGuiAttached(): void {
         this.inputEl.nativeElement.focus();
-        this.hide = params.hidePopup;
     }
 
     onApplyClick(): void {

@@ -11,7 +11,7 @@ export class UploadBadgeItem {
 }
 
 @Component({
-    selector: 'file-upload-badge',
+    selector: 'st-file-upload-badge',
     templateUrl: './file-upload-badge.component.html',
     styleUrls: ['./file-upload-badge.component.css']
 })
