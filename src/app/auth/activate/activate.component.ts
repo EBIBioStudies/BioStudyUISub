@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../shared';
-import { ServerError } from 'app/http';
 
 @Component({
-    selector: 'auth-activate',
+    selector: 'st-auth-activate',
     templateUrl: './activate.component.html'
 })
 export class ActivateComponent implements OnInit {
