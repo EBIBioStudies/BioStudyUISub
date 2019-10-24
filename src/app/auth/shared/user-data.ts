@@ -18,12 +18,13 @@ export class UserData {
             if (created) {
                 authService.getUserProfile().subscribe( resp => {
                     const userInfo = resp;
+
                     submService.getProjects().subscribe( result => {
                         const extendedUserInfo = <ExtendedUserInfo>userInfo;
                         extendedUserInfo.projects = result.map(project => project.accno);
                         this.whenFetched$.next(extendedUserInfo);
                         this.whenFetched$.complete();
-                    })
+                    });
                 });
             }
         });

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 
 @Component({
-    selector: 'directory-path',
+    selector: 'st-directory-path',
     templateUrl: './directory-path.component.html',
     styleUrls: ['./directory-path.component.css']
 })
