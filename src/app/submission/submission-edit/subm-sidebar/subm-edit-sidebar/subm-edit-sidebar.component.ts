@@ -10,6 +10,7 @@ import { SectionForm } from '../../shared/section-form';
 import { SubmEditService } from '../../shared/subm-edit.service';
 import { AddSubmTypeModalComponent } from '../add-subm-type-modal/add-subm-type-modal.component';
 import { ModalService } from '../../../../shared/modal.service';
+import { takeUntil } from 'rxjs/operators';
 
 const SECTION_ID = '@SECTION@';
 
@@ -81,7 +82,7 @@ export class SubmEditSidebarComponent implements OnDestroy {
                 private submEditService: SubmEditService
     ) {
         this.submEditService.sectionSwitch$
-            .takeUntil(this.unsubscribe)
+            .pipe(takeUntil(this.unsubscribe))
             .subscribe(sectionForm => this.switchSection(sectionForm));
     }
 

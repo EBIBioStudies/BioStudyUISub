@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { MyFormControl } from '../shared/form-validators';
 import { SectionForm } from '../shared/section-form';
 import { SubmEditService } from '../shared/subm-edit.service';
+import { takeUntil } from 'rxjs/operators';
 
 type FormControlGroup = Array<FormControl>;
 
@@ -31,7 +32,7 @@ export class SubmSidebarComponent implements OnDestroy {
 
     constructor(private submEditService: SubmEditService) {
         this.submEditService.serverError$
-            .takeUntil(this.unsubscribe)
+            .pipe(takeUntil(this.unsubscribe))
             .subscribe((error) => {
                 if (error.log !== undefined) {
                     this.serverError = ServerError.fromResponse(error.log);
@@ -41,7 +42,7 @@ export class SubmSidebarComponent implements OnDestroy {
             });
 
         this.submEditService.sectionSwitch$
-            .takeUntil(this.unsubscribe)
+            .pipe(takeUntil(this.unsubscribe))
             .subscribe(sectionForm => this.switchSection(sectionForm));
     }
 
@@ -94,13 +95,16 @@ export class SubmSidebarComponent implements OnDestroy {
 
             this.unsubscribeForm.next();
 
-            secForm.structureChanges$.takeUntil(this.unsubscribeForm).subscribe(
-                () => {
+            secForm.structureChanges$
+                .pipe(takeUntil(this.unsubscribeForm))
+                .subscribe(() => {
                     this.controls = this.groupControlsBySectionId(secForm.controls());
                     this.updateInvalidControls();
-                }
-            );
-            secForm.form.statusChanges.takeUntil(this.unsubscribeForm).subscribe(() => {
+                });
+
+            secForm.form.statusChanges
+            .pipe(takeUntil(this.unsubscribeForm))
+            .subscribe(() => {
                 this.updateInvalidControls();
             });
         }
