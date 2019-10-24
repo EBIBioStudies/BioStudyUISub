@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FileNode } from './file-tree.model';
 import { FileTreeStore } from './file-tree.store';
 import { Subject } from 'rxjs/Subject';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'file-tree',
@@ -23,13 +24,13 @@ export class FileTreeComponent implements OnInit, OnDestroy {
     ngOnInit() {
         if (this.root === undefined) {
             this.fileStore.getUserDirs()
-                .takeUntil(this.unsubscribe)
+                .pipe(takeUntil(this.unsubscribe))
                 .subscribe(nodes => {
                     this.nodes = nodes;
                 });
         } else if (this.root.isDir) {
             this.fileStore.getFiles(this.root.path)
-                .takeUntil(this.unsubscribe)
+                .pipe(takeUntil(this.unsubscribe))
                 .subscribe(nodes => {
                     this.nodes = nodes;
                 });

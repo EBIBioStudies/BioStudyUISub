@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { FileUpload } from '../../shared/file-upload-list.service';
 
 @Component({
-    selector: 'file-actions-cell',
+    selector: 'st-file-actions-cell',
     template: `
         <div style="text-align:center">
             <button *ngIf="canDownload"

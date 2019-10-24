@@ -1,17 +1,17 @@
 <div class="row-offcanvas row-offcanvas-left">
-    <directory-sidebar
+    <st-directory-sidebar
             name="userDirsSidebar"
             [(ngModel)]="rootPath"
             (select)="onRootPathSelect($event)"
             (toggle)="sideBarCollapsed=!sideBarCollapsed"
             [collapsed]="sideBarCollapsed">
-    </directory-sidebar>
+    </st-directory-sidebar>
 
     <div class="navbar-default navbar-subm-fixed"
          [ngClass]="{'collapse-left': sideBarCollapsed}">
         <nav>
             <div class="nav-block col-xs-8">
-                <i class="fa fa-folder-open"></i>&nbsp;<directory-path [path]="path.rel" (change)="onRelativePathChange($event)"></directory-path>
+                <i class="fa fa-folder-open"></i>&nbsp;<st-directory-path [path]="path.rel" (change)="onRelativePathChange($event)"></st-directory-path>
             </div>
                 <div class="nav-block clearfix col-xs-4">
                 <file-upload-badge class="upload-count"

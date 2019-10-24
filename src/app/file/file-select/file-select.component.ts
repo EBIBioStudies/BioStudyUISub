@@ -2,6 +2,7 @@ import { Component, forwardRef, Input, OnDestroy, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FileTreeStore } from './file-tree.store';
 import { Subject } from 'rxjs/Subject';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'file-select',
@@ -31,7 +32,7 @@ export class FileSelectComponent implements ControlValueAccessor, OnInit, OnDest
 
     ngOnInit(): void {
         this.fileStore.isEmpty()
-            .takeUntil(this.unsubscribe)
+            .pipe(takeUntil(this.unsubscribe))
             .subscribe(fileNode => {
                 this.isLoading = false;
                 this.isEmpty = fileNode === undefined;
@@ -65,7 +66,7 @@ export class FileSelectComponent implements ControlValueAccessor, OnInit, OnDest
     writeValue(value: any): void {
         if (value) {
             this.fileStore.findFile(value)
-                .takeUntil(this.unsubscribe)
+                .pipe(takeUntil(this.unsubscribe))
                 .subscribe(path => {
                     this.selected = path;
                     // temporary fix: implicitly converting file path to /Groups/<group group_name>/..

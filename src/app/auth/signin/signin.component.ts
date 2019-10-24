@@ -5,7 +5,7 @@ import { AuthService, UserSession } from 'app/auth/shared';
 import { ServerError } from 'app/http';
 
 @Component({
-    selector: 'auth-signin',
+    selector: 'st-auth-signin',
     templateUrl: './signin.component.html',
     styleUrls: ['./signin.component.css']
 })

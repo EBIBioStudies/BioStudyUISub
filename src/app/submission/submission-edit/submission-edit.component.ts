@@ -6,7 +6,7 @@ import { AppConfig } from 'app/app.config';
 import { Option } from 'fp-ts/lib/Option';
 import { BsModalService } from 'ngx-bootstrap';
 import { Observable, of } from 'rxjs';
-import { filter, switchMap } from 'rxjs/operators';
+import { filter, switchMap, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
 import { SubmResultsModalComponent } from '../submission-results/subm-results-modal.component';
 import { SubmitResponse, SubmitLog } from '../submission-shared/submission.service';
@@ -62,13 +62,15 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
     ) {
         this.sideBarCollapsed = window.innerWidth < this.appConfig.tabletBreak;
 
-        submEditService.sectionSwitch$.takeUntil(this.unsubscribe)
-            .subscribe(sectionForm => this.switchSection(sectionForm));
+        submEditService.sectionSwitch$.pipe(
+            takeUntil(this.unsubscribe)
+        ).subscribe(sectionForm => this.switchSection(sectionForm));
 
-        submEditService.scroll2Control$.takeUntil(this.unsubscribe)
-            .subscribe(ctrl => {
-                this.scrollToCtrl = ctrl;
-            });
+        submEditService.scroll2Control$.pipe(
+            takeUntil(this.unsubscribe)
+        ).subscribe(ctrl => {
+            this.scrollToCtrl = ctrl;
+        });
     }
 
     get location() {
@@ -150,8 +152,8 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
 
     onRevertClick() {
         this.confirmRevert()
-            .takeUntil(this.unsubscribe)
             .pipe(
+                takeUntil(this.unsubscribe),
                 switchMap(() => this.submEditService.revert())
             ).subscribe(() => {});
     }
@@ -175,9 +177,9 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
         confirmObservable
             .pipe(
                 switchMap(() => this.confirmReleaseDateOverride()),
-                switchMap(() => this.submEditService.submit())
+                switchMap(() => this.submEditService.submit()),
+                takeUntil(this.unsubscribe)
             )
-            .takeUntil(this.unsubscribe)
             .subscribe(
                 (resp) => this.onSubmitFinished(resp),
                 (resp) => this.showSubmitLog(false, resp.log)

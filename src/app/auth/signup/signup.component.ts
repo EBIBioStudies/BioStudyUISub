@@ -7,7 +7,7 @@ import { AuthService, UserSession } from '../shared';
 import { RegistrationData } from '../shared/model';
 
 @Component({
-    selector: 'auth-signup',
+    selector: 'st-auth-signup',
     templateUrl: './signup.component.html'
 })
 export class SignUpComponent implements AfterViewInit, OnInit {

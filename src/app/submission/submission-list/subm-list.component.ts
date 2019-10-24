@@ -11,6 +11,7 @@ import { SubmissionService } from '../submission-shared/submission.service';
 import { DateFilterComponent } from './ag-grid/date-filter.component';
 import { TextFilterComponent } from './ag-grid/text-filter.component';
 import { ModalService } from '../../shared/modal.service';
+import { takeUntil, catchError } from 'rxjs/operators';
 
 @Component({
     selector: 'action-buttons-cell',
@@ -266,12 +267,13 @@ export class SubmListComponent {
                         keywords: fm.title && fm.title.value ? fm.title.value : undefined
 
                     // Hides the overlaid progress box if request failed
-                    })
-                    .takeUntil(this.ngUnsubscribe)
-                    .catch((error) => {
-                        agApi!.hideOverlay();
-                        return throwError(error);
-                     })
+                    }).pipe(
+                        takeUntil(this.ngUnsubscribe),
+                        catchError((error) => {
+                            agApi!.hideOverlay();
+                            return throwError(error);
+                        })
+                    )
                     .subscribe((rows) => {
                         let lastRow = -1;
 
