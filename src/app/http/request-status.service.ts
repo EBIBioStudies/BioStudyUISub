@@ -8,6 +8,10 @@ import {
 import { throwError } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/finally';
+import 'rxjs/add/observable/throw';
 import { catchError, finalize } from 'rxjs/operators';
 
 

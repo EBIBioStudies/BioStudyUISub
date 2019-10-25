@@ -8,7 +8,7 @@ import { AppConfig } from 'app/app.config';
 @Component({
     selector: 'st-root',
     template: `
-        <st-app-header></st-app-header>
+        <app-header></app-header>
         <router-outlet></router-outlet>
     `
 })
