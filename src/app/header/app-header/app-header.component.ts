@@ -1,7 +1,8 @@
-import { ApplicationRef, Component, OnDestroy, ViewChild } from '@angular/core';
+import { ApplicationRef, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { Event, NavigationEnd, Router } from '@angular/router';
 import { AuthService, UserSession, UserData } from 'app/auth/shared';
 import { RequestStatusService } from 'app/http/request-status.service';
+import { BsModalService } from 'ngx-bootstrap';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
@@ -22,10 +23,12 @@ export class AppHeaderComponent implements OnDestroy {
     @ViewChild('user') user;
 
     constructor(private userSession: UserSession,
+                private userData: UserData,
                 private router: Router,
                 private authService: AuthService,
                 private requestStatus: RequestStatusService,
-                private appRef: ApplicationRef) {
+                private appRef: ApplicationRef,
+                private modalService: BsModalService) {
         const header = this;
 
 
@@ -41,7 +44,7 @@ export class AppHeaderComponent implements OnDestroy {
             // forcing of change detection. //TODO: find out why this is.
             if (sessionDestroyed) {
                 router.navigate(['/signin']).then(() => {
-                    this.appRef.tick();
+                    appRef.tick();
                     header.signOut();
                 });
             }

@@ -6,6 +6,7 @@ import { last, mergeAll, takeUntil, map, finalize } from 'rxjs/operators';
 import { AppConfig } from 'app/app.config';
 import { DirectSubmitService } from './direct-submit.service';
 import { DirectSubmitFileUploadService } from './direct-submit-file-upload.service';
+import { UploadEvent } from 'app/file/shared/http-upload-client.service';
 
 @Component({
     selector: 'direct-submit-sidebar',
@@ -26,9 +27,9 @@ export class DirectSubmitSideBarComponent implements OnInit {
     submitType: string = 'create'; // Will the upload create or update studies?
     selectedProj: string[] = []; // Projects selected for attachment
 
-    @Input() collapsed = false;
-    @Input() readonly = false;
-    @Output() toggle = new EventEmitter();
+    @Input() collapsed? = false;
+    @Input() readonly? = false;
+    @Output() toggle? = new EventEmitter();
 
     @ViewChild(FileUploadButtonComponent)
     private fileSelector;

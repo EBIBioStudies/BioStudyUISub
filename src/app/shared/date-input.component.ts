@@ -32,6 +32,7 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
     @ViewChild('dp') private datepicker?: BsDatepickerDirective;
 
     private onChange: any = () => {};
+    private onTouched: any = () => {};
 
     dateValue: Date | undefined;
 
@@ -44,7 +45,7 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
      */
     constructor(config: BsDatepickerConfig, private appConfig: AppConfig, private rootEl: ElementRef) {
         config.showWeekNumbers = false;
-        config.dateInputFormat = this.appConfig.dateInputFormat;
+        config.dateInputFormat = appConfig.dateInputFormat;
     }
 
     /**
@@ -94,8 +95,11 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
     /**
      * Registers a handler specifically for when a control receives a touch event.
      * @see {@link ControlValueAccessor}
+     * @param fn - Handler for touch events.
      */
-    registerOnTouched() {}
+    registerOnTouched(fn: any) {
+        this.onTouched = fn;
+    }
 
     /**
      * Normalises clicking behaviour across all of the input. Otherwise, clicking around the area of the arrow would
