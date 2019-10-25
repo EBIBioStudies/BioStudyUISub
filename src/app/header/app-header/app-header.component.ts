@@ -1,11 +1,11 @@
 import { ApplicationRef, Component, OnDestroy, ViewChild } from '@angular/core';
 import { Event, NavigationEnd, Router } from '@angular/router';
-import { AuthService, UserSession } from 'app/auth/shared';
+import { AuthService, UserSession, UserData } from 'app/auth/shared';
 import { RequestStatusService } from 'app/http/request-status.service';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
-    selector: 'st-app-header',
+    selector: 'app-header',
     templateUrl: './app-header.component.html',
     styleUrls: ['./app-header.component.css']
 })

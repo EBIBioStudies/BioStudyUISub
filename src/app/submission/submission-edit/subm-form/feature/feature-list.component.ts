@@ -15,8 +15,8 @@ export class FeatureListComponent implements AfterViewInit {
 
     public suggestLength: number; // max number of suggested values to be displayed at once
 
-    constructor(private appConfig: AppConfig) {
-        this.suggestLength = this.appConfig.maxSuggestLength;
+    constructor(private rootEl: ElementRef, private appConfig: AppConfig) {
+        this.suggestLength = appConfig.maxSuggestLength;
     }
 
     get columns(): ColumnControl[] {

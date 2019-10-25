@@ -1,5 +1,6 @@
-import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, forwardRef, Input, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { AppConfig } from 'app/app.config';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { typeaheadSource } from '../../shared/typeahead.utils';
 
@@ -12,19 +13,21 @@ import { typeaheadSource } from '../../shared/typeahead.utils';
     ]
 })
 export class InlineEditComponent implements ControlValueAccessor {
-    readonly typeahead: Observable<string[]>;
     private _value: string = '';
+    readonly typeahead: Observable<string[]>;
     private valueChanges$: Subject<string> = new BehaviorSubject<string>('');
-
-    editing: boolean = false;
 
     @Input() readonly = false;
     @Input() removable = true;
     @Input() emptyValue = '';
     @Input() placeholder = '';
     @Input() suggestThreshold = 0;
-    @Output() remove = new EventEmitter<any>();
     @Input() autosuggestSource: () => string[] = () => [];
+
+    @Output() remove = new EventEmitter<any>();
+
+    editing: boolean = false;
+    suggestLength: number;
 
     onChange: any = () => {};
     onTouched: any = () => {};
@@ -34,7 +37,8 @@ export class InlineEditComponent implements ControlValueAccessor {
      * @param {AppConfig} appConfig - Global configuration object with app-wide settings.
      * @param {ElementRef} rootEl - Reference to the component's wrapping element.
      */
-    constructor() {
+    constructor(private rootEl: ElementRef, private appConfig: AppConfig) {
+        this.suggestLength = appConfig.maxSuggestLength;
         this.typeahead = typeaheadSource(() => {
             return this.autosuggestSource();
         }, this.valueChanges$);

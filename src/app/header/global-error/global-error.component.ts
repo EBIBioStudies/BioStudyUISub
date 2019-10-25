@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, ElementRef, ErrorHandler } from '@angular
 import { GlobalErrorHandler } from 'app/global-error.handler';
 
 @Component({
-    selector: 'st-global-error',
+    selector: 'global-error',
     templateUrl: './global-error.component.html',
     styleUrls: ['./global-error.component.css']
 })
