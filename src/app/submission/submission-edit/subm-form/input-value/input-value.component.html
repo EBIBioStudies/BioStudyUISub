@@ -23,14 +23,14 @@
               (keyup.enter)="$event.stopPropagation()"
               (blur)="onBlur()"></textarea>
 
-    <date-input *ngSwitchCase="ValueTypeNameEnum.date"
+    <st-date-input *ngSwitchCase="ValueTypeNameEnum.date"
                 [isSmall]="isSmall"
                 [formControl]="formControl"
                 [readonly]="readonly"
                 [maxDate]="nowInNyears()"
                 [allowPast]="allowPast"
                 (focusout)="onBlur()">
-    </date-input>
+    </st-date-input>
 
     <st-id-link *ngSwitchCase="ValueTypeNameEnum.idlink"
              [isSmall]="isSmall"

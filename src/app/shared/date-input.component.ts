@@ -6,7 +6,7 @@ import { isEqualDate } from '../utils';
 import { AppConfig } from '../app.config';
 
 @Component({
-    selector: 'date-input',
+    selector: 'st-date-input',
     templateUrl: './date-input.component.html',
     styleUrls: ['./date-input.component.css'],
     providers: [{

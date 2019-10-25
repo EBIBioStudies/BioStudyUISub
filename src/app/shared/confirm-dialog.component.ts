@@ -5,7 +5,7 @@ import { BsModalRef, ModalDirective } from 'ngx-bootstrap/modal';
  * UI component for confirmation modals with all its text parts parameterized.
  */
 @Component({
-    selector: 'confirm-dialog',
+    selector: 'st-confirm-dialog',
     templateUrl: './confirm-dialog.component.html'
 })
 export class ConfirmDialogComponent {
