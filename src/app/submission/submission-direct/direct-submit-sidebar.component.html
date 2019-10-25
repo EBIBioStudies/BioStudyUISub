@@ -39,13 +39,13 @@
                         {{selectedFileCount}}
                     </span>
                     <div class="control-list files-control center-spread">
-                        <file-upload-button [multiple]="true"
+                        <st-file-upload-button [multiple]="true"
                                             [isDirOnly]="isBulkMode"
                                             (select)="onUploadFilesSelect($event)"
                                             tooltip="{{isBulkMode ? 'Select a folder' : 'Select files'}}"
                                             placement="bottom"
                                             #fileEl>
-                        </file-upload-button>
+                        </st-file-upload-button>
                         <span *ngIf="fileEl.isDirSupport" class="mode-toggle checkbox">
                             <label>
                                 <input type="checkbox"
@@ -70,7 +70,7 @@
                                 Only generic allowed.
                             </span>
                         </p>
-                        <div *ngIf="model.projects.length" (change)="onProjChange($event)">
+                        <div *ngIf="model.projects.length" (change)="onProjectChange($event)">
                             <div *ngFor="let project of model.projects" class="checkbox">
                                 <label>
                                     <input type="checkbox"

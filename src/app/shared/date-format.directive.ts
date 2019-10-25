@@ -3,7 +3,7 @@ import { AbstractControl, NG_VALIDATORS, ValidationErrors, Validator } from '@an
 import { formatDate, parseDate } from '../utils';
 
 @Directive({
-    selector: '[bsstDateFormat]',
+    selector: '[stDateFormat]',
     providers: [
         {provide: NG_VALIDATORS, useExisting: forwardRef(() => DateFormatDirective), multi: true}
     ]

@@ -24,7 +24,6 @@ export class InputValueComponent implements ControlValueAccessor, AfterViewCheck
     readonly ValueTypeNameEnum = ValueTypeName;
     readonly typeahead: Observable<string[]>;
     private _value = '';
-    private suggestLength: number;
     private valueChanges$: Subject<string> = new BehaviorSubject<string>('');
 
     @Output() select = new EventEmitter<{ [key: string]: string }>();
@@ -43,8 +42,7 @@ export class InputValueComponent implements ControlValueAccessor, AfterViewCheck
     private onChange: any = (_: any) => {};
     private onTouched: any = () => {};
 
-    constructor(private rootEl: ElementRef, private appConfig: AppConfig) {
-        this.suggestLength = appConfig.maxSuggestLength;
+    constructor(private appConfig: AppConfig) {
         this.typeahead = typeaheadSource(() => {
             return this.autosuggestValues();
         }, this.valueChanges$);

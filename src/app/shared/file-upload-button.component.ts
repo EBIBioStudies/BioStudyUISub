@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 
 @Component({
-    selector: 'file-upload-button',
+    selector: 'st-file-upload-button',
     template: `
     <input
         id="files-input"
