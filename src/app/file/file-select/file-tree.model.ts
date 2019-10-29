@@ -1,8 +1,14 @@
 export class FileNode {
     expanded: boolean = false;
     icon: string | undefined = undefined;
+    isDir: boolean;
+    name: string;
+    path: string;
 
-    constructor(public name: string, public isDir: boolean, public path: string) {
+    constructor(isDir: boolean, path: string, name: string) {
+        this.isDir = isDir;
+        this.name = name;
+        this.path = path.length === 0 ? `/${name}` : `/${path}/${name}`;
         this.icon = this.getIcon();
     }
 
@@ -20,5 +26,4 @@ export class FileNode {
         }
         return undefined;
     }
-
 }

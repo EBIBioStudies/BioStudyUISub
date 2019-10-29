@@ -23,21 +23,25 @@ export class FileTreeStore {
 
     private dfs(nodes: FileNode[]): Observable<FileNode> {
         return from(nodes).pipe(
-            mergeMap(node => node.isDir ?
-                this.getFiles(node.path).pipe(mergeMap(nodes => this.dfs(nodes)))
-                : of(node))
+            mergeMap((node) => {
+                if (node.isDir) {
+                    return this.getFiles(node.path).pipe(mergeMap((files) => this.dfs(files)));
+                }
+
+                return of(node);
+            })
         );
     }
 
     getUserDirs(): Observable<FileNode[]> {
         return this.fileService.getUserDirs(this.getUserGroups()).pipe(
-            map(groups => groups.map(g => new FileNode(g.name, true, g.path)))
+            map(groups => groups.map(g => new FileNode(true, g.path, g.name)))
         );
     }
 
     getFiles(path: string) {
         return this.getUserFiles(path).pipe(
-            map(files => files.map(file => new FileNode(file.name, file.type === 'DIR', file.path)))
+            map((files) => files.map((file) => new FileNode(file.type === 'DIR', file.path, file.name)))
         );
     }
 
@@ -48,6 +52,7 @@ export class FileTreeStore {
                 refCount() // keep the observable alive for as long as there are subscribers
             );
         }
+
         return this.files$[path];
     }
 
@@ -58,6 +63,7 @@ export class FileTreeStore {
                 refCount() // keep the observable alive for as long as there are subscribers
             );
         }
+
         return this.userGroups$;
     }
 
