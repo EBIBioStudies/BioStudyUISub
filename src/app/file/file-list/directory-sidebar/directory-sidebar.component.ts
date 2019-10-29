@@ -6,7 +6,7 @@ import { FileNode } from 'app/file/file-select/file-tree.model';
 import { map } from 'rxjs/operators';
 
 @Component({
-    selector: 'directory-sidebar',
+    selector: 'st-directory-sidebar',
     templateUrl: './directory-sidebar.component.html',
     providers: [
         {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DirectorySidebarComponent), multi: true}
@@ -14,7 +14,7 @@ import { map } from 'rxjs/operators';
 })
 export class DirectorySidebarComponent implements OnInit, ControlValueAccessor {
     @Input() collapsed?: boolean = false;
-    @Output() toggle? = new EventEmitter();
+    @Output() toggle = new EventEmitter();
     @Output() select = new EventEmitter();
 
     private selectedPath?: string;
@@ -25,9 +25,6 @@ export class DirectorySidebarComponent implements OnInit, ControlValueAccessor {
     }
 
     private onChange: any = () => {};
-
-    private onTouched: any = () => {};
-
     private validateFn: any = () => {};
 
     get value() {
@@ -52,9 +49,7 @@ export class DirectorySidebarComponent implements OnInit, ControlValueAccessor {
     }
 
     // From ControlValueAccessor interface
-    registerOnTouched(fn: any) {
-        this.onTouched = fn;
-    }
+    registerOnTouched() {}
 
     validate(c: FormControl) {
         return this.validateFn(c);

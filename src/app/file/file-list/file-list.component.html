@@ -1,23 +1,23 @@
 <div class="row-offcanvas row-offcanvas-left">
-    <directory-sidebar
+    <st-directory-sidebar
             name="userDirsSidebar"
             [(ngModel)]="rootPath"
             (select)="onRootPathSelect($event)"
             (toggle)="sideBarCollapsed=!sideBarCollapsed"
             [collapsed]="sideBarCollapsed">
-    </directory-sidebar>
+    </st-directory-sidebar>
 
     <div class="navbar-default navbar-subm-fixed"
          [ngClass]="{'collapse-left': sideBarCollapsed}">
         <nav>
             <div class="nav-block col-xs-8">
-                <i class="fa fa-folder-open"></i>&nbsp;<directory-path [path]="path.rel" (change)="onRelativePathChange($event)"></directory-path>
+                <i class="fa fa-folder-open"></i>&nbsp;<st-directory-path [path]="path.rel" (change)="onRelativePathChange($event)"></st-directory-path>
             </div>
                 <div class="nav-block clearfix col-xs-4">
-                <file-upload-badge class="upload-count"
-                                   (select)="onUploadSelect($event)"></file-upload-badge>
+                <st-file-upload-badge class="upload-count"
+                                   (select)="onUploadSelect($event)"></st-file-upload-badge>
             <div class="btn-group pull-right" role="group">
-                <ftp-upload-button></ftp-upload-button>
+                <st-ftp-upload-button></st-ftp-upload-button>
             </div>
             <div class="btn-group pull-right" style="margin-right:1em;background-color:#b5d7ec;border-radius: 3px;" role="group">
                 <file-upload-button

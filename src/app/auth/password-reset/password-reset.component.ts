@@ -6,7 +6,7 @@ import { AuthService } from 'app/auth/shared';
 import { PasswordResetData } from '../shared/model';
 
 @Component({
-    selector: 'auth-passwd-reset',
+    selector: 'st-auth-passwd-reset',
     templateUrl: './password-reset.component.html'
 })
 export class PasswordResetComponent implements OnInit, AfterViewInit {

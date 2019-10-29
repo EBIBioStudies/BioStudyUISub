@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AgRendererComponent } from 'ag-grid-angular/src/interfaces';
 
 @Component({
-    selector: 'file-type-cell',
+    selector: 'st-file-type-cell',
     template: `
         <div class="text-center text-primary">
             <i class="fa" [ngClass]="{

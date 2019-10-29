@@ -11,6 +11,7 @@ import { SubmissionService } from '../submission-shared/submission.service';
 import { DateFilterComponent } from './ag-grid/date-filter.component';
 import { TextFilterComponent } from './ag-grid/text-filter.component';
 import { ModalService } from '../../shared/modal.service';
+import { takeUntil, catchError } from 'rxjs/operators';
 
 @Component({
     selector: 'action-buttons-cell',
@@ -53,7 +54,7 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
         this.isBusy = true;
 
         if (this.rowData) {
-            this.rowData.onDelete(this.rowData.accno, this.reset.bind(this));
+            this.rowData.onDelete(this.rowData.accno, this.reset.bind(this), this.rowData.isTemp);
         }
 
     }
@@ -266,12 +267,13 @@ export class SubmListComponent {
                         keywords: fm.title && fm.title.value ? fm.title.value : undefined
 
                     // Hides the overlaid progress box if request failed
-                    })
-                    .takeUntil(this.ngUnsubscribe)
-                    .catch((error) => {
-                        agApi!.hideOverlay();
-                        return throwError(error);
-                     })
+                    }).pipe(
+                        takeUntil(this.ngUnsubscribe),
+                        catchError((error) => {
+                            agApi!.hideOverlay();
+                            return throwError(error);
+                        })
+                    )
                     .subscribe((rows) => {
                         let lastRow = -1;
 
@@ -309,24 +311,26 @@ export class SubmListComponent {
     decorateDataRows(rows: any[]): any {
         return rows.map(row => ({
             isTemp: !this.showSubmitted,
-            isDeletable: row.accno.startsWith('S-'),
+            isDeletable: ['S-', 'TMP_'].some((prefix) => row.accno.indexOf(prefix) === 0),
             accno: row.accno,
             title: row.title,
             rtime: row.rtime,
             status: row.status,
             version: row.version,
-            onDelete: (accno: string, onCancel: Function): Subscription => {
+            onDelete: (accno: string, onCancel: Function, isTemp: boolean): Subscription => {
                 const onNext = (isOk: boolean) => {
                     this.isBusy = true;
 
                     // Deletion confirmed => makes a request to remove the submission from the server
                     if (isOk) {
-                        this.submService
-                            .deleteSubmitted(accno)
-                            .subscribe(() => {
-                                this.setDatasource();
-                                this.isBusy = false;
-                            });
+                        const action: Function = isTemp
+                            ? this.submService.deleteDraft.bind(this.submService)
+                            : this.submService.deleteSubmitted.bind(this.submService);
+
+                        action(accno).subscribe(() => {
+                            this.setDatasource();
+                            this.isBusy = false;
+                        });
 
                         // Deletion canceled: reflects it on the button
                     } else {

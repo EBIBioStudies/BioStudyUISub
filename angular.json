@@ -126,11 +126,11 @@
   "defaultProject": "biostd-submissions",
   "schematics": {
     "@schematics/angular:component": {
-      "prefix": "app",
+      "prefix": "st",
       "styleext": "css"
     },
     "@schematics/angular:directive": {
-      "prefix": "app"
+      "prefix": "st"
     }
   }
 }

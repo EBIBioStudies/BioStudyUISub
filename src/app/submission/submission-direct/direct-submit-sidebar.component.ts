@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import { UserData } from 'app/auth/shared';
 import { FileUploadButtonComponent } from 'app/shared/file-upload-button.component';
 import { Observable, from, Subject, Subscription } from 'rxjs';
-import { last, mergeAll } from 'rxjs/operators';
+import { last, mergeAll, takeUntil, map, finalize } from 'rxjs/operators';
 import { AppConfig } from 'app/app.config';
 import { DirectSubmitService } from './direct-submit.service';
 import { DirectSubmitFileUploadService } from './direct-submit-file-upload.service';
@@ -274,23 +274,26 @@ export class DirectSubmitSideBarComponent implements OnInit {
         this.directSubmitSvc.reset();
 
          // Performs the double-request submits and flattens the resulting high-order observables onto a single one.
-        return from(files)
-            .map((file: File) => this.directSubmitSvc.addRequest(file, '', this.selectedProj, submissionType))
+        return from(files).pipe(
+            map((file: File) => this.directSubmitSvc.addRequest(file, '', this.selectedProj, submissionType)),
             // Throttles the number of requests allowed in parallel and takes just the last event
             // to signal the end of the upload process.
-            .pipe(mergeAll(this.appConfig.maxConcurrent))
-            .pipe(last())
+            mergeAll(this.appConfig.maxConcurrent),
+            last(),
             // Cancels all requests on demand and keeps the files list in sync with the list of requests.
-            .takeUntil(this.ngUnsubscribe)
-            .finally(() => this.model.files = files);
+            takeUntil(this.ngUnsubscribe),
+            finalize(() => this.model.files = files)
+        );
     }
 
     private uploadFiles(files: File[]): Observable<any> {
         return from(files)
-            .map((file) => this.directSubmitFileUploadService.doUpload(file))
-            .pipe(mergeAll(this.appConfig.maxConcurrent))
-            .pipe(last())
-            .takeUntil(this.ngUnsubscribe);
+            .pipe(
+                map((file) => this.directSubmitFileUploadService.doUpload(file)),
+                mergeAll(this.appConfig.maxConcurrent),
+                last(),
+                takeUntil(this.ngUnsubscribe)
+            );
     }
 
     /**

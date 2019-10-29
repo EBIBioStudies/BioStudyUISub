@@ -1,7 +1,8 @@
-import {Injectable} from '@angular/core';
-import {Observable, of, Subject} from 'rxjs';
-import {BsModalService} from 'ngx-bootstrap';
-import {ConfirmDialogComponent} from './confirm-dialog.component';
+import { Injectable } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+import { BsModalService } from 'ngx-bootstrap';
+import { ConfirmDialogComponent } from './confirm-dialog.component';
+import { filter, take } from 'rxjs/operators';
 
 @Injectable()
 export class ModalService {
@@ -19,11 +20,11 @@ export class ModalService {
                     callback: (value: boolean) => subj.next(value)
                 }
             });
-        return subj.asObservable().take(1);
+        return subj.asObservable().pipe(take(1));
     }
 
     whenConfirmed(text: string, title: string, confirmLabel: string): Observable<boolean> {
-        return this.confirm(text, title, confirmLabel).filter(v => v === true);
+        return this.confirm(text, title, confirmLabel).pipe(filter(v => v === true));
     }
 
     alert(text: string, title: string, confirmLabel: string): Observable<boolean> {
@@ -38,6 +39,6 @@ export class ModalService {
                     callback: (value: boolean) => subj.next(value)
                 }
             });
-        return subj.asObservable().take(1);
+        return subj.asObservable().pipe(take(1));
     }
 }

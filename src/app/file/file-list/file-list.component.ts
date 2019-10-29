@@ -2,7 +2,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid-community/main';
 import { Subject } from 'rxjs/Subject';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, filter, takeUntil, catchError } from 'rxjs/operators';
 import { throwError, of } from 'rxjs';
 import { AppConfig } from '../../app.config';
 import { FileService } from '../shared/file.service';
@@ -13,13 +13,9 @@ import { FileTypeCellComponent } from './ag-grid/file-type-cell.component';
 import { FileUpload, FileUploadList } from '../shared/file-upload-list.service';
 import { ProgressCellComponent } from './ag-grid/upload-progress-cell.component';
 import { UploadBadgeItem } from './file-upload-badge/file-upload-badge.component';
-import { UserData } from 'app/auth/shared';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/takeUntil';
 
 @Component({
-    selector: 'file-list',
+    selector: 'st-file-list',
     templateUrl: './file-list.component.html',
     styleUrls: ['./file-list.component.css']
 })
@@ -57,11 +53,14 @@ export class FileListComponent implements OnInit, OnDestroy {
         };
 
         this.fileUploadList.uploadCompleted$
-            .filter((path) => path.startsWith(this.currentPath))
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                filter((path) => path.startsWith(this.currentPath)),
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe(() => {
                 this.loadData();
             });
+
         this.rowData = [];
         this.createColumnDefs();
         this.loadData();
@@ -127,12 +126,14 @@ export class FileListComponent implements OnInit, OnDestroy {
     private loadData(path?: Path) {
         const p: Path = path ? path : this.path;
         this.fileService.getFiles(p.absolutePath())
-            .takeUntil(this.ngUnsubscribe)
-            .catch(error => {
-                this.gridOptions!.api!.hideOverlay();
-                return throwError(error);
-
-            }).subscribe(files => {
+            .pipe(
+                takeUntil(this.ngUnsubscribe),
+                catchError((error) => {
+                    this.gridOptions!.api!.hideOverlay();
+                    return throwError(error);
+                })
+            )
+            .subscribe(files => {
                 const decoratedRows = ([] as any[]).concat(
                     this.decorateUploads(this.fileUploadList.activeUploads),
                     this.decorateFiles(files)
@@ -175,7 +176,7 @@ export class FileListComponent implements OnInit, OnDestroy {
         const overlap = filesToUpload.filter((fileToUpload) => uploadedFileNames.includes(fileToUpload));
 
         (overlap.length > 0 ? this.confirmOverwrite(overlap) : of(true))
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe(() => this.upload(files));
     }
 
@@ -225,9 +226,9 @@ export class FileListComponent implements OnInit, OnDestroy {
     private removeFile(filePath: string, fileName: string): void {
         this.modalService.whenConfirmed(`Do you want to delete "${fileName}"?`, 'Delete a file', 'Delete')
             .pipe(
-                switchMap(() => this.fileService.removeFile(filePath, fileName))
+                switchMap(() => this.fileService.removeFile(filePath, fileName)),
+                takeUntil(this.ngUnsubscribe)
             )
-            .takeUntil(this.ngUnsubscribe)
             .subscribe(() => this.loadData());
     }
 

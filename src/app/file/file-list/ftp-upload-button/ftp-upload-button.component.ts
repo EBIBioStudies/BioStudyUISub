@@ -3,7 +3,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { UserData } from 'app/auth/shared';
 
 @Component({
-    selector: 'ftp-upload-button',
+    selector: 'st-ftp-upload-button',
     templateUrl: './ftp-upload-button.component.html',
     styleUrls: ['./ftp-upload-button.component.css']
 })

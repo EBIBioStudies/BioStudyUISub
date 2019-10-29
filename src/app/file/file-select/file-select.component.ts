@@ -2,9 +2,10 @@ import { Component, forwardRef, Input, OnDestroy, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FileTreeStore } from './file-tree.store';
 import { Subject } from 'rxjs/Subject';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
-    selector: 'file-select',
+    selector: 'st-file-select',
     templateUrl: './file-select.component.html',
     styleUrls: ['./file-select.component.css'],
     providers: [
@@ -12,6 +13,7 @@ import { Subject } from 'rxjs/Subject';
     ]
 })
 export class FileSelectComponent implements ControlValueAccessor, OnInit, OnDestroy {
+    // tslint:disable-next-line: no-input-rename
     @Input('value') private selected = '';
 
     isOpen = false;
@@ -26,12 +28,9 @@ export class FileSelectComponent implements ControlValueAccessor, OnInit, OnDest
     private onChange: any = () => {
     }
 
-    private onTouched: any = () => {
-    }
-
     ngOnInit(): void {
         this.fileStore.isEmpty()
-            .takeUntil(this.unsubscribe)
+            .pipe(takeUntil(this.unsubscribe))
             .subscribe(fileNode => {
                 this.isLoading = false;
                 this.isEmpty = fileNode === undefined;
@@ -65,7 +64,7 @@ export class FileSelectComponent implements ControlValueAccessor, OnInit, OnDest
     writeValue(value: any): void {
         if (value) {
             this.fileStore.findFile(value)
-                .takeUntil(this.unsubscribe)
+                .pipe(takeUntil(this.unsubscribe))
                 .subscribe(path => {
                     this.selected = path;
                     // temporary fix: implicitly converting file path to /Groups/<group group_name>/..
@@ -80,9 +79,7 @@ export class FileSelectComponent implements ControlValueAccessor, OnInit, OnDest
         this.onChange = fn;
     }
 
-    registerOnTouched(fn: any) {
-        this.onTouched = fn;
-    }
+    registerOnTouched() {}
 
     setDisabledState(): void {
     }
