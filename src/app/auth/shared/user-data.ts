@@ -7,13 +7,11 @@ import { ExtendedUserInfo } from './model';
 import { UserRole } from './user-role';
 import { UserSession } from './user-session';
 
-
 @Injectable()
 export class UserData {
     private whenFetched$: Subject<ExtendedUserInfo> = new ReplaySubject<ExtendedUserInfo>(1);
 
     constructor(userSession: UserSession, authService: AuthService, submService: SubmissionService) {
-
         userSession.created$.subscribe(created => {
             if (created) {
                 authService.getUserProfile().subscribe( resp => {

@@ -1,7 +1,6 @@
-import { Injectable } from '@angular/core';
 import { AppConfig } from 'app/app.config';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { Injectable } from '@angular/core';
+import { ReplaySubject, Subject } from 'rxjs';
 import {
     setLoginToken,
     getLoginToken,
@@ -14,9 +13,7 @@ import { UserInfo } from './model';
 
 @Injectable()
 export class UserSession {
-    private sessionCreated = new Subject<boolean>();
-
-    created$: Observable<boolean> = this.sessionCreated.asObservable();
+    created$: Subject<boolean> = new ReplaySubject<boolean>(1);
 
     constructor(
         private appConfig: AppConfig
@@ -62,10 +59,10 @@ export class UserSession {
     }
 
     private notifySessionCreated(): void {
-        this.sessionCreated.next(true);
+        this.created$.next(true);
     }
 
     private notifySessionDestroyed(): void {
-        this.sessionCreated.next(false);
+        this.created$.next(false);
     }
 }
