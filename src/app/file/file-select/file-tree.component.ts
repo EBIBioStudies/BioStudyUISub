@@ -42,15 +42,17 @@ export class FileTreeComponent implements OnInit, OnDestroy {
         this.unsubscribe.complete();
     }
 
-    onChildTreeClick(value: string) {
-        this.select.emit(value);
+    onChildTreeClick(path: string) {
+        const finalPath = path.replace('/user/', '');
+
+        this.select.emit(finalPath);
     }
 
     onNodeClick(node: FileNode) {
         if (node.isDir) {
             node.expandOrCollapse();
         } else {
-            this.select.emit(node.name);
+            this.select.emit(node.path);
         }
     }
 

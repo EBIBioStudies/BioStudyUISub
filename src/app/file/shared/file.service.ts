@@ -15,7 +15,7 @@ export class FileService {
 
         return userGroups.pipe(
             map((groupsByUser) => groupsByUser.map((group) => new PathInfo(group.name, 'groups', 'DIR'))),
-            map(paths => [new PathInfo('user', '', 'DIR'), ...paths])
+            map(paths => [new PathInfo('/', 'user', 'DIR'), ...paths])
         );
     }
 

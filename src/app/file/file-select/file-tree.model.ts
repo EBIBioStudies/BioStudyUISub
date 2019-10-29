@@ -8,7 +8,7 @@ export class FileNode {
     constructor(isDir: boolean, path: string, name: string) {
         this.isDir = isDir;
         this.name = name;
-        this.path = path.length === 0 ? `/${name}` : `/${path}/${name}`;
+        this.path = name === '/' ? `/user` : `/${path}/${name}`;
         this.icon = this.getIcon();
     }
 
