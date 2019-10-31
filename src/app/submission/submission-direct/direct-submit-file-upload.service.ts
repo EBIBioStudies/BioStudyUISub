@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from "rxjs";
+import { Observable } from 'rxjs';
 import { FileService } from '../../file/shared/file.service';
 import { Path } from '../../file/shared/path';
 import { UploadEvent } from '../../file/shared/http-upload-client.service';
