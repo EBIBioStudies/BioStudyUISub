@@ -7,7 +7,6 @@ import {
     NgModel,
     Validators,
 } from '@angular/forms';
-import 'rxjs/add/observable/timer';
 
 @Component({
     selector: 'orcid-input-box',

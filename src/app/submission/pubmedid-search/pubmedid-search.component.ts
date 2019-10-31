@@ -43,10 +43,7 @@ export class PubMedIdSearchComponent implements ControlValueAccessor {
     @Output() found: EventEmitter<any> = new EventEmitter<any>();
 
     // placeholder for handler propagating changes outside the custom control
-    private onChange: any = (_: any) => {};
-
-    // placeholder for handler after the control has been "touched"
-    private onTouched: any = () => {}
+    private onChange: any = () => {};
 
     constructor(private pubMedSearchService: PubMedSearchService) {
         this.pubMedFetch = _.debounce(this.pubMedFetch, 300);
@@ -87,11 +84,8 @@ export class PubMedIdSearchComponent implements ControlValueAccessor {
     /**
      * Registers a handler specifically for when a control receives a touch event.
      * @see {@link ControlValueAccessor}
-     * @param fn - Handler for touch events.
      */
-    registerOnTouched(fn: any) {
-        this.onTouched = fn;
-    }
+    registerOnTouched() {}
 
     /**
      * Performs a new lookup operation provided the field is not blank and there is no request in progress.

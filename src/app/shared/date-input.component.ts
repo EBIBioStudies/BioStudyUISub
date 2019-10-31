@@ -24,6 +24,8 @@ import { AppConfig } from '../app.config';
  * @see {@link ControlValueAccessor}
  */
 export class DateInputComponent implements ControlValueAccessor, OnInit {
+    dateValue: Date | undefined;
+
     @Input() allowPast?: boolean = undefined;
     @Input() maxDate?: Date = undefined;
     @Input() isSmall?: boolean = false;
@@ -32,9 +34,7 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
     @ViewChild('dp') private datepicker?: BsDatepickerDirective;
 
     private onChange: any = () => {};
-    private onTouched: any = () => {};
 
-    dateValue: Date | undefined;
 
     /**
      * Instantiates a new custom component, hiding the weeks column on the calendar and setting
@@ -45,7 +45,7 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
      */
     constructor(config: BsDatepickerConfig, private appConfig: AppConfig, private rootEl: ElementRef) {
         config.showWeekNumbers = false;
-        config.dateInputFormat = appConfig.dateInputFormat;
+        config.dateInputFormat = this.appConfig.dateInputFormat;
     }
 
     /**
@@ -95,11 +95,8 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
     /**
      * Registers a handler specifically for when a control receives a touch event.
      * @see {@link ControlValueAccessor}
-     * @param fn - Handler for touch events.
      */
-    registerOnTouched(fn: any) {
-        this.onTouched = fn;
-    }
+    registerOnTouched() {}
 
     /**
      * Normalises clicking behaviour across all of the input. Otherwise, clicking around the area of the arrow would

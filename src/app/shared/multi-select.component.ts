@@ -157,16 +157,6 @@ export class MultiSelectComponent implements ControlValueAccessor, OnChanges, On
         this.isOpen = !this.isOpen;
     }
 
-    private select(item: any) {
-        item.checked = !item.checked;
-        if (item.checked) {
-            this.selected.push(item.label);
-        } else {
-            _.remove(this.selected, el => (el === item.label));
-        }
-        this.onChange(this.selected);
-    }
-
     private setSelected(value: string[]): void {
         this.selected = value;
         const ht = _.zipObject(value, _.fill(Array(value.length), 1));
@@ -176,8 +166,6 @@ export class MultiSelectComponent implements ControlValueAccessor, OnChanges, On
     }
 
     private onChange: any = () => {};
-
-    private onTouched: any = () => {};
 
     get value(): any {
         return this.selected;
@@ -196,9 +184,7 @@ export class MultiSelectComponent implements ControlValueAccessor, OnChanges, On
     }
 
     // ControlValueAccessor interface
-    registerOnTouched(fn: any): void {
-        this.onTouched = fn;
-    }
+    registerOnTouched() {}
 
     // ControlValueAccessor interface
     setDisabledState(): void {

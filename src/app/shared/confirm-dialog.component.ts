@@ -1,6 +1,5 @@
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { BsModalRef, ModalDirective } from 'ngx-bootstrap/modal';
-import 'rxjs/add/operator/take';
 
 /**
  * UI component for confirmation modals with all its text parts parameterized.

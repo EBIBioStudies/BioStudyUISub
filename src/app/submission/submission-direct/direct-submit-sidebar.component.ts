@@ -6,7 +6,6 @@ import { last, mergeAll, takeUntil, map, finalize } from 'rxjs/operators';
 import { AppConfig } from 'app/app.config';
 import { DirectSubmitService } from './direct-submit.service';
 import { DirectSubmitFileUploadService } from './direct-submit-file-upload.service';
-import { UploadEvent } from 'app/file/shared/http-upload-client.service';
 
 @Component({
     selector: 'direct-submit-sidebar',
@@ -27,9 +26,9 @@ export class DirectSubmitSideBarComponent implements OnInit {
     submitType: string = 'create'; // Will the upload create or update studies?
     selectedProj: string[] = []; // Projects selected for attachment
 
-    @Input() collapsed? = false;
-    @Input() readonly? = false;
-    @Output() toggle? = new EventEmitter();
+    @Input() collapsed = false;
+    @Input() readonly = false;
+    @Output() toggle = new EventEmitter();
 
     @ViewChild(FileUploadButtonComponent)
     private fileSelector;
@@ -168,23 +167,12 @@ export class DirectSubmitSideBarComponent implements OnInit {
     }
 
     /**
-     * Converts a list of projects into a data object suitable for checkbox controls.
-     * @param {string[]} projects - Names of projects.
-     * @returns {{name: string; checked: boolean}[]} Checkbox-compliant object.
-     */
-    private initProjModel(projects: string[]): { name: string, checked: boolean }[] {
-        return projects.map(name => {
-            return { name: name, checked: false };
-        });
-    }
-
-    /**
      * Surgically updates the list of selected projects without destroying it in the process.
      * NOTE: Angular's change detection cycle tends to work best when the original array is not wiped out such as
      * when using map.
      * @param {Event} event - DOM object for the click action.
      */
-    private onProjChange(event: Event) {
+    onProjChange(event: Event) {
         const checkboxEl = <HTMLInputElement>event.target;
 
         if (checkboxEl.checked) {
@@ -201,7 +189,7 @@ export class DirectSubmitSideBarComponent implements OnInit {
      *
      * @param {FileList} files - List of files to be uploaded.
      */
-    private onUploadFilesSelect(files: FileList): void {
+    onUploadFilesSelect(files: FileList): void {
         if (files.length > 0) {
             this.model.files = Array.from(files);
             this.directSubmitSvc.reset();
@@ -212,7 +200,7 @@ export class DirectSubmitSideBarComponent implements OnInit {
      * Cancels all currently pending requests by unsubscribing from the aggregated observable and updating their
      * respective statuses.
      */
-    private onCancelPending() {
+    onCancelPending() {
         this.uploadSubs!.unsubscribe();
         this.uploadFilesSubscription!.unsubscribe();
         this.directSubmitSvc.cancelAll();
@@ -225,7 +213,7 @@ export class DirectSubmitSideBarComponent implements OnInit {
      * NOTE: The files list is independent of the requests one. A difference in length between the two would lead to
      * state inconsistencies. Hence also the conservative assignment approach.
      */
-    private clearUploads() {
+    clearUploads() {
         const files = this.model.files;
 
         files.forEach((_file, index) => {
@@ -236,22 +224,13 @@ export class DirectSubmitSideBarComponent implements OnInit {
     }
 
     /**
-     * Signals the UI that the files input has been blurred an is invalid. Since the actual input is never "touched"
-     * -to use Angular terminology-, the state is inferred from the input's value. Within this context, "null" indicates
-     * a blank field.
-     */
-    private markFileTouched() {
-        this.model.files = null;
-    }
-
-    /**
      * Carries out the necessary requests for the selected files, detecting their format automatically.
      * NOTE: Requests are bundled into groups of MAX_CONCURRENT requests to avoid overwhelming the browser and/or
      * the server when dealing with a high number of files.
      *
      * @param {string} submissionType - Indicates whether the submitted file should create or update an existing database entry.
      */
-    private onSubmit(submissionType: string): void {
+    onSubmit(submissionType: string): void {
         let nonClearedFiles;
 
         if (this.canSubmit) {
@@ -267,6 +246,37 @@ export class DirectSubmitSideBarComponent implements OnInit {
         } else {
             this.markFileTouched();
         }
+    }
+
+    /**
+     * Notifies the outside world if the collapsed state of the sidebar has changed.
+     * @param {Event} event - DOM object for the click action.
+     */
+    onToggle(event: Event): void {
+        event.preventDefault();
+        if (this.toggle) {
+            this.toggle.emit();
+        }
+    }
+
+    /**
+     * Converts a list of projects into a data object suitable for checkbox controls.
+     * @param {string[]} projects - Names of projects.
+     * @returns {{name: string; checked: boolean}[]} Checkbox-compliant object.
+     */
+    private initProjModel(projects: string[]): { name: string, checked: boolean }[] {
+        return projects.map(name => {
+            return { name: name, checked: false };
+        });
+    }
+
+    /**
+     * Signals the UI that the files input has been blurred an is invalid. Since the actual input is never "touched"
+     * -to use Angular terminology-, the state is inferred from the input's value. Within this context, "null" indicates
+     * a blank field.
+     */
+    private markFileTouched() {
+        this.model.files = null;
     }
 
     private createDirectSubmission(files: File[], submissionType: string): Observable<any> {
@@ -294,16 +304,5 @@ export class DirectSubmitSideBarComponent implements OnInit {
                 last(),
                 takeUntil(this.ngUnsubscribe)
             );
-    }
-
-    /**
-     * Notifies the outside world if the collapsed state of the sidebar has changed.
-     * @param {Event} event - DOM object for the click action.
-     */
-    onToggle(event: Event): void {
-        event.preventDefault();
-        if (this.toggle) {
-            this.toggle.emit();
-        }
     }
 }
