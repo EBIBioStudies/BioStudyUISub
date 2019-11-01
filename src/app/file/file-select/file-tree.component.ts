@@ -25,15 +25,11 @@ export class FileTreeComponent implements OnInit, OnDestroy {
         if (this.root === undefined) {
             this.fileStore.getUserDirs()
                 .pipe(takeUntil(this.unsubscribe))
-                .subscribe((nodes) => {
-                    this.nodes = nodes;
-                });
+                .subscribe(nodes => this.nodes = nodes);
         } else if (this.root.isDir) {
             this.fileStore.getFiles(this.root.path)
                 .pipe(takeUntil(this.unsubscribe))
-                .subscribe((nodes) => {
-                    this.nodes = nodes;
-                });
+                .subscribe(nodes => this.nodes = nodes);
         }
     }
 
