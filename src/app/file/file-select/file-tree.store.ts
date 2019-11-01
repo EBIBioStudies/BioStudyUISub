@@ -2,42 +2,25 @@ import { Injectable } from '@angular/core';
 import { FileNode } from './file-tree.model';
 import { PathInfo, UserGroup } from '../shared/file-rest.model';
 import { FileService } from '../shared/file.service';
-import { from, Observable, of } from 'rxjs';
-import { find, map, mergeMap, publishReplay, refCount } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, mergeMap, publishReplay, refCount } from 'rxjs/operators';
 
 @Injectable()
 export class FileTreeStore {
     private userGroups$?: Observable<UserGroup[]>;
     private files$ = {}; // path -> Observable<FileNode[]>
 
-    constructor(private fileService: FileService) {
-    }
-
-    /* checks if at least one file exists in the user's directories */
-    isEmpty(): Observable<FileNode | undefined> {
-        return this.getUserDirs().pipe(
-            mergeMap(dirs => this.dfs(dirs)),
-            find(node => !node.isDir)
-        );
-    }
-
-    private dfs(nodes: FileNode[]): Observable<FileNode> {
-        return from(nodes).pipe(
-            mergeMap(node => node.isDir ?
-                this.getFiles(node.path).pipe(mergeMap(nodes => this.dfs(nodes)))
-                : of(node))
-        );
-    }
+    constructor(private fileService: FileService) {}
 
     getUserDirs(): Observable<FileNode[]> {
         return this.fileService.getUserDirs(this.getUserGroups()).pipe(
-            map(groups => groups.map(g => new FileNode(true, g.path)))
+            map(groups => groups.map(g => new FileNode(true, g.path, g.name)))
         );
     }
 
     getFiles(path: string) {
         return this.getUserFiles(path).pipe(
-            map(files => files.map(file => new FileNode(file.type === 'DIR', file.path)))
+            map((files) => files.map((file) => new FileNode(file.type === 'DIR', file.path, file.name)))
         );
     }
 
@@ -48,6 +31,7 @@ export class FileTreeStore {
                 refCount() // keep the observable alive for as long as there are subscribers
             );
         }
+
         return this.files$[path];
     }
 
@@ -58,6 +42,7 @@ export class FileTreeStore {
                 refCount() // keep the observable alive for as long as there are subscribers
             );
         }
+
         return this.userGroups$;
     }
 

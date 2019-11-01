@@ -14,8 +14,8 @@ export class FileService {
         const userGroups = groups || this.getUserGroups();
 
         return userGroups.pipe(
-            map((groupsByUser) => groupsByUser.map((group) => new PathInfo(group.name, '/groups/' + group.name, 'DIR'))),
-            map(paths => ([] as PathInfo[]).concat([new PathInfo('Home', '/user', 'DIR')], paths))
+            map((groupsByUser) => groupsByUser.map((group) => new PathInfo(group.name, 'groups', 'DIR'))),
+            map(paths => [new PathInfo('/', 'user', 'DIR'), ...paths])
         );
     }
 

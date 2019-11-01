@@ -1,7 +1,8 @@
 import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { PathInfo } from '../../shared/file-rest.model';
 import { FileService } from '../../shared/file.service';
+import { FileNode } from 'app/file/file-select/file-tree.model';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'st-directory-sidebar',
@@ -17,7 +18,7 @@ export class DirectorySidebarComponent implements OnInit, ControlValueAccessor {
 
     private selectedPath?: string;
 
-    dirs: PathInfo[] = [];
+    dirs: FileNode[] = [];
 
     constructor(private fileService: FileService) {
     }
@@ -54,12 +55,11 @@ export class DirectorySidebarComponent implements OnInit, ControlValueAccessor {
     }
 
     ngOnInit() {
-        this.fileService.getUserDirs()
-            .subscribe(
-                (dirs) => {
-                    this.dirs = dirs;
-                }
-            );
+        this.fileService.getUserDirs().pipe(
+            map((dirs) => dirs.map((dir) => new FileNode(true, dir.path, dir.name)))
+        ).subscribe((dirs) => {
+            this.dirs = dirs;
+        });
     }
 
     onToggle(e) {
@@ -69,10 +69,11 @@ export class DirectorySidebarComponent implements OnInit, ControlValueAccessor {
         }
     }
 
-    onDirSelect(d) {
-        this.value = d.path;
+    onDirSelect(directory) {
+        this.value = directory.path;
+
         if (this.select) {
-            this.select.emit(d.path);
+            this.select.emit(directory.path);
         }
     }
 }
