@@ -4,7 +4,7 @@ import { UserData } from 'app/auth/shared';
 import { pageTab2Submission, PageTab, submission2PageTab, SelectValueType } from 'app/submission/submission-shared/model';
 import { Submission, AttributeData, Section, Feature, Attribute } from 'app/submission/submission-shared/model';
 import { none, Option, some } from 'fp-ts/lib/Option';
-import { BehaviorSubject, EMPTY, Observable, of, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 import { UserInfo } from '../../../auth/shared/model';
 import { SubmissionService, SubmitResponse } from '../../submission-shared/submission.service';

@@ -285,7 +285,7 @@ export class DirectSubmitSideBarComponent implements OnInit {
 
          // Performs the double-request submits and flattens the resulting high-order observables onto a single one.
         return from(files).pipe(
-            map((file: File) => this.directSubmitSvc.addRequest(file, '', this.selectedProj, submissionType)),
+            map((file: File) => this.directSubmitSvc.addRequest(file, this.selectedProj, submissionType)),
             // Throttles the number of requests allowed in parallel and takes just the last event
             // to signal the end of the upload process.
             mergeAll(this.appConfig.maxConcurrent),

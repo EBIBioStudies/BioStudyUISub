@@ -278,7 +278,6 @@ export class SubmFormValidators {
 export class CustomErrorMessages {
     static for(control: AbstractControl) {
         const ref = ((control instanceof MyFormControl) ? control.ref : undefined) || ControlRef.unknown;
-        const groupRef = ((control instanceof MyFormGroup) ? control.ref : undefined) || ControlGroupRef.unknown;
 
         return {
             'required': () => {

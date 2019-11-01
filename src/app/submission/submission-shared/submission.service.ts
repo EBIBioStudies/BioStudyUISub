@@ -132,10 +132,6 @@ export class SubmissionService {
         return this.http.get<PageTab>(`/api/submissions/drafts/${accno}/content`);
     }
 
-    private getSubmitted(accno: string): Observable<PageTab> {
-        return this.http.get<PageTab>(`/api/submissions/${accno}.json`);
-    }
-
     private checkStatus<R, T>(response: HttpResponse<R>): T {
         if (response.status === HttpStatus.OK) {
             return <T>(response.body || {});

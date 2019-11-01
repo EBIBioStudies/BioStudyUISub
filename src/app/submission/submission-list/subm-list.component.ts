@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AgRendererComponent } from 'ag-grid-angular/main';
 import { GridOptions } from 'ag-grid-community/main';
 import { AppConfig } from 'app/app.config';
-import { UserData } from 'app/auth/shared';
 import { throwError } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
@@ -136,7 +135,6 @@ export class SubmListComponent {
 
     constructor(private submService: SubmissionService,
                 private modalService: ModalService,
-                private userData: UserData,
                 private router: Router,
                 private route: ActivatedRoute) {
 

@@ -65,7 +65,7 @@ class ValidationRules {
     static forFeature(feature: Feature): ValidationRule[] {
         const rules: ValidationRule[] = [];
         if (feature.type.displayType.isRequired) {
-            rules.push(ValidationRules.atLeastOneRowFeature(feature))
+            rules.push(ValidationRules.atLeastOneRowFeature(feature));
         }
 
         const valueRules: ValidationRule[] = [];

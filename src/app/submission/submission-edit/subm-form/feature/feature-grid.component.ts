@@ -10,7 +10,7 @@ import { FeatureForm, RowForm, ColumnControl } from '../../shared/section-form';
 })
 export class FeatureGridComponent implements AfterViewInit {
     @Input() featureForm?: FeatureForm;
-    @Input() readonly? = false;
+    @Input() readonly = false;
 
     @ViewChildren('ahead') typeaheads?: QueryList<TypeaheadDirective>;
     @ViewChildren('rowEl') rowEls?: QueryList<ElementRef>;

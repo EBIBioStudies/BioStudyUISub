@@ -9,7 +9,6 @@ enum ReqType {CREATE, UPDATE}
 
 export class DirectSubmitRequest {
     private _filename: string;
-    private _format: string;
     private _projects: string[];
     private _type: ReqType;
 
@@ -19,9 +18,8 @@ export class DirectSubmitRequest {
     private _accno: string = '';
     private _releaseDate: string | undefined;
 
-    constructor(filename: string, format: string, projects: string[], type: ReqType) {
+    constructor(filename: string, projects: string[], type: ReqType) {
         this._filename = filename;
-        this._format = format;
         this._projects = projects;
         this._type = type;
 
@@ -160,13 +158,12 @@ export class DirectSubmitService {
     /**
      * Given a study file an its properties, it adds a new request to the queue and starts the submission process.
      * @param {File} file - Object representative of the file to be submitted.
-     * @param {string} format - Format of the file. If omitted, it automatically detects it.
      * @param {string[]} projects - Projects the file should be attached to.
      * @param {string} type - Indicates whether the submitted file should create or update an existing database entry.
      * @returns {Observable<any>} Stream of inputs coming from the subsequent responses.
      */
-    addRequest(file: File, format: string, projects: string[], type: string): Observable<any> {
-        const req = new DirectSubmitRequest(file.name, format, projects, ReqType[type.toUpperCase()]);
+    addRequest(file: File, projects: string[], type: string): Observable<any> {
+        const req = new DirectSubmitRequest(file.name, projects, ReqType[type.toUpperCase()]);
         const index = this._requests.length;
 
         this._requests.push(req);
