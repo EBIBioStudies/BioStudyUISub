@@ -12,30 +12,18 @@ import { takeUntil } from 'rxjs/operators';
         {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => FileSelectComponent), multi: true}
     ]
 })
-export class FileSelectComponent implements ControlValueAccessor, OnInit, OnDestroy {
+export class FileSelectComponent implements ControlValueAccessor, OnDestroy {
     // tslint:disable-next-line: no-input-rename
     @Input('value') private selected = '';
 
     isOpen = false;
     isEmpty = false;
-    isLoading = true;
 
     private unsubscribe = new Subject();
 
-    constructor(private fileStore: FileTreeStore) {
-    }
+    constructor(private fileStore: FileTreeStore) {}
 
-    private onChange: any = () => {
-    }
-
-    ngOnInit(): void {
-        this.fileStore.isEmpty()
-            .pipe(takeUntil(this.unsubscribe))
-            .subscribe(fileNode => {
-                this.isLoading = false;
-                this.isEmpty = fileNode === undefined;
-            });
-    }
+    private onChange: any = () => {};
 
     ngOnDestroy(): void {
         this.unsubscribe.next();
