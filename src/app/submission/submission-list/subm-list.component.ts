@@ -34,9 +34,6 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
     public isBusy: boolean = false; // flags if a previous button action is in progress
     public rowData: any; // object including the data values for the row this cell belongs to
 
-    private onDelete?: (accno: string, onCancel: Function) => {};
-    private onEdit?: (string) => {};
-
     agInit(params: any): void {
         this.rowData = params.data;
         this.reset();

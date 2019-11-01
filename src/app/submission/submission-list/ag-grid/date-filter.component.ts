@@ -6,7 +6,6 @@ import {
     IAfterGuiAttachedParams
 } from 'ag-grid-community/main';
 import { AgFilterComponent } from 'ag-grid-angular/main';
-import { parseDate, formatDate } from 'app/utils';
 import { DateInputComponent } from '../../../shared/date-input.component';
 
 class DateRange {
@@ -46,10 +45,11 @@ class DateRange {
 export class DateFilterComponent implements AgFilterComponent {
     private params?: IFilterParams;
     private valueGetter?: (rowNode: RowNode) => any;
-    private hide?: Function;
     private selection;
     private date?: DateRange;
     private prev?: DateRange;
+
+    hide?: Function;
 
     @ViewChildren(DateInputComponent) dateInputs?: QueryList<DateInputComponent>;
 
@@ -118,7 +118,9 @@ export class DateFilterComponent implements AgFilterComponent {
             this.params!.filterChangedCallback();
         }
 
-        this.hide && this.hide();
+        if (this.hide) {
+            this.hide();
+        }
     }
 
     get after(): boolean {
@@ -157,21 +159,17 @@ export class DateFilterComponent implements AgFilterComponent {
         this.notifyAboutChanges();
     }
 
-    onToChange($event) {
+    onToChange() {
         if (!this.between) {
             return;
-        }
-        const s = this.date!.getRange();
-        if (s.from > s.to) {
-            $event.to
         }
     }
 
-    onFromChange($event) {
-        console.log($event)
+    onFromChange() {
         if (!this.between) {
             return;
         }
+
         const s = this.date!.getRange();
         if (s.from > s.to) {
             this.reset();

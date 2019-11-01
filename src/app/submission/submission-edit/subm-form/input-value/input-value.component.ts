@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, forwardRef, Input, Output, AfterViewChecked } from '@angular/core';
+import { Component, EventEmitter, forwardRef, Input, Output, AfterViewChecked } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { AppConfig } from 'app/app.config';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
@@ -24,8 +24,9 @@ export class InputValueComponent implements ControlValueAccessor, AfterViewCheck
     readonly ValueTypeNameEnum = ValueTypeName;
     readonly typeahead: Observable<string[]>;
     private _value = '';
-    private suggestLength: number;
     private valueChanges$: Subject<string> = new BehaviorSubject<string>('');
+
+    suggestLength: number;
 
     @Output() select = new EventEmitter<{ [key: string]: string }>();
     @Input() valueType: ValueType = ValueTypeFactory.DEFAULT;
@@ -43,7 +44,7 @@ export class InputValueComponent implements ControlValueAccessor, AfterViewCheck
     private onChange: any = (_: any) => {};
     private onTouched: any = () => {};
 
-    constructor(private rootEl: ElementRef, private appConfig: AppConfig) {
+    constructor(private appConfig: AppConfig) {
         this.suggestLength = appConfig.maxSuggestLength;
         this.typeahead = typeaheadSource(() => {
             return this.autosuggestValues();

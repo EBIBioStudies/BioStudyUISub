@@ -6,7 +6,7 @@ import { AppConfig } from 'app/app.config';
 import { Option } from 'fp-ts/lib/Option';
 import { BsModalService } from 'ngx-bootstrap';
 import { Observable, of } from 'rxjs';
-import { filter, switchMap, takeUntil } from 'rxjs/operators';
+import { switchMap, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
 import { SubmResultsModalComponent } from '../submission-results/subm-results-modal.component';
 import { SubmitResponse, SubmitLog } from '../submission-shared/submission.service';
@@ -45,10 +45,10 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
     private hasJustCreated = false;
     private releaseDate: Date = new Date();
     private scrollToCtrl?: FormControl;
-    private sideBarCollapsed = false;
-    private submitOperation: SubmitOperation = SubmitOperation.Unknown;
     private unsubscribe: Subject<void> = new Subject<void>();
 
+    sideBarCollapsed = false;
+    submitOperation: SubmitOperation = SubmitOperation.Unknown;
     sectionForm?: SectionForm;
 
     constructor(

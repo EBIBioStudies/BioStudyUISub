@@ -18,7 +18,7 @@ type FormControlGroup = Array<FormControl>;
 export class SubmSidebarComponent implements OnDestroy {
     @Input() collapsed?: boolean = false;
     @Input() sectionForm?: SectionForm;
-    @Output() toggle? = new EventEmitter();
+    @Output() toggle = new EventEmitter();
 
     serverError?: ServerError;
     invalidControls: FormControlGroup[] = [];
@@ -83,7 +83,9 @@ export class SubmSidebarComponent implements OnDestroy {
         // tslint:disable-next-line: no-unused-expression
         event && event.preventDefault();
 
-        this.toggle && this.toggle.emit();
+        if (this.toggle) {
+            this.toggle.emit();
+        }
     }
 
     private switchSection(sectionFormOp: Option<SectionForm>) {
