@@ -97,28 +97,29 @@ export class FileListComponent implements OnInit, OnDestroy {
     private createColumnDefs() {
         this.columnDefs = [
             {
-                headerName: 'Type',
+                cellRendererFramework: FileTypeCellComponent,
                 field: 'type',
-                minWidth: 70,
+                headerName: 'Type',
                 maxWidth: 70,
-                sortable: false,
-                cellRendererFramework: FileTypeCellComponent
+                minWidth: 70,
+                sort: 'asc',
+                sortable: false
             },
             {
-                headerName: 'Name',
-                field: 'name'
+                field: 'name',
+                headerName: 'Name'
             },
             {
+                cellRendererFramework: ProgressCellComponent,
                 headerName: 'Progress',
-                maxWidth: 200,
-                cellRendererFramework: ProgressCellComponent
+                maxWidth: 200
             },
             {
+                cellRendererFramework: FileActionsCellComponent,
                 headerName: 'Actions',
                 maxWidth: 100,
-                suppressMenu: true,
                 sortable: false,
-                cellRendererFramework: FileActionsCellComponent
+                suppressMenu: true
             }
         ];
     }
