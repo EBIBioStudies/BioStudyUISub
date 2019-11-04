@@ -92,12 +92,12 @@
                             <p>
                                 The study with accession number <strong>{{accno}}</strong>
                                 <span *ngIf="releaseDate">
-                            and release date <strong>{{releaseDate | date: 'dd MMMM yyyy'}} (BST)</strong>
+                            and release date <strong>{{releaseDate | date: 'dd MMMM yyyy'}}</strong>
                         </span>
                                 <span *ngIf="submitOperation.isUnknown">is present on the BioStudies database with the data shown below.</span>
                                 <span *ngIf="submitOperation.isCreate">has been successfully added to the BioStudies database.</span>
                                 <span *ngIf="submitOperation.isUpdate">has been successfully updated.</span>
-                                It {{submitOperation.isCreate ? 'will be available in the next 24 hours' : 'is available' }} at
+                                It {{submitOperation.isCreate ? 'will be available in the next 24 hours (BST)' : 'is available' }} at
                                 <a target="_blank" href="{{location.origin}}/biostudies/studies/{{accno}}">
                                     {{location.hostname}}/biostudies/studies/{{accno}}</a>.
                             </p>
