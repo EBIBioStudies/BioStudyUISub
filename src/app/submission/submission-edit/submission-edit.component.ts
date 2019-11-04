@@ -130,7 +130,17 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
                     // TODO: log this error using the new service
                 } else {
                     const releaseDateCtrl = this.sectionForm!.findFieldControl('ReleaseDate');
-                    this.releaseDate =  releaseDateCtrl ? new Date (Date.parse(releaseDateCtrl.control.value)) : new Date();
+
+                    if (releaseDateCtrl) {
+                        this.releaseDate = new Date(Date.parse(releaseDateCtrl.control.value));
+
+                        releaseDateCtrl.control.valueChanges.subscribe((value) => {
+                            this.releaseDate = new Date(Date.parse(value));
+                        });
+                    } else {
+                        this.releaseDate = new Date();
+                    }
+
                     this.releaseDate.setHours(0, 0, 0);
                 }
             });
