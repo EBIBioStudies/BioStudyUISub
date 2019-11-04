@@ -10,7 +10,7 @@ export interface TreeViewConfig {
 }
 
 @Component({
-    selector: 'tree-view-node',
+    selector: 'st-tree-view-node',
     template: `
     <span class="node">
         <i *ngIf="hasChildren"
@@ -22,8 +22,9 @@ export interface TreeViewConfig {
     </span>
     <ul [collapse]="isCollapsed">
         <li  *ngFor="let child of children">
-            <tree-view-node [data]="child"
-                            [config]="config"></tree-view-node>
+            <st-tree-view-node [data]="child"
+                               [config]="config">
+            </st-tree-view-node>
         </li>
     </ul>
 `,
@@ -116,20 +117,20 @@ export class TreeViewNodeComponent {
 
 
 @Component({
-    selector: 'tree-view',
+    selector: 'st-tree-view',
     template: `
-<div class="tree">
-     <tree-view-node [data]="data"
-                     [config]="config"></tree-view-node>
-</div>
-
-`,
+        <div class="tree">
+            <st-tree-view-node [data]="data"
+                            [config]="config">
+            </st-tree-view-node>
+        </div>
+    `,
     styles: [`
-.tree {
-    min-height:20px;
-    padding:10px;
-}
-`]
+        .tree {
+            min-height:20px;
+            padding:10px;
+        }
+    `]
 })
 export class TreeViewComponent {
     @Input() data?: any;

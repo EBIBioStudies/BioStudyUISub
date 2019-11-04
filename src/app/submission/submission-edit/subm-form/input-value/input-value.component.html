@@ -23,14 +23,14 @@
               (keyup.enter)="$event.stopPropagation()"
               (blur)="onBlur()"></textarea>
 
-    <date-input *ngSwitchCase="ValueTypeNameEnum.date"
+    <st-date-input *ngSwitchCase="ValueTypeNameEnum.date"
                 [isSmall]="isSmall"
                 [formControl]="formControl"
                 [readonly]="readonly"
                 [maxDate]="nowInNyears()"
                 [allowPast]="allowPast"
                 (focusout)="onBlur()">
-    </date-input>
+    </st-date-input>
 
     <st-id-link *ngSwitchCase="ValueTypeNameEnum.idlink"
              [isSmall]="isSmall"
@@ -40,21 +40,21 @@
              [formControl]="formControl"
              (focusout)="onBlur()"></st-id-link>
 
-    <orcid-input-box *ngSwitchCase="ValueTypeNameEnum.orcid"
+    <st-orcid-input-box *ngSwitchCase="ValueTypeNameEnum.orcid"
                      [isSmall]="isSmall"
                      [readonly]="readonly"
                      [isPopupButton]="false"
                      [formControl]="formControl"
                      (focusout)="onBlur()">
-    </orcid-input-box>
+    </st-orcid-input-box>
 
     <st-file-select *ngSwitchCase="ValueTypeNameEnum.file"
                  [formControl]="formControl">
     </st-file-select>
 
-    <pubmedid-search *ngSwitchCase="ValueTypeNameEnum.pubmedid"
+    <st-pubmedid-search *ngSwitchCase="ValueTypeNameEnum.pubmedid"
                      [formControl]="formControl"
                      [readonly]="readonly"
                      (found)="selectData($event)">
-    </pubmedid-search>
+    </st-pubmedid-search>
 </div>

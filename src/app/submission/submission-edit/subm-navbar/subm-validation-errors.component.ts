@@ -5,8 +5,10 @@ import {
 import { SubmValidationErrors } from 'app/submission/submission-shared/model';
 import { BsModalRef } from 'ngx-bootstrap';
 
+// TODO: Is this component used?
+
 @Component({
-    selector: 'subm-validation-errors',
+    selector: 'st-subm-validation-errors',
     templateUrl: './subm-validation-errors.component.html',
     styleUrls: ['./subm-validation-errors.component.css']
 })

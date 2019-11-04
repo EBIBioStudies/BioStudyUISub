@@ -4,7 +4,7 @@ import { SectionForm } from '../shared/section-form';
 import { SubmEditService } from '../shared/subm-edit.service';
 
 @Component({
-    selector: 'subm-navbar',
+    selector: 'st-subm-navbar',
     templateUrl: './subm-navbar.component.html',
     styleUrls: ['./subm-navbar.component.css']
 })

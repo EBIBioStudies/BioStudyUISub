@@ -33,8 +33,10 @@ export class FilterPipe implements PipeTransform {
     }
 }
 
+// TODO: is this component used?
+
 @Component({
-    selector: 'multi-select',
+    selector: 'st-multi-select',
     template: `
 <div class="btn-group btn-block" dropdown [isOpen]="isOpen">
     <button type="button" class="btn btn-default col-sm-12 dropdown-toggle" (click)="onToggle()">

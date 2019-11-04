@@ -10,7 +10,7 @@ import {
 import { AgFilterComponent } from 'ag-grid-angular/main';
 
 @Component({
-    selector: 'ag-acc-filter',
+    selector: 'st-ag-acc-filter',
     templateUrl: 'text-filter.component.html'
 })
 export class TextFilterComponent implements AgFilterComponent {

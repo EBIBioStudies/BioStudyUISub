@@ -5,7 +5,7 @@ import { SectionType } from 'app/submission/submission-shared/model/templates';
 import { SectionForm } from '../../shared/section-form';
 
 @Component({
-    selector: 'add-subm-type-modal',
+    selector: 'st-add-subm-type-modal',
     templateUrl: './add-subm-type-modal.component.html'
 })
 export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {

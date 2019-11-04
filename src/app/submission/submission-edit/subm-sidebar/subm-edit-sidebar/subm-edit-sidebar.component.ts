@@ -59,7 +59,7 @@ class DataTypeControl {
 }
 
 @Component({
-    selector: 'subm-edit-sidebar',
+    selector: 'st-subm-edit-sidebar',
     templateUrl: './subm-edit-sidebar.component.html',
     styleUrls: ['./subm-edit-sidebar.component.css']
 })

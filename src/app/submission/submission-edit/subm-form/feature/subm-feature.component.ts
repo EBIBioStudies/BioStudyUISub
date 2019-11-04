@@ -8,7 +8,7 @@ interface FeatureOperation {
 }
 
 @Component({
-    selector: 'subm-feature',
+    selector: 'st-subm-feature',
     templateUrl: './subm-feature.component.html',
     styleUrls: ['./subm-feature.component.css']
 })

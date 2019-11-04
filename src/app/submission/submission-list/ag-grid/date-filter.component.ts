@@ -39,7 +39,7 @@ class DateRange {
 }
 
 @Component({
-    selector: 'ag-date-filter',
+    selector: 'st-ag-date-filter',
     templateUrl: 'date-filter.component.html'
 })
 export class DateFilterComponent implements AgFilterComponent {

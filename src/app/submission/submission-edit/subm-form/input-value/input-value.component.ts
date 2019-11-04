@@ -12,7 +12,7 @@ import { typeaheadSource } from '../../shared/typeahead.utils';
 
 
 @Component({
-    selector: 'input-value',
+    selector: 'st-input-value',
     templateUrl: './input-value.component.html',
     providers: [{
         provide: NG_VALUE_ACCESSOR,

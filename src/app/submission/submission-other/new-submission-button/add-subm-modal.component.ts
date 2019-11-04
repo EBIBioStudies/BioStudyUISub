@@ -2,7 +2,7 @@ import { AfterViewInit, Component } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap';
 
 @Component({
-    selector: 'add-subm-modal',
+    selector: 'st-add-subm-modal',
     templateUrl: './add-subm-modal.component.html'
 })
 export class AddSubmModalComponent implements AfterViewInit {

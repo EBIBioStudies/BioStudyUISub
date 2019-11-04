@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { typeaheadSource } from '../../shared/typeahead.utils';
 
 @Component({
-    selector: 'inline-edit',
+    selector: 'st-inline-edit',
     templateUrl: './inline-edit.component.html',
     styleUrls: ['./inline-edit.component.css'],
     providers: [

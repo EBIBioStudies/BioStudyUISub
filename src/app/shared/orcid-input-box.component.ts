@@ -9,7 +9,7 @@ import {
 } from '@angular/forms';
 
 @Component({
-    selector: 'orcid-input-box',
+    selector: 'st-orcid-input-box',
     templateUrl: './orcid-input-box.component.html',
     providers: [{
         provide: NG_VALUE_ACCESSOR,

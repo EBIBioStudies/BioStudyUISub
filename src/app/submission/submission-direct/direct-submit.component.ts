@@ -3,7 +3,7 @@ import { AppConfig } from 'app/app.config';
 import * as pluralize from 'pluralize';
 
 @Component({
-    selector: 'direct-submit',
+    selector: 'st-direct-submit',
     templateUrl: './direct-submit.component.html',
     styleUrls: ['./direct-submit.component.css']
 })

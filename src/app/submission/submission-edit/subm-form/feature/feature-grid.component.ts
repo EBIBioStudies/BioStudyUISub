@@ -4,7 +4,7 @@ import { TypeaheadDirective } from 'ngx-bootstrap';
 import { FeatureForm, RowForm, ColumnControl } from '../../shared/section-form';
 
 @Component({
-    selector: 'subm-feature-grid',
+    selector: 'st-subm-feature-grid',
     templateUrl: './feature-grid.component.html',
     styleUrls: ['./feature-grid.component.css']
 })

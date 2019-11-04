@@ -15,7 +15,7 @@ import { PubMedSearchService } from './pubmedid-search.service';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
-    selector: 'pubmedid-search',
+    selector: 'st-pubmedid-search',
     templateUrl: './pubmedid-search.component.html',
     styleUrls: ['./pubmedid-search.component.css'],
     providers: [{

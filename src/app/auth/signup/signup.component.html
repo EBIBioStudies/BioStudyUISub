@@ -1,5 +1,5 @@
-<container-root>
-    <container-md>
+<st-container-root>
+    <st-container-md>
         <div class="auth-content">
             <div class="alert" [ngClass]="{'alert-danger': error, 'invisible': !error}">
                 {{error ? error.message : '&nbsp;'}}
@@ -79,13 +79,13 @@
                             </span>
                         </label>
                         <span class="text-muted pull-right"><i>Optional</i></span>
-                        <orcid-input-box
+                        <st-orcid-input-box
                                 [(ngModel)]="model.orcid"
                                 [isSmall]="false"
                                 name="orcid"
                                 #orcid="ngModel"
                                 validate-onblur>
-                        </orcid-input-box>
+                        </st-orcid-input-box>
                     </div>
                     <div class="form-group" [ngClass]="{'has-error': captcha.invalid && (captcha.dirty || captcha.touched)}">
                         <label class="control-label">
@@ -127,5 +127,5 @@
                 </form>
             </div>
         </div>
-    </container-md>
-</container-root>
+    </st-container-md>
+</st-container-root>

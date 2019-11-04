@@ -5,7 +5,7 @@ import { RequestStatusService } from 'app/http/request-status.service';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
-    selector: 'app-header',
+    selector: 'st-app-header',
     templateUrl: './app-header.component.html',
     styleUrls: ['./app-header.component.css']
 })

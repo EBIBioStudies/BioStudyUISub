@@ -1,9 +1,9 @@
 <div class="row-offcanvas row-offcanvas-left">
-    <direct-submit-sidebar
+    <st-direct-submit-sidebar
             (toggle)="onToggle($event)"
             [collapsed]="collapseSideBar"
             #sidebar>
-    </direct-submit-sidebar>
+    </st-direct-submit-sidebar>
     <div class="navbar-default navbar-subm-fixed"
          [ngClass]="{'collapse-left': collapseSideBar}">
         <nav>
@@ -186,7 +186,7 @@
                                 </div>
                             </div>
                             <div *ngIf="isFail(i)" class="hidden panel-body container-fluid">
-                                <subm-results-tree [log]="getLog(i)"></subm-results-tree>
+                                <st-subm-results-tree [log]="getLog(i)"></st-subm-results-tree>
                             </div>
                         </div>
                     </div>

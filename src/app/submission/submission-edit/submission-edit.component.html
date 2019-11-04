@@ -1,21 +1,22 @@
 <div class="row-offcanvas row-offcanvas-left"
      [ngClass]="{'readonly': readonly, 'grayout': isReverting}">
-    <subm-sidebar *ngIf="!readonly"
-                  (toggle)="sideBarCollapsed=!sideBarCollapsed"
-                  [collapsed]="sideBarCollapsed"
-                  [sectionForm]="sectionForm">
-    </subm-sidebar>
+    <st-subm-sidebar *ngIf="!readonly"
+                     (toggle)="sideBarCollapsed=!sideBarCollapsed"
+                     [collapsed]="sideBarCollapsed"
+                     [sectionForm]="sectionForm">
+    </st-subm-sidebar>
 
-    <subm-navbar *ngIf="sectionForm" class="navbar-subm-fixed navbar-default"
-            [ngClass]="{'collapse-left': !readonly && sideBarCollapsed}"
-            [readonly]="readonly"
-            [accno]="accno"
-            [sectionForm]="sectionForm"
-            (sectionClick)="onSectionClick($event)"
-            (revertClick)="onRevertClick($event)"
-            (submitClick)="onSubmitClick($event)"
-            (editClick)="onEditBackClick($event)">
-    </subm-navbar>
+    <st-subm-navbar *ngIf="sectionForm"
+                    class="navbar-subm-fixed navbar-default"
+                    [ngClass]="{'collapse-left': !readonly && sideBarCollapsed}"
+                    [readonly]="readonly"
+                    [accno]="accno"
+                    [sectionForm]="sectionForm"
+                    (sectionClick)="onSectionClick($event)"
+                    (revertClick)="onRevertClick($event)"
+                    (submitClick)="onSubmitClick($event)"
+                    (editClick)="onEditBackClick($event)">
+    </st-subm-navbar>
 
     <div *ngIf="sectionForm" class="container-fluid">
         <aside [ngClass]="{'collapse-left' : !readonly && sideBarCollapsed, 'right-side': !readonly}">
@@ -126,10 +127,10 @@
                     </div>
                 </div>
 
-                <subm-form [sectionForm]="sectionForm"
-                           (keyup.enter)="onSubmitClick($event, true)"
-                           [readonly]="readonly">
-                </subm-form>
+                <st-subm-form [sectionForm]="sectionForm"
+                              (keyup.enter)="onSubmitClick($event, true)"
+                              [readonly]="readonly">
+                </st-subm-form>
 
                 <div *ngIf="sectionForm.subsectionForms.length > 0" class="list-group form-group">
                     <label class="control-label">Subsections</label>

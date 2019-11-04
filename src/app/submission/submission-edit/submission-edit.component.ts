@@ -34,7 +34,7 @@ class SubmitOperation {
 }
 
 @Component({
-    selector: 'app-subm-edit',
+    selector: 'st-app-subm-edit',
     templateUrl: './submission-edit.component.html'
 })
 export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChecked {

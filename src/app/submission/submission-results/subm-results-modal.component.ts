@@ -7,7 +7,7 @@ import { SubmitLog, SubmissionService } from '../submission-shared/submission.se
  * UI component for the modal being rendered with a given study's submission results.
  */
 @Component({
-    selector: 'subm-results',
+    selector: 'st-subm-results',
     templateUrl: './subm-results-modal.component.html'
 })
 export class SubmResultsModalComponent {

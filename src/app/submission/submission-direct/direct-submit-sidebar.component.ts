@@ -8,7 +8,7 @@ import { DirectSubmitService } from './direct-submit.service';
 import { DirectSubmitFileUploadService } from './direct-submit-file-upload.service';
 
 @Component({
-    selector: 'direct-submit-sidebar',
+    selector: 'st-direct-submit-sidebar',
     templateUrl: './direct-submit-sidebar.component.html',
     styleUrls: ['./direct-submit-sidebar.component.css']
 })

@@ -13,7 +13,7 @@ import { ModalService } from '../../shared/modal.service';
 import { takeUntil, catchError } from 'rxjs/operators';
 
 @Component({
-    selector: 'action-buttons-cell',
+    selector: 'st-action-buttons-cell',
     template: `
         <button *ngIf="rowData" type="button" class="btn btn-primary btn-xs btn-flat"
                 (click)="onEditSubmission()"
@@ -73,7 +73,7 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
 }
 
 @Component({
-    selector: 'date-cell',
+    selector: 'st-date-cell',
     template: `{{ value === undefined ? '&mdash;' : value | date: appConfig.dateListFormat }}`
 })
 export class DateCellComponent implements AgRendererComponent {
@@ -115,7 +115,7 @@ export class DateCellComponent implements AgRendererComponent {
 }
 
 @Component({
-    selector: 'subm-list',
+    selector: 'st-subm-list',
     templateUrl: './subm-list.component.html',
     styleUrls: ['./subm-list.component.css']
 })

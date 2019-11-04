@@ -5,7 +5,7 @@ import { MyFormControl } from '../../shared/form-validators';
 import { SubmEditService } from '../../shared/subm-edit.service';
 
 @Component({
-    selector: 'subm-check-sidebar',
+    selector: 'st-subm-check-sidebar',
     templateUrl: './subm-check-sidebar.component.html'
 })
 export class SubmCheckSidebarComponent {

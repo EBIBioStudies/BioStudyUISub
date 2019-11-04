@@ -11,7 +11,7 @@ import { takeUntil } from 'rxjs/operators';
 type FormControlGroup = Array<FormControl>;
 
 @Component({
-    selector: 'subm-sidebar',
+    selector: 'st-subm-sidebar',
     templateUrl: './subm-sidebar.component.html',
     styleUrls: ['./subm-sidebar.component.css']
 })
