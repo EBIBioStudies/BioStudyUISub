@@ -1,7 +1,10 @@
 <ul class="treeview" *ngIf="loaded; else loadingBlock">
     <li *ngFor="let node of nodes">
         <a (click)="onNodeClick(node)">
-            <span>{{node.icon}}</span>{{node.name}}
+            <span *ngIf="node.isDir">
+                <i class="fas" [ngClass]="{ 'fa-folder-open': node.expanded, 'fa-folder': !node.expanded }"></i>
+            </span>
+            {{node.name}}
         </a>
         <div *ngIf="node.expanded">
             <st-file-tree [root]="node" (select)="onChildTreeClick($event)"></st-file-tree>
