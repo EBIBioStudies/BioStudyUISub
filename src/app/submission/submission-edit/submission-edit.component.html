@@ -92,7 +92,7 @@
                             <p>
                                 The study with accession number <strong>{{accno}}</strong>
                                 <span *ngIf="releaseDate">
-                            and release date <strong>{{releaseDate | date: 'dd MMMM yyyy'}}</strong>
+                            and release date <strong>{{releaseDate | date: 'dd MMMM yyyy'}} (BST)</strong>
                         </span>
                                 <span *ngIf="submitOperation.isUnknown">is present on the BioStudies database with the data shown below.</span>
                                 <span *ngIf="submitOperation.isCreate">has been successfully added to the BioStudies database.</span>
