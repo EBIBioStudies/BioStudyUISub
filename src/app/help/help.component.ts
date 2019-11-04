@@ -21,7 +21,7 @@ export class HelpComponent {
             window.scrollBy(0, sectionEl.getBoundingClientRect().top - 100);
 
         } catch (exception) {
-            console.error('Target unknown');
+            // TODO: Review logic and check if this try/catch is needed
         }
     }
 }

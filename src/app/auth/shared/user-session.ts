@@ -51,7 +51,7 @@ export class UserSession {
     }
 
     userName(): string {
-        return getUser().fullname != null ? getUser().fullname : getUser().username ;
+        return getUser().fullname !== null ? getUser().fullname : getUser().username ;
     }
 
     isAnonymous(): boolean {

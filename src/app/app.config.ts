@@ -106,7 +106,6 @@ export class AppConfig {
 
         whenFetched.then(res => {
             this.config = res;
-            console.log('config', this.config);
         });
 
         return whenFetched;

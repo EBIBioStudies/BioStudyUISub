@@ -169,7 +169,7 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
             control.setValidators(Validators.compose([control.validator, this.inputModel!.control.validator]));
             control.setAsyncValidators(Validators.composeAsync([control.asyncValidator, this.inputModel!.control.asyncValidator]));
         } catch (event) {
-            console.log('Validator merge bypassed. ' + event);
+            // TODO: Review logic and check if this try/catch is needed
         }
     }
 

@@ -30,7 +30,6 @@ export class GlobalErrorHandler extends ErrorHandler {
 
         // An error occurred that may potentially be worth handling at a global level.
         } else {
-            console.error(error);
             this.errors.next(error);
         }
     }

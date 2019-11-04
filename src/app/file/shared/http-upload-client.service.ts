@@ -34,7 +34,6 @@ export class UploadEvent {
                 return UploadEvent.SUCCESS_EVENT;
 
             default:
-                console.log(event);
                 return new UploadEvent();
         }
     }

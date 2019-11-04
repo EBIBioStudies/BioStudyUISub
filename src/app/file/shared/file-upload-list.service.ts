@@ -37,6 +37,7 @@ export class FileUpload {
                 catchError((error: UploadErrorEvent) => of(error))
             );
 
+        // TODO: Log error in new log system.
         this.uploadEvent$.subscribe((event: UploadEvent) => {
             if (event.isProgress()) {
                 this.percentage = (<UploadProgressEvent>event).percentage;
@@ -57,7 +58,7 @@ export class FileUpload {
                 this.finish$.complete();
                 this.uploadEvent$.complete();
             }
-        }, console.log);
+        });
 
         this.sb = upload$.subscribe(this.uploadEvent$);
     }

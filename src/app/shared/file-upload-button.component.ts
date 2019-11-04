@@ -28,7 +28,7 @@ import {
 `
 })
 export class FileUploadButtonComponent implements OnInit, OnChanges {
-    public isDirSupport: boolean = false;
+    isDirSupport: boolean = false;
 
     @Output() select: EventEmitter<File[]> = new EventEmitter<File[]>();
     @Input() title: string = 'Upload Files';

@@ -19,14 +19,7 @@
     "member-ordering": [true,  { "order": [ "static-before-instance", "variables-before-functions"] }],
     "no-arg": true,
     "no-bitwise": true,
-    "no-console": [
-      true,
-      "debug",
-      "info",
-      "time",
-      "timeEnd",
-      "trace"
-    ],
+    "no-console": true,
     "no-construct": true,
     "no-debugger": true,
     "no-duplicate-variable": true,
@@ -57,7 +50,7 @@
     ],
     "radix": true,
     "semicolon": [true, "always", "ignore-interfaces"],
-    "triple-equals": [true, "allow-null-check"],
+    "triple-equals": true,
     "typedef-whitespace": [
       true,
       {
@@ -70,7 +63,13 @@
     ],
     "typeof-compare": true,
     "unified-signatures": true,
-    "variable-name": false,
+    "variable-name": {
+      "options": [
+        "ban-keywords",
+        "check-format",
+        "allow-leading-underscore"
+      ]
+    },
     "whitespace": [
       true,
       "check-branch",
@@ -83,7 +82,6 @@
       "check-separator",
       "check-type"
     ],
-
     "directive-selector": [
       true,
       "attribute",

@@ -3,7 +3,7 @@ import { FileUploadList } from '../../shared/file-upload-list.service';
 import { Path } from '../../shared/path';
 import { Subscription } from 'rxjs';
 
-interface UploadBadgeItem {
+export interface UploadBadgeItem {
     fileName: string;
     filePath: Path;
     progress: string;
