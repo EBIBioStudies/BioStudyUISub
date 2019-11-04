@@ -13,7 +13,7 @@ export class FeatureListComponent implements AfterViewInit {
 
     @ViewChildren('rowEl') rowEls?: QueryList<ElementRef>;
 
-    public suggestLength: number; // max number of suggested values to be displayed at once
+    suggestLength: number; // max number of suggested values to be displayed at once
 
     constructor(private appConfig: AppConfig) {
         this.suggestLength = this.appConfig.maxSuggestLength;

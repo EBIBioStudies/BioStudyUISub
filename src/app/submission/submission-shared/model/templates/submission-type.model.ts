@@ -107,12 +107,12 @@ export abstract class TypeBase {
 }
 
 export class DisplayType {
-    public static Required = new DisplayType('required');
-    public static Desirable = new DisplayType('desirable');
-    public static Readonly = new DisplayType('readonly');
-    public static Optional = new DisplayType('optional');
+    static Required = new DisplayType('required');
+    static Desirable = new DisplayType('desirable');
+    static Readonly = new DisplayType('readonly');
+    static Optional = new DisplayType('optional');
 
-    public static all = [
+    static all = [
         DisplayType.Desirable,
         DisplayType.Optional,
         DisplayType.Readonly,
@@ -121,7 +121,7 @@ export class DisplayType {
 
     readonly name: string;
 
-    public static create(name: string): DisplayType {
+    static create(name: string): DisplayType {
         return DisplayType.all.find(t => t.name === name) || DisplayType.Optional;
     }
 
@@ -129,27 +129,27 @@ export class DisplayType {
         this.name = name;
     }
 
-    public get isRequired(): boolean {
+    get isRequired(): boolean {
         return this === DisplayType.Required;
     }
 
-    public get isReadonly(): boolean {
+    get isReadonly(): boolean {
         return this === DisplayType.Readonly;
     }
 
-    public get isDesirable(): boolean {
+    get isDesirable(): boolean {
         return this === DisplayType.Desirable;
     }
 
-    public get isOptional(): boolean {
+    get isOptional(): boolean {
         return this === DisplayType.Optional;
     }
 
-    public get isShownByDefault(): boolean {
+    get isShownByDefault(): boolean {
         return this.isRequired || this.isDesirable;
     }
 
-    public get isRemovable(): boolean {
+    get isRemovable(): boolean {
         return !this.isShownByDefault;
     }
 }

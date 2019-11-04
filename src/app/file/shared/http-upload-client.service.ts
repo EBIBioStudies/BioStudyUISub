@@ -56,13 +56,13 @@ export class UploadEvent {
 }
 
 export class UploadProgressEvent extends UploadEvent {
-    constructor(public readonly percentage: number) {
+    constructor(readonly percentage: number) {
         super(UploadEventType.PROGRESS);
     }
 }
 
 export class UploadErrorEvent extends UploadEvent {
-    constructor(public readonly message: string) {
+    constructor(readonly message: string) {
         super(UploadEventType.ERROR);
     }
 }

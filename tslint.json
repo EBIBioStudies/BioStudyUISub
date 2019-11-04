@@ -6,24 +6,17 @@
   "rules": {
     "callable-types": true,
     "class-name": true,
-    "comment-format": [
-      true,
-      "check-space"
-    ],
+    "comment-format": [true, "check-space"],
     "curly": true,
     "eofline": true,
     "forin": true,
-    "import-blacklist": [true],
     "import-spacing": true,
     "indent": [true, "spaces", 2],
     "interface-over-type-literal": true,
     "label-position": true,
-    "max-line-length": [
-      true,
-      140
-    ],
-    "member-access": false,
-    "member-ordering": [true, "static-before-instance", "variables-before-functions"],
+    "max-line-length": [true, 140],
+    "member-access": [true, "no-public"],
+    "member-ordering": [true,  { "order": [ "static-before-instance", "variables-before-functions"] }],
     "no-arg": true,
     "no-bitwise": true,
     "no-console": [

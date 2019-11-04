@@ -3,11 +3,10 @@ import { FileUploadList } from '../../shared/file-upload-list.service';
 import { Path } from '../../shared/path';
 import { Subscription } from 'rxjs';
 
-export class UploadBadgeItem {
-    constructor(public readonly fileName: string,
-                public readonly filePath: Path,
-                public progress: string) {
-    }
+interface UploadBadgeItem {
+    fileName: string;
+    filePath: Path;
+    progress: string;
 }
 
 @Component({

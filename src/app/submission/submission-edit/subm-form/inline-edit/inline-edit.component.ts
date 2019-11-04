@@ -119,7 +119,7 @@ export class InlineEditComponent implements ControlValueAccessor {
      * @param {Event} event - DOM event object.
      * @param {boolean} isSuggestOpen - If true, the autosuggest typeahead list is being displayed.
      */
-    public onEnterKey(event: Event, isSuggestOpen: boolean): void {
+    onEnterKey(event: Event, isSuggestOpen: boolean): void {
         event.stopPropagation();
         if (!isSuggestOpen) {
             this.stopEditing();
@@ -131,7 +131,7 @@ export class InlineEditComponent implements ControlValueAccessor {
      * @param {Element} element - DOM element for the field.
      * @returns {boolean} True if the text's length is greater than its container.
      */
-    public isOverflow(element: Element): boolean {
+    isOverflow(element: Element): boolean {
         return element.scrollWidth > element.clientWidth;
     }
 }

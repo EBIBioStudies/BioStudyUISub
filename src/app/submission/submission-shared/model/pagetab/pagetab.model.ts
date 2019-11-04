@@ -35,19 +35,19 @@ export class AttrExceptions {
     private static _unique: Array<string> = AttrExceptions.all
         .filter(at => at.unique).map(at => at.name);
 
-    public static get editable() {
+    static get editable() {
         return this._editable;
     }
 
-    public static get editableAndRootOnly() {
+    static get editableAndRootOnly() {
         return this._editableAndRootOnly;
     }
 
-    public static get unique() {
+    static get unique() {
         return this._unique;
     }
 
-    public static get attachToAttr(): string {
+    static get attachToAttr(): string {
         return 'AttachTo';
     }
 }

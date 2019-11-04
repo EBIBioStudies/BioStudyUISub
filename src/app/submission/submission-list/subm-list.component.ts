@@ -31,8 +31,8 @@ import { takeUntil, catchError } from 'rxjs/operators';
         </button>`
 })
 export class ActionButtonsCellComponent implements AgRendererComponent {
-    public isBusy: boolean = false; // flags if a previous button action is in progress
-    public rowData: any; // object including the data values for the row this cell belongs to
+    isBusy: boolean = false; // flags if a previous button action is in progress
+    rowData: any; // object including the data values for the row this cell belongs to
 
     agInit(params: any): void {
         this.rowData = params.data;

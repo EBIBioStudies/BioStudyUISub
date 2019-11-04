@@ -20,7 +20,7 @@ export class TextFilterComponent implements AgFilterComponent {
     text: string = '';
     private prev: string = '';
 
-    @ViewChild('inputEl') public inputEl;
+    @ViewChild('inputEl') inputEl;
 
     agInit(params: IFilterParams): void {
         this.params = params;

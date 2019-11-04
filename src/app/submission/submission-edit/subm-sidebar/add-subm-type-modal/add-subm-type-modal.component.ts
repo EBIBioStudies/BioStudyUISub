@@ -10,9 +10,8 @@ import { SectionForm } from '../../shared/section-form';
 })
 export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
     sectionForm?: SectionForm;
-
-    public typeBase: string = 'Grid';
-    public typeName?: string;
+    typeBase: string = 'Grid';
+    typeName?: string;
 
     private featNames?: string[];
 
