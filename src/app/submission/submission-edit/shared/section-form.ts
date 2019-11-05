@@ -629,7 +629,7 @@ export class SectionForm extends FormBase {
     }
 
     get isTypeReadonly(): boolean {
-        return this.section.type.displayType === DisplayType.Readonly;
+        return this.section.type.displayType === DisplayType.READONLY;
     }
 
     get typeName(): string {

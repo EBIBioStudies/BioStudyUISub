@@ -252,11 +252,11 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
         this.locService.replaceState('/submissions/' + this.accno);
         this.readonly = true;
 
-        this.submitOperation = SubmitOperation.Update;
+        this.submitOperation = SubmitOperation.UPDATE;
 
         if (resp.accno) {
             this.accno = resp.accno;
-            this.submitOperation = SubmitOperation.Create;
+            this.submitOperation = SubmitOperation.CREATE;
             this.showSubmitLog(true);
         }
 
