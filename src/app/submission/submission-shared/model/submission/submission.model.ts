@@ -270,11 +270,12 @@ export class Features {
 
     add(type: FeatureType, data?: FeatureData): Feature | undefined {
         if (this.features.filter(f => f.type === type).length > 0) {
-            console.error(`Feature of type ${type} already exists in the section`);
             return;
         }
+
         const feature = new Feature(type, data);
         this.features.push(feature);
+
         return feature;
     }
 

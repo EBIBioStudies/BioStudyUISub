@@ -36,7 +36,6 @@ class TypeScope<T extends TypeBase> {
 
     rename(oldName: string, newName: string): boolean {
         if (this.has(newName)) {
-            console.warn('rename (${oldName}): Type with the name ${newName} already exists');
             return false;
         }
 
@@ -71,12 +70,10 @@ export abstract class TypeBase {
         this.typeName = typeName.trim();
 
         if (typeName.isEmpty()) {
-            console.warn(`Error: Type name is empty`);
             return;
         }
 
         if (scope.has(typeName)) {
-            console.warn(`Error: Type with name ${typeName} already exists in the scope`);
             return;
         }
 
@@ -107,22 +104,22 @@ export abstract class TypeBase {
 }
 
 export class DisplayType {
-    static Required = new DisplayType('required');
-    static Desirable = new DisplayType('desirable');
-    static Readonly = new DisplayType('readonly');
-    static Optional = new DisplayType('optional');
+    static REQUIRED = new DisplayType('required');
+    static DESIRABLE = new DisplayType('desirable');
+    static READONLY = new DisplayType('readonly');
+    static OPTIONAL = new DisplayType('optional');
 
     static all = [
-        DisplayType.Desirable,
-        DisplayType.Optional,
-        DisplayType.Readonly,
-        DisplayType.Required
+        DisplayType.DESIRABLE,
+        DisplayType.OPTIONAL,
+        DisplayType.READONLY,
+        DisplayType.REQUIRED
     ];
 
     readonly name: string;
 
     static create(name: string): DisplayType {
-        return DisplayType.all.find(t => t.name === name) || DisplayType.Optional;
+        return DisplayType.all.find(t => t.name === name) || DisplayType.OPTIONAL;
     }
 
     private constructor(name: string) {
@@ -130,19 +127,19 @@ export class DisplayType {
     }
 
     get isRequired(): boolean {
-        return this === DisplayType.Required;
+        return this === DisplayType.REQUIRED;
     }
 
     get isReadonly(): boolean {
-        return this === DisplayType.Readonly;
+        return this === DisplayType.READONLY;
     }
 
     get isDesirable(): boolean {
-        return this === DisplayType.Desirable;
+        return this === DisplayType.DESIRABLE;
     }
 
     get isOptional(): boolean {
-        return this === DisplayType.Optional;
+        return this === DisplayType.OPTIONAL;
     }
 
     get isShownByDefault(): boolean {
@@ -235,7 +232,7 @@ export class FieldType extends TypeBase {
     readonly icon: string;
 
     constructor(name: string, data: Partial<FieldType> = {}, scope?: TypeScope<TypeBase>,
-                parentDisplayType: DisplayType = DisplayType.Optional) {
+                parentDisplayType: DisplayType = DisplayType.OPTIONAL) {
         super(name, true, scope);
 
         this.valueType = ValueTypeFactory.create(data.valueType || {});
@@ -266,7 +263,7 @@ export class FeatureType extends TypeBase {
     }
 
     constructor(name: string, data?: Partial<FeatureType>, scope?: TypeScope<TypeBase>, isTemplBased: boolean = true,
-                parentDisplayType: DisplayType = DisplayType.Optional) {
+                parentDisplayType: DisplayType = DisplayType.OPTIONAL) {
         super(name, isTemplBased, scope);
 
         data = data || {};
@@ -305,7 +302,7 @@ export class FeatureType extends TypeBase {
 
 export class AnnotationsType extends FeatureType {
     constructor(data?: Partial<FeatureType>, scope?: TypeScope<TypeBase>, isTemplBased: boolean = true,
-                parentDisplayType: DisplayType= DisplayType.Optional) {
+                parentDisplayType: DisplayType= DisplayType.OPTIONAL) {
         const d = Object.assign(data || {}, {singleRow: true});
         super('Annotation', d, scope, isTemplBased, parentDisplayType);
     }
@@ -323,7 +320,7 @@ export class ColumnType extends TypeBase {
     }
 
     constructor(name: string, data?: Partial<ColumnType>, scope?: TypeScope<ColumnType>, isTemplBased: boolean = true,
-                parentDisplayType: DisplayType= DisplayType.Optional) {
+                parentDisplayType: DisplayType= DisplayType.OPTIONAL) {
         super(name, isTemplBased, scope as TypeScope<TypeBase>);
 
         data = data || {};
@@ -365,7 +362,7 @@ export class SectionType extends TypeBase {
     }
 
     constructor(name: string, data?: Partial<SectionType>, scope?: TypeScope<TypeBase>, isTemplBased: boolean = true,
-                parentDisplayType: DisplayType = DisplayType.Optional) {
+                parentDisplayType: DisplayType = DisplayType.OPTIONAL) {
         super(name, isTemplBased, scope);
 
         data = data || {};
@@ -428,7 +425,7 @@ export class SectionType extends TypeBase {
 
 export class SubmissionType extends TypeBase {
     readonly sectionType: SectionType;
-    readonly display: string = DisplayType.Optional.name;
+    readonly display: string = DisplayType.OPTIONAL.name;
 
     static fromTemplate(tmplName: string): SubmissionType {
         const tmpl = findSubmissionTemplateByName(tmplName);

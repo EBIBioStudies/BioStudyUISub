@@ -17,20 +17,20 @@ import { ModalService } from '../../shared/modal.service';
 
 class SubmitOperation {
     get isUnknown(): boolean {
-        return this === SubmitOperation.Unknown;
+        return this === SubmitOperation.UNKNOWN;
     }
 
     get isCreate(): boolean {
-        return this === SubmitOperation.Create;
+        return this === SubmitOperation.CREATE;
     }
 
     get isUpdate(): boolean {
-        return this === SubmitOperation.Update;
+        return this === SubmitOperation.UPDATE;
     }
 
-    static Unknown = new SubmitOperation();
-    static Create = new SubmitOperation();
-    static Update = new SubmitOperation();
+    static UNKNOWN = new SubmitOperation();
+    static CREATE = new SubmitOperation();
+    static UPDATE = new SubmitOperation();
 }
 
 @Component({
@@ -48,7 +48,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
     private unsubscribe: Subject<void> = new Subject<void>();
 
     sideBarCollapsed = false;
-    submitOperation: SubmitOperation = SubmitOperation.Unknown;
+    submitOperation: SubmitOperation = SubmitOperation.UNKNOWN;
     sectionForm?: SectionForm;
 
     constructor(

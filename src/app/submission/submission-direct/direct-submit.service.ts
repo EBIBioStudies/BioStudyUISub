@@ -197,7 +197,7 @@ export class DirectSubmitService {
      * @returns {Observable<any>} Flat stream of inputs coming from the responses to the requests issued.
      */
     private dirSubmit(req: DirectSubmitRequest, file: File): Observable<any> {
-        return this.submService.directSubmit(file, req.type === ReqType.CREATE, req.projects).pipe(
+        return this.submService.directSubmit(file, req.projects).pipe(
             map(data => {
                 req.onResponse(data, ReqStatus.SUCCESS);
             }),

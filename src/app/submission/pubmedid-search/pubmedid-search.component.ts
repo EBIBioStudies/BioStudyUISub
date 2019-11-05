@@ -32,7 +32,7 @@ import { Observable } from 'rxjs/Observable';
  * to be displayed again (1st enter key press) or actioned upon (2nd key press).
  */
 export class PubMedIdSearchComponent implements ControlValueAccessor {
-    public isPreviewPub: boolean = false; // indicates if the retrieved publication's summary preview is on display
+    isPreviewPub: boolean = false; // indicates if the retrieved publication's summary preview is on display
     private isBusy: boolean = false; // indicates a transaction is in progress
     private pubMedId: string | undefined; // last PubMed ID number typed in
     private lastIDfetched: string | undefined; // helps cancel unnecessary search actions triggered by enter key

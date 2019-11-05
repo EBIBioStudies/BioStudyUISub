@@ -29,7 +29,6 @@ export function parseDate(date: string): Date | undefined {
     }
     const d: string[] = date.match(/(\d{4})\-(\d{2})\-(\d{2})/) || [];
     if (d.length === 0) {
-        console.log('Date in a wrong format: ', date);
         return undefined;
     }
     return new Date(Number(d[1]), Number(d[2]) - 1, Number(d[3]));

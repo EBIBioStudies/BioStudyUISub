@@ -21,7 +21,7 @@ import { typeaheadSource } from '../../shared/typeahead.utils';
     }]
 })
 export class InputValueComponent implements ControlValueAccessor, AfterViewChecked {
-    readonly ValueTypeNameEnum = ValueTypeName;
+    readonly valueTypeNameEnum = ValueTypeName;
     readonly typeahead: Observable<string[]>;
     private _value = '';
     private valueChanges$: Subject<string> = new BehaviorSubject<string>('');

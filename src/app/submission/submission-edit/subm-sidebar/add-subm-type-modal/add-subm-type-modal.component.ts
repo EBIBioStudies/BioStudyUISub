@@ -12,8 +12,7 @@ export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
     sectionForm?: SectionForm;
     typeBase: string = 'Grid';
     typeName?: string;
-
-    private featNames?: string[];
+    featNames?: string[];
 
     @ViewChild('focusBtn')
     private focusEl?: ElementRef;
@@ -73,8 +72,8 @@ export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
 
         if (isSection) {
             const sectionType = rootType.getSectionType(name);
-            console.log(sectionType);
             this.sectionForm!.addSection(sectionType);
+
             return true;
         }
 

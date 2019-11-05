@@ -1,4 +1,4 @@
-export const ArrayExpressTemplate = {
+export const arrayExpressTemplate = {
     'name': 'ArrayExpress',
     'description': 'ArrayExpress studies',
     'display': 'readonly',

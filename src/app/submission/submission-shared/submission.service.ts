@@ -109,8 +109,7 @@ export class SubmissionService {
         return this.sendPostRequest('/api/submissions', pt, headers);
     }
 
-    directSubmit(file: File, create: boolean, attachTo: Array<string> = []): Observable<SubmitResponse> {
-        const operation = create ? 'CREATE' : 'CREATE_OR_UPDATE';
+    directSubmit(file: File, attachTo: Array<string> = []): Observable<SubmitResponse> {
         const formData = new FormData();
         attachTo.forEach(projectName => {
             formData.append('attachTo', projectName);

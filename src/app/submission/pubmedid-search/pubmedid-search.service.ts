@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-const PublAttrMapping = {
+const publAttrMapping = {
     title: 'title',
     authorString: 'authors',
     pubType: 'type',
@@ -20,18 +20,18 @@ export class PubMedSearchService {
 
     search(pmid): Observable<any> {
         if (!pmid) {
-            console.warn('PubMedSearch: no pubMedId given');
             return of({});
         }
+
         return this.http.get<any>(`https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=ext_id:${pmid}&format=json`).pipe(
             map(resp => {
                 const hitCount = resp.hitCount;
                 const data = {};
                 if (hitCount >= 1) {
                     const publ = resp.resultList.result[0];
-                    Object.keys(PublAttrMapping).forEach(key => {
+                    Object.keys(publAttrMapping).forEach(key => {
                         if (publ.hasOwnProperty(key)) {
-                            data[PublAttrMapping[key]] = publ[key] + '';
+                            data[publAttrMapping[key]] = publ[key] + '';
                         }
                     });
                 }
@@ -48,7 +48,7 @@ export class PubMedSearchService {
                     err.status = error.status || 'Error';
                     err.message = error.statusText || 'Server error';
                 }
-                console.error(err);
+
                 return throwError(err);
             }));
     }

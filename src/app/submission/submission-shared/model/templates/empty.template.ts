@@ -1,4 +1,4 @@
-export const EmptyTemplate = {
+export const emptyTemplate = {
     'name': 'Empty',
     'description': 'Empty Template',
     'sectionType': {

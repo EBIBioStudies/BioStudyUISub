@@ -1,4 +1,4 @@
-export const EutoxriskTemplate = {
+export const euToxRiskTemplate = {
     'name': 'EU-ToxRisk',
     'description': 'Integrated European programme for mechanism-based Toxicity testing and Risk assessment',
     'sectionType': {

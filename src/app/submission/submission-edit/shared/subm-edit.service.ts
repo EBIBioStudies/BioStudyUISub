@@ -13,28 +13,28 @@ import { SectionForm } from './section-form';
 import { flatFeatures } from '../../utils';
 
 class EditState {
-    static Init = 'Init';
-    static Loading = 'Loading';
-    static Reverting = 'Reverting';
-    static Editing = 'Editing';
-    static Saving = 'Saving';
-    static Submitting = 'Submitting';
-    static Error = 'Error';
+    static INIT = 'Init';
+    static LOADING = 'Loading';
+    static REVERTING = 'Reverting';
+    static EDITING = 'Editing';
+    static SAVING = 'Saving';
+    static SUBMITTING = 'Submitting';
+    static ERROR = 'Error';
 
     private state: string;
     private editState: string;
 
     constructor() {
-        this.state = EditState.Init;
-        this.editState = EditState.Init;
+        this.state = EditState.INIT;
+        this.editState = EditState.INIT;
     }
 
     reset() {
-        this.state = EditState.Init;
+        this.state = EditState.INIT;
     }
 
     startLoading() {
-        this.state = EditState.Loading;
+        this.state = EditState.LOADING;
     }
 
     stopLoading(error?: any) {
@@ -42,16 +42,16 @@ class EditState {
     }
 
     startReverting() {
-        this.state = EditState.Reverting;
+        this.state = EditState.REVERTING;
     }
 
     stopReverting(error?: any) {
         this.backToEditing(error);
-        this.editState = EditState.Init;
+        this.editState = EditState.INIT;
     }
 
     startSaving() {
-        this.state = EditState.Saving;
+        this.state = EditState.SAVING;
     }
 
     stopSaving(error?: any) {
@@ -59,52 +59,52 @@ class EditState {
     }
 
     startSubmitting() {
-        this.state = EditState.Submitting;
+        this.state = EditState.SUBMITTING;
     }
 
     startEditing() {
-        this.editState = EditState.Editing;
+        this.editState = EditState.EDITING;
     }
 
     stopSubmitting(error?: any) {
         this.backToEditing(error);
-        this.editState = EditState.Init;
+        this.editState = EditState.INIT;
     }
 
     get isSubmitting(): boolean {
-        return this.state === EditState.Submitting;
+        return this.state === EditState.SUBMITTING;
     }
 
     get isLoading(): boolean {
-        return this.state === EditState.Loading;
+        return this.state === EditState.LOADING;
     }
 
     get isSaving(): boolean {
-        return this.state === EditState.Saving;
+        return this.state === EditState.SAVING;
     }
 
     get isReverting(): boolean {
-        return this.state === EditState.Reverting;
+        return this.state === EditState.REVERTING;
     }
 
     get isEditing(): boolean {
-        return this.editState === EditState.Editing;
+        return this.editState === EditState.EDITING;
     }
 
     private backToEditing(error: any) {
         if (error === undefined) {
-            this.state = EditState.Editing;
+            this.state = EditState.EDITING;
             return;
         }
-        this.state = EditState.Error;
+        this.state = EditState.ERROR;
     }
 }
 
 export class ServerResponse<T> {
-    static Error = (error: any) => {
+    static ERROR = (error: any) => {
         return new ServerResponse(none, some(error));
     }
-    static Ok = <T>(payload: T) => new ServerResponse<T>(some(payload), none);
+    static OK = <T>(payload: T) => new ServerResponse<T>(some(payload), none);
 
     private constructor(readonly payload: Option<T>, readonly error: Option<any>) {
     }
@@ -178,12 +178,12 @@ export class SubmEditService {
                         .filter( att => att.name && att.name.toLowerCase() === 'attachto')
                         .shift();
 
-                return ServerResponse.Ok(projectAttribute);
+                return ServerResponse.OK(projectAttribute);
             }),
             catchError(error => {
                 this.editState.stopLoading(error);
 
-                return of(ServerResponse.Error(error));
+                return of(ServerResponse.ERROR(error));
             })
         );
     }
@@ -196,11 +196,11 @@ export class SubmEditService {
             map((draftSubm) => {
                 this.editState.stopReverting();
                 this.createForm(draftSubm, this.accno);
-                return ServerResponse.Ok({});
+                return ServerResponse.OK({});
             }),
             catchError(error => {
                 this.editState.stopReverting(error);
-                return of(ServerResponse.Error(error));
+                return of(ServerResponse.ERROR(error));
             }));
     }
 
@@ -310,8 +310,8 @@ export class SubmEditService {
         this.editState.startSaving();
         this.submService.saveDraftSubmission(this.accno!!, this.asPageTab())
             .pipe(
-                map(resp => ServerResponse.Ok(resp)),
-                catchError(error => of(ServerResponse.Error(error))))
+                map(resp => ServerResponse.OK(resp)),
+                catchError(error => of(ServerResponse.ERROR(error))))
             .subscribe(resp => {
                 this.editState.stopSaving(resp.error);
                 this.onSaveFinished(resp);

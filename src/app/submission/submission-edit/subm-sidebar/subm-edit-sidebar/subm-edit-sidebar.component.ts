@@ -170,7 +170,6 @@ export class SubmEditSidebarComponent implements OnDestroy {
             this.modalService.confirm(message, 'Delete items', 'Delete')
                 .subscribe(
                     (isConfirmed: boolean) => {
-                        console.log(isConfirmed);
                         if (isConfirmed) {
                             this.applyChanges();
                         } else {

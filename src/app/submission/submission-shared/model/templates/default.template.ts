@@ -1,4 +1,4 @@
-export const DefaultTemplate = {
+export const defaultTemplate = {
     'name': 'Default',
     'description': 'Generic submission for stand-alone or generic studies',
     'sectionType': {

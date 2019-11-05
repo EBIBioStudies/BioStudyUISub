@@ -16,18 +16,18 @@ export class ValueMap {
 
   add(key: string, value?: string): void {
     if (this.valueMap.has(key)) {
-      console.warn(`adding multiple values for a key:${key}`);
       return;
     }
+
     const v = new AttributeValue(value);
     this.valueMap.set(key, v);
   }
 
   remove(key: string): void {
     if (!this.valueMap.has(key)) {
-      console.warn(`remove: the key '${key}' does not exist in the map`);
       return;
     }
+
     this.valueMap.delete(key);
   }
 

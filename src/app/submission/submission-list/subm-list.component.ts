@@ -248,7 +248,7 @@ export class SubmListComponent {
                     this.isBusy = true;
 
                     // Shows loading progress overlay box.
-                    if (agApi != null) {
+                    if (agApi !== undefined && agApi !== null) {
                         agApi.showLoadingOverlay();
                     }
 
