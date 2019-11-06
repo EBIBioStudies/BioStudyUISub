@@ -11,23 +11,26 @@ import { PasswordResetRequestData } from '../shared/model';
 })
 export class PasswordResetReqComponent implements AfterViewInit {
     hasError: boolean = false;
-    showSuccess: boolean = false;
     isLoading: boolean = false; // Flag indicating if login request in progress
-    model: PasswordResetRequestData = new PasswordResetRequestData();
     message: string = '';
-
-    @ViewChild('recaptchaEl')
-    private recaptcha?: RecaptchaComponent;
+    model: PasswordResetRequestData = new PasswordResetRequestData();
+    showSuccess: boolean = false;
 
     @ViewChild('emailEl')
     private focusRef?: ElementRef;
 
-    constructor(private authService: AuthService) {
-    }
+    @ViewChild('recaptchaEl')
+    private recaptcha?: RecaptchaComponent;
+
+    constructor(private authService: AuthService) {}
 
     // TODO: Turn autofocus on render into a directive
     ngAfterViewInit(): void {
         this.focusRef!.nativeElement.focus();
+    }
+
+    onRecaptchaResolved(resp: string): void {
+        this.model.captcha = resp;
     }
 
     onSubmit(form: NgForm): void {
@@ -77,9 +80,5 @@ export class PasswordResetReqComponent implements AfterViewInit {
         // Resets the state of captcha's control
         control.markAsUntouched({onlySelf: true});
         control.markAsPristine({onlySelf: true});
-    }
-
-    onRecaptchaResolved(resp: string): void {
-        this.model.captcha = resp;
     }
 }
