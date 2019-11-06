@@ -16,7 +16,13 @@
     "label-position": true,
     "max-line-length": [true, 140],
     "member-access": [true, "no-public"],
-    "member-ordering": [true,  { "order": [ "static-before-instance", "variables-before-functions"] }],
+    "member-ordering": [
+      true,
+      {
+        "order": "fields-first",
+        "alphabetize": true
+      }
+    ],
     "no-arg": true,
     "no-bitwise": true,
     "no-console": true,
@@ -61,7 +67,6 @@
         "variable-declaration": "nospace"
       }
     ],
-    "typeof-compare": true,
     "unified-signatures": true,
     "variable-name": {
       "options": [
@@ -103,7 +108,6 @@
     "use-pipe-transform-interface": true,
     "component-class-suffix": true,
     "directive-class-suffix": true,
-    "no-unused-variable": true,
     "rxjs-no-add": { "severity": "error" },
     "rxjs-no-operator": { "severity": "error" },
     "rxjs-no-patched": { "severity": "error" }

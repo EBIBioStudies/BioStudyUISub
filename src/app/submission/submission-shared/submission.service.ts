@@ -8,10 +8,10 @@ import { SubmissionDraftUtils } from './utils/submission-draft.utils';
 
 export interface SubmissionListItem {
     accno: string,
-    title: string,
-    rtime: number,
     mtime: number,
-    status: string
+    rtime: number,
+    status: string,
+    title: string
 }
 
 export interface SubmitResponse {
@@ -26,12 +26,12 @@ export interface SubmitLog {
 }
 
 export interface SubmissionListParams {
-    offset?: number,
-    limit?: number,
     accNo?: string,
+    keywords?: string[],
+    limit?: number,
+    offset?: number,
     rTimeFrom?: number,
-    rTimeTo?: number,
-    keywords?: string[]
+    rTimeTo?: number
 }
 
 function definedPropertiesOnly(obj: any): any {
@@ -55,6 +55,12 @@ function definedPropertiesOnly(obj: any): any {
 export class SubmissionService {
     private submissionDraftUtils: SubmissionDraftUtils;
 
+    constructor(
+        private http: HttpClient
+    ) {
+        this.submissionDraftUtils = new SubmissionDraftUtils();
+    }
+
     /**
      * Traverses the error log tree to find the first deepest error message.
      * @param {Array<Object> | Object} obj - Log tree's root node or subnode list.
@@ -70,43 +76,18 @@ export class SubmissionService {
         return this.deepestError(errorNode);
     }
 
-    constructor(
-        private http: HttpClient
-    ) {
-        this.submissionDraftUtils = new SubmissionDraftUtils();
-    }
-
-    getSubmissions(submitted: boolean, params: SubmissionListParams = {}): Observable<SubmissionListItem[]> {
-        const url = submitted ? '/api/submissions' : '/api/submissions/drafts';
-        return this.http.get<SubmissionListItem[]>(url, { params: definedPropertiesOnly(params) }).pipe(
-            map((items) => {
-                return submitted ? items : this.submissionDraftUtils.filterAndFormatDraftSubmissions(items);
-            })
-        );
-    }
-
-    getProjects(): Observable<any> {
-        return this.http.get('/api/projects');
-    }
-
     createDraftSubmission(pt: PageTab): Observable<string> {
         return this.http.post<DraftPayload>('/api/submissions/drafts', pt).pipe(
             map((response) => response.key)
         );
     }
 
-    getSubmission(accno: string): Observable<PageTab> {
-        return this.getDraft(accno);
+    deleteDraft(accno: string): Observable<boolean> {
+        return this.http.delete(`/api/submissions/drafts/${accno}`).pipe(map(() => true));
     }
 
-    saveDraftSubmission(accno: string, pt: PageTab): Observable<any> {
-        return this.http.put<PageTab>(`/api/submissions/drafts/${accno}`, pt).pipe(map(() => 'done'));
-    }
-
-    submitSubmission(pt: PageTab): Observable<SubmitResponse> {
-        const headers: HttpHeaders = new HttpHeaders().set('Submission_Type', 'application/json');
-
-        return this.sendPostRequest('/api/submissions', pt, headers);
+    deleteSubmitted(accno: string): Observable<boolean> {
+        return this.http.delete(`/api/submissions/${accno}`).pipe(map(() => true));
     }
 
     directSubmit(file: File, attachTo: Array<string> = []): Observable<SubmitResponse> {
@@ -119,16 +100,31 @@ export class SubmissionService {
         return this.http.post<SubmitResponse>(`/api/submissions/direct`, formData);
     }
 
-    deleteSubmitted(accno: string): Observable<boolean> {
-        return this.http.delete(`/api/submissions/${accno}`).pipe(map(() => true));
+    getProjects(): Observable<any> {
+        return this.http.get('/api/projects');
     }
 
-    deleteDraft(accno: string): Observable<boolean> {
-        return this.http.delete(`/api/submissions/drafts/${accno}`).pipe(map(() => true));
+    getSubmission(accno: string): Observable<PageTab> {
+        return this.getDraft(accno);
     }
 
-    private getDraft(accno: string): Observable<PageTab> {
-        return this.http.get<PageTab>(`/api/submissions/drafts/${accno}/content`);
+    getSubmissions(submitted: boolean, params: SubmissionListParams = {}): Observable<SubmissionListItem[]> {
+        const url = submitted ? '/api/submissions' : '/api/submissions/drafts';
+        return this.http.get<SubmissionListItem[]>(url, { params: definedPropertiesOnly(params) }).pipe(
+            map((items) => {
+                return submitted ? items : this.submissionDraftUtils.filterAndFormatDraftSubmissions(items);
+            })
+        );
+    }
+
+    saveDraftSubmission(accno: string, pt: PageTab): Observable<any> {
+        return this.http.put<PageTab>(`/api/submissions/drafts/${accno}`, pt).pipe(map(() => 'done'));
+    }
+
+    submitSubmission(pt: PageTab): Observable<SubmitResponse> {
+        const headers: HttpHeaders = new HttpHeaders().set('Submission_Type', 'application/json');
+
+        return this.sendPostRequest('/api/submissions', pt, headers);
     }
 
     private checkStatus<R, T>(response: HttpResponse<R>): T {
@@ -137,6 +133,10 @@ export class SubmissionService {
         }
 
         throw response.body;
+    }
+
+    private getDraft(accno: string): Observable<PageTab> {
+        return this.http.get<PageTab>(`/api/submissions/drafts/${accno}/content`);
     }
 
     private sendPostRequest<R, T>(path: string, payload: any, headers: HttpHeaders): Observable<T> {
