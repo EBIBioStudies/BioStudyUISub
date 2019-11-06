@@ -20,16 +20,7 @@ interface SubmissionSection {
 class Rows {
     private rows: Array<ValueMap> = [];
 
-    constructor(private capacity: number = -1) {
-    }
-
-    list(): Array<ValueMap> {
-        return this.rows.slice();
-    }
-
-    at(index: number): ValueMap | undefined {
-        return (index >= 0) && (index < this.rows.length) ? this.rows[index] : undefined;
-    }
+    constructor(private capacity: number = -1) {}
 
     add(keys: string[]): ValueMap {
         if (this.isFull()) {
@@ -40,18 +31,26 @@ class Rows {
         return row;
     }
 
+    addKey(key: string) {
+        this.rows.forEach(r => {
+            r.add(key);
+        });
+    }
+
+    at(index: number): ValueMap | undefined {
+        return (index >= 0) && (index < this.rows.length) ? this.rows[index] : undefined;
+    }
+
+    list(): Array<ValueMap> {
+        return this.rows.slice();
+    }
+
     removeAt(index: number): boolean {
         if ((index < 0) || (index > this.rows.length)) {
             return false;
         }
         this.rows.splice(index, 1);
         return true;
-    }
-
-    addKey(key: string) {
-        this.rows.forEach(r => {
-            r.add(key);
-        });
     }
 
     removeKey(key: string) {
@@ -72,16 +71,13 @@ class Rows {
 type FeatureGroup = Feature[];
 
 export class Feature {
+    readonly dependency;
+    readonly groups: FeatureGroup[] = [];
     readonly id: string;
     readonly type: FeatureType;
-    readonly groups: FeatureGroup[] = [];
-    readonly dependency;
+
     private _columns: Columns;
     private _rows: Rows;
-
-    static create(type: FeatureType, attrs: AttributeData[]): Feature {
-        return new Feature(type, { type: type.name, entries: [attrs] });
-    }
 
     constructor(type: FeatureType, data: FeatureData = {} as FeatureData) {
         this.id = `feature_${nextId()}`;
@@ -105,12 +101,20 @@ export class Feature {
         }
     }
 
-    get singleRow(): boolean {
-        return this.type.singleRow;
+    static create(type: FeatureType, attrs: AttributeData[]): Feature {
+        return new Feature(type, { type: type.name, entries: [attrs] });
     }
 
-    get uniqueCols(): boolean {
-        return this.type.uniqueCols;
+    get columns(): Attribute[] {
+        return this._columns.list();
+    }
+
+    get colNames(): string[] {
+        return this._columns.names();
+    }
+
+    get isEmpty(): boolean {
+        return this.rowSize() === 0;
     }
 
     get typeName(): string {
@@ -125,28 +129,12 @@ export class Feature {
         return this._rows.list();
     }
 
-    get columns(): Attribute[] {
-        return this._columns.list();
+    get singleRow(): boolean {
+        return this.type.singleRow;
     }
 
-    get colNames(): string[] {
-        return this._columns.names();
-    }
-
-    rowSize(): number {
-        return this._rows.size();
-    }
-
-    colSize(): number {
-        return this._columns.size();
-    }
-
-    attributeValuesForColumn(columnId: string) {
-        return this._rows.list().map((row) => row.valueFor(columnId));
-    }
-
-    get isEmpty(): boolean {
-        return this.rowSize() === 0;
+    get uniqueCols(): boolean {
+        return this.type.uniqueCols;
     }
 
     add(attributes: AttributeData[] = [], rowIdx?: number): void {
@@ -181,10 +169,6 @@ export class Feature {
         });
     }
 
-    private getOrCreateRow(rowIdx?: number): ValueMap | undefined {
-        return (rowIdx === undefined) ? this.addRow() : this._rows.at(rowIdx);
-    }
-
     addColumn(
         name?: string,
         valueType?: ValueType,
@@ -209,12 +193,21 @@ export class Feature {
         return undefined;
     }
 
+    attributeValuesForColumn(columnId: string) {
+        return this._rows.list().map((row) => row.valueFor(columnId));
+    }
+
     canAddRow(): boolean {
         return (!this.singleRow || this.rowSize() === 0);
     }
 
-    removeRowAt(index: number): boolean {
-        return this._rows.removeAt(index);
+
+    colSize(): number {
+        return this._columns.size();
+    }
+
+    findColumnById(columnId: string): Attribute | undefined {
+        return this._columns.findById(columnId);
     }
 
     removeColumn(id: string): boolean {
@@ -223,8 +216,16 @@ export class Feature {
         return true;
     }
 
-    findColumnById(columnId: string): Attribute | undefined {
-        return this._columns.findById(columnId);
+    removeRowAt(index: number): boolean {
+        return this._rows.removeAt(index);
+    }
+
+    rowSize(): number {
+        return this._rows.size();
+    }
+
+    private getOrCreateRow(rowIdx?: number): ValueMap | undefined {
+        return (rowIdx === undefined) ? this.addRow() : this._rows.at(rowIdx);
     }
 }
 
@@ -264,10 +265,6 @@ export class Features {
         return this.features.length;
     }
 
-    list(): Feature[] {
-        return this.features.slice();
-    }
-
     add(type: FeatureType, data?: FeatureData): Feature | undefined {
         if (this.features.filter(f => f.type === type).length > 0) {
             return;
@@ -279,9 +276,19 @@ export class Features {
         return feature;
     }
 
-    removeById(featureId: string): boolean {
-        const feature = this.features.find(f => f.id === featureId);
-        return feature !== undefined && this.remove(feature);
+    /**
+     * Retrieves the feature object that fulfills a scalar comparison with one of its property values.
+     * By default, it will look for a given ID.
+     * @param {string} value - Value of the required feature's property.
+     * @param {string} [property = 'id'] - Property name by which features are looked up.
+     * @returns {Feature} Feature fulfilling the predicated comparison.
+     */
+    find(value: string, property: string = 'id'): Feature | undefined {
+        return this.features.find((feature) => (feature[property] === value));
+    }
+
+    list(): Feature[] {
+        return this.features.slice();
     }
 
     remove(feature: Feature): boolean {
@@ -298,15 +305,9 @@ export class Features {
         return true;
     }
 
-    /**
-     * Retrieves the feature object that fulfills a scalar comparison with one of its property values.
-     * By default, it will look for a given ID.
-     * @param {string} value - Value of the required feature's property.
-     * @param {string} [property = 'id'] - Property name by which features are looked up.
-     * @returns {Feature} Feature fulfilling the predicated comparison.
-     */
-    find(value: string, property: string = 'id'): Feature | undefined {
-        return this.features.find((feature) => (feature[property] === value));
+    removeById(featureId: string): boolean {
+        const feature = this.features.find(f => f.id === featureId);
+        return feature !== undefined && this.remove(feature);
     }
 }
 
@@ -363,17 +364,8 @@ export class Fields {
         });
     }
 
-    list(): Field[] {
-        return this.fields.slice();
-    }
-
     get length(): number {
         return this.fields.length;
-    }
-
-    private add(type: FieldType, value?: string): void {
-        const field = new Field(type, value);
-        this.fields.push(field);
     }
 
     /**
@@ -386,19 +378,29 @@ export class Fields {
     find(value: string, property: string = 'id'): Field | undefined {
         return this.fields.find((field) => (field[property] === value));
     }
+
+    list(): Field[] {
+        return this.fields.slice();
+    }
+
+    private add(type: FieldType, value?: string): void {
+        const field = new Field(type, value);
+        this.fields.push(field);
+    }
 }
 
 export class Section implements SubmissionSection {
-    private _accno: string;
-    readonly id: string;
-    readonly type: SectionType;
     readonly annotations: Feature;
-    readonly fields: Fields;
+    readonly data: SectionData;
     readonly features: Features;
+    readonly fields: Fields;
+    readonly id: string;
     readonly sections: Sections;
     readonly subsections: Sections;
     readonly tags: Tags;
-    readonly data: SectionData;
+    readonly type: SectionType;
+
+    private _accno: string;
 
     constructor(type: SectionType, data: SectionData = <SectionData>{}, accno: string = '') {
         this.tags = Tags.create(data);
@@ -459,8 +461,8 @@ export class Section implements SubmissionSection {
 }
 
 export class Sections {
-    private sections: Section[];
     private nextIdx: number = 0;
+    private sections: Section[];
 
     /* Fills in existed data if given. Data with types defined in the template goes first. */
     constructor(type: SectionType, sections: Array<SectionData> = []) {
@@ -489,14 +491,20 @@ export class Sections {
         return this.sections.length;
     }
 
-    list(): Section[] {
-        return this.sections.slice();
-    }
-
     add(type: SectionType, data?: SectionData, accno?: string): Section {
         const s = new Section(type, data, accno || type.name + '-' + (++this.nextIdx));
         this.sections.push(s);
         return s;
+    }
+
+    byType(typeName: string): Section[] {
+        return this.sections.filter(section => {
+            return section.type.name === typeName;
+        });
+    }
+
+    list(): Section[] {
+        return this.sections.slice();
     }
 
     remove(section: Section): boolean {
@@ -514,22 +522,16 @@ export class Sections {
         const section = this.sections.find(s => s.id === sectionId);
         return section !== undefined ? this.remove(section) : false;
     }
-
-    byType(typeName: string): Section[] {
-        return this.sections.filter(section => {
-            return section.type.name === typeName;
-        });
-    }
 }
 
 export class Submission {
     accno: string;
+    readonly attributes: AttributeData[];
     isRevised: boolean; // true if submission has been sent and is marked as revised by PageTab class.
     readonly section: Section;
+    readonly tags: Tags;
     readonly type;
 
-    readonly tags: Tags;
-    readonly attributes: AttributeData[];
 
     /**
      * Creates a new submission from PageTab-formatted data and pre-defined type definitions.
@@ -560,19 +562,19 @@ export class Submission {
 }
 
 export class Tags {
-    private _tags: Tag[];
     private _accessTags: string[];
+    private _tags: Tag[];
+
+    constructor(tags: Tag[] = [], accessTags: string[] = []) {
+        this._tags = tags.slice();
+        this._accessTags = accessTags.slice();
+    }
 
     static create(data?: TaggedData): Tags {
         if (data !== undefined) {
             return new Tags(data.tags, data.accessTags);
         }
         return new Tags();
-    }
-
-    constructor(tags: Tag[] = [], accessTags: string[] = []) {
-        this._tags = tags.slice();
-        this._accessTags = accessTags.slice();
     }
 
     get tags(): any[] {
@@ -586,19 +588,19 @@ export class Tags {
 
 export interface AttributeData {
     name?: string;
-    value?: string;
     reference?: boolean;
     terms?: NameAndValue[];
+    value?: string;
 }
 
 export interface FeatureData {
-    type?: string;
     entries?: AttributeData[][];
+    type?: string;
 }
 
 export interface TaggedData {
-    tags?: Tag[];
     accessTags?: string[];
+    tags?: Tag[];
 }
 
 export interface SectionData extends TaggedData {

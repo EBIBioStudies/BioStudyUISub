@@ -17,8 +17,7 @@ interface AttrException {
  *               submitted.
  */
 export class AttrExceptions {
-
-    private static all: Array<AttrException> = [
+    private static _all: Array<AttrException> = [
         {name: 'AttachTo', rootLevel: true, studyLevel: false, systemOnly: true, unique: false},
         {name: 'ReleaseDate', rootLevel: true, studyLevel: false, systemOnly: false, unique: true},
         {name: 'Title', rootLevel: true, studyLevel: true, systemOnly: false, unique: true},
@@ -26,13 +25,13 @@ export class AttrExceptions {
         {name: 'AccNoTemplate', rootLevel: true, studyLevel: false, systemOnly: true, unique: true}
     ];
 
-    private static _editable: Array<string> = AttrExceptions.all
+    private static _editable: Array<string> = AttrExceptions._all
         .filter(at => (at.rootLevel || at.studyLevel) && !at.systemOnly).map(at => at.name);
 
-    private static _editableAndRootOnly: Array<string> = AttrExceptions.all
+    private static _editableAndRootOnly: Array<string> = AttrExceptions._all
         .filter(at => at.rootLevel && !at.studyLevel && !at.systemOnly).map(at => at.name);
 
-    private static _unique: Array<string> = AttrExceptions.all
+    private static _unique: Array<string> = AttrExceptions._all
         .filter(at => at.unique).map(at => at.name);
 
     static get editable() {
@@ -74,13 +73,13 @@ export interface PtAttribute {
 }
 
 export interface PtLink {
-    url?: string;
     attributes?: PtAttribute[];
+    url?: string;
 }
 
 export interface PtFile {
-    path?: string;
     attributes?: PtAttribute[];
+    path?: string;
 }
 
 export interface PageTabSection {
@@ -105,6 +104,6 @@ export interface PageTab {
 }
 
 export interface DraftPayload {
+    content: PageTab;
     key: string,
-    content: PageTab
 }

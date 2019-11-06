@@ -6,6 +6,8 @@ export class Counter {
   private static instance: Counter;
   private count = 0;
 
+  private constructor() { }
+
   static getInstance(): Counter {
     if (Counter.instance === undefined) {
       Counter.instance = new Counter();
@@ -13,8 +15,6 @@ export class Counter {
 
     return Counter.instance;
   }
-
-  private constructor() { }
 
   get next(): number {
     return ++this.count;
