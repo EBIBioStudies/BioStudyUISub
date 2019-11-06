@@ -15,8 +15,8 @@ import {
 } from './model';
 
 interface StatusResponse {
-    status: string, // 'OK' or 'FAIL'
-    message?: string
+    message?: string;
+    status: string; // 'OK' or 'FAIL'
 }
 
 interface UserInfoResponse extends UserInfo, StatusResponse { }
@@ -68,17 +68,16 @@ export class AuthService {
       );
   }
 
-
-  sendPasswordResetRequest(obj: PasswordResetRequestData): Observable<StatusResponse> {
-    return this.sendPostRequest<UserInfoResponse, StatusResponse>('/api/auth/password/reset', this.withInstanceKey(obj.snapshot()));
+  register(regData: RegistrationData): Observable<StatusResponse> {
+    return this.sendPostRequest<StatusResponse, StatusResponse>('/api/auth/register', this.withInstanceKey(regData.snapshot()));
   }
 
   sendActivationLinkRequest(obj: ActivationLinkRequestData): Observable<StatusResponse> {
     return this.sendPostRequest<StatusResponse, StatusResponse>('/api/auth/retryact', this.withInstanceKey(obj.snapshot()));
   }
 
-  register(regData: RegistrationData): Observable<StatusResponse> {
-    return this.sendPostRequest<StatusResponse, StatusResponse>('/api/auth/register', this.withInstanceKey(regData.snapshot()));
+  sendPasswordResetRequest(obj: PasswordResetRequestData): Observable<StatusResponse> {
+    return this.sendPostRequest<UserInfoResponse, StatusResponse>('/api/auth/password/reset', this.withInstanceKey(obj.snapshot()));
   }
 
   private catchError<T>(resp: HttpErrorResponse): Observable<T> {
@@ -91,20 +90,20 @@ export class AuthService {
     return of(response.error);
   }
 
-  private checkStatus<R, T>(response: HttpResponse<R>): T {
-    if (response.status === HttpStatus.OK) {
-      return <T>(response.body || {});
-    }
-
-    throw ServerError.dataError(response.body);
-  }
-
   private checkProfileStatus<R, T>(response: HttpResponse<R>): T {
     if (response.status !== HttpStatus.OK) {
       this.userSession.destroy();
     }
 
     return <T>(response.body || {});
+  }
+
+  private checkStatus<R, T>(response: HttpResponse<R>): T {
+    if (response.status === HttpStatus.OK) {
+      return <T>(response.body || {});
+    }
+
+    throw ServerError.dataError(response.body);
   }
 
   private sendPostRequest<R, T>(path: string, payload: any): Observable<T> {

@@ -11,7 +11,7 @@ export const EMPTY_TEMPLATE_NAME = 'Empty';
 const SUBMISSION_TEMPLATES = [arrayExpressTemplate, euToxRiskTemplate, hecatosTemplate, emptyTemplate];
 const SUBMISSION_TEMPLATES_PUBLIC = [biaTemplate, defaultTemplate];
 
-export function getSubmissionTemplates(projects: Array<string> = []): Array<{ name: string, description: string }> {
+export function getSubmissionTemplates(projects: Array<string> = []): Array<{ description: string, name: string }> {
     const projectNames = projects.map(p => p.toLowerCase());
 
     return [...SUBMISSION_TEMPLATES.filter(t => projectNames.includes(t.name.toLowerCase())),
@@ -20,6 +20,6 @@ export function getSubmissionTemplates(projects: Array<string> = []): Array<{ na
 
 export function findSubmissionTemplateByName(name: string): any {
     const tmplName = name.toLowerCase();
-    const tmpl = [...SUBMISSION_TEMPLATES, ...SUBMISSION_TEMPLATES_PUBLIC].find(tmpl => tmpl.name.toLowerCase() === tmplName);
+    const tmpl = [...SUBMISSION_TEMPLATES, ...SUBMISSION_TEMPLATES_PUBLIC].find(tmplItem => tmplItem.name.toLowerCase() === tmplName);
     return tmpl ? tmpl : defaultTemplate;
 }
