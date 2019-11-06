@@ -32,10 +32,10 @@ import { FileUpload } from '../../shared/file-upload-list.service';
 
 export class FileActionsCellComponent implements AgRendererComponent {
     readonly canDeleteTypes = ['FILE', 'ARCHIVE', 'DIR'];
+    private onDownload;
+    private onRemove;
     private type?: string;
     private upload?: FileUpload;
-    private onRemove;
-    private onDownload;
 
     agInit(params: any): void {
         this.type = params.data.type;
@@ -56,9 +56,11 @@ export class FileActionsCellComponent implements AgRendererComponent {
         return this.type === 'FILE';
     }
 
-    onFileRemove(ev) {
+    onCancelUpload(ev) {
         ev.preventDefault();
-        this.onRemove();
+        if (this.upload) {
+            this.upload.cancel();
+        }
     }
 
     onFileDownload(event) {
@@ -66,11 +68,9 @@ export class FileActionsCellComponent implements AgRendererComponent {
         this.onDownload();
     }
 
-    onCancelUpload(ev) {
+    onFileRemove(ev) {
         ev.preventDefault();
-        if (this.upload) {
-            this.upload.cancel();
-        }
+        this.onRemove();
     }
 
     refresh(): boolean {

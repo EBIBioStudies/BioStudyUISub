@@ -19,23 +19,9 @@ export class UserSession {
         private appConfig: AppConfig
     ) {}
 
-    // call it when the app is bootstrapped
-    init(): void {
-        if (!this.isAnonymous()) {
-            this.notifySessionCreated();
-        }
-    }
-
     create(user: any): UserInfo {
         this.update(user);
         this.notifySessionCreated();
-
-        return user;
-    }
-
-    update(user: any) {
-        setLoginToken(user.sessid, this.appConfig.environment);
-        setUser(user);
 
         return user;
     }
@@ -46,16 +32,30 @@ export class UserSession {
         this.notifySessionDestroyed();
     }
 
-    token(): string {
-        return getLoginToken(this.appConfig.environment);
-    }
-
-    userName(): string {
-        return getUser().fullname !== null ? getUser().fullname : getUser().username ;
+    // call it when the app is bootstrapped
+    init(): void {
+        if (!this.isAnonymous()) {
+            this.notifySessionCreated();
+        }
     }
 
     isAnonymous(): boolean {
         return this.token() === '';
+    }
+
+    token(): string {
+        return getLoginToken(this.appConfig.environment);
+    }
+
+    update(user: any) {
+        setLoginToken(user.sessid, this.appConfig.environment);
+        setUser(user);
+
+        return user;
+    }
+
+    userName(): string {
+        return getUser().fullname !== null ? getUser().fullname : getUser().username ;
     }
 
     private notifySessionCreated(): void {

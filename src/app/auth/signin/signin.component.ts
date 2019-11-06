@@ -10,9 +10,9 @@ import { ServerError } from 'app/http';
     styleUrls: ['./signin.component.css']
 })
 export class SignInComponent implements OnInit, AfterViewInit {
-    model = {login: '', password: '', next: ''}; // Data model for the component's form
     error?: ServerError; // Server response object in case of error
     isLoading = false; // Flag indicating if login request in progress
+    model = {login: '', password: '', next: ''}; // Data model for the component's form
 
     @ViewChild('focusEl')
     private focusRef?: ElementRef;
@@ -23,15 +23,15 @@ export class SignInComponent implements OnInit, AfterViewInit {
                 private route: ActivatedRoute) {
     }
 
+    // TODO: Turn autofocus on render into a directive
+    ngAfterViewInit(): void {
+        this.focusRef!.nativeElement.focus();
+    }
+
     ngOnInit() {
         if (!this.session.isAnonymous()) {
             this.router.navigate(['']);
         }
-    }
-
-    // TODO: Turn autofocus on render into a directive
-    ngAfterViewInit(): void {
-        this.focusRef!.nativeElement.focus();
     }
 
     onSubmit(form: NgForm) {

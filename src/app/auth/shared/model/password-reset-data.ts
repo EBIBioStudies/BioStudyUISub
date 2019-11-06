@@ -5,6 +5,10 @@ export class PasswordResetData extends DataWithCaptcha {
     password: string = '';
     passwordRepeat: string = '';
 
+    snapshot(): { [key: string]: string } {
+        return copyAndExtend(super.snapshot(), { 'activationKey': this.key, 'password': this.password });
+    }
+
     valid(): boolean {
         if (super.valid) {
             return false;
@@ -19,9 +23,5 @@ export class PasswordResetData extends DataWithCaptcha {
         }
 
         return true;
-    }
-
-    snapshot(): { [key: string]: string } {
-        return copyAndExtend(super.snapshot(), {'activationKey': this.key, 'password': this.password});
     }
 }
