@@ -17,7 +17,7 @@ export class GlobalErrorComponent {
      */
     constructor (geh: ErrorHandler, changeRef: ChangeDetectorRef, private rootEl: ElementRef) {
         if (geh instanceof GlobalErrorHandler) {
-            geh.anErrorDetected$.subscribe(error => {
+            geh.errorDetected.subscribe(error => {
 
                 // Message conversion is bypassed to allow for plain strings as error exception objects.
                 if (typeof error === 'string') {
@@ -30,6 +30,13 @@ export class GlobalErrorComponent {
                 rootEl.nativeElement.firstChild.classList.add('slide-in');
             });
         }
+    }
+
+    /**
+     * Slides the alert out of view when performing the close action.
+     */
+    onClose() {
+        this.rootEl.nativeElement.firstChild.classList.remove('slide-in');
     }
 
     /**
@@ -50,12 +57,5 @@ export class GlobalErrorComponent {
         } else {
             return 'You seem to be offline. Please check your network.';
         }
-    }
-
-    /**
-     * Slides the alert out of view when performing the close action.
-     */
-    onClose() {
-        this.rootEl.nativeElement.firstChild.classList.remove('slide-in');
     }
 }

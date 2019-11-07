@@ -7,17 +7,17 @@ import { UserSession } from 'app/auth/shared';
 
 @Injectable()
 export class GlobalErrorHandler extends ErrorHandler {
-
     private errors: Subject<any> = new Subject<any>();
-
-    anErrorDetected$ = this.errors.asObservable();
 
     constructor(private userSession: UserSession, private zone: NgZone) {
         super();
     }
 
-    handleError(error) {
+    get errorDetected() {
+        return this.errors.asObservable();
+    }
 
+    handleError(error) {
         // Invalid authentication credentials, probably due to the current session having expired => clean up and reload.
         // NOTE: the app seems to get into a limbo state whereby the digest cycle fails to detect property changes
         // any more and requests are not issued. Reloading is a workaround.

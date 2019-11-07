@@ -7,9 +7,8 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 })
 export class DirectoryPathComponent implements OnChanges {
     @Output() change: EventEmitter<string> = new EventEmitter<string>();
-    @Input() path: string = '';
-
     dirs: string[] = [];
+    @Input() path: string = '';
 
     get isEmpty(): boolean {
         return this.dirs.length === 0;

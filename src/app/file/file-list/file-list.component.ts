@@ -20,15 +20,15 @@ import { UploadBadgeItem } from './file-upload-badge/file-upload-badge.component
     styleUrls: ['./file-list.component.css']
 })
 export class FileListComponent implements OnInit, OnDestroy {
-    protected ngUnsubscribe: Subject<void>;     // stopper for all subscriptions
-    private rowData: any[];
-
+    backButton = false;
+    columnDefs?: any[];
+    gridOptions: GridOptions;
+    isBulkMode = false;
     path: Path = new Path('/user', '/');
     sideBarCollapsed = false;
-    backButton = false;
-    gridOptions: GridOptions;
-    columnDefs?: any[];
-    isBulkMode = false;
+
+    protected ngUnsubscribe: Subject<void>;     // stopper for all subscriptions
+    private rowData: any[];
 
     constructor(
         private appConfig: AppConfig,
@@ -66,10 +66,46 @@ export class FileListComponent implements OnInit, OnDestroy {
         this.loadData();
     }
 
-    ngOnInit() {
-        this.route.queryParams.forEach((params: Params) => {
-            this.backButton = params.bb;
-        });
+    get rootPath(): string {
+        return this.path.root;
+    }
+
+    set rootPath(rp: string) {
+        this.path = this.path.setRoot(rp);
+    }
+
+    private get currentPath() {
+        return this.path.absolutePath();
+    }
+
+    decorateFiles(files: any[] | undefined): any[] {
+        return (files || []).map(f => ({
+            name: f.name,
+            type: f.type,
+            files: this.decorateFiles(f.files),
+            onRemove: () => {
+                this.removeFile(f.path, f.name);
+            },
+            onDownload: () => {
+                this.downloadFile(f.path, f.name);
+            }
+        }));
+    }
+
+    decorateUploads(uploads: FileUpload[]): any[] {
+        return uploads.map(u => {
+            if (!u.absoluteFilePath.startsWith(this.currentPath)) {
+                return [];
+            }
+            return u.fileNames.map(f => ({
+                name: f,
+                upload: u,
+                type: 'FILE',
+                onRemove: () => {
+                    this.removeUpload(u);
+                }
+            }));
+        }).reduce((rv, v) => rv.concat(v), []);
     }
 
     /**
@@ -82,16 +118,53 @@ export class FileListComponent implements OnInit, OnDestroy {
         this.ngUnsubscribe.complete();
     }
 
-    private get currentPath() {
-        return this.path.absolutePath();
+    ngOnInit() {
+        this.route.queryParams.forEach((params: Params) => {
+            this.backButton = params.bb;
+        });
     }
 
-    get rootPath(): string {
-        return this.path.root;
+    onRelativePathChange(relPath) {
+        this.loadData(this.path.setRel(relPath));
     }
 
-    set rootPath(rp: string) {
-        this.path = this.path.setRoot(rp);
+    onRootPathSelect(rootPath) {
+        this.path = new Path(rootPath, '/');
+        this.loadData();
+    }
+
+    onRowDoubleClick(ev) {
+        if (ev.data.type !== 'FILE') {
+            this.loadData(this.path.addRel(ev.data.name));
+        }
+    }
+
+    onUploadFilesSelect(files: FileList) {
+        const uploadedFileNames = this.rowData.map((file) => file.name);
+        const filesToUpload = Array.from(files).map((file) => file.name);
+        const overlap = filesToUpload.filter((fileToUpload) => uploadedFileNames.includes(fileToUpload));
+
+        (overlap.length > 0 ? this.confirmOverwrite(overlap) : of(true))
+            .pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe(() => this.upload(files));
+    }
+
+    onUploadSelect(upload: UploadBadgeItem) {
+        this.path = upload.filePath;
+        this.loadData();
+    }
+
+    updateDataRows(rows) {
+        this.rowData = rows;
+        this.gridOptions!.api!.setRowData(rows);
+    }
+
+    private confirmOverwrite(overlap) {
+        const overlapString = overlap.length === 1 ? overlap[0] + '?' :
+            overlap.length + ' files? (' + overlap.join(', ') + ')' ;
+
+        return this.modalService.whenConfirmed(`Do you want to overwrite ${overlapString}`,
+            'Overwrite files?', 'Overwrite');
     }
 
     private createColumnDefs() {
@@ -124,6 +197,18 @@ export class FileListComponent implements OnInit, OnDestroy {
         ];
     }
 
+    private downloadFile(filePath: string, fileName: string): void {
+        const downloadPath = `/api/files/${filePath}?fileName=${fileName}`;
+        const link = document.createElement('a');
+
+        link.href = downloadPath;
+        link.download = fileName;
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
     private loadData(path?: Path) {
         const p: Path = path ? path : this.path;
         this.fileService.getFiles(p.absolutePath())
@@ -143,85 +228,7 @@ export class FileListComponent implements OnInit, OnDestroy {
                 this.path = p;
                 this.updateDataRows(decoratedRows);
             }
-        );
-    }
-
-    updateDataRows(rows) {
-        this.rowData = rows;
-        this.gridOptions!.api!.setRowData(rows);
-    }
-
-    onRowDoubleClick(ev) {
-        if (ev.data.type !== 'FILE') {
-            this.loadData(this.path.addRel(ev.data.name));
-        }
-    }
-
-    onRelativePathChange(relPath) {
-        this.loadData(this.path.setRel(relPath));
-    }
-
-    onRootPathSelect(rootPath) {
-        this.path = new Path(rootPath, '/');
-        this.loadData();
-    }
-
-    onUploadSelect(upload: UploadBadgeItem) {
-        this.path = upload.filePath;
-        this.loadData();
-    }
-
-    onUploadFilesSelect(files: FileList) {
-        const uploadedFileNames = this.rowData.map((file) => file.name);
-        const filesToUpload =  Array.from(files).map((file) => file.name);
-        const overlap = filesToUpload.filter((fileToUpload) => uploadedFileNames.includes(fileToUpload));
-
-        (overlap.length > 0 ? this.confirmOverwrite(overlap) : of(true))
-            .pipe(takeUntil(this.ngUnsubscribe))
-            .subscribe(() => this.upload(files));
-    }
-
-    private confirmOverwrite(overlap) {
-        const overlapString = overlap.length === 1 ? overlap[0] + '?' :
-            overlap.length + ' files? (' + overlap.join(', ') + ')' ;
-
-        return this.modalService.whenConfirmed(`Do you want to overwrite ${overlapString}`,
-            'Overwrite files?', 'Overwrite');
-    }
-
-    private upload(files: FileList) {
-        const upload = this.fileUploadList.upload(this.path, Array.from(files));
-        this.updateDataRows(([] as any[]).concat(this.decorateUploads([upload]), this.rowData));
-    }
-
-    decorateUploads(uploads: FileUpload[]): any[] {
-        return uploads.map(u => {
-            if (!u.absoluteFilePath.startsWith(this.currentPath)) {
-                return [];
-            }
-            return u.fileNames.map(f => ({
-                name: f,
-                upload: u,
-                type: 'FILE',
-                onRemove: () => {
-                    this.removeUpload(u);
-                }
-            }));
-        }).reduce((rv, v) => rv.concat(v), []);
-    }
-
-    decorateFiles(files: any[] | undefined): any[] {
-        return (files || []).map(f => ({
-            name: f.name,
-            type: f.type,
-            files: this.decorateFiles(f.files),
-            onRemove: () => {
-                this.removeFile(f.path, f.name);
-            },
-            onDownload: () => {
-                this.downloadFile(f.path, f.name);
-            }
-        }));
+            );
     }
 
     private removeFile(filePath: string, fileName: string): void {
@@ -238,15 +245,8 @@ export class FileListComponent implements OnInit, OnDestroy {
         this.loadData();
     }
 
-    private downloadFile(filePath: string, fileName: string): void {
-        const downloadPath = `/api/files/${filePath}?fileName=${fileName}`;
-        const link = document.createElement('a');
-
-        link.href = downloadPath;
-        link.download = fileName;
-
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+    private upload(files: FileList) {
+        const upload = this.fileUploadList.upload(this.path, Array.from(files));
+        this.updateDataRows(([] as any[]).concat(this.decorateUploads([upload]), this.rowData));
     }
 }

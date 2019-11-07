@@ -24,31 +24,20 @@ import {
  * @see {@link ControlValueAccessor}
  */
 export class ORCIDInputBoxComponent implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy {
-    private orcidValue = ''; // internal data model
-    private mlistener: any = null;
-
-    @Input() readonly: boolean = false;
     @Input() isPopupButton: boolean = true; // flag for showing/hiding popup button
     @Input() isSmall: boolean = true; // flag for making the input area the same size as grid fields
-
+    @Input() readonly: boolean = false;
     @ViewChild(NgModel)
+
     private inputModel?: NgModel;
-
-    // placeholder for handler propagating changes outside the custom control
-    private onChange: any = (_: any) => {
-    }
-
-    // placeholder for handler after the control has been "touched"
-    private onTouched: any = () => {
-    }
+    private mlistener: any = null;
+    private orcidValue = ''; // internal data model
 
     /**
      * Instantiates a new custom component.
      * @param {Injector} injector - Parent's injector retrieved to get the component's form control later on.
      */
-    constructor(private injector: Injector) {
-    }
-
+    constructor(private injector: Injector) { }
 
     get value() {
         return this.orcidValue;
@@ -57,44 +46,6 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor, OnInit, Aft
     set value(newValue) {
         this.orcidValue = newValue;
         this.onChange(newValue);
-    }
-
-    /**
-     * Writes a new value from the form model into the view or (if needed) DOM property.
-     * @see {@link ControlValueAccessor}
-     * @param newValue - Value to be stored
-     */
-    writeValue(newValue: any) {
-        if (newValue) {
-            this.orcidValue = newValue;
-            this.onChange(newValue);
-        }
-    }
-
-    /**
-     * Registers a handler that should be called when something in the view has changed.
-     * @see {@link ControlValueAccessor}
-     * @param fn - Handler telling other form directives and form controls to update their values.
-     */
-    registerOnChange(fn) {
-        this.onChange = fn;
-    }
-
-
-    /**
-     * Registers a handler specifically for when a control receives a touch event.
-     * @see {@link ControlValueAccessor}
-     * @param fn - Handler for touch events.
-     */
-    registerOnTouched(fn: any) {
-        this.onTouched = fn;
-    }
-
-    /**
-     * Handler for blur events. Normalises the behaviour of the "touched" flag.
-     */
-    onBlur() {
-        this.onTouched();
     }
 
     messageListener() {
@@ -118,10 +69,6 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor, OnInit, Aft
         return this.mlistener;
     }
 
-    ngOnInit() {
-        window.addEventListener('message', this.messageListener());
-    }
-
     /**
      * Lifecycle hook for operations after all child views have been initialised. It merges all validators of
      * the actual input and the wrapping component.
@@ -140,10 +87,58 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor, OnInit, Aft
         window.removeEventListener('message', this.messageListener());
     }
 
+    ngOnInit() {
+        window.addEventListener('message', this.messageListener());
+    }
+
+    /**
+     * Handler for blur events. Normalises the behaviour of the "touched" flag.
+     */
+    onBlur() {
+        this.onTouched();
+    }
+
     openPopup() {
         const thorIFrame: any = document.getElementById('thor');
         const w = thorIFrame.contentWindow;
 
         w.postMessage('openPopup', '*');
     }
+
+    /**
+     * Registers a handler that should be called when something in the view has changed.
+     * @see {@link ControlValueAccessor}
+     * @param fn - Handler telling other form directives and form controls to update their values.
+     */
+    registerOnChange(fn) {
+        this.onChange = fn;
+    }
+
+
+    /**
+     * Registers a handler specifically for when a control receives a touch event.
+     * @see {@link ControlValueAccessor}
+     * @param fn - Handler for touch events.
+     */
+    registerOnTouched(fn: any) {
+        this.onTouched = fn;
+    }
+
+    /**
+     * Writes a new value from the form model into the view or (if needed) DOM property.
+     * @see {@link ControlValueAccessor}
+     * @param newValue - Value to be stored
+     */
+    writeValue(newValue: any) {
+        if (newValue) {
+            this.orcidValue = newValue;
+            this.onChange(newValue);
+        }
+    }
+
+    // placeholder for handler propagating changes outside the custom control
+    private onChange: any = (_: any) => { };
+
+    // placeholder for handler after the control has been "touched"
+    private onTouched: any = () => { };
 }

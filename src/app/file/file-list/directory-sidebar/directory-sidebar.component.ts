@@ -13,18 +13,13 @@ import { map } from 'rxjs/operators';
 })
 export class DirectorySidebarComponent implements OnInit, ControlValueAccessor {
     @Input() collapsed?: boolean = false;
-    @Output() toggle = new EventEmitter();
+    dirs: FileNode[] = [];
     @Output() select = new EventEmitter();
+    @Output() toggle = new EventEmitter();
 
     private selectedPath?: string;
 
-    dirs: FileNode[] = [];
-
-    constructor(private fileService: FileService) {
-    }
-
-    private onChange: any = () => {};
-    private validateFn: any = () => {};
+    constructor(private fileService: FileService) {}
 
     get value() {
         return this.selectedPath;
@@ -35,10 +30,26 @@ export class DirectorySidebarComponent implements OnInit, ControlValueAccessor {
         this.onChange(val);
     }
 
-    // From ControlValueAccessor interface
-    writeValue(value: any) {
-        if (value) {
-            this.selectedPath = value;
+    ngOnInit() {
+        this.fileService.getUserDirs().pipe(
+            map((dirs) => dirs.map((dir) => new FileNode(true, dir.path, dir.name)))
+        ).subscribe((dirs) => {
+            this.dirs = dirs;
+        });
+    }
+
+    onDirSelect(directory) {
+        this.value = directory.path;
+
+        if (this.select) {
+            this.select.emit(directory.path);
+        }
+    }
+
+    onToggle(e) {
+        e.preventDefault();
+        if (this.toggle) {
+            this.toggle.emit();
         }
     }
 
@@ -54,26 +65,13 @@ export class DirectorySidebarComponent implements OnInit, ControlValueAccessor {
         return this.validateFn(c);
     }
 
-    ngOnInit() {
-        this.fileService.getUserDirs().pipe(
-            map((dirs) => dirs.map((dir) => new FileNode(true, dir.path, dir.name)))
-        ).subscribe((dirs) => {
-            this.dirs = dirs;
-        });
-    }
-
-    onToggle(e) {
-        e.preventDefault();
-        if (this.toggle) {
-            this.toggle.emit();
+    // From ControlValueAccessor interface
+    writeValue(value: any) {
+        if (value) {
+            this.selectedPath = value;
         }
     }
 
-    onDirSelect(directory) {
-        this.value = directory.path;
-
-        if (this.select) {
-            this.select.emit(directory.path);
-        }
-    }
+    private onChange: any = () => {};
+    private validateFn: any = () => {};
 }

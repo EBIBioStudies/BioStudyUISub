@@ -10,16 +10,16 @@ import { Subscription } from 'rxjs/Subscription';
     styleUrls: ['./app-header.component.css']
 })
 export class AppHeaderComponent implements OnDestroy {
-    reqStatusSubs: Subscription;
+    isBusy = false; // flags whether there is a transaction triggered by this component
+    isPendingReq = false; // flags whether there is a transaction in progress (from anywhere in the app)
+    @ViewChild('logout') logout;
     navCollapsed = true;
+    profileTooltip = '';
+    reqStatusSubs: Subscription;
+    @ViewChild('user') user;
     userLoggedIn = false;
     userLoggingIn = false;
     userRegistering = false;
-    isPendingReq = false; // flags whether there is a transaction in progress (from anywhere in the app)
-    isBusy = false; // flags whether there is a transaction triggered by this component
-    profileTooltip = '';
-    @ViewChild('logout') logout;
-    @ViewChild('user') user;
 
     constructor(
         private userSession: UserSession,
@@ -67,6 +67,10 @@ export class AppHeaderComponent implements OnDestroy {
         this.profileTooltip = this.userSession.userName();
     }
 
+    ngOnDestroy(): void {
+        this.reqStatusSubs.unsubscribe();
+    }
+
     signOut() {
         this.isBusy = true;
         this.authService
@@ -79,15 +83,11 @@ export class AppHeaderComponent implements OnDestroy {
                 });
     }
 
-    toggleCollapsed() {
-        this.navCollapsed = !this.navCollapsed;
-    }
-
     submitFeedback() {
         window.location.href = 'mailto:biostudies@ebi.ac.uk?Subject=BioStudies Submission Tool Feedback';
     }
 
-    ngOnDestroy(): void {
-        this.reqStatusSubs.unsubscribe();
+    toggleCollapsed() {
+        this.navCollapsed = !this.navCollapsed;
     }
 }

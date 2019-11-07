@@ -11,15 +11,20 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class FileTreeComponent implements OnInit, OnDestroy {
     private static ROOT_FOLDER_PATH = '/user/';
-    private _nodes: FileNode[] = [];
-    private unsubscribe = new Subject();
 
+    loaded = false;
     @Input() root?: FileNode;
     @Output() select = new EventEmitter();
 
-    loaded = false;
+    private _nodes: FileNode[] = [];
+    private unsubscribe = new Subject();
 
     constructor(private fileStore: FileTreeStore) {}
+
+    ngOnDestroy() {
+        this.unsubscribe.next();
+        this.unsubscribe.complete();
+    }
 
     ngOnInit() {
         if (this.root === undefined) {
@@ -31,11 +36,6 @@ export class FileTreeComponent implements OnInit, OnDestroy {
                 .pipe(takeUntil(this.unsubscribe))
                 .subscribe(nodes => this.nodes = nodes);
         }
-    }
-
-    ngOnDestroy() {
-        this.unsubscribe.next();
-        this.unsubscribe.complete();
     }
 
     onChildTreeClick(path: string) {

@@ -7,7 +7,14 @@ import { HttpUploadClientService, UploadEvent } from './http-upload-client.servi
 
 @Injectable()
 export class FileService {
-    constructor(private http: HttpClient, private httpUpload: HttpUploadClientService) {
+    constructor(private http: HttpClient, private httpUpload: HttpUploadClientService) {}
+
+    download(filePath: string, fileName: string): Observable<any> {
+        return this.http.get(`/api/files/${filePath}?fileName=${fileName}`, { responseType: 'blob' });
+    }
+
+    getFiles(fullPath: string): Observable<PathInfo[]> {
+        return this.http.get<PathInfo[]>(`/api/files${fullPath}`);
     }
 
     getUserDirs(groups?: Observable<UserGroup[]>): Observable<PathInfo[]> {
@@ -19,20 +26,12 @@ export class FileService {
         );
     }
 
-    getFiles(fullPath: string): Observable<PathInfo[]> {
-        return this.http.get<PathInfo[]>(`/api/files${fullPath}`);
-    }
-
-    removeFile(filePath: string, fileName: string): Observable<any> {
-        return this.http.delete(`/api/files/${filePath}?fileName=${fileName}`);
-    }
-
     getUserGroups(): Observable<UserGroup[]> {
         return this.http.get<UserGroup[]>('/api/groups');
     }
 
-    download(filePath: string, fileName: string): Observable<any> {
-        return this.http.get(`/api/files/${filePath}?fileName=${fileName}`, { responseType: 'blob' });
+    removeFile(filePath: string, fileName: string): Observable<any> {
+        return this.http.delete(`/api/files/${filePath}?fileName=${fileName}`);
     }
 
     upload(fullPath: string, files: File[], keepFolders: boolean = true): Observable<UploadEvent> {

@@ -4,9 +4,19 @@ import { Observable } from 'rxjs/Observable';
 import { HttpErrorResponse } from '@angular/common/http';
 
 export class ServerError {
+    data: any;
     status: number = 0;
     statusString: string = '';
-    data: any;
+
+    constructor(status: number, statusString: string, data: any) {
+        this.status = status;
+        this.statusString = statusString;
+        this.status = data;
+    }
+
+    static dataError(data: any): ServerError {
+        return new ServerError(HttpStatus.UNPROCESSABLE_ENTITY, 'Unprocessable Entity', data);
+    }
 
     /**
      * Factory-like method to turn the standard error object coming from the HTTP client to
@@ -27,16 +37,6 @@ export class ServerError {
         }
 
         return new ServerError(error.status, error.statusText, data);
-    }
-
-    static dataError(data: any): ServerError {
-        return new ServerError(HttpStatus.UNPROCESSABLE_ENTITY, 'Unprocessable Entity', data);
-    }
-
-    constructor(status: number, statusString: string, data: any) {
-        this.status = status;
-        this.statusString = statusString;
-        this.status = data;
     }
 
     get name(): string {

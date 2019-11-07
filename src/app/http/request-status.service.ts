@@ -17,9 +17,9 @@ import { catchError, finalize } from 'rxjs/operators';
  */
 @Injectable()
 export class RequestStatusService implements HttpInterceptor {
-    private _whenStatusChanged: Subject<boolean> = new Subject<boolean>();
     private _filteredUrlPatterns: RegExp[] = []; // URLs to exclude from request status tracking
     private _pendingRequests = 0; // counter for pending requests
+    private _whenStatusChanged: Subject<boolean> = new Subject<boolean>();
 
     get filteredUrlPatterns(): RegExp[] {
         return this._filteredUrlPatterns;
@@ -31,17 +31,6 @@ export class RequestStatusService implements HttpInterceptor {
 
     get whenStatusChanged(): Observable<boolean> {
         return this._whenStatusChanged.asObservable();
-    }
-
-    /**
-     * Flags those URLs to which requests should not be counted as pending
-     * @param {string} url - URL for the request in question
-     * @returns {boolean} True if the request is to be ignored.
-     */
-    private shouldBypass(url: string): boolean {
-        return this._filteredUrlPatterns.some(e => {
-            return e.test(url);
-        });
     }
 
     /**
@@ -72,6 +61,17 @@ export class RequestStatusService implements HttpInterceptor {
                     }
                 }
             }));
+    }
+
+    /**
+     * Flags those URLs to which requests should not be counted as pending
+     * @param {string} url - URL for the request in question
+     * @returns {boolean} True if the request is to be ignored.
+     */
+    private shouldBypass(url: string): boolean {
+        return this._filteredUrlPatterns.some(e => {
+            return e.test(url);
+        });
     }
 }
 

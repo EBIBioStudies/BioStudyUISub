@@ -9,17 +9,15 @@ import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, 
     },
 })
 export class FileTreeDropdownComponent implements OnInit, OnDestroy {
+    @Output() close = new EventEmitter();
+    @ViewChild('dropdown', {read: ElementRef}) ddRef?: ElementRef;
+    @Output() fileSelect = new EventEmitter();
     @Input() isOpen = false;
     @Input() targetElement: any;
-    @Output() fileSelect = new EventEmitter();
-    @Output() close = new EventEmitter();
-
-    @ViewChild('dropdown', {read: ElementRef}) ddRef?: ElementRef;
 
     private _style: any;
 
-    constructor(private elementRef: ElementRef) {
-    }
+    constructor(private elementRef: ElementRef) {}
 
     get isVisible(): boolean {
         return this.isInBodyContainer() || this.isOpen;
@@ -32,42 +30,15 @@ export class FileTreeDropdownComponent implements OnInit, OnDestroy {
         return this._style;
     }
 
-    private computeStyle(): any {
-        if (this.isInBodyContainer()) {
-            const pos = this.computePosition(this.targetElement);
-
-            return {
-                position: 'absolute',
-                top: pos.top,
-                left: pos.left
-            };
+    ngOnDestroy(): void {
+        if (this.isInBodyContainer() && document.body.contains(this.elementRef.nativeElement)) {
+            document.body.removeChild(this.elementRef.nativeElement);
         }
-        return {};
-    }
-
-    private computePosition(nativeElement): { top: string, left: string } {
-        const rect = nativeElement.getBoundingClientRect();
-        const dropdownWidth = 300; // This should correspond to the width in the file tree style.
-
-        return {
-            top: (rect.bottom + window.scrollY) + 'px',
-            left: (rect.left + window.scrollX + dropdownWidth) + 'px'
-        };
-    }
-
-    private isInBodyContainer(): boolean {
-        return this.targetElement !== undefined;
     }
 
     ngOnInit(): void {
         if (this.isInBodyContainer()) {
             document.body.appendChild(this.elementRef.nativeElement);
-        }
-    }
-
-    ngOnDestroy(): void {
-        if (this.isInBodyContainer() && document.body.contains(this.elementRef.nativeElement)) {
-            document.body.removeChild(this.elementRef.nativeElement);
         }
     }
 
@@ -84,5 +55,32 @@ export class FileTreeDropdownComponent implements OnInit, OnDestroy {
         if (!this.ddRef.nativeElement.contains(event.target)) {
             this.close.emit();
         }
+    }
+
+    private computePosition(nativeElement): { left: string, top: string } {
+        const rect = nativeElement.getBoundingClientRect();
+        const dropdownWidth = 300; // This should correspond to the width in the file tree style.
+
+        return {
+            top: (rect.bottom + window.scrollY) + 'px',
+            left: (rect.left + window.scrollX + dropdownWidth) + 'px'
+        };
+    }
+
+    private computeStyle(): any {
+        if (this.isInBodyContainer()) {
+            const pos = this.computePosition(this.targetElement);
+
+            return {
+                position: 'absolute',
+                top: pos.top,
+                left: pos.left
+            };
+        }
+        return {};
+    }
+
+    private isInBodyContainer(): boolean {
+        return this.targetElement !== undefined;
     }
 }

@@ -17,8 +17,8 @@ import { FileUpload } from '../../shared/file-upload-list.service';
     `
 })
 export class ProgressCellComponent implements AgRendererComponent {
-    private upload?: FileUpload;
     private type?: string;
+    private upload?: FileUpload;
 
     agInit(params: any): void {
         this.type = params.data.type;
