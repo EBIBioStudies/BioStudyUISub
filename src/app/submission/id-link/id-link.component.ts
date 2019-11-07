@@ -31,28 +31,24 @@ import { mergeMap, distinctUntilChanged } from 'rxjs/operators';
   ]
 })
 export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
-    private linkModel: IdLinkModel = new IdLinkModel();
-    private inputChanged: Subject<string> = new Subject<string>();
-
     dataSource!: Observable<any>;
-
-    @Input() placeholder = 'URL or prefix:ID';
     @Input() disabled = false;
-    @Input() required?: boolean = false;
-    @Input() readonly?: boolean = false;
     @Input() isSmall: boolean = true; // flag for making the input area the same size as grid fields
+    @Input() placeholder = 'URL or prefix:ID';
+    @Input() readonly?: boolean = false;
+    @Input() required?: boolean = false;
+    @Output() selected: EventEmitter<string> = new EventEmitter<string>();
     @Input() suggestLength: number = 10; // max number of suggested values to be displayed at once
     @Input() suggestThreshold: number = 0; // number of typed characters before suggestions are displayed.
 
+    private inputChanged: Subject<string> = new Subject<string>();
     @ViewChild(NgModel)
     private inputModel?: NgModel;
 
+    private linkModel: IdLinkModel = new IdLinkModel();
+
     @ViewChild(IdLinkValueValidatorDirective)
     private validator?: IdLinkValueValidatorDirective;
-
-    @Output() selected: EventEmitter<string> = new EventEmitter<string>();
-
-    private onChange: any = (_: any) => {}; // placeholder for handler propagating changes outside the custom control
 
     /**
      * Instantiates a new custom input component. Validates the input's contents on debounced keypresses.
@@ -124,40 +120,6 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
     }
 
     /**
-     * Writes a new value from the form model into the view or (if needed) DOM property. It supports both
-     * plain input from the server (a string) or directly an object model for the link.
-     * @see {@link ControlValueAccessor}
-     * @param {string | IdLinkValue} newValue - Value to be stored.
-     */
-    writeValue(newValue: string | IdLinkValue): void {
-        if (typeof newValue === 'string') {
-            this.update(newValue);
-        } else if (newValue && newValue instanceof IdLinkValue) {
-            this.value = newValue;
-        }
-    }
-
-    /**
-     * Registers a handler that should be called when something in the view has changed.
-     * @see {@link ControlValueAccessor}
-     * @param fn - Handler telling other form directives and form controls to update their values.
-     */
-    registerOnChange(fn) {
-        this.onChange = fn;
-    }
-
-
-    /**
-     * Registers a handler specifically for when a control receives a touch event.
-     * @see {@link ControlValueAccessor}
-     */
-    registerOnTouched() {}
-
-    setDisabledState(disabled: boolean): void {
-        this.disabled = disabled;
-    }
-
-    /**
      * Lifecycle hook for operations after all child views have been initialised. It merges all validators of
      * the actual input and the wrapping component.
      * NOTE: This stage is not testable. Hence the try-catch block.
@@ -197,6 +159,42 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
         // Forces the control's "viewModel" and "value" to update on selection, not later.
         this.inputModel!.reset(this.linkModel.asString());
     }
+
+    /**
+     * Registers a handler that should be called when something in the view has changed.
+     * @see {@link ControlValueAccessor}
+     * @param fn - Handler telling other form directives and form controls to update their values.
+     */
+    registerOnChange(fn) {
+        this.onChange = fn;
+    }
+
+
+    /**
+     * Registers a handler specifically for when a control receives a touch event.
+     * @see {@link ControlValueAccessor}
+     */
+    registerOnTouched() {}
+
+    setDisabledState(disabled: boolean): void {
+        this.disabled = disabled;
+    }
+
+    /**
+     * Writes a new value from the form model into the view or (if needed) DOM property. It supports both
+     * plain input from the server (a string) or directly an object model for the link.
+     * @see {@link ControlValueAccessor}
+     * @param {string | IdLinkValue} newValue - Value to be stored.
+     */
+    writeValue(newValue: string | IdLinkValue): void {
+        if (typeof newValue === 'string') {
+            this.update(newValue);
+        } else if (newValue && newValue instanceof IdLinkValue) {
+            this.value = newValue;
+        }
+    }
+
+    private onChange: any = (_: any) => { }; // placeholder for handler propagating changes outside the custom control
 
     /**
      * Updates the link model, notifying the outside world.

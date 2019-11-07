@@ -13,25 +13,27 @@ import { DirectSubmitFileUploadService } from './direct-submit-file-upload.servi
     styleUrls: ['./direct-submit-sidebar.component.css']
 })
 export class DirectSubmitSideBarComponent implements OnInit {
+    @Input() collapsed = false;
+    isBulkMode: boolean = false; // Flags if single directory with all study files is expected
+    isBulkSupport: boolean = false; // Indicates if directory selection is supported by the browser
+    isProjFetch: boolean = true; // Are projects still being retrieved?
+    @Input() readonly = false;
+    selectedProj: string[] = []; // Projects selected for attachment
+    submitType: string = 'create'; // Will the upload create or update studies?
+    @Output() toggle = new EventEmitter();
+
     protected ngUnsubscribe: Subject<void>; // Stopper for all subscriptions
-    private uploadSubs?: Subscription; // Subscription for the battery of upload requests
-    private uploadFilesSubscription?: Subscription;
+
+    @ViewChild(FileUploadButtonComponent)
+    private fileSelector;
+
     private model: { files: any | undefined[], projects: any | undefined[] } = {
         files: undefined, // No file selection at first
         projects: [] // Chebox-ised representation of project list
     };
-    isProjFetch: boolean = true; // Are projects still being retrieved?
-    isBulkMode: boolean = false; // Flags if single directory with all study files is expected
-    isBulkSupport: boolean = false; // Indicates if directory selection is supported by the browser
-    submitType: string = 'create'; // Will the upload create or update studies?
-    selectedProj: string[] = []; // Projects selected for attachment
+    private uploadFilesSubscription?: Subscription;
+    private uploadSubs?: Subscription; // Subscription for the battery of upload requests
 
-    @Input() collapsed = false;
-    @Input() readonly = false;
-    @Output() toggle = new EventEmitter();
-
-    @ViewChild(FileUploadButtonComponent)
-    private fileSelector;
 
     /**
      * Initializes subscription stopper so that pending requests can be cancelled on view destruction.
@@ -117,17 +119,29 @@ export class DirectSubmitSideBarComponent implements OnInit {
     }
 
     /**
-     * Fetches the list of allowed projects for the current user on component initialisation. It only does so after
-     * the request for user data has completed successfully since it is only then when relevant project authorisation
-     * is known.
+     * Marks successful uploads as not present or unselected by setting the corresponding indexed member to null.
+     * NOTE: Angular's change detection cycle tends to work best when the original array is not wiped out such as
+     * when using map.
+     * NOTE: The files list is independent of the requests one. A difference in length between the two would lead to
+     * state inconsistencies. Hence also the conservative assignment approach.
      */
-    ngOnInit(): void {
-        this.userData.projectAccNumbers$.subscribe(projects => {
-            this.model.projects = this.initProjModel(projects);
-            this.isProjFetch = false;
-        }, () => {
-            this.isProjFetch = false;
+    clearUploads() {
+        const files = this.model.files;
+
+        files.forEach((_file, index) => {
+            if (this.directSubmitSvc!.getRequest(index)!.successful) {
+                files[index] = null;
+            }
         });
+    }
+
+    /**
+     * Convenience method to find out whether the request queue has pending requests or not.
+     * @param {string} status - Status being probed.
+     * @returns {boolean} True if the queue is with the status passed in.
+     */
+    isStatus(status: string): boolean {
+        return this.directSubmitSvc.isQueueStatus(status);
     }
 
     ngDoCheck() {
@@ -146,24 +160,27 @@ export class DirectSubmitSideBarComponent implements OnInit {
     }
 
     /**
-     * Convenience method to find out whether the request queue has pending requests or not.
-     * @param {string} status - Status being probed.
-     * @returns {boolean} True if the queue is with the status passed in.
+     * Fetches the list of allowed projects for the current user on component initialisation. It only does so after
+     * the request for user data has completed successfully since it is only then when relevant project authorisation
+     * is known.
      */
-    isStatus(status: string): boolean {
-        return this.directSubmitSvc.isQueueStatus(status);
+    ngOnInit(): void {
+        this.userData.projectAccNumbers$.subscribe(projects => {
+            this.model.projects = this.initProjModel(projects);
+            this.isProjFetch = false;
+        }, () => {
+            this.isProjFetch = false;
+        });
     }
 
     /**
-     * Convenience method to the get the value of a given request's property.
-     * @param {number} studyIdx - Index for the request.
-     * @param {string} property - Name of the property whose value is to be retrieved.
-     * @returns {string} Value of the property.
+     * Cancels all currently pending requests by unsubscribing from the aggregated observable and updating their
+     * respective statuses.
      */
-    studyProp(studyIdx: number, property: string): string {
-        const request = this.directSubmitSvc.getRequest(studyIdx);
-
-        return typeof request !== 'undefined' ? request[property] : '';
+    onCancelPending() {
+        this.uploadSubs!.unsubscribe();
+        this.uploadFilesSubscription!.unsubscribe();
+        this.directSubmitSvc.cancelAll();
     }
 
     /**
@@ -180,47 +197,6 @@ export class DirectSubmitSideBarComponent implements OnInit {
         } else {
             this.selectedProj.splice(this.selectedProj.indexOf(checkboxEl.value), 1);
         }
-    }
-
-    /**
-     * Converts a list of would-be upload files into a native array. The upload service is reset as part of the
-     * process since it signals the start of a new upload process and allows treating the list of files as
-     * "nascent uploads".
-     *
-     * @param {FileList} files - List of files to be uploaded.
-     */
-    onUploadFilesSelect(files: FileList): void {
-        if (files.length > 0) {
-            this.model.files = Array.from(files);
-            this.directSubmitSvc.reset();
-        }
-    }
-
-    /**
-     * Cancels all currently pending requests by unsubscribing from the aggregated observable and updating their
-     * respective statuses.
-     */
-    onCancelPending() {
-        this.uploadSubs!.unsubscribe();
-        this.uploadFilesSubscription!.unsubscribe();
-        this.directSubmitSvc.cancelAll();
-    }
-
-    /**
-     * Marks successful uploads as not present or unselected by setting the corresponding indexed member to null.
-     * NOTE: Angular's change detection cycle tends to work best when the original array is not wiped out such as
-     * when using map.
-     * NOTE: The files list is independent of the requests one. A difference in length between the two would lead to
-     * state inconsistencies. Hence also the conservative assignment approach.
-     */
-    clearUploads() {
-        const files = this.model.files;
-
-        files.forEach((_file, index) => {
-            if (this.directSubmitSvc!.getRequest(index)!.successful) {
-                files[index] = null;
-            }
-        });
     }
 
     /**
@@ -260,23 +236,29 @@ export class DirectSubmitSideBarComponent implements OnInit {
     }
 
     /**
-     * Converts a list of projects into a data object suitable for checkbox controls.
-     * @param {string[]} projects - Names of projects.
-     * @returns {{name: string; checked: boolean}[]} Checkbox-compliant object.
+     * Converts a list of would-be upload files into a native array. The upload service is reset as part of the
+     * process since it signals the start of a new upload process and allows treating the list of files as
+     * "nascent uploads".
+     *
+     * @param {FileList} files - List of files to be uploaded.
      */
-    private initProjModel(projects: string[]): { name: string, checked: boolean }[] {
-        return projects.map(name => {
-            return { name: name, checked: false };
-        });
+    onUploadFilesSelect(files: FileList): void {
+        if (files.length > 0) {
+            this.model.files = Array.from(files);
+            this.directSubmitSvc.reset();
+        }
     }
 
     /**
-     * Signals the UI that the files input has been blurred an is invalid. Since the actual input is never "touched"
-     * -to use Angular terminology-, the state is inferred from the input's value. Within this context, "null" indicates
-     * a blank field.
+     * Convenience method to the get the value of a given request's property.
+     * @param {number} studyIdx - Index for the request.
+     * @param {string} property - Name of the property whose value is to be retrieved.
+     * @returns {string} Value of the property.
      */
-    private markFileTouched() {
-        this.model.files = null;
+    studyProp(studyIdx: number, property: string): string {
+        const request = this.directSubmitSvc.getRequest(studyIdx);
+
+        return typeof request !== 'undefined' ? request[property] : '';
     }
 
     private createDirectSubmission(files: File[], submissionType: string): Observable<any> {
@@ -294,6 +276,26 @@ export class DirectSubmitSideBarComponent implements OnInit {
             takeUntil(this.ngUnsubscribe),
             finalize(() => this.model.files = files)
         );
+    }
+
+    /**
+     * Converts a list of projects into a data object suitable for checkbox controls.
+     * @param {string[]} projects - Names of projects.
+     * @returns {{name: string; checked: boolean}[]} Checkbox-compliant object.
+     */
+    private initProjModel(projects: string[]): { checked: boolean, name: string }[] {
+        return projects.map(name => {
+            return { name: name, checked: false };
+        });
+    }
+
+    /**
+     * Signals the UI that the files input has been blurred an is invalid. Since the actual input is never "touched"
+     * -to use Angular terminology-, the state is inferred from the input's value. Within this context, "null" indicates
+     * a blank field.
+     */
+    private markFileTouched() {
+        this.model.files = null;
     }
 
     private uploadFiles(files: File[]): Observable<any> {
