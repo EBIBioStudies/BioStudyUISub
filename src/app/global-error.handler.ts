@@ -30,6 +30,10 @@ export class GlobalErrorHandler extends ErrorHandler {
 
         // An error occurred that may potentially be worth handling at a global level.
         } else {
+            // TODO: post error to new logging system.
+            // tslint:disable-next-line: no-console
+            console.error(error);
+
             this.errors.next(error);
         }
     }
