@@ -44,11 +44,19 @@ export class ControlRef {
 export class ControlGroupRef {
     static unknown = new ControlGroupRef();
 
-    readonly sectionId: string;
-    readonly sectionName: string;
     readonly featureName?: string;
     readonly icon: string;
     readonly isRoot: boolean;
+    readonly sectionId: string;
+    readonly sectionName: string;
+
+    private constructor(params: Partial<ControlGroupRef> = {}) {
+        this.sectionId = params.sectionId || 'unknown_section_id';
+        this.sectionName = params.sectionName || 'unknown_section_name';
+        this.featureName = params.featureName;
+        this.icon = params.icon || 'fa-square';
+        this.isRoot = params.isRoot === true;
+    }
 
     static sectionRef(section: Section, isRoot: boolean = false) {
         return new ControlGroupRef({
@@ -58,28 +66,12 @@ export class ControlGroupRef {
         });
     }
 
-    private constructor(params: Partial<ControlGroupRef> = {}) {
-       this.sectionId = params.sectionId || 'unknown_section_id';
-       this.sectionName = params.sectionName || 'unknown_section_name';
-       this.featureName = params.featureName;
-       this.icon = params.icon || 'fa-square';
-       this.isRoot = params.isRoot === true;
-    }
-
     get name(): string {
         return this.featureName || this.sectionName;
     }
 
-    fieldRef(field: Field): ControlRef {
-        return this.createRef(field.id, field.name, field.type.icon);
-    }
-
     columnRef(column: Attribute): ControlRef {
         return this.createRef(column.id, 'Column');
-    }
-
-    rowValueRef(column: Attribute, rowId: string): ControlRef {
-        return this.createRef(column.id + '#' + rowId, column.name);
     }
 
     featureRef(feature: Feature): ControlGroupRef {
@@ -92,6 +84,14 @@ export class ControlGroupRef {
         });
     }
 
+    fieldRef(field: Field): ControlRef {
+        return this.createRef(field.id, field.name, field.type.icon);
+    }
+
+    rowValueRef(column: Attribute, rowId: string): ControlRef {
+        return this.createRef(column.id + '#' + rowId, column.name);
+    }
+
     private createRef(id: string, name: string, icon?: string) {
         const parentName = this.featureName || this.sectionName;
         const uniqueId = [parentName, id].join('_');
@@ -102,6 +102,14 @@ export class ControlGroupRef {
 export class MyFormControl extends FormControl {
     ref: ControlRef = ControlRef.unknown;
 
+    constructor(
+        formState?: any,
+        validatorOrOpts?: ValidatorFn | ValidatorFn[] | AbstractControlOptions | null,
+        asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null
+    ) {
+        super(formState, validatorOrOpts, asyncValidator);
+    }
+
     static compareBySectionId = (c1: FormControl, c2: FormControl) => {
         if (c1 instanceof MyFormControl && c2 instanceof MyFormControl) {
             return c1.ref.sectionId.localeCompare(c2.ref.sectionId);
@@ -111,12 +119,6 @@ export class MyFormControl extends FormControl {
             return -1;
         }
         return 0;
-    }
-
-    constructor(formState?: any,
-                validatorOrOpts?: ValidatorFn | ValidatorFn[] | AbstractControlOptions | null,
-                asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null) {
-        super(formState, validatorOrOpts, asyncValidator);
     }
 
     withRef(ref: ControlRef): MyFormControl {
@@ -141,6 +143,16 @@ export class MyFormGroup extends FormGroup {
 }
 
 export class FormValidators {
+    static formatDate: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+        const v = control.value;
+        return String.isNotDefinedOrEmpty(v) || (parseDate(v) !== undefined) ? null : { 'format': { value: v } };
+    }
+
+    static formatOrcid: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+        const v = control.value;
+        return String.isNotDefinedOrEmpty(v) || /^\d{4}-\d{4}-\d{4}-\d{4}$/.test(v) ? null : { 'format': { value: v } };
+    }
+
     static uniqueValues: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
         const columns = <FormGroup> control;
         const values = Object.keys(columns.controls)
@@ -176,68 +188,9 @@ export class FormValidators {
 
         return {'uniqueCols': {value: duplicates[0]}};
     }
-
-    static formatDate: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-        const v = control.value;
-        return String.isNotDefinedOrEmpty(v) || (parseDate(v) !== undefined) ? null : {'format': {value: v}};
-    }
-
-    static formatOrcid: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-        const v = control.value;
-        return String.isNotDefinedOrEmpty(v) || /^\d{4}-\d{4}-\d{4}-\d{4}$/.test(v) ? null : {'format': {value: v}};
-    }
 }
 
 export class SubmFormValidators {
-    static forValueType(valueType: ValueType): ValidatorFn[] {
-        const validators: ValidatorFn[] = [];
-
-        if (valueType.is(ValueTypeName.text, ValueTypeName.largetext)) {
-            const vt = <TextValueType>valueType;
-            if (vt.maxlength > 0) {
-                validators.push(Validators.maxLength(vt.maxlength));
-            }
-            if (vt.minlength > 0) {
-                validators.push(Validators.minLength(vt.minlength));
-            }
-        } else if (valueType.is(ValueTypeName.date)) {
-            validators.push(FormValidators.formatDate);
-        }
-
-        if (valueType.is(ValueTypeName.orcid)) {
-            validators.push(FormValidators.formatOrcid);
-        }
-
-        return validators;
-    }
-
-    static forCellWithDependency(valueType: SelectValueType): ValidatorFn {
-        return (control: AbstractControl) => {
-            const { value } = control;
-            const { values } = valueType;
-
-            if (value.length === 0) {
-                return null;
-            }
-
-            // This is to avoid a false positive while values are calculated
-            // for a dependant field.
-            if (value.length !== 0 && values.length === 0) {
-                return null;
-            }
-
-            return values.includes(value) ? null : { dependency: { value: control.value } };
-        };
-    }
-
-    static forField(field: Field): ValidatorFn[] {
-        const validators: ValidatorFn[] = [];
-        if (field.type.displayType.isRequired) {
-            validators.push(Validators.required);
-        }
-        return [...validators, ...SubmFormValidators.forValueType(field.type.valueType)];
-    }
-
     static forCell(column: Attribute): ValidatorFn[] {
         const validators: ValidatorFn[] = [];
 
@@ -260,6 +213,25 @@ export class SubmFormValidators {
         ];
     }
 
+    static forCellWithDependency(valueType: SelectValueType): ValidatorFn {
+        return (control: AbstractControl) => {
+            const { value } = control;
+            const { values } = valueType;
+
+            if (value.length === 0) {
+                return null;
+            }
+
+            // This is to avoid a false positive while values are calculated
+            // for a dependant field.
+            if (value.length !== 0 && values.length === 0) {
+                return null;
+            }
+
+            return values.includes(value) ? null : { dependency: { value: control.value } };
+        };
+    }
+
     static forColumn(_column: Attribute): ValidatorFn[] {
         return [Validators.required];
     }
@@ -269,6 +241,36 @@ export class SubmFormValidators {
 
         if (feature.type.uniqueCols) {
             validators.push(FormValidators.uniqueValues);
+        }
+
+        return validators;
+    }
+
+    static forField(field: Field): ValidatorFn[] {
+        const validators: ValidatorFn[] = [];
+        if (field.type.displayType.isRequired) {
+            validators.push(Validators.required);
+        }
+        return [...validators, ...SubmFormValidators.forValueType(field.type.valueType)];
+    }
+
+    static forValueType(valueType: ValueType): ValidatorFn[] {
+        const validators: ValidatorFn[] = [];
+
+        if (valueType.is(ValueTypeName.text, ValueTypeName.largetext)) {
+            const vt = <TextValueType>valueType;
+            if (vt.maxlength > 0) {
+                validators.push(Validators.maxLength(vt.maxlength));
+            }
+            if (vt.minlength > 0) {
+                validators.push(Validators.minLength(vt.minlength));
+            }
+        } else if (valueType.is(ValueTypeName.date)) {
+            validators.push(FormValidators.formatDate);
+        }
+
+        if (valueType.is(ValueTypeName.orcid)) {
+            validators.push(FormValidators.formatOrcid);
         }
 
         return validators;
@@ -283,10 +285,10 @@ export class CustomErrorMessages {
             'required': () => {
                 return `Please enter the ${ref.parentName}'s ${ref.name.toLowerCase()}`;
             },
-            'minlength': (error: { requiredLength: number, actualLength: number }) => {
+            'minlength': (error: { actualLength: number, requiredLength: number }) => {
                 return `Please use at least ${error.requiredLength} characters`;
             },
-            'maxlength': (error: { requiredLength: number, actualLength: number }) => {
+            'maxlength': (error: { actualLength: number, requiredLength: number }) => {
                 return `Please use up to ${error.requiredLength} characters`;
             },
             'format': () => {

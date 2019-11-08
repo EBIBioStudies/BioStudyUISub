@@ -70,16 +70,14 @@ li:last-child::before {
 `]
 })
 export class TreeViewNodeComponent {
-    @Input() data?: any;
     @Input() config?: TreeViewConfig;
-
+    @Input() data?: any;
+    isCollapsed: boolean = true; // All branches will be collapsed by default.
     @ViewChild('nodeTemplate', {read: ViewContainerRef}) vcr;
 
     private compRef;
-    isCollapsed: boolean = true; // All branches will be collapsed by default.
 
-    constructor(private componentFactoryResolver: ComponentFactoryResolver) {
-    }
+    constructor(private componentFactoryResolver: ComponentFactoryResolver) {}
 
     get children(): any [] {
         return this.config ? this.config.children(this.data) : [];
@@ -133,6 +131,6 @@ export class TreeViewNodeComponent {
     `]
 })
 export class TreeViewComponent {
-    @Input() data?: any;
     @Input() config?: TreeViewConfig;
+    @Input() data?: any;
 }

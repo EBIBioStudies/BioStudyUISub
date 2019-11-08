@@ -6,8 +6,8 @@ import { SectionForm } from '../shared/section-form';
     templateUrl: './subm-form.component.html'
 })
 export class SubmFormComponent implements OnChanges {
-    @Input() sectionForm?: SectionForm;
     @Input() readonly?: boolean = false;
+    @Input() sectionForm?: SectionForm;
 
     constructor() {}
 

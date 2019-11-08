@@ -17,14 +17,12 @@ type FormControlGroup = Array<FormControl>;
 })
 export class SubmSidebarComponent implements OnDestroy {
     @Input() collapsed?: boolean = false;
-    @Input() sectionForm?: SectionForm;
-    @Output() toggle = new EventEmitter();
-
-    serverError?: ServerError;
     invalidControls: FormControlGroup[] = [];
-
     isCheckTabActive: boolean = true;
+    @Input() sectionForm?: SectionForm;
+    serverError?: ServerError;
     showAdvanced: boolean = false;
+    @Output() toggle = new EventEmitter();
 
     private controls: Array<FormControl>[] = [];
     private unsubscribe = new Subject<void>();
@@ -46,24 +44,8 @@ export class SubmSidebarComponent implements OnDestroy {
             .subscribe(sectionForm => this.switchSection(sectionForm));
     }
 
-    ngOnDestroy(): void {
-        this.unsubscribeForm.next();
-        this.unsubscribeForm.complete();
-
-        this.unsubscribe.next();
-        this.unsubscribe.complete();
-    }
-
     get isEditTabActive(): boolean {
         return !this.isCheckTabActive;
-    }
-
-    onCheckTabClick(): void {
-        this.isCheckTabActive = true;
-    }
-
-    onAddTabClick(): void {
-        this.isCheckTabActive = false;
     }
 
     get numInvalid(): number {
@@ -72,6 +54,22 @@ export class SubmSidebarComponent implements OnDestroy {
 
     get numInvalidAndTouched(): number {
         return this.invalidControls.flatMap(c => c).filter(c => c.touched).length;
+    }
+
+    ngOnDestroy(): void {
+        this.unsubscribeForm.next();
+        this.unsubscribeForm.complete();
+
+        this.unsubscribe.next();
+        this.unsubscribe.complete();
+    }
+
+    onAddTabClick(): void {
+        this.isCheckTabActive = false;
+    }
+
+    onCheckTabClick(): void {
+        this.isCheckTabActive = true;
     }
 
     /**
@@ -86,6 +84,20 @@ export class SubmSidebarComponent implements OnDestroy {
         if (this.toggle) {
             this.toggle.emit();
         }
+    }
+
+    private groupControlsBySectionId(controls: FormControl[]): FormControlGroup[] {
+        return controls
+            .reduce((rv, c) => {
+                const group = rv.isEmpty() ? undefined : rv[rv.length - 1];
+                const prevControl = group === undefined ? undefined : group[group.length - 1];
+                if (prevControl !== undefined && MyFormControl.compareBySectionId(prevControl, c) === 0) {
+                    group!.push(c);
+                } else {
+                    rv.push([c]);
+                }
+                return rv;
+            }, [] as Array<FormControlGroup>);
     }
 
     private switchSection(sectionFormOp: Option<SectionForm>) {
@@ -114,19 +126,5 @@ export class SubmSidebarComponent implements OnDestroy {
 
     private updateInvalidControls() {
         this.invalidControls = this.controls.map(g => g.filter(c => c.invalid)).filter(g => !g.isEmpty());
-    }
-
-    private groupControlsBySectionId(controls: FormControl[]): FormControlGroup[] {
-        return controls
-            .reduce((rv, c) => {
-                const group = rv.isEmpty() ? undefined : rv[rv.length - 1];
-                const prevControl = group === undefined ? undefined : group[group.length - 1];
-                if (prevControl !== undefined && MyFormControl.compareBySectionId(prevControl, c) === 0) {
-                    group!.push(c);
-                } else {
-                    rv.push([c]);
-                }
-                return rv;
-            }, [] as Array<FormControlGroup>);
     }
 }

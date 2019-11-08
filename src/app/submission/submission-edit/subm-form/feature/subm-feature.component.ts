@@ -3,8 +3,8 @@ import { UserData } from 'app/auth/shared';
 import { FeatureForm } from '../../shared/section-form';
 
 interface FeatureOperation {
-    label: string,
-    callback: () => void
+    callback: () => void;
+    label: string;
 }
 
 @Component({
@@ -13,19 +13,39 @@ interface FeatureOperation {
     styleUrls: ['./subm-feature.component.css']
 })
 export class SubmFeatureComponent implements OnInit, DoCheck {
-    @Input() featureForm?: FeatureForm;
-    @Input() readonly?: boolean = false;
-    @Input() isMenu?: boolean = false;
     @ViewChild('featureEl') featureEl?: ElementRef;
-
+    @Input() featureForm?: FeatureForm;
+    @Input() isMenu?: boolean = false;
     operations: FeatureOperation[] = [];
-    private colTypeNames: string[] = [];
+    @Input() readonly?: boolean = false;
 
+    private _allowedColNames: string[] = [];
     private _errorNum: number = 0;
     private _uniqueColNames: string[] = [];
-    private _allowedColNames: string[] = [];
+    private colTypeNames: string[] = [];
 
-    constructor(private changeRef: ChangeDetectorRef, public userData: UserData) {
+    constructor(private changeRef: ChangeDetectorRef, public userData: UserData) {}
+
+    get allowedColNames(): string[] {
+        return this._allowedColNames;
+    }
+
+    get uniqueColNames(): string[] {
+        return this._uniqueColNames;
+    }
+
+    get errorNum(): number {
+        return this._errorNum;
+    }
+
+    /**
+     * Counts the number of errors if the feature is not empty.
+     */
+    ngDoCheck(): void {
+        this._errorNum = Object.keys(this.featureForm!.form.errors || {}).length;
+        this._uniqueColNames = this.colTypeNames.filter(name => this.featureForm!.columnNames.includes(name));
+        this._allowedColNames = this.featureForm!.hasUniqueColumns ? this._uniqueColNames : this.colTypeNames;
+        this.changeRef.detectChanges();
     }
 
     ngOnInit() {
@@ -46,27 +66,5 @@ export class SubmFeatureComponent implements OnInit, DoCheck {
                 this.featureForm!.addRow();
             }
         });
-    }
-
-    get allowedColNames(): string [] {
-        return this._allowedColNames;
-    }
-
-    get uniqueColNames(): string[] {
-        return this._uniqueColNames;
-    }
-
-    get errorNum(): number {
-        return this._errorNum;
-    }
-
-    /**
-     * Counts the number of errors if the feature is not empty.
-     */
-    ngDoCheck(): void {
-        this._errorNum = Object.keys(this.featureForm!.form.errors || {}).length;
-        this._uniqueColNames = this.colTypeNames.filter(name => this.featureForm!.columnNames.includes(name));
-        this._allowedColNames = this.featureForm!.hasUniqueColumns ? this._uniqueColNames : this.colTypeNames;
-        this.changeRef.detectChanges();
     }
 }

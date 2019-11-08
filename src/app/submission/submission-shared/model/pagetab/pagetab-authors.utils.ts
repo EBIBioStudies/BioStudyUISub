@@ -53,14 +53,14 @@ export function authors2Contacts(sections: PageTabSection[] = []): PageTabSectio
 }
 
 class Organisations {
-    private refs: Dictionary<string> = {};
     private names: Dictionary<string> = {};
+    private refs: Dictionary<string> = {};
 
-    private refFor(value: string, accno: string): string {
-        const key = value.trim().toLowerCase();
-        this.refs[key] = accno ? accno : `o${Object.keys(this.refs).length + 1}`;
-        this.names[key] = this.names[key] || value;
-        return this.refs[key]!;
+    list(): { accno: string, name: string }[] {
+        return Object.keys(this.refs).map(key => ({
+            accno: this.refs[key]!,
+            name: this.names[key]!
+        }));
     }
 
     toReference(attr: PtAttribute): PtAttribute {
@@ -72,11 +72,11 @@ class Organisations {
         return <PtAttribute>{ name: 'affiliation', value: orgRef, isReference: true };
     }
 
-    list(): { accno: string, name: string }[] {
-        return Object.keys(this.refs).map(key => ({
-            accno: this.refs[key]!,
-            name: this.names[key]!
-        }));
+    private refFor(value: string, accno: string): string {
+        const key = value.trim().toLowerCase();
+        this.refs[key] = accno ? accno : `o${Object.keys(this.refs).length + 1}`;
+        this.names[key] = this.names[key] || value;
+        return this.refs[key]!;
     }
 }
 

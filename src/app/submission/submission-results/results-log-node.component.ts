@@ -6,8 +6,8 @@ import { TreeViewCustomNodeComponent } from './tree-view.component';
     templateUrl: './results-log-node.component.html'
 })
 export class ResultsLogNodeComponent implements TreeViewCustomNodeComponent {
-    private _message = '';
     private _logLevel = '';
+    private _message = '';
 
     onNodeData(data: any = {}): void {
         this._message = data.message || '';

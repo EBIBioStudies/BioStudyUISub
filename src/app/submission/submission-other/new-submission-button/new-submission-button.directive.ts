@@ -42,15 +42,6 @@ export class NewSubmissionButtonDirective implements AfterViewInit {
         });
     }
 
-    private selectTemplate(templates: Array<{ name: string, description: string }>) {
-        this.modalService.show(AddSubmModalComponent, {
-            initialState: {
-                templates: templates,
-                onOk: (project: string) => this.onOk(project)
-            }
-        });
-    }
-
     private onOk(template?: string) {
         this.startCreating();
         this.submService.createDraftSubmission(newPageTab(template))
@@ -58,6 +49,15 @@ export class NewSubmissionButtonDirective implements AfterViewInit {
                 this.stopCreating();
                 this.router.navigate(['/submissions/new/', accno]);
             });
+    }
+
+    private selectTemplate(templates: Array<{ description: string, name: string }>) {
+        this.modalService.show(AddSubmModalComponent, {
+            initialState: {
+                templates: templates,
+                onOk: (project: string) => this.onOk(project)
+            }
+        });
     }
 
     private startCreating() {

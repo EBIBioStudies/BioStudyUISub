@@ -14,21 +14,20 @@ import { AgFilterComponent } from 'ag-grid-angular/main';
     templateUrl: 'text-filter.component.html'
 })
 export class TextFilterComponent implements AgFilterComponent {
+    @ViewChild('inputEl') inputEl;
+    text: string = '';
     private params?: IFilterParams;
+    private prev: string = '';
     private valueGetter?: (rowNode: RowNode) => any;
 
-    text: string = '';
-    private prev: string = '';
 
-    @ViewChild('inputEl') inputEl;
+    afterGuiAttached(): void {
+        this.inputEl.nativeElement.focus();
+    }
 
     agInit(params: IFilterParams): void {
         this.params = params;
         this.valueGetter = params.valueGetter;
-    }
-
-    isFilterActive(): boolean {
-        return this.text !== null && this.text !== undefined && this.text !== '';
     }
 
     doesFilterPass(params: IDoesFilterPassParams): boolean {
@@ -40,17 +39,18 @@ export class TextFilterComponent implements AgFilterComponent {
     }
 
     getModel(): any {
-        return {value: this.text};
+        return { value: this.text };
     }
 
-    setModel(model: any): void {
-        if (model) {
-            this.text = model.value;
+    isFilterActive(): boolean {
+        return this.text !== null && this.text !== undefined && this.text !== '';
+    }
+
+    notifyAboutChanges() {
+        if (this.text !== this.prev) {
+            this.prev = this.text;
+            this.params!.filterChangedCallback();
         }
-    }
-
-    afterGuiAttached(): void {
-        this.inputEl.nativeElement.focus();
     }
 
     onApplyClick(): void {
@@ -62,10 +62,9 @@ export class TextFilterComponent implements AgFilterComponent {
         this.notifyAboutChanges();
     }
 
-    notifyAboutChanges() {
-        if (this.text !== this.prev) {
-            this.prev = this.text;
-            this.params!.filterChangedCallback();
+    setModel(model: any): void {
+        if (model) {
+            this.text = model.value;
         }
     }
 }

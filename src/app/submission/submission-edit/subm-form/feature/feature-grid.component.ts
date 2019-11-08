@@ -9,15 +9,13 @@ import { FeatureForm, RowForm, ColumnControl } from '../../shared/section-form';
     styleUrls: ['./feature-grid.component.css']
 })
 export class FeatureGridComponent implements AfterViewInit {
+    @ViewChildren('colEl') colEls?: QueryList<ElementRef>;
     @Input() featureForm?: FeatureForm;
     @Input() readonly = false;
-
-    @ViewChildren('ahead') typeaheads?: QueryList<TypeaheadDirective>;
     @ViewChildren('rowEl') rowEls?: QueryList<ElementRef>;
-    @ViewChildren('colEl') colEls?: QueryList<ElementRef>;
+    @ViewChildren('ahead') typeaheads?: QueryList<TypeaheadDirective>;
 
-    constructor(private rootEl: ElementRef, public userData: UserData) {
-    }
+    constructor(private rootEl: ElementRef, public userData: UserData) {}
 
     get rows(): RowForm[] {
         return this.featureForm!.rows;
@@ -50,6 +48,16 @@ export class FeatureGridComponent implements AfterViewInit {
     }
 
     /**
+     * Handler for the change event. Only save an attribute when its associated cell changes.
+     * @param {Object} attrObj - Object representative of the attribute.
+     * @param {string} newValue - New value for the specified attribute.
+     * @param {string} [attrName = 'value'] - Name of the attribute whose value is being saved.
+    */
+    onFieldChange(attrObj: any, newValue: string, attrName: string = 'value') {
+        attrObj[attrName] = newValue;
+    }
+
+    /**
      * Changes the values of an existing feature's row fields to those of a given a set of grid attributes,
      * bubbling a single DOM change event for all of them. Attribute names are assumed to be in lower case.
      * @param {object} data - Grid attribute data retrieved asynchronously.
@@ -70,15 +78,5 @@ export class FeatureGridComponent implements AfterViewInit {
         });
 
         this.rootEl.nativeElement.dispatchEvent(new Event('change', {bubbles: true}));
-    }
-
-    /**
-     * Handler for the change event. Only save an attribute when its associated cell changes.
-     * @param {Object} attrObj - Object representative of the attribute.
-     * @param {string} newValue - New value for the specified attribute.
-     * @param {string} [attrName = 'value'] - Name of the attribute whose value is being saved.
-     */
-    onFieldChange(attrObj: any, newValue: string, attrName: string = 'value') {
-        attrObj[attrName] = newValue;
     }
 }

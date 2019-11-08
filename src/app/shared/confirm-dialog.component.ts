@@ -9,13 +9,14 @@ import { BsModalRef, ModalDirective } from 'ngx-bootstrap/modal';
     templateUrl: './confirm-dialog.component.html'
 })
 export class ConfirmDialogComponent {
-    @ViewChild('focusBtn')
     @Input() abortLabel: string = 'Cancel'; // Default name for negative action.
     @Input() body: string = 'Are you sure?'; // Descriptive message for the modal's body.
     callback?: (v: boolean) => any;
     @Input() confirmLabel: string = 'Ok'; // Default name for positive action.
     @Input() isHideCancel: boolean = false; // Hides the cancel button. Suitable for info modals.
     @Input() title: string = 'Confirm'; // Summary text for the modal's title.
+
+    @ViewChild('focusBtn')
 
     private focusEl?: ElementRef;
 

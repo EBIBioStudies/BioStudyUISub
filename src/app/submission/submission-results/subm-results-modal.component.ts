@@ -11,9 +11,10 @@ import { SubmitLog, SubmissionService } from '../submission-shared/submission.se
     templateUrl: './subm-results-modal.component.html'
 })
 export class SubmResultsModalComponent {
-    log?: SubmitLog;
     collapsedLog?: boolean = false;
     isSuccess: boolean = true;
+    log?: SubmitLog;
+
     private modalRef: BsModalRef;
     private router: Router;
 
@@ -30,16 +31,8 @@ export class SubmResultsModalComponent {
         return this.log !== undefined;
     }
 
-    /**
-     * Formats the response's log section as a URI string.
-     * @returns {string} Serialised contents of the log section.
-     */
-    toLogURI(): string {
-        return encodeURIComponent(JSON.stringify(this.log));
-    }
-
-    hideModal() {
-        this.modalRef.hide();
+    get isError(): boolean {
+        return !this.isSuccess;
     }
 
     goToSubmissions() {
@@ -47,7 +40,15 @@ export class SubmResultsModalComponent {
         this.router.navigateByUrl('/submissions');
     }
 
-    get isError(): boolean {
-        return !this.isSuccess;
+    hideModal() {
+        this.modalRef.hide();
+    }
+
+    /**
+     * Formats the response's log section as a URI string.
+     * @returns {string} Serialised contents of the log section.
+     */
+    toLogURI(): string {
+        return encodeURIComponent(JSON.stringify(this.log));
     }
 }

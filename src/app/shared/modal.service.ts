@@ -20,6 +20,7 @@ export class ModalService {
                     callback: (value: boolean) => subj.next(value)
                 }
             });
+
         return subj.asObservable().pipe(take(1));
     }
 
@@ -35,6 +36,7 @@ export class ModalService {
                     callback: (value: boolean) => subj.next(value)
                 }
             });
+
         return subj.asObservable().pipe(take(1));
     }
 

@@ -14,7 +14,10 @@ export class TextareaAutosizeDirective implements AfterContentInit, AfterContent
 
     private minHeight: number = 50;
 
-    constructor(private element: ElementRef) {
+    constructor(private element: ElementRef) {}
+
+    ngAfterContentChecked(): void {
+        this.adjust();
     }
 
     ngAfterContentInit(): void {
@@ -30,10 +33,6 @@ export class TextareaAutosizeDirective implements AfterContentInit, AfterContent
                 distinctUntilChanged((evt: any) => evt.timeStamp)
             )
             .subscribe(() => this.adjust());
-    }
-
-    ngAfterContentChecked(): void {
-        this.adjust();
     }
 
     @HostListener('input') onInput(): void {

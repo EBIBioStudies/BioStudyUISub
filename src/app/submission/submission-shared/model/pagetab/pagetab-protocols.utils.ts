@@ -8,6 +8,8 @@ class Protocols {
   private static instance: Protocols;
   private refs: Dictionary<string> = {};
 
+  private constructor() { }
+
   static getInstance() {
     if (!Protocols.instance) {
       Protocols.instance = new Protocols();
@@ -15,8 +17,6 @@ class Protocols {
 
     return Protocols.instance;
   }
-
-  private constructor() {}
 
   getRefKeyByValue(value?: string): string {
     return Object.keys(this.refs).find((key) => this.refs[key] === value) || '';

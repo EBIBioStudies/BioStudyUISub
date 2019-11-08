@@ -18,20 +18,18 @@ import {
     ]
 })
 export class UniqueValidator implements Validator, OnDestroy {
-    validator: ValidatorFn;
-
     @Input('unique') isApply?: boolean = true;
+    validator: ValidatorFn;
 
     constructor(private injector: Injector) {
         this.validator = uniqueValidatorFactory();
     }
 
-    validate(formControl: FormControl) {
-        if (this.isApply) {
-            return this.validator(formControl);
-        } else {
-            return null;
-        }
+    /**
+     * Updates validity after deletion to avoid inconsistencies.
+     */
+    ngOnDestroy(): void {
+        this.onChange();
     }
 
     /**
@@ -52,11 +50,12 @@ export class UniqueValidator implements Validator, OnDestroy {
         });
     }
 
-    /**
-     * Updates validity after deletion to avoid inconsistencies.
-     */
-    ngOnDestroy(): void {
-        this.onChange();
+    validate(formControl: FormControl) {
+        if (this.isApply) {
+            return this.validator(formControl);
+        } else {
+            return null;
+        }
     }
 }
 

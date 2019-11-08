@@ -9,25 +9,21 @@ import { AgFilterComponent } from 'ag-grid-angular/main';
 import { DateInputComponent } from '../../../shared/date-input.component';
 
 class DateRange {
-    private static isValueEmpty(v: any): boolean {
-        return v === null || v === undefined && v === '';
-    }
-
     constructor(
         public from?: string,
         public to?: string
     ) {}
 
-    isEmpty(): boolean {
-        return DateRange.isValueEmpty(this.from) && DateRange.isValueEmpty(this.to);
-    }
-
-    equalsTo(obj?: DateRange): boolean {
-        return (obj && this.from === obj.from && this.to === obj.to) === true;
+    private static isValueEmpty(v: any): boolean {
+        return v === null || v === undefined && v === '';
     }
 
     copy(): DateRange {
         return new DateRange(this.from, this.to);
+    }
+
+    equalsTo(obj?: DateRange): boolean {
+        return (obj && this.from === obj.from && this.to === obj.to) === true;
     }
 
     getRange(): any {
@@ -36,6 +32,10 @@ class DateRange {
             to: this.to
         };
     }
+
+    isEmpty(): boolean {
+        return DateRange.isValueEmpty(this.from) && DateRange.isValueEmpty(this.to);
+    }
 }
 
 @Component({
@@ -43,41 +43,40 @@ class DateRange {
     templateUrl: 'date-filter.component.html'
 })
 export class DateFilterComponent implements AgFilterComponent {
-    private params?: IFilterParams;
-    private valueGetter?: (rowNode: RowNode) => any;
-    private selection;
-    private date?: DateRange;
-    private prev?: DateRange;
-
+    @ViewChildren(DateInputComponent) dateInputs?: QueryList<DateInputComponent>;
     hide?: Function;
 
-    @ViewChildren(DateInputComponent) dateInputs?: QueryList<DateInputComponent>;
+    private date?: DateRange;
+    private params?: IFilterParams;
+    private prev?: DateRange;
+    private selection;
+    private valueGetter?: (rowNode: RowNode) => any;
+
+    get isInvalidRange(): boolean {
+        const s = this.date!.getRange();
+        return this.between && s.from > s.to;
+    }
+
+    get after(): boolean {
+        return this.selection === 'after';
+    }
+
+    get before(): boolean {
+        return this.selection === 'before';
+    }
+
+    get between(): boolean {
+        return this.selection === 'between';
+    }
+
+    afterGuiAttached(params: IAfterGuiAttachedParams): void {
+        this.hide = params.hidePopup;
+    }
 
     agInit(params: IFilterParams): void {
         this.params = params;
         this.valueGetter = params.valueGetter;
         this.reset();
-    }
-
-    /**
-     * Sets all date fields and the underlying date range model to initial values.
-     */
-    reset() {
-        this.selection = 'after';
-        this.date = new DateRange();
-
-        if (this.dateInputs) {
-            this.dateInputs.forEach((dateInput) => dateInput.reset());
-        }
-    }
-
-    isFilterActive(): boolean {
-        return !this.date!.isEmpty();
-    }
-
-    get isInvalidRange(): boolean {
-        const s = this.date!.getRange();
-        return this.between && s.from > s.to;
     }
 
     doesFilterPass(params: IDoesFilterPassParams): boolean {
@@ -99,50 +98,11 @@ export class DateFilterComponent implements AgFilterComponent {
     }
 
     getModel(): any {
-        return {value: this.date!.getRange()};
+        return { value: this.date!.getRange() };
     }
 
-    setModel(model: any): void {
-        if (model) {
-            this.date = new DateRange(model.value.from, model.value.to);
-        }
-    }
-
-    afterGuiAttached(params: IAfterGuiAttachedParams): void {
-        this.hide = params.hidePopup;
-    }
-
-    private notifyAboutChanges() {
-        if (!this.date!.equalsTo(this.prev)) {
-            this.prev = this.date!.copy();
-            this.params!.filterChangedCallback();
-        }
-
-        if (this.hide) {
-            this.hide();
-        }
-    }
-
-    get after(): boolean {
-        return this.selection === 'after';
-    }
-
-    get before(): boolean {
-        return this.selection === 'before';
-    }
-
-    get between(): boolean {
-        return this.selection === 'between';
-    }
-
-    onSelectionChange(value): void {
-        this.selection = value;
-        if (this.after) {
-            this.date!.to = undefined;
-        }
-        if (this.before) {
-            this.date!.from = undefined;
-        }
+    isFilterActive(): boolean {
+        return !this.date!.isEmpty();
     }
 
     onApplyClick(): void {
@@ -159,12 +119,6 @@ export class DateFilterComponent implements AgFilterComponent {
         this.notifyAboutChanges();
     }
 
-    onToChange() {
-        if (!this.between) {
-            return;
-        }
-    }
-
     onFromChange() {
         if (!this.between) {
             return;
@@ -173,6 +127,51 @@ export class DateFilterComponent implements AgFilterComponent {
         const s = this.date!.getRange();
         if (s.from > s.to) {
             this.reset();
+        }
+    }
+
+    onSelectionChange(value): void {
+        this.selection = value;
+        if (this.after) {
+            this.date!.to = undefined;
+        }
+        if (this.before) {
+            this.date!.from = undefined;
+        }
+    }
+
+    onToChange() {
+        if (!this.between) {
+            return;
+        }
+    }
+
+    /**
+     * Sets all date fields and the underlying date range model to initial values.
+     */
+    reset() {
+        this.selection = 'after';
+        this.date = new DateRange();
+
+        if (this.dateInputs) {
+            this.dateInputs.forEach((dateInput) => dateInput.reset());
+        }
+    }
+
+    setModel(model: any): void {
+        if (model) {
+            this.date = new DateRange(model.value.from, model.value.to);
+        }
+    }
+
+    private notifyAboutChanges() {
+        if (!this.date!.equalsTo(this.prev)) {
+            this.prev = this.date!.copy();
+            this.params!.filterChangedCallback();
+        }
+
+        if (this.hide) {
+            this.hide();
         }
     }
 }
