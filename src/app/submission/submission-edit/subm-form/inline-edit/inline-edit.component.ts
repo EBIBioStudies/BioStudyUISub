@@ -41,10 +41,10 @@ export class InlineEditComponent implements ControlValueAccessor {
         return this._value;
     }
 
-    set value(v: any) {
-        if (v !== this._value) {
-            this._value = v;
-            this.onChange();
+    set value(value: any) {
+        if (value !== this._value) {
+            this._value = value;
+            this.onChange(value);
         }
     }
 
@@ -74,7 +74,7 @@ export class InlineEditComponent implements ControlValueAccessor {
         this.stopEditing();
     }
 
-    onChange() { }
+    onChange(_value: string) { }
 
     onEdit(): void {
         this.startEditing();
