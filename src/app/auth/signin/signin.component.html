@@ -27,7 +27,7 @@
                                    class="form-control"
                                    [(ngModel)]="model.login"
                                    required
-                                   validate-onblur
+                                   stValidateOnblur
                                    (change)="resetGlobalError()"
                                    #login="ngModel"
                                    #focusEl/>
@@ -44,7 +44,7 @@
                                    class="form-control"
                                    [(ngModel)]="model.password"
                                    required
-                                   validate-onblur
+                                   stValidateOnblur
                                    (change)="resetGlobalError()"
                                    #password="ngModel"/>
                             <div class="text-right">

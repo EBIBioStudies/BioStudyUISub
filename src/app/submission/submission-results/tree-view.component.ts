@@ -1,4 +1,13 @@
-import { Component, ComponentFactoryResolver, Input, Type, ViewChild, ViewContainerRef } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ComponentFactoryResolver,
+    Input,
+    OnChanges,
+    Type,
+    ViewChild,
+    ViewContainerRef
+} from '@angular/core';
 
 export interface TreeViewCustomNodeComponent {
     onNodeData(data: any): void;
@@ -69,7 +78,7 @@ li:last-child::before {
 }
 `]
 })
-export class TreeViewNodeComponent {
+export class TreeViewNodeComponent implements AfterViewInit, OnChanges {
     @Input() config?: TreeViewConfig;
     @Input() data?: any;
     isCollapsed: boolean = true; // All branches will be collapsed by default.

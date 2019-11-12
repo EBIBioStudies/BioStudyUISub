@@ -26,8 +26,8 @@
                             [removable]="featureForm.canRemoveColumn(column) && !featureForm.isReadonly"
                             [autosuggestSource]="featureForm.columnNamesAvailable"
                             (remove)="featureForm.removeColumn(column)"
-                            nativeElementAttach
-                            validate-onblur>
+                            stNativeElementAttach
+                            stValidateOnblur>
             </st-inline-edit>
         </div>
     </div>
@@ -62,8 +62,8 @@
                                     [formControl]="row.cellControlAt(column.id).control"
                                     [autosuggestSource]="featureForm.cellValuesTypeaheadFunc(rowIdx, column.id)"
                                     (select)="onInputValueSelect($event, rowIdx)"
-                                    nativeElementAttach
-                                    validate-onblur>
+                                    stNativeElementAttach
+                                    stValidateOnblur>
                     </st-input-value>
                 </div>
             </div>

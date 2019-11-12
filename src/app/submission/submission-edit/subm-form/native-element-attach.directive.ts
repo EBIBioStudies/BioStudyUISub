@@ -2,7 +2,7 @@ import { NgControl } from '@angular/forms';
 import { AfterViewInit, Directive, ElementRef, OnDestroy } from '@angular/core';
 
 @Directive({
-    selector: '[nativeElementAttach]'
+    selector: '[stNativeElementAttach]'
 })
 export class NativeElementAttachDirective implements AfterViewInit, OnDestroy {
     constructor(private el: ElementRef, private ngControl: NgControl) {

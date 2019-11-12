@@ -1,5 +1,5 @@
 import {
-    Directive, Injector, Input, OnDestroy
+    Directive, Injector, Input, OnDestroy, HostListener
 } from '@angular/core';
 import {
     NG_VALIDATORS,
@@ -10,9 +10,6 @@ import {
 
 @Directive({
     selector: '[unique]',
-    host: {
-        '(change)': 'onChange()'
-    },
     providers: [
         { provide: NG_VALIDATORS, useExisting: UniqueValidator, multi: true }
     ]
@@ -37,6 +34,7 @@ export class UniqueValidator implements Validator, OnDestroy {
      * two invalid fields with a non-unique value will cease to be invalid the moment that value is changed
      * in any one field.
      */
+    @HostListener('change')
     onChange(): void {
         const control = this.injector.get(NgControl).control;
         const controls = control.parent.controls;

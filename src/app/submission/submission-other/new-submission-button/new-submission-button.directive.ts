@@ -10,7 +10,7 @@ const PLUS_ICON = '<i class="fa fa-plus-circle" aria-hidden="true"></i>';
 const SPINNER_ICON = '<i class="fa fa-cog fa-spin"></i>';
 
 @Directive({
-    selector: 'button[newSubmissionButton]'
+    selector: 'button[stNewSubmissionButton]'
 })
 export class NewSubmissionButtonDirective implements AfterViewInit {
     @HostBinding('disabled') disabled?: boolean;

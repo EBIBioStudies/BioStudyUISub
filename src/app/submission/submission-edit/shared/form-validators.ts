@@ -172,18 +172,18 @@ export class FormValidators {
         }
 
         Object.keys(columns.controls).forEach(key => {
-            const control = columns.controls[key];
-            let errors = control.errors;
-            if (duplicates.includes(control.value)) {
+            const controlItem = columns.controls[key];
+            let errors = controlItem.errors;
+            if (duplicates.includes(controlItem.value)) {
                 errors = errors || {};
-                errors['uniqueCols'] = {value: control.value};
+                errors['uniqueCols'] = { value: controlItem.value};
             } else if (errors !== null) {
                 delete errors['uniqueCols'];
                 if (Object.keys(errors).length === 0) {
                     errors = null;
                 }
             }
-            control.setErrors(errors);
+            controlItem.setErrors(errors);
         });
 
         return {'uniqueCols': {value: duplicates[0]}};

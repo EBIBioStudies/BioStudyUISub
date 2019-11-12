@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild, DoCheck, OnDestroy } from '@angular/core';
 import { UserData } from 'app/auth/shared';
 import { FileUploadButtonComponent } from 'app/shared/file-upload-button.component';
 import { Observable, from, Subject, Subscription } from 'rxjs';
@@ -12,7 +12,7 @@ import { DirectSubmitFileUploadService } from './direct-submit-file-upload.servi
     templateUrl: './direct-submit-sidebar.component.html',
     styleUrls: ['./direct-submit-sidebar.component.css']
 })
-export class DirectSubmitSideBarComponent implements OnInit {
+export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck {
     @Input() collapsed = false;
     isBulkMode: boolean = false; // Flags if single directory with all study files is expected
     isBulkSupport: boolean = false; // Indicates if directory selection is supported by the browser

@@ -7,10 +7,11 @@ interface CSSStyleDeclarationWithResize extends CSSStyleDeclaration {
 }
 
 @Directive({
-    selector: 'textarea[autosize]'
+    selector: 'textarea[stAutosize]'
 })
 export class TextareaAutosizeDirective implements AfterContentInit, AfterContentChecked {
-    @Input('autosize') private maxHeight: number = 100;
+    // tslint:disable-next-line: no-input-rename
+    @Input('stAutosize') private maxHeight: number = 100;
 
     private minHeight: number = 50;
 

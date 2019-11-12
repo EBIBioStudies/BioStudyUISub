@@ -43,7 +43,7 @@
                                (change)="resetGlobalError()"
                                #email="ngModel"
                                required
-                               validate-onblur>
+                               stValidateOnblur>
                     </div>
                     <div class="form-group" [ngClass]="{'has-error': password.invalid && password.touched}">
                         <label class="control-label" for="password">
@@ -62,7 +62,7 @@
                                class="form-control"
                                [(ngModel)]="model.password"
                                (change)="resetGlobalError()"
-                               validate-onblur
+                               stValidateOnblur
                                required
                                minlength="6"
                                #password="ngModel"/>
@@ -84,7 +84,7 @@
                                 [isSmall]="false"
                                 name="orcid"
                                 #orcid="ngModel"
-                                validate-onblur>
+                                stValidateOnblur>
                         </st-orcid-input-box>
                     </div>
                     <div class="form-group" [ngClass]="{'has-error': captcha.invalid && (captcha.dirty || captcha.touched)}">
@@ -108,7 +108,7 @@
                                    (change)="resetGlobalError()"
                                    #terms="ngModel"
                                    required
-                                   validate-onblur>
+                                   stValidateOnblur>
                             <span>
                                 I have read and agree to the
                                 <a target="_blank" href="https://www.ebi.ac.uk/data-protection/privacy-notice/biostudies-database">Privacy Notice</a> and

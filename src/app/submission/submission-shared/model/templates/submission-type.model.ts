@@ -270,9 +270,7 @@ export class FeatureType extends TypeBase {
         this.dependency = data.dependency || '';
 
         (data.columnTypes || [])
-            .forEach(ct => {
-                new ColumnType(ct.name, ct, this.columnScope);
-            });
+            .forEach(ct => new ColumnType(ct.name, ct, this.columnScope));
     }
 
     static createDefault(name: string, singleRow?: boolean, uniqueCols?: boolean, scope?: TypeScope<TypeBase>,

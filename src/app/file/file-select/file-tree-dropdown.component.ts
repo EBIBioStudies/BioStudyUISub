@@ -1,12 +1,9 @@
-import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, HostListener } from '@angular/core';
 
 @Component({
     selector: 'st-file-tree-dropdown',
     templateUrl: './file-tree-dropdown.component.html',
-    styleUrls: ['./file-tree-dropdown.component.css'],
-    host: {
-        '(document:click)': 'onOutsideClick($event)',
-    },
+    styleUrls: ['./file-tree-dropdown.component.css']
 })
 export class FileTreeDropdownComponent implements OnInit, OnDestroy {
     @Output() close = new EventEmitter();
@@ -47,12 +44,13 @@ export class FileTreeDropdownComponent implements OnInit, OnDestroy {
         this.close.emit();
     }
 
-    onOutsideClick(event: Event): void {
+    @HostListener('document:click', ['$event.target'])
+    onOutsideClick(target: Element): void {
         if (!this.isVisible || this.ddRef === undefined) {
             return;
         }
 
-        if (!this.ddRef.nativeElement.contains(event.target)) {
+        if (!this.ddRef.nativeElement.contains(target)) {
             this.close.emit();
         }
     }

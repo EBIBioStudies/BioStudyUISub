@@ -28,12 +28,14 @@ import {
 function listOfControls(control: AbstractControl): FormControl[] {
     if (control instanceof FormGroup) {
         const map = (<FormGroup>control).controls;
+
         return Object.keys(map)
             .map(key => map[key])
-            .flatMap(control => listOfControls(control));
+            .flatMap((controlItem) => listOfControls(controlItem));
     } else if (control instanceof FormArray) {
         const array = (<FormArray>control).controls;
-        return array.flatMap(control => listOfControls(control));
+
+        return array.flatMap((controlItem) => listOfControls(controlItem));
     }
 
     return [<FormControl>control];

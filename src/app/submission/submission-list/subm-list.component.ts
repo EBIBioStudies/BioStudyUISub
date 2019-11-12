@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AgRendererComponent } from 'ag-grid-angular/main';
 import { GridOptions } from 'ag-grid-community/main';
@@ -118,7 +118,7 @@ export class DateCellComponent implements AgRendererComponent {
     templateUrl: './subm-list.component.html',
     styleUrls: ['./subm-list.component.css']
 })
-export class SubmListComponent {
+export class SubmListComponent implements OnDestroy {
     columnDefs?: any[];
     // AgGrid-related properties
     gridOptions: GridOptions;
