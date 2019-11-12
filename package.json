@@ -15,6 +15,7 @@
     "node:prod": "cross-env NODE_ENV=production node .",
     "start-no-ssl": "ng serve --proxy-config proxy.conf.json --progress",
     "start:dev": "run-p node:dev start-no-ssl",
+    "pretest": "npm run lint",
     "test": "ng test"
   },
   "dependencies": {
