@@ -12,8 +12,8 @@ describe('AuthorsAndAffiliations:', () => {
                             value: 'John D'
                         },
                         {
-                            name: 'Affiliation',
-                            isReference: true,
+                            name: 'affiliation',
+                            reference: true,
                             value: 'o1'
                         }
                     ]
@@ -26,7 +26,7 @@ describe('AuthorsAndAffiliations:', () => {
                             value: 'Guy R'
                         },
                         {
-                            name: 'Affiliation',
+                            name: 'affiliation',
                             value: 'Some organisation'
                         }
                     ]
@@ -51,12 +51,14 @@ describe('AuthorsAndAffiliations:', () => {
                     ]
                 },
                 {
-                    type: 'Other'
+                    type: 'Other',
+                    attributes: []
                 }
             ])).toEqual(
             [
                 {
-                    type: 'Other'
+                    type: 'Other',
+                    attributes: []
                 },
                 {
                     type: 'Contact',
@@ -138,13 +140,15 @@ describe('AuthorsAndAffiliations:', () => {
                     ]
                 },
                 {
-                    type: 'Other'
+                    type: 'Other',
+                    attributes: []
                 }]);
 
         expect(authors).toEqual(
             [
                 {
-                    type: 'Other'
+                    type: 'Other',
+                    attributes: []
                 },
                 {
                     type: 'Author',
@@ -155,7 +159,7 @@ describe('AuthorsAndAffiliations:', () => {
                         },
                         {
                             name: 'affiliation',
-                            isReference: true,
+                            reference: true,
                             value: 'o1'
                         }
                     ]
@@ -169,7 +173,7 @@ describe('AuthorsAndAffiliations:', () => {
                         },
                         {
                             name: 'affiliation',
-                            isReference: true,
+                            reference: true,
                             value: 'o2'
                         }
                     ]

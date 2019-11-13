@@ -19,16 +19,17 @@ export function authors2Contacts(sections: PageTabSection[] = []): PageTabSectio
     };
 
     const isAuthor = isEqualTo('author');
-
     const isName = isEqualTo('name');
 
     const affiliations: Dictionary<string> =
         sections
             .filter(s => String.isDefined(s.accno) && isAffiliation(s.type))
-            .reduce((rv, sec) => {
-                rv[sec.accno!] =
-                    ((sec.attributes || []).find(at => isName(at.name)) || {value: ''}).value;
-                return rv;
+            .reduce((result, section) => {
+                const nameAttribute: PtAttribute = section.attributes.find((attribute) => isName(attribute.name)) || { value: '' };
+
+                result[section.accno!] = nameAttribute.value;
+
+                return result;
             }, <Dictionary<string>>{});
 
     const contacts = sections
@@ -39,11 +40,13 @@ export function authors2Contacts(sections: PageTabSection[] = []): PageTabSectio
                 attributes: (a.attributes || [])
                     .map(attr => {
                         if (isAffiliation(attr.name)) {
-                            const value = attr.isReference &&
-                            String.isDefinedAndNotEmpty(attr.value) ?
-                                (affiliations[attr.value!] || attr.value) : attr.value;
+                            const value = attr.reference
+                                && String.isDefinedAndNotEmpty(attr.value) ? (affiliations[attr.value!] || attr.value)
+                                : attr.value;
+
                             return <PtAttribute>{name: 'Organisation', value: value};
                         }
+
                         return attr;
                     })
             });
@@ -69,7 +72,7 @@ class Organisations {
         }
 
         const orgRef = this.refFor(attr.value!, attr.accno!);
-        return <PtAttribute>{ name: 'affiliation', value: orgRef, isReference: true };
+        return <PtAttribute>{ name: 'affiliation', value: orgRef, reference: true };
     }
 
     private refFor(value: string, accno: string): string {

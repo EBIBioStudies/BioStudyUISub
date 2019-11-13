@@ -39,6 +39,7 @@ describe('PageTab To Submission Util:', () => {
     it('Links should go to section feature list', () => {
         const pageTab = {
             section: {
+                attributes: [],
                 links: [
                     {
                         url: 'url1'
@@ -64,6 +65,7 @@ describe('PageTab To Submission Util:', () => {
     it('Files should go to section feature list', () => {
         const pageTab = {
             section: {
+                attributes: [],
                 files: [
                     {
                         path: 'path1'

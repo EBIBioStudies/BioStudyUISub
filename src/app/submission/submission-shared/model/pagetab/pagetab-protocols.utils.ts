@@ -45,7 +45,7 @@ class Protocols {
     return <PtAttribute>{
       name: 'Protocol',
       value: refKeyForValue,
-      isReference: true
+      reference: true
     };
   }
 }

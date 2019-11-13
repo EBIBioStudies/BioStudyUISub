@@ -66,8 +66,8 @@ export interface PtNameAndValue {
 
 export interface PtAttribute {
     accno?: string;
-    isReference?: boolean;
     name?: string;
+    reference?: boolean;
     valqual?: PtNameAndValue[];
     value?: string;
 }
@@ -85,7 +85,7 @@ export interface PtFile {
 export interface PageTabSection {
     accessTags?: string[];
     accno?: string;
-    attributes?: PtAttribute[];
+    attributes: PtAttribute[];
     files?: PtFileItem[];
     libraryFile?: string;
     links?: PtLinkItem[];
