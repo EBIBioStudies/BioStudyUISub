@@ -25,7 +25,7 @@ export function authors2Contacts(sections: PtSection[] = []): PtSection[] {
         sections
             .filter(s => String.isDefined(s.accno) && isAffiliation(s.type))
             .reduce((result, section) => {
-                const nameAttribute: PtAttribute = section.attributes.find((attribute) => isName(attribute.name)) || { value: '' };
+                const nameAttribute: PtAttribute = section.attributes!.find((attribute) => isName(attribute.name)) || { value: '' };
 
                 result[section.accno!] = nameAttribute.value;
 

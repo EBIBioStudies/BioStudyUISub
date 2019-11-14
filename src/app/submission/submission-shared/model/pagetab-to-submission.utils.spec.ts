@@ -90,16 +90,20 @@ describe('PageTab To Submission Util:', () => {
     it('Sections without subsections should go to section feature list', () => {
         const pageTab = {
             section: {
+                attributes: [],
                 subsections: [
                     {
+                        attributes: [],
                         type: 'secType1'
                     },
                     [
                         {
+                            attributes: [],
                             type: 'secType2'
 
                         },
                         {
+                            attributes: [],
                             type: 'secType2'
                         }
                     ]
@@ -121,17 +125,21 @@ describe('PageTab To Submission Util:', () => {
     it('Sections with subsections should go to section subsections list', () => {
         const pageTab = {
             section: {
+                attributes: [],
                 subsections: [
                     {
+                        attributes: [],
                         type: 'secType1',
                         links: [{url: 'url1'}]
                     },
                     [
                         {
+                            attributes: [],
                             type: 'secType2',
                             links: [{url: 'url2'}]
                         },
                         {
+                            attributes: [],
                             type: 'secType2',
                             links: [{url: 'url3'}]
                         }

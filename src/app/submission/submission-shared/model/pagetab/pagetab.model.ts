@@ -88,7 +88,7 @@ export interface PtFile {
 export interface PtSection {
     type?: string;
     accno?: string;
-    attributes: PtAttribute[];
+    attributes?: PtAttribute[];
     tags?: PtTag[];
     accessTags?: string[];
     subsections?: PtSectionItem [];
