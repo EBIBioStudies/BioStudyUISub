@@ -68,19 +68,19 @@ export abstract class TypeBase {
                 readonly tmplBased: boolean,
                 private scope: TypeScope<TypeBase> = GLOBAL_TYPE_SCOPE) {
 
-        this.typeName = typeName.trim();
+        this.typeName = String.isDefined(typeName) ? typeName.trim() : '';
 
-        if (typeName.isEmpty()) {
+        if (this.typeName.isEmpty()) {
             console.warn(`Error: Type name is empty`);
             return;
         }
 
-        if (scope.has(typeName)) {
-            console.warn(`Error: Type with name ${typeName} already exists in the scope`);
+        if (scope.has(this.typeName)) {
+            console.warn(`Error: Type with name ${this.typeName} already exists in the scope`);
             return;
         }
 
-        scope.set(typeName, this);
+        scope.set(this.typeName, this);
     }
 
     get name(): string {
