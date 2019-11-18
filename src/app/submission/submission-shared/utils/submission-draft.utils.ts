@@ -2,10 +2,8 @@ import { SubmissionListItem } from '../submission.service';
 
 export class SubmissionDraftUtils {
   filterAndFormatDraftSubmissions(drafts): SubmissionListItem[] {
-    const validDrafts = drafts.filter((draft) => draft.content.attributes !== undefined);
-
-    return validDrafts.map((draft) => {
-        const { key, content: { attributes } } = draft;
+    return drafts.map((draft) => {
+        const { key, content: { attributes = [] } } = draft;
         const titleAttribute = attributes.find((attribute) => attribute.name === 'Title') || {};
         const releaseDateAttribute = attributes.find((attribute) => attribute.name === 'ReleaseDate') || {};
         const title = titleAttribute.value;
