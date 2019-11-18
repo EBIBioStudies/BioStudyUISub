@@ -41,7 +41,7 @@ export function pageTabSample1() {
                         },
                         {
                             'name': 'affiliation',
-                            'isReference': true,
+                            'reference': true,
                             'value': 'o1'
                         }
                     ],

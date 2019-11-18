@@ -127,9 +127,9 @@ function hasSubsections(section: PtSection): boolean {
 function pageTabAttributesToAttributeData(attrs: PtAttribute[]): AttributeData[] {
     return attrs.map(at => <AttributeData>{
         name: at.name,
-        value: at.value,
-        reference: at.isReference,
-        terms: (at.valqual || []).map(t => new NameAndValue(t.name, t.value))
+        reference: at.reference,
+        terms: (at.valqual || []).map(t => new NameAndValue(t.name, t.value)),
+        value: at.value
     });
 }
 
@@ -138,6 +138,6 @@ function flatArray<T>(array: (T | T[])[]): T[] {
 
     return elements
         .map((element) => Array.isArray(element) ? element : [element])
-        .reduce((previousElement, currentElement) => [ ...previousElement, ...currentElement ], <T[]>[])
+        .reduce((previousElement, currentElement) => [...currentElement, ...previousElement], <T[]>[])
         .reverse();
 }

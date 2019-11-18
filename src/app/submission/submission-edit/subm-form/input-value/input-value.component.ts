@@ -67,7 +67,6 @@ export class InputValueComponent implements ControlValueAccessor, AfterViewCheck
     }
 
     onKeyDown() {
-        this.valueChanges$.next(this.value);
     }
 
     writeValue(value: any): void {

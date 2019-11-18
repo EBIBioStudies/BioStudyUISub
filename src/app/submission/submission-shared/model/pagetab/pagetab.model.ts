@@ -69,6 +69,7 @@ export interface PtNameAndValue {
 export interface PtAttribute {
     accno?: string;
     name?: string;
+    reference?: boolean;
     value?: string;
     isReference?: boolean;
     valqual?: PtNameAndValue[];
