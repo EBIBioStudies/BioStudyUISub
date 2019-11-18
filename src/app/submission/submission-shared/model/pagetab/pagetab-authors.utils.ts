@@ -3,7 +3,6 @@ import { PtAttribute, PtSection } from './pagetab.model';
 const isEqualTo = (value: string) => {
     return (s: Nullable<string>) => (String.isDefined(s) && s!.toLowerCase() === value);
 };
-
 export function getOrganizationFromSubsection(section, orgName) {
     const { sections = [] } = section.subsections || {};
 
@@ -17,7 +16,6 @@ export function authors2Contacts(sections: PtSection[] = []): PtSection[] {
     const isAffiliation = (s: Nullable<string>) => {
         return String.isDefined(s) && ['organization', 'organisation', 'affiliation'].includes(s!.toLowerCase());
     };
-
     const isAuthor = isEqualTo('author');
     const isName = isEqualTo('name');
 
@@ -40,8 +38,8 @@ export function authors2Contacts(sections: PtSection[] = []): PtSection[] {
                 attributes: (a.attributes || [])
                     .map(attr => {
                         if (isAffiliation(attr.name)) {
-                            const value = attr.reference
-                                && String.isDefinedAndNotEmpty(attr.value) ? (affiliations[attr.value!] || attr.value)
+                            const value = (attr.reference || attr.isReference) && String.isDefinedAndNotEmpty(attr.value)
+                                ? (affiliations[attr.value!] || attr.value)
                                 : attr.value;
 
                             return <PtAttribute>{name: 'Organisation', value: value};
