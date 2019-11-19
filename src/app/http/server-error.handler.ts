@@ -11,7 +11,7 @@ export class ServerError {
     constructor(status: number, statusString: string, data: any) {
         this.status = status;
         this.statusString = statusString;
-        this.status = data;
+        this.data = data;
     }
 
     static dataError(data: any): ServerError {

@@ -45,7 +45,7 @@ export class SignInComponent implements OnInit, AfterViewInit {
                 .login(this.model)
                 .subscribe(
                     () => {
-                        this.router.navigate( [next]);
+                        this.router.navigate([next]);
                     },
                     (error: ServerError) => {
                         this.isLoading = false;
