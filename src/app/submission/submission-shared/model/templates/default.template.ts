@@ -252,12 +252,12 @@ export const defaultTemplate = {
                     {
                         'name': 'Pointer',
                         'valueType': {'name': 'idlink'},
-                        'display': 'required'
+                        'display': 'desirable'
                     },
                     {
                         'name': 'Description',
                         'valueType': {'name': 'text'},
-                        'display': 'required'
+                        'display': 'desirable'
                     }
                 ]
             },

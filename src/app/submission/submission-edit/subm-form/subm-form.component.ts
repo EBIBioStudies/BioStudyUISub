@@ -5,13 +5,9 @@ import { SectionForm } from '../shared/section-form';
     selector: 'st-subm-form',
     templateUrl: './subm-form.component.html'
 })
-export class SubmFormComponent implements OnChanges {
+export class SubmFormComponent {
     @Input() readonly?: boolean = false;
     @Input() sectionForm?: SectionForm;
 
     constructor() {}
-
-    ngOnChanges(): void {}
-
-    onSubmit() {}
 }

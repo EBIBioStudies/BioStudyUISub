@@ -6,8 +6,12 @@ String.prototype.isEmpty = function () {
     return this.trim().length === 0;
 };
 
+String.isString = function (string: any) {
+    return typeof string === 'string';
+}
+
 String.isDefined = function (s: string | undefined | null) {
-    return s !== undefined && s !== null;
+    return String.isString(s) && s !== undefined && s !== null;
 };
 
 String.isNotDefinedOrEmpty = function (s: string | undefined | null) {
@@ -15,5 +19,5 @@ String.isNotDefinedOrEmpty = function (s: string | undefined | null) {
 };
 
 String.isDefinedAndNotEmpty = function (s: string | undefined | null) {
-    return String.isDefined(s) && !s!.isEmpty();
+    return String.isDefined(s) && String.isString(s) && !s!.isEmpty();
 };

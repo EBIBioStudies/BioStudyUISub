@@ -67,17 +67,17 @@ export abstract class TypeBase {
                 readonly tmplBased: boolean,
                 private scope: TypeScope<TypeBase> = GLOBAL_TYPE_SCOPE) {
 
-        this.typeName = typeName.trim();
+        this.typeName = String.isDefined(typeName) ? typeName.trim() : '';
 
-        if (typeName.isEmpty()) {
+        if (this.typeName.isEmpty()) {
             return;
         }
 
-        if (scope.has(typeName)) {
+        if (scope.has(this.typeName)) {
             return;
         }
 
-        scope.set(typeName, this);
+        scope.set(this.typeName, this);
     }
 
     get name(): string {
