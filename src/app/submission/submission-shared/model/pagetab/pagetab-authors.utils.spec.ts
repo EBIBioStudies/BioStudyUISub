@@ -109,6 +109,7 @@ describe('AuthorsAndAffiliations:', () => {
                             value: 'John D'
                         },
                         {
+                            accno: 'o1',
                             name: 'Organisation',
                             value: 'Org1'
                         }]
@@ -121,6 +122,7 @@ describe('AuthorsAndAffiliations:', () => {
                             value: 'Bob D'
                         },
                         {
+                            accno: 'o1',
                             name: 'Organisation',
                             value: 'Org1'
                         }
@@ -174,7 +176,7 @@ describe('AuthorsAndAffiliations:', () => {
                         {
                             name: 'affiliation',
                             reference: true,
-                            value: 'o2'
+                            value: 'o1'
                         }
                     ]
                 },
@@ -193,7 +195,7 @@ describe('AuthorsAndAffiliations:', () => {
                 },
                 {
                     type: 'Organization',
-                    accno: 'o2',
+                    accno: 'o1',
                     attributes: [
                         {
                             name: 'Name',

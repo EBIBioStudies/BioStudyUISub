@@ -90,7 +90,7 @@ class Organisations {
             return Number.parseInt(num, 10);
         });
 
-        const highestValueNumber: number = Math.max(...refValueNumbers);
+        const highestValueNumber: number = refValueNumbers.length > 0 ? Math.max(...refValueNumbers) : 0;
 
         return `o${highestValueNumber + 1}`;
     }
