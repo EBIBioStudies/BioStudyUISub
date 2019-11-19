@@ -58,10 +58,41 @@ class Organisations {
     private names: Dictionary<string> = {};
 
     private refFor(value: string, accno: string): string {
-        const key = value.trim().toLowerCase();
-        this.refs[key] = accno ? accno : `o${Object.keys(this.refs).length + 1}`;
-        this.names[key] = this.names[key] || value;
+        const key: string = value.trim().toLowerCase();
+        const isAccnoDefined: boolean = String.isDefined(accno);
+        const isValueDefined: boolean = String.isDefined(this.names[key]);
+
+        if (isValueDefined) {
+            return this.refs[key]!;
+        }
+
+        if (isAccnoDefined) {
+            this.refs[key] = accno;
+            this.names[key] = value;
+
+            return this.refs[key]!;
+        }
+
+        this.refs[key] = this.generateNextRefValue();
+        this.names[key] = value;
+
         return this.refs[key]!;
+    }
+
+    private generateNextRefValue(): string {
+        const onlyDigitsRegex: RegExp  = /\d+/;
+        const refKeys: string[]  = Object.keys(this.refs);
+
+        const refValueNumbers: number[] = refKeys.map((key: string) => {
+            const keyValue: string = this.refs[key] || '';
+            const [num] = keyValue.match(onlyDigitsRegex) || ['0'];
+
+            return Number.parseInt(num, 10);
+        });
+
+        const highestValueNumber: number = Math.max(...refValueNumbers);
+
+        return `o${highestValueNumber + 1}`;
     }
 
     toReference(attr: PtAttribute): PtAttribute {
