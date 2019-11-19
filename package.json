@@ -6,7 +6,6 @@
   "main": "server/app.js",
   "scripts": {
     "build": "sh ./tasks/build.sh",
-    "cypress:open": "cypress open",
     "e2e": "ng e2e",
     "lint": "ng lint",
     "ng": "ng",
@@ -61,7 +60,6 @@
     "@types/pluralize": "0.0.28",
     "codelyzer": "^4.4.2",
     "cross-env": "^5.2.1",
-    "cypress": "^3.4.1",
     "del": "^4.1.1",
     "forever": "^1.0.0",
     "gulp": "^4.0.0",
