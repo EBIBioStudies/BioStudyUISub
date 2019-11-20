@@ -145,7 +145,7 @@ function attributeData2PtAttribute(attr: AttributeData): PtAttribute {
     const ptAttr = <PtAttribute>{
         name: attr.name,
         value: attr.value,
-        reference: attr.reference
+        isReference: attr.reference
     };
     if (!(attr.terms || []).isEmpty()) {
         ptAttr.valqual = attr.terms!.slice();
