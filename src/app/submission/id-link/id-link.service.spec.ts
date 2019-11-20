@@ -1,32 +1,21 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { IdLinkService } from './id-link.service';
 import { IdentifierNamespace } from './id-link.interfaces';
-import { defer, of, throwError } from 'rxjs';
-
-function asyncError(errorObject: any) {
-  return defer(() => throwError(errorObject));
-}
-
-function asyncData<T>(data: T) {
-  return defer(() => of(data));
-}
+import { of, throwError } from 'rxjs';
 
 function buildResponse(namespaces: Array<IdentifierNamespace>) {
   return { _embedded: { namespaces } };
 }
 
 describe('IdLinkService', () => {
-
-  let httpClientSpy: { get: jasmine.Spy };
   let service: IdLinkService;
+  const namespaces = [{ prefix: 'prefix1' }, { prefix: 'prefix2' }, { prefix: 'prefix3' }];
+  const httpClient = {
+    get: jest.fn()
+  };
 
-  beforeEach(() => {
-    const namespaces = [{ prefix: 'prefix1' }, { prefix: 'prefix2' }, { prefix: 'prefix3' }];
-    const response = buildResponse(namespaces);
-
-    httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
-    httpClientSpy.get.and.returnValue(asyncData(response));
-    service = new IdLinkService(<any> httpClientSpy);
+  beforeAll(() => {
+    service = new IdLinkService(<any> httpClient);
   });
 
   it('#suggest should return an empty list when the server returns a 404', () => {
@@ -36,7 +25,7 @@ describe('IdLinkService', () => {
       statusText: 'Not Found'
     });
 
-    httpClientSpy.get.and.returnValue(asyncError(errorResponse));
+    httpClient.get.mockReturnValueOnce(throwError(errorResponse));
 
     service.suggest('prefix').subscribe(
       items => expect(items).toEqual([])
@@ -51,7 +40,7 @@ describe('IdLinkService', () => {
       statusText: 'Not Found'
     });
 
-    httpClientSpy.get.and.returnValue(asyncError(errorResponse));
+    httpClient.get.mockReturnValueOnce(throwError(errorResponse));
 
     service.validate('prefix', '12345').subscribe(
       (obj: Object) => {
@@ -61,15 +50,15 @@ describe('IdLinkService', () => {
   });
 
   it('#suggest should return only list of valid prefixes', () => {
-    const namespaces = [{ prefix: 'p1' }, { prefix: 'p2' }, { prefix: 'p3' }];
     const resp = buildResponse(namespaces);
     const expectedPrefixes: string[] = namespaces.map(p => p.prefix);
 
-    httpClientSpy.get.and.returnValue(asyncData(resp));
+    httpClient.get.mockReturnValue(of(resp));
 
     service.suggest('prefix').subscribe(
       items => expect(items).toEqual(expectedPrefixes)
     );
-    expect(httpClientSpy.get.calls.count()).toBe(1);
+
+    expect(httpClient.get).toHaveBeenCalledTimes(1);
   });
 });
