@@ -101,7 +101,7 @@ class Organisations {
         }
 
         const orgRef = this.refFor(attr.value!, attr.accno!);
-        return <PtAttribute>{ name: 'affiliation', value: orgRef, reference: true };
+        return <PtAttribute>{ name: 'affiliation', value: orgRef, isReference: true };
     }
 
     list(): { accno: string, name: string }[] {
