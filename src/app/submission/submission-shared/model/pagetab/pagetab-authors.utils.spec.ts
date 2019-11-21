@@ -13,7 +13,7 @@ describe('AuthorsAndAffiliations:', () => {
                         },
                         {
                             name: 'affiliation',
-                            reference: true,
+                            isReference: true,
                             value: 'o1'
                         }
                     ]
@@ -161,7 +161,7 @@ describe('AuthorsAndAffiliations:', () => {
                         },
                         {
                             name: 'affiliation',
-                            reference: true,
+                            isReference: true,
                             value: 'o1'
                         }
                     ]
@@ -175,7 +175,7 @@ describe('AuthorsAndAffiliations:', () => {
                         },
                         {
                             name: 'affiliation',
-                            reference: true,
+                            isReference: true,
                             value: 'o1'
                         }
                     ]
