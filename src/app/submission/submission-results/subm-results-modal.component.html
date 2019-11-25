@@ -43,16 +43,15 @@
             <strong>Please note</strong>
         </div>
         <p class="text-block text-black">
-            Any registered study will remain private and accessible only through login until the release date.
+            Any registered study will remain private and accessible only through login until the release date in the Western European Time Zone.
         </p>
     </div>
     <div *ngIf="hasLog && isError" class="modal-body">
-        <div role="button" class="text-danger"
-             (click)="collapsedLog = !collapsedLog">
+        <div role="button" class="text-danger" (click)="collapsedLog = !collapsedLog">
             <i class="fa" [ngClass]="{'fa-caret-square-down':!collapsedLog, 'fa-caret-square-right': collapsedLog}"></i>
             {{errorMessage}}
         </div>
-        <subm-results-tree [hidden]="collapsedLog" [log]="log"></subm-results-tree>
+        <st-subm-results-tree [hidden]="collapsedLog" [log]="log"></st-subm-results-tree>
     </div>
 </div>
 <div class="modal-footer">

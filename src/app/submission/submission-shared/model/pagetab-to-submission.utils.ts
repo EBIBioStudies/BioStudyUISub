@@ -130,7 +130,7 @@ function hasSubsections(section: PageTabSection): boolean {
     const hasLinks = typeof section.links !== 'undefined' && section.links.length > 0;
     const hasFiles = typeof section.files !== 'undefined' && section.files.length > 0;
     const hasLibraryFile = typeof section.libraryFile !== 'undefined' && section.libraryFile.length > 0;
-    const sectionTags = section.tags || [];
+    const sectionTags = section.tags === undefined ? [] : Array.from(section.tags);
     const hasPageTag = sectionTags
         .map((tagItem) => new Tag(tagItem.classifier, tagItem.tag))
         .some((tagInstance) => tagInstance.equals(PAGE_TAG));
@@ -141,9 +141,9 @@ function hasSubsections(section: PageTabSection): boolean {
 function pageTabAttributesToAttributeData(attrs: PtAttribute[]): AttributeData[] {
     return attrs.map(at => <AttributeData>{
         name: at.name,
-        value: at.value,
-        reference: at.isReference,
-        terms: (at.valqual || []).map(t => new NameAndValue(t.name, t.value))
+        reference: at.reference || at.isReference,
+        terms: (at.valqual || []).map(t => new NameAndValue(t.name, t.value)),
+        value: at.value
     });
 }
 
@@ -152,6 +152,6 @@ function flatArray<T>(array: (T | T[])[]): T[] {
 
     return elements
         .map((element) => Array.isArray(element) ? element : [element])
-        .reduce((previousElement, currentElement) => [ ...previousElement, ...currentElement ], <T[]>[])
+        .reduce((previousElement, currentElement) => [...currentElement, ...previousElement], <T[]>[])
         .reverse();
 }

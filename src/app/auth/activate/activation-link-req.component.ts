@@ -6,29 +6,31 @@ import { AuthService } from 'app/auth/shared';
 import { ActivationLinkRequestData } from '../shared/model';
 
 @Component({
-    selector: 'auth-activation-resend',
+    selector: 'st-auth-activation-resend',
     templateUrl: './activation-link-req.component.html'
 })
 export class ActivationLinkReqComponent implements AfterViewInit {
     hasError: boolean = false;
-    showSuccess: boolean = false;
     isLoading: boolean = false;
-
-    model: ActivationLinkRequestData = new ActivationLinkRequestData();
     message: string = '';
-
-    @ViewChild('recaptchaEl')
-    private recaptchaRef?: RecaptchaComponent;
+    model: ActivationLinkRequestData = new ActivationLinkRequestData();
+    showSuccess: boolean = false;
 
     @ViewChild('emailEl')
     private focusRef?: ElementRef;
 
-    constructor(private authService: AuthService) {
-    }
+    @ViewChild('recaptchaEl')
+    private recaptchaRef?: RecaptchaComponent;
+
+    constructor(private authService: AuthService) {}
 
     // TODO: Turn autofocus on render into a directive
     ngAfterViewInit(): void {
         this.focusRef!.nativeElement.focus();
+    }
+
+    onRecaptchaResolved(resp: string): void {
+        this.model.captcha = resp;
     }
 
     onSubmit(form: NgForm) {
@@ -79,9 +81,5 @@ export class ActivationLinkReqComponent implements AfterViewInit {
         // Resets the state of captcha's control
         control.markAsUntouched({onlySelf: true});
         control.markAsPristine({onlySelf: true});
-    }
-
-    onRecaptchaResolved(resp: string): void {
-        this.model.captcha = resp;
     }
 }

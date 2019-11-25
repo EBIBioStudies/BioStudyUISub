@@ -1,27 +1,33 @@
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { BsModalRef, ModalDirective } from 'ngx-bootstrap/modal';
-import 'rxjs/add/operator/take';
 
 /**
  * UI component for confirmation modals with all its text parts parameterized.
  */
 @Component({
-    selector: 'confirm-dialog',
+    selector: 'st-confirm-dialog',
     templateUrl: './confirm-dialog.component.html'
 })
 export class ConfirmDialogComponent {
+    @Input() abortLabel: string = 'Cancel'; // Default name for negative action.
+    @Input() body: string = 'Are you sure?'; // Descriptive message for the modal's body.
+    callback?: (v: boolean) => any;
+    @Input() confirmLabel: string = 'Ok'; // Default name for positive action.
+    @Input() isHideCancel: boolean = false; // Hides the cancel button. Suitable for info modals.
+    @Input() title: string = 'Confirm'; // Summary text for the modal's title.
+
     @ViewChild('focusBtn')
+
     private focusEl?: ElementRef;
 
-    @Input() title: string = 'Confirm'; // Summary text for the modal's title.
-    @Input() confirmLabel: string = 'Ok'; // Default name for positive action.
-    @Input() abortLabel: string = 'Cancel'; // Default name for negative action.
-    @Input() isHideCancel: boolean = false; // Hides the cancel button. Suitable for info modals.
-    @Input() body: string = 'Are you sure?'; // Descriptive message for the modal's body.
+    constructor(public bsModalRef: BsModalRef) {}
 
-    callback?: (v: boolean) => any;
-
-    constructor(public bsModalRef: BsModalRef) {
+    /**
+     * Handler for abort event. Notifies such confirmation with a "false" in the event stream.
+     */
+    cancel(): void {
+        this.response(false);
+        this.bsModalRef.hide();
     }
 
     /**
@@ -33,21 +39,6 @@ export class ConfirmDialogComponent {
     }
 
     /**
-     * Handler for abort event. Notifies such confirmation with a "false" in the event stream.
-     */
-    cancel(): void {
-        this.response(false);
-        this.bsModalRef.hide();
-    }
-
-    /**
-     * Handler for "onShown" event, triggered exactly after the modal has been fully revealed.
-     */
-    onShown(): void {
-        this.focusEl!.nativeElement.focus();
-    }
-
-    /**
      * Monitors modal dismissals and, if any of them are due to clicks on the backdrop area,
      * it is interpreted as a cancel action.
      * @param event - Custom modal event indicating the reason for the modal's dismissal
@@ -56,6 +47,13 @@ export class ConfirmDialogComponent {
         if (event.dismissReason === 'backdrop-click') {
             this.cancel();
         }
+    }
+
+    /**
+     * Handler for "onShown" event, triggered exactly after the modal has been fully revealed.
+     */
+    onShown(): void {
+        this.focusEl!.nativeElement.focus();
     }
 
     private response(resp: boolean): void {

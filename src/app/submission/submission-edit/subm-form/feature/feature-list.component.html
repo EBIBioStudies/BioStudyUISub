@@ -36,8 +36,8 @@
                                [typeaheadOptionsLimit]="200"
                                [typeaheadScrollable]="true"
                                [typeaheadOptionsInScrollableView]="suggestLength"
-                               nativeElementAttach
-                               validate-onblur>
+                               stNativeElementAttach
+                               stValidateOnblur>
                     </div>
                 </div>
             </div>
@@ -46,18 +46,18 @@
                      [ngClass]="{'readonly': column.isReadonly || featureForm.isReadonly,
                                  'optional': !column.isRequired,
                                  'has-error': cell.hasErrors}">
-                    <input-value placement="top"
-                                 container="body"
-                                 containerClass="{{featureForm.isRequired ? 'text-danger' : 'text-warning'}}"
-                                 popover="{{cell.hasErrors ? cell.errors : ''}}"
-                                 triggers="focus"
-                                 [valueType]="column.valueType"
-                                 [readonly]="readonly || column.isReadonly || featureForm.isReadonly"
-                                 [formControl]="cell.control"
-                                 [autosuggestSource]="featureForm.cellValuesTypeaheadFunc(column.id)"
-                                 nativeElementAttach
-                                 validate-onblur>
-                    </input-value>
+                    <st-input-value placement="top"
+                                    container="body"
+                                    containerClass="{{featureForm.isRequired ? 'text-danger' : 'text-warning'}}"
+                                    popover="{{cell.hasErrors ? cell.errors : ''}}"
+                                    triggers="focus"
+                                    [valueType]="column.valueType"
+                                    [readonly]="readonly || column.isReadonly || featureForm.isReadonly"
+                                    [formControl]="cell.control"
+                                    [autosuggestSource]="featureForm.cellValuesTypeaheadFunc(column.id)"
+                                    stNativeElementAttach
+                                    stValidateOnblur>
+                    </st-input-value>
                 </div>
             </div>
         </div>

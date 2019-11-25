@@ -4,15 +4,15 @@
 
     <div *ngFor="let fieldControl of sectionForm.fieldControls"
          [ngClass]="{'form-group row': !readonly}">
-        <subm-field [fieldControl]="fieldControl"
+        <st-subm-field [fieldControl]="fieldControl"
                     [readonly]="readonly">
-        </subm-field>
+        </st-subm-field>
     </div>
 
     <div *ngFor="let featureForm of sectionForm.featureForms"
          [ngClass]="{'form-group row': !featureForm.isEmpty}">
-        <subm-feature [featureForm]="featureForm"
+        <st-subm-feature [featureForm]="featureForm"
                       [readonly]="readonly">
-        </subm-feature>
+        </st-subm-feature>
     </div>
 </form>

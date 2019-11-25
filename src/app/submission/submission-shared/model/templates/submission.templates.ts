@@ -1,17 +1,17 @@
-import { BIATemplate } from './bia.template';
-import { DefaultTemplate } from './default.template';
-import { EmptyTemplate } from './empty.template';
-import { EutoxriskTemplate } from './eutoxrisk.template';
-import { HecatosTemplate } from './hecatos.template';
-import { ArrayExpressTemplate } from './arrayexpress.template';
+import { biaTemplate } from './bia.template';
+import { defaultTemplate } from './default.template';
+import { emptyTemplate } from './empty.template';
+import { euToxRiskTemplate } from './eutoxrisk.template';
+import { hecatosTemplate } from './hecatos.template';
+import { arrayExpressTemplate } from './arrayexpress.template';
 
 export const DEFAULT_TEMPLATE_NAME = 'Default';
 export const EMPTY_TEMPLATE_NAME = 'Empty';
 
-const SUBMISSION_TEMPLATES = [ArrayExpressTemplate, EutoxriskTemplate, HecatosTemplate, EmptyTemplate];
-const SUBMISSION_TEMPLATES_PUBLIC = [BIATemplate, DefaultTemplate];
+const SUBMISSION_TEMPLATES = [arrayExpressTemplate, euToxRiskTemplate, hecatosTemplate, emptyTemplate];
+const SUBMISSION_TEMPLATES_PUBLIC = [biaTemplate, defaultTemplate];
 
-export function getSubmissionTemplates(projects: Array<string> = []): Array<{ name: string, description: string }> {
+export function getSubmissionTemplates(projects: Array<string> = []): Array<{ description: string, name: string }> {
     const projectNames = projects.map(p => p.toLowerCase());
 
     return [...SUBMISSION_TEMPLATES.filter(t => projectNames.includes(t.name.toLowerCase())),
@@ -20,6 +20,6 @@ export function getSubmissionTemplates(projects: Array<string> = []): Array<{ na
 
 export function findSubmissionTemplateByName(name: string): any {
     const tmplName = name.toLowerCase();
-    const tmpl = [...SUBMISSION_TEMPLATES, ...SUBMISSION_TEMPLATES_PUBLIC].find(tmpl => tmpl.name.toLowerCase() === tmplName);
-    return tmpl ? tmpl : DefaultTemplate;
+    const tmpl = [...SUBMISSION_TEMPLATES, ...SUBMISSION_TEMPLATES_PUBLIC].find(tmplItem => tmplItem.name.toLowerCase() === tmplName);
+    return tmpl ? tmpl : defaultTemplate;
 }

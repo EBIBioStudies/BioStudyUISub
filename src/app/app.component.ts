@@ -6,9 +6,9 @@ import { UserSession } from 'app/auth/shared';
 import { AppConfig } from 'app/app.config';
 
 @Component({
-    selector: 'app-root',
+    selector: 'st-root',
     template: `
-        <app-header></app-header>
+        <st-app-header></st-app-header>
         <router-outlet></router-outlet>
     `
 })

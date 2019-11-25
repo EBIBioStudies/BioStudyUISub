@@ -7,21 +7,20 @@ import { AuthService, UserSession } from '../shared';
 import { RegistrationData } from '../shared/model';
 
 @Component({
-    selector: 'auth-signup',
+    selector: 'st-auth-signup',
     templateUrl: './signup.component.html'
 })
 export class SignUpComponent implements AfterViewInit, OnInit {
-    success: boolean = false;
-    isLoading: boolean = false;
-
-    model: RegistrationData = new RegistrationData();
     error?: ServerError; // global object for showing error feedback
-
-    @ViewChild('recaptchaEl')
-    private recaptcha?: RecaptchaComponent;
+    isLoading: boolean = false;
+    model: RegistrationData = new RegistrationData();
+    success: boolean = false;
 
     @ViewChild('focusEl')
     private focusRef?: ElementRef;
+
+    @ViewChild('recaptchaEl')
+    private recaptcha?: RecaptchaComponent;
 
     constructor(private authService: AuthService,
                 private session: UserSession,
@@ -37,6 +36,10 @@ export class SignUpComponent implements AfterViewInit, OnInit {
         if (!this.session.isAnonymous()) {
             this.router.navigate(['']);
         }
+    }
+
+    onRecaptchaResolved(resp: string): void {
+        this.model.captcha = resp;
     }
 
     onSubmit(form: NgForm): void {
@@ -86,9 +89,5 @@ export class SignUpComponent implements AfterViewInit, OnInit {
         // Resets the state of captcha's control
         control.markAsUntouched({onlySelf: true});
         control.markAsPristine({onlySelf: true});
-    }
-
-    onRecaptchaResolved(resp: string): void {
-        this.model.captcha = resp;
     }
 }

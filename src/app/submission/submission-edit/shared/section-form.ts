@@ -28,13 +28,16 @@ import {
 function listOfControls(control: AbstractControl): FormControl[] {
     if (control instanceof FormGroup) {
         const map = (<FormGroup>control).controls;
+
         return Object.keys(map)
             .map(key => map[key])
-            .flatMap(control => listOfControls(control));
+            .flatMap((controlItem) => listOfControls(controlItem));
     } else if (control instanceof FormArray) {
         const array = (<FormArray>control).controls;
-        return array.flatMap(control => listOfControls(control));
+
+        return array.flatMap((controlItem) => listOfControls(controlItem));
     }
+
     return [<FormControl>control];
 }
 
@@ -136,10 +139,9 @@ export class CellControl {
 
 export class RowForm {
     readonly form: FormGroup;
-
     private controls: Map<String, CellControl> = new Map();
-    private row: ValueMap;
     private parentRef: ControlGroupRef;
+    private row: ValueMap;
 
     constructor(row: ValueMap, columns: Attribute[], parentRef: ControlGroupRef) {
         this.row = row;
@@ -154,13 +156,14 @@ export class RowForm {
         this.controls.set(column.id, cellControl);
     }
 
-    removeCellControl(columnId: string) {
-        this.form.removeControl(columnId);
-        this.controls.delete(columnId);
-    }
-
     cellControlAt(columnId: string): CellControl | undefined {
         return this.controls.get(columnId);
+    }
+
+    errorsAt(columnId: string): string[] {
+        return fromNullable(this.cellControlAt(columnId))
+            .map(c => c.errors)
+            .getOrElse([]);
     }
 
     hasErrorsAt(columnId: string): boolean {
@@ -169,10 +172,9 @@ export class RowForm {
             .getOrElse(false);
     }
 
-    errorsAt(columnId: string): string[] {
-        return fromNullable(this.cellControlAt(columnId))
-            .map(c => c.errors)
-            .getOrElse([]);
+    removeCellControl(columnId: string) {
+        this.form.removeControl(columnId);
+        this.controls.delete(columnId);
     }
 }
 
@@ -217,14 +219,12 @@ export class FormBase {
 const featureGroupSize = (g: Feature[]) => g.map(f => f.rowSize()).reduce((rv, v) => rv + v, 0);
 
 export class FeatureForm extends FormBase {
-    private columnControls: ColumnControl[] = [];
-    private rowForms: RowForm[] = [];
+    columnNamesAvailableCached: string[] = [];
+    structureChanges$: Subject<StructureChangeEvent> = new Subject<StructureChangeEvent>();
 
     private cellValueTypeahead: Map<string, () => string[]> = new Map();
-
-    columnNamesAvailableCached: string[] = [];
-
-    structureChanges$: Subject<StructureChangeEvent> = new Subject<StructureChangeEvent>();
+    private columnControls: ColumnControl[] = [];
+    private rowForms: RowForm[] = [];
 
     constructor(private feature: Feature, private featureRef: ControlGroupRef) {
         super(new FormGroup({
@@ -351,97 +351,6 @@ export class FeatureForm extends FormBase {
         return rowForm.cellControlAt(lastColumn)!.control;
     }
 
-    columnNamesTypeahead(column: ColumnControl): Observable<string[]> {
-        return column.typeaheadSource(this.columnNamesAvailable);
-    }
-
-    /* returns a list of column names available for a new column to add */
-    columnNamesAvailable = () => {
-        if (this.hasUniqueColumns) {
-            const colNames = this.columnNames;
-            return this.colTypeNames.filter(name => !colNames.includes(name));
-        }
-        return this.colTypeNames;
-    }
-
-    cellValuesTypeaheadFunc(rowIndex: number, columnId: string): () => string[] {
-        const key = `${rowIndex}_${columnId}`;
-        if (!this.cellValueTypeahead.has(key)) {
-            this.cellValueTypeahead.set(key, () => {
-                return this.cellValues(rowIndex, columnId);
-            });
-        }
-        return this.cellValueTypeahead.get(key)!;
-    }
-
-    /* returns list of current values for a column, excludes value in the current row */
-    cellValues(rowIndex: number, columnId: string): string[] {
-        const skipRow = this.rowForms[rowIndex];
-        return this.rowForms
-            .filter(row => row !== skipRow)
-            .map(row => row.cellControlAt(columnId))
-            .filter(c => c !== undefined)
-            .map(c => c!.control.value)
-            .filter((v: string) => !v.isEmpty())
-            .uniqueValues();
-    }
-
-    cellControlAt(rowIndex: number, columnId: string): CellControl | undefined {
-        return this.rowForms[rowIndex].cellControlAt(columnId);
-    }
-
-    addEntry(): void {
-        this.addRow();
-
-        if (!this.canHaveMultipleRows) {
-            this.addColumn();
-        }
-    }
-
-    canAddRow(): boolean {
-        return !this.isReadonly && this.feature.canAddRow();
-    }
-
-    addRow() {
-        if (this.canAddRow()) {
-            const row = this.feature.addRow();
-            this.addRowForm(row!, this.feature.columns);
-            this.structureChanges$.next(StructureChangeEvent.featureRowAdd);
-        }
-    }
-
-    canRemoveRow(): boolean {
-        return !this.isReadonly &&
-            (!this.featureType.displayType.isShownByDefault || this.feature.rowSize() > 1) &&
-            this.feature.groups.every(g => featureGroupSize(g) > 1);
-    }
-
-    removeRow(rowIndex: number) {
-        if (this.canRemoveRow()) {
-            this.feature.removeRowAt(rowIndex);
-            this.removeRowForm(rowIndex);
-            this.structureChanges$.next(StructureChangeEvent.featureRowRemove);
-        }
-    }
-
-    canAddColumn(): boolean {
-        return !this.isReadonly && this.canHaveMoreColumns();
-    }
-
-    canHaveMoreColumns(): boolean {
-        return this.featureType.allowCustomCols
-            || !this.featureType.uniqueCols
-            || this.feature.colSize() < this.featureType.columnTypes.length;
-    }
-
-    /*canAddColumn(name: string, isTemplateBased: boolean): boolean {
-        const notExists = this.columns.find(col => col.name === name) === undefined;
-        if (notExists) {
-            return isTemplateBased || this.type.allowCustomCols;
-        }
-        return !this.featureType.uniqueCols;
-    }*/
-
     addColumn() {
         /*if (!isTemplateBased && !this.type.allowCustomCols) {
             if (this.type.columnTypes.length === 0) {
@@ -465,8 +374,83 @@ export class FeatureForm extends FormBase {
         }
     }
 
+    addEntry(): void {
+        this.addRow();
+
+        if (!this.canHaveMultipleRows) {
+            this.addColumn();
+        }
+    }
+
+    addRow() {
+        if (this.canAddRow()) {
+            const row = this.feature.addRow();
+            this.addRowForm(row!, this.feature.columns);
+            this.structureChanges$.next(StructureChangeEvent.featureRowAdd);
+        }
+    }
+
+    canAddColumn(): boolean {
+        return !this.isReadonly && this.canHaveMoreColumns();
+    }
+
+    canAddRow(): boolean {
+        return !this.isReadonly && this.feature.canAddRow();
+    }
+
+    canHaveMoreColumns(): boolean {
+        return this.featureType.allowCustomCols
+            || !this.featureType.uniqueCols
+            || this.feature.colSize() < this.featureType.columnTypes.length;
+    }
+
     canRemoveColumn(columnCtrl: ColumnControl): boolean {
         return !this.isReadonly && columnCtrl.isRemovable;
+    }
+
+    canRemoveRow(): boolean {
+        return !this.isReadonly &&
+            (!this.featureType.displayType.isShownByDefault || this.feature.rowSize() > 1) &&
+            this.feature.groups.every(g => featureGroupSize(g) > 1);
+    }
+
+    cellControlAt(rowIndex: number, columnId: string): CellControl | undefined {
+        return this.rowForms[rowIndex].cellControlAt(columnId);
+    }
+
+    /* returns list of current values for a column, excludes value in the current row */
+    cellValues(rowIndex: number, columnId: string): string[] {
+        const skipRow = this.rowForms[rowIndex];
+        return this.rowForms
+            .filter(row => row !== skipRow)
+            .map(row => row.cellControlAt(columnId))
+            .filter(c => c !== undefined)
+            .map(c => c!.control.value)
+            .filter((v: string) => !v.isEmpty())
+            .uniqueValues();
+    }
+
+    cellValuesTypeaheadFunc(rowIndex: number, columnId: string): () => string[] {
+        const key = `${rowIndex}_${columnId}`;
+        if (!this.cellValueTypeahead.has(key)) {
+            this.cellValueTypeahead.set(key, () => {
+                return this.cellValues(rowIndex, columnId);
+            });
+        }
+        return this.cellValueTypeahead.get(key)!;
+    }
+
+    /* returns a list of column names available for a new column to add */
+    columnNamesAvailable = () => {
+        if (this.hasUniqueColumns) {
+            const colNames = this.columnNames;
+            return this.colTypeNames.filter(name => !colNames.includes(name));
+        }
+        return this.colTypeNames;
+    }
+
+    columnNamesTypeahead(column: ColumnControl): Observable<string[]> {
+        return column.typeaheadSource(this.columnNamesAvailable);
     }
 
     removeColumn(columnCtrl: ColumnControl) {
@@ -478,16 +462,21 @@ export class FeatureForm extends FormBase {
         }
     }
 
-    private addRowForm(row: ValueMap, columns: Attribute[]) {
-        const rowForm = new RowForm(row, columns, this.featureRef);
-        this.rowForms.push(rowForm);
-        this.rowFormArray.push(rowForm.form);
+    removeRow(rowIndex: number) {
+        if (this.canRemoveRow()) {
+            this.feature.removeRowAt(rowIndex);
+            this.removeRowForm(rowIndex);
+            this.structureChanges$.next(StructureChangeEvent.featureRowRemove);
+        }
     }
 
-    private removeRowForm(rowIndex: number) {
-        this.rowForms.splice(rowIndex, 1);
-        this.rowFormArray.removeAt(rowIndex);
-    }
+    /*canAddColumn(name: string, isTemplateBased: boolean): boolean {
+        const notExists = this.columns.find(col => col.name === name) === undefined;
+        if (notExists) {
+            return isTemplateBased || this.type.allowCustomCols;
+        }
+        return !this.featureType.uniqueCols;
+    }*/
 
     private addColumnControl(column: Attribute) {
         const colControl = new ColumnControl(column, this.featureRef.columnRef(column));
@@ -495,41 +484,48 @@ export class FeatureForm extends FormBase {
         this.columnsForm.addControl(column.id, colControl.control);
     }
 
+    private addRowForm(row: ValueMap, columns: Attribute[]) {
+        const rowForm = new RowForm(row, columns, this.featureRef);
+        this.rowForms.push(rowForm);
+        this.rowFormArray.push(rowForm.form);
+    }
+
     private removeColumnControl(columnId: string) {
         const index = this.columnControls.findIndex(c => c.id === columnId);
         this.columnControls.splice(index, 1);
         this.columnsForm.removeControl(columnId);
     }
-}
 
-export class StructureChangeEvent {
-    static init: StructureChangeEvent = new StructureChangeEvent('init');
-    static featureAdd: StructureChangeEvent = new StructureChangeEvent('featureAdd');
-    static featureRemove: StructureChangeEvent = new StructureChangeEvent('featureRemove');
-    static featureRowAdd: StructureChangeEvent = new StructureChangeEvent('featureRowAdd');
-    static featureRowRemove: StructureChangeEvent = new StructureChangeEvent('featureRowRemove');
-    static featureColumnAdd: StructureChangeEvent = new StructureChangeEvent('featureColumnAdd');
-    static featureColumnRemove: StructureChangeEvent = new StructureChangeEvent('featureColumnRemove');
-    static sectionRemove: StructureChangeEvent = new StructureChangeEvent('sectionRemove');
-    static sectionAdd: StructureChangeEvent = new StructureChangeEvent('sectionAdd');
-
-    constructor(readonly name: string) {
+    private removeRowForm(rowIndex: number) {
+        this.rowForms.splice(rowIndex, 1);
+        this.rowFormArray.removeAt(rowIndex);
     }
 }
 
+export class StructureChangeEvent {
+    static featureAdd: StructureChangeEvent = new StructureChangeEvent('featureAdd');
+    static featureColumnAdd: StructureChangeEvent = new StructureChangeEvent('featureColumnAdd');
+    static featureColumnRemove: StructureChangeEvent = new StructureChangeEvent('featureColumnRemove');
+    static featureRemove: StructureChangeEvent = new StructureChangeEvent('featureRemove');
+    static featureRowAdd: StructureChangeEvent = new StructureChangeEvent('featureRowAdd');
+    static featureRowRemove: StructureChangeEvent = new StructureChangeEvent('featureRowRemove');
+    static init: StructureChangeEvent = new StructureChangeEvent('init');
+    static sectionAdd: StructureChangeEvent = new StructureChangeEvent('sectionAdd');
+    static sectionRemove: StructureChangeEvent = new StructureChangeEvent('sectionRemove');
+
+    constructor(readonly name: string) {}
+}
+
 export class SectionForm extends FormBase {
-
-    readonly fieldControls: FieldControl[] = [];
     readonly featureForms: FeatureForm[] = [];
-    readonly subsectionForms: SectionForm[] = [];
+    readonly fieldControls: FieldControl[] = [];
     readonly sectionPath: string[];
-
     /* can use form's valueChanges, but then the operations like add/remove column will not be atomic,
     as it requires to apply multiple changes at once */
     readonly structureChanges$ = new BehaviorSubject<StructureChangeEvent>(StructureChangeEvent.init);
+    readonly subsectionForms: SectionForm[] = [];
 
     private sb: Map<string, Subscription> = new Map<string, Subscription>();
-
     private sectionRef: ControlGroupRef;
 
     constructor(private section: Section, readonly parent?: SectionForm) {
@@ -545,6 +541,28 @@ export class SectionForm extends FormBase {
         this.buildElements();
     }
 
+    addFeature(type: FeatureType): Feature | undefined {
+        const feature = this.section.features.add(type);
+        if (feature) {
+            this.addFeatureForm(feature);
+            this.structureChanges$.next(StructureChangeEvent.featureAdd);
+        }
+        return feature;
+    }
+
+    addFeatureEntry(featureId: string): void {
+        const featureForm = this.featureForms.find(f => f.id === featureId);
+        if (featureForm !== undefined) {
+            featureForm.addEntry();
+        }
+    }
+
+    addSection(type: SectionType): SectionForm {
+        const form = this.addSubsectionForm(this.section.sections.add(type));
+        this.structureChanges$.next(StructureChangeEvent.sectionAdd);
+        return form;
+    }
+
     buildElements() {
         const section = this.section;
 
@@ -556,6 +574,14 @@ export class SectionForm extends FormBase {
         section.sections.list().forEach((sectionItem) => this.addSubsectionForm(sectionItem));
     }
 
+    findFieldControl(fieldName: string) {
+        return this.fieldControls.find((fieldControl) => fieldControl.name === fieldName);
+    }
+
+    findSectionForm(sectionId: string) {
+        return this.findRoot().lookupSectionForm(sectionId);
+    }
+
     getFeatureControl(featureId: string): FormControl | undefined {
         const featureForm = this.featureForms.find(f => f.id === featureId);
         if (featureForm !== undefined) {
@@ -565,6 +591,11 @@ export class SectionForm extends FormBase {
 
     getFeatureFormById(featureId: string): FeatureForm | undefined {
         return this.featureForms.find((feature) => feature.id === featureId);
+    }
+
+    isSectionRemovable(sectionForm: SectionForm): boolean {
+        const min = sectionForm.typeMinRequired;
+        return sectionForm.isTypeRemovable || (this.section.sections.byType(sectionForm.typeName).length > min);
     }
 
     removeFeatureType(featureId: string): void {
@@ -581,28 +612,6 @@ export class SectionForm extends FormBase {
         }
     }
 
-    addFeatureEntry(featureId: string): void {
-        const featureForm = this.featureForms.find(f => f.id === featureId);
-        if (featureForm !== undefined) {
-            featureForm.addEntry();
-        }
-    }
-
-    addFeature(type: FeatureType): Feature | undefined {
-        const feature = this.section.features.add(type);
-        if (feature) {
-            this.addFeatureForm(feature);
-            this.structureChanges$.next(StructureChangeEvent.featureAdd);
-        }
-        return feature;
-    }
-
-    addSection(type: SectionType): SectionForm {
-        const form = this.addSubsectionForm(this.section.sections.add(type));
-        this.structureChanges$.next(StructureChangeEvent.sectionAdd);
-        return form;
-    }
-
     removeSection(sectionId: string): void {
         const index = this.subsectionForms.findIndex(s => s.id === sectionId);
         if (index < 0) {
@@ -616,20 +625,12 @@ export class SectionForm extends FormBase {
         }
     }
 
-    findSectionForm(sectionId: string) {
-        return this.findRoot().lookupSectionForm(sectionId);
-    }
-
-    findFieldControl(fieldName: string) {
-        return this.fieldControls.find((fieldControl) => fieldControl.name === fieldName);
-    }
-
     get type(): SectionType {
         return this.section.type;
     }
 
     get isTypeReadonly(): boolean {
-        return this.section.type.displayType === DisplayType.Readonly;
+        return this.section.type.displayType === DisplayType.READONLY;
     }
 
     get typeName(): string {
@@ -667,11 +668,6 @@ export class SectionForm extends FormBase {
             }, [{} as { [key: string]: any }, [] as Array<SectionType>])[1];
     }
 
-    isSectionRemovable(sectionForm: SectionForm): boolean {
-        const min = sectionForm.typeMinRequired;
-        return sectionForm.isTypeRemovable || (this.section.sections.byType(sectionForm.typeName).length > min);
-    }
-
     private get fieldFormGroup(): FormGroup {
         return <FormGroup>this.form.get('fields');
     }
@@ -684,12 +680,6 @@ export class SectionForm extends FormBase {
         return <FormGroup>this.form.get('sections');
     }
 
-    private addFieldControl(field: Field): void {
-        const fieldControl = new FieldControl(field, this.sectionRef.fieldRef(field));
-        this.fieldControls.push(fieldControl);
-        this.fieldFormGroup.addControl(field.id, fieldControl.control);
-    }
-
     private addFeatureForm(feature: Feature): FeatureForm {
         const featureForm = new FeatureForm(feature, this.sectionRef.featureRef(feature));
         this.featureForms.push(featureForm);
@@ -698,22 +688,17 @@ export class SectionForm extends FormBase {
         return featureForm;
     }
 
+    private addFieldControl(field: Field): void {
+        const fieldControl = new FieldControl(field, this.sectionRef.fieldRef(field));
+        this.fieldControls.push(fieldControl);
+        this.fieldFormGroup.addControl(field.id, fieldControl.control);
+    }
+
     private addSubsectionForm(section: Section): SectionForm {
         const sectionForm = new SectionForm(section, this);
         this.subsectionForms.push(sectionForm);
         this.subsectionFormGroups.addControl(section.id, sectionForm.form);
         return sectionForm;
-    }
-
-    private subscribe(featureForm: FeatureForm) {
-        this.sb.set(featureForm.id, featureForm.structureChanges$.subscribe(ev => {
-            this.structureChanges$.next(ev);
-        }));
-    }
-
-    private unsubscribe(featureId: string) {
-        this.sb.get(featureId)!.unsubscribe();
-        this.sb.delete(featureId);
     }
 
     private findRoot(): SectionForm {
@@ -728,5 +713,16 @@ export class SectionForm extends FormBase {
             return this;
         }
         return this.subsectionForms.find(sf => sf.lookupSectionForm(sectionId) !== undefined);
+    }
+
+    private subscribe(featureForm: FeatureForm) {
+        this.sb.set(featureForm.id, featureForm.structureChanges$.subscribe(ev => {
+            this.structureChanges$.next(ev);
+        }));
+    }
+
+    private unsubscribe(featureId: string) {
+        this.sb.get(featureId)!.unsubscribe();
+        this.sb.delete(featureId);
     }
 }

@@ -7,7 +7,7 @@ export class Attribute {
   constructor(
     private _name: string = '',
     readonly valueType: ValueType = ValueTypeFactory.DEFAULT,
-    readonly displayType: DisplayType = DisplayType.Optional,
+    readonly displayType: DisplayType = DisplayType.OPTIONAL,
     readonly isTemplateBased: boolean = false,
     readonly dependencyColumn: string = '',
     readonly uniqueValues: boolean = false

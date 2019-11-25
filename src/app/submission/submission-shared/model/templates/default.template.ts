@@ -1,4 +1,4 @@
-export const DefaultTemplate = {
+export const defaultTemplate = {
     'name': 'Default',
     'description': 'Generic submission for stand-alone or generic studies',
     'sectionType': {
@@ -252,12 +252,12 @@ export const DefaultTemplate = {
                     {
                         'name': 'Pointer',
                         'valueType': {'name': 'idlink'},
-                        'display': 'required'
+                        'display': 'desirable'
                     },
                     {
                         'name': 'Description',
                         'valueType': {'name': 'text'},
-                        'display': 'required'
+                        'display': 'desirable'
                     }
                 ]
             },

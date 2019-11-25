@@ -45,14 +45,14 @@
 
         <div class="panel-body" #featureEl>
             <div>
-                <subm-feature-grid *ngIf="featureForm.canHaveMultipleRows; else featureList"
+                <st-subm-feature-grid *ngIf="featureForm.canHaveMultipleRows; else featureList"
                                    [featureForm]="featureForm"
                                    [readonly]="readonly">
-                </subm-feature-grid>
+                </st-subm-feature-grid>
                 <ng-template #featureList>
-                    <subm-feature-list [featureForm]="featureForm"
+                    <st-subm-feature-list [featureForm]="featureForm"
                                        [readonly]="readonly">
-                    </subm-feature-list>
+                    </st-subm-feature-list>
                 </ng-template>
             </div>
         </div>

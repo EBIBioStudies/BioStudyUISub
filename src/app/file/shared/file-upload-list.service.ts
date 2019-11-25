@@ -15,17 +15,15 @@ enum UploadState {
 const CANCEL_UPLOAD_EVENT = new UploadEvent();
 
 export class FileUpload {
-    private state: UploadState = UploadState.UPLOADING;
-    private percentage: number;
-    private errorMessage?: string;
-
-    private sb?: Subscription;
-    private uploadEvent$: Subject<UploadEvent> = new Subject<UploadEvent>();
-
+    readonly fileNames: string[];
+    readonly filePath: Path;
     finish$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-    readonly filePath: Path;
-    readonly fileNames: string[];
+    private errorMessage?: string;
+    private percentage: number;
+    private sb?: Subscription;
+    private state: UploadState = UploadState.UPLOADING;
+    private uploadEvent$: Subject<UploadEvent> = new Subject<UploadEvent>();
 
     constructor(path: Path, files: File[], fileService: FileService) {
         this.filePath = path;
@@ -37,6 +35,7 @@ export class FileUpload {
                 catchError((error: UploadErrorEvent) => of(error))
             );
 
+        // TODO: Log error in new log system.
         this.uploadEvent$.subscribe((event: UploadEvent) => {
             if (event.isProgress()) {
                 this.percentage = (<UploadProgressEvent>event).percentage;
@@ -57,7 +56,7 @@ export class FileUpload {
                 this.finish$.complete();
                 this.uploadEvent$.complete();
             }
-        }, console.log);
+        });
 
         this.sb = upload$.subscribe(this.uploadEvent$);
     }
@@ -90,10 +89,6 @@ export class FileUpload {
         return this.state === UploadState.CANCELLED;
     }
 
-    isFinished(): boolean {
-        return this.isDone() || this.isFailed();
-    }
-
     isDone(): boolean {
         return this.state === UploadState.SUCCESS || this.isCancelled();
     }
@@ -101,20 +96,31 @@ export class FileUpload {
     isFailed(): boolean {
         return this.state === UploadState.ERROR;
     }
+
+    isFinished(): boolean {
+        return this.isDone() || this.isFailed();
+    }
 }
 
 @Injectable()
 export class FileUploadList {
+    activeUploadsChanged$: Subject<FileUpload[]> = new BehaviorSubject<FileUpload[]>([]);
+    uploadCompleted$: Subject<string> = new Subject<string>();
+
     private uploads: FileUpload[] = [];
 
-    uploadCompleted$: Subject<string> = new Subject<string>();
-    activeUploadsChanged$: Subject<FileUpload[]> = new BehaviorSubject<FileUpload[]>([]);
-
-    constructor(private fileService: FileService) {
-    }
+    constructor(private fileService: FileService) {}
 
     get activeUploads(): FileUpload[] {
         return this.uploads.filter(u => !u.isDone());
+    }
+
+    remove(upload: FileUpload) {
+        const index = this.uploads.indexOf(upload);
+        if (index > -1) {
+            this.uploads.splice(index, 1);
+            this.notifyActiveUploadsChanged();
+        }
     }
 
     upload(path: Path, files: File[]): FileUpload {
@@ -134,14 +140,6 @@ export class FileUploadList {
         this.notifyActiveUploadsChanged();
 
         return upload;
-    }
-
-    remove(upload: FileUpload) {
-        const index = this.uploads.indexOf(upload);
-        if (index > -1) {
-            this.uploads.splice(index, 1);
-            this.notifyActiveUploadsChanged();
-        }
     }
 
     private notifyActiveUploadsChanged() {

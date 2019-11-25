@@ -33,8 +33,8 @@ describe('Submission Attributes:', () => {
 
         expect(res).toBeDefined();
         expect(res.length).toEqual(3);
-        expect(res).toContain({name: 'Title', value: 'a title 2'});
-        expect(res).toContain({name: 'AttachTo', value: 'prj1'});
-        expect(res).toContain({name: 'AttachTo', value: 'prj2'});
+        expect(res).toContainEqual({ name: 'Title', value: 'a title 2' });
+        expect(res).toContainEqual({ name: 'AttachTo', value: 'prj1' });
+        expect(res).toContainEqual({ name: 'AttachTo', value: 'prj2' });
     });
 });

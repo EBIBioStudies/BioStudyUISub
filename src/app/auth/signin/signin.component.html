@@ -1,5 +1,5 @@
-<container-root>
-    <container-md>
+<st-container-root>
+    <st-container-md>
         <div class="auth-content">
             <div class="alert error-message" [ngClass]="{'alert-danger': error, 'invisible': !error}">
                 {{error ? error.message : '&nbsp;'}}
@@ -27,7 +27,7 @@
                                    class="form-control"
                                    [(ngModel)]="model.login"
                                    required
-                                   validate-onblur
+                                   stValidateOnblur
                                    (change)="resetGlobalError()"
                                    #login="ngModel"
                                    #focusEl/>
@@ -44,7 +44,7 @@
                                    class="form-control"
                                    [(ngModel)]="model.password"
                                    required
-                                   validate-onblur
+                                   stValidateOnblur
                                    (change)="resetGlobalError()"
                                    #password="ngModel"/>
                             <div class="text-right">
@@ -64,5 +64,5 @@
                 </div>
             </div>
         </div>
-    </container-md>
-</container-root>
+    </st-container-md>
+</st-container-root>

@@ -6,24 +6,30 @@ import { AuthService } from 'app/auth/shared';
 import { PasswordResetData } from '../shared/model';
 
 @Component({
-    selector: 'auth-passwd-reset',
+    selector: 'st-auth-passwd-reset',
     templateUrl: './password-reset.component.html'
 })
 export class PasswordResetComponent implements OnInit, AfterViewInit {
     hasError: boolean = false;
-    showSuccess: boolean = false;
     isLoading: boolean = false;
-    model: PasswordResetData = new PasswordResetData();
     message: string = '';
-
-    @ViewChild('recaptchaEl')
-    private recaptcha?: RecaptchaComponent;
+    model: PasswordResetData = new PasswordResetData();
+    showSuccess: boolean = false;
 
     @ViewChild('focusEl')
     private focusRef?: ElementRef;
 
-    constructor(private authService: AuthService,
-                private activatedRoute: ActivatedRoute) {
+    @ViewChild('recaptchaEl')
+    private recaptcha?: RecaptchaComponent;
+
+    constructor(
+        private authService: AuthService,
+        private activatedRoute: ActivatedRoute
+    ) {}
+
+    // TODO: Turn autofocus on render into a directive
+    ngAfterViewInit(): void {
+        this.focusRef!.nativeElement.focus();
     }
 
     ngOnInit(): void {
@@ -36,9 +42,8 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
         }
     }
 
-    // TODO: Turn autofocus on render into a directive
-    ngAfterViewInit(): void {
-        this.focusRef!.nativeElement.focus();
+    onRecaptchaResolved(resp: string): void {
+        this.model.captcha = resp;
     }
 
     onSubmit(form: NgForm): void {
@@ -86,9 +91,5 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
         // Resets the state of captcha's control
         control.markAsUntouched({onlySelf: true});
         control.markAsPristine({onlySelf: true});
-    }
-
-    onRecaptchaResolved(resp: string): void {
-        this.model.captcha = resp;
     }
 }

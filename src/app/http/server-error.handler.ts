@@ -1,15 +1,30 @@
+import * as HttpStatus from 'http-status-codes';
 import { throwError } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
 import { HttpErrorResponse } from '@angular/common/http';
 
 export class ServerError {
+    data: any;
+    status: number = 0;
+    statusString: string = '';
+
+    constructor(status: number, statusString: string, data: any) {
+        this.status = status;
+        this.statusString = statusString;
+        this.data = data;
+    }
+
+    static dataError(data: any): ServerError {
+        return new ServerError(HttpStatus.UNPROCESSABLE_ENTITY, 'Unprocessable Entity', data);
+    }
+
     /**
      * Factory-like method to turn the standard error object coming from the HTTP client to
      * the app's custom error object.
      * @param {HttpErrorResponse} error Error object as it comes from the HTTP client
      * @returns {ServerError} Converted error object
      */
-    public static fromResponse(error: HttpErrorResponse): ServerError {
+    static fromResponse(error: HttpErrorResponse): ServerError {
         const data = {
             message: 'Unknown error type', // Default error message
             error: error.error // Original error object coming from the server
@@ -22,15 +37,6 @@ export class ServerError {
         }
 
         return new ServerError(error.status, error.statusText, data);
-    }
-
-    public static dataError(data: any): ServerError {
-        return new ServerError(422, 'Unprocessable Entity', data);
-    }
-
-    constructor(public status: number,
-                public statusString: string,
-                public data: any) {
     }
 
     get name(): string {

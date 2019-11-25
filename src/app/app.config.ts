@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class AppConfig {
@@ -107,7 +106,6 @@ export class AppConfig {
 
         whenFetched.then(res => {
             this.config = res;
-            console.log('config', this.config);
         });
 
         return whenFetched;

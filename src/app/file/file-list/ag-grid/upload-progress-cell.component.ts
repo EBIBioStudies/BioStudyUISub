@@ -3,7 +3,7 @@ import { AgRendererComponent } from 'ag-grid-angular/src/interfaces';
 import { FileUpload } from '../../shared/file-upload-list.service';
 
 @Component({
-    selector: 'progress-cell',
+    selector: 'st-progress-cell',
     template: `
         <div *ngIf="value >= 1 && value < 100" class="progress"
              style="margin-bottom: 0;">
@@ -17,8 +17,8 @@ import { FileUpload } from '../../shared/file-upload-list.service';
     `
 })
 export class ProgressCellComponent implements AgRendererComponent {
-    private upload?: FileUpload;
     private type?: string;
+    private upload?: FileUpload;
 
     agInit(params: any): void {
         this.type = params.data.type;

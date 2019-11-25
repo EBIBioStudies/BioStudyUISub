@@ -5,32 +5,29 @@ import {
 import {
     IFilterParams,
     IDoesFilterPassParams,
-    RowNode,
-    IAfterGuiAttachedParams
+    RowNode
 } from 'ag-grid-community/main';
 import { AgFilterComponent } from 'ag-grid-angular/main';
 
 @Component({
-    selector: 'ag-acc-filter',
+    selector: 'st-ag-acc-filter',
     templateUrl: 'text-filter.component.html'
 })
 export class TextFilterComponent implements AgFilterComponent {
+    @ViewChild('inputEl') inputEl;
+    text: string = '';
     private params?: IFilterParams;
+    private prev: string = '';
     private valueGetter?: (rowNode: RowNode) => any;
 
-    text: string = '';
-    private prev: string = '';
-    private hide?: Function;
 
-    @ViewChild('inputEl') public inputEl;
+    afterGuiAttached(): void {
+        this.inputEl.nativeElement.focus();
+    }
 
     agInit(params: IFilterParams): void {
         this.params = params;
         this.valueGetter = params.valueGetter;
-    }
-
-    isFilterActive(): boolean {
-        return this.text !== null && this.text !== undefined && this.text !== '';
     }
 
     doesFilterPass(params: IDoesFilterPassParams): boolean {
@@ -42,18 +39,18 @@ export class TextFilterComponent implements AgFilterComponent {
     }
 
     getModel(): any {
-        return {value: this.text};
+        return { value: this.text };
     }
 
-    setModel(model: any): void {
-        if (model) {
-            this.text = model.value;
+    isFilterActive(): boolean {
+        return this.text !== null && this.text !== undefined && this.text !== '';
+    }
+
+    notifyAboutChanges() {
+        if (this.text !== this.prev) {
+            this.prev = this.text;
+            this.params!.filterChangedCallback();
         }
-    }
-
-    afterGuiAttached(params: IAfterGuiAttachedParams): void {
-        this.inputEl.nativeElement.focus();
-        this.hide = params.hidePopup;
     }
 
     onApplyClick(): void {
@@ -65,10 +62,9 @@ export class TextFilterComponent implements AgFilterComponent {
         this.notifyAboutChanges();
     }
 
-    notifyAboutChanges() {
-        if (this.text !== this.prev) {
-            this.prev = this.text;
-            this.params!.filterChangedCallback();
+    setModel(model: any): void {
+        if (model) {
+            this.text = model.value;
         }
     }
 }

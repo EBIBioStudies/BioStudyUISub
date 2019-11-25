@@ -1,4 +1,4 @@
-export const HecatosTemplate = {
+export const hecatosTemplate = {
     'name': 'HeCaToS',
     'description': 'Hepatic and Cardiac Toxicity Systems modelling',
     'sectionType': {

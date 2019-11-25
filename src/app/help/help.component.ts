@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-    selector: 'help-page',
+    selector: 'st-help-page',
     templateUrl: './help.component.html',
     styleUrls: ['./help.component.css']
 })
@@ -21,7 +21,7 @@ export class HelpComponent {
             window.scrollBy(0, sectionEl.getBoundingClientRect().top - 100);
 
         } catch (exception) {
-            console.error('Target unknown');
+            // TODO: Review logic and check if this try/catch is needed
         }
     }
 }

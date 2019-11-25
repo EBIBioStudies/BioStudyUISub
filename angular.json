@@ -70,28 +70,6 @@
             "browserTarget": "biostd-submissions:build"
           }
         },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "src/test.ts",
-            "karmaConfig": "./karma.conf.js",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "src/tsconfig.spec.json",
-            "scripts": [],
-            "styles": [
-              "node_modules/ag-grid-community/dist/styles/ag-grid.css",
-              "node_modules/ag-grid-community/dist/styles/ag-theme-fresh.css",
-              "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
-              "src/styles/custom-bootstrap.less"
-            ],
-            "assets": [
-              "src/images",
-              "src/thor-integration.html",
-              "src/styles/bootstrap/fonts",
-              "src/config.json"
-            ]
-          }
-        },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
@@ -126,11 +104,11 @@
   "defaultProject": "biostd-submissions",
   "schematics": {
     "@schematics/angular:component": {
-      "prefix": "app",
+      "prefix": "st",
       "styleext": "css"
     },
     "@schematics/angular:directive": {
-      "prefix": "app"
+      "prefix": "st"
     }
   }
 }

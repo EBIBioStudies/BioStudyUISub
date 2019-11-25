@@ -1,4 +1,13 @@
-import { Component, ComponentFactoryResolver, Input, Type, ViewChild, ViewContainerRef } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ComponentFactoryResolver,
+    Input,
+    OnChanges,
+    Type,
+    ViewChild,
+    ViewContainerRef
+} from '@angular/core';
 
 export interface TreeViewCustomNodeComponent {
     onNodeData(data: any): void;
@@ -10,7 +19,7 @@ export interface TreeViewConfig {
 }
 
 @Component({
-    selector: 'tree-view-node',
+    selector: 'st-tree-view-node',
     template: `
     <span class="node">
         <i *ngIf="hasChildren"
@@ -22,8 +31,9 @@ export interface TreeViewConfig {
     </span>
     <ul [collapse]="isCollapsed">
         <li  *ngFor="let child of children">
-            <tree-view-node [data]="child"
-                            [config]="config"></tree-view-node>
+            <st-tree-view-node [data]="child"
+                               [config]="config">
+            </st-tree-view-node>
         </li>
     </ul>
 `,
@@ -68,17 +78,15 @@ li:last-child::before {
 }
 `]
 })
-export class TreeViewNodeComponent {
-    @Input() data?: any;
+export class TreeViewNodeComponent implements AfterViewInit, OnChanges {
     @Input() config?: TreeViewConfig;
-
+    @Input() data?: any;
+    isCollapsed: boolean = true; // All branches will be collapsed by default.
     @ViewChild('nodeTemplate', {read: ViewContainerRef}) vcr;
 
     private compRef;
-    isCollapsed: boolean = true; // All branches will be collapsed by default.
 
-    constructor(private componentFactoryResolver: ComponentFactoryResolver) {
-    }
+    constructor(private componentFactoryResolver: ComponentFactoryResolver) {}
 
     get children(): any [] {
         return this.config ? this.config.children(this.data) : [];
@@ -90,7 +98,8 @@ export class TreeViewNodeComponent {
 
     ngAfterViewInit() {
         if (this.config) {
-            let compFactory = this.componentFactoryResolver.resolveComponentFactory(this.config.nodeComponentClass);
+            const compFactory = this.componentFactoryResolver.resolveComponentFactory(this.config.nodeComponentClass);
+
             this.compRef = this.vcr.createComponent(compFactory);
             this.detectChanges();
         }
@@ -115,22 +124,22 @@ export class TreeViewNodeComponent {
 
 
 @Component({
-    selector: 'tree-view',
+    selector: 'st-tree-view',
     template: `
-<div class="tree">
-     <tree-view-node [data]="data"
-                     [config]="config"></tree-view-node>
-</div>
-
-`,
+        <div class="tree">
+            <st-tree-view-node [data]="data"
+                            [config]="config">
+            </st-tree-view-node>
+        </div>
+    `,
     styles: [`
-.tree {
-    min-height:20px;
-    padding:10px;
-}
-`]
+        .tree {
+            min-height:20px;
+            padding:10px;
+        }
+    `]
 })
 export class TreeViewComponent {
-    @Input() data?: any;
     @Input() config?: TreeViewConfig;
+    @Input() data?: any;
 }

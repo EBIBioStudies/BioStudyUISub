@@ -1,15 +1,15 @@
 export interface IdentifierNamespace {
-  prefix: string;
-  name?: string;
   description?: string;
+  name?: string;
+  prefix: string;
 }
 
 export interface IdentifierEmbedded {
-  namespaces: IdentifierNamespace[]
+  namespaces: IdentifierNamespace[];
 }
 
 export interface IdentifierResponse {
-  _embedded: IdentifierEmbedded
+  _embedded: IdentifierEmbedded;
 }
 
 export interface IdentifierResolvedResource {

@@ -11,14 +11,12 @@ import { LogService } from './logger/log.service';
 export class GlobalErrorHandler extends ErrorHandler {
     private errors: Subject<any> = new Subject<any>();
 
-    anErrorDetected$ = this.errors.asObservable();
-
-    constructor(
-        private userSession: UserSession,
-        private zone: NgZone,
-        private logService: LogService
-    ) {
+    constructor(private userSession: UserSession, private zone: NgZone, private logService: LogService) {
         super();
+    }
+
+    get errorDetected() {
+        return this.errors.asObservable();
     }
 
     handleError(error) {
@@ -32,11 +30,19 @@ export class GlobalErrorHandler extends ErrorHandler {
         }
 
         if (error.status === INTERNAL_SERVER_ERROR) {
+            // An error occurred that may potentially be worth handling at a global level.
+
             this.errors.next(
                 `Something went wrong at our side. Sorry for the inconvenience,
                 we are working to fix it. Please try again later and if the problem persists,
                 drop an email to <a href="mailto:biostudies@ebi.ac.uk">biostudies@ebi.ac.uk</a>`
             );
+        } else {
+            // TODO: post error to new logging system.
+            // tslint:disable-next-line: no-console
+            console.error(error);
+
+            this.errors.next(error);
         }
 
         this.logService.error('global-error', error);

@@ -4,20 +4,19 @@ import { SectionForm } from '../shared/section-form';
 import { SubmEditService } from '../shared/subm-edit.service';
 
 @Component({
-    selector: 'subm-navbar',
+    selector: 'st-subm-navbar',
     templateUrl: './subm-navbar.component.html',
     styleUrls: ['./subm-navbar.component.css']
 })
 export class SubmNavBarComponent implements OnChanges {
-    @Input() sectionForm?: SectionForm;
     @Input() accno?: string; // accession number for the current submission
-    @Input() readonly: boolean = false; // read-only status of the submission form
-    @Output() sectionClick: EventEmitter<Section> = new EventEmitter<Section>();
-    @Output() revertClick: EventEmitter<Event> = new EventEmitter<Event>();
-    @Output() submitClick: EventEmitter<Event> = new EventEmitter<Event>();
     @Output() editClick: EventEmitter<Event> = new EventEmitter<Event>();
-
+    @Input() readonly: boolean = false; // read-only status of the submission form
+    @Output() revertClick: EventEmitter<Event> = new EventEmitter<Event>();
+    @Output() sectionClick: EventEmitter<Section> = new EventEmitter<Section>();
+    @Input() sectionForm?: SectionForm;
     sectionPath: SectionForm[] = [];
+    @Output() submitClick: EventEmitter<Event> = new EventEmitter<Event>();
 
     constructor(private submEditService: SubmEditService) {}
 
@@ -27,20 +26,20 @@ export class SubmNavBarComponent implements OnChanges {
         }
     }
 
-    onSectionClick(section: Section): void {
-        this.sectionClick.next(section);
+    onEdit(event: Event): void {
+        this.editClick.next(event);
     }
 
     onRevert(event: Event): void {
         this.revertClick.next(event);
     }
 
-    onSubmit(event: Event): void {
-        this.submitClick.next(event);
+    onSectionClick(section: Section): void {
+        this.sectionClick.next(section);
     }
 
-    onEdit(event: Event): void {
-        this.editClick.next(event);
+    onSubmit(event: Event): void {
+        this.submitClick.next(event);
     }
 
     // TODO: a temporary workaround

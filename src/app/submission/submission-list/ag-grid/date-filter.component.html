@@ -7,19 +7,19 @@
 </div>
 <div class="form-group">
     <div *ngIf="after || between">
-        <date-input id="date-from"
+        <st-date-input id="date-from"
                     [allowPast]="true"
                     [(ngModel)]="date.from">
-        </date-input>
+        </st-date-input>
     </div>
     <div *ngIf="between" >
         and
     </div>
     <div *ngIf="before || between" >
-        <date-input id="date-to"
+        <st-date-input id="date-to"
                     [allowPast]="true"
                     [(ngModel)]="date.to">
-        </date-input>
+        </st-date-input>
     </div>
 </div>
 <button class="btn btn-sm btn-primary btn-submit" type="submit"
@@ -31,4 +31,3 @@
         (click)="onClearClick($event)">
     Clear
 </button>
-

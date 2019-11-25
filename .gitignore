@@ -20,7 +20,9 @@ node_modules
 
 # Env variables files
 .env
-cypress.env.json
 
 # Logs
 logs
+
+# Coverage
+coverage

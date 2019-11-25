@@ -27,12 +27,12 @@
         <span *ngIf="!isReadonly" class="input-group-addon">
             <i class="fa {{fieldType.icon}}"></i>
         </span>
-        <input-value [valueType]="valueType"
-                     [readonly]="isReadonly"
-                     [formControl]="fieldControl.control"
-                     [isSmall]="false"
-                     nativeElementAttach
-                     validate-onblur>
-        </input-value>
+        <st-input-value [valueType]="valueType"
+                        [readonly]="isReadonly"
+                        [formControl]="fieldControl.control"
+                        [isSmall]="false"
+                        stNativeElementAttach
+                        stValidateOnblur>
+        </st-input-value>
     </div>
 </div>

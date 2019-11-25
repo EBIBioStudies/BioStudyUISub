@@ -2,7 +2,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid-community/main';
 import { Subject } from 'rxjs/Subject';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, filter, takeUntil, catchError } from 'rxjs/operators';
 import { throwError, of } from 'rxjs';
 import { AppConfig } from '../../app.config';
 import { FileService } from '../shared/file.service';
@@ -13,26 +13,22 @@ import { FileTypeCellComponent } from './ag-grid/file-type-cell.component';
 import { FileUpload, FileUploadList } from '../shared/file-upload-list.service';
 import { ProgressCellComponent } from './ag-grid/upload-progress-cell.component';
 import { UploadBadgeItem } from './file-upload-badge/file-upload-badge.component';
-import { UserData } from 'app/auth/shared';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/takeUntil';
 
 @Component({
-    selector: 'file-list',
+    selector: 'st-file-list',
     templateUrl: './file-list.component.html',
     styleUrls: ['./file-list.component.css']
 })
 export class FileListComponent implements OnInit, OnDestroy {
-    protected ngUnsubscribe: Subject<void>;     // stopper for all subscriptions
-    private rowData: any[];
-
+    backButton = false;
+    columnDefs?: any[];
+    gridOptions: GridOptions;
+    isBulkMode = false;
     path: Path = new Path('/user', '/');
     sideBarCollapsed = false;
-    backButton = false;
-    gridOptions: GridOptions;
-    columnDefs?: any[];
-    isBulkMode = false;
+
+    protected ngUnsubscribe: Subject<void>;     // stopper for all subscriptions
+    private rowData: any[];
 
     constructor(
         private appConfig: AppConfig,
@@ -57,34 +53,17 @@ export class FileListComponent implements OnInit, OnDestroy {
         };
 
         this.fileUploadList.uploadCompleted$
-            .filter((path) => path.startsWith(this.currentPath))
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                filter((path) => path.startsWith(this.currentPath)),
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe(() => {
                 this.loadData();
             });
+
         this.rowData = [];
         this.createColumnDefs();
         this.loadData();
-    }
-
-    ngOnInit() {
-        this.route.queryParams.forEach((params: Params) => {
-            this.backButton = params.bb;
-        });
-    }
-
-    /**
-     * Removes all subscriptions whenever the user navigates away from this view.
-     * Requires the takeUntil operator before every subscription.
-     * @see {@link https://stackoverflow.com/a/41177163}
-     */
-    ngOnDestroy() {
-        this.ngUnsubscribe.next();
-        this.ngUnsubscribe.complete();
-    }
-
-    private get currentPath() {
-        return this.path.absolutePath();
     }
 
     get rootPath(): string {
@@ -95,101 +74,22 @@ export class FileListComponent implements OnInit, OnDestroy {
         this.path = this.path.setRoot(rp);
     }
 
-    private createColumnDefs() {
-        this.columnDefs = [
-            {
-                headerName: 'Type',
-                field: 'type',
-                minWidth: 70,
-                maxWidth: 70,
-                sortable: false,
-                cellRendererFramework: FileTypeCellComponent
+    private get currentPath() {
+        return this.path.absolutePath();
+    }
+
+    decorateFiles(files: any[] | undefined): any[] {
+        return (files || []).map(f => ({
+            name: f.name,
+            type: f.type,
+            files: this.decorateFiles(f.files),
+            onRemove: () => {
+                this.removeFile(f.path, f.name);
             },
-            {
-                headerName: 'Name',
-                field: 'name'
-            },
-            {
-                headerName: 'Progress',
-                maxWidth: 200,
-                cellRendererFramework: ProgressCellComponent
-            },
-            {
-                headerName: 'Actions',
-                maxWidth: 100,
-                suppressMenu: true,
-                sortable: false,
-                cellRendererFramework: FileActionsCellComponent
+            onDownload: () => {
+                this.downloadFile(f.path, f.name);
             }
-        ];
-    }
-
-    private loadData(path?: Path) {
-        const p: Path = path ? path : this.path;
-        this.fileService.getFiles(p.absolutePath())
-            .takeUntil(this.ngUnsubscribe)
-            .catch(error => {
-                this.gridOptions!.api!.hideOverlay();
-                return throwError(error);
-
-            }).subscribe(files => {
-                const decoratedRows = ([] as any[]).concat(
-                    this.decorateUploads(this.fileUploadList.activeUploads),
-                    this.decorateFiles(files)
-                );
-
-                this.path = p;
-                this.updateDataRows(decoratedRows);
-            }
-        );
-    }
-
-    updateDataRows(rows) {
-        this.rowData = rows;
-        this.gridOptions!.api!.setRowData(rows);
-    }
-
-    onRowDoubleClick(ev) {
-        if (ev.data.type !== 'FILE') {
-            this.loadData(this.path.addRel(ev.data.name));
-        }
-    }
-
-    onRelativePathChange(relPath) {
-        this.loadData(this.path.setRel(relPath));
-    }
-
-    onRootPathSelect(rootPath) {
-        this.path = new Path(rootPath, '/');
-        this.loadData();
-    }
-
-    onUploadSelect(upload: UploadBadgeItem) {
-        this.path = upload.filePath;
-        this.loadData();
-    }
-
-    onUploadFilesSelect(files: FileList) {
-        const uploadedFileNames = this.rowData.map((file) => file.name);
-        const filesToUpload =  Array.from(files).map((file) => file.name);
-        const overlap = filesToUpload.filter((fileToUpload) => uploadedFileNames.includes(fileToUpload));
-
-        (overlap.length > 0 ? this.confirmOverwrite(overlap) : of(true))
-            .takeUntil(this.ngUnsubscribe)
-            .subscribe(() => this.upload(files));
-    }
-
-    private confirmOverwrite(overlap) {
-        const overlapString = overlap.length === 1 ? overlap[0] + '?' :
-            overlap.length + ' files? (' + overlap.join(', ') + ')' ;
-
-        return this.modalService.whenConfirmed(`Do you want to overwrite ${overlapString}`,
-            'Overwrite files?', 'Overwrite');
-    }
-
-    private upload(files: FileList) {
-        const upload = this.fileUploadList.upload(this.path, Array.from(files));
-        this.updateDataRows(([] as any[]).concat(this.decorateUploads([upload]), this.rowData));
+        }));
     }
 
     decorateUploads(uploads: FileUpload[]): any[] {
@@ -208,32 +108,93 @@ export class FileListComponent implements OnInit, OnDestroy {
         }).reduce((rv, v) => rv.concat(v), []);
     }
 
-    decorateFiles(files: any[] | undefined): any[] {
-        return (files || []).map(f => ({
-            name: f.name,
-            type: f.type,
-            files: this.decorateFiles(f.files),
-            onRemove: () => {
-                this.removeFile(f.path, f.name);
-            },
-            onDownload: () => {
-                this.downloadFile(f.path, f.name);
-            }
-        }));
+    /**
+     * Removes all subscriptions whenever the user navigates away from this view.
+     * Requires the takeUntil operator before every subscription.
+     * @see {@link https://stackoverflow.com/a/41177163}
+     */
+    ngOnDestroy() {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
-    private removeFile(filePath: string, fileName: string): void {
-        this.modalService.whenConfirmed(`Do you want to delete "${fileName}"?`, 'Delete a file', 'Delete')
-            .pipe(
-                switchMap(() => this.fileService.removeFile(filePath, fileName))
-            )
-            .takeUntil(this.ngUnsubscribe)
-            .subscribe(() => this.loadData());
+    ngOnInit() {
+        this.route.queryParams.forEach((params: Params) => {
+            this.backButton = params.bb;
+        });
     }
 
-    private removeUpload(u: FileUpload) {
-        this.fileUploadList.remove(u);
+    onRelativePathChange(relPath) {
+        this.loadData(this.path.setRel(relPath));
+    }
+
+    onRootPathSelect(rootPath) {
+        this.path = new Path(rootPath, '/');
         this.loadData();
+    }
+
+    onRowDoubleClick(ev) {
+        if (ev.data.type !== 'FILE') {
+            this.loadData(this.path.addRel(ev.data.name));
+        }
+    }
+
+    onUploadFilesSelect(files: FileList) {
+        const uploadedFileNames = this.rowData.map((file) => file.name);
+        const filesToUpload = Array.from(files).map((file) => file.name);
+        const overlap = filesToUpload.filter((fileToUpload) => uploadedFileNames.includes(fileToUpload));
+
+        (overlap.length > 0 ? this.confirmOverwrite(overlap) : of(true))
+            .pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe(() => this.upload(files));
+    }
+
+    onUploadSelect(upload: UploadBadgeItem) {
+        this.path = upload.filePath;
+        this.loadData();
+    }
+
+    updateDataRows(rows) {
+        this.rowData = rows;
+        this.gridOptions!.api!.setRowData(rows);
+    }
+
+    private confirmOverwrite(overlap) {
+        const overlapString = overlap.length === 1 ? overlap[0] + '?' :
+            overlap.length + ' files? (' + overlap.join(', ') + ')' ;
+
+        return this.modalService.whenConfirmed(`Do you want to overwrite ${overlapString}`,
+            'Overwrite files?', 'Overwrite');
+    }
+
+    private createColumnDefs() {
+        this.columnDefs = [
+            {
+                cellRendererFramework: FileTypeCellComponent,
+                field: 'type',
+                headerName: 'Type',
+                maxWidth: 70,
+                minWidth: 70,
+                sort: 'asc',
+                sortable: false
+            },
+            {
+                field: 'name',
+                headerName: 'Name'
+            },
+            {
+                cellRendererFramework: ProgressCellComponent,
+                headerName: 'Progress',
+                maxWidth: 200
+            },
+            {
+                cellRendererFramework: FileActionsCellComponent,
+                headerName: 'Actions',
+                maxWidth: 100,
+                sortable: false,
+                suppressMenu: true
+            }
+        ];
     }
 
     private downloadFile(filePath: string, fileName: string): void {
@@ -246,5 +207,46 @@ export class FileListComponent implements OnInit, OnDestroy {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+    }
+
+    private loadData(path?: Path) {
+        const p: Path = path ? path : this.path;
+        this.fileService.getFiles(p.absolutePath())
+            .pipe(
+                takeUntil(this.ngUnsubscribe),
+                catchError((error) => {
+                    this.gridOptions!.api!.hideOverlay();
+                    return throwError(error);
+                })
+            )
+            .subscribe(files => {
+                const decoratedRows = ([] as any[]).concat(
+                    this.decorateUploads(this.fileUploadList.activeUploads),
+                    this.decorateFiles(files)
+                );
+
+                this.path = p;
+                this.updateDataRows(decoratedRows);
+            }
+            );
+    }
+
+    private removeFile(filePath: string, fileName: string): void {
+        this.modalService.whenConfirmed(`Do you want to delete "${fileName}"?`, 'Delete a file', 'Delete')
+            .pipe(
+                switchMap(() => this.fileService.removeFile(filePath, fileName)),
+                takeUntil(this.ngUnsubscribe)
+            )
+            .subscribe(() => this.loadData());
+    }
+
+    private removeUpload(u: FileUpload) {
+        this.fileUploadList.remove(u);
+        this.loadData();
+    }
+
+    private upload(files: FileList) {
+        const upload = this.fileUploadList.upload(this.path, Array.from(files));
+        this.updateDataRows(([] as any[]).concat(this.decorateUploads([upload]), this.rowData));
     }
 }

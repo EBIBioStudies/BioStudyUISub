@@ -5,16 +5,14 @@ import { SectionType } from 'app/submission/submission-shared/model/templates';
 import { SectionForm } from '../../shared/section-form';
 
 @Component({
-    selector: 'add-subm-type-modal',
+    selector: 'st-add-subm-type-modal',
     templateUrl: './add-subm-type-modal.component.html'
 })
 export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
+    featNames?: string[];
     sectionForm?: SectionForm;
-
-    public typeBase: string = 'Grid';
-    public typeName?: string;
-
-    private featNames?: string[];
+    typeBase: string = 'Grid';
+    typeName?: string;
 
     @ViewChild('focusBtn')
     private focusEl?: ElementRef;
@@ -24,27 +22,30 @@ export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
 
     constructor(public bsModalRef: BsModalRef) {}
 
+    hide(): void {
+        this.bsModalRef.hide();
+    }
+
+    ngAfterViewInit(): void {
+        this.focusEl!.nativeElement.focus();
+    }
+
     ngOnInit(): void {
         this.featNames = this.getFeatureNames();
     }
 
-    ngAfterViewInit(): void {
-       this.focusEl!.nativeElement.focus();
-    }
+    onAddType(name: string, isSection: boolean, isSingleRow: boolean): boolean {
+        const rootType: SectionType = this.sectionForm!.type;
 
-    /**
-     * Generates the list of type names for all features (including annotations) from section data.
-     * @returns {string[]} Type names of all defined features.
-     */
-    private getFeatureNames(): string[] {
-        if (this.sectionForm) {
-            return this.sectionForm.featureForms.map(ff => ff.featureTypeName);
+        if (isSection) {
+            const sectionType = rootType.getSectionType(name);
+            this.sectionForm!.addSection(sectionType);
+
+            return true;
         }
-        return [];
-    }
 
-    hide(): void {
-        this.bsModalRef.hide();
+        const featureType = rootType.getFeatureType(name, isSingleRow);
+        return this.sectionForm!.addFeature(featureType) !== undefined;
     }
 
     onCancel(form: NgForm): void {
@@ -69,18 +70,14 @@ export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
         }
     }
 
-    onAddType(name: string, isSection: boolean, isSingleRow: boolean): boolean {
-        const rootType: SectionType = this.sectionForm!.type;
-
-        if (isSection) {
-            const sectionType = rootType.getSectionType(name);
-            console.log(sectionType);
-            this.sectionForm!.addSection(sectionType);
-            return true;
+    /**
+     * Handler for blur event on the type name field. Hides the popover displayed by the method above.
+     * NOTE: The popover is only rendered when the uniqueness test fails.
+     */
+    onTypeNameBlur() {
+        if (this.uniquePop) {
+            this.uniquePop.hide();
         }
-
-        const featureType = rootType.getFeatureType(name, isSingleRow);
-        return this.sectionForm!.addFeature(featureType) !== undefined;
     }
 
     /**
@@ -94,12 +91,13 @@ export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
     }
 
     /**
-     * Handler for blur event on the type name field. Hides the popover displayed by the method above.
-     * NOTE: The popover is only rendered when the uniqueness test fails.
+     * Generates the list of type names for all features (including annotations) from section data.
+     * @returns {string[]} Type names of all defined features.
      */
-    onTypeNameBlur() {
-        if (this.uniquePop) {
-            this.uniquePop.hide();
+    private getFeatureNames(): string[] {
+        if (this.sectionForm) {
+            return this.sectionForm.featureForms.map(ff => ff.featureTypeName);
         }
+        return [];
     }
 }

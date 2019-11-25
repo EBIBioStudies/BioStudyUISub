@@ -5,9 +5,9 @@ export function typeaheadSource(sourceFunc: () => string[], valueChanges: Observ
     return valueChanges.pipe(
         map(token => token.toLowerCase()),
         mergeMap((token: string) => {
-                const v = sourceFunc().filter(v => v.toLowerCase().includes(token));
-                return of(v);
-            }
-        )
+            const value = sourceFunc().filter((filterValues) => filterValues.toLowerCase().includes(token));
+
+            return of(value);
+        })
     );
 }

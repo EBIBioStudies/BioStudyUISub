@@ -2,56 +2,26 @@ import { Component, forwardRef, Input, OnDestroy, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FileTreeStore } from './file-tree.store';
 import { Subject } from 'rxjs/Subject';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
-    selector: 'file-select',
+    selector: 'st-file-select',
     templateUrl: './file-select.component.html',
     styleUrls: ['./file-select.component.css'],
     providers: [
         {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => FileSelectComponent), multi: true}
     ]
 })
-export class FileSelectComponent implements ControlValueAccessor, OnInit, OnDestroy {
-    @Input('value') private selected = '';
-
-    isOpen = false;
+export class FileSelectComponent implements ControlValueAccessor, OnDestroy {
     isEmpty = false;
-    isLoading = true;
+    isOpen = false;
+
+    // tslint:disable-next-line: no-input-rename
+    @Input('value') private selected = '';
 
     private unsubscribe = new Subject();
 
-    constructor(private fileStore: FileTreeStore) {
-    }
-
-    private onChange: any = () => {
-    }
-
-    private onTouched: any = () => {
-    }
-
-    ngOnInit(): void {
-        this.fileStore.isEmpty()
-            .takeUntil(this.unsubscribe)
-            .subscribe(fileNode => {
-                this.isLoading = false;
-                this.isEmpty = fileNode === undefined;
-            });
-    }
-
-    ngOnDestroy(): void {
-        this.unsubscribe.next();
-        this.unsubscribe.complete();
-        this.fileStore.clearCache();
-    }
-
-    onInputClick(): void {
-        setTimeout(() => { this.isOpen = true; }, 100);
-    }
-
-    doNothing(event: Event): boolean {
-        event.preventDefault();
-        return false;
-    }
+    constructor(private fileStore: FileTreeStore) {}
 
     get value() {
         return this.selected;
@@ -62,10 +32,41 @@ export class FileSelectComponent implements ControlValueAccessor, OnInit, OnDest
         this.onChange(value);
     }
 
+    doNothing(event: Event): boolean {
+        event.preventDefault();
+        return false;
+    }
+
+    ngOnDestroy(): void {
+        this.unsubscribe.next();
+        this.unsubscribe.complete();
+        this.fileStore.clearCache();
+    }
+
+    onFileDropdownClose() {
+        this.isOpen = false;
+    }
+
+    onFileSelect(path: string) {
+        this.value = path;
+    }
+
+    onInputClick(): void {
+        setTimeout(() => { this.isOpen = true; }, 100);
+    }
+
+    registerOnChange(fn) {
+        this.onChange = fn;
+    }
+
+    registerOnTouched() { }
+
+    setDisabledState(): void {}
+
     writeValue(value: any): void {
         if (value) {
             this.fileStore.findFile(value)
-                .takeUntil(this.unsubscribe)
+                .pipe(takeUntil(this.unsubscribe))
                 .subscribe(path => {
                     this.selected = path;
                     // temporary fix: implicitly converting file path to /Groups/<group group_name>/..
@@ -76,22 +77,5 @@ export class FileSelectComponent implements ControlValueAccessor, OnInit, OnDest
         }
     }
 
-    registerOnChange(fn) {
-        this.onChange = fn;
-    }
-
-    registerOnTouched(fn: any) {
-        this.onTouched = fn;
-    }
-
-    setDisabledState(): void {
-    }
-
-    onFileSelect(path: string) {
-        this.value = path;
-    }
-
-    onFileDropdownClose() {
-        this.isOpen = false;
-    }
+    private onChange: any = () => { };
 }

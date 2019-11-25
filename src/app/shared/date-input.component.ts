@@ -6,7 +6,7 @@ import { isEqualDate } from '../utils';
 import { AppConfig } from '../app.config';
 
 @Component({
-    selector: 'date-input',
+    selector: 'st-date-input',
     templateUrl: './date-input.component.html',
     styleUrls: ['./date-input.component.css'],
     providers: [{
@@ -25,16 +25,12 @@ import { AppConfig } from '../app.config';
  */
 export class DateInputComponent implements ControlValueAccessor, OnInit {
     @Input() allowPast?: boolean = undefined;
-    @Input() maxDate?: Date = undefined;
-    @Input() isSmall?: boolean = false;
-    @Input() required?: boolean = false;
-    @Input() readonly?: boolean = false;
-    @ViewChild('dp') private datepicker?: BsDatepickerDirective;
-
-    private onChange: any = () => {};
-    private onTouched: any = () => {};
-
     dateValue: Date | undefined;
+    @Input() isSmall?: boolean = false;
+    @Input() maxDate?: Date = undefined;
+    @Input() readonly?: boolean = false;
+    @Input() required?: boolean = false;
+    @ViewChild('dp') private datepicker?: BsDatepickerDirective;
 
     /**
      * Instantiates a new custom component, hiding the weeks column on the calendar and setting
@@ -45,7 +41,7 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
      */
     constructor(config: BsDatepickerConfig, private appConfig: AppConfig, private rootEl: ElementRef) {
         config.showWeekNumbers = false;
-        config.dateInputFormat = appConfig.dateInputFormat;
+        config.dateInputFormat = this.appConfig.dateInputFormat;
     }
 
     /**
@@ -64,44 +60,6 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
     }
 
     /**
-     * Gets the datepicker's input back to its state at instantiation, namely a blank value.
-     */
-    reset() {
-        this.dateValue = undefined;
-        this.onChange(this.dateValue);
-    }
-
-    /**
-     * Sets the date field to today's date if no value is coming from the encompassing form. It is assumed that
-     * the type of the incoming data is always "string".
-     * @see {@link ControlValueAccessor}
-     * @param value - Value to be stored.
-     */
-    writeValue(value: any) {
-        if (String.isDefinedAndNotEmpty(value)) {
-            this.onPickerSet(new Date(value));
-        }
-    }
-
-    /**
-     * Registers a handler that should be called when something in the view has changed.
-     * @see {@link ControlValueAccessor}
-     * @param fn - Handler telling other form directives and form controls to update their values.
-     */
-    registerOnChange(fn) {
-        this.onChange = fn;
-    }
-
-    /**
-     * Registers a handler specifically for when a control receives a touch event.
-     * @see {@link ControlValueAccessor}
-     * @param fn - Handler for touch events.
-     */
-    registerOnTouched(fn: any) {
-        this.onTouched = fn;
-    }
-
-    /**
      * Normalises clicking behaviour across all of the input. Otherwise, clicking around the area of the arrow would
      * not bring up the calendar, the expected behaviour.
      * @param {Event} event - DOM event for the click action.
@@ -112,7 +70,7 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
         if (this.readonly) {
             this.datepicker!.toggle();
 
-        // Checks click happened on the wrapping element
+            // Checks click happened on the wrapping element
         } else if ((<Element>event.target).classList.contains('dropdown')) {
             this.datepicker!.show();
         }
@@ -139,7 +97,7 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
             // Propagates the date change through the DOM if so wished.
             if (isChange) {
                 this.rootEl.nativeElement.value = formattedDate;
-                this.rootEl.nativeElement.dispatchEvent(new Event('change', {bubbles: true}));
+                this.rootEl.nativeElement.dispatchEvent(new Event('change', { bubbles: true }));
             }
 
         }
@@ -153,4 +111,41 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
             event.stopPropagation();
         });
     }
+
+    /**
+     * Registers a handler that should be called when something in the view has changed.
+     * @see {@link ControlValueAccessor}
+     * @param fn - Handler telling other form directives and form controls to update their values.
+     */
+    registerOnChange(fn) {
+        this.onChange = fn;
+    }
+
+    /**
+     * Registers a handler specifically for when a control receives a touch event.
+     * @see {@link ControlValueAccessor}
+     */
+    registerOnTouched() { }
+
+    /**
+     * Gets the datepicker's input back to its state at instantiation, namely a blank value.
+     */
+    reset() {
+        this.dateValue = undefined;
+        this.onChange(this.dateValue);
+    }
+
+    /**
+     * Sets the date field to today's date if no value is coming from the encompassing form. It is assumed that
+     * the type of the incoming data is always "string".
+     * @see {@link ControlValueAccessor}
+     * @param value - Value to be stored.
+     */
+    writeValue(value: any) {
+        if (String.isDefinedAndNotEmpty(value)) {
+            this.onPickerSet(new Date(value));
+        }
+    }
+
+    private onChange: any = () => { };
 }

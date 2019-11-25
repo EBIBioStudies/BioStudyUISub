@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, forwardRef, Input, Output, AfterViewChecked } from '@angular/core';
+import { Component, EventEmitter, forwardRef, Input, Output, AfterViewChecked } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { AppConfig } from 'app/app.config';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
@@ -12,7 +12,7 @@ import { typeaheadSource } from '../../shared/typeahead.utils';
 
 
 @Component({
-    selector: 'input-value',
+    selector: 'st-input-value',
     templateUrl: './input-value.component.html',
     providers: [{
         provide: NG_VALUE_ACCESSOR,
@@ -21,40 +21,30 @@ import { typeaheadSource } from '../../shared/typeahead.utils';
     }]
 })
 export class InputValueComponent implements ControlValueAccessor, AfterViewChecked {
-    readonly ValueTypeNameEnum = ValueTypeName;
-    readonly typeahead: Observable<string[]>;
-    private _value = '';
-    private suggestLength: number;
-    private valueChanges$: Subject<string> = new BehaviorSubject<string>('');
-
-    @Output() select = new EventEmitter<{ [key: string]: string }>();
-    @Input() valueType: ValueType = ValueTypeFactory.DEFAULT;
-    @Input() readonly = false;
     @Input() formControl?: FormControl;
     @Input() isSmall = true;
+    @Input() readonly = false;
+    @Output() select = new EventEmitter<{ [key: string]: string }>();
+    suggestLength: number;
     @Input() suggestThreshold: number = 0;
-    @Input() autosuggestSource: () => string[] = () => [];
+    readonly typeahead: Observable<string[]>;
+    @Input() valueType: ValueType = ValueTypeFactory.DEFAULT;
+    readonly valueTypeNameEnum = ValueTypeName;
+
+    private _value = '';
+    private valueChanges$: Subject<string> = new BehaviorSubject<string>('');
+
     /*
         @Input() suggestLength: number;             //max number of suggested values to be displayed at once
         @Input() suggestThreshold: number = 0;      //number of typed characters before suggestions are displayed.
     */
     // a value of 0 makes typeahead behave like an auto-suggest box.
 
-    private onChange: any = (_: any) => {};
-    private onTouched: any = () => {};
-
-    constructor(private rootEl: ElementRef, private appConfig: AppConfig) {
+    constructor(private appConfig: AppConfig) {
         this.suggestLength = appConfig.maxSuggestLength;
         this.typeahead = typeaheadSource(() => {
             return this.autosuggestValues();
         }, this.valueChanges$);
-    }
-
-    private autosuggestValues(): string[] {
-        if (this.valueType.is(ValueTypeName.select)) {
-            return (<SelectValueType>this.valueType).values;
-        }
-        return this.autosuggestSource();
     }
 
     get value() {
@@ -66,26 +56,19 @@ export class InputValueComponent implements ControlValueAccessor, AfterViewCheck
         this.onChange(value);
     }
 
-    onKeyDown() {
-        this.valueChanges$.next(this.value);
+    get allowPast(): boolean {
+        return (<DateValueType>this.valueType).allowPast;
     }
 
-    writeValue(value: any): void {
-        if (value !== undefined) {
-            this.value = value;
-        }
-    }
+    @Input() autosuggestSource: () => string[] = () => [];
 
-    registerOnChange(fn: any): void {
-        this.onChange = fn;
-    }
-
-    registerOnTouched(fn: any) {
-        this.onTouched = fn;
-    }
-
-    onBlur() {
-        this.onTouched();
+    /**
+     * Determines if the field's contents are longer than the actual field's dimensions by probing the DOM directly.
+     * @returns {boolean} True if the text's length is greater than its container.
+     */
+    isOverflow(): boolean {
+        // return (formEl && formEl.scrollWidth > formEl.clientWidth) === true;
+        return false;
     }
 
     /**
@@ -97,12 +80,29 @@ export class InputValueComponent implements ControlValueAccessor, AfterViewCheck
     }
 
     /**
-     * Determines if the field's contents are longer than the actual field's dimensions by probing the DOM directly.
-     * @returns {boolean} True if the text's length is greater than its container.
+     * Convenience method for the equivalen date n years into the future.
+     * @param {number} years - Number of years the date is incremented in.
+     * @returns {Date} - Resulting date object.
      */
-    isOverflow(): boolean {
-        // return (formEl && formEl.scrollWidth > formEl.clientWidth) === true;
-        return false;
+    nowInNyears(years: number = this.appConfig.maxDateYears): Date {
+        const currDate = new Date();
+        return new Date(currDate.setFullYear(currDate.getFullYear() + years));
+    }
+
+    onBlur() {
+        this.onTouched();
+    }
+
+    onKeyDown() {
+        this.valueChanges$.next(this.value);
+    }
+
+    registerOnChange(fn: any): void {
+        this.onChange = fn;
+    }
+
+    registerOnTouched(fn: any) {
+        this.onTouched = fn;
     }
 
     /**
@@ -126,17 +126,19 @@ export class InputValueComponent implements ControlValueAccessor, AfterViewCheck
          // this.rootEl.nativeElement.getElementsByTagName('input')[0].dispatchEvent(new Event('change', {bubbles: true}));
      }*/
 
-    /**
-     * Convenience method for the equivalen date n years into the future.
-     * @param {number} years - Number of years the date is incremented in.
-     * @returns {Date} - Resulting date object.
-     */
-    nowInNyears(years: number = this.appConfig.maxDateYears): Date {
-        const currDate = new Date();
-        return new Date(currDate.setFullYear(currDate.getFullYear() + years));
+    writeValue(value: any): void {
+        if (value !== undefined) {
+            this.value = value;
+        }
     }
 
-    get allowPast(): boolean {
-        return (<DateValueType>this.valueType).allowPast;
+    private autosuggestValues(): string[] {
+        if (this.valueType.is(ValueTypeName.select)) {
+            return (<SelectValueType>this.valueType).values;
+        }
+        return this.autosuggestSource();
     }
+
+    private onChange: any = (_: any) => { };
+    private onTouched: any = () => { };
 }

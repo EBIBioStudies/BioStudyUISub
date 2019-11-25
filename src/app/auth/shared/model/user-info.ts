@@ -1,16 +1,16 @@
 export interface Aux {
-    orcid: string
+    orcid: string;
 }
 
 export interface UserInfo {
-    sessid: string,
-    username: string,
-    email: string,
-    superuser: boolean,
-    secret: string,
-    aux: Aux
+    aux: Aux;
+    email: string;
+    secret: string;
+    sessid: string;
+    superuser: boolean;
+    username: string;
 }
 
 export interface ExtendedUserInfo extends UserInfo {
-    projects: string[]
+    projects: string[];
 }

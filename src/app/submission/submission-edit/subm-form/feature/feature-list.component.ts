@@ -3,7 +3,7 @@ import { AppConfig } from 'app/app.config';
 import { FeatureForm, ColumnControl } from '../../shared/section-form';
 
 @Component({
-    selector: 'subm-feature-list',
+    selector: 'st-subm-feature-list',
     templateUrl: './feature-list.component.html',
     styleUrls: ['./feature-list.component.css']
 })
@@ -13,10 +13,10 @@ export class FeatureListComponent implements AfterViewInit {
 
     @ViewChildren('rowEl') rowEls?: QueryList<ElementRef>;
 
-    public suggestLength: number; // max number of suggested values to be displayed at once
+    suggestLength: number; // max number of suggested values to be displayed at once
 
-    constructor(private rootEl: ElementRef, private appConfig: AppConfig) {
-        this.suggestLength = appConfig.maxSuggestLength;
+    constructor(private appConfig: AppConfig) {
+        this.suggestLength = this.appConfig.maxSuggestLength;
     }
 
     get columns(): ColumnControl[] {

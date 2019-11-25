@@ -16,8 +16,9 @@ import {
 export class IdLinkService {
     static REGISTRY_URL: string = '/identifiers/registry'; // base URL for the service endpoint
     static RESOLUTION_URL: string = '/identifiers/resolver';
-    public prefixes: string[] = []; // all possible prefixes for formatted links
-    public idUrl: string | undefined; // last URL for valid identifier
+
+    idUrl: string | undefined; // last URL for valid identifier
+    prefixes: string[] = []; // all possible prefixes for formatted links
 
     /**
      * Caches the list of all prefixes, signalling when it's been retrieved and available.

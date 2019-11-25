@@ -1,11 +1,11 @@
 export class Path {
-    static join(...parts: string[]) {
-        return parts.join('/').replace(/\/[\/]+/, '/');
-    }
-
     constructor(
         private rootPath: string,
         private relativePath: string) {
+    }
+
+    static join(...parts: string[]) {
+        return parts.join('/').replace(/\/[\/]+/, '/');
     }
 
     get root(): string {
@@ -24,15 +24,15 @@ export class Path {
         return Path.join(this.rootPath, this.relativePath);
     }
 
-    setRoot(r: string): Path {
-        return new Path(r, this.relativePath);
+    addRel(name: string): Path {
+        return new Path(this.rootPath, Path.join(this.relativePath, name));
     }
 
     setRel(r: string): Path {
         return new Path(this.rootPath, r);
     }
 
-    addRel(name: string): Path {
-        return new Path(this.rootPath, Path.join(this.relativePath, name));
+    setRoot(r: string): Path {
+        return new Path(r, this.relativePath);
     }
 }

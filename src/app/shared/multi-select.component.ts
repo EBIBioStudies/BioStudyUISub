@@ -33,8 +33,10 @@ export class FilterPipe implements PipeTransform {
     }
 }
 
+// TODO: is this component used?
+
 @Component({
-    selector: 'multi-select',
+    selector: 'st-multi-select',
     template: `
 <div class="btn-group btn-block" dropdown [isOpen]="isOpen">
     <button type="button" class="btn btn-default col-sm-12 dropdown-toggle" (click)="onToggle()">
@@ -99,48 +101,26 @@ export class FilterPipe implements PipeTransform {
     ]
 })
 export class MultiSelectComponent implements ControlValueAccessor, OnChanges, OnInit, OnDestroy {
-    @Input() placeholder = 'Select an option';
-    @Input() filterPlaceholder = 'Filter list';
     @Input() filterEnabled = true;
-    @Input() options: string[] = [];
-
+    filterInputValue$: Subject<string> = new Subject<string>();
+    @Input() filterPlaceholder = 'Filter list';
     filterText = '';
     isOpen = false;
     items: any[] = [];
+    @Input() options: string[] = [];
+    @Input() placeholder = 'Select an option';
 
-    filterInputValue$: Subject<string> = new Subject<string>();
-
-    private selected: string[] = [];
     private sb?: Subscription;
+    private selected: string[] = [];
 
     constructor(private rootEl: ElementRef) {}
-
-    ngOnInit(): void {
-        this.sb = this.filterInputValue$.subscribe(term => {
-            this.filterText = term;
-        });
-
-        // Detects clicks outside the multi-select box.
-        document.body.addEventListener('click', this.closeOnClick.bind(this));
-    }
-
-    ngOnDestroy(): void {
-        this.sb!.unsubscribe();
-        document.body.removeEventListener('click', this.closeOnClick);
-    }
-
-    ngOnChanges(): void {
-        this.items = this.options.map(opt => ({checked: false, label: opt}));
-        this.selected = [];
-        this.onChange(this.selected);
-    }
 
     get empty(): boolean {
         return this.options.length === 0;
     }
 
-    onClearFilter() {
-        this.filterText = '';
+    get value(): any {
+        return this.selected;
     }
 
     /**
@@ -153,34 +133,45 @@ export class MultiSelectComponent implements ControlValueAccessor, OnChanges, On
         }
     }
 
+    ngOnChanges(): void {
+        this.items = this.options.map(opt => ({ checked: false, label: opt }));
+        this.selected = [];
+        this.onChange(this.selected);
+    }
+
+    ngOnDestroy(): void {
+        this.sb!.unsubscribe();
+        document.body.removeEventListener('click', this.closeOnClick);
+    }
+
+    ngOnInit(): void {
+        this.sb = this.filterInputValue$.subscribe(term => {
+            this.filterText = term;
+        });
+
+        // Detects clicks outside the multi-select box.
+        document.body.addEventListener('click', this.closeOnClick.bind(this));
+    }
+
+    onClearFilter() {
+        this.filterText = '';
+    }
+
     onToggle(): void {
         this.isOpen = !this.isOpen;
     }
 
-    private select(item: any) {
-        item.checked = !item.checked;
-        if (item.checked) {
-            this.selected.push(item.label);
-        } else {
-            _.remove(this.selected, el => (el === item.label));
-        }
-        this.onChange(this.selected);
+    // ControlValueAccessor interface
+    registerOnChange(fn: any): void {
+        this.onChange = fn;
     }
 
-    private setSelected(value: string[]): void {
-        this.selected = value;
-        const ht = _.zipObject(value, _.fill(Array(value.length), 1));
-        _.forEach(this.items, item => {
-            item.checked = (ht[item.label] === 1);
-        });
-    }
+    // ControlValueAccessor interface
+    registerOnTouched() {}
 
-    private onChange: any = () => {};
-
-    private onTouched: any = () => {};
-
-    get value(): any {
-        return this.selected;
+    // ControlValueAccessor interface
+    setDisabledState(): void {
+        // not supported yet
     }
 
     // ControlValueAccessor interface
@@ -190,18 +181,13 @@ export class MultiSelectComponent implements ControlValueAccessor, OnChanges, On
         }
     }
 
-    // ControlValueAccessor interface
-    registerOnChange(fn: any): void {
-        this.onChange = fn;
-    }
+    private onChange: any = () => { };
 
-    // ControlValueAccessor interface
-    registerOnTouched(fn: any): void {
-        this.onTouched = fn;
-    }
-
-    // ControlValueAccessor interface
-    setDisabledState(): void {
-        // not supported yet
+    private setSelected(value: string[]): void {
+        this.selected = value;
+        const ht = _.zipObject(value, _.fill(Array(value.length), 1));
+        _.forEach(this.items, item => {
+            item.checked = (ht[item.label] === 1);
+        });
     }
 }

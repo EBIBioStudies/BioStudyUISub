@@ -1,5 +1,5 @@
-<container-root>
-    <container-md>
+<st-container-root>
+    <st-container-md>
         <div class="auth-content">
             <div class="alert" [ngClass]="{'alert-danger': error, 'invisible': !error}">
                 {{error ? error.message : '&nbsp;'}}
@@ -43,7 +43,7 @@
                                (change)="resetGlobalError()"
                                #email="ngModel"
                                required
-                               validate-onblur>
+                               stValidateOnblur>
                     </div>
                     <div class="form-group" [ngClass]="{'has-error': password.invalid && password.touched}">
                         <label class="control-label" for="password">
@@ -62,7 +62,7 @@
                                class="form-control"
                                [(ngModel)]="model.password"
                                (change)="resetGlobalError()"
-                               validate-onblur
+                               stValidateOnblur
                                required
                                minlength="6"
                                #password="ngModel"/>
@@ -79,13 +79,13 @@
                             </span>
                         </label>
                         <span class="text-muted pull-right"><i>Optional</i></span>
-                        <orcid-input-box
+                        <st-orcid-input-box
                                 [(ngModel)]="model.orcid"
                                 [isSmall]="false"
                                 name="orcid"
                                 #orcid="ngModel"
-                                validate-onblur>
-                        </orcid-input-box>
+                                stValidateOnblur>
+                        </st-orcid-input-box>
                     </div>
                     <div class="form-group" [ngClass]="{'has-error': captcha.invalid && (captcha.dirty || captcha.touched)}">
                         <label class="control-label">
@@ -108,7 +108,7 @@
                                    (change)="resetGlobalError()"
                                    #terms="ngModel"
                                    required
-                                   validate-onblur>
+                                   stValidateOnblur>
                             <span>
                                 I have read and agree to the
                                 <a target="_blank" href="https://www.ebi.ac.uk/data-protection/privacy-notice/biostudies-database">Privacy Notice</a> and
@@ -127,5 +127,5 @@
                 </form>
             </div>
         </div>
-    </container-md>
-</container-root>
+    </st-container-md>
+</st-container-root>

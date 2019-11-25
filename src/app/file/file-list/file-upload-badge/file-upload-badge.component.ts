@@ -3,24 +3,23 @@ import { FileUploadList } from '../../shared/file-upload-list.service';
 import { Path } from '../../shared/path';
 import { Subscription } from 'rxjs';
 
-export class UploadBadgeItem {
-    constructor(public readonly fileName: string,
-                public readonly filePath: Path,
-                public progress: string) {
-    }
+export interface UploadBadgeItem {
+    fileName: string;
+    filePath: Path;
+    progress: string;
 }
 
 @Component({
-    selector: 'file-upload-badge',
+    selector: 'st-file-upload-badge',
     templateUrl: './file-upload-badge.component.html',
     styleUrls: ['./file-upload-badge.component.css']
 })
 export class FileUploadBadgeComponent implements OnDestroy {
+    hasFailedUploads: boolean = false;
     @Output() select: EventEmitter<UploadBadgeItem> = new EventEmitter<UploadBadgeItem>();
 
     private sb?: Subscription;
     private uploadItems: UploadBadgeItem[] = [];
-    hasFailedUploads: boolean = false;
 
     constructor(fileUploadList: FileUploadList) {
         this.sb = fileUploadList.activeUploadsChanged$.subscribe(activeUploads => {
@@ -46,11 +45,11 @@ export class FileUploadBadgeComponent implements OnDestroy {
         return this.uploadItems;
     }
 
-    onMenuItemClick(uploadItem: UploadBadgeItem) {
-        this.select.emit({...uploadItem});
-    }
-
     ngOnDestroy(): void {
         this.sb!.unsubscribe();
+    }
+
+    onMenuItemClick(uploadItem: UploadBadgeItem) {
+        this.select.emit({...uploadItem});
     }
 }

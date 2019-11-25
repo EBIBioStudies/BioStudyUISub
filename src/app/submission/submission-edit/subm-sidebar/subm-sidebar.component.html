@@ -29,16 +29,15 @@
         </tabset>
     </div>
 
-    <subm-edit-sidebar *ngIf="isEditTabActive"
-                       [isAdvancedVisible]="showAdvanced"
-                       [collapsed]="collapsed"
-    >
-    </subm-edit-sidebar>
+    <st-subm-edit-sidebar *ngIf="isEditTabActive"
+                          [isAdvancedVisible]="showAdvanced"
+                          [collapsed]="collapsed">
+    </st-subm-edit-sidebar>
 
-    <subm-check-sidebar *ngIf="isCheckTabActive"
-                        [collapsed]="collapsed"
-                        [invalidControls]="invalidControls"
-                        [serverError]="serverError"
-                        (review)="onReviewClick($event)">
-    </subm-check-sidebar>
+    <st-subm-check-sidebar *ngIf="isCheckTabActive"
+                           [collapsed]="collapsed"
+                           [invalidControls]="invalidControls"
+                           [serverError]="serverError"
+                           (review)="onReviewClick($event)">
+    </st-subm-check-sidebar>
 </aside>

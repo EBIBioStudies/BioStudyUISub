@@ -10,16 +10,16 @@ export function copyAndExtend(obj: any, extension: any): any {
 export class DataWithCaptcha {
     captcha: string = '';
 
-    valid(): boolean {
-        return this.captcha.trim().length > 0;
-    }
-
     resetCaptcha(): void {
         this.captcha = '';
     }
 
     snapshot(): any {
-        return {'recaptcha2-response': this.captcha};
+        return { 'recaptcha2-response': this.captcha };
+    }
+
+    valid(): boolean {
+        return this.captcha.trim().length > 0;
     }
 }
 

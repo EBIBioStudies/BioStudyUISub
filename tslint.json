@@ -6,34 +6,26 @@
   "rules": {
     "callable-types": true,
     "class-name": true,
-    "comment-format": [
-      true,
-      "check-space"
-    ],
+    "comment-format": [true, "check-space"],
     "curly": true,
     "eofline": true,
     "forin": true,
-    "import-blacklist": [true],
     "import-spacing": true,
     "indent": [true, "spaces", 2],
     "interface-over-type-literal": true,
     "label-position": true,
-    "max-line-length": [
+    "max-line-length": [true, 140],
+    "member-access": [true, "no-public"],
+    "member-ordering": [
       true,
-      140
+      {
+        "order": "fields-first",
+        "alphabetize": true
+      }
     ],
-    "member-access": false,
-    "member-ordering": [true, "static-before-instance", "variables-before-functions"],
     "no-arg": true,
     "no-bitwise": true,
-    "no-console": [
-      true,
-      "debug",
-      "info",
-      "time",
-      "timeEnd",
-      "trace"
-    ],
+    "no-console": true,
     "no-construct": true,
     "no-debugger": true,
     "no-duplicate-variable": true,
@@ -47,7 +39,9 @@
     "no-switch-case-fall-through": true,
     "no-trailing-whitespace": true,
     "no-unused-expression": true,
-    "no-use-before-declare": true,
+    "no-use-before-declare": {
+      "severity": "warning"
+    },
     "no-var-keyword": true,
     "object-literal-sort-keys": false,
     "one-line": [
@@ -64,7 +58,7 @@
     ],
     "radix": true,
     "semicolon": [true, "always", "ignore-interfaces"],
-    "triple-equals": [true, "allow-null-check"],
+    "triple-equals": true,
     "typedef-whitespace": [
       true,
       {
@@ -75,9 +69,14 @@
         "variable-declaration": "nospace"
       }
     ],
-    "typeof-compare": true,
     "unified-signatures": true,
-    "variable-name": false,
+    "variable-name": {
+      "options": [
+        "ban-keywords",
+        "check-format",
+        "allow-leading-underscore"
+      ]
+    },
     "whitespace": [
       true,
       "check-branch",
@@ -90,9 +89,18 @@
       "check-separator",
       "check-type"
     ],
-
-    "directive-selector": [true, "attribute", "app", "camelCase"],
-    "component-selector": [true, "element", "app", "kebab-case"],
+    "directive-selector": [
+      false,
+      "attribute",
+      "st",
+      "camelCase"
+    ],
+    "component-selector": [
+      true,
+      "element",
+      "st",
+      "kebab-case"
+    ],
     "use-input-property-decorator": true,
     "use-output-property-decorator": true,
     "use-host-property-decorator": true,
@@ -102,7 +110,6 @@
     "use-pipe-transform-interface": true,
     "component-class-suffix": true,
     "directive-class-suffix": true,
-    "no-unused-variable": true,
     "rxjs-no-add": { "severity": "error" },
     "rxjs-no-operator": { "severity": "error" },
     "rxjs-no-patched": { "severity": "error" }

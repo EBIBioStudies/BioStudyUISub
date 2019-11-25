@@ -15,20 +15,20 @@
         <div *ngFor="let column of columns; let idx = index" class="cell heading-cell column-heading col-xs-3 col-md-2"
              [ngClass]="{'optional': featureForm.canRemoveColumn(column),
                             'has-error': column.hasErrors}">
-            <inline-edit placement="bottom"
-                         container="body"
-                         containerClass="text-danger"
-                         popover="{{column.hasErrors ? column.errors : ''}}"
-                         triggers="focus"
-                         emptyValue="{{'Column ' + (idx + 1)}}"
-                         [formControl]="column.control"
-                         [readonly]="readonly || !column.canEditName || !userData.isPrivileged || featureForm.isReadonly"
-                         [removable]="featureForm.canRemoveColumn(column) && !featureForm.isReadonly"
-                         [autosuggestSource]="featureForm.columnNamesAvailable"
-                         (remove)="featureForm.removeColumn(column)"
-                         nativeElementAttach
-                         validate-onblur>
-            </inline-edit>
+            <st-inline-edit placement="bottom"
+                            container="body"
+                            containerClass="text-danger"
+                            popover="{{column.hasErrors ? column.errors : ''}}"
+                            triggers="focus"
+                            emptyValue="{{'Column ' + (idx + 1)}}"
+                            [formControl]="column.control"
+                            [readonly]="readonly || !column.canEditName || !userData.isPrivileged || featureForm.isReadonly"
+                            [removable]="featureForm.canRemoveColumn(column) && !featureForm.isReadonly"
+                            [autosuggestSource]="featureForm.columnNamesAvailable"
+                            (remove)="featureForm.removeColumn(column)"
+                            stNativeElementAttach
+                            stValidateOnblur>
+            </st-inline-edit>
         </div>
     </div>
     <div *ngFor="let row of rows; let rowIdx = index;">
@@ -52,19 +52,19 @@
                 <div [ngClass]="{'readonly': column.isReadonly || featureForm.isReadonly,
                                  'optional': !column.isRequired,
                                  'has-error': row.hasErrorsAt(column.id)}">
-                    <input-value placement="top"
-                                 container="body"
-                                 containerClass="{{featureForm.isRequired ? 'text-danger' : 'text-warning'}}"
-                                 popover="{{row.hasErrorsAt(column.id) ? row.errorsAt(column.id) : ''}}"
-                                 triggers="focus"
-                                 [valueType]="column.valueType"
-                                 [readonly]="readonly || column.isReadonly"
-                                 [formControl]="row.cellControlAt(column.id).control"
-                                 [autosuggestSource]="featureForm.cellValuesTypeaheadFunc(rowIdx, column.id)"
-                                 (select)="onInputValueSelect($event, rowIdx)"
-                                 nativeElementAttach
-                                 validate-onblur>
-                    </input-value>
+                    <st-input-value placement="top"
+                                    container="body"
+                                    containerClass="{{featureForm.isRequired ? 'text-danger' : 'text-warning'}}"
+                                    popover="{{row.hasErrorsAt(column.id) ? row.errorsAt(column.id) : ''}}"
+                                    triggers="focus"
+                                    [valueType]="column.valueType"
+                                    [readonly]="readonly || column.isReadonly"
+                                    [formControl]="row.cellControlAt(column.id).control"
+                                    [autosuggestSource]="featureForm.cellValuesTypeaheadFunc(rowIdx, column.id)"
+                                    (select)="onInputValueSelect($event, rowIdx)"
+                                    stNativeElementAttach
+                                    stValidateOnblur>
+                    </st-input-value>
                 </div>
             </div>
         </div>

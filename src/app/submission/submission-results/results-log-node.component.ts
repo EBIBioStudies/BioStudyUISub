@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { TreeViewCustomNodeComponent } from './tree-view.component';
 
 @Component({
-    selector: 'results-log-node',
+    selector: 'st-results-log-node',
     templateUrl: './results-log-node.component.html'
 })
 export class ResultsLogNodeComponent implements TreeViewCustomNodeComponent {
-    private _message = '';
     private _logLevel = '';
+    private _message = '';
 
     onNodeData(data: any = {}): void {
         this._message = data.message || '';

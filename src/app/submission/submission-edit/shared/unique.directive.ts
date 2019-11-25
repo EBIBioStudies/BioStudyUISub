@@ -1,5 +1,5 @@
 import {
-    Directive, Injector, Input, OnDestroy
+    Directive, Injector, Input, OnDestroy, HostListener
 } from '@angular/core';
 import {
     NG_VALIDATORS,
@@ -10,28 +10,23 @@ import {
 
 @Directive({
     selector: '[unique]',
-    host: {
-        '(change)': 'onChange()'
-    },
     providers: [
         { provide: NG_VALIDATORS, useExisting: UniqueValidator, multi: true }
     ]
 })
 export class UniqueValidator implements Validator, OnDestroy {
-    validator: ValidatorFn;
-
     @Input('unique') isApply?: boolean = true;
+    validator: ValidatorFn;
 
     constructor(private injector: Injector) {
         this.validator = uniqueValidatorFactory();
     }
 
-    validate(formControl: FormControl) {
-        if (this.isApply) {
-            return this.validator(formControl);
-        } else {
-            return null;
-        }
+    /**
+     * Updates validity after deletion to avoid inconsistencies.
+     */
+    ngOnDestroy(): void {
+        this.onChange();
     }
 
     /**
@@ -39,6 +34,7 @@ export class UniqueValidator implements Validator, OnDestroy {
      * two invalid fields with a non-unique value will cease to be invalid the moment that value is changed
      * in any one field.
      */
+    @HostListener('change')
     onChange(): void {
         const control = this.injector.get(NgControl).control;
         const controls = control.parent.controls;
@@ -52,11 +48,12 @@ export class UniqueValidator implements Validator, OnDestroy {
         });
     }
 
-    /**
-     * Updates validity after deletion to avoid inconsistencies.
-     */
-    ngOnDestroy(): void {
-        this.onChange();
+    validate(formControl: FormControl) {
+        if (this.isApply) {
+            return this.validator(formControl);
+        } else {
+            return null;
+        }
     }
 }
 

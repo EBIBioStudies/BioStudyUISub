@@ -8,20 +8,17 @@ enum ReqStatus {SUBMIT, ERROR, SUCCESS}
 enum ReqType {CREATE, UPDATE}
 
 export class DirectSubmitRequest {
+    private _accno: string = '';
+    private _created: Date;
     private _filename: string;
-    private _format: string;
+    private _log: any;
     private _projects: string[];
+    private _releaseDate: string | undefined;
+    private _status: ReqStatus;
     private _type: ReqType;
 
-    private _created: Date;
-    private _status: ReqStatus;
-    private _log: any;
-    private _accno: string = '';
-    private _releaseDate: string | undefined;
-
-    constructor(filename: string, format: string, projects: string[], type: ReqType) {
+    constructor(filename: string, projects: string[], type: ReqType) {
         this._filename = filename;
-        this._format = format;
         this._projects = projects;
         this._type = type;
 
@@ -70,10 +67,10 @@ export class DirectSubmitRequest {
     }
 
     get errorMessage(): string {
-        if (this.failed) {
+        if (this.failed && this._log !== undefined) {
             return this._log.message;
         } else {
-            return '';
+            return 'There was an error processing the study';
         }
     }
 
@@ -131,6 +128,34 @@ export class DirectSubmitService {
         return this._requests.filter(request => request.failed).length;
     }
 
+    /**
+     * Given a study file an its properties, it adds a new request to the queue and starts the submission process.
+     * @param {File} file - Object representative of the file to be submitted.
+     * @param {string[]} projects - Projects the file should be attached to.
+     * @param {string} type - Indicates whether the submitted file should create or update an existing database entry.
+     * @returns {Observable<any>} Stream of inputs coming from the subsequent responses.
+     */
+    addRequest(file: File, projects: string[], type: string): Observable<any> {
+        const req = new DirectSubmitRequest(file.name, projects, ReqType[type.toUpperCase()]);
+        const index = this._requests.length;
+
+        this._requests.push(req);
+        this.newRequest$.next(index);
+
+        return this.dirSubmit(req, file);
+    }
+
+    /**
+     * Marks all requests as failed at once.
+     */
+    cancelAll() {
+        this._requests.forEach(request => {
+            if (!request.successful && !request.done) {
+                request.onResponse('Upload cancelled', ReqStatus.ERROR);
+            }
+        });
+    }
+
     getRequest(index: number) {
         if (index >= 0 && index < this._requests.length) {
             return this._requests[index];
@@ -158,39 +183,10 @@ export class DirectSubmitService {
     }
 
     /**
-     * Given a study file an its properties, it adds a new request to the queue and starts the submission process.
-     * @param {File} file - Object representative of the file to be submitted.
-     * @param {string} format - Format of the file. If omitted, it automatically detects it.
-     * @param {string[]} projects - Projects the file should be attached to.
-     * @param {string} type - Indicates whether the submitted file should create or update an existing database entry.
-     * @returns {Observable<any>} Stream of inputs coming from the subsequent responses.
-     */
-    addRequest(file: File, format: string, projects: string[], type: string): Observable<any> {
-        const req = new DirectSubmitRequest(file.name, format, projects, ReqType[type.toUpperCase()]);
-        const index = this._requests.length;
-
-        this._requests.push(req);
-        this.newRequest$.next(index);
-
-        return this.dirSubmit(req, file);
-    }
-
-    /**
      * Wipes out the request queue in case a new battery of requests is going to be issued.
      */
     reset() {
         this._requests.length = 0;
-    }
-
-    /**
-     * Marks all requests as failed at once.
-     */
-    cancelAll() {
-        this._requests.forEach(request => {
-            if (!request.successful && !request.done) {
-                request.onResponse('Upload cancelled', ReqStatus.ERROR);
-            }
-        });
     }
 
     /**
@@ -200,7 +196,7 @@ export class DirectSubmitService {
      * @returns {Observable<any>} Flat stream of inputs coming from the responses to the requests issued.
      */
     private dirSubmit(req: DirectSubmitRequest, file: File): Observable<any> {
-        return this.submService.directSubmit(file, req.type === ReqType.CREATE, req.projects).pipe(
+        return this.submService.directSubmit(file, req.projects).pipe(
             map(data => {
                 req.onResponse(data, ReqStatus.SUCCESS);
             }),

@@ -10,15 +10,28 @@ import { SectionForm } from '../../shared/section-form';
 import { SubmEditService } from '../../shared/subm-edit.service';
 import { AddSubmTypeModalComponent } from '../add-subm-type-modal/add-subm-type-modal.component';
 import { ModalService } from '../../../../shared/modal.service';
+import { takeUntil } from 'rxjs/operators';
 
 const SECTION_ID = '@SECTION@';
 
 class DataTypeControl {
-    deleted = false;
-
     readonly control: FormControl;
+    deleted = false;
     readonly isReadonly: boolean;
     readonly isVisible: boolean;
+
+    constructor(
+        readonly type: TypeBase,
+        readonly icon: string,
+        readonly displayType: DisplayType,
+        readonly description: string,
+        readonly id: string
+    ) {
+        this.isReadonly = !type.canModify;
+        this.isVisible = !this.displayType.isReadonly;
+        this.control = new FormControl({value: type.name, disabled: this.isReadonly},
+            [Validators.required, Validators.pattern('[a-zA-Z0-9_ ]*')]);
+    }
 
     static fromFeatureType(type: FeatureType, id: string): DataTypeControl {
         return new DataTypeControl(type, type.icon, type.displayType, type.description, id);
@@ -28,15 +41,12 @@ class DataTypeControl {
         return new DataTypeControl(type, 'fa-folder-plus', type.displayType, '', SECTION_ID);
     }
 
-    constructor(readonly type: TypeBase,
-                readonly icon: string,
-                readonly displayType: DisplayType,
-                readonly description: string,
-                readonly id: string) {
-        this.isReadonly = !type.canModify;
-        this.isVisible = !this.displayType.isReadonly;
-        this.control = new FormControl({value: type.name, disabled: this.isReadonly},
-            [Validators.required, Validators.pattern('[a-zA-Z0-9_ ]*')]);
+    get typeName(): string {
+        return this.type.name;
+    }
+
+    get prettyName(): string {
+        return this.type.name.replace(/([a-z])([A-Z])/g, '$1 $2');
     }
 
     reset(): void {
@@ -47,41 +57,33 @@ class DataTypeControl {
     update(): void {
         this.type.name = this.control.value;
     }
-
-    get typeName(): string {
-        return this.type.name;
-    }
-
-    get prettyName(): string {
-        return this.type.name.replace(/([a-z])([A-Z])/g, '$1 $2');
-    }
 }
 
 @Component({
-    selector: 'subm-edit-sidebar',
+    selector: 'st-subm-edit-sidebar',
     templateUrl: './subm-edit-sidebar.component.html',
     styleUrls: ['./subm-edit-sidebar.component.css']
 })
 export class SubmEditSidebarComponent implements OnDestroy {
-    isEditModeOn: boolean = false;
+    @Input() collapsed?: boolean = false;
+    form?: FormGroup;
     isAdvancedOpen: boolean = false;
     @Input() isAdvancedVisible: boolean = true;
-    @Input() collapsed?: boolean = false;
+    isEditModeOn: boolean = false;
     items: DataTypeControl[] = [];
-
-    form?: FormGroup;
     sectionForm?: SectionForm;
 
-    private unsubscribe: Subject<void> = new Subject<void>();
     private formSubscription?: Subscription;
+    private unsubscribe: Subject<void> = new Subject<void>();
 
-    constructor(public userData: UserData,
-                private bsModalService: BsModalService,
-                private modalService: ModalService,
-                private submEditService: SubmEditService
+    constructor(
+        public userData: UserData,
+        private bsModalService: BsModalService,
+        private modalService: ModalService,
+        private submEditService: SubmEditService
     ) {
         this.submEditService.sectionSwitch$
-            .takeUntil(this.unsubscribe)
+            .pipe(takeUntil(this.unsubscribe))
             .subscribe(sectionForm => this.switchSection(sectionForm));
     }
 
@@ -98,11 +100,51 @@ export class SubmEditSidebarComponent implements OnDestroy {
         this.unsubscribe.complete();
     }
 
-    onNewTypeClick(event?: Event): void {
+    onAdvancedToggle() {
+        this.isAdvancedOpen = !this.isAdvancedOpen;
+    }
+
+    onApplyChanges(): void {
+        if (this.form!.invalid) {
+            return;
+        }
+
+        const deleted = this.items!.filter(item => item.deleted);
+
+        if (deleted.length > 0) {
+            const isPlural = deleted.length > 1;
+
+            const message = `The submission
+                    ${isPlural ? `items` : `item`} with type
+                    ${deleted.map(({ typeName }) => `"${typeName}"`).join(', ')}
+                    ${isPlural ? `have` : `has`} been deleted. If you proceed,
+                    ${isPlural ? `they` : `it`} will be removed from the
+                    list of items and any related features or sections will be permanently deleted.`;
+            this.modalService.confirm(message, 'Delete items', 'Delete')
+                .subscribe(
+                    (isConfirmed: boolean) => {
+                        if (isConfirmed) {
+                            this.applyChanges();
+                        } else {
+                            this.onCancelChanges();
+                        }
+                    }
+                );
+        } else {
+            this.applyChanges();
+        }
+    }
+
+    onCancelChanges(event?: Event): void {
+        this.items.forEach(item => item.reset());
+        this.onEditModeToggle(event);
+    }
+
+
+    onEditModeToggle(event?: Event): void {
         // tslint:disable-next-line: no-unused-expression
         event && event.preventDefault();
-        const bsModalRef = this.bsModalService.show(AddSubmTypeModalComponent, {initialState: {sectionForm: this.sectionForm}});
-        bsModalRef.content.closeBtnName = 'Close';
+        this.isEditModeOn = !this.isEditModeOn;
     }
 
     onItemClick(item: DataTypeControl): void {
@@ -135,51 +177,21 @@ export class SubmEditSidebarComponent implements OnDestroy {
         this.form!.removeControl(item.id);
     }
 
-    onCancelChanges(event?: Event): void {
-        this.items.forEach(item => item.reset());
-        this.onEditModeToggle(event);
-    }
-
-    onEditModeToggle(event?: Event): void {
+    onNewTypeClick(event?: Event): void {
         // tslint:disable-next-line: no-unused-expression
         event && event.preventDefault();
-        this.isEditModeOn = !this.isEditModeOn;
+        const bsModalRef = this.bsModalService.show(AddSubmTypeModalComponent, {initialState: {sectionForm: this.sectionForm}});
+        bsModalRef.content.closeBtnName = 'Close';
     }
 
-    onAdvancedToggle() {
-        this.isAdvancedOpen = !this.isAdvancedOpen;
-    }
-
-    onApplyChanges(): void {
-        if (this.form!.invalid) {
-            return;
-        }
-
+    private applyChanges() {
         const deleted = this.items!.filter(item => item.deleted);
+        deleted.forEach(({ id }) => {
+            this.sectionForm!.removeFeatureType(id);
+        });
 
-        if (deleted.length > 0) {
-            const isPlural = deleted.length > 1;
-
-            const message = `The submission
-                    ${isPlural ? `items` : `item`} with type
-                    ${deleted.map(({typeName}) => `"${typeName}"`).join(', ')}
-                    ${isPlural ? `have` : `has`} been deleted. If you proceed,
-                    ${isPlural ? `they` : `it`} will be removed from the
-                    list of items and any related features or sections will be permanently deleted.`;
-            this.modalService.confirm(message, 'Delete items', 'Delete')
-                .subscribe(
-                    (isConfirmed: boolean) => {
-                        console.log(isConfirmed);
-                        if (isConfirmed) {
-                            this.applyChanges();
-                        } else {
-                            this.onCancelChanges();
-                        }
-                    }
-                );
-        } else {
-            this.applyChanges();
-        }
+        this.items!.filter(item => !item.deleted).forEach(item => item.update());
+        this.onEditModeToggle();
     }
 
     private switchSection(sectionFormOp: Option<SectionForm>) {
@@ -192,16 +204,6 @@ export class SubmEditSidebarComponent implements OnDestroy {
                 this.formSubscription = this.sectionForm.structureChanges$.subscribe(() => this.updateItems());
             }
         }
-    }
-
-    private applyChanges() {
-        const deleted = this.items!.filter(item => item.deleted);
-        deleted.forEach(({id}) => {
-            this.sectionForm!.removeFeatureType(id);
-        });
-
-        this.items!.filter(item => !item.deleted).forEach(item => item.update());
-        this.onEditModeToggle();
     }
 
     private updateItems(): void {

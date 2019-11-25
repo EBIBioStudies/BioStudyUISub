@@ -15,7 +15,7 @@ import { PubMedSearchService } from './pubmedid-search.service';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
-    selector: 'pubmedid-search',
+    selector: 'st-pubmedid-search',
     templateUrl: './pubmedid-search.component.html',
     styleUrls: ['./pubmedid-search.component.css'],
     providers: [{
@@ -32,21 +32,15 @@ import { Observable } from 'rxjs/Observable';
  * to be displayed again (1st enter key press) or actioned upon (2nd key press).
  */
 export class PubMedIdSearchComponent implements ControlValueAccessor {
-    public isPreviewPub: boolean = false; // indicates if the retrieved publication's summary preview is on display
+    @Output() found: EventEmitter<any> = new EventEmitter<any>();
+    isPreviewPub: boolean = false; // indicates if the retrieved publication's summary preview is on display
+    @Input() readonly?: boolean = false;
+    @Input() required?: boolean = false;
+
     private isBusy: boolean = false; // indicates a transaction is in progress
-    private pubMedId: string | undefined; // last PubMed ID number typed in
     private lastIDfetched: string | undefined; // helps cancel unnecessary search actions triggered by enter key
     private publication: { [key: string]: string } = {}; // last publication retrieved
-
-    @Input() required?: boolean = false;
-    @Input() readonly?: boolean = false;
-    @Output() found: EventEmitter<any> = new EventEmitter<any>();
-
-    // placeholder for handler propagating changes outside the custom control
-    private onChange: any = (_: any) => {};
-
-    // placeholder for handler after the control has been "touched"
-    private onTouched: any = () => {}
+    private pubMedId: string | undefined; // last PubMed ID number typed in
 
     constructor(private pubMedSearchService: PubMedSearchService) {
         this.pubMedFetch = _.debounce(this.pubMedFetch, 300);
@@ -64,14 +58,26 @@ export class PubMedIdSearchComponent implements ControlValueAccessor {
     }
 
     /**
-     * Writes a new value from the form model into the view or (if needed) DOM property.
-     * @see {@link ControlValueAccessor}
-     * @param newValue - Value to be stored.
+     * Retrieves the publication data for the ID present in the search field shows its preview, ready
+     * for selection so the user wishes. It will also notify the template that the transaction is going on so that
+     * no further action is allowed in the interim.
+     * @returns {Observable<any>} Stream of HTTP client events.
      */
-    writeValue(newValue: any) {
-        if (newValue) {
-            this.pubMedId = newValue;
-        }
+    pubMedFetch(): Observable<any> {
+        let eventStream;
+
+        this.isBusy = true;
+        eventStream = this.pubMedSearchService.search(this.pubMedId);
+        eventStream.subscribe((response) => {
+            this.isBusy = false;
+            this.lastIDfetched = this.pubMedId;
+            if (response.hasOwnProperty('title')) {
+                this.publication = response;
+                this.isPreviewPub = true;
+            }
+        });
+
+        return eventStream;
     }
 
     /**
@@ -87,11 +93,8 @@ export class PubMedIdSearchComponent implements ControlValueAccessor {
     /**
      * Registers a handler specifically for when a control receives a touch event.
      * @see {@link ControlValueAccessor}
-     * @param fn - Handler for touch events.
      */
-    registerOnTouched(fn: any) {
-        this.onTouched = fn;
-    }
+    registerOnTouched() {}
 
     /**
      * Performs a new lookup operation provided the field is not blank and there is no request in progress.
@@ -121,29 +124,6 @@ export class PubMedIdSearchComponent implements ControlValueAccessor {
     }
 
     /**
-     * Retrieves the publication data for the ID present in the search field shows its preview, ready
-     * for selection so the user wishes. It will also notify the template that the transaction is going on so that
-     * no further action is allowed in the interim.
-     * @returns {Observable<any>} Stream of HTTP client events.
-     */
-    pubMedFetch(): Observable<any> {
-        let eventStream;
-
-        this.isBusy = true;
-        eventStream = this.pubMedSearchService.search(this.pubMedId);
-        eventStream.subscribe((response) => {
-            this.isBusy = false;
-            this.lastIDfetched = this.pubMedId;
-            if (response.hasOwnProperty('title')) {
-                this.publication = response;
-                this.isPreviewPub = true;
-            }
-        });
-
-        return eventStream;
-    }
-
-    /**
      * Bubbles the selected publication event up, hiding its preview too.
      */
     selectPub() {
@@ -162,4 +142,17 @@ export class PubMedIdSearchComponent implements ControlValueAccessor {
         }
         this.isPreviewPub = !this.isPreviewPub;
     }
+
+    /**
+     * Writes a new value from the form model into the view or (if needed) DOM property.
+     * @see {@link ControlValueAccessor}
+     * @param newValue - Value to be stored.
+     */
+    writeValue(newValue: any) {
+        if (newValue) {
+            this.pubMedId = newValue;
+        }
+    }
+
+    private onChange: any = () => {};
 }

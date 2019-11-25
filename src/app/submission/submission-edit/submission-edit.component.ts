@@ -6,10 +6,10 @@ import { AppConfig } from 'app/app.config';
 import { Option } from 'fp-ts/lib/Option';
 import { BsModalService } from 'ngx-bootstrap';
 import { Observable, of } from 'rxjs';
-import { filter, switchMap } from 'rxjs/operators';
+import { switchMap, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
 import { SubmResultsModalComponent } from '../submission-results/subm-results-modal.component';
-import { SubmitResponse } from '../submission-shared/submission.service';
+import { SubmitResponse, SubmitLog } from '../submission-shared/submission.service';
 import { SectionForm } from './shared/section-form';
 import { SubmEditService } from './shared/subm-edit.service';
 import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
@@ -17,40 +17,39 @@ import { ModalService } from '../../shared/modal.service';
 import { LogService } from 'app/logger/log.service';
 
 class SubmitOperation {
+    static CREATE = new SubmitOperation();
+    static UNKNOWN = new SubmitOperation();
+    static UPDATE = new SubmitOperation();
+
     get isUnknown(): boolean {
-        return this === SubmitOperation.Unknown;
+        return this === SubmitOperation.UNKNOWN;
     }
 
     get isCreate(): boolean {
-        return this === SubmitOperation.Create;
+        return this === SubmitOperation.CREATE;
     }
 
     get isUpdate(): boolean {
-        return this === SubmitOperation.Update;
+        return this === SubmitOperation.UPDATE;
     }
-
-    static Unknown = new SubmitOperation();
-    static Create = new SubmitOperation();
-    static Update = new SubmitOperation();
 }
 
 @Component({
-    selector: 'app-subm-edit',
+    selector: 'st-app-subm-edit',
     templateUrl: './submission-edit.component.html'
 })
 export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChecked {
     @Input() readonly = false;
+    sectionForm?: SectionForm;
     @ViewChild(SubmSidebarComponent) sideBar?: SubmSidebarComponent;
+    sideBarCollapsed = false;
+    submitOperation: SubmitOperation = SubmitOperation.UNKNOWN;
 
     private accno?: string;
     private hasJustCreated = false;
     private releaseDate: Date = new Date();
     private scrollToCtrl?: FormControl;
-    private sideBarCollapsed = false;
-    private submitOperation: SubmitOperation = SubmitOperation.Unknown;
     private unsubscribe: Subject<void> = new Subject<void>();
-
-    sectionForm?: SectionForm;
 
     constructor(
         private route: ActivatedRoute,
@@ -64,13 +63,15 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
     ) {
         this.sideBarCollapsed = window.innerWidth < this.appConfig.tabletBreak;
 
-        submEditService.sectionSwitch$.takeUntil(this.unsubscribe)
-            .subscribe(sectionForm => this.switchSection(sectionForm));
+        submEditService.sectionSwitch$.pipe(
+            takeUntil(this.unsubscribe)
+        ).subscribe(sectionForm => this.switchSection(sectionForm));
 
-        submEditService.scroll2Control$.takeUntil(this.unsubscribe)
-            .subscribe(ctrl => {
-                this.scrollToCtrl = ctrl;
-            });
+        submEditService.scroll2Control$.pipe(
+            takeUntil(this.unsubscribe)
+        ).subscribe(ctrl => {
+            this.scrollToCtrl = ctrl;
+        });
     }
 
     get location() {
@@ -100,6 +101,20 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
     // TODO: a temporary workaround
     get isTemp(): boolean {
         return this.accno!.startsWith('TMP_');
+    }
+
+    ngAfterViewChecked(): void {
+        if (this.scrollToCtrl !== undefined) {
+            setTimeout(() => {
+                this.scroll();
+            }, 500);
+        }
+    }
+
+    ngOnDestroy() {
+        this.unsubscribe.next();
+        this.unsubscribe.complete();
+        this.submEditService.reset();
     }
 
     ngOnInit(): void {
@@ -132,60 +147,33 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
                     this.logService.error('submission-edit', resp.error);
                 } else {
                     const releaseDateCtrl = this.sectionForm!.findFieldControl('ReleaseDate');
-                    this.releaseDate =  releaseDateCtrl ? new Date (Date.parse(releaseDateCtrl.control.value)) : new Date();
+
+                    if (releaseDateCtrl) {
+                        this.releaseDate = new Date(Date.parse(releaseDateCtrl.control.value));
+
+                        releaseDateCtrl.control.valueChanges.subscribe((value) => {
+                            this.releaseDate = new Date(Date.parse(value));
+                        });
+                    } else {
+                        this.releaseDate = new Date();
+                    }
+
                     this.releaseDate.setHours(0, 0, 0);
                 }
             });
     }
 
-    ngAfterViewChecked(): void {
-        if (this.scrollToCtrl !== undefined) {
-            setTimeout(() => {
-                this.scroll();
-            }, 500);
-        }
-    }
-
-    ngOnDestroy() {
-        this.unsubscribe.next();
-        this.unsubscribe.complete();
-        this.submEditService.reset();
+    onEditBackClick() {
+        this.readonly = false;
+        this.router.navigate([`/submissions/edit/${this.accno}`]);
     }
 
     onRevertClick() {
         this.confirmRevert()
-            .takeUntil(this.unsubscribe)
             .pipe(
+                takeUntil(this.unsubscribe),
                 switchMap(() => this.submEditService.revert())
             ).subscribe(() => {});
-    }
-
-    onSubmitClick(event, isConfirm: boolean = false) {
-        if (event) {
-            event.preventDefault();
-        }
-
-        if (this.isSubmitting) {
-            return;
-        }
-
-        if (!this.isValid) {
-            this.sideBar!.onCheckTabClick();
-            return;
-        }
-
-            (isConfirm ? this.confirmSubmit() : of(true))
-                .pipe(
-                    filter(v => v),
-                    switchMap( () => this.confirmReleaseDateOverride()),
-                    switchMap(() => this.submEditService.submit())
-            ).takeUntil(this.unsubscribe)
-            .subscribe(resp => this.onSubmitFinished(resp));
-    }
-
-    onEditBackClick() {
-        this.readonly = false;
-        this.router.navigate([`/submissions/edit/${this.accno}`]);
     }
 
     onSectionClick(sectionForm: SectionForm): void {
@@ -206,6 +194,97 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
             });
     }
 
+    onSubmitClick(event, isConfirm: boolean = false) {
+        if (event) {
+            event.preventDefault();
+        }
+
+        if (this.isSubmitting) {
+            return;
+        }
+
+        if (!this.isValid) {
+            this.sideBar!.onCheckTabClick();
+            return;
+        }
+
+        const confirmObservable: Observable<boolean> = isConfirm ? this.confirmSubmit() : of(true);
+
+        confirmObservable
+            .pipe(
+                switchMap(() => this.confirmReleaseDateOverride()),
+                switchMap(() => this.submEditService.submit()),
+                takeUntil(this.unsubscribe)
+            )
+            .subscribe(
+                (resp) => this.onSubmitFinished(resp),
+                (resp) => this.showSubmitLog(false, resp.log)
+            );
+    }
+
+    private confirmPageDelete(message: string): Observable<boolean> {
+        return this.modalService.whenConfirmed(
+            message,
+            'Delete page',
+            'Delete'
+        );
+    }
+
+    private confirmReleaseDateOverride(): Observable<boolean> {
+        const releaseDateCtrl = this.sectionForm!.findFieldControl('ReleaseDate');
+        const newReleaseDate = releaseDateCtrl ? new Date(Date.parse(releaseDateCtrl.control.value)) : new Date();
+        newReleaseDate.setHours(0, 0, 0);
+        const today = new Date();
+        today.setHours(0, 0, 0);
+        return (this.releaseDate <= today && newReleaseDate > today) ? this.modalService.whenConfirmed(
+            'This study has already been released and resetting the release date may make it ' +
+            'unavailable to the public. Are you sure you want to continue?',
+            'Submit the study',
+            'OK',
+        ) : of(true);
+    }
+
+    private confirmRevert(): Observable<boolean> {
+        return this.modalService.whenConfirmed(
+            'You are about to discard all changes made to this submission since it was last released. This operation cannot be undone.',
+            'Revert to released version',
+            'Revert'
+        );
+    }
+
+    private confirmSubmit(): Observable<boolean> {
+        return this.modalService.confirm(
+            'You have hit the enter key while filling in the form. If you continue, the study data will be submitted',
+            'Submit the study',
+            'Submit',
+        );
+    }
+
+    private isInViewPort(rect: { bottom: number, left: number, right: number, top: number }) {
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement!.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement!.clientWidth)
+        );
+    }
+
+    // todo: add proper type for submit response
+    private onSubmitFinished(resp: SubmitResponse) {
+        this.locService.replaceState('/submissions/' + this.accno);
+        this.readonly = true;
+
+        this.submitOperation = SubmitOperation.UPDATE;
+
+        if (resp.accno) {
+            this.accno = resp.accno;
+            this.submitOperation = SubmitOperation.CREATE;
+            this.showSubmitLog(true);
+        }
+
+        window.scrollTo(0, 0);
+    }
+
     private scroll() {
         if (this.scrollToCtrl === undefined) {
             return;
@@ -221,88 +300,17 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
         this.scrollToCtrl = undefined;
     }
 
-    private isInViewPort(rect: { top: number, left: number, bottom: number, right: number }) {
-        return (
-            rect.top >= 0 &&
-            rect.left >= 0 &&
-            rect.bottom <= (window.innerHeight || document.documentElement!.clientHeight) &&
-            rect.right <= (window.innerWidth || document.documentElement!.clientWidth)
-        );
-    }
-
     private get isValid(): boolean {
         return this.sectionForm !== undefined && this.sectionForm.form.valid;
     }
 
-    // todo: add proper type for submit response
-    private onSubmitFinished(resp: SubmitResponse) {
-        if (resp.status !== 'OK') {
-            this.showSubmitLog(resp);
-            return;
-        }
-        this.locService.replaceState('/submissions/' + this.accno);
-        this.readonly = true;
-
-        this.submitOperation = SubmitOperation.Update;
-
-        if (resp.mapping[0].assigned) {
-            this.accno = resp.mapping[0].assigned;
-            this.submitOperation = SubmitOperation.Create;
-            this.showSubmitLog(resp);
-        }
-
-        window.scrollTo(0, 0);
-    }
-
-    private showSubmitLog(resp: SubmitResponse) {
+    private showSubmitLog(isSuccess: boolean, log?: SubmitLog) {
         this.bsModalService.show(SubmResultsModalComponent, {
-            initialState: {
-                log: resp.log,
-                status: resp.status
-            }
+            initialState: { isSuccess, log }
         });
     }
 
     private switchSection(sectionForm: Option<SectionForm>) {
         this.sectionForm = sectionForm.toUndefined();
-    }
-
-    private confirmRevert(): Observable<boolean> {
-        return this.modalService.whenConfirmed(
-            'You are about to discard all changes made to this submission since it was last released. This operation cannot be undone.',
-            'Revert to released version',
-            'Revert'
-        );
-
-    }
-
-    private confirmSubmit(): Observable<boolean> {
-        return this.modalService.confirm(
-            'You have hit the enter key while filling in the form. If you continue, the study data will be submitted',
-            'Submit the study',
-            'Submit',
-        );
-    }
-
-    private confirmReleaseDateOverride(): Observable<boolean> {
-        const releaseDateCtrl = this.sectionForm!.findFieldControl('ReleaseDate');
-        const newReleaseDate = releaseDateCtrl ? new Date (Date.parse(releaseDateCtrl.control.value)) : new Date();
-        newReleaseDate.setHours(0, 0, 0);
-        const today = new Date();
-        today.setHours(0, 0, 0);
-        return (this.releaseDate <= today && newReleaseDate > today) ? this.modalService.whenConfirmed(
-            'This study has already been released and resetting the release date may make it ' +
-            'unavailable to the public. Are you sure you want to continue?',
-            'Submit the study',
-            'OK',
-        ) : of(true);
-    }
-
-    private confirmPageDelete(message: string): Observable<boolean> {
-        return this.modalService.whenConfirmed(
-            message,
-            'Delete page',
-            'Delete'
-        );
     }
 }

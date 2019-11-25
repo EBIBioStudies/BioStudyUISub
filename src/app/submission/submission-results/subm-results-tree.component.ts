@@ -6,7 +6,7 @@ import { ResultsLogNodeComponent } from './results-log-node.component';
 import { TreeViewConfig } from './tree-view.component';
 
 @Component({
-    selector: 'subm-results-tree',
+    selector: 'st-subm-results-tree',
     templateUrl: './subm-results-tree.component.html'
 })
 export class SubmResultsTreeComponent {

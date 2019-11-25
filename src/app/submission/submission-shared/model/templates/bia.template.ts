@@ -1,4 +1,4 @@
-export const BIATemplate = {
+export const biaTemplate = {
     'name': 'BioImages',
     'description': 'High Content Screen Image Study',
     'sectionType': {

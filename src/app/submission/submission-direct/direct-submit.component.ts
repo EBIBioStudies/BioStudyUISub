@@ -3,7 +3,7 @@ import { AppConfig } from 'app/app.config';
 import * as pluralize from 'pluralize';
 
 @Component({
-    selector: 'direct-submit',
+    selector: 'st-direct-submit',
     templateUrl: './direct-submit.component.html',
     styleUrls: ['./direct-submit.component.css']
 })
@@ -29,46 +29,28 @@ export class DirectSubmitComponent {
         return this.sidebar.studyProp(studyIdx, 'accno');
     }
 
-    getRelease(studyIdx: number) {
-        return this.sidebar.studyProp(studyIdx, 'releaseDate');
+    getError(studyIdx: number) {
+        return this.sidebar.studyProp(studyIdx, 'errorMessage');
     }
 
     getLog(studyIdx: number) {
         return this.sidebar.studyProp(studyIdx, 'log');
     }
 
-    getError(studyIdx: number) {
-        return this.sidebar.studyProp(studyIdx, 'errorMessage');
+    getRelease(studyIdx: number) {
+        return this.sidebar.studyProp(studyIdx, 'releaseDate');
     }
 
     isBusy(studyIdx: number) {
         return this.sidebar.studyProp(studyIdx, 'inprogress');
     }
 
-    isSuccess(studyIdx: number) {
-        return this.sidebar.studyProp(studyIdx, 'successful');
-    }
-
     isFail(studyIdx: number) {
         return this.sidebar.studyProp(studyIdx, 'failed');
     }
 
-    uploadedCount(): number {
-        return this.sidebar.selectedFileCount - this.sidebar.errorFiles;
-    }
-
-    /**
-     * Convenience alias to pluralise a given noun.
-     * @param {string} noun - Target noun.
-     * @param {number} count - Number of noun-designated entities.
-     * @returns {string} Noun in the
-     */
-    pluralise(noun: string, count: number = this.sidebar.selectedFileCount) {
-        return pluralize(noun, count);
-    }
-
-    onToggle(): void {
-        this.collapseSideBar = !this.collapseSideBar;
+    isSuccess(studyIdx: number) {
+        return this.sidebar.studyProp(studyIdx, 'successful');
     }
 
     /**
@@ -87,5 +69,23 @@ export class DirectSubmitComponent {
             }
             containerEl.classList.toggle('container-full', !logEl.classList.contains('hidden'));
         }
+    }
+
+    onToggle(): void {
+        this.collapseSideBar = !this.collapseSideBar;
+    }
+
+    /**
+     * Convenience alias to pluralise a given noun.
+     * @param {string} noun - Target noun.
+     * @param {number} count - Number of noun-designated entities.
+     * @returns {string} Noun in the
+     */
+    pluralise(noun: string, count: number = this.sidebar.selectedFileCount) {
+        return pluralize(noun, count);
+    }
+
+    uploadedCount(): number {
+        return this.sidebar.selectedFileCount - this.sidebar.errorFiles;
     }
 }

@@ -10,9 +10,10 @@ const PLUS_ICON = '<i class="fa fa-plus-circle" aria-hidden="true"></i>';
 const SPINNER_ICON = '<i class="fa fa-cog fa-spin"></i>';
 
 @Directive({
-    selector: 'button[newSubmissionButton]'
+    selector: 'button[stNewSubmissionButton]'
 })
 export class NewSubmissionButtonDirective implements AfterViewInit {
+    @HostBinding('disabled') disabled?: boolean;
 
     constructor(private modalService: BsModalService,
                 private submService: SubmissionService,
@@ -30,8 +31,6 @@ export class NewSubmissionButtonDirective implements AfterViewInit {
         this.onNewSubmissionClick();
     }
 
-    @HostBinding('disabled') disabled?: boolean;
-
     private onNewSubmissionClick() {
         this.userData.projectAccNumbers$.subscribe(projectNames => {
             const templates = getSubmissionTemplates(projectNames);
@@ -43,15 +42,6 @@ export class NewSubmissionButtonDirective implements AfterViewInit {
         });
     }
 
-    private selectTemplate(templates: Array<{ name: string, description: string }>) {
-        this.modalService.show(AddSubmModalComponent, {
-            initialState: {
-                templates: templates,
-                onOk: (project: string) => this.onOk(project)
-            }
-        });
-    }
-
     private onOk(template?: string) {
         this.startCreating();
         this.submService.createDraftSubmission(newPageTab(template))
@@ -59,6 +49,15 @@ export class NewSubmissionButtonDirective implements AfterViewInit {
                 this.stopCreating();
                 this.router.navigate(['/submissions/new/', accno]);
             });
+    }
+
+    private selectTemplate(templates: Array<{ description: string, name: string }>) {
+        this.modalService.show(AddSubmModalComponent, {
+            initialState: {
+                templates: templates,
+                onOk: (project: string) => this.onOk(project)
+            }
+        });
     }
 
     private startCreating() {

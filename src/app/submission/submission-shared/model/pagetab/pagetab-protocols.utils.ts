@@ -1,5 +1,4 @@
 import { PageTabSection, PtAttribute } from './pagetab.model';
-import { Feature } from '../submission';
 
 const isEqualTo = (value: string) => (s: Nullable<string>) => (String.isDefined(s) && s!.toLowerCase() === value);
 const isComponentProtocol = isEqualTo('protocols');
@@ -9,6 +8,8 @@ class Protocols {
   private static instance: Protocols;
   private refs: Dictionary<string> = {};
 
+  private constructor() { }
+
   static getInstance() {
     if (!Protocols.instance) {
       Protocols.instance = new Protocols();
@@ -16,8 +17,6 @@ class Protocols {
 
     return Protocols.instance;
   }
-
-  private constructor() {}
 
   getRefKeyByValue(value?: string): string {
     return Object.keys(this.refs).find((key) => this.refs[key] === value) || '';

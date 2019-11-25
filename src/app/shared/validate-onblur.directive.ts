@@ -1,5 +1,5 @@
 import { NgControl } from '@angular/forms';
-import { Directive } from '@angular/core';
+import { Directive, HostListener } from '@angular/core';
 
 /**
  * Directive that replicates "touched" flag behaviour beyond the first blur event. Otherwise, once the latter happens,
@@ -12,20 +12,18 @@ import { Directive } from '@angular/core';
  * @author Hector Casanova <hector@ebi.ac.uk>
  */
 @Directive({
-    selector: '[validate-onblur]',
-    host: {
-        '(keydown)': 'onKeyDown()',
-        '(focusout)': 'markOnBlur()'
-    }
+    selector: '[stValidateOnblur]',
 })
 export class ValidateOnBlurDirective {
     constructor(public formControl: NgControl) {}
 
-    onKeyDown() {
-        this.formControl.control!.markAsUntouched({onlySelf: false});
+    @HostListener('focusout')
+    markOnBlur() {
+        this.formControl.control!.markAsTouched({ onlySelf: true });
     }
 
-    markOnBlur() {
-        this.formControl.control!.markAsTouched({onlySelf: true});
+    @HostListener('keydown')
+    onKeyDown() {
+        this.formControl.control!.markAsUntouched({ onlySelf: false });
     }
 }

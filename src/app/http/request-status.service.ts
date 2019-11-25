@@ -8,11 +8,7 @@ import {
 import { throwError } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/finally';
-import 'rxjs/add/observable/throw';
-
+import { catchError, finalize } from 'rxjs/operators';
 
 /**
  * Global listener to HTTP requests. Reports the status of any request in progress by means of observables,
@@ -21,9 +17,9 @@ import 'rxjs/add/observable/throw';
  */
 @Injectable()
 export class RequestStatusService implements HttpInterceptor {
-    private _whenStatusChanged: Subject<boolean> = new Subject<boolean>();
     private _filteredUrlPatterns: RegExp[] = []; // URLs to exclude from request status tracking
     private _pendingRequests = 0; // counter for pending requests
+    private _whenStatusChanged: Subject<boolean> = new Subject<boolean>();
 
     get filteredUrlPatterns(): RegExp[] {
         return this._filteredUrlPatterns;
@@ -35,17 +31,6 @@ export class RequestStatusService implements HttpInterceptor {
 
     get whenStatusChanged(): Observable<boolean> {
         return this._whenStatusChanged.asObservable();
-    }
-
-    /**
-     * Flags those URLs to which requests should not be counted as pending
-     * @param {string} url - URL for the request in question
-     * @returns {boolean} True if the request is to be ignored.
-     */
-    private shouldBypass(url: string): boolean {
-        return this._filteredUrlPatterns.some(e => {
-            return e.test(url);
-        });
     }
 
     /**
@@ -65,18 +50,27 @@ export class RequestStatusService implements HttpInterceptor {
             }
         }
 
-        return next.handle(req).map(event => {
-            return event;
-        }).catch(error => {
-            return throwError(error);
-        }).finally(() => {
-            if (!shouldBypass) {
-                this._pendingRequests--;
+        return next.handle(req).pipe(
+            catchError((error) => throwError(error)),
+            finalize(() => {
+                if (!shouldBypass) {
+                    this._pendingRequests--;
 
-                if (0 === this._pendingRequests) {
-                    this._whenStatusChanged.next(false);
+                    if (0 === this._pendingRequests) {
+                        this._whenStatusChanged.next(false);
+                    }
                 }
-            }
+            }));
+    }
+
+    /**
+     * Flags those URLs to which requests should not be counted as pending
+     * @param {string} url - URL for the request in question
+     * @returns {boolean} True if the request is to be ignored.
+     */
+    private shouldBypass(url: string): boolean {
+        return this._filteredUrlPatterns.some(e => {
+            return e.test(url);
         });
     }
 }

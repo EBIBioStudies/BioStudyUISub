@@ -1,7 +1,6 @@
-import { Injectable } from '@angular/core';
 import { AppConfig } from 'app/app.config';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { Injectable } from '@angular/core';
+import { ReplaySubject, Subject } from 'rxjs';
 import {
     setLoginToken,
     getLoginToken,
@@ -14,31 +13,13 @@ import { UserInfo } from './model';
 
 @Injectable()
 export class UserSession {
-    private sessionCreated = new Subject<boolean>();
+    created$: Subject<boolean> = new ReplaySubject<boolean>(1);
 
-    created$: Observable<boolean> = this.sessionCreated.asObservable();
-
-    constructor(
-        private appConfig: AppConfig
-    ) {}
-
-    // call it when the app is bootstrapped
-    init(): void {
-        if (!this.isAnonymous()) {
-            this.notifySessionCreated();
-        }
-    }
+    constructor(private appConfig: AppConfig) {}
 
     create(user: UserInfo): UserInfo {
         this.update(user);
         this.notifySessionCreated();
-
-        return user;
-    }
-
-    update(user: UserInfo) {
-        setLoginToken(user.sessid, this.appConfig.environment);
-        setUser(user);
 
         return user;
     }
@@ -49,29 +30,43 @@ export class UserSession {
         this.notifySessionDestroyed();
     }
 
-    token(): string {
-        return getLoginToken(this.appConfig.environment);
-    }
-
-    userName(): string {
-        const {  username } = getUser();
-        return username;
-    }
-
     getUserEmail(): string {
         const { email } = getUser();
         return email;
+    }
+
+    // call it when the app is bootstrapped
+    init(): void {
+        if (!this.isAnonymous()) {
+            this.notifySessionCreated();
+        }
     }
 
     isAnonymous(): boolean {
         return this.token() === '';
     }
 
+    token(): string {
+        return getLoginToken(this.appConfig.environment);
+    }
+
+    update(user: any) {
+        setLoginToken(user.sessid, this.appConfig.environment);
+        setUser(user);
+
+        return user;
+    }
+
+    userName(): string {
+        const { username } = getUser();
+        return username;
+    }
+
     private notifySessionCreated(): void {
-        this.sessionCreated.next(true);
+        this.created$.next(true);
     }
 
     private notifySessionDestroyed(): void {
-        this.sessionCreated.next(false);
+        this.created$.next(false);
     }
 }

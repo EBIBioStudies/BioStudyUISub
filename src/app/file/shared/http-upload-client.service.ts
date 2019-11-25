@@ -13,9 +13,7 @@ enum UploadEventType {
 export class UploadEvent {
     private static SUCCESS_EVENT = new UploadEvent(UploadEventType.SUCCESS);
 
-    static progress(percentage: number): UploadEvent {
-        return new UploadProgressEvent(percentage);
-    }
+    constructor(private readonly type: UploadEventType = UploadEventType.OTHER) {}
 
     static error(message: any) {
         return new UploadErrorEvent(message);
@@ -34,20 +32,20 @@ export class UploadEvent {
                 return UploadEvent.SUCCESS_EVENT;
 
             default:
-                console.log(event);
                 return new UploadEvent();
         }
     }
 
-    constructor(private readonly type: UploadEventType = UploadEventType.OTHER) {
-    }
-
-    isProgress(): boolean {
-        return this.type === UploadEventType.PROGRESS;
+    static progress(percentage: number): UploadEvent {
+        return new UploadProgressEvent(percentage);
     }
 
     isError(): boolean {
         return this.type === UploadEventType.ERROR;
+    }
+
+    isProgress(): boolean {
+        return this.type === UploadEventType.PROGRESS;
     }
 
     isSuccess(): boolean {
@@ -56,13 +54,13 @@ export class UploadEvent {
 }
 
 export class UploadProgressEvent extends UploadEvent {
-    constructor(public readonly percentage: number) {
+    constructor(readonly percentage: number) {
         super(UploadEventType.PROGRESS);
     }
 }
 
 export class UploadErrorEvent extends UploadEvent {
-    constructor(public readonly message: string) {
+    constructor(readonly message: string) {
         super(UploadEventType.ERROR);
     }
 }

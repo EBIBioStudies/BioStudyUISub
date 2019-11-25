@@ -26,7 +26,7 @@ class ValueLength {
 }
 
 @Component({
-    selector: 'subm-field',
+    selector: 'st-subm-field',
     templateUrl: './subm-field.component.html',
     styleUrls: ['./subm-field.component.css']
 })
