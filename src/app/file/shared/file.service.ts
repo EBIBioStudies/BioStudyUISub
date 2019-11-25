@@ -4,10 +4,15 @@ import { Observable } from 'rxjs/Observable';
 import { PathInfo, UserGroup } from './file-rest.model';
 import { map } from 'rxjs/operators';
 import { HttpUploadClientService, UploadEvent } from './http-upload-client.service';
+import { LogService } from 'app/core/logger/log.service';
 
 @Injectable()
 export class FileService {
-    constructor(private http: HttpClient, private httpUpload: HttpUploadClientService) {}
+    constructor(
+        private http: HttpClient,
+        private httpUpload: HttpUploadClientService,
+        private logService: LogService
+    ) {}
 
     download(filePath: string, fileName: string): Observable<any> {
         return this.http.get(`/api/files/${filePath}?fileName=${fileName}`, { responseType: 'blob' });
@@ -46,6 +51,8 @@ export class FileService {
                 formData.append('files', file, file.name);
             }
         });
+
+        this.logService.info('file-upload', files);
 
         return this.httpUpload.upload(`/api/files${fullPath}`, formData);
     }
