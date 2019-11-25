@@ -18,6 +18,10 @@ export class LogService {
     this.buildPublishers();
   }
 
+  error(message: string, ...optionalParams: any[]) {
+    this.writeToLog(message, LogLevel.ERROR, optionalParams);
+  }
+
   info(message: string, ...optionalParams: any[]) {
     this.writeToLog(message, LogLevel.INFO, optionalParams);
   }
@@ -26,8 +30,12 @@ export class LogService {
     this.writeToLog(message, LogLevel.WARN, optionalParams);
   }
 
-  error(message: string, ...optionalParams: any[]) {
-    this.writeToLog(message, LogLevel.ERROR, optionalParams);
+  private buildPublishers() {
+    const consolePublisher: LogPublisher = new LogConsole();
+    const webapiPublisher: LogWebApi = new LogWebApi(this.http);
+
+    this.publishers.push(consolePublisher);
+    this.publishers.push(webapiPublisher);
   }
 
   private writeToLog(message: string, level: LogLevel, params: any[]) {
@@ -37,13 +45,5 @@ export class LogService {
     this.publishers.forEach((publisher: LogPublisher) => {
       publisher.log(entry, level);
     });
-  }
-
-  private buildPublishers() {
-    const consolePublisher: LogPublisher = new LogConsole();
-    const webapiPublisher: LogWebApi = new LogWebApi(this.http);
-
-    this.publishers.push(consolePublisher);
-    this.publishers.push(webapiPublisher);
   }
 }

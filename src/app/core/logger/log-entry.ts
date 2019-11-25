@@ -8,18 +8,6 @@ export class LogEntry {
     public userEmail: string = ''
   ) {}
 
-  buildLogString(): string {
-    const type: string = LogLevel[this.level];
-    const value: string = `${new Date()} [${type}] - ${this.userEmail} - ${this.message}`;
-
-    if (this.extraInfo.length > 0) {
-      const formattedParams = this.formatParams(this.extraInfo);
-      return `${value} - ${formattedParams}`;
-    }
-
-    return value;
-  }
-
   buildLogJsonFormat() {
     const type: string = LogLevel[this.level];
 
@@ -30,6 +18,18 @@ export class LogEntry {
       message: this.message,
       params: this.extraInfo
     };
+  }
+
+  buildLogString(): string {
+    const type: string = LogLevel[this.level];
+    const value: string = `${new Date()} [${type}] - ${this.userEmail} - ${this.message}`;
+
+    if (this.extraInfo.length > 0) {
+      const formattedParams = this.formatParams(this.extraInfo);
+      return `${value} - ${formattedParams}`;
+    }
+
+    return value;
   }
 
   private formatParams(params: any[]): string {
