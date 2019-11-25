@@ -89,7 +89,7 @@ export class Feature {
         type.columnTypes
             .filter(ct => ct.isRequired || ct.isDesirable)
             .forEach(ct => {
-                this.addColumn(ct.name, ct.valueType, ct.displayType, true, ct.dependencyColumn, ct.uniqueValues);
+                this.addColumn(ct.name, ct.valueType, ct.displayType, true, ct.dependencyColumn, ct.uniqueValues, ct.autosuggest);
             });
 
         (data.entries || []).forEach(entry => {
@@ -176,10 +176,11 @@ export class Feature {
         isTemplateBased: boolean = false,
         dependencyColumn: string = '',
         uniqueValues: boolean = false,
+        autosuggest: boolean = true
     ): Attribute {
         const defColName = (this.singleRow ? this.typeName : 'Column') + ' ' + (this._columns.size() + 1);
         const colName = name || defColName;
-        const col = new Attribute(colName, valueType, displayType, isTemplateBased, dependencyColumn, uniqueValues);
+        const col = new Attribute(colName, valueType, displayType, isTemplateBased, dependencyColumn, uniqueValues, autosuggest);
         this._rows.addKey(col.id);
         this._columns.add(col);
 

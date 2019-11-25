@@ -10,7 +10,8 @@ export class Attribute {
     readonly displayType: DisplayType = DisplayType.OPTIONAL,
     readonly isTemplateBased: boolean = false,
     readonly dependencyColumn: string = '',
-    readonly uniqueValues: boolean = false
+    readonly uniqueValues: boolean = false,
+    readonly autosuggest: boolean = true
   ) {
     this.id = `attr_${nextId()}`;
   }

@@ -9,7 +9,7 @@
            [readonly]="readonly"
            (blur)="onBlur()"
            (keydown)="onKeyDown()"
-           [typeahead]="readonly ? [] : typeahead"
+           [typeahead]="typeahead()"
            [typeaheadMinLength]="suggestThreshold"
            [typeaheadOptionsLimit]="200"
            [typeaheadScrollable]="true"
