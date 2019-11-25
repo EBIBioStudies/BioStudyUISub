@@ -14,7 +14,7 @@ import { SectionForm } from './shared/section-form';
 import { SubmEditService } from './shared/subm-edit.service';
 import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
 import { ModalService } from '../../shared/modal.service';
-import { LogService } from 'app/logger/log.service';
+import { LogService } from 'app/core/logger/log.service';
 
 class SubmitOperation {
     static CREATE = new SubmitOperation();

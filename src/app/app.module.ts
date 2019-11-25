@@ -29,6 +29,7 @@ import { HeaderModule } from './header/header.module';
 import { SubmissionDirectModule } from './submission/submission-direct/submission-direct.module';
 import { SubmissionEditModule } from './submission/submission-edit/submission-edit.module';
 import { SubmissionListModule } from './submission/submission-list/submission-list.module';
+import { CoreModule } from './core/core.module';
 
 export function initConfig(config: AppConfig): () => Promise<any> {
     return () => config.load();
@@ -55,7 +56,8 @@ export function initConfig(config: AppConfig): () => Promise<any> {
         SubmissionListModule,
         SubmissionEditModule,
         SubmissionDirectModule,
-        FileModule
+        FileModule,
+        CoreModule
     ],
     declarations: [
         AppComponent

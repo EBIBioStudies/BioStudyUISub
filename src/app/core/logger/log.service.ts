@@ -7,9 +7,7 @@ import { LogLevel } from './log-levels';
 import { LogPublisher } from './publishers/log-publisher';
 import { LogWebApi } from './publishers/log-webapi';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class LogService {
   publishers: LogPublisher[] = [];
 
