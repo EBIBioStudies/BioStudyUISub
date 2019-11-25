@@ -76,6 +76,10 @@ export class ColumnControl {
         });
     }
 
+    get autosuggest(): boolean {
+       return this.column.autosuggest;
+    }
+
     get isRemovable(): boolean {
         return this.column.displayType.isRemovable;
     }

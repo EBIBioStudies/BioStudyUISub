@@ -137,11 +137,13 @@ export const defaultTemplate = {
                 'uniqueCols': true,
                 'columnTypes': [
                     {
+                        'autosuggest': false,
+                        'display': 'required',
                         'name': 'Name',
-                        'valueType': {'name': 'text'},
-                        'display': 'required'
+                        'valueType': {'name': 'text'}
                     },
                     {
+                        'autosuggest': false,
                         'name': 'E-mail',
                         'valueType': {'name': 'text'},
                         'display': 'required'

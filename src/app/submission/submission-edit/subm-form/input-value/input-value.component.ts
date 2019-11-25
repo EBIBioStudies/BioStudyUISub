@@ -1,7 +1,7 @@
 import { Component, EventEmitter, forwardRef, Input, Output, AfterViewChecked } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { AppConfig } from 'app/app.config';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, of } from 'rxjs';
 import {
     ValueType,
     ValueTypeFactory,
@@ -21,13 +21,13 @@ import { typeaheadSource } from '../../shared/typeahead.utils';
     }]
 })
 export class InputValueComponent implements ControlValueAccessor, AfterViewChecked {
+    @Input() autosuggest: boolean = true;
     @Input() formControl?: FormControl;
-    @Input() isSmall = true;
-    @Input() readonly = false;
+    @Input() isSmall: boolean = true;
+    @Input() readonly: boolean = false;
     @Output() select = new EventEmitter<{ [key: string]: string }>();
     suggestLength: number;
     @Input() suggestThreshold: number = 0;
-    readonly typeahead: Observable<string[]>;
     @Input() valueType: ValueType = ValueTypeFactory.DEFAULT;
     readonly valueTypeNameEnum = ValueTypeName;
 
@@ -39,12 +39,8 @@ export class InputValueComponent implements ControlValueAccessor, AfterViewCheck
         @Input() suggestThreshold: number = 0;      //number of typed characters before suggestions are displayed.
     */
     // a value of 0 makes typeahead behave like an auto-suggest box.
-
     constructor(private appConfig: AppConfig) {
         this.suggestLength = appConfig.maxSuggestLength;
-        this.typeahead = typeaheadSource(() => {
-            return this.autosuggestValues();
-        }, this.valueChanges$);
     }
 
     get value() {
@@ -111,6 +107,16 @@ export class InputValueComponent implements ControlValueAccessor, AfterViewCheck
      */
     selectData(data: { [key: string]: string }): void {
         this.select.emit(data);
+    }
+
+    typeahead(): Observable<string[]> {
+        if (this.readonly || !this.autosuggest) {
+            return of([]);
+        }
+
+        return typeaheadSource(() => {
+            return this.autosuggestValues();
+        }, this.valueChanges$);
     }
 
     /**

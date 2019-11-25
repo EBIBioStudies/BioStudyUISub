@@ -61,6 +61,7 @@
                                     [readonly]="readonly || column.isReadonly"
                                     [formControl]="row.cellControlAt(column.id).control"
                                     [autosuggestSource]="featureForm.cellValuesTypeaheadFunc(rowIdx, column.id)"
+                                    [autosuggest]="column.autosuggest"
                                     (select)="onInputValueSelect($event, rowIdx)"
                                     stNativeElementAttach
                                     stValidateOnblur>
