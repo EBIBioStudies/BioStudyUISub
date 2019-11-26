@@ -305,6 +305,7 @@ export class AnnotationsType extends FeatureType {
 }
 
 export class ColumnType extends TypeBase {
+    readonly autosuggest: boolean;
     readonly dependencyColumn: string;
     readonly display: string;
     readonly displayType: DisplayType;
@@ -320,6 +321,7 @@ export class ColumnType extends TypeBase {
         this.display = this.displayType.name;
         this.valueType = ValueTypeFactory.create(data.valueType || {});
         this.dependencyColumn = data.dependencyColumn || '';
+        this.autosuggest = data.autosuggest !== undefined ? data.autosuggest : true;
         this.uniqueValues = data.uniqueValues || false;
     }
 
