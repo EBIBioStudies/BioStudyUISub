@@ -6,6 +6,8 @@ import { LogLevel } from '../log-levels';
 export class LogWebApi extends LogPublisher {
   http: HttpClient;
 
+  private allowedLevels: LogLevel[] = [LogLevel.ERROR, LogLevel.UPLOAD];
+
   constructor(http: HttpClient) {
     super();
     this.http = http;
@@ -13,7 +15,7 @@ export class LogWebApi extends LogPublisher {
 
   log(entry: LogEntry, level: LogLevel) {
     // Only send errors to external service.
-    if (level === LogLevel.ERROR) {
+    if (this.allowedLevels.includes(level)) {
       this.send(entry);
     }
   }

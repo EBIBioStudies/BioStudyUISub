@@ -26,6 +26,10 @@ export class LogService {
     this.writeToLog(message, LogLevel.INFO, optionalParams);
   }
 
+  upload(message: string, ...optionalParams: any[]) {
+    this.writeToLog(message, LogLevel.UPLOAD, optionalParams);
+  }
+
   warn(message: string, ...optionalParams: any[]) {
     this.writeToLog(message, LogLevel.WARN, optionalParams);
   }

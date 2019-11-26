@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { PathInfo, UserGroup } from './file-rest.model';
-import { map } from 'rxjs/operators';
+import { map, tap, catchError, finalize } from 'rxjs/operators';
 import { HttpUploadClientService, UploadEvent } from './http-upload-client.service';
 import { LogService } from 'app/core/logger/log.service';
+import { of, throwError } from 'rxjs';
 
 @Injectable()
 export class FileService {
@@ -52,8 +53,17 @@ export class FileService {
             }
         });
 
-        this.logService.info('file-upload', files);
+        this.logService.upload('file-upload: start', ...files);
 
-        return this.httpUpload.upload(`/api/files${fullPath}`, formData);
+        return this.httpUpload.upload(`/api/files${fullPath}`, formData).pipe(
+            catchError((error: HttpErrorResponse) => {
+                this.logService.error('file-upload: error', error);
+
+                return throwError(error);
+            }),
+            finalize(() => {
+                this.logService.upload('file-upload: finish', ...files);
+            })
+        );
     }
 }
