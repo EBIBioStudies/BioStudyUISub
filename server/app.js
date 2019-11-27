@@ -8,10 +8,10 @@ const express = require('express');
 const expressWinston = require('express-winston');
 const helmet = require('helmet');
 const path = require('path');
-const submitterProxy = require('./proxies/submitter');
+const submitterProxy = require('./proxies/submitterProxy');
+const { registryProxy, resolverProxy } = require('./proxies/identifiersProxy');
 const { loggerSettings } = require('./logger');
-const { registryProxy, resolverProxy } = require('./proxies/identifiers');
-const loggerProxy = require('./proxies/logger');
+const loggerProxy = require('./proxies/loggerProxy');
 
 const { port, hostname, protocol } = config.express;
 

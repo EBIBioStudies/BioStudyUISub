@@ -1,7 +1,8 @@
 const config = require('config');
+const expressWinston = require('express-winston');
 const proxy = require('express-http-proxy');
 const { format } = require('url');
-const { logger } = require('../logger');
+const { logger, loggerSettings } = require('../logger');
 const { REQUEST_TIMEOUT } = require('http-status-codes');
 
 const defaultErrorMessage = { message: 'Something went wrong.' };
@@ -32,7 +33,7 @@ const submitterProxy = (app) => {
   const { context } = config.backend;
   const backendUri = format(config.backend.uri);
 
-  app.use('*/api', proxy(backendUri, proxyConfig(context)));
+  app.use('*/api', expressWinston.logger(loggerSettings), proxy(backendUri, proxyConfig(context)));
 };
 
 module.exports = submitterProxy;
