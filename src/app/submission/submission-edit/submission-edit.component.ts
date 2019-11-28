@@ -14,6 +14,7 @@ import { SectionForm } from './shared/section-form';
 import { SubmEditService } from './shared/subm-edit.service';
 import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
 import { ModalService } from '../../shared/modal.service';
+import { LogService } from 'app/core/logger/log.service';
 
 class SubmitOperation {
     static CREATE = new SubmitOperation();
@@ -57,7 +58,8 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
         private bsModalService: BsModalService,
         private modalService: ModalService,
         private appConfig: AppConfig,
-        private submEditService: SubmEditService
+        private submEditService: SubmEditService,
+        private logService: LogService
     ) {
         this.sideBarCollapsed = window.innerWidth < this.appConfig.tabletBreak;
 
@@ -128,10 +130,12 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
                 if (this.hasJustCreated) {
                     this.locService.replaceState('/submissions/edit/' + this.accno);
                 }
+
                 if (this.sideBar && resp.payload.isSome ) {
                     const att = resp.payload.getOrElse({'name': 'AttachTo', value: '' }) || { value: '' };
                     this.sideBar.showAdvanced = !(att.value.toLowerCase() === 'arrayexpress' );
                 }
+
                 if (resp.error.isSome() ) {
                     this.modalService.alert(
                         'Submission could not be retrieved. ' +
@@ -140,7 +144,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
                         this.router.navigate(['/submissions/']);
                     });
 
-                    // TODO: log this error using the new service
+                    this.logService.error('submission-edit', resp.error);
                 } else {
                     const releaseDateCtrl = this.sectionForm!.findFieldControl('ReleaseDate');
 

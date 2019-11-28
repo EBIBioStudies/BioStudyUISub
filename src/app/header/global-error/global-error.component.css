@@ -13,9 +13,7 @@
     -moz-box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.18);
     box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.18);
 }
-.message-container {
-    padding: 15px 0 15px 7px;
-}
+
 .close {
     position: static;
     float: none;
@@ -26,6 +24,7 @@
     background: #d99997;
     border-radius: 4px 0 0 4px;
 }
+
 .slide-in {
     margin-left: 3.5px;
 }

@@ -1,7 +1,8 @@
 module.exports = {
   express: {
     hostname: 'HOSTNAME',
-    port: 'PORT'
+    port: 'PORT',
+    protocol: 'PROTOCOL'
   },
   backend: {
     context: 'BACKEND_PATH_CONTEXT',

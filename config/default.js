@@ -1,9 +1,9 @@
 module.exports = {
   files: {
-    limit: '1024mb'
+    limit: '10gb'
   },
   express: {
-    hostname: '0.0.0.0',
+    hostname: 'localhost',
     port: '8080',
     protocol: 'http'
   },

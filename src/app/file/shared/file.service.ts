@@ -1,13 +1,19 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { PathInfo, UserGroup } from './file-rest.model';
-import { map } from 'rxjs/operators';
+import { map, tap, catchError, finalize } from 'rxjs/operators';
 import { HttpUploadClientService, UploadEvent } from './http-upload-client.service';
+import { LogService } from 'app/core/logger/log.service';
+import { of, throwError } from 'rxjs';
 
 @Injectable()
 export class FileService {
-    constructor(private http: HttpClient, private httpUpload: HttpUploadClientService) {}
+    constructor(
+        private http: HttpClient,
+        private httpUpload: HttpUploadClientService,
+        private logService: LogService
+    ) {}
 
     download(filePath: string, fileName: string): Observable<any> {
         return this.http.get(`/api/files/${filePath}?fileName=${fileName}`, { responseType: 'blob' });
@@ -47,6 +53,17 @@ export class FileService {
             }
         });
 
-        return this.httpUpload.upload(`/api/files${fullPath}`, formData);
+        this.logService.upload('file-upload: start', ...files);
+
+        return this.httpUpload.upload(`/api/files${fullPath}`, formData).pipe(
+            catchError((error: HttpErrorResponse) => {
+                this.logService.error('file-upload: error', error);
+
+                return throwError(error);
+            }),
+            finalize(() => {
+                this.logService.upload('file-upload: finish', ...files);
+            })
+        );
     }
 }

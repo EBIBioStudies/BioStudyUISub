@@ -15,11 +15,9 @@ import { UserInfo } from './model';
 export class UserSession {
     created$: Subject<boolean> = new ReplaySubject<boolean>(1);
 
-    constructor(
-        private appConfig: AppConfig
-    ) {}
+    constructor(private appConfig: AppConfig) {}
 
-    create(user: any): UserInfo {
+    create(user: UserInfo): UserInfo {
         this.update(user);
         this.notifySessionCreated();
 
@@ -30,6 +28,11 @@ export class UserSession {
         destroyLoginToken(this.appConfig.environment);
         destroyUser();
         this.notifySessionDestroyed();
+    }
+
+    getUserEmail(): string {
+        const { email } = getUser();
+        return email;
     }
 
     // call it when the app is bootstrapped
@@ -55,7 +58,8 @@ export class UserSession {
     }
 
     userName(): string {
-        return getUser().fullname !== null ? getUser().fullname : getUser().username ;
+        const { username } = getUser();
+        return username;
     }
 
     private notifySessionCreated(): void {

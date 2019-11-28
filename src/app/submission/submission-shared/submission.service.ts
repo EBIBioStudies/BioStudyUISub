@@ -6,6 +6,12 @@ import { map, catchError } from 'rxjs/operators';
 import { PageTab, DraftPayload } from './model/pagetab';
 import { SubmissionDraftUtils } from './utils/submission-draft.utils';
 
+export interface DraftSubmission {
+    accno: string,
+    changed: number,
+    data: PageTab
+}
+
 export interface SubmissionListItem {
     accno: string,
     mtime: number,
