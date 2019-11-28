@@ -1,9 +1,9 @@
 // Load env vars into process.env
 require('dotenv').config();
 
+const bodyParser = require('body-parser');
 const compression = require('compression');
 const config = require('config');
-const bodyParser = require('body-parser');
 const express = require('express');
 const expressWinston = require('express-winston');
 const helmet = require('helmet');

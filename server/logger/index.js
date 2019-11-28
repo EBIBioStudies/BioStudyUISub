@@ -18,6 +18,7 @@ const loggerSettings = {
   transports: [
     new transports.Console({
       level: 'info',
+      silent: process.env.NODE_ENV === 'production',
       format: format.combine(
         colorize(),
         timestamp(),
