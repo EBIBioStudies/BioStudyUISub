@@ -11,7 +11,7 @@ import {
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { TextValueType, ValueType, ValueTypeName, SelectValueType } from 'app/submission/submission-shared/model';
 import { Attribute, Feature, Field, Section } from 'app/submission/submission-shared/model';
-import { parseDate } from 'app/utils';
+import { parseDate, isOrcidValid } from 'app/utils';
 
 // experimental: Control Reference details for using in error messages
 export class ControlRef {
@@ -149,8 +149,10 @@ export class FormValidators {
     }
 
     static formatOrcid: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-        const v = control.value;
-        return String.isNotDefinedOrEmpty(v) || /^\d{4}-\d{4}-\d{4}-\d{4}$/.test(v) ? null : { 'format': { value: v } };
+        const value: string  = control.value;
+        const isValueValid = String.isNotDefinedOrEmpty(value) || isOrcidValid(value);
+
+        return isValueValid ? null : { 'format': { value } };
     }
 
     static uniqueValues: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
