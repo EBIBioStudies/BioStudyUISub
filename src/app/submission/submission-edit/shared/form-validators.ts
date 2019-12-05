@@ -150,7 +150,7 @@ export class FormValidators {
 
     static formatOrcid: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
         const value: string  = control.value;
-        const isValueValid = String.isNotDefinedOrEmpty(value) && isOrcidValid(value);
+        const isValueValid = String.isDefinedAndNotEmpty(value) && isOrcidValid(value);
 
         return isValueValid ? null : { 'format': { value } };
     }
