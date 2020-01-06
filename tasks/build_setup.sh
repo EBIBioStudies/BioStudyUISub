@@ -21,9 +21,9 @@ ciEnvironment=${CI_ENVIRONMENT_SLUG};
 
 # Update config.json
 sed -i 's%"APP_PROXY_BASE":.*%"APP_PROXY_BASE":"'$appProxyBase'",%' src/config.json
-sed -i 's%"CONTEXT_PATH":.*%"CONTEXT_PATH":"'$contextPath'",%' src/config.json
+sed -i 's%"APP_CONTEXT":.*%"APP_CONTEXT":"'$contextPath'",%' src/config.json
 # Last line, don't append a comma
-sed -i 's%"INSTANCE_KEY".*%"INSTANCE_KEY":"'$instanceKey'"%' src/config.json
+sed -i 's%"APP_INSTANCE_KEY".*%"APP_INSTANCE_KEY":"'$instanceKey'"%' src/config.json
 
 # Create .env file
 echo "
