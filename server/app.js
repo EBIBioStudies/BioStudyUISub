@@ -20,7 +20,7 @@ app.use(helmet());
 app.use(compression());
 app.use(bodyParser.json());
 
-app.use('/static', express.static(config.assets.path));
+app.use('*/static', express.static(config.assets.path));
 
 // Proxies
 submitterProxy(app);
