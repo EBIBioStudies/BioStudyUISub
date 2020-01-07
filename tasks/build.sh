@@ -6,8 +6,14 @@ set -v
 # Variables
 ciEnvironment=${CI_ENVIRONMENT_SLUG}
 
+if [ -z "${CONTEXT_PATH}" ]; then
+  resources="/static/"
+else
+  resources="${CONTEXT_PATH}/static/"
+fi
+
 # Build assets into dist/public folder
-npx ng build --outputPath=dist/public --deleteOutputPath=true --baseHref=/static/
+npx ng build --outputPath=dist/public --deleteOutputPath=true --baseHref=${resources}
 
 # Copy package.json to server
 cp package.json dist/
