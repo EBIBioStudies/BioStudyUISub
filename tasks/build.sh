@@ -9,7 +9,7 @@ ciEnvironment=${CI_ENVIRONMENT_SLUG}
 if [ -z "${CONTEXT_PATH}" ]; then
   resources="/static/"
 else
-  resources="/${CONTEXT_PATH}/static/"
+  resources="${CONTEXT_PATH}/static/"
 fi
 
 # Build assets into dist/public folder
