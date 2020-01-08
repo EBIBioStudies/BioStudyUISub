@@ -11,7 +11,9 @@
        [ngModel]="value"
        (keydown)="doNothing($event)"
        (keyup)="doNothing($event)"
-       class="form-control input-sm" (click)="onInputClick($event)" #inputbox/>
+       class="form-control input-sm"
+       (click)="onInputClick()"
+       #inputbox/>
 <st-file-tree-dropdown *ngIf="isOpen"
                     [targetElement]="inputbox"
                     (fileSelect)="onFileSelect($event)"

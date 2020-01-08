@@ -45,11 +45,11 @@ class DateRange {
 export class DateFilterComponent implements AgFilterComponent {
     @ViewChildren(DateInputComponent) dateInputs?: QueryList<DateInputComponent>;
     hide?: Function;
+    selection;
 
     private date?: DateRange;
     private params?: IFilterParams;
     private prev?: DateRange;
-    private selection;
     private valueGetter?: (rowNode: RowNode) => any;
 
     get isInvalidRange(): boolean {

@@ -22,12 +22,14 @@
         </st-date-input>
     </div>
 </div>
-<button class="btn btn-sm btn-primary btn-submit" type="submit"
+<button class="btn btn-sm btn-primary btn-submit"
+        type="submit"
         [disabled]="isInvalidRange"
-        (click)="onApplyClick($event)">
+        (click)="onApplyClick()">
     Filter
 </button>
-<button class="btn btn-sm btn-default btn-submit" type="button"
-        (click)="onClearClick($event)">
+<button class="btn btn-sm btn-default btn-submit"
+        type="button"
+        (click)="onClearClick()">
     Clear
 </button>

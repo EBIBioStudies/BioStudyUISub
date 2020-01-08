@@ -3,11 +3,13 @@
            [(ngModel)]="text"
            #inputEl>
 </div>
-<button class="btn btn-sm btn-primary btn-submit" type="submit"
-        (click)="onApplyClick($event)">
+<button class="btn btn-sm btn-primary btn-submit"
+        type="submit"
+        (click)="onApplyClick()">
     Filter
 </button>
-<button class="btn btn-sm btn-default btn-submit" type="button"
-        (click)="onClearClick($event)">
+<button class="btn btn-sm btn-default btn-submit"
+        type="button"
+        (click)="onClearClick()">
     Clear
 </button>

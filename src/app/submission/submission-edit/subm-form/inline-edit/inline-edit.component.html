@@ -13,7 +13,7 @@
            [typeaheadOptionsLimit]="200"
            [typeaheadScrollable]="true"
            [typeaheadOptionsInScrollableView]="suggestLength"
-           (blur)="onBlur($event)"
+           (blur)="onBlur()"
            (click)="canEdit && onEdit()"
            (keyup.enter)="onEnterKey($event, ahead._container)"
            (keydown)="onKeyDown()"

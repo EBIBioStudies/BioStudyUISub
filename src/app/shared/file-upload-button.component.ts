@@ -22,7 +22,7 @@ import {
     />
     <button type="button"
             class="btn btn-primary btn-sm"
-            (click)="onButtonClick($event)">
+            (click)="onButtonClick()">
             {{title}}
     </button>
 `
@@ -54,7 +54,7 @@ export class FileUploadButtonComponent implements OnInit, OnChanges {
         this.inputEl!.nativeElement.click();
     }
 
-    onInputChange(event) {
-        this.select.emit(event.target.files);
+    onInputChange($event) {
+        this.select.emit($event.target.files);
     }
 }
