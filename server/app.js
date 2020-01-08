@@ -20,13 +20,13 @@ app.use(helmet());
 app.use(compression());
 app.use(bodyParser.json());
 
+app.use('*/static', express.static(config.assets.path));
+
 // Proxies
 submitterProxy(app);
 registryProxy(app);
 resolverProxy(app);
 loggerProxy(app);
-
-app.use(express.static(config.assets.path));
 
 // In DEV mode this service only proxies requests to the backend.
 // In PROD it serves the Angular static files as well.
