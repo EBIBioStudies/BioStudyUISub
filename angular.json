@@ -23,11 +23,11 @@
               "src/config.json"
             ],
             "styles": [
-              "node_modules/ag-grid-community/dist/styles/ag-grid.css",
-              "node_modules/ag-grid-community/dist/styles/ag-theme-fresh.css",
+              "src/styles/custom-bootstrap.less",
               "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
               "node_modules/@fortawesome/fontawesome-free/css/all.css",
-              "src/styles/custom-bootstrap.less"
+              "node_modules/ag-grid-community/dist/styles/ag-grid.css",
+              "node_modules/ag-grid-community/dist/styles/ag-theme-fresh.css"
             ],
             "scripts": [
               "node_modules/marked/lib/marked.js"
