@@ -1,5 +1,6 @@
 module.exports = {
   express: {
+    context: 'CONTEXT_PATH',
     hostname: 'HOSTNAME',
     port: 'PORT',
     protocol: 'PROTOCOL'

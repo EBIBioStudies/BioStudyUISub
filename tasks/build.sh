@@ -4,10 +4,22 @@ set -e
 set -v
 
 # Variables
-ciEnvironment=${CI_ENVIRONMENT_SLUG}
+ciEnvironment=${CI_ENVIRONMENT_NAME}
+ciEnvironmentSlug=${CI_ENVIRONMENT_SLUG}
+
+if [ -n "${CONTEXT_PATH}" ]; then
+  baseHref="${CONTEXT_PATH}/"
+else
+  baseHref="/"
+fi
 
 # Build assets into dist/public folder
-npx ng build --prod --outputPath=dist/public --deleteOutputPath=true
+# Add --prod if ENVIRONMENT is different to DEV
+if [ -z "$ciEnvironment" ] || [ "$ciEnvironment" = "DEV" ]; then
+  npx ng build --outputPath=dist/public --deleteOutputPath=true --baseHref=${baseHref}
+else
+  npx ng build --prod --outputPath=dist/public --deleteOutputPath=true --baseHref=${baseHref}
+fi
 
 # Copy package.json to server
 cp package.json dist/
@@ -24,11 +36,11 @@ cp -r server/ dist/server
 cp -r config dist/
 
 # Create log files
-mkdir dist/logs
+mkdir -p dist/logs
 touch dist/logs/forever.log
 
 # Create artifact if the script is ran in a CI environment
 if [ -n "${CI}" ]; then
   # Create artifact
-  tar -czf subtool-$ciEnvironment.tar.gz -C dist .
+  tar -czf subtool-$ciEnvironmentSlug.tar.gz -C dist .
 fi

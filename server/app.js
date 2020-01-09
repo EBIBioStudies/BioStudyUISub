@@ -13,9 +13,10 @@ const { registryProxy, resolverProxy } = require('./proxies/identifiersProxy');
 const { loggerSettings } = require('./logger');
 const loggerProxy = require('./proxies/loggerProxy');
 
-const { port, hostname, protocol } = config.express;
+const { context, port, hostname, protocol } = config.express;
 
 const app = express();
+const router = express.Router();
 app.use(helmet());
 app.use(compression());
 app.use(bodyParser.json());
@@ -26,19 +27,17 @@ registryProxy(app);
 resolverProxy(app);
 loggerProxy(app);
 
-app.use(express.static(config.assets.path));
+router.use(express.static(config.assets.path));
 
 // In DEV mode this service only proxies requests to the backend.
 // In PROD it serves the Angular static files as well.
 if (process.env.NODE_ENV === 'production') {
-  app.get('/thor-integration', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public', 'thor-integration.html'));
-  });
-
-  app.get('/*', (req, res) => {
+  router.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
   });
 }
+
+app.use(context, router);
 
 // This has to be after app settings and routes definition.
 app.use(expressWinston.errorLogger(loggerSettings));

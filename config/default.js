@@ -3,6 +3,7 @@ module.exports = {
     limit: '10gb'
   },
   express: {
+    context: '',
     hostname: 'localhost',
     port: '8080',
     protocol: 'http'
