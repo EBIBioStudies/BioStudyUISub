@@ -31,4 +31,5 @@ BACKEND_PATH_CONTEXT=${backendPathContext}
 BACKEND_HOST_NAME=${backendHostName}
 BACKEND_PORT=${backendPort}
 PORT=${appPort}
+CONTEXT_PATH=${contextPath}
 " > dist/.env
