@@ -22,16 +22,20 @@ app.use(compression());
 app.use(bodyParser.json());
 
 // Proxies
-submitterProxy(app);
-registryProxy(app);
-resolverProxy(app);
-loggerProxy(app);
+submitterProxy('*/api', router);
+registryProxy('/identifiers/registry', router);
+resolverProxy('/identifiers/resolver', router);
+loggerProxy('/log', router);
 
 router.use(express.static(config.assets.path));
 
 // In DEV mode this service only proxies requests to the backend.
 // In PROD it serves the Angular static files as well.
 if (process.env.NODE_ENV === 'production') {
+  router.get('/thor-integration', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'thor-integration.html'));
+  });
+
   router.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
   });
@@ -43,5 +47,5 @@ app.use(context, router);
 app.use(expressWinston.errorLogger(loggerSettings));
 
 app.listen(port, hostname, () => {
-  console.log(`Proxy and host running on: ${protocol}://${hostname}:${port}`);
+  console.log(`Proxy and host running on: ${protocol}://${hostname}:${port}${context}`);
 });

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RequestStatusService, RequestStatusServiceFactory } from './request-status.service';
 import { AuthInterceptorService } from './auth-interceptor.service';
+import { ContextPathInterceptorService } from './context-path-interceptor.service';
 // import { TestBackendInterceptor } from './test-backend-interceptor.service';
 
 @NgModule({
@@ -24,6 +25,10 @@ import { AuthInterceptorService } from './auth-interceptor.service';
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthInterceptorService,
+            multi: true
+        }, {
+            provide: HTTP_INTERCEPTORS,
+            useClass: ContextPathInterceptorService,
             multi: true
         }/*,
         {

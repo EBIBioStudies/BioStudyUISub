@@ -29,11 +29,11 @@ const proxyConfig = (pathname) => {
   });
 };
 
-const submitterProxy = (app) => {
+const submitterProxy = (path, router) => {
   const { context } = config.backend;
   const backendUri = format(config.backend.uri);
 
-  app.use('*/api', expressWinston.logger(loggerSettings), proxy(backendUri, proxyConfig(context)));
+  router.use(path, expressWinston.logger(loggerSettings), proxy(backendUri, proxyConfig(context)));
 };
 
 module.exports = submitterProxy;
