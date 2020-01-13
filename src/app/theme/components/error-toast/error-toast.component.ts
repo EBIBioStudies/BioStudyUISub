@@ -2,11 +2,11 @@ import { ChangeDetectorRef, Component, ElementRef, ErrorHandler } from '@angular
 import { GlobalErrorHandler } from 'app/global-error.handler';
 
 @Component({
-    selector: 'st-global-error',
-    templateUrl: './global-error.component.html',
-    styleUrls: ['./global-error.component.css']
+    selector: 'st-error-toast',
+    templateUrl: './error-toast.component.html',
+    styleUrls: ['./error-toast.component.css']
 })
-export class GlobalErrorComponent {
+export class ErrorToastComponent {
     message: string = '';
 
     /**

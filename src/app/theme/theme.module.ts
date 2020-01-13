@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from 'app/shared/shared.module';
-import { HeaderComponent, GlobalErrorComponent } from './components';
+import { HeaderComponent, ErrorToastComponent } from './components';
 
 const COMPONENTS = [
   HeaderComponent,
-  GlobalErrorComponent
+  ErrorToastComponent
 ];
 
 @NgModule({
