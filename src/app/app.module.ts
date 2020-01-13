@@ -18,18 +18,18 @@ import {
     BsDatepickerModule
 } from 'ngx-bootstrap';
 import { MarkdownModule } from 'ngx-markdown';
-import { AppRoutingModule } from './app-routing.module';
-import { HelpModule } from './help/help.module';
-import { AuthModule } from './auth/auth.module';
-import { FileModule } from './file/file.module';
 import { AppComponent } from './app.component';
-import { GlobalErrorHandler } from './global-error.handler';
 import { AppConfig } from './app.config';
-import { HeaderModule } from './header/header.module';
+import { AppRoutingModule } from './app-routing.module';
+import { AuthModule } from './auth/auth.module';
+import { CoreModule } from './core/core.module';
+import { FileModule } from './file/file.module';
+import { GlobalErrorHandler } from './global-error.handler';
+import { HelpModule } from './help/help.module';
 import { SubmissionDirectModule } from './submission/submission-direct/submission-direct.module';
 import { SubmissionEditModule } from './submission/submission-edit/submission-edit.module';
 import { SubmissionListModule } from './submission/submission-list/submission-list.module';
-import { CoreModule } from './core/core.module';
+import { ThemeModule } from './theme/theme.module';
 
 export function initConfig(config: AppConfig): () => Promise<any> {
     return () => config.load();
@@ -50,13 +50,13 @@ export function initConfig(config: AppConfig): () => Promise<any> {
         CollapseModule.forRoot(),
         AlertModule.forRoot(),
         AppRoutingModule,
-        HeaderModule,
-        HelpModule,
         AuthModule,
-        SubmissionListModule,
-        SubmissionEditModule,
-        SubmissionDirectModule,
         FileModule,
+        HelpModule,
+        SubmissionDirectModule,
+        SubmissionEditModule,
+        SubmissionListModule,
+        ThemeModule,
         CoreModule
     ],
     declarations: [

@@ -5,11 +5,11 @@ import { RequestStatusInterceptorService } from 'app/core/interceptors/request-s
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
-    selector: 'st-app-header',
-    templateUrl: './app-header.component.html',
-    styleUrls: ['./app-header.component.css']
+    selector: 'st-header',
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.css']
 })
-export class AppHeaderComponent implements OnDestroy {
+export class HeaderComponent implements OnDestroy {
     isBusy = false; // flags whether there is a transaction triggered by this component
     isPendingReq = false; // flags whether there is a transaction in progress (from anywhere in the app)
     @ViewChild('logout') logout;
