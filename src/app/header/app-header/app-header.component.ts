@@ -1,7 +1,7 @@
 import { ApplicationRef, Component, OnDestroy, ViewChild } from '@angular/core';
 import { Event, NavigationEnd, Router } from '@angular/router';
 import { AuthService, UserSession } from 'app/auth/shared';
-import { RequestStatusService } from 'app/http/request-status.service';
+import { RequestStatusInterceptorService } from 'app/core/interceptors/request-status-interceptor.service';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
@@ -25,7 +25,7 @@ export class AppHeaderComponent implements OnDestroy {
         private userSession: UserSession,
         private router: Router,
         private authService: AuthService,
-        private requestStatus: RequestStatusService,
+        private requestStatus: RequestStatusInterceptorService,
         private appRef: ApplicationRef
     ) {
         const header = this;
@@ -58,6 +58,8 @@ export class AppHeaderComponent implements OnDestroy {
         });
 
         // Shows visual feedback while the apps awaits request resolution.
+        // TODO: RequestStatusInterceptorService is an interceptor and it should not be used
+        //       to get general status from all the request coming out from the app.
         this.reqStatusSubs = this.requestStatus.whenStatusChanged.subscribe(hasPendingRequests => {
             header.isPendingReq = hasPendingRequests;
         });

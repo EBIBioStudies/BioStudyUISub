@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { RecaptchaComponent } from 'ng-recaptcha';
-import { ServerError } from 'app/http';
+import { ServerError } from 'app/shared/server-error.handler';
 import { AbstractControl, NgForm } from '@angular/forms';
 import { AuthService, UserSession } from '../shared';
 import { RegistrationData } from '../shared/model';

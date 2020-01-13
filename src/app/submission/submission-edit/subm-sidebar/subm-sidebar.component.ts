@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
-import { ServerError } from 'app/http/server-error.handler';
+import { ServerError } from 'app/shared/server-error.handler';
 import { Option } from 'fp-ts/lib/Option';
 import { FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';

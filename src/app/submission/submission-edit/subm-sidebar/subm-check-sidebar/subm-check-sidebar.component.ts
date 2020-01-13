@@ -1,6 +1,6 @@
 import { FormControl, ValidationErrors } from '@angular/forms';
 import { Component, Input } from '@angular/core';
-import { ServerError } from 'app/http';
+import { ServerError } from 'app/shared/server-error.handler';
 import { MyFormControl } from '../../shared/form-validators';
 import { SubmEditService } from '../../shared/subm-edit.service';
 

@@ -2,7 +2,7 @@ import * as HttpStatus from 'http-status-codes';
 import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { ServerError } from 'app/http';
+import { ServerError } from 'app/shared/server-error.handler';
 import { map, catchError } from 'rxjs/operators';
 import { AppConfig } from '../../app.config';
 import { UserSession } from './user-session';

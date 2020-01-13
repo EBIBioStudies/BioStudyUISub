@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angula
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, UserSession } from 'app/auth/shared';
-import { ServerError } from 'app/http';
+import { ServerError } from 'app/shared/server-error.handler';
 
 @Component({
     selector: 'st-auth-signin',

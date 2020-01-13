@@ -16,7 +16,7 @@ import { catchError, finalize } from 'rxjs/operators';
  * Based on the ng-http-loader project: {@link https://github.com/mpalourdio/ng-http-loader}
  */
 @Injectable()
-export class RequestStatusService implements HttpInterceptor {
+export class RequestStatusInterceptorService implements HttpInterceptor {
     private _filteredUrlPatterns: RegExp[] = []; // URLs to exclude from request status tracking
     private _pendingRequests = 0; // counter for pending requests
     private _whenStatusChanged: Subject<boolean> = new Subject<boolean>();
@@ -76,5 +76,5 @@ export class RequestStatusService implements HttpInterceptor {
 }
 
 export function RequestStatusServiceFactory() {
-    return new RequestStatusService();
+    return new RequestStatusInterceptorService();
 }
