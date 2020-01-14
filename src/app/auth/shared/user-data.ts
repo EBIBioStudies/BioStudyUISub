@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { SubmissionService } from 'app/pages/submission/submission-shared/submission.service';
+import { SubmissionService } from '../../submission/submission-shared/submission.service';
 import { AuthService } from './auth.service';
 import { ExtendedUserInfo } from './model';
 import { UserRole } from './user-role';

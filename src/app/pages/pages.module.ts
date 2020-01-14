@@ -3,18 +3,12 @@ import { SharedModule } from 'app/shared/shared.module';
 import { HelpComponent } from './help/help.component';
 import { PagesRoutingModule } from './pages-routing.module';
 import { FileModule } from './file/file.module';
-import { SubmissionDirectModule } from './submission/submission-direct/submission-direct.module';
-import { SubmissionEditModule } from './submission/submission-edit/submission-edit.module';
-import { SubmissionListModule } from './submission/submission-list/submission-list.module';
 
 @NgModule({
   imports: [
     SharedModule,
     FileModule,
-    PagesRoutingModule,
-    SubmissionDirectModule,
-    SubmissionEditModule,
-    SubmissionListModule
+    PagesRoutingModule
   ],
   declarations: [HelpComponent]
 })
