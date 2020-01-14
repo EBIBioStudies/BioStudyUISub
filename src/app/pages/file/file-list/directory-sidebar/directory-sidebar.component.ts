@@ -1,7 +1,7 @@
 import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FileService } from '../../shared/file.service';
-import { FileNode } from 'app/file/file-select/file-tree.model';
+import { FileNode } from 'app/pages/file/file-select/file-tree.model';
 import { map } from 'rxjs/operators';
 
 @Component({

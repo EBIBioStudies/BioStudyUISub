@@ -4,13 +4,13 @@ import { GridOptions } from 'ag-grid-community/main';
 import { Subject } from 'rxjs/Subject';
 import { switchMap, filter, takeUntil, catchError } from 'rxjs/operators';
 import { throwError, of } from 'rxjs';
-import { AppConfig } from '../../app.config';
-import { FileService } from '../shared/file.service';
-import { ModalService } from '../../shared/modal.service';
-import { Path } from '../shared/path';
+import { AppConfig } from 'app/app.config';
+import { FileService } from 'app/pages/file/shared/file.service';
+import { ModalService } from 'app/shared/modal.service';
+import { Path } from 'app/pages/file/shared/path';
 import { FileActionsCellComponent } from './ag-grid/file-actions-cell.component';
 import { FileTypeCellComponent } from './ag-grid/file-type-cell.component';
-import { FileUpload, FileUploadList } from '../shared/file-upload-list.service';
+import { FileUpload, FileUploadList } from 'app/pages/file/shared/file-upload-list.service';
 import { ProgressCellComponent } from './ag-grid/upload-progress-cell.component';
 import { UploadBadgeItem } from './file-upload-badge/file-upload-badge.component';
 

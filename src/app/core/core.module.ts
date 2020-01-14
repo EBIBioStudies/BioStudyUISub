@@ -1,4 +1,4 @@
-import { NgModule, Optional, SkipSelf, ModuleWithProviders } from '@angular/core';
+import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LogService } from './logger/log.service';
 import { RequestStatusInterceptorService, RequestStatusServiceFactory } from './interceptors/request-status-interceptor.service';

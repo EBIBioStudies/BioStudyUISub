@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from 'app/shared/shared.module';
-import { FileModule } from '../../file/file.module';
+import { FileModule } from 'app/pages/file/file.module';
 import { IdLinkModule } from '../id-link/id-link.module';
 import { PubMedIdSearchModule } from '../pubmedid-search/pubmedid-search.module';
 import { SubmissionOtherModule } from '../submission-other/submission-other.module';

@@ -7,13 +7,13 @@ import { PasswordResetReqComponent } from './auth/password-reset/password-reset-
 import { PasswordResetComponent } from './auth/password-reset/password-reset.component';
 import { SignInComponent } from './auth/signin/signin.component';
 import { SignUpComponent } from './auth/signup/signup.component';
-import { FileListComponent } from './file/file-list/file-list.component';
 import { DirectSubmitComponent } from './submission/submission-direct/direct-submit.component';
 import { SubmissionEditComponent } from './submission/submission-edit/submission-edit.component';
 import { SubmListComponent } from './submission/submission-list/subm-list.component';
 
 const appRoutes: Routes = [
-    {path: '', redirectTo: 'submissions', pathMatch: 'full'},
+    { path: '', redirectTo: 'submissions', pathMatch: 'full' },
+    { path: '', loadChildren: () => import('app/pages/pages.module').then(m => m.PagesModule) },
     {path: 'signin', component: SignInComponent},
     {path: 'signup', component: SignUpComponent},
     {path: 'activate/:key', component: ActivateComponent},
@@ -55,11 +55,6 @@ const appRoutes: Routes = [
         data: {readonly: true},
         canActivate: [AuthGuard],
         runGuardsAndResolvers: 'always'
-    },
-    {
-        path: 'files',
-        component: FileListComponent,
-        canActivate: [AuthGuard]
     }
     // NOTE: some components should be reused instead of re-instantiated
     // when navigating to certain routes (the ones with a "reuse" data property).
