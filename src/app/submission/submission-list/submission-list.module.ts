@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
 import { AgGridModule } from 'ag-grid-angular';
 import { SharedModule } from 'app/shared/shared.module';
 import { SubmissionOtherModule } from '../submission-other/submission-other.module';
@@ -13,7 +12,6 @@ import { ButtonsModule } from 'ngx-bootstrap';
 @NgModule({
     imports: [
         SharedModule,
-        RouterModule,
         AgGridModule.withComponents([
             ActionButtonsCellComponent,
             DateCellComponent,

@@ -24,9 +24,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AuthModule } from './auth/auth.module';
 import { CoreModule } from './core/core.module';
 import { GlobalErrorHandler } from './global-error.handler';
-import { SubmissionDirectModule } from './submission/submission-direct/submission-direct.module';
-import { SubmissionEditModule } from './submission/submission-edit/submission-edit.module';
-import { SubmissionListModule } from './submission/submission-list/submission-list.module';
 import { ThemeModule } from './theme/theme.module';
 import { PagesModule } from './pages/pages.module';
 
@@ -48,13 +45,10 @@ export function initConfig(config: AppConfig): () => Promise<any> {
         PopoverModule.forRoot(),
         CollapseModule.forRoot(),
         AlertModule.forRoot(),
+        PagesModule,
         AppRoutingModule,
         AuthModule,
-        SubmissionDirectModule,
-        SubmissionEditModule,
-        SubmissionListModule,
         ThemeModule,
-        PagesModule,
         CoreModule
     ],
     declarations: [
