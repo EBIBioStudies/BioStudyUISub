@@ -1,86 +1,85 @@
 <ul class="sidebar-menu">
+  <form *ngIf="form"
+      novalidate
+      [ngClass]="{'edit-type-form': isEditModeOn}"
+      [formGroup]="form"
+      (ngSubmit)="onApplyChanges()">
 
-    <form *ngIf="form"
-          novalidate
-          [ngClass]="{'edit-type-form': isEditModeOn}"
-          [formGroup]="form"
-          (ngSubmit)="onApplyChanges()">
-
-        <li class="sidebar-item" *ngFor="let item of items; let i = index">
-            <a *ngIf="isEditModeOff"
-               tooltip="{{item.description | stripHtml}}"
-               placement="top"
-               container="body"
-               (click)="onItemClick(item)">
-                <i class="fa fa-lg text-center {{item.icon}}"></i>
-                {{!collapsed ? '&nbsp;&nbsp;' + item.prettyName : ''}}
-            </a>
-            <div *ngIf="isEditModeOn && !item.deleted"
-                 class="row-input"
-                 [ngClass]="{'has-error': item.control.invalid && item.control.touched}">
-                <label [hidden]="!item.control.errors?.unique || !item.control.touched"
-                       class="control-label small">
-                    Please use a unique type name
-                </label>
-                <label [hidden]="!item.control.errors?.required || !item.control.touched"
-                       class="control-label small">
-                    Please enter a type name
-                </label>
-                <span class="input-group">
-                        <span class="input-group-addon">
-                            <i class="fa fa-lg text-center {{item.icon}} text-primary"></i>
-                        </span>
-                        <input type="text"
-                               class="form-control input-sm form-control-auto"
-                               [formControl]="item.control"
-                               stValidateOnblur/>
-                        <span class="input-group-btn">
-                            <button class="item-delete btn btn-danger btn-sm btn-flat"
-                                    [disabled]="item.isReadonly"
-                                    tooltip="delete"
-                                    (click)="onItemDelete(item)">
-                                <i class="fas fa-trash-alt fa-fw"></i>
-                            </button>
-                        </span>
-                    </span>
-            </div>
-        </li>
-        <li *ngIf="isEditModeOn && !collapsed" class="row-submit btn-toolbar">
-            <button class="btn btn-primary btn-submit" type="submit">
-                Save
-            </button>
-            <button class="btn btn-default btn-cancel" (click)="onCancelChanges($event)">
-                Cancel
-            </button>
-        </li>
-
-    </form>
-
-    <li *ngIf="isEditModeOff && userData.isPrivileged && isAdvancedVisible" class="text-right">
-        <button *ngIf="!collapsed" class="advanced-btn btn btn-link btn-sm"
-                (click)="onAdvancedToggle()">
-            <i class="far fa-lg" aria-hidden="true"
-               [ngClass]="{'fa-caret-square-down': isAdvancedClosed,
-                               'fa-caret-square-up': isAdvancedOpen}"></i>
-            Advanced
-        </button>
-        <ul class="sidebar-menu advanced-menu text-left"
-            [ngClass]="{'collapsed-box': !isAdvancedOpen}">
-            <li class="sidebar-item type-control">
-                <a (click)="onEditModeToggle($event)">
-                    <strong class="fa-stack">
-                        <i class="fa fa-circle fa-stack-2x"></i>
-                        <i class="fa fa-pencil-alt fa-stack-1x fa-inverse"></i>
-                    </strong>
-                    {{!collapsed ? '&nbsp;Edit types' : ''}}
-                </a>
-            </li>
-            <li *ngIf="isEditModeOff" class="sidebar-item type-control">
-                <a (click)="onNewTypeClick($event)">
-                    <i class="fa fa-fw fa-plus-circle fa-lg"></i>
-                    {{!collapsed ? '&nbsp;&nbsp;Add...' : ''}}
-                </a>
-            </li>
-        </ul>
+    <li class="sidebar-item" *ngFor="let item of items; let i = index">
+      <a *ngIf="isEditModeOff"
+         tooltip="{{item.description | stripHtml}}"
+         placement="top"
+         container="body"
+         (click)="onItemClick(item)">
+        <i class="fa fa-lg text-center {{item.icon}}"></i>
+        {{!collapsed ? '&nbsp;&nbsp;' + item.prettyName : ''}}
+      </a>
+      <div *ngIf="isEditModeOn && !item.deleted"
+         class="row-input"
+         [ngClass]="{'has-error': item.control.invalid && item.control.touched}">
+        <label [hidden]="!item.control.errors?.unique || !item.control.touched"
+             class="control-label small">
+          Please use a unique type name
+        </label>
+        <label [hidden]="!item.control.errors?.required || !item.control.touched"
+             class="control-label small">
+          Please enter a type name
+        </label>
+        <span class="input-group">
+            <span class="input-group-addon">
+              <i class="fa fa-lg text-center {{item.icon}} text-primary"></i>
+            </span>
+            <input type="text"
+                 class="form-control input-sm form-control-auto"
+                 [formControl]="item.control"
+                 stValidateOnblur/>
+            <span class="input-group-btn">
+              <button class="item-delete btn btn-danger btn-sm btn-flat"
+                  [disabled]="item.isReadonly"
+                  tooltip="delete"
+                  (click)="onItemDelete(item)">
+                <i class="fas fa-trash-alt fa-fw"></i>
+              </button>
+            </span>
+          </span>
+      </div>
     </li>
+    <li *ngIf="isEditModeOn && !collapsed" class="row-submit btn-toolbar">
+      <button class="btn btn-primary btn-submit" type="submit">
+        Save
+      </button>
+      <button class="btn btn-default btn-cancel" (click)="onCancelChanges($event)">
+        Cancel
+      </button>
+    </li>
+
+  </form>
+
+  <li *ngIf="isEditModeOff && userData.isPrivileged && isAdvancedVisible" class="text-right">
+    <button *ngIf="!collapsed" class="advanced-btn btn btn-link btn-sm"
+        (click)="onAdvancedToggle()">
+      <i class="far fa-lg" aria-hidden="true"
+         [ngClass]="{'fa-caret-square-down': isAdvancedClosed,
+                 'fa-caret-square-up': isAdvancedOpen}"></i>
+      Advanced
+    </button>
+    <ul class="sidebar-menu advanced-menu text-left"
+      [ngClass]="{'collapsed-box': !isAdvancedOpen}">
+      <li class="sidebar-item type-control">
+        <a (click)="onEditModeToggle($event)">
+          <strong class="fa-stack">
+            <i class="fa fa-circle fa-stack-2x"></i>
+            <i class="fa fa-pencil-alt fa-stack-1x fa-inverse"></i>
+          </strong>
+          {{!collapsed ? '&nbsp;Edit types' : ''}}
+        </a>
+      </li>
+      <li *ngIf="isEditModeOff" class="sidebar-item type-control">
+        <a (click)="onNewTypeClick($event)">
+          <i class="fa fa-fw fa-plus-circle fa-lg"></i>
+          {{!collapsed ? '&nbsp;&nbsp;Add...' : ''}}
+        </a>
+      </li>
+    </ul>
+  </li>
 </ul>

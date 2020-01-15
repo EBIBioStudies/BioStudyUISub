@@ -3,42 +3,42 @@ import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../shared';
 
 @Component({
-    selector: 'st-auth-activate',
-    templateUrl: './activate.component.html'
+  selector: 'st-auth-activate',
+  templateUrl: './activate.component.html'
 })
 export class ActivateComponent implements OnInit {
-    hasError: boolean = false;
-    message: string = '';
+  hasError: boolean = false;
+  message: string = '';
 
-    constructor(
-        private authService: AuthService,
-        private activatedRoute: ActivatedRoute
-    ) {
+  constructor(
+    private authService: AuthService,
+    private activatedRoute: ActivatedRoute
+  ) {
+  }
+
+  ngOnInit(): void {
+    const key = this.activatedRoute.snapshot.paramMap.get('key');
+
+    if (key === null) {
+      this.hasError = true;
+      this.message = 'Invalid path';
+    } else {
+      this.activate(key);
     }
+  }
 
-    ngOnInit(): void {
-        const key = this.activatedRoute.snapshot.paramMap.get('key');
+  private activate(key: string): void {
+    const component = this; // SelfSubscriber object overwrites context for "subscribe" method
 
-        if (key === null) {
-            this.hasError = true;
-            this.message = 'Invalid path';
-        } else {
-            this.activate(key);
-        }
-    }
-
-    private activate(key: string): void {
-        const component = this; // SelfSubscriber object overwrites context for "subscribe" method
-
-        this.authService
-            .activate(key)
-            .subscribe(
-                () => {
-                    component.message = 'Activation was successful';
-                },
-                (error) => {
-                    component.hasError = true;
-                    component.message = error.message;
-                });
-    }
+    this.authService
+      .activate(key)
+      .subscribe(
+        () => {
+          component.message = 'Activation was successful';
+        },
+        (error) => {
+          component.hasError = true;
+          component.message = error.message;
+        });
+  }
 }

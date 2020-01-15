@@ -4,46 +4,46 @@ import { of } from 'rxjs';
 import { UserInfo, ExtendedUserInfo } from './model';
 
 describe('UserData', () => {
-    let submService;
-    let appConfig;
+  let submService;
+  let appConfig;
 
-    beforeEach(() => {
-        submService = {
-            getProjects() {
-                return of([]);
-            }
-        };
+  beforeEach(() => {
+    submService = {
+      getProjects() {
+        return of([]);
+      }
+    };
 
-        appConfig = {
-            environment: 'DEV'
-        };
-    });
+    appConfig = {
+      environment: 'DEV'
+    };
+  });
 
-    it('should return valid user info', async(() => {
-        const user: UserInfo = {
-            sessid: '123',
-            username: 'vasya',
-            email: 'vasya@pupkin.com',
-            superuser: false,
-            secret: 'secret',
-            aux: {
-                orcid: '1234-5678-9999'
-            }
-        };
+  it('should return valid user info', async(() => {
+    const user: UserInfo = {
+      sessid: '123',
+      username: 'vasya',
+      email: 'vasya@pupkin.com',
+      superuser: false,
+      secret: 'secret',
+      aux: {
+        orcid: '1234-5678-9999'
+      }
+    };
 
-        const authService = {
-            getUserProfile() {
-                return of(user);
-            }
-        };
+    const authService = {
+      getUserProfile() {
+        return of(user);
+      }
+    };
 
-        const session = new UserSession(appConfig);
+    const session = new UserSession(appConfig);
 
-        new UserData(session, authService as AuthService, submService).info$
-            .subscribe(info => {
-                expect(info).toEqual(user as ExtendedUserInfo);
-            });
+    new UserData(session, authService as AuthService, submService).info$
+      .subscribe(info => {
+        expect(info).toEqual(user as ExtendedUserInfo);
+      });
 
-        session.create(user);
-    }));
+    session.create(user);
+  }));
 });

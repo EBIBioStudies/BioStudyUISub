@@ -28,46 +28,46 @@ import { SubmEditSidebarComponent } from './subm-sidebar/subm-edit-sidebar/subm-
 import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
 
 @NgModule({
-    imports: [
-        SharedModule,
-        RouterModule,
-        FileModule,
-        SubmissionSharedModule,
-        SubmissionResultsModule,
-        SubmissionOtherModule,
-        IdLinkModule,
-        PubMedIdSearchModule
-    ],
-    providers: [
-        SubmEditService
-    ],
-    declarations: [
-        SubmissionEditComponent,
-        InputValueComponent,
-        InlineEditComponent,
-        SubmFormComponent,
-        SubmFieldComponent,
-        SubmFeatureComponent,
-        SubmSidebarComponent,
-        SubmEditSidebarComponent,
-        SubmCheckSidebarComponent,
-        SubmNavBarComponent,
-        SubmValidationErrorsComponent,
-        AddSubmTypeModalComponent,
-        FeatureGridComponent,
-        FeatureListComponent,
-        Camelcase2LabelPipe,
-        UniqueValidator,
-        NativeElementAttachDirective,
-        TextareaAutosizeDirective
-    ],
-    exports: [
-        SubmissionEditComponent
-    ],
-    entryComponents: [
-        SubmValidationErrorsComponent,
-        AddSubmTypeModalComponent
-    ]
+  imports: [
+    SharedModule,
+    RouterModule,
+    FileModule,
+    SubmissionSharedModule,
+    SubmissionResultsModule,
+    SubmissionOtherModule,
+    IdLinkModule,
+    PubMedIdSearchModule
+  ],
+  providers: [
+    SubmEditService
+  ],
+  declarations: [
+    SubmissionEditComponent,
+    InputValueComponent,
+    InlineEditComponent,
+    SubmFormComponent,
+    SubmFieldComponent,
+    SubmFeatureComponent,
+    SubmSidebarComponent,
+    SubmEditSidebarComponent,
+    SubmCheckSidebarComponent,
+    SubmNavBarComponent,
+    SubmValidationErrorsComponent,
+    AddSubmTypeModalComponent,
+    FeatureGridComponent,
+    FeatureListComponent,
+    Camelcase2LabelPipe,
+    UniqueValidator,
+    NativeElementAttachDirective,
+    TextareaAutosizeDirective
+  ],
+  exports: [
+    SubmissionEditComponent
+  ],
+  entryComponents: [
+    SubmValidationErrorsComponent,
+    AddSubmTypeModalComponent
+  ]
 })
 export class SubmissionEditModule {
 }

@@ -9,26 +9,26 @@ import { SignInComponent } from './auth/signin/signin.component';
 import { SignUpComponent } from './auth/signup/signup.component';
 
 const appRoutes: Routes = [
-    { path: '', redirectTo: 'submissions', pathMatch: 'full' },
-    { path: '', loadChildren: () => import('app/pages/pages.module').then(m => m.PagesModule) },
-    { path: 'signin', component: SignInComponent },
-    { path: 'signup', component: SignUpComponent },
-    { path: 'activate/:key', component: ActivateComponent },
-    { path: 'password_reset_request', component: PasswordResetReqComponent },
-    { path: 'password_reset/:key', component: PasswordResetComponent },
-    { path: 'resend_activation_link', component: ActivationLinkReqComponent }
+  { path: '', redirectTo: 'submissions', pathMatch: 'full' },
+  { path: '', loadChildren: () => import('app/pages/pages.module').then(m => m.PagesModule) },
+  { path: 'signin', component: SignInComponent },
+  { path: 'signup', component: SignUpComponent },
+  { path: 'activate/:key', component: ActivateComponent },
+  { path: 'password_reset_request', component: PasswordResetReqComponent },
+  { path: 'password_reset/:key', component: PasswordResetComponent },
+  { path: 'resend_activation_link', component: ActivationLinkReqComponent }
 ];
 
 @NgModule({
-    imports: [
-        RouterModule.forRoot(appRoutes, { onSameUrlNavigation: 'reload' })
-    ],
-    exports: [
-        RouterModule
-    ],
-    providers: [
-        AuthGuard
-    ]
+  imports: [
+    RouterModule.forRoot(appRoutes, { onSameUrlNavigation: 'reload' })
+  ],
+  exports: [
+    RouterModule
+  ],
+  providers: [
+    AuthGuard
+  ]
 })
 export class AppRoutingModule {
 }

@@ -12,18 +12,18 @@ import { Directive, HostListener } from '@angular/core';
  * @author Hector Casanova <hector@ebi.ac.uk>
  */
 @Directive({
-    selector: '[stValidateOnblur]',
+  selector: '[stValidateOnblur]',
 })
 export class ValidateOnBlurDirective {
-    constructor(public formControl: NgControl) {}
+  constructor(public formControl: NgControl) {}
 
-    @HostListener('focusout')
-    markOnBlur() {
-        this.formControl.control!.markAsTouched({ onlySelf: true });
-    }
+  @HostListener('focusout')
+  markOnBlur() {
+    this.formControl.control!.markAsTouched({ onlySelf: true });
+  }
 
-    @HostListener('keydown')
-    onKeyDown() {
-        this.formControl.control!.markAsUntouched({ onlySelf: false });
-    }
+  @HostListener('keydown')
+  onKeyDown() {
+    this.formControl.control!.markAsUntouched({ onlySelf: false });
+  }
 }

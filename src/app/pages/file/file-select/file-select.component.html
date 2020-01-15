@@ -2,20 +2,20 @@
    [ngClass]="{'input-sm': isSmall}"
    routerLink="/files"
    [queryParams]="{bb: true}">
-    <span class="btn-link">
-         Upload a file
-        <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
-    </span>
+  <span class="btn-link">
+     Upload a file
+    <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+  </span>
 </a>
 <input type="text"
-       [ngModel]="value"
-       (keydown)="doNothing($event)"
-       (keyup)="doNothing($event)"
-       class="form-control input-sm"
-       (click)="onInputClick()"
-       #inputbox/>
+     [ngModel]="value"
+     (keydown)="doNothing($event)"
+     (keyup)="doNothing($event)"
+     class="form-control input-sm"
+     (click)="onInputClick()"
+     #inputbox/>
 <st-file-tree-dropdown *ngIf="isOpen"
-                    [targetElement]="inputbox"
-                    (fileSelect)="onFileSelect($event)"
-                    (close)="onFileDropdownClose($event)">
+          [targetElement]="inputbox"
+          (fileSelect)="onFileSelect($event)"
+          (close)="onFileDropdownClose($event)">
 </st-file-tree-dropdown>

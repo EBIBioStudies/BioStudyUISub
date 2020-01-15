@@ -6,20 +6,20 @@ import { PubMedIdSearchComponent } from './pubmedid-search.component';
 import { PubMedSearchService } from './pubmedid-search.service';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        HttpClientModule
-    ],
-    providers: [
-        PubMedSearchService
-    ],
-    declarations: [
-        PubMedIdSearchComponent
-    ],
-    exports: [
-        PubMedIdSearchComponent
-    ]
+  imports: [
+    CommonModule,
+    FormsModule,
+    HttpClientModule
+  ],
+  providers: [
+    PubMedSearchService
+  ],
+  declarations: [
+    PubMedIdSearchComponent
+  ],
+  exports: [
+    PubMedIdSearchComponent
+  ]
 })
 export class PubMedIdSearchModule {
 }

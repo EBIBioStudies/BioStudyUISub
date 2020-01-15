@@ -1,42 +1,42 @@
 <ul class="sidebar-menu">
-    <li *ngIf="invalidControls.isEmpty() || isLoading || isSubmitting" class="center-vertically text-center"
-        [ngClass]="{'col-xs-12': !collapsed}">
-        <i class="fa " aria-hidden="true"
-           [ngClass]="{
-                    'fa-2x': collapsed, 'fa-4x': !collapsed,
-                    'fa-times-circle': serverError,
-                    'fa-check-circle': !serverError && !isLoading && !isSubmitting,
-                    'fa-cog fa-spin': isLoading || isSubmitting}"></i>
-        <h4 [ngClass]="{'vertical-text': collapsed}">
-            {{isLoading ? 'Loading submission...' :
-            isSubmitting? 'Submitting submission...' :
-            serverError ? errorMsg() : 'All fields are valid'}}
-        </h4>
-        <h4 *ngIf="!serverError" class="action-title">
-            {{isLoading || isSubmitting ? 'Please wait' : 'You may submit your study now'}}
-        </h4>
-    </li>
+  <li *ngIf="invalidControls.isEmpty() || isLoading || isSubmitting" class="center-vertically text-center"
+    [ngClass]="{'col-xs-12': !collapsed}">
+    <i class="fa " aria-hidden="true"
+       [ngClass]="{
+          'fa-2x': collapsed, 'fa-4x': !collapsed,
+          'fa-times-circle': serverError,
+          'fa-check-circle': !serverError && !isLoading && !isSubmitting,
+          'fa-cog fa-spin': isLoading || isSubmitting}"></i>
+    <h4 [ngClass]="{'vertical-text': collapsed}">
+      {{isLoading ? 'Loading submission...' :
+      isSubmitting? 'Submitting submission...' :
+      serverError ? errorMsg() : 'All fields are valid'}}
+    </h4>
+    <h4 *ngIf="!serverError" class="action-title">
+      {{isLoading || isSubmitting ? 'Please wait' : 'You may submit your study now'}}
+    </h4>
+  </li>
 </ul>
 <ul class="sidebar-menu" *ngFor="let controlGroup of invalidControls">
-    <li *ngIf="!controlGroup[0].ref.isRootSection" class="sidebar-item-header">
-        <span>{{collapsed ? '' : controlGroup[0].ref.sectionName}}</span>
-    </li>
-    <li class="sidebar-item" *ngFor="let control of controlGroup">
-        <a *ngIf="control.invalid"
-           [ngClass]="{'center-spread': !collapsed}"
-           tooltip="{{collapsed ? '&quot;' + control.ref.name + '&quot; field is ' + tipText(control.errors) : 'Highlight field on the form'}}"
-           container="body"
-           placement="{{collapsed ? 'right' : 'top'}}"
-           (click)="onReviewClick($event, control)">
-                    <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                        <i class="entry-item fas fa-lg text-center {{control.ref.icon}}"></i>
-                        {{!collapsed ? '&nbsp;' + control.ref.name + '&nbsp;' : ''}}
-                    </span>
-            <strong *ngIf="!collapsed" class="entry-item label label-default"
-                    [ngClass]="{'label-danger': control.touched}"
-                    #labelEl>
-                {{tipText(control.errors)}}
-            </strong>
-        </a>
-    </li>
+  <li *ngIf="!controlGroup[0].ref.isRootSection" class="sidebar-item-header">
+    <span>{{collapsed ? '' : controlGroup[0].ref.sectionName}}</span>
+  </li>
+  <li class="sidebar-item" *ngFor="let control of controlGroup">
+    <a *ngIf="control.invalid"
+       [ngClass]="{'center-spread': !collapsed}"
+       tooltip="{{collapsed ? '&quot;' + control.ref.name + '&quot; field is ' + tipText(control.errors) : 'Highlight field on the form'}}"
+       container="body"
+       placement="{{collapsed ? 'right' : 'top'}}"
+       (click)="onReviewClick($event, control)">
+          <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+            <i class="entry-item fas fa-lg text-center {{control.ref.icon}}"></i>
+            {{!collapsed ? '&nbsp;' + control.ref.name + '&nbsp;' : ''}}
+          </span>
+      <strong *ngIf="!collapsed" class="entry-item label label-default"
+          [ngClass]="{'label-danger': control.touched}"
+          #labelEl>
+        {{tipText(control.errors)}}
+      </strong>
+    </a>
+  </li>
 </ul>

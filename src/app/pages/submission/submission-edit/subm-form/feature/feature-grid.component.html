@@ -1,80 +1,80 @@
 <div *ngIf="featureForm"
-     class="container-fluid grid-container"
-     [formGroup]="featureForm.form">
-    <div class="row">
-        <div class="cell canton col-xs-1 col-md-1 text-center">
-            <button *ngIf="featureForm.canAddColumn() && !featureForm.isReadonly"
-                    class="btn-add btn btn-link btn-md" type="button" tabindex="-1"
-                    [ngClass]="{'invisible': readonly || !userData.isPrivileged || featureForm.isReadonly}"
-                    [tooltip]="'Add a new ' + featureForm.featureTypeName.toLowerCase() + ' attribute'"
-                    container="body"
-                    (click)="featureForm.addColumn()">
-                <i class="fa fa-plus-circle" aria-hidden="true"></i> Column
-            </button>&nbsp;
-        </div>
-        <div *ngFor="let column of columns; let idx = index" class="cell heading-cell column-heading col-xs-3 col-md-2"
-             [ngClass]="{'optional': featureForm.canRemoveColumn(column),
-                            'has-error': column.hasErrors}">
-            <st-inline-edit placement="bottom"
-                            container="body"
-                            containerClass="text-danger"
-                            popover="{{column.hasErrors ? column.errors : ''}}"
-                            triggers="focus"
-                            emptyValue="{{'Column ' + (idx + 1)}}"
-                            [formControl]="column.control"
-                            [readonly]="readonly || !column.canEditName || !userData.isPrivileged || featureForm.isReadonly"
-                            [removable]="featureForm.canRemoveColumn(column) && !featureForm.isReadonly"
-                            [autosuggestSource]="featureForm.columnNamesAvailable"
-                            (remove)="featureForm.removeColumn(column)"
-                            stNativeElementAttach
-                            stValidateOnblur>
-            </st-inline-edit>
-        </div>
+   class="container-fluid grid-container"
+   [formGroup]="featureForm.form">
+  <div class="row">
+    <div class="cell canton col-xs-1 col-md-1 text-center">
+      <button *ngIf="featureForm.canAddColumn() && !featureForm.isReadonly"
+          class="btn-add btn btn-link btn-md" type="button" tabindex="-1"
+          [ngClass]="{'invisible': readonly || !userData.isPrivileged || featureForm.isReadonly}"
+          [tooltip]="'Add a new ' + featureForm.featureTypeName.toLowerCase() + ' attribute'"
+          container="body"
+          (click)="featureForm.addColumn()">
+        <i class="fa fa-plus-circle" aria-hidden="true"></i> Column
+      </button>&nbsp;
     </div>
-    <div *ngFor="let row of rows; let rowIdx = index;">
-        <div *ngIf="!readonly || !row.isEmpty" class="row">
-            <div class="cell heading-cell row-heading col-xs-1 col-md-1 text-center">
-                <span container="body"
-                      [tooltip]="featureForm.canRemoveRow() ? '' : 'The table must contain one row at least'">
-                    <button class="btn btn-danger btn-sm" type="button"
-                            [ngClass]="{'invisible': readonly || featureForm.isReadonly}"
-                            [disabled]="!featureForm.canRemoveRow()"
-                            (click)="featureForm.removeRow(rowIdx)"
-                            [tooltip]="featureForm.canRemoveRow ? 'Delete ' + featureForm.featureTypeName.toLowerCase() + ' ' + (rowIdx + 1) : ''"
-                            placement="bottom"
-                            container="body">
-                        <i class="far fa-trash-alt"></i>
-                    </button>
-                </span>
-                {{rowIdx+1}}
-            </div>
-            <div class="cell body-cell column-entry col-xs-3 col-md-2" *ngFor="let column of columns">
-                <div [ngClass]="{'readonly': column.isReadonly || featureForm.isReadonly,
-                                 'optional': !column.isRequired,
-                                 'has-error': row.hasErrorsAt(column.id)}">
-                    <st-input-value placement="top"
-                                    container="body"
-                                    containerClass="{{featureForm.isRequired ? 'text-danger' : 'text-warning'}}"
-                                    popover="{{row.hasErrorsAt(column.id) ? row.errorsAt(column.id) : ''}}"
-                                    triggers="focus"
-                                    [valueType]="column.valueType"
-                                    [readonly]="readonly || column.isReadonly"
-                                    [formControl]="row.cellControlAt(column.id).control"
-                                    [autosuggestSource]="featureForm.cellValuesTypeaheadFunc(rowIdx, column.id)"
-                                    [autosuggest]="column.autosuggest"
-                                    (select)="onInputValueSelect($event, rowIdx)"
-                                    stNativeElementAttach
-                                    stValidateOnblur>
-                    </st-input-value>
-                </div>
-            </div>
-        </div>
+    <div *ngFor="let column of columns; let idx = index" class="cell heading-cell column-heading col-xs-3 col-md-2"
+       [ngClass]="{'optional': featureForm.canRemoveColumn(column),
+              'has-error': column.hasErrors}">
+      <st-inline-edit placement="bottom"
+              container="body"
+              containerClass="text-danger"
+              popover="{{column.hasErrors ? column.errors : ''}}"
+              triggers="focus"
+              emptyValue="{{'Column ' + (idx + 1)}}"
+              [formControl]="column.control"
+              [readonly]="readonly || !column.canEditName || !userData.isPrivileged || featureForm.isReadonly"
+              [removable]="featureForm.canRemoveColumn(column) && !featureForm.isReadonly"
+              [autosuggestSource]="featureForm.columnNamesAvailable"
+              (remove)="featureForm.removeColumn(column)"
+              stNativeElementAttach
+              stValidateOnblur>
+      </st-inline-edit>
     </div>
+  </div>
+  <div *ngFor="let row of rows; let rowIdx = index;">
+    <div *ngIf="!readonly || !row.isEmpty" class="row">
+      <div class="cell heading-cell row-heading col-xs-1 col-md-1 text-center">
+        <span container="body"
+            [tooltip]="featureForm.canRemoveRow() ? '' : 'The table must contain one row at least'">
+          <button class="btn btn-danger btn-sm" type="button"
+              [ngClass]="{'invisible': readonly || featureForm.isReadonly}"
+              [disabled]="!featureForm.canRemoveRow()"
+              (click)="featureForm.removeRow(rowIdx)"
+              [tooltip]="featureForm.canRemoveRow ? 'Delete ' + featureForm.featureTypeName.toLowerCase() + ' ' + (rowIdx + 1) : ''"
+              placement="bottom"
+              container="body">
+            <i class="far fa-trash-alt"></i>
+          </button>
+        </span>
+        {{rowIdx+1}}
+      </div>
+      <div class="cell body-cell column-entry col-xs-3 col-md-2" *ngFor="let column of columns">
+        <div [ngClass]="{'readonly': column.isReadonly || featureForm.isReadonly,
+                 'optional': !column.isRequired,
+                 'has-error': row.hasErrorsAt(column.id)}">
+          <st-input-value placement="top"
+                  container="body"
+                  containerClass="{{featureForm.isRequired ? 'text-danger' : 'text-warning'}}"
+                  popover="{{row.hasErrorsAt(column.id) ? row.errorsAt(column.id) : ''}}"
+                  triggers="focus"
+                  [valueType]="column.valueType"
+                  [readonly]="readonly || column.isReadonly"
+                  [formControl]="row.cellControlAt(column.id).control"
+                  [autosuggestSource]="featureForm.cellValuesTypeaheadFunc(rowIdx, column.id)"
+                  [autosuggest]="column.autosuggest"
+                  (select)="onInputValueSelect($event, rowIdx)"
+                  stNativeElementAttach
+                  stValidateOnblur>
+          </st-input-value>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 <button *ngIf="featureForm && featureForm.canAddRow() && !featureForm.isReadonly && !readonly" type="button" class="btn-add btn btn-link" tabindex="-1"
-        [tooltip]="'Add a new ' + featureForm.prettyName"
-        container="body"
-        (click)="featureForm.addRow()">
-    <i class="fa fa-lg fa-plus-circle"></i>
-    Add {{featureForm.prettyName}} row
+    [tooltip]="'Add a new ' + featureForm.prettyName"
+    container="body"
+    (click)="featureForm.addRow()">
+  <i class="fa fa-lg fa-plus-circle"></i>
+  Add {{featureForm.prettyName}} row
 </button>

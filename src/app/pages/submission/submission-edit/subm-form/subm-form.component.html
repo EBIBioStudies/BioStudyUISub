@@ -1,12 +1,11 @@
 <form *ngIf="sectionForm" [formGroup]="sectionForm.form" (ngSubmit)="onSubmit($event)">
+  <div *ngFor="let fieldControl of sectionForm.fieldControls"
+     [ngClass]="{'form-group row': !readonly}">
+    <st-subm-field [fieldControl]="fieldControl" [readonly]="readonly"></st-subm-field>
+  </div>
 
-    <div *ngFor="let fieldControl of sectionForm.fieldControls"
-         [ngClass]="{'form-group row': !readonly}">
-        <st-subm-field [fieldControl]="fieldControl" [readonly]="readonly"></st-subm-field>
-    </div>
-
-    <div *ngFor="let featureForm of sectionForm.featureForms"
-         [ngClass]="{'form-group row': !featureForm.isEmpty}">
-        <st-subm-feature [featureForm]="featureForm" [readonly]="readonly"></st-subm-feature>
-    </div>
+  <div *ngFor="let featureForm of sectionForm.featureForms"
+     [ngClass]="{'form-group row': !featureForm.isEmpty}">
+    <st-subm-feature [featureForm]="featureForm" [readonly]="readonly"></st-subm-feature>
+  </div>
 </form>

@@ -1,23 +1,23 @@
 <div class="modal-header bg-primary">
-    <button type="button"
-            class="close"
-            (click)="modalRef?.hide()"
-            aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-    <h4 class="modal-title">Validation log: {{errors.total()}} error{{errors.total() > 1 ? 's' : ''}}</h4>
+  <button type="button"
+      class="close"
+      (click)="modalRef?.hide()"
+      aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <h4 class="modal-title">Validation log: {{errors.total()}} error{{errors.total() > 1 ? 's' : ''}}</h4>
 </div>
 <div class="modal-body">
-    <ul class="list-group">
-        <li class="list-group-item" *ngFor="let error of errorList">
-            <i *ngFor="let i of error.level"
-               class="fa fa-long-arrow-right"
-               aria-hidden="true"></i>
-            {{error.message}}
-        </li>
-    </ul>
-    <p class="text-muted text-right">
-        <a href="mailto:biostudies@ebi.ac.uk?Subject=Validation%20log&Body=%0A%0A%0A%0A______________%0A{{toLogURI()}}">Email support</a>
-        with this log.
-    </p>
+  <ul class="list-group">
+    <li class="list-group-item" *ngFor="let error of errorList">
+      <i *ngFor="let i of error.level"
+         class="fa fa-long-arrow-right"
+         aria-hidden="true"></i>
+      {{error.message}}
+    </li>
+  </ul>
+  <p class="text-muted text-right">
+    <a href="mailto:biostudies@ebi.ac.uk?Subject=Validation%20log&Body=%0A%0A%0A%0A______________%0A{{toLogURI()}}">Email support</a>
+    with this log.
+  </p>
 </div>

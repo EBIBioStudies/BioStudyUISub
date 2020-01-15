@@ -2,15 +2,15 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
-    AlertModule,
-    BsDatepickerModule,
-    BsDropdownModule,
-    CollapseModule,
-    ModalModule,
-    PopoverModule,
-    TabsModule,
-    TooltipModule,
-    TypeaheadModule
+  AlertModule,
+  BsDatepickerModule,
+  BsDropdownModule,
+  CollapseModule,
+  ModalModule,
+  PopoverModule,
+  TabsModule,
+  TooltipModule,
+  TypeaheadModule
 } from 'ngx-bootstrap';
 import { ContainerRootComponent } from './container-root.component';
 import { ContainerMdComponent } from './container-md.component';
@@ -26,66 +26,66 @@ import { PluralPipe } from './plural.pipe';
 import { ModalService } from './modal.service';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        TypeaheadModule,
-        TooltipModule,
-        TabsModule,
-        BsDropdownModule,
-        BsDatepickerModule,
-        ModalModule,
-        PopoverModule,
-        CollapseModule,
-        AlertModule
-    ],
-    providers: [
-        ModalService
-    ],
-    declarations: [
-        ContainerRootComponent,
-        ContainerMdComponent,
-        ORCIDInputBoxComponent,
-        FileUploadButtonComponent,
-        ConfirmDialogComponent,
-        MultiSelectComponent,
-        FilterPipe,
-        StripHtmlPipe,
-        ValidateOnBlurDirective,
-        DateFormatDirective,
-        DateInputComponent,
-        PluralPipe
-    ],
-    exports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        CommonModule,
-        TypeaheadModule,
-        TooltipModule,
-        TabsModule,
-        BsDropdownModule,
-        BsDatepickerModule,
-        ModalModule,
-        PopoverModule,
-        CollapseModule,
-        AlertModule,
-        ContainerRootComponent,
-        ContainerMdComponent,
-        ORCIDInputBoxComponent,
-        FileUploadButtonComponent,
-        ConfirmDialogComponent,
-        MultiSelectComponent,
-        FilterPipe,
-        StripHtmlPipe,
-        ValidateOnBlurDirective,
-        DateFormatDirective,
-        DateInputComponent,
-        PluralPipe
-    ],
-    entryComponents: [
-        ConfirmDialogComponent
-    ]
+  imports: [
+    CommonModule,
+    FormsModule,
+    TypeaheadModule,
+    TooltipModule,
+    TabsModule,
+    BsDropdownModule,
+    BsDatepickerModule,
+    ModalModule,
+    PopoverModule,
+    CollapseModule,
+    AlertModule
+  ],
+  providers: [
+    ModalService
+  ],
+  declarations: [
+    ContainerRootComponent,
+    ContainerMdComponent,
+    ORCIDInputBoxComponent,
+    FileUploadButtonComponent,
+    ConfirmDialogComponent,
+    MultiSelectComponent,
+    FilterPipe,
+    StripHtmlPipe,
+    ValidateOnBlurDirective,
+    DateFormatDirective,
+    DateInputComponent,
+    PluralPipe
+  ],
+  exports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    CommonModule,
+    TypeaheadModule,
+    TooltipModule,
+    TabsModule,
+    BsDropdownModule,
+    BsDatepickerModule,
+    ModalModule,
+    PopoverModule,
+    CollapseModule,
+    AlertModule,
+    ContainerRootComponent,
+    ContainerMdComponent,
+    ORCIDInputBoxComponent,
+    FileUploadButtonComponent,
+    ConfirmDialogComponent,
+    MultiSelectComponent,
+    FilterPipe,
+    StripHtmlPipe,
+    ValidateOnBlurDirective,
+    DateFormatDirective,
+    DateInputComponent,
+    PluralPipe
+  ],
+  entryComponents: [
+    ConfirmDialogComponent
+  ]
 })
 export class SharedModule {
 }

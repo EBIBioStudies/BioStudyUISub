@@ -1,96 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <title>Thor Integration</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="https://www.ebi.ac.uk/europepmc/thor/resources/js/datasubmission/ebithor-submission.1.0.0.js"></script>
+  <meta charset="utf-8"/>
+  <title>Thor Integration</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="https://www.ebi.ac.uk/europepmc/thor/resources/js/datasubmission/ebithor-submission.1.0.0.js"></script>
 </head>
 <body>
 <form id="thorForm" name="thorForm">
-    <input type="text"
-           id="username"
-           name="username"
-           tabindex="1"
-           class="thorCompleteNameTx"/>
-    <input type="email"
-           id="email"
-           name="email"
-           class="thorEmailTxt"/>
-    <input type="text" id="orcId" name="orcId" class="thorOrcIdIdentifier"/>
-    <span class="thorOrcIdSpan"></span>
+  <input type="text"
+       id="username"
+       name="username"
+       tabindex="1"
+       class="thorCompleteNameTx"/>
+  <input type="email"
+       id="email"
+       name="email"
+       class="thorEmailTxt"/>
+  <input type="text" id="orcId" name="orcId" class="thorOrcIdIdentifier"/>
+  <span class="thorOrcIdSpan"></span>
 </form>
 </body>
 <script>
 
-    var myThor = (function(){
+  var myThor = (function(){
 
-        var thor = null;
-        var myCallback = null;
+    var thor = null;
+    var myCallback = null;
 
-        var myListener = function (event) {
-            console.debug('thor: myListener(...)', event);
+    var myListener = function (event) {
+      console.debug('thor: myListener(...)', event);
 
-            if (event.data === 'openPopup') {
-                myCallback = function (msg) {
-                    if (parent) {
-                        console.debug('thor: sending message to parent', msg);
-                        parent.postMessage({thor: msg}, '*');
-                    }
-                };
-                thor.openOrcidPopup(0);
-                return;
-            }
-
-            thor.searchOrcIdBio(function (msg) {
-                if (myCallback) {
-                    myCallback(msg);
-                    myCallback = null;
-                }
-            });
+      if (event.data === 'openPopup') {
+        myCallback = function (msg) {
+          if (parent) {
+            console.debug('thor: sending message to parent', msg);
+            parent.postMessage({thor: msg}, '*');
+          }
         };
+        thor.openOrcidPopup(0);
+        return;
+      }
 
-        function removeMessageListener(listener, capture) {
-            if (window.removeEventListener) {
-                console.debug('thor: removeEventListener(...)');
-                window.removeEventListener('message', listener, capture);
-            }
-            if (window.detachEvent) {
-                console.debug('thor: detachEvent(...)');
-                window.detachEvent('onmessage', listener);
-            }
+      thor.searchOrcIdBio(function (msg) {
+        if (myCallback) {
+          myCallback(msg);
+          myCallback = null;
+        }
+      });
+    };
+
+    function removeMessageListener(listener, capture) {
+      if (window.removeEventListener) {
+        console.debug('thor: removeEventListener(...)');
+        window.removeEventListener('message', listener, capture);
+      }
+      if (window.detachEvent) {
+        console.debug('thor: detachEvent(...)');
+        window.detachEvent('onmessage', listener);
+      }
+    }
+
+    function addMessageListener(listener, capture) {
+      if (window.addEventListener) {
+        console.debug('thor: addEventListener(...)');
+        addEventListener('message', listener, capture);
+      }
+      if (window.attachEvent) {
+        console.debug('thor: attachEvent(...)');
+        attachEvent('onmessage', listener);
+      }
+    }
+
+    return {
+      init: function(listener, thorNamespace) {
+        if (listener) {
+          removeMessageListener(listener, false);
+        } else {
+          console.log('warning: no thorListener found');
         }
 
-        function addMessageListener(listener, capture) {
-            if (window.addEventListener) {
-                console.debug('thor: addEventListener(...)');
-                addEventListener('message', listener, capture);
-            }
-            if (window.attachEvent) {
-                console.debug('thor: attachEvent(...)');
-                attachEvent('onmessage', listener);
-            }
+        if (thorNamespace) {
+          addMessageListener(myListener, false);
+          thor = thorNamespace;
+        } else {
+          console.log('warning: no thorApplicationNamespace found');
         }
+      }
+    }
 
-        return {
-            init: function(listener, thorNamespace) {
-                if (listener) {
-                    removeMessageListener(listener, false);
-                } else {
-                    console.log('warning: no thorListener found');
-                }
+  })();
 
-                if (thorNamespace) {
-                    addMessageListener(myListener, false);
-                    thor = thorNamespace;
-                } else {
-                    console.log('warning: no thorApplicationNamespace found');
-                }
-            }
-        }
-
-    })();
-
-    myThor.init(thorListener, thorApplicationNamespace);
+  myThor.init(thorListener, thorApplicationNamespace);
 
 </script>

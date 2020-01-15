@@ -1,131 +1,131 @@
 <st-container-root>
-    <st-container-md>
-        <div class="auth-content">
-            <div class="alert" [ngClass]="{'alert-danger': error, 'invisible': !error}">
-                {{error ? error.message : '&nbsp;'}}
+  <st-container-md>
+    <div class="auth-content">
+      <div class="alert" [ngClass]="{'alert-danger': error, 'invisible': !error}">
+        {{error ? error.message : '&nbsp;'}}
+      </div>
+    </div>
+    <p>
+      <a routerLink="/signin"><i class="fa fa-chevron-circle-left" aria-hidden="true"></i> Back to Log in</a>
+    </p>
+    <div *ngIf="success">
+      <h4 class="text-success">Thank you for registering</h4>
+      <p>An email has been sent with a link to activate your new account.</p>
+    </div>
+    <div *ngIf="!success">
+      <h4>Registration</h4>
+      <p>Please provide the information below to create a new account. Note that both the <i>Full name</i> and
+        <i>ORCID</i> fields are optional.</p>
+    </div>
+    <div *ngIf="!success" class="panel panel-default">
+      <div class="panel-body">
+        <form id="signUpForm" novalidate name="signUpForm" role="form" autocomplete="off"
+            (ngSubmit)="onSubmit(signUpForm)" #signUpForm="ngForm">
+          <div class="form-group">
+            <label class="control-label" for="username">Full name</label>
+            <span class="text-muted pull-right"><i>Optional</i></span>
+            <input type="text" autofocus
+                 id="username"
+                 name="username"
+                 class="form-control"
+                 [(ngModel)]="model.username"
+                 (change)="resetGlobalError()"
+                 #focusEl />
+          </div>
+          <div class="form-group" [ngClass]="{'has-error': email.invalid && email.touched}">
+            <label class="control-label" for="email">
+              <span class="text-black">Email address</span>
+              <span *ngIf="email.invalid && email.touched">Please enter an email address</span>
+            </label>
+            <input type="email" id="email" name="email" autocomplete="nope"
+                 class="form-control"
+                 [(ngModel)]="model.email"
+                 (change)="resetGlobalError()"
+                 #email="ngModel"
+                 required
+                 stValidateOnblur>
+          </div>
+          <div class="form-group" [ngClass]="{'has-error': password.invalid && password.touched}">
+            <label class="control-label" for="password">
+              <span class="text-black">Password</span>
+              <span *ngIf="password.invalid && password.touched">
+                <span *ngIf="password.errors?.required">Please enter your new password</span>
+                <span *ngIf="password.errors?.minlength">Please use at least 6 characters</span>
+              </span>
+              <span [hidden]="password.valid || (password.invalid && password.touched)"
+                  class="text-muted">
+                (at least 6 characters long)
+              </span>
+            </label>
+            <input type="password" id="password" autocomplete="nope"
+                 name="password"
+                 class="form-control"
+                 [(ngModel)]="model.password"
+                 (change)="resetGlobalError()"
+                 stValidateOnblur
+                 required
+                 minlength="6"
+                 #password="ngModel"/>
+          </div>
+          <div class="form-group" [ngClass]="{'has-error': orcid.invalid && orcid.touched}">
+            <label class="control-label">
+              <span class="text-black">ORCID</span>
+              <span *ngIf="orcid.invalid && orcid.touched">
+                <span *ngIf="orcid.errors?.pattern">(use 4x4 digit format)</span>
+              </span>
+              <span [hidden]="(orcid.valid && model.orcid) || (orcid.invalid && orcid.touched)"
+                  [ngClass]="{'text-muted': orcid.untouched}">
+                (use 4x4 digit format)
+              </span>
+            </label>
+            <span class="text-muted pull-right"><i>Optional</i></span>
+            <st-orcid-input-box
+                [(ngModel)]="model.orcid"
+                [isSmall]="false"
+                name="orcid"
+                #orcid="ngModel"
+                stValidateOnblur>
+            </st-orcid-input-box>
+          </div>
+          <div class="form-group" [ngClass]="{'has-error': captcha.invalid && (captcha.dirty || captcha.touched)}">
+            <label class="control-label">
+              <span class="text-black">Verify you are a human</span>
+              <span [hidden]="captcha.valid || (captcha.pristine && captcha.untouched)">Please confirm you are not a robot</span>
+            </label>
+            <re-captcha (resolved)="onRecaptchaResolved($event)"
+                  [(ngModel)]="model.captcha"
+                  name="captcha"
+                  #captcha="ngModel"
+                  required
+                  siteKey="6Lcmlv0SAAAAAHofnIcb29l1LMZsnGFcSlH8Reve"
+                  class="captcha-root"
+                  #recaptchaEl></re-captcha>
+          </div>
+          <div [ngClass]="{'has-error': terms.invalid && terms.touched}">
+            <div class="radio">
+              <input type="checkbox" id="terms" name="terms"
+                   [(ngModel)]="model.terms"
+                   (change)="resetGlobalError()"
+                   #terms="ngModel"
+                   required
+                   stValidateOnblur>
+              <span>
+                I have read and agree to the
+                <a target="_blank" href="https://www.ebi.ac.uk/data-protection/privacy-notice/biostudies-database">Privacy Notice</a> and
+                <a target="_blank" href="https://www.ebi.ac.uk/about/terms-of-use">Terms of Use</a>,
+                including the limited processing of personal data.
+              </span>
             </div>
-        </div>
-        <p>
-            <a routerLink="/signin"><i class="fa fa-chevron-circle-left" aria-hidden="true"></i> Back to Log in</a>
-        </p>
-        <div *ngIf="success">
-            <h4 class="text-success">Thank you for registering</h4>
-            <p>An email has been sent with a link to activate your new account.</p>
-        </div>
-        <div *ngIf="!success">
-            <h4>Registration</h4>
-            <p>Please provide the information below to create a new account. Note that both the <i>Full name</i> and
-                <i>ORCID</i> fields are optional.</p>
-        </div>
-        <div *ngIf="!success" class="panel panel-default">
-            <div class="panel-body">
-                <form id="signUpForm" novalidate name="signUpForm" role="form" autocomplete="off"
-                      (ngSubmit)="onSubmit(signUpForm)" #signUpForm="ngForm">
-                    <div class="form-group">
-                        <label class="control-label" for="username">Full name</label>
-                        <span class="text-muted pull-right"><i>Optional</i></span>
-                        <input type="text" autofocus
-                               id="username"
-                               name="username"
-                               class="form-control"
-                               [(ngModel)]="model.username"
-                               (change)="resetGlobalError()"
-                               #focusEl />
-                    </div>
-                    <div class="form-group" [ngClass]="{'has-error': email.invalid && email.touched}">
-                        <label class="control-label" for="email">
-                            <span class="text-black">Email address</span>
-                            <span *ngIf="email.invalid && email.touched">Please enter an email address</span>
-                        </label>
-                        <input type="email" id="email" name="email" autocomplete="nope"
-                               class="form-control"
-                               [(ngModel)]="model.email"
-                               (change)="resetGlobalError()"
-                               #email="ngModel"
-                               required
-                               stValidateOnblur>
-                    </div>
-                    <div class="form-group" [ngClass]="{'has-error': password.invalid && password.touched}">
-                        <label class="control-label" for="password">
-                            <span class="text-black">Password</span>
-                            <span *ngIf="password.invalid && password.touched">
-                                <span *ngIf="password.errors?.required">Please enter your new password</span>
-                                <span *ngIf="password.errors?.minlength">Please use at least 6 characters</span>
-                            </span>
-                            <span [hidden]="password.valid || (password.invalid && password.touched)"
-                                  class="text-muted">
-                                (at least 6 characters long)
-                            </span>
-                        </label>
-                        <input type="password" id="password" autocomplete="nope"
-                               name="password"
-                               class="form-control"
-                               [(ngModel)]="model.password"
-                               (change)="resetGlobalError()"
-                               stValidateOnblur
-                               required
-                               minlength="6"
-                               #password="ngModel"/>
-                    </div>
-                    <div class="form-group" [ngClass]="{'has-error': orcid.invalid && orcid.touched}">
-                        <label class="control-label">
-                            <span class="text-black">ORCID</span>
-                            <span *ngIf="orcid.invalid && orcid.touched">
-                                <span *ngIf="orcid.errors?.pattern">(use 4x4 digit format)</span>
-                            </span>
-                            <span [hidden]="(orcid.valid && model.orcid) || (orcid.invalid && orcid.touched)"
-                                  [ngClass]="{'text-muted': orcid.untouched}">
-                                (use 4x4 digit format)
-                            </span>
-                        </label>
-                        <span class="text-muted pull-right"><i>Optional</i></span>
-                        <st-orcid-input-box
-                                [(ngModel)]="model.orcid"
-                                [isSmall]="false"
-                                name="orcid"
-                                #orcid="ngModel"
-                                stValidateOnblur>
-                        </st-orcid-input-box>
-                    </div>
-                    <div class="form-group" [ngClass]="{'has-error': captcha.invalid && (captcha.dirty || captcha.touched)}">
-                        <label class="control-label">
-                            <span class="text-black">Verify you are a human</span>
-                            <span [hidden]="captcha.valid || (captcha.pristine && captcha.untouched)">Please confirm you are not a robot</span>
-                        </label>
-                        <re-captcha (resolved)="onRecaptchaResolved($event)"
-                                    [(ngModel)]="model.captcha"
-                                    name="captcha"
-                                    #captcha="ngModel"
-                                    required
-                                    siteKey="6Lcmlv0SAAAAAHofnIcb29l1LMZsnGFcSlH8Reve"
-                                    class="captcha-root"
-                                    #recaptchaEl></re-captcha>
-                    </div>
-                    <div [ngClass]="{'has-error': terms.invalid && terms.touched}">
-                        <div class="radio">
-                            <input type="checkbox" id="terms" name="terms"
-                                   [(ngModel)]="model.terms"
-                                   (change)="resetGlobalError()"
-                                   #terms="ngModel"
-                                   required
-                                   stValidateOnblur>
-                            <span>
-                                I have read and agree to the
-                                <a target="_blank" href="https://www.ebi.ac.uk/data-protection/privacy-notice/biostudies-database">Privacy Notice</a> and
-                                <a target="_blank" href="https://www.ebi.ac.uk/about/terms-of-use">Terms of Use</a>,
-                                including the limited processing of personal data.
-                            </span>
-                        </div>
-                    </div>
-                    <div class="row-submit">
-                        <button type="submit" class="btn btn-primary btn-submit"
-                                [disabled]="isLoading || terms.invalid">Register</button>
-                        <div class="text-muted col-md-10">
-                            <span *ngIf="isLoading"><i class="fa fa-cog fa-spin"></i> Registering...</span>
-                        </div>
-                    </div>
-                </form>
+          </div>
+          <div class="row-submit">
+            <button type="submit" class="btn btn-primary btn-submit"
+                [disabled]="isLoading || terms.invalid">Register</button>
+            <div class="text-muted col-md-10">
+              <span *ngIf="isLoading"><i class="fa fa-cog fa-spin"></i> Registering...</span>
             </div>
-        </div>
-    </st-container-md>
+          </div>
+        </form>
+      </div>
+    </div>
+  </st-container-md>
 </st-container-root>

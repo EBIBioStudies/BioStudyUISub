@@ -1,11 +1,11 @@
 Array.prototype.isEmpty = function () {
-    return this.length === 0;
+  return this.length === 0;
 };
 
 Array.prototype.uniqueValues = function () {
-    return this.filter((x, i, a) => a.indexOf(x) === i);
+  return this.filter((x, i, a) => a.indexOf(x) === i);
 };
 
 Array.prototype.flatMap = function (mapFunc) {
-    return this.reduce((rv, next) => [...mapFunc(next), ...rv], []);
+  return this.reduce((rv, next) => [...mapFunc(next), ...rv], []);
 };

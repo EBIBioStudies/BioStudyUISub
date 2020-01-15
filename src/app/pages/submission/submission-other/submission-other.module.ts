@@ -9,26 +9,26 @@ import { AddSubmModalComponent } from './new-submission-button/add-subm-modal.co
 import { NewSubmissionButtonDirective } from './new-submission-button/new-submission-button.directive';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        RouterModule,
-        ModalModule,
-        TooltipModule,
-        SubmissionSharedModule,
-        AuthModule
-    ],
-    providers: [],
-    declarations: [
-        AddSubmModalComponent,
-        NewSubmissionButtonDirective
-    ],
-    exports: [
-        NewSubmissionButtonDirective
-    ],
-    entryComponents: [
-        AddSubmModalComponent
-    ]
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    ModalModule,
+    TooltipModule,
+    SubmissionSharedModule,
+    AuthModule
+  ],
+  providers: [],
+  declarations: [
+    AddSubmModalComponent,
+    NewSubmissionButtonDirective
+  ],
+  exports: [
+    NewSubmissionButtonDirective
+  ],
+  entryComponents: [
+    AddSubmModalComponent
+  ]
 })
 export class SubmissionOtherModule {
 }

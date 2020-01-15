@@ -6,10 +6,10 @@ import { Pipe, PipeTransform } from '@angular/core';
  * @author Hector Casanova <hector@ebi.ac.uk>
  */
 @Pipe({
-    name: 'stripHtml'
+  name: 'stripHtml'
 })
 export class StripHtmlPipe implements PipeTransform {
-    transform(value: string): string {
-        return value.replace(/<\/?[^>]+>/gi, '');
-    }
+  transform(value: string): string {
+    return value.replace(/<\/?[^>]+>/gi, '');
+  }
 }

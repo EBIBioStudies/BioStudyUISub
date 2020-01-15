@@ -13,34 +13,34 @@ import { SignUpComponent } from './signup/signup.component';
 import { Equals2Directive } from './password-reset/equals2.directive';
 
 @NgModule({
-    imports: [
-        RouterModule,
-        RecaptchaModule,
-        RecaptchaFormsModule,
-        SharedModule
-    ],
-    providers: [
-        AuthService,
-        UserSession,
-        UserData
-    ],
-    declarations: [
-        SignInComponent,
-        SignUpComponent,
-        ActivateComponent,
-        ActivationLinkReqComponent,
-        PasswordResetReqComponent,
-        PasswordResetComponent,
-        Equals2Directive
-    ],
-    exports: [
-        SignInComponent,
-        SignUpComponent,
-        ActivateComponent,
-        ActivationLinkReqComponent,
-        PasswordResetReqComponent,
-        PasswordResetComponent
-    ]
+  imports: [
+    RouterModule,
+    RecaptchaModule,
+    RecaptchaFormsModule,
+    SharedModule
+  ],
+  providers: [
+    AuthService,
+    UserSession,
+    UserData
+  ],
+  declarations: [
+    SignInComponent,
+    SignUpComponent,
+    ActivateComponent,
+    ActivationLinkReqComponent,
+    PasswordResetReqComponent,
+    PasswordResetComponent,
+    Equals2Directive
+  ],
+  exports: [
+    SignInComponent,
+    SignUpComponent,
+    ActivateComponent,
+    ActivationLinkReqComponent,
+    PasswordResetReqComponent,
+    PasswordResetComponent
+  ]
 })
 export class AuthModule {
 }

@@ -1,276 +1,276 @@
 <st-container-root>
-    <aside class="col-md-10 col-md-offset-1">
-        <section class="row">
-            <div class="col-md-12">
-                <h3>Help</h3>
-                <ol class="list-group">
-                    <li class="list-group-item">
-                        <a href="#help-list" (click)="jumpTo($event)">Listing all your studies</a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="#help-files" (click)="jumpTo($event)">Uploading files</a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="#help-start" (click)="jumpTo($event)">Adding a study to the database</a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="#help-edit" (click)="jumpTo($event)">Editing a study</a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="#help-save" (click)="jumpTo($event)">Saving and submitting a study</a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="#help-about" (click)="jumpTo($event)">About</a>
-                        <a href="mailto:biostudies@ebi.ac.uk?Subject=Submission%20Tool" class="pull-right">
-                            <i class="fa fa-envelope-square"></i>
-                            Contact us
-                        </a>
-                    </li>
-                </ol>
+  <aside class="col-md-10 col-md-offset-1">
+    <section class="row">
+      <div class="col-md-12">
+        <h3>Help</h3>
+        <ol class="list-group">
+          <li class="list-group-item">
+            <a href="#help-list" (click)="jumpTo($event)">Listing all your studies</a>
+          </li>
+          <li class="list-group-item">
+            <a href="#help-files" (click)="jumpTo($event)">Uploading files</a>
+          </li>
+          <li class="list-group-item">
+            <a href="#help-start" (click)="jumpTo($event)">Adding a study to the database</a>
+          </li>
+          <li class="list-group-item">
+            <a href="#help-edit" (click)="jumpTo($event)">Editing a study</a>
+          </li>
+          <li class="list-group-item">
+            <a href="#help-save" (click)="jumpTo($event)">Saving and submitting a study</a>
+          </li>
+          <li class="list-group-item">
+            <a href="#help-about" (click)="jumpTo($event)">About</a>
+            <a href="mailto:biostudies@ebi.ac.uk?Subject=Submission%20Tool" class="pull-right">
+              <i class="fa fa-envelope-square"></i>
+              Contact us
+            </a>
+          </li>
+        </ol>
 
-                <dl>
-                    <dt><h4 class="underlined">1.Listing all your studies</h4></dt>
-                    <dd id="help-list" class="col-md-12">
-                        <p>
-                            The first screen shown is the list of so-called <i>"Submissions"</i>. Each of these is,
-                            effectively, a form for a current or prospective BioStudies entry.
-                            There are two main categories of submissions depending on the stage they are at:
-                        </p>
-                        <ul>
-                            <li>
-                                <strong><i class="fa fa-clock-o" aria-hidden="true"></i> Draft</strong>:
-                                These are new or incomplete submissions that have not been added to the BioStudies
-                                database yet.
-                            </li>
-                            <li>
-                                <strong><i class="fa fa-database" aria-hidden="true"></i> Submitted</strong>:
-                                These are submissions already added to the BioStudies database.
-                            </li>
-                        </ul>
-                        <p><img src="images/help/submission_list.jpg" width="1402" height="241" /></p>
-                        <p>
-                            Submissions of either category can be edited or deleted using the buttons with icons
-                            <button type="button" class="btn btn-link btn-xs btn-flat">
-                                <i class="fa fa-pencil fa-fw fa-lg"></i>
-                            </button>
-                            <button type="button" class="btn btn-danger btn-xs btn-flat">
-                                <i class="fas fa-trash-alt fa-fw"></i>
-                            </button>&nbsp;
-                            under the <i>"Actions"</i> column.
-                        </p>
-                        <p>
-                            The entire list can be filtered by any of the data columns. Just press the
-                            <span class="ag-fresh">
-                                <span class="ag-header-cell-menu-button">
-                                    <i class="fa fa-filter"></i>
-                                </span>
-                            </span>
-                            icon in the relevant column and provide the text or date to be filtered by. Additionally,
-                            the sorting order of the displayed rows can be changed by clicking on the
-                            <span class="ag-fresh">
-                                <span ref="eSortNone" class="ag-header-cell-menu-button ag-header-icon ag-sort-none-icon">
-                                    <svg width="10" height="10">
-                                        <polygon points="0,4 5,0 10,4"></polygon>
-                                        <polygon points="0,6 5,10 10,6"></polygon>
-                                    </svg>
-                                </span>
-                            </span> icon.
-                        </p>
-                    </dd>
-                    <dt><h4 class="underlined">2.Uploading files</h4></dt>
-                    <dd id="help-files" class="col-md-12">
-                        <p>
-                            Each user's files are stored in a central repository and made available for all your
-                            submissions. To navigate and list all your files, click on
-                            <button class="btn navbar-btn">
-                                <i class="fa fa-fw fa-lg fa-folder-open"></i>
-                                Files
-                            </button>. Click the
-                            <button type="button" class="btn btn-primary btn-sm">
-                                Browse...
-                            </button>
-                            button above the list to select additional files to upload to your folder. Multiple selection
-                            is supported using the conventional shift key. A <i>"Bulk folder"</i> mode is also provided
-                            to allow the upload of all the files under a given folder.
-                        </p>
-                        <div class="alert alert-warning">
-                            <div class="pull-left">
-                                <i class="fa fa-hand-o-right fa-lg"></i>
-                                <strong>Please note</strong>
-                            </div>
-                            <p class="text-block text-black">
-                                The <i>"Bulk folder"</i> mode is non-standard and may not be supported by your browser.
-                                Please upgrade to the latest version (of Chrome) if possible.
-                            </p>
-                        </div>
-                        <div>
-                            <strong>Uploading Files using FTP and Aspera</strong>
-                            <p>
-                                For large information volumes (i.e., number and/or size of files) FTP/Aspera can be used
-                                for uploads. You will need to know your secret directory to be able to upload data
-                                into your BioStudies Files area. This can be obtained by clicking on
-                                <button type="button" class="btn btn-primary btn-sm">FTP/Aspera</button> and
-                                following the instructions.
-                            </p>
-                        </div>
-                    </dd>
-                    <dt><h4 class="underlined">3.Adding a study to the database</h4></dt>
-                    <dd id="help-start" class="col-md-12">
-                        <p>
-                            Depending on how experimental data is provided, there are two possible ways of adding
-                            a given study to the database. Both require clicking one of the two buttons above the
-                            list of submissions:
-                        </p>
-                        <div class="row">
-                            <p class="pull-left">
-                                <button class="btn btn-primary">
-                                    <i class="fa fa-plus-circle" aria-hidden="true"></i>
-                                    <span>Add new</span>
-                                </button>
-                            </p>
-                            <p class="text-block">
-                                Creates a blank submission form to be manually filled in with study data and added to
-                                the database at your own discretion. As part of the process, the project your study belongs
-                                to must be selected. This is due to the difference in data requirements that exists from
-                                project to project.
-                                <img src="images/help/new_submission.gif" width="1402" height="383" />
-                            </p>
-                        </div>
-                        <div class="row">
-                            <p class="pull-left">
-                                <button class="btn btn-primary">
-                                    <i class="fa fa-upload" aria-hidden="true"></i>
-                                    <span>Direct upload</span>
-                                </button>
-                            </p>
-                            <p class="text-block">
-                                Allows the automatic extraction of study data from a selected pre-formatted file. The data
-                                can then be incorporated into the database as a new study or used to update an existing one.
-                                As with user files (see the <i>"Uploading files"</i> section), study files can be submitted in
-                                bulk.
-                                <img src="images/help/direct_upload.jpg" width="2734" height="800" />
-                            </p>
-                        </div>
-                    </dd>
-                    <dt><h4 class="underlined">4.Editing a study</h4></dt>
-                    <dd id="help-edit" class="col-md-12">
-                        <p>
-                            In most submission forms, only some of the fields may be required, such as the study's title or
-                            its release date. For ease of reference, all required fields are listed under the <i>"Check"</i>
-                            tab on the left-hand side of the form at all times. Clicking on any entry of the checklist
-                            sets the focus on the relevant field, scrolling directly to it if needed.
-                        </p>
-                        <p><img src="images/help/check_tab.gif" width="1402" height="513" /></p>
-                        <p>
-                            New fields may be added through the <i>"Add"</i> tab on the left-hand side of the form. It includes
-                            the most common field types for a study such as publication tables or annotations lists.
-                            In the app, tables and lists are generally referred to as <i>"grids"</i>.
-                        </p>
-                        <p><img src="images/help/add_tab.png" width="2802" height="1058" /></p>
-                        <p>
-                            If a grid is already present in the form, a new row will be added when clicking on the
-                            corresponding entry in the <i>"Add"</i> tab.
-                            <button type="button" class="btn-add btn btn-link">
-                                <i class="fa fa-lg fa-plus-circle"></i>
-                                Add ... row
-                            </button>
-                            button inside the corresponding grid has the same effect.
-                            Pre-defined or custom table columns may be added too through the
-                            <button type="button" class="btn-add btn btn-link">
-                                <i class="fa fa-lg fa-plus-circle"></i>
-                                Column
-                            </button>
-
-                        </p>
-                        <p>
-                            For more advanced field operations, two options are provided:
-                        </p>
-                        <ul>
-                            <li>
-                                <strong class="fa-stack">
-                                    <i class="fa fa-circle fa-stack-2x"></i>
-                                    <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
-                                </strong>
-                                <strong>Edit types</strong>:
-                                It sets the <i>"Add"</i> tab on edit mode, allowing the change of properties of existing
-                                field types. As of the application's current version, only the name can be changed.
-                            </li>
-                            <li>
-                                <strong><i class="fa fa-plus-circle" aria-hidden="true"></i> New type</strong>:
-                                It allows the creation of new list, table or section types to choose from when adding
-                                fields to the form.
-                            </li>
-                        </ul>
-                        <div class="alert alert-warning">
-                            <div class="pull-left">
-                                <i class="fa fa-hand-o-right fa-lg"></i>
-                                <strong>Please note</strong>
-                            </div>
-                            <p class="text-block text-black">
-                                Sections are not stable in the current version.
-                            </p>
-                        </div>
-                        <p>
-                            A given study can be edited at any point of its lifecycle: before being added to the database
-                            (as a <i>"Draft"</i> submission) or afterwards (as <i>"Submitted"</i> submission).
-                            Additionally, in the case of a sent submission, any recent changes in the form can be cancelled,
-                            reverting the form to its previous state before the changes.
-                        </p>
-                        <p><img src="images/help/revert_submission.gif" width="1402" height="532" /></p>
-                    </dd>
-                    <dt><h4 class="underlined">5.Saving and submitting a study</h4></dt>
-                    <dd id="help-save" class="col-md-12">
-                        <p>
-                            Submission forms are automatically backed up every time a change is made, so you can leave
-                            an incomplete form and come back to it later.
-                        </p>
-                        <p>
-                            Once all the study data has been provided, the form can be submitted by pressing the
-                            <button type="button" class="btn-submit btn btn-primary">Submit</button>
-                            button, located both in the secondary top bar and at the bottom of the form. If the
-                            submission has been successful, a summary of all the information pertaining the study is shown.
-                        </p>
-                        <p><img src="images/help/success_submission.gif" width="1402" height="535" /></p>
-                        <p>
-                            If the form is submitted with any required fields blank, the application will cancel the
-                            submission process and highlight the relevant fields.
-                        </p>
-                        <p><img src="images/help/submit_blanks.gif" width="1402" height="592" /></p>
-                        <div class="alert alert-warning">
-                            <div class="pull-left">
-                                <i class="fa fa-hand-o-right fa-lg"></i>
-                                <strong>Please note</strong>
-                            </div>
-                            <p class="text-block text-black">
-                                The system may take up to 24 hours after submission to register any new studies in the
-                                database.
-                            </p>
-                        </div>
-                        <div class="alert alert-warning">
-                            <div class="pull-left">
-                                <i class="fa fa-hand-o-right fa-lg"></i>
-                                <strong>Please note</strong>
-                            </div>
-                            <p class="text-block text-black">
-                                Any registered study will remain private and accessible only through login
-                                until the release date in the Western European Time Zone.
-                            </p>
-                        </div>
-                    </dd>
-                    <dt><h4 class="underlined">6.About</h4></dt>
-                    <dd id="help-about" class="col-md-12">
-                        <p>
-                            The submission tool is a single-page app based on the
-                            <a href="https://github.com/angular/angular">Angular</a>
-                            framework and the <a href="https://github.com/twbs/bootstrap">Bootstrap</a> library.
-                            The team behind it is part of the
-                            <a href="https://www.ebi.ac.uk/about/people/ugis-sarkans">Functional Genomics Development
-                            group</a>, led by Ugis Sarkans. You can reach us at
-                            <a href="mailto:biostudies@ebi.ac.uk?Subject=Submission%20Tool">biostudies[at]ebi.ac.uk</a>.
-                        </p>
-                    </dd>
-                </dl>
+        <dl>
+          <dt><h4 class="underlined">1.Listing all your studies</h4></dt>
+          <dd id="help-list" class="col-md-12">
+            <p>
+              The first screen shown is the list of so-called <i>"Submissions"</i>. Each of these is,
+              effectively, a form for a current or prospective BioStudies entry.
+              There are two main categories of submissions depending on the stage they are at:
+            </p>
+            <ul>
+              <li>
+                <strong><i class="fa fa-clock-o" aria-hidden="true"></i> Draft</strong>:
+                These are new or incomplete submissions that have not been added to the BioStudies
+                database yet.
+              </li>
+              <li>
+                <strong><i class="fa fa-database" aria-hidden="true"></i> Submitted</strong>:
+                These are submissions already added to the BioStudies database.
+              </li>
+            </ul>
+            <p><img src="images/help/submission_list.jpg" width="1402" height="241" /></p>
+            <p>
+              Submissions of either category can be edited or deleted using the buttons with icons
+              <button type="button" class="btn btn-link btn-xs btn-flat">
+                <i class="fa fa-pencil fa-fw fa-lg"></i>
+              </button>
+              <button type="button" class="btn btn-danger btn-xs btn-flat">
+                <i class="fas fa-trash-alt fa-fw"></i>
+              </button>&nbsp;
+              under the <i>"Actions"</i> column.
+            </p>
+            <p>
+              The entire list can be filtered by any of the data columns. Just press the
+              <span class="ag-fresh">
+                <span class="ag-header-cell-menu-button">
+                  <i class="fa fa-filter"></i>
+                </span>
+              </span>
+              icon in the relevant column and provide the text or date to be filtered by. Additionally,
+              the sorting order of the displayed rows can be changed by clicking on the
+              <span class="ag-fresh">
+                <span ref="eSortNone" class="ag-header-cell-menu-button ag-header-icon ag-sort-none-icon">
+                  <svg width="10" height="10">
+                    <polygon points="0,4 5,0 10,4"></polygon>
+                    <polygon points="0,6 5,10 10,6"></polygon>
+                  </svg>
+                </span>
+              </span> icon.
+            </p>
+          </dd>
+          <dt><h4 class="underlined">2.Uploading files</h4></dt>
+          <dd id="help-files" class="col-md-12">
+            <p>
+              Each user's files are stored in a central repository and made available for all your
+              submissions. To navigate and list all your files, click on
+              <button class="btn navbar-btn">
+                <i class="fa fa-fw fa-lg fa-folder-open"></i>
+                Files
+              </button>. Click the
+              <button type="button" class="btn btn-primary btn-sm">
+                Browse...
+              </button>
+              button above the list to select additional files to upload to your folder. Multiple selection
+              is supported using the conventional shift key. A <i>"Bulk folder"</i> mode is also provided
+              to allow the upload of all the files under a given folder.
+            </p>
+            <div class="alert alert-warning">
+              <div class="pull-left">
+                <i class="fa fa-hand-o-right fa-lg"></i>
+                <strong>Please note</strong>
+              </div>
+              <p class="text-block text-black">
+                The <i>"Bulk folder"</i> mode is non-standard and may not be supported by your browser.
+                Please upgrade to the latest version (of Chrome) if possible.
+              </p>
             </div>
-        </section>
-    </aside>
+            <div>
+              <strong>Uploading Files using FTP and Aspera</strong>
+              <p>
+                For large information volumes (i.e., number and/or size of files) FTP/Aspera can be used
+                for uploads. You will need to know your secret directory to be able to upload data
+                into your BioStudies Files area. This can be obtained by clicking on
+                <button type="button" class="btn btn-primary btn-sm">FTP/Aspera</button> and
+                following the instructions.
+              </p>
+            </div>
+          </dd>
+          <dt><h4 class="underlined">3.Adding a study to the database</h4></dt>
+          <dd id="help-start" class="col-md-12">
+            <p>
+              Depending on how experimental data is provided, there are two possible ways of adding
+              a given study to the database. Both require clicking one of the two buttons above the
+              list of submissions:
+            </p>
+            <div class="row">
+              <p class="pull-left">
+                <button class="btn btn-primary">
+                  <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                  <span>Add new</span>
+                </button>
+              </p>
+              <p class="text-block">
+                Creates a blank submission form to be manually filled in with study data and added to
+                the database at your own discretion. As part of the process, the project your study belongs
+                to must be selected. This is due to the difference in data requirements that exists from
+                project to project.
+                <img src="images/help/new_submission.gif" width="1402" height="383" />
+              </p>
+            </div>
+            <div class="row">
+              <p class="pull-left">
+                <button class="btn btn-primary">
+                  <i class="fa fa-upload" aria-hidden="true"></i>
+                  <span>Direct upload</span>
+                </button>
+              </p>
+              <p class="text-block">
+                Allows the automatic extraction of study data from a selected pre-formatted file. The data
+                can then be incorporated into the database as a new study or used to update an existing one.
+                As with user files (see the <i>"Uploading files"</i> section), study files can be submitted in
+                bulk.
+                <img src="images/help/direct_upload.jpg" width="2734" height="800" />
+              </p>
+            </div>
+          </dd>
+          <dt><h4 class="underlined">4.Editing a study</h4></dt>
+          <dd id="help-edit" class="col-md-12">
+            <p>
+              In most submission forms, only some of the fields may be required, such as the study's title or
+              its release date. For ease of reference, all required fields are listed under the <i>"Check"</i>
+              tab on the left-hand side of the form at all times. Clicking on any entry of the checklist
+              sets the focus on the relevant field, scrolling directly to it if needed.
+            </p>
+            <p><img src="images/help/check_tab.gif" width="1402" height="513" /></p>
+            <p>
+              New fields may be added through the <i>"Add"</i> tab on the left-hand side of the form. It includes
+              the most common field types for a study such as publication tables or annotations lists.
+              In the app, tables and lists are generally referred to as <i>"grids"</i>.
+            </p>
+            <p><img src="images/help/add_tab.png" width="2802" height="1058" /></p>
+            <p>
+              If a grid is already present in the form, a new row will be added when clicking on the
+              corresponding entry in the <i>"Add"</i> tab.
+              <button type="button" class="btn-add btn btn-link">
+                <i class="fa fa-lg fa-plus-circle"></i>
+                Add ... row
+              </button>
+              button inside the corresponding grid has the same effect.
+              Pre-defined or custom table columns may be added too through the
+              <button type="button" class="btn-add btn btn-link">
+                <i class="fa fa-lg fa-plus-circle"></i>
+                Column
+              </button>
+
+            </p>
+            <p>
+              For more advanced field operations, two options are provided:
+            </p>
+            <ul>
+              <li>
+                <strong class="fa-stack">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+                </strong>
+                <strong>Edit types</strong>:
+                It sets the <i>"Add"</i> tab on edit mode, allowing the change of properties of existing
+                field types. As of the application's current version, only the name can be changed.
+              </li>
+              <li>
+                <strong><i class="fa fa-plus-circle" aria-hidden="true"></i> New type</strong>:
+                It allows the creation of new list, table or section types to choose from when adding
+                fields to the form.
+              </li>
+            </ul>
+            <div class="alert alert-warning">
+              <div class="pull-left">
+                <i class="fa fa-hand-o-right fa-lg"></i>
+                <strong>Please note</strong>
+              </div>
+              <p class="text-block text-black">
+                Sections are not stable in the current version.
+              </p>
+            </div>
+            <p>
+              A given study can be edited at any point of its lifecycle: before being added to the database
+              (as a <i>"Draft"</i> submission) or afterwards (as <i>"Submitted"</i> submission).
+              Additionally, in the case of a sent submission, any recent changes in the form can be cancelled,
+              reverting the form to its previous state before the changes.
+            </p>
+            <p><img src="images/help/revert_submission.gif" width="1402" height="532" /></p>
+          </dd>
+          <dt><h4 class="underlined">5.Saving and submitting a study</h4></dt>
+          <dd id="help-save" class="col-md-12">
+            <p>
+              Submission forms are automatically backed up every time a change is made, so you can leave
+              an incomplete form and come back to it later.
+            </p>
+            <p>
+              Once all the study data has been provided, the form can be submitted by pressing the
+              <button type="button" class="btn-submit btn btn-primary">Submit</button>
+              button, located both in the secondary top bar and at the bottom of the form. If the
+              submission has been successful, a summary of all the information pertaining the study is shown.
+            </p>
+            <p><img src="images/help/success_submission.gif" width="1402" height="535" /></p>
+            <p>
+              If the form is submitted with any required fields blank, the application will cancel the
+              submission process and highlight the relevant fields.
+            </p>
+            <p><img src="images/help/submit_blanks.gif" width="1402" height="592" /></p>
+            <div class="alert alert-warning">
+              <div class="pull-left">
+                <i class="fa fa-hand-o-right fa-lg"></i>
+                <strong>Please note</strong>
+              </div>
+              <p class="text-block text-black">
+                The system may take up to 24 hours after submission to register any new studies in the
+                database.
+              </p>
+            </div>
+            <div class="alert alert-warning">
+              <div class="pull-left">
+                <i class="fa fa-hand-o-right fa-lg"></i>
+                <strong>Please note</strong>
+              </div>
+              <p class="text-block text-black">
+                Any registered study will remain private and accessible only through login
+                until the release date in the Western European Time Zone.
+              </p>
+            </div>
+          </dd>
+          <dt><h4 class="underlined">6.About</h4></dt>
+          <dd id="help-about" class="col-md-12">
+            <p>
+              The submission tool is a single-page app based on the
+              <a href="https://github.com/angular/angular">Angular</a>
+              framework and the <a href="https://github.com/twbs/bootstrap">Bootstrap</a> library.
+              The team behind it is part of the
+              <a href="https://www.ebi.ac.uk/about/people/ugis-sarkans">Functional Genomics Development
+              group</a>, led by Ugis Sarkans. You can reach us at
+              <a href="mailto:biostudies@ebi.ac.uk?Subject=Submission%20Tool">biostudies[at]ebi.ac.uk</a>.
+            </p>
+          </dd>
+        </dl>
+      </div>
+    </section>
+  </aside>
 </st-container-root>

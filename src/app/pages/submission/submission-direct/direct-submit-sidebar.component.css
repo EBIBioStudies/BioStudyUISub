@@ -1,24 +1,24 @@
 .files-control {
-    padding-top: 10px;
+  padding-top: 10px;
 }
 
 .mode-toggle {
-    margin: 0;
+  margin: 0;
 }
 
 .sidebar-contents {
-    padding: 15px 0;
-    background: #fff;
+  padding: 15px 0;
+  background: #fff;
 }
 
 .control-list {
-    border-top: 1px solid #cadde8;
+  border-top: 1px solid #cadde8;
 }
 
 .has-error .control-list {
-    border-color: #fbd9cb;
+  border-color: #fbd9cb;
 }
 
 .progress {
-    margin: 12px 5px 0;
+  margin: 12px 5px 0;
 }

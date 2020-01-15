@@ -1,24 +1,24 @@
 .panel-extra {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .container-full {
-    width: 100%;
+  width: 100%;
 }
 
 .fa-caret-square-o-up {
-    display: none;
+  display: none;
 }
 .container-full .fa-caret-square-o-down {
-    display: none;
+  display: none;
 }
 .container-full .fa-caret-square-o-up {
-    display: inline;
+  display: inline;
 }
 
 .panel.text-primary:hover {
-    color: white;
-    background: #3c739f;
-    transition: background-color .25s ease-in;
+  color: white;
+  background: #3c739f;
+  transition: background-color .25s ease-in;
 }

@@ -1,27 +1,27 @@
 /* Prevents the input from taking up all horizontal space */
 /* NOTE: it is assumed that the control will be subject to Bootstrap styling */
 .dropdown {
-    position: relative;
-    max-width: 15rem;
-    cursor: pointer;
+  position: relative;
+  max-width: 15rem;
+  cursor: pointer;
 }
 
 /* Ensures the control is understood as a select-like interactive element */
 .dropdown:after {
-    position: absolute;
-    content: "\25BC";
-    top: .5rem;
-    right: .75rem;
-    z-index: 100;
+  position: absolute;
+  content: "\25BC";
+  top: .5rem;
+  right: .75rem;
+  z-index: 100;
 }
 .form-control {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 /* Do not display interactivity cues if datepicker is meant to be read-only */
 .readonly.dropdown:after {
-    display: none;
+  display: none;
 }
 .readonly .form-control {
-    cursor: default;
+  cursor: default;
 }

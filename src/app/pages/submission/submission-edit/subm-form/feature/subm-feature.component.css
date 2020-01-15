@@ -1,11 +1,11 @@
 .panel {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .panel-body {
-    overflow: auto;
+  overflow: auto;
 }
 
 .panel-heading .fa {
-     color: #777777;
+   color: #777777;
  }

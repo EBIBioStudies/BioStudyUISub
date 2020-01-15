@@ -6,31 +6,31 @@ const USER = 'BioStudiesUser';
 const COOKIE_PATH = '/';
 
 export function setLoginToken(token: string, environment: string): void {
-    const cookieName = `${LOGIN_TOKEN_NAME}-${environment}`;
+  const cookieName = `${LOGIN_TOKEN_NAME}-${environment}`;
 
-    Cookie.set(cookieName, token, 365, COOKIE_PATH);
+  Cookie.set(cookieName, token, 365, COOKIE_PATH);
 }
 
 export function getLoginToken(environment: string): string {
-    const cookieName = `${LOGIN_TOKEN_NAME}-${environment}`;
+  const cookieName = `${LOGIN_TOKEN_NAME}-${environment}`;
 
-    return Cookie.get(cookieName) || '';
+  return Cookie.get(cookieName) || '';
 }
 
 export function destroyLoginToken(environment: string): void {
-    const cookieName = `${LOGIN_TOKEN_NAME}-${environment}`;
+  const cookieName = `${LOGIN_TOKEN_NAME}-${environment}`;
 
-    Cookie.delete(cookieName, COOKIE_PATH);
+  Cookie.delete(cookieName, COOKIE_PATH);
 }
 
 export function destroyUser(): void {
-    localStorage.removeItem(USER);
+  localStorage.removeItem(USER);
 }
 
 export function setUser(user: UserInfo): void {
-    localStorage.setItem(USER, JSON.stringify(user));
+  localStorage.setItem(USER, JSON.stringify(user));
 }
 
 export function getUser(): UserInfo {
-    return JSON.parse(localStorage.getItem(USER) || '{}');
+  return JSON.parse(localStorage.getItem(USER) || '{}');
 }

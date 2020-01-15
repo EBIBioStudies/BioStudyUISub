@@ -8,12 +8,12 @@ import './app/extensions/string.extensions';
 import './app/extensions/array.extensions';
 
 if (environment.production) {
-    enableProdMode();
+  enableProdMode();
 }
 
 platformBrowserDynamic().bootstrapModule(AppModule, {
-    preserveWhitespaces: true
+  preserveWhitespaces: true
 }).catch(err => {
-    // tslint:disable-next-line: no-console
-    console.log(err);
+  // tslint:disable-next-line: no-console
+  console.log(err);
 });

@@ -1,11 +1,11 @@
 export class AppPath {
-    private path: string;
+  private path: string;
 
-    constructor(anchor: string) {
-        this.path = anchor;
-    }
+  constructor(anchor: string) {
+    this.path = anchor;
+  }
 
-    get value(): string {
-        return this.path;
-    }
+  get value(): string {
+    return this.path;
+  }
 }

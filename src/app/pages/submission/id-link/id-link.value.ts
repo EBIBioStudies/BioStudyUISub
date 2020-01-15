@@ -21,6 +21,7 @@ export class IdLinkValue {
     if (this.value.url === undefined) {
       return `${this.value.prefix || ''}:${this.value.id || ''}`;
     }
+
     return this.value.url;
   }
 }

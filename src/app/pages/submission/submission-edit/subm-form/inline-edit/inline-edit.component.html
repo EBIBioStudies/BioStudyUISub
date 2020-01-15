@@ -1,32 +1,32 @@
 <div class="inline-edit-wrapper"
-     [ngClass]="{'editable': canEdit, 'text-muted': !editing}">
-    <input class="form-control form-control-auto" type="text" tabindex="-1" autocomplete="off"
-           name="inline-edit-box"
-           container="body"
-           placement="bottom"
-           [tooltip]="isOverflow(inlineEditBox) ? value : ''"
-           [(ngModel)]="value"
-           [placeholder]="placeholder"
-           [readonly]="!editing"
-           [typeahead]="typeahead"
-           [typeaheadMinLength]="suggestThreshold"
-           [typeaheadOptionsLimit]="200"
-           [typeaheadScrollable]="true"
-           [typeaheadOptionsInScrollableView]="suggestLength"
-           (blur)="onBlur()"
-           (click)="canEdit && onEdit()"
-           (keyup.enter)="onEnterKey($event, ahead._container)"
-           (keydown)="onKeyDown()"
-           #ahead="bs-typeahead"
-           #inlineEditBox/>
-    <div *ngIf="!editing" class="icons">
-        <button *ngIf="canEdit" class="btn btn-xs btn-link" type="button"
-                (click)="onEdit($event)">
-            <i class="fa fa-pencil"></i>
-        </button>
-        <button *ngIf="canRemove" class="btn btn-xs btn-link" type="button"
-                (click)="onRemove($event)">
-            <i class="text-danger fas fa-trash-alt"></i>
-        </button>
-    </div>
+   [ngClass]="{'editable': canEdit, 'text-muted': !editing}">
+  <input class="form-control form-control-auto" type="text" tabindex="-1" autocomplete="off"
+       name="inline-edit-box"
+       container="body"
+       placement="bottom"
+       [tooltip]="isOverflow(inlineEditBox) ? value : ''"
+       [(ngModel)]="value"
+       [placeholder]="placeholder"
+       [readonly]="!editing"
+       [typeahead]="typeahead"
+       [typeaheadMinLength]="suggestThreshold"
+       [typeaheadOptionsLimit]="200"
+       [typeaheadScrollable]="true"
+       [typeaheadOptionsInScrollableView]="suggestLength"
+       (blur)="onBlur()"
+       (click)="canEdit && onEdit()"
+       (keyup.enter)="onEnterKey($event, ahead._container)"
+       (keydown)="onKeyDown()"
+       #ahead="bs-typeahead"
+       #inlineEditBox/>
+  <div *ngIf="!editing" class="icons">
+    <button *ngIf="canEdit" class="btn btn-xs btn-link" type="button"
+        (click)="onEdit($event)">
+      <i class="fa fa-pencil"></i>
+    </button>
+    <button *ngIf="canRemove" class="btn btn-xs btn-link" type="button"
+        (click)="onRemove($event)">
+      <i class="text-danger fas fa-trash-alt"></i>
+    </button>
+  </div>
 </div>

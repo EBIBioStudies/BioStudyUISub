@@ -1,21 +1,21 @@
 import {
-    Component,
-    Input
+  Component,
+  Input
 } from '@angular/core';
 import { ResultsLogNodeComponent } from './results-log-node.component';
 import { TreeViewConfig } from './tree-view.component';
 
 @Component({
-    selector: 'st-subm-results-tree',
-    templateUrl: './subm-results-tree.component.html'
+  selector: 'st-subm-results-tree',
+  templateUrl: './subm-results-tree.component.html'
 })
 export class SubmResultsTreeComponent {
-    @Input() log: any;
+  @Input() log: any;
 
-    treeViewConfig: TreeViewConfig = {
-        children(data: any = {}): any[] {
-            return data.subnodes ? data.subnodes : [];
-        },
-        nodeComponentClass: ResultsLogNodeComponent
-    };
+  treeViewConfig: TreeViewConfig = {
+    children(data: any = {}): any[] {
+      return data.subnodes ? data.subnodes : [];
+    },
+    nodeComponentClass: ResultsLogNodeComponent
+  };
 }

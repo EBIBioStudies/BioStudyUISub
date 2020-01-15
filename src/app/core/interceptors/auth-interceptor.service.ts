@@ -6,28 +6,28 @@ import { AppConfig } from 'app/app.config';
 
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
-    constructor(
-        private appConfig: AppConfig
-    ) {}
+  constructor(
+    private appConfig: AppConfig
+  ) {}
 
-    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        if (req.url.startsWith('/api')) {
-            req = req.clone({
-                headers: this.updateHeaders(req.headers),
-                url: this.updateUrl(req.url)
-            });
-        }
-
-        return next.handle(req);
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    if (req.url.startsWith('/api')) {
+      req = req.clone({
+        headers: this.updateHeaders(req.headers),
+        url: this.updateUrl(req.url)
+      });
     }
 
-    private updateHeaders(headers: HttpHeaders = new HttpHeaders()): HttpHeaders {
-        const sessionId = getLoginToken(this.appConfig.environment);
+    return next.handle(req);
+  }
 
-        return sessionId ? headers.set('X-Session-Token', sessionId) : headers;
-    }
+  private updateHeaders(headers: HttpHeaders = new HttpHeaders()): HttpHeaders {
+    const sessionId = getLoginToken(this.appConfig.environment);
 
-    private updateUrl(url: string): string {
-        return this.appConfig.proxyBase + url;
-    }
+    return sessionId ? headers.set('X-Session-Token', sessionId) : headers;
+  }
+
+  private updateUrl(url: string): string {
+    return this.appConfig.proxyBase + url;
+  }
 }

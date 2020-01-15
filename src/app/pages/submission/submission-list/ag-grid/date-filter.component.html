@@ -1,35 +1,35 @@
 <div class="form-group">
-    <div class="btn-group">
-        <label class="btn btn-default" [(ngModel)]="selection" btnRadio="after" tabindex="0" role="button" (ngModelChange)="onSelectionChange($event)">After</label>
-        <label class="btn btn-default" [(ngModel)]="selection" btnRadio="before" tabindex="0" role="button" (ngModelChange)="onSelectionChange($event)">Before</label>
-        <label class="btn btn-default" [(ngModel)]="selection" btnRadio="between" tabindex="0" role="button" (ngModelChange)="onSelectionChange($event)">Between</label>
-    </div>
+  <div class="btn-group">
+    <label class="btn btn-default" [(ngModel)]="selection" btnRadio="after" tabindex="0" role="button" (ngModelChange)="onSelectionChange($event)">After</label>
+    <label class="btn btn-default" [(ngModel)]="selection" btnRadio="before" tabindex="0" role="button" (ngModelChange)="onSelectionChange($event)">Before</label>
+    <label class="btn btn-default" [(ngModel)]="selection" btnRadio="between" tabindex="0" role="button" (ngModelChange)="onSelectionChange($event)">Between</label>
+  </div>
 </div>
 <div class="form-group">
-    <div *ngIf="after || between">
-        <st-date-input id="date-from"
-                    [allowPast]="true"
-                    [(ngModel)]="date.from">
-        </st-date-input>
-    </div>
-    <div *ngIf="between" >
-        and
-    </div>
-    <div *ngIf="before || between" >
-        <st-date-input id="date-to"
-                    [allowPast]="true"
-                    [(ngModel)]="date.to">
-        </st-date-input>
-    </div>
+  <div *ngIf="after || between">
+    <st-date-input id="date-from"
+          [allowPast]="true"
+          [(ngModel)]="date.from">
+    </st-date-input>
+  </div>
+  <div *ngIf="between" >
+    and
+  </div>
+  <div *ngIf="before || between" >
+    <st-date-input id="date-to"
+          [allowPast]="true"
+          [(ngModel)]="date.to">
+    </st-date-input>
+  </div>
 </div>
 <button class="btn btn-sm btn-primary btn-submit"
-        type="submit"
-        [disabled]="isInvalidRange"
-        (click)="onApplyClick()">
-    Filter
+    type="submit"
+    [disabled]="isInvalidRange"
+    (click)="onApplyClick()">
+  Filter
 </button>
 <button class="btn btn-sm btn-default btn-submit"
-        type="button"
-        (click)="onClearClick()">
-    Clear
+    type="button"
+    (click)="onClearClick()">
+  Clear
 </button>

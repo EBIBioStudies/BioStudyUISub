@@ -22,41 +22,41 @@ import { SharedModule } from 'app/shared/shared.module';
 import { UserData } from 'app/auth/shared';
 
 @NgModule({
-    imports: [
-        MarkdownModule.forChild(),
-        RouterModule,
-        SharedModule,
-        AgGridModule.withComponents([
-            FileActionsCellComponent,
-            FileTypeCellComponent,
-            ProgressCellComponent
-        ]),
-        AccordionModule.forRoot()
-    ],
-    declarations: [
-        FileListComponent,
-        FileActionsCellComponent,
-        FileTypeCellComponent,
-        ProgressCellComponent,
-        FileUploadBadgeComponent,
-        DirectoryPathComponent,
-        DirectorySidebarComponent,
-        FileSelectComponent,
-        FileTreeComponent,
-        FileTreeDropdownComponent,
-        FTPUploadButtonComponent
-    ],
-    providers: [
-        FileService,
-        FileTreeStore,
-        FileUploadList,
-        HttpUploadClientService,
-        UserData
-    ],
-    exports: [
-        FileListComponent,
-        FileSelectComponent
-    ]
+  imports: [
+    MarkdownModule.forChild(),
+    RouterModule,
+    SharedModule,
+    AgGridModule.withComponents([
+      FileActionsCellComponent,
+      FileTypeCellComponent,
+      ProgressCellComponent
+    ]),
+    AccordionModule.forRoot()
+  ],
+  declarations: [
+    FileListComponent,
+    FileActionsCellComponent,
+    FileTypeCellComponent,
+    ProgressCellComponent,
+    FileUploadBadgeComponent,
+    DirectoryPathComponent,
+    DirectorySidebarComponent,
+    FileSelectComponent,
+    FileTreeComponent,
+    FileTreeDropdownComponent,
+    FTPUploadButtonComponent
+  ],
+  providers: [
+    FileService,
+    FileTreeStore,
+    FileUploadList,
+    HttpUploadClientService,
+    UserData
+  ],
+  exports: [
+    FileListComponent,
+    FileSelectComponent
+  ]
 })
 export class FileModule {
 }

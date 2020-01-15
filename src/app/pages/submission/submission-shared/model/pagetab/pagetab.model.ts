@@ -1,11 +1,11 @@
 import { Tag } from '../model.common';
 
 interface AttrException {
-    name: string,
-    rootLevel: boolean,
-    studyLevel: boolean,
-    systemOnly: boolean,
-    unique: boolean
+  name: string,
+  rootLevel: boolean,
+  studyLevel: boolean,
+  systemOnly: boolean,
+  unique: boolean
 }
 
 /* Here are the attributes which we have to deal with exceptionally (unfortunately):
@@ -17,94 +17,94 @@ interface AttrException {
  *               submitted.
  */
 export class AttrExceptions {
-    private static _all: Array<AttrException> = [
-        {name: 'AttachTo', rootLevel: true, studyLevel: false, systemOnly: true, unique: false},
-        {name: 'ReleaseDate', rootLevel: true, studyLevel: false, systemOnly: false, unique: true},
-        {name: 'Title', rootLevel: true, studyLevel: true, systemOnly: false, unique: true},
-        {name: 'AccNoPattern', rootLevel: true, studyLevel: false, systemOnly: true, unique: true},
-        {name: 'AccNoTemplate', rootLevel: true, studyLevel: false, systemOnly: true, unique: true}
-    ];
+  private static _all: Array<AttrException> = [
+    {name: 'AttachTo', rootLevel: true, studyLevel: false, systemOnly: true, unique: false},
+    {name: 'ReleaseDate', rootLevel: true, studyLevel: false, systemOnly: false, unique: true},
+    {name: 'Title', rootLevel: true, studyLevel: true, systemOnly: false, unique: true},
+    {name: 'AccNoPattern', rootLevel: true, studyLevel: false, systemOnly: true, unique: true},
+    {name: 'AccNoTemplate', rootLevel: true, studyLevel: false, systemOnly: true, unique: true}
+  ];
 
-    private static _editable: Array<string> = AttrExceptions._all
-        .filter(at => (at.rootLevel || at.studyLevel) && !at.systemOnly).map(at => at.name);
+  private static _editable: Array<string> = AttrExceptions._all
+    .filter(at => (at.rootLevel || at.studyLevel) && !at.systemOnly).map(at => at.name);
 
-    private static _editableAndRootOnly: Array<string> = AttrExceptions._all
-        .filter(at => at.rootLevel && !at.studyLevel && !at.systemOnly).map(at => at.name);
+  private static _editableAndRootOnly: Array<string> = AttrExceptions._all
+    .filter(at => at.rootLevel && !at.studyLevel && !at.systemOnly).map(at => at.name);
 
-    private static _unique: Array<string> = AttrExceptions._all
-        .filter(at => at.unique).map(at => at.name);
+  private static _unique: Array<string> = AttrExceptions._all
+    .filter(at => at.unique).map(at => at.name);
 
-    static get editable() {
-        return this._editable;
-    }
+  static get editable() {
+    return this._editable;
+  }
 
-    static get editableAndRootOnly() {
-        return this._editableAndRootOnly;
-    }
+  static get editableAndRootOnly() {
+    return this._editableAndRootOnly;
+  }
 
-    static get unique() {
-        return this._unique;
-    }
+  static get unique() {
+    return this._unique;
+  }
 
-    static get attachToAttr(): string {
-        return 'AttachTo';
-    }
+  static get attachToAttr(): string {
+    return 'AttachTo';
+  }
 }
 
 export type PtLinkItem = PtLink | PtLink[];
 export type PtFileItem = PtFile | PtFile[];
 
 export interface PtTag {
-    classifier?: string;
-    tag?: string
+  classifier?: string;
+  tag?: string
 }
 
 export interface PtNameAndValue {
-    name?: string;
-    value?: string;
+  name?: string;
+  value?: string;
 }
 
 export interface PtAttribute {
-    accno?: string
-    isReference?: boolean;
-    name?: string;
-    reference?: boolean;
-    valqual?: PtNameAndValue[];
-    value?: string;
+  accno?: string
+  isReference?: boolean;
+  name?: string;
+  reference?: boolean;
+  valqual?: PtNameAndValue[];
+  value?: string;
 }
 
 export interface PtLink {
-    attributes?: PtAttribute[];
-    url?: string;
+  attributes?: PtAttribute[];
+  url?: string;
 }
 
 export interface PtFile {
-    attributes?: PtAttribute[];
-    path?: string;
+  attributes?: PtAttribute[];
+  path?: string;
 }
 
 export interface PageTabSection {
-    accessTags?: string[];
-    accno?: string;
-    attributes?: PtAttribute[];
-    files?: PtFileItem[];
-    libraryFile?: string;
-    links?: PtLinkItem[];
-    subsections?: PageTabSection[];
-    tags?: PtTag[];
-    type?: string;
+  accessTags?: string[];
+  accno?: string;
+  attributes?: PtAttribute[];
+  files?: PtFileItem[];
+  libraryFile?: string;
+  links?: PtLinkItem[];
+  subsections?: PageTabSection[];
+  tags?: PtTag[];
+  type?: string;
 }
 
 export interface PageTab {
-    accessTags?: string[];
-    accno?: string;
-    attributes?: PtAttribute[];
-    section?: PageTabSection;
-    tags?: Tag[];
-    type?: string;
+  accessTags?: string[];
+  accno?: string;
+  attributes?: PtAttribute[];
+  section?: PageTabSection;
+  tags?: Tag[];
+  type?: string;
 }
 
 export interface DraftPayload {
-    content: PageTab;
-    key: string,
+  content: PageTab;
+  key: string,
 }

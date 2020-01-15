@@ -10,27 +10,27 @@ import { DateCellComponent, ActionButtonsCellComponent, SubmListComponent } from
 import { ButtonsModule } from 'ngx-bootstrap';
 
 @NgModule({
-    imports: [
-        SharedModule,
-        AgGridModule.withComponents([
-            ActionButtonsCellComponent,
-            DateCellComponent,
-            TextFilterComponent,
-            DateFilterComponent
-        ]),
-        SubmissionSharedModule,
-        SubmissionOtherModule,
-        ButtonsModule
-    ],
-    providers: [],
-    declarations: [
-        SubmListComponent,
-        TextFilterComponent,
-        DateFilterComponent,
-        ActionButtonsCellComponent,
-        DateCellComponent
-    ],
-    exports: []
+  imports: [
+    SharedModule,
+    AgGridModule.withComponents([
+      ActionButtonsCellComponent,
+      DateCellComponent,
+      TextFilterComponent,
+      DateFilterComponent
+    ]),
+    SubmissionSharedModule,
+    SubmissionOtherModule,
+    ButtonsModule
+  ],
+  providers: [],
+  declarations: [
+    SubmListComponent,
+    TextFilterComponent,
+    DateFilterComponent,
+    ActionButtonsCellComponent,
+    DateCellComponent
+  ],
+  exports: []
 })
 export class SubmissionListModule {
 }

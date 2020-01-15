@@ -7,26 +7,26 @@ import { SubmResultsTreeComponent } from './subm-results-tree.component';
 import { TreeViewComponent, TreeViewNodeComponent } from './tree-view.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        CollapseModule
-    ],
-    providers: [],
-    declarations: [
-        TreeViewComponent,
-        TreeViewNodeComponent,
-        ResultsLogNodeComponent,
-        SubmResultsModalComponent,
-        SubmResultsTreeComponent,
-    ],
-    exports: [
-        SubmResultsModalComponent,
-        SubmResultsTreeComponent
-    ],
-    entryComponents: [
-        SubmResultsModalComponent,
-        ResultsLogNodeComponent
-    ]
+  imports: [
+    CommonModule,
+    CollapseModule
+  ],
+  providers: [],
+  declarations: [
+    TreeViewComponent,
+    TreeViewNodeComponent,
+    ResultsLogNodeComponent,
+    SubmResultsModalComponent,
+    SubmResultsTreeComponent,
+  ],
+  exports: [
+    SubmResultsModalComponent,
+    SubmResultsTreeComponent
+  ],
+  entryComponents: [
+    SubmResultsModalComponent,
+    ResultsLogNodeComponent
+  ]
 })
 export class SubmissionResultsModule {
 }

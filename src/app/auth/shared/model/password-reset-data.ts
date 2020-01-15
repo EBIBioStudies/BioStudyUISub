@@ -1,27 +1,27 @@
 import { DataWithCaptcha, copyAndExtend } from './data-base';
 
 export class PasswordResetData extends DataWithCaptcha {
-    key: string = '';
-    password: string = '';
-    passwordRepeat: string = '';
+  key: string = '';
+  password: string = '';
+  passwordRepeat: string = '';
 
-    snapshot(): { [key: string]: string } {
-        return copyAndExtend(super.snapshot(), { 'activationKey': this.key, 'password': this.password });
+  snapshot(): { [key: string]: string } {
+    return copyAndExtend(super.snapshot(), { 'activationKey': this.key, 'password': this.password });
+  }
+
+  valid(): boolean {
+    if (super.valid) {
+      return false;
     }
 
-    valid(): boolean {
-        if (super.valid) {
-            return false;
-        }
-
-        if (this.password.length < 6) {
-            return false;
-        }
-
-        if (this.password !== this.passwordRepeat) {
-            return false;
-        }
-
-        return true;
+    if (this.password.length < 6) {
+      return false;
     }
+
+    if (this.password !== this.passwordRepeat) {
+      return false;
+    }
+
+    return true;
+  }
 }

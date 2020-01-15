@@ -1,29 +1,29 @@
 export class FileNode {
-    expanded: boolean = false;
-    icon: string | undefined = undefined;
-    isDir: boolean;
-    name: string;
-    path: string;
+  expanded: boolean = false;
+  icon: string | undefined = undefined;
+  isDir: boolean;
+  name: string;
+  path: string;
 
-    constructor(isDir: boolean, path: string, name: string) {
-        this.isDir = isDir;
-        this.name = name;
-        this.path = name === '/' ? `/user` : `/${path}/${name}`;
-        this.icon = this.getIcon();
-    }
+  constructor(isDir: boolean, path: string, name: string) {
+    this.isDir = isDir;
+    this.name = name;
+    this.path = name === '/' ? `/user` : `/${path}/${name}`;
+    this.icon = this.getIcon();
+  }
 
-    expandOrCollapse(): void {
-        this.expanded = !this.expanded;
-        this.icon = this.getIcon();
-    }
+  expandOrCollapse(): void {
+    this.expanded = !this.expanded;
+    this.icon = this.getIcon();
+  }
 
-    private getIcon(): string | undefined {
-        if (this.isDir) {
-            if (this.expanded) {
-                return '- ';
-            }
-            return '+ ';
-        }
-        return undefined;
+  private getIcon(): string | undefined {
+    if (this.isDir) {
+      if (this.expanded) {
+        return '- ';
+      }
+      return '+ ';
     }
+    return undefined;
+  }
 }
