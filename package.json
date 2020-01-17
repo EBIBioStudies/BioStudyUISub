@@ -12,7 +12,7 @@
     "node:beta": "cross-env NODE_ENV=beta node .",
     "node:dev": "cross-env NODE_ENV=development nodemon .",
     "node:prod": "cross-env NODE_ENV=production node .",
-    "start-no-ssl": "ng serve --proxy-config proxy.conf.json --progress",
+    "start-no-ssl": "ng serve --proxy-config proxy.conf.json --progress --aot",
     "start:dev": "run-p node:dev start-no-ssl",
     "pretest": "npm run lint",
     "test": "jest --ci"
