@@ -30,42 +30,42 @@ export class AuthService {
   ) { }
 
   activate(key: string): Observable<StatusResponse> {
-  return this.http.post<StatusResponse>(`/api/auth/activate/${key}`, {});
+    return this.http.post<StatusResponse>(`/api/auth/activate/${key}`, {});
   }
 
   changePassword(obj: PasswordResetData): Observable<StatusResponse> {
-  return this.http.post<StatusResponse>('/api/auth/password/change', obj.snapshot());
+    return this.http.post<StatusResponse>('/api/auth/password/change', obj.snapshot());
   }
 
   getUserProfile(): Observable<UserInfo> {
-  return this.http.get<UserInfoResponse>(
-    '/api/auth/profile',
-    { observe: 'response' }
-  ).pipe(
-    catchError((response: HttpErrorResponse) => this.catchProfileError<UserInfoResponse>(response)),
-    map((response: HttpResponse<UserInfoResponse>) => this.checkProfileStatus(response)),
-    map((user: UserInfo) => this.userSession.update(user))
-  );
+    return this.http.get<UserInfoResponse>(
+      '/api/auth/profile',
+      { observe: 'response' }
+    ).pipe(
+      catchError((response: HttpErrorResponse) => this.catchProfileError<UserInfoResponse>(response)),
+      map((response: HttpResponse<UserInfoResponse>) => this.checkProfileStatus(response)),
+      map((user: UserInfo) => this.userSession.update(user))
+    );
   }
 
   login(user: { login: string, password: string }): Observable<UserInfo> {
-  return this.sendPostRequest<UserInfoResponse, UserInfo>('/api/auth/login', user)
-    .pipe(map((userInfo: UserInfo) => this.userSession.create(userInfo)));
+    return this.sendPostRequest<UserInfoResponse, UserInfo>('/api/auth/login', user)
+      .pipe(map((userInfo: UserInfo) => this.userSession.create(userInfo)));
   }
 
   logout(): Observable<StatusResponse> {
-  if (this.userSession.isAnonymous()) {
-    return of({ status: 'OK' });
-  }
+    if (this.userSession.isAnonymous()) {
+      return of({ status: 'OK' });
+    }
 
-  return this.sendPostRequest<StatusResponse, StatusResponse>('/api/auth/logout', { sessid: this.userSession.token() })
-    .pipe(
-    map(() => {
-      this.userSession.destroy();
+    return this.sendPostRequest<StatusResponse, StatusResponse>('/api/auth/logout', { sessid: this.userSession.token() })
+      .pipe(
+        map(() => {
+          this.userSession.destroy();
 
-      return { status: 'OK' };
-    })
-    );
+          return { status: 'OK' };
+        })
+      );
   }
 
   register(regData: RegistrationData): Observable<StatusResponse> {

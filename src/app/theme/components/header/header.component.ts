@@ -78,11 +78,14 @@ export class HeaderComponent implements OnDestroy {
     this.authService
       .logout()
       .subscribe(
-        () => { this.isBusy = false; },
         () => {
-          this.userSession.destroy();
+          this.isBusy = false;
+        },
+        () => {
           this.isBusy = false;
         });
+
+    this.userSession.destroy();
   }
 
   submitFeedback() {
