@@ -18,6 +18,7 @@ backendHostName=${BACKEND_HOST_NAME}
 backendPathContext=${BACKEND_PATH_CONTEXT}
 backendPort=${BACKEND_PORT}
 ciEnvironment=${CI_ENVIRONMENT_SLUG};
+ciEnvironmentName=${CI_ENVIRONMENT_NAME};
 
 # Update config.json
 sed -i 's%"APP_PROXY_BASE":.*%"APP_PROXY_BASE":"'$appProxyBase'",%' src/config.json
