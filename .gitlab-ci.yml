@@ -17,24 +17,6 @@ stages:
       - subtool-$CI_ENVIRONMENT_SLUG.tar.gz
     expire_in: 2 days
 
-.build_ui_template: &build_ui_definition
-  stage: build_ui
-  script:
-    - sh ./tasks/build_ui.sh
-  artifacts:
-    paths:
-      - subtool-$CI_ENVIRONMENT_SLUG.tar.gz
-    expire_in: 2 days
-
-.build_proxy_template: &build_proxy_definition
-  stage: build_proxy
-  script:
-    - sh ./tasks/build_proxy.sh
-  artifacts:
-    paths:
-      - proxy/build/libs/proxy-$CI_ENVIRONMENT_SLUG.war
-    expire_in: 2 days
-
 .deploy_template: &deploy_definition
   stage: deploy
   before_script:
@@ -78,17 +60,8 @@ build_ui:beta:
     - dev@ndiaz/BioStudyUISub
 
 build_ui:prod:
-  <<: *build_ui_definition
+  <<: *build_template
   environment: PROD
-  only:
-    - master@ndiaz/BioStudyUISub
-
-# Build Proxy per environment
-build_proxy:prod:
-  <<: *build_proxy_definition
-  environment: PROD
-  dependencies:
-    - build_ui:prod
   only:
     - master@ndiaz/BioStudyUISub
 
