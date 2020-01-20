@@ -1,9 +1,8 @@
-image: karlrun/java-node-gradle
+image: node
 stages:
   - setup
   - test
   - build_ui
-  - build_proxy
   - deploy
 
 .build_template: &build_template
@@ -87,7 +86,7 @@ deploy:prod:
   <<: *deploy_definition
   environment: PROD
   dependencies:
-    - build_proxy:prod
+    - build_ui:prod
   only:
     - master@ndiaz/BioStudyUISub
   when: manual
