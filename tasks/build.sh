@@ -16,7 +16,7 @@ fi
 # Build assets into dist/public folder
 # Add --prod if ENVIRONMENT is different to DEV
 if [ -z "$ciEnvironment" ] || [ "$ciEnvironment" = "DEV" ]; then
-  npx ng build --outputPath=dist/public --deleteOutputPath=true --baseHref=${baseHref}
+  npx ng build --outputPath=dist/public --deleteOutputPath=true --baseHref=${baseHref} --aot
 else
   npx ng build --prod --outputPath=dist/public --deleteOutputPath=true --baseHref=${baseHref}
 fi

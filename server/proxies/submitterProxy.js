@@ -8,12 +8,18 @@ const { REQUEST_TIMEOUT } = require('http-status-codes');
 const defaultErrorMessage = { message: 'Something went wrong.' };
 const handledErrorCodes = ['ENOTFOUND', 'ECONNREFUSED'];
 
-const proxyConfig = (pathname) => {
+const isMultipartRequest = (req) => {
+  const contentTypeHeader = req.headers["content-type"];
+  return contentTypeHeader && contentTypeHeader.indexOf("multipart") > -1;
+};
+
+const proxyConfig = (req, pathname) => {
   const { limit } = config.files;
 
   return ({
     limit,
     memoizeHost: true,
+    parseReqBody: !isMultipartRequest(req),
     proxyReqPathResolver: (req) => {
       return pathname ? `/${pathname}${req.url}` : req.url;
     },
@@ -33,7 +39,11 @@ const submitterProxy = (path, router) => {
   const { context } = config.backend;
   const backendUri = format(config.backend.uri);
 
-  router.use(path, expressWinston.logger(loggerSettings), proxy(backendUri, proxyConfig(context)));
+  router.use(
+    path,
+    expressWinston.logger(loggerSettings),
+    (req, res, next) => proxy(backendUri, proxyConfig(req, context))(req, res, next)
+  );
 };
 
 module.exports = submitterProxy;
