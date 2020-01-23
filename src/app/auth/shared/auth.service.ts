@@ -69,56 +69,56 @@ export class AuthService {
   }
 
   register(regData: RegistrationData): Observable<StatusResponse> {
-  return this.sendPostRequest<StatusResponse, StatusResponse>('/api/auth/register', this.withInstanceKey(regData.snapshot()));
+    return this.sendPostRequest<StatusResponse, StatusResponse>('/api/auth/register', this.withInstanceKey(regData.snapshot()));
   }
 
   sendActivationLinkRequest(obj: ActivationLinkRequestData): Observable<StatusResponse> {
-  return this.sendPostRequest<StatusResponse, StatusResponse>('/api/auth/retryact', this.withInstanceKey(obj.snapshot()));
+    return this.sendPostRequest<StatusResponse, StatusResponse>('/api/auth/retryact', this.withInstanceKey(obj.snapshot()));
   }
 
   sendPasswordResetRequest(obj: PasswordResetRequestData): Observable<StatusResponse> {
-  return this.sendPostRequest<UserInfoResponse, StatusResponse>('/api/auth/password/reset', this.withInstanceKey(obj.snapshot()));
+    return this.sendPostRequest<UserInfoResponse, StatusResponse>('/api/auth/password/reset', this.withInstanceKey(obj.snapshot()));
   }
 
   private catchError<T>(resp: HttpErrorResponse): Observable<T> {
-  throw ServerError.fromResponse(resp);
+    throw ServerError.fromResponse(resp);
   }
 
   private catchProfileError<T>(response: HttpErrorResponse): Observable<T> {
-  this.userSession.destroy();
+    this.userSession.destroy();
 
-  return of(response.error);
+    return of(response.error);
   }
 
   private checkProfileStatus<R, T>(response: HttpResponse<R>): T {
-  if (response.status !== HttpStatus.OK) {
-    this.userSession.destroy();
-  }
+    if (response.status !== HttpStatus.OK) {
+      this.userSession.destroy();
+    }
 
-  return <T>(response.body || {});
-  }
-
-  private checkStatus<R, T>(response: HttpResponse<R>): T {
-  if (response.status === HttpStatus.OK) {
     return <T>(response.body || {});
   }
 
-  throw ServerError.dataError(response.body);
+  private checkStatus<R, T>(response: HttpResponse<R>): T {
+    if (response.status === HttpStatus.OK) {
+      return <T>(response.body || {});
+    }
+
+    throw ServerError.dataError(response.body);
   }
 
   private sendPostRequest<R, T>(path: string, payload: any): Observable<T> {
-  return this.http.post<R>(
-    path, payload, { observe: 'response' }
-  ).pipe(
-    catchError((response: HttpErrorResponse) => this.catchError<R>(response)),
-    map((response: HttpResponse<R>) => this.checkStatus<R, T>(response))
-  );
+    return this.http.post<R>(
+      path, payload, { observe: 'response' }
+    ).pipe(
+      catchError((response: HttpErrorResponse) => this.catchError<R>(response)),
+      map((response: HttpResponse<R>) => this.checkStatus<R, T>(response))
+    );
   }
 
   private withInstanceKey(obj: { [key: string]: string }): { [key: string]: string } {
-  return copyAndExtend(obj, {
-    instanceKey: this.appConfig.instanceKey,
-    path: this.appConfig.contextPath + '/' + obj.path
-  });
+    return copyAndExtend(obj, {
+      instanceKey: this.appConfig.instanceKey,
+      path: this.appConfig.contextPath + '/' + obj.path
+    });
   }
 }
