@@ -92,7 +92,7 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
    */
   get isIdLink(): boolean {
     try {
-      return this.validator!.extra.isId;
+      return this.validator!.state.isId;
     } catch (error) {
       return false;
     }
@@ -107,7 +107,7 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
     let url;
 
     try {
-      url = this.validator!.extra.url;
+      url = this.validator!.state.url;
     } catch (error) {
       url = '';
     }

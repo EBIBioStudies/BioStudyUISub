@@ -1,3 +1,4 @@
+import * as HttpStatus from 'http-status-codes';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
@@ -62,7 +63,7 @@ export class IdLinkService {
         });
       }),
       catchError(err => {
-        if (err.status === 404) {
+        if (err.status === HttpStatus.NOT_FOUND) {
           return of([]);
         }
         return throwError(err);
@@ -73,12 +74,11 @@ export class IdLinkService {
   /**
    * Checks if a prefix:id string is among the allowed ones.
    *
-   * @param {string} prefix - Section of the string containg just the prefix.
-   * @param {string} id - Section of the string containing just the identifier.
+   * @param {string} identifier - Identifier to be validated against identifiers.org.
    * @returns {Observable<boolean>} Observable the request has been turned into.
    */
-  validate(prefix: string, id: string): Observable<boolean> {
-    return this.http.get(`${IdLinkService.RESOLUTION_URL}/${prefix}:${id}`).pipe(
+  validate(identifier: string): Observable<string | IdentifierResolvedResource>  {
+    return this.http.get(`${IdLinkService.RESOLUTION_URL}/${identifier}`).pipe(
       map((response: IdentifierResolverResponse) => {
         const payload: IdentifierResolverPayload = response.payload || {};
         const resolvedResources: IdentifierResolvedResource = payload.resolvedResources[0] || {};
@@ -86,12 +86,8 @@ export class IdLinkService {
         return resolvedResources;
       }),
       catchError((err) => {
-        if (err.status === 404) {
-          return of(err.error);
-        }
-
-        if (err.status === 400) {
-          return of(`INVALID resolution request for ${prefix}:${id}`);
+        if (err.status === HttpStatus.BAD_REQUEST) {
+          return of(`INVALID resolution request for ${identifier}`);
         }
 
         return throwError(err);
