@@ -42,7 +42,7 @@ describe('IdLinkService', () => {
 
     httpClient.get.mockReturnValueOnce(throwError(errorResponse));
 
-    service.validate('prefix', '12345').subscribe(
+    service.validate('prefix:12345').subscribe(
       (obj: Object) => {
         return expect(obj).toEqual(error);
       }
