@@ -1,6 +1,6 @@
 import { PtAttribute, PtLink } from './pagetab.model';
 
-const POINTER_ATTR = 'Pointer';
+const POINTER_ATTR = 'Link';
 const TYPE_ATTR = 'Type';
 
 /**
@@ -47,7 +47,7 @@ export class LinksUtils {
   }
 
   /**
-   * Converts a PageTab link to a submission one, typically used when loading a study. It adds a 'Pointer' attribute
+   * Converts a PageTab link to a submission one, typically used when loading a study. It adds a 'Link' attribute
    * whose value is equal to the root 'url' property. It also prefixes the pointer with the 'Type' attribute's value
    * if not empty (it's the prefix of a prefix:ID link).
    * NOTE: In the case of prefix:ID links, PageTab's 'url' root property is set to the ID.

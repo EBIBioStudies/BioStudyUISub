@@ -41,7 +41,7 @@ describe('Submission To PageTab Util:', () => {
           {
             type: 'Link',
             entries: [
-              [{name: 'Pointer', value: 'url1'}, {name: 'Type', value: ''}]
+              [{name: 'Link', value: 'url1'}, {name: 'Type', value: ''}]
             ]
           }
         ]

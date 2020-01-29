@@ -325,7 +325,7 @@ export const euToxRiskTemplate = {
         'uniqueCols': true,
         'columnTypes': [
           {
-            'name': 'Pointer',
+            'name': 'Link',
             'valueType': {'name': 'idlink'},
             'display': 'required'
           },
