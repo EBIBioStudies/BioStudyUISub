@@ -1,4 +1,5 @@
 import { AbstractControl, FormControl, FormGroup, FormArray } from '@angular/forms';
+import { Feature } from '../../submission-shared/model';
 
 export function controlToList(control: AbstractControl): FormControl[] {
   if (control instanceof FormGroup) {
@@ -14,4 +15,8 @@ export function controlToList(control: AbstractControl): FormControl[] {
   }
 
   return [<FormControl>control];
+}
+
+export function featureGroupSize(g: Feature[]) {
+  return g.map(f => f.rowSize()).reduce((rv, v) => rv + v, 0);
 }

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FieldType, ValueType, TextValueType } from 'app/pages/submission/submission-shared/model/templates';
-import { FieldControl } from '../../shared/section-form';
+import { FieldControl } from '../../shared/field-control';
 
 class ValueLength {
   static unknown: ValueLength = new ValueLength();
