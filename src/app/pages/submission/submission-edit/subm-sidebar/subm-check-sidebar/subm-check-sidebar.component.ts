@@ -1,8 +1,8 @@
 import { FormControl, ValidationErrors } from '@angular/forms';
 import { Component, Input } from '@angular/core';
 import { ServerError } from 'app/shared/server-error.handler';
-import { MyFormControl } from '../../shared/form-validators';
 import { SubmEditService } from '../../shared/subm-edit.service';
+import { CustomFormControl } from '../../shared/custom-form-control';
 
 @Component({
   selector: 'st-subm-check-sidebar',
@@ -57,7 +57,7 @@ export class SubmCheckSidebarComponent {
    * @param {FieldControl} control - Form control augmented with the DOM element for the field.
    */
   onReviewClick(control: FormControl) {
-    if (control instanceof MyFormControl) {
+    if (control instanceof CustomFormControl) {
       this.submEditService.scrollToControl(control);
     }
     // const buttonEl = <HTMLElement>event.target;

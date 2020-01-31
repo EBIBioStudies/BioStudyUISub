@@ -8,8 +8,8 @@ import { UserData } from 'app/auth/shared';
 import { UserInfo } from 'app/auth/shared/model';
 import { pageTab2Submission, PageTab, submission2PageTab, SelectValueType } from 'app/pages/submission/submission-shared/model';
 import { SubmissionService, SubmitResponse } from '../../submission-shared/submission.service';
-import { MyFormControl } from './form-validators';
 import { SectionForm } from './section-form';
+import { CustomFormControl } from './custom-form-control';
 import { flatFeatures } from '../../utils';
 
 class EditState {
@@ -206,7 +206,7 @@ export class SubmEditService {
       }));
   }
 
-  scrollToControl(ctrl: MyFormControl) {
+  scrollToControl(ctrl: CustomFormControl) {
     this.switchSectionById(ctrl.ref.sectionId);
     this.scroll2Control$.next(ctrl);
   }

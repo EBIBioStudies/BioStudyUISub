@@ -22,7 +22,6 @@
     "clearMocks": true,
     "collectCoverage": true,
     "setupFilesAfterEnv": [
-      "<rootDir>/src/setup-jest.ts",
       "<rootDir>/src/setup-jest-after-env.ts"
     ],
     "coverageThreshold": {
@@ -49,6 +48,7 @@
     ]
   },
   "dependencies": {
+    "@angular/animations": "^8.2.14",
     "@angular/common": "^6.0.7",
     "@angular/compiler": "^6.0.7",
     "@angular/core": "^6.0.7",

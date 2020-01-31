@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
-import { ServerError } from 'app/shared/server-error.handler';
-import { Option } from 'fp-ts/lib/Option';
 import { FormControl } from '@angular/forms';
+import { Option } from 'fp-ts/lib/Option';
+import { ServerError } from 'app/shared/server-error.handler';
 import { Subject } from 'rxjs';
-import { MyFormControl } from '../shared/form-validators';
+import { takeUntil } from 'rxjs/operators';
 import { SectionForm } from '../shared/section-form';
 import { SubmEditService } from '../shared/subm-edit.service';
-import { takeUntil } from 'rxjs/operators';
+import { CustomFormControl } from '../shared/custom-form-control';
 
 type FormControlGroup = Array<FormControl>;
 
@@ -91,7 +91,7 @@ export class SubmSidebarComponent implements OnDestroy {
       .reduce((rv, c) => {
         const group = rv.isEmpty() ? undefined : rv[rv.length - 1];
         const prevControl = group === undefined ? undefined : group[group.length - 1];
-        if (prevControl !== undefined && MyFormControl.compareBySectionId(prevControl, c) === 0) {
+        if (prevControl !== undefined && CustomFormControl.compareBySectionId(prevControl, c) === 0) {
           group!.push(c);
         } else {
           rv.push([c]);

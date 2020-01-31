@@ -11,41 +11,25 @@ import {
   ValueMap,
   ValueType
 } from 'app/pages/submission/submission-shared/model';
-import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { fromNullable } from 'fp-ts/lib/Option';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { typeaheadSource } from 'app/pages/submission/submission-edit/shared/typeahead.utils';
 import * as pluralize from 'pluralize';
 import {
-  ControlGroupRef,
-  ControlRef,
   ErrorMessages,
-  MyFormControl,
   MyFormGroup,
   SubmFormValidators
 } from './form-validators';
-
-function listOfControls(control: AbstractControl): FormControl[] {
-  if (control instanceof FormGroup) {
-    const map = (<FormGroup>control).controls;
-
-    return Object.keys(map)
-      .map(key => map[key])
-      .flatMap((controlItem) => listOfControls(controlItem));
-  } else if (control instanceof FormArray) {
-    const array = (<FormArray>control).controls;
-
-    return array.flatMap((controlItem) => listOfControls(controlItem));
-  }
-
-  return [<FormControl>control];
-}
+import { FormBase } from './form-base';
+import { ControlRef, ControlGroupRef } from './control-reference';
+import { CustomFormControl } from './custom-form-control';
 
 export class FieldControl {
-  readonly control: MyFormControl;
+  readonly control: CustomFormControl;
 
   constructor(private field: Field, ref: ControlRef) {
-    this.control = new MyFormControl(field.value, SubmFormValidators.forField(field)).withRef(ref);
+    this.control = new CustomFormControl(field.value, SubmFormValidators.forField(field)).withRef(ref);
     this.control.valueChanges.subscribe((value) => {
       field.value = value;
     });
@@ -65,12 +49,12 @@ export class FieldControl {
 }
 
 export class ColumnControl {
-  readonly control: MyFormControl;
+  readonly control: CustomFormControl;
 
   private typeahead: Observable<string[]> | undefined;
 
   constructor(private column: Attribute, ref: ControlRef) {
-    this.control = new MyFormControl(column.name, SubmFormValidators.forColumn(column)).withRef(ref);
+    this.control = new CustomFormControl(column.name, SubmFormValidators.forColumn(column)).withRef(ref);
     this.control.valueChanges.subscribe(v => {
       column.name = v;
     });
@@ -125,10 +109,10 @@ export class ColumnControl {
 }
 
 export class CellControl {
-  readonly control: MyFormControl;
+  readonly control: CustomFormControl;
 
   constructor(attrValue: AttributeValue, column: Attribute, ref: ControlRef) {
-    this.control = new MyFormControl(attrValue.value, SubmFormValidators.forCell(column)).withRef(ref);
+    this.control = new CustomFormControl(attrValue.value, SubmFormValidators.forCell(column)).withRef(ref);
     this.control.valueChanges.subscribe(value => attrValue.value = value);
   }
 
@@ -179,44 +163,6 @@ export class RowForm {
   removeCellControl(columnId: string) {
     this.form.removeControl(columnId);
     this.controls.delete(columnId);
-  }
-}
-
-export class FormBase {
-  private _errorCount: number = 0;
-
-  constructor(readonly form: FormGroup) {
-    form.statusChanges.subscribe(() => {
-      this.onStatusChanges();
-    });
-  }
-
-  get errorCount(): number {
-    return this._errorCount;
-  }
-
-  get hasErrors(): boolean {
-    return this.form.invalid && this.form.touched;
-  }
-
-  get invalid(): boolean {
-    return this.form.invalid;
-  }
-
-  get valid(): boolean {
-    return this.form.valid;
-  }
-
-  controls(): FormControl[] {
-    return listOfControls(this.form).reverse();
-  }
-
-  invalidControls(): FormControl[] {
-    return this.controls().filter(control => control.invalid);
-  }
-
-  private onStatusChanges() {
-    this._errorCount = this.invalidControls().length;
   }
 }
 
