@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, Input, QueryList, ViewChildren } 
 import { UserData } from 'app/auth/shared';
 import { TypeaheadDirective } from 'ngx-bootstrap';
 import { ColumnControl } from '../../shared/model/column-control.model';
-import { RowForm } from '../../shared/row-form';
+import { RowForm } from '../../shared/model/row-form.model';
 import { FeatureForm } from '../../shared/model/feature-form.model';
 
 @Component({

@@ -10,7 +10,7 @@ import * as pluralize from 'pluralize';
 import { FormGroup, FormArray, FormControl } from '@angular/forms';
 import { FormBase } from './form-base.model';
 import { ColumnControl } from './column-control.model';
-import { RowForm } from '../row-form';
+import { RowForm } from './row-form.model';
 import { ControlGroupRef } from '../control-reference';
 import { MyFormGroup, SubmFormValidators } from '../form-validators';
 import { featureGroupSize } from '../utilis';
