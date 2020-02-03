@@ -55,7 +55,6 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
   /**
    * Gets the current number of selected files, normalising to 0 if there are none.
    * NOTE: When successful uploads are cleared, the selected file count must reflect that. Hence the boolean filter.
-   * @see {@link clearUploads}
    * @returns {number} Number of files selected.
    */
   get selectedFileCount(): number {
@@ -116,23 +115,6 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
    */
   get fileTouched() {
     return this.model.files !== undefined;
-  }
-
-  /**
-   * Marks successful uploads as not present or unselected by setting the corresponding indexed member to null.
-   * NOTE: Angular's change detection cycle tends to work best when the original array is not wiped out such as
-   * when using map.
-   * NOTE: The files list is independent of the requests one. A difference in length between the two would lead to
-   * state inconsistencies. Hence also the conservative assignment approach.
-   */
-  clearUploads() {
-    const files = this.model.files;
-
-    files.forEach((_file, index) => {
-      if (this.directSubmitSvc!.getRequest(index)!.successful) {
-        files[index] = null;
-      }
-    });
   }
 
   /**

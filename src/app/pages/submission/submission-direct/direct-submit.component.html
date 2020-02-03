@@ -26,16 +26,6 @@
           <strong>{{sidebar.errorFiles}}</strong> failed
         </span>
       </div>
-      <div class="col-xs-4 nav-block">
-        <button *ngIf="sidebar.hasRequests && sidebar.isStatus('done')" class="btn btn-primary btn-sm pull-right"
-            tooltip="Remove successful uploads from the list"
-            placement="bottom"
-            container="body"
-            (click)="sidebar.clearUploads()">
-          <i class="far fa-trash-alt"></i>
-          Clear uploads
-        </button>
-      </div>
     </nav>
   </div>
   <div class="container-fluid">
