@@ -198,7 +198,8 @@ export class FileListComponent implements OnInit, OnDestroy {
   }
 
   private downloadFile(filePath: string, fileName: string): void {
-    const downloadPath = `/api/files/${filePath}?fileName=${fileName}`;
+    const contextPath: string = this.appConfig.contextPath;
+    const downloadPath = `${contextPath}/api/files/${filePath}?fileName=${fileName}`;
     const link = document.createElement('a');
 
     link.href = downloadPath;
