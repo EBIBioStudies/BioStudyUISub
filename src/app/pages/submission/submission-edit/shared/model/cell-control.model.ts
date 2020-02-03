@@ -1,8 +1,7 @@
-import { Attribute } from 'app/pages/submission/submission-shared/model';
-import { ControlRef } from './control-reference';
-import { CustomFormControl } from './custom-form-control';
-import { SubmFormValidators, ErrorMessages } from './form-validators';
-import { AttributeValue } from '../../submission-shared/model';
+import { Attribute, AttributeValue } from 'app/pages/submission/submission-shared/model';
+import { ControlRef } from '../control-reference';
+import { CustomFormControl } from '../model/custom-form-control.model';
+import { SubmFormValidators, ErrorMessages } from '../form-validators';
 
 export class CellControl {
   readonly control: CustomFormControl;

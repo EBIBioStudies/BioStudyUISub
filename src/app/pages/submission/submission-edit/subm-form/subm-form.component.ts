@@ -1,5 +1,5 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { SectionForm } from '../shared/section-form';
+import { Component, Input } from '@angular/core';
+import { SectionForm } from '../shared/model/section-form.model';
 
 @Component({
   selector: 'st-subm-form',

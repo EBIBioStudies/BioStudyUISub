@@ -9,11 +9,11 @@ import {
   Validators
 } from '@angular/forms';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
-import { Attribute, Feature, Field, Section } from 'app/pages/submission/submission-shared/model';
+import { Attribute, Feature, Field } from 'app/pages/submission/submission-shared/model';
 import { TextValueType, ValueType, ValueTypeName, SelectValueType } from 'app/pages/submission/submission-shared/model';
 import { parseDate, isOrcidValid } from 'app/utils';
 import { ControlRef, ControlGroupRef } from './control-reference';
-import { CustomFormControl } from './custom-form-control';
+import { CustomFormControl } from './model/custom-form-control.model';
 
 export class MyFormGroup extends FormGroup {
   ref: ControlGroupRef = ControlGroupRef.unknown;

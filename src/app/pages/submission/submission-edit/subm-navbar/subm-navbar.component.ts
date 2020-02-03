@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { Section } from 'app/pages/submission/submission-shared/model/submission';
-import { SectionForm } from '../shared/section-form';
+import { SectionForm } from '../shared/model/section-form.model';
 import { SubmEditService } from '../shared/subm-edit.service';
 
 @Component({

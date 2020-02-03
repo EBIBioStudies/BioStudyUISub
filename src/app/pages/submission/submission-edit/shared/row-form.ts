@@ -1,6 +1,6 @@
 import { FormGroup } from '@angular/forms';
 import { fromNullable } from 'fp-ts/lib/Option';
-import { CellControl } from './cell-control';
+import { CellControl } from './model/cell-control.model';
 import { ControlGroupRef } from './control-reference';
 import { ValueMap, Attribute } from '../../submission-shared/model';
 

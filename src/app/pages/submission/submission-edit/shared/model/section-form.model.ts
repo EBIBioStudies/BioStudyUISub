@@ -8,11 +8,11 @@ import {
 } from 'app/pages/submission/submission-shared/model';
 import { FormControl, FormGroup } from '@angular/forms';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { FormBase } from './form-base';
-import { ControlGroupRef } from './control-reference';
-import { FieldControl } from './field-control';
-import { FeatureForm } from './feature-form';
-import { StructureChangeEvent } from './structure-change-event';
+import { FormBase } from '../model/form-base.model';
+import { ControlGroupRef } from '../control-reference';
+import { FieldControl } from './field-control.model';
+import { FeatureForm } from '../feature-form';
+import { StructureChangeEvent } from '../structure-change-event';
 
 export class SectionForm extends FormBase {
   readonly featureForms: FeatureForm[] = [];

@@ -2,7 +2,7 @@ import { FormControl, ValidationErrors } from '@angular/forms';
 import { Component, Input } from '@angular/core';
 import { ServerError } from 'app/shared/server-error.handler';
 import { SubmEditService } from '../../shared/subm-edit.service';
-import { CustomFormControl } from '../../shared/custom-form-control';
+import { CustomFormControl } from '../../shared/model/custom-form-control.model';
 
 @Component({
   selector: 'st-subm-check-sidebar',

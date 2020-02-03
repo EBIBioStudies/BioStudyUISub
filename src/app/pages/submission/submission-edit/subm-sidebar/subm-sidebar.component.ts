@@ -4,9 +4,9 @@ import { Option } from 'fp-ts/lib/Option';
 import { ServerError } from 'app/shared/server-error.handler';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { SectionForm } from '../shared/section-form';
+import { SectionForm } from '../shared/model/section-form.model';
 import { SubmEditService } from '../shared/subm-edit.service';
-import { CustomFormControl } from '../shared/custom-form-control';
+import { CustomFormControl } from '../shared/model/custom-form-control.model';
 
 type FormControlGroup = Array<FormControl>;
 

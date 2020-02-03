@@ -8,8 +8,8 @@ import { UserData } from 'app/auth/shared';
 import { UserInfo } from 'app/auth/shared/model';
 import { pageTab2Submission, PageTab, submission2PageTab, SelectValueType } from 'app/pages/submission/submission-shared/model';
 import { SubmissionService, SubmitResponse } from '../../submission-shared/submission.service';
-import { SectionForm } from './section-form';
-import { CustomFormControl } from './custom-form-control';
+import { SectionForm } from './model/section-form.model';
+import { CustomFormControl } from './model/custom-form-control.model';
 import { flatFeatures } from '../../utils';
 
 class EditState {

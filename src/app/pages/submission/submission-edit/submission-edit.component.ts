@@ -10,7 +10,7 @@ import { switchMap, takeUntil } from 'rxjs/operators';
 import { AppConfig } from 'app/app.config';
 import { LogService } from 'app/core/logger/log.service';
 import { ModalService } from 'app/shared/modal.service';
-import { SectionForm } from './shared/section-form';
+import { SectionForm } from './shared/model/section-form.model';
 import { SubmEditService } from './shared/subm-edit.service';
 import { SubmResultsModalComponent } from '../submission-results/subm-results-modal.component';
 import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';

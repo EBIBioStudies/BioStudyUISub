@@ -9,7 +9,7 @@ import { ModalService } from 'app/shared/modal.service';
 import { TypeBase, FeatureType, SectionType, DisplayType } from 'app/pages/submission/submission-shared/model/templates';
 import { AddSubmTypeModalComponent } from '../add-subm-type-modal/add-subm-type-modal.component';
 import { FormValidators } from '../../shared/form-validators';
-import { SectionForm } from '../../shared/section-form';
+import { SectionForm } from '../../shared/model/section-form.model';
 import { SubmEditService } from '../../shared/subm-edit.service';
 
 const SECTION_ID = '@SECTION@';

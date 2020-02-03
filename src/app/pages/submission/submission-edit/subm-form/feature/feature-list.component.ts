@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, QueryList, ViewChildren } from '@angular/core';
 import { AppConfig } from 'app/app.config';
-import { ColumnControl } from '../../shared/column-control';
+import { ColumnControl } from '../../shared/model/column-control.model';
 import { FeatureForm } from '../../shared/feature-form';
 
 @Component({
