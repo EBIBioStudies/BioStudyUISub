@@ -96,11 +96,9 @@ export class SubmissionService {
     return this.http.delete(`/api/submissions/${accno}`).pipe(map(() => true));
   }
 
-  directSubmit(file: File, attachTo: Array<string> = []): Observable<SubmitResponse> {
+  directSubmit(file: File, attachTo: string): Observable<SubmitResponse> {
     const formData = new FormData();
-    attachTo.forEach(projectName => {
-      formData.append('attachTo', projectName);
-    });
+    formData.append('attachTo', attachTo);
     formData.append('submission', file);
 
     return this.http.post<SubmitResponse>(`/api/submissions/direct`, formData);

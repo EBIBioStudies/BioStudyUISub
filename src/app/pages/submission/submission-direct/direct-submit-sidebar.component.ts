@@ -18,7 +18,7 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
   isBulkSupport: boolean = false; // Indicates if directory selection is supported by the browser
   isProjFetch: boolean = true; // Are projects still being retrieved?
   @Input() readonly = false;
-  selectedProj: string[] = []; // Projects selected for attachment
+  selectedProject: string = '';
   submitType: string = 'create'; // Will the upload create or update studies?
   @Output() toggle = new EventEmitter();
 
@@ -184,22 +184,6 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
   }
 
   /**
-   * Surgically updates the list of selected projects without destroying it in the process.
-   * NOTE: Angular's change detection cycle tends to work best when the original array is not wiped out such as
-   * when using map.
-   * @param {Event} event - DOM object for the click action.
-   */
-  onProjChange(event: Event) {
-    const checkboxEl = <HTMLInputElement>event.target;
-
-    if (checkboxEl.checked) {
-      this.selectedProj.push(checkboxEl.value);
-    } else {
-      this.selectedProj.splice(this.selectedProj.indexOf(checkboxEl.value), 1);
-    }
-  }
-
-  /**
    * Carries out the necessary requests for the selected files, detecting their format automatically.
    * NOTE: Requests are bundled into groups of MAX_CONCURRENT requests to avoid overwhelming the browser and/or
    * the server when dealing with a high number of files.
@@ -267,7 +251,7 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
 
      // Performs the double-request submits and flattens the resulting high-order observables onto a single one.
     return from(files).pipe(
-      map((file: File) => this.directSubmitSvc.addRequest(file, this.selectedProj, submissionType)),
+      map((file: File) => this.directSubmitSvc.addRequest(file, this.selectedProject, submissionType)),
       // Throttles the number of requests allowed in parallel and takes just the last event
       // to signal the end of the upload process.
       mergeAll(this.appConfig.maxConcurrent),
