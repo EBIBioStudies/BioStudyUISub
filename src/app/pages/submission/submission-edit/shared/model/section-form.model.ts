@@ -11,7 +11,7 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { FormBase } from '../model/form-base.model';
 import { ControlGroupRef } from '../control-reference';
 import { FieldControl } from './field-control.model';
-import { FeatureForm } from '../feature-form';
+import { FeatureForm } from './feature-form.model';
 import { StructureChangeEvent } from '../structure-change-event';
 
 export class SectionForm extends FormBase {

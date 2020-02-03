@@ -7,15 +7,15 @@ import {
 } from 'app/pages/submission/submission-shared/model';
 import { Subject, Observable } from 'rxjs';
 import * as pluralize from 'pluralize';
-import { FormBase } from './model/form-base.model';
-import { ColumnControl } from './model/column-control.model';
-import { RowForm } from './row-form';
-import { ControlGroupRef } from './control-reference';
 import { FormGroup, FormArray, FormControl } from '@angular/forms';
-import { MyFormGroup, SubmFormValidators } from './form-validators';
-import { featureGroupSize } from './utilis';
-import { CellControl } from './model/cell-control.model';
-import { StructureChangeEvent } from './structure-change-event';
+import { FormBase } from './form-base.model';
+import { ColumnControl } from './column-control.model';
+import { RowForm } from '../row-form';
+import { ControlGroupRef } from '../control-reference';
+import { MyFormGroup, SubmFormValidators } from '../form-validators';
+import { featureGroupSize } from '../utilis';
+import { CellControl } from './cell-control.model';
+import { StructureChangeEvent } from '../structure-change-event';
 
 export class FeatureForm extends FormBase {
   columnNamesAvailableCached: string[] = [];

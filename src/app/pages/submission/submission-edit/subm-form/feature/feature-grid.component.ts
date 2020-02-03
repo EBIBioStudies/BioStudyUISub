@@ -3,7 +3,7 @@ import { UserData } from 'app/auth/shared';
 import { TypeaheadDirective } from 'ngx-bootstrap';
 import { ColumnControl } from '../../shared/model/column-control.model';
 import { RowForm } from '../../shared/row-form';
-import { FeatureForm } from '../../shared/feature-form';
+import { FeatureForm } from '../../shared/model/feature-form.model';
 
 @Component({
   selector: 'st-subm-feature-grid',
