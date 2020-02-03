@@ -166,7 +166,7 @@
                   </p>
                   <div class="panel-extra">
                     <span *ngIf="!isFail(i)">
-                      {{sidebar.selectedProj.length ? sidebar.selectedProj.join(', ') : 'No project'}}
+                      {{sidebar.selectedProject ? sidebar.selectedProject : 'No project'}}
                     </span>
                     <span *ngIf="isFail(i)" class="text-danger">
                       {{getError(i)}}

@@ -12,14 +12,14 @@ export class DirectSubmitRequest {
   private _created: Date;
   private _filename: string;
   private _log: any;
-  private _projects: string[];
+  private _project: string;
   private _releaseDate: string | undefined;
   private _status: ReqStatus;
   private _type: ReqType;
 
-  constructor(filename: string, projects: string[], type: ReqType) {
+  constructor(filename: string, project: string, type: ReqType) {
     this._filename = filename;
-    this._projects = projects;
+    this._project = project;
     this._type = type;
 
     this._created = new Date();
@@ -54,8 +54,8 @@ export class DirectSubmitRequest {
     return this._filename;
   }
 
-  get projects(): string[] {
-    return this._projects;
+  get project(): string {
+    return this._project;
   }
 
   get type(): ReqType {
@@ -131,12 +131,12 @@ export class DirectSubmitService {
   /**
    * Given a study file an its properties, it adds a new request to the queue and starts the submission process.
    * @param {File} file - Object representative of the file to be submitted.
-   * @param {string[]} projects - Projects the file should be attached to.
+   * @param {string} projects- Project the file should be attached to.
    * @param {string} type - Indicates whether the submitted file should create or update an existing database entry.
    * @returns {Observable<any>} Stream of inputs coming from the subsequent responses.
    */
-  addRequest(file: File, projects: string[], type: string): Observable<any> {
-    const req = new DirectSubmitRequest(file.name, projects, ReqType[type.toUpperCase()]);
+  addRequest(file: File, project: string, type: string): Observable<any> {
+    const req = new DirectSubmitRequest(file.name, project, ReqType[type.toUpperCase()]);
     const index = this._requests.length;
 
     this._requests.push(req);
@@ -196,7 +196,7 @@ export class DirectSubmitService {
    * @returns {Observable<any>} Flat stream of inputs coming from the responses to the requests issued.
    */
   private dirSubmit(req: DirectSubmitRequest, file: File): Observable<any> {
-    return this.submService.directSubmit(file, req.projects).pipe(
+    return this.submService.directSubmit(file, req.project).pipe(
       map(data => {
         req.onResponse(data, ReqStatus.SUCCESS);
       }),

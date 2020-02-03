@@ -70,13 +70,13 @@
                 Only generic allowed.
               </span>
             </p>
-            <div *ngIf="model.projects.length" (change)="onProjChange($event)">
-              <div *ngFor="let project of model.projects" class="checkbox">
+            <div *ngIf="model.projects.length">
+              <div *ngFor="let project of model.projects" class="radio">
                 <label>
-                  <input type="checkbox"
-                       name="projects"
+                  <input type="radio"
+                       name="project"
                        value="{{project.name}}"
-                       [(ngModel)]="project.checked">
+                       [(ngModel)]="selectedProject">
                   <span>{{project.name}}</span>
                 </label>
               </div>
