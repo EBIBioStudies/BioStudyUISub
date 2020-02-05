@@ -7,6 +7,12 @@ import { AppConfig } from 'app/app.config';
 import { DirectSubmitService } from './direct-submit.service';
 import { DirectSubmitFileUploadService } from './direct-submit-file-upload.service';
 
+interface ProjectOption {
+  checked: boolean,
+  name: string,
+  value: string
+}
+
 @Component({
   selector: 'st-direct-submit-sidebar',
   templateUrl: './direct-submit-sidebar.component.html',
@@ -24,16 +30,15 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
 
   protected ngUnsubscribe: Subject<void>; // Stopper for all subscriptions
 
+  private defaultPojectOption: ProjectOption = { checked: true, name: 'None', value: '' };
   @ViewChild(FileUploadButtonComponent)
   private fileSelector;
-
   private model: { files: any | undefined[], projects: any | undefined[] } = {
     files: undefined, // No file selection at first
     projects: [] // Chebox-ised representation of project list
   };
   private uploadFilesSubscription?: Subscription;
   private uploadSubs?: Subscription; // Subscription for the battery of upload requests
-
 
   /**
    * Initializes subscription stopper so that pending requests can be cancelled on view destruction.
@@ -231,9 +236,11 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
     // In case the same files are re-submitted, the previous list of requests is reset.
     this.directSubmitSvc.reset();
 
+    const project: string = this.getSelectedProject();
+
      // Performs the double-request submits and flattens the resulting high-order observables onto a single one.
     return from(files).pipe(
-      map((file: File) => this.directSubmitSvc.addRequest(file, this.selectedProject, submissionType)),
+      map((file: File) => this.directSubmitSvc.addRequest(file, project, submissionType)),
       // Throttles the number of requests allowed in parallel and takes just the last event
       // to signal the end of the upload process.
       mergeAll(this.appConfig.maxConcurrent),
@@ -244,15 +251,25 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
     );
   }
 
+  private getSelectedProject(): string {
+    // If selected project is "None" then return an empty string.
+    return this.selectedProject === this.defaultPojectOption.name ? '' : this.selectedProject;
+  }
+
   /**
    * Converts a list of projects into a data object suitable for checkbox controls.
    * @param {string[]} projects - Names of projects.
    * @returns {{name: string; checked: boolean}[]} Checkbox-compliant object.
    */
-  private initProjModel(projects: string[]): { checked: boolean, name: string }[] {
-    return projects.map(name => {
-      return { name: name, checked: false };
-    });
+  private initProjModel(projects: string[]): ProjectOption[] {
+    const formattedProjects = projects.map((name) => ({ name: name, value: name, checked: false }));
+
+    // Adds a default option when user has at least one project
+    if (formattedProjects.length > 0) {
+      return [...formattedProjects, this.defaultPojectOption];
+    }
+
+    return formattedProjects;
   }
 
   /**
