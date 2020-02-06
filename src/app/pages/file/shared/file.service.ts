@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpEvent, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { PathInfo, UserGroup } from './file-rest.model';
-import { map, tap, catchError, finalize } from 'rxjs/operators';
+import { map, catchError, finalize } from 'rxjs/operators';
 import { HttpUploadClientService, UploadEvent } from './http-upload-client.service';
 import { LogService } from 'app/core/logger/log.service';
-import { of, throwError } from 'rxjs';
+import { throwError } from 'rxjs';
 
 @Injectable()
 export class FileService {

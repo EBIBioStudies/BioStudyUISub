@@ -4,17 +4,8 @@ import { FileUpload } from '../../shared/file-upload-list.service';
 
 @Component({
   selector: 'st-progress-cell',
-  template: `
-    <div *ngIf="value >= 1 && value < 100" class="progress"
-       style="margin-bottom: 0;">
-      <div class="progress-bar" role="progressbar"
-         [ngStyle]="{ 'width': value + '%'}">
-        {{value}}%
-      </div>
-    </div>
-    <div *ngIf="value === 100" class="text-success text-center"><i class="fa fa-check"></i></div>
-    <div *ngIf="value < 0" class="text-danger text-center"><i class="fa fa-times-circle"></i> {{error}}</div>
-  `
+  templateUrl: './upload-progress-cell.component.html',
+  styleUrls: ['./upload-progress-cell.component.css']
 })
 export class ProgressCellComponent implements AgRendererComponent {
   private type?: string;
@@ -25,21 +16,32 @@ export class ProgressCellComponent implements AgRendererComponent {
     this.upload = params.data.upload;
   }
 
+  get error(): string {
+    return ((this.upload || {}) as any).error || '';
+  }
+
+  get isUploading(): boolean {
+    if (this.upload && !this.upload.isFailed()) {
+      return true;
+    }
+
+    return false;
+  }
+
   get value(): number {
     if (this.upload) {
       if (this.upload.isFailed()) {
         return -1;
       }
+
       return this.upload.progress;
     }
+
     if (this.type === 'FILE' || this.type === 'ARCHIVE') {
       return 100;
     }
-    return 0;
-  }
 
-  get error(): string {
-    return ((this.upload || {}) as any).error || '';
+    return 0;
   }
 
   /**

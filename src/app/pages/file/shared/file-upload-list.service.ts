@@ -30,35 +30,34 @@ export class FileUpload {
     this.fileNames = files.map(f => f.name);
     this.percentage = 0;
 
-    const upload$: Observable<UploadEvent> =
-      fileService.upload(path.absolutePath(), files, true).pipe(
-        catchError((error: UploadErrorEvent) => of(error))
-      );
+    const upload$: Observable<UploadEvent> = fileService.upload(path.absolutePath(), files, true);
+    this.sb = upload$.subscribe((event: UploadEvent) => this.uploadEvent$.next(event));
 
-    // TODO: Log error in new log system.
     this.uploadEvent$.subscribe((event: UploadEvent) => {
       if (event.isProgress()) {
         this.percentage = (<UploadProgressEvent>event).percentage;
         this.state = UploadState.UPLOADING;
       }
+
       if (event.isError()) {
         this.errorMessage = (<UploadErrorEvent>event).message;
         this.state = UploadState.ERROR;
       }
+
       if (event.isSuccess()) {
         this.state = UploadState.SUCCESS;
       }
+
       if (event === CANCEL_UPLOAD_EVENT) {
         this.state = UploadState.CANCELLED;
       }
+
       if (this.isDone()) {
         this.finish$.next(true);
         this.finish$.complete();
         this.uploadEvent$.complete();
       }
     });
-
-    this.sb = upload$.subscribe(this.uploadEvent$);
   }
 
   get progress(): number {
