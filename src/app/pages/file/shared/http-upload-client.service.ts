@@ -67,8 +67,7 @@ export class UploadErrorEvent extends UploadEvent {
 
 @Injectable()
 export class HttpUploadClientService {
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
   upload(url: string, formData: FormData): Observable<UploadEvent> {
     const req = new HttpRequest('POST', url, formData, {
@@ -76,8 +75,7 @@ export class HttpUploadClientService {
     });
 
     return this.http.request(req).pipe(
-      map(event => UploadEvent.fromHttpEvent(event)),
-      last(), // return last (completed) message to caller
+      map((event) => UploadEvent.fromHttpEvent(event)),
       catchError(this.handleError)
     );
   }
