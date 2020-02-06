@@ -19,8 +19,7 @@
       </button>
     </span>
     <tabset>
-      <tab [active]="showSubmitted"
-         (select)="onSubmTabSelect(true)">
+      <tab [active]="showSubmitted" (selectTab)="onSubmTabSelect(true)">
         <ng-template tabHeading>
           <span tooltip="Studies already submitted or revised"
               container="body">
@@ -29,8 +28,7 @@
           </span>
         </ng-template>
       </tab>
-      <tab [active]="!showSubmitted"
-         (select)="onSubmTabSelect(false)">
+      <tab [active]="!showSubmitted" (selectTab)="onSubmTabSelect(false)">
         <ng-template tabHeading>
           <span tooltip="New studies draft submission or incomplete"
               container="body">
