@@ -151,7 +151,6 @@ export class SubmListComponent implements OnDestroy {
     this.gridOptions = <GridOptions>{
       cacheBlockSize: 15,
       debug: false,
-      enableColResize: true,
       enableSorting: false,
       icons: {menu: '<i class="fa fa-filter"/>'},
       localeText: {noRowsToShow: 'No submissions found'},
@@ -199,6 +198,7 @@ export class SubmListComponent implements OnDestroy {
         resizable: true
       },
       {
+        cellClass: 'ag-cell-centered',
         field: 'title',
         filter: true,
         filterFramework: TextFilterComponent,

@@ -21,149 +21,112 @@
 }
 
 //Makes all main submit/cancel buttons stand out clearly
-.btn-submit, .btn-cancel {
+.btn-submit,
+.btn-cancel {
   text-transform: uppercase;
 }
 
 //Prevents highlighting for add links
-.btn-add.btn-link:hover, .btn-add.button-link:active, .btn-add.button-link:focus {
+.btn-add.btn-link:hover,
+.btn-add.button-link:active,
+.btn-add.button-link:focus {
   text-decoration: none;
   outline: 0;
 }
 
-//Gets rid of default styling for ag-grid's buttons
-.ag-paging-button {
-  padding: .5rem 1rem;
-  color: #fafafa;
-  background: @brand-primary;
-  border: @sidebar-light-bg;
-  border-radius: .3rem;
-  outline: none;
+// Centers the labels inside each flex-enabled header cell
+.ag-theme-fresh {
+  .ag-root {
+    border: none;
+    border-top: 3px solid @sidebar-light-bg;
+  }
 
-  //Makes disabled state for ag-grid's buttons more apparent
-  &[disabled] {
-    opacity: .4;
+  .ag-cell-centered {
+    display: flex;
+    align-items: center;
+  }
+
+  .ag-header {
+    background: @sidebar-light-bg;
+    border: none;
+    color: #fff;
+  }
+
+  .ag-header-cell-label {
+    justify-content: center;
+  }
+
+  // Prevents cell menu buttons from being hidden. By default, only shown on hover.
+  // Additionally, it uses the cell menu's icon to make the two filtering states visually explicit.
+  .ag-header-cell-menu-button {
+    color: @link-color;
+    cursor: pointer;
+    width: 12px;
+
+    &:hover {
+      color: #FFFFFF;
+    }
+  }
+
+  .ag-header-cell-filtered .ag-header-cell-menu-button {
+    color: @brand-danger;
+  }
+
+  .ag-header-icon {
+    .ag-icon-none {
+      color: @link-color;
+    }
+
+    .ag-icon-asc {
+      color: @link-color;
+    }
+
+    .ag-icon-desc {
+      color: @link-color;
+    }
+  }
+
+  .ag-menu {
+    padding: 10px;
+    border-color: #d7d7d7;
+  }
+
+  .ag-paging-panel {
+    height: 40px;
+
+    .ag-icon {
+      color: #FFFFFF;
+    }
+
+    .ag-paging-button.ag-disabled .ag-icon {
+      color: #FFFFFF;
+    }
+
+    .ag-paging-button {
+      background: @brand-primary;
+      border-radius: .3rem;
+      padding: .5rem 1rem;
+      margin: 2px;
+    }
+  }
+
+  .ag-row-hover {
+    background-color: #b2e1fe;
+  }
+
+  @media screen and (max-width: 650px) {
+    .ag-paging-row-summary-panel {
+      display: none;
+    }
   }
 }
 
-//Centers the labels inside each flex-enabled header cell
-.ag-theme-fresh .ag-header-cell-label {
-  justify-content: center;
-}
-
-//Prevents cell menu buttons from being hidden. By default, only shown on hover.
-//Additionally, it uses the cell menu's icon to make the two filtering states visually explicit.
-.ag-header-cell-menu-button {
-  opacity: 1 !important;
-  width: 12px;
-}
-.ag-theme-fresh .ag-header-cell-menu-button {
-  color: @link-color;
-}
-.ag-header-cell-filtered .ag-header-cell-menu-button {
-  color: #fafafa;
-}
-.ag-header-cell-menu-button, .ag-header-cell-label {
-  cursor: pointer;
-}
-.ag-theme-fresh .ag-header-cell-menu-button:hover {
-  border-color: #fafafa;
-}
-
-//Mutes the unsort icon and highlights what the next state is on hover
-.ag-theme-fresh .ag-sort-none-icon svg {
-  fill: @link-color;
-}
-.ag-header-cell-label:hover polygon:first-child {
-  fill: #fafafa;
-}
-
-//Permanently hides filter icon
-.ag-filter-icon {
-  display: none !important;
-}
-
-//Center-aligns ag-grid cells marked accordingly
-.ag-cell-centered {
-  text-align: center;
-}
-
-//Brings ag-grid table's styles for cells in line with app's colour scheme
-.ag-theme-fresh .ag-root {
-  border: none;
-  border-top: 3px solid @sidebar-light-bg;
-}
-.ag-theme-fresh .ag-header {
-  background: @sidebar-light-bg;
-  border: none;
-  color: #fff;
-}
-.ag-theme-fresh .ag-header-icon {
-  fill: #fff;
-}
-.ag-theme-fresh .ag-ltr .ag-header-cell {
-  border-right-color: #c8c8c8;
-}
-.ag-theme-fresh .ag-ltr .ag-cell-no-focus {
-  border-right: 1px solid #c8c8c8;
-}
-.ag-theme-fresh .ag-ltr .ag-cell-no-focus:last-of-type, .ag-theme-fresh .ag-ltr .ag-header-cell:last-of-type {
-  border-right: none;
-}
-
-//Brings styles of ag-grid's floating menu in line with rest of the app
-.ag-theme-fresh .ag-menu {
-  padding: 10px;
-  border-color: #d7d7d7;
-}
-.ag-menu .form-group {
-  padding: 0;
-}
-
-//Prevents highlighting of single cells
-.ag-cell {
-  outline: none !important;
-}
-.ag-theme-fresh .ag-cell-focus {
-  border-left: none;
-  border-top: none;
-  border-bottom: none;
-}
-
-//Prevents page controls from wrapping onto the next line when on smaller screens
-.ag-theme-fresh .ag-paging-row-summary-panel {
-  width: auto;
-  float: left
-}
-@media screen and (max-width: 650px) {
-  .ag-theme-fresh .ag-paging-row-summary-panel {
-    display: none;
-  }
-}
-.ag-theme-fresh .ag-paging-panel {
-  text-align: center;
-  height: 40px;
-}
-
-//Highlights row being hovered on, except when over the "actions" cell if applicable
-//NOTE: The rows' zebra colour pattern has to be overriden
-//NOTE: The shadow-piercing descendant combinator is being deprecated. Hence why this is not within the subm-list component
-.subm-list .ag-row-hover {
-  background-color: #b2e1fe !important;
-}
-.subm-list .ag-cell[colid="0"] {
-  cursor: default;
-}
-.subm-list .ag-cell {
-  cursor: pointer;
-}
-
-//Prevents flickering tooltips when hovering near the edge of an element
+// Prevents flickering tooltips when hovering near the edge of an element
 .tooltip {
   pointer-events: none;
 }
 
-///Makes notes stand out by means of styled boxes
+// Makes notes stand out by means of styled boxes
 .alert-warning {
   margin-top: 10px;
   margin-bottom: 10px;
@@ -176,25 +139,26 @@
     background: white;
   }
 
-  .pull-left, .text-block {
+  .pull-left,
+  .text-block {
     padding: 10px;
   }
 }
 
-//Creates new blocking context useful for media sitting on one side.
+// Creates new blocking context useful for media sitting on one side.
 .text-block {
   overflow: hidden;
 }
 
-//Normalises quotation blocks for citation examples
+// Normalises quotation blocks for citation examples
 .blockquote {
   font: inherit;
   margin: 4px 0 12px;
   padding: .5rem 1rem;
 }
 
-//Shades an entire area, preventing any interaction as well.
-//TODO: Optimistic approach (IE11+). Depending on user response, this could need replacing with the traditional method.
+// Shades an entire area, preventing any interaction as well.
+// TODO: Optimistic approach (IE11+). Depending on user response, this could need replacing with the traditional method.
 .grayout {
   -webkit-filter: grayscale(100%);
   ms-filter: gray;
@@ -202,7 +166,7 @@
   pointer-events: none;
 }
 
-//Creates a new font-awesome-like icon for titles
+// Creates a new font-awesome-like icon for titles
 .fa-title {
   font-size: 1.8rem;
   font-weight: bold;
@@ -217,31 +181,33 @@
   }
 }
 
-//Highlights the label for the selected radio button
-input[type=radio], input[type=checkbox] {
+// Highlights the label for the selected radio button
+input[type=radio],
+input[type=checkbox] {
   cursor: pointer;
 
-  & + span {
+  &+span {
     color: @gray-light;
   }
 
-  &:checked + span, &:hover + span {
+  &:checked+span,
+  &:hover+span {
     color: black;
   }
 }
 
-//Prevents captcha widget from overflowing, especially on small screens
-//SOURCE: https://geekgoddess.com/how-to-resize-the-google-nocaptcha-recaptcha/
-.captcha-root > div {
+// Prevents captcha widget from overflowing, especially on small screens
+// SOURCE: https://geekgoddess.com/how-to-resize-the-google-nocaptcha-recaptcha/
+.captcha-root>div {
   transform: scale(0.855);
   -webkit-transform: scale(0.855);
   transform-origin: 0 0;
   -webkit-transform-origin: 0 0;
 }
 
-//GDPR bottom banner's style corrections
+// GDPR bottom banner's style corrections
 .data-protection-banner {
-  z-index: @zindex-modal !important;
+  z-index: @zindex-modal  !important;
   padding: 1rem !important;
 
   .row {
@@ -253,7 +219,8 @@ input[type=radio], input[type=checkbox] {
   }
 }
 
-//Makes external links stand out when placed within blocks of text
-span > a:not([routerLink]), p > a:not([routerLink]) {
+// Makes external links stand out when placed within blocks of text
+span>a:not([routerLink]),
+p>a:not([routerLink]) {
   text-decoration: underline;
 }
