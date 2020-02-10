@@ -109,9 +109,6 @@
     "use-lifecycle-interface": true,
     "use-pipe-transform-interface": true,
     "component-class-suffix": true,
-    "directive-class-suffix": true,
-    "rxjs-no-add": { "severity": "error" },
-    "rxjs-no-operator": { "severity": "error" },
-    "rxjs-no-patched": { "severity": "error" }
+    "directive-class-suffix": true
   }
 }
