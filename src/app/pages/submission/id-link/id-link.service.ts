@@ -1,9 +1,8 @@
 import * as HttpStatus from 'http-status-codes';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable, of, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { of, throwError } from 'rxjs';
 import {
   IdentifierEmbedded,
   IdentifierNamespace,

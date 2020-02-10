@@ -1,9 +1,8 @@
 import { ActivatedRoute, Params } from '@angular/router';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid-community/main';
-import { Subject } from 'rxjs/Subject';
+import { Subject, throwError, of } from 'rxjs';
 import { switchMap, filter, takeUntil, catchError } from 'rxjs/operators';
-import { throwError, of } from 'rxjs';
 import { AppConfig } from 'app/app.config';
 import { FileService } from 'app/pages/file/shared/file.service';
 import { ModalService } from 'app/shared/modal.service';

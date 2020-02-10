@@ -10,12 +10,11 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, NgModel, Validators } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { Subject } from 'rxjs/Subject';
+import { Subject, Observable } from 'rxjs';
 import { IdLinkModel } from './id-link.model';
 import { IdLinkService } from './id-link.service';
 import { IdLinkValue } from './id-link.value';
 import { IdLinkValueValidatorDirective } from './id-link.validator.directive';
-import { Observable } from 'rxjs';
 import { mergeMap, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({

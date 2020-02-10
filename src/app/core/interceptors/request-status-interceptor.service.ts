@@ -5,9 +5,7 @@ import {
   HttpInterceptor,
   HttpRequest
 } from '@angular/common/http';
-import { throwError } from 'rxjs';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { throwError, Observable, Subject } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
 
 /**
