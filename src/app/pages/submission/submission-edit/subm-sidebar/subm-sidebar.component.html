@@ -11,9 +11,7 @@
          [ngClass]="{'fa-angle-double-left': !collapsed, 'fa-angle-double-right': collapsed}"></i>
     </button>
     <tabset [ngClass]="{'invisible': collapsed}">
-      <tab [active]="isCheckTabActive"
-         customClass="badge-parent"
-         (select)="onCheckTabClick()">
+      <tab [active]="isCheckTabActive" customClass="badge-parent" (selectTab)="onCheckTabClick()">
         <ng-template tabHeading>
           Validation
           <span *ngIf="numInvalid" class="badge badge-corner"
@@ -23,9 +21,7 @@
           </span>
         </ng-template>
       </tab>
-      <tab heading="Add"
-         [active]="isEditTabActive"
-         (select)="onAddTabClick()"></tab>
+      <tab heading="Add" [active]="isEditTabActive" (selectTab)="onAddTabClick()"></tab>
     </tabset>
   </div>
 
