@@ -7,7 +7,7 @@ import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, 
 })
 export class FileTreeDropdownComponent implements OnInit, OnDestroy {
   @Output() close = new EventEmitter();
-  @ViewChild('dropdown', {read: ElementRef}) ddRef?: ElementRef;
+  @ViewChild('dropdown', { read: ElementRef, static: true }) ddRef?: ElementRef;
   @Output() fileSelect = new EventEmitter();
   @Input() isOpen = false;
   @Input() targetElement: any;

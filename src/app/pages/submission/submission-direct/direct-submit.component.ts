@@ -10,7 +10,7 @@ import * as pluralize from 'pluralize';
 export class DirectSubmitComponent {
   collapseSideBar: Boolean = false;
 
-  @ViewChild('sidebar')
+  @ViewChild('sidebar', { static: true })
   private sidebar;
 
   /**

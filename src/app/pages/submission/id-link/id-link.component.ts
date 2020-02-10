@@ -41,12 +41,12 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
   @Input() suggestThreshold: number = 0; // number of typed characters before suggestions are displayed.
 
   private inputChanged: Subject<string> = new Subject<string>();
-  @ViewChild(NgModel)
+  @ViewChild(NgModel, { static: true })
   private inputModel?: NgModel;
 
   private linkModel: IdLinkModel = new IdLinkModel();
 
-  @ViewChild(IdLinkValueValidatorDirective)
+  @ViewChild(IdLinkValueValidatorDirective, { static: true })
   private validator?: IdLinkValueValidatorDirective;
 
   /**

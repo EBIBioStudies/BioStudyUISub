@@ -35,7 +35,7 @@ export class FileUploadButtonComponent implements OnInit, OnChanges {
   @Output() select: EventEmitter<File[]> = new EventEmitter<File[]>();
   @Input() title: string = 'Upload Files';
 
-  @ViewChild('inputFile')
+  @ViewChild('inputFile', { static: true })
   private inputEl?: ElementRef;
 
   ngOnChanges() {

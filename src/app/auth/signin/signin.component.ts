@@ -14,7 +14,7 @@ export class SignInComponent implements OnInit, AfterViewInit {
   isLoading = false; // Flag indicating if login request in progress
   model = {login: '', password: '', next: ''}; // Data model for the component's form
 
-  @ViewChild('focusEl')
+  @ViewChild('focusEl', { static: true })
   private focusRef?: ElementRef;
 
   constructor(private authService: AuthService,

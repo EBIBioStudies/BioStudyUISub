@@ -16,10 +16,10 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
   model: PasswordResetData = new PasswordResetData();
   showSuccess: boolean = false;
 
-  @ViewChild('focusEl')
+  @ViewChild('focusEl', { static: false })
   private focusRef?: ElementRef;
 
-  @ViewChild('recaptchaEl')
+  @ViewChild('recaptchaEl', { static: false })
   private recaptcha?: RecaptchaComponent;
 
   constructor(

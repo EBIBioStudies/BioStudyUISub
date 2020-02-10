@@ -16,7 +16,7 @@ export class ConfirmDialogComponent {
   @Input() isHideCancel: boolean = false; // Hides the cancel button. Suitable for info modals.
   @Input() title: string = 'Confirm'; // Summary text for the modal's title.
 
-  @ViewChild('focusBtn')
+  @ViewChild('focusBtn', { static: true })
 
   private focusEl?: ElementRef;
 

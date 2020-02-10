@@ -12,11 +12,11 @@ import { Subscription } from 'rxjs';
 export class HeaderComponent implements OnDestroy {
   isBusy = false; // flags whether there is a transaction triggered by this component
   isPendingReq = false; // flags whether there is a transaction in progress (from anywhere in the app)
-  @ViewChild('logout') logout;
+  @ViewChild('logout', { static: false }) logout;
   navCollapsed = true;
   profileTooltip = '';
   reqStatusSubs: Subscription;
-  @ViewChild('user') user;
+  @ViewChild('user', { static: true }) user;
   userLoggedIn = false;
   userLoggingIn = false;
   userRegistering = false;

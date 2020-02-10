@@ -30,7 +30,7 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
   @Input() maxDate?: Date = undefined;
   @Input() readonly?: boolean = false;
   @Input() required?: boolean = false;
-  @ViewChild('dp') private datepicker?: BsDatepickerDirective;
+  @ViewChild('dp', { static: true }) private datepicker?: BsDatepickerDirective;
 
   /**
    * Instantiates a new custom component, hiding the weeks column on the calendar and setting

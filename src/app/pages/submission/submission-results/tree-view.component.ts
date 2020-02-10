@@ -82,7 +82,7 @@ export class TreeViewNodeComponent implements AfterViewInit, OnChanges {
   @Input() config?: TreeViewConfig;
   @Input() data?: any;
   isCollapsed: boolean = true; // All branches will be collapsed by default.
-  @ViewChild('nodeTemplate', {read: ViewContainerRef}) vcr;
+  @ViewChild('nodeTemplate', { read: ViewContainerRef, static: true }) vcr;
 
   private compRef;
 

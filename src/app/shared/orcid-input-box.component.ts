@@ -27,7 +27,7 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor, OnInit, Aft
   @Input() isPopupButton: boolean = true; // flag for showing/hiding popup button
   @Input() isSmall: boolean = true; // flag for making the input area the same size as grid fields
   @Input() readonly: boolean = false;
-  @ViewChild(NgModel)
+  @ViewChild(NgModel, { static: true })
 
   private inputModel?: NgModel;
   private mlistener: any = null;

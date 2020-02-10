@@ -14,10 +14,10 @@ export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
   typeBase: string = 'Grid';
   typeName?: string;
 
-  @ViewChild('focusBtn')
+  @ViewChild('focusBtn', { static: true })
   private focusEl?: ElementRef;
 
-  @ViewChild('uniquePop')
+  @ViewChild('uniquePop', { static: false })
   private uniquePop?: PopoverDirective;
 
   constructor(public bsModalRef: BsModalRef) {}

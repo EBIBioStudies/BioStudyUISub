@@ -14,7 +14,7 @@ import { AgFilterComponent } from 'ag-grid-angular/main';
   templateUrl: 'text-filter.component.html'
 })
 export class TextFilterComponent implements AgFilterComponent {
-  @ViewChild('inputEl') inputEl;
+  @ViewChild('inputEl', { static: true }) inputEl;
   text: string = '';
   private params?: IFilterParams;
   private prev: string = '';

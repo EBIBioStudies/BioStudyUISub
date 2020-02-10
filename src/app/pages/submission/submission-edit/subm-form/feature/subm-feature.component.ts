@@ -13,7 +13,7 @@ interface FeatureOperation {
   styleUrls: ['./subm-feature.component.css']
 })
 export class SubmFeatureComponent implements OnInit, DoCheck {
-  @ViewChild('featureEl') featureEl?: ElementRef;
+  @ViewChild('featureEl', { static: false }) featureEl?: ElementRef;
   @Input() featureForm?: FeatureForm;
   @Input() isMenu?: boolean = false;
   operations: FeatureOperation[] = [];

@@ -3,9 +3,10 @@
   "compilerOptions": {
     "baseUrl": "./src",
     "declaration": false,
+    "downlevelIteration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "module": "ESNext",
+    "module": "esnext",
     "moduleResolution": "node",
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false,
@@ -14,7 +15,7 @@
     "sourceMap": true,
     "strictNullChecks": true,
     "strictPropertyInitialization": true,
-    "target": "es5",
+    "target": "es2015",
     "typeRoots": [
       "node_modules/@types",
       "src/app.d.ts"

@@ -31,7 +31,7 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
   protected ngUnsubscribe: Subject<void>; // Stopper for all subscriptions
 
   private defaultPojectOption: ProjectOption = { checked: true, name: 'None', value: '' };
-  @ViewChild(FileUploadButtonComponent)
+  @ViewChild(FileUploadButtonComponent, { static: false })
   private fileSelector;
   private model: { files: any | undefined[], projects: any | undefined[] } = {
     files: undefined, // No file selection at first

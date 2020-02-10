@@ -10,7 +10,7 @@ import { SignUpComponent } from './auth/signup/signup.component';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: 'submissions', pathMatch: 'full' },
-  { path: '', loadChildren: './pages/pages.module#PagesModule' },
+  { path: '', loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule) },
   { path: 'signin', component: SignInComponent },
   { path: 'signup', component: SignUpComponent },
   { path: 'activate/:key', component: ActivateComponent },
