@@ -49,14 +49,14 @@
   },
   "dependencies": {
     "@angular/animations": "^8.2.14",
-    "@angular/common": "^6.0.7",
-    "@angular/compiler": "^6.0.7",
-    "@angular/core": "^6.0.7",
-    "@angular/forms": "^6.0.7",
-    "@angular/http": "^6.0.7",
-    "@angular/platform-browser": "^6.0.7",
-    "@angular/platform-browser-dynamic": "^6.0.7",
-    "@angular/router": "^6.0.7",
+    "@angular/common": "^7.2.16",
+    "@angular/compiler": "^7.2.16",
+    "@angular/core": "^7.2.16",
+    "@angular/forms": "^7.2.16",
+    "@angular/http": "^7.2.16",
+    "@angular/platform-browser": "^7.2.16",
+    "@angular/platform-browser-dynamic": "^7.2.16",
+    "@angular/router": "^7.2.16",
     "@fortawesome/fontawesome-free": "^5.4.2",
     "@rxweb/reactive-form-validators": "^1.9.1",
     "ag-grid-angular": "^22.1.1",
@@ -71,8 +71,8 @@
     "ngx-bootstrap": "^5.5.0",
     "ngx-markdown": "^8.1.0",
     "pluralize": "^7.0.0",
-    "rxjs": "^6.2.1",
-    "zone.js": "~0.8.10"
+    "rxjs": "^6.5.4",
+    "zone.js": "~0.8.29"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.13.9",
