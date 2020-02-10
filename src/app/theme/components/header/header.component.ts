@@ -2,7 +2,7 @@ import { ApplicationRef, Component, OnDestroy, ViewChild } from '@angular/core';
 import { Event, NavigationEnd, Router } from '@angular/router';
 import { AuthService, UserSession } from 'app/auth/shared';
 import { RequestStatusInterceptorService } from 'app/core/interceptors/request-status-interceptor.service';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'st-header',

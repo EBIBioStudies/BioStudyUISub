@@ -3,9 +3,8 @@ import { AfterViewChecked, Component, Input, OnDestroy, OnInit, ViewChild } from
 import { BsModalService } from 'ngx-bootstrap';
 import { FormControl } from '@angular/forms';
 import { Location } from '@angular/common';
-import { Observable, of } from 'rxjs';
+import { Observable, of ,  Subject } from 'rxjs';
 import { Option } from 'fp-ts/lib/Option';
-import { Subject } from 'rxjs/Subject';
 import { switchMap, takeUntil } from 'rxjs/operators';
 import { AppConfig } from 'app/app.config';
 import { LogService } from 'app/core/logger/log.service';

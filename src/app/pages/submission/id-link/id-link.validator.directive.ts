@@ -1,6 +1,6 @@
 import { AbstractControl, AsyncValidator, NG_ASYNC_VALIDATORS, ValidationErrors } from '@angular/forms';
 import { Directive } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { IdLinkService } from './id-link.service';
 import { idLinkValidator } from './id-link.validator';
 

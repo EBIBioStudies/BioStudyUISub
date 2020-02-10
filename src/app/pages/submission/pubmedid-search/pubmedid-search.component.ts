@@ -12,7 +12,7 @@ import {
 } from '@angular/forms';
 import * as _ from 'lodash';
 import { PubMedSearchService } from './pubmedid-search.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'st-pubmedid-search',

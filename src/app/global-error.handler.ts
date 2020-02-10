@@ -2,7 +2,7 @@ import {
   ErrorHandler,
   Injectable, NgZone
 } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { UserSession } from 'app/auth/shared';
 import { INTERNAL_SERVER_ERROR, UNAUTHORIZED } from 'http-status-codes';
 import { LogService } from './core/logger/log.service';

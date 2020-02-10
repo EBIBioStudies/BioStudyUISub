@@ -1,6 +1,5 @@
 import * as HttpStatus from 'http-status-codes';
-import { throwError } from 'rxjs';
-import { Observable } from 'rxjs/Observable';
+import { throwError, Observable } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 
 export class ServerError {
