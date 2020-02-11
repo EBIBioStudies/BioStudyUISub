@@ -25,10 +25,10 @@
             <label class="control-label" for="username">Full name</label>
             <span class="text-muted pull-right"><i>Optional</i></span>
             <input type="text" autofocus
-                 id="username"
-                 name="username"
+                 id="name"
+                 name="name"
                  class="form-control"
-                 [(ngModel)]="model.username"
+                 [(ngModel)]="model.name"
                  (change)="resetGlobalError()"
                  #focusEl />
           </div>

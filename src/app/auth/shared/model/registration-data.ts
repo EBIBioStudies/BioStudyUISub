@@ -3,9 +3,9 @@ import { DataWithCaptchaAndPath, copyAndExtend } from './data-base';
 
 export class RegistrationData extends DataWithCaptchaAndPath {
   email: string = '';
+  name: string = '';
   orcid: string = '';
   password: string = '';
-  username: string = '';
 
   constructor() {
     super(new AppPath('#/activate'));
@@ -16,7 +16,7 @@ export class RegistrationData extends DataWithCaptchaAndPath {
       'aux': [`orcid:${this.orcid}`],
       'email': this.email,
       'password': this.password,
-      'username': this.username
+      'name': this.name
     });
   }
 }

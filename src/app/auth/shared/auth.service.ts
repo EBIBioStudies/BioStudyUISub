@@ -69,7 +69,7 @@ export class AuthService {
   }
 
   register(regData: RegistrationData): Observable<StatusResponse> {
-    return this.sendPostRequest<StatusResponse, StatusResponse>('/api/auth/register', this.withInstanceKey(regData.snapshot()));
+    return this.http.post<StatusResponse>('/api/auth/register', this.withInstanceKey(regData.snapshot()));
   }
 
   sendActivationLinkRequest(obj: ActivationLinkRequestData): Observable<StatusResponse> {
