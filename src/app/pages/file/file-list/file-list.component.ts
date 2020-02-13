@@ -202,7 +202,6 @@ export class FileListComponent implements OnInit, OnDestroy {
     const link = document.createElement('a');
 
     link.href = downloadPath;
-    link.download = fileName;
 
     document.body.appendChild(link);
     link.click();
