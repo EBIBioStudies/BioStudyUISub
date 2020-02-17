@@ -10,7 +10,7 @@ import {
 } from '@angular/forms';
 import { TextValueType, ValueType, ValueTypeName } from 'app/submission/submission-shared/model';
 import { Attribute, Feature, Field, Section } from 'app/submission/submission-shared/model/submission';
-import { parseDate } from 'app/utils';
+import { parseDate, isOrcidValid } from 'app/utils';
 
 // experimental: Control Reference details for using in error messages
 export class ControlRef {
@@ -181,8 +181,15 @@ export class FormValidators {
     }
 
     static formatOrcid: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-        const v = control.value;
-        return String.isNotDefinedOrEmpty(v) || /^\d{4}-\d{4}-\d{4}-\d{4}$/.test(v) ? null : {'format': {value: v}};
+        const value = control.value;
+        const isEmpty = String.isNotDefinedOrEmpty(value);
+        const isValueValid = !isEmpty && isOrcidValid(value);
+
+        if (isEmpty) {
+            return null;
+        }
+
+        return isValueValid ? null : { 'format': { value } };
     }
 }
 
