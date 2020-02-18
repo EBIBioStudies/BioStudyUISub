@@ -98,7 +98,7 @@ export class SubmissionService {
 
   directSubmit(file: File, attachTo: string): Observable<SubmitResponse> {
     const formData = new FormData();
-    formData.append('attachTo', attachTo);
+    formData.append('AttachTo', attachTo);
     formData.append('submission', file);
 
     return this.http.post<SubmitResponse>(`/api/submissions/direct`, formData);
