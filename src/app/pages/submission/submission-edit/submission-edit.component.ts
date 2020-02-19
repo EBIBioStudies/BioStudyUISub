@@ -46,6 +46,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
 
   private accno?: string;
   private hasJustCreated = false;
+  private method?: string;
   private releaseDate: Date = new Date();
   private scrollToCtrl?: FormControl;
   private unsubscribe: Subject<void> = new Subject<void>();
@@ -120,8 +121,9 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
     this.hasJustCreated = this.route.snapshot.data.isNew || false;
     this.route.params
       .pipe(
-        switchMap(({ accno }) => {
+        switchMap(({ accno, method }) => {
           this.accno = accno;
+          this.method = method;
 
           return this.submEditService.load(accno, this.hasJustCreated);
         })

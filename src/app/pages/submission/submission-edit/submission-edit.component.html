@@ -21,6 +21,17 @@
   <div *ngIf="sectionForm" class="container-fluid">
     <aside [ngClass]="{'collapse-left' : !readonly && sideBarCollapsed, 'right-side': !readonly}">
       <div class="navbar-subm-margin">
+        <div *ngIf="method === 'FILE'" class="alert alert-info">
+          <div class="pull-left">
+            <i class="fa fa-hand-o-right fa-lg"></i>
+            <strong>Please note</strong>
+          </div>
+          <p class="text-block text-black">
+            You are about to edit a submission which was created by Direct Upload. Any updates to this submission will be available on
+            BioStudies but will not be reflected in the initially submitted file.
+          </p>
+        </div>
+
         <div class="panel">
           <div class="panel-body">
             <div *ngIf="hasJustCreated && sectionForm.invalid">

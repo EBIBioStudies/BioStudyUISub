@@ -230,9 +230,10 @@ export class SubmListComponent implements OnDestroy {
       isTemp: !this.showSubmitted,
       isDeletable: ['S-', 'TMP_'].some((prefix) => row.accno.indexOf(prefix) === 0),
       accno: row.accno,
-      title: row.title,
+      method: row.method,
       rtime: row.rtime,
       status: row.status,
+      title: row.title,
       version: row.version,
       onDelete: (accno: string, onCancel: Function, isTemp: boolean): Subscription => {
         const onNext = (isOk: boolean) => {
@@ -302,7 +303,10 @@ export class SubmListComponent implements OnDestroy {
    */
   onRowClicked(event): void {
     if (!this.isBusy && event.colDef.headerName !== 'Actions') {
-      this.router.navigate(['/submissions/edit', event.data.accno]);
+      const { accno, method } = event.data;
+      const params = String.isDefinedAndNotEmpty(method) ? { accno, method } : { accno };
+
+      this.router.navigate(['/submissions/edit', params]);
     }
   }
 
