@@ -304,9 +304,9 @@ export class SubmListComponent implements OnDestroy {
   onRowClicked(event): void {
     if (!this.isBusy && event.colDef.headerName !== 'Actions') {
       const { accno, method } = event.data;
-      const params = String.isDefinedAndNotEmpty(method) ? { accno, method } : { accno };
+      const optionalParams = String.isDefinedAndNotEmpty(method) ? { method } : {};
 
-      this.router.navigate(['/submissions/edit', params]);
+      this.router.navigate([`/submissions/edit/${accno}`, optionalParams ]);
     }
   }
 

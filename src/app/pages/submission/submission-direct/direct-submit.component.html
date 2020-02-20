@@ -132,12 +132,12 @@
       </div>
       <div class="row">
         <div *ngFor="let file of sidebar.model.files; let i = index">
-          <div *ngIf="file" class="col-xs-12 col-md-6 col-lg-4" (click)="onClickError($event)">
+          <div *ngIf="file" class="col-xs-12 col-md-6 col-lg-4">
             <div class="panel"
                [ngClass]="{'panel-default': !getAccno(i), 'text-primary': getAccno(i)}"
                [ngStyle]="{'cursor': getAccno(i) || isFail(i) ? 'pointer' : 'default'}"
-               [routerLink]="getAccno(i) ? '/submissions/edit/' + getAccno(i) : null"
                [tooltip]="getAccno(i) ? 'Edit this study' : isFail(i) ? 'Show error log' : ''"
+               (click)="handleFileCardClick($event, isFail(i), getAccno(i))"
                placement="top"
                container="body">
               <div class="panel-heading">
