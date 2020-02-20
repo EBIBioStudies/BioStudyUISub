@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Component, ViewChild } from '@angular/core';
 import { AppConfig } from 'app/app.config';
 import * as pluralize from 'pluralize';
@@ -17,7 +18,10 @@ export class DirectSubmitComponent {
    * Initally collapses the sidebar for tablet-sized screens.
    * @param {AppConfig} appConfig - Global configuration object with app-wide settings.
    */
-  constructor(public appConfig: AppConfig) {
+  constructor(
+    public appConfig: AppConfig,
+    private router: Router
+  ) {
     this.collapseSideBar = window.innerWidth < this.appConfig.tabletBreak;
   }
 
@@ -41,6 +45,26 @@ export class DirectSubmitComponent {
     return this.sidebar.studyProp(studyIdx, 'releaseDate');
   }
 
+  /**
+   * Toggles the width of the request card and the log's visibility on click.
+   * @param {Event} event - DOM object for the click action.
+   */
+  handleFileCardClick(event: Event, isFail: boolean, accno: string) {
+    const containerEl = event.currentTarget as HTMLElement;
+    const targetEl = event.target as HTMLElement;
+    const headingEl = containerEl.querySelector('.panel-heading');
+    const logEl = containerEl.querySelector('.panel-body');
+
+    if (logEl && isFail) {
+      if (headingEl!.contains(targetEl)) {
+        logEl.classList.toggle('hidden');
+      }
+      containerEl.classList.toggle('container-full', !logEl.classList.contains('hidden'));
+    } else {
+      this.router.navigate([`/submissions/edit/${accno}`, { method: 'FILE' }]);
+    }
+  }
+
   isBusy(studyIdx: number) {
     return this.sidebar.studyProp(studyIdx, 'inprogress');
   }
@@ -51,24 +75,6 @@ export class DirectSubmitComponent {
 
   isSuccess(studyIdx: number) {
     return this.sidebar.studyProp(studyIdx, 'successful');
-  }
-
-  /**
-   * Toggles the width of the request card and the log's visibility on click.
-   * @param {Event} event - DOM object for the click action.
-   */
-  onClickError(event: Event) {
-    const containerEl = event.currentTarget as HTMLElement;
-    const targetEl = event.target as HTMLElement;
-    const headingEl = containerEl.querySelector('.panel-heading');
-    const logEl = containerEl.querySelector('.panel-body');
-
-    if (logEl) {
-      if (headingEl!.contains(targetEl)) {
-        logEl.classList.toggle('hidden');
-      }
-      containerEl.classList.toggle('container-full', !logEl.classList.contains('hidden'));
-    }
   }
 
   onToggle(): void {
