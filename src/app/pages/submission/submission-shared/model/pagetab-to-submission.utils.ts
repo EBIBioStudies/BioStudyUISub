@@ -12,17 +12,19 @@ import {
 import { DEFAULT_TEMPLATE_NAME, SubmissionType } from './templates';
 import { AttributeData, FeatureData, SectionData, Submission, SubmissionData } from './submission';
 import { NameAndValue, PAGE_TAG, Tag } from './model.common';
+import { findAttribute } from '../utils/pagetab.utils';
 
 function findSubmissionTemplateName(pageTab: PageTab): string {
-  const attachToValues: string[] = (pageTab.attributes || [])
-    .filter(attr => attr.name === AttrExceptions.attachToAttr)
-    .filter(at => String.isDefinedAndNotEmpty(at.value))
-    .map(at => at.value!);
-  return attachToValues.length === 1 ? attachToValues[0] : DEFAULT_TEMPLATE_NAME;
+  const attachToAttributes: PtAttribute[] = findAttribute(pageTab, AttrExceptions.attachToAttr);
+  const attachToValue: string[] = attachToAttributes.map((attribute) => attribute.value!);
+
+  return attachToValue.length === 1 ? attachToValue[0] : DEFAULT_TEMPLATE_NAME;
 }
 
 export function pageTab2Submission(pageTab: PageTab): Submission {
-  const type = SubmissionType.fromTemplate(findSubmissionTemplateName(pageTab));
+  const submissionTemplateName: string = findSubmissionTemplateName(pageTab);
+  const type: SubmissionType = SubmissionType.fromTemplate(submissionTemplateName);
+
   return new Submission(type, pageTab2SubmissionData(pageTab));
 }
 
