@@ -1,13 +1,19 @@
+import { TestBed, inject } from '@angular/core/testing';
 import { Submission, SubmissionData } from './model/submission';
 import { SubmissionType } from './model/templates';
-import { submission2PageTab } from './submission-to-pagetab.service';
+import { SubmissionToPageTabService } from './submission-to-pagetab.service';
 import { PtFile, PtLink } from './model/pagetab';
 
-describe('Submission To PageTab Util:', () => {
+describe('SubmissionToPageTabService', () => {
   let submType;
 
   beforeAll(() => {
     submType = SubmissionType.fromEmptyTemplate();
+
+    TestBed.configureTestingModule({
+      imports: [],
+      providers: [SubmissionToPageTabService]
+    });
   });
 
   it('Title and ReleaseDate attributes should be moved to the submission level', () => {
@@ -24,14 +30,16 @@ describe('Submission To PageTab Util:', () => {
       }
     });
 
-    const pageTab = submission2PageTab(subm);
-    expect(pageTab.attributes!.length).toBe(3);
-    expect(pageTab.attributes!.find(at => at.name === 'Title')).toBeDefined();
-    expect(pageTab.attributes!.find(at => at.name === 'ReleaseDate')).toBeDefined();
-    expect(pageTab.attributes!.find(at => at.name === 'AttachTo')).toBeDefined();
+    inject([SubmissionToPageTabService], (submToPageTabService) => {
+      const pageTab = submToPageTabService.submission2PageTab(subm);
+      expect(pageTab.attributes!.length).toBe(3);
+      expect(pageTab.attributes!.find(at => at.name === 'Title')).toBeDefined();
+      expect(pageTab.attributes!.find(at => at.name === 'ReleaseDate')).toBeDefined();
+      expect(pageTab.attributes!.find(at => at.name === 'AttachTo')).toBeDefined();
 
-    const secAttributes = pageTab.section!.attributes!;
-    expect(secAttributes.length).toBe(2);
+      const secAttributes = pageTab.section!.attributes!;
+      expect(secAttributes.length).toBe(2);
+    });
   });
 
   it('Section Link features should go to section links list', () => {
@@ -48,9 +56,11 @@ describe('Submission To PageTab Util:', () => {
       }
     });
 
-    const pageTab = submission2PageTab(subm);
-    expect(pageTab.section!.links!.length).toBe(1);
-    expect((<PtLink>pageTab.section!.links![0]).url).toBe('url1');
+    inject([SubmissionToPageTabService], (submToPageTabService) => {
+      const pageTab = submToPageTabService.submission2PageTab(subm);
+      expect(pageTab.section!.links!.length).toBe(1);
+      expect((<PtLink>pageTab.section!.links![0]).url).toBe('url1');
+    });
   });
 
   it('Section File features should go to section files list', () => {
@@ -67,9 +77,10 @@ describe('Submission To PageTab Util:', () => {
       }
     });
 
-    const pageTab = submission2PageTab(subm);
-    expect(pageTab.section!.files!.length).toBe(1);
-    expect((<PtFile>pageTab.section!.files![0]).path).toBe('path1');
+    inject([SubmissionToPageTabService], (submToPageTabService) => {
+      const pageTab = submToPageTabService.submission2PageTab(subm);
+      expect(pageTab.section!.files!.length).toBe(1);
+      expect((<PtFile>pageTab.section!.files![0]).path).toBe('path1');
+    });
   });
-
 });

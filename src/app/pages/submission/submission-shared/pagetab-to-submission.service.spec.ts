@@ -1,7 +1,15 @@
-import { pageTab2SubmissionData } from './pagetab-to-submission.service';
+import { TestBed, inject } from '@angular/core/testing';
+import { PageTabToSubmissionService } from './pagetab-to-submission.service';
 import { PageTab } from './model/pagetab';
 
 describe('PageTab To Submission Util:', () => {
+  beforeAll(() => {
+    TestBed.configureTestingModule({
+      imports: [],
+      providers: [PageTabToSubmissionService]
+    });
+  });
+
   it('Title and ReleaseDate attributes should be merged to the section level attributes', () => {
     const title1 = {
       name: 'Title',
@@ -28,12 +36,15 @@ describe('PageTab To Submission Util:', () => {
         attributes: [title2]
       }
     };
-    const submData = pageTab2SubmissionData(pageTab);
 
-    expect(submData.attributes!.length).toEqual(3);
-    expect(submData.section).toBeDefined();
-    expect(submData.section!.attributes!.length).toEqual(2);
-    expect(submData.section!.attributes!.map(at => at.value)).toContain(title2.value);
+    inject([PageTabToSubmissionService], (pagetTabToSubmService) => {
+      const submData = pagetTabToSubmService.pageTab2SubmissionData(pageTab);
+
+      expect(submData.attributes!.length).toEqual(3);
+      expect(submData.section).toBeDefined();
+      expect(submData.section!.attributes!.length).toEqual(2);
+      expect(submData.section!.attributes!.map(at => at.value)).toContain(title2.value);
+    });
   });
 
   it('Links should go to section feature list', () => {
@@ -57,9 +68,11 @@ describe('PageTab To Submission Util:', () => {
       }
     };
 
-    const submData = pageTab2SubmissionData(pageTab);
-    expect(submData.section!.features!.length).toEqual(1);
-    expect(submData.section!.features![0].entries!.length).toEqual(3);
+    inject([PageTabToSubmissionService], (pagetTabToSubmService) => {
+      const submData = pagetTabToSubmService.pageTab2SubmissionData(pageTab);
+      expect(submData.section!.features!.length).toEqual(1);
+      expect(submData.section!.features![0].entries!.length).toEqual(3);
+    });
   });
 
   it('Files should go to section feature list', () => {
@@ -83,9 +96,11 @@ describe('PageTab To Submission Util:', () => {
       }
     };
 
-    const submData = pageTab2SubmissionData(pageTab);
-    expect(submData.section!.features!.length).toEqual(1);
-    expect(submData.section!.features![0].entries!.length).toEqual(3);
+    inject([PageTabToSubmissionService], (pagetTabToSubmService) => {
+      const submData = pagetTabToSubmService.pageTab2SubmissionData(pageTab);
+      expect(submData.section!.features!.length).toEqual(1);
+      expect(submData.section!.features![0].entries!.length).toEqual(3);
+    });
   });
 
   it('Sections without subsections should go to section feature list', () => {
@@ -112,15 +127,17 @@ describe('PageTab To Submission Util:', () => {
       }
     };
 
-    const submData = pageTab2SubmissionData(<PageTab>(pageTab));
-    expect(submData.section!.features!.length).toEqual(2);
+    inject([PageTabToSubmissionService], (pagetTabToSubmService) => {
+      const submData = pagetTabToSubmService.pageTab2SubmissionData(<PageTab>(pageTab));
+      expect(submData.section!.features!.length).toEqual(2);
 
-    const f1 = submData.section!.features!.find(f => f.type === 'secType1');
-    expect(f1).toBeDefined();
-    expect(f1!.entries!.length).toEqual(1);
+      const f1 = submData.section!.features!.find(f => f.type === 'secType1');
+      expect(f1).toBeDefined();
+      expect(f1!.entries!.length).toEqual(1);
 
-    const f2 = submData.section!.features!.find(f => f.type === 'secType2');
-    expect(f2!.entries!.length).toEqual(2);
+      const f2 = submData.section!.features!.find(f => f.type === 'secType2');
+      expect(f2!.entries!.length).toEqual(2);
+    });
   });
 
   it('Sections with subsections should go to section subsections list', () => {
@@ -149,13 +166,15 @@ describe('PageTab To Submission Util:', () => {
       }
     };
 
-    const submData = pageTab2SubmissionData(<PageTab>(pageTab));
-    expect(submData.section!.features!.isEmpty()).toBeTruthy();
-    expect(submData.section!.sections!.length).toBe(3);
+    inject([PageTabToSubmissionService], (pagetTabToSubmService) => {
+      const submData = pagetTabToSubmService.pageTab2SubmissionData(<PageTab>(pageTab));
+      expect(submData.section!.features!.isEmpty()).toBeTruthy();
+      expect(submData.section!.sections!.length).toBe(3);
 
-    const s1 = submData.section!.sections!.find(s => s.type === 'secType1');
-    expect(s1).toBeDefined();
-    expect(s1!.features!.length).toEqual(1);
+      const s1 = submData.section!.sections!.find(s => s.type === 'secType1');
+      expect(s1).toBeDefined();
+      expect(s1!.features!.length).toEqual(1);
+    });
   });
 
 });
