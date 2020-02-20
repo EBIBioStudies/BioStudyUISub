@@ -1,5 +1,5 @@
-import { pageTab2SubmissionData } from './pagetab-to-submission.utils';
-import { PageTab } from './pagetab';
+import { pageTab2SubmissionData } from './pagetab-to-submission.service';
+import { PageTab } from './model/pagetab';
 
 describe('PageTab To Submission Util:', () => {
   it('Title and ReleaseDate attributes should be merged to the section level attributes', () => {

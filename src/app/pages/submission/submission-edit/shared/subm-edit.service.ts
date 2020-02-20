@@ -6,7 +6,9 @@ import { none, Option, some } from 'fp-ts/lib/Option';
 import { Submission, AttributeData, Section, Feature, Attribute } from 'app/pages/submission/submission-shared/model';
 import { UserData } from 'app/auth/shared';
 import { UserInfo } from 'app/auth/shared/model';
-import { pageTab2Submission, PageTab, submission2PageTab, SelectValueType } from 'app/pages/submission/submission-shared/model';
+import { PageTab, SelectValueType } from 'app/pages/submission/submission-shared/model';
+import { PageTabToSubmissionService } from 'app/pages/submission/submission-shared/pagetab-to-submission.service';
+import { SubmissionToPageTabService } from 'app/pages/submission/submission-shared/submission-to-pagetab.service';
 import { SubmissionService, SubmitResponse } from '../../submission-shared/submission.service';
 import { SectionForm } from './model/section-form.model';
 import { CustomFormControl } from './model/custom-form-control.model';
@@ -128,7 +130,9 @@ export class SubmEditService {
 
   constructor(
     private userData: UserData,
-    private submService: SubmissionService
+    private submService: SubmissionService,
+    private submToPageTabService: SubmissionToPageTabService,
+    private pageTabToSubmService: PageTabToSubmissionService,
   ) {}
 
   get isSubmitting(): boolean {
@@ -159,7 +163,7 @@ export class SubmEditService {
     return this.submModel!.isRevised;
   }
 
-  load(accno: string, setDefaults?: boolean): Observable<ServerResponse<any>> {
+  loadSubmission(accno: string, setDefaults?: boolean): Observable<ServerResponse<any>> {
     this.editState.startLoading();
 
     return this.submService.getSubmission(accno).pipe(
@@ -276,11 +280,11 @@ export class SubmEditService {
   }
 
   private asPageTab(isSubmit: boolean = false): PageTab {
-    return submission2PageTab(this.submModel!, isSubmit);
+    return this.submToPageTabService.submissionToPageTab(this.submModel!, isSubmit);
   }
 
   private createForm(draftSubm: PageTab, accno: string = '', setDefaults: boolean = false) {
-    this.submModel = pageTab2Submission(draftSubm);
+    this.submModel = this.pageTabToSubmService.pageTab2Submission(draftSubm);
 
     if (accno.length !== 0) {
       this.accno = accno;

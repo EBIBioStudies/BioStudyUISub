@@ -125,7 +125,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
           this.accno = accno;
           this.method = method;
 
-          return this.submEditService.load(accno, this.hasJustCreated);
+          return this.submEditService.loadSubmission(accno, this.hasJustCreated);
         })
       ).subscribe((resp) => {
         if (this.hasJustCreated) {

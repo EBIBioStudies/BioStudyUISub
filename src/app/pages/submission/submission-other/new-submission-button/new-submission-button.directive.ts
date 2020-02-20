@@ -1,7 +1,8 @@
 import { AfterViewInit, Directive, ElementRef, HostBinding, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserData } from 'app/auth/shared';
-import { newPageTab, getSubmissionTemplates } from 'app/pages/submission/submission-shared/model';
+import { getSubmissionTemplates, PageTab } from 'app/pages/submission/submission-shared/model';
+import { SubmissionToPageTabService } from 'app/pages/submission/submission-shared/submission-to-pagetab.service';
 import { SubmissionService } from 'app/pages/submission/submission-shared/submission.service';
 import { BsModalService } from 'ngx-bootstrap';
 import { AddSubmModalComponent } from './add-subm-modal.component';
@@ -15,12 +16,14 @@ const SPINNER_ICON = '<i class="fa fa-cog fa-spin"></i>';
 export class NewSubmissionButtonDirective implements AfterViewInit {
   @HostBinding('disabled') disabled?: boolean;
 
-  constructor(private modalService: BsModalService,
-        private submService: SubmissionService,
-        private userData: UserData,
-        private router: Router,
-        private el: ElementRef) {
-  }
+  constructor(
+    private modalService: BsModalService,
+    private submService: SubmissionService,
+    private userData: UserData,
+    private router: Router,
+    private el: ElementRef,
+    private submissionToPageTab: SubmissionToPageTabService,
+  ) {}
 
   ngAfterViewInit(): void {
     const html = this.el.nativeElement.innerHTML;
@@ -43,8 +46,10 @@ export class NewSubmissionButtonDirective implements AfterViewInit {
   }
 
   private onOk(template?: string) {
+    const emptySubmission: PageTab = this.submissionToPageTab.newPageTab(template);
+
     this.startCreating();
-    this.submService.createDraftSubmission(newPageTab(template))
+    this.submService.createDraftSubmission(emptySubmission)
       .subscribe((accno) => {
         this.stopCreating();
         this.router.navigate(['/submissions/new/', accno]);
