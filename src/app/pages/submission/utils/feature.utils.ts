@@ -1,4 +1,4 @@
-import { Feature, Section } from '../submission-shared/model/submission';
+import { Feature, Section, Sections } from '../submission-shared/model/submission';
 
 export function flatFeatures(section: Section): Feature[] {
   let result = [...section.features.list()];
@@ -7,7 +7,11 @@ export function flatFeatures(section: Section): Feature[] {
     result = result.concat(sectionItem.features.list());
 
     if (sectionItem.sections.length > 0) {
-      result = result.concat(this.flatFeatures(sectionItem.sections));
+      const nestedSections: Section[] = sectionItem.sections.list();
+
+      nestedSections.forEach((nestedSection) => {
+        result = result.concat(flatFeatures(nestedSection));
+      });
     }
   });
 
