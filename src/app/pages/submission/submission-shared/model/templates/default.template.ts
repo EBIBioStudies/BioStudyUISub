@@ -254,7 +254,7 @@ export const defaultTemplate = {
           {
             'name': 'Link',
             'valueType': {'name': 'idlink'},
-            'display': 'desirable'
+            'display': 'required'
           },
           {
             'name': 'Description',

@@ -14,6 +14,7 @@ import { SubmEditService } from './shared/subm-edit.service';
 import { SubmResultsModalComponent } from '../submission-results/subm-results-modal.component';
 import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
 import { SubmitResponse, SubmitLog } from '../submission-shared/submission.service';
+import { SubmValidationErrors } from '../submission-shared/model';
 
 class SubmitOperation {
   static CREATE = new SubmitOperation();
@@ -49,6 +50,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
   private method?: string;
   private releaseDate: Date = new Date();
   private scrollToCtrl?: FormControl;
+  private submissionErrors: SubmValidationErrors = SubmValidationErrors.EMPTY;
   private unsubscribe: Subject<void> = new Subject<void>();
 
   constructor(
@@ -196,6 +198,8 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
   }
 
   onSubmitClick(event, isConfirm: boolean = false) {
+    this.submissionErrors = this.submEditService.validateSubmission();
+
     if (event) {
       event.preventDefault();
     }
@@ -302,7 +306,9 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
   }
 
   private get isValid(): boolean {
-    return this.sectionForm !== undefined && this.sectionForm.form.valid;
+    const hasErrors: boolean = this.submissionErrors.errors.length > 0;
+
+    return this.sectionForm !== undefined && this.sectionForm.form.valid && !hasErrors;
   }
 
   private showSubmitLog(isSuccess: boolean, log?: SubmitLog) {

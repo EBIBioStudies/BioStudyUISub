@@ -21,6 +21,8 @@
   <div *ngIf="sectionForm" class="container-fluid">
     <aside [ngClass]="{'collapse-left' : !readonly && sideBarCollapsed, 'right-side': !readonly}">
       <div class="navbar-subm-margin">
+        <st-subm-validation-errors [errors]="submissionErrors"></st-subm-validation-errors>
+
         <div *ngIf="method === 'FILE'" class="alert alert-info">
           <div class="pull-left">
             <i class="fa fa-hand-o-right fa-lg"></i>

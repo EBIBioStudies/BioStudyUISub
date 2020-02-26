@@ -533,7 +533,6 @@ export class Submission {
   readonly tags: Tags;
   readonly type;
 
-
   /**
    * Creates a new submission from PageTab-formatted data and pre-defined type definitions.
    * @see {@link PageTab}

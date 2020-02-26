@@ -1,17 +1,20 @@
 import { Injectable } from '@angular/core';
+import { flatArray } from 'app/utils/array.utils';
 import {
   AttrExceptions,
   LinksUtils,
   PageTab,
   PageTabSection,
   PtAttribute,
-  authors2Contacts,
+  authorsToContacts,
   extractKeywordsFromAttributes,
   mergeAttributes,
   pageTabToSubmissionProtocols,
+  PtLink,
+  PtFile,
 } from './model/pagetab';
-import { DEFAULT_TEMPLATE_NAME, SubmissionType } from './model/templates';
 import { AttributeData, FeatureData, SectionData, Submission, SubmissionData } from './model/submission';
+import { DEFAULT_TEMPLATE_NAME, SubmissionType } from './model/templates';
 import { NameAndValue, PAGE_TAG, Tag } from './model/model.common';
 import { findAttribute } from './utils/pagetab.utils';
 
@@ -21,10 +24,10 @@ export class PageTabToSubmissionService {
     const submissionTemplateName: string = this.findSubmissionTemplateName(pageTab);
     const type: SubmissionType = SubmissionType.fromTemplate(submissionTemplateName);
 
-    return new Submission(type, this.pageTab2SubmissionData(pageTab));
+    return new Submission(type, this.pageTabToSubmissionData(pageTab));
   }
 
-  pageTab2SubmissionData(pageTab: PageTab): SubmissionData {
+  pageTabToSubmissionData(pageTab: PageTab): SubmissionData {
     return <SubmissionData>{
       accno: pageTab.accno,
       tags: (pageTab.tags || []).map(t => new Tag(t.classifier, t.tag)),
@@ -40,15 +43,6 @@ export class PageTabToSubmissionService {
     const attachToValue: string[] = attachToAttributes.map((attribute) => attribute.value!);
 
     return attachToValue.length === 1 ? attachToValue[0] : DEFAULT_TEMPLATE_NAME;
-  }
-
-  private flatArray<T>(array: (T | T[])[]): T[] {
-    const elements = Array.isArray(array) ? array : new Array(array);
-
-    return elements
-      .map((element) => Array.isArray(element) ? element : [element])
-      .reduce((previousElement, currentElement) => [...currentElement, ...previousElement], <T[]>[])
-      .reverse();
   }
 
   private hasSubsections(section: PageTabSection): boolean {
@@ -79,10 +73,10 @@ export class PageTabToSubmissionService {
     const parentAndChildAttributes = mergeAttributes(editableParentAttributes, ptSection.attributes || []);
     const attributes = this.pageTabAttributesToAttributeData(parentAndChildAttributes);
 
-    const links = this.flatArray(ptSection.links || []);
-    const files = this.flatArray(ptSection.files || []);
-    const subsections = this.flatArray(ptSection.subsections || []);
-    const contacts = authors2Contacts(subsections.filter(section => !this.hasSubsections(section)));
+    const links = flatArray<PtLink>(ptSection.links || []);
+    const files = flatArray<PtFile>(ptSection.files || []);
+    const subsections = flatArray(ptSection.subsections || []);
+    const contacts = authorsToContacts(subsections.filter(section => !this.hasSubsections(section)));
     const featureSections = pageTabToSubmissionProtocols(contacts);
     const keywords = extractKeywordsFromAttributes(ptSection.attributes || []);
 

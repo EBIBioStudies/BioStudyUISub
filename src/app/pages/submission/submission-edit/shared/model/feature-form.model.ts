@@ -13,7 +13,6 @@ import { ColumnControl } from './column-control.model';
 import { RowForm } from './row-form.model';
 import { ControlGroupRef } from '../control-reference';
 import { MyFormGroup, SubmFormValidators } from '../form-validators';
-import { featureGroupSize } from '../utilis';
 import { CellControl } from './cell-control.model';
 import { StructureChangeEvent } from '../structure-change-event';
 
@@ -208,9 +207,7 @@ export class FeatureForm extends FormBase {
   }
 
   canRemoveRow(): boolean {
-    return !this.isReadonly &&
-      (!this.featureType.displayType.isShownByDefault || this.feature.rowSize() > 1) &&
-      this.feature.groups.every(g => featureGroupSize(g) > 1);
+    return !this.isReadonly && (!this.featureType.displayType.isShownByDefault || this.feature.rowSize() > 1);
   }
 
   cellControlAt(rowIndex: number, columnId: string): CellControl | undefined {

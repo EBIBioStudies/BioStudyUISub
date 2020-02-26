@@ -3,7 +3,15 @@ import { FormControl } from '@angular/forms';
 import { Injectable } from '@angular/core';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 import { none, Option, some } from 'fp-ts/lib/Option';
-import { Submission, AttributeData, Section, Feature, Attribute } from 'app/pages/submission/submission-shared/model';
+import {
+  Attribute,
+  AttributeData,
+  Feature,
+  Section,
+  SubmValidationErrors,
+  Submission,
+  SubmissionValidator
+} from 'app/pages/submission/submission-shared/model';
 import { UserData } from 'app/auth/shared';
 import { UserInfo } from 'app/auth/shared/model';
 import { PageTab, SelectValueType } from 'app/pages/submission/submission-shared/model';
@@ -269,6 +277,10 @@ export class SubmEditService {
 
   switchSectionById(sectionId: string) {
     this.switchSection(this.sectionSwitch$.value.map(sf => sf.findSectionForm(sectionId)).toUndefined());
+  }
+
+  validateSubmission(): SubmValidationErrors {
+    return SubmissionValidator.validate(this.submModel!);
   }
 
   private asContactAttributes(userInfo: UserInfo): AttributeData[] {

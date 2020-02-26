@@ -19,18 +19,16 @@
 // Use on `li`s or `div`s within the `.list-group` parent.
 
 .list-group-item {
-  position: relative;
+  color: @list-group-bg;
   display: block;
   padding: 10px 15px;
-  // Place the border on the list items and negative margin up for better styling
-  margin-bottom: -1px;
-  background-color: @list-group-bg;
-  border: 1px solid @list-group-border;
+  position: relative;
 
   // Round the first and last items
   &:first-child {
     .border-top-radius(@list-group-border-radius);
   }
+
   &:last-child {
     margin-bottom: 0;
     .border-bottom-radius(@list-group-border-radius);
@@ -66,6 +64,7 @@ button.list-group-item {
 }
 
 .list-group-item {
+
   // Disabled state
   &.disabled,
   &.disabled:hover,
@@ -78,6 +77,7 @@ button.list-group-item {
     .list-group-item-heading {
       color: inherit;
     }
+
     .list-group-item-text {
       color: @list-group-disabled-text-color;
     }
@@ -94,10 +94,11 @@ button.list-group-item {
 
     // Force color to inherit for custom content
     .list-group-item-heading,
-    .list-group-item-heading > small,
-    .list-group-item-heading > .small {
+    .list-group-item-heading>small,
+    .list-group-item-heading>.small {
       color: inherit;
     }
+
     .list-group-item-text {
       color: @list-group-active-text-color;
     }
@@ -124,6 +125,7 @@ button.list-group-item {
   margin-top: 0;
   margin-bottom: 5px;
 }
+
 .list-group-item-text {
   margin-bottom: 0;
   line-height: 1.3;

@@ -1,8 +1,8 @@
-import { authors2Contacts, contacts2Authors } from './pagetab-authors.utils';
+import { authorsToContacts, contactsToAuthors } from './pagetab-authors.utils';
 
 describe('AuthorsAndAffiliations:', () => {
   it('authorsToContacts: authors and affiliations are merged into contacts', () => {
-    expect(authors2Contacts(
+    expect(authorsToContacts(
       [
         {
           type: 'Author',
@@ -99,7 +99,7 @@ describe('AuthorsAndAffiliations:', () => {
   });
 
   it('contactsToAuthors: [contact] sections are split into authors and affiliations', () => {
-    const authors = contacts2Authors(
+    const authors = contactsToAuthors(
       [
         {
           type: 'Contact',

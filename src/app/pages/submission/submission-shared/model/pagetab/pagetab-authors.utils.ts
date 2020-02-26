@@ -12,7 +12,7 @@ export function getOrganizationFromSubsection(section, orgName) {
   )) || {};
 }
 
-export function authors2Contacts(sections: PageTabSection[] = []): PageTabSection[] {
+export function authorsToContacts(sections: PageTabSection[] = []): PageTabSection[] {
   const isAffiliation = (s: Nullable<string>) => {
     return String.isDefined(s) && ['organization', 'organisation', 'affiliation'].includes(s!.toLowerCase());
   };
@@ -112,7 +112,7 @@ class Organisations {
   }
 }
 
-export function contacts2Authors(sections: PageTabSection[] = []): PageTabSection[] {
+export function contactsToAuthors(sections: PageTabSection[] = []): PageTabSection[] {
   const isContact = isEqualTo('contact');
   const isOrganisation = isEqualTo('organisation');
   const orgs = new Organisations();

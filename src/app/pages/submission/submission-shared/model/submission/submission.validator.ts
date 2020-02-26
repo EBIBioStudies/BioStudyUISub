@@ -74,9 +74,6 @@ class ValidationRules {
         if (valueType.is(ValueTypeName.date) && parseDate(value) === undefined) {
           return `'${name}' has an invalid format`;
         }
-        if (valueType.is(ValueTypeName.orcid) && !/^\d{4}-\d{4}-\d{4}-\d{4}$/.test(value)) {
-          return `'${name}' has an invalid format`;
-        }
         return undefined;
       }
     };
