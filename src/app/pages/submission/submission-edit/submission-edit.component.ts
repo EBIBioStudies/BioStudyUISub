@@ -50,8 +50,8 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
   private method?: string;
   private releaseDate: Date = new Date();
   private scrollToCtrl?: FormControl;
-  private unsubscribe: Subject<void> = new Subject<void>();
   private submissionErrors: SubmValidationErrors = SubmValidationErrors.EMPTY;
+  private unsubscribe: Subject<void> = new Subject<void>();
 
   constructor(
     private route: ActivatedRoute,
