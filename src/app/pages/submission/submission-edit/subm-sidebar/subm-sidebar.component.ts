@@ -117,10 +117,8 @@ export class SubmSidebarComponent implements OnDestroy {
         });
 
       secForm.form.statusChanges
-      .pipe(takeUntil(this.unsubscribeForm))
-      .subscribe(() => {
-        this.updateInvalidControls();
-      });
+        .pipe(takeUntil(this.unsubscribeForm))
+        .subscribe(() => this.updateInvalidControls());
     }
   }
 
