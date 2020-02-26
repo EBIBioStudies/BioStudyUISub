@@ -260,9 +260,9 @@ export class SubmEditService {
       sectionForm.form.valueChanges
         .pipe(debounceTime(500))
         .subscribe(() => {
-          const dirty: boolean = sectionForm.form.dirty;
+          const touched: boolean = sectionForm.form.touched;
 
-          if (dirty) {
+          if (touched) {
             this.editState.startEditing();
             this.save();
           }

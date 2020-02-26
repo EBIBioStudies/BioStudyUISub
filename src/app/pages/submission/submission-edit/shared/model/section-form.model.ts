@@ -214,8 +214,10 @@ export class SectionForm extends FormBase {
   }
 
   private subscribe(featureForm: FeatureForm) {
-    this.sb.set(featureForm.id, featureForm.structureChanges$.subscribe(ev => {
-      this.structureChanges$.next(ev);
+    this.sb.set(featureForm.id, featureForm.structureChanges$.subscribe((event) => {
+      this.form.markAsTouched();
+
+      this.structureChanges$.next(event);
     }));
   }
 
