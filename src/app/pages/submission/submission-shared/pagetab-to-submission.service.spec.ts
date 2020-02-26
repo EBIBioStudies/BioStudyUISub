@@ -2,7 +2,7 @@ import { TestBed, inject } from '@angular/core/testing';
 import { PageTabToSubmissionService } from './pagetab-to-submission.service';
 import { PageTab } from './model/pagetab';
 
-describe('PageTab To Submission Util:', () => {
+describe('PageTabToSubmissionService', () => {
   beforeAll(() => {
     TestBed.configureTestingModule({
       imports: [],

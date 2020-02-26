@@ -1,9 +1,9 @@
 import { isOrcidValid } from './orcid.utils';
 
 describe('orcid.utils', () => {
-  const validOrcidWithXChecksum = '0000-0003-0850-250X';
-  const validOrcidWithIntChecksum = '0000-0002-6663-9734';
-  const invalidOrcid = '0000-0003-0850-250-320';
+  const validOrcidWithXChecksum: string = '0000-0003-0850-250X';
+  const validOrcidWithIntChecksum: string = '0000-0002-6663-9734';
+  const invalidOrcid: string = '0000-0003-0850-250-320';
 
   describe('isOrcidValid method', () => {
     test('should return true if ORCID carrying a X checksum is valid', () => {

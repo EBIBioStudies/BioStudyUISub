@@ -87,9 +87,9 @@ export interface PageTabSection {
   accessTags?: string[];
   accno?: string;
   attributes?: PtAttribute[];
-  files?: PtFileItem[];
+  files?: PtFile[];
   libraryFile?: string;
-  links?: PtLinkItem[];
+  links?: PtLink[];
   subsections?: PageTabSection[];
   tags?: PtTag[];
   type?: string;

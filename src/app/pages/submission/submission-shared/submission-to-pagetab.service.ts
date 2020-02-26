@@ -9,7 +9,7 @@ import {
   PtFileItem,
   PtLink,
   PtLinkItem,
-  contacts2Authors,
+  contactsToAuthors,
   mergeAttributes,
   submissionToPageTabProtocols,
 } from './model/pagetab';
@@ -44,17 +44,17 @@ export class SubmissionToPageTabService {
     return <PageTab>{
       type: 'Submission',
       accno: subm.accno,
-      section: this.section2PtSection(subm.section, isSanitise),
+      section: this.sectionToPtSection(subm.section, isSanitise),
       tags: subm.tags.tags,
       accessTags: subm.tags.accessTags,
       attributes: mergeAttributes(
-        subm.attributes.map(at => this.attributeData2PtAttribute(at)),
+        subm.attributes.map(at => this.attributeDataToPtAttribute(at)),
         this.extractSectionAttributes(subm.section, isSanitise)
           .filter(at => AttrExceptions.editable.includes(at.name!)))
     };
   }
 
-  private attributeData2PtAttribute(attr: AttributeData): PtAttribute {
+  private attributeDataToPtAttribute(attr: AttributeData): PtAttribute {
     const ptAttr = <PtAttribute>{
       name: attr.name,
       value: attr.value,
@@ -142,10 +142,10 @@ export class SubmissionToPageTabService {
       .map(featureToPageTabSection)
       .reduce((rv, el) => rv.concat(el), []);
 
-    const authorsSections = contacts2Authors(featureAttributesAsPageTabSection);
+    const authorsSections = contactsToAuthors(featureAttributesAsPageTabSection);
     const protocolSections = submissionToPageTabProtocols(authorsSections);
 
-    return protocolSections.concat(section.sections.list().map(s => this.section2PtSection(s, isSanitize)));
+    return protocolSections.concat(section.sections.list().map(s => this.sectionToPtSection(s, isSanitize)));
   }
 
   private fieldsAsAttributes(section: Section, isSanitise: boolean) {
@@ -153,7 +153,7 @@ export class SubmissionToPageTabService {
       .filter(attr => (isSanitise && !isEmptyAttr(attr)) || !isSanitise);
   }
 
-  private section2PtSection(section: Section, isSanitise: boolean = false): PageTabSection {
+  private sectionToPtSection(section: Section, isSanitise: boolean = false): PageTabSection {
     return <PageTabSection>{
       accessTags: section.tags.accessTags,
       accno: section.accno,
