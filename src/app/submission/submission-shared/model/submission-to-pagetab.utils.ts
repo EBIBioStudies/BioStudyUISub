@@ -87,7 +87,7 @@ function extractSectionSubsections(section: Section, isSanitize: boolean): PtSec
                 const featureAttributes = extractFeatureAttributes(f, isSanitize);
 
                 return featureAttributes.map(attrs => {
-                    return <PtSection>{type: f.typeName, attributes: attrs, subsections: <PtSectionItem> section.subsections };
+                    return <PtSection>{ type: f.typeName, attributes: attrs };
                 });
             }).reduce((rv, el) => rv.concat(el), [])
     );
