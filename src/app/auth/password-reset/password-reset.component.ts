@@ -22,9 +22,10 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
     @ViewChild('focusEl')
     private focusRef?: ElementRef;
 
-    constructor(private authService: AuthService,
-                private activatedRoute: ActivatedRoute) {
-    }
+    constructor(
+        private authService: AuthService,
+        private activatedRoute: ActivatedRoute
+    ) {}
 
     ngOnInit(): void {
         const key = this.activatedRoute.snapshot.paramMap.get('key');
@@ -46,22 +47,8 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
 
         // Makes request if all form fields completed satisfactorily
         if (form.valid) {
-            this.isLoading = true;
-            this.authService
-                .passwordReset(this.model)
-                .subscribe(
-                    (data) => {
-                        this.isLoading = false;
-                        this.showSuccess = true;
-                    },
-                    (error) => {
-                        this.isLoading = false;
-                        this.hasError = true;
-                        this.message = error.message;
-                        this.resetRecaptcha(form.controls['captcha']);
-                    });
-
-            // Validates in bulk if form incomplete
+            // If reCAPTCHA resolves, the signup request is sent.
+            this.recaptcha!.execute();
         } else {
             Object.keys(form.controls).forEach((key) => {
                 form.controls[key].markAsTouched({onlySelf: true});
@@ -77,18 +64,26 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
     /**
      * Resets all aspects of the captcha widget.
      * @see {@link RecaptchaComponent}
-     * @param {AbstractControl} control - Form control for the captcha.
      */
-    resetRecaptcha(control: AbstractControl): void {
+    resetRecaptcha(): void {
         this.recaptcha!.reset();
         this.model.resetCaptcha();
-
-        // Resets the state of captcha's control
-        control.markAsUntouched({onlySelf: true});
-        control.markAsPristine({onlySelf: true});
     }
 
-    onRecaptchaResolved(resp: string): void {
-        this.model.captcha = resp;
+    onRecaptchaResolved(): void {
+        this.isLoading = true;
+        this.authService
+            .passwordReset(this.model)
+            .subscribe(
+                () => {
+                    this.isLoading = false;
+                    this.showSuccess = true;
+                },
+                (error) => {
+                    this.isLoading = false;
+                    this.hasError = true;
+                    this.message = error.message;
+                    this.resetRecaptcha();
+                });
     }
 }
