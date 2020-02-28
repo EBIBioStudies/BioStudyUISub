@@ -44,22 +44,8 @@ export class SignUpComponent implements AfterViewInit, OnInit {
 
         // Makes request if all form fields completed satisfactorily
         if (form.valid) {
-            this.isLoading = true;
-            this.authService
-                .signUp(this.model)
-                .subscribe(
-                    (data) => {
-                        this.isLoading = false;
-                        this.success = true;
-                    },
-                    (error: ServerError) => {
-                        this.isLoading = false;
-                        this.error = error;
-                        this.resetReCaptcha(form.controls['captcha']);
-                    }
-                );
-
-            // Validates in bulk if form incomplete
+            // If reCAPTCHA resolves, the signup request is sent.
+            this.recaptcha!.execute();
         } else {
             Object.keys(form.controls).forEach((key) => {
                 form.controls[key].markAsTouched({onlySelf: true});
@@ -77,18 +63,26 @@ export class SignUpComponent implements AfterViewInit, OnInit {
     /**
      * Resets all aspects of the captcha widget.
      * @see {@link RecaptchaComponent}
-     * @param {AbstractControl} control - Form control for the captcha.
      */
-    resetReCaptcha(control: AbstractControl): void {
+    resetReCaptcha(): void {
         this.recaptcha!.reset();
         this.model.resetCaptcha();
-
-        // Resets the state of captcha's control
-        control.markAsUntouched({onlySelf: true});
-        control.markAsPristine({onlySelf: true});
     }
 
-    onRecaptchaResolved(resp: string): void {
-        this.model.captcha = resp;
+    onRecaptchaResolved(): void {
+        this.isLoading = true;
+        this.authService
+            .signUp(this.model)
+            .subscribe(
+                () => {
+                    this.isLoading = false;
+                    this.success = true;
+                },
+                (error: ServerError) => {
+                    this.isLoading = false;
+                    this.error = error;
+                    this.resetReCaptcha();
+                }
+            );
     }
 }
