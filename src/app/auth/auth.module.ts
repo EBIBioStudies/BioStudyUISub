@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { RecaptchaModule } from 'ng-recaptcha';
-import { RecaptchaFormsModule } from 'ng-recaptcha/forms';
+import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
 import { SharedModule } from 'app/shared/shared.module';
 import { AuthService, UserSession, UserData } from 'app/auth/shared';
 import { SignInComponent } from './signin/signin.component';

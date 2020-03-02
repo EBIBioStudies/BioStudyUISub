@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, ViewChild, OnInit } from '@angula
 import { Router } from '@angular/router';
 import { RecaptchaComponent } from 'ng-recaptcha';
 import { ServerError } from 'app/shared/server-error.handler';
-import { AbstractControl, NgForm } from '@angular/forms';
+import { NgForm } from '@angular/forms';
 import { AuthService, UserSession } from '../shared';
 import { RegistrationData } from '../shared/model';
 
@@ -22,10 +22,11 @@ export class SignUpComponent implements AfterViewInit, OnInit {
   @ViewChild('recaptchaEl', { static: false })
   private recaptcha?: RecaptchaComponent;
 
-  constructor(private authService: AuthService,
-        private session: UserSession,
-        private router: Router) {
-  }
+  constructor(
+    private authService: AuthService,
+    private session: UserSession,
+    private router: Router
+  ) {}
 
   // TODO: Turn autofocus on render into a directive
   ngAfterViewInit(): void {
@@ -40,6 +41,20 @@ export class SignUpComponent implements AfterViewInit, OnInit {
 
   onRecaptchaResolved(resp: string): void {
     this.model.captcha = resp;
+    this.isLoading = true;
+    this.authService
+      .register(this.model)
+      .subscribe(
+        () => {
+          this.isLoading = false;
+          this.success = true;
+        },
+        (error: ServerError) => {
+          this.isLoading = false;
+          this.error = error;
+          this.resetReCaptcha();
+        }
+      );
   }
 
   onSubmit(form: NgForm): void {
@@ -47,22 +62,8 @@ export class SignUpComponent implements AfterViewInit, OnInit {
 
     // Makes request if all form fields completed satisfactorily
     if (form.valid) {
-      this.isLoading = true;
-      this.authService
-        .register(this.model)
-        .subscribe(
-          () => {
-            this.isLoading = false;
-            this.success = true;
-          },
-          (error: ServerError) => {
-            this.isLoading = false;
-            this.error = error;
-            this.resetReCaptcha(form.controls['captcha']);
-          }
-        );
-
-      // Validates in bulk if form incomplete
+      // If reCAPTCHA resolves, the signup request is sent.
+      this.recaptcha!.execute();
     } else {
       Object.keys(form.controls).forEach((key) => {
         form.controls[key].markAsTouched({onlySelf: true});
@@ -80,14 +81,8 @@ export class SignUpComponent implements AfterViewInit, OnInit {
   /**
    * Resets all aspects of the captcha widget.
    * @see {@link RecaptchaComponent}
-   * @param {AbstractControl} control - Form control for the captcha.
    */
-  resetReCaptcha(control: AbstractControl): void {
-    this.recaptcha!.reset();
+  resetReCaptcha(): void {
     this.model.resetCaptcha();
-
-    // Resets the state of captcha's control
-    control.markAsUntouched({onlySelf: true});
-    control.markAsPristine({onlySelf: true});
   }
 }

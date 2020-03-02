@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { PathLocationStrategy, LocationStrategy } from '@angular/common';
-import { RecaptchaModule } from 'ng-recaptcha';
+import { RecaptchaModule, RecaptchaSettings, RECAPTCHA_SETTINGS, RECAPTCHA_BASE_URL } from 'ng-recaptcha';
 import {
   TypeaheadModule,
   TooltipModule,
@@ -58,9 +58,14 @@ export function initConfig(config: AppConfig): () => Promise<any> {
   ],
   providers: [
     AppConfig,
-    {provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true},
-    {provide: LocationStrategy, useClass: PathLocationStrategy},
-    {provide: ErrorHandler, useClass: GlobalErrorHandler}
+    { provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true },
+    { provide: LocationStrategy, useClass: PathLocationStrategy },
+    { provide: ErrorHandler, useClass: GlobalErrorHandler },
+    { provide: RECAPTCHA_BASE_URL, useValue: 'https://recaptcha.net/recaptcha/api.js' },
+    {
+      provide: RECAPTCHA_SETTINGS,
+      useValue: { siteKey: '6Lc8JN0UAAAAAN4yxc0Ms6qIZ3fml-EYuuD_cTKi', size: 'invisible' } as RecaptchaSettings
+    }
   ],
   bootstrap: [AppComponent]
 })
