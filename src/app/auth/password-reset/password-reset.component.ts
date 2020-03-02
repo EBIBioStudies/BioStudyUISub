@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { RecaptchaComponent } from 'ng-recaptcha';
 import { ActivatedRoute } from '@angular/router';
-import { AbstractControl, NgForm } from '@angular/forms';
+import { NgForm } from '@angular/forms';
 import { AuthService } from 'app/auth/shared';
 import { PasswordResetData } from '../shared/model';
 
@@ -44,6 +44,20 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
 
   onRecaptchaResolved(resp: string): void {
     this.model.captcha = resp;
+    this.isLoading = true;
+    this.authService
+      .changePassword(this.model)
+      .subscribe(
+        () => {
+          this.isLoading = false;
+          this.showSuccess = true;
+        },
+        (error) => {
+          this.isLoading = false;
+          this.hasError = true;
+          this.message = error.message;
+          this.resetRecaptcha();
+        });
   }
 
   onSubmit(form: NgForm): void {
@@ -51,22 +65,8 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
 
     // Makes request if all form fields completed satisfactorily
     if (form.valid) {
-      this.isLoading = true;
-      this.authService
-        .changePassword(this.model)
-        .subscribe(
-          () => {
-            this.isLoading = false;
-            this.showSuccess = true;
-          },
-          (error) => {
-            this.isLoading = false;
-            this.hasError = true;
-            this.message = error.message;
-            this.resetRecaptcha(form.controls['captcha']);
-          });
-
-      // Validates in bulk if form incomplete
+      // If reCAPTCHA resolves, the signup request is sent.
+      this.recaptcha!.execute();
     } else {
       Object.keys(form.controls).forEach((key) => {
         form.controls[key].markAsTouched({onlySelf: true});
@@ -82,14 +82,8 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
   /**
    * Resets all aspects of the captcha widget.
    * @see {@link RecaptchaComponent}
-   * @param {AbstractControl} control - Form control for the captcha.
    */
-  resetRecaptcha(control: AbstractControl): void {
-    this.recaptcha!.reset();
+  resetRecaptcha(): void {
     this.model.resetCaptcha();
-
-    // Resets the state of captcha's control
-    control.markAsUntouched({onlySelf: true});
-    control.markAsPristine({onlySelf: true});
   }
 }

@@ -87,20 +87,13 @@
                 stValidateOnblur>
             </st-orcid-input-box>
           </div>
-          <div class="form-group" [ngClass]="{'has-error': captcha.invalid && (captcha.dirty || captcha.touched)}">
-            <label class="control-label">
-              <span class="text-black">Verify you are a human</span>
-              <span [hidden]="captcha.valid || (captcha.pristine && captcha.untouched)">Please confirm you are not a robot</span>
-            </label>
-            <re-captcha (resolved)="onRecaptchaResolved($event)"
-                  [(ngModel)]="model.captcha"
-                  name="captcha"
-                  #captcha="ngModel"
-                  required
-                  siteKey="6Lcmlv0SAAAAAHofnIcb29l1LMZsnGFcSlH8Reve"
-                  class="captcha-root"
-                  #recaptchaEl></re-captcha>
-          </div>
+            <re-captcha
+              (resolved)="onRecaptchaResolved($event)"
+              name="captcha"
+              required
+              class="captcha-root"
+              #recaptchaEl
+            ></re-captcha>
           <div [ngClass]="{'has-error': terms.invalid && terms.touched}">
             <div class="radio">
               <input type="checkbox" id="terms" name="terms"
