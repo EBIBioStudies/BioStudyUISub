@@ -3,7 +3,8 @@
     <div class="auth-content">
       <div class="alert error-message" [ngClass]="{'alert-danger': error, 'invisible': !error}">
         {{error ? error.message : '&nbsp;'}}
-        Please check the fields below and try again, if the problem persists, drop an email to <a  href="mailto:biostudies@ebi.ac.uk">biostudies@ebi.ac.uk</a>
+        Please check the fields below and try again, if the problem persists, drop an email to <a
+          href="mailto:biostudies@ebi.ac.uk">biostudies@ebi.ac.uk</a>
       </div>
       <h3>Welcome</h3>
       <p>
@@ -16,21 +17,15 @@
       <div class="panel panel-default">
         <div class="panel-body">
           <form id="login-form" novalidate name="signInForm" role="form" autocomplete="off"
-              (ngSubmit)="onSubmit(signInForm)"
-              #signInForm="ngForm">
+            (ngSubmit)="onSubmit(signInForm)" #signInForm="ngForm">
             <div class="form-group" [ngClass]="{'has-error': login.invalid && login.touched}">
               <label class="control-label" for="login">
                 <span class="text-black">Email address</span>
                 <span *ngIf="login.invalid && login.touched">Please enter an email address</span>
               </label>
-              <input type="text" id="login" name="login" autofocus tabindex="1"
-                   class="form-control"
-                   [(ngModel)]="model.login"
-                   required
-                   stValidateOnblur
-                   (change)="resetGlobalError()"
-                   #login="ngModel"
-                   #focusEl/>
+              <input type="text" id="login" name="login" autofocus tabindex="1" class="form-control"
+                [(ngModel)]="model.login" required stValidateOnblur (change)="resetGlobalError()" #login="ngModel"
+                #focusEl />
               <div class="text-right">
                 <a routerLink="/resend_activation_link" tabindex="3">Resend activation email</a>
               </div>
@@ -40,21 +35,16 @@
                 <span class="text-black">Password</span>
                 <span *ngIf="password.invalid && password.touched">Please enter a password</span>
               </label>
-              <input type="password" name="password" id="password" tabindex="2" autocomplete="nope"
-                   class="form-control"
-                   [(ngModel)]="model.password"
-                   required
-                   stValidateOnblur
-                   (change)="resetGlobalError()"
-                   #password="ngModel"/>
+              <input type="password" name="password" id="password" tabindex="2" autocomplete="nope" class="form-control"
+                [(ngModel)]="model.password" required stValidateOnblur (change)="resetGlobalError()"
+                #password="ngModel" />
               <div class="text-right">
                 <a routerLink="/password_reset_request" tabindex="4">Forgot your password?</a>
               </div>
             </div>
 
             <div class="row-submit">
-              <button type="submit" class="btn btn-primary btn-submit"
-                  [disabled]="isLoading">Log in</button>
+              <button type="submit" class="btn btn-primary btn-submit" [disabled]="isLoading">Log in</button>
               <div class="text-muted col-md-10">
                 <span *ngIf="isLoading"><i class="fa fa-cog fa-spin"></i> Logging in...</span>
               </div>
