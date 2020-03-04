@@ -51,9 +51,9 @@ export class HeaderComponent implements OnDestroy {
 
     // Updates the view's state whenever the current URL is among the login-related routes.
     this.router.events.subscribe((event: Event) => {
-       if (event instanceof NavigationEnd) {
-         header.userRegistering = router.url === '/signup';
-         header.userLoggingIn = router.url === '/signin';
+      if (event instanceof NavigationEnd) {
+        header.userRegistering = router.url.includes('signup');
+        header.userLoggingIn = router.url.includes('signin');
       }
     });
 
