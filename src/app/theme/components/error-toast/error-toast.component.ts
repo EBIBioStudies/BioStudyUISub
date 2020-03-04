@@ -15,7 +15,7 @@ export class ErrorToastComponent {
    * @param {ChangeDetectorRef} changeRef - Forces change detection on this component.
    * @param {ElementRef} rootEl - Reference to the component's wrapping element
    */
-  constructor (geh: ErrorHandler, changeRef: ChangeDetectorRef, private rootEl: ElementRef) {
+  constructor(geh: ErrorHandler, changeRef: ChangeDetectorRef, private rootEl: ElementRef) {
     if (geh instanceof GlobalErrorHandler) {
       geh.errorDetected.subscribe(error => {
 
