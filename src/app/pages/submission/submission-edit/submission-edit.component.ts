@@ -134,12 +134,12 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
           this.locService.replaceState('/submissions/edit/' + this.accno);
         }
 
-        if (this.sideBar && resp.payload.isSome ) {
-          const att = resp.payload.getOrElse({'name': 'AttachTo', value: '' }) || { value: '' };
-          this.sideBar.showAdvanced = !(att.value.toLowerCase() === 'arrayexpress' );
+        if (this.sideBar && resp.payload.isSome) {
+          const att = resp.payload.getOrElse({ 'name': 'AttachTo', value: '' }) || { value: '' };
+          this.sideBar.showAdvanced = !(att.value.toLowerCase() === 'arrayexpress');
         }
 
-        if (resp.error.isSome() ) {
+        if (resp.error.isSome()) {
           this.modalService.alert(
             'Submission could not be retrieved. ' +
             'Please make sure the URL is correct and contact us in case the problem persists.', 'Error', 'Ok'
@@ -153,10 +153,6 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
 
           if (releaseDateCtrl) {
             this.releaseDate = new Date(Date.parse(releaseDateCtrl.control.value));
-
-            releaseDateCtrl.control.valueChanges.subscribe((value) => {
-              this.releaseDate = new Date(Date.parse(value));
-            });
           } else {
             this.releaseDate = new Date();
           }
@@ -176,7 +172,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
       .pipe(
         takeUntil(this.unsubscribe),
         switchMap(() => this.submEditService.revert())
-      ).subscribe(() => {});
+      ).subscribe(() => { });
   }
 
   onSectionClick(sectionForm: SectionForm): void {

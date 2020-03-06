@@ -1,19 +1,29 @@
-/* Prevents the input from taking up all horizontal space */
-/* NOTE: it is assumed that the control will be subject to Bootstrap styling */
-.dropdown {
+.wrapper {
+  display: flex;
   position: relative;
   max-width: 15rem;
-  cursor: pointer;
+}
+
+.hidden-input {
+  position: absolute;
+  height: 100%;
+  top: 0;
+  visibility: hidden;
+}
+
+.dropdown {
+  position: relative;
 }
 
 /* Ensures the control is understood as a select-like interactive element */
 .dropdown:after {
-  position: absolute;
   content: "\25BC";
-  top: .5rem;
+  position: absolute;
   right: .75rem;
+  top: .5rem;
   z-index: 100;
 }
+
 .form-control {
   cursor: pointer;
 }
@@ -22,6 +32,7 @@
 .readonly.dropdown:after {
   display: none;
 }
+
 .readonly .form-control {
   cursor: default;
 }

@@ -1,7 +1,8 @@
-import { Component, ElementRef, forwardRef, Input, ViewChild, OnInit } from '@angular/core';
+import { Component, ElementRef, forwardRef, Input, ViewChild, OnInit, HostListener } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { BsDatepickerDirective } from 'ngx-bootstrap';
+import { formatDate } from 'ngx-bootstrap/chronos';
 import { isEqualDate } from '../utils';
 import { AppConfig } from '../app.config';
 
@@ -25,9 +26,10 @@ import { AppConfig } from '../app.config';
  */
 export class DateInputComponent implements ControlValueAccessor, OnInit {
   @Input() allowPast?: boolean = undefined;
-  dateValue: Date | undefined;
+  inputDateValue: string | undefined;
   @Input() isSmall?: boolean = false;
   @Input() maxDate?: Date = undefined;
+  rawDateValue: Date | undefined;
   @Input() readonly?: boolean = false;
   @Input() required?: boolean = false;
   @ViewChild('dp', { static: true }) private datepicker?: BsDatepickerDirective;
@@ -41,7 +43,6 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
    */
   constructor(config: BsDatepickerConfig, private appConfig: AppConfig, private rootEl: ElementRef) {
     config.showWeekNumbers = false;
-    config.dateInputFormat = this.appConfig.dateInputFormat;
   }
 
   /**
@@ -87,19 +88,18 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
    * @see {@link https://valor-software.com/ngx-bootstrap/#/datepicker}
    */
   onPickerSet(dateObj: Date, isChange: boolean = this.datepicker!.isOpen) {
-    let formattedDate; // date in format expected by backend
+    if (dateObj && !isEqualDate(dateObj, this.rawDateValue)) {
+      this.rawDateValue = dateObj;
+      this.inputDateValue = formatDate(dateObj, this.appConfig.dateInputFormat);
 
-    if (dateObj && !isEqualDate(dateObj, this.dateValue)) {
-      this.dateValue = dateObj;
-      formattedDate = this.dateValue.toISOString();
-      this.onChange(formattedDate);
+      // Formats to ISO as backend expect such format.
+      const formattedDate = dateObj.toISOString();
 
       // Propagates the date change through the DOM if so wished.
       if (isChange) {
-        this.rootEl.nativeElement.value = formattedDate;
+        this.onChange(formattedDate);
         this.rootEl.nativeElement.dispatchEvent(new Event('change', { bubbles: true }));
       }
-
     }
   }
 
@@ -110,6 +110,11 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
     document.querySelector('.bs-datepicker-container')!.addEventListener('click', (event) => {
       event.stopPropagation();
     });
+  }
+
+  @HostListener('window:scroll', ['$event'])
+  onScrollEvent() {
+    this.datepicker!.hide();
   }
 
   /**
@@ -131,8 +136,9 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
    * Gets the datepicker's input back to its state at instantiation, namely a blank value.
    */
   reset() {
-    this.dateValue = undefined;
-    this.onChange(this.dateValue);
+    this.rawDateValue = undefined;
+    this.inputDateValue = undefined;
+    this.onChange(this.rawDateValue);
   }
 
   /**
