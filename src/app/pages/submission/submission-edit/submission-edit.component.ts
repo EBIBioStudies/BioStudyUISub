@@ -151,7 +151,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
         } else {
           const releaseDateCtrl = this.sectionForm!.findFieldControl('ReleaseDate');
 
-          if (releaseDateCtrl) {
+          if (releaseDateCtrl && releaseDateCtrl.control.value) {
             this.releaseDate = new Date(Date.parse(releaseDateCtrl.control.value));
           } else {
             this.releaseDate = new Date();
