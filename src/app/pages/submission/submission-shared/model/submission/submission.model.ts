@@ -257,7 +257,7 @@ export class Features {
       featureGroup.forEach(f => f.groups.push(featureGroup));
       const rowCount = featureGroup.map(f => f.rowSize()).reduce((rv, v) => rv + v, 0);
       if (rowCount === 0) {
-        featureGroup[0].addRow();
+        featureGroup.forEach((fGroup) => fGroup.addRow());
       }
     });
   }
