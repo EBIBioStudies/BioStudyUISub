@@ -18,7 +18,7 @@ export class SectionForm extends FormBase {
   readonly featureForms: FeatureForm[] = [];
   readonly fieldControls: FieldControl[] = [];
   readonly sectionPath: string[];
-  /* can use form's valueChanges, but then the operations like add/remove column will not be atomic,
+  /** Can use form's valueChanges, but then the operations like add/remove column will not be atomic,
   as it requires to apply multiple changes at once */
   readonly structureChanges$ = new BehaviorSubject<StructureChangeEvent>(StructureChangeEvent.init);
   readonly subsectionForms: SectionForm[] = [];
@@ -59,17 +59,6 @@ export class SectionForm extends FormBase {
     const form = this.addSubsectionForm(this.section.sections.add(type));
     this.structureChanges$.next(StructureChangeEvent.sectionAdd);
     return form;
-  }
-
-  buildElements() {
-    const section = this.section;
-
-    section.fields.list().forEach((field) => this.addFieldControl(field));
-
-    [...[section.annotations], ...section.features.list()]
-      .forEach((feature) => this.addFeatureForm(feature));
-
-    section.sections.list().forEach((sectionItem) => this.addSubsectionForm(sectionItem));
   }
 
   findFieldControl(fieldName: string) {
@@ -197,6 +186,17 @@ export class SectionForm extends FormBase {
     this.subsectionForms.push(sectionForm);
     this.subsectionFormGroups.addControl(section.id, sectionForm.form);
     return sectionForm;
+  }
+
+  private buildElements() {
+    const section = this.section;
+
+    section.fields.list().forEach((field) => this.addFieldControl(field));
+
+    [section.annotations, ...section.features.list()]
+      .forEach((feature) => this.addFeatureForm(feature));
+
+    section.sections.list().forEach((sectionItem) => this.addSubsectionForm(sectionItem));
   }
 
   private findRoot(): SectionForm {

@@ -19,6 +19,7 @@ import {
 } from 'ngx-bootstrap';
 import { MarkdownModule } from 'ngx-markdown';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SortablejsModule } from 'ngx-sortablejs';
 import { AppComponent } from './app.component';
 import { AppConfig } from './app.config';
 import { AppRoutingModule } from './app-routing.module';
@@ -46,6 +47,7 @@ export function initConfig(config: AppConfig): () => Promise<any> {
     PopoverModule.forRoot(),
     CollapseModule.forRoot(),
     AlertModule.forRoot(),
+    SortablejsModule.forRoot({ animation: 150 }),
     BrowserAnimationsModule,
     PagesModule,
     AppRoutingModule,

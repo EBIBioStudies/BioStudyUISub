@@ -31,41 +31,46 @@
       </st-inline-edit>
     </div>
   </div>
-  <div *ngFor="let row of rows; let rowIdx = index;">
-    <div *ngIf="!readonly || !row.isEmpty" class="row">
-      <div class="cell heading-cell row-heading col-xs-1 col-md-1 text-center">
-        <span container="body"
-            [tooltip]="featureForm.canRemoveRow() ? '' : 'The table must contain one row at least'">
-          <button class="btn btn-danger btn-sm" type="button"
-              [ngClass]="{'invisible': readonly || featureForm.isReadonly}"
-              [disabled]="!featureForm.canRemoveRow()"
-              (click)="featureForm.removeRow(rowIdx)"
-              [tooltip]="featureForm.canRemoveRow ? 'Delete ' + featureForm.featureTypeName.toLowerCase() + ' ' + (rowIdx + 1) : ''"
-              placement="bottom"
-              container="body">
-            <i class="far fa-trash-alt"></i>
-          </button>
-        </span>
-        {{rowIdx+1}}
-      </div>
-      <div class="cell body-cell column-entry col-xs-3 col-md-2" *ngFor="let column of columns">
-        <div [ngClass]="{'readonly': column.isReadonly || featureForm.isReadonly,
-                 'optional': !column.isRequired,
-                 'has-error': row.hasErrorsAt(column.id)}">
-          <st-input-value placement="top"
-                  container="body"
-                  containerClass="{{featureForm.isRequired ? 'text-danger' : 'text-warning'}}"
-                  popover="{{row.hasErrorsAt(column.id) ? row.errorsAt(column.id) : ''}}"
-                  triggers="focus"
-                  [valueType]="column.valueType"
-                  [readonly]="readonly || column.isReadonly"
-                  [formControl]="row.cellControlAt(column.id).control"
-                  [autosuggestSource]="featureForm.cellValuesTypeaheadFunc(rowIdx, column.id)"
-                  [autosuggest]="column.autosuggest"
-                  (select)="onInputValueSelect($event, rowIdx)"
-                  stNativeElementAttach
-                  stValidateOnblur>
-          </st-input-value>
+  <div [sortablejs]="rows" [sortablejsOptions]="sortableJsOptions">
+    <div *ngFor="let row of rows; let rowIdx = index;"
+      (mouseenter)="onMouseEnterRow(rowIdx)"
+      (mouseleave)="onMouseLeaveRow()">
+      <div *ngIf="!readonly || !row.isEmpty" class="row" [ngClass]="{'is-sortable': isSortable}">
+        <div class="cell heading-cell row-heading col-xs-1 col-md-1 text-center">
+          <i class="fas fa-grip-vertical drip" [ngClass]="{ 'drip-visible': rowIdx === hoveredRowIndex && isSortable }"></i>
+          <span container="body"
+              [tooltip]="featureForm.canRemoveRow() ? '' : 'The table must contain one row at least'">
+            <button class="btn btn-danger btn-sm" type="button"
+                [ngClass]="{'invisible': readonly || featureForm.isReadonly}"
+                [disabled]="!featureForm.canRemoveRow()"
+                (click)="featureForm.removeRow(rowIdx)"
+                [tooltip]="featureForm.canRemoveRow ? 'Delete ' + featureForm.featureTypeName.toLowerCase() + ' ' + (rowIdx + 1) : ''"
+                placement="bottom"
+                container="body">
+              <i class="far fa-trash-alt"></i>
+            </button>
+          </span>
+          {{rowIdx+1}}
+        </div>
+        <div class="cell body-cell column-entry col-xs-3 col-md-2" *ngFor="let column of columns">
+          <div [ngClass]="{'readonly': column.isReadonly || featureForm.isReadonly,
+                    'optional': !column.isRequired,
+                    'has-error': row.hasErrorsAt(column.id)}">
+            <st-input-value placement="top"
+                    container="body"
+                    containerClass="{{featureForm.isRequired ? 'text-danger' : 'text-warning'}}"
+                    popover="{{row.hasErrorsAt(column.id) ? row.errorsAt(column.id) : ''}}"
+                    triggers="focus"
+                    [valueType]="column.valueType"
+                    [readonly]="readonly || column.isReadonly"
+                    [formControl]="row.cellControlAt(column.id).control"
+                    [autosuggestSource]="featureForm.cellValuesTypeaheadFunc(rowIdx, column.id)"
+                    [autosuggest]="column.autosuggest"
+                    (select)="onInputValueSelect($event, rowIdx)"
+                    stNativeElementAttach
+                    stValidateOnblur>
+            </st-input-value>
+          </div>
         </div>
       </div>
     </div>

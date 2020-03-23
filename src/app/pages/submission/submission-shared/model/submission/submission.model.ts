@@ -26,8 +26,10 @@ class Rows {
     if (this.isFull()) {
       throw new Error(`Can not add more than ${this.capacity} row(s) to a feature`);
     }
+
     const row = new ValueMap(keys);
     this.rows.push(row);
+
     return row;
   }
 
@@ -43,6 +45,10 @@ class Rows {
 
   list(): Array<ValueMap> {
     return this.rows.slice();
+  }
+
+  patchRows(rows: Array<ValueMap>) {
+    this.rows = rows;
   }
 
   removeAt(index: number): boolean {
@@ -209,6 +215,10 @@ export class Feature {
 
   findColumnById(columnId: string): Attribute | undefined {
     return this._columns.findById(columnId);
+  }
+
+  patchRows(rows: ValueMap[]) {
+    this._rows.patchRows(rows);
   }
 
   removeColumn(id: string): boolean {
