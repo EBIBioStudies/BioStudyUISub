@@ -56,7 +56,7 @@
     "@angular/platform-browser": "^8.2.14",
     "@angular/platform-browser-dynamic": "^8.2.14",
     "@angular/router": "^8.2.14",
-    "@fortawesome/fontawesome-free": "^5.4.2",
+    "@fortawesome/fontawesome-free": "^5.12.1",
     "@rxweb/reactive-form-validators": "^1.9.1",
     "ag-grid-angular": "^22.1.1",
     "ag-grid-community": "^22.1.1",
@@ -69,8 +69,10 @@
     "ng2-cookies": "^1.0.2",
     "ngx-bootstrap": "^5.5.0",
     "ngx-markdown": "^8.1.0",
+    "ngx-sortablejs": "^3.1.4",
     "pluralize": "^7.0.0",
     "rxjs": "^6.5.4",
+    "sortablejs": "^1.10.2",
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
@@ -83,6 +85,7 @@
     "@types/jsdom": "^12.2.4",
     "@types/node": "^8.0.7",
     "@types/pluralize": "0.0.28",
+    "@types/sortablejs": "^1.10.2",
     "body-parser": "^1.19.0",
     "codelyzer": "^5.0.1",
     "compression": "^1.7.4",

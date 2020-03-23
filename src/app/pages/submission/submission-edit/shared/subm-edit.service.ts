@@ -1,4 +1,4 @@
-import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subject, Subscription, merge } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { Injectable } from '@angular/core';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
@@ -257,15 +257,14 @@ export class SubmEditService {
     }
 
     if (sectionForm !== undefined) {
-      sectionForm.form.valueChanges
+      merge(
+        sectionForm.structureChanges$,
+        sectionForm.form.statusChanges
+      )
         .pipe(debounceTime(500))
         .subscribe(() => {
-          const touched: boolean = sectionForm.form.touched;
-
-          if (touched) {
-            this.editState.startEditing();
-            this.save();
-          }
+          this.editState.startEditing();
+          this.save();
         });
 
       this.updateDependencyValues(sectionForm);

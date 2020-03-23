@@ -4,7 +4,6 @@
 }
 
 .cell:not(.canton) {
-  float: none;
   display: inline-block;
   padding: 0 0.5vw;
 }
@@ -14,7 +13,6 @@
   display: flex;
   align-items: center;
   justify-content: space-around;
-  float: left;
 }
 
 .canton,
@@ -37,11 +35,25 @@
 
 /* Other rows */
 .row {
+  display: flex;
   margin-top: 16px;
+}
+
+.row.is-sortable {
+  cursor: ns-resize;
 }
 
 .row:last-of-type {
   margin-bottom: 10px;
+}
+
+/** Drag and drop drip */
+.drip {
+  visibility: hidden;
+}
+
+.drip-visible {
+  visibility: visible;
 }
 
 @media (min-width: 768px) {

@@ -98,7 +98,6 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
       // Propagates the date change through the DOM if so wished.
       if (isChange) {
         this.onChange(formattedDate);
-        this.rootEl.nativeElement.dispatchEvent(new Event('change', { bubbles: true }));
       }
     }
   }

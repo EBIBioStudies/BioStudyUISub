@@ -4,6 +4,8 @@ import { TypeaheadDirective } from 'ngx-bootstrap';
 import { ColumnControl } from '../../shared/model/column-control.model';
 import { RowForm } from '../../shared/model/row-form.model';
 import { FeatureForm } from '../../shared/model/feature-form.model';
+import { StructureChangeEvent } from '../../shared/structure-change-event';
+import { FormArray } from '@angular/forms';
 
 @Component({
   selector: 'st-subm-feature-grid',
@@ -13,11 +15,17 @@ import { FeatureForm } from '../../shared/model/feature-form.model';
 export class FeatureGridComponent implements AfterViewInit {
   @ViewChildren('colEl') colEls?: QueryList<ElementRef>;
   @Input() featureForm?: FeatureForm;
+  hoveredRowIndex: number = -1;
   @Input() readonly = false;
   @ViewChildren('rowEl') rowEls?: QueryList<ElementRef>;
+  sortableJsOptions: { onUpdate: () => void; };
   @ViewChildren('ahead') typeaheads?: QueryList<TypeaheadDirective>;
 
-  constructor(private rootEl: ElementRef, public userData: UserData) {}
+  constructor(private rootEl: ElementRef, public userData: UserData) {
+    this.sortableJsOptions = {
+      onUpdate: this.onRowOrderUpdate.bind(this)
+    };
+  }
 
   get rows(): RowForm[] {
     return this.featureForm!.rows;
@@ -25,6 +33,10 @@ export class FeatureGridComponent implements AfterViewInit {
 
   get columns(): ColumnControl[] {
     return this.featureForm!.columns;
+  }
+
+  get isSortable(): boolean {
+    return this.featureForm!.rows.length > 1;
   }
 
   ngAfterViewInit(): void {
@@ -78,7 +90,17 @@ export class FeatureGridComponent implements AfterViewInit {
         rowForm.cellControlAt(col.id)!.control.setValue(data[attrName]);
       }
     });
+  }
 
-    this.rootEl.nativeElement.dispatchEvent(new Event('change', {bubbles: true}));
+  onMouseEnterRow(rowIndex: number) {
+    this.hoveredRowIndex = rowIndex;
+  }
+
+  onMouseLeaveRow() {
+    this.hoveredRowIndex = -1;
+  }
+
+  onRowOrderUpdate() {
+    this.featureForm!.syncModelRows();
   }
 }
