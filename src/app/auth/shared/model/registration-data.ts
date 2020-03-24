@@ -8,7 +8,7 @@ export class RegistrationData extends DataWithCaptchaAndPath {
   password: string = '';
 
   constructor() {
-    super(new AppPath('#/activate'));
+    super(new AppPath('activate'));
   }
 
   snapshot(): any {
