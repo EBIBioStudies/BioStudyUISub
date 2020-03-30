@@ -143,9 +143,11 @@ export class FeatureForm extends FormBase {
     const rowForm = this.rowForms[this.rowForms.length - 1];
     const firstColumn = this.columnControls[0].id;
     const lastColumn = this.columnControls[this.columnControls.length - 1].id;
+
     if (this.canHaveMultipleRows) {
       return rowForm.cellControlAt(firstColumn)!.control;
     }
+
     return rowForm.cellControlAt(lastColumn)!.control;
   }
 

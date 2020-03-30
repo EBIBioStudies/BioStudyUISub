@@ -14,6 +14,7 @@ import { SubmResultsModalComponent } from '../submission-results/subm-results-mo
 import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
 import { SubmitResponse, SubmitLog } from '../submission-shared/submission.service';
 import { SubmValidationErrors } from '../submission-shared/model';
+import { scrollTop } from 'app/utils';
 
 class SubmitOperation {
   static CREATE = new SubmitOperation();
@@ -267,7 +268,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
       this.showSubmitLog(true);
     }
 
-    window.scrollTo(0, 0);
+    scrollTop();
   }
 
   private get isValid(): boolean {

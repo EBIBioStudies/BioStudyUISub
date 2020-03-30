@@ -7,6 +7,7 @@ import { UserData } from 'app/auth/shared';
 import { takeUntil } from 'rxjs/operators';
 import { ModalService } from 'app/shared/modal.service';
 import { TypeBase, FeatureType, SectionType, DisplayType } from 'app/pages/submission/submission-shared/model/templates';
+import { scrollToFormControl } from 'app/utils';
 import { AddSubmTypeModalComponent } from '../add-subm-type-modal/add-subm-type-modal.component';
 import { FormValidators } from '../../shared/form-validators';
 import { SectionForm } from '../../shared/model/section-form.model';
@@ -156,20 +157,12 @@ export class SubmEditSidebarComponent implements OnDestroy {
 
     this.sectionForm!.addFeatureEntry(item.id);
     const control = this.sectionForm!.getFeatureControl(item.id);
+
     if (control === undefined) {
       return;
     }
 
-    setTimeout(() => {
-      let controlEl = (<any>control).nativeElement;
-      if (controlEl !== undefined) {
-        controlEl = controlEl.querySelectorAll('input, select, textarea')[0];
-        const scrollTop = controlEl.top;
-        window.scrollBy(0, scrollTop);
-        controlEl.focus();
-      }
-    }, 50);
-
+    setTimeout(() => scrollToFormControl(control), 50);
   }
 
   onItemDelete(item: DataTypeControl): void {
