@@ -218,8 +218,7 @@ export class SubmEditService {
       }));
   }
 
-  scrollToControl(ctrl: CustomFormControl) {
-    this.switchSectionById(ctrl.ref.sectionId);
+  scrollToControl(ctrl: FormControl) {
     this.scroll2Control$.next(ctrl);
   }
 
@@ -272,10 +271,6 @@ export class SubmEditService {
     } else {
       this.sectionSwitch$.next(none);
     }
-  }
-
-  switchSectionById(sectionId: string) {
-    this.switchSection(this.sectionSwitch$.value.map(sf => sf.findSectionForm(sectionId)).toUndefined());
   }
 
   validateSubmission(): SubmValidationErrors {

@@ -38,7 +38,7 @@ class SubmitOperation {
   selector: 'st-app-subm-edit',
   templateUrl: './submission-edit.component.html'
 })
-export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class SubmissionEditComponent implements OnInit, OnDestroy {
   @Input() readonly = false;
   sectionForm?: SectionForm;
   @ViewChild(SubmSidebarComponent, { static: false }) sideBar?: SubmSidebarComponent;
@@ -49,7 +49,6 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
   private hasJustCreated = false;
   private method?: string;
   private releaseDate: Date = new Date();
-  private scrollToCtrl?: FormControl;
   private submissionErrors: SubmValidationErrors = SubmValidationErrors.EMPTY;
   private unsubscribe: Subject<void> = new Subject<void>();
 
@@ -71,8 +70,8 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
 
     submEditService.scroll2Control$.pipe(
       takeUntil(this.unsubscribe)
-    ).subscribe(ctrl => {
-      this.scrollToCtrl = ctrl;
+    ).subscribe((control: FormControl) => {
+      this.scroll(control);
     });
   }
 
@@ -103,14 +102,6 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
   // TODO: a temporary workaround
   get isTemp(): boolean {
     return this.accno!.startsWith('TMP_');
-  }
-
-  ngAfterViewChecked(): void {
-    if (this.scrollToCtrl !== undefined) {
-      setTimeout(() => {
-        this.scroll();
-      }, 500);
-    }
   }
 
   ngOnDestroy() {
@@ -286,11 +277,9 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
     window.scrollTo(0, 0);
   }
 
-  private scroll() {
-    if (this.scrollToCtrl === undefined) {
-      return;
-    }
-    const el = (<any>this.scrollToCtrl).nativeElement;
+  private scroll(scrollToCtrl: FormControl) {
+    const el = (<any>scrollToCtrl).nativeElement;
+
     if (el !== undefined) {
       const rect = el.getBoundingClientRect();
       if (!this.isInViewPort(rect)) {
@@ -298,7 +287,6 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
       }
       el.querySelectorAll('input, select, textarea')[0].focus();
     }
-    this.scrollToCtrl = undefined;
   }
 
   private get isValid(): boolean {

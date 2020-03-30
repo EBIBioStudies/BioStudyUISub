@@ -1,60 +1,66 @@
 <div [ngSwitch]="valueType.name">
   <input *ngSwitchCase="[valueTypeNameEnum.text, valueTypeNameEnum.select].includes(valueType.name) ? valueType.name : ''"
-       type="text" class="form-control"
-       [ngClass]="{'input-sm': isSmall}"
-       tooltip="{{isOverflow() && !ahead._container ? value : ''}}"
-       container="body"
-       placement="bottom"
-       [(ngModel)]="value"
-       [readonly]="readonly"
-       (blur)="onBlur()"
-       (keydown)="onKeyDown()"
-       [typeahead]="typeahead()"
-       [typeaheadMinLength]="suggestThreshold"
-       [typeaheadOptionsLimit]="200"
-       [typeaheadScrollable]="true"
-       [typeaheadOptionsInScrollableView]="suggestLength"/>
+      type="text"
+      class="form-control"
+      tooltip="{{isOverflow() && !ahead._container ? value : ''}}"
+      container="body"
+      placement="bottom"
+      [(ngModel)]="value"
+      [ngClass]="{'input-sm': isSmall}"
+      [readonly]="readonly"
+      [typeahead]="typeahead()"
+      [typeaheadMinLength]="suggestThreshold"
+      [typeaheadOptionsLimit]="200"
+      [typeaheadScrollable]="true"
+      [typeaheadOptionsInScrollableView]="suggestLength"
+      (blur)="onBlur()"
+      (change)="onChange()"
+      (input)="onChange()"
+      (keydown)="onKeyDown()"/>
 
   <textarea *ngSwitchCase="valueTypeNameEnum.largetext"
-        class="form-control"
-        [formControl]="formControl"
-        [readonly]="readonly"
-        stAutosize="200"
-        (keyup.enter)="$event.stopPropagation()"
-        (blur)="onBlur()"></textarea>
+      class="form-control"
+      stAutosize="200"
+      [formControl]="formControl"
+      [readonly]="readonly"
+      (keyup.enter)="$event.stopPropagation()"
+      (blur)="onBlur()"
+      (change)="onChange()">
+  </textarea>
 
   <st-date-input *ngSwitchCase="valueTypeNameEnum.date"
-        [isSmall]="isSmall"
-        [formControl]="formControl"
-        [readonly]="readonly"
-        [maxDate]="nowInNyears()"
-        [allowPast]="allowPast"
-        (focusout)="onBlur()">
+      [isSmall]="isSmall"
+      [formControl]="formControl"
+      [readonly]="readonly"
+      [maxDate]="nowInNyears()"
+      [allowPast]="allowPast"
+      (focusout)="onBlur()">
   </st-date-input>
 
   <st-id-link *ngSwitchCase="valueTypeNameEnum.idlink"
-       [isSmall]="isSmall"
-       [readonly]="readonly"
-       [suggestThreshold]="suggestThreshold"
-       [suggestLength]="suggestLength"
-       [formControl]="formControl"
-       (focusout)="onBlur()"></st-id-link>
+      [isSmall]="isSmall"
+      [readonly]="readonly"
+      [suggestThreshold]="suggestThreshold"
+      [suggestLength]="suggestLength"
+      [formControl]="formControl"
+      (focusout)="onBlur()">
+  </st-id-link>
 
   <st-orcid-input-box *ngSwitchCase="valueTypeNameEnum.orcid"
-           [isSmall]="isSmall"
-           [readonly]="readonly"
-           [isPopupButton]="false"
-           [formControl]="formControl"
-           (focusout)="onBlur()">
+      [isSmall]="isSmall"
+      [readonly]="readonly"
+      [isPopupButton]="false"
+      [formControl]="formControl"
+      (focusout)="onBlur()">
   </st-orcid-input-box>
 
   <st-file-select *ngSwitchCase="valueTypeNameEnum.file"
-         [formControl]="formControl">
+      [formControl]="formControl">
   </st-file-select>
 
   <st-pubmedid-search *ngSwitchCase="valueTypeNameEnum.pubmedid"
-           [formControl]="formControl"
-           [readonly]="readonly"
-           (found)="selectData($event)">
+      [formControl]="formControl"
+      [readonly]="readonly"
+      (found)="selectData($event)">
   </st-pubmedid-search>
 </div>

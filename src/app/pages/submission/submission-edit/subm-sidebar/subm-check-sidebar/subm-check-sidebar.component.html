@@ -27,7 +27,7 @@
        tooltip="{{collapsed ? '&quot;' + control.ref.name + '&quot; field is ' + tipText(control.errors) : 'Highlight field on the form'}}"
        container="body"
        placement="{{collapsed ? 'right' : 'top'}}"
-       (click)="onReviewClick($event, control)">
+       (click)="onReviewClick(control)">
           <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
             <i class="entry-item fas fa-lg text-center {{control.ref.icon}}"></i>
             {{!collapsed ? '&nbsp;' + control.ref.name + '&nbsp;' : ''}}

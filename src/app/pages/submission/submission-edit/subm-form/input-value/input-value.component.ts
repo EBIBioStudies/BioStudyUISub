@@ -16,12 +16,13 @@ import { typeaheadSource } from '../../shared/typeahead.utils';
   templateUrl: './input-value.component.html',
   providers: [{
     provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => InputValueComponent),
+    useExisting: InputValueComponent,
     multi: true
   }]
 })
 export class InputValueComponent implements ControlValueAccessor, AfterViewChecked {
   @Input() autosuggest: boolean = true;
+  disabled: boolean = false;
   @Input() formControl?: FormControl;
   @Input() isSmall: boolean = true;
   @Input() readonly: boolean = false;
@@ -49,7 +50,7 @@ export class InputValueComponent implements ControlValueAccessor, AfterViewCheck
 
   set value(value) {
     this._value = value;
-    this.onChange(value);
+    this.onChangeFn(value);
   }
 
   get allowPast(): boolean {
@@ -71,9 +72,7 @@ export class InputValueComponent implements ControlValueAccessor, AfterViewCheck
    * Lifecycle hook for operations after all child views have been changed.
    * Used to update the pointer to the DOM element.
    */
-  ngAfterViewChecked(): void {
-    // this.formControl!.nativeElement = this.rootEl.nativeElement.querySelector('.form-control');
-  }
+  ngAfterViewChecked(): void {}
 
   /**
    * Convenience method for the equivalen date n years into the future.
@@ -86,19 +85,27 @@ export class InputValueComponent implements ControlValueAccessor, AfterViewCheck
   }
 
   onBlur() {
-    this.onTouched();
+    this.onTouchedFn();
   }
+
+  onChange() {
+    this.onChangeFn(this.value);
+  }
+
+  onChangeFn: any = (_: any) => {};
 
   onKeyDown() {
     this.valueChanges$.next(this.value);
   }
 
+  onTouchedFn: any = () => {};
+
   registerOnChange(fn: any): void {
-    this.onChange = fn;
+    this.onChangeFn = fn;
   }
 
   registerOnTouched(fn: any) {
-    this.onTouched = fn;
+    this.onTouchedFn = fn;
   }
 
   /**
@@ -107,6 +114,10 @@ export class InputValueComponent implements ControlValueAccessor, AfterViewCheck
    */
   selectData(data: { [key: string]: string }): void {
     this.select.emit(data);
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
   }
 
   typeahead(): Observable<string[]> {
@@ -144,7 +155,4 @@ export class InputValueComponent implements ControlValueAccessor, AfterViewCheck
     }
     return this.autosuggestSource();
   }
-
-  private onChange: any = (_: any) => { };
-  private onTouched: any = () => { };
 }
