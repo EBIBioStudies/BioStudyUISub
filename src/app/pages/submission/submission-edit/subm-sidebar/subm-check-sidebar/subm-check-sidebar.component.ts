@@ -57,9 +57,23 @@ export class SubmCheckSidebarComponent {
    * @param {FieldControl} control - Form control augmented with the DOM element for the field.
    */
   onReviewClick(control: FormControl) {
-    if (control instanceof CustomFormControl) {
-      this.submEditService.scrollToControl(control);
+    const element: HTMLElement  = (<any>control).nativeElement;
+
+    if (element !== undefined) {
+      const rect = element.getBoundingClientRect();
+
+      if (!this.isInViewPort(rect)) {
+        window.scrollBy(0, rect.top - 120); // TODO: header height
+      }
+
+      console.log(element);
+
+      // element.querySelectorAll('input, select, textarea')[0].focus();
     }
+
+    // if (control instanceof CustomFormControl) {
+      // this.submEditService.scrollToControl(control);
+    // }
     // const buttonEl = <HTMLElement>event.target;
     // let scrollTop = controlEl.getBoundingClientRect().top - buttonEl.getBoundingClientRect().top;
 
@@ -90,5 +104,14 @@ export class SubmCheckSidebarComponent {
       return 'not unique';
     }
     return Object.keys(errors)[0];
+  }
+
+  private isInViewPort(rect: { bottom: number, left: number, right: number, top: number }) {
+    return (
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <= (window.innerHeight || document.documentElement!.clientHeight) &&
+      rect.right <= (window.innerWidth || document.documentElement!.clientWidth)
+    );
   }
 }

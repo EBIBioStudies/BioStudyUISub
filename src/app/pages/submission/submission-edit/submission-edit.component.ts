@@ -282,9 +282,11 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
 
     if (el !== undefined) {
       const rect = el.getBoundingClientRect();
+
       if (!this.isInViewPort(rect)) {
         window.scrollBy(0, rect.top - 120); // TODO: header height
       }
+
       el.querySelectorAll('input, select, textarea')[0].focus();
     }
   }
