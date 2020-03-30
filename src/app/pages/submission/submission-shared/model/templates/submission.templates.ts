@@ -9,7 +9,7 @@ export const DEFAULT_TEMPLATE_NAME = 'Default';
 export const EMPTY_TEMPLATE_NAME = 'Empty';
 
 const SUBMISSION_TEMPLATES = [arrayExpressTemplate, euToxRiskTemplate, hecatosTemplate, emptyTemplate];
-const SUBMISSION_TEMPLATES_PUBLIC = [defaultTemplate];
+const SUBMISSION_TEMPLATES_PUBLIC = [defaultTemplate, biaTemplate];
 
 export function getSubmissionTemplates(projects: Array<string> = []): Array<{ description: string, name: string }> {
   const projectNames = projects.map(p => p.toLowerCase());
