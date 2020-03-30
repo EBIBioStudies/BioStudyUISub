@@ -1,5 +1,4 @@
 import { BehaviorSubject, Observable, of, Subject, Subscription, merge } from 'rxjs';
-import { FormControl } from '@angular/forms';
 import { Injectable } from '@angular/core';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 import { none, Option, some } from 'fp-ts/lib/Option';
@@ -19,7 +18,6 @@ import { PageTabToSubmissionService } from 'app/pages/submission/submission-shar
 import { SubmissionToPageTabService } from 'app/pages/submission/submission-shared/submission-to-pagetab.service';
 import { SubmissionService, SubmitResponse } from '../../submission-shared/submission.service';
 import { SectionForm } from './model/section-form.model';
-import { CustomFormControl } from './model/custom-form-control.model';
 import { flatFeatures } from '../../utils';
 
 class EditState {
@@ -126,7 +124,6 @@ export class ServerResponse<T> {
 
 @Injectable()
 export class SubmEditService {
-  readonly scroll2Control$: Subject<FormControl> = new Subject<FormControl>();
   readonly sectionSwitch$: BehaviorSubject<Option<SectionForm>> = new BehaviorSubject<Option<SectionForm>>(none);
   readonly serverError$: Subject<any> = new Subject<any>();
 
@@ -216,10 +213,6 @@ export class SubmEditService {
         this.editState.stopReverting(error);
         return of(ServerResponse.ERROR(error));
       }));
-  }
-
-  scrollToControl(ctrl: FormControl) {
-    this.scroll2Control$.next(ctrl);
   }
 
   submit(): Observable<SubmitResponse> {

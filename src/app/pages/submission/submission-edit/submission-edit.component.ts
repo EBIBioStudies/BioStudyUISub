@@ -1,7 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { AfterViewChecked, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap';
-import { FormControl } from '@angular/forms';
 import { Location } from '@angular/common';
 import { Observable, of, Subject } from 'rxjs';
 import { Option } from 'fp-ts/lib/Option';
@@ -67,12 +66,6 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     submEditService.sectionSwitch$.pipe(
       takeUntil(this.unsubscribe)
     ).subscribe(sectionForm => this.switchSection(sectionForm));
-
-    submEditService.scroll2Control$.pipe(
-      takeUntil(this.unsubscribe)
-    ).subscribe((control: FormControl) => {
-      this.scroll(control);
-    });
   }
 
   get location() {
@@ -275,20 +268,6 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     }
 
     window.scrollTo(0, 0);
-  }
-
-  private scroll(scrollToCtrl: FormControl) {
-    const el = (<any>scrollToCtrl).nativeElement;
-
-    if (el !== undefined) {
-      const rect = el.getBoundingClientRect();
-
-      if (!this.isInViewPort(rect)) {
-        window.scrollBy(0, rect.top - 120); // TODO: header height
-      }
-
-      el.querySelectorAll('input, select, textarea')[0].focus();
-    }
   }
 
   private get isValid(): boolean {

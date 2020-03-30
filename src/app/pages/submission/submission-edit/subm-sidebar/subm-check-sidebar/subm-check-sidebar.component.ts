@@ -2,7 +2,6 @@ import { FormControl, ValidationErrors } from '@angular/forms';
 import { Component, Input } from '@angular/core';
 import { ServerError } from 'app/shared/server-error.handler';
 import { SubmEditService } from '../../shared/subm-edit.service';
-import { CustomFormControl } from '../../shared/model/custom-form-control.model';
 
 @Component({
   selector: 'st-subm-check-sidebar',
@@ -63,27 +62,14 @@ export class SubmCheckSidebarComponent {
       const rect = element.getBoundingClientRect();
 
       if (!this.isInViewPort(rect)) {
-        window.scrollBy(0, rect.top - 120); // TODO: header height
+        window.scrollBy(0, rect.top - 120);
       }
 
-      console.log(element);
+      const elementRef: HTMLTextAreaElement | HTMLInputElement =
+        element.querySelectorAll<HTMLTextAreaElement | HTMLInputElement>('input, textarea')[0];
 
-      // element.querySelectorAll('input, select, textarea')[0].focus();
+      elementRef.focus();
     }
-
-    // if (control instanceof CustomFormControl) {
-      // this.submEditService.scrollToControl(control);
-    // }
-    // const buttonEl = <HTMLElement>event.target;
-    // let scrollTop = controlEl.getBoundingClientRect().top - buttonEl.getBoundingClientRect().top;
-
-    // Prevents the submission topbar from overlapping the control's label area if it's at the top.
-    // if (this.formControls.indexOf(control) == 0) {
-    //    scrollTop -= 25;
-    // }
-
-    // window.scrollBy(0, scrollTop);
-    // controlEl.querySelectorAll('input, select, textarea')[0].focus();
   }
 
   /**
