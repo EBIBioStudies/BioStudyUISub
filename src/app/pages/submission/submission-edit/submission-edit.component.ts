@@ -189,13 +189,13 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
       return;
     }
 
+    if (this.submissionErrors.errors.length > 0) {
+      scrollTop();
+    }
+
     if (!this.isValid) {
       this.sideBar!.onCheckTabClick();
       return;
-    }
-
-    if (this.submissionErrors.errors.length > 0) {
-      scrollTop();
     }
 
     const confirmObservable: Observable<boolean> = isConfirm ? this.confirmSubmit() : of(true);

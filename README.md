@@ -1,6 +1,6 @@
 # BioStudies - Submission Tool
 
-- Angular v6
+- Angular v8
 - ExpressJS v4
 - Node v10.16.2
 
@@ -14,7 +14,7 @@ Create a `.env` file in the root of the project and copy / pase the next environ
 ```js
 BACKEND_PATH_CONTEXT=pathname
 BACKEND_HOST_NAME=hostname
-BACKEND_PORT=port
+BACKEND_PORT=portst-input-value
 ```
 
 - `BACKEND_PATH_CONTEXT` is the pathname of the backend service URL
