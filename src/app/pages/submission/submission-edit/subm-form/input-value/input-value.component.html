@@ -14,8 +14,6 @@
       [typeaheadScrollable]="true"
       [typeaheadOptionsInScrollableView]="suggestLength"
       (blur)="onBlur()"
-      (change)="onChange()"
-      (input)="onChange()"
       (keydown)="onKeyDown()"/>
 
   <textarea *ngSwitchCase="valueTypeNameEnum.largetext"
@@ -24,8 +22,7 @@
       [formControl]="formControl"
       [readonly]="readonly"
       (keyup.enter)="$event.stopPropagation()"
-      (blur)="onBlur()"
-      (change)="onChange()">
+      (blur)="onBlur()">
   </textarea>
 
   <st-date-input *ngSwitchCase="valueTypeNameEnum.date"

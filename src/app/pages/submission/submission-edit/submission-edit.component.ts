@@ -8,13 +8,13 @@ import { switchMap, takeUntil } from 'rxjs/operators';
 import { AppConfig } from 'app/app.config';
 import { LogService } from 'app/core/logger/log.service';
 import { ModalService } from 'app/shared/modal.service';
+import { scrollTop } from 'app/utils';
 import { SectionForm } from './shared/model/section-form.model';
 import { SubmEditService } from './shared/subm-edit.service';
 import { SubmResultsModalComponent } from '../submission-results/subm-results-modal.component';
 import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
 import { SubmitResponse, SubmitLog } from '../submission-shared/submission.service';
 import { SubmValidationErrors } from '../submission-shared/model';
-import { scrollTop } from 'app/utils';
 
 class SubmitOperation {
   static CREATE = new SubmitOperation();
@@ -192,6 +192,10 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     if (!this.isValid) {
       this.sideBar!.onCheckTabClick();
       return;
+    }
+
+    if (this.submissionErrors.errors.length > 0) {
+      scrollTop();
     }
 
     const confirmObservable: Observable<boolean> = isConfirm ? this.confirmSubmit() : of(true);
