@@ -145,9 +145,11 @@ export class SubmFormValidators {
 
   static forField(field: Field): ValidatorFn[] {
     const validators: ValidatorFn[] = [];
+
     if (field.type.displayType.isRequired) {
       validators.push(Validators.required);
     }
+
     return [...validators, ...SubmFormValidators.forValueType(field.type.valueType)];
   }
 

@@ -1,7 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { AfterViewChecked, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap';
-import { FormControl } from '@angular/forms';
 import { Location } from '@angular/common';
 import { Observable, of, Subject } from 'rxjs';
 import { Option } from 'fp-ts/lib/Option';
@@ -9,6 +8,7 @@ import { switchMap, takeUntil } from 'rxjs/operators';
 import { AppConfig } from 'app/app.config';
 import { LogService } from 'app/core/logger/log.service';
 import { ModalService } from 'app/shared/modal.service';
+import { scrollTop } from 'app/utils';
 import { SectionForm } from './shared/model/section-form.model';
 import { SubmEditService } from './shared/subm-edit.service';
 import { SubmResultsModalComponent } from '../submission-results/subm-results-modal.component';
@@ -38,7 +38,7 @@ class SubmitOperation {
   selector: 'st-app-subm-edit',
   templateUrl: './submission-edit.component.html'
 })
-export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class SubmissionEditComponent implements OnInit, OnDestroy {
   @Input() readonly = false;
   sectionForm?: SectionForm;
   @ViewChild(SubmSidebarComponent, { static: false }) sideBar?: SubmSidebarComponent;
@@ -49,7 +49,6 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
   private hasJustCreated = false;
   private method?: string;
   private releaseDate: Date = new Date();
-  private scrollToCtrl?: FormControl;
   private submissionErrors: SubmValidationErrors = SubmValidationErrors.EMPTY;
   private unsubscribe: Subject<void> = new Subject<void>();
 
@@ -68,12 +67,6 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
     submEditService.sectionSwitch$.pipe(
       takeUntil(this.unsubscribe)
     ).subscribe(sectionForm => this.switchSection(sectionForm));
-
-    submEditService.scroll2Control$.pipe(
-      takeUntil(this.unsubscribe)
-    ).subscribe(ctrl => {
-      this.scrollToCtrl = ctrl;
-    });
   }
 
   get location() {
@@ -103,14 +96,6 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
   // TODO: a temporary workaround
   get isTemp(): boolean {
     return this.accno!.startsWith('TMP_');
-  }
-
-  ngAfterViewChecked(): void {
-    if (this.scrollToCtrl !== undefined) {
-      setTimeout(() => {
-        this.scroll();
-      }, 500);
-    }
   }
 
   ngOnDestroy() {
@@ -209,6 +194,10 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
       return;
     }
 
+    if (this.submissionErrors.errors.length > 0) {
+      scrollTop();
+    }
+
     const confirmObservable: Observable<boolean> = isConfirm ? this.confirmSubmit() : of(true);
 
     confirmObservable
@@ -283,22 +272,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
       this.showSubmitLog(true);
     }
 
-    window.scrollTo(0, 0);
-  }
-
-  private scroll() {
-    if (this.scrollToCtrl === undefined) {
-      return;
-    }
-    const el = (<any>this.scrollToCtrl).nativeElement;
-    if (el !== undefined) {
-      const rect = el.getBoundingClientRect();
-      if (!this.isInViewPort(rect)) {
-        window.scrollBy(0, rect.top - 120); // TODO: header height
-      }
-      el.querySelectorAll('input, select, textarea')[0].focus();
-    }
-    this.scrollToCtrl = undefined;
+    scrollTop();
   }
 
   private get isValid(): boolean {
