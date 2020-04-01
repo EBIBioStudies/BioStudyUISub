@@ -11,7 +11,6 @@
         <img src="images/logo.png" class="logo" alt="Submission tool" />
       </a>
     </div>
-
     <div [ngClass]="{'collapse navbar-collapse': userLoggedIn}" [collapse]="userLoggedIn && navCollapsed">
       <ul class="nav navbar-right" [ngClass]="{'navbar-nav': userLoggedIn, 'pull-right': !userLoggedIn}">
         <li *ngIf="userLoggingIn">
@@ -28,7 +27,6 @@
             <span>Log in</span>
           </button>
         </li>
-
         <li *ngIf="userLoggedIn">
           <button class="btn navbar-btn" routerLink="submissions" routerLinkActive="active"
             tooltip="List of submissions" placement="bottom" container="body" (click)="toggleCollapsed()">
@@ -36,7 +34,6 @@
             <span>Submissions</span>
           </button>
         </li>
-
         <li *ngIf="userLoggedIn">
           <button class="btn navbar-btn" routerLink="files" routerLinkActive="active"
             tooltip="Upload or list your files" placement="bottom" container="body" (click)="toggleCollapsed()">
@@ -44,8 +41,7 @@
             <span>Files</span>
           </button>
         </li>
-
-        <li *ngIf="userLoggedIn">
+        <li>
           <button class="btn navbar-btn" routerLink="/help" routerLinkActive="active" tooltip="How to use this tool"
             placement="bottom" container="body" (click)="toggleCollapsed()">
             <i class="fa fa-fw fa-question-circle fa-lg"></i>
