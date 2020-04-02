@@ -250,15 +250,6 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     );
   }
 
-  private isInViewPort(rect: { bottom: number, left: number, right: number, top: number }) {
-    return (
-      rect.top >= 0 &&
-      rect.left >= 0 &&
-      rect.bottom <= (window.innerHeight || document.documentElement!.clientHeight) &&
-      rect.right <= (window.innerWidth || document.documentElement!.clientWidth)
-    );
-  }
-
   // todo: add proper type for submit response
   private onSubmitFinished(resp: SubmitResponse) {
     this.locService.replaceState('/submissions/' + this.accno);
