@@ -27,7 +27,7 @@
               "node_modules/ag-grid-community/dist/styles/ag-theme-fresh.css",
               "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
               "node_modules/@fortawesome/fontawesome-free/css/all.css",
-              "src/styles/custom-bootstrap.less"
+              "src/theme/custom-bootstrap.less"
             ],
             "scripts": [
               "node_modules/marked/lib/marked.js"
