@@ -1,5 +1,6 @@
-<aside *ngIf="!readonly" class="left-side sidebar sidebar-offcanvas"
-     [ngClass]="{'collapse-left' : collapsed}">
+<aside *ngIf="!readonly"
+       class="st-direct-submit-sidebar left-side sidebar sidebar-offcanvas"
+       [ngClass]="{'collapse-left' : collapsed}">
   <div class="menu-toggle">
     <button class="minimise-btn btn pull-right"
         [ngClass]="{'inactive': !collapsed}"
@@ -7,7 +8,7 @@
         (click)="onToggle($event)"
         tooltip="{{collapsed ? 'Expand sidebar' : 'Collapse sidebar'}}"
         container="body"
-        placement="right">
+        placement="auto">
       <i class="fa fa-fw fa-lg"
          [ngClass]="{'fa-angle-double-left': !collapsed, 'fa-angle-double-right': collapsed}"></i>
     </button>
@@ -19,18 +20,14 @@
     </tabset>
   </div>
   <div *ngIf="collapsed" class="vertical-text">Upload files</div>
-  <ul class="sidebar-menu clearfix" *ngIf="!collapsed"
-    [ngClass]="{'sidebar-contents': !isStatus('busy')}">
-    <li [hidden]="isStatus('busy')">
-      <form id="subm-upload-form"
-          class="col-sm-12"
-          name="submUploadForm"
+  <div *ngIf="!collapsed" class="sidebar-menu clearfix">
+    <div class="st-direct-submit-form-container" [hidden]="isStatus('busy')">
+      <form name="submUploadForm"
           novalidate
           role="form"
           method="post"
           (ngSubmit)="onSubmit($event)"
           #uploadForm="ngForm">
-
         <div class="form-group" [ngClass]="{'has-error': !selectedFileCount && fileTouched}">
           <label class="control-label">
             1. Study files
@@ -56,7 +53,6 @@
             </span>
           </div>
         </div>
-
         <div class="form-group">
           <label class="control-label">2. Projects</label>
           <span class="text-muted pull-right"><i>Optional</i></span>
@@ -118,28 +114,30 @@
           </button>
         </div>
       </form>
-    </li>
-    <li *ngIf="isStatus('busy')" class="center-vertically text-center"
-      [ngClass]="{'col-xs-12': !collapsed}">
-      <i class="fa fa-cog fa-spin" aria-hidden="true"
-         [ngClass]="{'fa-2x': collapsed, 'fa-4x': !collapsed}"></i>
-      <div class="progress">
-        <div class="progress-bar"
-           [ngStyle]="{ 'width': progress + '%'}">
-          {{progress}}%
+    </div>
+    <div *ngIf="isStatus('busy')" class="st-direct-submit-progress">
+      <div class="text-center"
+           [ngClass]="{'col-xs-12': !collapsed}">
+        <i class="fa fa-cog fa-spin" aria-hidden="true"
+          [ngClass]="{'fa-2x': collapsed, 'fa-4x': !collapsed}"></i>
+        <div class="progress">
+          <div class="progress-bar"
+            [ngStyle]="{ 'width': progress + '%'}">
+            {{progress}}%
+          </div>
         </div>
+        <h4 [ngClass]="{'vertical-text': collapsed}">
+          {{submitType == 'create' ? 'Creating' : 'Updating'}}
+          {{selectedFileCount > 1 ? 'studies' : 'study'}}...
+        </h4>
+        <button class="btn btn-danger btn-sm"
+            tooltip="Stop all pending uploads"
+            placement="bottom"
+            container="body"
+            (click)="onCancelPending($event)">
+          CANCEL
+        </button>
       </div>
-      <h4 [ngClass]="{'vertical-text': collapsed}">
-        {{submitType == 'create' ? 'Creating' : 'Updating'}}
-        {{selectedFileCount > 1 ? 'studies' : 'study'}}...
-      </h4>
-      <button class="btn btn-danger btn-sm"
-          tooltip="Stop all pending uploads"
-          placement="bottom"
-          container="body"
-          (click)="onCancelPending($event)">
-        CANCEL
-      </button>
-    </li>
-  </ul>
+    </div>
+  </div>
 </aside>

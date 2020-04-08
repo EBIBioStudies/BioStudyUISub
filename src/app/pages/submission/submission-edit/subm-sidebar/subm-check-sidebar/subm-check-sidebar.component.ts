@@ -6,7 +6,8 @@ import { scrollToFormControl } from 'app/utils';
 
 @Component({
   selector: 'st-subm-check-sidebar',
-  templateUrl: './subm-check-sidebar.component.html'
+  templateUrl: './subm-check-sidebar.component.html',
+  styleUrls: ['./subm-check-sidebar.component.css']
 })
 export class SubmCheckSidebarComponent {
   @Input() collapsed?: boolean = false;
