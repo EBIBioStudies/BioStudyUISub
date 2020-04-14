@@ -1,3 +1,8 @@
+.st-edit-sidebar-collapsed {
+  display: flex;
+  justify-content: center;
+}
+
 /* Add tab - edit mode */
 .row-input, .row-submit {
   padding: 12px 10px 12px 10px;

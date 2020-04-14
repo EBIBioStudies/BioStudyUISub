@@ -36,7 +36,8 @@ class SubmitOperation {
 
 @Component({
   selector: 'st-app-subm-edit',
-  templateUrl: './submission-edit.component.html'
+  templateUrl: './submission-edit.component.html',
+  styleUrls: ['./submission-edit.component.css']
 })
 export class SubmissionEditComponent implements OnInit, OnDestroy {
   @Input() readonly = false;

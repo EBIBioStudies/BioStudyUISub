@@ -6,7 +6,7 @@
         (click)="onToggleCollapse($event)"
         tooltip="{{collapsed ? 'Expand sidebar' : 'Collapse sidebar'}}"
         container="body"
-        placement="right">
+        placement="auto">
       <i class="fa fa-fw fa-lg"
          [ngClass]="{'fa-angle-double-left': !collapsed, 'fa-angle-double-right': collapsed}"></i>
     </button>

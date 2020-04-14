@@ -4,14 +4,14 @@ export function scrollToFormControl(control: FormControl) {
   const element: HTMLElement  = (<any>control).nativeElement;
 
   if (element !== undefined) {
-    const rect = element.getBoundingClientRect();
+    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-    window.scrollBy(0, rect.top - 140);
+    setTimeout(() => {
+      const elementRef: HTMLTextAreaElement | HTMLInputElement =
+        element.querySelectorAll<HTMLTextAreaElement | HTMLInputElement>('input, textarea')[0];
 
-    const elementRef: HTMLTextAreaElement | HTMLInputElement =
-      element.querySelectorAll<HTMLTextAreaElement | HTMLInputElement>('input, textarea')[0];
-
-    elementRef.focus();
+      elementRef.focus();
+    }, 200);
   }
 }
 

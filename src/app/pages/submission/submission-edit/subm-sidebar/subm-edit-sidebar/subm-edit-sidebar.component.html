@@ -7,16 +7,18 @@
 
     <li class="sidebar-item" *ngFor="let item of items; let i = index">
       <a *ngIf="isEditModeOff"
-         tooltip="{{item.description | stripHtml}}"
-         placement="top"
-         container="body"
-         (click)="onItemClick(item)">
-        <i class="fa fa-lg text-center {{item.icon}}"></i>
-        {{!collapsed ? '&nbsp;&nbsp;' + item.prettyName : ''}}
+          (click)="onItemClick(item)">
+        <div tooltip="{{ collapsed ? '' : item.description | stripHtml}}"
+          placement="auto"
+          container="body"
+          [ngClass]="{'st-edit-sidebar-collapsed': collapsed}">
+          <i class="fa fa-lg text-center {{item.icon}}"></i>
+          {{!collapsed ? '&nbsp;&nbsp;' + item.prettyName : ''}}
+        </div>
       </a>
       <div *ngIf="isEditModeOn && !item.deleted"
-         class="row-input"
-         [ngClass]="{'has-error': item.control.invalid && item.control.touched}">
+          class="row-input"
+          [ngClass]="{'has-error': item.control.invalid && item.control.touched}">
         <label [hidden]="!item.control.errors?.unique || !item.control.touched"
              class="control-label small">
           Please use a unique type name
