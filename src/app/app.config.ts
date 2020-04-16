@@ -73,6 +73,16 @@ export class AppConfig {
   }
 
   /**
+   * Maximum number of concurrent connections supported by the browser. It should be in accordance to
+   * a ball-park average for different browsers.
+   * @see {@link http://www.browserscope.org/?category=network&v=top}
+   * @returns {number} Number of allowed concurrent connections.
+   */
+  get maxConcurrent(): number {
+    return this.config.MAX_CONCURRENT;
+  }
+
+  /**
    * The current environment where tha application is running.
    * @returns {string} Name of the current environment.
    */

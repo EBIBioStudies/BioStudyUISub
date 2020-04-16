@@ -172,6 +172,8 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
 
   /**
    * Carries out the necessary requests for the selected files, detecting their format automatically.
+   * NOTE: Requests are bundled into groups of MAX_CONCURRENT requests to avoid overwhelming the browser and/or
+   * the server when dealing with a high number of files.
    *
    * @param {string} submissionType - Indicates whether the submitted file should create or update an existing database entry.
    */
