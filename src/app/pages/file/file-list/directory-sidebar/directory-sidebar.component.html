@@ -14,7 +14,7 @@
       <tab heading="Explorer" active="true"></tab>
     </tabset>
   </div>
-  <ul class="sidebar-menu">
+  <ul class="sidebar-menu st-directory-sidebar">
     <li *ngFor="let dir of dirs" class="sidebar-item success" [ngClass]="{'active': dir.path === selectedPath}">
       <a *ngIf="collapsed"
          (click)="onDirSelect(dir)">
