@@ -7,6 +7,7 @@ import { map } from 'rxjs/operators';
 @Component({
   selector: 'st-directory-sidebar',
   templateUrl: './directory-sidebar.component.html',
+  styleUrls: ['./directory-sidebar.component.css'],
   providers: [
     {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DirectorySidebarComponent), multi: true}
   ]
