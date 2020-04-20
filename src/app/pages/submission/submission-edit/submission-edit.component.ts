@@ -49,7 +49,8 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
   private accno?: string;
   private hasJustCreated = false;
   private method?: string;
-  private releaseDate: Date = new Date();
+  private newReleaseDate: Date = new Date();
+  private oldReleaseDate: Date = new Date();
   private submissionErrors: SubmValidationErrors = SubmValidationErrors.EMPTY;
   private unsubscribe: Subject<void> = new Subject<void>();
 
@@ -137,13 +138,19 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
         } else {
           const releaseDateCtrl = this.sectionForm!.findFieldControl('ReleaseDate');
 
-          if (releaseDateCtrl && releaseDateCtrl.control.value) {
-            this.releaseDate = new Date(Date.parse(releaseDateCtrl.control.value));
-          } else {
-            this.releaseDate = new Date();
-          }
+          if (releaseDateCtrl) {
+            const currentControlDate: string = releaseDateCtrl.control.value;
+            const currentDate: Date = currentControlDate ? new Date(Date.parse(currentControlDate)) : new Date();
+            this.oldReleaseDate = currentDate;
+            this.newReleaseDate = currentDate;
+            this.oldReleaseDate.setHours(0, 0, 0);
+            this.newReleaseDate.setHours(0, 0, 0);
 
-          this.releaseDate.setHours(0, 0, 0);
+            releaseDateCtrl.control.valueChanges.subscribe((value) => {
+              this.newReleaseDate = new Date(Date.parse(value));
+              this.newReleaseDate.setHours(0, 0, 0);
+            });
+          }
         }
       });
   }
@@ -222,12 +229,11 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
   }
 
   private confirmReleaseDateOverride(): Observable<boolean> {
-    const releaseDateCtrl = this.sectionForm!.findFieldControl('ReleaseDate');
-    const newReleaseDate = releaseDateCtrl ? new Date(Date.parse(releaseDateCtrl.control.value)) : new Date();
-    newReleaseDate.setHours(0, 0, 0);
-    const today = new Date();
+    const today: Date = new Date();
     today.setHours(0, 0, 0);
-    return (this.releaseDate <= today && newReleaseDate > today) ? this.modalService.whenConfirmed(
+    const isDateOverride: boolean = this.oldReleaseDate <= today && this.newReleaseDate > today;
+
+    return isDateOverride ? this.modalService.whenConfirmed(
       'This study has already been released and resetting the release date may make it ' +
       'unavailable to the public. Are you sure you want to continue?',
       'Submit the study',
