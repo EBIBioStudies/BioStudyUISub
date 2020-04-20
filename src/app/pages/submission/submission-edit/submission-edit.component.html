@@ -101,9 +101,9 @@
                 </h4>
                 <p>
                   The study with accession number <strong>{{accno}}</strong>
-                  <span *ngIf="releaseDate">
-                and release date <strong>{{releaseDate | date: 'dd MMMM yyyy'}}</strong>
-              </span>
+                  <span *ngIf="newReleaseDate">
+                    and release date <strong>{{newReleaseDate | date: 'dd MMMM yyyy'}}</strong>
+                  </span>
                   <span *ngIf="submitOperation.isUnknown">is present on the BioStudies database with the data shown below.</span>
                   <span *ngIf="submitOperation.isCreate">has been successfully added to the BioStudies database.</span>
                   <span *ngIf="submitOperation.isUpdate">has been successfully updated.</span>
