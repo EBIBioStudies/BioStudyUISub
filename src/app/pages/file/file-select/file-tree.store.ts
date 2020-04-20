@@ -42,7 +42,7 @@ export class FileTreeStore {
   }
 
   getUserDirs(): Observable<FileNode[]> {
-    return this.fileService.getUserDirs(this.getUserGroups()).pipe(
+    return this.fileService.getUserDirs().pipe(
       map(groups => groups.map(g => new FileNode(true, g.path, g.name)))
     );
   }

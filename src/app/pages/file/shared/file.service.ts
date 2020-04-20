@@ -22,8 +22,8 @@ export class FileService {
     return this.http.get<PathInfo[]>(`/api/files${fullPath}`);
   }
 
-  getUserDirs(groups?: Observable<UserGroup[]>): Observable<PathInfo[]> {
-    const userGroups = groups || this.getUserGroups();
+  getUserDirs(): Observable<PathInfo[]> {
+    const userGroups: Observable<UserGroup[]> = this.getUserGroups();
 
     return userGroups.pipe(
       map((groupsByUser) => groupsByUser.map((group) => new PathInfo(group.name, 'groups', 'DIR'))),
