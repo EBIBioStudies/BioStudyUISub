@@ -25,7 +25,7 @@
       </li>
     </ul>
     <ul class="st-dir-sidebar-list">
-      <li class="st-dir-sidebar-list-item-header">
+      <li *ngIf="groups.length > 0" class="st-dir-sidebar-list-item-header">
         Groups
       </li>
       <li *ngFor="let dir of groups" class="sidebar-item success" [ngClass]="{'active': dir.path === selectedPath}">
