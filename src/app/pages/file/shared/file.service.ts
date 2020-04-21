@@ -22,12 +22,16 @@ export class FileService {
     return this.http.get<PathInfo[]>(`/api/files${fullPath}`);
   }
 
+  getUserDir(): PathInfo {
+    return new PathInfo('/', 'user', 'DIR');
+  }
+
   getUserDirs(): Observable<PathInfo[]> {
     const userGroups: Observable<UserGroup[]> = this.getUserGroups();
 
     return userGroups.pipe(
       map((groupsByUser) => groupsByUser.map((group) => new PathInfo(group.name, 'groups', 'DIR'))),
-      map(paths => [new PathInfo('/', 'user', 'DIR'), ...paths])
+      map((paths) => [this.getUserDir(), ...paths])
     );
   }
 

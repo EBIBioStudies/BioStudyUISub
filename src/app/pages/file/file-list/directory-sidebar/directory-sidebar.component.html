@@ -7,23 +7,35 @@
         tooltip="{{collapsed ? 'Expand sidebar' : 'Collapse sidebar'}}"
         container="body"
         placement="auto">
-      <i class="fa fa-fw fa-lg"
-         [ngClass]="{'fa-angle-double-left': !collapsed, 'fa-angle-double-right': collapsed}"></i>
+      <i class="fa fa-fw fa-lg" [ngClass]="{'fa-angle-double-left': !collapsed, 'fa-angle-double-right': collapsed}"></i>
     </button>
     <tabset [ngClass]="{'invisible': collapsed}">
       <tab heading="Explorer" active="true"></tab>
     </tabset>
   </div>
-  <ul class="sidebar-menu st-directory-sidebar">
-    <li *ngFor="let dir of dirs" class="sidebar-item success" [ngClass]="{'active': dir.path === selectedPath}">
-      <a *ngIf="collapsed"
-         (click)="onDirSelect(dir)">
-        <i class="fa fa-fw fa-folder"></i>
-      </a>
-      <a *ngIf="!collapsed"
-         (click)="onDirSelect(dir)">
-        <i class="fa fa-fw fa-folder"></i><span>{{dir.name}}</span>
-      </a>
-    </li>
-  </ul>
+  <div class="sidebar-menu st-dir-sidebar">
+    <ul class="st-dir-sidebar-list">
+      <li *ngFor="let dir of userDirs" class="sidebar-item success" [ngClass]="{'active': dir.path === selectedPath}">
+        <a *ngIf="collapsed" (click)="onDirSelect(dir)">
+          <i class="fa fa-fw fa-folder"></i>
+        </a>
+        <a *ngIf="!collapsed" (click)="onDirSelect(dir)">
+          <i class="fa fa-fw fa-folder"></i><span>{{dir.name}}</span>
+        </a>
+      </li>
+    </ul>
+    <ul class="st-dir-sidebar-list">
+      <li class="st-dir-sidebar-list-item-header">
+        Groups
+      </li>
+      <li *ngFor="let dir of groups" class="sidebar-item success" [ngClass]="{'active': dir.path === selectedPath}">
+        <a *ngIf="collapsed" (click)="onDirSelect(dir)">
+          <i class="fa fa-fw fa-folder"></i>
+        </a>
+        <a *ngIf="!collapsed" (click)="onDirSelect(dir)">
+          <i class="fa fa-fw fa-folder"></i><span>{{dir.name}}</span>
+        </a>
+      </li>
+    </ul>
+  </div>
 </aside>
