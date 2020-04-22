@@ -26,7 +26,8 @@
     </ul>
     <ul class="st-dir-sidebar-list">
       <li *ngIf="groups.length > 0" class="st-dir-sidebar-list-item-header">
-        Groups
+        <i class="fa fa-fw fa-layer-group"></i>
+        <span *ngIf="!collapsed">Groups</span>
       </li>
       <li *ngFor="let dir of groups" class="sidebar-item success" [ngClass]="{'active': dir.path === selectedPath}">
         <a *ngIf="collapsed" (click)="onDirSelect(dir)">
