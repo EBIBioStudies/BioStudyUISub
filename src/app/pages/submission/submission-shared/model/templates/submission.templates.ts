@@ -8,14 +8,15 @@ import { arrayExpressTemplate } from './arrayexpress.template';
 export const DEFAULT_TEMPLATE_NAME = 'Default';
 export const EMPTY_TEMPLATE_NAME = 'Empty';
 
-const SUBMISSION_TEMPLATES = [arrayExpressTemplate, euToxRiskTemplate, hecatosTemplate, emptyTemplate];
-const SUBMISSION_TEMPLATES_PUBLIC = [defaultTemplate, biaTemplate];
+const SUBMISSION_TEMPLATES = [arrayExpressTemplate, euToxRiskTemplate, hecatosTemplate, emptyTemplate, biaTemplate];
+const SUBMISSION_TEMPLATES_PUBLIC = [defaultTemplate];
 
 export function getSubmissionTemplates(projects: Array<string> = []): Array<{ description: string, name: string }> {
-  const projectNames = projects.map(p => p.toLowerCase());
+  const projectNames: string[] = projects.map((project) => project.toLowerCase());
+  const filteredTemplates = SUBMISSION_TEMPLATES.filter((template) => projectNames.includes(template.name.toLowerCase()));
+  const templates = [...filteredTemplates, ...SUBMISSION_TEMPLATES_PUBLIC];
 
-  return [...SUBMISSION_TEMPLATES.filter(t => projectNames.includes(t.name.toLowerCase())),
-    ...SUBMISSION_TEMPLATES_PUBLIC].map(t => ({name: t.name, description: t.description}));
+  return templates.map((template) => ({name: template.name, description: template.description}));
 }
 
 export function findSubmissionTemplateByName(name: string): any {
