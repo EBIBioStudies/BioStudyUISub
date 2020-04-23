@@ -23,19 +23,18 @@ export class ServerError {
    * @param {HttpErrorResponse} error Error object as it comes from the HTTP client
    * @returns {ServerError} Converted error object
    */
-  static fromResponse(error: HttpErrorResponse): ServerError {
+  static fromResponse(response: HttpErrorResponse): ServerError {
+    const { error } = response;
     const data = {
       message: 'Unknown error type', // Default error message
-      error: error.error // Original error object coming from the server
+      error: error.log
     };
 
-    if (error.error && error.error.message) {
-      data.message = error.error.message;
-    } else if (error.message) {
-      data.message = error.message;
+    if (error && error.log) {
+      data.message = error.log.message;
     }
 
-    return new ServerError(error.status, error.statusText, data);
+    return new ServerError(response.status, error.status, data);
   }
 
   get name(): string {
