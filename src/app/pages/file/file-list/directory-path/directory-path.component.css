@@ -1,6 +1,10 @@
-.dot {
+.root {
   font-size: 1em;
   font-weight: bold
+}
+
+.root a {
+  text-decoration: none;
 }
 
 .dir {
@@ -9,4 +13,8 @@
 
 .dir a {
   text-decoration: none;
+}
+
+.chevron {
+  color: #c4c4c4;
 }
