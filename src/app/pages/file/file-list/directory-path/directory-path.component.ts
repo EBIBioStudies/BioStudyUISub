@@ -20,7 +20,11 @@ export class DirectoryPathComponent implements OnChanges {
   }
 
   onDirectoryClick(idx) {
-    const dir = '/' + (this.dirs.slice(0, idx + 1)).join('/');
-    this.change.emit(dir);
+    if (idx === 'root') {
+      this.change.emit('/');
+    } else {
+      const dir = '/' + (this.dirs.slice(0, idx + 1)).join('/');
+      this.change.emit(dir);
+    }
   }
 }

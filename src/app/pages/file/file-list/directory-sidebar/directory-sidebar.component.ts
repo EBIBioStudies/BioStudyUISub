@@ -16,11 +16,10 @@ import { map } from 'rxjs/operators';
 export class DirectorySidebarComponent implements OnInit, ControlValueAccessor {
   @Input() collapsed?: boolean = false;
   groups: FileNode[] = [];
+  homeDir: FileNode = new FileNode(true, '/', 'home');
   @Output() select = new EventEmitter();
+  selectedPath?: string;
   @Output() toggle = new EventEmitter();
-  userDirs: FileNode[] = [];
-
-  private selectedPath?: string;
 
   constructor(private fileService: FileService) {}
 
@@ -34,9 +33,9 @@ export class DirectorySidebarComponent implements OnInit, ControlValueAccessor {
   }
 
   ngOnInit() {
-    const userDir: PathInfo = this.fileService.getUserDir();
+    const homeDir: PathInfo = this.fileService.getUserDir();
 
-    this.userDirs = [new FileNode(true, userDir.path, userDir.name)];
+    this.homeDir = new FileNode(true, homeDir.path, homeDir.name);
 
     this.fileService.getUserGroups().pipe(
       map((groups) => groups.map((group) => new FileNode(true, 'groups', group.name)))
