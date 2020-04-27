@@ -5,6 +5,7 @@ export interface Aux {
 export interface UserInfo {
   aux: Aux;
   email: string;
+  fullname: string;
   secret: string;
   sessid: string;
   superuser: boolean;

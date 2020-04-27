@@ -57,7 +57,7 @@
         </li>
         <li [class.hidden]="!userLoggedIn" dropdown>
           <button dropdownToggle type="button" class="btn navbar-btn dropdown-toggle" [disabled]="isBusy"
-            [tooltip]="profileTooltip" placement="bottom" container="body" (mouseenter)="changeProfileTooltip()" #user
+            [tooltip]="userDisplayName" placement="bottom" container="body" #user
             aria-controls="dropdown-basic">
             <i *ngIf="!isBusy" class="fa fa-fw fa-user-circle fa-lg"></i>
             <i *ngIf="isBusy" class="fa fa-fw fa-cog fa-spin fa-lg"></i>
