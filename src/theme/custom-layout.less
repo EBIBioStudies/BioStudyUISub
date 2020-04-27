@@ -15,7 +15,8 @@
 //Top spacing to make room for top bar on login-related screens */
 //TODO: Untangle the styling used for the authentication screens, which is spread over "container-md" and the auth component in question
 .auth-content {
-  margin-top: calc(@navbar-height + 20px);
+  margin-top: 1rem;
+  max-width: 70rem;
 }
 
 /*left side - contains sidebar*/
@@ -357,7 +358,11 @@ input[type="radio"], input[type="checkbox"] {
 //Makes alerts take up no more space than its contents
 .alert {
   display: inline-block;
-  margin: 5px;
+  padding: 10px;
+}
+
+.alert-toast {
+  padding: 0;
 }
 
 //Removes the gray shading over close buttons, instead using white to make them evident
