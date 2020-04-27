@@ -30,6 +30,20 @@ export class UserSession {
     this.notifySessionDestroyed();
   }
 
+  getUserDisplayName(): string {
+    const { username, fullname, email } = getUser();
+
+    if (String.isDefinedAndNotEmpty(username)) {
+      return username;
+    }
+
+    if (String.isDefinedAndNotEmpty(fullname)) {
+      return fullname;
+    }
+
+    return email;
+  }
+
   getUserEmail(): string {
     const { email } = getUser();
     return email;
@@ -55,11 +69,6 @@ export class UserSession {
     setUser(user);
 
     return user;
-  }
-
-  userName(): string {
-    const { username } = getUser();
-    return username;
   }
 
   private notifySessionCreated(): void {
