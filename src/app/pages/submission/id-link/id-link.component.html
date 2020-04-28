@@ -18,7 +18,8 @@
     [typeaheadOptionsInScrollableView]="suggestLength"
     (typeaheadOnSelect)="onSelect($event)"
     #ahead="bs-typeahead"
-    (keyup.enter)="ahead._container ? $event.stopPropagation() : ''"/>
+    (keyup.enter)="ahead._container ? $event.stopPropagation() : ''"
+  />
   <a class="btn form-control-feedback"
     [ngClass]="{'disabled': !link()}"
     target="_blank"

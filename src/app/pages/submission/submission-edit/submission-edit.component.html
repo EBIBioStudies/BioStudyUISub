@@ -31,7 +31,7 @@
           </div>
 
           <div class="panel">
-            <div class="panel-body">
+            <div class="panel-body st-edit-status-message">
               <div *ngIf="hasJustCreated && sectionForm.invalid">
                 <h4>New submission</h4>
                 <p>
@@ -74,17 +74,33 @@
                 <div *ngIf="isTemp && !isSubmitting">
                   <h4>Study ready for submission</h4>
                   <p>
-                    You may submit the data on this form now. After submission, your study will be allocated
-                    a permanent accession number under which it will be published.
+                    You may submit the data on this form now.
                   </p>
+                  <div class="alert alert-success">
+                    <div class="pull-left">
+                      <i class="fa fa-hand-o-right fa-lg"></i>
+                      <strong>Please note</strong>
+                    </div>
+                    <p class="text-block text-black">
+                      After submission, your study will be allocated a permanent accession number under which it will be published.
+                    </p>
+                  </div>
                 </div>
 
                 <div *ngIf="!isTemp && !isSubmitting">
                   <h4>Study ready for re-submission</h4>
                   <p>
-                    You may re-submit the data on this form now. Your study will retain
-                    the same accession number under which it was registered.
+                    You may re-submit the data on this form now.
                   </p>
+                  <div class="alert alert-success">
+                    <div class="pull-left">
+                      <i class="fa fa-hand-o-right fa-lg"></i>
+                      <strong>Please note</strong>
+                    </div>
+                    <p class="text-block text-black">
+                      Your study will retain the same accession number under which it was registered.
+                    </p>
+                  </div>
                 </div>
 
                 <div *ngIf="isSubmitting">

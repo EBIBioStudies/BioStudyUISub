@@ -34,3 +34,7 @@
   color: #fff;
   text-decoration: underline;
 }
+
+.st-edit-status-message {
+  min-height: 17rem;
+}
