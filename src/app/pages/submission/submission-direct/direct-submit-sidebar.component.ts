@@ -37,7 +37,6 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
     files: undefined, // No file selection at first
     projects: [] // Chebox-ised representation of project list
   };
-  private uploadFilesSubscription?: Subscription;
   private uploadSubs?: Subscription; // Subscription for the battery of upload requests
 
   /**
@@ -166,8 +165,8 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
    */
   onCancelPending() {
     this.uploadSubs!.unsubscribe();
-    this.uploadFilesSubscription!.unsubscribe();
     this.directSubmitSvc.cancelAll();
+    this.directSubmitSvc.reset();
   }
 
   /**
@@ -272,15 +271,5 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
    */
   private markFileTouched() {
     this.model.files = null;
-  }
-
-  private uploadFiles(files: File[]): Observable<any> {
-    return from(files)
-      .pipe(
-        map((file) => this.directSubmitFileUploadService.doUpload(file)),
-        mergeAll(this.appConfig.maxConcurrent),
-        last(),
-        takeUntil(this.ngUnsubscribe)
-      );
   }
 }
