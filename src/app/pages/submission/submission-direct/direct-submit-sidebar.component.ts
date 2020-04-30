@@ -181,7 +181,14 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
 
     if (this.canSubmit) {
       nonClearedFiles = this.model.files.filter(Boolean);
-      this.uploadSubs = this.createDirectSubmission(nonClearedFiles, submissionType).subscribe();
+
+      this.uploadFilesSubscription = this.uploadFiles(nonClearedFiles).subscribe((uploadEvent) => {
+        if (uploadEvent.isSuccess()) {
+          this.uploadSubs = this.createDirectSubmission(nonClearedFiles, submissionType).subscribe();
+        }
+      });
+
+      // Most probably file selection was left out.
     } else {
       this.markFileTouched();
     }
@@ -271,5 +278,15 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
    */
   private markFileTouched() {
     this.model.files = null;
+  }
+
+  private uploadFiles(files: File[]): Observable<any> {
+    return from(files)
+      .pipe(
+        map((file) => this.directSubmitFileUploadService.doUpload(file)),
+        mergeAll(this.appConfig.maxConcurrent),
+        last(),
+        takeUntil(this.ngUnsubscribe)
+      );
   }
 }
