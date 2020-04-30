@@ -37,6 +37,7 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
     files: undefined, // No file selection at first
     projects: [] // Chebox-ised representation of project list
   };
+  private uploadFilesSubscription?: Subscription;
   private uploadSubs?: Subscription; // Subscription for the battery of upload requests
 
   /**
@@ -165,6 +166,7 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
    */
   onCancelPending() {
     this.uploadSubs!.unsubscribe();
+    this.uploadFilesSubscription!.unsubscribe();
     this.directSubmitSvc.cancelAll();
     this.directSubmitSvc.reset();
   }
