@@ -10,7 +10,7 @@
   <div class="st-file-list-body">
     <nav class="st-file-list-navbar navbar-default navbar-subm-fixed" [ngClass]="{'collapse-left': sideBarCollapsed}">
       <div class="nav-block col-xs-8">
-        <st-directory-path [path]="path.rel" (change)="onPathChange($event)"></st-directory-path>
+        <st-directory-path [path]="path.rel" [root]="path.root" (change)="onPathChange($event)"></st-directory-path>
       </div>
         <div class="nav-block clearfix col-xs-4">
         <st-file-upload-badge

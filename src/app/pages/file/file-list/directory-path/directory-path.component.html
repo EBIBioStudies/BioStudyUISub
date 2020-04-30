@@ -1,11 +1,25 @@
 <span class="root" *ngIf="isEmpty">
-  <i class="fa fa-home"></i>
+  <span *ngIf="isGroupRoot">
+    <i class="fa fa-fw fa-folder"></i>
+    {{groupName}}
+  </span>
+  <span *ngIf="!isGroupRoot">
+    <i class="fa fa-home"></i>
+    Home
+  </span>
 </span>
 <span class="root" *ngIf="!isEmpty">
   <a *ngIf="!last"
     href="javascript:void(0)"
     (click)="onDirectoryClick('root')">
-    <i class="fa fa-home"></i>
+    <span *ngIf="isGroupRoot">
+      <i class="fa fa-fw fa-folder"></i>
+      {{groupName}}
+    </span>
+    <span *ngIf="!isGroupRoot">
+      <i class="fa fa-home"></i>
+      Home
+    </span>
   </a>
   <i class="fa fa-angle-right chevron"></i>
 </span>
