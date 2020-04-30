@@ -1,6 +1,6 @@
 <span class="root" *ngIf="isEmpty">
   <span *ngIf="isGroupRoot">
-    <i class="fa fa-layer-group"></i>
+    <i class="fa fa-fw fa-folder"></i>
     {{groupName}}
   </span>
   <span *ngIf="!isGroupRoot">
@@ -13,7 +13,7 @@
     href="javascript:void(0)"
     (click)="onDirectoryClick('root')">
     <span *ngIf="isGroupRoot">
-      <i class="fa fa-layer-group"></i>
+      <i class="fa fa-fw fa-folder"></i>
       {{groupName}}
     </span>
     <span *ngIf="!isGroupRoot">
