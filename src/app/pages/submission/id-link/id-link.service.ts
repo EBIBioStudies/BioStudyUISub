@@ -47,7 +47,9 @@ export class IdLinkService {
     if (typeof prefix === 'undefined' || prefix.length === 0) {
       url = `${IdLinkService.REGISTRY_URL}/namespaces`;
     } else if (prefix.length) {
-      url = `${IdLinkService.REGISTRY_URL}/namespaces/search/findByPrefixContaining?content=${prefix}`;
+      const formattedPrefix: string = prefix.toLowerCase().trim();
+
+      url = `${IdLinkService.REGISTRY_URL}/namespaces/search/findByPrefixContaining?content=${formattedPrefix}`;
     } else {
       return of([]);
     }
