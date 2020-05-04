@@ -30,27 +30,28 @@
           #uploadForm="ngForm">
         <div class="form-group" [ngClass]="{'has-error': !selectedFileCount && fileTouched}">
           <label class="control-label">
-            1. Study files
+            1. Files
           </label>
           <span *ngIf="selectedFileCount" class="badge pull-right">
             {{selectedFileCount}}
           </span>
           <div class="control-list files-control center-spread">
             <st-file-upload-button [multiple]="true"
-                      [isDirOnly]="isBulkMode"
+                      [isDirOnly]="false"
                       (select)="onUploadFilesSelect($event)"
-                      tooltip="{{isBulkMode ? 'Select a folder' : 'Select files'}}"
+                      title="File upload"
+                      tooltip="Select files"
                       placement="bottom"
                       #fileEl>
             </st-file-upload-button>
-            <span *ngIf="fileEl.isDirSupport" class="mode-toggle checkbox">
-              <label>
-                <input type="checkbox"
-                     name="folder-mode"
-                     [(ngModel)]="isBulkMode">
-                <span>Bulk folder</span>
-              </label>
-            </span>
+            <st-file-upload-button [multiple]="false"
+                      [isDirOnly]="true"
+                      title="Folder upload"
+                      (select)="onUploadFilesSelect($event)"
+                      tooltip="Select a folder"
+                      placement="bottom"
+                      #fileEl>
+            </st-file-upload-button>
           </div>
         </div>
         <div class="form-group">
