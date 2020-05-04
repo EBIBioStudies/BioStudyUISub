@@ -31,18 +31,15 @@
         <div class="help-msg panel">
           <div *ngIf="!sidebar.hasRequests" class="panel-body">
             <h4>New direct {{sidebar.submitType == 'create' ? 'entry' : 'update'}}</h4>
-            <p>Please fill in the form on the left-hand side to upload your study files:</p>
+            <p>Please fill in the form on the left-hand side to upload your studies:</p>
             <ol>
               <li>
                 <strong>
-                  {{sidebar.isBulkSupport ? 'Are all the files in a folder?' : 'Provide the study files'}}
+                  Provide the study files
                 </strong>
                 <p>
-                    Use the <i>"Browse..."</i> button to select the relevant files.
-                    <span *ngIf="sidebar.isBulkSupport">
-                    If all of them are located under a certain folder, you can instead check the
-                    <i>"Bulk folder"</i> option and select that folder.
-                    </span>
+                    Use the <i>"File Upload"</i> button to pick files from different directories. <br />
+                    Use the <i>"Folder Upload"</i> button to upload all the files in a folder.
                 </p>
               </li>
               <li>
