@@ -25,6 +25,21 @@
   scroll-behavior: smooth;
 }
 
+.st-panel-description {
+  align-items: center;
+  display: flex;
+}
+
+.st-panel-description-icon {
+  padding-right: 10px;
+}
+
+.st-panel-description-item {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .panel-extra {
   overflow: hidden;
   white-space: nowrap;

@@ -51,15 +51,10 @@ export class DirectSubmitComponent {
    */
   handleFileCardClick(event: Event, isFail: boolean, accno: string) {
     const containerEl = event.currentTarget as HTMLElement;
-    const targetEl = event.target as HTMLElement;
-    const headingEl = containerEl.querySelector('.panel-heading');
-    const logEl = containerEl.querySelector('.panel-body');
+    const logElement = containerEl.querySelector('.log-container');
 
-    if (logEl && isFail) {
-      if (headingEl!.contains(targetEl)) {
-        logEl.classList.toggle('hidden');
-      }
-      containerEl.classList.toggle('container-full', !logEl.classList.contains('hidden'));
+    if (logElement && isFail) {
+      logElement.classList.toggle('hidden');
     } else {
       this.router.navigate([`/submissions/edit/${accno}`, { method: 'FILE' }]);
     }
