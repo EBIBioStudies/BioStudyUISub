@@ -8,15 +8,30 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 export class DirectoryPathComponent implements OnChanges {
   @Output() change: EventEmitter<string> = new EventEmitter<string>();
   dirs: string[] = [];
+  groupName: string = '';
+  isGroup: boolean = false;
   @Input() path: string = '';
+  @Input() root: string = '';
 
   get isEmpty(): boolean {
     return this.dirs.length === 0;
   }
 
+  get isGroupRoot(): boolean {
+    return this.isGroup;
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
-    const pathValue = changes.path.currentValue;
-    this.dirs = (pathValue || '').split('/').filter(Boolean);
+    if (changes.path) {
+      const pathValue = changes.path.currentValue;
+      this.dirs = (pathValue || '').split('/').filter(Boolean);
+    }
+
+    if (changes.root) {
+      const currentValue: string = changes.root.currentValue;
+      this.isGroup = currentValue.indexOf('/groups') !== -1;
+      this.groupName = currentValue.split('/')[2];
+    }
   }
 
   onDirectoryClick(idx) {
