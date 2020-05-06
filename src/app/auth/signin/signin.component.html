@@ -22,10 +22,21 @@
           <div class="form-group" [ngClass]="{'has-error': login.invalid && login.touched}">
             <label class="control-label" for="login">
               <span class="text-black">Email address</span>
-              <span *ngIf="login.invalid && login.touched">Please enter an email address</span>
+              <span *ngIf="login.invalid && login.touched">Please enter a valid email address</span>
             </label>
-            <input type="text" id="login" name="login" autofocus tabindex="1" class="form-control"
-              [(ngModel)]="model.login" required stValidateOnblur (change)="resetGlobalError()" #login="ngModel"
+            <input
+              type="text"
+              id="login"
+              name="login"
+              autofocus
+              tabindex="1"
+              class="form-control"
+              [(ngModel)]="model.login"
+              required
+              stValidateOnblur
+              email="true"
+              (change)="resetGlobalError()"
+              #login="ngModel"
               #focusEl />
             <div class="text-right">
               <a routerLink="/resend_activation_link" tabindex="3">Resend activation email</a>
@@ -36,8 +47,17 @@
               <span class="text-black">Password</span>
               <span *ngIf="password.invalid && password.touched">Please enter a password</span>
             </label>
-            <input type="password" name="password" id="password" tabindex="2" autocomplete="nope" class="form-control"
-              [(ngModel)]="model.password" required stValidateOnblur (change)="resetGlobalError()"
+            <input
+              type="password"
+              name="password"
+              id="password"
+              tabindex="2"
+              autocomplete="nope"
+              class="form-control"
+              [(ngModel)]="model.password"
+              required
+              stValidateOnblur
+              (change)="resetGlobalError()"
               #password="ngModel" />
             <div class="text-right">
               <a routerLink="/password_reset_request" tabindex="4">Forgot your password?</a>
