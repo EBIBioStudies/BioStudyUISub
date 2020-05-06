@@ -34,12 +34,13 @@
         <div class="form-group" [ngClass]="{'has-error': email.invalid && email.touched}">
           <label class="control-label" for="email">
             <span class="text-black">Email address</span>
-            <span *ngIf="email.invalid && email.touched">Please enter an email address</span>
+            <span *ngIf="email.invalid && email.touched">Please enter a valid email address</span>
           </label>
           <input type="email" id="email" name="email" autocomplete="nope"
                 class="form-control"
                 [(ngModel)]="model.email"
                 (change)="resetGlobalError()"
+                email="true"
                 #email="ngModel"
                 required
                 stValidateOnblur>
