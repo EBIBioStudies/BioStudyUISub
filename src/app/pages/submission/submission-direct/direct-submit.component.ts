@@ -49,17 +49,13 @@ export class DirectSubmitComponent {
    * Toggles the width of the request card and the log's visibility on click.
    * @param {Event} event - DOM object for the click action.
    */
-  handleFileCardClick(event: Event, isFail: boolean, accno: string) {
+  handleFileCardClick(args: { accno: string, event: Event, hasSubmitFailed: boolean }) {
+    const { accno, event, hasSubmitFailed } = args;
     const containerEl = event.currentTarget as HTMLElement;
-    const targetEl = event.target as HTMLElement;
-    const headingEl = containerEl.querySelector('.panel-heading');
-    const logEl = containerEl.querySelector('.panel-body');
+    const logElement = containerEl.querySelector('.log-container');
 
-    if (logEl && isFail) {
-      if (headingEl!.contains(targetEl)) {
-        logEl.classList.toggle('hidden');
-      }
-      containerEl.classList.toggle('container-full', !logEl.classList.contains('hidden'));
+    if (logElement && hasSubmitFailed) {
+      logElement.classList.toggle('hidden');
     } else {
       this.router.navigate([`/submissions/edit/${accno}`, { method: 'FILE' }]);
     }
@@ -71,6 +67,10 @@ export class DirectSubmitComponent {
 
   isFail(studyIdx: number) {
     return this.sidebar.studyProp(studyIdx, 'failed');
+  }
+
+  isPending() {
+    return this.sidebar.hasRequests;
   }
 
   isSuccess(studyIdx: number) {
