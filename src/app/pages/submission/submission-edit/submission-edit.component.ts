@@ -143,12 +143,12 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
             const currentDate: Date = currentControlDate ? new Date(Date.parse(currentControlDate)) : new Date();
             this.oldReleaseDate = currentDate;
             this.newReleaseDate = currentDate;
-            this.oldReleaseDate.setHours(0, 0, 0);
-            this.newReleaseDate.setHours(0, 0, 0);
+            this.oldReleaseDate.setHours(0, 0, 0, 0);
+            this.newReleaseDate.setHours(0, 0, 0, 0);
 
             releaseDateCtrl.control.valueChanges.subscribe((value) => {
               this.newReleaseDate = new Date(Date.parse(value));
-              this.newReleaseDate.setHours(0, 0, 0);
+              this.newReleaseDate.setHours(0, 0, 0, 0);
             });
           }
         }
@@ -230,8 +230,8 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
 
   private confirmReleaseDateOverride(): Observable<boolean> {
     const today: Date = new Date();
-    today.setHours(0, 0, 0);
-    const isDateOverride: boolean = this.oldReleaseDate <= today && this.newReleaseDate > today;
+    today.setHours(0, 0, 0, 0);
+    const isDateOverride: boolean = this.oldReleaseDate < today && this.newReleaseDate >= today;
 
     return isDateOverride ? this.modalService.whenConfirmed(
       'This study has already been released and resetting the release date may make it ' +
