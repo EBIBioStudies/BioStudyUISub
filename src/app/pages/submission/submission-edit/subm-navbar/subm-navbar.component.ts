@@ -15,6 +15,7 @@ export class SubmNavBarComponent implements OnChanges {
   @Output() revertClick: EventEmitter<Event> = new EventEmitter<Event>();
   @Output() sectionClick: EventEmitter<Section> = new EventEmitter<Section>();
   @Input() sectionForm?: SectionForm;
+
   sectionPath: SectionForm[] = [];
   @Output() submitClick: EventEmitter<Event> = new EventEmitter<Event>();
 
@@ -54,6 +55,10 @@ export class SubmNavBarComponent implements OnChanges {
 
   get isEditing(): boolean {
     return this.submEditService.isEditing;
+  }
+
+  get isSaving(): boolean {
+    return this.submEditService.isSaving;
   }
 
   private findSectionPath(sectionForm?: SectionForm): SectionForm[] {
