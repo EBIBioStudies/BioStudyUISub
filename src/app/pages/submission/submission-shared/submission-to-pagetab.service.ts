@@ -95,10 +95,10 @@ export class SubmissionToPageTabService {
     let keywordsAsAttributes: PtAttribute[] = [];
 
     if (keywordsFeature !== undefined) {
-      const keywordFeature: PtAttribute[][] = this.extractFeatureAttributes(keywordsFeature, isSanitise);
+      const attributes: PtAttribute[][] = this.extractFeatureAttributes(keywordsFeature, isSanitise);
 
-      if (keywordFeature.length > 0) {
-        keywordsAsAttributes = keywordFeature.map((column) => <PtAttribute>column.pop());
+      if (attributes.length > 0) {
+        keywordsAsAttributes = attributes.map((column) => <PtAttribute>column.pop());
       }
     }
 
