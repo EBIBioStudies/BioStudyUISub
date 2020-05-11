@@ -1,0 +1,19 @@
+.st-dir-sidebar {
+  height: calc(100vh - 116px);
+}
+
+.st-dir-sidebar-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.st-dir-sidebar-list-item-header {
+  background-color: #6293b5;
+  box-shadow: 0px 1px 2px #396E99;
+  color: #ffffff;
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-top: 1.4rem;
+  padding: 6px 12px;
+}

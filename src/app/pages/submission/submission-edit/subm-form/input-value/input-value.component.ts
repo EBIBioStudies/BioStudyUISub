@@ -1,4 +1,4 @@
-import { Component, EventEmitter, forwardRef, Input, Output, AfterViewChecked } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { AppConfig } from 'app/app.config';
 import { BehaviorSubject, Observable, Subject, of } from 'rxjs';
@@ -10,17 +10,16 @@ import {
 } from 'app/pages/submission/submission-shared/model/templates';
 import { typeaheadSource } from '../../shared/typeahead.utils';
 
-
 @Component({
   selector: 'st-input-value',
   templateUrl: './input-value.component.html',
   providers: [{
     provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => InputValueComponent),
+    useExisting: InputValueComponent,
     multi: true
   }]
 })
-export class InputValueComponent implements ControlValueAccessor, AfterViewChecked {
+export class InputValueComponent implements ControlValueAccessor {
   @Input() autosuggest: boolean = true;
   @Input() formControl?: FormControl;
   @Input() isSmall: boolean = true;
@@ -68,14 +67,6 @@ export class InputValueComponent implements ControlValueAccessor, AfterViewCheck
   }
 
   /**
-   * Lifecycle hook for operations after all child views have been changed.
-   * Used to update the pointer to the DOM element.
-   */
-  ngAfterViewChecked(): void {
-    // this.formControl!.nativeElement = this.rootEl.nativeElement.querySelector('.form-control');
-  }
-
-  /**
    * Convenience method for the equivalen date n years into the future.
    * @param {number} years - Number of years the date is incremented in.
    * @returns {Date} - Resulting date object.
@@ -89,9 +80,13 @@ export class InputValueComponent implements ControlValueAccessor, AfterViewCheck
     this.onTouched();
   }
 
+  onChange: any = (_: any) => {};
+
   onKeyDown() {
     this.valueChanges$.next(this.value);
   }
+
+  onTouched: any = () => {};
 
   registerOnChange(fn: any): void {
     this.onChange = fn;
@@ -119,19 +114,6 @@ export class InputValueComponent implements ControlValueAccessor, AfterViewCheck
     }, this.valueChanges$);
   }
 
-  /**
-   * Handler for select event from auto-suggest typeahead. Fixes the lack of a change event when selecting
-   * a value without any character being typed (typically in combination with typeaheadMinLength = 0).
-   * The closest input element descendant will be the event's target.
-   * TODO: this might be sorted in newer versions of the ngx-bootstrap plugin. Duplicate events may occur due to the
-   * repeated calling of "set value(value)" above (cannot keep track of the last value and, by extension, can't detect change).
-   * @param {TypeaheadMatch} selection - Object for the currently selected value.
-   */
-
-  /* onSuggestSelect(selection: TypeaheadMatch) {
-     // this.rootEl.nativeElement.getElementsByTagName('input')[0].dispatchEvent(new Event('change', {bubbles: true}));
-   }*/
-
   writeValue(value: any): void {
     if (value !== undefined) {
       this.value = value;
@@ -144,7 +126,4 @@ export class InputValueComponent implements ControlValueAccessor, AfterViewCheck
     }
     return this.autosuggestSource();
   }
-
-  private onChange: any = (_: any) => { };
-  private onTouched: any = () => { };
 }

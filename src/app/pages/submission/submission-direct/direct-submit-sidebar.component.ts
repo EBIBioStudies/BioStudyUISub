@@ -168,6 +168,7 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
     this.uploadSubs!.unsubscribe();
     this.uploadFilesSubscription!.unsubscribe();
     this.directSubmitSvc.cancelAll();
+    this.directSubmitSvc.reset();
   }
 
   /**

@@ -1,0 +1,40 @@
+.st-edit-page {
+  display: flex;
+}
+
+.st-edit-body {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.st-edit-form-container {
+  height: calc(100vh - 116px);
+  overflow: auto;
+  padding-top: 2rem;
+  scroll-behavior: smooth;
+}
+
+.st-edit-form-subsections {
+  list-style: none;
+  padding: 0;
+}
+
+.st-edit-form-subsections-item {
+  background-color: #f5f5f5;
+  border-radius: 0.5rem;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  margin-top: 1rem;
+  padding: 1rem;
+}
+
+.st-edit-form-subsections-item:hover {
+  background-color: #6d9fc1;
+  color: #fff;
+  text-decoration: underline;
+}
+
+.st-edit-status-message {
+  min-height: 17rem;
+}

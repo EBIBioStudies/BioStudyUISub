@@ -1,3 +1,10 @@
+.st-help-container {
+  height: calc(100vh - 60px);
+  overflow: auto;
+  padding: 2rem;
+  scroll-behavior: smooth;
+}
+
 /* Index */
 .list-group {
   list-style: decimal inside;

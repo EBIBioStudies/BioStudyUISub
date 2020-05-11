@@ -143,32 +143,20 @@ export class FeatureForm extends FormBase {
     const rowForm = this.rowForms[this.rowForms.length - 1];
     const firstColumn = this.columnControls[0].id;
     const lastColumn = this.columnControls[this.columnControls.length - 1].id;
+
     if (this.canHaveMultipleRows) {
       return rowForm.cellControlAt(firstColumn)!.control;
     }
+
     return rowForm.cellControlAt(lastColumn)!.control;
   }
 
   addColumn() {
-    /*if (!isTemplateBased && !this.type.allowCustomCols) {
-      if (this.type.columnTypes.length === 0) {
-        console.error(`Can't create column for ${this.typeName}; column types are not defined and custom columns are not allowed`);
-        return undefined;
-      }
-      let colType = this.type.columnTypes.find(t => this._columns.findByType(t) === undefined);
-      if (colType === undefined && this.type.uniqueCols) {
-        return undefined;
-      }
-      colType = colType || this.type.columnTypes[0];
-      colName = colType.name;
-      valueType = colType.valueType;
-      isTemplateBased = true;
-    }*/
     if (this.canAddColumn()) {
       const column = this.feature.addColumn();
       this.addColumnControl(column);
       this.rowForms.forEach(rf => rf.addCellControl(column));
-      this.structureChanges$.next(StructureChangeEvent.featureColumnAdd);
+      this.notifiyChanges(StructureChangeEvent.featureColumnAdd);
     }
   }
 
@@ -184,7 +172,7 @@ export class FeatureForm extends FormBase {
     if (this.canAddRow()) {
       const row = this.feature.addRow();
       this.addRowForm(row!, this.feature.columns);
-      this.structureChanges$.next(StructureChangeEvent.featureRowAdd);
+      this.notifiyChanges(StructureChangeEvent.featureRowAdd);
     }
   }
 
@@ -249,12 +237,16 @@ export class FeatureForm extends FormBase {
     return column.typeaheadSource(this.columnNamesAvailable);
   }
 
+  notifiyChanges(event: StructureChangeEvent) {
+    this.structureChanges$.next(event);
+  }
+
   removeColumn(columnCtrl: ColumnControl) {
     if (this.canRemoveColumn(columnCtrl)) {
       this.feature.removeColumn(columnCtrl.id);
       this.removeColumnControl(columnCtrl.id);
       this.rowForms.forEach(rf => rf.removeCellControl(columnCtrl.id));
-      this.structureChanges$.next(StructureChangeEvent.featureColumnRemove);
+      this.notifiyChanges(StructureChangeEvent.featureColumnRemove);
     }
   }
 
@@ -262,17 +254,15 @@ export class FeatureForm extends FormBase {
     if (this.canRemoveRow()) {
       this.feature.removeRowAt(rowIndex);
       this.removeRowForm(rowIndex);
-      this.structureChanges$.next(StructureChangeEvent.featureRowRemove);
+      this.notifiyChanges(StructureChangeEvent.featureRowRemove);
     }
   }
 
-  /*canAddColumn(name: string, isTemplateBased: boolean): boolean {
-    const notExists = this.columns.find(col => col.name === name) === undefined;
-    if (notExists) {
-      return isTemplateBased || this.type.allowCustomCols;
-    }
-    return !this.featureType.uniqueCols;
-  }*/
+  syncModelRows() {
+    const fromRows = this.rowForms.map((rowForm) => rowForm.row);
+    this.feature.patchRows(fromRows);
+    this.notifiyChanges(StructureChangeEvent.featureRowOrderUpdate);
+  }
 
   private addColumnControl(column: Attribute) {
     const colControl = new ColumnControl(column, this.featureRef.columnRef(column));

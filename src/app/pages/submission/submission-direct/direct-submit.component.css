@@ -1,8 +1,36 @@
+.st-direct-upload-page {
+  display: flex;
+}
+
+.st-direct-upload-body {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.st-direct-upload-navbar {
+  align-items: center;
+  background: white;
+  box-shadow: 0 4px 4px -4px rgba(0, 0, 0, 0.24);
+  display: flex;
+  height: 54px;
+  position: relative;
+  z-index: 1030;
+}
+
+.st-direct-upload-container {
+  height: calc(100vh - 116px);
+  overflow: auto;
+  padding: 2rem;
+  scroll-behavior: smooth;
+}
+
 .panel-extra {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
 .container-full {
   width: 100%;
 }
@@ -10,9 +38,11 @@
 .fa-caret-square-o-up {
   display: none;
 }
+
 .container-full .fa-caret-square-o-down {
   display: none;
 }
+
 .container-full .fa-caret-square-o-up {
   display: inline;
 }

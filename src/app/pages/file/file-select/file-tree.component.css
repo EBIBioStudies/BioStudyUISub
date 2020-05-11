@@ -53,13 +53,12 @@
   left: 0
 }
 
-.treeview li a {
+.treeview li a.node, .treeview li a.dir {
   text-decoration: none;
   white-space: nowrap;
   color: inherit;
   cursor: pointer;
   display: inline-block;
-  padding-right:1em;
 }
 
 .treeview li a:hover {

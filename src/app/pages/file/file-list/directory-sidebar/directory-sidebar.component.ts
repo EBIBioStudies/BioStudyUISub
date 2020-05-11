@@ -1,23 +1,25 @@
 import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FileService } from '../../shared/file.service';
+import { PathInfo } from '../../shared/file-rest.model';
 import { FileNode } from 'app/pages/file/file-select/file-tree.model';
 import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'st-directory-sidebar',
   templateUrl: './directory-sidebar.component.html',
+  styleUrls: ['./directory-sidebar.component.css'],
   providers: [
     {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DirectorySidebarComponent), multi: true}
   ]
 })
 export class DirectorySidebarComponent implements OnInit, ControlValueAccessor {
   @Input() collapsed?: boolean = false;
-  dirs: FileNode[] = [];
+  groups: FileNode[] = [];
+  homeDir: FileNode = new FileNode(true, '/', 'home');
   @Output() select = new EventEmitter();
+  selectedPath?: string;
   @Output() toggle = new EventEmitter();
-
-  private selectedPath?: string;
 
   constructor(private fileService: FileService) {}
 
@@ -31,10 +33,15 @@ export class DirectorySidebarComponent implements OnInit, ControlValueAccessor {
   }
 
   ngOnInit() {
-    this.fileService.getUserDirs().pipe(
-      map((dirs) => dirs.map((dir) => new FileNode(true, dir.path, dir.name)))
-    ).subscribe((dirs) => {
-      this.dirs = dirs;
+    const homeDir: PathInfo = this.fileService.getUserDir();
+
+    this.homeDir = new FileNode(true, homeDir.path, homeDir.name);
+
+    this.fileService.getUserGroups().pipe(
+      map((groups) => groups.map((group) => new FileNode(true, 'groups', group.name)))
+    ).subscribe((groups) => {
+      this.groups = groups;
+      this.collapsed = groups.length === 0;
     });
   }
 

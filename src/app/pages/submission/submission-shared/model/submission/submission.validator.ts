@@ -35,6 +35,7 @@ class ValidationRules {
 
   static forFeature(feature: Feature): ValidationRule[] {
     const rules: ValidationRule[] = [];
+
     if (feature.type.displayType.isRequired) {
       rules.push(ValidationRules.atLeastOneRowFeature(feature));
     }
@@ -42,13 +43,15 @@ class ValidationRules {
     const valueRules: ValidationRule[] = [];
     feature.columns.forEach((col, colIndex) => {
       rules.push(ValidationRules.requiredValue(col.name, `${feature.type.name}: (col ${colIndex}):`));
+
       feature.rows.forEach((row, rowIndex) => {
         const rowValue = row.valueFor(col.id)!.value;
-        const rowName = `${feature.type.name}: (col: ${colIndex}, row: ${rowIndex}):`;
+        const rowName = `'${col.name}' for '${feature.type.name}' in row ${rowIndex + 1}`;
 
         if (feature.type.displayType.isRequired && col.displayType.isRequired) {
           valueRules.push(ValidationRules.requiredValue(rowValue, rowName));
         }
+
         valueRules.push(ValidationRules.formattedValue(rowValue, col.valueType, rowName));
       });
     });
@@ -181,7 +184,7 @@ class ValidationRules {
     return {
       validate() {
         if (isRequired && ValidationRules.isEmpty(value)) {
-          return `'${name}' value is required`;
+          return `${name} is required`;
         }
         return undefined;
       }

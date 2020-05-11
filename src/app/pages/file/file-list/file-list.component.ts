@@ -123,8 +123,8 @@ export class FileListComponent implements OnInit, OnDestroy {
     });
   }
 
-  onRelativePathChange(relPath) {
-    this.loadData(this.path.setRel(relPath));
+  onPathChange(path) {
+    this.loadData(this.path.setRel(path));
   }
 
   onRootPathSelect(rootPath) {

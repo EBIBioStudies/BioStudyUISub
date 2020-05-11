@@ -1,42 +1,53 @@
-<ul class="sidebar-menu">
-  <li *ngIf="invalidControls.isEmpty() || isLoading || isSubmitting" class="center-vertically text-center"
-    [ngClass]="{'col-xs-12': !collapsed}">
-    <i class="fa " aria-hidden="true"
-       [ngClass]="{
-          'fa-2x': collapsed, 'fa-4x': !collapsed,
-          'fa-times-circle': serverError,
-          'fa-check-circle': !serverError && !isLoading && !isSubmitting,
-          'fa-cog fa-spin': isLoading || isSubmitting}"></i>
-    <h4 [ngClass]="{'vertical-text': collapsed}">
-      {{isLoading ? 'Loading submission...' :
-      isSubmitting? 'Submitting submission...' :
-      serverError ? errorMsg() : 'All fields are valid'}}
-    </h4>
-    <h4 *ngIf="!serverError" class="action-title">
-      {{isLoading || isSubmitting ? 'Please wait' : 'You may submit your study now'}}
-    </h4>
+<ul class="sidebar-menu st-check-sidebar st-status-sidebar" *ngIf="invalidControls.isEmpty() || isLoading || isSubmitting">
+  <li *ngIf="!serverError && !isLoading && !isSubmitting"
+      class="st-status-sidebar-content text-center"
+      [ngClass]="{'col-xs-12': !collapsed}">
+    <i aria-hidden="true" class="fa fa-check-circle" [ngClass]="{'fa-2x': collapsed, 'fa-4x': !collapsed}"></i>
+    <h4 *ngIf="!collapsed">All fields are valid</h4>
+    <h4 *ngIf="!collapsed" class="action-title">You may submit your study now</h4>
+  </li>
+  <li *ngIf="serverError"
+      class="st-status-sidebar-content text-center"
+      [ngClass]="{'col-xs-12': !collapsed}">
+    <i aria-hidden="true" class="fa fa-times-circle" [ngClass]="{'fa-2x': collapsed, 'fa-4x': !collapsed}"></i>
+    <h4 [ngClass]="{'vertical-text': collapsed}">{{errorMsg()}}</h4>
+  </li>
+  <li *ngIf="!serverError && isLoading"
+      class="st-status-sidebar-content text-center"
+      [ngClass]="{'col-xs-12': !collapsed}">
+    <i aria-hidden="true" class="fa fa-cog fa-spin" [ngClass]="{'fa-2x': collapsed, 'fa-4x': !collapsed}"></i>
+    <h4 [ngClass]="{'vertical-text': collapsed}">Loading submission...</h4>
+  </li>
+  <li *ngIf="!serverError && isSubmitting"
+      class="st-status-sidebar-content text-center"
+      [ngClass]="{'col-xs-12': !collapsed}">
+    <i aria-hidden="true" class="fa fa-cog fa-spin" [ngClass]="{'fa-2x': collapsed, 'fa-4x': !collapsed}"></i>
+    <h4 [ngClass]="{'vertical-text': collapsed}">Submitting...</h4>
   </li>
 </ul>
-<ul class="sidebar-menu" *ngFor="let controlGroup of invalidControls">
-  <li *ngIf="!controlGroup[0].ref.isRootSection" class="sidebar-item-header">
-    <span>{{collapsed ? '' : controlGroup[0].ref.sectionName}}</span>
-  </li>
-  <li class="sidebar-item" *ngFor="let control of controlGroup">
-    <a *ngIf="control.invalid"
-       [ngClass]="{'center-spread': !collapsed}"
-       tooltip="{{collapsed ? '&quot;' + control.ref.name + '&quot; field is ' + tipText(control.errors) : 'Highlight field on the form'}}"
-       container="body"
-       placement="{{collapsed ? 'right' : 'top'}}"
-       (click)="onReviewClick($event, control)">
+<div class="st-check-sidebar">
+  <ul class="sidebar-menu" *ngFor="let controlGroup of invalidControls">
+    <li *ngIf="!controlGroup[0].ref.isRootSection" class="sidebar-item-header">
+      <span>{{collapsed ? '' : controlGroup[0].ref.sectionName}}</span>
+    </li>
+    <li class="sidebar-item" *ngFor="let control of controlGroup">
+      <a *ngIf="control.invalid"
+          (click)="onReviewClick(control)">
+        <div [ngClass]="{'st-check-item': !collapsed, 'st-check-item-collapsed': collapsed}">
           <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
             <i class="entry-item fas fa-lg text-center {{control.ref.icon}}"></i>
             {{!collapsed ? '&nbsp;' + control.ref.name + '&nbsp;' : ''}}
           </span>
-      <strong *ngIf="!collapsed" class="entry-item label label-default"
-          [ngClass]="{'label-danger': control.touched}"
-          #labelEl>
-        {{tipText(control.errors)}}
-      </strong>
-    </a>
-  </li>
-</ul>
+          <strong *ngIf="!collapsed"
+              class="entry-item label label-default"
+              tooltip="{{collapsed ? '&quot;' + control.ref.name + '&quot; field is ' + tipText(control.errors) : 'Highlight field on the form'}}"
+              placement="{{collapsed ? 'right' : 'top'}}"
+              [ngClass]="{'label-danger': control.touched}"
+              #labelEl>
+            {{tipText(control.errors)}}
+          </strong>
+        </div>
+      </a>
+    </li>
+  </ul>
+</div>

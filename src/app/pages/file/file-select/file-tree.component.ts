@@ -10,6 +10,15 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./file-tree.component.css']
 })
 export class FileTreeComponent implements OnInit, OnDestroy {
+
+  get nodes(): FileNode[] {
+    return this._nodes;
+  }
+
+  set nodes(nodes: FileNode[]) {
+    this._nodes = nodes;
+    this.loaded = true;
+  }
   private static ROOT_FOLDER_PATH = '/user/';
 
   loaded = false;
@@ -45,19 +54,10 @@ export class FileTreeComponent implements OnInit, OnDestroy {
   }
 
   onNodeClick(node: FileNode) {
-    if (node.isDir) {
-      node.expandOrCollapse();
-    } else {
       this.select.emit(node.path);
-    }
   }
 
-  get nodes(): FileNode[] {
-    return this._nodes;
-  }
-
-  set nodes(nodes: FileNode[]) {
-    this._nodes = nodes;
-    this.loaded = true;
+  onParentClick(node: FileNode) {
+    node.expandOrCollapse();
   }
 }

@@ -26,8 +26,10 @@ class Rows {
     if (this.isFull()) {
       throw new Error(`Can not add more than ${this.capacity} row(s) to a feature`);
     }
+
     const row = new ValueMap(keys);
     this.rows.push(row);
+
     return row;
   }
 
@@ -43,6 +45,10 @@ class Rows {
 
   list(): Array<ValueMap> {
     return this.rows.slice();
+  }
+
+  patchRows(rows: Array<ValueMap>) {
+    this.rows = rows;
   }
 
   removeAt(index: number): boolean {
@@ -209,6 +215,10 @@ export class Feature {
 
   findColumnById(columnId: string): Attribute | undefined {
     return this._columns.findById(columnId);
+  }
+
+  patchRows(rows: ValueMap[]) {
+    this._rows.patchRows(rows);
   }
 
   removeColumn(id: string): boolean {
@@ -526,7 +536,7 @@ export class Sections {
 }
 
 export class Submission {
-  accno: string;
+  accno: string | null;
   readonly attributes: AttributeData[];
   isRevised: boolean; // true if submission has been sent and is marked as revised by PageTab class.
   readonly section: Section;
@@ -542,7 +552,7 @@ export class Submission {
   constructor(type: SubmissionType, data: SubmissionData = <SubmissionData>{}) {
     this.tags = Tags.create(data);
     this.type = type;
-    this.accno = data.accno || '';
+    this.accno = data.accno || null;
     this.attributes = data.attributes || [];
     this.isRevised = !this.isTemp && data.isRevised === true;
     this.section = new Section(type.sectionType, data.section);
@@ -553,7 +563,7 @@ export class Submission {
    * @returns {boolean} True if the submission is temporary.
    */
   get isTemp(): boolean {
-    return this.accno.length === 0 || this.accno.indexOf('TMP') === 0;
+    return this.accno === null || this.accno.length === 0 || this.accno.indexOf('TMP') === 0;
   }
 
   sectionPath(id: string): Section[] {
