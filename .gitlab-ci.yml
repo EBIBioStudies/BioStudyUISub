@@ -1,12 +1,15 @@
 image: node
+variables:
+  DOCKER_TLS_CERTDIR: ""
 stages:
   - setup
   - test
-  - build_ui
+  - build
+  - build_image
   - deploy
 
 .build_template: &build_template
-  stage: build_ui
+  stage: build
   before_script:
     - sh ./tasks/build_setup.sh
   script:
@@ -15,6 +18,16 @@ stages:
     paths:
       - subtool-$CI_ENVIRONMENT_SLUG.tar.gz
     expire_in: 2 days
+
+.build_image: &build_image_template
+  stage: build_image
+  image: docker:latest
+  services:
+    - docker:dind
+  dependencies:
+    - build
+  script:
+    - sh ./tasks/build_image.sh
 
 .deploy_template: &deploy_definition
   stage: deploy
@@ -45,31 +58,41 @@ test:
   script:
     - npm test
 
-# Build UI per environment
-build_ui:dev:
+# Build per environment
+build:dev:
   <<: *build_template
   environment: DEV
   only:
     - dev@ndiaz/BioStudyUISub
 
-build_ui:beta:
+build:beta:
   <<: *build_template
   environment: BETA
   only:
     - beta@ndiaz/BioStudyUISub
 
-build_ui:prod:
+build:prod:
   <<: *build_template
   environment: PROD
   only:
     - master@ndiaz/BioStudyUISub
+
+# Build Docker image per environment
+build_image:dev:
+  <<: *build_image_template
+  environment: DEV
+  dependencies:
+    - build:dev
+  only:
+    - dev@ndiaz/BioStudyUISub
+  when: manual
 
 # Deploy per environment
 deploy:dev:
   <<: *deploy_definition
   environment: DEV
   dependencies:
-    - build_ui:dev
+    - build:dev
   only:
     - dev@ndiaz/BioStudyUISub
 
@@ -77,7 +100,7 @@ deploy:beta:
   <<: *deploy_definition
   environment: BETA
   dependencies:
-    - build_ui:beta
+    - build:beta
   only:
     - beta@ndiaz/BioStudyUISub
   when: manual
@@ -86,7 +109,7 @@ deploy:prod:
   <<: *deploy_definition
   environment: PROD
   dependencies:
-    - build_ui:prod
+    - build:prod
   only:
     - master@ndiaz/BioStudyUISub
   when: manual

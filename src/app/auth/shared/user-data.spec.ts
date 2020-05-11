@@ -26,6 +26,7 @@ describe('UserData', () => {
       email: 'vasya@pupkin.com',
       superuser: false,
       secret: 'secret',
+      fullname: 'Vasya',
       aux: {
         orcid: '1234-5678-9999'
       }

@@ -1,4 +1,4 @@
-<div class="row-offcanvas row-offcanvas-left">
+<div class="st-file-list-page">
   <st-directory-sidebar
       name="userDirsSidebar"
       [(ngModel)]="rootPath"
@@ -7,15 +7,16 @@
       [collapsed]="sideBarCollapsed">
   </st-directory-sidebar>
 
-  <div class="navbar-default navbar-subm-fixed"
-     [ngClass]="{'collapse-left': sideBarCollapsed}">
-    <nav>
+  <div class="st-file-list-body">
+    <nav class="st-file-list-navbar navbar-default navbar-subm-fixed" [ngClass]="{'collapse-left': sideBarCollapsed}">
       <div class="nav-block col-xs-8">
-        <i class="fa fa-folder-open"></i>&nbsp;<st-directory-path [path]="path.rel" (change)="onRelativePathChange($event)"></st-directory-path>
+        <st-directory-path [path]="path.rel" [root]="path.root" (change)="onPathChange($event)"></st-directory-path>
       </div>
         <div class="nav-block clearfix col-xs-4">
-        <st-file-upload-badge class="upload-count"
-                   (select)="onUploadSelect($event)"></st-file-upload-badge>
+        <st-file-upload-badge
+          class="upload-count"
+          (select)="onUploadSelect($event)">
+        </st-file-upload-badge>
       <div class="btn-group pull-right" role="group">
         <st-ftp-upload-button></st-ftp-upload-button>
       </div>
@@ -40,30 +41,30 @@
       </div>
       </div>
     </nav>
-  </div>
-  <div class="container-fluid navbar-subm-margin">
-    <aside class="right-side" [ngClass]="{'collapse-left' : sideBarCollapsed}">
-      <section class="content">
-        <button class="btn btn-default btn-link"
-            (click)="onBackButtonClick()"
-            *ngIf="backButton">
-          <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
-          Back to submission
-        </button>
-        <div class="panel">
-          <div class="row">
-            <div class="col-xs-12">
-              <ag-grid-angular style="width: 100%; height: 450px;" class="ag-theme-fresh"
-                       [gridOptions]="gridOptions"
-                       [columnDefs]="columnDefs"
-                       enableSorting
-                       rowHeight="30"
-                       (rowDoubleClicked)="onRowDoubleClick($event)">
-              </ag-grid-angular>
+    <div class="st-file-list-container">
+      <aside class="right-side">
+        <section class="content">
+          <button class="btn btn-default btn-link"
+              (click)="onBackButtonClick()"
+              *ngIf="backButton">
+            <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
+            Back to submission
+          </button>
+          <div class="panel">
+            <div class="row">
+              <div class="col-xs-12">
+                <ag-grid-angular style="width: 100%; height: 450px;" class="ag-theme-fresh"
+                         [gridOptions]="gridOptions"
+                         [columnDefs]="columnDefs"
+                         enableSorting
+                         rowHeight="30"
+                         (rowDoubleClicked)="onRowDoubleClick($event)">
+                </ag-grid-angular>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-    </aside>
+        </section>
+      </aside>
+    </div>
   </div>
 </div>

@@ -14,7 +14,6 @@ export class HeaderComponent implements OnDestroy {
   isPendingReq = false; // flags whether there is a transaction in progress (from anywhere in the app)
   @ViewChild('logout', { static: false }) logout;
   navCollapsed = true;
-  profileTooltip = '';
   reqStatusSubs: Subscription;
   @ViewChild('user', { static: true }) user;
   userLoggedIn = false;
@@ -65,8 +64,8 @@ export class HeaderComponent implements OnDestroy {
     });
   }
 
-  changeProfileTooltip() {
-    this.profileTooltip = this.userSession.userName();
+  get userDisplayName() {
+    return this.userSession.getUserDisplayName();
   }
 
   ngOnDestroy(): void {

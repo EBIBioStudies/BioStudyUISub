@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { SortablejsModule } from 'ngx-sortablejs';
 import { SharedModule } from 'app/shared/shared.module';
 import { FileModule } from 'app/pages/file/file.module';
 import { IdLinkModule } from '../id-link/id-link.module';
@@ -36,7 +37,8 @@ import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
     SubmissionResultsModule,
     SubmissionOtherModule,
     IdLinkModule,
-    PubMedIdSearchModule
+    PubMedIdSearchModule,
+    SortablejsModule
   ],
   providers: [
     SubmEditService

@@ -1,7 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { AfterViewChecked, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap';
-import { FormControl } from '@angular/forms';
 import { Location } from '@angular/common';
 import { Observable, of, Subject } from 'rxjs';
 import { Option } from 'fp-ts/lib/Option';
@@ -9,6 +8,7 @@ import { switchMap, takeUntil } from 'rxjs/operators';
 import { AppConfig } from 'app/app.config';
 import { LogService } from 'app/core/logger/log.service';
 import { ModalService } from 'app/shared/modal.service';
+import { scrollTop } from 'app/utils';
 import { SectionForm } from './shared/model/section-form.model';
 import { SubmEditService } from './shared/subm-edit.service';
 import { SubmResultsModalComponent } from '../submission-results/subm-results-modal.component';
@@ -36,9 +36,10 @@ class SubmitOperation {
 
 @Component({
   selector: 'st-app-subm-edit',
-  templateUrl: './submission-edit.component.html'
+  templateUrl: './submission-edit.component.html',
+  styleUrls: ['./submission-edit.component.css']
 })
-export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class SubmissionEditComponent implements OnInit, OnDestroy {
   @Input() readonly = false;
   sectionForm?: SectionForm;
   @ViewChild(SubmSidebarComponent, { static: false }) sideBar?: SubmSidebarComponent;
@@ -48,8 +49,8 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
   private accno?: string;
   private hasJustCreated = false;
   private method?: string;
-  private releaseDate: Date = new Date();
-  private scrollToCtrl?: FormControl;
+  private newReleaseDate: Date = new Date();
+  private oldReleaseDate: Date = new Date();
   private submissionErrors: SubmValidationErrors = SubmValidationErrors.EMPTY;
   private unsubscribe: Subject<void> = new Subject<void>();
 
@@ -68,12 +69,6 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
     submEditService.sectionSwitch$.pipe(
       takeUntil(this.unsubscribe)
     ).subscribe(sectionForm => this.switchSection(sectionForm));
-
-    submEditService.scroll2Control$.pipe(
-      takeUntil(this.unsubscribe)
-    ).subscribe(ctrl => {
-      this.scrollToCtrl = ctrl;
-    });
   }
 
   get location() {
@@ -103,14 +98,6 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
   // TODO: a temporary workaround
   get isTemp(): boolean {
     return this.accno!.startsWith('TMP_');
-  }
-
-  ngAfterViewChecked(): void {
-    if (this.scrollToCtrl !== undefined) {
-      setTimeout(() => {
-        this.scroll();
-      }, 500);
-    }
   }
 
   ngOnDestroy() {
@@ -151,13 +138,19 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
         } else {
           const releaseDateCtrl = this.sectionForm!.findFieldControl('ReleaseDate');
 
-          if (releaseDateCtrl && releaseDateCtrl.control.value) {
-            this.releaseDate = new Date(Date.parse(releaseDateCtrl.control.value));
-          } else {
-            this.releaseDate = new Date();
-          }
+          if (releaseDateCtrl) {
+            const currentControlDate: string = releaseDateCtrl.control.value;
+            const currentDate: Date = currentControlDate ? new Date(Date.parse(currentControlDate)) : new Date();
+            this.oldReleaseDate = currentDate;
+            this.newReleaseDate = currentDate;
+            this.oldReleaseDate.setHours(0, 0, 0);
+            this.newReleaseDate.setHours(0, 0, 0);
 
-          this.releaseDate.setHours(0, 0, 0);
+            releaseDateCtrl.control.valueChanges.subscribe((value) => {
+              this.newReleaseDate = new Date(Date.parse(value));
+              this.newReleaseDate.setHours(0, 0, 0);
+            });
+          }
         }
       });
   }
@@ -204,6 +197,10 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
       return;
     }
 
+    if (this.submissionErrors.errors.length > 0) {
+      scrollTop();
+    }
+
     if (!this.isValid) {
       this.sideBar!.onCheckTabClick();
       return;
@@ -232,12 +229,11 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
   }
 
   private confirmReleaseDateOverride(): Observable<boolean> {
-    const releaseDateCtrl = this.sectionForm!.findFieldControl('ReleaseDate');
-    const newReleaseDate = releaseDateCtrl ? new Date(Date.parse(releaseDateCtrl.control.value)) : new Date();
-    newReleaseDate.setHours(0, 0, 0);
-    const today = new Date();
+    const today: Date = new Date();
     today.setHours(0, 0, 0);
-    return (this.releaseDate <= today && newReleaseDate > today) ? this.modalService.whenConfirmed(
+    const isDateOverride: boolean = this.oldReleaseDate <= today && this.newReleaseDate > today;
+
+    return isDateOverride ? this.modalService.whenConfirmed(
       'This study has already been released and resetting the release date may make it ' +
       'unavailable to the public. Are you sure you want to continue?',
       'Submit the study',
@@ -261,15 +257,6 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
     );
   }
 
-  private isInViewPort(rect: { bottom: number, left: number, right: number, top: number }) {
-    return (
-      rect.top >= 0 &&
-      rect.left >= 0 &&
-      rect.bottom <= (window.innerHeight || document.documentElement!.clientHeight) &&
-      rect.right <= (window.innerWidth || document.documentElement!.clientWidth)
-    );
-  }
-
   // todo: add proper type for submit response
   private onSubmitFinished(resp: SubmitResponse) {
     this.locService.replaceState('/submissions/' + this.accno);
@@ -283,22 +270,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy, AfterViewChec
       this.showSubmitLog(true);
     }
 
-    window.scrollTo(0, 0);
-  }
-
-  private scroll() {
-    if (this.scrollToCtrl === undefined) {
-      return;
-    }
-    const el = (<any>this.scrollToCtrl).nativeElement;
-    if (el !== undefined) {
-      const rect = el.getBoundingClientRect();
-      if (!this.isInViewPort(rect)) {
-        window.scrollBy(0, rect.top - 120); // TODO: header height
-      }
-      el.querySelectorAll('input, select, textarea')[0].focus();
-    }
-    this.scrollToCtrl = undefined;
+    scrollTop();
   }
 
   private get isValid(): boolean {

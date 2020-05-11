@@ -113,8 +113,7 @@ export class DirectSubmitService {
   newRequest$: Subject<Number> = new Subject<Number>();
   private _requests: DirectSubmitRequest[] = [];
 
-  constructor(private submService: SubmissionService) {
-  }
+  constructor(private submService: SubmissionService) {}
 
   get requestCount(): number {
     return this._requests.length;

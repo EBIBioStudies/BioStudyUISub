@@ -2,7 +2,7 @@ import {
   Component,
   EventEmitter,
   Output,
-  Input, ViewChild, ElementRef, OnInit, OnChanges
+  Input, ViewChild, ElementRef, OnChanges
 } from '@angular/core';
 
 @Component({
@@ -27,9 +27,8 @@ import {
   </button>
 `
 })
-export class FileUploadButtonComponent implements OnInit, OnChanges {
+export class FileUploadButtonComponent implements OnChanges {
   @Input() isDirOnly: boolean = false;
-  isDirSupport: boolean = false;
   @Input() isResetOnClick: boolean = true;
   @Input() multiple: boolean = false;
   @Output() select: EventEmitter<File[]> = new EventEmitter<File[]>();
@@ -39,11 +38,9 @@ export class FileUploadButtonComponent implements OnInit, OnChanges {
   private inputEl?: ElementRef;
 
   ngOnChanges() {
-    this.inputEl!.nativeElement.webkitdirectory = this.isDirSupport && this.isDirOnly;
-  }
+    const hasDirSupport: boolean = 'webkitdirectory' in this.inputEl!.nativeElement;
 
-  ngOnInit() {
-    this.isDirSupport = 'webkitdirectory' in this.inputEl!.nativeElement;
+    this.inputEl!.nativeElement.webkitdirectory = hasDirSupport && this.isDirOnly;
   }
 
   // Makes sure every subsequent selection triggers a "select" event even if the file selected is the same.

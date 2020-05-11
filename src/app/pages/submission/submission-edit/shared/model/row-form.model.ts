@@ -6,9 +6,9 @@ import { ValueMap, Attribute } from '../../../submission-shared/model';
 
 export class RowForm {
   readonly form: FormGroup;
+  readonly row: ValueMap;
   private controls: Map<String, CellControl> = new Map();
   private parentRef: ControlGroupRef;
-  private row: ValueMap;
 
   constructor(row: ValueMap, columns: Attribute[], parentRef: ControlGroupRef) {
     this.row = row;

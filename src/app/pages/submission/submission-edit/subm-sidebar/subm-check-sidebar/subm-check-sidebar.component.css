@@ -1,0 +1,33 @@
+.st-check-sidebar {
+  height: calc(100vh - 116px);
+}
+
+.st-status-sidebar {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.st-status-sidebar-content {
+  transform: translateY(-50%);
+  color: #fff;
+}
+
+.st-status-sidebar-content h4 {
+  overflow: hidden;
+  line-height: inherit;
+  font-weight: 400;
+  word-break: break-word;
+  text-overflow: ellipsis;
+}
+
+.st-check-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.st-check-item-collapsed {
+  display: flex;
+  justify-content: center;
+}

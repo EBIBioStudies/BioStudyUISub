@@ -1,3 +1,30 @@
+.st-file-list-page {
+  display: flex;
+}
+
+.st-file-list-body {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.st-file-list-container {
+  height: calc(100vh - 116px);
+  overflow: auto;
+  padding: 2rem;
+  scroll-behavior: smooth;
+}
+
+.st-file-list-navbar {
+  align-items: center;
+  background: white;
+  box-shadow: 0 4px 4px -4px rgba(0, 0, 0, 0.24);
+  display: flex;
+  height: 54px;
+  position: relative;
+  z-index: 1030;
+}
+
 .upload-count {
   position: absolute;
   top: -9px;
