@@ -27,11 +27,12 @@ export class ServerError {
     const { error } = response;
     const data = {
       message: 'Unknown error type', // Default error message
-      error: error.log
+      error: {}
     };
 
     if (error && error.log) {
       data.message = error.log.message;
+      data.error = error.log;
     }
 
     return new ServerError(response.status, error.status, data);
