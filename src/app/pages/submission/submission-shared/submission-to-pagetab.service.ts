@@ -41,16 +41,18 @@ export class SubmissionToPageTabService {
   }
 
   submissionToPageTab(subm: Submission, isSanitise: boolean = false): PageTab {
+    const sectionAttributes: PtAttribute[] =
+      this.extractSectionAttributes(subm.section, isSanitise).filter((at) => {
+        return AttrExceptions.editable.includes(at.name!);
+      });
+
     return <PageTab>{
       type: 'Submission',
       accno: subm.accno,
       section: this.sectionToPtSection(subm.section, isSanitise),
       tags: subm.tags.tags,
       accessTags: subm.tags.accessTags,
-      attributes: mergeAttributes(
-        subm.attributes.map(at => this.attributeDataToPtAttribute(at)),
-        this.extractSectionAttributes(subm.section, isSanitise)
-          .filter(at => AttrExceptions.editable.includes(at.name!)))
+      attributes: mergeAttributes(subm.attributes.map(at => this.attributeDataToPtAttribute(at)), sectionAttributes)
     };
   }
 
@@ -78,20 +80,32 @@ export class SubmissionToPageTabService {
   }
 
   private extractFeatureAttributes(feature: Feature, isSanitise: boolean): PtAttribute[][] {
-    return feature.rows.map(row =>
-      feature.columns.map(c => <PtAttribute>{ name: c.name, value: row.valueFor(c.id)!.value })
-        .filter(attr => (isSanitise && !isEmptyAttr(attr)) || !isSanitise));
+    const mappedFeatures: PtAttribute[][] = feature.rows.map((row) => {
+      const attributes: PtAttribute[] =
+        feature.columns.map((column) => <PtAttribute>{ name: column.name, value: row.valueFor(column.id)!.value });
+
+      return attributes.filter((attr) => (isSanitise && !isEmptyAttr(attr)) || !isSanitise);
+    });
+
+    return mappedFeatures.filter((mappedFeature) => mappedFeature.length > 0);
   }
 
   private extractSectionAttributes(section: Section, isSanitise: boolean): PtAttribute[] {
-    const keywordsFeature = section.features.list().find((feature) => feature.typeName === 'Keywords');
-    const keywordsAsAttributes = keywordsFeature ?
-      this.extractFeatureAttributes(keywordsFeature, isSanitise).map((keyword) => <PtAttribute>keyword.pop()) : [];
+    const keywordsFeature: Feature | undefined = section.features.list().find((feature) => feature.typeName === 'Keywords');
+    let keywordsAsAttributes: PtAttribute[] = [];
+
+    if (keywordsFeature !== undefined) {
+      const attributes: PtAttribute[][] = this.extractFeatureAttributes(keywordsFeature, isSanitise);
+
+      if (attributes.length > 0) {
+        keywordsAsAttributes = attributes.map((column) => <PtAttribute>column.pop());
+      }
+    }
 
     return ([] as Array<PtAttribute>).concat(
       this.fieldsAsAttributes(section, isSanitise),
       (this.extractFeatureAttributes(section.annotations, isSanitise).pop() || []),
-      keywordsAsAttributes || []
+      keywordsAsAttributes
     );
   }
 
