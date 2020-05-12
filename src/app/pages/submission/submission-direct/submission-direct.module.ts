@@ -7,6 +7,7 @@ import { DirectSubmitSideBarComponent } from './direct-submit-sidebar.component'
 import { DirectSubmitComponent } from './direct-submit.component';
 import { DirectSubmitFileUploadService } from './direct-submit-file-upload.service';
 import { DirectSubmitService } from './direct-submit.service';
+import { DirectSubmitFileComponent } from './direct-submit-file.component';
 
 @NgModule({
   imports: [
@@ -21,7 +22,8 @@ import { DirectSubmitService } from './direct-submit.service';
   ],
   declarations: [
     DirectSubmitComponent,
-    DirectSubmitSideBarComponent
+    DirectSubmitSideBarComponent,
+    DirectSubmitFileComponent
   ],
   exports: [
     DirectSubmitComponent

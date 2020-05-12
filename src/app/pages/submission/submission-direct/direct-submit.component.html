@@ -126,56 +126,20 @@
         </div>
         <div class="row">
           <div *ngFor="let file of sidebar.model.files; let i = index">
-            <div *ngIf="file" class="col-xs-12 col-md-6 col-lg-4">
-              <div class="panel"
-                  [ngClass]="{'panel-default': !getAccno(i), 'text-primary': getAccno(i)}"
-                  [ngStyle]="{'cursor': getAccno(i) || isFail(i) ? 'pointer' : 'default'}"
-                  [tooltip]="getAccno(i) ? 'Edit this study' : isFail(i) ? 'Click to show error log' : ''"
-                  (click)="isFail(i) || isSuccess(i) ? handleFileCardClick($event, isFail(i), getAccno(i)) : null"
-                  placement="top"
-                  container="body">
-                <div class="panel-body">
-                  <div class="st-panel-description">
-                    <i class="fa fa-2x st-panel-description-icon"
-                        *ngIf="!isSuccess(i)"
-                        aria-hidden="true"
-                        [ngClass]="{ 'fa-plus': !sidebar.hasRequests && sidebar.submitType == 'create',
-                            'fa-refresh': !sidebar.hasRequests && sidebar.submitType == 'update',
-                            'fa-caret-square-down text-danger': isFail(i),
-                            'fa-pencil': isSuccess(i),
-                            'fa-exchange': isBusy(i)}">
-                      </i>
-                    <h4 class="st-panel-description-item" [tooltip]="isFail(i) ? '' : file.name">
-                      {{file.name}}
-                    </h4>
-                  </div>
-                  <span *ngIf="!isFail(i)">
-                    {{sidebar.selectedProject ? sidebar.selectedProject : 'No project'}}
-                  </span>
-                  <span *ngIf="isFail(i)" class="text-danger">
-                    {{getError(i)}}
-                  </span>
-                  <div *ngIf="isFail(i)" class="hidden panel-body container-fluid log-container">
-                    <st-subm-results-tree [log]="getLog(i)"></st-subm-results-tree>
-                  </div>
-                  <div *ngIf="isSuccess(i)" class="pull-right text-right">
-                    <p class="panel-title">
-                      <strong>{{getAccno(i)}}</strong>
-                    </p>
-                    <span *ngIf="getRelease(i)">
-                      <i class="fa fa-bullhorn"></i>&nbsp; {{getRelease(i) | date: 'dd MMM yyyy'}}
-                    </span>
-                    <span *ngIf="!getRelease(i)">
-                      No release date
-                    </span>
-                  </div>
-                </div>
-                <div *ngIf="!isFail(i) && !isSuccess(i)" class="panel-footer">
-                  <input type="checkbox">
-                  Study File
-                </div>
-              </div>
-            </div>
+            <st-direct-submit-file
+              [accno]="getAccno(i)"
+              [errorLog]="getLog(i)"
+              [error]="getError(i)"
+              [file]="file"
+              [hasSubmitFailed]="isFail(i)"
+              [hasSubmitPassed]="isSuccess(i)"
+              [isPending]="isPending()"
+              [isSubmitting]="isBusy(i)"
+              [project]="sidebar.selectedProject"
+              [releaseDate]="getRelease(i)"
+              [submitType]="sidebar.submitType"
+              (fileClick)="handleFileCardClick($event)"
+            ></st-direct-submit-file>
           </div>
         </div>
       </aside>

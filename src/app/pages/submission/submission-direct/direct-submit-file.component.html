@@ -1,0 +1,50 @@
+<div *ngIf="file" class="col-xs-12 col-md-6 col-lg-4">
+  <div class="panel"
+      [ngClass]="{'panel-default': !accno, 'text-primary': accno}"
+      [ngStyle]="{'cursor': accno || hasSubmitFailed ? 'pointer' : 'default'}"
+      [tooltip]="accno ? 'Edit this study' : hasSubmitFailed ? 'Click to show error log' : ''"
+      (click)="hasSubmitFailed || hasSubmitPassed ? onFileClick($event, hasSubmitFailed, accno) : null"
+      placement="top"
+      container="body">
+    <div class="panel-body">
+      <div class="st-panel-description">
+        <i class="fa fa-2x st-panel-description-icon"
+            *ngIf="!hasSubmitPassed"
+            aria-hidden="true"
+            [ngClass]="{ 'fa-plus': !isPending && submitType == 'create',
+                'fa-refresh': !isPending && submitType == 'update',
+                'fa-caret-square-down text-danger': hasSubmitFailed,
+                'fa-pencil': hasSubmitPassed,
+                'fa-exchange': isSubmitting}">
+          </i>
+        <h4 class="st-panel-description-item" [tooltip]="hasSubmitFailed ? '' : file.name">
+          {{file.name}}
+        </h4>
+      </div>
+      <span *ngIf="!hasSubmitFailed">
+        {{project ? project : 'No project'}}
+      </span>
+      <span *ngIf="hasSubmitFailed" class="text-danger">
+        {{error}}
+      </span>
+      <div *ngIf="hasSubmitFailed" class="hidden panel-body container-fluid log-container">
+        <st-subm-results-tree [log]="errorLog"></st-subm-results-tree>
+      </div>
+      <div *ngIf="hasSubmitPassed" class="pull-right text-right">
+        <p class="panel-title">
+          <strong>{{accno}}</strong>
+        </p>
+        <span *ngIf="releaseDate">
+          <i class="fa fa-bullhorn"></i>&nbsp; {{releaseDate | date: 'dd MMM yyyy'}}
+        </span>
+        <span *ngIf="!releaseDate">
+          No release date
+        </span>
+      </div>
+    </div>
+    <div *ngIf="!hasSubmitFailed && !hasSubmitPassed" class="panel-footer">
+      <input type="checkbox">
+      Study File
+    </div>
+  </div>
+</div>
