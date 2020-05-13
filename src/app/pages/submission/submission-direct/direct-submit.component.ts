@@ -1,7 +1,8 @@
 import { Router } from '@angular/router';
+import * as pluralize from 'pluralize';
 import { Component, ViewChild } from '@angular/core';
 import { AppConfig } from 'app/app.config';
-import * as pluralize from 'pluralize';
+import { SidebarFile } from './direct-submit-sidebar.component';
 
 @Component({
   selector: 'st-direct-submit',
@@ -10,6 +11,8 @@ import * as pluralize from 'pluralize';
 })
 export class DirectSubmitComponent {
   collapseSideBar: Boolean = false;
+  files: any;
+  studies: any;
 
   @ViewChild('sidebar', { static: true })
   private sidebar;
@@ -41,13 +44,24 @@ export class DirectSubmitComponent {
     return this.sidebar.studyProp(studyIdx, 'log');
   }
 
+  getRawFiles() {
+    if (!this.sidebar.model.files) {
+      return [];
+    }
+
+    this.sidebar.model.files.filter((file) => !file.isStudy);
+  }
+
   getRelease(studyIdx: number) {
     return this.sidebar.studyProp(studyIdx, 'releaseDate');
   }
 
+  getStudyFiles() {
+    this.sidebar.model.files.filter((file) => file.isStudy);
+  }
+
   /**
    * Toggles the width of the request card and the log's visibility on click.
-   * @param {Event} event - DOM object for the click action.
    */
   handleFileCardClick(args: { accno: string, event: Event, hasSubmitFailed: boolean }) {
     const { accno, event, hasSubmitFailed } = args;
@@ -59,6 +73,11 @@ export class DirectSubmitComponent {
     } else {
       this.router.navigate([`/submissions/edit/${accno}`, { method: 'FILE' }]);
     }
+  }
+
+  handleIsStudyChange(args: { fileName: string, isStudy: boolean }) {
+    const { fileName, isStudy } = args;
+    this.sidebar.toggleStudyFile(fileName, isStudy);
   }
 
   isBusy(studyIdx: number) {
@@ -75,6 +94,11 @@ export class DirectSubmitComponent {
 
   isSuccess(studyIdx: number) {
     return this.sidebar.studyProp(studyIdx, 'successful');
+  }
+
+  onFilesChange(files: SidebarFile[]): void {
+    this.files = files.filter((file) => !file.isStudy);
+    this.studies = files.filter((file) => file.isStudy);
   }
 
   onToggle(): void {
