@@ -1,6 +1,7 @@
 <div class="st-direct-upload-page">
   <st-direct-submit-sidebar
       (toggle)="onToggle()"
+      (filesChange)="onFilesChange($event)"
       [collapsed]="collapseSideBar"
       #sidebar>
   </st-direct-submit-sidebar>
@@ -125,12 +126,13 @@
           </div>
         </div>
         <div class="row">
-          <div *ngFor="let file of sidebar.model.files; let i = index">
+          <div *ngFor="let file of studies; let i = index">
             <st-direct-submit-file
               [accno]="getAccno(i)"
               [errorLog]="getLog(i)"
               [error]="getError(i)"
               [file]="file"
+              [fileName]="file.name"
               [hasSubmitFailed]="isFail(i)"
               [hasSubmitPassed]="isSuccess(i)"
               [isPending]="isPending()"
@@ -138,7 +140,28 @@
               [project]="sidebar.selectedProject"
               [releaseDate]="getRelease(i)"
               [submitType]="sidebar.submitType"
+              [isStudy]="file.isStudy"
               (fileClick)="handleFileCardClick($event)"
+              (isStudyChange)="handleIsStudyChange($event)"
+            ></st-direct-submit-file>
+          </div>
+          <div *ngFor="let file of files; let i = index">
+            <st-direct-submit-file
+              [accno]="getAccno(i)"
+              [errorLog]="getLog(i)"
+              [error]="getError(i)"
+              [file]="file"
+              [fileName]="file.name"
+              [hasSubmitFailed]="isFail(i)"
+              [hasSubmitPassed]="isSuccess(i)"
+              [isPending]="isPending()"
+              [isSubmitting]="isBusy(i)"
+              [project]="sidebar.selectedProject"
+              [releaseDate]="getRelease(i)"
+              [submitType]="sidebar.submitType"
+              [isStudy]="file.isStudy"
+              (fileClick)="handleFileCardClick($event)"
+              (isStudyChange)="handleIsStudyChange($event)"
             ></st-direct-submit-file>
           </div>
         </div>

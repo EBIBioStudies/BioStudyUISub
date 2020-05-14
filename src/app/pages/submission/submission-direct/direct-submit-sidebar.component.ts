@@ -7,10 +7,19 @@ import { AppConfig } from 'app/app.config';
 import { DirectSubmitService } from './direct-submit.service';
 import { DirectSubmitFileUploadService } from './direct-submit-file-upload.service';
 
+export interface SidebarFile extends File {
+  isStudy: boolean;
+}
+
 interface ProjectOption {
   checked: boolean,
   name: string,
   value: string
+}
+
+interface SidebarModel {
+  files: SidebarFile[] | undefined;
+  projects: any;
 }
 
 @Component({
@@ -20,6 +29,7 @@ interface ProjectOption {
 })
 export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck {
   @Input() collapsed = false;
+  @Output() filesChange = new EventEmitter<SidebarFile[]>();
   isBulkMode: boolean = false; // Flags if single directory with all study files is expected
   isBulkSupport: boolean = false; // Indicates if directory selection is supported by the browser
   isProjFetch: boolean = true; // Are projects still being retrieved?
@@ -33,9 +43,9 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
   private defaultPojectOption: ProjectOption = { checked: true, name: 'None', value: '' };
   @ViewChild(FileUploadButtonComponent, { static: false })
   private fileSelector;
-  private model: { files: any | undefined[], projects: any | undefined[] } = {
-    files: undefined, // No file selection at first
-    projects: [] // Chebox-ised representation of project list
+  private model: SidebarModel = {
+    files: undefined,
+    projects: []
   };
   private uploadFilesSubscription?: Subscription;
   private uploadSubs?: Subscription; // Subscription for the battery of upload requests
@@ -182,7 +192,7 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
     let nonClearedFiles;
 
     if (this.canSubmit) {
-      nonClearedFiles = this.model.files.filter(Boolean);
+      nonClearedFiles = this.model.files!.filter(Boolean);
 
       this.uploadFilesSubscription = this.uploadFiles(nonClearedFiles).subscribe((uploadEvent) => {
         if (uploadEvent.isSuccess()) {
@@ -216,8 +226,14 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
    */
   onUploadFilesSelect(files: FileList): void {
     if (files.length > 0) {
-      this.model.files = Array.from(files);
+      this.model.files = Array.from(files) as SidebarFile[];
       this.directSubmitSvc.reset();
+
+      this.model.files.map((file) => {
+        file.isStudy = false;
+      });
+
+      this.filesChange.emit(this.model.files);
     }
   }
 
@@ -231,6 +247,16 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
     const request = this.directSubmitSvc.getRequest(studyIdx);
 
     return typeof request !== 'undefined' ? request[property] : '';
+  }
+
+  toggleStudyFile(fileName: string, isStudy: boolean) {
+    this.model.files!.forEach((file) => {
+      if (file.name === fileName) {
+        file.isStudy = isStudy;
+      }
+    });
+
+    this.filesChange.emit(this.model.files);
   }
 
   private createDirectSubmission(files: File[], submissionType: string): Observable<any> {
@@ -248,7 +274,9 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
       last(),
       // Cancels all requests on demand and keeps the files list in sync with the list of requests.
       takeUntil(this.ngUnsubscribe),
-      finalize(() => this.model.files = files)
+      finalize(() => {
+        this.model.files = files as SidebarFile[];
+      })
     );
   }
 
@@ -279,7 +307,7 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
    * a blank field.
    */
   private markFileTouched() {
-    this.model.files = null;
+    this.model.files = undefined;
   }
 
   private uploadFiles(files: File[]): Observable<any> {
