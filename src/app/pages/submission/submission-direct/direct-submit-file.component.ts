@@ -20,7 +20,7 @@ export class DirectSubmitFileComponent {
   @Input() isSubmitting;
   @Input() project;
   @Input() releaseDate;
-  @Input() submitType;
+  @Input() submitType = 'none';
 
   handleOnFileClick(event: Event, hasSubmitFailed: boolean, accno: string) {
     this.fileClick.emit({ event, hasSubmitFailed, accno });

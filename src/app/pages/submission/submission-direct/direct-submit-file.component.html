@@ -1,4 +1,4 @@
-<div *ngIf="file" class="col-xs-12 col-md-6 col-lg-4">
+<div *ngIf="file">
   <div class="panel"
       [ngClass]="{'panel-default': !accno, 'text-primary': accno}"
       [ngStyle]="{'cursor': accno || hasSubmitFailed ? 'pointer' : 'default'}"
@@ -8,20 +8,22 @@
       container="body">
     <div class="panel-body">
       <div class="st-panel-description">
-        <i class="fa fa-2x st-panel-description-icon"
+        <i class="fa fa-2x"
             *ngIf="!hasSubmitPassed"
             aria-hidden="true"
-            [ngClass]="{ 'fa-plus': !isPending && submitType == 'create',
-                'fa-refresh': !isPending && submitType == 'update',
+            [ngClass]="{
+                'st-panel-description-icon': submitType != 'none',
+                'fa-plus': !isPending && submitType == 'create',
+                'fa-sync-alt': !isPending && submitType == 'update',
                 'fa-caret-square-down text-danger': hasSubmitFailed,
-                'fa-pencil': hasSubmitPassed,
-                'fa-exchange': isSubmitting}">
+                'fa-edit': hasSubmitPassed,
+                'fa-exchange-alt': isSubmitting}">
           </i>
         <h4 class="st-panel-description-item" [tooltip]="hasSubmitFailed ? '' : file.name">
           {{file.name}}
         </h4>
       </div>
-      <span *ngIf="!hasSubmitFailed">
+      <span *ngIf="!hasSubmitFailed && isStudy">
         {{project ? project : 'No project'}}
       </span>
       <span *ngIf="hasSubmitFailed" class="text-danger">

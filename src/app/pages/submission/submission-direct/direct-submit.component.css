@@ -40,6 +40,13 @@
   white-space: nowrap;
 }
 
+.st-direct-upload-files-grid {
+  align-items: center;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, 360px);
+}
+
 .panel-extra {
   overflow: hidden;
   white-space: nowrap;
