@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild, DoCheck, OnDestroy } from '@angular/core';
 import { UserData } from 'app/auth/shared';
 import { FileUploadButtonComponent } from 'app/shared/file-upload-button.component';
-import { Observable, from, Subject, Subscription } from 'rxjs';
+import { ModalService } from 'app/shared/modal.service';
+import { Observable, from, Subject, Subscription, of } from 'rxjs';
 import { last, mergeAll, takeUntil, map, finalize } from 'rxjs/operators';
 import { AppConfig } from 'app/app.config';
 import { DirectSubmitService } from './direct-submit.service';
@@ -62,7 +63,8 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
     private appConfig: AppConfig,
     private directSubmitSvc: DirectSubmitService,
     private directSubmitFileUploadService: DirectSubmitFileUploadService,
-    private userData: UserData
+    private userData: UserData,
+    private modalService: ModalService
   ) {
     this.ngUnsubscribe = new Subject<void>();
   }
@@ -188,22 +190,36 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
    *
    * @param {string} submissionType - Indicates whether the submitted file should create or update an existing database entry.
    */
-  onSubmit(submissionType: string): void {
+  onSubmit(submissionType: string): Observable<boolean> {
     let nonClearedFiles;
 
     if (this.canSubmit) {
       nonClearedFiles = this.model.files!.filter(Boolean);
+      const nonStudyFiles = nonClearedFiles.filter((file) => !file.isStudy);
+      const studyFiles = nonClearedFiles.filter((file) => file.isStudy);
 
-      this.uploadFilesSubscription = this.uploadFiles(nonClearedFiles).subscribe((uploadEvent) => {
-        if (uploadEvent.isSuccess()) {
-          this.uploadSubs = this.createDirectSubmission(nonClearedFiles, submissionType).subscribe();
-        }
-      });
+      if (studyFiles.length === 0) {
+        return this.modalService.alert(
+          'Please make sure at least one file is selected as study', 'Warning', 'Ok'
+        );
+      }
+
+      if (nonStudyFiles.length === 0) {
+        this.uploadSubs = this.createDirectSubmission(studyFiles, submissionType).subscribe();
+      } else {
+        this.uploadFilesSubscription = this.uploadFiles(nonStudyFiles).subscribe((uploadEvent) => {
+          if (uploadEvent.isSuccess()) {
+            this.uploadSubs = this.createDirectSubmission(studyFiles, submissionType).subscribe();
+          }
+        });
+      }
 
       // Most probably file selection was left out.
     } else {
       this.markFileTouched();
     }
+
+    return of(true);
   }
 
   /**
@@ -229,9 +245,14 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
       this.model.files = Array.from(files) as SidebarFile[];
       this.directSubmitSvc.reset();
 
-      this.model.files.map((file) => {
-        file.isStudy = false;
-      });
+      if (this.model.files.length === 1) {
+        // If there is just one file set it as study.
+        this.model.files[0].isStudy = true;
+      } else {
+        this.model.files.map((file) => {
+          file.isStudy = false;
+        });
+      }
 
       this.filesChange.emit(this.model.files);
     }
@@ -271,11 +292,12 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
       // Throttles the number of requests allowed in parallel and takes just the last event
       // to signal the end of the upload process.
       mergeAll(this.appConfig.maxConcurrent),
-      last(),
+      last(null, []),
       // Cancels all requests on demand and keeps the files list in sync with the list of requests.
       takeUntil(this.ngUnsubscribe),
       finalize(() => {
         this.model.files = files as SidebarFile[];
+        this.filesChange.emit(this.model.files);
       })
     );
   }
@@ -315,7 +337,7 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
       .pipe(
         map((file) => this.directSubmitFileUploadService.doUpload(file)),
         mergeAll(this.appConfig.maxConcurrent),
-        last(),
+        last(null, []),
         takeUntil(this.ngUnsubscribe)
       );
   }

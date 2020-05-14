@@ -125,7 +125,7 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="st-direct-upload-files-grid">
           <div *ngFor="let file of studies; let i = index">
             <st-direct-submit-file
               [accno]="getAccno(i)"
@@ -148,19 +148,9 @@
           <div *ngFor="let file of files; let i = index">
             <st-direct-submit-file
               [accno]="getAccno(i)"
-              [errorLog]="getLog(i)"
-              [error]="getError(i)"
               [file]="file"
               [fileName]="file.name"
-              [hasSubmitFailed]="isFail(i)"
-              [hasSubmitPassed]="isSuccess(i)"
-              [isPending]="isPending()"
-              [isSubmitting]="isBusy(i)"
-              [project]="sidebar.selectedProject"
-              [releaseDate]="getRelease(i)"
-              [submitType]="sidebar.submitType"
               [isStudy]="file.isStudy"
-              (fileClick)="handleFileCardClick($event)"
               (isStudyChange)="handleIsStudyChange($event)"
             ></st-direct-submit-file>
           </div>
