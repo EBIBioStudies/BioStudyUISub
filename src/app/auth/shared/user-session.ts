@@ -31,11 +31,7 @@ export class UserSession {
   }
 
   getUserDisplayName(): string {
-    const { username, fullname, email } = getUser();
-
-    if (String.isDefinedAndNotEmpty(username)) {
-      return username;
-    }
+    const { fullname, email } = getUser();
 
     if (String.isDefinedAndNotEmpty(fullname)) {
       return fullname;
