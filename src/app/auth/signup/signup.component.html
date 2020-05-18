@@ -33,8 +33,8 @@
         </div>
         <div class="form-group" [ngClass]="{'has-error': email.invalid && email.touched}">
           <label class="control-label" for="email">
-            <span class="text-black">Email address</span>
-            <span *ngIf="email.invalid && email.touched">Please enter a valid email address</span>
+            <span class="text-black">Email</span>
+            <span *ngIf="email.invalid && email.touched">Please enter a valid email</span>
           </label>
           <input type="email" id="email" name="email" autocomplete="nope"
                 class="form-control"
