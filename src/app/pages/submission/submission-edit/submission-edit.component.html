@@ -181,18 +181,7 @@
               </li>
             </ul>
           </div>
-
           <div *ngIf="!readonly" class="row row-submit">
-            <p class="col-xs-2">
-              <button type="button" class="btn-submit btn btn-primary"
-                  [disabled]="isSubmitting || isSaving || !isEditing"
-                  tooltip="Send to the BioStudies database"
-                  placement="top"
-                  container="body"
-                  (click)="onSubmitClick($event)">
-                {{isTemp ? 'S' : 'Re-s'}}ubmit
-              </button>
-            </p>
             <p class="text-muted col-xs-9">
               <i *ngIf="isSaving" class="fa fa-cog fa-spin"></i>
               <span *ngIf="isSaving">Backing up study data...</span>
