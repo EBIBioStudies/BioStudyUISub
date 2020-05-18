@@ -21,8 +21,8 @@
           (ngSubmit)="onSubmit(signInForm)" #signInForm="ngForm">
           <div class="form-group" [ngClass]="{'has-error': login.invalid && login.touched}">
             <label class="control-label" for="login">
-              <span class="text-black">Email address</span>
-              <span *ngIf="login.invalid && login.touched">Please enter a valid email address</span>
+              <span class="text-black">Email</span>
+              <span *ngIf="login.invalid && login.touched">Please enter a valid email</span>
             </label>
             <input
               type="text"
