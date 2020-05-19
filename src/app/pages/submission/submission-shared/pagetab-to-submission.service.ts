@@ -14,7 +14,7 @@ import {
   PtFile,
 } from './model/pagetab';
 import { AttributeData, FeatureData, SectionData, Submission, SubmissionData } from './model/submission';
-import { DEFAULT_TEMPLATE_NAME, SubmissionType } from './model/templates';
+import { DEFAULT_TEMPLATE_NAME, READONLY_TEMPLATE_NAME, SubmissionType } from './model/templates';
 import { NameAndValue, PAGE_TAG, Tag } from './model/model.common';
 import { findAttribute } from './utils/pagetab.utils';
 
@@ -42,7 +42,15 @@ export class PageTabToSubmissionService {
     const attachToAttributes: PtAttribute[] = findAttribute(pageTab, AttrExceptions.attachToAttr);
     const attachToValue: string[] = attachToAttributes.map((attribute) => attribute.value!);
 
-    return attachToValue.length === 1 ? attachToValue[0] : DEFAULT_TEMPLATE_NAME;
+    if (attachToValue.length === 0) {
+      return DEFAULT_TEMPLATE_NAME;
+    }
+
+    if (attachToValue.length === 1) {
+      return attachToValue[0];
+    }
+
+    return READONLY_TEMPLATE_NAME;
   }
 
   private hasSubsections(section: PageTabSection): boolean {

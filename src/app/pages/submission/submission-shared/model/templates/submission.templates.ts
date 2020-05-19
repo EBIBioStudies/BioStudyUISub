@@ -1,3 +1,4 @@
+import { readonlyTemplate } from './readonly.template';
 import { biaTemplate } from './bia.template';
 import { defaultTemplate } from './default.template';
 import { emptyTemplate } from './empty.template';
@@ -7,8 +8,9 @@ import { arrayExpressTemplate } from './arrayexpress.template';
 
 export const DEFAULT_TEMPLATE_NAME = 'Default';
 export const EMPTY_TEMPLATE_NAME = 'Empty';
+export const READONLY_TEMPLATE_NAME = 'ReadOnly';
 
-const SUBMISSION_TEMPLATES = [arrayExpressTemplate, euToxRiskTemplate, hecatosTemplate, emptyTemplate, biaTemplate];
+const SUBMISSION_TEMPLATES = [arrayExpressTemplate, euToxRiskTemplate, hecatosTemplate, emptyTemplate, biaTemplate, readonlyTemplate];
 const SUBMISSION_TEMPLATES_PUBLIC = [defaultTemplate];
 
 export function getSubmissionTemplates(projects: Array<string> = []): Array<{ description: string, name: string }> {
