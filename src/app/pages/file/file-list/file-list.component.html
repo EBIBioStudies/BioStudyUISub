@@ -1,14 +1,14 @@
-<div class="st-file-list-page">
+<div class="row-offcanvas row-offcanvas-left">
   <st-directory-sidebar
       name="userDirsSidebar"
       [(ngModel)]="rootPath"
       (select)="onRootPathSelect($event)"
-      (toggle)="sideBarCollapsed=!sideBarCollapsed"
+      (toggle)="onSideBarCollapsed()"
       [collapsed]="sideBarCollapsed">
   </st-directory-sidebar>
 
-  <div class="st-file-list-body">
-    <nav class="st-file-list-navbar navbar-default navbar-subm-fixed" [ngClass]="{'collapse-left': sideBarCollapsed}">
+  <div class="navbar-default navbar-subm-fixed" [ngClass]="{'collapse-left': sideBarCollapsed}">
+    <nav>
       <div class="nav-block col-xs-8">
         <st-directory-path [path]="path.rel" [root]="path.root" (change)="onPathChange($event)"></st-directory-path>
       </div>
@@ -41,8 +41,8 @@
       </div>
       </div>
     </nav>
-    <div class="st-file-list-container">
-      <aside class="right-side">
+    <div class="container-fluid navbar-subm-margin">
+      <aside>
         <section class="content">
           <button class="btn btn-default btn-link"
               (click)="onBackButtonClick()"
