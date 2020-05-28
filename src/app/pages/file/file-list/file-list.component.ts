@@ -138,6 +138,10 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
   }
 
+  onSideBarCollapsed() {
+    this.sideBarCollapsed = !this.sideBarCollapsed;
+  }
+
   onUploadFilesSelect(files: FileList) {
     const uploadedFileNames = this.rowData.map((file) => file.name);
     const filesToUpload = Array.from(files).map((file) => file.name);

@@ -1,25 +1,14 @@
-.st-direct-submit-sidebar {
-  height: 100%;
-}
-
-.st-direct-submit-form-container {
-  padding: 1.5rem;
-  background: #fff;
-}
-
-.st-direct-submit-progress {
-  align-items: center;
-  color: #fff;
-  display: flex;
-  height: calc(100vh - 116px);
-}
-
 .files-control {
   padding-top: 10px;
 }
 
 .mode-toggle {
   margin: 0;
+}
+
+.sidebar-contents {
+  padding: 15px 0;
+  background: #fff;
 }
 
 .control-list {

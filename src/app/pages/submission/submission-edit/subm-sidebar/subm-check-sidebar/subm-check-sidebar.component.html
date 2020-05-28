@@ -1,4 +1,4 @@
-<ul class="sidebar-menu st-check-sidebar st-status-sidebar" *ngIf="invalidControls.isEmpty() || isLoading || isSubmitting">
+<ul class="sidebar-menu" *ngIf="invalidControls.isEmpty() || isLoading || isSubmitting">
   <li *ngIf="!serverError && !isLoading && !isSubmitting"
       class="st-status-sidebar-content text-center"
       [ngClass]="{'col-xs-12': !collapsed}">
@@ -25,29 +25,27 @@
     <h4 [ngClass]="{'vertical-text': collapsed}">Submitting...</h4>
   </li>
 </ul>
-<div class="st-check-sidebar">
-  <ul class="sidebar-menu" *ngFor="let controlGroup of invalidControls">
-    <li *ngIf="!controlGroup[0].ref.isRootSection" class="sidebar-item-header">
-      <span>{{collapsed ? '' : controlGroup[0].ref.sectionName}}</span>
-    </li>
-    <li class="sidebar-item" *ngFor="let control of controlGroup">
-      <a *ngIf="control.invalid"
-          (click)="onReviewClick(control)">
-        <div [ngClass]="{'st-check-item': !collapsed, 'st-check-item-collapsed': collapsed}">
-          <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-            <i class="entry-item fas fa-lg text-center {{control.ref.icon}}"></i>
-            {{!collapsed ? '&nbsp;' + control.ref.name + '&nbsp;' : ''}}
-          </span>
-          <strong *ngIf="!collapsed"
-              class="entry-item label label-default"
-              tooltip="{{collapsed ? '&quot;' + control.ref.name + '&quot; field is ' + tipText(control.errors) : 'Highlight field on the form'}}"
-              placement="{{collapsed ? 'right' : 'top'}}"
-              [ngClass]="{'label-danger': control.touched}"
-              #labelEl>
-            {{tipText(control.errors)}}
-          </strong>
-        </div>
-      </a>
-    </li>
-  </ul>
-</div>
+<ul class="sidebar-menu" *ngFor="let controlGroup of invalidControls">
+  <li *ngIf="!controlGroup[0].ref.isRootSection" class="sidebar-item-header">
+    <span>{{collapsed ? '' : controlGroup[0].ref.sectionName}}</span>
+  </li>
+  <li class="sidebar-item" *ngFor="let control of controlGroup">
+    <a *ngIf="control.invalid"
+        (click)="onReviewClick(control)">
+      <div [ngClass]="{'st-check-item': !collapsed, 'st-check-item-collapsed': collapsed}">
+        <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+          <i class="entry-item fas fa-lg text-center {{control.ref.icon}}"></i>
+          {{!collapsed ? '&nbsp;' + control.ref.name + '&nbsp;' : ''}}
+        </span>
+        <strong *ngIf="!collapsed"
+            class="entry-item label label-default"
+            tooltip="{{collapsed ? '&quot;' + control.ref.name + '&quot; field is ' + tipText(control.errors) : 'Highlight field on the form'}}"
+            placement="{{collapsed ? 'right' : 'top'}}"
+            [ngClass]="{'label-danger': control.touched}"
+            #labelEl>
+          {{tipText(control.errors)}}
+        </strong>
+      </div>
+    </a>
+  </li>
+</ul>

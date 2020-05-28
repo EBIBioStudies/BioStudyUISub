@@ -12,7 +12,8 @@ import {
   TooltipModule,
   TypeaheadModule
 } from 'ngx-bootstrap';
-import { AuthContainerComponent } from './auth-container.component';
+import { ContainerRootComponent } from './container-root.component';
+import { ContainerMdComponent } from './container-md.component';
 import { ORCIDInputBoxComponent } from './orcid-input-box.component';
 import { FileUploadButtonComponent } from './file-upload-button.component';
 import { ConfirmDialogComponent } from './confirm-dialog.component';
@@ -42,7 +43,8 @@ import { ModalService } from './modal.service';
     ModalService
   ],
   declarations: [
-    AuthContainerComponent,
+    ContainerRootComponent,
+    ContainerMdComponent,
     ORCIDInputBoxComponent,
     FileUploadButtonComponent,
     ConfirmDialogComponent,
@@ -68,7 +70,8 @@ import { ModalService } from './modal.service';
     PopoverModule,
     CollapseModule,
     AlertModule,
-    AuthContainerComponent,
+    ContainerRootComponent,
+    ContainerMdComponent,
     ORCIDInputBoxComponent,
     FileUploadButtonComponent,
     ConfirmDialogComponent,
