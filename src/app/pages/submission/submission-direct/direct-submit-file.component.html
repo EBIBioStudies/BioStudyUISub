@@ -19,7 +19,7 @@
                 'fa-edit': hasSubmitPassed,
                 'fa-exchange-alt': isSubmitting}">
           </i>
-        <h4>{{file.name}}</h4>
+        <h4 class="st-direct-submit-file-name">{{file.name}}</h4>
       </div>
       <span *ngIf="!hasSubmitFailed && isStudy">
         {{project ? project : 'No project'}}

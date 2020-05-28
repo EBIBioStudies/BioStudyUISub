@@ -6,3 +6,7 @@
 .st-panel-description-icon {
   padding-right: 10px;
 }
+
+.st-direct-submit-file-name {
+  word-wrap: anywhere;
+}
