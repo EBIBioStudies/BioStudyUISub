@@ -1,16 +1,6 @@
-.st-check-sidebar {
-  height: calc(100vh - 116px);
-}
-
-.st-status-sidebar {
-  align-items: center;
-  display: flex;
-  justify-content: center;
-}
-
 .st-status-sidebar-content {
-  transform: translateY(-50%);
   color: #fff;
+  margin-top: 200px;
 }
 
 .st-status-sidebar-content h4 {

@@ -10,17 +10,63 @@
 
 @navbar-subm-height: 46px;
 
+/* Navbar submission */
+.navbar-subm-fixed {
+  width: 100%;
+  padding: 13px 0 12px @left-side-width;
+
+  nav {
+    position: fixed !important;
+    top: @navbar-height;
+    left: 0;
+    z-index: @zindex-navbar-fixed;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 54px;
+    padding: inherit;
+    background: inherit;
+    box-shadow: inherit;
+  }
+
+  .nav-block {
+    float: none;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .readonly & {
+    padding: 0;
+  }
+}
+
+.navbar-subm-margin {
+  padding-top: @navbar-subm-height;
+}
+
 /* Layout */
 
 //Top spacing to make room for top bar on login-related screens */
 //TODO: Untangle the styling used for the authentication screens, which is spread over "container-md" and the auth component in question
 .auth-content {
-  margin-top: 1rem;
-  max-width: 70rem;
+  margin-top: calc(@navbar-height + 20px);
+}
+
+//Top spacing for screens past the login-related ones */
+aside {
+  margin-top: @navbar-height;
+}
+
+/*right side - main content*/
+.right-side {
+  margin-left: @left-side-width;
 }
 
 /*left side - contains sidebar*/
 .left-side {
+  position: fixed;
+  top: 0;
+  bottom: 0;
   width: @left-side-width;
   background: @sidebar-light-bg;
   -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.24);
@@ -32,6 +78,10 @@
 
   &.server-error {
     background: @brand-danger;
+
+    .sidebar-menu {
+      border-top-color: @brand-danger;
+    }
   }
 
   &.collapse-left {
@@ -39,22 +89,36 @@
   }
 }
 
+.right-side.collapse-left {
+  margin-left: @left-side-width-collapse;
+  display: block !important;
+}
+
+.navbar-subm-fixed.collapse-left {
+  padding-left: @left-side-width-collapse;
+}
+
 @media screen and (max-width: @screen-md) {
   .right-side {
     margin-left: 0;
+  }
+
+  .navbar-subm-fixed {
+    padding-left: 0;
   }
 }
 
 /* Content */
 .content {
   background-color: transparent;
-  padding-top: 10px;
+  padding: 15px;
 }
 
 /* Off-canvas side menu */
 .sidebar {
   overflow-y: auto;
   overflow-x: hidden;
+  z-index: @zindex-side-fixed;
 }
 
 .sidebar-offcanvas {
@@ -87,6 +151,21 @@
     white-space: nowrap;
   }
 
+  .center-vertically {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #fff;
+  }
+
+  .center-vertically h4 {
+    overflow: hidden;
+    line-height: inherit;
+    font-weight: 400;
+    word-break: break-word;
+    text-overflow: ellipsis;
+  }
+
   .label {
     font-size: 80%;
   }
@@ -100,9 +179,20 @@
     .label {
       padding: .2em .17em .5em;
     }
+
+    .center-vertically {
+      width: 100%;
+
+      .action-title {
+        display: none;
+      }
+    }
   }
 
   .sidebar-menu {
+    border-top: 3px solid @sidebar-light-bg;
+    display: flex;
+    flex-direction: column;
     list-style: none;
     margin: 0;
     overflow-x: hidden;
@@ -143,9 +233,10 @@
     }
 
     .sidebar-item-header {
+      line-height: 20px;
       margin: 0;
       padding: 0;
-      line-height: 20px;
+      width: 100%;
 
       > span {
         white-space: nowrap;
@@ -176,10 +267,11 @@
     }
 
     .sidebar-item {
+      border-bottom: @sidebar-light-border;
+      line-height: 30px;
       margin: 0;
       padding: 0;
-      line-height: 30px;
-      border-bottom: @sidebar-light-border;
+      width: 100%;
 
       &.type-control {
         background: #fff;

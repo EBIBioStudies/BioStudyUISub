@@ -41,7 +41,6 @@ export class DirectorySidebarComponent implements OnInit, ControlValueAccessor {
       map((groups) => groups.map((group) => new FileNode(true, 'groups', group.name)))
     ).subscribe((groups) => {
       this.groups = groups;
-      this.collapsed = groups.length === 0;
     });
   }
 
