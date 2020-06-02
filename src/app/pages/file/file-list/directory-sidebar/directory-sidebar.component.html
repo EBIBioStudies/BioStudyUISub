@@ -15,7 +15,7 @@
   </div>
   <div class="sidebar-menu">
     <ul class="st-dir-sidebar-list">
-      <li class="sidebar-item success" [ngClass]="{'active': homeDir.path === selectedPath}">
+      <li class="sidebar-item success" [ngClass]="{'active': selectedPath.includes(homeDir.path) }">
         <a *ngIf="collapsed" (click)="onDirSelect(homeDir)">
           <i class="fa fa-fw fa-home"></i>
         </a>
@@ -26,7 +26,7 @@
       </li>
     </ul>
     <ul class="st-dir-sidebar-list">
-      <li *ngFor="let dir of groups" class="sidebar-item success" [ngClass]="{'active': dir.path === selectedPath}">
+      <li *ngFor="let dir of groups" class="sidebar-item success" [ngClass]="{'active': selectedPath.includes(dir.path) }">
         <a *ngIf="collapsed" (click)="onDirSelect(dir)">
           <i class="fa fa-fw fa-folder"></i>
         </a>

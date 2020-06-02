@@ -9,9 +9,10 @@ export class DirectoryPathComponent implements OnChanges {
   @Output() change: EventEmitter<string> = new EventEmitter<string>();
   dirs: string[] = [];
   groupName: string = '';
+  GROUPS_PATH = 'groups';
   isGroup: boolean = false;
   @Input() path: string = '';
-  @Input() root: string = '';
+  USER_PATH = 'user';
 
   get isEmpty(): boolean {
     return this.dirs.length === 0;
@@ -23,23 +24,23 @@ export class DirectoryPathComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.path) {
-      const pathValue = changes.path.currentValue;
-      this.dirs = (pathValue || '').split('/').filter(Boolean);
-    }
+      const pathValue: string = changes.path.currentValue;
+      const pathParts: string[] = pathValue.split('/');
+      this.isGroup = pathValue.indexOf(this.GROUPS_PATH) !== -1;
 
-    if (changes.root) {
-      const currentValue: string = changes.root.currentValue;
-      this.isGroup = currentValue.indexOf('/groups') !== -1;
-      this.groupName = currentValue.split('/')[2];
+      if (this.isGroup) {
+        this.groupName = pathParts[2];
+        this.dirs = pathParts.filter((part) => part !== '' && part !== this.groupName && part !== this.GROUPS_PATH);
+      } else {
+        this.dirs = pathParts.filter((part) => part !== '' && part !== this.USER_PATH);
+      }
     }
   }
 
   onDirectoryClick(idx) {
-    if (idx === 'root') {
-      this.change.emit('/');
-    } else {
-      const dir = '/' + (this.dirs.slice(0, idx + 1)).join('/');
-      this.change.emit(dir);
-    }
+    const rootPath: string = this.isGroup ? `/${this.GROUPS_PATH}/${this.groupName}` : `/${this.USER_PATH}`;
+    const dir: string = `${rootPath}/${this.dirs.slice(0, idx + 1).join('/')}`;
+
+    this.change.emit(dir);
   }
 }

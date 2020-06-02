@@ -1,7 +1,7 @@
 <div class="row-offcanvas row-offcanvas-left">
   <st-directory-sidebar
       name="userDirsSidebar"
-      [(ngModel)]="rootPath"
+      [(ngModel)]="absolutePath"
       (select)="onRootPathSelect($event)"
       (toggle)="onSideBarCollapsed()"
       [collapsed]="sideBarCollapsed">
@@ -10,7 +10,7 @@
   <div class="navbar-default navbar-subm-fixed" [ngClass]="{'collapse-left': sideBarCollapsed}">
     <nav>
       <div class="nav-block col-xs-8">
-        <st-directory-path [path]="path.rel" [root]="path.root" (change)="onPathChange($event)"></st-directory-path>
+        <st-directory-path [path]="absolutePath" (change)="onPathChange($event)"></st-directory-path>
       </div>
         <div class="nav-block clearfix col-xs-4">
         <st-file-upload-badge
