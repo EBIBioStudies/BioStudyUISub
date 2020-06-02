@@ -28,6 +28,7 @@ import {
 `
 })
 export class FileUploadButtonComponent implements OnChanges {
+  hasDirSupport: boolean = false;
   @Input() isDirOnly: boolean = false;
   @Input() isResetOnClick: boolean = true;
   @Input() multiple: boolean = false;
@@ -38,9 +39,8 @@ export class FileUploadButtonComponent implements OnChanges {
   private inputEl?: ElementRef;
 
   ngOnChanges() {
-    const hasDirSupport: boolean = 'webkitdirectory' in this.inputEl!.nativeElement;
-
-    this.inputEl!.nativeElement.webkitdirectory = hasDirSupport && this.isDirOnly;
+    this.hasDirSupport = 'webkitdirectory' in this.inputEl!.nativeElement;
+    this.inputEl!.nativeElement.webkitdirectory = this.hasDirSupport && this.isDirOnly;
   }
 
   // Makes sure every subsequent selection triggers a "select" event even if the file selected is the same.
