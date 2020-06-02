@@ -11,7 +11,6 @@ import { FileTreeComponent } from './file-select/file-tree.component';
 import { FileTreeDropdownComponent } from './file-select/file-tree-dropdown.component';
 import { FileTreeStore } from './file-select/file-tree.store';
 import { FileTypeCellComponent } from './file-list/ag-grid/file-type-cell.component';
-import { FileUploadBadgeComponent } from './file-list/file-upload-badge/file-upload-badge.component';
 import { FileUploadList } from './shared/file-upload-list.service';
 import { HttpUploadClientService } from './shared/http-upload-client.service';
 import { MarkdownModule } from 'ngx-markdown';
@@ -38,7 +37,6 @@ import { UserData } from 'app/auth/shared';
     FileActionsCellComponent,
     FileTypeCellComponent,
     ProgressCellComponent,
-    FileUploadBadgeComponent,
     DirectoryPathComponent,
     DirectorySidebarComponent,
     FileSelectComponent,
