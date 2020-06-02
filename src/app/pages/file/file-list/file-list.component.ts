@@ -1,4 +1,4 @@
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid-community/main';
 import { Subject, throwError, of } from 'rxjs';
@@ -19,12 +19,14 @@ import { UploadBadgeItem } from './file-upload-badge/file-upload-badge.component
   styleUrls: ['./file-list.component.css']
 })
 export class FileListComponent implements OnInit, OnDestroy {
+  absolutePath: string = '/user';
   backButton = false;
   columnDefs?: any[];
   gridOptions: GridOptions;
   isBulkMode = false;
   path: Path = new Path('/user', '/');
   sideBarCollapsed = false;
+  USER_PATH = 'user';
 
   protected ngUnsubscribe: Subject<void>;     // stopper for all subscriptions
   private rowData: any[];
@@ -34,6 +36,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     private fileService: FileService,
     private fileUploadList: FileUploadList,
     private modalService: ModalService,
+    private router: Router,
     private route: ActivatedRoute
   ) {
     this.ngUnsubscribe = new Subject<void>();
@@ -53,16 +56,15 @@ export class FileListComponent implements OnInit, OnDestroy {
 
     this.fileUploadList.uploadCompleted$
       .pipe(
-        filter((path) => path.startsWith(this.currentPath)),
+        filter((path) => path.startsWith(this.absolutePath)),
         takeUntil(this.ngUnsubscribe)
       )
       .subscribe(() => {
-        this.loadData();
+        this.refreshData();
       });
 
     this.rowData = [];
     this.createColumnDefs();
-    this.loadData();
   }
 
   get rootPath(): string {
@@ -73,8 +75,10 @@ export class FileListComponent implements OnInit, OnDestroy {
     this.path = this.path.setRoot(rp);
   }
 
-  private get currentPath() {
-    return this.path.absolutePath();
+  changePathQuery(absolutePath: string) {
+    const queryParams = { path: absolutePath };
+
+    this.router.navigate(['.'], { relativeTo: this.route, queryParamsHandling: 'merge', queryParams });
   }
 
   decorateFiles(files: any[] | undefined): any[] {
@@ -93,9 +97,10 @@ export class FileListComponent implements OnInit, OnDestroy {
 
   decorateUploads(uploads: FileUpload[]): any[] {
     return uploads.map(u => {
-      if (!u.absoluteFilePath.startsWith(this.currentPath)) {
+      if (!u.absoluteFilePath.startsWith(this.absolutePath)) {
         return [];
       }
+
       return u.fileNames.map(f => ({
         name: f,
         upload: u,
@@ -121,20 +126,28 @@ export class FileListComponent implements OnInit, OnDestroy {
     this.route.queryParams.forEach((params: Params) => {
       this.backButton = params.bb;
     });
+
+    this.route.queryParamMap.subscribe((queryParams) => {
+      const path: string = queryParams.get('path') || `/${this.USER_PATH}`;
+
+      this.loadData(path);
+    });
   }
 
   onPathChange(path) {
-    this.loadData(this.path.setRel(path));
+    this.changePathQuery(path);
   }
 
-  onRootPathSelect(rootPath) {
-    this.path = new Path(rootPath, '/');
-    this.loadData();
+  onRootPathSelect(rootPath: string) {
+    this.changePathQuery(rootPath);
   }
 
-  onRowDoubleClick(ev) {
-    if (ev.data.type !== 'FILE') {
-      this.loadData(this.path.addRel(ev.data.name));
+  onRowDoubleClick(event) {
+    if (event.data.type !== 'FILE') {
+      const dirName: string = event.data.name;
+      const dirPath: string = `${this.absolutePath}/${dirName}`;
+
+      this.changePathQuery(dirPath);
     }
   }
 
@@ -152,9 +165,8 @@ export class FileListComponent implements OnInit, OnDestroy {
       .subscribe(() => this.upload(files));
   }
 
-  onUploadSelect(upload: UploadBadgeItem) {
-    this.path = upload.filePath;
-    this.loadData();
+  onUploadSelect() {
+    this.refreshData();
   }
 
   updateDataRows(rows) {
@@ -212,9 +224,8 @@ export class FileListComponent implements OnInit, OnDestroy {
     document.body.removeChild(link);
   }
 
-  private loadData(path?: Path) {
-    const p: Path = path ? path : this.path;
-    this.fileService.getFiles(p.absolutePath())
+  private loadData(absolutePath: string) {
+    this.fileService.getFiles(absolutePath)
       .pipe(
         takeUntil(this.ngUnsubscribe),
         catchError((error) => {
@@ -228,10 +239,13 @@ export class FileListComponent implements OnInit, OnDestroy {
           this.decorateFiles(files)
         );
 
-        this.path = p;
+        this.absolutePath = absolutePath;
         this.updateDataRows(decoratedRows);
-      }
-      );
+      });
+  }
+
+  private refreshData() {
+    this.loadData(this.absolutePath);
   }
 
   private removeFile(filePath: string, fileName: string): void {
@@ -240,16 +254,19 @@ export class FileListComponent implements OnInit, OnDestroy {
         switchMap(() => this.fileService.removeFile(filePath, fileName)),
         takeUntil(this.ngUnsubscribe)
       )
-      .subscribe(() => this.loadData());
+      .subscribe(() => this.refreshData());
   }
 
   private removeUpload(u: FileUpload) {
     this.fileUploadList.remove(u);
-    this.loadData();
+    this.refreshData();
   }
 
   private upload(files: FileList) {
-    const upload = this.fileUploadList.upload(this.path, Array.from(files));
-    this.updateDataRows(([] as any[]).concat(this.decorateUploads([upload]), this.rowData));
+    const uploadPath: Path = new Path(this.absolutePath, '');
+    const upload: FileUpload = this.fileUploadList.upload(uploadPath, Array.from(files));
+    const decoratedRows = this.decorateUploads([upload]);
+
+    this.updateDataRows([...this.rowData, ...decoratedRows]);
   }
 }
