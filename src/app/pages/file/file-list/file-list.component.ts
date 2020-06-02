@@ -165,10 +165,6 @@ export class FileListComponent implements OnInit, OnDestroy {
       .subscribe(() => this.upload(files));
   }
 
-  onUploadSelect() {
-    this.refreshData();
-  }
-
   updateDataRows(rows) {
     this.rowData = rows;
     this.gridOptions!.api!.setRowData(rows);

@@ -12,11 +12,7 @@
       <div class="nav-block col-xs-8">
         <st-directory-path [path]="absolutePath" (change)="onPathChange($event)"></st-directory-path>
       </div>
-        <div class="nav-block clearfix col-xs-4">
-        <st-file-upload-badge
-          class="upload-count"
-          (select)="onUploadSelect($event)">
-        </st-file-upload-badge>
+      <div class="nav-block clearfix col-xs-4">
       <div class="btn-group pull-right" role="group">
         <st-ftp-upload-button></st-ftp-upload-button>
       </div>
