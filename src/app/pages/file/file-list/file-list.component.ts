@@ -11,7 +11,6 @@ import { FileActionsCellComponent } from './ag-grid/file-actions-cell.component'
 import { FileTypeCellComponent } from './ag-grid/file-type-cell.component';
 import { FileUpload, FileUploadList } from 'app/pages/file/shared/file-upload-list.service';
 import { ProgressCellComponent } from './ag-grid/upload-progress-cell.component';
-import { UploadBadgeItem } from './file-upload-badge/file-upload-badge.component';
 
 @Component({
   selector: 'st-file-list',

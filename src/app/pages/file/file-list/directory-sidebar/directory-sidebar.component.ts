@@ -18,7 +18,7 @@ export class DirectorySidebarComponent implements OnInit, ControlValueAccessor {
   groups: FileNode[] = [];
   homeDir: FileNode = new FileNode(true, '/', 'home');
   @Output() select = new EventEmitter();
-  selectedPath?: string = '';
+  selectedPath: string = '';
   @Output() toggle = new EventEmitter();
 
   constructor(private fileService: FileService) {}
