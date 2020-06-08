@@ -35,7 +35,7 @@
     <div *ngFor="let row of rows; let rowIdx = index;"
       (mouseenter)="onMouseEnterRow(rowIdx)"
       (mouseleave)="onMouseLeaveRow()">
-      <div *ngIf="!readonly || !row.isEmpty" class="row" [ngClass]="{'is-sortable': isSortable}">
+      <div *ngIf="!readonly || !row.isEmpty" class="row">
         <div class="cell heading-cell row-heading col-xs-1 col-md-1 text-center">
           <i class="fas fa-grip-vertical drip" [ngClass]="{ 'drip-visible': rowIdx === hoveredRowIndex && isSortable }"></i>
           <span container="body"

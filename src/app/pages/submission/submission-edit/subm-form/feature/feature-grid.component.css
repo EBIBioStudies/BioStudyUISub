@@ -39,10 +39,6 @@
   margin-top: 16px;
 }
 
-.row.is-sortable {
-  cursor: ns-resize;
-}
-
 .row:last-of-type {
   margin-bottom: 10px;
 }
@@ -53,6 +49,7 @@
 }
 
 .drip-visible {
+  cursor: ns-resize;
   visibility: visible;
 }
 
