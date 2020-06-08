@@ -4,8 +4,7 @@ import { TypeaheadDirective } from 'ngx-bootstrap';
 import { ColumnControl } from '../../shared/model/column-control.model';
 import { RowForm } from '../../shared/model/row-form.model';
 import { FeatureForm } from '../../shared/model/feature-form.model';
-import { StructureChangeEvent } from '../../shared/structure-change-event';
-import { FormArray } from '@angular/forms';
+import { Options as SortableOption } from 'sortablejs';
 
 @Component({
   selector: 'st-subm-feature-grid',
@@ -18,13 +17,12 @@ export class FeatureGridComponent implements AfterViewInit {
   hoveredRowIndex: number = -1;
   @Input() readonly = false;
   @ViewChildren('rowEl') rowEls?: QueryList<ElementRef>;
-  sortableJsOptions: { onUpdate: () => void; };
+  sortableJsOptions: SortableOption = {};
   @ViewChildren('ahead') typeaheads?: QueryList<TypeaheadDirective>;
 
   constructor(private rootEl: ElementRef, public userData: UserData) {
-    this.sortableJsOptions = {
-      onUpdate: this.onRowOrderUpdate.bind(this)
-    };
+    this.sortableJsOptions.onUpdate = this.onRowOrderUpdate.bind(this);
+    this.sortableJsOptions.handle = '.drip';
   }
 
   get rows(): RowForm[] {

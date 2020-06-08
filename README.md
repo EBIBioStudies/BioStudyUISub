@@ -12,11 +12,13 @@ This project uses [config](https://www.npmjs.com/package/config) module which ex
 Create a `.env` file in the root of the project and copy / pase the next environment variable definitions in it:
 
 ```js
+PORT=port
 BACKEND_PATH_CONTEXT=pathname
 BACKEND_HOST_NAME=hostname
 BACKEND_PORT=port
 ```
 
+- `PORT` is the service proxy (Node) port
 - `BACKEND_PATH_CONTEXT` is the pathname of the backend service URL
 - `BACKEND_HOST_NAME` is the hostname or backend URI
 - `BACKEND_PORT` is the port where the backend is running
@@ -39,6 +41,7 @@ npm run start:dev
 - The `npm run start:dev` will run a **Node + Express** service which proxies the requests to **BioStudies** backend and a **Angular Dev Server** to get local development benefits (hot reload + live TS compilation)
 - By default **Node + Express** service runs on `8080` port
 - By default **Angular Dev Server** service runs on `4200` port
+- If `PORT` is changed, it should be updated in the `proxy.config.json` file which is the **Angular Dev Proxy** configuration file
 
 ## Run production mode
 Make sure you have the `.env` file created as it's described in **Getting Started - Configure**
