@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, Input, QueryList, ViewChildren } from '@angular/core';
 import { UserData } from 'app/auth/shared';
 import { TypeaheadDirective } from 'ngx-bootstrap';
 import { ColumnControl } from '../../shared/model/column-control.model';
@@ -11,7 +11,7 @@ import { Options as SortableOption } from 'sortablejs';
   templateUrl: './feature-grid.component.html',
   styleUrls: ['./feature-grid.component.css']
 })
-export class FeatureGridComponent implements AfterViewInit {
+export class FeatureGridComponent {
   @ViewChildren('colEl') colEls?: QueryList<ElementRef>;
   @Input() featureForm?: FeatureForm;
   hoveredRowIndex: number = -1;
@@ -39,28 +39,6 @@ export class FeatureGridComponent implements AfterViewInit {
 
   get isSortable(): boolean {
     return this.featureForm!.rows.length > 1;
-  }
-
-  ngAfterViewInit(): void {
-    /*let oldNumRows = this.featureForm!.rows.length;      //initial row count
-    let oldNumCols = this.featureForm!.columns.length;   //initial column count
-
-    //On DOM change, compares current row and column count with the respective old value to find out if
-    //a row or column was added.
-    this.rowEls!.changes.subscribe((rowEls) => {
-
-      //Row added => sets focus to the first field of the row
-      if (oldNumRows < this.featureForm!.rows.length) {
-        rowEls.last.nativeElement.querySelector('.form-control').focus();
-
-        //Column added => sets focus to last field of the first row (first field of the added column)
-      } else if (oldNumCols < this.featureForm!.columns.length) {
-        rowEls.first.nativeElement.querySelectorAll('.form-control')[oldNumCols].focus();
-      }
-
-      oldNumRows = this.featureForm!.rows.length;
-      oldNumCols = this.featureForm!.columns.length;
-    });*/
   }
 
   /**
