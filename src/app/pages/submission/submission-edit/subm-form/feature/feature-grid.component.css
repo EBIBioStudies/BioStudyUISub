@@ -43,14 +43,18 @@
   margin-bottom: 10px;
 }
 
-/** Drag and drop drip */
-.drip {
+/** Drag and drop grip */
+.grip {
   visibility: hidden;
 }
 
-.drip-visible {
-  cursor: ns-resize;
+.grip-visible {
+  cursor: grab;
   visibility: visible;
+}
+
+.grip-is-sorting {
+  cursor: grabbing;
 }
 
 @media (min-width: 768px) {
