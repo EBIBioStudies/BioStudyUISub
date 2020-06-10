@@ -15,7 +15,6 @@ export class FeatureGridComponent {
   @ViewChildren('colEl') colEls?: QueryList<ElementRef>;
   @Input() featureForm?: FeatureForm;
   hoveredRowIndex: number = -1;
-  isSortingItem: boolean = false;
   @Input() readonly = false;
   @ViewChildren('rowEl') rowEls?: QueryList<ElementRef>;
   sortableJsOptions: SortableOption = {};
@@ -24,9 +23,8 @@ export class FeatureGridComponent {
 
   constructor(private rootEl: ElementRef, public userData: UserData) {
     this.sortableJsOptions.onUpdate = this.onRowOrderUpdate.bind(this);
-    this.sortableJsOptions.handle = '.grip';
-    this.sortableJsOptions.onChoose = () => { this.isSortingItem = true; };
-    this.sortableJsOptions.onUnchoose = () => { this.isSortingItem = false; };
+    this.sortableJsOptions.filter = '.form-control';
+    this.sortableJsOptions.preventOnFilter = false;
   }
 
   get rows(): RowForm[] {
