@@ -53,10 +53,6 @@
   visibility: visible;
 }
 
-.grip-is-sorting {
-  cursor: grabbing;
-}
-
 @media (min-width: 768px) {
   .container-scroll .col-md-2 {
     width: 16.66666667vw;
