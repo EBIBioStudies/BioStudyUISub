@@ -11,7 +11,7 @@ import {
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { Attribute, Feature, Field } from 'app/pages/submission/submission-shared/model';
 import { TextValueType, ValueType, ValueTypeName, SelectValueType } from 'app/pages/submission/submission-shared/model';
-import { parseDate, isOrcidValid } from 'app/utils';
+import { parseDate, isOrcidValid, isDnaSequenceValid } from 'app/utils';
 import { ControlRef, ControlGroupRef } from './control-reference';
 import { CustomFormControl } from './model/custom-form-control.model';
 
@@ -38,10 +38,17 @@ export class FormValidators {
     return String.isNotDefinedOrEmpty(v) || (parseDate(v) !== undefined) ? null : { 'format': { value: v } };
   }
 
+  static formatDna: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    const value: { raw: string } = control.value;
+    const isValueValid: boolean = isDnaSequenceValid(value.raw);
+
+    return isValueValid ? null : { 'format': { value } };
+  }
+
   static formatOrcid: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const value: string  = control.value;
-    const isEmpty = String.isNotDefinedOrEmpty(value);
-    const isValueValid = !isEmpty && isOrcidValid(value);
+    const isEmpty: boolean = String.isNotDefinedOrEmpty(value);
+    const isValueValid: boolean = !isEmpty && isOrcidValid(value);
 
     if (isEmpty) {
       return null;
@@ -172,6 +179,10 @@ export class SubmFormValidators {
       validators.push(FormValidators.formatOrcid);
     }
 
+    if (valueType.is(ValueTypeName.dna)) {
+      validators.push(FormValidators.formatDna);
+    }
+
     return validators;
   }
 }
@@ -191,7 +202,7 @@ export class CustomErrorMessages {
         return `Please use up to ${error.requiredLength} characters`;
       },
       'format': () => {
-        return `Please provide a valid value`;
+        return 'Please provide a valid value';
       },
       'pattern': (error: { actualValue: string, requiredPattern: string }) => {
         return `Please provide a value in '${error.requiredPattern}' format`;

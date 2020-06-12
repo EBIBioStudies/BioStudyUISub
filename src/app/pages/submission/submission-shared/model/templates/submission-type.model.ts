@@ -158,7 +158,9 @@ export enum ValueTypeName {
   link,
   idlink,
   orcid,
-  pubmedid
+  pubmedid,
+  dna,
+  protein
 }
 
 export abstract class ValueType {
@@ -170,7 +172,7 @@ export abstract class ValueType {
   }
 
   isText(): boolean {
-    return this.is(ValueTypeName.text, ValueTypeName.largetext);
+    return this.is(ValueTypeName.text, ValueTypeName.largetext, ValueTypeName.dna, ValueTypeName.protein);
   }
 }
 

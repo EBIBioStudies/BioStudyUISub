@@ -5,13 +5,22 @@ import { emptyTemplate } from './empty.template';
 import { euToxRiskTemplate } from './eutoxrisk.template';
 import { hecatosTemplate } from './hecatos.template';
 import { arrayExpressTemplate } from './arrayexpress.template';
+import { proteinDesignsTemplate } from './proteindesigns.template';
 
 export const DEFAULT_TEMPLATE_NAME = 'Default';
 export const EMPTY_TEMPLATE_NAME = 'Empty';
 export const READONLY_TEMPLATE_NAME = 'ReadOnly';
 
-const SUBMISSION_TEMPLATES = [arrayExpressTemplate, euToxRiskTemplate, hecatosTemplate, emptyTemplate, biaTemplate, readonlyTemplate];
-const SUBMISSION_TEMPLATES_PUBLIC = [defaultTemplate];
+const SUBMISSION_TEMPLATES = [
+  arrayExpressTemplate,
+  euToxRiskTemplate,
+  hecatosTemplate,
+  emptyTemplate,
+  biaTemplate,
+  readonlyTemplate,
+  proteinDesignsTemplate
+];
+const SUBMISSION_TEMPLATES_PUBLIC = [defaultTemplate, proteinDesignsTemplate];
 
 export function getSubmissionTemplates(projects: Array<string> = []): Array<{ description: string, name: string }> {
   const projectNames: string[] = projects.map((project) => project.toLowerCase());

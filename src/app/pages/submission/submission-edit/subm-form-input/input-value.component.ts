@@ -8,7 +8,7 @@ import {
   ValueTypeName,
   SelectValueType, DateValueType
 } from 'app/pages/submission/submission-shared/model/templates';
-import { typeaheadSource } from '../../shared/typeahead.utils';
+import { typeaheadSource } from '../shared/typeahead.utils';
 
 @Component({
   selector: 'st-input-value',

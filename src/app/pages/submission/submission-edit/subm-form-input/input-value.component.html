@@ -60,4 +60,9 @@
       [readonly]="readonly"
       (found)="selectData($event)">
   </st-pubmedid-search>
+
+  <st-dna-input *ngSwitchCase="valueTypeNameEnum.dna"
+    [formControl]="formControl"
+    [readonly]="readonly">
+  </st-dna-input>
 </div>
