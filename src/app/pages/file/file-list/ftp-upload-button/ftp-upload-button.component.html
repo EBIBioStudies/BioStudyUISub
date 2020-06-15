@@ -51,7 +51,7 @@
           ```
           $ sh ~/Documents/ibm-aspera-cli-3.9.1.1401.be67d47-mac-10.7-64-release.sh
           $ cd ~/Applications/Aspera\ CLI/bin
-          $ ./ascp -P33001 -i ../etc/asperaweb_id_dsa.openssh -d &lt;directory to upload&gt; bsaspera_w@hx-fasp-1.ebi.ac.uk:.dropbox/&lt;secret directory>
+          $ ./ascp -P33001 -i ../etc/asperaweb_id_dsa.openssh -d &lt;directory to upload&gt; bsaspera_w@hx-fasp-1.ebi.ac.uk:&lt;secret directory>
           ```
         </markdown>
         <markdown *ngIf="osName === 'windows'">
@@ -59,7 +59,7 @@
           the subdirectory bin, e.g.,
           ```
           C:\>cd C:\cli\bin
-          C:\cli\bin>ascp.exe -P33001 -i ..\etc\asperaweb_id_dsa.openssh -d &lt;directory to upload&gt; bsaspera_w@hx-fasp-1.ebi.ac.uk:.dropbox/&lt;secret directory&gt;
+          C:\cli\bin>ascp.exe -P33001 -i ..\etc\asperaweb_id_dsa.openssh -d &lt;directory to upload&gt; bsaspera_w@hx-fasp-1.ebi.ac.uk:.&lt;secret directory&gt;
           ```
         </markdown>
         <markdown>
