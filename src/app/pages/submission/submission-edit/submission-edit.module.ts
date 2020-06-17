@@ -18,7 +18,7 @@ import { FeatureListComponent } from './subm-form/feature/feature-list.component
 import { SubmFeatureComponent } from './subm-form/feature/subm-feature.component';
 import { SubmFieldComponent } from './subm-form/field/subm-field.component';
 import { InlineEditComponent } from './subm-form/inline-edit/inline-edit.component';
-import { InputValueComponent } from './subm-form/input-value/input-value.component';
+import { InputValueComponent } from './subm-form-input/input-value.component';
 import { NativeElementAttachDirective } from './subm-form/native-element-attach.directive';
 import { SubmFormComponent } from './subm-form/subm-form.component';
 import { SubmNavBarComponent } from './subm-navbar/subm-navbar.component';

@@ -12,6 +12,7 @@ import {
   TooltipModule,
   TypeaheadModule
 } from 'ngx-bootstrap';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { ContainerRootComponent } from './container-root.component';
 import { ContainerMdComponent } from './container-md.component';
 import { ORCIDInputBoxComponent } from './orcid-input-box.component';
@@ -22,6 +23,7 @@ import { ValidateOnBlurDirective } from './validate-onblur.directive';
 import { StripHtmlPipe } from './strip-html.pipe';
 import { DateFormatDirective } from './date-format.directive';
 import { DateInputComponent } from './date-input.component';
+import { DNAInputComponent } from './dna-input.component';
 import { PluralPipe } from './plural.pipe';
 import { ModalService } from './modal.service';
 
@@ -37,7 +39,8 @@ import { ModalService } from './modal.service';
     ModalModule,
     PopoverModule,
     CollapseModule,
-    AlertModule
+    AlertModule,
+    CKEditorModule
   ],
   providers: [
     ModalService
@@ -54,6 +57,7 @@ import { ModalService } from './modal.service';
     ValidateOnBlurDirective,
     DateFormatDirective,
     DateInputComponent,
+    DNAInputComponent,
     PluralPipe
   ],
   exports: [
@@ -81,6 +85,7 @@ import { ModalService } from './modal.service';
     ValidateOnBlurDirective,
     DateFormatDirective,
     DateInputComponent,
+    DNAInputComponent,
     PluralPipe
   ],
   entryComponents: [
