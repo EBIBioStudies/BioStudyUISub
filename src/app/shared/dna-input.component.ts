@@ -2,7 +2,7 @@ import { Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import * as DecoupledEditor from '@biostudies/ckeditor5-build-balloon';
 import { ChangeEvent } from '@ckeditor/ckeditor5-angular';
-import viewToPlainText from '@ckeditor/ckeditor5-clipboard/src/utils/viewToPlainText';
+import viewToPlainText from '@ckeditor/ckeditor5-clipboard/src/utils/viewtoplaintext';
 
 const dnaColorScheme = [
   {
