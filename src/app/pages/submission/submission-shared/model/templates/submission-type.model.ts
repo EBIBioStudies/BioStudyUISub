@@ -171,8 +171,12 @@ export abstract class ValueType {
     return names.includes(this.name);
   }
 
+  isRich(): boolean {
+    return this.is(ValueTypeName.dna, ValueTypeName.protein);
+  }
+
   isText(): boolean {
-    return this.is(ValueTypeName.text, ValueTypeName.largetext, ValueTypeName.dna, ValueTypeName.protein);
+    return this.is(ValueTypeName.text, ValueTypeName.largetext);
   }
 }
 

@@ -65,4 +65,9 @@
     [formControl]="formControl"
     [readonly]="readonly">
   </st-dna-input>
+
+  <st-protein-input *ngSwitchCase="valueTypeNameEnum.protein"
+    [formControl]="formControl"
+    [readonly]="readonly">
+  </st-protein-input>
 </div>

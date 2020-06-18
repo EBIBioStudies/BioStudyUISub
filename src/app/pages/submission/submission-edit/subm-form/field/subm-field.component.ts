@@ -1,5 +1,6 @@
+import { RichTextFieldValue } from './../../../submission-shared/model/submission/submission.model';
 import { Component, Input } from '@angular/core';
-import { FieldType, ValueType, TextValueType } from 'app/pages/submission/submission-shared/model/templates';
+import { FieldType, ValueType, TextValueType, ValueTypeName } from 'app/pages/submission/submission-shared/model/templates';
 import { FieldControl } from '../../shared/model/field-control.model';
 
 class ValueLength {
@@ -52,6 +53,12 @@ export class SubmFieldComponent {
   }
 
   get isEmpty(): boolean {
+    if (this.fieldType.valueType.isRich()) {
+      const fieldValue: RichTextFieldValue = <RichTextFieldValue>this.fieldControl!.control.value;
+
+      return fieldValue.raw.isEmpty();
+    }
+
     return (<string>this.fieldControl!.control.value).isEmpty();
   }
 

@@ -10,7 +10,9 @@ export function scrollToFormControl(control: FormControl) {
       const elementRef: HTMLTextAreaElement | HTMLInputElement =
         element.querySelectorAll<HTMLTextAreaElement | HTMLInputElement>('input, textarea')[0];
 
-      elementRef.focus();
+      if (elementRef) {
+        elementRef.focus();
+      }
     }, 200);
   }
 }

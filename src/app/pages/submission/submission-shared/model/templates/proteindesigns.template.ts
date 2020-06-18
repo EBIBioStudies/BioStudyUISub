@@ -1,5 +1,5 @@
 export const proteinDesignsTemplate = {
-  'name': 'Protein Designs',
+  'name': 'ProteinDesigns',
   'description': 'Generic submission for stand-alone or generic studies',
   'sectionType': {
     'name': 'Study',
@@ -37,9 +37,15 @@ export const proteinDesignsTemplate = {
       {
         'name': 'DNA Sequence',
         'icon': 'fa-comment',
-        'display': 'required',
         'valueType': {
           'name': 'dna'
+        }
+      },
+      {
+        'name': 'Protein Sequence',
+        'icon': 'fa-comment',
+        'valueType': {
+          'name': 'protein'
         }
       },
       {

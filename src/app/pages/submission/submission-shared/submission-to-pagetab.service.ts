@@ -1,3 +1,4 @@
+import { RichTextFieldValue } from './model/submission/submission.model';
 import { PAGE_TAG, Tag } from './model/model.common';
 import {
   AttrExceptions,
@@ -163,8 +164,15 @@ export class SubmissionToPageTabService {
   }
 
   private fieldsAsAttributes(section: Section, isSanitise: boolean) {
-    return section.fields.list().map((field) => <PtAttribute>{ name: field.name, value: field.value })
-      .filter(attr => (isSanitise && !isEmptyAttr(attr)) || !isSanitise);
+    return section.fields.list().map((field) => {
+      if (field.valueType.isRich()) {
+        const fieldValue: RichTextFieldValue = <RichTextFieldValue>field.value;
+
+        return <PtAttribute>{ name: field.name, value: fieldValue.value };
+      }
+
+      return <PtAttribute>{ name: field.name, value: field.value };
+    }).filter(attr => (isSanitise && !isEmptyAttr(attr)) || !isSanitise);
   }
 
   private sectionToPtSection(section: Section, isSanitise: boolean = false): PageTabSection {
