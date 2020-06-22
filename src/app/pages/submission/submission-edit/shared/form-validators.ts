@@ -11,7 +11,7 @@ import {
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { Attribute, Feature, Field } from 'app/pages/submission/submission-shared/model';
 import { TextValueType, ValueType, ValueTypeName, SelectValueType } from 'app/pages/submission/submission-shared/model';
-import { parseDate, isOrcidValid, isDnaSequenceValid } from 'app/utils';
+import { parseDate, isOrcidValid, isDnaSequenceValid, isProteinSequenceValid } from 'app/utils';
 import { ControlRef, ControlGroupRef } from './control-reference';
 import { CustomFormControl } from './model/custom-form-control.model';
 
@@ -40,6 +40,12 @@ export class FormValidators {
 
   static formatDna: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const value: { raw: string } = control.value;
+    const isEmpty: boolean = String.isNotDefinedOrEmpty(value.raw);
+
+    if (isEmpty) {
+      return null;
+    }
+
     const isValueValid: boolean = isDnaSequenceValid(value.raw);
 
     return isValueValid ? null : { 'format': { value } };
@@ -48,11 +54,25 @@ export class FormValidators {
   static formatOrcid: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const value: string  = control.value;
     const isEmpty: boolean = String.isNotDefinedOrEmpty(value);
-    const isValueValid: boolean = !isEmpty && isOrcidValid(value);
 
     if (isEmpty) {
       return null;
     }
+
+    const isValueValid: boolean = isOrcidValid(value);
+
+    return isValueValid ? null : { 'format': { value } };
+  }
+
+  static formatProtein: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    const value: { raw: string } = control.value;
+    const isEmpty: boolean = String.isNotDefinedOrEmpty(value.raw);
+
+    if (isEmpty) {
+      return null;
+    }
+
+    const isValueValid: boolean = isProteinSequenceValid(value.raw);
 
     return isValueValid ? null : { 'format': { value } };
   }
@@ -181,6 +201,10 @@ export class SubmFormValidators {
 
     if (valueType.is(ValueTypeName.dna)) {
       validators.push(FormValidators.formatDna);
+    }
+
+    if (valueType.is(ValueTypeName.protein)) {
+      validators.push(FormValidators.formatProtein);
     }
 
     return validators;

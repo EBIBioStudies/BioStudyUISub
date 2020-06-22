@@ -1,4 +1,4 @@
-import { Feature, Field, Section, Submission } from './submission.model';
+import { Feature, Field, Section, Submission, RichTextFieldValue } from './submission.model';
 import { parseDate } from 'app/utils';
 import { FeatureType, SectionType, TextValueType, ValueType, ValueTypeName } from '../templates';
 
@@ -60,11 +60,22 @@ class ValidationRules {
   }
 
   static forField(field: Field): ValidationRule[] {
-    const value = field.value;
+    if (field.valueType.isRich()) {
+      const richTextValue: RichTextFieldValue  = <RichTextFieldValue>field.value;
+      const rawValue: string = richTextValue.raw;
+
+      return [
+        ValidationRules.requiredValue(rawValue, field.name, field.type.displayType.isRequired),
+        ValidationRules.formattedValue(rawValue, field.valueType, field.name),
+        ...ValidationRules.forValue(rawValue, field.name, field.valueType)
+      ];
+    }
+
+    const value: string = <string>field.value;
     return [
       ValidationRules.requiredValue(value, field.name, field.type.displayType.isRequired),
       ValidationRules.formattedValue(value, field.valueType, field.name),
-      ...ValidationRules.forValue(field.value, field.name, field.valueType)
+      ...ValidationRules.forValue(value, field.name, field.valueType)
     ];
   }
 

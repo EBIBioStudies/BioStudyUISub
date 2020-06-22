@@ -24,6 +24,7 @@ import { StripHtmlPipe } from './strip-html.pipe';
 import { DateFormatDirective } from './date-format.directive';
 import { DateInputComponent } from './date-input.component';
 import { DNAInputComponent } from './dna-input.component';
+import { ProteinInputComponent } from './protein-input.component';
 import { PluralPipe } from './plural.pipe';
 import { ModalService } from './modal.service';
 
@@ -58,6 +59,7 @@ import { ModalService } from './modal.service';
     DateFormatDirective,
     DateInputComponent,
     DNAInputComponent,
+    ProteinInputComponent,
     PluralPipe
   ],
   exports: [
@@ -86,6 +88,7 @@ import { ModalService } from './modal.service';
     DateFormatDirective,
     DateInputComponent,
     DNAInputComponent,
+    ProteinInputComponent,
     PluralPipe
   ],
   entryComponents: [

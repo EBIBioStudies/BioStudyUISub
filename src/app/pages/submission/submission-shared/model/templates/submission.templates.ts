@@ -20,7 +20,7 @@ const SUBMISSION_TEMPLATES = [
   readonlyTemplate,
   proteinDesignsTemplate
 ];
-const SUBMISSION_TEMPLATES_PUBLIC = [defaultTemplate, proteinDesignsTemplate];
+const SUBMISSION_TEMPLATES_PUBLIC = [defaultTemplate];
 
 export function getSubmissionTemplates(projects: Array<string> = []): Array<{ description: string, name: string }> {
   const projectNames: string[] = projects.map((project) => project.toLowerCase());

@@ -13,8 +13,13 @@ import {
   ValueType
 } from '../templates';
 
-interface SubmissionSection {
+export interface SubmissionSection {
   subsections: Sections
+}
+
+export interface RichTextFieldValue {
+  raw: string,
+  value: string
 }
 
 class Rows {
@@ -326,10 +331,10 @@ export class Field {
   readonly id: string;
   readonly type: FieldType;
 
-  private _value: string;
+  private _value: string | RichTextFieldValue;
 
   constructor(type: FieldType,
-        value: string = '') {
+        value: RichTextFieldValue | string = '') {
     this.id = `field_${nextId()}`;
     this.type = type;
     this._value = value;
@@ -347,11 +352,11 @@ export class Field {
     return this.type.displayType.isReadonly;
   }
 
-  get value(): string {
+  get value(): string | RichTextFieldValue {
     return this._value;
   }
 
-  set value(v: string) {
+  set value(v: string | RichTextFieldValue) {
     if (this._value !== v) {
       this._value = v;
     }
