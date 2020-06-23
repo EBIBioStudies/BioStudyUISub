@@ -228,7 +228,7 @@ export class SubmListComponent implements OnDestroy {
   decorateDataRows(rows: any[]): any {
     return rows.map(row => ({
       isTemp: !this.showSubmitted,
-      isDeletable: ['S-', 'TMP_'].some((prefix) => row.accno.indexOf(prefix) === 0),
+      isDeletable: !this.showSubmitted || ['S-', 'TMP_'].some((prefix) => row.accno.indexOf(prefix) === 0),
       accno: row.accno,
       method: row.method,
       rtime: row.rtime,
