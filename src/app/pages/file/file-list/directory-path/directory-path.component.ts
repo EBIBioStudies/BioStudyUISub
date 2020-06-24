@@ -37,9 +37,10 @@ export class DirectoryPathComponent implements OnChanges {
     }
   }
 
-  onDirectoryClick(idx) {
+  onDirectoryClick(index) {
     const rootPath: string = this.isGroup ? `/${this.GROUPS_PATH}/${this.groupName}` : `/${this.USER_PATH}`;
-    const dir: string = `${rootPath}/${this.dirs.slice(0, idx + 1).join('/')}`;
+    const dirLevels: string[] = this.dirs.slice(0, index + 1);
+    const dir: string = dirLevels.length === 0 ? rootPath : `${rootPath}/${this.dirs.slice(0, index + 1).join('/')}`;
 
     this.change.emit(dir);
   }
