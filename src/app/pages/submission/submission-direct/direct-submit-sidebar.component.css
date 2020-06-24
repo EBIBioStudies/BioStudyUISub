@@ -22,3 +22,8 @@
 .progress {
   margin: 12px 5px 0;
 }
+
+.center-spread {
+  display: flex;
+  justify-content: space-evenly;
+}
