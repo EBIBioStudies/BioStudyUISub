@@ -17,23 +17,22 @@
         <st-ftp-upload-button></st-ftp-upload-button>
       </div>
       <div class="btn-group pull-right" style="margin-right:1em;background-color:#b5d7ec;border-radius: 3px;" role="group">
-        <st-file-upload-button
-          class="pull-right"
-          [multiple]="true"
-          [isDirOnly]="isBulkMode"
+        <st-file-upload-button [multiple]="true"
+          [isDirOnly]="false"
           (select)="onUploadFilesSelect($event)"
-          tooltip="{{isBulkMode ? 'Select a folder' : 'Select files'}}"
+          title="File upload"
+          tooltip="Select files"
           placement="bottom"
           #fileEl>
         </st-file-upload-button>
-        <span *ngIf="fileEl.hasDirSupport" class="mode-toggle checkbox pull-right" style="padding-left:6pt">
-          <label>
-            <input type="checkbox"
-                 name="folder-mode"
-                 [(ngModel)]="isBulkMode">
-            <span>Bulk folder</span>
-          </label>
-        </span>
+        <st-file-upload-button [multiple]="false"
+          [isDirOnly]="true"
+          title="Folder upload"
+          (select)="onUploadFilesSelect($event)"
+          tooltip="Select a folder"
+          placement="bottom"
+          #fileEl>
+        </st-file-upload-button>
       </div>
       </div>
     </nav>
