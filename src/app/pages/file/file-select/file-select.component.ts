@@ -15,7 +15,7 @@ import { takeUntil } from 'rxjs/operators';
 export class FileSelectComponent implements ControlValueAccessor, OnDestroy {
   isEmpty = false;
   isOpen = false;
-
+  @Input() readonly = false;
   // tslint:disable-next-line: no-input-rename
   @Input('value') private selected = '';
 
@@ -53,6 +53,10 @@ export class FileSelectComponent implements ControlValueAccessor, OnDestroy {
 
   onInputClick(): void {
     setTimeout(() => { this.isOpen = true; }, 100);
+  }
+
+  onUploadFile($event): void {
+    this.value = $event.fileName;
   }
 
   registerOnChange(fn) {

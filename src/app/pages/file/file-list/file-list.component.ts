@@ -95,17 +95,17 @@ export class FileListComponent implements OnInit, OnDestroy {
   }
 
   decorateUploads(uploads: FileUpload[]): any[] {
-    return uploads.map(u => {
-      if (!u.absoluteFilePath.startsWith(this.absolutePath)) {
+    return uploads.map((upload) => {
+      if (!upload.absoluteFilePath.startsWith(this.absolutePath)) {
         return [];
       }
 
-      return u.fileNames.map(f => ({
-        name: f,
-        upload: u,
+      return upload.fileNames.map((fileName) => ({
+        name: fileName,
+        upload: upload,
         type: 'FILE',
         onRemove: () => {
-          this.removeUpload(u);
+          this.removeUpload(upload);
         }
       }));
     }).reduce((rv, v) => rv.concat(v), []);

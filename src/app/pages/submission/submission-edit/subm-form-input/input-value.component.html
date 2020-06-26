@@ -52,7 +52,8 @@
   </st-orcid-input-box>
 
   <st-file-select *ngSwitchCase="valueTypeNameEnum.file"
-      [formControl]="formControl">
+      [formControl]="formControl"
+      [readonly]="readonly">
   </st-file-select>
 
   <st-pubmedid-search *ngSwitchCase="valueTypeNameEnum.pubmedid"
