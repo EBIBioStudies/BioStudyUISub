@@ -19,6 +19,8 @@ import { ProgressCellComponent } from './file-list/ag-grid/upload-progress-cell.
 import { RouterModule } from '@angular/router';
 import { SharedModule } from 'app/shared/shared.module';
 import { UserData } from 'app/auth/shared';
+import { UploadFileButtonDirective } from './upload-file-button/upload-file-button.directive';
+import { UploadFileModalComponent } from './upload-file-button/upload-file-modal.component';
 
 @NgModule({
   imports: [
@@ -42,7 +44,9 @@ import { UserData } from 'app/auth/shared';
     FileSelectComponent,
     FileTreeComponent,
     FileTreeDropdownComponent,
-    FTPUploadButtonComponent
+    FTPUploadButtonComponent,
+    UploadFileButtonDirective,
+    UploadFileModalComponent
   ],
   providers: [
     FileService,
@@ -53,7 +57,11 @@ import { UserData } from 'app/auth/shared';
   ],
   exports: [
     FileListComponent,
-    FileSelectComponent
+    FileSelectComponent,
+    UploadFileButtonDirective
+  ],
+  entryComponents: [
+    UploadFileModalComponent
   ]
 })
 export class FileModule {
