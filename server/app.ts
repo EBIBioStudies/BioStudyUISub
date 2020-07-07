@@ -1,19 +1,21 @@
 // Load env vars into process.env
 require('dotenv').config();
 
-const bodyParser = require('body-parser');
-const compression = require('compression');
-const config = require('config');
-const express = require('express');
-const expressWinston = require('express-winston');
-const helmet = require('helmet');
-const path = require('path');
-const submitterProxy = require('./proxies/submitterProxy');
-const { registryProxy, resolverProxy } = require('./proxies/identifiersProxy');
-const { loggerSettings } = require('./logger');
-const loggerProxy = require('./proxies/loggerProxy');
+import bodyParser from 'body-parser';
+import compression from 'compression';
+import config from 'config';
+import express from 'express';
+import expressWinston from 'express-winston';
+import helmet from 'helmet';
+import path from 'path';
+import { submitterProxy } from './proxies/submitterProxy';
+import { registryProxy, resolverProxy } from './proxies/identifiersProxy';
+import { loggerSettings } from './logger';
+import { loggerProxy } from './proxies/loggerProxy';
 
-const { context, port, hostname, protocol } = config.express;
+const expressConfig: ExpressUri = config.get('express');
+const { context, port, hostname, protocol } = expressConfig;
+const staticPath: string = config.get('assets.path');
 
 const app = express();
 const router = express.Router();
@@ -27,7 +29,7 @@ registryProxy('/identifiers/registry', router);
 resolverProxy('/identifiers/resolver', router);
 loggerProxy('/log', router);
 
-router.use(express.static(config.assets.path));
+router.use(express.static(staticPath));
 
 // In DEV mode this service only proxies requests to the backend.
 // In PROD it serves the Angular static files as well.
@@ -47,5 +49,6 @@ app.use(context, router);
 app.use(expressWinston.errorLogger(loggerSettings));
 
 app.listen(port, hostname, () => {
+  // tslint:disable-next-line: no-console
   console.log(`Proxy and host running on: ${protocol}://${hostname}:${port}${context}`);
 });

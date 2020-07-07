@@ -29,8 +29,8 @@ if [ -z "${CI}" ]; then
   npm install --prefix dist
 fi
 
-# Copy server files
-cp -r server/ dist/server
+# Compile node proxy
+npm run node:compile
 
 # Copy config files
 cp -r config dist/
