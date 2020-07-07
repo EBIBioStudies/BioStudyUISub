@@ -2,6 +2,7 @@ import config from 'config';
 import { format } from 'url';
 import { Router } from 'express';
 import { logger } from '../logger';
+import { ExpressUri } from '../app';
 
 export const loggerProxy = (path: string, router: Router) => {
   const expressConfig: ExpressUri = config.get('express');

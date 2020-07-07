@@ -3,6 +3,12 @@ import request from 'request';
 import { format } from 'url';
 import { Router } from 'express';
 
+export interface IdentifiersUri {
+  hostname: string,
+  pathname: string,
+  protocol: string
+}
+
 export const registryProxy = (path: string, router: Router) => {
   const registryUri: IdentifiersUri = config.get('identifiers.registry_uri');
   const registryUriFormatted = format(registryUri);

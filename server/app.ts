@@ -13,6 +13,13 @@ import { registryProxy, resolverProxy } from './proxies/identifiersProxy';
 import { loggerSettings } from './logger';
 import { loggerProxy } from './proxies/loggerProxy';
 
+export interface ExpressUri {
+  context: string,
+  hostname: string,
+  port: number,
+  protocol: string
+}
+
 const expressConfig: ExpressUri = config.get('express');
 const { context, port, hostname, protocol } = expressConfig;
 const staticPath: string = config.get('assets.path');
