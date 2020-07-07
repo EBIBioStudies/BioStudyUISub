@@ -168,7 +168,11 @@ export class SubmissionToPageTabService {
       if (field.valueType.isRich()) {
         const fieldValue: RichTextFieldValue = <RichTextFieldValue>field.value;
 
-        return <PtAttribute>{ name: field.name, value: fieldValue.value };
+        return <PtAttribute>{
+          name: field.name,
+          value: fieldValue.value,
+          valqual: [{'name': 'display', 'value': 'html'}]
+        };
       }
 
       return <PtAttribute>{ name: field.name, value: field.value };
