@@ -12,6 +12,8 @@ import { submitterProxy } from './proxies/submitterProxy';
 import { registryProxy, resolverProxy } from './proxies/identifiersProxy';
 import { loggerSettings } from './logger';
 import { loggerProxy } from './proxies/loggerProxy';
+import { listenToQueue } from './async/submission-consumer';
+import { logger } from './logger';
 
 export interface ExpressUri {
   context: string,
@@ -55,7 +57,8 @@ app.use(context, router);
 // This has to be after app settings and routes definition.
 app.use(expressWinston.errorLogger(loggerSettings));
 
-app.listen(port, hostname, () => {
-  // tslint:disable-next-line: no-console
-  console.log(`Proxy and host running on: ${protocol}://${hostname}:${port}${context}`);
+app.listen(port, hostname, async () => {
+  logger.info(`Proxy running on: ${protocol}://${hostname}:${port}${context}`);
+
+  await listenToQueue();
 });
