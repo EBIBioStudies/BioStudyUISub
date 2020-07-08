@@ -3,7 +3,7 @@
   "description": "BioStudies Submission Tool (UI)",
   "version": "0.0.0",
   "private": true,
-  "main": "dist/server/app.js",
+  "main": "server/app.ts",
   "scripts": {
     "build": "sh ./tasks/build.sh",
     "e2e": "ng e2e",
