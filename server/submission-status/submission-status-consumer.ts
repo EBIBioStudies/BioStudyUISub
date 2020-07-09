@@ -1,6 +1,7 @@
 import amqp, { Channel, Connection } from 'amqplib';
 import config from 'config';
 import { logger } from '../logger';
+import { stream } from './submission-status-controller';
 
 const assertQueueOptions = { durable: true };
 const consumeQueueOptions = { noAck: false };
@@ -9,17 +10,14 @@ const queueName: string = config.get('rabbitMQ.queueName');
 const uri: string = config.get('rabbitMQ.uri');
 
 const processMessage = (msg) => {
-  console.log(msg.content.toString());
-
-  return Promise.resolve();
+  stream.emit('push', 'sum-status', msg.content.toString());
 };
 
 const assertAndConsumeQueue = async (channel: Channel) => {
 
-  const ackMsg = async (msg) => {
-    await processMessage(msg);
-
-    return channel.ack(msg);
+  const ackMsg = (msg) => {
+    processMessage(msg);
+    channel.ack(msg);
   };
 
   await channel.assertQueue(queueName, assertQueueOptions);
@@ -27,7 +25,7 @@ const assertAndConsumeQueue = async (channel: Channel) => {
   return channel.consume(queueName, ackMsg, consumeQueueOptions);
 };
 
-export const listenToQueue = async () => {
+export const listenToSubmStatusQueue = async () => {
   try {
     const connection: Connection = await amqp.connect(uri);
     const channel: Channel = await connection.createChannel();

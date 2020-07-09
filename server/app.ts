@@ -12,7 +12,8 @@ import { submitterProxy } from './proxies/submitterProxy';
 import { registryProxy, resolverProxy } from './proxies/identifiersProxy';
 import { loggerSettings } from './logger';
 import { loggerProxy } from './proxies/loggerProxy';
-import { listenToQueue } from './async/submission-consumer';
+import { submStatusController } from './submission-status/submission-status-controller';
+import { listenToSubmStatusQueue } from './submission-status/submission-status-consumer';
 import { logger } from './logger';
 
 export interface ExpressUri {
@@ -38,6 +39,9 @@ registryProxy('/identifiers/registry', router);
 resolverProxy('/identifiers/resolver', router);
 loggerProxy('/log', router);
 
+// Controllers
+submStatusController('/subm-status', router);
+
 router.use(express.static(staticPath));
 
 // In DEV mode this service only proxies requests to the backend.
@@ -60,5 +64,5 @@ app.use(expressWinston.errorLogger(loggerSettings));
 app.listen(port, hostname, async () => {
   logger.info(`Proxy running on: ${protocol}://${hostname}:${port}${context}`);
 
-  await listenToQueue();
+  await listenToSubmStatusQueue();
 });
