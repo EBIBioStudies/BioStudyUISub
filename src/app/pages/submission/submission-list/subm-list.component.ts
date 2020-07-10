@@ -1,6 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { AgRendererComponent } from 'ag-grid-angular/main';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid-community/main';
 import { Subject, Subscription, throwError } from 'rxjs';
 import { takeUntil, catchError } from 'rxjs/operators';
@@ -9,6 +9,7 @@ import { ModalService } from 'app/shared/modal.service';
 import { SubmissionService } from '../submission-shared/submission.service';
 import { DateFilterComponent } from './ag-grid/date-filter.component';
 import { TextFilterComponent } from './ag-grid/text-filter.component';
+import { SubmissionStatusService, SubmStatus } from '../submission-shared/submission-status.service';
 
 @Component({
   selector: 'st-action-buttons-cell',
@@ -116,7 +117,7 @@ export class DateCellComponent implements AgRendererComponent {
   templateUrl: './subm-list.component.html',
   styleUrls: ['./subm-list.component.css']
 })
-export class SubmListComponent implements OnDestroy {
+export class SubmListComponent implements OnDestroy, OnInit {
   columnDefs?: any[];
   // AgGrid-related properties
   gridOptions: GridOptions;
@@ -132,7 +133,8 @@ export class SubmListComponent implements OnDestroy {
     private submService: SubmissionService,
     private modalService: ModalService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private submStatusService: SubmissionStatusService
   ) {
     this.ngUnsubscribe = new Subject<void>();
 
@@ -202,6 +204,12 @@ export class SubmListComponent implements OnDestroy {
         filterFramework: TextFilterComponent,
         headerName: this.showSubmitted ? 'Latest title' : 'Title',
         resizable: true
+      },
+      {
+        field: 'status',
+        headerName: 'Status',
+        resizable: false,
+        maxWidth: 100,
       },
       {
         cellClass: 'ag-cell-centered',
@@ -295,6 +303,12 @@ export class SubmListComponent implements OnDestroy {
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+  }
+
+  ngOnInit(): void {
+    this.submStatusService.getSubmStatus().subscribe((data: SubmStatus) => {
+      console.log(data);
+    });
   }
 
   /**

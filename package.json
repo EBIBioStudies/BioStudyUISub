@@ -9,7 +9,7 @@
     "e2e": "ng e2e",
     "lint": "ng lint",
     "ng": "ng",
-    "ng:start": "ng serve --proxy-config proxy.conf.json --progress --aot",
+    "ng:start": "ng serve --progress --aot",
     "node:compile": "tsc --project ./server/tsconfig.server.json",
     "node:beta": "cross-env NODE_ENV=beta node .",
     "node:dev": "cross-env NODE_ENV=development tsnd --project ./server/tsconfig.server.json --no-deps --transpile-only .",
@@ -29,7 +29,7 @@
       "global": {
         "statements": 14.72,
         "branches": 10.26,
-        "functions": 13.16,
+        "functions": 13.11,
         "lines": 13.38
       }
     },
