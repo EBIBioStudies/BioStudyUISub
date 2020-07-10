@@ -27,6 +27,7 @@ import { DNAInputComponent } from './dna-input.component';
 import { ProteinInputComponent } from './protein-input.component';
 import { PluralPipe } from './plural.pipe';
 import { ModalService } from './modal.service';
+import { ServerSentEventService } from './server-sent-event.service';
 
 @NgModule({
   imports: [
@@ -44,7 +45,8 @@ import { ModalService } from './modal.service';
     CKEditorModule
   ],
   providers: [
-    ModalService
+    ModalService,
+    ServerSentEventService
   ],
   declarations: [
     ContainerRootComponent,

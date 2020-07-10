@@ -13,7 +13,7 @@ import { registryProxy, resolverProxy } from './proxies/identifiersProxy';
 import { loggerSettings } from './logger';
 import { loggerProxy } from './proxies/loggerProxy';
 import { submStatusController } from './submission-status/submission-status-controller';
-import { listenToSubmStatusQueue } from './submission-status/submission-status-consumer';
+import { processSubmStatus } from './submission-status/submission-status-processor';
 import { logger } from './logger';
 
 export interface ExpressUri {
@@ -33,14 +33,14 @@ app.use(helmet());
 app.use(compression());
 app.use(bodyParser.json({ limit: '20GB' }));
 
+// Controllers
+submStatusController('/subm-status', app);
+
 // Proxies
 submitterProxy('*/api', router);
 registryProxy('/identifiers/registry', router);
 resolverProxy('/identifiers/resolver', router);
 loggerProxy('/log', router);
-
-// Controllers
-submStatusController('/subm-status', router);
 
 router.use(express.static(staticPath));
 
@@ -61,8 +61,8 @@ app.use(context, router);
 // This has to be after app settings and routes definition.
 app.use(expressWinston.errorLogger(loggerSettings));
 
-app.listen(port, hostname, async () => {
+app.listen(port, hostname, () => {
   logger.info(`Proxy running on: ${protocol}://${hostname}:${port}${context}`);
 
-  await listenToSubmStatusQueue();
+  return processSubmStatus();
 });

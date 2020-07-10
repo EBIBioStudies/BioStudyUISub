@@ -30,8 +30,8 @@ module.exports = {
       protocol: 'https'
     }
   },
-  rabbitMQ: {
+  rabbitmq: {
     uri: 'amqp://localhost',
-    queueName: 'SubmQueue'
+    submStatusQueueName: 'SubmQueue'
   }
 };
