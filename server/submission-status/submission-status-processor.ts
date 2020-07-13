@@ -11,9 +11,9 @@ export interface SubmStatus {
 
 const queueName: string = config.get('rabbitmq.submStatusQueueName');
 
-const processMessage = (msg: ConsumeMessage) => {
+const processMessage = (message: ConsumeMessage | null) => {
   try {
-    const submStatus: SubmStatus = JSON.parse(msg.content.toString());
+    const submStatus: SubmStatus = JSON.parse(message.content.toString());
     const { accNo, status } = submStatus;
 
     // Only sends accNo and status to client.
