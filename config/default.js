@@ -31,7 +31,7 @@ module.exports = {
     }
   },
   rabbitmq: {
-    uri: 'amqp://localhost',
-    submStatusQueueName: 'SubmQueue'
+    uri: 'amqp://',
+    submStatusQueueName: ''
   }
 };

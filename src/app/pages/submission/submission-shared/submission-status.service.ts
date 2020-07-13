@@ -14,7 +14,11 @@ export class SubmissionStatusService {
   constructor(private zone: NgZone, private sseService: ServerSentEventService, private logService: LogService) {}
 
   getSubmStatus(): Observable<SubmStatus> {
-    this.eventSource = this.sseService.getEventSource('/subm-status');
+    try {
+      this.eventSource = this.sseService.getEventSource('/subm-status');
+    } catch (error) {
+      this.logService.error('get-subm-status', 'SubmissionStatusService: could not stablish event source connection');
+    }
 
     return Observable.create((observer) => {
       this.eventSource!.addEventListener('subm-status', (event: MessageEvent) => {
