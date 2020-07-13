@@ -205,12 +205,12 @@ export class SubmListComponent implements OnDestroy, OnInit {
         headerName: this.showSubmitted ? 'Latest title' : 'Title',
         resizable: true
       },
-      {
-        field: 'status',
-        headerName: 'Status',
-        resizable: false,
-        maxWidth: 100,
-      },
+      // {
+      //   field: 'status',
+      //   headerName: 'Status',
+      //   resizable: false,
+      //   maxWidth: 100,
+      // },
       {
         cellClass: 'ag-cell-centered',
         cellRendererFramework: DateCellComponent,
@@ -307,6 +307,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
 
   ngOnInit(): void {
     this.submStatusService.getSubmStatus().subscribe((data: SubmStatus) => {
+      // tslint:disable-next-line: no-console
       console.log(data);
     });
   }
