@@ -45,7 +45,7 @@
       "!**/index.ts"
     ],
     "coveragePathIgnorePatterns": [
-      "src/environments"
+      "server"
     ]
   },
   "dependencies": {
