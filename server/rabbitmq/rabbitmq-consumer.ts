@@ -7,11 +7,13 @@ const consumeQueueOptions = { noAck: false };
 
 const uri: string = config.get('rabbitmq.uri');
 
-const assertAndConsumeQueue = async (channel: Channel, queueName: string, onMessage: Function) => {
+const assertAndConsumeQueue = async (channel: Channel, queueName: string, onMessage: (message: ConsumeMessage | null) => any) => {
 
-  const ackMsg = (msg: ConsumeMessage) => {
-    onMessage(msg);
-    channel.ack(msg);
+  const ackMsg = (message: ConsumeMessage | null) => {
+    if (message) {
+      onMessage(message);
+      channel.ack(message);
+    }
   };
 
   await channel.assertQueue(queueName, assertQueueOptions);
@@ -19,7 +21,7 @@ const assertAndConsumeQueue = async (channel: Channel, queueName: string, onMess
   return channel.consume(queueName, ackMsg, consumeQueueOptions);
 };
 
-export const listenToQueue = async (queueName, onMessage) => {
+export const listenToQueue = async (queueName: string, onMessage: (message: ConsumeMessage | null) => any) => {
   try {
     const connection: Connection = await amqp.connect(uri);
     const channel: Channel = await connection.createChannel();
