@@ -13,7 +13,7 @@ const queueName: string = config.get('rabbitmq.submStatusQueueName');
 
 const processMessage = (message: ConsumeMessage | null) => {
   try {
-    const submStatus: SubmStatus = JSON.parse(message.content.toString());
+    const submStatus: SubmStatus = JSON.parse(message!.content.toString());
     const { accNo, status } = submStatus;
 
     // Only sends accNo and status to client.
