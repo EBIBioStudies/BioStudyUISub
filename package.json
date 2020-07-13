@@ -9,7 +9,7 @@
     "e2e": "ng e2e",
     "lint": "ng lint",
     "ng": "ng",
-    "ng:start": "ng serve --proxy-config proxy.conf.json --progress --aot",
+    "ng:start": "ng serve --progress --aot",
     "node:compile": "tsc --project ./server/tsconfig.server.json",
     "node:beta": "cross-env NODE_ENV=beta node .",
     "node:dev": "cross-env NODE_ENV=development tsnd --project ./server/tsconfig.server.json --no-deps --transpile-only .",
@@ -29,7 +29,7 @@
       "global": {
         "statements": 14.72,
         "branches": 10.26,
-        "functions": 13.16,
+        "functions": 13.11,
         "lines": 13.38
       }
     },
@@ -45,7 +45,7 @@
       "!**/index.ts"
     ],
     "coveragePathIgnorePatterns": [
-      "src/environments"
+      "server"
     ]
   },
   "dependencies": {
@@ -85,6 +85,7 @@
     "@angular/compiler-cli": "^8.2.14",
     "@testing-library/angular": "^8.0.3",
     "@testing-library/jest-dom": "^4.2.4",
+    "@types/amqplib": "^0.5.13",
     "@types/compression": "^1.7.0",
     "@types/config": "0.0.36",
     "@types/express": "^4.17.6",
@@ -97,6 +98,7 @@
     "@types/pluralize": "0.0.28",
     "@types/request": "^2.48.5",
     "@types/sortablejs": "^1.10.4",
+    "amqplib": "^0.5.6",
     "body-parser": "^1.19.0",
     "codelyzer": "^5.0.1",
     "compression": "^1.7.4",

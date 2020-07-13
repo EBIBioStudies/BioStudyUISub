@@ -29,5 +29,9 @@ module.exports = {
       hostname: 'resolver.api.identifiers.org',
       protocol: 'https'
     }
+  },
+  rabbitmq: {
+    uri: 'amqp://',
+    submStatusQueueName: ''
   }
 };

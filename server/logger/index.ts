@@ -18,7 +18,7 @@ export const loggerSettings = {
   levels: logLevels,
   transports: [
     new transports.Console({
-      level: 'info',
+      level: 'warn',
       silent: process.env.NODE_ENV === 'production',
       format: format.combine(
         colorize(),

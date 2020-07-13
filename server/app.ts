@@ -12,6 +12,9 @@ import { submitterProxy } from './proxies/submitterProxy';
 import { registryProxy, resolverProxy } from './proxies/identifiersProxy';
 import { loggerSettings } from './logger';
 import { loggerProxy } from './proxies/loggerProxy';
+import { submStatusController } from './submission-status/submission-status-controller';
+import { processSubmStatus } from './submission-status/submission-status-processor';
+import { logger } from './logger';
 
 export interface ExpressUri {
   context: string,
@@ -29,6 +32,9 @@ const router = express.Router();
 app.use(helmet());
 app.use(compression());
 app.use(bodyParser.json({ limit: '20GB' }));
+
+// Controllers
+submStatusController('/subm-status', app);
 
 // Proxies
 submitterProxy('*/api', router);
@@ -56,6 +62,7 @@ app.use(context, router);
 app.use(expressWinston.errorLogger(loggerSettings));
 
 app.listen(port, hostname, () => {
-  // tslint:disable-next-line: no-console
-  console.log(`Proxy and host running on: ${protocol}://${hostname}:${port}${context}`);
+  logger.info(`Proxy running on: ${protocol}://${hostname}:${port}${context}`);
+
+  return processSubmStatus();
 });
