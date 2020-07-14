@@ -33,6 +33,8 @@ app.use(helmet());
 app.use(compression());
 app.use(bodyParser.json({ limit: '20GB' }));
 
+router.use(express.static(staticPath));
+
 // Controllers
 submStatusController('/subm-status', app);
 
@@ -42,7 +44,6 @@ registryProxy('/identifiers/registry', router);
 resolverProxy('/identifiers/resolver', router);
 loggerProxy('/log', router);
 
-router.use(express.static(staticPath));
 
 // In DEV mode this service only proxies requests to the backend.
 // In PROD it serves the Angular static files as well.
