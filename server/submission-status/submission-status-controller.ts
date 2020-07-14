@@ -11,6 +11,7 @@ export const submStatusController = (path: string, app: Application) => {
       Connection: 'keep-alive'
     });
     res.write('\n');
+    res.flush();
 
     stream.on('push', (event, data) => {
       res.write(`event: ${String(event)}\n`);

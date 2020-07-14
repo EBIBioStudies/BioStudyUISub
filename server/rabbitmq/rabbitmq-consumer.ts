@@ -26,7 +26,7 @@ export const listenToQueue = async (queueName: string, onMessage: (message: Cons
     const connection: Connection = await amqp.connect(uri);
     const channel: Channel = await connection.createChannel();
 
-    logger.info(`Consuming queue ${queueName} from ${uri}`);
+    logger.info(`Consuming queue ${queueName} from RabbitMQ`);
 
     return assertAndConsumeQueue(channel, queueName, onMessage);
   } catch (error) {
