@@ -1,10 +1,10 @@
 import { EventEmitter } from 'events';
-import { Request, Response, Application } from 'express';
+import { Request, Response, Router } from 'express';
 
 export const stream = new EventEmitter();
 
-export const submStatusController = (path: string, app: Application) => {
-  app.use(path, (req: Request, res: Response) => {
+export const submStatusController = (path: string, router: Router) => {
+  router.use(path, (req: Request, res: Response) => {
     res.writeHead(200, {
       'Content-Type': 'text/event-stream',
       'Cache-Control': 'no-cache',
