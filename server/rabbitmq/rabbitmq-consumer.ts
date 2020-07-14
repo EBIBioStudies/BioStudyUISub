@@ -2,10 +2,8 @@ import amqp, { Channel, Connection, ConsumeMessage } from 'amqplib';
 import config from 'config';
 import { logger } from '../logger';
 
-const assertQueueOptions = { durable: true };
+const assertQueueOptions = { durable: false };
 const consumeQueueOptions = { noAck: false };
-
-const uri: string = config.get('rabbitmq.uri');
 
 const assertAndConsumeQueue = async (channel: Channel, queueName: string, onMessage: (message: ConsumeMessage | null) => any) => {
 
@@ -22,6 +20,8 @@ const assertAndConsumeQueue = async (channel: Channel, queueName: string, onMess
 };
 
 export const listenToQueue = async (queueName: string, onMessage: (message: ConsumeMessage | null) => any) => {
+  const uri: string = config.get('rabbitmq.uri');
+
   try {
     const connection: Connection = await amqp.connect(uri);
     const channel: Channel = await connection.createChannel();
