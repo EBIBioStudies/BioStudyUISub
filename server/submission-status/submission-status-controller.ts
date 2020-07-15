@@ -31,7 +31,7 @@ export const submStatusController = (path: string, router: Router) => {
 
     const intervalId = setInterval(() => {
       sendEvent('ping', new Date().toLocaleTimeString());
-    }, 60 * 1000 * 5);
+    }, 60 * 1000);
 
     req.on('close', () => {
       stream.removeListener('push', sendEvent);
