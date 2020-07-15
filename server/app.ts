@@ -36,7 +36,7 @@ app.use(bodyParser.json({ limit: '20GB' }));
 router.use(express.static(staticPath));
 
 // Controllers
-submStatusController('*/subm-status', router);
+submStatusController('/subm-status', router);
 
 // Proxies
 submitterProxy('*/api', router);
