@@ -63,7 +63,7 @@ build:dev:
   <<: *build_template
   environment: DEV
   only:
-    - fix/rabbit-mq@ndiaz/BioStudyUISub
+    - dev@ndiaz/BioStudyUISub
 
 build:beta:
   <<: *build_template
@@ -94,7 +94,7 @@ deploy:dev:
   dependencies:
     - build:dev
   only:
-    - fix/rabbit-mq@ndiaz/BioStudyUISub
+    - dev@ndiaz/BioStudyUISub
 
 deploy:beta:
   <<: *deploy_definition
