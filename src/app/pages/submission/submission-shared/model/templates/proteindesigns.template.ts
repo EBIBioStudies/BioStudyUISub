@@ -3,9 +3,6 @@ export const proteinDesignsTemplate = {
   'description': 'Generic submission for stand-alone or generic studies',
   'sectionType': {
     'name': 'Study',
-    'featureGroups': [
-      ['Link', 'File']
-    ],
     'fieldTypes': [
       {
         'name': 'Title',
@@ -26,7 +23,7 @@ export const proteinDesignsTemplate = {
         }
       },
       {
-        'name': 'Description',
+        'name': 'Description of design',
         'icon': 'fa-comment',
         'display': 'required',
         'valueType': {
@@ -35,114 +32,80 @@ export const proteinDesignsTemplate = {
         }
       },
       {
-        'name': 'DNA Sequence',
-        'icon': 'fa-comment',
+        'name': '3D model of design (Format supported by PDB)',
+        'icon': 'fa-file',
+        'display': 'desirable',
+        'valueType': {
+          'name': 'file'
+        }
+      },
+      {
+        'name': 'DNA sequence of the design (Including promoter and other non-coding regions)',
+        'icon': 'fa-title',
+        'display': 'required',
         'valueType': {
           'name': 'dna'
         }
       },
       {
-        'name': 'Protein Sequence',
-        'icon': 'fa-comment',
+        'name': 'Amino acid sequence of the protein',
+        'icon': 'fa-title',
+        'display': 'required',
         'valueType': {
           'name': 'protein'
         }
       },
       {
-        'name': 'Organism',
-        'icon': 'fa-tag',
+        'name': 'How the proteins are produced',
+        'icon': 'fa-title',
         'display': 'required',
+        'valueType': {
+          'name': 'largetext',
+          'minlength': 25
+        }
+      },
+      {
+        'name': 'Is the protein expressed',
+        'icon': 'fa-tag',
         'valueType': {
           'name': 'select',
           'values': [
-            'Homo sapiens (human)',
-            'Mus musculus (mouse)',
-            'Arabidopsis thaliana (thale cress)',
-            'Rattus norvegicus (brown rat)',
-            'Drosophila melanogaster (fruit fly)',
-            'Oryza sativa Japonica (common rice)',
-            'Anas platyrhyncho (mallard)',
-            'Anolis carolinensis (anole)',
-            'Anopheles gambiae (marsh mosquito)',
-            'Arabidopsis lyrata (rock cress)',
-            'Aspergillus fumigatus',
-            'Bos Taurus (cow)',
-            'Brachypodium distachyon (stiff brome)',
-            'Brassica oleracea (cabbage)',
-            'Brassica rapa (turnip)',
-            'Caenorhabditis elegans',
-            'Canis familiaris (dog)',
-            'Chlorocebus sabaeus (green monkey)',
-            'Ciona intestinalis (sea squirt)',
-            'Ciona savignyi (Pacific sea squirt)',
-            'Danio rerio (zebrafish)',
-            'Dasypus novemcinctus (nine-banded armadillo)',
-            'Equus caballus (horse)',
-            'Gallus gallus (chicken)',
-            'Glycine max (soybean)',
-            'Gorilla gorilla',
-            'Hordeum vulgare (barley)',
-            'Macaca mulatta (rhesus monkey)',
-            'Medicago truncatula (barrel clover)',
-            'Monodelphis domestica (short-tailed opossum)',
-            'Musa acuminata (banana)',
-            'Ornithorhynchus anatinus (platypus)',
-            'Oryctolagus cuniculus (rabbit)',
-            'Oryza rufipogon (brownbeard rice)',
-            'Ovis aries (sheep)',
-            'Pan troglodytes (chimpanzee)',
-            'Papio Anubis (baboom)',
-            'Physcomitrella patens (moss)',
-            'Pongo abelii (orangutan)',
-            'Populus trichocarpa (poplar tree)',
-            'Saccharomyces cerevisiae (brewer\'s yeast)',
-            'Schistosoma mansoni (blood fluke)',
-            'Schizosaccharomyces pombe (fission yeast)',
-            'Solanum lycopersicum (tomato)',
-            'Solanum tuberosum (potato)',
-            'Sorghum bicolor',
-            'Sus scrofa (pig)',
-            'Tetraodon nigroviridis (green pufferfish)',
-            'Theobroma cacao (chocolate)',
-            'Triticum aestivum (wheat)',
-            'Vitis vinifera (grape)',
-            'Xenopus tropicalis (frog)',
-            'Yarrowia lipolytica',
-            'Zea mays (corn)'
+            'High',
+            'Medium',
+            'Low'
           ]
+        },
+        'display': 'required'
+      },
+      {
+        'name': 'Protein expression evidence',
+        'icon': 'fa-file',
+        'display': 'desirable',
+        'valueType': {
+          'name': 'file'
         }
+      },
+      {
+        'name': 'Solubility',
+        'icon': 'fa-file',
+        'display': 'desirable',
+        'valueType': {
+          'name': 'file'
+        }
+      },
+      {
+        'name': 'Solution characterization',
+        'icon': 'fa-tag',
+        'valueType': {
+          'name': 'select',
+          'values': [
+            'Monodisperse',
+            'Aggregated'
+          ]
+        },
+        'display': 'desirable'
       }
     ],
-    'annotationsType': {
-      'title': 'Describe your study',
-      'description': 'Provide any additional details that may help discover or interpret the study.',
-      'icon': 'fa-tag',
-      'display': 'desirable',
-      'singleRow': true,
-      'columnTypes': [
-        {
-          'name': 'AttachTo',
-          'valueType': {'name': 'text'},
-          'display': 'readonly'
-        },
-        {
-          'name': 'Experimental design',
-          'valueType': {'name': 'text'}
-        },
-        {
-          'name': 'Experimental factor',
-          'valueType': {'name': 'text'}
-        },
-        {
-          'name': 'Organ',
-          'valueType': {'name': 'text'}
-        },
-        {
-          'name': 'Cell type',
-          'valueType': {'name': 'text'}
-        }
-      ]
-    },
     'featureTypes': [
       {
         'name': 'Contact',
@@ -259,30 +222,47 @@ export const proteinDesignsTemplate = {
         ]
       },
       {
-        'name': 'Link',
-        'title': 'Add Links',
-        'description': 'Provide pointers to data held in external databases or to related information on the web. ' +
-          'Compact URIs from <a target="_blank" href="https://www.ebi.ac.uk/miriam/main/collections">Identifiers.org</a> ' +
-          'are supported. URLs must include the scheme, e.g. "http://".',
-        'icon': 'fa-link',
+        'name': 'SolutionCharacterization',
+        'title': 'Solution characterization (structure) / CD spectroscopy',
+        'description': 'Solution characterization (structure) / CD spectroscopy',
+        'icon': 'fa-book',
         'uniqueCols': true,
         'columnTypes': [
           {
-            'name': 'Link',
-            'valueType': {'name': 'idlink'},
+            'name': 'Signal',
+            'valueType': {'name': 'text'},
             'display': 'required'
           },
           {
-            'name': 'Description',
+            'name': 'Wavelength',
             'valueType': {'name': 'text'},
-            'display': 'desirable'
+            'display': 'required'
+          }
+        ]
+      },
+      {
+        'name': 'SolutionCharacterizationFluorescence',
+        'title': 'Solution characterisation (structure) / fluorescence',
+        'description': 'Solution characterisation (structure) / fluorescence',
+        'icon': 'fa-book',
+        'uniqueCols': true,
+        'columnTypes': [
+          {
+            'name': 'Intensity',
+            'valueType': {'name': 'text'},
+            'display': 'required'
+          },
+          {
+            'name': 'Wavelength',
+            'valueType': {'name': 'text'},
+            'display': 'required'
           }
         ]
       },
       {
         'name': 'File',
-        'title': 'Add Files',
-        'description': 'List the data files for the study and describe their respective scopes.',
+        'title': '',
+        'description': '3D structural confirmation of the design (Format supported by PDB)',
         'icon': 'fa-file',
         'uniqueCols': true,
         'columnTypes': [
@@ -290,70 +270,6 @@ export const proteinDesignsTemplate = {
             'name': 'Path',
             'valueType': {'name': 'file'},
             'display': 'required'
-          },
-          {
-            'name': 'Description',
-            'valueType': {'name': 'text'},
-            'display': 'required'
-          },
-          {
-            'name': 'Type',
-            'valueType': {'name': 'text'},
-            'display': 'desirable'
-          }
-        ]
-      },
-      {
-        'name': 'Publication',
-        'title': 'Add Publications',
-        'description': 'Add the bibliography relevant to the study. Autofill is available when searching by ' +
-          '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pubmed/">PubMed</a> identifier. ' +
-          'For other IDs, you may use ' +
-          '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pmc/pmctopmid/#converter">PubMed\'s converter</a>.',
-        'icon': 'fa-book',
-        'uniqueCols': true,
-        'columnTypes': [
-          {
-            'name': 'PMID',
-            'valueType': {'name': 'pubmedid'},
-            'display': 'desirable'
-          },
-          {
-            'name': 'Authors',
-            'valueType': {'name': 'text'},
-            'display': 'required'
-          },
-          {
-            'name': 'Title',
-            'valueType': {'name': 'text'},
-            'display': 'required'
-          },
-          {
-            'name': 'Year',
-            'valueType': {'name': 'text'},
-            'display': 'required'
-          },
-          {
-            'name': 'Volume',
-            'valueType': {'name': 'text'},
-            'display': 'desirable'
-          },
-          {
-            'name': 'Issue',
-            'valueType': {'name': 'text'},
-            'display': 'desirable'
-          },
-          {
-            'name': 'Type',
-            'valueType': {'name': 'text'}
-          },
-          {
-            'name': 'Issn',
-            'valueType': {'name': 'text'}
-          },
-          {
-            'name': 'DOI',
-            'valueType': {'name': 'text'}
           }
         ]
       }
