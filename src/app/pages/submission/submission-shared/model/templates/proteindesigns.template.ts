@@ -272,7 +272,7 @@ export const proteinDesignsTemplate = {
             'display': 'required'
           }
         ]
-      },
+      }
     ]
   }
 };
