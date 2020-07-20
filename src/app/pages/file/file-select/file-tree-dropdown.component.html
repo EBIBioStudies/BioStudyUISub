@@ -1,4 +1,4 @@
-<div class="dropdown" [ngClass]="{'open':isVisible}"  [ngStyle]="style" #dropdown>
+<div class="dropdown dropup" [ngClass]="{'open':isVisible}" [ngStyle]="style" #dropdown>
   <div class="dropdown-menu dropdown-menu-right file-tree">
     <st-file-tree (select)="onFileSelect($event)"></st-file-tree>
   </div>
