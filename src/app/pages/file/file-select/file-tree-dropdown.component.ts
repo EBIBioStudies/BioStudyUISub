@@ -60,7 +60,7 @@ export class FileTreeDropdownComponent implements OnInit, OnDestroy {
     const dropdownWidth = 300; // This should correspond to the width in the file tree style.
 
     return {
-      top: (rect.bottom + window.scrollY) + 'px',
+      top: (rect.top + window.scrollY) + 'px',
       left: (rect.left + window.scrollX + dropdownWidth) + 'px'
     };
   }
