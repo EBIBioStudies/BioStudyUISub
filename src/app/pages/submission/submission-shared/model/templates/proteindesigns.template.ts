@@ -226,6 +226,7 @@ export const proteinDesignsTemplate = {
         'title': 'Solution characterization (structure) / CD spectroscopy',
         'description': 'Solution characterization (structure) / CD spectroscopy',
         'icon': 'fa-book',
+        'display': 'desirable',
         'uniqueCols': true,
         'columnTypes': [
           {
@@ -245,6 +246,7 @@ export const proteinDesignsTemplate = {
         'title': 'Solution characterisation (structure) / fluorescence',
         'description': 'Solution characterisation (structure) / fluorescence',
         'icon': 'fa-book',
+        'display': 'desirable',
         'uniqueCols': true,
         'columnTypes': [
           {
@@ -264,6 +266,7 @@ export const proteinDesignsTemplate = {
         'title': '',
         'description': '3D structural confirmation of the design (Format supported by PDB)',
         'icon': 'fa-file',
+        'display': 'desirable',
         'uniqueCols': true,
         'columnTypes': [
           {

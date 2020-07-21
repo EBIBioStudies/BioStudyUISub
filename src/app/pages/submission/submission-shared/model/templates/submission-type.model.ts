@@ -260,8 +260,13 @@ export class FeatureType extends TypeBase {
 
   private columnScope: TypeScope<ColumnType> = new TypeScope<ColumnType>();
 
-  constructor(name: string, data?: Partial<FeatureType>, scope?: TypeScope<TypeBase>, isTemplBased: boolean = true,
-    parentDisplayType: DisplayType = DisplayType.OPTIONAL) {
+  constructor(
+    name: string,
+    data?: Partial<FeatureType>,
+    scope?: TypeScope<TypeBase>,
+    isTemplBased: boolean = true,
+    parentDisplayType: DisplayType = DisplayType.OPTIONAL
+  ) {
     super(name, isTemplBased, scope);
 
     data = data || {};
