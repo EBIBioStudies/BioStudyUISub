@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, forwardRef, Input, OnDestroy } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FileTreeStore } from './file-tree.store';
 import { Subject } from 'rxjs';
@@ -15,7 +15,7 @@ import { takeUntil } from 'rxjs/operators';
 export class FileSelectComponent implements ControlValueAccessor, OnDestroy {
   isEmpty = false;
   isOpen = false;
-
+  @Input() readonly = false;
   // tslint:disable-next-line: no-input-rename
   @Input('value') private selected = '';
 
@@ -53,6 +53,10 @@ export class FileSelectComponent implements ControlValueAccessor, OnDestroy {
 
   onInputClick(): void {
     setTimeout(() => { this.isOpen = true; }, 100);
+  }
+
+  onUploadFile($event): void {
+    this.value = $event.fileName;
   }
 
   registerOnChange(fn) {

@@ -21,11 +21,7 @@ export class ProgressCellComponent implements AgRendererComponent {
   }
 
   get isUploading(): boolean {
-    if (this.upload && !this.upload.isFailed()) {
-      return true;
-    }
-
-    return false;
+    return Boolean(this.upload && !this.upload.isFailed());
   }
 
   get value(): number {

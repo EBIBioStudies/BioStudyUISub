@@ -329,11 +329,13 @@ export class SubmEditService {
     this.editState.startSaving();
     this.submService.saveDraftSubmission(this.accno!!, this.asPageTab())
       .pipe(
-        map(resp => ServerResponse.OK(resp)),
-        catchError(error => of(ServerResponse.ERROR(error))))
-      .subscribe(resp => {
-        this.editState.stopSaving(resp.error);
+        map((resp) => ServerResponse.OK(resp)),
+        catchError((error) => of(ServerResponse.ERROR(error))))
+      .subscribe((resp) => {
         this.onSaveFinished(resp);
+        this.editState.stopSaving();
+      }, (error) => {
+        this.editState.stopSaving(error);
       });
   }
 

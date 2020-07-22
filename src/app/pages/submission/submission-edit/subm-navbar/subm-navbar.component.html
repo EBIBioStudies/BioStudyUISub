@@ -21,7 +21,7 @@
   </div>
   <div class="col-xs-4 col-md-3 btn-toolbar nav-block">
     <button *ngIf="!readonly"
-        [disabled]="isSaving || !isEditing"
+        [disabled]="isSaving"
         class="button-link btn btn-primary btn-sm btn-submit pull-right"
         tooltip="Send to the BioStudies database"
         placement="bottom"

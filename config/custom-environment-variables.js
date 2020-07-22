@@ -13,4 +13,8 @@ module.exports = {
       protocol: 'BACKEND_PROTOCOL'
     }
   },
+  rabbitmq: {
+    uri: 'RABBITMQ_URI',
+    submStatusQueueName: 'RABBITMQ_SUBM_STATUS_QUEUE_NAME'
+  }
 };

@@ -5,7 +5,7 @@ module.exports = {
   express: {
     context: '',
     hostname: 'localhost',
-    port: '8080',
+    port: 8080,
     protocol: 'http'
   },
   backend: {
@@ -29,5 +29,9 @@ module.exports = {
       hostname: 'resolver.api.identifiers.org',
       protocol: 'https'
     }
+  },
+  rabbitmq: {
+    uri: 'amqp://',
+    submStatusQueueName: ''
   }
 };

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Path } from './path';
 import { FileService } from './file.service';
 import { UploadErrorEvent, UploadEvent, UploadProgressEvent } from './http-upload-client.service';

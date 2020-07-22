@@ -1,4 +1,5 @@
-const { createLogger, format, transports } = require('winston');
+import { createLogger, format, transports } from 'winston';
+
 const { timestamp, colorize, printf, json } = format;
 
 const consoleLogFormat = printf(({ level, message, timestamp }) => {
@@ -12,12 +13,12 @@ const logLevels = {
   upload: 3
 };
 
-const loggerSettings = {
+export const loggerSettings = {
   level: 'info',
   levels: logLevels,
   transports: [
     new transports.Console({
-      level: 'info',
+      level: 'warn',
       silent: process.env.NODE_ENV === 'production',
       format: format.combine(
         colorize(),
@@ -36,9 +37,4 @@ const loggerSettings = {
   ]
 };
 
-const logger = createLogger(loggerSettings);
-
-module.exports = {
-  logger,
-  loggerSettings
-};
+export const logger = createLogger(loggerSettings);
