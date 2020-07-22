@@ -25,7 +25,7 @@ export class UserSession {
   }
 
   destroy(): void {
-    destroyLoginToken(this.appConfig.environment);
+    destroyLoginToken();
     destroyUser();
     this.notifySessionDestroyed();
   }
@@ -57,11 +57,11 @@ export class UserSession {
   }
 
   token(): string {
-    return getLoginToken(this.appConfig.environment);
+    return getLoginToken();
   }
 
   update(user: any) {
-    setLoginToken(user.sessid, this.appConfig.environment);
+    setLoginToken(user.sessid);
     setUser(user);
 
     return user;
