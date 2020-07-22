@@ -22,7 +22,7 @@ export class AuthInterceptorService implements HttpInterceptor {
   }
 
   private updateHeaders(headers: HttpHeaders = new HttpHeaders()): HttpHeaders {
-    const sessionId = getLoginToken(this.appConfig.environment);
+    const sessionId = getLoginToken();
 
     return sessionId ? headers.set('X-Session-Token', sessionId) : headers;
   }
