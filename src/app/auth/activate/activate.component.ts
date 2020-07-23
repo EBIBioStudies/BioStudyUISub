@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../shared';
+import { ServerError } from 'app/shared/server-error.handler';
 
 @Component({
   selector: 'st-auth-activate',
@@ -34,11 +35,11 @@ export class ActivateComponent implements OnInit {
       .activate(key)
       .subscribe(
         () => {
-          component.message = 'Activation was successful';
+          component.message = 'The activation was successful';
         },
-        (error) => {
+        (error: ServerError) => {
           component.hasError = true;
-          component.message = error.message;
+          this.message = error.data.message;
         });
   }
 }

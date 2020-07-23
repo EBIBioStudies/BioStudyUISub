@@ -1,5 +1,4 @@
-import { AppPath } from './app-path';
-import { DataWithCaptchaAndPath, copyAndExtend } from './data-base';
+import { DataWithCaptchaAndPath } from './data-base';
 
 export class RegistrationData extends DataWithCaptchaAndPath {
   email: string = '';
@@ -8,15 +7,16 @@ export class RegistrationData extends DataWithCaptchaAndPath {
   password: string = '';
 
   constructor() {
-    super(new AppPath('activate'));
+    super('activate');
   }
 
   snapshot(): any {
-    return copyAndExtend(super.snapshot(), {
+    return {
+      ...super.snapshot(),
       'aux': [`orcid:${this.orcid}`],
       'email': this.email,
       'password': this.password,
       'name': this.name
-    });
+    };
   }
 }
