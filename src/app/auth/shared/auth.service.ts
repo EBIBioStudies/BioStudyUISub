@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/htt
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { ServerError } from 'app/shared/server-error.handler';
+import { isSuccessStatusCode } from 'app/utils/http.utils';
 import { map, catchError } from 'rxjs/operators';
 import { AppConfig } from '../../app.config';
 import { UserSession } from './user-session';
@@ -11,7 +12,7 @@ import {
   PasswordResetRequestData,
   PasswordResetData,
   ActivationLinkRequestData,
-  RegistrationData, copyAndExtend
+  RegistrationData
 } from './model';
 
 interface StatusResponse {
@@ -30,11 +31,11 @@ export class AuthService {
   ) { }
 
   activate(key: string): Observable<StatusResponse> {
-    return this.http.post<StatusResponse>(`/api/auth/activate/${key}`, {});
+    return this.sendPostRequest(`/api/auth/activate/${key}`, {});
   }
 
   changePassword(obj: PasswordResetData): Observable<StatusResponse> {
-    return this.http.post<StatusResponse>('/api/auth/password/change', obj.snapshot());
+    return this.sendPostRequest('/api/auth/password/change', obj.snapshot());
   }
 
   getUserProfile(): Observable<UserInfo> {
@@ -44,43 +45,31 @@ export class AuthService {
     ).pipe(
       catchError((response: HttpErrorResponse) => this.catchProfileError<UserInfoResponse>(response)),
       map((response: HttpResponse<UserInfoResponse>) => this.checkProfileStatus(response)),
-      map((user: UserInfo) => this.userSession.update(user))
     );
   }
 
   login(user: { login: string, password: string }): Observable<UserInfo> {
-    return this.sendPostRequest<UserInfoResponse, UserInfo>('/api/auth/login', user)
-      .pipe(map((userInfo: UserInfo) => this.userSession.create(userInfo)));
+    return this.sendPostRequest<UserInfoResponse>('/api/auth/login', user);
   }
 
   logout(): Observable<StatusResponse> {
     if (this.userSession.isAnonymous()) {
-      return of({ status: 'OK' });
+      return of();
     }
 
-    return this.sendPostRequest<StatusResponse, StatusResponse>('/api/auth/logout', { sessid: this.userSession.token() })
-      .pipe(
-        map(() => {
-          this.userSession.destroy();
-
-          return { status: 'OK' };
-        })
-      );
+    return this.sendPostRequest<StatusResponse>('/api/auth/logout', { sessid: this.userSession.token() });
   }
 
   register(regData: RegistrationData): Observable<StatusResponse> {
-    return this.http.post<StatusResponse>('/api/auth/register', this.withInstanceKey(regData.snapshot()))
-      .pipe(
-        catchError((response: HttpErrorResponse) => this.catchError<StatusResponse>(response))
-      );
+    return this.sendPostRequest<StatusResponse>('/api/auth/register', this.withInstanceKey(regData.snapshot()));
   }
 
   sendActivationLinkRequest(obj: ActivationLinkRequestData): Observable<StatusResponse> {
-    return this.sendPostRequest<StatusResponse, StatusResponse>('/api/auth/retryact', this.withInstanceKey(obj.snapshot()));
+    return this.sendPostRequest<StatusResponse>('/api/auth/retryact', this.withInstanceKey(obj.snapshot()));
   }
 
   sendPasswordResetRequest(obj: PasswordResetRequestData): Observable<StatusResponse> {
-    return this.sendPostRequest<UserInfoResponse, StatusResponse>('/api/auth/password/reset', this.withInstanceKey(obj.snapshot()));
+    return this.sendPostRequest<UserInfoResponse>('/api/auth/password/reset', this.withInstanceKey(obj.snapshot()));
   }
 
   private catchError<T>(resp: HttpErrorResponse): Observable<T> {
@@ -101,27 +90,24 @@ export class AuthService {
     return <T>(response.body || {});
   }
 
-  private checkStatus<R, T>(response: HttpResponse<R>): T {
-    if (response.status === HttpStatus.OK) {
-      return <T>(response.body || {});
+  private checkStatus<R>(response: HttpResponse<R>): R {
+    if (isSuccessStatusCode(response.status)) {
+      return <R>(response.body || {});
     }
 
     throw ServerError.dataError(response.body);
   }
 
-  private sendPostRequest<R, T>(path: string, payload: any): Observable<T> {
+  private sendPostRequest<R>(path: string, payload: any): Observable<R> {
     return this.http.post<R>(
       path, payload, { observe: 'response' }
     ).pipe(
       catchError((response: HttpErrorResponse) => this.catchError<R>(response)),
-      map((response: HttpResponse<R>) => this.checkStatus<R, T>(response))
+      map((response: HttpResponse<R>) => this.checkStatus<R>(response))
     );
   }
 
   private withInstanceKey(obj: { [key: string]: string }): { [key: string]: string } {
-    return copyAndExtend(obj, {
-      instanceKey: this.appConfig.instanceKey,
-      path: this.appConfig.contextPath + '/' + obj.path
-    });
+    return { ...obj, instanceKey: this.appConfig.instanceKey, path: this.appConfig.contextPath + '/' + obj.path };
   }
 }

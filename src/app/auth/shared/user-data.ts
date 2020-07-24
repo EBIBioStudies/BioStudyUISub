@@ -3,7 +3,7 @@ import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SubmissionService } from 'app/pages/submission/submission-shared/submission.service';
 import { AuthService } from './auth.service';
-import { ExtendedUserInfo } from './model';
+import { ExtendedUserInfo, UserInfo } from './model';
 import { UserRole } from './user-role';
 import { UserSession } from './user-session';
 
@@ -14,11 +14,11 @@ export class UserData {
   constructor(userSession: UserSession, authService: AuthService, submService: SubmissionService) {
     userSession.created$.subscribe(created => {
       if (created) {
-        authService.getUserProfile().subscribe( resp => {
-          const userInfo = resp;
+        authService.getUserProfile().subscribe((user: UserInfo) => {
+          userSession.update(user);
 
-          submService.getProjects().subscribe( result => {
-            const extendedUserInfo = <ExtendedUserInfo>userInfo;
+          submService.getProjects().subscribe((result) => {
+            const extendedUserInfo = <ExtendedUserInfo>user;
             extendedUserInfo.projects = result.map(project => project.accno);
             this.whenFetched$.next(extendedUserInfo);
             this.whenFetched$.complete();

@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { AuthService } from 'app/auth/shared';
 import { PasswordResetData } from '../shared/model';
+import { ServerError } from 'app/shared/server-error.handler';
 
 @Component({
   selector: 'st-auth-passwd-reset',
@@ -42,30 +43,34 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onRecaptchaResolved(resp: string): void {
-    this.model.captcha = resp;
-    this.isLoading = true;
-    this.authService
-      .changePassword(this.model)
-      .subscribe(
-        () => {
-          this.isLoading = false;
-          this.showSuccess = true;
-        },
-        (error) => {
-          this.isLoading = false;
-          this.hasError = true;
-          this.message = error.message;
-          this.resetRecaptcha();
-        });
+  onRecaptchaResolved(captchaToken: string): void {
+    if (captchaToken) {
+      this.model.captcha = captchaToken;
+      this.authService
+        .changePassword(this.model)
+        .subscribe(
+          () => {
+            this.isLoading = false;
+            this.showSuccess = true;
+          },
+          (error: ServerError) => {
+            this.isLoading = false;
+            this.hasError = true;
+            this.resetRecaptcha();
+            this.message = error.data.message;
+          });
+    }
   }
 
   onSubmit(form: NgForm): void {
-    this.resetGlobalError();
+    if (this.hasError) {
+      this.resetRecaptcha();
+      this.hasError = false;
+      this.message = '';
+    }
 
-    // Makes request if all form fields completed satisfactorily
     if (form.valid) {
-      // If reCAPTCHA resolves, the signup request is sent.
+      this.isLoading = true;
       this.recaptcha!.execute();
     } else {
       Object.keys(form.controls).forEach((key) => {
@@ -74,16 +79,8 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
     }
   }
 
-  resetGlobalError(): void {
-    this.hasError = false;
-    this.message = '';
-  }
-
-  /**
-   * Resets all aspects of the captcha widget.
-   * @see {@link RecaptchaComponent}
-   */
   resetRecaptcha(): void {
+    this.recaptcha!.reset();
     this.model.resetCaptcha();
   }
 }

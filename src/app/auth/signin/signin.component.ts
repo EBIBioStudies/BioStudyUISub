@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, UserSession } from 'app/auth/shared';
 import { ServerError } from 'app/shared/server-error.handler';
+import { UserInfo } from '../shared/model';
 
 @Component({
   selector: 'st-auth-signin',
@@ -18,7 +19,7 @@ export class SignInComponent implements OnInit, AfterViewInit {
   private focusRef?: ElementRef;
 
   constructor(private authService: AuthService,
-        private session: UserSession,
+        private userSession: UserSession,
         private router: Router,
         private route: ActivatedRoute) {
   }
@@ -29,7 +30,7 @@ export class SignInComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    if (!this.session.isAnonymous()) {
+    if (!this.userSession.isAnonymous()) {
       this.router.navigate(['']);
     }
   }
@@ -38,13 +39,13 @@ export class SignInComponent implements OnInit, AfterViewInit {
     this.resetGlobalError();
     const next = this.route.snapshot.paramMap.get('next') || '/submissions';
 
-    // Makes request for login if all form fields completed satisfactorily
     if (form.valid) {
       this.isLoading = true;
       this.authService
         .login(this.model)
         .subscribe(
-          () => {
+          (user: UserInfo) => {
+            this.userSession.create(user);
             this.router.navigate([next]);
           },
           (error: ServerError) => {
@@ -52,8 +53,6 @@ export class SignInComponent implements OnInit, AfterViewInit {
             this.error = error;
           }
         );
-
-      // Validates in bulk if form incomplete
     } else {
       Object.keys(form.controls).forEach((key) => {
         form.controls[key].markAsTouched({onlySelf: true});

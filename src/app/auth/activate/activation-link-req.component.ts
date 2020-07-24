@@ -1,9 +1,9 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
 import { RecaptchaComponent } from 'ng-recaptcha';
 import { AuthService } from 'app/auth/shared';
 import { ActivationLinkRequestData } from '../shared/model';
+import { NgForm } from '@angular/forms';
+import { ServerError } from 'app/shared/server-error.handler';
 
 @Component({
   selector: 'st-auth-activation-resend',
@@ -29,32 +29,36 @@ export class ActivationLinkReqComponent implements AfterViewInit {
     this.focusRef!.nativeElement.focus();
   }
 
-  onRecaptchaResolved(resp: string): void {
+  onRecaptchaResolved(captchaToken: string): void {
     const component = this; // SelfSubscriber object overwrites context for "subscribe" method
 
-    this.model.captcha = resp;
-    this.isLoading = true;
-    this.authService
-      .sendActivationLinkRequest(this.model)
-      .subscribe(
-        () => {
-          this.isLoading = false;
-          component.showSuccess = true;
-        },
-        (error: HttpErrorResponse) => {
-          this.isLoading = false;
-          component.hasError = true;
-          component.message = error.message;
-          component.resetRecaptcha();
-        }
-      );
+    if (captchaToken) {
+      this.model.captcha = captchaToken;
+      this.authService
+        .sendActivationLinkRequest(this.model)
+        .subscribe(
+          () => {
+            this.isLoading = false;
+            component.showSuccess = true;
+          },
+          (error: ServerError) => {
+            this.isLoading = false;
+            component.hasError = true;
+            component.message = error.data.message;
+          }
+        );
+    }
   }
 
   onSubmit(form: NgForm) {
-    this.resetGlobalError();
+    if (this.hasError) {
+      this.resetRecaptcha();
+      this.hasError = false;
+      this.message = '';
+    }
 
     if (form.valid) {
-      // If reCAPTCHA resolves, the signup request is sent.
+      this.isLoading = true;
       this.recaptchaRef!.execute();
     } else {
       Object.keys(form.controls).forEach((key) => {
@@ -63,16 +67,8 @@ export class ActivationLinkReqComponent implements AfterViewInit {
     }
   }
 
-  resetGlobalError() {
-    this.hasError = false;
-    this.message = '';
-  }
-
-  /**
-   * Resets all aspects of the captcha widget.
-   * @see {@link RecaptchaComponent}
-   */
   resetRecaptcha(): void {
+    this.recaptchaRef!.reset();
     this.model.resetCaptcha();
   }
 }

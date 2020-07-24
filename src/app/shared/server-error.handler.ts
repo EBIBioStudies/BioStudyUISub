@@ -1,6 +1,7 @@
 import * as HttpStatus from 'http-status-codes';
 import { throwError, Observable } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { DEFAULT_ERROR_MESSAGE } from 'app/app.constants';
 
 export class ServerError {
   data: any;
@@ -26,7 +27,7 @@ export class ServerError {
   static fromResponse(response: HttpErrorResponse): ServerError {
     const { error } = response;
     const data = {
-      message: 'Unknown error type', // Default error message
+      message: DEFAULT_ERROR_MESSAGE,
       error: {}
     };
 

@@ -79,6 +79,7 @@ export class HeaderComponent implements OnDestroy {
       .subscribe(
         () => {
           this.isBusy = false;
+          this.userSession.destroy();
         },
         () => {
           this.isBusy = false;
