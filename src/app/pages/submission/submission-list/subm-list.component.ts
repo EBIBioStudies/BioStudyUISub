@@ -1,116 +1,16 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { AgRendererComponent } from 'ag-grid-angular/main';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid-community/main';
 import { Subject, Subscription, throwError } from 'rxjs';
 import { takeUntil, catchError } from 'rxjs/operators';
-import { AppConfig } from 'app/app.config';
 import { ModalService } from 'app/shared/modal.service';
 import { SubmissionService } from '../submission-shared/submission.service';
+import { SubmissionStatusService, SubmStatus } from '../submission-shared/submission-status.service';
 import { DateFilterComponent } from './ag-grid/date-filter.component';
 import { TextFilterComponent } from './ag-grid/text-filter.component';
-import { SubmissionStatusService, SubmStatus } from '../submission-shared/submission-status.service';
-
-@Component({
-  selector: 'st-action-buttons-cell',
-  template: `
-    <button *ngIf="rowData" type="button" class="btn btn-primary btn-xs btn-flat"
-        (click)="onEditSubmission()"
-        tooltip="Edit this submission"
-        container="body">
-      <i class="fas fa-pencil-alt fa-fw"></i>
-    </button>
-    <button *ngIf="rowData && rowData.isDeletable" type="button" class="btn btn-danger btn-xs btn-flat"
-        [disabled]="isBusy"
-        (click)="onDeleteSubmission()"
-        tooltip="Delete this submission"
-        container="body">
-      <i *ngIf="!isBusy" class="fas fa-trash-alt fa-fw"></i>
-      <i *ngIf="isBusy" class="fa fa-cog fa-spin fa-fw"></i>
-    </button>`
-})
-export class ActionButtonsCellComponent implements AgRendererComponent {
-  isBusy: boolean = false; // flags if a previous button action is in progress
-  rowData: any; // object including the data values for the row this cell belongs to
-
-  agInit(params: any): void {
-    this.rowData = params.data;
-    this.reset();
-  }
-
-  onDeleteSubmission() {
-    this.isBusy = true;
-
-    if (this.rowData) {
-      this.rowData.onDelete(this.rowData.accno, this.reset.bind(this), this.rowData.isTemp);
-    }
-
-  }
-
-  onEditSubmission() {
-    if (this.rowData) {
-      this.rowData.onEdit(this.rowData.accno);
-    }
-  }
-
-  /**
-   * Mandatory - Get the cell to refresh.
-   * @see {@link https://www.ag-grid.com/javascript-grid-cell-editor/}
-   * @returns {boolean} By returning false, the grid will remove the component from the DOM and create
-   * a new component in it's place with the new values.
-   */
-  refresh(): boolean {
-    return false;
-  }
-
-  /**
-   * Reverts the button to its original state
-   */
-  reset() {
-    this.isBusy = false;
-  }
-}
-
-@Component({
-  selector: 'st-date-cell',
-  template: `{{ value === undefined ? '&mdash;' : value | date: appConfig.dateListFormat }}`
-})
-export class DateCellComponent implements AgRendererComponent {
-  value?: Date;
-
-  /**
-   * Exposes app's configuration to the template.
-   * @param {AppConfig} appConfig - Global configuration object with app-wide settings.
-   */
-  constructor(public appConfig: AppConfig) {}
-
-  agInit(params: any): void {
-    this.value = this.asDate(params.value);
-  }
-
-  /**
-   * Mandatory - Get the cell to refresh.
-   * @see {@link https://www.ag-grid.com/javascript-grid-cell-editor/}
-   * @returns {boolean} By returning false, the grid will remove the component from the DOM and create
-   * a new component in it's place with the new values.
-   */
-  refresh(): boolean {
-    return false;
-  }
-
-  /**
-   * Formats date string into a JavaScript Date object.
-   * @param {string} date Date string to be formatted
-   * @returns {Date} Equivalent JavaScript Date object.
-   */
-  private asDate(date: string): Date | undefined {
-    if (date === undefined || date === null || date.length === 0) {
-      return undefined;
-    }
-
-    return new Date(date);
-  }
-}
+import { ActionButtonsCellComponent } from './ag-grid/action-buttons-cell.component';
+import { DateCellComponent } from './ag-grid/date-cell.component';
+import { StatusCellComponent } from './ag-grid/status-cell.component';
 
 @Component({
   selector: 'st-subm-list',
@@ -171,9 +71,6 @@ export class SubmListComponent implements OnDestroy, OnInit {
     };
 
     this.createColumnDefs();
-
-    // Works out the list of allowed projects by comparison with template names
-    // this.isBusy = true;
   }
 
   createColumnDefs() {
@@ -205,12 +102,13 @@ export class SubmListComponent implements OnDestroy, OnInit {
         headerName: this.showSubmitted ? 'Latest title' : 'Title',
         resizable: true
       },
-      // {
-      //   field: 'status',
-      //   headerName: 'Status',
-      //   resizable: false,
-      //   maxWidth: 100,
-      // },
+      {
+        cellRendererFramework: StatusCellComponent,
+        field: 'status',
+        headerName: 'Status',
+        maxWidth: 100,
+        resizable: false,
+      },
       {
         cellClass: 'ag-cell-centered',
         cellRendererFramework: DateCellComponent,
@@ -235,6 +133,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
 
   decorateDataRows(rows: any[]): any {
     return rows.map(row => ({
+      id: row.accno,
       isTemp: !this.showSubmitted,
       isDeletable: !this.showSubmitted || ['S-', 'TMP_'].some((prefix) => row.accno.indexOf(prefix) === 0),
       accno: row.accno,
@@ -307,8 +206,11 @@ export class SubmListComponent implements OnDestroy, OnInit {
 
   ngOnInit(): void {
     this.submStatusService.getSubmStatus().subscribe((data: SubmStatus) => {
-      // tslint:disable-next-line: no-console
-      console.log(data);
+      const agApi = this.gridOptions.api;
+      const { accNo, status } = data;
+      const rowNode = agApi!.getRowNode(accNo);
+
+      rowNode.setDataValue('status', status);
     });
   }
 
@@ -350,11 +252,10 @@ export class SubmListComponent implements OnDestroy, OnInit {
   }
 
   setDatasource() {
-    const agApi = this.gridOptions.api; // AgGrid's API
+    const agApi = this.gridOptions.api;
 
     if (!this.datasource) {
       this.datasource = {
-        // rowCount: ???, - not setting the row count, infinite paging will be used
         getRows: (params) => {
           const pageSize = params.endRow - params.startRow;
           const fm = params.filterModel || {};
