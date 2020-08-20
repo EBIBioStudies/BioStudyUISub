@@ -132,7 +132,7 @@ export class SubmissionService {
   submitSubmission(pt: PageTab): Observable<SubmitResponse> {
     const headers: HttpHeaders = new HttpHeaders().set('Submission_Type', 'application/json');
 
-    return this.sendPostRequest('/api/submissions', pt, headers);
+    return this.sendPostRequest('/api/submissions/async', pt, headers);
   }
 
   private checkStatus<R, T>(response: HttpResponse<R>): T {
