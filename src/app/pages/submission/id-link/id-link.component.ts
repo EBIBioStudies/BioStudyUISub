@@ -8,7 +8,7 @@ import {
   ViewChild,
   EventEmitter
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, NgModel, Validators } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, NgModel, Validators, AbstractControl } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Subject, Observable } from 'rxjs';
 import { IdLinkModel } from './id-link.model';
@@ -125,10 +125,12 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
    */
   ngAfterViewInit() {
     try {
-      const control = this.injector.get(NgControl).control;
+      const control: AbstractControl | null = this.injector.get(NgControl).control;
 
-      control.setValidators(Validators.compose([control.validator, this.inputModel!.control.validator]));
-      control.setAsyncValidators(Validators.composeAsync([control.asyncValidator, this.inputModel!.control.asyncValidator]));
+      if (control) {
+        control.setValidators(Validators.compose([control.validator, this.inputModel!.control.validator]));
+        control.setAsyncValidators(Validators.composeAsync([control.asyncValidator, this.inputModel!.control.asyncValidator]));
+      }
     } catch (event) {
       // TODO: Review logic and check if this try/catch is needed
     }

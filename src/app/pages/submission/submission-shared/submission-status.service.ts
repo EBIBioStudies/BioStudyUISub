@@ -1,13 +1,14 @@
 import { ServerSentEventService } from 'app/shared/server-sent-event.service';
 import { LogService } from 'app/core/logger/log.service';
 import { Observable } from 'rxjs';
-import { NgZone } from '@angular/core';
+import { NgZone, Injectable } from '@angular/core';
 
 export interface SubmStatus {
   accNo: string,
   status: string
 }
 
+@Injectable()
 export class SubmissionStatusService {
   eventSource: EventSource | undefined;
 

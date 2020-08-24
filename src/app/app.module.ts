@@ -35,7 +35,6 @@ export function initConfig(config: AppConfig): () => Promise<any> {
   imports: [
     BrowserModule,
     MarkdownModule.forRoot(),
-    RecaptchaModule.forRoot(),
     TypeaheadModule.forRoot(),
     TooltipModule.forRoot(),
     TabsModule.forRoot(),
@@ -46,6 +45,7 @@ export function initConfig(config: AppConfig): () => Promise<any> {
     CollapseModule.forRoot(),
     AlertModule.forRoot(),
     SortablejsModule.forRoot({ animation: 150 }),
+    RecaptchaModule,
     BrowserAnimationsModule,
     PagesModule,
     AppRoutingModule,

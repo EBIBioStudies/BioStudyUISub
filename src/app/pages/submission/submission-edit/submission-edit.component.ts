@@ -42,7 +42,7 @@ class SubmitOperation {
 export class SubmissionEditComponent implements OnInit, OnDestroy {
   @Input() readonly = false;
   sectionForm?: SectionForm;
-  @ViewChild(SubmSidebarComponent, { static: false }) sideBar?: SubmSidebarComponent;
+  @ViewChild(SubmSidebarComponent) sideBar?: SubmSidebarComponent;
   sideBarCollapsed = false;
   submitOperation: SubmitOperation = SubmitOperation.UNKNOWN;
 

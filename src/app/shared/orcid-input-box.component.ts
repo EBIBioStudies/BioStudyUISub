@@ -74,13 +74,15 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor, OnInit, Aft
    * the actual input and the wrapping component.
    */
   ngAfterViewInit() {
-    const control: AbstractControl = this.injector.get(NgControl).control;
+    const control: AbstractControl | null = this.injector.get(NgControl).control;
 
-    control.setValidators(Validators.compose([control.validator, this.inputModel!.control.validator]));
-    control.setAsyncValidators(Validators.composeAsync([control.asyncValidator, this.inputModel!.control.asyncValidator]));
-    setTimeout(() => {
-      control.updateValueAndValidity();
-    }, 10);
+    if (control) {
+      control.setValidators(Validators.compose([control.validator, this.inputModel!.control.validator]));
+      control.setAsyncValidators(Validators.composeAsync([control.asyncValidator, this.inputModel!.control.asyncValidator]));
+      setTimeout(() => {
+        control.updateValueAndValidity();
+      }, 10);
+    }
   }
 
   ngOnDestroy() {

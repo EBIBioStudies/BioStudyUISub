@@ -1,4 +1,5 @@
 import { PageTabSection, PtAttribute } from './pagetab.model';
+import { Dictionary, Nullable } from './pagetab-authors.utils';
 
 const isEqualTo = (value: string) => (s: Nullable<string>) => (String.isDefined(s) && s!.toLowerCase() === value);
 const isComponentProtocol = isEqualTo('protocols');

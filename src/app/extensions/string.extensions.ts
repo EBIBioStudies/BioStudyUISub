@@ -1,3 +1,15 @@
+interface String {
+  isEmpty(): boolean;
+  isEqualIgnoringCase(value: string): boolean;
+}
+
+interface StringConstructor {
+  isDefined(s: string | undefined | null): boolean;
+  isDefinedAndNotEmpty(s: string | undefined | null): boolean;
+  isNotDefinedOrEmpty(s: string | undefined | null): boolean;
+  isString(string: any): boolean;
+}
+
 String.prototype.isEqualIgnoringCase = function (value: string) {
   return this.toLowerCase() === value.toLowerCase();
 };
