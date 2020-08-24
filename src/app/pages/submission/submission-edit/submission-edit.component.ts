@@ -1,6 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { BsModalService } from 'ngx-bootstrap';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { Location } from '@angular/common';
 import { Observable, of, Subject } from 'rxjs';
 import { Option } from 'fp-ts/lib/Option';

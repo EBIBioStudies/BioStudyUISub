@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { BsModalService } from 'ngx-bootstrap';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { ConfirmDialogComponent } from './confirm-dialog.component';
 import { filter, take } from 'rxjs/operators';
 

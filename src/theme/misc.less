@@ -34,56 +34,28 @@
   outline: 0;
 }
 
-// Centers the labels inside each flex-enabled header cell
 .ag-theme-fresh {
-  .ag-root {
+  .ag-root-wrapper {
     border: none;
-    border-top: 3px solid @sidebar-light-bg;
-  }
-
-  .ag-cell-centered {
-    display: flex;
-    align-items: center;
-  }
-
-  .ag-header {
-    background: @sidebar-light-bg;
-    border: none;
-    color: #fff;
+    background-color: @body-bg;
   }
 
   .ag-header-cell-label {
-    justify-content: center;
+    text-align: center;
   }
 
-  // Prevents cell menu buttons from being hidden. By default, only shown on hover.
-  // Additionally, it uses the cell menu's icon to make the two filtering states visually explicit.
-  .ag-header-cell-menu-button {
-    color: @link-color;
+  .ag-header-container {
+    background: @sidebar-light-bg;
+    border: none;
+  }
+
+  .ag-header-row {
+    color: #fff;
+  }
+
+  .ag-row-hover {
+    background-color: #b2e1fe;
     cursor: pointer;
-    width: 12px;
-
-    &:hover {
-      color: #FFFFFF;
-    }
-  }
-
-  .ag-header-cell-filtered .ag-header-cell-menu-button {
-    color: @brand-danger;
-  }
-
-  .ag-header-icon {
-    .ag-icon-none {
-      color: @link-color;
-    }
-
-    .ag-icon-asc {
-      color: @link-color;
-    }
-
-    .ag-icon-desc {
-      color: @link-color;
-    }
   }
 
   .ag-menu {
@@ -91,32 +63,13 @@
     border-color: #d7d7d7;
   }
 
-  .ag-paging-panel {
-    height: 40px;
+  .ag-header-cell-menu-button {
+    color: @link-color;
+    cursor: pointer;
+    width: 12px;
 
-    .ag-icon {
+    &:hover {
       color: #FFFFFF;
-    }
-
-    .ag-paging-button.ag-disabled .ag-icon {
-      color: #FFFFFF;
-    }
-
-    .ag-paging-button {
-      background: @brand-primary;
-      border-radius: .3rem;
-      padding: .5rem 1rem;
-      margin: 2px;
-    }
-  }
-
-  .ag-row-hover {
-    background-color: #b2e1fe;
-  }
-
-  @media screen and (max-width: 650px) {
-    .ag-paging-row-summary-panel {
-      display: none;
     }
   }
 }

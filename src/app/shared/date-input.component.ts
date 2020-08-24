@@ -1,7 +1,6 @@
 import { Component, ElementRef, forwardRef, Input, ViewChild, OnInit, HostListener } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
-import { BsDatepickerDirective } from 'ngx-bootstrap';
+import { BsDatepickerConfig, BsDatepickerDirective } from 'ngx-bootstrap/datepicker';
 import { formatDate } from 'ngx-bootstrap/chronos';
 import { isEqualDate } from '../utils';
 import { AppConfig } from '../app.config';

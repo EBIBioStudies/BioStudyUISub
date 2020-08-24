@@ -7,7 +7,7 @@ import { DateFilterComponent } from './ag-grid/date-filter.component';
 import { TextFilterComponent } from './ag-grid/text-filter.component';
 
 import { DateCellComponent, ActionButtonsCellComponent, SubmListComponent } from './subm-list.component';
-import { ButtonsModule } from 'ngx-bootstrap';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
 
 @NgModule({
   imports: [

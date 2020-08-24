@@ -5,7 +5,7 @@ import {
   RowNode,
   IAfterGuiAttachedParams
 } from 'ag-grid-community/main';
-import { AgFilterComponent } from 'ag-grid-angular/main';
+import { AgFilterComponent } from 'ag-grid-angular';
 import { DateInputComponent } from 'app/shared/date-input.component';
 
 class DateRange {

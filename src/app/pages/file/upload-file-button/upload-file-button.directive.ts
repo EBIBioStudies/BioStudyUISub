@@ -1,5 +1,5 @@
 import { Directive, HostListener, Output, EventEmitter } from '@angular/core';
-import { BsModalService } from 'ngx-bootstrap';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { UploadFileModalComponent } from './upload-file-modal.component';
 
 @Directive({

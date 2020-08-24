@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, QueryList, ViewChildren } from '@angular/core';
 import { UserData } from 'app/auth/shared';
-import { TypeaheadDirective } from 'ngx-bootstrap';
+import { TypeaheadDirective } from 'ngx-bootstrap/typeahead';
 import { ColumnControl } from '../../shared/model/column-control.model';
 import { RowForm } from '../../shared/model/row-form.model';
 import { FeatureForm } from '../../shared/model/feature-form.model';

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AgRendererComponent } from 'ag-grid-angular/dist/interfaces';
+import { AgRendererComponent } from 'ag-grid-angular';
 import { FileUpload } from '../../shared/file-upload-list.service';
 
 @Component({

@@ -1,5 +1,5 @@
 import { Component, TemplateRef } from '@angular/core';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { UserData } from 'app/auth/shared';
 
 interface OSOption {

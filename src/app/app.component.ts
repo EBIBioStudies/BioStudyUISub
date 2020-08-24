@@ -4,6 +4,7 @@ import {
 } from '@angular/core';
 import { UserSession } from 'app/auth/shared';
 import { AppConfig } from 'app/app.config';
+import { setTheme } from 'ngx-bootstrap/utils';
 
 @Component({
   selector: 'st-root',
@@ -14,7 +15,9 @@ import { AppConfig } from 'app/app.config';
 })
 
 export class AppComponent implements OnInit {
-  constructor(private userSession: UserSession, private appConfig: AppConfig) {}
+  constructor(private userSession: UserSession, private appConfig: AppConfig) {
+    setTheme('bs3');
+  }
 
   ngOnInit() {
     const bannerEl = document.createElement('script');
