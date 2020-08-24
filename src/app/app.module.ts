@@ -6,17 +6,15 @@ import {
 import { BrowserModule } from '@angular/platform-browser';
 import { PathLocationStrategy, LocationStrategy } from '@angular/common';
 import { RecaptchaModule, RecaptchaSettings, RECAPTCHA_SETTINGS, RECAPTCHA_BASE_URL } from 'ng-recaptcha';
-import {
-  TypeaheadModule,
-  TooltipModule,
-  TabsModule,
-  BsDropdownModule,
-  ModalModule,
-  PopoverModule,
-  CollapseModule,
-  AlertModule,
-  BsDatepickerModule
-} from 'ngx-bootstrap';
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { PopoverModule } from 'ngx-bootstrap/popover';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { AlertModule } from 'ngx-bootstrap/alert';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { MarkdownModule } from 'ngx-markdown';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SortablejsModule } from 'ngx-sortablejs';
