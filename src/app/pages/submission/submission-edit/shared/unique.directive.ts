@@ -5,7 +5,7 @@ import {
   NG_VALIDATORS,
   FormControl,
   ValidatorFn,
-  Validator, NgControl
+  Validator, NgControl, AbstractControl
 } from '@angular/forms';
 
 @Directive({
@@ -36,16 +36,19 @@ export class UniqueValidator implements Validator, OnDestroy {
    */
   @HostListener('change')
   onChange(): void {
-    const control = this.injector.get(NgControl).control;
-    const controls = control.parent.controls;
+    const control: AbstractControl | null = this.injector.get(NgControl).control;
 
-    // Updates validity of fields, forcing the display of feedback even if not "touched" yet.
-    Object.keys(controls).forEach((key) => {
-      controls[key].updateValueAndValidity();
-      if (controls[key].invalid) {
-        controls[key].markAsTouched();
-      }
-    });
+    if (control) {
+      const controls = control.parent.controls;
+
+      // Updates validity of fields, forcing the display of feedback even if not "touched" yet.
+      Object.keys(controls).forEach((key) => {
+        controls[key].updateValueAndValidity();
+        if (controls[key].invalid) {
+          controls[key].markAsTouched();
+        }
+      });
+    }
   }
 
   validate(formControl: FormControl) {

@@ -16,10 +16,10 @@ export class ActivationLinkReqComponent implements AfterViewInit {
   model: ActivationLinkRequestData = new ActivationLinkRequestData();
   showSuccess: boolean = false;
 
-  @ViewChild('emailEl', { static: false })
+  @ViewChild('emailEl')
   private focusRef?: ElementRef;
 
-  @ViewChild('recaptchaEl', { static: false })
+  @ViewChild('recaptchaEl')
   private recaptchaRef?: RecaptchaComponent;
 
   constructor(private authService: AuthService) {}

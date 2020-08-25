@@ -18,7 +18,7 @@ export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
   @ViewChild('focusBtn', { static: true })
   private focusEl?: ElementRef;
 
-  @ViewChild('uniquePop', { static: false })
+  @ViewChild('uniquePop')
   private uniquePop?: PopoverDirective;
 
   constructor(public bsModalRef: BsModalRef) {}

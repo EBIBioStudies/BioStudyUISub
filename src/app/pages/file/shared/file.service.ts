@@ -6,6 +6,10 @@ import { map, catchError, finalize } from 'rxjs/operators';
 import { HttpUploadClientService, UploadEvent } from './http-upload-client.service';
 import { LogService } from 'app/core/logger/log.service';
 
+interface FullPathFile extends File {
+  webkitRelativePath: string;
+}
+
 @Injectable()
 export class FileService {
   constructor(
