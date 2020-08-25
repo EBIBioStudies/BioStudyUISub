@@ -16,6 +16,7 @@
     "node:prod": "cross-env NODE_ENV=production node .",
     "start:dev": "run-p node:dev ng:start",
     "pretest": "npm run lint",
+    "postinstall": "ngcc",
     "test": "jest --ci"
   },
   "jest": {
