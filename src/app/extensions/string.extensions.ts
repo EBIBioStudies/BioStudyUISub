@@ -7,7 +7,7 @@ interface StringConstructor {
   isDefined(s: string | undefined | null): boolean;
   isDefinedAndNotEmpty(s: string | undefined | null): boolean;
   isNotDefinedOrEmpty(s: string | undefined | null): boolean;
-  isString(string: any): boolean;
+  isString(value: any): boolean;
 }
 
 String.prototype.isEqualIgnoringCase = function (value: string) {
