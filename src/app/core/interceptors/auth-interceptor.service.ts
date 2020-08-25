@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { getLoginToken } from 'app/auth/shared';
+import { UserCookies } from 'app/auth/shared';
 import { AppConfig } from 'app/app.config';
 
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
   constructor(
-    private appConfig: AppConfig
+    private appConfig: AppConfig,
+    private userCookies: UserCookies
   ) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -22,7 +23,7 @@ export class AuthInterceptorService implements HttpInterceptor {
   }
 
   private updateHeaders(headers: HttpHeaders = new HttpHeaders()): HttpHeaders {
-    const sessionId = getLoginToken();
+    const sessionId = this.userCookies.getLoginToken();
 
     return sessionId ? headers.set('X-Session-Token', sessionId) : headers;
   }

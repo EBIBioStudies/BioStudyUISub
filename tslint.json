@@ -8,6 +8,9 @@
     "class-name": true,
     "comment-format": [true, "check-space"],
     "curly": true,
+    "deprecation": {
+      "severity": "warning"
+    },
     "eofline": true,
     "forin": true,
     "import-spacing": true,
@@ -39,9 +42,6 @@
     "no-switch-case-fall-through": true,
     "no-trailing-whitespace": true,
     "no-unused-expression": true,
-    "no-use-before-declare": {
-      "severity": "warning"
-    },
     "no-var-keyword": true,
     "object-literal-sort-keys": false,
     "one-line": [

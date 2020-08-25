@@ -10,7 +10,8 @@ import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
-import * as _ from 'lodash';
+import debounce from 'lodash.debounce';
+import isEmpty from 'lodash.isempty';
 import { PubMedSearchService } from './pubmedid-search.service';
 import { Observable } from 'rxjs';
 
@@ -43,7 +44,7 @@ export class PubMedIdSearchComponent implements ControlValueAccessor {
   private pubMedId: string | undefined; // last PubMed ID number typed in
 
   constructor(private pubMedSearchService: PubMedSearchService) {
-    this.pubMedFetch = _.debounce(this.pubMedFetch, 300);
+    this.pubMedFetch = debounce(this.pubMedFetch, 300);
   }
 
   get value() {
@@ -136,7 +137,7 @@ export class PubMedIdSearchComponent implements ControlValueAccessor {
    * has just been rendered, it checks for an already existing ID and retrieves the publication for that one.
    */
   togglePreviewPub() {
-    if (this.pubMedId && _.isEmpty(this.publication) && !this.isPreviewPub) {
+    if (this.pubMedId && isEmpty(this.publication) && !this.isPreviewPub) {
       this.pubMedFetch();
       return;
     }
