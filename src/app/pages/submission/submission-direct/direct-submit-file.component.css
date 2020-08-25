@@ -1,3 +1,7 @@
+.st-panel-overflow {
+  overflow: auto;
+}
+
 .st-panel-description {
   align-items: center;
   display: flex;

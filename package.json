@@ -76,8 +76,8 @@
     "pluralize": "8.0.0",
     "rxjs": "6.6.2",
     "sortablejs": "1.10.2",
-    "tslib": "^1.10.0",
-    "zone.js": "~0.10.2"
+    "tslib": "1.10.0",
+    "zone.js": "0.10.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.901.12",
@@ -94,13 +94,13 @@
     "@types/helmet": "0.0.47",
     "@types/jest": "26.0.10",
     "@types/jsdom": "16.2.3",
-    "@types/node": "^12.11.1",
+    "@types/node": "14.6.0",
     "@types/pluralize": "0.0.28",
     "@types/request": "2.48.5",
     "@types/sortablejs": "1.10.4",
     "amqplib": "0.5.6",
     "body-parser": "1.19.0",
-    "codelyzer": "^5.1.2",
+    "codelyzer": "5.1.2",
     "compression": "1.7.4",
     "config": "3.1.0",
     "cross-env": "5.2.1",
