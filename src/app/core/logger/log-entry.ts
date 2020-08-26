@@ -17,7 +17,7 @@ export class LogEntry {
       level: level.toLowerCase(),
       userEmail: this.userEmail,
       message: this.message,
-      params: params
+      params
     };
   }
 

@@ -17,7 +17,7 @@ export class AddSubmModalComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    (<HTMLInputElement>document.getElementsByClassName('project-radio')[0]).focus();
+    (document.getElementsByClassName('project-radio')[0] as HTMLInputElement).focus();
   }
 
   ok(): void {

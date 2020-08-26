@@ -313,7 +313,7 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
    * @returns {{name: string; checked: boolean}[]} Checkbox-compliant object.
    */
   private initProjModel(projects: string[]): ProjectOption[] {
-    const formattedProjects = projects.map((name) => ({ name: name, value: name, checked: false }));
+    const formattedProjects = projects.map((name) => ({ name, value: name, checked: false }));
 
     // Adds a default option when user has at least one project
     if (formattedProjects.length > 0) {

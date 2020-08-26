@@ -52,7 +52,7 @@ export class InputValueComponent implements ControlValueAccessor {
   }
 
   get allowPast(): boolean {
-    return (<DateValueType>this.valueType).allowPast;
+    return (this.valueType as DateValueType).allowPast;
   }
 
   @Input() autosuggestSource: () => string[] = () => [];
@@ -122,7 +122,7 @@ export class InputValueComponent implements ControlValueAccessor {
 
   private autosuggestValues(): string[] {
     if (this.valueType.is(ValueTypeName.select)) {
-      return (<SelectValueType>this.valueType).values;
+      return (this.valueType as SelectValueType).values;
     }
     return this.autosuggestSource();
   }

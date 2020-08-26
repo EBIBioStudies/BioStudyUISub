@@ -24,7 +24,7 @@ export class LinksUtils {
     const typeAttr = { name: TYPE_ATTR, value: '' };
     const isUrl = this.URL_REGEXP.test(pointer);
 
-    const linkObj = <PtLink>{ url: '', attributes: attributes.filter(at => ![TYPE_ATTR, POINTER_ATTR].includes(at.name!)) };
+    const linkObj = { url: '', attributes: attributes.filter(at => ![TYPE_ATTR, POINTER_ATTR].includes(at.name!)) } as PtLink;
 
     linkObj.attributes!.push(typeAttr);
     if (pointer) {

@@ -148,7 +148,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
     // TODO: enable server-side sorting once sorting parameters are added to the submission list endpoint
     // NOTE: Ag-Grid doesn't support client-side filtering/sorting and server-side pagination simultaneously.
     // https://www.ag-grid.com/javascript-grid-infinite-scrolling/#sorting-filtering
-    this.gridOptions = <GridOptions>{
+    this.gridOptions = ({
       cacheBlockSize: 15,
       debug: false,
       enableSorting: false,
@@ -168,7 +168,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
 
         window.onresize = () => this.gridOptions!.api! && this.gridOptions!.api!.sizeColumnsToFit();
       }
-    };
+    } as GridOptions);
 
     this.createColumnDefs();
 

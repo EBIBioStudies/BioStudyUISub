@@ -61,7 +61,7 @@ class ValidationRules {
 
   static forField(field: Field): ValidationRule[] {
     if (field.valueType.isRich()) {
-      const richTextValue: RichTextFieldValue  = <RichTextFieldValue>field.value;
+      const richTextValue: RichTextFieldValue  = field.value as RichTextFieldValue;
       const rawValue: string = richTextValue.raw;
 
       return [
@@ -71,7 +71,7 @@ class ValidationRules {
       ];
     }
 
-    const value: string = <string>field.value;
+    const value: string = field.value as string;
     return [
       ValidationRules.requiredValue(value, field.name, field.type.displayType.isRequired),
       ValidationRules.formattedValue(value, field.valueType, field.name),
@@ -133,8 +133,8 @@ class ValidationRules {
   static forValue(value: string, fieldName: string, valueType: ValueType): ValidationRule[] {
     const rules: ValidationRule[] = [];
     if (valueType.is(ValueTypeName.text, ValueTypeName.largetext)) {
-      rules.push(ValidationRules.maxlengthValue(value, (<TextValueType>valueType).maxlength, fieldName));
-      rules.push(ValidationRules.minlengthValue(value, (<TextValueType>valueType).minlength, fieldName));
+      rules.push(ValidationRules.maxlengthValue(value, (valueType as TextValueType).maxlength, fieldName));
+      rules.push(ValidationRules.minlengthValue(value, (valueType as TextValueType).minlength, fieldName));
     }
     return rules;
   }
@@ -211,8 +211,8 @@ export class SubmValidationErrors {
   static EMPTY = new SubmValidationErrors('');
 
   constructor(readonly secId: string,
-        readonly errors: string [] = [],
-        readonly sections: SubmValidationErrors[] = []) {
+              readonly errors: string [] = [],
+              readonly sections: SubmValidationErrors[] = []) {
   }
 
   empty(): boolean {

@@ -141,7 +141,7 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
    * @param {Event} event - DOM event object.
    */
   onInput(event: Event) {
-    this.inputChanged.next((<HTMLInputElement>event.target).value);
+    this.inputChanged.next((event.target as HTMLInputElement).value);
   }
 
   /**

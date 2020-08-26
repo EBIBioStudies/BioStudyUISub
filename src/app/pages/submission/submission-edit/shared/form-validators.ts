@@ -35,7 +35,7 @@ export class MyFormGroup extends FormGroup {
 export class FormValidators {
   static formatDate: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const v = control.value;
-    return String.isNotDefinedOrEmpty(v) || (parseDate(v) !== undefined) ? null : { 'format': { value: v } };
+    return String.isNotDefinedOrEmpty(v) || (parseDate(v) !== undefined) ? null : { format: { value: v } };
   }
 
   static formatDna: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -48,7 +48,7 @@ export class FormValidators {
 
     const isValueValid: boolean = isDnaSequenceValid(value.raw);
 
-    return isValueValid ? null : { 'format': { value } };
+    return isValueValid ? null : { format: { value } };
   }
 
   static formatOrcid: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -61,7 +61,7 @@ export class FormValidators {
 
     const isValueValid: boolean = isOrcidValid(value);
 
-    return isValueValid ? null : { 'format': { value } };
+    return isValueValid ? null : { format: { value } };
   }
 
   static formatProtein: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -74,13 +74,13 @@ export class FormValidators {
 
     const isValueValid: boolean = isProteinSequenceValid(value.raw);
 
-    return isValueValid ? null : { 'format': { value } };
+    return isValueValid ? null : { format: { value } };
   }
 
   static uniqueValues: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const columns = <FormGroup> control;
+    const columns = control as FormGroup;
     const values = Object.keys(columns.controls)
-      .map(key => <FormControl>columns.controls[key])
+      .map(key => columns.controls[key] as FormControl)
       .map(c => c.value);
 
     const valueCounts = values
@@ -100,9 +100,9 @@ export class FormValidators {
       let errors = controlItem.errors;
       if (duplicates.includes(controlItem.value)) {
         errors = errors || {};
-        errors['uniqueCols'] = { value: controlItem.value};
+        errors.uniqueCols = { value: controlItem.value};
       } else if (errors !== null) {
-        delete errors['uniqueCols'];
+        delete errors.uniqueCols;
         if (Object.keys(errors).length === 0) {
           errors = null;
         }
@@ -110,7 +110,7 @@ export class FormValidators {
       controlItem.setErrors(errors);
     });
 
-    return {'uniqueCols': {value: duplicates[0]}};
+    return {uniqueCols: {value: duplicates[0]}};
   }
 }
 
@@ -127,7 +127,7 @@ export class SubmFormValidators {
     }
 
     if (column.dependencyColumn !== '') {
-      const selectValueType = <SelectValueType>column.valueType;
+      const selectValueType = column.valueType as SelectValueType;
       validators.push(SubmFormValidators.forCellWithDependency(selectValueType));
     }
 
@@ -184,7 +184,7 @@ export class SubmFormValidators {
     const validators: ValidatorFn[] = [];
 
     if (valueType.is(ValueTypeName.text, ValueTypeName.largetext)) {
-      const vt = <TextValueType>valueType;
+      const vt = valueType as TextValueType;
       if (vt.maxlength > 0) {
         validators.push(Validators.maxLength(vt.maxlength));
       }
@@ -216,28 +216,28 @@ export class CustomErrorMessages {
     const ref = ((control instanceof CustomFormControl) ? control.ref : undefined) || ControlRef.unknown;
 
     return {
-      'required': () => {
+      required: () => {
         return `Please enter the ${ref.parentName}'s ${ref.name.toLowerCase()}`;
       },
-      'minlength': (error: { actualLength: number, requiredLength: number }) => {
+      minlength: (error: { actualLength: number, requiredLength: number }) => {
         return `Please use at least ${error.requiredLength} characters`;
       },
-      'maxlength': (error: { actualLength: number, requiredLength: number }) => {
+      maxlength: (error: { actualLength: number, requiredLength: number }) => {
         return `Please use up to ${error.requiredLength} characters`;
       },
-      'format': () => {
+      format: () => {
         return 'Please provide a valid value';
       },
-      'pattern': (error: { actualValue: string, requiredPattern: string }) => {
+      pattern: (error: { actualValue: string, requiredPattern: string }) => {
         return `Please provide a value in '${error.requiredPattern}' format`;
       },
-      'uniqueCols': (error: { value: string }) => {
+      uniqueCols: (error: { value: string }) => {
         return `${ref.parentName}'s ${error.value} column is not unique`;
       },
-      'unique': () => {
+      unique: () => {
         return `${ref.parentName}'s values should be unique`;
       },
-      'dependency': (error: { value: string }) => {
+      dependency: (error: { value: string }) => {
         return `${error.value} is not an Study Protocol. Please add and describe Protocols on the Study page firstly. `;
       }
     };

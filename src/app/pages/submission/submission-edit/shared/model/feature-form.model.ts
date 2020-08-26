@@ -44,11 +44,11 @@ export class FeatureForm extends FormBase {
   }
 
   private get columnsForm(): FormGroup {
-    return <FormGroup>this.form.get('columns');
+    return this.form.get('columns') as FormGroup;
   }
 
   private get rowFormArray(): FormArray {
-    return <FormArray>this.form.get('rows');
+    return this.form.get('rows') as FormArray;
   }
 
   get isEmpty(): boolean {

@@ -54,12 +54,12 @@ export class SubmFieldComponent {
 
   get isEmpty(): boolean {
     if (this.fieldType.valueType.isRich()) {
-      const fieldValue: RichTextFieldValue = <RichTextFieldValue>this.fieldControl!.control.value;
+      const fieldValue: RichTextFieldValue = this.fieldControl!.control.value as RichTextFieldValue;
 
       return fieldValue.raw.isEmpty();
     }
 
-    return (<string>this.fieldControl!.control.value).isEmpty();
+    return (this.fieldControl!.control.value as string).isEmpty();
   }
 
   get isRequired(): boolean {
@@ -94,8 +94,8 @@ export class SubmFieldComponent {
     if (this.valueLen === undefined) {
       const vt = this.valueType;
       if (vt.isText()) {
-        const min = (<TextValueType>vt).minlength;
-        const max = (<TextValueType>vt).maxlength;
+        const min = (vt as TextValueType).minlength;
+        const max = (vt as TextValueType).maxlength;
         this.valueLen = new ValueLength(min, max);
       } else {
         this.valueLen = ValueLength.unknown;

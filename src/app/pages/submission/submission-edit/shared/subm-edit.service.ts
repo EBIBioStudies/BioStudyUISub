@@ -368,7 +368,7 @@ export class SubmEditService {
         const matchedColumn = dependency!.columns.find((column) => column.name === columnWithDependency.dependencyColumn);
         const attributeValues = dependency!.attributeValuesForColumn(matchedColumn!.id);
         const rawValues: string[] = attributeValues.map((attributeValue) => attributeValue!.value);
-        const selectValueType = <SelectValueType>(columnWithDependency.valueType);
+        const selectValueType = (columnWithDependency.valueType) as SelectValueType;
 
         selectValueType.setValues(rawValues);
 

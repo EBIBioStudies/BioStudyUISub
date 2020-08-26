@@ -27,6 +27,6 @@ export class DataWithCaptchaAndPath extends DataWithCaptcha {
   }
 
   snapshot(): any {
-    return { ...super.snapshot(), 'path': this.path };
+    return { ...super.snapshot(), path: this.path };
   }
 }

@@ -116,7 +116,7 @@ export class TreeViewNodeComponent implements AfterViewInit, OnChanges {
 
   private detectChanges() {
     if (this.compRef) {
-      (<TreeViewCustomNodeComponent>this.compRef.instance).onNodeData(this.data);
+      (this.compRef.instance as TreeViewCustomNodeComponent).onNodeData(this.data);
       this.compRef.changeDetectorRef.detectChanges();
     }
   }

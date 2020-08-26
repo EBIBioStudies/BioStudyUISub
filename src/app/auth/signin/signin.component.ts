@@ -19,9 +19,9 @@ export class SignInComponent implements OnInit, AfterViewInit {
   private focusRef?: ElementRef;
 
   constructor(private authService: AuthService,
-        private userSession: UserSession,
-        private router: Router,
-        private route: ActivatedRoute) {
+              private userSession: UserSession,
+              private router: Router,
+              private route: ActivatedRoute) {
   }
 
   // TODO: Turn autofocus on render into a directive

@@ -334,7 +334,7 @@ export class Field {
   private _value: string | RichTextFieldValue;
 
   constructor(type: FieldType,
-        value: RichTextFieldValue | string = '') {
+              value: RichTextFieldValue | string = '') {
     this.id = `field_${nextId()}`;
     this.type = type;
     this._value = value;
@@ -418,7 +418,7 @@ export class Section implements SubmissionSection {
 
   private _accno: string;
 
-  constructor(type: SectionType, data: SectionData = <SectionData>{}, accno: string = '') {
+  constructor(type: SectionType, data: SectionData = {} as SectionData, accno: string = '') {
     this.tags = Tags.create(data);
     this.id = `section_${nextId()}`;
     this.type = type;
@@ -554,7 +554,7 @@ export class Submission {
    * @param {SubmissionType} type Type definitions object
    * @param {SubmissionData} data Submission data in PageTab format.
    */
-  constructor(type: SubmissionType, data: SubmissionData = <SubmissionData>{}) {
+  constructor(type: SubmissionType, data: SubmissionData = {} as SubmissionData) {
     this.tags = Tags.create(data);
     this.type = type;
     this.accno = data.accno || null;

@@ -43,7 +43,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     // Initially collapses the sidebar for tablet-sized screens
     this.sideBarCollapsed = window.innerWidth < this.appConfig.tabletBreak;
 
-    this.gridOptions = <GridOptions>{
+    this.gridOptions = ({
       onGridReady: () => {
         this.gridOptions!.api!.sizeColumnsToFit();
       },
@@ -51,7 +51,7 @@ export class FileListComponent implements OnInit, OnDestroy {
       unSortIcon: true,
       localeText: {noRowsToShow: 'No files found'},
       overlayLoadingTemplate: '<span class="ag-overlay-loading-center"><i class="fa fa-cog fa-spin fa-lg"></i> Loading...</span>',
-    };
+    } as GridOptions);
 
     this.fileUploadList.uploadCompleted$
       .pipe(
@@ -102,7 +102,7 @@ export class FileListComponent implements OnInit, OnDestroy {
 
       return upload.fileNames.map((fileName) => ({
         name: fileName,
-        upload: upload,
+        upload,
         type: 'FILE',
         onRemove: () => {
           this.removeUpload(upload);

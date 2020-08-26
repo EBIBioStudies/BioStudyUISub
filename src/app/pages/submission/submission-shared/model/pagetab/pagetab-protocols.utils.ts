@@ -39,15 +39,15 @@ class Protocols {
 
   toReference(attr: PtAttribute): PtAttribute {
     if (String.isNotDefinedOrEmpty(attr.value) || attr.name !== 'Protocol') {
-      return <PtAttribute>{ name: attr.name, value: attr.value };
+      return { name: attr.name, value: attr.value } as PtAttribute;
     }
 
     const refKeyForValue = this.getRefKeyByValue(attr.value);
-    return <PtAttribute>{
+    return {
       name: 'Protocol',
       value: refKeyForValue,
       isReference: true
-    };
+    } as PtAttribute;
   }
 }
 
@@ -57,12 +57,12 @@ export function submissionToPageTabProtocols(pageTabSections: PageTabSection[]):
   const studyProtocols: PageTabSection[] = pageTabSections.filter((section) => isStudyProtocol(section.type));
 
   const componentProtocolWithReference = componentProtocols.map((componentProtocol) => (
-    <PageTabSection>{
+    {
       type: componentProtocol.type,
       attributes: componentProtocol.attributes!.map((attribute) => {
         return protocols.toReference({ ...attribute });
       })
-    }
+    } as PageTabSection
   ));
 
   const studyProtocolToReference = studyProtocols.map((studyProtocol, index) => {
@@ -71,11 +71,11 @@ export function submissionToPageTabProtocols(pageTabSections: PageTabSection[]):
     const studyProtocolNameValue: string = nameAttribute.value || '';
 
     return (
-      <PageTabSection>{
+      {
         type: studyProtocol.type,
         accno: studyProtocol.accno ? studyProtocol.accno : protocols.refFor(studyProtocolNameValue, `p${index}`),
         attributes: studyProtocol.attributes
-      }
+      } as PageTabSection
     );
   });
 
@@ -107,17 +107,17 @@ export function pageTabToSubmissionProtocols(pageTabSections: PageTabSection[]):
     const finalAttributes = attributes!.filter((attribute) => attribute.name !== 'Protocol') || [];
 
     if (protocolAttribute) {
-      finalAttributes.push(<PtAttribute>{
+      finalAttributes.push({
         name: 'Protocol',
         value: protocols.getRefValueByKey(protocolAttribute.value)
-      });
+      } as PtAttribute);
     }
 
     return (
-      <PageTabSection>{
+      {
         ...componentProtocol,
         attributes: finalAttributes
-      }
+      } as PageTabSection
     );
   });
 

@@ -21,7 +21,7 @@ export class UploadFileButtonDirective {
   private uploadFileTemplate() {
     const modal = this.modalService.show(UploadFileModalComponent, { ignoreBackdropClick: true });
 
-    (<UploadFileModalComponent>modal.content).onClose.subscribe((fileName) => {
+    (modal.content as UploadFileModalComponent).onClose.subscribe((fileName) => {
       this.onUploadFile.emit({ fileName });
     });
   }

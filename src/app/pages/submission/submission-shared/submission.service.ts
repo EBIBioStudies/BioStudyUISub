@@ -137,7 +137,7 @@ export class SubmissionService {
 
   private checkStatus<R, T>(response: HttpResponse<R>): T {
     if (response.status === HttpStatus.OK) {
-      return <T>(response.body || {});
+      return (response.body || {}) as T;
     }
 
     throw response.body;

@@ -47,22 +47,22 @@ export class SubmissionToPageTabService {
         return AttrExceptions.editable.includes(at.name!);
       });
 
-    return <PageTab>{
+    return {
       type: 'Submission',
       accno: subm.accno,
       section: this.sectionToPtSection(subm.section, isSanitise),
       tags: subm.tags.tags,
       accessTags: subm.tags.accessTags,
       attributes: mergeAttributes(subm.attributes.map(at => this.attributeDataToPtAttribute(at)), sectionAttributes)
-    };
+    } as PageTab;
   }
 
   private attributeDataToPtAttribute(attr: AttributeData): PtAttribute {
-    const ptAttr = <PtAttribute>{
+    const ptAttr = {
       name: attr.name,
       value: attr.value,
       reference: attr.reference
-    };
+    } as PtAttribute;
     if (!(attr.terms || []).isEmpty()) {
       ptAttr.valqual = attr.terms!.slice();
     }
@@ -73,7 +73,7 @@ export class SubmissionToPageTabService {
     const isPathAttr = (at: PtAttribute) => String.isDefined(at.name) && at.name!.isEqualIgnoringCase('path');
     const attr = attributes.find(at => isPathAttr(at));
     const attrs = attributes.filter(at => !isPathAttr(at));
-    return <PtFile>{ path: attr!.value, attributes: attrs };
+    return { path: attr!.value, attributes: attrs } as PtFile;
   }
 
   private attributesAsLink(attributes: PtAttribute[]): PtLink {
@@ -83,7 +83,7 @@ export class SubmissionToPageTabService {
   private extractFeatureAttributes(feature: Feature, isSanitise: boolean): PtAttribute[][] {
     const mappedFeatures: PtAttribute[][] = feature.rows.map((row) => {
       const attributes: PtAttribute[] =
-        feature.columns.map((column) => <PtAttribute>{ name: column.name, value: row.valueFor(column.id)!.value });
+        feature.columns.map((column) => { name: column.name, value: row.valueFor(column.id)!.value } as PtAttribute);
 
       return attributes.filter((attr) => (isSanitise && !isEmptyAttr(attr)) || !isSanitise);
     });
@@ -99,7 +99,7 @@ export class SubmissionToPageTabService {
       const attributes: PtAttribute[][] = this.extractFeatureAttributes(keywordsFeature, isSanitise);
 
       if (attributes.length > 0) {
-        keywordsAsAttributes = attributes.map((column) => <PtAttribute>column.pop());
+        keywordsAsAttributes = attributes.map((column) => column.pop() as PtAttribute);
       }
     }
 
@@ -146,10 +146,10 @@ export class SubmissionToPageTabService {
       const featureAttributes = this.extractFeatureAttributes(feature, isSanitize);
 
       return featureAttributes.map(attrs => {
-        return <PageTabSection>{
+        return {
           type: feature.typeName,
           attributes: attrs
-        };
+        } as PageTabSection;
       });
     };
 
@@ -166,21 +166,21 @@ export class SubmissionToPageTabService {
   private fieldsAsAttributes(section: Section, isSanitise: boolean) {
     return section.fields.list().map((field) => {
       if (field.valueType.isRich()) {
-        const fieldValue: RichTextFieldValue = <RichTextFieldValue>field.value;
+        const fieldValue: RichTextFieldValue = field.value as RichTextFieldValue;
 
-        return <PtAttribute>{
+        return {
           name: field.name,
           value: fieldValue.value,
-          valqual: [{'name': 'display', 'value': 'html'}]
-        };
+          valqual: [{name: 'display', value: 'html'}]
+        } as PtAttribute;
       }
 
-      return <PtAttribute>{ name: field.name, value: field.value };
+      return { name: field.name, value: field.value } as PtAttribute;
     }).filter(attr => (isSanitise && !isEmptyAttr(attr)) || !isSanitise);
   }
 
   private sectionToPtSection(section: Section, isSanitise: boolean = false): PageTabSection {
-    return <PageTabSection>{
+    return {
       accessTags: section.tags.accessTags,
       accno: section.accno,
       attributes: this.extractSectionAttributes(section, isSanitise)
@@ -191,7 +191,7 @@ export class SubmissionToPageTabService {
       subsections: this.extractSectionSubsections(section, isSanitise),
       tags: this.withPageTag(section.tags.tags),
       type: section.typeName,
-    };
+    } as PageTabSection;
   }
 
   private withPageTag(tags: Tag[]): Tag[] {

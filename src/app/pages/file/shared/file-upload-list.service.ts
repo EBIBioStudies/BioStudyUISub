@@ -35,12 +35,12 @@ export class FileUpload {
 
     this.uploadEvent$.subscribe((event: UploadEvent) => {
       if (event.isProgress()) {
-        this.percentage = (<UploadProgressEvent>event).percentage;
+        this.percentage = (event as UploadProgressEvent).percentage;
         this.state = UploadState.UPLOADING;
       }
 
       if (event.isError()) {
-        this.errorMessage = (<UploadErrorEvent>event).message;
+        this.errorMessage = (event as UploadErrorEvent).message;
         this.state = UploadState.ERROR;
       }
 

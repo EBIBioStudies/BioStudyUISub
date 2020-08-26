@@ -5,9 +5,9 @@ export class ControlRef {
   static unknown = new ControlRef('unknown_control', 'unknown');
 
   constructor(readonly id: string,
-    readonly name: string = '',
-    readonly parentRef?: ControlGroupRef,
-    readonly icon: string = 'fa-square') {
+              readonly name: string = '',
+              readonly parentRef?: ControlGroupRef,
+              readonly icon: string = 'fa-square') {
   }
 
   get parentName(): string {
@@ -49,7 +49,7 @@ export class ControlGroupRef {
     return new ControlGroupRef({
       sectionId: section.id,
       sectionName: section.accno || section.typeName,
-      isRoot: isRoot
+      isRoot
     });
   }
 

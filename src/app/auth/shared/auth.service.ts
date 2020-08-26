@@ -87,12 +87,12 @@ export class AuthService {
       this.userSession.destroy();
     }
 
-    return <T>(response.body || {});
+    return (response.body || {}) as T;
   }
 
   private checkStatus<R>(response: HttpResponse<R>): R {
     if (isSuccessStatusCode(response.status)) {
-      return <R>(response.body || {});
+      return (response.body || {}) as R;
     }
 
     throw ServerError.dataError(response.body);

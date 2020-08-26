@@ -145,26 +145,26 @@ export class SectionForm extends FormBase {
   }
 
   get sectionTypes(): Array<SectionType> {
-    return <SectionType[]>[...this.section.type.sectionTypes, ...this.subsectionForms.map(sf => sf.type)]
+    return [...this.section.type.sectionTypes, ...this.subsectionForms.map(sf => sf.type)]
       .reduce((rv, v) => {
         if (rv[0][v.name] === undefined) {
           rv[0][v.name] = 1;
           rv[1].push(v);
         }
         return rv;
-      }, [{} as { [key: string]: any }, [] as Array<SectionType>])[1];
+      }, [{} as { [key: string]: any }, [] as Array<SectionType>])[1] as SectionType[];
   }
 
   private get fieldFormGroup(): FormGroup {
-    return <FormGroup>this.form.get('fields');
+    return this.form.get('fields') as FormGroup;
   }
 
   private get featureFormGroups(): FormGroup {
-    return <FormGroup>this.form.get('features');
+    return this.form.get('features') as FormGroup;
   }
 
   private get subsectionFormGroups(): FormGroup {
-    return <FormGroup>this.form.get('sections');
+    return this.form.get('sections') as FormGroup;
   }
 
   private addFeatureForm(feature: Feature): FeatureForm {

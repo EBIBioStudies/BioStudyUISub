@@ -71,7 +71,7 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
       this.datepicker!.toggle();
 
       // Checks click happened on the wrapping element
-    } else if ((<Element>event.target).classList.contains('dropdown')) {
+    } else if ((event.target as Element).classList.contains('dropdown')) {
       this.datepicker!.show();
     }
   }

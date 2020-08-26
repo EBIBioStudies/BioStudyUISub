@@ -1,7 +1,7 @@
 import { FormControl } from '@angular/forms';
 
 export function scrollToFormControl(control: FormControl) {
-  const element: HTMLElement  = (<any>control).nativeElement;
+  const element: HTMLElement  = (control as any).nativeElement;
 
   if (element !== undefined) {
     element.scrollIntoView({ behavior: 'smooth', block: 'center' });

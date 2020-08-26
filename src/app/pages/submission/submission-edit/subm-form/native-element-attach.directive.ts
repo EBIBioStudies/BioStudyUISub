@@ -13,12 +13,12 @@ export class NativeElementAttachDirective implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    (<any>this.ngControl.control).nativeElement = undefined;
+    (this.ngControl.control as any).nativeElement = undefined;
   }
 
   private update = () => {
     if (this.ngControl && this.ngControl.control) {
-      const ctrl = <any>this.ngControl.control;
+      const ctrl = this.ngControl.control as any;
       ctrl.nativeElement = this.el.nativeElement;
     }
   }

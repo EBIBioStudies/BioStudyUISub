@@ -43,7 +43,7 @@ export class IdLinkModel {
     const m = input.match(this.idRegexp) || [input];
     const prefix = m[1];
     const id = m[2];
-    this.updateValues({ prefix: prefix, id: prefixOnly ? (this._id || ':') : id });
+    this.updateValues({ prefix, id: prefixOnly ? (this._id || ':') : id });
 
     return this.asString();
   }

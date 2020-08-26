@@ -32,12 +32,12 @@ export function authorsToContacts(sections: PageTabSection[] = []): PageTabSecti
         result[section.accno!] = nameAttribute.value;
 
         return result;
-      }, <Dictionary<string>>{});
+      }, {} as Dictionary<string>);
 
   const contacts = sections
     .filter(s => isAuthor(s.type))
     .map(a =>
-      <PageTabSection>{
+      ({
         type: 'Contact',
         attributes: (a.attributes || [])
           .map(attr => {
@@ -46,12 +46,12 @@ export function authorsToContacts(sections: PageTabSection[] = []): PageTabSecti
                 ? (affiliations[attr.value!] || attr.value)
                 : attr.value;
 
-              return <PtAttribute>{name: 'Organisation', value: value};
+              return {name: 'Organisation', value} as PtAttribute;
             }
 
             return attr;
           })
-      });
+      }) as PageTabSection);
   return sections
     .filter(s => !isAuthor(s.type) && !isAffiliation(s.type))
     .concat(contacts);
@@ -70,11 +70,11 @@ class Organisations {
 
   toReference(attr: PtAttribute): PtAttribute {
     if (String.isNotDefinedOrEmpty(attr.value)) {
-      return <PtAttribute>{ name: 'affiliation', value: attr.value };
+      return { name: 'affiliation', value: attr.value } as PtAttribute;
     }
 
     const orgRef = this.refFor(attr.value!, attr.accno!);
-    return <PtAttribute>{ name: 'affiliation', value: orgRef, reference: true };
+    return { name: 'affiliation', value: orgRef, reference: true } as PtAttribute;
   }
 
   private generateNextRefValue(): string {
@@ -123,7 +123,7 @@ export function contactsToAuthors(sections: PageTabSection[] = []): PageTabSecti
 
   const authors: PageTabSection[] = sections
     .filter(s => isContact(s.type))
-    .map(contact => <PageTabSection>{
+    .map(contact => ({
       type: 'Author',
       attributes: (contact.attributes || [])
         .map(attr => {
@@ -134,14 +134,14 @@ export function contactsToAuthors(sections: PageTabSection[] = []): PageTabSecti
           }
           return attr;
         })
-    });
+    }) as PageTabSection);
 
   const affiliations: PageTabSection[] = orgs.list().map(org =>
-    <PageTabSection>{
+    ({
       type: 'Organization',
       accno: org.accno,
-      attributes: [<PtAttribute>{name: 'Name', value: org.name}]
-    }
+      attributes: [{name: 'Name', value: org.name} as PtAttribute]
+    }) as PageTabSection
   );
 
   return sections

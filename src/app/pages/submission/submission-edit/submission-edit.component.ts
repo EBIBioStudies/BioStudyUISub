@@ -122,7 +122,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
         }
 
         if (this.sideBar && resp.payload.isSome) {
-          const att = resp.payload.getOrElse({ 'name': 'AttachTo', value: '' }) || { value: '' };
+          const att = resp.payload.getOrElse({ name: 'AttachTo', value: '' }) || { value: '' };
           this.sideBar.showAdvanced = !(att.value.toLowerCase() === 'arrayexpress');
         }
 

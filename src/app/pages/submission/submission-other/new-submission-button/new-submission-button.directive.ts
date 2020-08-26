@@ -59,7 +59,7 @@ export class NewSubmissionButtonDirective implements AfterViewInit {
   private selectTemplate(templates: Array<{ description: string, name: string }>) {
     this.modalService.show(AddSubmModalComponent, {
       initialState: {
-        templates: templates,
+        templates,
         onOk: (project: string) => this.onOk(project)
       }
     });

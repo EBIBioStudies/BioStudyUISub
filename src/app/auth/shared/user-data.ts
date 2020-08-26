@@ -18,7 +18,7 @@ export class UserData {
           userSession.update(user);
 
           submService.getProjects().subscribe((result) => {
-            const extendedUserInfo = <ExtendedUserInfo>user;
+            const extendedUserInfo = user as ExtendedUserInfo;
             extendedUserInfo.projects = result.map(project => project.accno);
             this.whenFetched$.next(extendedUserInfo);
             this.whenFetched$.complete();
