@@ -56,19 +56,19 @@ export class FileActionsCellComponent implements AgRendererComponent {
     return this.type === 'FILE';
   }
 
-  onCancelUpload(ev) {
+  onCancelUpload(ev): void {
     ev.preventDefault();
     if (this.upload) {
       this.upload.cancel();
     }
   }
 
-  onFileDownload(event) {
+  onFileDownload(event): void {
     event.preventDefault();
     this.onDownload();
   }
 
-  onFileRemove(ev) {
+  onFileRemove(ev): void {
     ev.preventDefault();
     this.onRemove();
   }

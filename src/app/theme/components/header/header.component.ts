@@ -64,7 +64,7 @@ export class HeaderComponent implements OnDestroy {
     });
   }
 
-  get userDisplayName() {
+  get userDisplayName(): string {
     return this.userSession.getUserDisplayName();
   }
 
@@ -72,7 +72,7 @@ export class HeaderComponent implements OnDestroy {
     this.reqStatusSubs.unsubscribe();
   }
 
-  signOut() {
+  signOut(): void {
     this.isBusy = true;
     this.authService
       .logout()
@@ -88,11 +88,11 @@ export class HeaderComponent implements OnDestroy {
     this.userSession.destroy();
   }
 
-  submitFeedback() {
+  submitFeedback(): void {
     window.location.href = 'mailto:biostudies@ebi.ac.uk?Subject=BioStudies Submission Tool Feedback';
   }
 
-  toggleCollapsed() {
+  toggleCollapsed(): void {
     this.navCollapsed = !this.navCollapsed;
   }
 }

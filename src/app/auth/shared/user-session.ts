@@ -52,7 +52,7 @@ export class UserSession {
     return this.userCookies.getLoginToken();
   }
 
-  update(user: any) {
+  update(user: any): any {
     this.userCookies.setLoginToken(user.sessid);
     this.userCookies.setUser(user);
 

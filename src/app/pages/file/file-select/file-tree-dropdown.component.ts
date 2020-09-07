@@ -6,13 +6,13 @@ import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, 
   styleUrls: ['./file-tree-dropdown.component.css']
 })
 export class FileTreeDropdownComponent implements OnInit, OnDestroy {
-  @Output() close = new EventEmitter();
+  @Output() fileTreeDropdownClose = new EventEmitter();
   @ViewChild('dropdown', { read: ElementRef, static: true }) ddRef?: ElementRef;
   @Output() fileSelect = new EventEmitter();
   @Input() isOpen = false;
   @Input() targetElement: any;
 
-  private _style: any;
+  private fileTreeDropdownStyle: any;
 
   constructor(private elementRef: ElementRef) {}
 
@@ -21,10 +21,10 @@ export class FileTreeDropdownComponent implements OnInit, OnDestroy {
   }
 
   get style(): any {
-    if (this._style === undefined) {
-      this._style = this.computeStyle();
+    if (this.fileTreeDropdownStyle === undefined) {
+      this.fileTreeDropdownStyle = this.computeStyle();
     }
-    return this._style;
+    return this.fileTreeDropdownStyle;
   }
 
   ngOnDestroy(): void {
@@ -39,9 +39,9 @@ export class FileTreeDropdownComponent implements OnInit, OnDestroy {
     }
   }
 
-  onFileSelect(value: string) {
+  onFileSelect(value: string): void {
     this.fileSelect.emit(value);
-    this.close.emit();
+    this.fileTreeDropdownClose.emit();
   }
 
   @HostListener('document:click', ['$event.target'])
@@ -51,7 +51,7 @@ export class FileTreeDropdownComponent implements OnInit, OnDestroy {
     }
 
     if (!this.ddRef.nativeElement.contains(target)) {
-      this.close.emit();
+      this.fileTreeDropdownClose.emit();
     }
   }
 

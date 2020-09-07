@@ -4,7 +4,7 @@ export class Path {
     private relativePath: string
   ) {}
 
-  static join(...parts: string[]) {
+  static join(...parts: string[]): string {
     return parts.join('/').replace(/\/[\/]+/, '/');
   }
 
@@ -20,7 +20,7 @@ export class Path {
     return this.relativePath;
   }
 
-  absolutePath(name?: string) {
+  absolutePath(name?: string): string {
     if (name) {
       return Path.join(this.rootPath, this.relativePath, name);
     }

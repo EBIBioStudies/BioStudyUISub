@@ -40,7 +40,7 @@ export class PageTabToSubmissionService {
 
   private findSubmissionTemplateName(pageTab: PageTab): string {
     const attachToAttributes: PtAttribute[] = findAttribute(pageTab, AttrExceptions.attachToAttr);
-    const attachToValue: string[] = attachToAttributes.map((attribute) => attribute.value!);
+    const attachToValue: string[] = attachToAttributes.map((attribute) => attribute.value || '');
 
     if (attachToValue.length === 0) {
       return DEFAULT_TEMPLATE_NAME;
@@ -77,7 +77,7 @@ export class PageTabToSubmissionService {
 
   private pageTabSectionToSectionData(ptSection: PageTabSection, parentAttributes: PtAttribute[] = []): SectionData {
     const parentAttributesWithName = parentAttributes.filter((attribute) => String.isDefined(attribute.name));
-    const editableParentAttributes = parentAttributesWithName.filter((attribute) => AttrExceptions.editable.includes(attribute.name!));
+    const editableParentAttributes = parentAttributesWithName.filter((attribute) => attribute.name && AttrExceptions.editable.includes(attribute.name));
     const parentAndChildAttributes = mergeAttributes(editableParentAttributes, ptSection.attributes || []);
     const attributes = this.pageTabAttributesToAttributeData(parentAndChildAttributes);
 

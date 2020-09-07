@@ -44,7 +44,7 @@ class DateRange {
 })
 export class DateFilterComponent implements AgFilterComponent {
   @ViewChildren(DateInputComponent) dateInputs?: QueryList<DateInputComponent>;
-  hide?: Function;
+  hide?: () => void;
   selection;
 
   private date?: DateRange;
@@ -119,7 +119,7 @@ export class DateFilterComponent implements AgFilterComponent {
     this.notifyAboutChanges();
   }
 
-  onFromChange() {
+  onFromChange(): void {
     if (!this.between) {
       return;
     }
@@ -140,7 +140,7 @@ export class DateFilterComponent implements AgFilterComponent {
     }
   }
 
-  onToChange() {
+  onToChange(): void {
     if (!this.between) {
       return;
     }
@@ -149,7 +149,7 @@ export class DateFilterComponent implements AgFilterComponent {
   /**
    * Sets all date fields and the underlying date range model to initial values.
    */
-  reset() {
+  reset(): void {
     this.selection = 'after';
     this.date = new DateRange();
 

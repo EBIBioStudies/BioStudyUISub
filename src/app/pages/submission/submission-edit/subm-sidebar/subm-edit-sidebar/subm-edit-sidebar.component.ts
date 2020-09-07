@@ -66,8 +66,8 @@ class DataTypeControl {
   styleUrls: ['./subm-edit-sidebar.component.css']
 })
 export class SubmEditSidebarComponent implements OnDestroy {
-  @Input() collapsed?: boolean = false;
-  form?: FormGroup;
+  @Input() collapse: boolean = false;
+  form: FormGroup = new FormGroup({}, FormValidators.uniqueValues);
   isAdvancedOpen: boolean = false;
   @Input() isAdvancedVisible: boolean = true;
   isEditModeOn: boolean = false;
@@ -101,16 +101,16 @@ export class SubmEditSidebarComponent implements OnDestroy {
     this.unsubscribe.complete();
   }
 
-  onAdvancedToggle() {
+  onAdvancedToggle(): void {
     this.isAdvancedOpen = !this.isAdvancedOpen;
   }
 
   onApplyChanges(): void {
-    if (this.form!.invalid) {
+    if (this.form.invalid) {
       return;
     }
 
-    const deleted = this.items!.filter(item => item.deleted);
+    const deleted = this.items.filter(item => item.deleted);
 
     if (deleted.length > 0) {
       const isPlural = deleted.length > 1;
@@ -167,7 +167,7 @@ export class SubmEditSidebarComponent implements OnDestroy {
 
   onItemDelete(item: DataTypeControl): void {
     item.deleted = true;
-    this.form!.removeControl(item.id);
+    this.form.removeControl(item.id);
   }
 
   onNewTypeClick(event?: Event): void {
@@ -177,7 +177,7 @@ export class SubmEditSidebarComponent implements OnDestroy {
     bsModalRef.content.closeBtnName = 'Close';
   }
 
-  private applyChanges() {
+  private applyChanges(): void {
     const deleted = this.items!.filter(item => item.deleted);
     deleted.forEach(({ id }) => {
       this.sectionForm!.removeFeatureType(id);
@@ -187,7 +187,7 @@ export class SubmEditSidebarComponent implements OnDestroy {
     this.onEditModeToggle();
   }
 
-  private switchSection(sectionFormOp: Option<SectionForm>) {
+  private switchSection(sectionFormOp: Option<SectionForm>): void {
     if (sectionFormOp.isSome()) {
       this.sectionForm = sectionFormOp.toUndefined();
       if (this.formSubscription) {

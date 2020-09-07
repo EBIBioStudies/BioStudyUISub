@@ -43,8 +43,8 @@ export class SubmissionToPageTabService {
 
   submissionToPageTab(subm: Submission, isSanitise: boolean = false): PageTab {
     const sectionAttributes: PtAttribute[] =
-      this.extractSectionAttributes(subm.section, isSanitise).filter((at) => {
-        return AttrExceptions.editable.includes(at.name!);
+      this.extractSectionAttributes(subm.section, isSanitise).filter((at: PtAttribute) => {
+        return at.name && AttrExceptions.editable.includes(at.name);
       });
 
     return {
@@ -64,16 +64,16 @@ export class SubmissionToPageTabService {
       reference: attr.reference
     } as PtAttribute;
     if (!(attr.terms || []).isEmpty()) {
-      ptAttr.valqual = attr.terms!.slice();
+      ptAttr.valqual = attr.terms && attr.terms.slice();
     }
     return ptAttr;
   }
 
   private attributesAsFile(attributes: PtAttribute[]): PtFile {
-    const isPathAttr = (at: PtAttribute) => String.isDefined(at.name) && at.name!.isEqualIgnoringCase('path');
+    const isPathAttr = (at: PtAttribute) => at.name && at.name.isEqualIgnoringCase('path');
     const attr = attributes.find(at => isPathAttr(at));
     const attrs = attributes.filter(at => !isPathAttr(at));
-    return { path: attr!.value, attributes: attrs } as PtFile;
+    return { path: attr && attr.value, attributes: attrs } as PtFile;
   }
 
   private attributesAsLink(attributes: PtAttribute[]): PtLink {
@@ -82,8 +82,11 @@ export class SubmissionToPageTabService {
 
   private extractFeatureAttributes(feature: Feature, isSanitise: boolean): PtAttribute[][] {
     const mappedFeatures: PtAttribute[][] = feature.rows.map((row) => {
-      const attributes: PtAttribute[] =
-        feature.columns.map((column) => { name: column.name, value: row.valueFor(column.id)!.value } as PtAttribute);
+      const attributes: PtAttribute[] = feature.columns.map((column) => {
+        const rowValue = row.valueFor(column.id);
+
+        return ({ name: column.name, value: rowValue && rowValue.value }) as PtAttribute
+      });
 
       return attributes.filter((attr) => (isSanitise && !isEmptyAttr(attr)) || !isSanitise);
     });
@@ -121,8 +124,11 @@ export class SubmissionToPageTabService {
   private extractSectionLibraryFile(section: Section): string | undefined {
     const feature = section.features.list().find(f => isLibraryFileType(f.typeName));
     if (feature !== undefined && !feature.isEmpty) {
-      return feature.rows[0].values()[0].value;
+      const featureRowValue = feature.rows[0].values()[0];
+
+      return featureRowValue ? featureRowValue.value : undefined;
     }
+
     return undefined;
   }
 
@@ -163,7 +169,7 @@ export class SubmissionToPageTabService {
     return protocolSections.concat(section.sections.list().map(s => this.sectionToPtSection(s, isSanitize)));
   }
 
-  private fieldsAsAttributes(section: Section, isSanitise: boolean) {
+  private fieldsAsAttributes(section: Section, isSanitise: boolean): any[] {
     return section.fields.list().map((field) => {
       if (field.valueType.isRich()) {
         const fieldValue: RichTextFieldValue = field.value as RichTextFieldValue;
@@ -184,7 +190,7 @@ export class SubmissionToPageTabService {
       accessTags: section.tags.accessTags,
       accno: section.accno,
       attributes: this.extractSectionAttributes(section, isSanitise)
-        .filter(at => !AttrExceptions.editableAndRootOnly.includes(at.name!)),
+        .filter(at => at.name && !AttrExceptions.editableAndRootOnly.includes(at.name)),
       files: this.extractSectionFiles(section, isSanitise),
       libraryFile: this.extractSectionLibraryFile(section),
       links: this.extractSectionLinks(section, isSanitise),

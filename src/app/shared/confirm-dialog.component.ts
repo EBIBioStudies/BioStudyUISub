@@ -17,8 +17,7 @@ export class ConfirmDialogComponent {
   @Input() title: string = 'Confirm'; // Summary text for the modal's title.
 
   @ViewChild('focusBtn', { static: true })
-
-  private focusEl?: ElementRef;
+  private focusEl!: ElementRef;
 
   constructor(public bsModalRef: BsModalRef) {}
 
@@ -53,7 +52,7 @@ export class ConfirmDialogComponent {
    * Handler for "onShown" event, triggered exactly after the modal has been fully revealed.
    */
   onShown(): void {
-    this.focusEl!.nativeElement.focus();
+    this.focusEl.nativeElement.focus();
   }
 
   private response(resp: boolean): void {

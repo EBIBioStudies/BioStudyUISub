@@ -11,7 +11,7 @@ class Protocols {
 
   private constructor() { }
 
-  static getInstance() {
+  static getInstance(): Protocols {
     if (!Protocols.instance) {
       Protocols.instance = new Protocols();
     }

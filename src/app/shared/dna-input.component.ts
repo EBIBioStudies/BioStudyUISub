@@ -45,14 +45,14 @@ export class DNAInputComponent implements ControlValueAccessor {
   @Input() readonly: boolean = false;
   private dnaRawSequence = '';
 
-  onEditorChange({ editor }: ChangeEvent) {
+  onEditorChange({ editor }: ChangeEvent): void {
     setTimeout(() => {
       this.dnaRawSequence = viewToPlainText(editor.editing.view.document.getRoot());
       this.onChange({ value: this.dnaSequence, raw: this.dnaRawSequence });
     }, 10);
   }
 
-  onEditorReady(editor) {
+  onEditorReady(editor): void {
     this.dnaRawSequence = viewToPlainText(editor.editing.view.document.getRoot());
     this.onChange({ value: this.dnaSequence, raw: this.dnaRawSequence });
   }

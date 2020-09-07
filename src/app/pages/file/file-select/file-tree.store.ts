@@ -35,7 +35,7 @@ export class FileTreeStore {
     );
   }
 
-  getFiles(path: string) {
+  getFiles(path: string): Observable<FileNode[]> {
     return this.getUserFiles(path).pipe(
       map((files) => files.map((file) => new FileNode(file.type === 'DIR', file.path, file.name)))
     );

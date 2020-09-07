@@ -19,7 +19,7 @@ export class FileTypeCellComponent implements AgRendererComponent {
   /**
    * Mandatory - Get the cell to refresh.
    * @see {@link https://www.ag-grid.com/javascript-grid-cell-editor/}
-   * @returns {boolean} By returning false, the grid will remove the component from the DOM and create
+   * @returns By returning false, the grid will remove the component from the DOM and create
    * a new component in it's place with the new values.
    */
   refresh(): boolean {

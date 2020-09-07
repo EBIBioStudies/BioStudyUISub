@@ -54,10 +54,10 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
   /**
    * Initializes subscription stopper so that pending requests can be cancelled on view destruction.
    *
-   * @param {AppConfig} appConfig - Global configuration object with app-wide settings.
-   * @param {DirectSubmitService} submitSvc - Singleton service for all submission transactions.
-   * @param {FileUploadList} fileUpload - Service to upload files.
-   * @param {UserData} userData - Singleton service for fetching and accessing the current user's profile data.
+   * @param appConfig - Global configuration object with app-wide settings.
+   * @param submitSvc - Singleton service for all submission transactions.
+   * @param fileUpload - Service to upload files.
+   * @param userData - Singleton service for fetching and accessing the current user's profile data.
    */
   constructor(
     private appConfig: AppConfig,
@@ -72,11 +72,11 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
   /**
    * Gets the current number of selected files, normalising to 0 if there are none.
    * NOTE: When successful uploads are cleared, the selected file count must reflect that. Hence the boolean filter.
-   * @returns {number} Number of files selected.
+   * @returns Number of files selected.
    */
   get selectedFileCount(): number {
     if (this.model.files) {
-      return this.model.files!.filter(Boolean).length;
+      return this.model.files.filter(Boolean).length;
     } else {
       return 0;
     }
@@ -89,7 +89,7 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
   /**
    * Gives the number of files that have not been uploaded yet. Before any requests are made, this number will
    * be assumed to be equal to the number of selected files.
-   * @returns {number} Count of pending files.
+   * @returns Count of pending files.
    */
   get pendingFiles(): number {
     if (this.directSubmitSvc.requestCount) {
@@ -101,7 +101,7 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
 
   /**
    * Calculates the global progress rate of all active uploads.
-   * @returns {number} Percentage of completed queued requests.
+   * @returns Percentage of completed queued requests.
    */
   get progress(): number {
     return Math.floor((this.selectedFileCount - this.pendingFiles) * 100 / this.selectedFileCount);
@@ -110,7 +110,7 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
   /**
    * Gives the number of files whose upload has failed. Before any requests are made, this number will
    * be assumed to be equal to 0.
-   * @returns {number} Count of erroneous files.
+   * @returns Count of erroneous files.
    */
   get errorFiles(): number {
     if (this.directSubmitSvc.requestCount) {
@@ -130,20 +130,20 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
   /**
    * Acts as Angular's "touched" attribute for the file upload button.
    */
-  get fileTouched() {
+  get fileTouched(): boolean {
     return this.model.files !== undefined;
   }
 
   /**
    * Convenience method to find out whether the request queue has pending requests or not.
-   * @param {string} status - Status being probed.
-   * @returns {boolean} True if the queue is with the status passed in.
+   * @param status - Status being probed.
+   * @returns True if the queue is with the status passed in.
    */
   isStatus(status: string): boolean {
     return this.directSubmitSvc.isQueueStatus(status);
   }
 
-  ngDoCheck() {
+  ngDoCheck(): void {
     this.isBulkSupport = this.fileSelector && this.fileSelector.isDirSupport;
   }
 
@@ -152,7 +152,7 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
    * NOTE: Requires the takeUntil operator before every subscription.
    * @see {@link https://stackoverflow.com/a/41177163}
    */
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
     this.directSubmitSvc.reset();
@@ -176,9 +176,15 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
    * Cancels all currently pending requests by unsubscribing from the aggregated observable and updating their
    * respective statuses.
    */
-  onCancelPending() {
-    this.uploadSubs!.unsubscribe();
-    this.uploadFilesSubscription!.unsubscribe();
+  onCancelPending(): void {
+    if (this.uploadSubs) {
+      this.uploadSubs.unsubscribe();
+    }
+
+    if (this.uploadFilesSubscription) {
+      this.uploadFilesSubscription.unsubscribe();
+    }
+
     this.directSubmitSvc.cancelAll();
     this.directSubmitSvc.reset();
   }
@@ -188,13 +194,13 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
    * NOTE: Requests are bundled into groups of MAX_CONCURRENT requests to avoid overwhelming the browser and/or
    * the server when dealing with a high number of files.
    *
-   * @param {string} submissionType - Indicates whether the submitted file should create or update an existing database entry.
+   * @param submissionType - Indicates whether the submitted file should create or update an existing database entry.
    */
   onSubmit(submissionType: string): Observable<boolean> {
     let nonClearedFiles;
 
     if (this.canSubmit) {
-      nonClearedFiles = this.model.files!.filter(Boolean);
+      nonClearedFiles = this.model.files ? this.model.files.filter(Boolean) : [];
       const nonStudyFiles = nonClearedFiles.filter((file) => !file.isStudy);
       const studyFiles = nonClearedFiles.filter((file) => file.isStudy);
 
@@ -224,7 +230,7 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
 
   /**
    * Notifies the outside world if the collapsed state of the sidebar has changed.
-   * @param {Event} event - DOM object for the click action.
+   * @param event - DOM object for the click action.
    */
   onToggle(event: Event): void {
     event.preventDefault();
@@ -238,7 +244,7 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
    * process since it signals the start of a new upload process and allows treating the list of files as
    * "nascent uploads".
    *
-   * @param {FileList} files - List of files to be uploaded.
+   * @param files - List of files to be uploaded.
    */
   onUploadFilesSelect(files: FileList): void {
     if (files.length > 0) {
@@ -260,24 +266,26 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
 
   /**
    * Convenience method to the get the value of a given request's property.
-   * @param {number} studyIdx - Index for the request.
-   * @param {string} property - Name of the property whose value is to be retrieved.
-   * @returns {string} Value of the property.
+   * @param studyIdx - Index for the request.
+   * @param property - Name of the property whose value is to be retrieved.
+   * @returns Value of the property.
    */
-  studyProp(studyIdx: number, property: string): string {
+  studyProp(studyIdx: number, property: string): string | boolean {
     const request = this.directSubmitSvc.getRequest(studyIdx);
 
     return typeof request !== 'undefined' ? request[property] : '';
   }
 
-  toggleStudyFile(fileName: string, isStudy: boolean) {
-    this.model.files!.forEach((file) => {
-      if (file.name === fileName) {
-        file.isStudy = isStudy;
-      }
-    });
+  toggleStudyFile(fileName: string, isStudy: boolean): void {
+    if (this.model.files) {
+      this.model.files.forEach((file) => {
+        if (file.name === fileName) {
+          file.isStudy = isStudy;
+        }
+      });
 
-    this.filesChange.emit(this.model.files);
+      this.filesChange.emit(this.model.files);
+    }
   }
 
   private createDirectSubmission(files: File[], submissionType: string): Observable<any> {
@@ -309,8 +317,8 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
 
   /**
    * Converts a list of projects into a data object suitable for checkbox controls.
-   * @param {string[]} projects - Names of projects.
-   * @returns {{name: string; checked: boolean}[]} Checkbox-compliant object.
+   * @param projects - Names of projects.
+   * @returns Checkbox-compliant object.
    */
   private initProjModel(projects: string[]): ProjectOption[] {
     const formattedProjects = projects.map((name) => ({ name, value: name, checked: false }));
@@ -328,7 +336,7 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
    * -to use Angular terminology-, the state is inferred from the input's value. Within this context, "null" indicates
    * a blank field.
    */
-  private markFileTouched() {
+  private markFileTouched(): void {
     this.model.files = undefined;
   }
 

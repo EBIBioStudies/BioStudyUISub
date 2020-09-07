@@ -156,11 +156,12 @@ export class SubmFormValidators {
     };
   }
 
+  // tslint:disable-next-line: variable-name
   static forColumn(_column: Attribute): ValidatorFn[] {
     return [Validators.required];
   }
 
-  static forFeatureColumns(feature: Feature) {
+  static forFeatureColumns(feature: Feature): ValidatorFn[] {
     const validators: ValidatorFn[] = [];
 
     if (feature.type.uniqueCols) {
@@ -212,7 +213,7 @@ export class SubmFormValidators {
 }
 
 export class CustomErrorMessages {
-  static for(control: AbstractControl) {
+  static for(control: AbstractControl): any {
     const ref = ((control instanceof CustomFormControl) ? control.ref : undefined) || ControlRef.unknown;
 
     return {

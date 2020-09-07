@@ -15,15 +15,15 @@ export class DataWithCaptcha {
 }
 
 export class DataWithCaptchaAndPath extends DataWithCaptcha {
-  private _path: string;
+  private innerPath: string;
 
   constructor(path: string) {
     super();
-    this._path = path;
+    this.innerPath = path;
   }
 
   get path(): string {
-    return this._path;
+    return this.innerPath;
   }
 
   snapshot(): any {

@@ -19,17 +19,22 @@ export class AppComponent implements OnInit {
     setTheme('bs3');
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     const bannerEl = document.createElement('script');
 
     // Loads the GDPR bottom panel logic.
     // NOTE: The banner should be called with 'other' to indicate a framework different from EBI's is in use.
     // NOTE: ebiFrameworkRunDataProtectionBanner is defined after the script loads.
     bannerEl.src = this.appConfig.bannerUrl;
-    bannerEl.onload = function () {
-      window['ebiFrameworkRunDataProtectionBanner']('other');
+    bannerEl.onload = () => {
+      if (window.ebiFrameworkRunDataProtectionBanner !== undefined) {
+        window.ebiFrameworkRunDataProtectionBanner('other');
+      }
     };
-    document.head!.appendChild(bannerEl);
+
+    if (document.head !== undefined) {
+      document.head.appendChild(bannerEl);
+    }
 
     this.userSession.init();
   }

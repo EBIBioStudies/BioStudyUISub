@@ -32,7 +32,7 @@ class ValueLength {
   styleUrls: ['./subm-field.component.css']
 })
 export class SubmFieldComponent {
-  @Input() fieldControl?: FieldControl;
+  @Input() fieldControl!: FieldControl;
   @Input() readonly = false;
 
   private valueLen?: ValueLength;
@@ -41,11 +41,11 @@ export class SubmFieldComponent {
   }
 
   get fieldType(): FieldType {
-    return this.fieldControl!.type;
+    return this.fieldControl.type;
   }
 
   get fieldName(): string {
-    return this.fieldControl!.name;
+    return this.fieldControl.name;
   }
 
   get valueType(): ValueType {
@@ -54,12 +54,12 @@ export class SubmFieldComponent {
 
   get isEmpty(): boolean {
     if (this.fieldType.valueType.isRich()) {
-      const fieldValue: RichTextFieldValue = this.fieldControl!.control.value as RichTextFieldValue;
+      const fieldValue: RichTextFieldValue = this.fieldControl.control.value as RichTextFieldValue;
 
       return fieldValue.raw.isEmpty();
     }
 
-    return (this.fieldControl!.control.value as string).isEmpty();
+    return (this.fieldControl.control.value as string).isEmpty();
   }
 
   get isRequired(): boolean {
@@ -71,15 +71,15 @@ export class SubmFieldComponent {
   }
 
   get isInvalid(): boolean {
-    return this.fieldControl!.control.invalid;
+    return this.fieldControl.control.invalid;
   }
 
   get isValid(): boolean {
-    return this.fieldControl!.control.valid;
+    return this.fieldControl.control.valid;
   }
 
   get isTouched(): boolean {
-    return this.fieldControl!.control.touched;
+    return this.fieldControl.control.touched;
   }
 
   get hasErrors(): boolean {
@@ -87,10 +87,10 @@ export class SubmFieldComponent {
   }
 
   get errors(): string[] {
-    return this.fieldControl!.errors;
+    return this.fieldControl.errors;
   }
 
-  get valueLength() {
+  get valueLength(): ValueLength {
     if (this.valueLen === undefined) {
       const vt = this.valueType;
       if (vt.isText()) {

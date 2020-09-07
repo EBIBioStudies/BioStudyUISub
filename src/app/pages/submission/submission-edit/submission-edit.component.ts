@@ -71,7 +71,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     ).subscribe(sectionForm => this.switchSection(sectionForm));
   }
 
-  get location() {
+  get location(): globalThis.Location {
     return window.location;
   }
 
@@ -100,7 +100,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     return this.accno!.startsWith('TMP_');
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.unsubscribe.next();
     this.unsubscribe.complete();
     this.submEditService.reset();
@@ -155,12 +155,12 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
       });
   }
 
-  onEditBackClick() {
+  onEditBackClick(): void {
     this.readonly = false;
     this.router.navigate([`/submissions/edit/${this.accno}`]);
   }
 
-  onRevertClick() {
+  onRevertClick(): void {
     this.confirmRevert()
       .pipe(
         takeUntil(this.unsubscribe),
@@ -186,7 +186,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
       });
   }
 
-  onSubmitClick(event, isConfirm: boolean = false) {
+  onSubmitClick(event, isConfirm: boolean = false): void {
     this.submissionErrors = this.submEditService.validateSubmission();
 
     if (event) {
@@ -258,7 +258,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
   }
 
   // todo: add proper type for submit response
-  private onSubmitFinished(resp: SubmitResponse) {
+  private onSubmitFinished(resp: SubmitResponse): void {
     this.locService.replaceState('/submissions/' + this.accno);
     this.readonly = true;
 
@@ -279,13 +279,13 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     return this.sectionForm !== undefined && this.sectionForm.form.valid && !hasErrors;
   }
 
-  private showSubmitLog(isSuccess: boolean, log?: SubmitLog) {
+  private showSubmitLog(isSuccess: boolean, log?: SubmitLog): void {
     this.bsModalService.show(SubmResultsModalComponent, {
       initialState: { isSuccess, log }
     });
   }
 
-  private switchSection(sectionForm: Option<SectionForm>) {
+  private switchSection(sectionForm: Option<SectionForm>): void {
     this.sectionForm = sectionForm.toUndefined();
   }
 }

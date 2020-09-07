@@ -6,7 +6,7 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
   styleUrls: ['./directory-path.component.css']
 })
 export class DirectoryPathComponent implements OnChanges {
-  @Output() change: EventEmitter<string> = new EventEmitter<string>();
+  @Output() directoryPathChange: EventEmitter<string> = new EventEmitter<string>();
   dirs: string[] = [];
   groupName: string = '';
   GROUPS_PATH = 'groups';
@@ -37,11 +37,11 @@ export class DirectoryPathComponent implements OnChanges {
     }
   }
 
-  onDirectoryClick(index) {
+  onDirectoryClick(index): void {
     const rootPath: string = this.isGroup ? `/${this.GROUPS_PATH}/${this.groupName}` : `/${this.USER_PATH}`;
     const dirLevels: string[] = this.dirs.slice(0, index + 1);
     const dir: string = dirLevels.length === 0 ? rootPath : `${rootPath}/${this.dirs.slice(0, index + 1).join('/')}`;
 
-    this.change.emit(dir);
+    this.directoryPathChange.emit(dir);
   }
 }

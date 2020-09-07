@@ -16,8 +16,8 @@ export class LinksUtils {
    * link's pointer to determine if a 'Type' attribute is required. It also renames the root-level 'pointer'
    * property to PageTab's expected 'url'.
    * NOTE: In the case of prefix:ID links, the 'Type' attribute must be set to the pre
-   * @param {Object} linkObj - PageTab's data object for the link.
-   * @returns {Object} PageTab-ready link object.
+   * @param linkObj - PageTab's data object for the link.
+   * @returns PageTab-ready link object.
    */
   static toTyped(attributes: PtAttribute[]): PtLink {
     const pointer: string = (attributes.find(at => at.name === POINTER_ATTR) || { value: '' }).value || '';
@@ -51,8 +51,8 @@ export class LinksUtils {
    * whose value is equal to the root 'url' property. It also prefixes the pointer with the 'Type' attribute's value
    * if not empty (it's the prefix of a prefix:ID link).
    * NOTE: In the case of prefix:ID links, PageTab's 'url' root property is set to the ID.
-   * @param {Object} linkObj - Submission model's object for the link.
-   * @returns {Object} Submission-ready link object.
+   * @param linkObj - Submission model's object for the link.
+   * @returns Submission-ready link object.
    */
   static toUntyped(linkObj: PtLink): PtAttribute[] {
     const attrs = (linkObj.attributes || []);

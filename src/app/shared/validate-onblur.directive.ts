@@ -18,12 +18,16 @@ export class ValidateOnBlurDirective {
   constructor(public formControl: NgControl) {}
 
   @HostListener('focusout')
-  markOnBlur() {
-    this.formControl.control!.markAsTouched({ onlySelf: true });
+  markOnBlur(): void {
+    if (this.formControl.control !== null) {
+      this.formControl.control.markAsTouched({ onlySelf: true });
+    }
   }
 
   @HostListener('keydown')
-  onKeyDown() {
-    this.formControl.control!.markAsUntouched({ onlySelf: false });
+  onKeyDown(): void {
+    if (this.formControl.control !== null) {
+      this.formControl.control.markAsUntouched({ onlySelf: false });
+    }
   }
 }

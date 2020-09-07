@@ -11,9 +11,9 @@ export class ErrorToastComponent {
 
   /**
    * Captures async errors and refreshes the UI (slides an alert in).
-   * @param {ErrorHandler} geh - Global handler for errors.
-   * @param {ChangeDetectorRef} changeRef - Forces change detection on this component.
-   * @param {ElementRef} rootEl - Reference to the component's wrapping element
+   * @param geh - Global handler for errors.
+   * @param changeRef - Forces change detection on this component.
+   * @param rootEl - Reference to the component's wrapping element
    */
   constructor(geh: ErrorHandler, changeRef: ChangeDetectorRef, private rootEl: ElementRef) {
     if (geh instanceof GlobalErrorHandler) {
@@ -35,7 +35,7 @@ export class ErrorToastComponent {
   /**
    * Slides the alert out of view when performing the close action.
    */
-  onClose() {
+  onClose(): void {
     this.rootEl.nativeElement.firstChild.classList.remove('slide-in');
   }
 
@@ -43,7 +43,7 @@ export class ErrorToastComponent {
    * Merges different error properties to produce the string to be shown as an error message. If there is
    * no network, the user is instead alerted to that.
    * @param error - Error object containing fragments of the error message.
-   * @returns {string} - Text to be used as an error message.
+   * @returns Text to be used as an error message.
    */
   toMessage(error: any): string {
 

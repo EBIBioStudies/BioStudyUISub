@@ -18,10 +18,10 @@ export class SignUpComponent implements AfterViewInit, OnInit {
   success: boolean = false;
 
   @ViewChild('focusEl')
-  private focusRef?: ElementRef;
+  private focusRef!: ElementRef;
 
   @ViewChild('recaptchaEl')
-  private recaptcha?: RecaptchaComponent;
+  private recaptcha!: RecaptchaComponent;
 
   constructor(
     private authService: AuthService,
@@ -31,10 +31,10 @@ export class SignUpComponent implements AfterViewInit, OnInit {
 
   // TODO: Turn autofocus on render into a directive
   ngAfterViewInit(): void {
-    this.focusRef!.nativeElement.focus();
+    this.focusRef.nativeElement.focus();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     if (!this.session.isAnonymous()) {
       this.router.navigate(['']);
     }
@@ -70,7 +70,7 @@ export class SignUpComponent implements AfterViewInit, OnInit {
 
     if (form.valid) {
       this.isLoading = true;
-      this.recaptcha!.execute();
+      this.recaptcha.execute();
     } else {
       Object.keys(form.controls).forEach((key) => {
         form.controls[key].markAsTouched({onlySelf: true});
@@ -79,7 +79,7 @@ export class SignUpComponent implements AfterViewInit, OnInit {
   }
 
   resetReCaptcha(): void {
-    this.recaptcha!.reset();
+    this.recaptcha.reset();
     this.model.resetCaptcha();
   }
 }

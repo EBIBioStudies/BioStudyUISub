@@ -17,17 +17,17 @@ export class FileSelectComponent implements ControlValueAccessor, OnDestroy {
   isOpen = false;
   @Input() readonly = false;
   // tslint:disable-next-line: no-input-rename
-  @Input('value') private selected = '';
-
+  @Input('value')
+  private selected = '';
   private unsubscribe = new Subject();
 
   constructor(private fileStore: FileTreeStore) {}
 
-  get value() {
+  get value(): string {
     return this.selected;
   }
 
-  set value(value: any) {
+  set value(value: string) {
     this.selected = value;
     this.onChange(value);
   }
@@ -43,11 +43,11 @@ export class FileSelectComponent implements ControlValueAccessor, OnDestroy {
     this.fileStore.clearCache();
   }
 
-  onFileDropdownClose() {
+  onFileDropdownClose(): void {
     this.isOpen = false;
   }
 
-  onFileSelect(path: string) {
+  onFileSelect(path: string): void {
     this.value = path;
   }
 
@@ -59,11 +59,11 @@ export class FileSelectComponent implements ControlValueAccessor, OnDestroy {
     this.value = $event.fileName;
   }
 
-  registerOnChange(fn) {
+  registerOnChange(fn): void {
     this.onChange = fn;
   }
 
-  registerOnTouched() { }
+  registerOnTouched(): void { }
 
   setDisabledState(): void {}
 

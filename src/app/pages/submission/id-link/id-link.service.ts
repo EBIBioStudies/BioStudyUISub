@@ -22,7 +22,7 @@ export class IdLinkService {
 
   /**
    * Caches the list of all prefixes, signalling when it's been retrieved and available.
-   * @param {HttpClient} http - Client HTTP API.
+   * @param http - Client HTTP API.
    */
   constructor(
     private http: HttpClient
@@ -30,7 +30,6 @@ export class IdLinkService {
 
   /**
    * Pseudonym for the "suggest" method without parameters to retrieve the complete list of prefixes.
-   * @returns {Observable<string[]>}
    */
   list(): Observable<string[]> {
     return this.suggest();
@@ -38,8 +37,8 @@ export class IdLinkService {
 
   /**
    * Retrieves the list of identifier prefixes matching the user-defined partial string.
-   * @param {string} [prefix] - Partial prefix for identifier. If not provided, the full list is retrieved.
-   * @returns {Observable<string[]>} Observable the request has been turned into.
+   * @param [prefix] - Partial prefix for identifier. If not provided, the full list is retrieved.
+   * @returns Observable the request has been turned into.
    */
   suggest(prefix?: string): Observable<string[]> {
     let url;
@@ -56,8 +55,8 @@ export class IdLinkService {
 
     return this.http.get(url).pipe(
       map((data: IdentifierResponse) => {
-        const _embedded: IdentifierEmbedded = data._embedded || {};
-        const namespaces: IdentifierNamespace[] = _embedded.namespaces || [];
+        const embedded: IdentifierEmbedded = data._embedded || {};
+        const namespaces: IdentifierNamespace[] = embedded.namespaces || [];
 
         return namespaces.map((namespace) => {
           return namespace.prefix === 'chebi' ? namespace.prefix.toUpperCase() : namespace.prefix;
@@ -75,10 +74,10 @@ export class IdLinkService {
   /**
    * Checks if a prefix:id string is among the allowed ones.
    *
-   * @param {string} identifier - Identifier to be validated against identifiers.org.
-   * @returns {Observable<boolean>} Observable the request has been turned into.
+   * @param identifier - Identifier to be validated against identifiers.org.
+   * @returns Observable the request has been turned into.
    */
-  validate(identifier: string): Observable<string | IdentifierResolvedResource>  {
+  validate(identifier: string): Observable<IdentifierResolvedResource>  {
     return this.http.get(`${IdLinkService.RESOLUTION_URL}/${identifier}`).pipe(
       map((response: IdentifierResolverResponse) => {
         const payload: IdentifierResolverPayload = response.payload || {};
@@ -88,7 +87,7 @@ export class IdLinkService {
       }),
       catchError((err) => {
         if (err.status === HttpStatus.BAD_REQUEST) {
-          return of(`INVALID resolution request for ${identifier}`);
+          return throwError(`INVALID resolution request for ${identifier}`);
         }
 
         return throwError(err);

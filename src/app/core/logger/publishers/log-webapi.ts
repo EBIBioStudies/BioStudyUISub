@@ -13,14 +13,14 @@ export class LogWebApi extends LogPublisher {
     this.http = http;
   }
 
-  log(entry: LogEntry, level: LogLevel) {
+  log(entry: LogEntry, level: LogLevel): void {
     // Only send errors to external service.
     if (this.allowedLevels.includes(level)) {
       this.send(entry);
     }
   }
 
-  private send(entry: LogEntry) {
+  private send(entry: LogEntry): void {
     this.http.post('/log', entry.buildLogJsonFormat()).subscribe();
   }
 }

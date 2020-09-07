@@ -20,7 +20,7 @@ export class UploadFileModalComponent {
   constructor(private fileUploadList: FileUploadList, public bsModalRef: BsModalRef) {}
 
   get error(): string {
-    return this.upload ? (this.upload!.error || '') : '';
+    return this.upload ? (this.upload.error || '') : '';
   }
 
   get isUploading(): boolean {
@@ -43,7 +43,7 @@ export class UploadFileModalComponent {
     this.bsModalRef.hide();
   }
 
-  onCancelCloseClick() {
+  onCancelCloseClick(): void {
     if (this.upload) {
       this.upload.cancel();
     }
@@ -51,7 +51,7 @@ export class UploadFileModalComponent {
     this.hide();
   }
 
-  onInputChange($event) {
+  onInputChange($event): void {
     const files: FileList = $event.target.files;
     const rawFiles: File[] = Array.from(files);
     const filesToUploadName: string[] = rawFiles.map((file) => file.name);
@@ -61,11 +61,11 @@ export class UploadFileModalComponent {
     this.files = rawFiles;
   }
 
-  onUploadClick() {
+  onUploadClick(): void {
     this.uploadFile(this.files);
   }
 
-  private uploadFile(files: File[]) {
+  private uploadFile(files: File[]): void {
     const uploadPath: Path = new Path(this.absolutePath, '');
 
     this.upload = this.fileUploadList.upload(uploadPath, Array.from(files));

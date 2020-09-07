@@ -12,7 +12,7 @@ export class NativeElementAttachDirective implements AfterViewInit, OnDestroy {
     setTimeout(this.update);
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     (this.ngControl.control as any).nativeElement = undefined;
   }
 

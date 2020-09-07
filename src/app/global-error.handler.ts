@@ -2,7 +2,7 @@ import {
   ErrorHandler,
   Injectable, NgZone
 } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { UserSession } from 'app/auth/shared';
 import { INTERNAL_SERVER_ERROR, UNAUTHORIZED } from 'http-status-codes';
 import { LogService } from './core/logger/log.service';
@@ -16,11 +16,11 @@ export class GlobalErrorHandler extends ErrorHandler {
     super();
   }
 
-  get errorDetected() {
+  get errorDetected(): Observable<any> {
     return this.errors.asObservable();
   }
 
-  handleError(error) {
+  handleError(error): void {
     // Invalid authentication credentials, probably due to the current session having expired => clean up and reload.
     // NOTE: the app seems to get into a limbo state whereby the digest cycle fails to detect property changes
     // any more and requests are not issued. Reloading is a workaround.

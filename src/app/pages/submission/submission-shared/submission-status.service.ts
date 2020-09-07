@@ -21,19 +21,21 @@ export class SubmissionStatusService {
       this.logService.error('get-subm-status', 'SubmissionStatusService: could not stablish event source connection');
     }
 
-    return Observable.create((observer) => {
-      this.eventSource!.addEventListener('subm-status', (event: MessageEvent) => {
-        const { data } = event;
-        const parsedData: SubmStatus = JSON.parse(data);
+    return new Observable((observer) => {
+      if (this.eventSource) {
+        this.eventSource.addEventListener('subm-status', (event: MessageEvent) => {
+          const { data } = event;
+          const parsedData: SubmStatus = JSON.parse(data);
 
-        this.zone.run(() => {
-          observer.next(parsedData);
+          this.zone.run(() => {
+            observer.next(parsedData);
+          });
         });
-      });
 
-      this.eventSource!.onerror = () => {
-        this.logService.error('get-subm-status', 'SubmissionStatusService: EventSource has stopped');
-      };
+        this.eventSource.onerror = () => {
+          this.logService.error('get-subm-status', 'SubmissionStatusService: EventSource has stopped');
+        };
+      }
     });
   }
 }

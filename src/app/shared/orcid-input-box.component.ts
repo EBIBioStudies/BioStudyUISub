@@ -29,17 +29,17 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor, OnInit, Aft
   @Input() readonly: boolean = false;
   @ViewChild(NgModel, { static: true })
 
-  private inputModel?: NgModel;
+  private inputModel!: NgModel;
   private mlistener: any = null;
   private orcidValue = ''; // internal data model
 
   /**
    * Instantiates a new custom component.
-   * @param {Injector} injector - Parent's injector retrieved to get the component's form control later on.
+   * @param injector - Parent's injector retrieved to get the component's form control later on.
    */
   constructor(private injector: Injector) { }
 
-  get value() {
+  get value(): string {
     return this.orcidValue;
   }
 
@@ -48,11 +48,11 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor, OnInit, Aft
     this.onChange(newValue);
   }
 
-  messageListener() {
+  messageListener(): any {
     if (!this.mlistener) {
       const obj = this;
 
-      this.mlistener = function (event) {
+      this.mlistener = (event) => {
         const msg = event.data;
 
         if (!msg.thor) {
@@ -60,9 +60,10 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor, OnInit, Aft
         }
 
         const data = JSON.parse(msg.thor);
-        const orcid = data['orcid-profile']['orcid-identifier']['path'];
-
-        obj.value = orcid;
+        const orcidIdentifier = data['orcid-profile']['orcid-identifier'];
+        if (orcidIdentifier) {
+          obj.value = orcidIdentifier.path;
+        }
       };
     }
 
@@ -73,34 +74,34 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor, OnInit, Aft
    * Lifecycle hook for operations after all child views have been initialised. It merges all validators of
    * the actual input and the wrapping component.
    */
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     const control: AbstractControl | null = this.injector.get(NgControl).control;
 
     if (control) {
-      control.setValidators(Validators.compose([control.validator, this.inputModel!.control.validator]));
-      control.setAsyncValidators(Validators.composeAsync([control.asyncValidator, this.inputModel!.control.asyncValidator]));
+      control.setValidators(Validators.compose([control.validator, this.inputModel.control.validator]));
+      control.setAsyncValidators(Validators.composeAsync([control.asyncValidator, this.inputModel.control.asyncValidator]));
       setTimeout(() => {
         control.updateValueAndValidity();
       }, 10);
     }
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     window.removeEventListener('message', this.messageListener());
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     window.addEventListener('message', this.messageListener());
   }
 
   /**
    * Handler for blur events. Normalises the behaviour of the "touched" flag.
    */
-  onBlur() {
+  onBlur(): void {
     this.onTouched();
   }
 
-  openPopup() {
+  openPopup(): void {
     const thorIFrame: any = document.getElementById('thor');
     const w = thorIFrame.contentWindow;
 
@@ -112,7 +113,7 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor, OnInit, Aft
    * @see {@link ControlValueAccessor}
    * @param fn - Handler telling other form directives and form controls to update their values.
    */
-  registerOnChange(fn) {
+  registerOnChange(fn): void {
     this.onChange = fn;
   }
 
@@ -122,7 +123,7 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor, OnInit, Aft
    * @see {@link ControlValueAccessor}
    * @param fn - Handler for touch events.
    */
-  registerOnTouched(fn: any) {
+  registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
 
@@ -131,7 +132,7 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor, OnInit, Aft
    * @see {@link ControlValueAccessor}
    * @param newValue - Value to be stored
    */
-  writeValue(newValue: any) {
+  writeValue(newValue: any): void {
     if (newValue) {
       this.orcidValue = newValue;
       this.onChange(newValue);

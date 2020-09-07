@@ -26,7 +26,7 @@ export class SubmCheckSidebarComponent {
 
   /**
    * Determines the text corresponding to a certain error status in the event of no message being provided already.
-   * @returns {string} Descriptive text for the error.
+   * @returns Descriptive text for the error.
    */
   errorMsg(): string {
     const error = this.serverError;
@@ -55,16 +55,16 @@ export class SubmCheckSidebarComponent {
 
   /**
    * Scrolls to and sets focus on the field represented by the form control clicked on within the check tab.
-   * @param {FieldControl} control - Form control augmented with the DOM element for the field.
+   * @param control - Form control augmented with the DOM element for the field.
    */
-  onReviewClick(control: FormControl) {
+  onReviewClick(control: FormControl): void {
     scrollToFormControl(control);
   }
 
   /**
    * Determines the abbreviated text matching a certain error key.
-   * @param {ValidationErrors} errors Set of error keys.
-   * @returns {string} Abbreviated text
+   * @param errors Set of error keys.
+   * @returns Abbreviated text
    */
   tipText(errors: ValidationErrors): string {
     if (errors.required) {

@@ -96,7 +96,7 @@ export class TreeViewNodeComponent implements AfterViewInit, OnChanges {
     return this.children.length > 0;
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     if (this.config) {
       const compFactory = this.componentFactoryResolver.resolveComponentFactory(this.config.nodeComponentClass);
 
@@ -105,7 +105,7 @@ export class TreeViewNodeComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  ngOnChanges() {
+  ngOnChanges(): void {
     this.detectChanges();
 
     // Reveals only branches of the tree that indicate error.
@@ -114,7 +114,7 @@ export class TreeViewNodeComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  private detectChanges() {
+  private detectChanges(): void {
     if (this.compRef) {
       (this.compRef.instance as TreeViewCustomNodeComponent).onNodeData(this.data);
       this.compRef.changeDetectorRef.detectChanges();

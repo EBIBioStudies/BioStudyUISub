@@ -78,7 +78,10 @@ export class FileUpload {
 
   cancel(): void {
     if (!this.isFinished()) {
-      this.sb!.unsubscribe();
+      if (this.sb) {
+        this.sb.unsubscribe();
+      }
+
       this.sb = undefined;
       this.uploadEvent$.next(CANCEL_UPLOAD_EVENT);
     }
@@ -114,7 +117,7 @@ export class FileUploadList {
     return this.uploads.filter(u => !u.isDone());
   }
 
-  remove(upload: FileUpload) {
+  remove(upload: FileUpload): void {
     const index = this.uploads.indexOf(upload);
     if (index > -1) {
       this.uploads.splice(index, 1);
@@ -141,7 +144,7 @@ export class FileUploadList {
     return upload;
   }
 
-  private notifyActiveUploadsChanged() {
+  private notifyActiveUploadsChanged(): void {
     this.activeUploadsChanged$.next(this.activeUploads);
   }
 }

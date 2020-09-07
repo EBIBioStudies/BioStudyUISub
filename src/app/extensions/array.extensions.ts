@@ -4,14 +4,14 @@ interface Array<T> {
   uniqueValues(): Array<T>;
 }
 
-Array.prototype.isEmpty = function () {
+Array.prototype.isEmpty = function (): boolean {
   return this.length === 0;
 };
 
-Array.prototype.uniqueValues = function () {
+Array.prototype.uniqueValues = function (): any[] {
   return this.filter((x, i, a) => a.indexOf(x) === i);
 };
 
-Array.prototype.flatMap = function (mapFunc) {
+Array.prototype.flatMap = function (mapFunc): any[] {
   return this.reduce((rv, next) => [...mapFunc(next), ...rv], []);
 };

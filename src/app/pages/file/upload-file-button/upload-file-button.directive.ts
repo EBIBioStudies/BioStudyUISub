@@ -6,23 +6,23 @@ import { UploadFileModalComponent } from './upload-file-modal.component';
   selector: 'button[stUploadFileButton]'
 })
 export class UploadFileButtonDirective {
-  @Output() onUploadFile: EventEmitter<any> = new EventEmitter();
+  @Output() uploadFile: EventEmitter<any> = new EventEmitter();
 
   constructor(private modalService: BsModalService) {}
 
-  @HostListener('click', ['$event.target']) onClick() {
+  @HostListener('click', ['$event.target']) onClick(): void {
     this.onUploadFileClick();
   }
 
-  private onUploadFileClick() {
+  private onUploadFileClick(): void {
     this.uploadFileTemplate();
   }
 
-  private uploadFileTemplate() {
+  private uploadFileTemplate(): void {
     const modal = this.modalService.show(UploadFileModalComponent, { ignoreBackdropClick: true });
 
     (modal.content as UploadFileModalComponent).onClose.subscribe((fileName) => {
-      this.onUploadFile.emit({ fileName });
+      this.uploadFile.emit({ fileName });
     });
   }
 }

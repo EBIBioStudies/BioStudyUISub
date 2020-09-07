@@ -11,12 +11,12 @@ import { SectionForm } from '../../shared/model/section-form.model';
 })
 export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
   featNames?: string[];
-  sectionForm?: SectionForm;
+  sectionForm!: SectionForm;
   typeBase: string = 'Grid';
-  typeName?: string;
+  typeName: string = '';
 
   @ViewChild('focusBtn', { static: true })
-  private focusEl?: ElementRef;
+  private focusEl!: ElementRef;
 
   @ViewChild('uniquePop')
   private uniquePop?: PopoverDirective;
@@ -28,7 +28,7 @@ export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.focusEl!.nativeElement.focus();
+    this.focusEl.nativeElement.focus();
   }
 
   ngOnInit(): void {
@@ -36,17 +36,17 @@ export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
   }
 
   onAddType(name: string, isSection: boolean, isSingleRow: boolean): boolean {
-    const rootType: SectionType = this.sectionForm!.type;
+    const rootType: SectionType = this.sectionForm.type;
 
     if (isSection) {
       const sectionType = rootType.getSectionType(name);
-      this.sectionForm!.addSection(sectionType);
+      this.sectionForm.addSection(sectionType);
 
       return true;
     }
 
     const featureType = rootType.getFeatureType(name, isSingleRow);
-    return this.sectionForm!.addFeature(featureType) !== undefined;
+    return this.sectionForm.addFeature(featureType) !== undefined;
   }
 
   onCancel(form: NgForm): void {
@@ -58,7 +58,7 @@ export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
   /**
    * Shows validation errors globally on submission according to the nature of the type, using the addition operation
    * as a validator post-submission. Only after that op is the form data confirmed as valid.
-   * @param {NgForm} form New type submit form.
+   * @param form New type submit form.
    */
   onSubmit(form: NgForm): void {
     // Adds type if all form fields completed satisfactorily
@@ -66,7 +66,7 @@ export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
       const isSection = this.typeBase === 'Section';
       const isSingleRow = this.typeBase === 'List';
 
-      this.onAddType(this.typeName!, isSection, isSingleRow);
+      this.onAddType(this.typeName, isSection, isSingleRow);
       this.onCancel(form);
     }
   }
@@ -75,7 +75,7 @@ export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
    * Handler for blur event on the type name field. Hides the popover displayed by the method above.
    * NOTE: The popover is only rendered when the uniqueness test fails.
    */
-  onTypeNameBlur() {
+  onTypeNameBlur(): void {
     if (this.uniquePop) {
       this.uniquePop.hide();
     }
@@ -85,7 +85,7 @@ export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
    * Handler for focus event on the type name field. It displays the popover with a list of existing type names.
    * NOTE: The popover is only rendered when the uniqueness test fails.
    */
-  onTypeNameFocus() {
+  onTypeNameFocus(): void {
     if (this.uniquePop) {
       this.uniquePop.show();
     }
@@ -93,7 +93,7 @@ export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
 
   /**
    * Generates the list of type names for all features (including annotations) from section data.
-   * @returns {string[]} Type names of all defined features.
+   * @returns Type names of all defined features.
    */
   private getFeatureNames(): string[] {
     if (this.sectionForm) {

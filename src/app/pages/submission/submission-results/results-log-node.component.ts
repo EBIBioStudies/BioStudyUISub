@@ -6,21 +6,21 @@ import { TreeViewCustomNodeComponent } from './tree-view.component';
   templateUrl: './results-log-node.component.html'
 })
 export class ResultsLogNodeComponent implements TreeViewCustomNodeComponent {
-  private _logLevel = '';
-  private _message = '';
+  private resultsLogLevel = '';
+  private resultsLogMessage = '';
 
   onNodeData(data: any = {}): void {
-    this._message = data.message || '';
-    this._logLevel = (data.level || 'info').toLowerCase();
+    this.resultsLogMessage = data.message || '';
+    this.resultsLogLevel = (data.level || 'info').toLowerCase();
 
     // Makes parent ERRORS display as normal info nodes.
-    if (data.subnodes && this._logLevel === 'error') {
-      this._logLevel = 'info';
+    if (data.subnodes && this.resultsLogLevel === 'error') {
+      this.resultsLogLevel = 'info';
     }
   }
 
   get message(): string {
-    return this._message;
+    return this.resultsLogMessage;
   }
 
   get error(): boolean {
@@ -40,6 +40,6 @@ export class ResultsLogNodeComponent implements TreeViewCustomNodeComponent {
   }
 
   private logLevelEquals(level: string): boolean {
-    return this._logLevel === level;
+    return this.resultsLogLevel === level;
   }
 }

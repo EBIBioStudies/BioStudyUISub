@@ -1,5 +1,18 @@
 import { LogLevel } from './log-levels';
 
+interface LogJsonFormat {
+  level: string,
+  userEmail: string,
+  message: string,
+  params: any[]
+}
+
+interface FileParams {
+  name: string,
+  size: number,
+  type: string
+}
+
 export class LogEntry {
   constructor(
     public message: string = '',
@@ -8,7 +21,7 @@ export class LogEntry {
     public userEmail: string = ''
   ) {}
 
-  buildLogJsonFormat() {
+  buildLogJsonFormat(): LogJsonFormat {
     const level: string = LogLevel[this.level];
     const isUpload: boolean = this.level === LogLevel.UPLOAD;
     const params: any[] = isUpload ? this.formatFileParams(this.extraInfo) : this.extraInfo;
@@ -35,7 +48,7 @@ export class LogEntry {
     return value;
   }
 
-  private formatFileParams(files: File[]) {
+  private formatFileParams(files: File[]): FileParams[] {
     return files.map((file) => ({ name: file.name, size: file.size, type: file.type }));
   }
 

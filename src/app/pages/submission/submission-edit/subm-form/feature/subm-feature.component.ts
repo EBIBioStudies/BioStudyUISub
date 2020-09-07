@@ -14,41 +14,41 @@ interface FeatureOperation {
 })
 export class SubmFeatureComponent implements OnInit, DoCheck {
   @ViewChild('featureEl') featureEl?: ElementRef;
-  @Input() featureForm?: FeatureForm;
+  @Input() featureForm!: FeatureForm;
   @Input() isMenu?: boolean = false;
   operations: FeatureOperation[] = [];
   @Input() readonly?: boolean = false;
 
-  private _allowedColNames: string[] = [];
-  private _errorNum: number = 0;
-  private _uniqueColNames: string[] = [];
+  private submFeatureAllowedColNames: string[] = [];
+  private submFeatureErrorNum: number = 0;
+  private submFeatureUniqueColNames: string[] = [];
   private colTypeNames: string[] = [];
 
   constructor(private changeRef: ChangeDetectorRef, public userData: UserData) {}
 
   get allowedColNames(): string[] {
-    return this._allowedColNames;
+    return this.submFeatureAllowedColNames;
   }
 
   get uniqueColNames(): string[] {
-    return this._uniqueColNames;
+    return this.submFeatureUniqueColNames;
   }
 
   get errorNum(): number {
-    return this._errorNum;
+    return this.submFeatureErrorNum;
   }
 
   /**
    * Counts the number of errors if the feature is not empty.
    */
   ngDoCheck(): void {
-    this._errorNum = Object.keys(this.featureForm!.form.errors || {}).length;
-    this._uniqueColNames = this.colTypeNames.filter(name => this.featureForm!.columnNames.includes(name));
-    this._allowedColNames = this.featureForm!.hasUniqueColumns ? this._uniqueColNames : this.colTypeNames;
+    this.submFeatureErrorNum = Object.keys(this.featureForm.form.errors || {}).length;
+    this.submFeatureUniqueColNames = this.colTypeNames.filter(name => this.featureForm.columnNames.includes(name));
+    this.submFeatureAllowedColNames = this.featureForm.hasUniqueColumns ? this.submFeatureUniqueColNames : this.colTypeNames;
     this.changeRef.detectChanges();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     if (this.featureForm === undefined) {
       return;
     }
@@ -56,14 +56,14 @@ export class SubmFeatureComponent implements OnInit, DoCheck {
     this.operations.push({
       label: 'Add column',
       callback: () => {
-        this.featureForm!.addColumn();
+        this.featureForm.addColumn();
       }
     });
 
     this.operations.push({
       label: 'Add row',
       callback: () => {
-        this.featureForm!.addRow();
+        this.featureForm.addRow();
       }
     });
   }

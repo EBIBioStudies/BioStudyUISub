@@ -1,6 +1,6 @@
 import { FormControl } from '@angular/forms';
 
-export function scrollToFormControl(control: FormControl) {
+export function scrollToFormControl(control: FormControl): void {
   const element: HTMLElement  = (control as any).nativeElement;
 
   if (element !== undefined) {
@@ -17,6 +17,6 @@ export function scrollToFormControl(control: FormControl) {
   }
 }
 
-export function scrollTop() {
+export function scrollTop(): void {
   window.scrollTo(0, 0);
 }

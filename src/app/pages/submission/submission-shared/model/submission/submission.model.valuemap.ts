@@ -31,11 +31,11 @@ export class ValueMap {
     this.valueMap.delete(key);
   }
 
-  valueFor(key: string): AttributeValue | undefined {
-    return this.valueMap.get(key);
+  valueFor(key: string): AttributeValue {
+    return this.valueMap.get(key) || new AttributeValue('');
   }
 
-  values(keys?: string[]): AttributeValue[] {
-    return (keys || this.keys()).map(key => this.valueMap.get(key)!);
+  values(keys?: string[]): (AttributeValue | undefined)[] {
+    return (keys || this.keys()).map(key => this.valueMap.get(key));
   }
 }

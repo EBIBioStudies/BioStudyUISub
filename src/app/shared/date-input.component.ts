@@ -31,14 +31,15 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
   rawDateValue: Date | undefined;
   @Input() readonly?: boolean = false;
   @Input() required?: boolean = false;
-  @ViewChild('dp', { static: true }) private datepicker?: BsDatepickerDirective;
+  @ViewChild('dp', { static: true })
+  private datepicker!: BsDatepickerDirective;
 
   /**
    * Instantiates a new custom component, hiding the weeks column on the calendar and setting
    * its default formats.
-   * @param {BsDatepickerConfig} config - Configuration object for the datepicker directive.
-   * @param {AppConfig} appConfig - Global configuration object with app-wide settings.
-   * @param {ElementRef} rootEl - Reference to the component's wrapping element
+   * @param config - Configuration object for the datepicker directive.
+   * @param appConfig - Global configuration object with app-wide settings.
+   * @param rootEl - Reference to the component's wrapping element
    */
   constructor(config: BsDatepickerConfig, private appConfig: AppConfig, private rootEl: ElementRef) {
     config.showWeekNumbers = false;
@@ -52,41 +53,41 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
    */
   ngOnInit(): void {
     if (!this.allowPast) {
-      this.datepicker!.minDate = new Date(Date.now());
+      this.datepicker.minDate = new Date(Date.now());
     }
     if (this.maxDate instanceof Date) {
-      this.datepicker!.maxDate = this.maxDate;
+      this.datepicker.maxDate = this.maxDate;
     }
   }
 
   /**
    * Normalises clicking behaviour across all of the input. Otherwise, clicking around the area of the arrow would
    * not bring up the calendar, the expected behaviour.
-   * @param {Event} event - DOM event for the click action.
+   * @param event - DOM event for the click action.
    */
-  onClick(event: Event) {
+  onClick(event: Event): void {
     // Cancels the datepicker dialogue by closing it as soon as it's opened.
     // NOTE: As of ngx-bootstrap's current version, a disabled state is still WIP.
     if (this.readonly) {
-      this.datepicker!.toggle();
+      this.datepicker.toggle();
 
       // Checks click happened on the wrapping element
     } else if ((event.target as Element).classList.contains('dropdown')) {
-      this.datepicker!.show();
+      this.datepicker.show();
     }
   }
 
   /**
    * Bubble value and change event up when the date chosen on the date picker is different from the already set one.
-   * @param {Date} dateObj - Date coming from the picker. May be null if date not retrieved from server yet.
-   * @param {Boolean} [isChange = false] - Forces/Cancels the triggering of a change event (and, possibly,
+   * @param dateObj - Date coming from the picker. May be null if date not retrieved from server yet.
+   * @param [isChange = false] - Forces/Cancels the triggering of a change event (and, possibly,
    * its corresponding backup action. @see {@link SubmEditComponent}). By default, any programmatic change will be
    * cancelled (because they are not initiated by the user in the first place).
    * NOTE: Contrary to what its name suggests, DatePicker's "bsValueChange" output event is triggered every time
    * a date is set, NOT on value change exclusively.
    * @see {@link https://valor-software.com/ngx-bootstrap/#/datepicker}
    */
-  onPickerSet(dateObj: Date, isChange: boolean = this.datepicker!.isOpen) {
+  onPickerSet(dateObj: Date, isChange: boolean = this.datepicker.isOpen): void {
     if (dateObj && !isEqualDate(dateObj, this.rawDateValue)) {
       this.rawDateValue = dateObj;
       this.inputDateValue = formatDate(dateObj, this.appConfig.dateInputFormat);
@@ -104,15 +105,19 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
   /**
    * Prevents any click events from bubbling beyond the date picker to avoid conflict with any external listeners.
    */
-  onPickerShown() {
-    document.querySelector('.bs-datepicker-container')!.addEventListener('click', (event) => {
-      event.stopPropagation();
-    });
+  onPickerShown(): void {
+    const dataPickerContainer: Element | null = document.querySelector('.bs-datepicker-container');
+
+    if (dataPickerContainer) {
+      dataPickerContainer.addEventListener('click', (event) => {
+        event.stopPropagation();
+      });
+    }
   }
 
   @HostListener('window:scroll', ['$event'])
-  onScrollEvent() {
-    this.datepicker!.hide();
+  onScrollEvent(): void {
+    this.datepicker.hide();
   }
 
   /**
@@ -120,7 +125,7 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
    * @see {@link ControlValueAccessor}
    * @param fn - Handler telling other form directives and form controls to update their values.
    */
-  registerOnChange(fn) {
+  registerOnChange(fn): void {
     this.onChange = fn;
   }
 
@@ -128,12 +133,12 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
    * Registers a handler specifically for when a control receives a touch event.
    * @see {@link ControlValueAccessor}
    */
-  registerOnTouched() { }
+  registerOnTouched(): void { }
 
   /**
    * Gets the datepicker's input back to its state at instantiation, namely a blank value.
    */
-  reset() {
+  reset(): void {
     this.rawDateValue = undefined;
     this.inputDateValue = undefined;
     this.onChange(this.rawDateValue);
@@ -145,7 +150,7 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
    * @see {@link ControlValueAccessor}
    * @param value - Value to be stored.
    */
-  writeValue(value: any) {
+  writeValue(value: any): void {
     if (String.isDefinedAndNotEmpty(value)) {
       this.onPickerSet(new Date(value));
     }
