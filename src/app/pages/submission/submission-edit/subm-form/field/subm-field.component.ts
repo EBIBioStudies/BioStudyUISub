@@ -52,6 +52,14 @@ export class SubmFieldComponent {
     return this.fieldType.valueType;
   }
 
+  get fieldIcon(): string {
+    return this.fieldType.icon;
+  }
+
+  get fieldHelpText(): string {
+    return this.fieldType.helpText;
+  }
+
   get isEmpty(): boolean {
     if (this.fieldType.valueType.isRich()) {
       const fieldValue: RichTextFieldValue = <RichTextFieldValue>this.fieldControl!.control.value;
@@ -84,6 +92,10 @@ export class SubmFieldComponent {
 
   get hasErrors(): boolean {
     return this.isRequired && this.isInvalid && this.isTouched;
+  }
+
+  get hasHelpText(): boolean {
+    return this.fieldHelpText.length > 0;
   }
 
   get errors(): string[] {

@@ -232,16 +232,21 @@ export class ValueTypeFactory {
 export class FieldType extends TypeBase {
   readonly display: string;
   readonly displayType: DisplayType;
+  readonly helpText: string;
   readonly icon: string;
   readonly valueType: ValueType;
 
-  constructor(name: string, data: Partial<FieldType> = {}, scope?: TypeScope<TypeBase>,
-        parentDisplayType: DisplayType = DisplayType.OPTIONAL) {
+  constructor(
+    name: string,
+    data: Partial<FieldType> = {},
+    scope?: TypeScope<TypeBase>,
+    parentDisplayType: DisplayType = DisplayType.OPTIONAL
+  ) {
     super(name, true, scope);
 
     this.valueType = ValueTypeFactory.create(data.valueType || {});
     this.icon = data.icon || 'fa-pencil-square-o';
-
+    this.helpText = data.helpText || '';
     this.displayType = DisplayType.create( data.display || parentDisplayType.name);
     this.display = this.displayType.name;
   }
