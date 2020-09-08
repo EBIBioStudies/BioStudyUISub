@@ -164,7 +164,7 @@ export class DateFilterComponent implements AgFilterComponent {
     }
   }
 
-  private notifyAboutChanges() {
+  private notifyAboutChanges(): void {
     if (!this.date!.equalsTo(this.prev)) {
       this.prev = this.date!.copy();
       this.params!.filterChangedCallback();

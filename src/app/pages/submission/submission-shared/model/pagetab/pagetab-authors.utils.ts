@@ -30,7 +30,7 @@ export function authorsToContacts(sections: PageTabSection[] = []): PageTabSecti
           nameAttribute = section.attributes.find((attribute) => attribute.name && isName(attribute.name)) || { value: '' };
         }
 
-        result[section.accno] = nameAttribute.value;
+        result[section.accno!] = nameAttribute.value;
 
         return result;
       }, {} as Dictionary<string>);

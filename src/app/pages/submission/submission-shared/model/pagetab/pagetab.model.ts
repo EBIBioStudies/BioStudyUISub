@@ -85,7 +85,7 @@ export interface PtFile {
 
 export interface PageTabSection {
   accessTags?: string[];
-  accno: string;
+  accno?: string;
   attributes?: PtAttribute[];
   files?: PtFile[];
   libraryFile?: string;
@@ -97,7 +97,7 @@ export interface PageTabSection {
 
 export interface PageTab {
   accessTags?: string[];
-  accno: string;
+  accno?: string;
   attributes?: PtAttribute[];
   section?: PageTabSection;
   tags?: Tag[];

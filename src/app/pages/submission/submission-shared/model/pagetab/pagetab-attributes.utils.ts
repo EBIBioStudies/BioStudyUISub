@@ -21,7 +21,7 @@ export function mergeAttributes(attrs1: PtAttribute[], attrs2: PtAttribute[]): P
   return merged;
 }
 
-export function extractKeywordsFromAttributes(attributes: PtAttribute[]) {
+export function extractKeywordsFromAttributes(attributes: PtAttribute[]): PtAttribute[] {
   return attributes.filter((attribute) => attribute.name === 'Keyword');
 }
 

@@ -242,13 +242,13 @@ export class SubmListComponent implements OnDestroy, OnInit {
       status: row.status,
       title: row.title,
       version: row.version,
-      onDelete: (accno: string, onCancel: Function, isTemp: boolean): Subscription => {
+      onDelete: (accno: string, onCancel: () => void, isTemp: boolean): Subscription => {
         const onNext = (isOk: boolean) => {
           this.isBusy = true;
 
           // Deletion confirmed => makes a request to remove the submission from the server
           if (isOk) {
-            const action: Function = isTemp
+            const action = isTemp
               ? this.submService.deleteDraft.bind(this.submService)
               : this.submService.deleteSubmitted.bind(this.submService);
 
@@ -348,7 +348,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
     this.router.navigate(['/submissions/direct_upload']);
   }
 
-  setDatasource() {
+  setDatasource(): void {
     const agApi = this.gridOptions.api; // AgGrid's API
 
     if (!this.datasource) {

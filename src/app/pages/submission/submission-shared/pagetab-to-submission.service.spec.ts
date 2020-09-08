@@ -128,7 +128,7 @@ describe('PageTabToSubmissionService', () => {
     };
 
     inject([PageTabToSubmissionService], (pagetTabToSubmService) => {
-      const submData = pagetTabToSubmService.pageTab2SubmissionData(<PageTab>(pageTab));
+      const submData = pagetTabToSubmService.pageTab2SubmissionData(pageTab as PageTab);
       expect(submData.section!.features!.length).toEqual(2);
 
       const f1 = submData.section!.features!.find(f => f.type === 'secType1');

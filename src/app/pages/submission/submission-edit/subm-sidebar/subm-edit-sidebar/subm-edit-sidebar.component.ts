@@ -38,7 +38,7 @@ class DataTypeControl {
     return new DataTypeControl(type, type.icon, type.displayType, type.description, id);
   }
 
-  static fromSectionType(type: SectionType) {
+  static fromSectionType(type: SectionType): DataTypeControl {
     return new DataTypeControl(type, 'fa-folder-plus', type.displayType, '', SECTION_ID);
   }
 

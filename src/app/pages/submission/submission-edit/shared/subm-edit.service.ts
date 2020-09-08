@@ -289,7 +289,7 @@ export class SubmEditService {
     if (accno.length !== 0) {
       this.accno = accno;
     } else {
-      this.accno = draftSubm.accno;
+      this.accno = draftSubm.accno!;
     }
 
     if (setDefaults) {
