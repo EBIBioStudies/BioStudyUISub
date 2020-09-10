@@ -1,4 +1,4 @@
-<ul class="sidebar-menu" *ngIf="invalidControls.isEmpty() || isLoading || isSubmitting">
+<ul class="sidebar-menu" *ngIf="areInvalidControlsEmpty || isLoading || isSubmitting">
   <li *ngIf="!serverError && !isLoading && !isSubmitting"
       class="st-status-sidebar-content text-center"
       [ngClass]="{'col-xs-12': !collapsed}">

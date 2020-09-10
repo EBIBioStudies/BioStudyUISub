@@ -29,7 +29,6 @@ export class HeaderComponent implements OnDestroy {
   ) {
     const header = this;
 
-
     // If the session has expired (hence destroyed), it updates the view.
     // NOTE: the component's context has to be closed in. Otherwise, "this" points to SafeSubscriber.
     this.userSession.created$.subscribe(created => {
