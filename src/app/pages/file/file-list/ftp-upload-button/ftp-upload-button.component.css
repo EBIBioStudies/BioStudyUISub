@@ -16,7 +16,11 @@ pre {
 .aspera-header {
   align-items: center;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
+}
+
+.aspera-header-select {
+  padding-left: 10px;
 }
 
 .divider {
