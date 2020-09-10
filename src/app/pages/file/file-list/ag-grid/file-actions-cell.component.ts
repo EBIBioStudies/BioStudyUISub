@@ -1,4 +1,4 @@
-import { AgRendererComponent } from 'ag-grid-angular/dist/interfaces';
+import { AgRendererComponent } from 'ag-grid-angular';
 import { Component } from '@angular/core';
 import { FileUpload } from '../../shared/file-upload-list.service';
 

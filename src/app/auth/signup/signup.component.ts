@@ -17,10 +17,10 @@ export class SignUpComponent implements AfterViewInit, OnInit {
   model: RegistrationData = new RegistrationData();
   success: boolean = false;
 
-  @ViewChild('focusEl', { static: false })
+  @ViewChild('focusEl')
   private focusRef?: ElementRef;
 
-  @ViewChild('recaptchaEl', { static: false })
+  @ViewChild('recaptchaEl')
   private recaptcha?: RecaptchaComponent;
 
   constructor(

@@ -7,7 +7,7 @@ import {
   IDoesFilterPassParams,
   RowNode
 } from 'ag-grid-community/main';
-import { AgFilterComponent } from 'ag-grid-angular/main';
+import { AgFilterComponent } from 'ag-grid-angular';
 
 @Component({
   selector: 'st-ag-acc-filter',

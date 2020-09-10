@@ -4,7 +4,7 @@ import { UserData } from 'app/auth/shared';
 import { getSubmissionTemplates, PageTab } from 'app/pages/submission/submission-shared/model';
 import { SubmissionToPageTabService } from 'app/pages/submission/submission-shared/submission-to-pagetab.service';
 import { SubmissionService } from 'app/pages/submission/submission-shared/submission.service';
-import { BsModalService } from 'ngx-bootstrap';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { AddSubmModalComponent } from './add-subm-modal.component';
 
 const PLUS_ICON = '<i class="fa fa-plus-circle" aria-hidden="true"></i>';

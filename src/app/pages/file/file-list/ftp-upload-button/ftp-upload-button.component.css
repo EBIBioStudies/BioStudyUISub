@@ -12,3 +12,13 @@ pre {
   padding: 10pt;
   background-color: #eee;
 }
+
+.aspera-header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.divider {
+  margin: 5px 0;
+}

@@ -1,4 +1,4 @@
-import { AccordionModule } from 'ngx-bootstrap';
+import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { AgGridModule } from 'ag-grid-angular';
 import { DirectoryPathComponent } from './file-list/directory-path/directory-path.component';
 import { DirectorySidebarComponent } from './file-list/directory-sidebar/directory-sidebar.component';

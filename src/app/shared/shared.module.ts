@@ -1,17 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {
-  AlertModule,
-  BsDatepickerModule,
-  BsDropdownModule,
-  CollapseModule,
-  ModalModule,
-  PopoverModule,
-  TabsModule,
-  TooltipModule,
-  TypeaheadModule
-} from 'ngx-bootstrap';
+import { AlertModule } from 'ngx-bootstrap/alert';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { PopoverModule } from 'ngx-bootstrap/popover';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { ContainerRootComponent } from './container-root.component';
 import { ContainerMdComponent } from './container-md.component';

@@ -41,12 +41,28 @@
            </span>
           Upload using Aspera
         </div>
-        <markdown ngPreserveWhitespaces>
-          The **Aspera** `ascp` command line client is distributed as part of the **Aspera CLI**
+        <div class="aspera-header">
+          <h3>Instructions for {{osOption.displayName}}</h3>
+          <div>
+            <select [ngModel]="osOption.name" (ngModelChange)="onOSChange($event)">
+              <option *ngFor="let option of osOptions"
+                [value]="option.name"
+                [selected]="option.name === osOption.name">
+                {{option.displayName}}
+              </option>
+            </select>
+          </div>
+        </div>
+        <hr class="divider" />
+        <p>
+          The <strong>Aspera</strong> <em>ascp</em> command line client is distributed as part of the <strong>Aspera CLI</strong>
           high-performance transfer browser plug-in which can be downloaded from
-          <a target="_blank" href="https://downloads.asperasoft.com/en/downloads/62">https://downloads.asperasoft.com/en/downloads/62</a>.
-        </markdown>
-        <markdown *ngIf="osName === 'macos' || osName === 'linux' || osName === 'unknown'">
+          <br />
+          <a target="_blank" [href]="osOption.link">
+            {{osOption.link}}
+          </a>
+        </p>
+        <markdown *ngIf="osOption.name === 'Mac' || osOption.name === 'Linux'">
           You will need to execute the downloaded file and switch to the CLI folder, e.g.,
           ```
           $ sh ~/Documents/ibm-aspera-cli-3.9.1.1401.be67d47-mac-10.7-64-release.sh
@@ -54,7 +70,7 @@
           $ ./ascp -P33001 -i ../etc/asperaweb_id_dsa.openssh -d &lt;directory to upload&gt; bsaspera_w@hx-fasp-1.ebi.ac.uk:&lt;secret directory>
           ```
         </markdown>
-        <markdown *ngIf="osName === 'windows'">
+        <markdown *ngIf="osOption.name === 'Win'">
           You will need to extract the downloaded zip file to a directory of your choice and then switch to
           the subdirectory bin, e.g.,
           ```

@@ -1,5 +1,5 @@
 <div *ngIf="file">
-  <div class="panel"
+  <div class="panel st-panel-overflow"
       [ngClass]="{'panel-default': !accno, 'text-primary': accno}"
       [ngStyle]="{'cursor': accno || hasSubmitFailed ? 'pointer' : 'default'}"
       [tooltip]="accno ? 'Edit this study' : hasSubmitFailed ? 'Click to show error log' : ''"

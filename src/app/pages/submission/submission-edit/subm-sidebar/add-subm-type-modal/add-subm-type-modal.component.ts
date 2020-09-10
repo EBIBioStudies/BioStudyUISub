@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { BsModalRef, PopoverDirective } from 'ngx-bootstrap';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+import { PopoverDirective } from 'ngx-bootstrap/popover';
 import { NgForm } from '@angular/forms';
 import { SectionType } from 'app/pages/submission/submission-shared/model/templates';
 import { SectionForm } from '../../shared/model/section-form.model';
@@ -17,7 +18,7 @@ export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
   @ViewChild('focusBtn', { static: true })
   private focusEl?: ElementRef;
 
-  @ViewChild('uniquePop', { static: false })
+  @ViewChild('uniquePop')
   private uniquePop?: PopoverDirective;
 
   constructor(public bsModalRef: BsModalRef) {}

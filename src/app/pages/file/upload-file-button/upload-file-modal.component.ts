@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Subject } from 'rxjs';
-import { BsModalRef } from 'ngx-bootstrap';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 import { Path } from '../shared/path';
 import { FileUpload, FileUploadList } from '../shared/file-upload-list.service';
 
