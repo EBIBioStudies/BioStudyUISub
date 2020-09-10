@@ -16,6 +16,7 @@ import { UserInfo } from 'app/auth/shared/model';
 import { PageTab, SelectValueType } from 'app/pages/submission/submission-shared/model';
 import { PageTabToSubmissionService } from 'app/pages/submission/submission-shared/pagetab-to-submission.service';
 import { SubmissionToPageTabService } from 'app/pages/submission/submission-shared/submission-to-pagetab.service';
+import { isDefinedAndNotEmpty } from 'app/utils';
 import { SubmissionService, SubmitResponse } from '../../submission-shared/submission.service';
 import { SectionForm } from './model/section-form.model';
 import { flatFeatures } from '../../utils';
@@ -357,12 +358,12 @@ export class SubmEditService {
   private updateDependencyValues(sectionForm: SectionForm) {
     const section: Section = this.submModel!.section;
     const features: Feature[] = flatFeatures(section);
-    const featuresWithDependencies: Feature[] = features.filter((feature) => String.isDefinedAndNotEmpty(feature.dependency));
+    const featuresWithDependencies: Feature[] = features.filter((feature) => isDefinedAndNotEmpty(feature.dependency));
 
     featuresWithDependencies.forEach((featureWithDependency) => {
       const dependency = features.find((feature) => feature.type.typeName === featureWithDependency.dependency);
       const columnWithDependencies = featureWithDependency.columns
-        .filter((column) => String.isDefinedAndNotEmpty(column.dependencyColumn));
+        .filter((column) => isDefinedAndNotEmpty(column.dependencyColumn));
 
       columnWithDependencies.forEach((columnWithDependency) => {
         const matchedColumn = dependency!.columns.find((column) => column.name === columnWithDependency.dependencyColumn);
@@ -382,7 +383,7 @@ export class SubmEditService {
       const attributeValues = feature.attributeValuesForColumn(column.id);
 
       attributeValues.forEach((attribute, index) => {
-        if (String.isDefinedAndNotEmpty(attribute!.value) && !values.includes(attribute!.value)) {
+        if (isDefinedAndNotEmpty(attribute!.value) && !values.includes(attribute!.value)) {
           const formControl = sectionForm.getFeatureFormById(feature.id);
 
           if (formControl) {

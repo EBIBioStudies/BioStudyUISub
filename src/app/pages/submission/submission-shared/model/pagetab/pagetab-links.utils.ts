@@ -1,4 +1,5 @@
 import { PtAttribute, PtLink } from './pagetab.model';
+import { isDefinedAndNotEmpty } from 'app/utils';
 
 const POINTER_ATTR = 'Link';
 const TYPE_ATTR = 'Type';
@@ -61,7 +62,7 @@ export class LinksUtils {
 
     const typeAttr = attrs.find(at => at.name ===  TYPE_ATTR);
 
-    if (typeAttr !== undefined && String.isDefinedAndNotEmpty(typeAttr.value)) {
+    if (typeAttr !== undefined && isDefinedAndNotEmpty(typeAttr.value)) {
       pointerAttr.value = typeAttr.value + ':' + linkObj.url;
     }
 

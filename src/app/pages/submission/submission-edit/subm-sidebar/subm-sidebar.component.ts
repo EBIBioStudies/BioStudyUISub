@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Option } from 'fp-ts/lib/Option';
-import { ServerError } from 'app/shared/server-error.handler';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { ServerError } from 'app/shared/server-error.handler';
+import { isArrayEmpty } from 'app/utils';
 import { SectionForm } from '../shared/model/section-form.model';
 import { SubmEditService } from '../shared/subm-edit.service';
 import { CustomFormControl } from '../shared/model/custom-form-control.model';
@@ -79,7 +80,7 @@ export class SubmSidebarComponent implements OnDestroy {
   private groupControlsBySectionId(controls: FormControl[]): FormControlGroup[] {
     return controls
       .reduce((rv, c) => {
-        const group = rv.isEmpty() ? undefined : rv[rv.length - 1];
+        const group = isArrayEmpty(rv) ? undefined : rv[rv.length - 1];
         const prevControl = group === undefined ? undefined : group[group.length - 1];
         if (prevControl !== undefined && CustomFormControl.compareBySectionId(prevControl, c) === 0) {
           group!.push(c);
@@ -113,6 +114,6 @@ export class SubmSidebarComponent implements OnDestroy {
   }
 
   private updateInvalidControls() {
-    this.invalidControls = this.controls.map(g => g.filter(c => c.invalid)).filter(g => !g.isEmpty());
+    this.invalidControls = this.controls.map(g => g.filter(c => c.invalid)).filter(g => !isArrayEmpty(g));
   }
 }
