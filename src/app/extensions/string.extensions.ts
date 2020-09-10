@@ -1,12 +1,13 @@
 interface String {
+  isDefined(s: string | undefined | null): boolean;
   isEmpty(): boolean;
   isEqualIgnoringCase(value: string): boolean;
 }
 
 interface StringConstructor {
   isDefined(s: string | undefined | null): boolean;
-  isDefinedAndNotEmpty(s: string | undefined | null): boolean;
-  isNotDefinedOrEmpty(s: string | undefined | null): boolean;
+  isEmpty(): boolean;
+  isEqualIgnoringCase(): boolean;
   isString(value: any): boolean;
 }
 
@@ -24,12 +25,4 @@ String.isString = function (s: any) {
 
 String.isDefined = function (s: string | undefined | null) {
   return String.isString(s) && s !== undefined && s !== null;
-};
-
-String.isNotDefinedOrEmpty = function (s: string | undefined | null) {
-  return !String.isDefinedAndNotEmpty(s);
-};
-
-String.isDefinedAndNotEmpty = function (s: string | undefined | null) {
-  return String.isDefined(s) && String.isString(s) && !s!.isEmpty();
 };

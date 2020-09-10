@@ -14,6 +14,7 @@ import {
   mergeAttributes,
   submissionToPageTabProtocols,
 } from './model/pagetab';
+import { isNotDefinedOrEmpty, isArrayEmpty } from 'app/utils';
 import { AttributeData, Feature, Section, Submission } from './model/submission';
 import { DEFAULT_TEMPLATE_NAME, SubmissionType } from './model/templates';
 import { Injectable } from '@angular/core';
@@ -22,7 +23,7 @@ const isFileType = (type: string) => type.isEqualIgnoringCase('file');
 const isLinkType = (type: string) => type.isEqualIgnoringCase('link');
 const isLibraryFileType = (type: string) => type.isEqualIgnoringCase('libraryfile');
 const isKeywordType = (type: string) => type.isEqualIgnoringCase('keywords');
-const isEmptyAttr = (attr: PtAttribute) => String.isNotDefinedOrEmpty(attr.value);
+const isEmptyAttr = (attr: PtAttribute) => isNotDefinedOrEmpty(attr.value);
 
 @Injectable()
 export class SubmissionToPageTabService {
@@ -63,7 +64,7 @@ export class SubmissionToPageTabService {
       value: attr.value,
       reference: attr.reference
     };
-    if (!(attr.terms || []).isEmpty()) {
+    if (!isArrayEmpty(attr.terms || [])) {
       ptAttr.valqual = attr.terms!.slice();
     }
     return ptAttr;

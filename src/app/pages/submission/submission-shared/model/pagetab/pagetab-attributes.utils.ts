@@ -1,4 +1,5 @@
 import { AttrExceptions, PageTab, PtAttribute } from './pagetab.model';
+import { isDefinedAndNotEmpty } from 'app/utils';
 
 /* merges to attribute lists by overriding only single value attributes*/
 export function mergeAttributes(attrs1: PtAttribute[], attrs2: PtAttribute[]): PtAttribute[] {
@@ -7,7 +8,7 @@ export function mergeAttributes(attrs1: PtAttribute[], attrs2: PtAttribute[]): P
 
   attrs1.concat(attrs2)
     .forEach(at => {
-      if (String.isDefinedAndNotEmpty(at.name) && AttrExceptions.unique.includes(at.name!)) {
+      if (isDefinedAndNotEmpty(at.name) && AttrExceptions.unique.includes(at.name!)) {
         if (visited[at.name!] === undefined) {
           visited[at.name!] = merged.length;
           merged.push(at);

@@ -10,6 +10,7 @@ import {
   destroyUser
 } from './user-cookies';
 import { UserInfo } from './model';
+import { isDefinedAndNotEmpty } from 'app/utils';
 
 @Injectable()
 export class UserSession {
@@ -33,7 +34,7 @@ export class UserSession {
   getUserDisplayName(): string {
     const { fullname, email } = getUser();
 
-    if (String.isDefinedAndNotEmpty(fullname)) {
+    if (isDefinedAndNotEmpty(fullname)) {
       return fullname;
     }
 

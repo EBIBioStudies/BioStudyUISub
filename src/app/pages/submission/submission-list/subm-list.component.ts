@@ -6,6 +6,7 @@ import { Subject, Subscription, throwError } from 'rxjs';
 import { takeUntil, catchError } from 'rxjs/operators';
 import { AppConfig } from 'app/app.config';
 import { ModalService } from 'app/shared/modal.service';
+import { isDefinedAndNotEmpty } from 'app/utils';
 import { SubmissionService } from '../submission-shared/submission.service';
 import { DateFilterComponent } from './ag-grid/date-filter.component';
 import { TextFilterComponent } from './ag-grid/text-filter.component';
@@ -319,7 +320,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
   onRowClicked(event): void {
     if (!this.isBusy && event.colDef.headerName !== 'Actions') {
       const { accno, method } = event.data;
-      const optionalParams = String.isDefinedAndNotEmpty(method) ? { method } : {};
+      const optionalParams = isDefinedAndNotEmpty(method) ? { method } : {};
 
       this.router.navigate([`/submissions/edit/${accno}`, optionalParams ]);
     }

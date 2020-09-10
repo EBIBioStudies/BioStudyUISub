@@ -1,4 +1,5 @@
 import { PtAttribute, PageTabSection } from './pagetab.model';
+import { isNotDefinedOrEmpty, isDefinedAndNotEmpty } from 'app/utils';
 
 export interface Dictionary<T> { [key: string]: T | undefined }
 export type Nullable<T> = T | null | undefined;
@@ -42,7 +43,7 @@ export function authorsToContacts(sections: PageTabSection[] = []): PageTabSecti
         attributes: (a.attributes || [])
           .map(attr => {
             if (isAffiliation(attr.name)) {
-              const value = (attr.reference || attr.isReference) && String.isDefinedAndNotEmpty(attr.value)
+              const value = (attr.reference || attr.isReference) && isDefinedAndNotEmpty(attr.value)
                 ? (affiliations[attr.value!] || attr.value)
                 : attr.value;
 
@@ -69,7 +70,7 @@ class Organisations {
   }
 
   toReference(attr: PtAttribute): PtAttribute {
-    if (String.isNotDefinedOrEmpty(attr.value)) {
+    if (isNotDefinedOrEmpty(attr.value)) {
       return <PtAttribute>{ name: 'affiliation', value: attr.value };
     }
 
