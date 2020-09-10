@@ -3,7 +3,7 @@ export function isEmpty(value: string | undefined | null): boolean {
 }
 
 export function isDefined(value: string | undefined | null): boolean {
-  return value !== 'undefined' || value !== null;
+  return typeof value !== 'undefined' && value !== null;
 }
 
 export function isDefinedAndNotEmpty(value: string | undefined | null): boolean {
