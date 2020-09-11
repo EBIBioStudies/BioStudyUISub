@@ -1,5 +1,5 @@
 import { EMPTY_TEMPLATE_NAME, findSubmissionTemplateByName } from './submission.templates';
-import { isArrayEmpty } from 'app/utils';
+import { isArrayEmpty, isStringDefined, isStringEmpty } from 'app/utils';
 
 /*
 *  Type scopes are used to check if the types with a given name already exists in the scope
@@ -68,9 +68,9 @@ export abstract class TypeBase {
         readonly tmplBased: boolean,
         private scope: TypeScope<TypeBase> = GLOBAL_TYPE_SCOPE) {
 
-    this.typeName = String.isDefined(typeName) ? typeName.trim() : '';
+    this.typeName = isStringDefined(typeName) ? typeName.trim() : '';
 
-    if (this.typeName.isEmpty()) {
+    if (isStringEmpty(this.typeName)) {
       return;
     }
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { flatArray, isDefinedAndNotEmpty, isArrayEmpty, arrayUniqueValues } from 'app/utils';
+import { flatArray, isDefinedAndNotEmpty, isArrayEmpty, arrayUniqueValues, isStringDefined } from 'app/utils';
 import {
   AttrExceptions,
   LinksUtils,
@@ -76,7 +76,7 @@ export class PageTabToSubmissionService {
   }
 
   private pageTabSectionToSectionData(ptSection: PageTabSection, parentAttributes: PtAttribute[] = []): SectionData {
-    const parentAttributesWithName = parentAttributes.filter((attribute) => String.isDefined(attribute.name));
+    const parentAttributesWithName = parentAttributes.filter((attribute) => isStringDefined(attribute.name));
     const editableParentAttributes = parentAttributesWithName.filter((attribute) => AttrExceptions.editable.includes(attribute.name!));
     const parentAndChildAttributes = mergeAttributes(editableParentAttributes, ptSection.attributes || []);
     const attributes = this.pageTabAttributesToAttributeData(parentAndChildAttributes);

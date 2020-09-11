@@ -4,7 +4,7 @@ import { Option } from 'fp-ts/lib/Option';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ServerError } from 'app/shared/server-error.handler';
-import { isArrayEmpty } from 'app/utils';
+import { isArrayEmpty, flatMap } from 'app/utils';
 import { SectionForm } from '../shared/model/section-form.model';
 import { SubmEditService } from '../shared/subm-edit.service';
 import { CustomFormControl } from '../shared/model/custom-form-control.model';
@@ -40,11 +40,11 @@ export class SubmSidebarComponent implements OnDestroy {
   }
 
   get numInvalid(): number {
-    return this.invalidControls.flatMap(c => c).length;
+    return flatMap(this.invalidControls, (c) => c).length;
   }
 
   get numInvalidAndTouched(): number {
-    return this.invalidControls.flatMap(c => c).filter(c => c.touched).length;
+    return flatMap(this.invalidControls, (c) => c).filter((c) => c.touched).length;
   }
 
   ngOnDestroy(): void {

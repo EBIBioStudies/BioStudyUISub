@@ -1,8 +1,8 @@
 import { PageTabSection, PtAttribute } from './pagetab.model';
 import { Dictionary, Nullable } from './pagetab-authors.utils';
-import { isNotDefinedOrEmpty } from 'app/utils';
+import { isNotDefinedOrEmpty, isStringDefined } from 'app/utils';
 
-const isEqualTo = (value: string) => (s: Nullable<string>) => (String.isDefined(s) && s!.toLowerCase() === value);
+const isEqualTo = (value: string) => (s: Nullable<string>) => (isStringDefined(s) && s!.toLowerCase() === value);
 const isComponentProtocol = isEqualTo('protocols');
 const isStudyProtocol = isEqualTo('study protocols');
 

@@ -16,9 +16,9 @@ import {
   isOrcidValid,
   isDnaSequenceValid,
   isProteinSequenceValid,
-  isDefinedAndNotEmpty,
   isNotDefinedOrEmpty,
-  isArrayEmpty
+  isArrayEmpty,
+  isStringEmpty
 } from 'app/utils';
 import { ControlRef, ControlGroupRef } from './control-reference';
 import { CustomFormControl } from './model/custom-form-control.model';
@@ -92,7 +92,7 @@ export class FormValidators {
       .map(c => c.value);
 
     const valueCounts = values
-      .filter(v => !v.isEmpty())
+      .filter(v => !isStringEmpty(v))
       .reduce((rv, v) => {
         rv[v] = (rv[v] || 0) + 1;
         return rv;

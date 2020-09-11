@@ -8,7 +8,7 @@ import {
   FeatureType,
   ValueMap
 } from 'app/pages/submission/submission-shared/model';
-import { isArrayEmpty, arrayUniqueValues } from 'app/utils';
+import { isArrayEmpty, arrayUniqueValues, isStringEmpty } from 'app/utils';
 import { FormBase } from './form-base.model';
 import { ColumnControl } from './column-control.model';
 import { RowForm } from './row-form.model';
@@ -211,7 +211,7 @@ export class FeatureForm extends FormBase {
       .map(row => row.cellControlAt(columnId))
       .filter(c => c !== undefined)
       .map(c => c!.control.value)
-      .filter((v: string) => !v.isEmpty());
+      .filter((v: string) => !isStringEmpty(v));
 
     return arrayUniqueValues(allCellValues);
   }
