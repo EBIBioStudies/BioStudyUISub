@@ -3,7 +3,6 @@ import { Attribute } from './submission.model.attribute';
 describe('Submission Model: Attribute', () => {
   it('it has default values if nothing is specified', () => {
     const attr = new Attribute();
-    expect(attr.name.isEmpty).toBeTruthy();
     expect(attr.canEditName).toBeTruthy();
     expect(attr.displayType.isOptional).toBeTruthy();
     expect(attr.valueType.isText).toBeTruthy();

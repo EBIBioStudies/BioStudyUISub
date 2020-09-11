@@ -1,5 +1,5 @@
 import { zip } from 'fp-ts/lib/Array';
-import { isDefinedAndNotEmpty, isArrayEmpty, arrayUniqueValues } from 'app/utils';
+import { isDefinedAndNotEmpty, isArrayEmpty, arrayUniqueValues, isStringDefined } from 'app/utils';
 import { nextId } from './submission.model.counter';
 import { Attribute } from './submission.model.attribute';
 import { ValueMap } from './submission.model.valuemap';
@@ -370,7 +370,7 @@ export class Fields {
   constructor(type: SectionType, attributes: Array<AttributeData> = []) {
     this.fields = [];
 
-    const attrMap = attributes.filter(at => String.isDefined(at.name))
+    const attrMap = attributes.filter(at => isStringDefined(at.name))
       .reduce((rv, attr) => {
         rv[attr.name!] = attr.value;
         return rv;

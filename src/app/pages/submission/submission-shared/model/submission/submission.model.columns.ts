@@ -1,3 +1,4 @@
+import { isEqualIgnoringCase } from 'app/utils';
 import { Attribute } from './submission.model.attribute';
 import { ColumnType } from '../templates';
 
@@ -13,7 +14,7 @@ export class Columns {
   }
 
   filterByName(name: string): Attribute[] {
-    return this.columns.filter(attr => attr.name.isEqualIgnoringCase(name));
+    return this.columns.filter(attr => isEqualIgnoringCase(attr.name, name));
   }
 
   findById(id: string): Attribute | undefined {

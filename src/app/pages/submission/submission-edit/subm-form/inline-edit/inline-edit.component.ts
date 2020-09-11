@@ -2,6 +2,7 @@ import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/cor
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { AppConfig } from 'app/app.config';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { isStringEmpty } from 'app/utils';
 import { typeaheadSource } from '../../shared/typeahead.utils';
 
 @Component({
@@ -68,7 +69,7 @@ export class InlineEditComponent implements ControlValueAccessor {
   }
 
   onBlur(): void {
-    if ((<string>this.value).isEmpty()) {
+    if (isStringEmpty(<string>this.value)) {
       this.value = this.emptyValue;
     }
     this.stopEditing();

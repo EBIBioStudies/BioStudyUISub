@@ -11,3 +11,7 @@ export function isArrayEmpty(array: any[]): boolean {
 export function arrayUniqueValues(array: any[]): Array<any> {
   return array.filter((x, i, a) => a.indexOf(x) === i);
 }
+
+export function flatMap(array: any[], mapFunc: (value: any) => any) {
+  return array.reduce((rv, next) => [...mapFunc(next), ...rv], []);
+}
