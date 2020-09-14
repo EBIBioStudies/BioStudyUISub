@@ -1,6 +1,6 @@
 import { async } from '@angular/core/testing';
 import { AuthService, UserData, UserSession } from 'app/auth/shared';
-import { of } from 'rxjs';
+import { of, Observable } from 'rxjs';
 import { UserInfo, ExtendedUserInfo } from './model';
 
 describe('UserData', () => {
@@ -9,7 +9,7 @@ describe('UserData', () => {
 
   beforeEach(() => {
     submService = {
-      getProjects() {
+      getProjects(): Observable<[]> {
         return of([]);
       }
     };
@@ -33,7 +33,7 @@ describe('UserData', () => {
     };
 
     const authService = {
-      getUserProfile() {
+      getUserProfile(): Observable<UserInfo> {
         return of(user);
       }
     };

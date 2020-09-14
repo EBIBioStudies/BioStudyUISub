@@ -66,10 +66,11 @@ class TypeScope<T extends TypeBase> {
 const GLOBAL_TYPE_SCOPE: TypeScope<TypeBase> = new TypeScope<TypeBase>();
 
 export abstract class TypeBase {
-  constructor(public typeName: string,
-        readonly tmplBased: boolean,
-        private scope: TypeScope<TypeBase> = GLOBAL_TYPE_SCOPE) {
-
+  constructor(
+    public typeName: string,
+    readonly tmplBased: boolean,
+    private scope: TypeScope<TypeBase> = GLOBAL_TYPE_SCOPE
+  ) {
     this.typeName = isStringDefined(typeName) ? typeName.trim() : '';
 
     if (isStringEmpty(this.typeName)) {

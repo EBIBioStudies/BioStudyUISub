@@ -68,7 +68,7 @@ export class SubmFieldComponent {
       return isStringEmpty(fieldValue.raw);
     }
 
-    return isStringEmpty(<string>this.fieldControl!.control.value);
+    return isStringEmpty(this.fieldControl!.control.value as string);
   }
 
   get isRequired(): boolean {

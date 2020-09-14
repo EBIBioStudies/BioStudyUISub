@@ -12,6 +12,6 @@ export function arrayUniqueValues(array: any[]): Array<any> {
   return array.filter((x, i, a) => a.indexOf(x) === i);
 }
 
-export function flatMap(array: any[], mapFunc: (value: any) => any) {
+export function flatMap(array: any[], mapFunc: (value: any) => any): Array<any> {
   return array.reduce((rv, next) => [...mapFunc(next), ...rv], []);
 }

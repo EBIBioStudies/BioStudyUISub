@@ -72,7 +72,7 @@ describe('Submission Model: Feature', () => {
     expect(f.rowSize()).toBe(1);
     expect(f.colSize()).toBe(2);
     const ids = f.columns.map(c => c.id);
-    expect(f.rows[0].values(ids).map(v => v.value).sort()).toEqual(['value1', 'value2']);
+    expect(f.rows[0].values(ids).map(v => v && v.value).sort()).toEqual(['value1', 'value2']);
   });
 
   it('can be created with the pre-existed data', () => {
@@ -95,7 +95,7 @@ describe('Submission Model: Feature', () => {
     expect(f.rowSize()).toBe(1);
     expect(f.colSize()).toBe(2);
     const ids = f.columns.map(c => c.id);
-    expect(f.rows[0].values(ids).map(v => v.value).sort()).toEqual(['value1', 'value2']);
+    expect(f.rows[0].values(ids).map(v => v && v.value).sort()).toEqual(['value1', 'value2']);
   });
 
   it('creates required columns according the type definition', () => {

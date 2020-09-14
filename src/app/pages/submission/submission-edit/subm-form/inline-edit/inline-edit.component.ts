@@ -69,7 +69,7 @@ export class InlineEditComponent implements ControlValueAccessor {
   }
 
   onBlur(): void {
-    if (isStringEmpty(<string>this.value)) {
+    if (isStringEmpty(this.value)) {
       this.value = this.emptyValue;
     }
     this.stopEditing();

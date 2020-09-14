@@ -40,7 +40,7 @@ class Protocols {
 
   toReference(attr: PtAttribute): PtAttribute {
     if (isNotDefinedOrEmpty(attr.value) || attr.name !== 'Protocol') {
-      return <PtAttribute>{ name: attr.name, value: attr.value };
+      return { name: attr.name, value: attr.value } as PtAttribute;
     }
 
     const refKeyForValue = this.getRefKeyByValue(attr.value);

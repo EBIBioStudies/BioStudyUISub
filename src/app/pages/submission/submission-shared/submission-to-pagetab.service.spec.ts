@@ -17,7 +17,7 @@ describe('SubmissionToPageTabService', () => {
   });
 
   it('Title and ReleaseDate attributes should be moved to the submission level', () => {
-    const subm = new Submission(submType, <SubmissionData>{
+    const subm = new Submission(submType, {
       attributes: [
         {name: 'AttachTo', value: 'proj1'}
       ],
@@ -28,7 +28,7 @@ describe('SubmissionToPageTabService', () => {
           {name: 'Attr1', value: 'Value1'}
         ]
       }
-    });
+    } as SubmissionData);
 
     inject([SubmissionToPageTabService], (submToPageTabService) => {
       const pageTab = submToPageTabService.submission2PageTab(subm);
@@ -43,7 +43,7 @@ describe('SubmissionToPageTabService', () => {
   });
 
   it('Section Link features should go to section links list', () => {
-    const subm = new Submission(submType, <SubmissionData>{
+    const subm = new Submission(submType, {
       section: {
         features: [
           {
@@ -54,17 +54,17 @@ describe('SubmissionToPageTabService', () => {
           }
         ]
       }
-    });
+    } as SubmissionData);
 
     inject([SubmissionToPageTabService], (submToPageTabService) => {
       const pageTab = submToPageTabService.submission2PageTab(subm);
       expect(pageTab.section!.links!.length).toBe(1);
-      expect((<PtLink>pageTab.section!.links![0]).url).toBe('url1');
+      expect((pageTab.section!.links![0]).url as PtLink).toBe('url1');
     });
   });
 
   it('Section File features should go to section files list', () => {
-    const subm = new Submission(submType, <SubmissionData>{
+    const subm = new Submission(submType, {
       section: {
         features: [
           {
@@ -75,12 +75,12 @@ describe('SubmissionToPageTabService', () => {
           }
         ]
       }
-    });
+    } as SubmissionData);
 
     inject([SubmissionToPageTabService], (submToPageTabService) => {
       const pageTab = submToPageTabService.submission2PageTab(subm);
       expect(pageTab.section!.files!.length).toBe(1);
-      expect((<PtFile>pageTab.section!.files![0]).path).toBe('path1');
+      expect((pageTab.section!.files![0]).path as PtFile).toBe('path1');
     });
   });
 });

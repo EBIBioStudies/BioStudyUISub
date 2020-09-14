@@ -43,7 +43,7 @@ export class MyFormGroup extends FormGroup {
 export class FormValidators {
   static formatDate: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const v = control.value;
-    return isNotDefinedOrEmpty(v) || (parseDate(v) !== undefined) ? null : { 'format': { value: v } };
+    return isNotDefinedOrEmpty(v) || (parseDate(v) !== undefined) ? null : { format: { value: v } };
   }
 
   static formatDna: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {

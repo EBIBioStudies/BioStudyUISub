@@ -3,7 +3,7 @@ import { flatMap } from 'app/utils';
 
 export function controlToList(control: AbstractControl): FormControl[] {
   if (control instanceof FormGroup) {
-    const map = (<FormGroup>control).controls;
+    const map = (control as FormGroup).controls;
     const controls = Object.keys(map).map((key) => map[key]);
 
     return flatMap(controls, (controlItem) => controlToList(controlItem));

@@ -80,7 +80,7 @@ class Organisations {
 
   toReference(attr: PtAttribute): PtAttribute {
     if (isNotDefinedOrEmpty(attr.value)) {
-      return <PtAttribute>{ name: 'affiliation', value: attr.value };
+      return { name: 'affiliation', value: attr.value } as PtAttribute;
     }
 
     const orgRef = this.refFor(attr.value!, attr.accno!);

@@ -150,7 +150,7 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
    * @see {@link ControlValueAccessor}
    * @param value - Value to be stored.
    */
-  writeValue(value: any) {
+  writeValue(value: any): void {
     if (isDefinedAndNotEmpty(value)) {
       this.onPickerSet(new Date(value));
     }
