@@ -1,4 +1,5 @@
 import { EMPTY_TEMPLATE_NAME, findSubmissionTemplateByName } from './submission.templates';
+import { isArrayEmpty, isStringDefined, isStringEmpty } from 'app/utils';
 
 /*
 *  Type scopes are used to check if the types with a given name already exists in the scope
@@ -67,9 +68,9 @@ export abstract class TypeBase {
         readonly tmplBased: boolean,
         private scope: TypeScope<TypeBase> = GLOBAL_TYPE_SCOPE) {
 
-    this.typeName = String.isDefined(typeName) ? typeName.trim() : '';
+    this.typeName = isStringDefined(typeName) ? typeName.trim() : '';
 
-    if (this.typeName.isEmpty()) {
+    if (isStringEmpty(this.typeName)) {
       return;
     }
 
@@ -377,7 +378,7 @@ export class SectionType extends TypeBase {
     data = data || {};
     this.displayType = DisplayType.create(data.display || parentDisplayType.name);
     this.display = this.displayType.name;
-    this.featureGroups = (data.featureGroups || []).filter(gr => !gr.isEmpty());
+    this.featureGroups = (data.featureGroups || []).filter(gr => !isArrayEmpty(gr));
     this.minRequired = data.minRequired || 1;
     this.annotationsType = new AnnotationsType(data.annotationsType, new TypeScope<AnnotationsType>(), isTemplBased,
       this.displayType);

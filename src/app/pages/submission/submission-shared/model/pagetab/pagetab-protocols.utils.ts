@@ -1,7 +1,8 @@
 import { PageTabSection, PtAttribute } from './pagetab.model';
 import { Dictionary, Nullable } from './pagetab-authors.utils';
+import { isNotDefinedOrEmpty, isStringDefined } from 'app/utils';
 
-const isEqualTo = (value: string) => (s: Nullable<string>) => (String.isDefined(s) && s!.toLowerCase() === value);
+const isEqualTo = (value: string) => (s: Nullable<string>) => (isStringDefined(s) && s!.toLowerCase() === value);
 const isComponentProtocol = isEqualTo('protocols');
 const isStudyProtocol = isEqualTo('study protocols');
 
@@ -38,7 +39,7 @@ class Protocols {
   }
 
   toReference(attr: PtAttribute): PtAttribute {
-    if (String.isNotDefinedOrEmpty(attr.value) || attr.name !== 'Protocol') {
+    if (isNotDefinedOrEmpty(attr.value) || attr.name !== 'Protocol') {
       return <PtAttribute>{ name: attr.name, value: attr.value };
     }
 

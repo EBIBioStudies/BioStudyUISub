@@ -1,4 +1,4 @@
-import { PageTab, PtAttribute } from '../model/pagetab';
+import { PageTab } from '../model/pagetab';
 import { findAttribute } from './pagetab.utils';
 
 const attributes = [{

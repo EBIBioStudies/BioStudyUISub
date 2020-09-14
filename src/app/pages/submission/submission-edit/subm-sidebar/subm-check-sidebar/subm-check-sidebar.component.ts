@@ -2,7 +2,7 @@ import { FormControl, ValidationErrors } from '@angular/forms';
 import { Component, Input } from '@angular/core';
 import { ServerError } from 'app/shared/server-error.handler';
 import { SubmEditService } from '../../shared/subm-edit.service';
-import { scrollToFormControl } from 'app/utils';
+import { scrollToFormControl, isArrayEmpty } from 'app/utils';
 
 @Component({
   selector: 'st-subm-check-sidebar',
@@ -22,6 +22,10 @@ export class SubmCheckSidebarComponent {
 
   get isSubmitting(): boolean {
     return this.submEditService.isSubmitting;
+  }
+
+  get areInvalidControlsEmpty(): boolean {
+    return isArrayEmpty(this.invalidControls);
   }
 
   /**

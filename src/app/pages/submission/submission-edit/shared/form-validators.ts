@@ -11,7 +11,15 @@ import {
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { Attribute, Feature, Field } from 'app/pages/submission/submission-shared/model';
 import { TextValueType, ValueType, ValueTypeName, SelectValueType } from 'app/pages/submission/submission-shared/model';
-import { parseDate, isOrcidValid, isDnaSequenceValid, isProteinSequenceValid } from 'app/utils';
+import {
+  parseDate,
+  isOrcidValid,
+  isDnaSequenceValid,
+  isProteinSequenceValid,
+  isNotDefinedOrEmpty,
+  isArrayEmpty,
+  isStringEmpty
+} from 'app/utils';
 import { ControlRef, ControlGroupRef } from './control-reference';
 import { CustomFormControl } from './model/custom-form-control.model';
 
@@ -35,12 +43,12 @@ export class MyFormGroup extends FormGroup {
 export class FormValidators {
   static formatDate: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const v = control.value;
-    return String.isNotDefinedOrEmpty(v) || (parseDate(v) !== undefined) ? null : { 'format': { value: v } };
+    return isNotDefinedOrEmpty(v) || (parseDate(v) !== undefined) ? null : { 'format': { value: v } };
   }
 
   static formatDna: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const value: { raw: string } = control.value;
-    const isEmpty: boolean = String.isNotDefinedOrEmpty(value.raw);
+    const isEmpty: boolean = isNotDefinedOrEmpty(value.raw);
 
     if (isEmpty) {
       return null;
@@ -53,7 +61,7 @@ export class FormValidators {
 
   static formatOrcid: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const value: string  = control.value;
-    const isEmpty: boolean = String.isNotDefinedOrEmpty(value);
+    const isEmpty: boolean = isNotDefinedOrEmpty(value);
 
     if (isEmpty) {
       return null;
@@ -66,7 +74,7 @@ export class FormValidators {
 
   static formatProtein: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const value: { raw: string } = control.value;
-    const isEmpty: boolean = String.isNotDefinedOrEmpty(value.raw);
+    const isEmpty: boolean = isNotDefinedOrEmpty(value.raw);
 
     if (isEmpty) {
       return null;
@@ -84,14 +92,14 @@ export class FormValidators {
       .map(c => c.value);
 
     const valueCounts = values
-      .filter(v => !v.isEmpty())
+      .filter(v => !isStringEmpty(v))
       .reduce((rv, v) => {
         rv[v] = (rv[v] || 0) + 1;
         return rv;
       }, {});
 
     const duplicates = values.filter(v => valueCounts[v] > 1);
-    if (duplicates.isEmpty()) {
+    if (isArrayEmpty(duplicates)) {
       return null;
     }
 

@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angul
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { isDefinedAndNotEmpty } from 'app/utils';
 import { PageTab, DraftPayload } from './model/pagetab';
 import { SubmissionDraftUtils } from './utils/submission-draft.utils';
 
@@ -99,7 +100,7 @@ export class SubmissionService {
   directSubmit(file: File, attachTo: string): Observable<SubmitResponse> {
     const formData = new FormData();
 
-    if (String.isDefinedAndNotEmpty(attachTo)) {
+    if (isDefinedAndNotEmpty(attachTo)) {
       formData.append('AttachTo', attachTo);
     }
 

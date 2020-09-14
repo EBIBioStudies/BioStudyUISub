@@ -1,4 +1,5 @@
 import { zip } from 'fp-ts/lib/Array';
+import { isDefinedAndNotEmpty, isArrayEmpty, arrayUniqueValues, isStringDefined } from 'app/utils';
 import { nextId } from './submission.model.counter';
 import { Attribute } from './submission.model.attribute';
 import { ValueMap } from './submission.model.valuemap';
@@ -149,7 +150,7 @@ export class Feature {
   }
 
   add(attributes: AttributeData[] = [], rowIdx?: number): void {
-    if (attributes.isEmpty()) {
+    if (isArrayEmpty(attributes)) {
       return;
     }
 
@@ -158,12 +159,12 @@ export class Feature {
       throw new Error(`Can't add new row to ${this.typeName}: ${attributes.map(at => at.name).join(',')}`);
     }
 
-    const attrsWithName = attributes.filter(attr => String.isDefinedAndNotEmpty(attr.name));
+    const attrsWithName = attributes.filter(attr => isDefinedAndNotEmpty(attr.name));
     const newColNames = attrsWithName.map(attr => attr.name!);
 
     const existedColNames = this._columns.names();
 
-    newColNames.uniqueValues().forEach(colName => {
+    arrayUniqueValues(newColNames).forEach(colName => {
       const colType = this.type.getColumnType(colName);
       const requiredColCount = newColNames.filter(name => name === colName).length;
       let colCount = existedColNames.filter(name => name === colName).length;
@@ -249,7 +250,7 @@ export class Features {
   private features: Feature[] = [];
 
   constructor(type: SectionType, features: Array<FeatureData> = []) {
-    const fd = features.filter(f => String.isDefinedAndNotEmpty(f.type))
+    const fd = features.filter(f => isDefinedAndNotEmpty(f.type))
       .reduce((rv, d) => {
         rv[d.type!] = d;
         return rv;
@@ -369,7 +370,7 @@ export class Fields {
   constructor(type: SectionType, attributes: Array<AttributeData> = []) {
     this.fields = [];
 
-    const attrMap = attributes.filter(at => String.isDefined(at.name))
+    const attrMap = attributes.filter(at => isStringDefined(at.name))
       .reduce((rv, attr) => {
         rv[attr.name!] = attr.value;
         return rv;

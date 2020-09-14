@@ -1,10 +1,11 @@
 import { PtAttribute, PageTabSection } from './pagetab.model';
+import { isNotDefinedOrEmpty, isDefinedAndNotEmpty, isStringDefined } from 'app/utils';
 
 export interface Dictionary<T> { [key: string]: T | undefined }
 export type Nullable<T> = T | null | undefined;
 
 const isEqualTo = (value: string) => {
-  return (s: Nullable<string>) => (String.isDefined(s) && s!.toLowerCase() === value);
+  return (s: Nullable<string>) => (isStringDefined(s) && s!.toLowerCase() === value);
 };
 
 export function getOrganizationFromSubsection(section, orgName) {
@@ -18,14 +19,14 @@ export function getOrganizationFromSubsection(section, orgName) {
 
 export function authorsToContacts(sections: PageTabSection[] = []): PageTabSection[] {
   const isAffiliation = (s: Nullable<string>) => {
-    return String.isDefined(s) && ['organization', 'organisation', 'affiliation'].includes(s!.toLowerCase());
+    return isStringDefined(s) && ['organization', 'organisation', 'affiliation'].includes(s!.toLowerCase());
   };
   const isAuthor = isEqualTo('author');
   const isName = isEqualTo('name');
 
   const affiliations: Dictionary<string> =
     sections
-      .filter(s => String.isDefined(s.accno) && isAffiliation(s.type))
+      .filter(s => isStringDefined(s.accno) && isAffiliation(s.type))
       .reduce((result, section) => {
         const nameAttribute: PtAttribute = section.attributes!.find((attribute) => isName(attribute.name)) || { value: '' };
 
@@ -42,7 +43,7 @@ export function authorsToContacts(sections: PageTabSection[] = []): PageTabSecti
         attributes: (a.attributes || [])
           .map(attr => {
             if (isAffiliation(attr.name)) {
-              const value = (attr.reference || attr.isReference) && String.isDefinedAndNotEmpty(attr.value)
+              const value = (attr.reference || attr.isReference) && isDefinedAndNotEmpty(attr.value)
                 ? (affiliations[attr.value!] || attr.value)
                 : attr.value;
 
@@ -69,7 +70,7 @@ class Organisations {
   }
 
   toReference(attr: PtAttribute): PtAttribute {
-    if (String.isNotDefinedOrEmpty(attr.value)) {
+    if (isNotDefinedOrEmpty(attr.value)) {
       return <PtAttribute>{ name: 'affiliation', value: attr.value };
     }
 
@@ -95,8 +96,8 @@ class Organisations {
 
   private refFor(value: string, accno: string): string {
     const key: string = value.trim().toLowerCase();
-    const isAccnoDefined: boolean = String.isDefined(accno);
-    const isValueDefined: boolean = String.isDefined(this.names[key]);
+    const isAccnoDefined: boolean = isStringDefined(accno);
+    const isValueDefined: boolean = isStringDefined(this.names[key]);
 
     if (isValueDefined) {
       return this.refs[key]!;
