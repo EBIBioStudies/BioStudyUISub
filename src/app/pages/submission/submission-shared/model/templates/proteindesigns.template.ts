@@ -1,6 +1,6 @@
 export const proteinDesignsTemplate = {
   name: "ProteinDesigns",
-  description: "Generic submission for stand-alone or generic studies",
+  description: "Protein Designs Template",
   sectionType: {
     name: "Study",
     fieldTypes: [
@@ -14,7 +14,7 @@ export const proteinDesignsTemplate = {
         },
       },
       {
-        name: "ReleaseDate",
+        name: "Release Date",
         icon: "fa-calendar-alt",
         display: "required",
         valueType: {
@@ -41,7 +41,7 @@ export const proteinDesignsTemplate = {
       },
       {
         name:
-          "DNA sequence of the design (Including promoter and other non-coding regions)",
+          "DNA sequence of the plasmid you are using for expression, including DNA sequence of your protein",
         icon: "fa-title",
         display: "required",
         valueType: {
@@ -57,7 +57,9 @@ export const proteinDesignsTemplate = {
         },
       },
       {
-        name: "How the proteins are produced",
+        name: "How are the proteins produced?",
+        helpText:
+          'For example "expressed in E. coli", "synthesized chemically", "expressed using yeast surface display"',
         icon: "fa-title",
         display: "required",
         valueType: {
@@ -66,16 +68,22 @@ export const proteinDesignsTemplate = {
         },
       },
       {
-        name: "Is the protein expressed",
+        name: "Is the protein expressed?",
+        helpText:
+          "Based on whatever test you use to assess the amount of protein produced (e.g. band on a gel, " +
+          "fluorescence signal) would you rank this particular protein as high, medium or low expression " +
+          '(choice from a menu) you can also write in "none"',
         icon: "fa-tag",
+        display: "required",
         valueType: {
           name: "select",
           values: ["High", "Medium", "Low"],
         },
-        display: "required",
       },
       {
         name: "Protein expression evidence",
+        helpText:
+          "Please upload data from whatever test you use. e.g. an image of a protein gel, data from a FACS experient.",
         icon: "fa-file",
         display: "desirable",
         valueType: {
@@ -84,6 +92,10 @@ export const proteinDesignsTemplate = {
       },
       {
         name: "Solubility",
+        helpText:
+          "Especially relevant for proteins expressed in cells. When you lyse the cell, is the majority of the protein " +
+          "of interest in the supernatant or the pelet after the first spin? Please upload data from whatever " +
+          "test you use, e.g. an image of a protein gel.",
         icon: "fa-file",
         display: "desirable",
         valueType: {
@@ -99,8 +111,88 @@ export const proteinDesignsTemplate = {
         },
         display: "desirable",
       },
+      {
+        name: "Association state",
+        icon: "fa-tag",
+        valueType: {
+          name: "select",
+          values: ["Monomer", "Dimer", "Trimer", "Aggregated"],
+        },
+        display: "desirable",
+      },
+      {
+        name: "Association state evidence",
+        icon: "fa-tag",
+        valueType: {
+          name: "select",
+          values: [
+            "Analytical ultracentrifugation (AUC)",
+            "Size exclusion chromatography (SEC)",
+            "SEC/Multiangle light scattering (MALS) (SEC/MALS)",
+            "Small angle x-ray scattering (SAXS)",
+          ],
+        },
+        display: "desirable",
+      },
     ],
     featureTypes: [
+      {
+        name: "SolutionCharacterization",
+        title: "Solution characterization (structure) / CD spectroscopy",
+        description:
+          "Solution characterization (structure) / Circular Dichroism (CD)",
+        icon: "fa-book",
+        display: "desirable",
+        uniqueCols: true,
+        columnTypes: [
+          {
+            name: "Signal",
+            valueType: { name: "text" },
+            display: "required",
+          },
+          {
+            name: "Wavelength",
+            valueType: { name: "text" },
+            display: "required",
+          },
+        ],
+      },
+      {
+        name: "SolutionCharacterizationFluorescence",
+        title: "Solution characterisation (structure) / fluorescence",
+        description: "Solution characterisation (structure) / fluorescence",
+        icon: "fa-book",
+        display: "desirable",
+        uniqueCols: true,
+        columnTypes: [
+          {
+            name: "Intensity",
+            valueType: { name: "text" },
+            display: "required",
+          },
+          {
+            name: "Wavelength",
+            valueType: { name: "text" },
+            display: "required",
+          },
+        ],
+      },
+      {
+        name: "File",
+        title: "",
+        description:
+          "3D structural confirmation of the design (Format supported by PDB)",
+        icon: "fa-file",
+        display: "desirable",
+        uniqueCols: true,
+        columnTypes: [
+          {
+            name: "Path",
+            valueType: { name: "file" },
+            display: "required",
+          },
+        ],
+      },
       {
         name: "Contact",
         title: "Add Contacts",
@@ -212,62 +304,6 @@ export const proteinDesignsTemplate = {
           {
             name: "Funding",
             valueType: { name: "text" },
-          },
-        ],
-      },
-      {
-        name: "SolutionCharacterization",
-        title: "Solution characterization (structure) / CD spectroscopy",
-        description: "Solution characterization (structure) / CD spectroscopy",
-        icon: "fa-book",
-        display: "desirable",
-        uniqueCols: true,
-        columnTypes: [
-          {
-            name: "Signal",
-            valueType: { name: "text" },
-            display: "required",
-          },
-          {
-            name: "Wavelength",
-            valueType: { name: "text" },
-            display: "required",
-          },
-        ],
-      },
-      {
-        name: "SolutionCharacterizationFluorescence",
-        title: "Solution characterisation (structure) / fluorescence",
-        description: "Solution characterisation (structure) / fluorescence",
-        icon: "fa-book",
-        display: "desirable",
-        uniqueCols: true,
-        columnTypes: [
-          {
-            name: "Intensity",
-            valueType: { name: "text" },
-            display: "required",
-          },
-          {
-            name: "Wavelength",
-            valueType: { name: "text" },
-            display: "required",
-          },
-        ],
-      },
-      {
-        name: "File",
-        title: "",
-        description:
-          "3D structural confirmation of the design (Format supported by PDB)",
-        icon: "fa-file",
-        display: "desirable",
-        uniqueCols: true,
-        columnTypes: [
-          {
-            name: "Path",
-            valueType: { name: "file" },
-            display: "required",
           },
         ],
       },

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ReplaySubject, Subject } from 'rxjs';
 import { UserCookies } from './user-cookies';
 import { UserInfo } from './model';
+import { isDefinedAndNotEmpty } from 'app/utils';
 
 @Injectable()
 export class UserSession {
@@ -25,7 +26,7 @@ export class UserSession {
   getUserDisplayName(): string {
     const { fullname, email } = this.userCookies.getUser();
 
-    if (String.isDefinedAndNotEmpty(fullname)) {
+    if (isDefinedAndNotEmpty(fullname)) {
       return fullname;
     }
 

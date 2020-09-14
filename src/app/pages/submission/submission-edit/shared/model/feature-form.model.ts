@@ -1,3 +1,6 @@
+import { Subject, Observable } from 'rxjs';
+import * as pluralize from 'pluralize';
+import { FormGroup, FormArray, FormControl } from '@angular/forms';
 import {
   Attribute,
   ColumnType,
@@ -5,9 +8,7 @@ import {
   FeatureType,
   ValueMap
 } from 'app/pages/submission/submission-shared/model';
-import { Subject, Observable } from 'rxjs';
-import * as pluralize from 'pluralize';
-import { FormGroup, FormArray, FormControl } from '@angular/forms';
+import { isArrayEmpty, arrayUniqueValues, isStringEmpty } from 'app/utils';
 import { FormBase } from './form-base.model';
 import { ColumnControl } from './column-control.model';
 import { RowForm } from './row-form.model';
@@ -15,7 +16,6 @@ import { ControlGroupRef } from '../control-reference';
 import { MyFormGroup, SubmFormValidators } from '../form-validators';
 import { CellControl } from './cell-control.model';
 import { StructureChangeEvent } from '../structure-change-event';
-import { cons } from 'fp-ts/lib/NonEmptyArray2v';
 
 export class FeatureForm extends FormBase {
   columnNamesAvailableCached: string[] = [];
@@ -137,7 +137,7 @@ export class FeatureForm extends FormBase {
   }
 
   get scrollToTheLastControl(): FormControl | undefined {
-    if (this.rowForms.isEmpty() || this.columnControls.isEmpty()) {
+    if (isArrayEmpty(this.rowForms) || isArrayEmpty(this.columnControls)) {
       return undefined;
     }
 
@@ -211,13 +211,14 @@ export class FeatureForm extends FormBase {
   /* returns list of current values for a column, excludes value in the current row */
   cellValues(rowIndex: number, columnId: string): string[] {
     const skipRow = this.rowForms[rowIndex];
-    return this.rowForms
+    const allCellValues =  this.rowForms
       .filter(row => row !== skipRow)
       .map(row => row.cellControlAt(columnId))
       .filter(c => c !== undefined)
-      .map(c => c?.control.value)
-      .filter((v: string) => !v.isEmpty())
-      .uniqueValues();
+      .map(c => c!.control.value)
+      .filter((v: string) => !isStringEmpty(v));
+
+    return arrayUniqueValues(allCellValues);
   }
 
   cellValuesTypeaheadFunc(rowIndex: number, columnId: string): (() => string[]) | undefined {

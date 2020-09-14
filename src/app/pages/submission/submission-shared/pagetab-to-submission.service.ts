@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { flatArray } from 'app/utils/array.utils';
+import { flatArray, isDefinedAndNotEmpty, isArrayEmpty, arrayUniqueValues, isStringDefined } from 'app/utils';
 import {
   AttrExceptions,
   LinksUtils,
@@ -31,7 +31,7 @@ export class PageTabToSubmissionService {
     return {
       accno: pageTab.accno,
       tags: (pageTab.tags || []).map(t => new Tag(t.classifier, t.tag)),
-      isRevised: !(pageTab.tags || []).isEmpty(),
+      isRevised: !isArrayEmpty((pageTab.tags || [])),
       accessTags: pageTab.accessTags,
       attributes: this.pageTabAttributesToAttributeData(pageTab.attributes || []),
       section: pageTab.section ? this.pageTabSectionToSectionData(pageTab.section, pageTab.attributes) : undefined
@@ -76,8 +76,8 @@ export class PageTabToSubmissionService {
   }
 
   private pageTabSectionToSectionData(ptSection: PageTabSection, parentAttributes: PtAttribute[] = []): SectionData {
-    const parentAttributesWithName = parentAttributes.filter((attribute) => String.isDefined(attribute.name));
-    const editableParentAttributes = parentAttributesWithName.filter((attribute) => attribute.name && AttrExceptions.editable.includes(attribute.name));
+    const parentAttributesWithName = parentAttributes.filter((attribute) => isStringDefined(attribute.name));
+    const editableParentAttributes = parentAttributesWithName.filter((attribute) => AttrExceptions.editable.includes(attribute.name!));
     const parentAndChildAttributes = mergeAttributes(editableParentAttributes, ptSection.attributes || []);
     const attributes = this.pageTabAttributesToAttributeData(parentAndChildAttributes);
 
@@ -92,7 +92,7 @@ export class PageTabToSubmissionService {
     const hasLinks = links.length > 0;
     const hasFiles = files.length > 0;
     const hasFeatureSections = featureSections.length > 0;
-    const hasLibraryFile = String.isDefinedAndNotEmpty(ptSection.libraryFile);
+    const hasLibraryFile = isDefinedAndNotEmpty(ptSection.libraryFile);
     const hasKeywords = keywords.length > 0;
 
     if (hasLinks) {
@@ -128,10 +128,10 @@ export class PageTabToSubmissionService {
     }
 
     if (hasFeatureSections) {
-      const featureTypes = featureSections
-        .filter((featureSection) => String.isDefinedAndNotEmpty(featureSection.type))
-        .map((featureSection) => featureSection.type)
-        .uniqueValues();
+      const allFeatureTypes = featureSections
+        .filter((featureSection) => isDefinedAndNotEmpty(featureSection.type))
+        .map((featureSection) => featureSection.type);
+      const featureTypes = arrayUniqueValues(allFeatureTypes);
 
       featureTypes.forEach((featureType) => {
         const entries = featureSections

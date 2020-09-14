@@ -1,4 +1,5 @@
 import { EMPTY_TEMPLATE_NAME, findSubmissionTemplateByName } from './submission.templates';
+import { isArrayEmpty, isStringDefined, isStringEmpty } from 'app/utils';
 
 /*
 *  Type scopes are used to check if the types with a given name already exists in the scope
@@ -66,11 +67,12 @@ const GLOBAL_TYPE_SCOPE: TypeScope<TypeBase> = new TypeScope<TypeBase>();
 
 export abstract class TypeBase {
   constructor(public typeName: string,
-              readonly tmplBased: boolean,
-              private scope: TypeScope<TypeBase> = GLOBAL_TYPE_SCOPE) {
-    this.typeName = String.isDefined(typeName) ? typeName.trim() : '';
+        readonly tmplBased: boolean,
+        private scope: TypeScope<TypeBase> = GLOBAL_TYPE_SCOPE) {
 
-    if (this.typeName.isEmpty()) {
+    this.typeName = isStringDefined(typeName) ? typeName.trim() : '';
+
+    if (isStringEmpty(this.typeName)) {
       return;
     }
 
@@ -233,16 +235,21 @@ export class ValueTypeFactory {
 export class FieldType extends TypeBase {
   readonly display: string;
   readonly displayType: DisplayType;
+  readonly helpText: string;
   readonly icon: string;
   readonly valueType: ValueType;
 
-  constructor(name: string, data: Partial<FieldType> = {}, scope?: TypeScope<TypeBase>,
-              parentDisplayType: DisplayType = DisplayType.OPTIONAL) {
+  constructor(
+    name: string,
+    data: Partial<FieldType> = {},
+    scope?: TypeScope<TypeBase>,
+    parentDisplayType: DisplayType = DisplayType.OPTIONAL
+  ) {
     super(name, true, scope);
 
     this.valueType = ValueTypeFactory.create(data.valueType || {});
     this.icon = data.icon || 'fa-pencil-square-o';
-
+    this.helpText = data.helpText || '';
     this.displayType = DisplayType.create( data.display || parentDisplayType.name);
     this.display = this.displayType.name;
   }
@@ -377,7 +384,7 @@ export class SectionType extends TypeBase {
     data = data || {};
     this.displayType = DisplayType.create(data.display || parentDisplayType.name);
     this.display = this.displayType.name;
-    this.featureGroups = (data.featureGroups || []).filter(gr => !gr.isEmpty());
+    this.featureGroups = (data.featureGroups || []).filter(gr => !isArrayEmpty(gr));
     this.minRequired = data.minRequired || 1;
     this.annotationsType = new AnnotationsType(data.annotationsType, new TypeScope<AnnotationsType>(), isTemplBased,
       this.displayType);

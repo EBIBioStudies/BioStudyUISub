@@ -2,7 +2,7 @@ import { Component, ElementRef, forwardRef, Input, ViewChild, OnInit, HostListen
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BsDatepickerConfig, BsDatepickerDirective } from 'ngx-bootstrap/datepicker';
 import { formatDate } from 'ngx-bootstrap/chronos';
-import { isEqualDate } from '../utils';
+import { isEqualDate, isDefinedAndNotEmpty } from 'app/utils';
 import { AppConfig } from '../app.config';
 
 @Component({
@@ -150,8 +150,8 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
    * @see {@link ControlValueAccessor}
    * @param value - Value to be stored.
    */
-  writeValue(value: any): void {
-    if (String.isDefinedAndNotEmpty(value)) {
+  writeValue(value: any) {
+    if (isDefinedAndNotEmpty(value)) {
       this.onPickerSet(new Date(value));
     }
   }

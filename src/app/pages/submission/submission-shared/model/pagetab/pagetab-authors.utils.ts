@@ -1,10 +1,12 @@
-import { Section } from 'app/pages/submission/submission-shared/model/submission';
 import { PtAttribute, PageTabSection } from './pagetab.model';
+import { isNotDefinedOrEmpty, isDefinedAndNotEmpty, isStringDefined } from 'app/utils';
 
 export interface Dictionary<T> { [key: string]: T | undefined }
 export type Nullable<T> = T | null | undefined;
 
-const isEqualTo = (value: string) => (s: string) => s.toLowerCase() === value;
+const isEqualTo = (value: string) => {
+  return (s: Nullable<string>) => (isStringDefined(s) && s!.toLowerCase() === value);
+};
 
 export function getOrganizationFromSubsection(section, orgName): any {
   const { sections = [] } = section.subsections || {};
@@ -16,13 +18,15 @@ export function getOrganizationFromSubsection(section, orgName): any {
 }
 
 export function authorsToContacts(sections: PageTabSection[] = []): PageTabSection[] {
-  const isAffiliation = (s: string) => ['organization', 'organisation', 'affiliation'].includes(s.toLowerCase());
+  const isAffiliation = (s: Nullable<string>) => {
+    return isStringDefined(s) && ['organization', 'organisation', 'affiliation'].includes(s!.toLowerCase());
+  };
   const isAuthor = isEqualTo('author');
   const isName = isEqualTo('name');
 
   const affiliations: Dictionary<string> =
     sections
-      .filter((section) => section.accno && section.type && isAffiliation(section.type))
+      .filter(s => isStringDefined(s.accno) && isAffiliation(s.type))
       .reduce((result, section) => {
         let nameAttribute: PtAttribute = { value: '' };
 
@@ -42,9 +46,9 @@ export function authorsToContacts(sections: PageTabSection[] = []): PageTabSecti
         type: 'Contact',
         attributes: (a.attributes || [])
           .map(attr => {
-            if (attr.name && isAffiliation(attr.name)) {
-              const value = (attr.reference || attr.isReference) && attr.value
-                ? (affiliations[attr.value] || attr.value)
+            if (isAffiliation(attr.name)) {
+              const value = (attr.reference || attr.isReference) && isDefinedAndNotEmpty(attr.value)
+                ? (affiliations[attr.value!] || attr.value)
                 : attr.value;
 
               return {name: 'Organisation', value} as PtAttribute;
@@ -75,8 +79,8 @@ class Organisations {
   }
 
   toReference(attr: PtAttribute): PtAttribute {
-    if (String.isNotDefinedOrEmpty(attr.value)) {
-      return { name: 'affiliation', value: attr.value } as PtAttribute;
+    if (isNotDefinedOrEmpty(attr.value)) {
+      return <PtAttribute>{ name: 'affiliation', value: attr.value };
     }
 
     const orgRef = this.refFor(attr.value!, attr.accno!);
@@ -101,8 +105,8 @@ class Organisations {
 
   private refFor(value: string, accno: string): string {
     const key: string = value.trim().toLowerCase();
-    const isAccnoDefined: boolean = String.isDefined(accno);
-    const isValueDefined: boolean = String.isDefined(this.names[key]);
+    const isAccnoDefined: boolean = isStringDefined(accno);
+    const isValueDefined: boolean = isStringDefined(this.names[key]);
 
     if (isValueDefined) {
       return this.refs[key]!;

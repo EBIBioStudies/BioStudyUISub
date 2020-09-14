@@ -1,4 +1,5 @@
 import { AttrExceptions, PageTab, PtAttribute } from './pagetab.model';
+import { isDefinedAndNotEmpty, isStringDefined, isEqualIgnoringCase } from 'app/utils';
 
 /* merges to attribute lists by overriding only single value attributes*/
 export function mergeAttributes(attrs1: PtAttribute[], attrs2: PtAttribute[]): PtAttribute[] {
@@ -7,7 +8,7 @@ export function mergeAttributes(attrs1: PtAttribute[], attrs2: PtAttribute[]): P
 
   attrs1.concat(attrs2)
     .forEach(at => {
-      if (String.isDefinedAndNotEmpty(at.name) && AttrExceptions.unique.includes(at.name!)) {
+      if (isDefinedAndNotEmpty(at.name) && AttrExceptions.unique.includes(at.name!)) {
         if (visited[at.name!] === undefined) {
           visited[at.name!] = merged.length;
           merged.push(at);
@@ -31,7 +32,7 @@ export function updateAttachToAttribute(obj: PageTab, projectIds: string[]): Pag
   const attachAttrs = projectIds.map(pid => ({name: AttrExceptions.attachToAttr, value: pid}));
 
   const otherAttrs = (objCopy.attributes || [])
-    .filter(at => !String.isDefined(at.name) || !at.name!.isEqualIgnoringCase(AttrExceptions.attachToAttr));
+    .filter(at => !isStringDefined(at.name) || !isEqualIgnoringCase(at.name!, AttrExceptions.attachToAttr));
   objCopy.attributes = [...otherAttrs, ...attachAttrs];
   return objCopy;
 }

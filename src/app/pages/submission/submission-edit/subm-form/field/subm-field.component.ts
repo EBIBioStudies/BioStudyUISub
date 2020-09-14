@@ -1,6 +1,7 @@
-import { RichTextFieldValue } from './../../../submission-shared/model/submission/submission.model';
 import { Component, Input } from '@angular/core';
-import { FieldType, ValueType, TextValueType, ValueTypeName } from 'app/pages/submission/submission-shared/model/templates';
+import { FieldType, ValueType, TextValueType } from 'app/pages/submission/submission-shared/model/templates';
+import { isStringEmpty } from 'app/utils';
+import { RichTextFieldValue } from './../../../submission-shared/model/submission/submission.model';
 import { FieldControl } from '../../shared/model/field-control.model';
 
 class ValueLength {
@@ -52,14 +53,22 @@ export class SubmFieldComponent {
     return this.fieldType.valueType;
   }
 
+  get fieldIcon(): string {
+    return this.fieldType.icon;
+  }
+
+  get fieldHelpText(): string {
+    return this.fieldType.helpText;
+  }
+
   get isEmpty(): boolean {
     if (this.fieldType.valueType.isRich()) {
       const fieldValue: RichTextFieldValue = this.fieldControl.control.value as RichTextFieldValue;
 
-      return fieldValue.raw.isEmpty();
+      return isStringEmpty(fieldValue.raw);
     }
 
-    return (this.fieldControl.control.value as string).isEmpty();
+    return isStringEmpty(<string>this.fieldControl!.control.value);
   }
 
   get isRequired(): boolean {
@@ -84,6 +93,10 @@ export class SubmFieldComponent {
 
   get hasErrors(): boolean {
     return this.isRequired && this.isInvalid && this.isTouched;
+  }
+
+  get hasHelpText(): boolean {
+    return this.fieldHelpText.length > 0;
   }
 
   get errors(): string[] {

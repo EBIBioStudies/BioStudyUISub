@@ -42,8 +42,8 @@
           Upload using Aspera
         </div>
         <div class="aspera-header">
-          <h3>Instructions for {{osOption.displayName}}</h3>
-          <div>
+          <h4>Instructions for</h4>
+          <div class="aspera-header-select">
             <select [ngModel]="osOption.name" (ngModelChange)="onOSChange($event)">
               <option *ngFor="let option of osOptions"
                 [value]="option.name"
@@ -57,9 +57,8 @@
         <p>
           The <strong>Aspera</strong> <em>ascp</em> command line client is distributed as part of the <strong>Aspera CLI</strong>
           high-performance transfer browser plug-in which can be downloaded from
-          <br />
           <a target="_blank" [href]="osOption.link">
-            {{osOption.link}}
+            here
           </a>
         </p>
         <markdown *ngIf="osOption.name === 'Mac' || osOption.name === 'Linux'">

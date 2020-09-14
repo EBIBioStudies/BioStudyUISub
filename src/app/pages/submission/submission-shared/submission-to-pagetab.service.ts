@@ -14,15 +14,16 @@ import {
   mergeAttributes,
   submissionToPageTabProtocols,
 } from './model/pagetab';
+import { isNotDefinedOrEmpty, isArrayEmpty, isStringDefined, isEqualIgnoringCase } from 'app/utils';
 import { AttributeData, Feature, Section, Submission } from './model/submission';
 import { DEFAULT_TEMPLATE_NAME, SubmissionType } from './model/templates';
 import { Injectable } from '@angular/core';
 
-const isFileType = (type: string) => type.isEqualIgnoringCase('file');
-const isLinkType = (type: string) => type.isEqualIgnoringCase('link');
-const isLibraryFileType = (type: string) => type.isEqualIgnoringCase('libraryfile');
-const isKeywordType = (type: string) => type.isEqualIgnoringCase('keywords');
-const isEmptyAttr = (attr: PtAttribute) => String.isNotDefinedOrEmpty(attr.value);
+const isFileType = (type: string) => isEqualIgnoringCase(type, 'file');
+const isLinkType = (type: string) => isEqualIgnoringCase(type, 'link');
+const isLibraryFileType = (type: string) => isEqualIgnoringCase(type, 'libraryfile');
+const isKeywordType = (type: string) => isEqualIgnoringCase(type, 'keywords');
+const isEmptyAttr = (attr: PtAttribute) => isNotDefinedOrEmpty(attr.value);
 
 @Injectable()
 export class SubmissionToPageTabService {
@@ -63,14 +64,16 @@ export class SubmissionToPageTabService {
       value: attr.value,
       reference: attr.reference
     } as PtAttribute;
-    if (!(attr.terms || []).isEmpty()) {
-      ptAttr.valqual = attr.terms && attr.terms.slice();
+
+    if (!isArrayEmpty(attr.terms || [])) {
+      ptAttr.valqual = attr.terms!.slice();
     }
+
     return ptAttr;
   }
 
   private attributesAsFile(attributes: PtAttribute[]): PtFile {
-    const isPathAttr = (at: PtAttribute) => at.name && at.name.isEqualIgnoringCase('path');
+    const isPathAttr = (at: PtAttribute) => isStringDefined(at.name) && isEqualIgnoringCase(at.name!, 'path');
     const attr = attributes.find(at => isPathAttr(at));
     const attrs = attributes.filter(at => !isPathAttr(at));
     return { path: attr && attr.value, attributes: attrs } as PtFile;
