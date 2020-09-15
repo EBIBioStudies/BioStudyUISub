@@ -12,6 +12,7 @@ import { TextFilterComponent } from './ag-grid/text-filter.component';
 import { ActionButtonsCellComponent } from './ag-grid/action-buttons-cell.component';
 import { DateCellComponent } from './ag-grid/date-cell.component';
 import { StatusCellComponent } from './ag-grid/status-cell.component';
+import { SubmissionStatus } from 'app/pages/submission/submission-shared/submission.status';
 
 @Component({
   selector: 'st-subm-list',
@@ -141,7 +142,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
       accno: row.accno,
       method: row.method,
       rtime: row.rtime,
-      status: row.status || 'PROCESSING',
+      status: row.status || SubmissionStatus.PROCESSING.name,
       title: row.title,
       version: row.version,
       onDelete: (accno: string, onCancel: Function, isTemp: boolean): Subscription => {
@@ -215,7 +216,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
         const { accNo } = data;
         const rowNode = agApi!.getRowNode(accNo);
 
-        rowNode.setDataValue('status', 'PROCCESSED');
+        rowNode.setDataValue('status', SubmissionStatus.PROCESSED.name);
       });
   }
 
