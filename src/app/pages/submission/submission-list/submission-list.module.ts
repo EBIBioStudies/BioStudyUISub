@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { AgGridModule } from 'ag-grid-angular';
-import { ButtonsModule } from 'ngx-bootstrap';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { ActionButtonsCellComponent } from './ag-grid/action-buttons-cell.component';
 import { DateCellComponent } from './ag-grid/date-cell.component';
 import { DateFilterComponent } from './ag-grid/date-filter.component';

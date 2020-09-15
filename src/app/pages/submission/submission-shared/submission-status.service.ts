@@ -1,5 +1,4 @@
 import { ServerSentEventService } from 'app/shared/server-sent-event.service';
-import { LogService } from 'app/core/logger/log.service';
 import { Observable } from 'rxjs';
 import { NgZone, Injectable } from '@angular/core';
 
@@ -12,15 +11,16 @@ export interface SubmStatus {
 export class SubmissionStatusService {
   eventSource: EventSource | undefined;
 
-  constructor(private zone: NgZone, private sseService: ServerSentEventService, private logService: LogService) {}
-
-  getSubmStatus(): Observable<SubmStatus> {
+  constructor(private zone: NgZone, private sseService: ServerSentEventService) {
     try {
       this.eventSource = this.sseService.getEventSource('/subm-status');
     } catch (error) {
-      this.logService.error('get-subm-status', 'SubmissionStatusService: could not stablish event source connection');
+      // tslint:disable-next-line: no-console
+      console.error('get-subm-status', 'SubmissionStatusService: could not stablish event source connection', error);
     }
+  }
 
+  getSubmStatus(): Observable<SubmStatus> {
     return Observable.create((observer) => {
       this.eventSource!.addEventListener('subm-status', (event: MessageEvent) => {
         const { data } = event;
@@ -29,10 +29,13 @@ export class SubmissionStatusService {
         this.zone.run(() => {
           observer.next(parsedData);
         });
+
+        return () => this.eventSource?.close();
       });
 
-      this.eventSource!.onerror = () => {
-        this.logService.error('get-subm-status', 'SubmissionStatusService: EventSource has stopped');
+      this.eventSource!.onerror = (error) => {
+        // tslint:disable-next-line: no-console
+        console.error('get-subm-status', 'SubmissionStatusService: EventSource has stopped', error);
       };
     });
   }

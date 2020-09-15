@@ -7,10 +7,14 @@ import { AgRendererComponent } from 'ag-grid-angular';
   styleUrls: ['./status-cell.component.css']
 })
 export class StatusCellComponent implements AgRendererComponent {
-  value?: string;
+  value?: string = 'Pending';
+  valueToDisplayMap: object = {
+    PROCESSING: 'Submitting',
+    PROCESSED: 'Submitted'
+  };
 
   agInit(params: any): void {
-    this.value = params.value;
+    this.value = this.valueToDisplayMap[params.value];
   }
 
   refresh(): boolean {

@@ -109,6 +109,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
         headerName: 'Status',
         maxWidth: 100,
         resizable: false,
+        hide: !this.showSubmitted
       },
       {
         cellClass: 'ag-cell-centered',
@@ -140,7 +141,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
       accno: row.accno,
       method: row.method,
       rtime: row.rtime,
-      status: row.status,
+      status: row.status || 'PROCESSING',
       title: row.title,
       version: row.version,
       onDelete: (accno: string, onCancel: Function, isTemp: boolean): Subscription => {
@@ -206,13 +207,16 @@ export class SubmListComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit(): void {
-    this.submStatusService.getSubmStatus().subscribe((data: SubmStatus) => {
-      const agApi = this.gridOptions.api;
-      const { accNo, status } = data;
-      const rowNode = agApi!.getRowNode(accNo);
+    this.submStatusService
+      .getSubmStatus()
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe((data: SubmStatus) => {
+        const agApi = this.gridOptions.api;
+        const { accNo } = data;
+        const rowNode = agApi!.getRowNode(accNo);
 
-      rowNode.setDataValue('status', status);
-    });
+        rowNode.setDataValue('status', 'PROCCESSED');
+      });
   }
 
   /**
