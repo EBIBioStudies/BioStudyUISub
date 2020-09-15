@@ -1,5 +1,5 @@
 import { Subject, Observable } from 'rxjs';
-import * as pluralize from 'pluralize';
+import pluralize from 'pluralize';
 import { FormGroup, FormArray, FormControl } from '@angular/forms';
 import {
   Attribute,

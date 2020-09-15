@@ -6,6 +6,7 @@
     "downlevelIteration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
     "module": "es2020",
     "moduleResolution": "node",
     "noFallthroughCasesInSwitch": true,

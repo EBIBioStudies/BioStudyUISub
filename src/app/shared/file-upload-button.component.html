@@ -1,0 +1,5 @@
+<input id="files-input" class="hidden" name="files-input" type="file" (change)="onInputChange($event)"
+  [multiple]="multiple" allowdirs #inputFile directory webkitdirectory />
+<button type="button" class="btn btn-primary btn-sm upload-button" (click)="onButtonClick()">
+  {{title}}
+</button>

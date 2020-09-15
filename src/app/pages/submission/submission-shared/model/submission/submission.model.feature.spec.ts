@@ -1,3 +1,4 @@
+import { AttributeValue } from './submission.model.attribute-value';
 import { ColumnType, FeatureType, invalidateGlobalScope } from '../templates';
 import { Feature, FeatureData } from './submission.model';
 
@@ -56,8 +57,8 @@ describe('Submission Model: Feature', () => {
     expect(f.rows[1]!.valueFor(col.id)!.value).toBe('');
 
     f.removeColumn(col.id);
-    expect(f.rows[0].valueFor(col.id)).toBeUndefined();
-    expect(f.rows[1].valueFor(col.id)).toBeUndefined();
+    expect(f.rows[0].valueFor(col.id)).toStrictEqual(new AttributeValue(''));
+    expect(f.rows[1].valueFor(col.id)).toStrictEqual(new AttributeValue(''));
   });
 
   it('automatically updates columns and rows when new data added as attributes', () => {

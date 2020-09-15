@@ -7,25 +7,8 @@ import {
 
 @Component({
   selector: 'st-file-upload-button',
-  template: `
-  <input
-    id="files-input"
-    class="hidden"
-    name="files-input"
-    type="file"
-    (change)="onInputChange($event)"
-    [multiple]="multiple"
-    allowdirs
-    #inputFile
-    directory
-    webkitdirectory
-  />
-  <button type="button"
-      class="btn btn-primary btn-sm"
-      (click)="onButtonClick()">
-      {{title}}
-  </button>
-`
+  templateUrl: './file-upload-button.component.html',
+  styleUrls: ['./file-upload-button.component.css'],
 })
 export class FileUploadButtonComponent implements OnChanges {
   hasDirSupport: boolean = false;

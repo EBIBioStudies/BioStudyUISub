@@ -5,7 +5,7 @@ import { UserInfo, ExtendedUserInfo } from './model';
 
 describe('UserData', () => {
   let submService;
-  let appConfig;
+  let userCookies;
 
   beforeEach(() => {
     submService = {
@@ -14,9 +14,10 @@ describe('UserData', () => {
       }
     };
 
-    appConfig = {
-      environment: 'DEV'
-    };
+    userCookies = {
+      setLoginToken(): void {},
+      setUser(): void {}
+    }
   });
 
   it('should return valid user info', async(() => {
@@ -38,7 +39,7 @@ describe('UserData', () => {
       }
     };
 
-    const session = new UserSession(appConfig);
+    const session = new UserSession(userCookies);
 
     new UserData(session, authService as AuthService, submService).info$
       .subscribe(info => {

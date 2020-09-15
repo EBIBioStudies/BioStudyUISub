@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import * as pluralize from 'pluralize';
+import pluralize from 'pluralize';
 import { Component, ViewChild } from '@angular/core';
 import { AppConfig } from 'app/app.config';
 import { SidebarFile } from './direct-submit-sidebar.component';
