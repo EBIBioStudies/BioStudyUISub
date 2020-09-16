@@ -1,6 +1,6 @@
 export class SubmissionStatus {
   static PROCESSED = new SubmissionStatus('PROCESSED', 'Submitted');
-  static PROCESSING = new SubmissionStatus('PROCESSING', 'Submitting');
+  static PROCESSING = new SubmissionStatus('PROCESSING', 'Processing');
 
   readonly displayValue: string;
   readonly name: string;

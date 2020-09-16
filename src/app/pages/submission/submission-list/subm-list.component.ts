@@ -6,7 +6,7 @@ import { takeUntil, catchError } from 'rxjs/operators';
 import { ModalService } from 'app/shared/modal.service';
 import { isDefinedAndNotEmpty } from 'app/utils';
 import { SubmissionService } from '../submission-shared/submission.service';
-import { SubmissionStatusService, SubmStatus } from '../submission-shared/submission-status.service';
+import { SubmissionStatusService } from '../submission-shared/submission-status.service';
 import { DateFilterComponent } from './ag-grid/date-filter.component';
 import { TextFilterComponent } from './ag-grid/text-filter.component';
 import { ActionButtonsCellComponent } from './ag-grid/action-buttons-cell.component';
@@ -211,9 +211,8 @@ export class SubmListComponent implements OnDestroy, OnInit {
     this.submStatusService
       .getSubmStatus()
       .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe((data: SubmStatus) => {
+      .subscribe((accNo: string) => {
         const agApi = this.gridOptions.api;
-        const { accNo } = data;
         const rowNode = agApi!.getRowNode(accNo);
 
         rowNode.setDataValue('status', SubmissionStatus.PROCESSED.name);

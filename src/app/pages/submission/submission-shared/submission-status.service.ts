@@ -1,11 +1,7 @@
-import { ServerSentEventService } from 'app/shared/server-sent-event.service';
 import { Observable } from 'rxjs';
 import { NgZone, Injectable } from '@angular/core';
-
-export interface SubmStatus {
-  accNo: string,
-  status: string
-}
+import { ServerSentEventService } from 'app/shared/server-sent-event.service';
+import { isStringDefined } from 'app/utils';
 
 @Injectable()
 export class SubmissionStatusService {
@@ -20,14 +16,16 @@ export class SubmissionStatusService {
     }
   }
 
-  getSubmStatus(): Observable<SubmStatus> {
+  getSubmStatus(): Observable<string> {
     return Observable.create((observer) => {
       this.eventSource!.addEventListener('message', (event: MessageEvent) => {
         const { data } = event;
-        const parsedData: SubmStatus = JSON.parse(data);
+        const { accNo } = JSON.parse(data);
 
         this.zone.run(() => {
-          observer.next(parsedData);
+          if (isStringDefined(accNo)) {
+            observer.next(accNo);
+          }
         });
 
         return () => this.eventSource?.close();
