@@ -79,22 +79,13 @@ export class SubmListComponent implements OnDestroy, OnInit {
     this.columnDefs = [
       {
         cellClass: 'ag-cell-centered',
+        cellRendererFramework: StatusCellComponent,
         field: 'accno',
         filter: true,
-        filterFramework: TextFilterComponent,
         headerName: 'Accession',
         maxWidth: 175,
-        resizable: true
-      },
-      {
-        cellClass: 'ag-cell-centered',
-        field: 'version',
-        filter: true,
-        filterFramework: TextFilterComponent,
-        headerName: 'Version',
-        hide: !this.showSubmitted,
-        maxWidth: 100,
-        resizable: true
+        resizable: true,
+        valueGetter: ({ data }) => `${data?.accno}:${data?.status}`
       },
       {
         cellClass: 'ag-cell-centered',
@@ -103,14 +94,6 @@ export class SubmListComponent implements OnDestroy, OnInit {
         filterFramework: TextFilterComponent,
         headerName: this.showSubmitted ? 'Latest title' : 'Title',
         resizable: true
-      },
-      {
-        cellRendererFramework: StatusCellComponent,
-        field: 'status',
-        headerName: 'Status',
-        maxWidth: 100,
-        resizable: false,
-        hide: !this.showSubmitted
       },
       {
         cellClass: 'ag-cell-centered',
@@ -142,7 +125,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
       accno: row.accno,
       method: row.method,
       rtime: row.rtime,
-      status: row.status || SubmissionStatus.PROCESSING.name,
+      status: row.status || SubmissionStatus.PROCESSED.name,
       title: row.title,
       version: row.version,
       onDelete: (accno: string, onCancel: Function, isTemp: boolean): Subscription => {
@@ -211,11 +194,11 @@ export class SubmListComponent implements OnDestroy, OnInit {
     this.submStatusService
       .getSubmStatus()
       .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe((accNo: string) => {
+      .subscribe((accno: string) => {
         const agApi = this.gridOptions.api;
-        const rowNode = agApi!.getRowNode(accNo);
+        const rowNode = agApi!.getRowNode(accno);
 
-        rowNode.setDataValue('status', SubmissionStatus.PROCESSED.name);
+        rowNode.setDataValue('accno', `${accno}:${SubmissionStatus.PROCESSED.name}`);
       });
   }
 
