@@ -25,6 +25,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
   gridOptions: GridOptions;
   isBusy: boolean = false; // Flag indicating if a request is in progress
   isCreating: boolean = false; // Flag indicating if submission creation is in progress
+  rows: any[] = [];
   showSubmitted: boolean = true; // Flag indicating if the list of sent submissions is to be displayed
 
   protected ngUnsubscribe: Subject<void>; // Stopper for all subscriptions to HTTP get operations
@@ -54,6 +55,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
       cacheBlockSize: 15,
       debug: false,
       enableSorting: false,
+      getRowNodeId: (item) => item.accno,
       icons: {menu: '<i class="fa fa-filter"/>'},
       localeText: {noRowsToShow: 'No submissions found'},
       overlayLoadingTemplate: '<span class="ag-overlay-loading-center"><i class="fa fa-cog fa-spin fa-lg"></i> Loading...</span>',
@@ -62,8 +64,8 @@ export class SubmListComponent implements OnDestroy, OnInit {
       rowHeight: 30,
       rowModelType: 'infinite',
       rowSelection: 'single',
+      suppressRowClickSelection: true,
       unSortIcon: true,
-      getRowNodeId: (item) => item.accno,
       onGridReady: () => {
         this.gridOptions!.api!.sizeColumnsToFit();
         this.setDatasource();
@@ -85,10 +87,10 @@ export class SubmListComponent implements OnDestroy, OnInit {
         headerName: 'Accession',
         maxWidth: 175,
         resizable: true,
-        valueGetter: ({ data }) => `${data?.accno}:${data?.status}`
       },
       {
         cellClass: 'ag-cell-centered',
+        editable: false,
         field: 'title',
         filter: true,
         filterFramework: TextFilterComponent,
@@ -110,9 +112,9 @@ export class SubmListComponent implements OnDestroy, OnInit {
         filter: true,
         headerName: 'Actions',
         maxWidth: 100,
+        resizable: true,
         sortable: false,
-        suppressMenu: true,
-        resizable: true
+        suppressMenu: true
       }
     ];
   }
@@ -121,7 +123,9 @@ export class SubmListComponent implements OnDestroy, OnInit {
     return rows.map(row => ({
       id: row.accno,
       isTemp: !this.showSubmitted,
-      isDeletable: !this.showSubmitted || ['S-', 'TMP_'].some((prefix) => row.accno.indexOf(prefix) === 0),
+      isDeletable: this.canDeleteRow(row),
+      isEditable: this.canEditRow(row),
+      isProcessing: this.isProcessingRowSubmission(row),
       accno: row.accno,
       method: row.method,
       rtime: row.rtime,
@@ -172,10 +176,6 @@ export class SubmListComponent implements OnDestroy, OnInit {
 
       onEdit: (accno: string) => {
         this.router.navigate(['/submissions/edit', accno]);
-      },
-
-      onView: (accno: string) => {
-        this.router.navigate(['/submissions', accno]);
       }
     }));
   }
@@ -197,8 +197,20 @@ export class SubmListComponent implements OnDestroy, OnInit {
       .subscribe((accno: string) => {
         const agApi = this.gridOptions.api;
         const rowNode = agApi!.getRowNode(accno);
+        const rowData = rowNode.data;
+        const newRowData = {
+          ...rowData,
+          status: SubmissionStatus.PROCESSED.name
+        };
+        const updateRowData = {
+          ...newRowData,
+          isDeletable: this.canDeleteRow(newRowData),
+          isEditable: this.canEditRow(newRowData),
+          isProcessing: false
+        };
 
-        rowNode.setDataValue('accno', `${accno}:${SubmissionStatus.PROCESSED.name}`);
+        rowNode.updateData(updateRowData);
+        agApi!.redrawRows();
       });
   }
 
@@ -207,7 +219,9 @@ export class SubmListComponent implements OnDestroy, OnInit {
    * @param event - ag-Grid's custom event object that includes data represented by the clicked row.
    */
   onRowClicked(event): void {
-    if (!this.isBusy && event.colDef.headerName !== 'Actions') {
+    const isProcessingSubmission = this.isProcessingRowSubmission(event.data);
+
+    if (!this.isBusy && event.colDef.headerName !== 'Actions' && !isProcessingSubmission) {
       const { accno, method } = event.data;
       const optionalParams = isDefinedAndNotEmpty(method) ? { method } : {};
 
@@ -281,12 +295,25 @@ export class SubmListComponent implements OnDestroy, OnInit {
               lastRow = params.startRow + rows.length;
             }
 
-            params.successCallback(this.decorateDataRows(rows), lastRow);
+            this.rows = this.decorateDataRows(rows);
+            params.successCallback(this.rows, lastRow);
             this.isBusy = false;
           });
         }
       };
     }
     agApi!.setDatasource(this.datasource);
+  }
+
+  private canDeleteRow(row): boolean {
+    return ['S-', 'TMP_'].some((prefix) => row.accno.indexOf(prefix) >= 0) && !this.isProcessingRowSubmission(row);
+  }
+
+  private canEditRow(row): boolean {
+    return !this.isProcessingRowSubmission(row);
+  }
+
+  private isProcessingRowSubmission(row): boolean {
+    return row.status === SubmissionStatus.REQUESTED.name;
   }
 }

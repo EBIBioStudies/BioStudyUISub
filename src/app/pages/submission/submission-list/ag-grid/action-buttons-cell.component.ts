@@ -4,13 +4,13 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'st-action-buttons-cell',
   template: `
-    <button *ngIf="rowData" type="button" class="btn btn-primary btn-xs btn-flat"
+    <button *ngIf="rowData && isRowEditable" type="button" class="btn btn-primary btn-xs btn-flat"
         (click)="onEditSubmission()"
         tooltip="Edit this submission"
         container="body">
       <i class="fas fa-pencil-alt fa-fw"></i>
     </button>
-    <button *ngIf="rowData && rowData.isDeletable" type="button" class="btn btn-danger btn-xs btn-flat"
+    <button *ngIf="rowData && isRowDeletable" type="button" class="btn btn-danger btn-xs btn-flat"
         [disabled]="isBusy"
         (click)="onDeleteSubmission()"
         tooltip="Delete this submission"
@@ -22,6 +22,14 @@ import { Component } from '@angular/core';
 export class ActionButtonsCellComponent implements AgRendererComponent {
   isBusy: boolean = false; // flags if a previous button action is in progress
   rowData: any; // object including the data values for the row this cell belongs to
+
+  get isRowDeletable(): boolean {
+    return this.rowData.isDeletable;
+  }
+
+  get isRowEditable(): boolean {
+    return this.rowData.isEditable;
+  }
 
   agInit(params: any): void {
     this.rowData = params.data;

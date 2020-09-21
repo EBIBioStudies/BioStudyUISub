@@ -1,3 +1,12 @@
+.badge-status {
+  align-items: center;
+  display: flex;
+}
+
 .badge-primary {
   background-color: #3c739f;
+}
+
+.badge-status-spinner {
+  margin-left: 4px;
 }

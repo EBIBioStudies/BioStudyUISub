@@ -2,39 +2,41 @@ import { isDefinedAndNotEmpty } from 'app/utils';
 import { Component } from '@angular/core';
 import { AgRendererComponent } from 'ag-grid-angular';
 import { SubmissionStatus } from 'app/pages/submission/submission-shared/submission.status';
-import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'st-status-cell',
   template: `
     <div>
-      {{accno}}
-      <span *ngIf="shouldDisplayBadge" class="badge badge-primary">
-        {{displayStatus}}
+      {{shouldShowAccno ? submissionAccno : ''}}
+      <span *ngIf="rowData && isProcessingSubmission" class="badge badge-status badge-primary">
+        {{processingDisplayName}}
+        <span class="spinner-border spinner-border-sm badge-status-spinner"></span>
       </span>
     </div>
   `,
   styleUrls: ['./status-cell.component.css']
 })
 export class StatusCellComponent implements AgRendererComponent {
-  accno?: string;
-  displayStatus?: string = '';
-  isProcessed: boolean = false;
+  rowData: any;
 
-  agInit(params: any): void {
-    const [accno, status] = params.value.split(':');
-    this.isProcessed = status === SubmissionStatus.PROCESSED.name;
-    this.accno = this.isProcessed ? accno : '';
-
-    if (isDefinedAndNotEmpty(status)) {
-      this.displayStatus = this.isProcessed
-        ? SubmissionStatus.PROCESSED.displayValue
-        : SubmissionStatus.PROCESSING.displayValue;
-    }
+  get submissionAccno(): boolean {
+    return this.rowData.accno;
   }
 
-  get shouldDisplayBadge(): boolean {
-    return !this.isProcessed && isDefinedAndNotEmpty(this.displayStatus);
+  get shouldShowAccno(): boolean {
+    return this.rowData !== undefined && !this.isProcessingSubmission;
+  }
+
+  get isProcessingSubmission(): boolean {
+    return this.rowData.isProcessing;
+  }
+
+  get processingDisplayName(): string {
+    return SubmissionStatus.PROCESSING.displayValue;
+  }
+
+  agInit(params: any): void {
+    this.rowData = params.data;
   }
 
   refresh(): boolean {

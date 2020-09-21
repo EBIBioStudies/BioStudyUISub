@@ -1,6 +1,7 @@
 export class SubmissionStatus {
   static PROCESSED = new SubmissionStatus('PROCESSED', 'Submitted');
   static PROCESSING = new SubmissionStatus('PROCESSING', 'Processing');
+  static REQUESTED = new SubmissionStatus('REQUESTED', 'Requested');
 
   readonly displayValue: string;
   readonly name: string;
