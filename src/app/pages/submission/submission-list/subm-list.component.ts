@@ -200,7 +200,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
         const agApi = this.gridOptions.api;
         const rowNode = agApi!.getRowNode(accno);
 
-        if (rowNode !== undefined) {
+        if (rowNode !== null) {
           const rowData = rowNode.data;
           const newRowData = {
             ...rowData,
