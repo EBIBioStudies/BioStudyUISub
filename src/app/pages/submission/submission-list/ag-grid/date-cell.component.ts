@@ -4,9 +4,16 @@ import { AppConfig } from 'app/app.config';
 
 @Component({
   selector: 'st-date-cell',
-  template: `{{ value === undefined ? '&mdash;' : value | date: appConfig.dateListFormat }}`
+  template: `
+    <span class="{{classes}}">
+      {{ value === undefined ? '&mdash;' : value | date: appConfig.dateListFormat }}
+    </span>
+  `,
+  styleUrls: ['./date-cell.component.css']
 })
 export class DateCellComponent implements AgRendererComponent {
+  classes: string = '';
+  rowData: any;
   value?: Date;
 
   /**
@@ -15,8 +22,14 @@ export class DateCellComponent implements AgRendererComponent {
    */
   constructor(public appConfig: AppConfig) {}
 
+  get isProcessingSubmission(): boolean {
+    return this.rowData !== undefined && this.rowData.isProcessing;
+  }
+
   agInit(params: any): void {
+    this.rowData = params.data;
     this.value = this.asDate(params.value);
+    this.classes = this.isProcessingSubmission ? 'data-cell-disable' : '';
   }
 
   /**

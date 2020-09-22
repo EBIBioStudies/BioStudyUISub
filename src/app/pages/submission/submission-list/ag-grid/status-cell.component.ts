@@ -1,4 +1,3 @@
-import { isDefinedAndNotEmpty } from 'app/utils';
 import { Component } from '@angular/core';
 import { AgRendererComponent } from 'ag-grid-angular';
 import { SubmissionStatus } from 'app/pages/submission/submission-shared/submission.status';
@@ -8,7 +7,7 @@ import { SubmissionStatus } from 'app/pages/submission/submission-shared/submiss
   template: `
     <div>
       {{shouldShowAccno ? submissionAccno : ''}}
-      <span *ngIf="rowData && isProcessingSubmission" class="badge badge-status badge-primary">
+      <span *ngIf="isProcessingSubmission" class="badge badge-status badge-primary">
         {{processingDisplayName}}
         <span class="spinner-border spinner-border-sm badge-status-spinner"></span>
       </span>
@@ -28,7 +27,7 @@ export class StatusCellComponent implements AgRendererComponent {
   }
 
   get isProcessingSubmission(): boolean {
-    return this.rowData.isProcessing;
+    return this.rowData !== undefined && this.rowData.isProcessing;
   }
 
   get processingDisplayName(): string {

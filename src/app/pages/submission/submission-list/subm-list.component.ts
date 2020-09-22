@@ -12,6 +12,7 @@ import { TextFilterComponent } from './ag-grid/text-filter.component';
 import { ActionButtonsCellComponent } from './ag-grid/action-buttons-cell.component';
 import { DateCellComponent } from './ag-grid/date-cell.component';
 import { StatusCellComponent } from './ag-grid/status-cell.component';
+import { TextCellComponent } from './ag-grid/text-cell.component';
 import { SubmissionStatus } from 'app/pages/submission/submission-shared/submission.status';
 
 @Component({
@@ -90,11 +91,12 @@ export class SubmListComponent implements OnDestroy, OnInit {
       },
       {
         cellClass: 'ag-cell-centered',
+        cellRendererFramework: TextCellComponent,
         editable: false,
         field: 'title',
         filter: true,
         filterFramework: TextFilterComponent,
-        headerName: this.showSubmitted ? 'Latest title' : 'Title',
+        headerName: 'Title',
         resizable: true
       },
       {
@@ -103,7 +105,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
         field: 'rtime',
         filter: true,
         filterFramework: DateFilterComponent,
-        headerName: this.showSubmitted ? 'First Released' : 'Release Date',
+        headerName: 'Release Date',
         maxWidth: 150,
         resizable: true
       },
