@@ -16,7 +16,7 @@
     <div class="media-body media-middle">
       <p class="media-heading">
         <span *ngIf="isSuccess">
-          Your submission has been successfully added to the BioStudies database.
+          The study has been successfully submitted to the BioStudies database and is now being processed.
         </span>
         <span *ngIf="isError">
           An error has occurred while submitting the data to BioStudies. You may review your submission and try again. If the error
@@ -28,20 +28,20 @@
       </p>
     </div>
   </div>
+  <div *ngIf="isSuccess">
+    <h3>Please note <i class="far fa-hand-point-down"></i></h3>
+  </div>
   <div  *ngIf="isSuccess" class="alert alert-warning">
-    <div class="pull-left">
-      <i class="fa fa-hand-o-right fa-lg"></i>
-      <strong>Please note</strong>
-    </div>
     <p class="text-block text-black">
-      The system may take up to 24 hours after submission to register any new studies in the database.
+      Your submission is being processed and the system may take up to 24 hours after submission to register any new studies in the database.
     </p>
   </div>
   <div  *ngIf="isSuccess" class="alert alert-warning">
-    <div class="pull-left">
-      <i class="fa fa-hand-o-right fa-lg"></i>
-      <strong>Please note</strong>
-    </div>
+    <p class="text-block text-black">
+      A notification will be dropped to your email as soon as the submission has been processed.
+    </p>
+  </div>
+  <div *ngIf="isSuccess" class="alert alert-warning">
     <p class="text-block text-black">
       Any registered study will remain private and accessible only through login until the release date in the Western European Time Zone.
     </p>

@@ -20,5 +20,9 @@
 }
 
 .st-edit-status-message {
-  min-height: 17rem;
+  min-height: 10rem;
+}
+
+.st-submission-edit-body {
+  margin-top: 8rem;
 }
