@@ -199,9 +199,9 @@ export class SubmListComponent implements OnDestroy, OnInit {
       .subscribe((accno: string) => {
         const agApi = this.gridOptions.api;
         const rowNode = agApi!.getRowNode(accno);
-        const rowData = rowNode!.data;
 
-        if (rowNode !== undefined && rowData !== undefined) {
+        if (rowNode !== undefined) {
+          const rowData = rowNode.data;
           const newRowData = {
             ...rowData,
             status: SubmissionStatus.PROCESSED.name
