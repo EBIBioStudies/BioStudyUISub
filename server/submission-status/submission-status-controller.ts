@@ -20,8 +20,8 @@ export const submStatusController = (path: string, router: Router) => {
       res.write(new Array(1024 * 1024).fill(0).toString());
     }
 
-    const sendEvent = (event: string, data: Date | string) => {
-      res.write(`event: ${String(event)}\n`);
+    const sendEvent = (event: string, data: string) => {
+      res.write(`event: ${event}\n`);
       res.write(`data: ${data}`);
       res.write('\n\n');
       res.flushHeaders();
@@ -30,7 +30,7 @@ export const submStatusController = (path: string, router: Router) => {
     stream.on('push', sendEvent);
 
     const intervalId = setInterval(() => {
-      sendEvent('ping', new Date().toLocaleTimeString());
+      sendEvent('ping', JSON.stringify({ time: new Date().toLocaleTimeString() }));
     }, 60 * 1000);
 
     req.on('close', () => {

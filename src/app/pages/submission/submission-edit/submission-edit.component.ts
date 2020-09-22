@@ -95,7 +95,6 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     return this.submEditService.isEditing;
   }
 
-  // TODO: a temporary workaround
   get isTemp(): boolean {
     return this.accno!.startsWith('TMP_');
   }
@@ -217,7 +216,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
         takeUntil(this.unsubscribe)
       )
       .subscribe(
-        (resp) => this.onSubmitFinished(resp),
+        () => this.onSubmitSuccess(),
         (resp) => this.showSubmitLog(false, resp.log)
       );
   }
@@ -259,18 +258,12 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     );
   }
 
-  // todo: add proper type for submit response
-  private onSubmitFinished(resp: SubmitResponse) {
+  private onSubmitSuccess() {
     this.locService.replaceState('/submissions/' + this.accno);
     this.readonly = true;
 
-    this.submitOperation = SubmitOperation.UPDATE;
-
-    if (resp.accno) {
-      this.accno = resp.accno;
-      this.submitOperation = SubmitOperation.CREATE;
-      this.showSubmitLog(true);
-    }
+    this.submitOperation = this.isTemp ? SubmitOperation.CREATE : SubmitOperation.UPDATE;
+    this.showSubmitLog(true);
 
     scrollTop();
   }

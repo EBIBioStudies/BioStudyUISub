@@ -20,7 +20,6 @@ export class TextFilterComponent implements AgFilterComponent {
   private prev: string = '';
   private valueGetter?: (rowNode: RowNode) => any;
 
-
   afterGuiAttached(): void {
     this.inputEl.nativeElement.focus();
   }

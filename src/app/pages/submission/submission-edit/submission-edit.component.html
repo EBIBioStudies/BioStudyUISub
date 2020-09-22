@@ -17,7 +17,7 @@
   </st-subm-navbar>
 
   <div *ngIf="sectionForm" class="container-fluid">
-    <aside [ngClass]="{'collapse-left' : !readonly && sideBarCollapsed, 'right-side': !readonly}">
+    <aside class="st-submission-edit-body" [ngClass]="{'collapse-left' : !readonly && sideBarCollapsed, 'right-side': !readonly}">
       <div class="navbar-subm-margin">
         <st-subm-validation-errors [errors]="submissionErrors"></st-subm-validation-errors>
         <div *ngIf="method === 'FILE'" class="alert alert-info">
@@ -109,45 +109,32 @@
               </div>
             </div>
 
-            <div *ngIf="!isTemp && readonly">
-              <h4>Study
+            <div *ngIf="isTemp && readonly">
+              <h3>
+                <i aria-hidden="true" class="fa fa-check-circle"></i>
+                Study
                 <span *ngIf="submitOperation.isUnknown">entry</span>
-                <span *ngIf="submitOperation.isCreate">created</span>
+                <span *ngIf="submitOperation.isCreate">submitted</span>
+              </h3>
+              <h5 *ngIf="submitOperation.isUnknown || submitOperation.isCreate">
+                The study has been successfully submitted to the BioStudies database and is now being processed.
+              </h5>
+              <h5>
+                <mark>A notification will be dropped to your email as soon as the submission has been processed.</mark>
+              </h5>
+            </div>
+            <div *ngIf="!isTemp && readonly">
+              <h3>
+                <i aria-hidden="true" class="fa fa-check-circle"></i>
+                Study
                 <span *ngIf="submitOperation.isUpdate">updated</span>
-              </h4>
-              <p>
-                The study with accession number <strong>{{accno}}</strong>
-                <span *ngIf="newReleaseDate">
-                  and release date <strong>{{newReleaseDate | date: 'dd MMMM yyyy'}}</strong>
-                </span>
-                <span *ngIf="submitOperation.isUnknown">is present on the BioStudies database with the data shown below.</span>
-                <span *ngIf="submitOperation.isCreate">has been successfully added to the BioStudies database.</span>
-                <span *ngIf="submitOperation.isUpdate">has been successfully updated.</span>
-                It {{submitOperation.isCreate ? 'will be available in the next 24 hours' : 'is available' }} at
-                <a target="_blank" href="{{location.origin}}/biostudies/studies/{{accno}}">
-                  {{location.hostname}}/biostudies/studies/{{accno}}</a>.
-              </p>
-              <strong>
-                <a target="_blank" href="https://www.ebi.ac.uk/biostudies/about">
-                  Citing my study
-                  <i class="fa fa-fw fa-external-link-square"></i>
-                </a>
-              </strong>
-              <blockquote class="blockquote">
-                Data are available in the BioStudies database (http://www.ebi.ac.uk/biostudies)
-                under accession number {{accno}}.
-              </blockquote>
-              <strong>
-                <a target="_blank" href="http://europepmc.org/abstract/MED/26700850">
-                  Citing the BioStudies database
-                  <i class="fa fa-fw fa-external-link-square"></i>
-                </a>
-              </strong>
-              <blockquote class="blockquote">
-                McEntyre J, Sarkans U, Brazma A (2015) The
-                BioStudies database. <i>Mol. Syst. Biol.</i> 11(12):847.
-                https://doi.org/10.15252/msb.20156658.
-              </blockquote>
+              </h3>
+              <h5 *ngIf="submitOperation.isUpdate">
+                The study has been successfully updated and is now being processed.
+              </h5>
+              <h5>
+                <mark>A notification will be dropped to your email as soon as the submission has been processed.</mark>
+              </h5>
             </div>
           </div>
         </div>

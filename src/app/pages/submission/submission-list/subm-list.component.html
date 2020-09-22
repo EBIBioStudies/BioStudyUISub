@@ -1,6 +1,5 @@
 <st-container-root>
-  <aside class="row col-md-10 col-md-offset-1">
-    <h3>Submissions</h3>
+  <div class="submission-list row col-md-10 col-md-offset-1">
     <span class="pull-right">
       <button class="btn btn-primary"
           (click)="onUploadSubmClick($event)"
@@ -23,7 +22,7 @@
           <span tooltip="Studies already submitted or revised"
               container="body">
             <i class="fas fa-database" aria-hidden="true"></i>
-            Submitted
+            Submissions
           </span>
         </ng-template>
       </tab>
@@ -55,5 +54,5 @@
     <a href="https://www.ebi.ac.uk/biostudies/studies/" target="_blank">
       Search published submissions <i class="fa fa-fw fa-external-link-square"></i>
     </a>
-  </aside>
+  </div>
 </st-container-root>

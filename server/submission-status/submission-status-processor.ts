@@ -14,10 +14,10 @@ const queueName: string = config.get('rabbitmq.submStatusQueueName');
 const processMessage = (message: ConsumeMessage | null) => {
   try {
     const submStatus: SubmStatus = JSON.parse(message!.content.toString());
-    const { accNo, status } = submStatus;
+    const { accNo } = submStatus;
 
     // Only sends accNo and status to client.
-    stream.emit('push', 'subm-status', JSON.stringify({ accNo, status }));
+    stream.emit('push', 'message', JSON.stringify({ accNo }));
   } catch (error) {
     logger.error('submission-status-processor', error);
   }
