@@ -35,11 +35,11 @@ export class FeatureGridComponent implements OnChanges {
   }
 
   get isSortable(): boolean {
-    return !this.readonly && this.featureForm!.rows.length > 1;
+    return !this.isReadOnly() && this.featureForm!.rows.length > 1;
   }
 
   ngOnChanges() {
-    this.sortableJsOptions = { ...this.sortableJsOptions, disabled: this.readonly };
+    this.sortableJsOptions = { ...this.sortableJsOptions, disabled: this.isReadOnly() };
   }
 
   /**
@@ -83,5 +83,9 @@ export class FeatureGridComponent implements OnChanges {
 
   onRowOrderUpdate() {
     this.featureForm!.syncModelRows();
+  }
+
+  private isReadOnly(): boolean {
+    return Boolean(this.readonly || this.featureForm?.isReadonly);
   }
 }
