@@ -162,7 +162,6 @@ export class Feature {
 
     const attrsWithName = attributes.filter(attr => isDefinedAndNotEmpty(attr.name));
     const newColNames = attrsWithName.map(attr => attr.name!);
-
     const existedColNames = this.featureColumns.names();
 
     arrayUniqueValues(newColNames).forEach(colName => {
@@ -207,11 +206,8 @@ export class Feature {
     return col;
   }
 
-  addRow(): ValueMap | undefined {
-    if (this.canAddRow()) {
-      return this.featureRows.add(this.featureColumns.keys());
-    }
-    return undefined;
+  addRow(): ValueMap {
+    return this.featureRows.add(this.featureColumns.keys());
   }
 
   attributeValuesForColumn(columnId: string): (AttributeValue | undefined)[] {
@@ -221,7 +217,6 @@ export class Feature {
   canAddRow(): boolean {
     return (!this.singleRow || this.rowSize() === 0);
   }
-
 
   colSize(): number {
     return this.featureColumns.size();

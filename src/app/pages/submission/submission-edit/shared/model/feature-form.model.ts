@@ -174,9 +174,9 @@ export class FeatureForm extends FormBase {
   }
 
   addRow(): void {
-    const row = this.feature.addRow();
+    if (this.canAddRow()) {
+      const row = this.feature.addRow();
 
-    if (this.canAddRow() && row) {
       this.addRowForm(row, this.feature.columns);
       this.notifiyChanges(StructureChangeEvent.featureRowAdd);
     }
