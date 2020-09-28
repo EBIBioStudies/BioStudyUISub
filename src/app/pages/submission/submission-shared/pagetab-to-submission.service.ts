@@ -28,19 +28,19 @@ export class PageTabToSubmissionService {
   }
 
   pageTabToSubmissionData(pageTab: PageTab): SubmissionData {
-    return <SubmissionData>{
+    return {
       accno: pageTab.accno,
       tags: (pageTab.tags || []).map(t => new Tag(t.classifier, t.tag)),
       isRevised: !isArrayEmpty((pageTab.tags || [])),
       accessTags: pageTab.accessTags,
       attributes: this.pageTabAttributesToAttributeData(pageTab.attributes || []),
       section: pageTab.section ? this.pageTabSectionToSectionData(pageTab.section, pageTab.attributes) : undefined
-    };
+    } as SubmissionData;
   }
 
   private findSubmissionTemplateName(pageTab: PageTab): string {
     const attachToAttributes: PtAttribute[] = findAttribute(pageTab, AttrExceptions.attachToAttr);
-    const attachToValue: string[] = attachToAttributes.map((attribute) => attribute.value!);
+    const attachToValue: string[] = attachToAttributes.map((attribute) => attribute.value || '');
 
     if (attachToValue.length === 0) {
       return DEFAULT_TEMPLATE_NAME;
@@ -67,12 +67,12 @@ export class PageTabToSubmissionService {
   }
 
   private pageTabAttributesToAttributeData(attrs: PtAttribute[]): AttributeData[] {
-    return attrs.map(at => <AttributeData>{
+    return attrs.map(at => ({
       name: at.name,
       reference: at.reference || at.isReference,
       terms: (at.valqual || []).map(t => new NameAndValue(t.name, t.value)),
       value: at.value
-    });
+    }) as AttributeData);
   }
 
   private pageTabSectionToSectionData(ptSection: PageTabSection, parentAttributes: PtAttribute[] = []): SectionData {
@@ -96,35 +96,35 @@ export class PageTabToSubmissionService {
     const hasKeywords = keywords.length > 0;
 
     if (hasLinks) {
-      features.push(<FeatureData>{
+      features.push({
         type: 'Link',
         entries: links
           .map((link) => LinksUtils.toUntyped(link))
           .map((link) => this.pageTabAttributesToAttributeData(link))
-      });
+      } as FeatureData);
     }
 
     if (hasFiles) {
-      features.push(<FeatureData>{
+      features.push({
         type: 'File',
         entries: files
-          .map((file) => [<PtAttribute>{ name: 'Path', value: file.path }].concat(file.attributes || []))
+          .map((file) => [{ name: 'Path', value: file.path } as PtAttribute].concat(file.attributes || []))
           .map((file) => this.pageTabAttributesToAttributeData(file))
-      });
+      } as FeatureData);
     }
 
     if (hasLibraryFile) {
-      features.push(<FeatureData>{
+      features.push({
         type: 'LibraryFile',
-        entries: [[<PtAttribute>{ name: 'Path', value: ptSection.libraryFile }]]
-      });
+        entries: [[{ name: 'Path', value: ptSection.libraryFile } as PtAttribute]]
+      } as FeatureData);
     }
 
     if (hasKeywords) {
-      features.push(<FeatureData>{
+      features.push({
         type: 'Keywords',
-        entries: keywords.map((keyword) => [<PtAttribute>{ name: 'Keyword', value: keyword.value }])
-      });
+        entries: keywords.map((keyword) => [{ name: 'Keyword', value: keyword.value } as PtAttribute])
+      } as FeatureData);
     }
 
     if (hasFeatureSections) {
@@ -138,10 +138,10 @@ export class PageTabToSubmissionService {
           .filter((featureSection) => (featureSection.type === featureType))
           .map((featureSection) => this.pageTabAttributesToAttributeData(featureSection.attributes || []));
 
-        features.push(<FeatureData>{
+        features.push({
           type: featureType,
-          entries: entries
-        });
+          entries
+        } as FeatureData);
       });
     }
 
@@ -153,13 +153,13 @@ export class PageTabToSubmissionService {
       .filter((section) => section.type !== 'Protocol')
       .map((subSection) => this.pageTabSectionToSectionData(subSection));
 
-    return <SectionData>{
+    return {
       type: ptSection.type,
       accno: ptSection.accno,
-      attributes: attributes,
-      features: features,
+      attributes,
+      features,
       sections: formattedSections,
       subsections: formattedSubSections
-    };
+    } as SectionData;
   }
 }

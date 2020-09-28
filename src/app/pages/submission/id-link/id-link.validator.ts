@@ -10,8 +10,8 @@ const URL_REGEXP = /^(http|https|ftp):\/\/.+$/;
 /**
  * Custom validator factory for universal links, the latter comprising a full URL or a prefix:ID number.
  *
- * @param {IdLinkService} service - API service used for validating prefix:ID links.
- * @returns {AsyncValidatorFn} Routine for validation.
+ * @param service - API service used for validating prefix:ID links.
+ * @returns Routine for validation.
  */
 export function idLinkValidator(service: IdLinkService, state: IdLinkValueValidatorState): AsyncValidatorFn {
   return (control: AbstractControl): Observable<ValidationErrors | null> => {
@@ -26,9 +26,9 @@ export function idLinkValidator(service: IdLinkService, state: IdLinkValueValida
       return service.validate(value).pipe(
         map((res) => {
           // The response has a URL => the link is valid
-          if (res['compactIdentifierResolvedUrl']) {
+          if (res.compactIdentifierResolvedUrl) {
             state.isId = true;
-            state.url = res['compactIdentifierResolvedUrl'];
+            state.url = res.compactIdentifierResolvedUrl;
 
             return null;
           }

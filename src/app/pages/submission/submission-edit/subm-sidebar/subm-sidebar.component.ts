@@ -66,7 +66,7 @@ export class SubmSidebarComponent implements OnDestroy {
   /**
    * Handler for the button toggling the collapsed state of the whole sidebar menu,
    * bubbling the menu's state up.
-   * @param {Event} [event] - Optional click event object.
+   * @param [event] - Optional click event object.
    */
   onToggleCollapse(event?: Event): void {
     // tslint:disable-next-line: no-unused-expression
@@ -91,7 +91,7 @@ export class SubmSidebarComponent implements OnDestroy {
       }, [] as Array<FormControlGroup>);
   }
 
-  private switchSection(sectionFormOp: Option<SectionForm>) {
+  private switchSection(sectionFormOp: Option<SectionForm>): void {
     if (sectionFormOp.isSome()) {
       const secForm = sectionFormOp.toUndefined()!;
       if (!secForm.isRootSection) {
@@ -113,7 +113,7 @@ export class SubmSidebarComponent implements OnDestroy {
     }
   }
 
-  private updateInvalidControls() {
+  private updateInvalidControls(): void {
     this.invalidControls = this.controls.map(g => g.filter(c => c.invalid)).filter(g => !isArrayEmpty(g));
   }
 }

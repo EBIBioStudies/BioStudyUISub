@@ -23,14 +23,14 @@ export class ProteinInputComponent implements ControlValueAccessor {
   @Input() readonly: boolean = false;
   private proteinRawSequence = '';
 
-  onEditorChange({ editor }: ChangeEvent) {
+  onEditorChange({ editor }: ChangeEvent): void {
     setTimeout(() => {
       this.proteinRawSequence = viewToPlainText(editor.editing.view.document.getRoot());
       this.onChange({ value: this.proteinSequence, raw: this.proteinRawSequence });
     }, 10);
   }
 
-  onEditorReady(editor) {
+  onEditorReady(editor): void {
     this.proteinRawSequence = viewToPlainText(editor.editing.view.document.getRoot());
     this.onChange({ value: this.proteinSequence, raw: this.proteinRawSequence });
   }

@@ -1,30 +1,39 @@
-import { Cookie } from 'ng2-cookies/ng2-cookies';
+import { CookieService } from 'ngx-cookie-service';
 import { UserInfo } from './model';
+import { Injectable } from '@angular/core';
 
-const LOGIN_TOKEN_NAME = 'BioStudiesToken';
-const USER = 'BioStudiesUser';
-const COOKIE_PATH = '/';
+@Injectable({
+  providedIn: 'root'
+})
+export class UserCookies {
+  COOKIE_EXPIRES: number = 365;
+  COOKIE_NAME: string = 'BioStudiesToken';
+  COOKIE_PATH: string = '/';
+  USER: string = 'BioStudiesUser';
 
-export function setLoginToken(token: string): void {
-  Cookie.set(LOGIN_TOKEN_NAME, token, 365, COOKIE_PATH);
-}
+  constructor(private cookieService: CookieService) {}
 
-export function getLoginToken(): string {
-  return Cookie.get(LOGIN_TOKEN_NAME) || '';
-}
+  destroyLoginToken(): void {
+    this.cookieService.delete(this.COOKIE_NAME, this.COOKIE_PATH);
+  }
 
-export function destroyLoginToken(): void {
-  Cookie.delete(LOGIN_TOKEN_NAME, COOKIE_PATH);
-}
+  destroyUser(): void {
+    localStorage.removeItem(this.USER);
+  }
 
-export function destroyUser(): void {
-  localStorage.removeItem(USER);
-}
+  getLoginToken(): string {
+    return this.cookieService.get(this.COOKIE_NAME);
+  }
 
-export function setUser(user: UserInfo): void {
-  localStorage.setItem(USER, JSON.stringify(user));
-}
+  getUser(): UserInfo {
+    return JSON.parse(localStorage.getItem(this.USER) || '{}');
+  }
 
-export function getUser(): UserInfo {
-  return JSON.parse(localStorage.getItem(USER) || '{}');
+  setLoginToken(token: string): void {
+    this.cookieService.set(this.COOKIE_NAME, token, this.COOKIE_EXPIRES, this.COOKIE_PATH);
+  }
+
+  setUser(user: UserInfo): void {
+    localStorage.setItem(this.USER, JSON.stringify(user));
+  }
 }

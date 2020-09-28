@@ -6,6 +6,6 @@ export class PasswordResetData extends DataWithCaptcha {
   passwordRepeat: string = '';
 
   snapshot(): { [key: string]: string } {
-    return { ...super.snapshot(), 'activationKey': this.key, 'password': this.password };
+    return { ...super.snapshot(), activationKey: this.key, password: this.password };
   }
 }

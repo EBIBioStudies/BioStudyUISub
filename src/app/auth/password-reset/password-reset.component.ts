@@ -18,10 +18,10 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
   showSuccess: boolean = false;
 
   @ViewChild('focusEl')
-  private focusRef?: ElementRef;
+  private focusRef!: ElementRef;
 
   @ViewChild('recaptchaEl')
-  private recaptcha?: RecaptchaComponent;
+  private recaptcha!: RecaptchaComponent;
 
   constructor(
     private authService: AuthService,
@@ -30,7 +30,7 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
 
   // TODO: Turn autofocus on render into a directive
   ngAfterViewInit(): void {
-    this.focusRef!.nativeElement.focus();
+    this.focusRef.nativeElement.focus();
   }
 
   ngOnInit(): void {
@@ -71,7 +71,7 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
 
     if (form.valid) {
       this.isLoading = true;
-      this.recaptcha!.execute();
+      this.recaptcha.execute();
     } else {
       Object.keys(form.controls).forEach((key) => {
         form.controls[key].markAsTouched({onlySelf: true});
@@ -80,7 +80,7 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
   }
 
   resetRecaptcha(): void {
-    this.recaptcha!.reset();
+    this.recaptcha.reset();
     this.model.resetCaptcha();
   }
 }

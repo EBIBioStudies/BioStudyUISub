@@ -8,30 +8,30 @@ enum ReqStatus {SUBMIT, ERROR, SUCCESS}
 enum ReqType {CREATE, UPDATE}
 
 export class DirectSubmitRequest {
-  private _accno: string = '';
-  private _created: Date;
-  private _filename: string;
-  private _log: any;
-  private _project: string;
-  private _releaseDate: string | undefined;
-  private _status: ReqStatus;
-  private _type: ReqType;
+  private directSubmissionAccno: string = '';
+  private directSubmissionCreated: Date;
+  private directSubmissionFilename: string;
+  private directSubmissionLog: any;
+  private directSubmissionProject: string;
+  private directSubmissionReleaseDate: string | undefined;
+  private directSubmissionStatus: ReqStatus;
+  private directSubmissionType: ReqType;
 
   constructor(filename: string, project: string, type: ReqType) {
-    this._filename = filename;
-    this._project = project;
-    this._type = type;
+    this.directSubmissionFilename = filename;
+    this.directSubmissionProject = project;
+    this.directSubmissionType = type;
 
-    this._created = new Date();
-    this._status = ReqStatus.SUBMIT;
+    this.directSubmissionCreated = new Date();
+    this.directSubmissionStatus = ReqStatus.SUBMIT;
   }
 
   get failed(): boolean {
-    return this._status === ReqStatus.ERROR;
+    return this.directSubmissionStatus === ReqStatus.ERROR;
   }
 
   get successful(): boolean {
-    return this._status === ReqStatus.SUCCESS;
+    return this.directSubmissionStatus === ReqStatus.SUCCESS;
   }
 
   get done(): boolean {
@@ -43,102 +43,102 @@ export class DirectSubmitRequest {
   }
 
   get statusText(): string {
-    return ReqStatus[this._status];
+    return ReqStatus[this.directSubmissionStatus];
   }
 
   get created(): Date {
-    return this._created;
+    return this.directSubmissionCreated;
   }
 
   get filename(): string {
-    return this._filename;
+    return this.directSubmissionFilename;
   }
 
   get project(): string {
-    return this._project;
+    return this.directSubmissionProject;
   }
 
   get type(): ReqType {
-    return this._type;
+    return this.directSubmissionType;
   }
 
   get log(): any {
-    return this._log || {};
+    return this.directSubmissionLog || {};
   }
 
   get errorMessage(): string {
-    if (this.failed && this._log !== undefined) {
-      return this._log.message;
+    if (this.failed && this.directSubmissionLog !== undefined) {
+      return this.directSubmissionLog.message;
     } else {
       return 'There was an error processing the study';
     }
   }
 
   get accno(): string {
-    return this._accno;
+    return this.directSubmissionAccno;
   }
 
   get releaseDate(): string | undefined {
-    return this._releaseDate;
+    return this.directSubmissionReleaseDate;
   }
 
   /**
    * Handler for responses from conversion or final submission, updating request status accordingly.
-   * @param {Object} res - Data object representative of response to the request.
-   * @param {ReqStatus} successStatus - Used when the request has been successful to determine the upload stage.
+   * @param res - Data object representative of response to the request.
+   * @param successStatus - Used when the request has been successful to determine the upload stage.
    */
   onResponse(res: SubmitResponse | string, successStatus: ReqStatus): void {
 
     // Normalises error to object
     if (typeof res === 'string') {
-      this._log = {message: res, level: 'error'};
+      this.directSubmissionLog = {message: res, level: 'error'};
     } else if (res.log && res.log.level === 'ERROR') {
        // Failed server response from direct submit => reflects failure in this request object ignoring passed-in status
-      this._status = ReqStatus.ERROR;
-      this._log = res.log || {message: 'No results available', level: 'error'};
+      this.directSubmissionStatus = ReqStatus.ERROR;
+      this.directSubmissionLog = res.log || {message: 'No results available', level: 'error'};
 
     // Successful server response from direct submit => reflects success accordingly
     } else {
-      this._status = successStatus;
-      this._log = res.log || undefined;
+      this.directSubmissionStatus = successStatus;
+      this.directSubmissionLog = res.log || undefined;
 
       // exposes the accession number
-      this._accno = res.accno;
+      this.directSubmissionAccno = res.accno;
     }
   }
 }
 
 @Injectable()
 export class DirectSubmitService {
-  newRequest$: Subject<Number> = new Subject<Number>();
-  private _requests: DirectSubmitRequest[] = [];
+  newRequest$: Subject<number> = new Subject<number>();
+  private requests: DirectSubmitRequest[] = [];
 
   constructor(private submService: SubmissionService) {}
 
   get requestCount(): number {
-    return this._requests.length;
+    return this.requests.length;
   }
 
   get pendingCount(): number {
-    return this._requests.filter(request => !request.done).length;
+    return this.requests.filter(request => !request.done).length;
   }
 
   get errorCount(): number {
-    return this._requests.filter(request => request.failed).length;
+    return this.requests.filter(request => request.failed).length;
   }
 
   /**
    * Given a study file an its properties, it adds a new request to the queue and starts the submission process.
-   * @param {File} file - Object representative of the file to be submitted.
-   * @param {string} projects- Project the file should be attached to.
-   * @param {string} type - Indicates whether the submitted file should create or update an existing database entry.
-   * @returns {Observable<any>} Stream of inputs coming from the subsequent responses.
+   * @param file - Object representative of the file to be submitted.
+   * @param projects- Project the file should be attached to.
+   * @param type - Indicates whether the submitted file should create or update an existing database entry.
+   * @returns Stream of inputs coming from the subsequent responses.
    */
   addRequest(file: File, project: string, type: string): Observable<any> {
     const req = new DirectSubmitRequest(file.name, project, ReqType[type.toUpperCase()]);
-    const index = this._requests.length;
+    const index = this.requests.length;
 
-    this._requests.push(req);
+    this.requests.push(req);
     this.newRequest$.next(index);
 
     return this.dirSubmit(req, file);
@@ -147,17 +147,17 @@ export class DirectSubmitService {
   /**
    * Marks all requests as failed at once.
    */
-  cancelAll() {
-    this._requests.forEach(request => {
+  cancelAll(): void {
+    this.requests.forEach(request => {
       if (!request.successful && !request.done) {
         request.onResponse('Upload cancelled', ReqStatus.ERROR);
       }
     });
   }
 
-  getRequest(index: number) {
-    if (index >= 0 && index < this._requests.length) {
-      return this._requests[index];
+  getRequest(index: number): DirectSubmitRequest | undefined {
+    if (index >= 0 && index < this.requests.length) {
+      return this.requests[index];
     } else {
       return undefined;
     }
@@ -166,8 +166,8 @@ export class DirectSubmitService {
   /**
    * Checks the overall status of the request queue by probing its members.
    *
-   * @param {string} statusName - Descriptive name of the status.
-   * @returns {boolean} True if the queue is with the status checked.
+   * @param statusName - Descriptive name of the status.
+   * @returns True if the queue is with the status checked.
    */
   isQueueStatus(statusName: string): boolean {
     let condition = 'some';
@@ -178,21 +178,21 @@ export class DirectSubmitService {
       condition = 'every';
     }
 
-    return this._requests[condition](request => request[statusName]);
+    return this.requests[condition](request => request[statusName]);
   }
 
   /**
    * Wipes out the request queue in case a new battery of requests is going to be issued.
    */
-  reset() {
-    this._requests.length = 0;
+  reset(): void {
+    this.requests.length = 0;
   }
 
   /**
    * Makes the two inter-dependent requests necessary to submit a given file.
-   * @param {DirectSubmitRequest} req - Request object to be updated on response.
-   * @param {File} file - Object representative of the file to be submitted.
-   * @returns {Observable<any>} Flat stream of inputs coming from the responses to the requests issued.
+   * @param req - Request object to be updated on response.
+   * @param file - Object representative of the file to be submitted.
+   * @returns Flat stream of inputs coming from the responses to the requests issued.
    */
   private dirSubmit(req: DirectSubmitRequest, file: File): Observable<any> {
     return this.submService.directSubmit(file, req.project).pipe(

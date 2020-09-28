@@ -16,7 +16,6 @@ import { ContainerMdComponent } from './container-md.component';
 import { ORCIDInputBoxComponent } from './orcid-input-box.component';
 import { FileUploadButtonComponent } from './file-upload-button.component';
 import { ConfirmDialogComponent } from './confirm-dialog.component';
-import { FilterPipe, MultiSelectComponent } from './multi-select.component';
 import { ValidateOnBlurDirective } from './validate-onblur.directive';
 import { StripHtmlPipe } from './strip-html.pipe';
 import { DateFormatDirective } from './date-format.directive';
@@ -52,8 +51,6 @@ import { ServerSentEventService } from './server-sent-event.service';
     ORCIDInputBoxComponent,
     FileUploadButtonComponent,
     ConfirmDialogComponent,
-    MultiSelectComponent,
-    FilterPipe,
     StripHtmlPipe,
     ValidateOnBlurDirective,
     DateFormatDirective,
@@ -81,8 +78,6 @@ import { ServerSentEventService } from './server-sent-event.service';
     ORCIDInputBoxComponent,
     FileUploadButtonComponent,
     ConfirmDialogComponent,
-    MultiSelectComponent,
-    FilterPipe,
     StripHtmlPipe,
     ValidateOnBlurDirective,
     DateFormatDirective,

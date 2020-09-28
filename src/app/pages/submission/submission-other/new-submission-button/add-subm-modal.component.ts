@@ -6,7 +6,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
   templateUrl: './add-subm-modal.component.html'
 })
 export class AddSubmModalComponent implements AfterViewInit {
-  onOk?: Function;
+  onOk?: (selected: string) => void;
   selected: string = 'Default';
   templates?: Array<{ description: string, name: string }> = [];
 
@@ -17,7 +17,7 @@ export class AddSubmModalComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    (<HTMLInputElement>document.getElementsByClassName('project-radio')[0]).focus();
+    (document.getElementsByClassName('project-radio')[0] as HTMLInputElement).focus();
   }
 
   ok(): void {

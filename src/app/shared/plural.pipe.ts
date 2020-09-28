@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import * as pluralize from 'pluralize';
+import pluralize from 'pluralize';
 
 @Pipe({
   name: 'plural'

@@ -70,8 +70,8 @@ export class SubmissionService {
 
   /**
    * Traverses the error log tree to find the first deepest error message.
-   * @param {Array<Object> | Object} obj - Log tree's root node or subnode list.
-   * @returns {string} Error message.
+   * @param obj - Log tree's root node or subnode list.
+   * @returns Error message.
    */
   static deepestError(log: SubmitLog): string {
     const errorNode = (log.subnodes || []).find(n => n.level === 'ERROR');
@@ -138,7 +138,7 @@ export class SubmissionService {
 
   private checkStatus<R, T>(response: HttpResponse<R>): T {
     if (response.status === HttpStatus.OK) {
-      return <T>(response.body || {});
+      return (response.body || {}) as T;
     }
 
     throw response.body;

@@ -1,5 +1,5 @@
 import { Subject, Observable } from 'rxjs';
-import * as pluralize from 'pluralize';
+import pluralize from 'pluralize';
 import { FormGroup, FormArray, FormControl } from '@angular/forms';
 import {
   Attribute,
@@ -45,11 +45,11 @@ export class FeatureForm extends FormBase {
   }
 
   private get columnsForm(): FormGroup {
-    return <FormGroup>this.form.get('columns');
+    return this.form.get('columns') as FormGroup;
   }
 
   private get rowFormArray(): FormArray {
-    return <FormArray>this.form.get('rows');
+    return this.form.get('rows') as FormArray;
   }
 
   get isEmpty(): boolean {
@@ -146,13 +146,17 @@ export class FeatureForm extends FormBase {
     const lastColumn = this.columnControls[this.columnControls.length - 1].id;
 
     if (this.canHaveMultipleRows) {
-      return rowForm.cellControlAt(firstColumn)!.control;
+      const firstColumnCell = rowForm.cellControlAt(firstColumn);
+
+      return firstColumnCell ? firstColumnCell.control : undefined;
     }
 
-    return rowForm.cellControlAt(lastColumn)!.control;
+    const lastColumnCell = rowForm.cellControlAt(lastColumn);
+
+    return lastColumnCell ? lastColumnCell.control : undefined;
   }
 
-  addColumn() {
+  addColumn(): void {
     if (this.canAddColumn()) {
       const column = this.feature.addColumn();
       this.addColumnControl(column);
@@ -169,10 +173,11 @@ export class FeatureForm extends FormBase {
     }
   }
 
-  addRow() {
+  addRow(): void {
     if (this.canAddRow()) {
       const row = this.feature.addRow();
-      this.addRowForm(row!, this.feature.columns);
+
+      this.addRowForm(row, this.feature.columns);
       this.notifiyChanges(StructureChangeEvent.featureRowAdd);
     }
   }
@@ -216,14 +221,17 @@ export class FeatureForm extends FormBase {
     return arrayUniqueValues(allCellValues);
   }
 
-  cellValuesTypeaheadFunc(rowIndex: number, columnId: string): () => string[] {
+  cellValuesTypeaheadFunc(rowIndex: number, columnId: string): (() => string[]) | undefined {
     const key = `${rowIndex}_${columnId}`;
     if (!this.cellValueTypeahead.has(key)) {
       this.cellValueTypeahead.set(key, () => {
         return this.cellValues(rowIndex, columnId);
       });
     }
-    return this.cellValueTypeahead.get(key)!;
+
+    const cellValue = this.cellValueTypeahead.get(key);
+
+    return cellValue ? cellValue : undefined;
   }
 
   /* returns a list of column names available for a new column to add */
@@ -239,11 +247,11 @@ export class FeatureForm extends FormBase {
     return column.typeaheadSource(this.columnNamesAvailable);
   }
 
-  notifiyChanges(event: StructureChangeEvent) {
+  notifiyChanges(event: StructureChangeEvent): void {
     this.structureChanges$.next(event);
   }
 
-  removeColumn(columnCtrl: ColumnControl) {
+  removeColumn(columnCtrl: ColumnControl): void {
     if (this.canRemoveColumn(columnCtrl)) {
       this.feature.removeColumn(columnCtrl.id);
       this.removeColumnControl(columnCtrl.id);
@@ -252,7 +260,7 @@ export class FeatureForm extends FormBase {
     }
   }
 
-  removeRow(rowIndex: number) {
+  removeRow(rowIndex: number): void {
     if (this.canRemoveRow()) {
       this.feature.removeRowAt(rowIndex);
       this.removeRowForm(rowIndex);
@@ -260,31 +268,31 @@ export class FeatureForm extends FormBase {
     }
   }
 
-  syncModelRows() {
+  syncModelRows(): void {
     const fromRows = this.rowForms.map((rowForm) => rowForm.row);
     this.feature.patchRows(fromRows);
     this.notifiyChanges(StructureChangeEvent.featureRowOrderUpdate);
   }
 
-  private addColumnControl(column: Attribute) {
+  private addColumnControl(column: Attribute): void {
     const colControl = new ColumnControl(column, this.featureRef.columnRef(column));
     this.columnControls.push(colControl);
     this.columnsForm.addControl(column.id, colControl.control);
   }
 
-  private addRowForm(row: ValueMap, columns: Attribute[]) {
+  private addRowForm(row: ValueMap, columns: Attribute[]): void {
     const rowForm = new RowForm(row, columns, this.featureRef);
     this.rowForms.push(rowForm);
     this.rowFormArray.push(rowForm.form);
   }
 
-  private removeColumnControl(columnId: string) {
+  private removeColumnControl(columnId: string): void {
     const index = this.columnControls.findIndex(c => c.id === columnId);
     this.columnControls.splice(index, 1);
     this.columnsForm.removeControl(columnId);
   }
 
-  private removeRowForm(rowIndex: number) {
+  private removeRowForm(rowIndex: number): void {
     this.rowForms.splice(rowIndex, 1);
     this.rowFormArray.removeAt(rowIndex);
   }

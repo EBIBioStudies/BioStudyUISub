@@ -9,7 +9,7 @@ import { FeatureForm } from '../../shared/model/feature-form.model';
   styleUrls: ['./feature-list.component.css']
 })
 export class FeatureListComponent implements AfterViewInit {
-  @Input() featureForm?: FeatureForm; // Reactive data structure for the form containing this feature
+  @Input() featureForm!: FeatureForm; // Reactive data structure for the form containing this feature
   @Input() readonly?: boolean = false; // Flag for features that cannot be edited (e.g. sent state for submissions)
 
   @ViewChildren('rowEl') rowEls?: QueryList<ElementRef>;
@@ -21,7 +21,7 @@ export class FeatureListComponent implements AfterViewInit {
   }
 
   get columns(): ColumnControl[] {
-    return this.featureForm!.columns;
+    return this.featureForm.columns;
   }
 
   // On DOM change, sets focus on first field of newly added row
@@ -33,11 +33,11 @@ export class FeatureListComponent implements AfterViewInit {
 
   /**
    * Handler for the change event. Only save an attribute when its associated cell changes.
-   * @param {Object} attrObj - Object representative of the attribute.
-   * @param {string} newValue - New value for the specified attribute.
-   * @param {string} [attrName = 'value'] - Name of the attribute whose value is being saved.
+   * @param attrObj - Object representative of the attribute.
+   * @param newValue - New value for the specified attribute.
+   * @param [attrName = 'value'] - Name of the attribute whose value is being saved.
    */
-  onFieldChange(attrObj: any, newValue: string, attrName: string = 'value') {
+  onFieldChange(attrObj: any, newValue: string, attrName: string = 'value'): void {
     attrObj[attrName] = newValue;
   }
 

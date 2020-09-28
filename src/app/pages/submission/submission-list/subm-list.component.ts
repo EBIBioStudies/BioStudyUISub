@@ -52,7 +52,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
     // TODO: enable server-side sorting once sorting parameters are added to the submission list endpoint
     // NOTE: Ag-Grid doesn't support client-side filtering/sorting and server-side pagination simultaneously.
     // https://www.ag-grid.com/javascript-grid-infinite-scrolling/#sorting-filtering
-    this.gridOptions = <GridOptions>{
+    this.gridOptions = ({
       cacheBlockSize: 15,
       debug: false,
       enableSorting: false,
@@ -73,12 +73,12 @@ export class SubmListComponent implements OnDestroy, OnInit {
 
         window.onresize = () => this.gridOptions!.api! && this.gridOptions!.api!.sizeColumnsToFit();
       }
-    };
+    } as GridOptions);
 
     this.createColumnDefs();
   }
 
-  createColumnDefs() {
+  createColumnDefs(): void {
     this.columnDefs = [
       {
         cellClass: 'ag-cell-centered',
@@ -134,13 +134,13 @@ export class SubmListComponent implements OnDestroy, OnInit {
       status: row.status || SubmissionStatus.PROCESSED.name,
       title: row.title,
       version: row.version,
-      onDelete: (accno: string, onCancel: Function, isTemp: boolean): Subscription => {
+      onDelete: (accno: string, onCancel: () => void, isTemp: boolean): Subscription => {
         const onNext = (isOk: boolean) => {
           this.isBusy = true;
 
           // Deletion confirmed => makes a request to remove the submission from the server
           if (isOk) {
-            const action: Function = isTemp
+            const action = isTemp
               ? this.submService.deleteDraft.bind(this.submService)
               : this.submService.deleteSubmitted.bind(this.submService);
 
@@ -187,7 +187,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
    * Requires the takeUntil operator before every subscription.
    * @see {@link https://stackoverflow.com/a/41177163}
    */
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }
@@ -234,7 +234,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
     }
   }
 
-  onSubmTabSelect(isSubmitted: boolean) {
+  onSubmTabSelect(isSubmitted: boolean): void {
     let fragment = 'draft';
 
     // Ignores actions that don't carry with them a change in state.
@@ -251,14 +251,14 @@ export class SubmListComponent implements OnDestroy, OnInit {
 
   /**
    * Handler for the click event on the upload submission button, redirecting to a new view.
-   * @param {Event} event - Click event object, the bubbling of which will be prevented.
+   * @param event - Click event object, the bubbling of which will be prevented.
    */
-  onUploadSubmClick(event: Event) {
+  onUploadSubmClick(event: Event): void {
     event.preventDefault();
     this.router.navigate(['/submissions/direct_upload']);
   }
 
-  setDatasource() {
+  setDatasource(): void {
     const agApi = this.gridOptions.api;
 
     if (!this.datasource) {

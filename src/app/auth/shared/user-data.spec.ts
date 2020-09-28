@@ -1,22 +1,23 @@
 import { async } from '@angular/core/testing';
 import { AuthService, UserData, UserSession } from 'app/auth/shared';
-import { of } from 'rxjs';
+import { of, Observable } from 'rxjs';
 import { UserInfo, ExtendedUserInfo } from './model';
 
 describe('UserData', () => {
   let submService;
-  let appConfig;
+  let userCookies;
 
   beforeEach(() => {
     submService = {
-      getProjects() {
+      getProjects(): Observable<[]> {
         return of([]);
       }
     };
 
-    appConfig = {
-      environment: 'DEV'
-    };
+    userCookies = {
+      setLoginToken(): void {},
+      setUser(): void {}
+    }
   });
 
   it('should return valid user info', async(() => {
@@ -33,12 +34,12 @@ describe('UserData', () => {
     };
 
     const authService = {
-      getUserProfile() {
+      getUserProfile(): Observable<UserInfo> {
         return of(user);
       }
     };
 
-    const session = new UserSession(appConfig);
+    const session = new UserSession(userCookies);
 
     new UserData(session, authService as AuthService, submService).info$
       .subscribe(info => {

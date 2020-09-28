@@ -13,7 +13,7 @@ import { Options as SortableOption } from 'sortablejs';
 })
 export class FeatureGridComponent implements OnChanges {
   @ViewChildren('colEl') colEls?: QueryList<ElementRef>;
-  @Input() featureForm?: FeatureForm;
+  @Input() featureForm!: FeatureForm;
   hoveredRowIndex: number = -1;
   @Input() readonly = false;
   @ViewChildren('rowEl') rowEls?: QueryList<ElementRef>;
@@ -27,62 +27,67 @@ export class FeatureGridComponent implements OnChanges {
   }
 
   get rows(): RowForm[] {
-    return this.featureForm!.rows;
+    return this.featureForm.rows;
   }
 
   get columns(): ColumnControl[] {
-    return this.featureForm!.columns;
+    return this.featureForm.columns;
   }
 
   get isSortable(): boolean {
     return !this.isReadOnly() && this.featureForm!.rows.length > 1;
   }
 
-  ngOnChanges() {
+  ngOnChanges(): void {
     this.sortableJsOptions = { ...this.sortableJsOptions, disabled: this.isReadOnly() };
   }
 
   /**
    * Handler for the change event. Only save an attribute when its associated cell changes.
-   * @param {Object} attrObj - Object representative of the attribute.
-   * @param {string} newValue - New value for the specified attribute.
-   * @param {string} [attrName = 'value'] - Name of the attribute whose value is being saved.
-  */
-  onFieldChange(attrObj: any, newValue: string, attrName: string = 'value') {
+   * @param attrObj - Object representative of the attribute.
+   * @param newValue - New value for the specified attribute.
+   * @param [attrName = 'value'] - Name of the attribute whose value is being saved.
+   */
+  onFieldChange(attrObj: any, newValue: string, attrName: string = 'value'): void {
     attrObj[attrName] = newValue;
   }
 
   /**
    * Changes the values of an existing feature's row fields to those of a given a set of grid attributes,
    * bubbling a single DOM change event for all of them. Attribute names are assumed to be in lower case.
-   * @param {object} data - Grid attribute data retrieved asynchronously.
-   * @param {number} rowIdx - Row whose field values are to be changed.
+   * @param data - Grid attribute data retrieved asynchronously.
+   * @param rowIdx - Row whose field values are to be changed.
    */
-  onInputValueSelect(data: { [key: string]: string }, rowIdx: number) {
+  onInputValueSelect(data: { [key: string]: string }, rowIdx: number): void {
     const attrNames = Object.keys(data);
     if (attrNames.length === 0) {
       return;
     }
 
     attrNames.forEach(attrName => {
-      const rowForm = this.featureForm!.rows[rowIdx];
-      const col = this.featureForm!.columns.find(c => c.name.toLowerCase() === attrName.toLowerCase());
+      const rowForm = this.featureForm.rows[rowIdx];
+      const col = this.featureForm.columns.find(c => c.name.toLowerCase() === attrName.toLowerCase());
+
       if (col !== undefined) {
-        rowForm.cellControlAt(col.id)!.control.setValue(data[attrName]);
+        const cellControl = rowForm.cellControlAt(col.id);
+
+        if (cellControl) {
+          cellControl.control.setValue(data[attrName]);
+        }
       }
     });
   }
 
-  onMouseEnterRow(rowIndex: number) {
+  onMouseEnterRow(rowIndex: number): void {
     this.hoveredRowIndex = rowIndex;
   }
 
-  onMouseLeaveRow() {
+  onMouseLeaveRow(): void {
     this.hoveredRowIndex = -1;
   }
 
-  onRowOrderUpdate() {
-    this.featureForm!.syncModelRows();
+  onRowOrderUpdate(): void {
+    this.featureForm.syncModelRows();
   }
 
   private isReadOnly(): boolean {

@@ -45,7 +45,7 @@ export class TextFilterComponent implements AgFilterComponent {
     return this.text !== null && this.text !== undefined && this.text !== '';
   }
 
-  notifyAboutChanges() {
+  notifyAboutChanges(): void {
     if (this.text !== this.prev) {
       this.prev = this.text;
       this.params!.filterChangedCallback();

@@ -4,20 +4,22 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'st-action-buttons-cell',
   template: `
-    <button *ngIf="rowData && isRowEditable" type="button" class="btn btn-primary btn-xs btn-flat"
-        (click)="onEditSubmission()"
-        tooltip="Edit this submission"
-        container="body">
-      <i class="fas fa-pencil-alt fa-fw"></i>
-    </button>
-    <button *ngIf="rowData && isRowDeletable" type="button" class="btn btn-danger btn-xs btn-flat"
-        [disabled]="isBusy"
-        (click)="onDeleteSubmission()"
-        tooltip="Delete this submission"
-        container="body">
-      <i *ngIf="!isBusy" class="fas fa-trash-alt fa-fw"></i>
-      <i *ngIf="isBusy" class="fa fa-cog fa-spin fa-fw"></i>
-    </button>`
+    <div class="btn-group">
+      <button *ngIf="rowData && isRowEditable" type="button" class="btn btn-primary btn-xs btn-flat"
+          (click)="onEditSubmission()"
+          tooltip="Edit this submission"
+          container="body">
+        <i class="fas fa-pencil-alt fa-fw"></i>
+      </button>
+      <button *ngIf="rowData && isRowDeletable" type="button" class="btn btn-danger btn-xs btn-flat"
+          [disabled]="isBusy"
+          (click)="onDeleteSubmission()"
+          tooltip="Delete this submission"
+          container="body">
+        <i *ngIf="!isBusy" class="fas fa-trash-alt fa-fw"></i>
+        <i *ngIf="isBusy" class="fa fa-cog fa-spin fa-fw"></i>
+      </button>
+    </div>`
 })
 export class ActionButtonsCellComponent implements AgRendererComponent {
   isBusy: boolean = false; // flags if a previous button action is in progress
@@ -36,16 +38,15 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
     this.reset();
   }
 
-  onDeleteSubmission() {
+  onDeleteSubmission(): void {
     this.isBusy = true;
 
     if (this.rowData) {
       this.rowData.onDelete(this.rowData.accno, this.reset.bind(this), this.rowData.isTemp);
     }
-
   }
 
-  onEditSubmission() {
+  onEditSubmission(): void {
     if (this.rowData) {
       this.rowData.onEdit(this.rowData.accno);
     }
@@ -54,7 +55,7 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
   /**
    * Mandatory - Get the cell to refresh.
    * @see {@link https://www.ag-grid.com/javascript-grid-cell-editor/}
-   * @returns {boolean} By returning false, the grid will remove the component from the DOM and create
+   * @returns By returning false, the grid will remove the component from the DOM and create
    * a new component in it's place with the new values.
    */
   refresh(): boolean {
@@ -64,7 +65,7 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
   /**
    * Reverts the button to its original state
    */
-  reset() {
+  reset(): void {
     this.isBusy = false;
   }
 }

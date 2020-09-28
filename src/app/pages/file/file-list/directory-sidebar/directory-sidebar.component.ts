@@ -17,13 +17,13 @@ export class DirectorySidebarComponent implements OnInit, ControlValueAccessor {
   @Input() collapsed?: boolean = false;
   groups: FileNode[] = [];
   homeDir: FileNode = new FileNode(true, '/', 'home');
-  @Output() select = new EventEmitter();
+  @Output() directorySidebarSelect = new EventEmitter();
   selectedPath: string = '';
   @Output() toggle = new EventEmitter();
 
   constructor(private fileService: FileService) {}
 
-  get value() {
+  get value(): string {
     return this.selectedPath;
   }
 
@@ -32,7 +32,7 @@ export class DirectorySidebarComponent implements OnInit, ControlValueAccessor {
     this.onChange(val);
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     const homeDir: PathInfo = this.fileService.getUserDir();
 
     this.homeDir = new FileNode(true, homeDir.path, homeDir.name);
@@ -44,35 +44,32 @@ export class DirectorySidebarComponent implements OnInit, ControlValueAccessor {
     });
   }
 
-  onDirSelect(directory) {
+  onDirSelect(directory): void {
     this.value = directory.path;
 
-    if (this.select) {
-      this.select.emit(directory.path);
+    if (this.directorySidebarSelect) {
+      this.directorySidebarSelect.emit(directory.path);
     }
   }
 
-  onToggle(e) {
+  onToggle(e): void {
     e.preventDefault();
     if (this.toggle) {
       this.toggle.emit();
     }
   }
 
-  // From ControlValueAccessor interface
-  registerOnChange(fn) {
+  registerOnChange(fn): void {
     this.onChange = fn;
   }
 
-  // From ControlValueAccessor interface
-  registerOnTouched() {}
+  registerOnTouched(): void {}
 
-  validate(c: FormControl) {
+  validate(c: FormControl): any {
     return this.validateFn(c);
   }
 
-  // From ControlValueAccessor interface
-  writeValue(value: any) {
+  writeValue(value: any): void {
     if (value) {
       this.selectedPath = value;
     }

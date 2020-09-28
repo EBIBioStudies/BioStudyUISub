@@ -22,11 +22,11 @@ export class DirectSubmitFileComponent {
   @Input() releaseDate;
   @Input() submitType = 'none';
 
-  handleOnFileClick(event: Event, hasSubmitFailed: boolean, accno: string) {
+  handleOnFileClick(event: Event, hasSubmitFailed: boolean, accno: string): void {
     this.fileClick.emit({ event, hasSubmitFailed, accno });
   }
 
-  handleOnIsStudyChange(isStudy: boolean, fileName: string) {
+  handleOnIsStudyChange(isStudy: boolean, fileName: string): void {
     this.isStudy = isStudy;
     this.isStudyChange.emit({ fileName, isStudy});
   }

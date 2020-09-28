@@ -7,9 +7,9 @@ interface ValidationRule {
 }
 
 class ValidationRules {
-  static atLeastOneFeatureFromGroup(group: string[], section: Section) {
+  static atLeastOneFeatureFromGroup(group: string[], section: Section): ValidationRule {
     return {
-      validate() {
+      validate(): string | undefined {
         const rowCount = section.features.list()
           .filter(f => group.includes(f.typeName))
           .map(f => f.rowSize())
@@ -24,7 +24,7 @@ class ValidationRules {
 
   static atLeastOneRowFeature(feature: Feature): ValidationRule {
     return {
-      validate() {
+      validate(): string | undefined {
         if (feature.rowSize() === 0) {
           return `At least one of ${feature.typeName} is required`;
         }
@@ -45,7 +45,8 @@ class ValidationRules {
       rules.push(ValidationRules.requiredValue(col.name, `${feature.type.name}: (col ${colIndex}):`));
 
       feature.rows.forEach((row, rowIndex) => {
-        const rowValue = row.valueFor(col.id)!.value;
+        const rowColumnRef = row.valueFor(col.id);
+        const rowValue = rowColumnRef ? rowColumnRef.value : '';
         const rowName = `'${col.name}' for '${feature.type.name}' in row ${rowIndex + 1}`;
 
         if (feature.type.displayType.isRequired && col.displayType.isRequired) {
@@ -61,7 +62,7 @@ class ValidationRules {
 
   static forField(field: Field): ValidationRule[] {
     if (field.valueType.isRich()) {
-      const richTextValue: RichTextFieldValue  = <RichTextFieldValue>field.value;
+      const richTextValue: RichTextFieldValue  = field.value as RichTextFieldValue;
       const rawValue: string = richTextValue.raw;
 
       return [
@@ -71,7 +72,7 @@ class ValidationRules {
       ];
     }
 
-    const value: string = <string>field.value;
+    const value: string = field.value as string;
     return [
       ValidationRules.requiredValue(value, field.name, field.type.displayType.isRequired),
       ValidationRules.formattedValue(value, field.valueType, field.name),
@@ -81,7 +82,7 @@ class ValidationRules {
 
   static formattedValue(value: string, valueType: ValueType, name: string): ValidationRule {
     return {
-      validate() {
+      validate(): string | undefined {
         if (ValidationRules.isEmpty(value)) {
           return undefined;
         }
@@ -133,15 +134,15 @@ class ValidationRules {
   static forValue(value: string, fieldName: string, valueType: ValueType): ValidationRule[] {
     const rules: ValidationRule[] = [];
     if (valueType.is(ValueTypeName.text, ValueTypeName.largetext)) {
-      rules.push(ValidationRules.maxlengthValue(value, (<TextValueType>valueType).maxlength, fieldName));
-      rules.push(ValidationRules.minlengthValue(value, (<TextValueType>valueType).minlength, fieldName));
+      rules.push(ValidationRules.maxlengthValue(value, (valueType as TextValueType).maxlength, fieldName));
+      rules.push(ValidationRules.minlengthValue(value, (valueType as TextValueType).minlength, fieldName));
     }
     return rules;
   }
 
   static maxlengthValue(value: string, maxlength: number, name: string): ValidationRule {
     return {
-      validate() {
+      validate(): string | undefined {
         if (ValidationRules.isEmpty(value)) {
           return undefined;
         }
@@ -155,7 +156,7 @@ class ValidationRules {
 
   static minlengthValue(value: string, minlength: number, name: string): ValidationRule {
     return {
-      validate() {
+      validate(): string | undefined {
         if (ValidationRules.isEmpty(value)) {
           return undefined;
         }
@@ -169,7 +170,7 @@ class ValidationRules {
 
   static requiredFeature(ft: FeatureType, section: Section): ValidationRule {
     return {
-      validate() {
+      validate(): string | undefined {
         const features = section.features.list().filter(f => f.type.name === ft.name);
         if (features.length === 0) {
           return `At least one of ${ft.name} is required in the section`;
@@ -181,7 +182,7 @@ class ValidationRules {
 
   static requiredSection(st: SectionType, section: Section): ValidationRule {
     return {
-      validate() {
+      validate(): string | undefined {
         const sections = section.sections.list().filter(f => f.type.name === st.name);
         if (sections.length === 0) {
           return `At least one subsection of ${st.name} is required`;
@@ -193,7 +194,7 @@ class ValidationRules {
 
   static requiredValue(value: string, name: string, isRequired: boolean = true): ValidationRule {
     return {
-      validate() {
+      validate(): string | undefined {
         if (isRequired && ValidationRules.isEmpty(value)) {
           return `${name} is required`;
         }
@@ -202,7 +203,7 @@ class ValidationRules {
     };
   }
 
-  private static isEmpty(value: string) {
+  private static isEmpty(value: string): boolean {
     return value === undefined || value.trim().length === 0;
   }
 }
@@ -211,8 +212,8 @@ export class SubmValidationErrors {
   static EMPTY = new SubmValidationErrors('');
 
   constructor(readonly secId: string,
-        readonly errors: string [] = [],
-        readonly sections: SubmValidationErrors[] = []) {
+              readonly errors: string [] = [],
+              readonly sections: SubmValidationErrors[] = []) {
   }
 
   empty(): boolean {

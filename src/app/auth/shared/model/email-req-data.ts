@@ -8,7 +8,7 @@ class EmailRequestData extends DataWithCaptchaAndPath {
   }
 
   snapshot(): { [key: string]: string } {
-    return { ...super.snapshot(), 'email': this.email };
+    return { ...super.snapshot(), email: this.email };
   }
 }
 

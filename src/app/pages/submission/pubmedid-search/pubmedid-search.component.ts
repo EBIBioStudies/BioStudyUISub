@@ -10,7 +10,8 @@ import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
-import * as _ from 'lodash';
+import debounce from 'lodash.debounce';
+import isEmpty from 'lodash.isempty';
 import { PubMedSearchService } from './pubmedid-search.service';
 import { Observable } from 'rxjs';
 
@@ -43,10 +44,10 @@ export class PubMedIdSearchComponent implements ControlValueAccessor {
   private pubMedId: string | undefined; // last PubMed ID number typed in
 
   constructor(private pubMedSearchService: PubMedSearchService) {
-    this.pubMedFetch = _.debounce(this.pubMedFetch, 300);
+    this.pubMedFetch = debounce(this.pubMedFetch, 300);
   }
 
-  get value() {
+  get value(): string | undefined {
     return this.pubMedId;
   }
 
@@ -61,7 +62,7 @@ export class PubMedIdSearchComponent implements ControlValueAccessor {
    * Retrieves the publication data for the ID present in the search field shows its preview, ready
    * for selection so the user wishes. It will also notify the template that the transaction is going on so that
    * no further action is allowed in the interim.
-   * @returns {Observable<any>} Stream of HTTP client events.
+   * @returns Stream of HTTP client events.
    */
   pubMedFetch(): Observable<any> {
     let eventStream;
@@ -85,7 +86,7 @@ export class PubMedIdSearchComponent implements ControlValueAccessor {
    * @see {@link ControlValueAccessor}
    * @param fn - Handler telling other form directives and form controls to update their values.
    */
-  registerOnChange(fn) {
+  registerOnChange(fn): void {
     this.onChange = fn;
   }
 
@@ -94,13 +95,13 @@ export class PubMedIdSearchComponent implements ControlValueAccessor {
    * Registers a handler specifically for when a control receives a touch event.
    * @see {@link ControlValueAccessor}
    */
-  registerOnTouched() {}
+  registerOnTouched(): void {}
 
   /**
    * Performs a new lookup operation provided the field is not blank and there is no request in progress.
    * It also hides the previous search result's preview if on display.
    */
-  search() {
+  search(): void {
     if (this.pubMedId && !this.isBusy) {
       this.isPreviewPub = false;
       this.pubMedFetch();
@@ -111,9 +112,9 @@ export class PubMedIdSearchComponent implements ControlValueAccessor {
    * Performs a lookup operation on pressing a certain key (filtered at the template level) as long as the
    * ID being searched is different from the last one. Otherwise it just directly selects the previously
    * searched publication for autofill.
-   * @param {Event} event - DOM event for the click action.
+   * @param event - DOM event for the click action.
    */
-  searchOnKeypress(event: Event) {
+  searchOnKeypress(event: Event): void {
     event.stopPropagation();
 
     if (this.pubMedId !== this.lastIDfetched) {
@@ -126,7 +127,7 @@ export class PubMedIdSearchComponent implements ControlValueAccessor {
   /**
    * Bubbles the selected publication event up, hiding its preview too.
    */
-  selectPub() {
+  selectPub(): void {
     this.found.emit(this.publication);
     this.isPreviewPub = false;
   }
@@ -135,8 +136,8 @@ export class PubMedIdSearchComponent implements ControlValueAccessor {
    * Shows or hides the publication's preview. If there is no preview to be shown because the field
    * has just been rendered, it checks for an already existing ID and retrieves the publication for that one.
    */
-  togglePreviewPub() {
-    if (this.pubMedId && _.isEmpty(this.publication) && !this.isPreviewPub) {
+  togglePreviewPub(): void {
+    if (this.pubMedId && isEmpty(this.publication) && !this.isPreviewPub) {
       this.pubMedFetch();
       return;
     }
@@ -148,7 +149,7 @@ export class PubMedIdSearchComponent implements ControlValueAccessor {
    * @see {@link ControlValueAccessor}
    * @param newValue - Value to be stored.
    */
-  writeValue(newValue: any) {
+  writeValue(newValue: any): void {
     if (newValue) {
       this.pubMedId = newValue;
     }

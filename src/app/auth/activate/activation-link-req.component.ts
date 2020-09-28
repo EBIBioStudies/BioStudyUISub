@@ -17,16 +17,16 @@ export class ActivationLinkReqComponent implements AfterViewInit {
   showSuccess: boolean = false;
 
   @ViewChild('emailEl')
-  private focusRef?: ElementRef;
+  private focusRef!: ElementRef;
 
   @ViewChild('recaptchaEl')
-  private recaptchaRef?: RecaptchaComponent;
+  private recaptchaRef!: RecaptchaComponent;
 
   constructor(private authService: AuthService) {}
 
   // TODO: Turn autofocus on render into a directive
   ngAfterViewInit(): void {
-    this.focusRef!.nativeElement.focus();
+    this.focusRef.nativeElement.focus();
   }
 
   onRecaptchaResolved(captchaToken: string): void {
@@ -50,7 +50,7 @@ export class ActivationLinkReqComponent implements AfterViewInit {
     }
   }
 
-  onSubmit(form: NgForm) {
+  onSubmit(form: NgForm): void {
     if (this.hasError) {
       this.resetRecaptcha();
       this.hasError = false;
@@ -59,7 +59,7 @@ export class ActivationLinkReqComponent implements AfterViewInit {
 
     if (form.valid) {
       this.isLoading = true;
-      this.recaptchaRef!.execute();
+      this.recaptchaRef.execute();
     } else {
       Object.keys(form.controls).forEach((key) => {
         form.controls[key].markAsTouched({onlySelf: true});
@@ -68,7 +68,7 @@ export class ActivationLinkReqComponent implements AfterViewInit {
   }
 
   resetRecaptcha(): void {
-    this.recaptchaRef!.reset();
+    this.recaptchaRef.reset();
     this.model.resetCaptcha();
   }
 }

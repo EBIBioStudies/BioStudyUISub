@@ -10,6 +10,7 @@ import { PasswordResetReqComponent } from './password-reset/password-reset-req.c
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { SignUpComponent } from './signup/signup.component';
 import { Equals2Directive } from './password-reset/equals2.directive';
+import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
   imports: [
@@ -21,7 +22,8 @@ import { Equals2Directive } from './password-reset/equals2.directive';
   providers: [
     AuthService,
     UserSession,
-    UserData
+    UserData,
+    CookieService
   ],
   declarations: [
     SignInComponent,

@@ -2,7 +2,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { controlToList } from '../utilis';
 
 export class FormBase {
-  private _errorCount: number = 0;
+  private formErrorCount: number = 0;
 
   constructor(readonly form: FormGroup) {
     form.statusChanges.subscribe(() => {
@@ -11,7 +11,7 @@ export class FormBase {
   }
 
   get errorCount(): number {
-    return this._errorCount;
+    return this.formErrorCount;
   }
 
   get hasErrors(): boolean {
@@ -34,7 +34,7 @@ export class FormBase {
     return this.controls().filter(control => control.invalid);
   }
 
-  private onStatusChanges() {
-    this._errorCount = this.invalidControls().length;
+  private onStatusChanges(): void {
+    this.formErrorCount = this.invalidControls().length;
   }
 }

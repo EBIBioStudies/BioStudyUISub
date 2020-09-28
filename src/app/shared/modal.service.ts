@@ -13,8 +13,8 @@ export class ModalService {
     this.modalService.show(ConfirmDialogComponent,
       {
         initialState: {
-          title: title,
-          confirmLabel: confirmLabel,
+          title,
+          confirmLabel,
           body: text,
           isHideCancel: true,
           callback: (value: boolean) => subj.next(value)
@@ -29,8 +29,8 @@ export class ModalService {
     this.modalService.show(ConfirmDialogComponent,
       {
         initialState: {
-          title: title,
-          confirmLabel: confirmLabel,
+          title,
+          confirmLabel,
           body: text,
           isHideCancel: false,
           callback: (value: boolean) => subj.next(value)

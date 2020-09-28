@@ -17,7 +17,7 @@ interface AttrException {
  *               submitted.
  */
 export class AttrExceptions {
-  private static _all: Array<AttrException> = [
+  private static allAttrs: Array<AttrException> = [
     {name: 'AttachTo', rootLevel: true, studyLevel: false, systemOnly: true, unique: false},
     {name: 'ReleaseDate', rootLevel: true, studyLevel: false, systemOnly: false, unique: true},
     {name: 'Title', rootLevel: true, studyLevel: true, systemOnly: false, unique: true},
@@ -25,25 +25,25 @@ export class AttrExceptions {
     {name: 'AccNoTemplate', rootLevel: true, studyLevel: false, systemOnly: true, unique: true}
   ];
 
-  private static _editable: Array<string> = AttrExceptions._all
+  private static editableAttr: Array<string> = AttrExceptions.allAttrs
     .filter(at => (at.rootLevel || at.studyLevel) && !at.systemOnly).map(at => at.name);
 
-  private static _editableAndRootOnly: Array<string> = AttrExceptions._all
+  private static editableAndRootOnlyAttr: Array<string> = AttrExceptions.allAttrs
     .filter(at => at.rootLevel && !at.studyLevel && !at.systemOnly).map(at => at.name);
 
-  private static _unique: Array<string> = AttrExceptions._all
+  private static uniqueAttr: Array<string> = AttrExceptions.allAttrs
     .filter(at => at.unique).map(at => at.name);
 
-  static get editable() {
-    return this._editable;
+  static get editable(): string[] {
+    return this.editableAttr;
   }
 
-  static get editableAndRootOnly() {
-    return this._editableAndRootOnly;
+  static get editableAndRootOnly(): string[] {
+    return this.editableAndRootOnlyAttr;
   }
 
-  static get unique() {
-    return this._unique;
+  static get unique(): string[] {
+    return this.uniqueAttr;
   }
 
   static get attachToAttr(): string {

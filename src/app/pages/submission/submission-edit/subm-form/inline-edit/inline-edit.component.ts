@@ -24,12 +24,12 @@ export class InlineEditComponent implements ControlValueAccessor {
   @Input() suggestThreshold = 0;
   readonly typeahead: Observable<string[]>;
 
-  private _value: string = '';
+  private inlineEditValue: string = '';
   private valueChanges$: Subject<string> = new BehaviorSubject<string>('');
 
   /**
    * Sets the max number of suggestions shown at any given time.
-   * @param {AppConfig} appConfig - Global configuration object with app-wide settings.
+   * @param appConfig - Global configuration object with app-wide settings.
    */
   constructor(private appConfig: AppConfig) {
     this.suggestLength = this.appConfig.maxSuggestLength;
@@ -39,12 +39,12 @@ export class InlineEditComponent implements ControlValueAccessor {
   }
 
   get value(): any {
-    return this._value;
+    return this.inlineEditValue;
   }
 
   set value(value: any) {
-    if (value !== this._value) {
-      this._value = value;
+    if (value !== this.inlineEditValue) {
+      this.inlineEditValue = value;
       this.onChange(value);
     }
   }
@@ -61,21 +61,22 @@ export class InlineEditComponent implements ControlValueAccessor {
 
   /**
    * Determines if the field's contents are longer than the actual field's dimensions by probing the DOM directly.
-   * @param {Element} element - DOM element for the field.
-   * @returns {boolean} True if the text's length is greater than its container.
+   * @param element - DOM element for the field.
+   * @returns True if the text's length is greater than its container.
    */
   isOverflow(element: Element): boolean {
     return element.scrollWidth > element.clientWidth;
   }
 
   onBlur(): void {
-    if (isStringEmpty(<string>this.value)) {
+    if (isStringEmpty(this.value)) {
       this.value = this.emptyValue;
     }
     this.stopEditing();
   }
 
-  onChange(_value: string) { }
+  // tslint:disable-next-line: variable-name
+  onChange(_value: string): void { }
 
   onEdit(): void {
     this.startEditing();
@@ -84,8 +85,8 @@ export class InlineEditComponent implements ControlValueAccessor {
   /**
    * Handler for enter key press event. It cancels the press event's propagation and makes the component
    * go into display mode if the event is not resulting from the selection of a suggested column name.
-   * @param {Event} event - DOM event object.
-   * @param {boolean} isSuggestOpen - If true, the autosuggest typeahead list is being displayed.
+   * @param event - DOM event object.
+   * @param isSuggestOpen - If true, the autosuggest typeahead list is being displayed.
    */
   onEnterKey(event: Event, isSuggestOpen: boolean): void {
     event.stopPropagation();
@@ -94,7 +95,7 @@ export class InlineEditComponent implements ControlValueAccessor {
     }
   }
 
-  onKeyDown() {
+  onKeyDown(): void {
     this.valueChanges$.next(this.value);
   }
 
@@ -102,7 +103,7 @@ export class InlineEditComponent implements ControlValueAccessor {
     this.remove.emit();
   }
 
-  onTouched() {}
+  onTouched(): void {}
 
   registerOnChange(fn: () => {}): void {
     this.onChange = fn;
@@ -113,7 +114,7 @@ export class InlineEditComponent implements ControlValueAccessor {
   }
 
   writeValue(value: any): void {
-    this._value = value;
+    this.inlineEditValue = value;
   }
 
   private startEditing(): void {

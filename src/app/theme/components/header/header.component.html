@@ -31,28 +31,28 @@
           <button class="btn navbar-btn" routerLink="submissions" routerLinkActive="active"
             tooltip="List of submissions" placement="bottom" container="body" (click)="toggleCollapsed()">
             <i class="fas fa-fw fa-lg fa-cloud-upload-alt"></i>
-            <span>Submissions</span>
+            Submissions
           </button>
         </li>
         <li *ngIf="userLoggedIn">
           <button class="btn navbar-btn" routerLink="files" routerLinkActive="active"
             tooltip="Upload or list your files" placement="bottom" container="body" (click)="toggleCollapsed()">
             <i class="fa fa-fw fa-folder-open fa-lg"></i>
-            <span>Files</span>
+            Files
           </button>
         </li>
         <li>
           <button class="btn navbar-btn" routerLink="/help" routerLinkActive="active" tooltip="How to use this tool"
             placement="bottom" container="body" (click)="toggleCollapsed()">
             <i class="fa fa-fw fa-question-circle fa-lg"></i>
-            <span>Help</span>
+            Help
           </button>
         </li>
         <li>
           <button class="btn navbar-btn" tooltip="Submit feedback" placement="bottom" container="body"
             (click)="submitFeedback()">
             <i class="fa fa-fw fa-paper-plane fa-lg"></i>
-            <span>Feedback</span>
+            Feedback
           </button>
         </li>
         <li [class.hidden]="!userLoggedIn" dropdown>

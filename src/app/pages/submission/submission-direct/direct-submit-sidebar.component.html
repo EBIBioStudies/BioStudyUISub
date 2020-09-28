@@ -39,7 +39,7 @@
           <div class="control-list files-control center-spread">
             <st-file-upload-button [multiple]="true"
                       [isDirOnly]="false"
-                      (select)="onUploadFilesSelect($event)"
+                      (fileUploadSelect)="onUploadFilesSelect($event)"
                       title="File upload"
                       tooltip="Select files"
                       placement="bottom"
@@ -48,7 +48,7 @@
             <st-file-upload-button [multiple]="false"
                       [isDirOnly]="true"
                       title="Folder upload"
-                      (select)="onUploadFilesSelect($event)"
+                      (fileUploadSelect)="onUploadFilesSelect($event)"
                       tooltip="Select a folder"
                       placement="bottom"
                       #fileEl>

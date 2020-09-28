@@ -16,26 +16,26 @@ export class SignInComponent implements OnInit, AfterViewInit {
   model = {login: '', password: '', next: ''}; // Data model for the component's form
 
   @ViewChild('focusEl', { static: true })
-  private focusRef?: ElementRef;
+  private focusRef!: ElementRef;
 
   constructor(private authService: AuthService,
-        private userSession: UserSession,
-        private router: Router,
-        private route: ActivatedRoute) {
+              private userSession: UserSession,
+              private router: Router,
+              private route: ActivatedRoute) {
   }
 
   // TODO: Turn autofocus on render into a directive
   ngAfterViewInit(): void {
-    this.focusRef!.nativeElement.focus();
+    this.focusRef.nativeElement.focus();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     if (!this.userSession.isAnonymous()) {
       this.router.navigate(['']);
     }
   }
 
-  onSubmit(form: NgForm) {
+  onSubmit(form: NgForm): void {
     this.resetGlobalError();
     const next = this.route.snapshot.paramMap.get('next') || '/submissions';
 
@@ -60,7 +60,7 @@ export class SignInComponent implements OnInit, AfterViewInit {
     }
   }
 
-  resetGlobalError() {
+  resetGlobalError(): void {
     this.error = undefined;
   }
 }

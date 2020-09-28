@@ -9,7 +9,7 @@ import { SubmEditService } from '../shared/subm-edit.service';
   styleUrls: ['./subm-navbar.component.css']
 })
 export class SubmNavBarComponent implements OnChanges {
-  @Input() accno?: string; // accession number for the current submission
+  @Input() accno!: string; // accession number for the current submission
   @Output() editClick: EventEmitter<Event> = new EventEmitter<Event>();
   @Input() readonly: boolean = false; // read-only status of the submission form
   @Output() revertClick: EventEmitter<Event> = new EventEmitter<Event>();
@@ -45,7 +45,7 @@ export class SubmNavBarComponent implements OnChanges {
 
   // TODO: a temporary workaround
   get isTemp(): boolean {
-    return this.accno!.startsWith('TMP_');
+    return this.accno.startsWith('TMP_');
   }
 
   // TODO: a temporary workaround

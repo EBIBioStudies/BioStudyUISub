@@ -3,7 +3,7 @@ import { IdLinkService } from './id-link.service';
 import { IdentifierNamespace } from './id-link.interfaces';
 import { of, throwError } from 'rxjs';
 
-function buildResponse(namespaces: Array<IdentifierNamespace>) {
+function buildResponse(namespaces: Array<IdentifierNamespace>): { _embedded: object } {
   return { _embedded: { namespaces } };
 }
 
@@ -15,7 +15,7 @@ describe('IdLinkService', () => {
   };
 
   beforeAll(() => {
-    service = new IdLinkService(<any> httpClient);
+    service = new IdLinkService(httpClient as any);
   });
 
   it('#suggest should return an empty list when the server returns a 404', () => {
@@ -35,7 +35,7 @@ describe('IdLinkService', () => {
   it('#validate should return an error object when the server returns a 404', () => {
     const error = {message: 'Unknown prefix', timeStamp: 'Mon Apr 23 11:44:31 BST 2018'};
     const errorResponse = new HttpErrorResponse({
-      error: error,
+      error,
       status: 404,
       statusText: 'Not Found'
     });
@@ -43,7 +43,7 @@ describe('IdLinkService', () => {
     httpClient.get.mockReturnValueOnce(throwError(errorResponse));
 
     service.validate('prefix:12345').subscribe(
-      (obj: Object) => {
+      (obj) => {
         return expect(obj).toEqual(error);
       }
     );

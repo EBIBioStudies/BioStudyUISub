@@ -5,7 +5,7 @@ export class Attribute {
   readonly id: string;
 
   constructor(
-    private _name: string = '',
+    private attributeName: string = '',
     readonly valueType: ValueType = ValueTypeFactory.DEFAULT,
     readonly displayType: DisplayType = DisplayType.OPTIONAL,
     readonly isTemplateBased: boolean = false,
@@ -17,12 +17,12 @@ export class Attribute {
   }
 
   get name(): string {
-    return this._name;
+    return this.attributeName;
   }
 
   set name(name: string) {
-    if (this.canEditName && this._name !== name) {
-      this._name = name;
+    if (this.canEditName && this.attributeName !== name) {
+      this.attributeName = name;
     }
   }
 

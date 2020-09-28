@@ -65,7 +65,7 @@
                     [formControl]="row.cellControlAt(column.id).control"
                     [autosuggestSource]="featureForm.cellValuesTypeaheadFunc(rowIdx, column.id)"
                     [autosuggest]="column.autosuggest"
-                    (select)="onInputValueSelect($event, rowIdx)"
+                    (inputValueSelect)="onInputValueSelect($event, rowIdx)"
                     stNativeElementAttach
                     stValidateOnblur>
             </st-input-value>
