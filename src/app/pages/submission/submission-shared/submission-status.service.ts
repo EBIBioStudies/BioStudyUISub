@@ -17,7 +17,7 @@ export class SubmissionStatusService {
   }
 
   getSubmStatus(): Observable<string> {
-    return Observable.create((observer) => {
+    return new Observable((observer) => {
       this.eventSource!.addEventListener('message', (event: MessageEvent) => {
         const { data } = event;
         const { accNo } = JSON.parse(data);

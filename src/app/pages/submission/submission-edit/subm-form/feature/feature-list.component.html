@@ -41,7 +41,7 @@
           </div>
         </div>
       </div>
-      <div class="cell col-xs-9" *ngFor="let cell of [featureForm.cellControlAt(0,column.id)]">
+      <div class="cell col-xs-9" *ngFor="let cell of [featureForm.cellControlAt(0, column.id)]">
         <div class="form-group"
            [ngClass]="{'readonly': column.isReadonly || featureForm.isReadonly,
                  'optional': !column.isRequired,

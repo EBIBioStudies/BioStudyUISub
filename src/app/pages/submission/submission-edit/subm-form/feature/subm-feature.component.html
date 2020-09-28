@@ -44,17 +44,15 @@
     </div>
 
     <div class="panel-body" #featureEl>
-      <div>
-        <st-subm-feature-grid *ngIf="featureForm.canHaveMultipleRows; else featureList"
-                   [featureForm]="featureForm"
-                   [readonly]="readonly">
-        </st-subm-feature-grid>
-        <ng-template #featureList>
-          <st-subm-feature-list [featureForm]="featureForm"
-                     [readonly]="readonly">
-          </st-subm-feature-list>
-        </ng-template>
-      </div>
+      <st-subm-feature-grid *ngIf="featureForm.canHaveMultipleRows; else featureList"
+                  [featureForm]="featureForm"
+                  [readonly]="readonly">
+      </st-subm-feature-grid>
+      <ng-template #featureList>
+        <st-subm-feature-list [featureForm]="featureForm"
+                    [readonly]="readonly">
+        </st-subm-feature-list>
+      </ng-template>
     </div>
   </div>
 </div>
