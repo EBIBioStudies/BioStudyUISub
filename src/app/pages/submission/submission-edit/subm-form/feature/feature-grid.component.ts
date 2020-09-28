@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, Input, QueryList, ViewChildren, OnChanges } from '@angular/core';
 import { UserData } from 'app/auth/shared';
 import { TypeaheadDirective } from 'ngx-bootstrap/typeahead';
 import { ColumnControl } from '../../shared/model/column-control.model';
@@ -11,7 +11,7 @@ import { Options as SortableOption } from 'sortablejs';
   templateUrl: './feature-grid.component.html',
   styleUrls: ['./feature-grid.component.css']
 })
-export class FeatureGridComponent {
+export class FeatureGridComponent implements OnChanges {
   @ViewChildren('colEl') colEls?: QueryList<ElementRef>;
   @Input() featureForm!: FeatureForm;
   hoveredRowIndex: number = -1;
@@ -20,8 +20,7 @@ export class FeatureGridComponent {
   sortableJsOptions: SortableOption = {};
   @ViewChildren('ahead') typeaheads?: QueryList<TypeaheadDirective>;
 
-
-  constructor(private rootEl: ElementRef, public userData: UserData) {
+  constructor(public userData: UserData) {
     this.sortableJsOptions.onUpdate = this.onRowOrderUpdate.bind(this);
     this.sortableJsOptions.filter = '.form-control';
     this.sortableJsOptions.preventOnFilter = false;
@@ -36,7 +35,11 @@ export class FeatureGridComponent {
   }
 
   get isSortable(): boolean {
-    return this.featureForm.rows.length > 1;
+    return !this.isReadOnly() && this.featureForm!.rows.length > 1;
+  }
+
+  ngOnChanges() {
+    this.sortableJsOptions = { ...this.sortableJsOptions, disabled: this.isReadOnly() };
   }
 
   /**
@@ -85,5 +88,9 @@ export class FeatureGridComponent {
 
   onRowOrderUpdate(): void {
     this.featureForm.syncModelRows();
+  }
+
+  private isReadOnly(): boolean {
+    return Boolean(this.readonly || this.featureForm?.isReadonly);
   }
 }

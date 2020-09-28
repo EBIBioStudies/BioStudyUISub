@@ -38,8 +38,7 @@
       <div *ngIf="!readonly || !row.isEmpty" class="row">
         <div class="cell heading-cell row-heading col-xs-1 col-md-1 text-center">
           <i class="fas fa-grip-vertical grip" [ngClass]="{ 'grip-visible': rowIdx === hoveredRowIndex && isSortable }"></i>
-          <span container="body"
-              [tooltip]="featureForm.canRemoveRow() ? '' : 'The table must contain one row at least'">
+          <span container="body" [tooltip]="featureForm.canRemoveRow() ? '' : 'The table must contain one row at least'">
             <button class="btn btn-danger btn-sm" type="button"
                 [ngClass]="{'invisible': readonly || featureForm.isReadonly}"
                 [disabled]="!featureForm.canRemoveRow()"
