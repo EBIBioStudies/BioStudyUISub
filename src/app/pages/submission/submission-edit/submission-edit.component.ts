@@ -258,7 +258,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     );
   }
 
-  private onSubmitSuccess() {
+  private onSubmitSuccess(): void {
     this.locService.replaceState('/submissions/' + this.accno);
     this.readonly = true;
 

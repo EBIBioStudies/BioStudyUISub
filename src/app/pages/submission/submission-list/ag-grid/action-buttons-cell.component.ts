@@ -38,16 +38,15 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
     this.reset();
   }
 
-  onDeleteSubmission() {
+  onDeleteSubmission(): void {
     this.isBusy = true;
 
     if (this.rowData) {
       this.rowData.onDelete(this.rowData.accno, this.reset.bind(this), this.rowData.isTemp);
     }
-
   }
 
-  onEditSubmission() {
+  onEditSubmission(): void {
     if (this.rowData) {
       this.rowData.onEdit(this.rowData.accno);
     }
@@ -56,7 +55,7 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
   /**
    * Mandatory - Get the cell to refresh.
    * @see {@link https://www.ag-grid.com/javascript-grid-cell-editor/}
-   * @returns {boolean} By returning false, the grid will remove the component from the DOM and create
+   * @returns By returning false, the grid will remove the component from the DOM and create
    * a new component in it's place with the new values.
    */
   refresh(): boolean {
@@ -66,7 +65,7 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
   /**
    * Reverts the button to its original state
    */
-  reset() {
+  reset(): void {
     this.isBusy = false;
   }
 }

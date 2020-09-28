@@ -31,15 +31,6 @@ describe('Submission Model: Feature', () => {
     expect(f.rowSize()).toBe(2);
   });
 
-  it('does not allow to add more than 1 row to a single row feature', () => {
-    const f = new Feature(FeatureType.createDefault('SingleRowFeature', true));
-    expect(f.singleRow).toBeTruthy();
-    f.addRow();
-    expect(f.rowSize()).toBe(1);
-    f.addRow();
-    expect(f.rowSize()).toBe(1);
-  });
-
   it('creates default empty values (in rows) when a new column is added', () => {
     const f = new Feature(FeatureType.createDefault('AFeature'));
     f.addRow();

@@ -258,7 +258,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
     this.router.navigate(['/submissions/direct_upload']);
   }
 
-  setDatasource() {
+  setDatasource(): void {
     const agApi = this.gridOptions.api;
 
     if (!this.datasource) {

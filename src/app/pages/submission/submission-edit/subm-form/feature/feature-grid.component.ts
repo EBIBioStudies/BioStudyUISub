@@ -38,7 +38,7 @@ export class FeatureGridComponent implements OnChanges {
     return !this.isReadOnly() && this.featureForm!.rows.length > 1;
   }
 
-  ngOnChanges() {
+  ngOnChanges(): void {
     this.sortableJsOptions = { ...this.sortableJsOptions, disabled: this.isReadOnly() };
   }
 
