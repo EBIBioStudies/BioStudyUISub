@@ -30,7 +30,7 @@
             BioStudies but will not be reflected in the initially submitted file.
           </p>
         </div>
-        <div class="panel">
+        <div *ngIf="sectionForm.isRootSection" class="panel">
           <div class="panel-body st-edit-status-message">
             <div *ngIf="hasJustCreated && sectionForm.invalid">
               <h4>New submission</h4>

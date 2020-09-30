@@ -3,7 +3,6 @@ import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { Location } from '@angular/common';
 import { Observable, of, Subject } from 'rxjs';
-import { Option } from 'fp-ts/lib/Option';
 import { switchMap, takeUntil } from 'rxjs/operators';
 import { AppConfig } from 'app/app.config';
 import { LogService } from 'app/core/logger/log.service';
@@ -41,7 +40,7 @@ class SubmitOperation {
 })
 export class SubmissionEditComponent implements OnInit, OnDestroy {
   @Input() readonly = false;
-  sectionForm?: SectionForm;
+  sectionForm!: SectionForm;
   @ViewChild(SubmSidebarComponent) sideBar?: SubmSidebarComponent;
   sideBarCollapsed = false;
   submitOperation: SubmitOperation = SubmitOperation.UNKNOWN;
@@ -67,8 +66,8 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     this.sideBarCollapsed = window.innerWidth < this.appConfig.tabletBreak;
 
     submEditService.sectionSwitch$.pipe(
-      takeUntil(this.unsubscribe)
-    ).subscribe(sectionForm => this.switchSection(sectionForm));
+      takeUntil(this.unsubscribe),
+    ).subscribe((sectionForm) => this.switchSection(sectionForm));
   }
 
   get location(): globalThis.Location {
@@ -181,10 +180,9 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     }
     confirmMsg += '. This operation cannot be undone.';
 
-    this.confirmPageDelete(confirmMsg)
-      .subscribe(() => {
-        this.sectionForm!.removeSection(sectionForm.id);
-      });
+    this.confirmPageDelete(confirmMsg).subscribe(() => {
+      this.sectionForm!.removeSection(sectionForm.id);
+    });
   }
 
   onSubmitClick(event, isConfirm: boolean = false): void {
@@ -261,7 +259,6 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
   private onSubmitSuccess(): void {
     this.locService.replaceState('/submissions/' + this.accno);
     this.readonly = true;
-
     this.submitOperation = this.isTemp ? SubmitOperation.CREATE : SubmitOperation.UPDATE;
     this.showSubmitLog(true);
 
@@ -280,7 +277,9 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  private switchSection(sectionForm: Option<SectionForm>): void {
-    this.sectionForm = sectionForm.toUndefined();
+  private switchSection(sectionForm: SectionForm | null): void {
+    if (sectionForm) {
+      this.sectionForm = sectionForm;
+    }
   }
 }
