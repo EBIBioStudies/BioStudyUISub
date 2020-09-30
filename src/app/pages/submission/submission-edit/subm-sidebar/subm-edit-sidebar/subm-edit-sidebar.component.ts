@@ -187,12 +187,14 @@ export class SubmEditSidebarComponent implements OnDestroy {
     this.onEditModeToggle();
   }
 
-  private switchSection(sectionFormOp: Option<SectionForm>): void {
-    if (sectionFormOp.isSome()) {
-      this.sectionForm = sectionFormOp.toUndefined();
+  private switchSection(sectionFormOp: SectionForm | null): void {
+    if (sectionFormOp) {
+      this.sectionForm = sectionFormOp;
+
       if (this.formSubscription) {
         this.formSubscription.unsubscribe();
       }
+
       if (this.sectionForm) {
         this.formSubscription = this.sectionForm.structureChanges$.subscribe(() => this.updateItems());
       }

@@ -1,4 +1,4 @@
-import { BehaviorSubject, Observable, of, Subject, Subscription, merge } from 'rxjs';
+import { Observable, of, Subject, Subscription, merge, BehaviorSubject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 import { none, Option, some } from 'fp-ts/lib/Option';
@@ -126,7 +126,7 @@ export class ServerResponse<T> {
 
 @Injectable()
 export class SubmEditService {
-  readonly sectionSwitch$: BehaviorSubject<Option<SectionForm>> = new BehaviorSubject<Option<SectionForm>>(none);
+  readonly sectionSwitch$: BehaviorSubject<SectionForm | null> = new BehaviorSubject<SectionForm | null>(null);
   readonly serverError$: Subject<any> = new Subject<any>();
 
   private accno: string = '';
@@ -195,9 +195,9 @@ export class SubmEditService {
   }
 
   reset(): void {
-    this.editState.reset();
-    this.switchSection(undefined);
     this.accno = '';
+    this.editState.reset();
+    this.sectionSwitch$.next(null);
     this.submModel = new Submission(SubmissionType.defaultType());
   }
 
@@ -235,10 +235,8 @@ export class SubmEditService {
       }));
   }
 
-  switchSection(sectionForm: SectionForm | undefined): void {
-    if (this.sectionSwitch$.value.toUndefined() === sectionForm) {
-      return;
-    }
+  switchSection(sectionForm: SectionForm): void {
+    const nextSectionForm: SectionForm = new SectionForm(sectionForm.section, sectionForm.parent);
 
     if (this.sectionFormSub) {
       this.sectionFormSub.unsubscribe();
@@ -250,22 +248,18 @@ export class SubmEditService {
       this.sectionFormSubEdit = undefined;
     }
 
-    if (sectionForm !== undefined) {
-      merge(
-        sectionForm.structureChanges$,
-        sectionForm.form.statusChanges
-      )
-        .pipe(debounceTime(500))
-        .subscribe(() => {
-          this.editState.startEditing();
-          this.save();
-        });
+    merge(
+      nextSectionForm.structureChanges$,
+      nextSectionForm.form.statusChanges
+    )
+      .pipe(debounceTime(500))
+      .subscribe(() => {
+        this.editState.startEditing();
+        this.save();
+      });
 
-      this.updateDependencyValues(sectionForm);
-      this.sectionSwitch$.next(some(sectionForm));
-    } else {
-      this.sectionSwitch$.next(none);
-    }
+    this.updateDependencyValues(nextSectionForm);
+    this.sectionSwitch$.next(nextSectionForm);
   }
 
   validateSubmission(): SubmValidationErrors {

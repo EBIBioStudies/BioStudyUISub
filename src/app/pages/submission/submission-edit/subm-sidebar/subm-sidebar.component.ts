@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Option } from 'fp-ts/lib/Option';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ServerError } from 'app/shared/server-error.handler';
@@ -91,9 +90,10 @@ export class SubmSidebarComponent implements OnDestroy {
       }, [] as Array<FormControlGroup>);
   }
 
-  private switchSection(sectionFormOp: Option<SectionForm>): void {
-    if (sectionFormOp.isSome()) {
-      const secForm = sectionFormOp.toUndefined()!;
+  private switchSection(sectionFormOp: SectionForm | null): void {
+    if (sectionFormOp) {
+      const secForm = sectionFormOp!;
+
       if (!secForm.isRootSection) {
         return;
       }

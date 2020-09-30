@@ -65,6 +65,6 @@ export class SubmNavBarComponent implements OnChanges {
     if (sectionForm === undefined) {
       return [];
     }
-    return [...this.findSectionPath(sectionForm.parent), ...[sectionForm]];
+    return [...this.findSectionPath(sectionForm.parent), sectionForm];
   }
 }

@@ -26,7 +26,7 @@ export class SectionForm extends FormBase {
   private sb: Map<string, Subscription> = new Map<string, Subscription>();
   private sectionRef: ControlGroupRef;
 
-  constructor(private section: Section, readonly parent?: SectionForm) {
+  constructor(readonly section: Section, readonly parent?: SectionForm) {
     super(new FormGroup({
       fields: new FormGroup({}),
       features: new FormGroup({}),
