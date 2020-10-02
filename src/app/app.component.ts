@@ -16,7 +16,7 @@ import { setTheme } from 'ngx-bootstrap/utils';
 
 export class AppComponent implements OnInit {
   constructor(private userSession: UserSession, private appConfig: AppConfig) {
-    setTheme('bs3');
+    setTheme('bs4');
   }
 
   ngOnInit(): void {
