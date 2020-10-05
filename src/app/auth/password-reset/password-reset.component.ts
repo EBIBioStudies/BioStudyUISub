@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { RecaptchaComponent } from 'ng-recaptcha';
 import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
@@ -10,15 +10,12 @@ import { ServerError } from 'app/shared/server-error.handler';
   selector: 'st-auth-passwd-reset',
   templateUrl: './password-reset.component.html'
 })
-export class PasswordResetComponent implements OnInit, AfterViewInit {
+export class PasswordResetComponent implements OnInit {
   hasError: boolean = false;
   isLoading: boolean = false;
   message: string = '';
   model: PasswordResetData = new PasswordResetData();
   showSuccess: boolean = false;
-
-  @ViewChild('focusEl')
-  private focusRef!: ElementRef;
 
   @ViewChild('recaptchaEl')
   private recaptcha!: RecaptchaComponent;
@@ -27,11 +24,6 @@ export class PasswordResetComponent implements OnInit, AfterViewInit {
     private authService: AuthService,
     private activatedRoute: ActivatedRoute
   ) {}
-
-  // TODO: Turn autofocus on render into a directive
-  ngAfterViewInit(): void {
-    this.focusRef.nativeElement.focus();
-  }
 
   ngOnInit(): void {
     const key = this.activatedRoute.snapshot.paramMap.get('key');

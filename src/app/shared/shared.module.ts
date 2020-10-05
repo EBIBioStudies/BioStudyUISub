@@ -12,7 +12,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { ContainerRootComponent } from './container-root.component';
-import { ContainerMdComponent } from './container-md.component';
+import { AuthContainer } from './auth-container.component';
 import { ORCIDInputBoxComponent } from './orcid-input-box.component';
 import { FileUploadButtonComponent } from './file-upload-button.component';
 import { ConfirmDialogComponent } from './confirm-dialog.component';
@@ -47,7 +47,7 @@ import { ServerSentEventService } from './server-sent-event.service';
   ],
   declarations: [
     ContainerRootComponent,
-    ContainerMdComponent,
+    AuthContainer,
     ORCIDInputBoxComponent,
     FileUploadButtonComponent,
     ConfirmDialogComponent,
@@ -74,7 +74,7 @@ import { ServerSentEventService } from './server-sent-event.service';
     CollapseModule,
     AlertModule,
     ContainerRootComponent,
-    ContainerMdComponent,
+    AuthContainer,
     ORCIDInputBoxComponent,
     FileUploadButtonComponent,
     ConfirmDialogComponent,

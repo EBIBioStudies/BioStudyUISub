@@ -18,7 +18,7 @@ import { SubmissionStatus } from 'app/pages/submission/submission-shared/submiss
 @Component({
   selector: 'st-subm-list',
   templateUrl: './subm-list.component.html',
-  styleUrls: ['./subm-list.component.css']
+  styleUrls: ['./subm-list.component.scss']
 })
 export class SubmListComponent implements OnDestroy, OnInit {
   columnDefs?: any[];
@@ -62,7 +62,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
       overlayLoadingTemplate: '<span class="ag-overlay-loading-center"><i class="fa fa-cog fa-spin fa-lg"></i> Loading...</span>',
       pagination: true,
       paginationPageSize: 15,
-      rowHeight: 30,
+      rowHeight: 35,
       rowModelType: 'infinite',
       rowSelection: 'single',
       suppressRowClickSelection: true,

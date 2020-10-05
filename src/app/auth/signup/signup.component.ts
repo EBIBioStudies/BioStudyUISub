@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { RecaptchaComponent } from 'ng-recaptcha';
 import { ServerError } from 'app/shared/server-error.handler';
@@ -10,15 +10,12 @@ import { NgForm } from '@angular/forms';
   selector: 'st-auth-signup',
   templateUrl: './signup.component.html'
 })
-export class SignUpComponent implements AfterViewInit, OnInit {
+export class SignUpComponent implements OnInit {
   hasError: boolean = false;
   isLoading: boolean = false;
   message: string = '';
   model: RegistrationData = new RegistrationData();
   success: boolean = false;
-
-  @ViewChild('focusEl')
-  private focusRef!: ElementRef;
 
   @ViewChild('recaptchaEl')
   private recaptcha!: RecaptchaComponent;
@@ -28,11 +25,6 @@ export class SignUpComponent implements AfterViewInit, OnInit {
     private session: UserSession,
     private router: Router
   ) {}
-
-  // TODO: Turn autofocus on render into a directive
-  ngAfterViewInit(): void {
-    this.focusRef.nativeElement.focus();
-  }
 
   ngOnInit(): void {
     if (!this.session.isAnonymous()) {

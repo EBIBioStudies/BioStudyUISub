@@ -1,56 +1,54 @@
-<st-container-root>
-  <st-container-md>
-    <div class="auth-content">
-      <div class="alert" [ngClass]="{'alert-danger': hasError, 'invisible': !hasError}">
-        {{hasError ? message : '&nbsp;'}}
-      </div>
+<st-auth-container>
+  <div class="auth-content">
+    <div class="alert" [ngClass]="{'alert-danger': hasError, 'invisible': !hasError}">
+      {{hasError ? message : '&nbsp;'}}
     </div>
-    <p>
-      <a routerLink="/signin"><i class="fa fa-chevron-circle-left" aria-hidden="true"></i> Back to Log in</a>
-    </p>
-    <div *ngIf="showSuccess">
-      <h4 class="text-success">Activation email re-sent</h4>
-      <p>The activation link has been sent to <strong>{{model.email}}</strong>. Please check your email,
-        including the spam/trash folder.</p>
-    </div>
-    <div *ngIf="!showSuccess">
-      <h4>Resend activation email</h4>
-      <p>Please enter your email and we will send you a new link to activate your account. All fields are required.</p>
-    </div>
-    <div *ngIf="!showSuccess" class="panel panel-default">
-      <div class="panel-body">
-        <form novalidate name="raForm" role="form"
-            (ngSubmit)="onSubmit(raForm)" #raForm="ngForm">
-          <div class="form-group" [ngClass]="{'has-error': email.invalid && email.touched}">
-            <label class="control-label" for="email">
-              <span class="text-black">Email</span>
-              <span *ngIf="email.invalid && email.touched">Please enter a valid email</span>
-            </label>
-            <input type="email" id="email" name="email" autofocus
-                  class="form-control"
-                  [(ngModel)]="model.email"
-                  email="true"
-                  #email="ngModel"
-                  #emailEl
-                  required
-                  stValidateOnblur>
+  </div>
+  <p>
+    <a routerLink="/signin"><i class="fa fa-chevron-circle-left" aria-hidden="true"></i> Back to Log in</a>
+  </p>
+  <div *ngIf="showSuccess">
+    <h4 class="text-success">Activation email re-sent</h4>
+    <p>The activation link has been sent to <strong>{{model.email}}</strong>. Please check your email,
+      including the spam/trash folder.</p>
+  </div>
+  <div *ngIf="!showSuccess">
+    <h4>Resend activation email</h4>
+    <p>Please enter your email and we will send you a new link to activate your account. All fields are required.</p>
+  </div>
+  <div *ngIf="!showSuccess" class="panel panel-default">
+    <div class="panel-body">
+      <form novalidate name="raForm" role="form"
+          (ngSubmit)="onSubmit(raForm)" #raForm="ngForm">
+        <div class="form-group" [ngClass]="{'has-error': email.invalid && email.touched}">
+          <label class="control-label" for="email">
+            <span class="text-black">Email</span>
+            <span *ngIf="email.invalid && email.touched">Please enter a valid email</span>
+          </label>
+          <input type="email" id="email" name="email" autofocus
+                class="form-control"
+                [(ngModel)]="model.email"
+                email="true"
+                #email="ngModel"
+                #emailEl
+                required
+                stValidateOnblur>
+        </div>
+        <re-captcha
+          (resolved)="onRecaptchaResolved($event)"
+          name="captcha"
+          required
+          class="captcha-root"
+          #recaptchaEl
+        ></re-captcha>
+        <div class="row-submit">
+          <button type="submit" class="btn btn-primary btn-submit"
+              [disabled]="isLoading">Re-send activation</button>
+          <div class="text-muted col-md-10">
+            <span *ngIf="isLoading"><i class="fa fa-cog fa-spin"></i> Sending...</span>
           </div>
-          <re-captcha
-            (resolved)="onRecaptchaResolved($event)"
-            name="captcha"
-            required
-            class="captcha-root"
-            #recaptchaEl
-          ></re-captcha>
-          <div class="row-submit">
-            <button type="submit" class="btn btn-primary btn-submit"
-                [disabled]="isLoading">Re-send activation</button>
-            <div class="text-muted col-md-10">
-              <span *ngIf="isLoading"><i class="fa fa-cog fa-spin"></i> Sending...</span>
-            </div>
-          </div>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
-  </st-container-md>
-</st-container-root>
+  </div>
+</st-auth-container>

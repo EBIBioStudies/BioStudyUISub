@@ -7,43 +7,43 @@
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav ml-auto">
-      <li class="nav-item px-2" *ngIf="userLoggingIn">
+    <ul class="nav nav-pills ml-auto">
+      <li class="nav-item" *ngIf="userLoggingIn">
         <a class="nav-link" routerLink="/signup" routerLinkActive="active" tooltip="Register as new user"
           placement="bottom" container="body" (click)="toggleCollapsed()">
           <i class="fa fa-user-plus fa-fw fa-lg"></i>
           Register
         </a>
       </li>
-      <li class="nav-item px-2" *ngIf="!userLoggedIn && !userLoggingIn">
+      <li class="nav-item" *ngIf="!userLoggedIn && !userLoggingIn">
         <a class="nav-link" routerLink="/signin" tooltip="Log in to access studies" placement="bottom"
           container="body" (click)="toggleCollapsed()">
           <i class="fas fa-sign-in-alt fa-fw fa-lg"></i>
           Log in
         </a>
       </li>
-      <li class="nav-item px-2" *ngIf="userLoggedIn">
+      <li class="nav-item" *ngIf="userLoggedIn">
         <a class="nav-link" routerLink="submissions" routerLinkActive="active"
           tooltip="List of submissions" placement="bottom" container="body" (click)="toggleCollapsed()">
           <i class="fas fa-fw fa-lg fa-cloud-upload-alt"></i>
           Submissions
         </a>
       </li>
-      <li class="nav-item px-2" *ngIf="userLoggedIn">
+      <li class="nav-item" *ngIf="userLoggedIn">
         <a class="nav-link" routerLink="files" routerLinkActive="active"
           tooltip="Upload or list your files" placement="bottom" container="body" (click)="toggleCollapsed()">
           <i class="fa fa-fw fa-folder-open fa-lg"></i>
           Files
         </a>
       </li>
-      <li class="nav-item px-2">
+      <li class="nav-item">
         <a class="nav-link" routerLink="/help" routerLinkActive="active" tooltip="How to use this tool"
           placement="bottom" container="body" (click)="toggleCollapsed()">
           <i class="fa fa-fw fa-question-circle fa-lg"></i>
           Help
         </a>
       </li>
-      <li class="nav-item px-2">
+      <li class="nav-item">
         <a class="nav-link" tooltip="Submit feedback" placement="bottom" container="body" (click)="submitFeedback()" role="button">
           <i class="fa fa-fw fa-paper-plane fa-lg"></i>
           Feedback
