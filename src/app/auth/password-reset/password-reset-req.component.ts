@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { RecaptchaComponent } from 'ng-recaptcha';
 import { AuthService } from 'app/auth/shared';
@@ -9,25 +9,17 @@ import { ServerError } from 'app/shared/server-error.handler';
   selector: 'st-auth-passwd-reset-req',
   templateUrl: './password-reset-req.component.html'
 })
-export class PasswordResetReqComponent implements AfterViewInit {
+export class PasswordResetReqComponent {
   hasError: boolean = false;
   isLoading: boolean = false; // Flag indicating if login request in progress
   message: string = '';
   model: PasswordResetRequestData = new PasswordResetRequestData();
   showSuccess: boolean = false;
 
-  @ViewChild('emailEl')
-  private focusRef!: ElementRef;
-
   @ViewChild('recaptchaEl')
   private recaptcha!: RecaptchaComponent;
 
   constructor(private authService: AuthService) {}
-
-  // TODO: Turn autofocus on render into a directive
-  ngAfterViewInit(): void {
-    this.focusRef.nativeElement.focus();
-  }
 
   onRecaptchaResolved(captchaToken: string): void {
     const component = this; // SelfSubscriber object sometimes overwrites context for "subscribe" method
