@@ -1,39 +1,29 @@
-<aside class="left-side sidebar sidebar-offcanvas"
-     [ngClass]="{'collapse-left' : collapsed, 'server-error': serverError}">
-  <div class="menu-toggle">
-    <button class="minimise-btn btn pull-right"
-        [ngClass]="{'inactive': !collapsed}"
-        (click)="onToggleCollapse($event)"
-        tooltip="{{collapsed ? 'Expand sidebar' : 'Collapse sidebar'}}"
-        container="body"
-        placement="auto">
-      <i class="fa fa-fw fa-lg"
-         [ngClass]="{'fa-angle-double-left': !collapsed, 'fa-angle-double-right': collapsed}"></i>
-    </button>
-    <tabset [ngClass]="{'invisible': collapsed}">
-      <tab [active]="isCheckTabActive" customClass="badge-parent" (selectTab)="onCheckTabClick()">
-        <ng-template tabHeading>
-          Validation
-          <span *ngIf="numInvalid" class="badge badge-corner"
-              [ngClass]="{'badge-half-danger': numInvalidAndTouched > 0 && numInvalidAndTouched < numInvalid,
-                    'badge-danger': numInvalidAndTouched === numInvalid}">
-            {{numInvalid}}
-          </span>
-        </ng-template>
-      </tab>
-      <tab heading="Add" [active]="isEditTabActive" (selectTab)="onAddTabClick()"></tab>
-    </tabset>
+<div class="pt-2">
+  <tabset [ngClass]="{'invisible': collapsed}">
+    <tab [active]="isCheckTabActive" customClass="badge-parent" (selectTab)="onCheckTabClick()">
+      <ng-template tabHeading>
+        Validation
+        <span *ngIf="numInvalid" class="badge badge-corner"
+            [ngClass]="{'badge-half-danger': numInvalidAndTouched > 0 && numInvalidAndTouched < numInvalid,
+                  'badge-danger': numInvalidAndTouched === numInvalid}">
+          {{numInvalid}}
+        </span>
+      </ng-template>
+    </tab>
+    <tab heading="Add" [active]="isEditTabActive" (selectTab)="onAddTabClick()"></tab>
+  </tabset>
+
+  <div class="subm-sidebar-content">
+    <st-subm-edit-sidebar *ngIf="isEditTabActive"
+                [isAdvancedVisible]="showAdvanced"
+                [collapsed]="collapsed">
+    </st-subm-edit-sidebar>
+
+    <st-subm-check-sidebar *ngIf="isCheckTabActive"
+                  [collapsed]="collapsed"
+                  [invalidControls]="invalidControls"
+                  [serverError]="serverError"
+                  (review)="onReviewClick($event)">
+    </st-subm-check-sidebar>
   </div>
-
-  <st-subm-edit-sidebar *ngIf="isEditTabActive"
-              [isAdvancedVisible]="showAdvanced"
-              [collapsed]="collapsed">
-  </st-subm-edit-sidebar>
-
-  <st-subm-check-sidebar *ngIf="isCheckTabActive"
-               [collapsed]="collapsed"
-               [invalidControls]="invalidControls"
-               [serverError]="serverError"
-               (review)="onReviewClick($event)">
-  </st-subm-check-sidebar>
-</aside>
+</div>

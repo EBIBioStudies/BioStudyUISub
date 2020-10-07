@@ -1,0 +1,11 @@
+.sidebar-expanded {
+    width: 240px;
+}
+
+.sidebar-collapsed {
+    width: 60px;
+}
+
+.sidebar-container {
+  min-height: calc(100vh - var(--header-height));
+}

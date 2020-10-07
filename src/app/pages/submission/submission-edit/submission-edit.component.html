@@ -1,22 +1,23 @@
-<div class="st-edit-page" [ngClass]="{'readonly': readonly, 'grayout': isReverting}">
-  <st-subm-sidebar *ngIf="!readonly"
-           (toggle)="sideBarCollapsed=!sideBarCollapsed"
-           [collapsed]="sideBarCollapsed"
-           [sectionForm]="sectionForm">
-  </st-subm-sidebar>
-  <st-subm-navbar *ngIf="sectionForm"
-    class="navbar-subm-fixed navbar-default"
-    [ngClass]="{'collapse-left': !readonly && sideBarCollapsed}"
-    [readonly]="readonly"
-    [accno]="accno"
-    [sectionForm]="sectionForm"
-    (sectionClick)="onSectionClick($event)"
-    (revertClick)="onRevertClick($event)"
-    (submitClick)="onSubmitClick($event)"
-    (editClick)="onEditBackClick($event)">
-  </st-subm-navbar>
+<div class="container-fluid" [ngClass]="{'readonly': readonly, 'grayout': isReverting}">
+  <div class="row">
+    <st-sidebar *ngIf="!readonly" (toggle)="onSidebarToggle($event)">
+      <st-subm-sidebar [collapsed]="isSidebarCollapsed" [sectionForm]="sectionForm"></st-subm-sidebar>
+    </st-sidebar>
+    <main class="col px-0">
+      <st-subm-navbar *ngIf="sectionForm"
+        [ngClass]="{'collapse-left': !readonly && sideBarCollapsed}"
+        [readonly]="readonly"
+        [accno]="accno"
+        [sectionForm]="sectionForm"
+        (sectionClick)="onSectionClick($event)"
+        (revertClick)="onRevertClick($event)"
+        (submitClick)="onSubmitClick($event)"
+        (editClick)="onEditBackClick($event)">
+      </st-subm-navbar>
+    </main>
+  </div>
 
-  <div *ngIf="sectionForm" class="container-fluid">
+  <!-- <div *ngIf="sectionForm" class="container-fluid">
     <aside class="st-submission-edit-body" [ngClass]="{'collapse-left' : !readonly && sideBarCollapsed, 'right-side': !readonly}">
       <div class="navbar-subm-margin">
         <st-subm-validation-errors [errors]="submissionErrors"></st-subm-validation-errors>
@@ -176,5 +177,5 @@
         </p>
       </div>
     </aside>
-  </div>
+  </div> -->
 </div>
