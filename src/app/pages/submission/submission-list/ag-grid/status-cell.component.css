@@ -1,4 +1,4 @@
-.badge-status {
+.flex-center {
   align-items: center;
   display: flex;
 }
@@ -7,6 +7,6 @@
   background-color: #3c739f;
 }
 
-.badge-status-spinner {
+.status-spinner {
   margin-left: 4px;
 }

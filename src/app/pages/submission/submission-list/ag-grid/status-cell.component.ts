@@ -6,10 +6,13 @@ import { SubmissionStatus } from 'app/pages/submission/submission-shared/submiss
   selector: 'st-status-cell',
   template: `
     <div>
-      {{shouldShowAccno ? submissionAccno : ''}}
-      <span *ngIf="isProcessingSubmission" class="badge badge-status badge-primary">
+      <span class="flex-center" *ngIf="shouldShowAccno || isResubmitting">
+        {{submissionAccno}}
+        <i *ngIf="isResubmitting" class="spinner-border spinner-border-sm status-spinner"></i>
+      </span>
+      <span *ngIf="isProcessingSubmission && !this.isResubmitting" class="badge flex-center badge-primary">
         {{processingDisplayName}}
-        <span class="spinner-border spinner-border-sm badge-status-spinner"></span>
+        <i class="spinner-border spinner-border-sm status-spinner"></i>
       </span>
     </div>
   `,
@@ -32,6 +35,10 @@ export class StatusCellComponent implements AgRendererComponent {
 
   get processingDisplayName(): string {
     return SubmissionStatus.PROCESSING.displayValue;
+  }
+
+  get isResubmitting(): boolean {
+    return this.rowData !== undefined && this.rowData.version > 1 && this.isProcessingSubmission;
   }
 
   agInit(params: any): void {
