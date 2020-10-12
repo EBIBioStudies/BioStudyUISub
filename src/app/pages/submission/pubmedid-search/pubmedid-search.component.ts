@@ -37,6 +37,7 @@ export class PubMedIdSearchComponent implements ControlValueAccessor {
   isPreviewPub: boolean = false; // indicates if the retrieved publication's summary preview is on display
   @Input() readonly?: boolean = false;
   @Input() required?: boolean = false;
+  @Input() inputId: string = '';
 
   private isBusy: boolean = false; // indicates a transaction is in progress
   private lastIDfetched: string | undefined; // helps cancel unnecessary search actions triggered by enter key

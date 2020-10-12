@@ -1,3 +1,19 @@
+.sidebar-expanded {
+  padding: 0 0 0 var(--sidebar-expanded-width);
+}
+
+.sidebar-collapsed {
+  padding: 0 0 0 var(--sidebar-collapsed-width);
+}
+
+.text-dashed {
+  border: 1px dashed;
+  border-radius: var(--border-radius-small);
+}
+
+.st-edit-status-message {
+  min-height: 10rem;
+}
 
 .st-edit-form-subsections {
   list-style: none;
@@ -17,10 +33,6 @@
   background-color: #6d9fc1;
   color: #fff;
   text-decoration: underline;
-}
-
-.st-edit-status-message {
-  min-height: 10rem;
 }
 
 .st-submission-edit-body {

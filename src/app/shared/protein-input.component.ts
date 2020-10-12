@@ -21,6 +21,7 @@ export class ProteinInputComponent implements ControlValueAccessor {
   editor = DecoupledEditor;
   proteinSequence = '';
   @Input() readonly: boolean = false;
+  @Input() inputId: string = '';
   private proteinRawSequence = '';
 
   onEditorChange({ editor }: ChangeEvent): void {

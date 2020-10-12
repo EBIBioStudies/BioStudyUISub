@@ -27,6 +27,7 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
   @Input() allowPast?: boolean = undefined;
   inputDateValue: string | undefined;
   @Input() isSmall?: boolean = false;
+  @Input() inputId: string = '';
   @Input() maxDate?: Date = undefined;
   rawDateValue: Date | undefined;
   @Input() readonly?: boolean = false;

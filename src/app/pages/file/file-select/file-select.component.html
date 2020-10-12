@@ -1,5 +1,5 @@
 <div class="input-group">
-  <input type="text" [ngModel]="value" (keydown)="doNothing($event)" (keyup)="doNothing($event)"
+  <input id="{{inputId}}" type="text" [ngModel]="value" (keydown)="doNothing($event)" (keyup)="doNothing($event)"
     class="form-control input-sm" (click)="onInputClick()" readonly #inputbox />
   <span *ngIf="!readonly" class="input-group-btn">
     <button class="btn btn-sm btn-primary" type="button" (uploadFile)="onUploadFile($event)" stUploadFileButton>Upload File</button>

@@ -15,6 +15,7 @@ import { takeUntil } from 'rxjs/operators';
 export class FileSelectComponent implements ControlValueAccessor, OnDestroy {
   isEmpty = false;
   isOpen = false;
+  @Input() inputId = '';
   @Input() readonly = false;
   // tslint:disable-next-line: no-input-rename
   @Input('value')

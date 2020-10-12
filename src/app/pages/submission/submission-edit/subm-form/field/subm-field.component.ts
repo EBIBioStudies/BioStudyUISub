@@ -61,6 +61,10 @@ export class SubmFieldComponent {
     return this.fieldType.helpText;
   }
 
+  get fieldId(): string {
+    return this.fieldControl.control.ref.id;
+  }
+
   get isEmpty(): boolean {
     if (this.fieldType.valueType.isRich()) {
       const fieldValue: RichTextFieldValue = this.fieldControl.control.value as RichTextFieldValue;

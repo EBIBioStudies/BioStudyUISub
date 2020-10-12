@@ -35,7 +35,7 @@ class SubmitOperation {
 @Component({
   selector: 'st-app-subm-edit',
   templateUrl: './submission-edit.component.html',
-  styleUrls: ['./submission-edit.component.css']
+  styleUrls: ['./submission-edit.component.scss']
 })
 export class SubmissionEditComponent implements OnInit, OnDestroy {
   @Input() readonly = false;
@@ -43,13 +43,13 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
   @ViewChild(SubmSidebarComponent) sideBar?: SubmSidebarComponent;
   submitOperation: SubmitOperation = SubmitOperation.UNKNOWN;
   isSidebarCollapsed: boolean = false;
+  method?: string;
+  submissionErrors: SubmValidationErrors = SubmValidationErrors.EMPTY;
 
   private accno?: string;
   private hasJustCreated = false;
-  private method?: string;
   private newReleaseDate: Date = new Date();
   private oldReleaseDate: Date = new Date();
-  private submissionErrors: SubmValidationErrors = SubmValidationErrors.EMPTY;
   private unsubscribe: Subject<void> = new Subject<void>();
 
   constructor(

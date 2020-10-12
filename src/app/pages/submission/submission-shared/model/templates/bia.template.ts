@@ -7,7 +7,7 @@ export const biaTemplate = {
     fieldTypes: [
       {
         name: "Title",
-        icon: "fa-title",
+        icon: "fa-heading",
         valueType: { name: "largetext", minlength: 25 },
         display: "required",
       },

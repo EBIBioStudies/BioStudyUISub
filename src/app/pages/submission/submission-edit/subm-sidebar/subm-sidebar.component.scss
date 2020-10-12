@@ -1,6 +1,11 @@
-.subm-sidebar-content {
-  display: flex;
-  background-color: #6d9fc1;
+.header {
+  height: calc(var(--page-navbar-height) - 1px);
+}
+
+::ng-deep .tab-container {
+  .nav-tabs {
+    border-bottom: 0;
+  }
 }
 
 /* Ripple effect on error count when highlighted */

@@ -6,7 +6,7 @@ export const proteinDesignsTemplate = {
     fieldTypes: [
       {
         name: "Title",
-        icon: "fa-title",
+        icon: "fa-heading",
         display: "required",
         valueType: {
           name: "largetext",

@@ -43,6 +43,7 @@ export class DNAInputComponent implements ControlValueAccessor {
   dnaSequence = '';
   editor = DecoupledEditor;
   @Input() readonly: boolean = false;
+  @Input() inputId: string = '';
   private dnaRawSequence = '';
 
   onEditorChange({ editor }: ChangeEvent): void {

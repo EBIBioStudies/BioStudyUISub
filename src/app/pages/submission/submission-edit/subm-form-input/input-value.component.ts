@@ -22,12 +22,13 @@ import { typeaheadSource } from '../shared/typeahead.utils';
 export class InputValueComponent implements ControlValueAccessor {
   @Input() autosuggest: boolean = true;
   @Input() formControl?: FormControl;
+  @Input() inputId: string = '';
   @Input() isSmall: boolean = true;
   @Input() readonly: boolean = false;
-  @Output() inputValueSelect = new EventEmitter<{ [key: string]: string }>();
-  suggestLength: number;
   @Input() suggestThreshold: number = 0;
   @Input() valueType: ValueType = ValueTypeFactory.DEFAULT;
+  @Output() inputValueSelect = new EventEmitter<{ [key: string]: string }>();
+  suggestLength: number;
   readonly valueTypeNameEnum = ValueTypeName;
 
   private inputValue = '';

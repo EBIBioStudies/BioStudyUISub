@@ -7,7 +7,7 @@ export const defaultTemplate = {
     fieldTypes: [
       {
         name: "Title",
-        icon: "fa-title",
+        icon: "fa-heading",
         display: "required",
         valueType: {
           name: "largetext",

@@ -32,13 +32,14 @@ import { mergeMap, distinctUntilChanged } from 'rxjs/operators';
 export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
   dataSource!: Observable<any>;
   @Input() disabled = false;
+  @Input() inputId: string = '';
   @Input() isSmall: boolean = true; // flag for making the input area the same size as grid fields
   @Input() placeholder = 'URL or prefix:ID';
   @Input() readonly?: boolean = false;
   @Input() required?: boolean = false;
-  @Output() selected: EventEmitter<string> = new EventEmitter<string>();
   @Input() suggestLength: number = 10; // max number of suggested values to be displayed at once
   @Input() suggestThreshold: number = 0; // number of typed characters before suggestions are displayed.
+  @Output() selected: EventEmitter<string> = new EventEmitter<string>();
 
   private inputChanged: Subject<string> = new Subject<string>();
   @ViewChild(NgModel, { static: true })

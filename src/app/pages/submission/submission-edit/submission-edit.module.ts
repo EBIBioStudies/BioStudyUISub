@@ -11,6 +11,7 @@ import { SubmissionResultsModule } from '../submission-results/submission-result
 import { SubmissionSharedModule } from '../submission-shared/submission-shared.module';
 import { Camelcase2LabelPipe } from './shared/camelcase-to-label.pipe';
 import { SubmEditService } from './shared/subm-edit.service';
+import { RemoveHostDirective } from './shared/remove-host.directive';
 import { TextareaAutosizeDirective } from './shared/textarea-autosize.directive';
 import { UniqueValidator } from './shared/unique.directive';
 import { SubmissionEditComponent } from './submission-edit.component';
@@ -62,6 +63,7 @@ import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
     FeatureListComponent,
     Camelcase2LabelPipe,
     UniqueValidator,
+    RemoveHostDirective,
     NativeElementAttachDirective,
     TextareaAutosizeDirective
   ],
