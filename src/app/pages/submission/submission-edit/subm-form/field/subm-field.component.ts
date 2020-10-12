@@ -29,8 +29,7 @@ class ValueLength {
 
 @Component({
   selector: 'st-subm-field',
-  templateUrl: './subm-field.component.html',
-  styleUrls: ['./subm-field.component.css']
+  templateUrl: './subm-field.component.html'
 })
 export class SubmFieldComponent {
   @Input() fieldControl!: FieldControl;
@@ -59,10 +58,6 @@ export class SubmFieldComponent {
 
   get fieldHelpText(): string {
     return this.fieldType.helpText;
-  }
-
-  get fieldId(): string {
-    return this.fieldControl.control.ref.id;
   }
 
   get isEmpty(): boolean {

@@ -6,6 +6,7 @@
         tooltip="{{isOverflow() && !ahead._container ? value : ''}}"
         container="body"
         placement="bottom"
+        [formControl]="formControl"
         [(ngModel)]="value"
         [ngClass]="{'input-sm': isSmall}"
         [readonly]="readonly"
@@ -15,7 +16,8 @@
         [typeaheadScrollable]="true"
         [typeaheadOptionsInScrollableView]="suggestLength"
         (blur)="onBlur()"
-        (keydown)="onKeyDown()"/>
+        (keydown)="onKeyDown()"
+        stBootstrapValidation/>
 
   <textarea *ngSwitchCase="valueTypeNameEnum.largetext"
         id="{{inputId}}"
@@ -24,7 +26,8 @@
         [formControl]="formControl"
         [readonly]="readonly"
         (keyup.enter)="$event.stopPropagation()"
-        (blur)="onBlur()">
+        (blur)="onBlur()"
+        stBootstrapValidation>
   </textarea>
 
   <st-date-input *ngSwitchCase="valueTypeNameEnum.date"

@@ -12,7 +12,7 @@
         (submitClick)="onSubmitClick($event)" (editClick)="onEditBackClick($event)">
       </st-subm-navbar>
 
-      <div class="p-3">
+      <div *ngIf="sectionForm" class="p-3">
         <st-subm-validation-errors [errors]="submissionErrors"></st-subm-validation-errors>
         <div *ngIf="method === 'FILE'" class="alert alert-info">
           <p class="mb-0">

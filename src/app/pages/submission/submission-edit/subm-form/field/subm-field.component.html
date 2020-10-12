@@ -1,4 +1,4 @@
-<div *ngIf="!isReadonly || !isEmpty" class="form-group" [ngClass]="{'was-validated': hasErrors}">
+<div *ngIf="!isReadonly || !isEmpty" class="form-group">
   <label>
     {{fieldName}}
     <i *ngIf="hasHelpText" [tooltip]="fieldHelpText" class="fa fa-question-circle" aria-hidden="true"></i>
@@ -27,7 +27,7 @@
         <i class="fa {{fieldType.icon}}"></i>
       </span>
     </div>
-    <st-input-value [inputId]="fieldId" [valueType]="valueType" [readonly]="isReadonly" [formControl]="fieldControl.control"
+    <st-input-value [valueType]="valueType" [readonly]="isReadonly" [formControl]="fieldControl.control"
       [isSmall]="false" stValidateOnblur stRemoveHostTag>
     </st-input-value>
   </div>

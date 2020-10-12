@@ -3,6 +3,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BsDatepickerConfig, BsDatepickerDirective } from 'ngx-bootstrap/datepicker';
 import { formatDate } from 'ngx-bootstrap/chronos';
 import { isEqualDate, isDefinedAndNotEmpty } from 'app/utils';
+import { CustomFormControl } from 'app/pages/submission/submission-edit/shared/model/custom-form-control.model';
 import { AppConfig } from '../app.config';
 
 @Component({
@@ -32,6 +33,7 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
   rawDateValue: Date | undefined;
   @Input() readonly?: boolean = false;
   @Input() required?: boolean = false;
+  @Input() formControl!: CustomFormControl;
   @ViewChild('dp', { static: true })
   private datepicker!: BsDatepickerDirective;
 
