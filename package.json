@@ -62,6 +62,7 @@
     "@ckeditor/ckeditor5-angular": "1.2.3",
     "@ckeditor/ckeditor5-clipboard": "19.0.1",
     "@fortawesome/fontawesome-free": "5.14.0",
+    "@ng-select/ng-select": "^5.0.8",
     "@rxweb/reactive-form-validators": "2.0.0",
     "ag-grid-angular": "23.2.1",
     "ag-grid-community": "23.2.1",
