@@ -1,39 +1,27 @@
-<aside class="left-side sidebar sidebar-offcanvas"
-       [ngClass]="{'collapse-left' : collapsed}">
-  <div class="menu-toggle">
-    <button class="minimise-btn btn pull-right"
-        [ngClass]="{'inactive': !collapsed}"
-        (click)="onToggle($event)"
-        tooltip="{{collapsed ? 'Expand sidebar' : 'Collapse sidebar'}}"
-        container="body"
-        placement="auto">
-      <i class="fa fa-fw fa-lg" [ngClass]="{'fa-angle-double-left': !collapsed, 'fa-angle-double-right': collapsed}"></i>
-    </button>
-    <tabset [ngClass]="{'invisible': collapsed}">
-      <tab heading="Explorer" active="true"></tab>
-    </tabset>
-  </div>
-  <div class="sidebar-menu">
-    <ul class="st-dir-sidebar-list">
-      <li class="sidebar-item success" [ngClass]="{'active': selectedPath.includes(homeDir.path) }">
-        <a *ngIf="collapsed" (click)="onDirSelect(homeDir)">
-          <i class="fa fa-fw fa-home"></i>
-        </a>
-        <a *ngIf="!collapsed" (click)="onDirSelect(homeDir)">
-          <i class="fa fa-fw fa-home"></i>
-          Home
-        </a>
-      </li>
-    </ul>
-    <ul class="st-dir-sidebar-list">
-      <li *ngFor="let dir of groups" class="sidebar-item success" [ngClass]="{'active': selectedPath.includes(dir.path) }">
-        <a *ngIf="collapsed" (click)="onDirSelect(dir)">
-          <i class="fa fa-fw fa-folder"></i>
-        </a>
-        <a *ngIf="!collapsed" (click)="onDirSelect(dir)">
-          <i class="fa fa-fw fa-folder"></i><span>{{dir.name}}</span>
-        </a>
-      </li>
-    </ul>
-  </div>
-</aside>
+<div class="bg-white border-right pt-2 header">
+  <tabset [ngClass]="{'invisible': collapsed}">
+    <tab heading="Explorer" active="true"></tab>
+  </tabset>
+  <ul class="st-dir-sidebar-list">
+    <li class="sidebar-item success" [ngClass]="{'active': selectedPath.includes(homeDir.path) }">
+      <a *ngIf="collapsed" (click)="onDirSelect(homeDir)">
+        <i class="fa fa-fw fa-home"></i>
+      </a>
+      <a *ngIf="!collapsed" (click)="onDirSelect(homeDir)">
+        <i class="fa fa-fw fa-home"></i>
+        Home
+      </a>
+    </li>
+  </ul>
+  <ul class="st-dir-sidebar-list">
+    <li *ngFor="let dir of groups" class="sidebar-item success"
+      [ngClass]="{'active': selectedPath.includes(dir.path) }">
+      <a *ngIf="collapsed" (click)="onDirSelect(dir)">
+        <i class="fa fa-fw fa-folder"></i>
+      </a>
+      <a *ngIf="!collapsed" (click)="onDirSelect(dir)">
+        <i class="fa fa-fw fa-folder"></i><span>{{dir.name}}</span>
+      </a>
+    </li>
+  </ul>
+</div>

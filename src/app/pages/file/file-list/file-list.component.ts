@@ -15,7 +15,7 @@ import { ProgressCellComponent } from './ag-grid/upload-progress-cell.component'
 @Component({
   selector: 'st-file-list',
   templateUrl: './file-list.component.html',
-  styleUrls: ['./file-list.component.css']
+  styleUrls: ['./file-list.component.scss']
 })
 export class FileListComponent implements OnInit, OnDestroy {
   absolutePath: string = '/user';

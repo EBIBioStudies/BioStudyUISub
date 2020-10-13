@@ -18,9 +18,10 @@ import { NgModule } from '@angular/core';
 import { ProgressCellComponent } from './file-list/ag-grid/upload-progress-cell.component';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from 'app/shared/shared.module';
-import { UserData } from 'app/auth/shared';
+import { ThemeModule } from 'app/theme/theme.module';
 import { UploadFileButtonDirective } from './upload-file-button/upload-file-button.directive';
 import { UploadFileModalComponent } from './upload-file-button/upload-file-modal.component';
+import { UserData } from 'app/auth/shared';
 
 @NgModule({
   imports: [
@@ -32,7 +33,8 @@ import { UploadFileModalComponent } from './upload-file-button/upload-file-modal
       FileTypeCellComponent,
       ProgressCellComponent
     ]),
-    AccordionModule.forRoot()
+    AccordionModule.forRoot(),
+    ThemeModule
   ],
   declarations: [
     FileListComponent,
