@@ -17,6 +17,7 @@ export class SelectInputComponent implements ControlValueAccessor {
   @Input() multiple: boolean = false;
   @Input() isInputGroup: boolean = false;
   @Input() formControl!: FormControl;
+  @Input() readonly: boolean = false;
   selectedValue: string | string[] = '';
 
   addValue(value: string): string {

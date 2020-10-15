@@ -203,7 +203,11 @@ class ValidationRules {
     };
   }
 
-  private static isEmpty(value: string): boolean {
+  private static isEmpty(value: string | string[]): boolean {
+    if (Array.isArray(value)) {
+      return value.length === 0;
+    }
+
     return value === undefined || value.trim().length === 0;
   }
 }
