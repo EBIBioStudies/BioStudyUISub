@@ -1,1 +1,5 @@
-<p>select-input works!</p>
+<ng-select class="select-input auto-grow" [(ngModel)]="selectedValue"
+  [ngClass]="{'grouped': isInputGroup, 'is-invalid': formControl.invalid && formControl.touched}" (change)="onChange"
+  (focus)="onTouched" (change)="onSelectChange($event)" [multiple]="multiple" [addTag]="addValue" appendTo="body">
+  <ng-option *ngFor="let value of values" [value]="value">{{value}}</ng-option>
+</ng-select>

@@ -23,6 +23,7 @@ export class InputValueComponent implements ControlValueAccessor {
   @Input() autosuggest: boolean = true;
   @Input() formControl?: FormControl;
   @Input() isSmall: boolean = true;
+  @Input() isInputGroup: boolean = false;
   @Input() readonly: boolean = false;
   @Output() inputValueSelect = new EventEmitter<{ [key: string]: string }>();
   suggestLength: number;

@@ -1,5 +1,6 @@
+import { filter } from 'rxjs/operators';
 import { PtAttribute, PageTabSection } from './pagetab.model';
-import { isNotDefinedOrEmpty, isDefinedAndNotEmpty, isStringDefined } from 'app/utils';
+import { isStringEmpty, isDefinedAndNotEmpty, isStringDefined } from 'app/utils';
 
 export interface Dictionary<T> { [key: string]: T | undefined }
 export type Nullable<T> = T | null | undefined;
@@ -13,7 +14,7 @@ export function getOrganizationFromSubsection(section, orgName): any {
 
   return sections.find((sectionItem) => (
     sectionItem.typeName === 'Organization' &&
-    sectionItem.data.attributes.some((attribute) => attribute.value === orgName )
+    sectionItem.data.attributes.some((attribute) => attribute.value === orgName)
   )) || {};
 }
 
@@ -23,6 +24,7 @@ export function authorsToContacts(sections: PageTabSection[] = []): PageTabSecti
   };
   const isAuthor = isEqualTo('author');
   const isName = isEqualTo('name');
+  const orgs = new Organisations();
 
   const affiliations: Dictionary<string> =
     sections
@@ -34,29 +36,14 @@ export function authorsToContacts(sections: PageTabSection[] = []): PageTabSecti
           nameAttribute = section.attributes.find((attribute) => attribute.name && isName(attribute.name)) || { value: '' };
         }
 
-        result[section.accno!] = nameAttribute.value;
+        result[section.accno!] = nameAttribute.value as string;
 
         return result;
       }, {} as Dictionary<string>);
 
   const contacts = sections
     .filter((section) => section.type && isAuthor(section.type))
-    .map(a =>
-      ({
-        type: 'Contact',
-        attributes: (a.attributes || [])
-          .map(attr => {
-            if (isAffiliation(attr.name)) {
-              const value = (attr.reference || attr.isReference) && isDefinedAndNotEmpty(attr.value)
-                ? (affiliations[attr.value!] || attr.value)
-                : attr.value;
-
-              return {name: 'Organisation', value} as PtAttribute;
-            }
-
-            return attr;
-          })
-      }) as PageTabSection);
+    .map((author) => ({ type: 'Contact', attributes: orgs.referencesToOrg(author, affiliations) }) as PageTabSection);
 
   return sections
     .filter((section) => section.type && !isAuthor(section.type) && !isAffiliation(section.type))
@@ -78,12 +65,49 @@ class Organisations {
     });
   }
 
-  toReference(attr: PtAttribute): PtAttribute {
-    if (isNotDefinedOrEmpty(attr.value)) {
-      return { name: 'affiliation', value: attr.value } as PtAttribute;
+  orgToReferences(contact: PageTabSection): PtAttribute[] {
+    const attributes: PtAttribute[] = contact.attributes || [];
+    const isOrganisation = isEqualTo('organisation');
+    const orgAttribute = attributes.find((attribute) => isOrganisation(attribute.name));
+
+    if (orgAttribute === undefined) {
+      return attributes;
     }
 
-    const orgRef = this.refFor(attr.value!, attr.accno!);
+    const attributesWithoutOrg = attributes.filter((attribute) => !isOrganisation(attribute.name));
+    const orgAttributeValue = Array.isArray(orgAttribute.value) ? orgAttribute.value : [orgAttribute.value];
+
+    const references = orgAttributeValue.map((value) => {
+      const organization = getOrganizationFromSubsection(contact, value);
+
+      return this.toReference(value, organization.accno)
+    });
+
+    return [...attributesWithoutOrg, ...references];
+  }
+
+  referencesToOrg(author: PageTabSection, affiliations: Dictionary<string>): PtAttribute[] {
+    const attributes: PtAttribute[] = author.attributes || [];
+    const isAffiliation = isEqualTo('affiliation');
+    const isAffiliationWithValidReference = (attribute) => isAffiliation(attribute.name) && (attribute.reference || attribute.isReference);
+    const affiliationAttributes = attributes.filter(isAffiliationWithValidReference);
+    const otherAttributes = attributes.filter((attribute) => !isAffiliation(attribute.name));
+
+    const referenceValues = affiliationAttributes.map((attribute) => {
+      const attributeValue = attribute.value as string;
+
+      return affiliations[attributeValue] || attributeValue;
+    });
+
+    return [...otherAttributes, { name: 'Organisation', value: referenceValues }];
+  }
+
+  private toReference(orgValue: string | undefined, accno: string): PtAttribute {
+    if (orgValue === undefined || isStringEmpty(orgValue)) {
+      return { name: 'affiliation', value: orgValue } as PtAttribute;
+    }
+
+    const orgRef = this.refFor(orgValue, accno!);
     return { name: 'affiliation', value: orgRef, reference: true } as PtAttribute;
   }
 
@@ -128,21 +152,12 @@ class Organisations {
 
 export function contactsToAuthors(sections: PageTabSection[] = []): PageTabSection[] {
   const isContact = isEqualTo('contact');
-  const isOrganisation = isEqualTo('organisation');
   const orgs = new Organisations();
 
   const contacts: PageTabSection[] = sections.filter((section) => isContact(section.type!));
-  const authors: PageTabSection[] = contacts.map(contact => ({
+  const authors: PageTabSection[] = contacts.map((contact) => ({
       type: 'Author',
-      attributes: (contact.attributes || [])
-        .map(attr => {
-          if (isOrganisation(attr.name!)) {
-            const organization = getOrganizationFromSubsection(contact, attr.value);
-
-            return orgs.toReference({ ...attr, accno: organization.accno });
-          }
-          return attr;
-        })
+      attributes: orgs.orgToReferences(contact)
     }) as PageTabSection);
 
   const affiliations: PageTabSection[] = orgs.list().map(org =>

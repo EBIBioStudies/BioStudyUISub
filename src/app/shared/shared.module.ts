@@ -11,6 +11,7 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { ContainerRootComponent } from './container-root.component';
 import { ContainerMdComponent } from './container-md.component';
 import { ORCIDInputBoxComponent } from './orcid-input-box/orcid-input-box.component';
@@ -30,6 +31,7 @@ import { SelectInputComponent } from './select-input/select-input.component';
 @NgModule({
   imports: [
     CommonModule,
+    NgSelectModule,
     FormsModule,
     TypeaheadModule,
     TooltipModule,
@@ -86,7 +88,8 @@ import { SelectInputComponent } from './select-input/select-input.component';
     DateInputComponent,
     DNAInputComponent,
     ProteinInputComponent,
-    PluralPipe
+    PluralPipe,
+    SelectInputComponent
   ],
   entryComponents: [
     ConfirmDialogComponent

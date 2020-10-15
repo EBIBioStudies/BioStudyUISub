@@ -1,5 +1,5 @@
 <div [ngSwitch]="valueType.name">
-  <input *ngSwitchCase="[valueTypeNameEnum.text, valueTypeNameEnum.select].includes(valueType.name) ? valueType.name : ''"
+  <input *ngSwitchCase="valueTypeNameEnum.text"
       type="text"
       class="form-control"
       tooltip="{{isOverflow() && !ahead._container ? value : ''}}"
@@ -24,6 +24,13 @@
       (keyup.enter)="$event.stopPropagation()"
       (blur)="onBlur()">
   </textarea>
+
+  <st-select-input *ngSwitchCase="valueTypeNameEnum.select"
+    [formControl]="formControl"
+    [values]="valueType.values"
+    [multiple]="valueType.multiple"
+    [isInputGroup]="isInputGroup">
+  </st-select-input>
 
   <st-date-input *ngSwitchCase="valueTypeNameEnum.date"
       [isSmall]="isSmall"
