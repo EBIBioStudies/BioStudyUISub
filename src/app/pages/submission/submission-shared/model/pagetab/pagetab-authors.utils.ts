@@ -89,17 +89,22 @@ class Organisations {
   referencesToOrg(author: PageTabSection, affiliations: Dictionary<string>): PtAttribute[] {
     const attributes: PtAttribute[] = author.attributes || [];
     const isAffiliation = isEqualTo('affiliation');
-    const isAffiliationWithValidReference = (attribute) => isAffiliation(attribute.name) && (attribute.reference || attribute.isReference);
-    const affiliationAttributes = attributes.filter(isAffiliationWithValidReference);
+    const isAffiliationWithReference = (attribute) => isAffiliation(attribute.name) && (attribute.reference || attribute.isReference);
+    const affiliationAttributes = attributes.filter((attribute) => isAffiliation(attribute.name));
     const otherAttributes = attributes.filter((attribute) => !isAffiliation(attribute.name));
 
     const referenceValues = affiliationAttributes.map((attribute) => {
+      const isReference: boolean = Boolean(attribute.reference || attribute.isReference);
       const attributeValue = attribute.value as string;
 
-      return affiliations[attributeValue] || attributeValue;
+      return isReference ? affiliations[attributeValue] || attributeValue : attributeValue;
     });
 
-    return [...otherAttributes, { name: 'Organisation', value: referenceValues }];
+    if (referenceValues.length > 0) {
+      return [...otherAttributes, { name: 'Organisation', value: referenceValues }];
+    }
+
+    return otherAttributes;
   }
 
   private toReference(orgValue: string | undefined, accno: string): PtAttribute {

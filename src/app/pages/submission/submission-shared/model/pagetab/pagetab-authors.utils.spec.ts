@@ -82,7 +82,7 @@ describe('AuthorsAndAffiliations:', () => {
             },
             {
               name: 'Organisation',
-              value: 'Some organisation'
+              value: ['Some organisation']
             }
           ]
         },
