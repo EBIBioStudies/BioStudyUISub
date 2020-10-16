@@ -2,14 +2,17 @@ import { Observable } from 'rxjs';
 import { NgZone, Injectable } from '@angular/core';
 import { ServerSentEventService } from 'app/shared/server-sent-event.service';
 import { isStringDefined } from 'app/utils';
+import { PlatformLocation } from '@angular/common';
 
 @Injectable()
 export class SubmissionStatusService {
   eventSource: EventSource | undefined;
 
-  constructor(private zone: NgZone, private sseService: ServerSentEventService) {
+  constructor(private zone: NgZone, private sseService: ServerSentEventService, platformLocation: PlatformLocation) {
     try {
-      this.eventSource = this.sseService.getEventSource('/subm-status');
+      const baseHref: string = platformLocation.getBaseHrefFromDOM();
+
+      this.eventSource = this.sseService.getEventSource(`${baseHref}subm-status`);
     } catch (error) {
       // tslint:disable-next-line: no-console
       console.error('get-subm-status', 'SubmissionStatusService: could not stablish event source connection', error);
