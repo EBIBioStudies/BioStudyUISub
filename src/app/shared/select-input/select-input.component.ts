@@ -1,5 +1,6 @@
 import { Component, forwardRef, Input, ViewEncapsulation } from "@angular/core";
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl, NgSelectOption } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl } from '@angular/forms';
+import { isNotDefinedOrEmpty } from 'app/utils';
 
 @Component({
   selector: 'st-select-input',
@@ -36,11 +37,17 @@ export class SelectInputComponent implements ControlValueAccessor {
     this.onTouched = fn;
   }
 
-  writeValue(obj: any): void {
-    if (this.multiple && !Array.isArray(obj)) {
-      this.selectedValue = [obj];
-    } else {
-      this.selectedValue = obj;
+  writeValue(value: string | string[]): void {
+    if (!this.multiple && !isNotDefinedOrEmpty(value as string)) {
+      this.selectedValue = value;
+    }
+
+    if (this.multiple && !Array.isArray(value) && !isNotDefinedOrEmpty(value)) {
+      this.selectedValue = [value];
+    }
+
+    if (this.multiple && value.length > 0) {
+      this.selectedValue = (value as string[]).filter((valueItem) => !isNotDefinedOrEmpty(valueItem));
     }
   }
 
