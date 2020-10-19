@@ -110,9 +110,7 @@ export class InputValueComponent implements ControlValueAccessor {
       return of([]);
     }
 
-    return typeaheadSource(() => {
-      return this.autosuggestValues();
-    }, this.valueChanges$);
+    return typeaheadSource(() => this.autosuggestValues(), this.valueChanges$);
   }
 
   writeValue(value: any): void {

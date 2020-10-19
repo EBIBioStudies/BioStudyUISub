@@ -63,7 +63,7 @@
                     popover="{{row.hasErrorsAt(column.id) ? row.errorsAt(column.id) : ''}}"
                     triggers="focus"
                     [valueType]="column.valueType"
-                    [readonly]="readonly || column.isReadonly"
+                    [readonly]="isReadOnly || column.isReadonly"
                     [formControl]="row.cellControlAt(column.id).control"
                     [autosuggestSource]="featureForm.cellValuesTypeaheadFunc(rowIdx, column.id)"
                     [autosuggest]="column.autosuggest"

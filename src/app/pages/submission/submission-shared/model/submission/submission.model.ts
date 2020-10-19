@@ -142,6 +142,10 @@ export class Feature {
     return this.featureRows.list();
   }
 
+  get readonly(): boolean {
+    return this.type.displayType.isReadonly;
+  }
+
   get singleRow(): boolean {
     return this.type.singleRow;
   }
@@ -461,6 +465,10 @@ export class Section implements SubmissionSection {
 
   get displayName(): string {
     return `${this.type.name} ${this.type.sectionExample}`;
+  }
+
+  get readonly(): boolean {
+    return this.type.displayType.isReadonly;
   }
 
   isRequired(): boolean {
