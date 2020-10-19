@@ -39,11 +39,13 @@ class Protocols {
   }
 
   toReference(attr: PtAttribute): PtAttribute {
-    if (isNotDefinedOrEmpty(attr.value) || attr.name !== 'Protocol') {
+    const attributeValue: string = attr.value as string;
+
+    if (isNotDefinedOrEmpty(attributeValue) || attr.name !== 'Protocol') {
       return { name: attr.name, value: attr.value } as PtAttribute;
     }
 
-    const refKeyForValue = this.getRefKeyByValue(attr.value);
+    const refKeyForValue = this.getRefKeyByValue(attributeValue);
     return {
       name: 'Protocol',
       value: refKeyForValue,
@@ -69,7 +71,7 @@ export function submissionToPageTabProtocols(pageTabSections: PageTabSection[]):
   const studyProtocolToReference = studyProtocols.map((studyProtocol, index) => {
     const attributes = studyProtocol.attributes;
     const nameAttribute = attributes!.find((attribute) => attribute.name === 'Name') || {};
-    const studyProtocolNameValue: string = nameAttribute.value || '';
+    const studyProtocolNameValue: string = nameAttribute.value as string || '';
 
     return (
       {
@@ -96,7 +98,7 @@ export function pageTabToSubmissionProtocols(pageTabSections: PageTabSection[]):
   studyProtocols.forEach((studyProtocol) => {
     const attributes = studyProtocol.attributes;
     const nameAttribute = attributes!.find((attribute) => attribute.name === 'Name') || {};
-    const studyProtocolNameValue: string = nameAttribute.value || '';
+    const studyProtocolNameValue: string = nameAttribute.value as string || '';
     const studyProtocolAccno: string = studyProtocol.accno || '';
 
     protocols.refFor(studyProtocolNameValue, studyProtocolAccno);
@@ -106,11 +108,12 @@ export function pageTabToSubmissionProtocols(pageTabSections: PageTabSection[]):
     const attributes = componentProtocol.attributes || [];
     const protocolAttribute = attributes!.find((attribute) => attribute.name === 'Protocol') || {};
     const finalAttributes = attributes!.filter((attribute) => attribute.name !== 'Protocol') || [];
+    const protocolAttributeValue = protocolAttribute.value as string;
 
     if (protocolAttribute) {
       finalAttributes.push({
         name: 'Protocol',
-        value: protocols.getRefValueByKey(protocolAttribute.value)
+        value: protocols.getRefValueByKey(protocolAttributeValue)
       } as PtAttribute);
     }
 

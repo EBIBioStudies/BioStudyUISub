@@ -36,20 +36,22 @@
       (mouseenter)="onMouseEnterRow(rowIdx)"
       (mouseleave)="onMouseLeaveRow()">
       <div *ngIf="!readonly || !row.isEmpty" class="row">
-        <div class="cell heading-cell row-heading col-xs-1 col-md-1 text-center">
-          <i class="fas fa-grip-vertical grip" [ngClass]="{ 'grip-visible': rowIdx === hoveredRowIndex && isSortable }"></i>
-          <span container="body" [tooltip]="featureForm.canRemoveRow() ? '' : 'The table must contain one row at least'">
-            <button class="btn btn-danger btn-sm" type="button"
-                [ngClass]="{'invisible': readonly || featureForm.isReadonly}"
-                [disabled]="!featureForm.canRemoveRow()"
-                (click)="featureForm.removeRow(rowIdx)"
-                [tooltip]="featureForm.canRemoveRow ? 'Delete ' + featureForm.featureTypeName.toLowerCase() + ' ' + (rowIdx + 1) : ''"
-                placement="bottom"
-                container="body">
-              <i class="far fa-trash-alt"></i>
-            </button>
-          </span>
-          {{rowIdx+1}}
+        <div class="cell heading-cell col-xs-1 col-md-1">
+          <div class="row-heading">
+            <i class="fas fa-grip-vertical grip" [ngClass]="{ 'grip-visible': rowIdx === hoveredRowIndex && isSortable }"></i>
+            <span container="body" [tooltip]="featureForm.canRemoveRow() ? '' : 'The table must contain one row at least'">
+              <button class="btn btn-danger btn-sm" type="button"
+                  [ngClass]="{'invisible': readonly || featureForm.isReadonly}"
+                  [disabled]="!featureForm.canRemoveRow()"
+                  (click)="featureForm.removeRow(rowIdx)"
+                  [tooltip]="featureForm.canRemoveRow ? 'Delete ' + featureForm.featureTypeName.toLowerCase() + ' ' + (rowIdx + 1) : ''"
+                  placement="bottom"
+                  container="body">
+                <i class="far fa-trash-alt"></i>
+              </button>
+            </span>
+            {{rowIdx+1}}
+          </div>
         </div>
         <div class="cell body-cell column-entry col-xs-3 col-md-2" *ngFor="let column of columns">
           <div [ngClass]="{'readonly': column.isReadonly || featureForm.isReadonly,
@@ -65,6 +67,7 @@
                     [formControl]="row.cellControlAt(column.id).control"
                     [autosuggestSource]="featureForm.cellValuesTypeaheadFunc(rowIdx, column.id)"
                     [autosuggest]="column.autosuggest"
+                    [isSmall]="false"
                     (inputValueSelect)="onInputValueSelect($event, rowIdx)"
                     stNativeElementAttach
                     stValidateOnblur>

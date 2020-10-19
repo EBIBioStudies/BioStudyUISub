@@ -209,7 +209,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
 
     confirmObservable
       .pipe(
-        switchMap(() => this.confirmReleaseDateOverride()),
+        // switchMap(() => this.confirmReleaseDateOverride()),
         switchMap(() => this.submEditService.submit()),
         takeUntil(this.unsubscribe)
       )

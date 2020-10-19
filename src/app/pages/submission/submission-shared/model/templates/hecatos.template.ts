@@ -252,6 +252,7 @@ export const hecatosTemplate = {
             name: "Organisation",
             valueType: {
               name: "select",
+              multiple: true,
               values: [
                 "ETH Zürich",
                 "European Bioinformatics Institute (EMBL-EBI)",

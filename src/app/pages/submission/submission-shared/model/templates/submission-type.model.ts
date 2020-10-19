@@ -206,10 +206,12 @@ export class DateValueType extends ValueType {
 
 export class SelectValueType extends ValueType {
   values: string[];
+  multiple: boolean = false;
 
   constructor(data: Partial<SelectValueType> = {}) {
     super(ValueTypeName.select);
     this.values = data.values || [];
+    this.multiple = data.multiple || false;
   }
 
   setValues(values: string[]): void {

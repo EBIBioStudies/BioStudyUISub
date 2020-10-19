@@ -70,7 +70,7 @@ export interface PtAttribute {
   name?: string;
   reference?: boolean;
   valqual?: PtNameAndValue[];
-  value?: string;
+  value?: string | string[];
 }
 
 export interface PtLink {

@@ -73,6 +73,7 @@ export const biaTemplate = {
             name: "Organisation",
             valueType: {
               name: "select",
+              multiple: true,
               values: [
                 "Australia Bioinformatics Resource (EMBL-ABR)",
                 "Beijing Genomics Institute (BGI)",

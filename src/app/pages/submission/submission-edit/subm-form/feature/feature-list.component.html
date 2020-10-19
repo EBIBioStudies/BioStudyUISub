@@ -55,6 +55,7 @@
                   [readonly]="readonly || column.isReadonly || featureForm.isReadonly"
                   [formControl]="cell.control"
                   [autosuggestSource]="featureForm.cellValuesTypeaheadFunc(column.id)"
+                  [isSmall]="false"
                   stNativeElementAttach
                   stValidateOnblur>
           </st-input-value>
