@@ -38,16 +38,19 @@ export class SelectInputComponent implements ControlValueAccessor {
   }
 
   writeValue(value: string | string[]): void {
-    if (!this.multiple && !isNotDefinedOrEmpty(value as string)) {
-      this.selectedValue = value;
+    const filterEmptyValues = (collection) => collection.filter((item) => !isNotDefinedOrEmpty(item));
+    const formattedValue = Array.isArray(value) ? filterEmptyValues(value) : value;
+
+    if (!this.multiple && !Array.isArray(formattedValue) && !isNotDefinedOrEmpty(formattedValue)) {
+      this.selectedValue = formattedValue;
     }
 
-    if (this.multiple && !Array.isArray(value) && !isNotDefinedOrEmpty(value)) {
-      this.selectedValue = [value];
+    if (this.multiple && !Array.isArray(formattedValue) && !isNotDefinedOrEmpty(formattedValue)) {
+      this.selectedValue = [formattedValue];
     }
 
-    if (this.multiple && value.length > 0) {
-      this.selectedValue = (value as string[]).filter((valueItem) => !isNotDefinedOrEmpty(valueItem));
+    if (this.multiple && Array.isArray(value) && formattedValue.length > 0) {
+      this.selectedValue = formattedValue;
     }
   }
 

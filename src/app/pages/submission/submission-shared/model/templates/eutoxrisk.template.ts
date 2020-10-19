@@ -162,6 +162,7 @@ export const euToxRiskTemplate = {
             name: "Organisation",
             valueType: {
               name: "select",
+              multiple: true,
               values: [
                 "BASF",
                 "BioDetection Systems B.V.",
