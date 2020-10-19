@@ -14,7 +14,8 @@
       [typeaheadScrollable]="true"
       [typeaheadOptionsInScrollableView]="suggestLength"
       (blur)="onBlur()"
-      (keydown)="onKeyDown()"/>
+      (keydown)="onKeyDown()"
+      [disabled]="readonly" />
 
   <textarea *ngSwitchCase="valueTypeNameEnum.largetext"
       class="form-control"

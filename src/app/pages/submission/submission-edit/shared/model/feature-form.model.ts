@@ -103,7 +103,7 @@ export class FeatureForm extends FormBase {
   }
 
   get isReadonly(): boolean {
-    return this.feature.type.displayType.isReadonly;
+    return this.feature.readonly;
   }
 
   get icon(): string {
