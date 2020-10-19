@@ -40,7 +40,7 @@ export class PageTabToSubmissionService {
 
   private findSubmissionTemplateName(pageTab: PageTab): string {
     const attachToAttributes: PtAttribute[] = findAttribute(pageTab, AttrExceptions.attachToAttr);
-    const attachToValue: string[] = attachToAttributes.map((attribute) => attribute.value || '');
+    const attachToValue: string[] = attachToAttributes.map((attribute) => attribute.value as string || '');
 
     if (attachToValue.length === 0) {
       return DEFAULT_TEMPLATE_NAME;

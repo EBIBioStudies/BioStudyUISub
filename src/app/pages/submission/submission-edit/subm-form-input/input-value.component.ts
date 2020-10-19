@@ -24,6 +24,7 @@ export class InputValueComponent implements ControlValueAccessor {
   @Input() autosuggest: boolean = true;
   @Input() formControl!: CustomFormControl;
   @Input() isSmall: boolean = true;
+  @Input() isInputGroup: boolean = false;
   @Input() readonly: boolean = false;
   @Input() suggestThreshold: number = 0;
   @Input() valueType: ValueType = ValueTypeFactory.DEFAULT;
@@ -114,9 +115,7 @@ export class InputValueComponent implements ControlValueAccessor {
       return of([]);
     }
 
-    return typeaheadSource(() => {
-      return this.autosuggestValues();
-    }, this.valueChanges$);
+    return typeaheadSource(() => this.autosuggestValues(), this.valueChanges$);
   }
 
   writeValue(value: any): void {

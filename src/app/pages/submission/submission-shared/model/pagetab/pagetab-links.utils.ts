@@ -21,7 +21,7 @@ export class LinksUtils {
    * @returns PageTab-ready link object.
    */
   static toTyped(attributes: PtAttribute[]): PtLink {
-    const pointer: string = (attributes.find(at => at.name === POINTER_ATTR) || { value: '' }).value || '';
+    const pointer: string = (attributes.find(at => at.name === POINTER_ATTR) || { value: '' }).value as string || '';
     const typeAttr = { name: TYPE_ATTR, value: '' };
     const isUrl = this.URL_REGEXP.test(pointer);
 
@@ -62,7 +62,7 @@ export class LinksUtils {
 
     const typeAttr = attrs.find(at => at.name ===  TYPE_ATTR);
 
-    if (typeAttr !== undefined && isDefinedAndNotEmpty(typeAttr.value)) {
+    if (typeAttr !== undefined && isDefinedAndNotEmpty(typeAttr.value as string)) {
       pointerAttr.value = typeAttr.value + ':' + linkObj.url;
     }
 

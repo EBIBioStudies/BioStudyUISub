@@ -206,10 +206,12 @@ export class DateValueType extends ValueType {
 
 export class SelectValueType extends ValueType {
   values: string[];
+  multiple: boolean = false;
 
   constructor(data: Partial<SelectValueType> = {}) {
     super(ValueTypeName.select);
     this.values = data.values || [];
+    this.multiple = data.multiple || false;
   }
 
   setValues(values: string[]): void {
@@ -453,11 +455,18 @@ export class SubmissionType extends TypeBase {
   // tslint:disable-next-line: variable-name
   constructor(_name: string, typeObj: SubmissionType, scope?: TypeScope<TypeBase>) {
     super('Submission', true, scope);
+
     if (typeObj.sectionType === undefined) {
       throw Error('sectionType is not defined in the template');
     }
-    this.sectionType = new SectionType(typeObj.sectionType.name, typeObj.sectionType, new TypeScope<TypeBase>(),
-      true, DisplayType.create(typeObj.display));
+
+    this.sectionType = new SectionType(
+      typeObj.sectionType.name,
+      typeObj.sectionType,
+      new TypeScope<TypeBase>(),
+      true,
+      DisplayType.create(typeObj.display)
+    );
   }
 
   static defaultType(): SubmissionType {

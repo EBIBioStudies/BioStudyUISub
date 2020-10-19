@@ -8,8 +8,7 @@
   padding: 0 0.5vw;
 }
 
-/* Heading row */
-.cell.row-heading {
+.row-heading {
   display: flex;
   align-items: center;
   justify-content: space-around;

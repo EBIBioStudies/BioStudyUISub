@@ -6,7 +6,7 @@ import {
   IAfterGuiAttachedParams
 } from 'ag-grid-community/main';
 import { AgFilterComponent } from 'ag-grid-angular';
-import { DateInputComponent } from 'app/shared/date-input.component';
+import { DateInputComponent } from 'app/shared/date-input/date-input.component';
 
 class DateRange {
   constructor(

@@ -17,6 +17,7 @@
         [typeaheadOptionsInScrollableView]="suggestLength"
         (blur)="onBlur()"
         (keydown)="onKeyDown()"
+        [disabled]="readonly"
         stBootstrapValidation/>
 
   <textarea *ngSwitchCase="valueTypeNameEnum.largetext"
@@ -29,6 +30,14 @@
         (blur)="onBlur()"
         stBootstrapValidation>
   </textarea>
+
+  <st-select-input *ngSwitchCase="valueTypeNameEnum.select"
+    [formControl]="formControl"
+    [values]="valueType.values"
+    [multiple]="valueType.multiple"
+    [readonly]="readonly"
+    [isInputGroup]="isInputGroup">
+  </st-select-input>
 
   <st-date-input *ngSwitchCase="valueTypeNameEnum.date"
         [inputId]="inputId"

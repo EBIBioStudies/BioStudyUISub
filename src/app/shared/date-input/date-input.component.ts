@@ -4,7 +4,7 @@ import { BsDatepickerConfig, BsDatepickerDirective } from 'ngx-bootstrap/datepic
 import { formatDate } from 'ngx-bootstrap/chronos';
 import { isEqualDate, isDefinedAndNotEmpty } from 'app/utils';
 import { CustomFormControl } from 'app/pages/submission/submission-edit/shared/model/custom-form-control.model';
-import { AppConfig } from '../app.config';
+import { AppConfig } from 'app/app.config';
 
 @Component({
   selector: 'st-date-input',

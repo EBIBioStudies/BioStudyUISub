@@ -1,10 +1,10 @@
 <nav class="navbar navbar-light border-bottom page-navbar sticky-top">
   <div class="mr-auto">
     <a *ngIf="isTemp" routerLink="/submissions/draft">
-      <i class="fa fa-clock-o" aria-hidden="true"></i> Draft
+      <i class="fa fa-clock-o" aria-hidden="true"></i> Drafts
     </a>
     <a *ngIf="!isTemp" routerLink="/submissions">
-      <i class="fa fa-database" aria-hidden="true"></i> Submitted
+      <i class="fa fa-database" aria-hidden="true"></i> Submissions
     </a>
     <span *ngFor="let secForm of sectionPath; let idx = index; let last = last;">
       &nbsp;<i class="fa fa-angle-right font-bold"></i>&nbsp;

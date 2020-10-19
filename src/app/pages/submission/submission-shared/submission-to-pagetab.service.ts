@@ -23,7 +23,13 @@ const isFileType = (type: string) => isEqualIgnoringCase(type, 'file');
 const isLinkType = (type: string) => isEqualIgnoringCase(type, 'link');
 const isLibraryFileType = (type: string) => isEqualIgnoringCase(type, 'libraryfile');
 const isKeywordType = (type: string) => isEqualIgnoringCase(type, 'keywords');
-const isEmptyAttr = (attr: PtAttribute) => isNotDefinedOrEmpty(attr.value);
+const isEmptyAttr = (attr: PtAttribute) => {
+  if (Array.isArray(attr.value)) {
+    return attr.value.length === 0;
+  }
+
+  return isNotDefinedOrEmpty(attr.value)
+};
 
 @Injectable()
 export class SubmissionToPageTabService {

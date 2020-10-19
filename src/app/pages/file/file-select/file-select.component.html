@@ -2,7 +2,8 @@
   <input id="{{inputId}}" type="text" [ngModel]="value" (keydown)="doNothing($event)" (keyup)="doNothing($event)"
     class="form-control input-sm" (click)="onInputClick()" readonly #inputbox />
   <span *ngIf="!readonly" class="input-group-btn">
-    <button class="btn btn-sm btn-primary" type="button" (uploadFile)="onUploadFile($event)" stUploadFileButton>Upload File</button>
+    <button class="btn btn-primary" type="button" (uploadFile)="onUploadFile($event)" stUploadFileButton>Upload
+      File</button>
   </span>
   <st-file-tree-dropdown *ngIf="!readonly && isOpen" [targetElement]="inputbox" (fileSelect)="onFileSelect($event)"
     (fileTreeDropdownClose)="onFileDropdownClose($event)">
