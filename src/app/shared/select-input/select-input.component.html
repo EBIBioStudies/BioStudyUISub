@@ -1,5 +1,5 @@
-<ng-select class="select-input auto-grow" [(ngModel)]="selectedValue"
-  [ngClass]="{'grouped': isInputGroup, 'is-invalid': formControl.invalid && formControl.touched}" (change)="onChange"
+<ng-select class="select-input" [(ngModel)]="selectedValue"
+  [ngClass]="{'is-grouped': isInputGroup, 'is-invalid': formControl.invalid && formControl.touched}" (change)="onChange"
   (focus)="onTouched" (change)="onSelectChange($event)" [multiple]="multiple" [addTag]="addValue" [readonly]="readonly"
   appendTo="body">
   <ng-option *ngFor="let value of values" [value]="value">{{value}}</ng-option>

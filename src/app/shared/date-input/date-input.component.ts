@@ -9,7 +9,7 @@ import { AppConfig } from 'app/app.config';
 @Component({
   selector: 'st-date-input',
   templateUrl: './date-input.component.html',
-  styleUrls: ['./date-input.component.css'],
+  styleUrls: ['./date-input.component.scss'],
   providers: [{
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => DateInputComponent),
@@ -34,6 +34,7 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
   @Input() readonly?: boolean = false;
   @Input() required?: boolean = false;
   @Input() formControl!: CustomFormControl;
+  @Input() isInputGroup: boolean = false;
   @ViewChild('dp', { static: true })
   private datepicker!: BsDatepickerDirective;
 

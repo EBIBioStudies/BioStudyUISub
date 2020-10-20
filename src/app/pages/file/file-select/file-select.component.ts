@@ -7,7 +7,7 @@ import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'st-file-select',
   templateUrl: './file-select.component.html',
-  styleUrls: ['./file-select.component.css'],
+  styleUrls: ['./file-select.component.scss'],
   providers: [
     {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => FileSelectComponent), multi: true}
   ]
@@ -17,6 +17,7 @@ export class FileSelectComponent implements ControlValueAccessor, OnDestroy {
   isOpen = false;
   @Input() inputId = '';
   @Input() readonly = false;
+  @Input() isInputGroup: boolean = false;
   // tslint:disable-next-line: no-input-rename
   @Input('value')
   private selected = '';

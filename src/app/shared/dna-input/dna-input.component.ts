@@ -26,7 +26,7 @@ const dnaColorScheme = [
 @Component({
   selector: 'st-dna-input',
   templateUrl: './dna-input.component.html',
-  styleUrls: ['./dna-input.component.css'],
+  styleUrls: ['./dna-input.component.scss'],
   providers: [{
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => DNAInputComponent),
@@ -43,6 +43,7 @@ export class DNAInputComponent implements ControlValueAccessor {
   dnaSequence = '';
   editor = DecoupledEditor;
   @Input() readonly: boolean = false;
+  @Input() isInputGroup: boolean = false;
   @Input() inputId: string = '';
   private dnaRawSequence = '';
 

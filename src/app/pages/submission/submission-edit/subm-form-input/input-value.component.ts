@@ -14,6 +14,7 @@ import { CustomFormControl } from '../shared/model/custom-form-control.model';
 @Component({
   selector: 'st-input-value',
   templateUrl: './input-value.component.html',
+  styleUrls: ['./input-value.component.scss'],
   providers: [{
     provide: NG_VALUE_ACCESSOR,
     useExisting: InputValueComponent,

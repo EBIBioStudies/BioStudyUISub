@@ -1,7 +1,7 @@
 <ckeditor
   id="{{inputId}}"
   [(ngModel)]="proteinSequence"
-  [ngClass]="{'is-readonly': readonly}"
+  [ngClass]="{'is-readonly': readonly, 'is-grouped': isInputGroup}"
   [editor]="editor"
   [config]="config"
   [disabled]="readonly"

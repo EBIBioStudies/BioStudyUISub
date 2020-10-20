@@ -7,7 +7,7 @@ import viewToPlainText from '@ckeditor/ckeditor5-clipboard/src/utils/viewtoplain
 @Component({
   selector: 'st-protein-input',
   templateUrl: './protein-input.component.html',
-  styleUrls: ['./protein-input.component.css'],
+  styleUrls: ['./protein-input.component.scss'],
   providers: [{
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => ProteinInputComponent),
@@ -21,6 +21,7 @@ export class ProteinInputComponent implements ControlValueAccessor {
   editor = DecoupledEditor;
   proteinSequence = '';
   @Input() readonly: boolean = false;
+  @Input() isInputGroup: boolean = false;
   @Input() inputId: string = '';
   private proteinRawSequence = '';
 
