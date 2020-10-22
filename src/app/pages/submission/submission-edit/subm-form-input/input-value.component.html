@@ -8,7 +8,7 @@
       placement="bottom"
       [formControl]="formControl"
       [(ngModel)]="value"
-      [ngClass]="{'input-sm': isSmall}"
+      [ngClass]="{'input-sm': isSmall, 'group-element': isInputGroup}"
       [readonly]="readonly"
       [typeahead]="typeahead()"
       [typeaheadMinLength]="suggestThreshold"
@@ -24,6 +24,7 @@
       id="{{inputId}}"
       class="form-control"
       stAutosize="200"
+      [ngClass]="{'group-element': isInputGroup}"
       [formControl]="formControl"
       [readonly]="readonly"
       (keyup.enter)="$event.stopPropagation()"
@@ -32,7 +33,6 @@
   </textarea>
 
   <st-select-input *ngSwitchCase="valueTypeNameEnum.select"
-      [ngClass]="{'input-group-element': isInputGroup}"
       [formControl]="formControl"
       [values]="valueType.values"
       [multiple]="valueType.multiple"
@@ -85,7 +85,6 @@
   </st-pubmedid-search>
 
   <st-dna-input *ngSwitchCase="valueTypeNameEnum.dna"
-      [ngClass]="{'input-group-element': isInputGroup}"
       [inputId]="inputId"
       [formControl]="formControl"
       [readonly]="readonly"
@@ -93,7 +92,6 @@
   </st-dna-input>
 
   <st-protein-input *ngSwitchCase="valueTypeNameEnum.protein"
-      [ngClass]="{'input-group-element': isInputGroup}"
       [inputId]="inputId"
       [formControl]="formControl"
       [readonly]="readonly"
