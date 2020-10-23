@@ -47,14 +47,15 @@ export class FormValidators {
   }
 
   static formatDna: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const value: { raw: string } = control.value;
-    const isEmpty: boolean = isNotDefinedOrEmpty(value.raw);
+    const value: string = control.value || '';
+    const [richValue, rawValue] = value.split('@');
+    const isEmpty: boolean = isNotDefinedOrEmpty(richValue);
 
     if (isEmpty) {
       return null;
     }
 
-    const isValueValid: boolean = isDnaSequenceValid(value.raw);
+    const isValueValid: boolean = isDnaSequenceValid(rawValue);
 
     return isValueValid ? null : { format: { value } };
   }
@@ -73,14 +74,15 @@ export class FormValidators {
   }
 
   static formatProtein: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const value: { raw: string } = control.value;
-    const isEmpty: boolean = isNotDefinedOrEmpty(value.raw);
+    const value: string = control.value || '';
+    const [richValue, rawValue] = value.split('@');
+    const isEmpty: boolean = isNotDefinedOrEmpty(richValue);
 
     if (isEmpty) {
       return null;
     }
 
-    const isValueValid: boolean = isProteinSequenceValid(value.raw);
+    const isValueValid: boolean = isProteinSequenceValid(rawValue);
 
     return isValueValid ? null : { format: { value } };
   }
