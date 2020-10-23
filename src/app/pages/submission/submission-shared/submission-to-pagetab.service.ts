@@ -1,4 +1,3 @@
-import { RichTextFieldValue } from './model/submission/submission.model';
 import { PAGE_TAG, Tag } from './model/model.common';
 import {
   AttrExceptions,
@@ -181,11 +180,12 @@ export class SubmissionToPageTabService {
   private fieldsAsAttributes(section: Section, isSanitise: boolean): any[] {
     return section.fields.list().map((field) => {
       if (field.valueType.isRich()) {
-        const fieldValue: RichTextFieldValue = field.value as RichTextFieldValue;
+        const fieldValue: string = field.value || '';
+        const [richValue] = fieldValue.split('@');
 
         return {
           name: field.name,
-          value: fieldValue.value,
+          value: richValue,
           valqual: [{name: 'display', value: 'html'}]
         } as PtAttribute;
       }

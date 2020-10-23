@@ -19,11 +19,6 @@ export interface SubmissionSection {
   subsections: Sections
 }
 
-export interface RichTextFieldValue {
-  raw: string,
-  value: string
-}
-
 class Rows {
   private rows: Array<ValueMap> = [];
 
@@ -339,10 +334,9 @@ export class Field {
   readonly id: string;
   readonly type: FieldType;
 
-  private fieldValue: string | RichTextFieldValue;
+  private fieldValue: string;
 
-  constructor(type: FieldType,
-              value: RichTextFieldValue | string = '') {
+  constructor(type: FieldType, value: string = '') {
     this.id = `field_${nextId()}`;
     this.type = type;
     this.fieldValue = value;
@@ -360,11 +354,11 @@ export class Field {
     return this.type.displayType.isReadonly;
   }
 
-  get value(): string | RichTextFieldValue {
+  get value(): string {
     return this.fieldValue;
   }
 
-  set value(v: string | RichTextFieldValue) {
+  set value(v: string) {
     if (this.fieldValue !== v) {
       this.fieldValue = v;
     }

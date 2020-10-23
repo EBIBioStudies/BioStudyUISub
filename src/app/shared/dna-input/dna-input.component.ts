@@ -3,6 +3,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ChangeEvent } from '@ckeditor/ckeditor5-angular';
 import * as DecoupledEditor from '@biostudies/ckeditor5-build-balloon';
 import viewToPlainText from '@ckeditor/ckeditor5-clipboard/src/utils/viewtoplaintext';
+import { isStringEmpty } from 'app/utils';
 
 const dnaColorScheme = [
   {
@@ -50,13 +51,13 @@ export class DNAInputComponent implements ControlValueAccessor {
   onEditorChange({ editor }: ChangeEvent): void {
     setTimeout(() => {
       this.dnaRawSequence = viewToPlainText(editor.editing.view.document.getRoot());
-      this.onChange({ value: this.dnaSequence, raw: this.dnaRawSequence });
+      this.informChange();
     }, 10);
   }
 
   onEditorReady(editor): void {
     this.dnaRawSequence = viewToPlainText(editor.editing.view.document.getRoot());
-    this.onChange({ value: this.dnaSequence, raw: this.dnaRawSequence });
+    this.informChange();
   }
 
   registerOnChange(fn: any): void {
@@ -75,6 +76,14 @@ export class DNAInputComponent implements ControlValueAccessor {
         this.dnaRawSequence = raw;
         this.dnaSequence = value;
       }
+    }
+  }
+
+  private informChange(): void {
+    if (!isStringEmpty(this.dnaSequence)) {
+      this.onChange(`${this.dnaSequence}@${this.dnaRawSequence}`);
+    } else {
+      this.onChange();
     }
   }
 
