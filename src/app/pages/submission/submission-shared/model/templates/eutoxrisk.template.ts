@@ -27,7 +27,7 @@ export const euToxRiskTemplate = {
       },
       {
         name: "Organism",
-        icon: "fa-eyedropper",
+        icon: "fa-tag",
         valueType: {
           name: "select",
           values: ["Homo sapiens (human)", "Danio rerio (zebrafish)"],
@@ -35,7 +35,7 @@ export const euToxRiskTemplate = {
       },
       {
         name: "Organ",
-        icon: "fa-eyedropper",
+        icon: "fa-lungs",
         valueType: {
           name: "select",
           values: [
@@ -51,7 +51,7 @@ export const euToxRiskTemplate = {
       },
       {
         name: "Cell type",
-        icon: "fa-eyedropper",
+        icon: "fa-disease",
         valueType: {
           name: "select",
           values: [
@@ -64,7 +64,7 @@ export const euToxRiskTemplate = {
       },
       {
         name: "Cell name",
-        icon: "fa-eyedropper",
+        icon: "fa-disease",
         valueType: {
           name: "select",
           values: ["CELLLINE", "HepG2", "HEK", "LUHMES"],

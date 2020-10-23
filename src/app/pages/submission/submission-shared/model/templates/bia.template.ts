@@ -27,7 +27,7 @@ export const biaTemplate = {
       },
       {
         name: "Study Type",
-        icon: "fa-comment",
+        icon: "fa-microscope",
         valueType: {
           name: "select",
           values: ["High content screen", "High content analysis of cells"],
