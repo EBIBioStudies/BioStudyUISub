@@ -1,5 +1,5 @@
 import { Component, forwardRef, Input } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ChangeEvent } from '@ckeditor/ckeditor5-angular';
 import * as DecoupledEditor from '@biostudies/ckeditor5-build-balloon';
 import viewToPlainText from '@ckeditor/ckeditor5-clipboard/src/utils/viewtoplaintext';
@@ -46,6 +46,7 @@ export class DNAInputComponent implements ControlValueAccessor {
   @Input() readonly: boolean = false;
   @Input() isInputGroup: boolean = false;
   @Input() inputId: string = '';
+  @Input() formControl!: FormControl;
   private dnaRawSequence = '';
 
   onEditorChange({ editor }: ChangeEvent): void {

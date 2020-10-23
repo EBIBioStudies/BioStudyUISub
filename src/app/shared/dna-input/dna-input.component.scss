@@ -26,6 +26,6 @@
   border-top-left-radius: 0 !important;
 }
 
-.has-error :host ::ng-deep .ck-editor__editable_inline {
+:host ::ng-deep .is-invalid .ck-editor__editable_inline {
   border-color: #C05F5D;
 }
