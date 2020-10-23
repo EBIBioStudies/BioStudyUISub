@@ -3,6 +3,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ChangeEvent } from '@ckeditor/ckeditor5-angular';
 import * as DecoupledEditor from '@biostudies/ckeditor5-build-balloon';
 import viewToPlainText from '@ckeditor/ckeditor5-clipboard/src/utils/viewtoplaintext';
+import { isStringEmpty } from 'app/utils';
 
 @Component({
   selector: 'st-protein-input',
@@ -26,13 +27,13 @@ export class ProteinInputComponent implements ControlValueAccessor {
   onEditorChange({ editor }: ChangeEvent): void {
     setTimeout(() => {
       this.proteinRawSequence = viewToPlainText(editor.editing.view.document.getRoot());
-      this.onChange({ value: this.proteinSequence, raw: this.proteinRawSequence });
+      this.informChange();
     }, 10);
   }
 
   onEditorReady(editor): void {
     this.proteinRawSequence = viewToPlainText(editor.editing.view.document.getRoot());
-    this.onChange({ value: this.proteinSequence, raw: this.proteinRawSequence });
+    this.informChange();
   }
 
   registerOnChange(fn: any): void {
@@ -51,6 +52,14 @@ export class ProteinInputComponent implements ControlValueAccessor {
         this.proteinRawSequence = raw;
         this.proteinSequence = value;
       }
+    }
+  }
+
+  private informChange(): void {
+    if (!isStringEmpty(this.proteinSequence)) {
+      this.onChange(`${this.proteinSequence}@${this.proteinRawSequence}`);
+    } else {
+      this.onChange();
     }
   }
 
