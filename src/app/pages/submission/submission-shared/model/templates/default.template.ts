@@ -250,7 +250,7 @@ export const defaultTemplate = {
         description:
           "Provide pointers to data held in external databases or to related information on the web. " +
           'Compact URIs from <a target="_blank" href="https://www.ebi.ac.uk/miriam/main/collections">Identifiers.org</a> ' +
-          'are supported. URLs must include the scheme, e.g. "http://".',
+          'are supported. </br>URLs must include the scheme, e.g. "http://".',
         icon: "fa-link",
         uniqueCols: true,
         columnTypes: [
