@@ -1,20 +1,17 @@
-<div *ngIf="featureForm"
-   class="container-fluid grid-container"
-   [formGroup]="featureForm.form">
-  <div class="row">
-    <div class="cell canton col-xs-1 col-md-1 text-center">
+<div class="overflow-auto container-fluid" *ngIf="featureForm" [formGroup]="featureForm.form">
+  <div class="row flex-nowrap mt-0">
+    <div class="col-sm-1 col-md-1 border-bottom">
       <button *ngIf="featureForm.canAddColumn() && !featureForm.isReadonly"
-          class="btn-add btn btn-link btn-md" type="button" tabindex="-1"
+          class="btn btn-link text-truncate" type="button" tabindex="-1"
           [ngClass]="{'invisible': readonly || !userData.isPrivileged || featureForm.isReadonly}"
           [tooltip]="'Add a new ' + featureForm.featureTypeName.toLowerCase() + ' attribute'"
           container="body"
           (click)="featureForm.addColumn()">
         <i class="fa fa-plus-circle" aria-hidden="true"></i> Column
-      </button>&nbsp;
+      </button>
     </div>
-    <div *ngFor="let column of columns; let idx = index" class="cell heading-cell column-heading col-xs-3 col-md-2"
-       [ngClass]="{'optional': featureForm.canRemoveColumn(column),
-              'has-error': column.hasErrors}">
+    <div *ngFor="let column of columns; let idx = index" class="col-sm-1 col-md-1 col-lg-3 col-xl-3 border-bottom"
+       [ngClass]="{'optional': featureForm.canRemoveColumn(column), 'has-error': column.hasErrors}">
       <st-inline-edit placement="bottom"
               container="body"
               containerClass="text-danger"
@@ -35,8 +32,8 @@
     <div *ngFor="let row of rows; let rowIdx = index;"
       (mouseenter)="onMouseEnterRow(rowIdx)"
       (mouseleave)="onMouseLeaveRow()">
-      <div *ngIf="!readonly || !row.isEmpty" class="row">
-        <div class="cell heading-cell col-xs-1 col-md-1">
+      <div *ngIf="!readonly || !row.isEmpty" class="row flex-nowrap">
+        <div class="col-sm-1 col-md-1">
           <div class="row-heading">
             <i class="fas fa-grip-vertical grip" [ngClass]="{ 'grip-visible': rowIdx === hoveredRowIndex && isSortable }"></i>
             <span container="body" [tooltip]="featureForm.canRemoveRow() ? '' : 'The table must contain one row at least'">
@@ -53,7 +50,7 @@
             {{rowIdx+1}}
           </div>
         </div>
-        <div class="cell body-cell column-entry col-xs-3 col-md-2" *ngFor="let column of columns">
+        <div class="column-entry col-sm-1 col-md-1 col-lg-3 col-xl-3" *ngFor="let column of columns">
           <div [ngClass]="{'readonly': column.isReadonly || featureForm.isReadonly,
                     'optional': !column.isRequired,
                     'has-error': row.hasErrorsAt(column.id)}">
