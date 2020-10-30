@@ -8,7 +8,6 @@ import { FileListComponent } from './file-list/file-list.component';
 import { FileSelectComponent } from './file-select/file-select.component';
 import { FileService } from './shared/file.service';
 import { FileTreeComponent } from './file-select/file-tree.component';
-import { FileTreeDropdownComponent } from './file-select/file-tree-dropdown.component';
 import { FileTreeStore } from './file-select/file-tree.store';
 import { FileTypeCellComponent } from './file-list/ag-grid/file-type-cell.component';
 import { FileUploadList } from './shared/file-upload-list.service';
@@ -19,7 +18,6 @@ import { ProgressCellComponent } from './file-list/ag-grid/upload-progress-cell.
 import { RouterModule } from '@angular/router';
 import { SharedModule } from 'app/shared/shared.module';
 import { ThemeModule } from 'app/theme/theme.module';
-import { UploadFileButtonDirective } from './upload-file-button/upload-file-button.directive';
 import { UploadFileModalComponent } from './upload-file-button/upload-file-modal.component';
 import { UserData } from 'app/auth/shared';
 
@@ -45,9 +43,7 @@ import { UserData } from 'app/auth/shared';
     DirectorySidebarComponent,
     FileSelectComponent,
     FileTreeComponent,
-    FileTreeDropdownComponent,
     FTPUploadButtonComponent,
-    UploadFileButtonDirective,
     UploadFileModalComponent
   ],
   providers: [
@@ -59,8 +55,7 @@ import { UserData } from 'app/auth/shared';
   ],
   exports: [
     FileListComponent,
-    FileSelectComponent,
-    UploadFileButtonDirective
+    FileSelectComponent
   ],
   entryComponents: [
     UploadFileModalComponent

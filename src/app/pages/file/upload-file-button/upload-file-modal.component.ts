@@ -13,7 +13,6 @@ export class UploadFileModalComponent {
   absolutePath: string = '/user';
   files: File[] = [];
   fileToUploadName: string = '';
-  isUploadEnabled: boolean = false;
   onClose: Subject<string> = new Subject();
   private upload?: FileUpload;
 
@@ -51,17 +50,18 @@ export class UploadFileModalComponent {
     this.hide();
   }
 
+  onFileSelect(value: string): void {
+    this.onClose.next(value);
+    this.hide();
+  }
+
   onInputChange($event): void {
     const files: FileList = $event.target.files;
     const rawFiles: File[] = Array.from(files);
     const filesToUploadName: string[] = rawFiles.map((file) => file.name);
 
     this.fileToUploadName = filesToUploadName[0];
-    this.isUploadEnabled = true;
     this.files = rawFiles;
-  }
-
-  onUploadClick(): void {
     this.uploadFile(this.files);
   }
 
@@ -69,9 +69,6 @@ export class UploadFileModalComponent {
     const uploadPath: Path = new Path(this.absolutePath, '');
 
     this.upload = this.fileUploadList.upload(uploadPath, Array.from(files));
-    this.isUploadEnabled = false;
-
-
     this.fileUploadList.uploadCompleted$.subscribe(() => {
       if (this.upload) {
         const fileName = this.upload.fileNames[0];

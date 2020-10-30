@@ -24,6 +24,7 @@ export class FileNode {
       }
       return '+ ';
     }
+
     return undefined;
   }
 }

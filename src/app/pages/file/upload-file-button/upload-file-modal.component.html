@@ -1,33 +1,39 @@
-<div class="modal-header bg-primary">
-  Upload File
-  <button type="button" class="close pull-right" aria-label="Close" (click)="onCancelCloseClick()">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-<div class="modal-body">
-  <div class="input-group upload-file-select">
-    <div class="custom-file">
-      <input id="inputGroupFile" class="custom-file-input" type="file" (change)="onInputChange($event)" />
-      <label class="custom-file-label" for="inputGroupFile">
-        {{fileToUploadName.length === 0 ? 'Choose file' : fileToUploadName}}
-      </label>
+<div class="modal-content">
+  <div class="modal-header">
+    <h5 class="modal-title">Select or upload file</h5>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="onCancelCloseClick()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="card bg-light mb-3">
+      <div class="card-body overflow-auto">
+        <h6 class="card-title">Select file</h6>
+        <st-file-tree (fileTreeSelect)="onFileSelect($event)"></st-file-tree>
+      </div>
+    </div>
+    <div class="input-group upload-file-select">
+      <div class="custom-file">
+        <input id="inputGroupFile" class="custom-file-input" type="file" (change)="onInputChange($event)" />
+        <label class="custom-file-label" for="inputGroupFile">
+          {{fileToUploadName.length === 0 ? 'Upload file' : fileToUploadName}}
+        </label>
+      </div>
     </div>
   </div>
-</div>
-<div class="modal-footer upload-file-footer">
-  <div class="pull-left">
-    <button type="submit" class="btn btn-primary btn-sm" [disabled]="!isUploadEnabled"
-      (click)="onUploadClick()">Upload</button>
-    <button type="button" class="btn btn-default btn-sm" (click)="onCancelCloseClick()">Cancel</button>
-  </div>
-  <div *ngIf="isUploading && uploadProgressValue < 100" class="upload-file-progress">
-    <div class="spinner-border text-info" role="status">
-      <span class="sr-only">Loading...</span>
+  <div class="modal-footer upload-file-footer">
+    <div class="pull-left">
+      <button type="button" class="btn btn-default btn-sm" (click)="onCancelCloseClick()">Cancel</button>
     </div>
-    <span>{{uploadProgressValue}}%</span>
-  </div>
-  <div *ngIf="uploadProgressValue < 0" class="text-danger text-center">
-    <i class="fa fa-times-circle"></i>
-    {{error}}
+    <div *ngIf="isUploading && uploadProgressValue < 100" class="upload-file-progress">
+      <div class="spinner-border text-info" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <span>{{uploadProgressValue}}%</span>
+    </div>
+    <div *ngIf="uploadProgressValue < 0" class="text-danger text-center">
+      <i class="fa fa-times-circle"></i>
+      {{error}}
+    </div>
   </div>
 </div>
