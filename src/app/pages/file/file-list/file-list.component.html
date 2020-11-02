@@ -9,28 +9,22 @@
       'sidebar-expanded': !sideBarCollapsed,
       'sidebar-collapsed': sideBarCollapsed
     }">
-      <nav class="navbar navbar-light border-bottom">
-        <div class="nav-block col-xs-8">
-          <st-directory-path [path]="absolutePath" (directoryPathChange)="onPathChange($event)"></st-directory-path>
-        </div>
-        <div class="nav-block clearfix col-xs-4">
-          <div class="btn-group pull-right" role="group">
-            <st-ftp-upload-button></st-ftp-upload-button>
-          </div>
-          <div class="btn-group pull-right" style="margin-right: 1em" role="group">
-            <st-file-upload-button [multiple]="true" [isDirOnly]="false"
-              (fileUploadSelect)="onUploadFilesSelect($event)" title="File upload" tooltip="Select files"
-              placement="bottom" #fileEl>
-            </st-file-upload-button>
-            <st-file-upload-button [multiple]="false" [isDirOnly]="true" title="Folder upload"
-              (fileUploadSelect)="onUploadFilesSelect($event)" tooltip="Select a folder" placement="bottom" #fileEl>
-            </st-file-upload-button>
-          </div>
+      <nav class="navbar navbar-light border-bottom page-navbar bg-white sticky-top">
+        <st-directory-path [path]="absolutePath" (directoryPathChange)="onPathChange($event)"></st-directory-path>
+        <div class="btn-group" role="group">
+          <st-file-upload-button [multiple]="true" [isDirOnly]="false"
+            (fileUploadSelect)="onUploadFilesSelect($event)" title="File upload" tooltip="Select files"
+            placement="bottom" #fileEl>
+          </st-file-upload-button>
+          <st-file-upload-button [multiple]="false" [isDirOnly]="true" title="Folder upload"
+            (fileUploadSelect)="onUploadFilesSelect($event)" tooltip="Select a folder" placement="bottom" #fileEl>
+          </st-file-upload-button>
+          <st-ftp-upload-button></st-ftp-upload-button>
         </div>
       </nav>
-      <div class="p-4">
-        <ag-grid-angular style="width: 100%; height: 450px;" class="ag-theme-fresh" [gridOptions]="gridOptions"
-          [columnDefs]="columnDefs" enableSorting rowHeight="30" (rowDoubleClicked)="onRowDoubleClick($event)">
+      <div class="p-3">
+        <ag-grid-angular style="width: 100%; height: 580px;" class="ag-theme-fresh" [gridOptions]="gridOptions"
+          [columnDefs]="columnDefs" enableSorting (rowDoubleClicked)="onRowDoubleClick($event)">
         </ag-grid-angular>
       </div>
     </main>

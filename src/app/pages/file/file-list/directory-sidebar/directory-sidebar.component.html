@@ -2,26 +2,24 @@
   <tabset [ngClass]="{'invisible': collapsed}">
     <tab heading="Explorer" active="true"></tab>
   </tabset>
-  <ul class="st-dir-sidebar-list">
-    <li class="sidebar-item success" [ngClass]="{'active': selectedPath.includes(homeDir.path) }">
-      <a *ngIf="collapsed" (click)="onDirSelect(homeDir)">
+  <ul class="list-group">
+    <li>
+      <button type="button" (click)="onDirSelect(homeDir)"
+        class="list-group-item list-group-item-action border-0 bg-transparent text-white"
+        [ngClass]="{'active': selectedPath.includes(homeDir.path) }">
         <i class="fa fa-fw fa-home"></i>
-      </a>
-      <a *ngIf="!collapsed" (click)="onDirSelect(homeDir)">
-        <i class="fa fa-fw fa-home"></i>
-        Home
-      </a>
+        <span class="ml-1" *ngIf="!collapsed">Home</span>
+      </button>
     </li>
   </ul>
-  <ul class="st-dir-sidebar-list">
-    <li *ngFor="let dir of groups" class="sidebar-item success"
-      [ngClass]="{'active': selectedPath.includes(dir.path) }">
-      <a *ngIf="collapsed" (click)="onDirSelect(dir)">
+  <ul class="list-group">
+    <li *ngFor="let dir of groups">
+      <button type="button" (click)="onDirSelect(dir)"
+        class="list-group-item list-group-item-action border-0 bg-transparent text-white"
+        [ngClass]="{'active': selectedPath.includes(dir.path) }">
         <i class="fa fa-fw fa-folder"></i>
-      </a>
-      <a *ngIf="!collapsed" (click)="onDirSelect(dir)">
-        <i class="fa fa-fw fa-folder"></i><span>{{dir.name}}</span>
-      </a>
+        <span class="ml-1" *ngIf="!collapsed">{{dir.name}}</span>
+      </button>
     </li>
   </ul>
 </div>

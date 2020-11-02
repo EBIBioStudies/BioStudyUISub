@@ -6,12 +6,7 @@
   padding: 0 0 0 var(--sidebar-collapsed-width);
 }
 
-// .upload-count {
-//   position: absolute;
-//   top: -9px;
-//   right: 5px;
-// }
-
-// .mode-toggle {
-//   margin: 5px 10px 0 0;
-// }
+.page-navbar {
+  height: var(--page-navbar-height);
+  top: var(--header-height);
+}

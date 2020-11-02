@@ -5,10 +5,10 @@ import { FileUpload } from '../../shared/file-upload-list.service';
 @Component({
   selector: 'st-file-actions-cell',
   template: `
-    <div class="btn-group">
+    <div class="btn-group btn-group-sm" role="group" aria-label="File actions">
       <button *ngIf="canDownload"
           type="button"
-          class="btn btn-primary btn-xs btn-flat"
+          class="btn btn-primary"
           tooltip="Download"
           container="body"
           placement="bottom"
@@ -17,7 +17,7 @@ import { FileUpload } from '../../shared/file-upload-list.service';
       </button>
       <button *ngIf="canRemove"
           type="button"
-          class="btn btn-danger btn-xs btn-flat"
+          class="btn btn-danger"
           tooltip="Delete"
           container="body"
           placement="bottom"
@@ -25,7 +25,7 @@ import { FileUpload } from '../../shared/file-upload-list.service';
         <i class="fas fa-trash-alt fa-fw"></i>
       </button>
       <button *ngIf="canCancel"
-          type="button" class="btn btn-warning btn-xs"
+          type="button" class="btn btn-warning"
           tooltip="Cancel"
           container="body"
           placement="bottom"

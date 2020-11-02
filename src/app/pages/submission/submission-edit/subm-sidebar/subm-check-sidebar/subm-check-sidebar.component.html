@@ -24,7 +24,7 @@
     <span>{{collapsed ? '' : controlGroup[0].ref.sectionName}}</span>
   </div>
   <ng-container *ngFor="let control of controlGroup">
-    <button *ngIf="control.invalid" (click)="onReviewClick(control)"
+    <button type="button" *ngIf="control.invalid" (click)="onReviewClick(control)"
       class="list-group-item list-group-item-action d-flex justify-content-between align-items-center bg-transparent text-white border-0">
       <div class="text-truncate pr-2">
         <i class="entry-item fas {{control.ref.icon}}"></i>

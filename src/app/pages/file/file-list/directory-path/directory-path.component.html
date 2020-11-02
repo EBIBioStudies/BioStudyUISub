@@ -21,7 +21,7 @@
       Home
     </span>
   </a>
-  <i class="fa fa-angle-right chevron"></i>
+  &nbsp;<i class="fa fa-angle-right chevron"></i>&nbsp;
 </span>
 <span *ngFor="let dir of dirs; let last = last; let index = index" class="dir">
   <a *ngIf="!last"
@@ -30,7 +30,7 @@
     {{dir}}
   </a>
   <span *ngIf="!last">
-    <i class="fa fa-angle-right chevron"></i>
+    &nbsp;<i class="fa fa-angle-right chevron"></i>&nbsp;
   </span>
   <span *ngIf="last">{{dir}}</span>
 </span>
