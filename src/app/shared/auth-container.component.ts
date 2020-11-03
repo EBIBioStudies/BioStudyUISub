@@ -16,4 +16,4 @@ import { Component } from '@angular/core';
     }`
   ]
 })
-export class AuthContainer {}
+export class AuthContainerComponent {}
