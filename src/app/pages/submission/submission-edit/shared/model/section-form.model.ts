@@ -1,3 +1,4 @@
+import { CustomFormControl } from './custom-form-control.model';
 import {
   DisplayType,
   Feature,
@@ -70,7 +71,7 @@ export class SectionForm extends FormBase {
     return this.findRoot().lookupSectionForm(sectionId);
   }
 
-  getFeatureControl(featureId: string): FormControl | undefined {
+  getFeatureControl(featureId: string): CustomFormControl | undefined {
     const featureForm = this.featureForms.find(f => f.id === featureId);
     if (featureForm !== undefined) {
       return featureForm.scrollToTheLastControl;

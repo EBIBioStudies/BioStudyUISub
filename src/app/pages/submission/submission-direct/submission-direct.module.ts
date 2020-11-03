@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from 'app/shared/shared.module';
+import { ThemeModule } from 'app/theme/theme.module';
 import { SubmissionResultsModule } from '../submission-results/submission-results.module';
 import { SubmissionSharedModule } from '../submission-shared/submission-shared.module';
 import { DirectSubmitSideBarComponent } from './direct-submit-sidebar.component';
@@ -14,7 +15,8 @@ import { DirectSubmitFileComponent } from './direct-submit-file.component';
     SharedModule,
     RouterModule,
     SubmissionSharedModule,
-    SubmissionResultsModule
+    SubmissionResultsModule,
+    ThemeModule
   ],
   providers: [
     DirectSubmitFileUploadService,

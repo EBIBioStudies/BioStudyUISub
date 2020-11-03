@@ -1,3 +1,4 @@
+import { CustomFormControl } from './../../shared/model/custom-form-control.model';
 import { FormControl, ValidationErrors } from '@angular/forms';
 import { Component, Input } from '@angular/core';
 import { ServerError } from 'app/shared/server-error.handler';
@@ -7,7 +8,7 @@ import { scrollToFormControl, isArrayEmpty } from 'app/utils';
 @Component({
   selector: 'st-subm-check-sidebar',
   templateUrl: './subm-check-sidebar.component.html',
-  styleUrls: ['./subm-check-sidebar.component.css']
+  styleUrls: ['./subm-check-sidebar.component.scss']
 })
 export class SubmCheckSidebarComponent {
   @Input() collapsed?: boolean = false;
@@ -61,7 +62,7 @@ export class SubmCheckSidebarComponent {
    * Scrolls to and sets focus on the field represented by the form control clicked on within the check tab.
    * @param control - Form control augmented with the DOM element for the field.
    */
-  onReviewClick(control: FormControl): void {
+  onReviewClick(control: CustomFormControl): void {
     scrollToFormControl(control);
   }
 

@@ -1,5 +1,5 @@
 import { Component, forwardRef, Input } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ChangeEvent } from '@ckeditor/ckeditor5-angular';
 import * as DecoupledEditor from '@biostudies/ckeditor5-build-balloon';
 import viewToPlainText from '@ckeditor/ckeditor5-clipboard/src/utils/viewtoplaintext';
@@ -8,7 +8,7 @@ import { isStringEmpty } from 'app/utils';
 @Component({
   selector: 'st-protein-input',
   templateUrl: './protein-input.component.html',
-  styleUrls: ['./protein-input.component.css'],
+  styleUrls: ['./protein-input.component.scss'],
   providers: [{
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => ProteinInputComponent),
@@ -22,6 +22,9 @@ export class ProteinInputComponent implements ControlValueAccessor {
   editor = DecoupledEditor;
   proteinSequence = '';
   @Input() readonly: boolean = false;
+  @Input() isInputGroup: boolean = false;
+  @Input() inputId: string = '';
+  @Input() formControl!: FormControl;
   private proteinRawSequence = '';
 
   onEditorChange({ editor }: ChangeEvent): void {

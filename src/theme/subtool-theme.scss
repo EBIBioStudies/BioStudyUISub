@@ -1,0 +1,41 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+// Color system
+$white:    #fff;
+
+$blue:        #3c739f;
+$core-blue:   #6d9fc1;
+
+$colors: (
+  "blue":       $blue,
+  "core-blue":  $core-blue,
+  "white":      $white
+);
+
+$primary: $blue;
+
+$theme-colors: (
+  "primary":    $primary
+);
+
+// Links
+//
+// Style anchor elements.
+
+$link-color:                              theme-color("primary");
+$link-hover-color:                        darken($link-color, 15%);
+
+// Components
+//
+// Define common padding and border radius sizes and more.
+
+$component-active-bg:         theme-color("primary");
+
+// Navs
+$nav-tabs-link-active-color:          $white;
+$nav-tabs-link-active-bg:             $core-blue;
+$nav-tabs-link-active-border-color:   $core-blue;
+
+$nav-pills-link-active-bg:            $component-active-bg;

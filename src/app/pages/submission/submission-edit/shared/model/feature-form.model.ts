@@ -1,3 +1,4 @@
+import { CustomFormControl } from './custom-form-control.model';
 import { Subject, Observable } from 'rxjs';
 import pluralize from 'pluralize';
 import { FormGroup, FormArray, FormControl } from '@angular/forms';
@@ -136,7 +137,7 @@ export class FeatureForm extends FormBase {
     return this.requiredGroups.length > 0;
   }
 
-  get scrollToTheLastControl(): FormControl | undefined {
+  get scrollToTheLastControl(): CustomFormControl | undefined {
     if (isArrayEmpty(this.rowForms) || isArrayEmpty(this.columnControls)) {
       return undefined;
     }

@@ -5,7 +5,7 @@ import { isNotDefinedOrEmpty } from 'app/utils';
 @Component({
   selector: 'st-select-input',
   templateUrl: './select-input.component.html',
-  styleUrls: ['./select-input.component.css'],
+  styleUrls: ['./select-input.component.scss'],
   providers: [{
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => SelectInputComponent),

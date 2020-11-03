@@ -6,8 +6,7 @@ import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'st-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  templateUrl: './header.component.html'
 })
 export class HeaderComponent implements OnDestroy {
   isBusy = false; // flags whether there is a transaction triggered by this component

@@ -4,14 +4,14 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'st-action-buttons-cell',
   template: `
-    <div class="btn-group">
-      <button *ngIf="rowData && isRowEditable" type="button" class="btn btn-primary btn-xs btn-flat"
+    <div class="btn-group btn-group-sm" role="group" aria-label="Study actions">
+      <button *ngIf="rowData && isRowEditable" type="button" class="btn btn-primary"
           (click)="onEditSubmission()"
           tooltip="Edit this submission"
           container="body">
         <i class="fas fa-pencil-alt fa-fw"></i>
       </button>
-      <button *ngIf="rowData && isRowDeletable" type="button" class="btn btn-danger btn-xs btn-flat"
+      <button *ngIf="rowData && isRowDeletable" type="button" class="btn btn-danger"
           [disabled]="isBusy"
           (click)="onDeleteSubmission()"
           tooltip="Delete this submission"

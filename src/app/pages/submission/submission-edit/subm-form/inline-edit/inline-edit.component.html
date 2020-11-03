@@ -1,5 +1,4 @@
-<div class="inline-edit-wrapper"
-   [ngClass]="{'editable': canEdit, 'text-muted': !editing}">
+<div class="d-flex align-content-center h-100" [ngClass]="{'editable': canEdit, 'text-muted': !editing}">
   <input class="form-control form-control-auto" type="text" tabindex="-1" autocomplete="off"
        name="inline-edit-box"
        container="body"
@@ -19,14 +18,14 @@
        (keydown)="onKeyDown()"
        #ahead="bs-typeahead"
        #inlineEditBox/>
-  <div *ngIf="!editing" class="icons">
-    <button *ngIf="canEdit" class="btn btn-xs btn-link" type="button"
+  <div *ngIf="!editing" class="btn-group btn-group-sm">
+    <button *ngIf="canEdit" class="btn btn-link" type="button"
         (click)="onEdit($event)">
-      <i class="fa fa-pencil"></i>
+      <i class="fas fa-pencil-alt"></i>
     </button>
-    <button *ngIf="canRemove" class="btn btn-xs btn-link" type="button"
+    <button *ngIf="canRemove" class="btn btn-link" type="button"
         (click)="onRemove($event)">
-      <i class="text-danger fas fa-trash-alt"></i>
+      <i class="fas fa-trash-alt text-danger"></i>
     </button>
   </div>
 </div>

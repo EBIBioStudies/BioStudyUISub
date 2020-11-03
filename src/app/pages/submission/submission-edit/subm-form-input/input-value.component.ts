@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { AppConfig } from 'app/app.config';
 import { BehaviorSubject, Observable, Subject, of } from 'rxjs';
 import {
@@ -9,10 +9,12 @@ import {
   SelectValueType, DateValueType
 } from 'app/pages/submission/submission-shared/model/templates';
 import { typeaheadSource } from '../shared/typeahead.utils';
+import { CustomFormControl } from '../shared/model/custom-form-control.model';
 
 @Component({
   selector: 'st-input-value',
   templateUrl: './input-value.component.html',
+  styleUrls: ['./input-value.component.scss'],
   providers: [{
     provide: NG_VALUE_ACCESSOR,
     useExisting: InputValueComponent,
@@ -21,14 +23,14 @@ import { typeaheadSource } from '../shared/typeahead.utils';
 })
 export class InputValueComponent implements ControlValueAccessor {
   @Input() autosuggest: boolean = true;
-  @Input() formControl?: FormControl;
+  @Input() formControl!: CustomFormControl;
   @Input() isSmall: boolean = true;
   @Input() isInputGroup: boolean = false;
   @Input() readonly: boolean = false;
-  @Output() inputValueSelect = new EventEmitter<{ [key: string]: string }>();
-  suggestLength: number;
   @Input() suggestThreshold: number = 0;
   @Input() valueType: ValueType = ValueTypeFactory.DEFAULT;
+  @Output() inputValueSelect = new EventEmitter<{ [key: string]: string }>();
+  suggestLength: number;
   readonly valueTypeNameEnum = ValueTypeName;
 
   private inputValue = '';
@@ -41,6 +43,10 @@ export class InputValueComponent implements ControlValueAccessor {
   // a value of 0 makes typeahead behave like an auto-suggest box.
   constructor(private appConfig: AppConfig) {
     this.suggestLength = appConfig.maxSuggestLength;
+  }
+
+  get inputId(): string {
+    return this.formControl.ref.id;
   }
 
   get value(): string {

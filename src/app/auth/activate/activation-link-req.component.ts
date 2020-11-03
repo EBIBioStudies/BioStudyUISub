@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { RecaptchaComponent } from 'ng-recaptcha';
 import { AuthService } from 'app/auth/shared';
 import { ActivationLinkRequestData } from '../shared/model';
@@ -9,25 +9,17 @@ import { ServerError } from 'app/shared/server-error.handler';
   selector: 'st-auth-activation-resend',
   templateUrl: './activation-link-req.component.html'
 })
-export class ActivationLinkReqComponent implements AfterViewInit {
+export class ActivationLinkReqComponent {
   hasError: boolean = false;
   isLoading: boolean = false;
   message: string = '';
   model: ActivationLinkRequestData = new ActivationLinkRequestData();
   showSuccess: boolean = false;
 
-  @ViewChild('emailEl')
-  private focusRef!: ElementRef;
-
   @ViewChild('recaptchaEl')
   private recaptchaRef!: RecaptchaComponent;
 
   constructor(private authService: AuthService) {}
-
-  // TODO: Turn autofocus on render into a directive
-  ngAfterViewInit(): void {
-    this.focusRef.nativeElement.focus();
-  }
 
   onRecaptchaResolved(captchaToken: string): void {
     const component = this; // SelfSubscriber object overwrites context for "subscribe" method

@@ -1,5 +1,6 @@
 :host ::ng-deep .ck-editor__editable_inline {
   background-color: #ffffff;
+  border-radius: 0.25rem !important;
   border: 1px solid #ccc;
   padding: 6px 12px;
 }
@@ -20,6 +21,11 @@
   border: 0;
 }
 
-.has-error :host ::ng-deep .ck-editor__editable_inline {
+:host ::ng-deep .is-grouped .ck-editor__editable_inline {
+  border-bottom-left-radius: 0 !important;
+  border-top-left-radius: 0 !important;
+}
+
+:host ::ng-deep .is-invalid .ck-editor__editable_inline {
   border-color: #C05F5D;
 }

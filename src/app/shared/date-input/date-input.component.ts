@@ -3,12 +3,13 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BsDatepickerConfig, BsDatepickerDirective } from 'ngx-bootstrap/datepicker';
 import { formatDate } from 'ngx-bootstrap/chronos';
 import { isEqualDate, isDefinedAndNotEmpty } from 'app/utils';
+import { CustomFormControl } from 'app/pages/submission/submission-edit/shared/model/custom-form-control.model';
 import { AppConfig } from 'app/app.config';
 
 @Component({
   selector: 'st-date-input',
   templateUrl: './date-input.component.html',
-  styleUrls: ['./date-input.component.css'],
+  styleUrls: ['./date-input.component.scss'],
   providers: [{
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => DateInputComponent),
@@ -27,10 +28,13 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
   @Input() allowPast?: boolean = undefined;
   inputDateValue: string | undefined;
   @Input() isSmall?: boolean = false;
+  @Input() inputId: string = '';
   @Input() maxDate?: Date = undefined;
   rawDateValue: Date | undefined;
   @Input() readonly?: boolean = false;
   @Input() required?: boolean = false;
+  @Input() formControl!: CustomFormControl;
+  @Input() isInputGroup: boolean = false;
   @ViewChild('dp', { static: true })
   private datepicker!: BsDatepickerDirective;
 

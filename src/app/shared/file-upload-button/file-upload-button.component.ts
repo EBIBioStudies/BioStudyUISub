@@ -7,8 +7,7 @@ import {
 
 @Component({
   selector: 'st-file-upload-button',
-  templateUrl: './file-upload-button.component.html',
-  styleUrls: ['./file-upload-button.component.css'],
+  templateUrl: './file-upload-button.component.html'
 })
 export class FileUploadButtonComponent implements OnChanges {
   hasDirSupport: boolean = false;

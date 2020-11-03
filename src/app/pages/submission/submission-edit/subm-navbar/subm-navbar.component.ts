@@ -6,7 +6,7 @@ import { SubmEditService } from '../shared/subm-edit.service';
 @Component({
   selector: 'st-subm-navbar',
   templateUrl: './subm-navbar.component.html',
-  styleUrls: ['./subm-navbar.component.css']
+  styleUrls: ['./subm-navbar.component.scss']
 })
 export class SubmNavBarComponent implements OnChanges {
   @Input() accno!: string; // accession number for the current submission

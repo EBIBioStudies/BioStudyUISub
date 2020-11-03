@@ -1,0 +1,43 @@
+@import "~@ng-select/ng-select/scss/default.theme.scss";
+@import "~ag-grid-community/dist/styles/ag-grid.scss";
+@import "~ag-grid-community/dist/styles/ag-theme-fresh/sass/ag-theme-fresh.scss";
+@import "~ngx-bootstrap/datepicker/bs-datepicker.css";
+@import './theme/subtool-variables.scss';
+@import './theme/subtool-theme.scss';
+@import './theme/subtool-ag-grid-theme.scss';
+@import '~bootstrap/scss/bootstrap';
+
+body {
+  padding-top: var(--header-height);
+  position: relative;
+}
+
+/*
+  NOTE: Font-size is set to 62.5% so that all the REM measurements throughout
+  are based on 10px sizing. So basically 1.5rem = 15px.
+*/
+// html {
+//   font-size: 62.5%;
+// }
+
+// .st * {
+//   box-sizing: border-box
+// }
+
+// .st {
+//   -moz-osx-font-smoothing: grayscale;
+//   -webkit-font-smoothing: antialiased;
+//   background: #fafafa;
+//   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+//   font-size: 14px;
+//   height: 100%;
+//   line-height: 1.42857143;
+//   margin: 0;
+//   padding: 0;
+// }
+
+/* Selects dropdown are append to body so the reason of having this global style here. */
+/* It ensures wide content in the dropdown is shown properly. */
+.ng-dropdown-panel {
+  width: auto !important;
+}

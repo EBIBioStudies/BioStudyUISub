@@ -1,8 +1,8 @@
-<button type="button" class="btn btn-primary btn-sm" (click)="openModal(template)">FTP/Aspera</button>
+<button type="button" class="btn btn-info btn-sm" (click)="openModal(template)">FTP/Aspera</button>
 
 <ng-template #template>
-  <div class="modal-header bg-primary">
-    FTP/Aspera Upload
+  <div class="modal-header">
+    <h5 class="modal-title">FTP/Aspera Upload</h5>
   </div>
   <div class="modal-body">
     <markdown>
@@ -11,9 +11,9 @@
       Your secret directory is: `{{secretId}}`
     </markdown>
     <accordion closeOthers="true">
-      <accordion-group  #group [isOpen]="true">
+      <accordion-group panelClass="mb-3" #group [isOpen]="true">
         <div accordion-heading class="clearfix">
-           <span class="float-right pull-right">
+           <span class="float-right">
              <i class="fa" [ngClass]="!group?.isOpen ? 'fa-chevron-down': 'fa-chevron-up'"></i>
            </span>
           Upload using FTP
@@ -36,7 +36,7 @@
       </accordion-group>
       <accordion-group #group2 [isOpen]="false">
         <div accordion-heading class="clearfix">
-           <span class="float-right pull-right">
+           <span class="float-right">
              <i class="fa" [ngClass]="!group2?.isOpen ? 'fa-chevron-down': 'fa-chevron-up'"></i>
            </span>
           Upload using Aspera
@@ -87,8 +87,6 @@
     </accordion>
   </div>
   <div class="modal-footer">
-    <form class="pull-right">
-      <button type="button" class="btn btn-primary btn-xs" (click)="modalRef.hide()" autofocus>Ok</button>
-    </form>
+    <button type="button" class="btn btn-primary btn-xs" (click)="modalRef.hide()" autofocus>Ok</button>
   </div>
 </ng-template>

@@ -37,11 +37,12 @@ export class PubMedIdSearchComponent implements ControlValueAccessor {
   isPreviewPub: boolean = false; // indicates if the retrieved publication's summary preview is on display
   @Input() readonly?: boolean = false;
   @Input() required?: boolean = false;
+  @Input() inputId: string = '';
 
-  private isBusy: boolean = false; // indicates a transaction is in progress
+  publication: { [key: string]: string } = {}; // last publication retrieved
+  isBusy: boolean = false; // indicates a transaction is in progress
+  pubMedId: string | undefined; // last PubMed ID number typed in
   private lastIDfetched: string | undefined; // helps cancel unnecessary search actions triggered by enter key
-  private publication: { [key: string]: string } = {}; // last publication retrieved
-  private pubMedId: string | undefined; // last PubMed ID number typed in
 
   constructor(private pubMedSearchService: PubMedSearchService) {
     this.pubMedFetch = debounce(this.pubMedFetch, 300);

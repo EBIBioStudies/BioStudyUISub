@@ -1,23 +1,19 @@
-<st-container-root>
-  <st-container-md>
-    <div class="panel auth-content panel-default">
-      <div class="panel-body">
-        <div *ngIf="!message">
-          <h4 class="text-muted">
-            <i class="fa fa-cog fa-spin"></i> Activating...
-          </h4>
-        </div>
-        <div *ngIf="message">
-          <h4 *ngIf="hasError" class="text-muted text-danger" style="text-align: center">
-            <i class="fa fa-exclamation-triangle"></i>
-            {{message}}
-          </h4>
-          <h4 *ngIf="!hasError" class="text-muted text-success">
-            <i class="fa fa-check text-success"></i>
-            {{message}} You can now <a routerLink="/signin">log in</a>
-          </h4>
-        </div>
-      </div>
+<st-auth-container>
+  <div class="card">
+    <div *ngIf="!message" class="card-body">
+      <h4 class="card-title">Activating <i class="fa fa-cog fa-spin"></i></h4>
     </div>
-  </st-container-md>
-</st-container-root>
+    <div *ngIf="message" class="card-body">
+      <h5 class="card-subtitle mb-2 text-muted">
+        <i class="fa fa-exclamation-triangle"></i>
+        {{message}}
+      </h5>
+    </div>
+    <div class="card-footer text-muted">
+      <a routerLink="/signin">
+        <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
+        Back to Log in
+      </a>
+    </div>
+  </div>
+</st-auth-container>

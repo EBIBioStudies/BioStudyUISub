@@ -4,7 +4,6 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { Location } from '@angular/common';
 import { Observable, of, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
-import { AppConfig } from 'app/app.config';
 import { LogService } from 'app/core/logger/log.service';
 import { ModalService } from 'app/shared/modal.service';
 import { scrollTop } from 'app/utils';
@@ -36,21 +35,21 @@ class SubmitOperation {
 @Component({
   selector: 'st-app-subm-edit',
   templateUrl: './submission-edit.component.html',
-  styleUrls: ['./submission-edit.component.css']
+  styleUrls: ['./submission-edit.component.scss']
 })
 export class SubmissionEditComponent implements OnInit, OnDestroy {
   @Input() readonly = false;
   sectionForm!: SectionForm;
   @ViewChild(SubmSidebarComponent) sideBar?: SubmSidebarComponent;
-  sideBarCollapsed = false;
   submitOperation: SubmitOperation = SubmitOperation.UNKNOWN;
+  isSidebarCollapsed: boolean = false;
+  method?: string;
+  submissionErrors: SubmValidationErrors = SubmValidationErrors.EMPTY;
 
   private accno?: string;
   private hasJustCreated = false;
-  private method?: string;
   private newReleaseDate: Date = new Date();
   private oldReleaseDate: Date = new Date();
-  private submissionErrors: SubmValidationErrors = SubmValidationErrors.EMPTY;
   private unsubscribe: Subject<void> = new Subject<void>();
 
   constructor(
@@ -59,12 +58,9 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     private locService: Location,
     private bsModalService: BsModalService,
     private modalService: ModalService,
-    private appConfig: AppConfig,
     private submEditService: SubmEditService,
     private logService: LogService
   ) {
-    this.sideBarCollapsed = window.innerWidth < this.appConfig.tabletBreak;
-
     submEditService.sectionSwitch$.pipe(
       takeUntil(this.unsubscribe),
     ).subscribe((sectionForm) => this.switchSection(sectionForm));
@@ -217,6 +213,10 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
         () => this.onSubmitSuccess(),
         (resp) => this.showSubmitLog(false, resp.log)
       );
+  }
+
+  onSidebarToggle(): void {
+    this.isSidebarCollapsed = !this.isSidebarCollapsed;
   }
 
   private confirmPageDelete(message: string): Observable<boolean> {

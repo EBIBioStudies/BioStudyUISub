@@ -1,5 +1,5 @@
-<nav>
-  <div class="col-xs-8 col-md-9 breadcrumbs nav-block">
+<nav class="navbar navbar-light border-bottom page-navbar bg-white sticky-top">
+  <div class="mr-auto">
     <a *ngIf="isTemp" routerLink="/submissions/draft">
       <i class="fa fa-clock-o" aria-hidden="true"></i> Drafts
     </a>
@@ -19,10 +19,10 @@
     </span>
     <i *ngIf="isSaving" class="fas fa-save save-icon"></i>
   </div>
-  <div class="col-xs-4 col-md-3 btn-toolbar nav-block">
+  <div class="btn-toolbar">
     <button *ngIf="!readonly"
         [disabled]="isSaving"
-        class="button-link btn btn-primary btn-sm btn-submit pull-right"
+        class="btn btn-primary btn-sm"
         tooltip="Send to the BioStudies database"
         placement="bottom"
         container="body"
@@ -31,7 +31,7 @@
     </button>
     <button *ngIf="!readonly && !isTemp && isRevised"
         [disabled]="!isEditing"
-        class="button-link btn btn-primary btn-sm btn-danger pull-right"
+        class="btn btn-primary btn-sm btn-danger ml-2"
         tooltip="Revert to last released version"
         placement="bottom"
         container="body"
@@ -39,15 +39,15 @@
       <i class="fa fa-undo" aria-hidden="true"></i>
       Revert
     </button>
-    <button *ngIf="readonly" class="btn btn-default btn-sm pull-right"
+    <button *ngIf="readonly" class="btn btn-secondary btn-sm ml-2"
         (click)="onEdit($event)"
         tooltip="Edit this submission"
         placement="bottom"
         container="body">
-      <i class="fa fa-pencil" aria-hidden="true"></i>
+      <i class="fas fa-pencil-alt" aria-hidden="true"></i>
       Edit
     </button>
-    <button *ngIf="readonly" class="btn btn-primary btn-sm pull-right"
+    <button *ngIf="readonly" class="btn btn-primary btn-sm ml-2"
         tooltip="Create a new submission"
         placement="bottom"
         container="body"

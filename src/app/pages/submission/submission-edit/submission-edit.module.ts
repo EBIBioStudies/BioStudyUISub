@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { SortablejsModule } from 'ngx-sortablejs';
 import { SharedModule } from 'app/shared/shared.module';
 import { FileModule } from 'app/pages/file/file.module';
+import { ThemeModule } from 'app/theme/theme.module';
 import { IdLinkModule } from '../id-link/id-link.module';
 import { PubMedIdSearchModule } from '../pubmedid-search/pubmedid-search.module';
 import { SubmissionOtherModule } from '../submission-other/submission-other.module';
@@ -10,6 +11,8 @@ import { SubmissionResultsModule } from '../submission-results/submission-result
 import { SubmissionSharedModule } from '../submission-shared/submission-shared.module';
 import { Camelcase2LabelPipe } from './shared/camelcase-to-label.pipe';
 import { SubmEditService } from './shared/subm-edit.service';
+import { BootstrapValidationDirective } from './shared/bootstrap-validation.directive';
+import { RemoveHostDirective } from './shared/remove-host.directive';
 import { TextareaAutosizeDirective } from './shared/textarea-autosize.directive';
 import { UniqueValidator } from './shared/unique.directive';
 import { SubmissionEditComponent } from './submission-edit.component';
@@ -38,7 +41,8 @@ import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
     SubmissionOtherModule,
     IdLinkModule,
     PubMedIdSearchModule,
-    SortablejsModule
+    SortablejsModule,
+    ThemeModule
   ],
   providers: [
     SubmEditService
@@ -60,6 +64,8 @@ import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
     FeatureListComponent,
     Camelcase2LabelPipe,
     UniqueValidator,
+    BootstrapValidationDirective,
+    RemoveHostDirective,
     NativeElementAttachDirective,
     TextareaAutosizeDirective
   ],

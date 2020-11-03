@@ -5,18 +5,19 @@ import { SubmissionStatus } from 'app/pages/submission/submission-shared/submiss
 @Component({
   selector: 'st-status-cell',
   template: `
-    <div>
-      <span class="flex-center" *ngIf="shouldShowAccno || isResubmitting">
+    <div class="d-flex align-items-center">
+      <span *ngIf="shouldShowAccno || isResubmitting">
         {{submissionAccno}}
         <i *ngIf="isResubmitting" class="spinner-border spinner-border-sm status-spinner"></i>
       </span>
-      <span *ngIf="isProcessingSubmission && !this.isResubmitting" class="badge flex-center badge-primary">
-        {{processingDisplayName}}
-        <i class="spinner-border spinner-border-sm status-spinner"></i>
-      </span>
+      <h5 class="d-flex m-0">
+        <span *ngIf="isProcessingSubmission && !this.isResubmitting" class="badge badge-primary">
+          {{processingDisplayName}}
+          <i class="spinner-border spinner-border-sm status-spinner"></i>
+        </span>
+      </h5>
     </div>
   `,
-  styleUrls: ['./status-cell.component.css']
 })
 export class StatusCellComponent implements AgRendererComponent {
   rowData: any;

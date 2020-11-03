@@ -6,7 +6,7 @@ export const proteinDesignsTemplate = {
     fieldTypes: [
       {
         name: "Title",
-        icon: "fa-title",
+        icon: "fa-heading",
         display: "required",
         valueType: {
           name: "largetext",
@@ -42,7 +42,7 @@ export const proteinDesignsTemplate = {
       {
         name:
           "DNA sequence of the plasmid you are using for expression, including DNA sequence of your protein",
-        icon: "fa-title",
+        icon: "fa-dna",
         display: "required",
         valueType: {
           name: "dna",
@@ -50,7 +50,7 @@ export const proteinDesignsTemplate = {
       },
       {
         name: "Amino acid sequence of the protein",
-        icon: "fa-title",
+        icon: "fa-vial",
         display: "required",
         valueType: {
           name: "protein",
@@ -60,7 +60,7 @@ export const proteinDesignsTemplate = {
         name: "How are the proteins produced?",
         helpText:
           'For example "expressed in E. coli", "synthesized chemically", "expressed using yeast surface display"',
-        icon: "fa-title",
+        icon: "fa-comment",
         display: "required",
         valueType: {
           name: "largetext",

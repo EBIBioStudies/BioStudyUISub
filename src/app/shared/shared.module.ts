@@ -13,7 +13,7 @@ import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ContainerRootComponent } from './container-root.component';
-import { ContainerMdComponent } from './container-md.component';
+import { AuthContainerComponent } from './auth-container.component';
 import { ORCIDInputBoxComponent } from './orcid-input-box/orcid-input-box.component';
 import { FileUploadButtonComponent } from './file-upload-button/file-upload-button.component';
 import { ConfirmDialogComponent } from './confirm-dialog.component';
@@ -50,7 +50,7 @@ import { SelectInputComponent } from './select-input/select-input.component';
   ],
   declarations: [
     ContainerRootComponent,
-    ContainerMdComponent,
+    AuthContainerComponent,
     ORCIDInputBoxComponent,
     FileUploadButtonComponent,
     ConfirmDialogComponent,
@@ -78,7 +78,7 @@ import { SelectInputComponent } from './select-input/select-input.component';
     CollapseModule,
     AlertModule,
     ContainerRootComponent,
-    ContainerMdComponent,
+    AuthContainerComponent,
     ORCIDInputBoxComponent,
     FileUploadButtonComponent,
     ConfirmDialogComponent,

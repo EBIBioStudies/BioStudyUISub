@@ -7,7 +7,7 @@ export const hecatosTemplate = {
     fieldTypes: [
       {
         name: "Title",
-        icon: "fa-title",
+        icon: "fa-heading",
         valueType: {
           name: "largetext",
           minlength: 25,
@@ -21,7 +21,7 @@ export const hecatosTemplate = {
       },
       {
         name: "Sample Type",
-        icon: "fa-eyedropper",
+        icon: "fa-disease",
         valueType: {
           name: "select",
           values: [
@@ -35,7 +35,7 @@ export const hecatosTemplate = {
       },
       {
         name: "Organism",
-        icon: "fa-eyedropper",
+        icon: "fa-tag",
         valueType: {
           name: "select",
           values: ["Homo sapiens (human)", "Sus scrofa (pig)"],
@@ -43,7 +43,7 @@ export const hecatosTemplate = {
       },
       {
         name: "Organ",
-        icon: "fa-eyedropper",
+        icon: "fa-lungs",
         valueType: {
           name: "select",
           values: ["heart", "liver"],
@@ -51,7 +51,7 @@ export const hecatosTemplate = {
       },
       {
         name: "Dose",
-        icon: "fa-eyedropper",
+        icon: "fa-vial",
         valueType: {
           name: "select",
           values: ["therapeutic", "toxic"],
@@ -59,7 +59,7 @@ export const hecatosTemplate = {
       },
       {
         name: "Raw/Processed",
-        icon: "fa-eyedropper",
+        icon: "fa-tag",
         valueType: {
           name: "select",
           values: ["raw", "processed"],
@@ -67,7 +67,7 @@ export const hecatosTemplate = {
       },
       {
         name: "Biological Replicate",
-        icon: "fa-eyedropper",
+        icon: "fa-comment",
         valueType: { name: "text" },
       },
       {

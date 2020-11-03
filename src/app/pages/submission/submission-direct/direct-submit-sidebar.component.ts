@@ -26,7 +26,7 @@ interface SidebarModel {
 @Component({
   selector: 'st-direct-submit-sidebar',
   templateUrl: './direct-submit-sidebar.component.html',
-  styleUrls: ['./direct-submit-sidebar.component.css']
+  styleUrls: ['./direct-submit-sidebar.component.scss']
 })
 export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck {
   @Input() collapsed = false;

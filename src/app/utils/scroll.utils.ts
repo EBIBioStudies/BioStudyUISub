@@ -1,19 +1,11 @@
-import { FormControl } from '@angular/forms';
+import { CustomFormControl } from './../pages/submission/submission-edit/shared/model/custom-form-control.model';
 
-export function scrollToFormControl(control: FormControl): void {
-  const element: HTMLElement  = (control as any).nativeElement;
+export function scrollToFormControl(control: CustomFormControl): void {
+  const element: HTMLElement | null = document.getElementById(control.ref.id);
 
-  if (element !== undefined) {
+  if (element) {
     element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-    setTimeout(() => {
-      const elementRef: HTMLTextAreaElement | HTMLInputElement =
-        element.querySelectorAll<HTMLTextAreaElement | HTMLInputElement>('input, textarea')[0];
-
-      if (elementRef) {
-        elementRef.focus();
-      }
-    }, 200);
+    setTimeout(() => element.focus(), 200);
   }
 }
 

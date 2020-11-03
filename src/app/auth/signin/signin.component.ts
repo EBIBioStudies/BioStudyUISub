@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, UserSession } from 'app/auth/shared';
@@ -10,23 +10,15 @@ import { UserInfo } from '../shared/model';
   templateUrl: './signin.component.html',
   styleUrls: ['./signin.component.css']
 })
-export class SignInComponent implements OnInit, AfterViewInit {
+export class SignInComponent implements OnInit {
   error?: ServerError; // Server response object in case of error
   isLoading = false; // Flag indicating if login request in progress
   model = {login: '', password: '', next: ''}; // Data model for the component's form
-
-  @ViewChild('focusEl', { static: true })
-  private focusRef!: ElementRef;
 
   constructor(private authService: AuthService,
               private userSession: UserSession,
               private router: Router,
               private route: ActivatedRoute) {
-  }
-
-  // TODO: Turn autofocus on render into a directive
-  ngAfterViewInit(): void {
-    this.focusRef.nativeElement.focus();
   }
 
   ngOnInit(): void {

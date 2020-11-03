@@ -62,11 +62,10 @@ class DataTypeControl {
 
 @Component({
   selector: 'st-subm-edit-sidebar',
-  templateUrl: './subm-edit-sidebar.component.html',
-  styleUrls: ['./subm-edit-sidebar.component.css']
+  templateUrl: './subm-edit-sidebar.component.html'
 })
 export class SubmEditSidebarComponent implements OnDestroy {
-  @Input() collapse: boolean = false;
+  @Input() collapsed: boolean = false;
   form: FormGroup = new FormGroup({}, FormValidators.uniqueValues);
   isAdvancedOpen: boolean = false;
   @Input() isAdvancedVisible: boolean = true;

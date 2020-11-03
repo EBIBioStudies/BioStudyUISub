@@ -1,0 +1,12 @@
+.sidebar-expanded {
+  padding: 0 0 0 var(--sidebar-expanded-width);
+}
+
+.sidebar-collapsed {
+  padding: 0 0 0 var(--sidebar-collapsed-width);
+}
+
+.text-dashed {
+  border: 1px dashed;
+  border-radius: var(--border-radius-small);
+}

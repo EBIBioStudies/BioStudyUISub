@@ -7,7 +7,7 @@ import { SidebarFile } from './direct-submit-sidebar.component';
 @Component({
   selector: 'st-direct-submit',
   templateUrl: './direct-submit.component.html',
-  styleUrls: ['./direct-submit.component.css']
+  styleUrls: ['./direct-submit.component.scss']
 })
 export class DirectSubmitComponent {
   collapseSideBar: boolean = false;

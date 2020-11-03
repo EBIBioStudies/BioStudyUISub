@@ -24,6 +24,7 @@ import {
  * @see {@link ControlValueAccessor}
  */
 export class ORCIDInputBoxComponent implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy {
+  @Input() inputId: string = '';
   @Input() isPopupButton: boolean = true; // flag for showing/hiding popup button
   @Input() isSmall: boolean = true; // flag for making the input area the same size as grid fields
   @Input() readonly: boolean = false;

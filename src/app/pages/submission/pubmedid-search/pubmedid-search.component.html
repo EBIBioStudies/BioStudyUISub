@@ -1,29 +1,22 @@
-<input class="form-control input-sm" type="text"
-    placeholder="{{!readonly ? 'Find by PubMed ID' : ''}}"
-    [(ngModel)]="value"
-    (ngModelChange)="search()"
-    (keyup.enter)="searchOnKeypress($event)"
-    [readonly]="readonly"
+<div class="input-group dropup" [ngClass]="{'open': isPreviewPub}">
+  <input id="{{inputId}}" class="form-control" type="text" placeholder="{{!readonly ? 'Find by PubMed ID' : ''}}"
+    [(ngModel)]="value" (ngModelChange)="search()" (keyup.enter)="searchOnKeypress($event)" [readonly]="readonly"
     [required]="required">
-<span *ngIf="!readonly" class="input-group-btn dropup"
-    [ngClass]="{'open': isPreviewPub}">
-  <button class="btn btn-link btn-sm dropdown-toggle" type="button"
-      [disabled]="isBusy || !pubMedId"
+  <div class="input-group-append">
+    <button class="btn btn-outline-secondary dropdown-toggle" type="button" [disabled]="isBusy || !pubMedId"
       (click)="togglePreviewPub()">
-    <i class="fa fa-fw fa-lg" aria-hidden="true"
-       [ngClass]="{ 'fa-cog fa-spin': isBusy, 'fa-search': !isBusy}"></i>
-  </button>
+      <i class="fa fa-fw fa-lg" aria-hidden="true" [ngClass]="{ 'fa-cog fa-spin': isBusy, 'fa-search': !isBusy}"></i>
+    </button>
+  </div>
   <ul class="dropdown-menu" role="menu">
-    <li role="menuitem"
-      (mouseenter)="$event.target.className = 'active'"
-      (mouseleave)="$event.target.className = ''">
-      <a class="dropdown-item" href="javascript:void(0)"
-         (click)="selectPub()">
-        {{publication.authors?.split(',').slice(0, 2).join(',')}} <!-- Shows just the two first authors -->
+    <li role="menuitem" (mouseenter)="$event.target.className = 'active'" (mouseleave)="$event.target.className = ''">
+      <a class="dropdown-item" href="javascript:void(0)" (click)="selectPub()">
+        {{publication.authors?.split(',').slice(0, 2).join(',')}}
+        <!-- Shows just the two first authors -->
         <strong>{{publication.title}}</strong>
         {{publication.year}}{{publication.volume? ';' : '.'}}
         {{publication.volume}}{{publication.issue ? '(' + publication.issue + ').' : ''}}
       </a>
     </li>
   </ul>
-</span>
+</div>

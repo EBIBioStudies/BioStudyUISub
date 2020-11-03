@@ -7,6 +7,11 @@
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
       "prefix": "st",
       "architect": {
         "build": {
@@ -25,10 +30,8 @@
               "src/config.json"
             ],
             "styles": [
-              "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
               "node_modules/@fortawesome/fontawesome-free/css/all.css",
-              "src/style.less",
-              "src/theme/custom-bootstrap.less"
+              "src/style.scss"
             ],
             "scripts": [
               "node_modules/marked/lib/marked.js"

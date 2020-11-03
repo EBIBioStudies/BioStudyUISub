@@ -228,7 +228,7 @@ export class CustomErrorMessages {
 
     return {
       required: () => {
-        return `Please enter the ${ref.parentName}'s ${ref.name.toLowerCase()}`;
+        return `This field is required please enter a value`;
       },
       minlength: (error: { actualLength: number, requiredLength: number }) => {
         return `Please use at least ${error.requiredLength} characters`;

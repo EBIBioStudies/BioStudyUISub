@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -13,16 +13,14 @@ type FormControlGroup = Array<FormControl>;
 @Component({
   selector: 'st-subm-sidebar',
   templateUrl: './subm-sidebar.component.html',
-  styleUrls: ['./subm-sidebar.component.css']
+  styleUrls: ['./subm-sidebar.component.scss']
 })
 export class SubmSidebarComponent implements OnDestroy {
   @Input() collapsed?: boolean = false;
   invalidControls: FormControlGroup[] = [];
   isCheckTabActive: boolean = true;
-  @Input() sectionForm?: SectionForm;
   serverError?: ServerError;
   showAdvanced: boolean = false;
-  @Output() toggle = new EventEmitter();
 
   private controls: Array<FormControl>[] = [];
   private unsubscribe = new Subject<void>();
@@ -60,20 +58,6 @@ export class SubmSidebarComponent implements OnDestroy {
 
   onCheckTabClick(): void {
     this.isCheckTabActive = true;
-  }
-
-  /**
-   * Handler for the button toggling the collapsed state of the whole sidebar menu,
-   * bubbling the menu's state up.
-   * @param [event] - Optional click event object.
-   */
-  onToggleCollapse(event?: Event): void {
-    // tslint:disable-next-line: no-unused-expression
-    event && event.preventDefault();
-
-    if (this.toggle) {
-      this.toggle.emit();
-    }
   }
 
   private groupControlsBySectionId(controls: FormControl[]): FormControlGroup[] {
