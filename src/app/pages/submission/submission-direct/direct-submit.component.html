@@ -1,163 +1,146 @@
-<div class="row-offcanvas row-offcanvas-left">
-  <st-direct-submit-sidebar
-      (toggle)="onToggle()"
-      (filesChange)="onFilesChange($event)"
-      [collapsed]="collapseSideBar"
-      #sidebar>
-  </st-direct-submit-sidebar>
-  <div class="navbar-default navbar-subm-fixed"
-     [ngClass]="{'collapse-left': collapseSideBar}">
-    <nav>
-      <div class="col-xs-4 nav-block">
-        <a routerLink="/submissions{{sidebar.hasRequests && sidebar.isStatus('successful') ? '' : '/draft'}}">
-          <i *ngIf="sidebar.hasRequests && sidebar.isStatus('successful')" class="fa fa-database" aria-hidden="true"></i>
-          {{sidebar.hasRequests && sidebar.isStatus('successful') ? 'Submitted' : 'Submission list'}}
-        </a>
-        &nbsp;<i class="fa fa-angle-right font-bold"></i>&nbsp;
-        <strong>Direct upload</strong>
-      </div>
-      <div class="col-xs-4 nav-block text-center text-muted">
-        <span *ngIf="sidebar.pendingFiles > 0">
-          <strong>{{sidebar.pendingFiles}}</strong> {{pluralise('files')}} pending upload
-        </span>
-        <span *ngIf="sidebar.pendingFiles === 0 && sidebar.hasRequests && uploadedCount()">
-          <strong>{{uploadedCount()}}</strong> {{pluralise('files')}} uploaded
-        </span>
-        <span *ngIf="sidebar.hasRequests && sidebar.isStatus('failed')" class="text-danger">
-          <strong>{{sidebar.errorFiles}}</strong> failed
-        </span>
-      </div>
-    </nav>
-  </div>
-  <div class="container-fluid">
-    <aside class="right-side navbar-subm-margin clearfix"
-         [ngClass]="{'collapse-left': collapseSideBar}">
-      <div class="help-msg panel">
-        <div *ngIf="!sidebar.hasRequests" class="panel-body">
-          <h4>New direct {{sidebar.submitType == 'create' ? 'entry' : 'update'}}</h4>
-          <p>Please fill in the form on the left-hand side to upload your studies:</p>
-          <ol>
-            <li>
-              <strong>
-                Provide the study files
-              </strong>
-              <p>
+<div class="container-fluid">
+  <div class="row">
+    <st-sidebar (toggle)="onToggle()">
+      <st-direct-submit-sidebar (filesChange)="onFilesChange($event)" [collapsed]="collapseSideBar" #sidebar>
+      </st-direct-submit-sidebar>
+    </st-sidebar>
+    <main class="col" [ngClass]="{
+      'sidebar-expanded': !collapseSideBar,
+      'sidebar-collapsed': collapseSideBar
+    }">
+      <nav class="navbar navbar-light border-bottom page-navbar bg-white sticky-top">
+        <div class="nav-block">
+          <a routerLink="/submissions{{sidebar.hasRequests && sidebar.isStatus('successful') ? '' : '/draft'}}">
+            <i *ngIf="sidebar.hasRequests && sidebar.isStatus('successful')" class="fa fa-database"
+              aria-hidden="true"></i>
+            {{sidebar.hasRequests && sidebar.isStatus('successful') ? 'Submitted' : 'Submissions'}}
+          </a>
+          &nbsp;<i class="fa fa-angle-right font-bold"></i>&nbsp;
+          <strong>Direct upload</strong>
+        </div>
+        <div class="nav-block text-center text-muted">
+          <span *ngIf="sidebar.pendingFiles > 0">
+            <strong>{{sidebar.pendingFiles}}</strong> {{pluralise('files')}} pending to upload
+          </span>
+          <span *ngIf="sidebar.pendingFiles === 0 && sidebar.hasRequests && uploadedCount()">
+            <strong>{{uploadedCount()}}</strong> {{pluralise('files')}} uploaded
+          </span>
+          <span *ngIf="sidebar.hasRequests && sidebar.isStatus('failed')">
+            <strong>{{sidebar.errorFiles}}</strong> failed
+          </span>
+        </div>
+      </nav>
+      <div class="content p-3 bg-light">
+        <div class="card">
+          <div *ngIf="!sidebar.hasRequests" class="card-body">
+            <h4>New direct {{sidebar.submitType == 'create' ? 'entry' : 'update'}}</h4>
+            <p>Please fill in the form on the left-hand side to upload your studies:</p>
+            <ol>
+              <li>
+                <strong>
+                  Provide the study files
+                </strong>
+                <p>
                   Use the <i>"File Upload"</i> button to pick files from different directories. <br />
                   Use the <i>"Folder Upload"</i> button to upload all the files in a folder.
-              </p>
-            </li>
-            <li>
-              <strong>Which projects are you attaching your studies to?</strong>
-              <p>Choose the projects all your files will be attached to. If no project is selected, studies
-                will be uploaded as stand-alone and will be allocated an accession number with format
-                <i>S-BSST&lt;number&gt;</i>.
-              </p>
-            </li>
-            <li>
-              <strong>Are you updating existing studies?</strong>
-              <p>Only select <i>"Update studies"</i> if the files are intented to overwrite
-                corresponding studies on the database.
-              </p>
-            </li>
-          </ol>
-          <div class="alert alert-warning">
-            <div class="pull-left">
-              <i class="fa fa-hand-o-right fa-lg"></i>
-              <strong>Please note</strong>
-            </div>
-            <p class="text-block text-black">
-              If updating existing studies, each study file must have the accession number as its first
+                </p>
+              </li>
+              <li>
+                <strong>Which projects are you attaching your studies to?</strong>
+                <p>Choose the projects all your files will be attached to. If no project is selected, studies
+                  will be uploaded as stand-alone and will be allocated an accession number with format
+                  <i>S-BSST&lt;number&gt;</i>.
+                </p>
+              </li>
+              <li>
+                <strong>Are you updating existing studies?</strong>
+                <p>Only select <i>"Update studies"</i> if the files are intented to overwrite
+                  corresponding studies on the database.
+                </p>
+              </li>
+            </ol>
+            <div class="alert alert-warning mb-0" role="alert">
+              <strong>Please note:</strong> If updating existing studies, each study file must have the accession number
+              as its first
               entry. In a spreadsheet, for example, the number would be in the first line.
-            </p>
+            </div>
+          </div>
+          <div *ngIf="sidebar.hasRequests" class="card-body">
+            <ng-container *ngIf="sidebar.isStatus('busy')">
+              <h4>{{sidebar.submitType == 'create' ? 'Creating' : 'Updating'}} {{pluralise('study')}}...</h4>
+              <p>Please wait while the {{pluralise('studies')}} {{pluralise('is')}} being {{sidebar.submitType + 'd'}}
+                and
+                validated. Any invalid ones will be highlighted below. Click on them to reveal more details.</p>
+            </ng-container>
+            <ng-container *ngIf="sidebar.isStatus('failed') && sidebar.isStatus('done')">
+              <h4>Error while {{sidebar.submitType == 'create' ? 'creating' : 'updating'}}
+                {{pluralise('study')}}</h4>
+              <p>The {{pluralise('study')}} highlighted below {{pluralise('is')}} invalid or an unexpected
+                error was encountered. Please try to correct any issues before uploading the affected
+                {{pluralise('files')}} again. To show the error log, simply click on the relevant failed file.
+              </p>
+            </ng-container>
+            <ng-container *ngIf="sidebar.isStatus('successful')">
+              <h4>{{pluralise('Study')}} {{sidebar.submitType + 'd'}}</h4>
+              <p>
+                The {{pluralise('study')}} specified below with accession {{pluralise('number')}}
+                <span *ngFor="let file of sidebar.model.files; let i = index; let last = last">
+                  <strong>{{getAccno(i)}}</strong>{{last ? '' : ', '}}
+                </span>
+                {{pluralise('has')}} been successfully
+                {{sidebar.submitType == 'create' ? 'added to the BioStudies database' : 'updated'}}.
+                {{sidebar.selectedFileCount > 1 ? 'They' : 'It'}}
+                {{sidebar.submitType == 'create' ? 'will be available in the next 24 hours' : 'is available'}}
+                at the following {{pluralise('address')}}:
+                <span *ngFor="let file of sidebar.model.files; let i = index; let last = last">
+                  <a target="_blank" href="{{location.origin}}/biostudies/studies/{{getAccno(i)}}">
+                    {{location.hostname}}/biostudies/studies/{{getAccno(i)}}</a>{{last ? '' : ', '}}
+                </span>.
+              </p>
+              <strong>
+                <a target="_blank" href="https://www.ebi.ac.uk/biostudies/about.html">
+                  Citing my {{pluralise('study')}}
+                  <i class="fa fa-fw fa-external-link-square"></i>
+                </a>
+              </strong>
+              <p>
+                Data are available in the BioStudies database <a target="_blank"
+                  href="https://www.ebi.ac.uk/biostudies/">(https://ebi.ac.uk/biostudies/)</a>
+                under accession {{pluralise('number')}}
+                <span *ngFor="let file of sidebar.model.files; let i = index; let last = last">
+                  {{getAccno(i)}}{{last ? '' : ', '}}
+                </span>.
+              </p>
+              <strong>
+                <a target="_blank" href="http://europepmc.org/abstract/MED/26700850">
+                  Citing the BioStudies database
+                  <i class="fa fa-fw fa-external-link-square"></i>
+                </a>
+              </strong>
+              <p>
+                McEntyre J, Sarkans U, Brazma A (2015) The
+                BioStudies database. <i>Mol. Syst. Biol.</i> 11(12):847.
+                https://doi.org/10.15252/msb.20156658.
+              </p>
+            </ng-container>
           </div>
         </div>
-        <div *ngIf="sidebar.hasRequests">
-          <div *ngIf="sidebar.isStatus('busy')" class="panel-body">
-            <h4>{{sidebar.submitType == 'create' ? 'Creating' : 'Updating'}} {{pluralise('study')}}...</h4>
-            <p>Please wait while the {{pluralise('studies')}} {{pluralise('is')}} being {{sidebar.submitType + 'd'}} and validated.
-              Any invalid ones will be highlighted below. Click on them to reveal more details.</p>
-          </div>
-          <div *ngIf="sidebar.isStatus('failed') && sidebar.isStatus('done')" class="panel-body">
-            <h4>Error while {{sidebar.submitType == 'create' ? 'creating' : 'updating'}} {{pluralise('study')}}</h4>
-            <p>The {{pluralise('study')}} highlighted below {{pluralise('is')}} invalid or an unexpected
-              error was encountered. Please try to correct any issues before uploading the affected {{pluralise('files')}} again.
-              To show the error log, simply click on the relevant failed file.
-            </p>
-          </div>
-          <div *ngIf="sidebar.isStatus('successful')" class="panel-body">
-            <h4>{{pluralise('Study')}} {{sidebar.submitType + 'd'}}</h4>
-            <p>
-              The {{pluralise('study')}} specified below with accession {{pluralise('number')}}
-              <span *ngFor="let file of sidebar.model.files; let i = index; let last = last">
-                <strong>{{getAccno(i)}}</strong>{{last ? '' : ', '}}
-              </span>
-              {{pluralise('has')}} been successfully
-              {{sidebar.submitType == 'create' ? 'added to the BioStudies database' : 'updated'}}.
-              {{sidebar.selectedFileCount > 1 ? 'They' : 'It'}}
-              {{sidebar.submitType == 'create' ? 'will be available in the next 24 hours' : 'is available'}}
-              at the following {{pluralise('address')}}:
-              <span *ngFor="let file of sidebar.model.files; let i = index; let last = last">
-                <a target="_blank" href="{{location.origin}}/biostudies/studies/{{getAccno(i)}}">
-                  {{location.hostname}}/biostudies/studies/{{getAccno(i)}}</a>{{last ? '' : ', '}}
-              </span>.
-            </p>
-            <strong>
-              <a target="_blank" href="https://www.ebi.ac.uk/biostudies/about.html">
-                Citing my {{pluralise('study')}}
-                <i class="fa fa-fw fa-external-link-square"></i>
-              </a>
-            </strong>
-            <blockquote class="blockquote">
-              Data are available in the BioStudies database (http://www.ebi.ac.uk/biostudies)
-              under accession {{pluralise('number')}}
-              <span *ngFor="let file of sidebar.model.files; let i = index; let last = last">
-                {{getAccno(i)}}{{last ? '' : ', '}}
-              </span>.
-            </blockquote>
-            <strong>
-              <a target="_blank" href="http://europepmc.org/abstract/MED/26700850">
-                Citing the BioStudies database
-                <i class="fa fa-fw fa-external-link-square"></i>
-              </a>
-            </strong>
-            <blockquote class="blockquote">
-              McEntyre J, Sarkans U, Brazma A (2015) The
-              BioStudies database. <i>Mol. Syst. Biol.</i> 11(12):847.
-              https://doi.org/10.15252/msb.20156658.
-            </blockquote>
-          </div>
-        </div>
-      </div>
-      <div class="st-direct-upload-files-grid">
-        <div *ngFor="let file of studies; let i = index">
-          <st-direct-submit-file
-            [accno]="getAccno(i)"
-            [errorLog]="getLog(i)"
-            [error]="getError(i)"
-            [file]="file"
-            [fileName]="file.name"
-            [hasSubmitFailed]="isFail(i)"
-            [hasSubmitPassed]="isSuccess(i)"
-            [isPending]="isPending()"
-            [isSubmitting]="isBusy(i)"
-            [project]="sidebar.selectedProject"
-            [releaseDate]="getRelease(i)"
-            [submitType]="sidebar.submitType"
-            [isStudy]="file.isStudy"
-            (fileClick)="handleFileCardClick($event)"
-            (isStudyChange)="handleIsStudyChange($event)"
-          ></st-direct-submit-file>
-        </div>
-        <div *ngFor="let file of files; let i = index">
-          <st-direct-submit-file
-            [accno]="getAccno(i)"
-            [file]="file"
-            [fileName]="file.name"
-            [isStudy]="file.isStudy"
-            (isStudyChange)="handleIsStudyChange($event)"
-          ></st-direct-submit-file>
+
+        <div class="st-direct-upload-files-grid mt-3">
+          <ng-container *ngFor="let file of studies; let i = index">
+            <st-direct-submit-file class="h-100" [accno]="getAccno(i)" [errorLog]="getLog(i)" [error]="getError(i)"
+              [file]="file" [fileName]="file.name" [hasSubmitFailed]="isFail(i)" [hasSubmitPassed]="isSuccess(i)"
+              [isPending]="isPending()" [isSubmitting]="isBusy(i)" [project]="sidebar.selectedProject"
+              [releaseDate]="getRelease(i)" [submitType]="sidebar.submitType" [isStudy]="file.isStudy"
+              (fileClick)="handleFileCardClick($event)" (isStudyChange)="handleIsStudyChange($event)">
+            </st-direct-submit-file>
+          </ng-container>
+          <ng-container *ngFor="let file of files; let i = index">
+            <st-direct-submit-file class="h-100" [accno]="getAccno(i)" [file]="file" [fileName]="file.name"
+              [isStudy]="file.isStudy" (isStudyChange)="handleIsStudyChange($event)"></st-direct-submit-file>
+          </ng-container>
         </div>
       </div>
-    </aside>
+    </main>
   </div>
 </div>

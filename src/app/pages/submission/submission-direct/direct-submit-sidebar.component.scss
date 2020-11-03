@@ -1,0 +1,13 @@
+.header {
+  height: calc(var(--page-navbar-height) - 1px);
+}
+
+.vertical-text {
+  left: -40px;
+  letter-spacing: 3px;
+  position: absolute;
+  text-transform: uppercase;
+  top: 50%;
+  transform: rotate(-90deg);
+  white-space: nowrap;
+}

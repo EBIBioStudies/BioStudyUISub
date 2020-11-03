@@ -1,0 +1,23 @@
+.sidebar-expanded {
+  padding: 0 0 0 var(--sidebar-expanded-width);
+}
+
+.sidebar-collapsed {
+  padding: 0 0 0 var(--sidebar-collapsed-width);
+}
+
+.st-direct-upload-files-grid {
+  align-items: center;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, 360px);
+}
+
+.page-navbar {
+  height: var(--page-navbar-height);
+  top: var(--header-height);
+}
+
+.content {
+  height: calc(100vh - calc(var(--page-navbar-height) + var(--header-height)));
+}
