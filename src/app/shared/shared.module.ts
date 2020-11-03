@@ -78,7 +78,7 @@ import { SelectInputComponent } from './select-input/select-input.component';
     CollapseModule,
     AlertModule,
     ContainerRootComponent,
-    AuthContainer,
+    AuthContainerComponent,
     ORCIDInputBoxComponent,
     FileUploadButtonComponent,
     ConfirmDialogComponent,
