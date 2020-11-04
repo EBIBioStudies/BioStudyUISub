@@ -115,12 +115,12 @@
             <h5 class="card-title">Subsections</h5>
             <div class="mb-3" *ngFor="let subsectionForm of sectionForm.subsectionForms">
               <div class="btn-group w-100" role="group">
-                <button type="button" class="btn btn-light text-left w-100" (click)="onSectionClick(subsectionForm)">
-                  <strong>{{subsectionForm.section.displayName}}</strong>
-                  <span *ngIf="subsectionForm.section.accno">
-                    : {{subsectionForm.section.accno}}
+                <button type="button" class="btn btn-light text-left w-100 d-flex align-items-center" (click)="onSectionClick(subsectionForm)">
+                  <strong>{{subsectionForm.section.displayName}}:</strong>
+                  <span class="flex-grow-1 ml-1" *ngIf="subsectionForm.section.accno">
+                    {{subsectionForm.section.accno}}
                   </span>
-                  <span class="label label-danger pull-right" style="margin-right: 10px" *ngIf="subsectionForm.invalid">
+                  <span class="badge badge-danger" *ngIf="subsectionForm.invalid">
                     {{subsectionForm.errorCount | plural: 'error' }}
                   </span>
                 </button>
@@ -138,17 +138,4 @@
       </div>
     </main>
   </div>
-
-  <!-- <div *ngIf="sectionForm" class="container-fluid">
-    <aside class="st-submission-edit-body" [ngClass]="{'collapse-left' : !readonly && sideBarCollapsed, 'right-side': !readonly}">
-      <st-subm-form [sectionForm]="sectionForm" [readonly]="readonly"></st-subm-form>
-
-      <div *ngIf="!readonly" class="row row-submit">
-        <p class="text-muted col-xs-9">
-          <i *ngIf="isSaving" class="fa fa-cog fa-spin"></i>
-          <span *ngIf="isSaving">Backing up study data...</span>
-        </p>
-      </div>
-    </aside>
-  </div> -->
 </div>

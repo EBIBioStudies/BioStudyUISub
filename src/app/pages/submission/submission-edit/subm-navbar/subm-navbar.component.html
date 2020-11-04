@@ -17,7 +17,10 @@
         </span>
       </a>
     </span>
-    <i *ngIf="isSaving" class="fas fa-save save-icon"></i>
+    <span class="text-muted ml-2" *ngIf="isSaving">
+      <i class="fa fa-cog fa-spin"></i>
+      Backing up study data...
+    </span>
   </div>
   <div class="btn-toolbar">
     <button *ngIf="!readonly"
