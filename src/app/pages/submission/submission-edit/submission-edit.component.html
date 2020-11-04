@@ -5,7 +5,8 @@
     </st-sidebar>
     <main class="col" [ngClass]="{
         'sidebar-expanded': !isSidebarCollapsed,
-        'sidebar-collapsed': isSidebarCollapsed
+        'sidebar-collapsed': isSidebarCollapsed,
+        'read-only-body': readonly
       }">
       <st-subm-navbar *ngIf="sectionForm" [readonly]="readonly" [accno]="accno" [sectionForm]="sectionForm"
         (sectionClick)="onSectionClick($event)" (revertClick)="onRevertClick($event)"
