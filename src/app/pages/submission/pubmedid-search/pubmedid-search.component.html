@@ -3,7 +3,7 @@
     [(ngModel)]="value" (ngModelChange)="search()" (keyup.enter)="searchOnKeypress($event)" [readonly]="readonly"
     [required]="required">
   <div class="input-group-append">
-    <button class="btn btn-outline-secondary dropdown-toggle" type="button" [disabled]="isBusy || !pubMedId"
+    <button class="btn btn-outline-secondary dropdown-toggle" type="button" [disabled]="isBusy || !pubMedId || readonly"
       (click)="togglePreviewPub()">
       <i class="fa fa-fw fa-lg" aria-hidden="true" [ngClass]="{ 'fa-cog fa-spin': isBusy, 'fa-search': !isBusy}"></i>
     </button>

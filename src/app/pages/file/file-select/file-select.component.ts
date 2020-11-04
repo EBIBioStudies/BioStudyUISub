@@ -41,13 +41,15 @@ export class FileSelectComponent implements ControlValueAccessor, OnDestroy {
   }
 
   openFileSelectModal(): void {
-    const modal = this.modalService.show(UploadFileModalComponent, { ignoreBackdropClick: true });
+    if (!this.readonly) {
+      const modal = this.modalService.show(UploadFileModalComponent, { ignoreBackdropClick: true });
 
-    (modal.content as UploadFileModalComponent).onClose
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe((fileName) => {
-        this.value = fileName;
-      });
+      (modal.content as UploadFileModalComponent).onClose
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe((fileName) => {
+          this.value = fileName;
+        });
+    }
   }
 
   registerOnChange(fn): void {

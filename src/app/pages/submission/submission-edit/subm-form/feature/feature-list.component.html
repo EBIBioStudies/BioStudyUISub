@@ -26,7 +26,7 @@
                 popover="{{column.hasErrors ? column.errors : ''}}"
                 triggers="focus"
                 [formControl]="column.control"
-                [readonly]="!column.canEditName || featureForm.isReadonly"
+                [readonly]="!column.canEditName || featureForm.isReadonly || readonly"
                 [typeahead]="featureForm.columnNamesTypeahead(column)"
                 [typeaheadMinLength]="0"
                 [typeaheadOptionsLimit]="200"
