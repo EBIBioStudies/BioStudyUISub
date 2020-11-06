@@ -4,7 +4,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { Location } from '@angular/common';
 import { Observable, of, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
-import { LogService } from 'app/core/logger/log.service';
+import { ErrorMessageService } from 'app/core/errors/error-message.service';
 import { ModalService } from 'app/shared/modal.service';
 import { scrollTop } from 'app/utils';
 import { SectionForm } from './shared/model/section-form.model';
@@ -59,7 +59,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     private bsModalService: BsModalService,
     private modalService: ModalService,
     private submEditService: SubmEditService,
-    private logService: LogService
+    private errorMessage: ErrorMessageService
   ) {
     submEditService.sectionSwitch$.pipe(
       takeUntil(this.unsubscribe),
@@ -121,14 +121,12 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
         }
 
         if (resp.error.isSome()) {
-          this.modalService.alert(
-            'Submission could not be retrieved. ' +
-            'Please make sure the URL is correct and contact us in case the problem persists.', 'Error', 'Ok'
-          ).subscribe(() => {
+          const message = this.errorMessage.getPlainMessage();
+
+          this.modalService.alert(message, 'Error', 'Ok').subscribe(() => {
             this.router.navigate(['/submissions/']);
           });
 
-          this.logService.error('submission-edit', resp.error);
           // tslint:disable-next-line: no-console
           console.error(resp.error);
         } else {

@@ -1,18 +1,25 @@
 import {
   ErrorHandler,
-  Injectable, NgZone
+  Injectable,
+  Injector,
+  NgZone
 } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
-import { UserSession } from 'app/auth/shared';
 import { INTERNAL_SERVER_ERROR, UNAUTHORIZED } from 'http-status-codes';
-import { LogService } from './core/logger/log.service';
-import { DEFAULT_ERROR_MESSAGE } from './app.constants';
+import { ToastrService } from 'ngx-toastr';
+import { UserSession } from 'app/auth/shared';
+import { ErrorMessageService } from './error-message.service';
 
 @Injectable()
-export class GlobalErrorHandler extends ErrorHandler {
+export class GlobalErrorService extends ErrorHandler {
   private errors: Subject<any> = new Subject<any>();
 
-  constructor(private userSession: UserSession, private zone: NgZone, private logService: LogService) {
+  constructor(
+    private userSession: UserSession,
+    private zone: NgZone,
+    private injector: Injector,
+    private errorMessage: ErrorMessageService
+  ) {
     super();
   }
 
@@ -20,11 +27,23 @@ export class GlobalErrorHandler extends ErrorHandler {
     return this.errors.asObservable();
   }
 
+  private get toastr(): ToastrService {
+    return this.injector.get(ToastrService);
+  }
+
+  private showErrorToast(error): void {
+    const message = this.errorMessage.getMessageWithMailBody(error.message);
+
+    this.toastr.error(message, '', {
+      closeButton: true,
+      disableTimeOut: true,
+      enableHtml: true,
+      tapToDismiss: false
+    });
+  }
+
   handleError(error): void {
     // Invalid authentication credentials, probably due to the current session having expired => clean up and reload.
-    // NOTE: the app seems to get into a limbo state whereby the digest cycle fails to detect property changes
-    // any more and requests are not issued. Reloading is a workaround.
-    // TODO: why is this happening?
     if (error.status === UNAUTHORIZED) {
       this.userSession.destroy();
       this.zone.runOutsideAngular(() => location.reload());
@@ -32,16 +51,11 @@ export class GlobalErrorHandler extends ErrorHandler {
 
     if (error.status === INTERNAL_SERVER_ERROR) {
       // An error occurred that may potentially be worth handling at a global level.
-
-      this.errors.next(DEFAULT_ERROR_MESSAGE);
+      this.showErrorToast(error);
     } else {
-      // TODO: post error to new logging system.
       // tslint:disable-next-line: no-console
       console.error(error);
-
-      this.errors.next(error);
+      this.showErrorToast(error);
     }
-
-    this.logService.error('global-error', error);
   }
 }

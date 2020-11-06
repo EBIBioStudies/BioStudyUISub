@@ -8,6 +8,7 @@ import { Component } from '@angular/core';
       <button *ngIf="rowData && isRowEditable" type="button" class="btn btn-primary"
           (click)="onEditSubmission()"
           tooltip="Edit this submission"
+          placement="left"
           container="body">
         <i class="fas fa-pencil-alt fa-fw"></i>
       </button>
@@ -15,6 +16,7 @@ import { Component } from '@angular/core';
           [disabled]="isBusy"
           (click)="onDeleteSubmission()"
           tooltip="Delete this submission"
+          placement="left"
           container="body">
         <i *ngIf="!isBusy" class="fas fa-trash-alt fa-fw"></i>
         <i *ngIf="isBusy" class="fa fa-cog fa-spin fa-fw"></i>

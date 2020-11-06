@@ -6,6 +6,7 @@
 @import './theme/subtool-theme.scss';
 @import './theme/subtool-ag-grid-theme.scss';
 @import '~bootstrap/scss/bootstrap';
+@import '~ngx-toastr/toastr-bs4-alert';
 
 body {
   padding-top: var(--header-height);
@@ -40,4 +41,13 @@ body {
 /* It ensures wide content in the dropdown is shown properly. */
 .ng-dropdown-panel {
   width: auto !important;
+}
+
+.toast-top-left {
+  top: 5px;
+}
+
+.toast-container .ngx-toastr {
+  width: 800px;
+  padding: 0.2rem 1.25rem 0.2rem 50px;
 }
