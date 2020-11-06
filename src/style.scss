@@ -25,6 +25,6 @@ body {
 }
 
 .toast-container .ngx-toastr {
-  width: 800px;
+  width: var(--toast-width);
   padding: 0.2rem 1.25rem 0.2rem 50px;
 }
