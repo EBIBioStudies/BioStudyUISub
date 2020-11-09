@@ -11,7 +11,6 @@
       option if the new submission is a stand-alone study or its parent project is not in the list. <br />
     </p>
     <strong>What is the study's parent project?</strong>
-    <!-- <div class="form-group"> -->
     <ng-container *ngFor="let tmpl of templates">
       <div class="form-check">
         <input id="{{tmpl.name}}" type="radio" class="form-check-input" [name]="tmpl.name" [value]="tmpl.name"
@@ -20,17 +19,7 @@
           placement="right">{{tmpl.name}}</label>
       </div>
     </ng-container>
-
-
-    <!-- <label class="control-label">What is the study's parent project?</label>
-      <div *ngFor="let tmpl of templates" class="radio">
-        <label [tooltip]="tmpl.description" placement="right">
-          <input type="radio" class="project-radio" [name]="tmpl.name" [value]="tmpl.name" [(ngModel)]="selected">
-          <span>{{tmpl.name}}</span>
-        </label>
-      </div> -->
   </div>
-  <!-- </div> -->
   <div class="modal-footer">
     <button type="submit" class="btn btn-primary btn-sm">Add</button>
     <button type="button" class="btn btn-default btn-sm" (click)="hide()">Cancel</button>
