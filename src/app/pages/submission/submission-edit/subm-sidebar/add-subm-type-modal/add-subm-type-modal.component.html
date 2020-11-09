@@ -1,7 +1,7 @@
 <form class="modal-content" autocomplete="off" #form="ngForm" (ngSubmit)="onSubmit(form)" novalidate>
   <div class="modal-header">
     <h5 class="modal-title">Add new...</h5>
-    <button type="button" class="close pull-right" aria-label="Close" (click)="hide()">
+    <button type="button" class="close" aria-label="Close" (click)="hide()">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -40,12 +40,9 @@
     </div>
   </div>
   <div class="modal-footer">
-    <div class="pull-right">
-      <button type="submit" class="btn btn-primary btn-sm">
-        Add
-      </button>
-      <button type="button" class="btn btn-default btn-sm" (click)="onCancel(form)">Cancel
-      </button>
-    </div>
+    <button type="submit" class="btn btn-primary btn-sm">
+      Add
+    </button>
+    <button type="button" class="btn btn-default btn-sm" (click)="onCancel(form)">Cancel</button>
   </div>
 </form>

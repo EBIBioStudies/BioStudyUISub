@@ -22,7 +22,8 @@ export class InlineEditComponent implements ControlValueAccessor {
   @Output() remove = new EventEmitter<any>();
   suggestLength: number;
   @Input() suggestThreshold = 0;
-  readonly typeahead: Observable<string[]>;
+  @Input() canEdit = false;
+  readonly columnOptions: Observable<string[]>;
 
   private inlineEditValue: string = '';
   private valueChanges$: Subject<string> = new BehaviorSubject<string>('');
@@ -33,7 +34,7 @@ export class InlineEditComponent implements ControlValueAccessor {
    */
   constructor(private appConfig: AppConfig) {
     this.suggestLength = this.appConfig.maxSuggestLength;
-    this.typeahead = typeaheadSource(() => {
+    this.columnOptions = typeaheadSource(() => {
       return this.autosuggestSource();
     }, this.valueChanges$);
   }
@@ -47,10 +48,6 @@ export class InlineEditComponent implements ControlValueAccessor {
       this.inlineEditValue = value;
       this.onChange(value);
     }
-  }
-
-  get canEdit(): boolean {
-    return !this.readonly;
   }
 
   get canRemove(): boolean {

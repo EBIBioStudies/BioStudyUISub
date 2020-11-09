@@ -19,8 +19,9 @@
               triggers="focus"
               emptyValue="{{'Column ' + (idx + 1)}}"
               [formControl]="column.control"
-              [readonly]="readonly || !column.canEditName || !userData.isPrivileged || featureForm.isReadonly"
-              [removable]="featureForm.canRemoveColumn(column) && !featureForm.isReadonly"
+              [canEdit]="column.canEditName && userData.isPrivileged && !readonly"
+              [readonly]="readonly"
+              [removable]="featureForm.canRemoveColumn(column) && !readonly"
               [autosuggestSource]="featureForm.columnNamesAvailable"
               (remove)="featureForm.removeColumn(column)"
               stNativeElementAttach
