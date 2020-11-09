@@ -11,7 +11,7 @@ import { FileUpload } from '../../shared/file-upload-list.service';
           class="btn btn-primary"
           tooltip="Download"
           container="body"
-          placement="bottom"
+          placement="left"
           (click)="onFileDownload($event)">
         <i class="fas fa-download fa-fw"></i>
       </button>
@@ -20,7 +20,7 @@ import { FileUpload } from '../../shared/file-upload-list.service';
           class="btn btn-danger"
           tooltip="Delete"
           container="body"
-          placement="bottom"
+          placement="left"
           (click)="onFileRemove($event)">
         <i class="fas fa-trash-alt fa-fw"></i>
       </button>
@@ -28,7 +28,7 @@ import { FileUpload } from '../../shared/file-upload-list.service';
           type="button" class="btn btn-warning"
           tooltip="Cancel"
           container="body"
-          placement="bottom"
+          placement="left"
           (click)="onCancelUpload($event)">
         Cancel
       </button>

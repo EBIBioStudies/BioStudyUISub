@@ -1,9 +1,12 @@
 import * as HttpStatus from 'http-status-codes';
 import { throwError, Observable } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-import { DEFAULT_ERROR_MESSAGE } from 'app/app.constants';
 
 export class ServerError {
+  static defaultErrorMessage: string = `Something went wrong at our side. Sorry for the inconvenience,
+    we are working to fix it. Please try again later and if the problem persists,
+    drop an email to biostudies@ebi.ac.uk`;
+
   data: any;
   status: number = 0;
   statusString: string = '';
@@ -27,7 +30,7 @@ export class ServerError {
   static fromResponse(response: HttpErrorResponse): ServerError {
     const { error } = response;
     const data = {
-      message: DEFAULT_ERROR_MESSAGE,
+      message: this.defaultErrorMessage,
       error: {}
     };
 
