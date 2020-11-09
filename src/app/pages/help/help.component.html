@@ -2,23 +2,23 @@
   <section class="row">
     <div>
       <h3>Help</h3>
-      <ol class="list-group">
-        <li class="list-group-item">
+      <ol>
+        <li class="py-2">
           <a href="#help-list" (click)="jumpTo($event)">Listing all your studies</a>
         </li>
-        <li class="list-group-item">
+        <li class="py-2">
           <a href="#help-files" (click)="jumpTo($event)">Uploading files</a>
         </li>
-        <li class="list-group-item">
+        <li class="py-2">
           <a href="#help-start" (click)="jumpTo($event)">Adding a study to the database</a>
         </li>
-        <li class="list-group-item">
+        <li class="py-2">
           <a href="#help-edit" (click)="jumpTo($event)">Editing a study</a>
         </li>
-        <li class="list-group-item">
+        <li class="py-2">
           <a href="#help-save" (click)="jumpTo($event)">Saving and submitting a study</a>
         </li>
-        <li class="list-group-item">
+        <li class="py-2">
           <a href="#help-about" (click)="jumpTo($event)">About</a>
           <a href="mailto:biostudies@ebi.ac.uk?Subject=Submission%20Tool" class="float-right">
             <i class="fa fa-envelope-square"></i>
@@ -62,9 +62,7 @@
           <p>
             The entire list can be filtered by any of the data columns. Just press the
             <span class="ag-fresh">
-              <span class="ag-header-cell-menu-button">
-                <i class="fa fa-filter"></i>
-              </span>
+              <i class="fa fa-filter"></i>
             </span>
             icon in the relevant column and provide the text or date to be filtered by. Additionally,
             the sorting order of the displayed rows can be changed by clicking on the
@@ -83,7 +81,7 @@
           <p>
             Each user's files are stored in a central repository and made available for all your
             submissions. To navigate and list all your files, click on
-            <button class="btn navbar-btn">
+            <button class="btn">
               <i class="fa fa-fw fa-lg fa-folder-open"></i>
               Files
             </button>. Click the
@@ -116,36 +114,32 @@
             a given study to the database. Both require clicking one of the two buttons above the
             list of submissions:
           </p>
-          <div class="row">
-            <p class="float-left">
-              <button class="btn btn-primary">
-                <i class="fa fa-plus-circle" aria-hidden="true"></i>
-                Add new
-              </button>
-            </p>
-            <p class="text-block">
-              Creates a blank submission form to be manually filled in with study data and added to
-              the database at your own discretion. As part of the process, the project your study belongs
-              to must be selected. This is due to the difference in data requirements that exists from
-              project to project.
-              <img src="images/help/new_submission.gif" width="1402" height="383" />
-            </p>
-          </div>
-          <div class="row">
-            <p class="float-left">
-              <button class="btn btn-primary">
-                <i class="fa fa-upload" aria-hidden="true"></i>
-                Direct upload
-              </button>
-            </p>
-            <p class="text-block">
-              Allows the automatic extraction of study data from a selected pre-formatted file. The data
-              can then be incorporated into the database as a new study or used to update an existing one.
-              As with user files (see the <i>"Uploading files"</i> section), study files can be submitted in
-              bulk.
-              <img src="images/help/direct_upload.jpg" width="2734" height="800" />
-            </p>
-          </div>
+          <p>
+            <button class="btn btn-primary btn-sm">
+              <i class="fa fa-plus-circle" aria-hidden="true"></i>
+              Add new
+            </button>
+          </p>
+          <p>
+            Creates a blank submission form to be manually filled in with study data and added to
+            the database at your own discretion. As part of the process, the project your study belongs
+            to must be selected. This is due to the difference in data requirements that exists from
+            project to project.
+          </p>
+          <img src="images/help/new_submission.gif" width="1402" height="383" />
+          <p>
+            <button class="btn btn-primary btn-sm">
+              <i class="fa fa-upload" aria-hidden="true"></i>
+              Direct upload
+            </button>
+          </p>
+          <p>
+            Allows the automatic extraction of study data from a selected pre-formatted file. The data
+            can then be incorporated into the database as a new study or used to update an existing one.
+            As with user files (see the <i>"Uploading files"</i> section), study files can be submitted in
+            bulk.
+          </p>
+          <img src="images/help/direct_upload.jpg" width="2734" height="800" />
         </dd>
         <dt class="border-bottom"><h4>4.Editing a study</h4></dt>
         <dd id="help-edit" class="pt-2">
@@ -211,11 +205,11 @@
           </p>
           <p>
             Once all the study data has been provided, the form can be submitted by pressing the
-            <button type="button" class="btn-submit btn btn-primary">Submit</button>
+            <button type="button" class="btn btn-primary btn-sm">Submit</button>
             button, located both in the secondary top bar and at the bottom of the form. If the
             submission has been successful, a summary of all the information pertaining the study is shown.
           </p>
-          <p><img src="images/help/success_submission.gif" width="1402" height="535" /></p>
+          <img src="images/help/success_submission.gif" width="1402" height="535" />
           <p>
             If the form is submitted with any required fields blank, the application will cancel the
             submission process and highlight the relevant fields.
