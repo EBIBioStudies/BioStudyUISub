@@ -6,8 +6,7 @@ import { FileUpload, FileUploadList } from '../shared/file-upload-list.service';
 
 @Component({
   selector: 'st-upload-file-modal',
-  templateUrl: './upload-file-modal.component.html',
-  styleUrls: ['./upload-file-modal.component.css']
+  templateUrl: './upload-file-modal.component.html'
 })
 export class UploadFileModalComponent {
   absolutePath: string = '/user';
@@ -70,7 +69,7 @@ export class UploadFileModalComponent {
 
     this.upload = this.fileUploadList.upload(uploadPath, Array.from(files));
     this.fileUploadList.uploadCompleted$.subscribe(() => {
-      if (this.upload) {
+      if (this.upload && !this.upload.isCancelled() && !this.upload.isFailed()) {
         const fileName = this.upload.fileNames[0];
         this.onClose.next(fileName);
       }

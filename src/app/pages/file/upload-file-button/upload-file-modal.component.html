@@ -7,12 +7,12 @@
   </div>
   <div class="modal-body">
     <div class="card bg-light mb-3">
-      <div class="card-body overflow-auto">
+      <div class="card-body overflow-auto" style="max-height: 400px">
         <h6 class="card-title">Select file</h6>
         <st-file-tree (fileTreeSelect)="onFileSelect($event)"></st-file-tree>
       </div>
     </div>
-    <div class="input-group upload-file-select">
+    <div class="input-group">
       <div class="custom-file">
         <input id="inputGroupFile" class="custom-file-input" type="file" (change)="onInputChange($event)" />
         <label class="custom-file-label" for="inputGroupFile">
@@ -20,20 +20,18 @@
         </label>
       </div>
     </div>
-  </div>
-  <div class="modal-footer upload-file-footer">
-    <div class="pull-left">
-      <button type="button" class="btn btn-default btn-sm" (click)="onCancelCloseClick()">Cancel</button>
-    </div>
-    <div *ngIf="isUploading && uploadProgressValue < 100" class="upload-file-progress">
-      <div class="spinner-border text-info" role="status">
-        <span class="sr-only">Loading...</span>
+    <div *ngIf="isUploading && uploadProgressValue < 100" class="pt-2">
+      <div class="spinner-border spinner-border-sm" role="status">
+        <span class="sr-only">Uploading file...</span>
       </div>
-      <span>{{uploadProgressValue}}%</span>
+      Uploading file {{uploadProgressValue}}%
     </div>
-    <div *ngIf="uploadProgressValue < 0" class="text-danger text-center">
+    <div *ngIf="uploadProgressValue < 0" class="text-danger pt-2">
       <i class="fa fa-times-circle"></i>
       {{error}}
     </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default btn-sm" (click)="onCancelCloseClick()">Cancel</button>
   </div>
 </div>

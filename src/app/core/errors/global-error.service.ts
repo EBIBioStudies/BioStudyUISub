@@ -31,8 +31,8 @@ export class GlobalErrorService extends ErrorHandler {
     return this.injector.get(ToastrService);
   }
 
-  private showErrorToast(error): void {
-    const message = this.errorMessage.getMessageWithMailBody(error.message);
+  private showErrorToast(): void {
+    const message = this.errorMessage.getMessage();
 
     this.toastr.error(message, '', {
       closeButton: true,
@@ -51,11 +51,11 @@ export class GlobalErrorService extends ErrorHandler {
 
     if (error.status === INTERNAL_SERVER_ERROR) {
       // An error occurred that may potentially be worth handling at a global level.
-      this.showErrorToast(error);
+      this.showErrorToast();
     } else {
       // tslint:disable-next-line: no-console
       console.error(error);
-      this.showErrorToast(error);
+      this.showErrorToast();
     }
   }
 }
