@@ -26,7 +26,6 @@
             "assets": [
               "src/images",
               "src/thor-integration.html",
-              "src/styles/bootstrap/fonts",
               "src/config.json"
             ],
             "styles": [
