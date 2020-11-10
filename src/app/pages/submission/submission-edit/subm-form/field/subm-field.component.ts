@@ -36,9 +36,6 @@ export class SubmFieldComponent {
 
   private valueLen?: ValueLength;
 
-  constructor() {
-  }
-
   get fieldType(): FieldType {
     return this.fieldControl.type;
   }

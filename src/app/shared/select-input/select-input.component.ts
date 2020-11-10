@@ -19,6 +19,7 @@ export class SelectInputComponent implements ControlValueAccessor {
   @Input() isInputGroup: boolean = false;
   @Input() formControl!: FormControl;
   @Input() readonly: boolean = false;
+  @Input() inputId: string = '';
   selectedValue: string | string[] = '';
 
   addValue(value: string): string {
