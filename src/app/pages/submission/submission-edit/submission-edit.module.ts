@@ -22,7 +22,6 @@ import { SubmFeatureComponent } from './subm-form/feature/subm-feature.component
 import { SubmFieldComponent } from './subm-form/field/subm-field.component';
 import { InlineEditComponent } from './subm-form/inline-edit/inline-edit.component';
 import { InputValueComponent } from './subm-form-input/input-value.component';
-import { NativeElementAttachDirective } from './subm-form/native-element-attach.directive';
 import { SubmFormComponent } from './subm-form/subm-form.component';
 import { SubmNavBarComponent } from './subm-navbar/subm-navbar.component';
 import { SubmValidationErrorsComponent } from './subm-navbar/subm-validation-errors.component';
@@ -66,7 +65,6 @@ import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
     UniqueValidator,
     BootstrapValidationDirective,
     RemoveHostDirective,
-    NativeElementAttachDirective,
     TextareaAutosizeDirective
   ],
   exports: [

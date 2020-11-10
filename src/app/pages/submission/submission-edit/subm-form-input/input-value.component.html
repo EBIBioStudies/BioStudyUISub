@@ -6,7 +6,6 @@
       container="body"
       placement="bottom"
       [formControl]="formControl"
-      [(ngModel)]="value"
       [ngClass]="{'input-sm': isSmall, 'group-element': isInputGroup}"
       [readonly]="readonly"
       [typeahead]="typeahead()"
@@ -16,7 +15,6 @@
       [typeaheadOptionsInScrollableView]="suggestLength"
       (blur)="onBlur()"
       (keydown)="onKeyDown()"
-      [disabled]="readonly"
       stBootstrapValidation/>
 
   <textarea *ngSwitchCase="valueTypeNameEnum.largetext"

@@ -4,6 +4,7 @@ export const biaTemplate = {
   sectionType: {
     name: "Study",
     display: "required",
+    featureGroups: [[]],
     fieldTypes: [
       {
         name: "Title",
@@ -31,6 +32,70 @@ export const biaTemplate = {
         valueType: {
           name: "select",
           values: ["High content screen", "High content analysis of cells"],
+        },
+      },
+      {
+        name: "Organism",
+        icon: "fa-tag",
+        display: "required",
+        valueType: {
+          name: "select",
+          values: [
+            "Homo sapiens (human)",
+            "Mus musculus (mouse)",
+            "Arabidopsis thaliana (thale cress)",
+            "Rattus norvegicus (brown rat)",
+            "Drosophila melanogaster (fruit fly)",
+            "Oryza sativa Japonica (common rice)",
+            "Anas platyrhyncho (mallard)",
+            "Anolis carolinensis (anole)",
+            "Anopheles gambiae (marsh mosquito)",
+            "Arabidopsis lyrata (rock cress)",
+            "Aspergillus fumigatus",
+            "Bos Taurus (cow)",
+            "Brachypodium distachyon (stiff brome)",
+            "Brassica oleracea (cabbage)",
+            "Brassica rapa (turnip)",
+            "Caenorhabditis elegans",
+            "Canis familiaris (dog)",
+            "Chlorocebus sabaeus (green monkey)",
+            "Ciona intestinalis (sea squirt)",
+            "Ciona savignyi (Pacific sea squirt)",
+            "Danio rerio (zebrafish)",
+            "Dasypus novemcinctus (nine-banded armadillo)",
+            "Equus caballus (horse)",
+            "Gallus gallus (chicken)",
+            "Glycine max (soybean)",
+            "Gorilla gorilla",
+            "Hordeum vulgare (barley)",
+            "Macaca mulatta (rhesus monkey)",
+            "Medicago truncatula (barrel clover)",
+            "Monodelphis domestica (short-tailed opossum)",
+            "Musa acuminata (banana)",
+            "Ornithorhynchus anatinus (platypus)",
+            "Oryctolagus cuniculus (rabbit)",
+            "Oryza rufipogon (brownbeard rice)",
+            "Ovis aries (sheep)",
+            "Pan troglodytes (chimpanzee)",
+            "Papio Anubis (baboom)",
+            "Physcomitrella patens (moss)",
+            "Pongo abelii (orangutan)",
+            "Populus trichocarpa (poplar tree)",
+            "Saccharomyces cerevisiae (brewer's yeast)",
+            "Schistosoma mansoni (blood fluke)",
+            "Schizosaccharomyces pombe (fission yeast)",
+            "Solanum lycopersicum (tomato)",
+            "Solanum tuberosum (potato)",
+            "Sorghum bicolor",
+            "Sus scrofa (pig)",
+            "Tetraodon nigroviridis (green pufferfish)",
+            "Theobroma cacao (chocolate)",
+            "Triticum aestivum (wheat)",
+            "Vitis vinifera (grape)",
+            "Xenopus tropicalis (frog)",
+            "Yarrowia lipolytica",
+            "Zea mays (corn)",
+          ],
         },
       },
     ],
@@ -62,11 +127,7 @@ export const biaTemplate = {
           {
             name: "Name",
             valueType: { name: "text" },
-            required: true,
-          },
-          {
-            name: "E-mail",
-            valueType: { name: "text" },
+            display: "required",
             required: true,
           },
           {
@@ -152,6 +213,13 @@ export const biaTemplate = {
               ],
             },
             display: "required",
+            required: true
+          },
+          {
+            name: "E-mail",
+            valueType: { name: "text" },
+            display: "required",
+            required: true,
           },
           {
             name: "ORCID",
@@ -161,6 +229,7 @@ export const biaTemplate = {
           {
             name: "Role",
             valueType: { name: "text" },
+            display: "desirable",
           },
           {
             name: "Address",
@@ -219,6 +288,7 @@ export const biaTemplate = {
           'are supported. URLs must include the scheme, e.g. "http://".',
         icon: "fa-link",
         uniqueCols: true,
+        display: 'desirable',
         columnTypes: [
           {
             name: "Link",
@@ -240,6 +310,7 @@ export const biaTemplate = {
           '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pubmed/">PubMed</a> identifier. For other IDs, you ' +
           'may use <a target="_blank" href="https://www.ncbi.nlm.nih.gov/pmc/pmctopmid/#converter">this converter</a>.',
         icon: "fa-book",
+        display: 'desirable',
         uniqueCols: true,
         columnTypes: [
           {
@@ -291,8 +362,8 @@ export const biaTemplate = {
       {
         name: "Study Component",
         sectionExample: "(e.g., Screens)",
-        display: "required",
         minRequired: 1,
+        display: "required",
         fieldTypes: [
           {
             name: "Name",
@@ -305,6 +376,19 @@ export const biaTemplate = {
             icon: "fa-comment",
             valueType: { name: "largetext" },
             display: "required",
+          },
+          {
+            name: "Type",
+            icon: "fa-comment",
+            display: "desirable",
+            valueType: {
+              name: "select",
+              values: [
+                "primary screen",
+                "secondary screen",
+                "validation screen",
+              ],
+            },
           },
           {
             name: "Imaging Method",
@@ -328,25 +412,52 @@ export const biaTemplate = {
             },
           },
           {
-            name: "Type",
-            icon: "fa-comment",
-            valueType: {
-              name: "select",
-              values: [
-                "primary screen",
-                "secondary screen",
-                "validation screen",
-              ],
-            },
-          },
-          {
             name: "File List",
             icon: "fa-file",
             valueType: { name: "file" },
             display: "required",
           },
+          {
+            name: "Comment",
+            icon: "fa-comment",
+            valueType: { name: "largetext" },
+            display: "desirable",
+          },
         ],
         featureTypes: [
+          {
+            name: "Other data files",
+            title: "Add other data files",
+            description: "List other data files for the imaging study",
+            icon: "fa-file",
+            uniqueCols: true,
+            display: 'disarable',
+            columnTypes: [
+              {
+                name: "Path",
+                valueType: { name: "file" },
+                display: "required",
+              },
+              {
+                name: "Type",
+                valueType: {
+                  name: "select",
+                  values: [
+                    "Feature level data file",
+                    "Processed data file",
+                    "Library file",
+                    "Other"
+                  ],
+                },
+                display: "required",
+              },
+              {
+                name: "Description",
+                valueType: { name: "text" },
+                display: "desirable",
+              }
+            ],
+          },
           {
             name: "Protocols",
             title: "Protocols",

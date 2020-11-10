@@ -36,7 +36,7 @@ export class GlobalErrorService extends ErrorHandler {
 
     this.toastr.error(message, '', {
       closeButton: true,
-      disableTimeOut: true,
+      timeOut: 7000,
       enableHtml: true,
       tapToDismiss: false
     });

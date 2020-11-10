@@ -17,8 +17,7 @@
         </span>
         <span *ngIf="isError">
           An error has occurred while submitting the data to BioStudies. You may review your submission and try again.
-          If the error
-          persists, please contact us at
+          If the error persists, please contact us at
           <a
             href="mailto:biostudies@ebi.ac.uk?Subject=Error%20while%20submitting%20study&Body=%0A%0A%0A%0A______________%0A{{toLogURI()}}">
             biostudies@ebi.ac.uk
@@ -46,7 +45,7 @@
       </li>
     </ul>
     <ng-container *ngIf="hasLog && isError">
-      <button class="btn btn-link text-danger p-0" (click)="collapsedLog = !collapsedLog">
+      <button class="btn btn-link text-danger text-left p-0" (click)="collapsedLog = !collapsedLog">
         <i class="fa" [ngClass]="{'fa-caret-square-down':!collapsedLog, 'fa-caret-square-right': collapsedLog}"></i>
         {{errorMessage}}
       </button>
