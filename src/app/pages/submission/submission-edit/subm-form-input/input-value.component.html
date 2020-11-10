@@ -1,8 +1,7 @@
 <ng-container [ngSwitch]="valueType.name">
   <input *ngSwitchCase="valueTypeNameEnum.text"
-      id="{{inputId}}"
       type="text"
-      class="form-control"
+      class="form-control {{inputId}}"
       tooltip="{{isOverflow() && !ahead._container ? value : ''}}"
       container="body"
       placement="bottom"
@@ -21,8 +20,7 @@
       stBootstrapValidation/>
 
   <textarea *ngSwitchCase="valueTypeNameEnum.largetext"
-      id="{{inputId}}"
-      class="form-control"
+      class="form-control {{inputId}}"
       stAutosize="200"
       [ngClass]="{'group-element': isInputGroup}"
       [formControl]="formControl"
@@ -33,11 +31,12 @@
   </textarea>
 
   <st-select-input *ngSwitchCase="valueTypeNameEnum.select"
-      [formControl]="formControl"
-      [values]="valueType.values"
-      [multiple]="valueType.multiple"
-      [readonly]="readonly"
-      [isInputGroup]="isInputGroup">
+    [inputId]="inputId"
+    [formControl]="formControl"
+    [values]="valueType.values"
+    [multiple]="valueType.multiple"
+    [readonly]="readonly"
+    [isInputGroup]="isInputGroup">
   </st-select-input>
 
   <st-date-input *ngSwitchCase="valueTypeNameEnum.date"

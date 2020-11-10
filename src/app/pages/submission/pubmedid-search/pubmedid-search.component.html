@@ -1,5 +1,5 @@
 <div class="input-group dropup" [ngClass]="{'open': isPreviewPub}">
-  <input id="{{inputId}}" class="form-control" type="text" placeholder="{{!readonly ? 'Find by PubMed ID' : ''}}"
+  <input class="form-control {{inputId}}" type="text" placeholder="{{!readonly ? 'Find by PubMed ID' : ''}}"
     [(ngModel)]="value" (ngModelChange)="search()" (keyup.enter)="searchOnKeypress($event)" [readonly]="readonly"
     [required]="required">
   <div class="input-group-append">
