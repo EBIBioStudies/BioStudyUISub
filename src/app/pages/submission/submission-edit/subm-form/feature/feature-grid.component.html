@@ -6,6 +6,7 @@
           [ngClass]="{'invisible': readonly || !userData.isPrivileged || featureForm.isReadonly}"
           [tooltip]="'Add a new ' + featureForm.featureTypeName.toLowerCase() + ' attribute'"
           container="body"
+          placement="right"
           (click)="featureForm.addColumn()">
         <i class="fa fa-plus-circle" aria-hidden="true"></i> Column
       </button>
@@ -42,7 +43,7 @@
                   [disabled]="!featureForm.canRemoveRow()"
                   (click)="featureForm.removeRow(rowIdx)"
                   [tooltip]="featureForm.canRemoveRow ? 'Delete ' + featureForm.featureTypeName.toLowerCase() + ' ' + (rowIdx + 1) : ''"
-                  placement="bottom"
+                  placement="right"
                   container="body">
                 <i class="far fa-trash-alt"></i>
               </button>

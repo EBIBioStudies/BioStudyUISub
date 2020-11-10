@@ -202,7 +202,7 @@ export class FeatureForm extends FormBase {
   }
 
   canRemoveRow(): boolean {
-    return !this.isReadonly && (!this.featureType.displayType.isShownByDefault || this.feature.rowSize() > 1);
+    return !this.isReadonly && (!this.featureType.displayType.isRequired || this.feature.rowSize() > 1);
   }
 
   cellControlAt(rowIndex: number, columnId: string): CellControl | undefined {

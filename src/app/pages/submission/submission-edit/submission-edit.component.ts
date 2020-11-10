@@ -163,6 +163,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
   }
 
   onSectionClick(sectionForm: SectionForm): void {
+    scrollTop();
     this.submEditService.switchSection(sectionForm);
   }
 
