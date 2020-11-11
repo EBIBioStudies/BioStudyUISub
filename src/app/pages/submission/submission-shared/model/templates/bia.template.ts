@@ -31,7 +31,19 @@ export const biaTemplate = {
         icon: "fa-microscope",
         valueType: {
           name: "select",
-          values: ["High content screen", "High content analysis of cells"],
+          values: [
+            "compound library screen",
+            "electron microscopy volume map",
+            "in situ hybridization",
+            "high content screen",
+            "histology",
+            "image cytometry",
+            "image segmentation",
+            "imaging method",
+            "immunocytochemistry",
+            "protein localization",
+            "time-lapse imaging"
+          ],
         },
       },
       {
@@ -228,7 +240,20 @@ export const biaTemplate = {
           },
           {
             name: "Role",
-            valueType: { name: "text" },
+            valueType: {
+              name: "select",
+              values: [
+                "corresponding author",
+                "data acquisition",
+                "data analyst",
+                "experiment performer",
+                "first author",
+                "investigator",
+                "principal investigator",
+                "software development",
+                "submitter"
+              ]
+            },
             display: "desirable",
           },
           {
@@ -401,13 +426,30 @@ export const biaTemplate = {
             valueType: {
               name: "select",
               values: [
-                "gene deletion screen",
-                "RNAi screen",
-                "protein screen",
-                "compound screen",
-                "antibody screen",
-                "ORF overexpression screen",
-                "Other",
+                "bright-field microscopy",
+                "confocal fluorescence microscopy",
+                "confocal microscopy",
+                "dark-field microscopy",
+                "fluorescence correlation spectroscopy",
+                "fluorescence microscopy",
+                "FRAP",
+                "imaging mass cytometry",
+                "light microscopy",
+                "light sheet fluorescence microscopy",
+                "multi-fluorescence high-resolution episcopic microscopy",
+                "multi-photon microscopy",
+                "phase contrast microscopy",
+                "scanning electron microscopy (SEM)",
+                "SPIM",
+                "spinning disk confocal microscopy",
+                "stimulated emission depletion (STED)",
+                "STORM (stochastic optical reconstruction microscopy)",
+                "structured illumination microscopy (SIM)",
+                "transmission electron microscopy (TEM)",
+                "two-photon laser scanning microscopy",
+                "unsupervised transmission electron microscopy",
+                "wide field fluorescence deconvolution microscopy",
+                "wide-field epi-fluorescence microscopy"
               ],
             },
           },
