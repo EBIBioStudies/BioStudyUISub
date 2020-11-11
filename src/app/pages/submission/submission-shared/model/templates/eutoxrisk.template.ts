@@ -5,6 +5,7 @@ export const euToxRiskTemplate = {
   sectionType: {
     name: "Study",
     display: "required",
+    displayAnnotations: true,
     fieldTypes: [
       {
         name: "Title",

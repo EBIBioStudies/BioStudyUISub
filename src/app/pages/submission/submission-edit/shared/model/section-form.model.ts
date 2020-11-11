@@ -38,7 +38,7 @@ export class SectionForm extends FormBase {
     this.sectionPath = this.isRootSection ? [] : [...parentSectionPath, this.id];
     this.sectionRef = ControlGroupRef.sectionRef(section, this.isRootSection);
 
-    this.buildElements();
+    this.buildElements(section.displayAnnotations);
   }
 
   addFeature(type: FeatureType): Feature | undefined {
@@ -190,13 +190,13 @@ export class SectionForm extends FormBase {
     return sectionForm;
   }
 
-  private buildElements(): void {
+  private buildElements(displayAnnotations: boolean): void {
     const section = this.section;
 
     section.fields.list().forEach((field) => this.addFieldControl(field));
 
-    [section.annotations, ...section.features.list()]
-      .forEach((feature) => this.addFeatureForm(feature));
+    const features = displayAnnotations ? [section.annotations, ...section.features.list()] : section.features.list();
+    features.forEach((feature) => this.addFeatureForm(feature));
 
     section.sections.list().forEach((sectionItem) => this.addSubsectionForm(sectionItem));
   }

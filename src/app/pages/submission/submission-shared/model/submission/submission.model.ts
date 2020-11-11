@@ -465,6 +465,10 @@ export class Section implements SubmissionSection {
     return this.type.displayType.isReadonly;
   }
 
+  get displayAnnotations(): boolean {
+    return this.type.displayAnnotations;
+  }
+
   isRequired(): boolean {
     return this.type.displayType.isRequired;
   }

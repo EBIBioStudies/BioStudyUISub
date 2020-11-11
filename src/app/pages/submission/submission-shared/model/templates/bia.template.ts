@@ -2,9 +2,10 @@ export const biaTemplate = {
   name: "BioImages",
   description: "High Content Screen Image Study",
   sectionType: {
-    name: "Study",
     display: "required",
+    displayAnnotations: false,
     featureGroups: [[]],
+    name: "Study",
     fieldTypes: [
       {
         name: "Title",
@@ -385,10 +386,11 @@ export const biaTemplate = {
     ],
     sectionTypes: [
       {
+        display: "required",
+        displayAnnotations: false,
+        minRequired: 1,
         name: "Study Component",
         sectionExample: "(e.g., Screens)",
-        minRequired: 1,
-        display: "required",
         fieldTypes: [
           {
             name: "Name",

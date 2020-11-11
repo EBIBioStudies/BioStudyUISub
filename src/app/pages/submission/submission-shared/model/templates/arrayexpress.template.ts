@@ -4,6 +4,7 @@ export const arrayExpressTemplate = {
   display: "readonly",
   sectionType: {
     name: "Study",
+    displayAnnotations: true,
     fieldTypes: [
       {
         name: "ReleaseDate",

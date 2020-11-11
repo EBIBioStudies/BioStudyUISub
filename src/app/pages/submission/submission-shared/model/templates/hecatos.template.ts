@@ -4,6 +4,7 @@ export const hecatosTemplate = {
   sectionType: {
     name: "Study",
     display: "required",
+    displayAnnotations: true,
     fieldTypes: [
       {
         name: "Title",

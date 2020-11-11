@@ -4,6 +4,7 @@ export const defaultTemplate = {
   sectionType: {
     name: "Study",
     featureGroups: [["Link", "File"]],
+    displayAnnotations: true,
     fieldTypes: [
       {
         name: "Title",
