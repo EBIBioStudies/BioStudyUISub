@@ -371,6 +371,7 @@ export class SectionType extends TypeBase {
   readonly annotationsType: AnnotationsType;
   readonly display: string;
   readonly displayType: DisplayType;
+  readonly displayAnnotations: boolean;
   readonly featureGroups: string[][];
   readonly minRequired: number;
   readonly sectionExample: string;
@@ -380,25 +381,29 @@ export class SectionType extends TypeBase {
   private sectionScope: TypeScope<SectionType> = new TypeScope<SectionType>();
 
   constructor(
-    name: string, data?: Partial<SectionType>, scope?: TypeScope<TypeBase>, isTemplBased: boolean = true, parentDisplayType: DisplayType = DisplayType.OPTIONAL
+    name: string,
+    data?: Partial<SectionType>,
+    scope?: TypeScope<TypeBase>,
+    isTemplBased: boolean = true,
+    parentDisplayType: DisplayType = DisplayType.OPTIONAL
   ) {
     super(name, isTemplBased, scope);
 
     data = data || {};
     this.displayType = DisplayType.create(data.display || parentDisplayType.name);
     this.display = this.displayType.name;
+    this.displayAnnotations = data.displayAnnotations || false;
     this.featureGroups = (data.featureGroups || []).filter(gr => !isArrayEmpty(gr));
     this.minRequired = data.minRequired || 1;
-    this.annotationsType = new AnnotationsType(data.annotationsType, new TypeScope<AnnotationsType>(), isTemplBased,
-      this.displayType);
+    this.annotationsType = new AnnotationsType(data.annotationsType, new TypeScope<AnnotationsType>(), isTemplBased, this.displayType);
     this.sectionExample = data.sectionExample || '';
 
     (data.fieldTypes || [])
-      .forEach(f => new FieldType(f.name, f, this.fieldScope, this.displayType));
+      .forEach((fieldType) => new FieldType(fieldType.name, fieldType, this.fieldScope, this.displayType));
     (data.featureTypes || [])
-      .forEach(f => new FeatureType(f.name, f, this.featureScope, isTemplBased, this.displayType));
+      .forEach((featureType) => new FeatureType(featureType.name, featureType, this.featureScope, isTemplBased, this.displayType));
     (data.sectionTypes || [])
-      .forEach(s => new SectionType(s.name, s, this.sectionScope, isTemplBased, this.displayType));
+      .forEach((sectionType) => new SectionType(sectionType.name, sectionType, this.sectionScope, isTemplBased, this.displayType));
   }
 
   static createDefault(name: string, scope?: TypeScope<TypeBase>, parentDisplayType?: DisplayType): SectionType {

@@ -3,6 +3,7 @@ export const proteinDesignsTemplate = {
   description: "Protein Designs Template",
   sectionType: {
     name: "Study",
+    displayAnnotations: true,
     fieldTypes: [
       {
         name: "Title",
