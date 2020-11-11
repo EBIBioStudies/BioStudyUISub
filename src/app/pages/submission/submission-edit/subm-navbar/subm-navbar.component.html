@@ -1,22 +1,18 @@
 <nav class="navbar navbar-light border-bottom page-navbar bg-white sticky-top">
-  <div class="mr-auto">
-    <a *ngIf="isTemp" routerLink="/submissions/draft">
+  <div class="d-flex align-items-center mr-auto">
+    <a class="btn btn-link btn-sm pl-0" *ngIf="isTemp" routerLink="/submissions/draft">
       <i class="fa fa-clock-o" aria-hidden="true"></i> Drafts
     </a>
-    <a *ngIf="!isTemp" routerLink="/submissions">
+    <a class="btn btn-link btn-sm pl-0" *ngIf="!isTemp" routerLink="/submissions">
       <i class="fa fa-database" aria-hidden="true"></i> Submissions
     </a>
-    <span *ngFor="let secForm of sectionPath; let idx = index; let last = last;">
-      &nbsp;<i class="fa fa-angle-right font-bold"></i>&nbsp;
-      <a href="javascript:void(0)"
-         [ngClass]="{'current-section': last}"
-         (click)="onSectionClick(secForm)">
-        <span>
-          <span *ngIf="idx == 0">{{accno}}{{isDiscardable? ' (revised)' : ''}}</span>
-          <span *ngIf="idx > 0">{{secForm.accno ? secForm.accno : secForm.typeName}}</span>
-        </span>
-      </a>
-    </span>
+    <ng-container *ngFor="let secForm of sectionPath; let idx = index; let last = last;">
+      <i class="fa fa-angle-right font-bold"></i>
+      <button class="btn btn-link btn-sm" (click)="onSectionClick(secForm)" [disabled]="last">
+        <span *ngIf="idx == 0">{{accno}}{{isDiscardable? ' (revised)' : ''}}</span>
+        <span *ngIf="idx > 0">{{secForm.accno ? secForm.accno : secForm.typeName}}</span>
+      </button>
+    </ng-container>
     <span class="text-muted ml-2" *ngIf="isSaving">
       <i class="fa fa-cog fa-spin"></i>
       Backing up study data...
@@ -42,7 +38,7 @@
       <i class="fa fa-undo" aria-hidden="true"></i>
       Revert
     </button>
-    <button *ngIf="readonly" class="btn btn-secondary btn-sm ml-2"
+    <button *ngIf="readonly" class="btn btn-primary btn-sm ml-2"
         (click)="onEdit($event)"
         tooltip="Edit this submission"
         placement="bottom"
@@ -50,7 +46,7 @@
       <i class="fas fa-pencil-alt" aria-hidden="true"></i>
       Edit
     </button>
-    <button *ngIf="readonly" class="btn btn-primary btn-sm ml-2"
+    <button *ngIf="readonly" class="btn btn-secondary btn-sm ml-2"
         tooltip="Create a new submission"
         placement="bottom"
         container="body"
