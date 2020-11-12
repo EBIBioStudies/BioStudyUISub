@@ -5,8 +5,7 @@ import { listenToQueue } from '../rabbitmq/rabbitmq-consumer';
 import { logger } from '../logger';
 
 export interface SubmStatus {
-  accNo: string,
-  status: string
+  accNo: string
 }
 
 const queueName: string = config.get('rabbitmq.submStatusQueueName');
@@ -16,7 +15,7 @@ const processMessage = (message: ConsumeMessage | null) => {
     const submStatus: SubmStatus = JSON.parse(message!.content.toString());
     const { accNo } = submStatus;
 
-    // Only sends accNo and status to client.
+    // Only sends accNo to client.
     stream.emit('push', 'message', JSON.stringify({ accNo }));
   } catch (error) {
     logger.error('submission-status-processor', error);

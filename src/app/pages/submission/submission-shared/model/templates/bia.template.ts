@@ -289,11 +289,11 @@ export const biaTemplate = {
             valueType: {
               name: "select",
               values: [
-                "Data Analysis Protocol",
-                "Growth protocol",
-                "Image acquisition and feature extraction protocol",
-                "Library Protocol",
-                "Treatment protocol",
+                "data Analysis Protocol",
+                "growth protocol",
+                "image acquisition and feature extraction protocol",
+                "library Protocol",
+                "treatment protocol",
               ],
             },
             display: "required",
@@ -469,6 +469,27 @@ export const biaTemplate = {
           },
         ],
         featureTypes: [
+          {
+            name: 'Size',
+            display: 'desirable',
+            uniqueCols: true,
+            allowCustomCols: false,
+            columnTypes: [
+              {
+                name: 'Paramater',
+                valueType: {
+                  name: "select",
+                  values: ["Plates", "5D images", "Planes", "Average image dimension [XYZCT]", "Total TB"]
+                },
+                display: "required",
+              },
+              {
+                name: 'Value',
+                valueType: { name: "text" },
+                display: "required",
+              }
+            ]
+          },
           {
             name: "Other data files",
             title: "Add other data files",
