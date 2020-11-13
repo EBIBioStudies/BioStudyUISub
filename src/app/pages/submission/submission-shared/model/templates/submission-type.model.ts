@@ -239,6 +239,7 @@ export class FieldType extends TypeBase {
   readonly display: string;
   readonly displayType: DisplayType;
   readonly helpText: string;
+  readonly helpLink: string;
   readonly icon: string;
   readonly valueType: ValueType;
 
@@ -253,6 +254,7 @@ export class FieldType extends TypeBase {
     this.valueType = ValueTypeFactory.create(data.valueType || {});
     this.icon = data.icon || 'fa-pencil-square-o';
     this.helpText = data.helpText || '';
+    this.helpLink = data.helpLink || '';
     this.displayType = DisplayType.create( data.display || parentDisplayType.name);
     this.display = this.displayType.name;
   }

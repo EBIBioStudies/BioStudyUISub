@@ -10,7 +10,7 @@ export const biaTemplate = {
       {
         name: "Title",
         icon: "fa-heading",
-        valueType: { name: "largetext", minlength: 25 },
+        valueType: { name: "largetext" },
         display: "required",
       },
       {
@@ -420,11 +420,6 @@ export const biaTemplate = {
           {
             name: "Imaging Method",
             icon: "fa-comment",
-            valueType: { name: "text" },
-          },
-          {
-            name: "Technology Type",
-            icon: "fa-comment",
             valueType: {
               name: "select",
               values: [
@@ -452,14 +447,32 @@ export const biaTemplate = {
                 "unsupervised transmission electron microscopy",
                 "wide field fluorescence deconvolution microscopy",
                 "wide-field epi-fluorescence microscopy"
+              ]
+            },
+          },
+          {
+            name: "Technology Type",
+            icon: "fa-comment",
+            valueType: {
+              name: "select",
+              values: [
+                "cell line screen",
+                "compound screen",
+                "gene deletion screen",
+                "geographic screen",
+                "ORF overexpression screen",
+                "protein screen",
+                "RNAi screen",
               ],
             },
           },
           {
-            name: "File List",
+            name: 'File List',
             icon: "fa-file",
             valueType: { name: "file" },
             display: "required",
+            helpLink: 'https://www.ebi.ac.uk/biostudies/BioImages/help',
+            helpText: 'Help'
           },
           {
             name: "Comment",
