@@ -56,6 +56,10 @@ export class SubmFieldComponent {
     return this.fieldType.helpText;
   }
 
+  get fieldHelpLink(): string {
+    return this.fieldType.helpLink;
+  }
+
   get isEmpty(): boolean {
     return isStringEmpty(this.fieldControl!.control.value as string);
   }
@@ -86,6 +90,10 @@ export class SubmFieldComponent {
 
   get hasHelpText(): boolean {
     return this.fieldHelpText.length > 0;
+  }
+
+  get hasHelpLink(): boolean {
+    return this.fieldHelpLink.length > 0;
   }
 
   get errors(): string[] {
