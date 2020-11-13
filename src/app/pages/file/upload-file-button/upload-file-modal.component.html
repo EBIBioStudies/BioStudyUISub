@@ -7,8 +7,10 @@
   </div>
   <div class="modal-body">
     <div class="card bg-light mb-3">
+      <div class="card-header">
+        Select file
+      </div>
       <div class="card-body overflow-auto" style="max-height: 400px">
-        <h6 class="card-title">Select file</h6>
         <st-file-tree (fileTreeSelect)="onFileSelect($event)"></st-file-tree>
       </div>
     </div>
