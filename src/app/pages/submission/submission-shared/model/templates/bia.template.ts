@@ -467,12 +467,12 @@ export const biaTemplate = {
             },
           },
           {
-            name: 'File List',
+            name: "File List",
             icon: "fa-file",
             valueType: { name: "file" },
             display: "required",
-            helpLink: 'https://www.ebi.ac.uk/biostudies/BioImages/help',
-            helpText: 'Help'
+            helpLink: "https://www.ebi.ac.uk/biostudies/BioImages/help",
+            helpText: "Help"
           },
           {
             name: "Comment",
