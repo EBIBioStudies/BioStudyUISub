@@ -1,4 +1,4 @@
-export function isOrcidValid(orcid) {
+export function isOrcidValid(orcid): boolean {
   const orcidFormatRegex: RegExp = /\d{4}-\d{4}-\d{4}-\d{3}[\dX]/gi;
   const matches: string[] = orcid.match(orcidFormatRegex);
 

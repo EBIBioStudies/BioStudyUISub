@@ -1,52 +1,41 @@
-<ul class="sidebar-menu">
-  <form *ngIf="form"
-      novalidate
-      [ngClass]="{'edit-type-form': isEditModeOn}"
-      [formGroup]="form"
-      (ngSubmit)="onApplyChanges()">
-
-    <li class="sidebar-item" *ngFor="let item of items; let i = index">
-      <a *ngIf="isEditModeOff"
-          (click)="onItemClick(item)">
-        <div tooltip="{{ collapsed ? '' : item.description | stripHtml}}"
-          placement="auto"
-          container="body"
-          [ngClass]="{'st-edit-sidebar-collapsed': collapsed}">
-          <i class="fa fa-lg text-center {{item.icon}}"></i>
+<ul class="list-group">
+  <form *ngIf="form" [formGroup]="form" (ngSubmit)="onApplyChanges()" novalidate>
+    <li *ngFor="let item of items; let i = index">
+      <button class="list-group-item list-group-item-action border-0 bg-transparent text-white" *ngIf="isEditModeOff"
+        (click)="onItemClick(item)">
+        <span tooltip="{{ collapsed ? '' : item.description | stripHtml}}" placement="auto" container="body">
+          <i class="fa {{item.icon}}"></i>
           {{!collapsed ? '&nbsp;&nbsp;' + item.prettyName : ''}}
+        </span>
+      </button>
+      <div class="list-group-item border-0 bg-transparent text-white pl-1" *ngIf="isEditModeOn && !item.deleted">
+        <div class="input-group input-group-sm">
+          <div class="input-group-prepend">
+            <span class="input-group-text bg-transparent border-0 text-white">
+              <i class="fa {{item.icon}}"></i>
+            </span>
+          </div>
+          <input type="text" class="form-control input-sm form-control-auto" [formControl]="item.control"
+            [ngClass]="{'is-invalid': item.control.invalid && item.control.touched}"
+            stValidateOnblur />
+          <div class="input-group-append">
+            <button class="item-delete btn btn-danger btn-sm btn-flat" [disabled]="item.isReadonly" tooltip="delete"
+              (click)="onItemDelete(item)">
+              <i class="fas fa-trash-alt fa-fw"></i>
+            </button>
+          </div>
+          <div class="invalid-feedback text-white pl-4">
+            <span [hidden]="!item.control.errors?.unique || !item.control.touched">
+              Please use a unique type name
+            </span>
+            <span [hidden]="!item.control.errors?.required || !item.control.touched">
+              Please enter a type name
+            </span>
+          </div>
         </div>
-      </a>
-      <div *ngIf="isEditModeOn && !item.deleted"
-          class="row-input"
-          [ngClass]="{'has-error': item.control.invalid && item.control.touched}">
-        <label [hidden]="!item.control.errors?.unique || !item.control.touched"
-             class="control-label small">
-          Please use a unique type name
-        </label>
-        <label [hidden]="!item.control.errors?.required || !item.control.touched"
-             class="control-label small">
-          Please enter a type name
-        </label>
-        <span class="input-group">
-            <span class="input-group-addon">
-              <i class="fa fa-lg text-center {{item.icon}} text-primary"></i>
-            </span>
-            <input type="text"
-                 class="form-control input-sm form-control-auto"
-                 [formControl]="item.control"
-                 stValidateOnblur/>
-            <span class="input-group-btn">
-              <button class="item-delete btn btn-danger btn-sm btn-flat"
-                  [disabled]="item.isReadonly"
-                  tooltip="delete"
-                  (click)="onItemDelete(item)">
-                <i class="fas fa-trash-alt fa-fw"></i>
-              </button>
-            </span>
-          </span>
       </div>
     </li>
-    <li *ngIf="isEditModeOn && !collapsed" class="row-submit btn-toolbar">
+    <li class="pl-2" *ngIf="isEditModeOn && !collapsed">
       <button class="btn btn-primary btn-submit" type="submit">
         Save
       </button>
@@ -56,30 +45,28 @@
     </li>
   </form>
 
-  <li *ngIf="isEditModeOff && userData.isPrivileged && isAdvancedVisible" class="text-right">
-    <button *ngIf="!collapsed" class="advanced-btn btn btn-link btn-sm"
-        (click)="onAdvancedToggle()">
-      <i class="far fa-lg" aria-hidden="true"
-         [ngClass]="{'fa-caret-square-down': isAdvancedClosed,
-                 'fa-caret-square-up': isAdvancedOpen}"></i>
-      Advanced
-    </button>
-    <ul class="sidebar-menu advanced-menu text-left"
-      [ngClass]="{'collapsed-box': !isAdvancedOpen}">
-      <li class="sidebar-item type-control">
-        <a (click)="onEditModeToggle($event)">
-          <strong class="fa-stack">
-            <i class="fa fa-circle fa-stack-2x"></i>
-            <i class="fa fa-pencil-alt fa-stack-1x fa-inverse"></i>
-          </strong>
-          {{!collapsed ? '&nbsp;Edit types' : ''}}
-        </a>
+  <li *ngIf="!collapsed && isEditModeOff && userData.isPrivileged && isAdvancedVisible">
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-link btn-sm text-white" (click)="onAdvancedToggle()">
+        <i class="far fa-lg" aria-hidden="true"
+          [ngClass]="{'fa-caret-square-down': isAdvancedClosed, 'fa-caret-square-up': isAdvancedOpen}"></i>
+        Advanced
+      </button>
+    </div>
+    <ul class="list-group" *ngIf="!isAdvancedOpen">
+      <li>
+        <button class="list-group-item list-group-item-action bg-dark text-white border-0"
+          (click)="onEditModeToggle($event)">
+          <i class="fas fa-pen"></i>
+          &nbsp;Edit types
+        </button>
       </li>
-      <li *ngIf="isEditModeOff" class="sidebar-item type-control">
-        <a (click)="onNewTypeClick($event)">
-          <i class="fa fa-fw fa-plus-circle fa-lg"></i>
-          {{!collapsed ? '&nbsp;&nbsp;Add...' : ''}}
-        </a>
+      <li *ngIf="isEditModeOff">
+        <button class="list-group-item list-group-item-action bg-dark text-white border-0"
+          (click)="onNewTypeClick($event)">
+          <i class="fas fa-plus"></i>
+          &nbsp;&nbsp;Add...
+        </button>
       </li>
     </ul>
   </li>

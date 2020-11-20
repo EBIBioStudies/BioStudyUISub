@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angul
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { isDefinedAndNotEmpty } from 'app/utils';
 import { PageTab, DraftPayload } from './model/pagetab';
 import { SubmissionDraftUtils } from './utils/submission-draft.utils';
 
@@ -69,8 +70,8 @@ export class SubmissionService {
 
   /**
    * Traverses the error log tree to find the first deepest error message.
-   * @param {Array<Object> | Object} obj - Log tree's root node or subnode list.
-   * @returns {string} Error message.
+   * @param obj - Log tree's root node or subnode list.
+   * @returns Error message.
    */
   static deepestError(log: SubmitLog): string {
     const errorNode = (log.subnodes || []).find(n => n.level === 'ERROR');
@@ -99,7 +100,7 @@ export class SubmissionService {
   directSubmit(file: File, attachTo: string): Observable<SubmitResponse> {
     const formData = new FormData();
 
-    if (String.isDefinedAndNotEmpty(attachTo)) {
+    if (isDefinedAndNotEmpty(attachTo)) {
       formData.append('AttachTo', attachTo);
     }
 
@@ -132,12 +133,12 @@ export class SubmissionService {
   submitSubmission(pt: PageTab): Observable<SubmitResponse> {
     const headers: HttpHeaders = new HttpHeaders().set('Submission_Type', 'application/json');
 
-    return this.sendPostRequest('/api/submissions', pt, headers);
+    return this.sendPostRequest('/api/submissions/async', pt, headers);
   }
 
   private checkStatus<R, T>(response: HttpResponse<R>): T {
     if (response.status === HttpStatus.OK) {
-      return <T>(response.body || {});
+      return (response.body || {}) as T;
     }
 
     throw response.body;

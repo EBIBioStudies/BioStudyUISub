@@ -8,7 +8,7 @@ import {
   ViewChild,
   EventEmitter
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, NgModel, Validators } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, NgModel, Validators, AbstractControl } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Subject, Observable } from 'rxjs';
 import { IdLinkModel } from './id-link.model';
@@ -32,17 +32,18 @@ import { mergeMap, distinctUntilChanged } from 'rxjs/operators';
 export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
   dataSource!: Observable<any>;
   @Input() disabled = false;
+  @Input() inputId: string = '';
   @Input() isSmall: boolean = true; // flag for making the input area the same size as grid fields
   @Input() placeholder = 'URL or prefix:ID';
   @Input() readonly?: boolean = false;
   @Input() required?: boolean = false;
-  @Output() selected: EventEmitter<string> = new EventEmitter<string>();
   @Input() suggestLength: number = 10; // max number of suggested values to be displayed at once
   @Input() suggestThreshold: number = 0; // number of typed characters before suggestions are displayed.
+  @Output() selected: EventEmitter<string> = new EventEmitter<string>();
 
   private inputChanged: Subject<string> = new Subject<string>();
   @ViewChild(NgModel, { static: true })
-  private inputModel?: NgModel;
+  private inputModel!: NgModel;
 
   private linkModel: IdLinkModel = new IdLinkModel();
 
@@ -51,9 +52,9 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
 
   /**
    * Instantiates a new custom input component. Validates the input's contents on debounced keypresses.
-   * @param {IdLinkService} linkService - Singleton API service for Identifier.org.
-   * @param {Injector} injector - Parent's injector retrieved to get the component's form control later on.
-   * @param {DomSanitizer} sanitizer - Marks URLs as safe for use in the different DOM contexts.
+   * @param linkService - Singleton API service for Identifier.org.
+   * @param injector - Parent's injector retrieved to get the component's form control later on.
+   * @param sanitizer - Marks URLs as safe for use in the different DOM contexts.
    */
   constructor(
     private linkService: IdLinkService,
@@ -64,7 +65,7 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
       .pipe(distinctUntilChanged())
       .subscribe((value) => this.update(value));
 
-    this.dataSource = Observable.create((observer: any) => {
+    this.dataSource = new Observable((observer: any) => {
       // Runs on every typing
       observer.next(this.inputText);
     })
@@ -87,28 +88,26 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
 
   /**
    * Determines if a link is not a conventional URL.
-   * @returns {boolean} True if pointing to Identifier's website.
+   * @returns True if pointing to Identifier's website.
    */
   get isIdLink(): boolean {
-    try {
-      return this.validator!.state.isId;
-    } catch (error) {
-      return false;
+    if (this.validator) {
+      return this.validator.state.isId;
     }
+
+    return false;
   }
 
   /**
    * Web link for the current URL or prefix:id pointer if valid, sanitised if so wished.
-   * @param {boolean} [isSanitise = false] - Enables protection against XSS if necessary.
-   * @returns {SafeUrl | string} Sanitised URL for the link corresponding to the field's current contents.
+   * @param [isSanitise = false] - Enables protection against XSS if necessary.
+   * @returns Sanitised URL for the link corresponding to the field's current contents.
    */
   link(isSanitise: boolean = false): SafeUrl | string {
-    let url;
+    let url = '';
 
-    try {
-      url = this.validator!.state.url;
-    } catch (error) {
-      url = '';
+    if (this.validator) {
+      url = this.validator.state.url;
     }
 
     if (isSanitise) {
@@ -123,12 +122,14 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
    * the actual input and the wrapping component.
    * NOTE: This stage is not testable. Hence the try-catch block.
    */
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     try {
-      const control = this.injector.get(NgControl).control;
+      const control: AbstractControl | null = this.injector.get(NgControl).control;
 
-      control.setValidators(Validators.compose([control.validator, this.inputModel!.control.validator]));
-      control.setAsyncValidators(Validators.composeAsync([control.asyncValidator, this.inputModel!.control.asyncValidator]));
+      if (control) {
+        control.setValidators(Validators.compose([control.validator, this.inputModel.control.validator]));
+        control.setAsyncValidators(Validators.composeAsync([control.asyncValidator, this.inputModel.control.asyncValidator]));
+      }
     } catch (event) {
       // TODO: Review logic and check if this try/catch is needed
     }
@@ -136,18 +137,18 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
 
   /**
    * Handler for the input event. Notifies the input's contents change.
-   * @param {Event} event - DOM event object.
+   * @param event - DOM event object.
    */
-  onInput(event: Event) {
-    this.inputChanged.next((<HTMLInputElement>event.target).value);
+  onInput(event: Event): void {
+    this.inputChanged.next((event.target as HTMLInputElement).value);
   }
 
   /**
    * Handler for typeahead selection events. Replaces the present prefix with the one selected and notifies the
    * outside world of the selection.
-   * @param {string} selection - Selected prefix.
+   * @param selection - Selected prefix.
    */
-  onSelect(selection: string) {
+  onSelect(selection: string): void {
     if (this.linkModel.id) {
       this.update(selection + ':' + this.linkModel.id);
     } else {
@@ -156,7 +157,7 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
     this.selected.emit(selection);
 
     // Forces the control's "viewModel" and "value" to update on selection, not later.
-    this.inputModel!.reset(this.linkModel.asString());
+    this.inputModel.reset(this.linkModel.asString());
   }
 
   /**
@@ -164,7 +165,7 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
    * @see {@link ControlValueAccessor}
    * @param fn - Handler telling other form directives and form controls to update their values.
    */
-  registerOnChange(fn) {
+  registerOnChange(fn): void {
     this.onChange = fn;
   }
 
@@ -173,7 +174,7 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
    * Registers a handler specifically for when a control receives a touch event.
    * @see {@link ControlValueAccessor}
    */
-  registerOnTouched() {}
+  registerOnTouched(): void {}
 
   setDisabledState(disabled: boolean): void {
     this.disabled = disabled;
@@ -183,7 +184,7 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
    * Writes a new value from the form model into the view or (if needed) DOM property. It supports both
    * plain input from the server (a string) or directly an object model for the link.
    * @see {@link ControlValueAccessor}
-   * @param {string | IdLinkValue} newValue - Value to be stored.
+   * @param newValue - Value to be stored.
    */
   writeValue(newValue: string | IdLinkValue): void {
     if (typeof newValue === 'string') {
@@ -197,11 +198,11 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
 
   /**
    * Updates the link model, notifying the outside world.
-   * @param {string} value - New value for the link model.
-   * @param {boolean} [prefixOnly = false] - No clear purpose.
+   * @param value - New value for the link model.
+   * @param [prefixOnly = false] - No clear purpose.
    * TODO: what is the exact purpose of prefixOnly (beyond idlink.model's corresponding code) and is it still necessary?
    */
-  private update(value: string, prefixOnly = false) {
+  private update(value: string, prefixOnly = false): void {
     this.linkModel.update(value, prefixOnly);
     this.onChange(value);
   }

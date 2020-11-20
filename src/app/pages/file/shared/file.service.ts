@@ -1,10 +1,15 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { PathInfo, UserGroup } from './file-rest.model';
 import { map, catchError, finalize } from 'rxjs/operators';
-import { HttpUploadClientService, UploadEvent } from './http-upload-client.service';
 import { LogService } from 'app/core/logger/log.service';
+import { isDefinedAndNotEmpty } from 'app/utils';
+import { PathInfo, UserGroup } from './file-rest.model';
+import { HttpUploadClientService, UploadEvent } from './http-upload-client.service';
+
+interface FullPathFile extends File {
+  webkitRelativePath: string;
+}
 
 @Injectable()
 export class FileService {
@@ -49,7 +54,7 @@ export class FileService {
     files.forEach((file: FullPathFile) => {
       // Keep file paths (folders) only if browser supports "webkitRelativePath".
       // If it doesn't, files are uploaded without keeping folder structure.
-      if (String.isDefinedAndNotEmpty(file.webkitRelativePath) && keepFolders) {
+      if (isDefinedAndNotEmpty(file.webkitRelativePath) && keepFolders) {
         formData.append('files', file, file.webkitRelativePath);
       } else {
         formData.append('files', file, file.name);

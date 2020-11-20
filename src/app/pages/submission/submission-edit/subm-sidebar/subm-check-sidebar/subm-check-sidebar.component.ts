@@ -1,13 +1,14 @@
+import { CustomFormControl } from './../../shared/model/custom-form-control.model';
 import { FormControl, ValidationErrors } from '@angular/forms';
 import { Component, Input } from '@angular/core';
 import { ServerError } from 'app/shared/server-error.handler';
 import { SubmEditService } from '../../shared/subm-edit.service';
-import { scrollToFormControl } from 'app/utils';
+import { scrollToFormControl, isArrayEmpty } from 'app/utils';
 
 @Component({
   selector: 'st-subm-check-sidebar',
   templateUrl: './subm-check-sidebar.component.html',
-  styleUrls: ['./subm-check-sidebar.component.css']
+  styleUrls: ['./subm-check-sidebar.component.scss']
 })
 export class SubmCheckSidebarComponent {
   @Input() collapsed?: boolean = false;
@@ -24,9 +25,13 @@ export class SubmCheckSidebarComponent {
     return this.submEditService.isSubmitting;
   }
 
+  get areInvalidControlsEmpty(): boolean {
+    return isArrayEmpty(this.invalidControls);
+  }
+
   /**
    * Determines the text corresponding to a certain error status in the event of no message being provided already.
-   * @returns {string} Descriptive text for the error.
+   * @returns Descriptive text for the error.
    */
   errorMsg(): string {
     const error = this.serverError;
@@ -55,16 +60,16 @@ export class SubmCheckSidebarComponent {
 
   /**
    * Scrolls to and sets focus on the field represented by the form control clicked on within the check tab.
-   * @param {FieldControl} control - Form control augmented with the DOM element for the field.
+   * @param control - Form control augmented with the DOM element for the field.
    */
-  onReviewClick(control: FormControl) {
+  onReviewClick(control: CustomFormControl): void {
     scrollToFormControl(control);
   }
 
   /**
    * Determines the abbreviated text matching a certain error key.
-   * @param {ValidationErrors} errors Set of error keys.
-   * @returns {string} Abbreviated text
+   * @param errors Set of error keys.
+   * @returns Abbreviated text
    */
   tipText(errors: ValidationErrors): string {
     if (errors.required) {

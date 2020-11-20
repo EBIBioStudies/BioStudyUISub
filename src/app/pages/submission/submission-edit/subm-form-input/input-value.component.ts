@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { AppConfig } from 'app/app.config';
 import { BehaviorSubject, Observable, Subject, of } from 'rxjs';
 import {
@@ -9,10 +9,12 @@ import {
   SelectValueType, DateValueType
 } from 'app/pages/submission/submission-shared/model/templates';
 import { typeaheadSource } from '../shared/typeahead.utils';
+import { CustomFormControl } from '../shared/model/custom-form-control.model';
 
 @Component({
   selector: 'st-input-value',
   templateUrl: './input-value.component.html',
+  styleUrls: ['./input-value.component.scss'],
   providers: [{
     provide: NG_VALUE_ACCESSOR,
     useExisting: InputValueComponent,
@@ -21,16 +23,17 @@ import { typeaheadSource } from '../shared/typeahead.utils';
 })
 export class InputValueComponent implements ControlValueAccessor {
   @Input() autosuggest: boolean = true;
-  @Input() formControl?: FormControl;
+  @Input() formControl!: CustomFormControl;
   @Input() isSmall: boolean = true;
+  @Input() isInputGroup: boolean = false;
   @Input() readonly: boolean = false;
-  @Output() select = new EventEmitter<{ [key: string]: string }>();
-  suggestLength: number;
   @Input() suggestThreshold: number = 0;
   @Input() valueType: ValueType = ValueTypeFactory.DEFAULT;
+  @Output() inputValueSelect = new EventEmitter<{ [key: string]: string }>();
+  suggestLength: number;
   readonly valueTypeNameEnum = ValueTypeName;
 
-  private _value = '';
+  private inputValue = '';
   private valueChanges$: Subject<string> = new BehaviorSubject<string>('');
 
   /*
@@ -42,24 +45,28 @@ export class InputValueComponent implements ControlValueAccessor {
     this.suggestLength = appConfig.maxSuggestLength;
   }
 
-  get value() {
-    return this._value;
+  get inputId(): string {
+    return this.formControl.ref.id;
+  }
+
+  get value(): string {
+    return this.inputValue;
   }
 
   set value(value) {
-    this._value = value;
+    this.inputValue = value;
     this.onChange(value);
   }
 
   get allowPast(): boolean {
-    return (<DateValueType>this.valueType).allowPast;
+    return (this.valueType as DateValueType).allowPast;
   }
 
   @Input() autosuggestSource: () => string[] = () => [];
 
   /**
    * Determines if the field's contents are longer than the actual field's dimensions by probing the DOM directly.
-   * @returns {boolean} True if the text's length is greater than its container.
+   * @returns True if the text's length is greater than its container.
    */
   isOverflow(): boolean {
     // return (formEl && formEl.scrollWidth > formEl.clientWidth) === true;
@@ -68,21 +75,21 @@ export class InputValueComponent implements ControlValueAccessor {
 
   /**
    * Convenience method for the equivalen date n years into the future.
-   * @param {number} years - Number of years the date is incremented in.
-   * @returns {Date} - Resulting date object.
+   * @param years - Number of years the date is incremented in.
+   * @returns Resulting date object.
    */
   nowInNyears(years: number = this.appConfig.maxDateYears): Date {
     const currDate = new Date();
     return new Date(currDate.setFullYear(currDate.getFullYear() + years));
   }
 
-  onBlur() {
+  onBlur(): void {
     this.onTouched();
   }
 
   onChange: any = (_: any) => {};
 
-  onKeyDown() {
+  onKeyDown(): void {
     this.valueChanges$.next(this.value);
   }
 
@@ -92,7 +99,7 @@ export class InputValueComponent implements ControlValueAccessor {
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: any) {
+  registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
 
@@ -101,7 +108,7 @@ export class InputValueComponent implements ControlValueAccessor {
    * @param data - Data retrieved asynchronously.
    */
   selectData(data: { [key: string]: string }): void {
-    this.select.emit(data);
+    this.inputValueSelect.emit(data);
   }
 
   typeahead(): Observable<string[]> {
@@ -109,9 +116,7 @@ export class InputValueComponent implements ControlValueAccessor {
       return of([]);
     }
 
-    return typeaheadSource(() => {
-      return this.autosuggestValues();
-    }, this.valueChanges$);
+    return typeaheadSource(() => this.autosuggestValues(), this.valueChanges$);
   }
 
   writeValue(value: any): void {
@@ -122,7 +127,7 @@ export class InputValueComponent implements ControlValueAccessor {
 
   private autosuggestValues(): string[] {
     if (this.valueType.is(ValueTypeName.select)) {
-      return (<SelectValueType>this.valueType).values;
+      return (this.valueType as SelectValueType).values;
     }
     return this.autosuggestSource();
   }

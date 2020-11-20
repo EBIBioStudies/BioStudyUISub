@@ -1,17 +1,18 @@
 import { EMPTY_TEMPLATE_NAME, findSubmissionTemplateByName } from './submission.templates';
+import { isArrayEmpty, isStringDefined, isStringEmpty } from 'app/utils';
 
 /*
 *  Type scopes are used to check if the types with a given name already exists in the scope
 *  (SubmissionScope, SectionScope, FeatureScope, FieldsScope.. etc.). Each type must be in a scope.
 * */
 class TypeScope<T extends TypeBase> {
-  private map: Map<String, T> = new Map();
+  private map: Map<string, T> = new Map();
 
-  clear() {
+  clear(): void {
     this.map.clear();
   }
 
-  del(typeName: string) {
+  del(typeName: string): void {
     if (this.has(typeName)) {
       this.map.delete(typeName);
     }
@@ -26,13 +27,15 @@ class TypeScope<T extends TypeBase> {
   }
 
   getOrElse(typeName: string, elseFunc: () => T): T {
-    if (this.has(typeName)) {
-      return this.get(typeName)!;
+    const type = this.get(typeName);
+    if (type) {
+      return type
     }
+
     return elseFunc();
   }
 
-  has(typeName: string) {
+  has(typeName: string): boolean {
     return this.map.has(typeName);
   }
 
@@ -41,8 +44,8 @@ class TypeScope<T extends TypeBase> {
       return false;
     }
 
-    if (this.has(oldName)) {
-      const value = this.get(oldName)!;
+    const value = this.get(oldName)
+    if (value) {
       this.set(newName, value);
       this.del(oldName);
       return true;
@@ -51,7 +54,7 @@ class TypeScope<T extends TypeBase> {
     return false;
   }
 
-  set(typeName: string, value: T) {
+  set(typeName: string, value: T): void {
     this.map.set(typeName, value);
   }
 
@@ -63,13 +66,14 @@ class TypeScope<T extends TypeBase> {
 const GLOBAL_TYPE_SCOPE: TypeScope<TypeBase> = new TypeScope<TypeBase>();
 
 export abstract class TypeBase {
-  constructor(public typeName: string,
-        readonly tmplBased: boolean,
-        private scope: TypeScope<TypeBase> = GLOBAL_TYPE_SCOPE) {
+  constructor(
+    public typeName: string,
+    readonly tmplBased: boolean,
+    private scope: TypeScope<TypeBase> = GLOBAL_TYPE_SCOPE
+  ) {
+    this.typeName = isStringDefined(typeName) ? typeName.trim() : '';
 
-    this.typeName = String.isDefined(typeName) ? typeName.trim() : '';
-
-    if (this.typeName.isEmpty()) {
+    if (isStringEmpty(this.typeName)) {
       return;
     }
 
@@ -202,10 +206,12 @@ export class DateValueType extends ValueType {
 
 export class SelectValueType extends ValueType {
   values: string[];
+  multiple: boolean = false;
 
   constructor(data: Partial<SelectValueType> = {}) {
     super(ValueTypeName.select);
     this.values = data.values || [];
+    this.multiple = data.multiple || false;
   }
 
   setValues(values: string[]): void {
@@ -232,16 +238,23 @@ export class ValueTypeFactory {
 export class FieldType extends TypeBase {
   readonly display: string;
   readonly displayType: DisplayType;
+  readonly helpText: string;
+  readonly helpLink: string;
   readonly icon: string;
   readonly valueType: ValueType;
 
-  constructor(name: string, data: Partial<FieldType> = {}, scope?: TypeScope<TypeBase>,
-        parentDisplayType: DisplayType = DisplayType.OPTIONAL) {
+  constructor(
+    name: string,
+    data: Partial<FieldType> = {},
+    scope?: TypeScope<TypeBase>,
+    parentDisplayType: DisplayType = DisplayType.OPTIONAL
+  ) {
     super(name, true, scope);
 
     this.valueType = ValueTypeFactory.create(data.valueType || {});
     this.icon = data.icon || 'fa-pencil-square-o';
-
+    this.helpText = data.helpText || '';
+    this.helpLink = data.helpLink || '';
     this.displayType = DisplayType.create( data.display || parentDisplayType.name);
     this.display = this.displayType.name;
   }
@@ -284,9 +297,10 @@ export class FeatureType extends TypeBase {
       .forEach(ct => new ColumnType(ct.name, ct, this.columnScope));
   }
 
-  static createDefault(name: string, singleRow?: boolean, uniqueCols?: boolean, scope?: TypeScope<TypeBase>,
-             parentDisplayType?: DisplayType): FeatureType {
-    return new FeatureType(name, {singleRow: singleRow, uniqueCols: uniqueCols}, scope, false,
+  static createDefault(
+    name: string, singleRow?: boolean, uniqueCols?: boolean, scope?: TypeScope<TypeBase>, parentDisplayType?: DisplayType
+  ): FeatureType {
+    return new FeatureType(name, {singleRow, uniqueCols}, scope, false,
       parentDisplayType);
   }
 
@@ -308,8 +322,9 @@ export class FeatureType extends TypeBase {
 }
 
 export class AnnotationsType extends FeatureType {
-  constructor(data?: Partial<FeatureType>, scope?: TypeScope<TypeBase>, isTemplBased: boolean = true,
-        parentDisplayType: DisplayType= DisplayType.OPTIONAL) {
+  constructor(
+    data?: Partial<FeatureType>, scope?: TypeScope<TypeBase>, isTemplBased: boolean = true, parentDisplayType: DisplayType= DisplayType.OPTIONAL
+  ) {
     const d = Object.assign(data || {}, {singleRow: true});
     super('Annotation', d, scope, isTemplBased, parentDisplayType);
   }
@@ -323,8 +338,9 @@ export class ColumnType extends TypeBase {
   readonly uniqueValues: boolean;
   readonly valueType: ValueType;
 
-  constructor(name: string, data?: Partial<ColumnType>, scope?: TypeScope<ColumnType>, isTemplBased: boolean = true,
-    parentDisplayType: DisplayType = DisplayType.OPTIONAL) {
+  constructor(
+    name: string, data?: Partial<ColumnType>, scope?: TypeScope<ColumnType>, isTemplBased: boolean = true, parentDisplayType: DisplayType = DisplayType.OPTIONAL
+  ) {
     super(name, isTemplBased, scope as TypeScope<TypeBase>);
 
     data = data || {};
@@ -357,6 +373,7 @@ export class SectionType extends TypeBase {
   readonly annotationsType: AnnotationsType;
   readonly display: string;
   readonly displayType: DisplayType;
+  readonly displayAnnotations: boolean;
   readonly featureGroups: string[][];
   readonly minRequired: number;
   readonly sectionExample: string;
@@ -365,29 +382,33 @@ export class SectionType extends TypeBase {
   private fieldScope: TypeScope<FieldType> = new TypeScope<FieldType>();
   private sectionScope: TypeScope<SectionType> = new TypeScope<SectionType>();
 
-  constructor(name: string, data?: Partial<SectionType>, scope?: TypeScope<TypeBase>, isTemplBased: boolean = true,
-    parentDisplayType: DisplayType = DisplayType.OPTIONAL) {
+  constructor(
+    name: string,
+    data?: Partial<SectionType>,
+    scope?: TypeScope<TypeBase>,
+    isTemplBased: boolean = true,
+    parentDisplayType: DisplayType = DisplayType.OPTIONAL
+  ) {
     super(name, isTemplBased, scope);
 
     data = data || {};
     this.displayType = DisplayType.create(data.display || parentDisplayType.name);
     this.display = this.displayType.name;
-    this.featureGroups = (data.featureGroups || []).filter(gr => !gr.isEmpty());
+    this.displayAnnotations = data.displayAnnotations || false;
+    this.featureGroups = (data.featureGroups || []).filter(gr => !isArrayEmpty(gr));
     this.minRequired = data.minRequired || 1;
-    this.annotationsType = new AnnotationsType(data.annotationsType, new TypeScope<AnnotationsType>(), isTemplBased,
-      this.displayType);
+    this.annotationsType = new AnnotationsType(data.annotationsType, new TypeScope<AnnotationsType>(), isTemplBased, this.displayType);
     this.sectionExample = data.sectionExample || '';
 
     (data.fieldTypes || [])
-      .forEach(f => new FieldType(f.name, f, this.fieldScope, this.displayType));
+      .forEach((fieldType) => new FieldType(fieldType.name, fieldType, this.fieldScope, this.displayType));
     (data.featureTypes || [])
-      .forEach(f => new FeatureType(f.name, f, this.featureScope, isTemplBased, this.displayType));
+      .forEach((featureType) => new FeatureType(featureType.name, featureType, this.featureScope, isTemplBased, this.displayType));
     (data.sectionTypes || [])
-      .forEach(s => new SectionType(s.name, s, this.sectionScope, isTemplBased, this.displayType));
+      .forEach((sectionType) => new SectionType(sectionType.name, sectionType, this.sectionScope, isTemplBased, this.displayType));
   }
 
-  static createDefault(name: string, scope?: TypeScope<TypeBase>,
-             parentDisplayType?: DisplayType): SectionType {
+  static createDefault(name: string, scope?: TypeScope<TypeBase>, parentDisplayType?: DisplayType): SectionType {
     return new SectionType(name, {}, scope, false, parentDisplayType);
   }
 
@@ -417,17 +438,19 @@ export class SectionType extends TypeBase {
       .getOrElse(name, () => (SectionType.createDefault(name, this.sectionScope, this.displayType)));
   }
 
-  sectionType(names: string[]) {
+  sectionType(names: string[]): any {
     if (names.length > 1) {
       const types = this.sectionTypes
         .map(s => s.sectionType(names.slice(1)))
         .filter(t => t !== undefined);
+
       if (types.length > 0) {
         return types[0];
       }
     } else if (names.length === 1 && names[0] === this.name) {
       return this;
     }
+
     return undefined;
   }
 }
@@ -436,13 +459,25 @@ export class SubmissionType extends TypeBase {
   readonly display: string = DisplayType.OPTIONAL.name;
   readonly sectionType: SectionType;
 
+  // tslint:disable-next-line: variable-name
   constructor(_name: string, typeObj: SubmissionType, scope?: TypeScope<TypeBase>) {
     super('Submission', true, scope);
+
     if (typeObj.sectionType === undefined) {
       throw Error('sectionType is not defined in the template');
     }
-    this.sectionType = new SectionType(typeObj.sectionType.name, typeObj.sectionType, new TypeScope<TypeBase>(),
-      true, DisplayType.create(typeObj.display));
+
+    this.sectionType = new SectionType(
+      typeObj.sectionType.name,
+      typeObj.sectionType,
+      new TypeScope<TypeBase>(),
+      true,
+      DisplayType.create(typeObj.display)
+    );
+  }
+
+  static defaultType(): SubmissionType {
+    return SubmissionType.fromEmptyTemplate();
   }
 
   static fromEmptyTemplate(): SubmissionType {
@@ -455,6 +490,6 @@ export class SubmissionType extends TypeBase {
   }
 }
 
-export function invalidateGlobalScope() {
+export function invalidateGlobalScope(): void {
   GLOBAL_TYPE_SCOPE.clear();
 }

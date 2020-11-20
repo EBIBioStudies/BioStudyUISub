@@ -1,12 +1,12 @@
-<div [ngSwitch]="valueType.name">
-  <input *ngSwitchCase="[valueTypeNameEnum.text, valueTypeNameEnum.select].includes(valueType.name) ? valueType.name : ''"
+<ng-container [ngSwitch]="valueType.name">
+  <input *ngSwitchCase="valueTypeNameEnum.text"
       type="text"
-      class="form-control"
+      class="form-control {{inputId}}"
       tooltip="{{isOverflow() && !ahead._container ? value : ''}}"
       container="body"
       placement="bottom"
-      [(ngModel)]="value"
-      [ngClass]="{'input-sm': isSmall}"
+      [formControl]="formControl"
+      [ngClass]="{'input-sm': isSmall, 'group-element': isInputGroup}"
       [readonly]="readonly"
       [typeahead]="typeahead()"
       [typeaheadMinLength]="suggestThreshold"
@@ -14,27 +14,42 @@
       [typeaheadScrollable]="true"
       [typeaheadOptionsInScrollableView]="suggestLength"
       (blur)="onBlur()"
-      (keydown)="onKeyDown()"/>
+      (keydown)="onKeyDown()"
+      stBootstrapValidation/>
 
   <textarea *ngSwitchCase="valueTypeNameEnum.largetext"
-      class="form-control"
+      class="form-control {{inputId}}"
       stAutosize="200"
+      [ngClass]="{'group-element': isInputGroup}"
       [formControl]="formControl"
       [readonly]="readonly"
       (keyup.enter)="$event.stopPropagation()"
-      (blur)="onBlur()">
+      (blur)="onBlur()"
+      stBootstrapValidation>
   </textarea>
 
+  <st-select-input *ngSwitchCase="valueTypeNameEnum.select"
+    [inputId]="inputId"
+    [formControl]="formControl"
+    [values]="valueType.values"
+    [multiple]="valueType.multiple"
+    [readonly]="readonly"
+    [isInputGroup]="isInputGroup">
+  </st-select-input>
+
   <st-date-input *ngSwitchCase="valueTypeNameEnum.date"
+      [inputId]="inputId"
       [isSmall]="isSmall"
       [formControl]="formControl"
       [readonly]="readonly"
       [maxDate]="nowInNyears()"
       [allowPast]="allowPast"
-      (focusout)="onBlur()">
+      (focusout)="onBlur()"
+      [isInputGroup]="isInputGroup">
   </st-date-input>
 
   <st-id-link *ngSwitchCase="valueTypeNameEnum.idlink"
+      [inputId]="inputId"
       [isSmall]="isSmall"
       [readonly]="readonly"
       [suggestThreshold]="suggestThreshold"
@@ -44,6 +59,7 @@
   </st-id-link>
 
   <st-orcid-input-box *ngSwitchCase="valueTypeNameEnum.orcid"
+      [inputId]="inputId"
       [isSmall]="isSmall"
       [readonly]="readonly"
       [isPopupButton]="false"
@@ -52,23 +68,30 @@
   </st-orcid-input-box>
 
   <st-file-select *ngSwitchCase="valueTypeNameEnum.file"
+      [inputId]="inputId"
       [formControl]="formControl"
-      [readonly]="readonly">
+      [readonly]="readonly"
+      [isInputGroup]="isInputGroup">
   </st-file-select>
 
   <st-pubmedid-search *ngSwitchCase="valueTypeNameEnum.pubmedid"
+      [inputId]="inputId"
       [formControl]="formControl"
       [readonly]="readonly"
       (found)="selectData($event)">
   </st-pubmedid-search>
 
   <st-dna-input *ngSwitchCase="valueTypeNameEnum.dna"
-    [formControl]="formControl"
-    [readonly]="readonly">
+      [inputId]="inputId"
+      [formControl]="formControl"
+      [readonly]="readonly"
+      [isInputGroup]="isInputGroup">
   </st-dna-input>
 
   <st-protein-input *ngSwitchCase="valueTypeNameEnum.protein"
-    [formControl]="formControl"
-    [readonly]="readonly">
+      [inputId]="inputId"
+      [formControl]="formControl"
+      [readonly]="readonly"
+      [isInputGroup]="isInputGroup">
   </st-protein-input>
-</div>
+</ng-container>

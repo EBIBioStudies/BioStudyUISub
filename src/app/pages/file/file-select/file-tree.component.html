@@ -1,13 +1,13 @@
-<ul class="treeview" *ngIf="loaded; else loadingBlock">
+<ul class="treeview list-group-flush" *ngIf="loaded; else loadingBlock">
   <li *ngFor="let node of nodes">
     <a *ngIf="node.isDir" (click)="onParentClick(node)" class="dir">
       <i class="far" [ngClass]="{ 'fa-minus-square': node.expanded, 'fa-plus-square': !node.expanded }"></i>
     </a>
-    <a class="node" (click)="onNodeClick(node)">
+    <a class="node pl-2" (click)="onNodeClick(node)">
       {{node.name}}
     </a>
     <div *ngIf="node.expanded">
-      <st-file-tree [root]="node" (select)="onChildTreeClick($event)"></st-file-tree>
+      <st-file-tree [root]="node" (fileTreeSelect)="onChildTreeClick($event)"></st-file-tree>
     </div>
   </li>
 </ul>

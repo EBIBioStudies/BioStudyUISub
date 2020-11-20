@@ -1,11 +1,9 @@
-<form *ngIf="sectionForm" [formGroup]="sectionForm.form" (ngSubmit)="onSubmit($event)">
-  <div *ngFor="let fieldControl of sectionForm.fieldControls"
-     [ngClass]="{'form-group row': !readonly}">
+<form *ngIf="sectionForm" class="needs-validation mt-4" [formGroup]="sectionForm.form" (ngSubmit)="onSubmit($event)" novalidate>
+  <ng-container *ngFor="let fieldControl of sectionForm.fieldControls">
     <st-subm-field [fieldControl]="fieldControl" [readonly]="readonly"></st-subm-field>
-  </div>
+  </ng-container>
 
-  <div *ngFor="let featureForm of sectionForm.featureForms"
-     [ngClass]="{'form-group row': !featureForm.isEmpty}">
+  <ng-container *ngFor="let featureForm of sectionForm.featureForms">
     <st-subm-feature [featureForm]="featureForm" [readonly]="readonly"></st-subm-feature>
-  </div>
+  </ng-container>
 </form>

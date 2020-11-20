@@ -18,23 +18,23 @@ export class LogService {
     this.buildPublishers();
   }
 
-  error(message: string, ...optionalParams: any[]) {
+  error(message: string, ...optionalParams: any[]): void {
     this.writeToLog(message, LogLevel.ERROR, optionalParams);
   }
 
-  info(message: string, ...optionalParams: any[]) {
+  info(message: string, ...optionalParams: any[]): void {
     this.writeToLog(message, LogLevel.INFO, optionalParams);
   }
 
-  upload(message: string, ...optionalParams: any[]) {
+  upload(message: string, ...optionalParams: any[]): void {
     this.writeToLog(message, LogLevel.UPLOAD, optionalParams);
   }
 
-  warn(message: string, ...optionalParams: any[]) {
+  warn(message: string, ...optionalParams: any[]): void {
     this.writeToLog(message, LogLevel.WARN, optionalParams);
   }
 
-  private buildPublishers() {
+  private buildPublishers(): void  {
     const consolePublisher: LogPublisher = new LogConsole();
     const webapiPublisher: LogWebApi = new LogWebApi(this.http);
 
@@ -42,7 +42,7 @@ export class LogService {
     this.publishers.push(webapiPublisher);
   }
 
-  private writeToLog(message: string, level: LogLevel, params: any[]) {
+  private writeToLog(message: string, level: LogLevel, params: any[]): void {
     const userEmail: string = this.useSession.getUserEmail();
     const entry: LogEntry = new LogEntry(message, level, params, userEmail);
 

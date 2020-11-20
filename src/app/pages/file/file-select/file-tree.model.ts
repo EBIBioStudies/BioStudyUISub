@@ -6,10 +6,13 @@ export class FileNode {
   path: string;
 
   constructor(isDir: boolean, path: string, name: string) {
+    const isRoot = name === '/';
+
     this.isDir = isDir;
     this.name = name;
-    this.path = name === '/' ? `/user` : `/${path}/${name}`;
+    this.path = isRoot ? `/user` : `/${path}/${name}`;
     this.icon = this.getIcon();
+    this.expanded = isRoot;
   }
 
   expandOrCollapse(): void {
@@ -24,6 +27,7 @@ export class FileNode {
       }
       return '+ ';
     }
+
     return undefined;
   }
 }

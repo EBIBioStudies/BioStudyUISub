@@ -10,32 +10,32 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./file-tree.component.css']
 })
 export class FileTreeComponent implements OnInit, OnDestroy {
-
-  get nodes(): FileNode[] {
-    return this._nodes;
-  }
-
-  set nodes(nodes: FileNode[]) {
-    this._nodes = nodes;
-    this.loaded = true;
-  }
   private static ROOT_FOLDER_PATH = '/user/';
 
   loaded = false;
   @Input() root?: FileNode;
-  @Output() select = new EventEmitter();
+  @Output() fileTreeSelect = new EventEmitter();
 
-  private _nodes: FileNode[] = [];
+  private fileTreeNodes: FileNode[] = [];
   private unsubscribe = new Subject();
 
   constructor(private fileStore: FileTreeStore) {}
 
-  ngOnDestroy() {
+  get nodes(): FileNode[] {
+    return this.fileTreeNodes;
+  }
+
+  set nodes(nodes: FileNode[]) {
+    this.fileTreeNodes = nodes;
+    this.loaded = true;
+  }
+
+  ngOnDestroy(): void {
     this.unsubscribe.next();
     this.unsubscribe.complete();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     if (this.root === undefined) {
       this.fileStore.getUserDirs()
         .pipe(takeUntil(this.unsubscribe))
@@ -47,17 +47,17 @@ export class FileTreeComponent implements OnInit, OnDestroy {
     }
   }
 
-  onChildTreeClick(path: string) {
+  onChildTreeClick(path: string): void {
     const finalPath = path.replace(FileTreeComponent.ROOT_FOLDER_PATH, '');
 
-    this.select.emit(finalPath);
+    this.fileTreeSelect.emit(finalPath);
   }
 
-  onNodeClick(node: FileNode) {
-      this.select.emit(node.path);
+  onNodeClick(node: FileNode): void {
+    this.fileTreeSelect.emit(node.path);
   }
 
-  onParentClick(node: FileNode) {
+  onParentClick(node: FileNode): void {
     node.expandOrCollapse();
   }
 }

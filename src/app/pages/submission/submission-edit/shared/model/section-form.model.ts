@@ -1,3 +1,4 @@
+import { CustomFormControl } from './custom-form-control.model';
 import {
   DisplayType,
   Feature,
@@ -18,25 +19,26 @@ export class SectionForm extends FormBase {
   readonly featureForms: FeatureForm[] = [];
   readonly fieldControls: FieldControl[] = [];
   readonly sectionPath: string[];
-  /** Can use form's valueChanges, but then the operations like add/remove column will not be atomic,
-  as it requires to apply multiple changes at once */
+  // Can use form's valueChanges, but then the operations like add/remove column will not be atomic,
+  // as it requires to apply multiple changes at once
   readonly structureChanges$ = new BehaviorSubject<StructureChangeEvent>(StructureChangeEvent.init);
   readonly subsectionForms: SectionForm[] = [];
 
   private sb: Map<string, Subscription> = new Map<string, Subscription>();
   private sectionRef: ControlGroupRef;
 
-  constructor(private section: Section, readonly parent?: SectionForm) {
+  constructor(readonly section: Section, readonly parent?: SectionForm) {
     super(new FormGroup({
       fields: new FormGroup({}),
       features: new FormGroup({}),
       sections: new FormGroup({})
     }));
 
-    this.sectionPath = this.isRootSection ? [] : [...this.parent!.sectionPath, ...[this.id]];
+    const parentSectionPath = this.parent ? this.parent.sectionPath : [];
+    this.sectionPath = this.isRootSection ? [] : [...parentSectionPath, this.id];
     this.sectionRef = ControlGroupRef.sectionRef(section, this.isRootSection);
 
-    this.buildElements();
+    this.buildElements(section.displayAnnotations);
   }
 
   addFeature(type: FeatureType): Feature | undefined {
@@ -61,15 +63,15 @@ export class SectionForm extends FormBase {
     return form;
   }
 
-  findFieldControl(fieldName: string) {
+  findFieldControl(fieldName: string): FieldControl | undefined {
     return this.fieldControls.find((fieldControl) => fieldControl.name === fieldName);
   }
 
-  findSectionForm(sectionId: string) {
+  findSectionForm(sectionId: string): SectionForm | undefined {
     return this.findRoot().lookupSectionForm(sectionId);
   }
 
-  getFeatureControl(featureId: string): FormControl | undefined {
+  getFeatureControl(featureId: string): CustomFormControl | undefined {
     const featureForm = this.featureForms.find(f => f.id === featureId);
     if (featureForm !== undefined) {
       return featureForm.scrollToTheLastControl;
@@ -145,26 +147,26 @@ export class SectionForm extends FormBase {
   }
 
   get sectionTypes(): Array<SectionType> {
-    return <SectionType[]>[...this.section.type.sectionTypes, ...this.subsectionForms.map(sf => sf.type)]
+    return [...this.section.type.sectionTypes, ...this.subsectionForms.map(sf => sf.type)]
       .reduce((rv, v) => {
         if (rv[0][v.name] === undefined) {
           rv[0][v.name] = 1;
           rv[1].push(v);
         }
         return rv;
-      }, [{} as { [key: string]: any }, [] as Array<SectionType>])[1];
+      }, [{} as { [key: string]: any }, [] as Array<SectionType>])[1] as SectionType[];
   }
 
   private get fieldFormGroup(): FormGroup {
-    return <FormGroup>this.form.get('fields');
+    return this.form.get('fields') as FormGroup;
   }
 
   private get featureFormGroups(): FormGroup {
-    return <FormGroup>this.form.get('features');
+    return this.form.get('features') as FormGroup;
   }
 
   private get subsectionFormGroups(): FormGroup {
-    return <FormGroup>this.form.get('sections');
+    return this.form.get('sections') as FormGroup;
   }
 
   private addFeatureForm(feature: Feature): FeatureForm {
@@ -188,13 +190,13 @@ export class SectionForm extends FormBase {
     return sectionForm;
   }
 
-  private buildElements() {
+  private buildElements(displayAnnotations: boolean): void {
     const section = this.section;
 
     section.fields.list().forEach((field) => this.addFieldControl(field));
 
-    [section.annotations, ...section.features.list()]
-      .forEach((feature) => this.addFeatureForm(feature));
+    const features = displayAnnotations ? [section.annotations, ...section.features.list()] : section.features.list();
+    features.forEach((feature) => this.addFeatureForm(feature));
 
     section.sections.list().forEach((sectionItem) => this.addSubsectionForm(sectionItem));
   }
@@ -213,7 +215,7 @@ export class SectionForm extends FormBase {
     return this.subsectionForms.find(sf => sf.lookupSectionForm(sectionId) !== undefined);
   }
 
-  private subscribe(featureForm: FeatureForm) {
+  private subscribe(featureForm: FeatureForm): void {
     this.sb.set(featureForm.id, featureForm.structureChanges$.subscribe((event) => {
       this.form.markAsTouched();
 
@@ -221,8 +223,12 @@ export class SectionForm extends FormBase {
     }));
   }
 
-  private unsubscribe(featureId: string) {
-    this.sb.get(featureId)!.unsubscribe();
+  private unsubscribe(featureId: string): void {
+    const suscription = this.sb.get(featureId);
+    if (suscription) {
+      suscription.unsubscribe();
+    }
+
     this.sb.delete(featureId);
   }
 }

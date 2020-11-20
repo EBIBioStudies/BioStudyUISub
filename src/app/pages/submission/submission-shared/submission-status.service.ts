@@ -1,37 +1,42 @@
-import { ServerSentEventService } from 'app/shared/server-sent-event.service';
-import { LogService } from 'app/core/logger/log.service';
 import { Observable } from 'rxjs';
-import { NgZone } from '@angular/core';
+import { NgZone, Injectable } from '@angular/core';
+import { ServerSentEventService } from 'app/shared/server-sent-event.service';
+import { isStringDefined } from 'app/utils';
+import { PlatformLocation } from '@angular/common';
 
-export interface SubmStatus {
-  accNo: string,
-  status: string
-}
-
+@Injectable()
 export class SubmissionStatusService {
   eventSource: EventSource | undefined;
 
-  constructor(private zone: NgZone, private sseService: ServerSentEventService, private logService: LogService) {}
-
-  getSubmStatus(): Observable<SubmStatus> {
+  constructor(private zone: NgZone, private sseService: ServerSentEventService, platformLocation: PlatformLocation) {
     try {
-      this.eventSource = this.sseService.getEventSource('/subm-status');
-    } catch (error) {
-      this.logService.error('get-subm-status', 'SubmissionStatusService: could not stablish event source connection');
-    }
+      const baseHref: string = platformLocation.getBaseHrefFromDOM();
 
-    return Observable.create((observer) => {
-      this.eventSource!.addEventListener('subm-status', (event: MessageEvent) => {
+      this.eventSource = this.sseService.getEventSource(`${baseHref}subm-status`);
+    } catch (error) {
+      // tslint:disable-next-line: no-console
+      console.error('get-subm-status', 'SubmissionStatusService: could not stablish event source connection', error);
+    }
+  }
+
+  getSubmStatus(): Observable<string> {
+    return new Observable((observer) => {
+      this.eventSource!.addEventListener('message', (event: MessageEvent) => {
         const { data } = event;
-        const parsedData: SubmStatus = JSON.parse(data);
+        const { accNo } = JSON.parse(data);
 
         this.zone.run(() => {
-          observer.next(parsedData);
+          if (isStringDefined(accNo)) {
+            observer.next(accNo);
+          }
         });
+
+        return () => this.eventSource?.close();
       });
 
-      this.eventSource!.onerror = () => {
-        this.logService.error('get-subm-status', 'SubmissionStatusService: EventSource has stopped');
+      this.eventSource!.onerror = (error) => {
+        // tslint:disable-next-line: no-console
+        console.error('get-subm-status', 'SubmissionStatusService: EventSource has stopped', error);
       };
     });
   }

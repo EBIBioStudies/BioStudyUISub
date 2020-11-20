@@ -1,0 +1,4 @@
+<ckeditor class="{{inputId}}" [(ngModel)]="proteinSequence"
+  [ngClass]="{'is-readonly': readonly, 'is-grouped': isInputGroup, 'is-invalid': formControl.invalid && formControl.touched}"
+  [editor]="editor" [config]="config" [disabled]="readonly" (change)="onEditorChange($event)"
+  (ready)="onEditorReady($event)"></ckeditor>

@@ -1,4 +1,5 @@
 import { SubmissionListItem } from '../submission.service';
+import { isDefinedAndNotEmpty } from 'app/utils';
 
 export class SubmissionDraftUtils {
   filterAndFormatDraftSubmissions(drafts): SubmissionListItem[] {
@@ -12,7 +13,7 @@ export class SubmissionDraftUtils {
       return {
         accno: key,
         title: title === undefined ? '' : title,
-        rtime: (String.isDefinedAndNotEmpty(release) || release === '') ? null : release
+        rtime: (isDefinedAndNotEmpty(release) || release === '') ? null : release
       };
     });
   }

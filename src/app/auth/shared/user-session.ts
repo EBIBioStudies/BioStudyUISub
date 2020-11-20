@@ -1,21 +1,14 @@
-import { AppConfig } from 'app/app.config';
 import { Injectable } from '@angular/core';
 import { ReplaySubject, Subject } from 'rxjs';
-import {
-  setLoginToken,
-  getLoginToken,
-  setUser,
-  getUser,
-  destroyLoginToken,
-  destroyUser
-} from './user-cookies';
+import { UserCookies } from './user-cookies';
 import { UserInfo } from './model';
+import { isDefinedAndNotEmpty } from 'app/utils';
 
 @Injectable()
 export class UserSession {
   created$: Subject<boolean> = new ReplaySubject<boolean>(1);
 
-  constructor(private appConfig: AppConfig) {}
+  constructor(private userCookies: UserCookies) {}
 
   create(user: UserInfo): UserInfo {
     this.update(user);
@@ -25,15 +18,15 @@ export class UserSession {
   }
 
   destroy(): void {
-    destroyLoginToken();
-    destroyUser();
+    this.userCookies.destroyLoginToken();
+    this.userCookies.destroyUser();
     this.notifySessionDestroyed();
   }
 
   getUserDisplayName(): string {
-    const { fullname, email } = getUser();
+    const { fullname, email } = this.userCookies.getUser();
 
-    if (String.isDefinedAndNotEmpty(fullname)) {
+    if (isDefinedAndNotEmpty(fullname)) {
       return fullname;
     }
 
@@ -41,7 +34,7 @@ export class UserSession {
   }
 
   getUserEmail(): string {
-    const { email } = getUser();
+    const { email } = this.userCookies.getUser();
     return email;
   }
 
@@ -57,12 +50,12 @@ export class UserSession {
   }
 
   token(): string {
-    return getLoginToken();
+    return this.userCookies.getLoginToken();
   }
 
-  update(user: any) {
-    setLoginToken(user.sessid);
-    setUser(user);
+  update(user: any): any {
+    this.userCookies.setLoginToken(user.sessid);
+    this.userCookies.setUser(user);
 
     return user;
   }

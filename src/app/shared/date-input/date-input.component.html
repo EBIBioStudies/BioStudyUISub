@@ -1,0 +1,15 @@
+<div class="wrapper">
+   <div class="dropdown" [ngClass]="{'readonly': readonly}" (click)="onClick($event)">
+      <input class="form-control {{inputId}}" placeholder="Choose a date" type="text"
+         [ngClass]="{'input-sm': isSmall, 'is-grouped': isInputGroup}" [ngModel]="inputDateValue" [required]="required"
+         (click)="dp.toggle()" readonly stBootstrapValidation>
+   </div>
+   <!--
+      This is a hack to show dates out of min/max dates. bsDatePicker has a validation which checks if the provided
+      date is out of min/max dates and if so, it automatically overrides the value for the predefined min date.
+      To bypass it, two inputs have been defined, the form-control above which only visualizes the value and this hidden
+      input which displays the date picker.
+   -->
+   <input class="hidden-input" readonly (bsValueChange)="onPickerSet($event)" (onShown)="onPickerShown()"
+      #dp="bsDatepicker" bsDatepicker>
+</div>

@@ -1,6 +1,8 @@
 import { PageTabSection, PtAttribute } from './pagetab.model';
+import { Dictionary, Nullable } from './pagetab-authors.utils';
+import { isNotDefinedOrEmpty, isStringDefined } from 'app/utils';
 
-const isEqualTo = (value: string) => (s: Nullable<string>) => (String.isDefined(s) && s!.toLowerCase() === value);
+const isEqualTo = (value: string) => (s: Nullable<string>) => (isStringDefined(s) && s!.toLowerCase() === value);
 const isComponentProtocol = isEqualTo('protocols');
 const isStudyProtocol = isEqualTo('study protocols');
 
@@ -10,7 +12,7 @@ class Protocols {
 
   private constructor() { }
 
-  static getInstance() {
+  static getInstance(): Protocols {
     if (!Protocols.instance) {
       Protocols.instance = new Protocols();
     }
@@ -37,16 +39,18 @@ class Protocols {
   }
 
   toReference(attr: PtAttribute): PtAttribute {
-    if (String.isNotDefinedOrEmpty(attr.value) || attr.name !== 'Protocol') {
-      return <PtAttribute>{ name: attr.name, value: attr.value };
+    const attributeValue: string = attr.value as string;
+
+    if (isNotDefinedOrEmpty(attributeValue) || attr.name !== 'Protocol') {
+      return { name: attr.name, value: attr.value } as PtAttribute;
     }
 
-    const refKeyForValue = this.getRefKeyByValue(attr.value);
-    return <PtAttribute>{
+    const refKeyForValue = this.getRefKeyByValue(attributeValue);
+    return {
       name: 'Protocol',
       value: refKeyForValue,
       isReference: true
-    };
+    } as PtAttribute;
   }
 }
 
@@ -56,25 +60,25 @@ export function submissionToPageTabProtocols(pageTabSections: PageTabSection[]):
   const studyProtocols: PageTabSection[] = pageTabSections.filter((section) => isStudyProtocol(section.type));
 
   const componentProtocolWithReference = componentProtocols.map((componentProtocol) => (
-    <PageTabSection>{
+    {
       type: componentProtocol.type,
       attributes: componentProtocol.attributes!.map((attribute) => {
         return protocols.toReference({ ...attribute });
       })
-    }
+    } as PageTabSection
   ));
 
   const studyProtocolToReference = studyProtocols.map((studyProtocol, index) => {
     const attributes = studyProtocol.attributes;
     const nameAttribute = attributes!.find((attribute) => attribute.name === 'Name') || {};
-    const studyProtocolNameValue: string = nameAttribute.value || '';
+    const studyProtocolNameValue: string = nameAttribute.value as string || '';
 
     return (
-      <PageTabSection>{
+      {
         type: studyProtocol.type,
         accno: studyProtocol.accno ? studyProtocol.accno : protocols.refFor(studyProtocolNameValue, `p${index}`),
         attributes: studyProtocol.attributes
-      }
+      } as PageTabSection
     );
   });
 
@@ -94,7 +98,7 @@ export function pageTabToSubmissionProtocols(pageTabSections: PageTabSection[]):
   studyProtocols.forEach((studyProtocol) => {
     const attributes = studyProtocol.attributes;
     const nameAttribute = attributes!.find((attribute) => attribute.name === 'Name') || {};
-    const studyProtocolNameValue: string = nameAttribute.value || '';
+    const studyProtocolNameValue: string = nameAttribute.value as string || '';
     const studyProtocolAccno: string = studyProtocol.accno || '';
 
     protocols.refFor(studyProtocolNameValue, studyProtocolAccno);
@@ -104,19 +108,20 @@ export function pageTabToSubmissionProtocols(pageTabSections: PageTabSection[]):
     const attributes = componentProtocol.attributes || [];
     const protocolAttribute = attributes!.find((attribute) => attribute.name === 'Protocol') || {};
     const finalAttributes = attributes!.filter((attribute) => attribute.name !== 'Protocol') || [];
+    const protocolAttributeValue = protocolAttribute.value as string;
 
     if (protocolAttribute) {
-      finalAttributes.push(<PtAttribute>{
+      finalAttributes.push({
         name: 'Protocol',
-        value: protocols.getRefValueByKey(protocolAttribute.value)
-      });
+        value: protocols.getRefValueByKey(protocolAttributeValue)
+      } as PtAttribute);
     }
 
     return (
-      <PageTabSection>{
+      {
         ...componentProtocol,
         attributes: finalAttributes
-      }
+      } as PageTabSection
     );
   });
 

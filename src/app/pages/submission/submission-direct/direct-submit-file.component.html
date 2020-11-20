@@ -1,17 +1,13 @@
-<div *ngIf="file">
-  <div class="panel"
-      [ngClass]="{'panel-default': !accno, 'text-primary': accno}"
-      [ngStyle]="{'cursor': accno || hasSubmitFailed ? 'pointer' : 'default'}"
-      [tooltip]="accno ? 'Edit this study' : hasSubmitFailed ? 'Click to show error log' : ''"
-      (click)="hasSubmitFailed || hasSubmitPassed ? handleOnFileClick($event, hasSubmitFailed, accno) : null"
-      placement="top"
-      container="body">
-    <div class="panel-body">
-      <div class="st-panel-description">
-        <i class="fa fa-2x"
-            *ngIf="!hasSubmitPassed"
-            aria-hidden="true"
-            [ngClass]="{
+<ng-container *ngIf="file">
+  <div class="card h-100" [ngClass]="{'panel-default': !accno, 'text-primary': accno}"
+    [ngStyle]="{'cursor': accno || hasSubmitFailed ? 'pointer' : 'default'}"
+    [tooltip]="accno ? 'Edit this study' : hasSubmitFailed ? 'Click to show error log' : ''"
+    (click)="hasSubmitFailed || hasSubmitPassed ? handleOnFileClick($event, hasSubmitFailed, accno) : null"
+    placement="top" container="body">
+    <div class="card-body">
+      <div class="card-title d-flex align-items-center">
+        <div>
+          <i class="fa fa-2x" *ngIf="!hasSubmitPassed" aria-hidden="true" [ngClass]="{
                 'st-panel-description-icon': submitType != 'none',
                 'fa-plus': !isPending && submitType == 'create',
                 'fa-sync-alt': !isPending && submitType == 'update',
@@ -19,19 +15,20 @@
                 'fa-edit': hasSubmitPassed,
                 'fa-exchange-alt': isSubmitting}">
           </i>
-        <h4 class="st-direct-submit-file-name">{{file.name}}</h4>
+        </div>
+        <h5 class="st-direct-submit-file-name m-0">{{file.name}}</h5>
       </div>
       <span *ngIf="!hasSubmitFailed && isStudy">
         {{project ? project : 'No project'}}
       </span>
-      <span *ngIf="hasSubmitFailed" class="text-danger">
+      <span class="text-danger" *ngIf="hasSubmitFailed">
         {{error}}
       </span>
-      <div *ngIf="hasSubmitFailed" class="hidden panel-body container-fluid log-container">
+      <div class="overflow-auto" *ngIf="hasSubmitFailed">
         <st-subm-results-tree [log]="errorLog"></st-subm-results-tree>
       </div>
-      <div *ngIf="hasSubmitPassed" class="pull-right text-right">
-        <p class="panel-title">
+      <div *ngIf="hasSubmitPassed" class="text-right">
+        <p class="card-title">
           <strong>{{accno}}</strong>
         </p>
         <span *ngIf="releaseDate">
@@ -42,9 +39,10 @@
         </span>
       </div>
     </div>
-    <div *ngIf="!hasSubmitFailed && !hasSubmitPassed" class="panel-footer" (click)="handleOnIsStudyChange(!isStudy, fileName)">
+    <div *ngIf="!hasSubmitFailed && !hasSubmitPassed" class="card-footer text-muted"
+      (click)="handleOnIsStudyChange(!isStudy, fileName)">
       <input type="checkbox" [checked]="isStudy">
       Study File
     </div>
   </div>
-</div>
+</ng-container>

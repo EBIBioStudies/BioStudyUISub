@@ -10,6 +10,7 @@ export interface IdLinkValueValidatorState {
 }
 
 @Directive({
+  // tslint:disable-next-line: directive-selector
   selector: '[idLinkValue][formControlName],[idLinkValue][formControl], [idLinkValue][ngModel]',
   providers: [{provide: NG_ASYNC_VALIDATORS, useExisting: IdLinkValueValidatorDirective, multi: true}]
 })
@@ -18,7 +19,7 @@ export class IdLinkValueValidatorDirective implements AsyncValidator {
 
   /**
    * Initialises the dynamic and cached properties to those matching an invalid empty link.
-   * @param {IdLinkService} linkService - Singleton API service for Identifier.org.
+   * @param linkService - Singleton API service for Identifier.org.
    */
   constructor(private linkService: IdLinkService) {
     this.state = {

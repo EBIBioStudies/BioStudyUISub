@@ -1,9 +1,11 @@
-import { NgModule, Optional, SkipSelf } from '@angular/core';
+import { ErrorHandler, NgModule, Optional, SkipSelf } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LogService } from './logger/log.service';
 import { RequestStatusInterceptorService, RequestStatusServiceFactory } from './interceptors/request-status-interceptor.service';
 import { AuthInterceptorService } from './interceptors/auth-interceptor.service';
 import { ContextPathInterceptorService } from './interceptors/context-path-interceptor.service';
+import { GlobalErrorService } from './errors/global-error.service';
+import { ErrorMessageService } from './errors/error-message.service';
 
 @NgModule({
   imports: [
@@ -11,6 +13,7 @@ import { ContextPathInterceptorService } from './interceptors/context-path-inter
   ],
   providers: [
     LogService,
+    ErrorMessageService,
     {
       provide: RequestStatusInterceptorService,
       useFactory: RequestStatusServiceFactory
@@ -28,7 +31,8 @@ import { ContextPathInterceptorService } from './interceptors/context-path-inter
       provide: HTTP_INTERCEPTORS,
       useClass: ContextPathInterceptorService,
       multi: true
-    }
+    },
+    { provide: ErrorHandler, useClass: GlobalErrorService },
   ]
 })
 export class CoreModule {

@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import * as pluralize from 'pluralize';
+import pluralize from 'pluralize';
 import { Component, ViewChild } from '@angular/core';
 import { AppConfig } from 'app/app.config';
 import { SidebarFile } from './direct-submit-sidebar.component';
@@ -7,10 +7,10 @@ import { SidebarFile } from './direct-submit-sidebar.component';
 @Component({
   selector: 'st-direct-submit',
   templateUrl: './direct-submit.component.html',
-  styleUrls: ['./direct-submit.component.css']
+  styleUrls: ['./direct-submit.component.scss']
 })
 export class DirectSubmitComponent {
-  collapseSideBar: Boolean = false;
+  collapseSideBar: boolean = false;
   files: any;
   studies: any;
 
@@ -19,7 +19,7 @@ export class DirectSubmitComponent {
 
   /**
    * Initally collapses the sidebar for tablet-sized screens.
-   * @param {AppConfig} appConfig - Global configuration object with app-wide settings.
+   * @param appConfig - Global configuration object with app-wide settings.
    */
   constructor(
     public appConfig: AppConfig,
@@ -28,42 +28,34 @@ export class DirectSubmitComponent {
     this.collapseSideBar = window.innerWidth < this.appConfig.tabletBreak;
   }
 
-  get location() {
+  get location(): Location {
     return window.location;
   }
 
-  getAccno(studyIdx: number) {
+  getAccno(studyIdx: number): string {
     return this.sidebar.studyProp(studyIdx, 'accno');
   }
 
-  getError(studyIdx: number) {
+  getError(studyIdx: number): string {
     return this.sidebar.studyProp(studyIdx, 'errorMessage');
   }
 
-  getLog(studyIdx: number) {
+  getLog(studyIdx: number): string {
     return this.sidebar.studyProp(studyIdx, 'log');
   }
 
-  getRawFiles() {
-    if (!this.sidebar.model.files) {
-      return [];
-    }
-
-    this.sidebar.model.files.filter((file) => !file.isStudy);
-  }
-
-  getRelease(studyIdx: number) {
+  getRelease(studyIdx: number): string {
     return this.sidebar.studyProp(studyIdx, 'releaseDate');
   }
 
-  getStudyFiles() {
+  getStudyFiles(): void {
     this.sidebar.model.files.filter((file) => file.isStudy);
   }
 
   /**
    * Toggles the width of the request card and the log's visibility on click.
    */
-  handleFileCardClick(args: { accno: string, event: Event, hasSubmitFailed: boolean }) {
+  handleFileCardClick(args: { accno: string, event: Event, hasSubmitFailed: boolean }): void {
     const { accno, event, hasSubmitFailed } = args;
     const containerEl = event.currentTarget as HTMLElement;
     const logElement = containerEl.querySelector('.log-container');
@@ -75,24 +67,24 @@ export class DirectSubmitComponent {
     }
   }
 
-  handleIsStudyChange(args: { fileName: string, isStudy: boolean }) {
+  handleIsStudyChange(args: { fileName: string, isStudy: boolean }): void {
     const { fileName, isStudy } = args;
     this.sidebar.toggleStudyFile(fileName, isStudy);
   }
 
-  isBusy(studyIdx: number) {
+  isBusy(studyIdx: number): boolean {
     return this.sidebar.studyProp(studyIdx, 'inprogress');
   }
 
-  isFail(studyIdx: number) {
+  isFail(studyIdx: number): boolean {
     return this.sidebar.studyProp(studyIdx, 'failed');
   }
 
-  isPending() {
+  isPending(): boolean {
     return this.sidebar.hasRequests;
   }
 
-  isSuccess(studyIdx: number) {
+  isSuccess(studyIdx: number): boolean {
     return this.sidebar.studyProp(studyIdx, 'successful');
   }
 
@@ -107,11 +99,11 @@ export class DirectSubmitComponent {
 
   /**
    * Convenience alias to pluralise a given noun.
-   * @param {string} noun - Target noun.
-   * @param {number} count - Number of noun-designated entities.
-   * @returns {string} Noun in the
+   * @param noun - Target noun.
+   * @param count - Number of noun-designated entities.
+   * @returns Noun in the
    */
-  pluralise(noun: string, count: number = this.sidebar.selectedFileCount) {
+  pluralise(noun: string, count: number = this.sidebar.selectedFileCount): string {
     return pluralize(noun, count);
   }
 

@@ -1,33 +1,33 @@
 import { IdLinkValue } from './id-link.value';
 
 export class IdLinkModel {
-  private _id?: string;
-  private _prefix?: string;
-  private _url?: string;
+  private linkid?: string;
+  private linkPrefix?: string;
+  private linkUrl?: string;
   private idRegexp = /^([^:]*)(:.*)?$/; // used to split link into valid tokens, not for validation
   private urlRegexp = /^(http|https|ftp)+[^\s]+$/; // used to check if the link is a URL
 
   get prefix(): string | undefined {
-    return this._prefix === undefined ? this._prefix : this._prefix.trim();
+    return this.linkPrefix === undefined ? this.linkPrefix : this.linkPrefix.trim();
   }
 
   get id(): string | undefined {
-    if (this._id !== undefined) {
-      const v = this._id.trim().substring(1);
+    if (this.linkid !== undefined) {
+      const v = this.linkid.trim().substring(1);
       return v.length === 0 ? undefined : v;
     }
     return;
   }
 
   get url(): string | undefined {
-    return this._url === undefined ? this._url : this._url.trim();
+    return this.linkUrl === undefined ? this.linkUrl : this.linkUrl.trim();
   }
 
   asString(): string {
-    if (this._url === undefined) {
-      return `${this._prefix || ''}${this._id || ''}`;
+    if (this.linkUrl === undefined) {
+      return `${this.linkPrefix || ''}${this.linkid || ''}`;
     }
-    return this._url;
+    return this.linkUrl;
   }
 
   asValue(): IdLinkValue {
@@ -43,14 +43,14 @@ export class IdLinkModel {
     const m = input.match(this.idRegexp) || [input];
     const prefix = m[1];
     const id = m[2];
-    this.updateValues({ prefix: prefix, id: prefixOnly ? (this._id || ':') : id });
+    this.updateValues({ prefix, id: prefixOnly ? (this.linkid || ':') : id });
 
     return this.asString();
   }
 
-  updateValues(values: { id?: string, prefix?: string, url?: string }) {
-    this._prefix = values.prefix;
-    this._id = values.id;
-    this._url = values.url;
+  updateValues(values: { id?: string, prefix?: string, url?: string }): void {
+    this.linkPrefix = values.prefix;
+    this.linkid = values.id;
+    this.linkUrl = values.url;
   }
 }

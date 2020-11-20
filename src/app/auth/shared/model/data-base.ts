@@ -1,12 +1,3 @@
-import { AppPath } from './app-path';
-
-export function copyAndExtend(obj: any, extension: any): any {
-  const copy = { ...obj };
-  Object.keys(extension).forEach(k => copy[k] = extension[k]);
-
-  return copy;
-}
-
 export class DataWithCaptcha {
   captcha: string = '';
 
@@ -24,18 +15,18 @@ export class DataWithCaptcha {
 }
 
 export class DataWithCaptchaAndPath extends DataWithCaptcha {
-  private _path: AppPath;
+  private innerPath: string;
 
-  constructor(path: AppPath) {
+  constructor(path: string) {
     super();
-    this._path = path;
+    this.innerPath = path;
   }
 
   get path(): string {
-    return this._path.value;
+    return this.innerPath;
   }
 
   snapshot(): any {
-    return copyAndExtend(super.snapshot(), {'path': this.path});
+    return { ...super.snapshot(), path: this.path };
   }
 }

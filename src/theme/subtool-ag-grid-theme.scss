@@ -1,0 +1,45 @@
+.ag-theme-fresh {
+  .ag-root-wrapper {
+    border: none;
+    background-color: $body-bg;
+  }
+
+  .ag-header-cell-label {
+    text-align: center;
+  }
+
+  .ag-header-container {
+    background: $core-blue;
+    border: none;
+    color: $white;
+  }
+
+  .ag-header-row {
+    color: #fff;
+  }
+
+  .ag-row-hover {
+    background-color: #b2e1fe;
+    cursor: pointer;
+  }
+
+  .ag-cell {
+    align-items: center;
+    display: flex;
+  }
+
+  .ag-menu {
+    padding: 10px;
+    border-color: #d7d7d7;
+  }
+
+  .ag-header-cell-menu-button {
+    color: $link-color;
+    cursor: pointer;
+    width: 12px;
+
+    &:hover {
+      color: #FFFFFF;
+    }
+  }
+}

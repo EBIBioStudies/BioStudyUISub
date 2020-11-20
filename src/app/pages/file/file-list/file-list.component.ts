@@ -1,7 +1,7 @@
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid-community/main';
-import { Subject, throwError, of } from 'rxjs';
+import { Subject, throwError, of, Observable } from 'rxjs';
 import { switchMap, filter, takeUntil, catchError } from 'rxjs/operators';
 import { AppConfig } from 'app/app.config';
 import { FileService } from 'app/pages/file/shared/file.service';
@@ -15,7 +15,7 @@ import { ProgressCellComponent } from './ag-grid/upload-progress-cell.component'
 @Component({
   selector: 'st-file-list',
   templateUrl: './file-list.component.html',
-  styleUrls: ['./file-list.component.css']
+  styleUrls: ['./file-list.component.scss']
 })
 export class FileListComponent implements OnInit, OnDestroy {
   absolutePath: string = '/user';
@@ -43,15 +43,18 @@ export class FileListComponent implements OnInit, OnDestroy {
     // Initially collapses the sidebar for tablet-sized screens
     this.sideBarCollapsed = window.innerWidth < this.appConfig.tabletBreak;
 
-    this.gridOptions = <GridOptions>{
+    this.gridOptions = ({
       onGridReady: () => {
-        this.gridOptions!.api!.sizeColumnsToFit();
+        if (this.gridOptions && this.gridOptions.api) {
+          this.gridOptions.api.sizeColumnsToFit();
+        }
       },
+      rowHeight: 35,
       rowSelection: 'single',
       unSortIcon: true,
       localeText: {noRowsToShow: 'No files found'},
       overlayLoadingTemplate: '<span class="ag-overlay-loading-center"><i class="fa fa-cog fa-spin fa-lg"></i> Loading...</span>',
-    };
+    } as GridOptions);
 
     this.fileUploadList.uploadCompleted$
       .pipe(
@@ -74,7 +77,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     this.path = this.path.setRoot(rp);
   }
 
-  changePathQuery(absolutePath: string) {
+  changePathQuery(absolutePath: string): void {
     const queryParams = { path: absolutePath };
 
     this.router.navigate(['.'], { relativeTo: this.route, queryParamsHandling: 'merge', queryParams });
@@ -102,7 +105,7 @@ export class FileListComponent implements OnInit, OnDestroy {
 
       return upload.fileNames.map((fileName) => ({
         name: fileName,
-        upload: upload,
+        upload,
         type: 'FILE',
         onRemove: () => {
           this.removeUpload(upload);
@@ -116,12 +119,12 @@ export class FileListComponent implements OnInit, OnDestroy {
    * Requires the takeUntil operator before every subscription.
    * @see {@link https://stackoverflow.com/a/41177163}
    */
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.route.queryParams.forEach((params: Params) => {
       this.backButton = params.bb;
     });
@@ -133,15 +136,15 @@ export class FileListComponent implements OnInit, OnDestroy {
     });
   }
 
-  onPathChange(path) {
+  onPathChange(path): void {
     this.changePathQuery(path);
   }
 
-  onRootPathSelect(rootPath: string) {
+  onRootPathSelect(rootPath: string): void {
     this.changePathQuery(rootPath);
   }
 
-  onRowDoubleClick(event) {
+  onRowDoubleClick(event): void {
     if (event.data.type !== 'FILE') {
       const dirName: string = event.data.name;
       const dirPath: string = `${this.absolutePath}/${dirName}`;
@@ -150,11 +153,11 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSideBarCollapsed() {
+  onSideBarCollapsed(): void {
     this.sideBarCollapsed = !this.sideBarCollapsed;
   }
 
-  onUploadFilesSelect(files: FileList) {
+  onUploadFilesSelect(files: FileList): void {
     const uploadedFileNames = this.rowData.map((file) => file.name);
     const filesToUpload = Array.from(files).map((file) => file.name);
     const overlap = filesToUpload.filter((fileToUpload) => uploadedFileNames.includes(fileToUpload));
@@ -164,12 +167,14 @@ export class FileListComponent implements OnInit, OnDestroy {
       .subscribe(() => this.upload(files));
   }
 
-  updateDataRows(rows) {
+  updateDataRows(rows): void {
     this.rowData = rows;
-    this.gridOptions!.api!.setRowData(rows);
+    if (this.gridOptions && this.gridOptions.api) {
+      this.gridOptions.api.setRowData(rows);
+    }
   }
 
-  private confirmOverwrite(overlap) {
+  private confirmOverwrite(overlap): Observable<boolean> {
     const overlapString = overlap.length === 1 ? overlap[0] + '?' :
       overlap.length + ' files? (' + overlap.join(', ') + ')' ;
 
@@ -177,7 +182,7 @@ export class FileListComponent implements OnInit, OnDestroy {
       'Overwrite files?', 'Overwrite');
   }
 
-  private createColumnDefs() {
+  private createColumnDefs(): void {
     this.columnDefs = [
       {
         cellRendererFramework: FileTypeCellComponent,
@@ -219,12 +224,15 @@ export class FileListComponent implements OnInit, OnDestroy {
     document.body.removeChild(link);
   }
 
-  private loadData(absolutePath: string) {
+  private loadData(absolutePath: string): void {
     this.fileService.getFiles(absolutePath)
       .pipe(
         takeUntil(this.ngUnsubscribe),
         catchError((error) => {
-          this.gridOptions!.api!.hideOverlay();
+          if (this.gridOptions && this.gridOptions.api) {
+            this.gridOptions.api.hideOverlay();
+          }
+
           return throwError(error);
         })
       )
@@ -239,7 +247,7 @@ export class FileListComponent implements OnInit, OnDestroy {
       });
   }
 
-  private refreshData() {
+  private refreshData(): void {
     this.loadData(this.absolutePath);
   }
 
@@ -252,12 +260,12 @@ export class FileListComponent implements OnInit, OnDestroy {
       .subscribe(() => this.refreshData());
   }
 
-  private removeUpload(u: FileUpload) {
+  private removeUpload(u: FileUpload): void {
     this.fileUploadList.remove(u);
     this.refreshData();
   }
 
-  private upload(files: FileList) {
+  private upload(files: FileList): void {
     const uploadPath: Path = new Path(this.absolutePath, '');
     const upload: FileUpload = this.fileUploadList.upload(uploadPath, Array.from(files));
     const decoratedRows = this.decorateUploads([upload]);

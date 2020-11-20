@@ -3,6 +3,10 @@ import { throwError, Observable } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 
 export class ServerError {
+  static defaultErrorMessage: string = `Something went wrong at our side. Sorry for the inconvenience,
+    we are working to fix it. Please try again later and if the problem persists,
+    drop an email to biostudies@ebi.ac.uk`;
+
   data: any;
   status: number = 0;
   statusString: string = '';
@@ -20,13 +24,13 @@ export class ServerError {
   /**
    * Factory-like method to turn the standard error object coming from the HTTP client to
    * the app's custom error object.
-   * @param {HttpErrorResponse} error Error object as it comes from the HTTP client
-   * @returns {ServerError} Converted error object
+   * @param error Error object as it comes from the HTTP client
+   * @returns Converted error object
    */
   static fromResponse(response: HttpErrorResponse): ServerError {
     const { error } = response;
     const data = {
-      message: 'Unknown error type', // Default error message
+      message: this.defaultErrorMessage,
       error: {}
     };
 
@@ -52,7 +56,7 @@ export class ServerError {
   /**
    * Checks if the server error is due to correctly formatted data (for the API) yet invalid (for the database).
    * For example, the data is was sent as a JSON object as expected but it's an invalid submission.
-   * @returns {boolean} True for invalid data.
+   * @returns True for invalid data.
    */
   get isDataError(): boolean {
     return this.status === 422 || this.status === 400;

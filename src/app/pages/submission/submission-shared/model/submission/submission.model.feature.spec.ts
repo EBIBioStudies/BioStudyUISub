@@ -1,3 +1,4 @@
+import { AttributeValue } from './submission.model.attribute-value';
 import { ColumnType, FeatureType, invalidateGlobalScope } from '../templates';
 import { Feature, FeatureData } from './submission.model';
 
@@ -30,15 +31,6 @@ describe('Submission Model: Feature', () => {
     expect(f.rowSize()).toBe(2);
   });
 
-  it('does not allow to add more than 1 row to a single row feature', () => {
-    const f = new Feature(FeatureType.createDefault('SingleRowFeature', true));
-    expect(f.singleRow).toBeTruthy();
-    f.addRow();
-    expect(f.rowSize()).toBe(1);
-    f.addRow();
-    expect(f.rowSize()).toBe(1);
-  });
-
   it('creates default empty values (in rows) when a new column is added', () => {
     const f = new Feature(FeatureType.createDefault('AFeature'));
     f.addRow();
@@ -56,8 +48,8 @@ describe('Submission Model: Feature', () => {
     expect(f.rows[1]!.valueFor(col.id)!.value).toBe('');
 
     f.removeColumn(col.id);
-    expect(f.rows[0].valueFor(col.id)).toBeUndefined();
-    expect(f.rows[1].valueFor(col.id)).toBeUndefined();
+    expect(f.rows[0].valueFor(col.id)).toStrictEqual(new AttributeValue(''));
+    expect(f.rows[1].valueFor(col.id)).toStrictEqual(new AttributeValue(''));
   });
 
   it('automatically updates columns and rows when new data added as attributes', () => {
@@ -72,7 +64,7 @@ describe('Submission Model: Feature', () => {
     expect(f.rowSize()).toBe(1);
     expect(f.colSize()).toBe(2);
     const ids = f.columns.map(c => c.id);
-    expect(f.rows[0].values(ids).map(v => v.value).sort()).toEqual(['value1', 'value2']);
+    expect(f.rows[0].values(ids).map(v => v && v.value).sort()).toEqual(['value1', 'value2']);
   });
 
   it('can be created with the pre-existed data', () => {
@@ -95,7 +87,7 @@ describe('Submission Model: Feature', () => {
     expect(f.rowSize()).toBe(1);
     expect(f.colSize()).toBe(2);
     const ids = f.columns.map(c => c.id);
-    expect(f.rows[0].values(ids).map(v => v.value).sort()).toEqual(['value1', 'value2']);
+    expect(f.rows[0].values(ids).map(v => v && v.value).sort()).toEqual(['value1', 'value2']);
   });
 
   it('creates required columns according the type definition', () => {

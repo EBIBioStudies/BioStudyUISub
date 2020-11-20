@@ -1,6 +1,6 @@
 # BioStudies - Submission Tool
 
-- Angular v8
+- Angular v10
 - ExpressJS v4
 - Node v10.16.2
 

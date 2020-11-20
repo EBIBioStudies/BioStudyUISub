@@ -1,4 +1,4 @@
-import { DataWithCaptcha, copyAndExtend } from './data-base';
+import { DataWithCaptcha } from './data-base';
 
 export class PasswordResetData extends DataWithCaptcha {
   key: string = '';
@@ -6,22 +6,6 @@ export class PasswordResetData extends DataWithCaptcha {
   passwordRepeat: string = '';
 
   snapshot(): { [key: string]: string } {
-    return copyAndExtend(super.snapshot(), { 'activationKey': this.key, 'password': this.password });
-  }
-
-  valid(): boolean {
-    if (super.valid) {
-      return false;
-    }
-
-    if (this.password.length < 6) {
-      return false;
-    }
-
-    if (this.password !== this.passwordRepeat) {
-      return false;
-    }
-
-    return true;
+    return { ...super.snapshot(), activationKey: this.key, password: this.password };
   }
 }

@@ -1,10 +1,7 @@
-<div class="input-group">
-  <input type="text" [ngModel]="value" (keydown)="doNothing($event)" (keyup)="doNothing($event)"
-    class="form-control input-sm" (click)="onInputClick()" readonly #inputbox />
-  <span *ngIf="!readonly" class="input-group-btn">
-    <button class="btn btn-sm btn-primary" type="button" (onUploadFile)="onUploadFile($event)" stUploadFileButton>Upload File</button>
-  </span>
-  <st-file-tree-dropdown *ngIf="!readonly && isOpen" [targetElement]="inputbox" (fileSelect)="onFileSelect($event)"
-    (close)="onFileDropdownClose($event)">
-  </st-file-tree-dropdown>
+<div class="input-group" dropdown>
+  <input type="text" [ngModel]="value" class="form-control custom-file-input {{inputId}}"
+    (click)="openFileSelectModal()" [ngClass]="{'is-grouped': isInputGroup}" readonly #inputbox />
+  <div *ngIf="!readonly" class="input-group-append">
+    <button class="btn btn-outline-secondary" type="button" (click)="openFileSelectModal()">Select File</button>
+  </div>
 </div>

@@ -23,7 +23,7 @@ export class AppConfig {
   /**
    * Synonym getter providing the threshold below which the current screen size will trigger
    * tablet/mobile-geared layout.
-   * @returns {number} Upper-limit screen size in pixels for tablet-like devices.
+   * @returns Upper-limit screen size in pixels for tablet-like devices.
    */
   get tabletBreak(): number {
     return this.config.APP_TABLET_BREAKPOINT;
@@ -31,7 +31,7 @@ export class AppConfig {
 
   /**
    * Synonym getter providing the format in which dates should be displayed when listing submissions.
-   * @returns {string} Format expressed in Angular's date pipe notation.
+   * @returns Format expressed in Angular's date pipe notation.
    * @see {@link https://angular.io/api/common/DatePipe}
    */
   get dateListFormat(): string {
@@ -40,7 +40,7 @@ export class AppConfig {
 
   /**
    * Synonym getter providing the format in which dates should be displayed when editing submissions.
-   * @returns {string} Format following the Moment.js' notation.
+   * @returns Format following the Moment.js' notation.
    * @see {@link https://momentjs.com/docs/#/parsing/string-format/}
    */
   get dateInputFormat(): string {
@@ -50,7 +50,7 @@ export class AppConfig {
   /**
    * Synonym getter providing the number of years ahead of the current date that the date picker will render
    * selectable dates of.
-   * @returns {number} Maximum number of years into the future.
+   * @returns Maximum number of years into the future.
    */
   get maxDateYears(): number {
     return this.config.APP_MAX_DATE_YEARS;
@@ -58,7 +58,7 @@ export class AppConfig {
 
   /**
    * Synonym getter providing the maximum number of suggested entries in a typeahead box.
-   * @returns {number} Maximum length of the suggestion list.
+   * @returns Maximum length of the suggestion list.
    */
   get maxSuggestLength(): number {
     return this.config.APP_MAX_SUGGEST_LENGTH;
@@ -66,7 +66,7 @@ export class AppConfig {
 
   /**
    * Synonym getter providing the URL for the script containing the GDPR banner's logic.
-   * @returns {string} URL.
+   * @returns URL.
    */
   get bannerUrl(): string {
     return this.config.GDPR_BANNER_URL;
@@ -76,7 +76,7 @@ export class AppConfig {
    * Maximum number of concurrent connections supported by the browser. It should be in accordance to
    * a ball-park average for different browsers.
    * @see {@link http://www.browserscope.org/?category=network&v=top}
-   * @returns {number} Number of allowed concurrent connections.
+   * @returns Number of allowed concurrent connections.
    */
   get maxConcurrent(): number {
     return this.config.MAX_CONCURRENT;
@@ -84,7 +84,7 @@ export class AppConfig {
 
   /**
    * The current environment where tha application is running.
-   * @returns {string} Name of the current environment.
+   * @returns Name of the current environment.
    */
   get environment(): string {
     return this.config.APP_ENV;
@@ -97,7 +97,7 @@ export class AppConfig {
    * for that through the "APP_INITIALIZER" injector token. However, this feature is still experimental in v4,
    * requiring strict use of promises for it to be dependable.
    * TODO: Since Angular has been bumped up to v7, the much cleaner "APP_INITIALIZER" approach should be followed instead.
-   * @returns {Promise<any>} Promise fulfilled once the config data has been fetched.
+   * @returns Promise fulfilled once the config data has been fetched.
    * @see {@link /src/app/app.module.ts}
    * @see {@link https://stackoverflow.com/a/40222544}
    */

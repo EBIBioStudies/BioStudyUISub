@@ -2,8 +2,8 @@
  * Converts a date object into ISO 8601 bar the time offset without using toISOString(). The latter assumes your date
  * is local time and converts it to UTC. In turn, this leads to the actual date rolling back or forth one day depending
  * on the time offset. Instead, this method leverages other already existing ones to build the string.
- * @param {Date} date - Date object
- * @returns {string} The date in simplified extended ISO format without the time offset (YYYY-MM-DD).
+ * @param date - Date object
+ * @returns The date in simplified extended ISO format without the time offset (YYYY-MM-DD).
  */
 export function formatDate(date: Date | undefined): string {
   let day; // zero-padded day number
@@ -36,9 +36,9 @@ export function parseDate(date: string): Date | undefined {
 
 /**
  * Checks if the given dates are the same.
- * @param {Date} date1 - Date object
- * @param {Date} date2 - Date object
- * @returns {boolean} True if both dates are equal.
+ * @param date1 - Date object
+ * @param date2 - Date object
+ * @returns True if both dates are equal.
  */
 export function isEqualDate(date1: Date | undefined, date2: Date | undefined): boolean {
   if (date1 === undefined || date2 === undefined) {

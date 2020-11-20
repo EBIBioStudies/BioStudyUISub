@@ -1,121 +1,24 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { AgRendererComponent } from 'ag-grid-angular/main';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid-community/main';
 import { Subject, Subscription, throwError } from 'rxjs';
 import { takeUntil, catchError } from 'rxjs/operators';
-import { AppConfig } from 'app/app.config';
 import { ModalService } from 'app/shared/modal.service';
+import { isDefinedAndNotEmpty } from 'app/utils';
 import { SubmissionService } from '../submission-shared/submission.service';
+import { SubmissionStatusService } from '../submission-shared/submission-status.service';
 import { DateFilterComponent } from './ag-grid/date-filter.component';
 import { TextFilterComponent } from './ag-grid/text-filter.component';
-import { SubmissionStatusService, SubmStatus } from '../submission-shared/submission-status.service';
-
-@Component({
-  selector: 'st-action-buttons-cell',
-  template: `
-    <button *ngIf="rowData" type="button" class="btn btn-primary btn-xs btn-flat"
-        (click)="onEditSubmission()"
-        tooltip="Edit this submission"
-        container="body">
-      <i class="fas fa-pencil-alt fa-fw"></i>
-    </button>
-    <button *ngIf="rowData && rowData.isDeletable" type="button" class="btn btn-danger btn-xs btn-flat"
-        [disabled]="isBusy"
-        (click)="onDeleteSubmission()"
-        tooltip="Delete this submission"
-        container="body">
-      <i *ngIf="!isBusy" class="fas fa-trash-alt fa-fw"></i>
-      <i *ngIf="isBusy" class="fa fa-cog fa-spin fa-fw"></i>
-    </button>`
-})
-export class ActionButtonsCellComponent implements AgRendererComponent {
-  isBusy: boolean = false; // flags if a previous button action is in progress
-  rowData: any; // object including the data values for the row this cell belongs to
-
-  agInit(params: any): void {
-    this.rowData = params.data;
-    this.reset();
-  }
-
-  onDeleteSubmission() {
-    this.isBusy = true;
-
-    if (this.rowData) {
-      this.rowData.onDelete(this.rowData.accno, this.reset.bind(this), this.rowData.isTemp);
-    }
-
-  }
-
-  onEditSubmission() {
-    if (this.rowData) {
-      this.rowData.onEdit(this.rowData.accno);
-    }
-  }
-
-  /**
-   * Mandatory - Get the cell to refresh.
-   * @see {@link https://www.ag-grid.com/javascript-grid-cell-editor/}
-   * @returns {boolean} By returning false, the grid will remove the component from the DOM and create
-   * a new component in it's place with the new values.
-   */
-  refresh(): boolean {
-    return false;
-  }
-
-  /**
-   * Reverts the button to its original state
-   */
-  reset() {
-    this.isBusy = false;
-  }
-}
-
-@Component({
-  selector: 'st-date-cell',
-  template: `{{ value === undefined ? '&mdash;' : value | date: appConfig.dateListFormat }}`
-})
-export class DateCellComponent implements AgRendererComponent {
-  value?: Date;
-
-  /**
-   * Exposes app's configuration to the template.
-   * @param {AppConfig} appConfig - Global configuration object with app-wide settings.
-   */
-  constructor(public appConfig: AppConfig) {}
-
-  agInit(params: any): void {
-    this.value = this.asDate(params.value);
-  }
-
-  /**
-   * Mandatory - Get the cell to refresh.
-   * @see {@link https://www.ag-grid.com/javascript-grid-cell-editor/}
-   * @returns {boolean} By returning false, the grid will remove the component from the DOM and create
-   * a new component in it's place with the new values.
-   */
-  refresh(): boolean {
-    return false;
-  }
-
-  /**
-   * Formats date string into a JavaScript Date object.
-   * @param {string} date Date string to be formatted
-   * @returns {Date} Equivalent JavaScript Date object.
-   */
-  private asDate(date: string): Date | undefined {
-    if (date === undefined || date === null || date.length === 0) {
-      return undefined;
-    }
-
-    return new Date(date);
-  }
-}
+import { ActionButtonsCellComponent } from './ag-grid/action-buttons-cell.component';
+import { DateCellComponent } from './ag-grid/date-cell.component';
+import { StatusCellComponent } from './ag-grid/status-cell.component';
+import { TextCellComponent } from './ag-grid/text-cell.component';
+import { SubmissionStatus } from 'app/pages/submission/submission-shared/submission.status';
 
 @Component({
   selector: 'st-subm-list',
   templateUrl: './subm-list.component.html',
-  styleUrls: ['./subm-list.component.css']
+  styleUrls: ['./subm-list.component.scss']
 })
 export class SubmListComponent implements OnDestroy, OnInit {
   columnDefs?: any[];
@@ -123,6 +26,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
   gridOptions: GridOptions;
   isBusy: boolean = false; // Flag indicating if a request is in progress
   isCreating: boolean = false; // Flag indicating if submission creation is in progress
+  rows: any[] = [];
   showSubmitted: boolean = true; // Flag indicating if the list of sent submissions is to be displayed
 
   protected ngUnsubscribe: Subject<void>; // Stopper for all subscriptions to HTTP get operations
@@ -148,76 +52,60 @@ export class SubmListComponent implements OnDestroy, OnInit {
     // TODO: enable server-side sorting once sorting parameters are added to the submission list endpoint
     // NOTE: Ag-Grid doesn't support client-side filtering/sorting and server-side pagination simultaneously.
     // https://www.ag-grid.com/javascript-grid-infinite-scrolling/#sorting-filtering
-    this.gridOptions = <GridOptions>{
+    this.gridOptions = ({
       cacheBlockSize: 15,
       debug: false,
       enableSorting: false,
+      getRowNodeId: (item) => item.accno,
       icons: {menu: '<i class="fa fa-filter"/>'},
       localeText: {noRowsToShow: 'No submissions found'},
       overlayLoadingTemplate: '<span class="ag-overlay-loading-center"><i class="fa fa-cog fa-spin fa-lg"></i> Loading...</span>',
       pagination: true,
       paginationPageSize: 15,
-      rowHeight: 30,
+      rowHeight: 35,
       rowModelType: 'infinite',
       rowSelection: 'single',
+      suppressRowClickSelection: true,
       unSortIcon: true,
-      getRowNodeId: (item) => item.accno,
       onGridReady: () => {
         this.gridOptions!.api!.sizeColumnsToFit();
         this.setDatasource();
 
         window.onresize = () => this.gridOptions!.api! && this.gridOptions!.api!.sizeColumnsToFit();
       }
-    };
+    } as GridOptions);
 
     this.createColumnDefs();
-
-    // Works out the list of allowed projects by comparison with template names
-    // this.isBusy = true;
   }
 
-  createColumnDefs() {
+  createColumnDefs(): void {
     this.columnDefs = [
       {
         cellClass: 'ag-cell-centered',
+        cellRendererFramework: StatusCellComponent,
         field: 'accno',
         filter: true,
-        filterFramework: TextFilterComponent,
         headerName: 'Accession',
         maxWidth: 175,
-        resizable: true
+        resizable: true,
       },
       {
         cellClass: 'ag-cell-centered',
-        field: 'version',
-        filter: true,
-        filterFramework: TextFilterComponent,
-        headerName: 'Version',
-        hide: !this.showSubmitted,
-        maxWidth: 100,
-        resizable: true
-      },
-      {
-        cellClass: 'ag-cell-centered',
+        cellRendererFramework: TextCellComponent,
+        editable: false,
         field: 'title',
         filter: true,
         filterFramework: TextFilterComponent,
-        headerName: this.showSubmitted ? 'Latest title' : 'Title',
+        headerName: 'Title',
         resizable: true
       },
-      // {
-      //   field: 'status',
-      //   headerName: 'Status',
-      //   resizable: false,
-      //   maxWidth: 100,
-      // },
       {
         cellClass: 'ag-cell-centered',
         cellRendererFramework: DateCellComponent,
         field: 'rtime',
         filter: true,
         filterFramework: DateFilterComponent,
-        headerName: this.showSubmitted ? 'First Released' : 'Release Date',
+        headerName: 'Release Date',
         maxWidth: 150,
         resizable: true
       },
@@ -226,30 +114,33 @@ export class SubmListComponent implements OnDestroy, OnInit {
         filter: true,
         headerName: 'Actions',
         maxWidth: 100,
+        resizable: true,
         sortable: false,
-        suppressMenu: true,
-        resizable: true
+        suppressMenu: true
       }
     ];
   }
 
   decorateDataRows(rows: any[]): any {
     return rows.map(row => ({
+      id: row.accno,
       isTemp: !this.showSubmitted,
-      isDeletable: !this.showSubmitted || ['S-', 'TMP_'].some((prefix) => row.accno.indexOf(prefix) === 0),
+      isDeletable: this.canDeleteRow(row),
+      isEditable: this.canEditRow(row),
+      isProcessing: this.isProcessingRowSubmission(row),
       accno: row.accno,
       method: row.method,
       rtime: row.rtime,
-      status: row.status,
+      status: row.status || SubmissionStatus.PROCESSED.name,
       title: row.title,
       version: row.version,
-      onDelete: (accno: string, onCancel: Function, isTemp: boolean): Subscription => {
+      onDelete: (accno: string, onCancel: () => void, isTemp: boolean): Subscription => {
         const onNext = (isOk: boolean) => {
           this.isBusy = true;
 
           // Deletion confirmed => makes a request to remove the submission from the server
           if (isOk) {
-            const action: Function = isTemp
+            const action = isTemp
               ? this.submService.deleteDraft.bind(this.submService)
               : this.submService.deleteSubmitted.bind(this.submService);
 
@@ -287,10 +178,6 @@ export class SubmListComponent implements OnDestroy, OnInit {
 
       onEdit: (accno: string) => {
         this.router.navigate(['/submissions/edit', accno]);
-      },
-
-      onView: (accno: string) => {
-        this.router.navigate(['/submissions', accno]);
       }
     }));
   }
@@ -300,16 +187,36 @@ export class SubmListComponent implements OnDestroy, OnInit {
    * Requires the takeUntil operator before every subscription.
    * @see {@link https://stackoverflow.com/a/41177163}
    */
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }
 
   ngOnInit(): void {
-    this.submStatusService.getSubmStatus().subscribe((data: SubmStatus) => {
-      // tslint:disable-next-line: no-console
-      console.log(data);
-    });
+    this.submStatusService
+      .getSubmStatus()
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe((accno: string) => {
+        const agApi = this.gridOptions.api;
+        const rowNode = agApi!.getRowNode(accno);
+
+        if (rowNode !== null) {
+          const rowData = rowNode.data;
+          const newRowData = {
+            ...rowData,
+            status: SubmissionStatus.PROCESSED.name
+          };
+          const updateRowData = {
+            ...newRowData,
+            isDeletable: this.canDeleteRow(newRowData),
+            isEditable: this.canEditRow(newRowData),
+            isProcessing: false
+          };
+
+          rowNode.updateData(updateRowData);
+          agApi!.redrawRows();
+        }
+      });
   }
 
   /**
@@ -317,15 +224,17 @@ export class SubmListComponent implements OnDestroy, OnInit {
    * @param event - ag-Grid's custom event object that includes data represented by the clicked row.
    */
   onRowClicked(event): void {
-    if (!this.isBusy && event.colDef.headerName !== 'Actions') {
+    const isProcessingSubmission = this.isProcessingRowSubmission(event.data);
+
+    if (!this.isBusy && event.colDef.headerName !== 'Actions' && !isProcessingSubmission) {
       const { accno, method } = event.data;
-      const optionalParams = String.isDefinedAndNotEmpty(method) ? { method } : {};
+      const optionalParams = isDefinedAndNotEmpty(method) ? { method } : {};
 
       this.router.navigate([`/submissions/edit/${accno}`, optionalParams ]);
     }
   }
 
-  onSubmTabSelect(isSubmitted: boolean) {
+  onSubmTabSelect(isSubmitted: boolean): void {
     let fragment = 'draft';
 
     // Ignores actions that don't carry with them a change in state.
@@ -342,19 +251,18 @@ export class SubmListComponent implements OnDestroy, OnInit {
 
   /**
    * Handler for the click event on the upload submission button, redirecting to a new view.
-   * @param {Event} event - Click event object, the bubbling of which will be prevented.
+   * @param event - Click event object, the bubbling of which will be prevented.
    */
-  onUploadSubmClick(event: Event) {
+  onUploadSubmClick(event: Event): void {
     event.preventDefault();
     this.router.navigate(['/submissions/direct_upload']);
   }
 
-  setDatasource() {
-    const agApi = this.gridOptions.api; // AgGrid's API
+  setDatasource(): void {
+    const agApi = this.gridOptions.api;
 
     if (!this.datasource) {
       this.datasource = {
-        // rowCount: ???, - not setting the row count, infinite paging will be used
         getRows: (params) => {
           const pageSize = params.endRow - params.startRow;
           const fm = params.filterModel || {};
@@ -392,12 +300,25 @@ export class SubmListComponent implements OnDestroy, OnInit {
               lastRow = params.startRow + rows.length;
             }
 
-            params.successCallback(this.decorateDataRows(rows), lastRow);
+            this.rows = this.decorateDataRows(rows);
+            params.successCallback(this.rows, lastRow);
             this.isBusy = false;
           });
         }
       };
     }
     agApi!.setDatasource(this.datasource);
+  }
+
+  private canDeleteRow(row): boolean {
+    return ['S-', 'TMP_'].some((prefix) => row.accno.indexOf(prefix) >= 0) && !this.isProcessingRowSubmission(row);
+  }
+
+  private canEditRow(row): boolean {
+    return !this.isProcessingRowSubmission(row);
+  }
+
+  private isProcessingRowSubmission(row): boolean {
+    return row.status === SubmissionStatus.REQUESTED.name;
   }
 }

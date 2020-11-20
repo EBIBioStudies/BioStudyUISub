@@ -1,15 +1,3 @@
 .has-feedback .form-control {
   padding-right: 30px;
 }
-.form-control-feedback img {
-  position: absolute;
-  top: 6.5px;
-  right: 4px;
-  width: 18px;
-}
-.input-sm + .form-control-feedback img {
-  top: 5px;
-}
-.glyphicon {
-  top: 3px;
-}

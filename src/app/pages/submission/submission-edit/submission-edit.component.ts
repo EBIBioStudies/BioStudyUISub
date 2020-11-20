@@ -1,19 +1,17 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { BsModalService } from 'ngx-bootstrap';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { Location } from '@angular/common';
 import { Observable, of, Subject } from 'rxjs';
-import { Option } from 'fp-ts/lib/Option';
 import { switchMap, takeUntil } from 'rxjs/operators';
-import { AppConfig } from 'app/app.config';
-import { LogService } from 'app/core/logger/log.service';
+import { ErrorMessageService } from 'app/core/errors/error-message.service';
 import { ModalService } from 'app/shared/modal.service';
 import { scrollTop } from 'app/utils';
 import { SectionForm } from './shared/model/section-form.model';
 import { SubmEditService } from './shared/subm-edit.service';
 import { SubmResultsModalComponent } from '../submission-results/subm-results-modal.component';
 import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
-import { SubmitResponse, SubmitLog } from '../submission-shared/submission.service';
+import { SubmitLog } from '../submission-shared/submission.service';
 import { SubmValidationErrors } from '../submission-shared/model';
 
 class SubmitOperation {
@@ -37,21 +35,21 @@ class SubmitOperation {
 @Component({
   selector: 'st-app-subm-edit',
   templateUrl: './submission-edit.component.html',
-  styleUrls: ['./submission-edit.component.css']
+  styleUrls: ['./submission-edit.component.scss']
 })
 export class SubmissionEditComponent implements OnInit, OnDestroy {
   @Input() readonly = false;
-  sectionForm?: SectionForm;
-  @ViewChild(SubmSidebarComponent, { static: false }) sideBar?: SubmSidebarComponent;
-  sideBarCollapsed = false;
+  sectionForm!: SectionForm;
+  @ViewChild(SubmSidebarComponent) sideBar?: SubmSidebarComponent;
   submitOperation: SubmitOperation = SubmitOperation.UNKNOWN;
+  isSidebarCollapsed: boolean = false;
+  method?: string;
+  submissionErrors: SubmValidationErrors = SubmValidationErrors.EMPTY;
 
   private accno?: string;
   private hasJustCreated = false;
-  private method?: string;
   private newReleaseDate: Date = new Date();
   private oldReleaseDate: Date = new Date();
-  private submissionErrors: SubmValidationErrors = SubmValidationErrors.EMPTY;
   private unsubscribe: Subject<void> = new Subject<void>();
 
   constructor(
@@ -60,18 +58,15 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     private locService: Location,
     private bsModalService: BsModalService,
     private modalService: ModalService,
-    private appConfig: AppConfig,
     private submEditService: SubmEditService,
-    private logService: LogService
+    private errorMessage: ErrorMessageService
   ) {
-    this.sideBarCollapsed = window.innerWidth < this.appConfig.tabletBreak;
-
     submEditService.sectionSwitch$.pipe(
-      takeUntil(this.unsubscribe)
-    ).subscribe(sectionForm => this.switchSection(sectionForm));
+      takeUntil(this.unsubscribe),
+    ).subscribe((sectionForm) => this.switchSection(sectionForm));
   }
 
-  get location() {
+  get location(): globalThis.Location {
     return window.location;
   }
 
@@ -95,12 +90,11 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     return this.submEditService.isEditing;
   }
 
-  // TODO: a temporary workaround
   get isTemp(): boolean {
     return this.accno!.startsWith('TMP_');
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.unsubscribe.next();
     this.unsubscribe.complete();
     this.submEditService.reset();
@@ -122,19 +116,19 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
         }
 
         if (this.sideBar && resp.payload.isSome) {
-          const att = resp.payload.getOrElse({ 'name': 'AttachTo', value: '' }) || { value: '' };
+          const att = resp.payload.getOrElse({ name: 'AttachTo', value: '' }) || { value: '' };
           this.sideBar.showAdvanced = !(att.value.toLowerCase() === 'arrayexpress');
         }
 
         if (resp.error.isSome()) {
-          this.modalService.alert(
-            'Submission could not be retrieved. ' +
-            'Please make sure the URL is correct and contact us in case the problem persists.', 'Error', 'Ok'
-          ).subscribe(() => {
+          const message = this.errorMessage.getPlainMessage();
+
+          this.modalService.alert(message, 'Error', 'Ok').subscribe(() => {
             this.router.navigate(['/submissions/']);
           });
 
-          this.logService.error('submission-edit', resp.error);
+          // tslint:disable-next-line: no-console
+          console.error(resp.error);
         } else {
           const releaseDateCtrl = this.sectionForm!.findFieldControl('ReleaseDate');
 
@@ -155,12 +149,12 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
       });
   }
 
-  onEditBackClick() {
+  onEditBackClick(): void {
     this.readonly = false;
     this.router.navigate([`/submissions/edit/${this.accno}`]);
   }
 
-  onRevertClick() {
+  onRevertClick(): void {
     this.confirmRevert()
       .pipe(
         takeUntil(this.unsubscribe),
@@ -169,6 +163,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
   }
 
   onSectionClick(sectionForm: SectionForm): void {
+    scrollTop();
     this.submEditService.switchSection(sectionForm);
   }
 
@@ -180,13 +175,12 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     }
     confirmMsg += '. This operation cannot be undone.';
 
-    this.confirmPageDelete(confirmMsg)
-      .subscribe(() => {
-        this.sectionForm!.removeSection(sectionForm.id);
-      });
+    this.confirmPageDelete(confirmMsg).subscribe(() => {
+      this.sectionForm!.removeSection(sectionForm.id);
+    });
   }
 
-  onSubmitClick(event, isConfirm: boolean = false) {
+  onSubmitClick(event, isConfirm: boolean = false): void {
     this.submissionErrors = this.submEditService.validateSubmission();
 
     if (event) {
@@ -210,14 +204,18 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
 
     confirmObservable
       .pipe(
-        switchMap(() => this.confirmReleaseDateOverride()),
+        // switchMap(() => this.confirmReleaseDateOverride()),
         switchMap(() => this.submEditService.submit()),
         takeUntil(this.unsubscribe)
       )
       .subscribe(
-        (resp) => this.onSubmitFinished(resp),
+        () => this.onSubmitSuccess(),
         (resp) => this.showSubmitLog(false, resp.log)
       );
+  }
+
+  onSidebarToggle(): void {
+    this.isSidebarCollapsed = !this.isSidebarCollapsed;
   }
 
   private confirmPageDelete(message: string): Observable<boolean> {
@@ -257,18 +255,11 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     );
   }
 
-  // todo: add proper type for submit response
-  private onSubmitFinished(resp: SubmitResponse) {
+  private onSubmitSuccess(): void {
     this.locService.replaceState('/submissions/' + this.accno);
     this.readonly = true;
-
-    this.submitOperation = SubmitOperation.UPDATE;
-
-    if (resp.accno) {
-      this.accno = resp.accno;
-      this.submitOperation = SubmitOperation.CREATE;
-      this.showSubmitLog(true);
-    }
+    this.submitOperation = this.isTemp ? SubmitOperation.CREATE : SubmitOperation.UPDATE;
+    this.showSubmitLog(true);
 
     scrollTop();
   }
@@ -279,13 +270,15 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     return this.sectionForm !== undefined && this.sectionForm.form.valid && !hasErrors;
   }
 
-  private showSubmitLog(isSuccess: boolean, log?: SubmitLog) {
+  private showSubmitLog(isSuccess: boolean, log?: SubmitLog): void {
     this.bsModalService.show(SubmResultsModalComponent, {
       initialState: { isSuccess, log }
     });
   }
 
-  private switchSection(sectionForm: Option<SectionForm>) {
-    this.sectionForm = sectionForm.toUndefined();
+  private switchSection(sectionForm: SectionForm | null): void {
+    if (sectionForm) {
+      this.sectionForm = sectionForm;
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, QueryList, ViewChildren } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { AppConfig } from 'app/app.config';
 import { ColumnControl } from '../../shared/model/column-control.model';
 import { FeatureForm } from '../../shared/model/feature-form.model';
@@ -8,11 +8,9 @@ import { FeatureForm } from '../../shared/model/feature-form.model';
   templateUrl: './feature-list.component.html',
   styleUrls: ['./feature-list.component.css']
 })
-export class FeatureListComponent implements AfterViewInit {
-  @Input() featureForm?: FeatureForm; // Reactive data structure for the form containing this feature
+export class FeatureListComponent {
+  @Input() featureForm!: FeatureForm; // Reactive data structure for the form containing this feature
   @Input() readonly?: boolean = false; // Flag for features that cannot be edited (e.g. sent state for submissions)
-
-  @ViewChildren('rowEl') rowEls?: QueryList<ElementRef>;
 
   suggestLength: number; // max number of suggested values to be displayed at once
 
@@ -21,23 +19,16 @@ export class FeatureListComponent implements AfterViewInit {
   }
 
   get columns(): ColumnControl[] {
-    return this.featureForm!.columns;
-  }
-
-  // On DOM change, sets focus on first field of newly added row
-  ngAfterViewInit(): void {
-    /*this.rowEls!.changes.subscribe((rowEls) => {
-      rowEls.last.nativeElement.querySelector('select, input').focus();
-    });*/
+    return this.featureForm.columns;
   }
 
   /**
    * Handler for the change event. Only save an attribute when its associated cell changes.
-   * @param {Object} attrObj - Object representative of the attribute.
-   * @param {string} newValue - New value for the specified attribute.
-   * @param {string} [attrName = 'value'] - Name of the attribute whose value is being saved.
+   * @param attrObj - Object representative of the attribute.
+   * @param newValue - New value for the specified attribute.
+   * @param [attrName = 'value'] - Name of the attribute whose value is being saved.
    */
-  onFieldChange(attrObj: any, newValue: string, attrName: string = 'value') {
+  onFieldChange(attrObj: any, newValue: string, attrName: string = 'value'): void {
     attrObj[attrName] = newValue;
   }
 

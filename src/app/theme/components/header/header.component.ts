@@ -6,13 +6,12 @@ import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'st-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  templateUrl: './header.component.html'
 })
 export class HeaderComponent implements OnDestroy {
   isBusy = false; // flags whether there is a transaction triggered by this component
   isPendingReq = false; // flags whether there is a transaction in progress (from anywhere in the app)
-  @ViewChild('logout', { static: false }) logout;
+  @ViewChild('logout') logout;
   navCollapsed = true;
   reqStatusSubs: Subscription;
   @ViewChild('user', { static: true }) user;
@@ -28,7 +27,6 @@ export class HeaderComponent implements OnDestroy {
     private appRef: ApplicationRef
   ) {
     const header = this;
-
 
     // If the session has expired (hence destroyed), it updates the view.
     // NOTE: the component's context has to be closed in. Otherwise, "this" points to SafeSubscriber.
@@ -64,7 +62,7 @@ export class HeaderComponent implements OnDestroy {
     });
   }
 
-  get userDisplayName() {
+  get userDisplayName(): string {
     return this.userSession.getUserDisplayName();
   }
 
@@ -72,13 +70,14 @@ export class HeaderComponent implements OnDestroy {
     this.reqStatusSubs.unsubscribe();
   }
 
-  signOut() {
+  signOut(): void {
     this.isBusy = true;
     this.authService
       .logout()
       .subscribe(
         () => {
           this.isBusy = false;
+          this.userSession.destroy();
         },
         () => {
           this.isBusy = false;
@@ -87,11 +86,11 @@ export class HeaderComponent implements OnDestroy {
     this.userSession.destroy();
   }
 
-  submitFeedback() {
+  submitFeedback(): void {
     window.location.href = 'mailto:biostudies@ebi.ac.uk?Subject=BioStudies Submission Tool Feedback';
   }
 
-  toggleCollapsed() {
+  toggleCollapsed(): void {
     this.navCollapsed = !this.navCollapsed;
   }
 }

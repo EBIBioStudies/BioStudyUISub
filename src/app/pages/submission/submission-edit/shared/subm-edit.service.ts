@@ -1,4 +1,4 @@
-import { BehaviorSubject, Observable, of, Subject, Subscription, merge } from 'rxjs';
+import { Observable, of, Subject, Subscription, merge, BehaviorSubject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 import { none, Option, some } from 'fp-ts/lib/Option';
@@ -11,11 +11,13 @@ import {
   Submission,
   SubmissionValidator
 } from 'app/pages/submission/submission-shared/model';
+import { SubmissionType } from 'app/pages/submission/submission-shared/model/templates/submission-type.model';
 import { UserData } from 'app/auth/shared';
 import { UserInfo } from 'app/auth/shared/model';
 import { PageTab, SelectValueType } from 'app/pages/submission/submission-shared/model';
 import { PageTabToSubmissionService } from 'app/pages/submission/submission-shared/pagetab-to-submission.service';
 import { SubmissionToPageTabService } from 'app/pages/submission/submission-shared/submission-to-pagetab.service';
+import { isDefinedAndNotEmpty } from 'app/utils';
 import { SubmissionService, SubmitResponse } from '../../submission-shared/submission.service';
 import { SectionForm } from './model/section-form.model';
 import { flatFeatures } from '../../utils';
@@ -37,44 +39,44 @@ class EditState {
     this.editState = EditState.INIT;
   }
 
-  reset() {
+  reset(): void {
     this.state = EditState.INIT;
   }
 
-  startEditing() {
+  startEditing(): void {
     this.editState = EditState.EDITING;
   }
 
-  startLoading() {
+  startLoading(): void {
     this.state = EditState.LOADING;
   }
 
-  startReverting() {
+  startReverting(): void {
     this.state = EditState.REVERTING;
   }
 
-  startSaving() {
+  startSaving(): void {
     this.state = EditState.SAVING;
   }
 
-  startSubmitting() {
+  startSubmitting(): void {
     this.state = EditState.SUBMITTING;
   }
 
-  stopLoading(error?: any) {
+  stopLoading(error?: any): void {
     this.backToEditing(error);
   }
 
-  stopReverting(error?: any) {
+  stopReverting(error?: any): void {
     this.backToEditing(error);
     this.editState = EditState.INIT;
   }
 
-  stopSaving(error?: any) {
+  stopSaving(error?: any): void {
     this.backToEditing(error);
   }
 
-  stopSubmitting(error?: any) {
+  stopSubmitting(error?: any): void {
     this.backToEditing(error);
     this.editState = EditState.INIT;
   }
@@ -99,7 +101,7 @@ class EditState {
     return this.editState === EditState.EDITING;
   }
 
-  private backToEditing(error: any) {
+  private backToEditing(error: any): void {
     if (error === undefined) {
       this.state = EditState.EDITING;
       return;
@@ -124,14 +126,14 @@ export class ServerResponse<T> {
 
 @Injectable()
 export class SubmEditService {
-  readonly sectionSwitch$: BehaviorSubject<Option<SectionForm>> = new BehaviorSubject<Option<SectionForm>>(none);
+  readonly sectionSwitch$: BehaviorSubject<SectionForm | null> = new BehaviorSubject<SectionForm | null>(null);
   readonly serverError$: Subject<any> = new Subject<any>();
 
-  private accno?: string;
+  private accno: string = '';
   private editState: EditState = new EditState();
   private sectionFormSub?: Subscription;
   private sectionFormSubEdit?: Subscription;
-  private submModel?: Submission;
+  private submModel: Submission = new Submission(SubmissionType.defaultType());
 
   constructor(
     private userData: UserData,
@@ -160,12 +162,12 @@ export class SubmEditService {
     return this.editState.isEditing;
   }
 
-  get isTemp() {
-    return this.submModel!.isTemp;
+  get isTemp(): boolean {
+    return this.submModel ? this.submModel.isTemp : false;
   }
 
-  get isRevised() {
-    return this.submModel!.isRevised;
+  get isRevised(): boolean {
+    return this.submModel ? this.submModel.isRevised : false;
   }
 
   loadSubmission(accno: string, setDefaults?: boolean): Observable<ServerResponse<any>> {
@@ -192,18 +194,18 @@ export class SubmEditService {
     );
   }
 
-  reset() {
+  reset(): void {
+    this.accno = '';
     this.editState.reset();
-    this.switchSection(undefined);
-    this.submModel = undefined;
-    this.accno = undefined;
+    this.sectionSwitch$.next(null);
+    this.submModel = new Submission(SubmissionType.defaultType());
   }
 
   revert(): Observable<ServerResponse<any>> {
     this.editState.startReverting();
 
-    return this.submService.deleteDraft(this.accno!).pipe(
-      switchMap(() => this.submService.getSubmission(this.accno!)),
+    return this.submService.deleteDraft(this.accno).pipe(
+      switchMap(() => this.submService.getSubmission(this.accno)),
       map((draftSubm) => {
         this.editState.stopReverting();
         this.createForm(draftSubm, this.accno);
@@ -233,10 +235,8 @@ export class SubmEditService {
       }));
   }
 
-  switchSection(sectionForm: SectionForm | undefined) {
-    if (this.sectionSwitch$.value.toUndefined() === sectionForm) {
-      return;
-    }
+  switchSection(sectionForm: SectionForm): void {
+    const nextSectionForm: SectionForm = new SectionForm(sectionForm.section, sectionForm.parent);
 
     if (this.sectionFormSub) {
       this.sectionFormSub.unsubscribe();
@@ -248,26 +248,22 @@ export class SubmEditService {
       this.sectionFormSubEdit = undefined;
     }
 
-    if (sectionForm !== undefined) {
-      merge(
-        sectionForm.structureChanges$,
-        sectionForm.form.statusChanges
-      )
-        .pipe(debounceTime(500))
-        .subscribe(() => {
-          this.editState.startEditing();
-          this.save();
-        });
+    merge(
+      nextSectionForm.structureChanges$,
+      nextSectionForm.form.statusChanges
+    )
+      .pipe(debounceTime(500))
+      .subscribe(() => {
+        this.editState.startEditing();
+        this.save();
+      });
 
-      this.updateDependencyValues(sectionForm);
-      this.sectionSwitch$.next(some(sectionForm));
-    } else {
-      this.sectionSwitch$.next(none);
-    }
+    this.updateDependencyValues(nextSectionForm);
+    this.sectionSwitch$.next(nextSectionForm);
   }
 
   validateSubmission(): SubmValidationErrors {
-    return SubmissionValidator.validate(this.submModel!);
+    return SubmissionValidator.validate(this.submModel);
   }
 
   private asContactAttributes(userInfo: UserInfo): AttributeData[] {
@@ -279,16 +275,16 @@ export class SubmEditService {
   }
 
   private asPageTab(isSubmit: boolean = false): PageTab {
-    return this.submToPageTabService.submissionToPageTab(this.submModel!, isSubmit);
+    return this.submToPageTabService.submissionToPageTab(this.submModel, isSubmit);
   }
 
-  private createForm(draftSubm: PageTab, accno: string = '', setDefaults: boolean = false) {
+  private createForm(draftSubm: PageTab, accno: string = '', setDefaults: boolean = false): void {
     this.submModel = this.pageTabToSubmService.pageTab2Submission(draftSubm);
 
     if (accno.length !== 0) {
       this.accno = accno;
     } else {
-      this.accno = draftSubm.accno;
+      this.accno = draftSubm.accno!;
     }
 
     if (setDefaults) {
@@ -298,13 +294,13 @@ export class SubmEditService {
     this.switchSection(new SectionForm(this.submModel.section));
   }
 
-  private onErrorResponse(error: any) {
+  private onErrorResponse(error: any): void {
     if (error !== undefined) {
       this.serverError$.next(error);
     }
   }
 
-  private onSaveFinished(resp: ServerResponse<any>) {
+  private onSaveFinished(resp: ServerResponse<any>): void {
     if (resp.isError) {
       return;
     }
@@ -313,21 +309,21 @@ export class SubmEditService {
     }
     // TODO: re-implement 'revised' feature
     // A sent submission has been backed up. It follows it's been revised.
-    if (!this.submModel!.isTemp && !this.submModel!.isRevised) {
-      this.submModel!.isRevised = true;
+    if (!this.submModel.isTemp && !this.submModel.isRevised) {
+      this.submModel.isRevised = true;
     }
   }
 
-  private onSubmitFinished(resp: any) {
-    if (this.submModel!.isTemp && ((resp.mapping || []).length > 0)) {
+  private onSubmitFinished(resp: any): void {
+    if (this.submModel.isTemp && ((resp.mapping || []).length > 0)) {
       this.accno = resp.mapping[0].assigned;
-      this.submModel!.accno = this.accno!;
+      this.submModel.accno = this.accno;
     }
   }
 
-  private save() {
+  private save(): void {
     this.editState.startSaving();
-    this.submService.saveDraftSubmission(this.accno!!, this.asPageTab())
+    this.submService.saveDraftSubmission(this.accno, this.asPageTab())
       .pipe(
         map((resp) => ServerResponse.OK(resp)),
         catchError((error) => of(ServerResponse.ERROR(error))))
@@ -354,21 +350,24 @@ export class SubmEditService {
     });
   }
 
-  private updateDependencyValues(sectionForm: SectionForm) {
-    const section: Section = this.submModel!.section;
+  private updateDependencyValues(sectionForm: SectionForm): void {
+    const section: Section = this.submModel.section;
     const features: Feature[] = flatFeatures(section);
-    const featuresWithDependencies: Feature[] = features.filter((feature) => String.isDefinedAndNotEmpty(feature.dependency));
+    const featuresWithDependencies: Feature[] = features.filter((feature) => isDefinedAndNotEmpty(feature.dependency));
 
     featuresWithDependencies.forEach((featureWithDependency) => {
       const dependency = features.find((feature) => feature.type.typeName === featureWithDependency.dependency);
       const columnWithDependencies = featureWithDependency.columns
-        .filter((column) => String.isDefinedAndNotEmpty(column.dependencyColumn));
+        .filter((column) => isDefinedAndNotEmpty(column.dependencyColumn));
 
       columnWithDependencies.forEach((columnWithDependency) => {
+        // tslint:disable-next-line: no-non-null-assertion
         const matchedColumn = dependency!.columns.find((column) => column.name === columnWithDependency.dependencyColumn);
+        // tslint:disable-next-line: no-non-null-assertion
         const attributeValues = dependency!.attributeValuesForColumn(matchedColumn!.id);
+        // tslint:disable-next-line: no-non-null-assertion
         const rawValues: string[] = attributeValues.map((attributeValue) => attributeValue!.value);
-        const selectValueType = <SelectValueType>(columnWithDependency.valueType);
+        const selectValueType = (columnWithDependency.valueType) as SelectValueType;
 
         selectValueType.setValues(rawValues);
 
@@ -377,12 +376,12 @@ export class SubmEditService {
     });
   }
 
-  private validateDependenciesForColumn(values: string[], feature: Feature, sectionForm: SectionForm, column?: Attribute) {
+  private validateDependenciesForColumn(values: string[], feature: Feature, sectionForm: SectionForm, column?: Attribute): void {
     if (column) {
       const attributeValues = feature.attributeValuesForColumn(column.id);
 
       attributeValues.forEach((attribute, index) => {
-        if (String.isDefinedAndNotEmpty(attribute!.value) && !values.includes(attribute!.value)) {
+        if (isDefinedAndNotEmpty(attribute!.value) && !values.includes(attribute!.value)) {
           const formControl = sectionForm.getFeatureFormById(feature.id);
 
           if (formControl) {

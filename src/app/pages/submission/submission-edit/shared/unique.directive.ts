@@ -5,10 +5,11 @@ import {
   NG_VALIDATORS,
   FormControl,
   ValidatorFn,
-  Validator, NgControl
+  Validator, NgControl, AbstractControl, ValidationErrors
 } from '@angular/forms';
 
 @Directive({
+  // tslint:disable-next-line: directive-selector
   selector: '[unique]',
   providers: [
     { provide: NG_VALIDATORS, useExisting: UniqueValidator, multi: true }
@@ -36,19 +37,22 @@ export class UniqueValidator implements Validator, OnDestroy {
    */
   @HostListener('change')
   onChange(): void {
-    const control = this.injector.get(NgControl).control;
-    const controls = control.parent.controls;
+    const control: AbstractControl | null = this.injector.get(NgControl).control;
 
-    // Updates validity of fields, forcing the display of feedback even if not "touched" yet.
-    Object.keys(controls).forEach((key) => {
-      controls[key].updateValueAndValidity();
-      if (controls[key].invalid) {
-        controls[key].markAsTouched();
-      }
-    });
+    if (control) {
+      const controls = control.parent.controls;
+
+      // Updates validity of fields, forcing the display of feedback even if not "touched" yet.
+      Object.keys(controls).forEach((key) => {
+        controls[key].updateValueAndValidity();
+        if (controls[key].invalid) {
+          controls[key].markAsTouched();
+        }
+      });
+    }
   }
 
-  validate(formControl: FormControl) {
+  validate(formControl: FormControl): ValidationErrors | null {
     if (this.isApply) {
       return this.validator(formControl);
     } else {
@@ -60,7 +64,7 @@ export class UniqueValidator implements Validator, OnDestroy {
 /**
  * Uniqueness validator factory. It checks the value of the control passed in is different from that of any other
  * control in the form. Effectively, the set of controls must contain no duplicate values.
- * @returns {ValidatorFn} Object describing if the uniqueness requirement is met or valid.
+ * @returns Object describing if the uniqueness requirement is met or valid.
  */
 function uniqueValidatorFactory(): ValidatorFn {
   return (control: FormControl) => {

@@ -1,7 +1,8 @@
 .treeview {
+  color: #369;
+  list-style-type: none;
   margin: 0;
   padding: 0;
-  color: #369;
 }
 
 .loading {
@@ -34,9 +35,8 @@
 }
 
 .treeview li {
-  margin: 0;
-  padding: 0 0 0 1em;
-  line-height: 2em;
+  padding-left: 0.5rem;
+  line-height: 2rem;
   font-weight: 700;
   position: relative;
 }

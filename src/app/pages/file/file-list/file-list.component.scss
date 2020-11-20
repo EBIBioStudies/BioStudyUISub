@@ -1,0 +1,12 @@
+.sidebar-expanded {
+  padding: 0 0 0 var(--sidebar-expanded-width);
+}
+
+.sidebar-collapsed {
+  padding: 0 0 0 var(--sidebar-collapsed-width);
+}
+
+.page-navbar {
+  height: var(--page-navbar-height);
+  top: var(--header-height);
+}

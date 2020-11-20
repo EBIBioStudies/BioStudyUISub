@@ -1,61 +1,56 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { RecaptchaComponent } from 'ng-recaptcha';
 import { AuthService } from 'app/auth/shared';
 import { PasswordResetRequestData } from '../shared/model';
+import { ServerError } from 'app/shared/server-error.handler';
 
 @Component({
   selector: 'st-auth-passwd-reset-req',
   templateUrl: './password-reset-req.component.html'
 })
-export class PasswordResetReqComponent implements AfterViewInit {
+export class PasswordResetReqComponent {
   hasError: boolean = false;
   isLoading: boolean = false; // Flag indicating if login request in progress
   message: string = '';
   model: PasswordResetRequestData = new PasswordResetRequestData();
   showSuccess: boolean = false;
 
-  @ViewChild('emailEl', { static: false })
-  private focusRef?: ElementRef;
-
-  @ViewChild('recaptchaEl', { static: false })
-  private recaptcha?: RecaptchaComponent;
+  @ViewChild('recaptchaEl')
+  private recaptcha!: RecaptchaComponent;
 
   constructor(private authService: AuthService) {}
 
-  // TODO: Turn autofocus on render into a directive
-  ngAfterViewInit(): void {
-    this.focusRef!.nativeElement.focus();
-  }
-
-  onRecaptchaResolved(resp: string): void {
+  onRecaptchaResolved(captchaToken: string): void {
     const component = this; // SelfSubscriber object sometimes overwrites context for "subscribe" method
 
-    this.model.captcha = resp;
-    this.isLoading = true;
-    this.authService.sendPasswordResetRequest(this.model)
-      .subscribe(
-        () => {
-          this.isLoading = false;
-          component.showSuccess = true;
-        },
-        (error: HttpErrorResponse) => {
-          this.isLoading = false;
-          component.hasError = true;
-          component.message = error.message;
-          component.resetRecaptcha();
-        }
-      );
+    if (captchaToken) {
+      this.model.captcha = captchaToken;
+      this.authService.sendPasswordResetRequest(this.model)
+        .subscribe(
+          () => {
+            this.isLoading = false;
+            component.showSuccess = true;
+          },
+          (error: ServerError) => {
+            this.isLoading = false;
+            component.hasError = true;
+            component.message = error.data.message;
+          }
+        );
+    }
   }
 
   onSubmit(form: NgForm): void {
-    this.resetGlobalError();
+    if (this.hasError) {
+      this.resetRecaptcha();
+      this.hasError = false;
+      this.message = '';
+    }
 
-    // Makes request if all form fields completed satisfactorily
     if (form.valid) {
-      // If reCAPTCHA resolves, the signup request is sent.
-      this.recaptcha!.execute();
+      this.isLoading = true;
+      this.recaptcha.execute();
     } else {
       Object.keys(form.controls).forEach((key) => {
         form.controls[key].markAsTouched({onlySelf: true});
@@ -63,16 +58,8 @@ export class PasswordResetReqComponent implements AfterViewInit {
     }
   }
 
-  resetGlobalError(): void {
-    this.message = '';
-    this.hasError = false;
-  }
-
-  /**
-   * Resets all aspects of the captcha widget.
-   * @see {@link RecaptchaComponent}
-   */
   resetRecaptcha(): void {
+    this.recaptcha.reset();
     this.model.resetCaptcha();
   }
 }

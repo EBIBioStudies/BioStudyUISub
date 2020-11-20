@@ -1,5 +1,5 @@
-<div class="modal-header bg-primary">
-  {{title}}
+<div class="modal-header">
+  <h5 class="modal-title">{{title}}</h5>
   <button type="button"
       class="close"
       (click)="cancel()"
@@ -9,19 +9,19 @@
 </div>
 <div class="modal-body">
   <div class="media">
-    <span class="media-left media-middle">
+    <div class="align-self-start mr-2">
       <i aria-hidden="true" class="fa fa-exclamation-triangle"></i>
-    </span>
-    <div class="media-body media-middle">
-      <p class="media-heading">{{body}}</p>
+    </div>
+    <div class="media-body">
+      {{body}}
     </div>
   </div>
 </div>
 <div class="modal-footer">
-  <form class="pull-right">
-    <button type="button" class="btn btn-primary btn-xs" (click)="ok()" autofocus #focusBtn>{{confirmLabel}}
-    </button>
-    <button *ngIf="!isHideCancel" type="button" class="btn btn-default btn-xs" (click)="cancel()">{{abortLabel}}
-    </button>
-  </form>
+  <button type="button" class="btn btn-primary btn-xs" (click)="ok()" autofocus #focusBtn>
+    {{confirmLabel}}
+  </button>
+  <button *ngIf="!isHideCancel" type="button" class="btn btn-default btn-xs" (click)="cancel()">
+    {{abortLabel}}
+  </button>
 </div>

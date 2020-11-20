@@ -1,6 +1,6 @@
 import { ControlRef } from '../control-reference';
 import { CustomFormControl } from './custom-form-control.model';
-import { Field, FieldType } from '../../../submission-shared/model';
+import { Field, FieldType } from 'app/pages/submission/submission-shared/model';
 import { SubmFormValidators, ErrorMessages } from '../form-validators';
 
 export class FieldControl {

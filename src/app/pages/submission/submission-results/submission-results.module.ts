@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { CollapseModule } from 'ngx-bootstrap';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { ResultsLogNodeComponent } from './results-log-node.component';
 import { SubmResultsModalComponent } from './subm-results-modal.component';
 import { SubmResultsTreeComponent } from './subm-results-tree.component';

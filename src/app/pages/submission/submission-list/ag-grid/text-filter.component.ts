@@ -7,7 +7,7 @@ import {
   IDoesFilterPassParams,
   RowNode
 } from 'ag-grid-community/main';
-import { AgFilterComponent } from 'ag-grid-angular/main';
+import { AgFilterComponent } from 'ag-grid-angular';
 
 @Component({
   selector: 'st-ag-acc-filter',
@@ -19,7 +19,6 @@ export class TextFilterComponent implements AgFilterComponent {
   private params?: IFilterParams;
   private prev: string = '';
   private valueGetter?: (rowNode: RowNode) => any;
-
 
   afterGuiAttached(): void {
     this.inputEl.nativeElement.focus();
@@ -46,7 +45,7 @@ export class TextFilterComponent implements AgFilterComponent {
     return this.text !== null && this.text !== undefined && this.text !== '';
   }
 
-  notifyAboutChanges() {
+  notifyAboutChanges(): void {
     if (this.text !== this.prev) {
       this.prev = this.text;
       this.params!.filterChangedCallback();

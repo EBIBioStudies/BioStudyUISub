@@ -5,9 +5,9 @@ export class ControlRef {
   static unknown = new ControlRef('unknown_control', 'unknown');
 
   constructor(readonly id: string,
-    readonly name: string = '',
-    readonly parentRef?: ControlGroupRef,
-    readonly icon: string = 'fa-square') {
+              readonly name: string = '',
+              readonly parentRef?: ControlGroupRef,
+              readonly icon: string = 'fa-square') {
   }
 
   get parentName(): string {
@@ -45,11 +45,11 @@ export class ControlGroupRef {
     this.isRoot = params.isRoot === true;
   }
 
-  static sectionRef(section: Section, isRoot: boolean = false) {
+  static sectionRef(section: Section, isRoot: boolean = false): ControlGroupRef {
     return new ControlGroupRef({
       sectionId: section.id,
       sectionName: section.accno || section.typeName,
-      isRoot: isRoot
+      isRoot
     });
   }
 
@@ -79,7 +79,7 @@ export class ControlGroupRef {
     return this.createRef(column.id + '#' + rowId, column.name);
   }
 
-  private createRef(id: string, name: string, icon?: string) {
+  private createRef(id: string, name: string, icon?: string): ControlRef {
     const parentName = this.featureName || this.sectionName;
     const uniqueId = [parentName, id].join('_');
     return new ControlRef(uniqueId, name, this, icon || this.icon);

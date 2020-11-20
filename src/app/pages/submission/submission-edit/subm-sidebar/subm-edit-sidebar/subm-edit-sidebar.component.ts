@@ -1,4 +1,4 @@
-import { BsModalService } from 'ngx-bootstrap';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { Component, Input, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Option } from 'fp-ts/lib/Option';
@@ -38,7 +38,7 @@ class DataTypeControl {
     return new DataTypeControl(type, type.icon, type.displayType, type.description, id);
   }
 
-  static fromSectionType(type: SectionType) {
+  static fromSectionType(type: SectionType): DataTypeControl {
     return new DataTypeControl(type, 'fa-folder-plus', type.displayType, '', SECTION_ID);
   }
 
@@ -62,12 +62,11 @@ class DataTypeControl {
 
 @Component({
   selector: 'st-subm-edit-sidebar',
-  templateUrl: './subm-edit-sidebar.component.html',
-  styleUrls: ['./subm-edit-sidebar.component.css']
+  templateUrl: './subm-edit-sidebar.component.html'
 })
 export class SubmEditSidebarComponent implements OnDestroy {
-  @Input() collapsed?: boolean = false;
-  form?: FormGroup;
+  @Input() collapsed: boolean = false;
+  form: FormGroup = new FormGroup({}, FormValidators.uniqueValues);
   isAdvancedOpen: boolean = false;
   @Input() isAdvancedVisible: boolean = true;
   isEditModeOn: boolean = false;
@@ -101,16 +100,16 @@ export class SubmEditSidebarComponent implements OnDestroy {
     this.unsubscribe.complete();
   }
 
-  onAdvancedToggle() {
+  onAdvancedToggle(): void {
     this.isAdvancedOpen = !this.isAdvancedOpen;
   }
 
   onApplyChanges(): void {
-    if (this.form!.invalid) {
+    if (this.form.invalid) {
       return;
     }
 
-    const deleted = this.items!.filter(item => item.deleted);
+    const deleted = this.items.filter(item => item.deleted);
 
     if (deleted.length > 0) {
       const isPlural = deleted.length > 1;
@@ -167,7 +166,7 @@ export class SubmEditSidebarComponent implements OnDestroy {
 
   onItemDelete(item: DataTypeControl): void {
     item.deleted = true;
-    this.form!.removeControl(item.id);
+    this.form.removeControl(item.id);
   }
 
   onNewTypeClick(event?: Event): void {
@@ -177,7 +176,7 @@ export class SubmEditSidebarComponent implements OnDestroy {
     bsModalRef.content.closeBtnName = 'Close';
   }
 
-  private applyChanges() {
+  private applyChanges(): void {
     const deleted = this.items!.filter(item => item.deleted);
     deleted.forEach(({ id }) => {
       this.sectionForm!.removeFeatureType(id);
@@ -187,12 +186,14 @@ export class SubmEditSidebarComponent implements OnDestroy {
     this.onEditModeToggle();
   }
 
-  private switchSection(sectionFormOp: Option<SectionForm>) {
-    if (sectionFormOp.isSome()) {
-      this.sectionForm = sectionFormOp.toUndefined();
+  private switchSection(sectionFormOp: SectionForm | null): void {
+    if (sectionFormOp) {
+      this.sectionForm = sectionFormOp;
+
       if (this.formSubscription) {
         this.formSubscription.unsubscribe();
       }
+
       if (this.sectionForm) {
         this.formSubscription = this.sectionForm.structureChanges$.subscribe(() => this.updateItems());
       }

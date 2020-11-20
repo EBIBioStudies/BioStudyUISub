@@ -1,15 +1,14 @@
-import { AppPath } from './app-path';
-import { DataWithCaptchaAndPath, copyAndExtend } from './data-base';
+import { DataWithCaptchaAndPath } from './data-base';
 
 class EmailRequestData extends DataWithCaptchaAndPath {
   email: string = '';
 
   constructor(pathAnchor: string) {
-    super(new AppPath(pathAnchor));
+    super(pathAnchor);
   }
 
   snapshot(): { [key: string]: string } {
-    return copyAndExtend(super.snapshot(), {'email': this.email});
+    return { ...super.snapshot(), email: this.email };
   }
 }
 

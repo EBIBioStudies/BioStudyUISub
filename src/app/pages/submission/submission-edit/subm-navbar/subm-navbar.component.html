@@ -1,28 +1,27 @@
-<nav>
-  <div class="col-xs-8 col-md-9 breadcrumbs nav-block">
-    <a *ngIf="isTemp" routerLink="/submissions/draft">
-      <i class="fa fa-clock-o" aria-hidden="true"></i> Draft
+<nav class="navbar navbar-light border-bottom page-navbar bg-white sticky-top">
+  <div class="d-flex align-items-center mr-auto">
+    <a class="btn btn-link btn-sm pl-0" *ngIf="isTemp" routerLink="/submissions/draft">
+      <i class="fa fa-clock-o" aria-hidden="true"></i> Drafts
     </a>
-    <a *ngIf="!isTemp" routerLink="/submissions">
-      <i class="fa fa-database" aria-hidden="true"></i> Submitted
+    <a class="btn btn-link btn-sm pl-0" *ngIf="!isTemp" routerLink="/submissions">
+      <i class="fa fa-database" aria-hidden="true"></i> Submissions
     </a>
-    <span *ngFor="let secForm of sectionPath; let idx = index; let last = last;">
-      &nbsp;<i class="fa fa-angle-right font-bold"></i>&nbsp;
-      <a href="javascript:void(0)"
-         [ngClass]="{'current-section': last}"
-         (click)="onSectionClick(secForm)">
-        <span>
-          <span *ngIf="idx == 0">{{accno}}{{isDiscardable? ' (revised)' : ''}}</span>
-          <span *ngIf="idx > 0">{{secForm.accno ? secForm.accno : secForm.typeName}}</span>
-        </span>
-      </a>
+    <ng-container *ngFor="let secForm of sectionPath; let idx = index; let last = last;">
+      <i class="fa fa-angle-right font-bold"></i>
+      <button class="btn btn-link btn-sm" (click)="onSectionClick(secForm)" [disabled]="last">
+        <span *ngIf="idx == 0">{{accno}}{{isDiscardable? ' (revised)' : ''}}</span>
+        <span *ngIf="idx > 0">{{secForm.accno ? secForm.accno : secForm.typeName}}</span>
+      </button>
+    </ng-container>
+    <span class="text-muted ml-2" *ngIf="isSaving">
+      <i class="fa fa-cog fa-spin"></i>
+      Backing up study data...
     </span>
-    <i *ngIf="isSaving" class="fas fa-save save-icon"></i>
   </div>
-  <div class="col-xs-4 col-md-3 btn-toolbar nav-block">
+  <div class="btn-toolbar">
     <button *ngIf="!readonly"
         [disabled]="isSaving"
-        class="button-link btn btn-primary btn-sm btn-submit pull-right"
+        class="btn btn-primary btn-sm"
         tooltip="Send to the BioStudies database"
         placement="bottom"
         container="body"
@@ -31,7 +30,7 @@
     </button>
     <button *ngIf="!readonly && !isTemp && isRevised"
         [disabled]="!isEditing"
-        class="button-link btn btn-primary btn-sm btn-danger pull-right"
+        class="btn btn-primary btn-sm btn-danger ml-2"
         tooltip="Revert to last released version"
         placement="bottom"
         container="body"
@@ -39,15 +38,15 @@
       <i class="fa fa-undo" aria-hidden="true"></i>
       Revert
     </button>
-    <button *ngIf="readonly" class="btn btn-default btn-sm pull-right"
+    <button *ngIf="readonly" class="btn btn-primary btn-sm ml-2"
         (click)="onEdit($event)"
         tooltip="Edit this submission"
         placement="bottom"
         container="body">
-      <i class="fa fa-pencil" aria-hidden="true"></i>
+      <i class="fas fa-pencil-alt" aria-hidden="true"></i>
       Edit
     </button>
-    <button *ngIf="readonly" class="btn btn-primary btn-sm pull-right"
+    <button *ngIf="readonly" class="btn btn-secondary btn-sm ml-2"
         tooltip="Create a new submission"
         placement="bottom"
         container="body"

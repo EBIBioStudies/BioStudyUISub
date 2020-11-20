@@ -10,7 +10,7 @@ describe('Submission Model: ValueMap', () => {
     const keys = ['k1', 'k2', 'k3'];
     const vm = new ValueMap(keys);
     expect(vm.keys().sort()).toEqual(keys.sort());
-    expect(vm.values().map(v => v.value)).toEqual(['', '', '']);
+    expect(vm.values().map(v => v && v.value)).toEqual(['', '', '']);
   });
 
    /* it('allows to add a key (and a value)', () => {
@@ -26,7 +26,7 @@ describe('Submission Model: ValueMap', () => {
   it('does not allow to add the same key twice', () => {
     const vm = new ValueMap(['k1', 'k1']);
     expect(vm.keys()).toEqual(['k1']);
-    expect(vm.values().map(v => v.value)).toEqual(['']);
+    expect(vm.values().map(v => v && v.value)).toEqual(['']);
   });
 
   it('allows to remove a key', () => {
@@ -34,7 +34,7 @@ describe('Submission Model: ValueMap', () => {
     const vm = new ValueMap(keys);
     vm.remove('k1');
     expect(vm.keys().sort()).toEqual(keys.slice(1).sort());
-    expect(vm.values().map(v => v.value)).toEqual(['', '']);
+    expect(vm.values().map(v => v && v.value)).toEqual(['', '']);
   });
 
   /*it('notifies if a value has changed', () => {

@@ -29,11 +29,11 @@ export class ColumnControl {
     return this.column.displayType.isRequired;
   }
 
-  get canEditName() {
+  get canEditName(): boolean {
     return this.column.canEditName;
   }
 
-  get isReadonly() {
+  get isReadonly(): boolean {
     return this.column.displayType.isReadonly;
   }
 

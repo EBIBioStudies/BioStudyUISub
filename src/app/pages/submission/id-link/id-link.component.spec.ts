@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { TypeaheadModule } from 'ngx-bootstrap';
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { IdLinkComponent } from './id-link.component';
 import { IdLinkService } from './id-link.service';
 import { Observable, of } from 'rxjs';

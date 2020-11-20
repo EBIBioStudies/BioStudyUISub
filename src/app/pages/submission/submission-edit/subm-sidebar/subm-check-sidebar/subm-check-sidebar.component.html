@@ -1,51 +1,40 @@
-<ul class="sidebar-menu" *ngIf="invalidControls.isEmpty() || isLoading || isSubmitting">
-  <li *ngIf="!serverError && !isLoading && !isSubmitting"
-      class="st-status-sidebar-content text-center"
-      [ngClass]="{'col-xs-12': !collapsed}">
-    <i aria-hidden="true" class="fa fa-check-circle" [ngClass]="{'fa-2x': collapsed, 'fa-4x': !collapsed}"></i>
-    <h4 *ngIf="!collapsed">All fields are valid</h4>
-    <h4 *ngIf="!collapsed" class="action-title">You may submit your study now</h4>
-  </li>
-  <li *ngIf="serverError"
-      class="st-status-sidebar-content text-center"
-      [ngClass]="{'col-xs-12': !collapsed}">
-    <i aria-hidden="true" class="fa fa-times-circle" [ngClass]="{'fa-2x': collapsed, 'fa-4x': !collapsed}"></i>
-    <h4 [ngClass]="{'vertical-text': collapsed}">{{errorMsg()}}</h4>
-  </li>
-  <li *ngIf="!serverError && isLoading"
-      class="st-status-sidebar-content text-center"
-      [ngClass]="{'col-xs-12': !collapsed}">
-    <i aria-hidden="true" class="fa fa-cog fa-spin" [ngClass]="{'fa-2x': collapsed, 'fa-4x': !collapsed}"></i>
-    <h4 [ngClass]="{'vertical-text': collapsed}">Loading submission...</h4>
-  </li>
-  <li *ngIf="!serverError && isSubmitting"
-      class="st-status-sidebar-content text-center"
-      [ngClass]="{'col-xs-12': !collapsed}">
-    <i aria-hidden="true" class="fa fa-cog fa-spin" [ngClass]="{'fa-2x': collapsed, 'fa-4x': !collapsed}"></i>
-    <h4 [ngClass]="{'vertical-text': collapsed}">Submitting...</h4>
-  </li>
-</ul>
-<ul class="sidebar-menu" *ngFor="let controlGroup of invalidControls">
-  <li *ngIf="!controlGroup[0].ref.isRootSection" class="sidebar-item-header">
+<div *ngIf="areInvalidControlsEmpty || isLoading || isSubmitting" class="p-3">
+  <div *ngIf="!serverError && !isLoading && !isSubmitting" class="text-center text-white"
+    [ngClass]="{'col-xs-12': !collapsed}">
+    <i aria-hidden="true" class="fa fa-check-circle mb-2" [ngClass]="{'fa-2x': collapsed, 'fa-3x': !collapsed}"></i>
+    <h5 *ngIf="!collapsed">All fields are valid</h5>
+    <h5 *ngIf="!collapsed" class="action-title">You may submit your study now</h5>
+  </div>
+  <div *ngIf="serverError" class="text-center text-danger" [ngClass]="{'col-xs-12': !collapsed}">
+    <i aria-hidden="true" class="fa fa-times-circle mb-2" [ngClass]="{'fa-2x': collapsed, 'fa-3x': !collapsed}"></i>
+    <h5 *ngIf="!collapsed">{{errorMsg()}}</h5>
+  </div>
+  <div *ngIf="!serverError && isLoading" class="text-center text-white" [ngClass]="{'col-xs-12': !collapsed}">
+    <i aria-hidden="true" class="fa fa-cog fa-spin mb-2" [ngClass]="{'fa-2x': collapsed, 'fa-3x': !collapsed}"></i>
+    <h5 *ngIf="!collapsed">Loading submission...</h5>
+  </div>
+  <div *ngIf="!serverError && isSubmitting" class="text-center text-white" [ngClass]="{'col-xs-12': !collapsed}">
+    <i aria-hidden="true" class="fa fa-cog fa-spin mb-2" [ngClass]="{'fa-2x': collapsed, 'fa-3x': !collapsed}"></i>
+    <h5 *ngIf="!collapsed">Submitting...</h5>
+  </div>
+</div>
+<div *ngFor="let controlGroup of invalidControls" class="list-group">
+  <div *ngIf="!controlGroup[0].ref.isRootSection"
+    class="list-group-item bg-transparent text-white border-top-0 border-bottom">
     <span>{{collapsed ? '' : controlGroup[0].ref.sectionName}}</span>
-  </li>
-  <li class="sidebar-item" *ngFor="let control of controlGroup">
-    <a *ngIf="control.invalid"
-        (click)="onReviewClick(control)">
-      <div [ngClass]="{'st-check-item': !collapsed, 'st-check-item-collapsed': collapsed}">
-        <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-          <i class="entry-item fas fa-lg text-center {{control.ref.icon}}"></i>
-          {{!collapsed ? '&nbsp;' + control.ref.name + '&nbsp;' : ''}}
-        </span>
-        <strong *ngIf="!collapsed"
-            class="entry-item label label-default"
-            tooltip="{{collapsed ? '&quot;' + control.ref.name + '&quot; field is ' + tipText(control.errors) : 'Highlight field on the form'}}"
-            placement="{{collapsed ? 'right' : 'top'}}"
-            [ngClass]="{'label-danger': control.touched}"
-            #labelEl>
-          {{tipText(control.errors)}}
-        </strong>
+  </div>
+  <ng-container *ngFor="let control of controlGroup">
+    <button type="button" *ngIf="control.invalid" (click)="onReviewClick(control)"
+      class="list-group-item list-group-item-action d-flex justify-content-between align-items-center bg-transparent text-white border-0">
+      <div class="text-truncate pr-2">
+        <i class="entry-item fas {{control.ref.icon}}"></i>
+        {{!collapsed ? '&nbsp;' + control.ref.name + '&nbsp;' : ''}}
       </div>
-    </a>
-  </li>
-</ul>
+      <span *ngIf="!collapsed" class="badge badge-dark"
+        tooltip="{{collapsed ? '&quot;' + control.ref.name + '&quot; field is ' + tipText(control.errors) : 'Highlight field on the form'}}"
+        placement="{{collapsed ? 'right' : 'top'}}" [ngClass]="{'label-danger': control.touched}" #labelEl>
+        {{tipText(control.errors)}}
+      </span>
+    </button>
+  </ng-container>
+</div>
