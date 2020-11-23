@@ -42,8 +42,9 @@ export function initConfig(config: AppConfig): () => Promise<any> {
     AlertModule.forRoot(),
     SortablejsModule.forRoot({ animation: 150 }),
     ToastrModule.forRoot({
+      maxOpened: 1,
       positionClass: 'toast-top-left',
-      maxOpened: 1
+      preventDuplicates: true
     }),
     RecaptchaModule,
     BrowserAnimationsModule,
