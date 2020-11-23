@@ -2,13 +2,7 @@ import { CustomFormControl } from './custom-form-control.model';
 import { Subject, Observable } from 'rxjs';
 import pluralize from 'pluralize';
 import { FormGroup, FormArray, FormControl } from '@angular/forms';
-import {
-  Attribute,
-  ColumnType,
-  Feature,
-  FeatureType,
-  ValueMap
-} from 'app/pages/submission/submission-shared/model';
+import { Attribute, ColumnType, Feature, FeatureType, ValueMap } from 'app/pages/submission/submission-shared/model';
 import { isArrayEmpty, arrayUniqueValues, isStringEmpty } from 'app/utils';
 import { FormBase } from './form-base.model';
 import { ColumnControl } from './column-control.model';
@@ -27,14 +21,16 @@ export class FeatureForm extends FormBase {
   private rowForms: RowForm[] = [];
 
   constructor(private feature: Feature, private featureRef: ControlGroupRef) {
-    super(new FormGroup({
-      columns: new MyFormGroup({}, SubmFormValidators.forFeatureColumns(feature)).withRef(featureRef),
-      rows: new FormArray([])
-    }));
+    super(
+      new FormGroup({
+        columns: new MyFormGroup({}, SubmFormValidators.forFeatureColumns(feature)).withRef(featureRef),
+        rows: new FormArray([])
+      })
+    );
 
-    feature.columns.forEach(column => this.addColumnControl(column));
+    feature.columns.forEach((column) => this.addColumnControl(column));
 
-    feature.rows.forEach(row => {
+    feature.rows.forEach((row) => {
       this.addRowForm(row, feature.columns);
     });
 
@@ -82,13 +78,10 @@ export class FeatureForm extends FormBase {
   }
 
   get prettyName(): string {
-    const isSingleElementFeature =
-      this.feature.singleRow &&
-      this.feature.colSize() === 1 &&
-      !this.canHaveMoreColumns();
+    const isSingleElementFeature = this.feature.singleRow && this.feature.colSize() === 1 && !this.canHaveMoreColumns();
 
     const name = this.feature.typeName.replace(/([A-Z])/g, ' $1');
-    return (isSingleElementFeature ? name : pluralize(name));
+    return isSingleElementFeature ? name : pluralize(name);
   }
 
   get featureTypeName(): string {
@@ -124,13 +117,11 @@ export class FeatureForm extends FormBase {
   }
 
   get colTypeNames(): string[] {
-    return this.columnTypes
-      .filter(type => !type.displayType.isReadonly)
-      .map(type => type.name);
+    return this.columnTypes.filter((type) => !type.displayType.isReadonly).map((type) => type.name);
   }
 
   get requiredGroups(): string[] {
-    return this.feature.groups.length > 0 ? this.feature.groups[0].map(f => f.typeName) : [];
+    return this.feature.groups.length > 0 ? this.feature.groups[0].map((f) => f.typeName) : [];
   }
 
   get hasRequiredGroups(): boolean {
@@ -161,7 +152,7 @@ export class FeatureForm extends FormBase {
     if (this.canAddColumn()) {
       const column = this.feature.addColumn();
       this.addColumnControl(column);
-      this.rowForms.forEach(rf => rf.addCellControl(column));
+      this.rowForms.forEach((rf) => rf.addCellControl(column));
       this.notifiyChanges(StructureChangeEvent.featureColumnAdd);
     }
   }
@@ -192,9 +183,11 @@ export class FeatureForm extends FormBase {
   }
 
   canHaveMoreColumns(): boolean {
-    return this.featureType.allowCustomCols
-      || !this.featureType.uniqueCols
-      || this.feature.colSize() < this.featureType.columnTypes.length;
+    return (
+      this.featureType.allowCustomCols ||
+      !this.featureType.uniqueCols ||
+      this.feature.colSize() < this.featureType.columnTypes.length
+    );
   }
 
   canRemoveColumn(columnCtrl: ColumnControl): boolean {
@@ -212,11 +205,11 @@ export class FeatureForm extends FormBase {
   /* returns list of current values for a column, excludes value in the current row */
   cellValues(rowIndex: number, columnId: string): string[] {
     const skipRow = this.rowForms[rowIndex];
-    const allCellValues =  this.rowForms
-      .filter(row => row !== skipRow)
-      .map(row => row.cellControlAt(columnId))
-      .filter(c => c !== undefined)
-      .map(c => c!.control.value)
+    const allCellValues = this.rowForms
+      .filter((row) => row !== skipRow)
+      .map((row) => row.cellControlAt(columnId))
+      .filter((c) => c !== undefined)
+      .map((c) => c!.control.value)
       .filter((v: string) => !isStringEmpty(v));
 
     return arrayUniqueValues(allCellValues);
@@ -239,10 +232,10 @@ export class FeatureForm extends FormBase {
   columnNamesAvailable = () => {
     if (this.hasUniqueColumns) {
       const colNames = this.columnNames;
-      return this.colTypeNames.filter(name => !colNames.includes(name));
+      return this.colTypeNames.filter((name) => !colNames.includes(name));
     }
     return this.colTypeNames;
-  }
+  };
 
   columnNamesTypeahead(column: ColumnControl): Observable<string[]> {
     return column.typeaheadSource(this.columnNamesAvailable);
@@ -256,7 +249,7 @@ export class FeatureForm extends FormBase {
     if (this.canRemoveColumn(columnCtrl)) {
       this.feature.removeColumn(columnCtrl.id);
       this.removeColumnControl(columnCtrl.id);
-      this.rowForms.forEach(rf => rf.removeCellControl(columnCtrl.id));
+      this.rowForms.forEach((rf) => rf.removeCellControl(columnCtrl.id));
       this.notifiyChanges(StructureChangeEvent.featureColumnRemove);
     }
   }
@@ -288,7 +281,7 @@ export class FeatureForm extends FormBase {
   }
 
   private removeColumnControl(columnId: string): void {
-    const index = this.columnControls.findIndex(c => c.id === columnId);
+    const index = this.columnControls.findIndex((c) => c.id === columnId);
     this.columnControls.splice(index, 1);
     this.columnsForm.removeControl(columnId);
   }

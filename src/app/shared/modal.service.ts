@@ -6,41 +6,39 @@ import { filter, take } from 'rxjs/operators';
 
 @Injectable()
 export class ModalService {
-  constructor( private modalService: BsModalService) {}
+  constructor(private modalService: BsModalService) {}
 
   alert(text: string, title: string, confirmLabel: string): Observable<boolean> {
     const subj = new Subject<boolean>();
-    this.modalService.show(ConfirmDialogComponent,
-      {
-        initialState: {
-          title,
-          confirmLabel,
-          body: text,
-          isHideCancel: true,
-          callback: (value: boolean) => subj.next(value)
-        }
-      });
+    this.modalService.show(ConfirmDialogComponent, {
+      initialState: {
+        title,
+        confirmLabel,
+        body: text,
+        isHideCancel: true,
+        callback: (value: boolean) => subj.next(value)
+      }
+    });
 
     return subj.asObservable().pipe(take(1));
   }
 
   confirm(text: string, title: string, confirmLabel: string): Observable<boolean> {
     const subj = new Subject<boolean>();
-    this.modalService.show(ConfirmDialogComponent,
-      {
-        initialState: {
-          title,
-          confirmLabel,
-          body: text,
-          isHideCancel: false,
-          callback: (value: boolean) => subj.next(value)
-        }
-      });
+    this.modalService.show(ConfirmDialogComponent, {
+      initialState: {
+        title,
+        confirmLabel,
+        body: text,
+        isHideCancel: false,
+        callback: (value: boolean) => subj.next(value)
+      }
+    });
 
     return subj.asObservable().pipe(take(1));
   }
 
   whenConfirmed(text: string, title: string, confirmLabel: string): Observable<boolean> {
-    return this.confirm(text, title, confirmLabel).pipe(filter(v => v === true));
+    return this.confirm(text, title, confirmLabel).pipe(filter((v) => v === true));
   }
 }

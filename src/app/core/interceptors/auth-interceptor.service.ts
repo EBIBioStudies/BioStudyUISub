@@ -6,10 +6,7 @@ import { AppConfig } from 'app/app.config';
 
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
-  constructor(
-    private appConfig: AppConfig,
-    private userCookies: UserCookies
-  ) {}
+  constructor(private appConfig: AppConfig, private userCookies: UserCookies) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (req.url.startsWith('/api')) {

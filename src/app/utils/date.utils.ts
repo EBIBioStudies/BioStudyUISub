@@ -17,7 +17,7 @@ export function formatDate(date: Date | undefined): string {
     year = date.getFullYear();
     return [year, month, day].join('-');
 
-  // Returns an empty string instead of a zero-padded string corresponding to the start of the Unix epoch if null.
+    // Returns an empty string instead of a zero-padded string corresponding to the start of the Unix epoch if null.
   } else {
     return '';
   }

@@ -6,7 +6,7 @@ export class Counter {
   private static instance: Counter;
   private count = 0;
 
-  private constructor() { }
+  private constructor() {}
 
   static getInstance(): Counter {
     if (Counter.instance === undefined) {

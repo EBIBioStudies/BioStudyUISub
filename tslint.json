@@ -4,7 +4,7 @@
     "tslint-config-prettier"
   ],
   "rules": {
-    "prettier": false,
+    "prettier": true,
     "align": {
       "options": [
         "parameters",

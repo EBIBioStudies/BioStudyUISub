@@ -13,9 +13,9 @@ export interface SidebarFile extends File {
 }
 
 interface ProjectOption {
-  checked: boolean,
-  name: string,
-  value: string
+  checked: boolean;
+  name: string;
+  value: string;
 }
 
 interface SidebarModel {
@@ -104,7 +104,7 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
    * @returns Percentage of completed queued requests.
    */
   get progress(): number {
-    return Math.floor((this.selectedFileCount - this.pendingFiles) * 100 / this.selectedFileCount);
+    return Math.floor(((this.selectedFileCount - this.pendingFiles) * 100) / this.selectedFileCount);
   }
 
   /**
@@ -164,12 +164,15 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
    * is known.
    */
   ngOnInit(): void {
-    this.userData.projectAccNumbers$.subscribe(projects => {
-      this.model.projects = this.initProjModel(projects);
-      this.isProjFetch = false;
-    }, () => {
-      this.isProjFetch = false;
-    });
+    this.userData.projectAccNumbers$.subscribe(
+      (projects) => {
+        this.model.projects = this.initProjModel(projects);
+        this.isProjFetch = false;
+      },
+      () => {
+        this.isProjFetch = false;
+      }
+    );
   }
 
   /**
@@ -205,9 +208,7 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
       const studyFiles = nonClearedFiles.filter((file) => file.isStudy);
 
       if (studyFiles.length === 0) {
-        return this.modalService.alert(
-          'Please make sure at least one file is selected as study', 'Warning', 'Ok'
-        );
+        return this.modalService.alert('Please make sure at least one file is selected as study', 'Warning', 'Ok');
       }
 
       if (nonStudyFiles.length === 0) {
@@ -294,7 +295,7 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
 
     const project: string = this.getSelectedProject();
 
-     // Performs the double-request submits and flattens the resulting high-order observables onto a single one.
+    // Performs the double-request submits and flattens the resulting high-order observables onto a single one.
     return from(files).pipe(
       map((file: File) => this.directSubmitSvc.addRequest(file, project, submissionType)),
       // Throttles the number of requests allowed in parallel and takes just the last event
@@ -341,12 +342,11 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
   }
 
   private uploadFiles(files: File[]): Observable<any> {
-    return from(files)
-      .pipe(
-        map((file) => this.directSubmitFileUploadService.doUpload(file)),
-        mergeAll(this.appConfig.maxConcurrent),
-        last(null, []),
-        takeUntil(this.ngUnsubscribe)
-      );
+    return from(files).pipe(
+      map((file) => this.directSubmitFileUploadService.doUpload(file)),
+      mergeAll(this.appConfig.maxConcurrent),
+      last(null, []),
+      takeUntil(this.ngUnsubscribe)
+    );
   }
 }

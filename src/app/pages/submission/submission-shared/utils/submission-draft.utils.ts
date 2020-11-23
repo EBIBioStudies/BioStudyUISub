@@ -4,7 +4,10 @@ import { isDefinedAndNotEmpty } from 'app/utils';
 export class SubmissionDraftUtils {
   filterAndFormatDraftSubmissions(drafts): SubmissionListItem[] {
     return drafts.map((draft) => {
-      const { key, content: { attributes = [] } } = draft;
+      const {
+        key,
+        content: { attributes = [] }
+      } = draft;
       const titleAttribute = attributes.find((attribute) => attribute.name === 'Title') || {};
       const releaseDateAttribute = attributes.find((attribute) => attribute.name === 'ReleaseDate') || {};
       const title = titleAttribute.value;
@@ -13,7 +16,7 @@ export class SubmissionDraftUtils {
       return {
         accno: key,
         title: title === undefined ? '' : title,
-        rtime: (isDefinedAndNotEmpty(release) || release === '') ? null : release
+        rtime: isDefinedAndNotEmpty(release) || release === '' ? null : release
       };
     });
   }

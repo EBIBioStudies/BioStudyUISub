@@ -115,7 +115,7 @@ export class ServerResponse<T> {
 
   static ERROR = (error: any) => {
     return new ServerResponse(none, some(error));
-  }
+  };
 
   static OK = <T>(payload: T) => new ServerResponse<T>(some(payload), none);
 
@@ -139,7 +139,7 @@ export class SubmEditService {
     private userData: UserData,
     private submService: SubmissionService,
     private submToPageTabService: SubmissionToPageTabService,
-    private pageTabToSubmService: PageTabToSubmissionService,
+    private pageTabToSubmService: PageTabToSubmissionService
   ) {}
 
   get isSubmitting(): boolean {
@@ -174,19 +174,17 @@ export class SubmEditService {
     this.editState.startLoading();
 
     return this.submService.getSubmission(accno).pipe(
-      map(draftSubm => {
+      map((draftSubm) => {
         this.editState.stopLoading();
         this.createForm(draftSubm, accno, setDefaults);
         const projectAttribute =
           draftSubm &&
           draftSubm.attributes &&
-          draftSubm.attributes
-            .filter(att => att.name && att.name.toLowerCase() === 'attachto')
-            .shift();
+          draftSubm.attributes.filter((att) => att.name && att.name.toLowerCase() === 'attachto').shift();
 
         return ServerResponse.OK(projectAttribute);
       }),
-      catchError(error => {
+      catchError((error) => {
         this.editState.stopLoading(error);
 
         return of(ServerResponse.ERROR(error));
@@ -211,10 +209,11 @@ export class SubmEditService {
         this.createForm(draftSubm, this.accno);
         return ServerResponse.OK({});
       }),
-      catchError(error => {
+      catchError((error) => {
         this.editState.stopReverting(error);
         return of(ServerResponse.ERROR(error));
-      }));
+      })
+    );
   }
 
   submit(): Observable<SubmitResponse> {
@@ -232,7 +231,8 @@ export class SubmEditService {
         this.onErrorResponse(error);
 
         throw error;
-      }));
+      })
+    );
   }
 
   switchSection(sectionForm: SectionForm): void {
@@ -248,10 +248,7 @@ export class SubmEditService {
       this.sectionFormSubEdit = undefined;
     }
 
-    merge(
-      nextSectionForm.structureChanges$,
-      nextSectionForm.form.statusChanges
-    )
+    merge(nextSectionForm.structureChanges$, nextSectionForm.form.statusChanges)
       .pipe(debounceTime(500))
       .subscribe(() => {
         this.editState.startEditing();
@@ -315,7 +312,7 @@ export class SubmEditService {
   }
 
   private onSubmitFinished(resp: any): void {
-    if (this.submModel.isTemp && ((resp.mapping || []).length > 0)) {
+    if (this.submModel.isTemp && (resp.mapping || []).length > 0) {
       this.accno = resp.mapping[0].assigned;
       this.submModel.accno = this.accno;
     }
@@ -323,21 +320,26 @@ export class SubmEditService {
 
   private save(): void {
     this.editState.startSaving();
-    this.submService.saveDraftSubmission(this.accno, this.asPageTab())
+    this.submService
+      .saveDraftSubmission(this.accno, this.asPageTab())
       .pipe(
         map((resp) => ServerResponse.OK(resp)),
-        catchError((error) => of(ServerResponse.ERROR(error))))
-      .subscribe((resp) => {
-        this.onSaveFinished(resp);
-        this.editState.stopSaving();
-      }, (error) => {
-        this.editState.stopSaving(error);
-      });
+        catchError((error) => of(ServerResponse.ERROR(error)))
+      )
+      .subscribe(
+        (resp) => {
+          this.onSaveFinished(resp);
+          this.editState.stopSaving();
+        },
+        (error) => {
+          this.editState.stopSaving(error);
+        }
+      );
   }
 
   /* TODO: set defaults when submission object is created and not yet sent to the server (NOT HERE!!!)*/
   private setDefaults(section: Section): void {
-    const subscr = this.userData.info$.subscribe(info => {
+    const subscr = this.userData.info$.subscribe((info) => {
       const contactFeature = section.features.find('Contact', 'typeName');
 
       if (contactFeature) {
@@ -357,17 +359,20 @@ export class SubmEditService {
 
     featuresWithDependencies.forEach((featureWithDependency) => {
       const dependency = features.find((feature) => feature.type.typeName === featureWithDependency.dependency);
-      const columnWithDependencies = featureWithDependency.columns
-        .filter((column) => isDefinedAndNotEmpty(column.dependencyColumn));
+      const columnWithDependencies = featureWithDependency.columns.filter((column) =>
+        isDefinedAndNotEmpty(column.dependencyColumn)
+      );
 
       columnWithDependencies.forEach((columnWithDependency) => {
         // tslint:disable-next-line: no-non-null-assertion
-        const matchedColumn = dependency!.columns.find((column) => column.name === columnWithDependency.dependencyColumn);
+        const matchedColumn = dependency!.columns.find(
+          (column) => column.name === columnWithDependency.dependencyColumn
+        );
         // tslint:disable-next-line: no-non-null-assertion
         const attributeValues = dependency!.attributeValuesForColumn(matchedColumn!.id);
         // tslint:disable-next-line: no-non-null-assertion
         const rawValues: string[] = attributeValues.map((attributeValue) => attributeValue!.value);
-        const selectValueType = (columnWithDependency.valueType) as SelectValueType;
+        const selectValueType = columnWithDependency.valueType as SelectValueType;
 
         selectValueType.setValues(rawValues);
 
@@ -376,7 +381,12 @@ export class SubmEditService {
     });
   }
 
-  private validateDependenciesForColumn(values: string[], feature: Feature, sectionForm: SectionForm, column?: Attribute): void {
+  private validateDependenciesForColumn(
+    values: string[],
+    feature: Feature,
+    sectionForm: SectionForm,
+    column?: Attribute
+  ): void {
     if (column) {
       const attributeValues = feature.attributeValuesForColumn(column.id);
 

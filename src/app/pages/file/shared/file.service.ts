@@ -13,11 +13,7 @@ interface FullPathFile extends File {
 
 @Injectable()
 export class FileService {
-  constructor(
-    private http: HttpClient,
-    private httpUpload: HttpUploadClientService,
-    private logService: LogService
-  ) {}
+  constructor(private http: HttpClient, private httpUpload: HttpUploadClientService, private logService: LogService) {}
 
   download(filePath: string, fileName: string): Observable<any> {
     return this.http.get(`/api/files/${filePath}?fileName=${fileName}`, { responseType: 'blob' });

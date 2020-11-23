@@ -3,7 +3,7 @@ import { fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 interface CSSStyleDeclarationWithResize extends CSSStyleDeclaration {
-  resize: string
+  resize: string;
 }
 
 @Directive({

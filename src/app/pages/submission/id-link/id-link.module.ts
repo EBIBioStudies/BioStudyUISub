@@ -8,22 +8,9 @@ import { IdLinkValueValidatorDirective } from './id-link.validator.directive';
 import { IdLinkService } from './id-link.service';
 
 @NgModule({
-  declarations: [
-    IdLinkComponent,
-    IdLinkValueValidatorDirective
-  ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    HttpClientModule,
-    TypeaheadModule.forRoot(),
-  ],
-  providers: [
-    IdLinkService
-  ],
-  exports: [
-    IdLinkComponent
-  ]
+  declarations: [IdLinkComponent, IdLinkValueValidatorDirective],
+  imports: [CommonModule, FormsModule, HttpClientModule, TypeaheadModule.forRoot()],
+  providers: [IdLinkService],
+  exports: [IdLinkComponent]
 })
-export class IdLinkModule {
-}
+export class IdLinkModule {}

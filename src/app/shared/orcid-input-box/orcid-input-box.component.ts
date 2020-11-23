@@ -5,17 +5,19 @@ import {
   NG_VALUE_ACCESSOR,
   NgControl,
   NgModel,
-  Validators,
+  Validators
 } from '@angular/forms';
 
 @Component({
   selector: 'st-orcid-input-box',
   templateUrl: './orcid-input-box.component.html',
-  providers: [{
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => ORCIDInputBoxComponent),
-    multi: true
-  }]
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => ORCIDInputBoxComponent),
+      multi: true
+    }
+  ]
 })
 
 /**
@@ -29,7 +31,6 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor, OnInit, Aft
   @Input() isSmall: boolean = true; // flag for making the input area the same size as grid fields
   @Input() readonly: boolean = false;
   @ViewChild(NgModel, { static: true })
-
   private inputModel!: NgModel;
   private mlistener: any = null;
   private orcidValue = ''; // internal data model
@@ -38,7 +39,7 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor, OnInit, Aft
    * Instantiates a new custom component.
    * @param injector - Parent's injector retrieved to get the component's form control later on.
    */
-  constructor(private injector: Injector) { }
+  constructor(private injector: Injector) {}
 
   get value(): string {
     return this.orcidValue;
@@ -80,7 +81,9 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor, OnInit, Aft
 
     if (control) {
       control.setValidators(Validators.compose([control.validator, this.inputModel.control.validator]));
-      control.setAsyncValidators(Validators.composeAsync([control.asyncValidator, this.inputModel.control.asyncValidator]));
+      control.setAsyncValidators(
+        Validators.composeAsync([control.asyncValidator, this.inputModel.control.asyncValidator])
+      );
       setTimeout(() => {
         control.updateValueAndValidity();
       }, 10);
@@ -118,7 +121,6 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor, OnInit, Aft
     this.onChange = fn;
   }
 
-
   /**
    * Registers a handler specifically for when a control receives a touch event.
    * @see {@link ControlValueAccessor}
@@ -141,8 +143,8 @@ export class ORCIDInputBoxComponent implements ControlValueAccessor, OnInit, Aft
   }
 
   // placeholder for handler propagating changes outside the custom control
-  private onChange: any = (_: any) => { };
+  private onChange: any = (_: any) => {};
 
   // placeholder for handler after the control has been "touched"
-  private onTouched: any = () => { };
+  private onTouched: any = () => {};
 }

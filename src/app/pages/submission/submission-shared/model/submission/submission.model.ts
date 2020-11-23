@@ -5,18 +5,11 @@ import { Attribute } from './submission.model.attribute';
 import { ValueMap } from './submission.model.valuemap';
 import { Columns } from './submission.model.columns';
 import { NameAndValue, Tag } from '../model.common';
-import {
-  DisplayType,
-  FeatureType,
-  FieldType,
-  SectionType,
-  SubmissionType,
-  ValueType
-} from '../templates';
+import { DisplayType, FeatureType, FieldType, SectionType, SubmissionType, ValueType } from '../templates';
 import { AttributeValue } from './submission.model.attribute-value';
 
 export interface SubmissionSection {
-  subsections: Sections
+  subsections: Sections;
 }
 
 class Rows {
@@ -36,13 +29,13 @@ class Rows {
   }
 
   addKey(key: string): void {
-    this.rows.forEach(r => {
+    this.rows.forEach((r) => {
       r.add(key);
     });
   }
 
   at(index: number): ValueMap | undefined {
-    return (index >= 0) && (index < this.rows.length) ? this.rows[index] : undefined;
+    return index >= 0 && index < this.rows.length ? this.rows[index] : undefined;
   }
 
   list(): Array<ValueMap> {
@@ -54,7 +47,7 @@ class Rows {
   }
 
   removeAt(index: number): boolean {
-    if ((index < 0) || (index > this.rows.length)) {
+    if (index < 0 || index > this.rows.length) {
       return false;
     }
     this.rows.splice(index, 1);
@@ -62,7 +55,7 @@ class Rows {
   }
 
   removeKey(key: string): void {
-    this.rows.forEach(r => {
+    this.rows.forEach((r) => {
       r.remove(key);
     });
   }
@@ -95,12 +88,20 @@ export class Feature {
     this.dependency = type.dependency;
 
     type.columnTypes
-      .filter(ct => ct.isRequired || ct.isDesirable)
-      .forEach(ct => {
-        this.addColumn(ct.name, ct.valueType, ct.displayType, true, ct.dependencyColumn, ct.uniqueValues, ct.autosuggest);
+      .filter((ct) => ct.isRequired || ct.isDesirable)
+      .forEach((ct) => {
+        this.addColumn(
+          ct.name,
+          ct.valueType,
+          ct.displayType,
+          true,
+          ct.dependencyColumn,
+          ct.uniqueValues,
+          ct.autosuggest
+        );
       });
 
-    (data.entries || []).forEach(entry => {
+    (data.entries || []).forEach((entry) => {
       this.add(entry);
     });
 
@@ -156,33 +157,33 @@ export class Feature {
 
     const rowMap = this.getOrCreateRow(rowIdx);
     if (rowMap === undefined) {
-      throw new Error(`Can't add new row to ${this.typeName}: ${attributes.map(at => at.name).join(',')}`);
+      throw new Error(`Can't add new row to ${this.typeName}: ${attributes.map((at) => at.name).join(',')}`);
     }
 
-    const attrsWithName = attributes.filter(attr => isDefinedAndNotEmpty(attr.name));
-    const newColNames = attrsWithName.map(attr => attr.name!);
+    const attrsWithName = attributes.filter((attr) => isDefinedAndNotEmpty(attr.name));
+    const newColNames = attrsWithName.map((attr) => attr.name!);
     const existedColNames = this.featureColumns.names();
 
-    arrayUniqueValues(newColNames).forEach(colName => {
+    arrayUniqueValues(newColNames).forEach((colName) => {
       const colType = this.type.getColumnType(colName);
-      const requiredColCount = newColNames.filter(name => name === colName).length;
+      const requiredColCount = newColNames.filter((name) => name === colName).length;
 
       if (colType) {
-        let colCount = existedColNames.filter(name => name === colName).length;
+        let colCount = existedColNames.filter((name) => name === colName).length;
         while (colCount < requiredColCount) {
           this.addColumn(colName, colType.valueType, colType.displayType);
           colCount++;
         }
       }
 
-      const attrs = attrsWithName.filter(attr => attr.name === colName);
+      const attrs = attrsWithName.filter((attr) => attr.name === colName);
       const columns = this.featureColumns.filterByName(colName);
       zip(attrs, columns).forEach((pair) => {
-         const rowValue = rowMap.valueFor(pair[1].id);
+        const rowValue = rowMap.valueFor(pair[1].id);
 
-         if (rowValue) {
+        if (rowValue) {
           rowValue.value = pair[0].value || '';
-         }
+        }
       });
     });
   }
@@ -198,7 +199,15 @@ export class Feature {
   ): Attribute {
     const defColName = (this.singleRow ? this.typeName : 'Column') + ' ' + (this.featureColumns.size() + 1);
     const colName = name || defColName;
-    const col = new Attribute(colName, valueType, displayType, isTemplateBased, dependencyColumn, uniqueValues, autosuggest);
+    const col = new Attribute(
+      colName,
+      valueType,
+      displayType,
+      isTemplateBased,
+      dependencyColumn,
+      uniqueValues,
+      autosuggest
+    );
     this.featureRows.addKey(col.id);
     this.featureColumns.add(col);
 
@@ -214,7 +223,7 @@ export class Feature {
   }
 
   canAddRow(): boolean {
-    return (!this.singleRow || this.rowSize() === 0);
+    return !this.singleRow || this.rowSize() === 0;
   }
 
   colSize(): number {
@@ -244,7 +253,7 @@ export class Feature {
   }
 
   private getOrCreateRow(rowIdx?: number): ValueMap | undefined {
-    return (rowIdx === undefined) ? this.addRow() : this.featureRows.at(rowIdx);
+    return rowIdx === undefined ? this.addRow() : this.featureRows.at(rowIdx);
   }
 }
 
@@ -252,28 +261,29 @@ export class Features {
   private features: Feature[] = [];
 
   constructor(type: SectionType, features: Array<FeatureData> = []) {
-    const fd = features.filter(f => isDefinedAndNotEmpty(f.type))
+    const fd = features
+      .filter((f) => isDefinedAndNotEmpty(f.type))
       .reduce((rv, d) => {
         rv[d.type!] = d;
         return rv;
       }, {});
 
-    type.featureTypes.forEach(ft => {
+    type.featureTypes.forEach((ft) => {
       this.add(ft, fd[ft.name]);
       fd[ft.name] = undefined;
     });
 
-    Object.keys(fd).forEach(key => {
+    Object.keys(fd).forEach((key) => {
       if (fd[key] !== undefined) {
         const ft = type.getFeatureType(key);
         this.add(ft, fd[ft.name]);
       }
     });
 
-    type.featureGroups.forEach(group => {
-      const featureGroup = this.features.filter(f => group.includes(f.typeName));
-      featureGroup.forEach(f => f.groups.push(featureGroup));
-      const rowCount = featureGroup.map(f => f.rowSize()).reduce((rv, v) => rv + v, 0);
+    type.featureGroups.forEach((group) => {
+      const featureGroup = this.features.filter((f) => group.includes(f.typeName));
+      featureGroup.forEach((f) => f.groups.push(featureGroup));
+      const rowCount = featureGroup.map((f) => f.rowSize()).reduce((rv, v) => rv + v, 0);
       if (rowCount === 0) {
         featureGroup.forEach((fGroup) => fGroup.addRow());
       }
@@ -285,7 +295,7 @@ export class Features {
   }
 
   add(type: FeatureType, data?: FeatureData): Feature | undefined {
-    if (this.features.filter(f => f.type === type).length > 0) {
+    if (this.features.filter((f) => f.type === type).length > 0) {
       return;
     }
 
@@ -303,7 +313,7 @@ export class Features {
    * @returns Feature fulfilling the predicated comparison.
    */
   find(value: string, property: string = 'id'): Feature | undefined {
-    return this.features.find((feature) => (feature[property] === value));
+    return this.features.find((feature) => feature[property] === value);
   }
 
   list(): Feature[] {
@@ -325,7 +335,7 @@ export class Features {
   }
 
   removeById(featureId: string): boolean {
-    const feature = this.features.find(f => f.id === featureId);
+    const feature = this.features.find((f) => f.id === featureId);
     return feature !== undefined && this.remove(feature);
   }
 }
@@ -371,13 +381,14 @@ export class Fields {
   constructor(type: SectionType, attributes: Array<AttributeData> = []) {
     this.fields = [];
 
-    const attrMap = attributes.filter(at => isStringDefined(at.name))
+    const attrMap = attributes
+      .filter((at) => isStringDefined(at.name))
       .reduce((rv, attr) => {
         rv[attr.name!] = attr.value;
         return rv;
       }, {});
 
-    type.fieldTypes.forEach(fieldType => {
+    type.fieldTypes.forEach((fieldType) => {
       this.add(fieldType, attrMap[fieldType.name] || '');
     });
   }
@@ -394,7 +405,7 @@ export class Fields {
    * @returns Field fulfilling the predicated comparison.
    */
   find(value: string, property: string = 'id'): Field | undefined {
-    return this.fields.find((field) => (field[property] === value));
+    return this.fields.find((field) => field[property] === value);
   }
 
   list(): Field[] {
@@ -429,11 +440,10 @@ export class Section implements SubmissionSection {
     // Any attribute names from the server that do not match top-level field names are added as annotations.
     this.annotations = Feature.create(
       type.annotationsType,
-      (data.attributes || []).filter((attribute) => (
-        (attribute).name &&
-        attribute.name !== 'Keyword' &&
-        type.getFieldType(attribute.name || '') === undefined
-      ))
+      (data.attributes || []).filter(
+        (attribute) =>
+          attribute.name && attribute.name !== 'Keyword' && type.getFieldType(attribute.name || '') === undefined
+      )
     );
     this.data = data;
     this.features = new Features(type, data.features);
@@ -479,10 +489,10 @@ export class Section implements SubmissionSection {
     }
     const path = this.sections
       .list()
-      .map(s => s.sectionPath(id))
-      .filter(p => p.length > 0);
+      .map((s) => s.sectionPath(id))
+      .filter((p) => p.length > 0);
 
-    return (path.length > 0) ? ([] as Section[]).concat([this], path[0]) : [];
+    return path.length > 0 ? ([] as Section[]).concat([this], path[0]) : [];
   }
 }
 
@@ -494,20 +504,23 @@ export class Sections {
   constructor(type: SectionType, sections: Array<SectionData> = []) {
     this.sections = [];
 
-    type.sectionTypes.forEach(st => {
-      const sd = sections.filter(s => s.type === st.name);
-      sd.forEach(d => {
+    type.sectionTypes.forEach((st) => {
+      const sd = sections.filter((s) => s.type === st.name);
+      sd.forEach((d) => {
         this.add(st, d);
       });
 
       if (st.displayType.isShownByDefault && sd.length < st.minRequired) {
-        Array(st.minRequired - sd.length).fill(0).forEach(() => this.add(st, {}));
+        Array(st.minRequired - sd.length)
+          .fill(0)
+          .forEach(() => this.add(st, {}));
       }
     });
 
-    const definedTypes = type.sectionTypes.map(t => t.name);
-    sections.filter(sd => sd.type === undefined || !definedTypes.includes(sd.type))
-      .forEach(sd => {
+    const definedTypes = type.sectionTypes.map((t) => t.name);
+    sections
+      .filter((sd) => sd.type === undefined || !definedTypes.includes(sd.type))
+      .forEach((sd) => {
         const accno = sd.accno;
         this.add(type.getSectionType(sd.type || 'UnknownSectionType'), sd, accno);
       });
@@ -518,13 +531,13 @@ export class Sections {
   }
 
   add(type: SectionType, data?: SectionData, accno?: string): Section {
-    const s = new Section(type, data, accno || type.name + '-' + (++this.nextIdx));
+    const s = new Section(type, data, accno || type.name + '-' + ++this.nextIdx);
     this.sections.push(s);
     return s;
   }
 
   byType(typeName: string): Section[] {
-    return this.sections.filter(section => {
+    return this.sections.filter((section) => {
       return section.type.name === typeName;
     });
   }
@@ -545,7 +558,7 @@ export class Sections {
   }
 
   removeById(sectionId: string): boolean {
-    const section = this.sections.find(s => s.id === sectionId);
+    const section = this.sections.find((s) => s.id === sectionId);
     return section !== undefined ? this.remove(section) : false;
   }
 }
@@ -603,7 +616,7 @@ export class Tags {
   }
 
   get tags(): any[] {
-    return this.innerTags.map(t => Object.assign({}, t));
+    return this.innerTags.map((t) => Object.assign({}, t));
   }
 
   get accessTags(): string[] {

@@ -20,15 +20,11 @@ interface StatusResponse {
   status: string; // 'OK' or 'FAIL'
 }
 
-interface UserInfoResponse extends UserInfo, StatusResponse { }
+interface UserInfoResponse extends UserInfo, StatusResponse {}
 
 @Injectable()
 export class AuthService {
-  constructor(
-  private http: HttpClient,
-  private userSession: UserSession,
-  private appConfig: AppConfig
-  ) { }
+  constructor(private http: HttpClient, private userSession: UserSession, private appConfig: AppConfig) {}
 
   activate(key: string): Observable<StatusResponse> {
     return this.sendPostRequest(`/api/auth/activate/${key}`, {});
@@ -39,16 +35,15 @@ export class AuthService {
   }
 
   getUserProfile(): Observable<UserInfo> {
-    return this.http.get<UserInfoResponse>(
-      '/api/auth/profile',
-      { observe: 'response' }
-    ).pipe(
-      catchError((response: HttpErrorResponse) => this.catchProfileError<UserInfoResponse>(response)),
-      map((response: HttpResponse<UserInfoResponse>) => this.checkProfileStatus(response)),
-    );
+    return this.http
+      .get<UserInfoResponse>('/api/auth/profile', { observe: 'response' })
+      .pipe(
+        catchError((response: HttpErrorResponse) => this.catchProfileError<UserInfoResponse>(response)),
+        map((response: HttpResponse<UserInfoResponse>) => this.checkProfileStatus(response))
+      );
   }
 
-  login(user: { login: string, password: string }): Observable<UserInfo> {
+  login(user: { login: string; password: string }): Observable<UserInfo> {
     return this.sendPostRequest<UserInfoResponse>('/api/auth/login', user);
   }
 
@@ -99,12 +94,12 @@ export class AuthService {
   }
 
   private sendPostRequest<R>(path: string, payload: any): Observable<R> {
-    return this.http.post<R>(
-      path, payload, { observe: 'response' }
-    ).pipe(
-      catchError((response: HttpErrorResponse) => this.catchError<R>(response)),
-      map((response: HttpResponse<R>) => this.checkStatus<R>(response))
-    );
+    return this.http
+      .post<R>(path, payload, { observe: 'response' })
+      .pipe(
+        catchError((response: HttpErrorResponse) => this.catchError<R>(response)),
+        map((response: HttpResponse<R>) => this.checkStatus<R>(response))
+      );
   }
 
   private withInstanceKey(obj: { [key: string]: string }): { [key: string]: string } {

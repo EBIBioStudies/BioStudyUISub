@@ -26,18 +26,17 @@ export class PasswordResetReqComponent {
 
     if (captchaToken) {
       this.model.captcha = captchaToken;
-      this.authService.sendPasswordResetRequest(this.model)
-        .subscribe(
-          () => {
-            this.isLoading = false;
-            component.showSuccess = true;
-          },
-          (error: ServerError) => {
-            this.isLoading = false;
-            component.hasError = true;
-            component.message = error.data.message;
-          }
-        );
+      this.authService.sendPasswordResetRequest(this.model).subscribe(
+        () => {
+          this.isLoading = false;
+          component.showSuccess = true;
+        },
+        (error: ServerError) => {
+          this.isLoading = false;
+          component.hasError = true;
+          component.message = error.data.message;
+        }
+      );
     }
   }
 
@@ -53,7 +52,7 @@ export class PasswordResetReqComponent {
       this.recaptcha.execute();
     } else {
       Object.keys(form.controls).forEach((key) => {
-        form.controls[key].markAsTouched({onlySelf: true});
+        form.controls[key].markAsTouched({ onlySelf: true });
       });
     }
   }

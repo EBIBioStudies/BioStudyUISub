@@ -1,15 +1,6 @@
-import {
-  Component,
-  Input,
-  Output,
-  forwardRef,
-  EventEmitter
-} from '@angular/core';
+import { Component, Input, Output, forwardRef, EventEmitter } from '@angular/core';
 
-import {
-  ControlValueAccessor,
-  NG_VALUE_ACCESSOR
-} from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import debounce from 'lodash.debounce';
 import isEmpty from 'lodash.isempty';
 import { PubMedSearchService } from './pubmedid-search.service';
@@ -19,11 +10,13 @@ import { Observable } from 'rxjs';
   selector: 'st-pubmedid-search',
   templateUrl: './pubmedid-search.component.html',
   styleUrls: ['./pubmedid-search.component.css'],
-  providers: [{
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => PubMedIdSearchComponent),
-    multi: true
-  }]
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => PubMedIdSearchComponent),
+      multi: true
+    }
+  ]
 })
 
 /**
@@ -90,7 +83,6 @@ export class PubMedIdSearchComponent implements ControlValueAccessor {
   registerOnChange(fn): void {
     this.onChange = fn;
   }
-
 
   /**
    * Registers a handler specifically for when a control receives a touch event.

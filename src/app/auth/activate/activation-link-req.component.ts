@@ -26,19 +26,17 @@ export class ActivationLinkReqComponent {
 
     if (captchaToken) {
       this.model.captcha = captchaToken;
-      this.authService
-        .sendActivationLinkRequest(this.model)
-        .subscribe(
-          () => {
-            this.isLoading = false;
-            component.showSuccess = true;
-          },
-          (error: ServerError) => {
-            this.isLoading = false;
-            component.hasError = true;
-            component.message = error.data.message;
-          }
-        );
+      this.authService.sendActivationLinkRequest(this.model).subscribe(
+        () => {
+          this.isLoading = false;
+          component.showSuccess = true;
+        },
+        (error: ServerError) => {
+          this.isLoading = false;
+          component.hasError = true;
+          component.message = error.data.message;
+        }
+      );
     }
   }
 
@@ -54,7 +52,7 @@ export class ActivationLinkReqComponent {
       this.recaptchaRef.execute();
     } else {
       Object.keys(form.controls).forEach((key) => {
-        form.controls[key].markAsTouched({onlySelf: true});
+        form.controls[key].markAsTouched({ onlySelf: true });
       });
     }
   }

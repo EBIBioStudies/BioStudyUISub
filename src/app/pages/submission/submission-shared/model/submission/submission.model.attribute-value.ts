@@ -1,5 +1,3 @@
 export class AttributeValue {
-  constructor(
-    public value: string = ''
-  ) {}
+  constructor(public value: string = '') {}
 }

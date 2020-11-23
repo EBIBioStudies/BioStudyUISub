@@ -1,7 +1,4 @@
-import {
-  Component,
-  Input
-} from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { SubmValidationErrors } from 'app/pages/submission/submission-shared/model';
 
 @Component({

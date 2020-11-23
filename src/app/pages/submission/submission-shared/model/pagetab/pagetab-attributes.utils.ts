@@ -6,19 +6,18 @@ export function mergeAttributes(attrs1: PtAttribute[], attrs2: PtAttribute[]): P
   const merged: PtAttribute[] = [];
   const visited: { [key: string]: number } = {};
 
-  attrs1.concat(attrs2)
-    .forEach(at => {
-      if (isDefinedAndNotEmpty(at.name) && AttrExceptions.unique.includes(at.name!)) {
-        if (visited[at.name!] === undefined) {
-          visited[at.name!] = merged.length;
-          merged.push(at);
-        } else {
-          merged[visited[at.name!]] = at;
-        }
-      } else {
+  attrs1.concat(attrs2).forEach((at) => {
+    if (isDefinedAndNotEmpty(at.name) && AttrExceptions.unique.includes(at.name!)) {
+      if (visited[at.name!] === undefined) {
+        visited[at.name!] = merged.length;
         merged.push(at);
+      } else {
+        merged[visited[at.name!]] = at;
       }
-    });
+    } else {
+      merged.push(at);
+    }
+  });
   return merged;
 }
 
@@ -29,10 +28,11 @@ export function extractKeywordsFromAttributes(attributes: PtAttribute[]): PtAttr
 /* Adds 'AttachTo' attributes to a given submission's root level, leaving other existing attributes intact.*/
 export function updateAttachToAttribute(obj: PageTab, projectIds: string[]): PageTab {
   const objCopy = Object.assign({}, obj);
-  const attachAttrs = projectIds.map(pid => ({name: AttrExceptions.attachToAttr, value: pid}));
+  const attachAttrs = projectIds.map((pid) => ({ name: AttrExceptions.attachToAttr, value: pid }));
 
-  const otherAttrs = (objCopy.attributes || [])
-    .filter(at => !isStringDefined(at.name) || !isEqualIgnoringCase(at.name!, AttrExceptions.attachToAttr));
+  const otherAttrs = (objCopy.attributes || []).filter(
+    (at) => !isStringDefined(at.name) || !isEqualIgnoringCase(at.name!, AttrExceptions.attachToAttr)
+  );
   objCopy.attributes = [...otherAttrs, ...attachAttrs];
   return objCopy;
 }

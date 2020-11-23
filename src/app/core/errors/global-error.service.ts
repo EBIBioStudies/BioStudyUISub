@@ -1,9 +1,4 @@
-import {
-  ErrorHandler,
-  Injectable,
-  Injector,
-  NgZone
-} from '@angular/core';
+import { ErrorHandler, Injectable, Injector, NgZone } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
 import { INTERNAL_SERVER_ERROR, UNAUTHORIZED } from 'http-status-codes';
 import { ToastrService } from 'ngx-toastr';

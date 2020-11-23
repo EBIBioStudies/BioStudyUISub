@@ -22,7 +22,7 @@ export class NewSubmissionButtonDirective implements AfterViewInit {
     private userData: UserData,
     private router: Router,
     private el: ElementRef,
-    private submissionToPageTab: SubmissionToPageTabService,
+    private submissionToPageTab: SubmissionToPageTabService
   ) {}
 
   ngAfterViewInit(): void {
@@ -35,7 +35,7 @@ export class NewSubmissionButtonDirective implements AfterViewInit {
   }
 
   private onNewSubmissionClick(): void {
-    this.userData.projectAccNumbers$.subscribe(projectNames => {
+    this.userData.projectAccNumbers$.subscribe((projectNames) => {
       const templates = getSubmissionTemplates(projectNames);
       if (templates.length > 0) {
         this.selectTemplate(templates);
@@ -49,14 +49,13 @@ export class NewSubmissionButtonDirective implements AfterViewInit {
     const emptySubmission: PageTab = this.submissionToPageTab.newPageTab(template);
 
     this.startCreating();
-    this.submService.createDraftSubmission(emptySubmission)
-      .subscribe((accno) => {
-        this.stopCreating();
-        this.router.navigate(['/submissions/new/', accno]);
-      });
+    this.submService.createDraftSubmission(emptySubmission).subscribe((accno) => {
+      this.stopCreating();
+      this.router.navigate(['/submissions/new/', accno]);
+    });
   }
 
-  private selectTemplate(templates: Array<{ description: string, name: string }>): void {
+  private selectTemplate(templates: Array<{ description: string; name: string }>): void {
     this.modalService.show(AddSubmModalComponent, {
       initialState: {
         templates,
@@ -70,7 +69,6 @@ export class NewSubmissionButtonDirective implements AfterViewInit {
     const html = this.el.nativeElement.innerHTML;
     this.el.nativeElement.innerHTML = html.replace(PLUS_ICON, SPINNER_ICON);
   }
-
 
   private stopCreating(): void {
     this.disabled = false;

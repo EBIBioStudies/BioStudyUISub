@@ -2,9 +2,9 @@ import { EMPTY_TEMPLATE_NAME, findSubmissionTemplateByName } from './submission.
 import { isArrayEmpty, isStringDefined, isStringEmpty } from 'app/utils';
 
 /*
-*  Type scopes are used to check if the types with a given name already exists in the scope
-*  (SubmissionScope, SectionScope, FeatureScope, FieldsScope.. etc.). Each type must be in a scope.
-* */
+ *  Type scopes are used to check if the types with a given name already exists in the scope
+ *  (SubmissionScope, SectionScope, FeatureScope, FieldsScope.. etc.). Each type must be in a scope.
+ * */
 class TypeScope<T extends TypeBase> {
   private map: Map<string, T> = new Map();
 
@@ -29,7 +29,7 @@ class TypeScope<T extends TypeBase> {
   getOrElse(typeName: string, elseFunc: () => T): T {
     const type = this.get(typeName);
     if (type) {
-      return type
+      return type;
     }
 
     return elseFunc();
@@ -44,7 +44,7 @@ class TypeScope<T extends TypeBase> {
       return false;
     }
 
-    const value = this.get(oldName)
+    const value = this.get(oldName);
     if (value) {
       this.set(newName, value);
       this.del(oldName);
@@ -120,12 +120,11 @@ export class DisplayType {
   }
 
   static create(name: string): DisplayType {
-    return [
-      DisplayType.DESIRABLE,
-      DisplayType.OPTIONAL,
-      DisplayType.READONLY,
-      DisplayType.REQUIRED
-    ].find(type => type.name === name) || DisplayType.OPTIONAL;
+    return (
+      [DisplayType.DESIRABLE, DisplayType.OPTIONAL, DisplayType.READONLY, DisplayType.REQUIRED].find(
+        (type) => type.name === name
+      ) || DisplayType.OPTIONAL
+    );
   }
 
   get isRequired(): boolean {
@@ -168,8 +167,7 @@ export enum ValueTypeName {
 }
 
 export abstract class ValueType {
-  constructor(readonly name: ValueTypeName) {
-  }
+  constructor(readonly name: ValueTypeName) {}
 
   is(...names: ValueTypeName[]): boolean {
     return names.includes(this.name);
@@ -255,7 +253,7 @@ export class FieldType extends TypeBase {
     this.icon = data.icon || 'fa-pencil-square-o';
     this.helpText = data.helpText || '';
     this.helpLink = data.helpLink || '';
-    this.displayType = DisplayType.create( data.display || parentDisplayType.name);
+    this.displayType = DisplayType.create(data.display || parentDisplayType.name);
     this.display = this.displayType.name;
   }
 }
@@ -293,19 +291,21 @@ export class FeatureType extends TypeBase {
     this.icon = data.icon || (this.singleRow ? 'fa-list' : 'fa-th');
     this.dependency = data.dependency || '';
 
-    (data.columnTypes || [])
-      .forEach(ct => new ColumnType(ct.name, ct, this.columnScope));
+    (data.columnTypes || []).forEach((ct) => new ColumnType(ct.name, ct, this.columnScope));
   }
 
   static createDefault(
-    name: string, singleRow?: boolean, uniqueCols?: boolean, scope?: TypeScope<TypeBase>, parentDisplayType?: DisplayType
+    name: string,
+    singleRow?: boolean,
+    uniqueCols?: boolean,
+    scope?: TypeScope<TypeBase>,
+    parentDisplayType?: DisplayType
   ): FeatureType {
-    return new FeatureType(name, {singleRow, uniqueCols}, scope, false,
-      parentDisplayType);
+    return new FeatureType(name, { singleRow, uniqueCols }, scope, false, parentDisplayType);
   }
 
   get columnTypes(): ColumnType[] {
-    return this.columnScope.filterValues(ct => ct.tmplBased);
+    return this.columnScope.filterValues((ct) => ct.tmplBased);
   }
 
   getColumnType(name: string, createDefault: boolean = true): ColumnType | undefined {
@@ -323,9 +323,12 @@ export class FeatureType extends TypeBase {
 
 export class AnnotationsType extends FeatureType {
   constructor(
-    data?: Partial<FeatureType>, scope?: TypeScope<TypeBase>, isTemplBased: boolean = true, parentDisplayType: DisplayType= DisplayType.OPTIONAL
+    data?: Partial<FeatureType>,
+    scope?: TypeScope<TypeBase>,
+    isTemplBased: boolean = true,
+    parentDisplayType: DisplayType = DisplayType.OPTIONAL
   ) {
-    const d = Object.assign(data || {}, {singleRow: true});
+    const d = Object.assign(data || {}, { singleRow: true });
     super('Annotation', d, scope, isTemplBased, parentDisplayType);
   }
 }
@@ -339,7 +342,11 @@ export class ColumnType extends TypeBase {
   readonly valueType: ValueType;
 
   constructor(
-    name: string, data?: Partial<ColumnType>, scope?: TypeScope<ColumnType>, isTemplBased: boolean = true, parentDisplayType: DisplayType = DisplayType.OPTIONAL
+    name: string,
+    data?: Partial<ColumnType>,
+    scope?: TypeScope<ColumnType>,
+    isTemplBased: boolean = true,
+    parentDisplayType: DisplayType = DisplayType.OPTIONAL
   ) {
     super(name, isTemplBased, scope as TypeScope<TypeBase>);
 
@@ -395,17 +402,25 @@ export class SectionType extends TypeBase {
     this.displayType = DisplayType.create(data.display || parentDisplayType.name);
     this.display = this.displayType.name;
     this.displayAnnotations = data.displayAnnotations || false;
-    this.featureGroups = (data.featureGroups || []).filter(gr => !isArrayEmpty(gr));
+    this.featureGroups = (data.featureGroups || []).filter((gr) => !isArrayEmpty(gr));
     this.minRequired = data.minRequired || 1;
-    this.annotationsType = new AnnotationsType(data.annotationsType, new TypeScope<AnnotationsType>(), isTemplBased, this.displayType);
+    this.annotationsType = new AnnotationsType(
+      data.annotationsType,
+      new TypeScope<AnnotationsType>(),
+      isTemplBased,
+      this.displayType
+    );
     this.sectionExample = data.sectionExample || '';
 
-    (data.fieldTypes || [])
-      .forEach((fieldType) => new FieldType(fieldType.name, fieldType, this.fieldScope, this.displayType));
-    (data.featureTypes || [])
-      .forEach((featureType) => new FeatureType(featureType.name, featureType, this.featureScope, isTemplBased, this.displayType));
-    (data.sectionTypes || [])
-      .forEach((sectionType) => new SectionType(sectionType.name, sectionType, this.sectionScope, isTemplBased, this.displayType));
+    (data.fieldTypes || []).forEach(
+      (fieldType) => new FieldType(fieldType.name, fieldType, this.fieldScope, this.displayType)
+    );
+    (data.featureTypes || []).forEach(
+      (featureType) => new FeatureType(featureType.name, featureType, this.featureScope, isTemplBased, this.displayType)
+    );
+    (data.sectionTypes || []).forEach(
+      (sectionType) => new SectionType(sectionType.name, sectionType, this.sectionScope, isTemplBased, this.displayType)
+    );
   }
 
   static createDefault(name: string, scope?: TypeScope<TypeBase>, parentDisplayType?: DisplayType): SectionType {
@@ -413,20 +428,21 @@ export class SectionType extends TypeBase {
   }
 
   get fieldTypes(): FieldType[] {
-    return this.fieldScope.filterValues(ft => ft.tmplBased);
+    return this.fieldScope.filterValues((ft) => ft.tmplBased);
   }
 
   get featureTypes(): FeatureType[] {
-    return this.featureScope.filterValues(ft => ft.tmplBased);
+    return this.featureScope.filterValues((ft) => ft.tmplBased);
   }
 
   get sectionTypes(): SectionType[] {
-    return this.sectionScope.filterValues(st => st.tmplBased);
+    return this.sectionScope.filterValues((st) => st.tmplBased);
   }
 
   getFeatureType(name: string, singleRow: boolean = false, uniqueCols: boolean = false): FeatureType {
-    return this.featureScope
-      .getOrElse(name, () => (FeatureType.createDefault(name, singleRow, uniqueCols, this.featureScope, this.displayType)));
+    return this.featureScope.getOrElse(name, () =>
+      FeatureType.createDefault(name, singleRow, uniqueCols, this.featureScope, this.displayType)
+    );
   }
 
   getFieldType(name: string): FieldType | undefined {
@@ -434,15 +450,14 @@ export class SectionType extends TypeBase {
   }
 
   getSectionType(name: string): SectionType {
-    return this.sectionScope
-      .getOrElse(name, () => (SectionType.createDefault(name, this.sectionScope, this.displayType)));
+    return this.sectionScope.getOrElse(name, () =>
+      SectionType.createDefault(name, this.sectionScope, this.displayType)
+    );
   }
 
   sectionType(names: string[]): any {
     if (names.length > 1) {
-      const types = this.sectionTypes
-        .map(s => s.sectionType(names.slice(1)))
-        .filter(t => t !== undefined);
+      const types = this.sectionTypes.map((s) => s.sectionType(names.slice(1))).filter((t) => t !== undefined);
 
       if (types.length > 0) {
         return types[0];

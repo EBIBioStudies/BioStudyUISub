@@ -50,6 +50,6 @@ const pagesRoutes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forChild(pagesRoutes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class PagesRoutingModule {}

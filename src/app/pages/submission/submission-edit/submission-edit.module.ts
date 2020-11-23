@@ -43,9 +43,7 @@ import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
     SortablejsModule,
     ThemeModule
   ],
-  providers: [
-    SubmEditService
-  ],
+  providers: [SubmEditService],
   declarations: [
     SubmissionEditComponent,
     InputValueComponent,
@@ -67,13 +65,7 @@ import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
     RemoveHostDirective,
     TextareaAutosizeDirective
   ],
-  exports: [
-    SubmissionEditComponent
-  ],
-  entryComponents: [
-    SubmValidationErrorsComponent,
-    AddSubmTypeModalComponent
-  ]
+  exports: [SubmissionEditComponent],
+  entryComponents: [SubmValidationErrorsComponent, AddSubmTypeModalComponent]
 })
-export class SubmissionEditModule {
-}
+export class SubmissionEditModule {}

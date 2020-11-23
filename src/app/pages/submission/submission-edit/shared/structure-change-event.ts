@@ -10,5 +10,5 @@ export class StructureChangeEvent {
   static sectionAdd: StructureChangeEvent = new StructureChangeEvent('sectionAdd');
   static sectionRemove: StructureChangeEvent = new StructureChangeEvent('sectionRemove');
 
-  constructor(readonly name: string) { }
+  constructor(readonly name: string) {}
 }

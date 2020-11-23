@@ -36,7 +36,8 @@ export function idLinkValidator(service: IdLinkService, state: IdLinkValueValida
           return { format: true };
         }),
         // If identifers.org isn't responding don't mark the field as invalid
-        catchError(() => of(null)));
+        catchError(() => of(null))
+      );
     }
 
     if (isLink) {

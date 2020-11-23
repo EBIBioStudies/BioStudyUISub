@@ -25,7 +25,7 @@ export class UploadEvent {
         return UploadEvent.progress(0);
 
       case HttpEventType.UploadProgress:
-        const percentDone = Math.round(100 * event.loaded / (event.total || 1));
+        const percentDone = Math.round((100 * event.loaded) / (event.total || 1));
         return UploadEvent.progress(percentDone);
 
       case HttpEventType.Response:

@@ -20,11 +20,7 @@ export class SignUpComponent implements OnInit {
   @ViewChild('recaptchaEl')
   private recaptcha!: RecaptchaComponent;
 
-  constructor(
-    private authService: AuthService,
-    private session: UserSession,
-    private router: Router
-  ) {}
+  constructor(private authService: AuthService, private session: UserSession, private router: Router) {}
 
   ngOnInit(): void {
     if (!this.session.isAnonymous()) {
@@ -35,21 +31,19 @@ export class SignUpComponent implements OnInit {
   onRecaptchaResolved(captchaToken: string): void {
     if (captchaToken) {
       this.model.captcha = captchaToken;
-      this.authService
-        .register(this.model)
-        .subscribe(
-          () => {
-            this.hasError = false;
-            this.isLoading = false;
-            this.success = true;
-          },
-          (error: ServerError) => {
-            this.hasError = true;
-            this.isLoading = false;
-            this.message = error.data.message;
-            this.success = false;
-          }
-        );
+      this.authService.register(this.model).subscribe(
+        () => {
+          this.hasError = false;
+          this.isLoading = false;
+          this.success = true;
+        },
+        (error: ServerError) => {
+          this.hasError = true;
+          this.isLoading = false;
+          this.message = error.data.message;
+          this.success = false;
+        }
+      );
     }
   }
 
@@ -65,7 +59,7 @@ export class SignUpComponent implements OnInit {
       this.recaptcha.execute();
     } else {
       Object.keys(form.controls).forEach((key) => {
-        form.controls[key].markAsTouched({onlySelf: true});
+        form.controls[key].markAsTouched({ onlySelf: true });
       });
     }
   }

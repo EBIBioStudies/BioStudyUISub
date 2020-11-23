@@ -44,10 +44,7 @@ import { SelectInputComponent } from './select-input/select-input.component';
     AlertModule,
     CKEditorModule
   ],
-  providers: [
-    ModalService,
-    ServerSentEventService
-  ],
+  providers: [ModalService, ServerSentEventService],
   declarations: [
     ContainerRootComponent,
     AuthContainerComponent,
@@ -91,9 +88,6 @@ import { SelectInputComponent } from './select-input/select-input.component';
     PluralPipe,
     SelectInputComponent
   ],
-  entryComponents: [
-    ConfirmDialogComponent
-  ]
+  entryComponents: [ConfirmDialogComponent]
 })
-export class SharedModule {
-}
+export class SharedModule {}

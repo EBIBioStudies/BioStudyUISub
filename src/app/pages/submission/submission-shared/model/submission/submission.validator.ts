@@ -10,9 +10,10 @@ class ValidationRules {
   static atLeastOneFeatureFromGroup(group: string[], section: Section): ValidationRule {
     return {
       validate(): string | undefined {
-        const rowCount = section.features.list()
-          .filter(f => group.includes(f.typeName))
-          .map(f => f.rowSize())
+        const rowCount = section.features
+          .list()
+          .filter((f) => group.includes(f.typeName))
+          .map((f) => f.rowSize())
           .reduce((rv, v) => rv + v, 0);
         if (rowCount === 0) {
           return `At least one ${group.join(' or ')} is required`;
@@ -88,35 +89,35 @@ class ValidationRules {
     let rules: ValidationRule[] = [];
 
     rules = rules.concat(
-      section.fields.list()
-        .map(field => ValidationRules.forField(field))
+      section.fields
+        .list()
+        .map((field) => ValidationRules.forField(field))
         .reduce((rv, v) => rv.concat(v), [])
     );
 
-    rules = rules.concat(
-      ValidationRules.forFeature(section.annotations)
-    );
+    rules = rules.concat(ValidationRules.forFeature(section.annotations));
 
     rules = rules.concat(
-      section.features.list()
-        .map(feature => ValidationRules.forFeature(feature))
+      section.features
+        .list()
+        .map((feature) => ValidationRules.forFeature(feature))
         .reduce((rv, v) => rv.concat(v), [])
     );
 
     rules = rules.concat(
       section.type.featureTypes
-        .filter(ft => ft.displayType.isRequired)
-        .map(ft => ValidationRules.requiredFeature(ft, section))
+        .filter((ft) => ft.displayType.isRequired)
+        .map((ft) => ValidationRules.requiredFeature(ft, section))
     );
 
     rules = rules.concat(
       section.type.sectionTypes
-        .filter(st => st.displayType.isRequired)
-        .map(st => ValidationRules.requiredSection(st, section))
+        .filter((st) => st.displayType.isRequired)
+        .map((st) => ValidationRules.requiredSection(st, section))
     );
 
     rules = rules.concat(
-      section.type.featureGroups.map(gr => ValidationRules.atLeastOneFeatureFromGroup(gr, section))
+      section.type.featureGroups.map((gr) => ValidationRules.atLeastOneFeatureFromGroup(gr, section))
     );
     return rules;
   }
@@ -161,7 +162,7 @@ class ValidationRules {
   static requiredFeature(ft: FeatureType, section: Section): ValidationRule {
     return {
       validate(): string | undefined {
-        const features = section.features.list().filter(f => f.type.name === ft.name);
+        const features = section.features.list().filter((f) => f.type.name === ft.name);
         if (features.length === 0) {
           return `At least one of ${ft.name} is required in the section`;
         }
@@ -173,7 +174,7 @@ class ValidationRules {
   static requiredSection(st: SectionType, section: Section): ValidationRule {
     return {
       validate(): string | undefined {
-        const sections = section.sections.list().filter(f => f.type.name === st.name);
+        const sections = section.sections.list().filter((f) => f.type.name === st.name);
         if (sections.length === 0) {
           return `At least one subsection of ${st.name} is required`;
         }
@@ -205,17 +206,14 @@ class ValidationRules {
 export class SubmValidationErrors {
   static EMPTY = new SubmValidationErrors('');
 
-  constructor(readonly secId: string,
-              readonly errors: string [] = [],
-              readonly sections: SubmValidationErrors[] = []) {
-  }
+  constructor(readonly secId: string, readonly errors: string[] = [], readonly sections: SubmValidationErrors[] = []) {}
 
   empty(): boolean {
     return this.errors.length === 0 && this.sections.length === 0;
   }
 
   total(): number {
-    return this.errors.length + this.sections.reduce((rv, ve) => (rv + ve.total()), 0);
+    return this.errors.length + this.sections.reduce((rv, ve) => rv + ve.total(), 0);
   }
 }
 
@@ -226,11 +224,12 @@ export class SubmissionValidator {
 
   private static validateSection(section: Section): SubmValidationErrors {
     const errors = ValidationRules.forSection(section)
-      .map(vr => vr.validate())
-      .filter(m => m !== undefined) as string[];
-    const sections = section.sections.list()
-      .map(s => SubmissionValidator.validateSection(s))
-      .filter(ve => !ve.empty());
+      .map((vr) => vr.validate())
+      .filter((m) => m !== undefined) as string[];
+    const sections = section.sections
+      .list()
+      .map((s) => SubmissionValidator.validateSection(s))
+      .filter((ve) => !ve.empty());
 
     return new SubmValidationErrors(section.id, errors, sections);
   }

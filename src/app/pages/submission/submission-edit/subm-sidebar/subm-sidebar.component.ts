@@ -29,7 +29,7 @@ export class SubmSidebarComponent implements OnDestroy {
   constructor(private submEditService: SubmEditService) {
     this.submEditService.sectionSwitch$
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe(sectionForm => this.switchSection(sectionForm));
+      .subscribe((sectionForm) => this.switchSection(sectionForm));
   }
 
   get isEditTabActive(): boolean {
@@ -61,17 +61,16 @@ export class SubmSidebarComponent implements OnDestroy {
   }
 
   private groupControlsBySectionId(controls: FormControl[]): FormControlGroup[] {
-    return controls
-      .reduce((rv, c) => {
-        const group = isArrayEmpty(rv) ? undefined : rv[rv.length - 1];
-        const prevControl = group === undefined ? undefined : group[group.length - 1];
-        if (prevControl !== undefined && CustomFormControl.compareBySectionId(prevControl, c) === 0) {
-          group!.push(c);
-        } else {
-          rv.push([c]);
-        }
-        return rv;
-      }, [] as Array<FormControlGroup>);
+    return controls.reduce((rv, c) => {
+      const group = isArrayEmpty(rv) ? undefined : rv[rv.length - 1];
+      const prevControl = group === undefined ? undefined : group[group.length - 1];
+      if (prevControl !== undefined && CustomFormControl.compareBySectionId(prevControl, c) === 0) {
+        group!.push(c);
+      } else {
+        rv.push([c]);
+      }
+      return rv;
+    }, [] as Array<FormControlGroup>);
   }
 
   private switchSection(sectionFormOp: SectionForm | null): void {
@@ -84,20 +83,16 @@ export class SubmSidebarComponent implements OnDestroy {
 
       this.unsubscribeForm.next();
 
-      secForm.structureChanges$
-        .pipe(takeUntil(this.unsubscribeForm))
-        .subscribe(() => {
-          this.controls = this.groupControlsBySectionId(secForm.controls());
-          this.updateInvalidControls();
-        });
+      secForm.structureChanges$.pipe(takeUntil(this.unsubscribeForm)).subscribe(() => {
+        this.controls = this.groupControlsBySectionId(secForm.controls());
+        this.updateInvalidControls();
+      });
 
-      secForm.form.statusChanges
-        .pipe(takeUntil(this.unsubscribeForm))
-        .subscribe(() => this.updateInvalidControls());
+      secForm.form.statusChanges.pipe(takeUntil(this.unsubscribeForm)).subscribe(() => this.updateInvalidControls());
     }
   }
 
   private updateInvalidControls(): void {
-    this.invalidControls = this.controls.map(g => g.filter(c => c.invalid)).filter(g => !isArrayEmpty(g));
+    this.invalidControls = this.controls.map((g) => g.filter((c) => c.invalid)).filter((g) => !isArrayEmpty(g));
   }
 }

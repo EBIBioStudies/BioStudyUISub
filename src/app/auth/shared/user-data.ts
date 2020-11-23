@@ -12,14 +12,14 @@ export class UserData {
   private whenFetched$: Subject<ExtendedUserInfo> = new ReplaySubject<ExtendedUserInfo>(1);
 
   constructor(userSession: UserSession, authService: AuthService, submService: SubmissionService) {
-    userSession.created$.subscribe(created => {
+    userSession.created$.subscribe((created) => {
       if (created) {
         authService.getUserProfile().subscribe((user: UserInfo) => {
           userSession.update(user);
 
           submService.getProjects().subscribe((result) => {
             const extendedUserInfo = user as ExtendedUserInfo;
-            extendedUserInfo.projects = result.map(project => project.accno);
+            extendedUserInfo.projects = result.map((project) => project.accno);
             this.whenFetched$.next(extendedUserInfo);
             this.whenFetched$.complete();
           });
@@ -33,15 +33,11 @@ export class UserData {
   }
 
   get secretId$(): Observable<string> {
-    return this.info$.pipe(
-      map(ui => ui.secret)
-    );
+    return this.info$.pipe(map((ui) => ui.secret));
   }
 
   get projectAccNumbers$(): Observable<string[]> {
-    return this.info$.pipe(
-      map(ui => ui.projects)
-    );
+    return this.info$.pipe(map((ui) => ui.projects));
   }
 
   get role(): UserRole {

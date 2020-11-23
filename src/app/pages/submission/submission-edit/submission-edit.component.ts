@@ -61,9 +61,9 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     private submEditService: SubmEditService,
     private errorMessage: ErrorMessageService
   ) {
-    submEditService.sectionSwitch$.pipe(
-      takeUntil(this.unsubscribe),
-    ).subscribe((sectionForm) => this.switchSection(sectionForm));
+    submEditService.sectionSwitch$
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((sectionForm) => this.switchSection(sectionForm));
   }
 
   get location(): globalThis.Location {
@@ -110,7 +110,8 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
 
           return this.submEditService.loadSubmission(accno, this.hasJustCreated);
         })
-      ).subscribe((resp) => {
+      )
+      .subscribe((resp) => {
         if (this.hasJustCreated) {
           this.locService.replaceState('/submissions/edit/' + this.accno);
         }
@@ -159,7 +160,8 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.unsubscribe),
         switchMap(() => this.submEditService.revert())
-      ).subscribe(() => { });
+      )
+      .subscribe(() => {});
   }
 
   onSectionClick(sectionForm: SectionForm): void {
@@ -219,11 +221,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
   }
 
   private confirmPageDelete(message: string): Observable<boolean> {
-    return this.modalService.whenConfirmed(
-      message,
-      'Delete page',
-      'Delete'
-    );
+    return this.modalService.whenConfirmed(message, 'Delete page', 'Delete');
   }
 
   private confirmReleaseDateOverride(): Observable<boolean> {
@@ -231,12 +229,14 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     today.setHours(0, 0, 0, 0);
     const isDateOverride: boolean = this.oldReleaseDate < today && this.newReleaseDate >= today;
 
-    return isDateOverride ? this.modalService.whenConfirmed(
-      'This study has already been released and resetting the release date may make it ' +
-      'unavailable to the public. Are you sure you want to continue?',
-      'Submit the study',
-      'OK',
-    ) : of(true);
+    return isDateOverride
+      ? this.modalService.whenConfirmed(
+          'This study has already been released and resetting the release date may make it ' +
+            'unavailable to the public. Are you sure you want to continue?',
+          'Submit the study',
+          'OK'
+        )
+      : of(true);
   }
 
   private confirmRevert(): Observable<boolean> {
@@ -251,7 +251,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     return this.modalService.confirm(
       'You have hit the enter key while filling in the form. If you continue, the study data will be submitted',
       'Submit the study',
-      'Submit',
+      'Submit'
     );
   }
 

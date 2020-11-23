@@ -1,19 +1,18 @@
-import {
-  Directive, Injector, Input, OnDestroy, HostListener
-} from '@angular/core';
+import { Directive, Injector, Input, OnDestroy, HostListener } from '@angular/core';
 import {
   NG_VALIDATORS,
   FormControl,
   ValidatorFn,
-  Validator, NgControl, AbstractControl, ValidationErrors
+  Validator,
+  NgControl,
+  AbstractControl,
+  ValidationErrors
 } from '@angular/forms';
 
 @Directive({
   // tslint:disable-next-line: directive-selector
   selector: '[unique]',
-  providers: [
-    { provide: NG_VALIDATORS, useExisting: UniqueValidator, multi: true }
-  ]
+  providers: [{ provide: NG_VALIDATORS, useExisting: UniqueValidator, multi: true }]
 })
 export class UniqueValidator implements Validator, OnDestroy {
   @Input('unique') isApply?: boolean = true;
@@ -69,7 +68,7 @@ export class UniqueValidator implements Validator, OnDestroy {
 function uniqueValidatorFactory(): ValidatorFn {
   return (control: FormControl) => {
     const controls = control.parent.controls;
-    const values = Object.keys(controls).map(controlKey => controls[controlKey].value);
+    const values = Object.keys(controls).map((controlKey) => controls[controlKey].value);
     const valueSet = new Set(values);
     let isValid = false;
 
@@ -80,9 +79,10 @@ function uniqueValidatorFactory(): ValidatorFn {
     // If some values are not unique, does the present control have one such value?
     // NOTE: the uniqueness test may be passed if all controls with values equal to this control's are removed.
     if (!isValid) {
-      isValid = values.reduce((occurrences, value) => {
-        return occurrences + (value === control.value);
-      }, 0) === 1;
+      isValid =
+        values.reduce((occurrences, value) => {
+          return occurrences + (value === control.value);
+        }, 0) === 1;
     }
 
     if (isValid) {

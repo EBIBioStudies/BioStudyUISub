@@ -27,7 +27,7 @@ export class FileUpload {
 
   constructor(path: Path, files: File[], fileService: FileService) {
     this.filePath = path;
-    this.fileNames = files.map(f => f.name);
+    this.fileNames = files.map((f) => f.name);
     this.percentage = 0;
 
     const upload$: Observable<UploadEvent> = fileService.upload(path.absolutePath(), files, true);
@@ -114,7 +114,7 @@ export class FileUploadList {
   constructor(private fileService: FileService) {}
 
   get activeUploads(): FileUpload[] {
-    return this.uploads.filter(u => !u.isDone());
+    return this.uploads.filter((u) => !u.isDone());
   }
 
   remove(upload: FileUpload): void {
@@ -132,9 +132,7 @@ export class FileUploadList {
 
     // do not subscribe uploadFinish$ directly here.
     // as cancellation of finish$ will cancel uploadFinish$ as well
-    upload.finish$.pipe(
-      map(() => upload.absoluteFilePath)
-    ).subscribe(fullPath => {
+    upload.finish$.pipe(map(() => upload.absoluteFilePath)).subscribe((fullPath) => {
       this.uploadCompleted$.next(fullPath);
       this.notifyActiveUploadsChanged();
     });

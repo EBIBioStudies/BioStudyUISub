@@ -12,7 +12,7 @@ export class ColumnControl {
 
   constructor(private column: Attribute, ref: ControlRef) {
     this.control = new CustomFormControl(column.name, SubmFormValidators.forColumn(column)).withRef(ref);
-    this.control.valueChanges.subscribe(v => {
+    this.control.valueChanges.subscribe((v) => {
       column.name = v;
     });
   }

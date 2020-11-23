@@ -8,9 +8,11 @@ if (environment.production) {
   enableProdMode();
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule, {
-  preserveWhitespaces: true
-}).catch(err => {
-  // tslint:disable-next-line: no-console
-  console.log(err);
-});
+platformBrowserDynamic()
+  .bootstrapModule(AppModule, {
+    preserveWhitespaces: true
+  })
+  .catch((err) => {
+    // tslint:disable-next-line: no-console
+    console.log(err);
+  });

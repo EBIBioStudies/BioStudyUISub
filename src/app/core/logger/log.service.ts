@@ -11,10 +11,7 @@ import { LogWebApi } from './publishers/log-webapi';
 export class LogService {
   publishers: LogPublisher[] = [];
 
-  constructor(
-    private useSession: UserSession,
-    private http: HttpClient
-  ) {
+  constructor(private useSession: UserSession, private http: HttpClient) {
     this.buildPublishers();
   }
 
@@ -34,7 +31,7 @@ export class LogService {
     this.writeToLog(message, LogLevel.WARN, optionalParams);
   }
 
-  private buildPublishers(): void  {
+  private buildPublishers(): void {
     const consolePublisher: LogPublisher = new LogConsole();
     const webapiPublisher: LogWebApi = new LogWebApi(this.http);
 

@@ -1,9 +1,5 @@
 export class UserGroup {
-  constructor(
-    readonly description: string,
-    readonly name: string,
-    readonly groupId: number
-  ) {}
+  constructor(readonly description: string, readonly name: string, readonly groupId: number) {}
 
   get id(): string {
     return this.groupId + '';

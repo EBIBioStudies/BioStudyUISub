@@ -10,9 +10,7 @@ import { UploadFileModalComponent } from '../upload-file-button/upload-file-moda
   selector: 'st-file-select',
   templateUrl: './file-select.component.html',
   styleUrls: ['./file-select.component.scss'],
-  providers: [
-    {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => FileSelectComponent), multi: true}
-  ]
+  providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => FileSelectComponent), multi: true }]
 })
 export class FileSelectComponent implements ControlValueAccessor, OnDestroy {
   @Input() inputId = '';
@@ -44,11 +42,9 @@ export class FileSelectComponent implements ControlValueAccessor, OnDestroy {
     if (!this.readonly) {
       const modal = this.modalService.show(UploadFileModalComponent, { ignoreBackdropClick: true });
 
-      (modal.content as UploadFileModalComponent).onClose
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((fileName) => {
-          this.value = fileName;
-        });
+      (modal.content as UploadFileModalComponent).onClose.pipe(takeUntil(this.unsubscribe)).subscribe((fileName) => {
+        this.value = fileName;
+      });
     }
   }
 
@@ -56,15 +52,16 @@ export class FileSelectComponent implements ControlValueAccessor, OnDestroy {
     this.onChange = fn;
   }
 
-  registerOnTouched(): void { }
+  registerOnTouched(): void {}
 
   setDisabledState(): void {}
 
   writeValue(value: any): void {
     if (value) {
-      this.fileStore.findFile(value)
+      this.fileStore
+        .findFile(value)
         .pipe(takeUntil(this.unsubscribe))
-        .subscribe(path => {
+        .subscribe((path) => {
           this.selected = path;
           // temporary fix: implicitly converting file path to /Groups/<group group_name>/..
           if (path !== value) {
@@ -74,5 +71,5 @@ export class FileSelectComponent implements ControlValueAccessor, OnDestroy {
     }
   }
 
-  private onChange: any = () => { };
+  private onChange: any = () => {};
 }

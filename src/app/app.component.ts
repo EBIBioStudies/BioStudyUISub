@@ -1,7 +1,4 @@
-import {
-  Component,
-  OnInit
-} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UserSession } from 'app/auth/shared';
 import { AppConfig } from 'app/app.config';
 import { setTheme } from 'ngx-bootstrap/utils';
@@ -13,7 +10,6 @@ import { setTheme } from 'ngx-bootstrap/utils';
     <router-outlet></router-outlet>
   `
 })
-
 export class AppComponent implements OnInit {
   constructor(private userSession: UserSession, private appConfig: AppConfig) {
     setTheme('bs4');

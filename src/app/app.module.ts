@@ -54,9 +54,7 @@ export function initConfig(config: AppConfig): () => Promise<any> {
     ThemeModule,
     CoreModule
   ],
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   providers: [
     AppConfig,
     { provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true },
@@ -69,5 +67,4 @@ export function initConfig(config: AppConfig): () => Promise<any> {
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {
-}
+export class AppModule {}

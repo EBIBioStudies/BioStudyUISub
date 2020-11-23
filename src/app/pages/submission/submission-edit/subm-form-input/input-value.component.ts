@@ -6,7 +6,8 @@ import {
   ValueType,
   ValueTypeFactory,
   ValueTypeName,
-  SelectValueType, DateValueType
+  SelectValueType,
+  DateValueType
 } from 'app/pages/submission/submission-shared/model/templates';
 import { typeaheadSource } from '../shared/typeahead.utils';
 import { CustomFormControl } from '../shared/model/custom-form-control.model';
@@ -15,11 +16,13 @@ import { CustomFormControl } from '../shared/model/custom-form-control.model';
   selector: 'st-input-value',
   templateUrl: './input-value.component.html',
   styleUrls: ['./input-value.component.scss'],
-  providers: [{
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: InputValueComponent,
-    multi: true
-  }]
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: InputValueComponent,
+      multi: true
+    }
+  ]
 })
 export class InputValueComponent implements ControlValueAccessor {
   @Input() autosuggest: boolean = true;

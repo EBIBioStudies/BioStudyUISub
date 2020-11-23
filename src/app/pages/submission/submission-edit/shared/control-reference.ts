@@ -4,11 +4,12 @@ import { Attribute, Feature, Field, Section } from 'app/pages/submission/submiss
 export class ControlRef {
   static unknown = new ControlRef('unknown_control', 'unknown');
 
-  constructor(readonly id: string,
-              readonly name: string = '',
-              readonly parentRef?: ControlGroupRef,
-              readonly icon: string = 'fa-square') {
-  }
+  constructor(
+    readonly id: string,
+    readonly name: string = '',
+    readonly parentRef?: ControlGroupRef,
+    readonly icon: string = 'fa-square'
+  ) {}
 
   get parentName(): string {
     return this.parentRef ? this.parentRef.name : '';

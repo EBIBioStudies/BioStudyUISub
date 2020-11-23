@@ -30,7 +30,7 @@ export class HeaderComponent implements OnDestroy {
 
     // If the session has expired (hence destroyed), it updates the view.
     // NOTE: the component's context has to be closed in. Otherwise, "this" points to SafeSubscriber.
-    this.userSession.created$.subscribe(created => {
+    this.userSession.created$.subscribe((created) => {
       const sessionDestroyed = header.userLoggedIn && !created;
       this.userLoggedIn = !this.userSession.isAnonymous();
       header.userLoggedIn = created;
@@ -57,7 +57,7 @@ export class HeaderComponent implements OnDestroy {
     // Shows visual feedback while the apps awaits request resolution.
     // TODO: RequestStatusInterceptorService is an interceptor and it should not be used
     //       to get general status from all the request coming out from the app.
-    this.reqStatusSubs = this.requestStatus.whenStatusChanged.subscribe(hasPendingRequests => {
+    this.reqStatusSubs = this.requestStatus.whenStatusChanged.subscribe((hasPendingRequests) => {
       header.isPendingReq = hasPendingRequests;
     });
   }
@@ -72,16 +72,15 @@ export class HeaderComponent implements OnDestroy {
 
   signOut(): void {
     this.isBusy = true;
-    this.authService
-      .logout()
-      .subscribe(
-        () => {
-          this.isBusy = false;
-          this.userSession.destroy();
-        },
-        () => {
-          this.isBusy = false;
-        });
+    this.authService.logout().subscribe(
+      () => {
+        this.isBusy = false;
+        this.userSession.destroy();
+      },
+      () => {
+        this.isBusy = false;
+      }
+    );
 
     this.userSession.destroy();
   }

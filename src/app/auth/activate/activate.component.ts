@@ -11,11 +11,7 @@ export class ActivateComponent implements OnInit {
   hasError: boolean = false;
   message: string = '';
 
-  constructor(
-    private authService: AuthService,
-    private activatedRoute: ActivatedRoute
-  ) {
-  }
+  constructor(private authService: AuthService, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
     const key = this.activatedRoute.snapshot.paramMap.get('key');
@@ -31,15 +27,14 @@ export class ActivateComponent implements OnInit {
   private activate(key: string): void {
     const component = this; // SelfSubscriber object overwrites context for "subscribe" method
 
-    this.authService
-      .activate(key)
-      .subscribe(
-        () => {
-          component.message = 'The activation was successful';
-        },
-        (error: ServerError) => {
-          component.hasError = true;
-          this.message = error.data.message;
-        });
+    this.authService.activate(key).subscribe(
+      () => {
+        component.message = 'The activation was successful';
+      },
+      (error: ServerError) => {
+        component.hasError = true;
+        this.message = error.data.message;
+      }
+    );
   }
 }
