@@ -7,7 +7,7 @@ import { AppConfig } from 'app/app.config';
 export class ContextPathInterceptorService implements HttpInterceptor {
   private paths: string[] = ['/api', '/log', '/identifiers'];
 
-  constructor(private appConfig: AppConfig) { }
+  constructor(private appConfig: AppConfig) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (this.paths.some((path) => req.url.startsWith(path))) {

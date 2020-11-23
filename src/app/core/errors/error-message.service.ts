@@ -15,9 +15,9 @@ export class ErrorMessageService {
 
   private buildErrorMessage(plain: boolean = false): string {
     if (plain) {
-      return`${this.defaultMessage} biostudies@ebi.ac.uk`;
+      return `${this.defaultMessage} biostudies@ebi.ac.uk`;
     } else {
-      return`${this.defaultMessage} <a href="mailto:biostudies@ebi.ac.uk?subject=Submission Tool error">biostudies@ebi.ac.uk</a>`;
+      return `${this.defaultMessage} <a href="mailto:biostudies@ebi.ac.uk?subject=Submission Tool error">biostudies@ebi.ac.uk</a>`;
     }
   }
 }

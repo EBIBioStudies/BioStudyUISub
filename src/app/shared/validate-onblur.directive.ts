@@ -12,7 +12,7 @@ import { Directive, HostListener } from '@angular/core';
  * @author Hector Casanova <hector@ebi.ac.uk>
  */
 @Directive({
-  selector: '[stValidateOnblur]',
+  selector: '[stValidateOnblur]'
 })
 export class ValidateOnBlurDirective {
   constructor(public formControl: NgControl) {}

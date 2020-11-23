@@ -20,10 +20,7 @@ export class PasswordResetComponent implements OnInit {
   @ViewChild('recaptchaEl')
   private recaptcha!: RecaptchaComponent;
 
-  constructor(
-    private authService: AuthService,
-    private activatedRoute: ActivatedRoute
-  ) {}
+  constructor(private authService: AuthService, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
     const key = this.activatedRoute.snapshot.paramMap.get('key');
@@ -38,19 +35,18 @@ export class PasswordResetComponent implements OnInit {
   onRecaptchaResolved(captchaToken: string): void {
     if (captchaToken) {
       this.model.captcha = captchaToken;
-      this.authService
-        .changePassword(this.model)
-        .subscribe(
-          () => {
-            this.isLoading = false;
-            this.showSuccess = true;
-          },
-          (error: ServerError) => {
-            this.isLoading = false;
-            this.hasError = true;
-            this.resetRecaptcha();
-            this.message = error.data.message;
-          });
+      this.authService.changePassword(this.model).subscribe(
+        () => {
+          this.isLoading = false;
+          this.showSuccess = true;
+        },
+        (error: ServerError) => {
+          this.isLoading = false;
+          this.hasError = true;
+          this.resetRecaptcha();
+          this.message = error.data.message;
+        }
+      );
     }
   }
 
@@ -66,7 +62,7 @@ export class PasswordResetComponent implements OnInit {
       this.recaptcha.execute();
     } else {
       Object.keys(form.controls).forEach((key) => {
-        form.controls[key].markAsTouched({onlySelf: true});
+        form.controls[key].markAsTouched({ onlySelf: true });
       });
     }
   }

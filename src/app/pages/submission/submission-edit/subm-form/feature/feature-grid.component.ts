@@ -68,9 +68,9 @@ export class FeatureGridComponent implements OnChanges {
       return;
     }
 
-    attrNames.forEach(attrName => {
+    attrNames.forEach((attrName) => {
       const rowForm = this.featureForm.rows[rowIdx];
-      const col = this.featureForm.columns.find(c => c.name.toLowerCase() === attrName.toLowerCase());
+      const col = this.featureForm.columns.find((c) => c.name.toLowerCase() === attrName.toLowerCase());
 
       if (col !== undefined) {
         const cellControl = rowForm.cellControlAt(col.id);

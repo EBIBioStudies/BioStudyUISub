@@ -3,9 +3,16 @@ import { Observable, of, Subject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { SubmissionService, SubmitResponse } from '../submission-shared/submission.service';
 
-enum ReqStatus {SUBMIT, ERROR, SUCCESS}
+enum ReqStatus {
+  SUBMIT,
+  ERROR,
+  SUCCESS
+}
 
-enum ReqType {CREATE, UPDATE}
+enum ReqType {
+  CREATE,
+  UPDATE
+}
 
 export class DirectSubmitRequest {
   private directSubmissionAccno: string = '';
@@ -88,16 +95,15 @@ export class DirectSubmitRequest {
    * @param successStatus - Used when the request has been successful to determine the upload stage.
    */
   onResponse(res: SubmitResponse | string, successStatus: ReqStatus): void {
-
     // Normalises error to object
     if (typeof res === 'string') {
-      this.directSubmissionLog = {message: res, level: 'error'};
+      this.directSubmissionLog = { message: res, level: 'error' };
     } else if (res.log && res.log.level === 'ERROR') {
-       // Failed server response from direct submit => reflects failure in this request object ignoring passed-in status
+      // Failed server response from direct submit => reflects failure in this request object ignoring passed-in status
       this.directSubmissionStatus = ReqStatus.ERROR;
-      this.directSubmissionLog = res.log || {message: 'No results available', level: 'error'};
+      this.directSubmissionLog = res.log || { message: 'No results available', level: 'error' };
 
-    // Successful server response from direct submit => reflects success accordingly
+      // Successful server response from direct submit => reflects success accordingly
     } else {
       this.directSubmissionStatus = successStatus;
       this.directSubmissionLog = res.log || undefined;
@@ -120,11 +126,11 @@ export class DirectSubmitService {
   }
 
   get pendingCount(): number {
-    return this.requests.filter(request => !request.done).length;
+    return this.requests.filter((request) => !request.done).length;
   }
 
   get errorCount(): number {
-    return this.requests.filter(request => request.failed).length;
+    return this.requests.filter((request) => request.failed).length;
   }
 
   /**
@@ -148,7 +154,7 @@ export class DirectSubmitService {
    * Marks all requests as failed at once.
    */
   cancelAll(): void {
-    this.requests.forEach(request => {
+    this.requests.forEach((request) => {
       if (!request.successful && !request.done) {
         request.onResponse('Upload cancelled', ReqStatus.ERROR);
       }
@@ -178,7 +184,7 @@ export class DirectSubmitService {
       condition = 'every';
     }
 
-    return this.requests[condition](request => request[statusName]);
+    return this.requests[condition]((request) => request[statusName]);
   }
 
   /**
@@ -196,7 +202,7 @@ export class DirectSubmitService {
    */
   private dirSubmit(req: DirectSubmitRequest, file: File): Observable<any> {
     return this.submService.directSubmit(file, req.project).pipe(
-      map(data => {
+      map((data) => {
         req.onResponse(data, ReqStatus.SUCCESS);
       }),
       catchError((error: any) => {
@@ -205,6 +211,7 @@ export class DirectSubmitService {
         // NOTE: an empty observable is used instead of throwing an exception to prevent this transaction
         // cancelling any remaining ones.
         return of(null);
-      }));
+      })
+    );
   }
 }

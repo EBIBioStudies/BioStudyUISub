@@ -13,13 +13,14 @@ import { UserInfo } from '../shared/model';
 export class SignInComponent implements OnInit {
   error?: ServerError; // Server response object in case of error
   isLoading = false; // Flag indicating if login request in progress
-  model = {login: '', password: '', next: ''}; // Data model for the component's form
+  model = { login: '', password: '', next: '' }; // Data model for the component's form
 
-  constructor(private authService: AuthService,
-              private userSession: UserSession,
-              private router: Router,
-              private route: ActivatedRoute) {
-  }
+  constructor(
+    private authService: AuthService,
+    private userSession: UserSession,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     if (!this.userSession.isAnonymous()) {
@@ -33,21 +34,19 @@ export class SignInComponent implements OnInit {
 
     if (form.valid) {
       this.isLoading = true;
-      this.authService
-        .login(this.model)
-        .subscribe(
-          (user: UserInfo) => {
-            this.userSession.create(user);
-            this.router.navigate([next]);
-          },
-          (error: ServerError) => {
-            this.isLoading = false;
-            this.error = error;
-          }
-        );
+      this.authService.login(this.model).subscribe(
+        (user: UserInfo) => {
+          this.userSession.create(user);
+          this.router.navigate([next]);
+        },
+        (error: ServerError) => {
+          this.isLoading = false;
+          this.error = error;
+        }
+      );
     } else {
       Object.keys(form.controls).forEach((key) => {
-        form.controls[key].markAsTouched({onlySelf: true});
+        form.controls[key].markAsTouched({ onlySelf: true });
       });
     }
   }

@@ -28,11 +28,13 @@ export class SectionForm extends FormBase {
   private sectionRef: ControlGroupRef;
 
   constructor(readonly section: Section, readonly parent?: SectionForm) {
-    super(new FormGroup({
-      fields: new FormGroup({}),
-      features: new FormGroup({}),
-      sections: new FormGroup({})
-    }));
+    super(
+      new FormGroup({
+        fields: new FormGroup({}),
+        features: new FormGroup({}),
+        sections: new FormGroup({})
+      })
+    );
 
     const parentSectionPath = this.parent ? this.parent.sectionPath : [];
     this.sectionPath = this.isRootSection ? [] : [...parentSectionPath, this.id];
@@ -51,7 +53,7 @@ export class SectionForm extends FormBase {
   }
 
   addFeatureEntry(featureId: string): void {
-    const featureForm = this.featureForms.find(f => f.id === featureId);
+    const featureForm = this.featureForms.find((f) => f.id === featureId);
     if (featureForm !== undefined) {
       featureForm.addEntry();
     }
@@ -72,7 +74,7 @@ export class SectionForm extends FormBase {
   }
 
   getFeatureControl(featureId: string): CustomFormControl | undefined {
-    const featureForm = this.featureForms.find(f => f.id === featureId);
+    const featureForm = this.featureForms.find((f) => f.id === featureId);
     if (featureForm !== undefined) {
       return featureForm.scrollToTheLastControl;
     }
@@ -84,11 +86,11 @@ export class SectionForm extends FormBase {
 
   isSectionRemovable(sectionForm: SectionForm): boolean {
     const min = sectionForm.typeMinRequired;
-    return sectionForm.isTypeRemovable || (this.section.sections.byType(sectionForm.typeName).length > min);
+    return sectionForm.isTypeRemovable || this.section.sections.byType(sectionForm.typeName).length > min;
   }
 
   removeFeatureType(featureId: string): void {
-    const index = this.featureForms.findIndex(f => f.id === featureId);
+    const index = this.featureForms.findIndex((f) => f.id === featureId);
     if (index < 0) {
       return;
     }
@@ -102,7 +104,7 @@ export class SectionForm extends FormBase {
   }
 
   removeSection(sectionId: string): void {
-    const index = this.subsectionForms.findIndex(s => s.id === sectionId);
+    const index = this.subsectionForms.findIndex((s) => s.id === sectionId);
     if (index < 0) {
       return;
     }
@@ -147,14 +149,16 @@ export class SectionForm extends FormBase {
   }
 
   get sectionTypes(): Array<SectionType> {
-    return [...this.section.type.sectionTypes, ...this.subsectionForms.map(sf => sf.type)]
-      .reduce((rv, v) => {
+    return [...this.section.type.sectionTypes, ...this.subsectionForms.map((sf) => sf.type)].reduce(
+      (rv, v) => {
         if (rv[0][v.name] === undefined) {
           rv[0][v.name] = 1;
           rv[1].push(v);
         }
         return rv;
-      }, [{} as { [key: string]: any }, [] as Array<SectionType>])[1] as SectionType[];
+      },
+      [{} as { [key: string]: any }, [] as Array<SectionType>]
+    )[1] as SectionType[];
   }
 
   private get fieldFormGroup(): FormGroup {
@@ -212,15 +216,18 @@ export class SectionForm extends FormBase {
     if (this.section.id === sectionId) {
       return this;
     }
-    return this.subsectionForms.find(sf => sf.lookupSectionForm(sectionId) !== undefined);
+    return this.subsectionForms.find((sf) => sf.lookupSectionForm(sectionId) !== undefined);
   }
 
   private subscribe(featureForm: FeatureForm): void {
-    this.sb.set(featureForm.id, featureForm.structureChanges$.subscribe((event) => {
-      this.form.markAsTouched();
+    this.sb.set(
+      featureForm.id,
+      featureForm.structureChanges$.subscribe((event) => {
+        this.form.markAsTouched();
 
-      this.structureChanges$.next(event);
-    }));
+        this.structureChanges$.next(event);
+      })
+    );
   }
 
   private unsubscribe(featureId: string): void {

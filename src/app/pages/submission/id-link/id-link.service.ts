@@ -9,7 +9,7 @@ import {
   IdentifierResponse,
   IdentifierResolverResponse,
   IdentifierResolverPayload,
-  IdentifierResolvedResource,
+  IdentifierResolvedResource
 } from './id-link.interfaces';
 
 @Injectable()
@@ -24,9 +24,7 @@ export class IdLinkService {
    * Caches the list of all prefixes, signalling when it's been retrieved and available.
    * @param http - Client HTTP API.
    */
-  constructor(
-    private http: HttpClient
-  ) {}
+  constructor(private http: HttpClient) {}
 
   /**
    * Pseudonym for the "suggest" method without parameters to retrieve the complete list of prefixes.
@@ -62,7 +60,7 @@ export class IdLinkService {
           return namespace.prefix === 'chebi' ? namespace.prefix.toUpperCase() : namespace.prefix;
         });
       }),
-      catchError(err => {
+      catchError((err) => {
         if (err.status === HttpStatus.NOT_FOUND) {
           return of([]);
         }
@@ -77,7 +75,7 @@ export class IdLinkService {
    * @param identifier - Identifier to be validated against identifiers.org.
    * @returns Observable the request has been turned into.
    */
-  validate(identifier: string): Observable<IdentifierResolvedResource>  {
+  validate(identifier: string): Observable<IdentifierResolvedResource> {
     return this.http.get(`${IdLinkService.RESOLUTION_URL}/${identifier}`).pipe(
       map((response: IdentifierResolverResponse) => {
         const payload: IdentifierResolverPayload = response.payload || {};

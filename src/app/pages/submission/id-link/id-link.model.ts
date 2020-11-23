@@ -31,7 +31,7 @@ export class IdLinkModel {
   }
 
   asValue(): IdLinkValue {
-    return new IdLinkValue({prefix: this.prefix, id: this.id, url: this.url});
+    return new IdLinkValue({ prefix: this.prefix, id: this.id, url: this.url });
   }
 
   update(input = '', prefixOnly = false): string {
@@ -43,12 +43,12 @@ export class IdLinkModel {
     const m = input.match(this.idRegexp) || [input];
     const prefix = m[1];
     const id = m[2];
-    this.updateValues({ prefix, id: prefixOnly ? (this.linkid || ':') : id });
+    this.updateValues({ prefix, id: prefixOnly ? this.linkid || ':' : id });
 
     return this.asString();
   }
 
-  updateValues(values: { id?: string, prefix?: string, url?: string }): void {
+  updateValues(values: { id?: string; prefix?: string; url?: string }): void {
     this.linkPrefix = values.prefix;
     this.linkid = values.id;
     this.linkUrl = values.url;

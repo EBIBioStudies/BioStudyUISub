@@ -28,6 +28,6 @@ export class DirectSubmitFileComponent {
 
   handleOnIsStudyChange(isStudy: boolean, fileName: string): void {
     this.isStudy = isStudy;
-    this.isStudyChange.emit({ fileName, isStudy});
+    this.isStudyChange.emit({ fileName, isStudy });
   }
 }

@@ -26,11 +26,7 @@ import { UserData } from 'app/auth/shared';
     MarkdownModule.forChild(),
     RouterModule,
     SharedModule,
-    AgGridModule.withComponents([
-      FileActionsCellComponent,
-      FileTypeCellComponent,
-      ProgressCellComponent
-    ]),
+    AgGridModule.withComponents([FileActionsCellComponent, FileTypeCellComponent, ProgressCellComponent]),
     AccordionModule.forRoot(),
     ThemeModule
   ],
@@ -46,20 +42,8 @@ import { UserData } from 'app/auth/shared';
     FTPUploadButtonComponent,
     UploadFileModalComponent
   ],
-  providers: [
-    FileService,
-    FileTreeStore,
-    FileUploadList,
-    HttpUploadClientService,
-    UserData
-  ],
-  exports: [
-    FileListComponent,
-    FileSelectComponent
-  ],
-  entryComponents: [
-    UploadFileModalComponent
-  ]
+  providers: [FileService, FileTreeStore, FileUploadList, HttpUploadClientService, UserData],
+  exports: [FileListComponent, FileSelectComponent],
+  entryComponents: [UploadFileModalComponent]
 })
-export class FileModule {
-}
+export class FileModule {}

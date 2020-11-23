@@ -9,9 +9,7 @@ import { map } from 'rxjs/operators';
   selector: 'st-directory-sidebar',
   templateUrl: './directory-sidebar.component.html',
   styleUrls: ['./directory-sidebar.component.scss'],
-  providers: [
-    {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DirectorySidebarComponent), multi: true}
-  ]
+  providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DirectorySidebarComponent), multi: true }]
 })
 export class DirectorySidebarComponent implements OnInit, ControlValueAccessor {
   @Input() collapsed?: boolean = false;
@@ -37,11 +35,12 @@ export class DirectorySidebarComponent implements OnInit, ControlValueAccessor {
 
     this.homeDir = new FileNode(true, homeDir.path, homeDir.name);
 
-    this.fileService.getUserGroups().pipe(
-      map((groups) => groups.map((group) => new FileNode(true, 'groups', group.name)))
-    ).subscribe((groups) => {
-      this.groups = groups;
-    });
+    this.fileService
+      .getUserGroups()
+      .pipe(map((groups) => groups.map((group) => new FileNode(true, 'groups', group.name))))
+      .subscribe((groups) => {
+        this.groups = groups;
+      });
   }
 
   onDirSelect(directory): void {

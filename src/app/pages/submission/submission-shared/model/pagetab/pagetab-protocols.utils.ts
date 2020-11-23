@@ -2,7 +2,7 @@ import { PageTabSection, PtAttribute } from './pagetab.model';
 import { Dictionary, Nullable } from './pagetab-authors.utils';
 import { isNotDefinedOrEmpty, isStringDefined } from 'app/utils';
 
-const isEqualTo = (value: string) => (s: Nullable<string>) => (isStringDefined(s) && s!.toLowerCase() === value);
+const isEqualTo = (value: string) => (s: Nullable<string>) => isStringDefined(s) && s!.toLowerCase() === value;
 const isComponentProtocol = isEqualTo('protocols');
 const isStudyProtocol = isEqualTo('study protocols');
 
@@ -10,7 +10,7 @@ class Protocols {
   private static instance: Protocols;
   private refs: Dictionary<string> = {};
 
-  private constructor() { }
+  private constructor() {}
 
   static getInstance(): Protocols {
     if (!Protocols.instance) {
@@ -59,27 +59,26 @@ export function submissionToPageTabProtocols(pageTabSections: PageTabSection[]):
   const componentProtocols: PageTabSection[] = pageTabSections.filter((section) => isComponentProtocol(section.type));
   const studyProtocols: PageTabSection[] = pageTabSections.filter((section) => isStudyProtocol(section.type));
 
-  const componentProtocolWithReference = componentProtocols.map((componentProtocol) => (
-    {
-      type: componentProtocol.type,
-      attributes: componentProtocol.attributes!.map((attribute) => {
-        return protocols.toReference({ ...attribute });
-      })
-    } as PageTabSection
-  ));
+  const componentProtocolWithReference = componentProtocols.map(
+    (componentProtocol) =>
+      ({
+        type: componentProtocol.type,
+        attributes: componentProtocol.attributes!.map((attribute) => {
+          return protocols.toReference({ ...attribute });
+        })
+      } as PageTabSection)
+  );
 
   const studyProtocolToReference = studyProtocols.map((studyProtocol, index) => {
     const attributes = studyProtocol.attributes;
     const nameAttribute = attributes!.find((attribute) => attribute.name === 'Name') || {};
-    const studyProtocolNameValue: string = nameAttribute.value as string || '';
+    const studyProtocolNameValue: string = (nameAttribute.value as string) || '';
 
-    return (
-      {
-        type: studyProtocol.type,
-        accno: studyProtocol.accno ? studyProtocol.accno : protocols.refFor(studyProtocolNameValue, `p${index}`),
-        attributes: studyProtocol.attributes
-      } as PageTabSection
-    );
+    return {
+      type: studyProtocol.type,
+      accno: studyProtocol.accno ? studyProtocol.accno : protocols.refFor(studyProtocolNameValue, `p${index}`),
+      attributes: studyProtocol.attributes
+    } as PageTabSection;
   });
 
   return pageTabSections
@@ -98,7 +97,7 @@ export function pageTabToSubmissionProtocols(pageTabSections: PageTabSection[]):
   studyProtocols.forEach((studyProtocol) => {
     const attributes = studyProtocol.attributes;
     const nameAttribute = attributes!.find((attribute) => attribute.name === 'Name') || {};
-    const studyProtocolNameValue: string = nameAttribute.value as string || '';
+    const studyProtocolNameValue: string = (nameAttribute.value as string) || '';
     const studyProtocolAccno: string = studyProtocol.accno || '';
 
     protocols.refFor(studyProtocolNameValue, studyProtocolAccno);
@@ -117,12 +116,10 @@ export function pageTabToSubmissionProtocols(pageTabSections: PageTabSection[]):
       } as PtAttribute);
     }
 
-    return (
-      {
-        ...componentProtocol,
-        attributes: finalAttributes
-      } as PageTabSection
-    );
+    return {
+      ...componentProtocol,
+      attributes: finalAttributes
+    } as PageTabSection;
   });
 
   return pageTabSections

@@ -21,10 +21,7 @@ export class DirectSubmitComponent {
    * Initally collapses the sidebar for tablet-sized screens.
    * @param appConfig - Global configuration object with app-wide settings.
    */
-  constructor(
-    public appConfig: AppConfig,
-    private router: Router
-  ) {
+  constructor(public appConfig: AppConfig, private router: Router) {
     this.collapseSideBar = window.innerWidth < this.appConfig.tabletBreak;
   }
 
@@ -55,7 +52,7 @@ export class DirectSubmitComponent {
   /**
    * Toggles the width of the request card and the log's visibility on click.
    */
-  handleFileCardClick(args: { accno: string, event: Event, hasSubmitFailed: boolean }): void {
+  handleFileCardClick(args: { accno: string; event: Event; hasSubmitFailed: boolean }): void {
     const { accno, event, hasSubmitFailed } = args;
     const containerEl = event.currentTarget as HTMLElement;
     const logElement = containerEl.querySelector('.log-container');
@@ -67,7 +64,7 @@ export class DirectSubmitComponent {
     }
   }
 
-  handleIsStudyChange(args: { fileName: string, isStudy: boolean }): void {
+  handleIsStudyChange(args: { fileName: string; isStudy: boolean }): void {
     const { fileName, isStudy } = args;
     this.sidebar.toggleStudyFile(fileName, isStudy);
   }

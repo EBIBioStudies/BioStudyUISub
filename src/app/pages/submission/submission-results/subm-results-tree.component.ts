@@ -1,7 +1,4 @@
-import {
-  Component,
-  Input
-} from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ResultsLogNodeComponent } from './results-log-node.component';
 import { TreeViewConfig } from './tree-view.component';
 

@@ -1,16 +1,16 @@
 import { LogLevel } from './log-levels';
 
 interface LogJsonFormat {
-  level: string,
-  userEmail: string,
-  message: string,
-  params: any[]
+  level: string;
+  userEmail: string;
+  message: string;
+  params: any[];
 }
 
 interface FileParams {
-  name: string,
-  size: number,
-  type: string
+  name: string;
+  size: number;
+  type: string;
 }
 
 export class LogEntry {
@@ -56,9 +56,7 @@ export class LogEntry {
     const hasObject = params.some((param) => typeof param === 'object');
 
     if (hasObject) {
-      return params.reduce((formattedParams, currentParam) => (
-        `${formattedParams}${JSON.stringify(currentParam)},`
-      ), '');
+      return params.reduce((formattedParams, currentParam) => `${formattedParams}${JSON.stringify(currentParam)},`, '');
     }
 
     return params.join(',');

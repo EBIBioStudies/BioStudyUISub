@@ -21,7 +21,7 @@ export class CustomFormControl extends FormControl {
       return -1;
     }
     return 0;
-  }
+  };
 
   withRef(ref: ControlRef): CustomFormControl {
     this.ref = ref;

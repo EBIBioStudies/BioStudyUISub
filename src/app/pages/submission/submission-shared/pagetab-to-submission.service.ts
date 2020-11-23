@@ -11,7 +11,7 @@ import {
   mergeAttributes,
   pageTabToSubmissionProtocols,
   PtLink,
-  PtFile,
+  PtFile
 } from './model/pagetab';
 import { AttributeData, FeatureData, SectionData, Submission, SubmissionData } from './model/submission';
 import { DEFAULT_TEMPLATE_NAME, READONLY_TEMPLATE_NAME, SubmissionType } from './model/templates';
@@ -30,8 +30,8 @@ export class PageTabToSubmissionService {
   pageTabToSubmissionData(pageTab: PageTab): SubmissionData {
     return {
       accno: pageTab.accno,
-      tags: (pageTab.tags || []).map(t => new Tag(t.classifier, t.tag)),
-      isRevised: !isArrayEmpty((pageTab.tags || [])),
+      tags: (pageTab.tags || []).map((t) => new Tag(t.classifier, t.tag)),
+      isRevised: !isArrayEmpty(pageTab.tags || []),
       accessTags: pageTab.accessTags,
       attributes: this.pageTabAttributesToAttributeData(pageTab.attributes || []),
       section: pageTab.section ? this.pageTabSectionToSectionData(pageTab.section, pageTab.attributes) : undefined
@@ -40,7 +40,7 @@ export class PageTabToSubmissionService {
 
   private findSubmissionTemplateName(pageTab: PageTab): string {
     const attachToAttributes: PtAttribute[] = findAttribute(pageTab, AttrExceptions.attachToAttr);
-    const attachToValue: string[] = attachToAttributes.map((attribute) => attribute.value as string || '');
+    const attachToValue: string[] = attachToAttributes.map((attribute) => (attribute.value as string) || '');
 
     if (attachToValue.length === 0) {
       return DEFAULT_TEMPLATE_NAME;
@@ -67,24 +67,29 @@ export class PageTabToSubmissionService {
   }
 
   private pageTabAttributesToAttributeData(attrs: PtAttribute[]): AttributeData[] {
-    return attrs.map(at => ({
-      name: at.name,
-      reference: at.reference || at.isReference,
-      terms: (at.valqual || []).map(t => new NameAndValue(t.name, t.value)),
-      value: at.value
-    }) as AttributeData);
+    return attrs.map(
+      (at) =>
+        ({
+          name: at.name,
+          reference: at.reference || at.isReference,
+          terms: (at.valqual || []).map((t) => new NameAndValue(t.name, t.value)),
+          value: at.value
+        } as AttributeData)
+    );
   }
 
   private pageTabSectionToSectionData(ptSection: PageTabSection, parentAttributes: PtAttribute[] = []): SectionData {
     const parentAttributesWithName = parentAttributes.filter((attribute) => isStringDefined(attribute.name));
-    const editableParentAttributes = parentAttributesWithName.filter((attribute) => AttrExceptions.editable.includes(attribute.name!));
+    const editableParentAttributes = parentAttributesWithName.filter((attribute) =>
+      AttrExceptions.editable.includes(attribute.name!)
+    );
     const parentAndChildAttributes = mergeAttributes(editableParentAttributes, ptSection.attributes || []);
     const attributes = this.pageTabAttributesToAttributeData(parentAndChildAttributes);
 
     const links = flatArray<PtLink>(ptSection.links || []);
     const files = flatArray<PtFile>(ptSection.files || []);
     const subsections = flatArray(ptSection.subsections || []);
-    const contacts = authorsToContacts(subsections.filter(section => !this.hasSubsections(section)));
+    const contacts = authorsToContacts(subsections.filter((section) => !this.hasSubsections(section)));
     const featureSections = pageTabToSubmissionProtocols(contacts);
     const keywords = extractKeywordsFromAttributes(ptSection.attributes || []);
 
@@ -135,7 +140,7 @@ export class PageTabToSubmissionService {
 
       featureTypes.forEach((featureType) => {
         const entries = featureSections
-          .filter((featureSection) => (featureSection.type === featureType))
+          .filter((featureSection) => featureSection.type === featureType)
           .map((featureSection) => this.pageTabAttributesToAttributeData(featureSection.attributes || []));
 
         features.push({

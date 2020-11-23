@@ -8,7 +8,7 @@ export class CellControl {
 
   constructor(attrValue: AttributeValue, column: Attribute, ref: ControlRef) {
     this.control = new CustomFormControl(attrValue.value, SubmFormValidators.forCell(column)).withRef(ref);
-    this.control.valueChanges.subscribe(value => attrValue.value = value);
+    this.control.valueChanges.subscribe((value) => (attrValue.value = value));
   }
 
   get errors(): string[] {

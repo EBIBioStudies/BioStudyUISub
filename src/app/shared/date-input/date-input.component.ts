@@ -10,11 +10,13 @@ import { AppConfig } from 'app/app.config';
   selector: 'st-date-input',
   templateUrl: './date-input.component.html',
   styleUrls: ['./date-input.component.scss'],
-  providers: [{
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => DateInputComponent),
-    multi: true
-  }]
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => DateInputComponent),
+      multi: true
+    }
+  ]
 })
 
 /**
@@ -137,7 +139,7 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
    * Registers a handler specifically for when a control receives a touch event.
    * @see {@link ControlValueAccessor}
    */
-  registerOnTouched(): void { }
+  registerOnTouched(): void {}
 
   /**
    * Gets the datepicker's input back to its state at instantiation, namely a blank value.
@@ -160,5 +162,5 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
     }
   }
 
-  private onChange: any = () => { };
+  private onChange: any = () => {};
 }

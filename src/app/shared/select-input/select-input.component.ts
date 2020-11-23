@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, ViewEncapsulation } from "@angular/core";
+import { Component, forwardRef, Input, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl } from '@angular/forms';
 import { isNotDefinedOrEmpty } from 'app/utils';
 
@@ -6,11 +6,13 @@ import { isNotDefinedOrEmpty } from 'app/utils';
   selector: 'st-select-input',
   templateUrl: './select-input.component.html',
   styleUrls: ['./select-input.component.scss'],
-  providers: [{
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => SelectInputComponent),
-    multi: true
-  }],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => SelectInputComponent),
+      multi: true
+    }
+  ],
   encapsulation: ViewEncapsulation.None
 })
 export class SelectInputComponent implements ControlValueAccessor {

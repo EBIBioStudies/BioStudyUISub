@@ -4,15 +4,13 @@ import { formatDate, parseDate } from '../utils';
 
 @Directive({
   selector: '[stDateFormat]',
-  providers: [
-    {provide: NG_VALIDATORS, useExisting: forwardRef(() => DateFormatDirective), multi: true}
-  ]
+  providers: [{ provide: NG_VALIDATORS, useExisting: forwardRef(() => DateFormatDirective), multi: true }]
 })
 export class DateFormatDirective implements Validator {
   private regexp = /(\d{4})\-(\d{2})\-(\d{2})/;
 
   validate(c: AbstractControl): ValidationErrors | null {
-    const  v = c.value || '';
+    const v = c.value || '';
 
     if (v !== '') {
       if (!this.valid(v)) {

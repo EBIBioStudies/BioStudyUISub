@@ -10,23 +10,25 @@ export class Columns {
   }
 
   at(index: number): Attribute | undefined {
-    return (index >= 0) && (index < this.columns.length) ? this.columns[index] : undefined;
+    return index >= 0 && index < this.columns.length ? this.columns[index] : undefined;
   }
 
   filterByName(name: string): Attribute[] {
-    return this.columns.filter(attr => isEqualIgnoringCase(attr.name, name));
+    return this.columns.filter((attr) => isEqualIgnoringCase(attr.name, name));
   }
 
   findById(id: string): Attribute | undefined {
-    return this.columns.find(col => col.id === id);
+    return this.columns.find((col) => col.id === id);
   }
 
   findByType(colType: ColumnType): Attribute | undefined {
-    return this.columns.find(col => col.name === colType.name && col.valueType === colType.valueType && col.isTemplateBased);
+    return this.columns.find(
+      (col) => col.name === colType.name && col.valueType === colType.valueType && col.isTemplateBased
+    );
   }
 
   keys(): string[] {
-    return this.columns.map(attr => attr.id);
+    return this.columns.map((attr) => attr.id);
   }
 
   list(): Attribute[] {
@@ -34,11 +36,11 @@ export class Columns {
   }
 
   names(): any {
-    return this.columns.map(attr => attr.name);
+    return this.columns.map((attr) => attr.name);
   }
 
   remove(id: string): boolean {
-    return this.removeAt(this.columns.findIndex(attr => attr.id === id));
+    return this.removeAt(this.columns.findIndex((attr) => attr.id === id));
   }
 
   removeAt(index: number): boolean {

@@ -7,7 +7,7 @@ export class ValueMap {
 
   constructor(keys?: string[]) {
     this.id = nextId();
-    (keys || []).forEach(key => this.add(key));
+    (keys || []).forEach((key) => this.add(key));
   }
 
   add(key: string, value?: string): void {
@@ -36,6 +36,6 @@ export class ValueMap {
   }
 
   values(keys?: string[]): (AttributeValue | undefined)[] {
-    return (keys || this.keys()).map(key => this.valueMap.get(key));
+    return (keys || this.keys()).map((key) => this.valueMap.get(key));
   }
 }

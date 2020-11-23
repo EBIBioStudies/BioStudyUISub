@@ -21,11 +21,15 @@ export class LinksUtils {
    * @returns PageTab-ready link object.
    */
   static toTyped(attributes: PtAttribute[]): PtLink {
-    const pointer: string = (attributes.find(at => at.name === POINTER_ATTR) || { value: '' }).value as string || '';
+    const pointer: string =
+      ((attributes.find((at) => at.name === POINTER_ATTR) || { value: '' }).value as string) || '';
     const typeAttr = { name: TYPE_ATTR, value: '' };
     const isUrl = this.URL_REGEXP.test(pointer);
 
-    const linkObj = { url: '', attributes: attributes.filter(at => ![TYPE_ATTR, POINTER_ATTR].includes(at.name!)) } as PtLink;
+    const linkObj = {
+      url: '',
+      attributes: attributes.filter((at) => ![TYPE_ATTR, POINTER_ATTR].includes(at.name!))
+    } as PtLink;
 
     linkObj.attributes!.push(typeAttr);
     if (pointer) {
@@ -56,16 +60,16 @@ export class LinksUtils {
    * @returns Submission-ready link object.
    */
   static toUntyped(linkObj: PtLink): PtAttribute[] {
-    const attrs = (linkObj.attributes || []);
+    const attrs = linkObj.attributes || [];
 
-    const pointerAttr = {name: POINTER_ATTR, value: linkObj.url};
+    const pointerAttr = { name: POINTER_ATTR, value: linkObj.url };
 
-    const typeAttr = attrs.find(at => at.name ===  TYPE_ATTR);
+    const typeAttr = attrs.find((at) => at.name === TYPE_ATTR);
 
     if (typeAttr !== undefined && isDefinedAndNotEmpty(typeAttr.value as string)) {
       pointerAttr.value = typeAttr.value + ':' + linkObj.url;
     }
 
-    return [...[pointerAttr], ...attrs.filter(at => ![TYPE_ATTR,  POINTER_ATTR].includes(at.name!))];
+    return [...[pointerAttr], ...attrs.filter((at) => ![TYPE_ATTR, POINTER_ATTR].includes(at.name!))];
   }
 }

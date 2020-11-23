@@ -6,14 +6,8 @@ import { SubmissionStatusService } from './submission-status.service';
 
 @NgModule({
   imports: [],
-  providers: [
-    SubmissionService,
-    SubmissionToPageTabService,
-    PageTabToSubmissionService,
-    SubmissionStatusService
-  ],
+  providers: [SubmissionService, SubmissionToPageTabService, PageTabToSubmissionService, SubmissionStatusService],
   declarations: [],
   exports: []
 })
-export class SubmissionSharedModule {
-}
+export class SubmissionSharedModule {}

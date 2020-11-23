@@ -5,8 +5,8 @@ import { AppConfig } from 'app/app.config';
 @Component({
   selector: 'st-date-cell',
   template: `
-    <span class="{{classes}}">
-      {{ value === undefined ? '&mdash;' : value | date: appConfig.dateListFormat }}
+    <span class="{{ classes }}">
+      {{ value === undefined ? '&mdash;' : (value | date: appConfig.dateListFormat) }}
     </span>
   `,
   styleUrls: ['./date-cell.component.css']

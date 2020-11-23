@@ -1,21 +1,13 @@
 import { Component, QueryList, ViewChildren } from '@angular/core';
-import {
-  IFilterParams,
-  IDoesFilterPassParams,
-  RowNode,
-  IAfterGuiAttachedParams
-} from 'ag-grid-community/main';
+import { IFilterParams, IDoesFilterPassParams, RowNode, IAfterGuiAttachedParams } from 'ag-grid-community/main';
 import { AgFilterComponent } from 'ag-grid-angular';
 import { DateInputComponent } from 'app/shared/date-input/date-input.component';
 
 class DateRange {
-  constructor(
-    public from?: string,
-    public to?: string
-  ) {}
+  constructor(public from?: string, public to?: string) {}
 
   private static isValueEmpty(v: any): boolean {
-    return v === null || v === undefined && v === '';
+    return v === null || (v === undefined && v === '');
   }
 
   copy(): DateRange {

@@ -9,9 +9,7 @@ import { typeaheadSource } from '../../shared/typeahead.utils';
   selector: 'st-inline-edit',
   templateUrl: './inline-edit.component.html',
   styleUrls: ['./inline-edit.component.css'],
-  providers: [
-    {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => InlineEditComponent), multi: true}
-  ]
+  providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => InlineEditComponent), multi: true }]
 })
 export class InlineEditComponent implements ControlValueAccessor {
   editing: boolean = false;
@@ -73,7 +71,7 @@ export class InlineEditComponent implements ControlValueAccessor {
   }
 
   // tslint:disable-next-line: variable-name
-  onChange(_value: string): void { }
+  onChange(_value: string): void {}
 
   onEdit(): void {
     this.startEditing();

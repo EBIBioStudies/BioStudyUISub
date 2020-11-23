@@ -6,8 +6,7 @@ import { FieldControl } from '../../shared/model/field-control.model';
 class ValueLength {
   static unknown: ValueLength = new ValueLength();
 
-  constructor(readonly min = -1, readonly max = -1) {
-  }
+  constructor(readonly min = -1, readonly max = -1) {}
 
   get isDefined(): boolean {
     return this.min > 0 || this.max > 0;

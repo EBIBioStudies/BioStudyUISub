@@ -3,7 +3,7 @@ import { AgRendererComponent } from 'ag-grid-angular';
 
 @Component({
   selector: 'st-text-cell',
-  template: `<span class="{{classes}}">{{text}}</span>`,
+  template: `<span class="{{ classes }}">{{ text }}</span>`,
   styleUrls: ['./text-cell.component.css']
 })
 export class TextCellComponent implements AgRendererComponent {

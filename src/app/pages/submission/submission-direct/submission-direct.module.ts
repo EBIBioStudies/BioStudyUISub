@@ -11,25 +11,9 @@ import { DirectSubmitService } from './direct-submit.service';
 import { DirectSubmitFileComponent } from './direct-submit-file.component';
 
 @NgModule({
-  imports: [
-    SharedModule,
-    RouterModule,
-    SubmissionSharedModule,
-    SubmissionResultsModule,
-    ThemeModule
-  ],
-  providers: [
-    DirectSubmitFileUploadService,
-    DirectSubmitService
-  ],
-  declarations: [
-    DirectSubmitComponent,
-    DirectSubmitSideBarComponent,
-    DirectSubmitFileComponent
-  ],
-  exports: [
-    DirectSubmitComponent
-  ]
+  imports: [SharedModule, RouterModule, SubmissionSharedModule, SubmissionResultsModule, ThemeModule],
+  providers: [DirectSubmitFileUploadService, DirectSubmitService],
+  declarations: [DirectSubmitComponent, DirectSubmitSideBarComponent, DirectSubmitFileComponent],
+  exports: [DirectSubmitComponent]
 })
-export class SubmissionDirectModule {
-}
+export class SubmissionDirectModule {}

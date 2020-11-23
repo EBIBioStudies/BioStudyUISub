@@ -27,7 +27,7 @@ export class FileListComponent implements OnInit, OnDestroy {
   sideBarCollapsed = false;
   USER_PATH = 'user';
 
-  protected ngUnsubscribe: Subject<void>;     // stopper for all subscriptions
+  protected ngUnsubscribe: Subject<void>; // stopper for all subscriptions
   private rowData: any[];
 
   constructor(
@@ -43,7 +43,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     // Initially collapses the sidebar for tablet-sized screens
     this.sideBarCollapsed = window.innerWidth < this.appConfig.tabletBreak;
 
-    this.gridOptions = ({
+    this.gridOptions = {
       onGridReady: () => {
         if (this.gridOptions && this.gridOptions.api) {
           this.gridOptions.api.sizeColumnsToFit();
@@ -52,9 +52,10 @@ export class FileListComponent implements OnInit, OnDestroy {
       rowHeight: 35,
       rowSelection: 'single',
       unSortIcon: true,
-      localeText: {noRowsToShow: 'No files found'},
-      overlayLoadingTemplate: '<span class="ag-overlay-loading-center"><i class="fa fa-cog fa-spin fa-lg"></i> Loading...</span>',
-    } as GridOptions);
+      localeText: { noRowsToShow: 'No files found' },
+      overlayLoadingTemplate:
+        '<span class="ag-overlay-loading-center"><i class="fa fa-cog fa-spin fa-lg"></i> Loading...</span>'
+    } as GridOptions;
 
     this.fileUploadList.uploadCompleted$
       .pipe(
@@ -84,7 +85,7 @@ export class FileListComponent implements OnInit, OnDestroy {
   }
 
   decorateFiles(files: any[] | undefined): any[] {
-    return (files || []).map(f => ({
+    return (files || []).map((f) => ({
       name: f.name,
       type: f.type,
       files: this.decorateFiles(f.files),
@@ -98,20 +99,22 @@ export class FileListComponent implements OnInit, OnDestroy {
   }
 
   decorateUploads(uploads: FileUpload[]): any[] {
-    return uploads.map((upload) => {
-      if (!upload.absoluteFilePath.startsWith(this.absolutePath)) {
-        return [];
-      }
-
-      return upload.fileNames.map((fileName) => ({
-        name: fileName,
-        upload,
-        type: 'FILE',
-        onRemove: () => {
-          this.removeUpload(upload);
+    return uploads
+      .map((upload) => {
+        if (!upload.absoluteFilePath.startsWith(this.absolutePath)) {
+          return [];
         }
-      }));
-    }).reduce((rv, v) => rv.concat(v), []);
+
+        return upload.fileNames.map((fileName) => ({
+          name: fileName,
+          upload,
+          type: 'FILE',
+          onRemove: () => {
+            this.removeUpload(upload);
+          }
+        }));
+      })
+      .reduce((rv, v) => rv.concat(v), []);
   }
 
   /**
@@ -175,11 +178,14 @@ export class FileListComponent implements OnInit, OnDestroy {
   }
 
   private confirmOverwrite(overlap): Observable<boolean> {
-    const overlapString = overlap.length === 1 ? overlap[0] + '?' :
-      overlap.length + ' files? (' + overlap.join(', ') + ')' ;
+    const overlapString =
+      overlap.length === 1 ? overlap[0] + '?' : overlap.length + ' files? (' + overlap.join(', ') + ')';
 
-    return this.modalService.whenConfirmed(`Do you want to overwrite ${overlapString}`,
-      'Overwrite files?', 'Overwrite');
+    return this.modalService.whenConfirmed(
+      `Do you want to overwrite ${overlapString}`,
+      'Overwrite files?',
+      'Overwrite'
+    );
   }
 
   private createColumnDefs(): void {
@@ -225,7 +231,8 @@ export class FileListComponent implements OnInit, OnDestroy {
   }
 
   private loadData(absolutePath: string): void {
-    this.fileService.getFiles(absolutePath)
+    this.fileService
+      .getFiles(absolutePath)
       .pipe(
         takeUntil(this.ngUnsubscribe),
         catchError((error) => {
@@ -236,7 +243,7 @@ export class FileListComponent implements OnInit, OnDestroy {
           return throwError(error);
         })
       )
-      .subscribe(files => {
+      .subscribe((files) => {
         const decoratedRows = ([] as any[]).concat(
           this.decorateUploads(this.fileUploadList.activeUploads),
           this.decorateFiles(files)
@@ -252,7 +259,8 @@ export class FileListComponent implements OnInit, OnDestroy {
   }
 
   private removeFile(filePath: string, fileName: string): void {
-    this.modalService.whenConfirmed(`Do you want to delete "${fileName}"?`, 'Delete a file', 'Delete')
+    this.modalService
+      .whenConfirmed(`Do you want to delete "${fileName}"?`, 'Delete a file', 'Delete')
       .pipe(
         switchMap(() => this.fileService.removeFile(filePath, fileName)),
         takeUntil(this.ngUnsubscribe)

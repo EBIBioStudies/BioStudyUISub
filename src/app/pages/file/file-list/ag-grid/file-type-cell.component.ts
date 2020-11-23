@@ -5,7 +5,7 @@ import { AgRendererComponent } from 'ag-grid-angular';
   selector: 'st-file-type-cell',
   template: `
     <div class="text-center text-primary">
-      <i class="fa" [ngClass]="{'fa-folder' : ftype === 'DIR'}"></i>
+      <i class="fa" [ngClass]="{ 'fa-folder': ftype === 'DIR' }"></i>
     </div>
   `
 })

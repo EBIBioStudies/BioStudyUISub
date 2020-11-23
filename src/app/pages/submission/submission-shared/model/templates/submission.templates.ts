@@ -22,16 +22,20 @@ const SUBMISSION_TEMPLATES = [
 ];
 const SUBMISSION_TEMPLATES_PUBLIC = [defaultTemplate];
 
-export function getSubmissionTemplates(projects: Array<string> = []): Array<{ description: string, name: string }> {
+export function getSubmissionTemplates(projects: Array<string> = []): Array<{ description: string; name: string }> {
   const projectNames: string[] = projects.map((project) => project.toLowerCase());
-  const filteredTemplates = SUBMISSION_TEMPLATES.filter((template) => projectNames.includes(template.name.toLowerCase()));
+  const filteredTemplates = SUBMISSION_TEMPLATES.filter((template) =>
+    projectNames.includes(template.name.toLowerCase())
+  );
   const templates = [...filteredTemplates, ...SUBMISSION_TEMPLATES_PUBLIC];
 
-  return templates.map((template) => ({name: template.name, description: template.description}));
+  return templates.map((template) => ({ name: template.name, description: template.description }));
 }
 
 export function findSubmissionTemplateByName(name: string): any {
   const tmplName = name.toLowerCase();
-  const tmpl = [...SUBMISSION_TEMPLATES, ...SUBMISSION_TEMPLATES_PUBLIC].find(tmplItem => tmplItem.name.toLowerCase() === tmplName);
+  const tmpl = [...SUBMISSION_TEMPLATES, ...SUBMISSION_TEMPLATES_PUBLIC].find(
+    (tmplItem) => tmplItem.name.toLowerCase() === tmplName
+  );
   return tmpl ? tmpl : defaultTemplate;
 }

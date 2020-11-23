@@ -10,7 +10,7 @@ import { SignUpComponent } from './auth/signup/signup.component';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: 'submissions', pathMatch: 'full' },
-  { path: '', loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule) },
+  { path: '', loadChildren: () => import('./pages/pages.module').then((m) => m.PagesModule) },
   { path: 'signin', component: SignInComponent },
   { path: 'signup', component: SignUpComponent },
   { path: 'activate/:key', component: ActivateComponent },
@@ -20,15 +20,8 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forRoot(appRoutes, { onSameUrlNavigation: 'reload', scrollPositionRestoration: 'enabled' })
-  ],
-  exports: [
-    RouterModule
-  ],
-  providers: [
-    AuthGuard
-  ]
+  imports: [RouterModule.forRoot(appRoutes, { onSameUrlNavigation: 'reload', scrollPositionRestoration: 'enabled' })],
+  exports: [RouterModule],
+  providers: [AuthGuard]
 })
-export class AppRoutingModule {
-}
+export class AppRoutingModule {}

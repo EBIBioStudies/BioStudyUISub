@@ -26,12 +26,10 @@ export class FileTreeStore {
     const fileDir = parts.slice(0, -1).join('/');
 
     return this.getUserGroups().pipe(
-      map(groups => groups.find(g => g.groupId !== undefined && fileDir.startsWith(g.id))),
-      mergeMap(group => group ?
-        of(fileDir.replace(group.id, '/Groups/' + group.name)) :
-        of(fileDir)),
-      map(dir => dir === '' ? dir : dir + '/'),
-      map(dir => dir + fileName)
+      map((groups) => groups.find((g) => g.groupId !== undefined && fileDir.startsWith(g.id))),
+      mergeMap((group) => (group ? of(fileDir.replace(group.id, '/Groups/' + group.name)) : of(fileDir))),
+      map((dir) => (dir === '' ? dir : dir + '/')),
+      map((dir) => dir + fileName)
     );
   }
 
@@ -42,9 +40,7 @@ export class FileTreeStore {
   }
 
   getUserDirs(): Observable<FileNode[]> {
-    return this.fileService.getUserDirs().pipe(
-      map(groups => groups.map(g => new FileNode(true, g.path, g.name)))
-    );
+    return this.fileService.getUserDirs().pipe(map((groups) => groups.map((g) => new FileNode(true, g.path, g.name))));
   }
 
   getUserFiles(path: string): Observable<PathInfo[]> {

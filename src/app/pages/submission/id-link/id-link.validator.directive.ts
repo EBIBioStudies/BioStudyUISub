@@ -5,14 +5,14 @@ import { IdLinkService } from './id-link.service';
 import { idLinkValidator } from './id-link.validator';
 
 export interface IdLinkValueValidatorState {
-  isId: boolean,
-  url: string
+  isId: boolean;
+  url: string;
 }
 
 @Directive({
   // tslint:disable-next-line: directive-selector
   selector: '[idLinkValue][formControlName],[idLinkValue][formControl], [idLinkValue][ngModel]',
-  providers: [{provide: NG_ASYNC_VALIDATORS, useExisting: IdLinkValueValidatorDirective, multi: true}]
+  providers: [{ provide: NG_ASYNC_VALIDATORS, useExisting: IdLinkValueValidatorDirective, multi: true }]
 })
 export class IdLinkValueValidatorDirective implements AsyncValidator {
   state: IdLinkValueValidatorState; // Dynamic link properties determined after validation.

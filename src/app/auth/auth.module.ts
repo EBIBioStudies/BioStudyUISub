@@ -13,18 +13,8 @@ import { Equals2Directive } from './password-reset/equals2.directive';
 import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
-  imports: [
-    RouterModule,
-    RecaptchaModule,
-    RecaptchaFormsModule,
-    SharedModule
-  ],
-  providers: [
-    AuthService,
-    UserSession,
-    UserData,
-    CookieService
-  ],
+  imports: [RouterModule, RecaptchaModule, RecaptchaFormsModule, SharedModule],
+  providers: [AuthService, UserSession, UserData, CookieService],
   declarations: [
     SignInComponent,
     SignUpComponent,
@@ -43,5 +33,4 @@ import { CookieService } from 'ngx-cookie-service';
     PasswordResetComponent
   ]
 })
-export class AuthModule {
-}
+export class AuthModule {}

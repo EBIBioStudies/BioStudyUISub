@@ -1,11 +1,11 @@
 import { Tag } from '../model.common';
 
 interface AttrException {
-  name: string,
-  rootLevel: boolean,
-  studyLevel: boolean,
-  systemOnly: boolean,
-  unique: boolean
+  name: string;
+  rootLevel: boolean;
+  studyLevel: boolean;
+  systemOnly: boolean;
+  unique: boolean;
 }
 
 /* Here are the attributes which we have to deal with exceptionally (unfortunately):
@@ -18,21 +18,22 @@ interface AttrException {
  */
 export class AttrExceptions {
   private static allAttrs: Array<AttrException> = [
-    {name: 'AttachTo', rootLevel: true, studyLevel: false, systemOnly: true, unique: false},
-    {name: 'ReleaseDate', rootLevel: true, studyLevel: false, systemOnly: false, unique: true},
-    {name: 'Title', rootLevel: true, studyLevel: true, systemOnly: false, unique: true},
-    {name: 'AccNoPattern', rootLevel: true, studyLevel: false, systemOnly: true, unique: true},
-    {name: 'AccNoTemplate', rootLevel: true, studyLevel: false, systemOnly: true, unique: true}
+    { name: 'AttachTo', rootLevel: true, studyLevel: false, systemOnly: true, unique: false },
+    { name: 'ReleaseDate', rootLevel: true, studyLevel: false, systemOnly: false, unique: true },
+    { name: 'Title', rootLevel: true, studyLevel: true, systemOnly: false, unique: true },
+    { name: 'AccNoPattern', rootLevel: true, studyLevel: false, systemOnly: true, unique: true },
+    { name: 'AccNoTemplate', rootLevel: true, studyLevel: false, systemOnly: true, unique: true }
   ];
 
   private static editableAttr: Array<string> = AttrExceptions.allAttrs
-    .filter(at => (at.rootLevel || at.studyLevel) && !at.systemOnly).map(at => at.name);
+    .filter((at) => (at.rootLevel || at.studyLevel) && !at.systemOnly)
+    .map((at) => at.name);
 
   private static editableAndRootOnlyAttr: Array<string> = AttrExceptions.allAttrs
-    .filter(at => at.rootLevel && !at.studyLevel && !at.systemOnly).map(at => at.name);
+    .filter((at) => at.rootLevel && !at.studyLevel && !at.systemOnly)
+    .map((at) => at.name);
 
-  private static uniqueAttr: Array<string> = AttrExceptions.allAttrs
-    .filter(at => at.unique).map(at => at.name);
+  private static uniqueAttr: Array<string> = AttrExceptions.allAttrs.filter((at) => at.unique).map((at) => at.name);
 
   static get editable(): string[] {
     return this.editableAttr;
@@ -56,7 +57,7 @@ export type PtFileItem = PtFile | PtFile[];
 
 export interface PtTag {
   classifier?: string;
-  tag?: string
+  tag?: string;
 }
 
 export interface PtNameAndValue {
@@ -65,7 +66,7 @@ export interface PtNameAndValue {
 }
 
 export interface PtAttribute {
-  accno?: string
+  accno?: string;
   isReference?: boolean;
   name?: string;
   reference?: boolean;
@@ -106,5 +107,5 @@ export interface PageTab {
 
 export interface DraftPayload {
   content: PageTab;
-  key: string,
+  key: string;
 }

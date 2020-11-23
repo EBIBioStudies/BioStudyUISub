@@ -6,7 +6,12 @@ import { Subject, Subscription } from 'rxjs';
 import { UserData } from 'app/auth/shared';
 import { takeUntil } from 'rxjs/operators';
 import { ModalService } from 'app/shared/modal.service';
-import { TypeBase, FeatureType, SectionType, DisplayType } from 'app/pages/submission/submission-shared/model/templates';
+import {
+  TypeBase,
+  FeatureType,
+  SectionType,
+  DisplayType
+} from 'app/pages/submission/submission-shared/model/templates';
 import { scrollToFormControl } from 'app/utils';
 import { AddSubmTypeModalComponent } from '../add-subm-type-modal/add-subm-type-modal.component';
 import { FormValidators } from '../../shared/form-validators';
@@ -30,8 +35,10 @@ class DataTypeControl {
   ) {
     this.isReadonly = !type.canModify;
     this.isVisible = !this.displayType.isReadonly;
-    this.control = new FormControl({value: type.name, disabled: this.isReadonly},
-      [Validators.required, Validators.pattern('[a-zA-Z0-9_ ]*')]);
+    this.control = new FormControl({ value: type.name, disabled: this.isReadonly }, [
+      Validators.required,
+      Validators.pattern('[a-zA-Z0-9_ ]*')
+    ]);
   }
 
   static fromFeatureType(type: FeatureType, id: string): DataTypeControl {
@@ -84,7 +91,7 @@ export class SubmEditSidebarComponent implements OnDestroy {
   ) {
     this.submEditService.sectionSwitch$
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe(sectionForm => this.switchSection(sectionForm));
+      .subscribe((sectionForm) => this.switchSection(sectionForm));
   }
 
   get isEditModeOff(): boolean {
@@ -109,7 +116,7 @@ export class SubmEditSidebarComponent implements OnDestroy {
       return;
     }
 
-    const deleted = this.items.filter(item => item.deleted);
+    const deleted = this.items.filter((item) => item.deleted);
 
     if (deleted.length > 0) {
       const isPlural = deleted.length > 1;
@@ -120,26 +127,22 @@ export class SubmEditSidebarComponent implements OnDestroy {
           ${isPlural ? `have` : `has`} been deleted. If you proceed,
           ${isPlural ? `they` : `it`} will be removed from the
           list of items and any related features or sections will be permanently deleted.`;
-      this.modalService.confirm(message, 'Delete items', 'Delete')
-        .subscribe(
-          (isConfirmed: boolean) => {
-            if (isConfirmed) {
-              this.applyChanges();
-            } else {
-              this.onCancelChanges();
-            }
-          }
-        );
+      this.modalService.confirm(message, 'Delete items', 'Delete').subscribe((isConfirmed: boolean) => {
+        if (isConfirmed) {
+          this.applyChanges();
+        } else {
+          this.onCancelChanges();
+        }
+      });
     } else {
       this.applyChanges();
     }
   }
 
   onCancelChanges(event?: Event): void {
-    this.items.forEach(item => item.reset());
+    this.items.forEach((item) => item.reset());
     this.onEditModeToggle(event);
   }
-
 
   onEditModeToggle(event?: Event): void {
     // tslint:disable-next-line: no-unused-expression
@@ -172,17 +175,19 @@ export class SubmEditSidebarComponent implements OnDestroy {
   onNewTypeClick(event?: Event): void {
     // tslint:disable-next-line: no-unused-expression
     event && event.preventDefault();
-    const bsModalRef = this.bsModalService.show(AddSubmTypeModalComponent, {initialState: {sectionForm: this.sectionForm}});
+    const bsModalRef = this.bsModalService.show(AddSubmTypeModalComponent, {
+      initialState: { sectionForm: this.sectionForm }
+    });
     bsModalRef.content.closeBtnName = 'Close';
   }
 
   private applyChanges(): void {
-    const deleted = this.items!.filter(item => item.deleted);
+    const deleted = this.items!.filter((item) => item.deleted);
     deleted.forEach(({ id }) => {
       this.sectionForm!.removeFeatureType(id);
     });
 
-    this.items!.filter(item => !item.deleted).forEach(item => item.update());
+    this.items!.filter((item) => !item.deleted).forEach((item) => item.update());
     this.onEditModeToggle();
   }
 
@@ -201,13 +206,13 @@ export class SubmEditSidebarComponent implements OnDestroy {
   }
 
   private updateItems(): void {
-    this.items =
-      [...this.sectionForm!.featureForms.map(ff => DataTypeControl.fromFeatureType(ff.featureType, ff.id)),
-        ...this.sectionForm!.type.sectionTypes.map(st => DataTypeControl.fromSectionType(st))]
-        .filter( item => item.isVisible );
+    this.items = [
+      ...this.sectionForm!.featureForms.map((ff) => DataTypeControl.fromFeatureType(ff.featureType, ff.id)),
+      ...this.sectionForm!.type.sectionTypes.map((st) => DataTypeControl.fromSectionType(st))
+    ].filter((item) => item.isVisible);
 
     const form = new FormGroup({}, FormValidators.uniqueValues);
-    this.items.forEach(item => form.addControl(item.id, item.control));
+    this.items.forEach((item) => form.addControl(item.id, item.control));
 
     this.form = form;
   }

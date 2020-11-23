@@ -52,14 +52,15 @@ export class SubmListComponent implements OnDestroy, OnInit {
     // TODO: enable server-side sorting once sorting parameters are added to the submission list endpoint
     // NOTE: Ag-Grid doesn't support client-side filtering/sorting and server-side pagination simultaneously.
     // https://www.ag-grid.com/javascript-grid-infinite-scrolling/#sorting-filtering
-    this.gridOptions = ({
+    this.gridOptions = {
       cacheBlockSize: 15,
       debug: false,
       enableSorting: false,
       getRowNodeId: (item) => item.accno,
-      icons: {menu: '<i class="fa fa-filter"/>'},
-      localeText: {noRowsToShow: 'No submissions found'},
-      overlayLoadingTemplate: '<span class="ag-overlay-loading-center"><i class="fa fa-cog fa-spin fa-lg"></i> Loading...</span>',
+      icons: { menu: '<i class="fa fa-filter"/>' },
+      localeText: { noRowsToShow: 'No submissions found' },
+      overlayLoadingTemplate:
+        '<span class="ag-overlay-loading-center"><i class="fa fa-cog fa-spin fa-lg"></i> Loading...</span>',
       pagination: true,
       paginationPageSize: 15,
       rowHeight: 35,
@@ -73,7 +74,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
 
         window.onresize = () => this.gridOptions!.api! && this.gridOptions!.api!.sizeColumnsToFit();
       }
-    } as GridOptions);
+    } as GridOptions;
 
     this.createColumnDefs();
   }
@@ -87,7 +88,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
         filter: true,
         headerName: 'Accession',
         maxWidth: 175,
-        resizable: true,
+        resizable: true
       },
       {
         cellClass: 'ag-cell-centered',
@@ -122,7 +123,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
   }
 
   decorateDataRows(rows: any[]): any {
-    return rows.map(row => ({
+    return rows.map((row) => ({
       id: row.accno,
       isTemp: !this.showSubmitted,
       isDeletable: this.canDeleteRow(row),
@@ -158,21 +159,25 @@ export class SubmListComponent implements OnDestroy, OnInit {
 
         // Shows the confirm dialogue for an already sent submission (including its revisions).
         if (this.showSubmitted) {
-          return this.modalService.confirm(
-            `The submission with accession number ${accno} may have un-submitted changes. \
+          return this.modalService
+            .confirm(
+              `The submission with accession number ${accno} may have un-submitted changes. \
             If you proceed, both the submission and any changes will be permanently lost.`,
-            `Delete submission and its revisions`,
-            'Delete'
-          ).subscribe(onNext);
+              `Delete submission and its revisions`,
+              'Delete'
+            )
+            .subscribe(onNext);
 
           // Shows the confirm dialogue for a temporary submission
         } else {
-          return this.modalService.confirm(
-            `The submission with accession number ${accno} has not been submitted yet. If you proceed, \
+          return this.modalService
+            .confirm(
+              `The submission with accession number ${accno} has not been submitted yet. If you proceed, \
             it will be permanently deleted.`,
-            `Delete draft submission`,
-            'Delete'
-          ).subscribe(onNext);
+              `Delete draft submission`,
+              'Delete'
+            )
+            .subscribe(onNext);
         }
       },
 
@@ -230,7 +235,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
       const { accno, method } = event.data;
       const optionalParams = isDefinedAndNotEmpty(method) ? { method } : {};
 
-      this.router.navigate([`/submissions/edit/${accno}`, optionalParams ]);
+      this.router.navigate([`/submissions/edit/${accno}`, optionalParams]);
     }
   }
 
@@ -239,7 +244,6 @@ export class SubmListComponent implements OnDestroy, OnInit {
 
     // Ignores actions that don't carry with them a change in state.
     if (this.showSubmitted !== isSubmitted) {
-
       // Submitted list's route has 'sent' as a fragment while temp list has no fragment.
       if (isSubmitted) {
         fragment = '';
@@ -274,36 +278,38 @@ export class SubmListComponent implements OnDestroy, OnInit {
           }
 
           // Makes the request taking into account any filtering arguments supplied through the UI.
-          this.submService.getSubmissions(this.showSubmitted, {
-            offset: params.startRow,
-            limit: pageSize,
-            accNo: fm.accno && fm.accno.value ? fm.accno.value : undefined,
-            rTimeFrom: fm.rtime && fm.rtime.value && fm.rtime.value.from ? fm.rtime.value.from : undefined,
-            rTimeTo: fm.rtime && fm.rtime.value && fm.rtime.value.to ? fm.rtime.value.to : undefined,
-            keywords: fm.title && fm.title.value ? fm.title.value : undefined
+          this.submService
+            .getSubmissions(this.showSubmitted, {
+              offset: params.startRow,
+              limit: pageSize,
+              accNo: fm.accno && fm.accno.value ? fm.accno.value : undefined,
+              rTimeFrom: fm.rtime && fm.rtime.value && fm.rtime.value.from ? fm.rtime.value.from : undefined,
+              rTimeTo: fm.rtime && fm.rtime.value && fm.rtime.value.to ? fm.rtime.value.to : undefined,
+              keywords: fm.title && fm.title.value ? fm.title.value : undefined
 
-          // Hides the overlaid progress box if request failed
-          }).pipe(
-            takeUntil(this.ngUnsubscribe),
-            catchError((error) => {
-              agApi!.hideOverlay();
-              return throwError(error);
+              // Hides the overlaid progress box if request failed
             })
-          )
-          .subscribe((rows) => {
-            let lastRow = -1;
+            .pipe(
+              takeUntil(this.ngUnsubscribe),
+              catchError((error) => {
+                agApi!.hideOverlay();
+                return throwError(error);
+              })
+            )
+            .subscribe((rows) => {
+              let lastRow = -1;
 
-            // Hides progress box.
-            agApi!.hideOverlay();
+              // Hides progress box.
+              agApi!.hideOverlay();
 
-            if (rows.length < pageSize) {
-              lastRow = params.startRow + rows.length;
-            }
+              if (rows.length < pageSize) {
+                lastRow = params.startRow + rows.length;
+              }
 
-            this.rows = this.decorateDataRows(rows);
-            params.successCallback(this.rows, lastRow);
-            this.isBusy = false;
-          });
+              this.rows = this.decorateDataRows(rows);
+              params.successCallback(this.rows, lastRow);
+              this.isBusy = false;
+            });
         }
       };
     }

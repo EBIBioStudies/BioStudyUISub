@@ -9,15 +9,17 @@ import { isStringEmpty } from 'app/utils';
   selector: 'st-protein-input',
   templateUrl: './protein-input.component.html',
   styleUrls: ['./protein-input.component.scss'],
-  providers: [{
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => ProteinInputComponent),
-    multi: true
-  }]
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => ProteinInputComponent),
+      multi: true
+    }
+  ]
 })
 export class ProteinInputComponent implements ControlValueAccessor {
   config = {
-    toolbar: [ 'bold', 'italic', 'fontColor' ]
+    toolbar: ['bold', 'italic', 'fontColor']
   };
   editor = DecoupledEditor;
   proteinSequence = '';

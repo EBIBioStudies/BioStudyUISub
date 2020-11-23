@@ -1,8 +1,5 @@
 export class Path {
-  constructor(
-    private rootPath: string,
-    private relativePath: string
-  ) {}
+  constructor(private rootPath: string, private relativePath: string) {}
 
   static join(...parts: string[]): string {
     return parts.join('/').replace(/\/[\/]+/, '/');

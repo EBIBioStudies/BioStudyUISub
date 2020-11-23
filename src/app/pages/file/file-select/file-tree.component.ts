@@ -37,13 +37,15 @@ export class FileTreeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.root === undefined) {
-      this.fileStore.getUserDirs()
+      this.fileStore
+        .getUserDirs()
         .pipe(takeUntil(this.unsubscribe))
-        .subscribe(nodes => this.nodes = nodes);
+        .subscribe((nodes) => (this.nodes = nodes));
     } else if (this.root.isDir) {
-      this.fileStore.getFiles(this.root.path)
+      this.fileStore
+        .getFiles(this.root.path)
         .pipe(takeUntil(this.unsubscribe))
-        .subscribe(nodes => this.nodes = nodes);
+        .subscribe((nodes) => (this.nodes = nodes));
     }
   }
 

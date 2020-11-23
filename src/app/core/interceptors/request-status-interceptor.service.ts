@@ -1,10 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  HttpEvent,
-  HttpHandler,
-  HttpInterceptor,
-  HttpRequest
-} from '@angular/common/http';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { throwError, Observable, Subject } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
 
@@ -50,7 +45,8 @@ export class RequestStatusInterceptorService implements HttpInterceptor {
             this.statusChanged.next(false);
           }
         }
-      }));
+      })
+    );
   }
 
   /**
@@ -59,7 +55,7 @@ export class RequestStatusInterceptorService implements HttpInterceptor {
    * @returns True if the request is to be ignored.
    */
   private shouldBypass(url: string): boolean {
-    return this.filteredUrlPatterns.some(e => {
+    return this.filteredUrlPatterns.some((e) => {
       return e.test(url);
     });
   }

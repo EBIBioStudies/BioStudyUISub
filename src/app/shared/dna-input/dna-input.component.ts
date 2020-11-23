@@ -28,18 +28,20 @@ const dnaColorScheme = [
   selector: 'st-dna-input',
   templateUrl: './dna-input.component.html',
   styleUrls: ['./dna-input.component.scss'],
-  providers: [{
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => DNAInputComponent),
-    multi: true
-  }]
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => DNAInputComponent),
+      multi: true
+    }
+  ]
 })
 export class DNAInputComponent implements ControlValueAccessor {
   config = {
     fontColor: {
       colors: dnaColorScheme
     },
-    toolbar: [ 'bold', 'italic', 'fontColor' ]
+    toolbar: ['bold', 'italic', 'fontColor']
   };
   dnaSequence = '';
   editor = DecoupledEditor;

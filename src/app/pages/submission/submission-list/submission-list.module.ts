@@ -36,5 +36,4 @@ import { TextFilterComponent } from './ag-grid/text-filter.component';
   ],
   exports: []
 })
-export class SubmissionListModule {
-}
+export class SubmissionListModule {}

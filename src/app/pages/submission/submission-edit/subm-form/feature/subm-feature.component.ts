@@ -41,8 +41,10 @@ export class SubmFeatureComponent implements OnInit, DoCheck {
    */
   ngDoCheck(): void {
     this.submFeatureErrorNum = Object.keys(this.featureForm.form.errors || {}).length;
-    this.submFeatureUniqueColNames = this.colTypeNames.filter(name => this.featureForm.columnNames.includes(name));
-    this.submFeatureAllowedColNames = this.featureForm.hasUniqueColumns ? this.submFeatureUniqueColNames : this.colTypeNames;
+    this.submFeatureUniqueColNames = this.colTypeNames.filter((name) => this.featureForm.columnNames.includes(name));
+    this.submFeatureAllowedColNames = this.featureForm.hasUniqueColumns
+      ? this.submFeatureUniqueColNames
+      : this.colTypeNames;
     this.changeRef.detectChanges();
   }
 

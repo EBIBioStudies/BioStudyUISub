@@ -1,7 +1,7 @@
 export class IdLinkValue {
   private value;
 
-  constructor(value: { id?: string, prefix?: string, url?: string }) {
+  constructor(value: { id?: string; prefix?: string; url?: string }) {
     this.value = value;
   }
 

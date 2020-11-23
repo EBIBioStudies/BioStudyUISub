@@ -14,11 +14,15 @@ export class RowForm {
     this.row = row;
     this.parentRef = parentRef;
     this.form = new FormGroup({});
-    columns.forEach(column => this.addCellControl(column));
+    columns.forEach((column) => this.addCellControl(column));
   }
 
   addCellControl(column: Attribute): void {
-    const cellControl = new CellControl(this.row.valueFor(column.id), column, this.parentRef.rowValueRef(column, this.row.id));
+    const cellControl = new CellControl(
+      this.row.valueFor(column.id),
+      column,
+      this.parentRef.rowValueRef(column, this.row.id)
+    );
     this.form.addControl(column.id, cellControl.control);
     this.controls.set(column.id, cellControl);
   }
@@ -29,13 +33,13 @@ export class RowForm {
 
   errorsAt(columnId: string): string[] {
     return fromNullable(this.cellControlAt(columnId))
-      .map(c => c.errors)
+      .map((c) => c.errors)
       .getOrElse([]);
   }
 
   hasErrorsAt(columnId: string): boolean {
     return fromNullable(this.cellControlAt(columnId))
-      .map(c => c.hasErrors)
+      .map((c) => c.hasErrors)
       .getOrElse(false);
   }
 

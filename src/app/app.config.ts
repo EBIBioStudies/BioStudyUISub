@@ -5,8 +5,7 @@ import { HttpClient } from '@angular/common/http';
 export class AppConfig {
   private config: any = {};
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
   get proxyBase(): string {
     return this.config.APP_PROXY_BASE;
@@ -104,7 +103,7 @@ export class AppConfig {
   load(): Promise<any> {
     const whenFetched: Promise<any> = this.http.get('./config.json').toPromise();
 
-    whenFetched.then(res => {
+    whenFetched.then((res) => {
       this.config = res;
     });
 

@@ -1,14 +1,12 @@
+import { AfterViewInit, Component, forwardRef, Injector, Input, Output, ViewChild, EventEmitter } from '@angular/core';
 import {
-  AfterViewInit,
-  Component,
-  forwardRef,
-  Injector,
-  Input,
-  Output,
-  ViewChild,
-  EventEmitter
-} from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, NgModel, Validators, AbstractControl } from '@angular/forms';
+  ControlValueAccessor,
+  NG_VALUE_ACCESSOR,
+  NgControl,
+  NgModel,
+  Validators,
+  AbstractControl
+} from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Subject, Observable } from 'rxjs';
 import { IdLinkModel } from './id-link.model';
@@ -22,11 +20,11 @@ import { mergeMap, distinctUntilChanged } from 'rxjs/operators';
   templateUrl: './id-link.component.html',
   styleUrls: ['./id-link.component.css'],
   providers: [
-  {
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => IdLinkComponent),
-    multi: true
-  }
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => IdLinkComponent),
+      multi: true
+    }
   ]
 })
 export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
@@ -56,20 +54,13 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
    * @param injector - Parent's injector retrieved to get the component's form control later on.
    * @param sanitizer - Marks URLs as safe for use in the different DOM contexts.
    */
-  constructor(
-    private linkService: IdLinkService,
-    private injector: Injector,
-    private sanitizer: DomSanitizer
-  ) {
-    this.inputChanged
-      .pipe(distinctUntilChanged())
-      .subscribe((value) => this.update(value));
+  constructor(private linkService: IdLinkService, private injector: Injector, private sanitizer: DomSanitizer) {
+    this.inputChanged.pipe(distinctUntilChanged()).subscribe((value) => this.update(value));
 
     this.dataSource = new Observable((observer: any) => {
       // Runs on every typing
       observer.next(this.inputText);
-    })
-    .pipe(mergeMap((value: string) => this.linkService.suggest(value)));
+    }).pipe(mergeMap((value: string) => this.linkService.suggest(value)));
   }
 
   set value(value: IdLinkValue) {
@@ -128,7 +119,9 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
 
       if (control) {
         control.setValidators(Validators.compose([control.validator, this.inputModel.control.validator]));
-        control.setAsyncValidators(Validators.composeAsync([control.asyncValidator, this.inputModel.control.asyncValidator]));
+        control.setAsyncValidators(
+          Validators.composeAsync([control.asyncValidator, this.inputModel.control.asyncValidator])
+        );
       }
     } catch (event) {
       // TODO: Review logic and check if this try/catch is needed
@@ -169,7 +162,6 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
     this.onChange = fn;
   }
 
-
   /**
    * Registers a handler specifically for when a control receives a touch event.
    * @see {@link ControlValueAccessor}
@@ -194,7 +186,7 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
     }
   }
 
-  private onChange: any = (_: any) => { }; // placeholder for handler propagating changes outside the custom control
+  private onChange: any = (_: any) => {}; // placeholder for handler propagating changes outside the custom control
 
   /**
    * Updates the link model, notifying the outside world.
