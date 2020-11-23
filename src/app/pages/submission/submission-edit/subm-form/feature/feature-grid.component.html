@@ -1,9 +1,9 @@
 <div class="overflow-auto container-fluid" *ngIf="featureForm" [formGroup]="featureForm.form">
   <div class="row flex-nowrap mt-0">
     <div class="col-sm-1 col-md-1 border-bottom">
-      <button *ngIf="featureForm.canAddColumn() && !featureForm.isReadonly"
+      <button *ngIf="featureForm.canAddColumn() && !isReadOnly"
           class="btn btn-link text-truncate" type="button" tabindex="-1"
-          [ngClass]="{'invisible': readonly || !userData.isPrivileged || featureForm.isReadonly}"
+          [ngClass]="{'invisible': isReadOnly || !userData.isPrivileged}"
           [tooltip]="'Add a new ' + featureForm.featureTypeName.toLowerCase() + ' attribute'"
           container="body"
           placement="right"
@@ -20,9 +20,9 @@
               triggers="focus"
               emptyValue="{{'Column ' + (idx + 1)}}"
               [formControl]="column.control"
-              [canEdit]="column.canEditName && userData.isPrivileged && !readonly"
-              [readonly]="readonly"
-              [removable]="featureForm.canRemoveColumn(column) && !readonly"
+              [canEdit]="column.canEditName && userData.isPrivileged && !isReadOnly"
+              [readonly]="isReadOnly"
+              [removable]="featureForm.canRemoveColumn(column) && !isReadOnly"
               [autosuggestSource]="featureForm.columnNamesAvailable"
               (remove)="featureForm.removeColumn(column)"
               stValidateOnblur>
@@ -33,13 +33,13 @@
     <div *ngFor="let row of rows; let rowIdx = index;"
       (mouseenter)="onMouseEnterRow(rowIdx)"
       (mouseleave)="onMouseLeaveRow()">
-      <div *ngIf="!readonly || !row.isEmpty" class="row flex-nowrap">
+      <div *ngIf="!isReadOnly || !row.isEmpty" class="row flex-nowrap">
         <div class="col-sm-1 col-md-1">
           <div class="row-heading">
             <i class="fas fa-grip-vertical grip" [ngClass]="{ 'grip-visible': rowIdx === hoveredRowIndex && isSortable }"></i>
             <span container="body" [tooltip]="featureForm.canRemoveRow() ? '' : 'The table must contain one row at least'">
               <button class="btn btn-danger btn-sm" type="button"
-                  [ngClass]="{'invisible': readonly || featureForm.isReadonly}"
+                  [ngClass]="{'invisible': isReadOnly}"
                   [disabled]="!featureForm.canRemoveRow()"
                   (click)="featureForm.removeRow(rowIdx)"
                   [tooltip]="featureForm.canRemoveRow ? 'Delete ' + featureForm.featureTypeName.toLowerCase() + ' ' + (rowIdx + 1) : ''"
@@ -52,7 +52,7 @@
           </div>
         </div>
         <div class="column-entry col-sm-1 col-md-1 col-lg-3 col-xl-3" *ngFor="let column of columns">
-          <div [ngClass]="{'readonly': column.isReadonly || featureForm.isReadonly,
+          <div [ngClass]="{'readonly': isReadOnly || column.isReadonly,
                     'optional': !column.isRequired,
                     'has-error': row.hasErrorsAt(column.id)}">
             <st-input-value placement="top"
@@ -75,7 +75,7 @@
     </div>
   </div>
 </div>
-<button *ngIf="featureForm && featureForm.canAddRow() && !featureForm.isReadonly && !readonly" type="button" class="btn-add btn btn-link" tabindex="-1"
+<button *ngIf="featureForm && featureForm.canAddRow() && !isReadOnly" type="button" class="btn-add btn btn-link" tabindex="-1"
     [tooltip]="'Add a new ' + featureForm.prettyName"
     container="body"
     (click)="featureForm.addRow()">
