@@ -27,9 +27,9 @@ export class SubmSidebarComponent implements OnDestroy {
   private unsubscribeForm = new Subject<void>();
 
   constructor(private submEditService: SubmEditService) {
-    this.submEditService.sectionSwitch$
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe((sectionForm) => this.switchSection(sectionForm));
+    this.submEditService.sectionSwitch$.pipe(takeUntil(this.unsubscribe)).subscribe((sectionForm) => {
+      this.switchSection(sectionForm);
+    });
   }
 
   get isEditTabActive(): boolean {
@@ -76,10 +76,6 @@ export class SubmSidebarComponent implements OnDestroy {
   private switchSection(sectionFormOp: SectionForm | null): void {
     if (sectionFormOp) {
       const secForm = sectionFormOp!;
-
-      if (!secForm.isRootSection) {
-        return;
-      }
 
       this.unsubscribeForm.next();
 
