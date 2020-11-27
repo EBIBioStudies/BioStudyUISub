@@ -1,8 +1,4 @@
 <div *ngIf="errorList.length > 0" class="alert alert-danger">
-  <ul class="list-group">
-    <li *ngFor="let error of errorList" class="list-group-item">
-      <i class="fa fa-arrow-right" aria-hidden="true"></i>
-      {{error}}
-    </li>
-  </ul>
+  <i class="fas fa-arrow-left"></i>
+  Please fill in the required fields. Fields with validation issues are listed in the left sidebar.
 </div>
