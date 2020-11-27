@@ -115,7 +115,7 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
     const dataPickerContainer: Element | null = document.querySelector('.bs-datepicker-container');
 
     if (dataPickerContainer) {
-      dataPickerContainer.addEventListener('click', (event) => {
+      dataPickerContainer.addEventListener('mousedown', (event) => {
         event.stopPropagation();
       });
     }
