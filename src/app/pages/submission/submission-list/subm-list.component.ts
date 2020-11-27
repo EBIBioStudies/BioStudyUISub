@@ -17,8 +17,7 @@ import { SubmissionStatus } from 'app/pages/submission/submission-shared/submiss
 
 @Component({
   selector: 'st-subm-list',
-  templateUrl: './subm-list.component.html',
-  styleUrls: ['./subm-list.component.scss']
+  templateUrl: './subm-list.component.html'
 })
 export class SubmListComponent implements OnDestroy, OnInit {
   columnDefs?: any[];
