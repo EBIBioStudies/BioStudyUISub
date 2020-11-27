@@ -30,9 +30,9 @@
         <i class="entry-item fas {{control.ref.icon}}"></i>
         {{!collapsed ? '&nbsp;' + control.ref.name + '&nbsp;' : ''}}
       </div>
-      <span *ngIf="!collapsed" class="badge badge-dark"
+      <span *ngIf="!collapsed" class="badge badge-danger"
         tooltip="{{collapsed ? '&quot;' + control.ref.name + '&quot; field is ' + tipText(control.errors) : 'Highlight field on the form'}}"
-        placement="{{collapsed ? 'right' : 'top'}}" [ngClass]="{'label-danger': control.touched}" #labelEl>
+        placement="{{collapsed ? 'right' : 'top'}}" #labelEl>
         {{tipText(control.errors)}}
       </span>
     </button>
