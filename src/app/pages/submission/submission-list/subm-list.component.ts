@@ -85,7 +85,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
         cellClass: 'ag-cell-centered',
         cellRendererFramework: StatusCellComponent,
         field: 'accno',
-        filter: true,
+        filter: false,
         headerName: 'Accession',
         maxWidth: 175,
         resizable: true

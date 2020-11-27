@@ -98,7 +98,7 @@ export class DateFilterComponent implements AgFilterComponent {
   }
 
   onApplyClick(): void {
-    this.notifyAboutChanges();
+    this.notifyChanges();
   }
 
   /**
@@ -108,18 +108,7 @@ export class DateFilterComponent implements AgFilterComponent {
    */
   onClearClick(): void {
     this.reset();
-    this.notifyAboutChanges();
-  }
-
-  onFromChange(): void {
-    if (!this.between) {
-      return;
-    }
-
-    const s = this.date!.getRange();
-    if (s.from > s.to) {
-      this.reset();
-    }
+    this.notifyChanges();
   }
 
   onSelectionChange(value): void {
@@ -129,12 +118,6 @@ export class DateFilterComponent implements AgFilterComponent {
     }
     if (this.before) {
       this.date!.from = undefined;
-    }
-  }
-
-  onToChange(): void {
-    if (!this.between) {
-      return;
     }
   }
 
@@ -156,7 +139,7 @@ export class DateFilterComponent implements AgFilterComponent {
     }
   }
 
-  private notifyAboutChanges(): void {
+  private notifyChanges(): void {
     if (!this.date!.equalsTo(this.prev)) {
       this.prev = this.date!.copy();
       this.params!.filterChangedCallback();
