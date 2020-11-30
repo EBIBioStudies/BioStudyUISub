@@ -27,8 +27,8 @@ import { CustomFormControl } from '../shared/model/custom-form-control.model';
 export class InputValueComponent implements ControlValueAccessor {
   @Input() autosuggest: boolean = true;
   @Input() formControl!: CustomFormControl;
-  @Input() isSmall: boolean = true;
   @Input() isInputGroup: boolean = false;
+  @Input() isSmall: boolean = true;
   @Input() readonly: boolean = false;
   @Input() suggestThreshold: number = 0;
   @Input() valueType: ValueType = ValueTypeFactory.DEFAULT;
