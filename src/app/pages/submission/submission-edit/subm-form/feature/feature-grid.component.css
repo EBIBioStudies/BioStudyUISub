@@ -32,10 +32,6 @@
   border: none;
 }
 
-.optional .form-control {
-  background-color: red;
-}
-
 /* Other rows */
 .row {
   display: flex;
