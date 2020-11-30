@@ -14,7 +14,7 @@
     "node:beta": "cross-env NODE_ENV=beta node .",
     "node:dev": "cross-env NODE_ENV=development tsnd --project ./server/tsconfig.server.json --no-deps --transpile-only .",
     "node:prod": "cross-env NODE_ENV=production node .",
-    "start:dev": "run-p node:dev ng:start",
+    "dev": "run-p node:dev ng:start",
     "pretest": "npm run lint",
     "postinstall": "ngcc",
     "test": "jest --ci"

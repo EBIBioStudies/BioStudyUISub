@@ -16,11 +16,11 @@
 
 .canton,
 .column-heading {
-  border-bottom: 1px solid #CCC;
+  border-bottom: 1px solid #ccc;
 }
 
 .column-heading.has-error {
-  border-bottom-color: #C05F5D;
+  border-bottom-color: #c05f5d;
 }
 
 .canton .btn-add {

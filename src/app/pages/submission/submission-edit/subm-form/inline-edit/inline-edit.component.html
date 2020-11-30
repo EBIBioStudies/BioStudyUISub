@@ -1,5 +1,5 @@
-<div class="d-flex align-content-center h-100" [ngClass]="{'editable': canEdit, 'text-muted': !editing}">
-  <input class="form-control form-control-auto" type="text" tabindex="-1" autocomplete="off"
+<div class="d-flex align-items-center h-100" [ngClass]="{'editable': canEdit, 'text-muted': !editing}">
+  <input class="form-control" type="text" tabindex="-1" autocomplete="off"
        name="inline-edit-box"
        container="body"
        placement="bottom"
@@ -18,6 +18,9 @@
        (keydown)="onKeyDown()"
        #ahead="bs-typeahead"
        #inlineEditBox/>
+  <small *ngIf="isOptional && !editing && !readonly">
+    <i>Optional</i>
+  </small>
   <div *ngIf="!editing" class="btn-group btn-group-sm">
     <button *ngIf="canEdit" class="btn btn-link" type="button"
         (click)="onEdit($event)">

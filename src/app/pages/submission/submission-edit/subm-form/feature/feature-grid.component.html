@@ -19,11 +19,12 @@
               popover="{{column.hasErrors ? column.errors : ''}}"
               triggers="focus"
               emptyValue="{{'Column ' + (idx + 1)}}"
-              [formControl]="column.control"
+              [autosuggestSource]="featureForm.columnNamesAvailable"
               [canEdit]="column.canEditName && userData.isPrivileged && !isReadOnly"
+              [formControl]="column.control"
+              [isOptional]="!column.isRequired"
               [readonly]="isReadOnly"
               [removable]="featureForm.canRemoveColumn(column) && !isReadOnly"
-              [autosuggestSource]="featureForm.columnNamesAvailable"
               (remove)="featureForm.removeColumn(column)"
               stValidateOnblur>
       </st-inline-edit>
@@ -52,20 +53,18 @@
           </div>
         </div>
         <div class="column-entry col-sm-1 col-md-1 col-lg-3 col-xl-3" *ngFor="let column of columns">
-          <div [ngClass]="{'readonly': isReadOnly || column.isReadonly,
-                    'optional': !column.isRequired,
-                    'has-error': row.hasErrorsAt(column.id)}">
+          <div [ngClass]="{'readonly': isReadOnly || column.isReadonly, 'has-error': row.hasErrorsAt(column.id)}">
             <st-input-value placement="top"
                     container="body"
                     containerClass="{{featureForm.isRequired ? 'text-danger' : 'text-warning'}}"
                     popover="{{row.hasErrorsAt(column.id) ? row.errorsAt(column.id) : ''}}"
                     triggers="focus"
-                    [valueType]="column.valueType"
-                    [readonly]="isReadOnly || column.isReadonly"
-                    [formControl]="row.cellControlAt(column.id).control"
                     [autosuggestSource]="featureForm.cellValuesTypeaheadFunc(rowIdx, column.id)"
                     [autosuggest]="column.autosuggest"
+                    [formControl]="row.cellControlAt(column.id).control"
                     [isSmall]="false"
+                    [readonly]="isReadOnly || column.isReadonly"
+                    [valueType]="column.valueType"
                     (inputValueSelect)="onInputValueSelect($event, rowIdx)"
                     stValidateOnblur>
             </st-input-value>

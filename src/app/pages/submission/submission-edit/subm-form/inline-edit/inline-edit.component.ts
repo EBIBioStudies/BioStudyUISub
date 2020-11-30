@@ -13,14 +13,15 @@ import { typeaheadSource } from '../../shared/typeahead.utils';
 })
 export class InlineEditComponent implements ControlValueAccessor {
   editing: boolean = false;
+  suggestLength: number;
+  @Input() canEdit = false;
   @Input() emptyValue = '';
+  @Input() isOptional = false;
   @Input() placeholder = '';
   @Input() readonly = false;
   @Input() removable = true;
-  @Output() remove = new EventEmitter<any>();
-  suggestLength: number;
   @Input() suggestThreshold = 0;
-  @Input() canEdit = false;
+  @Output() remove = new EventEmitter<any>();
   readonly columnOptions: Observable<string[]>;
 
   private inlineEditValue: string = '';
