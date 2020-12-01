@@ -33,5 +33,9 @@ module.exports = {
   rabbitmq: {
     uri: 'amqp://',
     submStatusQueueName: ''
+  },
+  logs: {
+    environment: 'dev',
+    slack_webhook_url: ''
   }
 };

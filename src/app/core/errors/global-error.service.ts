@@ -1,3 +1,4 @@
+import { LogService } from './../logger/log.service';
 import { ErrorHandler, Injectable, Injector, NgZone } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
 import { INTERNAL_SERVER_ERROR, UNAUTHORIZED } from 'http-status-codes';
@@ -13,7 +14,8 @@ export class GlobalErrorService extends ErrorHandler {
     private userSession: UserSession,
     private zone: NgZone,
     private injector: Injector,
-    private errorMessage: ErrorMessageService
+    private errorMessage: ErrorMessageService,
+    private logService: LogService
   ) {
     super();
   }
@@ -47,10 +49,12 @@ export class GlobalErrorService extends ErrorHandler {
     if (error.status === INTERNAL_SERVER_ERROR) {
       // An error occurred that may potentially be worth handling at a global level.
       this.showErrorToast();
-    } else {
-      // tslint:disable-next-line: no-console
       console.error(error);
-      this.showErrorToast();
+    }
+
+    if (error !== UNAUTHORIZED) {
+      this.logService.error(error.message, error.stack);
+      console.log(error.stack);
     }
   }
 }
