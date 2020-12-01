@@ -11,14 +11,14 @@ export const loggerProxy = (path: string, router: Router) => {
   const webhook = new IncomingWebhook(logsWebhookUrl);
 
   router.use(path, async (req, res) => {
-    const { origin } = req.headers;
+    const { origin = '' } = req.headers;
     const { hostname: originHostname } = new URL(origin);
 
     if (originHostname === hostname && logsWebhookUrl.length > 0 && !isDevelopment) {
       const { message, userEmail, params = [] } = req.body;
 
       await webhook.send({
-        attachments: params.map((param) => ({ text: param })),
+        attachments: params.map((param: string) => ({ text: param })),
         blocks: [
           {
             type: 'header',
