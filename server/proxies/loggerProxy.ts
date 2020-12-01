@@ -1,20 +1,15 @@
 import config from 'config';
 import { Router } from 'express';
 import { IncomingWebhook } from '@slack/webhook';
-import { ExpressUri } from '../app';
 
 export const loggerProxy = (path: string, router: Router) => {
-  const { hostname }: ExpressUri = config.get('express');
   const logsWebhookUrl: string = config.get('logs.slack_webhook_url');
   const logsEnvironment: string = config.get('logs.environment');
   const isDevelopment = process.env.NODE_ENV === 'development';
   const webhook = new IncomingWebhook(logsWebhookUrl);
 
   router.use(path, async (req, res) => {
-    const { origin = '' } = req.headers;
-    const { hostname: originHostname } = new URL(origin);
-
-    if (originHostname === hostname && logsWebhookUrl.length > 0 && !isDevelopment) {
+    if (logsWebhookUrl.length > 0 && !isDevelopment) {
       const { message, userEmail, params = [] } = req.body;
 
       await webhook.send({
