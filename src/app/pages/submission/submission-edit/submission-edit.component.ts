@@ -5,14 +5,15 @@ import { Location } from '@angular/common';
 import { Observable, of, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 import { ErrorMessageService } from 'app/core/errors/error-message.service';
+import { LogService } from 'app/core/logger/log.service';
 import { ModalService } from 'app/shared/modal.service';
-import { scrollTop } from 'app/utils';
 import { SectionForm } from './shared/model/section-form.model';
 import { SubmEditService } from './shared/subm-edit.service';
 import { SubmResultsModalComponent } from '../submission-results/subm-results-modal.component';
 import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
-import { SubmitLog } from '../submission-shared/submission.service';
 import { SubmValidationErrors } from '../submission-shared/model';
+import { SubmitLog } from '../submission-shared/submission.service';
+import { scrollTop } from 'app/utils';
 
 class SubmitOperation {
   static CREATE = new SubmitOperation();
@@ -59,7 +60,8 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     private bsModalService: BsModalService,
     private modalService: ModalService,
     private submEditService: SubmEditService,
-    private errorMessage: ErrorMessageService
+    private errorMessage: ErrorMessageService,
+    private logService: LogService
   ) {
     submEditService.sectionSwitch$
       .pipe(takeUntil(this.unsubscribe))
@@ -130,6 +132,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
 
           // tslint:disable-next-line: no-console
           console.error(resp.error);
+          this.logService.error('Error loading submission', resp.error.value.error);
         } else {
           const releaseDateCtrl = this.sectionForm!.findFieldControl('ReleaseDate');
 
