@@ -20,19 +20,12 @@ export const loggerSettings = {
     new transports.Console({
       level: 'warn',
       silent: process.env.NODE_ENV === 'production',
-      format: format.combine(
-        colorize(),
-        timestamp(),
-        consoleLogFormat
-      )
+      format: format.combine(colorize(), timestamp(), consoleLogFormat)
     }),
     new transports.File({
       level: 'upload',
       filename: 'logs/index.log',
-      format: format.combine(
-        timestamp(),
-        json()
-      )
+      format: format.combine(timestamp(), json())
     })
   ]
 };

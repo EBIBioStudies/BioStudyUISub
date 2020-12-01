@@ -64,6 +64,7 @@
     "@fortawesome/fontawesome-free": "5.14.0",
     "@ng-select/ng-select": "^5.0.8",
     "@rxweb/reactive-form-validators": "2.0.0",
+    "@slack/webhook": "^5.0.3",
     "ag-grid-angular": "23.2.1",
     "ag-grid-community": "23.2.1",
     "bootstrap": "^4.5.2",

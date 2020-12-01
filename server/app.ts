@@ -17,10 +17,10 @@ import { processSubmStatus } from './submission-status/submission-status-process
 import { logger } from './logger';
 
 export interface ExpressUri {
-  context: string,
-  hostname: string,
-  port: number,
-  protocol: string
+  context: string;
+  hostname: string;
+  port: number;
+  protocol: string;
 }
 
 const expressConfig: ExpressUri = config.get('express');
@@ -43,7 +43,6 @@ submitterProxy('*/api', router);
 registryProxy('/identifiers/registry', router);
 resolverProxy('/identifiers/resolver', router);
 loggerProxy('/log', router);
-
 
 // In DEV mode this service only proxies requests to the backend.
 // In PROD it serves the Angular static files as well.
