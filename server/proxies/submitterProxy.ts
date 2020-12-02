@@ -17,7 +17,7 @@ const isMultipartRequest = (req: Request) => {
 const proxyConfig = (req: Request, pathname: string) => {
   const filesLimit: string = config.get('files');
 
-  return ({
+  return {
     limit: filesLimit,
     memoizeHost: true,
     parseReqBody: !isMultipartRequest(req),
@@ -33,7 +33,7 @@ const proxyConfig = (req: Request, pathname: string) => {
 
       next(err);
     }
-  });
+  };
 };
 
 export const submitterProxy = (path: string, router: Router) => {
@@ -41,9 +41,7 @@ export const submitterProxy = (path: string, router: Router) => {
   const backUri: string = config.get('backend.uri');
   const backUriFormtted: string = format(backUri);
 
-  router.use(
-    path,
-    expressWinston.logger(loggerSettings),
-    (req, res, next) => proxy(backUriFormtted, proxyConfig(req, backContextPath))(req, res, next)
+  router.use(path, expressWinston.logger(loggerSettings), (req, res, next) =>
+    proxy(backUriFormtted, proxyConfig(req, backContextPath))(req, res, next)
   );
 };

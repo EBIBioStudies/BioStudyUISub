@@ -1,18 +1,16 @@
 import config from 'config';
 import { Router } from 'express';
-import { IncomingWebhook } from '@slack/webhook';
+import fetch from 'node-fetch';
 
 export const loggerProxy = (path: string, router: Router) => {
   const logsWebhookUrl: string = config.get('logs.slack_webhook_url');
   const logsEnvironment: string = config.get('logs.environment');
   const isDevelopment = process.env.NODE_ENV === 'development';
-  const webhook = new IncomingWebhook(logsWebhookUrl);
 
   router.use(path, async (req, res) => {
     if (logsWebhookUrl.length > 0 && !isDevelopment) {
       const { message, userEmail, params = [] } = req.body;
-
-      await webhook.send({
+      const body = {
         attachments: params.map((param: string) => ({ text: param })),
         blocks: [
           {
@@ -41,7 +39,17 @@ export const loggerProxy = (path: string, router: Router) => {
             ]
           }
         ]
-      });
+      };
+
+      try {
+        await fetch(logsWebhookUrl, {
+          method: 'POST',
+          body: JSON.stringify(body),
+          headers: { 'Content-Type': 'application/json' }
+        });
+      } catch (error) {
+        console.error(error);
+      }
     }
 
     res.send();

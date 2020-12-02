@@ -5,8 +5,11 @@ import { logger } from '../logger';
 const assertQueueOptions = { durable: false };
 const consumeQueueOptions = { noAck: false };
 
-const assertAndConsumeQueue = async (channel: Channel, queueName: string, onMessage: (message: ConsumeMessage | null) => any) => {
-
+const assertAndConsumeQueue = async (
+  channel: Channel,
+  queueName: string,
+  onMessage: (message: ConsumeMessage | null) => any
+) => {
   const ackMsg = (message: ConsumeMessage | null) => {
     if (message) {
       onMessage(message);
