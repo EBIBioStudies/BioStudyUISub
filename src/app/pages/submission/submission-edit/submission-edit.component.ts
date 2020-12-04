@@ -131,8 +131,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
           });
 
           // tslint:disable-next-line: no-console
-          console.error(resp.error);
-          this.logService.error('Error loading submission', resp.error.value.error);
+          this.logService.error('Error loading submission', resp?.error?.value?.error?.log?.message);
         } else {
           const releaseDateCtrl = this.sectionForm!.findFieldControl('ReleaseDate');
 
