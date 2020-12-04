@@ -1,6 +1,6 @@
 import config from 'config';
 import { Router } from 'express';
-import fetch from 'node-fetch';
+import request from 'request';
 
 export const loggerProxy = (path: string, router: Router) => {
   const logsWebhookUrl: string = config.get('logs.slack_webhook_url');
@@ -42,11 +42,7 @@ export const loggerProxy = (path: string, router: Router) => {
       };
 
       try {
-        await fetch(logsWebhookUrl, {
-          method: 'POST',
-          body: JSON.stringify(body),
-          headers: { 'Content-Type': 'application/json' }
-        });
+        request.post(logsWebhookUrl, { json: body });
       } catch (error) {
         console.error(error);
       }
