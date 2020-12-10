@@ -31,7 +31,6 @@ export class LinksUtils {
       attributes: attributes.filter((at) => ![TYPE_ATTR, POINTER_ATTR].includes(at.name!) && !isAttributeEmpty(at))
     } as PtLink;
 
-    linkObj.attributes!.push(typeAttr);
     if (pointer) {
       if (isUrl) {
         linkObj.url = pointer;
@@ -46,6 +45,10 @@ export class LinksUtils {
           linkObj.url = linkParts[0];
         }
       }
+    }
+
+    if (!isAttributeEmpty(typeAttr)) {
+      linkObj.attributes!.push(typeAttr);
     }
 
     return linkObj;
