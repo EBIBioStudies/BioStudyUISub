@@ -13,7 +13,7 @@ import {
   mergeAttributes,
   submissionToPageTabProtocols
 } from './model/pagetab';
-import { isNotDefinedOrEmpty, isArrayEmpty, isStringDefined, isEqualIgnoringCase } from 'app/utils';
+import { isArrayEmpty, isStringDefined, isEqualIgnoringCase, isAttributeEmpty, isDefinedAndNotEmpty } from 'app/utils';
 import { AttributeData, Feature, Section, Submission } from './model/submission';
 import { DEFAULT_TEMPLATE_NAME, SubmissionType } from './model/templates';
 import { Injectable } from '@angular/core';
@@ -22,13 +22,6 @@ const isFileType = (type: string) => isEqualIgnoringCase(type, 'file');
 const isLinkType = (type: string) => isEqualIgnoringCase(type, 'link');
 const isLibraryFileType = (type: string) => isEqualIgnoringCase(type, 'libraryfile');
 const isKeywordType = (type: string) => isEqualIgnoringCase(type, 'keywords');
-const isEmptyAttr = (attr: PtAttribute) => {
-  if (Array.isArray(attr.value)) {
-    return attr.value.length === 0;
-  }
-
-  return isNotDefinedOrEmpty(attr.value);
-};
 
 @Injectable()
 export class SubmissionToPageTabService {
@@ -52,7 +45,7 @@ export class SubmissionToPageTabService {
   submissionToPageTab(subm: Submission, isSanitise: boolean = false): PageTab {
     const sectionAttributes: PtAttribute[] = this.extractSectionAttributes(subm.section, isSanitise).filter(
       (at: PtAttribute) => {
-        return at.name && AttrExceptions.editable.includes(at.name);
+        return at.name && AttrExceptions.editable.includes(at.name) && !isAttributeEmpty(at);
       }
     );
 
@@ -86,7 +79,8 @@ export class SubmissionToPageTabService {
   private attributesAsFile(attributes: PtAttribute[]): PtFile {
     const isPathAttr = (at: PtAttribute) => isStringDefined(at.name) && isEqualIgnoringCase(at.name!, 'path');
     const attr = attributes.find((at) => isPathAttr(at));
-    const attrs = attributes.filter((at) => !isPathAttr(at));
+    const attrs = attributes.filter((at) => !isPathAttr(at) && !isAttributeEmpty(at));
+
     return { path: attr && attr.value, attributes: attrs } as PtFile;
   }
 
@@ -102,7 +96,7 @@ export class SubmissionToPageTabService {
         return { name: column.name, value: rowValue && rowValue.value } as PtAttribute;
       });
 
-      return attributes.filter((attr) => (isSanitise && !isEmptyAttr(attr)) || !isSanitise);
+      return attributes.filter((attr) => (isSanitise && !isAttributeEmpty(attr)) || !isSanitise);
     });
 
     return mappedFeatures.filter((mappedFeature) => mappedFeature.length > 0);
@@ -131,9 +125,14 @@ export class SubmissionToPageTabService {
 
   private extractSectionFiles(section: Section, isSanitise: boolean): PtFileItem[] {
     const feature = section.features.list().find((f) => isFileType(f.typeName));
+
     if (feature !== undefined) {
-      return this.extractFeatureAttributes(feature, isSanitise).map((attrs) => this.attributesAsFile(attrs));
+      const featureAttributes: PtAttribute[][] = this.extractFeatureAttributes(feature, isSanitise);
+      const fileAttributes: PtFile[] = featureAttributes.map((attrs) => this.attributesAsFile(attrs));
+
+      return fileAttributes.filter((attr) => isDefinedAndNotEmpty(attr.path));
     }
+
     return [];
   }
 
@@ -150,9 +149,14 @@ export class SubmissionToPageTabService {
 
   private extractSectionLinks(section: Section, isSanitise: boolean): PtLinkItem[] {
     const feature = section.features.list().find((f) => isLinkType(f.typeName));
+
     if (feature !== undefined) {
-      return this.extractFeatureAttributes(feature, isSanitise).map((attrs) => this.attributesAsLink(attrs));
+      const featureAttributes: PtAttribute[][] = this.extractFeatureAttributes(feature, isSanitise);
+      const linkAttributes: PtLink[] = featureAttributes.map((attrs) => this.attributesAsLink(attrs));
+
+      return linkAttributes.filter((attr) => isDefinedAndNotEmpty(attr.url));
     }
+
     return [];
   }
 
@@ -173,7 +177,7 @@ export class SubmissionToPageTabService {
       return featureAttributes.map((attrs) => {
         return {
           type: feature.typeName,
-          attributes: attrs
+          attributes: attrs.filter((attr) => !isAttributeEmpty(attr))
         } as PageTabSection;
       });
     };
@@ -205,7 +209,7 @@ export class SubmissionToPageTabService {
 
         return { name: field.name, value: field.value } as PtAttribute;
       })
-      .filter((attr) => (isSanitise && !isEmptyAttr(attr)) || !isSanitise);
+      .filter((attr) => (isSanitise && !isAttributeEmpty(attr)) || !isSanitise);
   }
 
   private sectionToPtSection(section: Section, isSanitise: boolean = false): PageTabSection {
@@ -213,7 +217,7 @@ export class SubmissionToPageTabService {
       accessTags: section.tags.accessTags,
       accno: section.accno,
       attributes: this.extractSectionAttributes(section, isSanitise).filter(
-        (at) => at.name && !AttrExceptions.editableAndRootOnly.includes(at.name)
+        (at) => at.name && !AttrExceptions.editableAndRootOnly.includes(at.name) && !isAttributeEmpty(at)
       ),
       files: this.extractSectionFiles(section, isSanitise),
       libraryFile: this.extractSectionLibraryFile(section),

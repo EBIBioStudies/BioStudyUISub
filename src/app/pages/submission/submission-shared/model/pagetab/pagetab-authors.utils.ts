@@ -1,6 +1,6 @@
 import { filter } from 'rxjs/operators';
 import { PtAttribute, PageTabSection } from './pagetab.model';
-import { isStringEmpty, isDefinedAndNotEmpty, isStringDefined } from 'app/utils';
+import { isStringEmpty, isDefinedAndNotEmpty, isStringDefined, isAttributeEmpty } from 'app/utils';
 
 export interface Dictionary<T> {
   [key: string]: T | undefined;
@@ -169,7 +169,7 @@ export function contactsToAuthors(sections: PageTabSection[] = []): PageTabSecti
     (contact) =>
       ({
         type: 'Author',
-        attributes: orgs.orgToReferences(contact)
+        attributes: orgs.orgToReferences(contact).filter((ref) => !isAttributeEmpty(ref))
       } as PageTabSection)
   );
 

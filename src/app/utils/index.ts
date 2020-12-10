@@ -5,3 +5,4 @@ export * from './dna.utils';
 export * from './protein.utils';
 export * from './string.utils';
 export * from './array.utils';
+export * from './attribute.utils';

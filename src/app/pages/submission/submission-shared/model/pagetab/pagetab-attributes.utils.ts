@@ -1,5 +1,5 @@
 import { AttrExceptions, PageTab, PtAttribute } from './pagetab.model';
-import { isDefinedAndNotEmpty, isStringDefined, isEqualIgnoringCase } from 'app/utils';
+import { isDefinedAndNotEmpty, isStringDefined, isEqualIgnoringCase, isAttributeEmpty } from 'app/utils';
 
 /* merges to attribute lists by overriding only single value attributes*/
 export function mergeAttributes(attrs1: PtAttribute[], attrs2: PtAttribute[]): PtAttribute[] {
@@ -18,7 +18,8 @@ export function mergeAttributes(attrs1: PtAttribute[], attrs2: PtAttribute[]): P
       merged.push(at);
     }
   });
-  return merged;
+
+  return merged.filter((attr) => !isAttributeEmpty(attr));
 }
 
 export function extractKeywordsFromAttributes(attributes: PtAttribute[]): PtAttribute[] {
