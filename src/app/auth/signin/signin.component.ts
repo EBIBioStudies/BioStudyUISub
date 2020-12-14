@@ -24,20 +24,20 @@ export class SignInComponent implements OnInit {
 
   ngOnInit(): void {
     if (!this.userSession.isAnonymous()) {
-      this.router.navigate(['']);
+      this.router.navigate(['submissions']);
     }
   }
 
   onSubmit(form: NgForm): void {
     this.resetGlobalError();
-    const next = this.route.snapshot.paramMap.get('next') || '/submissions';
+    const next = this.route.snapshot.queryParamMap.get('next') || '/submissions';
 
     if (form.valid) {
       this.isLoading = true;
       this.authService.login(this.model).subscribe(
         (user: UserInfo) => {
           this.userSession.create(user);
-          this.router.navigate([next]);
+          this.router.navigateByUrl(next);
         },
         (error: ServerError) => {
           this.isLoading = false;
