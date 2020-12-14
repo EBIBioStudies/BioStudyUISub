@@ -9,7 +9,7 @@ export class AuthGuard implements CanActivate {
   // tslint:disable-next-line: variable-name
   canActivate(_route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     if (this.userSession.isAnonymous()) {
-      this.router.navigate(['/signin', { next: state.url }]);
+      this.router.navigate(['/signin'], { queryParams: { next: state.url } });
       return false;
     } else {
       return true;

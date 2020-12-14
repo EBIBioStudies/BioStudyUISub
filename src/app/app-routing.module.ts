@@ -7,16 +7,17 @@ import { PasswordResetReqComponent } from './auth/password-reset/password-reset-
 import { PasswordResetComponent } from './auth/password-reset/password-reset.component';
 import { SignInComponent } from './auth/signin/signin.component';
 import { SignUpComponent } from './auth/signup/signup.component';
+import { NotFoundComponent } from './pages/not-found/not-found.component';
 
 const appRoutes: Routes = [
-  { path: '', redirectTo: 'submissions', pathMatch: 'full' },
-  { path: '', loadChildren: () => import('./pages/pages.module').then((m) => m.PagesModule) },
   { path: 'signin', component: SignInComponent },
   { path: 'signup', component: SignUpComponent },
   { path: 'activate/:key', component: ActivateComponent },
   { path: 'password_reset_request', component: PasswordResetReqComponent },
   { path: 'password_reset/:key', component: PasswordResetComponent },
-  { path: 'resend_activation_link', component: ActivationLinkReqComponent }
+  { path: 'resend_activation_link', component: ActivationLinkReqComponent },
+  { path: '', component: SignInComponent },
+  { path: '**', component: NotFoundComponent }
 ];
 
 @NgModule({
