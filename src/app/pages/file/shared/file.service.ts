@@ -1,8 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { map, catchError, finalize } from 'rxjs/operators';
-import { LogService } from 'app/core/logger/log.service';
+import { map, catchError } from 'rxjs/operators';
 import { isDefinedAndNotEmpty } from 'app/utils';
 import { PathInfo, UserGroup } from './file-rest.model';
 import { HttpUploadClientService, UploadEvent } from './http-upload-client.service';
@@ -13,7 +12,7 @@ interface FullPathFile extends File {
 
 @Injectable()
 export class FileService {
-  constructor(private http: HttpClient, private httpUpload: HttpUploadClientService, private logService: LogService) {}
+  constructor(private http: HttpClient, private httpUpload: HttpUploadClientService) {}
 
   download(filePath: string, fileName: string): Observable<any> {
     return this.http.get(`/api/files/${filePath}?fileName=${fileName}`, { responseType: 'blob' });
@@ -57,16 +56,9 @@ export class FileService {
       }
     });
 
-    this.logService.upload('file-upload: start', ...files);
-
     return this.httpUpload.upload(`/api/files${fullPath}`, formData).pipe(
       catchError((error: HttpErrorResponse) => {
-        this.logService.error('file-upload: error', error);
-
         return throwError(error);
-      }),
-      finalize(() => {
-        this.logService.upload('file-upload: finish', ...files);
       })
     );
   }
