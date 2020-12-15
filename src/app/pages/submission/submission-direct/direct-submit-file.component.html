@@ -1,8 +1,8 @@
 <ng-container *ngIf="file">
   <div class="card h-100" [ngClass]="{'panel-default': !accno, 'text-primary': accno}"
-    [ngStyle]="{'cursor': accno || hasSubmitFailed ? 'pointer' : 'default'}"
-    [tooltip]="accno ? 'Edit this study' : hasSubmitFailed ? 'Click to show error log' : ''"
-    (click)="hasSubmitFailed || hasSubmitPassed ? handleOnFileClick($event, hasSubmitFailed, accno) : null"
+    [ngStyle]="{'cursor': accno  ? 'pointer' : 'default'}"
+    [tooltip]="accno ? 'Edit this study' : ''"
+    (click)="hasSubmitPassed ? handleOnFileClick($event, hasSubmitFailed, accno) : null"
     placement="top" container="body">
     <div class="card-body">
       <div class="card-title d-flex align-items-center">
