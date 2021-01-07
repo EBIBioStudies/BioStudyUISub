@@ -29,7 +29,11 @@ export function getSubmissionTemplates(projects: Array<string> = []): Array<{ de
   );
   const templates = [...filteredTemplates, ...SUBMISSION_TEMPLATES_PUBLIC];
 
-  return templates.map((template) => ({ name: template.name, description: template.description }));
+  return templates.map((template) => ({
+    description: template.description,
+    name: template.name,
+    title: template.title
+  }));
 }
 
 export function findSubmissionTemplateByName(name: string): any {

@@ -1,5 +1,6 @@
 export const arrayExpressTemplate = {
   name: 'ArrayExpress',
+  title: 'ArrayExpress',
   description: 'ArrayExpress studies',
   display: 'readonly',
   sectionType: {

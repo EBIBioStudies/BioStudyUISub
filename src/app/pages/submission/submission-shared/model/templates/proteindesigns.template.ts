@@ -1,6 +1,7 @@
 export const proteinDesignsTemplate = {
   name: 'ProteinDesigns',
-  description: 'Protein Designs Template',
+  title: 'Protein Designs',
+  description: 'Protein Engineering and Design project',
   sectionType: {
     name: 'Study',
     displayAnnotations: true,

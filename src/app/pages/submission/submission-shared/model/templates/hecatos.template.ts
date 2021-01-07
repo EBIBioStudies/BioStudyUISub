@@ -1,5 +1,6 @@
 export const hecatosTemplate = {
   name: 'HeCaToS',
+  title: 'HeCaToS',
   description: 'Hepatic and Cardiac Toxicity Systems modelling',
   sectionType: {
     name: 'Study',
