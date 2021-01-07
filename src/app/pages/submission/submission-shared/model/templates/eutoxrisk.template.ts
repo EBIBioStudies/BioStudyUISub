@@ -1,5 +1,6 @@
 export const euToxRiskTemplate = {
   name: 'EU-ToxRisk',
+  title: 'EU-ToxRisk',
   description: 'Integrated European programme for mechanism-based Toxicity testing and Risk assessment',
   sectionType: {
     name: 'Study',

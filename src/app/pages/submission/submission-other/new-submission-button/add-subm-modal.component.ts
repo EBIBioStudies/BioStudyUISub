@@ -8,7 +8,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 export class AddSubmModalComponent {
   onOk?: (selected: string) => void;
   selected: string = 'Default';
-  templates?: Array<{ description: string; name: string }> = [];
+  templates?: Array<{ description: string; name: string; title: string }> = [];
 
   constructor(public bsModalRef: BsModalRef) {}
 
