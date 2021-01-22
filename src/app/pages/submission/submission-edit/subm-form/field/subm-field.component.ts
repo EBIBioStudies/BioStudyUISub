@@ -60,6 +60,10 @@ export class SubmFieldComponent {
   }
 
   get isEmpty(): boolean {
+    if (Array.isArray(this.fieldControl!.control.value)) {
+      return this.fieldControl!.control.value.length === 0;
+    }
+
     return isStringEmpty(this.fieldControl!.control.value as string);
   }
 
