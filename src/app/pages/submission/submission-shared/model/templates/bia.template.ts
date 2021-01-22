@@ -54,6 +54,7 @@ export const biaTemplate = {
         display: 'required',
         valueType: {
           name: 'select',
+          multiple: true,
           values: [
             'Homo sapiens (human)',
             'Mus musculus (mouse)',

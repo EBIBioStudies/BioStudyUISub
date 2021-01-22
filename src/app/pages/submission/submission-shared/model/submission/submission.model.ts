@@ -182,7 +182,7 @@ export class Feature {
         const rowValue = rowMap.valueFor(pair[1].id);
 
         if (rowValue) {
-          rowValue.value = pair[0].value || '';
+          rowValue.value = (pair[0].value || '') as string;
         }
       });
     });
@@ -628,7 +628,7 @@ export interface AttributeData {
   name: string;
   reference?: boolean;
   terms?: NameAndValue[];
-  value?: string;
+  value?: string | string[];
 }
 
 export interface FeatureData {

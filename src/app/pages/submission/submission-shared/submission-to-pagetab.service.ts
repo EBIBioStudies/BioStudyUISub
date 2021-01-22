@@ -14,7 +14,7 @@ import {
   submissionToPageTabProtocols
 } from './model/pagetab';
 import { isArrayEmpty, isStringDefined, isEqualIgnoringCase, isAttributeEmpty, isDefinedAndNotEmpty } from 'app/utils';
-import { AttributeData, Feature, Section, Submission } from './model/submission';
+import { AttributeData, Feature, Field, Fields, Section, Submission } from './model/submission';
 import { DEFAULT_TEMPLATE_NAME, SubmissionType } from './model/templates';
 import { Injectable } from '@angular/core';
 
@@ -192,24 +192,38 @@ export class SubmissionToPageTabService {
     return protocolSections.concat(section.sections.list().map((s) => this.sectionToPtSection(s, isSanitize)));
   }
 
-  private fieldsAsAttributes(section: Section, isSanitise: boolean): any[] {
-    return section.fields
-      .list()
-      .map((field) => {
-        if (field.valueType.isRich()) {
-          const fieldValue: string = field.value || '';
-          const [richValue] = fieldValue.split('@');
+  private fieldAsAttribute(field: Field, displayType?: string): PtAttribute {
+    if (displayType) {
+      return {
+        name: field.name,
+        value: field.value,
+        valqual: [{ name: 'display', value: displayType }]
+      } as PtAttribute;
+    }
 
-          return {
-            name: field.name,
-            value: richValue,
-            valqual: [{ name: 'display', value: 'html' }]
-          } as PtAttribute;
-        }
+    return { name: field.name, value: field.value } as PtAttribute;
+  }
 
-        return { name: field.name, value: field.value } as PtAttribute;
-      })
-      .filter((attr) => (isSanitise && !isAttributeEmpty(attr)) || !isSanitise);
+  private fieldsAsAttributes(section: Section, isSanitise: boolean): PtAttribute[] {
+    const fields: Field[] = section.fields.list();
+    const attributes: PtAttribute[] = [];
+
+    fields.forEach((field) => {
+      if (field.valueType.isRich()) {
+        const fieldValue: string = field.value || '';
+        const [richValue] = fieldValue.split('@');
+
+        attributes.push(this.fieldAsAttribute({ name: field.name, value: richValue } as Field, 'html'));
+      } else if (Array.isArray(field.value)) {
+        field.value.forEach((value) => {
+          attributes.push(this.fieldAsAttribute({ name: field.name, value } as Field));
+        });
+      } else {
+        attributes.push({ name: field.name, value: field.value } as Field);
+      }
+    });
+
+    return attributes.filter((attr) => (isSanitise && !isAttributeEmpty(attr)) || !isSanitise);
   }
 
   private sectionToPtSection(section: Section, isSanitise: boolean = false): PageTabSection {

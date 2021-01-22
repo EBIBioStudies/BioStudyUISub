@@ -7,16 +7,18 @@ import {
   PageTabSection,
   PtAttribute,
   authorsToContacts,
-  extractKeywordsFromAttributes,
   mergeAttributes,
   pageTabToSubmissionProtocols,
   PtLink,
-  PtFile
+  PtFile,
+  findAttributesByName
 } from './model/pagetab';
 import { AttributeData, FeatureData, SectionData, Submission, SubmissionData } from './model/submission';
 import { DEFAULT_TEMPLATE_NAME, READONLY_TEMPLATE_NAME, SubmissionType } from './model/templates';
 import { NameAndValue, PAGE_TAG, Tag } from './model/model.common';
 import { findAttribute } from './utils/pagetab.utils';
+
+const multiValueAttributeNames = ['Organism'];
 
 @Injectable()
 export class PageTabToSubmissionService {
@@ -66,16 +68,37 @@ export class PageTabToSubmissionService {
     return hasSubsection || hasLinks || hasFiles || hasLibraryFile || hasPageTag;
   }
 
+  private attributeToAttributeData(attr: PtAttribute): AttributeData {
+    return {
+      name: attr.name || '',
+      reference: attr.reference || attr.isReference,
+      terms: (attr.valqual || []).map((t) => new NameAndValue(t.name, t.value)),
+      value: attr.value
+    };
+  }
+
   private pageTabAttributesToAttributeData(attrs: PtAttribute[]): AttributeData[] {
-    return attrs.map(
-      (at) =>
-        ({
-          name: at.name,
-          reference: at.reference || at.isReference,
-          terms: (at.valqual || []).map((t) => new NameAndValue(t.name, t.value)),
-          value: at.value
-        } as AttributeData)
-    );
+    const attributesData: AttributeData[] = [];
+    const otherAttributes = attrs.filter((attr) => !multiValueAttributeNames.includes(attr.name || ''));
+
+    multiValueAttributeNames.forEach((multiValueAttributeName) => {
+      const multiValueAttributes = attrs.filter(
+        (attr) => attr.name === multiValueAttributeName && attr.value !== undefined
+      );
+
+      if (multiValueAttributes.length > 0) {
+        const firstAttribute = multiValueAttributes[0];
+        const values = multiValueAttributes.map((attr) => attr.value) as string[];
+
+        attributesData.push(this.attributeToAttributeData({ ...firstAttribute, value: values }));
+      }
+    });
+
+    otherAttributes.forEach((attr) => {
+      attributesData.push(this.attributeToAttributeData(attr));
+    });
+
+    return attributesData;
   }
 
   private pageTabSectionToSectionData(ptSection: PageTabSection, parentAttributes: PtAttribute[] = []): SectionData {
@@ -91,7 +114,7 @@ export class PageTabToSubmissionService {
     const subsections = flatArray(ptSection.subsections || []);
     const contacts = authorsToContacts(subsections.filter((section) => !this.hasSubsections(section)));
     const featureSections = pageTabToSubmissionProtocols(contacts);
-    const keywords = extractKeywordsFromAttributes(ptSection.attributes || []);
+    const keywords = findAttributesByName('Keywords', ptSection.attributes || []);
 
     const features: FeatureData[] = [];
     const hasLinks = links.length > 0;
