@@ -22,6 +22,10 @@ export function mergeAttributes(attrs1: PtAttribute[], attrs2: PtAttribute[]): P
   return merged.filter((attr) => !isAttributeEmpty(attr));
 }
 
+export function findAttributesByName(name: string, attributes: PtAttribute[]): PtAttribute[] {
+  return attributes.filter((attribute) => attribute.name === name);
+}
+
 export function extractKeywordsFromAttributes(attributes: PtAttribute[]): PtAttribute[] {
   return attributes.filter((attribute) => attribute.name === 'Keyword');
 }
