@@ -18,25 +18,24 @@
         </div>
         <h5 class="st-direct-submit-file-name m-0">{{file.name}}</h5>
       </div>
-      <span *ngIf="!hasSubmitFailed && isStudy">
-        {{project ? project : 'No project'}}
-      </span>
+      <div *ngIf="hasSubmitPassed">
+        <p class="card-title">
+          <strong>{{accno}}</strong>
+        </p>
+        <dl class="row mb-0">
+          <dt class="col-sm-6" *ngIf="releaseDate">Release Date</dt>
+          <dd class="col-sm-6" *ngIf="releaseDate">{{releaseDate | date: 'dd MMM yyyy'}}</dd>
+          <dd class="col-sm-6" *ngIf="!releaseDate">No release date</dd>
+
+          <dt class="col-sm-6" *ngIf="isStudy">Project</dt>
+          <dd class="col-sm-6" *ngIf="isStudy">{{project ? project : 'No project'}}</dd>
+        </dl>
+      </div>
       <span class="text-danger" *ngIf="hasSubmitFailed">
         {{error}}
       </span>
       <div class="overflow-auto" *ngIf="hasSubmitFailed">
         <st-subm-results-tree [log]="errorLog"></st-subm-results-tree>
-      </div>
-      <div *ngIf="hasSubmitPassed" class="text-right">
-        <p class="card-title">
-          <strong>{{accno}}</strong>
-        </p>
-        <span *ngIf="releaseDate">
-          <i class="fa fa-bullhorn"></i>&nbsp; {{releaseDate | date: 'dd MMM yyyy'}}
-        </span>
-        <span *ngIf="!releaseDate">
-          No release date
-        </span>
       </div>
     </div>
     <div *ngIf="!hasSubmitFailed && !hasSubmitPassed" class="card-footer text-muted"

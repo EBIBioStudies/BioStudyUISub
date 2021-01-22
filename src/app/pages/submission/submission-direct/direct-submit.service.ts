@@ -89,6 +89,25 @@ export class DirectSubmitRequest {
     return this.directSubmissionReleaseDate;
   }
 
+  private extractReleaseDate(res: SubmitResponse): string {
+    const { attributes = [], section } = res;
+    let releaseDate;
+
+    if (attributes.length > 0) {
+      const releaseDateAttribute = attributes.find((attribute) => attribute.name === 'ReleaseDate');
+
+      releaseDate = releaseDateAttribute ? releaseDateAttribute.value : null;
+    }
+
+    if (!releaseDate && section && section.attributes && section.attributes.length > 0) {
+      const releaseDateAttribute = section.attributes.find((attribute) => attribute.name === 'ReleaseDate');
+
+      releaseDate = releaseDateAttribute ? releaseDateAttribute.value : null;
+    }
+
+    return releaseDate;
+  }
+
   /**
    * Handler for responses from conversion or final submission, updating request status accordingly.
    * @param res - Data object representative of response to the request.
@@ -110,6 +129,7 @@ export class DirectSubmitRequest {
 
       // exposes the accession number
       this.directSubmissionAccno = res.accno;
+      this.directSubmissionReleaseDate = this.extractReleaseDate(res);
     }
   }
 }

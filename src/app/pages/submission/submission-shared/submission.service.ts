@@ -1,3 +1,4 @@
+import { SectionData } from './model/submission/submission.model';
 import * as HttpStatus from 'http-status-codes';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -23,6 +24,8 @@ export interface SubmissionListItem {
 
 export interface SubmitResponse {
   accno: string;
+  attributes: Array<any>;
+  section: SectionData;
   log: SubmitLog;
 }
 
