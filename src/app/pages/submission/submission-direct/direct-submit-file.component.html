@@ -7,10 +7,8 @@
     <div class="card-body">
       <div class="card-title d-flex align-items-center">
         <div>
-          <i class="fa fa-2x" *ngIf="!hasSubmitPassed" aria-hidden="true" [ngClass]="{
-                'st-panel-description-icon': submitType != 'none',
-                'fa-plus': !isPending && submitType == 'create',
-                'fa-sync-alt': !isPending && submitType == 'update',
+          <i class="fa fa-2x st-panel-description-icon" *ngIf="!hasSubmitPassed" aria-hidden="true" [ngClass]="{
+                'fa-plus': !isPending,
                 'fa-caret-square-down text-danger': hasSubmitFailed,
                 'fa-edit': hasSubmitPassed,
                 'fa-exchange-alt': isSubmitting}">
