@@ -36,7 +36,6 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
   isProjFetch: boolean = true; // Are projects still being retrieved?
   @Input() readonly = false;
   selectedProject: string = '';
-  submitType: string = 'create'; // Will the upload create or update studies?
   @Output() toggle = new EventEmitter();
 
   protected ngUnsubscribe: Subject<void>; // Stopper for all subscriptions
@@ -196,10 +195,8 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
    * Carries out the necessary requests for the selected files, detecting their format automatically.
    * NOTE: Requests are bundled into groups of MAX_CONCURRENT requests to avoid overwhelming the browser and/or
    * the server when dealing with a high number of files.
-   *
-   * @param submissionType - Indicates whether the submitted file should create or update an existing database entry.
    */
-  onSubmit(submissionType: string): Observable<boolean> {
+  onSubmit(): Observable<boolean> {
     let nonClearedFiles;
 
     if (this.canSubmit) {
@@ -212,11 +209,11 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
       }
 
       if (nonStudyFiles.length === 0) {
-        this.uploadSubs = this.createDirectSubmission(studyFiles, submissionType).subscribe();
+        this.uploadSubs = this.createDirectSubmission(studyFiles).subscribe();
       } else {
         this.uploadFilesSubscription = this.uploadFiles(nonStudyFiles).subscribe((uploadEvent) => {
           if (uploadEvent.isSuccess()) {
-            this.uploadSubs = this.createDirectSubmission(studyFiles, submissionType).subscribe();
+            this.uploadSubs = this.createDirectSubmission(studyFiles).subscribe();
           }
         });
       }
@@ -289,7 +286,7 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
     }
   }
 
-  private createDirectSubmission(files: File[], submissionType: string): Observable<any> {
+  private createDirectSubmission(files: File[]): Observable<any> {
     // In case the same files are re-submitted, the previous list of requests is reset.
     this.directSubmitSvc.reset();
 
@@ -297,7 +294,7 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
 
     // Performs the double-request submits and flattens the resulting high-order observables onto a single one.
     return from(files).pipe(
-      map((file: File) => this.directSubmitSvc.addRequest(file, project, submissionType)),
+      map((file: File) => this.directSubmitSvc.addRequest(file, project)),
       // Throttles the number of requests allowed in parallel and takes just the last event
       // to signal the end of the upload process.
       mergeAll(this.appConfig.maxConcurrent),

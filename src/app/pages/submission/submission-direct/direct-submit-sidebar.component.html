@@ -44,26 +44,9 @@
         </div>
       </ng-container>
     </div>
-    <div class="form-group">
-      <div class="border-bottom mb-2">
-        <label class="m-0">3. Upload mode</label>
-      </div>
-      <div>
-        <label>
-          <input type="radio" class="project-radio" name="submitType" value="create" [(ngModel)]="submitType">
-          Create new studies
-        </label>
-      </div>
-      <div>
-        <label>
-          <input type="radio" class="project-radio" name="submitType" value="update" [(ngModel)]="submitType">
-          Update studies
-        </label>
-      </div>
-    </div>
     <div class="btn-group">
       <button id="single-button" type="button" [disabled]="isProjFetch || isStatus('busy')"
-        (click)="onSubmit(submitType)" class="btn btn-primary btn-submit">
+        (click)="onSubmit()" class="btn btn-primary btn-submit">
         Upload
       </button>
     </div>
@@ -76,8 +59,7 @@
       </div>
     </div>
     <h4 class="text-white mt-2" *ngIf="!collapsed">
-      {{submitType == 'create' ? 'Creating' : 'Updating'}}
-      {{selectedFileCount > 1 ? 'studies' : 'study'}}...
+      Uploading {{selectedFileCount > 1 ? 'studies' : 'study'}}...
     </h4>
     <button class="btn btn-danger btn-sm mt-2" tooltip="Stop all pending uploads" placement="bottom" container="body"
       (click)="onCancelPending($event)">
