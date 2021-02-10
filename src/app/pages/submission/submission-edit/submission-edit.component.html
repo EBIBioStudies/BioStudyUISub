@@ -95,11 +95,39 @@
                 Study <span *ngIf="submitOperation.isUpdate">updated</span>
               </h4>
               <p class="card-text mb-1" *ngIf="submitOperation.isUpdate ">
-                The study has been successfully updated and is now being processed.
-              </p>
-              <h6>
+                The study with accession number <strong>{{accno}}</strong>
+                <span *ngIf="releaseDate">and release date <strong>{{releaseDate | date: 'dd MMMM yyyy'}}</strong></span>
+                has been successfully updated and is now being processed. It will be available at
+                <a target="_blank" href="{{location.origin}}/biostudies/studies/{{accno}}">
+                  {{location.hostname}}/biostudies/studies/{{accno}}</a>. <br />
                 <mark>A notification will be dropped to your email as soon as the submission has been processed.</mark>
-              </h6>
+              </p>
+            </ng-container>
+
+            <ng-container *ngIf="readonly">
+              <div class="mt-3">
+                <strong *ngIf="!isTemp">
+                  <a target="_blank" href="https://www.ebi.ac.uk/biostudies/about">
+                    Citing my study
+                    <i class="fa fa-fw fa-external-link-square"></i>
+                  </a>
+                </strong>
+                <p *ngIf="!isTemp">
+                  Data are available in the BioStudies database <a target="_blank"
+                  href="https://www.ebi.ac.uk/biostudies/">(https://ebi.ac.uk/biostudies/) </a>
+                  under accession number {{accno}}.
+                </p>
+                <strong>
+                  <a target="_blank" href="http://europepmc.org/abstract/MED/26700850">
+                    Citing the BioStudies database
+                    <i class="fa fa-fw fa-external-link-square"></i>
+                  </a>
+                </strong>
+                <p>Sarkans U, Gostev M, Athar A, et al. <a href="http://doi.org/10.1093/nar/gkx965">The BioStudies
+                  database-one stop shop for all data supporting a life sciences study. </a>
+                  <i>Nucleic Acids Res.</i> 2018;46(D1):D1266-D1270. doi:10.1093/nar/gkx965
+                </p>
+              </div>
             </ng-container>
           </div>
         </div>
