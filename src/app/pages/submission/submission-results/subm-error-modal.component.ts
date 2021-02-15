@@ -1,4 +1,3 @@
-import { Router } from '@angular/router';
 import { Component } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { SubmitLog, SubmissionService } from '../submission-shared/submission.service';
@@ -7,20 +6,17 @@ import { SubmitLog, SubmissionService } from '../submission-shared/submission.se
  * UI component for the modal being rendered with a given study's submission results.
  */
 @Component({
-  selector: 'st-subm-results',
-  templateUrl: './subm-results-modal.component.html'
+  selector: 'st-subm-error',
+  templateUrl: './subm-error-modal.component.html'
 })
-export class SubmResultsModalComponent {
+export class SubmErrorModalComponent {
   collapsedLog?: boolean = false;
-  isSuccess: boolean = true;
   log?: SubmitLog;
 
   private modalRef: BsModalRef;
-  private router: Router;
 
-  constructor(modalRef: BsModalRef, router: Router) {
+  constructor(modalRef: BsModalRef) {
     this.modalRef = modalRef;
-    this.router = router;
   }
 
   get errorMessage(): string {
@@ -29,15 +25,6 @@ export class SubmResultsModalComponent {
 
   get hasLog(): boolean {
     return this.log !== undefined;
-  }
-
-  get isError(): boolean {
-    return !this.isSuccess;
-  }
-
-  goToSubmissions(): void {
-    this.hideModal();
-    this.router.navigateByUrl('/submissions');
   }
 
   hideModal(): void {
