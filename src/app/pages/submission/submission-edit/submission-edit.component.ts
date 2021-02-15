@@ -9,7 +9,7 @@ import { LogService } from 'app/core/logger/log.service';
 import { ModalService } from 'app/shared/modal.service';
 import { SectionForm } from './shared/model/section-form.model';
 import { SubmEditService } from './shared/subm-edit.service';
-import { SubmResultsModalComponent } from '../submission-results/subm-results-modal.component';
+import { SubmErrorModalComponent } from '../submission-results/subm-error-modal.component';
 import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
 import { SubmValidationErrors } from '../submission-shared/model';
 import { SubmitLog } from '../submission-shared/submission.service';
@@ -214,7 +214,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
       )
       .subscribe(
         () => this.onSubmitSuccess(),
-        (resp) => this.showSubmitLog(false, resp.log)
+        (resp) => this.showSubmitLog(resp.log)
       );
   }
 
@@ -261,7 +261,6 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     this.locService.replaceState('/submissions/' + this.accno);
     this.readonly = true;
     this.submitOperation = this.isTemp ? SubmitOperation.CREATE : SubmitOperation.UPDATE;
-    this.showSubmitLog(true);
 
     scrollTop();
   }
@@ -272,9 +271,9 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     return this.sectionForm !== undefined && this.sectionForm.form.valid && !hasErrors;
   }
 
-  private showSubmitLog(isSuccess: boolean, log?: SubmitLog): void {
-    this.bsModalService.show(SubmResultsModalComponent, {
-      initialState: { isSuccess, log }
+  private showSubmitLog(log?: SubmitLog): void {
+    this.bsModalService.show(SubmErrorModalComponent, {
+      initialState: { log }
     });
   }
 
