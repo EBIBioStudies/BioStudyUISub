@@ -4,6 +4,7 @@ import { RecaptchaComponent } from 'ng-recaptcha';
 import { AuthService } from 'app/auth/shared';
 import { PasswordResetRequestData } from '../shared/model';
 import { ServerError } from 'app/shared/server-error.handler';
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: 'st-auth-passwd-reset-req',
@@ -19,7 +20,14 @@ export class PasswordResetReqComponent {
   @ViewChild('recaptchaEl')
   private recaptcha!: RecaptchaComponent;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private activatedRoute: ActivatedRoute) {}
+
+  ngOnInit(): void {
+    const email = this.activatedRoute.snapshot.queryParamMap.get('email');
+    if (email !== null) {
+      this.model.email = email;
+    }
+  }
 
   onRecaptchaResolved(captchaToken: string): void {
     const component = this; // SelfSubscriber object sometimes overwrites context for "subscribe" method
