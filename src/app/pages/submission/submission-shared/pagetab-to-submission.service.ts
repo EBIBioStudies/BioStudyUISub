@@ -1,3 +1,4 @@
+import { SelectValueType, ValueTypeName, FieldType } from './model/templates/submission-type.model';
 import { Injectable } from '@angular/core';
 import { flatArray, isDefinedAndNotEmpty, isArrayEmpty, arrayUniqueValues, isStringDefined } from 'app/utils';
 import {
@@ -14,11 +15,9 @@ import {
   findAttributesByName
 } from './model/pagetab';
 import { AttributeData, FeatureData, SectionData, Submission, SubmissionData } from './model/submission';
-import { DEFAULT_TEMPLATE_NAME, READONLY_TEMPLATE_NAME, SubmissionType } from './model/templates';
+import { DEFAULT_TEMPLATE_NAME, SectionType, SubmissionType } from './model/templates';
 import { NameAndValue, PAGE_TAG, Tag } from './model/model.common';
 import { findAttribute } from './utils/pagetab.utils';
-
-const multiValueAttributeNames = ['Organism'];
 
 @Injectable()
 export class PageTabToSubmissionService {
@@ -26,17 +25,19 @@ export class PageTabToSubmissionService {
     const submissionTemplateName: string = this.findSubmissionTemplateName(pageTab);
     const type: SubmissionType = SubmissionType.fromTemplate(submissionTemplateName);
 
-    return new Submission(type, this.pageTabToSubmissionData(pageTab));
+    return new Submission(type, this.pageTabToSubmissionData(pageTab, type.sectionType));
   }
 
-  pageTabToSubmissionData(pageTab: PageTab): SubmissionData {
+  pageTabToSubmissionData(pageTab: PageTab, sectionType: SectionType): SubmissionData {
     return {
       accno: pageTab.accno,
       tags: (pageTab.tags || []).map((t) => new Tag(t.classifier, t.tag)),
       isRevised: !isArrayEmpty(pageTab.tags || []),
       accessTags: pageTab.accessTags,
-      attributes: this.pageTabAttributesToAttributeData(pageTab.attributes || []),
-      section: pageTab.section ? this.pageTabSectionToSectionData(pageTab.section, pageTab.attributes) : undefined
+      attributes: this.pageTabAttributesToAttributeData(pageTab.attributes || [], sectionType),
+      section: pageTab.section
+        ? this.pageTabSectionToSectionData(pageTab.section, pageTab.attributes, sectionType)
+        : undefined
     } as SubmissionData;
   }
 
@@ -48,11 +49,7 @@ export class PageTabToSubmissionService {
       return DEFAULT_TEMPLATE_NAME;
     }
 
-    if (attachToValue.length === 1) {
-      return attachToValue[0];
-    }
-
-    return READONLY_TEMPLATE_NAME;
+    return attachToValue[0];
   }
 
   private hasSubsections(section: PageTabSection): boolean {
@@ -77,9 +74,17 @@ export class PageTabToSubmissionService {
     };
   }
 
-  private pageTabAttributesToAttributeData(attrs: PtAttribute[]): AttributeData[] {
+  private pageTabAttributesToAttributeData(attrs: PtAttribute[], sectionType: SectionType): AttributeData[] {
     const attributesData: AttributeData[] = [];
-    const otherAttributes = attrs.filter((attr) => !multiValueAttributeNames.includes(attr.name || ''));
+
+    const selectFieldTypes: FieldType[] = sectionType.fieldTypes.filter(({ valueType }) =>
+      valueType.is(ValueTypeName.select)
+    );
+    const multiValueAttributeNames: string[] = selectFieldTypes
+      .filter((fieldType) => (fieldType.valueType as SelectValueType).multiple)
+      .map((fieldType) => fieldType.name);
+
+    const singleValueAttributes = attrs.filter((attr) => !multiValueAttributeNames.includes(attr.name || ''));
 
     multiValueAttributeNames.forEach((multiValueAttributeName) => {
       const multiValueAttributes = attrs.filter(
@@ -94,20 +99,24 @@ export class PageTabToSubmissionService {
       }
     });
 
-    otherAttributes.forEach((attr) => {
+    singleValueAttributes.forEach((attr) => {
       attributesData.push(this.attributeToAttributeData(attr));
     });
 
     return attributesData;
   }
 
-  private pageTabSectionToSectionData(ptSection: PageTabSection, parentAttributes: PtAttribute[] = []): SectionData {
+  private pageTabSectionToSectionData(
+    ptSection: PageTabSection,
+    parentAttributes: PtAttribute[] = [],
+    sectionType: SectionType
+  ): SectionData {
     const parentAttributesWithName = parentAttributes.filter((attribute) => isStringDefined(attribute.name));
     const editableParentAttributes = parentAttributesWithName.filter((attribute) =>
       AttrExceptions.editable.includes(attribute.name!)
     );
     const parentAndChildAttributes = mergeAttributes(editableParentAttributes, ptSection.attributes || []);
-    const attributes = this.pageTabAttributesToAttributeData(parentAndChildAttributes);
+    const attributes = this.pageTabAttributesToAttributeData(parentAndChildAttributes, sectionType);
 
     const links = flatArray<PtLink>(ptSection.links || []);
     const files = flatArray<PtFile>(ptSection.files || []);
@@ -128,7 +137,7 @@ export class PageTabToSubmissionService {
         type: 'Link',
         entries: links
           .map((link) => LinksUtils.toUntyped(link))
-          .map((link) => this.pageTabAttributesToAttributeData(link))
+          .map((link) => this.pageTabAttributesToAttributeData(link, sectionType))
       } as FeatureData);
     }
 
@@ -137,7 +146,7 @@ export class PageTabToSubmissionService {
         type: 'File',
         entries: files
           .map((file) => [{ name: 'Path', value: file.path } as PtAttribute].concat(file.attributes || []))
-          .map((file) => this.pageTabAttributesToAttributeData(file))
+          .map((file) => this.pageTabAttributesToAttributeData(file, sectionType))
       } as FeatureData);
     }
 
@@ -164,7 +173,7 @@ export class PageTabToSubmissionService {
       featureTypes.forEach((featureType) => {
         const entries = featureSections
           .filter((featureSection) => featureSection.type === featureType)
-          .map((featureSection) => this.pageTabAttributesToAttributeData(featureSection.attributes || []));
+          .map((featureSection) => this.pageTabAttributesToAttributeData(featureSection.attributes || [], sectionType));
 
         features.push({
           type: featureType,
@@ -175,11 +184,11 @@ export class PageTabToSubmissionService {
 
     const formattedSections = subsections
       .filter(this.hasSubsections)
-      .map((section) => this.pageTabSectionToSectionData(section));
+      .map((section) => this.pageTabSectionToSectionData(section, [], sectionType));
 
     const formattedSubSections = subsections
       .filter((section) => section.type !== 'Protocol')
-      .map((subSection) => this.pageTabSectionToSectionData(subSection));
+      .map((subSection) => this.pageTabSectionToSectionData(subSection, [], sectionType));
 
     return {
       type: ptSection.type,
