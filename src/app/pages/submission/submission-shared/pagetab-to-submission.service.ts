@@ -34,7 +34,7 @@ export class PageTabToSubmissionService {
       tags: (pageTab.tags || []).map((t) => new Tag(t.classifier, t.tag)),
       isRevised: !isArrayEmpty(pageTab.tags || []),
       accessTags: pageTab.accessTags,
-      attributes: this.pageTabAttributesToAttributeData(pageTab.attributes || [], sectionType),
+      attributes: this.pageTabAttributesToAttributeData(pageTab.attributes || []),
       section: pageTab.section
         ? this.pageTabSectionToSectionData(pageTab.section, pageTab.attributes, sectionType)
         : undefined
@@ -74,7 +74,7 @@ export class PageTabToSubmissionService {
     };
   }
 
-  private pageTabAttributesToAttributeData(attrs: PtAttribute[], sectionType: SectionType): AttributeData[] {
+  private pageTabStudyAttributesToAttributesData(attrs: PtAttribute[], sectionType: SectionType): AttributeData[] {
     const attributesData: AttributeData[] = [];
 
     const selectFieldTypes: FieldType[] = sectionType.fieldTypes.filter(({ valueType }) =>
@@ -106,17 +106,23 @@ export class PageTabToSubmissionService {
     return attributesData;
   }
 
+  private pageTabAttributesToAttributeData(attrs: PtAttribute[]): AttributeData[] {
+    return attrs.map((attr) => this.attributeToAttributeData(attr));
+  }
+
   private pageTabSectionToSectionData(
     ptSection: PageTabSection,
     parentAttributes: PtAttribute[] = [],
-    sectionType: SectionType
+    sectionType: SectionType | null
   ): SectionData {
     const parentAttributesWithName = parentAttributes.filter((attribute) => isStringDefined(attribute.name));
     const editableParentAttributes = parentAttributesWithName.filter((attribute) =>
       AttrExceptions.editable.includes(attribute.name!)
     );
     const parentAndChildAttributes = mergeAttributes(editableParentAttributes, ptSection.attributes || []);
-    const attributes = this.pageTabAttributesToAttributeData(parentAndChildAttributes, sectionType);
+    const attributes = sectionType
+      ? this.pageTabStudyAttributesToAttributesData(parentAndChildAttributes, sectionType)
+      : this.pageTabAttributesToAttributeData(parentAndChildAttributes);
 
     const links = flatArray<PtLink>(ptSection.links || []);
     const files = flatArray<PtFile>(ptSection.files || []);
@@ -137,7 +143,7 @@ export class PageTabToSubmissionService {
         type: 'Link',
         entries: links
           .map((link) => LinksUtils.toUntyped(link))
-          .map((link) => this.pageTabAttributesToAttributeData(link, sectionType))
+          .map((link) => this.pageTabAttributesToAttributeData(link))
       } as FeatureData);
     }
 
@@ -146,7 +152,7 @@ export class PageTabToSubmissionService {
         type: 'File',
         entries: files
           .map((file) => [{ name: 'Path', value: file.path } as PtAttribute].concat(file.attributes || []))
-          .map((file) => this.pageTabAttributesToAttributeData(file, sectionType))
+          .map((file) => this.pageTabAttributesToAttributeData(file))
       } as FeatureData);
     }
 
@@ -173,7 +179,7 @@ export class PageTabToSubmissionService {
       featureTypes.forEach((featureType) => {
         const entries = featureSections
           .filter((featureSection) => featureSection.type === featureType)
-          .map((featureSection) => this.pageTabAttributesToAttributeData(featureSection.attributes || [], sectionType));
+          .map((featureSection) => this.pageTabAttributesToAttributeData(featureSection.attributes || []));
 
         features.push({
           type: featureType,
@@ -184,11 +190,11 @@ export class PageTabToSubmissionService {
 
     const formattedSections = subsections
       .filter(this.hasSubsections)
-      .map((section) => this.pageTabSectionToSectionData(section, [], sectionType));
+      .map((section) => this.pageTabSectionToSectionData(section, [], null));
 
     const formattedSubSections = subsections
       .filter((section) => section.type !== 'Protocol')
-      .map((subSection) => this.pageTabSectionToSectionData(subSection, [], sectionType));
+      .map((subSection) => this.pageTabSectionToSectionData(subSection, [], null));
 
     return {
       type: ptSection.type,
