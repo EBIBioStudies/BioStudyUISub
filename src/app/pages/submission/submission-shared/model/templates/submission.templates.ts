@@ -41,5 +41,6 @@ export function findSubmissionTemplateByName(name: string): any {
   const tmpl = [...SUBMISSION_TEMPLATES, ...SUBMISSION_TEMPLATES_PUBLIC].find(
     (tmplItem) => tmplItem.name.toLowerCase() === tmplName
   );
-  return tmpl ? tmpl : defaultTemplate;
+
+  return tmpl ? tmpl : readonlyTemplate;
 }
