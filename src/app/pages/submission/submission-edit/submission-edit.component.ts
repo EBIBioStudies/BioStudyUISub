@@ -116,6 +116,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
       .subscribe((resp) => {
         if (this.hasJustCreated) {
           this.locService.replaceState('/submissions/edit/' + this.accno);
+          this.readonly = false;
         }
 
         if (this.sideBar && resp.payload.isSome) {
