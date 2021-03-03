@@ -11,5 +11,5 @@
       input which displays the date picker.
    -->
    <input class="hidden-input" readonly (bsValueChange)="onPickerSet($event)" (onShown)="onPickerShown()"
-      #dp="bsDatepicker" bsDatepicker>
+      #dp="bsDatepicker" [bsConfig]="{ showTodayButton: true, todayPosition: 'center' }" bsDatepicker>
 </div>
