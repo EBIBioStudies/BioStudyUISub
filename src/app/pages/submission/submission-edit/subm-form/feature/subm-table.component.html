@@ -1,20 +1,20 @@
-<div class="card mt-4" *ngIf="featureForm && !featureForm.isEmpty">
+<div class="card mt-4" *ngIf="tableForm && !tableForm.isEmpty">
   <div class="card-header d-flex align-items-center">
     <div class="d-flex align-items-center flex-grow-1">
-      <i class="fa fa-lg {{featureForm.icon}}"></i>
+      <i class="fa fa-lg {{tableForm.icon}}"></i>
       <div class="pl-3">
         <h6 class="d-flex align-items-center m-0">
-          {{featureForm.prettyName | lowercase | titlecase}}
+          {{tableForm.prettyName | lowercase | titlecase}}
           <span class="small text-muted ml-1"
-            *ngIf="!readonly && !featureForm.isRequired && !featureForm.isReadonly && featureForm.hasRequiredGroups">
-            (Required at least one {{featureForm.requiredGroups.join(' or ')}})
+            *ngIf="!readonly && !tableForm.isRequired && !tableForm.isReadonly && tableForm.hasRequiredGroups">
+            (Required at least one {{tableForm.requiredGroups.join(' or ')}})
           </span>
         </h6>
-        <span class="text-muted" [innerHTML]="featureForm.description"></span>
+        <span class="text-muted" [innerHTML]="tableForm.description"></span>
       </div>
     </div>
     <div class="text-muted"
-      *ngIf="!readonly && !featureForm.isRequired && !featureForm.isReadonly && !featureForm.hasRequiredGroups">
+      *ngIf="!readonly && !tableForm.isRequired && !tableForm.isReadonly && !tableForm.hasRequiredGroups">
       <i>Optional</i>
     </div>
   </div>
@@ -22,20 +22,20 @@
   <div class="card-body">
     <div class="d-flex align-items-center justify-content-end pb-2">
       <h6 class="card-subtitle text-muted flex-grow-1"
-        *ngIf="featureForm.columnNamesAvailableCached.length && userData.isPrivileged && !readonly && !featureForm.isReadonly">
-        <strong>{{featureForm.hasUniqueColumns ? 'More' : 'Available'}}
-          {{featureForm.canHaveMultipleRows ? 'column' : 'key'}}s</strong>:
-        <i>{{featureForm.columnNamesAvailableCached.join(', ')}}.</i>
+        *ngIf="tableForm.columnNamesAvailableCached.length && userData.isPrivileged && !readonly && !tableForm.isReadonly">
+        <strong>{{tableForm.hasUniqueColumns ? 'More' : 'Available'}}
+          {{tableForm.canHaveMultipleRows ? 'column' : 'key'}}s</strong>:
+        <i>{{tableForm.columnNamesAvailableCached.join(', ')}}.</i>
       </h6>
-      <div class="badge badge-danger" *ngIf="featureForm.invalid">{{featureForm.errorCount}}
-        error{{featureForm.errorCount > 1 ? 's' : ''}}</div>
+      <div class="badge badge-danger" *ngIf="tableForm.invalid">{{tableForm.errorCount}}
+        error{{tableForm.errorCount > 1 ? 's' : ''}}</div>
     </div>
 
-    <st-table *ngIf="featureForm.canHaveMultipleRows; else featureList" [featureForm]="featureForm"
+    <st-table *ngIf="tableForm.canHaveMultipleRows; else featureList" [tableForm]="tableForm"
       [readonly]="readonly">
     </st-table>
     <ng-template #featureList>
-      <st-single-column-table [featureForm]="featureForm" [readonly]="readonly">
+      <st-single-column-table [tableForm]="tableForm" [readonly]="readonly">
       </st-single-column-table>
     </ng-template>
   </div>

@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, DoCheck, Input, OnInit } from '@angular/c
 import { UserData } from 'app/auth/shared';
 import { FeatureForm } from '../../shared/model/feature-form.model';
 
-interface FeatureOperation {
+interface TableOperation {
   callback: () => void;
   label: string;
 }
@@ -13,57 +13,55 @@ interface FeatureOperation {
   styleUrls: ['./subm-table.component.css']
 })
 export class SubmTableComponent implements OnInit, DoCheck {
-  @Input() featureForm!: FeatureForm;
-  operations: FeatureOperation[] = [];
+  @Input() tableForm!: FeatureForm;
+  operations: TableOperation[] = [];
   @Input() readonly?: boolean = false;
 
-  private submFeatureAllowedColNames: string[] = [];
-  private submFeatureErrorNum: number = 0;
-  private submFeatureUniqueColNames: string[] = [];
+  private submTableAllowedColNames: string[] = [];
+  private submTableErrorNum: number = 0;
+  private submTableUniqueColNames: string[] = [];
   private colTypeNames: string[] = [];
 
   constructor(private changeRef: ChangeDetectorRef, public userData: UserData) {}
 
   get allowedColNames(): string[] {
-    return this.submFeatureAllowedColNames;
+    return this.submTableAllowedColNames;
   }
 
   get uniqueColNames(): string[] {
-    return this.submFeatureUniqueColNames;
+    return this.submTableUniqueColNames;
   }
 
   get errorNum(): number {
-    return this.submFeatureErrorNum;
+    return this.submTableErrorNum;
   }
 
   /**
-   * Counts the number of errors if the feature is not empty.
+   * Counts the number of errors if the table is not empty.
    */
   ngDoCheck(): void {
-    this.submFeatureErrorNum = Object.keys(this.featureForm.form.errors || {}).length;
-    this.submFeatureUniqueColNames = this.colTypeNames.filter((name) => this.featureForm.columnNames.includes(name));
-    this.submFeatureAllowedColNames = this.featureForm.hasUniqueColumns
-      ? this.submFeatureUniqueColNames
-      : this.colTypeNames;
+    this.submTableErrorNum = Object.keys(this.tableForm.form.errors || {}).length;
+    this.submTableUniqueColNames = this.colTypeNames.filter((name) => this.tableForm.columnNames.includes(name));
+    this.submTableAllowedColNames = this.tableForm.hasUniqueColumns ? this.submTableUniqueColNames : this.colTypeNames;
     this.changeRef.detectChanges();
   }
 
   ngOnInit(): void {
-    if (this.featureForm === undefined) {
+    if (this.tableForm === undefined) {
       return;
     }
 
     this.operations.push({
       label: 'Add column',
       callback: () => {
-        this.featureForm.addColumn();
+        this.tableForm.addColumn();
       }
     });
 
     this.operations.push({
       label: 'Add row',
       callback: () => {
-        this.featureForm.addRow();
+        this.tableForm.addRow();
       }
     });
   }

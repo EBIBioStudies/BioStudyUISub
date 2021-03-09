@@ -9,7 +9,7 @@ import { FeatureForm } from '../../shared/model/feature-form.model';
   styleUrls: ['./single-column-table.component.css']
 })
 export class SingleColumnTableComponent {
-  @Input() featureForm!: FeatureForm; // Reactive data structure for the form containing this feature
+  @Input() tableForm!: FeatureForm; // Reactive data structure for the form containing this feature
   @Input() readonly?: boolean = false; // Flag for features that cannot be edited (e.g. sent state for submissions)
 
   suggestLength: number; // max number of suggested values to be displayed at once
@@ -19,7 +19,7 @@ export class SingleColumnTableComponent {
   }
 
   get columns(): ColumnControl[] {
-    return this.featureForm.columns;
+    return this.tableForm.columns;
   }
 
   /**

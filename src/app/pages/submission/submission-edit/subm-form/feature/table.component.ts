@@ -13,7 +13,7 @@ import { Options as SortableOption } from 'sortablejs';
 })
 export class TableComponent implements OnChanges {
   @ViewChildren('colEl') colEls?: QueryList<ElementRef>;
-  @Input() featureForm!: FeatureForm;
+  @Input() tableForm!: FeatureForm;
   hoveredRowIndex: number = -1;
   @Input() readonly = false;
   @ViewChildren('rowEl') rowEls?: QueryList<ElementRef>;
@@ -27,19 +27,19 @@ export class TableComponent implements OnChanges {
   }
 
   get rows(): RowForm[] {
-    return this.featureForm.rows;
+    return this.tableForm.rows;
   }
 
   get columns(): ColumnControl[] {
-    return this.featureForm.columns;
+    return this.tableForm.columns;
   }
 
   get isSortable(): boolean {
-    return !this.isReadOnly && this.featureForm!.rows.length > 1;
+    return !this.isReadOnly && this.tableForm!.rows.length > 1;
   }
 
   get isReadOnly(): boolean {
-    return Boolean(this.readonly || this.featureForm?.isReadonly);
+    return Boolean(this.readonly || this.tableForm?.isReadonly);
   }
 
   ngOnChanges(): void {
@@ -69,8 +69,8 @@ export class TableComponent implements OnChanges {
     }
 
     attrNames.forEach((attrName) => {
-      const rowForm = this.featureForm.rows[rowIdx];
-      const col = this.featureForm.columns.find((c) => c.name.toLowerCase() === attrName.toLowerCase());
+      const rowForm = this.tableForm.rows[rowIdx];
+      const col = this.tableForm.columns.find((c) => c.name.toLowerCase() === attrName.toLowerCase());
 
       if (col !== undefined) {
         const cellControl = rowForm.cellControlAt(col.id);
@@ -91,6 +91,6 @@ export class TableComponent implements OnChanges {
   }
 
   onRowOrderUpdate(): void {
-    this.featureForm.syncModelRows();
+    this.tableForm.syncModelRows();
   }
 }
