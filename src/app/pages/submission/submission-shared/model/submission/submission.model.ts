@@ -1,4 +1,3 @@
-import { zip } from 'fp-ts/lib/Array';
 import { isDefinedAndNotEmpty, isArrayEmpty, arrayUniqueValues, isStringDefined } from 'app/utils';
 import { nextId } from './submission.model.counter';
 import { Attribute } from './submission.model.attribute';
@@ -178,11 +177,12 @@ export class Feature {
 
       const attrs = attrsWithName.filter((attr) => attr.name === colName);
       const columns = this.featureColumns.filterByName(colName);
-      zip(attrs, columns).forEach((pair) => {
-        const rowValue = rowMap.valueFor(pair[1].id);
+
+      columns.forEach((column, index) => {
+        const rowValue: AttributeValue = rowMap.valueFor(column.id);
 
         if (rowValue) {
-          rowValue.value = (pair[0].value || '') as string;
+          rowValue.value = (attrs[index].value || '') as string;
         }
       });
     });

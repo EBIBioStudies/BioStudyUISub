@@ -4,11 +4,11 @@ import { ColumnControl } from '../../shared/model/column-control.model';
 import { FeatureForm } from '../../shared/model/feature-form.model';
 
 @Component({
-  selector: 'st-subm-feature-list',
-  templateUrl: './feature-list.component.html',
-  styleUrls: ['./feature-list.component.css']
+  selector: 'st-single-column-table',
+  templateUrl: './single-column-table.component.html',
+  styleUrls: ['./single-column-table.component.css']
 })
-export class FeatureListComponent {
+export class SingleColumnTableComponent {
   @Input() featureForm!: FeatureForm; // Reactive data structure for the form containing this feature
   @Input() readonly?: boolean = false; // Flag for features that cannot be edited (e.g. sent state for submissions)
 

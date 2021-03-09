@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, DoCheck, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, DoCheck, Input, OnInit } from '@angular/core';
 import { UserData } from 'app/auth/shared';
 import { FeatureForm } from '../../shared/model/feature-form.model';
 
@@ -8,11 +8,11 @@ interface FeatureOperation {
 }
 
 @Component({
-  selector: 'st-subm-feature',
-  templateUrl: './subm-feature.component.html',
-  styleUrls: ['./subm-feature.component.css']
+  selector: 'st-subm-table',
+  templateUrl: './subm-table.component.html',
+  styleUrls: ['./subm-table.component.css']
 })
-export class SubmFeatureComponent implements OnInit, DoCheck {
+export class SubmTableComponent implements OnInit, DoCheck {
   @Input() featureForm!: FeatureForm;
   operations: FeatureOperation[] = [];
   @Input() readonly?: boolean = false;

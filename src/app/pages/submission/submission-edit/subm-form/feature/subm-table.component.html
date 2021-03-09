@@ -31,12 +31,12 @@
         error{{featureForm.errorCount > 1 ? 's' : ''}}</div>
     </div>
 
-    <st-subm-feature-grid *ngIf="featureForm.canHaveMultipleRows; else featureList" [featureForm]="featureForm"
+    <st-table *ngIf="featureForm.canHaveMultipleRows; else featureList" [featureForm]="featureForm"
       [readonly]="readonly">
-    </st-subm-feature-grid>
+    </st-table>
     <ng-template #featureList>
-      <st-subm-feature-list [featureForm]="featureForm" [readonly]="readonly">
-      </st-subm-feature-list>
+      <st-single-column-table [featureForm]="featureForm" [readonly]="readonly">
+      </st-single-column-table>
     </ng-template>
   </div>
 </div>

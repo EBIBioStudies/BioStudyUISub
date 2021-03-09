@@ -7,11 +7,11 @@ import { FeatureForm } from '../../shared/model/feature-form.model';
 import { Options as SortableOption } from 'sortablejs';
 
 @Component({
-  selector: 'st-subm-feature-grid',
-  templateUrl: './feature-grid.component.html',
-  styleUrls: ['./feature-grid.component.css']
+  selector: 'st-table',
+  templateUrl: './table.component.html',
+  styleUrls: ['./table.component.css']
 })
-export class FeatureGridComponent implements OnChanges {
+export class TableComponent implements OnChanges {
   @ViewChildren('colEl') colEls?: QueryList<ElementRef>;
   @Input() featureForm!: FeatureForm;
   hoveredRowIndex: number = -1;
@@ -57,7 +57,7 @@ export class FeatureGridComponent implements OnChanges {
   }
 
   /**
-   * Changes the values of an existing feature's row fields to those of a given a set of grid attributes,
+   * Changes the values of an existing tables's row fields to those of a given a set of grid attributes,
    * bubbling a single DOM change event for all of them. Attribute names are assumed to be in lower case.
    * @param data - Grid attribute data retrieved asynchronously.
    * @param rowIdx - Row whose field values are to be changed.
