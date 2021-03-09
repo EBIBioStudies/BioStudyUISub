@@ -3,7 +3,7 @@ import { UserData } from 'app/auth/shared';
 import { TypeaheadDirective } from 'ngx-bootstrap/typeahead';
 import { ColumnControl } from '../../shared/model/column-control.model';
 import { RowForm } from '../../shared/model/row-form.model';
-import { FeatureForm } from '../../shared/model/feature-form.model';
+import { FeatureForm } from '../../shared/model/table-form.model';
 import { Options as SortableOption } from 'sortablejs';
 
 @Component({

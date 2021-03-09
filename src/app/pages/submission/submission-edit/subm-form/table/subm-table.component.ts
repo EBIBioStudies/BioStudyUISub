@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, DoCheck, Input, OnInit } from '@angular/core';
 import { UserData } from 'app/auth/shared';
-import { FeatureForm } from '../../shared/model/feature-form.model';
+import { FeatureForm } from '../../shared/model/table-form.model';
 
 interface TableOperation {
   callback: () => void;
