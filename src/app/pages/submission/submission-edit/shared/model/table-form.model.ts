@@ -2,7 +2,7 @@ import { CustomFormControl } from './custom-form-control.model';
 import { Subject, Observable } from 'rxjs';
 import pluralize from 'pluralize';
 import { FormGroup, FormArray } from '@angular/forms';
-import { Attribute, ColumnType, Feature, TableType, ValueMap } from 'app/pages/submission/submission-shared/model';
+import { Attribute, ColumnType, Table, TableType, ValueMap } from 'app/pages/submission/submission-shared/model';
 import { isArrayEmpty, arrayUniqueValues, isStringEmpty } from 'app/utils';
 import { FormBase } from './form-base.model';
 import { ColumnControl } from './column-control.model';
@@ -20,7 +20,7 @@ export class TableForm extends FormBase {
   private columnControls: ColumnControl[] = [];
   private rowForms: RowForm[] = [];
 
-  constructor(private table: Feature, private featureRef: ControlGroupRef) {
+  constructor(private table: Table, private featureRef: ControlGroupRef) {
     super(
       new FormGroup({
         columns: new MyFormGroup({}, SubmFormValidators.forFeatureColumns(table)).withRef(featureRef),

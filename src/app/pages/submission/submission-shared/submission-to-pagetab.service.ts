@@ -14,7 +14,7 @@ import {
   submissionToPageTabProtocols
 } from './model/pagetab';
 import { isArrayEmpty, isStringDefined, isEqualIgnoringCase, isAttributeEmpty, isDefinedAndNotEmpty } from 'app/utils';
-import { AttributeData, Feature, Field, Fields, Section, Submission } from './model/submission';
+import { AttributeData, Table, Field, Fields, Section, Submission } from './model/submission';
 import { DEFAULT_TEMPLATE_NAME, SubmissionType } from './model/templates';
 import { Injectable } from '@angular/core';
 
@@ -88,7 +88,7 @@ export class SubmissionToPageTabService {
     return LinksUtils.toTyped(attributes);
   }
 
-  private extractFeatureAttributes(feature: Feature, isSanitise: boolean): PtAttribute[][] {
+  private extractFeatureAttributes(feature: Table, isSanitise: boolean): PtAttribute[][] {
     const mappedFeatures: PtAttribute[][] = feature.rows.map((row) => {
       const attributes: PtAttribute[] = feature.columns.map((column) => {
         const rowValue = row.valueFor(column.id);
@@ -103,9 +103,7 @@ export class SubmissionToPageTabService {
   }
 
   private extractSectionAttributes(section: Section, isSanitise: boolean): PtAttribute[] {
-    const keywordsFeature: Feature | undefined = section.features
-      .list()
-      .find((feature) => feature.typeName === 'Keywords');
+    const keywordsFeature: Table | undefined = section.tables.list().find((feature) => feature.typeName === 'Keywords');
     let keywordsAsAttributes: PtAttribute[] = [];
 
     if (keywordsFeature !== undefined) {
@@ -124,7 +122,7 @@ export class SubmissionToPageTabService {
   }
 
   private extractSectionFiles(section: Section, isSanitise: boolean): PtFileItem[] {
-    const feature = section.features.list().find((f) => isFileType(f.typeName));
+    const feature = section.tables.list().find((f) => isFileType(f.typeName));
 
     if (feature !== undefined) {
       const featureAttributes: PtAttribute[][] = this.extractFeatureAttributes(feature, isSanitise);
@@ -137,7 +135,7 @@ export class SubmissionToPageTabService {
   }
 
   private extractSectionLibraryFile(section: Section): string | undefined {
-    const feature = section.features.list().find((f) => isLibraryFileType(f.typeName));
+    const feature = section.tables.list().find((f) => isLibraryFileType(f.typeName));
     if (feature !== undefined && !feature.isEmpty) {
       const featureRowValue = feature.rows[0].values()[0];
 
@@ -148,7 +146,7 @@ export class SubmissionToPageTabService {
   }
 
   private extractSectionLinks(section: Section, isSanitise: boolean): PtLinkItem[] {
-    const feature = section.features.list().find((f) => isLinkType(f.typeName));
+    const feature = section.tables.list().find((f) => isLinkType(f.typeName));
 
     if (feature !== undefined) {
       const featureAttributes: PtAttribute[][] = this.extractFeatureAttributes(feature, isSanitise);
@@ -161,7 +159,7 @@ export class SubmissionToPageTabService {
   }
 
   private extractSectionSubsections(section: Section, isSanitize: boolean): PageTabSection[] {
-    const validFeatures = section.features
+    const validFeatures = section.tables
       .list()
       .filter(
         (feature) =>

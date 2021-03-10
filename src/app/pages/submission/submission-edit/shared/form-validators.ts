@@ -9,7 +9,7 @@ import {
   Validators
 } from '@angular/forms';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
-import { Attribute, Feature, Field } from 'app/pages/submission/submission-shared/model';
+import { Attribute, Table, Field } from 'app/pages/submission/submission-shared/model';
 import { TextValueType, ValueType, ValueTypeName, SelectValueType } from 'app/pages/submission/submission-shared/model';
 import {
   parseDate,
@@ -168,7 +168,7 @@ export class SubmFormValidators {
     return [Validators.required];
   }
 
-  static forFeatureColumns(feature: Feature): ValidatorFn[] {
+  static forFeatureColumns(feature: Table): ValidatorFn[] {
     const validators: ValidatorFn[] = [];
 
     if (feature.type.uniqueCols) {

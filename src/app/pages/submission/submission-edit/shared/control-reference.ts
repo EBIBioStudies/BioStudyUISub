@@ -1,4 +1,4 @@
-import { Attribute, Feature, Field, Section } from 'app/pages/submission/submission-shared/model';
+import { Attribute, Table, Field, Section } from 'app/pages/submission/submission-shared/model';
 
 // experimental: Control Reference details for using in error messages
 export class ControlRef {
@@ -62,7 +62,7 @@ export class ControlGroupRef {
     return this.createRef(column.id, 'Column');
   }
 
-  featureRef(feature: Feature): ControlGroupRef {
+  featureRef(feature: Table): ControlGroupRef {
     return new ControlGroupRef({
       sectionId: this.sectionId,
       sectionName: this.sectionName,

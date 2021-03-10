@@ -1,29 +1,29 @@
 import { AttributeValue } from './submission.model.attribute-value';
 import { ColumnType, TableType, invalidateGlobalScope } from '../templates';
-import { Feature, TableData } from './submission.model';
+import { Table, TableData } from './submission.model';
 
-describe('Submission Model: Feature', () => {
+describe('Submission Model: Table', () => {
   beforeEach(() => {
     invalidateGlobalScope();
   });
 
   it('can be multi row', () => {
-    const f = new Feature(TableType.createDefault('MultiRowFeature'));
+    const f = new Table(TableType.createDefault('MultiRowTable'));
     expect(f.colSize()).toBe(0);
     expect(f.rowSize()).toBe(0);
     expect(f.singleRow).toBeFalsy();
-    expect(f.type.name).toEqual('MultiRowFeature');
+    expect(f.type.name).toEqual('MultiRowTable');
   });
 
   it('can be single row', () => {
-    const f = new Feature(TableType.createDefault('SingleRowFeature', true));
+    const f = new Table(TableType.createDefault('SingleRowTable', true));
     expect(f.colSize()).toBe(0);
     expect(f.rowSize()).toBe(0);
     expect(f.singleRow).toBeTruthy();
   });
 
-  it('allows to add more rows to a multi row feature', () => {
-    const f = new Feature(TableType.createDefault('MultiRowFeature'));
+  it('allows to add more rows to a multi row table', () => {
+    const f = new Table(TableType.createDefault('MultiRowTable'));
     expect(f.singleRow).toBeFalsy();
     expect(f.rowSize()).toBe(0);
     f.addRow();
@@ -32,14 +32,14 @@ describe('Submission Model: Feature', () => {
   });
 
   it('creates default empty values (in rows) when a new column is added', () => {
-    const f = new Feature(TableType.createDefault('AFeature'));
+    const f = new Table(TableType.createDefault('ATable'));
     f.addRow();
     const col = f.addColumn('col1')!;
     expect(f.rows[0]!.valueFor(col.id)!.value).toBe('');
   });
 
   it('removes values from all rows when a column is deleted', () => {
-    const f = new Feature(TableType.createDefault('AFeature'));
+    const f = new Table(TableType.createDefault('ATable'));
     const col = f.addColumn('col1')!;
     f.addRow();
     f.addRow();
@@ -53,7 +53,7 @@ describe('Submission Model: Feature', () => {
   });
 
   it('automatically updates columns and rows when new data added as attributes', () => {
-    const f = new Feature(TableType.createDefault('AFeature'));
+    const f = new Table(TableType.createDefault('ATable'));
     f.add([
       {
         name: 'col1',
@@ -77,7 +77,7 @@ describe('Submission Model: Feature', () => {
 
   it('can be created with the pre-existed data', () => {
     const data = {
-      type: 'AFeature',
+      type: 'ATable',
       entries: [
         [
           {
@@ -91,7 +91,7 @@ describe('Submission Model: Feature', () => {
         ]
       ]
     } as TableData;
-    const f = new Feature(TableType.createDefault(data.type!), data);
+    const f = new Table(TableType.createDefault(data.type!), data);
     expect(f.rowSize()).toBe(1);
     expect(f.colSize()).toBe(2);
     const ids = f.columns.map((c) => c.id);
@@ -105,7 +105,7 @@ describe('Submission Model: Feature', () => {
 
   it('creates required columns according the type definition', () => {
     const type = new TableType(
-      'AFeature',
+      'ATable',
       {
         columnTypes: [
           { name: 'col1', display: 'required' } as ColumnType,
@@ -115,7 +115,7 @@ describe('Submission Model: Feature', () => {
       undefined,
       true
     );
-    const f = new Feature(type);
+    const f = new Table(type);
     expect(f.rowSize()).toBe(0);
     expect(f.colSize()).toBe(1);
   });

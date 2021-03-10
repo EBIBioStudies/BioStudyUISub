@@ -1,7 +1,7 @@
 import { CustomFormControl } from './custom-form-control.model';
 import {
   DisplayType,
-  Feature,
+  Table,
   TableType,
   Field,
   Section,
@@ -43,8 +43,8 @@ export class SectionForm extends FormBase {
     this.buildElements(section.displayAnnotations);
   }
 
-  addFeature(type: TableType): Feature | undefined {
-    const feature = this.section.features.add(type);
+  addFeature(type: TableType): Table | undefined {
+    const feature = this.section.tables.add(type);
     if (feature) {
       this.addTableForm(feature);
       this.structureChanges$.next(StructureChangeEvent.featureAdd);
@@ -95,7 +95,7 @@ export class SectionForm extends FormBase {
       return;
     }
 
-    if (this.section.features.removeById(featureId)) {
+    if (this.section.tables.removeById(featureId)) {
       this.unsubscribe(featureId);
       this.tableForms.splice(index, 1);
       this.tableFormGroups.removeControl(featureId);
@@ -173,7 +173,7 @@ export class SectionForm extends FormBase {
     return this.form.get('sections') as FormGroup;
   }
 
-  private addTableForm(feature: Feature): TableForm {
+  private addTableForm(feature: Table): TableForm {
     const tableForm = new TableForm(feature, this.sectionRef.featureRef(feature));
     this.tableForms.push(tableForm);
     this.tableFormGroups.addControl(feature.id, tableForm.form);
@@ -199,7 +199,7 @@ export class SectionForm extends FormBase {
 
     section.fields.list().forEach((field) => this.addFieldControl(field));
 
-    const features = displayAnnotations ? [section.annotations, ...section.features.list()] : section.features.list();
+    const features = displayAnnotations ? [section.annotations, ...section.tables.list()] : section.tables.list();
     features.forEach((feature) => this.addTableForm(feature));
 
     section.sections.list().forEach((sectionItem) => this.addSubsectionForm(sectionItem));

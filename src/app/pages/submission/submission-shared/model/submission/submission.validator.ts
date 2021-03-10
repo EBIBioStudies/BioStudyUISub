@@ -1,4 +1,4 @@
-import { Feature, Field, Section, Submission } from './submission.model';
+import { Table, Field, Section, Submission } from './submission.model';
 import { parseDate } from 'app/utils';
 import { TableType, SectionType, TextValueType, ValueType, ValueTypeName } from '../templates';
 
@@ -10,7 +10,7 @@ class ValidationRules {
   static atLeastOneFeatureFromGroup(group: string[], section: Section): ValidationRule {
     return {
       validate(): string | undefined {
-        const rowCount = section.features
+        const rowCount = section.tables
           .list()
           .filter((f) => group.includes(f.typeName))
           .map((f) => f.rowSize())
@@ -23,7 +23,7 @@ class ValidationRules {
     };
   }
 
-  static atLeastOneRowFeature(feature: Feature): ValidationRule {
+  static atLeastOneRowFeature(feature: Table): ValidationRule {
     return {
       validate(): string | undefined {
         if (feature.rowSize() === 0) {
@@ -34,7 +34,7 @@ class ValidationRules {
     };
   }
 
-  static forFeature(feature: Feature): ValidationRule[] {
+  static forFeature(feature: Table): ValidationRule[] {
     const rules: ValidationRule[] = [];
 
     if (feature.type.displayType.isRequired) {
@@ -98,7 +98,7 @@ class ValidationRules {
     rules = rules.concat(ValidationRules.forFeature(section.annotations));
 
     rules = rules.concat(
-      section.features
+      section.tables
         .list()
         .map((feature) => ValidationRules.forFeature(feature))
         .reduce((rv, v) => rv.concat(v), [])
@@ -160,7 +160,7 @@ class ValidationRules {
   static requiredFeature(ft: TableType, section: Section): ValidationRule {
     return {
       validate(): string | undefined {
-        const features = section.features.list().filter((f) => f.type.name === ft.name);
+        const features = section.tables.list().filter((f) => f.type.name === ft.name);
         if (features.length === 0) {
           return `At least one of ${ft.name} is required in the section`;
         }

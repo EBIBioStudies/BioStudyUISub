@@ -5,7 +5,7 @@ import { none, Option, some } from 'fp-ts/lib/Option';
 import {
   Attribute,
   AttributeData,
-  Feature,
+  Table,
   Section,
   SubmValidationErrors,
   Submission,
@@ -20,7 +20,7 @@ import { SubmissionToPageTabService } from 'app/pages/submission/submission-shar
 import { isDefinedAndNotEmpty } from 'app/utils';
 import { SubmissionService, SubmitResponse } from '../../submission-shared/submission.service';
 import { SectionForm } from './model/section-form.model';
-import { flatFeatures } from '../../utils';
+import { flatTables } from '../../utils/table.utils';
 
 class EditState {
   static EDITING = 'Editing';
@@ -340,7 +340,7 @@ export class SubmEditService {
   /* TODO: set defaults when submission object is created and not yet sent to the server (NOT HERE!!!)*/
   private setDefaults(section: Section): void {
     const subscr = this.userData.info$.subscribe((info) => {
-      const contactFeature = section.features.find('Contact', 'typeName');
+      const contactFeature = section.tables.find('Contact', 'typeName');
 
       if (contactFeature) {
         contactFeature.add(this.asContactAttributes(info), 0);
@@ -354,8 +354,8 @@ export class SubmEditService {
 
   private updateDependencyValues(sectionForm: SectionForm): void {
     const section: Section = this.submModel.section;
-    const features: Feature[] = flatFeatures(section);
-    const featuresWithDependencies: Feature[] = features.filter((feature) => isDefinedAndNotEmpty(feature.dependency));
+    const features: Table[] = flatTables(section);
+    const featuresWithDependencies: Table[] = features.filter((feature) => isDefinedAndNotEmpty(feature.dependency));
 
     featuresWithDependencies.forEach((featureWithDependency) => {
       const dependency = features.find((feature) => feature.type.typeName === featureWithDependency.dependency);
@@ -383,7 +383,7 @@ export class SubmEditService {
 
   private validateDependenciesForColumn(
     values: string[],
-    feature: Feature,
+    feature: Table,
     sectionForm: SectionForm,
     column?: Attribute
   ): void {

@@ -13,7 +13,7 @@ describe('Submission Model: Section', () => {
     expect(sec.accno).toBe('');
     expect(sec.annotations.isEmpty).toBeTruthy();
     expect(sec.fields.length).toBe(0);
-    expect(sec.features.length).toBe(0);
+    expect(sec.tables.length).toBe(0);
     expect(sec.sections.length).toBe(0);
   });
 
@@ -48,7 +48,7 @@ describe('Submission Model: Section', () => {
     });
     const sec = new Section(type);
     expect(sec.typeName).toBe('ASectionType');
-    expect(sec.features.length).toBe(2);
+    expect(sec.tables.length).toBe(2);
   });
 
   it('auto creates required-only sections declared in the type', () => {
@@ -72,20 +72,20 @@ describe('Submission Model: Section', () => {
   it('should not be possible to add two features of the same type', () => {
     const sec = new Section(new SectionType('MySectionType'));
     const ftype = sec.type.getTableType('MyFeatureType');
-    sec.features.add(ftype);
-    sec.features.add(ftype);
-    expect(sec.features.length).toBe(1);
+    sec.tables.add(ftype);
+    sec.tables.add(ftype);
+    expect(sec.tables.length).toBe(1);
   });
 
   it('should not be possible to rename featureType on already existed one', () => {
     const sec = new Section(new SectionType('MySectionType'));
     const ftype1 = sec.type.getTableType('MyFeatureType1');
     const ftype2 = sec.type.getTableType('MyFeatureType2');
-    sec.features.add(ftype1);
-    sec.features.add(ftype2);
-    expect(sec.features.length).toBe(2);
+    sec.tables.add(ftype1);
+    sec.tables.add(ftype2);
+    expect(sec.tables.length).toBe(2);
 
-    const f = sec.features.list()[0];
+    const f = sec.tables.list()[0];
     f.typeName = 'MyFeatureType2';
     expect(f.typeName).toBe('MyFeatureType1');
   });
