@@ -105,7 +105,7 @@ class ValidationRules {
     );
 
     rules = rules.concat(
-      section.type.featureTypes
+      section.type.tableTypes
         .filter((ft) => ft.displayType.isRequired)
         .map((ft) => ValidationRules.requiredFeature(ft, section))
     );
@@ -116,9 +116,7 @@ class ValidationRules {
         .map((st) => ValidationRules.requiredSection(st, section))
     );
 
-    rules = rules.concat(
-      section.type.featureGroups.map((gr) => ValidationRules.atLeastOneFeatureFromGroup(gr, section))
-    );
+    rules = rules.concat(section.type.tableGroups.map((gr) => ValidationRules.atLeastOneFeatureFromGroup(gr, section)));
     return rules;
   }
 

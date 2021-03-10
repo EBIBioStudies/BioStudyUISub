@@ -136,7 +136,7 @@ export const proteinDesignsTemplate = {
         display: 'desirable'
       }
     ],
-    featureTypes: [
+    tableTypes: [
       {
         name: 'SolutionCharacterization',
         title: 'Solution characterization (structure) / CD spectroscopy',

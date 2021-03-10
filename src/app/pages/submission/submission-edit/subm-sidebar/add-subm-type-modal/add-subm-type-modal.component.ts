@@ -45,7 +45,7 @@ export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
       return true;
     }
 
-    const featureType = rootType.getFeatureType(name, isSingleRow);
+    const featureType = rootType.getTableType(name, isSingleRow);
     return this.sectionForm.addFeature(featureType) !== undefined;
   }
 

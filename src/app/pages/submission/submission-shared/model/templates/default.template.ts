@@ -4,7 +4,7 @@ export const defaultTemplate = {
   description: 'Generic submission for stand-alone or generic studies',
   sectionType: {
     name: 'Study',
-    featureGroups: [['Link', 'File']],
+    tableGroups: [['Link', 'File']],
     displayAnnotations: true,
     fieldTypes: [
       {
@@ -130,7 +130,7 @@ export const defaultTemplate = {
         }
       ]
     },
-    featureTypes: [
+    tableTypes: [
       {
         name: 'Contact',
         title: 'Add Contacts',

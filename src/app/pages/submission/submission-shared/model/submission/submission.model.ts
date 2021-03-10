@@ -79,7 +79,7 @@ export class Feature {
   private featureColumns: Columns;
   private featureRows: Rows;
 
-  constructor(type: TableType, data: FeatureData = {} as FeatureData) {
+  constructor(type: TableType, data: TableData = {} as TableData) {
     this.id = `feature_${nextId()}`;
     this.type = type;
     this.featureColumns = new Columns();
@@ -260,7 +260,7 @@ export class Feature {
 export class Features {
   private features: Feature[] = [];
 
-  constructor(type: SectionType, features: Array<FeatureData> = []) {
+  constructor(type: SectionType, features: Array<TableData> = []) {
     const fd = features
       .filter((f) => isDefinedAndNotEmpty(f.type))
       .reduce((rv, d) => {
@@ -268,19 +268,19 @@ export class Features {
         return rv;
       }, {});
 
-    type.featureTypes.forEach((ft) => {
+    type.tableTypes.forEach((ft) => {
       this.add(ft, fd[ft.name]);
       fd[ft.name] = undefined;
     });
 
     Object.keys(fd).forEach((key) => {
       if (fd[key] !== undefined) {
-        const ft = type.getFeatureType(key);
+        const ft = type.getTableType(key);
         this.add(ft, fd[ft.name]);
       }
     });
 
-    type.featureGroups.forEach((group) => {
+    type.tableGroups.forEach((group) => {
       const featureGroup = this.features.filter((f) => group.includes(f.typeName));
       featureGroup.forEach((f) => f.groups.push(featureGroup));
       const rowCount = featureGroup.map((f) => f.rowSize()).reduce((rv, v) => rv + v, 0);
@@ -294,7 +294,7 @@ export class Features {
     return this.features.length;
   }
 
-  add(type: TableType, data?: FeatureData): Feature | undefined {
+  add(type: TableType, data?: TableData): Feature | undefined {
     if (this.features.filter((f) => f.type === type).length > 0) {
       return;
     }
@@ -446,7 +446,7 @@ export class Section implements SubmissionSection {
       )
     );
     this.data = data;
-    this.features = new Features(type, data.features);
+    this.features = new Features(type, data.tables);
     this.sections = new Sections(type, data.sections);
     this.subsections = new Sections(type, data.subsections);
   }
@@ -631,7 +631,7 @@ export interface AttributeData {
   value?: string | string[];
 }
 
-export interface FeatureData {
+export interface TableData {
   entries?: AttributeData[][];
   type?: string;
 }
@@ -644,7 +644,7 @@ export interface TaggedData {
 export interface SectionData extends TaggedData {
   accno?: string;
   attributes?: AttributeData[];
-  features?: FeatureData[];
+  tables?: TableData[];
   sections?: SectionData[];
   subsections?: SectionData[];
   type?: string;

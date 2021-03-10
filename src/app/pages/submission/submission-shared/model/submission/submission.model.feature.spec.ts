@@ -1,6 +1,6 @@
 import { AttributeValue } from './submission.model.attribute-value';
 import { ColumnType, TableType, invalidateGlobalScope } from '../templates';
-import { Feature, FeatureData } from './submission.model';
+import { Feature, TableData } from './submission.model';
 
 describe('Submission Model: Feature', () => {
   beforeEach(() => {
@@ -90,7 +90,7 @@ describe('Submission Model: Feature', () => {
           }
         ]
       ]
-    } as FeatureData;
+    } as TableData;
     const f = new Feature(TableType.createDefault(data.type!), data);
     expect(f.rowSize()).toBe(1);
     expect(f.colSize()).toBe(2);

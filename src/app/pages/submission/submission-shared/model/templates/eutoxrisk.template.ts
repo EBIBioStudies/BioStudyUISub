@@ -120,7 +120,7 @@ export const euToxRiskTemplate = {
         }
       ]
     },
-    featureTypes: [
+    tableTypes: [
       {
         name: 'Contact',
         title: 'Add Contacts',

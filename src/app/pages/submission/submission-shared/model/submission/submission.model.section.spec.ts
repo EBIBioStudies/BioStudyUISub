@@ -35,7 +35,7 @@ describe('Submission Model: Section', () => {
 
   it('auto creates all features declared in the type', () => {
     const type = new SectionType('ASectionType', {
-      featureTypes: [
+      tableTypes: [
         {
           name: 'Feature1',
           display: 'required'
@@ -71,7 +71,7 @@ describe('Submission Model: Section', () => {
 
   it('should not be possible to add two features of the same type', () => {
     const sec = new Section(new SectionType('MySectionType'));
-    const ftype = sec.type.getFeatureType('MyFeatureType');
+    const ftype = sec.type.getTableType('MyFeatureType');
     sec.features.add(ftype);
     sec.features.add(ftype);
     expect(sec.features.length).toBe(1);
@@ -79,8 +79,8 @@ describe('Submission Model: Section', () => {
 
   it('should not be possible to rename featureType on already existed one', () => {
     const sec = new Section(new SectionType('MySectionType'));
-    const ftype1 = sec.type.getFeatureType('MyFeatureType1');
-    const ftype2 = sec.type.getFeatureType('MyFeatureType2');
+    const ftype1 = sec.type.getTableType('MyFeatureType1');
+    const ftype2 = sec.type.getTableType('MyFeatureType2');
     sec.features.add(ftype1);
     sec.features.add(ftype2);
     expect(sec.features.length).toBe(2);
