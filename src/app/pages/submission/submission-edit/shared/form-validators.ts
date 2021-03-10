@@ -168,10 +168,10 @@ export class SubmFormValidators {
     return [Validators.required];
   }
 
-  static forFeatureColumns(feature: Table): ValidatorFn[] {
+  static forTableColumns(table: Table): ValidatorFn[] {
     const validators: ValidatorFn[] = [];
 
-    if (feature.type.uniqueCols) {
+    if (table.type.uniqueCols) {
       validators.push(FormValidators.uniqueValues);
     }
 

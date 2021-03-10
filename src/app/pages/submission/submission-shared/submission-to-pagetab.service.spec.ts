@@ -40,7 +40,7 @@ describe('SubmissionToPageTabService', () => {
     });
   });
 
-  it('Section Link features should go to section links list', () => {
+  it('Section Link tables should go to section links list', () => {
     const subm = new Submission(submType, {
       section: {
         tables: [
@@ -64,7 +64,7 @@ describe('SubmissionToPageTabService', () => {
     });
   });
 
-  it('Section File features should go to section files list', () => {
+  it('Section File tables should go to section files list', () => {
     const subm = new Submission(submType, {
       section: {
         tables: [

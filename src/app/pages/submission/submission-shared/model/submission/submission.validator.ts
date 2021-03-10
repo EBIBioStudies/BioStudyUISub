@@ -160,8 +160,8 @@ class ValidationRules {
   static requiredFeature(ft: TableType, section: Section): ValidationRule {
     return {
       validate(): string | undefined {
-        const features = section.tables.list().filter((f) => f.type.name === ft.name);
-        if (features.length === 0) {
+        const tables = section.tables.list().filter((f) => f.type.name === ft.name);
+        if (tables.length === 0) {
           return `At least one of ${ft.name} is required in the section`;
         }
         return undefined;

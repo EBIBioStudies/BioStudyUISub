@@ -9,8 +9,8 @@ import { TableForm } from '../../shared/model/table-form.model';
   styleUrls: ['./single-column-table.component.css']
 })
 export class SingleColumnTableComponent {
-  @Input() tableForm!: TableForm; // Reactive data structure for the form containing this feature
-  @Input() readonly?: boolean = false; // Flag for features that cannot be edited (e.g. sent state for submissions)
+  @Input() tableForm!: TableForm; // Reactive data structure for the form containing this table
+  @Input() readonly?: boolean = false; // Flag for tables that cannot be edited (e.g. sent state for submissions)
 
   suggestLength: number; // max number of suggested values to be displayed at once
 

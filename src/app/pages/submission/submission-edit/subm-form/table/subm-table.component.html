@@ -31,10 +31,10 @@
         error{{tableForm.errorCount > 1 ? 's' : ''}}</div>
     </div>
 
-    <st-table *ngIf="tableForm.canHaveMultipleRows; else featureList" [tableForm]="tableForm"
+    <st-table *ngIf="tableForm.canHaveMultipleRows; else singleColumnTable" [tableForm]="tableForm"
       [readonly]="readonly">
     </st-table>
-    <ng-template #featureList>
+    <ng-template #singleColumnTable>
       <st-single-column-table [tableForm]="tableForm" [readonly]="readonly">
       </st-single-column-table>
     </ng-template>

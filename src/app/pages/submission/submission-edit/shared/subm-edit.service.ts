@@ -304,7 +304,7 @@ export class SubmEditService {
     if (this.submModel === undefined) {
       return;
     }
-    // TODO: re-implement 'revised' feature
+    // TODO: re-implement 'revised' table
     // A sent submission has been backed up. It follows it's been revised.
     if (!this.submModel.isTemp && !this.submModel.isRevised) {
       this.submModel.isRevised = true;
@@ -340,10 +340,10 @@ export class SubmEditService {
   /* TODO: set defaults when submission object is created and not yet sent to the server (NOT HERE!!!)*/
   private setDefaults(section: Section): void {
     const subscr = this.userData.info$.subscribe((info) => {
-      const contactFeature = section.tables.find('Contact', 'typeName');
+      const contactTable = section.tables.find('Contact', 'typeName');
 
-      if (contactFeature) {
-        contactFeature.add(this.asContactAttributes(info), 0);
+      if (contactTable) {
+        contactTable.add(this.asContactAttributes(info), 0);
       }
 
       setTimeout(() => subscr.unsubscribe(), 10);
@@ -354,12 +354,12 @@ export class SubmEditService {
 
   private updateDependencyValues(sectionForm: SectionForm): void {
     const section: Section = this.submModel.section;
-    const features: Table[] = flatTables(section);
-    const featuresWithDependencies: Table[] = features.filter((feature) => isDefinedAndNotEmpty(feature.dependency));
+    const tables: Table[] = flatTables(section);
+    const tablesWithDependencies: Table[] = tables.filter((table) => isDefinedAndNotEmpty(table.dependency));
 
-    featuresWithDependencies.forEach((featureWithDependency) => {
-      const dependency = features.find((feature) => feature.type.typeName === featureWithDependency.dependency);
-      const columnWithDependencies = featureWithDependency.columns.filter((column) =>
+    tablesWithDependencies.forEach((tableWithDependency) => {
+      const dependency = tables.find((table) => table.type.typeName === tableWithDependency.dependency);
+      const columnWithDependencies = tableWithDependency.columns.filter((column) =>
         isDefinedAndNotEmpty(column.dependencyColumn)
       );
 
@@ -376,23 +376,23 @@ export class SubmEditService {
 
         selectValueType.setValues(rawValues);
 
-        this.validateDependenciesForColumn(rawValues, featureWithDependency, sectionForm, columnWithDependency);
+        this.validateDependenciesForColumn(rawValues, tableWithDependency, sectionForm, columnWithDependency);
       });
     });
   }
 
   private validateDependenciesForColumn(
     values: string[],
-    feature: Table,
+    table: Table,
     sectionForm: SectionForm,
     column?: Attribute
   ): void {
     if (column) {
-      const attributeValues = feature.attributeValuesForColumn(column.id);
+      const attributeValues = table.attributeValuesForColumn(column.id);
 
       attributeValues.forEach((attribute, index) => {
         if (isDefinedAndNotEmpty(attribute!.value) && !values.includes(attribute!.value)) {
-          const formControl = sectionForm.getTableFormById(feature.id);
+          const formControl = sectionForm.getTableFormById(table.id);
 
           if (formControl) {
             formControl.removeRow(index);

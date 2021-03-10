@@ -4,7 +4,7 @@
       <button *ngIf="tableForm.canAddColumn() && !isReadOnly"
           class="btn btn-link text-truncate" type="button" tabindex="-1"
           [ngClass]="{'invisible': isReadOnly || !userData.isPrivileged}"
-          [tooltip]="'Add a new ' + tableForm.featureTypeName.toLowerCase() + ' attribute'"
+          [tooltip]="'Add a new ' + tableForm.tableTypeName.toLowerCase() + ' attribute'"
           container="body"
           placement="right"
           (click)="tableForm.addColumn()">
@@ -43,7 +43,7 @@
                   [ngClass]="{'invisible': isReadOnly}"
                   [disabled]="!tableForm.canRemoveRow()"
                   (click)="tableForm.removeRow(rowIdx)"
-                  [tooltip]="tableForm.canRemoveRow ? 'Delete ' + tableForm.featureTypeName.toLowerCase() + ' ' + (rowIdx + 1) : ''"
+                  [tooltip]="tableForm.canRemoveRow ? 'Delete ' + tableForm.tableTypeName.toLowerCase() + ' ' + (rowIdx + 1) : ''"
                   placement="right"
                   container="body">
                 <i class="far fa-trash-alt"></i>

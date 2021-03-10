@@ -36,7 +36,7 @@ class DataTypeControl {
     ]);
   }
 
-  static fromFeatureType(type: TableType, id: string): DataTypeControl {
+  static fromTableType(type: TableType, id: string): DataTypeControl {
     return new DataTypeControl(type, type.icon, type.displayType, type.description, id);
   }
 
@@ -121,7 +121,7 @@ export class SubmEditSidebarComponent implements OnDestroy {
           ${deleted.map(({ typeName }) => `"${typeName}"`).join(', ')}
           ${isPlural ? `have` : `has`} been deleted. If you proceed,
           ${isPlural ? `they` : `it`} will be removed from the
-          list of items and any related features or sections will be permanently deleted.`;
+          list of items and any related tables or sections will be permanently deleted.`;
       this.modalService.confirm(message, 'Delete items', 'Delete').subscribe((isConfirmed: boolean) => {
         if (isConfirmed) {
           this.applyChanges();
@@ -152,8 +152,8 @@ export class SubmEditSidebarComponent implements OnDestroy {
       return;
     }
 
-    this.sectionForm!.addFeatureEntry(item.id);
-    const control = this.sectionForm!.getFeatureControl(item.id);
+    this.sectionForm!.addTableEntry(item.id);
+    const control = this.sectionForm!.getTableControl(item.id);
 
     if (control === undefined) {
       return;
@@ -179,7 +179,7 @@ export class SubmEditSidebarComponent implements OnDestroy {
   private applyChanges(): void {
     const deleted = this.items!.filter((item) => item.deleted);
     deleted.forEach(({ id }) => {
-      this.sectionForm!.removeFeatureType(id);
+      this.sectionForm!.removeTableType(id);
     });
 
     this.items!.filter((item) => !item.deleted).forEach((item) => item.update());
@@ -202,7 +202,7 @@ export class SubmEditSidebarComponent implements OnDestroy {
 
   private updateItems(): void {
     this.items = [
-      ...this.sectionForm!.tableForms.map((ff) => DataTypeControl.fromFeatureType(ff.featureType, ff.id)),
+      ...this.sectionForm!.tableForms.map((ff) => DataTypeControl.fromTableType(ff.tableType, ff.id)),
       ...this.sectionForm!.type.sectionTypes.map((st) => DataTypeControl.fromSectionType(st))
     ].filter((item) => item.isVisible);
 

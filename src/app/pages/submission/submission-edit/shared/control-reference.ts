@@ -28,11 +28,11 @@ export class ControlRef {
   }
 }
 
-// experimental: Controls Groups Reference (for sections and features) for using in error list
+// experimental: Controls Groups Reference (for sections and tables) for using in error list
 export class ControlGroupRef {
   static unknown = new ControlGroupRef();
 
-  readonly featureName?: string;
+  readonly tableName?: string;
   readonly icon: string;
   readonly isRoot: boolean;
   readonly sectionId: string;
@@ -41,7 +41,7 @@ export class ControlGroupRef {
   private constructor(params: Partial<ControlGroupRef> = {}) {
     this.sectionId = params.sectionId || 'unknown_section_id';
     this.sectionName = params.sectionName || 'unknown_section_name';
-    this.featureName = params.featureName;
+    this.tableName = params.tableName;
     this.icon = params.icon || 'fa-square';
     this.isRoot = params.isRoot === true;
   }
@@ -55,19 +55,19 @@ export class ControlGroupRef {
   }
 
   get name(): string {
-    return this.featureName || this.sectionName;
+    return this.tableName || this.sectionName;
   }
 
   columnRef(column: Attribute): ControlRef {
     return this.createRef(column.id, 'Column');
   }
 
-  featureRef(feature: Table): ControlGroupRef {
+  tableRef(table: Table): ControlGroupRef {
     return new ControlGroupRef({
       sectionId: this.sectionId,
       sectionName: this.sectionName,
-      featureName: feature.typeName,
-      icon: feature.type.icon,
+      tableName: table.typeName,
+      icon: table.type.icon,
       isRoot: this.isRoot
     });
   }
@@ -81,7 +81,7 @@ export class ControlGroupRef {
   }
 
   private createRef(id: string, name: string, icon?: string): ControlRef {
-    const parentName = this.featureName || this.sectionName;
+    const parentName = this.tableName || this.sectionName;
     const uniqueId = [parentName, id].join('_');
     return new ControlRef(uniqueId, name, this, icon || this.icon);
   }

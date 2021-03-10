@@ -32,7 +32,7 @@ export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.featNames = this.getFeatureNames();
+    this.featNames = this.getTableNames();
   }
 
   onAddType(name: string, isSection: boolean, isSingleRow: boolean): boolean {
@@ -45,8 +45,8 @@ export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
       return true;
     }
 
-    const featureType = rootType.getTableType(name, isSingleRow);
-    return this.sectionForm.addFeature(featureType) !== undefined;
+    const tableType = rootType.getTableType(name, isSingleRow);
+    return this.sectionForm.addTable(tableType) !== undefined;
   }
 
   onCancel(form: NgForm): void {
@@ -92,12 +92,12 @@ export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * Generates the list of type names for all features (including annotations) from section data.
-   * @returns Type names of all defined features.
+   * Generates the list of type names for all tables (including annotations) from section data.
+   * @returns Type names of all defined tables.
    */
-  private getFeatureNames(): string[] {
+  private getTableNames(): string[] {
     if (this.sectionForm) {
-      return this.sectionForm.tableForms.map((ff) => ff.featureTypeName);
+      return this.sectionForm.tableForms.map((ff) => ff.tableTypeName);
     }
     return [];
   }

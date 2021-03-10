@@ -20,10 +20,10 @@ export class TableForm extends FormBase {
   private columnControls: ColumnControl[] = [];
   private rowForms: RowForm[] = [];
 
-  constructor(private table: Table, private featureRef: ControlGroupRef) {
+  constructor(private table: Table, private tableRef: ControlGroupRef) {
     super(
       new FormGroup({
-        columns: new MyFormGroup({}, SubmFormValidators.forFeatureColumns(table)).withRef(featureRef),
+        columns: new MyFormGroup({}, SubmFormValidators.forTableColumns(table)).withRef(tableRef),
         rows: new FormArray([])
       })
     );
@@ -69,7 +69,7 @@ export class TableForm extends FormBase {
     return this.table.colNames;
   }
 
-  get featureType(): TableType {
+  get tableType(): TableType {
     return this.table.type;
   }
 
@@ -78,13 +78,13 @@ export class TableForm extends FormBase {
   }
 
   get prettyName(): string {
-    const isSingleElementFeature = this.table.singleRow && this.table.colSize() === 1 && !this.canHaveMoreColumns();
+    const isSingleElementTable = this.table.singleRow && this.table.colSize() === 1 && !this.canHaveMoreColumns();
 
     const name = this.table.typeName.replace(/([A-Z])/g, ' $1');
-    return isSingleElementFeature ? name : pluralize(name);
+    return isSingleElementTable ? name : pluralize(name);
   }
 
-  get featureTypeName(): string {
+  get tableTypeName(): string {
     return this.table.typeName;
   }
 
@@ -153,7 +153,7 @@ export class TableForm extends FormBase {
       const column = this.table.addColumn();
       this.addColumnControl(column);
       this.rowForms.forEach((rf) => rf.addCellControl(column));
-      this.notifiyChanges(StructureChangeEvent.featureColumnAdd);
+      this.notifiyChanges(StructureChangeEvent.tableColumnAdd);
     }
   }
 
@@ -170,7 +170,7 @@ export class TableForm extends FormBase {
       const row = this.table.addRow();
 
       this.addRowForm(row, this.table.columns);
-      this.notifiyChanges(StructureChangeEvent.featureRowAdd);
+      this.notifiyChanges(StructureChangeEvent.tableRowAdd);
     }
   }
 
@@ -184,9 +184,9 @@ export class TableForm extends FormBase {
 
   canHaveMoreColumns(): boolean {
     return (
-      this.featureType.allowCustomCols ||
-      !this.featureType.uniqueCols ||
-      this.table.colSize() < this.featureType.columnTypes.length
+      this.tableType.allowCustomCols ||
+      !this.tableType.uniqueCols ||
+      this.table.colSize() < this.tableType.columnTypes.length
     );
   }
 
@@ -195,7 +195,7 @@ export class TableForm extends FormBase {
   }
 
   canRemoveRow(): boolean {
-    return !this.isReadonly && (!this.featureType.displayType.isRequired || this.table.rowSize() > 1);
+    return !this.isReadonly && (!this.tableType.displayType.isRequired || this.table.rowSize() > 1);
   }
 
   cellControlAt(rowIndex: number, columnId: string): CellControl | undefined {
@@ -250,7 +250,7 @@ export class TableForm extends FormBase {
       this.table.removeColumn(columnCtrl.id);
       this.removeColumnControl(columnCtrl.id);
       this.rowForms.forEach((rf) => rf.removeCellControl(columnCtrl.id));
-      this.notifiyChanges(StructureChangeEvent.featureColumnRemove);
+      this.notifiyChanges(StructureChangeEvent.tableColumnRemove);
     }
   }
 
@@ -258,24 +258,24 @@ export class TableForm extends FormBase {
     if (this.canRemoveRow()) {
       this.table.removeRowAt(rowIndex);
       this.removeRowForm(rowIndex);
-      this.notifiyChanges(StructureChangeEvent.featureRowRemove);
+      this.notifiyChanges(StructureChangeEvent.tableRowRemove);
     }
   }
 
   syncModelRows(): void {
     const fromRows = this.rowForms.map((rowForm) => rowForm.row);
     this.table.patchRows(fromRows);
-    this.notifiyChanges(StructureChangeEvent.featureRowOrderUpdate);
+    this.notifiyChanges(StructureChangeEvent.tableRowOrderUpdate);
   }
 
   private addColumnControl(column: Attribute): void {
-    const colControl = new ColumnControl(column, this.featureRef.columnRef(column));
+    const colControl = new ColumnControl(column, this.tableRef.columnRef(column));
     this.columnControls.push(colControl);
     this.columnsForm.addControl(column.id, colControl.control);
   }
 
   private addRowForm(row: ValueMap, columns: Attribute[]): void {
-    const rowForm = new RowForm(row, columns, this.featureRef);
+    const rowForm = new RowForm(row, columns, this.tableRef);
     this.rowForms.push(rowForm);
     this.rowFormArray.push(rowForm.form);
   }

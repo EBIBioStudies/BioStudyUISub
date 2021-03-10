@@ -33,15 +33,15 @@ describe('Submission Model: Section', () => {
     expect(sec.fields.length).toBe(2);
   });
 
-  it('auto creates all features declared in the type', () => {
+  it('auto creates all tables declared in the type', () => {
     const type = new SectionType('ASectionType', {
       tableTypes: [
         {
-          name: 'Feature1',
+          name: 'Table1',
           display: 'required'
         } as TableType,
         {
-          name: 'Feature2',
+          name: 'Table2',
           display: 'required'
         } as TableType
       ]
@@ -59,7 +59,7 @@ describe('Submission Model: Section', () => {
           display: 'required'
         } as SectionType,
         {
-          name: 'Feature2',
+          name: 'Table2',
           display: 'optional'
         } as SectionType
       ]
@@ -69,24 +69,24 @@ describe('Submission Model: Section', () => {
     expect(sec.sections.length).toBe(1);
   });
 
-  it('should not be possible to add two features of the same type', () => {
+  it('should not be possible to add two Tables of the same type', () => {
     const sec = new Section(new SectionType('MySectionType'));
-    const ftype = sec.type.getTableType('MyFeatureType');
+    const ftype = sec.type.getTableType('MyTableType');
     sec.tables.add(ftype);
     sec.tables.add(ftype);
     expect(sec.tables.length).toBe(1);
   });
 
-  it('should not be possible to rename featureType on already existed one', () => {
+  it('should not be possible to rename tableType on already existed one', () => {
     const sec = new Section(new SectionType('MySectionType'));
-    const ftype1 = sec.type.getTableType('MyFeatureType1');
-    const ftype2 = sec.type.getTableType('MyFeatureType2');
+    const ftype1 = sec.type.getTableType('MyTableType1');
+    const ftype2 = sec.type.getTableType('MyTableType2');
     sec.tables.add(ftype1);
     sec.tables.add(ftype2);
     expect(sec.tables.length).toBe(2);
 
     const f = sec.tables.list()[0];
-    f.typeName = 'MyFeatureType2';
-    expect(f.typeName).toBe('MyFeatureType1');
+    f.typeName = 'MyTableType2';
+    expect(f.typeName).toBe('MyTableType1');
   });
 });

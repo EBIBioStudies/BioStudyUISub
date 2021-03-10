@@ -31,7 +31,8 @@ describe('PageTabToSubmissionService', () => {
         {
           name: 'AttachTo',
           value: 'proj123'
-        }],
+        }
+      ],
       section: {
         attributes: [title2]
       }
@@ -43,11 +44,11 @@ describe('PageTabToSubmissionService', () => {
       expect(submData.attributes!.length).toEqual(3);
       expect(submData.section).toBeDefined();
       expect(submData.section!.attributes!.length).toEqual(2);
-      expect(submData.section!.attributes!.map(at => at.value)).toContain(title2.value);
+      expect(submData.section!.attributes!.map((at) => at.value)).toContain(title2.value);
     });
   });
 
-  it('Links should go to section feature list', () => {
+  it('Links should go to section single column table', () => {
     const pageTab = {
       section: {
         attributes: [],
@@ -58,7 +59,6 @@ describe('PageTabToSubmissionService', () => {
           [
             {
               url: 'url2'
-
             },
             {
               url: 'url3'
@@ -70,12 +70,12 @@ describe('PageTabToSubmissionService', () => {
 
     inject([PageTabToSubmissionService], (pagetTabToSubmService) => {
       const submData = pagetTabToSubmService.pageTab2SubmissionData(pageTab);
-      expect(submData.section!.features!.length).toEqual(1);
-      expect(submData.section!.features![0].entries!.length).toEqual(3);
+      expect(submData.section!.tables!.length).toEqual(1);
+      expect(submData.section!.tables![0].entries!.length).toEqual(3);
     });
   });
 
-  it('Files should go to section feature list', () => {
+  it('Files should go to section single column table', () => {
     const pageTab = {
       section: {
         attributes: [],
@@ -86,7 +86,6 @@ describe('PageTabToSubmissionService', () => {
           [
             {
               path: 'path2'
-
             },
             {
               path: 'path3'
@@ -98,12 +97,12 @@ describe('PageTabToSubmissionService', () => {
 
     inject([PageTabToSubmissionService], (pagetTabToSubmService) => {
       const submData = pagetTabToSubmService.pageTab2SubmissionData(pageTab);
-      expect(submData.section!.features!.length).toEqual(1);
-      expect(submData.section!.features![0].entries!.length).toEqual(3);
+      expect(submData.section!.tables!.length).toEqual(1);
+      expect(submData.section!.tables![0].entries!.length).toEqual(3);
     });
   });
 
-  it('Sections without subsections should go to section feature list', () => {
+  it('Sections without subsections should go to section single column table', () => {
     const pageTab = {
       section: {
         attributes: [],
@@ -116,7 +115,6 @@ describe('PageTabToSubmissionService', () => {
             {
               attributes: [],
               type: 'secType2'
-
             },
             {
               attributes: [],
@@ -129,13 +127,13 @@ describe('PageTabToSubmissionService', () => {
 
     inject([PageTabToSubmissionService], (pagetTabToSubmService) => {
       const submData = pagetTabToSubmService.pageTab2SubmissionData(pageTab as PageTab);
-      expect(submData.section!.features!.length).toEqual(2);
+      expect(submData.section!.tables!.length).toEqual(2);
 
-      const f1 = submData.section!.features!.find(f => f.type === 'secType1');
+      const f1 = submData.section!.tables!.find((f) => f.type === 'secType1');
       expect(f1).toBeDefined();
       expect(f1!.entries!.length).toEqual(1);
 
-      const f2 = submData.section!.features!.find(f => f.type === 'secType2');
+      const f2 = submData.section!.tables!.find((f) => f.type === 'secType2');
       expect(f2!.entries!.length).toEqual(2);
     });
   });
@@ -148,18 +146,18 @@ describe('PageTabToSubmissionService', () => {
           {
             attributes: [],
             type: 'secType1',
-            links: [{url: 'url1'}]
+            links: [{ url: 'url1' }]
           },
           [
             {
               attributes: [],
               type: 'secType2',
-              links: [{url: 'url2'}]
+              links: [{ url: 'url2' }]
             },
             {
               attributes: [],
               type: 'secType2',
-              links: [{url: 'url3'}]
+              links: [{ url: 'url3' }]
             }
           ]
         ]
@@ -167,14 +165,13 @@ describe('PageTabToSubmissionService', () => {
     };
 
     inject([PageTabToSubmissionService], (pagetTabToSubmService) => {
-      const submData = pagetTabToSubmService.pageTab2SubmissionData(<PageTab>(pageTab));
-      expect(submData.section!.features!.isEmpty()).toBeTruthy();
+      const submData = pagetTabToSubmService.pageTab2SubmissionData(<PageTab>pageTab);
+      expect(submData.section!.tables!.isEmpty()).toBeTruthy();
       expect(submData.section!.sections!.length).toBe(3);
 
-      const s1 = submData.section!.sections!.find(s => s.type === 'secType1');
+      const s1 = submData.section!.sections!.find((s) => s.type === 'secType1');
       expect(s1).toBeDefined();
-      expect(s1!.features!.length).toEqual(1);
+      expect(s1!.tables!.length).toEqual(1);
     });
   });
-
 });
