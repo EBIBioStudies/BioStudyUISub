@@ -10,7 +10,7 @@ import { SectionForm } from '../../shared/model/section-form.model';
   templateUrl: './add-subm-type-modal.component.html'
 })
 export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
-  featNames?: string[];
+  tableNames?: string[];
   sectionForm!: SectionForm;
   typeBase: string = 'Grid';
   typeName: string = '';
@@ -32,7 +32,7 @@ export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.featNames = this.getTableNames();
+    this.tableNames = this.getTableNames();
   }
 
   onAddType(name: string, isSection: boolean, isSingleRow: boolean): boolean {
