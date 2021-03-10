@@ -258,7 +258,7 @@ export class FieldType extends TypeBase {
   }
 }
 
-export class FeatureType extends TypeBase {
+export class TableType extends TypeBase {
   readonly allowCustomCols: boolean;
   readonly dependency: string;
   readonly description: string;
@@ -273,7 +273,7 @@ export class FeatureType extends TypeBase {
 
   constructor(
     name: string,
-    data?: Partial<FeatureType>,
+    data?: Partial<TableType>,
     scope?: TypeScope<TypeBase>,
     isTemplBased: boolean = true,
     parentDisplayType: DisplayType = DisplayType.OPTIONAL
@@ -300,8 +300,8 @@ export class FeatureType extends TypeBase {
     uniqueCols?: boolean,
     scope?: TypeScope<TypeBase>,
     parentDisplayType?: DisplayType
-  ): FeatureType {
-    return new FeatureType(name, { singleRow, uniqueCols }, scope, false, parentDisplayType);
+  ): TableType {
+    return new TableType(name, { singleRow, uniqueCols }, scope, false, parentDisplayType);
   }
 
   get columnTypes(): ColumnType[] {
@@ -321,9 +321,9 @@ export class FeatureType extends TypeBase {
   }
 }
 
-export class AnnotationsType extends FeatureType {
+export class AnnotationsType extends TableType {
   constructor(
-    data?: Partial<FeatureType>,
+    data?: Partial<TableType>,
     scope?: TypeScope<TypeBase>,
     isTemplBased: boolean = true,
     parentDisplayType: DisplayType = DisplayType.OPTIONAL
@@ -385,7 +385,7 @@ export class SectionType extends TypeBase {
   readonly minRequired: number;
   readonly sectionExample: string;
 
-  private featureScope: TypeScope<FeatureType> = new TypeScope<FeatureType>();
+  private featureScope: TypeScope<TableType> = new TypeScope<TableType>();
   private fieldScope: TypeScope<FieldType> = new TypeScope<FieldType>();
   private sectionScope: TypeScope<SectionType> = new TypeScope<SectionType>();
 
@@ -416,7 +416,7 @@ export class SectionType extends TypeBase {
       (fieldType) => new FieldType(fieldType.name, fieldType, this.fieldScope, this.displayType)
     );
     (data.featureTypes || []).forEach(
-      (featureType) => new FeatureType(featureType.name, featureType, this.featureScope, isTemplBased, this.displayType)
+      (featureType) => new TableType(featureType.name, featureType, this.featureScope, isTemplBased, this.displayType)
     );
     (data.sectionTypes || []).forEach(
       (sectionType) => new SectionType(sectionType.name, sectionType, this.sectionScope, isTemplBased, this.displayType)
@@ -431,7 +431,7 @@ export class SectionType extends TypeBase {
     return this.fieldScope.filterValues((ft) => ft.tmplBased);
   }
 
-  get featureTypes(): FeatureType[] {
+  get featureTypes(): TableType[] {
     return this.featureScope.filterValues((ft) => ft.tmplBased);
   }
 
@@ -439,9 +439,9 @@ export class SectionType extends TypeBase {
     return this.sectionScope.filterValues((st) => st.tmplBased);
   }
 
-  getFeatureType(name: string, singleRow: boolean = false, uniqueCols: boolean = false): FeatureType {
+  getFeatureType(name: string, singleRow: boolean = false, uniqueCols: boolean = false): TableType {
     return this.featureScope.getOrElse(name, () =>
-      FeatureType.createDefault(name, singleRow, uniqueCols, this.featureScope, this.displayType)
+      TableType.createDefault(name, singleRow, uniqueCols, this.featureScope, this.displayType)
     );
   }
 

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { AppConfig } from 'app/app.config';
 import { ColumnControl } from '../../shared/model/column-control.model';
-import { FeatureForm } from '../../shared/model/feature-form.model';
+import { TableForm } from '../../shared/model/table-form.model';
 
 @Component({
   selector: 'st-single-column-table',
@@ -9,7 +9,7 @@ import { FeatureForm } from '../../shared/model/feature-form.model';
   styleUrls: ['./single-column-table.component.css']
 })
 export class SingleColumnTableComponent {
-  @Input() tableForm!: FeatureForm; // Reactive data structure for the form containing this feature
+  @Input() tableForm!: TableForm; // Reactive data structure for the form containing this feature
   @Input() readonly?: boolean = false; // Flag for features that cannot be edited (e.g. sent state for submissions)
 
   suggestLength: number; // max number of suggested values to be displayed at once

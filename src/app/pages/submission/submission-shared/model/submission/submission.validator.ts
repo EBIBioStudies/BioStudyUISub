@@ -1,6 +1,6 @@
 import { Feature, Field, Section, Submission } from './submission.model';
 import { parseDate } from 'app/utils';
-import { FeatureType, SectionType, TextValueType, ValueType, ValueTypeName } from '../templates';
+import { TableType, SectionType, TextValueType, ValueType, ValueTypeName } from '../templates';
 
 interface ValidationRule {
   validate(): string | undefined;
@@ -159,7 +159,7 @@ class ValidationRules {
     };
   }
 
-  static requiredFeature(ft: FeatureType, section: Section): ValidationRule {
+  static requiredFeature(ft: TableType, section: Section): ValidationRule {
     return {
       validate(): string | undefined {
         const features = section.features.list().filter((f) => f.type.name === ft.name);

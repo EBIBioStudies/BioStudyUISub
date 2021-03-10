@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, DoCheck, Input, OnInit } from '@angular/core';
 import { UserData } from 'app/auth/shared';
-import { FeatureForm } from '../../shared/model/table-form.model';
+import { TableForm } from '../../shared/model/table-form.model';
 
 interface TableOperation {
   callback: () => void;
@@ -13,7 +13,7 @@ interface TableOperation {
   styleUrls: ['./subm-table.component.css']
 })
 export class SubmTableComponent implements OnInit, DoCheck {
-  @Input() tableForm!: FeatureForm;
+  @Input() tableForm!: TableForm;
   operations: TableOperation[] = [];
   @Input() readonly?: boolean = false;
 

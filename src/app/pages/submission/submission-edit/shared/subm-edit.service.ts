@@ -392,7 +392,7 @@ export class SubmEditService {
 
       attributeValues.forEach((attribute, index) => {
         if (isDefinedAndNotEmpty(attribute!.value) && !values.includes(attribute!.value)) {
-          const formControl = sectionForm.getFeatureFormById(feature.id);
+          const formControl = sectionForm.getTableFormById(feature.id);
 
           if (formControl) {
             formControl.removeRow(index);

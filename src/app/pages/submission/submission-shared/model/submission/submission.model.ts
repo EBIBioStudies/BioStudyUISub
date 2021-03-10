@@ -4,7 +4,7 @@ import { Attribute } from './submission.model.attribute';
 import { ValueMap } from './submission.model.valuemap';
 import { Columns } from './submission.model.columns';
 import { NameAndValue, Tag } from '../model.common';
-import { DisplayType, FeatureType, FieldType, SectionType, SubmissionType, ValueType } from '../templates';
+import { DisplayType, TableType, FieldType, SectionType, SubmissionType, ValueType } from '../templates';
 import { AttributeValue } from './submission.model.attribute-value';
 
 export interface SubmissionSection {
@@ -74,12 +74,12 @@ export class Feature {
   readonly dependency;
   readonly groups: FeatureGroup[] = [];
   readonly id: string;
-  readonly type: FeatureType;
+  readonly type: TableType;
 
   private featureColumns: Columns;
   private featureRows: Rows;
 
-  constructor(type: FeatureType, data: FeatureData = {} as FeatureData) {
+  constructor(type: TableType, data: FeatureData = {} as FeatureData) {
     this.id = `feature_${nextId()}`;
     this.type = type;
     this.featureColumns = new Columns();
@@ -109,7 +109,7 @@ export class Feature {
     }
   }
 
-  static create(type: FeatureType, attrs: AttributeData[]): Feature {
+  static create(type: TableType, attrs: AttributeData[]): Feature {
     return new Feature(type, { type: type.name, entries: [attrs] });
   }
 
@@ -294,7 +294,7 @@ export class Features {
     return this.features.length;
   }
 
-  add(type: FeatureType, data?: FeatureData): Feature | undefined {
+  add(type: TableType, data?: FeatureData): Feature | undefined {
     if (this.features.filter((f) => f.type === type).length > 0) {
       return;
     }

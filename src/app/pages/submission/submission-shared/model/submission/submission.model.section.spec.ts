@@ -1,5 +1,5 @@
 import { Section } from './submission.model';
-import { FeatureType, FieldType, invalidateGlobalScope, SectionType } from '../templates';
+import { TableType, FieldType, invalidateGlobalScope, SectionType } from '../templates';
 
 describe('Submission Model: Section', () => {
   beforeEach(() => {
@@ -39,11 +39,11 @@ describe('Submission Model: Section', () => {
         {
           name: 'Feature1',
           display: 'required'
-        } as FeatureType,
+        } as TableType,
         {
           name: 'Feature2',
           display: 'required'
-        } as FeatureType
+        } as TableType
       ]
     });
     const sec = new Section(type);

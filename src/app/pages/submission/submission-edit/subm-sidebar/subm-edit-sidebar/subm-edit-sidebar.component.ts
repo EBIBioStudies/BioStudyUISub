@@ -6,12 +6,7 @@ import { Subject, Subscription } from 'rxjs';
 import { UserData } from 'app/auth/shared';
 import { takeUntil } from 'rxjs/operators';
 import { ModalService } from 'app/shared/modal.service';
-import {
-  TypeBase,
-  FeatureType,
-  SectionType,
-  DisplayType
-} from 'app/pages/submission/submission-shared/model/templates';
+import { TypeBase, TableType, SectionType, DisplayType } from 'app/pages/submission/submission-shared/model/templates';
 import { scrollToFormControl } from 'app/utils';
 import { AddSubmTypeModalComponent } from '../add-subm-type-modal/add-subm-type-modal.component';
 import { FormValidators } from '../../shared/form-validators';
@@ -41,7 +36,7 @@ class DataTypeControl {
     ]);
   }
 
-  static fromFeatureType(type: FeatureType, id: string): DataTypeControl {
+  static fromFeatureType(type: TableType, id: string): DataTypeControl {
     return new DataTypeControl(type, type.icon, type.displayType, type.description, id);
   }
 
@@ -207,7 +202,7 @@ export class SubmEditSidebarComponent implements OnDestroy {
 
   private updateItems(): void {
     this.items = [
-      ...this.sectionForm!.featureForms.map((ff) => DataTypeControl.fromFeatureType(ff.featureType, ff.id)),
+      ...this.sectionForm!.tableForms.map((ff) => DataTypeControl.fromFeatureType(ff.featureType, ff.id)),
       ...this.sectionForm!.type.sectionTypes.map((st) => DataTypeControl.fromSectionType(st))
     ].filter((item) => item.isVisible);
 

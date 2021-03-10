@@ -97,7 +97,7 @@ export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
    */
   private getFeatureNames(): string[] {
     if (this.sectionForm) {
-      return this.sectionForm.featureForms.map((ff) => ff.featureTypeName);
+      return this.sectionForm.tableForms.map((ff) => ff.featureTypeName);
     }
     return [];
   }

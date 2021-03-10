@@ -3,7 +3,7 @@ import { UserData } from 'app/auth/shared';
 import { TypeaheadDirective } from 'ngx-bootstrap/typeahead';
 import { ColumnControl } from '../../shared/model/column-control.model';
 import { RowForm } from '../../shared/model/row-form.model';
-import { FeatureForm } from '../../shared/model/table-form.model';
+import { TableForm } from '../../shared/model/table-form.model';
 import { Options as SortableOption } from 'sortablejs';
 
 @Component({
@@ -13,7 +13,7 @@ import { Options as SortableOption } from 'sortablejs';
 })
 export class TableComponent implements OnChanges {
   @ViewChildren('colEl') colEls?: QueryList<ElementRef>;
-  @Input() tableForm!: FeatureForm;
+  @Input() tableForm!: TableForm;
   hoveredRowIndex: number = -1;
   @Input() readonly = false;
   @ViewChildren('rowEl') rowEls?: QueryList<ElementRef>;
