@@ -1,6 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { RecaptchaComponent } from 'ng-recaptcha';
+import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'app/auth/shared';
 import { PasswordResetRequestData } from '../shared/model';
 import { ServerError } from 'app/shared/server-error.handler';
@@ -9,7 +10,7 @@ import { ServerError } from 'app/shared/server-error.handler';
   selector: 'st-auth-passwd-reset-req',
   templateUrl: './password-reset-req.component.html'
 })
-export class PasswordResetReqComponent {
+export class PasswordResetReqComponent implements OnInit {
   hasError: boolean = false;
   isLoading: boolean = false; // Flag indicating if login request in progress
   message: string = '';
@@ -19,7 +20,15 @@ export class PasswordResetReqComponent {
   @ViewChild('recaptchaEl')
   private recaptcha!: RecaptchaComponent;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private activatedRoute: ActivatedRoute) {}
+
+  ngOnInit(): void {
+    const email = this.activatedRoute.snapshot.queryParamMap.get('email');
+
+    if (email !== null) {
+      this.model.email = email;
+    }
+  }
 
   onRecaptchaResolved(captchaToken: string): void {
     const component = this; // SelfSubscriber object sometimes overwrites context for "subscribe" method

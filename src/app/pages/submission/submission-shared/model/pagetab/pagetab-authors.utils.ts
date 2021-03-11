@@ -137,7 +137,7 @@ class Organisations {
     return `o${highestValueNumber + 1}`;
   }
 
-  private refFor(value: string, accno: string): string {
+  private refFor(value: string = '', accno: string): string {
     const key: string = value.trim().toLowerCase();
     const isAccnoDefined: boolean = isStringDefined(accno);
     const isValueDefined: boolean = isStringDefined(this.names[key]);

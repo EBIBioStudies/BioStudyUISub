@@ -9,11 +9,6 @@ enum ReqStatus {
   SUCCESS
 }
 
-enum ReqType {
-  CREATE,
-  UPDATE
-}
-
 export class DirectSubmitRequest {
   private directSubmissionAccno: string = '';
   private directSubmissionCreated: Date;
@@ -22,12 +17,10 @@ export class DirectSubmitRequest {
   private directSubmissionProject: string;
   private directSubmissionReleaseDate: string | undefined;
   private directSubmissionStatus: ReqStatus;
-  private directSubmissionType: ReqType;
 
-  constructor(filename: string, project: string, type: ReqType) {
+  constructor(filename: string, project: string) {
     this.directSubmissionFilename = filename;
     this.directSubmissionProject = project;
-    this.directSubmissionType = type;
 
     this.directSubmissionCreated = new Date();
     this.directSubmissionStatus = ReqStatus.SUBMIT;
@@ -63,10 +56,6 @@ export class DirectSubmitRequest {
 
   get project(): string {
     return this.directSubmissionProject;
-  }
-
-  get type(): ReqType {
-    return this.directSubmissionType;
   }
 
   get log(): any {
@@ -160,8 +149,8 @@ export class DirectSubmitService {
    * @param type - Indicates whether the submitted file should create or update an existing database entry.
    * @returns Stream of inputs coming from the subsequent responses.
    */
-  addRequest(file: File, project: string, type: string): Observable<any> {
-    const req = new DirectSubmitRequest(file.name, project, ReqType[type.toUpperCase()]);
+  addRequest(file: File, project: string): Observable<any> {
+    const req = new DirectSubmitRequest(file.name, project);
     const index = this.requests.length;
 
     this.requests.push(req);

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { ResultsLogNodeComponent } from './results-log-node.component';
-import { SubmResultsModalComponent } from './subm-results-modal.component';
+import { SubmErrorModalComponent } from './subm-error-modal.component';
 import { SubmResultsTreeComponent } from './subm-results-tree.component';
 import { TreeViewComponent, TreeViewNodeComponent } from './tree-view.component';
 
@@ -13,10 +13,10 @@ import { TreeViewComponent, TreeViewNodeComponent } from './tree-view.component'
     TreeViewComponent,
     TreeViewNodeComponent,
     ResultsLogNodeComponent,
-    SubmResultsModalComponent,
+    SubmErrorModalComponent,
     SubmResultsTreeComponent
   ],
-  exports: [SubmResultsModalComponent, SubmResultsTreeComponent],
-  entryComponents: [SubmResultsModalComponent, ResultsLogNodeComponent]
+  exports: [SubmErrorModalComponent, SubmResultsTreeComponent],
+  entryComponents: [SubmErrorModalComponent, ResultsLogNodeComponent]
 })
 export class SubmissionResultsModule {}
