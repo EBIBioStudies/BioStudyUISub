@@ -16,9 +16,9 @@ import { RemoveHostDirective } from './shared/remove-host.directive';
 import { TextareaAutosizeDirective } from './shared/textarea-autosize.directive';
 import { UniqueValidator } from './shared/unique.directive';
 import { SubmissionEditComponent } from './submission-edit.component';
-import { FeatureGridComponent } from './subm-form/feature/feature-grid.component';
-import { FeatureListComponent } from './subm-form/feature/feature-list.component';
-import { SubmFeatureComponent } from './subm-form/feature/subm-feature.component';
+import { TableComponent } from './subm-form/table/table.component';
+import { SingleColumnTableComponent } from './subm-form/table/single-column-table.component';
+import { SubmTableComponent } from './subm-form/table/subm-table.component';
 import { SubmFieldComponent } from './subm-form/field/subm-field.component';
 import { InlineEditComponent } from './subm-form/inline-edit/inline-edit.component';
 import { InputValueComponent } from './subm-form-input/input-value.component';
@@ -50,15 +50,15 @@ import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
     InlineEditComponent,
     SubmFormComponent,
     SubmFieldComponent,
-    SubmFeatureComponent,
+    SubmTableComponent,
     SubmSidebarComponent,
     SubmEditSidebarComponent,
     SubmCheckSidebarComponent,
     SubmNavBarComponent,
     SubmValidationErrorsComponent,
     AddSubmTypeModalComponent,
-    FeatureGridComponent,
-    FeatureListComponent,
+    TableComponent,
+    SingleColumnTableComponent,
     Camelcase2LabelPipe,
     UniqueValidator,
     BootstrapValidationDirective,

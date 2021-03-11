@@ -11,8 +11,8 @@
         <span class="text-black">Name</span>
         <ng-template #popTemplate>
           <strong class="text-muted">Existing names</strong>:
-          <span *ngFor="let featName of featNames; let last = last" [ngClass]="{'text-danger': featName === typeName}">
-            {{featName}}{{last ? '': ', '}}
+          <span *ngFor="let tableName of tableNames; let last = last" [ngClass]="{'text-danger': tableName === typeName}">
+            {{tableName}}{{last ? '': ', '}}
           </span>
         </ng-template>
         <span *ngIf="typeNameCtrl.invalid && !typeNameCtrl.pristine">

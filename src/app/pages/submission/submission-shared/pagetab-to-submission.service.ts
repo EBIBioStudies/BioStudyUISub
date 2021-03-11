@@ -14,7 +14,7 @@ import {
   PtFile,
   findAttributesByName
 } from './model/pagetab';
-import { AttributeData, FeatureData, SectionData, Submission, SubmissionData } from './model/submission';
+import { AttributeData, TableData, SectionData, Submission, SubmissionData } from './model/submission';
 import { DEFAULT_TEMPLATE_NAME, SectionType, SubmissionType } from './model/templates';
 import { NameAndValue, PAGE_TAG, Tag } from './model/model.common';
 import { findAttribute } from './utils/pagetab.utils';
@@ -128,63 +128,63 @@ export class PageTabToSubmissionService {
     const files = flatArray<PtFile>(ptSection.files || []);
     const subsections = flatArray(ptSection.subsections || []);
     const contacts = authorsToContacts(subsections.filter((section) => !this.hasSubsections(section)));
-    const featureSections = pageTabToSubmissionProtocols(contacts);
+    const tableSections = pageTabToSubmissionProtocols(contacts);
     const keywords = findAttributesByName('Keywords', ptSection.attributes || []);
 
-    const features: FeatureData[] = [];
+    const tables: TableData[] = [];
     const hasLinks = links.length > 0;
     const hasFiles = files.length > 0;
-    const hasFeatureSections = featureSections.length > 0;
+    const hasTableSections = tableSections.length > 0;
     const hasLibraryFile = isDefinedAndNotEmpty(ptSection.libraryFile);
     const hasKeywords = keywords.length > 0;
 
     if (hasLinks) {
-      features.push({
+      tables.push({
         type: 'Link',
         entries: links
           .map((link) => LinksUtils.toUntyped(link))
           .map((link) => this.pageTabAttributesToAttributeData(link))
-      } as FeatureData);
+      } as TableData);
     }
 
     if (hasFiles) {
-      features.push({
+      tables.push({
         type: 'File',
         entries: files
           .map((file) => [{ name: 'Path', value: file.path } as PtAttribute].concat(file.attributes || []))
           .map((file) => this.pageTabAttributesToAttributeData(file))
-      } as FeatureData);
+      } as TableData);
     }
 
     if (hasLibraryFile) {
-      features.push({
+      tables.push({
         type: 'LibraryFile',
         entries: [[{ name: 'Path', value: ptSection.libraryFile } as PtAttribute]]
-      } as FeatureData);
+      } as TableData);
     }
 
     if (hasKeywords) {
-      features.push({
+      tables.push({
         type: 'Keywords',
         entries: keywords.map((keyword) => [{ name: 'Keyword', value: keyword.value } as PtAttribute])
-      } as FeatureData);
+      } as TableData);
     }
 
-    if (hasFeatureSections) {
-      const allFeatureTypes = featureSections
-        .filter((featureSection) => isDefinedAndNotEmpty(featureSection.type))
-        .map((featureSection) => featureSection.type);
-      const featureTypes = arrayUniqueValues(allFeatureTypes);
+    if (hasTableSections) {
+      const allTableTypes = tableSections
+        .filter((tableSection) => isDefinedAndNotEmpty(tableSection.type))
+        .map((tableSection) => tableSection.type);
+      const tableTypes = arrayUniqueValues(allTableTypes);
 
-      featureTypes.forEach((featureType) => {
-        const entries = featureSections
-          .filter((featureSection) => featureSection.type === featureType)
-          .map((featureSection) => this.pageTabAttributesToAttributeData(featureSection.attributes || []));
+      tableTypes.forEach((tableType) => {
+        const entries = tableSections
+          .filter((tableSection) => tableSection.type === tableType)
+          .map((tableSection) => this.pageTabAttributesToAttributeData(tableSection.attributes || []));
 
-        features.push({
-          type: featureType,
+        tables.push({
+          type: tableType,
           entries
-        } as FeatureData);
+        } as TableData);
       });
     }
 
@@ -200,7 +200,7 @@ export class PageTabToSubmissionService {
       type: ptSection.type,
       accno: ptSection.accno,
       attributes,
-      features,
+      tables,
       sections: formattedSections,
       subsections: formattedSubSections
     } as SectionData;

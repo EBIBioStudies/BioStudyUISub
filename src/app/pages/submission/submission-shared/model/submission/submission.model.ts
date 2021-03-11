@@ -1,11 +1,10 @@
-import { zip } from 'fp-ts/lib/Array';
 import { isDefinedAndNotEmpty, isArrayEmpty, arrayUniqueValues, isStringDefined } from 'app/utils';
 import { nextId } from './submission.model.counter';
 import { Attribute } from './submission.model.attribute';
 import { ValueMap } from './submission.model.valuemap';
 import { Columns } from './submission.model.columns';
 import { NameAndValue, Tag } from '../model.common';
-import { DisplayType, FeatureType, FieldType, SectionType, SubmissionType, ValueType } from '../templates';
+import { DisplayType, TableType, FieldType, SectionType, SubmissionType, ValueType } from '../templates';
 import { AttributeValue } from './submission.model.attribute-value';
 
 export interface SubmissionSection {
@@ -19,7 +18,7 @@ class Rows {
 
   add(keys: string[]): ValueMap {
     if (this.isFull()) {
-      throw new Error(`Can not add more than ${this.capacity} row(s) to a feature`);
+      throw new Error(`Can not add more than ${this.capacity} row(s) to a table`);
     }
 
     const row = new ValueMap(keys);
@@ -69,22 +68,22 @@ class Rows {
   }
 }
 
-type FeatureGroup = Feature[];
+type TableGroup = Table[];
 
-export class Feature {
+export class Table {
   readonly dependency;
-  readonly groups: FeatureGroup[] = [];
+  readonly groups: TableGroup[] = [];
   readonly id: string;
-  readonly type: FeatureType;
+  readonly type: TableType;
 
-  private featureColumns: Columns;
-  private featureRows: Rows;
+  private tableColumns: Columns;
+  private tableRows: Rows;
 
-  constructor(type: FeatureType, data: FeatureData = {} as FeatureData) {
-    this.id = `feature_${nextId()}`;
+  constructor(type: TableType, data: TableData = {} as TableData) {
+    this.id = `table${nextId()}`;
     this.type = type;
-    this.featureColumns = new Columns();
-    this.featureRows = new Rows(type.singleRow ? 1 : undefined);
+    this.tableColumns = new Columns();
+    this.tableRows = new Rows(type.singleRow ? 1 : undefined);
     this.dependency = type.dependency;
 
     type.columnTypes
@@ -110,16 +109,16 @@ export class Feature {
     }
   }
 
-  static create(type: FeatureType, attrs: AttributeData[]): Feature {
-    return new Feature(type, { type: type.name, entries: [attrs] });
+  static create(type: TableType, attrs: AttributeData[]): Table {
+    return new Table(type, { type: type.name, entries: [attrs] });
   }
 
   get columns(): Attribute[] {
-    return this.featureColumns.list();
+    return this.tableColumns.list();
   }
 
   get colNames(): string[] {
-    return this.featureColumns.names();
+    return this.tableColumns.names();
   }
 
   get isEmpty(): boolean {
@@ -135,7 +134,7 @@ export class Feature {
   }
 
   get rows(): ValueMap[] {
-    return this.featureRows.list();
+    return this.tableRows.list();
   }
 
   get readonly(): boolean {
@@ -162,7 +161,7 @@ export class Feature {
 
     const attrsWithName = attributes.filter((attr) => isDefinedAndNotEmpty(attr.name));
     const newColNames = attrsWithName.map((attr) => attr.name!);
-    const existedColNames = this.featureColumns.names();
+    const existedColNames = this.tableColumns.names();
 
     arrayUniqueValues(newColNames).forEach((colName) => {
       const colType = this.type.getColumnType(colName);
@@ -177,12 +176,13 @@ export class Feature {
       }
 
       const attrs = attrsWithName.filter((attr) => attr.name === colName);
-      const columns = this.featureColumns.filterByName(colName);
-      zip(attrs, columns).forEach((pair) => {
-        const rowValue = rowMap.valueFor(pair[1].id);
+      const columns = this.tableColumns.filterByName(colName);
+
+      columns.forEach((column, index) => {
+        const rowValue: AttributeValue = rowMap.valueFor(column.id);
 
         if (rowValue) {
-          rowValue.value = (pair[0].value || '') as string;
+          rowValue.value = (attrs[index].value || '') as string;
         }
       });
     });
@@ -197,7 +197,7 @@ export class Feature {
     uniqueValues: boolean = false,
     autosuggest: boolean = true
   ): Attribute {
-    const defColName = (this.singleRow ? this.typeName : 'Column') + ' ' + (this.featureColumns.size() + 1);
+    const defColName = (this.singleRow ? this.typeName : 'Column') + ' ' + (this.tableColumns.size() + 1);
     const colName = name || defColName;
     const col = new Attribute(
       colName,
@@ -208,18 +208,18 @@ export class Feature {
       uniqueValues,
       autosuggest
     );
-    this.featureRows.addKey(col.id);
-    this.featureColumns.add(col);
+    this.tableRows.addKey(col.id);
+    this.tableColumns.add(col);
 
     return col;
   }
 
   addRow(): ValueMap {
-    return this.featureRows.add(this.featureColumns.keys());
+    return this.tableRows.add(this.tableColumns.keys());
   }
 
   attributeValuesForColumn(columnId: string): (AttributeValue | undefined)[] {
-    return this.featureRows.list().map((row) => row.valueFor(columnId));
+    return this.tableRows.list().map((row) => row.valueFor(columnId));
   }
 
   canAddRow(): boolean {
@@ -227,116 +227,116 @@ export class Feature {
   }
 
   colSize(): number {
-    return this.featureColumns.size();
+    return this.tableColumns.size();
   }
 
   findColumnById(columnId: string): Attribute | undefined {
-    return this.featureColumns.findById(columnId);
+    return this.tableColumns.findById(columnId);
   }
 
   patchRows(rows: ValueMap[]): void {
-    this.featureRows.patchRows(rows);
+    this.tableRows.patchRows(rows);
   }
 
   removeColumn(id: string): boolean {
-    this.featureColumns.remove(id);
-    this.featureRows.removeKey(id);
+    this.tableColumns.remove(id);
+    this.tableRows.removeKey(id);
     return true;
   }
 
   removeRowAt(index: number): boolean {
-    return this.featureRows.removeAt(index);
+    return this.tableRows.removeAt(index);
   }
 
   rowSize(): number {
-    return this.featureRows.size();
+    return this.tableRows.size();
   }
 
   private getOrCreateRow(rowIdx?: number): ValueMap | undefined {
-    return rowIdx === undefined ? this.addRow() : this.featureRows.at(rowIdx);
+    return rowIdx === undefined ? this.addRow() : this.tableRows.at(rowIdx);
   }
 }
 
-export class Features {
-  private features: Feature[] = [];
+export class Tables {
+  private tables: Table[] = [];
 
-  constructor(type: SectionType, features: Array<FeatureData> = []) {
-    const fd = features
+  constructor(type: SectionType, tables: Array<TableData> = []) {
+    const fd = tables
       .filter((f) => isDefinedAndNotEmpty(f.type))
       .reduce((rv, d) => {
         rv[d.type!] = d;
         return rv;
       }, {});
 
-    type.featureTypes.forEach((ft) => {
+    type.tableTypes.forEach((ft) => {
       this.add(ft, fd[ft.name]);
       fd[ft.name] = undefined;
     });
 
     Object.keys(fd).forEach((key) => {
       if (fd[key] !== undefined) {
-        const ft = type.getFeatureType(key);
+        const ft = type.getTableType(key);
         this.add(ft, fd[ft.name]);
       }
     });
 
-    type.featureGroups.forEach((group) => {
-      const featureGroup = this.features.filter((f) => group.includes(f.typeName));
-      featureGroup.forEach((f) => f.groups.push(featureGroup));
-      const rowCount = featureGroup.map((f) => f.rowSize()).reduce((rv, v) => rv + v, 0);
+    type.tableGroups.forEach((group) => {
+      const tableGroup = this.tables.filter((f) => group.includes(f.typeName));
+      tableGroup.forEach((f) => f.groups.push(tableGroup));
+      const rowCount = tableGroup.map((f) => f.rowSize()).reduce((rv, v) => rv + v, 0);
       if (rowCount === 0) {
-        featureGroup.forEach((fGroup) => fGroup.addRow());
+        tableGroup.forEach((fGroup) => fGroup.addRow());
       }
     });
   }
 
   get length(): number {
-    return this.features.length;
+    return this.tables.length;
   }
 
-  add(type: FeatureType, data?: FeatureData): Feature | undefined {
-    if (this.features.filter((f) => f.type === type).length > 0) {
+  add(type: TableType, data?: TableData): Table | undefined {
+    if (this.tables.filter((f) => f.type === type).length > 0) {
       return;
     }
 
-    const feature = new Feature(type, data);
-    this.features.push(feature);
+    const table = new Table(type, data);
+    this.tables.push(table);
 
-    return feature;
+    return table;
   }
 
   /**
-   * Retrieves the feature object that fulfills a scalar comparison with one of its property values.
+   * Retrieves the table object that fulfills a scalar comparison with one of its property values.
    * By default, it will look for a given ID.
-   * @param value - Value of the required feature's property.
-   * @param [property = 'id'] - Property name by which features are looked up.
-   * @returns Feature fulfilling the predicated comparison.
+   * @param value - Value of the required table's property.
+   * @param [property = 'id'] - Property name by which tables are looked up.
+   * @returns Table fulfilling the predicated comparison.
    */
-  find(value: string, property: string = 'id'): Feature | undefined {
-    return this.features.find((feature) => feature[property] === value);
+  find(value: string, property: string = 'id'): Table | undefined {
+    return this.tables.find((table) => table[property] === value);
   }
 
-  list(): Feature[] {
-    return this.features.slice();
+  list(): Table[] {
+    return this.tables.slice();
   }
 
-  remove(feature: Feature): boolean {
-    if (feature.type.tmplBased) {
+  remove(table: Table): boolean {
+    if (table.type.tmplBased) {
       return false;
     }
-    const index = this.features.indexOf(feature);
+    const index = this.tables.indexOf(table);
     if (index < 0) {
       return false;
     }
-    this.features.splice(index, 1);
+    this.tables.splice(index, 1);
 
-    feature.type.destroy();
+    table.type.destroy();
     return true;
   }
 
-  removeById(featureId: string): boolean {
-    const feature = this.features.find((f) => f.id === featureId);
-    return feature !== undefined && this.remove(feature);
+  removeById(tableId: string): boolean {
+    const table = this.tables.find((f) => f.id === tableId);
+    return table !== undefined && this.remove(table);
   }
 }
 
@@ -419,9 +419,9 @@ export class Fields {
 }
 
 export class Section implements SubmissionSection {
-  readonly annotations: Feature;
+  readonly annotations: Table;
   readonly data: SectionData;
-  readonly features: Features;
+  readonly tables: Tables;
   readonly fields: Fields;
   readonly id: string;
   readonly sections: Sections;
@@ -438,7 +438,7 @@ export class Section implements SubmissionSection {
     this.sectionAccno = data.accno || accno;
     this.fields = new Fields(type, data.attributes);
     // Any attribute names from the server that do not match top-level field names are added as annotations.
-    this.annotations = Feature.create(
+    this.annotations = Table.create(
       type.annotationsType,
       (data.attributes || []).filter(
         (attribute) =>
@@ -446,7 +446,7 @@ export class Section implements SubmissionSection {
       )
     );
     this.data = data;
-    this.features = new Features(type, data.features);
+    this.tables = new Tables(type, data.tables);
     this.sections = new Sections(type, data.sections);
     this.subsections = new Sections(type, data.subsections);
   }
@@ -631,7 +631,7 @@ export interface AttributeData {
   value?: string | string[];
 }
 
-export interface FeatureData {
+export interface TableData {
   entries?: AttributeData[][];
   type?: string;
 }
@@ -644,7 +644,7 @@ export interface TaggedData {
 export interface SectionData extends TaggedData {
   accno?: string;
   attributes?: AttributeData[];
-  features?: FeatureData[];
+  tables?: TableData[];
   sections?: SectionData[];
   subsections?: SectionData[];
   type?: string;

@@ -3,17 +3,17 @@ import { UserData } from 'app/auth/shared';
 import { TypeaheadDirective } from 'ngx-bootstrap/typeahead';
 import { ColumnControl } from '../../shared/model/column-control.model';
 import { RowForm } from '../../shared/model/row-form.model';
-import { FeatureForm } from '../../shared/model/feature-form.model';
+import { TableForm } from '../../shared/model/table-form.model';
 import { Options as SortableOption } from 'sortablejs';
 
 @Component({
-  selector: 'st-subm-feature-grid',
-  templateUrl: './feature-grid.component.html',
-  styleUrls: ['./feature-grid.component.css']
+  selector: 'st-table',
+  templateUrl: './table.component.html',
+  styleUrls: ['./table.component.css']
 })
-export class FeatureGridComponent implements OnChanges {
+export class TableComponent implements OnChanges {
   @ViewChildren('colEl') colEls?: QueryList<ElementRef>;
-  @Input() featureForm!: FeatureForm;
+  @Input() tableForm!: TableForm;
   hoveredRowIndex: number = -1;
   @Input() readonly = false;
   @ViewChildren('rowEl') rowEls?: QueryList<ElementRef>;
@@ -27,19 +27,19 @@ export class FeatureGridComponent implements OnChanges {
   }
 
   get rows(): RowForm[] {
-    return this.featureForm.rows;
+    return this.tableForm.rows;
   }
 
   get columns(): ColumnControl[] {
-    return this.featureForm.columns;
+    return this.tableForm.columns;
   }
 
   get isSortable(): boolean {
-    return !this.isReadOnly && this.featureForm!.rows.length > 1;
+    return !this.isReadOnly && this.tableForm!.rows.length > 1;
   }
 
   get isReadOnly(): boolean {
-    return Boolean(this.readonly || this.featureForm?.isReadonly);
+    return Boolean(this.readonly || this.tableForm?.isReadonly);
   }
 
   ngOnChanges(): void {
@@ -57,7 +57,7 @@ export class FeatureGridComponent implements OnChanges {
   }
 
   /**
-   * Changes the values of an existing feature's row fields to those of a given a set of grid attributes,
+   * Changes the values of an existing tables's row fields to those of a given a set of grid attributes,
    * bubbling a single DOM change event for all of them. Attribute names are assumed to be in lower case.
    * @param data - Grid attribute data retrieved asynchronously.
    * @param rowIdx - Row whose field values are to be changed.
@@ -69,8 +69,8 @@ export class FeatureGridComponent implements OnChanges {
     }
 
     attrNames.forEach((attrName) => {
-      const rowForm = this.featureForm.rows[rowIdx];
-      const col = this.featureForm.columns.find((c) => c.name.toLowerCase() === attrName.toLowerCase());
+      const rowForm = this.tableForm.rows[rowIdx];
+      const col = this.tableForm.columns.find((c) => c.name.toLowerCase() === attrName.toLowerCase());
 
       if (col !== undefined) {
         const cellControl = rowForm.cellControlAt(col.id);
@@ -91,6 +91,6 @@ export class FeatureGridComponent implements OnChanges {
   }
 
   onRowOrderUpdate(): void {
-    this.featureForm.syncModelRows();
+    this.tableForm.syncModelRows();
   }
 }

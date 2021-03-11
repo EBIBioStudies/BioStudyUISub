@@ -1,22 +1,22 @@
 import { CustomFormControl } from './custom-form-control.model';
 import {
   DisplayType,
-  Feature,
-  FeatureType,
+  Table,
+  TableType,
   Field,
   Section,
   SectionType
 } from 'app/pages/submission/submission-shared/model';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { FormBase } from '../model/form-base.model';
 import { ControlGroupRef } from '../control-reference';
 import { FieldControl } from './field-control.model';
-import { FeatureForm } from './feature-form.model';
+import { TableForm } from './table-form.model';
 import { StructureChangeEvent } from '../structure-change-event';
 
 export class SectionForm extends FormBase {
-  readonly featureForms: FeatureForm[] = [];
+  readonly tableForms: TableForm[] = [];
   readonly fieldControls: FieldControl[] = [];
   readonly sectionPath: string[];
   // Can use form's valueChanges, but then the operations like add/remove column will not be atomic,
@@ -31,7 +31,7 @@ export class SectionForm extends FormBase {
     super(
       new FormGroup({
         fields: new FormGroup({}),
-        features: new FormGroup({}),
+        tables: new FormGroup({}),
         sections: new FormGroup({})
       })
     );
@@ -43,19 +43,19 @@ export class SectionForm extends FormBase {
     this.buildElements(section.displayAnnotations);
   }
 
-  addFeature(type: FeatureType): Feature | undefined {
-    const feature = this.section.features.add(type);
-    if (feature) {
-      this.addFeatureForm(feature);
-      this.structureChanges$.next(StructureChangeEvent.featureAdd);
+  addTable(type: TableType): Table | undefined {
+    const table = this.section.tables.add(type);
+    if (table) {
+      this.addTableForm(table);
+      this.structureChanges$.next(StructureChangeEvent.tableAdd);
     }
-    return feature;
+    return table;
   }
 
-  addFeatureEntry(featureId: string): void {
-    const featureForm = this.featureForms.find((f) => f.id === featureId);
-    if (featureForm !== undefined) {
-      featureForm.addEntry();
+  addTableEntry(tableId: string): void {
+    const tableForm = this.tableForms.find((f) => f.id === tableId);
+    if (tableForm !== undefined) {
+      tableForm.addEntry();
     }
   }
 
@@ -73,15 +73,15 @@ export class SectionForm extends FormBase {
     return this.findRoot().lookupSectionForm(sectionId);
   }
 
-  getFeatureControl(featureId: string): CustomFormControl | undefined {
-    const featureForm = this.featureForms.find((f) => f.id === featureId);
-    if (featureForm !== undefined) {
-      return featureForm.scrollToTheLastControl;
+  getTableControl(tableId: string): CustomFormControl | undefined {
+    const tableForm = this.tableForms.find((f) => f.id === tableId);
+    if (tableForm !== undefined) {
+      return tableForm.scrollToTheLastControl;
     }
   }
 
-  getFeatureFormById(featureId: string): FeatureForm | undefined {
-    return this.featureForms.find((feature) => feature.id === featureId);
+  getTableFormById(tableId: string): TableForm | undefined {
+    return this.tableForms.find((table) => table.id === tableId);
   }
 
   isSectionRemovable(sectionForm: SectionForm): boolean {
@@ -89,17 +89,17 @@ export class SectionForm extends FormBase {
     return sectionForm.isTypeRemovable || this.section.sections.byType(sectionForm.typeName).length > min;
   }
 
-  removeFeatureType(featureId: string): void {
-    const index = this.featureForms.findIndex((f) => f.id === featureId);
+  removeTableType(tableId: string): void {
+    const index = this.tableForms.findIndex((f) => f.id === tableId);
     if (index < 0) {
       return;
     }
 
-    if (this.section.features.removeById(featureId)) {
-      this.unsubscribe(featureId);
-      this.featureForms.splice(index, 1);
-      this.featureFormGroups.removeControl(featureId);
-      this.structureChanges$.next(StructureChangeEvent.featureRemove);
+    if (this.section.tables.removeById(tableId)) {
+      this.unsubscribe(tableId);
+      this.tableForms.splice(index, 1);
+      this.tableFormGroups.removeControl(tableId);
+      this.structureChanges$.next(StructureChangeEvent.tableRemove);
     }
   }
 
@@ -165,20 +165,20 @@ export class SectionForm extends FormBase {
     return this.form.get('fields') as FormGroup;
   }
 
-  private get featureFormGroups(): FormGroup {
-    return this.form.get('features') as FormGroup;
+  private get tableFormGroups(): FormGroup {
+    return this.form.get('tables') as FormGroup;
   }
 
   private get subsectionFormGroups(): FormGroup {
     return this.form.get('sections') as FormGroup;
   }
 
-  private addFeatureForm(feature: Feature): FeatureForm {
-    const featureForm = new FeatureForm(feature, this.sectionRef.featureRef(feature));
-    this.featureForms.push(featureForm);
-    this.featureFormGroups.addControl(feature.id, featureForm.form);
-    this.subscribe(featureForm);
-    return featureForm;
+  private addTableForm(table: Table): TableForm {
+    const tableForm = new TableForm(table, this.sectionRef.tableRef(table));
+    this.tableForms.push(tableForm);
+    this.tableFormGroups.addControl(table.id, tableForm.form);
+    this.subscribe(tableForm);
+    return tableForm;
   }
 
   private addFieldControl(field: Field): void {
@@ -199,8 +199,8 @@ export class SectionForm extends FormBase {
 
     section.fields.list().forEach((field) => this.addFieldControl(field));
 
-    const features = displayAnnotations ? [section.annotations, ...section.features.list()] : section.features.list();
-    features.forEach((feature) => this.addFeatureForm(feature));
+    const tables = displayAnnotations ? [section.annotations, ...section.tables.list()] : section.tables.list();
+    tables.forEach((table) => this.addTableForm(table));
 
     section.sections.list().forEach((sectionItem) => this.addSubsectionForm(sectionItem));
   }
@@ -219,10 +219,10 @@ export class SectionForm extends FormBase {
     return this.subsectionForms.find((sf) => sf.lookupSectionForm(sectionId) !== undefined);
   }
 
-  private subscribe(featureForm: FeatureForm): void {
+  private subscribe(tableForm: TableForm): void {
     this.sb.set(
-      featureForm.id,
-      featureForm.structureChanges$.subscribe((event) => {
+      tableForm.id,
+      tableForm.structureChanges$.subscribe((event) => {
         this.form.markAsTouched();
 
         this.structureChanges$.next(event);
@@ -230,12 +230,12 @@ export class SectionForm extends FormBase {
     );
   }
 
-  private unsubscribe(featureId: string): void {
-    const suscription = this.sb.get(featureId);
+  private unsubscribe(tableId: string): void {
+    const suscription = this.sb.get(tableId);
     if (suscription) {
       suscription.unsubscribe();
     }
 
-    this.sb.delete(featureId);
+    this.sb.delete(tableId);
   }
 }

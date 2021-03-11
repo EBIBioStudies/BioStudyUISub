@@ -1,16 +1,16 @@
 import { Component, Input } from '@angular/core';
 import { AppConfig } from 'app/app.config';
 import { ColumnControl } from '../../shared/model/column-control.model';
-import { FeatureForm } from '../../shared/model/feature-form.model';
+import { TableForm } from '../../shared/model/table-form.model';
 
 @Component({
-  selector: 'st-subm-feature-list',
-  templateUrl: './feature-list.component.html',
-  styleUrls: ['./feature-list.component.css']
+  selector: 'st-single-column-table',
+  templateUrl: './single-column-table.component.html',
+  styleUrls: ['./single-column-table.component.css']
 })
-export class FeatureListComponent {
-  @Input() featureForm!: FeatureForm; // Reactive data structure for the form containing this feature
-  @Input() readonly?: boolean = false; // Flag for features that cannot be edited (e.g. sent state for submissions)
+export class SingleColumnTableComponent {
+  @Input() tableForm!: TableForm; // Reactive data structure for the form containing this table
+  @Input() readonly?: boolean = false; // Flag for tables that cannot be edited (e.g. sent state for submissions)
 
   suggestLength: number; // max number of suggested values to be displayed at once
 
@@ -19,7 +19,7 @@ export class FeatureListComponent {
   }
 
   get columns(): ColumnControl[] {
-    return this.featureForm.columns;
+    return this.tableForm.columns;
   }
 
   /**

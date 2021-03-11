@@ -3,7 +3,7 @@ import { isArrayEmpty, isStringDefined, isStringEmpty } from 'app/utils';
 
 /*
  *  Type scopes are used to check if the types with a given name already exists in the scope
- *  (SubmissionScope, SectionScope, FeatureScope, FieldsScope.. etc.). Each type must be in a scope.
+ *  (SubmissionScope, SectionScope, TableScope, FieldsScope.. etc.). Each type must be in a scope.
  * */
 class TypeScope<T extends TypeBase> {
   private map: Map<string, T> = new Map();
@@ -258,7 +258,7 @@ export class FieldType extends TypeBase {
   }
 }
 
-export class FeatureType extends TypeBase {
+export class TableType extends TypeBase {
   readonly allowCustomCols: boolean;
   readonly dependency: string;
   readonly description: string;
@@ -273,7 +273,7 @@ export class FeatureType extends TypeBase {
 
   constructor(
     name: string,
-    data?: Partial<FeatureType>,
+    data?: Partial<TableType>,
     scope?: TypeScope<TypeBase>,
     isTemplBased: boolean = true,
     parentDisplayType: DisplayType = DisplayType.OPTIONAL
@@ -300,8 +300,8 @@ export class FeatureType extends TypeBase {
     uniqueCols?: boolean,
     scope?: TypeScope<TypeBase>,
     parentDisplayType?: DisplayType
-  ): FeatureType {
-    return new FeatureType(name, { singleRow, uniqueCols }, scope, false, parentDisplayType);
+  ): TableType {
+    return new TableType(name, { singleRow, uniqueCols }, scope, false, parentDisplayType);
   }
 
   get columnTypes(): ColumnType[] {
@@ -321,9 +321,9 @@ export class FeatureType extends TypeBase {
   }
 }
 
-export class AnnotationsType extends FeatureType {
+export class AnnotationsType extends TableType {
   constructor(
-    data?: Partial<FeatureType>,
+    data?: Partial<TableType>,
     scope?: TypeScope<TypeBase>,
     isTemplBased: boolean = true,
     parentDisplayType: DisplayType = DisplayType.OPTIONAL
@@ -381,11 +381,11 @@ export class SectionType extends TypeBase {
   readonly display: string;
   readonly displayType: DisplayType;
   readonly displayAnnotations: boolean;
-  readonly featureGroups: string[][];
+  readonly tableGroups: string[][];
   readonly minRequired: number;
   readonly sectionExample: string;
 
-  private featureScope: TypeScope<FeatureType> = new TypeScope<FeatureType>();
+  private tableScope: TypeScope<TableType> = new TypeScope<TableType>();
   private fieldScope: TypeScope<FieldType> = new TypeScope<FieldType>();
   private sectionScope: TypeScope<SectionType> = new TypeScope<SectionType>();
 
@@ -402,7 +402,7 @@ export class SectionType extends TypeBase {
     this.displayType = DisplayType.create(data.display || parentDisplayType.name);
     this.display = this.displayType.name;
     this.displayAnnotations = data.displayAnnotations || false;
-    this.featureGroups = (data.featureGroups || []).filter((gr) => !isArrayEmpty(gr));
+    this.tableGroups = (data.tableGroups || []).filter((gr) => !isArrayEmpty(gr));
     this.minRequired = data.minRequired || 1;
     this.annotationsType = new AnnotationsType(
       data.annotationsType,
@@ -415,8 +415,8 @@ export class SectionType extends TypeBase {
     (data.fieldTypes || []).forEach(
       (fieldType) => new FieldType(fieldType.name, fieldType, this.fieldScope, this.displayType)
     );
-    (data.featureTypes || []).forEach(
-      (featureType) => new FeatureType(featureType.name, featureType, this.featureScope, isTemplBased, this.displayType)
+    (data.tableTypes || []).forEach(
+      (tableType) => new TableType(tableType.name, tableType, this.tableScope, isTemplBased, this.displayType)
     );
     (data.sectionTypes || []).forEach(
       (sectionType) => new SectionType(sectionType.name, sectionType, this.sectionScope, isTemplBased, this.displayType)
@@ -431,17 +431,17 @@ export class SectionType extends TypeBase {
     return this.fieldScope.filterValues((ft) => ft.tmplBased);
   }
 
-  get featureTypes(): FeatureType[] {
-    return this.featureScope.filterValues((ft) => ft.tmplBased);
+  get tableTypes(): TableType[] {
+    return this.tableScope.filterValues((ft) => ft.tmplBased);
   }
 
   get sectionTypes(): SectionType[] {
     return this.sectionScope.filterValues((st) => st.tmplBased);
   }
 
-  getFeatureType(name: string, singleRow: boolean = false, uniqueCols: boolean = false): FeatureType {
-    return this.featureScope.getOrElse(name, () =>
-      FeatureType.createDefault(name, singleRow, uniqueCols, this.featureScope, this.displayType)
+  getTableType(name: string, singleRow: boolean = false, uniqueCols: boolean = false): TableType {
+    return this.tableScope.getOrElse(name, () =>
+      TableType.createDefault(name, singleRow, uniqueCols, this.tableScope, this.displayType)
     );
   }
 

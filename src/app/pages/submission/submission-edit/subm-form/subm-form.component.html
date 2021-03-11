@@ -3,7 +3,7 @@
     <st-subm-field [fieldControl]="fieldControl" [readonly]="readonly"></st-subm-field>
   </ng-container>
 
-  <ng-container *ngFor="let featureForm of sectionForm.featureForms">
-    <st-subm-feature [featureForm]="featureForm" [readonly]="readonly"></st-subm-feature>
+  <ng-container *ngFor="let tableForm of sectionForm.tableForms">
+    <st-subm-table [tableForm]="tableForm" [readonly]="readonly"></st-subm-table>
   </ng-container>
 </form>

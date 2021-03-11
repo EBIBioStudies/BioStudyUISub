@@ -100,7 +100,7 @@ export const arrayExpressTemplate = {
         }
       }
     ],
-    featureTypes: [
+    tableTypes: [
       {
         name: 'Publication',
         display: 'optional',

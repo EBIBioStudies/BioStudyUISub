@@ -1,16 +1,16 @@
-import { Feature, Field, Section, Submission } from './submission.model';
+import { Table, Field, Section, Submission } from './submission.model';
 import { parseDate } from 'app/utils';
-import { FeatureType, SectionType, TextValueType, ValueType, ValueTypeName } from '../templates';
+import { TableType, SectionType, TextValueType, ValueType, ValueTypeName } from '../templates';
 
 interface ValidationRule {
   validate(): string | undefined;
 }
 
 class ValidationRules {
-  static atLeastOneFeatureFromGroup(group: string[], section: Section): ValidationRule {
+  static atLeastOneTableFromGroup(group: string[], section: Section): ValidationRule {
     return {
       validate(): string | undefined {
-        const rowCount = section.features
+        const rowCount = section.tables
           .list()
           .filter((f) => group.includes(f.typeName))
           .map((f) => f.rowSize())
@@ -23,34 +23,34 @@ class ValidationRules {
     };
   }
 
-  static atLeastOneRowFeature(feature: Feature): ValidationRule {
+  static atLeastOneRowTable(table: Table): ValidationRule {
     return {
       validate(): string | undefined {
-        if (feature.rowSize() === 0) {
-          return `At least one of ${feature.typeName} is required`;
+        if (table.rowSize() === 0) {
+          return `At least one of ${table.typeName} is required`;
         }
         return undefined;
       }
     };
   }
 
-  static forFeature(feature: Feature): ValidationRule[] {
+  static forTable(table: Table): ValidationRule[] {
     const rules: ValidationRule[] = [];
 
-    if (feature.type.displayType.isRequired) {
-      rules.push(ValidationRules.atLeastOneRowFeature(feature));
+    if (table.type.displayType.isRequired) {
+      rules.push(ValidationRules.atLeastOneRowTable(table));
     }
 
     const valueRules: ValidationRule[] = [];
-    feature.columns.forEach((col, colIndex) => {
-      rules.push(ValidationRules.requiredValue(col.name, `${feature.type.name}: (col ${colIndex}):`));
+    table.columns.forEach((col, colIndex) => {
+      rules.push(ValidationRules.requiredValue(col.name, `${table.type.name}: (col ${colIndex}):`));
 
-      feature.rows.forEach((row, rowIndex) => {
+      table.rows.forEach((row, rowIndex) => {
         const rowColumnRef = row.valueFor(col.id);
         const rowValue = rowColumnRef ? rowColumnRef.value : '';
-        const rowName = `'${col.name}' for '${feature.type.name}' in row ${rowIndex + 1}`;
+        const rowName = `'${col.name}' for '${table.type.name}' in row ${rowIndex + 1}`;
 
-        if (feature.type.displayType.isRequired && col.displayType.isRequired) {
+        if (table.type.displayType.isRequired && col.displayType.isRequired) {
           valueRules.push(ValidationRules.requiredValue(rowValue, rowName));
         }
 
@@ -95,19 +95,19 @@ class ValidationRules {
         .reduce((rv, v) => rv.concat(v), [])
     );
 
-    rules = rules.concat(ValidationRules.forFeature(section.annotations));
+    rules = rules.concat(ValidationRules.forTable(section.annotations));
 
     rules = rules.concat(
-      section.features
+      section.tables
         .list()
-        .map((feature) => ValidationRules.forFeature(feature))
+        .map((table) => ValidationRules.forTable(table))
         .reduce((rv, v) => rv.concat(v), [])
     );
 
     rules = rules.concat(
-      section.type.featureTypes
+      section.type.tableTypes
         .filter((ft) => ft.displayType.isRequired)
-        .map((ft) => ValidationRules.requiredFeature(ft, section))
+        .map((ft) => ValidationRules.requiredTable(ft, section))
     );
 
     rules = rules.concat(
@@ -116,9 +116,7 @@ class ValidationRules {
         .map((st) => ValidationRules.requiredSection(st, section))
     );
 
-    rules = rules.concat(
-      section.type.featureGroups.map((gr) => ValidationRules.atLeastOneFeatureFromGroup(gr, section))
-    );
+    rules = rules.concat(section.type.tableGroups.map((gr) => ValidationRules.atLeastOneTableFromGroup(gr, section)));
     return rules;
   }
 
@@ -159,11 +157,11 @@ class ValidationRules {
     };
   }
 
-  static requiredFeature(ft: FeatureType, section: Section): ValidationRule {
+  static requiredTable(ft: TableType, section: Section): ValidationRule {
     return {
       validate(): string | undefined {
-        const features = section.features.list().filter((f) => f.type.name === ft.name);
-        if (features.length === 0) {
+        const tables = section.tables.list().filter((f) => f.type.name === ft.name);
+        if (tables.length === 0) {
           return `At least one of ${ft.name} is required in the section`;
         }
         return undefined;

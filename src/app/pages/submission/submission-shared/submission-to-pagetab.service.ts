@@ -14,7 +14,7 @@ import {
   submissionToPageTabProtocols
 } from './model/pagetab';
 import { isArrayEmpty, isStringDefined, isEqualIgnoringCase, isAttributeEmpty, isDefinedAndNotEmpty } from 'app/utils';
-import { AttributeData, Feature, Field, Fields, Section, Submission } from './model/submission';
+import { AttributeData, Table, Field, Fields, Section, Submission } from './model/submission';
 import { DEFAULT_TEMPLATE_NAME, SubmissionType } from './model/templates';
 import { Injectable } from '@angular/core';
 
@@ -88,9 +88,9 @@ export class SubmissionToPageTabService {
     return LinksUtils.toTyped(attributes);
   }
 
-  private extractFeatureAttributes(feature: Feature, isSanitise: boolean): PtAttribute[][] {
-    const mappedFeatures: PtAttribute[][] = feature.rows.map((row) => {
-      const attributes: PtAttribute[] = feature.columns.map((column) => {
+  private extractTableAttributes(table: Table, isSanitise: boolean): PtAttribute[][] {
+    const mappedTables: PtAttribute[][] = table.rows.map((row) => {
+      const attributes: PtAttribute[] = table.columns.map((column) => {
         const rowValue = row.valueFor(column.id);
 
         return { name: column.name, value: rowValue && rowValue.value } as PtAttribute;
@@ -99,17 +99,15 @@ export class SubmissionToPageTabService {
       return attributes.filter((attr) => (isSanitise && !isAttributeEmpty(attr)) || !isSanitise);
     });
 
-    return mappedFeatures.filter((mappedFeature) => mappedFeature.length > 0);
+    return mappedTables.filter((mappedTable) => mappedTable.length > 0);
   }
 
   private extractSectionAttributes(section: Section, isSanitise: boolean): PtAttribute[] {
-    const keywordsFeature: Feature | undefined = section.features
-      .list()
-      .find((feature) => feature.typeName === 'Keywords');
+    const keywordsTable: Table | undefined = section.tables.list().find((table) => table.typeName === 'Keywords');
     let keywordsAsAttributes: PtAttribute[] = [];
 
-    if (keywordsFeature !== undefined) {
-      const attributes: PtAttribute[][] = this.extractFeatureAttributes(keywordsFeature, isSanitise);
+    if (keywordsTable !== undefined) {
+      const attributes: PtAttribute[][] = this.extractTableAttributes(keywordsTable, isSanitise);
 
       if (attributes.length > 0) {
         keywordsAsAttributes = attributes.map((column) => column.pop() as PtAttribute);
@@ -118,17 +116,17 @@ export class SubmissionToPageTabService {
 
     return ([] as Array<PtAttribute>).concat(
       this.fieldsAsAttributes(section, isSanitise),
-      this.extractFeatureAttributes(section.annotations, isSanitise).pop() || [],
+      this.extractTableAttributes(section.annotations, isSanitise).pop() || [],
       keywordsAsAttributes
     );
   }
 
   private extractSectionFiles(section: Section, isSanitise: boolean): PtFileItem[] {
-    const feature = section.features.list().find((f) => isFileType(f.typeName));
+    const table = section.tables.list().find((f) => isFileType(f.typeName));
 
-    if (feature !== undefined) {
-      const featureAttributes: PtAttribute[][] = this.extractFeatureAttributes(feature, isSanitise);
-      const fileAttributes: PtFile[] = featureAttributes.map((attrs) => this.attributesAsFile(attrs));
+    if (table !== undefined) {
+      const tableAttributes: PtAttribute[][] = this.extractTableAttributes(table, isSanitise);
+      const fileAttributes: PtFile[] = tableAttributes.map((attrs) => this.attributesAsFile(attrs));
 
       return fileAttributes.filter((attr) => isDefinedAndNotEmpty(attr.path));
     }
@@ -137,22 +135,22 @@ export class SubmissionToPageTabService {
   }
 
   private extractSectionLibraryFile(section: Section): string | undefined {
-    const feature = section.features.list().find((f) => isLibraryFileType(f.typeName));
-    if (feature !== undefined && !feature.isEmpty) {
-      const featureRowValue = feature.rows[0].values()[0];
+    const table = section.tables.list().find((f) => isLibraryFileType(f.typeName));
+    if (table !== undefined && !table.isEmpty) {
+      const tableRowValue = table.rows[0].values()[0];
 
-      return featureRowValue ? featureRowValue.value : undefined;
+      return tableRowValue ? tableRowValue.value : undefined;
     }
 
     return undefined;
   }
 
   private extractSectionLinks(section: Section, isSanitise: boolean): PtLinkItem[] {
-    const feature = section.features.list().find((f) => isLinkType(f.typeName));
+    const table = section.tables.list().find((f) => isLinkType(f.typeName));
 
-    if (feature !== undefined) {
-      const featureAttributes: PtAttribute[][] = this.extractFeatureAttributes(feature, isSanitise);
-      const linkAttributes: PtLink[] = featureAttributes.map((attrs) => this.attributesAsLink(attrs));
+    if (table !== undefined) {
+      const tableAttributes: PtAttribute[][] = this.extractTableAttributes(table, isSanitise);
+      const linkAttributes: PtLink[] = tableAttributes.map((attrs) => this.attributesAsLink(attrs));
 
       return linkAttributes.filter((attr) => isDefinedAndNotEmpty(attr.url));
     }
@@ -161,32 +159,32 @@ export class SubmissionToPageTabService {
   }
 
   private extractSectionSubsections(section: Section, isSanitize: boolean): PageTabSection[] {
-    const validFeatures = section.features
+    const validTables = section.tables
       .list()
       .filter(
-        (feature) =>
-          !isFileType(feature.typeName) &&
-          !isLinkType(feature.typeName) &&
-          !isLibraryFileType(feature.typeName) &&
-          !isKeywordType(feature.typeName)
+        (table) =>
+          !isFileType(table.typeName) &&
+          !isLinkType(table.typeName) &&
+          !isLibraryFileType(table.typeName) &&
+          !isKeywordType(table.typeName)
       );
 
-    const featureToPageTabSection = (feature) => {
-      const featureAttributes = this.extractFeatureAttributes(feature, isSanitize);
+    const tableToPageTabSection = (table) => {
+      const tableAttributes = this.extractTableAttributes(table, isSanitize);
 
-      return featureAttributes.map((attrs) => {
+      return tableAttributes.map((attrs) => {
         return {
-          type: feature.typeName,
+          type: table.typeName,
           attributes: attrs.filter((attr) => !isAttributeEmpty(attr))
         } as PageTabSection;
       });
     };
 
-    const featureAttributesAsPageTabSection = validFeatures
-      .map(featureToPageTabSection)
+    const tableAttributesAsPageTabSection = validTables
+      .map(tableToPageTabSection)
       .reduce((rv, el) => rv.concat(el), []);
 
-    const authorsSections = contactsToAuthors(featureAttributesAsPageTabSection);
+    const authorsSections = contactsToAuthors(tableAttributesAsPageTabSection);
     const protocolSections = submissionToPageTabProtocols(authorsSections);
 
     return protocolSections.concat(section.sections.list().map((s) => this.sectionToPtSection(s, isSanitize)));

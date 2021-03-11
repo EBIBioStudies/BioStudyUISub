@@ -218,7 +218,7 @@ export const hecatosTemplate = {
         }
       ]
     },
-    featureTypes: [
+    tableTypes: [
       {
         name: 'Contact',
         title: 'Add Contacts',

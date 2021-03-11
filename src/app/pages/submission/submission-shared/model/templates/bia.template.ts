@@ -5,7 +5,7 @@ export const biaTemplate = {
   sectionType: {
     display: 'required',
     displayAnnotations: false,
-    featureGroups: [[]],
+    tableGroups: [[]],
     name: 'Study',
     fieldTypes: [
       {
@@ -114,7 +114,7 @@ export const biaTemplate = {
         }
       }
     ],
-    featureTypes: [
+    tableTypes: [
       {
         name: 'Keywords',
         title: 'Add Keywords',
@@ -478,7 +478,7 @@ export const biaTemplate = {
             display: 'desirable'
           }
         ],
-        featureTypes: [
+        tableTypes: [
           {
             name: 'Size',
             display: 'desirable',
