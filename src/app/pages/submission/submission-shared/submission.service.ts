@@ -127,14 +127,14 @@ export class SubmissionService {
       );
   }
 
-  saveDraftSubmission(accno: string, pt: PageTab): Observable<any> {
+  updateDraft(accno: string, pt: PageTab): Observable<any> {
     return this.http.put<PageTab>(`/api/submissions/drafts/${accno}`, pt).pipe(map(() => 'done'));
   }
 
-  submitSubmission(pt: PageTab): Observable<SubmitResponse> {
+  submitDraft(pt: PageTab, accno: string): Observable<SubmitResponse> {
     const headers: HttpHeaders = new HttpHeaders().set('Submission_Type', 'application/json');
 
-    return this.sendPostRequest('/api/submissions/async', pt, headers);
+    return this.sendPostRequest(`/api/submissions/drafts/${accno}/submit`, pt, headers);
   }
 
   private checkStatus<R, T>(response: HttpResponse<R>): T {

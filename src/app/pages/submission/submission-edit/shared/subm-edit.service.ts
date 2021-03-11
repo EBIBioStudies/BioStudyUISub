@@ -220,7 +220,7 @@ export class SubmEditService {
     this.editState.startSubmitting();
     const pageTab = this.asPageTab(true);
 
-    return this.submService.submitSubmission(pageTab).pipe(
+    return this.submService.submitDraft(pageTab, this.accno).pipe(
       map((resp) => {
         this.editState.stopSubmitting();
         this.onSubmitFinished(resp);
@@ -321,7 +321,7 @@ export class SubmEditService {
   private save(): void {
     this.editState.startSaving();
     this.submService
-      .saveDraftSubmission(this.accno, this.asPageTab())
+      .updateDraft(this.accno, this.asPageTab())
       .pipe(
         map((resp) => ServerResponse.OK(resp)),
         catchError((error) => of(ServerResponse.ERROR(error)))
