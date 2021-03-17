@@ -139,19 +139,19 @@ export const proteinDesignsTemplate = {
     featureTypes: [
       {
         name: 'SolutionCharacterization',
-        title: 'Solution characterization (structure) / CD spectroscopy',
+        title: 'Solution characterization (structure) / Circular Dichroism (CD)',
         description: 'Solution characterization (structure) / Circular Dichroism (CD)',
         icon: 'fa-book',
         display: 'desirable',
         uniqueCols: true,
         columnTypes: [
           {
-            name: 'Signal',
-            valueType: { name: 'text' },
+            name: 'Path',
+            valueType: { name: 'file' },
             display: 'required'
           },
           {
-            name: 'Wavelength',
+            name: 'Conditions',
             valueType: { name: 'text' },
             display: 'required'
           }
