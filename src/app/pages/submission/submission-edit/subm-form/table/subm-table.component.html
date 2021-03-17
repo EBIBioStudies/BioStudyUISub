@@ -3,20 +3,25 @@
     <div class="d-flex align-items-center flex-grow-1">
       <i class="fa fa-lg {{tableForm.icon}}"></i>
       <div class="pl-3">
-        <h6 class="d-flex align-items-center m-0">
-          {{tableForm.prettyName | lowercase | titlecase}}
-          <span class="small text-muted ml-1"
-            *ngIf="!readonly && !tableForm.isRequired && !tableForm.isReadonly && tableForm.hasRequiredGroups">
-            (Required at least one {{tableForm.requiredGroups.join(' or ')}})
+        <div class="d-flex align-items-center">
+          <h5 class="m-0">
+            {{tableForm.prettyName | lowercase | titlecase}}
+          </h5>
+          <span class="badge rounded-pill bg-aluminum ml-2"
+            *ngIf="!readonly && !tableForm.isRequired && !tableForm.isReadonly && !tableForm.hasRequiredGroups">
+            Optional
           </span>
-        </h6>
-        <span class="text-muted" [innerHTML]="tableForm.description"></span>
+          <span class="badge rounded-pill bg-aluminum ml-2"
+            *ngIf="!readonly && !tableForm.isRequired && !tableForm.isReadonly && tableForm.hasRequiredGroups">
+            Required at least one {{tableForm.requiredGroups.join(' or ')}}
+          </span>
+        </div>
+        <span [innerHTML]="tableForm.description"></span>
       </div>
     </div>
-    <div class="text-muted"
-      *ngIf="!readonly && !tableForm.isRequired && !tableForm.isReadonly && !tableForm.hasRequiredGroups">
-      <i>Optional</i>
-    </div>
+    <button type="button" class="btn btn-link" (click)="openImportTableDataModal()">
+      <i class="fas fa-file-import"></i> Import
+    </button>
   </div>
 
   <div class="card-body">

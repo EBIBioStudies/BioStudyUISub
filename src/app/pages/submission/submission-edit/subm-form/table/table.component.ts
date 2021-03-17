@@ -26,14 +26,6 @@ export class TableComponent implements OnChanges {
     this.sortableJsOptions.preventOnFilter = false;
   }
 
-  get rows(): RowForm[] {
-    return this.tableForm.rows;
-  }
-
-  get columns(): ColumnControl[] {
-    return this.tableForm.columns;
-  }
-
   get isSortable(): boolean {
     return !this.isReadOnly && this.tableForm!.rows.length > 1;
   }

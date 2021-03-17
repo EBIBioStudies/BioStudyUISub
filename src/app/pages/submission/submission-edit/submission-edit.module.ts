@@ -18,6 +18,7 @@ import { UniqueValidator } from './shared/unique.directive';
 import { SubmissionEditComponent } from './submission-edit.component';
 import { TableComponent } from './subm-form/table/table.component';
 import { SingleColumnTableComponent } from './subm-form/table/single-column-table.component';
+import { ImportTableDataModalComponent } from './subm-form/table/import-table-data-modal.component';
 import { SubmTableComponent } from './subm-form/table/subm-table.component';
 import { SubmFieldComponent } from './subm-form/field/subm-field.component';
 import { InlineEditComponent } from './subm-form/inline-edit/inline-edit.component';
@@ -59,6 +60,7 @@ import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
     AddSubmTypeModalComponent,
     TableComponent,
     SingleColumnTableComponent,
+    ImportTableDataModalComponent,
     Camelcase2LabelPipe,
     UniqueValidator,
     BootstrapValidationDirective,

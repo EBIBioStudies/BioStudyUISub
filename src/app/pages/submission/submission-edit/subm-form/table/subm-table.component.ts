@@ -1,5 +1,7 @@
 import { ChangeDetectorRef, Component, DoCheck, Input, OnInit } from '@angular/core';
 import { UserData } from 'app/auth/shared';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { ImportTableDataModalComponent } from './import-table-data-modal.component';
 import { TableForm } from '../../shared/model/table-form.model';
 
 interface TableOperation {
@@ -22,7 +24,7 @@ export class SubmTableComponent implements OnInit, DoCheck {
   private submTableUniqueColNames: string[] = [];
   private colTypeNames: string[] = [];
 
-  constructor(private changeRef: ChangeDetectorRef, public userData: UserData) {}
+  constructor(private changeRef: ChangeDetectorRef, public userData: UserData, private modalService: BsModalService) {}
 
   get allowedColNames(): string[] {
     return this.submTableAllowedColNames;
@@ -63,6 +65,33 @@ export class SubmTableComponent implements OnInit, DoCheck {
       callback: () => {
         this.tableForm.addRow();
       }
+    });
+  }
+
+  onTableDataImport(tableData: string[][], isFirstRowHeaders: boolean, appendData: boolean): void {
+    // If imported data is not appended then clear the existing entries in the table.
+    if (!appendData) {
+      this.tableForm.reset();
+    }
+
+    tableData.forEach((cells, index) => {
+      const firstRow = index === 0;
+
+      if (firstRow && isFirstRowHeaders) {
+        cells.forEach((columnName) => {
+          if (!this.tableForm.hasColumn(columnName)) {
+            this.tableForm.addColumn(columnName);
+          }
+        });
+      } else {
+        this.tableForm.addRowWithData(cells);
+      }
+    });
+  }
+
+  openImportTableDataModal(): void {
+    this.modalService.show(ImportTableDataModalComponent, {
+      initialState: { onTableDataImport: this.onTableDataImport.bind(this) }
     });
   }
 }

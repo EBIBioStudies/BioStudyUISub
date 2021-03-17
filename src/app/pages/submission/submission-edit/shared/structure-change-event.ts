@@ -6,6 +6,7 @@ export class StructureChangeEvent {
   static tableRowAdd: StructureChangeEvent = new StructureChangeEvent('tableRowAdd');
   static tableRowOrderUpdate: StructureChangeEvent = new StructureChangeEvent('tableRowOrderUpdate');
   static tableRowRemove: StructureChangeEvent = new StructureChangeEvent('tableRowRemove');
+  static tableReset: StructureChangeEvent = new StructureChangeEvent('tableReset');
   static init: StructureChangeEvent = new StructureChangeEvent('init');
   static sectionAdd: StructureChangeEvent = new StructureChangeEvent('sectionAdd');
   static sectionRemove: StructureChangeEvent = new StructureChangeEvent('sectionRemove');
