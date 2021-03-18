@@ -106,6 +106,7 @@ export const defaultTemplate = {
       icon: 'fa-tag',
       display: 'desirable',
       singleRow: true,
+      allowImport: false,
       columnTypes: [
         {
           name: 'AttachTo',
@@ -138,6 +139,7 @@ export const defaultTemplate = {
         icon: 'fa-address-card',
         display: 'required',
         uniqueCols: true,
+        allowImport: true,
         columnTypes: [
           {
             autosuggest: false,
@@ -254,6 +256,7 @@ export const defaultTemplate = {
           'are supported. </br>URLs must include the scheme, e.g. "http://".',
         icon: 'fa-link',
         uniqueCols: true,
+        allowImport: true,
         columnTypes: [
           {
             name: 'Link',
@@ -273,6 +276,7 @@ export const defaultTemplate = {
         description: 'List the data files for the study and describe their respective scopes.',
         icon: 'fa-file',
         uniqueCols: true,
+        allowImport: true,
         columnTypes: [
           {
             name: 'Path',
@@ -301,6 +305,7 @@ export const defaultTemplate = {
           '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pmc/pmctopmid/#converter">PubMed\'s converter</a>.',
         icon: 'fa-book',
         uniqueCols: true,
+        allowImport: false,
         columnTypes: [
           {
             name: 'PMID',

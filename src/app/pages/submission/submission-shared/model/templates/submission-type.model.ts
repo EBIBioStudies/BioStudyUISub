@@ -268,6 +268,7 @@ export class TableType extends TypeBase {
   readonly singleRow: boolean;
   readonly title: string;
   readonly uniqueCols: boolean;
+  readonly allowImport: boolean;
 
   private columnScope: TypeScope<ColumnType> = new TypeScope<ColumnType>();
 
@@ -290,6 +291,7 @@ export class TableType extends TypeBase {
     this.display = this.displayType.name;
     this.icon = data.icon || (this.singleRow ? 'fa-list' : 'fa-th');
     this.dependency = data.dependency || '';
+    this.allowImport = data.allowImport === true;
 
     (data.columnTypes || []).forEach((ct) => new ColumnType(ct.name, ct, this.columnScope));
   }

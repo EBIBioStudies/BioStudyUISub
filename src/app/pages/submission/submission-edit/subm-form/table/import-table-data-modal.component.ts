@@ -9,6 +9,7 @@ export class ImportTableDataModalComponent {
   private tableData: string[][] = [];
   isFirstRowHeaders: boolean = false;
   appendData: boolean = false;
+  requireData: boolean = false;
   @Input() onTableDataImport: (
     tableData: string[][],
     isFirstRowHeaders: boolean,
@@ -26,7 +27,12 @@ export class ImportTableDataModalComponent {
   }
 
   onImportClick(): void {
-    this.onTableDataImport(this.tableData, this.isFirstRowHeaders, this.appendData);
+    if (this.tableData.length === 0) {
+      this.requireData = true;
+    } else {
+      this.onTableDataImport(this.tableData, this.isFirstRowHeaders, this.appendData);
+      this.hide();
+    }
   }
 
   onTextAreaChange(event): void {

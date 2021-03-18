@@ -49,6 +49,10 @@ export class TableForm extends FormBase {
     return this.form.get('rows') as FormArray;
   }
 
+  get allowImport(): boolean {
+    return this.table.type.allowImport;
+  }
+
   get isEmpty(): boolean {
     return this.table.isEmpty;
   }
@@ -174,13 +178,26 @@ export class TableForm extends FormBase {
     }
   }
 
-  addRowWithData(cellsData: string[]): void {
+  addRowWithData(rowCells: string[], header: string[]): void {
     if (this.canAddRow()) {
       const row = this.table.addRow();
 
-      cellsData.forEach((cellData, index) => {
-        row.update(this.table.columns[index].id, cellData);
-      });
+      if (header.length > 0) {
+        header.forEach((column, index) => {
+          const cellData = rowCells[index];
+          const col = this.table.findColumnByName(column);
+          const colId = col?.id || '';
+
+          row.update(colId, cellData);
+        });
+      } else {
+        rowCells.forEach((cellData, index) => {
+          const col = this.table.columns[index];
+          const colId = col?.id || '';
+
+          row.update(colId, cellData);
+        });
+      }
 
       this.addRowForm(row, this.table.columns);
       this.notifyChanges(StructureChangeEvent.tableRowAdd);
@@ -257,7 +274,7 @@ export class TableForm extends FormBase {
   reset(): void {
     this.table.patchRows([]);
     this.rowForms = [];
-    this.rowFormArray.reset();
+    this.form.controls.rows = new FormArray([]);
 
     this.notifyChanges(StructureChangeEvent.tableReset);
   }

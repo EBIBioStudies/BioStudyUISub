@@ -19,7 +19,7 @@
         <span [innerHTML]="tableForm.description"></span>
       </div>
     </div>
-    <button type="button" class="btn btn-link" (click)="openImportTableDataModal()">
+    <button *ngIf="tableForm.allowImport" type="button" class="btn btn-link" (click)="openImportTableDataModal()">
       <i class="fas fa-file-import"></i> Import
     </button>
   </div>

@@ -74,24 +74,26 @@ export class SubmTableComponent implements OnInit, DoCheck {
       this.tableForm.reset();
     }
 
-    tableData.forEach((cells, index) => {
-      const firstRow = index === 0;
+    let headerRow: string[] = [];
+    if (isFirstRowHeaders) {
+      headerRow = tableData.shift() || [];
 
-      if (firstRow && isFirstRowHeaders) {
-        cells.forEach((columnName) => {
-          if (!this.tableForm.hasColumn(columnName)) {
-            this.tableForm.addColumn(columnName);
-          }
-        });
-      } else {
-        this.tableForm.addRowWithData(cells);
-      }
+      headerRow.forEach((columnName) => {
+        if (!this.tableForm.hasColumn(columnName)) {
+          this.tableForm.addColumn(columnName);
+        }
+      });
+    }
+
+    tableData.forEach((rowCells) => {
+      this.tableForm.addRowWithData(rowCells, headerRow);
     });
   }
 
   openImportTableDataModal(): void {
     this.modalService.show(ImportTableDataModalComponent, {
-      initialState: { onTableDataImport: this.onTableDataImport.bind(this) }
+      initialState: { onTableDataImport: this.onTableDataImport.bind(this) },
+      class: 'modal-lg'
     });
   }
 }

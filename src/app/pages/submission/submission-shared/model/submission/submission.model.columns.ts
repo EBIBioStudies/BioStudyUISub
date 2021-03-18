@@ -27,6 +27,10 @@ export class Columns {
     );
   }
 
+  findByName(name: string): Attribute | undefined {
+    return this.columns.find((col) => col.name === name);
+  }
+
   keys(): string[] {
     return this.columns.map((attr) => attr.id);
   }
