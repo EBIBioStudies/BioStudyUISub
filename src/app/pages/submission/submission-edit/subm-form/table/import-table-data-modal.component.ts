@@ -44,12 +44,7 @@ export class ImportTableDataModalComponent {
       const rows = data.split('\n');
 
       rows.forEach((row) => {
-        this.tableData.push(
-          row
-            .split(/\t/g)
-            .map((item) => item.trim())
-            .filter((item) => item.length > 0)
-        );
+        this.tableData.push(row.split(/\t/g).map((item) => item.trim()));
       });
     }
   }
