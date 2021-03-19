@@ -31,6 +31,15 @@ export class ValueMap {
     this.valueMap.delete(key);
   }
 
+  update(key: string, value: string): void {
+    if (!this.valueMap.has(key)) {
+      return;
+    }
+
+    const attributeValue = new AttributeValue(value);
+    this.valueMap.set(key, attributeValue);
+  }
+
   valueFor(key: string): AttributeValue {
     return this.valueMap.get(key) || new AttributeValue('');
   }

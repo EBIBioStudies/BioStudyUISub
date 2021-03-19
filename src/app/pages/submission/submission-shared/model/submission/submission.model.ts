@@ -234,6 +234,10 @@ export class Table {
     return this.tableColumns.findById(columnId);
   }
 
+  findColumnByName(name: string): Attribute | undefined {
+    return this.tableColumns.findByName(name);
+  }
+
   patchRows(rows: ValueMap[]): void {
     this.tableRows.patchRows(rows);
   }

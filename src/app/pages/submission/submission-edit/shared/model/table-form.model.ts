@@ -49,6 +49,10 @@ export class TableForm extends FormBase {
     return this.form.get('rows') as FormArray;
   }
 
+  get allowImport(): boolean {
+    return this.table.type.allowImport;
+  }
+
   get isEmpty(): boolean {
     return this.table.isEmpty;
   }
@@ -148,12 +152,12 @@ export class TableForm extends FormBase {
     return lastColumnCell ? lastColumnCell.control : undefined;
   }
 
-  addColumn(): void {
+  addColumn(name?: string): void {
     if (this.canAddColumn()) {
-      const column = this.table.addColumn();
+      const column = this.table.addColumn(name);
       this.addColumnControl(column);
       this.rowForms.forEach((rf) => rf.addCellControl(column));
-      this.notifiyChanges(StructureChangeEvent.tableColumnAdd);
+      this.notifyChanges(StructureChangeEvent.tableColumnAdd);
     }
   }
 
@@ -170,7 +174,33 @@ export class TableForm extends FormBase {
       const row = this.table.addRow();
 
       this.addRowForm(row, this.table.columns);
-      this.notifiyChanges(StructureChangeEvent.tableRowAdd);
+      this.notifyChanges(StructureChangeEvent.tableRowAdd);
+    }
+  }
+
+  addRowWithData(rowCells: string[], header: string[]): void {
+    if (this.canAddRow()) {
+      const row = this.table.addRow();
+
+      if (header.length > 0) {
+        header.forEach((column, index) => {
+          const cellData = rowCells[index];
+          const col = this.table.findColumnByName(column);
+          const colId = col?.id || '';
+
+          row.update(colId, cellData);
+        });
+      } else {
+        rowCells.forEach((cellData, index) => {
+          const col = this.table.columns[index];
+          const colId = col?.id || '';
+
+          row.update(colId, cellData);
+        });
+      }
+
+      this.addRowForm(row, this.table.columns);
+      this.notifyChanges(StructureChangeEvent.tableRowAdd);
     }
   }
 
@@ -241,8 +271,20 @@ export class TableForm extends FormBase {
     return column.typeaheadSource(this.columnNamesAvailable);
   }
 
-  notifiyChanges(event: StructureChangeEvent): void {
+  reset(): void {
+    this.table.patchRows([]);
+    this.rowForms = [];
+    this.form.controls.rows = new FormArray([]);
+
+    this.notifyChanges(StructureChangeEvent.tableReset);
+  }
+
+  notifyChanges(event: StructureChangeEvent): void {
     this.structureChanges$.next(event);
+  }
+
+  hasColumn(name: string): boolean {
+    return this.table.columns.some((column) => column.name.toLowerCase() === name.toLowerCase());
   }
 
   removeColumn(columnCtrl: ColumnControl): void {
@@ -250,7 +292,7 @@ export class TableForm extends FormBase {
       this.table.removeColumn(columnCtrl.id);
       this.removeColumnControl(columnCtrl.id);
       this.rowForms.forEach((rf) => rf.removeCellControl(columnCtrl.id));
-      this.notifiyChanges(StructureChangeEvent.tableColumnRemove);
+      this.notifyChanges(StructureChangeEvent.tableColumnRemove);
     }
   }
 
@@ -258,14 +300,14 @@ export class TableForm extends FormBase {
     if (this.canRemoveRow()) {
       this.table.removeRowAt(rowIndex);
       this.removeRowForm(rowIndex);
-      this.notifiyChanges(StructureChangeEvent.tableRowRemove);
+      this.notifyChanges(StructureChangeEvent.tableRowRemove);
     }
   }
 
   syncModelRows(): void {
     const fromRows = this.rowForms.map((rowForm) => rowForm.row);
     this.table.patchRows(fromRows);
-    this.notifiyChanges(StructureChangeEvent.tableRowOrderUpdate);
+    this.notifyChanges(StructureChangeEvent.tableRowOrderUpdate);
   }
 
   private addColumnControl(column: Attribute): void {
