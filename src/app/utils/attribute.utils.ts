@@ -1,5 +1,5 @@
 import { isDefinedAndNotEmpty } from './string.utils';
-import { PtAttribute } from './../pages/submission/submission-shared/model/pagetab/pagetab.model';
+import { PtAttribute } from 'app/submission/submission-shared/model/pagetab/pagetab.model';
 
 export function isAttributeEmpty(attribute: PtAttribute): boolean {
   if (Array.isArray(attribute.value)) {
