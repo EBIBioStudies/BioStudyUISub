@@ -1,4 +1,4 @@
-import { CustomFormControl } from './../pages/submission/submission-edit/shared/model/custom-form-control.model';
+import { CustomFormControl } from 'app/submission/submission-edit/shared/model/custom-form-control.model';
 
 export function scrollToFormControl(control: CustomFormControl): void {
   const elements: HTMLCollectionOf<Element> | null = document.getElementsByClassName(control.ref.id);
