@@ -30,6 +30,7 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   { path: 'direct_upload', component: DirectSubmitComponent, canActivate: [AuthGuard] },
+  { path: 'submissions', redirectTo: '' },
   {
     path: 'edit/:accno',
     component: SubmissionEditComponent,
