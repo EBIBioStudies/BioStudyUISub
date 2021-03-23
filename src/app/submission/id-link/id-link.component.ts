@@ -60,7 +60,13 @@ export class IdLinkComponent implements AfterViewInit, ControlValueAccessor {
     this.dataSource = new Observable((observer: any) => {
       // Runs on every typing
       observer.next(this.inputText);
-    }).pipe(mergeMap((value: string) => this.linkService.suggest(value)));
+    }).pipe(
+      mergeMap((value: string) => {
+        const suggested = this.linkService.suggest(value);
+
+        return suggested;
+      })
+    );
   }
 
   set value(value: IdLinkValue) {

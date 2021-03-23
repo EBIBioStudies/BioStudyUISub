@@ -27,13 +27,11 @@ describe('IdLinkService', () => {
 
     httpClient.get.mockReturnValueOnce(throwError(errorResponse));
 
-    service.suggest('prefix').subscribe(
-      items => expect(items).toEqual([])
-    );
+    service.suggest('prefix').subscribe((items) => expect(items).toEqual([]));
   });
 
   it('#validate should return an error object when the server returns a 404', () => {
-    const error = {message: 'Unknown prefix', timeStamp: 'Mon Apr 23 11:44:31 BST 2018'};
+    const error = { message: 'Unknown prefix', timeStamp: 'Mon Apr 23 11:44:31 BST 2018' };
     const errorResponse = new HttpErrorResponse({
       error,
       status: 404,
@@ -42,22 +40,18 @@ describe('IdLinkService', () => {
 
     httpClient.get.mockReturnValueOnce(throwError(errorResponse));
 
-    service.validate('prefix:12345').subscribe(
-      (obj) => {
-        return expect(obj).toEqual(error);
-      }
-    );
+    service.resolve('prefix:12345').subscribe((obj) => {
+      return expect(obj).toEqual(error);
+    });
   });
 
   it('#suggest should return only list of valid prefixes', () => {
     const resp = buildResponse(namespaces);
-    const expectedPrefixes: string[] = namespaces.map(p => p.prefix);
+    const expectedPrefixes: string[] = namespaces.map((p) => p.prefix);
 
     httpClient.get.mockReturnValue(of(resp));
 
-    service.suggest('prefix').subscribe(
-      items => expect(items).toEqual(expectedPrefixes)
-    );
+    service.suggest('prefix').subscribe((items) => expect(items).toEqual(expectedPrefixes));
 
     expect(httpClient.get).toHaveBeenCalledTimes(1);
   });
