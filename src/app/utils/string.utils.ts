@@ -29,6 +29,6 @@ export function isEqualIgnoringCase(firstValue: string, secondValue: string): bo
  */
 export function formatString(stringToFormat, ...args): string {
   return stringToFormat.replace(/{(\d+)}/g, (match, index) =>
-    typeof args[index - 1] !== 'undefined' ? args[index - 1] : match
+    typeof args[index] !== 'undefined' ? args[index] : match
   );
 }

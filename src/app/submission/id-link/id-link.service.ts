@@ -119,8 +119,8 @@ export class IdLinkService {
   /**
    * Checks if a prefix:id string is among the allowed ones.
    *
-   * @param identifier - Identifier to be validated against identifiers.org.
-   * @returns Observable the request has been turned into.
+   * @param identifier - Identifier to be validated against internal link or identifiers.org.
+   * @returns Observable carrying the valid link
    */
   resolve(identifier: string): Observable<IdentifierResolvedResource> {
     const [prefix, value] = identifier.split(':');
