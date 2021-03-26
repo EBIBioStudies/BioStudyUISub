@@ -21,6 +21,7 @@ import { isDefinedAndNotEmpty } from 'app/utils';
 import { SubmissionService, SubmitResponse } from '../../submission-shared/submission.service';
 import { SectionForm } from './model/section-form.model';
 import { flatTables } from '../../utils/table.utils';
+import { StructureChangeEvent } from './structure-change-event';
 
 class EditState {
   static EDITING = 'Editing';
@@ -248,13 +249,7 @@ export class SubmEditService {
       this.sectionFormSubEdit = undefined;
     }
 
-    merge(nextSectionForm.structureChanges$, nextSectionForm.form.statusChanges)
-      .pipe(debounceTime(500))
-      .subscribe(() => {
-        this.editState.startEditing();
-        this.save();
-      });
-
+    this.subscribeToFormChanges(nextSectionForm);
     this.updateDependencyValues(nextSectionForm);
     this.sectionSwitch$.next(nextSectionForm);
   }
@@ -349,6 +344,24 @@ export class SubmEditService {
       setTimeout(() => subscr.unsubscribe(), 10);
 
       this.save();
+    });
+  }
+
+  private subscribeToFormChanges(sectionForm: SectionForm): void {
+    const updateDelayInMilliseconds = 500;
+
+    sectionForm.structureChanges$.pipe(debounceTime(updateDelayInMilliseconds)).subscribe((value) => {
+      if (value !== StructureChangeEvent.init) {
+        this.editState.startEditing();
+        this.save();
+      }
+    });
+
+    sectionForm.form.statusChanges.pipe(debounceTime(updateDelayInMilliseconds)).subscribe(() => {
+      if (sectionForm.form.dirty) {
+        this.editState.startEditing();
+        this.save();
+      }
     });
   }
 
