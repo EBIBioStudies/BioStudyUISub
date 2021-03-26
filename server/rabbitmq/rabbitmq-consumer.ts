@@ -2,7 +2,7 @@ import amqp, { Channel, Connection, ConsumeMessage } from 'amqplib';
 import config from 'config';
 import { logger } from '../logger';
 
-const assertQueueOptions = { durable: false };
+const assertQueueOptions = { durable: true };
 const consumeQueueOptions = { noAck: false };
 
 const assertAndConsumeQueue = async (
