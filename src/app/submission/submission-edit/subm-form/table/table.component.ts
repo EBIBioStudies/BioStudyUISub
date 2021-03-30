@@ -1,8 +1,6 @@
 import { Component, ElementRef, Input, QueryList, ViewChildren, OnChanges } from '@angular/core';
 import { UserData } from 'app/auth/shared';
 import { TypeaheadDirective } from 'ngx-bootstrap/typeahead';
-import { ColumnControl } from '../../shared/model/column-control.model';
-import { RowForm } from '../../shared/model/row-form.model';
 import { TableForm } from '../../shared/model/table-form.model';
 import { Options as SortableOption } from 'sortablejs';
 

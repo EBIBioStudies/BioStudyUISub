@@ -1,3 +1,7 @@
+:host .scroll-viewport .cdk-virtual-scroll-content-wrapper {
+  overflow: auto;
+}
+
 .grid-container {
   padding-bottom: 20px;
   white-space: nowrap;
