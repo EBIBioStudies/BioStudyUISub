@@ -2,15 +2,15 @@ import { Component, Input } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
-  selector: 'st-import-modal',
-  templateUrl: './import-table-data-modal.component.html'
+  selector: 'st-paste-modal',
+  templateUrl: './paste-table-data-modal.component.html'
 })
-export class ImportTableDataModalComponent {
+export class PasteTableDataModalComponent {
   private tableData: string[][] = [];
   isFirstRowHeaders: boolean = false;
   appendData: boolean = false;
   requireData: boolean = false;
-  @Input() onTableDataImport: (
+  @Input() onTableDataPaste: (
     tableData: string[][],
     isFirstRowHeaders: boolean,
     appendData: boolean
@@ -30,7 +30,7 @@ export class ImportTableDataModalComponent {
     if (this.tableData.length === 0) {
       this.requireData = true;
     } else {
-      this.onTableDataImport(this.tableData, this.isFirstRowHeaders, this.appendData);
+      this.onTableDataPaste(this.tableData, this.isFirstRowHeaders, this.appendData);
       this.hide();
     }
   }

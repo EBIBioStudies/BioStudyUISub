@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, DoCheck, Input, OnInit } from '@angular/core';
 import { UserData } from 'app/auth/shared';
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { ImportTableDataModalComponent } from './import-table-data-modal.component';
+import { PasteTableDataModalComponent } from './paste-table-data-modal.component';
 import { TableForm } from '../../shared/model/table-form.model';
 
 interface TableOperation {
@@ -68,8 +68,8 @@ export class SubmTableComponent implements OnInit, DoCheck {
     });
   }
 
-  onTableDataImport(tableData: string[][], isFirstRowHeaders: boolean, appendData: boolean): void {
-    // If imported data is not appended then clear the existing entries in the table.
+  onTableDataPaste(tableData: string[][], isFirstRowHeaders: boolean, appendData: boolean): void {
+    // If pasted data is not appended then clear the existing entries in the table.
     if (!appendData) {
       this.tableForm.reset();
     }
@@ -90,9 +90,9 @@ export class SubmTableComponent implements OnInit, DoCheck {
     });
   }
 
-  openImportTableDataModal(): void {
-    this.modalService.show(ImportTableDataModalComponent, {
-      initialState: { onTableDataImport: this.onTableDataImport.bind(this) },
+  openPasteTableDataModal(): void {
+    this.modalService.show(PasteTableDataModalComponent, {
+      initialState: { onTableDataPaste: this.onTableDataPaste.bind(this) },
       class: 'modal-lg'
     });
   }
