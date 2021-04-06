@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { UserSession } from 'app/auth/shared';
+import { UserSession } from 'app/auth/shared/';
 import { LogConsole } from './publishers/log-console';
 import { LogEntry } from './log-entry';
 import { LogLevel } from './log-levels';
@@ -15,20 +15,16 @@ export class LogService {
     this.buildPublishers();
   }
 
-  error(message: string, ...optionalParams: any[]): void {
-    this.writeToLog(message, LogLevel.ERROR, optionalParams);
+  error(message: string, stackTrace?: string): void {
+    this.writeToLog(message, LogLevel.ERROR, stackTrace);
   }
 
-  info(message: string, ...optionalParams: any[]): void {
-    this.writeToLog(message, LogLevel.INFO, optionalParams);
+  info(message: string): void {
+    this.writeToLog(message, LogLevel.INFO);
   }
 
-  upload(message: string, ...optionalParams: any[]): void {
-    this.writeToLog(message, LogLevel.UPLOAD, optionalParams);
-  }
-
-  warn(message: string, ...optionalParams: any[]): void {
-    this.writeToLog(message, LogLevel.WARN, optionalParams);
+  warn(message: string): void {
+    this.writeToLog(message, LogLevel.WARN);
   }
 
   private buildPublishers(): void {
@@ -39,9 +35,9 @@ export class LogService {
     this.publishers.push(webapiPublisher);
   }
 
-  private writeToLog(message: string, level: LogLevel, params: any[]): void {
+  private writeToLog(message: string, level: LogLevel, stackTrace?: string): void {
     const userEmail: string = this.useSession.getUserEmail();
-    const entry: LogEntry = new LogEntry(message, level, params, userEmail);
+    const entry: LogEntry = new LogEntry(message, level, stackTrace, userEmail);
 
     this.publishers.forEach((publisher: LogPublisher) => {
       publisher.log(entry, level);

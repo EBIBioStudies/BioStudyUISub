@@ -1,11 +1,10 @@
 import * as HttpStatus from 'http-status-codes';
-import { throwError, Observable } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 
 export class ServerError {
   static defaultErrorMessage: string = `Something went wrong at our side. Sorry for the inconvenience,
     we are working to fix it. Please try again later and if the problem persists,
-    drop an email to biostudies@ebi.ac.uk`;
+    drop an email to <a href="mailto:biostudies@ebi.ac.uk?Subject=BioStudies Submission Tool error">biostudies@ebi.ac.uk</a>`;
 
   data: any;
   status: number = 0;
@@ -61,10 +60,4 @@ export class ServerError {
   get isDataError(): boolean {
     return this.status === 422 || this.status === 400;
   }
-}
-
-// TODO: come up with a generalised logic for human-readable error messages based on the info available from HttpErrorResponse.
-// TODO: the global handler should be manually called up. (globalHandler.handleError(ServerError.fromResponse(error));)
-export function serverErrorHandler(error: HttpErrorResponse): Observable<any> {
-  return throwError(ServerError.fromResponse(error));
 }

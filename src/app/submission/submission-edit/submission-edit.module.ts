@@ -30,6 +30,7 @@ import { AddSubmTypeModalComponent } from './subm-sidebar/add-subm-type-modal/ad
 import { SubmCheckSidebarComponent } from './subm-sidebar/subm-check-sidebar/subm-check-sidebar.component';
 import { SubmEditSidebarComponent } from './subm-sidebar/subm-edit-sidebar/subm-edit-sidebar.component';
 import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
+import { NotFoundModule } from 'app/not-found/not-found.module';
 
 @NgModule({
   imports: [
@@ -42,7 +43,8 @@ import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
     IdLinkModule,
     PubMedIdSearchModule,
     SortablejsModule,
-    ThemeModule
+    ThemeModule,
+    NotFoundModule
   ],
   providers: [SubmEditService],
   declarations: [

@@ -1,5 +1,6 @@
 <div class="container-fluid">
-  <div class="row">
+  <st-not-found *ngIf="submNotFound" [message]="submNotFoundMessage"></st-not-found>
+  <div *ngIf="!submNotFound" class="row">
     <st-sidebar *ngIf="!readonly" (toggle)="onSidebarToggle($event)">
       <st-subm-sidebar [collapsed]="isSidebarCollapsed" [sectionForm]="sectionForm"></st-subm-sidebar>
     </st-sidebar>

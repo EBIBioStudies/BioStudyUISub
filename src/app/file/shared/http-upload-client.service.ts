@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpEvent, HttpEventType, HttpRequest } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, last, map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 enum UploadEventType {
   PROGRESS,
@@ -87,6 +87,7 @@ export class HttpUploadClientService {
     } else {
       message = `Server error [${error.status}]: ${error.error}`;
     }
+
     return throwError(UploadEvent.error(message));
   }
 }

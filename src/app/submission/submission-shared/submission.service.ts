@@ -2,16 +2,15 @@ import { SectionData } from './model/submission/submission.model';
 import * as HttpStatus from 'http-status-codes';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { isDefinedAndNotEmpty } from 'app/utils';
 import { PageTab, DraftPayload } from './model/pagetab';
 import { SubmissionDraftUtils } from './utils/submission-draft.utils';
 
-export interface DraftSubmission {
-  accno: string;
-  changed: number;
-  data: PageTab;
+export interface DraftSubmissionWrapper {
+  key: string;
+  content: PageTab;
 }
 
 export interface SubmissionListItem {
@@ -127,8 +126,8 @@ export class SubmissionService {
       );
   }
 
-  updateDraft(accno: string, pt: PageTab): Observable<any> {
-    return this.http.put<PageTab>(`/api/submissions/drafts/${accno}`, pt).pipe(map(() => 'done'));
+  updateDraft(accno: string, pt: PageTab): Observable<DraftSubmissionWrapper> {
+    return this.http.put<DraftSubmissionWrapper>(`/api/submissions/drafts/${accno}`, pt);
   }
 
   submitDraft(pt: PageTab, accno: string): Observable<SubmitResponse> {

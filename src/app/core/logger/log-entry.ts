@@ -4,7 +4,7 @@ interface LogJsonFormat {
   level: string;
   userEmail: string;
   message: string;
-  params: any[];
+  stackTrace: string;
 }
 
 interface FileParams {
@@ -17,35 +17,24 @@ export class LogEntry {
   constructor(
     public message: string = '',
     public level: LogLevel = LogLevel.INFO,
-    public extraInfo: any[] = [],
+    public stackTrace: string = '',
     public userEmail: string = ''
   ) {}
 
   buildLogJsonFormat(): LogJsonFormat {
     const level: string = LogLevel[this.level];
-    const isUpload: boolean = this.level === LogLevel.UPLOAD;
-    const params: any[] = isUpload ? this.formatFileParams(this.extraInfo) : this.extraInfo;
 
     return {
       level: level.toLowerCase(),
       userEmail: this.userEmail,
       message: this.message,
-      params
+      stackTrace: this.stackTrace
     };
   }
 
   buildLogString(): string {
     const level: string = LogLevel[this.level];
-    const value: string = `${new Date()} [${level.toLowerCase()}] - ${this.userEmail} - ${this.message}`;
-    const isUpload: boolean = this.level === LogLevel.UPLOAD;
-
-    if (this.extraInfo.length > 0) {
-      const params: any[] = isUpload ? this.formatFileParams(this.extraInfo) : this.extraInfo;
-      const formattedParams = this.formatParams(params);
-      return `${value} - ${formattedParams}`;
-    }
-
-    return value;
+    return `${new Date()} [${level.toLowerCase()}] - ${this.userEmail} - ${this.message} - ${this.stackTrace}`;
   }
 
   private formatFileParams(files: File[]): FileParams[] {
