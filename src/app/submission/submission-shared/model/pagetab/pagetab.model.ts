@@ -109,3 +109,25 @@ export interface DraftPayload {
   content: PageTab;
   key: string;
 }
+
+export class PageTabSubmission implements PageTab {
+  accessTags?: string[];
+  accno?: string;
+  attributes?: PtAttribute[];
+  section?: PageTabSection;
+  tags?: Tag[];
+  type?: string;
+
+  constructor(pageTab: PageTab) {
+    this.accessTags = pageTab.accessTags || [];
+    this.accno = pageTab.accno;
+    this.attributes = pageTab.attributes || [];
+    this.section = pageTab.section;
+    this.tags = pageTab.tags || [];
+    this.type = pageTab.type;
+  }
+
+  findAttributeByName(name: string): PtAttribute | undefined {
+    return this.attributes?.find((attr) => attr.name?.toLowerCase() === name);
+  }
+}
