@@ -4,7 +4,7 @@ import { map, catchError } from 'rxjs/operators';
 import { IdLinkService } from './id-link.service';
 import { IdLinkValueValidatorState } from './id-link.validator.directive';
 
-const IDENTIFIER_REGEXP = /^([\w\s].+):([\w\W].+)$/;
+const IDENTIFIER_REGEXP = /^([\w\s].+):([\w\W]+)$/;
 const URL_REGEXP = /^(http|https|ftp):\/\/.+$/;
 
 /**
