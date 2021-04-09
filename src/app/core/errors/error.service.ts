@@ -7,8 +7,6 @@ import { ServerError } from 'app/shared/server-error.handler';
   providedIn: 'root'
 })
 export class ErrorService {
-  constructor() {}
-
   getClientErrorMessage(error: Error): string {
     return error.message ? error.message : error.toString();
   }
