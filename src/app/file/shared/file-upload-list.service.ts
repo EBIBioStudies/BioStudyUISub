@@ -19,7 +19,8 @@ export class FileUpload {
   readonly filePath: Path;
   finish$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  private errorMessage?: string;
+  private errorTitle: string = '';
+  private errorDetail: string = '';
   private percentage: number;
   private sb?: Subscription;
   private state: UploadState = UploadState.UPLOADING;
@@ -40,7 +41,8 @@ export class FileUpload {
       }
 
       if (event.isError()) {
-        this.errorMessage = (event as UploadErrorEvent).message;
+        this.errorTitle = (event as UploadErrorEvent).title;
+        this.errorDetail = (event as UploadErrorEvent).detail;
         this.state = UploadState.ERROR;
       }
 
@@ -68,8 +70,8 @@ export class FileUpload {
     return this.state;
   }
 
-  get error(): string | undefined {
-    return this.errorMessage;
+  get error(): { title: string; detail: string } {
+    return { title: this.errorTitle, detail: this.errorDetail };
   }
 
   get absoluteFilePath(): string {
@@ -101,6 +103,10 @@ export class FileUpload {
 
   isFinished(): boolean {
     return this.isDone() || this.isFailed();
+  }
+
+  isUploading(): boolean {
+    return this.state === UploadState.UPLOADING;
   }
 }
 

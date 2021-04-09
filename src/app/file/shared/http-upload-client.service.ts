@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpEvent, HttpEventType, HttpRequest } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { ErrorService } from 'app/core/errors/error.service';
 
 enum UploadEventType {
   PROGRESS,
@@ -15,8 +16,8 @@ export class UploadEvent {
 
   constructor(private readonly type: UploadEventType = UploadEventType.OTHER) {}
 
-  static error(message: any): UploadErrorEvent {
-    return new UploadErrorEvent(message);
+  static error(title: string, detail: string): UploadErrorEvent {
+    return new UploadErrorEvent(title, detail);
   }
 
   static fromHttpEvent(event: HttpEvent<any>): UploadEvent {
@@ -60,14 +61,14 @@ export class UploadProgressEvent extends UploadEvent {
 }
 
 export class UploadErrorEvent extends UploadEvent {
-  constructor(readonly message: string) {
+  constructor(readonly title: string, readonly detail: string) {
     super(UploadEventType.ERROR);
   }
 }
 
 @Injectable()
 export class HttpUploadClientService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private errorService: ErrorService) {}
 
   upload(url: string, formData: FormData): Observable<UploadEvent> {
     const req = new HttpRequest('POST', url, formData, {
@@ -76,18 +77,14 @@ export class HttpUploadClientService {
 
     return this.http.request(req).pipe(
       map((event) => UploadEvent.fromHttpEvent(event)),
-      catchError(this.handleError)
+      catchError(this.handleError.bind(this))
     );
   }
 
   private handleError(error: HttpErrorResponse): Observable<UploadEvent> {
-    let message;
-    if (error.error instanceof ErrorEvent) {
-      message = error.error.message;
-    } else {
-      message = `Server error [${error.status}]: ${error.error}`;
-    }
+    const title = this.errorService.getServerErrorMessage(error, true);
+    const detail = error.message;
 
-    return throwError(UploadEvent.error(message));
+    return of(UploadEvent.error(title, detail));
   }
 }

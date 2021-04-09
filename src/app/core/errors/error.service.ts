@@ -7,11 +7,17 @@ import { ServerError } from 'app/shared/server-error.handler';
   providedIn: 'root'
 })
 export class ErrorService {
+  constructor() {}
+
   getClientErrorMessage(error: Error): string {
     return error.message ? error.message : error.toString();
   }
 
-  getServerErrorMessage(resp: HttpErrorResponse): string {
+  getServerErrorMessage(resp: HttpErrorResponse, isFileUpload: boolean = false): string {
+    if (resp.status === INTERNAL_SERVER_ERROR && isFileUpload) {
+      return ServerError.defaultUploadErrorMessage;
+    }
+
     if (resp.status === INTERNAL_SERVER_ERROR) {
       return ServerError.defaultErrorMessage;
     }
