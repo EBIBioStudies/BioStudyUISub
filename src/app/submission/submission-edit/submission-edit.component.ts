@@ -1,11 +1,10 @@
+import { PageTabSubmission } from 'app/submission/submission-shared/model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { Location } from '@angular/common';
 import { Observable, of, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
-import { ErrorMessageService } from 'app/core/errors/error-message.service';
-import { LogService } from 'app/core/logger/log.service';
 import { ModalService } from 'app/shared/modal.service';
 import { SectionForm } from './shared/model/section-form.model';
 import { SubmEditService } from './shared/subm-edit.service';
@@ -14,6 +13,7 @@ import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
 import { SubmValidationErrors } from '../submission-shared/model';
 import { SubmitLog } from '../submission-shared/submission.service';
 import { scrollTop } from 'app/utils';
+import { ErrorService } from 'app/core/errors/error.service';
 
 class SubmitOperation {
   static CREATE = new SubmitOperation();
@@ -46,6 +46,8 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
   isSidebarCollapsed: boolean = false;
   method?: string;
   submissionErrors: SubmValidationErrors = SubmValidationErrors.EMPTY;
+  submNotFound: boolean = false;
+  submNotFoundMessage: string = '';
 
   private accno?: string;
   private hasJustCreated = false;
@@ -60,8 +62,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     private bsModalService: BsModalService,
     private modalService: ModalService,
     private submEditService: SubmEditService,
-    private errorMessage: ErrorMessageService,
-    private logService: LogService
+    private errorService: ErrorService
   ) {
     submEditService.sectionSwitch$
       .pipe(takeUntil(this.unsubscribe))
@@ -113,27 +114,23 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
           return this.submEditService.loadSubmission(accno, this.hasJustCreated);
         })
       )
-      .subscribe((resp) => {
-        if (this.hasJustCreated) {
-          this.locService.replaceState('/edit/' + this.accno);
-          this.readonly = false;
-        }
+      .subscribe(
+        (ptSubmission: PageTabSubmission) => {
+          if (this.hasJustCreated) {
+            this.locService.replaceState('/edit/' + this.accno);
+            this.readonly = false;
+          }
 
-        if (this.sideBar && resp.payload.isSome) {
-          const att = resp.payload.getOrElse({ name: 'AttachTo', value: '' }) || { value: '' };
-          this.sideBar.showAdvanced = !(att.value.toLowerCase() === 'arrayexpress');
-        }
+          if (this.sideBar) {
+            const attachToAttr = ptSubmission.findAttributeByName('attachto');
 
-        if (resp.error.isSome()) {
-          const message = this.errorMessage.getPlainMessage();
+            if (attachToAttr) {
+              const attachToValue = attachToAttr.value as string;
+              // TODO: handle this through template
+              this.sideBar.showAdvanced = !(attachToValue.toLowerCase() === 'arrayexpress');
+            }
+          }
 
-          this.modalService.alert(message, 'Error', 'Ok').subscribe(() => {
-            this.router.navigate(['/']);
-          });
-
-          // tslint:disable-next-line: no-console
-          this.logService.error('Error loading submission', resp?.error?.value?.error?.log?.message);
-        } else {
           const releaseDateCtrl = this.sectionForm!.findFieldControl('ReleaseDate');
 
           if (releaseDateCtrl) {
@@ -149,8 +146,17 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
               this.newReleaseDate.setHours(0, 0, 0, 0);
             });
           }
+        },
+        (error) => {
+          if (!this.errorService.isNotFoundError(error)) {
+            this.router.navigate(['/']);
+            throw error;
+          }
+
+          this.submNotFound = true;
+          this.submNotFoundMessage = this.errorService.getServerErrorMessage(error);
         }
-      });
+      );
   }
 
   onEditBackClick(): void {
@@ -209,7 +215,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
 
     confirmObservable
       .pipe(
-        // switchMap(() => this.confirmReleaseDateOverride()),
+        switchMap(() => this.confirmReleaseDateOverride()),
         switchMap(() => this.submEditService.submit()),
         takeUntil(this.unsubscribe)
       )

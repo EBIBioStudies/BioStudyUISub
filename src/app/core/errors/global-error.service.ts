@@ -1,60 +1,31 @@
-import { LogService } from './../logger/log.service';
-import { ErrorHandler, Injectable, Injector, NgZone } from '@angular/core';
-import { Subject, Observable } from 'rxjs';
-import { INTERNAL_SERVER_ERROR, UNAUTHORIZED } from 'http-status-codes';
-import { ToastrService } from 'ngx-toastr';
-import { UserSession } from 'app/auth/shared';
-import { ErrorMessageService } from './error-message.service';
+import { ErrorHandler, Injectable, Injector } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { LogService } from 'app/core/logger/log.service';
+import { ErrorService } from './error.service';
+import { NotificationService } from '../notification/notification.service';
 
 @Injectable()
 export class GlobalErrorService extends ErrorHandler {
-  private errors: Subject<any> = new Subject<any>();
-
-  constructor(
-    private userSession: UserSession,
-    private zone: NgZone,
-    private injector: Injector,
-    private errorMessage: ErrorMessageService,
-    private logService: LogService
-  ) {
+  constructor(private injector: Injector) {
     super();
   }
 
-  get errorDetected(): Observable<any> {
-    return this.errors.asObservable();
-  }
+  handleError(error: Error): void {
+    const errorService = this.injector.get(ErrorService);
+    const logger = this.injector.get(LogService);
+    const notifier = this.injector.get(NotificationService);
 
-  private get toastr(): ToastrService {
-    return this.injector.get(ToastrService);
-  }
-
-  private showErrorToast(): void {
-    const message = this.errorMessage.getMessage();
-
-    this.toastr.error(message, '', {
-      closeButton: true,
-      timeOut: 7000,
-      enableHtml: true,
-      tapToDismiss: false
-    });
-  }
-
-  handleError(error): void {
-    // Invalid authentication credentials, probably due to the current session having expired => clean up and reload.
-    if (error.status === UNAUTHORIZED) {
-      this.userSession.destroy();
-      this.zone.runOutsideAngular(() => location.reload());
+    let message;
+    if (error instanceof HttpErrorResponse) {
+      message = errorService.getServerErrorMessage(error);
+      logger.error(message);
+      notifier.showError(message);
+    } else {
+      message = errorService.getClientErrorMessage(error);
+      logger.error(message, error.stack);
+      notifier.showError(message);
     }
 
-    if (error.status === INTERNAL_SERVER_ERROR) {
-      // An error occurred that may potentially be worth handling at a global level.
-      this.showErrorToast();
-      console.error(error);
-    }
-
-    if (error !== UNAUTHORIZED) {
-      this.logService.error(error.message, error.stack);
-      console.log(error.stack);
-    }
+    console.error(error);
   }
 }

@@ -25,9 +25,9 @@ import { SubmissionDirectModule } from './submission/submission-direct/submissio
 import { SubmissionEditModule } from './submission/submission-edit/submission-edit.module';
 import { SubmissionListModule } from './submission/submission-list/submission-list.module';
 import { FileModule } from './file/file.module';
-import { NotFoundComponent } from './not-found/not-found.component';
 import { HelpComponent } from './help/help.component';
 import { SharedModule } from 'app/shared/shared.module';
+import { NotFoundModule } from 'app/not-found/not-found.module';
 
 export function initConfig(config: AppConfig): () => Promise<any> {
   return () => config.load();
@@ -62,9 +62,10 @@ export function initConfig(config: AppConfig): () => Promise<any> {
     AppRoutingModule,
     AuthModule,
     ThemeModule,
-    CoreModule
+    CoreModule,
+    NotFoundModule
   ],
-  declarations: [AppComponent, NotFoundComponent, HelpComponent],
+  declarations: [AppComponent, HelpComponent],
   providers: [
     AppConfig,
     { provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true },

@@ -1,7 +1,6 @@
-import { Observable, of, Subject, Subscription, merge, BehaviorSubject } from 'rxjs';
+import { Observable, Subject, Subscription, BehaviorSubject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
-import { none, Option, some } from 'fp-ts/lib/Option';
 import {
   Attribute,
   AttributeData,
@@ -18,6 +17,7 @@ import { PageTab, SelectValueType } from 'app/submission/submission-shared/model
 import { PageTabToSubmissionService } from 'app/submission/submission-shared/pagetab-to-submission.service';
 import { SubmissionToPageTabService } from 'app/submission/submission-shared/submission-to-pagetab.service';
 import { isDefinedAndNotEmpty } from 'app/utils';
+import { PageTabSubmission } from 'app/submission/submission-shared/model/pagetab/pagetab.model';
 import { SubmissionService, SubmitResponse } from '../../submission-shared/submission.service';
 import { SectionForm } from './model/section-form.model';
 import { flatTables } from '../../utils/table.utils';
@@ -111,20 +111,6 @@ class EditState {
   }
 }
 
-export class ServerResponse<T> {
-  private constructor(readonly payload: Option<T>, readonly error: Option<any>) {}
-
-  static ERROR = (error: any) => {
-    return new ServerResponse(none, some(error));
-  };
-
-  static OK = <T>(payload: T) => new ServerResponse<T>(some(payload), none);
-
-  get isError(): boolean {
-    return this.error.isSome();
-  }
-}
-
 @Injectable()
 export class SubmEditService {
   readonly sectionSwitch$: BehaviorSubject<SectionForm | null> = new BehaviorSubject<SectionForm | null>(null);
@@ -171,24 +157,20 @@ export class SubmEditService {
     return this.submModel ? this.submModel.isRevised : false;
   }
 
-  loadSubmission(accno: string, setDefaults?: boolean): Observable<ServerResponse<any>> {
+  loadSubmission(accno: string, setDefaults?: boolean): Observable<PageTabSubmission> {
     this.editState.startLoading();
 
     return this.submService.getSubmission(accno).pipe(
       map((draftSubm) => {
         this.editState.stopLoading();
         this.createForm(draftSubm, accno, setDefaults);
-        const projectAttribute =
-          draftSubm &&
-          draftSubm.attributes &&
-          draftSubm.attributes.filter((att) => att.name && att.name.toLowerCase() === 'attachto').shift();
 
-        return ServerResponse.OK(projectAttribute);
+        return new PageTabSubmission(draftSubm);
       }),
       catchError((error) => {
         this.editState.stopLoading(error);
 
-        return of(ServerResponse.ERROR(error));
+        throw error;
       })
     );
   }
@@ -200,7 +182,7 @@ export class SubmEditService {
     this.submModel = new Submission(SubmissionType.defaultType());
   }
 
-  revert(): Observable<ServerResponse<any>> {
+  revert(): Observable<PageTab> {
     this.editState.startReverting();
 
     return this.submService.deleteDraft(this.accno).pipe(
@@ -208,11 +190,13 @@ export class SubmEditService {
       map((draftSubm) => {
         this.editState.stopReverting();
         this.createForm(draftSubm, this.accno);
-        return ServerResponse.OK({});
+
+        return draftSubm;
       }),
       catchError((error) => {
         this.editState.stopReverting(error);
-        return of(ServerResponse.ERROR(error));
+
+        throw error;
       })
     );
   }
@@ -292,13 +276,11 @@ export class SubmEditService {
     }
   }
 
-  private onSaveFinished(resp: ServerResponse<any>): void {
-    if (resp.isError) {
-      return;
-    }
+  private onSaveFinished(): void {
     if (this.submModel === undefined) {
       return;
     }
+
     // TODO: re-implement 'revised' table
     // A sent submission has been backed up. It follows it's been revised.
     if (!this.submModel.isTemp && !this.submModel.isRevised) {
@@ -315,21 +297,17 @@ export class SubmEditService {
 
   private save(): void {
     this.editState.startSaving();
-    this.submService
-      .updateDraft(this.accno, this.asPageTab())
-      .pipe(
-        map((resp) => ServerResponse.OK(resp)),
-        catchError((error) => of(ServerResponse.ERROR(error)))
-      )
-      .subscribe(
-        (resp) => {
-          this.onSaveFinished(resp);
-          this.editState.stopSaving();
-        },
-        (error) => {
-          this.editState.stopSaving(error);
-        }
-      );
+    this.submService.updateDraft(this.accno, this.asPageTab()).subscribe(
+      () => {
+        this.onSaveFinished();
+        this.editState.stopSaving();
+      },
+      (error) => {
+        this.editState.stopSaving(error);
+
+        throw error;
+      }
+    );
   }
 
   /* TODO: set defaults when submission object is created and not yet sent to the server (NOT HERE!!!)*/

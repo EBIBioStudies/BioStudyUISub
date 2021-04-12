@@ -6,7 +6,7 @@ import { LogLevel } from '../log-levels';
 export class LogWebApi extends LogPublisher {
   http: HttpClient;
 
-  private allowedLevels: LogLevel[] = [LogLevel.ERROR, LogLevel.UPLOAD];
+  private allowedLevels: LogLevel[] = [LogLevel.ERROR];
 
   constructor(http: HttpClient) {
     super();

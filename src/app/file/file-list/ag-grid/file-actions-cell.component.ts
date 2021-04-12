@@ -68,6 +68,10 @@ export class FileActionsCellComponent implements AgRendererComponent {
     return this.type === 'FILE';
   }
 
+  get hasFailed(): boolean {
+    return this.upload?.isFailed() || false;
+  }
+
   onCancelUpload(ev): void {
     ev.preventDefault();
     if (this.upload) {

@@ -4,7 +4,7 @@ import { FileTreeStore } from './file-tree.store';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { UploadFileModalComponent } from '../upload-file-button/upload-file-modal.component';
+import { UploadFileModalComponent } from '../upload-file-modal/upload-file-modal.component';
 
 @Component({
   selector: 'st-file-select',

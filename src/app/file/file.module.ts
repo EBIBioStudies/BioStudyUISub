@@ -18,8 +18,10 @@ import { ProgressCellComponent } from './file-list/ag-grid/upload-progress-cell.
 import { RouterModule } from '@angular/router';
 import { SharedModule } from 'app/shared/shared.module';
 import { ThemeModule } from 'app/theme/theme.module';
-import { UploadFileModalComponent } from './upload-file-button/upload-file-modal.component';
+import { UploadFileModalComponent } from './upload-file-modal/upload-file-modal.component';
+import { UploadErrorModalComponent } from './upload-error-modal/upload-error-modal.component';
 import { UserData } from 'app/auth/shared';
+import { CoreModule } from 'app/core/core.module';
 
 @NgModule({
   imports: [
@@ -28,7 +30,8 @@ import { UserData } from 'app/auth/shared';
     SharedModule,
     AgGridModule.withComponents([FileActionsCellComponent, FileTypeCellComponent, ProgressCellComponent]),
     AccordionModule.forRoot(),
-    ThemeModule
+    ThemeModule,
+    CoreModule
   ],
   declarations: [
     FileListComponent,
@@ -40,7 +43,8 @@ import { UserData } from 'app/auth/shared';
     FileSelectComponent,
     FileTreeComponent,
     FTPUploadButtonComponent,
-    UploadFileModalComponent
+    UploadFileModalComponent,
+    UploadErrorModalComponent
   ],
   providers: [FileService, FileTreeStore, FileUploadList, HttpUploadClientService, UserData],
   exports: [FileListComponent, FileSelectComponent],
