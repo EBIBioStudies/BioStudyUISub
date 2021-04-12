@@ -18,7 +18,7 @@ export class UploadFileModalComponent {
   constructor(private fileUploadList: FileUploadList, public bsModalRef: BsModalRef) {}
 
   get error(): string {
-    return this.upload?.error.errorTitle || '';
+    return this.upload?.error.title || '';
   }
 
   get isUploading(): boolean {
