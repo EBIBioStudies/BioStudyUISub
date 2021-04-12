@@ -49,7 +49,7 @@ export class FileListComponent implements OnInit, OnDestroy {
           this.gridOptions.api.sizeColumnsToFit();
         }
       },
-      rowHeight: 35,
+      rowHeight: 40,
       rowSelection: 'single',
       unSortIcon: true,
       localeText: { noRowsToShow: 'No files found' },
@@ -211,7 +211,7 @@ export class FileListComponent implements OnInit, OnDestroy {
       {
         cellRendererFramework: FileActionsCellComponent,
         headerName: 'Actions',
-        maxWidth: 100,
+        maxWidth: 150,
         sortable: false,
         suppressMenu: true
       }

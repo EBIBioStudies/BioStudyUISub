@@ -11,7 +11,11 @@ export class ErrorService {
     return error.message ? error.message : error.toString();
   }
 
-  getServerErrorMessage(resp: HttpErrorResponse): string {
+  getServerErrorMessage(resp: HttpErrorResponse, isFileUpload: boolean = false): string {
+    if (resp.status === INTERNAL_SERVER_ERROR && isFileUpload) {
+      return ServerError.defaultUploadErrorMessage;
+    }
+
     if (resp.status === INTERNAL_SERVER_ERROR) {
       return ServerError.defaultErrorMessage;
     }

@@ -2,9 +2,9 @@ import * as HttpStatus from 'http-status-codes';
 import { HttpErrorResponse } from '@angular/common/http';
 
 export class ServerError {
-  static defaultErrorMessage: string = `Something went wrong at our side. Sorry for the inconvenience,
-    we are working to fix it. Please try again later and if the problem persists,
+  static defaultErrorMessage: string = `Something went wrong at our side. Please try again later and if the problem persists,
     drop an email to <a href="mailto:biostudies@ebi.ac.uk?Subject=BioStudies Submission Tool error">biostudies@ebi.ac.uk</a>`;
+  static defaultUploadErrorMessage: string = 'Uploading error';
 
   data: any;
   status: number = 0;
