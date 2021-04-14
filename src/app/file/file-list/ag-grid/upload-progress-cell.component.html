@@ -1,9 +1,10 @@
-<div *ngIf="isUploading && value < 100" class="progress">
-  <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': value + '%'}">
+<div *ngIf="isUploading && value >= 0" class="progress" style="min-width: 150px;">
+  <div class="progress-bar bg-info" role="progressbar" [ngStyle]="{ 'width': value + '%'}"
+    [attr.aria-valuenow]="value" aria-valuemin="0%" aria-valuemax="100%">
     <span>{{value}}%</span>
   </div>
 </div>
-<div *ngIf="value === 100" class="text-success text-center">
+<div *ngIf="!isUploading && value === 100" class="text-success text-center">
   <i class="fa fa-check"></i>
 </div>
 <div class="text-danger">

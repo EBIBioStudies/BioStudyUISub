@@ -1,22 +1,19 @@
-import { Component, ElementRef, Input, QueryList, ViewChildren, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, ChangeDetectionStrategy, ViewChild, HostListener } from '@angular/core';
 import { UserData } from 'app/auth/shared';
-import { TypeaheadDirective } from 'ngx-bootstrap/typeahead';
 import { TableForm } from '../../shared/model/table-form.model';
 import { Options as SortableOption } from 'sortablejs';
 
 @Component({
   selector: 'st-table',
   templateUrl: './table.component.html',
-  styleUrls: ['./table.component.css']
+  styleUrls: ['./table.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableComponent implements OnChanges {
-  @ViewChildren('colEl') colEls?: QueryList<ElementRef>;
   @Input() tableForm!: TableForm;
   hoveredRowIndex: number = -1;
   @Input() readonly = false;
-  @ViewChildren('rowEl') rowEls?: QueryList<ElementRef>;
   sortableJsOptions: SortableOption = {};
-  @ViewChildren('ahead') typeaheads?: QueryList<TypeaheadDirective>;
 
   constructor(public userData: UserData) {
     this.sortableJsOptions.onUpdate = this.onRowOrderUpdate.bind(this);

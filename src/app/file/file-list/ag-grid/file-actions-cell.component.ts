@@ -65,7 +65,7 @@ export class FileActionsCellComponent implements AgRendererComponent {
   }
 
   get canDownload(): boolean {
-    return this.type === 'FILE';
+    return Boolean(this.type === 'FILE' && !this.upload?.isUploading());
   }
 
   get hasFailed(): boolean {

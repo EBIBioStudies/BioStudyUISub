@@ -12,7 +12,7 @@
       </button>
     </div>
     <div *ngFor="let column of tableForm.columns; let idx = index" class="col-sm-1 col-md-1 col-lg-3 col-xl-3 border-bottom"
-       [ngClass]="{'optional': tableForm.canRemoveColumn(column), 'has-error': column.hasErrors}">
+      [ngClass]="{'optional': tableForm.canRemoveColumn(column), 'has-error': column.hasErrors}">
       <st-inline-edit placement="bottom"
               container="body"
               containerClass="text-danger"
@@ -30,51 +30,51 @@
       </st-inline-edit>
     </div>
   </div>
-  <cdk-virtual-scroll-viewport class="scroll-viewport" itemSize="38">
-    <div [sortablejs]="tableForm.rows" [sortablejsOptions]="sortableJsOptions">
-      <div *cdkVirtualFor="let row of tableForm.rows; let rowIdx = index;"
+  <div [sortablejs]="tableForm.rows" [sortablejsOptions]="sortableJsOptions">
+    <div *cdkVirtualFor="let row of tableForm.rows; let rowIdx = index;">
+      <div
+        *ngIf="!isReadOnly || !row.isEmpty"
+        class="row flex-nowrap"
         (mouseenter)="onMouseEnterRow(rowIdx)"
         (mouseleave)="onMouseLeaveRow()">
-        <div *ngIf="!isReadOnly || !row.isEmpty" class="row flex-nowrap">
-          <div class="col-sm-1 col-md-1">
-            <div class="row-heading">
-              <i class="fas fa-grip-vertical grip" [ngClass]="{ 'grip-visible': rowIdx === hoveredRowIndex && isSortable }"></i>
-              <span container="body" [tooltip]="tableForm.canRemoveRow() ? '' : 'The table must contain one row at least'">
-                <button class="btn btn-danger btn-sm" type="button"
-                    [ngClass]="{'invisible': isReadOnly}"
-                    [disabled]="!tableForm.canRemoveRow()"
-                    (click)="tableForm.removeRow(rowIdx)"
-                    [tooltip]="tableForm.canRemoveRow ? 'Delete ' + tableForm.tableTypeName.toLowerCase() + ' ' + (rowIdx + 1) : ''"
-                    placement="right"
-                    container="body">
-                  <i class="far fa-trash-alt"></i>
-                </button>
-              </span>
-              {{rowIdx+1}}
-            </div>
+        <div class="col-sm-1 col-md-1">
+          <div class="row-heading">
+            <i class="fas fa-grip-vertical grip" [ngClass]="{ 'grip-visible': rowIdx === hoveredRowIndex && isSortable }"></i>
+            <span container="body" [tooltip]="tableForm.canRemoveRow() ? '' : 'The table must contain one row at least'">
+              <button class="btn btn-danger btn-sm" type="button"
+                  [ngClass]="{'invisible': isReadOnly}"
+                  [disabled]="!tableForm.canRemoveRow()"
+                  (click)="tableForm.removeRow(rowIdx)"
+                  [tooltip]="tableForm.canRemoveRow ? 'Delete ' + tableForm.tableTypeName.toLowerCase() + ' ' + (rowIdx + 1) : ''"
+                  placement="right"
+                  container="body">
+                <i class="far fa-trash-alt"></i>
+              </button>
+            </span>
+            {{rowIdx+1}}
           </div>
-          <div class="column-entry col-sm-1 col-md-1 col-lg-3 col-xl-3" *ngFor="let column of tableForm.columns">
-            <div [ngClass]="{'readonly': isReadOnly || column.isReadonly, 'has-error': row.hasErrorsAt(column.id)}">
-              <st-input-value placement="top"
-                      container="body"
-                      containerClass="{{tableForm.isRequired ? 'text-danger' : 'text-warning'}}"
-                      popover="{{row.hasErrorsAt(column.id) ? row.errorsAt(column.id) : ''}}"
-                      triggers="focus"
-                      [autosuggestSource]="tableForm.cellValuesTypeaheadFunc(rowIdx, column.id)"
-                      [autosuggest]="column.autosuggest"
-                      [formControl]="row.cellControlAt(column.id).control"
-                      [isSmall]="false"
-                      [readonly]="isReadOnly || column.isReadonly"
-                      [valueType]="column.valueType"
-                      (inputValueSelect)="onInputValueSelect($event, rowIdx)"
-                      stValidateOnblur>
-              </st-input-value>
-            </div>
+        </div>
+        <div class="column-entry col-sm-1 col-md-1 col-lg-3 col-xl-3" *ngFor="let column of tableForm.columns">
+          <div [ngClass]="{'readonly': isReadOnly || column.isReadonly, 'has-error': row.hasErrorsAt(column.id)}">
+            <st-input-value placement="top"
+                    container="body"
+                    containerClass="{{tableForm.isRequired ? 'text-danger' : 'text-warning'}}"
+                    popover="{{row.hasErrorsAt(column.id) ? row.errorsAt(column.id) : ''}}"
+                    triggers="focus"
+                    [autosuggestSource]="tableForm.cellValuesTypeaheadFunc(rowIdx, column.id)"
+                    [autosuggest]="column.autosuggest"
+                    [formControl]="row.cellControlAt(column.id).control"
+                    [isSmall]="false"
+                    [readonly]="isReadOnly || column.isReadonly"
+                    [valueType]="column.valueType"
+                    (inputValueSelect)="onInputValueSelect($event, rowIdx)"
+                    stValidateOnblur>
+            </st-input-value>
           </div>
         </div>
       </div>
     </div>
-  </cdk-virtual-scroll-viewport>
+  </div>
 </div>
 <button *ngIf="tableForm && tableForm.canAddRow() && !isReadOnly" type="button" class="btn-add btn btn-link" tabindex="-1"
     [tooltip]="'Add a new ' + tableForm.prettyName"
