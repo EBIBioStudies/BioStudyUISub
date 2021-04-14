@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SortablejsModule } from 'ngx-sortablejs';
-import { ScrollingModule } from '@angular/cdk/scrolling';
 import { SharedModule } from 'app/shared/shared.module';
 import { FileModule } from 'app/file/file.module';
 import { ThemeModule } from 'app/theme/theme.module';
@@ -44,7 +43,6 @@ import { NotFoundModule } from 'app/not-found/not-found.module';
     IdLinkModule,
     PubMedIdSearchModule,
     SortablejsModule,
-    ScrollingModule,
     ThemeModule,
     NotFoundModule
   ],
