@@ -318,7 +318,7 @@ export class TableForm extends FormBase {
 
   private addRowForm(row: ValueMap, columns: Attribute[]): void {
     const rowForm = new RowForm(row, columns, this.tableRef);
-    this.rowForms.push(rowForm);
+    this.rowForms = [...this.rowForms, rowForm];
     this.rowFormArray.push(rowForm.form);
   }
 
@@ -329,7 +329,10 @@ export class TableForm extends FormBase {
   }
 
   private removeRowForm(rowIndex: number): void {
-    this.rowForms.splice(rowIndex, 1);
+    const tempArray = this.rowForms.slice();
+    tempArray.splice(rowIndex, 1);
+
+    this.rowForms = tempArray;
     this.rowFormArray.removeAt(rowIndex);
   }
 }

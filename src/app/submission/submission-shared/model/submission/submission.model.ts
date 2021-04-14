@@ -49,7 +49,12 @@ class Rows {
     if (index < 0 || index > this.rows.length) {
       return false;
     }
-    this.rows.splice(index, 1);
+
+    const tempRows = this.rows.slice();
+    tempRows.splice(index, 1);
+
+    this.rows = tempRows;
+
     return true;
   }
 

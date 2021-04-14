@@ -12,7 +12,7 @@
       </button>
     </div>
     <div *ngFor="let column of tableForm.columns; let idx = index" class="col-sm-1 col-md-1 col-lg-3 col-xl-3 border-bottom"
-       [ngClass]="{'optional': tableForm.canRemoveColumn(column), 'has-error': column.hasErrors}">
+      [ngClass]="{'optional': tableForm.canRemoveColumn(column), 'has-error': column.hasErrors}">
       <st-inline-edit placement="bottom"
               container="body"
               containerClass="text-danger"
@@ -31,10 +31,12 @@
     </div>
   </div>
   <div [sortablejs]="tableForm.rows" [sortablejsOptions]="sortableJsOptions">
-    <div *ngFor="let row of tableForm.rows; let rowIdx = index;"
-      (mouseenter)="onMouseEnterRow(rowIdx)"
-      (mouseleave)="onMouseLeaveRow()">
-      <div *ngIf="!isReadOnly || !row.isEmpty" class="row flex-nowrap">
+    <div *cdkVirtualFor="let row of tableForm.rows; let rowIdx = index;">
+      <div
+        *ngIf="!isReadOnly || !row.isEmpty"
+        class="row flex-nowrap"
+        (mouseenter)="onMouseEnterRow(rowIdx)"
+        (mouseleave)="onMouseLeaveRow()">
         <div class="col-sm-1 col-md-1">
           <div class="row-heading">
             <i class="fas fa-grip-vertical grip" [ngClass]="{ 'grip-visible': rowIdx === hoveredRowIndex && isSortable }"></i>
