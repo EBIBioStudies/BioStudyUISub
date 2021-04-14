@@ -31,7 +31,7 @@
     </div>
   </div>
   <div [sortablejs]="tableForm.rows" [sortablejsOptions]="sortableJsOptions">
-    <div *cdkVirtualFor="let row of tableForm.rows; let rowIdx = index;">
+    <div *ngFor="let row of tableForm.rows; let rowIdx = index;">
       <div
         *ngIf="!isReadOnly || !row.isEmpty"
         class="row flex-nowrap"
