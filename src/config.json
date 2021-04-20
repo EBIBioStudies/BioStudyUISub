@@ -1,6 +1,6 @@
 {
   "APP_PROXY_BASE": "",
-  "APP_ENV": "DEV",
+  "APP_ENV": "LOCAL",
   "APP_CONTEXT": "",
   "APP_TABLET_BREAKPOINT": 993,
   "APP_MAX_DATE_YEARS": 2,

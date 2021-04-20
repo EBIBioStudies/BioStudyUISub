@@ -279,7 +279,7 @@ export const defaultTemplate = {
         allowImport: true,
         columnTypes: [
           {
-            name: 'Path',
+            name: 'File',
             valueType: { name: 'file' },
             display: 'required'
           },

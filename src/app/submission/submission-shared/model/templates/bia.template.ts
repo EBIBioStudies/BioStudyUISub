@@ -509,7 +509,7 @@ export const biaTemplate = {
             display: 'disarable',
             columnTypes: [
               {
-                name: 'Path',
+                name: 'File',
                 valueType: { name: 'file' },
                 display: 'required'
               },
