@@ -3,12 +3,13 @@ import { ReplaySubject, Subject } from 'rxjs';
 import { UserCookies } from './user-cookies';
 import { UserInfo } from './model';
 import { isDefinedAndNotEmpty } from 'app/utils';
+import { AppConfig } from 'app/app.config';
 
 @Injectable()
 export class UserSession {
   created$: Subject<boolean> = new ReplaySubject<boolean>(1);
 
-  constructor(private userCookies: UserCookies) {}
+  constructor(private userCookies: UserCookies, private appConfig: AppConfig) {}
 
   create(user: UserInfo): UserInfo {
     this.update(user);
@@ -18,7 +19,7 @@ export class UserSession {
   }
 
   destroy(): void {
-    this.userCookies.destroyLoginToken();
+    this.userCookies.destroyLoginToken(this.appConfig.environment);
     this.userCookies.destroyUser();
     this.notifySessionDestroyed();
   }
@@ -54,7 +55,7 @@ export class UserSession {
   }
 
   update(user: any): any {
-    this.userCookies.setLoginToken(user.sessid);
+    this.userCookies.setLoginToken(user.sessid, this.appConfig.environment);
     this.userCookies.setUser(user);
 
     return user;

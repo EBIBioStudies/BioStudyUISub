@@ -146,7 +146,7 @@ export const proteinDesignsTemplate = {
         uniqueCols: true,
         columnTypes: [
           {
-            name: 'Path',
+            name: 'File',
             valueType: { name: 'file' },
             display: 'required'
           },
@@ -186,7 +186,7 @@ export const proteinDesignsTemplate = {
         uniqueCols: true,
         columnTypes: [
           {
-            name: 'Path',
+            name: 'File',
             valueType: { name: 'file' },
             display: 'required'
           }
