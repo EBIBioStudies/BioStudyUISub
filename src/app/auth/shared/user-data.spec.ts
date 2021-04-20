@@ -6,6 +6,7 @@ import { UserInfo, ExtendedUserInfo } from './model';
 describe('UserData', () => {
   let submService;
   let userCookies;
+  let appConfig;
 
   beforeEach(() => {
     submService = {
@@ -17,7 +18,11 @@ describe('UserData', () => {
     userCookies = {
       setLoginToken(): void {},
       setUser(): void {}
-    }
+    };
+
+    appConfig = {
+      environment: 'LOCAL'
+    };
   });
 
   it('should return valid user info', async(() => {
@@ -39,12 +44,11 @@ describe('UserData', () => {
       }
     };
 
-    const session = new UserSession(userCookies);
+    const session = new UserSession(userCookies, appConfig);
 
-    new UserData(session, authService as AuthService, submService).info$
-      .subscribe(info => {
-        expect(info).toEqual(user as ExtendedUserInfo);
-      });
+    new UserData(session, authService as AuthService, submService).info$.subscribe((info) => {
+      expect(info).toEqual(user as ExtendedUserInfo);
+    });
 
     session.create(user);
   }));
