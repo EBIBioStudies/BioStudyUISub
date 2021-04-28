@@ -221,7 +221,12 @@ export class SubmEditService {
   }
 
   switchSection(sectionForm: SectionForm): void {
-    const nextSectionForm: SectionForm = new SectionForm(sectionForm.section, sectionForm.parent);
+    const nextSectionForm: SectionForm = new SectionForm(
+      this.submService,
+      this.accno,
+      sectionForm.section,
+      sectionForm.parent
+    );
 
     if (this.sectionFormSub) {
       this.sectionFormSub.unsubscribe();
@@ -267,7 +272,7 @@ export class SubmEditService {
       this.setDefaults(this.submModel.section);
     }
 
-    this.switchSection(new SectionForm(this.submModel.section));
+    this.switchSection(new SectionForm(this.submService, this.accno, this.submModel.section));
   }
 
   private onErrorResponse(error: any): void {

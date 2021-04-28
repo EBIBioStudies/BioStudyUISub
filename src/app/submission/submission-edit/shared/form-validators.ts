@@ -20,8 +20,12 @@ import {
   isArrayEmpty,
   isStringEmpty
 } from 'app/utils';
+import { Observable, of } from 'rxjs';
+import { SubmissionListItem, SubmissionService } from 'app/submission/submission-shared/submission.service';
 import { ControlRef, ControlGroupRef } from './control-reference';
 import { CustomFormControl } from './model/custom-form-control.model';
+import { catchError, first, map } from 'rxjs/operators';
+import pluralize from 'pluralize';
 
 export class MyFormGroup extends FormGroup {
   ref: ControlGroupRef = ControlGroupRef.unknown;
@@ -85,6 +89,24 @@ export class FormValidators {
     const isValueValid: boolean = isProteinSequenceValid(rawValue);
 
     return isValueValid ? null : { format: { value } };
+  };
+
+  static forStudyTitle = (submService: SubmissionService, studyAccno: string): AsyncValidatorFn => {
+    return (control: CustomFormControl): Observable<ValidationErrors | null> => {
+      return submService.getSubmissions(true, { keywords: control.value }).pipe(
+        map((submissions) => {
+          const differentSubmissions = submissions.filter((submission) => submission.accno !== studyAccno);
+          control.warnings =
+            differentSubmissions.length > 0
+              ? { uniqueSubmission: { value: control.value, payload: differentSubmissions } }
+              : {};
+
+          return null;
+        }),
+        catchError(() => of(null)),
+        first()
+      );
+    };
   };
 
   static uniqueValues: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -193,9 +215,11 @@ export class SubmFormValidators {
 
     if (valueType.is(ValueTypeName.text, ValueTypeName.largetext)) {
       const vt = valueType as TextValueType;
+
       if (vt.maxlength > 0) {
         validators.push(Validators.maxLength(vt.maxlength));
       }
+
       if (vt.minlength > 0) {
         validators.push(Validators.minLength(vt.minlength));
       }
@@ -213,6 +237,21 @@ export class SubmFormValidators {
 
     if (valueType.is(ValueTypeName.protein)) {
       validators.push(FormValidators.formatProtein);
+    }
+
+    return validators;
+  }
+
+  static forAsyncField(field: Field, submService: SubmissionService, studyAccno: string): AsyncValidatorFn[] {
+    const validators: AsyncValidatorFn[] = [];
+    const valueType = field.type.valueType;
+
+    if (valueType.is(ValueTypeName.text, ValueTypeName.largetext)) {
+      const textValueType = valueType as TextValueType;
+
+      if (textValueType.isStudyTitle) {
+        validators.push(FormValidators.forStudyTitle(submService, studyAccno));
+      }
     }
 
     return validators;
@@ -252,11 +291,51 @@ export class CustomErrorMessages {
   }
 }
 
+export class CustomWarningsDefinition {
+  static for(): any {
+    return {
+      uniqueSubmission: (error: { value: string; payload: SubmissionListItem[] }) => {
+        const submissionsCount = error.payload.length;
+        const submissionText = pluralize('Submission', submissionsCount);
+        const countText = pluralize('have', submissionsCount);
+
+        return {
+          message: `${submissionText} with a similar title "${error.value}" ${countText} been found`,
+          payload: error.payload
+        };
+      }
+    };
+  }
+}
+
 export class ErrorMessages {
   static map(control: AbstractControl): string[] {
     const errors = control.errors || {};
     const messages = CustomErrorMessages.for(control);
 
     return Object.keys(errors).map((errorKey) => messages[errorKey](errors[errorKey]));
+  }
+}
+
+export class WarningMessages {
+  static map(control: CustomFormControl): { message: string; payload: any }[] {
+    const warnings = control.warnings || {};
+    const definitions = CustomWarningsDefinition.for();
+
+    return Object.keys(warnings).map((errorKey) => definitions[errorKey](warnings[errorKey]));
+  }
+
+  static getWarningParamByErrorKey<T>(control: CustomFormControl, paramName: string, errorKey: string): T | null {
+    const definitions = CustomWarningsDefinition.for();
+    const warnings = control.warnings || {};
+
+    // Only return warnings if control is valid to avoid polluting the control with messages.
+    if (warnings[errorKey] && control.status === 'VALID') {
+      const definition = definitions[errorKey](warnings[errorKey]);
+
+      return definition ? definition[paramName] : null;
+    }
+
+    return null;
   }
 }

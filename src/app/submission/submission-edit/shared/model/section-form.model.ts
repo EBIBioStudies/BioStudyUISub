@@ -7,6 +7,7 @@ import { ControlGroupRef } from '../control-reference';
 import { FieldControl } from './field-control.model';
 import { TableForm } from './table-form.model';
 import { StructureChangeEvent } from '../structure-change-event';
+import { SubmissionService } from 'app/submission/submission-shared/submission.service';
 
 export class SectionForm extends FormBase {
   readonly tableForms: TableForm[] = [];
@@ -20,7 +21,12 @@ export class SectionForm extends FormBase {
   private sb: Map<string, Subscription> = new Map<string, Subscription>();
   private sectionRef: ControlGroupRef;
 
-  constructor(readonly section: Section, readonly parent?: SectionForm) {
+  constructor(
+    private submService: SubmissionService,
+    private studyAccno: string,
+    readonly section: Section,
+    readonly parent?: SectionForm
+  ) {
     super(
       new FormGroup({
         fields: new FormGroup({}),
@@ -175,13 +181,13 @@ export class SectionForm extends FormBase {
   }
 
   private addFieldControl(field: Field): void {
-    const fieldControl = new FieldControl(field, this.sectionRef.fieldRef(field));
+    const fieldControl = new FieldControl(field, this.sectionRef.fieldRef(field), this.submService, this.studyAccno);
     this.fieldControls.push(fieldControl);
     this.fieldFormGroup.addControl(field.id, fieldControl.control);
   }
 
   private addSubsectionForm(section: Section): SectionForm {
-    const sectionForm = new SectionForm(section, this);
+    const sectionForm = new SectionForm(this.submService, this.studyAccno, section, this);
     this.subsectionForms.push(sectionForm);
     this.subsectionFormGroups.addControl(section.id, sectionForm.form);
     return sectionForm;

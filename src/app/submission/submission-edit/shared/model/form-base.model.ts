@@ -26,6 +26,10 @@ export class FormBase {
     return this.form.valid;
   }
 
+  get pending(): boolean {
+    return this.form.pending;
+  }
+
   controls(): FormControl[] {
     return controlToList(this.form).reverse();
   }

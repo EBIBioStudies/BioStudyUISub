@@ -11,7 +11,10 @@ export const biaTemplate = {
       {
         name: 'Title',
         icon: 'fa-heading',
-        valueType: { name: 'largetext' },
+        valueType: {
+          name: 'largetext',
+          isStudyTitle: true
+        },
         display: 'required'
       },
       {
