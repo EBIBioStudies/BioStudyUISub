@@ -12,7 +12,8 @@ export const proteinDesignsTemplate = {
         display: 'required',
         valueType: {
           name: 'largetext',
-          minlength: 25
+          minlength: 25,
+          isStudyTitle: true
         }
       },
       {
