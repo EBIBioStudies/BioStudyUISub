@@ -19,7 +19,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let submission of similarSubmissions">
-        <th scope="row">{{submission.accno}}</th>
+        <th scope="row"><a href="/edit/{{submission.accno}}" target="_blank">{{submission.accno}}</a></th>
         <td>{{submission.title}}</td>
         <td><a href="/edit/{{submission.accno}}" target="_blank">Open</a></td>
       </tr>
