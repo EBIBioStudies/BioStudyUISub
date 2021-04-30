@@ -50,6 +50,10 @@ export class UserSession {
     return this.token() === '';
   }
 
+  hasSessionExpired(): boolean {
+    return this.userCookies.hasSessionExpired(this.appConfig.environment);
+  }
+
   token(): string {
     return this.userCookies.getLoginToken();
   }

@@ -5,12 +5,18 @@ export class ErrorMessageService {
   private defaultMessage: string = `Something went wrong at our side, sorry for the inconvenience.
     Please try again later and if the problem persists drop an email to`;
 
+  private sessionExpired: string = 'Your session has expired. Please login again to continue working.';
+
   getMessage(): string {
     return this.buildErrorMessage();
   }
 
   getPlainMessage(): string {
     return this.buildErrorMessage(true);
+  }
+
+  getSessionExpiredMessage(): string {
+    return this.sessionExpired;
   }
 
   private buildErrorMessage(plain: boolean = false): string {
