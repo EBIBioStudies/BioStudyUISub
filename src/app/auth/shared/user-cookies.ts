@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class UserCookies {
-  COOKIE_EXPIRES: number = 365;
+  COOKIE_EXPIRES: number = 30;
   COOKIE_NAME: string = 'BioStudiesToken';
   COOKIE_PATH: string = '/';
   USER: string = 'BioStudiesUser';
@@ -15,8 +15,8 @@ export class UserCookies {
   constructor(private cookieService: CookieService) {}
 
   destroyLoginToken(environment: string): void {
-    this.cookieService.delete(this.COOKIE_NAME, this.COOKIE_PATH);
-    this.cookieService.delete(this.getBackendCookieWithEnv(environment), this.COOKIE_PATH);
+    this.cookieService.delete(this.COOKIE_NAME, this.COOKIE_PATH, undefined, true, 'Strict');
+    this.cookieService.delete(this.getBackendCookieWithEnv(environment), this.COOKIE_PATH, undefined, true, 'Strict');
   }
 
   destroyUser(): void {
@@ -31,9 +31,26 @@ export class UserCookies {
     return JSON.parse(localStorage.getItem(this.USER) || '{}');
   }
 
+  hasSessionExpired(environment: string): boolean {
+    const isUserStored = Object.keys(this.getUser()).length > 0;
+    const isCookiePresent =
+      this.cookieService.check(this.COOKIE_NAME) && this.cookieService.check(this.getBackendCookieWithEnv(environment));
+
+    // If the app still has the user data but the cookie is not there, it considers the session has expired.
+    return isUserStored && !isCookiePresent;
+  }
+
   setLoginToken(token: string, environment: string): void {
-    this.cookieService.set(this.COOKIE_NAME, token, this.COOKIE_EXPIRES, this.COOKIE_PATH);
-    this.cookieService.set(this.getBackendCookieWithEnv(environment), token, this.COOKIE_EXPIRES, this.COOKIE_PATH);
+    this.cookieService.set(this.COOKIE_NAME, token, this.COOKIE_EXPIRES, this.COOKIE_PATH, undefined, true, 'Strict');
+    this.cookieService.set(
+      this.getBackendCookieWithEnv(environment),
+      token,
+      this.COOKIE_EXPIRES,
+      this.COOKIE_PATH,
+      undefined,
+      true,
+      'Strict'
+    );
   }
 
   setUser(user: UserInfo): void {
