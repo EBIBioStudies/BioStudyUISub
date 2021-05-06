@@ -15,8 +15,8 @@ export class UserCookies {
   constructor(private cookieService: CookieService) {}
 
   destroyLoginToken(environment: string): void {
-    this.cookieService.delete(this.COOKIE_NAME, this.COOKIE_PATH, undefined, true, 'Strict');
-    this.cookieService.delete(this.getBackendCookieWithEnv(environment), this.COOKIE_PATH, undefined, true, 'Strict');
+    this.cookieService.delete(this.COOKIE_NAME, this.COOKIE_PATH, undefined, false, 'Strict');
+    this.cookieService.delete(this.getBackendCookieWithEnv(environment), this.COOKIE_PATH, undefined, false, 'Strict');
   }
 
   destroyUser(): void {
@@ -41,14 +41,14 @@ export class UserCookies {
   }
 
   setLoginToken(token: string, environment: string): void {
-    this.cookieService.set(this.COOKIE_NAME, token, this.COOKIE_EXPIRES, this.COOKIE_PATH, undefined, true, 'Strict');
+    this.cookieService.set(this.COOKIE_NAME, token, this.COOKIE_EXPIRES, this.COOKIE_PATH, undefined, false, 'Strict');
     this.cookieService.set(
       this.getBackendCookieWithEnv(environment),
       token,
       this.COOKIE_EXPIRES,
       this.COOKIE_PATH,
       undefined,
-      true,
+      false,
       'Strict'
     );
   }
