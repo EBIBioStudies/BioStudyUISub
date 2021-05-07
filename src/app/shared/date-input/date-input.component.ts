@@ -1,7 +1,7 @@
-import { Component, ElementRef, forwardRef, Input, ViewChild, OnInit, HostListener } from '@angular/core';
+import { Component, forwardRef, Input, ViewChild, OnInit, HostListener } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BsDatepickerConfig, BsDatepickerDirective } from 'ngx-bootstrap/datepicker';
-import { formatDate } from 'ngx-bootstrap/chronos';
+import { formatDate, isDateValid, parseDate } from 'ngx-bootstrap/chronos';
 import { isEqualDate, isDefinedAndNotEmpty } from 'app/utils';
 import { CustomFormControl } from 'app/submission/submission-edit/shared/model/custom-form-control.model';
 import { AppConfig } from 'app/app.config';
@@ -45,9 +45,8 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
    * its default formats.
    * @param config - Configuration object for the datepicker directive.
    * @param appConfig - Global configuration object with app-wide settings.
-   * @param rootEl - Reference to the component's wrapping element
    */
-  constructor(config: BsDatepickerConfig, private appConfig: AppConfig, private rootEl: ElementRef) {
+  constructor(config: BsDatepickerConfig, private appConfig: AppConfig) {
     config.showWeekNumbers = false;
   }
 
@@ -94,18 +93,7 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
    * @see {@link https://valor-software.com/ngx-bootstrap/#/datepicker}
    */
   onPickerSet(dateObj: Date, isChange: boolean = this.datepicker.isOpen): void {
-    if (dateObj && !isEqualDate(dateObj, this.rawDateValue)) {
-      this.rawDateValue = dateObj;
-      this.inputDateValue = formatDate(dateObj, this.appConfig.dateInputFormat);
-
-      // Formats to ISO as backend expect such format.
-      const formattedDate = dateObj.toISOString();
-
-      // Propagates the date change through the DOM if so wished.
-      if (isChange) {
-        this.onChange(formattedDate);
-      }
-    }
+    this.setDate(dateObj, isChange);
   }
 
   /**
@@ -124,6 +112,19 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
   @HostListener('window:scroll', ['$event'])
   onScrollEvent(): void {
     this.datepicker.hide();
+  }
+
+  onInputClick(): void {
+    if (!this.readonly) {
+      this.datepicker.toggle();
+    }
+  }
+
+  onInputChange($event): void {
+    const { value } = $event.target;
+    const parsedDate = parseDate(value, this.appConfig.dateInputFormat);
+
+    this.setDate(new Date(parsedDate), true);
   }
 
   /**
@@ -159,6 +160,24 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
   writeValue(value: any): void {
     if (isDefinedAndNotEmpty(value)) {
       this.onPickerSet(new Date(value));
+    }
+  }
+
+  private setDate(dateObj: Date, isChange: boolean): void {
+    if (!isDateValid(dateObj)) {
+      this.onChange('Invalid date');
+    } else if (!isEqualDate(dateObj, this.rawDateValue)) {
+      this.rawDateValue = dateObj;
+      this.inputDateValue = formatDate(dateObj, this.appConfig.dateInputFormat);
+      this.datepicker.bsValue = dateObj;
+
+      // Formats to ISO as backend expect such format.
+      const formattedDate = dateObj.toISOString();
+
+      // Propagates the date change through the DOM if so wished.
+      if (isChange) {
+        this.onChange(formattedDate);
+      }
     }
   }
 

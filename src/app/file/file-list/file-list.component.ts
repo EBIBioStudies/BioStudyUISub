@@ -46,7 +46,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     this.gridOptions = {
       onGridReady: () => {
         if (this.gridOptions && this.gridOptions.api) {
-          this.gridOptions.api.sizeColumnsToFit();
+          this.gridOptions.api?.sizeColumnsToFit();
         }
       },
       rowHeight: 40,

@@ -34,5 +34,5 @@
     </st-input-value>
   </div>
   <div class="invalid-feedback" *ngIf="hasErrors">{{errors}}</div>
-  <st-unique-submission-warning [fieldControl]="fieldControl"></st-unique-submission-warning>
+  <st-unique-submission-warning *ngIf="!isReadonly" [fieldControl]="fieldControl"></st-unique-submission-warning>
 </div>
