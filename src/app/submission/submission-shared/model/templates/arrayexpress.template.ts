@@ -18,6 +18,7 @@ export const arrayExpressTemplate = {
       },
       {
         name: 'ReleaseDate',
+        title: 'Release Date',
         icon: 'fa-calendar-alt',
         display: 'required',
         valueType: {
@@ -104,7 +105,6 @@ export const arrayExpressTemplate = {
       {
         name: 'Publication',
         display: 'optional',
-        title: 'Add Publications',
         description:
           'Add the bibliography relevant to the study. Autofill is available when searching by ' +
           '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pubmed/">PubMed</a> identifier. ' +

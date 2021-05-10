@@ -28,7 +28,7 @@
       class="list-group-item list-group-item-action d-flex justify-content-between align-items-center bg-transparent text-white border-0">
       <div class="text-truncate pr-2">
         <i class="entry-item fas {{control.ref.icon}}"></i>
-        {{!collapsed ? '&nbsp;' + control.ref.name + '&nbsp;' : ''}}
+        {{!collapsed ? '&nbsp;' + control.ref.displayName + '&nbsp;' : ''}}
       </div>
       <span *ngIf="!collapsed" class="badge badge-danger"
         tooltip="{{collapsed ? '&quot;' + control.ref.name + '&quot; field is ' + tipText(control.errors) : 'Highlight field on the form'}}"

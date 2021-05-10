@@ -19,6 +19,7 @@ export const defaultTemplate = {
       },
       {
         name: 'ReleaseDate',
+        title: 'Release Date',
         icon: 'fa-calendar-alt',
         display: 'required',
         valueType: {
@@ -135,7 +136,6 @@ export const defaultTemplate = {
     tableTypes: [
       {
         name: 'Contact',
-        title: 'Add Contacts',
         description: 'Add the contact details for the authors involved in the study.',
         icon: 'fa-address-card',
         display: 'required',
@@ -250,7 +250,6 @@ export const defaultTemplate = {
       },
       {
         name: 'Link',
-        title: 'Add Links',
         description:
           'Provide pointers to data held in external databases or to related information on the web. ' +
           'Compact URIs from <a target="_blank" href="https://www.ebi.ac.uk/miriam/main/collections">Identifiers.org</a> ' +
@@ -273,7 +272,6 @@ export const defaultTemplate = {
       },
       {
         name: 'File',
-        title: 'Add Files',
         description: 'List the data files for the study and describe their respective scopes.',
         icon: 'fa-file',
         uniqueCols: true,
@@ -298,7 +296,6 @@ export const defaultTemplate = {
       },
       {
         name: 'Publication',
-        title: 'Add Publications',
         description:
           'Add the bibliography relevant to the study. Autofill is available when searching by ' +
           '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pubmed/">PubMed</a> identifier. ' +

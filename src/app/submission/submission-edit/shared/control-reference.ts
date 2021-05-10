@@ -8,8 +8,13 @@ export class ControlRef {
     readonly id: string,
     readonly name: string = '',
     readonly parentRef?: ControlGroupRef,
-    readonly icon: string = 'fa-square'
+    readonly icon: string = 'fa-square',
+    readonly title: string = ''
   ) {}
+
+  get displayName(): string {
+    return this.title || this.name;
+  }
 
   get parentName(): string {
     return this.parentRef ? this.parentRef.name : '';
@@ -73,16 +78,16 @@ export class ControlGroupRef {
   }
 
   fieldRef(field: Field): ControlRef {
-    return this.createRef(field.id, field.name, field.type.icon);
+    return this.createRef(field.id, field.name, field.type.icon, field.title);
   }
 
   rowValueRef(column: Attribute, rowId: string): ControlRef {
     return this.createRef(column.id + '#' + rowId, column.name);
   }
 
-  private createRef(id: string, name: string, icon?: string): ControlRef {
+  private createRef(id: string, name: string, icon?: string, title?: string): ControlRef {
     const parentName = this.tableName || this.sectionName;
     const uniqueId = [parentName, id].join('_');
-    return new ControlRef(uniqueId, name, this, icon || this.icon);
+    return new ControlRef(uniqueId, name, this, icon || this.icon, title);
   }
 }

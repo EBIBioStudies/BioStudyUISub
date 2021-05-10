@@ -365,6 +365,10 @@ export class Field {
     return this.type.name;
   }
 
+  get title(): string {
+    return this.type.title;
+  }
+
   get valueType(): ValueType {
     return this.type.valueType;
   }

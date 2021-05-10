@@ -102,7 +102,6 @@ export const euToxRiskTemplate = {
       }
     ],
     annotationsType: {
-      title: 'Describe your study',
       icon: 'fa-tag',
       description: 'Provide any additional details that may help discover or interpret the study.',
       columnTypes: [
@@ -124,7 +123,6 @@ export const euToxRiskTemplate = {
     tableTypes: [
       {
         name: 'Contact',
-        title: 'Add Contacts',
         icon: 'fa-address-card',
         description: 'Add the contact details for the authors involved in the study.',
         uniqueCols: true,
@@ -208,7 +206,6 @@ export const euToxRiskTemplate = {
       },
       {
         name: 'Endpoint',
-        title: 'Add endpoints',
         icon: 'fa-medkit',
         description: "Provide at least the method and analytical measure of the study's endpoints.",
         uniqueCols: true,
@@ -235,7 +232,6 @@ export const euToxRiskTemplate = {
       },
       {
         name: 'Compound',
-        title: 'Add compounds',
         icon: 'fa-flask',
         description:
           'List all parent compounds by their most common chemical name. ' +
@@ -295,7 +291,6 @@ export const euToxRiskTemplate = {
       },
       {
         name: 'Link',
-        title: 'Add Links',
         description:
           'Provide pointers to data held in external databases or to related information on the web. ' +
           'Compact URIs from <a target="_blank" href="https://www.ebi.ac.uk/miriam/main/collections">Identifiers.org</a> ' +
@@ -317,7 +312,6 @@ export const euToxRiskTemplate = {
       },
       {
         name: 'File',
-        title: 'Add Files',
         description: 'List the data files for the study and describe their respective scopes.',
         icon: 'fa-file',
         uniqueCols: true,
@@ -341,7 +335,6 @@ export const euToxRiskTemplate = {
       },
       {
         name: 'Publication',
-        title: 'Add Publications',
         description:
           'Add the bibliography relevant to the study. Autofill is available when searching by ' +
           '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pubmed/">PubMed</a> identifier. ' +
