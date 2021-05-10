@@ -1,7 +1,6 @@
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { Component, Input, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Option } from 'fp-ts/lib/Option';
 import { Subject, Subscription } from 'rxjs';
 import { UserData } from 'app/auth/shared';
 import { takeUntil } from 'rxjs/operators';
@@ -49,7 +48,7 @@ class DataTypeControl {
   }
 
   get prettyName(): string {
-    return this.type.name.replace(/([a-z])([A-Z])/g, '$1 $2');
+    return this.type.title || this.type.name.replace(/([a-z])([A-Z])/g, '$1 $2');
   }
 
   reset(): void {

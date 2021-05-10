@@ -40,7 +40,7 @@ export class SubmFieldComponent {
   }
 
   get fieldName(): string {
-    return this.fieldControl.name;
+    return this.fieldType.title || this.fieldControl.name;
   }
 
   get valueType(): ValueType {

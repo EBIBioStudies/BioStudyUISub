@@ -157,7 +157,6 @@ export const hecatosTemplate = {
       }
     ],
     annotationsType: {
-      title: 'Describe your study',
       icon: 'fa-tag',
       description: 'Provide any additional details that may help discover or interpret the study.',
       columnTypes: [
@@ -222,7 +221,6 @@ export const hecatosTemplate = {
     tableTypes: [
       {
         name: 'Contact',
-        title: 'Add Contacts',
         icon: 'fa-address-card',
         description: 'Add the contact details for the authors involved in the study.',
         uniqueCols: true,
@@ -291,7 +289,6 @@ export const hecatosTemplate = {
       },
       {
         name: 'Link',
-        title: 'Add Links',
         description:
           'Add the bibliography relevant to the study. Autofill is available when searching by ' +
           '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pubmed/">PubMed</a> identifier. ' +
@@ -314,7 +311,6 @@ export const hecatosTemplate = {
       },
       {
         name: 'File',
-        title: 'Add Files',
         description: 'List the data files for the study and describe their respective scopes.',
         icon: 'fa-file',
         uniqueCols: true,
@@ -348,7 +344,6 @@ export const hecatosTemplate = {
       },
       {
         name: 'Publication',
-        title: 'Add Publications',
         description:
           'Add the bibliography relevant to the study. Autofill is available when searching by ' +
           '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pubmed/">PubMed</a> identifier. For other IDs, you ' +
@@ -402,7 +397,6 @@ export const hecatosTemplate = {
       },
       {
         name: 'ProtocolName',
-        title: 'Add protocols',
         description: 'List the details of any experimental protocols employed.',
         icon: 'fa-cogs',
         uniqueCols: true,

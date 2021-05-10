@@ -19,6 +19,7 @@ export const biaTemplate = {
       },
       {
         name: 'ReleaseDate',
+        title: 'Release Date',
         icon: 'fa-calendar-alt',
         display: 'required',
         valueType: {
@@ -120,7 +121,6 @@ export const biaTemplate = {
     tableTypes: [
       {
         name: 'Keywords',
-        title: 'Add Keywords',
         icon: 'fa-address-card',
         description: 'Add keywords',
         uniqueCols: true,
@@ -135,7 +135,6 @@ export const biaTemplate = {
       },
       {
         name: 'Contact',
-        title: 'Add Contacts',
         icon: 'fa-address-card',
         description: 'Add the contact details for the authors involved in the study.',
         uniqueCols: true,
@@ -279,7 +278,6 @@ export const biaTemplate = {
         description: 'Add the protocols involved in the study.',
         icon: 'fa-address-card',
         name: 'Study Protocols',
-        title: 'Study Protocols',
         uniqueCols: true,
         columnTypes: [
           {
@@ -311,7 +309,6 @@ export const biaTemplate = {
       },
       {
         name: 'Link',
-        title: 'Add Links',
         description:
           'Provide pointers to data held in external databases or to related information on the web. ' +
           'Compact URIs from <a target="_blank" href="https://www.ebi.ac.uk/miriam/main/collections">Identifiers.org</a> ' +
@@ -334,7 +331,6 @@ export const biaTemplate = {
       },
       {
         name: 'Publication',
-        title: 'Add Publications',
         description:
           'Add the bibliography relevant to the study. Autofill is available when searching by ' +
           '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pubmed/">PubMed</a> identifier. For other IDs, you ' +
@@ -505,7 +501,6 @@ export const biaTemplate = {
           },
           {
             name: 'Other data files',
-            title: 'Add other data files',
             description: 'List other data files for the imaging study',
             icon: 'fa-file',
             uniqueCols: true,
@@ -533,7 +528,6 @@ export const biaTemplate = {
           },
           {
             name: 'Protocols',
-            title: 'Protocols',
             icon: 'fa-address-card',
             description: 'Add the protocols used in this study component.',
             uniqueCols: true,

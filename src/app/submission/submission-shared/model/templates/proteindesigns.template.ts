@@ -17,7 +17,8 @@ export const proteinDesignsTemplate = {
         }
       },
       {
-        name: 'Release Date',
+        name: 'ReleaseDate',
+        title: 'Release Date',
         icon: 'fa-calendar-alt',
         display: 'required',
         valueType: {
@@ -140,7 +141,6 @@ export const proteinDesignsTemplate = {
     tableTypes: [
       {
         name: 'SolutionCharacterization',
-        title: 'Solution characterization (structure) / Circular Dichroism (CD)',
         description: 'Solution characterization (structure) / Circular Dichroism (CD)',
         icon: 'fa-book',
         display: 'desirable',
@@ -160,7 +160,6 @@ export const proteinDesignsTemplate = {
       },
       {
         name: 'SolutionCharacterizationFluorescence',
-        title: 'Solution characterisation (structure) / fluorescence',
         description: 'Solution characterisation (structure) / fluorescence',
         icon: 'fa-book',
         display: 'desirable',
@@ -180,7 +179,6 @@ export const proteinDesignsTemplate = {
       },
       {
         name: 'File',
-        title: '',
         description: '3D structural confirmation of the design (Format supported by PDB)',
         icon: 'fa-file',
         display: 'desirable',
@@ -195,7 +193,6 @@ export const proteinDesignsTemplate = {
       },
       {
         name: 'Contact',
-        title: 'Add Contacts',
         description: 'Add the contact details for the authors involved in the study.',
         icon: 'fa-address-card',
         display: 'required',

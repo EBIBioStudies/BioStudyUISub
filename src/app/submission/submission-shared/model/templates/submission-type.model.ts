@@ -69,7 +69,8 @@ export abstract class TypeBase {
   constructor(
     public typeName: string,
     readonly tmplBased: boolean,
-    private scope: TypeScope<TypeBase> = GLOBAL_TYPE_SCOPE
+    private scope: TypeScope<TypeBase> = GLOBAL_TYPE_SCOPE,
+    public typeTitle?: string
   ) {
     this.typeName = isStringDefined(typeName) ? typeName.trim() : '';
 
@@ -82,6 +83,10 @@ export abstract class TypeBase {
     }
 
     scope.set(this.typeName, this);
+  }
+
+  get title(): string {
+    return this.typeTitle || '';
   }
 
   get name(): string {
@@ -247,9 +252,10 @@ export class FieldType extends TypeBase {
     name: string,
     data: Partial<FieldType> = {},
     scope?: TypeScope<TypeBase>,
-    parentDisplayType: DisplayType = DisplayType.OPTIONAL
+    parentDisplayType: DisplayType = DisplayType.OPTIONAL,
+    title?: string
   ) {
-    super(name, true, scope);
+    super(name, true, scope, title);
 
     this.valueType = ValueTypeFactory.create(data.valueType || {});
     this.icon = data.icon || 'fa-pencil-square-o';
@@ -268,7 +274,6 @@ export class TableType extends TypeBase {
   readonly displayType: DisplayType;
   readonly icon: string;
   readonly singleRow: boolean;
-  readonly title: string;
   readonly uniqueCols: boolean;
   readonly allowImport: boolean;
 
@@ -284,7 +289,6 @@ export class TableType extends TypeBase {
     super(name, isTemplBased, scope);
 
     data = data || {};
-    this.title = data.title || 'Add ' + this.name;
     this.description = data.description || '';
     this.singleRow = data.singleRow === true;
     this.uniqueCols = data.uniqueCols === true;
@@ -417,7 +421,7 @@ export class SectionType extends TypeBase {
     this.sectionExample = data.sectionExample || '';
 
     (data.fieldTypes || []).forEach(
-      (fieldType) => new FieldType(fieldType.name, fieldType, this.fieldScope, this.displayType)
+      (fieldType) => new FieldType(fieldType.name, fieldType, this.fieldScope, this.displayType, fieldType.title)
     );
     (data.tableTypes || []).forEach(
       (tableType) => new TableType(tableType.name, tableType, this.tableScope, isTemplBased, this.displayType)
