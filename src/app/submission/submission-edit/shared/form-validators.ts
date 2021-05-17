@@ -91,24 +91,6 @@ export class FormValidators {
     return isValueValid ? null : { format: { value } };
   };
 
-  static forStudyTitle = (submService: SubmissionService, studyAccno: string): AsyncValidatorFn => {
-    return (control: CustomFormControl): Observable<ValidationErrors | null> => {
-      return submService.getSubmissions(true, { keywords: control.value }).pipe(
-        map((submissions) => {
-          const differentSubmissions = submissions.filter((submission) => submission.accno !== studyAccno);
-          control.warnings =
-            differentSubmissions.length > 0
-              ? { uniqueSubmission: { value: control.value, payload: differentSubmissions } }
-              : {};
-
-          return null;
-        }),
-        catchError(() => of(null)),
-        first()
-      );
-    };
-  };
-
   static uniqueValues: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const columns = control as FormGroup;
     const values = Object.keys(columns.controls)
@@ -237,21 +219,6 @@ export class SubmFormValidators {
 
     if (valueType.is(ValueTypeName.protein)) {
       validators.push(FormValidators.formatProtein);
-    }
-
-    return validators;
-  }
-
-  static forAsyncField(field: Field, submService: SubmissionService, studyAccno: string): AsyncValidatorFn[] {
-    const validators: AsyncValidatorFn[] = [];
-    const valueType = field.type.valueType;
-
-    if (valueType.is(ValueTypeName.text, ValueTypeName.largetext)) {
-      const textValueType = valueType as TextValueType;
-
-      if (textValueType.isStudyTitle) {
-        validators.push(FormValidators.forStudyTitle(submService, studyAccno));
-      }
     }
 
     return validators;

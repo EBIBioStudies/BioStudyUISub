@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { FieldType, ValueType, TextValueType } from 'app/submission/submission-shared/model/templates';
 import { isStringEmpty } from 'app/utils';
 import { FieldControl } from '../../shared/model/field-control.model';
@@ -29,11 +29,17 @@ class ValueLength {
   selector: 'st-subm-field',
   templateUrl: './subm-field.component.html'
 })
-export class SubmFieldComponent {
+export class SubmFieldComponent implements OnDestroy {
   @Input() fieldControl!: FieldControl;
   @Input() readonly = false;
 
   private valueLen?: ValueLength;
+
+  ngOnDestroy(): void {
+    if (this.fieldControl) {
+      this.fieldControl.unsubscribe();
+    }
+  }
 
   get fieldType(): FieldType {
     return this.fieldControl.type;
