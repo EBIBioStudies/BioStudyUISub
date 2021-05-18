@@ -151,7 +151,7 @@ export class PageTabToSubmissionService {
       tables.push({
         type: 'File',
         entries: files
-          .map((file) => [{ name: 'Path', value: file.path } as PtAttribute].concat(file.attributes || []))
+          .map((file) => [{ name: 'File', value: file.path } as PtAttribute].concat(file.attributes || []))
           .map((file) => this.pageTabAttributesToAttributeData(file))
       } as TableData);
     }
