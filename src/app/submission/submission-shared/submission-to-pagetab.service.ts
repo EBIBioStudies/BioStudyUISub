@@ -77,7 +77,7 @@ export class SubmissionToPageTabService {
   }
 
   private attributesAsFile(attributes: PtAttribute[]): PtFile {
-    const isPathAttr = (at: PtAttribute) => isStringDefined(at.name) && isEqualIgnoringCase(at.name!, 'path');
+    const isPathAttr = (at: PtAttribute) => isStringDefined(at.name) && isEqualIgnoringCase(at.name!, 'file');
     const attr = attributes.find((at) => isPathAttr(at));
     const attrs = attributes.filter((at) => !isPathAttr(at) && !isAttributeEmpty(at));
 
