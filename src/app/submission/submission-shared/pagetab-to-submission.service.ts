@@ -129,7 +129,7 @@ export class PageTabToSubmissionService {
     const subsections = flatArray(ptSection.subsections || []);
     const contacts = authorsToContacts(subsections.filter((section) => !this.hasSubsections(section)));
     const tableSections = pageTabToSubmissionProtocols(contacts);
-    const keywords = findAttributesByName('Keywords', ptSection.attributes || []);
+    const keywords = findAttributesByName('Keyword', ptSection.attributes || []);
 
     const tables: TableData[] = [];
     const hasLinks = links.length > 0;
@@ -159,7 +159,7 @@ export class PageTabToSubmissionService {
     if (hasLibraryFile) {
       tables.push({
         type: 'LibraryFile',
-        entries: [[{ name: 'Path', value: ptSection.libraryFile } as PtAttribute]]
+        entries: [[{ name: 'File', value: ptSection.libraryFile } as PtAttribute]]
       } as TableData);
     }
 
