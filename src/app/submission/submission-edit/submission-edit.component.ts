@@ -1,10 +1,10 @@
-import { PageTabSubmission } from 'app/submission/submission-shared/model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { Location } from '@angular/common';
 import { Observable, of, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
+import { ExtSubmissionType } from 'app/submission/submission-shared/model/ext-submission-types';
 import { ModalService } from 'app/shared/modal.service';
 import { SectionForm } from './shared/model/section-form.model';
 import { SubmEditService } from './shared/subm-edit.service';
@@ -14,6 +14,7 @@ import { SubmValidationErrors } from '../submission-shared/model';
 import { SubmitLog } from '../submission-shared/submission.service';
 import { scrollTop } from 'app/utils';
 import { ErrorService } from 'app/core/errors/error.service';
+import { AttributeNames } from '../submission-shared/utils/attribute.utils';
 
 class SubmitOperation {
   static CREATE = new SubmitOperation();
@@ -115,14 +116,16 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe(
-        (ptSubmission: PageTabSubmission) => {
+        (submission: ExtSubmissionType) => {
           if (this.hasJustCreated) {
             this.locService.replaceState('/edit/' + this.accno);
             this.readonly = false;
           }
 
           if (this.sideBar) {
-            const attachToAttr = ptSubmission.findAttributeByName('attachto');
+            const attachToAttr = submission.attributes?.find(
+              (attr) => attr.name.toLowerCase() === AttributeNames.ATTACH_TO.toLowerCase()
+            );
 
             if (attachToAttr) {
               const attachToValue = attachToAttr.value as string;

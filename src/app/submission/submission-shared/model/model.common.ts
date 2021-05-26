@@ -1,17 +1,19 @@
+import { Tag } from './submission-common-types';
+
 export class NameAndValue {
   constructor(readonly name: string = '', readonly value: string = '') {}
 }
 
-export class Tag {
-  constructor(readonly classifier: string = '', readonly tag: string = '') {}
+export class SubmissionTag implements Tag {
+  constructor(readonly name: string = '', readonly tag: string = '') {}
 
   get value(): string {
-    return this.classifier.toLowerCase() + ':' + this.tag.toLowerCase();
+    return this.name.toLowerCase() + ':' + this.tag.toLowerCase();
   }
 
-  equals(other: Tag): boolean {
+  equals(other: SubmissionTag): boolean {
     return this.value === other.value;
   }
 }
 
-export const PAGE_TAG = new Tag('SubmissionElement', 'page');
+export const PAGE_TAG = new SubmissionTag('SubmissionElement', 'page');

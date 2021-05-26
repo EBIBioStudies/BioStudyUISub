@@ -1,6 +1,6 @@
-import { filter } from 'rxjs/operators';
 import { PtAttribute, PageTabSection } from './pagetab.model';
-import { isStringEmpty, isDefinedAndNotEmpty, isStringDefined, isAttributeEmpty } from 'app/utils';
+import { ExtAttributeType, ExtSectionType } from 'app/submission/submission-shared/model/ext-submission-types';
+import { isStringEmpty, isStringDefined } from 'app/utils';
 
 export interface Dictionary<T> {
   [key: string]: T | undefined;
@@ -23,7 +23,7 @@ export function getOrganizationFromSubsection(section, orgName): any {
   );
 }
 
-export function authorsToContacts(sections: PageTabSection[] = []): PageTabSection[] {
+export function authorsToContacts(sections: ExtSectionType[] = []): ExtSectionType[] {
   const isAffiliation = (s: Nullable<string>) => {
     return isStringDefined(s) && ['organization', 'organisation', 'affiliation'].includes(s!.toLowerCase());
   };
@@ -32,31 +32,25 @@ export function authorsToContacts(sections: PageTabSection[] = []): PageTabSecti
   const orgs = new Organisations();
 
   const affiliations: Dictionary<string> = sections
-    .filter((s) => isStringDefined(s.accno) && isAffiliation(s.type))
+    .filter((s) => isStringDefined(s.accNo) && isAffiliation(s.type))
     .reduce((result, section) => {
-      let nameAttribute: PtAttribute = { value: '' };
-
       if (section.attributes) {
-        nameAttribute = section.attributes.find((attribute) => attribute.name && isName(attribute.name)) || {
+        const nameAttribute = section.attributes.find((attribute) => attribute.name && isName(attribute.name)) || {
           value: ''
         };
-      }
 
-      result[section.accno!] = nameAttribute.value as string;
+        result[section.accNo!] = nameAttribute.value as string;
+      }
 
       return result;
     }, {} as Dictionary<string>);
 
-  const contacts = sections
-    .filter((section) => section.type && isAuthor(section.type))
-    .map((author) => ({ type: 'Contact', attributes: orgs.referencesToOrg(author, affiliations) } as PageTabSection));
-
   return sections
-    .filter((section) => section.type && !isAuthor(section.type) && !isAffiliation(section.type))
-    .concat(contacts);
+    .filter((section) => section.type && isAuthor(section.type))
+    .map((author) => ({ type: 'Contact', attributes: orgs.referencesToOrg(author, affiliations) } as ExtSectionType));
 }
 
-class Organisations {
+export class Organisations {
   private names: Dictionary<string> = {};
   private refs: Dictionary<string> = {};
 
@@ -92,14 +86,14 @@ class Organisations {
     return [...attributesWithoutOrg, ...references];
   }
 
-  referencesToOrg(author: PageTabSection, affiliations: Dictionary<string>): PtAttribute[] {
-    const attributes: PtAttribute[] = author.attributes || [];
+  referencesToOrg(author: ExtSectionType, affiliations: Dictionary<string>): ExtAttributeType[] {
+    const attributes: ExtAttributeType[] = author.attributes || [];
     const isAffiliation = isEqualTo('affiliation');
     const affiliationAttributes = attributes.filter((attribute) => isAffiliation(attribute.name));
     const otherAttributes = attributes.filter((attribute) => !isAffiliation(attribute.name));
 
     const referenceValues = affiliationAttributes.map((attribute) => {
-      const isReference: boolean = Boolean(attribute.reference || attribute.isReference);
+      const isReference: boolean = Boolean(attribute.reference || attribute.reference);
       const attributeValue = attribute.value as string;
 
       return isReference ? affiliations[attributeValue] || attributeValue : attributeValue;
@@ -165,13 +159,13 @@ export function contactsToAuthors(sections: PageTabSection[] = []): PageTabSecti
   const orgs = new Organisations();
 
   const contacts: PageTabSection[] = sections.filter((section) => isContact(section.type!));
-  const authors: PageTabSection[] = contacts.map(
-    (contact) =>
-      ({
-        type: 'Author',
-        attributes: orgs.orgToReferences(contact).filter((ref) => !isAttributeEmpty(ref))
-      } as PageTabSection)
-  );
+  // const authors: PageTabSection[] = contacts.map(
+  //   (contact) =>
+  //     ({
+  //       type: 'Author',
+  //       attributes: orgs.orgToReferences(contact).filter((ref) => !isAttributeEmpty(ref))
+  //     } as PageTabSection)
+  // );
 
   const affiliations: PageTabSection[] = orgs.list().map(
     (org) =>
@@ -182,8 +176,10 @@ export function contactsToAuthors(sections: PageTabSection[] = []): PageTabSecti
       } as PageTabSection)
   );
 
-  return sections
-    .filter((s) => !isContact(s.type!))
-    .concat(authors)
-    .concat(affiliations);
+  return (
+    sections
+      .filter((s) => !isContact(s.type!))
+      // .concat(authors)
+      .concat(affiliations)
+  );
 }

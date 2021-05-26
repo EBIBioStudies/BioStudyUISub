@@ -1,15 +1,17 @@
+import { ExtAttributeType } from 'app/submission/submission-shared/model/ext-submission-types';
+import { TableType } from './../templates/submission-type.model';
 import { isDefinedAndNotEmpty, isArrayEmpty, arrayUniqueValues, isStringDefined } from 'app/utils';
 import { nextId } from './submission.model.counter';
 import { Attribute } from './submission.model.attribute';
 import { ValueMap } from './submission.model.valuemap';
 import { Columns } from './submission.model.columns';
-import { NameAndValue, Tag } from '../model.common';
-import { DisplayType, TableType, FieldType, SectionType, SubmissionType, ValueType } from '../templates';
+import { AccessTag, NameValueType, Tag, TaggedData } from '../submission-common-types';
+import { DisplayType, FieldType, SectionType, SubmissionType, ValueType } from '../templates';
 import { AttributeValue } from './submission.model.attribute-value';
 
-export interface SubmissionSection {
-  subsections: Sections;
-}
+// export interface SubmissionSection {
+//   subsections: Sections;
+// }
 
 class Rows {
   private rows: Array<ValueMap> = [];
@@ -325,6 +327,10 @@ export class Tables {
     return this.tables.find((table) => table[property] === value);
   }
 
+  findByType(value: string): Table | undefined {
+    return this.tables.find((table) => table.typeName.toLocaleLowerCase() === value.toLocaleLowerCase());
+  }
+
   list(): Table[] {
     return this.tables.slice();
   }
@@ -431,14 +437,15 @@ export class Fields {
   }
 }
 
-export class Section implements SubmissionSection {
+// export class Section implements SubmissionSection {
+export class Section {
   readonly annotations: Table;
   readonly data: SectionData;
   readonly tables: Tables;
   readonly fields: Fields;
   readonly id: string;
   readonly sections: Sections;
-  readonly subsections: Sections;
+  // readonly subsections: Sections;
   readonly tags: Tags;
   readonly type: SectionType;
 
@@ -461,7 +468,7 @@ export class Section implements SubmissionSection {
     this.data = data;
     this.tables = new Tables(type, data.tables);
     this.sections = new Sections(type, data.sections);
-    this.subsections = new Sections(type, data.subsections);
+    // this.subsections = new Sections(type, []);
   }
 
   get accno(): string {
@@ -585,10 +592,10 @@ export class Submission {
   readonly type;
 
   /**
-   * Creates a new submission from PageTab-formatted data and pre-defined type definitions.
+   * Creates a new submission from extended-formatted data and pre-defined type definitions.
    * @see {@link PageTab}
    * @param type Type definitions object
-   * @param data Submission data in PageTab format.
+   * @param data Submission data in extended format.
    */
   constructor(type: SubmissionType, data: SubmissionData = {} as SubmissionData) {
     this.tags = Tags.create(data);
@@ -610,15 +617,19 @@ export class Submission {
   sectionPath(id: string): Section[] {
     return this.section.sectionPath(id);
   }
+
+  findAttributeByName(name: string): AttributeData | undefined {
+    return this.attributes?.find((attr) => attr.name?.toLowerCase() === name.toLowerCase());
+  }
 }
 
 export class Tags {
   private innerAccessTags: string[];
   private innerTags: Tag[];
 
-  constructor(tags: Tag[] = [], accessTags: string[] = []) {
+  constructor(tags: Tag[] = [], accessTags: AccessTag[] = []) {
     this.innerTags = tags.slice();
-    this.innerAccessTags = accessTags.slice();
+    this.innerAccessTags = accessTags.map((accessTag) => accessTag.name);
   }
 
   static create(data?: TaggedData): Tags {
@@ -637,21 +648,18 @@ export class Tags {
   }
 }
 
-export interface AttributeData {
+export interface AttributeData extends ExtAttributeType {
   name: string;
+  nameAttrs?: NameValueType[];
   reference?: boolean;
-  terms?: NameAndValue[];
+  terms?: NameValueType[];
   value?: string | string[];
+  valueAttrs?: NameValueType[];
 }
 
 export interface TableData {
   entries?: AttributeData[][];
   type?: string;
-}
-
-export interface TaggedData {
-  accessTags?: string[];
-  tags?: Tag[];
 }
 
 export interface SectionData extends TaggedData {

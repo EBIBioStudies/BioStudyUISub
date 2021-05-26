@@ -14,14 +14,15 @@ import { SubmissionType } from 'app/submission/submission-shared/model/templates
 import { UserData } from 'app/auth/shared';
 import { UserInfo } from 'app/auth/shared/model';
 import { PageTab, SelectValueType } from 'app/submission/submission-shared/model';
-import { PageTabToSubmissionService } from 'app/submission/submission-shared/pagetab-to-submission.service';
 import { SubmissionToPageTabService } from 'app/submission/submission-shared/submission-to-pagetab.service';
 import { isDefinedAndNotEmpty } from 'app/utils';
-import { PageTabSubmission } from 'app/submission/submission-shared/model/pagetab/pagetab.model';
 import { SubmissionService, SubmitResponse } from '../../submission-shared/submission.service';
 import { SectionForm } from './model/section-form.model';
-import { flatTables } from '../../utils/table.utils';
 import { StructureChangeEvent } from './structure-change-event';
+import { ExtSubmissionToSubmissionService } from 'app/submission/submission-shared/ext-submission-to-submission.service';
+import { ExtSubmissionType } from 'app/submission/submission-shared/model/ext-submission-types';
+import { SubmissionToExtSubmissionService } from 'app/submission/submission-shared/submittion-to-ext-submission.service';
+import { flatTables } from 'app/submission/submission-shared/utils/table.utils';
 
 class EditState {
   static EDITING = 'Editing';
@@ -125,8 +126,8 @@ export class SubmEditService {
   constructor(
     private userData: UserData,
     private submService: SubmissionService,
-    private submToPageTabService: SubmissionToPageTabService,
-    private pageTabToSubmService: PageTabToSubmissionService
+    private submissionToExtSubmissionService: SubmissionToExtSubmissionService,
+    private extSubmissionToSubmissionService: ExtSubmissionToSubmissionService
   ) {}
 
   get isSubmitting(): boolean {
@@ -157,7 +158,7 @@ export class SubmEditService {
     return this.submModel ? this.submModel.isRevised : false;
   }
 
-  loadSubmission(accno: string, setDefaults?: boolean): Observable<PageTabSubmission> {
+  loadSubmission(accno: string, setDefaults?: boolean): Observable<ExtSubmissionType> {
     this.editState.startLoading();
 
     return this.submService.getSubmission(accno).pipe(
@@ -165,7 +166,7 @@ export class SubmEditService {
         this.editState.stopLoading();
         this.createForm(draftSubm, accno, setDefaults);
 
-        return new PageTabSubmission(draftSubm);
+        return draftSubm;
       }),
       catchError((error) => {
         this.editState.stopLoading(error);
@@ -182,7 +183,7 @@ export class SubmEditService {
     this.submModel = new Submission(SubmissionType.defaultType());
   }
 
-  revert(): Observable<PageTab> {
+  revert(): Observable<ExtSubmissionType> {
     this.editState.startReverting();
 
     return this.submService.deleteDraft(this.accno).pipe(
@@ -203,9 +204,9 @@ export class SubmEditService {
 
   submit(): Observable<SubmitResponse> {
     this.editState.startSubmitting();
-    const pageTab = this.asPageTab(true);
+    const submission = this.toExtended(true);
 
-    return this.submService.submitDraft(pageTab, this.accno).pipe(
+    return this.submService.submitDraft(submission, this.accno).pipe(
       map((resp) => {
         this.editState.stopSubmitting();
         this.onSubmitFinished(resp);
@@ -255,17 +256,17 @@ export class SubmEditService {
     ];
   }
 
-  private asPageTab(isSubmit: boolean = false): PageTab {
-    return this.submToPageTabService.submissionToPageTab(this.submModel, isSubmit);
+  private toExtended(isSubmit: boolean = false): ExtSubmissionType {
+    return this.submissionToExtSubmissionService.submissionToExtSubmission(this.submModel, isSubmit);
   }
 
-  private createForm(draftSubm: PageTab, accno: string = '', setDefaults: boolean = false): void {
-    this.submModel = this.pageTabToSubmService.pageTab2Submission(draftSubm);
+  private createForm(draftSubm: ExtSubmissionType, accno: string = '', setDefaults: boolean = false): void {
+    this.submModel = this.extSubmissionToSubmissionService.extSubmissionToSubmission(draftSubm);
 
     if (accno.length !== 0) {
       this.accno = accno;
     } else {
-      this.accno = draftSubm.accno!;
+      this.accno = draftSubm.accNo!;
     }
 
     if (setDefaults) {
@@ -302,7 +303,7 @@ export class SubmEditService {
 
   private save(): void {
     this.editState.startSaving();
-    this.submService.updateDraft(this.accno, this.asPageTab()).subscribe(
+    this.submService.saveDraftSubmission(this.accno, this.toExtended()).subscribe(
       () => {
         this.onSaveFinished();
         this.editState.stopSaving();

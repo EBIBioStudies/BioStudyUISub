@@ -1,12 +1,13 @@
 import { PageTabSection, PtAttribute } from './pagetab.model';
 import { Dictionary, Nullable } from './pagetab-authors.utils';
+import { ExtAttributeType, ExtSectionType } from 'app/submission/submission-shared/model/ext-submission-types';
 import { isNotDefinedOrEmpty, isStringDefined } from 'app/utils';
 
 const isEqualTo = (value: string) => (s: Nullable<string>) => isStringDefined(s) && s!.toLowerCase() === value;
 const isComponentProtocol = isEqualTo('protocols');
 const isStudyProtocol = isEqualTo('study protocols');
 
-class Protocols {
+export class Protocols {
   private static instance: Protocols;
   private refs: Dictionary<string> = {};
 
@@ -88,24 +89,24 @@ export function submissionToPageTabProtocols(pageTabSections: PageTabSection[]):
     .concat(componentProtocolWithReference);
 }
 
-export function pageTabToSubmissionProtocols(pageTabSections: PageTabSection[]): PageTabSection[] {
+export function pageTabToSubmissionProtocols(pageTabSections: ExtSectionType[]): ExtSectionType[] {
   const protocols: Protocols = Protocols.getInstance();
-  const studyProtocols: PageTabSection[] = pageTabSections.filter((section) => isStudyProtocol(section.type));
-  const componentProtocols: PageTabSection[] = pageTabSections.filter((section) => isComponentProtocol(section.type));
+  const studyProtocols: ExtSectionType[] = pageTabSections.filter((section) => isStudyProtocol(section.type));
+  const componentProtocols: ExtSectionType[] = pageTabSections.filter((section) => isComponentProtocol(section.type));
 
   // Creates the reference for each study protocol on first load.
   studyProtocols.forEach((studyProtocol) => {
     const attributes = studyProtocol.attributes;
-    const nameAttribute = attributes!.find((attribute) => attribute.name === 'Name') || {};
-    const studyProtocolNameValue: string = (nameAttribute.value as string) || '';
-    const studyProtocolAccno: string = studyProtocol.accno || '';
+    const nameAttribute = attributes!.find((attribute) => attribute.name === 'Name') || { value: '' };
+    const studyProtocolNameValue: string = nameAttribute.value as string;
+    const studyProtocolAccno: string = studyProtocol.accNo || '';
 
     protocols.refFor(studyProtocolNameValue, studyProtocolAccno);
   });
 
   const componentProtocolsWithReferenceValue = componentProtocols.map((componentProtocol) => {
     const attributes = componentProtocol.attributes || [];
-    const protocolAttribute = attributes!.find((attribute) => attribute.name === 'Protocol') || {};
+    const protocolAttribute = attributes!.find((attribute) => attribute.name === 'Protocol') || { value: '' };
     const finalAttributes = attributes!.filter((attribute) => attribute.name !== 'Protocol') || [];
     const protocolAttributeValue = protocolAttribute.value as string;
 
@@ -113,13 +114,13 @@ export function pageTabToSubmissionProtocols(pageTabSections: PageTabSection[]):
       finalAttributes.push({
         name: 'Protocol',
         value: protocols.getRefValueByKey(protocolAttributeValue)
-      } as PtAttribute);
+      } as ExtAttributeType);
     }
 
     return {
       ...componentProtocol,
       attributes: finalAttributes
-    } as PageTabSection;
+    } as ExtSectionType;
   });
 
   return pageTabSections

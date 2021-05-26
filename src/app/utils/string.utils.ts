@@ -1,3 +1,5 @@
+import { isArrayEmpty } from './array.utils';
+
 export function isStringEmpty(value: string | undefined | null): boolean {
   return value !== undefined && value !== null && value.trim().length === 0;
 }
@@ -16,6 +18,14 @@ export function isNotDefinedOrEmpty(value: string | undefined | null): boolean {
 
 export function isEqualIgnoringCase(firstValue: string, secondValue: string): boolean {
   return firstValue.toLowerCase() === secondValue.toLowerCase();
+}
+
+export function isValueEmpty(value: string[] | string | undefined): boolean {
+  if (Array.isArray(value)) {
+    return isArrayEmpty(value);
+  }
+
+  return !isDefinedAndNotEmpty(value);
 }
 
 /**
