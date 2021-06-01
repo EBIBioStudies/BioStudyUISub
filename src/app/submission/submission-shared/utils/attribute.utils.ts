@@ -112,6 +112,18 @@ export function extractTableAttributes(table: Table, isSanitise: boolean): ExtAt
   return mappedTables.filter((mappedTable) => mappedTable.length > 0);
 }
 
+export function fieldAsAttribute(field: Field, displayType?: string): ExtAttributeType {
+  if (displayType) {
+    return {
+      name: field.name,
+      value: field.value,
+      valueAttrs: [{ name: 'display', value: displayType }]
+    } as ExtAttributeType;
+  }
+
+  return { name: field.name, value: field.value } as ExtAttributeType;
+}
+
 export function fieldsAsAttributes(fields: Field[], isSanitise: boolean): ExtAttributeType[] {
   const attributes: ExtAttributeType[] = [];
 
@@ -120,10 +132,10 @@ export function fieldsAsAttributes(fields: Field[], isSanitise: boolean): ExtAtt
       const fieldValue: string = field.value || '';
       const [richValue] = fieldValue.split('@');
 
-      attributes.push(this.fieldAsAttribute({ name: field.name, value: richValue } as Field, 'html'));
+      attributes.push(fieldAsAttribute({ name: field.name, value: richValue } as Field, 'html'));
     } else if (Array.isArray(field.value)) {
       field.value.forEach((value) => {
-        attributes.push(this.fieldAsAttribute({ name: field.name, value } as Field));
+        attributes.push(fieldAsAttribute({ name: field.name, value } as Field));
       });
     } else {
       attributes.push({ name: field.name, value: field.value, reference: false });

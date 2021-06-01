@@ -1,7 +1,7 @@
 import { compose } from 'app/utils';
 import { partition } from 'app/utils/array.utils';
 import { isValueEmpty } from 'app/utils/string.utils';
-import { SectionNames, AttributeNames } from './../../utils/constants';
+import { SectionNames, AttributeNames, SectionTypes } from './../../utils/constants';
 import { ExtSectionType } from '../model/ext-submission-types';
 import { Table } from '../model/submission/submission.model';
 import { Organisations } from '../resources/organisation';
@@ -14,10 +14,13 @@ export function tableSectionsToSections(tables: Table[], isSanitise: boolean, is
     tableSections = [
       ...tableSections,
       ...tableToSections<ExtSectionType>(
-        (attrs, currentTable) => ({
-          type: currentTable?.typeName || '',
-          attributes: attrs.filter((attr) => !isValueEmpty(attr.value))
-        }),
+        (attrs, currentTable) => [
+          {
+            type: currentTable?.typeName || '',
+            attributes: attrs.filter((attr) => !isValueEmpty(attr.value)),
+            extType: SectionTypes.SECTION
+          }
+        ],
         (currentSection) => currentSection.attributes.length > 0,
         isSanitise,
         table
@@ -35,16 +38,18 @@ export function tableSectionsToSections(tables: Table[], isSanitise: boolean, is
 function contactsToSection(sections: ExtSectionType[]): ExtSectionType[] {
   const orgs: Organisations = Organisations.getInstance();
   const [contacts, sectionsWithoutContacts] = partition<ExtSectionType>(sections, (section) =>
-    [SectionNames.CONTACT.toLowerCase()].includes(section.type.toLowerCase() as SectionNames)
+    [SectionNames.CONTACT.toLowerCase()].includes(section.type.toLowerCase())
   );
   const authors: ExtSectionType[] = contacts.map((contact) => ({
     type: SectionNames.AUTHOR,
-    attributes: orgs.orgToReferences(contact).filter((ref) => !isValueEmpty(ref.value))
+    attributes: orgs.orgToReferences(contact).filter((ref) => !isValueEmpty(ref.value)),
+    extType: SectionTypes.SECTION
   }));
   const affiliations: ExtSectionType[] = orgs.list().map((org) => ({
     type: SectionNames.ORGANISATION,
     accno: org.accno,
-    attributes: [{ name: AttributeNames.NAME, value: org.name }]
+    attributes: [{ name: AttributeNames.NAME, value: org.name }],
+    extType: SectionTypes.SECTION
   }));
 
   return [...authors, ...affiliations, ...sectionsWithoutContacts];
@@ -63,7 +68,8 @@ function protocolsToSection(sections: ExtSectionType[]): ExtSectionType[] {
 
   const componentProtocolReferences = componentProtocols.map((componentProtocol) => ({
     type: componentProtocol.type,
-    attributes: componentProtocol.attributes!.map((attribute) => protocols.toReference({ ...attribute }))
+    attributes: componentProtocol.attributes!.map((attribute) => protocols.toReference({ ...attribute })),
+    extType: SectionTypes.SECTION
   }));
 
   const studyProtocolToReference = studyProtocols.map((studyProtocol, index) => {
@@ -74,7 +80,8 @@ function protocolsToSection(sections: ExtSectionType[]): ExtSectionType[] {
     return {
       type: studyProtocol.type,
       accno: studyProtocol.accNo ? studyProtocol.accNo : protocols.refFor(studyProtocolNameValue, `p${index}`),
-      attributes: studyProtocol.attributes
+      attributes: studyProtocol.attributes,
+      extType: SectionTypes.SECTION
     };
   });
 

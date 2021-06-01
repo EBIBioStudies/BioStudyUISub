@@ -37,7 +37,7 @@ export function extSectionsToContacts(sections: ExtSectionType[] = []): ExtSecti
   const orgs: Organisations = Organisations.getInstance();
   const [rawAffiliations, sectionsWithoutAffiliation] = partition<ExtSectionType>(sections, (section) =>
     [SectionNames.ORGANIZATION, SectionNames.ORGANISATION, SectionNames.AFFILIATION].includes(
-      section.type.toLowerCase() as SectionNames
+      section.type.toLowerCase()
     )
   );
   const [authors, otherSections] = partition<ExtSectionType>(

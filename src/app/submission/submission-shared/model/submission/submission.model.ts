@@ -445,7 +445,6 @@ export class Section {
   readonly fields: Fields;
   readonly id: string;
   readonly sections: Sections;
-  // readonly subsections: Sections;
   readonly tags: Tags;
   readonly type: SectionType;
 
@@ -468,7 +467,6 @@ export class Section {
     this.data = data;
     this.tables = new Tables(type, data.tables);
     this.sections = new Sections(type, data.sections);
-    // this.subsections = new Sections(type, []);
   }
 
   get accno(): string {

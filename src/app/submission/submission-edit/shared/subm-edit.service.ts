@@ -204,9 +204,8 @@ export class SubmEditService {
 
   submit(): Observable<SubmitResponse> {
     this.editState.startSubmitting();
-    const submission = this.toExtended(true);
 
-    return this.submService.submitDraft(submission, this.accno).pipe(
+    return this.submService.submitDraft(this.accno).pipe(
       map((resp) => {
         this.editState.stopSubmitting();
         this.onSubmitFinished(resp);

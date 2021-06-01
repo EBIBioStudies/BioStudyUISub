@@ -10,7 +10,7 @@ import { findSubmissionTemplateName } from './utils/template.utils';
 import { SubmissionType } from './model/templates';
 import { extAttrToAttrData } from './utils/ext-attribute-to-attribute.utils';
 import { extSectionsToTables } from './utils/ext-section-to-section.utils';
-import { filterAttributesByName, mergeAttributes } from './utils/attribute.utils';
+import { filterAttributesByName, findAttributeByName, mergeAttributes } from './utils/attribute.utils';
 import { toUntyped } from './utils/link.utils';
 import { ExtAttrExceptions } from './resources/attr-exceptions';
 import { partition } from 'app/utils';
@@ -99,9 +99,15 @@ export class ExtSubmissionToSubmissionService {
   }
 
   private titleAttr(extSubmission: ExtSubmissionType): ExtAttributeType {
+    let title: string | undefined = extSubmission.title;
+    if (!title) {
+      const titleAttribute = findAttributeByName(AttributeNames.TITLE, extSubmission.section.attributes);
+      title = (titleAttribute?.value as string) || undefined;
+    }
+
     return {
       name: AttributeNames.TITLE,
-      value: extSubmission.title
+      value: title
     };
   }
 }

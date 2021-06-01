@@ -21,7 +21,7 @@ export function flatTables(section: Section): Table[] {
 }
 
 export function tableToSections<T>(
-  formatter: (attr: ExtAttributeType[], table?: Table) => T,
+  formatter: (attr: ExtAttributeType[], table?: Table) => T[],
   validator: (attr: T) => boolean,
   isSanitise: boolean,
   table?: Table
@@ -31,7 +31,10 @@ export function tableToSections<T>(
   }
 
   const tableAttributes: ExtAttributeType[][] = extractTableAttributes(table, isSanitise);
-  const fileAttributes: T[] = tableAttributes.map((attr) => formatter(attr, table));
+  const fileAttributes: T[] = tableAttributes.reduce(
+    (result, attr) => [...formatter(attr, table), ...result],
+    [] as T[]
+  );
 
   return fileAttributes.filter(validator);
 }

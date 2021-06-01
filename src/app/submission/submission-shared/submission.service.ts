@@ -131,10 +131,10 @@ export class SubmissionService {
     return this.http.put<DraftSubmissionWrapper>(`/api/submissions/drafts/${accno}`, submission);
   }
 
-  submitDraft(submission: ExtSubmissionType, accno: string): Observable<SubmitResponse> {
+  submitDraft(accno: string): Observable<SubmitResponse> {
     const headers: HttpHeaders = new HttpHeaders().set('Submission_Type', 'application/json');
 
-    return this.sendPostRequest(`/api/submissions/drafts/${accno}/submit`, submission, headers);
+    return this.sendPostRequest(`/api/submissions/drafts/${accno}/submit`, {}, headers);
   }
 
   private checkStatus<R, T>(response: HttpResponse<R>): T {

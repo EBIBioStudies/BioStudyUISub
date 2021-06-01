@@ -13,7 +13,7 @@ import { Field, Section, Submission, Table } from './model/submission/submission
 import { AttrExceptions, attributesAsFile, attributesAsLink, fieldsAsAttributes } from './utils/attribute.utils';
 import { tableToSections } from './utils/table.utils';
 import { partition } from 'app/utils/array.utils';
-import { AttributeNames, SectionNames } from '../utils/constants';
+import { AttributeNames, LowerCaseSectionNames } from '../utils/constants';
 
 @Injectable()
 export class SubmissionToExtSubmissionService {
@@ -30,10 +30,14 @@ export class SubmissionToExtSubmissionService {
   }
 
   private extSectionToSection(section: Section, isSanitise: boolean, isSubsection: boolean = false): ExtSectionType {
-    const [rootTables, otherTables] = partition<Table>(section.tables.list(), (table) =>
-      [SectionNames.FILE, SectionNames.LINK, SectionNames.FILE_LIST, SectionNames.KEYWORDS].includes(
-        table.typeName.toLowerCase() as SectionNames
-      )
+    const [rootTables, otherTables] = partition<Table>([...section.tables.list(), section.annotations], (table) =>
+      [
+        LowerCaseSectionNames.FILE,
+        LowerCaseSectionNames.LINK,
+        LowerCaseSectionNames.FILE_LIST,
+        LowerCaseSectionNames.KEYWORDS,
+        LowerCaseSectionNames.ANNOTATION
+      ].includes(table.typeName.toLowerCase())
     );
 
     return {
@@ -44,12 +48,12 @@ export class SubmissionToExtSubmissionService {
       fileList: this.extractFileListFromSection(rootTables),
       files: this.extractFilesFromSection(rootTables, isSanitise),
       links: this.extractLinksFromSection(rootTables, isSanitise),
-      extType: SectionNames.SECTION,
+      extType: LowerCaseSectionNames.SECTION,
       sections: [
         ...tableSectionsToSections(otherTables, isSanitise, isSubsection),
         ...section.sections.list().map((s) => this.extSectionToSection(s, isSanitise, true))
       ],
-      type: SectionNames.STUDY
+      type: LowerCaseSectionNames.STUDY
     };
   }
 
@@ -61,10 +65,10 @@ export class SubmissionToExtSubmissionService {
   }
 
   private extractFilesFromSection(tables: Table[], isSanitise: boolean): ExtFileType[] {
-    const table = tables.find((t) => t.typeName === SectionNames.FILE);
+    const table = tables.find((t) => t.typeName.toLowerCase() === LowerCaseSectionNames.FILE);
 
     return tableToSections<ExtFileType>(
-      (rows) => attributesAsFile(rows),
+      (rows) => [attributesAsFile(rows)],
       (attr) => isDefinedAndNotEmpty(attr.path),
       isSanitise,
       table
@@ -72,10 +76,10 @@ export class SubmissionToExtSubmissionService {
   }
 
   private extractLinksFromSection(tables: Table[], isSanitise: boolean): ExtLinkType[] {
-    const table = tables.find((t) => t.typeName === SectionNames.LINK);
+    const table = tables.find((t) => t.typeName.toLowerCase() === LowerCaseSectionNames.LINK);
 
     return tableToSections<ExtLinkType>(
-      (rows) => attributesAsLink(rows),
+      (rows) => [attributesAsLink(rows)],
       (attr) => isDefinedAndNotEmpty(attr.url),
       isSanitise,
       table
@@ -83,10 +87,12 @@ export class SubmissionToExtSubmissionService {
   }
 
   private extractKeywordsFromSection(tables: Table[], isSanitise: boolean): ExtAttributeType[] {
-    const table = tables.find((t) => t.typeName === SectionNames.KEYWORDS);
+    const table = tables.find((t) =>
+      [LowerCaseSectionNames.KEYWORDS, LowerCaseSectionNames.ANNOTATION].includes(t.typeName.toLowerCase())
+    );
 
     return tableToSections<ExtAttributeType>(
-      (row) => row[0],
+      (rows) => rows,
       () => true,
       isSanitise,
       table
@@ -94,7 +100,7 @@ export class SubmissionToExtSubmissionService {
   }
 
   private extractFileListFromSection(tables: Table[]): ExtFileListType | null {
-    const table = tables.find((t) => t.typeName === SectionNames.FILE_LIST);
+    const table = tables.find((t) => t.typeName.toLowerCase() === LowerCaseSectionNames.FILE_LIST);
 
     if (table === undefined || table.isEmpty) {
       return null;
