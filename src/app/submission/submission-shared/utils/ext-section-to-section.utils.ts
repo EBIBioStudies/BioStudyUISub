@@ -5,16 +5,22 @@ import { compose, isStringDefined, partition } from '../../../utils';
 import { Dictionary } from './../model/pagetab/pagetab-authors.utils';
 import { Organisations } from './../resources/organisation';
 import { ExtSectionType } from '../../../submission/submission-shared/model/ext-submission-types';
-import { AttributeNames, findAttributeByName } from './attribute.utils';
+import { AttributeNames, SectionNames } from './../../utils/constants';
+import { findAttributeByName } from './attribute.utils';
 import { extAttrToAttrData } from './ext-attribute-to-attribute.utils';
-import { SectionNames } from './section.utils';
 
-export function extSectionsToTables(sections: ExtSectionType[], tableTypes: TableType[]): TableData[] {
+export function extSectionsToTables(
+  sections: ExtSectionType[],
+  tableTypes: TableType[],
+  isSubsection: boolean
+): TableData[] {
   const sectionsWithAttributes = sections.filter((section) => section.attributes.length > 0);
-  const tableSections: ExtSectionType[] = compose(
-    extSectionsToContacts,
-    extSectionsToProtocols
-  )(sectionsWithAttributes);
+  let tableSections: ExtSectionType[] = [];
+  if (isSubsection) {
+    tableSections = extSectionsToProtocols(sectionsWithAttributes);
+  } else {
+    tableSections = compose(extSectionsToContacts, extSectionsToProtocols)(sectionsWithAttributes);
+  }
 
   return tableSections.map((tableSection) => {
     const tableType = tableTypes.find((tType) => tType.name === tableSection.type);
@@ -62,11 +68,11 @@ export function extSectionsToProtocols(sections: ExtSectionType[] = []): ExtSect
   const protocols: Protocols = Protocols.getInstance();
   const [studyProtocols, sectionsWithoutProtocols] = partition<ExtSectionType>(
     sections,
-    (section) => SectionNames.PROTOCOLS === section.type.toLowerCase()
+    (section) => SectionNames.STUDY_PROTOCOLS === section.type.toLowerCase()
   );
   const [componentProtocols, sectionsWithoutCompProtocols] = partition<ExtSectionType>(
     sectionsWithoutProtocols,
-    (section) => SectionNames.STUDY_PROTOCOLS === section.type.toLowerCase()
+    (section) => SectionNames.PROTOCOLS === section.type.toLowerCase()
   );
 
   // Creates the reference for each study protocol on first load.
@@ -100,5 +106,5 @@ export function extSectionsToProtocols(sections: ExtSectionType[] = []): ExtSect
     } as ExtSectionType;
   });
 
-  return [...componentProtocolsWithReferenceValue, ...sectionsWithoutCompProtocols];
+  return [...componentProtocolsWithReferenceValue, ...studyProtocols, ...sectionsWithoutCompProtocols];
 }

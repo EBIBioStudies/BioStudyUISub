@@ -1,6 +1,6 @@
+import { SectionNames } from './../../utils/constants';
 import { ExtAttributeType, ExtLinkType } from '../model/ext-submission-types';
 import { isDefinedAndNotEmpty, isValueEmpty } from '../../../utils';
-import { SectionNames } from './section.utils';
 
 /**
  * Utility class bridging the differences between PageTab's specs for links and the app's internal submission model.

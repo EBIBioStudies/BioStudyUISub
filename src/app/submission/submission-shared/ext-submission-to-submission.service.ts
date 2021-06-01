@@ -10,10 +10,11 @@ import { findSubmissionTemplateName } from './utils/template.utils';
 import { SubmissionType } from './model/templates';
 import { extAttrToAttrData } from './utils/ext-attribute-to-attribute.utils';
 import { extSectionsToTables } from './utils/ext-section-to-section.utils';
-import { AttributeNames, filterAttributesByName, mergeAttributes } from './utils/attribute.utils';
+import { filterAttributesByName, mergeAttributes } from './utils/attribute.utils';
 import { toUntyped } from './utils/link.utils';
 import { ExtAttrExceptions } from './resources/attr-exceptions';
 import { partition } from 'app/utils';
+import { AttributeNames } from '../utils/constants';
 
 @Injectable()
 export class ExtSubmissionToSubmissionService {
@@ -37,7 +38,8 @@ export class ExtSubmissionToSubmissionService {
   private extSectionToSection(
     section: ExtSectionType,
     parentAttributes: ExtAttributeType[],
-    submissionType: SubmissionType
+    submissionType: SubmissionType,
+    isSubsection: boolean = false
   ): SectionData {
     const { attributes, links = [], files = [], fileList, sections = [] } = section;
     const { sectionType } = submissionType;
@@ -75,9 +77,9 @@ export class ExtSubmissionToSubmissionService {
       // }))
     ];
 
-    const tables = extSectionsToTables([...pageSections, ...tableSections], sectionType.tableTypes);
+    const tables = extSectionsToTables([...pageSections, ...tableSections], sectionType.tableTypes, isSubsection);
     const formattedSubsections = subsections.map((subsection) =>
-      this.extSectionToSection(subsection, section.attributes, submissionType)
+      this.extSectionToSection(subsection, section.attributes, submissionType, isSubsection)
     );
 
     return {

@@ -14,7 +14,7 @@ import { SubmValidationErrors } from '../submission-shared/model';
 import { SubmitLog } from '../submission-shared/submission.service';
 import { scrollTop } from 'app/utils';
 import { ErrorService } from 'app/core/errors/error.service';
-import { AttributeNames } from '../submission-shared/utils/attribute.utils';
+import { AttributeNames } from '../utils/constants';
 
 class SubmitOperation {
   static CREATE = new SubmitOperation();

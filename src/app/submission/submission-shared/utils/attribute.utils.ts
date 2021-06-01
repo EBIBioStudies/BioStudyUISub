@@ -1,16 +1,8 @@
+import { SectionNames } from './../../utils/constants';
 import { isDefinedAndNotEmpty, isEqualIgnoringCase, isStringDefined, isValueEmpty } from '../../../utils/string.utils';
 import { ExtAttributeType, ExtFileType, ExtLinkType } from '../model/ext-submission-types';
 import { Field, Table } from '../model/submission/submission.model';
 import { toTyped } from './link.utils';
-import { SectionNames } from './section.utils';
-
-export enum AttributeNames {
-  ATTACH_TO = 'AttachTo',
-  RELEASE_DATE = 'ReleaseDate',
-  TITLE = 'Title',
-  NAME = 'Name',
-  PROTOCOL = 'Protocol'
-}
 
 interface AttrException {
   name: string;

@@ -1,3 +1,4 @@
+import { ExtAttributeType } from './../model/ext-submission-types';
 import { PtAttribute } from './../model/pagetab/pagetab.model';
 import { Dictionary } from './../model/submission-common-types';
 import { isNotDefinedOrEmpty } from './../../../utils';
@@ -34,18 +35,18 @@ export class Protocols {
     return accno;
   }
 
-  toReference(attr: PtAttribute): PtAttribute {
+  toReference(attr: ExtAttributeType): ExtAttributeType {
     const attributeValue: string = attr.value as string;
 
     if (isNotDefinedOrEmpty(attributeValue) || attr.name !== 'Protocol') {
-      return { name: attr.name, value: attr.value } as PtAttribute;
+      return { name: attr.name, value: attr.value };
     }
 
     const refKeyForValue = this.getRefKeyByValue(attributeValue);
     return {
       name: 'Protocol',
       value: refKeyForValue,
-      isReference: true
-    } as PtAttribute;
+      reference: true
+    };
   }
 }

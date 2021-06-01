@@ -128,10 +128,7 @@ export class SubmissionService {
   }
 
   saveDraftSubmission(accno: string, submission: ExtSubmissionType): Observable<DraftSubmissionWrapper> {
-    console.log(accno, submission);
-
-    return new Observable();
-    // return this.http.put<DraftSubmissionWrapper>(`/api/submissions/drafts/${accno}`, submission);
+    return this.http.put<DraftSubmissionWrapper>(`/api/submissions/drafts/${accno}`, submission);
   }
 
   submitDraft(submission: ExtSubmissionType, accno: string): Observable<SubmitResponse> {
@@ -149,7 +146,7 @@ export class SubmissionService {
   }
 
   private getDraft(accno: string): Observable<ExtSubmissionType> {
-    return this.http.get<ExtSubmissionType>(`/api/submissions/extended/${accno}`);
+    return this.http.get<ExtSubmissionType>(`/api/submissions/drafts/${accno}/content`);
   }
 
   private sendPostRequest<R, T>(path: string, payload: any, headers: HttpHeaders): Observable<T> {

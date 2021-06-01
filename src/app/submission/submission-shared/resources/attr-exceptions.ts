@@ -1,4 +1,4 @@
-import { AttributeNames } from '../utils/attribute.utils';
+import { AttributeNames } from './../../utils/constants';
 
 /* Here are the attributes which we have to deal with exceptionally (unfortunately):
  * AttachTo:     It's updated/created when submission attached to a project; it can have multiple values (multiple projects).

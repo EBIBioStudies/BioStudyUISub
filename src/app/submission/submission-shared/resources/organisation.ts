@@ -1,7 +1,7 @@
+import { SectionNames } from './../../utils/constants';
 import { Dictionary, Nullable } from './../model/submission-common-types';
 import { isStringDefined, isStringEmpty } from './../../../utils';
 import { ExtAttributeType, ExtSectionType } from '../model/ext-submission-types';
-import { SectionNames } from '../utils/section.utils';
 
 const isEqualTo = (value: string) => {
   return (s: Nullable<string>) => isStringDefined(s) && s!.toLowerCase() === value;
