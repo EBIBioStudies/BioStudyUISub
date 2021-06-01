@@ -267,7 +267,7 @@ export class CustomWarningsDefinition {
         const countText = pluralize('have', submissionsCount);
 
         return {
-          message: `${submissionText} with a similar title "${error.value}" ${countText} been found`,
+          message: `${submissionText} with a similar title ${countText} been found`,
           payload: error.payload
         };
       }
