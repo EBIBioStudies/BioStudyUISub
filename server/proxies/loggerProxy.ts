@@ -9,9 +9,19 @@ export const loggerProxy = (path: string, router: Router) => {
 
   router.use(path, async (req, res) => {
     if (logsWebhookUrl.length > 0 && !isDevelopment) {
-      const { message, userEmail, params = [] } = req.body;
+      const { message, userEmail, stackTrace } = req.body;
+      const attachments = [];
+
+      if (stackTrace) {
+        attachments.push({
+          color: 'danger',
+          title: 'Trace',
+          text: stackTrace
+        });
+      }
+
       const body = {
-        attachments: params.map((param: string) => ({ text: param })),
+        attachments: [attachments],
         blocks: [
           {
             type: 'header',

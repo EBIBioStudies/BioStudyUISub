@@ -1,0 +1,31 @@
+<div class="modal-header">
+  <h5 class="modal-title">Similar submissions</h5>
+  <button type="button" class="close" aria-label="Close" (click)="onCancelCloseClick()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="alert alert-info" role="alert">
+    Please go ahead submitting your new submission if the entries below are not related.
+    In case it's duplicated, please update the existing submission and resubmit it.
+  </div>
+  <table class="table table-striped table-sm">
+    <thead>
+      <tr>
+        <th scope="col">Accession</th>
+        <th scope="col">Title</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let submission of similarSubmissions">
+        <th scope="row"><a href="/edit/{{submission.accno}}" target="_blank">{{submission.accno}}</a></th>
+        <td>{{submission.title}}</td>
+        <td><a href="/edit/{{submission.accno}}" target="_blank">Open</a></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default btn-sm" (click)="onCancelCloseClick()">Close</button>
+</div>

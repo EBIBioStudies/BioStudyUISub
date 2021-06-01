@@ -1,0 +1,53 @@
+<div class="card mt-4" *ngIf="tableForm && !tableForm.isEmpty">
+  <div class="card-header d-flex align-items-center">
+    <div class="d-flex align-items-center flex-grow-1">
+      <i class="fa fa-lg {{tableForm.icon}}"></i>
+      <div class="pl-3">
+        <div class="d-flex align-items-center">
+          <h5 class="m-0">
+            {{tableForm.prettyName | lowercase | titlecase}}
+          </h5>
+          <span class="badge rounded-pill bg-aluminum ml-2"
+            *ngIf="!readonly && !tableForm.isRequired && !tableForm.isReadonly && !tableForm.hasRequiredGroups">
+            Optional
+          </span>
+          <span class="badge rounded-pill bg-aluminum ml-2"
+            *ngIf="!readonly && !tableForm.isRequired && !tableForm.isReadonly && tableForm.hasRequiredGroups">
+            Required at least one {{tableForm.requiredGroups.join(' or ')}}
+          </span>
+        </div>
+        <span [innerHTML]="tableForm.description"></span>
+      </div>
+    </div>
+    <button
+      *ngIf="tableForm.allowImport"
+      type="button"
+      class="btn btn-link"
+      (click)="openPasteTableDataModal()"
+      tooltip="Paste from spreadsheet"
+    >
+      <i class="fas fa-paste"></i> Paste
+    </button>
+  </div>
+
+  <div class="card-body">
+    <div class="d-flex align-items-center justify-content-end pb-2">
+      <h6 class="card-subtitle text-muted flex-grow-1"
+        *ngIf="tableForm.columnNamesAvailableCached.length && userData.isPrivileged && !readonly && !tableForm.isReadonly">
+        <strong>{{tableForm.hasUniqueColumns ? 'More' : 'Available'}}
+          {{tableForm.canHaveMultipleRows ? 'column' : 'key'}}s</strong>:
+        <i>{{tableForm.columnNamesAvailableCached.join(', ')}}.</i>
+      </h6>
+      <div class="badge badge-danger" *ngIf="tableForm.invalid">{{tableForm.errorCount}}
+        error{{tableForm.errorCount > 1 ? 's' : ''}}</div>
+    </div>
+
+    <st-table *ngIf="tableForm.canHaveMultipleRows; else singleColumnTable" [tableForm]="tableForm"
+      [readonly]="readonly">
+    </st-table>
+    <ng-template #singleColumnTable>
+      <st-single-column-table [tableForm]="tableForm" [readonly]="readonly">
+      </st-single-column-table>
+    </ng-template>
+  </div>
+</div>
