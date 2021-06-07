@@ -13,6 +13,7 @@ import { ServerError } from 'app/shared/server-error.handler';
 export class PasswordResetComponent implements OnInit {
   hasError: boolean = false;
   isLoading: boolean = false;
+  isPassSetup: boolean = false;
   message: string = '';
   model: PasswordResetData = new PasswordResetData();
   showSuccess: boolean = false;
@@ -20,7 +21,13 @@ export class PasswordResetComponent implements OnInit {
   @ViewChild('recaptchaEl')
   private recaptcha!: RecaptchaComponent;
 
-  constructor(private authService: AuthService, private activatedRoute: ActivatedRoute) {}
+  constructor(private authService: AuthService, private activatedRoute: ActivatedRoute, private route: ActivatedRoute) {
+    this.route.data.subscribe((data) => {
+      if (data.hasOwnProperty('isPassSetup')) {
+        this.isPassSetup = data.isPassSetup;
+      }
+    });
+  }
 
   ngOnInit(): void {
     const key = this.activatedRoute.snapshot.paramMap.get('key');
