@@ -11,7 +11,7 @@ export class ErrorService {
   constructor(private errorMessageService: ErrorMessageService) {}
 
   getClientErrorMessage(error: Error): string {
-    return error.message ? error.message : error.toString();
+    return this.errorMessageService.getMessage(error.stack);
   }
 
   getServerErrorMessage(resp: HttpErrorResponse, isFileUpload: boolean = false): string {
@@ -23,7 +23,7 @@ export class ErrorService {
       return ServerError.defaultErrorMessage;
     }
 
-    const errorMessage = resp?.error?.log?.message || this.errorMessageService.getMessage();
+    const errorMessage = resp?.error?.log?.message || this.errorMessageService.getMessage(resp.error.stack);
 
     return navigator.onLine ? errorMessage : 'Looks like there is no internet connection';
   }
