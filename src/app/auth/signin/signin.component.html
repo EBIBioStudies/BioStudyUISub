@@ -12,7 +12,7 @@
       <form name="signInForm" (ngSubmit)="onSubmit(signInForm)" #signInForm="ngForm" data-testid="signInForm" novalidate>
         <div class="form-group" [ngClass]="{'was-validated': email.invalid && email.touched}">
           <label for="email">Email address</label>
-          <input type="email" class="form-control" id="email" name="email" email="true" [(ngModel)]="model.login"
+          <input type="email" class="form-control" id="email" name="email" [(ngModel)]="model.login"
             #email="ngModel" autofocus required>
           <div class="invalid-feedback" *ngIf="email.invalid && email.touched">Please enter a valid email</div>
         </div>
