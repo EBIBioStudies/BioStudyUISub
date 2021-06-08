@@ -9,3 +9,20 @@
 .read-only-body {
   padding: 0;
 }
+
+.section {
+  &-example {
+    padding: 0 3pt;
+
+    &:before {
+      content: '–';
+    }
+  }
+
+  &-accno {
+    color: #bbbbbb;
+    font-size: small;
+    padding: 0 0.5em;
+    text-align: right;
+  }
+}
