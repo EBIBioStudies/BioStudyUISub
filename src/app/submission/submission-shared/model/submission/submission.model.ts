@@ -480,10 +480,6 @@ export class Section implements SubmissionSection {
     this.type.name = name;
   }
 
-  get displayName(): string {
-    return `${this.type.name} - ${this.type.sectionExample}`;
-  }
-
   get readonly(): boolean {
     return this.type.displayType.isReadonly;
   }
