@@ -15,6 +15,7 @@ const appRoutes: Routes = [
   { path: 'activate/:key', component: ActivateComponent },
   { path: 'password_reset_request', component: PasswordResetReqComponent },
   { path: 'password_reset/:key', component: PasswordResetComponent },
+  { path: 'password_setup/:key', component: PasswordResetComponent, data: { isPassSetup: true } },
   { path: 'resend_activation_link', component: ActivationLinkReqComponent },
   { path: '', component: SignInComponent },
   { path: '**', component: NotFoundComponent }
