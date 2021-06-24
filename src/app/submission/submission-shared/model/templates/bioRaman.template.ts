@@ -236,40 +236,53 @@ export const bioRamanTemplate = {
         displayAnnotations: false,
         minRequired: 0,
         name: 'Sample',
-        sectionExample: 'Name',
+        sectionExample: 'Name of cell or compound, source, composition, conditions, mounting substrate, etc.',
         fieldTypes: [
           {
             name: 'Name of cell or compound',
             icon: 'fa-file-invoice',
-            valueType: { name: 'text' }
+            valueType: {
+              name: 'text',
+              placeholder: 'Description is being assayed. Sample names from publications can also go here.'
+            }
           },
           {
             name: 'Source',
             icon: 'fa-vial',
-            valueType: { name: 'text' }
+            valueType: {
+              name: 'text',
+              placeholder:
+                'Source of the sample, such as a strain collection, chemical supplier, or the environment or tissue sample was taken from.'
+            }
           },
           {
             name: 'Composition',
             icon: 'fa-cogs',
-            valueType: { name: 'largetext' }
+            valueType: {
+              name: 'largetext',
+              placeholder:
+                'Entities are contained in the sample,  including not just the cells of interest, but the media, and well as any extraneous materials such as tissue, debris, biofilm matrix, or soil.'
+            }
           },
           {
             name: 'Sample condition',
             icon: 'fa-temperature-low',
-            valueType: { name: 'largetext' }
+            valueType: {
+              name: 'largetext',
+              placeholder: 'Are the cells dry or wet, are they fixed or unfixed, and what are they suspended in. '
+            }
           },
           {
             name: 'Mounting substrate',
             icon: 'fa-layer-group',
-            valueType: { name: 'text' }
+            valueType: { name: 'text', placeholder: 'Glass coverslip, aluminum slide, CaF2 Slide' }
           }
         ],
         tableTypes: [
           {
             name: 'Image file',
             display: 'desirable',
-            description:
-              'Image file if spectra is part of a hyperspectral Raman image. Add coordinate value of spectra and "Pixel" size and spacing of spectra.',
+            description: 'Image file if spectra is part of a hyperspectral Raman image.',
             icon: 'fa-file-image',
             uniqueCols: true,
             allowImport: true,
@@ -281,12 +294,12 @@ export const bioRamanTemplate = {
               },
               {
                 name: 'Coordinates',
-                valueType: { name: 'text' },
+                valueType: { name: 'text', placeholder: 'coordinate value of spectra' },
                 display: 'desirable'
               },
               {
                 name: 'Spot size/spacing',
-                valueType: { name: 'text' },
+                valueType: { name: 'text', placeholder: 'Pixel size and spacing of spectra' },
                 display: 'desirable'
               }
             ]
@@ -303,7 +316,7 @@ export const bioRamanTemplate = {
           {
             name: 'Raman system used',
             icon: 'fa-microscope',
-            valueType: { name: 'text' }
+            valueType: { name: 'text', placeholder: 'Manufacturer and model of scope used' }
           },
           {
             name: 'Measurement type',
@@ -319,6 +332,14 @@ export const bioRamanTemplate = {
                 'Surface-enhanced Raman Scattering (SERS)'
               ]
             }
+          },
+          {
+            name: 'Raw spectrum',
+            icon: 'fa-wave-square',
+            valueType: { name: 'file' },
+            description:
+              'Raw, untreated spectrum with wavenumbers, bins, and intensities at each bin; format as TSV,CSV or other universal file format.',
+            display: 'required'
           }
         ],
         tableTypes: [
@@ -337,38 +358,38 @@ export const bioRamanTemplate = {
               },
               {
                 name: 'Wavelength of laser (nm)',
-                valueType: { name: 'text' },
+                valueType: { name: 'text', placeholder: 'Laser wavelength in nanometers' },
                 display: 'required'
               },
               {
                 name: 'Power of excitation laser (mW)',
-                valueType: { name: 'text' },
+                valueType: { name: 'text', placeholder: 'Laser power in milliwatts, prior to ND filter' },
                 display: 'required'
               },
               {
                 name: 'Neutral density filter (%)',
-                valueType: { name: 'text' },
+                valueType: { name: 'text', placeholder: 'ND filter percentage, if applicable' },
                 display: 'desirable'
               },
               {
                 name: 'Acquisition time (sec)',
                 display: 'required',
-                valueType: { name: 'text' }
+                valueType: { name: 'text', placeholder: 'Acquisition time of a single reading in seconds' }
               },
               {
                 name: 'Number of acquisitions (for average)',
                 display: 'required',
-                valueType: { name: 'text' }
+                valueType: { name: 'text', placeholder: 'Number of averaged or accumulated acquisitions' }
               },
               {
                 name: 'Measurement window (cm⁻¹)',
                 display: 'required',
-                valueType: { name: 'text' }
+                valueType: { name: 'text', placeholder: 'Start and end of measurement range in cm⁻¹' }
               },
               {
                 name: 'Resolution (cm⁻¹)',
                 display: 'required',
-                valueType: { name: 'text' }
+                valueType: { name: 'text', placeholder: 'Resolution of the spectrum in cm⁻¹' }
               }
             ]
           }
@@ -393,12 +414,12 @@ export const bioRamanTemplate = {
             name: 'Data treatments',
             icon: 'fa-address-card',
             description:
-              'Add data treatments, one per line e.g. De-noising applied, Baseline subtraction methods used, Any type of normalization applied to the spectrum',
+              'Add data treatments, one per line e.g. De-noising applied, baseline subtraction methods used, any type of normalization applied to the spectrum',
             display: 'desirable',
             columnTypes: [
               {
                 name: 'Treatment',
-                valueType: { name: 'text' },
+                valueType: { name: 'text', placeholder: 'Treatment description' },
                 display: 'desirable'
               }
             ]
