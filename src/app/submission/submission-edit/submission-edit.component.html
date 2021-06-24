@@ -159,8 +159,11 @@
             <div class="mb-3" *ngFor="let subsectionForm of sectionForm.subsectionForms">
               <div class="btn-group w-100" role="group">
                 <button type="button" class="btn btn-light text-left w-100 d-flex align-items-center" (click)="onSectionClick(subsectionForm)">
-                  <strong>{{subsectionForm.section.displayName}}:</strong>
-                  <span class="flex-grow-1 ml-1" *ngIf="subsectionForm.section.accno">
+                  <i class="fas fa-angle-right"></i>&nbsp;<strong>{{subsectionForm.section.type.name}}</strong>
+                  <span class="section-example" *ngIf="subsectionForm.section.type.sectionExample">
+                    {{subsectionForm.section.type.sectionExample}}
+                  </span>
+                  <span class="flex-grow-1 ml-1 section-accno" *ngIf="subsectionForm.section.accno">
                     {{subsectionForm.section.accno}}
                   </span>
                   <span class="badge badge-danger" *ngIf="subsectionForm.invalid">
