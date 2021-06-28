@@ -29,7 +29,7 @@ export function getSubmissionTemplates(
 ): Array<{ description: string; name: string; title: string }> {
   const projectNames = [...projects, defaultTemplate.name];
   const filteredTemplates = projectNames.map((project) => {
-    let template = SUBMISSION_TEMPLATES.find((template) => template.name.toLowerCase() == project.toLowerCase());
+    let template = SUBMISSION_TEMPLATES.find((json) => json.name.toLowerCase() === project.toLowerCase());
     if (!template) template = defaultTemplate;
     return {
       description: template.description,
