@@ -45,8 +45,8 @@ export class NewSubmissionButtonDirective implements AfterViewInit {
     });
   }
 
-  private onOk(template?: string): void {
-    const emptySubmission: PageTab = this.submissionToPageTab.newPageTab(template);
+  private onOk(collection?: string, template?: string): void {
+    const emptySubmission: PageTab = this.submissionToPageTab.newPageTab(collection, template);
 
     this.startCreating();
     this.submService.createDraftSubmission(emptySubmission).subscribe((accno) => {
@@ -59,7 +59,7 @@ export class NewSubmissionButtonDirective implements AfterViewInit {
     this.modalService.show(AddSubmModalComponent, {
       initialState: {
         templates,
-        onOk: (project: string) => this.onOk(project)
+        onOk: (collection: string, template: string) => this.onOk(collection, template)
       }
     });
   }

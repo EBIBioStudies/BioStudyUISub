@@ -26,7 +26,7 @@
         <div *ngIf="sectionForm.isRootSection" class="card">
           <div class="card-body st-edit-status-message">
             <ng-container *ngIf="hasJustCreated && sectionForm.invalid">
-              <h4 class="card-title">New submission</h4>
+              <h4 class="card-title">New {{collection}} submission</h4>
               <p class="card-text">
                 Please fill in the form below. The <span class="font-weight-bold">Check</span> tab on the
                 left-hand side lists those fields still incomplete or incorrect. Use the
@@ -38,7 +38,7 @@
             </ng-container>
 
             <ng-container *ngIf="!hasJustCreated && !readonly && sectionForm.invalid">
-              <h4 class="card-title">Incomplete submission</h4>
+              <h4 class="card-title">Incomplete {{collection}} submission</h4>
               <p class="card-text">
                 Some information in this submission is still missing or incorrect. Refer to the
                 <span class="font-weight-bold">Check</span> tab on the left-hand side for the

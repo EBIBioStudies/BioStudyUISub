@@ -1,7 +1,7 @@
 export const bioRamanTemplate = {
   name: 'BioRaman',
   title: 'BioRaman',
-  description: 'High Content Screen Image Study',
+  description: 'Raman Spectroscopy Study',
   sectionType: {
     display: 'required',
     displayAnnotations: false,
