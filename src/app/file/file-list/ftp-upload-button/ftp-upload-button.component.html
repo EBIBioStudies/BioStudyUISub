@@ -55,27 +55,33 @@
         </div>
         <hr />
         <p>
-          The <strong>Aspera</strong> <em>ascp</em> command line client is distributed as part of the <strong>Aspera CLI</strong>
+          The <strong>Aspera</strong>&nbsp;<em>ascp</em> command line client is distributed as part of the <strong>Aspera CLI</strong>
           high-performance transfer browser plug-in which can be downloaded from
           <a target="_blank" [href]="osOption.link">
             here
           </a>
         </p>
-        <markdown *ngIf="osOption.name === 'Mac' || osOption.name === 'Linux'">
+        <markdown *ngIf="osOption.name === 'Mac'" class='code-block'>
           You will need to execute the downloaded file and switch to the CLI folder, e.g.,
-          ```
-          $ sh ~/Documents/ibm-aspera-cli-3.9.1.1401.be67d47-mac-10.7-64-release.sh
-          $ cd ~/Applications/Aspera\ CLI/bin
-          $ ./ascp -P33001 -i ../etc/asperaweb_id_dsa.openssh -d &lt;directory to upload&gt; bsaspera_w@hx-fasp-1.ebi.ac.uk:&lt;secret directory>
-          ```
+
+          `$ sh ~/Documents/ibm-aspera-cli-3.9.6.1467.159c5b1-mac-10.11-64-release.sh`
+          `$ cd ~/Applications/Aspera\ CLI/bin`
+          `$ ./ascp -P33001 -i ../etc/asperaweb_id_dsa.openssh -d &lt;directory to upload&gt; bsaspera_w@hx-fasp-1.ebi.ac.uk:&lt;secret directory>`
+
         </markdown>
-        <markdown *ngIf="osOption.name === 'Win'">
+        <markdown *ngIf="osOption.name === 'Linux'" class='code-block'>
+          You will need to execute the downloaded file and switch to the CLI folder, e.g.,
+          `$ sh ~/Documents/ibm-aspera-cli-3.9.6.1467.159c5b1-linux-64-release.sh`
+          `$ cd ~/Applications/Aspera\ CLI/bin`
+          `$ ./ascp -P33001 -i ../etc/asperaweb_id_dsa.openssh -d &lt;directory to upload&gt; bsaspera_w@hx-fasp-1.ebi.ac.uk:&lt;secret directory>`
+        </markdown>
+        <markdown *ngIf="osOption.name === 'Win'" class='code-block'>
           You will need to extract the downloaded zip file to a directory of your choice and then switch to
           the subdirectory bin, e.g.,
-          ```
-          C:\>cd C:\cli\bin
-          C:\cli\bin>ascp.exe -P33001 -i ..\etc\asperaweb_id_dsa.openssh -d &lt;directory to upload&gt; bsaspera_w@hx-fasp-1.ebi.ac.uk:.&lt;secret directory&gt;
-          ```
+
+          `C:\>cd C:\cli\bin`
+          `C:\cli\bin>ascp.exe -P33001 -i ..\etc\asperaweb_id_dsa.openssh -d &lt;directory to upload&gt; bsaspera_w@hx-fasp-1.ebi.ac.uk:&lt;secret directory&gt;`
+
         </markdown>
         <markdown>
           where

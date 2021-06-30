@@ -243,7 +243,7 @@ export const bioRamanTemplate = {
             icon: 'fa-file-invoice',
             valueType: {
               name: 'text',
-              placeholder: 'Description is being assayed. Sample names from publications can also go here.'
+              placeholder: 'Description of what is being assayed. Sample names from publications can also go here.'
             }
           },
           {
