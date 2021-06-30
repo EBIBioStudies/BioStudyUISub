@@ -55,10 +55,10 @@ export class PasswordResetComponent implements OnInit {
       this.authService.changePassword(this.model).subscribe(
         (user) => {
           this.authService.login({ login: user.email, password: this.model.password }).subscribe(
-            (user: UserInfo) => {
+            (userInfo: UserInfo) => {
               this.isLoading = false;
               this.showSuccess = true;
-              this.userSession.create(user);
+              this.userSession.create(userInfo);
               window.location.href = this.frontendURL + '/studies';
             },
             (error: ServerError) => {
