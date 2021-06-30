@@ -19,6 +19,10 @@ export class AppConfig {
     return this.config.APP_CONTEXT;
   }
 
+  get frontendURL(): string {
+    return this.config.FRONTEND_URL;
+  }
+
   /**
    * Synonym getter providing the threshold below which the current screen size will trigger
    * tablet/mobile-geared layout.
