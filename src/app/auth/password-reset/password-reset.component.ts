@@ -1,10 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { RecaptchaComponent } from 'ng-recaptcha';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
-import { AuthService } from 'app/auth/shared';
-import { PasswordResetData } from '../shared/model';
+import { AuthService, UserSession } from 'app/auth/shared';
+import { PasswordResetData, UserInfo } from '../shared/model';
 import { ServerError } from 'app/shared/server-error.handler';
+import config from 'config';
+import { AppConfig } from '../../app.config';
 
 @Component({
   selector: 'st-auth-passwd-reset',
@@ -17,11 +19,19 @@ export class PasswordResetComponent implements OnInit {
   message: string = '';
   model: PasswordResetData = new PasswordResetData();
   showSuccess: boolean = false;
+  frontendURL: string = this.appConfig.frontendURL;
 
   @ViewChild('recaptchaEl')
   private recaptcha!: RecaptchaComponent;
 
-  constructor(private authService: AuthService, private activatedRoute: ActivatedRoute, private route: ActivatedRoute) {
+  constructor(
+    private authService: AuthService,
+    private userSession: UserSession,
+    private appConfig: AppConfig,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private route: ActivatedRoute
+  ) {
     this.route.data.subscribe((data) => {
       if (data.hasOwnProperty('isPassSetup')) {
         this.isPassSetup = data.isPassSetup;
@@ -43,9 +53,21 @@ export class PasswordResetComponent implements OnInit {
     if (captchaToken) {
       this.model.captcha = captchaToken;
       this.authService.changePassword(this.model).subscribe(
-        () => {
-          this.isLoading = false;
-          this.showSuccess = true;
+        (user) => {
+          this.authService.login({ login: user.email, password: this.model.password }).subscribe(
+            (user: UserInfo) => {
+              this.isLoading = false;
+              this.showSuccess = true;
+              this.userSession.create(user);
+              window.location.href = this.frontendURL + '/studies';
+            },
+            (error: ServerError) => {
+              this.isLoading = false;
+              this.hasError = true;
+              this.resetRecaptcha();
+              this.message = error.data.message;
+            }
+          );
         },
         (error: ServerError) => {
           this.isLoading = false;

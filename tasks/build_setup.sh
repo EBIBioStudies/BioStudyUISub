@@ -14,6 +14,7 @@ contextPath=${CONTEXT_PATH};
 instanceKey=${INSTANCE_KEY};
 appPort=${PORT}
 appProxyBase=${APP_PROXY_BASE};
+frontendURL=${FRONTEND_URL}
 backendHostName=${BACKEND_HOST_NAME}
 backendPathContext=${BACKEND_PATH_CONTEXT}
 backendPort=${BACKEND_PORT}
@@ -24,6 +25,7 @@ ciEnvironmentName=${CI_ENVIRONMENT_NAME};
 sed -i 's%"APP_PROXY_BASE":.*%"APP_PROXY_BASE":"'$appProxyBase'",%' src/config.json
 sed -i 's%"APP_ENV":.*%"APP_ENV":"'$ciEnvironmentName'",%' src/config.json
 sed -i 's%"APP_CONTEXT":.*%"APP_CONTEXT":"'$contextPath'",%' src/config.json
+sed -i 's%"FRONTEND_URL":.*%"FRONTEND_URL":"'frontendURL'",%' src/config.json
 # Last line, don't append a comma
 sed -i 's%"APP_INSTANCE_KEY".*%"APP_INSTANCE_KEY":"'$instanceKey'"%' src/config.json
 
