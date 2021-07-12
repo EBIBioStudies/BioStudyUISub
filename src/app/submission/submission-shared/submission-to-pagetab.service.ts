@@ -27,13 +27,13 @@ const isKeywordType = (type: string) => isEqualIgnoringCase(type, 'keywords');
 
 @Injectable()
 export class SubmissionToPageTabService {
-  newPageTab(templateName: string = DEFAULT_TEMPLATE_NAME): PageTab {
+  newPageTab(collection?: string, templateName: string = DEFAULT_TEMPLATE_NAME): PageTab {
     const subm = new Submission(SubmissionType.fromTemplate(templateName));
     const pageTab = this.submissionToPageTab(subm);
 
     // Guarantees that for non-default templates, an AttachTo attribute always exists.
     // NOTE: The PageTab constructor does not bother with attributes if the section is empty.
-    if (templateName && templateName !== DEFAULT_TEMPLATE_NAME) {
+    if (collection) {
       pageTab.attributes = mergeAttributes(pageTab.attributes || [], [
         {
           name: AttrExceptions.attachToAttr,

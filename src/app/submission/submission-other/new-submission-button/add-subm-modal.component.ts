@@ -6,8 +6,9 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
   templateUrl: './add-subm-modal.component.html'
 })
 export class AddSubmModalComponent {
-  onOk?: (selected: string) => void;
-  selected: string = 'Default';
+  onOk?: (collection?: string, template?: string) => void;
+  selectedCollection?: string;
+  selectedTemplate: string = 'Default';
   templates?: Array<{ description: string; name: string; title: string }> = [];
 
   constructor(public bsModalRef: BsModalRef) {}
@@ -18,7 +19,12 @@ export class AddSubmModalComponent {
 
   ok(): void {
     if (this.onOk) {
-      this.onOk(this.selected);
+      this.onOk(this.selectedCollection, this.selectedTemplate);
     }
+  }
+
+  changeTemplate(tmpl: any): void {
+    this.selectedTemplate = tmpl.name;
+    this.selectedCollection = tmpl.title;
   }
 }

@@ -10,7 +10,8 @@ interface OSOption {
 
 @Component({
   selector: 'st-ftp-upload-button',
-  templateUrl: './ftp-upload-button.component.html'
+  templateUrl: './ftp-upload-button.component.html',
+  styleUrls: ['./ftp-upload-button.component.scss']
 })
 export class FTPUploadButtonComponent {
   modalRef?: BsModalRef;

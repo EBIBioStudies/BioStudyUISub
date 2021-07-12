@@ -55,6 +55,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
   private newReleaseDate: Date = new Date();
   private oldReleaseDate: Date = new Date();
   private unsubscribe: Subject<void> = new Subject<void>();
+  private collection?: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -128,9 +129,9 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
             );
 
             if (attachToAttr) {
-              const attachToValue = attachToAttr.value as string;
+              this.collection = attachToAttr.value as string;
               // TODO: handle this through template
-              this.sideBar.showAdvanced = !(attachToValue.toLowerCase() === 'arrayexpress');
+              this.sideBar.showAdvanced = !(this.collection.toLowerCase() === 'arrayexpress');
             }
           }
 

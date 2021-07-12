@@ -485,7 +485,7 @@ export const biaTemplate = {
             allowCustomCols: false,
             columnTypes: [
               {
-                name: 'Paramater',
+                name: 'Parameter',
                 valueType: {
                   name: 'select',
                   values: ['Plates', '5D images', 'Planes', 'Average image dimension [XYZCT]', 'Total TB']

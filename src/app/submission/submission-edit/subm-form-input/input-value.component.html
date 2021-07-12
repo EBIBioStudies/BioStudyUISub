@@ -13,6 +13,7 @@
       [typeaheadOptionsLimit]="200"
       [typeaheadScrollable]="true"
       [typeaheadOptionsInScrollableView]="suggestLength"
+      [placeholder]="valueType.placeholder"
       (blur)="onBlur()"
       (keydown)="onKeyDown()"
       stBootstrapValidation/>
@@ -20,6 +21,7 @@
   <textarea *ngSwitchCase="valueTypeNameEnum.largetext"
       class="form-control {{inputId}}"
       stAutosize="200"
+      [placeholder]="valueType.placeholder"
       [ngClass]="{'group-element': isInputGroup}"
       [formControl]="formControl"
       [readonly]="readonly"
