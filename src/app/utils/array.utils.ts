@@ -15,3 +15,12 @@ export function arrayUniqueValues(array: any[]): Array<any> {
 export function flatMap(array: any[], mapFunc: (value: any) => any): Array<any> {
   return array.reduce((rv, next) => [...mapFunc(next), ...rv], []);
 }
+
+export function partition<T>(array: T[], condition: (el: T) => boolean): [Array<T>, Array<T>] {
+  return array.reduce(
+    ([pass, fail], elem) => {
+      return condition(elem) ? [[...pass, elem], fail] : [pass, [...fail, elem]];
+    },
+    [[], []]
+  );
+}

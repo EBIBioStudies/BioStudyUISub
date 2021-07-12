@@ -319,6 +319,10 @@ export class TableType extends TypeBase {
     return this.columnScope.filterValues((ct) => ct.tmplBased);
   }
 
+  get columnValueTypes(): ValueType[] {
+    return this.columnTypes.map((columnType) => columnType.valueType);
+  }
+
   getColumnType(name: string, createDefault: boolean = true): ColumnType | undefined {
     if (this.columnScope.has(name)) {
       return this.columnScope.get(name);
@@ -440,6 +444,10 @@ export class SectionType extends TypeBase {
 
   get fieldTypes(): FieldType[] {
     return this.fieldScope.filterValues((ft) => ft.tmplBased);
+  }
+
+  get fieldValueTypes(): ValueType[] {
+    return this.fieldTypes.map((fieldType) => fieldType.valueType);
   }
 
   get tableTypes(): TableType[] {

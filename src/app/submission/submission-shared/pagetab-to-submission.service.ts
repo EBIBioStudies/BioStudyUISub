@@ -1,37 +1,33 @@
-import { SelectValueType, ValueTypeName, FieldType } from './model/templates/submission-type.model';
+import { SelectValueType, ValueTypeName, FieldType, SectionType } from './model/templates/submission-type.model';
 import { Injectable } from '@angular/core';
-import { flatArray, isDefinedAndNotEmpty, isArrayEmpty, arrayUniqueValues, isStringDefined } from 'app/utils';
+import { isDefinedAndNotEmpty, isArrayEmpty, arrayUniqueValues, isStringDefined } from 'app/utils';
+import { authorsToContacts, mergeAttributes, pageTabToSubmissionProtocols } from './model/pagetab';
+import { AttributeData, SectionData, Submission, SubmissionData, TableData } from './model/submission';
+import { SubmissionType } from './model/templates';
+import { NameAndValue, SubmissionTag } from './model/model.common';
+import { findSubmissionTemplateName } from './utils/template.utils';
 import {
-  AttrExceptions,
-  LinksUtils,
-  PageTab,
-  PageTabSection,
-  PtAttribute,
-  authorsToContacts,
-  mergeAttributes,
-  pageTabToSubmissionProtocols,
-  PtLink,
-  PtFile,
-  findAttributesByName
-} from './model/pagetab';
-import { AttributeData, TableData, SectionData, Submission, SubmissionData } from './model/submission';
-import { DEFAULT_TEMPLATE_NAME, SectionType, SubmissionType } from './model/templates';
-import { NameAndValue, PAGE_TAG, Tag } from './model/model.common';
-import { findAttribute } from './utils/pagetab.utils';
+  ExtSubmissionType,
+  ExtSectionType,
+  ExtAttributeType
+} from 'app/submission/submission-shared/model/ext-submission-types';
+import { AttributeType } from './model/submission-common-types';
+import { AttrExceptions, filterAttributesByName } from './utils/attribute.utils';
+import { toUntyped } from './utils/link.utils';
 
 @Injectable()
 export class PageTabToSubmissionService {
-  pageTab2Submission(pageTab: PageTab): Submission {
-    const submissionTemplateName: string = this.findSubmissionTemplateName(pageTab);
+  pageTab2Submission(pageTab: ExtSubmissionType): Submission {
+    const submissionTemplateName: string = findSubmissionTemplateName(pageTab.collections);
     const type: SubmissionType = SubmissionType.fromTemplate(submissionTemplateName);
 
     return new Submission(type, this.pageTabToSubmissionData(pageTab, type.sectionType));
   }
 
-  pageTabToSubmissionData(pageTab: PageTab, sectionType: SectionType): SubmissionData {
+  pageTabToSubmissionData(pageTab: ExtSubmissionType, sectionType: SectionType): SubmissionData {
     return {
-      accno: pageTab.accno,
-      tags: (pageTab.tags || []).map((t) => new Tag(t.classifier, t.tag)),
+      accno: pageTab.accNo,
+      tags: (pageTab.tags || []).map((t) => new SubmissionTag(t.name, t.value)),
       isRevised: !isArrayEmpty(pageTab.tags || []),
       accessTags: pageTab.accessTags,
       attributes: this.pageTabAttributesToAttributeData(pageTab.attributes || []),
@@ -41,40 +37,29 @@ export class PageTabToSubmissionService {
     } as SubmissionData;
   }
 
-  private findSubmissionTemplateName(pageTab: PageTab): string {
-    const attachToAttributes: PtAttribute[] = findAttribute(pageTab, AttrExceptions.attachToAttr);
-    const attachToValue: string[] = attachToAttributes.map((attribute) => (attribute.value as string) || '');
+  private hasSubsections(section: ExtSectionType): boolean {
+    const hasSubsection = section.sections !== undefined && section.sections.length > 0;
+    const hasLinks = section.links !== undefined && section.links.length > 0;
+    const hasFiles = section.files !== undefined && section.files.length > 0;
+    const hasLibraryFile = section.fileList !== undefined && section.fileList !== null;
+    // const sectionTags = section.tags === undefined ? [] : Array.from(section.tags);
+    // const hasPageTag = sectionTags
+    //   .map((tagItem) => new SubmissionTag(tagItem.classifier, tagItem.tag))
+    //   .some((tagInstance) => tagInstance.equals(PAGE_TAG));
 
-    if (attachToValue.length === 0) {
-      return DEFAULT_TEMPLATE_NAME;
-    }
-
-    return attachToValue[0];
+    return hasSubsection || hasLinks || hasFiles || hasLibraryFile; // || hasPageTag;
   }
 
-  private hasSubsections(section: PageTabSection): boolean {
-    const hasSubsection = typeof section.subsections !== 'undefined' && section.subsections.length > 0;
-    const hasLinks = typeof section.links !== 'undefined' && section.links.length > 0;
-    const hasFiles = typeof section.files !== 'undefined' && section.files.length > 0;
-    const hasLibraryFile = typeof section.libraryFile !== 'undefined' && section.libraryFile.length > 0;
-    const sectionTags = section.tags === undefined ? [] : Array.from(section.tags);
-    const hasPageTag = sectionTags
-      .map((tagItem) => new Tag(tagItem.classifier, tagItem.tag))
-      .some((tagInstance) => tagInstance.equals(PAGE_TAG));
-
-    return hasSubsection || hasLinks || hasFiles || hasLibraryFile || hasPageTag;
-  }
-
-  private attributeToAttributeData(attr: PtAttribute): AttributeData {
+  private attributeToAttributeData(attr: ExtAttributeType): AttributeData {
     return {
       name: attr.name || '',
-      reference: attr.reference || attr.isReference,
-      terms: (attr.valqual || []).map((t) => new NameAndValue(t.name, t.value)),
+      reference: attr.reference,
+      terms: (attr.valueAttrs || []).map((t) => new NameAndValue(t.name, t.value)),
       value: attr.value
     };
   }
 
-  private pageTabStudyAttributesToAttributesData(attrs: PtAttribute[], sectionType: SectionType): AttributeData[] {
+  private pageTabStudyAttributesToAttributesData(attrs: ExtAttributeType[], sectionType: SectionType): AttributeData[] {
     const attributesData: AttributeData[] = [];
 
     const selectFieldTypes: FieldType[] = sectionType.fieldTypes.filter(({ valueType }) =>
@@ -106,44 +91,41 @@ export class PageTabToSubmissionService {
     return attributesData;
   }
 
-  private pageTabAttributesToAttributeData(attrs: PtAttribute[]): AttributeData[] {
+  private pageTabAttributesToAttributeData(attrs: ExtAttributeType[]): AttributeData[] {
     return attrs.map((attr) => this.attributeToAttributeData(attr));
   }
 
   private pageTabSectionToSectionData(
-    ptSection: PageTabSection,
-    parentAttributes: PtAttribute[] = [],
+    ptSection: ExtSectionType,
+    parentAttributes: ExtAttributeType[] = [],
     sectionType: SectionType | null
   ): SectionData {
+    const { accNo, attributes = [], links = [], files = [], fileList, type } = ptSection;
     const parentAttributesWithName = parentAttributes.filter((attribute) => isStringDefined(attribute.name));
     const editableParentAttributes = parentAttributesWithName.filter((attribute) =>
       AttrExceptions.editable.includes(attribute.name!)
     );
-    const parentAndChildAttributes = mergeAttributes(editableParentAttributes, ptSection.attributes || []);
-    const attributes = sectionType
+    const parentAndChildAttributes = mergeAttributes(editableParentAttributes, attributes);
+    const attributesData = sectionType
       ? this.pageTabStudyAttributesToAttributesData(parentAndChildAttributes, sectionType)
       : this.pageTabAttributesToAttributeData(parentAndChildAttributes);
 
-    const links = flatArray<PtLink>(ptSection.links || []);
-    const files = flatArray<PtFile>(ptSection.files || []);
-    const subsections = flatArray(ptSection.subsections || []);
+    const subsections = ptSection.sections || [];
     const contacts = authorsToContacts(subsections.filter((section) => !this.hasSubsections(section)));
     const tableSections = pageTabToSubmissionProtocols(contacts);
-    const keywords = findAttributesByName('Keyword', ptSection.attributes || []);
+    const keywords = filterAttributesByName('Keyword', attributes);
 
     const tables: TableData[] = [];
     const hasLinks = links.length > 0;
     const hasFiles = files.length > 0;
     const hasTableSections = tableSections.length > 0;
-    const hasLibraryFile = isDefinedAndNotEmpty(ptSection.libraryFile);
+    const hasFileList = fileList !== undefined && fileList !== null;
     const hasKeywords = keywords.length > 0;
 
     if (hasLinks) {
       tables.push({
         type: 'Link',
-        entries: links
-          .map((link) => LinksUtils.toUntyped(link))
-          .map((link) => this.pageTabAttributesToAttributeData(link))
+        entries: links.map((link) => toUntyped(link)).map((link) => this.pageTabAttributesToAttributeData(link))
       } as TableData);
     }
 
@@ -151,22 +133,22 @@ export class PageTabToSubmissionService {
       tables.push({
         type: 'File',
         entries: files
-          .map((file) => [{ name: 'File', value: file.path } as PtAttribute].concat(file.attributes || []))
+          .map((file) => [{ name: 'File', value: file.path } as ExtAttributeType].concat(file.attributes || []))
           .map((file) => this.pageTabAttributesToAttributeData(file))
       } as TableData);
     }
 
-    if (hasLibraryFile) {
+    if (hasFileList) {
       tables.push({
         type: 'LibraryFile',
-        entries: [[{ name: 'File', value: ptSection.libraryFile } as PtAttribute]]
+        entries: [[{ name: 'File', value: fileList?.fileName } as AttributeType]]
       } as TableData);
     }
 
     if (hasKeywords) {
       tables.push({
         type: 'Keywords',
-        entries: keywords.map((keyword) => [{ name: 'Keyword', value: keyword.value } as PtAttribute])
+        entries: keywords.map((keyword) => [{ name: 'Keyword', value: keyword.value } as AttributeType])
       } as TableData);
     }
 
@@ -192,17 +174,12 @@ export class PageTabToSubmissionService {
       .filter(this.hasSubsections)
       .map((section) => this.pageTabSectionToSectionData(section, [], null));
 
-    const formattedSubSections = subsections
-      .filter((section) => section.type !== 'Protocol')
-      .map((subSection) => this.pageTabSectionToSectionData(subSection, [], null));
-
     return {
-      type: ptSection.type,
-      accno: ptSection.accno,
-      attributes,
+      type,
+      accno: accNo,
+      attributes: attributesData,
       tables,
-      sections: formattedSections,
-      subsections: formattedSubSections
+      sections: formattedSections
     } as SectionData;
   }
 }
