@@ -5,7 +5,6 @@ import { NgForm } from '@angular/forms';
 import { AuthService, UserSession } from 'app/auth/shared';
 import { PasswordResetData, UserInfo } from '../shared/model';
 import { ServerError } from 'app/shared/server-error.handler';
-import config from 'config';
 import { AppConfig } from '../../app.config';
 
 @Component({
@@ -28,7 +27,6 @@ export class PasswordResetComponent implements OnInit {
     private authService: AuthService,
     private userSession: UserSession,
     private appConfig: AppConfig,
-    private router: Router,
     private activatedRoute: ActivatedRoute,
     private route: ActivatedRoute
   ) {
