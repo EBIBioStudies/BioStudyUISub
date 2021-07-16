@@ -141,21 +141,13 @@ export const proteinDesignsTemplate = {
     tableTypes: [
       {
         name: 'SolutionCharacterization',
-<<<<<<< HEAD:src/app/pages/submission/submission-shared/model/templates/proteindesigns.template.ts
-        title: 'Solution characterization (structure) / Circular Dichroism (CD)',
-=======
->>>>>>> dev:src/app/submission/submission-shared/model/templates/proteindesigns.template.ts
         description: 'Solution characterization (structure) / Circular Dichroism (CD)',
         icon: 'fa-book',
         display: 'desirable',
         uniqueCols: true,
         columnTypes: [
           {
-<<<<<<< HEAD:src/app/pages/submission/submission-shared/model/templates/proteindesigns.template.ts
-            name: 'Path',
-=======
             name: 'File',
->>>>>>> dev:src/app/submission/submission-shared/model/templates/proteindesigns.template.ts
             valueType: { name: 'file' },
             display: 'required'
           },
