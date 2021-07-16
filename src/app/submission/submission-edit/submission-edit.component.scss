@@ -1,0 +1,28 @@
+.sidebar-expanded {
+  padding: 0 0 0 var(--sidebar-expanded-width);
+}
+
+.sidebar-collapsed {
+  padding: 0 0 0 var(--sidebar-collapsed-width);
+}
+
+.read-only-body {
+  padding: 0;
+}
+
+.section {
+  &-example {
+    padding: 0 3pt;
+
+    &:before {
+      content: '–';
+    }
+  }
+
+  &-accno {
+    color: #bbbbbb;
+    font-size: small;
+    padding: 0 0.5em;
+    text-align: right;
+  }
+}

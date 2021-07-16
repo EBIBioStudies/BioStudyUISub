@@ -30,7 +30,7 @@ export class AuthService {
     return this.sendPostRequest(`/api/auth/activate/${key}`, {});
   }
 
-  changePassword(obj: PasswordResetData): Observable<StatusResponse> {
+  changePassword(obj: PasswordResetData): Observable<UserInfo> {
     return this.sendPostRequest('/api/auth/password/change', obj.snapshot());
   }
 

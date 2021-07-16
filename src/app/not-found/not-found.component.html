@@ -1,0 +1,21 @@
+<div class="container text-center mt-5">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="error-template">
+        <h1>404</h1>
+        <h5 class="mb-3">{{message}}</h5>
+        <div class="d-flex justify-content-center">
+          <a routerLink="/" class="btn btn-primary mr-2">
+            <i class="fas fa-list"></i>
+            Submission List
+          </a>
+          <button class="btn btn-light" (click)="sendEmail()"
+            role="button">
+            <i class="far fa-envelope"></i>
+            Contact BioStudies
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,70 @@
+<div *ngIf="tableForm" [formGroup]="tableForm.form">
+  <div class="row border-bottom">
+    <div class="col-sm-3 text-muted">Key</div>
+    <div class="col-sm-9 text-muted">Value</div>
+  </div>
+  <div class="row mt-3" *ngFor="let column of columns; let idx = index">
+    <div class="col-sm-3">
+      <div class="form-group m-0" [ngClass]="{'has-error': column.hasErrors}">
+        <div [ngClass]="{'input-group': tableForm.canRemoveColumn(column), 'readonly': column.isReadonly || tableForm.isReadonly}">
+          <div class="input-group-prepend" *ngIf="tableForm.canRemoveColumn(column) && !tableForm.isReadonly && !readonly">
+            <button type="button"
+                class="btn btn-danger"
+                tabindex="-1"
+                (click)="tableForm.removeColumn(column)"
+                [disabled]="!tableForm.canRemoveColumn(column)"
+                [tooltip]="'Delete &quot;' + column.name + '&quot; entry'"
+                placement="bottom"
+                container="body">
+                <i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
+          <input type="text" class="form-control input-sm"
+                placement="top"
+                container="body"
+                containerClass="text-danger"
+                popover="{{column.hasErrors ? column.errors : ''}}"
+                triggers="focus"
+                [formControl]="column.control"
+                [readonly]="!column.canEditName || tableForm.isReadonly || readonly"
+                [typeahead]="tableForm.columnNamesTypeahead(column)"
+                [typeaheadMinLength]="0"
+                [typeaheadOptionsLimit]="200"
+                [typeaheadScrollable]="true"
+                [typeaheadOptionsInScrollableView]="suggestLength"
+                stValidateOnblur>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-9" *ngFor="let cell of [tableForm.cellControlAt(0, column.id)]">
+      <div class="form-group m-0"
+          [ngClass]="{'readonly': column.isReadonly || tableForm.isReadonly,
+                'optional': !column.isRequired,
+                'has-error': cell.hasErrors}">
+        <st-input-value placement="top"
+                container="body"
+                containerClass="{{tableForm.isRequired ? 'text-danger' : 'text-warning'}}"
+                popover="{{cell.hasErrors ? cell.errors : ''}}"
+                triggers="focus"
+                [valueType]="column.valueType"
+                [readonly]="readonly || column.isReadonly || tableForm.isReadonly"
+                [formControl]="cell.control"
+                [autosuggestSource]="tableForm.cellValuesTypeaheadFunc(column.id)"
+                [isSmall]="false"
+                stValidateOnblur>
+        </st-input-value>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row mt-4" *ngIf="tableForm && tableForm.canAddColumn()">
+  <button *ngIf="!readonly && !tableForm.isReadonly"
+      type="button"
+      class="btn btn-link"
+      [tooltip]="'Add a new ' + tableForm.prettyName"
+      container="body"
+      (click)="tableForm.addColumn()">
+    <i class="fa fa-lg fa-plus-circle"></i>
+    Add {{tableForm.prettyName}} row
+  </button>
+</div>

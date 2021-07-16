@@ -1,0 +1,38 @@
+<div *ngIf="!isReadonly || !isEmpty" class="form-group">
+  <label>
+    <h6 class="m-0">
+      {{fieldName}}
+      <a *ngIf="hasHelpLink" class="small ml-1" href="{{fieldHelpLink}}" target="_blank">
+        <i class="fa fa-question-circle"></i> {{fieldHelpText}}
+      </a>
+      <i *ngIf="hasHelpText && !hasHelpLink" [tooltip]="fieldHelpText" class="fa fa-question-circle ml-1" aria-hidden="true"></i>
+      <span class="small text-muted" [hidden]="isReadonly || isValid">
+        <span *ngIf="valueLength.isAtLeast">
+          (at least {{valueLength.min}}
+        </span>
+        <span *ngIf="valueLength.isAtMost">
+          (at most {{valueLength.max}}
+        </span>
+        <span *ngIf="valueLength.isBetween">
+          (between {{valueLength.min}} and {{valueLength.max}}
+        </span>
+        <span *ngIf="valueLength.isDefined">
+          characters long)
+        </span>
+      </span>
+    </h6>
+  </label>
+  <span *ngIf="!isReadonly && !isRequired" class="text-muted float-right"><i>Optional</i></span>
+  <div [ngClass]="{'input-group': !isReadonly, 'readonly': isReadonly, 'is-invalid': isInvalid && isTouched }">
+    <div *ngIf="!isReadonly" class="input-group-prepend">
+      <span class="input-group-text">
+        <i class="fa {{fieldType.icon}}"></i>
+      </span>
+    </div>
+    <st-input-value class="flex-fill" [valueType]="valueType" [readonly]="isReadonly" [formControl]="fieldControl.control"
+      [isSmall]="false" [isInputGroup]="true" stValidateOnblur>
+    </st-input-value>
+  </div>
+  <div class="invalid-feedback" *ngIf="hasErrors">{{errors}}</div>
+  <st-unique-submission-warning *ngIf="!isReadonly" [fieldControl]="fieldControl"></st-unique-submission-warning>
+</div>

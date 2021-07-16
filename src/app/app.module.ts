@@ -21,7 +21,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { AuthModule } from './auth/auth.module';
 import { CoreModule } from './core/core.module';
 import { ThemeModule } from './theme/theme.module';
-import { PagesModule } from './pages/pages.module';
+import { SubmissionDirectModule } from './submission/submission-direct/submission-direct.module';
+import { SubmissionEditModule } from './submission/submission-edit/submission-edit.module';
+import { SubmissionListModule } from './submission/submission-list/submission-list.module';
+import { FileModule } from './file/file.module';
+import { HelpComponent } from './help/help.component';
+import { SharedModule } from 'app/shared/shared.module';
+import { NotFoundModule } from 'app/not-found/not-found.module';
 
 export function initConfig(config: AppConfig): () => Promise<any> {
   return () => config.load();
@@ -48,13 +54,18 @@ export function initConfig(config: AppConfig): () => Promise<any> {
     }),
     RecaptchaModule,
     BrowserAnimationsModule,
-    PagesModule,
+    SubmissionDirectModule,
+    SubmissionEditModule,
+    SubmissionListModule,
+    SharedModule,
+    FileModule,
     AppRoutingModule,
     AuthModule,
     ThemeModule,
-    CoreModule
+    CoreModule,
+    NotFoundModule
   ],
-  declarations: [AppComponent],
+  declarations: [AppComponent, HelpComponent],
   providers: [
     AppConfig,
     { provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true },
