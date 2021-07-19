@@ -179,25 +179,6 @@ export const proteinDesignsTemplate = {
         }
       },
       {
-        name: 'Protein identity verification by mass spectrometry',
-        icon: 'fa-tag',
-        display: 'required',
-        valueType: {
-          name: 'select',
-          values: ['Yes', 'No']
-        }
-      },
-      // {
-      //   name: 'Protein expression evidence',
-      //   helpText:
-      //     'Please upload data from whatever test you use. e.g. an image of a protein gel, data from a FACS experient.',
-      //   icon: 'fa-file',
-      //   display: 'desirable',
-      //   valueType: {
-      //     name: 'file'
-      //   }
-      // },
-      {
         name: 'Solubility',
         helpText:
           'Especially relevant for proteins expressed in cells. When you lyse the cell, is the majority of the protein ' +
@@ -250,7 +231,31 @@ export const proteinDesignsTemplate = {
         ]
       },
       {
-        name: 'Association',
+        name: 'Protein Expression and Solubility',
+        description:
+          'Please upload data from whatever test you use. e.g. an image of a protein gel, data from a FACS experient.',
+        icon: 'fa-file',
+        display: 'desirable',
+        uniqueCols: true,
+        columnTypes: [
+          {
+            name: 'Protein expression evidence',
+            valueType: { name: 'file' },
+            display: 'required'
+          },
+          {
+            name: 'Protein identity verification by mass spectrometry',
+            icon: 'fa-tag',
+            display: 'desirable',
+            valueType: {
+              name: 'select',
+              values: ['Yes', 'No']
+            }
+          }
+        ]
+      },
+      {
+        name: 'Association state',
         icon: 'fa-file',
         display: 'desirable',
         uniqueCols: true,
@@ -281,21 +286,6 @@ export const proteinDesignsTemplate = {
           {
             name: 'Conditions',
             display: 'desirable'
-          }
-        ]
-      },
-      {
-        name: 'Protein expression evidence',
-        description:
-          'Please upload data from whatever test you use. e.g. an image of a protein gel, data from a FACS experient.',
-        icon: 'fa-file',
-        display: 'desirable',
-        uniqueCols: true,
-        columnTypes: [
-          {
-            name: 'File',
-            valueType: { name: 'file' },
-            display: 'required'
           }
         ]
       },
