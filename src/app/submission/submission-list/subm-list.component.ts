@@ -107,13 +107,14 @@ export class SubmListComponent implements OnDestroy, OnInit {
         filterFramework: DateFilterComponent,
         headerName: 'Release Date',
         maxWidth: 150,
-        resizable: true
+        resizable: true,
+        hide: !this.showSubmitted
       },
       {
         cellRendererFramework: ActionButtonsCellComponent,
         filter: true,
         headerName: 'Actions',
-        maxWidth: 100,
+        maxWidth: this.showSubmitted ? 150 : 100,
         resizable: true,
         sortable: false,
         suppressMenu: true
@@ -182,6 +183,12 @@ export class SubmListComponent implements OnDestroy, OnInit {
 
       onEdit: (accno: string) => {
         this.router.navigate(['/edit', accno]);
+      },
+
+      onView: (accno: string) => {
+        let url =
+          location.href.indexOf('wwwdev') > 0 ? `/biostudies/studies/${accno}` : `/biostudies/preview/studies/${accno}`;
+        window.open(this.router.serializeUrl(this.router.createUrlTree([url])), '_blank');
       }
     }));
   }
@@ -234,7 +241,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
       const { accno, method } = event.data;
       const optionalParams = isDefinedAndNotEmpty(method) ? { method } : {};
 
-      this.router.navigate([`/edit/${accno}`, optionalParams]);
+      this.router.navigate([`../../../edit/${accno}`, optionalParams]);
     }
   }
 
