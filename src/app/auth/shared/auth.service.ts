@@ -63,6 +63,10 @@ export class AuthService {
     return this.sendPostRequest<StatusResponse>('/api/auth/retryact', this.withInstanceKey(obj.snapshot()));
   }
 
+  sendActivationEmailRequest(obj: ActivationLinkRequestData): Observable<StatusResponse> {
+    return this.sendPostRequest<StatusResponse>('/api/auth/activate', this.withInstanceKey(obj.snapshot()));
+  }
+
   sendPasswordResetRequest(obj: PasswordResetRequestData): Observable<StatusResponse> {
     return this.sendPostRequest<UserInfoResponse>('/api/auth/password/reset', this.withInstanceKey(obj.snapshot()));
   }

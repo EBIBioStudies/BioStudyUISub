@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { RecaptchaComponent } from 'ng-recaptcha';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { AuthService, UserSession } from 'app/auth/shared';
 import { PasswordResetData, UserInfo } from '../shared/model';
@@ -27,7 +27,6 @@ export class PasswordResetComponent implements OnInit {
     private authService: AuthService,
     private userSession: UserSession,
     private appConfig: AppConfig,
-    private activatedRoute: ActivatedRoute,
     private route: ActivatedRoute
   ) {
     this.route.data.subscribe((data) => {
@@ -38,7 +37,7 @@ export class PasswordResetComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const key = this.activatedRoute.snapshot.paramMap.get('key');
+    const key = this.route.snapshot.paramMap.get('key');
     if (key === null) {
       this.hasError = true;
       this.message = 'Invalid path';

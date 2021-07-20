@@ -4,16 +4,16 @@
   </div>
   <div class="card">
     <div *ngIf="showSuccess" class="card-body">
-      <h4 class="card-title">Activation email re-sent</h4>
+      <h4 class="card-title">Activation email sent</h4>
       <h6 class="card-subtitle mb-2 text-muted">
         The activation link has been sent to <strong>{{model.email}}</strong>.
         Please check your email, including the spam/trash folder.
       </h6>
     </div>
     <div *ngIf="!showSuccess" class="card-body">
-      <h4 class="card-title">Resend activation email</h4>
+      <h4 class="card-title">Send activation email</h4>
       <h6 class="card-subtitle mb-2 text-muted">
-        Please enter your email and we will send you a new link to activate your account.
+        Please enter your email and we will send you a link to activate your account.
       </h6>
       <form name="raForm" (ngSubmit)="onSubmit(raForm)" #raForm="ngForm" data-testid="raForm" novalidate>
         <div class="form-group" [ngClass]="{'was-validated': email.invalid && email.touched}">
@@ -22,7 +22,7 @@
           <div class="invalid-feedback" *ngIf="email.invalid && email.touched">Please enter a valid email</div>
         </div>
         <button type="submit" class="btn btn-primary my-2" [disabled]="isLoading">
-          Re-send activation
+          Send activation
           <span *ngIf="isLoading"><i class="fa fa-cog fa-spin"></i></span>
         </button>
         <re-captcha
