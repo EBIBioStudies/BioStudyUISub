@@ -31,6 +31,7 @@ export class ActivationLinkReqComponent {
   }
 
   sendActivationEmail(): void {
+    this.isLoading = true;
     this.authService.sendActivationEmailRequest(this.model).subscribe(
       () => {
         this.isLoading = false;

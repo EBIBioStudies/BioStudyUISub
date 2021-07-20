@@ -22,7 +22,7 @@
           <div class="invalid-feedback" *ngIf="email.invalid && email.touched">Please enter a valid email</div>
         </div>
         <button type="submit" class="btn btn-primary my-2" [disabled]="isLoading">
-          Send activation
+          {{isLoading ? 'Sending' : 'Send'}} activation
           <span *ngIf="isLoading"><i class="fa fa-cog fa-spin"></i></span>
         </button>
         <re-captcha
