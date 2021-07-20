@@ -4,6 +4,7 @@ import { AuthService } from 'app/auth/shared';
 import { ActivationLinkRequestData } from '../shared/model';
 import { NgForm } from '@angular/forms';
 import { ServerError } from 'app/shared/server-error.handler';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'st-auth-activation-resend',
@@ -19,22 +20,42 @@ export class ActivationLinkReqComponent {
   @ViewChild('recaptchaEl')
   private recaptchaRef!: RecaptchaComponent;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private route: ActivatedRoute) {
+    this.route.queryParams.subscribe((params) => {
+      this.model.email = params.email || '';
+
+      if (this.model.email.length > 0) {
+        this.sendActivationEmail();
+      }
+    });
+  }
+
+  sendActivationEmail(): void {
+    this.authService.sendActivationEmailRequest(this.model).subscribe(
+      () => {
+        this.isLoading = false;
+        this.showSuccess = true;
+      },
+      (error: ServerError) => {
+        this.isLoading = false;
+        this.hasError = true;
+        this.message = error.data.message;
+      }
+    );
+  }
 
   onRecaptchaResolved(captchaToken: string): void {
-    const component = this; // SelfSubscriber object overwrites context for "subscribe" method
-
     if (captchaToken) {
       this.model.captcha = captchaToken;
       this.authService.sendActivationLinkRequest(this.model).subscribe(
         () => {
           this.isLoading = false;
-          component.showSuccess = true;
+          this.showSuccess = true;
         },
         (error: ServerError) => {
           this.isLoading = false;
-          component.hasError = true;
-          component.message = error.data.message;
+          this.hasError = true;
+          this.message = error.data.message;
         }
       );
     }
