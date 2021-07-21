@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { RecaptchaComponent } from 'ng-recaptcha';
 import { AuthService } from 'app/auth/shared';
-import { ActivationLinkRequestData } from '../shared/model';
+import { ActivationLinkRequestData, PasswordSetupRequestData } from '../shared/model';
 import { NgForm } from '@angular/forms';
 import { ServerError } from 'app/shared/server-error.handler';
 import { ActivatedRoute } from '@angular/router';
@@ -32,7 +32,7 @@ export class ActivationLinkReqComponent {
 
   sendActivationEmail(): void {
     this.isLoading = true;
-    this.authService.sendActivationEmailRequest(this.model).subscribe(
+    this.authService.sendActivationEmailRequest(new PasswordSetupRequestData(this.model.email)).subscribe(
       () => {
         this.isLoading = false;
         this.showSuccess = true;
