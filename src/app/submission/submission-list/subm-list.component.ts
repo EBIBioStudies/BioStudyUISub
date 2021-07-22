@@ -4,7 +4,6 @@ import { GridOptions } from 'ag-grid-community/main';
 import { Subject, Subscription, throwError } from 'rxjs';
 import { takeUntil, catchError } from 'rxjs/operators';
 import { ModalService } from 'app/shared/modal.service';
-import { isDefinedAndNotEmpty } from 'app/utils';
 import { SubmissionService } from '../submission-shared/submission.service';
 import { SubmissionStatusService } from '../submission-shared/submission-status.service';
 import { DateFilterComponent } from './ag-grid/date-filter.component';
@@ -14,6 +13,7 @@ import { DateCellComponent } from './ag-grid/date-cell.component';
 import { StatusCellComponent } from './ag-grid/status-cell.component';
 import { TextCellComponent } from './ag-grid/text-cell.component';
 import { SubmissionStatus } from 'app/submission/submission-shared/submission.status';
+import { AppConfig } from 'app/app.config';
 
 @Component({
   selector: 'st-subm-list',
@@ -27,6 +27,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
   isCreating: boolean = false; // Flag indicating if submission creation is in progress
   rows: any[] = [];
   showSubmitted: boolean = true; // Flag indicating if the list of sent submissions is to be displayed
+  frontendURL: string = this.appConfig.frontendURL;
 
   protected ngUnsubscribe: Subject<void>; // Stopper for all subscriptions to HTTP get operations
 
@@ -37,7 +38,8 @@ export class SubmListComponent implements OnDestroy, OnInit {
     private modalService: ModalService,
     private router: Router,
     private route: ActivatedRoute,
-    private submStatusService: SubmissionStatusService
+    private submStatusService: SubmissionStatusService,
+    private appConfig: AppConfig
   ) {
     this.ngUnsubscribe = new Subject<void>();
 
@@ -107,13 +109,14 @@ export class SubmListComponent implements OnDestroy, OnInit {
         filterFramework: DateFilterComponent,
         headerName: 'Release Date',
         maxWidth: 150,
-        resizable: true
+        resizable: true,
+        hide: !this.showSubmitted
       },
       {
         cellRendererFramework: ActionButtonsCellComponent,
         filter: true,
         headerName: 'Actions',
-        maxWidth: 100,
+        maxWidth: this.showSubmitted ? 150 : 100,
         resizable: true,
         sortable: false,
         suppressMenu: true
@@ -182,6 +185,10 @@ export class SubmListComponent implements OnDestroy, OnInit {
 
       onEdit: (accno: string) => {
         this.router.navigate(['/edit', accno]);
+      },
+
+      onView: (accno: string) => {
+        window.open(`${this.frontendURL}/biostudies/studies/${accno}`, '_blank');
       }
     }));
   }
@@ -221,21 +228,6 @@ export class SubmListComponent implements OnDestroy, OnInit {
           agApi!.redrawRows();
         }
       });
-  }
-
-  /**
-   * Handler for click events on a row. It redirects the user to the study's edit mode, unless over the actions cell
-   * @param event - ag-Grid's custom event object that includes data represented by the clicked row.
-   */
-  onRowClicked(event): void {
-    const isProcessingSubmission = this.isProcessingRowSubmission(event.data);
-
-    if (!this.isBusy && event.colDef.headerName !== 'Actions' && !isProcessingSubmission) {
-      const { accno, method } = event.data;
-      const optionalParams = isDefinedAndNotEmpty(method) ? { method } : {};
-
-      this.router.navigate([`/edit/${accno}`, optionalParams]);
-    }
   }
 
   onSubmTabSelect(isSubmitted: boolean): void {
