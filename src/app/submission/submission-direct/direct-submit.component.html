@@ -101,7 +101,7 @@
               </strong>
               <p>
                 Data are available in the BioStudies database <a target="_blank"
-                  href="https://www.ebi.ac.uk/biostudies/">(https://ebi.ac.uk/biostudies/)</a>
+                  href="https://www.ebi.ac.uk/biostudies/">(https://www.ebi.ac.uk/biostudies/)</a>
                 under accession {{pluralise('number')}}
                 <span *ngFor="let file of sidebar.model.files; let i = index; let last = last">
                   {{getAccno(i)}}{{last ? '' : ', '}}

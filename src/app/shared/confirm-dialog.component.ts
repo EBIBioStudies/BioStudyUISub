@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { BsModalRef, ModalDirective } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 
 /**
  * UI component for confirmation modals with all its text parts parameterized.
@@ -19,7 +19,9 @@ export class ConfirmDialogComponent {
   @ViewChild('focusBtn', { static: true })
   private focusEl!: ElementRef;
 
-  constructor(public bsModalRef: BsModalRef) {}
+  constructor(public bsModalRef: BsModalRef) {
+    bsModalRef.onHidden.subscribe((event) => this.onHidden(event));
+  }
 
   /**
    * Handler for abort event. Notifies such confirmation with a "false" in the event stream.
@@ -42,17 +44,10 @@ export class ConfirmDialogComponent {
    * it is interpreted as a cancel action.
    * @param event - Custom modal event indicating the reason for the modal's dismissal
    */
-  onHidden(event: ModalDirective): void {
-    if (event.dismissReason === 'backdrop-click') {
+  onHidden(event): void {
+    if (event === 'backdrop-click') {
       this.cancel();
     }
-  }
-
-  /**
-   * Handler for "onShown" event, triggered exactly after the modal has been fully revealed.
-   */
-  onShown(): void {
-    this.focusEl.nativeElement.focus();
   }
 
   private response(resp: boolean): void {
