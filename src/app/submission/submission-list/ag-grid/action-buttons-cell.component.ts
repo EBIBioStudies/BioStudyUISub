@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   selector: 'st-action-buttons-cell',
   template: `
     <button
-      *ngIf="rowData && !rowData.isTemp"
+      *ngIf="rowData && !rowData.isTemp && !isProcessing"
       type="button"
       class="btn btn-link"
       (click)="onViewSubmission()"
@@ -31,7 +31,7 @@ import { Component } from '@angular/core';
     <button
       *ngIf="rowData && isRowDeletable"
       type="button"
-      class="btn btn-link btn-grey"
+      class="btn btn-link"
       [disabled]="isBusy"
       (click)="onDeleteSubmission()"
       tooltip="Delete"
@@ -41,19 +41,7 @@ import { Component } from '@angular/core';
       <i *ngIf="!isBusy" class="far fa-trash-alt fa-fw"></i>
       <i *ngIf="isBusy" class="fa fa-cog fa-spin fa-fw"></i>
     </button>
-  `,
-  styles: [
-    `
-      .btn-grey {
-        color: #999999;
-      }
-
-      button:focus {
-        outline: none;
-        box-shadow: none;
-      }
-    `
-  ]
+  `
 })
 export class ActionButtonsCellComponent implements AgRendererComponent {
   isBusy: boolean = false; // flags if a previous button action is in progress
@@ -65,6 +53,10 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
 
   get isRowEditable(): boolean {
     return this.rowData.isEditable;
+  }
+
+  get isProcessing(): boolean {
+    return this.rowData.isProcessing;
   }
 
   get deleteTooltip(): string {

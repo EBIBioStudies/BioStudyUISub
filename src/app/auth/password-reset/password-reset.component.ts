@@ -56,7 +56,7 @@ export class PasswordResetComponent implements OnInit {
               this.isLoading = false;
               this.showSuccess = true;
               this.userSession.create(userInfo);
-              window.location.href = this.frontendURL + '/studies';
+              window.location.href = `${this.frontendURL}/studies`;
             },
             (error: ServerError) => {
               this.isLoading = false;
