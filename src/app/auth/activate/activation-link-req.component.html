@@ -1,6 +1,6 @@
 <st-auth-container>
   <div class="alert" [ngClass]="{'alert-danger': hasError, 'invisible': !hasError}">
-    {{hasError ? message : '&nbsp;'}}
+    <span [innerHTML]="message"></span>
   </div>
   <div class="card">
     <div *ngIf="showSuccess" class="card-body">
@@ -18,7 +18,7 @@
       <form name="raForm" (ngSubmit)="onSubmit(raForm)" #raForm="ngForm" data-testid="raForm" novalidate>
         <div class="form-group" [ngClass]="{'was-validated': email.invalid && email.touched}">
           <label for="email">Email</label>
-          <input type="email" class="form-control" id="email" name="email" [(ngModel)]="model.email" #email="ngModel" autofocus required/>
+          <input type="email" class="form-control" id="email" name="email" [(ngModel)]="model.email" #email="ngModel" [disabled]="isLoading" autofocus required/>
           <div class="invalid-feedback" *ngIf="email.invalid && email.touched">Please enter a valid email</div>
         </div>
         <button type="submit" class="btn btn-primary my-2" [disabled]="isLoading">
