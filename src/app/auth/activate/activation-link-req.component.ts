@@ -16,6 +16,7 @@ export class ActivationLinkReqComponent {
   message: string = '';
   model: ActivationLinkRequestData = new ActivationLinkRequestData();
   showSuccess: boolean = false;
+  comesFromEmail: boolean = false;
 
   @ViewChild('recaptchaEl')
   private recaptchaRef!: RecaptchaComponent;
@@ -26,6 +27,7 @@ export class ActivationLinkReqComponent {
 
       if (this.model.email.length > 0) {
         this.sendActivationEmail();
+        this.comesFromEmail = true;
       }
     });
   }
