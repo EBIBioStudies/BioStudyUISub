@@ -3,13 +3,7 @@
     <span [innerHTML]="message"></span>
   </div>
   <div class="card">
-    <div *ngIf="showSuccess" class="card-body">
-      <h4 class="card-title">Activation email sent</h4>
-      <h6 class="card-subtitle mb-2 text-muted">
-        The activation link has been sent to <strong>{{model.email}}</strong>.
-        Please check your email, including the spam/trash folder.
-      </h6>
-    </div>
+    <st-activation-link-success *ngIf="showSuccess" [email]="model.email" [comesFromEmail]="comesFromEmail"></st-activation-link-success>
     <div *ngIf="!showSuccess" class="card-body">
       <h4 class="card-title">Send activation email</h4>
       <h6 class="card-subtitle mb-2 text-muted">

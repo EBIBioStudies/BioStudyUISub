@@ -6,6 +6,7 @@ import { AuthService, UserSession, UserData } from 'app/auth/shared';
 import { SignInComponent } from './signin/signin.component';
 import { ActivateComponent } from './activate/activate.component';
 import { ActivationLinkReqComponent } from './activate/activation-link-req.component';
+import { ActivationLinkSuccessComponent } from './activate/activation-link-success.component';
 import { PasswordResetReqComponent } from './password-reset/password-reset-req.component';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { SignUpComponent } from './signup/signup.component';
@@ -20,6 +21,7 @@ import { CookieService } from 'ngx-cookie-service';
     SignUpComponent,
     ActivateComponent,
     ActivationLinkReqComponent,
+    ActivationLinkSuccessComponent,
     PasswordResetReqComponent,
     PasswordResetComponent,
     Equals2Directive
@@ -29,6 +31,7 @@ import { CookieService } from 'ngx-cookie-service';
     SignUpComponent,
     ActivateComponent,
     ActivationLinkReqComponent,
+    ActivationLinkSuccessComponent,
     PasswordResetReqComponent,
     PasswordResetComponent
   ]
