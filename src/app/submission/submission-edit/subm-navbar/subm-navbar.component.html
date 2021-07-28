@@ -9,7 +9,7 @@
     <ng-container *ngFor="let secForm of sectionPath; let idx = index; let last = last;">
       <i class="fa fa-angle-right font-bold"></i>
       <button class="btn btn-link btn-sm" (click)="onSectionClick(secForm)" [disabled]="last">
-        <span *ngIf="idx == 0">{{accno}}{{isDiscardable? ' (revised)' : ''}}</span>
+        <span *ngIf="idx == 0">{{accno}}</span>
         <span *ngIf="idx > 0">{{secForm.accno ? secForm.accno : secForm.typeName}}</span>
       </button>
     </ng-container>
@@ -53,5 +53,13 @@
         stNewSubmissionButton>
       New submission
     </button>
+    <a *ngIf="!isTemp" class="btn btn-info btn-sm ml-2"
+        [href]="submissionUrl"
+        target="_blank"
+        tooltip="Open in BioStudies"
+        placement="bottom"
+        container="body">
+      <i class="fas fa-external-link-alt"></i>
+    </a>
   </div>
 </nav>

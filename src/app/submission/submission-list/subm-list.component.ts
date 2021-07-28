@@ -188,7 +188,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
       },
 
       onView: (accno: string) => {
-        window.open(`${this.frontendURL}/biostudies/studies/${accno}`, '_blank');
+        window.open(`${this.frontendURL}/studies/${accno}`, '_blank');
       }
     }));
   }
