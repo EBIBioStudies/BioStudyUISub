@@ -18,7 +18,10 @@
       Backing up study data...
     </span>
   </div>
-  <div class="btn-toolbar">
+  <div class="btn-toolbar d-flex align-items-center">
+    <a *ngIf="!isTemp" class="small mr-3" [href]="submissionUrl" target="_blank">
+      Open in BioStudies
+    </a>
     <button *ngIf="!readonly"
         [disabled]="isSaving"
         class="btn btn-primary btn-sm"
@@ -53,13 +56,5 @@
         stNewSubmissionButton>
       New submission
     </button>
-    <a *ngIf="!isTemp" class="btn btn-info btn-sm ml-2"
-        [href]="submissionUrl"
-        target="_blank"
-        tooltip="Open in BioStudies"
-        placement="bottom"
-        container="body">
-      <i class="fas fa-external-link-alt"></i>
-    </a>
   </div>
 </nav>
