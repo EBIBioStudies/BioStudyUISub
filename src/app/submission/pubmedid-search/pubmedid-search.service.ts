@@ -13,29 +13,46 @@ const publAttrMapping = {
   journalVolume: 'volume'
 };
 
+export interface PubMedResultList {
+  result: object[];
+}
+
+export interface PubMedPublication {
+  hitCount: number;
+  nextCursorMark?: string;
+  request?: object;
+  resultList?: PubMedResultList;
+  version?: string;
+}
+
 @Injectable()
 export class PubMedSearchService {
   constructor(private http: HttpClient) {}
 
-  search(pmid): Observable<any> {
+  search(pmid): Observable<PubMedPublication> {
     if (!pmid) {
-      return of({});
+      return of({} as PubMedPublication);
     }
 
     return this.http
-      .get<any>(`https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=ext_id:${pmid}&format=json`)
+      .get<PubMedPublication>(
+        `https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=ext_id:${pmid}&format=json`
+      )
       .pipe(
         map((resp) => {
           const hitCount = resp.hitCount;
-          const data = {};
-          if (hitCount >= 1) {
-            const publ = resp.resultList.result[0];
+          const data: PubMedPublication = { hitCount: 0 };
+
+          if (hitCount > 0) {
+            const publ = resp.resultList!.result[0];
             Object.keys(publAttrMapping).forEach((key) => {
               if (publ.hasOwnProperty(key)) {
                 data[publAttrMapping[key]] = publ[key] + '';
               }
             });
           }
+          data.hitCount = hitCount;
+
           return data;
         }),
         catchError((error: any) => {

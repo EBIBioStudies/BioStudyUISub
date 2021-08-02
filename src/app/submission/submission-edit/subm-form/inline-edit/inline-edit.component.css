@@ -21,7 +21,7 @@
   position: absolute;
   top: 0;
   right: 0;
-  opacity: .3;
+  opacity: 0.3;
 }
 .editable:hover .icons {
   opacity: 1;
