@@ -1,10 +1,18 @@
-import { Component, Input, Output, forwardRef, EventEmitter } from '@angular/core';
-
+import {
+  Component,
+  Input,
+  Output,
+  forwardRef,
+  EventEmitter,
+  OnDestroy,
+  ChangeDetectorRef,
+  ViewChild
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import debounce from 'lodash.debounce';
-import isEmpty from 'lodash.isempty';
-import { PubMedSearchService } from './pubmedid-search.service';
-import { Observable } from 'rxjs';
+import { PubMedPublication, PubMedSearchService } from './pubmedid-search.service';
+import { Observable, Subject, Subscription } from 'rxjs';
+import { debounceTime, delay, distinctUntilChanged, mergeMap } from 'rxjs/operators';
+import { BsDropdownDirective } from 'ngx-bootstrap/dropdown';
 
 @Component({
   selector: 'st-pubmedid-search',
@@ -25,20 +33,49 @@ import { Observable } from 'rxjs';
  * de-bounced key presses, supports the enter key and allows for any previously fetched publication data
  * to be displayed again (1st enter key press) or actioned upon (2nd key press).
  */
-export class PubMedIdSearchComponent implements ControlValueAccessor {
+export class PubMedIdSearchComponent implements ControlValueAccessor, OnDestroy {
   @Output() found: EventEmitter<any> = new EventEmitter<any>();
-  isPreviewPub: boolean = false; // indicates if the retrieved publication's summary preview is on display
   @Input() readonly?: boolean = false;
   @Input() required?: boolean = false;
   @Input() inputId: string = '';
 
-  publication: { [key: string]: string } = {}; // last publication retrieved
+  @ViewChild('dropdown', { static: true })
+  private dropdown!: BsDropdownDirective;
+
+  keyUp = new Subject<string>();
+  publication: PubMedPublication = { hitCount: 0 }; // last publication retrieved
   isBusy: boolean = false; // indicates a transaction is in progress
   pubMedId: string | undefined; // last PubMed ID number typed in
-  private lastIDfetched: string | undefined; // helps cancel unnecessary search actions triggered by enter key
+  private keyUpSubscription: Subscription;
 
-  constructor(private pubMedSearchService: PubMedSearchService) {
-    this.pubMedFetch = debounce(this.pubMedFetch, 300);
+  constructor(private pubMedSearchService: PubMedSearchService, private changeDetectorRef: ChangeDetectorRef) {
+    this.keyUpSubscription = this.keyUp
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        mergeMap((idToSearch) => this.pubMedFetch(idToSearch).pipe(delay(500)))
+      )
+      .subscribe(
+        (response) => {
+          this.isBusy = false;
+          this.publication = response;
+
+          if (this.publication.hitCount > 0) {
+            this.dropdown.show();
+          }
+
+          this.changeDetectorRef.detectChanges();
+        },
+        () => {
+          this.isBusy = false;
+          this.dropdown.hide();
+          this.changeDetectorRef.detectChanges();
+        }
+      );
+  }
+
+  ngOnDestroy(): void {
+    this.keyUpSubscription.unsubscribe();
   }
 
   get value(): string | undefined {
@@ -56,23 +93,13 @@ export class PubMedIdSearchComponent implements ControlValueAccessor {
    * Retrieves the publication data for the ID present in the search field shows its preview, ready
    * for selection so the user wishes. It will also notify the template that the transaction is going on so that
    * no further action is allowed in the interim.
-   * @returns Stream of HTTP client events.
    */
-  pubMedFetch(): Observable<any> {
-    let eventStream;
-
+  pubMedFetch(idToSearch: string): Observable<any> {
     this.isBusy = true;
-    eventStream = this.pubMedSearchService.search(this.pubMedId);
-    eventStream.subscribe((response) => {
-      this.isBusy = false;
-      this.lastIDfetched = this.pubMedId;
-      if (response.hasOwnProperty('title')) {
-        this.publication = response;
-        this.isPreviewPub = true;
-      }
-    });
+    this.dropdown.hide();
+    this.changeDetectorRef.detectChanges();
 
-    return eventStream;
+    return this.pubMedSearchService.search(idToSearch);
   }
 
   /**
@@ -91,38 +118,11 @@ export class PubMedIdSearchComponent implements ControlValueAccessor {
   registerOnTouched(): void {}
 
   /**
-   * Performs a new lookup operation provided the field is not blank and there is no request in progress.
-   * It also hides the previous search result's preview if on display.
-   */
-  search(): void {
-    if (this.pubMedId && !this.isBusy) {
-      this.isPreviewPub = false;
-      this.pubMedFetch();
-    }
-  }
-
-  /**
-   * Performs a lookup operation on pressing a certain key (filtered at the template level) as long as the
-   * ID being searched is different from the last one. Otherwise it just directly selects the previously
-   * searched publication for autofill.
-   * @param event - DOM event for the click action.
-   */
-  searchOnKeypress(event: Event): void {
-    event.stopPropagation();
-
-    if (this.pubMedId !== this.lastIDfetched) {
-      this.search();
-    } else if (this.pubMedId) {
-      this.selectPub();
-    }
-  }
-
-  /**
    * Bubbles the selected publication event up, hiding its preview too.
    */
   selectPub(): void {
     this.found.emit(this.publication);
-    this.isPreviewPub = false;
+    this.dropdown.hide();
   }
 
   /**
@@ -130,11 +130,13 @@ export class PubMedIdSearchComponent implements ControlValueAccessor {
    * has just been rendered, it checks for an already existing ID and retrieves the publication for that one.
    */
   togglePreviewPub(): void {
-    if (this.pubMedId && isEmpty(this.publication) && !this.isPreviewPub) {
-      this.pubMedFetch();
-      return;
+    if (this.pubMedId && this.publication.hitCount === 0) {
+      this.keyUp.next(this.pubMedId);
     }
-    this.isPreviewPub = !this.isPreviewPub;
+
+    if (this.publication.hitCount > 0) {
+      this.dropdown.toggle(true);
+    }
   }
 
   /**
