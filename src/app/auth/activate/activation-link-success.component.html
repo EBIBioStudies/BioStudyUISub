@@ -8,7 +8,7 @@
     <p>You can click on the link in the email or copy-paste the activation code in the text box below to activate your account</p>
     <div class="form-group mb-2 mr-2">
       <label class="mr-2" for="activationCode">Activation Code</label>
-      <input type="text" class="form-control flex-grow-1" id="activationCode" [(ngModel)]="activationCode" placeholder="e.g. 20b2ab80-d1dc-4d35-a0b9-2a781cd1fb11" autofocus>
+      <input type="text" class="form-control flex-grow-1" id="activationCode" [(ngModel)]="activationCode" placeholder="e.g. 20b2ab80-d1dc-4d35-a0b9-2a781cd1fb11" #activationCodeRef autofocus>
     </div>
     <a [routerLink]="['/password_setup', activationCode]" class="btn btn-primary my-2" [class.disabled]="isActivationCodeEmpty ? true: null">Activate and Set Password</a>
   </div>
