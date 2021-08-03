@@ -1,5 +1,5 @@
 <div class="d-flex align-items-center h-100" [ngClass]="{'editable': canEdit, 'text-muted': !editing}">
-  <input class="form-control" type="text" tabindex="-1" autocomplete="off"
+  <input class="form-control form-control-sm shadow-none" type="text" tabindex="-1" autocomplete="off"
        name="inline-edit-box"
        container="body"
        placement="bottom"
@@ -12,6 +12,7 @@
        [typeaheadOptionsLimit]="200"
        [typeaheadScrollable]="true"
        [typeaheadOptionsInScrollableView]="suggestLength"
+       [ngClass]="{'readonly': !editing}"
        (blur)="onBlur()"
        (click)="!readonly && canEdit && onEdit()"
        (keyup.enter)="onEnterKey($event, ahead._container)"
