@@ -2,7 +2,7 @@
   <div class="row flex-nowrap mt-0">
     <div class="col-sm-1 col-md-1 border-bottom">
       <button *ngIf="tableForm.canAddColumn() && !isReadOnly"
-          class="btn btn-link text-truncate" type="button" tabindex="-1"
+          class="btn btn-link btn-sm text-truncate" type="button" tabindex="-1"
           [ngClass]="{'invisible': isReadOnly || !userData.isPrivileged}"
           [tooltip]="'Add a new ' + tableForm.tableTypeName.toLowerCase() + ' attribute'"
           container="body"
@@ -76,7 +76,7 @@
     </div>
   </div>
 </div>
-<button *ngIf="tableForm && tableForm.canAddRow() && !isReadOnly" type="button" class="btn-add btn btn-link" tabindex="-1"
+<button *ngIf="tableForm && tableForm.canAddRow() && !isReadOnly" type="button" class="btn btn-add btn-link btn-sm" tabindex="-1"
     [tooltip]="'Add a new ' + tableForm.prettyName"
     container="body"
     (click)="tableForm.addRow()">
