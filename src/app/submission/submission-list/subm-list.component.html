@@ -1,19 +1,6 @@
 <div class="container pt-3">
   <div class="d-flex justify-content-end">
-    <button class="btn btn-primary mr-2"
-        (click)="onUploadSubmClick($event)"
-        [disabled]="isBusy"
-        tooltip="Create/Update a submission from a file"
-        container="body">
-      <i class="fa fa-upload" aria-hidden="true"></i>
-      Direct upload
-    </button>
-    <button class="btn btn-primary"
-        tooltip="Create a new submission manually"
-        container="body"
-        stNewSubmissionButton>
-      New submission
-    </button>
+    <st-new-submission-button [isBusy]="isBusy"></st-new-submission-button>
   </div>
   <tabset>
     <tab [active]="showSubmitted" (selectTab)="onSubmTabSelect(true)">

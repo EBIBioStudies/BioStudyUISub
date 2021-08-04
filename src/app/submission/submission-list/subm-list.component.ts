@@ -244,15 +244,6 @@ export class SubmListComponent implements OnDestroy, OnInit {
     }
   }
 
-  /**
-   * Handler for the click event on the upload submission button, redirecting to a new view.
-   * @param event - Click event object, the bubbling of which will be prevented.
-   */
-  onUploadSubmClick(event: Event): void {
-    event.preventDefault();
-    this.router.navigate(['/direct_upload']);
-  }
-
   setDatasource(): void {
     const agApi = this.gridOptions.api;
 
