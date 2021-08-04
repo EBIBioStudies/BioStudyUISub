@@ -174,9 +174,9 @@ export class SubmListComponent implements OnDestroy, OnInit {
         } else {
           return this.modalService
             .confirm(
-              `The submission with accession number ${accno} has not been submitted yet. If you proceed, \
+              `The draft with accession number ${accno} has not been submitted yet. If you proceed, \
             it will be permanently deleted.`,
-              `Delete draft submission`,
+              `Delete draft`,
               'Delete'
             )
             .subscribe(onNext);
