@@ -33,6 +33,10 @@ export function initConfig(config: AppConfig): () => Promise<any> {
   return () => config.load();
 }
 
+function initRecaptchaSettings(config: AppConfig): RecaptchaSettings {
+  return { siteKey: config.recaptchaPublicKey, size: 'invisible' };
+}
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -71,10 +75,7 @@ export function initConfig(config: AppConfig): () => Promise<any> {
     { provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true },
     { provide: LocationStrategy, useClass: PathLocationStrategy },
     { provide: RECAPTCHA_BASE_URL, useValue: 'https://recaptcha.net/recaptcha/api.js' },
-    {
-      provide: RECAPTCHA_SETTINGS,
-      useValue: { siteKey: '6Lc8JN0UAAAAAN4yxc0Ms6qIZ3fml-EYuuD_cTKi', size: 'invisible' } as RecaptchaSettings
-    }
+    { provide: RECAPTCHA_SETTINGS, useFactory: initRecaptchaSettings, deps: [AppConfig] }
   ],
   bootstrap: [AppComponent]
 })
