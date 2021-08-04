@@ -5,7 +5,7 @@ import { getSubmissionTemplates, PageTab } from 'app/submission/submission-share
 import { SubmissionToPageTabService } from 'app/submission/submission-shared/submission-to-pagetab.service';
 import { SubmissionService } from 'app/submission/submission-shared/submission.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { AddSubmModalComponent } from './add-subm-modal.component';
+import { AddSubmModalComponent } from '../add-subm-modal/add-subm-modal.component';
 
 const PLUS_ICON = '<i class="fa fa-plus-circle" aria-hidden="true"></i>';
 const SPINNER_ICON = '<i class="fa fa-cog fa-spin"></i>';
@@ -26,8 +26,8 @@ export class NewSubmissionButtonDirective implements AfterViewInit {
   ) {}
 
   ngAfterViewInit(): void {
-    const html = this.el.nativeElement.innerHTML;
-    this.el.nativeElement.innerHTML = PLUS_ICON + html;
+    // const html = this.el.nativeElement.innerHTML;
+    // this.el.nativeElement.innerHTML = PLUS_ICON + html;
   }
 
   @HostListener('click', ['$event.target']) onClick(): void {
@@ -66,13 +66,13 @@ export class NewSubmissionButtonDirective implements AfterViewInit {
 
   private startCreating(): void {
     this.disabled = true;
-    const html = this.el.nativeElement.innerHTML;
-    this.el.nativeElement.innerHTML = html.replace(PLUS_ICON, SPINNER_ICON);
+    // const html = this.el.nativeElement.innerHTML;
+    // this.el.nativeElement.innerHTML = html.replace(PLUS_ICON, SPINNER_ICON);
   }
 
   private stopCreating(): void {
     this.disabled = false;
-    const html = this.el.nativeElement.innerHTML;
-    this.el.nativeElement.innerHTML = html.replace(SPINNER_ICON, PLUS_ICON);
+    // const html = this.el.nativeElement.innerHTML;
+    // this.el.nativeElement.innerHTML = html.replace(SPINNER_ICON, PLUS_ICON);
   }
 }
