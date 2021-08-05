@@ -93,6 +93,10 @@ export class AppConfig {
     return this.config.APP_ENV;
   }
 
+  get recaptchaPublicKey(): string {
+    return this.config.RECAPTCHA_PUBLIC_KEY || '6Lc8JN0UAAAAAN4yxc0Ms6qIZ3fml-EYuuD_cTKi';
+  }
+
   /**
    * Uses promises exclusively to fetch the JSON file specifying the app's configuration options.
    * NOTE: URL data may be included in those options. To ensure that correct URLs are generated, this
