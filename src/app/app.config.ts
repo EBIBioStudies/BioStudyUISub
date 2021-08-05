@@ -94,7 +94,7 @@ export class AppConfig {
   }
 
   get recaptchaPublicKey(): string {
-    return this.config.RECAPTCHA_PUBLIC_KEY || "6Lc8JN0UAAAAAN4yxc0Ms6qIZ3fml-EYuuD_cTKi";
+    return this.config.RECAPTCHA_PUBLIC_KEY || '6Lc8JN0UAAAAAN4yxc0Ms6qIZ3fml-EYuuD_cTKi';
   }
 
   /**
