@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
 /**
@@ -15,9 +15,6 @@ export class ConfirmDialogComponent {
   @Input() confirmLabel: string = 'Ok'; // Default name for positive action.
   @Input() isHideCancel: boolean = false; // Hides the cancel button. Suitable for info modals.
   @Input() title: string = 'Confirm'; // Summary text for the modal's title.
-
-  @ViewChild('focusBtn', { static: true })
-  private focusEl!: ElementRef;
 
   constructor(public bsModalRef: BsModalRef) {
     bsModalRef.onHidden.subscribe((event) => this.onHidden(event));
@@ -45,7 +42,7 @@ export class ConfirmDialogComponent {
    * @param event - Custom modal event indicating the reason for the modal's dismissal
    */
   onHidden(event): void {
-    if (event === 'backdrop-click') {
+    if (event === 'backdrop-click' || event === 'esc') {
       this.cancel();
     }
   }
