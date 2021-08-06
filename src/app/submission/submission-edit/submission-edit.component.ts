@@ -41,6 +41,7 @@ class SubmitOperation {
 export class SubmissionEditComponent implements OnInit, OnDestroy {
   @Input() readonly = false;
   sectionForm!: SectionForm;
+  rootSection!: SectionForm;
   @ViewChild(SubmSidebarComponent) sideBar?: SubmSidebarComponent;
   submitOperation: SubmitOperation = SubmitOperation.UNKNOWN;
   isSidebarCollapsed: boolean = false;
@@ -194,6 +195,9 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
 
   onSubmitClick(event, isConfirm: boolean = false): void {
     this.submissionErrors = this.submEditService.validateSubmission();
+    this.submEditService.switchSection(this.rootSection);
+
+    scrollTop();
 
     if (event) {
       event.preventDefault();
@@ -201,10 +205,6 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
 
     if (this.isSubmitting) {
       return;
-    }
-
-    if (this.submissionErrors.errors.length > 0) {
-      scrollTop();
     }
 
     if (!this.isValid) {
@@ -288,6 +288,10 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
   private switchSection(sectionForm: SectionForm | null): void {
     if (sectionForm) {
       this.sectionForm = sectionForm;
+
+      if (sectionForm.isRootSection) {
+        this.rootSection = sectionForm;
+      }
     }
   }
 }
