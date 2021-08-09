@@ -3,32 +3,45 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'st-action-buttons-cell',
-  template: ` <div class="btn-group btn-group-sm" role="group" aria-label="Study actions">
+  template: `
+    <button
+      *ngIf="rowData && !rowData.isTemp && !isProcessing"
+      type="button"
+      class="btn btn-link"
+      (click)="onViewSubmission()"
+      tooltip="Open in BioStudies"
+      placement="left"
+      container="body"
+      triggers="hover"
+    >
+      <i class="fas fa-external-link-alt"></i>
+    </button>
     <button
       *ngIf="rowData && isRowEditable"
       type="button"
-      class="btn btn-primary"
+      class="btn btn-link"
       (click)="onEditSubmission()"
-      tooltip="Edit this submission"
+      tooltip="Edit"
       placement="left"
       container="body"
+      triggers="hover"
     >
-      <i class="fas fa-pencil-alt fa-fw"></i>
+      <i class="fas fa-pencil-alt"></i>
     </button>
     <button
       *ngIf="rowData && isRowDeletable"
       type="button"
-      class="btn btn-danger"
+      class="btn btn-link"
       [disabled]="isBusy"
       (click)="onDeleteSubmission()"
-      tooltip="Delete this submission"
+      tooltip="Delete"
       placement="left"
       container="body"
     >
-      <i *ngIf="!isBusy" class="fas fa-trash-alt fa-fw"></i>
+      <i *ngIf="!isBusy" class="far fa-trash-alt fa-fw"></i>
       <i *ngIf="isBusy" class="fa fa-cog fa-spin fa-fw"></i>
     </button>
-  </div>`
+  `
 })
 export class ActionButtonsCellComponent implements AgRendererComponent {
   isBusy: boolean = false; // flags if a previous button action is in progress
@@ -40,6 +53,22 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
 
   get isRowEditable(): boolean {
     return this.rowData.isEditable;
+  }
+
+  get isProcessing(): boolean {
+    return this.rowData.isProcessing;
+  }
+
+  get deleteTooltip(): string {
+    return 'Delete ' + this.rowData.accno;
+  }
+
+  get editTooltip(): string {
+    return 'Edit ' + this.rowData.accno;
+  }
+
+  get viewTooltip(): string {
+    return 'View ' + this.rowData.accno + ' in BioStudies';
   }
 
   agInit(params: any): void {
@@ -58,6 +87,12 @@ export class ActionButtonsCellComponent implements AgRendererComponent {
   onEditSubmission(): void {
     if (this.rowData) {
       this.rowData.onEdit(this.rowData.accno);
+    }
+  }
+
+  onViewSubmission(): void {
+    if (this.rowData) {
+      this.rowData.onView(this.rowData.accno);
     }
   }
 

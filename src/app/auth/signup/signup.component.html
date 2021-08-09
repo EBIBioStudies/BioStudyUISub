@@ -1,6 +1,6 @@
 <st-auth-container>
   <div class="alert" [ngClass]="{'alert-danger': hasError, 'invisible': !hasError }">
-    {{hasError ? message : '&nbsp;' }}
+    <span [innerHTML]="message"></span>
   </div>
   <div class="card">
     <div *ngIf="success" class="card-body">

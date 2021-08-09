@@ -1,19 +1,16 @@
-/* Makes the control appear as standard text, even when not on read-only mode */
-.form-control {
-  padding: 0;
-  height: auto;
-  color: inherit;
-  border: none;
-  background: transparent !important;
-  -webkit-box-shadow: none !important;
-  -moz-box-shadow: none !important;
-  box-shadow: none !important;
-}
-
 /* Truncates text when not editing */
 .editable .form-control[readonly] {
   width: 70%;
   cursor: pointer;
+}
+
+.readonly {
+  background: transparent !important;
+  border: none;
+  box-shadow: none !important;
+  color: inherit;
+  height: auto;
+  padding: 0;
 }
 
 /* Positions toolbar on the far right and highlights it on hover */
@@ -21,13 +18,9 @@
   position: absolute;
   top: 0;
   right: 0;
-  opacity: .3;
-}
-.editable:hover .icons {
-  opacity: 1;
+  opacity: 0.3;
 }
 
-/* Prevents outline on focus */
-.btn-link {
-  outline: none !important;
+.editable:hover .icons {
+  opacity: 1;
 }

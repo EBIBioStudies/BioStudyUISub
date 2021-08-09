@@ -16,7 +16,7 @@
             {{sidebar.hasRequests && sidebar.isStatus('successful') ? 'Submitted' : 'Submissions'}}
           </a>
           &nbsp;<i class="fa fa-angle-right font-bold"></i>&nbsp;
-          <strong>Direct upload</strong>
+          <strong>Submit PageTab</strong>
         </div>
         <div class="nav-block text-center text-muted">
           <span *ngIf="sidebar.pendingFiles > 0">
@@ -33,7 +33,6 @@
       <div class="content p-3 bg-light">
         <div class="card">
           <div *ngIf="!sidebar.hasRequests" class="card-body">
-            <h4>New direct entry</h4>
             <p>Please fill in the form on the left-hand side to upload your studies:</p>
             <ol>
               <li>

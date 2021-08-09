@@ -1,0 +1,15 @@
+<div class="card-body">
+  <h4 class="card-title">Activation email sent</h4>
+  <h6 class="card-subtitle mb-2 text-muted">
+    The activation link has been sent to <strong>{{email}}</strong>.
+    Please check your email, including the spam/trash folder.
+  </h6>
+  <div *ngIf="comesFromEmail" class="mt-4 p-2 bg-light rounded">
+    <p>You can click on the link in the email or copy-paste the activation code in the text box below to activate your account</p>
+    <div class="form-group mb-2 mr-2">
+      <label class="mr-2" for="activationCode">Activation Code</label>
+      <input type="text" class="form-control flex-grow-1" id="activationCode" [(ngModel)]="activationCode" placeholder="e.g. 20b2ab80-d1dc-4d35-a0b9-2a781cd1fb11" #activationCodeRef autofocus>
+    </div>
+    <a [routerLink]="['/password_setup', activationCode]" class="btn btn-primary my-2" [class.disabled]="isActivationCodeEmpty ? true: null">Activate and Set Password</a>
+  </div>
+</div>

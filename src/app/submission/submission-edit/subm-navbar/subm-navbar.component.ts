@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { AppConfig } from 'app/app.config';
 import { Section } from 'app/submission/submission-shared/model/submission';
 import { SectionForm } from '../shared/model/section-form.model';
 import { SubmEditService } from '../shared/subm-edit.service';
@@ -15,11 +16,11 @@ export class SubmNavBarComponent implements OnChanges {
   @Output() revertClick: EventEmitter<Event> = new EventEmitter<Event>();
   @Output() sectionClick: EventEmitter<Section> = new EventEmitter<Section>();
   @Input() sectionForm?: SectionForm;
-
-  sectionPath: SectionForm[] = [];
   @Output() submitClick: EventEmitter<Event> = new EventEmitter<Event>();
+  frontendURL: string = this.appConfig.frontendURL;
+  sectionPath: SectionForm[] = [];
 
-  constructor(private submEditService: SubmEditService) {}
+  constructor(private submEditService: SubmEditService, private appConfig: AppConfig) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.sectionForm !== null) {
@@ -59,6 +60,10 @@ export class SubmNavBarComponent implements OnChanges {
 
   get isSaving(): boolean {
     return this.submEditService.isSaving;
+  }
+
+  get submissionUrl(): string {
+    return `${this.frontendURL}/studies/${this.accno}`;
   }
 
   private findSectionPath(sectionForm?: SectionForm): SectionForm[] {

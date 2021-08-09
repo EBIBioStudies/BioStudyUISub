@@ -1,4 +1,4 @@
-import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, forwardRef, Input, Output, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { AppConfig } from 'app/app.config';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
@@ -23,6 +23,9 @@ export class InlineEditComponent implements ControlValueAccessor {
   @Input() suggestThreshold = 0;
   @Output() remove = new EventEmitter<any>();
   readonly columnOptions: Observable<string[]>;
+
+  @ViewChild('inlineEditBox', { static: true })
+  private inlineEditBox!: ElementRef;
 
   private inlineEditValue: string = '';
   private valueChanges$: Subject<string> = new BehaviorSubject<string>('');
@@ -76,6 +79,7 @@ export class InlineEditComponent implements ControlValueAccessor {
 
   onEdit(): void {
     this.startEditing();
+    this.inlineEditBox.nativeElement.focus();
   }
 
   /**
