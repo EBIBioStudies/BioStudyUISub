@@ -34,6 +34,10 @@ export class AuthService {
     return this.sendPostRequest('/api/auth/password/change', obj.snapshot());
   }
 
+  setupPassword(obj: PasswordResetData): Observable<UserInfo> {
+    return this.sendPostRequest('/api/auth/password/setup', obj.snapshot());
+  }
+
   getUserProfile(): Observable<UserInfo> {
     return this.http
       .get<UserInfoResponse>('/api/auth/profile', { observe: 'response' })
