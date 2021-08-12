@@ -19,9 +19,10 @@ import { AttributeNames } from '../utils/constants';
 @Injectable()
 export class ExtSubmissionToSubmissionService {
   extSubmissionToSubmission(extSubmission: ExtSubmissionType): Submission {
-    const { attributes = [], collections, section } = extSubmission;
+    const { attributes = [], collections, section, releaseTime, title } = extSubmission;
     const templateName = findSubmissionTemplateName(collections);
     const type: SubmissionType = SubmissionType.fromTemplate(templateName);
+
     const studyAttributes = mergeAttributes(attributes, [
       this.releaseDateAttr(extSubmission),
       this.titleAttr(extSubmission)
@@ -29,9 +30,10 @@ export class ExtSubmissionToSubmissionService {
 
     return new Submission(type, {
       accno: extSubmission.accNo,
-      tags: extSubmission.tags,
       attributes: extAttrToAttrData(studyAttributes, type.sectionType.fieldValueTypes),
-      section: this.extSectionToSection(section, studyAttributes, type)
+      collections,
+      section: this.extSectionToSection(section, studyAttributes, type),
+      tags: extSubmission.tags
     });
   }
 

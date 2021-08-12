@@ -20,25 +20,25 @@ import { DEFAULT_TEMPLATE_NAME } from './model/templates';
 @Injectable()
 export class SubmissionToExtSubmissionService {
   toExtSubmissionFromTemplate(collection?: string, templateName: string = DEFAULT_TEMPLATE_NAME): ExtSubmissionType {
-    const submission: Submission = new Submission(SubmissionType.fromTemplate(templateName));
     const collections: ExtCollection[] = collection ? [{ accNo: collection }] : [];
+    const submission: Submission = new Submission(SubmissionType.fromTemplate(templateName), { collections });
 
-    return this.toExtSubmission(submission, false, collections);
+    return this.toExtSubmission(submission, false);
   }
 
   submissionToExtSubmission(subm: Submission, isSanitise: boolean): ExtSubmissionType {
     return this.toExtSubmission(subm, isSanitise);
   }
 
-  toExtSubmission(subm: Submission, isSanitise: boolean, collections: ExtCollection[] = []): ExtSubmissionType {
-    const { value: title } = subm.findAttributeByName(AttributeNames.TITLE) || {};
-    const { value: releaseDate } = subm.findAttributeByName(AttributeNames.RELEASE_DATE) || {};
+  toExtSubmission(subm: Submission, isSanitise: boolean): ExtSubmissionType {
+    const titleField = subm.section.fields.list().find((field) => field.name === AttributeNames.TITLE);
+    const releaseDateField = subm.section.fields.list().find((field) => field.name === AttributeNames.RELEASE_DATE);
 
     return {
       accNo: subm.accno || '',
-      title: (title as string) || '',
-      releaseTime: (releaseDate as string) || '',
-      collections,
+      title: (titleField?.value as string) || '',
+      releaseTime: (releaseDateField?.value as string) || '',
+      collections: subm.collections,
       section: this.extSectionToSection(subm.section, isSanitise)
     };
   }

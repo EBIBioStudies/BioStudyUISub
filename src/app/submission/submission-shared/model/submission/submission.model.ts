@@ -1,4 +1,4 @@
-import { ExtAttributeType } from 'app/submission/submission-shared/model/ext-submission-types';
+import { ExtAttributeType, ExtCollection } from 'app/submission/submission-shared/model/ext-submission-types';
 import { TableType } from './../templates/submission-type.model';
 import { isDefinedAndNotEmpty, isArrayEmpty, arrayUniqueValues, isStringDefined } from 'app/utils';
 import { nextId } from './submission.model.counter';
@@ -584,6 +584,7 @@ export class Submission {
   readonly section: Section;
   readonly tags: Tags;
   readonly type;
+  readonly collections: ExtCollection[];
 
   /**
    * Creates a new submission from extended-formatted data and pre-defined type definitions.
@@ -598,6 +599,7 @@ export class Submission {
     this.attributes = data.attributes || [];
     this.isRevised = !this.isTemp && data.isRevised === true;
     this.section = new Section(type.sectionType, data.section);
+    this.collections = data.collections || [];
   }
 
   /**
@@ -610,10 +612,6 @@ export class Submission {
 
   sectionPath(id: string): Section[] {
     return this.section.sectionPath(id);
-  }
-
-  findAttributeByName(name: string): AttributeData | undefined {
-    return this.attributes?.find((attr) => attr.name?.toLowerCase() === name.toLowerCase());
   }
 }
 
@@ -668,6 +666,7 @@ export interface SectionData extends TaggedData {
 export interface SubmissionData extends TaggedData {
   accno?: string;
   attributes?: AttributeData[];
+  collections?: ExtCollection[];
   isRevised?: boolean;
   section?: SectionData;
 }

@@ -13,8 +13,7 @@ import {
 import { SubmissionType } from 'app/submission/submission-shared/model/templates/submission-type.model';
 import { UserData } from 'app/auth/shared';
 import { UserInfo } from 'app/auth/shared/model';
-import { PageTab, SelectValueType } from 'app/submission/submission-shared/model';
-import { SubmissionToPageTabService } from 'app/submission/submission-shared/submission-to-pagetab.service';
+import { SelectValueType } from 'app/submission/submission-shared/model';
 import { isDefinedAndNotEmpty } from 'app/utils';
 import { SubmissionService, SubmitResponse } from '../../submission-shared/submission.service';
 import { SectionForm } from './model/section-form.model';
