@@ -50,11 +50,6 @@ export interface PageTab {
   type?: string;
 }
 
-export interface DraftPayload {
-  content: PageTab;
-  key: string;
-}
-
 export class PageTabSubmission implements PageTab {
   accessTags?: string[];
   accno?: string;

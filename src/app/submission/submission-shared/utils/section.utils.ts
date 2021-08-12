@@ -47,7 +47,7 @@ function contactsToSection(sections: ExtSectionType[]): ExtSectionType[] {
   }));
   const affiliations: ExtSectionType[] = orgs.list().map((org) => ({
     type: SectionNames.ORGANISATION,
-    accno: org.accno,
+    accNo: org.accno,
     attributes: [{ name: AttributeNames.NAME, value: org.name }],
     extType: SectionTypes.SECTION
   }));
@@ -79,7 +79,7 @@ function protocolsToSection(sections: ExtSectionType[]): ExtSectionType[] {
 
     return {
       type: studyProtocol.type,
-      accno: studyProtocol.accNo ? studyProtocol.accNo : protocols.refFor(studyProtocolNameValue, `p${index}`),
+      accNo: studyProtocol.accNo ? studyProtocol.accNo : protocols.refFor(studyProtocolNameValue, `p${index}`),
       attributes: studyProtocol.attributes,
       extType: SectionTypes.SECTION
     };

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { isDefinedAndNotEmpty } from 'app/utils';
 import { ExtSubmissionType } from 'app/submission/submission-shared/model/ext-submission-types';
-import { PageTab, DraftPayload } from './model/pagetab';
+import { PageTab } from './model/pagetab';
 import { SubmissionDraftUtils } from './utils/submission-draft.utils';
 
 export interface DraftSubmissionWrapper {
@@ -84,8 +84,10 @@ export class SubmissionService {
     return this.deepestError(errorNode);
   }
 
-  createDraftSubmission(pt: PageTab): Observable<string> {
-    return this.http.post<DraftPayload>('/api/submissions/drafts', pt).pipe(map((response) => response.key));
+  createDraftSubmission(submission: ExtSubmissionType): Observable<string> {
+    return this.http
+      .post<DraftSubmissionWrapper>('/api/submissions/drafts', submission)
+      .pipe(map((response) => response.key));
   }
 
   deleteDraft(accno: string): Observable<boolean> {

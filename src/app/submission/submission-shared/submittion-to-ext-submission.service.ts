@@ -1,4 +1,5 @@
-import { ExtAttributeType } from 'app/submission/submission-shared/model/ext-submission-types';
+import { SubmissionType } from 'app/submission/submission-shared/model/templates/submission-type.model';
+import { ExtAttributeType, ExtCollection } from 'app/submission/submission-shared/model/ext-submission-types';
 import { tableSectionsToSections } from './utils/section.utils';
 import { Injectable } from '@angular/core';
 import { isDefinedAndNotEmpty, isValueEmpty } from 'app/utils/string.utils';
@@ -14,10 +15,22 @@ import { AttrExceptions, attributesAsFile, attributesAsLink, fieldsAsAttributes 
 import { tableToSections } from './utils/table.utils';
 import { partition } from 'app/utils/array.utils';
 import { AttributeNames, LowerCaseSectionNames } from '../utils/constants';
+import { DEFAULT_TEMPLATE_NAME } from './model/templates';
 
 @Injectable()
 export class SubmissionToExtSubmissionService {
+  toExtSubmissionFromTemplate(collection?: string, templateName: string = DEFAULT_TEMPLATE_NAME): ExtSubmissionType {
+    const submission: Submission = new Submission(SubmissionType.fromTemplate(templateName));
+    const collections: ExtCollection[] = collection ? [{ accNo: collection }] : [];
+
+    return this.toExtSubmission(submission, false, collections);
+  }
+
   submissionToExtSubmission(subm: Submission, isSanitise: boolean): ExtSubmissionType {
+    return this.toExtSubmission(subm, isSanitise);
+  }
+
+  toExtSubmission(subm: Submission, isSanitise: boolean, collections: ExtCollection[] = []): ExtSubmissionType {
     const { value: title } = subm.findAttributeByName(AttributeNames.TITLE) || {};
     const { value: releaseDate } = subm.findAttributeByName(AttributeNames.RELEASE_DATE) || {};
 
@@ -25,6 +38,7 @@ export class SubmissionToExtSubmissionService {
       accNo: subm.accno || '',
       title: (title as string) || '',
       releaseTime: (releaseDate as string) || '',
+      collections,
       section: this.extSectionToSection(subm.section, isSanitise)
     };
   }
