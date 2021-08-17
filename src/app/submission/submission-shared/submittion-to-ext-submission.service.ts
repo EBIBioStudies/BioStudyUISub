@@ -3,13 +3,7 @@ import { ExtAttributeType, ExtCollection } from 'app/submission/submission-share
 import { tableSectionsToSections } from './utils/section.utils';
 import { Injectable } from '@angular/core';
 import { isDefinedAndNotEmpty, isValueEmpty } from 'app/utils/string.utils';
-import {
-  ExtSubmissionType,
-  ExtSectionType,
-  ExtFileType,
-  ExtLinkType,
-  ExtFileListType
-} from './model/ext-submission-types';
+import { ExtSubmissionType, ExtSectionType, ExtFileType, ExtLinkType } from './model/ext-submission-types';
 import { Field, Section, Submission, Table } from './model/submission/submission.model';
 import { AttrExceptions, attributesAsFile, attributesAsLink, fieldsAsAttributes } from './utils/attribute.utils';
 import { tableToSections } from './utils/table.utils';
@@ -48,7 +42,6 @@ export class SubmissionToExtSubmissionService {
       [
         LowerCaseSectionNames.FILE,
         LowerCaseSectionNames.LINK,
-        LowerCaseSectionNames.FILE_LIST,
         LowerCaseSectionNames.KEYWORDS,
         LowerCaseSectionNames.ANNOTATION
       ].includes(table.typeName.toLowerCase())
@@ -59,7 +52,7 @@ export class SubmissionToExtSubmissionService {
       attributes: this.extractAttributesFromSection(section.fields.list(), rootTables, isSanitise).filter(
         (at) => at.name && !AttrExceptions.editableAndRootOnly.includes(at.name) && !isValueEmpty(at.value)
       ),
-      fileList: this.extractFileListFromSection(rootTables),
+      fileList: this.extractFileListFromFields(section.fields.list()),
       files: this.extractFilesFromSection(rootTables, isSanitise),
       links: this.extractLinksFromSection(rootTables, isSanitise),
       extType: LowerCaseSectionNames.SECTION,
@@ -67,7 +60,7 @@ export class SubmissionToExtSubmissionService {
         ...tableSectionsToSections(otherTables, isSanitise, isSubsection),
         ...section.sections.list().map((s) => this.extSectionToSection(s, isSanitise, true))
       ],
-      type: LowerCaseSectionNames.STUDY
+      type: section.type.name
     };
   }
 
@@ -113,15 +106,9 @@ export class SubmissionToExtSubmissionService {
     );
   }
 
-  private extractFileListFromSection(tables: Table[]): ExtFileListType | null {
-    const table = tables.find((t) => t.typeName.toLowerCase() === LowerCaseSectionNames.FILE_LIST);
+  private extractFileListFromFields(fields: Field[]): string {
+    const fileListField: Field | undefined = fields.find((field) => field.type.name === AttributeNames.FILE_LIST);
 
-    if (table === undefined || table.isEmpty) {
-      return null;
-    }
-
-    const tableRowValue = table.rows[0].values()[0];
-
-    return tableRowValue && tableRowValue.value ? { fileName: tableRowValue.value } : null;
+    return fileListField ? fileListField.value : '';
   }
 }

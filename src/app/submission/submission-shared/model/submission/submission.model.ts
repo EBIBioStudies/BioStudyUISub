@@ -659,7 +659,6 @@ export interface SectionData extends TaggedData {
   attributes?: AttributeData[];
   tables?: TableData[];
   sections?: SectionData[];
-  subsections?: SectionData[];
   type?: string;
 }
 

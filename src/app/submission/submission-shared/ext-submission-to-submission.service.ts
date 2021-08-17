@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { SectionData, Submission } from './model/submission/submission.model';
 import {
   ExtAttributeType,
-  ExtFileListType,
   ExtSectionType,
   ExtSubmissionType
 } from 'app/submission/submission-shared/model/ext-submission-types';
@@ -28,13 +27,15 @@ export class ExtSubmissionToSubmissionService {
       this.titleAttr(extSubmission)
     ]);
 
-    return new Submission(type, {
+    const submission = new Submission(type, {
       accno: extSubmission.accNo,
       attributes: extAttrToAttrData(studyAttributes, type.sectionType.fieldValueTypes),
       collections,
       section: this.extSectionToSection(section, studyAttributes, type),
       tags: extSubmission.tags
     });
+
+    return submission;
   }
 
   private extSectionToSection(
@@ -43,22 +44,18 @@ export class ExtSubmissionToSubmissionService {
     submissionType: SubmissionType,
     isSubsection: boolean = false
   ): SectionData {
-    const { attributes, links = [], files = [], fileList, sections = [] } = section;
+    const { attributes, links = [], files = [], fileList: fileListValue, sections = [] } = section;
     const { sectionType } = submissionType;
     const editableParentAttributes = parentAttributes.filter((attribute) =>
       ExtAttrExceptions.editable.includes(attribute.name!)
     );
-    const parentAndChildAttributes = mergeAttributes(editableParentAttributes, attributes);
+    const fileList: ExtAttributeType = { name: 'FileList', value: fileListValue, reference: false };
+    const parentAndChildAttributes = mergeAttributes(editableParentAttributes, [...attributes, fileList]);
     const attributesData = extAttrToAttrData(parentAndChildAttributes, sectionType.fieldValueTypes);
     const keywords = filterAttributesByName('Keyword', attributes);
     const [subsections, pageSections] = partition<ExtSectionType>(sections, (sec) =>
       Boolean(sec.sections && sec.sections.length > 0)
     );
-
-    // let fileLists: ExtFileListType[] = [];
-    // if (fileList !== undefined && fileList !== null) {
-    //   fileLists = [fileList];
-    // }
 
     const tableSections: ExtSectionType[] = [
       ...links.map((link) => ({
@@ -73,10 +70,6 @@ export class ExtSubmissionToSubmissionService {
         type: 'Keywords',
         attributes: [{ name: 'Keyword', value: keyword.value }]
       }))
-      // ...fileLists.map((file) => ({
-      //   type: 'LibraryFile',
-      //   attributes: [{ name: 'File', value: file?.fileName }]
-      // }))
     ];
 
     const tables = extSectionsToTables([...pageSections, ...tableSections], sectionType.tableTypes, isSubsection);

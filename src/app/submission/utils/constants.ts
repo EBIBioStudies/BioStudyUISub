@@ -4,7 +4,6 @@ export const SectionNames = {
   AUTHOR: 'author',
   CONTACT: 'Contact',
   FILE: 'file',
-  FILE_LIST: 'fileList',
   KEYWORDS: 'Keywords',
   LINK: 'link',
   ORGANISATION: 'organisation',
@@ -35,5 +34,6 @@ export const AttributeNames = {
   RELEASE_DATE: 'ReleaseDate',
   TITLE: 'Title',
   NAME: 'Name',
-  PROTOCOL: 'Protocol'
+  PROTOCOL: 'Protocol',
+  FILE_LIST: 'FileList'
 };

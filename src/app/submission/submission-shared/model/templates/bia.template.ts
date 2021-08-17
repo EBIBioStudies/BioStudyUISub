@@ -463,7 +463,8 @@ export const biaTemplate = {
             }
           },
           {
-            name: 'File List',
+            name: 'FileList',
+            title: 'File List',
             icon: 'fa-file',
             valueType: { name: 'file' },
             display: 'required',

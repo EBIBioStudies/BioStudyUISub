@@ -141,7 +141,7 @@ export class PageTabToSubmissionService {
     if (hasFileList) {
       tables.push({
         type: 'LibraryFile',
-        entries: [[{ name: 'File', value: fileList?.fileName } as AttributeType]]
+        entries: [[{ name: 'File', value: fileList } as AttributeType]]
       } as TableData);
     }
 
