@@ -14,6 +14,11 @@ export interface ExtLinkType {
   extType: string;
 }
 
+export interface ExtFileListType {
+  fileName: string | null;
+  files?: ExtFileType[];
+}
+
 export interface ExtFileType {
   attributes: ExtAttributeType[];
   file?: string;
@@ -31,7 +36,7 @@ export interface ExtCollection {
 export interface ExtSectionType {
   accNo?: string | null;
   attributes: ExtAttributeType[];
-  fileList?: string;
+  fileList?: ExtFileListType | null;
   files?: ExtFileType[];
   links?: ExtLinkType[];
   sections?: ExtSectionType[];

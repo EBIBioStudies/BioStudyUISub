@@ -1,5 +1,9 @@
 import { SubmissionType } from 'app/submission/submission-shared/model/templates/submission-type.model';
-import { ExtAttributeType, ExtCollection } from 'app/submission/submission-shared/model/ext-submission-types';
+import {
+  ExtAttributeType,
+  ExtCollection,
+  ExtFileListType
+} from 'app/submission/submission-shared/model/ext-submission-types';
 import { tableSectionsToSections } from './utils/section.utils';
 import { Injectable } from '@angular/core';
 import { isDefinedAndNotEmpty, isValueEmpty } from 'app/utils/string.utils';
@@ -106,9 +110,10 @@ export class SubmissionToExtSubmissionService {
     );
   }
 
-  private extractFileListFromFields(fields: Field[]): string {
+  private extractFileListFromFields(fields: Field[]): ExtFileListType {
     const fileListField: Field | undefined = fields.find((field) => field.type.name === AttributeNames.FILE_LIST);
+    const fileName = fileListField ? fileListField.value : '';
 
-    return fileListField ? fileListField.value : '';
+    return { fileName };
   }
 }

@@ -18,7 +18,7 @@ import { AttributeNames } from '../utils/constants';
 @Injectable()
 export class ExtSubmissionToSubmissionService {
   extSubmissionToSubmission(extSubmission: ExtSubmissionType): Submission {
-    const { attributes = [], collections, section, releaseTime, title } = extSubmission;
+    const { attributes = [], collections, section } = extSubmission;
     const templateName = findSubmissionTemplateName(collections);
     const type: SubmissionType = SubmissionType.fromTemplate(templateName);
 
@@ -44,13 +44,13 @@ export class ExtSubmissionToSubmissionService {
     submissionType: SubmissionType,
     isSubsection: boolean = false
   ): SectionData {
-    const { attributes, links = [], files = [], fileList: fileListValue, sections = [] } = section;
+    const { attributes, links = [], files = [], fileList, sections = [] } = section;
     const { sectionType } = submissionType;
     const editableParentAttributes = parentAttributes.filter((attribute) =>
       ExtAttrExceptions.editable.includes(attribute.name!)
     );
-    const fileList: ExtAttributeType = { name: 'FileList', value: fileListValue, reference: false };
-    const parentAndChildAttributes = mergeAttributes(editableParentAttributes, [...attributes, fileList]);
+    const fileListAttribute: ExtAttributeType = { name: 'FileList', value: fileList?.fileName || '', reference: false };
+    const parentAndChildAttributes = mergeAttributes(editableParentAttributes, [...attributes, fileListAttribute]);
     const attributesData = extAttrToAttrData(parentAndChildAttributes, sectionType.fieldValueTypes);
     const keywords = filterAttributesByName('Keyword', attributes);
     const [subsections, pageSections] = partition<ExtSectionType>(sections, (sec) =>
