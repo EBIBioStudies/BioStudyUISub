@@ -1,17 +1,46 @@
-import { ExtAttributeType, ExtCollection } from 'app/submission/submission-shared/model/ext-submission-types';
-import { TableType } from './../templates/submission-type.model';
 import { isDefinedAndNotEmpty, isArrayEmpty, arrayUniqueValues, isStringDefined } from 'app/utils';
+import { ExtAttribute, ExtCollection } from 'app/submission/submission-transform/model/ext-submission-types';
 import { nextId } from './submission.model.counter';
 import { Attribute } from './submission.model.attribute';
 import { ValueMap } from './submission.model.valuemap';
 import { Columns } from './submission.model.columns';
-import { AccessTag, NameValueType, Tag, TaggedData } from '../submission-common-types';
-import { DisplayType, FieldType, SectionType, SubmissionType, ValueType } from '../templates';
 import { AttributeValue } from './submission.model.attribute-value';
+import { AccessTag, NameValue, Tag, TaggedData } from './submission-common-types';
+import { DisplayType, FieldType, SectionType, SubmissionType, TableType, ValueType } from './submission-type.model';
 
-// export interface SubmissionSection {
-//   subsections: Sections;
-// }
+export class NameAndValue {
+  constructor(readonly name: string = '', readonly value: string = '') {}
+}
+
+export interface AttributeData extends ExtAttribute {
+  name: string;
+  nameAttrs?: NameValue[];
+  reference?: boolean;
+  terms?: NameValue[];
+  value?: string | string[];
+  valueAttrs?: NameValue[];
+}
+
+export interface TableData {
+  entries?: AttributeData[][];
+  type?: string;
+}
+
+export interface SectionData extends TaggedData {
+  accno?: string;
+  attributes?: AttributeData[];
+  tables?: TableData[];
+  sections?: SectionData[];
+  type?: string;
+}
+
+export interface SubmissionData extends TaggedData {
+  accno?: string;
+  attributes?: AttributeData[];
+  collections?: ExtCollection[];
+  isRevised?: boolean;
+  section?: SectionData;
+}
 
 class Rows {
   private rows: Array<ValueMap> = [];
@@ -588,7 +617,6 @@ export class Submission {
 
   /**
    * Creates a new submission from extended-formatted data and pre-defined type definitions.
-   * @see {@link PageTab}
    * @param type Type definitions object
    * @param data Submission data in extended format.
    */
@@ -638,34 +666,4 @@ export class Tags {
   get accessTags(): string[] {
     return this.innerAccessTags.slice();
   }
-}
-
-export interface AttributeData extends ExtAttributeType {
-  name: string;
-  nameAttrs?: NameValueType[];
-  reference?: boolean;
-  terms?: NameValueType[];
-  value?: string | string[];
-  valueAttrs?: NameValueType[];
-}
-
-export interface TableData {
-  entries?: AttributeData[][];
-  type?: string;
-}
-
-export interface SectionData extends TaggedData {
-  accno?: string;
-  attributes?: AttributeData[];
-  tables?: TableData[];
-  sections?: SectionData[];
-  type?: string;
-}
-
-export interface SubmissionData extends TaggedData {
-  accno?: string;
-  attributes?: AttributeData[];
-  collections?: ExtCollection[];
-  isRevised?: boolean;
-  section?: SectionData;
 }

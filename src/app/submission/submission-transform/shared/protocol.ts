@@ -1,7 +1,6 @@
-import { ExtAttributeType } from './../model/ext-submission-types';
-import { PtAttribute } from './../model/pagetab/pagetab.model';
-import { Dictionary } from './../model/submission-common-types';
-import { isNotDefinedOrEmpty } from './../../../utils';
+import { Dictionary } from 'app/submission/submission-shared/model/submission-common-types';
+import { isNotDefinedOrEmpty } from 'app/utils';
+import { ExtAttribute } from '../model/ext-submission-types';
 
 export class Protocols {
   private static instance: Protocols;
@@ -35,7 +34,7 @@ export class Protocols {
     return accno;
   }
 
-  toReference(attr: ExtAttributeType): ExtAttributeType {
+  toReference(attr: ExtAttribute): ExtAttribute {
     const attributeValue: string = attr.value as string;
 
     if (isNotDefinedOrEmpty(attributeValue) || attr.name !== 'Protocol') {

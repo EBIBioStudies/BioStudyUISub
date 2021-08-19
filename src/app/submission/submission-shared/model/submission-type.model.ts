@@ -1,5 +1,5 @@
-import { EMPTY_TEMPLATE_NAME, findSubmissionTemplateByName } from './submission.templates';
 import { isArrayEmpty, isStringDefined, isStringEmpty } from 'app/utils';
+import { EMPTY_TEMPLATE_NAME, SubmissionTemplatesService } from '../submission-templates.service';
 
 /*
  *  Type scopes are used to check if the types with a given name already exists in the scope
@@ -492,10 +492,13 @@ export class SectionType extends TypeBase {
 export class SubmissionType extends TypeBase {
   readonly display: string = DisplayType.OPTIONAL.name;
   readonly sectionType: SectionType;
+  private submissionTemplateService: SubmissionTemplatesService = new SubmissionTemplatesService();
 
   // tslint:disable-next-line: variable-name
-  constructor(_name: string, typeObj: SubmissionType, scope?: TypeScope<TypeBase>) {
+  constructor(_name: string, tmplName: string, scope?: TypeScope<TypeBase>) {
     super('Submission', true, scope);
+
+    const typeObj: SubmissionType = this.submissionTemplateService.findSubmissionTemplateByName(tmplName);
 
     if (typeObj.sectionType === undefined) {
       throw Error('sectionType is not defined in the template');
@@ -519,8 +522,7 @@ export class SubmissionType extends TypeBase {
   }
 
   static fromTemplate(tmplName: string): SubmissionType {
-    const tmpl = findSubmissionTemplateByName(tmplName);
-    return new SubmissionType('Submission', tmpl, new TypeScope<TypeBase>());
+    return new SubmissionType('Submission', tmplName, new TypeScope<TypeBase>());
   }
 }
 

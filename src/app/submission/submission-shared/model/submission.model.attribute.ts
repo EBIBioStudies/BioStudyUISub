@@ -1,4 +1,4 @@
-import { DisplayType, ValueType, ValueTypeFactory } from '../templates';
+import { DisplayType, ValueType, ValueTypeFactory } from './submission-type.model';
 import { nextId } from './submission.model.counter';
 
 export class Attribute {

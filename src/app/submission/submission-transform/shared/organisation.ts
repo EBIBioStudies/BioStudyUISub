@@ -1,7 +1,7 @@
-import { SectionNames } from './../../utils/constants';
-import { Dictionary, Nullable } from './../model/submission-common-types';
-import { isStringDefined, isStringEmpty } from './../../../utils';
-import { ExtAttributeType, ExtSectionType } from '../model/ext-submission-types';
+import { SectionNames } from 'app/submission/utils/constants';
+import { Dictionary, Nullable } from 'app/submission/submission-shared/model/submission-common-types';
+import { isStringDefined, isStringEmpty } from 'app/utils/string.utils';
+import { ExtAttribute, ExtSection } from '../model/ext-submission-types';
 
 const isEqualTo = (value: string) => {
   return (s: Nullable<string>) => isStringDefined(s) && s!.toLowerCase() === value;
@@ -33,8 +33,8 @@ export class Organisations {
     });
   }
 
-  orgToReferences(contact: ExtSectionType): ExtAttributeType[] {
-    const attributes: ExtAttributeType[] = contact.attributes || [];
+  orgToReferences(contact: ExtSection): ExtAttribute[] {
+    const attributes: ExtAttribute[] = contact.attributes || [];
     const isOrganisation = isEqualTo(SectionNames.ORGANISATION);
     const orgAttribute = attributes.find((attribute) => isOrganisation(attribute.name));
 
@@ -54,8 +54,8 @@ export class Organisations {
     return [...attributesWithoutOrg, ...references];
   }
 
-  referencesToOrg(author: ExtSectionType, affiliations: Dictionary<string>): ExtAttributeType[] {
-    const attributes: ExtAttributeType[] = author.attributes || [];
+  referencesToOrg(author: ExtSection, affiliations: Dictionary<string>): ExtAttribute[] {
+    const attributes: ExtAttribute[] = author.attributes || [];
     const isAffiliation = isEqualTo(SectionNames.AFFILIATION);
     const affiliationAttributes = attributes.filter((attribute) => isAffiliation(attribute.name));
     const otherAttributes = attributes.filter((attribute) => !isAffiliation(attribute.name));
@@ -86,13 +86,13 @@ export class Organisations {
     );
   }
 
-  private toReference(orgValue: string | undefined, accno: string): ExtAttributeType {
+  private toReference(orgValue: string | undefined, accno: string): ExtAttribute {
     if (orgValue === undefined || isStringEmpty(orgValue)) {
-      return { name: SectionNames.AFFILIATION, value: orgValue } as ExtAttributeType;
+      return { name: SectionNames.AFFILIATION, value: orgValue } as ExtAttribute;
     }
 
     const orgRef = this.refFor(orgValue, accno!);
-    return { name: SectionNames.AFFILIATION, value: orgRef, reference: true } as ExtAttributeType;
+    return { name: SectionNames.AFFILIATION, value: orgRef, reference: true } as ExtAttribute;
   }
 
   private generateNextRefValue(): string {

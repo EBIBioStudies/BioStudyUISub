@@ -8,20 +8,20 @@ import {
   Section,
   SubmValidationErrors,
   Submission,
-  SubmissionValidator
+  SubmissionValidator,
+  SubmissionType,
+  SelectValueType
 } from 'app/submission/submission-shared/model';
-import { SubmissionType } from 'app/submission/submission-shared/model/templates/submission-type.model';
 import { UserData } from 'app/auth/shared';
 import { UserInfo } from 'app/auth/shared/model';
-import { SelectValueType } from 'app/submission/submission-shared/model';
 import { isDefinedAndNotEmpty } from 'app/utils';
+import { SubmissionToExtSubmissionService } from 'app/submission/submission-transform/submittion-to-ext-submission.service';
+import { ExtSubmissionToSubmissionService } from 'app/submission/submission-transform/ext-submission-to-submission.service';
+import { flatTables } from 'app/submission/submission-transform/utils/table.utils';
+import { ExtSubmission } from 'app/submission/submission-transform/model/ext-submission-types';
 import { SubmissionService, SubmitResponse } from '../../submission-shared/submission.service';
 import { SectionForm } from './model/section-form.model';
 import { StructureChangeEvent } from './structure-change-event';
-import { ExtSubmissionToSubmissionService } from 'app/submission/submission-shared/ext-submission-to-submission.service';
-import { ExtSubmissionType } from 'app/submission/submission-shared/model/ext-submission-types';
-import { SubmissionToExtSubmissionService } from 'app/submission/submission-shared/submittion-to-ext-submission.service';
-import { flatTables } from 'app/submission/submission-shared/utils/table.utils';
 
 class EditState {
   static EDITING = 'Editing';
@@ -157,7 +157,7 @@ export class SubmEditService {
     return this.submModel ? this.submModel.isRevised : false;
   }
 
-  loadSubmission(accno: string, setDefaults?: boolean): Observable<ExtSubmissionType> {
+  loadSubmission(accno: string, setDefaults?: boolean): Observable<ExtSubmission> {
     this.editState.startLoading();
 
     return this.submService.getSubmission(accno).pipe(
@@ -182,7 +182,7 @@ export class SubmEditService {
     this.submModel = new Submission(SubmissionType.defaultType());
   }
 
-  revert(): Observable<ExtSubmissionType> {
+  revert(): Observable<ExtSubmission> {
     this.editState.startReverting();
 
     return this.submService.deleteDraft(this.accno).pipe(
@@ -254,11 +254,11 @@ export class SubmEditService {
     ];
   }
 
-  private toExtended(isSubmit: boolean = false): ExtSubmissionType {
+  private toExtended(isSubmit: boolean = false): ExtSubmission {
     return this.submissionToExtSubmissionService.submissionToExtSubmission(this.submModel, isSubmit);
   }
 
-  private createForm(draftSubm: ExtSubmissionType, accno: string = '', setDefaults: boolean = false): void {
+  private createForm(draftSubm: ExtSubmission, accno: string = '', setDefaults: boolean = false): void {
     this.submModel = this.extSubmissionToSubmissionService.extSubmissionToSubmission(draftSubm);
 
     if (accno.length !== 0) {

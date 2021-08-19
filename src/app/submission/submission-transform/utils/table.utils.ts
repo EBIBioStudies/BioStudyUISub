@@ -1,5 +1,5 @@
-import { ExtAttributeType } from './../model/ext-submission-types';
-import { Section, Table } from './../model/submission/submission.model';
+import { Section, Table } from 'app/submission/submission-shared/model';
+import { ExtAttribute } from '../model/ext-submission-types';
 import { extractTableAttributes } from './attribute.utils';
 
 export function flatTables(section: Section): Table[] {
@@ -21,7 +21,7 @@ export function flatTables(section: Section): Table[] {
 }
 
 export function tableToSections<T>(
-  formatter: (attr: ExtAttributeType[], table?: Table) => T[],
+  formatter: (attr: ExtAttribute[], table?: Table) => T[],
   validator: (attr: T) => boolean,
   isSanitise: boolean,
   table?: Table
@@ -30,7 +30,7 @@ export function tableToSections<T>(
     return [];
   }
 
-  const tableAttributes: ExtAttributeType[][] = extractTableAttributes(table, isSanitise);
+  const tableAttributes: ExtAttribute[][] = extractTableAttributes(table, isSanitise);
   const fileAttributes: T[] = tableAttributes.reduce(
     (result, attr) => [...formatter(attr, table), ...result],
     [] as T[]

@@ -2,7 +2,7 @@ import { FormGroup } from '@angular/forms';
 import { fromNullable } from 'fp-ts/lib/Option';
 import { CellControl } from './cell-control.model';
 import { ControlGroupRef } from '../control-reference';
-import { ValueMap, Attribute } from '../../../submission-shared/model';
+import { Attribute, ValueMap } from 'app/submission/submission-shared/model';
 
 export class RowForm {
   readonly form: FormGroup;

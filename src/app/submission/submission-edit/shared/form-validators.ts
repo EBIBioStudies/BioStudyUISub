@@ -9,8 +9,6 @@ import {
   Validators
 } from '@angular/forms';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
-import { Attribute, Table, Field } from 'app/submission/submission-shared/model';
-import { TextValueType, ValueType, ValueTypeName, SelectValueType } from 'app/submission/submission-shared/model';
 import {
   parseDate,
   isOrcidValid,
@@ -20,11 +18,18 @@ import {
   isArrayEmpty,
   isStringEmpty
 } from 'app/utils';
-import { Observable, of } from 'rxjs';
-import { SubmissionListItem, SubmissionService } from 'app/submission/submission-shared/submission.service';
+import { SubmissionListItem } from 'app/submission/submission-shared/submission.service';
+import {
+  Attribute,
+  Field,
+  SelectValueType,
+  Table,
+  TextValueType,
+  ValueType,
+  ValueTypeName
+} from 'app/submission/submission-shared/model';
 import { ControlRef, ControlGroupRef } from './control-reference';
 import { CustomFormControl } from './model/custom-form-control.model';
-import { catchError, first, map } from 'rxjs/operators';
 import pluralize from 'pluralize';
 
 export class MyFormGroup extends FormGroup {

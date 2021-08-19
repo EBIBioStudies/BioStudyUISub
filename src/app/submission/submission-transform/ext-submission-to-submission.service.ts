@@ -1,25 +1,22 @@
 import { Injectable } from '@angular/core';
-import { SectionData, Submission } from './model/submission/submission.model';
-import {
-  ExtAttributeType,
-  ExtSectionType,
-  ExtSubmissionType
-} from 'app/submission/submission-shared/model/ext-submission-types';
-import { findSubmissionTemplateName } from './utils/template.utils';
-import { SubmissionType } from './model/templates';
+import { SubmissionTemplatesService } from 'app/submission/submission-shared/submission-templates.service';
+import { ExtAttribute, ExtSection, ExtSubmission } from './model/ext-submission-types';
 import { extAttrToAttrData } from './utils/ext-attribute-to-attribute.utils';
 import { extSectionsToTables } from './utils/ext-section-to-section.utils';
 import { filterAttributesByName, findAttributeByName, mergeAttributes } from './utils/attribute.utils';
 import { toUntyped } from './utils/link.utils';
-import { ExtAttrExceptions } from './resources/attr-exceptions';
+import { ExtAttrExceptions } from './shared/attr-exceptions';
 import { partition } from 'app/utils';
 import { AttributeNames } from '../utils/constants';
+import { SectionData, Submission, SubmissionType } from '../submission-shared/model';
 
 @Injectable()
 export class ExtSubmissionToSubmissionService {
-  extSubmissionToSubmission(extSubmission: ExtSubmissionType): Submission {
+  constructor(private submissionTemplatesService: SubmissionTemplatesService) {}
+
+  extSubmissionToSubmission(extSubmission: ExtSubmission): Submission {
     const { attributes = [], collections, section } = extSubmission;
-    const templateName = findSubmissionTemplateName(collections);
+    const templateName = this.submissionTemplatesService.findSubmissionTemplateName(collections);
     const type: SubmissionType = SubmissionType.fromTemplate(templateName);
 
     const studyAttributes = mergeAttributes(attributes, [
@@ -39,8 +36,8 @@ export class ExtSubmissionToSubmissionService {
   }
 
   private extSectionToSection(
-    section: ExtSectionType,
-    parentAttributes: ExtAttributeType[],
+    section: ExtSection,
+    parentAttributes: ExtAttribute[],
     submissionType: SubmissionType,
     isSubsection: boolean = false
   ): SectionData {
@@ -49,15 +46,15 @@ export class ExtSubmissionToSubmissionService {
     const editableParentAttributes = parentAttributes.filter((attribute) =>
       ExtAttrExceptions.editable.includes(attribute.name!)
     );
-    const fileListAttribute: ExtAttributeType = { name: 'FileList', value: fileList?.fileName || '', reference: false };
+    const fileListAttribute: ExtAttribute = { name: 'FileList', value: fileList?.fileName || '', reference: false };
     const parentAndChildAttributes = mergeAttributes(editableParentAttributes, [...attributes, fileListAttribute]);
     const attributesData = extAttrToAttrData(parentAndChildAttributes, sectionType.fieldValueTypes);
     const keywords = filterAttributesByName('Keyword', attributes);
-    const [subsections, pageSections] = partition<ExtSectionType>(sections, (sec) =>
+    const [subsections, pageSections] = partition<ExtSection>(sections, (sec) =>
       Boolean(sec.sections && sec.sections.length > 0)
     );
 
-    const tableSections: ExtSectionType[] = [
+    const tableSections: ExtSection[] = [
       ...links.map((link) => ({
         type: 'Link',
         attributes: toUntyped(link)
@@ -86,14 +83,14 @@ export class ExtSubmissionToSubmissionService {
     };
   }
 
-  private releaseDateAttr(extSubmision: ExtSubmissionType): ExtAttributeType {
+  private releaseDateAttr(extSubmision: ExtSubmission): ExtAttribute {
     return {
       name: AttributeNames.RELEASE_DATE,
       value: extSubmision.releaseTime
     };
   }
 
-  private titleAttr(extSubmission: ExtSubmissionType): ExtAttributeType {
+  private titleAttr(extSubmission: ExtSubmission): ExtAttribute {
     let title: string | undefined = extSubmission.title;
     if (!title) {
       const titleAttribute = findAttributeByName(AttributeNames.TITLE, extSubmission.section.attributes);

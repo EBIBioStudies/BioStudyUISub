@@ -1,8 +1,8 @@
+import { Field, Table } from 'app/submission/submission-shared/model';
 import { SectionNames } from './../../utils/constants';
 import { isDefinedAndNotEmpty, isEqualIgnoringCase, isStringDefined, isValueEmpty } from '../../../utils/string.utils';
-import { ExtAttributeType, ExtFileType, ExtLinkType } from '../model/ext-submission-types';
-import { Field, Table } from '../model/submission/submission.model';
 import { toTyped } from './link.utils';
+import { ExtAttribute, ExtFile, ExtLink } from '../model/ext-submission-types';
 
 interface AttrException {
   name: string;
@@ -57,8 +57,8 @@ export class AttrExceptions {
   }
 }
 
-export function mergeAttributes(attrs1: ExtAttributeType[], attrs2: ExtAttributeType[]): ExtAttributeType[] {
-  const merged: ExtAttributeType[] = [];
+export function mergeAttributes(attrs1: ExtAttribute[], attrs2: ExtAttribute[]): ExtAttribute[] {
+  const merged: ExtAttribute[] = [];
   const visited: { [key: string]: number } = {};
 
   attrs1.concat(attrs2).forEach((at) => {
@@ -77,17 +77,16 @@ export function mergeAttributes(attrs1: ExtAttributeType[], attrs2: ExtAttribute
   return merged.filter((attr) => !isValueEmpty(attr.value));
 }
 
-export function findAttributeByName(name: string, attributes: ExtAttributeType[]): ExtAttributeType | undefined {
+export function findAttributeByName(name: string, attributes: ExtAttribute[]): ExtAttribute | undefined {
   return attributes.find((attr) => attr.name.toLowerCase() === name.toLowerCase());
 }
 
-export function filterAttributesByName(name: string, attributes: ExtAttributeType[]): ExtAttributeType[] {
+export function filterAttributesByName(name: string, attributes: ExtAttribute[]): ExtAttribute[] {
   return attributes.filter((attribute) => attribute.name === name);
 }
 
-export function attributesAsFile(attributes: ExtAttributeType[]): ExtFileType {
-  const isPathAttr = (at: ExtAttributeType) =>
-    isStringDefined(at.name) && isEqualIgnoringCase(at.name!, SectionNames.FILE);
+export function attributesAsFile(attributes: ExtAttribute[]): ExtFile {
+  const isPathAttr = (at: ExtAttribute) => isStringDefined(at.name) && isEqualIgnoringCase(at.name!, SectionNames.FILE);
   const attr = attributes.find((at) => isPathAttr(at));
   const attrs = attributes.filter((at) => !isPathAttr(at) && !isValueEmpty(at.value));
   const path = (attr && attr.value) as string;
@@ -95,16 +94,16 @@ export function attributesAsFile(attributes: ExtAttributeType[]): ExtFileType {
   return { fileName: path, path, attributes: attrs, extType: SectionNames.FILE, type: SectionNames.FILE };
 }
 
-export function attributesAsLink(attributes: ExtAttributeType[]): ExtLinkType {
+export function attributesAsLink(attributes: ExtAttribute[]): ExtLink {
   return toTyped(attributes);
 }
 
-export function extractTableAttributes(table: Table, isSanitise: boolean): ExtAttributeType[][] {
-  const mappedTables: ExtAttributeType[][] = table.rows.map((row) => {
-    const attributes: ExtAttributeType[] = table.columns.map((column) => {
+export function extractTableAttributes(table: Table, isSanitise: boolean): ExtAttribute[][] {
+  const mappedTables: ExtAttribute[][] = table.rows.map((row) => {
+    const attributes: ExtAttribute[] = table.columns.map((column) => {
       const rowValue = row.valueFor(column.id);
 
-      return { name: column.name, value: rowValue && rowValue.value } as ExtAttributeType;
+      return { name: column.name, value: rowValue && rowValue.value } as ExtAttribute;
     });
 
     return attributes.filter((attr) => (isSanitise && !isValueEmpty(attr.value)) || !isSanitise);
@@ -113,20 +112,20 @@ export function extractTableAttributes(table: Table, isSanitise: boolean): ExtAt
   return mappedTables.filter((mappedTable) => mappedTable.length > 0);
 }
 
-export function fieldAsAttribute(field: Field, displayType?: string): ExtAttributeType {
+export function fieldAsAttribute(field: Field, displayType?: string): ExtAttribute {
   if (displayType) {
     return {
       name: field.name,
       value: field.value,
       valueAttrs: [{ name: 'display', value: displayType }]
-    } as ExtAttributeType;
+    } as ExtAttribute;
   }
 
-  return { name: field.name, value: field.value } as ExtAttributeType;
+  return { name: field.name, value: field.value } as ExtAttribute;
 }
 
-export function fieldsAsAttributes(fields: Field[], isSanitise: boolean): ExtAttributeType[] {
-  const attributes: ExtAttributeType[] = [];
+export function fieldsAsAttributes(fields: Field[], isSanitise: boolean): ExtAttribute[] {
+  const attributes: ExtAttribute[] = [];
 
   fields.forEach((field) => {
     if (field.valueType.isRich()) {

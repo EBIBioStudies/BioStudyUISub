@@ -1,10 +1,10 @@
 import { Directive, HostBinding, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserData } from 'app/auth/shared';
-import { getSubmissionTemplates } from 'app/submission/submission-shared/model';
-import { ExtSubmissionType } from 'app/submission/submission-shared/model/ext-submission-types';
+import { SubmissionTemplatesService } from 'app/submission/submission-shared/submission-templates.service';
 import { SubmissionService } from 'app/submission/submission-shared/submission.service';
-import { SubmissionToExtSubmissionService } from 'app/submission/submission-shared/submittion-to-ext-submission.service';
+import { ExtSubmission } from 'app/submission/submission-transform/model/ext-submission-types';
+import { SubmissionToExtSubmissionService } from 'app/submission/submission-transform/submittion-to-ext-submission.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { AddSubmModalComponent } from '../add-subm-modal/add-subm-modal.component';
 
@@ -19,7 +19,8 @@ export class NewSubmissionButtonDirective {
     private submService: SubmissionService,
     private userData: UserData,
     private router: Router,
-    private submissionToExt: SubmissionToExtSubmissionService
+    private submissionToExt: SubmissionToExtSubmissionService,
+    private submissionTemplatesService: SubmissionTemplatesService
   ) {}
 
   @HostListener('click', ['$event.target']) onClick(): void {
@@ -28,7 +29,7 @@ export class NewSubmissionButtonDirective {
 
   private onNewSubmissionClick(): void {
     this.userData.projectAccNumbers$.subscribe((projectNames) => {
-      const templates = getSubmissionTemplates(projectNames);
+      const templates = this.submissionTemplatesService.getSubmissionTemplates(projectNames);
       if (templates.length > 0) {
         this.selectTemplate(templates);
       } else {
@@ -38,7 +39,7 @@ export class NewSubmissionButtonDirective {
   }
 
   private onOk(collection?: string, template?: string): void {
-    const emptySubmission: ExtSubmissionType = this.submissionToExt.toExtSubmissionFromTemplate(collection, template);
+    const emptySubmission: ExtSubmission = this.submissionToExt.toExtSubmissionFromTemplate(collection, template);
 
     this.startCreating();
     this.submService.createDraftSubmission(emptySubmission).subscribe((accno) => {

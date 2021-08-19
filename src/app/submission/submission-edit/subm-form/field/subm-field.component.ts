@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy } from '@angular/core';
-import { FieldType, ValueType, TextValueType } from 'app/submission/submission-shared/model/templates';
+import { FieldType, ValueType, TextValueType } from 'app/submission/submission-shared/model';
 import { isStringEmpty } from 'app/utils';
 import { FieldControl } from '../../shared/model/field-control.model';
 

@@ -4,17 +4,17 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { Location } from '@angular/common';
 import { Observable, of, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
-import { ExtSubmissionType } from 'app/submission/submission-shared/model/ext-submission-types';
+import { ExtSubmission } from 'app/submission/submission-transform/model/ext-submission-types';
 import { ModalService } from 'app/shared/modal.service';
 import { SectionForm } from './shared/model/section-form.model';
 import { SubmEditService } from './shared/subm-edit.service';
 import { SubmErrorModalComponent } from '../submission-results/subm-error-modal.component';
 import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
-import { SubmValidationErrors } from '../submission-shared/model';
 import { SubmitLog } from '../submission-shared/submission.service';
 import { scrollTop } from 'app/utils';
 import { ErrorService } from 'app/core/errors/error.service';
 import { AttributeNames } from '../utils/constants';
+import { SubmValidationErrors } from '../submission-shared/model';
 
 class SubmitOperation {
   static CREATE = new SubmitOperation();
@@ -118,7 +118,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe(
-        (submission: ExtSubmissionType) => {
+        (submission: ExtSubmission) => {
           if (this.hasJustCreated) {
             this.locService.replaceState('/edit/' + this.accno);
             this.readonly = false;

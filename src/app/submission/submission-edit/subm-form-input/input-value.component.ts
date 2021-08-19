@@ -8,7 +8,7 @@ import {
   ValueTypeName,
   SelectValueType,
   DateValueType
-} from 'app/submission/submission-shared/model/templates';
+} from 'app/submission/submission-shared/model';
 import { typeaheadSource } from '../shared/typeahead.utils';
 import { CustomFormControl } from '../shared/model/custom-form-control.model';
 

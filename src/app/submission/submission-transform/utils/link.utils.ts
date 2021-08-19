@@ -1,6 +1,6 @@
-import { SectionNames } from './../../utils/constants';
-import { ExtAttributeType, ExtLinkType } from '../model/ext-submission-types';
-import { isDefinedAndNotEmpty, isValueEmpty } from '../../../utils';
+import { SectionNames } from 'app/submission/utils/constants';
+import { isDefinedAndNotEmpty, isValueEmpty } from 'app/utils/string.utils';
+import { ExtAttribute, ExtLink } from '../model/ext-submission-types';
 
 /**
  * Utility class bridging the differences between PageTab's specs for links and the app's internal submission model.
@@ -20,7 +20,7 @@ const URL_REGEXP = /^(http|https|ftp):\/\/.+$/;
  * @param linkObj - PageTab's data object for the link.
  * @returns PageTab-ready link object.
  */
-export function toTyped(attributes: ExtAttributeType[]): ExtLinkType {
+export function toTyped(attributes: ExtAttribute[]): ExtLink {
   const pointer: string = ((attributes.find((at) => at.name === POINTER_ATTR) || { value: '' }).value as string) || '';
   const typeAttr = { name: TYPE_ATTR, value: '' };
   const isUrl = URL_REGEXP.test(pointer);
@@ -29,7 +29,7 @@ export function toTyped(attributes: ExtAttributeType[]): ExtLinkType {
     url: '',
     attributes: attributes.filter((at) => ![TYPE_ATTR, POINTER_ATTR].includes(at.name!) && !isValueEmpty(at.value)),
     extType: SectionNames.LINK
-  } as ExtLinkType;
+  } as ExtLink;
 
   if (pointer) {
     if (isUrl) {
@@ -62,7 +62,7 @@ export function toTyped(attributes: ExtAttributeType[]): ExtLinkType {
  * @param linkObj - Submission model's object for the link.
  * @returns Submission-ready link object.
  */
-export function toUntyped(linkObj: ExtLinkType): ExtAttributeType[] {
+export function toUntyped(linkObj: ExtLink): ExtAttribute[] {
   const attrs = linkObj.attributes || [];
   const pointerAttr = { name: POINTER_ATTR, value: linkObj.url, reference: false };
   const typeAttr = attrs.find((at) => at.name === TYPE_ATTR);

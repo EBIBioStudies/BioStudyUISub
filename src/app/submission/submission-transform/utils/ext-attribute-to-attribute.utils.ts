@@ -1,13 +1,17 @@
-import { ExtAttributeType } from '../model/ext-submission-types';
-import { NameAndValue } from '../model/model.common';
-import { AttributeData } from '../model/submission/submission.model';
-import { SelectValueType, ValueTypeName, ValueType } from '../model/templates/submission-type.model';
+import {
+  AttributeData,
+  NameAndValue,
+  SelectValueType,
+  ValueType,
+  ValueTypeName
+} from 'app/submission/submission-shared/model';
+import { ExtAttribute } from '../model/ext-submission-types';
 
-export function extAttrToAttrData(attributes: ExtAttributeType[], valueTypes: ValueType[]): AttributeData[] {
+export function extAttrToAttrData(attributes: ExtAttribute[], valueTypes: ValueType[]): AttributeData[] {
   return formatAttributes(attributes, valueTypes);
 }
 
-function formatAttributes(attrs: ExtAttributeType[], valueTypes: ValueType[]): AttributeData[] {
+function formatAttributes(attrs: ExtAttribute[], valueTypes: ValueType[]): AttributeData[] {
   const attributesData: AttributeData[] = [];
   const selectValueType: ValueType[] = valueTypes.filter((valueType) => valueType.is(ValueTypeName.select));
   const multiValueAttributeNames: string[] = selectValueType
@@ -36,7 +40,7 @@ function formatAttributes(attrs: ExtAttributeType[], valueTypes: ValueType[]): A
   return attributesData;
 }
 
-function toAttrData(attribute: ExtAttributeType): AttributeData {
+function toAttrData(attribute: ExtAttribute): AttributeData {
   return {
     name: attribute.name || '',
     reference: attribute.reference || false,

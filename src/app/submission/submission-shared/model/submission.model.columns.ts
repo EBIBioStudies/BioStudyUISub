@@ -1,6 +1,6 @@
 import { isEqualIgnoringCase } from 'app/utils';
+import { ColumnType } from './submission-type.model';
 import { Attribute } from './submission.model.attribute';
-import { ColumnType } from '../templates';
 
 export class Columns {
   private columns: Attribute[] = [];

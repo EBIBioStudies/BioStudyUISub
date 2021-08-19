@@ -1,9 +1,8 @@
 import { Observable, of } from 'rxjs';
 import { catchError, first, map } from 'rxjs/operators';
-import { Field } from 'app/submission/submission-shared/model/submission/submission.model';
-import { ValueTypeName, TextValueType } from 'app/submission/submission-shared/model/templates/submission-type.model';
-import { CustomFormControl } from './model/custom-form-control.model';
 import { SubmissionService } from 'app/submission/submission-shared/submission.service';
+import { Field, TextValueType, ValueTypeName } from 'app/submission/submission-shared/model';
+import { CustomFormControl } from './model/custom-form-control.model';
 
 export class FormValueValidator {
   static forStudyTitle = (

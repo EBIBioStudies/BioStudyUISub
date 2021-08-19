@@ -1,9 +1,9 @@
-import { CustomFormControl } from './custom-form-control.model';
 import { Subject, Observable } from 'rxjs';
 import pluralize from 'pluralize';
 import { FormGroup, FormArray } from '@angular/forms';
-import { Attribute, ColumnType, Table, TableType, ValueMap } from 'app/submission/submission-shared/model';
 import { isArrayEmpty, arrayUniqueValues, isStringEmpty } from 'app/utils';
+import { Attribute, ColumnType, Table, TableType, ValueMap } from 'app/submission/submission-shared/model';
+import { CustomFormControl } from './custom-form-control.model';
 import { FormBase } from './form-base.model';
 import { ColumnControl } from './column-control.model';
 import { RowForm } from './row-form.model';

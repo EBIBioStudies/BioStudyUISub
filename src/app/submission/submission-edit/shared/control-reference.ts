@@ -1,4 +1,4 @@
-import { Attribute, Table, Field, Section } from 'app/submission/submission-shared/model';
+import { Attribute, Field, Section, Table } from 'app/submission/submission-shared/model';
 
 // experimental: Control Reference details for using in error messages
 export class ControlRef {

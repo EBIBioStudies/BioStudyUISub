@@ -1,11 +1,11 @@
 import { filter, switchMap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { SubmissionService } from 'app/submission/submission-shared/submission.service';
+import { Field, FieldType } from 'app/submission/submission-shared/model';
 import { ControlRef } from '../control-reference';
 import { CustomFormControl } from './custom-form-control.model';
-import { Field, FieldType } from 'app/submission/submission-shared/model';
 import { FormValueValidator } from '../field-value-validators';
 import { SubmFormValidators, ErrorMessages } from '../form-validators';
-import { SubmissionService } from 'app/submission/submission-shared/submission.service';
 
 export class FieldControl {
   readonly control: CustomFormControl;

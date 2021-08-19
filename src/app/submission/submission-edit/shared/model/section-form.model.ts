@@ -1,13 +1,13 @@
-import { CustomFormControl } from './custom-form-control.model';
-import { DisplayType, Table, TableType, Field, Section, SectionType } from 'app/submission/submission-shared/model';
 import { FormGroup } from '@angular/forms';
 import { BehaviorSubject, Subscription } from 'rxjs';
+import { SubmissionService } from 'app/submission/submission-shared/submission.service';
+import { DisplayType, Field, Section, SectionType, Table, TableType } from 'app/submission/submission-shared/model';
+import { CustomFormControl } from './custom-form-control.model';
 import { FormBase } from '../model/form-base.model';
 import { ControlGroupRef } from '../control-reference';
 import { FieldControl } from './field-control.model';
 import { TableForm } from './table-form.model';
 import { StructureChangeEvent } from '../structure-change-event';
-import { SubmissionService } from 'app/submission/submission-shared/submission.service';
 
 export class SectionForm extends FormBase {
   readonly tableForms: TableForm[] = [];

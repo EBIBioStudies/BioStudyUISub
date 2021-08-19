@@ -1,21 +1,12 @@
 import { NgModule } from '@angular/core';
 import { SubmissionService } from './submission.service';
-import { SubmissionToPageTabService } from './submission-to-pagetab.service';
-import { ExtSubmissionToSubmissionService } from './ext-submission-to-submission.service';
-import { SubmissionToExtSubmissionService } from './submittion-to-ext-submission.service';
-import { PageTabToSubmissionService } from './pagetab-to-submission.service';
 import { SubmissionStatusService } from './submission-status.service';
+import { SubmissionTemplatesService } from './submission-templates.service';
+import { SubmissionTransformModule } from './../submission-transform/submission-transform.module';
 
 @NgModule({
-  imports: [],
-  providers: [
-    SubmissionService,
-    SubmissionToPageTabService,
-    ExtSubmissionToSubmissionService,
-    PageTabToSubmissionService,
-    SubmissionStatusService,
-    SubmissionToExtSubmissionService
-  ],
+  imports: [SubmissionTransformModule],
+  providers: [SubmissionService, SubmissionStatusService, SubmissionTemplatesService],
   declarations: [],
   exports: []
 })

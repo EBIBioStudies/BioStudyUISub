@@ -1,6 +1,12 @@
-import { Table, Field, Section, Submission } from './submission.model';
+import {
+  TableType,
+  SectionType,
+  TextValueType,
+  ValueType,
+  ValueTypeName
+} from 'app/submission/submission-shared/model/submission-type.model';
 import { parseDate } from 'app/utils';
-import { TableType, SectionType, TextValueType, ValueType, ValueTypeName } from '../templates';
+import { Table, Field, Section, Submission } from './submission.model';
 
 interface ValidationRule {
   validate(): string | undefined;

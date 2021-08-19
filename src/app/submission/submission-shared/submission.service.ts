@@ -1,17 +1,16 @@
-import { SectionData } from './model/submission/submission.model';
 import * as HttpStatus from 'http-status-codes';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { isDefinedAndNotEmpty } from 'app/utils';
-import { ExtSubmissionType } from 'app/submission/submission-shared/model/ext-submission-types';
-import { PageTab } from './model/pagetab';
 import { SubmissionDraftUtils } from './utils/submission-draft.utils';
+import { ExtSubmission } from '../submission-transform/model/ext-submission-types';
+import { SectionData } from './model';
 
 export interface DraftSubmissionWrapper {
   key: string;
-  content: PageTab;
+  content: ExtSubmission;
 }
 
 export interface SubmissionListItem {
@@ -84,7 +83,7 @@ export class SubmissionService {
     return this.deepestError(errorNode);
   }
 
-  createDraftSubmission(submission: ExtSubmissionType): Observable<string> {
+  createDraftSubmission(submission: ExtSubmission): Observable<string> {
     return this.http
       .post<DraftSubmissionWrapper>('/api/submissions/drafts', submission)
       .pipe(map((response) => response.key));
@@ -114,7 +113,7 @@ export class SubmissionService {
     return this.http.get('/api/projects');
   }
 
-  getSubmission(accno: string): Observable<ExtSubmissionType> {
+  getSubmission(accno: string): Observable<ExtSubmission> {
     return this.getDraft(accno);
   }
 
@@ -129,7 +128,7 @@ export class SubmissionService {
       );
   }
 
-  saveDraftSubmission(accno: string, submission: ExtSubmissionType): Observable<DraftSubmissionWrapper> {
+  saveDraftSubmission(accno: string, submission: ExtSubmission): Observable<DraftSubmissionWrapper> {
     return this.http.put<DraftSubmissionWrapper>(`/api/submissions/drafts/${accno}`, submission);
   }
 
@@ -147,8 +146,8 @@ export class SubmissionService {
     throw response.body;
   }
 
-  private getDraft(accno: string): Observable<ExtSubmissionType> {
-    return this.http.get<ExtSubmissionType>(`/api/submissions/drafts/${accno}/content`);
+  private getDraft(accno: string): Observable<ExtSubmission> {
+    return this.http.get<ExtSubmission>(`/api/submissions/drafts/${accno}/content`);
   }
 
   private sendPostRequest<R, T>(path: string, payload: any, headers: HttpHeaders): Observable<T> {

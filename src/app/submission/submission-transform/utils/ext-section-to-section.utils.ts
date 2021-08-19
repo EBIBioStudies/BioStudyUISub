@@ -1,21 +1,20 @@
-import { TableData } from './../model/submission/submission.model';
-import { TableType } from './../model/templates/submission-type.model';
-import { Protocols } from './../resources/protocol';
+import { TableData, TableType } from 'app/submission/submission-shared/model';
+import { Dictionary } from 'app/submission/submission-shared/model/submission-common-types';
 import { compose, isStringDefined, partition } from '../../../utils';
-import { Dictionary } from './../model/pagetab/pagetab-authors.utils';
-import { Organisations } from './../resources/organisation';
-import { ExtSectionType } from '../../../submission/submission-shared/model/ext-submission-types';
 import { AttributeNames, SectionNames } from './../../utils/constants';
-import { findAttributeByName } from './attribute.utils';
 import { extAttrToAttrData } from './ext-attribute-to-attribute.utils';
+import { findAttributeByName } from '../utils/attribute.utils';
+import { ExtSection } from '../model/ext-submission-types';
+import { Organisations } from '../shared/organisation';
+import { Protocols } from '../shared/protocol';
 
 export function extSectionsToTables(
-  sections: ExtSectionType[],
+  sections: ExtSection[],
   tableTypes: TableType[],
   isSubsection: boolean
 ): TableData[] {
   const sectionsWithAttributes = sections.filter((section) => section.attributes.length > 0);
-  let tableSections: ExtSectionType[] = [];
+  let tableSections: ExtSection[] = [];
   if (isSubsection) {
     tableSections = extSectionsToProtocols(sectionsWithAttributes);
   } else {
@@ -33,14 +32,14 @@ export function extSectionsToTables(
   });
 }
 
-export function extSectionsToContacts(sections: ExtSectionType[] = []): ExtSectionType[] {
+export function extSectionsToContacts(sections: ExtSection[] = []): ExtSection[] {
   const orgs: Organisations = Organisations.getInstance();
-  const [rawAffiliations, sectionsWithoutAffiliation] = partition<ExtSectionType>(sections, (section) =>
+  const [rawAffiliations, sectionsWithoutAffiliation] = partition<ExtSection>(sections, (section) =>
     [SectionNames.ORGANIZATION, SectionNames.ORGANISATION, SectionNames.AFFILIATION].includes(
       section.type.toLowerCase()
     )
   );
-  const [authors, otherSections] = partition<ExtSectionType>(
+  const [authors, otherSections] = partition<ExtSection>(
     sectionsWithoutAffiliation,
     (section) => SectionNames.AUTHOR === section.type.toLowerCase()
   );
@@ -64,13 +63,13 @@ export function extSectionsToContacts(sections: ExtSectionType[] = []): ExtSecti
   return [...contacts, ...otherSections];
 }
 
-export function extSectionsToProtocols(sections: ExtSectionType[] = []): ExtSectionType[] {
+export function extSectionsToProtocols(sections: ExtSection[] = []): ExtSection[] {
   const protocols: Protocols = Protocols.getInstance();
-  const [studyProtocols, sectionsWithoutProtocols] = partition<ExtSectionType>(
+  const [studyProtocols, sectionsWithoutProtocols] = partition<ExtSection>(
     sections,
     (section) => SectionNames.STUDY_PROTOCOLS === section.type.toLowerCase()
   );
-  const [componentProtocols, sectionsWithoutCompProtocols] = partition<ExtSectionType>(
+  const [componentProtocols, sectionsWithoutCompProtocols] = partition<ExtSection>(
     sectionsWithoutProtocols,
     (section) => SectionNames.PROTOCOLS === section.type.toLowerCase()
   );
@@ -103,7 +102,7 @@ export function extSectionsToProtocols(sections: ExtSectionType[] = []): ExtSect
     return {
       ...componentProtocol,
       attributes: finalAttributes
-    } as ExtSectionType;
+    } as ExtSection;
   });
 
   return [...componentProtocolsWithReferenceValue, ...studyProtocols, ...sectionsWithoutCompProtocols];

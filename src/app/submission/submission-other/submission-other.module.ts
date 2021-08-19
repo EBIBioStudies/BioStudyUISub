@@ -6,7 +6,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { AuthModule } from 'app/auth/auth.module';
-import { SubmissionSharedModule } from '../submission-shared/submission-shared.module';
+import { SubmissionTransformModule } from 'app/submission/submission-transform/submission-transform.module';
 import { AddSubmModalComponent } from './add-subm-modal/add-subm-modal.component';
 import { NewSubmissionButtonComponent } from './new-submission-button/new-submission-button.component';
 import { NewSubmissionButtonDirective } from './new-submission-button/new-submission-button.directive';
@@ -20,9 +20,9 @@ import { UniqueSubmissionModalComponent } from './unique-submission-modal/unique
     RouterModule,
     ModalModule,
     TooltipModule,
-    SubmissionSharedModule,
     AuthModule,
-    BsDropdownModule
+    BsDropdownModule,
+    SubmissionTransformModule
   ],
   providers: [],
   declarations: [

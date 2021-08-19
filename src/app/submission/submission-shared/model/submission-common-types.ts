@@ -18,15 +18,15 @@ export interface TaggedData {
   tags?: Tag[];
 }
 
-export interface NameValueType {
+export interface NameValue {
   name: string;
   value: string;
 }
 
-export interface AttributeType {
+export interface Attribute {
   name: string;
   reference: boolean;
-  nameAttrs?: NameValueType[];
-  valueAttrs?: NameValueType[];
+  nameAttrs?: NameValue[];
+  valueAttrs?: NameValue[];
   value: string | string[];
 }
