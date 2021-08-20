@@ -289,7 +289,7 @@ export const bioRamanTemplate = {
             columnTypes: [
               {
                 name: 'File',
-                valueType: { name: 'file' },
+                valueType: { name: 'file', allowFolders: false },
                 display: 'required'
               },
               {
@@ -336,7 +336,7 @@ export const bioRamanTemplate = {
           {
             name: 'Raw spectrum',
             icon: 'fa-wave-square',
-            valueType: { name: 'file' },
+            valueType: { name: 'file', allowFolders: false },
             description:
               'Raw, untreated spectrum with wavenumbers, bins, and intensities at each bin; format as TSV,CSV or other universal file format.',
             display: 'required'
@@ -405,7 +405,7 @@ export const bioRamanTemplate = {
           {
             name: 'File',
             icon: 'fa-wave-square',
-            valueType: { name: 'file' },
+            valueType: { name: 'file', allowFolders: false },
             display: 'required'
           }
         ],

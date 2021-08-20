@@ -70,10 +70,11 @@
   </st-orcid-input-box>
 
   <st-file-select *ngSwitchCase="valueTypeNameEnum.file"
-      [inputId]="inputId"
-      [formControl]="formControl"
-      [readonly]="readonly"
-      [isInputGroup]="isInputGroup">
+                  [inputId]="inputId"
+                  [formControl]="formControl"
+                  [readonly]="readonly"
+                  [allowFolders]="valueType.allowFolders"
+                  [isInputGroup]="isInputGroup">
   </st-file-select>
 
   <st-pubmedid-search *ngSwitchCase="valueTypeNameEnum.pubmedid"
