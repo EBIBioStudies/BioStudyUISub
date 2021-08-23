@@ -49,7 +49,7 @@ export class ExtSubmissionToSubmissionService {
     const fileListAttribute: ExtAttribute = { name: 'FileList', value: fileList?.fileName || '', reference: false };
     const parentAndChildAttributes = mergeAttributes(editableParentAttributes, [...attributes, fileListAttribute]);
     const attributesData = extAttrToAttrData(parentAndChildAttributes, sectionType.fieldValueTypes);
-    const keywords = filterAttributesByName('Keyword', attributes);
+    const keywords = filterAttributesByName(AttributeNames.KEYWORD, attributes);
     const [subsections, pageSections] = partition<ExtSection>(sections, (sec) =>
       Boolean(sec.sections && sec.sections.length > 0)
     );

@@ -1,5 +1,5 @@
+import { FieldType, invalidateGlobalScope, SectionType, TableType } from './submission-type.model';
 import { Section } from './submission.model';
-import { TableType, FieldType, invalidateGlobalScope, SectionType } from '../templates';
 
 describe('Submission Model: Section', () => {
   beforeEach(() => {

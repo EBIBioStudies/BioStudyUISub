@@ -16,9 +16,14 @@ export function tableSectionsToSections(tables: Table[], isSanitise: boolean, is
       ...tableToSections<ExtSection>(
         (attrs, currentTable) => [
           {
+            accNo: null,
             type: currentTable?.typeName || '',
             attributes: attrs.filter((attr) => !isValueEmpty(attr.value)),
-            extType: SectionTypes.SECTION
+            extType: SectionTypes.SECTION,
+            fileList: null,
+            files: [],
+            links: [],
+            sections: []
           }
         ],
         (currentSection) => currentSection.attributes.length > 0,
@@ -41,15 +46,23 @@ function contactsToSection(sections: ExtSection[]): ExtSection[] {
     [SectionNames.CONTACT.toLowerCase()].includes(section.type.toLowerCase())
   );
   const authors: ExtSection[] = contacts.map((contact) => ({
-    type: SectionNames.AUTHOR,
     attributes: orgs.orgToReferences(contact).filter((ref) => !isValueEmpty(ref.value)),
-    extType: SectionTypes.SECTION
+    extType: SectionTypes.SECTION,
+    fileList: null,
+    files: [],
+    links: [],
+    sections: [],
+    type: SectionNames.AUTHOR
   }));
   const affiliations: ExtSection[] = orgs.list().map((org) => ({
-    type: SectionNames.ORGANISATION,
     accNo: org.accno,
     attributes: [{ name: AttributeNames.NAME, value: org.name }],
-    extType: SectionTypes.SECTION
+    extType: SectionTypes.SECTION,
+    fileList: null,
+    files: [],
+    links: [],
+    sections: [],
+    type: SectionNames.ORGANISATION
   }));
 
   return [...authors, ...affiliations, ...sectionsWithoutContacts];
@@ -69,7 +82,11 @@ function protocolsToSection(sections: ExtSection[]): ExtSection[] {
   const componentProtocolReferences = componentProtocols.map((componentProtocol) => ({
     type: componentProtocol.type,
     attributes: componentProtocol.attributes!.map((attribute) => protocols.toReference({ ...attribute })),
-    extType: SectionTypes.SECTION
+    extType: SectionTypes.SECTION,
+    fileList: null,
+    files: [],
+    links: [],
+    sections: []
   }));
 
   const studyProtocolToReference = studyProtocols.map((studyProtocol, index) => {
@@ -81,7 +98,11 @@ function protocolsToSection(sections: ExtSection[]): ExtSection[] {
       type: studyProtocol.type,
       accNo: studyProtocol.accNo ? studyProtocol.accNo : protocols.refFor(studyProtocolNameValue, `p${index}`),
       attributes: studyProtocol.attributes,
-      extType: SectionTypes.SECTION
+      extType: SectionTypes.SECTION,
+      fileList: null,
+      files: [],
+      links: [],
+      sections: []
     };
   });
 

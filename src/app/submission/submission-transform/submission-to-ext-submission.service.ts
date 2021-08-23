@@ -35,11 +35,22 @@ export class SubmissionToExtSubmissionService {
     const releaseDateField = subm.section.fields.list().find((field) => field.name === AttributeNames.RELEASE_DATE);
 
     return {
-      accNo: subm.accno || '',
-      title: (titleField?.value as string) || '',
-      releaseTime: (releaseDateField?.value as string) || '',
+      accNo: subm.accno || 'S-BIAD100',
+      attributes: [],
       collections: subm.collections,
-      section: this.extSectionToSection(subm.section, isSanitise)
+      creationTime: '2021-08-17T14:27:49.234Z',
+      method: 'PAGE_TAB',
+      modificationTime: '2021-08-17T14:27:49.234Z',
+      owner: 'ndiaz+1@ebi.ac.uk',
+      relPath: '',
+      releaseTime: (releaseDateField?.value as string) || '',
+      released: false,
+      rootPath: null,
+      secretKey: '',
+      section: this.extSectionToSection(subm.section, isSanitise),
+      status: 'REQUESTED',
+      submitter: 'ndiaz+1@ebi.ac.uk',
+      title: (titleField?.value as string) || ''
     };
   }
 
@@ -112,10 +123,14 @@ export class SubmissionToExtSubmissionService {
     );
   }
 
-  private extractFileListFromFields(fields: Field[]): ExtFileList {
+  private extractFileListFromFields(fields: Field[]): ExtFileList | null {
     const fileListField: Field | undefined = fields.find((field) => field.type.name === AttributeNames.FILE_LIST);
     const fileName = fileListField ? fileListField.value : '';
 
-    return { fileName };
+    if (fileName.length === 0) {
+      return null;
+    }
+
+    return { fileName, filesUrl: '' };
   }
 }

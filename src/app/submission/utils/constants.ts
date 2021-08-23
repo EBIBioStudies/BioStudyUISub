@@ -31,9 +31,13 @@ export const LowerCaseSectionNames = Object.keys(SectionNames).reduce(
 
 export const AttributeNames = {
   ATTACH_TO: 'AttachTo',
-  RELEASE_DATE: 'ReleaseDate',
-  TITLE: 'Title',
+  DESCRIPTION: 'Description',
+  EMAIL: 'E-mail',
+  FILE_LIST: 'FileList',
+  KEYWORD: 'Keyword',
   NAME: 'Name',
+  ORGANISATION: 'Organisation',
   PROTOCOL: 'Protocol',
-  FILE_LIST: 'FileList'
+  RELEASE_DATE: 'ReleaseDate',
+  TITLE: 'Title'
 };

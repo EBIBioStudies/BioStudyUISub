@@ -1,5 +1,5 @@
 import { Field, Table } from 'app/submission/submission-shared/model';
-import { SectionNames } from './../../utils/constants';
+import { AttributeNames, SectionNames } from './../../utils/constants';
 import { isDefinedAndNotEmpty, isEqualIgnoringCase, isStringDefined, isValueEmpty } from '../../../utils/string.utils';
 import { toTyped } from './link.utils';
 import { ExtAttribute, ExtFile, ExtLink } from '../model/ext-submission-types';
@@ -22,12 +22,12 @@ interface AttrException {
  */
 export class AttrExceptions {
   private static allAttrs: Array<AttrException> = [
-    { name: 'AttachTo', rootLevel: true, studyLevel: false, systemOnly: true, unique: false },
-    { name: 'ReleaseDate', rootLevel: true, studyLevel: false, systemOnly: false, unique: true },
-    { name: 'Title', rootLevel: true, studyLevel: true, systemOnly: false, unique: true },
+    { name: AttributeNames.ATTACH_TO, rootLevel: true, studyLevel: false, systemOnly: true, unique: false },
+    { name: AttributeNames.RELEASE_DATE, rootLevel: true, studyLevel: false, systemOnly: false, unique: true },
+    { name: AttributeNames.TITLE, rootLevel: true, studyLevel: true, systemOnly: false, unique: true },
     { name: 'AccNoPattern', rootLevel: true, studyLevel: false, systemOnly: true, unique: true },
     { name: 'AccNoTemplate', rootLevel: true, studyLevel: false, systemOnly: true, unique: true },
-    { name: 'File List', rootLevel: true, studyLevel: false, systemOnly: false, unique: true }
+    { name: AttributeNames.FILE_LIST, rootLevel: true, studyLevel: false, systemOnly: false, unique: true }
   ];
 
   private static editableAttr: Array<string> = AttrExceptions.allAttrs
@@ -103,7 +103,7 @@ export function extractTableAttributes(table: Table, isSanitise: boolean): ExtAt
     const attributes: ExtAttribute[] = table.columns.map((column) => {
       const rowValue = row.valueFor(column.id);
 
-      return { name: column.name, value: rowValue && rowValue.value } as ExtAttribute;
+      return { name: column.name, value: rowValue && rowValue.value, reference: false } as ExtAttribute;
     });
 
     return attributes.filter((attr) => (isSanitise && !isValueEmpty(attr.value)) || !isSanitise);
@@ -116,12 +116,13 @@ export function fieldAsAttribute(field: Field, displayType?: string): ExtAttribu
   if (displayType) {
     return {
       name: field.name,
+      reference: false,
       value: field.value,
       valueAttrs: [{ name: 'display', value: displayType }]
     } as ExtAttribute;
   }
 
-  return { name: field.name, value: field.value } as ExtAttribute;
+  return { name: field.name, value: field.value, reference: false } as ExtAttribute;
 }
 
 export function fieldsAsAttributes(fields: Field[], isSanitise: boolean): ExtAttribute[] {

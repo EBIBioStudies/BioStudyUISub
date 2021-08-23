@@ -1,4 +1,4 @@
-import { SectionNames } from 'app/submission/utils/constants';
+import { AttributeNames, SectionNames } from 'app/submission/utils/constants';
 import { Dictionary, Nullable } from 'app/submission/submission-shared/model/submission-common-types';
 import { isStringDefined, isStringEmpty } from 'app/utils/string.utils';
 import { ExtAttribute, ExtSection } from '../model/ext-submission-types';
@@ -68,7 +68,7 @@ export class Organisations {
     });
 
     if (referenceValues.length > 0) {
-      return [...otherAttributes, { name: 'Organisation', value: referenceValues }];
+      return [...otherAttributes, { name: AttributeNames.ORGANISATION, value: referenceValues, reference: false }];
     }
 
     return otherAttributes;
@@ -88,7 +88,7 @@ export class Organisations {
 
   private toReference(orgValue: string | undefined, accno: string): ExtAttribute {
     if (orgValue === undefined || isStringEmpty(orgValue)) {
-      return { name: SectionNames.AFFILIATION, value: orgValue } as ExtAttribute;
+      return { name: SectionNames.AFFILIATION, value: orgValue, reference: false } as ExtAttribute;
     }
 
     const orgRef = this.refFor(orgValue, accno!);

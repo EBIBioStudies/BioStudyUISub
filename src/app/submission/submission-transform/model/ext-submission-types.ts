@@ -1,3 +1,4 @@
+import { AccessTag } from 'app/submission/submission-shared/model/submission-common-types';
 import { NameValue, TaggedData } from 'app/submission/submission-shared/model/submission-common-types';
 
 export interface ExtAttribute {
@@ -16,7 +17,7 @@ export interface ExtLink {
 
 export interface ExtFileList {
   fileName: string | null;
-  files?: ExtFile[];
+  filesUrl?: string;
 }
 
 export interface ExtFile {
@@ -46,9 +47,23 @@ export interface ExtSection {
 
 export interface ExtSubmission extends TaggedData {
   accNo: string;
-  collections?: ExtCollection[];
+  accessTags?: AccessTag[];
   attributes?: ExtAttribute[];
-  releaseTime: string;
-  title: string;
+  collections?: ExtCollection[];
+  creationTime?: string;
+  method?: string;
+  modificationTime?: string;
+  owner?: string;
+  relPath?: string;
+  releaseTime?: string;
+  released?: boolean;
+  rootPath?: string | null;
+  secretKey?: string;
   section: ExtSection;
+  stats?: NameValue[];
+  status?: 'PROCESSED' | 'PROCESSING' | 'REQUESTED';
+  submitter?: string;
+  tags?: NameValue[];
+  title: string;
+  version?: number;
 }

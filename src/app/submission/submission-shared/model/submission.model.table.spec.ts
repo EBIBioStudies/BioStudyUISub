@@ -1,6 +1,6 @@
 import { AttributeValue } from './submission.model.attribute-value';
-import { ColumnType, TableType, invalidateGlobalScope } from '../templates';
 import { Table, TableData } from './submission.model';
+import { ColumnType, invalidateGlobalScope, TableType } from './submission-type.model';
 
 describe('Submission Model: Table', () => {
   beforeEach(() => {

@@ -22,7 +22,7 @@ const URL_REGEXP = /^(http|https|ftp):\/\/.+$/;
  */
 export function toTyped(attributes: ExtAttribute[]): ExtLink {
   const pointer: string = ((attributes.find((at) => at.name === POINTER_ATTR) || { value: '' }).value as string) || '';
-  const typeAttr = { name: TYPE_ATTR, value: '' };
+  const typeAttr = { name: TYPE_ATTR, value: '', reference: false };
   const isUrl = URL_REGEXP.test(pointer);
 
   const linkObj = {
