@@ -25,8 +25,8 @@
           <dd class="col-sm-6" *ngIf="releaseDate">{{releaseDate | date: 'dd MMM yyyy'}}</dd>
           <dd class="col-sm-6" *ngIf="!releaseDate">No release date</dd>
 
-          <dt class="col-sm-6" *ngIf="isStudy">Project</dt>
-          <dd class="col-sm-6" *ngIf="isStudy">{{project ? project : 'No project'}}</dd>
+          <dt class="col-sm-6" *ngIf="isStudy">Collection</dt>
+          <dd class="col-sm-6" *ngIf="isStudy">{{project ? project : 'No Collection'}}</dd>
         </dl>
       </div>
       <span class="text-danger" *ngIf="hasSubmitFailed">

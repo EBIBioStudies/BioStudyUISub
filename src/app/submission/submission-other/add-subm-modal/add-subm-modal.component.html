@@ -7,10 +7,10 @@
   </div>
   <div class="modal-body">
     <p>
-      To create a blank submission, please select a project from the list below. You may leave the default
-      option if the new submission is a stand-alone study or its parent project is not in the list. <br />
+      To create a blank submission, please select a collection from the list below. You may leave the default
+      option if the new submission is a stand-alone study or its parent collection is not in the list. <br />
     </p>
-    <strong>What is the study's parent project?</strong>
+    <strong>What is the study's parent collection?</strong>
     <ng-container *ngFor="let tmpl of templates; index as i" >
       <div class="form-check">
         <input id="template_{{i}}" type="radio" class="form-check-input" name="template" [value]="tmpl.name"
