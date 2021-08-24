@@ -226,6 +226,15 @@ export class SelectValueType extends ValueType {
   }
 }
 
+export class FileValueType extends ValueType {
+  readonly allowFolders: boolean;
+
+  constructor(data: Partial<FileValueType> = {}) {
+    super(ValueTypeName.file);
+    this.allowFolders = data.allowFolders === undefined ? true : data.allowFolders;
+  }
+}
+
 export class ValueTypeFactory {
   static DEFAULT = ValueTypeFactory.create();
 
@@ -236,6 +245,8 @@ export class ValueTypeFactory {
         return new DateValueType(data);
       case ValueTypeName.select:
         return new SelectValueType(data);
+      case ValueTypeName.file:
+        return new FileValueType(data);
       default:
         return new TextValueType(data, typeName);
     }

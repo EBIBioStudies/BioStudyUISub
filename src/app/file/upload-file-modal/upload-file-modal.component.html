@@ -1,6 +1,6 @@
 <div class="modal-content">
   <div class="modal-header">
-    <h5 class="modal-title">Select or upload file</h5>
+    <h5 class="modal-title">Select or Upload</h5>
     <button type="button" class="close" aria-label="Close" (click)="onCancelCloseClick()">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -8,10 +8,10 @@
   <div class="modal-body">
     <div class="card bg-light mb-3">
       <div class="card-header">
-        Select file
+        Select file{{allowFolders ? '/folder' : ''}}
       </div>
       <div class="card-body overflow-auto" style="max-height: 400px">
-        <st-file-tree (fileTreeSelect)="onFileSelect($event)"></st-file-tree>
+        <st-file-tree (fileTreeSelect)="onFileSelect($event)" [allowFolders]="allowFolders" ></st-file-tree>
       </div>
     </div>
     <div class="input-group">

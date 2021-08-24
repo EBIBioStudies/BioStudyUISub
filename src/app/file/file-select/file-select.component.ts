@@ -16,6 +16,7 @@ export class FileSelectComponent implements ControlValueAccessor, OnDestroy {
   @Input() inputId = '';
   @Input() readonly = false;
   @Input() isInputGroup: boolean = false;
+  @Input() allowFolders: boolean = true;
   // tslint:disable-next-line: no-input-rename
   @Input('value')
   private selected = '';
@@ -41,7 +42,7 @@ export class FileSelectComponent implements ControlValueAccessor, OnDestroy {
   openFileSelectModal(): void {
     if (!this.readonly) {
       const modal = this.modalService.show(UploadFileModalComponent, { ignoreBackdropClick: true });
-
+      (modal.content as UploadFileModalComponent).allowFolders = this.allowFolders;
       (modal.content as UploadFileModalComponent).onClose.pipe(takeUntil(this.unsubscribe)).subscribe((fileName) => {
         this.value = fileName;
       });

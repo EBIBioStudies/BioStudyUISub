@@ -14,6 +14,7 @@ export class FileTreeComponent implements OnInit, OnDestroy {
 
   loaded = false;
   @Input() root?: FileNode;
+  @Input() allowFolders: boolean = true;
   @Output() fileTreeSelect = new EventEmitter();
 
   private fileTreeNodes: FileNode[] = [];
@@ -51,12 +52,15 @@ export class FileTreeComponent implements OnInit, OnDestroy {
 
   onChildTreeClick(path: string): void {
     const finalPath = path.replace(FileTreeComponent.ROOT_FOLDER_PATH, '');
-
     this.fileTreeSelect.emit(finalPath);
   }
 
   onNodeClick(node: FileNode): void {
-    this.fileTreeSelect.emit(node.path);
+    if (node.isDir && !this.allowFolders) {
+      node.expandOrCollapse();
+    } else {
+      this.fileTreeSelect.emit(node.path);
+    }
   }
 
   onParentClick(node: FileNode): void {

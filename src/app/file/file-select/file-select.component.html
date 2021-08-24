@@ -2,6 +2,8 @@
   <input type="text" [ngModel]="value" class="form-control custom-file-input {{inputId}}"
     (click)="openFileSelectModal()" [ngClass]="{'is-grouped': isInputGroup}" readonly #inputbox />
   <div *ngIf="!readonly" class="input-group-append">
-    <button class="btn btn-outline-secondary" type="button" (click)="openFileSelectModal()">Select File</button>
+    <button class="btn btn-outline-secondary" type="button" (click)="openFileSelectModal()">
+      Select File{{allowFolders ? '/Folder' : ''}}
+    </button>
   </div>
 </div>

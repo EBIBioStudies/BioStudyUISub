@@ -13,6 +13,7 @@ export class UploadFileModalComponent {
   files: File[] = [];
   fileToUploadName: string = '';
   onClose: Subject<string> = new Subject();
+  allowFolders: boolean = true;
   private upload?: FileUpload;
 
   constructor(private fileUploadList: FileUploadList, public bsModalRef: BsModalRef) {}
