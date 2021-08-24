@@ -96,8 +96,8 @@
                 The study with accession number <strong>{{accno}}</strong>
                 <span *ngIf="releaseDate">and release date <strong>{{releaseDate | date: 'dd MMMM yyyy'}}</strong></span>
                 has been successfully updated and is now being processed. It will be available at
-                <a target="_blank" href="{{location.origin}}/biostudies/studies/{{accno}}">
-                  {{location.hostname}}/biostudies/studies/{{accno}}</a>. <br />
+                <a target="_blank" href="{{frontendUrl}}/studies/{{accno}}">
+                  {{frontendUrl}}/studies/{{accno}}</a>. <br />
               </p>
             </ng-container>
 

@@ -14,6 +14,7 @@ import { SubmValidationErrors } from '../submission-shared/model';
 import { SubmitLog } from '../submission-shared/submission.service';
 import { scrollTop } from 'app/utils';
 import { ErrorService } from 'app/core/errors/error.service';
+import { AppConfig } from 'app/app.config';
 
 class SubmitOperation {
   static CREATE = new SubmitOperation();
@@ -64,15 +65,12 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     private bsModalService: BsModalService,
     private modalService: ModalService,
     private submEditService: SubmEditService,
-    private errorService: ErrorService
+    private errorService: ErrorService,
+    private appConfig: AppConfig
   ) {
     submEditService.sectionSwitch$
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((sectionForm) => this.switchSection(sectionForm));
-  }
-
-  get location(): globalThis.Location {
-    return window.location;
   }
 
   get isSubmitting(): boolean {
@@ -97,6 +95,10 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
 
   get isTemp(): boolean {
     return this.accno!.startsWith('TMP_');
+  }
+
+  get frontendUrl(): string {
+    return this.appConfig.frontendURL;
   }
 
   ngOnDestroy(): void {
