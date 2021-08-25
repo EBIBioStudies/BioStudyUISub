@@ -4,7 +4,7 @@ import { UserData } from 'app/auth/shared';
 import { SubmissionTemplatesService } from 'app/submission/submission-shared/submission-templates.service';
 import { SubmissionService } from 'app/submission/submission-shared/submission.service';
 import { ExtSubmission } from 'app/submission/submission-transform/model/ext-submission-types';
-import { SubmissionToExtSubmissionService } from 'app/submission/submission-transform/submittion-to-ext-submission.service';
+import { SubmissionToExtSubmissionService } from 'app/submission/submission-transform/submission-to-ext-submission.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { AddSubmModalComponent } from '../add-subm-modal/add-subm-modal.component';
 

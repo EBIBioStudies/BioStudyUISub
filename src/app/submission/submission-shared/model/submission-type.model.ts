@@ -492,14 +492,18 @@ export class SectionType extends TypeBase {
 export class SubmissionType extends TypeBase {
   readonly display: string = DisplayType.OPTIONAL.name;
   readonly sectionType: SectionType;
-  private submissionTemplateService: SubmissionTemplatesService = new SubmissionTemplatesService();
 
-  // tslint:disable-next-line: variable-name
-  constructor(_name: string, tmplName: string, scope?: TypeScope<TypeBase>) {
+  constructor(
+    // tslint:disable-next-line: variable-name
+    _name: string,
+    tmplName: string,
+    scope?: TypeScope<TypeBase>,
+    submissionTemplateService?: SubmissionTemplatesService
+  ) {
     super('Submission', true, scope);
 
-    const typeObj: SubmissionType = this.submissionTemplateService.findSubmissionTemplateByName(tmplName);
-
+    const templateService = submissionTemplateService ?? new SubmissionTemplatesService();
+    const typeObj: SubmissionType = templateService.findSubmissionTemplateByName(tmplName);
     if (typeObj.sectionType === undefined) {
       throw Error('sectionType is not defined in the template');
     }
@@ -521,8 +525,8 @@ export class SubmissionType extends TypeBase {
     return SubmissionType.fromTemplate(EMPTY_TEMPLATE_NAME);
   }
 
-  static fromTemplate(tmplName: string): SubmissionType {
-    return new SubmissionType('Submission', tmplName, new TypeScope<TypeBase>());
+  static fromTemplate(tmplName: string, submissionTemplateService?: SubmissionTemplatesService): SubmissionType {
+    return new SubmissionType('Submission', tmplName, new TypeScope<TypeBase>(), submissionTemplateService);
   }
 }
 

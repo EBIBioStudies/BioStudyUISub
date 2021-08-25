@@ -2,10 +2,10 @@ import { ExtSubmission } from './../../app/submission/submission-transform/model
 import { extRootSection } from './section';
 
 export const extSubmission: ExtSubmission = {
-  accNo: 'S-BIAD1',
+  accNo: 'S-TEST1',
   owner: 'ndiaz+1@ebi.ac.uk',
   submitter: 'ndiaz+1@ebi.ac.uk',
-  title: 'Testing extended submission from DEV',
+  title: 'Test Study Title',
   method: 'PAGE_TAB',
   relPath: '',
   rootPath: null,
@@ -17,5 +17,5 @@ export const extSubmission: ExtSubmission = {
   creationTime: '2021-08-17T14:27:49.234Z',
   section: extRootSection,
   attributes: [],
-  collections: [{ accNo: 'BioImages' }]
+  collections: [{ accNo: 'TestTemplate' }]
 };

@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SubmissionTemplatesService } from 'app/submission/submission-shared/submission-templates.service';
+import { SubmissionTypeService } from 'app/submission/submission-shared/submission-type.service';
+import { SectionData, Submission, SubmissionType } from 'app/submission/submission-shared/model';
 import { ExtAttribute, ExtSection, ExtSubmission } from './model/ext-submission-types';
 import { extAttrToAttrData } from './utils/ext-attribute-to-attribute.utils';
 import { extSectionsToTables } from './utils/ext-section-to-section.utils';
@@ -8,16 +10,18 @@ import { toUntyped } from './utils/link.utils';
 import { ExtAttrExceptions } from './shared/attr-exceptions';
 import { partition } from 'app/utils';
 import { AttributeNames } from '../utils/constants';
-import { SectionData, Submission, SubmissionType } from '../submission-shared/model';
 
 @Injectable()
 export class ExtSubmissionToSubmissionService {
-  constructor(private submissionTemplatesService: SubmissionTemplatesService) {}
+  constructor(
+    private submissionTemplatesService: SubmissionTemplatesService,
+    private submissionTypeService: SubmissionTypeService
+  ) {}
 
   extSubmissionToSubmission(extSubmission: ExtSubmission): Submission {
     const { attributes = [], collections, section } = extSubmission;
     const templateName = this.submissionTemplatesService.findSubmissionTemplateName(collections);
-    const type: SubmissionType = SubmissionType.fromTemplate(templateName);
+    const type: SubmissionType = this.submissionTypeService.fromTemplate(templateName);
 
     const studyAttributes = mergeAttributes(attributes, [
       this.releaseDateAttr(extSubmission),
@@ -46,7 +50,11 @@ export class ExtSubmissionToSubmissionService {
     const editableParentAttributes = parentAttributes.filter((attribute) =>
       ExtAttrExceptions.editable.includes(attribute.name!)
     );
-    const fileListAttribute: ExtAttribute = { name: 'FileList', value: fileList?.fileName || '', reference: false };
+    const fileListAttribute: ExtAttribute = {
+      name: AttributeNames.FILE_LIST,
+      value: fileList?.fileName || '',
+      reference: false
+    };
     const parentAndChildAttributes = mergeAttributes(editableParentAttributes, [...attributes, fileListAttribute]);
     const attributesData = extAttrToAttrData(parentAndChildAttributes, sectionType.fieldValueTypes);
     const keywords = filterAttributesByName(AttributeNames.KEYWORD, attributes);

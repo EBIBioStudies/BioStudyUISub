@@ -2,13 +2,13 @@ import { ExtAttribute } from '../../app/submission/submission-transform/model/ex
 
 export const titleAttribute: ExtAttribute = {
   name: 'Title',
-  value: 'Testing extended submission from DEV',
+  value: 'Test Study Title',
   reference: false
 };
 
 export const descriptionAttribute: ExtAttribute = {
   name: 'Description',
-  value: 'Testing extended submission from DEV',
+  value: 'Test Study Description',
   reference: false
 };
 

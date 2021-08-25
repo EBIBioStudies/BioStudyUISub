@@ -1,3 +1,4 @@
+import { testTemplate } from './../../../tests/templates/test-template';
 import { TestBed } from '@angular/core/testing';
 import { extRootSection } from './../../../tests/fixtures/section';
 import { extFile } from './../../../tests/fixtures/file';
@@ -8,6 +9,7 @@ import { Attribute, Section, Submission } from '../submission-shared/model';
 import { extSubmission } from './../../../tests/fixtures/submission';
 import { AttributeNames, SectionNames } from '../utils/constants';
 import { findAttributeByName } from './utils/attribute.utils';
+import { SubmissionTemplatesService } from '../submission-shared/submission-templates.service';
 
 const getColumnValue = (columnName, columns, row) => {
   const { id } = columns.find((column: Attribute) => column.name === columnName) || { id: '' };
@@ -15,13 +17,25 @@ const getColumnValue = (columnName, columns, row) => {
   return row.valueFor(id);
 };
 
+const findSubmissionTemplateNameMock = jest.fn(() => 'TestTemplate');
+const findSubmissionTemplateByNameMock = jest.fn(() => testTemplate);
+
 describe('ExtSubmissionToSubmissionService', () => {
   let extSubmissionToSubmissionService: ExtSubmissionToSubmissionService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [SubmissionSharedModule],
-      providers: [ExtSubmissionToSubmissionService]
+      providers: [
+        {
+          provide: SubmissionTemplatesService,
+          useValue: {
+            findSubmissionTemplateName: findSubmissionTemplateNameMock,
+            findSubmissionTemplateByName: findSubmissionTemplateByNameMock
+          }
+        },
+        ExtSubmissionToSubmissionService
+      ]
     });
 
     extSubmissionToSubmissionService = TestBed.inject(ExtSubmissionToSubmissionService);
