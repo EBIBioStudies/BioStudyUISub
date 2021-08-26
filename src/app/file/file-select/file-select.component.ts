@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, forwardRef, Input, OnDestroy } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FileTreeStore } from './file-tree.store';
 import { Subject } from 'rxjs';
@@ -22,7 +22,11 @@ export class FileSelectComponent implements ControlValueAccessor, OnDestroy {
   private selected = '';
   private unsubscribe = new Subject();
 
-  constructor(private fileStore: FileTreeStore, private modalService: BsModalService) {}
+  constructor(
+    private fileStore: FileTreeStore,
+    private modalService: BsModalService,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
 
   get value(): string {
     return this.selected;
@@ -45,6 +49,7 @@ export class FileSelectComponent implements ControlValueAccessor, OnDestroy {
       (modal.content as UploadFileModalComponent).allowFolders = this.allowFolders;
       (modal.content as UploadFileModalComponent).onClose.pipe(takeUntil(this.unsubscribe)).subscribe((fileName) => {
         this.value = fileName;
+        this.changeDetectorRef.detectChanges();
       });
     }
   }
@@ -68,6 +73,8 @@ export class FileSelectComponent implements ControlValueAccessor, OnDestroy {
           if (path !== value) {
             this.onChange(path);
           }
+
+          this.changeDetectorRef.detectChanges();
         });
     }
   }
