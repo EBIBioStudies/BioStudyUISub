@@ -1,5 +1,5 @@
-import { testTemplate } from './../../../tests/templates/test-template';
 import { TestBed } from '@angular/core/testing';
+import { testTemplate } from './../../../tests/templates/test-template';
 import { extRootSection } from './../../../tests/fixtures/section';
 import { extFile } from './../../../tests/fixtures/file';
 import { extAuthor } from './../../../tests/fixtures/author';
