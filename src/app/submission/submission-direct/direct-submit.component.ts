@@ -41,10 +41,6 @@ export class DirectSubmitComponent {
     return this.sidebar.studyProp(studyIdx, 'log');
   }
 
-  getRelease(studyIdx: number): string {
-    return this.sidebar.studyProp(studyIdx, 'releaseDate');
-  }
-
   getStudyFiles(): void {
     this.sidebar.model.files.filter((file) => file.isStudy);
   }

@@ -3,7 +3,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 @Component({
   selector: 'st-direct-submit-file',
   templateUrl: './direct-submit-file.component.html',
-  styleUrls: ['./direct-submit-file.component.css']
+  styleUrls: ['./direct-submit-file.component.scss']
 })
 export class DirectSubmitFileComponent {
   @Input() accno;
@@ -19,7 +19,6 @@ export class DirectSubmitFileComponent {
   @Output() isStudyChange = new EventEmitter<object>();
   @Input() isSubmitting;
   @Input() project;
-  @Input() releaseDate;
 
   handleOnFileClick(event: Event, hasSubmitFailed: boolean, accno: string): void {
     this.fileClick.emit({ event, hasSubmitFailed, accno });
