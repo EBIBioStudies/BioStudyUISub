@@ -1,5 +1,5 @@
 <ng-container *ngIf="file">
-  <div class="card h-100" [ngClass]="{'panel-default': !accno, 'text-primary': accno}"
+  <div class="card h-100" [ngClass]="{'panel-default': !accno, 'text-primary': accno, 'st-has-passed': hasSubmitPassed}"
     [ngStyle]="{'cursor': accno  ? 'pointer' : 'default'}"
     [tooltip]="accno ? 'Edit this study' : ''"
     (click)="hasSubmitPassed ? handleOnFileClick($event, hasSubmitFailed, accno) : null"
@@ -21,10 +21,6 @@
           <strong>{{accno}}</strong>
         </p>
         <dl class="row mb-0">
-          <dt class="col-sm-6" *ngIf="releaseDate">Release Date</dt>
-          <dd class="col-sm-6" *ngIf="releaseDate">{{releaseDate | date: 'dd MMM yyyy'}}</dd>
-          <dd class="col-sm-6" *ngIf="!releaseDate">No release date</dd>
-
           <dt class="col-sm-6" *ngIf="isStudy">Collection</dt>
           <dd class="col-sm-6" *ngIf="isStudy">{{project ? project : 'No Collection'}}</dd>
         </dl>
@@ -36,7 +32,7 @@
         <st-subm-results-tree [log]="errorLog"></st-subm-results-tree>
       </div>
     </div>
-    <div *ngIf="!hasSubmitFailed && !hasSubmitPassed" class="card-footer text-muted"
+    <div *ngIf="!hasSubmitFailed && !hasSubmitPassed" class="card-footer text-muted" [ngClass]="{'st-is-study': isStudy}"
       (click)="handleOnIsStudyChange(!isStudy, fileName)">
       <input type="checkbox" [checked]="isStudy">
       Study File

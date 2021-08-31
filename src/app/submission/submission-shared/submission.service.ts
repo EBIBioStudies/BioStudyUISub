@@ -104,7 +104,7 @@ export class SubmissionService {
 
     formData.append('submission', file);
 
-    return this.http.post<SubmitResponse>(`/api/submissions/direct`, formData);
+    return this.http.post<SubmitResponse>(`/api/submissions/async/direct`, formData);
   }
 
   getProjects(): Observable<any> {
