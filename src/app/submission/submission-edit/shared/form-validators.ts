@@ -153,7 +153,7 @@ export class SubmFormValidators {
       const { value } = control;
       const { values } = valueType;
 
-      if (value.length === 0) {
+      if (!value || value.length === 0) {
         return null;
       }
 
