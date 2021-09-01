@@ -58,7 +58,7 @@ Run the next steps to build and execute the application in **production** mode:
 npm run build
 cp .env ./dist
 cd ./dist
-npm run node:prod
+NODE_ENV=production node .
 ```
 
 ### Tests
