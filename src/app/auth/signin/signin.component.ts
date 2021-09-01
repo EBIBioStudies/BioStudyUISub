@@ -24,13 +24,13 @@ export class SignInComponent implements OnInit {
 
   ngOnInit(): void {
     if (!this.userSession.isAnonymous()) {
-      this.router.navigate(['submissions']);
+      this.router.navigate(['/']);
     }
   }
 
   onSubmit(form: NgForm): void {
     this.resetGlobalError();
-    const next = this.route.snapshot.queryParamMap.get('next') || '/submissions';
+    const next = this.route.snapshot.queryParamMap.get('next') || '/';
 
     if (form.valid) {
       this.isLoading = true;

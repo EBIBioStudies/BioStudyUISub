@@ -1,13 +1,14 @@
 {
   "APP_PROXY_BASE": "",
-  "APP_ENV": "DEV",
+  "APP_ENV": "LOCAL",
   "APP_CONTEXT": "",
   "APP_TABLET_BREAKPOINT": 993,
   "APP_MAX_DATE_YEARS": 2,
   "APP_DATE_LIST_FORMAT": "dd MMM yyyy",
-  "APP_DATE_INPUT_FORMAT": "DD MMM YYYY",
+  "APP_DATE_INPUT_FORMAT": "DD/MM/YYYY",
   "APP_MAX_SUGGEST_LENGTH": 15,
   "MAX_CONCURRENT": 4,
   "GDPR_BANNER_URL": "https://ebi.emblstatic.net/web_guidelines/EBI-Framework/v1.3/js/ebi-global-includes/script/5_ebiFrameworkNotificationBanner.js",
+  "FRONTEND_URL": "http://ribs.ebi.ac.uk:8080/biostudies",
   "APP_INSTANCE_KEY": "http://localhost"
 }

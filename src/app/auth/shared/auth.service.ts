@@ -30,7 +30,7 @@ export class AuthService {
     return this.sendPostRequest(`/api/auth/activate/${key}`, {});
   }
 
-  changePassword(obj: PasswordResetData): Observable<StatusResponse> {
+  changePassword(obj: PasswordResetData): Observable<UserInfo> {
     return this.sendPostRequest('/api/auth/password/change', obj.snapshot());
   }
 
@@ -61,6 +61,10 @@ export class AuthService {
 
   sendActivationLinkRequest(obj: ActivationLinkRequestData): Observable<StatusResponse> {
     return this.sendPostRequest<StatusResponse>('/api/auth/retryact', this.withInstanceKey(obj.snapshot()));
+  }
+
+  sendActivationEmailRequest(obj: ActivationLinkRequestData): Observable<StatusResponse> {
+    return this.sendPostRequest<StatusResponse>('/api/auth/activate', this.withInstanceKey(obj.snapshot()));
   }
 
   sendPasswordResetRequest(obj: PasswordResetRequestData): Observable<StatusResponse> {

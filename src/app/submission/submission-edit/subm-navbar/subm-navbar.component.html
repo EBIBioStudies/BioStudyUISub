@@ -1,0 +1,60 @@
+<nav class="navbar navbar-light border-bottom page-navbar bg-white sticky-top">
+  <div class="d-flex align-items-center mr-auto">
+    <a class="btn btn-link btn-sm pl-0" *ngIf="isTemp" routerLink="/draft">
+      <i class="fa fa-clock-o" aria-hidden="true"></i> Drafts
+    </a>
+    <a class="btn btn-link btn-sm pl-0" *ngIf="!isTemp" routerLink="/">
+      <i class="fa fa-database" aria-hidden="true"></i> Submissions
+    </a>
+    <ng-container *ngFor="let secForm of sectionPath; let idx = index; let last = last;">
+      <i class="fa fa-angle-right font-bold"></i>
+      <button class="btn btn-link btn-sm" (click)="onSectionClick(secForm)" [disabled]="last">
+        <span *ngIf="idx == 0">{{accno}}</span>
+        <span *ngIf="idx > 0">{{secForm.accno ? secForm.accno : secForm.typeName}}</span>
+      </button>
+    </ng-container>
+    <span class="text-muted ml-2" *ngIf="isSaving">
+      <i class="fa fa-cog fa-spin"></i>
+      Backing up study data...
+    </span>
+  </div>
+  <div class="btn-toolbar d-flex align-items-center">
+    <a *ngIf="!isTemp" class="small mr-3" [href]="submissionUrl" target="_blank">
+      Open in BioStudies
+    </a>
+    <button *ngIf="!readonly"
+        [disabled]="isSaving"
+        class="btn btn-primary btn-sm"
+        tooltip="Send to the BioStudies database"
+        placement="bottom"
+        container="body"
+        (click)="onSubmit($event)">
+      {{isTemp ? 'S' : 'Re-s'}}ubmit
+    </button>
+    <button *ngIf="!readonly && !isTemp && isRevised"
+        [disabled]="!isEditing"
+        class="btn btn-primary btn-sm btn-danger ml-2"
+        tooltip="Revert to last released version"
+        placement="bottom"
+        container="body"
+        (click)="onRevert($event)">
+      <i class="fa fa-undo" aria-hidden="true"></i>
+      Revert
+    </button>
+    <button *ngIf="readonly" class="btn btn-primary btn-sm ml-2"
+        (click)="onEdit($event)"
+        tooltip="Edit this submission"
+        placement="bottom"
+        container="body">
+      <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+      Edit
+    </button>
+    <button *ngIf="readonly" class="btn btn-secondary btn-sm ml-2"
+        tooltip="Create a new submission"
+        placement="bottom"
+        container="body"
+        stNewSubmissionButton>
+      New submission
+    </button>
+  </div>
+</nav>

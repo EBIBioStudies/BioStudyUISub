@@ -1,0 +1,187 @@
+<div class="container-fluid">
+  <st-not-found *ngIf="submNotFound" [message]="submNotFoundMessage"></st-not-found>
+  <div *ngIf="!submNotFound" class="row">
+    <st-sidebar *ngIf="!readonly" (toggle)="onSidebarToggle($event)">
+      <st-subm-sidebar [collapsed]="isSidebarCollapsed" [sectionForm]="sectionForm"></st-subm-sidebar>
+    </st-sidebar>
+    <main class="col" [ngClass]="{
+        'sidebar-expanded': !isSidebarCollapsed,
+        'sidebar-collapsed': isSidebarCollapsed,
+        'read-only-body': readonly
+      }">
+      <st-subm-navbar *ngIf="sectionForm" [readonly]="readonly" [accno]="accno" [sectionForm]="sectionForm"
+        (sectionClick)="onSectionClick($event)" (revertClick)="onRevertClick($event)"
+        (submitClick)="onSubmitClick($event)" (editClick)="onEditBackClick($event)">
+      </st-subm-navbar>
+
+      <div *ngIf="sectionForm" class="p-3 bg-light">
+        <st-subm-validation-errors [errors]="submissionErrors"></st-subm-validation-errors>
+        <div *ngIf="method === 'FILE'" class="alert alert-info">
+          <p class="mb-0">
+            <strong>Please note: </strong>
+            You are about to edit a submission which was created by Direct Upload. Any updates to this submission will
+            be available on BioStudies but will not be reflected in the initially submitted file.
+          </p>
+        </div>
+        <div *ngIf="sectionForm.isRootSection" class="card">
+          <div class="card-body st-edit-status-message">
+            <ng-container *ngIf="hasJustCreated && sectionForm.invalid">
+              <h4 class="card-title">New {{collection}} submission</h4>
+              <p class="card-text">
+                Please fill in the form below. The <span class="font-weight-bold">Check</span> tab on the
+                left-hand side lists those fields still incomplete or incorrect. Use the
+                <span class="font-weight-bold">Add</span> tab to quickly add new rows or tables.
+              </p>
+              <div class="alert alert-warning mb-0" role="alert">
+                <strong>Please note:</strong> all fields are required unless they are marked as "<i>Optional</i>"
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="!hasJustCreated && !readonly && sectionForm.invalid">
+              <h4 class="card-title">Incomplete {{collection}} submission</h4>
+              <p class="card-text">
+                Some information in this submission is still missing or incorrect. Refer to the
+                <span class="font-weight-bold">Check</span> tab on the left-hand side for the
+                list of fields that need updating.
+              </p>
+              <div class="alert alert-warning mb-0" role="alert">
+                <strong>Please note:</strong> all fields are required unless they are marked as "<i>Optional</i>"
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="!sectionForm.invalid && !readonly || sectionForm.pending">
+              <ng-container *ngIf="isTemp && !isSubmitting">
+                <h4 class="card-title">Study ready for submission</h4>
+                <p class="card-text">You may submit the data on this form now.</p>
+                <div class="alert alert-success mb-0" role="alert">
+                  <strong>Please note:</strong> after submission, your study will be allocated a permanent accession
+                  number under which it will be
+                  published.
+                </div>
+              </ng-container>
+
+              <ng-container *ngIf="!isTemp && !isSubmitting">
+                <h4 class="card-title">Study ready for re-submission</h4>
+                <p class="card-text">You may re-submit the data on this form now.</p>
+                <div class="alert alert-success mb-0" role="alert">
+                  <strong>Please note:</strong> your study will retain the same accession number under which it was
+                  registered.
+                </div>
+              </ng-container>
+
+              <ng-container *ngIf="isSubmitting">
+                <h4 class="card-title">Submitting study...</h4>
+                <p class="card-text">Please wait while the data in the form is being submitted and validated.</p>
+              </ng-container>
+            </ng-container>
+
+            <ng-container *ngIf="isTemp && readonly">
+              <h4 class="card-title">
+                <i aria-hidden="true" class="fa fa-check-circle"></i>
+                Study
+                <span *ngIf="submitOperation.isUnknown">entry</span>
+                <span *ngIf="submitOperation.isCreate">submitted</span>
+              </h4>
+              <p class="card-text mb-1" *ngIf="submitOperation.isUnknown || submitOperation.isCreate">
+                The study has been successfully submitted to the BioStudies database and is now being processed.
+              </p>
+            </ng-container>
+
+            <ng-container *ngIf="!isTemp && readonly">
+              <h4 class="card-title">
+                <i aria-hidden="true" class="fa fa-check-circle"></i>
+                Study <span *ngIf="submitOperation.isUpdate">updated</span>
+              </h4>
+              <p class="card-text mb-1" *ngIf="submitOperation.isUpdate ">
+                The study with accession number <strong>{{accno}}</strong>
+                <span *ngIf="releaseDate">and release date <strong>{{releaseDate | date: 'dd MMMM yyyy'}}</strong></span>
+                has been successfully updated and is now being processed. It will be available at
+                <a target="_blank" href="{{location.origin}}/biostudies/studies/{{accno}}">
+                  {{location.hostname}}/biostudies/studies/{{accno}}</a>. <br />
+              </p>
+            </ng-container>
+
+            <ng-container *ngIf="readonly">
+              <div class="mt-3">
+                <h5>Please note <i class="far fa-hand-point-down"></i></h5>
+                <ul>
+                  <li class="mb-3">
+                    <mark>
+                      Your submission is being processed and the system may take up to 24 hours after submission to register any new
+                      studies in the database.
+                    </mark>
+                  </li>
+                  <li class="mb-3">
+                    <mark>A notification will be dropped to your email as soon as the submission has been processed.</mark>
+                  </li>
+                  <li class="mb-3">
+                    <mark>Any registered study will remain private and accessible only through login until the release date in the
+                      Western European Time Zone.
+                    </mark>
+                  </li>
+                </ul>
+              </div>
+              <div class="mt-3">
+                <strong *ngIf="!isTemp">
+                  <a target="_blank" href="https://www.ebi.ac.uk/biostudies/about">
+                    Citing my study
+                    <i class="fa fa-fw fa-external-link-square"></i>
+                  </a>
+                </strong>
+                <p *ngIf="!isTemp">
+                  Data are available in the BioStudies database <a target="_blank"
+                  href="https://www.ebi.ac.uk/biostudies/">(https://www.ebi.ac.uk/biostudies/) </a>
+                  under accession number {{accno}}.
+                </p>
+                <strong>
+                  <a target="_blank" href="http://europepmc.org/abstract/MED/26700850">
+                    Citing the BioStudies database
+                    <i class="fa fa-fw fa-external-link-square"></i>
+                  </a>
+                </strong>
+                <p>Sarkans U, Gostev M, Athar A, et al. <a href="http://doi.org/10.1093/nar/gkx965">The BioStudies
+                  database-one stop shop for all data supporting a life sciences study. </a>
+                  <i>Nucleic Acids Res.</i> 2018;46(D1):D1266-D1270. doi:10.1093/nar/gkx965
+                </p>
+              </div>
+              <a class="btn btn-primary" tooltip="List all other submitted studies" routerLink="/">
+                Show all submitted
+              </a>
+            </ng-container>
+          </div>
+        </div>
+
+        <st-subm-form [sectionForm]="sectionForm" [readonly]="readonly"></st-subm-form>
+
+        <div *ngIf="sectionForm.subsectionForms.length > 0" class="card border-0 mt-4">
+          <div class="card-body">
+            <h5 class="card-title">Subsections</h5>
+            <div class="mb-3" *ngFor="let subsectionForm of sectionForm.subsectionForms">
+              <div class="btn-group w-100" role="group">
+                <button type="button" class="btn btn-light text-left w-100 d-flex align-items-center" (click)="onSectionClick(subsectionForm)">
+                  <i class="fas fa-angle-right"></i>&nbsp;<strong>{{subsectionForm.section.type.name}}</strong>
+                  <span class="section-example" *ngIf="subsectionForm.section.type.sectionExample">
+                    {{subsectionForm.section.type.sectionExample}}
+                  </span>
+                  <span class="flex-grow-1 ml-1 section-accno" *ngIf="subsectionForm.section.accno">
+                    {{subsectionForm.section.accno}}
+                  </span>
+                  <span class="badge badge-danger" *ngIf="subsectionForm.invalid">
+                    {{subsectionForm.errorCount | plural: 'error' }}
+                  </span>
+                </button>
+                <button type="button"
+                  *ngIf="!readonly && !sectionForm.isTypeReadonly && sectionForm.isSectionRemovable(subsectionForm)"
+                  class="btn btn-danger"
+                  tooltip="Delete page &quot;{{subsectionForm.typeName}}&quot;" container="body" placement="left"
+                  (click)="$event.stopPropagation(); onSectionDeleteClick(subsectionForm)">
+                  <i class="fas fa-trash-alt fa-fw"></i>
+                </button>
+              </div>
+            </div>
+            </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
