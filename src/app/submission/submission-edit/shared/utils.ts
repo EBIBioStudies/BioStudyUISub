@@ -1,5 +1,5 @@
 import { AbstractControl, FormControl, FormGroup, FormArray } from '@angular/forms';
-import { flatMap } from 'app/utils';
+import { flatMap } from 'app/utils/array.utils';
 
 export function controlToList(control: AbstractControl): FormControl[] {
   if (control instanceof FormGroup) {

@@ -1,6 +1,6 @@
 import { Directive, forwardRef } from '@angular/core';
 import { AbstractControl, NG_VALIDATORS, ValidationErrors, Validator } from '@angular/forms';
-import { formatDate, parseDate } from '../utils';
+import { formatDate, parseDate } from 'app/utils/date.utils';
 
 @Directive({
   selector: '[stDateFormat]',

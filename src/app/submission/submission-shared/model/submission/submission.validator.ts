@@ -1,5 +1,5 @@
+import { parseDate } from 'app/utils/date.utils';
 import { Table, Field, Section, Submission } from './submission.model';
-import { parseDate } from 'app/utils';
 import { TableType, SectionType, TextValueType, ValueType, ValueTypeName } from '../templates';
 
 interface ValidationRule {

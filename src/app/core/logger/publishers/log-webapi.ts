@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { LogPublisher } from './log-publisher';
 import { LogEntry } from '../log-entry';
 import { LogLevel } from '../log-levels';

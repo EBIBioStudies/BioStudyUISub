@@ -1,58 +1,11 @@
 import { PageTabSection, PtAttribute } from './pagetab.model';
-import { Dictionary, Nullable } from './pagetab-authors.utils';
-import { isNotDefinedOrEmpty, isStringDefined } from 'app/utils';
+import { isStringDefined } from 'app/utils/validation.utils';
+import { Nullable } from '../submission-common-types';
+import { Protocols } from '../protocols';
 
 const isEqualTo = (value: string) => (s: Nullable<string>) => isStringDefined(s) && s!.toLowerCase() === value;
 const isComponentProtocol = isEqualTo('protocols');
 const isStudyProtocol = isEqualTo('study protocols');
-
-class Protocols {
-  private static instance: Protocols;
-  private refs: Dictionary<string> = {};
-
-  private constructor() {}
-
-  static getInstance(): Protocols {
-    if (!Protocols.instance) {
-      Protocols.instance = new Protocols();
-    }
-
-    return Protocols.instance;
-  }
-
-  getRefKeyByValue(value?: string): string {
-    return Object.keys(this.refs).find((key) => this.refs[key] === value) || '';
-  }
-
-  getRefValueByKey(accno?: string): string {
-    if (!accno) {
-      return '';
-    }
-
-    return this.refs[accno] || '';
-  }
-
-  refFor(value: string, accno: string): string {
-    this.refs[accno] = value;
-
-    return accno;
-  }
-
-  toReference(attr: PtAttribute): PtAttribute {
-    const attributeValue: string = attr.value as string;
-
-    if (isNotDefinedOrEmpty(attributeValue) || attr.name !== 'Protocol') {
-      return { name: attr.name, value: attr.value } as PtAttribute;
-    }
-
-    const refKeyForValue = this.getRefKeyByValue(attributeValue);
-    return {
-      name: 'Protocol',
-      value: refKeyForValue,
-      isReference: true
-    } as PtAttribute;
-  }
-}
 
 export function submissionToPageTabProtocols(pageTabSections: PageTabSection[]): PageTabSection[] {
   const protocols: Protocols = Protocols.getInstance();

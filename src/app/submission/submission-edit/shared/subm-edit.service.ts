@@ -16,12 +16,12 @@ import { UserInfo } from 'app/auth/shared/model';
 import { PageTab, SelectValueType } from 'app/submission/submission-shared/model';
 import { PageTabToSubmissionService } from 'app/submission/submission-shared/pagetab-to-submission.service';
 import { SubmissionToPageTabService } from 'app/submission/submission-shared/submission-to-pagetab.service';
-import { isDefinedAndNotEmpty } from 'app/utils';
+import { isDefinedAndNotEmpty } from 'app/utils/validation.utils';
 import { PageTabSubmission } from 'app/submission/submission-shared/model/pagetab/pagetab.model';
 import { SubmissionService, SubmitResponse } from '../../submission-shared/submission.service';
 import { SectionForm } from './model/section-form.model';
-import { flatTables } from '../../utils/table.utils';
 import { StructureChangeEvent } from './structure-change-event';
+import { flatTables } from 'app/submission/submission-shared/utils/table.utils';
 
 class EditState {
   static EDITING = 'Editing';

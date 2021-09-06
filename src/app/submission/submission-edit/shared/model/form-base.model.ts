@@ -1,5 +1,5 @@
 import { FormGroup, FormControl } from '@angular/forms';
-import { controlToList } from '../utilis';
+import { controlToList } from '../utils';
 
 export class FormBase {
   private formErrorCount: number = 0;

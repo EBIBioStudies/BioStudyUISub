@@ -1,6 +1,6 @@
 import { Component, forwardRef, Input, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl } from '@angular/forms';
-import { isNotDefinedOrEmpty } from 'app/utils';
+import { isNotDefinedOrEmpty } from 'app/utils/validation.utils';
 
 @Component({
   selector: 'st-select-input',

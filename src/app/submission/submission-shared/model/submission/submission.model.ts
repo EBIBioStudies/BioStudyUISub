@@ -1,4 +1,6 @@
-import { isDefinedAndNotEmpty, isArrayEmpty, arrayUniqueValues, isStringDefined } from 'app/utils';
+import { isDefinedAndNotEmpty, isStringDefined } from 'app/utils/validation.utils';
+import { arrayUniqueValues } from 'app/utils/array.utils';
+import { isArrayEmpty } from 'app/utils/validation.utils';
 import { nextId } from './submission.model.counter';
 import { Attribute } from './submission.model.attribute';
 import { ValueMap } from './submission.model.valuemap';

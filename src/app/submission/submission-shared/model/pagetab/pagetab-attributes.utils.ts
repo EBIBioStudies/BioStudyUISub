@@ -1,5 +1,6 @@
 import { AttrExceptions, PageTab, PtAttribute } from './pagetab.model';
-import { isDefinedAndNotEmpty, isStringDefined, isEqualIgnoringCase, isAttributeEmpty } from 'app/utils';
+import { isDefinedAndNotEmpty, isStringDefined, isEqualIgnoringCase } from 'app/utils/validation.utils';
+import { isAttributeEmpty } from '../../utils/attribute.utils';
 
 /* merges to attribute lists by overriding only single value attributes*/
 export function mergeAttributes(attrs1: PtAttribute[], attrs2: PtAttribute[]): PtAttribute[] {

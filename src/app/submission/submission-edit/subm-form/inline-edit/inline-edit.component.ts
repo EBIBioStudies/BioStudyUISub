@@ -2,7 +2,7 @@ import { Component, ElementRef, EventEmitter, forwardRef, Input, Output, ViewChi
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { AppConfig } from 'app/app.config';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { isStringEmpty } from 'app/utils';
+import { isStringEmpty } from 'app/utils/validation.utils';
 import { typeaheadSource } from '../../shared/typeahead.utils';
 
 @Component({
