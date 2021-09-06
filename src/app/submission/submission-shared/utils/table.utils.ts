@@ -1,23 +1,25 @@
-import { compose } from 'app/utils/function.utils';
-import { isValueEmpty } from 'app/utils/validation.utils';
 import { PageTabSection, PtAttribute, Section, Table } from '../model';
-import { extractTableAttributes } from './attribute.utils';
 import { contactsToSection, protocolsToSection } from './section.utils';
 
-export function tableSectionsToSections(tables: Table[], isSanitise: boolean, isSubsection: boolean): PageTabSection[] {
+import { compose } from 'app/utils/function.utils';
+import { extractTableAttributes } from './attribute.utils';
+import { isValueEmpty } from 'app/utils/validation.utils';
+
+function rowsAsSections(table, isSanitise): PageTabSection[] {
+  return tableRowToSections<PageTabSection>(
+    (attrs, currentTable) => [
+      { type: currentTable?.typeName || '', attributes: attrs.filter((attr) => !isValueEmpty(attr.value)) }
+    ],
+    (currentSection) => currentSection!.attributes!.length > 0,
+    isSanitise,
+    table
+  );
+}
+
+export function tableToSectionItem(tables: Table[], isSanitise: boolean, isSubsection: boolean): PageTabSection[] {
   let tableSections: PageTabSection[] = [];
   tables.forEach((table) => {
-    tableSections = [
-      ...tableSections,
-      ...tableToSections<PageTabSection>(
-        (attrs, currentTable) => [
-          { type: currentTable?.typeName || '', attributes: attrs.filter((attr) => !isValueEmpty(attr.value)) }
-        ],
-        (currentSection) => currentSection!.attributes!.length > 0,
-        isSanitise,
-        table
-      )
-    ];
+    tableSections = [...tableSections, ...rowsAsSections(table, isSanitise)];
   });
 
   if (isSubsection) {
@@ -27,7 +29,11 @@ export function tableSectionsToSections(tables: Table[], isSanitise: boolean, is
   return compose(contactsToSection, protocolsToSection)(tableSections);
 }
 
-export function tableToSections<T>(
+export function tableToPtTable(tables: Table[], isSanitise): PageTabSection[][] {
+  return tables.map((table) => rowsAsSections(table, isSanitise));
+}
+
+export function tableRowToSections<T>(
   formatter: (attr: PtAttribute[], table?: Table) => T[],
   validator: (attr: T) => boolean,
   isSanitise: boolean,

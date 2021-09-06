@@ -1,7 +1,8 @@
 import { PageTabSection, PtAttribute } from './pagetab.model';
-import { isStringDefined } from 'app/utils/validation.utils';
+
 import { Nullable } from '../submission-common-types';
 import { Protocols } from '../protocols';
+import { isStringDefined } from 'app/utils/validation.utils';
 
 const isEqualTo = (value: string) => (s: Nullable<string>) => isStringDefined(s) && s!.toLowerCase() === value;
 const isComponentProtocol = isEqualTo('protocols');
@@ -51,7 +52,7 @@ export function pageTabToSubmissionProtocols(pageTabSections: PageTabSection[]):
     const attributes = studyProtocol.attributes;
     const nameAttribute = attributes!.find((attribute) => attribute.name === 'Name') || {};
     const studyProtocolNameValue: string = (nameAttribute.value as string) || '';
-    const studyProtocolAccno: string = studyProtocol.accno || '';
+    const studyProtocolAccno: string = studyProtocol.accno || studyProtocolNameValue;
 
     protocols.refFor(studyProtocolNameValue, studyProtocolAccno);
   });

@@ -1,5 +1,6 @@
 import { EMPTY_TEMPLATE_NAME, findSubmissionTemplateByName } from './submission.templates';
 import { isStringDefined, isStringEmpty } from 'app/utils/validation.utils';
+
 import { isArrayEmpty } from 'app/utils/validation.utils';
 
 /*
@@ -289,6 +290,7 @@ export class TableType extends TypeBase {
   readonly icon: string;
   readonly singleRow: boolean;
   readonly uniqueCols: boolean;
+  readonly rowAsSection: boolean;
 
   readonly allowImport: boolean;
 
@@ -313,6 +315,7 @@ export class TableType extends TypeBase {
     this.icon = data.icon || (this.singleRow ? 'fa-list' : 'fa-th');
     this.dependency = data.dependency || '';
     this.allowImport = data.allowImport === true;
+    this.rowAsSection = data.rowAsSection === true;
 
     (data.columnTypes || []).forEach((ct) => new ColumnType(ct.name, ct, this.columnScope));
   }

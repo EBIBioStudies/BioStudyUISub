@@ -139,6 +139,7 @@ export const biaTemplate = {
         description: 'Add the contact details for the authors involved in the study.',
         uniqueCols: true,
         display: 'required',
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'Name',
@@ -316,6 +317,7 @@ export const biaTemplate = {
         icon: 'fa-link',
         uniqueCols: true,
         display: 'desirable',
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'Link',

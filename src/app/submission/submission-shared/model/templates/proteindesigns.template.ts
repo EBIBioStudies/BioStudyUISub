@@ -403,6 +403,7 @@ export const proteinDesignsTemplate = {
         icon: 'fa-file',
         display: 'desirable',
         uniqueCols: true,
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'File',
@@ -422,6 +423,7 @@ export const proteinDesignsTemplate = {
         icon: 'fa-address-card',
         display: 'required',
         uniqueCols: true,
+        rowAsSection: true,
         columnTypes: [
           {
             autosuggest: false,
