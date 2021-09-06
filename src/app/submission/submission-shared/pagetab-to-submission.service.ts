@@ -1,24 +1,25 @@
-import { SelectValueType, ValueTypeName, FieldType } from './model/templates/submission-type.model';
-import { Injectable } from '@angular/core';
-import { isDefinedAndNotEmpty, isStringDefined } from 'app/utils/validation.utils';
-import { arrayUniqueValues, flatArray } from 'app/utils/array.utils';
-import { isArrayEmpty } from 'app/utils/validation.utils';
 import {
   AttrExceptions,
   PageTab,
   PageTabSection,
   PtAttribute,
-  authorsToContacts,
-  mergeAttributes,
-  pageTabToSubmissionProtocols,
-  PtLink,
   PtFile,
-  findAttributesByName
+  PtLink,
+  authorsToContacts,
+  findAttributesByName,
+  mergeAttributes,
+  pageTabToSubmissionProtocols
 } from './model/pagetab';
-import { AttributeData, TableData, SectionData, Submission, SubmissionData } from './model/submission';
+import { AttributeData, SectionData, Submission, SubmissionData, TableData } from './model/submission';
 import { DEFAULT_TEMPLATE_NAME, SectionType, SubmissionType } from './model/templates';
+import { FieldType, SelectValueType, ValueTypeName } from './model/templates/submission-type.model';
 import { NameAndValue, PAGE_TAG, Tag } from './model/model.common';
+import { arrayUniqueValues, flatArray } from 'app/utils/array.utils';
+import { isDefinedAndNotEmpty, isStringDefined } from 'app/utils/validation.utils';
+
+import { Injectable } from '@angular/core';
 import { findAttribute } from './utils/pagetab.utils';
+import { isArrayEmpty } from 'app/utils/validation.utils';
 import { toUntyped } from './utils/link.utils';
 
 @Injectable()

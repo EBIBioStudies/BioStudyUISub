@@ -1,14 +1,15 @@
-import { PAGE_TAG, Tag } from './model/model.common';
 import { AttrExceptions, PageTab, PageTabSection, PtAttribute, PtFile, PtLink, mergeAttributes } from './model/pagetab';
+import { AttributeData, Field, Section, Submission, Table } from './model/submission';
+import { DEFAULT_TEMPLATE_NAME, SubmissionType } from './model/templates';
+import { PAGE_TAG, Tag } from './model/model.common';
+import { attributesAsFile, attributesAsLink, fieldsAsAttributes } from './utils/attribute.utils';
+import { isArrayEmpty, isValueEmpty } from 'app/utils/validation.utils';
+import { tableSectionsToSections, tableToSections } from './utils/table.utils';
+
+import { Injectable } from '@angular/core';
+import { LowerCaseSectionNames } from '../utils/constants';
 import { isDefinedAndNotEmpty } from 'app/utils/validation.utils';
 import { partition } from 'app/utils/array.utils';
-import { isArrayEmpty, isValueEmpty } from 'app/utils/validation.utils';
-import { AttributeData, Table, Field, Section, Submission } from './model/submission';
-import { DEFAULT_TEMPLATE_NAME, SubmissionType } from './model/templates';
-import { Injectable } from '@angular/core';
-import { attributesAsFile, attributesAsLink, fieldsAsAttributes } from './utils/attribute.utils';
-import { LowerCaseSectionNames } from '../utils/constants';
-import { tableSectionsToSections, tableToSections } from './utils/table.utils';
 
 @Injectable()
 export class SubmissionToPageTabService {
