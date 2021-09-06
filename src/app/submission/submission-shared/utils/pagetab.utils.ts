@@ -1,5 +1,5 @@
 import { PageTab, PtAttribute } from '../model/pagetab';
-import { isDefinedAndNotEmpty } from 'app/utils';
+import { isDefinedAndNotEmpty } from 'app/utils/validation.utils';
 
 export function findAttribute(pageTab: PageTab, attributeName: string): PtAttribute[] {
   const ptAttributes: PtAttribute[] = pageTab.attributes || [];

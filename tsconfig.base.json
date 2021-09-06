@@ -12,6 +12,7 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false,
     "noUnusedParameters": true,
+    "noUnusedLocals": true,
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "strictNullChecks": true,

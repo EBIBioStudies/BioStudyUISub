@@ -89,7 +89,6 @@ export interface PageTabSection {
   accno?: string;
   attributes?: PtAttribute[];
   files?: PtFile[];
-  libraryFile?: string;
   links?: PtLink[];
   subsections?: PageTabSection[];
   tags?: PtTag[];

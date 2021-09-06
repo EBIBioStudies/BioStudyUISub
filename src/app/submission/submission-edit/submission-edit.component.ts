@@ -12,7 +12,7 @@ import { SubmErrorModalComponent } from '../submission-results/subm-error-modal.
 import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
 import { SubmValidationErrors } from '../submission-shared/model';
 import { SubmitLog } from '../submission-shared/submission.service';
-import { scrollTop } from 'app/utils';
+import { scrollTop } from 'app/utils/scroll.utils';
 import { ErrorService } from 'app/core/errors/error.service';
 import { AppConfig } from 'app/app.config';
 

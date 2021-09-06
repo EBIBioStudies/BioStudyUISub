@@ -1,4 +1,4 @@
-import { AfterViewInit, Directive, ElementRef, HostBinding, HostListener } from '@angular/core';
+import { Directive, HostBinding, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserData } from 'app/auth/shared';
 import { getSubmissionTemplates, PageTab } from 'app/submission/submission-shared/model';
@@ -7,13 +7,10 @@ import { SubmissionService } from 'app/submission/submission-shared/submission.s
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { AddSubmModalComponent } from '../add-subm-modal/add-subm-modal.component';
 
-const PLUS_ICON = '<i class="fa fa-plus-circle" aria-hidden="true"></i>';
-const SPINNER_ICON = '<i class="fa fa-cog fa-spin"></i>';
-
 @Directive({
   selector: 'button[stNewSubmissionButton]'
 })
-export class NewSubmissionButtonDirective implements AfterViewInit {
+export class NewSubmissionButtonDirective {
   @HostBinding('disabled') disabled?: boolean;
 
   constructor(
@@ -21,14 +18,8 @@ export class NewSubmissionButtonDirective implements AfterViewInit {
     private submService: SubmissionService,
     private userData: UserData,
     private router: Router,
-    private el: ElementRef,
     private submissionToPageTab: SubmissionToPageTabService
   ) {}
-
-  ngAfterViewInit(): void {
-    // const html = this.el.nativeElement.innerHTML;
-    // this.el.nativeElement.innerHTML = PLUS_ICON + html;
-  }
 
   @HostListener('click', ['$event.target']) onClick(): void {
     this.onNewSubmissionClick();
@@ -66,13 +57,9 @@ export class NewSubmissionButtonDirective implements AfterViewInit {
 
   private startCreating(): void {
     this.disabled = true;
-    // const html = this.el.nativeElement.innerHTML;
-    // this.el.nativeElement.innerHTML = html.replace(PLUS_ICON, SPINNER_ICON);
   }
 
   private stopCreating(): void {
     this.disabled = false;
-    // const html = this.el.nativeElement.innerHTML;
-    // this.el.nativeElement.innerHTML = html.replace(SPINNER_ICON, PLUS_ICON);
   }
 }

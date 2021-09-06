@@ -3,7 +3,7 @@ import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/f
 import { ChangeEvent } from '@ckeditor/ckeditor5-angular';
 import * as DecoupledEditor from '@biostudies/ckeditor5-build-balloon';
 import viewToPlainText from '@ckeditor/ckeditor5-clipboard/src/utils/viewtoplaintext';
-import { isStringEmpty } from 'app/utils';
+import { isStringEmpty } from 'app/utils/validation.utils';
 
 @Component({
   selector: 'st-protein-input',

@@ -1,5 +1,6 @@
 import { EMPTY_TEMPLATE_NAME, findSubmissionTemplateByName } from './submission.templates';
-import { isArrayEmpty, isStringDefined, isStringEmpty } from 'app/utils';
+import { isStringDefined, isStringEmpty } from 'app/utils/validation.utils';
+import { isArrayEmpty } from 'app/utils/validation.utils';
 
 /*
  *  Type scopes are used to check if the types with a given name already exists in the scope

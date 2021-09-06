@@ -1,4 +1,4 @@
-import { isEqualIgnoringCase } from 'app/utils';
+import { isEqualIgnoringCase } from 'app/utils/validation.utils';
 import { Attribute } from './submission.model.attribute';
 import { ColumnType } from '../templates';
 

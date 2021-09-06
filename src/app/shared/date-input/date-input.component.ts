@@ -2,7 +2,8 @@ import { Component, forwardRef, Input, ViewChild, OnInit, HostListener } from '@
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BsDatepickerConfig, BsDatepickerDirective } from 'ngx-bootstrap/datepicker';
 import { formatDate, isDateValid, parseDate } from 'ngx-bootstrap/chronos';
-import { isEqualDate, isDefinedAndNotEmpty } from 'app/utils';
+import { isDefinedAndNotEmpty } from 'app/utils/validation.utils';
+import { isEqualDate } from 'app/utils/date.utils';
 import { CustomFormControl } from 'app/submission/submission-edit/shared/model/custom-form-control.model';
 import { AppConfig } from 'app/app.config';
 

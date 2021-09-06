@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ReplaySubject, Subject } from 'rxjs';
 import { UserCookies } from './user-cookies';
 import { UserInfo } from './model';
-import { isDefinedAndNotEmpty } from 'app/utils';
+import { isDefinedAndNotEmpty } from 'app/utils/validation.utils';
 import { AppConfig } from 'app/app.config';
 
 @Injectable()

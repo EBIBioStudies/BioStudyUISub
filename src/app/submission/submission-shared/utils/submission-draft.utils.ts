@@ -1,5 +1,5 @@
 import { SubmissionListItem } from '../submission.service';
-import { isDefinedAndNotEmpty } from 'app/utils';
+import { isDefinedAndNotEmpty } from 'app/utils/validation.utils';
 
 export class SubmissionDraftUtils {
   filterAndFormatDraftSubmissions(drafts): SubmissionListItem[] {

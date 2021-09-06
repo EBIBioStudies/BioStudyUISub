@@ -11,20 +11,15 @@ import {
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { Attribute, Table, Field } from 'app/submission/submission-shared/model';
 import { TextValueType, ValueType, ValueTypeName, SelectValueType } from 'app/submission/submission-shared/model';
-import {
-  parseDate,
-  isOrcidValid,
-  isDnaSequenceValid,
-  isProteinSequenceValid,
-  isNotDefinedOrEmpty,
-  isArrayEmpty,
-  isStringEmpty
-} from 'app/utils';
-import { Observable, of } from 'rxjs';
-import { SubmissionListItem, SubmissionService } from 'app/submission/submission-shared/submission.service';
+import { isNotDefinedOrEmpty, isStringEmpty } from 'app/utils/validation.utils';
+import { parseDate } from 'app/utils/date.utils';
+import { isDnaSequenceValid } from 'app/utils/dna.utils';
+import { isOrcidValid } from 'app/utils/orcid.utils';
+import { isProteinSequenceValid } from 'app/utils/protein.utils';
+import { isArrayEmpty } from 'app/utils/validation.utils';
+import { SubmissionListItem } from 'app/submission/submission-shared/submission.service';
 import { ControlRef, ControlGroupRef } from './control-reference';
 import { CustomFormControl } from './model/custom-form-control.model';
-import { catchError, first, map } from 'rxjs/operators';
 import pluralize from 'pluralize';
 
 export class MyFormGroup extends FormGroup {
