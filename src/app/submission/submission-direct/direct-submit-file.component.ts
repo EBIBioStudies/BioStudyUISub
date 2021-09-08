@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'st-direct-submit-file',
@@ -10,7 +10,6 @@ export class DirectSubmitFileComponent {
   @Input() error;
   @Input() errorLog;
   @Input() file;
-  @Output() fileClick = new EventEmitter<object>();
   @Input() fileName;
   @Input() hasSubmitFailed;
   @Input() hasSubmitPassed;
@@ -19,10 +18,6 @@ export class DirectSubmitFileComponent {
   @Output() isStudyChange = new EventEmitter<object>();
   @Input() isSubmitting;
   @Input() project;
-
-  handleOnFileClick(event: Event, hasSubmitFailed: boolean, accno: string): void {
-    this.fileClick.emit({ event, hasSubmitFailed, accno });
-  }
 
   handleOnIsStudyChange(isStudy: boolean, fileName: string): void {
     this.isStudy = isStudy;
