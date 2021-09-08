@@ -82,13 +82,13 @@
                 <h5>Please note <i class="far fa-hand-point-down"></i></h5>
                 <ul>
                   <li class="mb-3">
+                    <mark>As soon as your {{pluralise('study')}} {{pluralise('is')}} processed, you will receive its accession number by e-mail</mark>
+                  </li>
+                  <li class="mb-3">
                     <mark>
                       Your {{pluralise('study')}} {{pluralise('is')}} being processed and the system may take up to 24 hours after submission to register any new
                       studies in the database.
                     </mark>
-                  </li>
-                  <li class="mb-3">
-                    <mark>A notification will be dropped to your email as soon as the {{pluralise('study')}} has been processed.</mark>
                   </li>
                   <li class="mb-3">
                     <mark>Any registered study will remain private and accessible only through login until the release date in the
@@ -117,7 +117,7 @@
             <st-direct-submit-file class="h-100" [accno]="getAccno(i)" [errorLog]="getLog(i)" [error]="getError(i)"
               [file]="file" [fileName]="file.name" [hasSubmitFailed]="isFail(i)" [hasSubmitPassed]="isSuccess(i)"
               [isPending]="isPending()" [isSubmitting]="isBusy(i)" [project]="sidebar.selectedProject" [isStudy]="file.isStudy"
-              (fileClick)="handleFileCardClick($event)" (isStudyChange)="handleIsStudyChange($event)">
+              (isStudyChange)="handleIsStudyChange($event)">
             </st-direct-submit-file>
           </ng-container>
           <ng-container *ngFor="let file of files; let i = index">

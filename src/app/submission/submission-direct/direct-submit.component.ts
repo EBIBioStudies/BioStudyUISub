@@ -1,8 +1,8 @@
-import { Router } from '@angular/router';
-import pluralize from 'pluralize';
 import { Component, ViewChild } from '@angular/core';
+
 import { AppConfig } from 'app/app.config';
 import { SidebarFile } from './direct-submit-sidebar.component';
+import pluralize from 'pluralize';
 
 @Component({
   selector: 'st-direct-submit',
@@ -21,7 +21,7 @@ export class DirectSubmitComponent {
    * Initally collapses the sidebar for tablet-sized screens.
    * @param appConfig - Global configuration object with app-wide settings.
    */
-  constructor(public appConfig: AppConfig, private router: Router) {
+  constructor(public appConfig: AppConfig) {
     this.collapseSideBar = window.innerWidth < this.appConfig.tabletBreak;
   }
 
@@ -43,21 +43,6 @@ export class DirectSubmitComponent {
 
   getStudyFiles(): void {
     this.sidebar.model.files.filter((file) => file.isStudy);
-  }
-
-  /**
-   * Toggles the width of the request card and the log's visibility on click.
-   */
-  handleFileCardClick(args: { accno: string; event: Event; hasSubmitFailed: boolean }): void {
-    const { accno, event, hasSubmitFailed } = args;
-    const containerEl = event.currentTarget as HTMLElement;
-    const logElement = containerEl.querySelector('.log-container');
-
-    if (logElement && hasSubmitFailed) {
-      logElement.classList.toggle('hidden');
-    } else {
-      this.router.navigate([`/edit/${accno}`, { method: 'FILE' }]);
-    }
   }
 
   handleIsStudyChange(args: { fileName: string; isStudy: boolean }): void {
