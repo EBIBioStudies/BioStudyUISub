@@ -1,9 +1,10 @@
 import { AttributeNames, SectionNames } from './../../utils/constants';
-import { partition } from 'app/utils/array.utils';
-import { isValueEmpty } from 'app/utils/validation.utils';
-import { PageTabSection } from './../model/pagetab/pagetab.model';
+
 import { Organisations } from '../model/organisations';
+import { PageTabSection } from './../model/pagetab/pagetab.model';
 import { Protocols } from '../model/protocols';
+import { isValueEmpty } from 'app/utils/validation.utils';
+import { partition } from 'app/utils/array.utils';
 
 export function contactsToSection(sections: PageTabSection[]): PageTabSection[] {
   const orgs: Organisations = Organisations.getInstance();
@@ -34,22 +35,22 @@ export function protocolsToSection(sections: PageTabSection[]): PageTabSection[]
     (section) => section!.type!.toLowerCase() === SectionNames.STUDY_PROTOCOLS.toLowerCase()
   );
 
-  const componentProtocolReferences = componentProtocols.map((componentProtocol) => ({
-    type: componentProtocol.type,
-    attributes: componentProtocol.attributes!.map((attribute) => protocols.toReference({ ...attribute }))
+  const componentProtocol = componentProtocols.map((componentProtocolItem) => ({
+    type: componentProtocolItem.type,
+    attributes: componentProtocolItem.attributes!.map((attribute) => protocols.toReference({ ...attribute }))
   }));
 
-  const studyProtocolToReference = studyProtocols.map((studyProtocol, index) => {
-    const attributes = studyProtocol.attributes;
+  const studyProtocol = studyProtocols.map((studyProtocolItem, index) => {
+    const attributes = studyProtocolItem.attributes;
     const nameAttribute = attributes!.find((attribute) => attribute.name === AttributeNames.NAME) || { value: '' };
     const studyProtocolNameValue: string = nameAttribute.value as string;
 
     return {
-      type: studyProtocol.type,
-      accno: studyProtocol.accno ? studyProtocol.accno : protocols.refFor(studyProtocolNameValue, `p${index}`),
-      attributes: studyProtocol.attributes
+      type: studyProtocolItem.type,
+      accno: studyProtocolItem.accno ? studyProtocolItem.accno : protocols.refFor(studyProtocolNameValue, `p${index}`),
+      attributes: studyProtocolItem.attributes
     };
   });
 
-  return [...componentProtocolReferences, ...studyProtocolToReference, ...otherSections];
+  return [...componentProtocol, ...studyProtocol, ...otherSections];
 }

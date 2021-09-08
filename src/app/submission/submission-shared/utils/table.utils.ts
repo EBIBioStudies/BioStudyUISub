@@ -1,36 +1,50 @@
 import { PageTabSection, PtAttribute, Section, Table } from '../model';
 import { contactsToSection, protocolsToSection } from './section.utils';
 
-import { compose } from 'app/utils/function.utils';
 import { extractTableAttributes } from './attribute.utils';
 import { isValueEmpty } from 'app/utils/validation.utils';
 
-function rowsAsSections(table, isSanitise): PageTabSection[] {
-  return tableRowToSections<PageTabSection>(
-    (attrs, currentTable) => [
-      { type: currentTable?.typeName || '', attributes: attrs.filter((attr) => !isValueEmpty(attr.value)) }
-    ],
-    (currentSection) => currentSection!.attributes!.length > 0,
-    isSanitise,
-    table
-  );
+function rowsAsSections(tables, isSanitise): PageTabSection[] {
+  let tableSections: PageTabSection[] = [];
+
+  tables.forEach((table) => {
+    const rowsSections = tableRowToSections<PageTabSection>(
+      (attrs, currentTable) => [
+        { type: currentTable?.typeName || '', attributes: attrs.filter((attr) => !isValueEmpty(attr.value)) }
+      ],
+      (currentSection) => currentSection!.attributes!.length > 0,
+      isSanitise,
+      table
+    );
+
+    tableSections = [...tableSections, ...rowsSections];
+  });
+
+  return tableSections;
 }
 
 export function tableToSectionItem(tables: Table[], isSanitise: boolean, isSubsection: boolean): PageTabSection[] {
-  let tableSections: PageTabSection[] = [];
-  tables.forEach((table) => {
-    tableSections = [...tableSections, ...rowsAsSections(table, isSanitise)];
-  });
+  const tableSections: PageTabSection[] = rowsAsSections(tables, isSanitise);
 
-  if (isSubsection) {
-    return protocolsToSection(tableSections);
+  if (!isSubsection) {
+    return contactsToSection(tableSections);
   }
 
-  return compose(contactsToSection, protocolsToSection)(tableSections);
+  return tableSections;
 }
 
 export function tableToPtTable(tables: Table[], isSanitise): PageTabSection[][] {
-  return tables.map((table) => rowsAsSections(table, isSanitise));
+  const tableSections: PageTabSection[] = rowsAsSections(tables, isSanitise);
+  const sections = protocolsToSection(tableSections);
+
+  const ptTablesMap = {};
+  sections.forEach((section) => {
+    if (section.type) {
+      ptTablesMap[section.type] = [section, ...(ptTablesMap[section.type] ?? [])];
+    }
+  });
+
+  return Object.keys(ptTablesMap).map((tableKey) => ptTablesMap[tableKey]);
 }
 
 export function tableRowToSections<T>(

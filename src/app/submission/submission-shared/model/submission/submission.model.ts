@@ -1,13 +1,15 @@
+import { DisplayType, FieldType, SectionType, SubmissionType, TableType, ValueType } from '../templates';
+import { NameAndValue, Tag } from '../model.common';
 import { isDefinedAndNotEmpty, isStringDefined } from 'app/utils/validation.utils';
+
+import { Attribute } from './submission.model.attribute';
+import { AttributeNames } from 'app/submission/utils/constants';
+import { AttributeValue } from './submission.model.attribute-value';
+import { Columns } from './submission.model.columns';
+import { ValueMap } from './submission.model.valuemap';
 import { arrayUniqueValues } from 'app/utils/array.utils';
 import { isArrayEmpty } from 'app/utils/validation.utils';
 import { nextId } from './submission.model.counter';
-import { Attribute } from './submission.model.attribute';
-import { ValueMap } from './submission.model.valuemap';
-import { Columns } from './submission.model.columns';
-import { NameAndValue, Tag } from '../model.common';
-import { DisplayType, TableType, FieldType, SectionType, SubmissionType, ValueType } from '../templates';
-import { AttributeValue } from './submission.model.attribute-value';
 
 export interface SubmissionSection {
   subsections: Sections;
@@ -457,7 +459,9 @@ export class Section implements SubmissionSection {
       type.annotationsType,
       (data.attributes || []).filter(
         (attribute) =>
-          attribute.name && attribute.name !== 'Keyword' && type.getFieldType(attribute.name || '') === undefined
+          attribute.name &&
+          attribute.name !== AttributeNames.KEYWORD &&
+          type.getFieldType(attribute.name || '') === undefined
       )
     );
     this.data = data;

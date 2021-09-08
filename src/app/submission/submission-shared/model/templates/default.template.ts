@@ -307,6 +307,7 @@ export const defaultTemplate = {
         icon: 'fa-book',
         uniqueCols: true,
         allowImport: false,
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'PMID',
