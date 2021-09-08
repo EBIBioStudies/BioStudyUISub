@@ -30,7 +30,10 @@
       </st-inline-edit>
     </div>
   </div>
-  <div [sortablejs]="tableForm.rows" [sortablejsOptions]="sortableJsOptions">
+  <div *ngIf="!isReadOnly; else table" [sortablejs]="tableForm.rows" [sortablejsOptions]="sortableJsOptions">
+    <ng-container *ngTemplateOutlet="table"></ng-container>
+  </div>
+  <ng-template #table>
     <div *ngFor="let row of tableForm.rows; let rowIdx = index;">
       <div
         *ngIf="!isReadOnly || !row.isEmpty"
@@ -74,7 +77,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </ng-template>
 </div>
 <button *ngIf="tableForm && tableForm.canAddRow() && !isReadOnly" type="button" class="btn btn-add btn-link btn-sm" tabindex="-1"
     [tooltip]="'Add a new ' + tableForm.prettyName"
