@@ -2,7 +2,6 @@
   <div class="card h-100" [ngClass]="{'panel-default': !accno, 'text-primary': accno, 'st-has-passed': hasSubmitPassed}"
     [ngStyle]="{'cursor': accno  ? 'pointer' : 'default'}"
     [tooltip]="accno ? 'Edit this study' : ''"
-    (click)="hasSubmitPassed ? handleOnFileClick($event, hasSubmitFailed, accno) : null"
     placement="top" container="body">
     <div class="card-body">
       <div class="card-title d-flex align-items-center">
