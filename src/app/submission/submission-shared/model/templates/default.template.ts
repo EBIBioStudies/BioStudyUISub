@@ -141,6 +141,7 @@ export const defaultTemplate = {
         display: 'required',
         uniqueCols: true,
         allowImport: true,
+        rowAsSection: true,
         columnTypes: [
           {
             autosuggest: false,
@@ -257,6 +258,7 @@ export const defaultTemplate = {
         icon: 'fa-link',
         uniqueCols: true,
         allowImport: true,
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'Link',
@@ -276,6 +278,7 @@ export const defaultTemplate = {
         icon: 'fa-file',
         uniqueCols: true,
         allowImport: true,
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'File',
@@ -304,6 +307,7 @@ export const defaultTemplate = {
         icon: 'fa-book',
         uniqueCols: true,
         allowImport: false,
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'PMID',

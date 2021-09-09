@@ -139,6 +139,7 @@ export const biaTemplate = {
         description: 'Add the contact details for the authors involved in the study.',
         uniqueCols: true,
         display: 'required',
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'Name',
@@ -279,6 +280,7 @@ export const biaTemplate = {
         icon: 'fa-address-card',
         name: 'Study Protocols',
         uniqueCols: true,
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'Name',
@@ -316,6 +318,7 @@ export const biaTemplate = {
         icon: 'fa-link',
         uniqueCols: true,
         display: 'desirable',
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'Link',
@@ -338,6 +341,7 @@ export const biaTemplate = {
         icon: 'fa-book',
         display: 'desirable',
         uniqueCols: true,
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'PMID',
@@ -532,6 +536,7 @@ export const biaTemplate = {
             description: 'Add the protocols used in this study component.',
             uniqueCols: true,
             dependency: 'Study Protocols',
+            rowAsSection: true,
             columnTypes: [
               {
                 dependencyColumn: 'Name',

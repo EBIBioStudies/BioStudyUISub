@@ -1,10 +1,10 @@
 import { AttrExceptions, PageTab, PageTabSection, PtAttribute, PtFile, PtLink, mergeAttributes } from './model/pagetab';
-import { AttributeData, Field, Section, Submission, Table } from './model/submission';
+import { AttributeData, Section, Submission, Table } from './model/submission';
 import { DEFAULT_TEMPLATE_NAME, SubmissionType } from './model/templates';
 import { PAGE_TAG, Tag } from './model/model.common';
 import { attributesAsFile, attributesAsLink, fieldsAsAttributes } from './utils/attribute.utils';
 import { isArrayEmpty, isValueEmpty } from 'app/utils/validation.utils';
-import { tableSectionsToSections, tableToSections } from './utils/table.utils';
+import { tableRowToSections, tableToPtTable, tableToSectionItem } from './utils/table.utils';
 
 import { Injectable } from '@angular/core';
 import { LowerCaseSectionNames } from '../utils/constants';
@@ -31,7 +31,7 @@ export class SubmissionToPageTabService {
   }
 
   submissionToPageTab(subm: Submission, isSanitise: boolean = false): PageTab {
-    const rootSectionAttributes = this.extractAttributesFromSection(subm.section.fields.list(), [], isSanitise).filter(
+    const rootSectionAttributes = fieldsAsAttributes(subm.section.fields.list(), isSanitise).filter(
       (at) => at.name && AttrExceptions.editableAndRootOnly.includes(at.name) && !isValueEmpty(at.value)
     );
 
@@ -53,25 +53,29 @@ export class SubmissionToPageTabService {
     isSanitise: boolean = false,
     isSubsection: boolean = false
   ): PageTabSection {
-    const [rootTables, otherTables] = partition<Table>([...section.tables.list(), section.annotations], (table) =>
-      [
-        LowerCaseSectionNames.FILE,
-        LowerCaseSectionNames.LINK,
-        LowerCaseSectionNames.KEYWORDS,
-        LowerCaseSectionNames.ANNOTATION
-      ].includes(table.typeName.toLowerCase())
+    const [rowAsSectionTables, otherTables] = partition<Table>(
+      section.tables.list(),
+      (table) => table.type.rowAsSection
+    );
+
+    const [ownPropTables, tableSectionItems] = partition<Table>(rowAsSectionTables, (table) =>
+      [LowerCaseSectionNames.FILE, LowerCaseSectionNames.LINK].includes(table.typeName.toLowerCase())
+    );
+
+    const keywordAttributes = this.extractKeywordsFromSection(section, isSanitise);
+    const sectionAttributes = fieldsAsAttributes(section.fields.list(), isSanitise).filter(
+      (at) => at.name && !AttrExceptions.editableAndRootOnly.includes(at.name) && !isValueEmpty(at.value)
     );
 
     return {
       accessTags: section.tags.accessTags,
       accno: section.accno,
-      attributes: this.extractAttributesFromSection(section.fields.list(), rootTables, isSanitise).filter(
-        (at) => at.name && !AttrExceptions.editableAndRootOnly.includes(at.name) && !isValueEmpty(at.value)
-      ),
-      files: this.extractFilesFromSection(rootTables, isSanitise),
-      links: this.extractLinksFromSection(rootTables, isSanitise),
+      attributes: [...keywordAttributes, ...sectionAttributes],
+      files: this.extractFilesFromSection(ownPropTables, isSanitise),
+      links: this.extractLinksFromSection(ownPropTables, isSanitise),
       subsections: [
-        ...tableSectionsToSections(otherTables, isSanitise, isSubsection),
+        ...tableToSectionItem(tableSectionItems, isSanitise, isSubsection),
+        ...tableToPtTable(otherTables, isSanitise),
         ...section.sections.list().map((s) => this.sectionToPtSection(s, isSanitise, true))
       ],
       tags: this.withPageTag(section.tags.tags),
@@ -103,7 +107,7 @@ export class SubmissionToPageTabService {
   private extractFilesFromSection(tables: Table[], isSanitise: boolean): PtFile[] {
     const table = tables.find((t) => t.typeName.toLowerCase() === LowerCaseSectionNames.FILE);
 
-    return tableToSections<PtFile>(
+    return tableRowToSections<PtFile>(
       (rows) => [attributesAsFile(rows)],
       (attr) => isDefinedAndNotEmpty(attr.path),
       isSanitise,
@@ -111,30 +115,19 @@ export class SubmissionToPageTabService {
     );
   }
 
-  private extractAttributesFromSection(fields: Field[], tables: Table[], isSanitise: boolean): PtAttribute[] {
-    const fieldAsAttributes = fieldsAsAttributes(fields, isSanitise);
-    const keywordAttributes = this.extractKeywordsFromSection(tables, isSanitise);
-
-    return [...fieldAsAttributes, ...keywordAttributes];
-  }
-
-  private extractKeywordsFromSection(tables: Table[], isSanitise: boolean): PtAttribute[] {
-    const table = tables.find((t) =>
-      [LowerCaseSectionNames.KEYWORDS, LowerCaseSectionNames.ANNOTATION].includes(t.typeName.toLowerCase())
-    );
-
-    return tableToSections<PtAttribute>(
+  private extractKeywordsFromSection(section: Section, isSanitise: boolean): PtAttribute[] {
+    return tableRowToSections<PtAttribute>(
       (rows) => rows,
       () => true,
       isSanitise,
-      table
+      section.annotations
     );
   }
 
   private extractLinksFromSection(tables: Table[], isSanitise: boolean): PtLink[] {
     const table = tables.find((t) => t.typeName.toLowerCase() === LowerCaseSectionNames.LINK);
 
-    return tableToSections<PtLink>(
+    return tableRowToSections<PtLink>(
       (rows) => [attributesAsLink(rows)],
       (attr) => isDefinedAndNotEmpty(attr.url),
       isSanitise,

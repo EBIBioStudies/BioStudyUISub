@@ -225,6 +225,7 @@ export const hecatosTemplate = {
         description: 'Add the contact details for the authors involved in the study.',
         uniqueCols: true,
         display: 'required',
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'Name',
@@ -296,6 +297,7 @@ export const hecatosTemplate = {
           '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pmc/pmctopmid/#converter">PubMed\'s converter</a>.',
         icon: 'fa-link',
         uniqueCols: true,
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'Link',
@@ -314,6 +316,7 @@ export const hecatosTemplate = {
         description: 'List the data files for the study and describe their respective scopes.',
         icon: 'fa-file',
         uniqueCols: true,
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'Path',

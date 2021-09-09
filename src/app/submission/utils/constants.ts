@@ -9,6 +9,7 @@ export const SectionNames = {
   ORGANISATION: 'organisation',
   ORGANIZATION: 'organization',
   PROTOCOLS: 'protocols',
+  PUBLICATION: 'Publication',
   SECTION: 'section',
   STUDY: 'Study',
   STUDY_PROTOCOLS: 'study protocols'

@@ -103,6 +103,46 @@ export const arrayExpressTemplate = {
     ],
     tableTypes: [
       {
+        name: 'Contact',
+        description: 'Add the contact details for the authors involved in the study.',
+        icon: 'fa-address-card',
+        display: 'readonly',
+        uniqueCols: true,
+        allowImport: true,
+        rowAsSection: true,
+        columnTypes: [
+          {
+            autosuggest: false,
+            display: 'required',
+            name: 'Name',
+            valueType: { name: 'text' }
+          },
+          {
+            autosuggest: false,
+            name: 'Email',
+            valueType: { name: 'text' },
+            display: 'required'
+          },
+          {
+            name: 'Organisation',
+            valueType: {
+              name: 'select',
+              multiple: true
+            },
+            display: 'required'
+          },
+          {
+            name: 'Role',
+            valueType: { name: 'text' }
+          },
+          {
+            name: 'ORCID',
+            valueType: { name: 'orcid' },
+            display: 'desirable'
+          }
+        ]
+      },
+      {
         name: 'Publication',
         display: 'optional',
         description:

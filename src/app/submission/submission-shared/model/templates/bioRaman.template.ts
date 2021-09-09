@@ -40,6 +40,7 @@ export const bioRamanTemplate = {
         description: 'Add the contact details for the authors involved in the study.',
         uniqueCols: true,
         display: 'required',
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'Name',
