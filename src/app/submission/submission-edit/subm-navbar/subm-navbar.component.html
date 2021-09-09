@@ -41,7 +41,7 @@
       <i class="fa fa-undo" aria-hidden="true"></i>
       Revert
     </button>
-    <button *ngIf="readonly" class="btn btn-primary btn-sm ml-2"
+    <button *ngIf="readonly && !isTemp" class="btn btn-primary btn-sm ml-2"
         (click)="onEdit($event)"
         tooltip="Edit this submission"
         placement="bottom"
