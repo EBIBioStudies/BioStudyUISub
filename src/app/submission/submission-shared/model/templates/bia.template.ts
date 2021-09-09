@@ -280,6 +280,7 @@ export const biaTemplate = {
         icon: 'fa-address-card',
         name: 'Study Protocols',
         uniqueCols: true,
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'Name',
@@ -340,6 +341,7 @@ export const biaTemplate = {
         icon: 'fa-book',
         display: 'desirable',
         uniqueCols: true,
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'PMID',
@@ -534,6 +536,7 @@ export const biaTemplate = {
             description: 'Add the protocols used in this study component.',
             uniqueCols: true,
             dependency: 'Study Protocols',
+            rowAsSection: true,
             columnTypes: [
               {
                 dependencyColumn: 'Name',

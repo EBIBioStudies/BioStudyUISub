@@ -20,7 +20,7 @@
       </div>
     </div>
     <button
-      *ngIf="tableForm.allowImport && !readonly"
+      *ngIf="tableForm.allowImport && !tableForm.isReadonly && !readonly"
       type="button"
       class="btn btn-link"
       (click)="openPasteTableDataModal()"
