@@ -1,27 +1,28 @@
-import { Observable, Subject, Subscription, BehaviorSubject } from 'rxjs';
-import { Injectable } from '@angular/core';
-import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 import {
   Attribute,
   AttributeData,
-  Table,
   Section,
   SubmValidationErrors,
   Submission,
-  SubmissionValidator
+  SubmissionValidator,
+  Table
 } from 'app/submission/submission-shared/model';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
+import { PageTab, SelectValueType } from 'app/submission/submission-shared/model';
+import { SubmissionService, SubmitResponse } from '../../submission-shared/submission.service';
+import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
+
+import { Injectable } from '@angular/core';
+import { PageTabSubmission } from 'app/submission/submission-shared/model/pagetab/pagetab.model';
+import { PageTabToSubmissionService } from 'app/submission/submission-shared/pagetab-to-submission.service';
+import { SectionForm } from './model/section-form.model';
+import { StructureChangeEvent } from './structure-change-event';
+import { SubmissionToPageTabService } from 'app/submission/submission-shared/submission-to-pagetab.service';
 import { SubmissionType } from 'app/submission/submission-shared/model/templates/submission-type.model';
 import { UserData } from 'app/auth/shared';
 import { UserInfo } from 'app/auth/shared/model';
-import { PageTab, SelectValueType } from 'app/submission/submission-shared/model';
-import { PageTabToSubmissionService } from 'app/submission/submission-shared/pagetab-to-submission.service';
-import { SubmissionToPageTabService } from 'app/submission/submission-shared/submission-to-pagetab.service';
-import { isDefinedAndNotEmpty } from 'app/utils/validation.utils';
-import { PageTabSubmission } from 'app/submission/submission-shared/model/pagetab/pagetab.model';
-import { SubmissionService, SubmitResponse } from '../../submission-shared/submission.service';
-import { SectionForm } from './model/section-form.model';
-import { StructureChangeEvent } from './structure-change-event';
 import { flatTables } from 'app/submission/submission-shared/utils/table.utils';
+import { isDefinedAndNotEmpty } from 'app/utils/validation.utils';
 
 class EditState {
   static EDITING = 'Editing';
@@ -115,6 +116,7 @@ class EditState {
 export class SubmEditService {
   readonly sectionSwitch$: BehaviorSubject<SectionForm | null> = new BehaviorSubject<SectionForm | null>(null);
   readonly serverError$: Subject<any> = new Subject<any>();
+  readonly validationError$: Subject<SubmValidationErrors> = new Subject<SubmValidationErrors>();
 
   private accno: string = '';
   private editState: EditState = new EditState();
@@ -243,8 +245,12 @@ export class SubmEditService {
     this.sectionSwitch$.next(nextSectionForm);
   }
 
-  validateSubmission(): SubmValidationErrors {
-    return SubmissionValidator.validate(this.submModel);
+  validateForm(): void {
+    const errors = SubmissionValidator.validate(this.submModel);
+
+    if (errors.total() > 0) {
+      this.validationError$.next(errors);
+    }
   }
 
   private asContactAttributes(userInfo: UserInfo): AttributeData[] {
@@ -336,6 +342,7 @@ export class SubmEditService {
     sectionForm.structureChanges$.pipe(debounceTime(updateDelayInMilliseconds)).subscribe((value) => {
       if (value !== StructureChangeEvent.init) {
         this.editState.startEditing();
+        this.validateForm();
         this.save();
       }
     });

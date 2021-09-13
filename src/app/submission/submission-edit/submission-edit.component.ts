@@ -1,11 +1,14 @@
-import { PageTabSubmission } from 'app/submission/submission-shared/model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { Location } from '@angular/common';
-import { Observable, of, Subject } from 'rxjs';
+import { Observable, Subject, of } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
+
+import { AppConfig } from 'app/app.config';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { ErrorService } from 'app/core/errors/error.service';
+import { Location } from '@angular/common';
 import { ModalService } from 'app/shared/modal.service';
+import { PageTabSubmission } from 'app/submission/submission-shared/model';
 import { SectionForm } from './shared/model/section-form.model';
 import { SubmEditService } from './shared/subm-edit.service';
 import { SubmErrorModalComponent } from '../submission-results/subm-error-modal.component';
@@ -13,8 +16,6 @@ import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
 import { SubmValidationErrors } from '../submission-shared/model';
 import { SubmitLog } from '../submission-shared/submission.service';
 import { scrollTop } from 'app/utils/scroll.utils';
-import { ErrorService } from 'app/core/errors/error.service';
-import { AppConfig } from 'app/app.config';
 
 class SubmitOperation {
   static CREATE = new SubmitOperation();
@@ -71,6 +72,13 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     submEditService.sectionSwitch$
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((sectionForm) => this.switchSection(sectionForm));
+
+    this.submEditService.validationError$
+      .asObservable()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((errors) => {
+        this.submissionErrors = errors;
+      });
   }
 
   get isSubmitting(): boolean {
@@ -196,7 +204,6 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
   }
 
   onSubmitClick(event, isConfirm: boolean = false): void {
-    this.submissionErrors = this.submEditService.validateSubmission();
     this.submEditService.switchSection(this.rootSection);
 
     scrollTop();

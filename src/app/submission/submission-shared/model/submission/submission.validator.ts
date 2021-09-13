@@ -1,22 +1,23 @@
+import { Field, Section, Submission, Table } from './submission.model';
+import { SectionType, TableType, TextValueType, ValueType, ValueTypeName } from '../templates';
+
 import { parseDate } from 'app/utils/date.utils';
-import { Table, Field, Section, Submission } from './submission.model';
-import { TableType, SectionType, TextValueType, ValueType, ValueTypeName } from '../templates';
 
 interface ValidationRule {
-  validate(): string | undefined;
+  validate(): SectionValidationError | string | undefined;
 }
 
 class ValidationRules {
   static atLeastOneTableFromGroup(group: string[], section: Section): ValidationRule {
     return {
-      validate(): string | undefined {
+      validate(): SectionValidationError | undefined {
         const rowCount = section.tables
           .list()
           .filter((f) => group.includes(f.typeName))
           .map((f) => f.rowSize())
           .reduce((rv, v) => rv + v, 0);
         if (rowCount === 0) {
-          return `At least one ${group.join(' or ')} is required`;
+          return new SectionValidationError(`At least one ${group.join(' or ')} is required`);
         }
         return undefined;
       }
@@ -204,7 +205,11 @@ class ValidationRules {
 export class SubmValidationErrors {
   static EMPTY = new SubmValidationErrors('');
 
-  constructor(readonly secId: string, readonly errors: string[] = [], readonly sections: SubmValidationErrors[] = []) {}
+  constructor(
+    readonly secId: string,
+    readonly errors: (SectionValidationError | string)[] = [],
+    readonly sections: SubmValidationErrors[] = []
+  ) {}
 
   empty(): boolean {
     return this.errors.length === 0 && this.sections.length === 0;
@@ -212,6 +217,14 @@ export class SubmValidationErrors {
 
   total(): number {
     return this.errors.length + this.sections.reduce((rv, ve) => rv + ve.total(), 0);
+  }
+}
+
+export class SectionValidationError {
+  constructor(private error: string) {}
+
+  get message(): string {
+    return this.error;
   }
 }
 
