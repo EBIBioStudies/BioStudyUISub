@@ -16,7 +16,8 @@ export class RegistrationData extends DataWithCaptchaAndPath {
       aux: [`orcid:${this.orcid}`],
       email: this.email,
       password: this.password,
-      name: this.name
+      name: this.name,
+      notificationsEnabled: true
     };
   }
 }
