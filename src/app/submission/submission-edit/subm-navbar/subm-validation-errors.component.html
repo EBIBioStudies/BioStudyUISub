@@ -1,4 +1,8 @@
-<div *ngIf="errorList.length > 0" class="alert alert-danger">
-  <i class="fas fa-arrow-left"></i>
+<div *ngIf="hasValidationErrors" class="alert alert-warning">
+  <i class="fas fa-arrow-left mr-2"></i>
   Please fill in the required fields. Fields with validation issues are listed in the left sidebar.
+</div>
+<div *ngFor="let error of sectionErrors" class="alert alert-danger">
+  <i class="fas fa-exclamation-triangle mr-2"></i>
+  {{error}}
 </div>
