@@ -1,18 +1,11 @@
-import {
-  Component,
-  Input,
-  Output,
-  forwardRef,
-  EventEmitter,
-  OnDestroy,
-  ChangeDetectorRef,
-  ViewChild
-} from '@angular/core';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, Output, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { PubMedPublication, PubMedSearchService } from './pubmedid-search.service';
 import { Observable, Subject, Subscription } from 'rxjs';
+import { PubMedPublication, PubMedSearchService } from './pubmedid-search.service';
 import { debounceTime, delay, distinctUntilChanged, mergeMap } from 'rxjs/operators';
-import { BsDropdownDirective } from 'ngx-bootstrap/dropdown';
+
+import { PubMedIdSearchModalComponent } from './pubmedid-search-modal.component';
 
 @Component({
   selector: 'st-pubmedid-search',
@@ -39,16 +32,18 @@ export class PubMedIdSearchComponent implements ControlValueAccessor, OnDestroy 
   @Input() required?: boolean = false;
   @Input() inputId: string = '';
 
-  @ViewChild('dropdown', { static: true })
-  private dropdown!: BsDropdownDirective;
-
   keyUp = new Subject<string>();
-  publication: PubMedPublication = { hitCount: 0 }; // last publication retrieved
+  publications: PubMedPublication[] = []; // last publication retrieved
   isBusy: boolean = false; // indicates a transaction is in progress
   pubMedId: string | undefined; // last PubMed ID number typed in
   private keyUpSubscription: Subscription;
+  private searchModalRef?: BsModalRef;
 
-  constructor(private pubMedSearchService: PubMedSearchService, private changeDetectorRef: ChangeDetectorRef) {
+  constructor(
+    private pubMedSearchService: PubMedSearchService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private modalService: BsModalService
+  ) {
     this.keyUpSubscription = this.keyUp
       .pipe(
         debounceTime(300),
@@ -58,17 +53,16 @@ export class PubMedIdSearchComponent implements ControlValueAccessor, OnDestroy 
       .subscribe(
         (response) => {
           this.isBusy = false;
-          this.publication = response;
+          this.publications = response;
 
-          if (this.publication.hitCount > 0) {
-            this.dropdown.show();
+          if (this.publications.length > 0) {
+            this.showSearchModal(this.publications);
           }
 
           this.changeDetectorRef.detectChanges();
         },
         () => {
           this.isBusy = false;
-          this.dropdown.hide();
           this.changeDetectorRef.detectChanges();
         }
       );
@@ -94,9 +88,8 @@ export class PubMedIdSearchComponent implements ControlValueAccessor, OnDestroy 
    * for selection so the user wishes. It will also notify the template that the transaction is going on so that
    * no further action is allowed in the interim.
    */
-  pubMedFetch(idToSearch: string): Observable<any> {
+  pubMedFetch(idToSearch: string): Observable<PubMedPublication[]> {
     this.isBusy = true;
-    this.dropdown.hide();
     this.changeDetectorRef.detectChanges();
 
     return this.pubMedSearchService.search(idToSearch);
@@ -120,9 +113,36 @@ export class PubMedIdSearchComponent implements ControlValueAccessor, OnDestroy 
   /**
    * Bubbles the selected publication event up, hiding its preview too.
    */
-  selectPub(): void {
-    this.found.emit(this.publication);
-    this.dropdown.hide();
+  selectPub(publication: PubMedPublication): void {
+    this.found.emit(publication);
+    this.searchModalRef?.hide();
+  }
+
+  onPubMedIdChange(value): void {
+    this.keyUp.next(value);
+    this.value = value;
+  }
+
+  onSearchModalHide(): void {
+    this.searchModalRef = undefined;
+  }
+
+  showSearchModal(publications: PubMedPublication[]): void {
+    if (!this.searchModalRef) {
+      this.searchModalRef = this.modalService.show(PubMedIdSearchModalComponent, {
+        class: 'modal-lg',
+        initialState: {
+          publications,
+          onSelectPub: this.selectPub.bind(this),
+          onPubMedIdChange: this.onPubMedIdChange.bind(this),
+          value: this.value
+        }
+      });
+
+      this.searchModalRef.onHidden.subscribe(() => this.onSearchModalHide());
+    } else {
+      this.searchModalRef.content.publications = publications;
+    }
   }
 
   /**
@@ -130,12 +150,14 @@ export class PubMedIdSearchComponent implements ControlValueAccessor, OnDestroy 
    * has just been rendered, it checks for an already existing ID and retrieves the publication for that one.
    */
   togglePreviewPub(): void {
-    if (this.pubMedId && this.publication.hitCount === 0) {
+    if (this.pubMedId && this.publications.length === 0) {
       this.keyUp.next(this.pubMedId);
     }
 
-    if (this.publication.hitCount > 0) {
-      this.dropdown.toggle(true);
+    if (this.publications.length > 0) {
+      this.searchModalRef?.hide();
+      this.searchModalRef = undefined;
+      this.showSearchModal(this.publications);
     }
   }
 
