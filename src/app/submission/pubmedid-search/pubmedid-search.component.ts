@@ -54,15 +54,12 @@ export class PubMedIdSearchComponent implements ControlValueAccessor, OnDestroy 
         (response) => {
           this.isBusy = false;
           this.publications = response;
-
-          if (this.publications.length > 0) {
-            this.showSearchModal(this.publications);
-          }
-
+          this.showSearchModal();
           this.changeDetectorRef.detectChanges();
         },
         () => {
           this.isBusy = false;
+          this.searchModalRef?.hide();
           this.changeDetectorRef.detectChanges();
         }
       );
@@ -90,6 +87,11 @@ export class PubMedIdSearchComponent implements ControlValueAccessor, OnDestroy 
    */
   pubMedFetch(idToSearch: string): Observable<PubMedPublication[]> {
     this.isBusy = true;
+
+    if (this.searchModalRef) {
+      this.searchModalRef.content.isBusy = true;
+    }
+
     this.changeDetectorRef.detectChanges();
 
     return this.pubMedSearchService.search(idToSearch);
@@ -127,21 +129,23 @@ export class PubMedIdSearchComponent implements ControlValueAccessor, OnDestroy 
     this.searchModalRef = undefined;
   }
 
-  showSearchModal(publications: PubMedPublication[]): void {
+  showSearchModal(): void {
     if (!this.searchModalRef) {
       this.searchModalRef = this.modalService.show(PubMedIdSearchModalComponent, {
         class: 'modal-lg',
         initialState: {
-          publications,
+          publications: this.publications,
           onSelectPub: this.selectPub.bind(this),
           onPubMedIdChange: this.onPubMedIdChange.bind(this),
+          isBusy: this.isBusy,
           value: this.value
         }
       });
 
       this.searchModalRef.onHidden.subscribe(() => this.onSearchModalHide());
     } else {
-      this.searchModalRef.content.publications = publications;
+      this.searchModalRef.content.isBusy = this.isBusy;
+      this.searchModalRef.content.publications = this.publications;
     }
   }
 
@@ -150,14 +154,8 @@ export class PubMedIdSearchComponent implements ControlValueAccessor, OnDestroy 
    * has just been rendered, it checks for an already existing ID and retrieves the publication for that one.
    */
   togglePreviewPub(): void {
-    if (this.pubMedId && this.publications.length === 0) {
+    if (this.pubMedId) {
       this.keyUp.next(this.pubMedId);
-    }
-
-    if (this.publications.length > 0) {
-      this.searchModalRef?.hide();
-      this.searchModalRef = undefined;
-      this.showSearchModal(this.publications);
     }
   }
 
