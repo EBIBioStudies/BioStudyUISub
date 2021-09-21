@@ -10,6 +10,7 @@ import { PubMedPublication } from './pubmedid-search.service';
 export class PubMedIdSearchModalComponent implements AfterViewInit {
   @Input() publications: PubMedPublication[] = [];
   @Input() value: string = '';
+  @Input() isBusy: boolean = false;
 
   @ViewChild('searchPubmedidInput', { static: true })
   private searchPubmedidInput!: ElementRef;
@@ -18,6 +19,14 @@ export class PubMedIdSearchModalComponent implements AfterViewInit {
   @Input() onSelectPub: (publication: PubMedPublication) => void = () => {};
 
   constructor(public bsModalRef: BsModalRef) {}
+
+  get hasPublications(): boolean {
+    return this.publications.length > 0;
+  }
+
+  get isValueEmpty(): boolean {
+    return this.value.length === 0;
+  }
 
   ngAfterViewInit(): void {
     setTimeout(() => {
