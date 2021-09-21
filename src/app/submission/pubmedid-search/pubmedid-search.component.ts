@@ -3,7 +3,7 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, Output, f
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { PubMedPublication, PubMedSearchService } from './pubmedid-search.service';
-import { debounceTime, delay, distinctUntilChanged, mergeMap } from 'rxjs/operators';
+import { debounceTime, delay, mergeMap } from 'rxjs/operators';
 
 import { PubMedIdSearchModalComponent } from './pubmedid-search-modal.component';
 
@@ -47,7 +47,6 @@ export class PubMedIdSearchComponent implements ControlValueAccessor, OnDestroy 
     this.keyUpSubscription = this.keyUp
       .pipe(
         debounceTime(300),
-        distinctUntilChanged(),
         mergeMap((idToSearch) => this.pubMedFetch(idToSearch).pipe(delay(500)))
       )
       .subscribe(
