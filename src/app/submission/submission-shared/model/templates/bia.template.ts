@@ -1,7 +1,7 @@
 export const biaTemplate = {
   name: 'BioImages',
   title: 'BioImages',
-  description: 'High Content Screen Image Study',
+  description: 'BioImage Archive Study',
   sectionType: {
     display: 'required',
     displayAnnotations: false,
