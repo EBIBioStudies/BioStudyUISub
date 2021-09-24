@@ -1,20 +1,20 @@
 import { Component, Input, OnDestroy } from '@angular/core';
+
+import { CustomFormControl } from '../shared/model/custom-form-control.model';
 import { FormControl } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { SectionForm } from '../shared/model/section-form.model';
 import { ServerError } from 'app/shared/server-error.handler';
+import { Subject } from 'rxjs';
+import { SubmEditService } from '../shared/subm-edit.service';
 import { flatMap } from 'app/utils/array.utils';
 import { isArrayEmpty } from 'app/utils/validation.utils';
-import { SectionForm } from '../shared/model/section-form.model';
-import { SubmEditService } from '../shared/subm-edit.service';
-import { CustomFormControl } from '../shared/model/custom-form-control.model';
+import { takeUntil } from 'rxjs/operators';
 
 type FormControlGroup = Array<FormControl>;
 
 @Component({
   selector: 'st-subm-sidebar',
-  templateUrl: './subm-sidebar.component.html',
-  styleUrls: ['./subm-sidebar.component.scss']
+  templateUrl: './subm-sidebar.component.html'
 })
 export class SubmSidebarComponent implements OnDestroy {
   @Input() collapsed?: boolean = false;

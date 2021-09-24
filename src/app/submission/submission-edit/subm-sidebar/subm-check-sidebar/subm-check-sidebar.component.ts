@@ -1,15 +1,15 @@
-import { CustomFormControl } from './../../shared/model/custom-form-control.model';
-import { FormControl, ValidationErrors } from '@angular/forms';
 import { Component, Input } from '@angular/core';
+import { FormControl, ValidationErrors } from '@angular/forms';
+
+import { CustomFormControl } from './../../shared/model/custom-form-control.model';
 import { ServerError } from 'app/shared/server-error.handler';
 import { SubmEditService } from '../../shared/subm-edit.service';
-import { scrollToFormControl } from 'app/utils/scroll.utils';
 import { isArrayEmpty } from 'app/utils/validation.utils';
+import { scrollToFormControl } from 'app/utils/scroll.utils';
 
 @Component({
   selector: 'st-subm-check-sidebar',
-  templateUrl: './subm-check-sidebar.component.html',
-  styleUrls: ['./subm-check-sidebar.component.scss']
+  templateUrl: './subm-check-sidebar.component.html'
 })
 export class SubmCheckSidebarComponent {
   @Input() collapsed?: boolean = false;

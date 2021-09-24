@@ -15,7 +15,7 @@
       </p>
       <form name="signUpForm" (ngSubmit)="onSubmit(signUpForm)" #signUpForm="ngForm" data-testid="signUpForm" novalidate>
         <div class="form-group">
-          <label for="username">Full name</label>
+          <label for="name">Full name</label>
           <span class="text-muted float-right"><i>Optional</i></span>
           <input type="text" class="form-control" id="name" name="name" [(ngModel)]="model.name" autocomplete="off" autofocus/>
         </div>
@@ -40,7 +40,6 @@
             <i>(use 4x4 digit format)</i>
           </span>
           <st-orcid-input-box
-            name="orcid"
             #orcid="ngModel"
             [(ngModel)]="model.orcid"
             [isSmall]="false">

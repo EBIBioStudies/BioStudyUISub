@@ -9,7 +9,7 @@
   }
 
   .ag-header-container {
-    background: $core-blue;
+    background: $primary;
     border: none;
     color: $white;
   }
@@ -38,7 +38,15 @@
     width: 12px;
 
     &:hover {
-      color: #FFFFFF;
+      color: #ffffff;
+    }
+  }
+
+  .ag-header-icon {
+    color: #ffffff;
+
+    &:hover {
+      color: #8bb8e8;
     }
   }
 }

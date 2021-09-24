@@ -2,26 +2,28 @@
   <div class="d-flex justify-content-end">
     <st-new-submission-button [isBusy]="isBusy"></st-new-submission-button>
   </div>
-  <tabset>
-    <tab [active]="showSubmitted" (selectTab)="onSubmTabSelect(true)">
-      <ng-template tabHeading>
-        <span tooltip="Studies already submitted or revised"
-            container="body">
-          <i class="fas fa-database" aria-hidden="true"></i>
-          Submissions
-        </span>
-      </ng-template>
-    </tab>
-    <tab [active]="!showSubmitted" (selectTab)="onSubmTabSelect(false)">
-      <ng-template tabHeading>
-        <span tooltip="New studies draft submission or incomplete"
-            container="body">
-          <i class="fas fa-clock" aria-hidden="true"></i>
-          Drafts
-        </span>
-      </ng-template>
-    </tab>
-  </tabset>
+  <div class="py-2">
+    <tabset type="pills">
+      <tab [active]="showSubmitted" (selectTab)="onSubmTabSelect(true)">
+        <ng-template tabHeading>
+          <span tooltip="Studies already submitted or revised"
+              container="body">
+            <i class="fas fa-database" aria-hidden="true"></i>
+            Submissions
+          </span>
+        </ng-template>
+      </tab>
+      <tab [active]="!showSubmitted" (selectTab)="onSubmTabSelect(false)">
+        <ng-template tabHeading>
+          <span tooltip="New studies draft submission or incomplete"
+              container="body">
+            <i class="fas fa-clock" aria-hidden="true"></i>
+            Drafts
+          </span>
+        </ng-template>
+      </tab>
+    </tabset>
+  </div>
   <section>
     <ag-grid-angular style="width: 100%; height: 580px;" class="ag-theme-fresh"
         [gridOptions]="gridOptions"

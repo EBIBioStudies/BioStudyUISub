@@ -1,11 +1,11 @@
-<div class="bg-white border-right pt-2 header">
+<div class="bg-white pt-2 header">
   <tabset [ngClass]="{'invisible': collapsed}">
     <tab heading="Explorer" active="true"></tab>
   </tabset>
   <ul class="list-group">
     <li>
       <button type="button" (click)="onDirSelect(homeDir)"
-        class="list-group-item list-group-item-action border-0 bg-transparent text-white"
+        class="btn btn-light list-group-item border-0 rounded-0 w-100 text-left"
         [ngClass]="{'active': selectedPath.includes(homeDir.path) }">
         <i class="fa fa-fw fa-home"></i>
         <span class="ml-1" *ngIf="!collapsed">Home</span>
@@ -15,7 +15,7 @@
   <ul class="list-group">
     <li *ngFor="let dir of groups">
       <button type="button" (click)="onDirSelect(dir)"
-        class="list-group-item list-group-item-action border-0 bg-transparent text-white"
+        class="btn btn-light list-group-item border-0 rounded-0 w-100 text-left"
         [ngClass]="{'active': selectedPath.includes(dir.path) }">
         <i class="fa fa-fw fa-folder"></i>
         <span class="ml-1" *ngIf="!collapsed">{{dir.name}}</span>

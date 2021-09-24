@@ -1,9 +1,0 @@
-.header {
-  height: calc(var(--page-navbar-height) - 1px);
-}
-
-::ng-deep .tab-container {
-  .nav-tabs {
-    border-bottom: 0;
-  }
-}

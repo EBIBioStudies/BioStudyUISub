@@ -1,11 +1,13 @@
-<div class="d-md-block sidebar overflow-auto sidebar-expanded" [ngClass]="{
+<div class="d-md-block sidebar overflow-auto sidebar-expanded border-right" [ngClass]="{
     'sidebar-collapsed' : collapsed
   }">
-  <button class="btn btn-sm mt-2 float-right" [ngClass]="{'inactive': !collapsed}" (click)="onToggleCollapse($event)"
-    tooltip="{{collapsed ? 'Expand sidebar' : 'Collapse sidebar'}}" container="body" placement="auto">
-    <i class="fa fa-fw fa-lg" [ngClass]="{'fa-angle-double-left': !collapsed, 'fa-angle-double-right': collapsed}"></i>
-  </button>
   <div class="sidebar-container">
     <ng-content></ng-content>
+  </div>
+  <div class="sidebar-closer">
+    <button class="btn btn-sm btn-light text-right rounded-0 w-100 mt-2" [ngClass]="{'inactive': !collapsed}" (click)="onToggleCollapse($event)"
+      tooltip="{{collapsed ? 'Expand sidebar' : 'Collapse sidebar'}}" container="body" placement="left">
+      <i class="fa fa-fw fa-lg" [ngClass]="{'fa-angle-double-left': !collapsed, 'fa-angle-double-right': collapsed}"></i>
+    </button>
   </div>
 </div>

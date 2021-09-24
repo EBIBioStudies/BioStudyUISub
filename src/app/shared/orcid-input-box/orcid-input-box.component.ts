@@ -1,4 +1,3 @@
-import { Component, forwardRef, Injector, Input, ViewChild, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -7,6 +6,7 @@ import {
   NgModel,
   Validators
 } from '@angular/forms';
+import { AfterViewInit, Component, Injector, Input, OnDestroy, OnInit, ViewChild, forwardRef } from '@angular/core';
 
 @Component({
   selector: 'st-orcid-input-box',
