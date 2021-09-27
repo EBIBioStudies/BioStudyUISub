@@ -1,5 +1,8 @@
 <ng-container [ngSwitch]="valueType.name">
+  <label for="{{inputId}}" class="sr-only">Enter {{inputDisplayName}}</label>
+
   <input *ngSwitchCase="valueTypeNameEnum.text"
+      id="{{inputId}}"
       type="text"
       class="form-control {{inputId}}"
       tooltip="{{isOverflow() && !ahead._container ? value : ''}}"
@@ -19,6 +22,7 @@
       stBootstrapValidation/>
 
   <textarea *ngSwitchCase="valueTypeNameEnum.largetext"
+      id="{{inputId}}"
       class="form-control {{inputId}}"
       stAutosize="200"
       [placeholder]="valueType.placeholder"

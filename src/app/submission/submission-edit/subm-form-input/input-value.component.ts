@@ -1,16 +1,17 @@
+import { BehaviorSubject, Observable, Subject, of } from 'rxjs';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { AppConfig } from 'app/app.config';
-import { BehaviorSubject, Observable, Subject, of } from 'rxjs';
 import {
+  DateValueType,
+  SelectValueType,
   ValueType,
   ValueTypeFactory,
-  ValueTypeName,
-  SelectValueType,
-  DateValueType
+  ValueTypeName
 } from 'app/submission/submission-shared/model/templates';
-import { typeaheadSource } from '../shared/typeahead.utils';
+
+import { AppConfig } from 'app/app.config';
 import { CustomFormControl } from '../shared/model/custom-form-control.model';
+import { typeaheadSource } from '../shared/typeahead.utils';
 
 @Component({
   selector: 'st-input-value',
@@ -50,6 +51,10 @@ export class InputValueComponent implements ControlValueAccessor {
 
   get inputId(): string {
     return this.formControl.ref.id;
+  }
+
+  get inputDisplayName(): string {
+    return this.formControl.ref.displayName;
   }
 
   get value(): string {

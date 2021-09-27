@@ -50,8 +50,10 @@
                   (click)="tableForm.removeRow(rowIdx)"
                   [tooltip]="tableForm.canRemoveRow ? 'Delete ' + tableForm.tableTypeName.toLowerCase() + ' ' + (rowIdx + 1) : ''"
                   placement="right"
-                  container="body">
-                <i class="far fa-trash-alt"></i>
+                  container="body"
+                  aria-label="Delete row {{rowIdx}}"
+                  title="Delete row {{rowIdx}}">
+                <i class="far fa-trash-alt" aria-hidden="true"></i>
               </button>
             </span>
             {{rowIdx+1}}

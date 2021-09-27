@@ -24,12 +24,14 @@
   </small>
   <div *ngIf="!editing" class="btn-group btn-group-sm">
     <button *ngIf="canEdit" class="btn btn-link" type="button"
-        (click)="onEdit($event)">
-      <i class="fas fa-pencil-alt"></i>
+        (click)="onEdit($event)" aria-label="Edit Column {{value}}"
+        title="Edit Column {{value}}">
+      <i class="fas fa-pencil-alt" aria-hidden="true"></i>
     </button>
     <button *ngIf="canRemove" class="btn btn-link" type="button"
-        (click)="onRemove($event)">
-      <i class="fas fa-trash-alt text-danger"></i>
+        (click)="onRemove($event)" aria-label="Remove Column {{value}}"
+        title="Remove Column {{value}}">
+      <i class="fas fa-trash-alt text-danger" aria-hidden="true"></i>
     </button>
   </div>
 </div>

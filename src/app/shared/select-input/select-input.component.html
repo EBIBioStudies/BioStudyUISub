@@ -1,6 +1,6 @@
 <ng-select class="select-input" [(ngModel)]="selectedValue"
   [ngClass]="{'is-grouped': isInputGroup, 'is-invalid': formControl.invalid && formControl.touched}" (change)="onChange"
   (focus)="onTouched" (change)="onSelectChange($event)" [multiple]="multiple" [addTag]="addValue" [readonly]="readonly"
-  placeholder="Please select" [inputAttrs]="{'class': inputId}" appendTo="body">
+  placeholder="Please select" [inputAttrs]="{'class': inputId, 'id': inputId}" appendTo="body">
   <ng-option *ngFor="let value of values" [value]="value">{{value}}</ng-option>
 </ng-select>

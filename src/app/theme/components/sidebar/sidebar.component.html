@@ -6,8 +6,8 @@
   </div>
   <div class="sidebar-closer">
     <button class="btn btn-sm btn-light text-right rounded-0 w-100 mt-2" [ngClass]="{'inactive': !collapsed}" (click)="onToggleCollapse($event)"
-      tooltip="{{collapsed ? 'Expand sidebar' : 'Collapse sidebar'}}" container="body" placement="left">
-      <i class="fa fa-fw fa-lg" [ngClass]="{'fa-angle-double-left': !collapsed, 'fa-angle-double-right': collapsed}"></i>
+      tooltip="{{collapsed ? 'Expand sidebar' : 'Collapse sidebar'}}" container="body" placement="left" aria-label="Collapse Sidebar" title="Collapse Sidebar">
+      <i class="fa fa-fw fa-lg" [ngClass]="{'fa-angle-double-left': !collapsed, 'fa-angle-double-right': collapsed}" aria-hidden="true"></i>
     </button>
   </div>
 </div>

@@ -1,5 +1,5 @@
 <div class="input-group">
-  <input class="form-control {{inputId}}" type="text" placeholder="{{!readonly ? 'Find by PubMed ID' : ''}}"
+  <input id="{{inputId}}" class="form-control {{inputId}}" type="text" placeholder="{{!readonly ? 'Find by PubMed ID' : ''}}"
     [(ngModel)]="value" (keyup)="keyUp.next($event.target.value)" [readonly]="readonly"
     [required]="required">
   <div class="input-group-append">
