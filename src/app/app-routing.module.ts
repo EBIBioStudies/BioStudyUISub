@@ -1,17 +1,18 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from './auth-guard.service';
+
 import { ActivateComponent } from './auth/activate/activate.component';
 import { ActivationLinkReqComponent } from './auth/activate/activation-link-req.component';
-import { PasswordResetReqComponent } from './auth/password-reset/password-reset-req.component';
+import { AuthGuard } from './auth-guard.service';
+import { DirectSubmitComponent } from './submission/submission-direct/direct-submit.component';
+import { FileListComponent } from './file/file-list/file-list.component';
+import { HelpComponent } from './help/help.component';
+import { NgModule } from '@angular/core';
+import { NotFoundComponent } from 'app/not-found/not-found.component';
 import { PasswordResetComponent } from './auth/password-reset/password-reset.component';
+import { PasswordResetReqComponent } from './auth/password-reset/password-reset-req.component';
 import { SignInComponent } from './auth/signin/signin.component';
 import { SignUpComponent } from './auth/signup/signup.component';
-import { NotFoundComponent } from 'app/not-found/not-found.component';
-import { HelpComponent } from './help/help.component';
-import { FileListComponent } from './file/file-list/file-list.component';
 import { SubmListComponent } from './submission/submission-list/subm-list.component';
-import { DirectSubmitComponent } from './submission/submission-direct/direct-submit.component';
 import { SubmissionEditComponent } from './submission/submission-edit/submission-edit.component';
 
 const appRoutes: Routes = [
@@ -61,7 +62,14 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(appRoutes, { onSameUrlNavigation: 'reload', scrollPositionRestoration: 'enabled' })],
+  imports: [
+    RouterModule.forRoot(appRoutes, {
+      onSameUrlNavigation: 'reload',
+      scrollPositionRestoration: 'enabled',
+      anchorScrolling: 'enabled',
+      scrollOffset: [0, 70]
+    })
+  ],
   exports: [RouterModule],
   providers: [AuthGuard]
 })

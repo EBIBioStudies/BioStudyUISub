@@ -1,7 +1,8 @@
 import { Component, Input, OnDestroy } from '@angular/core';
-import { FieldType, ValueType, TextValueType } from 'app/submission/submission-shared/model/templates';
-import { isStringEmpty } from 'app/utils/validation.utils';
+import { FieldType, TextValueType, ValueType } from 'app/submission/submission-shared/model/templates';
+
 import { FieldControl } from '../../shared/model/field-control.model';
+import { isStringEmpty } from 'app/utils/validation.utils';
 
 class ValueLength {
   static unknown: ValueLength = new ValueLength();
@@ -95,14 +96,6 @@ export class SubmFieldComponent implements OnDestroy {
 
   get hasErrors(): boolean {
     return this.isRequired && this.isInvalid && this.isTouched;
-  }
-
-  get hasHelpText(): boolean {
-    return this.fieldHelpText.length > 0;
-  }
-
-  get hasHelpLink(): boolean {
-    return this.fieldHelpLink.length > 0;
   }
 
   get errors(): string[] {

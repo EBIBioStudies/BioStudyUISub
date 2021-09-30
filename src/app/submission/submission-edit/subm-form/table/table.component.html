@@ -26,6 +26,8 @@
               [readonly]="isReadOnly"
               [removable]="tableForm.canRemoveColumn(column) && !isReadOnly"
               (remove)="tableForm.removeColumn(column)"
+              [helpText]="column.helpText"
+              [helpLink]="column.helpLink"
               stValidateOnblur>
       </st-inline-edit>
     </div>

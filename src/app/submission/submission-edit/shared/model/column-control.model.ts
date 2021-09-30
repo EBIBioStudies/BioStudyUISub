@@ -1,8 +1,9 @@
-import { Observable } from 'rxjs';
 import { Attribute, ValueType } from 'app/submission/submission-shared/model';
-import { CustomFormControl } from '../model/custom-form-control.model';
+import { ErrorMessages, SubmFormValidators } from '../form-validators';
+
 import { ControlRef } from '../control-reference';
-import { SubmFormValidators, ErrorMessages } from '../form-validators';
+import { CustomFormControl } from '../model/custom-form-control.model';
+import { Observable } from 'rxjs';
 import { typeaheadSource } from '../typeahead.utils';
 
 export class ColumnControl {
@@ -55,6 +56,14 @@ export class ColumnControl {
 
   get errors(): string[] {
     return ErrorMessages.map(this.control);
+  }
+
+  get helpText(): string {
+    return this.column.helpText;
+  }
+
+  get helpLink(): string {
+    return this.column.helpLink;
   }
 
   typeaheadSource(sourceFunc: () => string[]): Observable<string[]> {

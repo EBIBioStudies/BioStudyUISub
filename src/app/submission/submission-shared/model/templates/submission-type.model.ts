@@ -366,6 +366,8 @@ export class ColumnType extends TypeBase {
   readonly displayType: DisplayType;
   readonly uniqueValues: boolean;
   readonly valueType: ValueType;
+  readonly helpText: string;
+  readonly helpLink: string;
 
   constructor(
     name: string,
@@ -383,6 +385,8 @@ export class ColumnType extends TypeBase {
     this.dependencyColumn = data.dependencyColumn || '';
     this.autosuggest = data.autosuggest !== undefined ? data.autosuggest : true;
     this.uniqueValues = data.uniqueValues || false;
+    this.helpText = data.helpText || '';
+    this.helpLink = data.helpLink || '';
   }
 
   static createDefault(name: string, scope?: TypeScope<ColumnType>): ColumnType {
