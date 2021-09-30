@@ -23,13 +23,36 @@ export class SelectInputComponent implements ControlValueAccessor {
   @Input() readonly: boolean = false;
   @Input() inputId: string = '';
   selectedValue: string | string[] = '';
-
-  addValue(value: string): string {
-    return value;
-  }
+  searchTerm: string = '';
+  isAdding: boolean = false;
 
   onSelectChange(value: string | string[]): void {
     this.onChange(value);
+  }
+
+  onAdd(): void {
+    this.isAdding = true;
+  }
+
+  onClose(): void {
+    if (this.searchTerm.length === 0) {
+      return;
+    }
+
+    if (!this.isAdding && this.multiple) {
+      this.selectedValue = [...this.selectedValue, this.searchTerm];
+    }
+
+    this.isAdding = false;
+    this.onChange(this.selectedValue);
+  }
+
+  onSearch({ term }: { term: string }): void {
+    this.searchTerm = term;
+  }
+
+  addValue(value: string): string {
+    return value;
   }
 
   registerOnChange(fn: any): void {

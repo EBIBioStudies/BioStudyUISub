@@ -22,6 +22,9 @@ export class InlineEditComponent implements ControlValueAccessor {
   @Input() readonly = false;
   @Input() removable = true;
   @Input() suggestThreshold = 0;
+  @Input() helpText = '';
+  @Input() helpLink = '';
+
   @Output() remove = new EventEmitter<any>();
   readonly columnOptions: Observable<string[]>;
 
@@ -30,6 +33,8 @@ export class InlineEditComponent implements ControlValueAccessor {
 
   private inlineEditValue: string = '';
   private valueChanges$: Subject<string> = new BehaviorSubject<string>('');
+
+  @Input() autosuggestSource: () => string[] = () => [];
 
   /**
    * Sets the max number of suggestions shown at any given time.
@@ -57,7 +62,9 @@ export class InlineEditComponent implements ControlValueAccessor {
     return this.canEdit && this.removable;
   }
 
-  @Input() autosuggestSource: () => string[] = () => [];
+  get showHelpText(): boolean {
+    return this.helpText.length !== 0 && this.helpLink.length !== 0;
+  }
 
   /**
    * Determines if the field's contents are longer than the actual field's dimensions by probing the DOM directly.

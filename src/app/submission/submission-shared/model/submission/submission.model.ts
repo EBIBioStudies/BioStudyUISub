@@ -105,7 +105,9 @@ export class Table {
           true,
           ct.dependencyColumn,
           ct.uniqueValues,
-          ct.autosuggest
+          ct.autosuggest,
+          ct.helpText,
+          ct.helpLink
         );
       });
 
@@ -204,7 +206,9 @@ export class Table {
     isTemplateBased: boolean = false,
     dependencyColumn: string = '',
     uniqueValues: boolean = false,
-    autosuggest: boolean = true
+    autosuggest: boolean = true,
+    helpText: string = '',
+    helpLink: string = ''
   ): Attribute {
     const defColName = (this.singleRow ? this.typeName : 'Column') + ' ' + (this.tableColumns.size() + 1);
     const colName = name || defColName;
@@ -215,7 +219,9 @@ export class Table {
       isTemplateBased,
       dependencyColumn,
       uniqueValues,
-      autosuggest
+      autosuggest,
+      helpText,
+      helpLink
     );
     this.tableRows.addKey(col.id);
     this.tableColumns.add(col);

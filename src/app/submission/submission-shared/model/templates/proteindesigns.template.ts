@@ -445,6 +445,8 @@ export const proteinDesignsTemplate = {
           },
           {
             name: 'Organisation / University',
+            helpText: 'Add org',
+            helpLink: '/help#new-item-dropdown',
             valueType: {
               name: 'select',
               multiple: true,

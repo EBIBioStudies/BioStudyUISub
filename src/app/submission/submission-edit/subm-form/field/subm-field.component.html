@@ -2,10 +2,7 @@
   <label>
     <h6 class="m-0">
       {{fieldName}}
-      <a *ngIf="hasHelpLink" class="small ml-1" href="{{fieldHelpLink}}" target="_blank">
-        <i class="fa fa-question-circle"></i> {{fieldHelpText}}
-      </a>
-      <i *ngIf="hasHelpText && !hasHelpLink" [tooltip]="fieldHelpText" class="fa fa-question-circle ml-1" aria-hidden="true"></i>
+      <st-help-link class="ml-1" [text]="fieldHelpText" [href]="fieldHelpLink" ></st-help-link>
       <span class="small text-muted" [hidden]="isReadonly || isValid">
         <span *ngIf="valueLength.isAtLeast">
           (at least {{valueLength.min}}
