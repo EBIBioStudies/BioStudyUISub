@@ -33,6 +33,8 @@ export const hecatosTemplate = {
       {
         name: 'Organism',
         icon: 'fa-tag',
+        helpText: 'Add organism',
+        helpLink: '/help#new-item-dropdown',
         valueType: {
           name: 'select',
           values: ['Homo sapiens (human)', 'Sus scrofa (pig)']
@@ -239,6 +241,8 @@ export const hecatosTemplate = {
           },
           {
             name: 'Organisation',
+            helpText: 'Add org',
+            helpLink: '/help#new-item-dropdown',
             valueType: {
               name: 'select',
               multiple: true,

@@ -40,6 +40,8 @@ export const defaultTemplate = {
         name: 'Organism',
         icon: 'fa-tag',
         display: 'required',
+        helpText: 'Add organism',
+        helpLink: '/help#new-item-dropdown',
         valueType: {
           name: 'select',
           multiple: true,
@@ -157,6 +159,8 @@ export const defaultTemplate = {
           },
           {
             name: 'Organisation',
+            helpText: 'Add org',
+            helpLink: '/help#new-item-dropdown',
             valueType: {
               name: 'select',
               multiple: true,

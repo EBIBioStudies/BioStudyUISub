@@ -30,6 +30,8 @@ export const euToxRiskTemplate = {
       {
         name: 'Organism',
         icon: 'fa-tag',
+        helpText: 'Add organism',
+        helpLink: '/help#new-item-dropdown',
         valueType: {
           name: 'select',
           values: ['Homo sapiens (human)', 'Danio rerio (zebrafish)']
@@ -141,6 +143,8 @@ export const euToxRiskTemplate = {
           },
           {
             name: 'Organisation',
+            helpText: 'Add org',
+            helpLink: '/help#new-item-dropdown',
             valueType: {
               name: 'select',
               multiple: true,
