@@ -24,6 +24,7 @@ export class InlineEditComponent implements ControlValueAccessor {
   @Input() suggestThreshold = 0;
   @Input() helpText = '';
   @Input() helpLink = '';
+  @Input() columnId = '';
 
   @Output() remove = new EventEmitter<any>();
   readonly columnOptions: Observable<string[]>;
@@ -64,6 +65,10 @@ export class InlineEditComponent implements ControlValueAccessor {
 
   get showHelpText(): boolean {
     return this.helpText.length !== 0 && this.helpLink.length !== 0;
+  }
+
+  get id(): string {
+    return `inline-edit-${this.columnId}`;
   }
 
   /**

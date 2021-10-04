@@ -4,7 +4,7 @@
     [required]="required">
   <div class="input-group-append">
     <button class="btn btn-outline-secondary" type="button" [disabled]="isBusy || !pubMedId || readonly"
-      (click)="togglePreviewPub()">
+      (click)="togglePreviewPub()" aria-label="Search PubMed ID">
       <i class="fa fa-fw fa-lg" aria-hidden="true" [ngClass]="{ 'fa-cog fa-spin': isBusy, 'fa-search': !isBusy}"></i>
     </button>
   </div>

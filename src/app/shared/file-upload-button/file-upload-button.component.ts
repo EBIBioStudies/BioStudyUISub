@@ -31,4 +31,12 @@ export class FileUploadButtonComponent implements OnChanges {
   onInputChange($event): void {
     this.fileUploadSelect.emit($event.target.files);
   }
+
+  get id(): string {
+    return this.isDirOnly ? 'folder-input' : 'file-input';
+  }
+
+  get ariaLabel(): string {
+    return this.isDirOnly ? 'Upload folder' : 'Upload file';
+  }
 }

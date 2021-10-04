@@ -33,7 +33,8 @@
     </div>
     <div *ngIf="!hasSubmitFailed && !hasSubmitPassed" class="card-footer text-muted" [ngClass]="{'st-is-study': isStudy}"
       (click)="handleOnIsStudyChange(!isStudy, fileName)">
-      <input type="checkbox" [checked]="isStudy">
+      <label class="sr-only" [for]="id">Is {{file.name}} containing the study information?</label>
+      <input [id]="id" type="checkbox" [checked]="isStudy">
       Study File
     </div>
   </div>

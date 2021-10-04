@@ -66,6 +66,10 @@ export class SubmNavBarComponent implements OnChanges {
     return `${this.frontendURL}/studies/${this.accno}`;
   }
 
+  sectionName(section: Section): string {
+    return section.accno ? section.accno : section.typeName;
+  }
+
   private findSectionPath(sectionForm?: SectionForm): SectionForm[] {
     if (sectionForm === undefined) {
       return [];

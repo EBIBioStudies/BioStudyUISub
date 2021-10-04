@@ -8,6 +8,7 @@
       To bypass it, two inputs have been defined, the form-control above which only visualizes the value and this hidden
       input which displays the date picker.
    -->
-   <input class="hidden-input" readonly (bsValueChange)="onPickerSet($event)" (onShown)="onPickerShown()"
-      #dp="bsDatepicker" [bsConfig]="{ showTodayButton: true, todayPosition: 'center' }" aria-hidden="true" bsDatepicker>
+   <label class="sr-only" aria-hidden="true" for="date-picker-hidden-input">Hidden date picker</label>
+   <input id="date-picker-hidden-input" class="hidden-input" (bsValueChange)="onPickerSet($event)" (onShown)="onPickerShown()"
+      #dp="bsDatepicker" [bsConfig]="{ showTodayButton: true, todayPosition: 'center' }" aria-hidden="true" readonly bsDatepicker>
 </div>

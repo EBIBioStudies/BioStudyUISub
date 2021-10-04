@@ -87,7 +87,8 @@ export class ControlGroupRef {
 
   private createRef(id: string, name: string, icon?: string, title?: string): ControlRef {
     const parentName = this.tableName || this.sectionName;
-    const uniqueId = [parentName, id].join('_');
+    const parentNameSanitized = parentName.toLowerCase().replace(/\s/g, '');
+    const uniqueId = [parentNameSanitized, id].join('-');
     return new ControlRef(uniqueId, name, this, icon || this.icon, title);
   }
 }
