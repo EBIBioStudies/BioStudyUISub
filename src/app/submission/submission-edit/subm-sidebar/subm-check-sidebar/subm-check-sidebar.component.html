@@ -1,5 +1,5 @@
 <div *ngIf="areInvalidControlsEmpty || isLoading || isSubmitting" class="p-3">
-  <div *ngIf="!serverError && !isLoading && !isSubmitting" class="text-center text-white"
+  <div *ngIf="!serverError && !isLoading && !isSubmitting" class="text-center"
     [ngClass]="{'col-xs-12': !collapsed}">
     <i aria-hidden="true" class="fa fa-check-circle mb-2" [ngClass]="{'fa-2x': collapsed, 'fa-3x': !collapsed}"></i>
     <h5 *ngIf="!collapsed">All fields are valid</h5>
@@ -9,23 +9,23 @@
     <i aria-hidden="true" class="fa fa-times-circle mb-2" [ngClass]="{'fa-2x': collapsed, 'fa-3x': !collapsed}"></i>
     <h5 *ngIf="!collapsed">{{errorMsg()}}</h5>
   </div>
-  <div *ngIf="!serverError && isLoading" class="text-center text-white" [ngClass]="{'col-xs-12': !collapsed}">
+  <div *ngIf="!serverError && isLoading" class="text-center" [ngClass]="{'col-xs-12': !collapsed}">
     <i aria-hidden="true" class="fa fa-cog fa-spin mb-2" [ngClass]="{'fa-2x': collapsed, 'fa-3x': !collapsed}"></i>
     <h5 *ngIf="!collapsed">Loading submission...</h5>
   </div>
-  <div *ngIf="!serverError && isSubmitting" class="text-center text-white" [ngClass]="{'col-xs-12': !collapsed}">
+  <div *ngIf="!serverError && isSubmitting" class="text-center" [ngClass]="{'col-xs-12': !collapsed}">
     <i aria-hidden="true" class="fa fa-cog fa-spin mb-2" [ngClass]="{'fa-2x': collapsed, 'fa-3x': !collapsed}"></i>
     <h5 *ngIf="!collapsed">Submitting...</h5>
   </div>
 </div>
 <div *ngFor="let controlGroup of invalidControls" class="list-group">
   <div *ngIf="!controlGroup[0].ref.isRootSection"
-    class="list-group-item bg-transparent text-white border-top-0 border-bottom">
+    class="list-group-item bg-transparent border-top-0 border-bottom">
     <span>{{collapsed ? '' : controlGroup[0].ref.sectionName}}</span>
   </div>
   <ng-container *ngFor="let control of controlGroup">
     <button type="button" *ngIf="control.invalid" (click)="onReviewClick(control)"
-      class="list-group-item list-group-item-action d-flex justify-content-between align-items-center bg-transparent text-white border-0">
+      class="btn btn-light list-group-item d-flex justify-content-between align-items-center border-0 rounded-0">
       <div class="text-truncate pr-2">
         <i class="entry-item fas {{control.ref.icon}}"></i>
         {{!collapsed ? '&nbsp;' + control.ref.displayName + '&nbsp;' : ''}}

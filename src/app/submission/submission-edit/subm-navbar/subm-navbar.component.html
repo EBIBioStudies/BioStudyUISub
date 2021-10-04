@@ -1,16 +1,16 @@
 <nav class="navbar navbar-light border-bottom page-navbar bg-white sticky-top">
   <div class="d-flex align-items-center mr-auto">
-    <a class="btn btn-link btn-sm pl-0" *ngIf="isTemp" routerLink="/draft">
+    <a class="btn btn-link btn-sm pl-0" *ngIf="isTemp" routerLink="/draft" aria-label="Go to drafts list">
       <i class="fa fa-clock-o" aria-hidden="true"></i> Drafts
     </a>
-    <a class="btn btn-link btn-sm pl-0" *ngIf="!isTemp" routerLink="/">
+    <a class="btn btn-link btn-sm pl-0" *ngIf="!isTemp" routerLink="/" aria-label="Go to submissions list">
       <i class="fa fa-database" aria-hidden="true"></i> Submissions
     </a>
     <ng-container *ngFor="let secForm of sectionPath; let idx = index; let last = last;">
       <i class="fa fa-angle-right font-bold"></i>
       <button class="btn btn-link btn-sm" (click)="onSectionClick(secForm)" [disabled]="last">
         <span *ngIf="idx == 0">{{accno}}</span>
-        <span *ngIf="idx > 0">{{secForm.accno ? secForm.accno : secForm.typeName}}</span>
+        <span *ngIf="idx > 0">{{sectionName(secForm)}}</span>
       </button>
     </ng-container>
     <span class="text-muted ml-2" *ngIf="isSaving">
@@ -24,7 +24,7 @@
     </a>
     <button *ngIf="!readonly"
         [disabled]="isSaving"
-        class="btn btn-primary btn-sm"
+        class="btn btn-success btn-sm"
         tooltip="Send to the BioStudies database"
         placement="bottom"
         container="body"

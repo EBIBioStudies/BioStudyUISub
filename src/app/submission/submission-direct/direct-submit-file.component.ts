@@ -23,4 +23,8 @@ export class DirectSubmitFileComponent {
     this.isStudy = isStudy;
     this.isStudyChange.emit({ fileName, isStudy });
   }
+
+  get id(): string {
+    return this.fileName.toLowerCase().replace(/\s/g, '');
+  }
 }

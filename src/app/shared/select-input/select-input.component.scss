@@ -1,14 +1,13 @@
 .ng-select.select-input {
   .ng-select-container {
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    color: #555555;
     min-height: 34px;
   }
 }
 
 .ng-select.is-invalid {
   .ng-select-container {
-    border-color: #C05F5D;
+    border-color: #c05f5d;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   }
 }

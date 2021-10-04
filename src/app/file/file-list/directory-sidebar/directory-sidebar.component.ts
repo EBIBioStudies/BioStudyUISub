@@ -1,14 +1,14 @@
-import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, forwardRef } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+
+import { FileNode } from 'app/file/file-select/file-tree.model';
 import { FileService } from '../../shared/file.service';
 import { PathInfo } from '../../shared/file-rest.model';
-import { FileNode } from 'app/file/file-select/file-tree.model';
 import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'st-directory-sidebar',
   templateUrl: './directory-sidebar.component.html',
-  styleUrls: ['./directory-sidebar.component.scss'],
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DirectorySidebarComponent), multi: true }]
 })
 export class DirectorySidebarComponent implements OnInit, ControlValueAccessor {

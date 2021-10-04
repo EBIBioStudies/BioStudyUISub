@@ -1,5 +1,6 @@
-<input id="files-input" class="custom-file-input" name="files-input" type="file" (change)="onInputChange($event)"
+<label class="sr-only" [for]="id">{{ariaLabel}}</label>
+<input [id]="id" class="custom-file-input" name="files-input" type="file" (change)="onInputChange($event)"
   [multiple]="multiple" allowdirs #inputFile directory webkitdirectory hidden />
-<button type="button" class="btn btn-primary btn-sm mr-2" (click)="onButtonClick()">
+<button type="button" class="btn btn-primary btn-sm mr-2" (click)="onButtonClick()" [title]="ariaLabel">
   {{title}}
 </button>

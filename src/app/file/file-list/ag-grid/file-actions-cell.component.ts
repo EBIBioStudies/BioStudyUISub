@@ -14,8 +14,10 @@ import { FileUpload } from '../../shared/file-upload-list.service';
         container="body"
         placement="left"
         (click)="onFileDownload($event)"
+        aria-label="Download file"
+        title="Download file"
       >
-        <i class="fas fa-download fa-fw"></i>
+        <i aria-hidden="true" class="fas fa-download fa-fw"></i>
       </button>
       <button
         *ngIf="canRemove"
@@ -25,8 +27,10 @@ import { FileUpload } from '../../shared/file-upload-list.service';
         container="body"
         placement="left"
         (click)="onFileRemove($event)"
+        aria-label="Delete file"
+        title="Delete file"
       >
-        <i class="fas fa-trash-alt fa-fw"></i>
+        <i aria-hidden="true" class="fas fa-trash-alt fa-fw"></i>
       </button>
       <button
         *ngIf="canCancel"
@@ -36,6 +40,8 @@ import { FileUpload } from '../../shared/file-upload-list.service';
         container="body"
         placement="left"
         (click)="onCancelUpload($event)"
+        aria-label="Cancel upload"
+        title="Cancel upload"
       >
         Cancel
       </button>
