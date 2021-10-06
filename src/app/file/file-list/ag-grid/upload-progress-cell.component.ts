@@ -3,6 +3,7 @@ import { AgRendererComponent } from 'ag-grid-angular';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { UploadErrorModalComponent } from 'app/file/upload-error-modal/upload-error-modal.component';
 import { FileUpload } from 'app/file/shared/file-upload-list.service';
+import { LogService } from 'app/core/logger/log.service';
 
 @Component({
   selector: 'st-progress-cell',
@@ -13,7 +14,7 @@ export class ProgressCellComponent implements AgRendererComponent {
   private type?: string;
   private upload?: FileUpload;
 
-  constructor(private modalService: BsModalService) {}
+  constructor(private modalService: BsModalService, private logger: LogService) {}
 
   agInit(params: any): void {
     this.type = params.data.type;
@@ -35,6 +36,8 @@ export class ProgressCellComponent implements AgRendererComponent {
   get value(): number {
     if (this.upload) {
       if (this.upload.isFailed()) {
+        this.logger.error('Error uploading file', `${this.upload.error.title} - ${this.upload.error.detail}`);
+
         return -1;
       }
 

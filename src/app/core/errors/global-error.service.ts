@@ -18,7 +18,7 @@ export class GlobalErrorService extends ErrorHandler {
     let message;
     if (error instanceof HttpErrorResponse) {
       message = errorService.getServerErrorMessage(error);
-      logger.error(message);
+      logger.error(message, `${error.status} - ${error.url} - ${error.message}`);
       notifier.showError(message);
     } else {
       message = errorService.getClientErrorMessage(error);
