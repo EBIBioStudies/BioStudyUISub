@@ -1,17 +1,17 @@
 <div class="list-group">
   <form *ngIf="form" [formGroup]="form" (ngSubmit)="onApplyChanges()" novalidate>
     <ng-container *ngFor="let item of items; let i = index">
-      <button class="btn btn-light list-group-item d-flex justify-content-between align-items-center border-0 rounded-0 w-100" *ngIf="isEditModeOff"
+      <button class="list-group-item d-flex justify-content-between align-items-center border-0 rounded-0 w-100 bg-blue text-white" *ngIf="isEditModeOff"
         (click)="onItemClick(item)">
         <span tooltip="{{ collapsed ? '' : item.description | stripHtml}}" placement="auto" container="body">
           <i class="fa {{item.icon}}"></i>
           {{!collapsed ? '&nbsp;&nbsp;' + item.prettyName : ''}}
         </span>
       </button>
-      <div class="list-group-item border-0 bg-transparent pl-1" *ngIf="isEditModeOn && !item.deleted">
+      <div class="list-group-item border-0 bg-transparent text-white pl-1" *ngIf="isEditModeOn && !item.deleted">
         <div class="input-group input-group-sm">
           <div class="input-group-prepend">
-            <span class="input-group-text bg-transparent border-0">
+            <span class="input-group-text bg-transparent border-0 text-white">
               <i class="fa {{item.icon}}"></i>
             </span>
           </div>
@@ -24,7 +24,7 @@
               <i class="fas fa-trash-alt fa-fw"></i>
             </button>
           </div>
-          <div class="invalid-feedback pl-4">
+          <div class="invalid-feedback text-white pl-4">
             <span [hidden]="!item.control.errors?.unique || !item.control.touched">
               Please use a unique type name
             </span>
@@ -47,7 +47,7 @@
 
   <div *ngIf="!collapsed && isEditModeOff && userData.isPrivileged && isAdvancedVisible">
     <div class="d-flex justify-content-end">
-      <button class="btn btn-link btn-sm" (click)="onAdvancedToggle()">
+      <button class="btn btn-link btn-sm text-white" (click)="onAdvancedToggle()">
         <i class="far fa-lg" aria-hidden="true"
           [ngClass]="{'fa-caret-square-down': isAdvancedClosed, 'fa-caret-square-up': isAdvancedOpen}"></i>
         Advanced
