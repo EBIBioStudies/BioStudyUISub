@@ -5,6 +5,9 @@
 // Color system
 $white: #fff;
 
+$blue: #3c739f;
+$core-blue: #6d9fc1;
+$bio-blue: #9bc9e5;
 $embl-blue: #3b6fb6;
 $embl-green: #007b53;
 
@@ -35,3 +38,6 @@ $component-active-bg: theme-color('primary');
 
 // Navs
 $nav-pills-link-active-bg: $component-active-bg;
+$nav-tabs-link-active-color: $white;
+$nav-tabs-link-active-bg: $core-blue;
+$nav-tabs-link-active-border-color: $core-blue;

@@ -28,3 +28,15 @@ body {
   width: var(--toast-width);
   padding: 0.2rem 1.25rem 0.2rem 50px;
 }
+
+.bg-bio-blue {
+  background-color: var(--bio-blue);
+}
+
+button.bg-blue {
+  background-color: var(--core-blue);
+}
+
+button.bg-blue:hover {
+  background-color: var(--bio-blue);
+}

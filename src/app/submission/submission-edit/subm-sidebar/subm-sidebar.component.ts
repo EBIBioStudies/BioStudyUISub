@@ -14,7 +14,8 @@ type FormControlGroup = Array<FormControl>;
 
 @Component({
   selector: 'st-subm-sidebar',
-  templateUrl: './subm-sidebar.component.html'
+  templateUrl: './subm-sidebar.component.html',
+  styleUrls: ['./subm-sidebar.component.scss']
 })
 export class SubmSidebarComponent implements OnDestroy {
   @Input() collapsed?: boolean = false;
