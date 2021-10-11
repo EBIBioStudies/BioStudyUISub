@@ -40,8 +40,8 @@
                   Provide the study files
                 </strong>
                 <p>
-                  Use the <i>"File Upload"</i> button to pick files from different directories. <br />
-                  Use the <i>"Folder Upload"</i> button to upload all the files in a directory.
+                  Use the <i>"Add File"</i> button to pick files from different directories. <br />
+                  Use the <i>"Add Folder"</i> button to upload all the files in a directory.
                 </p>
               </li>
               <li>
@@ -116,12 +116,12 @@
             <st-direct-submit-file class="h-100" [accno]="getAccno(i)" [errorLog]="getLog(i)" [error]="getError(i)"
               [file]="file" [fileName]="file.name" [hasSubmitFailed]="isFail(i)" [hasSubmitPassed]="isSuccess(i)"
               [isPending]="isPending()" [isSubmitting]="isBusy(i)" [project]="sidebar.selectedProject" [isStudy]="file.isStudy"
-              (isStudyChange)="handleIsStudyChange($event)">
+              (fileChange)="handleFileChange($event)">
             </st-direct-submit-file>
           </ng-container>
           <ng-container *ngFor="let file of files; let i = index">
             <st-direct-submit-file class="h-100" [accno]="getAccno(i)" [file]="file" [fileName]="file.name"
-              [isStudy]="file.isStudy" (isStudyChange)="handleIsStudyChange($event)"></st-direct-submit-file>
+              [isStudy]="file.isStudy" (fileChange)="handleFileChange($event)"></st-direct-submit-file>
           </ng-container>
         </div>
       </div>

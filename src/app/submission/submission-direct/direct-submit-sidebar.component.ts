@@ -7,6 +7,7 @@ import { last, mergeAll, takeUntil, map, finalize } from 'rxjs/operators';
 import { AppConfig } from 'app/app.config';
 import { DirectSubmitService } from './direct-submit.service';
 import { DirectSubmitFileUploadService } from './direct-submit-file-upload.service';
+import { fileActionMap } from './direct-submit-file.component';
 
 export interface SidebarFile extends File {
   isStudy: boolean;
@@ -246,7 +247,10 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
    */
   onUploadFilesSelect(files: FileList): void {
     if (files.length > 0) {
-      this.model.files = Array.from(files) as SidebarFile[];
+      const sidebarFiles = Array.from(files) as SidebarFile[];
+      const modelFilesName = this.model.files?.map((file) => file.name);
+      const uniqueFiles = sidebarFiles.filter((file) => !modelFilesName?.includes(file.name));
+      this.model.files = [...(this.model.files || []), ...uniqueFiles];
       this.directSubmitSvc.reset();
 
       if (this.model.files.length === 1) {
@@ -274,13 +278,19 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
     return typeof request !== 'undefined' ? request[property] : '';
   }
 
-  toggleStudyFile(fileName: string, isStudy: boolean): void {
+  changeFile(fileName: string, isStudy: boolean, action: string): void {
     if (this.model.files) {
-      this.model.files.forEach((file) => {
-        if (file.name === fileName) {
-          file.isStudy = isStudy;
-        }
-      });
+      if (action === fileActionMap.SET_AS_STUDY_ACTION) {
+        this.model.files.forEach((file) => {
+          if (file.name === fileName) {
+            file.isStudy = isStudy;
+          }
+        });
+      }
+
+      if (action === fileActionMap.DELETE_FILE) {
+        this.model.files = this.model.files.filter((file) => file.name !== fileName);
+      }
 
       this.filesChange.emit(this.model.files);
     }
