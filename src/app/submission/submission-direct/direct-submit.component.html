@@ -34,30 +34,34 @@
         <div class="card">
           <div *ngIf="!sidebar.hasRequests" class="card-body">
             <p>Please fill in the form on the left-hand side to upload your studies:</p>
-            <ol>
+            <ul>
               <li>
                 <strong>
                   Provide the study files
                 </strong>
                 <p>
                   Use the <i>"Add File"</i> button to pick files from different directories. <br />
-                  Use the <i>"Add Folder"</i> button to upload all the files in a directory.
+                  Use the <i>"Add Folder"</i> button to upload all the files in a directory. <br />
                 </p>
               </li>
-              <li>
+              <li *ngIf="hasProjects">
                 <strong>Which collections are you attaching your studies to?</strong>
                 <p>Choose the collections all your files will be attached to. If no collection is selected, studies
                   will be uploaded as stand-alone and will be allocated an accession number with format
                   <i>S-BSST&lt;number&gt;</i>.
                 </p>
               </li>
-            </ol>
+            </ul>
             <strong>Are you updating existing studies?</strong>
             <p>
               <mark>
                 To update a study please provide the accession number in the <strong>"Submission"</strong> attribute within the study file (cell B1). If
                 no value for the <strong>"Submission"</strong> attribute is found, a new study will be created, with a new accession number.
               </mark>
+            </p>
+            <strong>Supported extensions for studies</strong>
+            <p>
+              The extension of the file containing the study information should be <strong>{{getSupportedFileExt()}}</strong>
             </p>
           </div>
           <div *ngIf="sidebar.hasRequests" class="card-body">
@@ -116,12 +120,12 @@
             <st-direct-submit-file class="h-100" [accno]="getAccno(i)" [errorLog]="getLog(i)" [error]="getError(i)"
               [file]="file" [fileName]="file.name" [hasSubmitFailed]="isFail(i)" [hasSubmitPassed]="isSuccess(i)"
               [isPending]="isPending()" [isSubmitting]="isBusy(i)" [project]="sidebar.selectedProject" [isStudy]="file.isStudy"
-              (fileChange)="handleFileChange($event)">
+              [showIsStudyOption]="true" (fileChange)="handleFileChange($event)">
             </st-direct-submit-file>
           </ng-container>
           <ng-container *ngFor="let file of files; let i = index">
             <st-direct-submit-file class="h-100" [accno]="getAccno(i)" [file]="file" [fileName]="file.name"
-              [isStudy]="file.isStudy" (fileChange)="handleFileChange($event)"></st-direct-submit-file>
+              [isStudy]="file.isStudy" [showIsStudyOption]="canBeStudyFile(file)" (fileChange)="handleFileChange($event)"></st-direct-submit-file>
           </ng-container>
         </div>
       </div>

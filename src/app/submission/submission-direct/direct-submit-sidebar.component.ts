@@ -143,6 +143,10 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
     return this.directSubmitSvc.isQueueStatus(status);
   }
 
+  getProjects(): string[] {
+    return this.model.projects;
+  }
+
   ngDoCheck(): void {
     this.isBulkSupport = this.fileSelector && this.fileSelector.isDirSupport;
   }
@@ -252,15 +256,6 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
       const uniqueFiles = sidebarFiles.filter((file) => !modelFilesName?.includes(file.name));
       this.model.files = [...(this.model.files || []), ...uniqueFiles];
       this.directSubmitSvc.reset();
-
-      if (this.model.files.length === 1) {
-        // If there is just one file set it as study.
-        this.model.files[0].isStudy = true;
-      } else {
-        this.model.files.map((file) => {
-          file.isStudy = false;
-        });
-      }
 
       this.filesChange.emit(this.model.files);
     }
