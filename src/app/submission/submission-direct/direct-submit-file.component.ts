@@ -15,13 +15,17 @@ export class DirectSubmitFileComponent {
   @Input() hasSubmitPassed;
   @Input() isPending;
   @Input() isStudy: boolean = false;
-  @Output() isStudyChange = new EventEmitter<object>();
+  @Output() fileChange = new EventEmitter<object>();
   @Input() isSubmitting;
   @Input() project;
 
   handleOnIsStudyChange(isStudy: boolean, fileName: string): void {
     this.isStudy = isStudy;
-    this.isStudyChange.emit({ fileName, isStudy });
+    this.fileChange.emit({ fileName, isStudy, action: 'set-as-study' });
+  }
+
+  handleOnDeleteFile(isStudy: boolean, fileName: string): void {
+    this.fileChange.emit({ fileName, isStudy, action: 'delete-file' });
   }
 
   get id(): string {

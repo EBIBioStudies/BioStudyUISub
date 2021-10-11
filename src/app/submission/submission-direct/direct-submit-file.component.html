@@ -31,11 +31,19 @@
         <st-subm-results-tree [log]="errorLog"></st-subm-results-tree>
       </div>
     </div>
-    <div *ngIf="!hasSubmitFailed && !hasSubmitPassed" class="card-footer text-muted" [ngClass]="{'st-is-study': isStudy}"
-      (click)="handleOnIsStudyChange(!isStudy, fileName)">
-      <label class="sr-only" [for]="id">Is {{file.name}} containing the study information?</label>
-      <input [id]="id" type="checkbox" [checked]="isStudy">
-      Study File
+    <div *ngIf="!hasSubmitFailed && !hasSubmitPassed" class="card-footer d-flex align-items-center" [ngClass]="{'st-is-study': isStudy}">
+      <div class="flex-grow-1 text-muted d-inline" (click)="handleOnIsStudyChange(!isStudy, fileName)">
+        <label class="sr-only" [for]="id">Is {{file.name}} containing the study information?</label>
+        <input [id]="id" type="checkbox" [checked]="isStudy">
+        Study File
+      </div>
+      <button class="btn btn-outline-secondary btn-sm"
+        type="button"
+        aria-label="Delete file '{{file.name}}'"
+        title="Delete file '{{file.name}}'"
+        (click)="handleOnDeleteFile(!isStudy, fileName)">
+        <i class="fas fa-trash-alt fa-fw" aria-hidden="true"></i>
+      </button>
     </div>
   </div>
 </ng-container>

@@ -45,9 +45,9 @@ export class DirectSubmitComponent {
     this.sidebar.model.files.filter((file) => file.isStudy);
   }
 
-  handleIsStudyChange(args: { fileName: string; isStudy: boolean }): void {
-    const { fileName, isStudy } = args;
-    this.sidebar.toggleStudyFile(fileName, isStudy);
+  handleFileChange(args: { fileName: string; isStudy: boolean; action: string }): void {
+    const { fileName, isStudy, action } = args;
+    this.sidebar.changeFile(fileName, isStudy, action);
   }
 
   isBusy(studyIdx: number): boolean {
