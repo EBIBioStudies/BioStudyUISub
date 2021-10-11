@@ -1,5 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
+export const fileActionMap = {
+  SET_AS_STUDY_ACTION: 'set-as-study',
+  DELETE_FILE: 'delete-file'
+};
+
 @Component({
   selector: 'st-direct-submit-file',
   templateUrl: './direct-submit-file.component.html',
@@ -21,11 +26,11 @@ export class DirectSubmitFileComponent {
 
   handleOnIsStudyChange(isStudy: boolean, fileName: string): void {
     this.isStudy = isStudy;
-    this.fileChange.emit({ fileName, isStudy, action: 'set-as-study' });
+    this.fileChange.emit({ fileName, isStudy, action: fileActionMap.SET_AS_STUDY_ACTION });
   }
 
   handleOnDeleteFile(isStudy: boolean, fileName: string): void {
-    this.fileChange.emit({ fileName, isStudy, action: 'delete-file' });
+    this.fileChange.emit({ fileName, isStudy, action: fileActionMap.DELETE_FILE });
   }
 
   get id(): string {

@@ -7,6 +7,7 @@ import { last, mergeAll, takeUntil, map, finalize } from 'rxjs/operators';
 import { AppConfig } from 'app/app.config';
 import { DirectSubmitService } from './direct-submit.service';
 import { DirectSubmitFileUploadService } from './direct-submit-file-upload.service';
+import { fileActionMap } from './direct-submit-file.component';
 
 export interface SidebarFile extends File {
   isStudy: boolean;
@@ -279,7 +280,7 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
 
   changeFile(fileName: string, isStudy: boolean, action: string): void {
     if (this.model.files) {
-      if (action === 'set-as-study') {
+      if (action === fileActionMap.SET_AS_STUDY_ACTION) {
         this.model.files.forEach((file) => {
           if (file.name === fileName) {
             file.isStudy = isStudy;
@@ -287,7 +288,7 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
         });
       }
 
-      if (action === 'delete-file') {
+      if (action === fileActionMap.DELETE_FILE) {
         this.model.files = this.model.files.filter((file) => file.name !== fileName);
       }
 
