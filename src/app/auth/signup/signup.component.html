@@ -11,13 +11,13 @@
       <h4 class="card-title">Registration</h4>
       <p class="card-subtitle mb-2 text-muted">
         Please provide the information below to create a new account. <br />
-        <mark>Note that both the <strong>Full name</strong> and <strong>ORCID</strong> fields are optional.</mark>
+        <mark>Note that <strong>ORCID</strong> field is optional.</mark>
       </p>
       <form name="signUpForm" (ngSubmit)="onSubmit(signUpForm)" #signUpForm="ngForm" data-testid="signUpForm" novalidate>
-        <div class="form-group">
-          <label for="name">Full name</label>
-          <span class="text-muted float-right"><i>Optional</i></span>
-          <input type="text" class="form-control" id="name" name="name" [(ngModel)]="model.name" autocomplete="off" autofocus/>
+        <div class="form-group" [ngClass]="{'was-validated': name.invalid && name.touched}">
+          <label for="name">Name</label>
+          <input type="text" class="form-control" id="name" name="name" [(ngModel)]="model.name" #name="ngModel" autocomplete="off" autofocus required/>
+          <div class="invalid-feedback" *ngIf="email.invalid && email.touched">Please enter your full name</div>
         </div>
         <div class="form-group" [ngClass]="{'was-validated': email.invalid && email.touched}">
           <label for="email">Email</label>
@@ -41,6 +41,7 @@
           </span>
           <st-orcid-input-box
             #orcid="ngModel"
+            name="orcid"
             [(ngModel)]="model.orcid"
             [isSmall]="false">
           </st-orcid-input-box>
