@@ -1,3 +1,4 @@
+import { HelpModule } from './help/help.module';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { PathLocationStrategy, LocationStrategy } from '@angular/common';
@@ -25,7 +26,6 @@ import { SubmissionDirectModule } from './submission/submission-direct/submissio
 import { SubmissionEditModule } from './submission/submission-edit/submission-edit.module';
 import { SubmissionListModule } from './submission/submission-list/submission-list.module';
 import { FileModule } from './file/file.module';
-import { HelpComponent } from './help/help.component';
 import { SharedModule } from 'app/shared/shared.module';
 import { NotFoundModule } from 'app/not-found/not-found.module';
 
@@ -67,9 +67,10 @@ function initRecaptchaSettings(config: AppConfig): RecaptchaSettings {
     AuthModule,
     ThemeModule,
     CoreModule,
-    NotFoundModule
+    NotFoundModule,
+    HelpModule
   ],
-  declarations: [AppComponent, HelpComponent],
+  declarations: [AppComponent],
   providers: [
     AppConfig,
     { provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true },

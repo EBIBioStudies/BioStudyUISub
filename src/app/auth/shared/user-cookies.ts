@@ -11,6 +11,7 @@ export class UserCookies {
   COOKIE_PATH: string = '/';
   USER: string = 'BioStudiesUser';
   BACKEND_TOKEN_NAME: string = 'BIOSTDSESS';
+  HELP_COOKIE_NAME: string = 'BioStudiesSTShowHelp';
 
   constructor(private cookieService: CookieService) {}
 
@@ -29,6 +30,10 @@ export class UserCookies {
 
   getUser(): UserInfo {
     return JSON.parse(localStorage.getItem(this.USER) || '{}');
+  }
+
+  isHelpCookieSet(): boolean {
+    return this.cookieService.check(this.HELP_COOKIE_NAME);
   }
 
   hasSessionExpired(environment: string): boolean {
@@ -55,6 +60,10 @@ export class UserCookies {
 
   setUser(user: UserInfo): void {
     localStorage.setItem(this.USER, JSON.stringify(user));
+  }
+
+  setHelpCookie(): void {
+    this.cookieService.set(this.HELP_COOKIE_NAME, 'true', 7, this.COOKIE_PATH, undefined, false, 'Strict');
   }
 
   private getBackendCookieWithEnv(environment: string): string {

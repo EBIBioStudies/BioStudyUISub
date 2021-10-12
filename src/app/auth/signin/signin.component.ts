@@ -37,7 +37,9 @@ export class SignInComponent implements OnInit {
       this.authService.login(this.model).subscribe(
         (user: UserInfo) => {
           this.userSession.create(user);
-          this.router.navigateByUrl(next);
+          this.router.navigateByUrl(next).then(() => {
+            this.userSession.showHelpModal();
+          });
         },
         (error: ServerError) => {
           this.isLoading = false;
