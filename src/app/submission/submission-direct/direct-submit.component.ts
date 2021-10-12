@@ -13,6 +13,7 @@ export class DirectSubmitComponent {
   collapseSideBar: boolean = false;
   files: any;
   studies: any;
+  supportedDirectSubmitFileExt: string[] = ['.json', '.xml', '.tsv', '.xlsx'];
 
   @ViewChild('sidebar', { static: true })
   private sidebar;
@@ -29,6 +30,10 @@ export class DirectSubmitComponent {
     return window.location;
   }
 
+  get hasProjects(): boolean {
+    return this.sidebar.getProjects().length > 0;
+  }
+
   getAccno(studyIdx: number): string {
     return this.sidebar.studyProp(studyIdx, 'accno');
   }
@@ -41,8 +46,8 @@ export class DirectSubmitComponent {
     return this.sidebar.studyProp(studyIdx, 'log');
   }
 
-  getStudyFiles(): void {
-    this.sidebar.model.files.filter((file) => file.isStudy);
+  getSupportedFileExt(): string {
+    return this.supportedDirectSubmitFileExt.join(', ').replace(/, ([^,]*)$/, ' or $1');
   }
 
   handleFileChange(args: { fileName: string; isStudy: boolean; action: string }): void {
@@ -64,6 +69,10 @@ export class DirectSubmitComponent {
 
   isSuccess(studyIdx: number): boolean {
     return this.sidebar.studyProp(studyIdx, 'successful');
+  }
+
+  canBeStudyFile(file: File): boolean {
+    return new RegExp(`(.*?).(${this.supportedDirectSubmitFileExt.join('|')})$`).test(file.name);
   }
 
   onFilesChange(files: SidebarFile[]): void {

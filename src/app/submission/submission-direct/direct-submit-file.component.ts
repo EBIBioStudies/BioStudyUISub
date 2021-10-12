@@ -23,6 +23,7 @@ export class DirectSubmitFileComponent {
   @Output() fileChange = new EventEmitter<object>();
   @Input() isSubmitting;
   @Input() project;
+  @Input() showIsStudyOption: boolean = false;
 
   handleOnIsStudyChange(isStudy: boolean, fileName: string): void {
     this.isStudy = isStudy;
