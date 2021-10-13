@@ -1,55 +1,60 @@
-import { async } from '@angular/core/testing';
+import { async, TestBed } from '@angular/core/testing';
 import { AuthService, UserData, UserSession } from 'app/auth/shared';
-import { of, Observable } from 'rxjs';
-import { UserInfo, ExtendedUserInfo } from './model';
+import { of, Observable, Subject, ReplaySubject } from 'rxjs';
+import { UserInfo } from './model';
+import { SubmissionService } from 'app/submission/submission-shared/submission.service';
+
+class UserSessionMock {
+  created$: Subject<boolean> = new ReplaySubject<boolean>(1);
+
+  constructor() {
+    this.created$.next(true);
+  }
+
+  update() {}
+}
+
+class AuthServiceMock {
+  static user: UserInfo = {
+    sessid: '123',
+    username: 'vasya',
+    email: 'vasya@pupkin.com',
+    superuser: false,
+    secret: 'secret',
+    fullname: 'Vasya',
+    aux: {
+      orcid: '1234-5678-9999'
+    }
+  };
+
+  getUserProfile(): Observable<UserInfo> {
+    return of(AuthServiceMock.user);
+  }
+}
+
+class SubmissionServiceMock {
+  getProjects(): Observable<[]> {
+    return of([]);
+  }
+}
 
 describe('UserData', () => {
-  let submService;
-  let userCookies;
-  let appConfig;
-
   beforeEach(() => {
-    submService = {
-      getProjects(): Observable<[]> {
-        return of([]);
-      }
-    };
-
-    userCookies = {
-      setLoginToken(): void {},
-      setUser(): void {}
-    };
-
-    appConfig = {
-      environment: 'LOCAL'
-    };
+    TestBed.configureTestingModule({
+      providers: [
+        UserData,
+        { provide: UserSession, useValue: new UserSessionMock() },
+        { provide: AuthService, useValue: new AuthServiceMock() },
+        { provide: SubmissionService, useValue: new SubmissionServiceMock() }
+      ]
+    }).compileComponents();
   });
 
   it('should return valid user info', async(() => {
-    const user: UserInfo = {
-      sessid: '123',
-      username: 'vasya',
-      email: 'vasya@pupkin.com',
-      superuser: false,
-      secret: 'secret',
-      fullname: 'Vasya',
-      aux: {
-        orcid: '1234-5678-9999'
-      }
-    };
+    const fixture: UserData = TestBed.inject(UserData);
 
-    const authService = {
-      getUserProfile(): Observable<UserInfo> {
-        return of(user);
-      }
-    };
-
-    const session = new UserSession(userCookies, appConfig);
-
-    new UserData(session, authService as AuthService, submService).info$.subscribe((info) => {
-      expect(info).toEqual(user as ExtendedUserInfo);
+    fixture.info$.subscribe((info) => {
+      expect(info).toEqual(AuthServiceMock.user);
     });
-
-    session.create(user);
   }));
 });

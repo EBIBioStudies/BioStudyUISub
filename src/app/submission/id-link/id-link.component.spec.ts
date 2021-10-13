@@ -17,16 +17,9 @@ describe('IdLinkComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        IdLinkComponent,
-      ],
-      imports: [
-        FormsModule,
-        TypeaheadModule.forRoot()
-      ],
-      providers: [
-        {provide: IdLinkService, useValue: new IdLinkServiceMock()}
-      ]
+      declarations: [IdLinkComponent],
+      imports: [FormsModule, TypeaheadModule.forRoot()],
+      providers: [{ provide: IdLinkService, useValue: new IdLinkServiceMock() }]
     }).compileComponents();
   }));
 
