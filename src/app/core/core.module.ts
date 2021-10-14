@@ -12,9 +12,15 @@ import { ErrorMessageService } from './errors/error-message.service';
 import { NotificationService } from './notification/notification.service';
 import { ErrorService } from './errors/error.service';
 import { LogService } from './logger/log.service';
+import { DateFormatDirective } from './directives/date-format.directive';
+import { PluralPipe } from './pipes/plural.pipe';
+import { StripHtmlPipe } from './pipes/strip-html.pipe';
+import { ValidateOnBlurDirective } from './directives/validate-onblur.directive';
 
 @NgModule({
   imports: [HttpClientModule],
+  declarations: [DateFormatDirective, ValidateOnBlurDirective, StripHtmlPipe, PluralPipe],
+  exports: [DateFormatDirective, ValidateOnBlurDirective, StripHtmlPipe, PluralPipe],
   providers: [
     ErrorMessageService,
     NotificationService,

@@ -8,7 +8,7 @@ import { AppConfig } from 'app/app.config';
 import { DateCellComponent } from './ag-grid/date-cell.component';
 import { DateFilterComponent } from './ag-grid/date-filter.component';
 import { GridOptions } from 'ag-grid-community/main';
-import { ModalService } from 'app/shared/modal.service';
+import { ModalService } from 'app/shared/modal/modal.service';
 import { StatusCellComponent } from './ag-grid/status-cell.component';
 import { SubmissionService } from '../submission-shared/submission.service';
 import { SubmissionStatus } from 'app/submission/submission-shared/submission.status';

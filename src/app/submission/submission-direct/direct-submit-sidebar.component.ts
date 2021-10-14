@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild, DoCheck, OnDestroy } from '@angular/core';
 import { UserData } from 'app/auth/shared';
 import { FileUploadButtonComponent } from 'app/shared/file-upload-button/file-upload-button.component';
-import { ModalService } from 'app/shared/modal.service';
+import { ModalService } from 'app/shared/modal/modal.service';
 import { Observable, from, Subject, Subscription, of } from 'rxjs';
 import { last, mergeAll, takeUntil, map, finalize } from 'rxjs/operators';
 import { AppConfig } from 'app/app.config';

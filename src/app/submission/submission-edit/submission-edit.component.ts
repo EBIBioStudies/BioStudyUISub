@@ -7,7 +7,7 @@ import { AppConfig } from 'app/app.config';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { ErrorService } from 'app/core/errors/error.service';
 import { Location } from '@angular/common';
-import { ModalService } from 'app/shared/modal.service';
+import { ModalService } from 'app/shared/modal/modal.service';
 import { PageTabSubmission } from 'app/submission/submission-shared/model';
 import { SectionForm } from './shared/model/section-form.model';
 import { SubmEditService } from './shared/subm-edit.service';

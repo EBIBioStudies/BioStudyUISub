@@ -4,7 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subject, Subscription } from 'rxjs';
 import { UserData } from 'app/auth/shared';
 import { takeUntil } from 'rxjs/operators';
-import { ModalService } from 'app/shared/modal.service';
+import { ModalService } from 'app/shared/modal/modal.service';
 import { TypeBase, TableType, SectionType, DisplayType } from 'app/submission/submission-shared/model/templates';
 import { scrollToFormControl } from 'app/utils/scroll.utils';
 import { AddSubmTypeModalComponent } from '../add-subm-type-modal/add-subm-type-modal.component';
