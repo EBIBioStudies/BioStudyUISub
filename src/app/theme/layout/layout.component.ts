@@ -35,3 +35,14 @@ export class LayoutHeaderComponent {}
   template: `<ng-content></ng-content>`
 })
 export class LayoutColumnComponent {}
+
+@Component({
+  selector: 'st-layout-auth',
+  template: `
+    <div class="layout-auth">
+      <ng-content></ng-content>
+    </div>
+  `,
+  styleUrls: ['./layout.component.scss']
+})
+export class LayoutAuthComponent {}

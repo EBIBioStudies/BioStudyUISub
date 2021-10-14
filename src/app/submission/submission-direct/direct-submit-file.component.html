@@ -39,11 +39,12 @@
           Study File
         </div>
       </div>
-      <button class="btn btn-outline-secondary btn-sm"
+      <button class="btn btn-outline-danger btn-sm"
         type="button"
         aria-label="Delete file '{{file.name}}'"
         title="Delete file '{{file.name}}'"
-        (click)="handleOnDeleteFile(!isStudy, fileName)">
+        (click)="handleOnDeleteFile(!isStudy, fileName)"
+        tooltip="Delete file '{{file.name}}'">
         <i class="fas fa-trash-alt fa-fw" aria-hidden="true"></i>
       </button>
     </div>

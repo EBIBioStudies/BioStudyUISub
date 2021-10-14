@@ -1,7 +1,6 @@
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AlertModule } from 'ngx-bootstrap/alert';
-import { AuthContainerComponent } from './auth-container.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
@@ -49,7 +48,6 @@ import { ValidateOnBlurDirective } from './validate-onblur.directive';
   providers: [ModalService, ServerSentEventService],
   declarations: [
     ContainerRootComponent,
-    AuthContainerComponent,
     ORCIDInputBoxComponent,
     FileUploadButtonComponent,
     ConfirmDialogComponent,
@@ -78,7 +76,6 @@ import { ValidateOnBlurDirective } from './validate-onblur.directive';
     CollapseModule,
     AlertModule,
     ContainerRootComponent,
-    AuthContainerComponent,
     ORCIDInputBoxComponent,
     FileUploadButtonComponent,
     ConfirmDialogComponent,
