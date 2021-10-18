@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
@@ -6,9 +6,20 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
   templateUrl: './help-modal.component.html'
 })
 export class HelpModalComponent {
+  isHiddenForever: boolean = false;
+  @Input() onHideForever: () => void = () => {};
+
   constructor(public bsModalRef: BsModalRef) {}
 
   hide(): void {
     this.bsModalRef.hide();
+
+    if (this.isHiddenForever) {
+      this.onHideForever();
+    }
+  }
+
+  hideForever(): void {
+    this.isHiddenForever = !this.isHiddenForever;
   }
 }

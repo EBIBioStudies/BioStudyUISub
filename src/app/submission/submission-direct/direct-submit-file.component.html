@@ -33,11 +33,11 @@
     </div>
     <div *ngIf="!hasSubmitFailed && !hasSubmitPassed" class="card-footer d-flex align-items-center" [ngClass]="{'st-is-study': isStudy}">
       <div class="flex-grow-1">
-        <div *ngIf="showIsStudyOption" class="text-muted d-inline" (click)="handleOnIsStudyChange(!isStudy, fileName)">
-          <label class="sr-only" [for]="id">Is {{file.name}} containing the study information?</label>
-          <input [id]="id" type="checkbox" [checked]="isStudy">
+        <button *ngIf="showIsStudyOption" class="btn btn-link text-muted d-inline p-0" (click)="handleOnIsStudyChange(!isStudy, fileName)">
+          <label class="sr-only" for="is-study-checkbox-'{{file.name}}'">Is {{file.name}} containing the study information?</label>
+          <input id="is-study-checkbox-'{{file.name}}'" type="checkbox" [checked]="isStudy">
           Study File
-        </div>
+        </button>
       </div>
       <button class="btn btn-outline-danger btn-sm"
         type="button"

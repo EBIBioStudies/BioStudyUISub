@@ -20,6 +20,11 @@
     </ul>
   </div>
   <div class="modal-footer">
+    <button type="button" class="btn btn-link d-inline text-muted" (click)="hideForever()">
+      <label class="sr-only" for="hide-forever-check">Do not show help modal again?</label>
+      <input id="hide-forever-check" type="checkbox" [checked]="isHiddenForever">
+      Don't show this again
+    </button>
     <button type="button" class="btn btn-primary" (click)="hide()" aria-label="Close" title="Close">Close</button>
   </div>
 </div>

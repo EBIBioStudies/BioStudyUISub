@@ -63,7 +63,16 @@ export class UserCookies {
   }
 
   setHelpCookie(): void {
-    this.cookieService.set(this.HELP_COOKIE_NAME, 'true', 7, this.COOKIE_PATH, undefined, false, 'Strict');
+    this.cookieService.set(
+      this.HELP_COOKIE_NAME,
+      'true',
+      // This cookie should not expire and the only way to achieve this is to set the "expires" to a far future date.
+      new Date('2038-01-19'),
+      this.COOKIE_PATH,
+      undefined,
+      false,
+      'Strict'
+    );
   }
 
   private getBackendCookieWithEnv(environment: string): string {

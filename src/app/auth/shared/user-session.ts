@@ -60,10 +60,17 @@ export class UserSession {
     return this.userCookies.getLoginToken();
   }
 
+  setHelpModelCookie(): void {
+    this.userCookies.setHelpCookie();
+  }
+
   showHelpModal(): void {
     if (!this.userCookies.isHelpCookieSet()) {
-      this.modalService.show(HelpModalComponent, { ignoreBackdropClick: true, class: 'modal-lg' });
-      this.userCookies.setHelpCookie();
+      this.modalService.show(HelpModalComponent, {
+        initialState: { onHideForever: this.setHelpModelCookie.bind(this) },
+        ignoreBackdropClick: true,
+        class: 'modal-lg'
+      });
     }
   }
 
