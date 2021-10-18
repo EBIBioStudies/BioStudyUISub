@@ -38,6 +38,10 @@ export class SubmTableComponent implements OnInit, DoCheck {
     return this.submTableErrorNum;
   }
 
+  get canRemove(): boolean {
+    return !this.tableForm.isRequired && !this.tableForm.isReadonly && !this.readonly;
+  }
+
   /**
    * Counts the number of errors if the table is not empty.
    */
@@ -88,6 +92,10 @@ export class SubmTableComponent implements OnInit, DoCheck {
     tableData.forEach((rowCells) => {
       this.tableForm.addRowWithData(rowCells, headerRow);
     });
+  }
+
+  onRemoveSection(): void {
+    this.tableForm.reset();
   }
 
   openPasteTableDataModal(): void {

@@ -28,6 +28,9 @@
     >
       <i class="fas fa-paste"></i> Paste
     </button>
+    <button *ngIf="canRemove" type="button" class="btn btn-link text-danger" tooltip="Delete section" (click)="onRemoveSection()">
+      <i class="fas fa-trash"></i> Delete
+    </button>
   </div>
 
   <div class="card-body">
