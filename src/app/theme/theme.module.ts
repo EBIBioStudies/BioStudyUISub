@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { CommonModule } from '@angular/common';
 import { SharedModule } from 'app/shared/shared.module';
 import { HeaderComponent } from './header/header.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
@@ -20,7 +22,7 @@ const COMPONENTS = [
 ];
 
 @NgModule({
-  imports: [RouterModule, SharedModule],
+  imports: [CommonModule, RouterModule, SharedModule, TooltipModule],
   exports: [...COMPONENTS],
   declarations: [...COMPONENTS]
 })

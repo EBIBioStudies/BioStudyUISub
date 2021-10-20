@@ -1,6 +1,9 @@
 import { NgModule } from '@angular/core';
 import { AgGridModule } from 'ag-grid-angular';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ActionButtonsCellComponent } from './ag-grid/action-buttons-cell.component';
 import { DateCellComponent } from './ag-grid/date-cell.component';
 import { DateFilterComponent } from './ag-grid/date-filter.component';
@@ -13,7 +16,10 @@ import { TextFilterComponent } from './ag-grid/text-filter.component';
 
 @NgModule({
   imports: [
+    CommonModule,
+    FormsModule,
     SharedModule,
+    TabsModule,
     AgGridModule.withComponents([
       ActionButtonsCellComponent,
       DateCellComponent,
