@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SortablejsModule } from 'ngx-sortablejs';
+import { CoreModule } from 'app/core/core.module';
 import { SharedModule } from 'app/shared/shared.module';
 import { FileModule } from 'app/file/file.module';
 import { ThemeModule } from 'app/theme/theme.module';
@@ -34,6 +35,7 @@ import { NotFoundModule } from 'app/not-found/not-found.module';
 
 @NgModule({
   imports: [
+    CoreModule,
     SharedModule,
     RouterModule,
     FileModule,

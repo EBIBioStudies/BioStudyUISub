@@ -3,6 +3,8 @@ import { UserData } from 'app/auth/shared';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { PasteTableDataModalComponent } from './paste-table-data-modal.component';
 import { TableForm } from '../../shared/model/table-form.model';
+import { ConfirmDialogComponent } from 'app/shared/modal/confirm-dialog.component';
+import { ModalService } from 'app/shared/modal/modal.service';
 
 interface TableOperation {
   callback: () => void;
@@ -24,7 +26,12 @@ export class SubmTableComponent implements OnInit, DoCheck {
   private submTableUniqueColNames: string[] = [];
   private colTypeNames: string[] = [];
 
-  constructor(private changeRef: ChangeDetectorRef, public userData: UserData, private modalService: BsModalService) {}
+  constructor(
+    private changeRef: ChangeDetectorRef,
+    public userData: UserData,
+    private modalService: BsModalService,
+    private stModalService: ModalService
+  ) {}
 
   get allowedColNames(): string[] {
     return this.submTableAllowedColNames;
@@ -95,7 +102,17 @@ export class SubmTableComponent implements OnInit, DoCheck {
   }
 
   onRemoveSection(): void {
-    this.tableForm.reset();
+    this.stModalService
+      .confirm(
+        'Are you sure you want to permanently remove this section?',
+        `Delete ${this.tableForm.prettyName} section`,
+        'Delete'
+      )
+      .subscribe((hasConfirmed) => {
+        if (hasConfirmed) {
+          this.tableForm.reset();
+        }
+      });
   }
 
   openPasteTableDataModal(): void {
