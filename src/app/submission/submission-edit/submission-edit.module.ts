@@ -1,6 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SortablejsModule } from 'ngx-sortablejs';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+import { CommonModule } from '@angular/common';
 import { CoreModule } from 'app/core/core.module';
 import { SharedModule } from 'app/shared/shared.module';
 import { FileModule } from 'app/file/file.module';
@@ -35,6 +40,9 @@ import { NotFoundModule } from 'app/not-found/not-found.module';
 
 @NgModule({
   imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     CoreModule,
     SharedModule,
     RouterModule,
@@ -46,7 +54,10 @@ import { NotFoundModule } from 'app/not-found/not-found.module';
     PubMedIdSearchModule,
     SortablejsModule,
     ThemeModule,
-    NotFoundModule
+    NotFoundModule,
+    TooltipModule,
+    TypeaheadModule,
+    TabsModule
   ],
   providers: [SubmEditService],
   declarations: [

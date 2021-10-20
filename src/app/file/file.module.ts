@@ -1,5 +1,7 @@
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { AgGridModule } from 'ag-grid-angular';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { DirectoryPathComponent } from './file-list/directory-path/directory-path.component';
 import { DirectorySidebarComponent } from './file-list/directory-sidebar/directory-sidebar.component';
 import { FTPUploadButtonComponent } from './file-list/ftp-upload-button/ftp-upload-button.component';
@@ -22,16 +24,20 @@ import { UploadFileModalComponent } from './upload-file-modal/upload-file-modal.
 import { UploadErrorModalComponent } from './upload-error-modal/upload-error-modal.component';
 import { UserData } from 'app/auth/shared';
 import { CoreModule } from 'app/core/core.module';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 
 @NgModule({
   imports: [
+    CommonModule,
     MarkdownModule.forChild(),
     RouterModule,
     SharedModule,
     AgGridModule.withComponents([FileActionsCellComponent, FileTypeCellComponent, ProgressCellComponent]),
     AccordionModule.forRoot(),
     ThemeModule,
-    CoreModule
+    CoreModule,
+    FormsModule,
+    TabsModule
   ],
   declarations: [
     FileListComponent,
