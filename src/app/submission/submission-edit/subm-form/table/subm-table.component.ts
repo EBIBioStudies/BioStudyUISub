@@ -3,7 +3,6 @@ import { UserData } from 'app/auth/shared';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { PasteTableDataModalComponent } from './paste-table-data-modal.component';
 import { TableForm } from '../../shared/model/table-form.model';
-import { ConfirmDialogComponent } from 'app/shared/modal/confirm-dialog.component';
 import { ModalService } from 'app/shared/modal/modal.service';
 
 interface TableOperation {
