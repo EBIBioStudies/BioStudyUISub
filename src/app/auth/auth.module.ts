@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
+import { ModalModule } from 'ngx-bootstrap/modal';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from 'app/shared/shared.module';
@@ -17,7 +18,16 @@ import { Equals2Directive } from './password-reset/equals2.directive';
 import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
-  imports: [CommonModule, RouterModule, RecaptchaModule, RecaptchaFormsModule, SharedModule, ThemeModule, FormsModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    RecaptchaModule,
+    RecaptchaFormsModule,
+    SharedModule,
+    ThemeModule,
+    FormsModule,
+    ModalModule
+  ],
   providers: [AuthService, UserSession, UserData, CookieService],
   declarations: [
     SignInComponent,
