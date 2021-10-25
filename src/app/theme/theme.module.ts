@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { CommonModule } from '@angular/common';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { SharedModule } from 'app/shared/shared.module';
 import { HeaderComponent } from './header/header.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
@@ -22,7 +23,7 @@ const COMPONENTS = [
 ];
 
 @NgModule({
-  imports: [CommonModule, RouterModule, SharedModule, TooltipModule],
+  imports: [CommonModule, RouterModule, SharedModule, TooltipModule, BsDropdownModule],
   exports: [...COMPONENTS],
   declarations: [...COMPONENTS]
 })
