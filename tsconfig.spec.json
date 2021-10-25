@@ -2,7 +2,6 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "baseUrl": "./src",
-    "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "outDir": "./out-tsc/spec",
     "types": [

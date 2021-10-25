@@ -17,36 +17,6 @@
     "postinstall": "ngcc",
     "test": "jest --ci"
   },
-  "jest": {
-    "preset": "jest-preset-angular",
-    "clearMocks": true,
-    "collectCoverage": true,
-    "setupFilesAfterEnv": [
-      "<rootDir>/src/tests/setupJestAfterEnv.ts"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "statements": 14.62,
-        "branches": 14.15,
-        "functions": 11.88,
-        "lines": 15.07
-      }
-    },
-    "collectCoverageFrom": [
-      "**/*.ts",
-      "!**/*.extensions.ts",
-      "!**/*.config.ts",
-      "!**/*.module.ts",
-      "!**/*.d.ts",
-      "!**/*Mocks.ts",
-      "!**/polyfills.ts",
-      "!**/main.ts",
-      "!**/index.ts"
-    ],
-    "coveragePathIgnorePatterns": [
-      "server"
-    ]
-  },
   "dependencies": {
     "@angular/animations": "10.0.12",
     "@angular/common": "10.0.12",
@@ -86,8 +56,8 @@
     "@angular-devkit/build-angular": "0.1000.7",
     "@angular/cli": "10.0.7",
     "@angular/compiler-cli": "10.0.12",
-    "@testing-library/angular": "10.0.2",
-    "@testing-library/jest-dom": "5.11.4",
+    "@testing-library/angular": "10.11.0",
+    "@testing-library/jest-dom": "5.14.1",
     "@types/amqplib": "0.5.13",
     "@types/compression": "1.7.0",
     "@types/config": "0.0.36",
@@ -95,7 +65,7 @@
     "@types/express-http-proxy": "1.6.1",
     "@types/express-winston": "4.0.0",
     "@types/helmet": "0.0.47",
-    "@types/jest": "26.0.10",
+    "@types/jest": "27.0.2",
     "@types/jsdom": "16.2.3",
     "@types/node": "14.6.0",
     "@types/pluralize": "0.0.29",
@@ -115,8 +85,9 @@
     "forever": "2.0.0",
     "gulp": "4.0.0",
     "gulp-zip": "3.2.0",
-    "jest": "26.4.2",
-    "jest-preset-angular": "8.3.1",
+    "jest": "27.3.1",
+    "jest-preset-angular": "10.0.1",
+    "msw": "^0.35.0",
     "nodemon": "1.19.1",
     "npm-run-all": "4.1.5",
     "prettier": "2.2.0",
