@@ -197,7 +197,9 @@ export class SubmListComponent implements OnDestroy, OnInit {
       },
 
       onEdit: (accno: string) => {
-        this.router.navigate(['/edit', accno]);
+        const pathParams = row.method ? { method: row.method } : {};
+
+        this.router.navigate([`/edit/${accno}`, pathParams]);
       },
 
       onView: (accno: string) => {
