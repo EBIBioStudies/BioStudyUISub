@@ -7,7 +7,7 @@ import { DirectSubmitComponent } from './submission/submission-direct/direct-sub
 import { FileListComponent } from './file/file-list/file-list.component';
 import { HelpComponent } from './help/help.component';
 import { NgModule } from '@angular/core';
-import { NotFoundComponent } from 'app/not-found/not-found.component';
+import { NotFoundComponent } from 'app/core/components/error/not-found.component';
 import { PasswordResetComponent } from './auth/password-reset/password-reset.component';
 import { PasswordResetReqComponent } from './auth/password-reset/password-reset-req.component';
 import { SignInComponent } from './auth/signin/signin.component';
@@ -37,6 +37,12 @@ const appRoutes: Routes = [
     path: 'edit/:accno',
     component: SubmissionEditComponent,
     runGuardsAndResolvers: 'always',
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'new',
+    component: SubmissionEditComponent,
+    data: { isNew: true },
     canActivate: [AuthGuard]
   },
   {

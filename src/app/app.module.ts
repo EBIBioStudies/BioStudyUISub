@@ -27,7 +27,6 @@ import { SubmissionEditModule } from './submission/submission-edit/submission-ed
 import { SubmissionListModule } from './submission/submission-list/submission-list.module';
 import { FileModule } from './file/file.module';
 import { SharedModule } from 'app/shared/shared.module';
-import { NotFoundModule } from 'app/not-found/not-found.module';
 
 export function initConfig(config: AppConfig): () => Promise<any> {
   return () => config.load();
@@ -67,7 +66,6 @@ function initRecaptchaSettings(config: AppConfig): RecaptchaSettings {
     AuthModule,
     ThemeModule,
     CoreModule,
-    NotFoundModule,
     HelpModule
   ],
   declarations: [AppComponent],

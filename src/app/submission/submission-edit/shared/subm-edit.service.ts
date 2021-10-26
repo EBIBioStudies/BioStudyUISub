@@ -5,7 +5,8 @@ import {
   SubmValidationErrors,
   Submission,
   SubmissionValidator,
-  Table
+  Table,
+  getTemplatesForCollections
 } from 'app/submission/submission-shared/model';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { PageTab, SelectValueType } from 'app/submission/submission-shared/model';
@@ -157,6 +158,27 @@ export class SubmEditService {
 
   get isRevised(): boolean {
     return this.submModel ? this.submModel.isRevised : false;
+  }
+
+  createEmptySubmission(templateName?: string): Observable<string> {
+    return this.userData.projectAccNumbers$.pipe(
+      switchMap((projectNames) => {
+        const templates = getTemplatesForCollections(projectNames);
+        const templateInfo = templates.find(
+          ({ collection }) => collection.toLowerCase() === templateName?.toLowerCase()
+        );
+
+        if (templateInfo !== undefined) {
+          const { name, collection } = templateInfo;
+
+          return this.submService.createDraftSubmission(collection, name);
+        }
+
+        throw new Error(
+          `Looks like you don't have permissions to see "${templateName}" collection or the study template doesn't exist`
+        );
+      })
+    );
   }
 
   loadSubmission(accno: string, setDefaults?: boolean): Observable<PageTabSubmission> {

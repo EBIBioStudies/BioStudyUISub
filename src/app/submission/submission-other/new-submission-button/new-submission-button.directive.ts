@@ -1,8 +1,7 @@
 import { Directive, HostBinding, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserData } from 'app/auth/shared';
-import { getSubmissionTemplates, PageTab } from 'app/submission/submission-shared/model';
-import { SubmissionToPageTabService } from 'app/submission/submission-shared/submission-to-pagetab.service';
+import { getTemplatesForCollections, TemplateDetail } from 'app/submission/submission-shared/model';
 import { SubmissionService } from 'app/submission/submission-shared/submission.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { AddSubmModalComponent } from '../add-subm-modal/add-subm-modal.component';
@@ -17,8 +16,7 @@ export class NewSubmissionButtonDirective {
     private modalService: BsModalService,
     private submService: SubmissionService,
     private userData: UserData,
-    private router: Router,
-    private submissionToPageTab: SubmissionToPageTabService
+    private router: Router
   ) {}
 
   @HostListener('click', ['$event.target']) onClick(): void {
@@ -26,8 +24,8 @@ export class NewSubmissionButtonDirective {
   }
 
   private onNewSubmissionClick(): void {
-    this.userData.projectAccNumbers$.subscribe((projectNames) => {
-      const templates = getSubmissionTemplates(projectNames);
+    this.userData.projectAccNumbers$.subscribe((collectionNames) => {
+      const templates: TemplateDetail[] = getTemplatesForCollections(collectionNames);
       if (templates.length > 0) {
         this.selectTemplate(templates);
       } else {
@@ -37,16 +35,14 @@ export class NewSubmissionButtonDirective {
   }
 
   private onOk(collection?: string, template?: string): void {
-    const emptySubmission: PageTab = this.submissionToPageTab.newPageTab(collection, template);
-
     this.startCreating();
-    this.submService.createDraftSubmission(emptySubmission).subscribe((accno) => {
+    this.submService.createDraftSubmission(collection, template).subscribe((accno) => {
       this.stopCreating();
       this.router.navigate(['/new/', accno]);
     });
   }
 
-  private selectTemplate(templates: Array<{ description: string; name: string }>): void {
+  private selectTemplate(templates: TemplateDetail[]): void {
     this.modalService.show(AddSubmModalComponent, {
       initialState: {
         templates,

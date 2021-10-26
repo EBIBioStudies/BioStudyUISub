@@ -1,4 +1,4 @@
-import { EMPTY_TEMPLATE_NAME, findSubmissionTemplateByName } from './submission.templates';
+import { EMPTY_TEMPLATE_NAME, findTemplateByName } from './submission.templates';
 import { isStringDefined, isStringEmpty } from 'app/utils/validation.utils';
 
 import { isArrayEmpty } from 'app/utils/validation.utils';
@@ -530,7 +530,7 @@ export class SubmissionType extends TypeBase {
   }
 
   static fromTemplate(tmplName: string): SubmissionType {
-    const tmpl = findSubmissionTemplateByName(tmplName);
+    const tmpl = findTemplateByName(tmplName);
     return new SubmissionType('Submission', tmpl, new TypeScope<TypeBase>());
   }
 }
