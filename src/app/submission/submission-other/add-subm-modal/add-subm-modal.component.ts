@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { TemplateDetail } from 'app/submission/submission-shared/model/templates/submission.templates';
 
 @Component({
   selector: 'st-add-subm-modal',
@@ -9,7 +10,7 @@ export class AddSubmModalComponent {
   onOk?: (collection?: string, template?: string) => void;
   selectedCollection?: string;
   selectedTemplate: string = 'Default';
-  templates?: Array<{ description: string; name: string; title: string }> = [];
+  templates?: TemplateDetail[] = [];
 
   constructor(public bsModalRef: BsModalRef) {}
 

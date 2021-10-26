@@ -15,9 +15,9 @@
       <ng-container *ngFor="let tmpl of templates; index as i" >
         <div class="form-check">
           <input id="template_{{i}}" type="radio" class="form-check-input" name="template" [value]="tmpl.name"
-                 [checked]="tmpl.title === 'Default'"  (change)="changeTemplate(tmpl)">
+                 [checked]="tmpl.collection === 'Default'"  (change)="changeTemplate(tmpl)">
           <label class="form-check-label" for="template_{{i}}" [tooltip]="tmpl.description"
-            placement="right">{{tmpl.title}}</label>
+            placement="right">{{tmpl.collection}}</label>
         </div>
       </ng-container>
     </fieldset>

@@ -6,7 +6,8 @@ import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { isDefinedAndNotEmpty } from 'app/utils/validation.utils';
 import { PageTab, DraftPayload } from './model/pagetab';
-import { SubmissionDraftUtils } from './utils/submission-draft.utils';
+import { SubmissionToPageTabService } from './submission-to-pagetab.service';
+import { filterAndFormatDraftSubmissions } from './utils/submission-draft.utils';
 
 export interface DraftSubmissionWrapper {
   key: string;
@@ -62,11 +63,7 @@ function definedPropertiesOnly(obj: any): any {
 
 @Injectable()
 export class SubmissionService {
-  private submissionDraftUtils: SubmissionDraftUtils;
-
-  constructor(private http: HttpClient) {
-    this.submissionDraftUtils = new SubmissionDraftUtils();
-  }
+  constructor(private http: HttpClient, private submissionToPageTab: SubmissionToPageTabService) {}
 
   /**
    * Traverses the error log tree to find the first deepest error message.
@@ -83,8 +80,12 @@ export class SubmissionService {
     return this.deepestError(errorNode);
   }
 
-  createDraftSubmission(pt: PageTab): Observable<string> {
-    return this.http.post<DraftPayload>('/api/submissions/drafts', pt).pipe(map((response) => response.key));
+  createDraftSubmission(collection?: string, templateName?: string): Observable<string> {
+    const emptySubmission: PageTab = this.submissionToPageTab.newPageTab(collection, templateName);
+
+    return this.http
+      .post<DraftPayload>('/api/submissions/drafts', emptySubmission)
+      .pipe(map((response) => response.key));
   }
 
   deleteDraft(accno: string): Observable<boolean> {
@@ -121,7 +122,7 @@ export class SubmissionService {
       .get<SubmissionListItem[]>(url, { params: definedPropertiesOnly(params) })
       .pipe(
         map((items) => {
-          return submitted ? items : this.submissionDraftUtils.filterAndFormatDraftSubmissions(items);
+          return submitted ? items : filterAndFormatDraftSubmissions(items);
         })
       );
   }

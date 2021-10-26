@@ -58,6 +58,7 @@
     "@angular/compiler-cli": "10.0.12",
     "@testing-library/angular": "10.11.0",
     "@testing-library/jest-dom": "5.14.1",
+    "@testing-library/user-event": "^13.5.0",
     "@types/amqplib": "0.5.13",
     "@types/compression": "1.7.0",
     "@types/config": "0.0.36",

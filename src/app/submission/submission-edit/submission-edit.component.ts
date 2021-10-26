@@ -14,8 +14,8 @@ import { SubmEditService } from './shared/subm-edit.service';
 import { SubmErrorModalComponent } from '../submission-results/subm-error-modal.component';
 import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
 import { SubmValidationErrors } from '../submission-shared/model';
-import { SubmitLog } from '../submission-shared/submission.service';
 import { scrollTop } from 'app/utils/scroll.utils';
+import { SubmitLog } from '../submission-shared/submission.service';
 
 class SubmitOperation {
   static CREATE = new SubmitOperation();
@@ -49,11 +49,11 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
   isSidebarCollapsed: boolean = false;
   method?: string;
   submissionErrors: SubmValidationErrors = SubmValidationErrors.EMPTY;
-  submNotFound: boolean = false;
+  showError: boolean = false;
+  templForbiddenMessage: string = '';
   submNotFoundMessage: string = '';
 
   private accno?: string;
-  private hasJustCreated = false;
   private newReleaseDate: Date = new Date();
   private oldReleaseDate: Date = new Date();
   private unsubscribe: Subject<void> = new Subject<void>();
@@ -116,59 +116,19 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.hasJustCreated = this.route.snapshot.data.isNew || false;
-    this.route.params
-      .pipe(
-        switchMap(({ accno, method }) => {
-          this.accno = accno;
-          this.method = method;
+    this.showError = false;
 
-          return this.submEditService.loadSubmission(accno, this.hasJustCreated);
-        })
-      )
-      .subscribe(
-        (ptSubmission: PageTabSubmission) => {
-          if (this.hasJustCreated) {
-            this.locService.replaceState('/edit/' + this.accno);
-            this.readonly = false;
-          }
+    const isNewSubmission = this.route.snapshot.data.isNew || false;
+    this.route.params.pipe(takeUntil(this.unsubscribe)).subscribe(({ accno, method, template }) => {
+      this.method = method;
+      this.accno = accno;
 
-          if (this.sideBar) {
-            const attachToAttr = ptSubmission.findAttributeByName('attachto');
-
-            if (attachToAttr) {
-              this.collection = attachToAttr.value as string;
-              // TODO: handle this through template
-              this.sideBar.showAdvanced = !(this.collection.toLowerCase() === 'arrayexpress');
-            }
-          }
-
-          const releaseDateCtrl = this.sectionForm!.findFieldControl('ReleaseDate');
-
-          if (releaseDateCtrl) {
-            const currentControlDate: string = releaseDateCtrl.control.value;
-            const currentDate: Date = currentControlDate ? new Date(Date.parse(currentControlDate)) : new Date();
-            this.oldReleaseDate = currentDate;
-            this.newReleaseDate = currentDate;
-            this.oldReleaseDate.setHours(0, 0, 0, 0);
-            this.newReleaseDate.setHours(0, 0, 0, 0);
-
-            releaseDateCtrl.control.valueChanges.subscribe((value) => {
-              this.newReleaseDate = new Date(Date.parse(value));
-              this.newReleaseDate.setHours(0, 0, 0, 0);
-            });
-          }
-        },
-        (error) => {
-          if (!this.errorService.isNotFoundError(error)) {
-            this.router.navigate(['/']);
-            throw error;
-          }
-
-          this.submNotFound = true;
-          this.submNotFoundMessage = this.errorService.getServerErrorMessage(error);
-        }
-      );
+      if (accno === undefined) {
+        this.createEmptySubmission(template);
+      } else {
+        this.loadSubmission(accno, isNewSubmission);
+      }
+    });
   }
 
   onEditBackClick(): void {
@@ -198,9 +158,11 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     }
     confirmMsg += '. This operation cannot be undone.';
 
-    this.confirmPageDelete(confirmMsg).subscribe(() => {
-      this.sectionForm!.removeSection(sectionForm.id);
-    });
+    this.confirmPageDelete(confirmMsg)
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(() => {
+        this.sectionForm!.removeSection(sectionForm.id);
+      });
   }
 
   onSubmitClick(event, isConfirm: boolean = false): void {
@@ -237,6 +199,68 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
 
   onSidebarToggle(): void {
     this.isSidebarCollapsed = !this.isSidebarCollapsed;
+  }
+
+  private createEmptySubmission(template: string): void {
+    this.submEditService.createEmptySubmission(template).subscribe(
+      (accno) => {
+        this.accno = accno;
+        this.loadSubmission(this.accno, true);
+      },
+      (error: Error) => {
+        this.showError = true;
+        this.templForbiddenMessage = error.message;
+      }
+    );
+  }
+
+  private loadSubmission(accno: string, isNewSubmission: boolean): void {
+    this.submEditService
+      .loadSubmission(accno, isNewSubmission)
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(
+        (ptSubmission: PageTabSubmission) => {
+          if (isNewSubmission) {
+            this.locService.replaceState('/edit/' + this.accno);
+            this.readonly = false;
+          }
+
+          if (this.sideBar) {
+            const attachToAttr = ptSubmission.findAttributeByName('attachto');
+
+            if (attachToAttr) {
+              this.collection = attachToAttr.value as string;
+              // TODO: handle this through template
+              this.sideBar.showAdvanced = !(this.collection.toLowerCase() === 'arrayexpress');
+            }
+          }
+
+          const releaseDateCtrl = this.sectionForm!.findFieldControl('ReleaseDate');
+
+          if (releaseDateCtrl) {
+            const currentControlDate: string = releaseDateCtrl.control.value;
+            const currentDate: Date = currentControlDate ? new Date(Date.parse(currentControlDate)) : new Date();
+            this.oldReleaseDate = currentDate;
+            this.newReleaseDate = currentDate;
+            this.oldReleaseDate.setHours(0, 0, 0, 0);
+            this.newReleaseDate.setHours(0, 0, 0, 0);
+
+            releaseDateCtrl.control.valueChanges.subscribe((value) => {
+              this.newReleaseDate = new Date(Date.parse(value));
+              this.newReleaseDate.setHours(0, 0, 0, 0);
+            });
+          }
+        },
+        (error) => {
+          if (!this.errorService.isNotFoundError(error)) {
+            this.router.navigate(['/']);
+            throw error;
+          }
+
+          this.showError = true;
+          this.submNotFoundMessage = this.errorService.getServerErrorMessage(error);
+        }
+      );
   }
 
   private confirmPageDelete(message: string): Observable<boolean> {
