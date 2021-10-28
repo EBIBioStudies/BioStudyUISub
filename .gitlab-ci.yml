@@ -1,4 +1,4 @@
-image: node:10.16.1
+image: node:14.17.5
 variables:
   DOCKER_TLS_CERTDIR: ''
 stages:
