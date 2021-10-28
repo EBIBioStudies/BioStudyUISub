@@ -5,10 +5,10 @@ module.exports = {
   setupFilesAfterEnv: ['<rootDir>/src/tests/setupJestAfterEnv.ts'],
   coverageThreshold: {
     global: {
-      statements: 17.5,
-      branches: 15.79,
-      functions: 12.5,
-      lines: 17.3
+      statements: 20.6,
+      branches: 16.7,
+      functions: 14.2,
+      lines: 19.8
     }
   },
   collectCoverageFrom: [

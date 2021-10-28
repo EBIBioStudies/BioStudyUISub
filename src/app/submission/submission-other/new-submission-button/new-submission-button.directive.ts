@@ -24,7 +24,7 @@ export class NewSubmissionButtonDirective {
   }
 
   private onNewSubmissionClick(): void {
-    this.userData.projectAccNumbers$.subscribe((collectionNames) => {
+    this.userData.collections$.subscribe((collectionNames) => {
       const templates: TemplateDetail[] = getTemplatesForCollections(collectionNames);
       if (templates.length > 0) {
         this.selectTemplate(templates);

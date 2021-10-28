@@ -5,7 +5,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { ActivatedRoute } from '@angular/router';
 import { BAD_REQUEST } from 'http-status-codes';
 import { AuthModule } from './../auth.module';
-import { rest, server } from './../../../tests/mocks/server';
+import { rest, server } from './../../../tests/server';
 import { ActivateComponent } from './activate.component';
 
 const renderComponent = (paramMap) =>

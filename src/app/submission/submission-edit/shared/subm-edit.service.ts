@@ -161,7 +161,7 @@ export class SubmEditService {
   }
 
   createEmptySubmission(templateName?: string): Observable<string> {
-    return this.userData.projectAccNumbers$.pipe(
+    return this.userData.collections$.pipe(
       switchMap((projectNames) => {
         const templates = getTemplatesForCollections(projectNames);
         const templateInfo = templates.find(
@@ -277,7 +277,7 @@ export class SubmEditService {
 
   private asContactAttributes(userInfo: UserInfo): AttributeData[] {
     return [
-      { name: 'Name', value: userInfo.username },
+      { name: 'Name', value: userInfo.username || '' },
       { name: 'E-mail', value: userInfo.email },
       { name: 'ORCID', value: userInfo.aux.orcid }
     ];

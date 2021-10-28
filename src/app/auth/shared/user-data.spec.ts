@@ -2,7 +2,7 @@ import { async, TestBed } from '@angular/core/testing';
 import { AuthService, UserData, UserSession } from 'app/auth/shared';
 import { of, Observable, Subject, ReplaySubject } from 'rxjs';
 import { UserInfo } from './model';
-import { SubmissionService } from 'app/submission/submission-shared/submission.service';
+import { CollectionsService } from 'app/collections/collections.service';
 
 class UserSessionMock {
   created$: Subject<boolean> = new ReplaySubject<boolean>(1);
@@ -24,7 +24,9 @@ class AuthServiceMock {
     fullname: 'Vasya',
     aux: {
       orcid: '1234-5678-9999'
-    }
+    },
+    allow: [],
+    deny: []
   };
 
   getUserProfile(): Observable<UserInfo> {
@@ -32,8 +34,8 @@ class AuthServiceMock {
   }
 }
 
-class SubmissionServiceMock {
-  getProjects(): Observable<[]> {
+class CollectionsServiceMock {
+  getCollections(): Observable<[]> {
     return of([]);
   }
 }
@@ -45,7 +47,7 @@ describe('UserData', () => {
         UserData,
         { provide: UserSession, useValue: new UserSessionMock() },
         { provide: AuthService, useValue: new AuthServiceMock() },
-        { provide: SubmissionService, useValue: new SubmissionServiceMock() }
+        { provide: CollectionsService, useValue: new CollectionsServiceMock() }
       ]
     }).compileComponents();
   });

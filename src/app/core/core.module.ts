@@ -1,3 +1,4 @@
+import { LoadingComponent } from './components/loading/loading.component';
 import { ErrorHandler, NgModule, Optional, SkipSelf } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
@@ -30,7 +31,8 @@ import { ErrorComponent } from './components/error/error.component';
     PluralPipe,
     NotFoundComponent,
     ErrorComponent,
-    ForbiddenComponent
+    ForbiddenComponent,
+    LoadingComponent
   ],
   exports: [
     DateFormatDirective,
@@ -39,7 +41,8 @@ import { ErrorComponent } from './components/error/error.component';
     PluralPipe,
     NotFoundComponent,
     ErrorComponent,
-    ForbiddenComponent
+    ForbiddenComponent,
+    LoadingComponent
   ],
   providers: [
     ErrorMessageService,

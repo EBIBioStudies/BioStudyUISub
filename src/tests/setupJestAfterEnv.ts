@@ -1,7 +1,7 @@
 import 'jest-preset-angular/setup-jest';
 import '@testing-library/jest-dom/extend-expect';
-import './mocks/jestGlobalMocks';
-import { server } from './mocks/server';
+import './jestGlobalMocks';
+import { server } from './server';
 
 // Establish API mocking before all tests.
 beforeAll(() => server.listen());
