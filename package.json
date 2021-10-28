@@ -24,10 +24,10 @@
     "setupFilesAfterEnv":["<rootDir>/src/tests/setupJestAfterEnv.ts"],
     "coverageThreshold":{
       "global":{
-        "statements":20.6,
-        "branches":16.7,
-        "functions":14.2,
-        "lines":19.8
+        "statements":20.3,
+        "branches":16.3,
+        "functions":13.9,
+        "lines":19.6
       }
     },
     "collectCoverageFrom": [
