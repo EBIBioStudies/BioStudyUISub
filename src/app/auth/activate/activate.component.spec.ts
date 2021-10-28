@@ -4,14 +4,15 @@ import { render, screen } from '@testing-library/angular';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ActivatedRoute } from '@angular/router';
 import { BAD_REQUEST } from 'http-status-codes';
-import { AuthModule } from './../auth.module';
 import { rest, server } from './../../../tests/server';
 import { ActivateComponent } from './activate.component';
+import { AuthService } from '../shared/auth.service';
+import { UserSession } from '../shared/user-session';
 
 const renderComponent = (paramMap) =>
   render(ActivateComponent, {
-    imports: [HttpClientModule, ThemeModule, AuthModule, ModalModule.forRoot()],
-    providers: [{ provide: ActivatedRoute, useValue: { snapshot: { paramMap } } }],
+    imports: [HttpClientModule, ThemeModule, ModalModule.forRoot()],
+    providers: [AuthService, UserSession, { provide: ActivatedRoute, useValue: { snapshot: { paramMap } } }],
     routes: []
   });
 
