@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { SharedModule } from 'app/shared/shared.module';
 import { ThemeModule } from 'app/theme/theme.module';
 import { AuthService, UserSession, UserData } from 'app/auth/shared';
+import { CollectionsModule } from 'app/collections/collections.module';
 import { SignInComponent } from './signin/signin.component';
 import { ActivateComponent } from './activate/activate.component';
 import { ActivationLinkReqComponent } from './activate/activation-link-req.component';
@@ -26,7 +27,8 @@ import { CookieService } from 'ngx-cookie-service';
     SharedModule,
     ThemeModule,
     FormsModule,
-    ModalModule
+    ModalModule,
+    CollectionsModule
   ],
   providers: [AuthService, UserSession, UserData, CookieService],
   declarations: [

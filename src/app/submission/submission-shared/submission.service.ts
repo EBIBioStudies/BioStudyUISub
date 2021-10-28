@@ -108,10 +108,6 @@ export class SubmissionService {
     return this.http.post<SubmitResponse>(`/api/submissions/async/direct`, formData);
   }
 
-  getProjects(): Observable<any> {
-    return this.http.get('/api/projects');
-  }
-
   getSubmission(accno: string): Observable<PageTab> {
     return this.getDraft(accno);
   }

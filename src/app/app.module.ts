@@ -1,4 +1,3 @@
-import { HelpModule } from './help/help.module';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { PathLocationStrategy, LocationStrategy } from '@angular/common';
@@ -27,6 +26,8 @@ import { SubmissionEditModule } from './submission/submission-edit/submission-ed
 import { SubmissionListModule } from './submission/submission-list/submission-list.module';
 import { FileModule } from './file/file.module';
 import { SharedModule } from 'app/shared/shared.module';
+import { ProfileModule } from './profile/profile.module';
+import { HelpModule } from './help/help.module';
 
 export function initConfig(config: AppConfig): () => Promise<any> {
   return () => config.load();
@@ -66,7 +67,8 @@ function initRecaptchaSettings(config: AppConfig): RecaptchaSettings {
     AuthModule,
     ThemeModule,
     CoreModule,
-    HelpModule
+    HelpModule,
+    ProfileModule
   ],
   declarations: [AppComponent],
   providers: [

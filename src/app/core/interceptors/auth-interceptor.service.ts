@@ -3,6 +3,7 @@ import { HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest } fro
 import { Observable } from 'rxjs';
 import { UserCookies } from 'app/auth/shared';
 import { AppConfig } from 'app/app.config';
+import { isDefinedAndNotEmpty } from 'app/utils/validation.utils';
 
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
@@ -22,10 +23,10 @@ export class AuthInterceptorService implements HttpInterceptor {
   private updateHeaders(headers: HttpHeaders = new HttpHeaders()): HttpHeaders {
     const sessionId = this.userCookies.getLoginToken();
 
-    return sessionId ? headers.set('X-Session-Token', sessionId) : headers;
+    return isDefinedAndNotEmpty(sessionId) ? headers.set('X-Session-Token', sessionId) : headers;
   }
 
   private updateUrl(url: string): string {
-    return this.appConfig.proxyBase + url;
+    return isDefinedAndNotEmpty(this.appConfig.proxyBase) ? this.appConfig.proxyBase + url : url;
   }
 }

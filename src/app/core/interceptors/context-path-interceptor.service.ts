@@ -2,6 +2,7 @@ import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/c
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AppConfig } from 'app/app.config';
+import { isDefinedAndNotEmpty } from 'app/utils/validation.utils';
 
 @Injectable()
 export class ContextPathInterceptorService implements HttpInterceptor {
@@ -12,8 +13,9 @@ export class ContextPathInterceptorService implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (this.paths.some((path) => req.url.startsWith(path))) {
       const contextPath: string = this.appConfig.contextPath;
+      const url = isDefinedAndNotEmpty(contextPath) ? `${contextPath}${req.url}` : req.url;
 
-      req = req.clone({ url: `${contextPath}${req.url}` });
+      req = req.clone({ url });
     }
 
     return next.handle(req);

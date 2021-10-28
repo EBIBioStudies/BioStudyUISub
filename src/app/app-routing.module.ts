@@ -14,6 +14,7 @@ import { SignInComponent } from './auth/signin/signin.component';
 import { SignUpComponent } from './auth/signup/signup.component';
 import { SubmListComponent } from './submission/submission-list/subm-list.component';
 import { SubmissionEditComponent } from './submission/submission-edit/submission-edit.component';
+import { ProfileComponent } from './profile/profile.component';
 
 const appRoutes: Routes = [
   { path: 'signin', component: SignInComponent },
@@ -24,6 +25,7 @@ const appRoutes: Routes = [
   { path: 'password_setup/:key', component: PasswordResetComponent, data: { isPassSetup: true } },
   { path: 'activation', component: ActivationLinkReqComponent },
   { path: 'help', component: HelpComponent },
+  { path: 'profile', component: ProfileComponent },
   { path: 'files', component: FileListComponent, canActivate: [AuthGuard] },
   {
     path: 'draft',

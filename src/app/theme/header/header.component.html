@@ -56,8 +56,16 @@
         </a>
         <ul id="dropdown-basic" class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="button-basic" *dropdownMenu>
           <li role="menuitem">
-            <a class="dropdown-item" tooltip="Log out" placement="bottom" container="body" href="/" (click)="signOut($event); false">
+            <a class="dropdown-item d-flex justify-content-between align-items-center" routerLink="/profile">
+              Profile
+              <i class="far fa-user-circle"></i>
+            </a>
+          </li>
+          <li class="divider dropdown-divider"></li>
+          <li role="menuitem">
+            <a class="dropdown-item d-flex justify-content-between align-items-center" href="/" (click)="signOut($event); false">
               Log out
+              <i class="fas fa-sign-out-alt"></i>
             </a>
           </li>
         </ul>

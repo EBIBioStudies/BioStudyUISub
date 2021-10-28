@@ -168,7 +168,7 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
    * is known.
    */
   ngOnInit(): void {
-    this.userData.projectAccNumbers$.subscribe(
+    this.userData.collections$.subscribe(
       (projects) => {
         this.model.projects = this.initProjModel(projects);
         this.isProjFetch = false;
