@@ -43,7 +43,7 @@ const proxyConfig = (req: Request, pathname: string) => {
 
       next(err);
     },
-    filter: (req, res) => {
+    filter: (req: Request) => {
       return !restrictedPaths.some((restrictedPath) => req.url.includes(restrictedPath));
     }
   };
