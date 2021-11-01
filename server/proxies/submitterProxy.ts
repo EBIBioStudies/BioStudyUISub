@@ -8,6 +8,16 @@ import { REQUEST_TIMEOUT } from 'http-status-codes';
 
 const defaultErrorMessage = { message: 'Something went wrong.' };
 const handledErrorCodes = ['ENOTFOUND', 'ECONNREFUSED'];
+const restrictedPaths = [
+  '/submissions/extended',
+  '/stats',
+  '/api/releaser',
+  '/api/pmc',
+  '/submissions/ftp',
+  '/submissions/refresh',
+  '/auth/refresh-user',
+  '/auth/check-registration'
+];
 
 const isMultipartRequest = (req: Request) => {
   const contentTypeHeader = req.headers['content-type'];
@@ -32,6 +42,9 @@ const proxyConfig = (req: Request, pathname: string) => {
       }
 
       next(err);
+    },
+    filter: (req, res) => {
+      return !restrictedPaths.some((restrictedPath) => req.url.includes(restrictedPath));
     }
   };
 };
