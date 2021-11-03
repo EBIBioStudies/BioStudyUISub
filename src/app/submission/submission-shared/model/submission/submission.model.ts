@@ -313,8 +313,18 @@ export class Tables {
     return this.tables.length;
   }
 
+  insertAt(table: Table, index: number): Table | undefined {
+    if (this.hasTableType(table.type)) {
+      return;
+    }
+
+    this.tables.splice(index, 0, table);
+
+    return table;
+  }
+
   add(type: TableType, data?: TableData): Table | undefined {
-    if (this.tables.filter((f) => f.type === type).length > 0) {
+    if (this.hasTableType(type)) {
       return;
     }
 
@@ -356,6 +366,10 @@ export class Tables {
   removeById(tableId: string): boolean {
     const table = this.tables.find((f) => f.id === tableId);
     return table !== undefined && this.remove(table);
+  }
+
+  private hasTableType(type: TableType): boolean {
+    return this.tables.filter((f) => f.type === type).length > 0;
   }
 }
 
@@ -442,7 +456,6 @@ export class Fields {
 }
 
 export class Section implements SubmissionSection {
-  readonly annotations: Table;
   readonly data: SectionData;
   readonly tables: Tables;
   readonly fields: Fields;
@@ -454,26 +467,30 @@ export class Section implements SubmissionSection {
 
   private sectionAccno: string;
 
-  constructor(type: SectionType, data: SectionData = {} as SectionData, accno: string = '') {
+  constructor(type: SectionType, data: SectionData = {} as SectionData, accno: string = '', isTemp: boolean = false) {
     this.tags = Tags.create(data);
     this.id = `section_${nextId()}`;
     this.type = type;
     this.sectionAccno = data.accno || accno;
     this.fields = new Fields(type, data.attributes);
-    // Any attribute names from the server that do not match top-level field names are added as annotations.
-    this.annotations = Table.create(
-      type.annotationsType,
-      (data.attributes || []).filter(
-        (attribute) =>
-          attribute.name &&
-          attribute.name !== AttributeNames.KEYWORD &&
-          type.getFieldType(attribute.name || '') === undefined
-      )
-    );
     this.data = data;
     this.tables = new Tables(type, data.tables);
     this.sections = new Sections(type, data.sections);
     this.subsections = new Sections(type, data.subsections);
+
+    if (this.displayAnnotations) {
+      // Any attribute names from the server that do not match top-level field names are added as annotations.
+      const annotations: AttributeData[] = (data.attributes || []).filter(
+        (attribute) =>
+          attribute.name &&
+          attribute.name !== AttributeNames.KEYWORD &&
+          type.getFieldType(attribute.name || '') === undefined
+      );
+
+      if (annotations.length > 0 || isTemp) {
+        this.tables.insertAt(Table.create(type.annotationsType, annotations), 0);
+      }
+    }
   }
 
   get accno(): string {
@@ -604,7 +621,7 @@ export class Submission {
     this.accno = data.accno || null;
     this.attributes = data.attributes || [];
     this.isRevised = !this.isTemp && data.isRevised === true;
-    this.section = new Section(type.sectionType, data.section);
+    this.section = new Section(type.sectionType, data.section, undefined, this.isTemp);
   }
 
   /**

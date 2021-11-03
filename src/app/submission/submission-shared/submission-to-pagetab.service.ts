@@ -62,7 +62,11 @@ export class SubmissionToPageTabService {
       [LowerCaseSectionNames.FILE, LowerCaseSectionNames.LINK].includes(table.typeName.toLowerCase())
     );
 
-    const keywordAttributes = this.extractKeywordsFromSection(section, isSanitise);
+    const [annotationTable, nonAnnotationTables] = partition<Table>(otherTables, (table) =>
+      [LowerCaseSectionNames.ANNOTATION].includes(table.typeName.toLowerCase())
+    );
+
+    const keywordAttributes = this.extractKeywordsFromSection(annotationTable, isSanitise);
     const sectionAttributes = fieldsAsAttributes(section.fields.list(), isSanitise).filter(
       (at) => at.name && !AttrExceptions.editableAndRootOnly.includes(at.name) && !isValueEmpty(at.value)
     );
@@ -75,7 +79,7 @@ export class SubmissionToPageTabService {
       links: this.extractLinksFromSection(ownPropTables, isSanitise),
       subsections: [
         ...tableToSectionItem(tableSectionItems, isSanitise, isSubsection),
-        ...tableToPtTable(otherTables, isSanitise),
+        ...tableToPtTable(nonAnnotationTables, isSanitise),
         ...section.sections.list().map((s) => this.sectionToPtSection(s, isSanitise, true))
       ],
       tags: this.withPageTag(section.tags.tags),
@@ -115,12 +119,14 @@ export class SubmissionToPageTabService {
     );
   }
 
-  private extractKeywordsFromSection(section: Section, isSanitise: boolean): PtAttribute[] {
+  private extractKeywordsFromSection(tables: Table[], isSanitise: boolean): PtAttribute[] {
+    const table = tables.find((t) => t.typeName.toLowerCase() === LowerCaseSectionNames.ANNOTATION);
+
     return tableRowToSections<PtAttribute>(
       (rows) => rows,
       () => true,
       isSanitise,
-      section.annotations
+      table
     );
   }
 

@@ -8,15 +8,19 @@ import { SectionValidationError, SubmValidationErrors } from 'app/submission/sub
 export class SubmValidationErrorsComponent {
   @Input() errors: SubmValidationErrors = SubmValidationErrors.EMPTY;
 
-  get hasValidationErrors(): boolean {
-    return this.errors.total() > 0;
-  }
-
-  get sectionErrors(): Array<string> {
-    const errors: (string | SectionValidationError)[] = this.errors.errors.filter(
-      (error) => error instanceof SectionValidationError
+  get hasFieldValidationErrors(): boolean {
+    const fieldErrors: (string | SectionValidationError)[] = this.errors.errors.filter(
+      (error) => !(error instanceof SectionValidationError)
     );
 
-    return errors.map((error) => (error as SectionValidationError).message);
+    return fieldErrors.length > 0;
+  }
+
+  get sectionErrorsMsg(): Array<string> {
+    const sectionErrors: (string | SectionValidationError)[] = ([] = this.errors.errors.filter(
+      (error) => error instanceof SectionValidationError
+    ));
+
+    return sectionErrors.map((error) => (error as SectionValidationError).message);
   }
 }

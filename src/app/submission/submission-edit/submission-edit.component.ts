@@ -167,6 +167,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
 
   onSubmitClick(event, isConfirm: boolean = false): void {
     this.submEditService.switchSection(this.rootSection);
+    this.submEditService.validateForm();
 
     scrollTop();
 
