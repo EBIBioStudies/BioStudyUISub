@@ -152,10 +152,6 @@ export class SubmEditService {
     return this.editState.isEditing;
   }
 
-  get isTemp(): boolean {
-    return this.submModel ? this.submModel.isTemp : false;
-  }
-
   get isRevised(): boolean {
     return this.submModel ? this.submModel.isRevised : false;
   }
@@ -270,9 +266,7 @@ export class SubmEditService {
   validateForm(): void {
     const errors = SubmissionValidator.validate(this.submModel);
 
-    if (errors.total() > 0) {
-      this.validationError$.next(errors);
-    }
+    this.validationError$.next(errors);
   }
 
   private asContactAttributes(userInfo: UserInfo): AttributeData[] {
@@ -364,7 +358,6 @@ export class SubmEditService {
     sectionForm.structureChanges$.pipe(debounceTime(updateDelayInMilliseconds)).subscribe((value) => {
       if (value !== StructureChangeEvent.init) {
         this.editState.startEditing();
-        this.validateForm();
         this.save();
       }
     });

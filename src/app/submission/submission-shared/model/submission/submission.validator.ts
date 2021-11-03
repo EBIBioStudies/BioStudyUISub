@@ -96,8 +96,6 @@ class ValidationRules {
         .reduce((rv, v) => rv.concat(v), [])
     );
 
-    rules = rules.concat(ValidationRules.forTable(section.annotations));
-
     rules = rules.concat(
       section.tables
         .list()
