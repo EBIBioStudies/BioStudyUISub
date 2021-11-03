@@ -11,7 +11,6 @@ describe('Submission Model: Section', () => {
     expect(sec.type.name).toBe('MySectionType');
     expect(sec.typeName).toBe('MySectionType');
     expect(sec.accno).toBe('');
-    expect(sec.annotations.isEmpty).toBeTruthy();
     expect(sec.fields.length).toBe(0);
     expect(sec.tables.length).toBe(0);
     expect(sec.sections.length).toBe(0);
