@@ -7,6 +7,7 @@ import { setTheme } from 'ngx-bootstrap/utils';
   selector: 'st-root',
   template: `
     <st-header></st-header>
+    <st-auth></st-auth>
     <router-outlet></router-outlet>
   `
 })

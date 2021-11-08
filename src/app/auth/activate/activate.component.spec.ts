@@ -1,9 +1,9 @@
-import { ThemeModule } from 'app/theme/theme.module';
 import { HttpClientModule } from '@angular/common/http';
 import { render, screen } from '@testing-library/angular';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ActivatedRoute } from '@angular/router';
 import { BAD_REQUEST } from 'http-status-codes';
+import { ThemeModule } from 'app/theme/theme.module';
 import { rest, server } from './../../../tests/server';
 import { ActivateComponent } from './activate.component';
 import { AuthService } from '../shared/auth.service';

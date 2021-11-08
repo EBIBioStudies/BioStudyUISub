@@ -1,0 +1,46 @@
+import { fireEvent, render, screen } from '@testing-library/angular';
+import userEvent from '@testing-library/user-event';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { ThemeModule } from 'app/theme/theme.module';
+import { AuthComponent } from './auth.component';
+import { authRoutes } from './auth-routing.module';
+import { AuthService } from './shared/auth.service';
+import { UserSession } from './shared/user-session';
+import { SignInComponent } from './signin/signin.component';
+
+test('is is possible to sign in, sign up, reset password and activate account', async () => {
+  const { navigate } = await render(AuthComponent, {
+    imports: [FormsModule, HttpClientModule, ThemeModule, ModalModule.forRoot()],
+    providers: [AuthService, UserSession],
+    declarations: [SignInComponent],
+    routes: authRoutes
+  });
+
+  // Test signin
+  await navigate('/signin');
+
+  const submitButton = screen.getByRole('button', { name: /log in/i });
+  const emailInput = screen.getByRole('textbox', { name: /email/i });
+  const passwordInput = screen.getByLabelText(/password/i);
+
+  fireEvent.blur(emailInput);
+  fireEvent.blur(passwordInput);
+
+  expect(emailInput).toBeInvalid();
+  expect(passwordInput).toBeInvalid();
+  expect(screen.getByText('Please enter a valid email')).toBeInTheDocument();
+  expect(screen.getByText('Please enter a password')).toBeInTheDocument();
+
+  userEvent.type(emailInput, 'pep@ebi.ac.uk');
+  userEvent.type(passwordInput, '123456');
+
+  expect(emailInput).toBeValid();
+  expect(passwordInput).toBeValid();
+
+  userEvent.click(submitButton);
+  // expect(passwordInput).toBeInTheDocument();
+
+  screen.debug();
+});

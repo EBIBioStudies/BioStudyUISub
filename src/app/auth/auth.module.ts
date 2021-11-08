@@ -4,6 +4,8 @@ import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CookieService } from 'ngx-cookie-service';
+import { AuthComponent } from './auth.component';
 import { SharedModule } from 'app/shared/shared.module';
 import { ThemeModule } from 'app/theme/theme.module';
 import { AuthService, UserSession, UserData } from 'app/auth/shared';
@@ -16,7 +18,7 @@ import { PasswordResetReqComponent } from './password-reset/password-reset-req.c
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { SignUpComponent } from './signup/signup.component';
 import { Equals2Directive } from './password-reset/equals2.directive';
-import { CookieService } from 'ngx-cookie-service';
+import { AuthRoutingModule } from './auth-routing.module';
 
 @NgModule({
   imports: [
@@ -28,10 +30,12 @@ import { CookieService } from 'ngx-cookie-service';
     ThemeModule,
     FormsModule,
     ModalModule,
-    CollectionsModule
+    CollectionsModule,
+    AuthRoutingModule
   ],
   providers: [AuthService, UserSession, UserData, CookieService],
   declarations: [
+    AuthComponent,
     SignInComponent,
     SignUpComponent,
     ActivateComponent,
@@ -42,6 +46,7 @@ import { CookieService } from 'ngx-cookie-service';
     Equals2Directive
   ],
   exports: [
+    AuthComponent,
     SignInComponent,
     SignUpComponent,
     ActivateComponent,
