@@ -279,23 +279,25 @@ export class Table {
 export class Tables {
   private tables: Table[] = [];
 
-  constructor(type: SectionType, tables: Array<TableData> = []) {
-    const fd = tables
+  constructor(type: SectionType, tables: Array<TableData> = [], isTemp: boolean) {
+    const tablesData = tables
       .filter((f) => isDefinedAndNotEmpty(f.type))
       .reduce((rv, d) => {
         rv[d.type!] = d;
         return rv;
       }, {});
 
-    type.tableTypes.forEach((ft) => {
-      this.add(ft, fd[ft.name]);
-      fd[ft.name] = undefined;
-    });
+    if (isTemp) {
+      type.tableTypes.forEach((tableType) => {
+        this.add(tableType, tablesData[tableType.name]);
+        tablesData[tableType.name] = undefined;
+      });
+    }
 
-    Object.keys(fd).forEach((key) => {
-      if (fd[key] !== undefined) {
-        const ft = type.getTableType(key);
-        this.add(ft, fd[ft.name]);
+    Object.keys(tablesData).forEach((key) => {
+      if (tablesData[key] !== undefined) {
+        const tableType = type.getTableType(key);
+        this.add(tableType, tablesData[tableType.name]);
       }
     });
 
@@ -474,7 +476,7 @@ export class Section implements SubmissionSection {
     this.sectionAccno = data.accno || accno;
     this.fields = new Fields(type, data.attributes);
     this.data = data;
-    this.tables = new Tables(type, data.tables);
+    this.tables = new Tables(type, data.tables, isTemp);
     this.sections = new Sections(type, data.sections);
     this.subsections = new Sections(type, data.subsections);
 
