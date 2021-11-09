@@ -26,6 +26,6 @@ export class AddSubmModalComponent {
 
   changeTemplate(tmpl: any): void {
     this.selectedTemplate = tmpl.name;
-    this.selectedCollection = tmpl.title;
+    this.selectedCollection = tmpl.collection;
   }
 }
