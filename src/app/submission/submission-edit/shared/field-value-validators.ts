@@ -1,9 +1,10 @@
 import { Observable, of } from 'rxjs';
 import { catchError, first, map } from 'rxjs/operators';
 import { Field } from 'app/submission/submission-shared/model/submission/submission.model';
-import { ValueTypeName, TextValueType } from 'app/submission/submission-shared/model/templates/submission-type.model';
 import { CustomFormControl } from './model/custom-form-control.model';
 import { SubmissionService } from 'app/submission/submission-shared/submission.service';
+
+type ValidatorFn = (control: CustomFormControl, submService: SubmissionService, studyAccno: string) => Observable<null>;
 
 export class FormValueValidator {
   static forStudyTitle = (
@@ -26,19 +27,23 @@ export class FormValueValidator {
     );
   };
 
+  static forFileList = (control: CustomFormControl, submService: SubmissionService) => {
+    return submService.validateFileList(control.value);
+  };
+
   static forAsyncFieldValue = (
     field: Field,
     control: CustomFormControl,
     submService: SubmissionService,
     studyAccno: string
   ): Observable<null> => {
-    const valueType = field.type.valueType;
+    const asyncValueValidatorName = field.type.asyncValueValidatorName;
 
-    if (valueType.is(ValueTypeName.text, ValueTypeName.largetext)) {
-      const textValueType = valueType as TextValueType;
+    if (asyncValueValidatorName !== null && asyncValueValidatorName.length > 0) {
+      const validator: ValidatorFn = FormValueValidator[asyncValueValidatorName];
 
-      if (textValueType.isStudyTitle) {
-        return FormValueValidator.forStudyTitle(control, submService, studyAccno);
+      if (validator) {
+        return validator(control, submService, studyAccno);
       }
     }
 

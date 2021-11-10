@@ -105,7 +105,7 @@ export class SubmissionService {
 
     formData.append('submission', file);
 
-    return this.http.post<SubmitResponse>(`/api/submissions/async/direct`, formData);
+    return this.http.post<SubmitResponse>('/api/submissions/async/direct', formData);
   }
 
   getSubmission(accno: string): Observable<PageTab> {
@@ -131,6 +131,14 @@ export class SubmissionService {
     const headers: HttpHeaders = new HttpHeaders().set('Submission_Type', 'application/json');
 
     return this.sendPostRequest(`/api/submissions/drafts/${accno}/submit`, pt, headers);
+  }
+
+  validateFileList(fileListName: string) {
+    const formData = new FormData();
+
+    formData.append('fileListName', fileListName);
+
+    return this.http.post('/submissions/fileLists/validate', formData);
   }
 
   private checkStatus<R, T>(response: HttpResponse<R>): T {

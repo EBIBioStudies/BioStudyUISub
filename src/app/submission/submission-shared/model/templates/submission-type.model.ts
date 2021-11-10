@@ -255,6 +255,11 @@ export class ValueTypeFactory {
   }
 }
 
+export class AsyncValidationType {
+  readonly enable: boolean = false;
+  readonly path: string = '';
+}
+
 export class FieldType extends TypeBase {
   readonly display: string;
   readonly displayType: DisplayType;
@@ -262,6 +267,7 @@ export class FieldType extends TypeBase {
   readonly helpLink: string;
   readonly icon: string;
   readonly valueType: ValueType;
+  readonly asyncValueValidatorName: string | null;
 
   constructor(
     name: string,
@@ -278,6 +284,7 @@ export class FieldType extends TypeBase {
     this.helpLink = data.helpLink || '';
     this.displayType = DisplayType.create(data.display || parentDisplayType.name);
     this.display = this.displayType.name;
+    this.asyncValueValidatorName = data.asyncValueValidatorName || null;
   }
 }
 
