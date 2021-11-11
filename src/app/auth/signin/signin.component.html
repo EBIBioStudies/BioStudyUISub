@@ -1,6 +1,6 @@
 <st-layout-auth>
-  <div class="alert" [ngClass]="{'alert-danger': error, 'invisible': !error}">
-    <div class="message">
+  <div class="alert-container">
+    <div *ngIf="error" class="alert alert-danger" role="alert">
       Please check the fields below and try again, if the problem persists, drop an email to <a
         href="mailto:biostudies@ebi.ac.uk">biostudies@ebi.ac.uk</a>
     </div>
@@ -10,13 +10,13 @@
       <h4 class="card-title">Welcome</h4>
       <h6 class="card-subtitle mb-2 text-muted">Please sign in to access to your studies.</h6>
       <form name="signInForm" (ngSubmit)="onSubmit(signInForm)" #signInForm="ngForm" data-testid="signInForm" novalidate>
-        <div class="form-group" [ngClass]="{'was-validated': email.invalid && email.touched}">
+        <div class="form-group mb-2" [ngClass]="{'was-validated': email.invalid && email.touched}">
           <label for="email">Email address</label>
           <input type="email" class="form-control" id="email" name="email" [(ngModel)]="model.login"
             #email="ngModel" autofocus required>
           <div class="invalid-feedback" *ngIf="email.invalid && email.touched">Please enter a valid email</div>
         </div>
-        <div class="form-group" [ngClass]="{'was-validated': password.invalid && password.touched}">
+        <div class="form-group mb-2" [ngClass]="{'was-validated': password.invalid && password.touched}">
           <label for="password">Password</label>
           <input type="password" class="form-control" id="password" name="password" [(ngModel)]="model.password"
             #password="ngModel" required>
