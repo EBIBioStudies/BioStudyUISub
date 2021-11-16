@@ -26,13 +26,7 @@ export interface SubmitResponse {
   accno: string;
   attributes: Array<any>;
   section: SectionData;
-  log: SubmitLog;
-}
-
-export interface SubmitLog {
-  level: string; // 'INFO'|'WARN'|'ERROR'
-  message: string;
-  subnodes: Array<SubmitLog>;
+  log: LogDetail;
 }
 
 export interface SubmissionListParams {
@@ -70,7 +64,7 @@ export class SubmissionService {
    * @param obj - Log tree's root node or subnode list.
    * @returns Error message.
    */
-  static deepestError(log: SubmitLog): string {
+  static deepestError(log: LogDetail): string {
     const errorNode = (log.subnodes || []).find((n) => n.level === 'ERROR');
 
     if (errorNode === undefined) {
@@ -133,12 +127,12 @@ export class SubmissionService {
     return this.sendPostRequest(`/api/submissions/drafts/${accno}/submit`, pt, headers);
   }
 
-  validateFileList(fileListName: string) {
+  validateFileList(fileListName: string): Observable<StatusResponse> {
     const formData = new FormData();
 
     formData.append('fileListName', fileListName);
 
-    return this.http.post('/submissions/fileLists/validate', formData);
+    return this.http.post<StatusResponse>('/api/submissions/fileLists/validate', formData);
   }
 
   private checkStatus<R, T>(response: HttpResponse<R>): T {

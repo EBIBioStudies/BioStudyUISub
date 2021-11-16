@@ -15,7 +15,6 @@ import { SubmErrorModalComponent } from '../submission-results/subm-error-modal.
 import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
 import { SubmValidationErrors } from '../submission-shared/model';
 import { scrollTop } from 'app/utils/scroll.utils';
-import { SubmitLog } from '../submission-shared/submission.service';
 
 class SubmitOperation {
   static CREATE = new SubmitOperation();
@@ -313,7 +312,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     return this.sectionForm !== undefined && this.sectionForm.form.valid && !hasErrors;
   }
 
-  private showSubmitLog(log?: SubmitLog): void {
+  private showSubmitLog(log?: LogDetail): void {
     this.bsModalService.show(SubmErrorModalComponent, {
       initialState: { log }
     });

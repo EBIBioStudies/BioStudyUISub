@@ -255,11 +255,6 @@ export class ValueTypeFactory {
   }
 }
 
-export class AsyncValidationType {
-  readonly enable: boolean = false;
-  readonly path: string = '';
-}
-
 export class FieldType extends TypeBase {
   readonly display: string;
   readonly displayType: DisplayType;
