@@ -13,7 +13,7 @@ export const biaTemplate = {
         icon: 'fa-heading',
         valueType: {
           name: 'largetext',
-          isStudyTitle: true
+          minlength: 25
         },
         display: 'required',
         asyncValueValidatorName: 'forStudyTitle'

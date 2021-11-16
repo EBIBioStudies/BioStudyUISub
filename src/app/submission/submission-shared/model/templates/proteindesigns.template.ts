@@ -12,9 +12,9 @@ export const proteinDesignsTemplate = {
         display: 'required',
         valueType: {
           name: 'largetext',
-          minlength: 25,
-          isStudyTitle: true
-        }
+          minlength: 25
+        },
+        asyncValueValidatorName: 'forStudyTitle'
       },
       {
         name: 'Description of design',

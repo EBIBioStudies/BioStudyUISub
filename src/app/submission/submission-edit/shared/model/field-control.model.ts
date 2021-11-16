@@ -1,4 +1,3 @@
-import { AsyncValidatorFn } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ControlRef } from '../control-reference';
 import { CustomFormControl } from './custom-form-control.model';

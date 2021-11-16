@@ -192,14 +192,12 @@ export abstract class ValueType {
 export class TextValueType extends ValueType {
   readonly maxlength: number;
   readonly minlength: number;
-  readonly isStudyTitle: boolean;
   readonly placeholder: string;
 
   constructor(data: Partial<TextValueType> = {}, valueTypeName?: ValueTypeName) {
     super(valueTypeName || ValueTypeName.text);
     this.minlength = data.minlength || -1;
     this.maxlength = data.maxlength || -1;
-    this.isStudyTitle = data.isStudyTitle || false;
     this.placeholder = data.placeholder || '';
   }
 }
