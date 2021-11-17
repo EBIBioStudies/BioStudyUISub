@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { ModalService } from 'app/shared/modal/modal.service';
 
 @Component({
   selector: 'st-field-errors',
@@ -11,6 +12,8 @@ export class FieldErrorsComponent {
 
   @Input() errors: string[] = [];
 
+  constructor(private modalService: ModalService) {}
+
   get formattedErrors(): string {
     this.singleLineError = this.errors.join(' ');
 
@@ -21,5 +24,9 @@ export class FieldErrorsComponent {
     }
 
     return this.singleLineError;
+  }
+
+  onSeeMoreClick(): void {
+    this.modalService.alert(this.singleLineError, '', 'Close', { class: 'modal-lg' });
   }
 }
