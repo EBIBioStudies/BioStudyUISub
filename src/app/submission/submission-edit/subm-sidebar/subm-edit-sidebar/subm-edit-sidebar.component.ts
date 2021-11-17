@@ -215,14 +215,17 @@ export class SubmEditSidebarComponent implements OnDestroy {
   }
 
   private updateItems(): void {
-    const tableTypes = this.sectionForm!.type.tableTypes.filter(
+    const tableTypes = this.sectionForm!.type.displayAnnotations
+      ? [...this.sectionForm!.type.tableTypes, this.sectionForm!.type.annotationsType]
+      : this.sectionForm!.type.tableTypes;
+    const tableTypesWithoutData = tableTypes.filter(
       (tableType) => !this.sectionForm!.tableForms.some((tableForm) => tableForm.tableType.name === tableType.name)
     );
 
     this.items = [
       ...this.sectionForm!.tableForms.map((tableForm) => DataTypeControl.fromTableForm(tableForm)),
       ...this.sectionForm!.type.sectionTypes.map((st) => DataTypeControl.fromSectionType(st)),
-      ...tableTypes.map((tableType) => DataTypeControl.fromTableType(tableType))
+      ...tableTypesWithoutData.map((tableType) => DataTypeControl.fromTableType(tableType))
     ].filter((item) => item.isVisible);
 
     const form = new FormGroup({}, FormValidators.uniqueValues);

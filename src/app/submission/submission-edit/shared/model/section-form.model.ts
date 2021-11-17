@@ -46,6 +46,7 @@ export class SectionForm extends FormBase {
     const table = this.section.tables.add(type);
     if (table) {
       this.addTableForm(table);
+      this.addTableEntry(table.id);
       this.structureChanges$.next(StructureChangeEvent.tableAdd);
     }
     return table;
