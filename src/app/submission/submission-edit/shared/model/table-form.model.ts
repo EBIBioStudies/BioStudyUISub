@@ -165,10 +165,7 @@ export class TableForm extends FormBase {
 
   addEntry(): void {
     this.addRow();
-
-    if (!this.canHaveMultipleRows) {
-      this.addColumn();
-    }
+    this.addColumn();
   }
 
   addRow(): void {
