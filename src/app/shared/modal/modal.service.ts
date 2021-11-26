@@ -8,7 +8,13 @@ import { filter, take } from 'rxjs/operators';
 export class ModalService {
   constructor(private modalService: BsModalService) {}
 
-  alert(text: string, title: string, confirmLabel: string, config?: ModalOptions | undefined): Observable<boolean> {
+  alert(
+    text: string,
+    title: string,
+    confirmLabel: string,
+    maxContentHeight?: string,
+    config?: ModalOptions | undefined
+  ): Observable<boolean> {
     const subj = new Subject<boolean>();
     this.modalService.show(ConfirmDialogComponent, {
       ...config,
@@ -17,6 +23,7 @@ export class ModalService {
         confirmLabel,
         body: text,
         isHideCancel: true,
+        maxContentHeight,
         callback: (value: boolean) => subj.next(value)
       }
     });

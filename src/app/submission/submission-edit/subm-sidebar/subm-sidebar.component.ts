@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
 
 import { CustomFormControl } from '../shared/model/custom-form-control.model';
 import { FormControl } from '@angular/forms';
@@ -23,12 +23,13 @@ export class SubmSidebarComponent implements OnDestroy {
   isCheckTabActive: boolean = true;
   serverError?: ServerError;
   showAdvanced: boolean = true;
+  numInvalid?: number;
 
   private controls: Array<FormControl>[] = [];
   private unsubscribe = new Subject<void>();
   private unsubscribeForm = new Subject<void>();
 
-  constructor(private submEditService: SubmEditService) {
+  constructor(private submEditService: SubmEditService, private changeDetectorRef: ChangeDetectorRef) {
     this.submEditService.sectionSwitch$.pipe(takeUntil(this.unsubscribe)).subscribe((sectionForm) => {
       this.switchSection(sectionForm);
     });
@@ -36,14 +37,6 @@ export class SubmSidebarComponent implements OnDestroy {
 
   get isEditTabActive(): boolean {
     return !this.isCheckTabActive;
-  }
-
-  get numInvalid(): number {
-    return flatMap(this.invalidControls, (c) => c).length;
-  }
-
-  get numInvalidAndTouched(): number {
-    return flatMap(this.invalidControls, (c) => c).filter((c) => c.touched).length;
   }
 
   ngOnDestroy(): void {
@@ -86,11 +79,17 @@ export class SubmSidebarComponent implements OnDestroy {
         this.updateInvalidControls();
       });
 
-      secForm.form.statusChanges.pipe(takeUntil(this.unsubscribeForm)).subscribe(() => this.updateInvalidControls());
+      secForm.form.statusChanges.pipe(takeUntil(this.unsubscribeForm)).subscribe(() => {
+        this.updateInvalidControls();
+      });
     }
   }
 
   private updateInvalidControls(): void {
-    this.invalidControls = this.controls.map((g) => g.filter((c) => c.invalid)).filter((g) => !isArrayEmpty(g));
+    this.invalidControls = this.controls
+      .map((g) => g.filter((c) => !c.valid && !c.pending))
+      .filter((g) => !isArrayEmpty(g));
+    this.numInvalid = flatMap(this.invalidControls, (c) => c).length;
+    this.changeDetectorRef.detectChanges();
   }
 }

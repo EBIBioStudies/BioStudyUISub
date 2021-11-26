@@ -1,42 +1,19 @@
-import { Observable, of } from 'rxjs';
-import { catchError, first, map } from 'rxjs/operators';
-import { Field } from 'app/submission/submission-shared/model/submission/submission.model';
+import { Observable, of, timer } from 'rxjs';
+import { catchError, finalize, first, map, switchMap } from 'rxjs/operators';
 import { CustomFormControl } from './model/custom-form-control.model';
 import { SubmissionService } from 'app/submission/submission-shared/submission.service';
-import { AsyncValidatorFn, ValidationErrors } from '@angular/forms';
+import { ValidationErrors } from '@angular/forms';
 
-type ValidatorFn = (
-  control: CustomFormControl,
-  submService: SubmissionService,
-  studyAccno: string
-) => Observable<ValidationErrors>;
+const DELAY_IN_MILLISECONDS = 500;
 
 export class FormValueValidator {
-  validatorNameToFnMap = {
-    forStudyTitle: this.forStudyTitle,
-    forFileList: this.forFileList
-  };
-
-  forAsyncFieldValue(field: Field, submService: SubmissionService, studyAccno: string): AsyncValidatorFn {
-    const asyncValueValidatorName = field.type.asyncValueValidatorName;
-
-    if (asyncValueValidatorName !== null && asyncValueValidatorName.length > 0) {
-      const validator: ValidatorFn = this.validatorNameToFnMap[asyncValueValidatorName];
-
-      if (validator) {
-        return (control: CustomFormControl) => validator(control, submService, studyAccno);
-      }
-    }
-
-    return () => Promise.resolve(null);
-  }
-
-  private forStudyTitle(
+  static forStudyTitle(
     control: CustomFormControl,
     submService: SubmissionService,
     studyAccno: string
   ): Observable<ValidationErrors | null> {
-    return submService.getSubmissions(true, { keywords: control.value }).pipe(
+    return timer(DELAY_IN_MILLISECONDS).pipe(
+      switchMap(() => submService.getSubmissions(true, { keywords: control.value })),
       map((submissions) => {
         const differentSubmissions = submissions.filter((submission) => submission.accno !== studyAccno);
         control.warningMessages =
@@ -47,20 +24,31 @@ export class FormValueValidator {
         return null;
       }),
       catchError(() => of(null)),
-      first()
+      first(),
+      finalize(() => {
+        control.root.updateValueAndValidity({ onlySelf: true });
+      })
     );
   }
 
-  private forFileList(control: CustomFormControl, submService: SubmissionService): Observable<ValidationErrors> {
-    return submService.validateFileList(control.value).pipe(
-      map(({ log }) => {
-        const { message } = log;
+  static forFileList(control: CustomFormControl, submService: SubmissionService): Observable<ValidationErrors> {
+    return timer(DELAY_IN_MILLISECONDS).pipe(
+      switchMap(() => submService.validateFileList(control.value)),
+      catchError(({ error }) => {
+        const {
+          log: { message }
+        } = error;
 
         control.errorMessages = {
           fileListNotValid: message
         };
 
-        return { fileListNotValid: true };
+        return of({ fileListNotValid: true });
+      }),
+      map((validation) => validation),
+      finalize(() => {
+        control.markAllAsTouched();
+        control.root.updateValueAndValidity({ onlySelf: true });
       })
     );
   }

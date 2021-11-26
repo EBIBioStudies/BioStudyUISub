@@ -27,6 +27,6 @@ export class FieldErrorsComponent {
   }
 
   onSeeMoreClick(): void {
-    this.modalService.alert(this.singleLineError, '', 'Close', { class: 'modal-lg' });
+    this.modalService.alert(this.singleLineError, '', 'Close', '600px', { class: 'modal-lg' });
   }
 }

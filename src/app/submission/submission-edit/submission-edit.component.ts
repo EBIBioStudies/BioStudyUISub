@@ -68,7 +68,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     private errorService: ErrorService,
     private appConfig: AppConfig
   ) {
-    submEditService.sectionSwitch$
+    this.submEditService.sectionSwitch$
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((sectionForm) => this.switchSection(sectionForm));
 
@@ -165,9 +165,6 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
   }
 
   onSubmitClick(event, isConfirm: boolean = false): void {
-    this.submEditService.switchSection(this.rootSection);
-    this.submEditService.validateForm();
-
     scrollTop();
 
     if (event) {
@@ -178,10 +175,14 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.submEditService.validateForm();
     if (!this.isValid) {
       this.sideBar!.onCheckTabClick();
+      this.submEditService.switchSection(this.rootSection);
       return;
     }
+
+    this.submEditService.switchSection(this.rootSection);
 
     const confirmObservable: Observable<boolean> = isConfirm ? this.confirmSubmit() : of(true);
 

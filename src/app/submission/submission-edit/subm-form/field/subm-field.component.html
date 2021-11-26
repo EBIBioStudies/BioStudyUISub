@@ -30,6 +30,6 @@
       [isSmall]="false" [isInputGroup]="true" stValidateOnblur>
     </st-input-value>
   </div>
-  <st-field-errors class="invalid-feedback"></st-field-errors>
+  <st-field-errors class="invalid-feedback" [errors]="errors"></st-field-errors>
   <st-unique-submission-warning *ngIf="!isReadonly" [fieldControl]="fieldControl"></st-unique-submission-warning>
 </div>
