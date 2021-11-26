@@ -12,6 +12,7 @@ import { NewSubmissionButtonComponent } from './new-submission-button/new-submis
 import { NewSubmissionButtonDirective } from './new-submission-button/new-submission-button.directive';
 import { UniqueSubmissionWarningComponent } from './unique-submission-warning/unique-submission-warning.component';
 import { UniqueSubmissionModalComponent } from './unique-submission-modal/unique-submission-modal.component';
+import { FieldErrorsComponent } from './field-errors/field-errors.component';
 
 @NgModule({
   imports: [
@@ -30,9 +31,15 @@ import { UniqueSubmissionModalComponent } from './unique-submission-modal/unique
     NewSubmissionButtonDirective,
     UniqueSubmissionWarningComponent,
     UniqueSubmissionModalComponent,
-    NewSubmissionButtonComponent
+    NewSubmissionButtonComponent,
+    FieldErrorsComponent
   ],
-  exports: [NewSubmissionButtonDirective, UniqueSubmissionWarningComponent, NewSubmissionButtonComponent],
+  exports: [
+    NewSubmissionButtonDirective,
+    UniqueSubmissionWarningComponent,
+    NewSubmissionButtonComponent,
+    FieldErrorsComponent
+  ],
   entryComponents: [AddSubmModalComponent]
 })
 export class SubmissionOtherModule {}

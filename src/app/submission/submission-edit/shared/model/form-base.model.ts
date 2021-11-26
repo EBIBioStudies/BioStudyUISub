@@ -5,9 +5,7 @@ export class FormBase {
   private formErrorCount: number = 0;
 
   constructor(readonly form: FormGroup) {
-    form.statusChanges.subscribe(() => {
-      this.onStatusChanges();
-    });
+    form.statusChanges.subscribe(() => this.onStatusChanges());
   }
 
   get errorCount(): number {

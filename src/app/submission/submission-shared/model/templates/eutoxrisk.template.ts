@@ -12,10 +12,10 @@ export const euToxRiskTemplate = {
         icon: 'fa-heading',
         valueType: {
           name: 'largetext',
-          minlength: 25,
-          isStudyTitle: true
+          minlength: 25
         },
-        display: 'required'
+        display: 'required',
+        asyncValueValidatorName: 'forStudyTitle'
       },
       {
         name: 'Description',

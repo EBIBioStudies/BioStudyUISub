@@ -75,16 +75,20 @@ export class SubmCheckSidebarComponent {
    */
   tipText(errors: ValidationErrors): string {
     if (errors.required) {
-      return 'blank';
+      return 'Blank';
     } else if (errors.maxlength) {
-      return 'too long';
+      return 'Too Long';
     } else if (errors.minlength) {
-      return 'too short';
+      return 'Too Short';
     } else if (errors.pattern) {
-      return 'wrong format';
+      return 'Wrong Format';
     } else if (errors.unique) {
-      return 'not unique';
+      return 'Not Unique';
+      // tslint:disable-next-line: no-string-literal
+    } else if (errors['fileListNotValid']) {
+      return 'Not Valid';
     }
+
     return Object.keys(errors)[0];
   }
 }
