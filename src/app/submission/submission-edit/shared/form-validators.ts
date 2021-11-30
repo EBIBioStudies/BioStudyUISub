@@ -86,6 +86,22 @@ export class FormValidators {
     return isValueValid ? null : { format: { value } };
   };
 
+  static maxLength = (maxlength: number) => (control: AbstractControl): ValidationErrors | null => {
+    const value: string = control.value || '';
+
+    return maxlength > 0 && value.trim().length < maxlength
+      ? null
+      : { maxlength: { actualLength: value.length, requiredLength: maxlength } };
+  };
+
+  static minLength = (minlength) => (control: AbstractControl): ValidationErrors | null => {
+    const value: string = control.value || '';
+
+    return minlength > 0 && value.trim().length > minlength
+      ? null
+      : { minlength: { actualLength: value.length, requiredLength: minlength } };
+  };
+
   static uniqueValues: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const columns = control as FormGroup;
     const values = Object.keys(columns.controls)
@@ -194,11 +210,11 @@ export class SubmFormValidators {
       const vt = valueType as TextValueType;
 
       if (vt.maxlength > 0) {
-        validators.push(Validators.maxLength(vt.maxlength));
+        validators.push(FormValidators.maxLength(vt.maxlength));
       }
 
       if (vt.minlength > 0) {
-        validators.push(Validators.minLength(vt.minlength));
+        validators.push(FormValidators.minLength(vt.minlength));
       }
     } else if (valueType.is(ValueTypeName.date)) {
       validators.push(FormValidators.formatDate);
