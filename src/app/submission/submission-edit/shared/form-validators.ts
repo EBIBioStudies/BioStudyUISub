@@ -89,7 +89,7 @@ export class FormValidators {
   static maxLength = (maxlength: number) => (control: AbstractControl): ValidationErrors | null => {
     const value: string = control.value || '';
 
-    return maxlength > 0 && value.trim().length < maxlength
+    return maxlength > 0 && value.trim().length <= maxlength
       ? null
       : { maxlength: { actualLength: value.length, requiredLength: maxlength } };
   };
@@ -97,7 +97,7 @@ export class FormValidators {
   static minLength = (minlength) => (control: AbstractControl): ValidationErrors | null => {
     const value: string = control.value || '';
 
-    return minlength > 0 && value.trim().length > minlength
+    return minlength > 0 && value.trim().length >= minlength
       ? null
       : { minlength: { actualLength: value.length, requiredLength: minlength } };
   };
