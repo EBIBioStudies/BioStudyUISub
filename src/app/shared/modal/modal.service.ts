@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { ConfirmDialogComponent } from './confirm-dialog.component';
 import { filter, take } from 'rxjs/operators';
 
@@ -8,14 +8,22 @@ import { filter, take } from 'rxjs/operators';
 export class ModalService {
   constructor(private modalService: BsModalService) {}
 
-  alert(text: string, title: string, confirmLabel: string): Observable<boolean> {
+  alert(
+    text: string,
+    title: string,
+    confirmLabel: string,
+    maxContentHeight?: string,
+    config?: ModalOptions | undefined
+  ): Observable<boolean> {
     const subj = new Subject<boolean>();
     this.modalService.show(ConfirmDialogComponent, {
+      ...config,
       initialState: {
         title,
         confirmLabel,
         body: text,
         isHideCancel: true,
+        maxContentHeight,
         callback: (value: boolean) => subj.next(value)
       }
     });
@@ -23,9 +31,10 @@ export class ModalService {
     return subj.asObservable().pipe(take(1));
   }
 
-  confirm(text: string, title: string, confirmLabel: string): Observable<boolean> {
+  confirm(text: string, title: string, confirmLabel: string, config?: ModalOptions | undefined): Observable<boolean> {
     const subj = new Subject<boolean>();
     this.modalService.show(ConfirmDialogComponent, {
+      ...config,
       initialState: {
         title,
         confirmLabel,

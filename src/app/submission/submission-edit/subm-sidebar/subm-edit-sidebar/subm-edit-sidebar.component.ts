@@ -11,8 +11,10 @@ import { AddSubmTypeModalComponent } from '../add-subm-type-modal/add-subm-type-
 import { FormValidators } from '../../shared/form-validators';
 import { SectionForm } from '../../shared/model/section-form.model';
 import { SubmEditService } from '../../shared/subm-edit.service';
+import { TableForm } from '../../shared/model/table-form.model';
 
 const SECTION_ID = '@SECTION@';
+const TABLE_TYPE_ID = '@TABLE_TYPE_ID@';
 
 class DataTypeControl {
   readonly control: FormControl;
@@ -35,8 +37,14 @@ class DataTypeControl {
     ]);
   }
 
-  static fromTableType(type: TableType, id: string): DataTypeControl {
-    return new DataTypeControl(type, type.icon, type.displayType, type.description, id);
+  static fromTableForm(table: TableForm): DataTypeControl {
+    const type: TableType = table.tableType;
+
+    return new DataTypeControl(type, type.icon, type.displayType, type.description, table.id);
+  }
+
+  static fromTableType(type: TableType): DataTypeControl {
+    return new DataTypeControl(type, type.icon, type.displayType, type.description, TABLE_TYPE_ID);
   }
 
   static fromSectionType(type: SectionType): DataTypeControl {
@@ -145,14 +153,21 @@ export class SubmEditSidebarComponent implements OnDestroy {
   }
 
   onItemClick(item: DataTypeControl): void {
+    let control;
+
     if (item.id === SECTION_ID) {
       const sf = this.sectionForm!.addSection(item.type as SectionType);
       this.submEditService.switchSection(sf);
       return;
     }
 
-    this.sectionForm!.addTableEntry(item.id);
-    const control = this.sectionForm!.getTableControl(item.id);
+    if (item.id === TABLE_TYPE_ID) {
+      const table = this.sectionForm!.addTable(item.type as TableType);
+      control = this.sectionForm!.getTableControl(table?.id || '');
+    } else {
+      this.sectionForm!.addTableEntry(item.id);
+      control = this.sectionForm!.getTableControl(item.id);
+    }
 
     if (control === undefined) {
       return;
@@ -200,9 +215,17 @@ export class SubmEditSidebarComponent implements OnDestroy {
   }
 
   private updateItems(): void {
+    const tableTypes = this.sectionForm!.type.displayAnnotations
+      ? [...this.sectionForm!.type.tableTypes, this.sectionForm!.type.annotationsType]
+      : this.sectionForm!.type.tableTypes;
+    const tableTypesWithoutData = tableTypes.filter(
+      (tableType) => !this.sectionForm!.tableForms.some((tableForm) => tableForm.tableType.name === tableType.name)
+    );
+
     this.items = [
-      ...this.sectionForm!.tableForms.map((ff) => DataTypeControl.fromTableType(ff.tableType, ff.id)),
-      ...this.sectionForm!.type.sectionTypes.map((st) => DataTypeControl.fromSectionType(st))
+      ...this.sectionForm!.tableForms.map((tableForm) => DataTypeControl.fromTableForm(tableForm)),
+      ...this.sectionForm!.type.sectionTypes.map((st) => DataTypeControl.fromSectionType(st)),
+      ...tableTypesWithoutData.map((tableType) => DataTypeControl.fromTableType(tableType))
     ].filter((item) => item.isVisible);
 
     const form = new FormGroup({}, FormValidators.uniqueValues);

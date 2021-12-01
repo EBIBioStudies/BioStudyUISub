@@ -12,10 +12,10 @@ export const bioRamanTemplate = {
         name: 'Title',
         icon: 'fa-heading',
         valueType: {
-          name: 'largetext',
-          isStudyTitle: true
+          name: 'largetext'
         },
-        display: 'required'
+        display: 'required',
+        asyncValueValidatorName: 'forStudyTitle'
       },
       {
         name: 'ReleaseDate',

@@ -26,7 +26,7 @@
         </div>
         <div *ngIf="sectionForm.isRootSection" class="card">
           <div class="card-body st-edit-status-message">
-            <ng-container *ngIf="hasJustCreated && sectionForm.invalid">
+            <ng-container *ngIf="isTemp && !readonly && !sectionForm.valid">
               <h2 class="card-title">New {{collection}} submission</h2>
               <p class="card-text">
                 Please fill in the form below. The <span class="font-weight-bold">Check</span> tab on the
@@ -38,7 +38,7 @@
               </div>
             </ng-container>
 
-            <ng-container *ngIf="!hasJustCreated && !readonly && sectionForm.invalid">
+            <ng-container *ngIf="!isTemp && !readonly && !sectionForm.valid">
               <h2 class="card-title">Incomplete {{collection}} submission</h2>
               <p class="card-text">
                 Some information in this submission is still missing or incorrect. Refer to the
@@ -50,7 +50,7 @@
               </div>
             </ng-container>
 
-            <ng-container *ngIf="!sectionForm.invalid && !readonly || sectionForm.pending">
+            <ng-container *ngIf="sectionForm.valid && !readonly">
               <ng-container *ngIf="isTemp && !isSubmitting">
                 <h2 class="card-title">Study ready for submission</h2>
                 <p class="card-text">You may submit the data on this form now.</p>

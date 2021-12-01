@@ -7,7 +7,7 @@ import { isArrayEmpty, isValueEmpty } from 'app/utils/validation.utils';
 import { tableRowToSections, tableToPtTable, tableToSectionItem } from './utils/table.utils';
 
 import { Injectable } from '@angular/core';
-import { LowerCaseSectionNames } from '../utils/constants';
+import { AttributeNames, LowerCaseSectionNames } from '../utils/constants';
 import { isDefinedAndNotEmpty } from 'app/utils/validation.utils';
 import { partition } from 'app/utils/array.utils';
 
@@ -16,17 +16,16 @@ export class SubmissionToPageTabService {
   newPageTab(collection?: string, templateName: string = DEFAULT_TEMPLATE_NAME): PageTab {
     const subm = new Submission(SubmissionType.fromTemplate(templateName));
     const pageTab = this.submissionToPageTab(subm);
+    const attributes = [{ name: AttributeNames.TEMPLATE, value: templateName }];
 
     // Guarantees that for non-default templates, an AttachTo attribute always exists.
     // NOTE: The PageTab constructor does not bother with attributes if the section is empty.
     if (collection) {
-      pageTab.attributes = mergeAttributes(pageTab.attributes || [], [
-        {
-          name: AttrExceptions.attachToAttr,
-          value: collection
-        }
-      ]);
+      attributes.push({ name: AttributeNames.ATTACH_TO, value: collection });
     }
+
+    pageTab.attributes = mergeAttributes(pageTab.attributes || [], attributes);
+
     return pageTab;
   }
 

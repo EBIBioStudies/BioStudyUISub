@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, forwardRef, Input, OnDestroy } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl } from '@angular/forms';
 import { FileTreeStore } from './file-tree.store';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -17,6 +17,7 @@ export class FileSelectComponent implements ControlValueAccessor, OnDestroy {
   @Input() readonly = false;
   @Input() isInputGroup: boolean = false;
   @Input() allowFolders: boolean = true;
+  @Input() formControl!: FormControl;
   // tslint:disable-next-line: no-input-rename
   @Input('value')
   private selected = '';
@@ -35,6 +36,10 @@ export class FileSelectComponent implements ControlValueAccessor, OnDestroy {
   set value(value: string) {
     this.selected = value;
     this.onChange(value);
+  }
+
+  get pending(): boolean {
+    return this.formControl.pending;
   }
 
   ngOnDestroy(): void {

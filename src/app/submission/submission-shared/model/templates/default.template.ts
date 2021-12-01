@@ -13,9 +13,9 @@ export const defaultTemplate = {
         display: 'required',
         valueType: {
           name: 'largetext',
-          minlength: 25,
-          isStudyTitle: true
-        }
+          minlength: 25
+        },
+        asyncValueValidatorName: 'forStudyTitle'
       },
       {
         name: 'ReleaseDate',

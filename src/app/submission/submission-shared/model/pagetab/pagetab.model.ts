@@ -22,7 +22,8 @@ export class AttrExceptions {
     { name: 'ReleaseDate', rootLevel: true, studyLevel: false, systemOnly: false, unique: true },
     { name: 'Title', rootLevel: true, studyLevel: false, systemOnly: false, unique: true },
     { name: 'AccNoPattern', rootLevel: true, studyLevel: false, systemOnly: true, unique: true },
-    { name: 'AccNoTemplate', rootLevel: true, studyLevel: false, systemOnly: true, unique: true }
+    { name: 'AccNoTemplate', rootLevel: true, studyLevel: false, systemOnly: true, unique: true },
+    { name: 'Template', rootLevel: true, studyLevel: false, systemOnly: true, unique: true }
   ];
 
   private static editableAttr: Array<string> = AttrExceptions.allAttrs
@@ -45,10 +46,6 @@ export class AttrExceptions {
 
   static get unique(): string[] {
     return this.uniqueAttr;
-  }
-
-  static get attachToAttr(): string {
-    return 'AttachTo';
   }
 }
 

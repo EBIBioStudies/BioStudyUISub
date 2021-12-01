@@ -15,6 +15,7 @@ export class ConfirmDialogComponent {
   @Input() confirmLabel: string = 'Ok'; // Default name for positive action.
   @Input() isHideCancel: boolean = false; // Hides the cancel button. Suitable for info modals.
   @Input() title: string = 'Confirm'; // Summary text for the modal's title.
+  @Input() maxContentHeight: string = '';
 
   constructor(public bsModalRef: BsModalRef) {
     bsModalRef.onHidden.subscribe((event) => this.onHidden(event));

@@ -192,14 +192,12 @@ export abstract class ValueType {
 export class TextValueType extends ValueType {
   readonly maxlength: number;
   readonly minlength: number;
-  readonly isStudyTitle: boolean;
   readonly placeholder: string;
 
   constructor(data: Partial<TextValueType> = {}, valueTypeName?: ValueTypeName) {
     super(valueTypeName || ValueTypeName.text);
     this.minlength = data.minlength || -1;
     this.maxlength = data.maxlength || -1;
-    this.isStudyTitle = data.isStudyTitle || false;
     this.placeholder = data.placeholder || '';
   }
 }
@@ -262,6 +260,7 @@ export class FieldType extends TypeBase {
   readonly helpLink: string;
   readonly icon: string;
   readonly valueType: ValueType;
+  readonly asyncValueValidatorName: string | null;
 
   constructor(
     name: string,
@@ -278,6 +277,7 @@ export class FieldType extends TypeBase {
     this.helpLink = data.helpLink || '';
     this.displayType = DisplayType.create(data.display || parentDisplayType.name);
     this.display = this.displayType.name;
+    this.asyncValueValidatorName = data.asyncValueValidatorName || null;
   }
 }
 

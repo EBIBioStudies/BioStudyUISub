@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { SubmitLog, SubmissionService } from '../submission-shared/submission.service';
+import { SubmissionService } from '../submission-shared/submission.service';
 
 /**
  * UI component for the modal being rendered with a given study's submission results.
@@ -11,7 +11,7 @@ import { SubmitLog, SubmissionService } from '../submission-shared/submission.se
 })
 export class SubmErrorModalComponent {
   collapsedLog?: boolean = false;
-  log?: SubmitLog;
+  log?: LogDetail;
 
   private modalRef: BsModalRef;
 

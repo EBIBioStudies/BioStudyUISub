@@ -13,9 +13,10 @@ export const biaTemplate = {
         icon: 'fa-heading',
         valueType: {
           name: 'largetext',
-          isStudyTitle: true
+          minlength: 25
         },
-        display: 'required'
+        display: 'required',
+        asyncValueValidatorName: 'forStudyTitle'
       },
       {
         name: 'ReleaseDate',
@@ -476,7 +477,8 @@ export const biaTemplate = {
             valueType: { name: 'file' },
             display: 'required',
             helpLink: 'https://www.ebi.ac.uk/biostudies/BioImages/help',
-            helpText: 'Help'
+            helpText: 'Help',
+            asyncValueValidatorName: 'forFileList'
           },
           {
             name: 'Comment',

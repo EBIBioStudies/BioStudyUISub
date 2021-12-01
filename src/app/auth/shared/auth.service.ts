@@ -15,11 +15,6 @@ import {
   RegistrationData
 } from './model';
 
-interface StatusResponse {
-  message?: string;
-  status: string; // 'OK' or 'FAIL'
-}
-
 interface UserInfoResponse extends UserInfo, StatusResponse {}
 
 @Injectable()
