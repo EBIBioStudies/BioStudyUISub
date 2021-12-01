@@ -159,8 +159,10 @@ export class DisplayType {
   }
 }
 
-export class BannerType {
-  constructor(readonly src: string, readonly alt: string, readonly backgroundColor: string) {}
+export interface BannerType {
+  readonly src: string;
+  readonly alt: string;
+  readonly backgroundColor: string;
 }
 
 export enum ValueTypeName {

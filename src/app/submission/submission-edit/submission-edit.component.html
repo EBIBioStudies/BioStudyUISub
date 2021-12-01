@@ -24,7 +24,7 @@
             be available on BioStudies but will not be reflected in the initially submitted file.
           </p>
         </div>
-        <div *ngIf="banner" class="card" [style.background]="banner.backgroundColor" style="justify-content: center; padding: 5px 0; margin: 0 0 10px 0">
+        <div *ngIf="banner" class="card d-flex justify-content-center px-2 mb-3" [style.background]="banner.backgroundColor">
           <img style="height: 3rem" [src]="banner.src" [alt]="banner.alt">
         </div>
         <div *ngIf="sectionForm.isRootSection" class="card">
