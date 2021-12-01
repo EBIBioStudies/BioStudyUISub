@@ -8,7 +8,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { ErrorService } from 'app/core/errors/error.service';
 import { Location } from '@angular/common';
 import { ModalService } from 'app/shared/modal/modal.service';
-import { PageTabSubmission } from 'app/submission/submission-shared/model';
+import { BannerType, PageTabSubmission } from 'app/submission/submission-shared/model';
 import { SectionForm } from './shared/model/section-form.model';
 import { SubmEditService } from './shared/subm-edit.service';
 import { SubmErrorModalComponent } from '../submission-results/subm-error-modal.component';
@@ -107,6 +107,10 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
 
   get frontendUrl(): string {
     return this.appConfig.frontendURL;
+  }
+
+  get banner(): BannerType | undefined {
+    return this.rootSection.section.type.banner;
   }
 
   ngOnDestroy(): void {
