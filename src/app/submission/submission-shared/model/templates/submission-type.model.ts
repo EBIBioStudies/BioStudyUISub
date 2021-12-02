@@ -159,6 +159,12 @@ export class DisplayType {
   }
 }
 
+export interface BannerType {
+  readonly src: string;
+  readonly alt: string;
+  readonly backgroundColor: string;
+}
+
 export enum ValueTypeName {
   text,
   largetext,
@@ -414,6 +420,7 @@ export class SectionType extends TypeBase {
   readonly tableGroups: string[][];
   readonly minRequired: number;
   readonly sectionExample: string;
+  readonly banner?: BannerType;
 
   private tableScope: TypeScope<TableType> = new TypeScope<TableType>();
   private fieldScope: TypeScope<FieldType> = new TypeScope<FieldType>();
@@ -441,6 +448,7 @@ export class SectionType extends TypeBase {
       this.displayType
     );
     this.sectionExample = data.sectionExample || '';
+    this.banner = data.banner;
 
     (data.fieldTypes || []).forEach(
       (fieldType) => new FieldType(fieldType.name, fieldType, this.fieldScope, this.displayType, fieldType.title)

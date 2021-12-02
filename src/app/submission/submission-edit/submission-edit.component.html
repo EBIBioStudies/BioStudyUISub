@@ -24,6 +24,9 @@
             be available on BioStudies but will not be reflected in the initially submitted file.
           </p>
         </div>
+        <div *ngIf="banner" class="card d-flex justify-content-center px-2 mb-3" [style.background]="banner.backgroundColor">
+          <img style="height: 3rem" [src]="banner.src" [alt]="banner.alt">
+        </div>
         <div *ngIf="sectionForm.isRootSection" class="card">
           <div class="card-body st-edit-status-message">
             <ng-container *ngIf="isTemp && !readonly && !sectionForm.valid">

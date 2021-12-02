@@ -1,0 +1,80 @@
+<?xml version="1.0" standalone="yes"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 569.93 85.93">
+    <defs>
+        <style>
+        @font-face {
+            font-family: IBMPlexSans-Regular;
+            src: url(data:application/font-woff;charset=utf-8;base64,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) format("woff");
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        .cls-1 {
+            fill: #038392;
+        }
+
+        .cls-2 {
+            font-size: 59px;
+            font-family: IBMPlexSans-Regular, sans-serif;
+        }
+
+        .cls-2, .cls-9 {
+            fill: #fff;
+        }
+
+        .cls-3 {
+            letter-spacing: 0em;
+        }
+
+        .cls-4 {
+            letter-spacing: -0.01em;
+        }
+
+        .cls-5 {
+            letter-spacing: 0em;
+        }
+
+        .cls-6 {
+            letter-spacing: 0em;
+        }
+
+        .cls-7 {
+            letter-spacing: -0.01em;
+        }
+
+        .cls-8 {
+            fill: #1d1d1b;
+        }
+
+        .cls-10 {
+            fill: #d32227;
+        }
+
+        .cls-11 {
+            fill: #29a6da;
+        }
+
+        .cls-12 {
+            fill: #82b530;
+        }</style>
+    </defs>
+    <rect class="cls-1" width="569.93" height="85.93"/>
+    <text class="cls-2" transform="translate(90.25 65.41)">Bi
+        <tspan class="cls-3" x="53.28" y="0">o</tspan>
+        <tspan x="86.02" y="0">Ima</tspan>
+        <tspan class="cls-4" x="192.63" y="0">g</tspan>
+        <tspan x="223.43" y="0">e A</tspan>
+        <tspan class="cls-5" x="307.56" y="0">r</tspan>
+        <tspan class="cls-6" x="328.92" y="0">chi</tspan>
+        <tspan class="cls-7" x="406.86" y="0">v</tspan>
+        <tspan x="435.42" y="0">e</tspan>
+    </text>
+    <rect class="cls-8" x="15.41" y="13.36" width="63.5" height="63.5"/>
+    <rect class="cls-9" x="17.84" y="16.1" width="58.08" height="58.08"/>
+    <rect class="cls-10" x="21.74" y="48.94" width="21.9" height="21.9"/>
+    <rect class="cls-11" x="34.84" y="47.75" width="36.08" height="9.88" transform="translate(0.2 105.57) rotate(-90)"/>
+    <rect class="cls-11" x="21.74" y="34.65" width="36.08" height="9.88"
+          transform="translate(79.56 79.17) rotate(-180)"/>
+    <rect class="cls-12" x="61.93" y="20.31" width="10.24" height="50.25"/>
+    <rect class="cls-12" x="41.6" y="-0.01" width="10.24" height="50.25" transform="translate(21.6 71.83) rotate(-90)"/>
+</svg>

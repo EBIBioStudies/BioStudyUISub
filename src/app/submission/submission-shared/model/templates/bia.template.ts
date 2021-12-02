@@ -7,6 +7,11 @@ export const biaTemplate = {
     displayAnnotations: false,
     tableGroups: [[]],
     name: 'Study',
+    banner: {
+      src: 'images/logo_bia.svg',
+      alt: 'BioImage Archive logo',
+      backgroundColor: '#038392'
+    },
     fieldTypes: [
       {
         name: 'Title',
