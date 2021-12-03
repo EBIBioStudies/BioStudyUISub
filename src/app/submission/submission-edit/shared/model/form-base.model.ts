@@ -33,7 +33,7 @@ export class FormBase {
   }
 
   invalidControls(): FormControl[] {
-    return this.controls().filter((control) => control.invalid);
+    return this.controls().filter((control) => !control.valid);
   }
 
   private onStatusChanges(): void {
