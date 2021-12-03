@@ -20,9 +20,10 @@ export class AttrExceptions {
   private static allAttrs: Array<AttrException> = [
     { name: 'AttachTo', rootLevel: true, studyLevel: false, systemOnly: true, unique: false },
     { name: 'ReleaseDate', rootLevel: true, studyLevel: false, systemOnly: false, unique: true },
-    { name: 'Title', rootLevel: true, studyLevel: true, systemOnly: false, unique: true },
+    { name: 'Title', rootLevel: true, studyLevel: false, systemOnly: false, unique: true },
     { name: 'AccNoPattern', rootLevel: true, studyLevel: false, systemOnly: true, unique: true },
-    { name: 'AccNoTemplate', rootLevel: true, studyLevel: false, systemOnly: true, unique: true }
+    { name: 'AccNoTemplate', rootLevel: true, studyLevel: false, systemOnly: true, unique: true },
+    { name: 'Template', rootLevel: true, studyLevel: false, systemOnly: true, unique: true }
   ];
 
   private static editableAttr: Array<string> = AttrExceptions.allAttrs
@@ -45,10 +46,6 @@ export class AttrExceptions {
 
   static get unique(): string[] {
     return this.uniqueAttr;
-  }
-
-  static get attachToAttr(): string {
-    return 'AttachTo';
   }
 }
 
@@ -89,7 +86,6 @@ export interface PageTabSection {
   accno?: string;
   attributes?: PtAttribute[];
   files?: PtFile[];
-  libraryFile?: string;
   links?: PtLink[];
   subsections?: PageTabSection[];
   tags?: PtTag[];

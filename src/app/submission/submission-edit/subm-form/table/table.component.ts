@@ -1,7 +1,17 @@
-import { Component, Input, OnChanges, ChangeDetectionStrategy, ViewChild, HostListener } from '@angular/core';
+import { takeUntil } from 'rxjs/operators';
+import {
+  Component,
+  Input,
+  OnChanges,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  OnInit,
+  OnDestroy
+} from '@angular/core';
 import { UserData } from 'app/auth/shared';
 import { TableForm } from '../../shared/model/table-form.model';
 import { Options as SortableOption } from 'sortablejs';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'st-table',
@@ -9,13 +19,14 @@ import { Options as SortableOption } from 'sortablejs';
   styleUrls: ['./table.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableComponent implements OnChanges {
+export class TableComponent implements OnChanges, OnInit, OnDestroy {
   @Input() tableForm!: TableForm;
   hoveredRowIndex: number = -1;
   @Input() readonly = false;
   sortableJsOptions: SortableOption = {};
+  private unsubscribe = new Subject();
 
-  constructor(public userData: UserData) {
+  constructor(public userData: UserData, private changeDetectorRef: ChangeDetectorRef) {
     this.sortableJsOptions.onUpdate = this.onRowOrderUpdate.bind(this);
     this.sortableJsOptions.filter = '.form-control';
     this.sortableJsOptions.preventOnFilter = false;
@@ -27,6 +38,17 @@ export class TableComponent implements OnChanges {
 
   get isReadOnly(): boolean {
     return Boolean(this.readonly || this.tableForm?.isReadonly);
+  }
+
+  ngOnInit(): void {
+    this.tableForm.structureChanges$.pipe(takeUntil(this.unsubscribe)).subscribe(() => {
+      this.changeDetectorRef.detectChanges();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
   }
 
   ngOnChanges(): void {

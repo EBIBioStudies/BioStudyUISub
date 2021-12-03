@@ -1,19 +1,20 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { GridOptions } from 'ag-grid-community/main';
 import { Subject, Subscription, throwError } from 'rxjs';
-import { takeUntil, catchError } from 'rxjs/operators';
-import { ModalService } from 'app/shared/modal.service';
-import { SubmissionService } from '../submission-shared/submission.service';
-import { SubmissionStatusService } from '../submission-shared/submission-status.service';
-import { DateFilterComponent } from './ag-grid/date-filter.component';
-import { TextFilterComponent } from './ag-grid/text-filter.component';
+import { catchError, takeUntil } from 'rxjs/operators';
+
 import { ActionButtonsCellComponent } from './ag-grid/action-buttons-cell.component';
-import { DateCellComponent } from './ag-grid/date-cell.component';
-import { StatusCellComponent } from './ag-grid/status-cell.component';
-import { TextCellComponent } from './ag-grid/text-cell.component';
-import { SubmissionStatus } from 'app/submission/submission-shared/submission.status';
 import { AppConfig } from 'app/app.config';
+import { DateCellComponent } from './ag-grid/date-cell.component';
+import { DateFilterComponent } from './ag-grid/date-filter.component';
+import { GridOptions } from 'ag-grid-community/main';
+import { ModalService } from 'app/shared/modal/modal.service';
+import { StatusCellComponent } from './ag-grid/status-cell.component';
+import { SubmissionService } from '../submission-shared/submission.service';
+import { SubmissionStatus } from 'app/submission/submission-shared/submission.status';
+import { SubmissionStatusService } from '../submission-shared/submission-status.service';
+import { TextCellComponent } from './ag-grid/text-cell.component';
+import { TextFilterComponent } from './ag-grid/text-filter.component';
 
 @Component({
   selector: 'st-subm-list',
@@ -108,7 +109,18 @@ export class SubmListComponent implements OnDestroy, OnInit {
         filter: true,
         filterFramework: DateFilterComponent,
         headerName: 'Release Date',
-        maxWidth: 150,
+        maxWidth: 120,
+        resizable: true,
+        hide: !this.showSubmitted
+      },
+      {
+        cellClass: 'ag-cell-centered',
+        cellRendererFramework: DateCellComponent,
+        field: 'mtime',
+        filter: true,
+        filterFramework: DateFilterComponent,
+        headerName: 'Last modified',
+        maxWidth: 130,
         resizable: true,
         hide: !this.showSubmitted
       },
@@ -116,7 +128,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
         cellRendererFramework: ActionButtonsCellComponent,
         filter: true,
         headerName: 'Actions',
-        maxWidth: this.showSubmitted ? 150 : 100,
+        maxWidth: this.showSubmitted ? 140 : 100,
         resizable: true,
         sortable: false,
         suppressMenu: true
@@ -134,6 +146,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
       accno: row.accno,
       method: row.method,
       rtime: row.rtime,
+      mtime: row.mtime,
       status: row.status || SubmissionStatus.PROCESSED.name,
       title: row.title,
       version: row.version,
@@ -174,9 +187,9 @@ export class SubmListComponent implements OnDestroy, OnInit {
         } else {
           return this.modalService
             .confirm(
-              `The submission with accession number ${accno} has not been submitted yet. If you proceed, \
+              `The draft with accession number ${accno} has not been submitted yet. If you proceed, \
             it will be permanently deleted.`,
-              `Delete draft submission`,
+              `Delete draft`,
               'Delete'
             )
             .subscribe(onNext);
@@ -184,7 +197,9 @@ export class SubmListComponent implements OnDestroy, OnInit {
       },
 
       onEdit: (accno: string) => {
-        this.router.navigate(['/edit', accno]);
+        const pathParams = row.method ? { method: row.method } : {};
+
+        this.router.navigate([`/edit/${accno}`, pathParams]);
       },
 
       onView: (accno: string) => {
@@ -242,15 +257,6 @@ export class SubmListComponent implements OnDestroy, OnInit {
 
       this.router.navigate([fragment], { relativeTo: this.route, replaceUrl: true });
     }
-  }
-
-  /**
-   * Handler for the click event on the upload submission button, redirecting to a new view.
-   * @param event - Click event object, the bubbling of which will be prevented.
-   */
-  onUploadSubmClick(event: Event): void {
-    event.preventDefault();
-    this.router.navigate(['/direct_upload']);
   }
 
   setDatasource(): void {

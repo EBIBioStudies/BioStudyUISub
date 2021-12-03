@@ -1,4 +1,5 @@
 import { DisplayType, ValueType, ValueTypeFactory } from '../templates';
+
 import { nextId } from './submission.model.counter';
 
 export class Attribute {
@@ -11,7 +12,9 @@ export class Attribute {
     readonly isTemplateBased: boolean = false,
     readonly dependencyColumn: string = '',
     readonly uniqueValues: boolean = false,
-    readonly autosuggest: boolean = true
+    readonly autosuggest: boolean = true,
+    readonly helpText: string = '',
+    readonly helpLink: string = ''
   ) {
     this.id = `attr_${nextId()}`;
   }

@@ -1,0 +1,32 @@
+<div class="col-lg-8 mx-auto p-3 py-md-5">
+  <div *ngIf="isLoading" class="d-flex justify-content-center">
+    <st-loading></st-loading>
+  </div>
+  <main *ngIf="!isLoading" class="flex-grow-1">
+    <div class="row g-5 p-2 bg-light rounded rounded-3">
+      <div class="col-md-2">
+        <h5>Profile</h5>
+      </div>
+      <div class="col-md-10">
+        <h4 *ngIf="fullname">{{fullname}}</h4>
+        <dl>
+          <dt *ngIf="email">Email</dt>
+          <dd *ngIf="email">{{email}}</dd>
+          <dt *ngIf="orcid">ORCID</dt>
+          <dd *ngIf="orcid">{{orcid}}</dd>
+        </dl>
+      </div>
+    </div>
+    <hr *ngIf="hasCollections" class="col-3 col-md-2">
+    <div *ngIf="hasCollections" class="row g-5 p-2 bg-light rounded rounded-3">
+      <div class="col-md-2">
+        <h5>Collections</h5>
+      </div>
+      <div class="col-md-10">
+        <ul class="list-unstyled">
+          <li *ngFor="let collection of collections">{{collection}}</li>
+        </ul>
+      </div>
+    </div>
+  </main>
+</div>

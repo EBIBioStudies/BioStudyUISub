@@ -9,9 +9,11 @@ export interface UserInfo {
   secret: string;
   sessid: string;
   superuser: boolean;
-  username: string;
+  username: string | null;
+  allow: string[];
+  deny: string[];
 }
 
 export interface ExtendedUserInfo extends UserInfo {
-  projects: string[];
+  collections: string[];
 }

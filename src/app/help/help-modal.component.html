@@ -1,0 +1,30 @@
+<div class="modal-content">
+  <div class="modal-body">
+    <h3>Welcome to BioStudies Submission Tool!</h3>
+    <p>If this is your first time in the application, we kindly invite you to watch the video below
+    which will guide you on how to upload files and create a submission from scratch. You can also drop an email to
+    <a href="mailto:biostudies@ebi.ac.uk?Subject=BioStudies Submission Tool error">biostudies@ebi.ac.uk</a>
+    if you need further help.</p>
+    <video width="764" class="shadow rounded mb-4" id="help-video" loop muted autoplay controls>
+      <source [src]="introVideoPath" type="video/mp4">
+
+      Sorry, it looks like your browser doesn't support embedded videos but you can use the sources below.
+    </video>
+    <script>
+      document.getElementById('help-video').play();
+    </script>
+    <h4>Other help resources</h4>
+    <ul>
+      <li><a href="https://www.ebi.ac.uk/biostudies/submissions/help" target="_blank">Submission Tool Help page</a></li>
+      <li><a href="https://www.ebi.ac.uk/biostudies/help" target="_blank">BioStudies Help page</a></li>
+    </ul>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-link d-inline text-muted" (click)="hideForever()">
+      <label class="sr-only" for="hide-forever-check">Do not show help modal again?</label>
+      <input id="hide-forever-check" type="checkbox" [checked]="isHiddenForever">
+      Don't show this again
+    </button>
+    <button type="button" class="btn btn-primary" (click)="hide()" aria-label="Close" title="Close">Close</button>
+  </div>
+</div>

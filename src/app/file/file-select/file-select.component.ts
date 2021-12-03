@@ -1,5 +1,5 @@
-import { Component, forwardRef, Input, OnDestroy } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ChangeDetectorRef, Component, forwardRef, Input, OnDestroy } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl } from '@angular/forms';
 import { FileTreeStore } from './file-tree.store';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -16,12 +16,18 @@ export class FileSelectComponent implements ControlValueAccessor, OnDestroy {
   @Input() inputId = '';
   @Input() readonly = false;
   @Input() isInputGroup: boolean = false;
+  @Input() allowFolders: boolean = true;
+  @Input() formControl!: FormControl;
   // tslint:disable-next-line: no-input-rename
   @Input('value')
   private selected = '';
   private unsubscribe = new Subject();
 
-  constructor(private fileStore: FileTreeStore, private modalService: BsModalService) {}
+  constructor(
+    private fileStore: FileTreeStore,
+    private modalService: BsModalService,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
 
   get value(): string {
     return this.selected;
@@ -30,6 +36,10 @@ export class FileSelectComponent implements ControlValueAccessor, OnDestroy {
   set value(value: string) {
     this.selected = value;
     this.onChange(value);
+  }
+
+  get pending(): boolean {
+    return this.formControl.pending;
   }
 
   ngOnDestroy(): void {
@@ -41,9 +51,10 @@ export class FileSelectComponent implements ControlValueAccessor, OnDestroy {
   openFileSelectModal(): void {
     if (!this.readonly) {
       const modal = this.modalService.show(UploadFileModalComponent, { ignoreBackdropClick: true });
-
+      (modal.content as UploadFileModalComponent).allowFolders = this.allowFolders;
       (modal.content as UploadFileModalComponent).onClose.pipe(takeUntil(this.unsubscribe)).subscribe((fileName) => {
         this.value = fileName;
+        this.changeDetectorRef.detectChanges();
       });
     }
   }
@@ -67,6 +78,8 @@ export class FileSelectComponent implements ControlValueAccessor, OnDestroy {
           if (path !== value) {
             this.onChange(path);
           }
+
+          this.changeDetectorRef.detectChanges();
         });
     }
   }

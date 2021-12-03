@@ -3,7 +3,8 @@ import { ControlRef } from '../control-reference';
 
 export class CustomFormControl extends FormControl {
   ref: ControlRef = ControlRef.unknown;
-  warnings = {};
+  warningMessages = {};
+  errorMessages = {};
 
   constructor(
     formState?: any,

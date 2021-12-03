@@ -1,34 +1,42 @@
 <div class="d-flex align-items-center h-100" [ngClass]="{'editable': canEdit, 'text-muted': !editing}">
-  <input class="form-control" type="text" tabindex="-1" autocomplete="off"
-       name="inline-edit-box"
-       container="body"
-       placement="bottom"
-       [tooltip]="isOverflow(inlineEditBox) ? value : ''"
-       [(ngModel)]="value"
-       [placeholder]="placeholder"
-       [disabled]="readonly || !canEdit"
-       [typeahead]="columnOptions"
-       [typeaheadMinLength]="suggestThreshold"
-       [typeaheadOptionsLimit]="200"
-       [typeaheadScrollable]="true"
-       [typeaheadOptionsInScrollableView]="suggestLength"
-       (blur)="onBlur()"
-       (click)="!readonly && canEdit && onEdit()"
-       (keyup.enter)="onEnterKey($event, ahead._container)"
-       (keydown)="onKeyDown()"
-       #ahead="bs-typeahead"
-       #inlineEditBox/>
+  <div class="input-group d-flex align-items-center pr-2">
+    <label class="sr-only" for="{{id}}">Enter column name</label>
+    <input class="form-control form-control-sm shadow-none" type="text" tabindex="-1" autocomplete="off"
+         name="inline-edit-box"
+         container="body"
+         placement="bottom"
+         [id]="id"
+         [tooltip]="isOverflow(inlineEditBox) ? value : ''"
+         [(ngModel)]="value"
+         [placeholder]="placeholder"
+         [disabled]="readonly || !canEdit"
+         [typeahead]="columnOptions"
+         [typeaheadMinLength]="suggestThreshold"
+         [typeaheadOptionsLimit]="200"
+         [typeaheadScrollable]="true"
+         [typeaheadOptionsInScrollableView]="suggestLength"
+         [ngClass]="{'readonly': !editing}"
+         (blur)="onBlur()"
+         (click)="!readonly && canEdit && onEdit()"
+         (keyup.enter)="onEnterKey($event, ahead._container)"
+         (keydown)="onKeyDown()"
+         #ahead="bs-typeahead"
+         #inlineEditBox/>
+    <st-help-link *ngIf="showHelpText && !editing" [text]="helpText" [href]="helpLink" ></st-help-link>
+  </div>
   <small *ngIf="isOptional && !editing && !readonly">
     <i>Optional</i>
   </small>
   <div *ngIf="!editing" class="btn-group btn-group-sm">
     <button *ngIf="canEdit" class="btn btn-link" type="button"
-        (click)="onEdit($event)">
-      <i class="fas fa-pencil-alt"></i>
+        (click)="onEdit($event)" aria-label="Edit Column {{value}}"
+        title="Edit Column {{value}}">
+      <i class="fas fa-pencil-alt" aria-hidden="true"></i>
     </button>
     <button *ngIf="canRemove" class="btn btn-link" type="button"
-        (click)="onRemove($event)">
-      <i class="fas fa-trash-alt text-danger"></i>
+        (click)="onRemove($event)" aria-label="Remove Column {{value}}"
+        title="Remove Column {{value}}">
+      <i class="fas fa-trash-alt text-danger" aria-hidden="true"></i>
     </button>
   </div>
 </div>

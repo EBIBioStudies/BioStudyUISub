@@ -1,7 +1,10 @@
 <div class="input-group" dropdown>
-  <input type="text" [ngModel]="value" class="form-control custom-file-input {{inputId}}"
-    (click)="openFileSelectModal()" [ngClass]="{'is-grouped': isInputGroup}" readonly #inputbox />
+  <input id="{{inputId}}" type="text" [ngModel]="value" class="form-control custom-file-input {{inputId}}"
+    (click)="openFileSelectModal()" [ngClass]="{'is-grouped': isInputGroup}" readonly #inputbox [disabled]="pending" />
   <div *ngIf="!readonly" class="input-group-append">
-    <button class="btn btn-outline-secondary" type="button" (click)="openFileSelectModal()">Select File</button>
+    <button class="btn btn-outline-secondary" type="button" (click)="openFileSelectModal()" [disabled]="pending">
+      <span *ngIf="pending" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+      Select File{{allowFolders ? '/Folder' : ''}}
+    </button>
   </div>
 </div>

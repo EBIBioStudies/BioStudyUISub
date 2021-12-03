@@ -7,7 +7,7 @@
       {{node.name}}
     </a>
     <div *ngIf="node.expanded">
-      <st-file-tree [root]="node" (fileTreeSelect)="onChildTreeClick($event)"></st-file-tree>
+      <st-file-tree [root]="node" [allowFolders]="this.allowFolders" (fileTreeSelect)="onChildTreeClick($event)"></st-file-tree>
     </div>
   </li>
 </ul>

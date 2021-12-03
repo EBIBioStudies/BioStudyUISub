@@ -13,8 +13,10 @@ import { Component } from '@angular/core';
       placement="left"
       container="body"
       triggers="hover"
+      aria-label="Open in BioStudies"
+      title="Open in BioStudies"
     >
-      <i class="fas fa-external-link-alt"></i>
+      <i aria-hidden="true" class="fas fa-external-link-alt"></i>
     </button>
     <button
       *ngIf="rowData && isRowEditable"
@@ -25,8 +27,10 @@ import { Component } from '@angular/core';
       placement="left"
       container="body"
       triggers="hover"
+      aria-label="Edit Submission"
+      title="Edit Submission"
     >
-      <i class="fas fa-pencil-alt"></i>
+      <i aria-hidden="true" class="fas fa-pencil-alt"></i>
     </button>
     <button
       *ngIf="rowData && isRowDeletable"
@@ -37,9 +41,11 @@ import { Component } from '@angular/core';
       tooltip="Delete"
       placement="left"
       container="body"
+      aria-label="Delete Submission"
+      title="Delete Submission"
     >
-      <i *ngIf="!isBusy" class="far fa-trash-alt fa-fw"></i>
-      <i *ngIf="isBusy" class="fa fa-cog fa-spin fa-fw"></i>
+      <i *ngIf="!isBusy" aria-hidden="true" class="far fa-trash-alt fa-fw"></i>
+      <i *ngIf="isBusy" aria-hidden="true" class="fa fa-cog fa-spin fa-fw"></i>
     </button>
   `
 })

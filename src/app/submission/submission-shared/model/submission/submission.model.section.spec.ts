@@ -2,6 +2,19 @@ import { Section } from './submission.model';
 import { TableType, FieldType, invalidateGlobalScope, SectionType } from '../templates';
 
 describe('Submission Model: Section', () => {
+  const sectionType = new SectionType('ASectionType', {
+    tableTypes: [
+      {
+        name: 'Table1',
+        display: 'required'
+      } as TableType,
+      {
+        name: 'Table2',
+        display: 'required'
+      } as TableType
+    ]
+  });
+
   beforeEach(() => {
     invalidateGlobalScope();
   });
@@ -11,7 +24,6 @@ describe('Submission Model: Section', () => {
     expect(sec.type.name).toBe('MySectionType');
     expect(sec.typeName).toBe('MySectionType');
     expect(sec.accno).toBe('');
-    expect(sec.annotations.isEmpty).toBeTruthy();
     expect(sec.fields.length).toBe(0);
     expect(sec.tables.length).toBe(0);
     expect(sec.sections.length).toBe(0);
@@ -33,22 +45,16 @@ describe('Submission Model: Section', () => {
     expect(sec.fields.length).toBe(2);
   });
 
-  it('auto creates all tables declared in the type', () => {
-    const type = new SectionType('ASectionType', {
-      tableTypes: [
-        {
-          name: 'Table1',
-          display: 'required'
-        } as TableType,
-        {
-          name: 'Table2',
-          display: 'required'
-        } as TableType
-      ]
-    });
-    const sec = new Section(type);
+  it('auto creates all tables declared in the type when submission is draft', () => {
+    const sec = new Section(sectionType, {}, '', true);
     expect(sec.typeName).toBe('ASectionType');
     expect(sec.tables.length).toBe(2);
+  });
+
+  it('should not auto create all tables declared in the type when submission is not draft', () => {
+    const sec = new Section(sectionType, {}, '', false);
+    expect(sec.typeName).toBe('ASectionType');
+    expect(sec.tables.length).toBe(0);
   });
 
   it('auto creates required-only sections declared in the type', () => {

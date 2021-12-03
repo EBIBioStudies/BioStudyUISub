@@ -1,27 +1,29 @@
-import { Observable, Subject, Subscription, BehaviorSubject } from 'rxjs';
-import { Injectable } from '@angular/core';
-import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 import {
   Attribute,
   AttributeData,
-  Table,
   Section,
   SubmValidationErrors,
   Submission,
-  SubmissionValidator
+  SubmissionValidator,
+  Table,
+  getTemplatesForCollections
 } from 'app/submission/submission-shared/model';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
+import { PageTab, SelectValueType } from 'app/submission/submission-shared/model';
+import { SubmissionService, SubmitResponse } from '../../submission-shared/submission.service';
+import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
+
+import { Injectable } from '@angular/core';
+import { PageTabSubmission } from 'app/submission/submission-shared/model/pagetab/pagetab.model';
+import { PageTabToSubmissionService } from 'app/submission/submission-shared/pagetab-to-submission.service';
+import { SectionForm } from './model/section-form.model';
+import { StructureChangeEvent } from './structure-change-event';
+import { SubmissionToPageTabService } from 'app/submission/submission-shared/submission-to-pagetab.service';
 import { SubmissionType } from 'app/submission/submission-shared/model/templates/submission-type.model';
 import { UserData } from 'app/auth/shared';
 import { UserInfo } from 'app/auth/shared/model';
-import { PageTab, SelectValueType } from 'app/submission/submission-shared/model';
-import { PageTabToSubmissionService } from 'app/submission/submission-shared/pagetab-to-submission.service';
-import { SubmissionToPageTabService } from 'app/submission/submission-shared/submission-to-pagetab.service';
-import { isDefinedAndNotEmpty } from 'app/utils';
-import { PageTabSubmission } from 'app/submission/submission-shared/model/pagetab/pagetab.model';
-import { SubmissionService, SubmitResponse } from '../../submission-shared/submission.service';
-import { SectionForm } from './model/section-form.model';
-import { flatTables } from '../../utils/table.utils';
-import { StructureChangeEvent } from './structure-change-event';
+import { flatTables } from 'app/submission/submission-shared/utils/table.utils';
+import { isDefinedAndNotEmpty } from 'app/utils/validation.utils';
 
 class EditState {
   static EDITING = 'Editing';
@@ -115,6 +117,7 @@ class EditState {
 export class SubmEditService {
   readonly sectionSwitch$: BehaviorSubject<SectionForm | null> = new BehaviorSubject<SectionForm | null>(null);
   readonly serverError$: Subject<any> = new Subject<any>();
+  readonly validationError$: Subject<SubmValidationErrors> = new Subject<SubmValidationErrors>();
 
   private accno: string = '';
   private editState: EditState = new EditState();
@@ -149,12 +152,29 @@ export class SubmEditService {
     return this.editState.isEditing;
   }
 
-  get isTemp(): boolean {
-    return this.submModel ? this.submModel.isTemp : false;
-  }
-
   get isRevised(): boolean {
     return this.submModel ? this.submModel.isRevised : false;
+  }
+
+  createEmptySubmission(templateName?: string): Observable<string> {
+    return this.userData.collections$.pipe(
+      switchMap((projectNames) => {
+        const templates = getTemplatesForCollections(projectNames);
+        const templateInfo = templates.find(
+          ({ collection }) => collection.toLowerCase() === templateName?.toLowerCase()
+        );
+
+        if (templateInfo !== undefined) {
+          const { name, collection } = templateInfo;
+
+          return this.submService.createDraftSubmission(collection, name);
+        }
+
+        throw new Error(
+          `Looks like you don't have permissions to see "${templateName}" collection or the study template doesn't exist`
+        );
+      })
+    );
   }
 
   loadSubmission(accno: string, setDefaults?: boolean): Observable<PageTabSubmission> {
@@ -243,13 +263,15 @@ export class SubmEditService {
     this.sectionSwitch$.next(nextSectionForm);
   }
 
-  validateSubmission(): SubmValidationErrors {
-    return SubmissionValidator.validate(this.submModel);
+  validateForm(): void {
+    const errors = SubmissionValidator.validate(this.submModel);
+
+    this.validationError$.next(errors);
   }
 
   private asContactAttributes(userInfo: UserInfo): AttributeData[] {
     return [
-      { name: 'Name', value: userInfo.username },
+      { name: 'Name', value: userInfo.username || '' },
       { name: 'E-mail', value: userInfo.email },
       { name: 'ORCID', value: userInfo.aux.orcid }
     ];

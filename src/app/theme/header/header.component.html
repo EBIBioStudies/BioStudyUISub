@@ -1,0 +1,75 @@
+<nav class="navbar navbar-expand-lg fixed-top navbar-light border-bottom bg-bio-blue">
+  <a class="navbar-brand" routerLink="/">
+    <img src="images/logo.svg" alt="BioStudies Submission Tool" height="38" />
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="nav nav-pills ml-auto">
+      <li class="nav-item" *ngIf="userLoggingIn">
+        <a class="nav-link" routerLink="/signup" routerLinkActive="active" tooltip="Register as new user"
+          placement="bottom" container="body" (click)="toggleCollapsed()">
+          <i class="fa fa-user-plus fa-fw fa-lg"></i>
+          Register
+        </a>
+      </li>
+      <li class="nav-item" *ngIf="!userLoggedIn && !userLoggingIn">
+        <a class="nav-link" routerLink="/signin" tooltip="Log in to access studies" placement="bottom"
+          container="body" (click)="toggleCollapsed()">
+          <i class="fas fa-sign-in-alt fa-fw fa-lg"></i>
+          Log in
+        </a>
+      </li>
+      <li class="nav-item" *ngIf="userLoggedIn">
+        <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+          tooltip="List of submissions" placement="bottom" container="body" (click)="toggleCollapsed()">
+          <i class="fas fa-fw fa-lg fa-cloud-upload-alt"></i>
+          Submissions
+        </a>
+      </li>
+      <li class="nav-item" *ngIf="userLoggedIn">
+        <a class="nav-link" routerLink="files" routerLinkActive="active"
+          tooltip="Upload or list your files" placement="bottom" container="body" (click)="toggleCollapsed()">
+          <i class="fa fa-fw fa-folder-open fa-lg"></i>
+          File Upload
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/help" routerLinkActive="active" tooltip="How to use this tool"
+          placement="bottom" container="body" (click)="toggleCollapsed()">
+          <i class="fa fa-fw fa-question-circle fa-lg"></i>
+          Help
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" tooltip="Submit feedback" placement="bottom" container="body" (click)="submitFeedback()" role="button">
+          <i class="fa fa-fw fa-paper-plane fa-lg"></i>
+          Feedback
+        </a>
+      </li>
+      <li class="nav-item dropdown" *ngIf="userLoggedIn" dropdown>
+        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false" [tooltip]="userDisplayName" dropdownToggle>
+          <i *ngIf="!isBusy" class="fa fa-fw fa-user-circle fa-lg"></i>
+          <i *ngIf="isBusy" class="fa fa-fw fa-cog fa-spin fa-lg"></i>
+        </a>
+        <ul id="dropdown-basic" class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="button-basic" *dropdownMenu>
+          <li role="menuitem">
+            <a class="dropdown-item d-flex justify-content-between align-items-center" routerLink="/profile">
+              Profile
+              <i class="far fa-user-circle"></i>
+            </a>
+          </li>
+          <li class="divider dropdown-divider"></li>
+          <li role="menuitem">
+            <a class="dropdown-item d-flex justify-content-between align-items-center" href="/" (click)="signOut($event); false">
+              Log out
+              <i class="fas fa-sign-out-alt"></i>
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</nav>

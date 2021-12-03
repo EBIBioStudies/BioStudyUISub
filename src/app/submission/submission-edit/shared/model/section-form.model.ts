@@ -39,13 +39,14 @@ export class SectionForm extends FormBase {
     this.sectionPath = this.isRootSection ? [] : [...parentSectionPath, this.id];
     this.sectionRef = ControlGroupRef.sectionRef(section, this.isRootSection);
 
-    this.buildElements(section.displayAnnotations);
+    this.buildElements();
   }
 
   addTable(type: TableType): Table | undefined {
     const table = this.section.tables.add(type);
     if (table) {
       this.addTableForm(table);
+      this.addTableEntry(table.id);
       this.structureChanges$.next(StructureChangeEvent.tableAdd);
     }
     return table;
@@ -193,14 +194,11 @@ export class SectionForm extends FormBase {
     return sectionForm;
   }
 
-  private buildElements(displayAnnotations: boolean): void {
+  private buildElements(): void {
     const section = this.section;
 
     section.fields.list().forEach((field) => this.addFieldControl(field));
-
-    const tables = displayAnnotations ? [section.annotations, ...section.tables.list()] : section.tables.list();
-    tables.forEach((table) => this.addTableForm(table));
-
+    section.tables.list().forEach((table) => this.addTableForm(table));
     section.sections.list().forEach((sectionItem) => this.addSubsectionForm(sectionItem));
   }
 

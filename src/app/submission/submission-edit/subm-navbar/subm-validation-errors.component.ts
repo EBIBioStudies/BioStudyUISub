@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { SubmValidationErrors } from 'app/submission/submission-shared/model';
+import { SectionValidationError, SubmValidationErrors } from 'app/submission/submission-shared/model';
 
 @Component({
   selector: 'st-subm-validation-errors',
@@ -8,7 +8,19 @@ import { SubmValidationErrors } from 'app/submission/submission-shared/model';
 export class SubmValidationErrorsComponent {
   @Input() errors: SubmValidationErrors = SubmValidationErrors.EMPTY;
 
-  get errorList(): Array<string> {
-    return this.errors.errors;
+  get hasFieldValidationErrors(): boolean {
+    const fieldErrors: (string | SectionValidationError)[] = this.errors.errors.filter(
+      (error) => !(error instanceof SectionValidationError)
+    );
+
+    return fieldErrors.length > 0;
+  }
+
+  get sectionErrorsMsg(): Array<string> {
+    const sectionErrors: (string | SectionValidationError)[] = ([] = this.errors.errors.filter(
+      (error) => error instanceof SectionValidationError
+    ));
+
+    return sectionErrors.map((error) => (error as SectionValidationError).message);
   }
 }

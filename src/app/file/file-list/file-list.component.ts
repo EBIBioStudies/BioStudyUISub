@@ -5,7 +5,7 @@ import { Subject, throwError, of, Observable } from 'rxjs';
 import { switchMap, filter, takeUntil, catchError } from 'rxjs/operators';
 import { AppConfig } from 'app/app.config';
 import { FileService } from 'app/file/shared/file.service';
-import { ModalService } from 'app/shared/modal.service';
+import { ModalService } from 'app/shared/modal/modal.service';
 import { Path } from 'app/file/shared/path';
 import { FileActionsCellComponent } from './ag-grid/file-actions-cell.component';
 import { FileTypeCellComponent } from './ag-grid/file-type-cell.component';

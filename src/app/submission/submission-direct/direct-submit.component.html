@@ -16,7 +16,7 @@
             {{sidebar.hasRequests && sidebar.isStatus('successful') ? 'Submitted' : 'Submissions'}}
           </a>
           &nbsp;<i class="fa fa-angle-right font-bold"></i>&nbsp;
-          <strong>Direct upload</strong>
+          <strong>Submit PageTab</strong>
         </div>
         <div class="nav-block text-center text-muted">
           <span *ngIf="sidebar.pendingFiles > 0">
@@ -33,35 +33,36 @@
       <div class="content p-3 bg-light">
         <div class="card">
           <div *ngIf="!sidebar.hasRequests" class="card-body">
-            <h4>New direct entry</h4>
             <p>Please fill in the form on the left-hand side to upload your studies:</p>
-            <ol>
+            <ul>
               <li>
                 <strong>
                   Provide the study files
                 </strong>
                 <p>
-                  Use the <i>"File Upload"</i> button to pick files from different directories. <br />
-                  Use the <i>"Folder Upload"</i> button to upload all the files in a directory.
+                  Use the <i>"Add File"</i> button to pick files from different directories. <br />
+                  Use the <i>"Add Folder"</i> button to upload all the files in a directory. <br />
                 </p>
               </li>
-              <li>
+              <li *ngIf="hasProjects">
                 <strong>Which collections are you attaching your studies to?</strong>
                 <p>Choose the collections all your files will be attached to. If no collection is selected, studies
                   will be uploaded as stand-alone and will be allocated an accession number with format
                   <i>S-BSST&lt;number&gt;</i>.
                 </p>
               </li>
-              <li>
-                <strong>Are you updating existing studies?</strong>
-                <p>
-                  <mark>
-                    To update a study please provide the accession number in the <strong>"Submission"</strong> attribute within the study file (cell B1). If
-                    no value for the <strong>"Submission"</strong> attribute is found, a new study will be created, with a new accession number.
-                  </mark>
-                </p>
-              </li>
-            </ol>
+            </ul>
+            <strong>Are you updating existing studies?</strong>
+            <p>
+              <mark>
+                To update a study please provide the accession number in the <strong>"Submission"</strong> attribute within the study file (cell B1). If
+                no value for the <strong>"Submission"</strong> attribute is found, a new study will be created, with a new accession number.
+              </mark>
+            </p>
+            <strong>Supported extensions for studies</strong>
+            <p>
+              The extension of the file containing the study information should be <strong>{{getSupportedFileExt()}}</strong>
+            </p>
           </div>
           <div *ngIf="sidebar.hasRequests" class="card-body">
             <ng-container *ngIf="sidebar.isStatus('busy')">
@@ -72,41 +73,33 @@
             <ng-container *ngIf="sidebar.isStatus('failed') && sidebar.isStatus('done')">
               <h4>Error while uploading {{pluralise('study')}}</h4>
               <p>The {{pluralise('study')}} highlighted below {{pluralise('is')}} invalid or an unexpected
-                error was encountered. Please try to correct any issues before uploading the affected
-                {{pluralise('files')}} again. To show the error log, simply click on the relevant failed file.
-              </p>
+                error was encountered.</p>
+              <p>Please try to correct any issues before uploading the affected
+                {{pluralise('files')}} again.</p>
             </ng-container>
             <ng-container *ngIf="sidebar.isStatus('successful')">
               <h4>{{pluralise('Study')}} uploaded</h4>
               <p>
-                The {{pluralise('study')}} specified below with accession {{pluralise('number')}}
-                <span *ngFor="let file of sidebar.model.files; let i = index; let last = last">
-                  <strong>{{getAccno(i)}}</strong>{{last ? '' : ', '}}
-                </span>
-                {{pluralise('has')}} been successfully uploaded to the BioStudies database. <br />
-                New studies or changes to existing studies will be available in the next 24 hours
-                at the following addresses:
+                The {{pluralise('study')}} {{pluralise('has')}} been successfully uploaded to the BioStudies database. <br />
               </p>
-              <ul>
-                <li *ngFor="let file of sidebar.model.files; let i = index;">
-                  <a target="_blank" href="{{location.origin}}/biostudies/studies/{{getAccno(i)}}">
-                    {{location.hostname}}/biostudies/studies/{{getAccno(i)}}</a>
-                </li>
-              </ul>
-              <strong>
-                <a target="_blank" href="https://www.ebi.ac.uk/biostudies/about.html">
-                  Citing my {{pluralise('study')}}
-                  <i class="fa fa-fw fa-external-link-square"></i>
-                </a>
-              </strong>
-              <p>
-                Data are available in the BioStudies database <a target="_blank"
-                  href="https://www.ebi.ac.uk/biostudies/">(https://www.ebi.ac.uk/biostudies/)</a>
-                under accession {{pluralise('number')}}
-                <span *ngFor="let file of sidebar.model.files; let i = index; let last = last">
-                  {{getAccno(i)}}{{last ? '' : ', '}}
-                </span>.
-              </p>
+              <div class="mt-3">
+                <h5>Please note <i class="far fa-hand-point-down"></i></h5>
+                <ul>
+                  <li class="mb-3">
+                    <mark>As soon as your {{pluralise('study')}} {{pluralise('is')}} processed, you will receive its accession number by e-mail</mark>
+                  </li>
+                  <li class="mb-3">
+                    <mark>
+                      The system may take up to 24 hours after submission to register any new studies in the database.
+                    </mark>
+                  </li>
+                  <li class="mb-3">
+                    <mark>Any registered study will remain private and accessible only through login until the release date in the
+                      Western European Time Zone.
+                    </mark>
+                  </li>
+                </ul>
+              </div>
               <strong>
                 <a target="_blank" href="http://europepmc.org/abstract/MED/26700850">
                   Citing the BioStudies database
@@ -126,14 +119,13 @@
           <ng-container *ngFor="let file of studies; let i = index">
             <st-direct-submit-file class="h-100" [accno]="getAccno(i)" [errorLog]="getLog(i)" [error]="getError(i)"
               [file]="file" [fileName]="file.name" [hasSubmitFailed]="isFail(i)" [hasSubmitPassed]="isSuccess(i)"
-              [isPending]="isPending()" [isSubmitting]="isBusy(i)" [project]="sidebar.selectedProject"
-              [releaseDate]="getRelease(i)" [isStudy]="file.isStudy"
-              (fileClick)="handleFileCardClick($event)" (isStudyChange)="handleIsStudyChange($event)">
+              [isPending]="isPending()" [isSubmitting]="isBusy(i)" [project]="sidebar.selectedProject" [isStudy]="file.isStudy"
+              [showIsStudyOption]="true" (fileChange)="handleFileChange($event)">
             </st-direct-submit-file>
           </ng-container>
           <ng-container *ngFor="let file of files; let i = index">
             <st-direct-submit-file class="h-100" [accno]="getAccno(i)" [file]="file" [fileName]="file.name"
-              [isStudy]="file.isStudy" (isStudyChange)="handleIsStudyChange($event)"></st-direct-submit-file>
+              [isStudy]="file.isStudy" [showIsStudyOption]="canBeStudyFile(file)" (fileChange)="handleFileChange($event)"></st-direct-submit-file>
           </ng-container>
         </div>
       </div>

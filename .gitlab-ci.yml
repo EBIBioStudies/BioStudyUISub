@@ -1,6 +1,6 @@
 image: node:14.17.5
 variables:
-  DOCKER_TLS_CERTDIR: ""
+  DOCKER_TLS_CERTDIR: ''
 stages:
   - setup
   - test
@@ -57,6 +57,16 @@ test:
     NODE_ENV: test
   script:
     - npm test
+
+on-pull-requests:
+  dependencies:
+    - install_dependencies
+  variables:
+    NODE_ENV: test
+  script:
+    - npm test
+  only:
+    - external_pull_requests
 
 # Build per environment
 build:dev:

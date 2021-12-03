@@ -106,7 +106,7 @@ export class DirectSubmitRequest {
     // Normalises error to object
     if (typeof res === 'string') {
       this.directSubmissionLog = { message: res, level: 'error' };
-    } else if (res.log && res.log.level === 'ERROR') {
+    } else if (res && res.log && res.log.level === 'ERROR') {
       // Failed server response from direct submit => reflects failure in this request object ignoring passed-in status
       this.directSubmissionStatus = ReqStatus.ERROR;
       this.directSubmissionLog = res.log || { message: 'No results available', level: 'error' };
@@ -114,7 +114,7 @@ export class DirectSubmitRequest {
       // Successful server response from direct submit => reflects success accordingly
     } else {
       this.directSubmissionStatus = successStatus;
-      this.directSubmissionLog = res.log || undefined;
+      this.directSubmissionLog = res && res.log ? res.log : null;
 
       // exposes the accession number
       this.directSubmissionAccno = res.accno;

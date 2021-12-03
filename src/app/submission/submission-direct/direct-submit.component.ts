@@ -1,8 +1,8 @@
-import { Router } from '@angular/router';
-import pluralize from 'pluralize';
 import { Component, ViewChild } from '@angular/core';
+
 import { AppConfig } from 'app/app.config';
 import { SidebarFile } from './direct-submit-sidebar.component';
+import pluralize from 'pluralize';
 
 @Component({
   selector: 'st-direct-submit',
@@ -13,6 +13,7 @@ export class DirectSubmitComponent {
   collapseSideBar: boolean = false;
   files: any;
   studies: any;
+  supportedDirectSubmitFileExt: string[] = ['.json', '.xml', '.tsv', '.xlsx'];
 
   @ViewChild('sidebar', { static: true })
   private sidebar;
@@ -21,12 +22,16 @@ export class DirectSubmitComponent {
    * Initally collapses the sidebar for tablet-sized screens.
    * @param appConfig - Global configuration object with app-wide settings.
    */
-  constructor(public appConfig: AppConfig, private router: Router) {
+  constructor(public appConfig: AppConfig) {
     this.collapseSideBar = window.innerWidth < this.appConfig.tabletBreak;
   }
 
   get location(): Location {
     return window.location;
+  }
+
+  get hasProjects(): boolean {
+    return this.sidebar.getProjects().length > 0;
   }
 
   getAccno(studyIdx: number): string {
@@ -41,32 +46,13 @@ export class DirectSubmitComponent {
     return this.sidebar.studyProp(studyIdx, 'log');
   }
 
-  getRelease(studyIdx: number): string {
-    return this.sidebar.studyProp(studyIdx, 'releaseDate');
+  getSupportedFileExt(): string {
+    return this.supportedDirectSubmitFileExt.join(', ').replace(/, ([^,]*)$/, ' or $1');
   }
 
-  getStudyFiles(): void {
-    this.sidebar.model.files.filter((file) => file.isStudy);
-  }
-
-  /**
-   * Toggles the width of the request card and the log's visibility on click.
-   */
-  handleFileCardClick(args: { accno: string; event: Event; hasSubmitFailed: boolean }): void {
-    const { accno, event, hasSubmitFailed } = args;
-    const containerEl = event.currentTarget as HTMLElement;
-    const logElement = containerEl.querySelector('.log-container');
-
-    if (logElement && hasSubmitFailed) {
-      logElement.classList.toggle('hidden');
-    } else {
-      this.router.navigate([`/edit/${accno}`, { method: 'FILE' }]);
-    }
-  }
-
-  handleIsStudyChange(args: { fileName: string; isStudy: boolean }): void {
-    const { fileName, isStudy } = args;
-    this.sidebar.toggleStudyFile(fileName, isStudy);
+  handleFileChange(args: { fileName: string; isStudy: boolean; action: string }): void {
+    const { fileName, isStudy, action } = args;
+    this.sidebar.changeFile(fileName, isStudy, action);
   }
 
   isBusy(studyIdx: number): boolean {
@@ -83,6 +69,10 @@ export class DirectSubmitComponent {
 
   isSuccess(studyIdx: number): boolean {
     return this.sidebar.studyProp(studyIdx, 'successful');
+  }
+
+  canBeStudyFile(file: File): boolean {
+    return new RegExp(`(.*?).(${this.supportedDirectSubmitFileExt.join('|')})$`).test(file.name);
   }
 
   onFilesChange(files: SidebarFile[]): void {

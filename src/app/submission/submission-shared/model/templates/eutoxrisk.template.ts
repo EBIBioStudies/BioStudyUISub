@@ -12,10 +12,10 @@ export const euToxRiskTemplate = {
         icon: 'fa-heading',
         valueType: {
           name: 'largetext',
-          minlength: 25,
-          isStudyTitle: true
+          minlength: 25
         },
-        display: 'required'
+        display: 'required',
+        asyncValueValidatorName: 'forStudyTitle'
       },
       {
         name: 'Description',
@@ -30,6 +30,8 @@ export const euToxRiskTemplate = {
       {
         name: 'Organism',
         icon: 'fa-tag',
+        helpText: 'Add organism',
+        helpLink: '/help#new-item-dropdown',
         valueType: {
           name: 'select',
           values: ['Homo sapiens (human)', 'Danio rerio (zebrafish)']
@@ -127,6 +129,7 @@ export const euToxRiskTemplate = {
         description: 'Add the contact details for the authors involved in the study.',
         uniqueCols: true,
         display: 'required',
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'Name',
@@ -140,6 +143,8 @@ export const euToxRiskTemplate = {
           },
           {
             name: 'Organisation',
+            helpText: 'Add org',
+            helpLink: '/help#new-item-dropdown',
             valueType: {
               name: 'select',
               multiple: true,
@@ -297,6 +302,7 @@ export const euToxRiskTemplate = {
           'are supported. URLs must include the scheme, e.g. "http://".',
         icon: 'fa-link',
         uniqueCols: true,
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'Link',
@@ -315,6 +321,7 @@ export const euToxRiskTemplate = {
         description: 'List the data files for the study and describe their respective scopes.',
         icon: 'fa-file',
         uniqueCols: true,
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'Path',

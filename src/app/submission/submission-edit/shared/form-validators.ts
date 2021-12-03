@@ -11,20 +11,15 @@ import {
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { Attribute, Table, Field } from 'app/submission/submission-shared/model';
 import { TextValueType, ValueType, ValueTypeName, SelectValueType } from 'app/submission/submission-shared/model';
-import {
-  parseDate,
-  isOrcidValid,
-  isDnaSequenceValid,
-  isProteinSequenceValid,
-  isNotDefinedOrEmpty,
-  isArrayEmpty,
-  isStringEmpty
-} from 'app/utils';
-import { Observable, of } from 'rxjs';
-import { SubmissionListItem, SubmissionService } from 'app/submission/submission-shared/submission.service';
+import { isNotDefinedOrEmpty, isStringEmpty } from 'app/utils/validation.utils';
+import { parseDate } from 'app/utils/date.utils';
+import { isDnaSequenceValid } from 'app/utils/dna.utils';
+import { isOrcidValid } from 'app/utils/orcid.utils';
+import { isProteinSequenceValid } from 'app/utils/protein.utils';
+import { isArrayEmpty } from 'app/utils/validation.utils';
+import { SubmissionListItem } from 'app/submission/submission-shared/submission.service';
 import { ControlRef, ControlGroupRef } from './control-reference';
 import { CustomFormControl } from './model/custom-form-control.model';
-import { catchError, first, map } from 'rxjs/operators';
 import pluralize from 'pluralize';
 
 export class MyFormGroup extends FormGroup {
@@ -89,6 +84,22 @@ export class FormValidators {
     const isValueValid: boolean = isProteinSequenceValid(rawValue);
 
     return isValueValid ? null : { format: { value } };
+  };
+
+  static maxLength = (maxlength: number) => (control: AbstractControl): ValidationErrors | null => {
+    const value: string = control.value || '';
+
+    return maxlength > 0 && value.trim().length <= maxlength
+      ? null
+      : { maxlength: { actualLength: value.length, requiredLength: maxlength } };
+  };
+
+  static minLength = (minlength) => (control: AbstractControl): ValidationErrors | null => {
+    const value: string = control.value || '';
+
+    return minlength > 0 && value.trim().length >= minlength
+      ? null
+      : { minlength: { actualLength: value.length, requiredLength: minlength } };
   };
 
   static uniqueValues: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -199,11 +210,11 @@ export class SubmFormValidators {
       const vt = valueType as TextValueType;
 
       if (vt.maxlength > 0) {
-        validators.push(Validators.maxLength(vt.maxlength));
+        validators.push(FormValidators.maxLength(vt.maxlength));
       }
 
       if (vt.minlength > 0) {
-        validators.push(Validators.minLength(vt.minlength));
+        validators.push(FormValidators.minLength(vt.minlength));
       }
     } else if (valueType.is(ValueTypeName.date)) {
       validators.push(FormValidators.formatDate);
@@ -253,6 +264,9 @@ export class CustomErrorMessages {
       },
       dependency: (error: { value: string }) => {
         return `${error.value} is not an Study Protocol. Please add and describe Protocols on the Study page firstly. `;
+      },
+      fileListNotValid: (_: boolean, errorMessage: string) => {
+        return `File list is not valid. ${errorMessage}`;
       }
     };
   }
@@ -276,17 +290,18 @@ export class CustomWarningsDefinition {
 }
 
 export class ErrorMessages {
-  static map(control: AbstractControl): string[] {
+  static map(control: CustomFormControl): string[] {
     const errors = control.errors || {};
+    const controlErrorMessages = control.errorMessages;
     const messages = CustomErrorMessages.for(control);
 
-    return Object.keys(errors).map((errorKey) => messages[errorKey](errors[errorKey]));
+    return Object.keys(errors).map((errorKey) => messages[errorKey](errors[errorKey], controlErrorMessages[errorKey]));
   }
 }
 
 export class WarningMessages {
   static map(control: CustomFormControl): { message: string; payload: any }[] {
-    const warnings = control.warnings || {};
+    const warnings = control.warningMessages || {};
     const definitions = CustomWarningsDefinition.for();
 
     return Object.keys(warnings).map((errorKey) => definitions[errorKey](warnings[errorKey]));
@@ -294,7 +309,7 @@ export class WarningMessages {
 
   static getWarningParamByErrorKey<T>(control: CustomFormControl, paramName: string, errorKey: string): T | null {
     const definitions = CustomWarningsDefinition.for();
-    const warnings = control.warnings || {};
+    const warnings = control.warningMessages || {};
 
     // Only return warnings if control is valid to avoid polluting the control with messages.
     if (warnings[errorKey] && control.status === 'VALID') {

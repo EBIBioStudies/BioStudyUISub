@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { SubmissionService } from 'app/submission/submission-shared/submission.service';
+import { CollectionsService } from 'app/collections/collections.service';
 import { AuthService } from './auth.service';
 import { ExtendedUserInfo, UserInfo } from './model';
 import { UserRole } from './user-role';
@@ -11,19 +11,28 @@ import { UserSession } from './user-session';
 export class UserData {
   private whenFetched$: Subject<ExtendedUserInfo> = new ReplaySubject<ExtendedUserInfo>(1);
 
-  constructor(userSession: UserSession, authService: AuthService, submService: SubmissionService) {
-    userSession.created$.subscribe((created) => {
+  constructor(
+    private userSession: UserSession,
+    private authService: AuthService,
+    private collectionsService: CollectionsService
+  ) {
+    this.userSession.created$.subscribe((created) => {
       if (created) {
-        authService.getUserProfile().subscribe((user: UserInfo) => {
-          userSession.update(user);
+        this.authService.getUserProfile().subscribe(
+          (user: UserInfo) => {
+            this.userSession.update(user);
 
-          submService.getProjects().subscribe((result) => {
-            const extendedUserInfo = user as ExtendedUserInfo;
-            extendedUserInfo.projects = result.map((project) => project.accno);
-            this.whenFetched$.next(extendedUserInfo);
-            this.whenFetched$.complete();
-          });
-        });
+            this.collectionsService.getCollections().subscribe((result) => {
+              const extendedUserInfo = user as ExtendedUserInfo;
+              extendedUserInfo.collections = result.map((collection) => collection.accno);
+              this.whenFetched$.next(extendedUserInfo);
+              this.whenFetched$.complete();
+            });
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
       }
     });
   }
@@ -33,11 +42,11 @@ export class UserData {
   }
 
   get secretId$(): Observable<string> {
-    return this.info$.pipe(map((ui) => ui.secret));
+    return this.info$.pipe(map((userInfo) => userInfo.secret));
   }
 
-  get projectAccNumbers$(): Observable<string[]> {
-    return this.info$.pipe(map((ui) => ui.projects));
+  get collections$(): Observable<string[]> {
+    return this.info$.pipe(map((userInfo) => userInfo.collections));
   }
 
   get role(): UserRole {

@@ -1,11 +1,15 @@
-import { isDefinedAndNotEmpty, isArrayEmpty, arrayUniqueValues, isStringDefined } from 'app/utils';
-import { nextId } from './submission.model.counter';
-import { Attribute } from './submission.model.attribute';
-import { ValueMap } from './submission.model.valuemap';
-import { Columns } from './submission.model.columns';
+import { DisplayType, FieldType, SectionType, SubmissionType, TableType, ValueType } from '../templates';
 import { NameAndValue, Tag } from '../model.common';
-import { DisplayType, TableType, FieldType, SectionType, SubmissionType, ValueType } from '../templates';
+import { isDefinedAndNotEmpty, isStringDefined } from 'app/utils/validation.utils';
+
+import { Attribute } from './submission.model.attribute';
+import { AttributeNames } from 'app/submission/utils/constants';
 import { AttributeValue } from './submission.model.attribute-value';
+import { Columns } from './submission.model.columns';
+import { ValueMap } from './submission.model.valuemap';
+import { arrayUniqueValues } from 'app/utils/array.utils';
+import { isArrayEmpty } from 'app/utils/validation.utils';
+import { nextId } from './submission.model.counter';
 
 export interface SubmissionSection {
   subsections: Sections;
@@ -101,7 +105,9 @@ export class Table {
           true,
           ct.dependencyColumn,
           ct.uniqueValues,
-          ct.autosuggest
+          ct.autosuggest,
+          ct.helpText,
+          ct.helpLink
         );
       });
 
@@ -200,7 +206,9 @@ export class Table {
     isTemplateBased: boolean = false,
     dependencyColumn: string = '',
     uniqueValues: boolean = false,
-    autosuggest: boolean = true
+    autosuggest: boolean = true,
+    helpText: string = '',
+    helpLink: string = ''
   ): Attribute {
     const defColName = (this.singleRow ? this.typeName : 'Column') + ' ' + (this.tableColumns.size() + 1);
     const colName = name || defColName;
@@ -211,7 +219,9 @@ export class Table {
       isTemplateBased,
       dependencyColumn,
       uniqueValues,
-      autosuggest
+      autosuggest,
+      helpText,
+      helpLink
     );
     this.tableRows.addKey(col.id);
     this.tableColumns.add(col);
@@ -269,23 +279,25 @@ export class Table {
 export class Tables {
   private tables: Table[] = [];
 
-  constructor(type: SectionType, tables: Array<TableData> = []) {
-    const fd = tables
+  constructor(type: SectionType, tables: Array<TableData> = [], isTemp: boolean) {
+    const tablesData = tables
       .filter((f) => isDefinedAndNotEmpty(f.type))
       .reduce((rv, d) => {
         rv[d.type!] = d;
         return rv;
       }, {});
 
-    type.tableTypes.forEach((ft) => {
-      this.add(ft, fd[ft.name]);
-      fd[ft.name] = undefined;
-    });
+    if (isTemp) {
+      type.tableTypes.forEach((tableType) => {
+        this.add(tableType, tablesData[tableType.name]);
+        tablesData[tableType.name] = undefined;
+      });
+    }
 
-    Object.keys(fd).forEach((key) => {
-      if (fd[key] !== undefined) {
-        const ft = type.getTableType(key);
-        this.add(ft, fd[ft.name]);
+    Object.keys(tablesData).forEach((key) => {
+      if (tablesData[key] !== undefined) {
+        const tableType = type.getTableType(key);
+        this.add(tableType, tablesData[tableType.name]);
       }
     });
 
@@ -303,8 +315,18 @@ export class Tables {
     return this.tables.length;
   }
 
+  insertAt(table: Table, index: number): Table | undefined {
+    if (this.hasTableType(table.type)) {
+      return;
+    }
+
+    this.tables.splice(index, 0, table);
+
+    return table;
+  }
+
   add(type: TableType, data?: TableData): Table | undefined {
-    if (this.tables.filter((f) => f.type === type).length > 0) {
+    if (this.hasTableType(type)) {
       return;
     }
 
@@ -346,6 +368,10 @@ export class Tables {
   removeById(tableId: string): boolean {
     const table = this.tables.find((f) => f.id === tableId);
     return table !== undefined && this.remove(table);
+  }
+
+  private hasTableType(type: TableType): boolean {
+    return this.tables.filter((f) => f.type === type).length > 0;
   }
 }
 
@@ -432,7 +458,6 @@ export class Fields {
 }
 
 export class Section implements SubmissionSection {
-  readonly annotations: Table;
   readonly data: SectionData;
   readonly tables: Tables;
   readonly fields: Fields;
@@ -444,24 +469,30 @@ export class Section implements SubmissionSection {
 
   private sectionAccno: string;
 
-  constructor(type: SectionType, data: SectionData = {} as SectionData, accno: string = '') {
+  constructor(type: SectionType, data: SectionData = {} as SectionData, accno: string = '', isTemp: boolean = false) {
     this.tags = Tags.create(data);
     this.id = `section_${nextId()}`;
     this.type = type;
     this.sectionAccno = data.accno || accno;
     this.fields = new Fields(type, data.attributes);
-    // Any attribute names from the server that do not match top-level field names are added as annotations.
-    this.annotations = Table.create(
-      type.annotationsType,
-      (data.attributes || []).filter(
-        (attribute) =>
-          attribute.name && attribute.name !== 'Keyword' && type.getFieldType(attribute.name || '') === undefined
-      )
-    );
     this.data = data;
-    this.tables = new Tables(type, data.tables);
+    this.tables = new Tables(type, data.tables, isTemp);
     this.sections = new Sections(type, data.sections);
     this.subsections = new Sections(type, data.subsections);
+
+    if (this.displayAnnotations) {
+      // Any attribute names from the server that do not match top-level field names are added as annotations.
+      const annotations: AttributeData[] = (data.attributes || []).filter(
+        (attribute) =>
+          attribute.name &&
+          attribute.name !== AttributeNames.KEYWORD &&
+          type.getFieldType(attribute.name || '') === undefined
+      );
+
+      if (annotations.length > 0 || isTemp) {
+        this.tables.insertAt(Table.create(type.annotationsType, annotations), 0);
+      }
+    }
   }
 
   get accno(): string {
@@ -592,7 +623,7 @@ export class Submission {
     this.accno = data.accno || null;
     this.attributes = data.attributes || [];
     this.isRevised = !this.isTemp && data.isRevised === true;
-    this.section = new Section(type.sectionType, data.section);
+    this.section = new Section(type.sectionType, data.section, undefined, this.isTemp);
   }
 
   /**

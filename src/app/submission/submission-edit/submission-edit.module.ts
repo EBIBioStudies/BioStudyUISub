@@ -1,6 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SortablejsModule } from 'ngx-sortablejs';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+import { CommonModule } from '@angular/common';
+import { CoreModule } from 'app/core/core.module';
 import { SharedModule } from 'app/shared/shared.module';
 import { FileModule } from 'app/file/file.module';
 import { ThemeModule } from 'app/theme/theme.module';
@@ -30,10 +36,13 @@ import { AddSubmTypeModalComponent } from './subm-sidebar/add-subm-type-modal/ad
 import { SubmCheckSidebarComponent } from './subm-sidebar/subm-check-sidebar/subm-check-sidebar.component';
 import { SubmEditSidebarComponent } from './subm-sidebar/subm-edit-sidebar/subm-edit-sidebar.component';
 import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
-import { NotFoundModule } from 'app/not-found/not-found.module';
 
 @NgModule({
   imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    CoreModule,
     SharedModule,
     RouterModule,
     FileModule,
@@ -44,7 +53,9 @@ import { NotFoundModule } from 'app/not-found/not-found.module';
     PubMedIdSearchModule,
     SortablejsModule,
     ThemeModule,
-    NotFoundModule
+    TooltipModule,
+    TypeaheadModule,
+    TabsModule
   ],
   providers: [SubmEditService],
   declarations: [

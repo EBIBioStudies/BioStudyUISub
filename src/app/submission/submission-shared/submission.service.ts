@@ -2,11 +2,12 @@ import { SectionData } from './model/submission/submission.model';
 import * as HttpStatus from 'http-status-codes';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { isDefinedAndNotEmpty } from 'app/utils';
+import { isDefinedAndNotEmpty } from 'app/utils/validation.utils';
 import { PageTab, DraftPayload } from './model/pagetab';
-import { SubmissionDraftUtils } from './utils/submission-draft.utils';
+import { SubmissionToPageTabService } from './submission-to-pagetab.service';
+import { filterAndFormatDraftSubmissions } from './utils/submission-draft.utils';
 
 export interface DraftSubmissionWrapper {
   key: string;
@@ -25,13 +26,7 @@ export interface SubmitResponse {
   accno: string;
   attributes: Array<any>;
   section: SectionData;
-  log: SubmitLog;
-}
-
-export interface SubmitLog {
-  level: string; // 'INFO'|'WARN'|'ERROR'
-  message: string;
-  subnodes: Array<SubmitLog>;
+  log: LogDetail;
 }
 
 export interface SubmissionListParams {
@@ -62,18 +57,14 @@ function definedPropertiesOnly(obj: any): any {
 
 @Injectable()
 export class SubmissionService {
-  private submissionDraftUtils: SubmissionDraftUtils;
-
-  constructor(private http: HttpClient) {
-    this.submissionDraftUtils = new SubmissionDraftUtils();
-  }
+  constructor(private http: HttpClient, private submissionToPageTab: SubmissionToPageTabService) {}
 
   /**
    * Traverses the error log tree to find the first deepest error message.
    * @param obj - Log tree's root node or subnode list.
    * @returns Error message.
    */
-  static deepestError(log: SubmitLog): string {
+  static deepestError(log: LogDetail): string {
     const errorNode = (log.subnodes || []).find((n) => n.level === 'ERROR');
 
     if (errorNode === undefined) {
@@ -83,8 +74,12 @@ export class SubmissionService {
     return this.deepestError(errorNode);
   }
 
-  createDraftSubmission(pt: PageTab): Observable<string> {
-    return this.http.post<DraftPayload>('/api/submissions/drafts', pt).pipe(map((response) => response.key));
+  createDraftSubmission(collection?: string, templateName?: string): Observable<string> {
+    const emptySubmission: PageTab = this.submissionToPageTab.newPageTab(collection, templateName);
+
+    return this.http
+      .post<DraftPayload>('/api/submissions/drafts', emptySubmission)
+      .pipe(map((response) => response.key));
   }
 
   deleteDraft(accno: string): Observable<boolean> {
@@ -104,11 +99,7 @@ export class SubmissionService {
 
     formData.append('submission', file);
 
-    return this.http.post<SubmitResponse>(`/api/submissions/direct`, formData);
-  }
-
-  getProjects(): Observable<any> {
-    return this.http.get('/api/projects');
+    return this.http.post<SubmitResponse>('/api/submissions/async/direct', formData);
   }
 
   getSubmission(accno: string): Observable<PageTab> {
@@ -121,7 +112,7 @@ export class SubmissionService {
       .get<SubmissionListItem[]>(url, { params: definedPropertiesOnly(params) })
       .pipe(
         map((items) => {
-          return submitted ? items : this.submissionDraftUtils.filterAndFormatDraftSubmissions(items);
+          return submitted ? items : filterAndFormatDraftSubmissions(items);
         })
       );
   }
@@ -134,6 +125,14 @@ export class SubmissionService {
     const headers: HttpHeaders = new HttpHeaders().set('Submission_Type', 'application/json');
 
     return this.sendPostRequest(`/api/submissions/drafts/${accno}/submit`, pt, headers);
+  }
+
+  validateFileList(fileListName: string): Observable<StatusResponse> {
+    const formData = new FormData();
+
+    formData.append('fileListName', fileListName);
+
+    return this.http.post<StatusResponse>('/api/submissions/fileLists/validate', formData);
   }
 
   private checkStatus<R, T>(response: HttpResponse<R>): T {

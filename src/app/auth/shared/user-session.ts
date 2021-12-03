@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
 import { ReplaySubject, Subject } from 'rxjs';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { UserCookies } from './user-cookies';
 import { UserInfo } from './model';
-import { isDefinedAndNotEmpty } from 'app/utils';
+import { isDefinedAndNotEmpty } from 'app/utils/validation.utils';
 import { AppConfig } from 'app/app.config';
+import { HelpModalComponent } from 'app/help/help-modal.component';
 
 @Injectable()
 export class UserSession {
   created$: Subject<boolean> = new ReplaySubject<boolean>(1);
 
-  constructor(private userCookies: UserCookies, private appConfig: AppConfig) {}
+  constructor(private userCookies: UserCookies, private appConfig: AppConfig, private modalService: BsModalService) {}
 
   create(user: UserInfo): UserInfo {
     this.update(user);
@@ -56,6 +58,20 @@ export class UserSession {
 
   token(): string {
     return this.userCookies.getLoginToken();
+  }
+
+  setHelpModelCookie(): void {
+    this.userCookies.setHelpCookie();
+  }
+
+  showHelpModal(): void {
+    if (!this.userCookies.isHelpCookieSet()) {
+      this.modalService.show(HelpModalComponent, {
+        initialState: { onHideForever: this.setHelpModelCookie.bind(this) },
+        ignoreBackdropClick: true,
+        class: 'modal-lg'
+      });
+    }
   }
 
   update(user: any): any {

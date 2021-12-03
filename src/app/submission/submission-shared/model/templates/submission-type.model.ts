@@ -1,5 +1,7 @@
-import { EMPTY_TEMPLATE_NAME, findSubmissionTemplateByName } from './submission.templates';
-import { isArrayEmpty, isStringDefined, isStringEmpty } from 'app/utils';
+import { EMPTY_TEMPLATE_NAME, findTemplateByName } from './submission.templates';
+import { isStringDefined, isStringEmpty } from 'app/utils/validation.utils';
+
+import { isArrayEmpty } from 'app/utils/validation.utils';
 
 /*
  *  Type scopes are used to check if the types with a given name already exists in the scope
@@ -157,6 +159,12 @@ export class DisplayType {
   }
 }
 
+export interface BannerType {
+  readonly src: string;
+  readonly alt: string;
+  readonly backgroundColor: string;
+}
+
 export enum ValueTypeName {
   text,
   largetext,
@@ -190,14 +198,12 @@ export abstract class ValueType {
 export class TextValueType extends ValueType {
   readonly maxlength: number;
   readonly minlength: number;
-  readonly isStudyTitle: boolean;
   readonly placeholder: string;
 
   constructor(data: Partial<TextValueType> = {}, valueTypeName?: ValueTypeName) {
     super(valueTypeName || ValueTypeName.text);
     this.minlength = data.minlength || -1;
     this.maxlength = data.maxlength || -1;
-    this.isStudyTitle = data.isStudyTitle || false;
     this.placeholder = data.placeholder || '';
   }
 }
@@ -226,6 +232,15 @@ export class SelectValueType extends ValueType {
   }
 }
 
+export class FileValueType extends ValueType {
+  readonly allowFolders: boolean;
+
+  constructor(data: Partial<FileValueType> = {}) {
+    super(ValueTypeName.file);
+    this.allowFolders = data.allowFolders === undefined ? true : data.allowFolders;
+  }
+}
+
 export class ValueTypeFactory {
   static DEFAULT = ValueTypeFactory.create();
 
@@ -236,6 +251,8 @@ export class ValueTypeFactory {
         return new DateValueType(data);
       case ValueTypeName.select:
         return new SelectValueType(data);
+      case ValueTypeName.file:
+        return new FileValueType(data);
       default:
         return new TextValueType(data, typeName);
     }
@@ -249,6 +266,7 @@ export class FieldType extends TypeBase {
   readonly helpLink: string;
   readonly icon: string;
   readonly valueType: ValueType;
+  readonly asyncValueValidatorName: string | null;
 
   constructor(
     name: string,
@@ -265,6 +283,7 @@ export class FieldType extends TypeBase {
     this.helpLink = data.helpLink || '';
     this.displayType = DisplayType.create(data.display || parentDisplayType.name);
     this.display = this.displayType.name;
+    this.asyncValueValidatorName = data.asyncValueValidatorName || null;
   }
 }
 
@@ -277,6 +296,7 @@ export class TableType extends TypeBase {
   readonly icon: string;
   readonly singleRow: boolean;
   readonly uniqueCols: boolean;
+  readonly rowAsSection: boolean;
 
   readonly allowImport: boolean;
 
@@ -301,6 +321,7 @@ export class TableType extends TypeBase {
     this.icon = data.icon || (this.singleRow ? 'fa-list' : 'fa-th');
     this.dependency = data.dependency || '';
     this.allowImport = data.allowImport === true;
+    this.rowAsSection = data.rowAsSection === true;
 
     (data.columnTypes || []).forEach((ct) => new ColumnType(ct.name, ct, this.columnScope));
   }
@@ -351,6 +372,8 @@ export class ColumnType extends TypeBase {
   readonly displayType: DisplayType;
   readonly uniqueValues: boolean;
   readonly valueType: ValueType;
+  readonly helpText: string;
+  readonly helpLink: string;
 
   constructor(
     name: string,
@@ -368,6 +391,8 @@ export class ColumnType extends TypeBase {
     this.dependencyColumn = data.dependencyColumn || '';
     this.autosuggest = data.autosuggest !== undefined ? data.autosuggest : true;
     this.uniqueValues = data.uniqueValues || false;
+    this.helpText = data.helpText || '';
+    this.helpLink = data.helpLink || '';
   }
 
   static createDefault(name: string, scope?: TypeScope<ColumnType>): ColumnType {
@@ -395,6 +420,7 @@ export class SectionType extends TypeBase {
   readonly tableGroups: string[][];
   readonly minRequired: number;
   readonly sectionExample: string;
+  readonly banner?: BannerType;
 
   private tableScope: TypeScope<TableType> = new TypeScope<TableType>();
   private fieldScope: TypeScope<FieldType> = new TypeScope<FieldType>();
@@ -422,6 +448,7 @@ export class SectionType extends TypeBase {
       this.displayType
     );
     this.sectionExample = data.sectionExample || '';
+    this.banner = data.banner;
 
     (data.fieldTypes || []).forEach(
       (fieldType) => new FieldType(fieldType.name, fieldType, this.fieldScope, this.displayType, fieldType.title)
@@ -511,7 +538,7 @@ export class SubmissionType extends TypeBase {
   }
 
   static fromTemplate(tmplName: string): SubmissionType {
-    const tmpl = findSubmissionTemplateByName(tmplName);
+    const tmpl = findTemplateByName(tmplName);
     return new SubmissionType('Submission', tmpl, new TypeScope<TypeBase>());
   }
 }

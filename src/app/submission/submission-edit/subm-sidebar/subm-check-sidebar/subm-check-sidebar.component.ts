@@ -1,9 +1,11 @@
-import { CustomFormControl } from './../../shared/model/custom-form-control.model';
-import { FormControl, ValidationErrors } from '@angular/forms';
 import { Component, Input } from '@angular/core';
+import { FormControl, ValidationErrors } from '@angular/forms';
+
+import { CustomFormControl } from './../../shared/model/custom-form-control.model';
 import { ServerError } from 'app/shared/server-error.handler';
 import { SubmEditService } from '../../shared/subm-edit.service';
-import { scrollToFormControl, isArrayEmpty } from 'app/utils';
+import { isArrayEmpty } from 'app/utils/validation.utils';
+import { scrollToFormControl } from 'app/utils/scroll.utils';
 
 @Component({
   selector: 'st-subm-check-sidebar',
@@ -73,16 +75,20 @@ export class SubmCheckSidebarComponent {
    */
   tipText(errors: ValidationErrors): string {
     if (errors.required) {
-      return 'blank';
+      return 'Blank';
     } else if (errors.maxlength) {
-      return 'too long';
+      return 'Too Long';
     } else if (errors.minlength) {
-      return 'too short';
+      return 'Too Short';
     } else if (errors.pattern) {
-      return 'wrong format';
+      return 'Wrong Format';
     } else if (errors.unique) {
-      return 'not unique';
+      return 'Not Unique';
+      // tslint:disable-next-line: no-string-literal
+    } else if (errors['fileListNotValid']) {
+      return 'Not Valid';
     }
+
     return Object.keys(errors)[0];
   }
 }

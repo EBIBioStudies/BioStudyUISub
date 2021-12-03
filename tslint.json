@@ -1,15 +1,9 @@
 {
-  "extends": [
-    "tslint:recommended",
-    "tslint-config-prettier"
-  ],
+  "extends": ["tslint:recommended", "tslint-config-prettier"],
   "rules": {
     "prettier": true,
     "align": {
-      "options": [
-        "parameters",
-        "statements"
-      ]
+      "options": ["parameters", "statements"]
     },
     "array-type": false,
     "arrow-return-shorthand": true,
@@ -19,63 +13,28 @@
     "component-class-suffix": true,
     "contextual-lifecycle": true,
     "directive-class-suffix": true,
-    "directive-selector": [
-      true,
-      "attribute",
-      "st",
-      "camelCase"
-    ],
-    "component-selector": [
-      true,
-      "element",
-      "st",
-      "kebab-case"
-    ],
+    "directive-selector": [true, "attribute", "st", "camelCase"],
+    "component-selector": [true, "element", "st", "kebab-case"],
     "eofline": true,
-    "import-blacklist": [
-      true,
-      "rxjs/Rx"
-    ],
+    "import-blacklist": [true, "rxjs/Rx"],
     "max-classes-per-file": false,
     "member-ordering": [
       true,
       {
-        "order": [
-          "static-field",
-          "instance-field",
-          "static-method",
-          "instance-method"
-        ]
+        "order": ["static-field", "instance-field", "static-method", "instance-method"]
       }
     ],
-    "no-console": [
-      true,
-      "debug",
-      "info",
-      "time",
-      "timeEnd",
-      "trace"
-    ],
+    "no-console": [true, "debug", "info", "time", "timeEnd", "trace"],
     "no-empty": false,
     "no-inferrable-types": false,
     "no-non-null-assertion": false,
     "no-redundant-jsdoc": true,
     "no-switch-case-fall-through": true,
     "no-var-requires": false,
-    "object-literal-key-quotes": [
-      true,
-      "as-needed"
-    ],
-    "typedef": [
-      true,
-      "call-signature"
-    ],
+    "object-literal-key-quotes": [true, "as-needed"],
+    "typedef": [true, "call-signature"],
     "variable-name": {
-      "options": [
-        "ban-keywords",
-        "check-format",
-        "allow-pascal-case"
-      ]
+      "options": ["ban-keywords", "check-format", "allow-pascal-case"]
     },
     "no-conflicting-lifecycle": true,
     "no-host-metadata-property": true,
@@ -90,8 +49,5 @@
     "use-lifecycle-interface": true,
     "use-pipe-transform-interface": true
   },
-  "rulesDirectory": [
-    "codelyzer",
-    "tslint-plugin-prettier"
-  ]
+  "rulesDirectory": ["codelyzer", "tslint-plugin-prettier"]
 }

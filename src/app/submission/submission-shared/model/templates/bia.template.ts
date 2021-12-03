@@ -7,15 +7,21 @@ export const biaTemplate = {
     displayAnnotations: false,
     tableGroups: [[]],
     name: 'Study',
+    banner: {
+      src: 'images/logo_bia.svg',
+      alt: 'BioImage Archive logo',
+      backgroundColor: '#038392'
+    },
     fieldTypes: [
       {
         name: 'Title',
         icon: 'fa-heading',
         valueType: {
           name: 'largetext',
-          isStudyTitle: true
+          minlength: 25
         },
-        display: 'required'
+        display: 'required',
+        asyncValueValidatorName: 'forStudyTitle'
       },
       {
         name: 'ReleaseDate',
@@ -56,6 +62,8 @@ export const biaTemplate = {
         name: 'Organism',
         icon: 'fa-tag',
         display: 'required',
+        helpText: 'Add organism',
+        helpLink: '/help#new-item-dropdown',
         valueType: {
           name: 'select',
           multiple: true,
@@ -139,6 +147,7 @@ export const biaTemplate = {
         description: 'Add the contact details for the authors involved in the study.',
         uniqueCols: true,
         display: 'required',
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'Name',
@@ -148,6 +157,8 @@ export const biaTemplate = {
           },
           {
             name: 'Organisation',
+            helpText: 'Add org',
+            helpLink: '/help#new-item-dropdown',
             valueType: {
               name: 'select',
               multiple: true,
@@ -279,6 +290,7 @@ export const biaTemplate = {
         icon: 'fa-address-card',
         name: 'Study Protocols',
         uniqueCols: true,
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'Name',
@@ -316,6 +328,7 @@ export const biaTemplate = {
         icon: 'fa-link',
         uniqueCols: true,
         display: 'desirable',
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'Link',
@@ -338,6 +351,7 @@ export const biaTemplate = {
         icon: 'fa-book',
         display: 'desirable',
         uniqueCols: true,
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'PMID',
@@ -468,7 +482,8 @@ export const biaTemplate = {
             valueType: { name: 'file' },
             display: 'required',
             helpLink: 'https://www.ebi.ac.uk/biostudies/BioImages/help',
-            helpText: 'Help'
+            helpText: 'Help',
+            asyncValueValidatorName: 'forFileList'
           },
           {
             name: 'Comment',
@@ -532,6 +547,7 @@ export const biaTemplate = {
             description: 'Add the protocols used in this study component.',
             uniqueCols: true,
             dependency: 'Study Protocols',
+            rowAsSection: true,
             columnTypes: [
               {
                 dependencyColumn: 'Name',

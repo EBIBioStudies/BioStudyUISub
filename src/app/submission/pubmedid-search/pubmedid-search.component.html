@@ -1,20 +1,11 @@
-<div class="input-group" dropdown #dropdown="bs-dropdown" container="body" [dropup]="true">
-  <input class="form-control {{inputId}}" type="text" placeholder="{{!readonly ? 'Find by PubMed ID' : ''}}"
+<div class="input-group">
+  <input id="{{inputId}}" class="form-control {{inputId}}" type="text" placeholder="{{!readonly ? 'Find by PubMed ID' : ''}}"
     [(ngModel)]="value" (keyup)="keyUp.next($event.target.value)" [readonly]="readonly"
     [required]="required">
   <div class="input-group-append">
-    <button class="btn btn-outline-secondary dropdown-toggle" type="button" [disabled]="isBusy || !pubMedId || readonly"
-      (click)="togglePreviewPub()">
+    <button class="btn btn-outline-secondary" type="button" [disabled]="isBusy || !pubMedId || readonly"
+      (click)="togglePreviewPub()" aria-label="Search PubMed ID">
       <i class="fa fa-fw fa-lg" aria-hidden="true" [ngClass]="{ 'fa-cog fa-spin': isBusy, 'fa-search': !isBusy}"></i>
     </button>
-  </div>
-  <div class="dropdown-menu" role="menu" *dropdownMenu>
-      <a class="dropdown-item" href="javascript:void(0)" (click)="selectPub()">
-        {{publication.authors?.split(',').slice(0, 2).join(',')}}
-        <!-- Shows just the two first authors -->
-        <strong>{{publication.title}}</strong>
-        {{publication.year}}{{publication.volume? ';' : '.'}}
-        {{publication.volume}}{{publication.issue ? '(' + publication.issue + ').' : ''}}
-      </a>
   </div>
 </div>

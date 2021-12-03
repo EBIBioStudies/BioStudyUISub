@@ -1,8 +1,9 @@
-import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { AppConfig } from 'app/app.config';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { isStringEmpty } from 'app/utils';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild, forwardRef } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+
+import { AppConfig } from 'app/app.config';
+import { isStringEmpty } from 'app/utils/validation.utils';
 import { typeaheadSource } from '../../shared/typeahead.utils';
 
 @Component({
@@ -21,11 +22,20 @@ export class InlineEditComponent implements ControlValueAccessor {
   @Input() readonly = false;
   @Input() removable = true;
   @Input() suggestThreshold = 0;
+  @Input() helpText = '';
+  @Input() helpLink = '';
+  @Input() columnId = '';
+
   @Output() remove = new EventEmitter<any>();
   readonly columnOptions: Observable<string[]>;
 
+  @ViewChild('inlineEditBox', { static: true })
+  private inlineEditBox!: ElementRef;
+
   private inlineEditValue: string = '';
   private valueChanges$: Subject<string> = new BehaviorSubject<string>('');
+
+  @Input() autosuggestSource: () => string[] = () => [];
 
   /**
    * Sets the max number of suggestions shown at any given time.
@@ -53,7 +63,13 @@ export class InlineEditComponent implements ControlValueAccessor {
     return this.canEdit && this.removable;
   }
 
-  @Input() autosuggestSource: () => string[] = () => [];
+  get showHelpText(): boolean {
+    return this.helpText.length !== 0 && this.helpLink.length !== 0;
+  }
+
+  get id(): string {
+    return `inline-edit-${this.columnId}`;
+  }
 
   /**
    * Determines if the field's contents are longer than the actual field's dimensions by probing the DOM directly.
@@ -76,6 +92,7 @@ export class InlineEditComponent implements ControlValueAccessor {
 
   onEdit(): void {
     this.startEditing();
+    this.inlineEditBox.nativeElement.focus();
   }
 
   /**
@@ -120,17 +137,4 @@ export class InlineEditComponent implements ControlValueAccessor {
   private stopEditing(): void {
     this.editing = false;
   }
-
-  /**
-   * Handler for select event from auto-suggest typeahead. Fixes the lack of a change event when selecting
-   * a value without any character being typed (typically in combination with typeaheadMinLength = 0).
-   * The closest input element descendant will be the event's target.
-   * TODO: this might be sorted in newer versions of the ngx-bootstrap plugin. Duplicate events may occur due to the
-   * repeated calling of "set value(value)" above (cannot keep track of the last value and, by extension, can't detect change).
-   * @param selection - Object for the currently selected value.
-   */
-
-  /*onSuggestSelect(selection: any) {
-    this.rootEl.nativeElement.getElementsByTagName('input')[0].dispatchEvent(new Event('change', {bubbles: true}));
-  }*/
 }

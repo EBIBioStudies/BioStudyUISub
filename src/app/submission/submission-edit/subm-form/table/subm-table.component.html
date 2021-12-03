@@ -20,24 +20,27 @@
       </div>
     </div>
     <button
-      *ngIf="tableForm.allowImport"
+      *ngIf="tableForm.allowImport && !tableForm.isReadonly && !readonly"
       type="button"
       class="btn btn-link"
       (click)="openPasteTableDataModal()"
-      tooltip="Paste from spreadsheet"
+      tooltip="Paste from spreadsheet (CSV)"
     >
       <i class="fas fa-paste"></i> Paste
+    </button>
+    <button *ngIf="canRemove" type="button" class="btn btn-link text-danger" tooltip="Delete section" (click)="onRemoveSection()">
+      <i class="fas fa-trash"></i> Delete
     </button>
   </div>
 
   <div class="card-body">
     <div class="d-flex align-items-center justify-content-end pb-2">
-      <h6 class="card-subtitle text-muted flex-grow-1"
+      <h7 class="card-subtitle text-muted flex-grow-1"
         *ngIf="tableForm.columnNamesAvailableCached.length && userData.isPrivileged && !readonly && !tableForm.isReadonly">
         <strong>{{tableForm.hasUniqueColumns ? 'More' : 'Available'}}
           {{tableForm.canHaveMultipleRows ? 'column' : 'key'}}s</strong>:
         <i>{{tableForm.columnNamesAvailableCached.join(', ')}}.</i>
-      </h6>
+      </h7>
       <div class="badge badge-danger" *ngIf="tableForm.invalid">{{tableForm.errorCount}}
         error{{tableForm.errorCount > 1 ? 's' : ''}}</div>
     </div>

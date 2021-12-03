@@ -52,9 +52,9 @@ const proxyConfig = (req: Request, pathname: string) => {
 export const submitterProxy = (path: string, router: Router) => {
   const backContextPath: string = config.get('backend.context');
   const backUri: string = config.get('backend.uri');
-  const backUriFormtted: string = format(backUri);
+  const backUriFormatted: string = format(backUri);
 
   router.use(path, expressWinston.logger(loggerSettings), (req, res, next) =>
-    proxy(backUriFormtted, proxyConfig(req, backContextPath))(req, res, next)
+    proxy(backUriFormatted, proxyConfig(req, backContextPath))(req, res, next)
   );
 };

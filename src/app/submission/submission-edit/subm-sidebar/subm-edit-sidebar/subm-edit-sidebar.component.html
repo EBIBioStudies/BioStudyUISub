@@ -1,7 +1,7 @@
-<ul class="list-group">
+<div class="list-group">
   <form *ngIf="form" [formGroup]="form" (ngSubmit)="onApplyChanges()" novalidate>
-    <li *ngFor="let item of items; let i = index">
-      <button class="list-group-item list-group-item-action border-0 bg-transparent text-white" *ngIf="isEditModeOff"
+    <ng-container *ngFor="let item of items; let i = index">
+      <button class="list-group-item d-flex justify-content-between align-items-center border-0 rounded-0 w-100 bg-blue text-white" *ngIf="isEditModeOff"
         (click)="onItemClick(item)">
         <span tooltip="{{ collapsed ? '' : item.description | stripHtml}}" placement="auto" container="body">
           <i class="fa {{item.icon}}"></i>
@@ -34,18 +34,18 @@
           </div>
         </div>
       </div>
-    </li>
-    <li class="pl-2" *ngIf="isEditModeOn && !collapsed">
+    </ng-container>
+    <div class="pl-2" *ngIf="isEditModeOn && !collapsed">
       <button class="btn btn-primary btn-submit" type="submit">
         Save
       </button>
       <button class="btn btn-default btn-cancel" (click)="onCancelChanges($event)">
         Cancel
       </button>
-    </li>
+    </div>
   </form>
 
-  <li *ngIf="!collapsed && isEditModeOff && userData.isPrivileged && isAdvancedVisible">
+  <div *ngIf="!collapsed && isEditModeOff && userData.isPrivileged && isAdvancedVisible">
     <div class="d-flex justify-content-end">
       <button class="btn btn-link btn-sm text-white" (click)="onAdvancedToggle()">
         <i class="far fa-lg" aria-hidden="true"
@@ -53,21 +53,19 @@
         Advanced
       </button>
     </div>
-    <ul class="list-group" *ngIf="!isAdvancedOpen">
-      <li>
-        <button class="list-group-item list-group-item-action bg-dark text-white border-0"
-          (click)="onEditModeToggle($event)">
-          <i class="fas fa-pen"></i>
-          Edit types
-        </button>
-      </li>
-      <li *ngIf="isEditModeOff">
-        <button class="list-group-item list-group-item-action bg-dark text-white border-0"
+    <div class="list-group" *ngIf="!isAdvancedOpen">
+      <button class="list-group-item bg-dark text-white text-left border-0 w-100 rounded-0"
+        (click)="onEditModeToggle($event)">
+        <i class="fas fa-pen"></i>
+        Edit types
+      </button>
+      <div *ngIf="isEditModeOff">
+        <button class="list-group-item bg-dark text-white text-left border-0 w-100 rounded-0"
           (click)="onNewTypeClick($event)">
           <i class="fas fa-plus"></i>
           Add type
         </button>
-      </li>
-    </ul>
-  </li>
-</ul>
+      </div>
+    </div>
+  </div>
+</div>

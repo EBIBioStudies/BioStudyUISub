@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AppConfig {
   private config: any = {};
 
@@ -91,6 +93,10 @@ export class AppConfig {
    */
   get environment(): string {
     return this.config.APP_ENV;
+  }
+
+  get recaptchaPublicKey(): string {
+    return this.config.RECAPTCHA_PUBLIC_KEY || '6Lc8JN0UAAAAAN4yxc0Ms6qIZ3fml-EYuuD_cTKi';
   }
 
   /**

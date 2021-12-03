@@ -1,7 +1,7 @@
 import { Component, QueryList, ViewChildren } from '@angular/core';
 import { IFilterParams, IDoesFilterPassParams, RowNode, IAfterGuiAttachedParams } from 'ag-grid-community/main';
 import { AgFilterComponent } from 'ag-grid-angular';
-import { DateInputComponent } from 'app/shared/date-input/date-input.component';
+import { DateInputComponent } from 'app/submission/submission-shared/date-input/date-input.component';
 
 class DateRange {
   constructor(public from?: string, public to?: string) {}

@@ -11,15 +11,21 @@
     }">
       <nav class="navbar navbar-light border-bottom page-navbar bg-white sticky-top">
         <st-directory-path [path]="absolutePath" (directoryPathChange)="onPathChange($event)"></st-directory-path>
-        <div class="btn-group" role="group">
-          <st-file-upload-button [multiple]="true" [isDirOnly]="false"
-            (fileUploadSelect)="onUploadFilesSelect($event)" title="File upload" tooltip="Select files"
-            placement="bottom" #fileEl>
-          </st-file-upload-button>
-          <st-file-upload-button [multiple]="false" [isDirOnly]="true" title="Folder upload"
-            (fileUploadSelect)="onUploadFilesSelect($event)" tooltip="Select a folder" placement="bottom" #fileEl>
-          </st-file-upload-button>
-          <st-ftp-upload-button></st-ftp-upload-button>
+        <div class="row btn-group" role="group">
+          <div class="col pr-1">
+            <st-file-upload-button [multiple]="true" [isDirOnly]="false"
+              (fileUploadSelect)="onUploadFilesSelect($event)" title="Upload file" tooltip="Select file to upload"
+              placement="bottom" #fileEl>
+            </st-file-upload-button>
+          </div>
+          <div class="col-4 pr-1 pl-1">
+            <st-file-upload-button [multiple]="false" [isDirOnly]="true" title="Upload folder"
+              (fileUploadSelect)="onUploadFilesSelect($event)" tooltip="Select a folder to upload" placement="bottom" #fileEl>
+            </st-file-upload-button>
+          </div>
+          <div class="col pl-1">
+            <st-ftp-upload-button></st-ftp-upload-button>
+          </div>
         </div>
       </nav>
       <div class="p-3">

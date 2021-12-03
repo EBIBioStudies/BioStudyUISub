@@ -1,7 +1,8 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 
 const publAttrMapping = {
   title: 'title',
@@ -18,7 +19,6 @@ export interface PubMedResultList {
 }
 
 export interface PubMedPublication {
-  hitCount: number;
   nextCursorMark?: string;
   request?: object;
   resultList?: PubMedResultList;
@@ -29,9 +29,9 @@ export interface PubMedPublication {
 export class PubMedSearchService {
   constructor(private http: HttpClient) {}
 
-  search(pmid): Observable<PubMedPublication> {
+  search(pmid): Observable<PubMedPublication[]> {
     if (!pmid) {
-      return of({} as PubMedPublication);
+      return of([] as PubMedPublication[]);
     }
 
     return this.http
@@ -40,20 +40,16 @@ export class PubMedSearchService {
       )
       .pipe(
         map((resp) => {
-          const hitCount = resp.hitCount;
-          const data: PubMedPublication = { hitCount: 0 };
-
-          if (hitCount > 0) {
-            const publ = resp.resultList!.result[0];
+          return (resp.resultList!.result || []).map((result) => {
+            const data: PubMedPublication = {};
             Object.keys(publAttrMapping).forEach((key) => {
-              if (publ.hasOwnProperty(key)) {
-                data[publAttrMapping[key]] = publ[key] + '';
+              if (result.hasOwnProperty(key)) {
+                data[publAttrMapping[key]] = result[key];
               }
             });
-          }
-          data.hitCount = hitCount;
 
-          return data;
+            return data;
+          });
         }),
         catchError((error: any) => {
           const err = { status: '', message: '' };

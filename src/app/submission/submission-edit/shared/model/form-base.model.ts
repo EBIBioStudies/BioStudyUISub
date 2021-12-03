@@ -1,13 +1,11 @@
 import { FormGroup, FormControl } from '@angular/forms';
-import { controlToList } from '../utilis';
+import { controlToList } from '../utils';
 
 export class FormBase {
   private formErrorCount: number = 0;
 
   constructor(readonly form: FormGroup) {
-    form.statusChanges.subscribe(() => {
-      this.onStatusChanges();
-    });
+    form.statusChanges.subscribe(() => this.onStatusChanges());
   }
 
   get errorCount(): number {
@@ -35,7 +33,7 @@ export class FormBase {
   }
 
   invalidControls(): FormControl[] {
-    return this.controls().filter((control) => control.invalid);
+    return this.controls().filter((control) => !control.valid);
   }
 
   private onStatusChanges(): void {

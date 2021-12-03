@@ -1,19 +1,20 @@
-import { PageTabSubmission } from 'app/submission/submission-shared/model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { Location } from '@angular/common';
-import { Observable, of, Subject } from 'rxjs';
+import { Observable, Subject, of } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
-import { ModalService } from 'app/shared/modal.service';
+
+import { AppConfig } from 'app/app.config';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { ErrorService } from 'app/core/errors/error.service';
+import { Location } from '@angular/common';
+import { ModalService } from 'app/shared/modal/modal.service';
+import { BannerType, PageTabSubmission } from 'app/submission/submission-shared/model';
 import { SectionForm } from './shared/model/section-form.model';
 import { SubmEditService } from './shared/subm-edit.service';
 import { SubmErrorModalComponent } from '../submission-results/subm-error-modal.component';
 import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
 import { SubmValidationErrors } from '../submission-shared/model';
-import { SubmitLog } from '../submission-shared/submission.service';
-import { scrollTop } from 'app/utils';
-import { ErrorService } from 'app/core/errors/error.service';
+import { scrollTop } from 'app/utils/scroll.utils';
 
 class SubmitOperation {
   static CREATE = new SubmitOperation();
@@ -41,16 +42,17 @@ class SubmitOperation {
 export class SubmissionEditComponent implements OnInit, OnDestroy {
   @Input() readonly = false;
   sectionForm!: SectionForm;
+  rootSection!: SectionForm;
   @ViewChild(SubmSidebarComponent) sideBar?: SubmSidebarComponent;
   submitOperation: SubmitOperation = SubmitOperation.UNKNOWN;
   isSidebarCollapsed: boolean = false;
   method?: string;
   submissionErrors: SubmValidationErrors = SubmValidationErrors.EMPTY;
-  submNotFound: boolean = false;
+  showError: boolean = false;
+  templForbiddenMessage: string = '';
   submNotFoundMessage: string = '';
 
   private accno?: string;
-  private hasJustCreated = false;
   private newReleaseDate: Date = new Date();
   private oldReleaseDate: Date = new Date();
   private unsubscribe: Subject<void> = new Subject<void>();
@@ -63,15 +65,19 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     private bsModalService: BsModalService,
     private modalService: ModalService,
     private submEditService: SubmEditService,
-    private errorService: ErrorService
+    private errorService: ErrorService,
+    private appConfig: AppConfig
   ) {
-    submEditService.sectionSwitch$
+    this.submEditService.sectionSwitch$
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((sectionForm) => this.switchSection(sectionForm));
-  }
 
-  get location(): globalThis.Location {
-    return window.location;
+    this.submEditService.validationError$
+      .asObservable()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((errors) => {
+        this.submissionErrors = errors;
+      });
   }
 
   get isSubmitting(): boolean {
@@ -98,6 +104,14 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     return this.accno!.startsWith('TMP_');
   }
 
+  get frontendUrl(): string {
+    return this.appConfig.frontendURL;
+  }
+
+  get banner(): BannerType | undefined {
+    return this.rootSection.section.type.banner;
+  }
+
   ngOnDestroy(): void {
     this.unsubscribe.next();
     this.unsubscribe.complete();
@@ -105,19 +119,113 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.hasJustCreated = this.route.snapshot.data.isNew || false;
-    this.route.params
-      .pipe(
-        switchMap(({ accno, method }) => {
-          this.accno = accno;
-          this.method = method;
+    this.showError = false;
 
-          return this.submEditService.loadSubmission(accno, this.hasJustCreated);
-        })
+    const isNewSubmission = this.route.snapshot.data.isNew || false;
+    this.route.params.pipe(takeUntil(this.unsubscribe)).subscribe(({ accno, method, template }) => {
+      this.method = method;
+      this.accno = accno;
+
+      if (accno === undefined) {
+        this.createEmptySubmission(template);
+      } else {
+        this.loadSubmission(accno, isNewSubmission);
+      }
+    });
+  }
+
+  onEditBackClick(): void {
+    this.readonly = false;
+    this.router.navigate([`/edit/${this.accno}`]);
+  }
+
+  onRevertClick(): void {
+    this.confirmRevert()
+      .pipe(
+        takeUntil(this.unsubscribe),
+        switchMap(() => this.submEditService.revert())
+      )
+      .subscribe(() => {});
+  }
+
+  onSectionClick(sectionForm: SectionForm): void {
+    scrollTop();
+    this.submEditService.switchSection(sectionForm);
+  }
+
+  onSectionDeleteClick(sectionForm: SectionForm): void {
+    let confirmMsg = `You are about to permanently delete the page named "${sectionForm.typeName}"`;
+
+    if (sectionForm.accno) {
+      confirmMsg += ` with accession number ${sectionForm.accno}`;
+    }
+    confirmMsg += '. This operation cannot be undone.';
+
+    this.confirmPageDelete(confirmMsg)
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(() => {
+        this.sectionForm!.removeSection(sectionForm.id);
+      });
+  }
+
+  onSubmitClick(event, isConfirm: boolean = false): void {
+    scrollTop();
+
+    if (event) {
+      event.preventDefault();
+    }
+
+    if (this.isSubmitting) {
+      return;
+    }
+
+    this.submEditService.validateForm();
+    if (!this.isValid) {
+      this.sideBar!.onCheckTabClick();
+      this.submEditService.switchSection(this.rootSection);
+      return;
+    }
+
+    this.submEditService.switchSection(this.rootSection);
+
+    const confirmObservable: Observable<boolean> = isConfirm ? this.confirmSubmit() : of(true);
+
+    confirmObservable
+      .pipe(
+        switchMap(() => this.confirmReleaseDateOverride()),
+        switchMap(() => this.submEditService.submit()),
+        takeUntil(this.unsubscribe)
       )
       .subscribe(
+        () => this.onSubmitSuccess(),
+        (resp) => this.showSubmitLog(resp.log)
+      );
+  }
+
+  onSidebarToggle(): void {
+    this.isSidebarCollapsed = !this.isSidebarCollapsed;
+  }
+
+  private createEmptySubmission(template: string): void {
+    this.submEditService.createEmptySubmission(template).subscribe(
+      (accno) => {
+        this.accno = accno;
+        this.loadSubmission(this.accno, true);
+      },
+      (error: Error) => {
+        this.showError = true;
+        this.templForbiddenMessage = error.message;
+      }
+    );
+  }
+
+  private loadSubmission(accno: string, isNewSubmission: boolean): void {
+    this.submEditService
+      .loadSubmission(accno, isNewSubmission)
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(
         (ptSubmission: PageTabSubmission) => {
-          if (this.hasJustCreated) {
+          if (isNewSubmission) {
             this.locService.replaceState('/edit/' + this.accno);
             this.readonly = false;
           }
@@ -154,80 +262,10 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
             throw error;
           }
 
-          this.submNotFound = true;
+          this.showError = true;
           this.submNotFoundMessage = this.errorService.getServerErrorMessage(error);
         }
       );
-  }
-
-  onEditBackClick(): void {
-    this.readonly = false;
-    this.router.navigate([`/edit/${this.accno}`]);
-  }
-
-  onRevertClick(): void {
-    this.confirmRevert()
-      .pipe(
-        takeUntil(this.unsubscribe),
-        switchMap(() => this.submEditService.revert())
-      )
-      .subscribe(() => {});
-  }
-
-  onSectionClick(sectionForm: SectionForm): void {
-    scrollTop();
-    this.submEditService.switchSection(sectionForm);
-  }
-
-  onSectionDeleteClick(sectionForm: SectionForm): void {
-    let confirmMsg = `You are about to permanently delete the page named "${sectionForm.typeName}"`;
-
-    if (sectionForm.accno) {
-      confirmMsg += ` with accession number ${sectionForm.accno}`;
-    }
-    confirmMsg += '. This operation cannot be undone.';
-
-    this.confirmPageDelete(confirmMsg).subscribe(() => {
-      this.sectionForm!.removeSection(sectionForm.id);
-    });
-  }
-
-  onSubmitClick(event, isConfirm: boolean = false): void {
-    this.submissionErrors = this.submEditService.validateSubmission();
-
-    if (event) {
-      event.preventDefault();
-    }
-
-    if (this.isSubmitting) {
-      return;
-    }
-
-    if (this.submissionErrors.errors.length > 0) {
-      scrollTop();
-    }
-
-    if (!this.isValid) {
-      this.sideBar!.onCheckTabClick();
-      return;
-    }
-
-    const confirmObservable: Observable<boolean> = isConfirm ? this.confirmSubmit() : of(true);
-
-    confirmObservable
-      .pipe(
-        switchMap(() => this.confirmReleaseDateOverride()),
-        switchMap(() => this.submEditService.submit()),
-        takeUntil(this.unsubscribe)
-      )
-      .subscribe(
-        () => this.onSubmitSuccess(),
-        (resp) => this.showSubmitLog(resp.log)
-      );
-  }
-
-  onSidebarToggle(): void {
-    this.isSidebarCollapsed = !this.isSidebarCollapsed;
   }
 
   private confirmPageDelete(message: string): Observable<boolean> {
@@ -279,7 +317,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     return this.sectionForm !== undefined && this.sectionForm.form.valid && !hasErrors;
   }
 
-  private showSubmitLog(log?: SubmitLog): void {
+  private showSubmitLog(log?: LogDetail): void {
     this.bsModalService.show(SubmErrorModalComponent, {
       initialState: { log }
     });
@@ -288,6 +326,10 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
   private switchSection(sectionForm: SectionForm | null): void {
     if (sectionForm) {
       this.sectionForm = sectionForm;
+
+      if (sectionForm.isRootSection) {
+        this.rootSection = sectionForm;
+      }
     }
   }
 }

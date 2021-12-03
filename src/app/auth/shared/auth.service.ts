@@ -15,11 +15,6 @@ import {
   RegistrationData
 } from './model';
 
-interface StatusResponse {
-  message?: string;
-  status: string; // 'OK' or 'FAIL'
-}
-
 interface UserInfoResponse extends UserInfo, StatusResponse {}
 
 @Injectable()
@@ -32,6 +27,10 @@ export class AuthService {
 
   changePassword(obj: PasswordResetData): Observable<UserInfo> {
     return this.sendPostRequest('/api/auth/password/change', obj.snapshot());
+  }
+
+  setupPassword(obj: PasswordResetData): Observable<UserInfo> {
+    return this.sendPostRequest('/api/auth/password/setup', obj.snapshot());
   }
 
   getUserProfile(): Observable<UserInfo> {

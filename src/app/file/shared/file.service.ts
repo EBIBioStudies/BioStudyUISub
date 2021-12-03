@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { isDefinedAndNotEmpty } from 'app/utils';
+import { isDefinedAndNotEmpty } from 'app/utils/validation.utils';
 import { PathInfo, UserGroup } from './file-rest.model';
 import { HttpUploadClientService, UploadEvent } from './http-upload-client.service';
 

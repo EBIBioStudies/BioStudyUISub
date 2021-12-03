@@ -48,8 +48,12 @@ export class PasswordResetComponent implements OnInit {
 
   onRecaptchaResolved(captchaToken: string): void {
     if (captchaToken) {
+      const serviceFn = this.isPassSetup
+        ? this.authService.setupPassword.bind(this.authService)
+        : this.authService.changePassword.bind(this.authService);
       this.model.captcha = captchaToken;
-      this.authService.changePassword(this.model).subscribe(
+
+      serviceFn(this.model).subscribe(
         (user) => {
           this.authService.login({ login: user.email, password: this.model.password }).subscribe(
             (userInfo: UserInfo) => {

@@ -4,22 +4,22 @@
       <h3>Help</h3>
       <ol>
         <li class="py-2">
-          <a href="#help-list" (click)="jumpTo($event)">Listing all your studies</a>
+          <a [routerLink]="['/help']" fragment="help-list">Listing all your studies</a>
         </li>
         <li class="py-2">
-          <a href="#help-files" (click)="jumpTo($event)">Uploading files</a>
+          <a [routerLink]="['/help']" fragment="help-files">Uploading files</a>
         </li>
         <li class="py-2">
-          <a href="#help-start" (click)="jumpTo($event)">Adding a study to the database</a>
+          <a [routerLink]="['/help']" fragment="help-start">Adding a study to the database</a>
         </li>
         <li class="py-2">
-          <a href="#help-edit" (click)="jumpTo($event)">Editing a study</a>
+          <a [routerLink]="['/help']" fragment="help-edit">Editing a study</a>
         </li>
         <li class="py-2">
-          <a href="#help-save" (click)="jumpTo($event)">Saving and submitting a study</a>
+          <a [routerLink]="['/help']" fragment="help-save">Saving and submitting a study</a>
         </li>
         <li class="py-2">
-          <a href="#help-about" (click)="jumpTo($event)">About</a>
+          <a [routerLink]="['/help']" fragment="help-about">About</a>
           <a href="mailto:biostudies@ebi.ac.uk?Subject=Submission%20Tool" class="float-right">
             <i class="fa fa-envelope-square"></i>
             Contact us
@@ -28,8 +28,8 @@
       </ol>
 
       <dl>
-        <dt class="border-bottom"><h4>1.Listing all your studies</h4></dt>
-        <dd id="help-list" class="pt-2">
+        <dt id="help-list" class="border-bottom"><h4>1. Listing all your studies</h4></dt>
+        <dd class="pt-2">
           <p>
             The first screen shown is the list of so-called <i>"Submissions"</i>. Each of these is,
             effectively, a form for a current or prospective BioStudies entry.
@@ -46,7 +46,7 @@
               database yet.
             </li>
           </ul>
-          <p><img src="images/help/submission_list.png" width="1400" height="448" /></p>
+          <img class="p-width" src="images/help/submission_list.png" alt="Submission list example" width="1400" height="448" />
           <p>
             Submissions of either category can be edited or deleted using the buttons with icons
             <span class="btn-group btn-group-sm">
@@ -67,8 +67,8 @@
             icon in the relevant column and provide the text or date to be filtered by.
           </p>
         </dd>
-        <dt class="border-bottom"><h4>2.Uploading files</h4></dt>
-        <dd id="help-files" class="pt-2">
+        <dt id="help-files" class="border-bottom"><h4>2. Uploading files</h4></dt>
+        <dd class="pt-2">
           <p>
             Each user's files are stored in a central repository and made available for all your
             submissions. To navigate and list all your files, click on
@@ -96,55 +96,47 @@
             </p>
           </div>
         </dd>
-        <dt class="border-bottom"><h4>3.Adding a study to the database</h4></dt>
-        <dd id="help-start" class="pt-2">
+        <dt id="help-start" class="border-bottom"><h4>3. Adding a study to the database</h4></dt>
+        <dd class="pt-2">
           <p>
             Depending on how experimental data is provided, there are two possible ways of adding
-            a given study to the database. Both require clicking one of the two buttons above the
-            list of submissions:
+            a given study to the database. Both require clicking one of the options in the "New Submission" dropdown:
           </p>
-          <p>
-            <button class="btn btn-primary btn-sm">
-              <i class="fa fa-plus-circle" aria-hidden="true"></i>
-              New submission
-            </button>
-          </p>
+          <img class="p-width" src="images/help/new_submission_dropdown.png" alt="New submission dropdown example" width="1400" height="144" />
+          <p></p>
+          <h5>Submit Form</h5>
           <p>
             Creates a blank submission form to be manually filled in with study data and added to
-            the database at your own discretion. As part of the process, the project your study belongs
+            the database at your own discretion. As part of the process, the collection your study belongs
             to must be selected. This is due to the difference in data requirements that exists from
-            project to project.
+            collection to collection.
           </p>
-          <img src="images/help/new_submission.gif" width="1402" height="383" />
-          <p>
-            <button class="btn btn-primary btn-sm">
-              <i class="fa fa-upload" aria-hidden="true"></i>
-              Direct upload
-            </button>
-          </p>
+          <img class="p-width" src="images/help/new_submission.gif" alt="New submission example" width="1402" height="383" />
+          <p></p>
+          <h5>Submit PageTab</h5>
           <p>
             Allows the automatic extraction of study data from a selected pre-formatted file. The data
             can then be incorporated into the database as a new study or used to update an existing one.
             As with user files (see the <i>"Files"</i> section in the sidebar), study files can be submitted
             individually or multiple can be submitted by uploading all the studies under a folder.
           </p>
-          <img src="images/help/direct_upload.gif" width="2734" height="800" />
+          <img class="p-width" src="images/help/direct_upload.gif" alt="New submission direct upload example" width="2734" height="800" />
         </dd>
-        <dt class="border-bottom"><h4>4.Editing a study</h4></dt>
-        <dd id="help-edit" class="pt-2">
+        <dt id="help-edit" class="border-bottom"><h4>4. Editing a study</h4></dt>
+        <dd class="pt-2">
           <p>
             In most submission forms, only some of the fields may be required, such as the study's title or
             its release date. For ease of reference, all required fields are listed under the <i>"Check"</i>
             tab on the left-hand side of the form at all times. Clicking on any entry of the checklist
             sets the focus on the relevant field, scrolling directly to it if needed.
           </p>
-          <p><img src="images/help/check_tab.gif" width="1402" height="513" /></p>
+          <p><img class="p-width" src="images/help/check_tab.gif" alt="Submission validation example" width="1402" height="513" /></p>
           <p>
             New fields may be added through the <i>"Add"</i> tab on the left-hand side of the form. It includes
             the most common field types for a study such as publication tables or annotations lists.
             In the app, tables and lists are generally referred to as <i>"grids"</i>.
           </p>
-          <p><img src="images/help/add_tab.png" width="2802" height="1058" /></p>
+          <p><img class="p-width" src="images/help/add_tab.png" alt="Add new elements to submission form example" width="2802" height="1058" /></p>
           <p>
             If a grid is already present in the form, a new row will be added when clicking on the
             corresponding entry in the <i>"Add"</i> tab.
@@ -181,10 +173,22 @@
             Additionally, in the case of a sent submission, any recent changes in the form can be cancelled,
             reverting the form to its previous state before the changes.
           </p>
-          <p><img src="images/help/revert_submission.gif" width="1402" height="532" /></p>
+          <p><img class="p-width" src="images/help/revert_submission.gif" alt="Revert submission example" width="1402" height="532" /></p>
+          <h5 id="new-item-dropdown">Adding new items to dropdowns</h5>
+          <p></p>
+          <p>
+            All dropdowns inputs in the edit submission form allow to enter new items. This applies to Organism, Organisation and any other dropdown.
+          </p>
+          <ul>
+            <li>Look for your item, if it doesn't show up in the list an "Add item" option should come up</li>
+            <li>Click or press enter on the "Add new" item option and the new item should be selected and added to the list</li>
+          </ul>
+          <div>
+            <img class="mx-auto d-block" src="images/help/add-new-dropdown.gif" alt="Adding new items to dropdowns example" width="398" height="151" />
+          </div>
         </dd>
-        <dt class="border-bottom"><h4>5.Saving and submitting a study</h4></dt>
-        <dd id="help-save" class="pt-2">
+        <dt id="help-save" class="border-bottom"><h4>5. Saving and submitting a study</h4></dt>
+        <dd class="pt-2">
           <p>
             Submission forms are automatically backed up every time a change is made, so you can leave
             an incomplete form and come back to it later.
@@ -195,12 +199,12 @@
             button, located both in the secondary top bar and at the bottom of the form. If the
             submission has been successful, a summary of all the information pertaining the study is shown.
           </p>
-          <img src="images/help/success_submission.gif" width="1402" height="535" />
+          <img class="p-width" src="images/help/success_submission.gif" alt="Success submission example" width="1402" height="535" />
           <p>
             If the form is submitted with any required fields blank, the application will cancel the
             submission process and highlight the relevant fields.
           </p>
-          <p><img src="images/help/submit_blanks.gif" width="1402" height="592" /></p>
+          <p><img class="p-width" src="images/help/submit_blanks.gif" alt="Submission with errors example" width="1402" height="592" /></p>
 
           <div class="alert alert-warning" role="alert">
             <strong>Please note:</strong> the system may take up to 24 hours after submission to register any new studies in the
@@ -211,8 +215,8 @@
             until the release date in the Western European Time Zone.
           </div>
         </dd>
-        <dt class="border-bottom"><h4>6.About</h4></dt>
-        <dd id="help-about" class="pt-2">
+        <dt id="help-about" class="border-bottom"><h4>6. About</h4></dt>
+        <dd class="pt-2">
           <p>
             The submission tool is a single-page app based on the
             <a href="https://github.com/angular/angular">Angular</a>

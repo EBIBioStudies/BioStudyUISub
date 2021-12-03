@@ -12,10 +12,10 @@ export const bioRamanTemplate = {
         name: 'Title',
         icon: 'fa-heading',
         valueType: {
-          name: 'largetext',
-          isStudyTitle: true
+          name: 'largetext'
         },
-        display: 'required'
+        display: 'required',
+        asyncValueValidatorName: 'forStudyTitle'
       },
       {
         name: 'ReleaseDate',
@@ -40,6 +40,7 @@ export const bioRamanTemplate = {
         description: 'Add the contact details for the authors involved in the study.',
         uniqueCols: true,
         display: 'required',
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'Name',
@@ -49,6 +50,8 @@ export const bioRamanTemplate = {
           },
           {
             name: 'Organisation',
+            helpText: 'Add org',
+            helpLink: '/help#new-item-dropdown',
             valueType: {
               name: 'select',
               multiple: true,
@@ -289,7 +292,7 @@ export const bioRamanTemplate = {
             columnTypes: [
               {
                 name: 'File',
-                valueType: { name: 'file' },
+                valueType: { name: 'file', allowFolders: false },
                 display: 'required'
               },
               {
@@ -336,7 +339,7 @@ export const bioRamanTemplate = {
           {
             name: 'Raw spectrum',
             icon: 'fa-wave-square',
-            valueType: { name: 'file' },
+            valueType: { name: 'file', allowFolders: false },
             description:
               'Raw, untreated spectrum with wavenumbers, bins, and intensities at each bin; format as TSV,CSV or other universal file format.',
             display: 'required'
@@ -405,7 +408,7 @@ export const bioRamanTemplate = {
           {
             name: 'File',
             icon: 'fa-wave-square',
-            valueType: { name: 'file' },
+            valueType: { name: 'file', allowFolders: false },
             display: 'required'
           }
         ],

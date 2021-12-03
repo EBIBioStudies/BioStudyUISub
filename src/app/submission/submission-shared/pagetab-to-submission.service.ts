@@ -1,23 +1,27 @@
-import { SelectValueType, ValueTypeName, FieldType } from './model/templates/submission-type.model';
-import { Injectable } from '@angular/core';
-import { flatArray, isDefinedAndNotEmpty, isArrayEmpty, arrayUniqueValues, isStringDefined } from 'app/utils';
 import {
   AttrExceptions,
-  LinksUtils,
   PageTab,
   PageTabSection,
   PtAttribute,
-  authorsToContacts,
-  mergeAttributes,
-  pageTabToSubmissionProtocols,
-  PtLink,
   PtFile,
-  findAttributesByName
+  PtLink,
+  authorsToContacts,
+  findAttributesByName,
+  mergeAttributes,
+  pageTabToSubmissionProtocols
 } from './model/pagetab';
-import { AttributeData, TableData, SectionData, Submission, SubmissionData } from './model/submission';
+import { AttributeData, SectionData, Submission, SubmissionData, TableData } from './model/submission';
 import { DEFAULT_TEMPLATE_NAME, SectionType, SubmissionType } from './model/templates';
+import { FieldType, SelectValueType, ValueTypeName } from './model/templates/submission-type.model';
 import { NameAndValue, PAGE_TAG, Tag } from './model/model.common';
+import { arrayUniqueValues, flatArray } from 'app/utils/array.utils';
+import { isDefinedAndNotEmpty, isStringDefined } from 'app/utils/validation.utils';
+
+import { Injectable } from '@angular/core';
 import { findAttribute } from './utils/pagetab.utils';
+import { isArrayEmpty } from 'app/utils/validation.utils';
+import { toUntyped } from './utils/link.utils';
+import { AttributeNames } from './../utils/constants';
 
 @Injectable()
 export class PageTabToSubmissionService {
@@ -42,27 +46,31 @@ export class PageTabToSubmissionService {
   }
 
   private findSubmissionTemplateName(pageTab: PageTab): string {
-    const attachToAttributes: PtAttribute[] = findAttribute(pageTab, AttrExceptions.attachToAttr);
-    const attachToValue: string[] = attachToAttributes.map((attribute) => (attribute.value as string) || '');
+    let templateName = DEFAULT_TEMPLATE_NAME;
+    const templateAttribute: PtAttribute[] = findAttribute(pageTab, AttributeNames.TEMPLATE);
 
-    if (attachToValue.length === 0) {
-      return DEFAULT_TEMPLATE_NAME;
+    if (templateAttribute.length > 0) {
+      templateName = (templateAttribute[0].value as string) || '';
+    } else {
+      const attachToAttributes: PtAttribute[] = findAttribute(pageTab, AttributeNames.ATTACH_TO);
+      const attachToValue: string[] = attachToAttributes.map((attribute) => (attribute.value as string) || '');
+
+      templateName = attachToValue.length === 0 ? DEFAULT_TEMPLATE_NAME : attachToValue[0];
     }
 
-    return attachToValue[0];
+    return templateName;
   }
 
   private hasSubsections(section: PageTabSection): boolean {
     const hasSubsection = typeof section.subsections !== 'undefined' && section.subsections.length > 0;
     const hasLinks = typeof section.links !== 'undefined' && section.links.length > 0;
     const hasFiles = typeof section.files !== 'undefined' && section.files.length > 0;
-    const hasLibraryFile = typeof section.libraryFile !== 'undefined' && section.libraryFile.length > 0;
     const sectionTags = section.tags === undefined ? [] : Array.from(section.tags);
     const hasPageTag = sectionTags
       .map((tagItem) => new Tag(tagItem.classifier, tagItem.tag))
       .some((tagInstance) => tagInstance.equals(PAGE_TAG));
 
-    return hasSubsection || hasLinks || hasFiles || hasLibraryFile || hasPageTag;
+    return hasSubsection || hasLinks || hasFiles || hasPageTag;
   }
 
   private attributeToAttributeData(attr: PtAttribute): AttributeData {
@@ -135,15 +143,12 @@ export class PageTabToSubmissionService {
     const hasLinks = links.length > 0;
     const hasFiles = files.length > 0;
     const hasTableSections = tableSections.length > 0;
-    const hasLibraryFile = isDefinedAndNotEmpty(ptSection.libraryFile);
     const hasKeywords = keywords.length > 0;
 
     if (hasLinks) {
       tables.push({
         type: 'Link',
-        entries: links
-          .map((link) => LinksUtils.toUntyped(link))
-          .map((link) => this.pageTabAttributesToAttributeData(link))
+        entries: links.map((link) => toUntyped(link)).map((link) => this.pageTabAttributesToAttributeData(link))
       } as TableData);
     }
 
@@ -153,13 +158,6 @@ export class PageTabToSubmissionService {
         entries: files
           .map((file) => [{ name: 'File', value: file.path } as PtAttribute].concat(file.attributes || []))
           .map((file) => this.pageTabAttributesToAttributeData(file))
-      } as TableData);
-    }
-
-    if (hasLibraryFile) {
-      tables.push({
-        type: 'LibraryFile',
-        entries: [[{ name: 'File', value: ptSection.libraryFile } as PtAttribute]]
       } as TableData);
     }
 

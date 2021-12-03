@@ -1,0 +1,25 @@
+<div class="btn-group" dropdown>
+  <button type="button"
+    class="btn btn-success"
+    [ngClass]="{'btn-sm': isSmall}"
+    tooltip="Create a new submission manually"
+    container="body"
+    [disabled]="isBusy"
+    stNewSubmissionButton>
+    <i class="fa fa-plus-circle" aria-hidden="true"></i> New Submission
+  </button>
+  <button type="button"
+    class="btn btn-success dropdown-toggle dropdown-toggle-split"
+    [ngClass]="{'btn-sm': isSmall}"
+    data-toggle="dropdown"
+    aria-haspopup="true"
+    aria-expanded="false"
+    [disabled]="isBusy"
+    dropdownToggle>
+    <span class="sr-only">New Submission</span>
+  </button>
+  <div class="dropdown-menu" *dropdownMenu>
+    <button type="button" class="dropdown-item" stNewSubmissionButton>Submit Form</button>
+    <button type="button" class="dropdown-item" (click)="onUploadSubmClick($event)">Submit PageTab</button>
+  </div>
+</div>

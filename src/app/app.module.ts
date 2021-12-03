@@ -25,12 +25,16 @@ import { SubmissionDirectModule } from './submission/submission-direct/submissio
 import { SubmissionEditModule } from './submission/submission-edit/submission-edit.module';
 import { SubmissionListModule } from './submission/submission-list/submission-list.module';
 import { FileModule } from './file/file.module';
-import { HelpComponent } from './help/help.component';
 import { SharedModule } from 'app/shared/shared.module';
-import { NotFoundModule } from 'app/not-found/not-found.module';
+import { ProfileModule } from './profile/profile.module';
+import { HelpModule } from './help/help.module';
 
 export function initConfig(config: AppConfig): () => Promise<any> {
   return () => config.load();
+}
+
+function initRecaptchaSettings(config: AppConfig): RecaptchaSettings {
+  return { siteKey: config.recaptchaPublicKey, size: 'invisible' };
 }
 
 @NgModule({
@@ -63,18 +67,16 @@ export function initConfig(config: AppConfig): () => Promise<any> {
     AuthModule,
     ThemeModule,
     CoreModule,
-    NotFoundModule
+    HelpModule,
+    ProfileModule
   ],
-  declarations: [AppComponent, HelpComponent],
+  declarations: [AppComponent],
   providers: [
     AppConfig,
     { provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true },
     { provide: LocationStrategy, useClass: PathLocationStrategy },
     { provide: RECAPTCHA_BASE_URL, useValue: 'https://recaptcha.net/recaptcha/api.js' },
-    {
-      provide: RECAPTCHA_SETTINGS,
-      useValue: { siteKey: '6Lc8JN0UAAAAAN4yxc0Ms6qIZ3fml-EYuuD_cTKi', size: 'invisible' } as RecaptchaSettings
-    }
+    { provide: RECAPTCHA_SETTINGS, useFactory: initRecaptchaSettings, deps: [AppConfig] }
   ],
   bootstrap: [AppComponent]
 })

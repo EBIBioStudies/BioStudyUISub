@@ -1,8 +1,7 @@
 <ng-container *ngIf="file">
-  <div class="card h-100" [ngClass]="{'panel-default': !accno, 'text-primary': accno}"
+  <div class="card h-100" [ngClass]="{'panel-default': !accno, 'text-primary': accno, 'st-has-passed': hasSubmitPassed}"
     [ngStyle]="{'cursor': accno  ? 'pointer' : 'default'}"
     [tooltip]="accno ? 'Edit this study' : ''"
-    (click)="hasSubmitPassed ? handleOnFileClick($event, hasSubmitFailed, accno) : null"
     placement="top" container="body">
     <div class="card-body">
       <div class="card-title d-flex align-items-center">
@@ -21,12 +20,8 @@
           <strong>{{accno}}</strong>
         </p>
         <dl class="row mb-0">
-          <dt class="col-sm-6" *ngIf="releaseDate">Release Date</dt>
-          <dd class="col-sm-6" *ngIf="releaseDate">{{releaseDate | date: 'dd MMM yyyy'}}</dd>
-          <dd class="col-sm-6" *ngIf="!releaseDate">No release date</dd>
-
-          <dt class="col-sm-6" *ngIf="isStudy">Project</dt>
-          <dd class="col-sm-6" *ngIf="isStudy">{{project ? project : 'No project'}}</dd>
+          <dt class="col-sm-6" *ngIf="isStudy">Collection</dt>
+          <dd class="col-sm-6" *ngIf="isStudy">{{project ? project : 'No Collection'}}</dd>
         </dl>
       </div>
       <span class="text-danger" *ngIf="hasSubmitFailed">
@@ -36,10 +31,22 @@
         <st-subm-results-tree [log]="errorLog"></st-subm-results-tree>
       </div>
     </div>
-    <div *ngIf="!hasSubmitFailed && !hasSubmitPassed" class="card-footer text-muted"
-      (click)="handleOnIsStudyChange(!isStudy, fileName)">
-      <input type="checkbox" [checked]="isStudy">
-      Study File
+    <div *ngIf="!hasSubmitFailed && !hasSubmitPassed" class="card-footer d-flex align-items-center" [ngClass]="{'st-is-study': isStudy}">
+      <div class="flex-grow-1">
+        <button *ngIf="showIsStudyOption" class="btn btn-link text-muted d-inline p-0" (click)="handleOnIsStudyChange(!isStudy, fileName)">
+          <label class="sr-only" for="is-study-checkbox-'{{file.name}}'">Is {{file.name}} containing the study information?</label>
+          <input id="is-study-checkbox-'{{file.name}}'" type="checkbox" [checked]="isStudy">
+          Study File
+        </button>
+      </div>
+      <button class="btn btn-outline-danger btn-sm"
+        type="button"
+        aria-label="Delete file '{{file.name}}'"
+        title="Delete file '{{file.name}}'"
+        (click)="handleOnDeleteFile(!isStudy, fileName)"
+        tooltip="Delete file '{{file.name}}'">
+        <i class="fas fa-trash-alt fa-fw" aria-hidden="true"></i>
+      </button>
     </div>
   </div>
 </ng-container>

@@ -12,10 +12,10 @@ export const hecatosTemplate = {
         icon: 'fa-heading',
         valueType: {
           name: 'largetext',
-          minlength: 25,
-          isStudyTitle: true
+          minlength: 25
         },
-        display: 'required'
+        display: 'required',
+        asyncValueValidatorName: 'forStudyTitle'
       },
       {
         name: 'Description',
@@ -33,6 +33,8 @@ export const hecatosTemplate = {
       {
         name: 'Organism',
         icon: 'fa-tag',
+        helpText: 'Add organism',
+        helpLink: '/help#new-item-dropdown',
         valueType: {
           name: 'select',
           values: ['Homo sapiens (human)', 'Sus scrofa (pig)']
@@ -225,6 +227,7 @@ export const hecatosTemplate = {
         description: 'Add the contact details for the authors involved in the study.',
         uniqueCols: true,
         display: 'required',
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'Name',
@@ -238,6 +241,8 @@ export const hecatosTemplate = {
           },
           {
             name: 'Organisation',
+            helpText: 'Add org',
+            helpLink: '/help#new-item-dropdown',
             valueType: {
               name: 'select',
               multiple: true,
@@ -296,6 +301,7 @@ export const hecatosTemplate = {
           '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pmc/pmctopmid/#converter">PubMed\'s converter</a>.',
         icon: 'fa-link',
         uniqueCols: true,
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'Link',
@@ -314,6 +320,7 @@ export const hecatosTemplate = {
         description: 'List the data files for the study and describe their respective scopes.',
         icon: 'fa-file',
         uniqueCols: true,
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'Path',

@@ -1,12 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild, DoCheck, OnDestroy } from '@angular/core';
 import { UserData } from 'app/auth/shared';
 import { FileUploadButtonComponent } from 'app/shared/file-upload-button/file-upload-button.component';
-import { ModalService } from 'app/shared/modal.service';
+import { ModalService } from 'app/shared/modal/modal.service';
 import { Observable, from, Subject, Subscription, of } from 'rxjs';
 import { last, mergeAll, takeUntil, map, finalize } from 'rxjs/operators';
 import { AppConfig } from 'app/app.config';
 import { DirectSubmitService } from './direct-submit.service';
 import { DirectSubmitFileUploadService } from './direct-submit-file-upload.service';
+import { fileActionMap } from './direct-submit-file.component';
 
 export interface SidebarFile extends File {
   isStudy: boolean;
@@ -142,6 +143,10 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
     return this.directSubmitSvc.isQueueStatus(status);
   }
 
+  getProjects(): string[] {
+    return this.model.projects;
+  }
+
   ngDoCheck(): void {
     this.isBulkSupport = this.fileSelector && this.fileSelector.isDirSupport;
   }
@@ -163,7 +168,7 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
    * is known.
    */
   ngOnInit(): void {
-    this.userData.projectAccNumbers$.subscribe(
+    this.userData.collections$.subscribe(
       (projects) => {
         this.model.projects = this.initProjModel(projects);
         this.isProjFetch = false;
@@ -246,17 +251,11 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
    */
   onUploadFilesSelect(files: FileList): void {
     if (files.length > 0) {
-      this.model.files = Array.from(files) as SidebarFile[];
+      const sidebarFiles = Array.from(files) as SidebarFile[];
+      const modelFilesName = this.model.files?.map((file) => file.name);
+      const uniqueFiles = sidebarFiles.filter((file) => !modelFilesName?.includes(file.name));
+      this.model.files = [...(this.model.files || []), ...uniqueFiles];
       this.directSubmitSvc.reset();
-
-      if (this.model.files.length === 1) {
-        // If there is just one file set it as study.
-        this.model.files[0].isStudy = true;
-      } else {
-        this.model.files.map((file) => {
-          file.isStudy = false;
-        });
-      }
 
       this.filesChange.emit(this.model.files);
     }
@@ -274,13 +273,19 @@ export class DirectSubmitSideBarComponent implements OnInit, OnDestroy, DoCheck 
     return typeof request !== 'undefined' ? request[property] : '';
   }
 
-  toggleStudyFile(fileName: string, isStudy: boolean): void {
+  changeFile(fileName: string, isStudy: boolean, action: string): void {
     if (this.model.files) {
-      this.model.files.forEach((file) => {
-        if (file.name === fileName) {
-          file.isStudy = isStudy;
-        }
-      });
+      if (action === fileActionMap.SET_AS_STUDY_ACTION) {
+        this.model.files.forEach((file) => {
+          if (file.name === fileName) {
+            file.isStudy = isStudy;
+          }
+        });
+      }
+
+      if (action === fileActionMap.DELETE_FILE) {
+        this.model.files = this.model.files.filter((file) => file.name !== fileName);
+      }
 
       this.filesChange.emit(this.model.files);
     }

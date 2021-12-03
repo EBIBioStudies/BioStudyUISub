@@ -1,6 +1,7 @@
 <div class="container-fluid">
-  <st-not-found *ngIf="submNotFound" [message]="submNotFoundMessage"></st-not-found>
-  <div *ngIf="!submNotFound" class="row">
+  <st-not-found *ngIf="showError && submNotFoundMessage" [message]="submNotFoundMessage"></st-not-found>
+  <st-forbidden *ngIf="showError && templForbiddenMessage" [message]="templForbiddenMessage"></st-forbidden>
+  <div *ngIf="!showError" class="row">
     <st-sidebar *ngIf="!readonly" (toggle)="onSidebarToggle($event)">
       <st-subm-sidebar [collapsed]="isSidebarCollapsed" [sectionForm]="sectionForm"></st-subm-sidebar>
     </st-sidebar>
@@ -19,14 +20,17 @@
         <div *ngIf="method === 'FILE'" class="alert alert-info">
           <p class="mb-0">
             <strong>Please note: </strong>
-            You are about to edit a submission which was created by Direct Upload. Any updates to this submission will
+            You are about to edit a submission which was created by submitting PageTab. Any updates to this submission will
             be available on BioStudies but will not be reflected in the initially submitted file.
           </p>
         </div>
+        <div *ngIf="banner" class="card d-flex justify-content-center px-2 mb-3" [style.background]="banner.backgroundColor">
+          <img style="height: 3rem" [src]="banner.src" [alt]="banner.alt">
+        </div>
         <div *ngIf="sectionForm.isRootSection" class="card">
           <div class="card-body st-edit-status-message">
-            <ng-container *ngIf="hasJustCreated && sectionForm.invalid">
-              <h4 class="card-title">New {{collection}} submission</h4>
+            <ng-container *ngIf="isTemp && !readonly && !sectionForm.valid">
+              <h2 class="card-title">New {{collection}} submission</h2>
               <p class="card-text">
                 Please fill in the form below. The <span class="font-weight-bold">Check</span> tab on the
                 left-hand side lists those fields still incomplete or incorrect. Use the
@@ -37,8 +41,8 @@
               </div>
             </ng-container>
 
-            <ng-container *ngIf="!hasJustCreated && !readonly && sectionForm.invalid">
-              <h4 class="card-title">Incomplete {{collection}} submission</h4>
+            <ng-container *ngIf="!isTemp && !readonly && !sectionForm.valid">
+              <h2 class="card-title">Incomplete {{collection}} submission</h2>
               <p class="card-text">
                 Some information in this submission is still missing or incorrect. Refer to the
                 <span class="font-weight-bold">Check</span> tab on the left-hand side for the
@@ -49,9 +53,9 @@
               </div>
             </ng-container>
 
-            <ng-container *ngIf="!sectionForm.invalid && !readonly || sectionForm.pending">
+            <ng-container *ngIf="sectionForm.valid && !readonly">
               <ng-container *ngIf="isTemp && !isSubmitting">
-                <h4 class="card-title">Study ready for submission</h4>
+                <h2 class="card-title">Study ready for submission</h2>
                 <p class="card-text">You may submit the data on this form now.</p>
                 <div class="alert alert-success mb-0" role="alert">
                   <strong>Please note:</strong> after submission, your study will be allocated a permanent accession
@@ -61,7 +65,7 @@
               </ng-container>
 
               <ng-container *ngIf="!isTemp && !isSubmitting">
-                <h4 class="card-title">Study ready for re-submission</h4>
+                <h2 class="card-title">Study ready for re-submission</h2>
                 <p class="card-text">You may re-submit the data on this form now.</p>
                 <div class="alert alert-success mb-0" role="alert">
                   <strong>Please note:</strong> your study will retain the same accession number under which it was
@@ -70,34 +74,34 @@
               </ng-container>
 
               <ng-container *ngIf="isSubmitting">
-                <h4 class="card-title">Submitting study...</h4>
+                <h2 class="card-title">Submitting study...</h2>
                 <p class="card-text">Please wait while the data in the form is being submitted and validated.</p>
               </ng-container>
             </ng-container>
 
             <ng-container *ngIf="isTemp && readonly">
-              <h4 class="card-title">
+              <h2 class="card-title">
                 <i aria-hidden="true" class="fa fa-check-circle"></i>
                 Study
                 <span *ngIf="submitOperation.isUnknown">entry</span>
                 <span *ngIf="submitOperation.isCreate">submitted</span>
-              </h4>
+              </h2>
               <p class="card-text mb-1" *ngIf="submitOperation.isUnknown || submitOperation.isCreate">
                 The study has been successfully submitted to the BioStudies database and is now being processed.
               </p>
             </ng-container>
 
             <ng-container *ngIf="!isTemp && readonly">
-              <h4 class="card-title">
+              <h2 class="card-title">
                 <i aria-hidden="true" class="fa fa-check-circle"></i>
                 Study <span *ngIf="submitOperation.isUpdate">updated</span>
-              </h4>
+              </h2>
               <p class="card-text mb-1" *ngIf="submitOperation.isUpdate ">
                 The study with accession number <strong>{{accno}}</strong>
                 <span *ngIf="releaseDate">and release date <strong>{{releaseDate | date: 'dd MMMM yyyy'}}</strong></span>
                 has been successfully updated and is now being processed. It will be available at
-                <a target="_blank" href="{{location.origin}}/biostudies/studies/{{accno}}">
-                  {{location.hostname}}/biostudies/studies/{{accno}}</a>. <br />
+                <a target="_blank" href="{{frontendUrl}}/studies/{{accno}}">
+                  {{frontendUrl}}/studies/{{accno}}</a>. <br />
               </p>
             </ng-container>
 
@@ -106,13 +110,12 @@
                 <h5>Please note <i class="far fa-hand-point-down"></i></h5>
                 <ul>
                   <li class="mb-3">
-                    <mark>
-                      Your submission is being processed and the system may take up to 24 hours after submission to register any new
-                      studies in the database.
-                    </mark>
+                    <mark>As soon as your study is processed, you will receive its accession number by e-mail</mark>
                   </li>
                   <li class="mb-3">
-                    <mark>A notification will be dropped to your email as soon as the submission has been processed.</mark>
+                    <mark>
+                      The system may take up to 24 hours after submission to register any new studies in the database.
+                    </mark>
                   </li>
                   <li class="mb-3">
                     <mark>Any registered study will remain private and accessible only through login until the release date in the

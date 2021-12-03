@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { NgZone, Injectable } from '@angular/core';
 import { ServerSentEventService } from 'app/shared/server-sent-event.service';
-import { isStringDefined } from 'app/utils';
+import { isStringDefined } from 'app/utils/validation.utils';
 import { PlatformLocation } from '@angular/common';
 
 @Injectable()

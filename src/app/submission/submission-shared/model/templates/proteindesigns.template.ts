@@ -12,9 +12,9 @@ export const proteinDesignsTemplate = {
         display: 'required',
         valueType: {
           name: 'largetext',
-          minlength: 25,
-          isStudyTitle: true
-        }
+          minlength: 25
+        },
+        asyncValueValidatorName: 'forStudyTitle'
       },
       {
         name: 'Description of design',
@@ -403,6 +403,7 @@ export const proteinDesignsTemplate = {
         icon: 'fa-file',
         display: 'desirable',
         uniqueCols: true,
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'File',
@@ -422,6 +423,7 @@ export const proteinDesignsTemplate = {
         icon: 'fa-address-card',
         display: 'required',
         uniqueCols: true,
+        rowAsSection: true,
         columnTypes: [
           {
             autosuggest: false,
@@ -443,6 +445,8 @@ export const proteinDesignsTemplate = {
           },
           {
             name: 'Organisation / University',
+            helpText: 'Add org',
+            helpLink: '/help#new-item-dropdown',
             valueType: {
               name: 'select',
               multiple: true,

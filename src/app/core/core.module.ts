@@ -1,5 +1,7 @@
+import { LoadingComponent } from './components/loading/loading.component';
 import { ErrorHandler, NgModule, Optional, SkipSelf } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
 import {
   RequestStatusInterceptorService,
   RequestStatusServiceFactory
@@ -12,9 +14,36 @@ import { ErrorMessageService } from './errors/error-message.service';
 import { NotificationService } from './notification/notification.service';
 import { ErrorService } from './errors/error.service';
 import { LogService } from './logger/log.service';
+import { DateFormatDirective } from './directives/date-format.directive';
+import { PluralPipe } from './pipes/plural.pipe';
+import { StripHtmlPipe } from './pipes/strip-html.pipe';
+import { ValidateOnBlurDirective } from './directives/validate-onblur.directive';
+import { NotFoundComponent } from './components/error/not-found.component';
+import { ForbiddenComponent } from './components/error/forbidden.component';
+import { ErrorComponent } from './components/error/error.component';
 
 @NgModule({
-  imports: [HttpClientModule],
+  imports: [HttpClientModule, RouterModule],
+  declarations: [
+    DateFormatDirective,
+    ValidateOnBlurDirective,
+    StripHtmlPipe,
+    PluralPipe,
+    NotFoundComponent,
+    ErrorComponent,
+    ForbiddenComponent,
+    LoadingComponent
+  ],
+  exports: [
+    DateFormatDirective,
+    ValidateOnBlurDirective,
+    StripHtmlPipe,
+    PluralPipe,
+    NotFoundComponent,
+    ErrorComponent,
+    ForbiddenComponent,
+    LoadingComponent
+  ],
   providers: [
     ErrorMessageService,
     NotificationService,

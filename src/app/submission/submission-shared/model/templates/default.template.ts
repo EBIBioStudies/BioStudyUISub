@@ -13,9 +13,9 @@ export const defaultTemplate = {
         display: 'required',
         valueType: {
           name: 'largetext',
-          minlength: 25,
-          isStudyTitle: true
-        }
+          minlength: 25
+        },
+        asyncValueValidatorName: 'forStudyTitle'
       },
       {
         name: 'ReleaseDate',
@@ -40,6 +40,8 @@ export const defaultTemplate = {
         name: 'Organism',
         icon: 'fa-tag',
         display: 'required',
+        helpText: 'Add organism',
+        helpLink: '/help#new-item-dropdown',
         valueType: {
           name: 'select',
           multiple: true,
@@ -141,6 +143,7 @@ export const defaultTemplate = {
         display: 'required',
         uniqueCols: true,
         allowImport: true,
+        rowAsSection: true,
         columnTypes: [
           {
             autosuggest: false,
@@ -156,6 +159,8 @@ export const defaultTemplate = {
           },
           {
             name: 'Organisation',
+            helpText: 'Add org',
+            helpLink: '/help#new-item-dropdown',
             valueType: {
               name: 'select',
               multiple: true,
@@ -257,6 +262,7 @@ export const defaultTemplate = {
         icon: 'fa-link',
         uniqueCols: true,
         allowImport: true,
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'Link',
@@ -276,6 +282,7 @@ export const defaultTemplate = {
         icon: 'fa-file',
         uniqueCols: true,
         allowImport: true,
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'File',
@@ -304,6 +311,7 @@ export const defaultTemplate = {
         icon: 'fa-book',
         uniqueCols: true,
         allowImport: false,
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'PMID',
