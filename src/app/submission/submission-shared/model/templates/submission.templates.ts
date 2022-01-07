@@ -1,5 +1,5 @@
 import { readonlyTemplate } from './readonly.template';
-import { biaTemplate } from './bia/bia.template';
+import { biaTemplate } from './bia.template';
 import { bioRamanTemplate } from './bioRaman.template';
 import { defaultTemplate } from './default.template';
 import { emptyTemplate } from './empty.template';
