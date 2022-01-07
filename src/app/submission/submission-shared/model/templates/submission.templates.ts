@@ -1,5 +1,5 @@
 import { readonlyTemplate } from './readonly.template';
-import { biaTemplate } from './bia.template';
+import { biaTemplate } from './bia/bia.template';
 import { bioRamanTemplate } from './bioRaman.template';
 import { defaultTemplate } from './default.template';
 import { emptyTemplate } from './empty.template';
@@ -30,11 +30,27 @@ export interface TemplateDetail {
   collection: string;
 }
 
+interface TemplateVersion {
+  collection: string;
+  version: number;
+}
+
 export function getTemplatesForCollections(collections: Array<string> = []): Array<TemplateDetail> {
   const collectionNames = [...collections, defaultTemplate.name];
+
   const templateDetail = collectionNames.map((collection) => {
-    let template = SUBMISSION_TEMPLATES.find((json) => json.name.toLowerCase() === collection.toLowerCase());
-    if (!template) template = defaultTemplate;
+    const template = SUBMISSION_TEMPLATES.reduce((latest, t) => {
+      const tInfo = parseTemplateName(t.name);
+      const latestInfo = parseTemplateName(latest.name);
+      if (tInfo.collection.toLowerCase() === collection.toLowerCase()) {
+        if (latestInfo.collection.toLowerCase() === collection.toLowerCase()) {
+          return tInfo.version > latestInfo.version ? t : latest;
+        } else {
+          return t;
+        }
+      }
+      return latest;
+    }, defaultTemplate);
 
     return {
       description: template.description,
@@ -53,4 +69,13 @@ export function findTemplateByName(name: string): any {
   );
 
   return tmpl ? tmpl : defaultTemplate;
+}
+
+function parseTemplateName(templateName: string): TemplateVersion {
+  const templateNameRe = /^(.+?)(?:\.v(\d+))?$/;
+  const matches = templateNameRe.exec(templateName) || [null, '', 0];
+  return {
+    collection: matches[1],
+    version: !!matches[2] ? Number(matches[2]) : 0
+  } as TemplateVersion;
 }
