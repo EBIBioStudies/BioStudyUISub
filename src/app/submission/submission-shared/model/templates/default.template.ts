@@ -41,7 +41,7 @@ export const defaultTemplate = {
         icon: 'fa-tag',
         display: 'required',
         helpText: 'Add organism',
-        helpLink: '/help#new-item-dropdown',
+        helpLink: 'help#new-item-dropdown',
         valueType: {
           name: 'select',
           multiple: true,
