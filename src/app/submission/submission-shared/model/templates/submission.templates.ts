@@ -28,22 +28,33 @@ export interface TemplateDetail {
   description: string;
   name: string;
   collection: string;
+  displayName: string;
 }
 
 export function getTemplatesForCollections(collections: Array<string> = []): Array<TemplateDetail> {
-  const collectionNames = [...collections, defaultTemplate.name];
-  const templateDetail = collectionNames.map((collection) => {
+  const templateDetail = collections.map((collection) => {
     let template = SUBMISSION_TEMPLATES.find((json) => json.name.toLowerCase() === collection.toLowerCase());
-    if (!template) template = defaultTemplate;
+    if (!template) {
+      template = defaultTemplate;
+    }
 
     return {
       description: template.description,
       name: template.name,
-      collection
+      collection,
+      displayName: collection
     };
   });
 
-  return templateDetail;
+  return [
+    ...templateDetail,
+    {
+      description: defaultTemplate.description,
+      name: defaultTemplate.name,
+      displayName: defaultTemplate.name,
+      collection: ''
+    }
+  ];
 }
 
 export function findTemplateByName(name: string): any {
