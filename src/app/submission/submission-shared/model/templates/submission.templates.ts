@@ -31,13 +31,27 @@ export interface TemplateDetail {
   displayName: string;
 }
 
-export function getTemplatesForCollections(collections: Array<string> = []): Array<TemplateDetail> {
-  const templateDetail = collections.map((collection) => {
-    let template = SUBMISSION_TEMPLATES.find((json) => json.name.toLowerCase() === collection.toLowerCase());
-    if (!template) {
-      template = defaultTemplate;
-    }
+interface TemplateVersion {
+  collection: string;
+  version: number;
+}
 
+export function getTemplatesForCollections(collections: Array<string> = []): Array<TemplateDetail> {
+  const collectionNames = [...collections, defaultTemplate.name];
+
+  const templateDetail = collectionNames.map((collection) => {
+    const template = SUBMISSION_TEMPLATES.reduce((latest, t) => {
+      const tInfo = parseTemplateName(t.name);
+      const latestInfo = parseTemplateName(latest.name);
+      if (tInfo.collection.toLowerCase() === collection.toLowerCase()) {
+        if (latestInfo.collection.toLowerCase() === collection.toLowerCase()) {
+          return tInfo.version > latestInfo.version ? t : latest;
+        } else {
+          return t;
+        }
+      }
+      return latest;
+    }, defaultTemplate);
     return {
       description: template.description,
       name: template.name,
@@ -64,4 +78,13 @@ export function findTemplateByName(name: string): any {
   );
 
   return tmpl ? tmpl : defaultTemplate;
+}
+
+function parseTemplateName(templateName: string): TemplateVersion {
+  const templateNameRe = /^(.+?)(?:\.v(\d+))?$/;
+  const matches = templateNameRe.exec(templateName) || [null, '', 0];
+  return {
+    collection: matches[1],
+    version: !!matches[2] ? Number(matches[2]) : 0
+  } as TemplateVersion;
 }
