@@ -28,6 +28,7 @@ export interface TemplateDetail {
   description: string;
   name: string;
   collection: string;
+  displayName: string;
 }
 
 interface TemplateVersion {
@@ -51,15 +52,24 @@ export function getTemplatesForCollections(collections: Array<string> = []): Arr
       }
       return latest;
     }, defaultTemplate);
-
+    
     return {
       description: template.description,
       name: template.name,
-      collection
+      collection,
+      displayName: collection
     };
   });
 
-  return templateDetail;
+  return [
+    ...templateDetail,
+    {
+      description: defaultTemplate.description,
+      name: defaultTemplate.name,
+      displayName: defaultTemplate.name,
+      collection: ''
+    }
+  ];
 }
 
 export function findTemplateByName(name: string): any {
