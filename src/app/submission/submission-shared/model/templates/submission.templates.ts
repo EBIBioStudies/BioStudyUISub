@@ -52,7 +52,6 @@ export function getTemplatesForCollections(collections: Array<string> = []): Arr
       }
       return latest;
     }, defaultTemplate);
-    
     return {
       description: template.description,
       name: template.name,
