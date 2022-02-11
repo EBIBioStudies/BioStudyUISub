@@ -52,6 +52,7 @@ export function getTemplatesForCollections(collections: Array<string> = []): Arr
       }
       return latest;
     }, defaultTemplate);
+
     return {
       description: template.description,
       name: template.name,
@@ -60,15 +61,7 @@ export function getTemplatesForCollections(collections: Array<string> = []): Arr
     };
   });
 
-  return [
-    ...templateDetail,
-    {
-      description: defaultTemplate.description,
-      name: defaultTemplate.name,
-      displayName: defaultTemplate.name,
-      collection: ''
-    }
-  ];
+  return templateDetail;
 }
 
 export function findTemplateByName(name: string): any {
