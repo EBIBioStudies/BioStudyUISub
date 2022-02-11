@@ -2,6 +2,7 @@ import { EMPTY_TEMPLATE_NAME, findTemplateByName } from './submission.templates'
 import { isStringDefined, isStringEmpty } from 'app/utils/validation.utils';
 
 import { isArrayEmpty } from 'app/utils/validation.utils';
+import { LowerCaseSectionNames } from 'app/submission/utils/constants';
 
 /*
  *  Type scopes are used to check if the types with a given name already exists in the scope
@@ -307,9 +308,10 @@ export class TableType extends TypeBase {
     data?: Partial<TableType>,
     scope?: TypeScope<TypeBase>,
     isTemplBased: boolean = true,
-    parentDisplayType: DisplayType = DisplayType.OPTIONAL
+    parentDisplayType: DisplayType = DisplayType.OPTIONAL,
+    title?: string
   ) {
-    super(name, isTemplBased, scope);
+    super(name, isTemplBased, scope, title);
 
     data = data || {};
     this.description = data.description || '';
@@ -360,8 +362,15 @@ export class AnnotationsType extends TableType {
     isTemplBased: boolean = true,
     parentDisplayType: DisplayType = DisplayType.OPTIONAL
   ) {
-    const d = Object.assign(data || {}, { singleRow: true });
-    super('Annotation', d, scope, isTemplBased, parentDisplayType);
+    const annotationData = Object.assign(data || {}, { singleRow: true });
+    super(
+      LowerCaseSectionNames.ANNOTATION,
+      annotationData,
+      scope,
+      isTemplBased,
+      parentDisplayType,
+      annotationData.title
+    );
   }
 }
 
@@ -454,7 +463,8 @@ export class SectionType extends TypeBase {
       (fieldType) => new FieldType(fieldType.name, fieldType, this.fieldScope, this.displayType, fieldType.title)
     );
     (data.tableTypes || []).forEach(
-      (tableType) => new TableType(tableType.name, tableType, this.tableScope, isTemplBased, this.displayType)
+      (tableType) =>
+        new TableType(tableType.name, tableType, this.tableScope, isTemplBased, this.displayType, tableType.title)
     );
     (data.sectionTypes || []).forEach(
       (sectionType) => new SectionType(sectionType.name, sectionType, this.sectionScope, isTemplBased, this.displayType)

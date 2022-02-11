@@ -86,7 +86,7 @@ export class TableForm extends FormBase {
   get prettyName(): string {
     const isSingleElementTable = this.table.singleRow && this.table.colSize() === 1 && !this.canHaveMoreColumns();
 
-    const name = this.table.typeName.replace(/([A-Z])/g, ' $1');
+    const name = this.table.typeDisplayName.replace(/([A-Z])/g, ' $1');
     return isSingleElementTable ? name : pluralize(name);
   }
 
