@@ -1,6 +1,5 @@
 import { EMPTY_TEMPLATE_NAME, findTemplateByName } from './submission.templates';
 import { isStringDefined, isStringEmpty } from 'app/utils/validation.utils';
-
 import { isArrayEmpty } from 'app/utils/validation.utils';
 import { LowerCaseSectionNames } from 'app/submission/utils/constants';
 
@@ -364,7 +363,7 @@ export class AnnotationsType extends TableType {
   ) {
     const annotationData = Object.assign(data || {}, { singleRow: true });
     super(
-      LowerCaseSectionNames.ANNOTATION,
+      LowerCaseSectionNames.ANNOTATIONS,
       annotationData,
       scope,
       isTemplBased,
