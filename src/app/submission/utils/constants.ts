@@ -1,6 +1,6 @@
 export const SectionNames = {
   AFFILIATION: 'affiliation',
-  ANNOTATION: 'Annotation',
+  ANNOTATIONS: 'Annotations',
   AUTHOR: 'author',
   CONTACT: 'Contact',
   FILE: 'file',

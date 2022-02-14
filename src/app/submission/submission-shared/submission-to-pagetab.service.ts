@@ -62,10 +62,24 @@ export class SubmissionToPageTabService {
     );
 
     const [annotationTable, nonAnnotationTables] = partition<Table>(otherTables, (table) =>
-      [LowerCaseSectionNames.ANNOTATION].includes(table.typeName.toLowerCase())
+      [LowerCaseSectionNames.ANNOTATIONS].includes(table.typeName.toLowerCase())
     );
 
-    const keywordAttributes = this.extractKeywordsFromSection(annotationTable, isSanitise);
+    const [keywordsTable, nonKeywordsTables] = partition<Table>(nonAnnotationTables, (table) =>
+      [LowerCaseSectionNames.KEYWORDS].includes(table.typeName.toLowerCase())
+    );
+
+    const keywordAttributes = this.extractAttributesFromSection(
+      keywordsTable,
+      isSanitise,
+      LowerCaseSectionNames.KEYWORDS
+    );
+    const annotationAttributes = this.extractAttributesFromSection(
+      annotationTable,
+      isSanitise,
+      LowerCaseSectionNames.ANNOTATIONS
+    );
+
     const sectionAttributes = fieldsAsAttributes(section.fields.list(), isSanitise).filter(
       (at) => at.name && !AttrExceptions.editableAndRootOnly.includes(at.name) && !isValueEmpty(at.value)
     );
@@ -73,12 +87,12 @@ export class SubmissionToPageTabService {
     return {
       accessTags: section.tags.accessTags,
       accno: section.accno,
-      attributes: [...keywordAttributes, ...sectionAttributes],
-      files: this.extractFilesFromSection(ownPropTables, isSanitise),
-      links: this.extractLinksFromSection(ownPropTables, isSanitise),
+      attributes: [...sectionAttributes, ...keywordAttributes, ...annotationAttributes],
+      files: this.filesToSections(ownPropTables, isSanitise),
+      links: this.linksToSections(ownPropTables, isSanitise),
       subsections: [
         ...tableToSectionItem(tableSectionItems, isSanitise, isSubsection),
-        ...tableToPtTable(nonAnnotationTables, isSanitise),
+        ...tableToPtTable(nonKeywordsTables, isSanitise),
         ...section.sections.list().map((s) => this.sectionToPtSection(s, isSanitise, true))
       ],
       tags: this.withPageTag(section.tags.tags),
@@ -107,7 +121,7 @@ export class SubmissionToPageTabService {
     return [...tags, ...[PAGE_TAG]];
   }
 
-  private extractFilesFromSection(tables: Table[], isSanitise: boolean): PtFile[] {
+  private filesToSections(tables: Table[], isSanitise: boolean): PtFile[] {
     const table = tables.find((t) => t.typeName.toLowerCase() === LowerCaseSectionNames.FILE);
 
     return tableRowToSections<PtFile>(
@@ -118,8 +132,8 @@ export class SubmissionToPageTabService {
     );
   }
 
-  private extractKeywordsFromSection(tables: Table[], isSanitise: boolean): PtAttribute[] {
-    const table = tables.find((t) => t.typeName.toLowerCase() === LowerCaseSectionNames.ANNOTATION);
+  private extractAttributesFromSection(tables: Table[], isSanitise: boolean, sectionName: string): PtAttribute[] {
+    const table = tables.find((t) => t.typeName.toLowerCase() === sectionName.toLowerCase());
 
     return tableRowToSections<PtAttribute>(
       (rows) => rows,
@@ -129,7 +143,7 @@ export class SubmissionToPageTabService {
     );
   }
 
-  private extractLinksFromSection(tables: Table[], isSanitise: boolean): PtLink[] {
+  private linksToSections(tables: Table[], isSanitise: boolean): PtLink[] {
     const table = tables.find((t) => t.typeName.toLowerCase() === LowerCaseSectionNames.LINK);
 
     return tableRowToSections<PtLink>(
