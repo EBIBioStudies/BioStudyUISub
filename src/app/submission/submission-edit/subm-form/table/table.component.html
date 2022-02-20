@@ -27,7 +27,7 @@
               [removable]="tableForm.canRemoveColumn(column) && !isReadOnly"
               (remove)="tableForm.removeColumn(column)"
               [helpText]="column.helpText"
-              [helpLink]="column.helpLink"
+              [helpLink]="this.locationStrategy.getBaseHref() + column.helpLink"
               [columnId]="column.id"
               stValidateOnblur>
       </st-inline-edit>

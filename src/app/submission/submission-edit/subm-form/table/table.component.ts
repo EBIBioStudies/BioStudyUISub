@@ -6,12 +6,14 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   OnInit,
-  OnDestroy
+  OnDestroy,
+  Inject
 } from '@angular/core';
 import { UserData } from 'app/auth/shared';
 import { TableForm } from '../../shared/model/table-form.model';
 import { Options as SortableOption } from 'sortablejs';
 import { Subject } from 'rxjs';
+import { LocationStrategy } from '@angular/common';
 
 @Component({
   selector: 'st-table',
@@ -26,7 +28,11 @@ export class TableComponent implements OnChanges, OnInit, OnDestroy {
   sortableJsOptions: SortableOption = {};
   private unsubscribe = new Subject();
 
-  constructor(public userData: UserData, private changeDetectorRef: ChangeDetectorRef) {
+  constructor(
+    public userData: UserData,
+    private changeDetectorRef: ChangeDetectorRef,
+    @Inject(LocationStrategy) private locationStrategy: LocationStrategy
+  ) {
     this.sortableJsOptions.onUpdate = this.onRowOrderUpdate.bind(this);
     this.sortableJsOptions.filter = '.form-control';
     this.sortableJsOptions.preventOnFilter = false;
