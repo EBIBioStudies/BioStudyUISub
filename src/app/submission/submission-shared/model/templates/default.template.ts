@@ -105,7 +105,7 @@ export const defaultTemplate = {
       }
     ],
     annotationsType: {
-      title: 'Annotations',
+      title: 'Describe your study',
       description: 'Provide any additional details that may help discover or interpret the study.',
       icon: 'fa-tag',
       display: 'desirable',
