@@ -19,6 +19,22 @@ const restrictedPaths = [
   '/auth/check-registration'
 ];
 
+// const allowedPaths = [
+//   '/auth/login',
+//   '/auth/activate/*',
+//   '/auth/password/change',
+//   '/auth/password/setup',
+//   '/auth/password/reset',
+//   '/auth/profile',
+//   '/auth/logout',
+//   '/auth/register',
+//   '/auth/retryact',
+//   '/auth/activate',
+//   '/submissions/*',
+//   '/submissions/drafts/*',
+//   '/submissions/async/direct'
+// ];
+
 const isMultipartRequest = (req: Request) => {
   const contentTypeHeader = req.headers['content-type'];
   return contentTypeHeader && contentTypeHeader.indexOf('multipart') > -1;

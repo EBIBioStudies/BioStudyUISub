@@ -12,7 +12,9 @@ export class ServerErrorInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        if (error.status === UNAUTHORIZED) {
+        const isLogin = error.url?.includes('/login');
+
+        if (error.status === UNAUTHORIZED && !isLogin) {
           this.userSession.destroy();
         }
 

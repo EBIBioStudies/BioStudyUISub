@@ -3,15 +3,15 @@ export interface Aux {
 }
 
 export interface UserInfo {
+  allow: string[];
   aux: Aux;
+  deny: string[];
   email: string;
   fullname: string;
   secret: string;
   sessid: string;
   superuser: boolean;
   username: string | null;
-  allow: string[];
-  deny: string[];
 }
 
 export interface ExtendedUserInfo extends UserInfo {
