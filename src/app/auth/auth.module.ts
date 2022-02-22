@@ -16,6 +16,7 @@ import { PasswordResetReqComponent } from './password-reset/password-reset-req.c
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { SignUpComponent } from './signup/signup.component';
 import { Equals2Directive } from './password-reset/equals2.directive';
+import { ImpersonateModalComponent } from './impersonate/impersonate-modal.component';
 import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
@@ -39,7 +40,8 @@ import { CookieService } from 'ngx-cookie-service';
     ActivationLinkSuccessComponent,
     PasswordResetReqComponent,
     PasswordResetComponent,
-    Equals2Directive
+    Equals2Directive,
+    ImpersonateModalComponent
   ],
   exports: [
     SignInComponent,

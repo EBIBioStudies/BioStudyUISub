@@ -1,7 +1,9 @@
 import { ApplicationRef, Component, OnDestroy, ViewChild } from '@angular/core';
 import { Event, NavigationEnd, Router } from '@angular/router';
+import { ImpersonateModalComponent } from 'app/auth/impersonate/impersonate-modal.component';
 import { AuthService, UserSession } from 'app/auth/shared';
 import { RequestStatusInterceptorService } from 'app/core/interceptors/request-status-interceptor.service';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -24,7 +26,8 @@ export class HeaderComponent implements OnDestroy {
     private router: Router,
     private authService: AuthService,
     private requestStatus: RequestStatusInterceptorService,
-    private appRef: ApplicationRef
+    private appRef: ApplicationRef,
+    private modalService: BsModalService
   ) {
     const header = this;
 
@@ -66,6 +69,10 @@ export class HeaderComponent implements OnDestroy {
     return this.userSession.getUserDisplayName();
   }
 
+  get isManager(): boolean {
+    return this.userSession.isManager();
+  }
+
   ngOnDestroy(): void {
     this.reqStatusSubs.unsubscribe();
   }
@@ -82,6 +89,7 @@ export class HeaderComponent implements OnDestroy {
       }
     );
 
+    this.isBusy = false;
     this.userSession.destroy();
   }
 
@@ -91,5 +99,9 @@ export class HeaderComponent implements OnDestroy {
 
   toggleCollapsed(): void {
     this.navCollapsed = !this.navCollapsed;
+  }
+
+  loginAs(): void {
+    this.modalService.show(ImpersonateModalComponent);
   }
 }

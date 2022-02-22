@@ -1,0 +1,25 @@
+<form name="loginAsForm" autocomplete="off" (ngSubmit)="login(loginAsForm)" #loginAsForm="ngForm" novalidate>
+  <div class="modal-header">
+    <h3 class="modal-title">Log in as</h3>
+    <button type="button" class="close" aria-label="Close" (click)="hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="alert" [ngClass]="{'alert-danger': error, 'd-none': !error}">
+      <div class="message">{{errorMessage}}</div>
+    </div>
+    <div class="form-group">
+      <div class="form-group" [ngClass]="{'was-validated': email.invalid && email.touched}">
+        <label for="email">Email address</label>
+        <input type="email" class="form-control" id="email" name="email" [(ngModel)]="model.email"
+        #email="ngModel" [email]="true" #emailElement autofocus required>
+        <div class="invalid-feedback" *ngIf="email.invalid && email.touched">Please enter a valid email</div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary btn-sm">Log in</button>
+    <button type="button" class="btn btn-default btn-sm" (click)="hide()">Cancel</button>
+  </div>
+</form>
