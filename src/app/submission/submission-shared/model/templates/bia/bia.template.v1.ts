@@ -1,4 +1,4 @@
-export const biaTemplate = {
+export const biaTemplateV1 = {
   name: 'BioImages',
   title: 'BioImages',
   description: 'BioImage Archive Study',
@@ -25,7 +25,7 @@ export const biaTemplate = {
       },
       {
         name: 'ReleaseDate',
-        title: 'Release Date',
+        title: 'Submission publication date',
         icon: 'fa-calendar-alt',
         display: 'required',
         valueType: {
@@ -63,7 +63,7 @@ export const biaTemplate = {
         icon: 'fa-tag',
         display: 'required',
         helpText: 'Add organism',
-        helpLink: '/help#new-item-dropdown',
+        helpLink: 'help#new-item-dropdown',
         valueType: {
           name: 'select',
           multiple: true,
@@ -158,7 +158,7 @@ export const biaTemplate = {
           {
             name: 'Organisation',
             helpText: 'Add org',
-            helpLink: '/help#new-item-dropdown',
+            helpLink: 'help#new-item-dropdown',
             valueType: {
               name: 'select',
               multiple: true,

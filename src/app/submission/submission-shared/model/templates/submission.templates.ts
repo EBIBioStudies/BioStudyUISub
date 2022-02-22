@@ -1,5 +1,6 @@
 import { readonlyTemplate } from './readonly.template';
-import { biaTemplate } from './bia.template';
+import { biaTemplateV1 } from './bia/bia.template.v1';
+import { biaTemplateV2 } from './bia/bia.template.v2';
 import { bioRamanTemplate } from './bioRaman.template';
 import { defaultTemplate } from './default.template';
 import { emptyTemplate } from './empty.template';
@@ -17,7 +18,8 @@ const SUBMISSION_TEMPLATES = [
   euToxRiskTemplate,
   hecatosTemplate,
   emptyTemplate,
-  biaTemplate,
+  biaTemplateV1,
+  biaTemplateV2,
   bioRamanTemplate,
   readonlyTemplate,
   proteinDesignsTemplate
