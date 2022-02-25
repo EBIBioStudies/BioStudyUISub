@@ -1,29 +1,15 @@
 import { RouterModule, Routes } from '@angular/router';
-
-import { ActivateComponent } from './auth/activate/activate.component';
-import { ActivationLinkReqComponent } from './auth/activate/activation-link-req.component';
 import { AuthGuard } from './auth-guard.service';
 import { DirectSubmitComponent } from './submission/submission-direct/direct-submit.component';
 import { FileListComponent } from './file/file-list/file-list.component';
 import { HelpComponent } from './help/help.component';
 import { NgModule } from '@angular/core';
 import { NotFoundComponent } from 'app/core/components/error/not-found.component';
-import { PasswordResetComponent } from './auth/password-reset/password-reset.component';
-import { PasswordResetReqComponent } from './auth/password-reset/password-reset-req.component';
-import { SignInComponent } from './auth/signin/signin.component';
-import { SignUpComponent } from './auth/signup/signup.component';
 import { SubmListComponent } from './submission/submission-list/subm-list.component';
 import { SubmissionEditComponent } from './submission/submission-edit/submission-edit.component';
 import { ProfileComponent } from './profile/profile.component';
 
 const appRoutes: Routes = [
-  { path: 'signin', component: SignInComponent },
-  { path: 'signup', component: SignUpComponent },
-  { path: 'activate/:key', component: ActivateComponent },
-  { path: 'password_reset_request', component: PasswordResetReqComponent },
-  { path: 'password_reset/:key', component: PasswordResetComponent },
-  { path: 'password_setup/:key', component: PasswordResetComponent, data: { isPassSetup: true } },
-  { path: 'activation', component: ActivationLinkReqComponent },
   { path: 'help', component: HelpComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'files', component: FileListComponent, canActivate: [AuthGuard] },
