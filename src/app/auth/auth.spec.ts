@@ -14,6 +14,7 @@ import { AuthService } from './shared/auth.service';
 import { UserSession } from './shared/user-session';
 import { SignInComponent } from './signin/signin.component';
 import { SignUpComponent } from './signup/signup.component';
+import { ActivateComponent } from './activate/activate.component';
 import { rest, server } from './../../tests/server';
 
 test('is is possible to sign in, sign up, reset password and activate account', async () => {
@@ -28,7 +29,7 @@ test('is is possible to sign in, sign up, reset password and activate account', 
       MockModule
     ],
     providers: [AuthService, UserSession],
-    declarations: [SignInComponent, SignUpComponent],
+    declarations: [SignInComponent, SignUpComponent, ActivateComponent],
     routes: authRoutes
   });
 
