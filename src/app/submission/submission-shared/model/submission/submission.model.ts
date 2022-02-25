@@ -144,6 +144,10 @@ export class Table {
     this.type.name = val;
   }
 
+  get typeDisplayName(): string {
+    return this.type.title || this.type.name;
+  }
+
   get rows(): ValueMap[] {
     return this.tableRows.list();
   }

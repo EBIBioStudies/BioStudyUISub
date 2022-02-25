@@ -59,7 +59,7 @@ export function tableRowToSections<T>(
 
   const tableAttributes: PtAttribute[][] = extractTableAttributes(table, isSanitise);
   const fileAttributes: T[] = tableAttributes.reduce(
-    (result, attr) => [...formatter(attr, table), ...result],
+    (result, attr) => [...result, ...formatter(attr, table)],
     [] as T[]
   );
 

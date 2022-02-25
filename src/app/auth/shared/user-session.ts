@@ -52,6 +52,11 @@ export class UserSession {
     return this.token() === '';
   }
 
+  isManager(): boolean {
+    const { username } = this.userCookies.getUser();
+    return username === 'manager';
+  }
+
   hasSessionExpired(): boolean {
     return this.userCookies.hasSessionExpired(this.appConfig.environment);
   }
@@ -74,7 +79,7 @@ export class UserSession {
     }
   }
 
-  update(user: any): any {
+  update(user: UserInfo): any {
     this.userCookies.setLoginToken(user.sessid, this.appConfig.environment);
     this.userCookies.setUser(user);
 

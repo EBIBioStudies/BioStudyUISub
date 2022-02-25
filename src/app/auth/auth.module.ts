@@ -19,6 +19,7 @@ import { PasswordResetComponent } from './password-reset/password-reset.componen
 import { SignUpComponent } from './signup/signup.component';
 import { Equals2Directive } from './password-reset/equals2.directive';
 import { AuthRoutingModule } from './auth-routing.module';
+import { ImpersonateModalComponent } from './impersonate/impersonate-modal.component';
 
 @NgModule({
   imports: [
@@ -43,7 +44,8 @@ import { AuthRoutingModule } from './auth-routing.module';
     ActivationLinkSuccessComponent,
     PasswordResetReqComponent,
     PasswordResetComponent,
-    Equals2Directive
+    Equals2Directive,
+    ImpersonateModalComponent
   ],
   exports: [
     AuthComponent,

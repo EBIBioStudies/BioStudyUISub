@@ -7,17 +7,16 @@
   </div>
   <div class="modal-body">
     <p>
-      To create a blank submission, please select a collection from the list below. You may leave the default
-      option if the new submission is a stand-alone study or its parent collection is not in the list. <br />
+      To create a new submission, please select from the list of BioStudies collections available to you - e.g., to
+      submit an imaging dataset, choose "BioImages".<br />
     </p>
     <fieldset>
-      <legend class="form-label">What is the study's parent collection?</legend>
       <ng-container *ngFor="let tmpl of templates; index as i" >
         <div class="form-check">
           <input id="template_{{i}}" type="radio" class="form-check-input" name="template" [value]="tmpl.name"
-                 [checked]="tmpl.collection === 'Default'"  (change)="changeTemplate(tmpl)">
+                 [checked]="tmpl.displayName === 'Default'" (change)="changeTemplate(tmpl)">
           <label class="form-check-label" for="template_{{i}}" [tooltip]="tmpl.description"
-            placement="right">{{tmpl.collection}}</label>
+            placement="right">{{tmpl.displayName}}</label>
         </div>
       </ng-container>
     </fieldset>

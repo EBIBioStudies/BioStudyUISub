@@ -1,7 +1,7 @@
 import { EMPTY_TEMPLATE_NAME, findTemplateByName } from './submission.templates';
 import { isStringDefined, isStringEmpty } from 'app/utils/validation.utils';
-
 import { isArrayEmpty } from 'app/utils/validation.utils';
+import { LowerCaseSectionNames } from 'app/submission/utils/constants';
 
 /*
  *  Type scopes are used to check if the types with a given name already exists in the scope
@@ -159,6 +159,12 @@ export class DisplayType {
   }
 }
 
+export interface BannerType {
+  readonly src: string;
+  readonly alt: string;
+  readonly backgroundColor: string;
+}
+
 export enum ValueTypeName {
   text,
   largetext,
@@ -301,9 +307,10 @@ export class TableType extends TypeBase {
     data?: Partial<TableType>,
     scope?: TypeScope<TypeBase>,
     isTemplBased: boolean = true,
-    parentDisplayType: DisplayType = DisplayType.OPTIONAL
+    parentDisplayType: DisplayType = DisplayType.OPTIONAL,
+    title?: string
   ) {
-    super(name, isTemplBased, scope);
+    super(name, isTemplBased, scope, title);
 
     data = data || {};
     this.description = data.description || '';
@@ -354,8 +361,15 @@ export class AnnotationsType extends TableType {
     isTemplBased: boolean = true,
     parentDisplayType: DisplayType = DisplayType.OPTIONAL
   ) {
-    const d = Object.assign(data || {}, { singleRow: true });
-    super('Annotation', d, scope, isTemplBased, parentDisplayType);
+    const annotationData = Object.assign(data || {}, { singleRow: true });
+    super(
+      LowerCaseSectionNames.ANNOTATIONS,
+      annotationData,
+      scope,
+      isTemplBased,
+      parentDisplayType,
+      annotationData.title
+    );
   }
 }
 
@@ -414,6 +428,7 @@ export class SectionType extends TypeBase {
   readonly tableGroups: string[][];
   readonly minRequired: number;
   readonly sectionExample: string;
+  readonly banner?: BannerType;
 
   private tableScope: TypeScope<TableType> = new TypeScope<TableType>();
   private fieldScope: TypeScope<FieldType> = new TypeScope<FieldType>();
@@ -441,12 +456,14 @@ export class SectionType extends TypeBase {
       this.displayType
     );
     this.sectionExample = data.sectionExample || '';
+    this.banner = data.banner;
 
     (data.fieldTypes || []).forEach(
       (fieldType) => new FieldType(fieldType.name, fieldType, this.fieldScope, this.displayType, fieldType.title)
     );
     (data.tableTypes || []).forEach(
-      (tableType) => new TableType(tableType.name, tableType, this.tableScope, isTemplBased, this.displayType)
+      (tableType) =>
+        new TableType(tableType.name, tableType, this.tableScope, isTemplBased, this.displayType, tableType.title)
     );
     (data.sectionTypes || []).forEach(
       (sectionType) => new SectionType(sectionType.name, sectionType, this.sectionScope, isTemplBased, this.displayType)

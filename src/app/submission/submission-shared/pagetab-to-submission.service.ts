@@ -70,7 +70,7 @@ export class PageTabToSubmissionService {
       .map((tagItem) => new Tag(tagItem.classifier, tagItem.tag))
       .some((tagInstance) => tagInstance.equals(PAGE_TAG));
 
-    return hasSubsection || hasLinks || hasFiles || hasPageTag;
+    return hasSubsection || hasLinks || hasFiles || hasPageTag || section.type === 'Study Component';
   }
 
   private attributeToAttributeData(attr: PtAttribute): AttributeData {

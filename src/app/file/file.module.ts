@@ -25,6 +25,7 @@ import { UploadErrorModalComponent } from './upload-error-modal/upload-error-mod
 import { UserData } from 'app/auth/shared';
 import { CoreModule } from 'app/core/core.module';
 import { TabsModule } from 'ngx-bootstrap/tabs';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   imports: [
@@ -37,7 +38,8 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
     ThemeModule,
     CoreModule,
     FormsModule,
-    TabsModule
+    TabsModule,
+    TooltipModule
   ],
   declarations: [
     FileListComponent,
