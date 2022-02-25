@@ -19,6 +19,9 @@ import { rest, server } from './../../tests/server';
 import { PasswordResetReqComponent } from './password-reset/password-reset-req.component';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { ActivationLinkReqComponent } from './activate/activation-link-req.component';
+import { Equals2Directive } from './password-reset/equals2.directive';
+import { ActivationLinkSuccessComponent } from './activate/activation-link-success.component';
+import { ImpersonateModalComponent } from './impersonate/impersonate-modal.component';
 
 test('is is possible to sign in, sign up, reset password and activate account', async () => {
   const { navigate } = await render(AuthComponent, {
@@ -38,7 +41,10 @@ test('is is possible to sign in, sign up, reset password and activate account', 
       ActivateComponent,
       PasswordResetReqComponent,
       PasswordResetComponent,
-      ActivationLinkReqComponent
+      ActivationLinkReqComponent,
+      ActivationLinkSuccessComponent,
+      Equals2Directive,
+      ImpersonateModalComponent
     ],
     routes: authRoutes
   });
