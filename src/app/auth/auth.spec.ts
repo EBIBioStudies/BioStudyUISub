@@ -95,8 +95,6 @@ test('is is possible to sign in, sign up, reset password and activate account', 
 
   expect(await screen.findByText('Thank you for registering')).toBeInTheDocument();
 
-  screen.debug();
-
   // TEST SIGNIN
   await navigate('/signin');
 
