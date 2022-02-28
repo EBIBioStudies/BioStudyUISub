@@ -30,10 +30,10 @@ sed -i 's%"APP_PROXY_BASE":.*%"APP_PROXY_BASE":"'$appProxyBase'",%' src/config.j
 sed -i 's%"APP_ENV":.*%"APP_ENV":"'$ciEnvironmentName'",%' src/config.json
 sed -i 's%"APP_CONTEXT":.*%"APP_CONTEXT":"'$contextPath'",%' src/config.json
 sed -i 's%"FRONTEND_URL":.*%"FRONTEND_URL":"'$frontendURL'",%' src/config.json
-sed -d 's%"APP_SUPER_USER_USERNAME".*%"APP_SUPER_USER_USERNAME":"'$mainSuperUserUsername'",%' src/config.json
-sed -d 's%"APP_ANNOUNCEMENT_HEADLINE".*%"APP_ANNOUNCEMENT_HEADLINE":"'$announcementHeadline'",%' src/config.json
-sed -d 's%"APP_ANNOUNCEMENT_CONTENT".*%"APP_ANNOUNCEMENT_CONTENT":"'$announcementContent'",%' src/config.json
-sed -d 's%"APP_ANNOUNCEMENT_PRIORITY".*%"APP_ANNOUNCEMENT_PRIORITY":"'$announcementPriority'",%' src/config.json
+sed -i 's%"APP_SUPER_USER_USERNAME".*%"APP_SUPER_USER_USERNAME":"'$mainSuperUserUsername'",%' src/config.json
+sed -i 's%"APP_ANNOUNCEMENT_HEADLINE".*%"APP_ANNOUNCEMENT_HEADLINE":"'$announcementHeadline'",%' src/config.json
+sed -i 's%"APP_ANNOUNCEMENT_CONTENT".*%"APP_ANNOUNCEMENT_CONTENT":"'$announcementContent'",%' src/config.json
+sed -i 's%"APP_ANNOUNCEMENT_PRIORITY".*%"APP_ANNOUNCEMENT_PRIORITY":"'$announcementPriority'",%' src/config.json
 # Last line, don't append a comma
 sed -i 's%"APP_INSTANCE_KEY".*%"APP_INSTANCE_KEY":"'$instanceKey'"%' src/config.json
 
