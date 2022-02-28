@@ -100,6 +100,29 @@ export class AppConfig {
   }
 
   /**
+   * Main super user's username used by biostudies team. Only this user can impersonate other users in the app.
+   * @returns Username of the main user
+   */
+  get superUserUsername(): string {
+    return this.config.APP_SUPER_USER_USERNAME;
+  }
+
+  get announcementHeadline(): string {
+    return this.config.APP_ANNOUNCEMENT_HEADLINE;
+  }
+
+  get announcementContent(): string {
+    return this.config.APP_ANNOUNCEMENT_CONTENT;
+  }
+
+  /**
+   * Type of alert the announcement will be display with. Valid options are 'success', 'danger', 'warning', 'info'.
+   */
+  get announcementPriority(): string {
+    return this.config.APP_ANNOUNCEMENT_PRIORITY;
+  }
+
+  /**
    * Uses promises exclusively to fetch the JSON file specifying the app's configuration options.
    * NOTE: URL data may be included in those options. To ensure that correct URLs are generated, this
    * method has to be called before anything else, during app initialisation. Angular provides a mechanism
