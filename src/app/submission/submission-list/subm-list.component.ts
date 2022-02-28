@@ -81,7 +81,124 @@ export class SubmListComponent implements OnDestroy, OnInit {
     this.createColumnDefs();
   }
 
-  createColumnDefs(): void {
+  /**
+   * Removes all subscriptions whenever the user navigates away from this view.
+   * Requires the takeUntil operator before every subscription.
+   * @see {@link https://stackoverflow.com/a/41177163}
+   */
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+  }
+
+  ngOnInit(): void {
+    this.submStatusService
+      .getSubmStatus()
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe((accno: string) => {
+        const agApi = this.gridOptions.api;
+        const rowNode = agApi!.getRowNode(accno);
+
+        if (rowNode !== null) {
+          const rowData = rowNode.data;
+          const newRowData = {
+            ...rowData,
+            status: SubmissionStatus.PROCESSED.name
+          };
+          const updateRowData = {
+            ...newRowData,
+            isDeletable: this.canDeleteRow(newRowData),
+            isEditable: this.canEditRow(newRowData),
+            isProcessing: false
+          };
+
+          rowNode.updateData(updateRowData);
+          agApi!.redrawRows();
+        }
+      });
+  }
+
+  get announcementHeadline(): string {
+    return this.appConfig.announcementHeadline;
+  }
+
+  get announcementContent(): string {
+    return this.appConfig.announcementContent;
+  }
+
+  get announcementPriorityClass(): string {
+    return `alert-${this.appConfig.announcementPriority}`;
+  }
+
+  onSubmTabSelect(isSubmitted: boolean): void {
+    let fragment = 'draft';
+
+    // Ignores actions that don't carry with them a change in state.
+    if (this.showSubmitted !== isSubmitted) {
+      // Submitted list's route has 'sent' as a fragment while temp list has no fragment.
+      if (isSubmitted) {
+        fragment = '';
+      }
+
+      this.router.navigate([fragment], { relativeTo: this.route, replaceUrl: true });
+    }
+  }
+
+  private setDatasource(): void {
+    const agApi = this.gridOptions.api;
+
+    if (!this.datasource) {
+      this.datasource = {
+        getRows: (params) => {
+          const pageSize = params.endRow - params.startRow;
+          const fm = params.filterModel || {};
+          this.isBusy = true;
+
+          // Shows loading progress overlay box.
+          if (agApi !== undefined && agApi !== null) {
+            agApi.showLoadingOverlay();
+          }
+
+          // Makes the request taking into account any filtering arguments supplied through the UI.
+          this.submService
+            .getSubmissions(this.showSubmitted, {
+              offset: params.startRow,
+              limit: pageSize,
+              accNo: fm.accno && fm.accno.value ? fm.accno.value : undefined,
+              rTimeFrom: fm.rtime && fm.rtime.value && fm.rtime.value.from ? fm.rtime.value.from : undefined,
+              rTimeTo: fm.rtime && fm.rtime.value && fm.rtime.value.to ? fm.rtime.value.to : undefined,
+              keywords: fm.title && fm.title.value ? fm.title.value : undefined
+
+              // Hides the overlaid progress box if request failed
+            })
+            .pipe(
+              takeUntil(this.ngUnsubscribe),
+              catchError((error) => {
+                agApi!.hideOverlay();
+                return throwError(error);
+              })
+            )
+            .subscribe((rows) => {
+              let lastRow = -1;
+
+              // Hides progress box.
+              agApi!.hideOverlay();
+
+              if (rows.length < pageSize) {
+                lastRow = params.startRow + rows.length;
+              }
+
+              this.rows = this.decorateDataRows(rows);
+              params.successCallback(this.rows, lastRow);
+              this.isBusy = false;
+            });
+        }
+      };
+    }
+    agApi!.setDatasource(this.datasource);
+  }
+
+  private createColumnDefs(): void {
     this.columnDefs = [
       {
         cellClass: 'ag-cell-centered',
@@ -136,7 +253,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
     ];
   }
 
-  decorateDataRows(rows: any[]): any {
+  private decorateDataRows(rows: any[]): any {
     return rows.map((row) => ({
       id: row.accno,
       isTemp: !this.showSubmitted,
@@ -206,111 +323,6 @@ export class SubmListComponent implements OnDestroy, OnInit {
         window.open(`${this.frontendURL}/studies/${accno}`, '_blank');
       }
     }));
-  }
-
-  /**
-   * Removes all subscriptions whenever the user navigates away from this view.
-   * Requires the takeUntil operator before every subscription.
-   * @see {@link https://stackoverflow.com/a/41177163}
-   */
-  ngOnDestroy(): void {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
-  }
-
-  ngOnInit(): void {
-    this.submStatusService
-      .getSubmStatus()
-      .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe((accno: string) => {
-        const agApi = this.gridOptions.api;
-        const rowNode = agApi!.getRowNode(accno);
-
-        if (rowNode !== null) {
-          const rowData = rowNode.data;
-          const newRowData = {
-            ...rowData,
-            status: SubmissionStatus.PROCESSED.name
-          };
-          const updateRowData = {
-            ...newRowData,
-            isDeletable: this.canDeleteRow(newRowData),
-            isEditable: this.canEditRow(newRowData),
-            isProcessing: false
-          };
-
-          rowNode.updateData(updateRowData);
-          agApi!.redrawRows();
-        }
-      });
-  }
-
-  onSubmTabSelect(isSubmitted: boolean): void {
-    let fragment = 'draft';
-
-    // Ignores actions that don't carry with them a change in state.
-    if (this.showSubmitted !== isSubmitted) {
-      // Submitted list's route has 'sent' as a fragment while temp list has no fragment.
-      if (isSubmitted) {
-        fragment = '';
-      }
-
-      this.router.navigate([fragment], { relativeTo: this.route, replaceUrl: true });
-    }
-  }
-
-  setDatasource(): void {
-    const agApi = this.gridOptions.api;
-
-    if (!this.datasource) {
-      this.datasource = {
-        getRows: (params) => {
-          const pageSize = params.endRow - params.startRow;
-          const fm = params.filterModel || {};
-          this.isBusy = true;
-
-          // Shows loading progress overlay box.
-          if (agApi !== undefined && agApi !== null) {
-            agApi.showLoadingOverlay();
-          }
-
-          // Makes the request taking into account any filtering arguments supplied through the UI.
-          this.submService
-            .getSubmissions(this.showSubmitted, {
-              offset: params.startRow,
-              limit: pageSize,
-              accNo: fm.accno && fm.accno.value ? fm.accno.value : undefined,
-              rTimeFrom: fm.rtime && fm.rtime.value && fm.rtime.value.from ? fm.rtime.value.from : undefined,
-              rTimeTo: fm.rtime && fm.rtime.value && fm.rtime.value.to ? fm.rtime.value.to : undefined,
-              keywords: fm.title && fm.title.value ? fm.title.value : undefined
-
-              // Hides the overlaid progress box if request failed
-            })
-            .pipe(
-              takeUntil(this.ngUnsubscribe),
-              catchError((error) => {
-                agApi!.hideOverlay();
-                return throwError(error);
-              })
-            )
-            .subscribe((rows) => {
-              let lastRow = -1;
-
-              // Hides progress box.
-              agApi!.hideOverlay();
-
-              if (rows.length < pageSize) {
-                lastRow = params.startRow + rows.length;
-              }
-
-              this.rows = this.decorateDataRows(rows);
-              params.successCallback(this.rows, lastRow);
-              this.isBusy = false;
-            });
-        }
-      };
-    }
-    agApi!.setDatasource(this.datasource);
   }
 
   private canDeleteRow(row): boolean {
