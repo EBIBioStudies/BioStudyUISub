@@ -31,7 +31,7 @@ sed -i 's%"APP_ENV":.*%"APP_ENV":"'$ciEnvironmentName'",%' src/config.json
 sed -i 's%"APP_CONTEXT":.*%"APP_CONTEXT":"'$contextPath'",%' src/config.json
 sed -i 's%"FRONTEND_URL":.*%"FRONTEND_URL":"'$frontendURL'",%' src/config.json
 sed -i 's%"APP_INSTANCE_KEY".*%"APP_INSTANCE_KEY":"'$instanceKey'",%' src/config.json
-sed -i 's%"APP_SUPER_USER_USERNAME".*%"APP_SUPER_USER_USERNAME":"'$mainSuperUserUsername'"%' src/config.json
+sed -i 's%"APP_SUPER_USER_USERNAME".*%"APP_SUPER_USER_USERNAME":"'$mainSuperUserUsername'",%' src/config.json
 
 # Create .env file
 echo "
