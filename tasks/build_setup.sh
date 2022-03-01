@@ -26,16 +26,16 @@ announcementContent=${APP_ANNOUNCEMENT_CONTENT}
 announcementPriority=${APP_ANNOUNCEMENT_PRIORITY}
 
 # Update config.json
-sed -i 's/"APP_PROXY_BASE":.*/"APP_PROXY_BASE":"'$appProxyBase'",/' src/config.json
-sed -i 's/"APP_ENV":.*/"APP_ENV":"'$ciEnvironmentName'",/' src/config.json
-sed -i 's/"APP_CONTEXT":.*/"APP_CONTEXT":"'$contextPath'",/' src/config.json
-sed -i 's/"FRONTEND_URL":.*/"FRONTEND_URL":"'$frontendURL'",/' src/config.json
-sed -i 's/"APP_INSTANCE_KEY".*/"APP_INSTANCE_KEY":"'$instanceKey'",/' src/config.json
-sed -i 's/"APP_SUPER_USER_USERNAME".*/"APP_SUPER_USER_USERNAME":"'$mainSuperUserUsername'",/' src/config.json
-sed -i 's/"APP_ANNOUNCEMENT_HEADLINE".*/"APP_ANNOUNCEMENT_HEADLINE":"'$announcementHeadline'",/' src/config.json
-sed -i 's/"APP_ANNOUNCEMENT_CONTENT".*/"APP_ANNOUNCEMENT_CONTENT":"'$announcementContent'",/' src/config.json
+sed -i 's/"APP_PROXY_BASE":.*/"APP_PROXY_BASE":"'$appProxyBase'",/g' src/config.json
+sed -i 's/"APP_ENV":.*/"APP_ENV":"'$ciEnvironmentName'",/g' src/config.json
+sed -i 's/"APP_CONTEXT":.*/"APP_CONTEXT":"'$contextPath'",/g' src/config.json
+sed -i 's/"FRONTEND_URL":.*/"FRONTEND_URL":"'$frontendURL'",/g' src/config.json
+sed -i 's/"APP_INSTANCE_KEY".*/"APP_INSTANCE_KEY":"'$instanceKey'",/g' src/config.json
+sed -i 's/"APP_SUPER_USER_USERNAME".*/"APP_SUPER_USER_USERNAME":"'$mainSuperUserUsername'",/g' src/config.json
+sed -i 's/"APP_ANNOUNCEMENT_HEADLINE".*/"APP_ANNOUNCEMENT_HEADLINE":"'$announcementHeadline'",/g' src/config.json
+sed -i 's/"APP_ANNOUNCEMENT_CONTENT".*/"APP_ANNOUNCEMENT_CONTENT":"'$announcementContent'",/g' src/config.json
 # Last line, don't append a comma
-sed -i 's/"APP_ANNOUNCEMENT_PRIORITY".*/"APP_ANNOUNCEMENT_PRIORITY":"'$announcementPriority'"/' src/config.json
+sed -i 's/"APP_ANNOUNCEMENT_PRIORITY".*/"APP_ANNOUNCEMENT_PRIORITY":"'$announcementPriority'"/g' src/config.json
 
 # Create .env file
 echo "
