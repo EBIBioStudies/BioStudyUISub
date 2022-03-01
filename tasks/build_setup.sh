@@ -32,8 +32,8 @@ sed -i 's|"APP_CONTEXT":.*|"APP_CONTEXT":"'$contextPath'",|g' src/config.json
 sed -i 's|"FRONTEND_URL":.*|"FRONTEND_URL":"'$frontendURL'",|g' src/config.json
 sed -i 's|"APP_INSTANCE_KEY".*|"APP_INSTANCE_KEY":"'$instanceKey'",|g' src/config.json
 sed -i 's|"APP_SUPER_USER_USERNAME".*|"APP_SUPER_USER_USERNAME":"'$mainSuperUserUsername'",|g' src/config.json
-sed -i 's|"APP_ANNOUNCEMENT_HEADLINE".*|"APP_ANNOUNCEMENT_HEADLINE":"'$announcementHeadline'",|g' src/config.json
-sed -i 's|"APP_ANNOUNCEMENT_CONTENT".*|"APP_ANNOUNCEMENT_CONTENT":"'$announcementContent'",|g' src/config.json
+sed -i 's|"APP_ANNOUNCEMENT_HEADLINE".*|"APP_ANNOUNCEMENT_HEADLINE":""'$announcementHeadline'"",|g' src/config.json
+sed -i 's|"APP_ANNOUNCEMENT_CONTENT".*|"APP_ANNOUNCEMENT_CONTENT":""'$announcementContent'"",|g' src/config.json
 # Last line, don't append a comma
 sed -i 's|"APP_ANNOUNCEMENT_PRIORITY".*|"APP_ANNOUNCEMENT_PRIORITY":"'$announcementPriority'"|g' src/config.json
 
