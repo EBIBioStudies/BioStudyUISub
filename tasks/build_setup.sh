@@ -9,9 +9,14 @@ set -v
 # Clean build dist folder
 # rm -rf dist/public && mkdir dist/public
 
-apt-get update && apt-get install gettext-base
+# apt-get update && apt-get install gettext-base
 
-envsubst < src/config.json
+# Install envsubst
+curl -L https://github.com/a8m/envsubst/releases/download/v1.2.0/envsubst-`uname -s`-`uname -m` -o envsubst
+chmod +x envsubst
+sudo mv envsubst /usr/local/bin
+
+envsubst < src/config.json > src/config.json
 
 cat src/config.json
 # Config properties
@@ -43,14 +48,14 @@ cat src/config.json
 # sed -i 's|"APP_ANNOUNCEMENT_PRIORITY".*|"APP_ANNOUNCEMENT_PRIORITY":"'$announcementPriority'"|g' src/config.json
 
 # Create .env file
-# echo "
-# BACKEND_PATH_CONTEXT=${backendPathContext}
-# BACKEND_HOST_NAME=${backendHostName}
-# BACKEND_PORT=${backendPort}
-# PORT=${appPort}
-# CONTEXT_PATH=${contextPath}
-# RABBITMQ_URI=${RABBITMQ_URI}
-# RABBITMQ_SUBM_STATUS_QUEUE_NAME=${RABBITMQ_SUBM_STATUS_QUEUE_NAME}
-# LOGS_ENVIRONMENT=${ciEnvironmentName}
-# LOGS_SLACK_WEBHOOK_URL=${LOGS_SLACK_WEBHOOK_URL}
-# " > dist/.env
+echo "
+BACKEND_PATH_CONTEXT=${BACKEND_PATH_CONTEXT}
+BACKEND_HOST_NAME=${BACKEND_HOST_NAME}
+BACKEND_PORT=${BACKEND_PORT}
+PORT=${PORT}
+CONTEXT_PATH=${CONTEXT_PATH}
+RABBITMQ_URI=${RABBITMQ_URI}
+RABBITMQ_SUBM_STATUS_QUEUE_NAME=${RABBITMQ_SUBM_STATUS_QUEUE_NAME}
+LOGS_ENVIRONMENT=${CI_ENVIRONMENT_NAME}
+LOGS_SLACK_WEBHOOK_URL=${LOGS_SLACK_WEBHOOK_URL}
+" > dist/.env
