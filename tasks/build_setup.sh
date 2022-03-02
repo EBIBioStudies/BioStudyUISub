@@ -9,7 +9,7 @@ set -v
 # Clean build dist folder
 # rm -rf dist/public && mkdir dist/public
 
-apt install gettext
+apt-get install gettext-base
 
 envsubst < src/config.json
 
