@@ -72,8 +72,8 @@ on-pull-requests:
 build:dev:
   <<: *build_template
   environment: DEV
-  # only:
-  #   - dev@ndiaz/BioStudyUISub
+  only:
+    - dev@ndiaz/BioStudyUISub
 
 build:beta:
   <<: *build_template
