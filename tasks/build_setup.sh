@@ -14,7 +14,7 @@ curl -L https://github.com/a8m/envsubst/releases/download/v1.2.0/envsubst-`uname
 chmod +x envsubst
 mv envsubst /usr/local/bin
 
-cat src/config.json | envsubst > src/config-copy.json
+cat src/config-ci.json | envsubst > src/config-copy.json
 mv src/config-copy.json src/config.json
 
 # Create .env file
