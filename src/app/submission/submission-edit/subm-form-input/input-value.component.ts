@@ -97,8 +97,12 @@ export class InputValueComponent implements ControlValueAccessor {
 
   onChange: any = (_: any) => {};
 
-  onKeyDown(): void {
-    this.valueChanges$.next(this.value);
+  onKeyDown(event): void {
+    const { key } = event;
+
+    if (key !== 'Enter') {
+      this.valueChanges$.next(this.value);
+    }
   }
 
   onTouched: any = () => {};

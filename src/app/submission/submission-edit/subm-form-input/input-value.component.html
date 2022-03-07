@@ -16,10 +16,10 @@
       [typeaheadOptionsLimit]="200"
       [typeaheadScrollable]="true"
       [typeaheadOptionsInScrollableView]="suggestLength"
-      [typeaheadIsFirstItemActive]="false"
+      [typeaheadSelectFirstItem]="false"
       [placeholder]="valueType.placeholder"
       (blur)="onBlur()"
-      (keydown)="onKeyDown()"
+      (keydown)="onKeyDown($event)"
       stBootstrapValidation/>
 
   <textarea *ngSwitchCase="valueTypeNameEnum.largetext"
