@@ -10,7 +10,6 @@ import { CoreModule } from 'app/core/core.module';
 import { SharedModule } from 'app/shared/shared.module';
 import { FileModule } from 'app/file/file.module';
 import { ThemeModule } from 'app/theme/theme.module';
-import { IdLinkModule } from '../id-link/id-link.module';
 import { PubMedIdSearchModule } from '../pubmedid-search/pubmedid-search.module';
 import { SubmissionOtherModule } from '../submission-other/submission-other.module';
 import { SubmissionResultsModule } from '../submission-results/submission-results.module';
@@ -49,7 +48,6 @@ import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
     SubmissionSharedModule,
     SubmissionResultsModule,
     SubmissionOtherModule,
-    IdLinkModule,
     PubMedIdSearchModule,
     SortablejsModule,
     ThemeModule,
