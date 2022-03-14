@@ -1,5 +1,5 @@
-export const biaTemplateV2 = {
-  name: 'BioImages.v2',
+export const biaTemplateV3 = {
+  name: 'BioImages.v3',
   title: 'BioImages',
   description: 'BioImage Archive Study',
   sectionType: {

@@ -1,6 +1,7 @@
 import { readonlyTemplate } from './readonly.template';
 import { biaTemplateV1 } from './bia/bia.template.v1';
 import { biaTemplateV2 } from './bia/bia.template.v2';
+import { biaTemplateV3 } from './bia/bia.template.v3';
 import { bioRamanTemplate } from './bioRaman.template';
 import { defaultTemplate } from './default.template';
 import { emptyTemplate } from './empty.template';
@@ -20,6 +21,7 @@ const SUBMISSION_TEMPLATES = [
   emptyTemplate,
   biaTemplateV1,
   biaTemplateV2,
+  biaTemplateV3,
   bioRamanTemplate,
   readonlyTemplate,
   proteinDesignsTemplate
