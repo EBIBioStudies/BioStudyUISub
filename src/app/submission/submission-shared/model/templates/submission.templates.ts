@@ -31,7 +31,7 @@ const SUBMISSION_TEMPLATES_PUBLIC = [defaultTemplate];
 export interface TemplateDetail {
   description: string;
   name: string;
-  collection: string;
+  collection?: string;
   displayName: string;
 }
 
@@ -41,9 +41,7 @@ interface TemplateVersion {
 }
 
 export function getTemplatesForCollections(collections: Array<string> = []): Array<TemplateDetail> {
-  const collectionNames = [...collections, defaultTemplate.name];
-
-  const templateDetail = collectionNames.map((collection) => {
+  const templateDetail = collections.map((collection) => {
     const template = SUBMISSION_TEMPLATES.reduce((latest, t) => {
       const tInfo = parseTemplateName(t.name);
       const latestInfo = parseTemplateName(latest.name);
@@ -65,7 +63,13 @@ export function getTemplatesForCollections(collections: Array<string> = []): Arr
     };
   });
 
-  return templateDetail;
+  const defaultTemplateItem = {
+    description: defaultTemplate.description,
+    name: defaultTemplate.name,
+    displayName: defaultTemplate.name
+  };
+
+  return [...templateDetail, defaultTemplateItem];
 }
 
 export function findTemplateByName(name: string): any {
