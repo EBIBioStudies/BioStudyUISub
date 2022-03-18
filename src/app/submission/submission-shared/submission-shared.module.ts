@@ -14,9 +14,6 @@ import { DNAInputComponent } from './dna-input/dna-input.component';
 import { ProteinInputComponent } from './protein-input/protein-input.component';
 import { SelectInputComponent } from './select-input/select-input.component';
 import { DateInputComponent } from './date-input/date-input.component';
-import { IdLinkComponent } from './id-link/id-link.component';
-import { IdLinkValueValidatorDirective } from './id-link/id-link.validator.directive';
-import { IdLinkService } from './id-link/id-link.service';
 
 @NgModule({
   imports: [
@@ -29,28 +26,8 @@ import { IdLinkService } from './id-link/id-link.service';
     HttpClientModule,
     TypeaheadModule.forRoot()
   ],
-  providers: [
-    SubmissionService,
-    SubmissionToPageTabService,
-    PageTabToSubmissionService,
-    SubmissionStatusService,
-    IdLinkService
-  ],
-  declarations: [
-    DNAInputComponent,
-    ProteinInputComponent,
-    SelectInputComponent,
-    DateInputComponent,
-    IdLinkComponent,
-    IdLinkValueValidatorDirective
-  ],
-  exports: [
-    DNAInputComponent,
-    ProteinInputComponent,
-    SelectInputComponent,
-    DateInputComponent,
-    IdLinkComponent,
-    BsDatepickerModule
-  ]
+  providers: [SubmissionService, SubmissionToPageTabService, PageTabToSubmissionService, SubmissionStatusService],
+  declarations: [DNAInputComponent, ProteinInputComponent, SelectInputComponent, DateInputComponent],
+  exports: [DNAInputComponent, ProteinInputComponent, SelectInputComponent, DateInputComponent, BsDatepickerModule]
 })
 export class SubmissionSharedModule {}
