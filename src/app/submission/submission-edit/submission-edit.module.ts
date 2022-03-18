@@ -35,6 +35,9 @@ import { AddSubmTypeModalComponent } from './subm-sidebar/add-subm-type-modal/ad
 import { SubmCheckSidebarComponent } from './subm-sidebar/subm-check-sidebar/subm-check-sidebar.component';
 import { SubmEditSidebarComponent } from './subm-sidebar/subm-edit-sidebar/subm-edit-sidebar.component';
 import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
+import { IdLinkComponent } from './id-link/id-link.component';
+import { IdLinkValueValidatorDirective } from './id-link/id-link.validator.directive';
+import { IdLinkService } from './id-link/id-link.service';
 
 @NgModule({
   imports: [
@@ -55,7 +58,7 @@ import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
     TypeaheadModule,
     TabsModule
   ],
-  providers: [SubmEditService],
+  providers: [SubmEditService, IdLinkService],
   declarations: [
     SubmissionEditComponent,
     InputValueComponent,
@@ -76,9 +79,11 @@ import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
     UniqueValidator,
     BootstrapValidationDirective,
     RemoveHostDirective,
-    TextareaAutosizeDirective
+    TextareaAutosizeDirective,
+    IdLinkComponent,
+    IdLinkValueValidatorDirective
   ],
-  exports: [SubmissionEditComponent],
+  exports: [SubmissionEditComponent, IdLinkComponent],
   entryComponents: [SubmValidationErrorsComponent, AddSubmTypeModalComponent]
 })
 export class SubmissionEditModule {}
