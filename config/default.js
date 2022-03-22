@@ -30,6 +30,10 @@ module.exports = {
       protocol: 'https'
     }
   },
+  ror: {
+    hostname: 'api.ror.org',
+    protocol: 'https'
+  },
   rabbitmq: {
     uri: 'amqp://',
     submStatusQueueName: ''

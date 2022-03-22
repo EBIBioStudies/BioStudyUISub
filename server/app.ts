@@ -12,6 +12,7 @@ import { submitterProxy } from './proxies/submitterProxy';
 import { registryProxy, resolverProxy } from './proxies/identifiersProxy';
 import { loggerSettings } from './logger';
 import { loggerProxy } from './proxies/loggerProxy';
+import { organizationProxy } from './proxies/organizationProxy';
 import { submStatusController } from './submission-status/submission-status-controller';
 import { processSubmStatus } from './submission-status/submission-status-processor';
 import { logger } from './logger';
@@ -42,6 +43,7 @@ submStatusController('/subm-status', router);
 submitterProxy('*/api', router);
 registryProxy('/identifiers/registry', router);
 resolverProxy('/identifiers/resolver', router);
+organizationProxy('/organizations', router);
 loggerProxy('/log', router);
 
 // In DEV mode this service only proxies requests to the backend.

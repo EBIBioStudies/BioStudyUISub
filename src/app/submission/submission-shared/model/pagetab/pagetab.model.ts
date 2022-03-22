@@ -68,7 +68,7 @@ export interface PtAttribute {
   name?: string;
   reference?: boolean;
   valqual?: PtNameAndValue[];
-  value?: string | string[];
+  value?: string | string[] | PtNameAndValue | PtNameAndValue[];
 }
 
 export interface PtLink {
