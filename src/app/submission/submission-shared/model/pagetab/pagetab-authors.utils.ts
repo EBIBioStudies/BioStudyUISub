@@ -24,24 +24,17 @@ export function authorsToContacts(sections: PageTabSection[] = []): PageTabSecti
     return isStringDefined(s) && ['organization', 'organisation', 'affiliation'].includes(s!.toLowerCase());
   };
   const isAuthor = isEqualTo('author');
-  const isName = isEqualTo('name');
   const orgs: Organisations = Organisations.getInstance();
 
-  const affiliations: Dictionary<string> = sections
+  const affiliations: Dictionary<PtAttribute[]> = sections
     .filter((s) => isStringDefined(s.accno) && isAffiliation(s.type))
     .reduce((result, section) => {
-      let nameAttribute: PtAttribute = { value: '' };
-
       if (section.attributes) {
-        nameAttribute = section.attributes.find((attribute) => attribute.name && isName(attribute.name)) || {
-          value: ''
-        };
+        result[section.accno!] = section.attributes;
       }
 
-      result[section.accno!] = nameAttribute.value as string;
-
       return result;
-    }, {} as Dictionary<string>);
+    }, {} as Dictionary<PtAttribute[]>);
 
   const contacts = sections
     .filter((section) => section.type && isAuthor(section.type))
