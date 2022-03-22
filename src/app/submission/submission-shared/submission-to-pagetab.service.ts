@@ -3,7 +3,7 @@ import { AttributeData, Section, Submission, Table } from './model/submission';
 import { DEFAULT_TEMPLATE_NAME, SubmissionType } from './model/templates';
 import { PAGE_TAG, Tag } from './model/model.common';
 import { attributesAsFile, attributesAsLink, fieldsAsAttributes } from './utils/attribute.utils';
-import { isArrayEmpty, isValueEmpty } from 'app/utils/validation.utils';
+import { isArrayEmpty, isPtAttributeValueEmpty } from 'app/utils/validation.utils';
 import { tableRowToSections, tableToPtTable, tableToSectionItem } from './utils/table.utils';
 
 import { Injectable } from '@angular/core';
@@ -31,7 +31,7 @@ export class SubmissionToPageTabService {
 
   submissionToPageTab(subm: Submission, isSanitise: boolean = false): PageTab {
     const rootSectionAttributes = fieldsAsAttributes(subm.section.fields.list(), isSanitise).filter(
-      (at) => at.name && AttrExceptions.editableAndRootOnly.includes(at.name) && !isValueEmpty(at.value)
+      (at) => at.name && AttrExceptions.editableAndRootOnly.includes(at.name) && !isPtAttributeValueEmpty(at.value)
     );
 
     return {
@@ -81,7 +81,7 @@ export class SubmissionToPageTabService {
     );
 
     const sectionAttributes = fieldsAsAttributes(section.fields.list(), isSanitise).filter(
-      (at) => at.name && !AttrExceptions.editableAndRootOnly.includes(at.name) && !isValueEmpty(at.value)
+      (at) => at.name && !AttrExceptions.editableAndRootOnly.includes(at.name) && !isPtAttributeValueEmpty(at.value)
     );
 
     return {

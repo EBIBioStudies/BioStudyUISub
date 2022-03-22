@@ -141,6 +141,11 @@ export class InputValueComponent implements ControlValueAccessor {
     if (this.valueType.is(ValueTypeName.select)) {
       return (this.valueType as SelectValueType).values;
     }
+
+    if (this.valueType.is(ValueTypeName.org)) {
+      return [];
+    }
+
     return this.autosuggestSource();
   }
 }
