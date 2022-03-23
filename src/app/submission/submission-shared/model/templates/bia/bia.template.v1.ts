@@ -479,7 +479,7 @@ export const biaTemplateV1 = {
           {
             name: 'File List',
             icon: 'fa-file',
-            valueType: { name: 'file' },
+            valueType: { name: 'file', allowFolders: false },
             display: 'required',
             helpLink: 'https://www.ebi.ac.uk/biostudies/BioImages/help',
             helpText: 'Help'

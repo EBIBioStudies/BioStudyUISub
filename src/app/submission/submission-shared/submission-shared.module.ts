@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { HttpClientModule } from '@angular/common/http';
 import { SubmissionService } from './submission.service';
 import { SubmissionToPageTabService } from './submission-to-pagetab.service';
@@ -14,9 +13,8 @@ import { DNAInputComponent } from './dna-input/dna-input.component';
 import { ProteinInputComponent } from './protein-input/protein-input.component';
 import { SelectInputComponent } from './select-input/select-input.component';
 import { DateInputComponent } from './date-input/date-input.component';
-import { IdLinkComponent } from './id-link/id-link.component';
-import { IdLinkValueValidatorDirective } from './id-link/id-link.validator.directive';
-import { IdLinkService } from './id-link/id-link.service';
+import { OrgInputComponent } from './org-input/org-input.component';
+import { OrgService } from './org-input/org.service';
 
 @NgModule({
   imports: [
@@ -26,30 +24,22 @@ import { IdLinkService } from './id-link/id-link.service';
     CKEditorModule,
     NgSelectModule,
     BsDatepickerModule,
-    HttpClientModule,
-    TypeaheadModule.forRoot()
+    HttpClientModule
   ],
   providers: [
     SubmissionService,
     SubmissionToPageTabService,
     PageTabToSubmissionService,
     SubmissionStatusService,
-    IdLinkService
+    OrgService
   ],
-  declarations: [
-    DNAInputComponent,
-    ProteinInputComponent,
-    SelectInputComponent,
-    DateInputComponent,
-    IdLinkComponent,
-    IdLinkValueValidatorDirective
-  ],
+  declarations: [DNAInputComponent, ProteinInputComponent, SelectInputComponent, DateInputComponent, OrgInputComponent],
   exports: [
     DNAInputComponent,
     ProteinInputComponent,
     SelectInputComponent,
     DateInputComponent,
-    IdLinkComponent,
+    OrgInputComponent,
     BsDatepickerModule
   ]
 })
