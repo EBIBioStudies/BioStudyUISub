@@ -468,7 +468,7 @@ export const biaTemplateV3 = {
           {
             name: 'File List',
             icon: 'fa-file',
-            valueType: { name: 'file' },
+            valueType: { name: 'file', allowFolders: false },
             display: 'required',
             helpText: 'Examples',
             helpLink: '/bioimage-archive/help-submission-form/#study-components-file-list'
