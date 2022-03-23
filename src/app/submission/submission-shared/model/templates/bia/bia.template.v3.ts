@@ -471,7 +471,7 @@ export const biaTemplateV3 = {
             valueType: { name: 'file', allowFolders: false },
             display: 'required',
             helpText: 'Examples',
-            helpLink: '/bioimage-archive/help-submission-form/#study-components-file-list'
+            helpLink: '/bioimage-archive/help-file-list/'
             // asyncValueValidatorName: 'forFileList'
           },
           {
