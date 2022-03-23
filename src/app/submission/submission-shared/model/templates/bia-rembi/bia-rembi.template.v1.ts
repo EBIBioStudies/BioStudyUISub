@@ -251,6 +251,12 @@ export const biaRembiTemplateV1 = {
             icon: 'fa-comment',
             valueType: { name: 'largetext' },
             display: 'required'
+          },
+          {
+            name: 'File List',
+            icon: 'fa-file',
+            valueType: { name: 'file' },
+            display: 'required'
           }
         ],
         sectionTypes: [
