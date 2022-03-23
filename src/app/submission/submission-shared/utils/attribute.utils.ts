@@ -10,7 +10,7 @@ export function isAttributeEmpty(attribute: PtAttribute): boolean {
     return attribute.value.length === 0;
   }
 
-  return !isPtAttributeValueEmpty(attribute.value);
+  return isPtAttributeValueEmpty(attribute.value);
 }
 
 export function extractTableAttributes(table: Table, isSanitise: boolean): PtAttribute[][] {
