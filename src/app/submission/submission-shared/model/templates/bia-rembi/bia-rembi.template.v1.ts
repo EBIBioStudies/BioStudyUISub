@@ -255,7 +255,7 @@ export const biaRembiTemplateV1 = {
           {
             name: 'File List',
             icon: 'fa-file',
-            valueType: { name: 'file' },
+            valueType: { name: 'file', allowFolders: false },
             display: 'required'
           }
         ],
