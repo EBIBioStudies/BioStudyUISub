@@ -1,8 +1,6 @@
 import { readonlyTemplate } from './readonly.template';
-import { biaTemplateV1 } from './bia/bia.template.v1';
-import { biaTemplateV2 } from './bia/bia.template.v2';
-import { biaTemplateV3 } from './bia/bia.template.v3';
-import { biaRembiTemplateV1 } from './bia-rembi/bia-rembi.template.v1';
+import { biaTemplateV1, biaTemplateV2, biaTemplateV3 } from './bia';
+import { biaRembiTemplateV1 } from './bia-rembi';
 import { bioRamanTemplate } from './bioRaman.template';
 import { defaultTemplate } from './default.template';
 import { emptyTemplate } from './empty.template';
