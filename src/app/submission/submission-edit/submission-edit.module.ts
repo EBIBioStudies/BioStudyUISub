@@ -38,6 +38,7 @@ import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
 import { IdLinkComponent } from './id-link/id-link.component';
 import { IdLinkValueValidatorDirective } from './id-link/id-link.validator.directive';
 import { IdLinkService } from './id-link/id-link.service';
+import { SubmResubmitModalComponent } from './subm-navbar/subm-resubmit-modal.component';
 
 @NgModule({
   imports: [
@@ -81,7 +82,8 @@ import { IdLinkService } from './id-link/id-link.service';
     RemoveHostDirective,
     TextareaAutosizeDirective,
     IdLinkComponent,
-    IdLinkValueValidatorDirective
+    IdLinkValueValidatorDirective,
+    SubmResubmitModalComponent
   ],
   exports: [SubmissionEditComponent, IdLinkComponent],
   entryComponents: [SubmValidationErrorsComponent, AddSubmTypeModalComponent]
