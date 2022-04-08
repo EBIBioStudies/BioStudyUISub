@@ -8,13 +8,9 @@ export interface Org {
   name: string;
 }
 
-interface OrgItem {
-  organization: Org;
-}
-
 interface OrgRawData {
   number_of_results: number;
-  items: OrgItem[];
+  items: Org[];
 }
 
 @Injectable()
@@ -24,11 +20,11 @@ export class OrgService {
   constructor(private http: HttpClient) {}
 
   getOrganizations(keyword: string): Observable<Org[]> {
-    return this.http.get(`${OrgService.ORGS_PATHNAME}?affiliation=${keyword}&matching_type=COMMON_TERMS`).pipe(
+    return this.http.get(`${OrgService.ORGS_PATHNAME}?query=${keyword}`).pipe(
       map((data: OrgRawData) => {
         const items = data.items;
 
-        return items.map(({ organization }) => ({
+        return items.map((organization) => ({
           id: organization.id,
           name: organization.name
         }));

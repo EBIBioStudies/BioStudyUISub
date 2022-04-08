@@ -15,8 +15,6 @@ export const organizationProxy = (path: string, router: Router) => {
   router.use(path, (req, res) => {
     const rorUrl = `${rorUriFormatted}${req.originalUrl}`;
 
-    console.log(rorUrl);
-
     req.pipe(request(rorUrl)).pipe(res);
   });
 };
