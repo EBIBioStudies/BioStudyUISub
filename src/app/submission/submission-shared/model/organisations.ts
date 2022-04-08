@@ -75,7 +75,6 @@ export class Organisations {
       const value = referenceValues.map((referenceValue) => {
         let result = {};
 
-        // ADD COMMENT
         if (Array.isArray(referenceValue)) {
           referenceValue.forEach((attribute) => {
             if (attribute.name) {
@@ -84,7 +83,6 @@ export class Organisations {
           });
         }
 
-        // ADD COMMENT
         if (typeof referenceValue === 'string') {
           result = { ...result, Name: referenceValue };
         }

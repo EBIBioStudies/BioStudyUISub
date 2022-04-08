@@ -126,7 +126,7 @@ export const arrayExpressTemplate = {
           {
             name: 'Organisation',
             valueType: {
-              name: 'select',
+              name: 'org',
               multiple: true
             },
             display: 'required'
