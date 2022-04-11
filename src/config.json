@@ -10,5 +10,10 @@
   "MAX_CONCURRENT": 4,
   "GDPR_BANNER_URL": "https://ebi.emblstatic.net/web_guidelines/EBI-Framework/v1.3/js/ebi-global-includes/script/5_ebiFrameworkNotificationBanner.js",
   "FRONTEND_URL": "http://ribs.ebi.ac.uk:8080/biostudies",
-  "APP_INSTANCE_KEY": "http://localhost"
+  "APP_INSTANCE_KEY": "http://localhost",
+  "APP_SUPER_USER_USERNAME": "manager",
+  "APP_ANNOUNCEMENT_HEADLINE": "",
+  "APP_ANNOUNCEMENT_CONTENT": "",
+  "APP_ANNOUNCEMENT_PRIORITY": "warning",
+  "RECAPTCHA_PUBLIC_KEY": ""
 }

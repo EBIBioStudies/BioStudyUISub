@@ -18,21 +18,16 @@ export class UserData {
   ) {
     this.userSession.created$.subscribe((created) => {
       if (created) {
-        this.authService.getUserProfile().subscribe(
-          (user: UserInfo) => {
-            this.userSession.update(user);
+        this.authService.getUserProfile().subscribe((user: UserInfo) => {
+          this.userSession.update(user);
 
-            this.collectionsService.getCollections().subscribe((result) => {
-              const extendedUserInfo = user as ExtendedUserInfo;
-              extendedUserInfo.collections = result.map((collection) => collection.accno);
-              this.whenFetched$.next(extendedUserInfo);
-              this.whenFetched$.complete();
-            });
-          },
-          (error) => {
-            console.log(error);
-          }
-        );
+          this.collectionsService.getCollections().subscribe((result) => {
+            const extendedUserInfo = user as ExtendedUserInfo;
+            extendedUserInfo.collections = result.map((collection) => collection.accno);
+            this.whenFetched$.next(extendedUserInfo);
+            this.whenFetched$.complete();
+          });
+        });
       }
     });
   }

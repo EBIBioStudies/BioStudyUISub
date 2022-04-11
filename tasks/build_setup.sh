@@ -9,35 +9,23 @@ rm -rf dist && mkdir dist
 # Clean build dist folder
 rm -rf dist/public && mkdir dist/public
 
-# Config properties
-contextPath=${CONTEXT_PATH};
-instanceKey=${INSTANCE_KEY};
-appPort=${PORT}
-appProxyBase=${APP_PROXY_BASE};
-frontendURL=${FRONTEND_URL}
-backendHostName=${BACKEND_HOST_NAME}
-backendPathContext=${BACKEND_PATH_CONTEXT}
-backendPort=${BACKEND_PORT}
-ciEnvironment=${CI_ENVIRONMENT_SLUG};
-ciEnvironmentName=${CI_ENVIRONMENT_NAME};
+# Install envsubst. This version supports default values for env vars.
+curl -L https://github.com/a8m/envsubst/releases/download/v1.2.0/envsubst-`uname -s`-`uname -m` -o envsubst
+chmod +x envsubst
+mv envsubst /usr/local/bin
 
-# Update config.json
-sed -i 's%"APP_PROXY_BASE":.*%"APP_PROXY_BASE":"'$appProxyBase'",%' src/config.json
-sed -i 's%"APP_ENV":.*%"APP_ENV":"'$ciEnvironmentName'",%' src/config.json
-sed -i 's%"APP_CONTEXT":.*%"APP_CONTEXT":"'$contextPath'",%' src/config.json
-sed -i 's%"FRONTEND_URL":.*%"FRONTEND_URL":"'$frontendURL'",%' src/config.json
-# Last line, don't append a comma
-sed -i 's%"APP_INSTANCE_KEY".*%"APP_INSTANCE_KEY":"'$instanceKey'"%' src/config.json
+cat src/config-ci.json | envsubst > src/config-copy.json
+mv src/config-copy.json src/config.json
 
 # Create .env file
 echo "
-BACKEND_PATH_CONTEXT=${backendPathContext}
-BACKEND_HOST_NAME=${backendHostName}
-BACKEND_PORT=${backendPort}
-PORT=${appPort}
-CONTEXT_PATH=${contextPath}
+BACKEND_PATH_CONTEXT=${BACKEND_PATH_CONTEXT}
+BACKEND_HOST_NAME=${BACKEND_HOST_NAME}
+BACKEND_PORT=${BACKEND_PORT}
+PORT=${PORT}
+CONTEXT_PATH=${CONTEXT_PATH}
 RABBITMQ_URI=${RABBITMQ_URI}
 RABBITMQ_SUBM_STATUS_QUEUE_NAME=${RABBITMQ_SUBM_STATUS_QUEUE_NAME}
-LOGS_ENVIRONMENT=${ciEnvironmentName}
+LOGS_ENVIRONMENT=${CI_ENVIRONMENT_NAME}
 LOGS_SLACK_WEBHOOK_URL=${LOGS_SLACK_WEBHOOK_URL}
 " > dist/.env

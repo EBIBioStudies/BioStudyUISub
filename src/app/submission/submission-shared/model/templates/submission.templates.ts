@@ -1,5 +1,6 @@
 import { readonlyTemplate } from './readonly.template';
-import { biaTemplate } from './bia.template';
+import { biaTemplateV1, biaTemplateV2, biaTemplateV3 } from './bia';
+import { biaRembiTemplateV1 } from './bia-rembi';
 import { bioRamanTemplate } from './bioRaman.template';
 import { defaultTemplate } from './default.template';
 import { emptyTemplate } from './empty.template';
@@ -17,7 +18,10 @@ const SUBMISSION_TEMPLATES = [
   euToxRiskTemplate,
   hecatosTemplate,
   emptyTemplate,
-  biaTemplate,
+  biaTemplateV1,
+  biaTemplateV2,
+  biaTemplateV3,
+  biaRembiTemplateV1,
   bioRamanTemplate,
   readonlyTemplate,
   proteinDesignsTemplate
@@ -27,7 +31,7 @@ const SUBMISSION_TEMPLATES_PUBLIC = [defaultTemplate];
 export interface TemplateDetail {
   description: string;
   name: string;
-  collection: string;
+  collection?: string;
   displayName: string;
 }
 
@@ -37,9 +41,7 @@ interface TemplateVersion {
 }
 
 export function getTemplatesForCollections(collections: Array<string> = []): Array<TemplateDetail> {
-  const collectionNames = [...collections, defaultTemplate.name];
-
-  const templateDetail = collectionNames.map((collection) => {
+  const templateDetail = collections.map((collection) => {
     const template = SUBMISSION_TEMPLATES.reduce((latest, t) => {
       const tInfo = parseTemplateName(t.name);
       const latestInfo = parseTemplateName(latest.name);
@@ -61,7 +63,13 @@ export function getTemplatesForCollections(collections: Array<string> = []): Arr
     };
   });
 
-  return templateDetail;
+  const defaultTemplateItem = {
+    description: defaultTemplate.description,
+    name: defaultTemplate.name,
+    displayName: defaultTemplate.name
+  };
+
+  return [...templateDetail, defaultTemplateItem];
 }
 
 export function findTemplateByName(name: string): any {

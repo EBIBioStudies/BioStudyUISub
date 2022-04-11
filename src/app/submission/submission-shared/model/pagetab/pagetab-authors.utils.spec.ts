@@ -70,7 +70,7 @@ describe('AuthorsAndAffiliations:', () => {
           {
             name: 'Organisation',
             reference: false,
-            value: ['EMBL-EBI']
+            value: [{ name: 'EMBL-EBI' }]
           }
         ]
       },
@@ -84,7 +84,7 @@ describe('AuthorsAndAffiliations:', () => {
           {
             name: 'Organisation',
             reference: false,
-            value: ['Some organisation']
+            value: [{ Name: 'Some organisation' }]
           }
         ]
       },

@@ -1,28 +1,26 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import * as config from '../config.json';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppConfig {
-  private config: any = {};
-
-  constructor(private http: HttpClient) {}
+  constructor() {}
 
   get proxyBase(): string {
-    return this.config.APP_PROXY_BASE;
+    return config.APP_PROXY_BASE;
   }
 
   get instanceKey(): string {
-    return this.config.APP_INSTANCE_KEY;
+    return config.APP_INSTANCE_KEY;
   }
 
   get contextPath(): string {
-    return this.config.APP_CONTEXT;
+    return config.APP_CONTEXT;
   }
 
   get frontendURL(): string {
-    return this.config.FRONTEND_URL;
+    return config.FRONTEND_URL;
   }
 
   /**
@@ -31,7 +29,7 @@ export class AppConfig {
    * @returns Upper-limit screen size in pixels for tablet-like devices.
    */
   get tabletBreak(): number {
-    return this.config.APP_TABLET_BREAKPOINT;
+    return config.APP_TABLET_BREAKPOINT;
   }
 
   /**
@@ -40,7 +38,7 @@ export class AppConfig {
    * @see {@link https://angular.io/api/common/DatePipe}
    */
   get dateListFormat(): string {
-    return this.config.APP_DATE_LIST_FORMAT;
+    return config.APP_DATE_LIST_FORMAT;
   }
 
   /**
@@ -49,7 +47,7 @@ export class AppConfig {
    * @see {@link https://momentjs.com/docs/#/parsing/string-format/}
    */
   get dateInputFormat(): string {
-    return this.config.APP_DATE_INPUT_FORMAT;
+    return config.APP_DATE_INPUT_FORMAT;
   }
 
   /**
@@ -58,7 +56,7 @@ export class AppConfig {
    * @returns Maximum number of years into the future.
    */
   get maxDateYears(): number {
-    return this.config.APP_MAX_DATE_YEARS;
+    return config.APP_MAX_DATE_YEARS;
   }
 
   /**
@@ -66,7 +64,7 @@ export class AppConfig {
    * @returns Maximum length of the suggestion list.
    */
   get maxSuggestLength(): number {
-    return this.config.APP_MAX_SUGGEST_LENGTH;
+    return config.APP_MAX_SUGGEST_LENGTH;
   }
 
   /**
@@ -74,7 +72,7 @@ export class AppConfig {
    * @returns URL.
    */
   get bannerUrl(): string {
-    return this.config.GDPR_BANNER_URL;
+    return config.GDPR_BANNER_URL;
   }
 
   /**
@@ -84,7 +82,7 @@ export class AppConfig {
    * @returns Number of allowed concurrent connections.
    */
   get maxConcurrent(): number {
-    return this.config.MAX_CONCURRENT;
+    return config.MAX_CONCURRENT;
   }
 
   /**
@@ -92,31 +90,33 @@ export class AppConfig {
    * @returns Name of the current environment.
    */
   get environment(): string {
-    return this.config.APP_ENV;
+    return config.APP_ENV;
   }
 
   get recaptchaPublicKey(): string {
-    return this.config.RECAPTCHA_PUBLIC_KEY || '6Lc8JN0UAAAAAN4yxc0Ms6qIZ3fml-EYuuD_cTKi';
+    return config.RECAPTCHA_PUBLIC_KEY || '6Lc8JN0UAAAAAN4yxc0Ms6qIZ3fml-EYuuD_cTKi';
   }
 
   /**
-   * Uses promises exclusively to fetch the JSON file specifying the app's configuration options.
-   * NOTE: URL data may be included in those options. To ensure that correct URLs are generated, this
-   * method has to be called before anything else, during app initialisation. Angular provides a mechanism
-   * for that through the "APP_INITIALIZER" injector token. However, this feature is still experimental in v4,
-   * requiring strict use of promises for it to be dependable.
-   * TODO: Since Angular has been bumped up to v7, the much cleaner "APP_INITIALIZER" approach should be followed instead.
-   * @returns Promise fulfilled once the config data has been fetched.
-   * @see {@link /src/app/app.module.ts}
-   * @see {@link https://stackoverflow.com/a/40222544}
+   * Main super user's username used by biostudies team. Only this user can impersonate other users in the app.
+   * @returns Username of the main user
    */
-  load(): Promise<any> {
-    const whenFetched: Promise<any> = this.http.get('./config.json').toPromise();
+  get superUserUsername(): string {
+    return config.APP_SUPER_USER_USERNAME;
+  }
 
-    whenFetched.then((res) => {
-      this.config = res;
-    });
+  get announcementHeadline(): string {
+    return config.APP_ANNOUNCEMENT_HEADLINE;
+  }
 
-    return whenFetched;
+  get announcementContent(): string {
+    return config.APP_ANNOUNCEMENT_CONTENT;
+  }
+
+  /**
+   * Type of alert the announcement will be display with. Valid options are 'success', 'danger', 'warning', 'info'.
+   */
+  get announcementPriority(): string {
+    return config.APP_ANNOUNCEMENT_PRIORITY;
   }
 }

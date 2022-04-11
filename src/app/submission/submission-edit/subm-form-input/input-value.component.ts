@@ -97,8 +97,12 @@ export class InputValueComponent implements ControlValueAccessor {
 
   onChange: any = (_: any) => {};
 
-  onKeyDown(): void {
-    this.valueChanges$.next(this.value);
+  onKeyDown(event): void {
+    const { key } = event;
+
+    if (key !== 'Enter') {
+      this.valueChanges$.next(this.value);
+    }
   }
 
   onTouched: any = () => {};
@@ -137,6 +141,11 @@ export class InputValueComponent implements ControlValueAccessor {
     if (this.valueType.is(ValueTypeName.select)) {
       return (this.valueType as SelectValueType).values;
     }
+
+    if (this.valueType.is(ValueTypeName.org)) {
+      return [];
+    }
+
     return this.autosuggestSource();
   }
 }

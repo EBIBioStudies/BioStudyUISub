@@ -4,7 +4,8 @@ module.exports = [
       '/api',
       '/identifiers',
       '/log',
-      '/subm-status'
+      '/subm-status',
+      '/organizations'
     ],
     target: 'http://0.0.0.0:8383',
     secure: false

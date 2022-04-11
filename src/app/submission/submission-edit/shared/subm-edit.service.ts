@@ -161,7 +161,7 @@ export class SubmEditService {
       switchMap((projectNames) => {
         const templates = getTemplatesForCollections(projectNames);
         const templateInfo = templates.find(
-          ({ collection }) => collection.toLowerCase() === templateName?.toLowerCase()
+          ({ collection }) => collection?.toLowerCase() === templateName?.toLowerCase()
         );
 
         if (templateInfo !== undefined) {

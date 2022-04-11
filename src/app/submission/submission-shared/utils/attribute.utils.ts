@@ -1,7 +1,7 @@
 import { PtFile, PtLink } from './../model/pagetab/pagetab.model';
-import { isValueEmpty } from 'app/utils/validation.utils';
+import { isPtAttributeValueEmpty } from 'app/utils/validation.utils';
 import { Table, Field, PtAttribute } from 'app/submission/submission-shared/model';
-import { isDefinedAndNotEmpty, isEqualIgnoringCase, isStringDefined } from 'app/utils/validation.utils';
+import { isEqualIgnoringCase, isStringDefined } from 'app/utils/validation.utils';
 import { SectionNames } from 'app/submission/utils/constants';
 import { toTyped } from './link.utils';
 
@@ -10,7 +10,7 @@ export function isAttributeEmpty(attribute: PtAttribute): boolean {
     return attribute.value.length === 0;
   }
 
-  return !isDefinedAndNotEmpty(attribute.value);
+  return isPtAttributeValueEmpty(attribute.value);
 }
 
 export function extractTableAttributes(table: Table, isSanitise: boolean): PtAttribute[][] {
@@ -21,7 +21,7 @@ export function extractTableAttributes(table: Table, isSanitise: boolean): PtAtt
       return { name: column.name, value: rowValue && rowValue.value, reference: false } as PtAttribute;
     });
 
-    return attributes.filter((attr) => (isSanitise && !isValueEmpty(attr.value)) || !isSanitise);
+    return attributes.filter((attr) => (isSanitise && !isPtAttributeValueEmpty(attr.value)) || !isSanitise);
   });
 
   return mappedTables.filter((mappedTable) => mappedTable.length > 0);
@@ -58,13 +58,13 @@ export function fieldsAsAttributes(fields: Field[], isSanitise: boolean): PtAttr
     }
   });
 
-  return attributes.filter((attr) => (isSanitise && !isValueEmpty(attr.value)) || !isSanitise);
+  return attributes.filter((attr) => (isSanitise && !isPtAttributeValueEmpty(attr.value)) || !isSanitise);
 }
 
 export function attributesAsFile(attributes: PtAttribute[]): PtFile {
   const isPathAttr = (at: PtAttribute) => isStringDefined(at.name) && isEqualIgnoringCase(at.name!, SectionNames.FILE);
   const attr = attributes.find((at) => isPathAttr(at));
-  const attrs = attributes.filter((at) => !isPathAttr(at) && !isValueEmpty(at.value));
+  const attrs = attributes.filter((at) => !isPathAttr(at) && !isPtAttributeValueEmpty(at.value));
   const path = (attr && attr.value) as string;
 
   return { path, attributes: attrs };
