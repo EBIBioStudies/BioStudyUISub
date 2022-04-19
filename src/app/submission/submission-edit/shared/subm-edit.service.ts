@@ -8,7 +8,7 @@ import {
   Table,
   getTemplatesForCollections
 } from 'app/submission/submission-shared/model';
-import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription, throwError } from 'rxjs';
 import { PageTab, SelectValueType } from 'app/submission/submission-shared/model';
 import { SubmissionService, SubmitResponse } from '../../submission-shared/submission.service';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
@@ -124,13 +124,18 @@ export class SubmEditService {
   private sectionFormSub?: Subscription;
   private sectionFormSubEdit?: Subscription;
   private submModel: Submission = new Submission(SubmissionType.defaultType());
+  private collections: string[] = [];
 
   constructor(
     private userData: UserData,
     private submService: SubmissionService,
     private submToPageTabService: SubmissionToPageTabService,
     private pageTabToSubmService: PageTabToSubmissionService
-  ) {}
+  ) {
+    this.userData.collections$.subscribe((collections) => {
+      this.collections = collections;
+    });
+  }
 
   get isSubmitting(): boolean {
     return this.editState.isSubmitting;
@@ -157,23 +162,17 @@ export class SubmEditService {
   }
 
   createEmptySubmission(templateName?: string): Observable<string> {
-    return this.userData.collections$.pipe(
-      switchMap((projectNames) => {
-        const templates = getTemplatesForCollections(projectNames);
-        const templateInfo = templates.find(
-          ({ collection }) => collection?.toLowerCase() === templateName?.toLowerCase()
-        );
+    const templates = getTemplatesForCollections(this.collections);
+    const templateInfo = templates.find(({ collection }) => collection?.toLowerCase() === templateName?.toLowerCase());
 
-        if (templateInfo !== undefined) {
-          const { name, collection } = templateInfo;
+    if (templateInfo !== undefined) {
+      const { name, collection } = templateInfo;
 
-          return this.submService.createDraftSubmission(collection, name);
-        }
+      return this.submService.createDraftSubmission(collection, name);
+    }
 
-        throw new Error(
-          `Looks like you don't have permissions to see "${templateName}" collection or the study template doesn't exist`
-        );
-      })
+    throw throwError(
+      `Looks like you don't have permissions to see "${templateName}" collection or the study template doesn't exist`
     );
   }
 
