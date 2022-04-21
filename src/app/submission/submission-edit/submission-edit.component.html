@@ -3,7 +3,7 @@
   <st-forbidden *ngIf="showError && templForbiddenMessage" [message]="templForbiddenMessage"></st-forbidden>
   <div *ngIf="!showError" class="row">
     <st-sidebar *ngIf="!readonly" (toggle)="onSidebarToggle($event)">
-      <st-subm-sidebar [collapsed]="isSidebarCollapsed" [sectionForm]="sectionForm"></st-subm-sidebar>
+      <st-subm-sidebar [collapsed]="isSidebarCollapsed"></st-subm-sidebar>
     </st-sidebar>
     <main class="col" [ngClass]="{
         'sidebar-expanded': !isSidebarCollapsed,
