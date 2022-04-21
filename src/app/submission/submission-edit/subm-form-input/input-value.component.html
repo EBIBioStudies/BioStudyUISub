@@ -16,9 +16,11 @@
       [typeaheadOptionsLimit]="200"
       [typeaheadScrollable]="true"
       [typeaheadOptionsInScrollableView]="suggestLength"
+      [typeaheadIsFirstItemActive]="false"
+      [typeaheadSelectFirstItem]="false"
       [placeholder]="valueType.placeholder"
       (blur)="onBlur()"
-      (keydown)="onKeyDown()"
+      (keydown)="onKeyDown($event)"
       stBootstrapValidation/>
 
   <textarea *ngSwitchCase="valueTypeNameEnum.largetext"
@@ -33,6 +35,14 @@
       (blur)="onBlur()"
       stBootstrapValidation>
   </textarea>
+
+  <st-org-input *ngSwitchCase="valueTypeNameEnum.org"
+    [inputId]="inputId"
+    [formControl]="formControl"
+    [multiple]="valueType.multiple"
+    [readonly]="readonly"
+    [isInputGroup]="isInputGroup">
+  </st-org-input>
 
   <st-select-input *ngSwitchCase="valueTypeNameEnum.select"
     [inputId]="inputId"

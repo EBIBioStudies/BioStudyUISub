@@ -1,7 +1,21 @@
-<ng-select class="select-input" [(ngModel)]="selectedValue"
-  [ngClass]="{'is-grouped': isInputGroup, 'is-invalid': formControl.invalid && formControl.touched}" (change)="onChange"
-  (focus)="onTouched" (change)="onSelectChange($event)" (close)="onClose()" (search)="onSearch($event)"
-  (add)="onAdd()" [multiple]="multiple" [addTag]="addValue" [readonly]="readonly" [selectOnTab]="false" placeholder="Please select or enter"
-  [inputAttrs]="{'class': inputId}" appendTo="body" [labelForId]="inputId">
+<ng-select class="select-input"
+  (add)="onAdd()"
+  (change)="onChange"
+  (change)="onSelectChange($event)"
+  (close)="onClose()"
+  (focus)="onTouched"
+  (search)="onSearch($event)"
+  [(ngModel)]="selectedValue"
+  [addTag]="addValue"
+  [inputAttrs]="{'class': inputId}"
+  [labelForId]="inputId"
+  [markFirst]="false"
+  [multiple]="multiple"
+  [ngClass]="{'is-grouped': isInputGroup, 'is-invalid': formControl.invalid && formControl.touched}"
+  [readonly]="readonly"
+  [selectOnTab]="false"
+  appendTo="body"
+  placeholder="Please select or enter"
+  >
   <ng-option *ngFor="let value of values" [value]="value">{{value}}</ng-option>
 </ng-select>

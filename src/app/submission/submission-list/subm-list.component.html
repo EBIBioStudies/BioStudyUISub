@@ -1,4 +1,8 @@
 <div class="container pt-3">
+  <div *ngIf="announcementContent" class="alert" [ngClass]="announcementPriorityClass">
+    <h4 *ngIf="announcementHeadline">{{announcementHeadline}}</h4>
+    {{announcementContent}}
+  </div>
   <div class="d-flex justify-content-end">
     <st-new-submission-button [isBusy]="isBusy"></st-new-submission-button>
   </div>

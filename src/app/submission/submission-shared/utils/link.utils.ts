@@ -1,4 +1,4 @@
-import { isDefinedAndNotEmpty } from 'app/utils/validation.utils';
+import { isDefinedAndNotEmpty, isPtAttributeValueEmpty } from 'app/utils/validation.utils';
 import { isValueEmpty } from 'app/utils/validation.utils';
 import { PtAttribute, PtLink } from '../model';
 
@@ -27,7 +27,9 @@ export function toTyped(attributes: PtAttribute[]): PtLink {
 
   const linkObj = {
     url: '',
-    attributes: attributes.filter((at) => ![TYPE_ATTR, POINTER_ATTR].includes(at.name!) && !isValueEmpty(at.value))
+    attributes: attributes.filter(
+      (at) => ![TYPE_ATTR, POINTER_ATTR].includes(at.name!) && !isPtAttributeValueEmpty(at.value)
+    )
   } as PtLink;
 
   if (pointer) {

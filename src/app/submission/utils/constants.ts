@@ -26,7 +26,8 @@ export const AttributeNames = {
   PROTOCOL: 'Protocol',
   RELEASE_DATE: 'ReleaseDate',
   TITLE: 'Title',
-  TEMPLATE: 'Template'
+  TEMPLATE: 'Template',
+  RORID: 'RORID'
 };
 
 export const SectionTypes = {

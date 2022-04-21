@@ -1,8 +1,7 @@
 import { PageTabSection, PtAttribute, Section, Table } from '../model';
 import { contactsToSection, protocolsToSection } from './section.utils';
-
 import { extractTableAttributes } from './attribute.utils';
-import { isValueEmpty } from 'app/utils/validation.utils';
+import { isPtAttributeValueEmpty } from 'app/utils/validation.utils';
 
 function rowsAsSections(tables, isSanitise): PageTabSection[] {
   let tableSections: PageTabSection[] = [];
@@ -10,7 +9,7 @@ function rowsAsSections(tables, isSanitise): PageTabSection[] {
   tables.forEach((table) => {
     const rowsSections = tableRowToSections<PageTabSection>(
       (attrs, currentTable) => [
-        { type: currentTable?.typeName || '', attributes: attrs.filter((attr) => !isValueEmpty(attr.value)) }
+        { type: currentTable?.typeName || '', attributes: attrs.filter((attr) => !isPtAttributeValueEmpty(attr.value)) }
       ],
       (currentSection) => currentSection!.attributes!.length > 0,
       isSanitise,

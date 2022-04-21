@@ -2,6 +2,7 @@ import { isStringDefined, isStringEmpty } from 'app/utils/validation.utils';
 import { AttributeNames, SectionNames } from './../../utils/constants';
 import { Dictionary, Nullable } from './submission-common-types';
 import { PageTabSection, PtAttribute } from './pagetab/pagetab.model';
+import { Org } from '../org-input/org.service';
 
 const isEqualTo = (value: string) => {
   return (s: Nullable<string>) => isStringDefined(s) && s!.toLowerCase() === value;
@@ -11,6 +12,7 @@ export class Organisations {
   private static instance: Organisations;
   private names: Dictionary<string> = {};
   private refs: Dictionary<string> = {};
+  private rorRefs: Dictionary<string> = {};
 
   private constructor() {}
 
@@ -22,14 +24,16 @@ export class Organisations {
     return Organisations.instance;
   }
 
-  list(): { accno: string; name: string }[] {
+  list(): { accno: string; name: string; rorId: string }[] {
     return Object.keys(this.refs).map((key) => {
       const ref = this.refs[key];
       const orgName = this.names[key];
+      const rorId = this.rorRefs[key];
       const accno = ref ? ref : '';
       const name = orgName ? orgName : '';
+      const rorIdValue = rorId ? rorId : '';
 
-      return { name, accno };
+      return { name, accno, rorId: rorIdValue };
     });
   }
 
@@ -48,13 +52,13 @@ export class Organisations {
     const references = orgAttributeValue.map((value) => {
       const organization = this.getOrganizationFromSubsection(contact, value);
 
-      return this.toReference(value, organization.accno);
+      return this.toReference(value as Org | string, organization.accno);
     });
 
     return [...attributesWithoutOrg, ...references];
   }
 
-  referencesToOrg(author: PageTabSection, affiliations: Dictionary<string>): PtAttribute[] {
+  referencesToOrg(author: PageTabSection, affiliations: Dictionary<PtAttribute[]>): PtAttribute[] {
     const attributes: PtAttribute[] = author.attributes || [];
     const isAffiliation = isEqualTo(SectionNames.AFFILIATION);
     const affiliationAttributes = attributes.filter((attribute) => isAffiliation(attribute.name));
@@ -68,7 +72,25 @@ export class Organisations {
     });
 
     if (referenceValues.length > 0) {
-      return [...otherAttributes, { name: AttributeNames.ORGANISATION, value: referenceValues, reference: false }];
+      const value = referenceValues.map((referenceValue) => {
+        let result = {};
+
+        if (Array.isArray(referenceValue)) {
+          referenceValue.forEach((attribute) => {
+            if (attribute.name) {
+              result[attribute.name.toLowerCase()] = attribute.value;
+            }
+          });
+        }
+
+        if (typeof referenceValue === 'string') {
+          result = { ...result, Name: referenceValue };
+        }
+
+        return result;
+      });
+
+      return [...otherAttributes, { name: AttributeNames.ORGANISATION, value, reference: false }];
     }
 
     return otherAttributes;
@@ -86,12 +108,15 @@ export class Organisations {
     );
   }
 
-  private toReference(orgValue: string | undefined, accno: string): PtAttribute {
-    if (orgValue === undefined || isStringEmpty(orgValue)) {
+  private toReference(orgValue: string | Org | undefined, accno: string): PtAttribute {
+    const orgName = orgValue instanceof Object ? orgValue.name : orgValue;
+    const rorId = orgValue instanceof Object ? orgValue.id : '';
+
+    if (orgValue === undefined || isStringEmpty(orgName)) {
       return { name: SectionNames.AFFILIATION, value: orgValue, reference: false } as PtAttribute;
     }
 
-    const orgRef = this.refFor(orgValue, accno!);
+    const orgRef = this.refFor(orgName, accno!, rorId);
     return { name: SectionNames.AFFILIATION, value: orgRef, reference: true } as PtAttribute;
   }
 
@@ -111,7 +136,7 @@ export class Organisations {
     return `o${highestValueNumber + 1}`;
   }
 
-  private refFor(value: string = '', accno: string): string {
+  private refFor(value: string = '', accno: string, rorId: string): string {
     const key: string = value.trim().toLowerCase();
     const isAccnoDefined: boolean = isStringDefined(accno);
     const isValueDefined: boolean = isStringDefined(this.names[key]);
@@ -123,12 +148,14 @@ export class Organisations {
     if (isAccnoDefined) {
       this.refs[key] = accno;
       this.names[key] = value;
+      this.rorRefs[key] = rorId;
 
       return this.refs[key]!;
     }
 
     this.refs[key] = this.generateNextRefValue();
     this.names[key] = value;
+    this.rorRefs[key] = rorId;
 
     return this.refs[key]!;
   }

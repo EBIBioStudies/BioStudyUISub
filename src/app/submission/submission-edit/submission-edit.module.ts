@@ -10,7 +10,6 @@ import { CoreModule } from 'app/core/core.module';
 import { SharedModule } from 'app/shared/shared.module';
 import { FileModule } from 'app/file/file.module';
 import { ThemeModule } from 'app/theme/theme.module';
-import { IdLinkModule } from '../id-link/id-link.module';
 import { PubMedIdSearchModule } from '../pubmedid-search/pubmedid-search.module';
 import { SubmissionOtherModule } from '../submission-other/submission-other.module';
 import { SubmissionResultsModule } from '../submission-results/submission-results.module';
@@ -36,6 +35,10 @@ import { AddSubmTypeModalComponent } from './subm-sidebar/add-subm-type-modal/ad
 import { SubmCheckSidebarComponent } from './subm-sidebar/subm-check-sidebar/subm-check-sidebar.component';
 import { SubmEditSidebarComponent } from './subm-sidebar/subm-edit-sidebar/subm-edit-sidebar.component';
 import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
+import { IdLinkComponent } from './id-link/id-link.component';
+import { IdLinkValueValidatorDirective } from './id-link/id-link.validator.directive';
+import { IdLinkService } from './id-link/id-link.service';
+import { PopoverModule } from 'ngx-bootstrap/popover';
 
 @NgModule({
   imports: [
@@ -49,15 +52,15 @@ import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
     SubmissionSharedModule,
     SubmissionResultsModule,
     SubmissionOtherModule,
-    IdLinkModule,
     PubMedIdSearchModule,
     SortablejsModule,
     ThemeModule,
     TooltipModule,
+    PopoverModule,
     TypeaheadModule,
     TabsModule
   ],
-  providers: [SubmEditService],
+  providers: [SubmEditService, IdLinkService],
   declarations: [
     SubmissionEditComponent,
     InputValueComponent,
@@ -78,9 +81,11 @@ import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
     UniqueValidator,
     BootstrapValidationDirective,
     RemoveHostDirective,
-    TextareaAutosizeDirective
+    TextareaAutosizeDirective,
+    IdLinkComponent,
+    IdLinkValueValidatorDirective
   ],
-  exports: [SubmissionEditComponent],
+  exports: [SubmissionEditComponent, IdLinkComponent],
   entryComponents: [SubmValidationErrorsComponent, AddSubmTypeModalComponent]
 })
 export class SubmissionEditModule {}

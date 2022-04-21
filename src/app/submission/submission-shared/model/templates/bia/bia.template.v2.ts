@@ -1,5 +1,5 @@
-export const biaTemplate = {
-  name: 'BioImages',
+export const biaTemplateV2 = {
+  name: 'BioImages.v2',
   title: 'BioImages',
   description: 'BioImage Archive Study',
   sectionType: {
@@ -21,22 +21,28 @@ export const biaTemplate = {
           minlength: 25
         },
         display: 'required',
-        asyncValueValidatorName: 'forStudyTitle'
+        asyncValueValidatorName: 'forStudyTitle',
+        helpText: 'Examples',
+        helpLink: '/bioimage-archive/help-submission-form/#title'
       },
       {
         name: 'ReleaseDate',
-        title: 'Release Date',
+        title: 'Submission publication date',
         icon: 'fa-calendar-alt',
         display: 'required',
         valueType: {
           name: 'date',
           allowPast: false
-        }
+        },
+        helpText: 'Explanation',
+        helpLink: '/bioimage-archive/help-submission-form/#release-date'
       },
       {
         name: 'Description',
         icon: 'fa-comment',
-        valueType: { name: 'largetext' }
+        valueType: { name: 'largetext' },
+        helpText: 'Examples',
+        helpLink: '/bioimage-archive/help-submission-form/#description'
       },
       {
         name: 'Study Type',
@@ -56,14 +62,14 @@ export const biaTemplate = {
             'protein localization',
             'time-lapse imaging'
           ]
-        }
+        },
+        helpText: 'Examples',
+        helpLink: '/bioimage-archive/help-submission-form/#study-type'
       },
       {
         name: 'Organism',
         icon: 'fa-tag',
         display: 'required',
-        helpText: 'Add organism',
-        helpLink: '/help#new-item-dropdown',
         valueType: {
           name: 'select',
           multiple: true,
@@ -123,14 +129,16 @@ export const biaTemplate = {
             'Yarrowia lipolytica',
             'Zea mays (corn)'
           ]
-        }
+        },
+        helpText: 'Examples',
+        helpLink: '/bioimage-archive/help-submission-form/#organism'
       }
     ],
     tableTypes: [
       {
         name: 'Keywords',
         icon: 'fa-address-card',
-        description: 'Add keywords',
+        description: 'Add keywords<br><a href="/bioimage-archive/help-submission-form/#keywords">Examples</a>',
         uniqueCols: true,
         display: 'desirable',
         columnTypes: [
@@ -144,7 +152,9 @@ export const biaTemplate = {
       {
         name: 'Contact',
         icon: 'fa-address-card',
-        description: 'Add the contact details for the authors involved in the study.',
+        description:
+          'Add the contact details for the authors involved in the study.' +
+          '<br><a href="/bioimage-archive/help-submission-form/#contact">Examples</a>',
         uniqueCols: true,
         display: 'required',
         rowAsSection: true,
@@ -160,84 +170,8 @@ export const biaTemplate = {
             helpText: 'Add org',
             helpLink: '/help#new-item-dropdown',
             valueType: {
-              name: 'select',
-              multiple: true,
-              values: [
-                'Australia Bioinformatics Resource (EMBL-ABR)',
-                'Beijing Genomics Institute (BGI)',
-                'Biomedicine Institute of Valencia (IBV)',
-                'Broad Institute',
-                'Center for Computational Biology and Bioinformatics of Korea (CCBB)',
-                'Centre for Biological Research (CIB)',
-                'Centre for Molecular Biology Severo Ochoa (CBMSO)',
-                'Chinese National Human Genome Center (CHGC)',
-                'Cold Spring Harbor Laboratory (CSHL)',
-                'Dana-Farber Cancer Institute',
-                'ETH Zürich',
-                'European Bioinformatics Institute (EMBL-EBI)',
-                'European Molecular Biology Laboratory (EMBL)',
-                'F. Hoffmann-La Roche Ltd',
-                'Francis Crick Institute',
-                'Garvan Institute of Medical Research',
-                'Genedata AG',
-                'Genetic Information Research Institute (GIRI)',
-                'Genome Institute of Singapore (GIS)',
-                'Georgetown University Medical Center',
-                'German Institute of Medical Documentation and Information',
-                'Howard Hughes Medical Institute (HHMI)',
-                'Icahn Institute for Genomics and Multiscale Biology',
-                'Imperial College London',
-                'InSphero AG',
-                'Institute of Biotechnology and Pharmaceutical Research of Taiwan (IBPR)',
-                'Institute of Molecular and Cell Biology of Singapore (IMCB)',
-                'Institute of Molecular and Genomic Medicine of Taiwan',
-                'Instituto de Investigación Sanitaria La Fe (IIS La Fe)',
-                'International Plant Genetic Resources Institute (IPGRI)',
-                'Johns Hopkins University',
-                'Joint Genome Institute (JGI)',
-                "King's College London",
-                'Kyoto University Bioinformatics Center',
-                'Luxcel Biosciences',
-                'MRC Biostatistics Unit (BSU)',
-                'MRC Cancer Unit',
-                'MRC Centre for Drug Safety Science (CDSS)',
-                'MRC Human Genetics Unit',
-                'MRC Institute of Genetics and Molecular Medicine (IGMM)',
-                'MRC Laboratory for Molecular Cell Biology (LMCB)',
-                'MRC Laboratory of Molecular Biology (LMB)',
-                'MRC Mammalian Genetics Unit (MGU)',
-                'MRC Toxicology Unit',
-                'MRC Weatherall Institute of Molecular Medicine (WIMM)',
-                'Maastricht University',
-                'Mary Lyon Centre (MLC)',
-                'Max Planck Institute for Molecular Cell Biology and Genetics',
-                'Microdiscovery GMBH',
-                'National Center for Biotechnology Information (NCBI)',
-                'National Human Genome Research Institute (NHGRI)',
-                'National Institute of Cancer Research of Taiwan',
-                'National Institute of Genetics of Japan (NIG)',
-                'National Institutes of Health (NIH)',
-                'Netherlands Bioinformatics Centre (NBIC)',
-                'New York Genome Center (NYGC)',
-                'New York University School of Medicine',
-                'Okinawa Institute of Science and Technology (OIST)',
-                'Ontario Institute for Cancer Research (OICR)',
-                'Optibrium Ltd',
-                'RWTH Aachen University',
-                'Royan Institute',
-                'Salk Institute for Biological Studies',
-                'Science for Life Laboratory (SciLifeLab)',
-                'Swiss Institute of Bioinformatics (SIB)',
-                'The Centre for Applied Genomics of Toronto (TCAG)',
-                'The Institute of Biomedical Research of Barcelona (IIBB)',
-                'The Jackson Laboratory Cancer Center (JAXCC)',
-                'The Scripps Research Institute (TSRI)',
-                'Translational Genomics Research Institute (TGen)',
-                'Wellcome Sanger Institute',
-                'Wellcome Trust Centre for Human Genetics',
-                'Wellcome Trust Sanger Institute',
-                'Whitehead Institute for Biomedical Research'
-              ]
+              name: 'org',
+              multiple: true
             },
             display: 'required',
             required: true
@@ -286,7 +220,9 @@ export const biaTemplate = {
         ]
       },
       {
-        description: 'Add the protocols involved in the study.',
+        description:
+          'Add the protocols involved in the study.' +
+          '<br><a href="/bioimage-archive/help-submission-form/#keywords">Examples</a>',
         icon: 'fa-address-card',
         name: 'Study Protocols',
         uniqueCols: true,
@@ -410,22 +346,17 @@ export const biaTemplate = {
             name: 'Name',
             icon: 'fa-comment',
             valueType: { name: 'text' },
-            display: 'required'
+            display: 'required',
+            helpText: 'Examples',
+            helpLink: '/bioimage-archive/help-submission-form/#study-components-name'
           },
           {
             name: 'Description',
             icon: 'fa-comment',
             valueType: { name: 'largetext' },
-            display: 'required'
-          },
-          {
-            name: 'Type',
-            icon: 'fa-comment',
-            display: 'desirable',
-            valueType: {
-              name: 'select',
-              values: ['primary screen', 'secondary screen', 'validation screen']
-            }
+            display: 'required',
+            helpText: 'Examples',
+            helpLink: '/bioimage-archive/help-submission-form/#study-components-description'
           },
           {
             name: 'Imaging Method',
@@ -458,38 +389,26 @@ export const biaTemplate = {
                 'wide field fluorescence deconvolution microscopy',
                 'wide-field epi-fluorescence microscopy'
               ]
-            }
-          },
-          {
-            name: 'Technology Type',
-            icon: 'fa-comment',
-            valueType: {
-              name: 'select',
-              values: [
-                'cell line screen',
-                'compound screen',
-                'gene deletion screen',
-                'geographic screen',
-                'ORF overexpression screen',
-                'protein screen',
-                'RNAi screen'
-              ]
-            }
+            },
+            helpText: 'Examples',
+            helpLink: '/bioimage-archive/help-submission-form/#study-components-imaging-method'
           },
           {
             name: 'File List',
             icon: 'fa-file',
-            valueType: { name: 'file' },
+            valueType: { name: 'file', allowFolders: false },
             display: 'required',
-            helpLink: 'https://www.ebi.ac.uk/biostudies/BioImages/help',
-            helpText: 'Help'
+            helpText: 'Examples',
+            helpLink: '/bioimage-archive/help-submission-form/#study-components-file-list'
             // asyncValueValidatorName: 'forFileList'
           },
           {
             name: 'Comment',
             icon: 'fa-comment',
             valueType: { name: 'largetext' },
-            display: 'desirable'
+            display: 'desirable',
+            helpText: 'Examples',
+            helpLink: '/bioimage-archive/help-submission-form/#study-components-comment'
           }
         ],
         tableTypes: [

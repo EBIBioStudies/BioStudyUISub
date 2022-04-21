@@ -1,4 +1,4 @@
-import { NgModule, APP_INITIALIZER } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { PathLocationStrategy, LocationStrategy } from '@angular/common';
 import { RecaptchaModule, RecaptchaSettings, RECAPTCHA_SETTINGS, RECAPTCHA_BASE_URL } from 'ng-recaptcha';
@@ -29,11 +29,7 @@ import { SharedModule } from 'app/shared/shared.module';
 import { ProfileModule } from './profile/profile.module';
 import { HelpModule } from './help/help.module';
 
-export function initConfig(config: AppConfig): () => Promise<any> {
-  return () => config.load();
-}
-
-function initRecaptchaSettings(config: AppConfig): RecaptchaSettings {
+export function initRecaptchaSettings(config: AppConfig): RecaptchaSettings {
   return { siteKey: config.recaptchaPublicKey, size: 'invisible' };
 }
 
@@ -73,7 +69,6 @@ function initRecaptchaSettings(config: AppConfig): RecaptchaSettings {
   declarations: [AppComponent],
   providers: [
     AppConfig,
-    { provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true },
     { provide: LocationStrategy, useClass: PathLocationStrategy },
     { provide: RECAPTCHA_BASE_URL, useValue: 'https://recaptcha.net/recaptcha/api.js' },
     { provide: RECAPTCHA_SETTINGS, useFactory: initRecaptchaSettings, deps: [AppConfig] }

@@ -3,7 +3,7 @@ import { AttributeNames, SectionNames } from './../../utils/constants';
 import { Organisations } from '../model/organisations';
 import { PageTabSection } from './../model/pagetab/pagetab.model';
 import { Protocols } from '../model/protocols';
-import { isValueEmpty } from 'app/utils/validation.utils';
+import { isPtAttributeValueEmpty, isStringEmpty } from 'app/utils/validation.utils';
 import { partition } from 'app/utils/array.utils';
 
 export function contactsToSection(sections: PageTabSection[]): PageTabSection[] {
@@ -12,12 +12,15 @@ export function contactsToSection(sections: PageTabSection[]): PageTabSection[] 
     [SectionNames.CONTACT.toLowerCase()].includes(section!.type!.toLowerCase())
   );
   const authors: PageTabSection[] = contacts.map((contact) => ({
-    attributes: orgs.orgToReferences(contact).filter((ref) => !isValueEmpty(ref.value)),
+    attributes: orgs.orgToReferences(contact).filter((ref) => !isPtAttributeValueEmpty(ref.value)),
     type: SectionNames.AUTHOR
   }));
   const affiliations: PageTabSection[] = orgs.list().map((org) => ({
     accno: org.accno,
-    attributes: [{ name: AttributeNames.NAME, value: org.name }],
+    attributes: [
+      { name: AttributeNames.NAME, value: org.name },
+      { name: AttributeNames.RORID, value: org.rorId }
+    ].filter((attr) => !isStringEmpty(attr.value)),
     type: SectionNames.ORGANISATION
   }));
 

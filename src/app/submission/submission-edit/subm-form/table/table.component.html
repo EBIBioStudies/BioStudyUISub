@@ -52,9 +52,9 @@
                   [disabled]="!tableForm.canRemoveRow()"
                   (click)="tableForm.removeRow(rowIdx)"
                   [tooltip]="tableForm.canRemoveRow ? 'Delete ' + tableForm.tableTypeName.toLowerCase() + ' ' + (rowIdx + 1) : ''"
+                  attr.aria-label="Delete row {{rowIdx}}"
                   placement="right"
                   container="body"
-                  aria-label="Delete row {{rowIdx}}"
                   title="Delete row {{rowIdx}}">
                 <i class="far fa-trash-alt" aria-hidden="true"></i>
               </button>

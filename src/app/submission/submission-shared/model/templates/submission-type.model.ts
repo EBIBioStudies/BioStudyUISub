@@ -176,7 +176,8 @@ export enum ValueTypeName {
   orcid,
   pubmedid,
   dna,
-  protein
+  protein,
+  org
 }
 
 export abstract class ValueType {
@@ -232,6 +233,15 @@ export class SelectValueType extends ValueType {
   }
 }
 
+export class OrgSelectValueType extends ValueType {
+  multiple: boolean = false;
+
+  constructor(data: Partial<SelectValueType> = {}) {
+    super(ValueTypeName.org);
+    this.multiple = data.multiple || false;
+  }
+}
+
 export class FileValueType extends ValueType {
   readonly allowFolders: boolean;
 
@@ -251,6 +261,8 @@ export class ValueTypeFactory {
         return new DateValueType(data);
       case ValueTypeName.select:
         return new SelectValueType(data);
+      case ValueTypeName.org:
+        return new OrgSelectValueType(data);
       case ValueTypeName.file:
         return new FileValueType(data);
       default:
