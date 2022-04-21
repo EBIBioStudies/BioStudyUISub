@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { SharedModule } from 'app/shared/shared.module';
 import { ThemeModule } from 'app/theme/theme.module';
 import { SubmissionResultsModule } from '../submission-results/submission-results.module';
@@ -21,8 +20,7 @@ import { DirectSubmitFileComponent } from './direct-submit-file.component';
     RouterModule,
     SubmissionSharedModule,
     SubmissionResultsModule,
-    ThemeModule,
-    TooltipModule
+    ThemeModule
   ],
   providers: [DirectSubmitFileUploadService, DirectSubmitService],
   declarations: [DirectSubmitComponent, DirectSubmitSideBarComponent, DirectSubmitFileComponent],

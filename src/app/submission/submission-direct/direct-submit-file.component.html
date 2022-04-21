@@ -1,7 +1,7 @@
 <ng-container *ngIf="file">
   <div class="card h-100" [ngClass]="{'panel-default': !accno, 'text-primary': accno, 'st-has-passed': hasSubmitPassed}"
     [ngStyle]="{'cursor': accno  ? 'pointer' : 'default'}"
-    tooltip="accno ? 'Edit this study' : ''"
+    [tooltip]="accno ? 'Edit this study' : ''"
     placement="top" container="body">
     <div class="card-body">
       <div class="card-title d-flex align-items-center">
@@ -41,7 +41,7 @@
       </div>
       <button class="btn btn-outline-danger btn-sm"
         type="button"
-        attr.aria-label="Delete file '{{file.name}}'"
+        aria-label="Delete file '{{file.name}}'"
         title="Delete file '{{file.name}}'"
         (click)="handleOnDeleteFile(!isStudy, fileName)"
         tooltip="Delete file '{{file.name}}'">
