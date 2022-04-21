@@ -31,6 +31,7 @@ module.exports = {
     }
   },
   ror: {
+    pathname: 'organizations',
     hostname: 'api.ror.org',
     protocol: 'https'
   },
