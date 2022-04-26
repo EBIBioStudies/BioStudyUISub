@@ -60,7 +60,6 @@ export class FieldControl {
         return [(control: CustomFormControl) => validator(control, this.submService, this.studyAccno)];
       }
     }
-
     return [];
   }
 
