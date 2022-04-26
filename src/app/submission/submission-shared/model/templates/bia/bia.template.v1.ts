@@ -406,8 +406,8 @@ export const biaTemplateV1 = {
             valueType: { name: 'file', allowFolders: false },
             display: 'required',
             helpLink: 'https://www.ebi.ac.uk/biostudies/BioImages/help',
-            helpText: 'Help'
-            // asyncValueValidatorName: 'forFileList'
+            helpText: 'Help',
+            asyncValueValidatorName: 'forFileList'
           },
           {
             name: 'Comment',
