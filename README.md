@@ -68,3 +68,14 @@ Run the next script to execute unit tests:
 ```
 npm run test
 ```
+
+## Show general announcement
+There is a handy feature to show general messages in the submission tool. If something needs to be announce to all the users a new `Announcement banner` is available in the app. The title, priority and description of the title are provided through environment variables.
+
+To show the general announcement set the variables below in GitLab with the desired values. Please make sure you select an environment while setting the env vars otherwise the announcement will be visible in all environments. The priority value can be any of the [available types](https://getbootstrap.com/docs/5.1/components/alerts/#examples) for the Bootstrap Alert component.
+
+```js
+APP_ANNOUNCEMENT_HEADLINE=Announcement title
+APP_ANNOUNCEMENT_CONTENT=Announcement body
+APP_ANNOUNCEMENT_PRIORITY=priority
+```
