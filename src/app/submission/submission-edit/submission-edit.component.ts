@@ -212,9 +212,13 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
         this.accno = accno;
         this.loadSubmission(this.accno, true);
       },
-      (error: Error) => {
-        this.showError = true;
-        this.templForbiddenMessage = error.message;
+      (error: Observable<string>) => {
+        error.subscribe({
+          error: (msg) => {
+            this.showError = true;
+            this.templForbiddenMessage = msg;
+          }
+        });
       }
     );
   }
