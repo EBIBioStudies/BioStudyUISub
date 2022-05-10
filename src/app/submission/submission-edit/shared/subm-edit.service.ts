@@ -124,18 +124,13 @@ export class SubmEditService {
   private sectionFormSub?: Subscription;
   private sectionFormSubEdit?: Subscription;
   private submModel: Submission = new Submission(SubmissionType.defaultType());
-  private collections: string[] = [];
 
   constructor(
     private userData: UserData,
     private submService: SubmissionService,
     private submToPageTabService: SubmissionToPageTabService,
     private pageTabToSubmService: PageTabToSubmissionService
-  ) {
-    this.userData.collections$.subscribe((collections) => {
-      this.collections = collections;
-    });
-  }
+  ) {}
 
   get isSubmitting(): boolean {
     return this.editState.isSubmitting;
@@ -162,17 +157,21 @@ export class SubmEditService {
   }
 
   createEmptySubmission(templateName?: string): Observable<string> {
-    const templates = getTemplatesForCollections(this.collections);
-    const templateInfo = templates.find(({ collection }) => collection?.toLowerCase() === templateName?.toLowerCase());
+    return this.userData.collections$.pipe(
+      switchMap((projectNames) => {
+        const templates = getTemplatesForCollections(projectNames);
+        const templateInfo = templates.find(
+          ({ collection }) => collection?.toLowerCase() === templateName?.toLowerCase()
+        );
+        if (templateInfo !== undefined) {
+          const { name, collection } = templateInfo;
+          return this.submService.createDraftSubmission(collection, name);
+        }
 
-    if (templateInfo !== undefined) {
-      const { name, collection } = templateInfo;
-
-      return this.submService.createDraftSubmission(collection, name);
-    }
-
-    throw throwError(
-      `Looks like you don't have permissions to see "${templateName}" collection or the study template doesn't exist`
+        throw throwError(
+          `Looks like you don't have permissions to see "${templateName}" collection or the study template doesn't exist`
+        );
+      })
     );
   }
 
