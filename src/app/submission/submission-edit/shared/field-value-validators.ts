@@ -32,6 +32,10 @@ export class FormValueValidator {
   }
 
   static forFileList(control: CustomFormControl, submService: SubmissionService): Observable<ValidationErrors> {
+    if (!control.touched) {
+      return of({});
+    }
+
     return timer(DELAY_IN_MILLISECONDS).pipe(
       switchMap(() => submService.validateFileList(control.value)),
       catchError(({ error }) => {

@@ -39,6 +39,7 @@ import { IdLinkComponent } from './id-link/id-link.component';
 import { IdLinkValueValidatorDirective } from './id-link/id-link.validator.directive';
 import { IdLinkService } from './id-link/id-link.service';
 import { SubmResubmitModalComponent } from './subm-navbar/subm-resubmit-modal.component';
+import { PopoverModule } from 'ngx-bootstrap/popover';
 
 @NgModule({
   imports: [
@@ -56,6 +57,7 @@ import { SubmResubmitModalComponent } from './subm-navbar/subm-resubmit-modal.co
     SortablejsModule,
     ThemeModule,
     TooltipModule,
+    PopoverModule,
     TypeaheadModule,
     TabsModule
   ],

@@ -8,7 +8,7 @@ import {
   Table,
   getTemplatesForCollections
 } from 'app/submission/submission-shared/model';
-import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription, throwError } from 'rxjs';
 import { PageTab, SelectValueType } from 'app/submission/submission-shared/model';
 import { SubmissionService, SubmitResponse } from '../../submission-shared/submission.service';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
@@ -163,14 +163,12 @@ export class SubmEditService {
         const templateInfo = templates.find(
           ({ collection }) => collection?.toLowerCase() === templateName?.toLowerCase()
         );
-
         if (templateInfo !== undefined) {
           const { name, collection } = templateInfo;
-
           return this.submService.createDraftSubmission(collection, name);
         }
 
-        throw new Error(
+        throw throwError(
           `Looks like you don't have permissions to see "${templateName}" collection or the study template doesn't exist`
         );
       })

@@ -52,9 +52,9 @@
                   [disabled]="!tableForm.canRemoveRow()"
                   (click)="tableForm.removeRow(rowIdx)"
                   [tooltip]="tableForm.canRemoveRow ? 'Delete ' + tableForm.tableTypeName.toLowerCase() + ' ' + (rowIdx + 1) : ''"
+                  attr.aria-label="Delete row {{rowIdx}}"
                   placement="right"
                   container="body"
-                  aria-label="Delete row {{rowIdx}}"
                   title="Delete row {{rowIdx}}">
                 <i class="far fa-trash-alt" aria-hidden="true"></i>
               </button>
@@ -63,12 +63,13 @@
           </div>
         </div>
         <div class="column-entry col-sm-1 col-md-1 col-lg-3 col-xl-3" *ngFor="let column of tableForm.columns">
-          <div [ngClass]="{'readonly': isReadOnly || column.isReadonly, 'has-error': row.hasErrorsAt(column.id)}">
-            <st-input-value placement="top"
-                    container="body"
-                    containerClass="{{tableForm.isRequired ? 'text-danger' : 'text-warning'}}"
-                    popover="{{row.hasErrorsAt(column.id) ? row.errorsAt(column.id) : ''}}"
-                    triggers="focus"
+          <div [ngClass]="{'readonly': isReadOnly || column.isReadonly, 'has-error': row.hasErrorsAt(column.id)}"
+            placement="right"
+            container="body"
+            popover="{{row.hasErrorsAt(column.id) ? row.errorsAt(column.id) : ''}}"
+            triggers="focus"
+            containerClass="{{tableForm.isRequired ? 'text-danger' : 'text-warning'}}">
+            <st-input-value
                     [autosuggestSource]="tableForm.cellValuesTypeaheadFunc(rowIdx, column.id)"
                     [autosuggest]="column.autosuggest"
                     [formControl]="row.cellControlAt(column.id).control"

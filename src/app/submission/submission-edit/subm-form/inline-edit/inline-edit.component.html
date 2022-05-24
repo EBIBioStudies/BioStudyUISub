@@ -29,12 +29,12 @@
   </small>
   <div *ngIf="!editing" class="btn-group btn-group-sm">
     <button *ngIf="canEdit" class="btn btn-link" type="button"
-        (click)="onEdit($event)" aria-label="Edit Column {{value}}"
+        (click)="onEdit($event)" attr.aria-label="Edit Column {{value}}"
         title="Edit Column {{value}}">
       <i class="fas fa-pencil-alt" aria-hidden="true"></i>
     </button>
     <button *ngIf="canRemove" class="btn btn-link" type="button"
-        (click)="onRemove($event)" aria-label="Remove Column {{value}}"
+        (click)="onRemove($event)" attr.aria-label="Remove Column {{value}}"
         title="Remove Column {{value}}">
       <i class="fas fa-trash-alt text-danger" aria-hidden="true"></i>
     </button>

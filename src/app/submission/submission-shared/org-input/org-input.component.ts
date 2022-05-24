@@ -27,6 +27,7 @@ export class OrgInputComponent implements ControlValueAccessor, OnInit {
   @Input() readonly: boolean = false;
   @Input() isInputGroup: boolean = false;
   @Input() multiple: boolean = false;
+  @Input() inputId: string = '';
   orgs$: Observable<Org[]> | undefined;
   orgsLoading = false;
   orgsInput$ = new Subject<string>();

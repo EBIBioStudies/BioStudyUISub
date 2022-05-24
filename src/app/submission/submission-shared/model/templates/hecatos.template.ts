@@ -244,28 +244,8 @@ export const hecatosTemplate = {
             helpText: 'Add org',
             helpLink: '/help#new-item-dropdown',
             valueType: {
-              name: 'select',
-              multiple: true,
-              values: [
-                'ETH Zürich',
-                'European Bioinformatics Institute (EMBL-EBI)',
-                'European Molecular Biology Laboratory (EMBL)',
-                'F. Hoffmann-La Roche Ltd',
-                'Francis Crick Institute',
-                'Genedata AG',
-                'Imperial College London',
-                'InSphero AG',
-                'Instituto de Investigación Sanitaria La Fe (IIS La Fe)',
-                "King's College London",
-                'Luxcel Biosciences',
-                'MRC Laboratory of Molecular Biology',
-                'Maastricht University',
-                'Max Planck Institute for Molecular Cell Biology and Genetics',
-                'Microdiscovery GMBH',
-                'Optibrium Ltd',
-                'RWTH Aachen University',
-                'Wellcome Sanger Institute'
-              ]
+              name: 'org',
+              multiple: true
             },
             display: 'required'
           },
