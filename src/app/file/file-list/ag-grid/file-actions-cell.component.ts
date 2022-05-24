@@ -5,7 +5,7 @@ import { FileUpload } from '../../shared/file-upload-list.service';
 @Component({
   selector: 'st-file-actions-cell',
   template: `
-    <div class="btn-group btn-group-sm" role="group" aria-label="File actions">
+    <div class="btn-group btn-group-sm" role="group" attr.aria-label="File actions">
       <button
         *ngIf="canDownload"
         type="button"
@@ -14,7 +14,7 @@ import { FileUpload } from '../../shared/file-upload-list.service';
         container="body"
         placement="left"
         (click)="onFileDownload($event)"
-        aria-label="Download file"
+        attr.aria-label="Download file"
         title="Download file"
       >
         <i aria-hidden="true" class="fas fa-download fa-fw"></i>
@@ -27,7 +27,7 @@ import { FileUpload } from '../../shared/file-upload-list.service';
         container="body"
         placement="left"
         (click)="onFileRemove($event)"
-        aria-label="Delete file"
+        attr.aria-label="Delete file"
         title="Delete file"
       >
         <i aria-hidden="true" class="fas fa-trash-alt fa-fw"></i>
@@ -40,7 +40,7 @@ import { FileUpload } from '../../shared/file-upload-list.service';
         container="body"
         placement="left"
         (click)="onCancelUpload($event)"
-        aria-label="Cancel upload"
+        attr.aria-label="Cancel upload"
         title="Cancel upload"
       >
         Cancel
