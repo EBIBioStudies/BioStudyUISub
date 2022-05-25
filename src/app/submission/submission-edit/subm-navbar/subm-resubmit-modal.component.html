@@ -12,7 +12,7 @@
       type="radio"
       class="form-check-input"
       name="resubmit-options"
-      value="no"
+      value="noFilesUpdated"
       (change)="onOptionChange($event['target']['value'])"
     >
     <label class="form-check-label" for="no-files-updated">No, I have not updated any files</label>
@@ -23,13 +23,13 @@
       type="radio"
       class="form-check-input"
       name="resubmit-options"
-      value="yes"
+      value="filesUpdated"
       (change)="onOptionChange($event['target']['value'])"
     >
     <label class="form-check-label" for="files-updated">Yes, one or more files have been updated</label>
   </div>
   <br />
   <div class="modal-footer">
-    <button type="submit" class="btn btn-success btn-sm">Re-submit</button>
+    <button type="submit" class="btn btn-success btn-sm" (click)="resubmit()">Re-submit</button>
   </div>
 </div>

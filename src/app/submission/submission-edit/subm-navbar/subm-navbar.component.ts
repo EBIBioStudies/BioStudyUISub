@@ -18,7 +18,7 @@ export class SubmNavBarComponent implements OnChanges {
   @Output() revertClick: EventEmitter<Event> = new EventEmitter<Event>();
   @Output() sectionClick: EventEmitter<Section> = new EventEmitter<Section>();
   @Input() sectionForm?: SectionForm;
-  @Output() submitClick: EventEmitter<Event> = new EventEmitter<Event>();
+  @Output() submitClick: EventEmitter<boolean> = new EventEmitter<boolean>();
   frontendURL: string = this.appConfig.frontendURL;
   sectionPath: SectionForm[] = [];
 
@@ -47,12 +47,19 @@ export class SubmNavBarComponent implements OnChanges {
   }
 
   onSubmit(event: Event): void {
+    if (event) {
+      event.preventDefault();
+    }
+
     if (!this.isTemp) {
       this.modalService.show(SubmResubmitModalComponent, {
-        class: 'modal-lg'
+        class: 'modal-lg',
+        initialState: {
+          onResubmit: (onlyMetadataUpdate) => this.submitClick.next(onlyMetadataUpdate)
+        }
       });
     } else {
-      this.submitClick.next(event);
+      this.submitClick.next(false);
     }
   }
 

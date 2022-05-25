@@ -6,6 +6,9 @@ import { Component } from '@angular/core';
   templateUrl: './subm-resubmit-modal.component.html'
 })
 export class SubmResubmitModalComponent {
+  onResubmit?: (onlyMetadataUpdate: boolean) => void;
+  onlyMetadataUpdate: boolean = false;
+
   constructor(public bsModalRef: BsModalRef) {}
 
   hide(): void {
@@ -13,6 +16,12 @@ export class SubmResubmitModalComponent {
   }
 
   onOptionChange(option: string): void {
-    console.log(option);
+    this.onlyMetadataUpdate = option === 'noFilesUpdated';
+  }
+
+  resubmit(): void {
+    if (this.onResubmit) {
+      this.onResubmit(this.onlyMetadataUpdate);
+    }
   }
 }
