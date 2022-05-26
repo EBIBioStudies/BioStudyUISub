@@ -1,7 +1,7 @@
 <div class="modal-content">
   <div class="modal-header">
     <h5 class="modal-title text-danger">Submission failed</h5>
-    <button type="button" class="close" (click)="hideModal()" aria-label="Close">
+    <button type="button" class="close" (click)="hideModal()" attr.aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -21,13 +21,13 @@
         </span>
       </div>
     </div>
-    <ng-container *ngIf="hasLog">
+    <div class="overflow-auto" *ngIf="hasLog">
       <button class="btn btn-link text-danger text-left p-0" (click)="collapsedLog = !collapsedLog">
         <i class="fa" [ngClass]="{'fa-caret-square-down':!collapsedLog, 'fa-caret-square-right': collapsedLog}"></i>
         {{errorMessage}}
       </button>
       <st-subm-results-tree [hidden]="collapsedLog" [log]="log"></st-subm-results-tree>
-    </ng-container>
+    </div>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-default" (click)="hideModal()">

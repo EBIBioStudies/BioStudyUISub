@@ -1,9 +1,9 @@
 <nav class="navbar navbar-light border-bottom page-navbar bg-white sticky-top">
   <div class="d-flex align-items-center mr-auto">
-    <a class="btn btn-link btn-sm pl-0" *ngIf="isTemp" routerLink="/draft" aria-label="Go to drafts list">
+    <a class="btn btn-link btn-sm pl-0" *ngIf="isTemp" routerLink="/draft" attr.aria-label="Go to drafts list">
       <i class="fa fa-clock-o" aria-hidden="true"></i> Drafts
     </a>
-    <a class="btn btn-link btn-sm pl-0" *ngIf="!isTemp" routerLink="/" aria-label="Go to submissions list">
+    <a class="btn btn-link btn-sm pl-0" *ngIf="!isTemp" routerLink="/" attr.aria-label="Go to submissions list">
       <i class="fa fa-database" aria-hidden="true"></i> Submissions
     </a>
     <ng-container *ngFor="let secForm of sectionPath; let idx = index; let last = last;">
