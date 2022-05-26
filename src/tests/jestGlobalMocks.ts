@@ -1,3 +1,5 @@
+import EventSource from 'eventsourcemock';
+
 Object.defineProperty(window, 'CSS', { value: null });
 
 Object.defineProperty(document, 'doctype', {
@@ -15,4 +17,8 @@ Object.defineProperty(document.body.style, 'transform', {
       configurable: true
     };
   }
+});
+
+Object.defineProperty(window, 'EventSource', {
+  value: EventSource
 });

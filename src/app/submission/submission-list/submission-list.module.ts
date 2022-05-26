@@ -13,6 +13,7 @@ import { SubmListComponent } from './subm-list.component';
 import { SubmissionOtherModule } from '../submission-other/submission-other.module';
 import { SubmissionSharedModule } from '../submission-shared/submission-shared.module';
 import { TextFilterComponent } from './ag-grid/text-filter.component';
+import { TextCellComponent } from './ag-grid/text-cell.component';
 
 @NgModule({
   imports: [
@@ -25,7 +26,8 @@ import { TextFilterComponent } from './ag-grid/text-filter.component';
       DateCellComponent,
       TextFilterComponent,
       DateFilterComponent,
-      StatusCellComponent
+      StatusCellComponent,
+      TextCellComponent
     ]),
     SubmissionSharedModule,
     SubmissionOtherModule,
@@ -37,6 +39,7 @@ import { TextFilterComponent } from './ag-grid/text-filter.component';
     StatusCellComponent,
     TextFilterComponent,
     DateFilterComponent,
+    TextCellComponent,
     ActionButtonsCellComponent,
     DateCellComponent
   ],

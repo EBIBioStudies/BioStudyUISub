@@ -63,12 +63,13 @@
           </div>
         </div>
         <div class="column-entry col-sm-1 col-md-1 col-lg-3 col-xl-3" *ngFor="let column of tableForm.columns">
-          <div [ngClass]="{'readonly': isReadOnly || column.isReadonly, 'has-error': row.hasErrorsAt(column.id)}">
-            <st-input-value placement="top"
-                    container="body"
-                    containerClass="{{tableForm.isRequired ? 'text-danger' : 'text-warning'}}"
-                    popover="{{row.hasErrorsAt(column.id) ? row.errorsAt(column.id) : ''}}"
-                    triggers="focus"
+          <div [ngClass]="{'readonly': isReadOnly || column.isReadonly, 'has-error': row.hasErrorsAt(column.id)}"
+            placement="right"
+            container="body"
+            popover="{{row.hasErrorsAt(column.id) ? row.errorsAt(column.id) : ''}}"
+            triggers="focus"
+            containerClass="{{tableForm.isRequired ? 'text-danger' : 'text-warning'}}">
+            <st-input-value
                     [autosuggestSource]="tableForm.cellValuesTypeaheadFunc(rowIdx, column.id)"
                     [autosuggest]="column.autosuggest"
                     [formControl]="row.cellControlAt(column.id).control"
