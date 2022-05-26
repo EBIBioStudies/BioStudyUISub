@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { setTheme } from 'ngx-bootstrap/utils';
+import { Title } from '@angular/platform-browser';
 import { UserSession } from 'app/auth/shared';
 import { AppConfig } from 'app/app.config';
-import { setTheme } from 'ngx-bootstrap/utils';
 
 @Component({
   selector: 'st-root',
@@ -12,7 +13,7 @@ import { setTheme } from 'ngx-bootstrap/utils';
   `
 })
 export class AppComponent implements OnInit {
-  constructor(private userSession: UserSession, private appConfig: AppConfig) {
+  constructor(private userSession: UserSession, private appConfig: AppConfig, private titleService: Title) {
     setTheme('bs4');
   }
 
@@ -34,5 +35,9 @@ export class AppComponent implements OnInit {
     }
 
     this.userSession.init();
+
+    if (this.appConfig.environment !== 'PROD') {
+      this.titleService.setTitle(`${this.appConfig.environment} - ${this.titleService.getTitle()}`);
+    }
   }
 }
