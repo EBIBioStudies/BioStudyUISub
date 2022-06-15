@@ -114,7 +114,7 @@ export class AppConfig {
   }
 
   /**
-   * Type of alert the announcement will be display with. Valid options are 'success', 'danger', 'warning', 'info'.
+   * Type of alert the announcement will be displayed with. Valid options are 'success', 'danger', 'warning', 'info'.
    */
   get announcementPriority(): string {
     return config.APP_ANNOUNCEMENT_PRIORITY;

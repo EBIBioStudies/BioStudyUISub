@@ -52,9 +52,9 @@ export class UserSession {
     return this.token() === '';
   }
 
-  isManager(): boolean {
+  isSuperUser(): boolean {
     const { username } = this.userCookies.getUser();
-    return username === 'manager';
+    return username === this.appConfig.superUserUsername;
   }
 
   hasSessionExpired(): boolean {
