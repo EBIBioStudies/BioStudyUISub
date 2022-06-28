@@ -16,10 +16,10 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoading = true;
-    this.userData.info$.subscribe(({ fullname, email, aux, collections }) => {
+    this.userData.info$.subscribe(({ fullname, email, orcid, collections }) => {
       this.fullname = fullname;
       this.email = email;
-      this.orcid = aux.orcid;
+      this.orcid = orcid;
       this.collections = collections;
       this.isLoading = false;
     });
