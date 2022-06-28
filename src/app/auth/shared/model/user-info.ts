@@ -1,10 +1,6 @@
-export interface Aux {
-  orcid: string;
-}
-
 export interface UserInfo {
   allow: string[];
-  aux: Aux;
+  orcid: string;
   deny: string[];
   email: string;
   fullname: string;
