@@ -271,7 +271,7 @@ export class SubmEditService {
     return [
       { name: 'Name', value: userInfo.fullname || userInfo.username || '' },
       { name: 'E-mail', value: userInfo.email },
-      { name: 'ORCID', value: userInfo.aux.orcid }
+      { name: 'ORCID', value: userInfo.orcid }
     ];
   }
 
