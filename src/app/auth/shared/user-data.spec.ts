@@ -22,9 +22,7 @@ class AuthServiceMock {
     superuser: false,
     secret: 'secret',
     fullname: 'Vasya',
-    aux: {
-      orcid: '1234-5678-9999'
-    },
+    orcid: '1234-5678-9999',
     allow: [],
     deny: []
   };

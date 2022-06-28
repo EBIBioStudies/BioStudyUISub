@@ -9,5 +9,5 @@ export const userProfile: UserInfo = {
   superuser: false,
   allow: ['BioImages', 'ProteinDesigns', 'EuropePMC'],
   deny: [],
-  aux: { orcid: 'CA23345' }
+  orcid: 'CA23345'
 };

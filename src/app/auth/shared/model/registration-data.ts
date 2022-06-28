@@ -13,7 +13,7 @@ export class RegistrationData extends DataWithCaptchaAndPath {
   snapshot(): any {
     return {
       ...super.snapshot(),
-      aux: [`orcid:${this.orcid}`],
+      orcid: `${this.orcid}`,
       email: this.email,
       password: this.password,
       name: this.name,
