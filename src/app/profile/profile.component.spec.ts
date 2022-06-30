@@ -35,7 +35,7 @@ describe('profile component', () => {
     expect(screen.getByText(userProfile.email)).toBeInTheDocument();
 
     expect(screen.getByText('ORCID')).toBeInTheDocument();
-    expect(screen.getByText(userProfile.aux.orcid)).toBeInTheDocument();
+    expect(screen.getByText(userProfile.orcid)).toBeInTheDocument();
 
     expect(screen.queryByText('Collections')).toBeInTheDocument();
     collections.forEach(({ accno }) => {
