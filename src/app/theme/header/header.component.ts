@@ -69,8 +69,8 @@ export class HeaderComponent implements OnDestroy {
     return this.userSession.getUserDisplayName();
   }
 
-  get isManager(): boolean {
-    return this.userSession.isManager();
+  get isSuperUser(): boolean {
+    return this.userSession.isSuperUser();
   }
 
   ngOnDestroy(): void {
