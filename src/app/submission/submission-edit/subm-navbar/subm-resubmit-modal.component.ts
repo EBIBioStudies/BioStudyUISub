@@ -23,5 +23,7 @@ export class SubmResubmitModalComponent {
     if (this.onResubmit) {
       this.onResubmit(this.onlyMetadataUpdate);
     }
+
+    this.hide();
   }
 }

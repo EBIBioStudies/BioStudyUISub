@@ -128,10 +128,19 @@ export class SubmissionService {
 
   submitDraft(accno: string, onlyMetadataUpdate: boolean): Observable<SubmitResponse> {
     const headers: HttpHeaders = new HttpHeaders().set('Submission_Type', 'application/json');
-    const preferredSource = onlyMetadataUpdate ? preferredSourceMap.SUBMISSION : preferredSourceMap.USER_SPACE;
-    const params = new HttpParams().set('preferredSource', preferredSource);
+    const params = this.preferredSources(onlyMetadataUpdate);
 
     return this.sendPostRequest({ path: `/api/submissions/drafts/${accno}/submit`, payload: null, headers, params });
+  }
+
+  private preferredSources(onlyMetadataUpdate): HttpParams {
+    if (onlyMetadataUpdate) {
+      return new HttpParams()
+        .append('preferredSources', preferredSourceMap.SUBMISSION)
+        .append('preferredSources', preferredSourceMap.USER_SPACE);
+    }
+
+    return new HttpParams();
   }
 
   validateFileList(fileListName: string): Observable<StatusResponse> {
