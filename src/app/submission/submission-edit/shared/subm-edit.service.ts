@@ -219,10 +219,11 @@ export class SubmEditService {
     );
   }
 
-  submit(onlyMetadataUpdate: boolean): Observable<SubmitResponse> {
+  submit(): Observable<SubmitResponse> {
     this.editState.startSubmitting();
+    const pageTab = this.asPageTab(true);
 
-    return this.submService.submitDraft(this.accno, onlyMetadataUpdate).pipe(
+    return this.submService.submitDraft(pageTab, this.accno).pipe(
       map((resp) => {
         this.editState.stopSubmitting();
         this.onSubmitFinished(resp);

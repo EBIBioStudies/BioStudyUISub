@@ -38,7 +38,6 @@ import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
 import { IdLinkComponent } from './id-link/id-link.component';
 import { IdLinkValueValidatorDirective } from './id-link/id-link.validator.directive';
 import { IdLinkService } from './id-link/id-link.service';
-import { SubmResubmitModalComponent } from './subm-navbar/subm-resubmit-modal.component';
 import { PopoverModule } from 'ngx-bootstrap/popover';
 
 @NgModule({
@@ -84,8 +83,7 @@ import { PopoverModule } from 'ngx-bootstrap/popover';
     RemoveHostDirective,
     TextareaAutosizeDirective,
     IdLinkComponent,
-    IdLinkValueValidatorDirective,
-    SubmResubmitModalComponent
+    IdLinkValueValidatorDirective
   ],
   exports: [SubmissionEditComponent, IdLinkComponent],
   entryComponents: [SubmValidationErrorsComponent, AddSubmTypeModalComponent]

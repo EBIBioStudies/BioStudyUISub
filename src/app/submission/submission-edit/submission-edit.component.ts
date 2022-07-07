@@ -168,8 +168,12 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
       });
   }
 
-  onSubmitClick(onlyMetadataUpdate: boolean): void {
+  onSubmitClick(event, isConfirm: boolean = false): void {
     scrollTop();
+
+    if (event) {
+      event.preventDefault();
+    }
 
     if (this.isSubmitting) {
       return;
@@ -184,9 +188,12 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
 
     this.submEditService.switchSection(this.rootSection);
 
-    this.confirmReleaseDateOverride()
+    const confirmObservable: Observable<boolean> = isConfirm ? this.confirmSubmit() : of(true);
+
+    confirmObservable
       .pipe(
-        switchMap(() => this.submEditService.submit(onlyMetadataUpdate)),
+        switchMap(() => this.confirmReleaseDateOverride()),
+        switchMap(() => this.submEditService.submit()),
         takeUntil(this.unsubscribe)
       )
       .subscribe(
@@ -289,6 +296,14 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
       'You are about to discard all changes made to this submission since it was last released. This operation cannot be undone.',
       'Revert to released version',
       'Revert'
+    );
+  }
+
+  private confirmSubmit(): Observable<boolean> {
+    return this.modalService.confirm(
+      'You have hit the enter key while filling in the form. If you continue, the study data will be submitted',
+      'Submit the study',
+      'Submit'
     );
   }
 
