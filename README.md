@@ -43,7 +43,7 @@ Run the next script to execute the application in **development mode**:
 npm run dev
 ```
 
-- The `npm run dev` will run a **Node + Express** service which proxies the requests to **BioStudies** backend and an **Angular Dev Server** to get local development benefits (hot reload + live TS compilation)
+- The `npm run dev` will run a **Node + Express** service which proxies the requests to **BioStudies** backend and a **Angular Dev Server** to get local development benefits (hot reload + live TS compilation)
 - By default **Node + Express** service runs on `8080` port
 - By default **Angular Dev Server** service runs on `4200` port
 - If `PORT` is changed, it should be updated in the `proxy.config.json` file which is the **Angular Dev Proxy** configuration file
