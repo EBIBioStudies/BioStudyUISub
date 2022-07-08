@@ -160,7 +160,7 @@ export const defaultTemplate = {
           {
             name: 'Organisation',
             helpText: 'Add org',
-            helpLink: '/help#new-item-dropdown',
+            helpLink: 'help#new-item-dropdown',
             valueType: {
               name: 'org',
               multiple: true
