@@ -1,8 +1,10 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { AppConfig } from 'app/app.config';
 import { Section } from 'app/submission/submission-shared/model/submission';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { SectionForm } from '../shared/model/section-form.model';
 import { SubmEditService } from '../shared/subm-edit.service';
+import { SubmResubmitModalComponent } from './subm-resubmit-modal.component';
 
 @Component({
   selector: 'st-subm-navbar',
@@ -16,11 +18,15 @@ export class SubmNavBarComponent implements OnChanges {
   @Output() revertClick: EventEmitter<Event> = new EventEmitter<Event>();
   @Output() sectionClick: EventEmitter<Section> = new EventEmitter<Section>();
   @Input() sectionForm?: SectionForm;
-  @Output() submitClick: EventEmitter<Event> = new EventEmitter<Event>();
+  @Output() submitClick: EventEmitter<boolean> = new EventEmitter<boolean>();
   frontendURL: string = this.appConfig.frontendURL;
   sectionPath: SectionForm[] = [];
 
-  constructor(private submEditService: SubmEditService, private appConfig: AppConfig) {}
+  constructor(
+    private submEditService: SubmEditService,
+    private appConfig: AppConfig,
+    private modalService: BsModalService
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.sectionForm !== null) {
@@ -41,7 +47,20 @@ export class SubmNavBarComponent implements OnChanges {
   }
 
   onSubmit(event: Event): void {
-    this.submitClick.next(event);
+    if (event) {
+      event.preventDefault();
+    }
+
+    if (!this.isTemp) {
+      this.modalService.show(SubmResubmitModalComponent, {
+        class: 'modal-lg',
+        initialState: {
+          onResubmit: (onlyMetadataUpdate) => this.submitClick.next(onlyMetadataUpdate)
+        }
+      });
+    } else {
+      this.submitClick.next(false);
+    }
   }
 
   // TODO: a temporary workaround

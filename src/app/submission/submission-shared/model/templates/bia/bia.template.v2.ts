@@ -168,7 +168,7 @@ export const biaTemplateV2 = {
           {
             name: 'Organisation',
             helpText: 'Add org',
-            helpLink: '/help#new-item-dropdown',
+            helpLink: 'help#new-item-dropdown',
             valueType: {
               name: 'org',
               multiple: true

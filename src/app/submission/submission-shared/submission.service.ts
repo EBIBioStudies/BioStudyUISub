@@ -1,6 +1,6 @@
 import { SectionData } from './model/submission/submission.model';
 import * as HttpStatus from 'http-status-codes';
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
@@ -37,6 +37,11 @@ export interface SubmissionListParams {
   rTimeFrom?: number;
   rTimeTo?: number;
 }
+
+export const preferredSourceMap = {
+  USER_SPACE: 'USER_SPACE',
+  SUBMISSION: 'SUBMISSION'
+};
 
 function definedPropertiesOnly(obj: any): any {
   if (obj === null || obj === undefined || typeof obj !== 'object') {
@@ -121,10 +126,21 @@ export class SubmissionService {
     return this.http.put<DraftSubmissionWrapper>(`/api/submissions/drafts/${accno}`, pt);
   }
 
-  submitDraft(pt: PageTab, accno: string): Observable<SubmitResponse> {
+  submitDraft(accno: string, onlyMetadataUpdate: boolean): Observable<SubmitResponse> {
     const headers: HttpHeaders = new HttpHeaders().set('Submission_Type', 'application/json');
+    const params = this.preferredSources(onlyMetadataUpdate);
 
-    return this.sendPostRequest(`/api/submissions/drafts/${accno}/submit`, pt, headers);
+    return this.sendPostRequest({ path: `/api/submissions/drafts/${accno}/submit`, payload: null, headers, params });
+  }
+
+  private preferredSources(onlyMetadataUpdate): HttpParams {
+    if (onlyMetadataUpdate) {
+      return new HttpParams()
+        .append('preferredSources', preferredSourceMap.SUBMISSION)
+        .append('preferredSources', preferredSourceMap.USER_SPACE);
+    }
+
+    return new HttpParams();
   }
 
   validateFileList(fileListName: string): Observable<StatusResponse> {
@@ -147,9 +163,19 @@ export class SubmissionService {
     return this.http.get<PageTab>(`/api/submissions/drafts/${accno}/content`);
   }
 
-  private sendPostRequest<R, T>(path: string, payload: any, headers: HttpHeaders): Observable<T> {
+  private sendPostRequest<R, T>({
+    path,
+    payload,
+    headers,
+    params
+  }: {
+    path: string;
+    payload: any;
+    headers: HttpHeaders;
+    params: HttpParams;
+  }): Observable<T> {
     return this.http
-      .post<R>(path, payload, { headers, observe: 'response' })
+      .post<R>(path, payload, { headers, params, observe: 'response' })
       .pipe(
         catchError((response: HttpErrorResponse) => {
           throw response.error;
