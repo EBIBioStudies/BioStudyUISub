@@ -6,6 +6,11 @@ export const arrayExpressTemplate = {
   sectionType: {
     name: 'Study',
     displayAnnotations: true,
+    banner: {
+      src: 'images/ae-logo-64.svg',
+      alt: 'ArrayExpress logo',
+      backgroundColor: 'rgb(94, 140, 192)'
+    },
     fieldTypes: [
       {
         name: 'Title',
