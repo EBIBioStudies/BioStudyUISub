@@ -334,6 +334,6 @@ export class SubmListComponent implements OnDestroy, OnInit {
   }
 
   private isProcessingRowSubmission(row): boolean {
-    return row.status === SubmissionStatus.REQUESTED.name;
+    return row.status === SubmissionStatus.PROCESSING.name;
   }
 }
