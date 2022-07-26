@@ -143,9 +143,10 @@ export class SubmissionService {
     return new HttpParams();
   }
 
-  validateFileList(fileListName: string): Observable<StatusResponse> {
+  validateFileList(fileListName: string, accNo: string): Observable<StatusResponse> {
     const formData = new FormData();
 
+    formData.append('accNo', accNo);
     formData.append('fileListName', fileListName);
 
     return this.http.post<StatusResponse>('/api/submissions/fileLists/validate', formData);
