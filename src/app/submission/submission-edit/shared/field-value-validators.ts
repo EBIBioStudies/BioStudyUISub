@@ -31,13 +31,17 @@ export class FormValueValidator {
     );
   }
 
-  static forFileList(control: CustomFormControl, submService: SubmissionService): Observable<ValidationErrors> {
+  static forFileList(
+    control: CustomFormControl,
+    submService: SubmissionService,
+    studyAccno: string
+  ): Observable<ValidationErrors> {
     if (!control.touched) {
       return of({});
     }
 
     return timer(DELAY_IN_MILLISECONDS).pipe(
-      switchMap(() => submService.validateFileList(control.value)),
+      switchMap(() => submService.validateFileList(control.value, studyAccno)),
       catchError(({ error }) => {
         const {
           log: { message }
