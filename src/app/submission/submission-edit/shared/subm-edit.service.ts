@@ -219,11 +219,10 @@ export class SubmEditService {
     );
   }
 
-  submit(): Observable<SubmitResponse> {
+  submit(onlyMetadataUpdate: boolean): Observable<SubmitResponse> {
     this.editState.startSubmitting();
-    const pageTab = this.asPageTab(true);
 
-    return this.submService.submitDraft(pageTab, this.accno).pipe(
+    return this.submService.submitDraft(this.accno, onlyMetadataUpdate).pipe(
       map((resp) => {
         this.editState.stopSubmitting();
         this.onSubmitFinished(resp);
@@ -269,7 +268,7 @@ export class SubmEditService {
 
   private asContactAttributes(userInfo: UserInfo): AttributeData[] {
     return [
-      { name: 'Name', value: userInfo.username || '' },
+      { name: 'Name', value: userInfo.fullname || userInfo.username || '' },
       { name: 'E-mail', value: userInfo.email },
       { name: 'ORCID', value: userInfo.orcid }
     ];
