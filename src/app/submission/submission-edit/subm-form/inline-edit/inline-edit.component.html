@@ -23,6 +23,7 @@
          #ahead="bs-typeahead"
          #inlineEditBox/>
     <st-help-link *ngIf="showHelpText && !editing" [text]="helpText" [href]="helpLink" ></st-help-link>
+    <st-help-contextual *ngIf="helpContextual" [contents]="helpContextual"></st-help-contextual>
   </div>
   <small *ngIf="isOptional && !editing && !readonly">
     <i>Optional</i>

@@ -2,6 +2,7 @@ import { EMPTY_TEMPLATE_NAME, findTemplateByName } from './submission.templates'
 import { isStringDefined, isStringEmpty } from 'app/utils/validation.utils';
 import { isArrayEmpty } from 'app/utils/validation.utils';
 import { LowerCaseSectionNames } from 'app/submission/utils/constants';
+import { DocItem } from '../../../submission-edit/field-docs-modal/field-docs-modal.component';
 
 /*
  *  Type scopes are used to check if the types with a given name already exists in the scope
@@ -279,6 +280,7 @@ export class FieldType extends TypeBase {
   readonly icon: string;
   readonly valueType: ValueType;
   readonly asyncValueValidatorName: string | null;
+  readonly helpContextual?: DocItem;
 
   constructor(
     name: string,
@@ -296,6 +298,12 @@ export class FieldType extends TypeBase {
     this.displayType = DisplayType.create(data.display || parentDisplayType.name);
     this.display = this.displayType.name;
     this.asyncValueValidatorName = data.asyncValueValidatorName || null;
+    this.helpContextual = data.helpContextual
+      ? {
+          fieldName: data.title || data.name,
+          ...data.helpContextual
+        }
+      : undefined;
   }
 }
 
@@ -394,6 +402,7 @@ export class ColumnType extends TypeBase {
   readonly valueType: ValueType;
   readonly helpText: string;
   readonly helpLink: string;
+  readonly helpContextual?: DocItem;
 
   constructor(
     name: string,
@@ -413,6 +422,12 @@ export class ColumnType extends TypeBase {
     this.uniqueValues = data.uniqueValues || false;
     this.helpText = data.helpText || '';
     this.helpLink = data.helpLink || '';
+    this.helpContextual = data.helpContextual
+      ? {
+          fieldName: data.title || data.name,
+          ...data.helpContextual
+        }
+      : undefined;
   }
 
   static createDefault(name: string, scope?: TypeScope<ColumnType>): ColumnType {

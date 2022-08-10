@@ -1,0 +1,22 @@
+.container {
+  padding: 1rem .5rem 1rem .5rem;
+  max-height: 90vh;
+  overflow: auto;
+}
+
+.examples {
+  padding: 2rem 0 0 0;
+}
+
+.examples ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.examples li:not(:first-child) {
+  padding-top: 1rem;
+}
+
+.examples li {
+  font-style: italic;
+}

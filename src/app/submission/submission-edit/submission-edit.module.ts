@@ -40,6 +40,8 @@ import { IdLinkValueValidatorDirective } from './id-link/id-link.validator.direc
 import { IdLinkService } from './id-link/id-link.service';
 import { SubmResubmitModalComponent } from './subm-navbar/subm-resubmit-modal.component';
 import { PopoverModule } from 'ngx-bootstrap/popover';
+import { FieldDocsModalComponent } from './field-docs-modal/field-docs-modal.component';
+import { HelpContextualComponent } from './field-docs-modal/help-contextual/help-contextual.component';
 
 @NgModule({
   imports: [
@@ -85,7 +87,9 @@ import { PopoverModule } from 'ngx-bootstrap/popover';
     TextareaAutosizeDirective,
     IdLinkComponent,
     IdLinkValueValidatorDirective,
-    SubmResubmitModalComponent
+    SubmResubmitModalComponent,
+    FieldDocsModalComponent,
+    HelpContextualComponent
   ],
   exports: [SubmissionEditComponent, IdLinkComponent],
   entryComponents: [SubmValidationErrorsComponent, AddSubmTypeModalComponent]

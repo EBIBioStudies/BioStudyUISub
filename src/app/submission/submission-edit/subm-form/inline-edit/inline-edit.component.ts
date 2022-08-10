@@ -5,6 +5,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { AppConfig } from 'app/app.config';
 import { isStringEmpty } from 'app/utils/validation.utils';
 import { typeaheadSource } from '../../shared/typeahead.utils';
+import { DocItem } from '../../field-docs-modal/field-docs-modal.component';
 
 @Component({
   selector: 'st-inline-edit',
@@ -25,6 +26,7 @@ export class InlineEditComponent implements ControlValueAccessor {
   @Input() helpText = '';
   @Input() helpLink = '';
   @Input() columnId = '';
+  @Input() helpContextual?: DocItem;
 
   @Output() remove = new EventEmitter<any>();
   readonly columnOptions: Observable<string[]>;
