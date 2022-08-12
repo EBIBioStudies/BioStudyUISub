@@ -1,7 +1,19 @@
+.modal-header {
+  padding: 0;
+}
+
+.modal-wrap-contents {
+  display: table;
+}
+
 .container {
-  padding: 1rem .5rem 1rem .5rem;
+  padding: 1rem 1rem 1rem 1rem;
   max-height: 90vh;
   overflow: auto;
+}
+
+.description {
+  padding-top: 1rem;
 }
 
 .examples {

@@ -1,11 +1,12 @@
 <div class="container">
-    <button type="button" class="close" attr.aria-label="Close" (click)="modalRef.hide()">
-        <span aria-hidden="true">&times;</span>
-    </button>
-
     <div *ngIf="contents; else emptyContentsModal">
-        <h3>{{contents.fieldName}}</h3>
-        <div>{{ contents.description }}</div>
+        <div class="modal-header">
+            <h3>{{contents.fieldName}}</h3>
+            <button type="button" class="close" (click)="modalRef.hide()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="description">{{ contents.description }}</div>
 
         <div *ngIf=contents.examples class="examples">
             <h5>Examples:</h5>
