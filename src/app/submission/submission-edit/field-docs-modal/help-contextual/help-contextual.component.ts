@@ -4,7 +4,8 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'st-help-contextual',
-  templateUrl: './help-contextual.component.html'
+  templateUrl: './help-contextual.component.html',
+  styleUrls: ['./help-contextual.component.scss']
 })
 export class HelpContextualComponent {
   @Input() contents?: DocItem;
