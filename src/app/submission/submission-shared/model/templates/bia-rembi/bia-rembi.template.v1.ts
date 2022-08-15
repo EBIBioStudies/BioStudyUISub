@@ -54,13 +54,6 @@ export const biaRembiTemplateV1 = {
         helpContextual: {
           description: 'A description of how the data generation was funded.'
         }
-      },
-      {
-        name: 'License - TODO ENUM (dropdown)',
-        valueType: {
-          name: 'text'
-        },
-        display: 'required'
       }
     ],
     tableTypes: [
