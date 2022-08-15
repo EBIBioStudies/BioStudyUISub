@@ -2,12 +2,17 @@
   padding: 0;
 }
 
+.modal-footer {
+  padding: 0 !important;
+  border: none;
+}
+
 .modal-wrap-contents {
-  display: table;
+  width: fit-content;
 }
 
 .container {
-  padding: 1rem 1rem 1rem 1rem;
+  padding: 1rem 1rem 0 1rem;
   max-height: 90vh;
   overflow: auto;
 }

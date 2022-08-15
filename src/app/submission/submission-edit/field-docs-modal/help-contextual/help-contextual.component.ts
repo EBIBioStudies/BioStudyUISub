@@ -16,7 +16,7 @@ export class HelpContextualComponent {
       initialState: {
         contents: this.contents
       },
-      class: 'modal-xl modal-wrap-contents'
+      class: 'modal-xl modal-wrap-contents modal-dialog-centered modal-dialog'
     });
   }
 }
