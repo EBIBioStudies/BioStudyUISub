@@ -1,11 +1,12 @@
-<div class="container">
-    <div *ngIf="contents; else emptyContentsModal">
-        <div class="modal-header">
-            <h3>{{contents.fieldName}}</h3>
-            <button type="button" class="close" (click)="modalRef.hide()">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
+<div *ngIf="contents; else emptyContentsModal">
+    <div class="modal-header">
+        <h3>{{contents.fieldName}}</h3>
+        <button #btnClose type="button" class="close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
         <div class="description">{{ contents.description }}</div>
 
         <div *ngIf=contents.examples class="examples">
@@ -14,10 +15,10 @@
                 <li *ngFor="let example of contents.examples">{{example}}</li>
             </ul>
         </div>
+    </div>
 
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="modalRef.hide()">Close</button>
-        </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modalRef.hide()">Close</button>
     </div>
 </div>
 

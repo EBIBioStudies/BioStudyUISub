@@ -1,24 +1,31 @@
-.modal-header {
-  padding: 0;
+.modal-footer {
+  border: none;
 }
 
-.modal-footer {
-  padding: 0 !important;
-  border: none;
+.modal-body {
+  padding-bottom: 0;
+}
+
+button.btn-secondary {
+  background-color: var(--core-blue);
+  font-weight: 600;
+}
+
+button:focus {
+  outline:0 !important;
+}
+
+ul {
+  margin-bottom: 0;
 }
 
 .modal-wrap-contents {
   width: fit-content;
 }
 
-.container {
-  padding: 1rem 1rem 1rem 1rem;
-  max-height: 90vh;
+.modal-body {
+  max-height: 80vh;
   overflow: auto;
-}
-
-.description {
-  padding-top: 1rem;
 }
 
 .examples {
