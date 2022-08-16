@@ -111,7 +111,7 @@ export const arrayExpressTemplate = {
         name: 'Contact',
         description: 'Add the contact details for the authors involved in the study.',
         icon: 'fa-address-card',
-        display: 'readonly',
+        display: 'required',
         uniqueCols: true,
         allowImport: true,
         rowAsSection: true,
