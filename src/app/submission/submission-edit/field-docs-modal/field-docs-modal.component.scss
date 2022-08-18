@@ -1,0 +1,46 @@
+.modal-footer {
+  border: none;
+}
+
+.modal-body {
+  padding-bottom: 0;
+}
+
+button.btn-secondary {
+  background-color: var(--core-blue);
+  font-weight: 600;
+}
+
+button:focus {
+  outline:0 !important;
+}
+
+ul {
+  margin-bottom: 0;
+}
+
+.modal-wrap-contents {
+  width: fit-content;
+}
+
+.modal-body {
+  max-height: 80vh;
+  overflow: auto;
+}
+
+.examples {
+  padding: 2rem 0 0 0;
+}
+
+.examples ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.examples li:not(:first-child) {
+  padding-top: 1rem;
+}
+
+.examples li {
+  font-style: italic;
+}

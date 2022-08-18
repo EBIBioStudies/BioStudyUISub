@@ -2,9 +2,10 @@ import { Attribute, ValueType } from 'app/submission/submission-shared/model';
 import { ErrorMessages, SubmFormValidators } from '../form-validators';
 
 import { ControlRef } from '../control-reference';
-import { CustomFormControl } from '../model/custom-form-control.model';
+import { CustomFormControl } from './custom-form-control.model';
 import { Observable } from 'rxjs';
 import { typeaheadSource } from '../typeahead.utils';
+import { DocItem } from '../../field-docs-modal/field-docs-modal.component';
 
 export class ColumnControl {
   readonly control: CustomFormControl;
@@ -64,6 +65,10 @@ export class ColumnControl {
 
   get helpLink(): string {
     return this.column.helpLink;
+  }
+
+  get helpContextual(): DocItem | undefined {
+    return this.column.helpContextual;
   }
 
   typeaheadSource(sourceFunc: () => string[]): Observable<string[]> {

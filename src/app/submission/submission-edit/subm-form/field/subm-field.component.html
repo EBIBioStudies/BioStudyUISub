@@ -3,6 +3,7 @@
     <h6 class="m-0">
       {{fieldName}}
       <st-help-link class="ml-1" [text]="fieldHelpText" [href]="fieldHelpLink" ></st-help-link>
+      <st-help-contextual *ngIf="fieldHelpContextual" [contents]="fieldHelpContextual"></st-help-contextual>
       <span class="small text-muted" [hidden]="isReadonly || isValid">
         <span *ngIf="valueLength.isAtLeast">
           (at least {{valueLength.min}}
