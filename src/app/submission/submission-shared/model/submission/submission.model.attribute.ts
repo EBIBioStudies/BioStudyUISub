@@ -1,6 +1,7 @@
 import { DisplayType, ValueType, ValueTypeFactory } from '../templates';
 
 import { nextId } from './submission.model.counter';
+import { DocItem } from '../../../submission-edit/field-docs-modal/field-docs-modal.component';
 
 export class Attribute {
   readonly id: string;
@@ -14,7 +15,8 @@ export class Attribute {
     readonly uniqueValues: boolean = false,
     readonly autosuggest: boolean = true,
     readonly helpText: string = '',
-    readonly helpLink: string = ''
+    readonly helpLink: string = '',
+    readonly helpContextual?: DocItem
   ) {
     this.id = `attr_${nextId()}`;
   }

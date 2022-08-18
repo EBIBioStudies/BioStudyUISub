@@ -3,6 +3,7 @@ import { FieldType, TextValueType, ValueType } from 'app/submission/submission-s
 
 import { FieldControl } from '../../shared/model/field-control.model';
 import { isStringEmpty } from 'app/utils/validation.utils';
+import { DocItem } from '../../field-docs-modal/field-docs-modal.component';
 
 class ValueLength {
   static unknown: ValueLength = new ValueLength();
@@ -64,6 +65,10 @@ export class SubmFieldComponent implements OnDestroy {
 
   get fieldHelpLink(): string {
     return this.fieldType.helpLink;
+  }
+
+  get fieldHelpContextual(): DocItem | undefined {
+    return this.fieldType.helpContextual;
   }
 
   get isEmpty(): boolean {

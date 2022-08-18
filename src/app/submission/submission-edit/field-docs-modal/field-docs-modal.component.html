@@ -1,0 +1,27 @@
+<div *ngIf="contents; else emptyContentsModal">
+    <div class="modal-header">
+        <h3>{{contents.fieldName}}</h3>
+        <button type="button" class="close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <div class="description">{{ contents.description }}</div>
+
+        <div *ngIf=contents.examples class="examples">
+            <h5>Examples:</h5>
+            <ul>
+                <li *ngFor="let example of contents.examples">{{example}}</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button #btnClose type="button" class="btn btn-primary" (click)="modalRef.hide()">Close</button>
+    </div>
+</div>
+
+<ng-template #emptyContentsModal>
+    There is no documentation available for this field.
+</ng-template>

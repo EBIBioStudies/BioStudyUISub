@@ -10,6 +10,7 @@ import { ValueMap } from './submission.model.valuemap';
 import { arrayUniqueValues } from 'app/utils/array.utils';
 import { isArrayEmpty } from 'app/utils/validation.utils';
 import { nextId } from './submission.model.counter';
+import { DocItem } from '../../../submission-edit/field-docs-modal/field-docs-modal.component';
 
 export interface SubmissionSection {
   subsections: Sections;
@@ -107,7 +108,8 @@ export class Table {
           ct.uniqueValues,
           ct.autosuggest,
           ct.helpText,
-          ct.helpLink
+          ct.helpLink,
+          ct.helpContextual
         );
       });
 
@@ -212,7 +214,8 @@ export class Table {
     uniqueValues: boolean = false,
     autosuggest: boolean = true,
     helpText: string = '',
-    helpLink: string = ''
+    helpLink: string = '',
+    helpContextual?: DocItem
   ): Attribute {
     const defColName = (this.singleRow ? this.typeName : 'Column') + ' ' + (this.tableColumns.size() + 1);
     const colName = name || defColName;
@@ -225,7 +228,8 @@ export class Table {
       uniqueValues,
       autosuggest,
       helpText,
-      helpLink
+      helpLink,
+      helpContextual
     );
     this.tableRows.addKey(col.id);
     this.tableColumns.add(col);
