@@ -24,7 +24,7 @@ describe('error component', () => {
     expect(screen.getByText(errorCode)).toBeInTheDocument();
     expect(screen.getByText('Submission List')).toHaveAttribute('routerlink', '/');
 
-    userEvent.click(screen.getByText('Contact BioStudies'));
+    await userEvent.click(screen.getByText('Contact BioStudies'));
 
     expect(window.location.href).toEqual(
       `mailto:biostudies@ebi.ac.uk?Subject=BioStudies Submission Tool Page ${errorCode} error`

@@ -13,7 +13,6 @@ import { AlertModule } from 'ngx-bootstrap/alert';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { MarkdownModule } from 'ngx-markdown';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { SortablejsModule } from 'ngx-sortablejs';
 import { ToastrModule } from 'ngx-toastr';
 import { AppComponent } from './app.component';
 import { AppConfig } from './app.config';
@@ -46,7 +45,6 @@ export function initRecaptchaSettings(config: AppConfig): RecaptchaSettings {
     PopoverModule.forRoot(),
     CollapseModule.forRoot(),
     AlertModule.forRoot(),
-    SortablejsModule.forRoot({ animation: 150 }),
     ToastrModule.forRoot({
       maxOpened: 1,
       positionClass: 'toast-top-left',

@@ -13,7 +13,7 @@ describe('Submission Model: ValueMap', () => {
     expect(vm.values().map(v => v && v.value)).toEqual(['', '', '']);
   });
 
-   /* it('allows to add a key (and a value)', () => {
+  /* it('allows to add a key (and a value)', () => {
     const vm = new ValueMap();
     vm.add('k1', 'v1');
     vm.add('k2');

@@ -10,7 +10,6 @@ import {
 } from '@angular/core';
 import { UserData } from 'app/auth/shared';
 import { TableForm } from '../../shared/model/table-form.model';
-import { Options as SortableOption } from 'sortablejs';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -23,14 +22,9 @@ export class TableComponent implements OnChanges, OnInit, OnDestroy {
   @Input() tableForm!: TableForm;
   hoveredRowIndex: number = -1;
   @Input() readonly = false;
-  sortableJsOptions: SortableOption = {};
   private unsubscribe = new Subject();
 
-  constructor(public userData: UserData, private changeDetectorRef: ChangeDetectorRef) {
-    this.sortableJsOptions.onUpdate = this.onRowOrderUpdate.bind(this);
-    this.sortableJsOptions.filter = '.form-control';
-    this.sortableJsOptions.preventOnFilter = false;
-  }
+  constructor(public userData: UserData, private changeDetectorRef: ChangeDetectorRef) { }
 
   get isSortable(): boolean {
     return !this.isReadOnly && this.tableForm!.rows.length > 1;
@@ -49,10 +43,6 @@ export class TableComponent implements OnChanges, OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.unsubscribe.next();
     this.unsubscribe.complete();
-  }
-
-  ngOnChanges(): void {
-    this.sortableJsOptions = { ...this.sortableJsOptions, disabled: this.isReadOnly };
   }
 
   /**

@@ -33,7 +33,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     MarkdownModule.forChild(),
     RouterModule,
     SharedModule,
-    AgGridModule.withComponents([FileActionsCellComponent, FileTypeCellComponent, ProgressCellComponent]),
+    AgGridModule,
     AccordionModule.forRoot(),
     ThemeModule,
     CoreModule,

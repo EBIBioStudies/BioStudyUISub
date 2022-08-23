@@ -276,11 +276,11 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
 
     return isDateOverride
       ? this.modalService.whenConfirmed(
-          'This study has already been released and resetting the release date may make it ' +
+        'This study has already been released and resetting the release date may make it ' +
             'unavailable to the public. Are you sure you want to continue?',
-          'Submit the study',
-          'OK'
-        )
+        'Submit the study',
+        'OK'
+      )
       : of(true);
   }
 

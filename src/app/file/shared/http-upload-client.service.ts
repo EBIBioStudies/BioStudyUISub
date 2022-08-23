@@ -24,14 +24,12 @@ export class UploadEvent {
     switch (event.type) {
       case HttpEventType.Sent:
         return UploadEvent.progress(0);
-
-      case HttpEventType.UploadProgress:
+      case HttpEventType.UploadProgress: {
         const percentDone = Math.round((100 * event.loaded) / (event.total || 1));
         return UploadEvent.progress(percentDone);
-
+      }
       case HttpEventType.Response:
         return UploadEvent.SUCCESS_EVENT;
-
       default:
         return new UploadEvent();
     }

@@ -1,5 +1,5 @@
 // tslint:disable-next-line: typedef
-export function compose(...funcs: ((...args: any) => any)[]) {
+export function compose(...funcs: ((..._: any) => any)[]) {
   if (funcs.length === 0) {
     // infer the argument type so it is usable in inference down the line
     return <T>(arg: T) => arg;

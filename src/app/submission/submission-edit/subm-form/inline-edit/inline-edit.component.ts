@@ -120,11 +120,11 @@ export class InlineEditComponent implements ControlValueAccessor {
 
   onTouched(): void {}
 
-  registerOnChange(fn: () => {}): void {
+  registerOnChange(fn: (string) => void): void {
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: () => {}): void {
+  registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
 

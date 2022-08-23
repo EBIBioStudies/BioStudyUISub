@@ -300,9 +300,9 @@ export class FieldType extends TypeBase {
     this.asyncValueValidatorName = data.asyncValueValidatorName || null;
     this.helpContextual = data.helpContextual
       ? {
-          fieldName: data.title || data.name,
-          ...data.helpContextual
-        }
+        fieldName: data.title || data.name,
+        ...data.helpContextual
+      }
       : undefined;
   }
 }
@@ -424,9 +424,9 @@ export class ColumnType extends TypeBase {
     this.helpLink = data.helpLink || '';
     this.helpContextual = data.helpContextual
       ? {
-          fieldName: data.title || data.name,
-          ...data.helpContextual
-        }
+        fieldName: data.title || data.name,
+        ...data.helpContextual
+      }
       : undefined;
   }
 

@@ -114,7 +114,7 @@ export const biaTemplateV3 = {
             'Physcomitrella patens (moss)',
             'Pongo abelii (orangutan)',
             'Populus trichocarpa (poplar tree)',
-            "Saccharomyces cerevisiae (brewer's yeast)",
+            'Saccharomyces cerevisiae (brewer\'s yeast)',
             'Schistosoma mansoni (blood fluke)',
             'Schizosaccharomyces pombe (fission yeast)',
             'Solanum lycopersicum (tomato)',

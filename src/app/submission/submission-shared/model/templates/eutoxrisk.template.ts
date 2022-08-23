@@ -178,7 +178,7 @@ export const euToxRiskTemplate = {
       {
         name: 'Endpoint',
         icon: 'fa-medkit',
-        description: "Provide at least the method and analytical measure of the study's endpoints.",
+        description: 'Provide at least the method and analytical measure of the study\'s endpoints.',
         uniqueCols: true,
         columnTypes: [
           {

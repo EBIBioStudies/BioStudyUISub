@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SortablejsModule } from 'ngx-sortablejs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { TabsModule } from 'ngx-bootstrap/tabs';
@@ -56,7 +55,6 @@ import { HelpContextualComponent } from './field-docs-modal/help-contextual/help
     SubmissionResultsModule,
     SubmissionOtherModule,
     PubMedIdSearchModule,
-    SortablejsModule,
     ThemeModule,
     TooltipModule,
     PopoverModule,

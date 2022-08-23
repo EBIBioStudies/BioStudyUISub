@@ -74,33 +74,33 @@ test('is is possible to sign in, sign up, reset password and activate account', 
   expect(screen.getByText('Please enter your new password')).toBeInTheDocument();
 
   // Test ORCID validation
-  userEvent.type(signUpOrcidInput, '1234');
+  await userEvent.type(signUpOrcidInput, '1234');
   expect(signUpOrcidInput).toBeInvalid();
 
-  userEvent.clear(signUpOrcidInput);
-  userEvent.type(signUpOrcidInput, '0000-0002-1825-0097');
+  await userEvent.clear(signUpOrcidInput);
+  await userEvent.type(signUpOrcidInput, '0000-0002-1825-0097');
   expect(signUpOrcidInput).toBeValid();
 
   // Test signup positive flow
-  userEvent.type(signUpNameInput, 'Pep Sanchez');
-  userEvent.type(signUpEmailInput, 'pep@ebi.ac.uk');
-  userEvent.type(signUpPasswordInput, '123456');
-  userEvent.click(signUpTermsCheck);
-  userEvent.click(signUpRecaptcha);
+  await userEvent.type(signUpNameInput, 'Pep Sanchez');
+  await userEvent.type(signUpEmailInput, 'pep@ebi.ac.uk');
+  await userEvent.type(signUpPasswordInput, '123456');
+  await userEvent.click(signUpTermsCheck);
+  await userEvent.click(signUpRecaptcha);
 
   // After terms has been accepted Register button should be enabled
   expect(signUpSubmitButton).toBeEnabled();
 
-  userEvent.click(signUpSubmitButton);
+  await userEvent.click(signUpSubmitButton);
 
   expect(await screen.findByText('Thank you for registering')).toBeInTheDocument();
 
   // Test signup negative flow (i.e the email is already registered)
-  userEvent.type(signUpNameInput, 'Pep Sanchez');
-  userEvent.type(signUpEmailInput, 'pep@ebi.ac.uk');
-  userEvent.type(signUpPasswordInput, '123456');
-  userEvent.click(signUpTermsCheck);
-  userEvent.click(signUpRecaptcha);
+  await userEvent .type(signUpNameInput, 'Pep Sanchez');
+  await userEvent .type(signUpEmailInput, 'pep@ebi.ac.uk');
+  await userEvent .type(signUpPasswordInput, '123456');
+  await userEvent .click(signUpTermsCheck);
+  await userEvent .click(signUpRecaptcha);
 
   server.use(
     rest.post('/api/auth/register', (_, res, ctx) => {
@@ -108,7 +108,7 @@ test('is is possible to sign in, sign up, reset password and activate account', 
     })
   );
 
-  userEvent.click(signUpSubmitButton);
+  await userEvent .click(signUpSubmitButton);
 
   expect(await screen.findByText('Thank you for registering')).toBeInTheDocument();
 
@@ -127,8 +127,8 @@ test('is is possible to sign in, sign up, reset password and activate account', 
   expect(screen.getByText('Please enter a valid email')).toBeInTheDocument();
   expect(screen.getByText('Please enter a password')).toBeInTheDocument();
 
-  userEvent.type(emailInput, 'pep@ebi.ac.uk');
-  userEvent.type(passwordInput, '123456');
+  await userEvent .type(emailInput, 'pep@ebi.ac.uk');
+  await userEvent .type(passwordInput, '123456');
 
   expect(emailInput).toBeValid();
   expect(passwordInput).toBeValid();
@@ -140,6 +140,6 @@ test('is is possible to sign in, sign up, reset password and activate account', 
     })
   );
 
-  userEvent.click(submitButton);
+  await userEvent .click(submitButton);
   expect(await screen.findByRole('alert')).toBeInTheDocument();
 });

@@ -39,7 +39,7 @@ export class UniqueValidator implements Validator, OnDestroy {
     const control: AbstractControl | null = this.injector.get(NgControl).control;
 
     if (control) {
-      const controls = control.parent.controls;
+      const controls = control.parent?.controls || {};
 
       // Updates validity of fields, forcing the display of feedback even if not "touched" yet.
       Object.keys(controls).forEach((key) => {
@@ -67,7 +67,7 @@ export class UniqueValidator implements Validator, OnDestroy {
  */
 function uniqueValidatorFactory(): ValidatorFn {
   return (control: FormControl) => {
-    const controls = control.parent.controls;
+    const controls = control.parent?.controls || {};
     const values = Object.keys(controls).map((controlKey) => controls[controlKey].value);
     const valueSet = new Set(values);
     let isValid = false;

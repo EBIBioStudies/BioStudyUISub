@@ -295,7 +295,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
             .confirm(
               `The submission with accession number ${accno} may have un-submitted changes. \
             If you proceed, both the submission and any changes will be permanently lost.`,
-              `Delete submission and its revisions`,
+              'Delete submission and its revisions',
               'Delete'
             )
             .subscribe(onNext);
@@ -306,7 +306,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
             .confirm(
               `The draft with accession number ${accno} has not been submitted yet. If you proceed, \
             it will be permanently deleted.`,
-              `Delete draft`,
+              'Delete draft',
               'Delete'
             )
             .subscribe(onNext);

@@ -26,13 +26,13 @@ export class LayoutComponent implements OnInit {
 
 @Component({
   selector: 'st-layout-header',
-  template: `<ng-content></ng-content>`
+  template: '<ng-content></ng-content>'
 })
 export class LayoutHeaderComponent {}
 
 @Component({
   selector: 'st-layout-column',
-  template: `<ng-content></ng-content>`
+  template: '<ng-content></ng-content>'
 })
 export class LayoutColumnComponent {}
 

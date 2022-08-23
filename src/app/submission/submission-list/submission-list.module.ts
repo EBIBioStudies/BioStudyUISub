@@ -21,14 +21,7 @@ import { TextCellComponent } from './ag-grid/text-cell.component';
     FormsModule,
     SharedModule,
     TabsModule,
-    AgGridModule.withComponents([
-      ActionButtonsCellComponent,
-      DateCellComponent,
-      TextFilterComponent,
-      DateFilterComponent,
-      StatusCellComponent,
-      TextCellComponent
-    ]),
+    AgGridModule,
     SubmissionSharedModule,
     SubmissionOtherModule,
     ButtonsModule

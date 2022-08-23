@@ -11,7 +11,6 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { MarkdownModule } from 'ngx-markdown';
-import { SortablejsModule } from 'ngx-sortablejs';
 import { ToastrModule } from 'ngx-toastr';
 import { APP_BASE_HREF } from '@angular/common';
 import { ProfileModule } from './../app/profile/profile.module';
@@ -42,7 +41,6 @@ export const renderAppComponent = () =>
       PopoverModule.forRoot(),
       CollapseModule.forRoot(),
       AlertModule.forRoot(),
-      SortablejsModule.forRoot({ animation: 150 }),
       ToastrModule.forRoot({
         maxOpened: 1,
         positionClass: 'toast-top-left',

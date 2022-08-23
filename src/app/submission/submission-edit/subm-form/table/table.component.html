@@ -34,7 +34,7 @@
       </st-inline-edit>
     </div>
   </div>
-  <div *ngIf="!isReadOnly; else table" [sortablejs]="tableForm.rows" [sortablejsOptions]="sortableJsOptions">
+  <div *ngIf="!isReadOnly; else table">
     <ng-container *ngTemplateOutlet="table"></ng-container>
   </div>
   <ng-template #table>

@@ -7,7 +7,7 @@ import { formatDate, parseDate } from 'app/utils/date.utils';
   providers: [{ provide: NG_VALIDATORS, useExisting: forwardRef(() => DateFormatDirective), multi: true }]
 })
 export class DateFormatDirective implements Validator {
-  private regexp = /(\d{4})\-(\d{2})\-(\d{2})/;
+  private regexp = /(\d{4})-(\d{2})-(\d{2})/;
 
   validate(c: AbstractControl): ValidationErrors | null {
     const v = c.value || '';

@@ -16,7 +16,6 @@ export class FieldDocsModalComponent implements AfterViewInit {
   public contents?: DocItem;
   @ViewChild('btnClose') btnClose!: ElementRef;
 
-  // @ts-ignore
   constructor(public modalRef: BsModalRef) {}
 
   ngAfterViewInit(): void {
