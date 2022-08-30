@@ -374,7 +374,7 @@ export const biaTemplateV4 = {
           {
             "name": "Organism",
             "icon": "fa-address-card",
-            "description": "DUMMY DESCRIPTION Organism.",
+            "description": "",
             "uniqueCols": true,
             "rowAsSection": true,
             "columnTypes": [
