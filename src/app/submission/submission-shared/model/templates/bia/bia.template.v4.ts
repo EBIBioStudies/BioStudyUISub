@@ -354,60 +354,77 @@ export const biaTemplateV4 = {
                 'Homozygous GFP integration into mitotic genes'
               ]
             }
-          }
-        ],
-        tableTypes: [
+          },
           {
             name: 'Organism',
-            icon: 'fa-address-card',
-            description: '',
-            uniqueCols: true,
-            rowAsSection: true,
-            columnTypes: [
-              {
-                name: 'Common name',
-                valueType: {
-                  name: 'text'
-                },
-                display: 'desirable',
-                helpContextual: {
-                  description: 'Common name.',
-                  examples: ['human', 'thale cress', 'zebrafish']
-                }
-              },
-              {
-                name: 'NCBI Taxon',
-                valueType: {
-                  name: 'text'
-                },
-                display: 'required',
-                helpContextual: {
-                  description: 'NCBI Taxon for the organism.',
-                  examples: [
-                    'http://purl.obolibrary.org/obo/NCBITaxon_9606',
-                    'http://purl.obolibrary.org/obo/NCBITaxon_3702',
-                    'http://purl.obolibrary.org/obo/NCBITaxon_7955'
-                  ]
-                }
-              },
-              {
-                name: 'Scientific name',
-                valueType: {
-                  name: 'text'
-                },
-                display: 'required',
-                helpContextual: {
-                  description: 'Scientific name.',
-                  examples: ['Homo sapiens', 'Arabidopsis thaliana', 'Danio rerio']
-                }
-              }
-            ],
+            icon: 'fa-tag',
             display: 'required',
+            valueType: {
+              name: 'select',
+              multiple: false,
+              values: [
+                'Homo sapiens (human)',
+                'Mus musculus (mouse)',
+                'Arabidopsis thaliana (thale cress)',
+                'Rattus norvegicus (brown rat)',
+                'Drosophila melanogaster (fruit fly)',
+                'Oryza sativa Japonica (common rice)',
+                'Anas platyrhyncho (mallard)',
+                'Anolis carolinensis (anole)',
+                'Anopheles gambiae (marsh mosquito)',
+                'Arabidopsis lyrata (rock cress)',
+                'Aspergillus fumigatus',
+                'Bos Taurus (cow)',
+                'Brachypodium distachyon (stiff brome)',
+                'Brassica oleracea (cabbage)',
+                'Brassica rapa (turnip)',
+                'Caenorhabditis elegans',
+                'Canis familiaris (dog)',
+                'Chlorocebus sabaeus (green monkey)',
+                'Ciona intestinalis (sea squirt)',
+                'Ciona savignyi (Pacific sea squirt)',
+                'Danio rerio (zebrafish)',
+                'Dasypus novemcinctus (nine-banded armadillo)',
+                'Equus caballus (horse)',
+                'Gallus gallus (chicken)',
+                'Glycine max (soybean)',
+                'Gorilla gorilla',
+                'Hordeum vulgare (barley)',
+                'Macaca mulatta (rhesus monkey)',
+                'Medicago truncatula (barrel clover)',
+                'Monodelphis domestica (short-tailed opossum)',
+                'Musa acuminata (banana)',
+                'Ornithorhynchus anatinus (platypus)',
+                'Oryctolagus cuniculus (rabbit)',
+                'Oryza rufipogon (brownbeard rice)',
+                'Ovis aries (sheep)',
+                'Pan troglodytes (chimpanzee)',
+                'Papio Anubis (baboom)',
+                'Physcomitrella patens (moss)',
+                'Pongo abelii (orangutan)',
+                'Populus trichocarpa (poplar tree)',
+                "Saccharomyces cerevisiae (brewer's yeast)",
+                'Schistosoma mansoni (blood fluke)',
+                'Schizosaccharomyces pombe (fission yeast)',
+                'Solanum lycopersicum (tomato)',
+                'Solanum tuberosum (potato)',
+                'Sorghum bicolor',
+                'Sus scrofa (pig)',
+                'Tetraodon nigroviridis (green pufferfish)',
+                'Theobroma cacao (chocolate)',
+                'Triticum aestivum (wheat)',
+                'Vitis vinifera (grape)',
+                'Xenopus tropicalis (frog)',
+                'Yarrowia lipolytica',
+                'Zea mays (corn)'
+              ]
+            },
             helpContextual: {
               description: 'Species.'
             }
           }
         ],
+        tableTypes: [],
         sectionTypes: [],
         display: 'required',
         helpContextual: {}
@@ -446,64 +463,99 @@ export const biaTemplateV4 = {
                 'Spherical aberration was minimized using immersion oil with refractive index (RI) 1.514. 3D image stacks were acquired over the whole nuclear volume in z and with 15 raw images per plane (five phases, three angles). The raw data were computationally reconstructed with SoftWoRx 6.5.2 (GE Healthcare) using channel-specific OTFs recorded using immersion oil with RI 1.512, and Wiener filter settings between 0.002-0.006 to generate 3D stacks of 115 nm (488 nm) or 130 nm (593 nm) lateral and approximately 350 nm axial resolution. Multi-channel acquisitions were aligned in 3D using Chromagnon software (Matsuda et al, 2018) based on 3D-SIM acquisitions of multi-colour EdU-labelled C127 cells(Kraus et al, 2017).'
               ]
             }
-          }
-        ],
-        tableTypes: [
+          },
           {
             name: 'Imaging method',
-            icon: '',
-            description: '',
-            uniqueCols: true,
-            rowAsSection: true,
-            columnTypes: [
-              {
-                name: 'Ontology name',
-                valueType: {
-                  name: 'text'
-                },
-                display: 'required',
-                helpContextual: {
-                  description: 'The name of the ontology.',
-                  examples: ['Biological Imaging Methods Ontology (FBbi)']
-                }
-              },
-              {
-                name: 'Ontology term ID',
-                valueType: {
-                  name: 'text'
-                },
-                display: 'required',
-                helpContextual: {
-                  description: 'The URI identifier for the ontology value.',
-                  examples: [
-                    'http://purl.obolibrary.org/obo/FBbi_00000243',
-                    'http://purl.obolibrary.org/obo/FBbi_00000253',
-                    'http://purl.obolibrary.org/obo/FBbi_00000622'
-                  ]
-                }
-              },
-              {
-                name: 'Ontology term value',
-                valueType: {
-                  name: 'text'
-                },
-                display: 'required',
-                helpContextual: {
-                  description: 'The text description of the ontology entry.',
-                  examples: [
-                    'bright-field microscopy',
-                    'spinning disk confocal microscopy',
-                    'high-voltage electron microscopy (HVEM)'
-                  ]
-                }
-              }
-            ],
+            icon: 'fa-tag',
             display: 'required',
+            valueType: {
+              name: 'select',
+              multiple: false,
+              values: [
+                'ANSOM',
+                'CARS',
+                'EDAX imaging',
+                'EELS imaging',
+                'FLIM',
+                'FLIP',
+                'FRAP',
+                'FRET',
+                'OCT',
+                'SPIM',
+                'X-ray computed tomography',
+                'X-ray microscopy',
+                'X-ray radiography',
+                'X-ray tomography',
+                'acrylic painted graphic',
+                'animation',
+                'array-scan confocal microscopy',
+                'atomic force microscopy',
+                'back-scattered_electron imaging',
+                'black and white graphic',
+                'bright-field microscopy',
+                'camera lucida assisted graphic',
+                'charcoal pencil graphic',
+                'color graphic',
+                'colored pencil graphic',
+                'computed tomography',
+                'computer graphic',
+                'confocal microscopy',
+                'dark-field microscopy',
+                'diagram',
+                'differential interference contrast microscopy',
+                'electron microscopy',
+                'evanescent wave microscopy',
+                'evanescent wave scattering',
+                'fluorescence microscopy',
+                'fluorescence polarization microscopy',
+                'focussed ion beam scanning electron microscopy (FIB-SEM)',
+                'free hand graphic',
+                'graphic illustration',
+                'graphite pencil graphic',
+                'grey scale graphic',
+                'high-voltage electron microscopy (HVEM)',
+                'imaging method',
+                'intermediate voltage electron microacopy (IVEM)',
+                'light microscopy',
+                'line art graphic',
+                'macroscopy',
+                'microscopy',
+                'microscopy with lenses',
+                'montage',
+                'multi-photon microscopy',
+                'nearfield scanning optical microscopy (ANSOM)',
+                'oil painted graphic',
+                'orientation-independent polarization microscopy',
+                'painted graphic',
+                'pastel painted graphic',
+                'pen and ink graphic',
+                'phase contrast microscopy',
+                'polarization microscopy',
+                'portrayed image',
+                'radiography',
+                'recorded image',
+                'scanning electron microscopy (SEM)',
+                'scanning probe microscopy',
+                'scanning tunneling microscopy',
+                'scanning-transmission electron microscopy',
+                'secondary_electron imaging',
+                'serial block face SEM (SBFSEM)',
+                'single-spot confocal microscopy',
+                'slit-scan confocal microscopy',
+                'spinning disk confocal microscopy',
+                'time lapse microscopy',
+                'tomography',
+                'transmission electron microscopy (TEM)',
+                'two-photon laser scanning microscopy',
+                'watercolor painted graphic'
+              ]
+            },
             helpContextual: {
               description: 'What method was used to capture images.'
             }
           }
         ],
+        tableTypes: [],
         display: 'required',
         helpContextual: {}
       },
