@@ -33,6 +33,18 @@ export const biaTemplateV4 = {
         }
       },
       {
+        name: 'ReleaseDate',
+        title: 'Submission publication date',
+        icon: 'fa-calendar-alt',
+        display: 'required',
+        valueType: {
+          name: 'date',
+          allowPast: false
+        },
+        helpText: 'Explanation',
+        helpLink: '/bioimage-archive/help-submission-form/#release-date'
+      },
+      {
         name: 'Description',
         icon: 'fa-comment',
         valueType: {
@@ -134,18 +146,12 @@ export const biaTemplateV4 = {
       {
         name: 'Keywords',
         icon: 'fa-address-card',
-        description: 'Add keywords',
-        uniqueCols: true,
-        allowCustomCols: false,
-        columnTypes: [
-          {
-            name: 'Keyword',
-            valueType: {
-              name: 'text'
-            }
-          }
-        ],
+        description: 'Add keywords<br><a href="/bioimage-archive/help-submission-form/#keywords">Examples</a>',
         display: 'required',
+        valueType: {
+          name: 'select',
+          multiple: true
+        },
         helpContextual: {
           description: 'Keywords describing your data that can be used to aid search and classification.',
           examples: ['RNA localisation', 'CRISPR', 'Brain']
@@ -361,7 +367,7 @@ export const biaTemplateV4 = {
             display: 'required',
             valueType: {
               name: 'select',
-              multiple: false,
+              multiple: true,
               values: [
                 'Homo sapiens (human)',
                 'Mus musculus (mouse)',
@@ -470,7 +476,7 @@ export const biaTemplateV4 = {
             display: 'required',
             valueType: {
               name: 'select',
-              multiple: false,
+              multiple: true,
               values: [
                 'ANSOM',
                 'CARS',
