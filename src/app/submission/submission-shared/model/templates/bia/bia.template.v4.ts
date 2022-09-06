@@ -63,7 +63,7 @@ export const biaTemplateV4 = {
           name: 'largetext',
           minlength: 25
         },
-        display: 'required',
+        display: 'desirable',
         helpContextual: {
           description: 'A description of how the data generation was funded.'
         }
@@ -233,7 +233,7 @@ export const biaTemplateV4 = {
               name: 'largetext',
               minlength: 25
             },
-            display: 'required',
+            display: 'desirable',
             helpContextual: {
               description: 'The funding body provididing support.'
             }
@@ -245,7 +245,7 @@ export const biaTemplateV4 = {
               name: 'largetext',
               minlength: 25
             },
-            display: 'required',
+            display: 'desirable',
             helpContextual: {
               description: 'The identifier for the grant.'
             }
@@ -568,6 +568,48 @@ export const biaTemplateV4 = {
       {
         displayAnnotations: false,
         tableGroups: [],
+        name: 'Image correlation',
+        fieldTypes: [
+          {
+            name: 'Fiducials used',
+            valueType: {
+              name: 'largetext'
+            },
+            display: 'desirable',
+            helpContextual: {
+              description: 'Features from correlated datasets used for colocalisation'
+            }
+          },
+          {
+            name: 'Spatial and temporal alignment',
+            valueType: {
+              name: 'largetext'
+            },
+            display: 'desirable',
+            helpContextual: {
+              description: 'Method used to correlate images from different modalities',
+              examples: ['Manual overlay', 'Alignment algorithm']
+            }
+          },
+          {
+            name: 'Transformation matrix',
+            valueType: {
+              name: 'largetext'
+            },
+            display: 'desirable',
+            helpContextual: {
+              description: 'Correlation transforms'
+            }
+          }
+        ],
+        display: 'desirable',
+        helpContextual: {
+          description: 'How images from the same correlative study are linked'
+        }
+      },
+      {
+        displayAnnotations: false,
+        tableGroups: [],
         name: 'Image analysis',
         fieldTypes: [
           {
@@ -575,7 +617,7 @@ export const biaTemplateV4 = {
             valueType: {
               name: 'largetext'
             },
-            display: 'required',
+            display: 'desirable',
             helpContextual: {
               description: 'How image analysis was carried out.',
               examples: [
