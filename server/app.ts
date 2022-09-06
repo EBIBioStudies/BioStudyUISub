@@ -1,7 +1,6 @@
 // Load env vars into process.env
 require('dotenv').config();
 
-import bodyParser from 'body-parser';
 import compression from 'compression';
 import config from 'config';
 import express from 'express';
@@ -32,7 +31,6 @@ const app = express();
 const router = express.Router();
 app.use(helmet());
 app.use(compression());
-app.use(bodyParser.json({ limit: '20GB' }));
 
 router.use(express.static(staticPath));
 
@@ -62,6 +60,8 @@ app.use(context, router);
 
 // This has to be after app settings and routes definition.
 app.use(expressWinston.errorLogger(loggerSettings));
+
+app.use(express.json({ limit: '20GB' }));
 
 app.listen(port, hostname, () => {
   logger.info(`Proxy running on: ${protocol}://${hostname}:${port}${context}`);
