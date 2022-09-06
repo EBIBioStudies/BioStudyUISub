@@ -208,7 +208,7 @@ export const biaTemplateV4 = {
           {
             name: 'Pubmed ID',
             valueType: {
-              name: 'text'
+              name: 'pubmedid'
             },
             display: 'desirable',
             helpContextual: {
