@@ -1,26 +1,28 @@
 import { Injectable } from '@angular/core';
-import * as config from '../config.json';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppConfig {
-  constructor() {}
+  private config: any = {};
+
+  constructor(private http: HttpClient) {}
 
   get proxyBase(): string {
-    return config.APP_PROXY_BASE;
+    return this.config.APP_PROXY_BASE;
   }
 
   get instanceKey(): string {
-    return config.APP_INSTANCE_KEY;
+    return this.config.APP_INSTANCE_KEY;
   }
 
   get contextPath(): string {
-    return config.APP_CONTEXT;
+    return this.config.APP_CONTEXT;
   }
 
   get frontendURL(): string {
-    return config.FRONTEND_URL;
+    return this.config.FRONTEND_URL;
   }
 
   /**
@@ -29,7 +31,7 @@ export class AppConfig {
    * @returns Upper-limit screen size in pixels for tablet-like devices.
    */
   get tabletBreak(): number {
-    return config.APP_TABLET_BREAKPOINT;
+    return this.config.APP_TABLET_BREAKPOINT;
   }
 
   /**
@@ -38,7 +40,7 @@ export class AppConfig {
    * @see {@link https://angular.io/api/common/DatePipe}
    */
   get dateListFormat(): string {
-    return config.APP_DATE_LIST_FORMAT;
+    return this.config.APP_DATE_LIST_FORMAT;
   }
 
   /**
@@ -47,7 +49,7 @@ export class AppConfig {
    * @see {@link https://momentjs.com/docs/#/parsing/string-format/}
    */
   get dateInputFormat(): string {
-    return config.APP_DATE_INPUT_FORMAT;
+    return this.config.APP_DATE_INPUT_FORMAT;
   }
 
   /**
@@ -56,7 +58,7 @@ export class AppConfig {
    * @returns Maximum number of years into the future.
    */
   get maxDateYears(): number {
-    return config.APP_MAX_DATE_YEARS;
+    return this.config.APP_MAX_DATE_YEARS;
   }
 
   /**
@@ -64,7 +66,7 @@ export class AppConfig {
    * @returns Maximum length of the suggestion list.
    */
   get maxSuggestLength(): number {
-    return config.APP_MAX_SUGGEST_LENGTH;
+    return this.config.APP_MAX_SUGGEST_LENGTH;
   }
 
   /**
@@ -72,7 +74,7 @@ export class AppConfig {
    * @returns URL.
    */
   get bannerUrl(): string {
-    return config.GDPR_BANNER_URL;
+    return this.config.GDPR_BANNER_URL;
   }
 
   /**
@@ -82,7 +84,7 @@ export class AppConfig {
    * @returns Number of allowed concurrent connections.
    */
   get maxConcurrent(): number {
-    return config.MAX_CONCURRENT;
+    return this.config.MAX_CONCURRENT;
   }
 
   /**
@@ -90,11 +92,11 @@ export class AppConfig {
    * @returns Name of the current environment.
    */
   get environment(): string {
-    return config.APP_ENV;
+    return this.config.APP_ENV;
   }
 
   get recaptchaPublicKey(): string {
-    return config.RECAPTCHA_PUBLIC_KEY || '6Lc8JN0UAAAAAN4yxc0Ms6qIZ3fml-EYuuD_cTKi';
+    return this.config.RECAPTCHA_PUBLIC_KEY || '6Lc8JN0UAAAAAN4yxc0Ms6qIZ3fml-EYuuD_cTKi';
   }
 
   /**
@@ -102,21 +104,42 @@ export class AppConfig {
    * @returns Username of the main user
    */
   get superUserUsername(): string {
-    return config.APP_SUPER_USER_USERNAME;
+    return this.config.APP_SUPER_USER_USERNAME;
   }
 
   get announcementHeadline(): string {
-    return config.APP_ANNOUNCEMENT_HEADLINE;
+    return this.config.APP_ANNOUNCEMENT_HEADLINE;
   }
 
   get announcementContent(): string {
-    return config.APP_ANNOUNCEMENT_CONTENT;
+    return this.config.APP_ANNOUNCEMENT_CONTENT;
   }
 
   /**
    * Type of alert the announcement will be displayed with. Valid options are 'success', 'danger', 'warning', 'info'.
    */
   get announcementPriority(): string {
-    return config.APP_ANNOUNCEMENT_PRIORITY;
+    return this.config.APP_ANNOUNCEMENT_PRIORITY;
+  }
+
+  /**
+   * Uses promises exclusively to fetch the JSON file specifying the app's configuration options.
+   * NOTE: URL data may be included in those options. To ensure that correct URLs are generated, this
+   * method has to be called before anything else, during app initialisation. Angular provides a mechanism
+   * for that through the "APP_INITIALIZER" injector token. However, this feature is still experimental in v4,
+   * requiring strict use of promises for it to be dependable.
+   * TODO: Since Angular has been bumped up to v7, the much cleaner "APP_INITIALIZER" approach should be followed instead.
+   * @returns Promise fulfilled once the config data has been fetched.
+   * @see {@link /src/app/app.module.ts}
+   * @see {@link https://stackoverflow.com/a/40222544}
+   */
+  load(): Promise<any> {
+    const whenFetched: Promise<any> = this.http.get('./config.json').toPromise();
+
+    whenFetched.then((res) => {
+      this.config = res;
+    });
+
+    return whenFetched;
   }
 }
