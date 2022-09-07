@@ -67,6 +67,20 @@ export const biaTemplateV4 = {
         helpContextual: {
           description: 'A description of how the data generation was funded.'
         }
+      },
+      {
+        name: 'Keywords',
+        icon: 'fa-address-card',
+        description: 'Add keywords<br><a href="/bioimage-archive/help-submission-form/#keywords">Examples</a>',
+        display: 'required',
+        valueType: {
+          name: 'select',
+          multiple: true
+        },
+        helpContextual: {
+          description: 'Keywords describing your data that can be used to aid search and classification.',
+          examples: ['RNA localisation', 'CRISPR', 'Brain']
+        }
       }
     ],
     tableTypes: [
@@ -142,20 +156,6 @@ export const biaTemplateV4 = {
         ],
         display: 'required',
         helpContextual: {}
-      },
-      {
-        name: 'Keywords',
-        icon: 'fa-address-card',
-        description: 'Add keywords<br><a href="/bioimage-archive/help-submission-form/#keywords">Examples</a>',
-        display: 'required',
-        valueType: {
-          name: 'select',
-          multiple: true
-        },
-        helpContextual: {
-          description: 'Keywords describing your data that can be used to aid search and classification.',
-          examples: ['RNA localisation', 'CRISPR', 'Brain']
-        }
       },
       {
         name: 'Publication',
