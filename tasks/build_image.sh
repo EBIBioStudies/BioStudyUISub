@@ -15,6 +15,10 @@ if [ -f $artifact ]; then
   tar -xvf $artifact -C ./dist;
 fi
 
+# Remove configuration
+rm ./dist/.env
+rm ./dist/public/config.json
+
 # Login to the GitLab Docker registry
 docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 

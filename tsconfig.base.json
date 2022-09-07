@@ -17,7 +17,6 @@
     "sourceMap": true,
     "strictNullChecks": true,
     "strictPropertyInitialization": true,
-    "resolveJsonModule": true,
     "target": "es2015",
     "lib": [
       "es2018",
