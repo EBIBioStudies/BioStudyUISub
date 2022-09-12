@@ -1,6 +1,7 @@
 import { Component, TemplateRef } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { UserData } from 'app/auth/shared';
+import { AppConfig } from 'app/app.config';
 
 interface OSOption {
   displayName: string;
@@ -41,7 +42,7 @@ export class FTPUploadButtonComponent {
   ];
   secretId: string = '1234';
 
-  constructor(private userData: UserData, private modalService: BsModalService) {
+  constructor(private userData: UserData, private modalService: BsModalService, private appConfig: AppConfig) {
     this.osOption = this.getCurrentOS();
   }
 
@@ -59,7 +60,7 @@ export class FTPUploadButtonComponent {
 
   openModal(template: TemplateRef<any>): void {
     this.userData.secretId$.subscribe((secret) => {
-      this.secretId = secret;
+      this.secretId = (this.appConfig.frontendURL.startsWith('https://www.ebi.ac.uk') ? '' : '.beta/') + secret;
       this.modalRef = this.modalService.show(template, { class: 'modal-lg' });
     });
   }
