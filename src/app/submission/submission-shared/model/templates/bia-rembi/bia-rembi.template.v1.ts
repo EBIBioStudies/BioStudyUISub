@@ -1,6 +1,6 @@
-export const biaTemplateV4 = {
-  name: 'BioImages.v4',
-  title: 'BioImages',
+export const biaRembiTemplateV1 = {
+  name: 'BioImages-REMBI.v1',
+  title: 'BioImages-REMBI',
   description: 'BioImage Archive Study',
   sectionType: {
     display: 'required',
@@ -60,8 +60,7 @@ export const biaTemplateV4 = {
         name: 'Funding statement',
         icon: '',
         valueType: {
-          name: 'largetext',
-          minlength: 25
+          name: 'largetext'
         },
         display: 'desirable',
         helpContextual: {
