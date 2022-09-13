@@ -11,6 +11,7 @@ export const authRoutes: Routes = [
   { path: 'signin', component: SignInComponent },
   { path: 'signup', component: SignUpComponent },
   { path: 'activate/:key', component: ActivateComponent },
+  { path: 'activate', component: ActivationLinkReqComponent },
   { path: 'password_reset_request', component: PasswordResetReqComponent },
   { path: 'password_reset/:key', component: PasswordResetComponent },
   { path: 'password_setup/:key', component: PasswordResetComponent, data: { isPassSetup: true } },
