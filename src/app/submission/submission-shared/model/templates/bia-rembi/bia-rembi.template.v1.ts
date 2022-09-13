@@ -41,8 +41,10 @@ export const biaRembiTemplateV1 = {
           name: 'date',
           allowPast: false
         },
-        helpText: 'Explanation',
-        helpLink: '/bioimage-archive/help-submission-form/#release-date'
+        helpContextual: {
+          description:
+            'The date at which your dataset should become publicly visible. This can be changed after submission if needed.'
+        }
       },
       {
         name: 'Description',
@@ -54,17 +56,6 @@ export const biaRembiTemplateV1 = {
         helpContextual: {
           description:
             'Use this field to describe your dataset. This can be the abstract to an accompanying publication.'
-        }
-      },
-      {
-        name: 'Funding statement',
-        icon: '',
-        valueType: {
-          name: 'largetext'
-        },
-        display: 'desirable',
-        helpContextual: {
-          description: 'A description of how the data generation was funded.'
         }
       },
       {
@@ -90,26 +81,6 @@ export const biaRembiTemplateV1 = {
         uniqueCols: true,
         rowAsSection: true,
         columnTypes: [
-          {
-            name: 'First Name',
-            valueType: {
-              name: 'text'
-            },
-            display: 'required',
-            helpContextual: {
-              description: 'Author first name.'
-            }
-          },
-          {
-            name: 'Last Name',
-            valueType: {
-              name: 'text'
-            },
-            display: 'required',
-            helpContextual: {
-              description: 'Author last name.'
-            }
-          },
           {
             name: 'ORCID',
             valueType: {
@@ -177,7 +148,8 @@ export const biaRembiTemplateV1 = {
           {
             name: 'Authors',
             valueType: {
-              name: 'text'
+              name: 'text',
+              placeholder: 'First Author, Second Author, Third Author'
             },
             display: 'required',
             helpContextual: {
@@ -217,149 +189,14 @@ export const biaRembiTemplateV1 = {
         ],
         display: 'required',
         helpContextual: {}
-      },
-      {
-        name: 'Grant references',
-        icon: '',
-        description: 'List of individual grants funding data acquisition.',
-        uniqueCols: true,
-        rowAsSection: true,
-        columnTypes: [
-          {
-            name: 'Grant funder',
-            icon: '',
-            valueType: {
-              name: 'largetext',
-              minlength: 25
-            },
-            display: 'desirable',
-            helpContextual: {
-              description: 'The funding body provididing support.'
-            }
-          },
-          {
-            name: 'Grant identifier',
-            icon: '',
-            valueType: {
-              name: 'largetext',
-              minlength: 25
-            },
-            display: 'desirable',
-            helpContextual: {
-              description: 'The identifier for the grant.'
-            }
-          }
-        ],
-        display: 'desirable',
-        helpContextual: {}
       }
     ],
     sectionTypes: [
-      {
-        name: 'Specimen',
-        displayAnnotations: false,
-        tableGroups: [],
-        fieldTypes: [
-          {
-            name: 'Growth protocol',
-            valueType: {
-              name: 'largetext'
-            },
-            display: 'desirable',
-            helpContextual: {
-              description: 'How the specimen was grown, e.g. cell line cultures, crosses or plant growth.',
-              examples: [
-                'Cells were cultured on poly-L-lysine treated coverslips. Culture media was aspirated, and coverslips were washed once with PBS. Cells were fixed by incubating for 10 min with 4 % formaldehyde/PBS, washed twice with PBS, and permeabilized by incubating (>3 h, -20\u00b0C) in 70 % ethanol. Cells were rehydrated by incubating (5 min, RT) with FISH wash buffer (10 % formamide, 2x SSC). For hybridization, coverslips were placed cell-coated side down on a 48\u03bcl drop containing 100 nM Quasar570-labelled probes complementary to one of REV-ERB\u03b1, CRY2, or TP53 transcripts (Biosearch Technologies) (see Table S6 for probe sequences), 0.1 g/ml dextran sulfate, 1 mg/ml E. coli tRNA, 2 mM VRC, 20 \u03bcg/ml BSA, 2x SSC, 10 % formamide and incubated (37\u00b0C, 20 h) in a sealed parafilm chamber. Coverslips were twice incubated (37\u00b0C, 30 min) in pre-warmed FISH wash buffer, then in PBS containing 0.5 \u03bcg/ml 4\u2019,6-diamidino-2-phenylindole (DAPI) (5 min, RT), washed twice with PBS, dipped in water, air-dried, placed cell-coated side down on a drop of ProLong Diamond Antifade Mountant (Life Technologies), allowed to polymerize for 24 h in the dark and then sealed with nail varnish.',
-                'Immunostained spreads of Arabidopsis pachytene cells were prepared for 3D-SIM imaging as follows. To roughly stage the meiocytes, a single anther from a floral bud was removed and squashed in a drop of water on a clean slide under a coverslip and inspected using brightfield microscopy. Early- and mid-pachytene meiocytes were still stuck together within a meiocyte column, whilst late-pachytene meiocytes had begun to break apart from one-another. More precise staging of early and late pachytene meiocytes was also based on previously defined HEI10 behaviour, with mid pachytene meiocytes exhibiting an intermediate phenotype. The remaining 5 anthers containing meiocytes of the desired stage were dissected from the staged buds. They were then macerated using a brass rod on a No. 1.5H coverslip (Marienfeld) in 10 \u00b5l digestion medium (0.4% cytohelicase, 1.5% sucrose, 1% polyvinylpyrolidone in sterile water) for 1 min. Coverslips were then incubated in a moist chamber at 37 \u00b0C for 4 min before adding 10 \u00b5l of 2% lipsol solution followed by 20 \u00b5l 4% paraformaldehyde (pH 8). Coverslips were dried in the fume hood for 3 h, blocked in 0.3% bovine serum albumin in 1x phosphate-buffered saline (PBS) solution and then incubated with primary antibody at 4 \u00b0C overnight and secondary antibody at 37 \u00b0C for 2 h. In between antibody incubations, coverslips were washed 3 times for 5 min in 1x PBS plus 0.1% Triton X-100. Coverslips were then incubated in 10 \u00b5l DAPI (10 \u00b5g/ml) for 5 min, washed and mounted on a slide in 7 \u00b5l Vectashield.',
-                'Cells grown on coverslips were fixed in ice-cold methanol at _20 _ C for 10 min. After blocking in 0.2% gelatine from cold-water fish (Sigma) in PBS (PBS/FSG) for 15 min, coverslips were incubated with primary antibodies in blocking solution for 1h. Following washes with 0.2% PBS/FSG, the cells were incubated with a 1:500 dilution of secondary antibodies for 1 h (donkey anti- mouse/rabbit/goat/sheep conjugated to Alexa 488 or Alexa 594; Molecular Probes  or donkey anti-mouse conjugated to DyLight 405, Jackson ImmunoResearch). The cells were counterstained with 1 _g ml_1 Hoechst 33342 (Sigma) to visualize chromatin. After washing with 0.2% PBS/FSG, the coverslips were mounted on glass slides by inverting them into mounting solution (ProLong Gold antifade, Molecular Probes). The samples were allowed to cure for 24-48 h.'
-              ]
-            }
-          },
-          {
-            name: 'Sample preparation protocol',
-            valueType: {
-              name: 'largetext'
-            },
-            display: 'required',
-            helpContextual: {
-              description: 'How the sample was prepared for imaging.',
-              examples: [
-                'Cells were cultured on poly-L-lysine treated coverslips. Culture media was aspirated, and coverslips were washed once with PBS. Cells were fixed by incubating for 10 min with 4 % formaldehyde/PBS, washed twice with PBS, and permeabilized by incubating (>3 h, -20\u00b0C) in 70 % ethanol. Cells were rehydrated by incubating (5 min, RT) with FISH wash buffer (10 % formamide, 2x SSC). For hybridization, coverslips were placed cell-coated side down on a 48\u03bcl drop containing 100 nM Quasar570-labelled probes complementary to one of REV-ERB\u03b1, CRY2, or TP53 transcripts (Biosearch Technologies) (see Table S6 for probe sequences), 0.1 g/ml dextran sulfate, 1 mg/ml E. coli tRNA, 2 mM VRC, 20 \u03bcg/ml BSA, 2x SSC, 10 % formamide and incubated (37\u00b0C, 20 h) in a sealed parafilm chamber. Coverslips were twice incubated (37\u00b0C, 30 min) in pre-warmed FISH wash buffer, then in PBS containing 0.5 \u03bcg/ml 4\u2019,6-diamidino-2-phenylindole (DAPI) (5 min, RT), washed twice with PBS, dipped in water, air-dried, placed cell-coated side down on a drop of ProLong Diamond Antifade Mountant (Life Technologies), allowed to polymerize for 24 h in the dark and then sealed with nail varnish.',
-                'Immunostained spreads of Arabidopsis pachytene cells were prepared for 3D-SIM imaging as follows. To roughly stage the meiocytes, a single anther from a floral bud was removed and squashed in a drop of water on a clean slide under a coverslip and inspected using brightfield microscopy. Early- and mid-pachytene meiocytes were still stuck together within a meiocyte column, whilst late-pachytene meiocytes had begun to break apart from one-another. More precise staging of early and late pachytene meiocytes was also based on previously defined HEI10 behaviour, with mid pachytene meiocytes exhibiting an intermediate phenotype. The remaining 5 anthers containing meiocytes of the desired stage were dissected from the staged buds. They were then macerated using a brass rod on a No. 1.5H coverslip (Marienfeld) in 10 \u00b5l digestion medium (0.4% cytohelicase, 1.5% sucrose, 1% polyvinylpyrolidone in sterile water) for 1 min. Coverslips were then incubated in a moist chamber at 37 \u00b0C for 4 min before adding 10 \u00b5l of 2% lipsol solution followed by 20 \u00b5l 4% paraformaldehyde (pH 8). Coverslips were dried in the fume hood for 3 h, blocked in 0.3% bovine serum albumin in 1x phosphate-buffered saline (PBS) solution and then incubated with primary antibody at 4 \u00b0C overnight and secondary antibody at 37 \u00b0C for 2 h. In between antibody incubations, coverslips were washed 3 times for 5 min in 1x PBS plus 0.1% Triton X-100. Coverslips were then incubated in 10 \u00b5l DAPI (10 \u00b5g/ml) for 5 min, washed and mounted on a slide in 7 \u00b5l Vectashield.',
-                'Cells grown on coverslips were fixed in ice-cold methanol at _20 _ C for 10 min. After blocking in 0.2% gelatine from cold-water fish (Sigma) in PBS (PBS/FSG) for 15 min, coverslips were incubated with primary antibodies in blocking solution for 1h. Following washes with 0.2% PBS/FSG, the cells were incubated with a 1:500 dilution of secondary antibodies for 1 h (donkey anti- mouse/rabbit/goat/sheep conjugated to Alexa 488 or Alexa 594; Molecular Probes  or donkey anti-mouse conjugated to DyLight 405, Jackson ImmunoResearch). The cells were counterstained with 1 _g ml_1 Hoechst 33342 (Sigma) to visualize chromatin. After washing with 0.2% PBS/FSG, the coverslips were mounted on glass slides by inverting them into mounting solution (ProLong Gold antifade, Molecular Probes). The samples were allowed to cure for 24-48 h.'
-              ]
-            }
-          }
-        ],
-        display: 'required',
-        helpContextual: {
-          description: 'How the sample was grown or cultured and prepared for imaging.'
-        }
-      },
       {
         displayAnnotations: false,
         tableGroups: [],
         name: 'Biosample',
         fieldTypes: [
-          {
-            name: 'Description',
-            valueType: {
-              name: 'largetext'
-            },
-            display: 'desirable',
-            helpContextual: {
-              description: 'High level description of sample.',
-              examples: ['Bronchial epithelial cell culture']
-            }
-          },
-          {
-            name: 'Biological entity',
-            valueType: {
-              name: 'largetext'
-            },
-            display: 'required',
-            helpContextual: {
-              description: 'What is being imaged.',
-              examples: ['Adult mouse corpus callosum', 'Drosophila endoderm', 'AC16s human cardiomyoctye cells']
-            }
-          },
-          {
-            name: 'Experimental variable',
-            valueType: {
-              name: 'largetext'
-            },
-            display: 'desirable',
-            helpContextual: {
-              description: 'What is intentionally varied between multiple images.',
-              examples: ['Time', 'Genotype', 'Light exposure']
-            }
-          },
-          {
-            name: 'Extrinsic variable',
-            valueType: {
-              name: 'largetext'
-            },
-            display: 'desirable',
-            helpContextual: {
-              description: 'External treatment (e.g. reagent).',
-              examples: ['Plate-bound anti-CD3 activation']
-            }
-          },
-          {
-            name: 'Intrinsic variable',
-            valueType: {
-              name: 'largetext'
-            },
-            display: 'desirable',
-            helpContextual: {
-              description: 'Intrinsic (e.g. genetic) alteration.',
-              examples: [
-                'stable overexpression of HIST1H2BJ-mCherry and LMNA',
-                'Jurkat E6.1 transfected with emerald-VAMP7',
-                'Homozygous GFP integration into mitotic genes'
-              ]
-            }
-          },
           {
             name: 'Organism',
             icon: 'fa-tag',
@@ -427,12 +264,112 @@ export const biaRembiTemplateV1 = {
             helpContextual: {
               description: 'Species.'
             }
+          },
+          {
+            name: 'Description',
+            valueType: {
+              name: 'largetext'
+            },
+            display: 'desirable',
+            helpContextual: {
+              description: 'High level description of sample.',
+              examples: ['Bronchial epithelial cell culture']
+            }
+          },
+          {
+            name: 'Biological entity',
+            valueType: {
+              name: 'largetext'
+            },
+            display: 'required',
+            helpContextual: {
+              description: 'What is being imaged.',
+              examples: ['Adult mouse corpus callosum', 'Drosophila endoderm', 'AC16s human cardiomyoctye cells']
+            }
+          },
+          {
+            name: 'Experimental variable',
+            valueType: {
+              name: 'largetext'
+            },
+            display: 'desirable',
+            helpContextual: {
+              description: 'What is intentionally varied between multiple images.',
+              examples: ['Time', 'Genotype', 'Light exposure']
+            }
+          },
+          {
+            name: 'Extrinsic variable',
+            valueType: {
+              name: 'largetext'
+            },
+            display: 'desirable',
+            helpContextual: {
+              description: 'External treatment (e.g. reagent).',
+              examples: ['Plate-bound anti-CD3 activation']
+            }
+          },
+          {
+            name: 'Intrinsic variable',
+            valueType: {
+              name: 'largetext'
+            },
+            display: 'desirable',
+            helpContextual: {
+              description: 'Intrinsic (e.g. genetic) alteration.',
+              examples: [
+                'stable overexpression of HIST1H2BJ-mCherry and LMNA',
+                'Jurkat E6.1 transfected with emerald-VAMP7',
+                'Homozygous GFP integration into mitotic genes'
+              ]
+            }
           }
         ],
         tableTypes: [],
         sectionTypes: [],
         display: 'required',
         helpContextual: {}
+      },
+      {
+        name: 'Specimen',
+        displayAnnotations: false,
+        tableGroups: [],
+        fieldTypes: [
+          {
+            name: 'Growth protocol',
+            valueType: {
+              name: 'largetext'
+            },
+            display: 'desirable',
+            helpContextual: {
+              description: 'How the specimen was grown, e.g. cell line cultures, crosses or plant growth.',
+              examples: [
+                'Cells were cultured on poly-L-lysine treated coverslips. Culture media was aspirated, and coverslips were washed once with PBS. Cells were fixed by incubating for 10 min with 4 % formaldehyde/PBS, washed twice with PBS, and permeabilized by incubating (>3 h, -20\u00b0C) in 70 % ethanol. Cells were rehydrated by incubating (5 min, RT) with FISH wash buffer (10 % formamide, 2x SSC). For hybridization, coverslips were placed cell-coated side down on a 48\u03bcl drop containing 100 nM Quasar570-labelled probes complementary to one of REV-ERB\u03b1, CRY2, or TP53 transcripts (Biosearch Technologies) (see Table S6 for probe sequences), 0.1 g/ml dextran sulfate, 1 mg/ml E. coli tRNA, 2 mM VRC, 20 \u03bcg/ml BSA, 2x SSC, 10 % formamide and incubated (37\u00b0C, 20 h) in a sealed parafilm chamber. Coverslips were twice incubated (37\u00b0C, 30 min) in pre-warmed FISH wash buffer, then in PBS containing 0.5 \u03bcg/ml 4\u2019,6-diamidino-2-phenylindole (DAPI) (5 min, RT), washed twice with PBS, dipped in water, air-dried, placed cell-coated side down on a drop of ProLong Diamond Antifade Mountant (Life Technologies), allowed to polymerize for 24 h in the dark and then sealed with nail varnish.',
+                'Immunostained spreads of Arabidopsis pachytene cells were prepared for 3D-SIM imaging as follows. To roughly stage the meiocytes, a single anther from a floral bud was removed and squashed in a drop of water on a clean slide under a coverslip and inspected using brightfield microscopy. Early- and mid-pachytene meiocytes were still stuck together within a meiocyte column, whilst late-pachytene meiocytes had begun to break apart from one-another. More precise staging of early and late pachytene meiocytes was also based on previously defined HEI10 behaviour, with mid pachytene meiocytes exhibiting an intermediate phenotype. The remaining 5 anthers containing meiocytes of the desired stage were dissected from the staged buds. They were then macerated using a brass rod on a No. 1.5H coverslip (Marienfeld) in 10 \u00b5l digestion medium (0.4% cytohelicase, 1.5% sucrose, 1% polyvinylpyrolidone in sterile water) for 1 min. Coverslips were then incubated in a moist chamber at 37 \u00b0C for 4 min before adding 10 \u00b5l of 2% lipsol solution followed by 20 \u00b5l 4% paraformaldehyde (pH 8). Coverslips were dried in the fume hood for 3 h, blocked in 0.3% bovine serum albumin in 1x phosphate-buffered saline (PBS) solution and then incubated with primary antibody at 4 \u00b0C overnight and secondary antibody at 37 \u00b0C for 2 h. In between antibody incubations, coverslips were washed 3 times for 5 min in 1x PBS plus 0.1% Triton X-100. Coverslips were then incubated in 10 \u00b5l DAPI (10 \u00b5g/ml) for 5 min, washed and mounted on a slide in 7 \u00b5l Vectashield.',
+                'Cells grown on coverslips were fixed in ice-cold methanol at _20 _ C for 10 min. After blocking in 0.2% gelatine from cold-water fish (Sigma) in PBS (PBS/FSG) for 15 min, coverslips were incubated with primary antibodies in blocking solution for 1h. Following washes with 0.2% PBS/FSG, the cells were incubated with a 1:500 dilution of secondary antibodies for 1 h (donkey anti- mouse/rabbit/goat/sheep conjugated to Alexa 488 or Alexa 594; Molecular Probes  or donkey anti-mouse conjugated to DyLight 405, Jackson ImmunoResearch). The cells were counterstained with 1 _g ml_1 Hoechst 33342 (Sigma) to visualize chromatin. After washing with 0.2% PBS/FSG, the coverslips were mounted on glass slides by inverting them into mounting solution (ProLong Gold antifade, Molecular Probes). The samples were allowed to cure for 24-48 h.'
+              ]
+            }
+          },
+          {
+            name: 'Sample preparation protocol',
+            valueType: {
+              name: 'largetext'
+            },
+            display: 'required',
+            helpContextual: {
+              description: 'How the sample was prepared for imaging.',
+              examples: [
+                'Cells were cultured on poly-L-lysine treated coverslips. Culture media was aspirated, and coverslips were washed once with PBS. Cells were fixed by incubating for 10 min with 4 % formaldehyde/PBS, washed twice with PBS, and permeabilized by incubating (>3 h, -20\u00b0C) in 70 % ethanol. Cells were rehydrated by incubating (5 min, RT) with FISH wash buffer (10 % formamide, 2x SSC). For hybridization, coverslips were placed cell-coated side down on a 48\u03bcl drop containing 100 nM Quasar570-labelled probes complementary to one of REV-ERB\u03b1, CRY2, or TP53 transcripts (Biosearch Technologies) (see Table S6 for probe sequences), 0.1 g/ml dextran sulfate, 1 mg/ml E. coli tRNA, 2 mM VRC, 20 \u03bcg/ml BSA, 2x SSC, 10 % formamide and incubated (37\u00b0C, 20 h) in a sealed parafilm chamber. Coverslips were twice incubated (37\u00b0C, 30 min) in pre-warmed FISH wash buffer, then in PBS containing 0.5 \u03bcg/ml 4\u2019,6-diamidino-2-phenylindole (DAPI) (5 min, RT), washed twice with PBS, dipped in water, air-dried, placed cell-coated side down on a drop of ProLong Diamond Antifade Mountant (Life Technologies), allowed to polymerize for 24 h in the dark and then sealed with nail varnish.',
+                'Immunostained spreads of Arabidopsis pachytene cells were prepared for 3D-SIM imaging as follows. To roughly stage the meiocytes, a single anther from a floral bud was removed and squashed in a drop of water on a clean slide under a coverslip and inspected using brightfield microscopy. Early- and mid-pachytene meiocytes were still stuck together within a meiocyte column, whilst late-pachytene meiocytes had begun to break apart from one-another. More precise staging of early and late pachytene meiocytes was also based on previously defined HEI10 behaviour, with mid pachytene meiocytes exhibiting an intermediate phenotype. The remaining 5 anthers containing meiocytes of the desired stage were dissected from the staged buds. They were then macerated using a brass rod on a No. 1.5H coverslip (Marienfeld) in 10 \u00b5l digestion medium (0.4% cytohelicase, 1.5% sucrose, 1% polyvinylpyrolidone in sterile water) for 1 min. Coverslips were then incubated in a moist chamber at 37 \u00b0C for 4 min before adding 10 \u00b5l of 2% lipsol solution followed by 20 \u00b5l 4% paraformaldehyde (pH 8). Coverslips were dried in the fume hood for 3 h, blocked in 0.3% bovine serum albumin in 1x phosphate-buffered saline (PBS) solution and then incubated with primary antibody at 4 \u00b0C overnight and secondary antibody at 37 \u00b0C for 2 h. In between antibody incubations, coverslips were washed 3 times for 5 min in 1x PBS plus 0.1% Triton X-100. Coverslips were then incubated in 10 \u00b5l DAPI (10 \u00b5g/ml) for 5 min, washed and mounted on a slide in 7 \u00b5l Vectashield.',
+                'Cells grown on coverslips were fixed in ice-cold methanol at _20 _ C for 10 min. After blocking in 0.2% gelatine from cold-water fish (Sigma) in PBS (PBS/FSG) for 15 min, coverslips were incubated with primary antibodies in blocking solution for 1h. Following washes with 0.2% PBS/FSG, the cells were incubated with a 1:500 dilution of secondary antibodies for 1 h (donkey anti- mouse/rabbit/goat/sheep conjugated to Alexa 488 or Alexa 594; Molecular Probes  or donkey anti-mouse conjugated to DyLight 405, Jackson ImmunoResearch). The cells were counterstained with 1 _g ml_1 Hoechst 33342 (Sigma) to visualize chromatin. After washing with 0.2% PBS/FSG, the coverslips were mounted on glass slides by inverting them into mounting solution (ProLong Gold antifade, Molecular Probes). The samples were allowed to cure for 24-48 h.'
+              ]
+            }
+          }
+        ],
+        display: 'required',
+        helpContextual: {
+          description: 'How the sample was grown or cultured and prepared for imaging.'
+        }
       },
       {
         displayAnnotations: false,
@@ -670,6 +607,61 @@ export const biaRembiTemplateV1 = {
           }
         ],
         display: 'required',
+        helpContextual: {}
+      },
+      {
+        name: 'Funding',
+        displayAnnotations: false,
+        tableGroups: [],
+        fieldTypes: [
+          {
+            name: 'Funding statement',
+            icon: '',
+            valueType: {
+              name: 'largetext'
+            },
+            display: 'desirable',
+            helpContextual: {
+              description: 'A description of how the data generation was funded.'
+            }
+          }
+        ],
+        tableTypes: [
+          {
+            name: 'Grant references',
+            icon: '',
+            description: 'List of individual grants funding data acquisition.',
+            uniqueCols: true,
+            rowAsSection: true,
+            columnTypes: [
+              {
+                name: 'Grant funder',
+                icon: '',
+                valueType: {
+                  name: 'largetext'
+                },
+                display: 'desirable',
+                helpContextual: {
+                  description: 'The funding body provididing support.'
+                }
+              },
+              {
+                name: 'Grant identifier',
+                icon: '',
+                valueType: {
+                  name: 'largetext'
+                },
+                display: 'desirable',
+                helpContextual: {
+                  description: 'The identifier for the grant.'
+                }
+              }
+            ],
+            display: 'desirable',
+            helpContextual: {}
+          }
+        ],
+        display: 'desirable',
         helpContextual: {}
       }
     ]
