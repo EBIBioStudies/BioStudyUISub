@@ -17,8 +17,7 @@ export const arrayExpressTemplate = {
         icon: 'fa-heading',
         display: 'readonly',
         valueType: {
-          name: 'largetext',
-          minlength: 25
+          name: 'largetext'
         }
       },
       {
@@ -36,8 +35,7 @@ export const arrayExpressTemplate = {
         icon: 'fa-comment',
         display: 'readonly',
         valueType: {
-          name: 'largetext',
-          minlength: 50
+          name: 'largetext'
         }
       },
       {
