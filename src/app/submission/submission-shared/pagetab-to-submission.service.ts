@@ -8,7 +8,7 @@ import {
   authorsToContacts,
   findAttributesByName,
   mergeAttributes,
-  pageTabToSubmissionProtocols
+  protocolsCollectReferences
 } from './model/pagetab';
 import { AttributeData, SectionData, Submission, SubmissionData, TableData } from './model/submission';
 import { DEFAULT_TEMPLATE_NAME, SectionType, SubmissionType } from './model/templates';
@@ -134,10 +134,15 @@ export class PageTabToSubmissionService {
 
     const links = flatArray<PtLink>(ptSection.links || []);
     const files = flatArray<PtFile>(ptSection.files || []);
-    const subsections = flatArray(ptSection.subsections || []);
-    const contacts = authorsToContacts(subsections.filter((section) => !this.hasSubsections(section)));
-    const tableSections = pageTabToSubmissionProtocols(contacts);
     const keywords = findAttributesByName('Keyword', ptSection.attributes || []);
+
+    // raw pagetab subsections include items that should be displayed as:
+    //  tables, foldable subsections, and references (e.g. Authors and Organisations, Protocols)
+    // to find just the tables in the current section,
+    //  iterate over the subsections to remove the foldable (actual) subsections and resolve references
+    const subsections = flatArray(ptSection.subsections || []);
+    let tableSections = authorsToContacts(subsections.filter((section) => !this.hasSubsections(section)));
+    tableSections = protocolsCollectReferences(tableSections);
 
     const tables: TableData[] = [];
     const hasLinks = links.length > 0;

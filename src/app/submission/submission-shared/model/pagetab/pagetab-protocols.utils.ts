@@ -8,7 +8,7 @@ const isEqualTo = (value: string) => (s: Nullable<string>) => isStringDefined(s)
 const isComponentProtocol = isEqualTo('protocols');
 const isStudyProtocol = isEqualTo('study protocols');
 
-export function pageTabToSubmissionProtocols(pageTabSections: PageTabSection[]): PageTabSection[] {
+export function protocolsCollectReferences(pageTabSections: PageTabSection[]): PageTabSection[] {
   const protocols: Protocols = Protocols.getInstance();
   const studyProtocols: PageTabSection[] = pageTabSections.filter((section) => isStudyProtocol(section.type));
   const componentProtocols: PageTabSection[] = pageTabSections.filter((section) => isComponentProtocol(section.type));
