@@ -69,8 +69,9 @@ export class PageTabToSubmissionService {
     const hasPageTag = sectionTags
       .map((tagItem) => new Tag(tagItem.classifier, tagItem.tag))
       .some((tagInstance) => tagInstance.equals(PAGE_TAG));
+    const hasSectionAccNo = !!section.accno?.match(/[A-Z][a-zA-Z\s]+-\d+/);
 
-    return hasSubsection || hasLinks || hasFiles || hasPageTag || section.type === 'Study Component';
+    return hasSubsection || hasLinks || hasFiles || hasPageTag || hasSectionAccNo;
   }
 
   private attributeToAttributeData(attr: PtAttribute): AttributeData {
@@ -143,6 +144,7 @@ export class PageTabToSubmissionService {
     const subsections = flatArray(ptSection.subsections || []);
     let tableSections = authorsToContacts(subsections.filter((section) => !this.hasSubsections(section)));
     tableSections = protocolsCollectReferences(tableSections);
+    tableSections = tableSections.filter((section) => section.accno?.match(/[a-zA-Z\s]+-\d+/) == null)
 
     const tables: TableData[] = [];
     const hasLinks = links.length > 0;
