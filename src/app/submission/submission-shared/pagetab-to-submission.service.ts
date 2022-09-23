@@ -8,7 +8,7 @@ import {
   authorsToContacts,
   findAttributesByName,
   mergeAttributes,
-  protocolsCollectReferences
+  pageTabToSubmissionProtocols
 } from './model/pagetab';
 import { AttributeData, SectionData, Submission, SubmissionData, TableData } from './model/submission';
 import { DEFAULT_TEMPLATE_NAME, SectionType, SubmissionType } from './model/templates';
@@ -61,7 +61,7 @@ export class PageTabToSubmissionService {
     return templateName;
   }
 
-  private isSubsection(section: PageTabSection): boolean {
+  private hasSubsections(section: PageTabSection): boolean {
     const hasSubsection = typeof section.subsections !== 'undefined' && section.subsections.length > 0;
     const hasLinks = typeof section.links !== 'undefined' && section.links.length > 0;
     const hasFiles = typeof section.files !== 'undefined' && section.files.length > 0;
@@ -153,9 +153,9 @@ export class PageTabToSubmissionService {
     //  iterate over the subsections to remove the foldable (actual) subsections and resolve references
     const subsections = flatArray(ptSection.subsections || []);
     // sections that don't have subsections are tables
-    let tableSections = subsections.filter((section) => !this.isSubsection(section))
+    let tableSections = subsections.filter((section) => !this.hasSubsections(section))
     tableSections = authorsToContacts(tableSections);
-    tableSections = protocolsCollectReferences(tableSections);
+    tableSections = pageTabToSubmissionProtocols(tableSections);
 
     const tables: TableData[] = [];
     const hasLinks = links.length > 0;
@@ -205,7 +205,7 @@ export class PageTabToSubmissionService {
     }
 
     const formattedSections = subsections
-      .filter(this.isSubsection)
+      .filter(this.hasSubsections)
       .map((section) => this.pageTabSectionToSectionData(section, [], null));
 
     const formattedSubSections = subsections
