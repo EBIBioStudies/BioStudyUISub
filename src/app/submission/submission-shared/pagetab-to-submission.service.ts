@@ -61,7 +61,7 @@ export class PageTabToSubmissionService {
     return templateName;
   }
 
-  private hasSubsections(section: PageTabSection): boolean {
+  private isSubsection(section: PageTabSection): boolean {
     const hasSubsection = typeof section.subsections !== 'undefined' && section.subsections.length > 0;
     const hasLinks = typeof section.links !== 'undefined' && section.links.length > 0;
     const hasFiles = typeof section.files !== 'undefined' && section.files.length > 0;
@@ -69,9 +69,19 @@ export class PageTabToSubmissionService {
     const hasPageTag = sectionTags
       .map((tagItem) => new Tag(tagItem.classifier, tagItem.tag))
       .some((tagInstance) => tagInstance.equals(PAGE_TAG));
-    const hasSectionAccNo = !!section.accno?.match(/[A-Z][a-zA-Z\s]+-\d+/);
 
-    return hasSubsection || hasLinks || hasFiles || hasPageTag || hasSectionAccNo;
+    const pagetabSectionTypes = [
+      "Study Component",
+      "Biosample",
+      "Specimen",
+      "Image acquisition",
+      "Image correlation",
+      "Image analysis",
+      "Funding"
+    ].map(el => el.toLowerCase());
+    const hasSectionType = pagetabSectionTypes.includes(section.type!.toLowerCase());
+
+    return hasSubsection || hasLinks || hasFiles || hasPageTag || hasSectionType;
   }
 
   private attributeToAttributeData(attr: PtAttribute): AttributeData {
@@ -142,9 +152,10 @@ export class PageTabToSubmissionService {
     // to find just the tables in the current section,
     //  iterate over the subsections to remove the foldable (actual) subsections and resolve references
     const subsections = flatArray(ptSection.subsections || []);
-    let tableSections = authorsToContacts(subsections.filter((section) => !this.hasSubsections(section)));
+    // sections that don't have subsections are tables
+    let tableSections = subsections.filter((section) => !this.isSubsection(section))
+    tableSections = authorsToContacts(tableSections);
     tableSections = protocolsCollectReferences(tableSections);
-    tableSections = tableSections.filter((section) => section.accno?.match(/[a-zA-Z\s]+-\d+/) == null)
 
     const tables: TableData[] = [];
     const hasLinks = links.length > 0;
@@ -194,7 +205,7 @@ export class PageTabToSubmissionService {
     }
 
     const formattedSections = subsections
-      .filter(this.hasSubsections)
+      .filter(this.isSubsection)
       .map((section) => this.pageTabSectionToSectionData(section, [], null));
 
     const formattedSubSections = subsections
