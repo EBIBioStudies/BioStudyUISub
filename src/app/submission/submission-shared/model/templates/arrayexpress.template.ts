@@ -155,6 +155,8 @@ export const arrayExpressTemplate = {
           '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pmc/pmctopmid/#converter">PubMed\'s converter</a>.',
         icon: 'fa-book',
         uniqueCols: true,
+        allowImport: false,
+        rowAsSection: true,
         columnTypes: [
           {
             name: 'PMID',
