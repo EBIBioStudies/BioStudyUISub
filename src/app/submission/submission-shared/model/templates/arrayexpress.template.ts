@@ -201,6 +201,54 @@ export const arrayExpressTemplate = {
             valueType: { name: 'text' }
           }
         ]
+      },
+      {
+        name: 'Link',
+        description:
+          'Provide pointers to data held in external databases or to related information on the web. ' +
+          'Compact URIs from <a target="_blank" href="https://www.ebi.ac.uk/miriam/main/collections">Identifiers.org</a> ' +
+          'are supported. </br>URLs must include the scheme, e.g. "http://".',
+        icon: 'fa-link',
+        uniqueCols: true,
+        allowImport: true,
+        rowAsSection: true,
+        columnTypes: [
+          {
+            name: 'Link',
+            valueType: { name: 'idlink' },
+            display: 'required'
+          },
+          {
+            name: 'Description',
+            valueType: { name: 'text' },
+            display: 'desirable'
+          }
+        ]
+      },
+      {
+        name: 'File',
+        description: 'List the data files for the study and describe their respective scopes.',
+        icon: 'fa-file',
+        uniqueCols: true,
+        allowImport: true,
+        rowAsSection: true,
+        columnTypes: [
+          {
+            name: 'File',
+            valueType: { name: 'file' },
+            display: 'required'
+          },
+          {
+            name: 'Description',
+            valueType: { name: 'text' },
+            display: 'required'
+          },
+          {
+            name: 'Type',
+            valueType: { name: 'text' },
+            display: 'desirable'
+          }
+        ]
       }
     ]
   }
