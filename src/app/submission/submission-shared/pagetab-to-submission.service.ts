@@ -70,7 +70,18 @@ export class PageTabToSubmissionService {
       .map((tagItem) => new Tag(tagItem.classifier, tagItem.tag))
       .some((tagInstance) => tagInstance.equals(PAGE_TAG));
 
-    return hasSubsection || hasLinks || hasFiles || hasPageTag || section.type === 'Study Component';
+    const pagetabSectionTypes = [
+      "Study Component",
+      "Biosample",
+      "Specimen",
+      "Image acquisition",
+      "Image correlation",
+      "Image analysis",
+      "Funding"
+    ].map(el => el.toLowerCase());
+    const hasSectionType = pagetabSectionTypes.includes(section.type!.toLowerCase());
+
+    return hasSubsection || hasLinks || hasFiles || hasPageTag || hasSectionType;
   }
 
   private attributeToAttributeData(attr: PtAttribute): AttributeData {
@@ -134,10 +145,17 @@ export class PageTabToSubmissionService {
 
     const links = flatArray<PtLink>(ptSection.links || []);
     const files = flatArray<PtFile>(ptSection.files || []);
-    const subsections = flatArray(ptSection.subsections || []);
-    const contacts = authorsToContacts(subsections.filter((section) => !this.hasSubsections(section)));
-    const tableSections = pageTabToSubmissionProtocols(contacts);
     const keywords = findAttributesByName('Keyword', ptSection.attributes || []);
+
+    // raw pagetab subsections include items that should be displayed as:
+    //  tables, foldable subsections, and references (e.g. Authors and Organisations, Protocols)
+    // to find just the tables in the current section,
+    //  iterate over the subsections to remove the foldable (actual) subsections and resolve references
+    const subsections = flatArray(ptSection.subsections || []);
+    // sections that don't have subsections are tables
+    let tableSections = subsections.filter((section) => !this.hasSubsections(section))
+    tableSections = authorsToContacts(tableSections);
+    tableSections = pageTabToSubmissionProtocols(tableSections);
 
     const tables: TableData[] = [];
     const hasLinks = links.length > 0;
