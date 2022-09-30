@@ -29,79 +29,6 @@ export const arrayExpressTemplate = {
           name: 'date',
           allowPast: false
         }
-      },
-      {
-        name: 'Description',
-        icon: 'fa-comment',
-        display: 'readonly',
-        valueType: {
-          name: 'largetext'
-        }
-      },
-      {
-        name: 'Organism',
-        icon: 'fa-tag',
-        display: 'readonly',
-        valueType: {
-          name: 'select',
-          multiple: true,
-          values: [
-            'Homo sapiens (human)',
-            'Mus musculus (mouse)',
-            'Arabidopsis thaliana (thale cress)',
-            'Rattus norvegicus (brown rat)',
-            'Drosophila melanogaster (fruit fly)',
-            'Oryza sativa Japonica (common rice)',
-            'Anas platyrhyncho (mallard)',
-            'Anolis carolinensis (anole)',
-            'Anopheles gambiae (marsh mosquito)',
-            'Arabidopsis lyrata (rock cress)',
-            'Aspergillus fumigatus',
-            'Bos Taurus (cow)',
-            'Brachypodium distachyon (stiff brome)',
-            'Brassica oleracea (cabbage)',
-            'Brassica rapa (turnip)',
-            'Caenorhabditis elegans',
-            'Canis familiaris (dog)',
-            'Chlorocebus sabaeus (green monkey)',
-            'Ciona intestinalis (sea squirt)',
-            'Ciona savignyi (Pacific sea squirt)',
-            'Danio rerio (zebrafish)',
-            'Dasypus novemcinctus (nine-banded armadillo)',
-            'Equus caballus (horse)',
-            'Gallus gallus (chicken)',
-            'Glycine max (soybean)',
-            'Gorilla gorilla',
-            'Hordeum vulgare (barley)',
-            'Macaca mulatta (rhesus monkey)',
-            'Medicago truncatula (barrel clover)',
-            'Monodelphis domestica (short-tailed opossum)',
-            'Musa acuminata (banana)',
-            'Ornithorhynchus anatinus (platypus)',
-            'Oryctolagus cuniculus (rabbit)',
-            'Oryza rufipogon (brownbeard rice)',
-            'Ovis aries (sheep)',
-            'Pan troglodytes (chimpanzee)',
-            'Papio Anubis (baboom)',
-            'Physcomitrella patens (moss)',
-            'Pongo abelii (orangutan)',
-            'Populus trichocarpa (poplar tree)',
-            "Saccharomyces cerevisiae (brewer's yeast)",
-            'Schistosoma mansoni (blood fluke)',
-            'Schizosaccharomyces pombe (fission yeast)',
-            'Solanum lycopersicum (tomato)',
-            'Solanum tuberosum (potato)',
-            'Sorghum bicolor',
-            'Sus scrofa (pig)',
-            'Tetraodon nigroviridis (green pufferfish)',
-            'Theobroma cacao (chocolate)',
-            'Triticum aestivum (wheat)',
-            'Vitis vinifera (grape)',
-            'Xenopus tropicalis (frog)',
-            'Yarrowia lipolytica',
-            'Zea mays (corn)'
-          ]
-        }
       }
     ],
     tableTypes: [
@@ -109,14 +36,14 @@ export const arrayExpressTemplate = {
         name: 'Contact',
         description: 'Add the contact details for the authors involved in the study.',
         icon: 'fa-address-card',
-        display: 'required',
+        display: 'optional',
         uniqueCols: true,
         allowImport: true,
         rowAsSection: true,
         columnTypes: [
           {
             autosuggest: false,
-            display: 'required',
+            display: 'desirable',
             name: 'Name',
             valueType: { name: 'text' }
           },
@@ -124,7 +51,7 @@ export const arrayExpressTemplate = {
             autosuggest: false,
             name: 'Email',
             valueType: { name: 'text' },
-            display: 'required'
+            display: 'optional'
           },
           {
             name: 'Organisation',
@@ -132,7 +59,7 @@ export const arrayExpressTemplate = {
               name: 'org',
               multiple: true
             },
-            display: 'required'
+            display: 'optional'
           },
           {
             name: 'Role',
@@ -141,7 +68,7 @@ export const arrayExpressTemplate = {
           {
             name: 'ORCID',
             valueType: { name: 'orcid' },
-            display: 'desirable'
+            display: 'optional'
           }
         ]
       },
@@ -204,10 +131,6 @@ export const arrayExpressTemplate = {
       },
       {
         name: 'Link',
-        description:
-          'Provide pointers to data held in external databases or to related information on the web. ' +
-          'Compact URIs from <a target="_blank" href="https://www.ebi.ac.uk/miriam/main/collections">Identifiers.org</a> ' +
-          'are supported. </br>URLs must include the scheme, e.g. "http://".',
         icon: 'fa-link',
         uniqueCols: true,
         allowImport: true,
@@ -227,7 +150,6 @@ export const arrayExpressTemplate = {
       },
       {
         name: 'File',
-        description: 'List the data files for the study and describe their respective scopes.',
         icon: 'fa-file',
         uniqueCols: true,
         allowImport: true,
@@ -249,6 +171,168 @@ export const arrayExpressTemplate = {
             display: 'desirable'
           }
         ]
+      },
+      {
+        name: 'MINSEQE Score',
+        icon: 'fa-sliders-h',
+        uniqueCols: true,
+        allowImport: true,
+        rowAsSection: true
+      }
+    ],
+    sectionTypes: [
+      {
+        name: 'Samples',
+        displayAnnotations: true,
+        sectionTypes: [
+          {
+            name: 'Experimental Factors',
+            displayAnnotations: true
+          },
+          {
+            name: 'Source Characteristics',
+            displayAnnotations: true
+          }
+        ]
+      },
+      {
+        name: 'Assays and Data',
+        displayAnnotations: true,
+        sectionTypes: [
+          {
+            name: 'Raw Data',
+            tableTypes: [
+              {
+                name: 'File',
+                description: 'List the raw data files for the experiment.',
+                icon: 'fa-file',
+                uniqueCols: true,
+                allowImport: true,
+                rowAsSection: true,
+                columnTypes: [
+                  {
+                    name: 'File',
+                    valueType: { name: 'file' },
+                    display: 'required'
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            name: 'Processed Data',
+            tableTypes: [
+              {
+                name: 'File',
+                description: 'List the processed data files for the experiment.',
+                icon: 'fa-file',
+                uniqueCols: true,
+                allowImport: true,
+                rowAsSection: true,
+                columnTypes: [
+                  {
+                    name: 'File',
+                    valueType: { name: 'file' },
+                    display: 'required'
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            name: 'Additional Files',
+            tableTypes: [
+              {
+                name: 'File',
+                description: 'List the additional data files for the experiment.',
+                icon: 'fa-file',
+                uniqueCols: true,
+                allowImport: true,
+                rowAsSection: true,
+                columnTypes: [
+                  {
+                    name: 'File',
+                    valueType: { name: 'file' },
+                    display: 'required'
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            name: 'MAGE-TAB Files',
+            tableTypes: [
+              {
+                name: 'File',
+                description: 'List the MAGE-TAB files for the experiment.',
+                icon: 'fa-file',
+                uniqueCols: true,
+                allowImport: true,
+                rowAsSection: true,
+                columnTypes: [
+                  {
+                    name: 'File',
+                    valueType: { name: 'file' },
+                    display: 'required'
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            name: 'Array Designs',
+            tableTypes: [
+              {
+                name: 'File',
+                description: 'List the MAGE-TAB files for the experiment.',
+                icon: 'fa-file',
+                uniqueCols: true,
+                allowImport: true,
+                rowAsSection: true,
+                columnTypes: [
+                  {
+                    name: 'File',
+                    valueType: { name: 'file' },
+                    display: 'required'
+                  }
+                ]
+              },
+              {
+                name: 'Link',
+                icon: 'fa-link',
+                uniqueCols: true,
+                allowImport: true,
+                rowAsSection: true,
+                columnTypes: [
+                  {
+                    name: 'Link',
+                    valueType: { name: 'idlink' },
+                    display: 'required'
+                  },
+                  {
+                    name: 'Description',
+                    valueType: { name: 'text' },
+                    display: 'desirable'
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        name: 'MINSEQE Score',
+        icon: 'fa-sliders-h',
+        singleRow: true,
+        allowImport: false,
+        displayAnnotations: true
+      },
+      {
+        name: 'MIAME Score',
+        icon: 'fa-sliders-h',
+        singleRow: true,
+        allowImport: false,
+        displayAnnotations: true
       }
     ]
   }

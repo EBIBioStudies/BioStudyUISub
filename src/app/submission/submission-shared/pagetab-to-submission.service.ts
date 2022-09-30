@@ -71,14 +71,16 @@ export class PageTabToSubmissionService {
       .some((tagInstance) => tagInstance.equals(PAGE_TAG));
 
     const pagetabSectionTypes = [
-      "Study Component",
-      "Biosample",
-      "Specimen",
-      "Image acquisition",
-      "Image correlation",
-      "Image analysis",
-      "Funding"
-    ].map(el => el.toLowerCase());
+      'Study Component',
+      'Biosample',
+      'Specimen',
+      'Image acquisition',
+      'Image correlation',
+      'Image analysis',
+      'Funding',
+      'MINSEQE Score',
+      'MIAME Score'
+    ].map((el) => el.toLowerCase());
     const hasSectionType = pagetabSectionTypes.includes(section.type!.toLowerCase());
 
     return hasSubsection || hasLinks || hasFiles || hasPageTag || hasSectionType;
@@ -153,7 +155,7 @@ export class PageTabToSubmissionService {
     //  iterate over the subsections to remove the foldable (actual) subsections and resolve references
     const subsections = flatArray(ptSection.subsections || []);
     // sections that don't have subsections are tables
-    let tableSections = subsections.filter((section) => !this.hasSubsections(section))
+    let tableSections = subsections.filter((section) => !this.hasSubsections(section));
     tableSections = authorsToContacts(tableSections);
     tableSections = pageTabToSubmissionProtocols(tableSections);
 
