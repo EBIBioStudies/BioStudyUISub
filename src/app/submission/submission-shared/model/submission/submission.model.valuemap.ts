@@ -1,5 +1,6 @@
 import { nextId } from './submission.model.counter';
 import { AttributeValue } from './submission.model.attribute-value';
+import { PtNameAndValue } from '../pagetab';
 
 export class ValueMap {
   readonly id: string;
@@ -10,12 +11,12 @@ export class ValueMap {
     (keys || []).forEach((key) => this.add(key));
   }
 
-  add(key: string, value?: string): void {
+  add(key: string, value?: string, valqual?: PtNameAndValue[]): void {
     if (this.valueMap.has(key)) {
       return;
     }
 
-    const v = new AttributeValue(value);
+    const v = new AttributeValue(value, valqual);
     this.valueMap.set(key, v);
   }
 
@@ -31,12 +32,12 @@ export class ValueMap {
     this.valueMap.delete(key);
   }
 
-  update(key: string, value: string): void {
+  update(key: string, value: string, valqual?: PtNameAndValue[]): void {
     if (!this.valueMap.has(key)) {
       return;
     }
 
-    const attributeValue = new AttributeValue(value);
+    const attributeValue = new AttributeValue(value, valqual);
     this.valueMap.set(key, attributeValue);
   }
 
