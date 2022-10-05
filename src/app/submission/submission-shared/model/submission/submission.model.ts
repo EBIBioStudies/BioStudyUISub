@@ -422,8 +422,8 @@ export class Field {
     }
   }
 
-  get valqual() {
-    return this.attributeData?.valqual;
+  get valqual(): NameAndValue[] {
+    return this.attributeData?.valqual || [];
   }
 }
 

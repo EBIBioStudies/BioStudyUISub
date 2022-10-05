@@ -17,7 +17,7 @@ export function extractTableAttributes(table: Table, isSanitise: boolean): PtAtt
   const mappedTables: PtAttribute[][] = table.rows.map((row) => {
     const attributes: PtAttribute[] = table.columns.map((column) => {
       const rowValue = row.valueFor(column.id);
-      let ptAttribute = {
+      const ptAttribute = {
         name: column.name,
         value: rowValue && rowValue.value,
         reference: false
