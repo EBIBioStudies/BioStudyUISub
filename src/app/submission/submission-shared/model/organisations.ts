@@ -27,15 +27,11 @@ export class Organisations {
 
   list(): { accno: string; name: string; rorId: string; address?: string }[] {
     return Object.keys(this.refs).map((key) => {
-      const ref = this.refs[key];
-      const orgName = this.names[key];
-      const rorId = this.rorRefs[key];
-      const address = this.addresses[key];
-      let orgItem = {
-        accno: ref,
-        name: orgName,
-        rorId: rorId,
-        address: address
+      const orgItem = {
+        accno: this.refs[key],
+        name: this.names[key],
+        rorId: this.rorRefs[key],
+        address: this.addresses[key]
       };
       return orgItem as { accno: string; name: string; rorId: string; address?: string };
     });

@@ -1,7 +1,7 @@
 import { PtNameAndValue } from 'app/submission/submission-shared/model';
 
 export function isStringEmpty(value: string | undefined | null): boolean {
-  //Should probably return true on undefined and null
+  // Should probably return true on undefined and null
   return value !== undefined && value !== null && value.trim().length === 0;
 }
 
