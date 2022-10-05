@@ -90,7 +90,7 @@ export class PageTabToSubmissionService {
     return {
       name: attr.name || '',
       reference: attr.reference || attr.isReference,
-      terms: (attr.valqual || []).map((t) => new NameAndValue(t.name, t.value)),
+      valqual: (attr.valqual || []).map((t) => new NameAndValue(t.name, t.value)),
       value: attr.value as string
     };
   }

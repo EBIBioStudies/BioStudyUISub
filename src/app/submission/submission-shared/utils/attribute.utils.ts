@@ -1,5 +1,5 @@
 import { PtFile, PtLink } from './../model/pagetab/pagetab.model';
-import { isPtAttributeValueEmpty } from 'app/utils/validation.utils';
+import { isArrayEmpty, isPtAttributeValueEmpty } from 'app/utils/validation.utils';
 import { Table, Field, PtAttribute } from 'app/submission/submission-shared/model';
 import { isEqualIgnoringCase, isStringDefined } from 'app/utils/validation.utils';
 import { SectionNames } from 'app/submission/utils/constants';
@@ -17,8 +17,16 @@ export function extractTableAttributes(table: Table, isSanitise: boolean): PtAtt
   const mappedTables: PtAttribute[][] = table.rows.map((row) => {
     const attributes: PtAttribute[] = table.columns.map((column) => {
       const rowValue = row.valueFor(column.id);
+      let ptAttribute = {
+        name: column.name,
+        value: rowValue && rowValue.value,
+        reference: false
+      } as PtAttribute;
+      if (!isArrayEmpty(rowValue.valqual || [])) {
+        ptAttribute.valqual = rowValue.valqual!.slice();
+      }
 
-      return { name: column.name, value: rowValue && rowValue.value, reference: false } as PtAttribute;
+      return ptAttribute;
     });
 
     return attributes.filter((attr) => (isSanitise && !isPtAttributeValueEmpty(attr.value)) || !isSanitise);
@@ -33,6 +41,7 @@ export function fieldAsAttribute(field: Field, displayType?: string): PtAttribut
       name: field.name,
       reference: false,
       value: field.value,
+      valqual: field.valqual,
       valueAttrs: [{ name: 'display', value: displayType }]
     } as PtAttribute;
   }
@@ -48,13 +57,15 @@ export function fieldsAsAttributes(fields: Field[], isSanitise: boolean): PtAttr
       const fieldValue: string = field.value || '';
       const [richValue] = fieldValue.split('@');
 
-      attributes.push(fieldAsAttribute({ name: field.name, value: richValue } as Field, 'html'));
+      attributes.push(
+        fieldAsAttribute({ name: field.name, value: richValue, valqual: field?.valqual } as Field, 'html')
+      );
     } else if (Array.isArray(field.value)) {
       field.value.forEach((value) => {
-        attributes.push(fieldAsAttribute({ name: field.name, value } as Field));
+        attributes.push(fieldAsAttribute({ name: field.name, value, valqual: field?.valqual } as Field));
       });
     } else {
-      attributes.push({ name: field.name, value: field.value, reference: false });
+      attributes.push({ name: field.name, value: field.value, reference: false, valqual: field?.valqual });
     }
   });
 

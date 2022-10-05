@@ -29,6 +29,30 @@ export const arrayExpressTemplate = {
           name: 'date',
           allowPast: false
         }
+      },
+      {
+        name: 'Study type',
+        icon: 'fa-tag',
+        display: 'readonly',
+        valueType: {
+          name: 'text'
+        }
+      },
+      {
+        name: 'Organism',
+        icon: 'fa-tag',
+        display: 'readonly',
+        valueType: {
+          name: 'text'
+        }
+      },
+      {
+        name: 'Description',
+        icon: 'fa-tag',
+        display: 'readonly',
+        valueType: {
+          name: 'largetext'
+        }
       }
     ],
     tableTypes: [
@@ -184,20 +208,56 @@ export const arrayExpressTemplate = {
       {
         name: 'Samples',
         displayAnnotations: true,
-        sectionTypes: [
+        fieldTypes: [
+          {
+            name: 'Sample count',
+            icon: 'fa-comment',
+            valueType: { name: 'text' }
+          },
           {
             name: 'Experimental Factors',
-            displayAnnotations: true
+            icon: 'fa-comment',
+            valueType: { name: 'text' }
           },
           {
             name: 'Source Characteristics',
-            displayAnnotations: true
+            icon: 'fa-comment',
+            valueType: { name: 'text' }
+          }
+        ],
+        tableTypes: [
+          {
+            name: 'Experimental Factors',
+            displayAnnotations: true,
+            rowAsSection: true
+          },
+          {
+            name: 'Source Characteristics',
+            displayAnnotations: true,
+            rowAsSection: true
           }
         ]
       },
       {
         name: 'Assays and Data',
         displayAnnotations: true,
+        fieldTypes: [
+          {
+            name: 'Assay count',
+            icon: 'fa-comment',
+            valueType: { name: 'text' }
+          },
+          {
+            name: 'Technology',
+            icon: 'fa-comment',
+            valueType: { name: 'text' }
+          },
+          {
+            name: 'Assay by Molecule',
+            icon: 'fa-comment',
+            valueType: { name: 'text' }
+          }
+        ],
         sectionTypes: [
           {
             name: 'Raw Data',
