@@ -13,6 +13,7 @@ export class Organisations {
   private names: Dictionary<string> = {};
   private refs: Dictionary<string> = {};
   private rorRefs: Dictionary<string> = {};
+  private addresses: Dictionary<string> = {};
 
   private constructor() {}
 
@@ -24,16 +25,19 @@ export class Organisations {
     return Organisations.instance;
   }
 
-  list(): { accno: string; name: string; rorId: string }[] {
+  list(): { accno: string; name: string; rorId: string; address?: string }[] {
     return Object.keys(this.refs).map((key) => {
       const ref = this.refs[key];
       const orgName = this.names[key];
       const rorId = this.rorRefs[key];
-      const accno = ref ? ref : '';
-      const name = orgName ? orgName : '';
-      const rorIdValue = rorId ? rorId : '';
-
-      return { name, accno, rorId: rorIdValue };
+      const address = this.addresses[key];
+      let orgItem = {
+        accno: ref,
+        name: orgName,
+        rorId: rorId,
+        address: address
+      };
+      return orgItem as { accno: string; name: string; rorId: string; address?: string };
     });
   }
 
@@ -111,12 +115,13 @@ export class Organisations {
   private toReference(orgValue: string | Org | undefined, accno: string): PtAttribute {
     const orgName = orgValue instanceof Object ? orgValue.name : orgValue;
     const rorId = orgValue instanceof Object ? orgValue.id : '';
+    const address = orgValue instanceof Object ? orgValue.address : '';
 
     if (orgValue === undefined || isStringEmpty(orgName)) {
       return { name: SectionNames.AFFILIATION, value: orgValue, reference: false } as PtAttribute;
     }
 
-    const orgRef = this.refFor(orgName, accno!, rorId);
+    const orgRef = this.refFor(orgName, accno!, rorId, address);
     return { name: SectionNames.AFFILIATION, value: orgRef, reference: true } as PtAttribute;
   }
 
@@ -136,7 +141,7 @@ export class Organisations {
     return `o${highestValueNumber + 1}`;
   }
 
-  private refFor(value: string = '', accno: string, rorId: string): string {
+  private refFor(value: string = '', accno: string, rorId: string, address?: string): string {
     const key: string = value.trim().toLowerCase();
     const isAccnoDefined: boolean = isStringDefined(accno);
     const isValueDefined: boolean = isStringDefined(this.names[key]);
@@ -149,6 +154,7 @@ export class Organisations {
       this.refs[key] = accno;
       this.names[key] = value;
       this.rorRefs[key] = rorId;
+      this.addresses[key] = address;
 
       return this.refs[key]!;
     }
@@ -156,6 +162,7 @@ export class Organisations {
     this.refs[key] = this.generateNextRefValue();
     this.names[key] = value;
     this.rorRefs[key] = rorId;
+    this.addresses[key] = address;
 
     return this.refs[key]!;
   }

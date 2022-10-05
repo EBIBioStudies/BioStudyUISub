@@ -38,14 +38,15 @@ export class Protocols {
     const attributeValue: string = attr.value as string;
 
     if (isNotDefinedOrEmpty(attributeValue) || attr.name !== 'Protocol') {
-      return { name: attr.name, value: attr.value };
+      return { name: attr.name, value: attr.value, valqual: attr.valqual };
     }
 
     const refKeyForValue = this.getRefKeyByValue(attributeValue);
     return {
       name: 'Protocol',
       value: refKeyForValue,
-      reference: true
+      reference: true,
+      valqual: attr.valqual
     };
   }
 }
