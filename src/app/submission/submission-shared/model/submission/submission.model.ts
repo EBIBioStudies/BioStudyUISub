@@ -393,7 +393,7 @@ export class Field {
   constructor(type: FieldType, attributeData: AttributeData) {
     this.id = `field_${nextId()}`;
     this.type = type;
-    this.attributeData = attributeData;
+    this.attributeData = attributeData || {};
   }
 
   get name(): string {
@@ -417,7 +417,7 @@ export class Field {
   }
 
   set value(v: string) {
-    if ((this.attributeData.value as string) !== v) {
+    if (this.attributeData && (this.attributeData?.value as string) !== v) {
       this.attributeData.value = v;
     }
   }
