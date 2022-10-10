@@ -107,8 +107,8 @@ export class SubmissionToPageTabService {
       reference: attr.reference
     } as PtAttribute;
 
-    if (!isArrayEmpty(attr.terms || [])) {
-      ptAttr.valqual = attr.terms!.slice();
+    if (!isArrayEmpty(attr.valqual || [])) {
+      ptAttr.valqual = attr.valqual!.slice();
     }
 
     return ptAttr;

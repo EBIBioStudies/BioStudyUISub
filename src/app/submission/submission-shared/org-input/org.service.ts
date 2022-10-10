@@ -4,8 +4,10 @@ import { Injectable } from '@angular/core';
 import { of, Observable } from 'rxjs';
 
 export interface Org {
+  // This should probably be replaced by the actual PageTab section
   id: string;
   name: string;
+  address?: string;
 }
 
 interface OrgRawData {

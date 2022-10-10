@@ -3,7 +3,7 @@ import { AttributeNames, SectionNames } from './../../utils/constants';
 import { Organisations } from '../model/organisations';
 import { PageTabSection } from './../model/pagetab/pagetab.model';
 import { Protocols } from '../model/protocols';
-import { isPtAttributeValueEmpty, isStringEmpty } from 'app/utils/validation.utils';
+import { isPtAttributeValueEmpty, isStringDefined, isStringEmpty } from 'app/utils/validation.utils';
 import { partition } from 'app/utils/array.utils';
 
 export function contactsToSection(sections: PageTabSection[]): PageTabSection[] {
@@ -19,8 +19,9 @@ export function contactsToSection(sections: PageTabSection[]): PageTabSection[] 
     accno: org.accno,
     attributes: [
       { name: AttributeNames.NAME, value: org.name },
-      { name: AttributeNames.RORID, value: org.rorId }
-    ].filter((attr) => !isStringEmpty(attr.value)),
+      { name: AttributeNames.RORID, value: org.rorId },
+      { name: AttributeNames.ADDRESS, value: org.address }
+    ].filter((attr) => isStringDefined(attr.value) && !isStringEmpty(attr.value)),
     type: SectionNames.ORGANISATION
   }));
 

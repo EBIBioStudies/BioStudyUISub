@@ -11,6 +11,7 @@ import { arrayUniqueValues } from 'app/utils/array.utils';
 import { isArrayEmpty } from 'app/utils/validation.utils';
 import { nextId } from './submission.model.counter';
 import { DocItem } from '../../../submission-edit/field-docs-modal/field-docs-modal.component';
+import { PtNameAndValue } from '../pagetab';
 
 export interface SubmissionSection {
   subsections: Sections;
@@ -200,6 +201,7 @@ export class Table {
 
         if (rowValue) {
           rowValue.value = (attrs[index].value || '') as string;
+          rowValue.valqual = (attrs[index].valqual || []) as PtNameAndValue[];
         }
       });
     });
@@ -386,13 +388,12 @@ export class Tables {
 export class Field {
   readonly id: string;
   readonly type: FieldType;
+  readonly attributeData: AttributeData;
 
-  private fieldValue: string;
-
-  constructor(type: FieldType, value: string = '') {
+  constructor(type: FieldType, attributeData: AttributeData) {
     this.id = `field_${nextId()}`;
     this.type = type;
-    this.fieldValue = value;
+    this.attributeData = attributeData || {};
   }
 
   get name(): string {
@@ -412,13 +413,17 @@ export class Field {
   }
 
   get value(): string {
-    return this.fieldValue;
+    return this.attributeData?.value as string;
   }
 
   set value(v: string) {
-    if (this.fieldValue !== v) {
-      this.fieldValue = v;
+    if (this.attributeData && (this.attributeData?.value as string) !== v) {
+      this.attributeData.value = v;
     }
+  }
+
+  get valqual(): NameAndValue[] {
+    return this.attributeData?.valqual || [];
   }
 }
 
@@ -431,12 +436,12 @@ export class Fields {
     const attrMap = attributes
       .filter((at) => isStringDefined(at.name))
       .reduce((rv, attr) => {
-        rv[attr.name!] = attr.value;
+        rv[attr.name!] = attr;
         return rv;
       }, {});
 
     type.fieldTypes.forEach((fieldType) => {
-      this.add(fieldType, attrMap[fieldType.name] || '');
+      this.add(fieldType, attrMap[fieldType.name]);
     });
   }
 
@@ -459,8 +464,8 @@ export class Fields {
     return this.fields.slice();
   }
 
-  private add(type: FieldType, value?: string): void {
-    const field = new Field(type, value);
+  private add(type: FieldType, attributeData: AttributeData): void {
+    const field = new Field(type, attributeData);
     this.fields.push(field);
   }
 }
@@ -677,7 +682,7 @@ export class Tags {
 export interface AttributeData {
   name: string;
   reference?: boolean;
-  terms?: NameAndValue[];
+  valqual?: NameAndValue[];
   value?: string | string[];
 }
 
