@@ -22,7 +22,7 @@ const URL_REGEXP = /^(http|https|ftp):\/\/.+$/;
  */
 export function toTyped(attributes: PtAttribute[]): PtLink {
   const pointer: string = ((attributes.find((at) => at.name === POINTER_ATTR) || { value: '' }).value as string) || '';
-  const typeAttr = { name: TYPE_ATTR, value: '', reference: false };
+  const typeAttr = { name: TYPE_ATTR, value: '' };
   const isUrl = URL_REGEXP.test(pointer);
 
   const linkObj = {
@@ -65,7 +65,7 @@ export function toTyped(attributes: PtAttribute[]): PtLink {
  */
 export function toUntyped(linkObj: PtLink): PtAttribute[] {
   const attrs = linkObj.attributes || [];
-  const pointerAttr = { name: POINTER_ATTR, value: linkObj.url, reference: false };
+  const pointerAttr = { name: POINTER_ATTR, value: linkObj.url };
   const typeAttr = attrs.find((at) => at.name === TYPE_ATTR);
 
   if (typeAttr !== undefined && isDefinedAndNotEmpty(typeAttr.value as string)) {

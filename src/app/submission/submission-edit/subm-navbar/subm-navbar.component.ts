@@ -51,7 +51,7 @@ export class SubmNavBarComponent implements OnChanges {
       event.preventDefault();
     }
 
-    if (!this.isTemp) {
+    if (!this.isTemp && !this.accno.startsWith('E-')) {
       this.modalService.show(SubmResubmitModalComponent, {
         class: 'modal-lg',
         initialState: {

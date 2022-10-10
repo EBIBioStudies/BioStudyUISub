@@ -87,12 +87,15 @@ export class PageTabToSubmissionService {
   }
 
   private attributeToAttributeData(attr: PtAttribute): AttributeData {
-    return {
+    const attrData = {
       name: attr.name || '',
-      reference: attr.reference || attr.isReference,
       valqual: (attr.valqual || []).map((t) => new NameAndValue(t.name, t.value)),
       value: attr.value as string
-    };
+    } as AttributeData;
+    if (attr.reference || attr.isReference) {
+      attrData.reference = true;
+    }
+    return attrData;
   }
 
   private pageTabStudyAttributesToAttributesData(attrs: PtAttribute[], sectionType: SectionType): AttributeData[] {
