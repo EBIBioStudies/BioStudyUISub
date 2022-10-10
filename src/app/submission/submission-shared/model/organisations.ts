@@ -90,7 +90,7 @@ export class Organisations {
         return result;
       });
 
-      return [...otherAttributes, { name: AttributeNames.ORGANISATION, value, reference: false }];
+      return [...otherAttributes, { name: AttributeNames.ORGANISATION, value }];
     }
 
     return otherAttributes;
@@ -114,7 +114,7 @@ export class Organisations {
     const address = orgValue instanceof Object ? orgValue.address : '';
 
     if (orgValue === undefined || isStringEmpty(orgName)) {
-      return { name: SectionNames.AFFILIATION, value: orgValue, reference: false } as PtAttribute;
+      return { name: SectionNames.AFFILIATION, value: orgValue } as PtAttribute;
     }
 
     const orgRef = this.refFor(orgName, accno!, rorId, address);
