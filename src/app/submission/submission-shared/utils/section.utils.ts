@@ -4,7 +4,7 @@ import { Organisations } from '../model/organisations';
 import { PageTabSection } from './../model/pagetab/pagetab.model';
 import { Protocols } from '../model/protocols';
 import { isPtAttributeValueEmpty, isStringDefined, isStringEmpty } from 'app/utils/validation.utils';
-import { partition } from 'app/utils/array.utils';
+import { flatMap, partition } from 'app/utils/array.utils';
 
 export function contactsToSection(sections: PageTabSection[]): PageTabSection[] {
   const orgs: Organisations = Organisations.getInstance();
@@ -25,7 +25,16 @@ export function contactsToSection(sections: PageTabSection[]): PageTabSection[] 
     type: SectionNames.ORGANISATION
   }));
 
-  return [...authors, ...affiliations, ...sectionsWithoutContacts];
+  const authorRefs = new Set(
+    flatMap(
+      authors.map((auth) => auth?.attributes?.filter((attribute) => attribute?.name?.toLowerCase() === 'affiliation')),
+      (v) => v
+    ).map((attribute) => attribute?.value)
+  );
+
+  const usedAffiliations = affiliations.filter((aff) => authorRefs.has(aff?.accno));
+
+  return [...authors, ...usedAffiliations, ...sectionsWithoutContacts];
 }
 
 export function protocolsToSection(sections: PageTabSection[]): PageTabSection[] {

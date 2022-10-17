@@ -19,8 +19,7 @@ export function extractTableAttributes(table: Table, isSanitise: boolean): PtAtt
       const rowValue = row.valueFor(column.id);
       const ptAttribute = {
         name: column.name,
-        value: rowValue && rowValue.value,
-        reference: false
+        value: rowValue && rowValue.value
       } as PtAttribute;
       if (!isArrayEmpty(rowValue.valqual || [])) {
         ptAttribute.valqual = rowValue.valqual!.slice();
@@ -37,16 +36,19 @@ export function extractTableAttributes(table: Table, isSanitise: boolean): PtAtt
 
 export function fieldAsAttribute(field: Field, displayType?: string): PtAttribute {
   if (displayType) {
-    return {
+    const ptAttribute = {
       name: field.name,
       reference: false,
       value: field.value,
-      valqual: field.valqual,
       valueAttrs: [{ name: 'display', value: displayType }]
     } as PtAttribute;
+    if (field?.valqual.length) {
+      ptAttribute.valqual = field.valqual;
+    }
+    return ptAttribute;
   }
 
-  return { name: field.name, value: field.value, reference: false } as PtAttribute;
+  return { name: field.name, value: field.value } as PtAttribute;
 }
 
 export function fieldsAsAttributes(fields: Field[], isSanitise: boolean): PtAttribute[] {
@@ -65,7 +67,9 @@ export function fieldsAsAttributes(fields: Field[], isSanitise: boolean): PtAttr
         attributes.push(fieldAsAttribute({ name: field.name, value, valqual: field?.valqual } as Field));
       });
     } else {
-      attributes.push({ name: field.name, value: field.value, reference: false, valqual: field?.valqual });
+      const attr = { name: field.name, value: field.value, valqual: field?.valqual };
+      if (!attr.valqual?.length) delete attr.valqual;
+      attributes.push(attr);
     }
   });
 
