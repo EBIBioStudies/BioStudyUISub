@@ -649,9 +649,9 @@ export const biaRembiTemplateV1 = {
                   section_type: 'Biosample',
                   type: 'section'
                 },
-                display: 'required',
+                display: 'desirable',
                 name: 'Biosample',
-                uniqueValues: true,
+                uniqueValues: false,
                 valueType: {
                   name: 'select',
                   values: []
@@ -663,9 +663,9 @@ export const biaRembiTemplateV1 = {
                   section_type: 'Specimen',
                   type: 'section'
                 },
-                display: 'required',
+                display: 'desirable',
                 name: 'Specimen',
-                uniqueValues: true,
+                uniqueValues: false,
                 valueType: {
                   name: 'select',
                   values: []
@@ -677,9 +677,9 @@ export const biaRembiTemplateV1 = {
                   section_type: 'Image acquisition',
                   type: 'section'
                 },
-                display: 'required',
+                display: 'desirable',
                 name: 'Image acquisition',
-                uniqueValues: true,
+                uniqueValues: false,
                 valueType: {
                   name: 'select',
                   values: []
@@ -691,9 +691,9 @@ export const biaRembiTemplateV1 = {
                   section_type: 'Image correlation',
                   type: 'section'
                 },
-                display: 'required',
+                display: 'desirable',
                 name: 'Image correlation',
-                uniqueValues: true,
+                uniqueValues: false,
                 valueType: {
                   name: 'select',
                   values: []
@@ -705,9 +705,9 @@ export const biaRembiTemplateV1 = {
                   section_type: 'Image analysis',
                   type: 'section'
                 },
-                display: 'required',
+                display: 'desirable',
                 name: 'Image analysis',
-                uniqueValues: true,
+                uniqueValues: false,
                 valueType: {
                   name: 'select',
                   values: []
