@@ -4,7 +4,9 @@ import {
   SubmValidationErrors,
   Submission,
   SubmissionValidator,
-  getTemplatesForCollections, DependencyTypeTable, DependencyTypeSection
+  DependencyTypeTable,
+  DependencyTypeSection,
+  getTemplatesForCollections
 } from 'app/submission/submission-shared/model';
 import { BehaviorSubject, Observable, Subject, Subscription, throwError } from 'rxjs';
 import { PageTab, SelectValueType } from 'app/submission/submission-shared/model';
@@ -368,35 +370,35 @@ export class SubmEditService {
     const section: Section = this.submModel.section;
     const tables = flatTables(section);
 
-    tables.map(tableWithDependency => {
-      tableWithDependency.type.columnTypes.map(columnType => {
+    tables.map((tableWithDependency) => {
+      tableWithDependency.type.columnTypes.map((columnType) => {
         if (columnType.dependency) {
           const columnWithDependency = tableWithDependency.findColumnByName(columnType.name)!;
           const columnWithDependencySelect = columnWithDependency.valueType as SelectValueType;
           const rawValues: string[] = [];
 
-          if (columnType.dependency.type == 'table') {
+          if (columnType.dependency.type === 'table') {
             const dependency = columnType.dependency as DependencyTypeTable;
 
             const dependencyTable = tables.find((table) => table.type.typeName === dependency.table_name)!;
-            const dependencyColumn = dependencyTable.columns.find((column) => column.name == dependency.column_name)!;
+            const dependencyColumn = dependencyTable.columns.find((column) => column.name === dependency.column_name)!;
 
-            dependencyTable.attributeValuesForColumn(dependencyColumn.id).map(
-              (attributeValue) => rawValues.push(attributeValue!.value)
-            );
-          } else if (columnType.dependency.type == 'section') {
+            dependencyTable
+              .attributeValuesForColumn(dependencyColumn.id)
+              .map((attributeValue) => rawValues.push(attributeValue!.value));
+          } else if (columnType.dependency.type === 'section') {
             const dependency = columnType.dependency as DependencyTypeSection;
 
             const dependencySections = this.submModel.section.sections.byType(dependency.section_type);
-            dependencySections.map(
-              section => section.fields.findAllByTypeName(dependency.field_name).map(field => {
+            dependencySections.map((dependencySection) =>
+              dependencySection.fields.findAllByTypeName(dependency.field_name).map((field) => {
                 if (field.value) {
                   rawValues.push(field.value);
                 }
               })
             );
           } else {
-            throw Error("Invalid dependency specification");
+            throw Error('Invalid dependency specification');
           }
 
           columnWithDependencySelect.setValues(rawValues);

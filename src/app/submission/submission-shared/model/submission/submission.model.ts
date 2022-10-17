@@ -1,5 +1,6 @@
 import {
-  DependencyTypeSection, DependencyTypeTable,
+  DependencyTypeSection,
+  DependencyTypeTable,
   DisplayType,
   FieldType,
   SectionType,
@@ -471,7 +472,7 @@ export class Fields {
   }
 
   findAllByTypeName(typeName: string): Field[] {
-    return this.fields.filter(field => field.type.name == typeName);
+    return this.fields.filter((field) => field.type.name === typeName);
   }
 
   private add(type: FieldType, attributeData: AttributeData): void {

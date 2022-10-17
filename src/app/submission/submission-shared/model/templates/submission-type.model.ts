@@ -582,13 +582,13 @@ export function invalidateGlobalScope(): void {
 }
 
 export interface DependencyTypeSection {
-  field_name: string,
-  section_type: string,
-  type: 'section'
+  field_name: string;
+  section_type: string;
+  type: 'section';
 }
 
 export interface DependencyTypeTable {
-  column_name: string
-  table_name: string,
-  type: 'table'
+  column_name: string;
+  table_name: string;
+  type: 'table';
 }
