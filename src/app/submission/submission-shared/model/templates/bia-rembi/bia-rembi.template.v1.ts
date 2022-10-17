@@ -198,12 +198,18 @@ export const biaRembiTemplateV1 = {
         name: 'Biosample',
         fieldTypes: [
           {
+            name: 'Biosample section name',
+            valueType: {
+              name: 'text'
+            }
+          },
+          {
             name: 'Organism',
             icon: 'fa-tag',
             display: 'required',
             valueType: {
               name: 'select',
-              multiple: true,
+              multiple: false,
               values: [
                 'Homo sapiens (human)',
                 'Mus musculus (mouse)',
@@ -333,8 +339,13 @@ export const biaRembiTemplateV1 = {
       {
         name: 'Specimen',
         displayAnnotations: false,
-        tableGroups: [],
         fieldTypes: [
+          {
+            name: 'Specimen section name',
+            valueType: {
+              name: 'text'
+            }
+          },
           {
             name: 'Growth protocol',
             valueType: {
@@ -376,6 +387,12 @@ export const biaRembiTemplateV1 = {
         tableGroups: [],
         name: 'Image acquisition',
         fieldTypes: [
+          {
+            name: 'Image Acquisition section name',
+            valueType: {
+              name: 'text'
+            }
+          },
           {
             name: 'Imaging instrument',
             valueType: {
@@ -507,6 +524,12 @@ export const biaRembiTemplateV1 = {
         name: 'Image correlation',
         fieldTypes: [
           {
+            name: 'Image Correlation section name',
+            valueType: {
+              name: 'text'
+            }
+          },
+          {
             name: 'Fiducials used',
             valueType: {
               name: 'largetext'
@@ -548,6 +571,12 @@ export const biaRembiTemplateV1 = {
         tableGroups: [],
         name: 'Image analysis',
         fieldTypes: [
+          {
+            name: 'Image Analysis section name',
+            valueType: {
+              name: 'text'
+            }
+          },
           {
             name: 'Image analysis overview',
             valueType: {
@@ -604,6 +633,87 @@ export const biaRembiTemplateV1 = {
             helpText: 'Examples',
             helpLink: '/bioimage-archive/help-file-list/',
             asyncValueValidatorName: 'forFileList'
+          }
+        ],
+        tableTypes: [
+          {
+            name: 'Associations',
+            icon: 'fa-address-card',
+            description: 'Associate parts of the study into a Study Components.',
+            uniqueCols: true,
+            rowAsSection: true,
+            columnTypes: [
+              {
+                dependency: {
+                  field_name: 'Biosample section name',
+                  section_type: 'Biosample',
+                  type: 'section'
+                },
+                display: 'required',
+                name: 'Biosample',
+                uniqueValues: true,
+                valueType: {
+                  name: 'select',
+                  values: []
+                }
+              },
+              {
+                dependency: {
+                  field_name: 'Specimen section name',
+                  section_type: 'Specimen',
+                  type: 'section'
+                },
+                display: 'required',
+                name: 'Specimen',
+                uniqueValues: true,
+                valueType: {
+                  name: 'select',
+                  values: []
+                }
+              },
+              {
+                dependency: {
+                  field_name: 'Image Acquisition section name',
+                  section_type: 'Image acquisition',
+                  type: 'section'
+                },
+                display: 'required',
+                name: 'Image acquisition',
+                uniqueValues: true,
+                valueType: {
+                  name: 'select',
+                  values: []
+                }
+              },
+              {
+                dependency: {
+                  field_name: 'Image Correlation section name',
+                  section_type: 'Image correlation',
+                  type: 'section'
+                },
+                display: 'required',
+                name: 'Image correlation',
+                uniqueValues: true,
+                valueType: {
+                  name: 'select',
+                  values: []
+                }
+              },
+              {
+                dependency: {
+                  field_name: 'Image Analysis section name',
+                  section_type: 'Image analysis',
+                  type: 'section'
+                },
+                display: 'required',
+                name: 'Image analysis',
+                uniqueValues: true,
+                valueType: {
+                  name: 'select',
+                  values: []
+                }
+              }
+            ]
           }
         ],
         display: 'required',

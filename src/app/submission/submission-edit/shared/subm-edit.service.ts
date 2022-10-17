@@ -1,12 +1,10 @@
 import {
-  Attribute,
   AttributeData,
   Section,
   SubmValidationErrors,
   Submission,
   SubmissionValidator,
-  Table,
-  getTemplatesForCollections
+  getTemplatesForCollections, DependencyTypeTable, DependencyTypeSection
 } from 'app/submission/submission-shared/model';
 import { BehaviorSubject, Observable, Subject, Subscription, throwError } from 'rxjs';
 import { PageTab, SelectValueType } from 'app/submission/submission-shared/model';
@@ -23,7 +21,6 @@ import { SubmissionType } from 'app/submission/submission-shared/model/templates
 import { UserData } from 'app/auth/shared';
 import { UserInfo } from 'app/auth/shared/model';
 import { flatTables } from 'app/submission/submission-shared/utils/table.utils';
-import { isDefinedAndNotEmpty } from 'app/utils/validation.utils';
 
 class EditState {
   static EDITING = 'Editing';
@@ -256,7 +253,7 @@ export class SubmEditService {
     }
 
     this.subscribeToFormChanges(nextSectionForm);
-    this.updateDependencyValues(nextSectionForm);
+    this.updateDependencyValues();
     this.sectionSwitch$.next(nextSectionForm);
   }
 
@@ -367,53 +364,44 @@ export class SubmEditService {
     });
   }
 
-  private updateDependencyValues(sectionForm: SectionForm): void {
+  private updateDependencyValues(): void {
     const section: Section = this.submModel.section;
-    const tables: Table[] = flatTables(section);
-    const tablesWithDependencies: Table[] = tables.filter((table) => isDefinedAndNotEmpty(table.dependency));
+    const tables = flatTables(section);
 
-    tablesWithDependencies.forEach((tableWithDependency) => {
-      const dependency = tables.find((table) => table.type.typeName === tableWithDependency.dependency);
-      const columnWithDependencies = tableWithDependency.columns.filter((column) =>
-        isDefinedAndNotEmpty(column.dependencyColumn)
-      );
+    tables.map(tableWithDependency => {
+      tableWithDependency.type.columnTypes.map(columnType => {
+        if (columnType.dependency) {
+          const columnWithDependency = tableWithDependency.findColumnByName(columnType.name)!;
+          const columnWithDependencySelect = columnWithDependency.valueType as SelectValueType;
+          const rawValues: string[] = [];
 
-      columnWithDependencies.forEach((columnWithDependency) => {
-        // tslint:disable-next-line: no-non-null-assertion
-        const matchedColumn = dependency!.columns.find(
-          (column) => column.name === columnWithDependency.dependencyColumn
-        );
-        // tslint:disable-next-line: no-non-null-assertion
-        const attributeValues = dependency!.attributeValuesForColumn(matchedColumn!.id);
-        // tslint:disable-next-line: no-non-null-assertion
-        const rawValues: string[] = attributeValues.map((attributeValue) => attributeValue!.value);
-        const selectValueType = columnWithDependency.valueType as SelectValueType;
+          if (columnType.dependency.type == 'table') {
+            const dependency = columnType.dependency as DependencyTypeTable;
 
-        selectValueType.setValues(rawValues);
+            const dependencyTable = tables.find((table) => table.type.typeName === dependency.table_name)!;
+            const dependencyColumn = dependencyTable.columns.find((column) => column.name == dependency.column_name)!;
 
-        this.validateDependenciesForColumn(rawValues, tableWithDependency, sectionForm, columnWithDependency);
-      });
-    });
-  }
+            dependencyTable.attributeValuesForColumn(dependencyColumn.id).map(
+              (attributeValue) => rawValues.push(attributeValue!.value)
+            );
+          } else if (columnType.dependency.type == 'section') {
+            const dependency = columnType.dependency as DependencyTypeSection;
 
-  private validateDependenciesForColumn(
-    values: string[],
-    table: Table,
-    sectionForm: SectionForm,
-    column?: Attribute
-  ): void {
-    if (column) {
-      const attributeValues = table.attributeValuesForColumn(column.id);
-
-      attributeValues.forEach((attribute, index) => {
-        if (isDefinedAndNotEmpty(attribute!.value) && !values.includes(attribute!.value)) {
-          const formControl = sectionForm.getTableFormById(table.id);
-
-          if (formControl) {
-            formControl.removeRow(index);
+            const dependencySections = this.submModel.section.sections.byType(dependency.section_type);
+            dependencySections.map(
+              section => section.fields.findAllByTypeName(dependency.field_name).map(field => {
+                if (field.value) {
+                  rawValues.push(field.value);
+                }
+              })
+            );
+          } else {
+            throw Error("Invalid dependency specification");
           }
+
+          columnWithDependencySelect.setValues(rawValues);
         }
       });
-    }
+    });
   }
 }

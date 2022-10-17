@@ -1,4 +1,12 @@
-import { DisplayType, FieldType, SectionType, SubmissionType, TableType, ValueType } from '../templates';
+import {
+  DependencyTypeSection, DependencyTypeTable,
+  DisplayType,
+  FieldType,
+  SectionType,
+  SubmissionType,
+  TableType,
+  ValueType
+} from '../templates';
 import { NameAndValue, Tag } from '../model.common';
 import { isDefinedAndNotEmpty, isStringDefined } from 'app/utils/validation.utils';
 
@@ -82,7 +90,6 @@ class Rows {
 type TableGroup = Table[];
 
 export class Table {
-  readonly dependency;
   readonly groups: TableGroup[] = [];
   readonly id: string;
   readonly type: TableType;
@@ -95,7 +102,6 @@ export class Table {
     this.type = type;
     this.tableColumns = new Columns();
     this.tableRows = new Rows(type.singleRow ? 1 : undefined);
-    this.dependency = type.dependency;
 
     type.columnTypes
       .filter((ct) => ct.isRequired || ct.isDesirable)
@@ -105,12 +111,12 @@ export class Table {
           ct.valueType,
           ct.displayType,
           true,
-          ct.dependencyColumn,
           ct.uniqueValues,
           ct.autosuggest,
           ct.helpText,
           ct.helpLink,
-          ct.helpContextual
+          ct.helpContextual,
+          ct.dependency
         );
       });
 
@@ -212,12 +218,12 @@ export class Table {
     valueType?: ValueType,
     displayType?: DisplayType,
     isTemplateBased: boolean = false,
-    dependencyColumn: string = '',
     uniqueValues: boolean = false,
     autosuggest: boolean = true,
     helpText: string = '',
     helpLink: string = '',
-    helpContextual?: DocItem
+    helpContextual?: DocItem,
+    dependency?: DependencyTypeSection | DependencyTypeTable
   ): Attribute {
     const defColName = (this.singleRow ? this.typeName : 'Column') + ' ' + (this.tableColumns.size() + 1);
     const colName = name || defColName;
@@ -226,12 +232,12 @@ export class Table {
       valueType,
       displayType,
       isTemplateBased,
-      dependencyColumn,
       uniqueValues,
       autosuggest,
       helpText,
       helpLink,
-      helpContextual
+      helpContextual,
+      dependency
     );
     this.tableRows.addKey(col.id);
     this.tableColumns.add(col);
@@ -413,11 +419,11 @@ export class Field {
   }
 
   get value(): string {
-    return this.attributeData?.value as string;
+    return this.attributeData?.value ? String(this.attributeData?.value) : '';
   }
 
   set value(v: string) {
-    if (this.attributeData && (this.attributeData?.value as string) !== v) {
+    if (this.attributeData && this.value !== v) {
       this.attributeData.value = v;
     }
   }
@@ -462,6 +468,10 @@ export class Fields {
 
   list(): Field[] {
     return this.fields.slice();
+  }
+
+  findAllByTypeName(typeName: string): Field[] {
+    return this.fields.filter(field => field.type.name == typeName);
   }
 
   private add(type: FieldType, attributeData: AttributeData): void {

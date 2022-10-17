@@ -1,4 +1,4 @@
-import { DisplayType, ValueType, ValueTypeFactory } from '../templates';
+import { DisplayType, ValueType, ValueTypeFactory, DependencyTypeTable, DependencyTypeSection } from '../templates';
 
 import { nextId } from './submission.model.counter';
 import { DocItem } from '../../../submission-edit/field-docs-modal/field-docs-modal.component';
@@ -11,12 +11,12 @@ export class Attribute {
     readonly valueType: ValueType = ValueTypeFactory.DEFAULT,
     readonly displayType: DisplayType = DisplayType.OPTIONAL,
     readonly isTemplateBased: boolean = false,
-    readonly dependencyColumn: string = '',
     readonly uniqueValues: boolean = false,
     readonly autosuggest: boolean = true,
     readonly helpText: string = '',
     readonly helpLink: string = '',
-    readonly helpContextual?: DocItem
+    readonly helpContextual?: DocItem,
+    readonly dependency?: DependencyTypeTable | DependencyTypeSection
   ) {
     this.id = `attr_${nextId()}`;
   }
