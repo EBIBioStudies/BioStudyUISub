@@ -470,11 +470,14 @@ export const biaTemplateV1 = {
             icon: 'fa-address-card',
             description: 'Add the protocols used in this study component.',
             uniqueCols: true,
-            dependency: 'Study Protocols',
             rowAsSection: true,
             columnTypes: [
               {
-                dependencyColumn: 'Name',
+                dependency: {
+                  column_name: 'Name',
+                  table_name: 'Study Protocols',
+                  type: 'table'
+                },
                 display: 'required',
                 name: 'Protocol',
                 uniqueValues: true,

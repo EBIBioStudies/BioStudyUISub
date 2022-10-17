@@ -151,7 +151,7 @@ export class SubmFormValidators {
       validators.push(RxwebValidators.unique());
     }
 
-    if (column.dependencyColumn !== '') {
+    if (column.dependency) {
       const selectValueType = column.valueType as SelectValueType;
       validators.push(SubmFormValidators.forCellWithDependency(selectValueType));
     }
@@ -263,7 +263,7 @@ export class CustomErrorMessages {
         return `${ref.parentName}'s values should be unique`;
       },
       dependency: (error: { value: string }) => {
-        return `${error.value} is not an Study Protocol. Please add and describe Protocols on the Study page firstly. `;
+        return `${error.value} is not a known section name for ${ref.name}. Values must be described in the appropriate REMBI section before being used here.`;
       },
       fileListNotValid: (_: boolean, errorMessage: string) => {
         return `File list is not valid. ${errorMessage}`;

@@ -309,7 +309,6 @@ export class FieldType extends TypeBase {
 
 export class TableType extends TypeBase {
   readonly allowCustomCols: boolean;
-  readonly dependency: string;
   readonly description: string;
   readonly display: string;
   readonly displayType: DisplayType;
@@ -340,7 +339,6 @@ export class TableType extends TypeBase {
     this.displayType = DisplayType.create(data.display || parentDisplayType.name);
     this.display = this.displayType.name;
     this.icon = data.icon || (this.singleRow ? 'fa-list' : 'fa-th');
-    this.dependency = data.dependency || '';
     this.allowImport = data.allowImport === true;
     this.rowAsSection = data.rowAsSection === true;
 
@@ -395,7 +393,7 @@ export class AnnotationsType extends TableType {
 
 export class ColumnType extends TypeBase {
   readonly autosuggest: boolean;
-  readonly dependencyColumn: string;
+  readonly dependency?: DependencyTypeTable | DependencyTypeSection;
   readonly display: string;
   readonly displayType: DisplayType;
   readonly uniqueValues: boolean;
@@ -417,11 +415,11 @@ export class ColumnType extends TypeBase {
     this.displayType = DisplayType.create(data.display || parentDisplayType.name);
     this.display = this.displayType.name;
     this.valueType = ValueTypeFactory.create(data.valueType || {});
-    this.dependencyColumn = data.dependencyColumn || '';
     this.autosuggest = data.autosuggest !== undefined ? data.autosuggest : true;
     this.uniqueValues = data.uniqueValues || false;
     this.helpText = data.helpText || '';
     this.helpLink = data.helpLink || '';
+    this.dependency = data.dependency;
     this.helpContextual = data.helpContextual
       ? {
           fieldName: data.title || data.name,
@@ -581,4 +579,16 @@ export class SubmissionType extends TypeBase {
 
 export function invalidateGlobalScope(): void {
   GLOBAL_TYPE_SCOPE.clear();
+}
+
+export interface DependencyTypeSection {
+  field_name: string,
+  section_type: string,
+  type: 'section'
+}
+
+export interface DependencyTypeTable {
+  column_name: string
+  table_name: string,
+  type: 'table'
 }
