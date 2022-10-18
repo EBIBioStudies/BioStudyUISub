@@ -36,7 +36,7 @@ export function isValueEmpty(value: string[] | string | undefined): boolean {
 export function isPtAttributeValueEmpty(
   value: string | string[] | PtNameAndValue | PtNameAndValue[] | undefined
 ): boolean {
-  if (typeof value === 'object') {
+  if (value && typeof value === 'object') {
     return Object.keys(value).length === 0;
   }
 

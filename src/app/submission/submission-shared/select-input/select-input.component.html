@@ -6,7 +6,7 @@
   (focus)="onTouched"
   (search)="onSearch($event)"
   [(ngModel)]="selectedValue"
-  [addTag]="addValue"
+  [addTag]="this.enableValueAdd && addValue"
   [inputAttrs]="{'class': inputId}"
   [labelForId]="inputId"
   [markFirst]="false"

@@ -222,11 +222,18 @@ export class DateValueType extends ValueType {
 export class SelectValueType extends ValueType {
   values: string[];
   multiple: boolean = false;
+  enableValueAdd: boolean = true;
 
   constructor(data: Partial<SelectValueType> = {}) {
     super(ValueTypeName.select);
     this.values = data.values || [];
     this.multiple = data.multiple || false;
+
+    if (data.enableValueAdd === undefined) {
+      this.enableValueAdd = true;
+    } else {
+      this.enableValueAdd = Boolean(data.enableValueAdd);
+    }
   }
 
   setValues(values: string[]): void {

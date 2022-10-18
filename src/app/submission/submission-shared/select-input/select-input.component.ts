@@ -22,6 +22,7 @@ export class SelectInputComponent implements ControlValueAccessor {
   @Input() formControl!: FormControl;
   @Input() readonly: boolean = false;
   @Input() inputId: string = '';
+  @Input() enableValueAdd: boolean = false;
   selectedValue: string | string[] = '';
   searchTerm: string = '';
   isAdding: boolean = false;

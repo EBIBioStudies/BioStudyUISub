@@ -654,7 +654,8 @@ export const biaRembiTemplateV1 = {
                 uniqueValues: false,
                 valueType: {
                   name: 'select',
-                  values: []
+                  values: [],
+                  enableValueAdd: false
                 }
               },
               {
@@ -668,7 +669,8 @@ export const biaRembiTemplateV1 = {
                 uniqueValues: false,
                 valueType: {
                   name: 'select',
-                  values: []
+                  values: [],
+                  enableValueAdd: false
                 }
               },
               {
@@ -682,7 +684,8 @@ export const biaRembiTemplateV1 = {
                 uniqueValues: false,
                 valueType: {
                   name: 'select',
-                  values: []
+                  values: [],
+                  enableValueAdd: false
                 }
               },
               {
@@ -696,7 +699,8 @@ export const biaRembiTemplateV1 = {
                 uniqueValues: false,
                 valueType: {
                   name: 'select',
-                  values: []
+                  values: [],
+                  enableValueAdd: false
                 }
               },
               {
@@ -710,7 +714,8 @@ export const biaRembiTemplateV1 = {
                 uniqueValues: false,
                 valueType: {
                   name: 'select',
-                  values: []
+                  values: [],
+                  enableValueAdd: false
                 }
               }
             ]
