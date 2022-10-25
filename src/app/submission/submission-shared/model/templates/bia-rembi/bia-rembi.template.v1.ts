@@ -256,6 +256,7 @@ export const biaRembiTemplateV1 = {
         fieldTypes: [
           {
             name: 'Biosample section name',
+            display: 'required',
             valueType: {
               name: 'text'
             },
@@ -404,6 +405,7 @@ export const biaRembiTemplateV1 = {
         fieldTypes: [
           {
             name: 'Specimen section name',
+            display: 'required',
             valueType: {
               name: 'text'
             },
@@ -456,6 +458,7 @@ export const biaRembiTemplateV1 = {
         fieldTypes: [
           {
             name: 'Image Acquisition section name',
+            display: 'required',
             valueType: {
               name: 'text'
             },
@@ -594,9 +597,12 @@ export const biaRembiTemplateV1 = {
         displayAnnotations: false,
         tableGroups: [],
         name: 'Image correlation',
+        minRequired: 0,
+        display: 'desirable',
         fieldTypes: [
           {
             name: 'Image Correlation section name',
+            display: 'required',
             valueType: {
               name: 'text'
             },
@@ -638,7 +644,6 @@ export const biaRembiTemplateV1 = {
             }
           }
         ],
-        display: 'desirable',
         helpContextual: {
           description: 'How images from the same correlative study are linked'
         }
@@ -647,9 +652,12 @@ export const biaRembiTemplateV1 = {
         displayAnnotations: false,
         tableGroups: [],
         name: 'Image analysis',
+        minRequired: 0,
+        display: 'desirable',
         fieldTypes: [
           {
             name: 'Image Analysis section name',
+            display: 'required',
             valueType: {
               name: 'text'
             },
@@ -675,7 +683,6 @@ export const biaRembiTemplateV1 = {
             }
           }
         ],
-        display: 'desirable',
         helpContextual: {}
       },
       {
