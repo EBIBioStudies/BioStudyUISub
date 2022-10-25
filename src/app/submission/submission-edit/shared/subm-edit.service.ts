@@ -348,10 +348,10 @@ export class SubmEditService {
     });
 
     section.fields.list().forEach((field) => {
-      if(field.type.defaultValue) {
+      if (field.type.defaultValue) {
         field.value = field.type.defaultValue;
       }
-    })
+    });
   }
 
   private subscribeToFormChanges(sectionForm: SectionForm): void {
