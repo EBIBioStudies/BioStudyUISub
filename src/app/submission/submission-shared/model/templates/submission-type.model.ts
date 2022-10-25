@@ -477,7 +477,7 @@ export class SectionType extends TypeBase {
     this.display = this.displayType.name;
     this.displayAnnotations = data.displayAnnotations || false;
     this.tableGroups = (data.tableGroups || []).filter((gr) => !isArrayEmpty(gr));
-    this.minRequired = data.minRequired || 1;
+    this.minRequired = Number.isInteger(data.minRequired) ? Number(data.minRequired) : 1;
     this.annotationsType = new AnnotationsType(
       data.annotationsType,
       new TypeScope<AnnotationsType>(),
