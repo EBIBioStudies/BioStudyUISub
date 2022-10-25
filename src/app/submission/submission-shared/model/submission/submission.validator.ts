@@ -209,6 +209,14 @@ export class SubmValidationErrors {
     readonly sections: SubmValidationErrors[] = []
   ) {}
 
+  get errorsRecursive(): (SectionValidationError | string)[] {
+    const sectionsErrors = this.sections
+      .map((sectionErrors) => sectionErrors.errorsRecursive)
+      .reduce((partialErrors, currentError) => partialErrors.concat(currentError), []);
+
+    return this.errors.concat(sectionsErrors);
+  }
+
   empty(): boolean {
     return this.errors.length === 0 && this.sections.length === 0;
   }
