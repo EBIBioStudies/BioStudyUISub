@@ -346,6 +346,12 @@ export class SubmEditService {
 
       this.save();
     });
+
+    section.fields.list().forEach((field) => {
+      if(field.type.defaultValue) {
+        field.value = field.type.defaultValue;
+      }
+    })
   }
 
   private subscribeToFormChanges(sectionForm: SectionForm): void {
