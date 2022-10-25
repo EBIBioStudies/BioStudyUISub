@@ -301,7 +301,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
   }
 
   private get isValid(): boolean {
-    const hasErrors: boolean = this.submissionErrors.errors.length > 0;
+    const hasErrors: boolean = this.submissionErrors.errorsRecursive.length > 0;
 
     return this.sectionForm !== undefined && this.sectionForm.form.valid && !hasErrors;
   }
