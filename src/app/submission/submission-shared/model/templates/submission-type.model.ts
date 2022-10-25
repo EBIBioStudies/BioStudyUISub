@@ -228,12 +228,7 @@ export class SelectValueType extends ValueType {
     super(ValueTypeName.select);
     this.values = data.values || [];
     this.multiple = data.multiple || false;
-
-    if (data.enableValueAdd === undefined) {
-      this.enableValueAdd = true;
-    } else {
-      this.enableValueAdd = Boolean(data.enableValueAdd);
-    }
+    this.enableValueAdd = data.enableValueAdd !== false;
   }
 
   setValues(values: string[]): void {
@@ -288,6 +283,7 @@ export class FieldType extends TypeBase {
   readonly valueType: ValueType;
   readonly asyncValueValidatorName: string | null;
   readonly helpContextual?: DocItem;
+  readonly defaultValue?: string;
 
   constructor(
     name: string,
@@ -311,6 +307,7 @@ export class FieldType extends TypeBase {
           ...data.helpContextual
         }
       : undefined;
+    this.defaultValue = data.defaultValue;
   }
 }
 

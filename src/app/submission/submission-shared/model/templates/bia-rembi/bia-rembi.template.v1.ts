@@ -71,6 +71,31 @@ export const biaRembiTemplateV1 = {
           description: 'Keywords describing your data that can be used to aid search and classification.',
           examples: ['RNA localisation', 'CRISPR', 'Brain']
         }
+      },
+      {
+        name: 'Acknowledgements',
+        icon: 'fa-comment',
+        valueType: {
+          name: 'largetext'
+        },
+        display: 'desirable',
+        helpContextual: {
+          description: 'Any people or groups that should be acknowledged as part of the dataset.'
+        }
+      },
+      {
+        display: 'required',
+        name: 'License',
+        uniqueValues: false,
+        defaultValue: 'CC0',
+        valueType: {
+          name: 'select',
+          values: ['CC0', 'CC BY'],
+          enableValueAdd: false
+        },
+        helpContextual: {
+          description: 'The license under which the data are available.'
+        }
       }
     ],
     tableTypes: [
@@ -140,7 +165,7 @@ export const biaRembiTemplateV1 = {
             valueType: {
               name: 'text'
             },
-            display: 'required',
+            display: 'desirable',
             helpContextual: {
               description: 'Title of associated publication.'
             }
@@ -151,7 +176,7 @@ export const biaRembiTemplateV1 = {
               name: 'text',
               placeholder: 'First Author, Second Author, Third Author'
             },
-            display: 'required',
+            display: 'desirable',
             helpContextual: {
               description: 'Authors of associated publication.'
             }
@@ -187,7 +212,39 @@ export const biaRembiTemplateV1 = {
             }
           }
         ],
-        display: 'required',
+        display: 'desirable',
+        helpContextual: {}
+      },
+      {
+        name: 'Link',
+        icon: '',
+        description: '',
+        uniqueCols: true,
+        rowAsSection: true,
+        columnTypes: [
+          {
+            name: 'Link URL',
+            valueType: {
+              name: 'idlink'
+            },
+            display: 'desirable',
+            helpContextual: {
+              description: 'The URL of a link relevant to the dataset.'
+            }
+          },
+          {
+            name: 'Link description',
+            valueType: {
+              name: 'text'
+            },
+            display: 'desirable',
+            helpContextual: {
+              description: 'The description of the linked content.',
+              examples: ['Image analysis code', 'Sequencing data', 'Project website']
+            }
+          }
+        ],
+        display: 'desirable',
         helpContextual: {}
       }
     ],
@@ -312,7 +369,7 @@ export const biaRembiTemplateV1 = {
             display: 'desirable',
             helpContextual: {
               description: 'External treatment (e.g. reagent).',
-              examples: ['Plate-bound anti-CD3 activation']
+              examples: ['Plate-bound anti-CD3 activation', '2-(9-oxoacridin-10-yl)acetic acid', 'cridanimod']
             }
           },
           {
