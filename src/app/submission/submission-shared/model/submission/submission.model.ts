@@ -576,10 +576,16 @@ export class Sections {
         this.add(st, d);
       });
 
-      if (st.displayType.isShownByDefault && sd.length < st.minRequired) {
-        Array(st.minRequired - sd.length)
-          .fill(0)
-          .forEach(() => this.add(st, {}));
+      if (st.displayType.isShownByDefault) {
+        if (st.minRequired === 0 && !sd.length) {
+          // add sections that are not required but shown by default,
+          //  so the user has the option of deleting it if they don't want it
+          this.add(st, {});
+        } else {
+          Array(Math.max(st.minRequired - sd.length, 0))
+            .fill(0)
+            .forEach(() => this.add(st, {}));
+        }
       }
     });
 
