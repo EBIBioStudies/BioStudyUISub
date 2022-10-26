@@ -164,6 +164,7 @@ export interface BannerType {
   readonly src: string;
   readonly alt: string;
   readonly backgroundColor: string;
+  readonly contactUs: { text: string; email: string };
 }
 
 export enum ValueTypeName {

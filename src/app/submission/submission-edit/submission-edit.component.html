@@ -24,7 +24,7 @@
             be available on BioStudies but will not be reflected in the initially submitted file.
           </p>
         </div>
-        <div *ngIf="banner" class="card d-flex justify-content-center px-2 mb-3" [style.background]="banner.backgroundColor">
+        <div *ngIf="banner" class="mb-3 justify-content-center px-2 card d-flex" [style.background]="banner.backgroundColor">
           <img style="height: 3rem" [src]="banner.src" [alt]="banner.alt">
         </div>
         <div *ngIf="sectionForm.isRootSection" class="card">
@@ -35,6 +35,11 @@
                 Please fill in the form below. The <span class="font-weight-bold">Validation</span> tab on the
                 left-hand side lists those fields still incomplete or incorrect. Use the
                 <span class="font-weight-bold">Add</span> tab to quickly add new rows or tables.
+              </p>
+              <p *ngIf="banner && banner.contactUs" class="card-text">
+                <i class="fa fa-exclamation-triangle"></i>
+                {{ banner.contactUs.text }}
+                <a href="mailto:{{ banner.contactUs.email }}">{{ banner.contactUs.email }}</a>
               </p>
               <div class="alert alert-warning mb-0" role="alert">
                 <strong>Please note:</strong> all fields are required unless they are marked as "<i>Optional</i>"

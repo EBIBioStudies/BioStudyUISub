@@ -10,7 +10,12 @@ export const biaRembiTemplateV1 = {
     banner: {
       src: 'images/logo_bia.svg',
       alt: 'BioImage Archive logo',
-      backgroundColor: '#038392'
+      backgroundColor: '#038392',
+      contactUs: {
+        text:
+          'If your submission contains complex REMBI section associations that do not fit this form, please send us an email at ',
+        email: 'bioimage-archive@ebi.ac.uk'
+      }
     },
     fieldTypes: [
       {
