@@ -202,7 +202,7 @@ export class SectionForm extends FormBase {
     section.sections.list().forEach((sectionItem) => this.addSubsectionForm(sectionItem));
   }
 
-  private findRoot(): SectionForm {
+  findRoot(): SectionForm {
     if (this.parent === undefined) {
       return this;
     }

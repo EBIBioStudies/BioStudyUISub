@@ -16,6 +16,7 @@ export class SubmCheckSidebarComponent {
   @Input() collapsed?: boolean = false;
   @Input() invalidControls: FormControl[][] = [];
   @Input() serverError?: ServerError;
+  @Input() isRootSection?: boolean;
 
   constructor(private submEditService: SubmEditService) {}
 
