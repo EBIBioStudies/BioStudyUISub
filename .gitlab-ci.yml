@@ -53,6 +53,7 @@ test:
   stage: test
   dependencies:
     - install_dependencies
+    - build
   variables:
     NODE_ENV: test
   script:
