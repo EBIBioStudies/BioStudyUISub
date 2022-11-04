@@ -22,24 +22,26 @@
     <a *ngIf="!isTemp" class="small mr-3" [href]="submissionUrl" target="_blank">
       Open in BioStudies
     </a>
-    <button *ngIf="!readonly && sectionForm.isRootSection"
-        [disabled]="isSaving"
-        class="btn btn-success btn-sm"
-        tooltip="Send to the BioStudies database"
-        placement="bottom"
-        container="body"
-        (click)="onSubmit($event)">
-      {{isTemp ? 'S' : 'Re-s'}}ubmit
-    </button>
-    <button *ngIf="!readonly && !sectionForm.isRootSection"
-            [disabled]="isSaving"
-            class="btn btn-warning btn-sm"
-            tooltip="Review submission"
-            placement="bottom"
-            container="body"
-            (click)="submEditService.switchSection(sectionForm.findRoot())">
-      Review Submission
-    </button>
+    <ng-container *ngIf="sectionForm">
+      <button *ngIf="!readonly && sectionForm.isRootSection"
+          [disabled]="isSaving"
+          class="btn btn-success btn-sm"
+          tooltip="Send to the BioStudies database"
+          placement="bottom"
+          container="body"
+          (click)="onSubmit($event)">
+        {{isTemp ? 'S' : 'Re-s'}}ubmit
+      </button>
+      <button *ngIf="!readonly && !sectionForm.isRootSection"
+              [disabled]="isSaving"
+              class="btn btn-warning btn-sm"
+              tooltip="Review submission"
+              placement="bottom"
+              container="body"
+              (click)="submEditService.switchSection(sectionForm.findRoot())">
+        Review Submission
+      </button>
+    </ng-container>
     <button *ngIf="!readonly && !isTemp && isRevised"
         [disabled]="!isEditing"
         class="btn btn-primary btn-sm btn-danger ml-2"
