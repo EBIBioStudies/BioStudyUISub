@@ -95,11 +95,15 @@ export const biaRembiTemplateV1 = {
         defaultValue: 'CC0',
         valueType: {
           name: 'select',
-          values: ['CC0', 'CC BY'],
+          values: ['CC0', 'CC BY 4.0'],
           enableValueAdd: false
         },
         helpContextual: {
-          description: 'The license under which the data are available.'
+          description: 'The license under which the data are available.',
+          examples_html: [
+            'Full text for the <a href="https://creativecommons.org/share-your-work/public-domain/cc0/" target="_blank" >CC0</a> license',
+            'Full text for the <a href="https://creativecommons.org/licenses/by/4.0/legalcode" target="_blank">CC BY 4.0</a> license'
+          ]
         }
       }
     ],
@@ -123,8 +127,6 @@ export const biaRembiTemplateV1 = {
           },
           {
             name: 'Organisation',
-            helpText: 'Add org',
-            helpLink: '/help#new-item-dropdown',
             valueType: {
               name: 'org',
               multiple: true
@@ -260,7 +262,7 @@ export const biaRembiTemplateV1 = {
         name: 'Biosample',
         fieldTypes: [
           {
-            name: 'Biosample section name',
+            name: 'Title',
             display: 'required',
             valueType: {
               name: 'text'
@@ -409,7 +411,7 @@ export const biaRembiTemplateV1 = {
         displayAnnotations: false,
         fieldTypes: [
           {
-            name: 'Specimen section name',
+            name: 'Title',
             display: 'required',
             valueType: {
               name: 'text'
@@ -462,7 +464,7 @@ export const biaRembiTemplateV1 = {
         name: 'Image acquisition',
         fieldTypes: [
           {
-            name: 'Image Acquisition section name',
+            name: 'Title',
             display: 'required',
             valueType: {
               name: 'text'
@@ -606,7 +608,7 @@ export const biaRembiTemplateV1 = {
         display: 'desirable',
         fieldTypes: [
           {
-            name: 'Image Correlation section name',
+            name: 'Title',
             display: 'required',
             valueType: {
               name: 'text'
@@ -661,7 +663,7 @@ export const biaRembiTemplateV1 = {
         display: 'desirable',
         fieldTypes: [
           {
-            name: 'Image Analysis section name',
+            name: 'Title',
             display: 'required',
             valueType: {
               name: 'text'
@@ -739,7 +741,7 @@ export const biaRembiTemplateV1 = {
             columnTypes: [
               {
                 dependency: {
-                  field_name: 'Biosample section name',
+                  field_name: 'Title',
                   section_type: 'Biosample',
                   type: 'section'
                 },
@@ -754,7 +756,7 @@ export const biaRembiTemplateV1 = {
               },
               {
                 dependency: {
-                  field_name: 'Specimen section name',
+                  field_name: 'Title',
                   section_type: 'Specimen',
                   type: 'section'
                 },
@@ -769,7 +771,7 @@ export const biaRembiTemplateV1 = {
               },
               {
                 dependency: {
-                  field_name: 'Image Acquisition section name',
+                  field_name: 'Title',
                   section_type: 'Image acquisition',
                   type: 'section'
                 },
@@ -784,7 +786,7 @@ export const biaRembiTemplateV1 = {
               },
               {
                 dependency: {
-                  field_name: 'Image Correlation section name',
+                  field_name: 'Title',
                   section_type: 'Image correlation',
                   type: 'section'
                 },
@@ -799,7 +801,7 @@ export const biaRembiTemplateV1 = {
               },
               {
                 dependency: {
-                  field_name: 'Image Analysis section name',
+                  field_name: 'Title',
                   section_type: 'Image analysis',
                   type: 'section'
                 },
@@ -833,28 +835,41 @@ export const biaRembiTemplateV1 = {
             helpContextual: {
               description: 'A description of how the data generation was funded.'
             }
-          },
+          }
+        ],
+        tableTypes: [
           {
-            name: 'Agency',
+            name: 'Grant references',
             icon: '',
-            valueType: {
-              name: 'largetext'
-            },
+            description: 'List of individual grants funding data acquisition.',
+            uniqueCols: true,
+            rowAsSection: true,
+            columnTypes: [
+              {
+                name: 'Agency',
+                icon: '',
+                valueType: {
+                  name: 'text'
+                },
+                display: 'desirable',
+                helpContextual: {
+                  description: 'The funding body provididing support.'
+                }
+              },
+              {
+                name: 'grant_id',
+                icon: '',
+                valueType: {
+                  name: 'text'
+                },
+                display: 'desirable',
+                helpContextual: {
+                  description: 'The identifier for the grant.'
+                }
+              }
+            ],
             display: 'desirable',
-            helpContextual: {
-              description: 'The funding body provididing support.'
-            }
-          },
-          {
-            name: 'grant_id',
-            icon: '',
-            valueType: {
-              name: 'largetext'
-            },
-            display: 'desirable',
-            helpContextual: {
-              description: 'The identifier for the grant.'
-            }
+            helpContextual: {}
           }
         ],
         display: 'desirable',
