@@ -2,8 +2,16 @@
   <div *ngIf="!serverError && !isLoading && !isSubmitting" class="text-center text-white"
     [ngClass]="{'col-xs-12': !collapsed}">
     <i aria-hidden="true" class="fa fa-check-circle mb-2" [ngClass]="{'fa-2x': collapsed, 'fa-3x': !collapsed}"></i>
-    <h5 *ngIf="!collapsed">All fields are valid</h5>
-    <h5 *ngIf="!collapsed" class="action-title">You may submit your study now</h5>
+    <ng-container *ngIf="!collapsed">
+      <ng-container *ngIf="isRootSection">
+        <h5 >All fields are valid</h5>
+        <h5 class="action-title">You may submit your study now</h5>
+      </ng-container>
+      <ng-container *ngIf="!isRootSection">
+        <h5 >All fields are valid for this section</h5>
+        <h5 class="action-title">Click 'Back' to review any missing fields and submit.</h5>
+      </ng-container>
+    </ng-container>
   </div>
   <div *ngIf="serverError" class="text-center text-danger" [ngClass]="{'col-xs-12': !collapsed}">
     <i aria-hidden="true" class="fa fa-times-circle mb-2" [ngClass]="{'fa-2x': collapsed, 'fa-3x': !collapsed}"></i>

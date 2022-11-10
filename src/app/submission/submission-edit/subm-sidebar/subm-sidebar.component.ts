@@ -24,6 +24,7 @@ export class SubmSidebarComponent implements OnDestroy {
   serverError?: ServerError;
   showAdvanced: boolean = true;
   numInvalid?: number;
+  isRootSection?: boolean;
 
   private controls: Array<FormControl>[] = [];
   private unsubscribe = new Subject<void>();
@@ -77,10 +78,12 @@ export class SubmSidebarComponent implements OnDestroy {
       secForm.structureChanges$.pipe(takeUntil(this.unsubscribeForm)).subscribe(() => {
         this.controls = this.groupControlsBySectionId(secForm.controls());
         this.updateInvalidControls();
+        this.isRootSection = secForm.isRootSection;
       });
 
       secForm.form.statusChanges.pipe(takeUntil(this.unsubscribeForm)).subscribe(() => {
         this.updateInvalidControls();
+        this.isRootSection = secForm.isRootSection;
       });
     }
   }

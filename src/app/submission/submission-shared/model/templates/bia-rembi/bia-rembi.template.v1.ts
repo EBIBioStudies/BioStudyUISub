@@ -835,28 +835,41 @@ export const biaRembiTemplateV1 = {
             helpContextual: {
               description: 'A description of how the data generation was funded.'
             }
-          },
+          }
+        ],
+        tableTypes: [
           {
-            name: 'Agency',
+            name: 'Grant references',
             icon: '',
-            valueType: {
-              name: 'largetext'
-            },
+            description: 'List of individual grants funding data acquisition.',
+            uniqueCols: true,
+            rowAsSection: true,
+            columnTypes: [
+              {
+                name: 'Agency',
+                icon: '',
+                valueType: {
+                  name: 'largetext'
+                },
+                display: 'desirable',
+                helpContextual: {
+                  description: 'The funding body provididing support.'
+                }
+              },
+              {
+                name: 'grant_id',
+                icon: '',
+                valueType: {
+                  name: 'largetext'
+                },
+                display: 'desirable',
+                helpContextual: {
+                  description: 'The identifier for the grant.'
+                }
+              }
+            ],
             display: 'desirable',
-            helpContextual: {
-              description: 'The funding body provididing support.'
-            }
-          },
-          {
-            name: 'grant_id',
-            icon: '',
-            valueType: {
-              name: 'largetext'
-            },
-            display: 'desirable',
-            helpContextual: {
-              description: 'The identifier for the grant.'
-            }
+            helpContextual: {}
           }
         ],
         display: 'desirable',

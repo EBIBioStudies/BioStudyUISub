@@ -12,7 +12,7 @@
   </tabset>
 </div>
 <st-subm-check-sidebar *ngIf="isCheckTabActive" [collapsed]="collapsed" [invalidControls]="invalidControls"
-  [serverError]="serverError" (review)="onReviewClick($event)">
+  [serverError]="serverError" [isRootSection]="isRootSection">
 </st-subm-check-sidebar>
 <st-subm-edit-sidebar *ngIf="isEditTabActive" [isAdvancedVisible]="showAdvanced" [collapsed]="collapsed">
 </st-subm-edit-sidebar>

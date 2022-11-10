@@ -57,6 +57,7 @@ test:
     NODE_ENV: test
   script:
     - npm test
+    - npm run ng build --dry-run
 
 on-pull-requests:
   dependencies:
@@ -65,6 +66,7 @@ on-pull-requests:
     NODE_ENV: test
   script:
     - npm test
+    - npm run ng build --dry-run
   only:
     - external_pull_requests
 
